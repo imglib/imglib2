@@ -428,6 +428,25 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 		
 		preConcatenate( dR );
 	}
+	
+	
+	/**
+	 * Scale
+	 * 
+	 * @param d scale factor
+	 * 
+	 * TODO Don't be lazy and do it directly on the values instead of creating another transform
+	 */
+	public void scale( final double d )
+	{
+		final AffineTransform3D dR = new AffineTransform3D();
+		dR.set(
+				d, 0.0, 0.0, 0.0,
+				0.0, d, 0.0, 0.0,
+				0.0, 0.0, d, 0.0 );
+		
+		preConcatenate( dR );
+	}
 
 	final public void set( final AffineTransform3D m )
 	{

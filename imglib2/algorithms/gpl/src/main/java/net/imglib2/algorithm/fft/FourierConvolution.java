@@ -55,6 +55,21 @@ import net.imglib2.util.Util;
  */
 public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, OutputAlgorithm<Img<T>>, Benchmark
 {
+	public static < T extends RealType< T >, S extends RealType< S > > Img< T > convolve( final Img< T > img, final Img< S > kernel ) throws IncompatibleTypeException
+	{
+		final FourierConvolution< T, S > convolution = new FourierConvolution<T, S>( img, kernel );
+		convolution.process();
+		return convolution.getResult();
+	}
+
+	public static < T extends RealType< T >, S extends RealType< S > > Img< T > convolve( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< S > kernel,
+			final ImgFactory<T> imgFactory, final ImgFactory<S> kernelImgFactory, final ImgFactory<ComplexFloatType> fftImgFactory )
+	{
+		final FourierConvolution< T, S > convolution = new FourierConvolution<T, S>( input, kernel, imgFactory, kernelImgFactory, fftImgFactory );
+		convolution.process();
+		return convolution.getResult();
+	}
+
 	final int numDimensions;
 	Img<T> convolved;
 	RandomAccessibleInterval<T> image;

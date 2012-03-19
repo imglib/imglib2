@@ -63,9 +63,14 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 	final private ColorProcessor cp;
 	
 	final private ArrayList< AffineTransform2D > list = new ArrayList< AffineTransform2D >();
+	final private ArrayList< AffineTransform2D > rotationList = new ArrayList< AffineTransform2D >();
+	final private AffineTransform2D affine = new AffineTransform2D();
+	final private AffineTransform2D centerShift = new AffineTransform2D();
+	final private AffineTransform2D centerUnShift = new AffineTransform2D();
 	final private AffineTransform2D rotation = new AffineTransform2D();
 	final private AffineTransform2D reducedAffine = new AffineTransform2D();
 	final private AffineTransform2D reducedAffineCopy = new AffineTransform2D();
+	final private AffineTransform2D reducedRotation = new AffineTransform2D();
 	
 	final private RealARGBConverter< T > converter;
 	
@@ -100,6 +105,7 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 		imp.updateAndDraw();
 		
 		list.clear();
+		rotationList.clear();
 		
 		gui = new GUI( imp );
 		
@@ -118,16 +124,14 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 			0.0, yScale, ( cp.getHeight() - img.dimension( 1 ) * yScale ) / 2.0 );
 
 		/* center shift */
-		final AffineTransform2D centerShift = new AffineTransform2D();
 		centerShift.set(
 				1, 0, -w / 2.0,
-				0, 1, -h / 2.0 * yScale );
+				0, 1, -h / 2.0 );
 
 		/* center un-shift */
-		final AffineTransform2D centerUnShift = new AffineTransform2D();
 		centerUnShift.set(
 				1, 0, w / 2.0,
-				0, 1, h / 2.0 * yScale );
+				0, 1, h / 2.0 );
 
 		/* initialize rotation */
 		rotation.set(
@@ -135,15 +139,12 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 			0.0, 1.0, 0.0 );
 
 		list.add( unScale );
-		list.add( centerShift );
-		list.add( rotation );
-		list.add( centerUnShift );
+		list.add( affine );
 		
-		synchronized ( reducedAffine )
-		{
-			reduceAffineTransformList( list, reducedAffine );
-		}
-
+		rotationList.add( centerShift );
+		rotationList.add( rotation );
+		rotationList.add( centerUnShift );
+		
 		gui.backupGui();
 		gui.takeOverGui();
 		
@@ -161,26 +162,74 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 	{
 		synchronized ( reducedAffine )
 		{
+			reduceAffineTransformList( rotationList, reducedRotation );
+			centerShift.set(
+					1, 0, 0,
+					0, 1, 0 );
+			centerUnShift.set(
+					1, 0, 0,
+					0, 1, 0 );
+			rotation.set(
+					1, 0, 0,
+					0, 1, 0 );
+			affine.preConcatenate( reducedRotation );
 			reduceAffineTransformList( list, reducedAffine );
 		}
+		
 		painter.repaint();
 	}
 	
 	
-	private void rotate( final double d )
+	private void rotate( double dTheta )
 	{
-		theta += d;
+		while ( dTheta > Math.PI )
+			dTheta -= Math.PI + Math.PI;
+		while ( dTheta < -Math.PI )
+			dTheta += Math.PI + Math.PI;
+		
+		theta += dTheta;
+		
 		while ( theta > Math.PI )
 			theta -= Math.PI + Math.PI;
 		while ( theta < -Math.PI )
 			theta += Math.PI + Math.PI;
-		rotation.rotate( d );
+		
+		synchronized ( reducedAffine )
+		{
+			centerShift.set(
+					1, 0, -screenImage.dimension( 0 ) / 2.0,
+					0, 1, -screenImage.dimension( 1 ) / 2.0 );
+			centerUnShift.set(
+					1, 0, screenImage.dimension( 0 ) / 2.0,
+					0, 1, screenImage.dimension( 1 ) / 2.0 );
+			rotation.rotate( dTheta );
+		}
 	}
 	
-	private void scale( final double d )
+	private void scale( final double dScale )
 	{
-		scale *= d;
-		rotation.scale( d );
+		scale *= dScale;
+		
+		synchronized ( reducedAffine )
+		{
+			centerShift.set(
+					1, 0, -screenImage.dimension( 0 ) / 2.0,
+					0, 1, -screenImage.dimension( 1 ) / 2.0 );
+			centerUnShift.set(
+					1, 0, screenImage.dimension( 0 ) / 2.0,
+					0, 1, screenImage.dimension( 1 ) / 2.0 );
+			rotation.scale( dScale );
+		}
+	}
+	
+	private void translate( final double x, final double y )
+	{
+		synchronized ( reducedAffine )
+		{
+			rotation.set(
+				1, 0, x,
+				0, 1, y );
+		}
 	}
 	
 	/**
@@ -263,34 +312,53 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 			{
 				scale( 1.0 + 0.1 * v );
 				update();
-//				IJ.run("In [+]");
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_MINUS )
 			{
 				scale( 1.0 / ( 1.0 + 0.1 * v ) );
 				update();
-//				IJ.run("Out [-]");
 			}
 		}
 	}
 
 	@Override
-	public void mouseWheelMoved( final MouseWheelEvent e ) {}
+	public void mouseWheelMoved( final MouseWheelEvent e )
+	{
+		final float v = keyModfiedSpeed( e.getModifiersEx() );
+		final int s = e.getWheelRotation();
+		final double dScale = 1.0 + 0.1 * v;
+		if ( s > 0 )
+			scale( 1.0 / dScale );
+		else
+			scale( dScale );
+		update();
+	}
 
 	@Override
 	public void mouseDragged( final MouseEvent e )
 	{
-		dX = img.dimension( 0 ) / 2 - e.getX();
-		dY = img.dimension( 1 ) / 2 - e.getY();
-		final double a = Math.sqrt( dX * dX + dY * dY );
-		if ( a == 0 )
-			return;
-		final double dTheta = Math.atan2( dY / a, dX / a );
-		
-		rotation.rotate( dTheta - oTheta );
-		
-		oTheta += dTheta;
-		
+		final int modifiers = e.getModifiersEx();
+		if ( ( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 )
+		{
+			dX = e.getX() - oX;
+			dY = e.getY() - oY;
+			oX += dX;
+			oY += dY;
+			translate( dX, dY );
+		}
+		else
+		{
+			dX = screenImage.dimension( 0 ) / 2 - e.getX();
+			dY = screenImage.dimension( 1 ) / 2 - e.getY();
+			final double a = Math.sqrt( dX * dX + dY * dY );
+			if ( a == 0 )
+				return;
+			final double dTheta = Math.atan2( dY / a, dX / a );
+			
+			rotate( dTheta - oTheta );
+			
+			oTheta = dTheta;
+		}
 		update();
 	}
 
@@ -307,8 +375,11 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 	@Override
 	public void mousePressed( final MouseEvent e )
 	{
-		dX = img.dimension( 0 ) / 2 - e.getX();
-		dY = img.dimension( 1 ) / 2 - e.getY();
+		oX = e.getX();
+		oY = e.getY();
+		
+		dX = screenImage.dimension( 0 ) / 2 - oX;
+		dY = screenImage.dimension( 1 ) / 2 - oY;
 		final double a = Math.sqrt( dX * dX + dY * dY );
 		if ( a == 0 )
 			return;
@@ -323,7 +394,7 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 		final ImgPlus< UnsignedByteType > imgPlus;
 		try
 		{
-			imgPlus = io.openImg( "/home/saalfeld/Desktop/screenshot.tif", new ArrayImgFactory< UnsignedByteType >(), new UnsignedByteType() );
+			imgPlus = io.openImg( "/home/saalfeld/Desktop/preikestolen.tif", new ArrayImgFactory< UnsignedByteType >(), new UnsignedByteType() );
 		}
 		catch ( final ImgIOException e )
 		{
