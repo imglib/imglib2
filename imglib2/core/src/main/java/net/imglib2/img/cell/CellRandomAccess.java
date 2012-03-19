@@ -14,6 +14,8 @@ import net.imglib2.type.NativeType;
  */
 public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends AbstractLocalizable implements RandomAccess< T >, CellImg.CellContainerSampler< T, A, C >
 {
+	protected final CellImg< T, A, C > img;
+
 	protected final T type;
 
 	protected final RandomAccess< C > randomAccessOnCells;
@@ -37,6 +39,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	{
 		super( randomAccess.numDimensions() );
 
+		this.img = randomAccess.img;
 		this.type = randomAccess.type.duplicateTypeOnSameNativeImg();
 		this.randomAccessOnCells = randomAccess.randomAccessOnCells.copyRandomAccess();
 		this.defaultCellDims = randomAccess.defaultCellDims;
@@ -60,21 +63,19 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		type.updateIndex( index );
 	}
 
-	public CellRandomAccess( final CellImg< T, A, C > container )
+	public CellRandomAccess( final CellImg< T, A, C > img )
 	{
-		super( container.numDimensions() );
+		super( img.numDimensions() );
 
-		this.type = container.createLinkedType();
-		this.randomAccessOnCells = container.cells.randomAccess();
-		this.defaultCellDims = container.cellDims;
+		this.img = img;
+		this.type = img.createLinkedType();
+		this.randomAccessOnCells = img.cells.randomAccess();
+		this.defaultCellDims = img.cellDims;
 
 		this.positionOfCurrentCell = new long[ n ];
 		this.positionInCell = new long[ n ];
 
-		for ( int d = 0; d < n; ++d )
-			position[ d ] = 0;
-
-		container.splitGlobalPosition( position, positionOfCurrentCell, positionInCell );
+		img.splitGlobalPosition( position, positionOfCurrentCell, positionInCell );
 		randomAccessOnCells.setPosition( positionOfCurrentCell );
 		updatePosition();
 	}
@@ -281,28 +282,34 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		localizable.localize( position );
-
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+			final long pos = localizable.getLongPosition( d );
+			if ( pos != position[ d ] )
 			{
-				randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
-				for ( ++d; d < n; ++d )
-					if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
-						randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+				index += ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ];
+				position[ d ] = pos;
+				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+				{
+					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
 
-				final C cell = getCell();
-				currentCellSteps = cell.steps;
-				currentCellMin = cell.min;
-				currentCellMax = cell.max;
-				type.updateContainer( this );
+					for ( ++d; d < n; ++d )
+					{
+						final long posInner = localizable.getLongPosition( d );
+						if ( posInner != position[ d ] )
+						{
+							position[ d ] = posInner;
+							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+							{
+								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+							}
+						}
+					}
+
+					updatePosition();
+				}
 			}
 		}
-
-		for ( int d = 0; d < n; ++d )
-			positionInCell[ d ] = position[ d ] - currentCellMin[ d ];
-		index = getCell().localPositionToIndex( positionInCell );
 		type.updateIndex( index );
 	}
 
@@ -372,7 +379,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 
 	/**
 	 * Update type to currentCellSteps, currentCellMin, and type after
-	 * switching cells. This is called after cursorOnCells and position
+	 * switching cells. This is called after randomAccessOnCells and position
 	 * fields have been set.
 	 */
 	private void updatePosition()
