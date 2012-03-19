@@ -46,7 +46,7 @@ public abstract class AbstractLocalizableInt extends AbstractEuclideanSpace impl
 	 * stored here. {@link Positionable} subclasses, such as {@link Point},
 	 * modify this array.
 	 */
-	final protected int[] position;
+	protected final int[] position;
 
 	/**
 	 * @param n

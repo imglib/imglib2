@@ -51,9 +51,11 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 
 	private final long[] tmp;
 
-	private final long lastIndex;
-
 	private long index;
+
+	private final long maxIndex;
+
+	private long maxIndexOnLine;
 
 	public < I extends RandomAccessible< T > & Interval > RandomAccessibleIntervalCursor( final I interval )
 	{
@@ -62,10 +64,11 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 		dimensions = new long[ n ];
 		dimensions( dimensions );
 		tmp = new long[ n ];
-		long size = 1;
-		for ( int d = 0; d < n; ++d )
+		long size = dimensions[ 0 ];
+		for ( int d = 1; d < n; ++d )
 			size *= dimensions[ d ];
-		lastIndex = size - 1;
+		maxIndex = size - 1;
+		maxIndexOnLine = dimensions[ 0 ] - 1;
 		reset();
 	}
 
@@ -75,8 +78,9 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 		this.randomAccess = cursor.randomAccess.copyRandomAccess();
 		dimensions = cursor.dimensions.clone();
 		tmp = new long[ n ];
-		lastIndex = cursor.lastIndex;
 		index = cursor.index;
+		maxIndex = cursor.maxIndex;
+		maxIndexOnLine = cursor.maxIndexOnLine;
 	}
 
 	@Override
@@ -89,6 +93,7 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 	public void jumpFwd( final long steps )
 	{
 		index += steps;
+		maxIndexOnLine += steps / dimensions[ 0 ];
 		IntervalIndexer.indexToPosition( steps, dimensions, tmp );
 		randomAccess.move( tmp );
 	}
@@ -96,8 +101,16 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 	@Override
 	public void fwd()
 	{
-		++index;
-		for ( int d = 0; d < n; ++d )
+		randomAccess.fwd( 0 );
+		if ( ++index > maxIndexOnLine )
+			nextLine();
+	}
+
+	private void nextLine()
+	{
+		randomAccess.setPosition( min[ 0 ], 0 );
+		maxIndexOnLine += dimensions[ 0 ];
+		for ( int d = 1; d < n; ++d )
 		{
 			randomAccess.fwd( d );
 			if ( randomAccess.getLongPosition( d ) > max[ d ] )
@@ -111,6 +124,7 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 	public void reset()
 	{
 		index = -1;
+		maxIndexOnLine = dimensions[ 0 ] - 1;
 		randomAccess.setPosition( min );
 		randomAccess.bck( 0 );
 	}
@@ -118,7 +132,7 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 	@Override
 	public boolean hasNext()
 	{
-		return index < lastIndex;
+		return index < maxIndex;
 	}
 
 	@Override
