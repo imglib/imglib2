@@ -57,29 +57,29 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 		target.setPosition( discrete );
 	}
 
-	final static protected long round( final double r )
+	public static final long round( final double r )
 	{
 		return r < 0 ? ( long )( r - 0.5 ) : ( long )( r + 0.5 );
 	}
 
-	final static protected long round( final float r )
+	public static final long round( final float r )
 	{
 		return r < 0 ? ( long )( r - 0.5f ) : ( long )( r + 0.5f );
 	}
 
-	final static protected void round( final double[] r, final long[] f )
+	public static final void round( final double[] r, final long[] f )
 	{
 		for ( int d = 0; d < r.length; ++d )
 			f[ d ] = round( r[ d ] );
 	}
 
-	final static protected void round( final float[] r, final long[] f )
+	public static final void round( final float[] r, final long[] f )
 	{
 		for ( int d = 0; d < r.length; ++d )
 			f[ d ] = round( r[ d ] );
 	}
 
-	final static protected void round( final RealLocalizable r, final long[] f )
+	public static final void round( final RealLocalizable r, final long[] f )
 	{
 		for ( int d = 0; d < f.length; ++d )
 			f[ d ] = round( r.getDoublePosition( d ) );
