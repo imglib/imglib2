@@ -29,16 +29,17 @@ package net.imglib2.img.list;
 
 import java.util.ArrayList;
 
-import net.imglib2.AbstractCursor;
+import net.imglib2.AbstractCursorInt;
 import net.imglib2.util.IntervalIndexer;
 
 /**
+ * {@link Cursor} on a {@link ListImg}.
  *
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListCursor< T > extends AbstractCursor< T >
+final public class ListCursor< T > extends AbstractCursorInt< T >
 {
 	private int i;
 	final private int maxNumPixels;
@@ -101,14 +102,14 @@ final public class ListCursor< T > extends AbstractCursor< T >
 	public void reset() { i = -1; }
 
 	@Override
-	public long getLongPosition( final int dim )
+	public void localize( final int[] position )
 	{
-		return IntervalIndexer.indexToPosition( i, container.dim, container.step, dim );
+		IntervalIndexer.indexToPosition( i, container.dim, position );
 	}
 
 	@Override
-	public void localize( final long[] position )
+	public int getIntPosition( final int d )
 	{
-		IntervalIndexer.indexToPosition( i, container.dim, position );
+		return IntervalIndexer.indexToPosition( i, container.dim, container.step, d );
 	}
 }

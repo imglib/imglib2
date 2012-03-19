@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,9 +32,10 @@ import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * 
+ * {@link Cursor} on an {@link ArrayImg}.
+ *
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
 public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt< T >
@@ -44,7 +45,7 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 	protected final ArrayImg< T, ? > container;
 
 	protected final int lastIndex;
-	
+
 	protected ArrayCursor( final ArrayCursor< T > cursor )
 	{
 		super( cursor.numDimensions() );
@@ -52,7 +53,7 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 		this.container = cursor.container;
 		this.type = container.createLinkedType();
 		this.lastIndex = ( int )container.size() - 1;
-		
+
 		type.updateIndex( cursor.type.getIndex() );
 		type.updateContainer( this );
 	}
@@ -64,7 +65,7 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 		this.type = container.createLinkedType();
 		this.container = container;
 		this.lastIndex = ( int )container.size() - 1;
-		
+
 		reset();
 	}
 
@@ -73,7 +74,7 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 	{
 		return type;
 	}
-	
+
 	@Override
 	public boolean hasNext()
 	{
@@ -116,7 +117,7 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 	{
 		IntervalIndexer.indexToPosition( type.getIndex(), container.dim, position );
 	}
-	
+
 	@Override
 	public ArrayCursor< T > copy()
 	{
