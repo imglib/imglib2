@@ -40,6 +40,19 @@
 
   <developers>
     <developer>
+      <id>preibisch</id>
+      <name>Stephan Preibisch</name>
+      <email>preibisch@mpi-cbg.de</email>
+      <url>http://fly.mpi-cbg.de/~preibisch/</url>
+      <organization>MPI-CBG at Dresden</organization>
+      <organizationUrl>http://mpi-cbg.de/</organizationUrl>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>saalfeld</id>
       <name>Stephan Saalfeld</name>
       <email>saalfeld@mpi-cbg.de</email>
@@ -56,19 +69,6 @@
       </properties>
     </developer>
     <developer>
-      <id>preibisch</id>
-      <name>Stephan Preibisch</name>
-      <email>preibisch@mpi-cbg.de</email>
-      <url>http://fly.mpi-cbg.de/~preibisch/</url>
-      <organization>MPI-CBG at Dresden</organization>
-      <organizationUrl>http://mpi-cbg.de/</organizationUrl>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
       <id>tobias</id>
       <name>Tobias Pietzsch</name>
       <email>pietzsch@mpi-cbg.de</email>
@@ -78,22 +78,6 @@
         <role>developer</role>
       </roles>
       <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>curtis</id>
-      <name>Curtis Rueden</name>
-      <email>ctrueden@wisc.edu</email>
-      <url>http://loci.wisc.edu/people/curtis-rueden</url>
-      <organization>UW-Madison LOCI</organization>
-      <organizationUrl>http://loci.wisc.edu/</organizationUrl>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>-6</timezone>
-      <properties>
-        <picUrl>http://loci.wisc.edu/files/loci/images/people/curtis-2010.jpg</picUrl>
-      </properties>
     </developer>
     <developer>
       <id>acardona</id>
@@ -126,6 +110,22 @@
       </properties>
     </developer>
     <developer>
+      <id>curtis</id>
+      <name>Curtis Rueden</name>
+      <email>ctrueden@wisc.edu</email>
+      <url>http://loci.wisc.edu/people/curtis-rueden</url>
+      <organization>UW-Madison LOCI</organization>
+      <organizationUrl>http://loci.wisc.edu/</organizationUrl>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>-6</timezone>
+      <properties>
+        <picUrl>http://loci.wisc.edu/files/loci/images/people/curtis-2010.jpg</picUrl>
+      </properties>
+    </developer>
+    <developer>
       <id>leek</id>
       <name>Lee Kamentsky</name>
       <email>leek@broadinstitute.org</email>
@@ -140,9 +140,39 @@
         <picUrl>http://www.broadinstitute.org/~leek/lee_small.jpg</picUrl>
       </properties>
     </developer>
+    <developer>
+      <id>llindsey</id>
+      <name>Larry Lindsey</name>
+      <email>llindsey@clm.utexas.edu</email>
+      <url>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.htm</url>
+      <organization>University of Texas at Austin</organization>
+      <organizationUrl>http://www.utexas.edu/</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-6</timezone>
+      <properties>
+        <picUrl>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.jpg</picUrl>
+      </properties>
+    </developer>
+    <developer>
+      <name>Johannes Schindelin</name>
+      <email>schindelin@wisc.edu</email>
+      <url>http://loci.wisc.edu/people/johannes-schindelin</url>
+      <organization>UW-Madison LOCI</organization>
+      <organizationUrl>http://loci.wisc.edu/</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-6</timezone>
+      <properties>
+        <picUrl>http://www.loci.wisc.edu/files/loci/images/people/johannes.jpeg</picUrl>
+      </properties>
+    </developer>
   </developers>
 
   <contributors>
+    <contributor><name>Christian Dietz</name></contributor>
     <contributor>
       <name>Grant Harris</name>
       <email>gharris@mbl.edu</email>
@@ -157,6 +187,11 @@
         <picUrl>http://www.loci.wisc.edu/files/loci/images/people/GBH-2010.jpg</picUrl>
       </properties>
     </contributor>
+    <contributor><name>Jan Funke</name></contributor>
+    <contributor><name>Jean-Yves Tinevez</name></contributor>
+    <contributor><name>Mark Longair</name></contributor>
+    <contributor><name>Nick Perry</name></contributor>
+    <contributor><name>Steffen Jaensch</name></contributor>
   </contributors>
 
   <issueManagement>
