@@ -142,7 +142,7 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 
 	@Override
 	public Cursor<T> cursor() {
-		return new RandomAccessibleZeroMinIntervalCursor<T>(Views.interval(rai, new long[dims.length], dims));
+		return new RandomAccessibleIntervalCursor<T>(Views.interval(rai, new long[dims.length], dims));
 	}
 
 	@Override

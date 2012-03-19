@@ -120,16 +120,6 @@ public class RandomAccessibleIntervalCursorBenchmark
 
 		for ( int iteration = 0; iteration < 10; ++iteration )
 		{
-			System.out.println( "array to array copy" );
-			BenchmarkHelper.benchmark( 20, false, new BenchmarkHelper.Benchmark()
-			{
-				@Override
-				public void run()
-				{
-					copy( b.array1.cursor(), b.array2.cursor() );
-				}
-			} );
-
 			System.out.println( "array to RandomAccessibleIntervalCursor( array ) copy" );
 			BenchmarkHelper.benchmark( 20, false, new BenchmarkHelper.Benchmark()
 			{
@@ -137,26 +127,6 @@ public class RandomAccessibleIntervalCursorBenchmark
 				public void run()
 				{
 					copy( b.array1.cursor(), new RandomAccessibleIntervalCursor< IntType >( b.array2 ) );
-				}
-			} );
-
-			System.out.println( "RandomAccessibleIntervalCursor( array ) to array copy" );
-			BenchmarkHelper.benchmark( 20, false, new BenchmarkHelper.Benchmark()
-			{
-				@Override
-				public void run()
-				{
-					copy( new RandomAccessibleIntervalCursor< IntType >( b.array1 ), b.array2.cursor() );
-				}
-			} );
-
-			System.out.println( "array to localizing array copy" );
-			BenchmarkHelper.benchmark( 20, false, new BenchmarkHelper.Benchmark()
-			{
-				@Override
-				public void run()
-				{
-					copy( b.array1.cursor(), b.array2.localizingCursor() );
 				}
 			} );
 		}
