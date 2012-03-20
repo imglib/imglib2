@@ -11,12 +11,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @author Lee Kamentsky
  *
  */
 package net.imglib2.labeling;
 
-public interface LabelingROIStrategyFactory<T extends Comparable<T>> {
-	public <L extends Labeling<T>> LabelingROIStrategy<T, L> createLabelingROIStrategy(L labeling);
+public interface LabelingROIStrategyFactory< T extends Comparable< T >>
+{
+	public < L extends Labeling< T >> LabelingROIStrategy< T, L > createLabelingROIStrategy( L labeling );
 }

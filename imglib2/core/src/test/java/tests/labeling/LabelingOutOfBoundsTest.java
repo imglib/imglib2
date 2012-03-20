@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package tests.labeling;
 
@@ -25,57 +25,53 @@ import org.junit.Test;
  * @author leek
  *
  */
-public class LabelingOutOfBoundsTest {
+public class LabelingOutOfBoundsTest
+{
 
-	private <T extends Comparable<T>> OutOfBounds<LabelingType<T>> makeOOB(
-			long [] dimensions, 
-			long [][] coordinates,
-			List<T> values) {
-		ArrayImgFactory<LabelingType<T>> factory =  new ArrayImgFactory<LabelingType<T>>();
-		NativeImgLabeling<T> labeling = new NativeImgLabeling<T>(dimensions, factory);
-		labeling.setLinkedType(new LabelingType<T>(labeling));
-		LabelingOutOfBoundsRandomAccessFactory<T, Img<LabelingType<T>>> oobFactory =
-			new LabelingOutOfBoundsRandomAccessFactory<T, Img<LabelingType<T>>>();
-		OutOfBounds<LabelingType<T>> result = oobFactory.create(labeling);
-		RandomAccess<LabelingType<T>> ra = labeling.randomAccess();
-		for (int i = 0; i < coordinates.length; i++) {
-			ra.setPosition(coordinates[i]);
-			ra.get().setLabel(values.get(i));
+	private < T extends Comparable< T >> OutOfBounds< LabelingType< T >> makeOOB( final long[] dimensions, final long[][] coordinates, final List< T > values )
+	{
+		final ArrayImgFactory< LabelingType< T >> factory = new ArrayImgFactory< LabelingType< T >>();
+		final NativeImgLabeling< T > labeling = new NativeImgLabeling< T >( dimensions, factory );
+		labeling.setLinkedType( new LabelingType< T >( labeling ) );
+		final LabelingOutOfBoundsRandomAccessFactory< T, Img< LabelingType< T >>> oobFactory = new LabelingOutOfBoundsRandomAccessFactory< T, Img< LabelingType< T >>>();
+		final OutOfBounds< LabelingType< T >> result = oobFactory.create( labeling );
+		final RandomAccess< LabelingType< T >> ra = labeling.randomAccess();
+		for ( int i = 0; i < coordinates.length; i++ )
+		{
+			ra.setPosition( coordinates[ i ] );
+			ra.get().setLabel( values.get( i ) );
 		}
 		return result;
 	}
-	
+
 	/**
-	 * Test method for {@link net.imglib2.labeling.LabelingOutOfBoundsRandomAccess#LabelingOutOfBoundsRandomAccess(net.imglib2.img.Img)}.
+	 * Test method for
+	 * {@link net.imglib2.labeling.LabelingOutOfBoundsRandomAccess#LabelingOutOfBoundsRandomAccess(net.imglib2.img.Img)}
+	 * .
 	 */
 	@Test
-	public void testLabelingOutOfBoundsRandomAccess() {
-		OutOfBounds<LabelingType<Integer>> result = makeOOB(
-				new long[] {10,10}, 
-				new long[][] { {1,2}},
-				Arrays.asList(new Integer [] { 1 }));
-		assertNotNull(result);
+	public void testLabelingOutOfBoundsRandomAccess()
+	{
+		final OutOfBounds< LabelingType< Integer >> result = makeOOB( new long[] { 10, 10 }, new long[][] { { 1, 2 } }, Arrays.asList( new Integer[] { 1 } ) );
+		assertNotNull( result );
 	}
-	
+
 	@Test
-	public void testWithinBounds() {
-		OutOfBounds<LabelingType<Integer>> result = makeOOB(
-				new long[] {10,10}, 
-				new long[][] { {1,2}},
-				Arrays.asList(new Integer [] { 1 }));
-		result.setPosition(new long[] { 1,2});
-		assertFalse(result.isOutOfBounds());
-		assertEquals(result.get().getLabeling().size(), 1);
-		assertTrue(result.get().getLabeling().contains(1));
+	public void testWithinBounds()
+	{
+		final OutOfBounds< LabelingType< Integer >> result = makeOOB( new long[] { 10, 10 }, new long[][] { { 1, 2 } }, Arrays.asList( new Integer[] { 1 } ) );
+		result.setPosition( new long[] { 1, 2 } );
+		assertFalse( result.isOutOfBounds() );
+		assertEquals( result.get().getLabeling().size(), 1 );
+		assertTrue( result.get().getLabeling().contains( 1 ) );
 	}
+
 	@Test
-	public void testOutOfBounds() {
-		OutOfBounds<LabelingType<Integer>> result = makeOOB(
-				new long[] {10,10}, 
-				new long[][] { {1,2}},
-				Arrays.asList(new Integer [] { 1 }));
-		result.setPosition(new long[] { 11,11 });
-		assertTrue(result.isOutOfBounds());
-		assertTrue(result.get().getLabeling().isEmpty());
+	public void testOutOfBounds()
+	{
+		final OutOfBounds< LabelingType< Integer >> result = makeOOB( new long[] { 10, 10 }, new long[][] { { 1, 2 } }, Arrays.asList( new Integer[] { 1 } ) );
+		result.setPosition( new long[] { 11, 11 } );
+		assertTrue( result.isOutOfBounds() );
+		assertTrue( result.get().getLabeling().isEmpty() );
 	}
 }
