@@ -13,12 +13,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @author Lee Kamentsky
+ * @modifier Christian Dietz, Martin Horn
  *
  */
 package net.imglib2.labeling;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,6 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+
+import net.imglib2.type.numeric.IntegerType;
 
 /**
  * The LabelingMapping maps a set of labelings of a pixel to an index value
@@ -46,50 +47,35 @@ import java.util.Map;
  * @param <T>
  * @param <N>
  */
-public class LabelingMapping< T extends Comparable< T >, N extends Number >
+public class LabelingMapping< T extends Comparable< T >>
 {
-	Constructor< N > constructor;
-
-	N instance;
-
 	final List< T > theEmptyList;
 
-	@SuppressWarnings( "unchecked" )
-	public LabelingMapping( final N srcInstance )
+	private final int maxNumLabels;
+
+	public LabelingMapping( final IntegerType< ? > value )
 	{
-		instance = srcInstance;
-		final Class< ? extends Number > c = srcInstance.getClass();
-		try
-		{
-			constructor = ( Constructor< N > ) c.getConstructor( new Class[] { String.class } );
-		}
-		catch ( final SecurityException e )
-		{
-			e.printStackTrace();
-			throw new AssertionError( e.getMessage() );
-		}
-		catch ( final NoSuchMethodException e )
-		{
-			e.printStackTrace();
-			throw new AssertionError( "Number class cannot be constructed from a string" );
-		}
+		maxNumLabels = ( int ) value.getMaxValue();
+
 		final List< T > background = Collections.emptyList();
 		theEmptyList = intern( background );
 	}
 
-	private static class InternedList< T1 extends Comparable< T1 >, N extends Number > implements List< T1 >
+	private static class InternedList< T1 extends Comparable< T1 >> implements List< T1 >
 	{
 		private final List< T1 > value;
 
-		final N index;
+		final int index;
 
-		final LabelingMapping< T1, N > owner;
+		final LabelingMapping< T1 > owner;
 
-		public InternedList( final List< T1 > src, final N index, final LabelingMapping< T1, N > owner )
+		// final LabelingMapping<L1> owner;
+
+		public InternedList( final List< T1 > src, final int index, final LabelingMapping< T1 > owner )
 		{
-			value = Collections.unmodifiableList( src );
-			this.index = index;
 			this.owner = owner;
+			this.value = Collections.unmodifiableList( src );
+			this.index = index;
 		}
 
 		@Override
@@ -147,9 +133,9 @@ public class LabelingMapping< T extends Comparable< T >, N extends Number >
 		}
 
 		@Override
-		public boolean addAll( final int i, final Collection< ? extends T1 > c )
+		public boolean addAll( final int index, final Collection< ? extends T1 > c )
 		{
-			return value.addAll( i, c );
+			return value.addAll( index, c );
 		}
 
 		@Override
@@ -171,9 +157,9 @@ public class LabelingMapping< T extends Comparable< T >, N extends Number >
 		}
 
 		@Override
-		public T1 get( final int i )
+		public T1 get( final int index )
 		{
-			return value.get( i );
+			return value.get( index );
 		}
 
 		@Override
@@ -183,15 +169,15 @@ public class LabelingMapping< T extends Comparable< T >, N extends Number >
 		}
 
 		@Override
-		public void add( final int i, final T1 element )
+		public void add( final int index, final T1 element )
 		{
-			value.add( i, element );
+			value.add( index, element );
 		}
 
 		@Override
-		public T1 remove( final int i )
+		public T1 remove( final int index )
 		{
-			return value.remove( i );
+			return value.remove( index );
 		}
 
 		@Override
@@ -213,9 +199,9 @@ public class LabelingMapping< T extends Comparable< T >, N extends Number >
 		}
 
 		@Override
-		public ListIterator< T1 > listIterator( final int i )
+		public ListIterator< T1 > listIterator( final int index )
 		{
-			return value.listIterator( i );
+			return value.listIterator( index );
 		}
 
 		@Override
@@ -252,16 +238,17 @@ public class LabelingMapping< T extends Comparable< T >, N extends Number >
 			if ( obj instanceof InternedList )
 			{
 				@SuppressWarnings( "rawtypes" )
-				final InternedList iobj = ( InternedList ) obj;
+				final
+				InternedList iobj = ( InternedList ) obj;
 				return value.equals( iobj.value );
 			}
 			return value.equals( obj );
 		}
 	}
 
-	protected Map< List< T >, InternedList< T, N >> internedLists = new HashMap< List< T >, InternedList< T, N >>();
+	protected Map< List< T >, InternedList< T >> internedLists = new HashMap< List< T >, InternedList< T >>();
 
-	protected ArrayList< InternedList< T, N >> listsByIndex = new ArrayList< InternedList< T, N >>();
+	protected List< InternedList< T >> listsByIndex = new ArrayList< InternedList< T >>();
 
 	public List< T > emptyList()
 	{
@@ -279,52 +266,38 @@ public class LabelingMapping< T extends Comparable< T >, N extends Number >
 		return internImpl( src );
 	}
 
-	@SuppressWarnings( "unchecked" )
-	private InternedList< T, N > internImpl( final List< T > src )
+	private InternedList< T > internImpl( List< T > src )
 	{
-		InternedList< T, N > interned;
+
+		InternedList< T > interned;
+
 		if ( src instanceof InternedList )
 		{
-			interned = ( InternedList< T, N > ) src;
-			if ( interned.owner == this )
-				return interned;
+			interned = ( InternedList< T > ) src;
+			if ( interned.owner == this ) { return interned; }
 		}
-		final List< T > copy = new ArrayList< T >( src );
-		Collections.sort( copy );
-		interned = internedLists.get( copy );
+		else
+		{
+			final List< T > copy = new ArrayList< T >( src );
+			Collections.sort( copy );
+			src = copy;
+		}
+
+		interned = internedLists.get( src );
+
 		if ( interned == null )
 		{
 			final int intIndex = listsByIndex.size();
-			N index;
-			try
-			{
-				index = constructor.newInstance( Integer.toString( intIndex ) );
-			}
-			catch ( final IllegalArgumentException e )
-			{
-				e.printStackTrace();
-				throw new AssertionError( e.getMessage() );
-			}
-			catch ( final InstantiationException e )
-			{
-				e.printStackTrace();
-				throw new AssertionError( e.getMessage() );
-			}
-			catch ( final IllegalAccessException e )
-			{
-				e.printStackTrace();
-				throw new AssertionError( e.getMessage() );
-			}
-			catch ( final InvocationTargetException e )
-			{
-				e.printStackTrace();
-				if ( e.getTargetException() instanceof NumberFormatException ) { throw new AssertionError( String.format( "Too many labels (or types of multiply-labeled pixels): %d maximum", intIndex ) ); }
-				throw new AssertionError( e.getMessage() );
-			}
-			interned = new InternedList< T, N >( copy, index, this );
+
+			if ( intIndex >= maxNumLabels )
+				throw new AssertionError( String.format( "Too many labels (or types of multiply-labeled pixels): %d maximum", intIndex ) );
+
+			interned = new InternedList< T >( src, intIndex, this );
 			listsByIndex.add( interned );
-			internedLists.put( interned, interned );
+			internedLists.put( src, interned );
+
 		}
+
 		return interned;
 	}
 
@@ -333,20 +306,30 @@ public class LabelingMapping< T extends Comparable< T >, N extends Number >
 		return intern( Arrays.asList( src ) );
 	}
 
-	public N indexOf( final List< T > key )
+	public int indexOf( final List< T > key )
 	{
-		final InternedList< T, N > interned = internImpl( key );
+		final InternedList< T > interned = internImpl( key );
 		return interned.index;
 	}
 
-	public N indexOf( final T[] key )
+	public int indexOf( final T[] key )
 	{
 		return indexOf( intern( key ) );
 	}
 
-	public List< T > listAtIndex( final int index )
+	public final List< T > listAtIndex( final int index )
 	{
 		return listsByIndex.get( index );
+	}
+
+	/**
+	 * Returns the number of indexed labeling lists
+	 *
+	 * @return
+	 */
+	public int numLists()
+	{
+		return listsByIndex.size();
 	}
 
 	/**
@@ -355,9 +338,9 @@ public class LabelingMapping< T extends Comparable< T >, N extends Number >
 	public List< T > getLabels()
 	{
 		final HashSet< T > result = new HashSet< T >();
-		for ( final InternedList< T, N > inst : listsByIndex )
+		for ( final InternedList< T > instance : listsByIndex )
 		{
-			for ( final T label : inst )
+			for ( final T label : instance )
 			{
 				result.add( label );
 			}

@@ -13,6 +13,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @author Lee Kamentsky
+ * @modified Christian Dietz, Martin Horn
  *
  */
 package net.imglib2.labeling;
@@ -21,11 +22,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.IntAccess;
-import net.imglib2.img.basictypeaccess.array.IntArray;
-import net.imglib2.type.AbstractNativeType;
+import net.imglib2.type.Type;
+import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.numeric.integer.IntType;
 
 /**
  * The LabelingType represents a labeling of a pixel with zero or more labelings
@@ -35,17 +34,13 @@ import net.imglib2.type.AbstractNativeType;
  *            the desired type of the pixel labels, for instance Integer to
  *            number objects or String for user-assigned label names
  */
-public class LabelingType< T extends Comparable< T >> extends AbstractNativeType< LabelingType< T >>
+public class LabelingType< T extends Comparable< T >> implements Type< LabelingType< T >>
 {
 	final protected long[] generation;
 
-	// the NativeContainer
-	final NativeLabeling< T, ? extends IntAccess > storage;
+	protected final LabelingMapping< T > mapping;
 
-	// the (sub)NativeContainer that holds the information
-	IntAccess b = null;
-
-	protected final LabelingMapping< T, Integer > mapping;
+	protected final IntegerType< ? > type;
 
 	/**
 	 * Constructor for mirroring state with another labeling
@@ -54,29 +49,30 @@ public class LabelingType< T extends Comparable< T >> extends AbstractNativeType
 	 * @param mapping
 	 * @param generation
 	 */
-	protected LabelingType( final NativeLabeling< T, ? extends IntAccess > storage, final LabelingMapping< T, Integer > mapping, final long[] generation )
+	protected LabelingType( final IntegerType< ? > type, final LabelingMapping< T > mapping, final long[] generation )
 	{
-		this.storage = storage;
+		this.type = type;
 		this.mapping = mapping;
 		this.generation = generation;
 	}
 
 	// this is the constructor if you want it to read from an array
-	public LabelingType( final NativeLabeling< T, ? extends IntAccess > storage )
+	public LabelingType( final IntegerType< ? > type, final LabelingMapping< T > mapping )
 	{
-		this.storage = storage;
-		mapping = storage.getMapping();
+		this.type = type;
+		this.mapping = mapping;
 		generation = new long[ 1 ];
 	}
 
 	// this is the constructor if you want it to be a variable
 	public LabelingType( final List< T > value )
 	{
-		storage = null;
-		b = new IntArray( 1 );
-		mapping = new LabelingMapping< T, Integer >( new Integer( 0 ) );
+
+		mapping = new LabelingMapping< T >( new IntType() );
 		generation = new long[ 1 ];
-		this.setLabeling( value );
+
+		this.type = new IntType();
+		setLabeling( value );
 	}
 
 	@SuppressWarnings( "unchecked" )
@@ -96,9 +92,9 @@ public class LabelingType< T extends Comparable< T >> extends AbstractNativeType
 	 *
 	 * @return a list of the labelings at the current location.
 	 */
-	public List< T > getLabeling()
+	public final List< T > getLabeling()
 	{
-		return mapping.listAtIndex( b.getValue( i ) );
+		return mapping.listAtIndex( type.getInteger() );
 	}
 
 	/**
@@ -108,8 +104,11 @@ public class LabelingType< T extends Comparable< T >> extends AbstractNativeType
 	 */
 	public void setLabeling( final List< T > labeling )
 	{
-		b.setValue( i, mapping.indexOf( labeling ) );
-		generation[ 0 ]++;
+		this.type.setInteger( mapping.indexOf( labeling ) );
+		synchronized ( generation )
+		{
+			generation[ 0 ]++;
+		}
 	}
 
 	public void setLabeling( final T[] labeling )
@@ -158,17 +157,10 @@ public class LabelingType< T extends Comparable< T >> extends AbstractNativeType
 		return intern( labeling );
 	}
 
-	@Override
-	public int getEntitiesPerPixel()
-	{
-		return 1;
-	}
-
-	@Override
-	public void updateContainer( final Object o )
-	{
-		b = storage.update( o );
-	}
+	// @Override
+	// public void updateContainer(Object o) {
+	// b = storage.update(o);
+	// }
 
 	@Override
 	public LabelingType< T > createVariable()
@@ -218,30 +210,9 @@ public class LabelingType< T extends Comparable< T >> extends AbstractNativeType
 		return generation[ 0 ];
 	}
 
-	@Override
-	public NativeImg< LabelingType< T >, ? > createSuitableNativeImg( final NativeImgFactory< LabelingType< T >> storageFactory, final long[] dim )
-	{
-		final NativeImg< LabelingType< T >, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
-
-		if ( !( container instanceof NativeLabeling ) ) { throw new UnsupportedOperationException( "The factory did not return a NativeLabeling, it returned a " + container.getClass().getName() ); }
-		// create a Type that is linked to the container
-		final LabelingType< T > linkedType = new LabelingType< T >( ( NativeLabeling< T, ? extends IntAccess > ) container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
-	public LabelingType< T > duplicateTypeOnSameNativeImg()
-	{
-		final LabelingType< T > t = new LabelingType< T >( storage, mapping, generation );
-		return t;
-	}
-
-	public LabelingMapping< T, Integer > getMapping()
+	public LabelingMapping< T > getMapping()
 	{
 		return mapping;
 	}
+
 }

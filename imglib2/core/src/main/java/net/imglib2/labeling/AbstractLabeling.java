@@ -13,13 +13,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @author Lee Kamentsky
+ * @modified Christian Dietz, Martin Horn
  *
  */
 package net.imglib2.labeling;
 
 import java.util.Collection;
 
-import net.imglib2.IterableRealInterval;
+import net.imglib2.AbstractInterval;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.roi.IterableRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
@@ -35,15 +36,24 @@ import net.imglib2.roi.RegionOfInterest;
  *            user-assigned object labels or integers for machine-labeled
  *            images.
  */
-public abstract class AbstractLabeling< T extends Comparable< T >> extends AbstractImg< LabelingType< T >> implements Labeling< T >
+public abstract class AbstractLabeling< T extends Comparable< T >> extends AbstractInterval implements Labeling< T >
 {
 
 	protected LabelingROIStrategy< T, ? extends Labeling< T >> strategy;
 
+	protected long size;
+
 	protected AbstractLabeling( final long[] size, final LabelingROIStrategyFactory< T > factory )
 	{
 		super( size );
+		this.size = AbstractImg.numElements( size );
 		this.strategy = factory.createLabelingROIStrategy( this );
+	}
+
+	@Override
+	public long size()
+	{
+		return size;
 	}
 
 	/**
@@ -57,17 +67,14 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 		this.strategy = strategy;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see net.imglib2.IterableRealInterval#equalIterationOrder(net.imglib2.
-	 * IterableRealInterval)
-	 */
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return false;
-	}
+	// /* (non-Javadoc)
+	// * @see
+	// net.imglib2.IterableRealInterval#equalIterationOrder(net.imglib2.IterableRealInterval)
+	// */
+	// @Override
+	// public boolean equalIterationOrder(IterableRealInterval<?> f) {
+	// return false;
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -145,4 +152,5 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 	{
 		return strategy.getLabels();
 	}
+
 }

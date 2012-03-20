@@ -12,12 +12,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingOutOfBoundsRandomAccessFactory;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.labeling.NativeImgLabeling;
 import net.imglib2.outofbounds.OutOfBounds;
+import net.imglib2.type.numeric.integer.IntType;
 
 import org.junit.Test;
 
@@ -30,10 +31,8 @@ public class LabelingOutOfBoundsTest
 
 	private < T extends Comparable< T >> OutOfBounds< LabelingType< T >> makeOOB( final long[] dimensions, final long[][] coordinates, final List< T > values )
 	{
-		final ArrayImgFactory< LabelingType< T >> factory = new ArrayImgFactory< LabelingType< T >>();
-		final NativeImgLabeling< T > labeling = new NativeImgLabeling< T >( dimensions, factory );
-		labeling.setLinkedType( new LabelingType< T >( labeling ) );
-		final LabelingOutOfBoundsRandomAccessFactory< T, Img< LabelingType< T >>> oobFactory = new LabelingOutOfBoundsRandomAccessFactory< T, Img< LabelingType< T >>>();
+		final Labeling< T > labeling = new NativeImgLabeling< T, IntType >( new ArrayImgFactory< IntType >().create( dimensions, new IntType() ) );
+		final LabelingOutOfBoundsRandomAccessFactory< T, Labeling< T >> oobFactory = new LabelingOutOfBoundsRandomAccessFactory< T, Labeling< T >>();
 		final OutOfBounds< LabelingType< T >> result = oobFactory.create( labeling );
 		final RandomAccess< LabelingType< T >> ra = labeling.randomAccess();
 		for ( int i = 0; i < coordinates.length; i++ )

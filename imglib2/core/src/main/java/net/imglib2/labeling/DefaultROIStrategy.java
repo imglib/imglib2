@@ -98,7 +98,7 @@ public class DefaultROIStrategy< T extends Comparable< T >, L extends Labeling< 
 	/**
 	 * Compute all statistics on the labels if cache is dirty.
 	 */
-	protected void computeStatistics()
+	protected synchronized void computeStatistics()
 	{
 		LabelingType< T > type = labeling.firstElement();
 		if ( ( type == null ) || ( type.getGeneration() != generation ) )
@@ -112,6 +112,7 @@ public class DefaultROIStrategy< T extends Comparable< T >, L extends Labeling< 
 			{
 				type = c.next();
 				c.localize( position );
+
 				for ( final T label : type.getLabeling() )
 				{
 					if ( ( last == null ) || ( !label.equals( lastLabel ) ) )
@@ -127,6 +128,7 @@ public class DefaultROIStrategy< T extends Comparable< T >, L extends Labeling< 
 					last.update( position );
 				}
 			}
+
 			generation = type.getGeneration();
 		}
 	}
@@ -144,11 +146,8 @@ public class DefaultROIStrategy< T extends Comparable< T >, L extends Labeling< 
 				Arrays.fill( maxExtents, 0 );
 			return false;
 		}
-		else
-		{
-			stats.getExtents( minExtents, maxExtents );
-			return true;
-		}
+		stats.getExtents( minExtents, maxExtents );
+		return true;
 	}
 
 	@Override
@@ -161,11 +160,8 @@ public class DefaultROIStrategy< T extends Comparable< T >, L extends Labeling< 
 			Arrays.fill( start, 0 );
 			return false;
 		}
-		else
-		{
-			stats.getRasterStart( start );
-			return true;
-		}
+		stats.getRasterStart( start );
+		return true;
 	}
 
 	@Override

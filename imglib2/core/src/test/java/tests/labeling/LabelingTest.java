@@ -33,12 +33,10 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.labeling.DefaultROIStrategyFactory;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.labeling.NativeImgLabeling;
-import net.imglib2.labeling.NativeLabeling;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -49,10 +47,7 @@ public class LabelingTest
 {
 	protected < T extends Comparable< T >> Labeling< T > makeLabeling( final T exemplar, final long[] dimensions )
 	{
-		NativeLabeling< T, IntAccess > labeling;
-		labeling = new NativeImgLabeling< T >( dimensions, new ArrayImgFactory< LabelingType< T >>() );
-		final LabelingType< T > type = new LabelingType< T >( labeling );
-		labeling.setLinkedType( type );
+		final Labeling< T > labeling = new NativeImgLabeling< T, IntType >( new ArrayImgFactory< IntType >().create( dimensions, new IntType() ) );
 		return labeling;
 	}
 
@@ -103,8 +98,7 @@ public class LabelingTest
 	public void testDefaultConstructor()
 	{
 		final long[] dimensions = { 5, 6, 7 };
-		Labeling< String > labeling;
-		labeling = new NativeImgLabeling< String >( dimensions, new ArrayImgFactory< LabelingType< String >>() );
+		final Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new ArrayImgFactory< IntType >().create( dimensions, new IntType() ) );
 		assertEquals( 3, labeling.numDimensions() );
 	}
 
@@ -112,8 +106,9 @@ public class LabelingTest
 	public void testFactoryConstructor()
 	{
 		final long[] dimensions = { 5, 6, 7 };
-		Labeling< String > labeling;
-		labeling = new NativeImgLabeling< String >( dimensions, new DefaultROIStrategyFactory< String >(), new ArrayImgFactory< LabelingType< String >>() );
+
+		final Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new DefaultROIStrategyFactory< String >(), new ArrayImgFactory< IntType >().create( dimensions, new IntType() ) );
+
 		assertEquals( 3, labeling.numDimensions() );
 	}
 
@@ -425,7 +420,7 @@ public class LabelingTest
 		{
 			t.setLabel( r.nextInt( 10 ) + 1 );
 		}
-		final Img< LabelingType< Integer >> copy = labeling.copy();
+		final Labeling< Integer > copy = labeling.copy();
 		final Cursor< LabelingType< Integer >> c = copy.cursor();
 		final RandomAccess< LabelingType< Integer >> ra = labeling.randomAccess();
 		while ( c.hasNext() )

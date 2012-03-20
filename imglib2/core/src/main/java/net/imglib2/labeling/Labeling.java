@@ -13,13 +13,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @author Lee Kamentsky
+ * @modified Christian Dietz, Martin Horn
  *
  */
 package net.imglib2.labeling;
 
 import java.util.Collection;
 
-import net.imglib2.img.Img;
+import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.roi.IterableRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
 
@@ -30,7 +32,7 @@ import net.imglib2.roi.RegionOfInterest;
  *         labeled objects in addition to image-like methods to discover the
  *         labels at given pixels.
  */
-public interface Labeling< T extends Comparable< T >> extends Img< LabelingType< T >>
+public interface Labeling< T extends Comparable< T >> extends RandomAccessibleInterval< LabelingType< T >>, IterableInterval< LabelingType< T >>
 {
 	/**
 	 * find the coordinates of the bounding box around the given label. The the
@@ -85,4 +87,19 @@ public interface Labeling< T extends Comparable< T >> extends Img< LabelingType<
 	 * @return
 	 */
 	public IterableRegionOfInterest getIterableRegionOfInterest( T label );
+
+	/**
+	 * Copy method
+	 *
+	 * @return copy of the labeling
+	 */
+	public Labeling< T > copy();
+
+	/**
+	 * Factory
+	 *
+	 * @return create new labeling
+	 */
+	public < LL extends Comparable< LL >> LabelingFactory< LL > factory();
+
 }
