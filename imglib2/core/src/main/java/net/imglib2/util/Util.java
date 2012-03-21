@@ -24,6 +24,9 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.RealRandomAccessibleRealInterval;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ExponentialMathType;
 
@@ -641,6 +644,23 @@ public class Util
 		return out;
 	}
 
+	public static String printCoordinates( final double[] value )
+	{
+		String out = "(Array empty)";
+
+		if ( value == null || value.length == 0 )
+			return out;
+		else
+			out = "(" + value[0];
+
+		for ( int i = 1; i < value.length; i++ )
+			out += ", " + value[ i ];
+
+		out += ")";
+
+		return out;
+	}
+
 	public static String printCoordinates( final Localizable localizable )
 	{
 		String out = "(Localizable empty)";
@@ -1040,5 +1060,41 @@ public class Util
 			return getTypeFromInterval( (RandomAccessibleInterval<T>)ra );
 		else
 			return ra.randomAccess().get();
+	}
+
+	/**
+	 * Gets an instance of T from the {@link RandomAccessibleInterval} by querying the value at the min coordinate
+	 * 
+	 * @param <T> - the T
+	 * @param rai - the {@link RandomAccessibleInterval}
+	 * @return - an instance of T
+	 */
+	final public static <T, F extends RealInterval & RealRandomAccessible< T >> T getTypeFromRealInterval( final F rai )
+	{
+		// create RealRandomAccess
+		final RealRandomAccess< T > realRandomAccess = rai.realRandomAccess();
+		
+		// place it at the first pixel
+		for ( int d = 0; d < rai.numDimensions(); ++d )
+			realRandomAccess.setPosition( rai.realMin( d ), d );
+		
+		return realRandomAccess.get();
+	}
+
+	/**
+	 * Gets an instance of T from the {@link RealRandomAccessible}
+	 * 
+	 * @param <T> - the T
+	 * @param rai - the {@link RealRandomAccessible}
+	 * @return - an instance of T
+	 */
+	final public static <T> T getTypeFromRealRandomAccess( final RealRandomAccessible<T> ra )
+	{
+		// test that it is not an interval, because in this case a simple get()
+		// at the position of creation will fail
+		if ( RealRandomAccessibleRealInterval.class.isInstance( ra ) )
+			return getTypeFromRealInterval( (RealRandomAccessibleRealInterval<T>)ra );
+		else
+			return ra.realRandomAccess().get();
 	}
 }
