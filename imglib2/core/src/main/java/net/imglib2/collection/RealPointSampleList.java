@@ -153,7 +153,9 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 	protected int lastIndex = -1;
 	final protected double[] min, max;
 	
-	
+	/**
+	 * @param n - number of dimensions
+	 */
 	public RealPointSampleList( final int n )
 	{
 		this.n = n;
