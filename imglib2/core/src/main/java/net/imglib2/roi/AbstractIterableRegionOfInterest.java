@@ -120,11 +120,9 @@ public abstract class AbstractIterableRegionOfInterest extends
 	protected class AROIIterableInterval <T extends Type<T>> implements IterableInterval<T> {
 		protected RandomAccessible<T> src;
 		protected T cached_first_element;
-		private final AROIIterationOrder iterationOrder;
 
 		public AROIIterableInterval(final RandomAccessible<T> src) {
 			this.src = src;
-			this.iterationOrder = new AROIIterationOrder();
 		}
 		protected class AROICursor implements Cursor<T> {
 			private RandomAccess<T> randomAccess = AROIIterableInterval.this.src.randomAccess();
@@ -305,7 +303,7 @@ public abstract class AbstractIterableRegionOfInterest extends
 		@Override
 		public Object iterationOrder()
 		{
-			return iterationOrder;
+			return new AROIIterationOrder();
 		}
 
 		@Override

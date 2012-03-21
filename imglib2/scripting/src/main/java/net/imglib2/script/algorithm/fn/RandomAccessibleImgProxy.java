@@ -20,7 +20,6 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 
 	protected final RAI rai;
 	protected final long[] dims;
-	private final FlatIterationOrder iterationOrder;
 
 	/** Wrap the {@param ra} in this {@link Img},
 	 * which is then able to iterate over the domain from 0 to {@param dims}.
@@ -31,7 +30,6 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 	public RandomAccessibleImgProxy(final RAI rai, final long[] dims) {
 		this.rai = rai;
 		this.dims = dims;
-		this.iterationOrder = new FlatIterationOrder( this );
 	}
 	
 	public RAI getRandomAccessible() {
@@ -169,7 +167,7 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 	@Override
 	public Object iterationOrder()
 	{
-		return iterationOrder;
+		return new FlatIterationOrder( this );
 	}
 
 	@Override

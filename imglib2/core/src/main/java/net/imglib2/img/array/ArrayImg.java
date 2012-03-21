@@ -29,7 +29,6 @@ package net.imglib2.img.array;
 
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
-import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.basictypeaccess.DataAccess;
@@ -55,8 +54,6 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 	// the DataAccess created by the ArrayContainerFactory
 	final private A data;
 
-	final private FlatIterationOrder iterationOrder;
-
 	/**
 	 * TODO check for the size of numPixels being < Integer.MAX_VALUE?
 	 * TODO Type is suddenly not necessary anymore
@@ -76,7 +73,6 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 		this.steps = new int[ n ];
 		IntervalIndexer.createAllocationSteps( this.dim, this.steps );
 		this.data = data;
-		this.iterationOrder = new FlatIterationOrder( this );
 	}
 
 	@Override
@@ -100,13 +96,7 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 	@Override
 	public Object iterationOrder()
 	{
-		return iterationOrder;
-	}
-
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
+		return new FlatIterationOrder( this );
 	}
 
 	@Override
