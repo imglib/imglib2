@@ -33,8 +33,6 @@ import java.io.IOException;
 import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.IFormatReader;
-
-import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -144,12 +142,6 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>>
 	{
 		// TODO maybe support. For now, for simplicity, don't support
 		return this; // iteration order is only compatible with ourselves
-	}
-
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

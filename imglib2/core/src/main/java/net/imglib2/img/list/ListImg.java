@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.imglib2.FlatIterationOrder;
-import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.Img;
 import net.imglib2.type.Type;
@@ -63,8 +62,6 @@ public class ListImg< T > extends AbstractImg< T >
 
 	final ArrayList< T > pixels;
 
-	final private FlatIterationOrder iterationOrder;
-
 	protected ListImg( final long[] dim, final T type )
 	{
 		super( dim );
@@ -91,8 +88,6 @@ public class ListImg< T > extends AbstractImg< T >
 			for ( int i = 0; i < this.numPixels; ++i )
 				pixels.add( null );
 		}
-
-		this.iterationOrder = new FlatIterationOrder( this );
 	}
 
 	public ListImg( final Collection< T > collection, final long[] dim )
@@ -109,8 +104,6 @@ public class ListImg< T > extends AbstractImg< T >
 
 		this.pixels = new ArrayList< T >( ( int ) numPixels );
 		this.pixels.addAll( collection );
-
-		this.iterationOrder = new FlatIterationOrder( this );
 	}
 
 	@Override
@@ -140,13 +133,7 @@ public class ListImg< T > extends AbstractImg< T >
 	@Override
 	public Object iterationOrder()
 	{
-		return iterationOrder;
-	}
-
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
+		return new FlatIterationOrder( this );
 	}
 
 	private static < A extends Type< A > > ListImg< A > copyWithType( final ListImg< A > img )

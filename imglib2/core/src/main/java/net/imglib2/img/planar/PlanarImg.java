@@ -30,7 +30,6 @@ package net.imglib2.img.planar;
 import java.util.ArrayList;
 
 import net.imglib2.FlatIterationOrder;
-import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
@@ -65,8 +64,6 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	final protected int[] sliceSteps;
 
 	final protected ArrayList< A > mirror;
-
-	final private FlatIterationOrder iterationOrder;
 
 	public PlanarImg( final long[] dim, final int entitiesPerPixel )
 	{
@@ -115,8 +112,6 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 			for ( int i = 0; i < numSlices; ++i )
 				mirror.add( creator.createArray( entitiesPerSlice ) );
 		}
-
-		this.iterationOrder = new FlatIterationOrder( this );
 	}
 
 	/**
@@ -246,13 +241,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	@Override
 	public Object iterationOrder()
 	{
-		return iterationOrder;
-	}
-
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
+		return new FlatIterationOrder( this );
 	}
 
 	@Override

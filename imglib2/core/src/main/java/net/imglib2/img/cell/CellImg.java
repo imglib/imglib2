@@ -1,6 +1,5 @@
 package net.imglib2.img.cell;
 
-import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
@@ -31,8 +30,6 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	 */
 	final int[] cellDims;
 
-	final private CellIterationOrder iterationOrder;
-
 	private static long[] getDimensionsFromCells( final Cells< ?, ? > cells )
 	{
 		final long[] dim = new long[ cells.numDimensions() ];
@@ -48,7 +45,6 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 		this.cells = cells;
 		cellDims = new int[ cells.numDimensions() ];
 		cells.cellDimensions( cellDims );
-		iterationOrder = new CellIterationOrder( this );
 	}
 
 	/**
@@ -111,13 +107,7 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	@Override
 	public Object iterationOrder()
 	{
-		return iterationOrder;
-	}
-
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
+		return new CellIterationOrder( this );
 	}
 
 	@Override

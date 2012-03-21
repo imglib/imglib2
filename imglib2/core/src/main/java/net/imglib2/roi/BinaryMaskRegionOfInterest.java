@@ -79,8 +79,6 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 	protected class BMROIIterableInterval<TT extends Type<TT>> implements IterableInterval<TT> {
 		final RandomAccess<TT> src;
 
-		final private BMROIIterationOrder iterationOrder;
-
 		/**
 		 * @author leek
 		 * 
@@ -165,7 +163,6 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 		}
 		protected BMROIIterableInterval(final RandomAccess<TT> src) {
 			this.src = src;
-			this.iterationOrder = new BMROIIterationOrder();
 		}
 
 		@Override
@@ -182,7 +179,7 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 		@Override
 		public Object iterationOrder()
 		{
-			return iterationOrder;
+			return new BMROIIterationOrder();
 		}
 
 		@Override

@@ -223,8 +223,6 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 
 	final protected IterableInterval< T > interval;
 
-	final private IISIterationOrder iterationOrder;
-
 	/**
 	 * Make sure that size and last index are dictated by the parent
 	 * {@link IterableInterval} or the {@link IterableIntervalSubset},
@@ -240,7 +238,6 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 		this.size = Math.min( size, interval.size() - firstIndex );
 		lastIndex = firstIndex + this.size - 1;
 		this.interval = interval;
-		this.iterationOrder = new IISIterationOrder();
 	}
 
 	@Override
@@ -262,7 +259,7 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 	@Override
 	public Object iterationOrder()
 	{
-		return iterationOrder;
+		return new IISIterationOrder();
 	}
 
 	@Override
