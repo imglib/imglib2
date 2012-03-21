@@ -50,7 +50,6 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 {
 	final protected RandomAccessibleInterval< T > interval;
 	final long size;
-	final private FlatIterationOrder iterationOrder;
 
 	public static < T > IterableRandomAccessibleInterval< T > create( final RandomAccessibleInterval< T > interval )
 	{
@@ -65,7 +64,6 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 		for ( int d = 1; d < n; ++d )
 			s *= interval.dimension( d );
 		size = s;
-		iterationOrder = new FlatIterationOrder( interval );
 	}
 
 	@Override
@@ -83,9 +81,9 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 	}
 
 	@Override
-	public Object iterationOrder()
+	public FlatIterationOrder iterationOrder()
 	{
-		return iterationOrder;
+		return new FlatIterationOrder( interval );
 	}
 
 	@Override
