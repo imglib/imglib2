@@ -40,6 +40,8 @@ import net.imglib2.type.numeric.ComplexType;
 public final class ComplexPolarNear<T extends ComplexType<T>,U extends ComplexType<U>>
 	implements BinaryRelation<T,U>
 {
+	private static final double TWO_PI = 2 * Math.PI;
+	
 	private final double rTol;
 	private final double thetaTol;
 
@@ -58,15 +60,11 @@ public final class ComplexPolarNear<T extends ComplexType<T>,U extends ComplexTy
 		if (Math.abs(val1.getPowerDouble() - val2.getPowerDouble()) > rTol) return false;
 		double theta1 = val1.getPhaseDouble();
 		double theta2 = val2.getPhaseDouble();
+		while ((theta1-theta2) > TWO_PI) theta2 += TWO_PI;
+		while ((theta1-theta2) < -TWO_PI) theta1 += TWO_PI;
+		// now theta1 and theta2 are within 2 pi of each other
 		if (Math.abs(theta1-theta2) <= thetaTol) return true;
-		// angles might be separated by near 2 pi
-		if (theta1 < theta2) {
-			while (theta1 < theta2) theta1 += 2*Math.PI;
-		}
-		else { // theta2 < theta1
-			while (theta2 < theta1) theta2 += 2*Math.PI;
-		}
-		return Math.abs(theta1-theta2) <= thetaTol;
+		return Math.abs(theta1-theta2) > (TWO_PI - thetaTol);
 	}
 
 	@Override
