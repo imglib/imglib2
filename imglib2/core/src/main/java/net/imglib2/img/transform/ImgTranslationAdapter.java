@@ -353,8 +353,15 @@ public class ImgTranslationAdapter<T extends Type< T >, I extends Img<T>> extend
 	}
 
 	@Override
-	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
-		return img.equalIterationOrder(f);
+	public Object iterationOrder()
+	{
+		return img.iterationOrder();
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

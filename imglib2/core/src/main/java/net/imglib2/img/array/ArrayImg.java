@@ -27,12 +27,12 @@
  */
 package net.imglib2.img.array;
 
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.basictypeaccess.DataAccess;
-import net.imglib2.img.list.ListImg;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
 
@@ -55,6 +55,8 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 	// the DataAccess created by the ArrayContainerFactory
 	final private A data;
 
+	final private FlatIterationOrder iterationOrder;
+
 	/**
 	 * TODO check for the size of numPixels being < Integer.MAX_VALUE?
 	 * TODO Type is suddenly not necessary anymore
@@ -74,6 +76,7 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 		this.steps = new int[ n ];
 		IntervalIndexer.createAllocationSteps( this.dim, this.steps );
 		this.data = data;
+		this.iterationOrder = new FlatIterationOrder( this );
 	}
 
 	@Override
@@ -95,22 +98,15 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 	public ArrayRandomAccess< T > randomAccess( final Interval interval ){ return randomAccess(); }
 
 	@Override
+	public Object iterationOrder()
+	{
+		return iterationOrder;
+	}
+
+	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
-		if ( f.numDimensions() != this.numDimensions() )
-			return false;
-
-		if ( getClass().isInstance( f ) || ListImg.class.isInstance( f ) )
-		{
-			final Interval a = ( Interval )f;
-			for ( int d = 0; d < n; ++d )
-				if ( dimension[ d ] != a.dimension( d ) )
-					return false;
-
-			return true;
-		}
-
-		return false;
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

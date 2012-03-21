@@ -29,7 +29,7 @@ package net.imglib2.img.planar;
 
 import java.util.ArrayList;
 
-import net.imglib2.Interval;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.NativeImg;
@@ -65,6 +65,8 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	final protected int[] sliceSteps;
 
 	final protected ArrayList< A > mirror;
+
+	final private FlatIterationOrder iterationOrder;
 
 	public PlanarImg( final long[] dim, final int entitiesPerPixel )
 	{
@@ -113,6 +115,8 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 			for ( int i = 0; i < numSlices; ++i )
 				mirror.add( creator.createArray( entitiesPerSlice ) );
 		}
+
+		this.iterationOrder = new FlatIterationOrder( this );
 	}
 
 	/**
@@ -240,20 +244,15 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	}
 
 	@Override
+	public Object iterationOrder()
+	{
+		return iterationOrder;
+	}
+
+	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
-		if ( f.numDimensions() != this.numDimensions() )
-			return false;
-
-		if ( getClass().isInstance( f ) )
-		{
-			final Interval a = ( Interval )f;
-			for ( int d = 0; d < n; ++d )
-				if ( dimension[ d ] != a.dimension( d ) )
-					return false;
-		}
-
-		return true;
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

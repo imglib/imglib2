@@ -41,8 +41,15 @@ public class ImgProxy<T extends NumericType<T>> implements Img<T> {
 	}
 
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return img.equalIterationOrder(f);
+	public Object iterationOrder()
+	{
+		return img.iterationOrder();
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

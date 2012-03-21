@@ -2,6 +2,7 @@ package net.imglib2.script.img;
 
 import net.imglib2.AbstractCursor;
 import net.imglib2.Cursor;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.exception.IncompatibleTypeException;
@@ -24,10 +25,13 @@ import net.imglib2.script.img.fn.ConstantRandomAccess;
 public class ConstantImg<T> extends AbstractImg<T>
 {
 	protected final T value;
-	
+
+	final private FlatIterationOrder iterationOrder;
+
 	public ConstantImg(final T value, final long[] size) {
 		super(size);
 		this.value = value;
+		this.iterationOrder = new FlatIterationOrder( this );
 	}
 	
 	static protected class ConstantImgFactory<W> extends ImgFactory<W>
@@ -70,7 +74,14 @@ public class ConstantImg<T> extends AbstractImg<T>
 	}
 
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return true; // iteration order does not matter!
+	public Object iterationOrder()
+	{
+		return iterationOrder;
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 }

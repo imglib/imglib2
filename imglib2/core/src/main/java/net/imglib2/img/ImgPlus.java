@@ -225,8 +225,15 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
-		return img.equalIterationOrder(f);
+	public Object iterationOrder()
+	{
+		return img.iterationOrder();
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

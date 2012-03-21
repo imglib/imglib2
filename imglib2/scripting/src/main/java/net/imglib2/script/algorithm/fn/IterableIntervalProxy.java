@@ -32,8 +32,15 @@ public class IterableIntervalProxy<T> implements IterableInterval<T>
 	}
 
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return iti.equalIterationOrder(f);
+	public Object iterationOrder()
+	{
+		return iti.iterationOrder();
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package net.imglib2.script.algorithm.fn;
 import java.util.Iterator;
 
 import net.imglib2.Cursor;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
@@ -11,8 +12,6 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.list.ListImg;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.view.RandomAccessibleIntervalCursor;
 import net.imglib2.view.Views;
@@ -21,7 +20,8 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 
 	protected final RAI rai;
 	protected final long[] dims;
-	
+	private final FlatIterationOrder iterationOrder;
+
 	/** Wrap the {@param ra} in this {@link Img},
 	 * which is then able to iterate over the domain from 0 to {@param dims}.
 	 * 
@@ -165,18 +165,16 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 		return cursor().next();
 	}
 
-	/** Flat iteration order like {@link ArrayImg}. */
 	@Override
-	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
-		if (rai.numDimensions() != f.numDimensions())
-			return false;
-		for (int d=0; d<numDimensions(); ++d)
-			if (dimension(d) != (long)(f.realMax(d) - f.realMin(d) + 1))
-				return false;
-		// Compatible with the flat-iterating images:
-		return getClass().isInstance(f)
-		  || ArrayImg.class.isInstance(f)
-		  || ListImg.class.isInstance(f);
+	public Object iterationOrder()
+	{
+		return iterationOrder;
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

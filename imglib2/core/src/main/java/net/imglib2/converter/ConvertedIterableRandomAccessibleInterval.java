@@ -37,91 +37,91 @@ public class ConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAc
 	}
 
 	@Override
-	public RandomAccess< B > randomAccess( Interval interval )
+	public RandomAccess< B > randomAccess( final Interval interval )
 	{
 		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess( interval ) );
 	}
 
 	@Override
-	public long min( int d )
+	public long min( final int d )
 	{
 		return source.min( d );
 	}
 
 	@Override
-	public void min( long[] min )
+	public void min( final long[] min )
 	{
 		source.min( min );
 	}
 
 	@Override
-	public void min( Positionable min )
+	public void min( final Positionable min )
 	{
 		source.min( min );
 	}
 
 	@Override
-	public long max( int d )
+	public long max( final int d )
 	{
 		return source.max( d );
 	}
 
 	@Override
-	public void max( long[] max )
+	public void max( final long[] max )
 	{
 		source.max( max );
 	}
 
 	@Override
-	public void max( Positionable max )
+	public void max( final Positionable max )
 	{
 		source.max( max );
 	}
 
 	@Override
-	public void dimensions( long[] dimensions )
+	public void dimensions( final long[] dimensions )
 	{
 		source.dimensions( dimensions );
 	}
 
 	@Override
-	public long dimension( int d )
+	public long dimension( final int d )
 	{
 		return source.dimension( d );
 	}
 
 	@Override
-	public double realMin( int d )
+	public double realMin( final int d )
 	{
 		return source.realMin( d );
 	}
 
 	@Override
-	public void realMin( double[] min )
+	public void realMin( final double[] min )
 	{
 		source.realMin( min );
 	}
 
 	@Override
-	public void realMin( RealPositionable min )
+	public void realMin( final RealPositionable min )
 	{
 		source.realMin( min );
 	}
 
 	@Override
-	public double realMax( int d )
+	public double realMax( final int d )
 	{
 		return source.realMax( d );
 	}
 
 	@Override
-	public void realMax( double[] max )
+	public void realMax( final double[] max )
 	{
 		source.realMax( max );
 	}
 
 	@Override
-	public void realMax( RealPositionable max )
+	public void realMax( final RealPositionable max )
 	{
 		source.realMax( max );
 	}
@@ -133,9 +133,15 @@ public class ConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAc
 	}
 
 	@Override
-	public boolean equalIterationOrder( IterableRealInterval< ? > f )
+	public Object iterationOrder()
 	{
-		return source.equalIterationOrder( f );
+		return source.iterationOrder();
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

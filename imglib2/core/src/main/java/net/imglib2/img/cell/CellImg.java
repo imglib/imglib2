@@ -31,6 +31,8 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	 */
 	final int[] cellDims;
 
+	final private CellIterationOrder iterationOrder;
+
 	private static long[] getDimensionsFromCells( final Cells< ?, ? > cells )
 	{
 		final long[] dim = new long[ cells.numDimensions() ];
@@ -46,6 +48,7 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 		this.cells = cells;
 		cellDims = new int[ cells.numDimensions() ];
 		cells.cellDimensions( cellDims );
+		iterationOrder = new CellIterationOrder( this );
 	}
 
 	/**
@@ -105,25 +108,16 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 		return factory;
 	}
 
-	@SuppressWarnings( "unchecked" )
+	@Override
+	public Object iterationOrder()
+	{
+		return iterationOrder;
+	}
+
 	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
-		if ( f.numDimensions() != this.numDimensions() )
-			return false;
-
-		if ( getClass().isInstance( f ) )
-		{
-			final CellImg< T, A, C > other = ( CellImg< T, A, C > ) f;
-
-			for ( int d = 0; d < n; ++d )
-				if ( this.dimension[ d ] != other.dimension[ d ] || this.cellDims[ d ] != other.cellDims[ d ] )
-					return false;
-
-			return true;
-		}
-
-		return false;
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

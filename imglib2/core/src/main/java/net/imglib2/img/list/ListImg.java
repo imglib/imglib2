@@ -30,11 +30,10 @@ package net.imglib2.img.list;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.imglib2.Interval;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImg;
 import net.imglib2.type.Type;
 import net.imglib2.util.IntervalIndexer;
 
@@ -64,6 +63,8 @@ public class ListImg< T > extends AbstractImg< T >
 
 	final ArrayList< T > pixels;
 
+	final private FlatIterationOrder iterationOrder;
+
 	protected ListImg( final long[] dim, final T type )
 	{
 		super( dim );
@@ -90,6 +91,8 @@ public class ListImg< T > extends AbstractImg< T >
 			for ( int i = 0; i < this.numPixels; ++i )
 				pixels.add( null );
 		}
+
+		this.iterationOrder = new FlatIterationOrder( this );
 	}
 
 	public ListImg( final Collection< T > collection, final long[] dim )
@@ -106,6 +109,8 @@ public class ListImg< T > extends AbstractImg< T >
 
 		this.pixels = new ArrayList< T >( ( int ) numPixels );
 		this.pixels.addAll( collection );
+
+		this.iterationOrder = new FlatIterationOrder( this );
 	}
 
 	@Override
@@ -133,22 +138,15 @@ public class ListImg< T > extends AbstractImg< T >
 	}
 
 	@Override
+	public Object iterationOrder()
+	{
+		return iterationOrder;
+	}
+
+	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
-		if ( f.numDimensions() != this.numDimensions() )
-			return false;
-
-		if ( getClass().isInstance( f ) || ArrayImg.class.isInstance( f ) )
-		{
-			final Interval a = ( Interval ) f;
-			for ( int d = 0; d < n; ++d )
-				if ( dimension[ d ] != a.dimension( d ) )
-					return false;
-
-			return true;
-		}
-
-		return false;
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	private static < A extends Type< A > > ListImg< A > copyWithType( final ListImg< A > img )

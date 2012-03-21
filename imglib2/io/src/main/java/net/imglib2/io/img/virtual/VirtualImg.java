@@ -140,9 +140,16 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>>
 	}
 
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
+	public Object iterationOrder()
+	{
 		// TODO maybe support. For now, for simplicity, don't support
-		return false;
+		return this; // iteration order is only compatible with ourselves
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override
