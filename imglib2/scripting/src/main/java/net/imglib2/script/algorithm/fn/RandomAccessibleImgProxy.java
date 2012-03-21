@@ -31,6 +31,7 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 	public RandomAccessibleImgProxy(final RAI rai, final long[] dims) {
 		this.rai = rai;
 		this.dims = dims;
+		this.iterationOrder = new FlatIterationOrder( this );
 	}
 	
 	public RAI getRandomAccessible() {
