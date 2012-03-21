@@ -90,7 +90,24 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * @return the first element in iteration order.
 	 */
 	public T firstElement();
-	
+
+	/**
+	 * Returns the iteration order of this {@link IterableRealInterval}.
+	 * If the returned object equals ({@link Object#equals(Object)}) the iteration order
+	 * of another {@link IterableRealInterval} <em>f</em> then they can be copied by synchronous iteration.
+	 * That is, having
+	 * an {@link Iterator} on this and another {@link Iterator} on <em>f</em>,
+	 * moving both in synchrony will point both of them to corresponding
+	 * locations in their source domain.  In other words, this and <em>f</em>
+	 * have the same iteration order and means and the same number of
+	 * elements.</p>
+	 *
+	 * @see FlatIterationOrder
+	 *
+	 * @return the iteration order of this {@link IterableRealInterval}.
+	 */
+	public Object iterationOrder();
+
 	/**
 	 * <p>Returns <tt>true</tt> if this {@link IterableRealInterval} and
 	 * <em>f</em> can be copied by synchronous iteration.  That is, having
@@ -109,5 +126,6 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * @return <tt>true</tt> if copy by iteration is definitely possible,
 	 *   <tt>false</tt> otherwise
 	 */
+	@Deprecated
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f );
 }

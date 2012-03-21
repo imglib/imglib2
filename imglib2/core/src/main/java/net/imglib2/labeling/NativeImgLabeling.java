@@ -88,6 +88,12 @@ public class NativeImgLabeling<T extends Comparable<T>>
 	}
 
 	@Override
+	public Object iterationOrder()
+	{
+		return img.iterationOrder();
+	}
+
+	@Override
 	public Cursor<LabelingType<T>> cursor() {
 		return img.cursor();
 	}

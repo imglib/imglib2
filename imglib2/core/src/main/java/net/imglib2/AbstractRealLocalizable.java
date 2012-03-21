@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,42 +28,63 @@
 package net.imglib2;
 
 /**
- * An abstract class that implements the {@link RealLocalizable} interface
- * using an array of doubles to maintain position
+ * An abstract class that implements the {@link RealLocalizable} interface using
+ * an array of doubles to maintain position
  *
  * @author Lee Kamentsky
  * @author Stephan Saalfeld
- *
- * @param <T> the type of the sampler
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractRealLocalizableSampler< T > extends AbstractSampler< T > implements RealLocalizable
+public abstract class AbstractRealLocalizable extends AbstractEuclideanSpace implements RealLocalizable
 {
+	/**
+	 * The {@link RealLocalizable} interface is implemented using the position
+	 * stored here. {@link RealPositionable} subclasses, such as {@link RealPoint},
+	 * modify this array.
+	 */
 	protected final double[] position;
 
-	protected AbstractRealLocalizableSampler( final int n )
+	/**
+	 * @param n
+	 *            number of dimensions.
+	 */
+	protected AbstractRealLocalizable( final int n )
 	{
 		super( n );
 		position = new double[ n ];
 	}
 
+	/**
+	 * Protected constructor that re-uses the passed position array. This is
+	 * intended to allow subclasses to provide a way to wrap a double[] array.
+	 *
+	 * @param position
+	 *            position array to use.
+	 */
+	protected AbstractRealLocalizable( final double[] position )
+	{
+		super( position.length );
+		this.position = position;
+	}
+
 	@Override
 	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < numDimensions(); ++d )
-			pos[ d ] = ( float )position[ d ];
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = ( float ) position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < numDimensions(); ++d )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = position[ d ];
 	}
 
 	@Override
 	public float getFloatPosition( final int d )
 	{
-		return ( float )position[ d ];
+		return ( float ) position[ d ];
 	}
 
 	@Override
@@ -71,5 +92,4 @@ public abstract class AbstractRealLocalizableSampler< T > extends AbstractSample
 	{
 		return position[ d ];
 	}
-
 }

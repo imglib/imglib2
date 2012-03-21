@@ -1,191 +1,206 @@
+/**
+ * Copyright (c) 2009--2012, ImgLib2 developers
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.  Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.  Neither the name of the imglib project nor
+ * the names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
 package net.imglib2;
 
 /**
  * A Point is a position in Euclidean space specified in integer coordinates.
  *
  * @author Lee Kamentsky
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class Point implements Localizable, Positionable {
-
-	final protected long[] position;
-	
+public class Point extends AbstractLocalizable implements Positionable
+{
 	/**
 	 * Protected constructor that re-uses the passed position array.
-	 * 
+	 *
 	 * @param position
-	 * @param x unused parameter that changes the method signature
+	 *            array used to store the position.
+	 * @param x
+	 *            unused parameter that changes the method signature
 	 */
 	protected Point( final long[] position, final Object x )
 	{
-		this.position = position;
-	}
-	
-	/**
-	 * Create a point at 0 in <i>nDimensional</i> space.
-	 * @param nDimensions # of dimensions in the space
-	 */
-	public Point( final int nDimensions ) {
-		position = new long [nDimensions];
-	}
-	
-	/**
-	 * Create a point at a definite position
-	 * @param position the initial position. The length of the array determines the dimensionality of the space.
-	 */
-	public Point( final long... position ) {
-		this.position = position.clone();
+		super( position );
 	}
 
 	/**
-	 * Create a point at a definite position
-	 * @param position the initial position. The length of the array determines the dimensionality of the space.
+	 * Create a point in <i>nDimensional</i> space initialized to 0,0,...
+	 *
+	 * @param n
+	 *            number of dimensions of the space
 	 */
-	public Point( final int... position ) {
-		this.position = new long[position.length];
-		for (int i=0; i < position.length; ++i) {
-			this.position[i] = position[i];
-		}
+	public Point( final int n )
+	{
+		super( n );
 	}
-	
+
 	/**
-	 * Create a point using the position of a {@link Localizable}
-	 * @param localizable get position from here
+	 * Create a point at a definite location in a space of the dimensionality of
+	 * the position.
+	 *
+	 * @param position
+	 *            the initial position. The length of the array determines the
+	 *            dimensionality of the space.
 	 */
-	public Point( final Localizable localizable ) {
-		position = new long [localizable.numDimensions()];
-		localizable.localize(position);
-	}
-	
-	@Override
-	public void localize(final float[] pos) {
-		for (int i=0; i < position.length; ++i)
-			pos[i] = position[i]; 
+	public Point( final long... position )
+	{
+		super( position.length );
+		setPosition( position );
 	}
 
-	@Override
-	public void localize(final double[] pos) {
-		for (int i=0; i < position.length; ++i)
-			pos[i] = position[i];
+	/**
+	 * Create a point at a definite location in a space of the dimensionality of
+	 * the position.
+	 *
+	 * @param position
+	 *            the initial position. The length of the array determines the
+	 *            dimensionality of the space.
+	 */
+	public Point( final int... position )
+	{
+		super( position.length );
+		setPosition( position );
 	}
 
-	@Override
-	public float getFloatPosition(final int d) {
-		return position[d];
-	}
-
-	@Override
-	public double getDoublePosition(final int d) {
-		return position[d];
-	}
-
-	@Override
-	public int numDimensions() {
-		return position.length;
-	}
-
-	@Override
-	public void fwd(final int d) {
-		position[d] += 1;
+	/**
+	 * Create a point using the position and dimensionality of a
+	 * {@link Localizable}
+	 *
+	 * @param localizable
+	 *            the initial position. Its dimensionality determines the
+	 *            dimensionality of the space.
+	 */
+	public Point( final Localizable localizable )
+	{
+		super( localizable.numDimensions() );
+		localizable.localize( position );
 	}
 
 	@Override
-	public void bck(final int d) {
-		position[d] -= 1;
-
+	public void fwd( final int d )
+	{
+		++position[ d ];
 	}
 
 	@Override
-	public void move(final int distance, final int d) {
-		position[d] += distance;
+	public void bck( final int d )
+	{
+		--position[ d ];
 	}
 
 	@Override
-	public void move(final long distance, final int d) {
-		position[d] += distance;
+	public void move( final int distance, final int d )
+	{
+		position[ d ] += distance;
 	}
 
 	@Override
-	public void move(final Localizable localizable) {
-		for (int i=0; i < position.length; ++i)
-			position[i] += localizable.getLongPosition(i);
+	public void move( final long distance, final int d )
+	{
+		position[ d ] += distance;
 	}
 
 	@Override
-	public void move(final int[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] += pos[i];
+	public void move( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; d++ )
+			position[ d ] += localizable.getLongPosition( d );
 	}
 
 	@Override
-	public void move(final long[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] += pos[i];
+	public void move( final int[] distance )
+	{
+		for ( int d = 0; d < n; d++ )
+			position[ d ] += distance[ d ];
 	}
 
 	@Override
-	public void setPosition(final Localizable localizable) {
-		for (int i=0; i < position.length; ++i)
-			position[i] = localizable.getLongPosition(i);
+	public void move( final long[] distance )
+	{
+		for ( int d = 0; d < n; d++ )
+			position[ d ] += distance[ d ];
 	}
 
 	@Override
-	public void setPosition(final int[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] = pos[i];
+	public void setPosition( final Localizable localizable )
+	{
+		localizable.localize( position );
 	}
 
 	@Override
-	public void setPosition(final long[] pos) {
-		for (int i=0; i < position.length; ++i)
-			position[i] = pos[i];
+	public void setPosition( final int[] position )
+	{
+		for ( int d = 0; d < n; d++ )
+			this.position[ d ] = position[ d ];
 	}
 
 	@Override
-	public void setPosition(final int pos, final int d) {
-		position[d] = pos;
+	public void setPosition( final long[] position )
+	{
+		for ( int d = 0; d < n; d++ )
+			this.position[ d ] = position[ d ];
 	}
 
 	@Override
-	public void setPosition(final long pos, final int d) {
-		position[d] = pos;
+	public void setPosition( final int position, final int d )
+	{
+		this.position[ d ] = position;
 	}
 
 	@Override
-	public void localize(final int[] pos) {
-		for (int i=0; i < position.length; ++i)
-			pos[i] = (int)(this.position[i]);
+	public void setPosition( final long position, final int d )
+	{
+		this.position[ d ] = position;
 	}
 
 	@Override
-	public void localize(final long[] pos) {
-		for (int i=0; i < position.length; ++i)
-			pos[i] = position[i];
-	}
-
-	@Override
-	public int getIntPosition(final int d) {
-		return (int)(position[d]);
-	}
-
-	@Override
-	public long getLongPosition(final int d) {
-		return position[d];
-	}
-
-	@Override
-	public String toString() {
+	public String toString()
+	{
 		final StringBuilder sb = new StringBuilder();
 		char c = '(';
-		for (int i=0; i<numDimensions(); i++) {
-			sb.append(c);
-			sb.append(position[i]);
+		for ( int i = 0; i < numDimensions(); i++ )
+		{
+			sb.append( c );
+			sb.append( position[ i ] );
 			c = ',';
 		}
-		sb.append(")");
+		sb.append( ")" );
 		return sb.toString();
 	}
-	
-	static public Point wrap( final long[] position )
+
+	/**
+	 * Create a point that stores its coordinates in the provided position
+	 * array.
+	 *
+	 * @param position
+	 *            array to use for storing the position.
+	 */
+	public static Point wrap( final long[] position )
 	{
 		return new Point( position, null );
 	}

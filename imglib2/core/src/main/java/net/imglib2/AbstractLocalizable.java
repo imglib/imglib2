@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,85 +27,95 @@
  */
 package net.imglib2;
 
-import net.imglib2.util.Util;
-
 /**
- * Abstract base class for localizable samplers.
- * The current position is stored in an int[] field and used to
- * implement the {@link Localizable} interface.
- * 
- * <p>
- * This is identical to {@link AbstractLocalizableSampler}, except that
- * the position is limited to {@link Integer#MAX_VALUE} in every dimension.
- *  
- * @param <T>
+ * An abstract class that implements the {@link Localizable} interface using a
+ * long[] array to maintain position.
  *
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Tobias Pietzsch
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractLocalizableSamplerInt< T > extends AbstractSampler< T > implements Localizable
+public abstract class AbstractLocalizable extends AbstractEuclideanSpace implements Localizable
 {
 	/**
 	 * The {@link Localizable} interface is implemented using the position
-	 * stored here. Subclasses use this array to keep track of the position of
-	 * the {@link Sampler}.
+	 * stored here. {@link Positionable} subclasses, such as {@link Point},
+	 * modify this array.
 	 */
-	final protected int[] position;
-	
+	protected final long[] position;
+
 	/**
-	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
+	 * @param n
+	 *            number of dimensions.
 	 */
-	public AbstractLocalizableSamplerInt( final int n )
+	public AbstractLocalizable( final int n )
 	{
 		super( n );
-		
-		position = new int[ n ];
+		position = new long[ n ];
 	}
-	
+
+	/**
+	 * Protected constructor that re-uses the passed position array. This is
+	 * intended to allow subclasses to provide a way to wrap a long[] array.
+	 *
+	 * @param position
+	 *            position array to use.
+	 */
+	protected AbstractLocalizable( final long[] position )
+	{
+		super( position.length );
+		this.position = position;
+	}
+
 	@Override
 	public void localize( final float[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = position[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
+		for ( int d = 0; d < n; ++d )
 			pos[ d ] = position[ d ];
 	}
 
 	@Override
 	public void localize( final int[] pos )
 	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = position[ d ];
+		for ( int d = 0; d < n; ++d )
+			pos[ d ] = ( int ) position[ d ];
 	}
-	
+
 	@Override
 	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < n; d++ )
 			pos[ d ] = position[ d ];
 	}
-	
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-	
-	@Override
-	public int getIntPosition( final int dim ){ return position[ dim ]; }
 
 	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-	
+	public float getFloatPosition( final int d )
+	{
+		return position[ d ];
+	}
+
 	@Override
-	public String toString(){ return Util.printCoordinates( position ) + " = " + get(); }
-	
+	public double getDoublePosition( final int d )
+	{
+		return position[ d ];
+	}
+
 	@Override
-	abstract public AbstractLocalizableSamplerInt< T > copy();
+	public int getIntPosition( final int d )
+	{
+		return ( int ) position[ d ];
+	}
+
+	@Override
+	public long getLongPosition( final int d )
+	{
+		return position[ d ];
+	}
 }

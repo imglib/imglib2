@@ -28,6 +28,7 @@
 package net.imglib2.img.constant;
 
 import net.imglib2.Cursor;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.AbstractImg;
@@ -51,12 +52,16 @@ public class ConstantImg < T extends Type< T > > extends AbstractImg< T >
 	ImgFactory< T > factory;
 	final protected long[] dim;
 
-	public ConstantImg( final long[] size, final T type ) 
+	final private FlatIterationOrder iterationOrder;
+
+	public ConstantImg( final long[] size, final T type )
 	{
 		super( size );
-		
+
 		this.type = type;
 		this.dim = size;
+
+		this.iterationOrder = new FlatIterationOrder( this );
 	}
 
 	@Override
@@ -88,5 +93,14 @@ public class ConstantImg < T extends Type< T > > extends AbstractImg< T >
 	}
 
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) { return false; }
+	public Object iterationOrder()
+	{
+		return iterationOrder;
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
+	}
 }

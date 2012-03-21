@@ -115,9 +115,15 @@ public class ARGBScreenImage implements ScreenImage, IterableInterval< ARGBType 
 	}
 
 	@Override
+	public Object iterationOrder()
+	{
+		return argbArray.iterationOrder();
+	}
+
+	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
-		return argbArray.equalIterationOrder( f );
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

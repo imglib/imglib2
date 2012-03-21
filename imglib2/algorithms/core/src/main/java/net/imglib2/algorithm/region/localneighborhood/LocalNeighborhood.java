@@ -54,7 +54,16 @@ public class LocalNeighborhood< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval<?> f ) { return false; }
+	public Object iterationOrder()
+	{
+		return this; // iteration order is only compatible with ourselves
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
+	}
 
 	@Override
 	public double realMin( final int d ) { return center[ d ] - 1; }

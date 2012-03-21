@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,7 +25,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.image;
 
@@ -37,7 +37,7 @@ import net.imglib2.type.Type;
 /**
  * 
  * @author Christian Dietz
- *
+ * 
  */
 public final class BinaryOperationAssignment<I extends Type<I>, V extends Type<V>, O extends Type<O>>
 		implements
@@ -56,27 +56,26 @@ public final class BinaryOperationAssignment<I extends Type<I>, V extends Type<V
 	 * @return
 	 */
 	@Override
-	public IterableInterval<O> compute(IterableInterval<I> op1,
-			IterableInterval<V> op2, IterableInterval<O> res) {
+	public IterableInterval<O> compute(IterableInterval<I> input1,
+			IterableInterval<V> input2, IterableInterval<O> result) {
 
-		if (!IterationOrderUtil.equalIterationOrder(op1, op2)) {
-			if (!IterationOrderUtil.equalInterval(op1, op2)) {
-				throw new IllegalArgumentException(
-						"Intervals are not compatible!");
-			}
-			Cursor<I> c1 = op1.localizingCursor();
-			Cursor<V> c2 = op2.cursor();
-			Cursor<O> resC = res.cursor();
-			while (c1.hasNext()) {
-				c1.fwd();
-				c2.fwd();
-				resC.fwd();
-				m_op.compute(c1.get(), c2.get(), resC.get());
-			}
-		} else {
-			throw new IllegalArgumentException("Intervals are not compatible!");
+		if (!IterationOrderUtil.equalIterationOrder(input1, input2)
+				|| !IterationOrderUtil.equalInterval(input1, input2)
+				|| !IterationOrderUtil.equalIterationOrder(input1, result)) {
+			throw new IllegalArgumentException("Intervals are not compatible");
 		}
-		return res;
+
+		Cursor<I> c1 = input1.cursor();
+		Cursor<V> c2 = input2.cursor();
+		Cursor<O> resC = result.cursor();
+		while (c1.hasNext()) {
+			c1.fwd();
+			c2.fwd();
+			resC.fwd();
+			m_op.compute(c1.get(), c2.get(), resC.get());
+		}
+
+		return result;
 	}
 
 	@Override

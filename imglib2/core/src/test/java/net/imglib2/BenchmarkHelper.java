@@ -1,10 +1,10 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -24,54 +24,61 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Tobias Pietzsch
  */
 package net.imglib2;
 
-import net.imglib2.img.Img;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
- * Abstract base class for bounded {@link RandomAccess}es.
- * 
- * Extends {@link AbstractRandomAccess} by an implementation of
- * the {@link Bounded} interface.
- * 
- * TODO: Remove? This is not used by anyone currently.
- * 
- * @param <T>
- * 
- * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ *
  */
-public abstract class AbstractBoundedRandomAccess< T > extends AbstractRandomAccess< T > implements Bounded
+public class BenchmarkHelper
 {
-	/**
-	 * Maximum of the {@link Img} in every dimension.
-	 * This is used to check isOutOfBounds().
-	 */
-	final protected long[] max;
-
-	public AbstractBoundedRandomAccess( final Interval f )
+	public static Long median( final ArrayList<Long> values )
 	{
-		super( f.numDimensions() );
+		Collections.sort(values);
 
-		max = new long[ n ];
-		f.max( max );
-	}
+		if (values.size() % 2 == 1)
+			return values.get((values.size() + 1) / 2 - 1);
+		else {
+			final long lower = values.get(values.size() / 2 - 1);
+			final long upper = values.get(values.size() / 2);
 
-	@Override
-	public boolean isOutOfBounds()
-	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final long x = position[ d ];
-			if ( x < 0 || x > max[ d ] )
-				return true;
+			return (lower + upper) / 2;
 		}
-		return false;
 	}
 
-	@Override
-	abstract public AbstractBoundedRandomAccess< T > copy();
+	public interface Benchmark
+	{
+		public void run();
+	}
 
-	@Override
-	abstract public AbstractBoundedRandomAccess< T > copyRandomAccess();
+	public static void benchmark( final Benchmark b )
+	{
+		benchmark( 20, true, b );
+	}
+
+	public static void benchmark( final int numRuns, final boolean printIndividualTimes, final Benchmark b )
+	{
+		final ArrayList<Long> times = new ArrayList<Long>( 100 );
+		for ( int i = 0; i < numRuns; ++i )
+		{
+			final long startTime = System.currentTimeMillis();
+			b.run();
+			final long endTime = System.currentTimeMillis();
+			times.add( endTime - startTime );
+		}
+		if ( printIndividualTimes )
+		{
+			for ( int i = 0; i < numRuns; ++i )
+				System.out.println( "run " + i + ": " + times.get( i ) + " ms" );
+			System.out.println();
+		}
+		System.out.println( "median: " + median( times ) + " ms" );
+		System.out.println();
+	}
 }

@@ -39,9 +39,16 @@ public class NewIterableInterval<T> extends AbstractInterval implements Iterable
 	}
 
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		// TODO Auto-generated method stub
-		return false;
+	public Object iterationOrder()
+	{
+		// TODO maybe support. For now, for simplicity, don't support
+		return this; // iteration order is only compatible with ourselves
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

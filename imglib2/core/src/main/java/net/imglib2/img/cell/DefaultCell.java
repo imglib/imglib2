@@ -1,10 +1,10 @@
 /**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
+ * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -24,55 +24,31 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Tobias Pietzsch
  */
-package net.imglib2;
+package net.imglib2.img.cell;
 
-import net.imglib2.img.Img;
+import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 
 /**
- * Abstract base class for bounded {@link RandomAccess}es.
- * 
- * Extends {@link AbstractRandomAccessInt} by an implementation of
- * the {@link Bounded} interface.
- * 
- * TODO: Remove? This is not used by anyone currently.
- * 
- * @param <T>
- * 
- * @author Tobias Pietzsch, Stephan Preibisch and Stephan Saalfeld
+ * Default (empty) implementation of the {@link AbstractCell}.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractBoundedRandomAccessInt< T > extends AbstractRandomAccessInt< T > implements Bounded
+public final class DefaultCell< A extends ArrayDataAccess< A > > extends AbstractCell< A >
 {
-	/**
-	 * Maximum of the {@link Img} in every dimension.
-	 * This is used to check isOutOfBounds().
-	 */
-	final protected int[] max;
+	private final A data;
 
-	public AbstractBoundedRandomAccessInt( final Interval f )
+	public DefaultCell( final A creator, final int[] dimensions, final long[] min, final int entitiesPerPixel )
 	{
-		super( f.numDimensions() );
-
-		max = new int[ n ];
-		for( int d = 0; d < n; ++d )
-			max[ d ] = ( int ) f.max( d );
+		super( dimensions, min );
+		this.data = creator.createArray( numPixels * entitiesPerPixel );
 	}
 
 	@Override
-	public boolean isOutOfBounds()
+	public A getData()
 	{
-		for ( int d = 0; d < n; ++d )
-		{
-			final int x = position[ d ];
-			if ( x < 0 || x > max[ d ] )
-				return true;
-		}
-		return false;
+		return data;
 	}
-	
-	@Override
-	abstract public AbstractBoundedRandomAccessInt< T > copy();
-	
-	@Override
-	abstract public AbstractBoundedRandomAccessInt< T > copyRandomAccess();
 }

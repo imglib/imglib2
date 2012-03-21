@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,13 +27,12 @@
  */
 package net.imglib2.img.array;
 
-import net.imglib2.Cursor;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.basictypeaccess.DataAccess;
-import net.imglib2.img.list.ListImg;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
 
@@ -43,7 +42,7 @@ import net.imglib2.util.IntervalIndexer;
  * limiting the number of basic types stored to {@link Integer#MAX_VALUE}.
  * Keep in mind that this does not necessarily reflect the number of pixels,
  * because a pixel can be stored in less than or more than a basic type entry.
- * 
+ *
  * @param <T>
  * @param <A>
  *
@@ -52,14 +51,16 @@ import net.imglib2.util.IntervalIndexer;
 public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeImg< T, A >
 {
 	final int[] steps, dim;
-	
+
 	// the DataAccess created by the ArrayContainerFactory
 	final private A data;
+
+	final private FlatIterationOrder iterationOrder;
 
 	/**
 	 * TODO check for the size of numPixels being < Integer.MAX_VALUE?
 	 * TODO Type is suddenly not necessary anymore
-	 * 
+	 *
 	 * @param factory
 	 * @param data
 	 * @param dim
@@ -75,6 +76,7 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 		this.steps = new int[ n ];
 		IntervalIndexer.createAllocationSteps( this.dim, this.steps );
 		this.data = data;
+		this.iterationOrder = new FlatIterationOrder( this );
 	}
 
 	@Override
@@ -96,43 +98,31 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 	public ArrayRandomAccess< T > randomAccess( final Interval interval ){ return randomAccess(); }
 
 	@Override
+	public Object iterationOrder()
+	{
+		return iterationOrder;
+	}
+
+	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
-		if ( f.numDimensions() != this.numDimensions() )
-			return false;
-		
-		if ( getClass().isInstance( f ) || ListImg.class.isInstance( f ) )
-		{
-			final Interval a = ( Interval )f;
-			for ( int d = 0; d < n; ++d )
-				if ( dimension[ d ] != a.dimension( d ) )
-					return false;
-			
-			return true;
-		}
-		
-		return false;
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override
 	public ArrayImgFactory<T> factory() { return new ArrayImgFactory<T>(); }
-	
+
 	@Override
-	public ArrayImg<T,?> copy()
+	public ArrayImg< T, ? > copy()
 	{
-		final ArrayImg<T,?> copy = factory().create( dimension, firstElement().createVariable() );
-		
-		final Cursor<T> cursor1 = this.cursor();
-		final Cursor<T> cursor2 = copy.cursor();
-		
-		while ( cursor1.hasNext() )
-		{
-			cursor1.fwd();
-			cursor2.fwd();
-			
-			cursor2.get().set( cursor1.get() );
-		}
-		
+		final ArrayImg< T, ? > copy = factory().create( dimension, firstElement().createVariable() );
+
+		final ArrayCursor< T > source = this.cursor();
+		final ArrayCursor< T > target = copy.cursor();
+
+		while ( source.hasNext() )
+			target.next().set( source.next() );
+
 		return copy;
-	}	
+	}
 }

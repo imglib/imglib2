@@ -30,6 +30,7 @@ package net.imglib2.view;
 import java.util.Iterator;
 
 import net.imglib2.Cursor;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
@@ -37,8 +38,6 @@ import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.list.ListImg;
 
 /**
  * Generates {@link Cursor Cursors} that iterate a
@@ -51,6 +50,7 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 {
 	final protected RandomAccessibleInterval< T > interval;
 	final long size;
+	final private FlatIterationOrder iterationOrder;
 
 	public static < T > IterableRandomAccessibleInterval< T > create( final RandomAccessibleInterval< T > interval )
 	{
@@ -65,6 +65,7 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 		for ( int d = 1; d < n; ++d )
 			s *= interval.dimension( d );
 		size = s;
+		iterationOrder = new FlatIterationOrder( interval );
 	}
 
 	@Override
@@ -82,24 +83,15 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 	}
 
 	@Override
+	public Object iterationOrder()
+	{
+		return iterationOrder;
+	}
+
+	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
-		final int n = numDimensions();
-		if (
-				f.numDimensions() == n &&
-				( IterableRandomAccessibleInterval.class.isInstance( f ) || ArrayImg.class.isInstance( f ) || ListImg.class.isInstance( f ) ) )
-		{
-			final Interval fAsInterval = ( Interval )f;
-			for ( int d = 0; d < n; ++d )
-			{
-				if ( dimension( d ) == fAsInterval.dimension( d ) )
-					continue;
-				else
-					return false;
-			}
-			return true;
-		}
-		return false;
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

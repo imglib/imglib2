@@ -3,14 +3,6 @@ package net.imglib2.img.cell;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.BitAccess;
-import net.imglib2.img.basictypeaccess.ByteAccess;
-import net.imglib2.img.basictypeaccess.CharAccess;
-import net.imglib2.img.basictypeaccess.DoubleAccess;
-import net.imglib2.img.basictypeaccess.FloatAccess;
-import net.imglib2.img.basictypeaccess.IntAccess;
-import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.img.basictypeaccess.ShortAccess;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
@@ -103,73 +95,73 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	}
 
 	@Override
-	public CellImg< T, ? > create( final long[] dim, final T type )
+	public CellImg< T, ?, ? > create( final long[] dim, final T type )
 	{
-		return ( CellImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		return ( CellImg< T, ?, ? > ) type.createSuitableNativeImg( this, dim );
 	}
 
 	@Override
-	public CellImg< T, ? extends BitAccess > createBitInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, BitArray, DefaultCell< BitArray > > createBitInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, BitArray >( this, new BitArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, BitArray, DefaultCell< BitArray > >( this, new ListImgCells< BitArray >( new BitArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, ? extends ByteAccess > createByteInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, ByteArray, DefaultCell< ByteArray > > createByteInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, ByteArray >( this, new ByteArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, ByteArray, DefaultCell< ByteArray > >( this, new ListImgCells< ByteArray >( new ByteArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, ? extends CharAccess > createCharInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, CharArray, DefaultCell< CharArray > > createCharInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, CharArray >( this, new CharArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, CharArray, DefaultCell< CharArray > >( this, new ListImgCells< CharArray >( new CharArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, ? extends ShortAccess > createShortInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, ShortArray, DefaultCell< ShortArray > > createShortInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, ShortArray >( this, new ShortArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, ShortArray, DefaultCell< ShortArray > >( this, new ListImgCells< ShortArray >( new ShortArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, ? extends IntAccess > createIntInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, IntArray, DefaultCell< IntArray > > createIntInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, IntArray >( this, new IntArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, IntArray, DefaultCell< IntArray > >( this, new ListImgCells< IntArray >( new IntArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, ? extends LongAccess > createLongInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, LongArray, DefaultCell< LongArray > > createLongInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, LongArray >( this, new LongArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, LongArray, DefaultCell< LongArray > >( this, new ListImgCells< LongArray >( new LongArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, ? extends FloatAccess > createFloatInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, FloatArray, DefaultCell< FloatArray > > createFloatInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, FloatArray >( this, new FloatArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, FloatArray, DefaultCell< FloatArray > >( this, new ListImgCells< FloatArray >( new FloatArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, ? extends DoubleAccess > createDoubleInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, DoubleArray, DefaultCell< DoubleArray > > createDoubleInstance( long[] dimensions, int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
-		return new CellImg< T, DoubleArray >( this, new DoubleArray( 1 ), dimensions, cellSize, entitiesPerPixel );
+		return new CellImg< T, DoubleArray, DefaultCell< DoubleArray > >( this, new ListImgCells< DoubleArray >( new DoubleArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )

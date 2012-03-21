@@ -122,9 +122,15 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 	}
 
 	@Override
+	public Object iterationOrder()
+	{
+		return argbArray.iterationOrder();
+	}
+
+	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
-		return argbArray.equalIterationOrder( f );
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

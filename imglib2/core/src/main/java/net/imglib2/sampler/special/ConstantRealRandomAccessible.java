@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the Fiji project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,9 +27,8 @@
  */
 package net.imglib2.sampler.special;
 
-import net.imglib2.AbstractRealRandomAccess;
-import net.imglib2.AbstractSampler;
 import net.imglib2.RealInterval;
+import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 
@@ -39,7 +38,7 @@ import net.imglib2.RealRandomAccessible;
  */
 public class ConstantRealRandomAccessible<T> implements RealRandomAccessible<T> {
 
-	protected class ConstantRealRandomAccess extends AbstractRealRandomAccess<T> {
+	protected class ConstantRealRandomAccess extends RealPoint implements RealRandomAccess<T> {
 		public ConstantRealRandomAccess() {
 			super(nDimensions);
 		}
@@ -55,10 +54,10 @@ public class ConstantRealRandomAccessible<T> implements RealRandomAccessible<T> 
 		}
 
 		@Override
-		public AbstractSampler<T> copy() {
+		public ConstantRealRandomAccess copy() {
 			return new ConstantRealRandomAccess();
 		}
-		
+
 	}
 	private final int nDimensions;
 	private final T constant;
@@ -76,7 +75,7 @@ public class ConstantRealRandomAccessible<T> implements RealRandomAccessible<T> 
 		return new ConstantRealRandomAccess() {
 		};
 	}
-	
+
 	@Override
 	public RealRandomAccess<T> realRandomAccess( final RealInterval interval ) {
 		return new ConstantRealRandomAccess() {

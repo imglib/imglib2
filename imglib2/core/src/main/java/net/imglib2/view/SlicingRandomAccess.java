@@ -1,6 +1,6 @@
 package net.imglib2.view;
 
-import net.imglib2.AbstractSampler;
+import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.transform.integer.Slicing;
@@ -11,7 +11,7 @@ import net.imglib2.transform.integer.Slicing;
  *
  * @param <T>
  */
-public class SlicingRandomAccess< T > extends AbstractSampler< T > implements RandomAccess< T >
+public class SlicingRandomAccess< T > extends AbstractEuclideanSpace implements RandomAccess< T >
 {
 	/**
 	 * source RandomAccess. note that this is the <em>target</em> of the

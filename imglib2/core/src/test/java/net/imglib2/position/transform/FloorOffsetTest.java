@@ -71,7 +71,6 @@ public class FloorOffsetTest
 	{
 		r = new double[]{ 1.54, -20.3, 100.4 };
 		reference = RealPoint.wrap( r );
-		target = Point.wrap( t );
 		t = new long[]{ 3, 4, 5 };
 		target = Point.wrap( t );
 		o = new long[]{ 1, -2, 3 };

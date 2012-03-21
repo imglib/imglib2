@@ -55,8 +55,9 @@ public abstract class AbstractLabeling<T extends Comparable<T>> extends Abstract
 	 * @see net.imglib2.IterableRealInterval#equalIterationOrder(net.imglib2.IterableRealInterval)
 	 */
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return false;
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	/* (non-Javadoc)

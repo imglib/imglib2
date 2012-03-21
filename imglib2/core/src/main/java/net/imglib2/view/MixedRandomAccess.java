@@ -1,6 +1,6 @@
 package net.imglib2.view;
 
-import net.imglib2.AbstractRandomAccess;
+import net.imglib2.AbstractLocalizable;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.transform.integer.Mixed;
@@ -13,7 +13,7 @@ import net.imglib2.transform.integer.Mixed;
  *
  * @param <T>
  */
-public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
+public final class MixedRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >
 {
 	/**
 	 * source RandomAccess. note that this is the <em>target</em> of the
@@ -148,6 +148,16 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		}
 	}
 
+
+	@Override
+	public void move( final int distance, final int d )
+	{
+		assert d < n;
+		position[ d ] += distance;
+		if ( !sourceZero[ d ] )
+			s.move( sourceInv[ d ] ? -distance : distance, sourceComponent[ d ] );
+	}
+
 	@Override
 	public void move( final long distance, final int d )
 	{
@@ -264,6 +274,17 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 			tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
 		}
 		s.setPosition( tmpPosition );
+	}
+
+
+	@Override
+	public void setPosition( final int position, final int d )
+	{
+		assert d < n;
+		this.position[ d ] = position;
+		final int td = sourceComponent[ d ];
+		final long targetPos = translation[ td ] + ( sourceInv[ d ] ? -position : position );
+		s.setPosition( targetPos, td );
 	}
 
 	@Override
