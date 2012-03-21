@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2011, Stephan Saalfeld
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,6 +28,7 @@
  */
 package net.imglib2.position.transform;
 
+import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.RealLocalizable;
@@ -37,39 +38,31 @@ import net.imglib2.RealPositionable;
  * Moves a {@link RealLocalizable} & {@link RealPositionable} and a
  * {@link Positionable} in synchrony.  The position of the latter is at the
  * round coordinates of the former:
- * 
+ *
  * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
- * 
+ *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RealPositionableRoundPositionable< P extends RealLocalizable & RealPositionable > implements RealPositionable, RealLocalizable
+public class RealPositionableRoundPositionable< P extends RealLocalizable & RealPositionable > extends AbstractEuclideanSpace implements RealPositionable, RealLocalizable
 {
 	final protected P source;
 	final protected Positionable target;
-	
-	final protected int n;
-	
+
 	final private long[] round;
-	
+
 	public RealPositionableRoundPositionable( final P source, final Positionable target )
 	{
+		super( source.numDimensions() );
+
 		this.source = source;
 		this.target = target;
-		
-		n = source.numDimensions();
-		
+
 		round = new long[ n ];
 	}
-	
 
-	/* EuclideanSpace */
-	
-	@Override
-	public int numDimensions(){ return n; }
 
-	
 	/* RealPositionable */
-	
+
 	@Override
 	public void move( final float distance, final int d )
 	{
@@ -146,9 +139,9 @@ public class RealPositionableRoundPositionable< P extends RealLocalizable & Real
 		target.setPosition( Round.round( position ), dim );
 	}
 
-	
+
 	/* Positionable */
-	
+
 	@Override
 	public void bck( final int dim )
 	{
@@ -168,7 +161,7 @@ public class RealPositionableRoundPositionable< P extends RealLocalizable & Real
 	{
 		source.move( distance, d );
 		target.move( distance, d );
-	}		
+	}
 
 	@Override
 	public void move( final long distance, final int d )
@@ -197,21 +190,21 @@ public class RealPositionableRoundPositionable< P extends RealLocalizable & Real
 		source.move( pos );
 		target.move( pos );
 	}
-	
+
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
 		source.setPosition( localizable );
 		target.setPosition( localizable );
 	}
-	
+
 	@Override
 	public void setPosition( final int[] position )
 	{
 		source.setPosition( position );
 		target.setPosition( position );
 	}
-	
+
 	@Override
 	public void setPosition( final long[] position )
 	{
@@ -232,8 +225,8 @@ public class RealPositionableRoundPositionable< P extends RealLocalizable & Real
 		source.setPosition( position, d );
 		target.setPosition( position, d );
 	}
-	
-	
+
+
 	/* RealLocalizable */
 
 	@Override

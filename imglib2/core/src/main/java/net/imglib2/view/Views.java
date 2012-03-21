@@ -1,11 +1,15 @@
 package net.imglib2.view;
 
+import net.imglib2.EuclideanSpace;
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealRandomAccessible;
 import net.imglib2.img.Img;
+import net.imglib2.interpolation.Interpolant;
+import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
@@ -18,6 +22,18 @@ import net.imglib2.util.Util;
 
 public class Views
 {
+	/**
+	 * Returns a {@link RealRandomAccessible} using interpolation
+	 * 
+	 * @param source
+	 * @param factory
+	 * @return
+	 */
+	public static < T, F extends EuclideanSpace > RealRandomAccessible< T > interpolate( final F source, final InterpolatorFactory< T, F > factory )
+	{
+		return new Interpolant< T, F >( source, factory );
+	}
+	
 	/**
 	 * Extend a RandomAccessibleInterval with an out-of-bounds strategy.
 	 * 

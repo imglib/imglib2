@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2009--2012, ImgLib2 developers
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.  Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -12,7 +12,7 @@
  * provided with the distribution.  Neither the name of the imglib project nor
  * the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,6 +27,7 @@
  */
 package net.imglib2.position.transform;
 
+import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.RealLocalizable;
@@ -35,38 +36,30 @@ import net.imglib2.RealPositionable;
 /**
  * A {@link RealPositionable} that drives a {@link Positionable} to somehow
  * derived discrete coordinates.
- * 
+ *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public abstract class AbstractPositionableTransform< LocalizablePositionable extends Localizable & Positionable > implements RealPositionable, RealLocalizable
+public abstract class AbstractPositionableTransform< LocalizablePositionable extends Localizable & Positionable > extends AbstractEuclideanSpace implements RealPositionable, RealLocalizable
 {
 	final protected LocalizablePositionable target;
-	
-	final protected int n;
-	
+
 	/* current position, required for relative movement */
 	final protected double[] position;
-	
+
 	/* current discrete position for temporary storage, this field does not necessarily contain the actual discrete position! */
 	final protected long[] discrete;
-	
+
 	public AbstractPositionableTransform( final LocalizablePositionable target )
 	{
+		super( target.numDimensions() );
+
 		this.target = target;
-		
-		n = target.numDimensions();
-		
+
 		position = new double[ n ];
 		discrete = new long[ n ];
 	}
-	
-	
-	/* EuclideanSpace */
-	
-	@Override
-	public int numDimensions(){ return n; }
 
-	
+
 	/* RealLocalizable */
 
 	@Override
@@ -95,9 +88,9 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 			pos[ d ] = this.position[ d ];
 	}
 
-	
+
 	/* Positionable */
-	
+
 	@Override
 	public void bck( final int dim )
 	{
@@ -130,8 +123,8 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 	public void move( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
-			position[ d ] += localizable.getDoublePosition( d ); 
-			
+			position[ d ] += localizable.getDoublePosition( d );
+
 		target.move( localizable );
 	}
 
@@ -139,8 +132,8 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 	public void move( final int[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
-			position[ d ] += distance[ d ]; 
-			
+			position[ d ] += distance[ d ];
+
 		target.move( distance );
 	}
 
@@ -149,32 +142,32 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 	{
 		for ( int d = 0; d < n; ++d )
 			position[ d ] += distance[ d ];
-		
+
 		target.move( distance );
 	}
-	
+
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
 		localizable.localize( position );
 		target.setPosition( localizable );
 	}
-	
+
 	@Override
 	public void setPosition( final int[] position )
 	{
 		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = position[ d ];
-		
+
 		target.setPosition( position );
 	}
-	
+
 	@Override
 	public void setPosition( final long[] position )
 	{
 		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = position[ d ];
-		
+
 		target.setPosition( position );
 	}
 
@@ -191,10 +184,10 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 		this.position[ d ] = position;
 		target.setPosition( position, d );
 	}
-	
-	
+
+
 	/* Object */
-	
+
 	@Override
 	public String toString()
 	{

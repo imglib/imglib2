@@ -1,16 +1,16 @@
 /*
 
-Copyright (c) 2012, Christian Dietz
+Copyright (c) 2011, Christian Dietz
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,57 +25,55 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.image;
 
-import net.imglib2.IterableRealInterval;
-import net.imglib2.RealInterval;
+import net.imglib2.ops.UnaryOperation;
 
-/**
- * 
- * @author dietzc, hornm University of Konstanz
- */
-public class IterationOrderUtil
-{
+public class ConcatenatedBufferedUnaryOperation<T> implements
+		UnaryOperation<T, T> {
 
-	/**
-	 * Helper to set positions even though the position-array dimension and
-	 * cursor dimension don't match.
-	 * 
-	 * @param pos
-	 * @param access
-	 */
+	private UnaryOperation<T, T>[] m_operations;
+	protected T m_buffer;
 
-	public static boolean equalIterationOrder( IterableRealInterval< ? > a, IterableRealInterval< ? >... bs )
-	{
-		for ( int i = 1; i < bs.length; i++ )
-		{
-			if ( !equalIterationOrder( a, bs[ i ] ) )
-				return false;
-		}
-		return true;
+	public ConcatenatedBufferedUnaryOperation(T buffer,
+			UnaryOperation<T, T>... operations) {
+		m_operations = operations;
+		m_buffer = buffer;
+
 	}
 
-	public static boolean equalInterval( RealInterval a, RealInterval... bs )
-	{
-		for ( int i = 1; i < bs.length; i++ )
-		{
-			if ( !equalInterval( a, bs[ i ] ) )
-				return false;
+	@Override
+	public T compute(T input, T output) {
+
+		if (m_buffer == null)
+			throw new IllegalArgumentException(
+					"Buffer can't be null in ConcatenatedBufferedUnaryOperation");
+
+		T tmpOutput = output;
+		T tmpInput = input;
+
+		for (UnaryOperation<T, T> op : m_operations) {
+			op.compute(tmpInput, tmpOutput);
+
+			tmpInput = tmpOutput;
+			tmpOutput = m_buffer;
 		}
-		return true;
+
+		return output;
 	}
 
-	public static boolean equalInterval( RealInterval a, RealInterval b )
-	{
-		for ( int i = 0; i < a.numDimensions(); i++ )
-		{
-			if ( a.realMin( i ) != b.realMin( i ) )
-				return false;
-			if ( a.realMax( i ) != b.realMax( i ) )
-				return false;
-		}
-		return true;
+	@SuppressWarnings("unchecked")
+	@Override
+	public UnaryOperation<T, T> copy() {
+		UnaryOperation<T, T>[] copyOps = new UnaryOperation[m_operations.length];
+
+		int c = 0;
+		for (UnaryOperation<T, T> op : m_operations)
+			copyOps[c++] = op.copy();
+
+		return new ConcatenatedBufferedUnaryOperation<T>(m_buffer, copyOps);
 	}
+
 }

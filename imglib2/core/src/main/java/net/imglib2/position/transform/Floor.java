@@ -57,29 +57,29 @@ public class Floor< LocalizablePositionable extends Localizable & Positionable >
 			target.setPosition( floor( position[ d ] ), d );
 	}
 
-	final static protected long floor( final double r )
+	public static final long floor( final double r )
 	{
 		return r < 0 ? ( long )r - 1 : ( long )r;
 	}
 
-	final static protected long floor( final float r )
+	public static final long floor( final float r )
 	{
 		return r < 0 ? ( long )r - 1 : ( long )r;
 	}
 
-	final static protected void floor( final double[] r, final long[] f )
+	public static final void floor( final double[] r, final long[] f )
 	{
 		for ( int d = 0; d < r.length; ++d )
 			f[ d ] = floor( r[ d ] );
 	}
 
-	final static protected void floor( final float[] r, final long[] f )
+	public static final void floor( final float[] r, final long[] f )
 	{
 		for ( int d = 0; d < r.length; ++d )
 			f[ d ] = floor( r[ d ] );
 	}
 
-	final static protected void floor( final RealLocalizable r, final long[] f )
+	public static final void floor( final RealLocalizable r, final long[] f )
 	{
 		for ( int d = 0; d < f.length; ++d )
 			f[ d ] = floor( r.getDoublePosition( d ) );

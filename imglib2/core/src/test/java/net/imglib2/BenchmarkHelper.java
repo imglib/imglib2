@@ -27,28 +27,58 @@
  *
  * @author Tobias Pietzsch
  */
-package net.imglib2.img.cell;
+package net.imglib2;
 
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
- * Default (empty) implementation of the {@link AbstractCell}.
- *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ *
  */
-public final class DefaultCell< A extends ArrayDataAccess< A > > extends AbstractCell< A >
+public class BenchmarkHelper
 {
-	private final A data;
-
-	public DefaultCell( final A creator, final int[] dimensions, final long[] min, final int entitiesPerPixel )
+	public static Long median( final ArrayList<Long> values )
 	{
-		super( dimensions, min );
-		this.data = creator.createArray( numPixels * entitiesPerPixel );
+		Collections.sort(values);
+
+		if (values.size() % 2 == 1)
+			return values.get((values.size() + 1) / 2 - 1);
+		else {
+			final long lower = values.get(values.size() / 2 - 1);
+			final long upper = values.get(values.size() / 2);
+
+			return (lower + upper) / 2;
+		}
 	}
 
-	@Override
-	public A getData()
+	public interface Benchmark
 	{
-		return data;
+		public void run();
+	}
+
+	public static void benchmark( final Benchmark b )
+	{
+		benchmark( 20, true, b );
+	}
+
+	public static void benchmark( final int numRuns, final boolean printIndividualTimes, final Benchmark b )
+	{
+		final ArrayList<Long> times = new ArrayList<Long>( 100 );
+		for ( int i = 0; i < numRuns; ++i )
+		{
+			final long startTime = System.currentTimeMillis();
+			b.run();
+			final long endTime = System.currentTimeMillis();
+			times.add( endTime - startTime );
+		}
+		if ( printIndividualTimes )
+		{
+			for ( int i = 0; i < numRuns; ++i )
+				System.out.println( "run " + i + ": " + times.get( i ) + " ms" );
+			System.out.println();
+		}
+		System.out.println( "median: " + median( times ) + " ms" );
+		System.out.println();
 	}
 }

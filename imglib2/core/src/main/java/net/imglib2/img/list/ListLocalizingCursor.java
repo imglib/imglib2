@@ -29,15 +29,16 @@ package net.imglib2.img.list;
 
 import java.util.ArrayList;
 
-import net.imglib2.AbstractLocalizingCursor;
+import net.imglib2.AbstractLocalizingCursorInt;
 
 /**
+ * Localizing {@link Cursor} on a {@link ListImg}.
  *
  * @param <T>
  *
  * @author Stephan Preibisch and Stephan Saalfeld
  */
-final public class ListLocalizingCursor< T > extends AbstractLocalizingCursor< T >
+final public class ListLocalizingCursor< T > extends AbstractLocalizingCursorInt< T >
 {
 	private int i;
 	final private int maxNumPixels;

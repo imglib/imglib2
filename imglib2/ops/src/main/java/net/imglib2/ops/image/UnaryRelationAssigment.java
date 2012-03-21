@@ -39,37 +39,40 @@ import net.imglib2.type.numeric.RealType;
 /**
  * 
  * @author Christian Dietz
- *
+ * 
  */
-public class UnaryRelationAssigment<T extends RealType<T>> implements
-		UnaryOperation<IterableInterval<T>, IterableInterval<BitType>> {
+public class UnaryRelationAssigment< T extends RealType< T >> implements UnaryOperation< IterableInterval< T >, IterableInterval< BitType >>
+{
 
-	private UnaryRelation<T> m_rel;
+	private UnaryRelation< T > m_rel;
 
-	public UnaryRelationAssigment(UnaryRelation<T> rel) {
+	public UnaryRelationAssigment( UnaryRelation< T > rel )
+	{
 		m_rel = rel;
 	}
 
 	@Override
-	public IterableInterval<BitType> compute(IterableInterval<T> input,
-			IterableInterval<BitType> output) {
+	public IterableInterval< BitType > compute( IterableInterval< T > input, IterableInterval< BitType > output )
+	{
 
-		if (!input.equalIterationOrder(output)) {
-			throw new IllegalArgumentException("Intervals are not compatible");
-		}
+		if ( !IterationOrderUtil.equalIterationOrder( input, output ) || !IterationOrderUtil.equalInterval( input, output ) ) { throw new IllegalArgumentException( "Intervals are not compatible" ); }
 
-		Cursor<T> inCursor = input.localizingCursor();
-		Cursor<BitType> outCursor = output.cursor();
+		Cursor< T > inCursor = input.cursor();
+		Cursor< BitType > outCursor = output.cursor();
 
-		while (outCursor.hasNext()) {
-			outCursor.get().set(m_rel.holds(inCursor.get()));
+		while ( outCursor.hasNext() )
+		{
+			inCursor.fwd();
+			outCursor.fwd();
+			outCursor.get().set( m_rel.holds( inCursor.get() ) );
 		}
 		return output;
 	}
 
 	@Override
-	public UnaryOperation<IterableInterval<T>, IterableInterval<BitType>> copy() {
-		return new UnaryRelationAssigment<T>(m_rel.copy());
+	public UnaryOperation< IterableInterval< T >, IterableInterval< BitType >> copy()
+	{
+		return new UnaryRelationAssigment< T >( m_rel.copy() );
 	}
 
 }

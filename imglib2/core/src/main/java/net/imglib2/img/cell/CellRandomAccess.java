@@ -1,3 +1,32 @@
+/**
+ * Copyright (c) 2009--2012, ImgLib2 developers
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.  Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.  Neither the name of the Fiji project nor
+ * the names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Tobias Pietzsch
+ */
 package net.imglib2.img.cell;
 
 import net.imglib2.AbstractLocalizable;
@@ -7,25 +36,30 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 
 /**
- * This {@link ImgRandomAccess} assumes that successive accesses fall
- * within different cells more often than not.
- * No checks are performed to determine whether we stay in the same cell.
- * Instead, the cell position is computed and set on every access.
+ * {@link RandomAccess} on a {@link CellImg}.
+ *
+ * The boundaries of the current cell are cached, so that
+ * position changes within the same cell have minimal overhead.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends AbstractLocalizable implements RandomAccess< T >, CellImg.CellContainerSampler< T, A, C >
 {
+	protected final CellImg< T, A, C > img;
+
 	protected final T type;
 
 	protected final RandomAccess< C > randomAccessOnCells;
 
-	protected final int[] defaultCellDims;
-
-	protected final long[] positionOfCurrentCell;
-	protected final long[] positionInCell;
+	protected final long[] tmp;
 
 	protected int[] currentCellSteps;
 	protected long[] currentCellMin;
 	protected long[] currentCellMax;
+
+	protected boolean isOutOfBounds;
+	protected final long[] oobCellMin;
+	protected final long[] oobCellMax;
 
 	/**
 	 * The current index of the type.
@@ -37,46 +71,49 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	{
 		super( randomAccess.numDimensions() );
 
-		this.type = randomAccess.type.duplicateTypeOnSameNativeImg();
-		this.randomAccessOnCells = randomAccess.randomAccessOnCells.copyRandomAccess();
-		this.defaultCellDims = randomAccess.defaultCellDims;
-
-		this.positionOfCurrentCell = new long[ n ];
-		this.positionInCell = new long[ n ];
+		img = randomAccess.img;
+		type = randomAccess.type.duplicateTypeOnSameNativeImg();
+		randomAccessOnCells = randomAccess.randomAccessOnCells.copyRandomAccess();
+		tmp = new long[ n ];
 
 		for ( int d = 0; d < n; ++d )
-		{
 			position[ d ] = randomAccess.position[ d ];
-			positionOfCurrentCell[ d ] = randomAccess.positionOfCurrentCell[ d ];
-			positionInCell[ d ] = randomAccess.positionInCell[ d ];
-		}
 
 		currentCellSteps = randomAccess.currentCellSteps;
 		currentCellMin = randomAccess.currentCellMin;
 		currentCellMax = randomAccess.currentCellMax;
+
+		isOutOfBounds = randomAccess.isOutOfBounds;
+		oobCellMin = randomAccess.oobCellMin;
+		oobCellMax = randomAccess.oobCellMax;
 
 		index = randomAccess.index;
 		type.updateContainer( this );
 		type.updateIndex( index );
 	}
 
-	public CellRandomAccess( final CellImg< T, A, C > container )
+	public CellRandomAccess( final CellImg< T, A, C > img )
 	{
-		super( container.numDimensions() );
+		super( img.numDimensions() );
 
-		this.type = container.createLinkedType();
-		this.randomAccessOnCells = container.cells.randomAccess();
-		this.defaultCellDims = container.cellDims;
+		this.img = img;
+		type = img.createLinkedType();
+		randomAccessOnCells = img.cells.randomAccess();
 
-		this.positionOfCurrentCell = new long[ n ];
-		this.positionInCell = new long[ n ];
+		tmp = new long[ n ];
 
+		isOutOfBounds = false;
+		oobCellMin = new long[ n ];
+		oobCellMax = new long[ n ];
 		for ( int d = 0; d < n; ++d )
-			position[ d ] = 0;
+		{
+			oobCellMin[ d ] = Long.MAX_VALUE;
+			oobCellMax[ d ] = Long.MIN_VALUE;
+		}
 
-		container.splitGlobalPosition( position, positionOfCurrentCell, positionInCell );
-		randomAccessOnCells.setPosition( positionOfCurrentCell );
-		updatePosition();
+		img.getCellPosition( position, tmp );
+		randomAccessOnCells.setPosition( tmp );
+		updatePosition( false );
 	}
 
 	@Override
@@ -110,7 +147,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		if ( ++position[ d ] > currentCellMax[ d ] )
 		{
 			randomAccessOnCells.fwd( d );
-			updatePosition();
+			updatePosition( position[ d ] >= img.dimension( d ) );
 		}
 		type.updateIndex( index );
 	}
@@ -122,7 +159,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		if ( --position[ d ] < currentCellMin[ d ] )
 		{
 			randomAccessOnCells.bck( d );
-			updatePosition();
+			updatePosition( position[ d ] < 0 );
 		}
 		type.updateIndex( index );
 	}
@@ -134,8 +171,8 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		position[ d ] += distance;
 		if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 		{
-			randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
-			updatePosition();
+			randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+			updatePosition( position[ d ] < 0 || position[ d ] >= img.dimension( d ) );
 		}
 		type.updateIndex( index );
 	}
@@ -147,8 +184,8 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		position[ d ] += distance;
 		if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 		{
-			randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
-			updatePosition();
+			randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+			updatePosition( position[ d ] < 0 || position[ d ] >= img.dimension( d ) );
 		}
 		type.updateIndex( index );
 	}
@@ -165,7 +202,8 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				position[ d ] += pos;
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
-					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+					randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+					boolean movedOutOfBounds = position[ d ] < 0 || position[ d ] >= img.dimension( d );
 
 					for ( ++d; d < n; ++d )
 					{
@@ -175,12 +213,13 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 							position[ d ] += pos2;
 							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 							{
-								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+								randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+								movedOutOfBounds |= position[ d ] < 0 || position[ d ] >= img.dimension( d );
 							}
 						}
 					}
 
-					updatePosition();
+					updatePosition( movedOutOfBounds );
 				}
 			}
 		}
@@ -198,7 +237,8 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				position[ d ] += distance[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
-					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+					randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+					boolean movedOutOfBounds = position[ d ] < 0 || position[ d ] >= img.dimension( d );
 
 					for ( ++d; d < n; ++d )
 					{
@@ -207,12 +247,13 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 							position[ d ] += distance[ d ];
 							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 							{
-								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+								randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+								movedOutOfBounds |= position[ d ] < 0 || position[ d ] >= img.dimension( d );
 							}
 						}
 					}
 
-					updatePosition();
+					updatePosition( movedOutOfBounds );
 				}
 			}
 		}
@@ -230,7 +271,8 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				position[ d ] += distance[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
-					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+					randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+					boolean movedOutOfBounds = position[ d ] < 0 || position[ d ] >= img.dimension( d );
 
 					for ( ++d; d < n; ++d )
 					{
@@ -239,12 +281,13 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 							position[ d ] += distance[ d ];
 							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 							{
-								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+								randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+								movedOutOfBounds |= position[ d ] < 0 || position[ d ] >= img.dimension( d );
 							}
 						}
 					}
 
-					updatePosition();
+					updatePosition( movedOutOfBounds );
 				}
 			}
 		}
@@ -258,8 +301,8 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		position[ d ] = pos;
 		if ( pos < currentCellMin[ d ] || pos > currentCellMax[ d ] )
 		{
-			randomAccessOnCells.setPosition( pos / defaultCellDims[ d ], d );
-			updatePosition();
+			randomAccessOnCells.setPosition( pos / img.cellDims[ d ], d );
+			updatePosition( position[ d ] < 0 || position[ d ] >= img.dimension( d ) );
 		}
 		type.updateIndex( index );
 	}
@@ -271,8 +314,8 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		position[ d ] = pos;
 		if ( pos < currentCellMin[ d ] || pos > currentCellMax[ d ] )
 		{
-			randomAccessOnCells.setPosition( pos / defaultCellDims[ d ], d );
-			updatePosition();
+			randomAccessOnCells.setPosition( pos / img.cellDims[ d ], d );
+			updatePosition( position[ d ] < 0 || position[ d ] >= img.dimension( d ) );
 		}
 		type.updateIndex( index );
 	}
@@ -281,28 +324,36 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		localizable.localize( position );
-
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+			final long pos = localizable.getLongPosition( d );
+			if ( pos != position[ d ] )
 			{
-				randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
-				for ( ++d; d < n; ++d )
-					if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
-						randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+				index += ( int ) ( pos - position[ d ] ) * currentCellSteps[ d ];
+				position[ d ] = pos;
+				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+				{
+					randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+					boolean movedOutOfBounds = position[ d ] < 0 || position[ d ] >= img.dimension( d );
 
-				final C cell = getCell();
-				currentCellSteps = cell.steps;
-				currentCellMin = cell.min;
-				currentCellMax = cell.max;
-				type.updateContainer( this );
+					for ( ++d; d < n; ++d )
+					{
+						final long posInner = localizable.getLongPosition( d );
+						if ( posInner != position[ d ] )
+						{
+							position[ d ] = posInner;
+							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
+							{
+								randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+								movedOutOfBounds |= position[ d ] < 0 || position[ d ] >= img.dimension( d );
+							}
+						}
+					}
+
+					updatePosition( movedOutOfBounds );
+				}
 			}
 		}
-
-		for ( int d = 0; d < n; ++d )
-			positionInCell[ d ] = position[ d ] - currentCellMin[ d ];
-		index = getCell().localPositionToIndex( positionInCell );
 		type.updateIndex( index );
 	}
 
@@ -317,7 +368,8 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				position[ d ] = pos[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
-					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+					randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+					boolean movedOutOfBounds = position[ d ] < 0 || position[ d ] >= img.dimension( d );
 
 					for ( ++d; d < n; ++d )
 					{
@@ -326,12 +378,13 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 							position[ d ] = pos[ d ];
 							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 							{
-								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+								randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+								movedOutOfBounds |= position[ d ] < 0 || position[ d ] >= img.dimension( d );
 							}
 						}
 					}
 
-					updatePosition();
+					updatePosition( movedOutOfBounds );
 				}
 			}
 		}
@@ -349,7 +402,8 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 				position[ d ] = pos[ d ];
 				if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 				{
-					randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+					randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+					boolean movedOutOfBounds = position[ d ] < 0 || position[ d ] >= img.dimension( d );
 
 					for ( ++d; d < n; ++d )
 					{
@@ -358,12 +412,13 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 							position[ d ] = pos[ d ];
 							if ( position[ d ] < currentCellMin[ d ] || position[ d ] > currentCellMax[ d ] )
 							{
-								randomAccessOnCells.setPosition( position[ d ] / defaultCellDims[ d ], d );
+								randomAccessOnCells.setPosition( position[ d ] / img.cellDims[ d ], d );
+								movedOutOfBounds |= position[ d ] < 0 || position[ d ] >= img.dimension( d );
 							}
 						}
 					}
 
-					updatePosition();
+					updatePosition( movedOutOfBounds );
 				}
 			}
 		}
@@ -372,21 +427,53 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 
 	/**
 	 * Update type to currentCellSteps, currentCellMin, and type after
-	 * switching cells. This is called after cursorOnCells and position
+	 * switching cells. This is called after randomAccessOnCells and position
 	 * fields have been set.
+	 *
+	 * @param updateD the (first) dimension that triggered the call by moving out of current cell range.
 	 */
-	private void updatePosition()
+	private void updatePosition( final boolean movedOutOfBounds )
 	{
-		final C cell = getCell();
+		// are we out of the image?
+		if ( movedOutOfBounds )
+		{
+			isOutOfBounds = true;
+			currentCellMin = oobCellMin;
+			currentCellMax = oobCellMax;
+		}
+		else
+		{
+			if ( isOutOfBounds )
+			{
+				// did we come back into the image?
+				isOutOfBounds = false;
+				for ( int d = 0; d < n; ++d )
+					if ( position[ d ] < 0 || position[ d ] >= img.dimension( d ) )
+					{
+						isOutOfBounds = true;
+						break;
+					}
 
-		currentCellSteps = cell.steps;
-		currentCellMin = cell.min;
-		currentCellMax = cell.max;
+				if ( ! isOutOfBounds )
+				{
+					// yes. we came back into the image.
+					// re-initialize randomAccessOnCells to the correct position.
+					img.getCellPosition( position, tmp );
+					randomAccessOnCells.setPosition( tmp );
+				}
+			}
 
-		for ( int d = 0; d < n; ++d )
-			positionInCell[ d ] = position[ d ] - currentCellMin[ d ];
+			final C cell = getCell();
 
-		index = cell.localPositionToIndex( positionInCell );
-		type.updateContainer( this );
+			currentCellSteps = cell.steps;
+			currentCellMin = cell.min;
+			currentCellMax = cell.max;
+
+			for ( int d = 0; d < n; ++d )
+				tmp[ d ] = position[ d ] - currentCellMin[ d ];
+			index = cell.localPositionToIndex( tmp );
+
+			type.updateContainer( this );
+		}
 	}
 }
