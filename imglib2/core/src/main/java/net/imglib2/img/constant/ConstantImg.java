@@ -88,7 +88,7 @@ public class ConstantImg < T extends Type< T > > extends AbstractImg< T >
 	}
 
 	@Override
-	public Object iterationOrder()
+	public FlatIterationOrder iterationOrder()
 	{
 		return new FlatIterationOrder( this );
 	}

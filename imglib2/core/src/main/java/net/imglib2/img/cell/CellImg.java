@@ -105,7 +105,7 @@ final public class CellImg< T extends NativeType< T >, A extends ArrayDataAccess
 	}
 
 	@Override
-	public Object iterationOrder()
+	public CellIterationOrder iterationOrder()
 	{
 		return new CellIterationOrder( this );
 	}

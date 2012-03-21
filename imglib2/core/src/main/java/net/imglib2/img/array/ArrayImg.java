@@ -94,7 +94,7 @@ public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends
 	public ArrayRandomAccess< T > randomAccess( final Interval interval ){ return randomAccess(); }
 
 	@Override
-	public Object iterationOrder()
+	public FlatIterationOrder iterationOrder()
 	{
 		return new FlatIterationOrder( this );
 	}

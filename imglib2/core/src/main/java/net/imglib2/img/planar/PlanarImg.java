@@ -239,7 +239,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	}
 
 	@Override
-	public Object iterationOrder()
+	public FlatIterationOrder iterationOrder()
 	{
 		return new FlatIterationOrder( this );
 	}
