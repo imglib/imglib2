@@ -403,4 +403,22 @@ public class SparseLabelingTest
 			assertEquals(x.get(0), y.get(0));
 		}
 	}
+	
+	@Test
+	public void testPerformance()
+	{
+		final int rounds = 10;
+		final long[] dimensions = new long[] { 1000, 1000, 40};
+		final Labeling< Integer > labeling = makeLabeling( 1, dimensions );
+				
+		for(int r = 0; r  < rounds; r++)
+		{
+			final Cursor< LabelingType< Integer >> c = labeling.cursor();
+			while( c.hasNext() )
+			{
+				c.fwd();		
+				c.get().getLabeling();
+			}
+		}
+	}
 }
