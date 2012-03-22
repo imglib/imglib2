@@ -6,6 +6,7 @@ import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RandomAccessibleOnRealRandomAccessible;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.interpolation.Interpolant;
@@ -24,7 +25,7 @@ public class Views
 {
 	/**
 	 * Returns a {@link RealRandomAccessible} using interpolation
-	 * 
+	 *
 	 * @param source
 	 * @param factory
 	 * @return
@@ -33,10 +34,27 @@ public class Views
 	{
 		return new Interpolant< T, F >( source, factory );
 	}
-	
+
+
+	/**
+	 * Turns a {@link RealRandomAccessible} into a {@link RandomAccessible},
+	 * providing {@link RandomAccess} at integer coordinates.
+	 *
+	 * @see #interpolate(net.imglib2.EuclideanSpace,
+	 *      net.imglib2.interpolation.InterpolatorFactory)
+	 *
+	 * @param source
+	 *            the {@link RealRandomAccessible} to be rasterized.
+	 * @return a {@link RandomAccessibleOnRealRandomAccessible} wrapping source.
+	 */
+	public static < T > RandomAccessibleOnRealRandomAccessible< T > raster( final RealRandomAccessible< T > source )
+	{
+		return new RandomAccessibleOnRealRandomAccessible< T >( source );
+	}
+
 	/**
 	 * Extend a RandomAccessibleInterval with an out-of-bounds strategy.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @param factory
@@ -53,7 +71,7 @@ public class Views
 	 * Extend a RandomAccessibleInterval with a mirroring out-of-bounds
 	 * strategy. Boundary pixels are not repeated. {@see
 	 * OutOfBoundsMirrorSingleBoundary}.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
@@ -68,7 +86,7 @@ public class Views
 	 * Extend a RandomAccessibleInterval with a mirroring out-of-bounds
 	 * strategy. Boundary pixels are repeated. {@see
 	 * OutOfBoundsMirrorDoubleBoundary}.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
@@ -82,7 +100,7 @@ public class Views
 	/**
 	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
 	 * strategy. {@see OutOfBoundsConstantValue}.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
@@ -96,7 +114,7 @@ public class Views
 	/**
 	 * Extend a RandomAccessibleInterval with a random-value out-of-bounds
 	 * strategy. {@see OutOfBoundsRandomValue}.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @param min
@@ -114,7 +132,7 @@ public class Views
 	/**
 	 * Extend a RandomAccessibleInterval with a periodic out-of-bounds
 	 * strategy. {@see OutOfBoundsPeriodic}.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
@@ -129,7 +147,7 @@ public class Views
 	 * Define an interval on a RandomAccessible. It is the callers
 	 * responsibility to ensure that the source RandomAccessible is defined in
 	 * the specified interval.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the source
 	 * @param min
@@ -147,7 +165,7 @@ public class Views
 	 * Define an interval on a RandomAccessible. It is the callers
 	 * responsibility to ensure that the source RandomAccessible is defined in
 	 * the specified interval.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the source
 	 * @param interval
@@ -162,11 +180,11 @@ public class Views
 	/**
 	 * Create view that is rotated by 90 degrees. The rotation is specified by
 	 * the fromAxis and toAxis arguments.
-	 * 
+	 *
 	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source view
 	 * is mapped to the Y-Axis of the rotated view. That is, it corresponds to a
 	 * 90 degree clock-wise rotation of the source view in the XY plane.
-	 * 
+	 *
 	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
 	 * the XY plane.
 	 */
@@ -200,11 +218,11 @@ public class Views
 	/**
 	 * Create view that is rotated by 90 degrees. The rotation is specified by
 	 * the fromAxis and toAxis arguments.
-	 * 
+	 *
 	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source view
 	 * is mapped to the Y-Axis of the rotated view. That is, it corresponds to a
 	 * 90 degree clock-wise rotation of the source view in the XY plane.
-	 * 
+	 *
 	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
 	 * the XY plane.
 	 */
@@ -227,7 +245,7 @@ public class Views
 	/**
 	 * Translate such that pixel at offset in randomAccessible is
 	 * pixel 0 in the resulting view.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the source
 	 */
@@ -242,7 +260,7 @@ public class Views
 	/**
 	 * Translate such that pixel at offset in interval is
 	 * pixel 0 in the resulting view.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the source
 	 */
@@ -263,7 +281,7 @@ public class Views
 
 	/**
 	 * Translate the source such that the upper left corner is at the origin
-	 * 
+	 *
 	 * @param interval
 	 *            the source.
 	 * @return view of the source translated to the origin
@@ -348,7 +366,7 @@ public class Views
 
 	/**
 	 * Invert the d-axis.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the source
 	 * @param d
@@ -366,7 +384,7 @@ public class Views
 
 	/**
 	 * Invert the d-axis.
-	 * 
+	 *
 	 * @param interval
 	 *            the source
 	 * @param d
@@ -385,14 +403,14 @@ public class Views
 		return interval( invertAxis( ( RandomAccessible< T > ) interval, d ), min, max );
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * Define an interval on a RandomAccessible and translate it such that the
 	 * min corner is at the origin. It is the callers responsibility to ensure
 	 * that the source RandomAccessible is defined in the specified interval.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the source
 	 * @param offset
@@ -410,10 +428,10 @@ public class Views
 			max[ d ] = dimension[ d ] - 1;
 		return interval( translate( randomAccessible, offset ), min, max );
 	}
-	
+
 	/**
 	 * test whether the source interval starts at (0,0,...,0)
-	 * 
+	 *
 	 * @param interval - the {@link Interval} to test
 	 * @return true if zero-bounded, false otherwise
 	 */
@@ -422,14 +440,14 @@ public class Views
 		for ( int d = 0; d < interval.numDimensions(); ++d )
 			if ( interval.min( d ) != 0 )
 				return false;
-		
+
 		return true;
 	}
 
 
 	/**
 	 * Invert the d-axis and shift the resulting view to the origin.
-	 * 
+	 *
 	 * @param interval
 	 *            the source
 	 * @param d
@@ -451,7 +469,7 @@ public class Views
 	 *
 	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
 	 * the XY plane.
-	 * 
+	 *
 	 * @param interval
 	 *            the source view
 	 * @param fromAxis
@@ -471,7 +489,7 @@ public class Views
 	 * Define an interval on a RandomAccessible and translate it such that the
 	 * min corner is at the origin. It is the callers responsibility to ensure
 	 * that the source RandomAccessible is defined in the specified interval.
-	 * 
+	 *
 	 * @param randomAccessible
 	 *            the source
 	 * @param offset
@@ -485,13 +503,13 @@ public class Views
 	{
 		return offsetInterval( randomAccessible, offset, dimension );
 	}
-	
+
 	/**
 	 * Return an {@link IterableInterval}.  If the passed
 	 * {@link RandomAccessibleInterval} is already an {@link IterableInterval}
 	 * then it is returned directly (this is the case for {@link Img}).  If
 	 * not, then an {@link IterableRandomAccessibleInterval} is created.
-	 *  
+	 *
 	 * @param randomAccessibleInterval
 	 * 				the source
 	 * @return an {@link IterableInterval}
