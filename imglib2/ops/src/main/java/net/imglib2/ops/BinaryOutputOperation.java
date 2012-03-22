@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2011, Barry DeZonia.
+Copyright (c) 2011, Christian Dietz.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

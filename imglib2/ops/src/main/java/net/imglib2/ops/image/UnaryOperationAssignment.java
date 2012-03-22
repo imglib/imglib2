@@ -39,7 +39,8 @@ import net.imglib2.type.Type;
  * @author Christian Dietz
  * 
  */
-public class UnaryOperationAssignment< T extends Type< T >, V extends Type< V >> implements UnaryOperation< IterableInterval< T >, IterableInterval< V >>
+public class UnaryOperationAssignment< T extends Type< T >, V extends Type< V >>
+	implements UnaryOperation< IterableInterval< T >, IterableInterval< V >>
 {
 
 	private final UnaryOperation< T, V > m_op;
@@ -53,7 +54,10 @@ public class UnaryOperationAssignment< T extends Type< T >, V extends Type< V >>
 	public IterableInterval< V > compute( IterableInterval< T > input, IterableInterval< V > output )
 	{
 
-		if ( !IterationOrderUtil.equalIterationOrder( input, output ) || !IterationOrderUtil.equalInterval( input, output ) ) { throw new IllegalArgumentException( "Intervals are not compatible" ); }
+		if ( !IterationOrderUtil.equalIterationOrder( input, output ) ||
+				!IterationOrderUtil.equalInterval( input, output ) ) {
+			throw new IllegalArgumentException( "Intervals are not compatible" );
+		}
 
 		final Cursor< T > opc = input.cursor();
 		final Cursor< V > outCursor = output.cursor();
