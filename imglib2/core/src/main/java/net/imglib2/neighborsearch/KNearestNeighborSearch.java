@@ -28,7 +28,6 @@
 
 package net.imglib2.neighborsearch;
 
-import net.imglib2.EuclideanSpace;
 import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
 
@@ -40,9 +39,9 @@ import net.imglib2.Sampler;
  * application, each thread will thus need its own
  * {@link KNearestNeighborSearch}. 
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de> and Stephan Preibisch
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface KNearestNeighborSearch< T > extends EuclideanSpace
+public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 {
 	/**
 	 * Perform <em>k</em>-nearest-neighbor search for a reference coordinate.
@@ -99,9 +98,4 @@ public interface KNearestNeighborSearch< T > extends EuclideanSpace
 	 * @return
 	 */
 	public double getDistance( final int i );
-	
-	/**
-	 * Create a copy.
-	 */
-	public KNearestNeighborSearch< T > copy();
 }

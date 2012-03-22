@@ -81,22 +81,6 @@ public class KNearestNeighborSearchBehavior
 		return timer.stop();
 	}
 
-	final static private < T extends Type< T > > long drawNearestNeighbor(
-			final IterableInterval< T > target,
-			final KNearestNeighborSearch< T > nnSearch )
-	{
-		final Timer timer = new Timer();
-		timer.start();
-		final Cursor< T > c = target.localizingCursor();
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			nnSearch.search( c );
-			c.get().set( nnSearch.getSampler( 0 ).get() );
-		}
-		return timer.stop();
-	}
-
 	final static private < T extends RealType< T > > long drawWeightedByDistance(
 			final IterableInterval< T > target,
 			final KNearestNeighborSearch< T > knnSearch,

@@ -135,6 +135,33 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 		return Math.sqrt( bestSquDistances[ i ] );
 	}
 	
+	
+	/* NearestNeighborSearch */
+	
+	@Override
+	public RealLocalizable getPosition()
+	{
+		return getPosition( 0 );
+	}
+	
+	@Override
+	public Sampler< T > getSampler()
+	{
+		return getSampler( 0 );
+	}
+	
+	@Override
+	public double getSquareDistance()
+	{
+		return getSquareDistance( 0 );
+	}
+	
+	@Override
+	public double getDistance()
+	{
+		return getDistance( 0 );
+	}
+	 	
 	@Override
 	public KNearestNeighborSearchOnKDTree< T > copy()
 	{
