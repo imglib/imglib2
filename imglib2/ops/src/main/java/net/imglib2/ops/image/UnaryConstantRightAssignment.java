@@ -39,7 +39,8 @@ import net.imglib2.type.numeric.RealType;
  * @author Christian Dietz
  * 
  */
-public class UnaryConstantRightAssignment< T extends RealType< T >, V extends RealType< V >, O extends RealType< O >> implements BinaryOperation< IterableInterval< T >, V, IterableInterval< O >>
+public class UnaryConstantRightAssignment< T extends RealType< T >, V extends RealType< V >, O extends RealType< O >>
+	implements BinaryOperation< IterableInterval< T >, V, IterableInterval< O >>
 {
 
 	private BinaryOperation< T, V, O > m_op;
@@ -53,7 +54,10 @@ public class UnaryConstantRightAssignment< T extends RealType< T >, V extends Re
 	public IterableInterval< O > compute( IterableInterval< T > input, V constant, IterableInterval< O > output )
 	{
 
-		if ( !IterationOrderUtil.equalIterationOrder( input, output ) || !IterationOrderUtil.equalInterval( input, output ) ) { throw new IllegalArgumentException( "Intervals are not compatible" ); }
+		if ( !IterationOrderUtil.equalIterationOrder( input, output ) ||
+				!IterationOrderUtil.equalInterval( input, output ) ) {
+			throw new IllegalArgumentException( "Intervals are not compatible" );
+		}
 
 		Cursor< T > inCursor = input.cursor();
 		Cursor< O > outCursor = output.cursor();

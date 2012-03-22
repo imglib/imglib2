@@ -33,29 +33,23 @@ package net.imglib2;
  * but only method calls passed through to an actual {@link RealRandomAccess}.
  * Therefore, localization into integer fields performs a Math.round operation
  * per field and is thus not very efficient.  Localization into real fields,
- * however, is passed through and thus performans optimally. 
+ * however, is passed through and thus performs optimally.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RandomAccessibleOnRealRandomAccessible< T > implements RandomAccessible< T >
+public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclideanSpace implements RandomAccessible< T >
 {
-	final protected int n;
 	final protected RealRandomAccessible< T > target;
-	
+
 	final protected class RandomAccessOnRealRandomAccessible implements RandomAccess< T >
 	{
 		final protected RealRandomAccess< T > targetAccess;
-		
-		public RandomAccessOnRealRandomAccessible()
+
+		public RandomAccessOnRealRandomAccessible( final RealRandomAccess< T > targetAccess )
 		{
-			targetAccess = target.realRandomAccess();
+			this.targetAccess = targetAccess;
 		}
-		
-		public RandomAccessOnRealRandomAccessible( final Interval interval )
-		{
-			targetAccess = target.realRandomAccess( interval );
-		}
-		
+
 		@Override
 		public void localize( final int[] position )
 		{
@@ -187,11 +181,11 @@ public class RandomAccessibleOnRealRandomAccessible< T > implements RandomAccess
 		@Override
 		public RandomAccessOnRealRandomAccessible copy()
 		{
-			return new RandomAccessOnRealRandomAccessible();
+			return new RandomAccessOnRealRandomAccessible( targetAccess.copyRealRandomAccess() );
 		}
 
 		@Override
-		public RandomAccess< T > copyRandomAccess()
+		public RandomAccessOnRealRandomAccessible copyRandomAccess()
 		{
 			return copy();
 		}
@@ -202,29 +196,22 @@ public class RandomAccessibleOnRealRandomAccessible< T > implements RandomAccess
 			return n;
 		}
 	}
-	
+
 	public RandomAccessibleOnRealRandomAccessible( final RealRandomAccessible< T > target )
 	{
+		super( target.numDimensions() );
 		this.target = target;
-		n = target.numDimensions();
-	}
-	
-	@Override
-	public int numDimensions()
-	{
-		return n;
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
-		return new RandomAccessOnRealRandomAccessible();
+		return new RandomAccessOnRealRandomAccessible( target.realRandomAccess() );
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess( final Interval interval )
 	{
-		return new RandomAccessOnRealRandomAccessible( interval );
+		return new RandomAccessOnRealRandomAccessible( target.realRandomAccess( interval ) );
 	}
-	
 }
