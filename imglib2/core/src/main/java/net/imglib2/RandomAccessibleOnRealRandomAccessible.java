@@ -45,17 +45,12 @@ public class RandomAccessibleOnRealRandomAccessible< T > implements RandomAccess
 	final protected class RandomAccessOnRealRandomAccessible implements RandomAccess< T >
 	{
 		final protected RealRandomAccess< T > targetAccess;
-		
-		public RandomAccessOnRealRandomAccessible()
+
+		public RandomAccessOnRealRandomAccessible( final RealRandomAccess< T > targetAccess )
 		{
-			targetAccess = target.realRandomAccess();
+			this.targetAccess = targetAccess;
 		}
-		
-		public RandomAccessOnRealRandomAccessible( final Interval interval )
-		{
-			targetAccess = target.realRandomAccess( interval );
-		}
-		
+
 		@Override
 		public void localize( final int[] position )
 		{
@@ -187,11 +182,11 @@ public class RandomAccessibleOnRealRandomAccessible< T > implements RandomAccess
 		@Override
 		public RandomAccessOnRealRandomAccessible copy()
 		{
-			return new RandomAccessOnRealRandomAccessible();
+			return new RandomAccessOnRealRandomAccessible( targetAccess.copyRealRandomAccess() );
 		}
 
 		@Override
-		public RandomAccess< T > copyRandomAccess()
+		public RandomAccessOnRealRandomAccessible copyRandomAccess()
 		{
 			return copy();
 		}
@@ -218,13 +213,13 @@ public class RandomAccessibleOnRealRandomAccessible< T > implements RandomAccess
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
-		return new RandomAccessOnRealRandomAccessible();
+		return new RandomAccessOnRealRandomAccessible( target.realRandomAccess() );
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess( final Interval interval )
 	{
-		return new RandomAccessOnRealRandomAccessible( interval );
+		return new RandomAccessOnRealRandomAccessible( target.realRandomAccess( interval ) );
 	}
 	
 }
