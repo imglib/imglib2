@@ -31,7 +31,6 @@ package net.imglib2.neighborsearch;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RealCursor;
 import net.imglib2.RealLocalizable;
-import net.imglib2.Sampler;
 
 /**
  * <em>k</em>-nearest-neighbor search on {@link IterableRealInterval}
@@ -84,6 +83,9 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	{
 		return n;
 	}
+	
+	@Override
+	public int numNeighbors() { return k; }
 	
 	@Override
 	public void search( final RealLocalizable reference )
@@ -139,33 +141,6 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	public double getDistance( final int i )
 	{
 		return Math.sqrt( squareDistances[ i ] );
-	}
-
-	
-	/* NearestNeighborSearch */
-	
-	@Override
-	public RealLocalizable getPosition()
-	{
-		return getPosition( 0 );
-	}
-
-	@Override
-	public Sampler< T > getSampler()
-	{
-		return getSampler( 0 );
-	}
-
-	@Override
-	public double getSquareDistance()
-	{
-		return getSquareDistance( 0 );
-	}
-	
-	@Override
-	public double getDistance()
-	{
-		return getDistance( 0 );
 	}
 	
 	@Override

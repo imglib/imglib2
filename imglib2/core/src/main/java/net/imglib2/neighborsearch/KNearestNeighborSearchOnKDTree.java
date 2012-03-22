@@ -69,6 +69,9 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 	}
 	
 	@Override
+	public int numNeighbors() { return k; }
+	
+	@Override
 	public void search( RealLocalizable reference )
 	{
 		reference.localize( pos );
@@ -130,34 +133,6 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 	public double getDistance( int i )
 	{
 		return Math.sqrt( bestSquDistances[ i ] );
-	}
-
-
-	@Override
-	public Sampler< T > getSampler()
-	{
-		return getSampler( 0 );
-	}
-
-
-	@Override
-	public RealLocalizable getPosition()
-	{
-		return getPosition( 0 );
-	}
-
-
-	@Override
-	public double getSquareDistance()
-	{
-		return getSquareDistance( 0 );
-	}
-
-
-	@Override
-	public double getDistance()
-	{
-		return getDistance( 0 );
 	}
 	
 	@Override
