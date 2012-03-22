@@ -8,7 +8,7 @@
   <parent>
     <groupId>com.github.scijava</groupId>
     <artifactId>pom-scijava</artifactId>
-    <version>1.4</version>
+    <version>1.6</version>
   </parent>
 
   <groupId>net.imglib2</groupId>
@@ -26,9 +26,33 @@
     <module>imglib2</module>
   </modules>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<licenseName>imglib</licenseName>
+					<licenseResolver>http://code.imagej.net/licenses</licenseResolver>
+					<inceptionYear>2009</inceptionYear>
+					<organizationName>Stephan Preibisch, Stephan Saalfeld, Tobias
+Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organizationName>
+					<projectName>ImgLib2: a general-purpose, multidimensional image processing library.</projectName>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.fusesource.mvnplugins</groupId>
+				<artifactId>maven-graph-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
   <licenses>
     <license>
-      <name>BSD</name>
+			<name>Simplified BSD License</name>
+			<url>http://code.imagej.net/licenses/imagej/license.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
