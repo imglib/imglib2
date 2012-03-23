@@ -40,6 +40,8 @@ import net.imglib2.collection.RealPointSampleList;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
+import net.imglib2.interpolation.neighborsearch.InverseDistanceWeightingInterpolator;
+import net.imglib2.interpolation.neighborsearch.InverseDistanceWeightingInterpolatorFactory;
 import net.imglib2.neighborsearch.KNearestNeighborSearch;
 import net.imglib2.neighborsearch.KNearestNeighborSearchOnIterableRealInterval;
 import net.imglib2.neighborsearch.KNearestNeighborSearchOnKDTree;
@@ -120,6 +122,29 @@ public class KNearestNeighborSearchBehavior
 		return timer.stop();
 	}
 	
+	final static private < T extends RealType< T > > long drawWeightedByDistanceInterpolator(
+			final IterableInterval< T > target,
+			final KNearestNeighborSearch< T > knnSearch,
+			final int k,
+			final double p,
+			final double min,
+			final double max )
+	{
+		final Timer timer = new Timer();
+		timer.start();
+		final Cursor< T > c = target.localizingCursor();
+		final InverseDistanceWeightingInterpolator< T > interpolator= new InverseDistanceWeightingInterpolatorFactory< T >( p ).create( knnSearch, target );
+		while ( c.hasNext() )
+		{
+			c.fwd();
+			interpolator.setPosition( c );
+			c.get().setReal( Math.max(  min, Math.min( max, interpolator.get().getRealDouble() ) ) );
+		}
+		return timer.stop();
+	}
+	
+	
+	
 	
 	
 	final static public void main( final String[] args )
@@ -190,7 +215,7 @@ public class KNearestNeighborSearchBehavior
 			{
 				IJ.log( "  k=" + k + " p=" + String.format( "%.2f", p ) );
 				final ImagePlusImg< UnsignedByteType, ? > img3 = factory.create( size, new UnsignedByteType() );
-				t += drawWeightedByDistance( img3, new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, k ), k, p, 0, 255 );
+				t += drawWeightedByDistanceInterpolator( img3, new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, k ), k, p, 0, 255 );
 				try
 				{
 					distanceStack.addSlice( "k=" + k + " p=" + String.format( "%.2f", p ), img3.getImagePlus().getProcessor() );
@@ -269,7 +294,7 @@ public class KNearestNeighborSearchBehavior
 			{
 				IJ.log( "  k=" + k + " p=" + String.format( "%.2f", p ) );
 				final ImagePlusImg< UnsignedByteType, ? > img3 = factory.create( size, new UnsignedByteType() );
-				t += drawWeightedByDistance(
+				t += drawWeightedByDistanceInterpolator(
 						img3,
 						new KNearestNeighborSearchOnKDTree< UnsignedByteType >( kdtree, k ), k, p, 0, 255 );
 				try
