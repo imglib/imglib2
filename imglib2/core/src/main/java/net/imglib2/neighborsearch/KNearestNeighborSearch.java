@@ -51,11 +51,11 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	public void search( final RealLocalizable reference );
 
 	/**
-	 * Get the number of nearest neighbor points k used during the last search
+	 * Get the of k nearest neighbor points used in this search
 	 * 
-	 * @return the number of nearest neighbor points k used during the last search
+	 * @return the number of nearest neighbor points k used for this search
 	 */
-	public int numNeighbors();
+	public int getK();
 
 	/**
 	 * Access the data of the <em>i</em><sup>th</sup> nearest neighbor, ordered
@@ -98,4 +98,9 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	 * @return
 	 */
 	public double getDistance( final int i );
+
+	/**
+	 * Create a copy.
+	 */
+	public KNearestNeighborSearch< T > copy();
 }

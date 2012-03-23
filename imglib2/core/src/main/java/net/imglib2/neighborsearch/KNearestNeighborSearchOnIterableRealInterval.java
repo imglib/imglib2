@@ -86,7 +86,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	}
 	
 	@Override
-	public int numNeighbors() { return k; }
+	public int getK() { return k; }
 	
 	@Override
 	public void search( final RealLocalizable reference )

@@ -69,7 +69,7 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 	}
 	
 	@Override
-	public int numNeighbors() { return k; }
+	public int getK() { return k; }
 	
 	@Override
 	public void search( RealLocalizable reference )

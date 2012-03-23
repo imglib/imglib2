@@ -71,7 +71,7 @@ public class InverseDistanceWeightingInterpolator< T extends RealType< T > > ext
 		
 		search.search( this );
 		this.value = search.getSampler( 0 ).get().copy();
-		this.numNeighbors = search.numNeighbors();
+		this.numNeighbors = search.getK();
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class InverseDistanceWeightingInterpolator< T extends RealType< T > > ext
 	public InverseDistanceWeightingInterpolator< T > copy()
 	{
 		//TODO: Ugly cast, needs a change in the KNearestNeighborSearch interface
-		return new InverseDistanceWeightingInterpolator< T >( (KNearestNeighborSearch<T>)search.copy(), p );
+		return new InverseDistanceWeightingInterpolator< T >( search.copy(), p );
 	}
 
 	@Override

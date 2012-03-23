@@ -57,7 +57,7 @@ public class InverseDistanceWeightingInterpolatorFactory< T extends RealType< T 
 	public InverseDistanceWeightingInterpolator< T > create( final KNearestNeighborSearch< T > search )
 	{
 		//TODO: Ugly cast, needs a change in the KNearestNeighborSearch interface
-		return new InverseDistanceWeightingInterpolator< T >( (KNearestNeighborSearch<T>)search.copy(), p );
+		return new InverseDistanceWeightingInterpolator< T >( search.copy(), p );
 	}
 	
 	/**
