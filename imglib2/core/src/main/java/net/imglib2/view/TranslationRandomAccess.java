@@ -40,7 +40,7 @@ public final class TranslationRandomAccess< T > extends AbstractEuclideanSpace i
 	{
 		assert position.length >= n;
 		for ( int d = 0; d < n; ++d )
-			position[ d ] = s.getIntPosition( d ) + ( int ) translation[ d ];
+			position[ d ] = s.getIntPosition( d ) - ( int ) translation[ d ];
 	}
 
 	@Override
@@ -48,21 +48,21 @@ public final class TranslationRandomAccess< T > extends AbstractEuclideanSpace i
 	{
 		assert position.length >= n;
 		for ( int d = 0; d < n; ++d )
-			position[ d ] = s.getLongPosition( d ) + ( int ) translation[ d ];
+			position[ d ] = s.getLongPosition( d ) - ( int ) translation[ d ];
 	}
 
 	@Override
 	public int getIntPosition( final int d )
 	{
 		assert d <= n;
-		return s.getIntPosition( d ) + ( int ) translation[ d ];
+		return s.getIntPosition( d ) - ( int ) translation[ d ];
 	}
 
 	@Override
 	public long getLongPosition( final int d )
 	{
 		assert d <= n;
-		return s.getLongPosition( d ) + ( int ) translation[ d ];
+		return s.getLongPosition( d ) - ( int ) translation[ d ];
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public final class TranslationRandomAccess< T > extends AbstractEuclideanSpace i
 	{
 		assert position.length >= n;
 		for ( int d = 0; d < n; ++d )
-			position[ d ] = s.getFloatPosition( d ) + translation[ d ];
+			position[ d ] = s.getFloatPosition( d ) - translation[ d ];
 	}
 
 	@Override
@@ -78,21 +78,21 @@ public final class TranslationRandomAccess< T > extends AbstractEuclideanSpace i
 	{
 		assert position.length >= n;
 		for ( int d = 0; d < n; ++d )
-			position[ d ] = s.getDoublePosition( d ) + translation[ d ];
+			position[ d ] = s.getDoublePosition( d ) - translation[ d ];
 	}
 
 	@Override
 	public float getFloatPosition( final int d )
 	{
 		assert d <= n;
-		return s.getFloatPosition( d ) + translation[ d ];
+		return s.getFloatPosition( d ) - translation[ d ];
 	}
 
 	@Override
 	public double getDoublePosition( final int d )
 	{
 		assert d <= n;
-		return s.getDoublePosition( d ) + translation[ d ];
+		return s.getDoublePosition( d ) - translation[ d ];
 	}
 
 	@Override
