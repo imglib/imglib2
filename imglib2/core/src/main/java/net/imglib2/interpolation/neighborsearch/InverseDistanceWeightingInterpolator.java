@@ -29,6 +29,7 @@ package net.imglib2.interpolation.neighborsearch;
 
 import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
+import net.imglib2.Sampler;
 import net.imglib2.neighborsearch.KNearestNeighborSearch;
 import net.imglib2.type.numeric.RealType;
 
@@ -88,11 +89,13 @@ public class InverseDistanceWeightingInterpolator< T extends RealType< T > > ext
 			
 			for ( int i = 0; i < numNeighbors; ++i )
 			{
-				final T t = search.getSampler( i ).get();
+				final Sampler< T > sampler = search.getSampler( i );
 				
-				if ( t == null )
+				if ( sampler == null )
 					break;
-				
+
+				final T t = sampler.get();
+								
 				final double weight = computeWeight( search.getSquareDistance( i ) );
 				
 				sumWeights += weight;
