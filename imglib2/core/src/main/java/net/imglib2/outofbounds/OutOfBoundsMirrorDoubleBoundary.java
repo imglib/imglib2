@@ -94,8 +94,8 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 		}
 		else if ( x == dimension[ d ] )
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
-		
-		final long y = outOfBoundsRandomAccess.getLongPosition( d );
+
+		final long y = outOfBoundsRandomAccess.getLongPosition( d ) - min[ d ];
 		if ( inc[ d ] )
 		{
 			if ( y + 1 == dimension[ d ] )
@@ -123,8 +123,8 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 			dimIsOutOfBounds[ d ] = false;
 			if ( isOutOfBounds ) checkOutOfBounds();
 		}
-		
-		final long y = outOfBoundsRandomAccess.getLongPosition( d );
+
+		final long y = outOfBoundsRandomAccess.getLongPosition( d ) - min[ d ];
 		if ( inc[ d ] )
 		{
 			if ( y == 0 )
