@@ -7,13 +7,12 @@
 
   <parent>
     <groupId>net.imglib2</groupId>
-    <artifactId>imglib-pom-base</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>pom-imglib</artifactId>
+    <version>2.0-SNAPSHOT</version>
   </parent>
 
   <groupId>mpicbg</groupId>
-  <artifactId>imglib-pom-imglib1</artifactId>
-  <version>2.0-SNAPSHOT</version>
+  <artifactId>pom-imglib1</artifactId>
   <packaging>pom</packaging>
 
   <name>ImgLib1 Projects</name>
@@ -27,17 +26,18 @@
     <module>io</module>
     <module>ops</module>
     <module>scripting</module>
+    <module>tests</module>
   </modules>
 
   <!-- NB: for project parent, in case of partial checkout -->
   <repositories>
     <repository>
       <id>imagej.releases</id>
-      <url>http://dev.imagejdev.org/maven2/releases</url>
+      <url>http://maven.imagej.net/content/repositories/releases</url>
     </repository>
     <repository>
       <id>imagej.snapshots</id>
-      <url>http://dev.imagejdev.org/maven2/snapshots</url>
+      <url>http://maven.imagej.net/content/repositories/snapshots</url>
     </repository>
   </repositories>
 

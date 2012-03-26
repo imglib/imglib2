@@ -1,6 +1,6 @@
 package net.imglib2.view;
 
-import net.imglib2.AbstractSampler;
+import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.transform.integer.Mixed;
@@ -16,12 +16,12 @@ import net.imglib2.transform.integer.Mixed;
  * <p>
  * For the general case, see {@link MixedRandomAccess}.
  * </p>
- * 
+ *
  * @author Tobias Pietzsch
- * 
+ *
  * @param <T>
  */
-public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< T > implements RandomAccess< T >
+public final class FullSourceMapMixedRandomAccess< T > extends AbstractEuclideanSpace implements RandomAccess< T >
 {
 	/**
 	 * source RandomAccess. note that this is the <em>target</em> of the
@@ -53,7 +53,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 
 	private final long[] tmpDistance;
 
-	FullSourceMapMixedRandomAccess( RandomAccess< T > source, Mixed transformToSource )
+	FullSourceMapMixedRandomAccess( final RandomAccess< T > source, final Mixed transformToSource )
 	{
 		super( transformToSource.numSourceDimensions() );
 		// n == transformToSource.numSourceDimensions()
@@ -98,7 +98,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 		super( randomAccess.numDimensions() );
 
 		this.s = randomAccess.s.copyRandomAccess();
-		this.m = randomAccess.m; 
+		this.m = randomAccess.m;
 		this.translation = randomAccess.translation.clone();
 		this.sourceInv = randomAccess.sourceInv.clone();
 		this.sourceComponent = randomAccess.sourceComponent.clone();
@@ -108,7 +108,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void localize( int[] position )
+	public void localize( final int[] position )
 	{
 		assert position.length >= n;
 		for ( int d = 0; d < n; ++d )
@@ -116,7 +116,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void localize( long[] position )
+	public void localize( final long[] position )
 	{
 		assert position.length >= n;
 		for ( int d = 0; d < n; ++d )
@@ -124,7 +124,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public int getIntPosition( int d )
+	public int getIntPosition( final int d )
 	{
 		assert d < n;
 		final int td = sourceComponent[ d ];
@@ -133,7 +133,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public long getLongPosition( int d )
+	public long getLongPosition( final int d )
 	{
 		assert d < n;
 		final int td = sourceComponent[ d ];
@@ -142,7 +142,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void localize( float[] position )
+	public void localize( final float[] position )
 	{
 		assert position.length >= n;
 		for ( int d = 0; d < n; ++d )
@@ -150,7 +150,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void localize( double[] position )
+	public void localize( final double[] position )
 	{
 		assert position.length >= n;
 		for ( int d = 0; d < n; ++d )
@@ -158,19 +158,19 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public float getFloatPosition( int d )
+	public float getFloatPosition( final int d )
 	{
-		return ( float ) getLongPosition( d );
+		return getLongPosition( d );
 	}
 
 	@Override
-	public double getDoublePosition( int d )
+	public double getDoublePosition( final int d )
 	{
-		return ( double ) getLongPosition( d );
+		return getLongPosition( d );
 	}
 
 	@Override
-	public void fwd( int d )
+	public void fwd( final int d )
 	{
 		assert d < n;
 		if ( sourceInv[ d ] )
@@ -180,7 +180,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void bck( int d )
+	public void bck( final int d )
 	{
 		assert d < n;
 		if ( sourceInv[ d ] )
@@ -190,21 +190,21 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void move( int distance, int d )
+	public void move( final int distance, final int d )
 	{
 		assert d < n;
 		s.move( sourceInv[ d ] ? -distance : distance, sourceComponent[ d ] );
 	}
 
 	@Override
-	public void move( long distance, int d )
+	public void move( final long distance, final int d )
 	{
 		assert d < n;
 		s.move( sourceInv[ d ] ? -distance : distance, sourceComponent[ d ] );
 	}
 
 	@Override
-	public void move( Localizable localizable )
+	public void move( final Localizable localizable )
 	{
 		assert localizable.numDimensions() >= n;
 
@@ -222,7 +222,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void move( int[] distance )
+	public void move( final int[] distance )
 	{
 		assert distance.length >= n;
 
@@ -238,7 +238,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void move( long[] distance )
+	public void move( final long[] distance )
 	{
 		assert distance.length >= n;
 
@@ -254,7 +254,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void setPosition( Localizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		assert localizable.numDimensions() >= n;
 
@@ -273,7 +273,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void setPosition( int[] position )
+	public void setPosition( final int[] position )
 	{
 		assert position.length >= n;
 
@@ -291,7 +291,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void setPosition( long[] position )
+	public void setPosition( final long[] position )
 	{
 		assert position.length >= n;
 
@@ -309,7 +309,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void setPosition( int position, int d )
+	public void setPosition( final int position, final int d )
 	{
 		assert d < n;
 		final int td = sourceComponent[ d ];
@@ -318,7 +318,7 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractSampler< 
 	}
 
 	@Override
-	public void setPosition( long position, int d )
+	public void setPosition( final long position, final int d )
 	{
 		assert d < n;
 		final int td = sourceComponent[ d ];

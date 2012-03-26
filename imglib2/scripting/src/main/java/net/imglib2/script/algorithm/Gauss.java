@@ -8,7 +8,7 @@ import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.ImageFunction;
-import net.imglib2.algorithm.gauss2.GaussFloat;
+import net.imglib2.algorithm.gauss.GaussFloat;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -52,12 +52,16 @@ public class Gauss<T extends RealType<T>> extends ImgProxy<FloatType>
 		return s;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	static private final <R extends RealType<R>> Img<FloatType>
 	process(final Img<R> img, final double[] sigma)throws Exception {
+		// NB: Reference type as RealType<?> rather than R to avoid javac issue.
+		// We also use a raw cast for img below, to avoid another javac limitation.
+		// Caution: These issues are not apparent when using the Eclipse compiler.
+		final RealType<?> type = img.firstElement();
 		return processFloat(
-				img.firstElement() instanceof FloatType ?
-				  (Img<FloatType>)img
+				type instanceof FloatType ?
+				  (Img)img
 				: Compute.inFloats(1, new ImageFunction(img)), sigma);
 	}
 	
@@ -69,6 +73,6 @@ public class Gauss<T extends RealType<T>> extends ImgProxy<FloatType>
 	static private final Img<FloatType>
 	processFloat(final Img<FloatType> img, final double[] sigma) throws Exception {
 		final GaussFloat g = new GaussFloat(sigma, img);
-		return g.getResult();
+		return (Img<FloatType>)g.getResult();
 	}
 }

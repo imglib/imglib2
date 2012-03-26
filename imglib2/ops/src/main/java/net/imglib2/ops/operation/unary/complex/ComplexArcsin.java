@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,58 +25,70 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.ComplexOutput;
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
 import net.imglib2.ops.operation.binary.complex.ComplexPower;
 import net.imglib2.ops.operation.binary.complex.ComplexSubtract;
+import net.imglib2.type.numeric.ComplexType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 //Handbook of Mathematics and Computational Science, Harris & Stocker, Springer, 2006
 
 /**
+ * Sets an output complex number to the inverse sine of an input complex
+ * number.
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class ComplexArcsin extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexArcsin<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements ComplexUnaryOperation<I,O>
+{
+	private final ComplexMultiply<ComplexDoubleType,I,ComplexDoubleType>
+		mulFunc1 = new ComplexMultiply<ComplexDoubleType, I, ComplexDoubleType>();
+	private final ComplexMultiply<I,I,ComplexDoubleType>
+		mulFunc2 = new ComplexMultiply<I,I,ComplexDoubleType>();
+	private final ComplexSubtract<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>
+		diffFunc = new ComplexSubtract<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexPower<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>
+		powFunc = new ComplexPower<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexAdd<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>
+		addFunc = new ComplexAdd<ComplexDoubleType, ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexLog<ComplexDoubleType, ComplexDoubleType>
+		logFunc = new ComplexLog<ComplexDoubleType, ComplexDoubleType>();
+	private final ComplexMultiply<ComplexDoubleType, ComplexDoubleType, O>
+		mulFunc3 = new ComplexMultiply<ComplexDoubleType, ComplexDoubleType, O>();
 
-	private static final Complex I = Complex.createCartesian(0, 1);
-	private static final Complex MINUS_I = Complex.createCartesian(0, -1);
-	private static final Complex ONE = Complex.createCartesian(1, 0);
-	private static final Complex ONE_HALF = Complex.createCartesian(0.5, 0);
+	private static final ComplexDoubleType I = new ComplexDoubleType(0,1);
+	private static final ComplexDoubleType MINUS_I = new ComplexDoubleType(0,-1);
+	private static final ComplexDoubleType ONE = new ComplexDoubleType(1,0);
+	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0.5,0);
 
-	private static final ComplexMultiply mulFunc = new ComplexMultiply();
-	private static final ComplexSubtract diffFunc = new ComplexSubtract();
-	private static final ComplexPower powFunc = new ComplexPower();
-	private static final ComplexAdd addFunc = new ComplexAdd();
-	private static final ComplexLog logFunc = new ComplexLog();
-	
-	private final Complex iz = new Complex();
-	private final Complex zSquared = new Complex();
-	private final Complex miniSum = new Complex();
-	private final Complex root = new Complex();
-	private final Complex sum = new Complex();
-	private final Complex logSum = new Complex();
-	
+	private final ComplexDoubleType iz = new ComplexDoubleType();
+	private final ComplexDoubleType zSquared = new ComplexDoubleType();
+	private final ComplexDoubleType miniSum = new ComplexDoubleType();
+	private final ComplexDoubleType root = new ComplexDoubleType();
+	private final ComplexDoubleType sum = new ComplexDoubleType();
+	private final ComplexDoubleType logSum = new ComplexDoubleType();
+
 	@Override
-	public void compute(Complex z, Complex output) {
-		mulFunc.compute(I, z, iz);
-		mulFunc.compute(z, z, zSquared);
+	public O compute(I z, O output) {
+		mulFunc1.compute(I, z, iz);
+		mulFunc2.compute(z, z, zSquared);
 		diffFunc.compute(ONE, zSquared, miniSum);
 		powFunc.compute(miniSum, ONE_HALF, root);
 		addFunc.compute(iz, root, sum);
 		logFunc.compute(sum, logSum);
-		mulFunc.compute(MINUS_I, logSum, output);
+		mulFunc3.compute(MINUS_I, logSum, output);
+		return output;
 	}
-	
+
 	@Override
-	public ComplexArcsin duplicate() {
-		return new ComplexArcsin();
+	public ComplexArcsin<I,O> copy() {
+		return new ComplexArcsin<I,O>();
 	}
 }

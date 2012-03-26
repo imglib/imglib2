@@ -1,3 +1,32 @@
+/**
+ * Copyright (c) 2009--2012, ImgLib2 developers
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.  Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.  Neither the name of the Fiji project nor
+ * the names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Tobias Pietzsch
+ */
 package net.imglib2.img.cell;
 
 import net.imglib2.AbstractLocalizingCursor;
@@ -5,64 +34,65 @@ import net.imglib2.Cursor;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 
-public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A >
+/**
+ * Localizing {@link Cursor} on a {@link CellImg}.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
+public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends AbstractLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A, C >
 {
 	protected final T type;
-	
-	protected final Cursor< Cell< A > > cursorOnCells;
+
+	protected final Cursor< C > cursorOnCells;
 
 	protected int lastIndexInCell;
-	final long[] minPositionInCell; 
-	final long[] maxPositionInCell;
+	protected long[] currentCellMin;
+	protected long[] currentCellMax;
 
 	/**
 	 * The current index of the type.
-	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 * It is faster to duplicate this here than to access it through type.getIndex().
 	 */
 	protected int index;
-	
+
 	/**
 	 * Caches cursorOnCells.hasNext().
 	 */
 	protected boolean isNotLastCell;
 
-	protected CellLocalizingCursor( final CellLocalizingCursor< T, A > cursor )
+	protected CellLocalizingCursor( final CellLocalizingCursor< T, A, C > cursor )
 	{
 		super( cursor.numDimensions() );
-		
+
 		this.type = cursor.type.duplicateTypeOnSameNativeImg();
 		this.cursorOnCells = cursor.cursorOnCells.copyCursor();
-		this.minPositionInCell = new long[ n ];
-		this.maxPositionInCell = new long[ n ];
-		
+		this.currentCellMin = cursor.currentCellMin;
+		this.currentCellMax = cursor.currentCellMax;
+
 		isNotLastCell = cursor.isNotLastCell;
 		lastIndexInCell = cursor.lastIndexInCell;
 		for ( int d = 0; d < n; ++d )
-		{
-			minPositionInCell[ d ] = cursor.minPositionInCell[ d ];
-			maxPositionInCell[ d ] = cursor.maxPositionInCell[ d ];
 			position[ d ] = cursor.position[ d ];
-		}
 		index = cursor.index;
-		
+
 		type.updateContainer( this );
 		type.updateIndex( index );
 	}
-	
-	public CellLocalizingCursor( final CellImg< T, A > container )
+
+	public CellLocalizingCursor( final CellImg< T, A, C > container )
 	{
 		super( container.numDimensions() );
-		
+
 		this.type = container.createLinkedType();
 		this.cursorOnCells = container.cells.cursor();
-		this.minPositionInCell = new long[ n ];
-		this.maxPositionInCell = new long[ n ];
-		
+		this.currentCellMin = null;
+		this.currentCellMax = null;
+
 		reset();
 	}
 
 	@Override
-	public Cell< A > getCell()
+	public C getCell()
 	{
 		return cursorOnCells.get();
 	}
@@ -75,13 +105,13 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	}
 
 	@Override
-	public CellLocalizingCursor< T, A > copy()
+	public CellLocalizingCursor< T, A, C > copy()
 	{
-		return new CellLocalizingCursor< T, A >( this );
+		return new CellLocalizingCursor< T, A, C >( this );
 	}
 
 	@Override
-	public CellLocalizingCursor< T, A > copyCursor()
+	public CellLocalizingCursor< T, A, C > copyCursor()
 	{
 		return copy();
 	}
@@ -89,11 +119,11 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	@Override
 	public boolean hasNext()
 	{
-		return isNotLastCell || ( index < lastIndexInCell );
+		return ( index < lastIndexInCell ) || isNotLastCell;
 	}
 
 	@Override
-	public void jumpFwd( long steps )
+	public void jumpFwd( final long steps )
 	{
 		long newIndex = index + steps;
 		while ( newIndex > lastIndexInCell )
@@ -104,19 +134,17 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 			lastIndexInCell = ( int )( getCell().size() - 1);
 		}
 
-		Cell< A > c = getCell();
-		for ( int d = 0; d < n; ++d ) {
-			minPositionInCell[ d ] = c.offset[ d ];
-			maxPositionInCell[ d ] = minPositionInCell[ d ] + c.dimensions[ d ] - 1;
-		}
+		final C cell = getCell();
+		currentCellMin = cell.min;
+		currentCellMax = cell.max;
 
 		index = ( int ) newIndex;
-		c.indexToGlobalPosition( index, position );
+		cell.indexToGlobalPosition( index, position );
 
 		type.updateIndex( index );
 		type.updateContainer( this );
 	}
-	
+
 	@Override
 	public void fwd()
 	{
@@ -129,8 +157,8 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( ++position[ d ] > maxPositionInCell[ d ] )
-				position[ d ] = minPositionInCell[ d ];
+			if ( ++position[ d ] > currentCellMax[ d ] )
+				position[ d ] = currentCellMin[ d ];
 			else
 				break;
 		}
@@ -141,28 +169,28 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	{
 		cursorOnCells.reset();
 		moveToNextCell();
+		index = -1;
 		type.updateIndex( index );
 	}
 
 	/**
 	 * Move cursor right before the first element of the next cell.
-	 * Update type, position, and index variables. 
+	 * Update type, position, and index variables.
 	 */
 	private void moveToNextCell()
 	{
 		cursorOnCells.fwd();
 		isNotLastCell = cursorOnCells.hasNext();
-		Cell< A > c = getCell();
+		final C cell = getCell();
 
-		lastIndexInCell = ( int )( c.size() - 1);
-		for ( int d = 0; d < n; ++d ) {
-			minPositionInCell[ d ] = c.offset[ d ];
-			maxPositionInCell[ d ] = minPositionInCell[ d ] + c.dimensions[ d ] - 1;
-			position[ d ] = minPositionInCell[ d ];
-		}
-		position[ 0 ] -= 1;
+		lastIndexInCell = ( int )( cell.size() - 1);
+		currentCellMin = cell.min;
+		currentCellMax = cell.max;
 
-		index = -1;
+		position[ 0 ] = currentCellMin[ 0 ] - 1;
+		for ( int d = 1; d < n; ++d )
+			position[ d ] = currentCellMin[ d ];
+
 		type.updateContainer( this );
 	}
 }

@@ -42,8 +42,9 @@ import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
 
 /**
- * @author leek
+ * TODO
  *
+ * @author Lee Kamentsky
  */
 public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> extends
 		AbstractRegionOfInterest implements IterableRegionOfInterest {
@@ -56,10 +57,28 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 	long [] firstPosition;
 	long [] minima;
 	long [] maxima;
-	
+
+	protected class BMROIIterationOrder
+	{
+		protected I getImg() {
+			return img;
+		}
+
+		@Override
+		public boolean equals( final Object obj )
+		{
+			if ( ! ( obj instanceof BinaryMaskRegionOfInterest.BMROIIterationOrder ) )
+				return false;
+
+			@SuppressWarnings( "unchecked" )
+			final BMROIIterationOrder o = ( BMROIIterationOrder )obj;
+			return o.getImg() == getImg();
+		}
+	}
+
 	protected class BMROIIterableInterval<TT extends Type<TT>> implements IterableInterval<TT> {
 		final RandomAccess<TT> src;
-		
+
 		/**
 		 * @author leek
 		 * 
@@ -142,7 +161,7 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 				}
 			}
 		}
-		protected BMROIIterableInterval(RandomAccess<TT> src) {
+		protected BMROIIterableInterval(final RandomAccess<TT> src) {
 			this.src = src;
 		}
 
@@ -158,12 +177,14 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 		}
 
 		@Override
-		public boolean equalIterationOrder(IterableRealInterval<?> f) {
-			if (f instanceof BMROIIterableInterval) {
-				BMROIIterableInterval<?> other = (BMROIIterableInterval<?>) f;
-				return other.getImg() == img;
-			}
-			return false;
+		public Object iterationOrder()
+		{
+			return new BMROIIterationOrder();
+		}
+
+		@Override
+		public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+			return iterationOrder().equals( f.iterationOrder() );
 		}
 
 		@Override
@@ -260,10 +281,6 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 		@Override
 		public Cursor<TT> localizingCursor() {
 			return new BMROICursor();
-		}
-		
-		protected I getImg() {
-			return img;
 		}
 	}
 	public BinaryMaskRegionOfInterest(final I img) {

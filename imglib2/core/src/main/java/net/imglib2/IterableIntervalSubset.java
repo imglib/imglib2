@@ -182,13 +182,47 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 			cursor.localize( position );
 		}
 	}
-	
+
+	private class IISIterationOrder
+	{
+		long firstIndex()
+		{
+			return firstIndex;
+		}
+
+		long size()
+		{
+			return size;
+		}
+
+		IterableInterval< T > interval()
+		{
+			return interval;
+		}
+
+		@Override
+		public boolean equals( final Object obj )
+		{
+			if ( ! ( obj instanceof IterableIntervalSubset.IISIterationOrder ) )
+				return false;
+
+			@SuppressWarnings( "unchecked" )
+			final IISIterationOrder o = ( IISIterationOrder )obj;
+
+			return
+				o.firstIndex() == firstIndex() &&
+				o.size() == size() &&
+				o.interval().iterationOrder().equals( interval().iterationOrder() );
+		}
+	}
+
+
 	final protected long firstIndex;
 	final private long size;
 	final protected long lastIndex;
-	
+
 	final protected IterableInterval< T > interval;
-	
+
 	/**
 	 * Make sure that size and last index are dictated by the parent
 	 * {@link IterableInterval} or the {@link IterableIntervalSubset},
@@ -223,17 +257,14 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 	}
 
 	@Override
-	final public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	public Object iterationOrder()
 	{
-		if ( f instanceof IterableIntervalSubset< ? > )
-		{
-			final IterableIntervalSubset< ? > fi = ( IterableIntervalSubset< ? > )f;
-			return
-				fi.firstIndex == firstIndex &&
-				fi.size == size &&
-				interval.equalIterationOrder( fi.interval );
-		}
-		return false;
+		return new IISIterationOrder();
+	}
+
+	@Override
+	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

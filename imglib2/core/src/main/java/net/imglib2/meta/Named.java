@@ -29,19 +29,17 @@
  */
 package net.imglib2.meta;
 
-import net.imglib2.img.Img;
-
 /**
- * Interface for things that have names
+ * Interface for things that have names.
  *
  * @author Lee Kamentsky
  */
 public interface Named {
-	/** Gets the name of the associated {@link Img} or other object. */
+
+	/** Gets the name of the object. */
 	String getName();
 
-	/** Sets the name of the associated {@link Img} or other object. */
+	/** Sets the name of the object. */
 	void setName(String name);
-
 
 }

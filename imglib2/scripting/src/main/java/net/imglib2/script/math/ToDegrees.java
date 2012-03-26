@@ -7,7 +7,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class ToDegrees extends UnaryOperation {
 
-	public ToDegrees(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> ToDegrees(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public ToDegrees(final IFunction fn) {

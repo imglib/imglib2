@@ -8,7 +8,7 @@ import net.imglib2.type.numeric.RealType;
 /** Does nothing other than returning {@link #a()} when evaluated. */
 public final class Identity extends UnaryOperation
 {
-	public Identity(final IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Identity(final IterableRealInterval<R> img) {
 		super(img);
 	}
 	public Identity(final IFunction fn) {

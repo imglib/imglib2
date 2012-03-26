@@ -29,10 +29,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.function.complex;
 
-import net.imglib2.ops.Complex;
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
+import net.imglib2.type.numeric.ComplexType;
 
 
 /**
@@ -40,22 +39,26 @@ import net.imglib2.ops.Neighborhood;
  * @author Barry DeZonia
  *
  */
-public class ConstantComplexFunction<INDEX> extends ComplexOutput implements Function<INDEX,Complex> {
-	private final Complex complex;
+public class ConstantComplexFunction<INDEX, T extends ComplexType<T>> implements Function<INDEX,T> {
+	private final T complex;
 
-	public ConstantComplexFunction(Complex c) {
-		complex = new Complex();
-		complex.setValue(c);
+	public ConstantComplexFunction(T c) {
+		complex = c;
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, Complex c) {
-		c.setValue(complex);
+	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, T c) {
+		c.set(complex);
 	}
 	
 	@Override
-	public ConstantComplexFunction<INDEX> duplicate() {
-		return new ConstantComplexFunction<INDEX>(complex);
+	public ConstantComplexFunction<INDEX,T> copy() {
+		return new ConstantComplexFunction<INDEX,T>(complex);
+	}
+
+	@Override
+	public T createOutput() {
+		return complex.createVariable();
 	}
 }
 

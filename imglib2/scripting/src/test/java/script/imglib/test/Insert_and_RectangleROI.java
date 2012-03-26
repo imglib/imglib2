@@ -4,8 +4,10 @@ import ij.ImageJ;
 import net.imglib2.img.Img;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.edit.Insert;
-import net.imglib2.script.edit.FloatImage;
+import net.imglib2.script.img.FloatImage;
 import net.imglib2.script.math.Add;
+import net.imglib2.script.math.Compute;
+import net.imglib2.script.math.fn.ImageFunction;
 import net.imglib2.script.view.RectangleROI;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -24,15 +26,15 @@ public class Insert_and_RectangleROI {
 
 		try {
 			// Insert the second into the first
-			Insert<FloatType, Img<FloatType>> fn3 =
-				new Insert<FloatType,Img<FloatType>>(fn2.asImage(), fn1.asImage(), new long[]{-50, -20});
-			Insert<FloatType, Img<FloatType>> fn4 =
-				new Insert<FloatType,Img<FloatType>>(fn2.asImage(), fn1.asImage(), new long[]{250, 300});
+			Insert<FloatType, Img<FloatType>, FloatType> fn3 =
+				new Insert<FloatType, Img<FloatType>, FloatType>(fn2.asImage(), fn1.asImage(), new long[]{-50, -20});
+			Insert<FloatType, Img<FloatType>, FloatType> fn4 =
+				new Insert<FloatType, Img<FloatType>, FloatType>(fn2.asImage(), fn1.asImage(), new long[]{250, 300});
 			
 			new ImageJ();
 			
-			ImgLib.show(fn3.asImage());
-			ImgLib.show(fn4.asImage());
+			ImgLib.show(Compute.inFloats(new ImageFunction<FloatType>(fn3)));
+			ImgLib.show(Compute.inFloats(new ImageFunction<FloatType>(fn4)));
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -10,7 +10,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
-import net.imglib2.io.img.virtual.VirtualImgFactory;
+import net.imglib2.io.img.virtual.VirtualImg;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -34,7 +34,7 @@ public class ImgLib {
 	}
 
 	public static<T extends RealType<T> & NativeType<T>> Img<T> openVirtual(String pathOrUrl) throws ImgIOException, IncompatibleTypeException {
-		return new ImgOpener().openImg(pathOrUrl, new VirtualImgFactory<T>());
+		return (Img<T>) VirtualImg.create(pathOrUrl, false);
 	}
 
 	/** Wrap an ImageJ's {@link ImagePlus} as an Imglib {@link Image} of the appropriate type.
@@ -47,7 +47,7 @@ public class ImgLib {
 	/** Wrap an Imglib's {@link Image} as an ImageJ's {@link ImagePlus} of the appropriate type.
 	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. 
 	 * @throws ImgLibException */
-	static public final <T extends RealType<T> & NativeType<T>> ImagePlus wrap(final Img<T> img) throws ImgLibException {
+	static public final <T extends RealType<T>> ImagePlus wrap(final Img<T> img) throws ImgLibException {
 		//return new ImagePlusImgFactory<T>().create(img, img.firstElement().createVariable()).getImagePlus();
 		return wrap(img, "");
 	}
@@ -55,7 +55,7 @@ public class ImgLib {
 	/** Wrap an Imglib's {@link Image} as an ImageJ's {@link ImagePlus} of the appropriate type.
 	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. 
 	 * @throws ImgLibException */
-	static public final <T extends RealType<T> & NativeType<T>> ImagePlus wrap(final Img<T> img, final String title) throws ImgLibException {
+	static public final <T extends RealType<T>> ImagePlus wrap(final Img<T> img, final String title) throws ImgLibException {
 		//ImagePlus imp = new ImagePlusImgFactory<T>().create(img, img.firstElement().createVariable()).getImagePlus();
 		//imp.setTitle(title);
 		//return imp;
@@ -65,14 +65,14 @@ public class ImgLib {
 	/** Wrap an Imglib's {@link Image} as an ImageJ's {@link ImagePlus} of the appropriate type.
 	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. 
 	 * @throws ImgLibException */
-	static public final <T extends RealType<T> & NativeType<T>> ImagePlus show(final Img<T> img) throws ImgLibException {
+	static public final <T extends RealType<T>> ImagePlus show(final Img<T> img) throws ImgLibException {
 		return show(img, "");
 	}
 	
 	/** Wrap an Imglib's {@link Image} as an ImageJ's {@link ImagePlus} of the appropriate type.
 	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. 
 	 * @throws ImgLibException */
-	static public final <T extends RealType<T> & NativeType<T>> ImagePlus show(final Img<T> img, final String title) throws ImgLibException {
+	static public final <T extends RealType<T>> ImagePlus show(final Img<T> img, final String title) throws ImgLibException {
 		ImagePlus imp = wrap(img, title);
 		imp.show();
 		return imp;

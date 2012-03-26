@@ -7,7 +7,7 @@
 
   <parent>
     <groupId>mpicbg</groupId>
-    <artifactId>imglib-pom-imglib1</artifactId>
+    <artifactId>pom-imglib1</artifactId>
     <version>2.0-SNAPSHOT</version>
   </parent>
 
@@ -43,30 +43,27 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib-io</artifactId>
-      <version>${project.version}</version>
+      <!-- TODO: define a real POM for mpicbg project -->
+      <groupId>${mpicbg.groupId}</groupId>
+      <artifactId>mpicbg</artifactId>
+      <version>${mpicbg.version}</version>
     </dependency>
     <dependency>
       <groupId>java3d</groupId>
       <artifactId>vecmath</artifactId>
       <version>1.3.1</version>
     </dependency>
-    <!-- TODO: define a real POM for mpicbg project -->
-    <dependency>
-      <groupId>jfree</groupId>
-      <artifactId>jcommon</artifactId>
-      <version>1.0.15</version>
-    </dependency>
     <dependency>
       <groupId>jfree</groupId>
       <artifactId>jfreechart</artifactId>
       <version>1.0.13</version>
     </dependency>
+
     <dependency>
-      <groupId>mpicbg</groupId>
-      <artifactId>mpicbg</artifactId>
-      <version>20100908</version>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib-io</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -89,11 +86,11 @@
   <repositories>
     <repository>
       <id>imagej.releases</id>
-      <url>http://dev.imagejdev.org/maven2/releases</url>
+      <url>http://maven.imagej.net/content/repositories/releases</url>
     </repository>
     <repository>
       <id>imagej.snapshots</id>
-      <url>http://dev.imagejdev.org/maven2/snapshots</url>
+      <url>http://maven.imagej.net/content/repositories/snapshots</url>
     </repository>
   </repositories>
 

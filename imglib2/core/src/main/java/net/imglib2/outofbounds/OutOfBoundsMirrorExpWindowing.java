@@ -119,7 +119,7 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 		if ( isOutOfBounds() )
 		{
 			type.set( outOfBoundsRandomAccess.get() );
-			type.mul( getWeight( position ) );
+			type.mul( getWeight( zeroMinPos ) );
 			return type;
 		}
 		else
@@ -128,22 +128,22 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 		}
 	}
 	
-	final protected float getWeight( final long[] position )
+	final protected float getWeight( final long[] zeroMinPos )
 	{
 		float weight = 1;
-		
+
 		for ( int d = 0; d < n; ++d )
 		{
-			final int pos = (int)position[ d ];
+			final int pos = ( int ) zeroMinPos[ d ];
 			final int distance;
 
-			if ( pos < min[ d ] )
-				distance = (int)min[ d ] - pos - 1;
-			else if ( pos > max[ d ] )
-				distance = pos - (int)max[ d ] - 1;
+			if ( pos < 0 )
+				distance = -pos - 1;
+			else if ( pos >= dimension[ d ] )
+				distance = pos - ( int ) dimension[ d ];
 			else
 				continue;
-			
+
 			if ( distance < weights[ d ].length )
 				weight *= weights[ d ][ distance ];
 			else

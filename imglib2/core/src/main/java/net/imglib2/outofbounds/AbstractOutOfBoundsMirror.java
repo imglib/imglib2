@@ -48,8 +48,29 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	final protected RandomAccess< T > outOfBoundsRandomAccess;
 	
 	final protected int n;
+
+	/**
+	 * Dimensions of the wrapped {@link RandomAccessible}.
+	 */
+	final protected long[] dimension;
+
+	/**
+	 * Position relative to min, for internal calculations.
+	 * <em>zeroMinPos = position - min</em>.
+	 */
+	final protected long[] zeroMinPos;
+
+	/**
+	 * Minimum of the wrapped {@link RandomAccessible}.
+	 */
+	final protected long[] min;
 	
-	final protected long[] dimension, position, min, p;
+	/**
+	 * Period of the extended interval.
+	 * This depends on whether boundary pixels are mirrored.
+	 * {@see OutOfBoundsMirrorDoubleBoundary} {@see OutOfBoundsMirrorSingleBoundary}.
+	 */
+	final protected long[] p;
 	
 	/* true when increasing, false when decreasing */
 	final protected boolean[] inc;
@@ -63,7 +84,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		n = outOfBounds.numDimensions();
 		dimension = new long[ n ];
 		min = new long[ n ];
-		position = new long[ n ];
+		zeroMinPos = new long[ n ];
 		p = new long[ n ];
 		dimIsOutOfBounds = new boolean[ n ];
 		inc = new boolean[ n ];
@@ -71,7 +92,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		{
 			dimension[ d ] = outOfBounds.dimension[ d ];
 			min[ d ] = outOfBounds.min[ d ];
-			position[ d ] = outOfBounds.position[ d ];
+			zeroMinPos[ d ] = outOfBounds.zeroMinPos[ d ];
 			p[ d ] = outOfBounds.p[ d ];
 			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
 			inc[ d ] = outOfBounds.inc[ d ];
@@ -87,7 +108,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		f.dimensions( dimension );
 		min = new long[ n ];
 		f.min( min );
-		position = new long[ n ];
+		zeroMinPos = new long[ n ];
 		p = new long[ n ];
 		dimIsOutOfBounds = new boolean[ n ];
 		inc = new boolean[ n ];
@@ -145,52 +166,52 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ] + min[ d ];
+			pos[ d ] = this.zeroMinPos[ d ] + min[ d ];
 	}
 
 	@Override
 	public void localize( final double[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ] + min[ d ];
+			pos[ d ] = this.zeroMinPos[ d ] + min[ d ];
 	}
 
 	@Override
 	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = ( int )( this.position[ d ] + min[ d ] );
+			pos[ d ] = ( int )( this.zeroMinPos[ d ] + min[ d ] );
 	}
 	
 	@Override
 	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ] + min[ d ];
+			pos[ d ] = this.zeroMinPos[ d ] + min[ d ];
 	}
 	
 	@Override
 	public float getFloatPosition( final int d )
 	{
-		return position[ d ] + min[ d ];
+		return zeroMinPos[ d ] + min[ d ];
 	}
 
 	@Override
 	public double getDoublePosition( final int d )
 	{
-		return position[ d ] + min[ d ];
+		return zeroMinPos[ d ] + min[ d ];
 	}
 
 	@Override
 	public int getIntPosition( final int d )
 	{
-		return ( int )( position[ d ] + min[ d ] );
+		return ( int )( zeroMinPos[ d ] + min[ d ] );
 	}
 
 	@Override
 	public long getLongPosition( final int d )
 	{
-		return position[ d ] + min[ d ];
+		return zeroMinPos[ d ] + min[ d ];
 	}
 	
 	
@@ -274,6 +295,6 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	@Override
 	public String toString()
 	{
-		return Util.printCoordinates( position ) + " = " + get();
+		return Util.printCoordinates( zeroMinPos ) + " = " + get();
 	}
 }

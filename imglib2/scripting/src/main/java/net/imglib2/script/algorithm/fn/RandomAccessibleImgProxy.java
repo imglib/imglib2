@@ -3,6 +3,7 @@ package net.imglib2.script.algorithm.fn;
 import java.util.Iterator;
 
 import net.imglib2.Cursor;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
@@ -12,14 +13,14 @@ import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.view.RandomAccessibleZeroMinIntervalCursor;
+import net.imglib2.view.RandomAccessibleIntervalCursor;
 import net.imglib2.view.Views;
 
 public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends RandomAccessible<T>> implements Img<T> {
 
 	protected final RAI rai;
 	protected final long[] dims;
-	
+
 	/** Wrap the {@param ra} in this {@link Img},
 	 * which is then able to iterate over the domain from 0 to {@param dims}.
 	 * 
@@ -29,6 +30,10 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 	public RandomAccessibleImgProxy(final RAI rai, final long[] dims) {
 		this.rai = rai;
 		this.dims = dims;
+	}
+	
+	public RAI getRandomAccessible() {
+		return this.rai;
 	}
 	
 	@Override
@@ -136,7 +141,7 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 
 	@Override
 	public Cursor<T> cursor() {
-		return new RandomAccessibleZeroMinIntervalCursor<T>(Views.interval(rai, new long[dims.length], dims));
+		return new RandomAccessibleIntervalCursor<T>(Views.interval(rai, new long[dims.length], dims));
 	}
 
 	@Override
@@ -160,8 +165,15 @@ public class RandomAccessibleImgProxy<T extends NumericType<T>, RAI extends Rand
 	}
 
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return false;
+	public Object iterationOrder()
+	{
+		return new FlatIterationOrder( this );
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override

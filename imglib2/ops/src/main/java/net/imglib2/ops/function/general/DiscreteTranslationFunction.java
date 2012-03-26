@@ -51,7 +51,7 @@ public class DiscreteTranslationFunction<T> implements Function<long[],T> {
 	{
 		this.otherFunc = otherFunc;
 		this.deltas = deltas;
-		this.localRegion = region.duplicate();
+		this.localRegion = region.copy();
 		this.localCtr = new long[deltas.length];
 	}
 	
@@ -70,7 +70,7 @@ public class DiscreteTranslationFunction<T> implements Function<long[],T> {
 	}
 
 	@Override
-	public DiscreteTranslationFunction<T> duplicate() {
-		return new DiscreteTranslationFunction<T>(otherFunc.duplicate(), localRegion.duplicate(), deltas.clone());
+	public DiscreteTranslationFunction<T> copy() {
+		return new DiscreteTranslationFunction<T>(otherFunc.copy(), localRegion.copy(), deltas.clone());
 	}
 }

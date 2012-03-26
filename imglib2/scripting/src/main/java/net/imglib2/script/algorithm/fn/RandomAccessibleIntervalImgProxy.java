@@ -12,7 +12,11 @@ public class RandomAccessibleIntervalImgProxy<T extends NumericType<T>> extends 
 	
 	public RandomAccessibleIntervalImgProxy(final RandomAccessibleInterval<T> rai) {
 		super(rai, Util.intervalDimensions(rai));
-		this.irai = new IterableRandomAccessibleInterval<T>(rai);
+		this.irai = new IterableRandomAccessibleInterval<T>(rai); // iterate in flat order like ArrayImg
+	}
+
+	public RandomAccessibleInterval<T> getRandomAccessibleInterval() {
+		return this.rai;
 	}
 
 	@Override

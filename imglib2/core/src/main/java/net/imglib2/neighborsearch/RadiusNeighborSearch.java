@@ -28,6 +28,7 @@
 
 package net.imglib2.neighborsearch;
 
+import net.imglib2.EuclideanSpace;
 import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
 
@@ -44,7 +45,7 @@ import net.imglib2.Sampler;
  * 
  * @author Tobias Pietzsch
  */
-public interface RadiusNeighborSearch< T >
+public interface RadiusNeighborSearch< T > extends EuclideanSpace
 {
 	/**
 	 * Perform neighbor search within a radius about a reference coordinate. A

@@ -29,9 +29,7 @@ package net.imglib2.img.planar;
 
 import java.util.ArrayList;
 
-import net.imglib2.Cursor;
-import net.imglib2.Interval;
-import net.imglib2.IterableRealInterval;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
@@ -102,7 +100,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 		numSlices = s;
 
 		mirror = new ArrayList< A >( numSlices );
-		
+
 		if ( creator == null)
 		{
 			for ( int i = 0; i < numSlices; ++i )
@@ -127,7 +125,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 		 */
 		public int getCurrentSliceIndex();
 	}
-		
+
 	@Override
 	public A update( final Object c )
 	{
@@ -144,7 +142,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	 *
 	 * @param l
 	 * @return
-	 * 
+	 *
 	 * TODO: remove this method? (it doesn't seem to be used anywhere)
 	 */
 	public final int getIndex( final int[] l )
@@ -156,11 +154,11 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 
 	/**
 	 * Compute a global position from the index of a slice and an index within that slice.
-	 * 
+	 *
 	 * @param sliceIndex    index of slice
 	 * @param indexInSlice  index of element within slice
 	 * @param position      receives global position of element
-	 * 
+	 *
 	 * TODO: move this method to AbstractPlanarCursor? (that seems to be the only place where it is needed)
 	 */
 	public void indexToGlobalPosition( int sliceIndex, final int indexInSlice, final int[] position )
@@ -173,7 +171,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 			if ( n > 2 )
 			{
 				final int maxDim = n - 1;
-				
+
 				for ( int d = 2; d < maxDim; ++d )
 				{
 					final int j = sliceIndex / dimensions[ d ];
@@ -189,12 +187,12 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 
 	/**
 	 * Compute a global position from the index of a slice and an index within that slice.
-	 * 
+	 *
 	 * @param sliceIndex    index of slice
 	 * @param indexInSlice  index of element within slice
 	 * @param dim           which dimension of the position we are interested in
 	 * @return              dimension dim of global position
-	 * 
+	 *
 	 * TODO: move this method to AbstractPlanarCursor? (that seems to be the only place where it is needed)
 	 */
 	public int indexToGlobalPosition( final int sliceIndex, final int indexInSlice, final int dim )
@@ -241,20 +239,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	public FlatIterationOrder iterationOrder()
 	{
-		if ( f.numDimensions() != this.numDimensions() )
-			return false;
-		
-		if ( getClass().isInstance( f ) )
-		{
-			final Interval a = ( Interval )f;
-			for ( int d = 0; d < n; ++d )
-				if ( dimension[ d ] != a.dimension( d ) )
-					return false;
-		}
-		
-		return true;
+		return new FlatIterationOrder( this );
 	}
 
 	@Override
@@ -265,23 +252,18 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 
 	@Override
 	public PlanarImgFactory< T > factory() { return new PlanarImgFactory<T>(); }
-	
+
 	@Override
-	public PlanarImg<T,?> copy()
+	public PlanarImg< T, ? > copy()
 	{
-		final PlanarImg<T,?> copy = factory().create( dimension, firstElement().createVariable() );
-		
-		final Cursor<T> cursor1 = this.cursor();
-		final Cursor<T> cursor2 = copy.cursor();
-		
+		final PlanarImg< T, ? > copy = factory().create( dimension, firstElement().createVariable() );
+
+		final PlanarCursor< T > cursor1 = this.cursor();
+		final PlanarCursor< T > cursor2 = copy.cursor();
+
 		while ( cursor1.hasNext() )
-		{
-			cursor1.fwd();
-			cursor2.fwd();
-			
-			cursor2.get().set( cursor1.get() );
-		}
-		
+			cursor2.next().set( cursor1.next() );
+
 		return copy;
-	}		
+	}
 }

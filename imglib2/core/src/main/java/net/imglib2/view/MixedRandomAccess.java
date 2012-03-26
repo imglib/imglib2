@@ -1,19 +1,19 @@
 package net.imglib2.view;
 
-import net.imglib2.AbstractRandomAccess;
+import net.imglib2.AbstractLocalizable;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.transform.integer.Mixed;
 
 /**
  * Wrap a {@code source} RandomAccess which is related to this by a {@link Mixed}
  * {@code transformToSource}.
- *  
+ *
  * @author Tobias Pietzsch
- * 
+ *
  * @param <T>
  */
-public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
+public final class MixedRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >
 {
 	/**
 	 * source RandomAccess. note that this is the <em>target</em> of the
@@ -51,7 +51,7 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 
 	private final long[] tmpDistance;
 
-	MixedRandomAccess( RandomAccess< T > source, MixedTransform transformToSource )
+	MixedRandomAccess( final RandomAccess< T > source, final Mixed transformToSource )
 	{
 		super( transformToSource.numSourceDimensions() );
 		// n == transformToSource.numSourceDimensions()
@@ -93,7 +93,7 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		}
 
 		tmpPosition = translation.clone();
-		tmpDistance = new long[ m ];		
+		tmpDistance = new long[ m ];
 	}
 
 	protected MixedRandomAccess( final MixedRandomAccess< T > randomAccess )
@@ -109,11 +109,11 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		this.sourceComponent = randomAccess.sourceComponent.clone();
 
 		tmpPosition = translation.clone();
-		tmpDistance = new long[ m ];		
+		tmpDistance = new long[ m ];
 	}
 
 	@Override
-	public void fwd( int d )
+	public void fwd( final int d )
 	{
 		assert d < n;
 		position[ d ] += 1;
@@ -131,7 +131,7 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 	}
 
 	@Override
-	public void bck( int d )
+	public void bck( final int d )
 	{
 		assert d < n;
 		position[ d ] -= 1;
@@ -148,8 +148,18 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		}
 	}
 
+
 	@Override
-	public void move( long distance, int d )
+	public void move( final int distance, final int d )
+	{
+		assert d < n;
+		position[ d ] += distance;
+		if ( !sourceZero[ d ] )
+			s.move( sourceInv[ d ] ? -distance : distance, sourceComponent[ d ] );
+	}
+
+	@Override
+	public void move( final long distance, final int d )
 	{
 		assert d < n;
 		position[ d ] += distance;
@@ -229,7 +239,7 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 	}
 
 	@Override
-	public void setPosition( int[] position )
+	public void setPosition( final int[] position )
 	{
 		assert position.length >= n;
 
@@ -248,7 +258,7 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 	}
 
 	@Override
-	public void setPosition( long[] position )
+	public void setPosition( final long[] position )
 	{
 		assert position.length >= n;
 
@@ -266,8 +276,19 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		s.setPosition( tmpPosition );
 	}
 
+
 	@Override
-	public void setPosition( long position, int d )
+	public void setPosition( final int position, final int d )
+	{
+		assert d < n;
+		this.position[ d ] = position;
+		final int td = sourceComponent[ d ];
+		final long targetPos = translation[ td ] + ( sourceInv[ d ] ? -position : position );
+		s.setPosition( targetPos, td );
+	}
+
+	@Override
+	public void setPosition( final long position, final int d )
 	{
 		assert d < n;
 		this.position[ d ] = position;

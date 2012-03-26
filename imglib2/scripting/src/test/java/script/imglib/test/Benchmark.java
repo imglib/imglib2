@@ -7,12 +7,10 @@ import net.imglib2.RandomAccess;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.script.math.ASin;
-import net.imglib2.script.math.Abs;
 import net.imglib2.script.math.Add;
 import net.imglib2.script.math.Cbrt;
 import net.imglib2.script.math.Compute;
@@ -100,6 +98,7 @@ public class Benchmark {
 		System.out.println(s);
 	}
 
+	@SuppressWarnings("boxing")
 	static public Img<FloatType> scriptCorrectIllumination(
 			final Img<? extends RealType<?>> img,
 			final Img<? extends RealType<?>> brightfield,
@@ -142,8 +141,9 @@ public class Benchmark {
 		return corrected;
 	}
 
-	static public Img<FloatType> scriptHeavyOperations(
-			final Img<? extends RealType<?>> img) throws Exception {
+	@SuppressWarnings("boxing")
+	static public <R extends RealType<R>> Img<FloatType> scriptHeavyOperations(
+			final Img<R> img) throws Exception {
 		p("Start script with heavy operations...");
 		long t0 = System.currentTimeMillis();
 		Img<FloatType> corrected = Compute.inFloats(1, 
@@ -244,15 +244,16 @@ public class Benchmark {
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		try {
 			
 			new ImageJ();
 			
-			String src = "http://imagej.nih.gov/ij/images/bridge.gif";
-			//String src = "/home/albert/Desktop/t2/bridge.gif";
+			//String src = "http://imagej.nih.gov/ij/images/bridge.gif";
+			String src = "/home/albert/Desktop/t2/bridge.gif";
 			Img<UnsignedByteType> img1 = new ImgOpener().openImg(src);
-			
+
 			System.out.println("dimensions of image opened by ImgOpener: " + img1.numDimensions());
 			System.out.println(" and 3rd dimension is: " + img1.dimension(2));
 			

@@ -58,7 +58,7 @@ public class NullFunction<INDEX, T> implements Function<INDEX,T> {
 	}
 
 	@Override
-	public NullFunction<INDEX,T> duplicate() {
+	public NullFunction<INDEX,T> copy() {
 		return new NullFunction<INDEX,T>();
 	}
 }

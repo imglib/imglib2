@@ -19,7 +19,6 @@ package net.imglib2.labeling;
 
 import java.util.Collection;
 
-import net.imglib2.IterableRealInterval;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.roi.IterableRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
@@ -48,15 +47,6 @@ public abstract class AbstractLabeling<T extends Comparable<T>> extends Abstract
 	 */
 	public void setLabelingCursorStrategy(LabelingROIStrategy<T, ? extends Labeling<T>> strategy) {
 		this.strategy = strategy;
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see net.imglib2.IterableRealInterval#equalIterationOrder(net.imglib2.IterableRealInterval)
-	 */
-	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return false;
 	}
 
 	/* (non-Javadoc)

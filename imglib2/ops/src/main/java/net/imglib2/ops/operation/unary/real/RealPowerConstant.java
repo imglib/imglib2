@@ -29,18 +29,20 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
-import net.imglib2.ops.UnaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Sets the real component of an output real number to the raising of
+ * the real component of an input real number to a constant value. The
+ * constant value is specified in the constructor.
  * 
  * @author Barry DeZonia
  *
  */
-public final class RealPowerConstant extends RealOutput implements UnaryOperation<Real,Real> {
-
+public final class RealPowerConstant<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
+{
 	private final double constant;
 	
 	public RealPowerConstant(double constant) {
@@ -48,13 +50,15 @@ public final class RealPowerConstant extends RealOutput implements UnaryOperatio
 	}
 	
 	@Override
-	public void compute(Real x, Real output) {
-		double value = Math.pow(x.getReal(), constant);
+	public O compute(I x, O output) {
+		double value = Math.pow(x.getRealDouble(), constant);
 		output.setReal(value);
+		return output;
 	}
 
 	@Override
-	public RealPowerConstant duplicate() {
-		return new RealPowerConstant(constant);
+	public RealPowerConstant<I,O> copy() {
+		return new RealPowerConstant<I,O>(constant);
 	}
+
 }

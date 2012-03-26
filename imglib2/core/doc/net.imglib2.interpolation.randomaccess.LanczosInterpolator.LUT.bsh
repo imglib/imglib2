@@ -1,0 +1,71 @@
+double piSquare = Math.PI * Math.PI;
+int preCalculationScale = 10;
+int a = 5;
+double[] sinc = new double[ a * preCalculationScale + 2 ];;
+
+int scale = 100;
+
+red = 0x00ff0000;
+green = 0x0000ff00;
+
+double[] preCalculateSinc( int max, int scale )
+{
+	double[] sinc = new double[ max * scale + 2 ];
+	for ( int i = 0; i < sinc.length; ++i )
+	{
+		double x = ( double )i / ( double )preCalculationScale;
+		sinc[ i ] = sinc( x, max );
+	}
+	return sinc;
+}
+
+double sinc( double x, double a )
+{
+	if ( x == 0 )
+		return 1;
+	else
+		return (( a * Math.sin( Math.PI * x ) * Math.sin( Math.PI * x / a ) ) / ( piSquare * x * x ));
+}
+	
+double sinc2( double x )
+{
+	double y = x < 0 ? -preCalculationScale * x : preCalculationScale * x;
+	int yi = ( int )y;
+	double d = y - yi;
+	return ( sinc[ yi + 1 ] - sinc[ yi ] ) * d + sinc[ yi ];
+}
+
+sinc = preCalculateSinc( a, preCalculationScale );
+
+ip = new ColorProcessor( a * scale, 2 * scale );
+
+for ( int x = 0; x < ip.getWidth(); ++x )
+{
+	v = sinc( ( double )x / scale, a );
+	ip.putPixel( x, scale - ( int )Math.round( v * scale ), green );
+	v = sinc2( ( double )x / scale );
+	yi = scale - ( int )Math.round( v * scale );
+	ip.putPixel( x, yi, ip.get( x, yi ) | red );
+}
+
+new ImagePlus( "Lanczos kernel", ip ).show();
+
+ipKernel = new ColorProcessor( 2 * a * scale, 2 * a * scale );
+impKernel = new ImagePlus( "Lanczos Kernel", ipKernel );
+impKernel.show();
+
+for ( int y = 0; y < ipKernel.getHeight(); ++y )
+{
+	vSinc = sinc( ( double )y / scale - a, a );
+	vSinc2 = sinc2( ( double )y / scale - a );
+	for ( int x = 0; x < ipKernel.getWidth(); ++x )
+	{
+		v = vSinc * sinc( ( double )x / scale - a, a );
+		rgb = ( int )Math.round( 127 + v * 127 ) << 8;
+		v = vSinc2 * sinc2( ( double )x / scale - a );
+		rgb |= ( int )Math.round( 127 + v * 127 ) << 16;
+		ipKernel.putPixel( x, y, rgb );
+	}
+	impKernel.updateAndDraw();
+}
+

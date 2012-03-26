@@ -5,7 +5,7 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.real.FloatType;
 
 /** Convenient class to define methods to create
- * a result {@code Image<FloatType>} out of an {@link IFunction}. */
+ * a result {@code Img<FloatType>} out of an {@link IFunction}. */
 public abstract class FloatImageOperation implements IFunction, ImageComputation<FloatType>
 {
 	/** Evaluate this operation as an {@code Image<FloatType>}.

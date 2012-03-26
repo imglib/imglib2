@@ -29,10 +29,10 @@ import net.imglib2.view.Views;
 /** Convenient intermediate class to be able to operate directly on an {@link Image} argument in the constructor. */
 public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProxy<T>
 {
-	static public enum Mode { LINEAR, NEAREST_NEIGHBOR };
+	static public enum Mode { LINEAR, NEAREST_NEIGHBOR }
 
-	static public final Mode LINEAR = Mode.LINEAR;
-	static public final Mode NEAREST_NEIGHBOR = Mode.NEAREST_NEIGHBOR;
+	//static public final Mode LINEAR = Mode.LINEAR;
+	//static public final Mode NEAREST_NEIGHBOR = Mode.NEAREST_NEIGHBOR;
 	static public final Mode BEST = Mode.LINEAR;
 
 	/** With a default {@link OutOfBoundsStrategyValueFactory} with @param outside. */

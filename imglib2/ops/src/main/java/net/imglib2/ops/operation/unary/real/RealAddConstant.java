@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,36 +25,39 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.real;
 
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
-import net.imglib2.ops.UnaryOperation;
-
+import net.imglib2.type.numeric.RealType;
 
 /**
+ * Sets the real component of an output real number to the addition of
+ * the real component of an input real number with a constant value. The
+ * constant value is specified in the constructor.
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class RealAddConstant extends RealOutput implements UnaryOperation<Real,Real> {
-
+public final class RealAddConstant<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
+{
 	private final double constant;
-	
+
 	public RealAddConstant(double constant) {
 		this.constant = constant;
 	}
-	
+
 	@Override
-	public void compute(Real x, Real output) {
-		double value = x.getReal() + constant;
+	public O compute(I x, O output) {
+		double value = x.getRealDouble() + constant;
 		output.setReal(value);
+		return output;
 	}
 
 	@Override
-	public RealAddConstant duplicate() {
-		return new RealAddConstant(constant);
+	public RealAddConstant<I,O> copy() {
+		return new RealAddConstant<I,O>(constant);
 	}
+
 }

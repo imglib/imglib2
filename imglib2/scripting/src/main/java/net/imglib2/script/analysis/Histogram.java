@@ -8,7 +8,7 @@ import java.util.TreeMap;
 import javax.swing.JFrame;
 
 import net.imglib2.Cursor;
-import net.imglib2.algorithm.math.ComputeMinMax;
+import net.imglib2.algorithm.stats.ComputeMinMax;
 import net.imglib2.img.Img;
 import net.imglib2.script.algorithm.fn.AlgorithmUtil;
 import net.imglib2.type.numeric.ARGBType;
@@ -55,7 +55,7 @@ public class Histogram<T extends RealType<T>> extends TreeMap<Double,Long>
 		cmm.process();
 		this.min = cmm.getMin().getRealDouble();
 		this.max = cmm.getMax().getRealDouble();
-		this.increment = process(img, nBins, min, max);
+		this.increment = process(this, img, nBins, min, max);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -63,10 +63,11 @@ public class Histogram<T extends RealType<T>> extends TreeMap<Double,Long>
 		this.img = AlgorithmUtil.wrap(fn);
 		this.min = min;
 		this.max = max;
-		this.increment = process(img, nBins, min, max);
+		this.increment = process(this, img, nBins, min, max);
 	}
 
-	private final double process(final Img<T> img, final int nBins, final double min, final double max) throws Exception {
+	@SuppressWarnings("boxing")
+	static private final <R extends RealType<R>> double process(final TreeMap<Double,Long> map, final Img<R> img, final int nBins, final double min, final double max) throws Exception {
 		final double range = max - min;
 		final double increment = range / nBins;
 		final long[] bins = new long[nBins];
@@ -74,7 +75,7 @@ public class Histogram<T extends RealType<T>> extends TreeMap<Double,Long>
 		if (0.0 == range) {
 			bins[0] = img.size();
 		} else {
-			final Cursor<T> c = img.cursor();
+			final Cursor<R> c = img.cursor();
 			// zero-based:
 			final int N = nBins -1;
 			// Analyze the image
@@ -86,9 +87,9 @@ public class Histogram<T extends RealType<T>> extends TreeMap<Double,Long>
 				bins[v] += 1;
 			}
 		}
-		// Put the contents of the bins into this ArrayList:
+		// Put the contents of the bins into the map
 		for (int i=0; i<bins.length; i++) {
-			this.put( min + i * increment, bins[i] );
+			map.put( min + i * increment, bins[i] );
 		}
 		
 		return increment;

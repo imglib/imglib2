@@ -7,7 +7,7 @@
 
   <parent>
     <groupId>net.imglib2</groupId>
-    <artifactId>imglib-pom-imglib2</artifactId>
+    <artifactId>pom-imglib2</artifactId>
     <version>2.0-SNAPSHOT</version>
   </parent>
 
@@ -22,11 +22,16 @@
       <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- TEMP - for development only -->
     <dependency>
-    	<groupId>${project.groupId}</groupId>
-    	<artifactId>imglib2-io</artifactId>
-    	<version>${project.version}</version>
+      <!-- TEMP - for development only -->
+      <groupId>${project.groupId}</groupId>
+      <artifactId>imglib2-io</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${scifio.groupId}</groupId>
+      <artifactId>loci-common</artifactId>
+      <version>${scifio.version}</version>
     </dependency>
   </dependencies>
 
@@ -49,11 +54,11 @@
   <repositories>
     <repository>
       <id>imagej.releases</id>
-      <url>http://dev.imagejdev.org/maven2/releases</url>
+      <url>http://maven.imagej.net/content/repositories/releases</url>
     </repository>
     <repository>
       <id>imagej.snapshots</id>
-      <url>http://dev.imagejdev.org/maven2/snapshots</url>
+      <url>http://maven.imagej.net/content/repositories/snapshots</url>
     </repository>
   </repositories>
 

@@ -31,64 +31,68 @@ package net.imglib2.ops.function.complex;
 
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
-import net.imglib2.ops.ComplexOutput;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Complex;
 import net.imglib2.ops.Neighborhood;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * ComplexImageFunction wraps an Img<? extends ComplexType<?>> and allows one to
+ * treat it as a function. ComplexImageFunction has two types <I,O>. I is the
+ * type of the image data (such as ComplexFloatType) while O is the type of
+ * output the function should assign to (such as ComplexDoubleType).
  * 
  * @author Barry DeZonia
  *
  */
-public class ComplexImageFunction
-	extends ComplexOutput implements Function<long[],Complex>
+public class ComplexImageFunction<I extends ComplexType<I>,O extends ComplexType<O>>
+	implements Function<long[],O>
 {
 	// -- instance variables --
 	
-	private final RandomAccess<? extends ComplexType<?>> accessor;
+	private final RandomAccess<I> accessor;
+	private final O type;
 	
 	// -- private constructor used by duplicate() --
 	
-	private ComplexImageFunction(
-		RandomAccess<? extends ComplexType<?>> acc)
+	private ComplexImageFunction(RandomAccess<I> accessor, O type)
 	{
-		this.accessor = acc;
+		this.accessor = accessor;
+		this.type = type;
 	}
 	
 	// -- public constructors --
 	
-	public ComplexImageFunction(Img<? extends ComplexType<?>> img) {
-		this.accessor = img.randomAccess();
+	public ComplexImageFunction(Img<I> img, O type) {
+		this(img.randomAccess(), type);
 	}
 	
+	@SuppressWarnings({"rawtypes","unchecked"})
 	public ComplexImageFunction(
-		Img<? extends ComplexType<?>> img,
-		OutOfBoundsFactory<? extends ComplexType<?>,Img<? extends ComplexType<?>>> factory)
+		Img<I> img,
+		OutOfBoundsFactory<I,Img<I>> factory, O type)
 	{
-		@SuppressWarnings({"rawtypes","unchecked"})
-		RandomAccessible< ? extends ComplexType<?> > extendedRandAcessible =
-				new ExtendedRandomAccessibleInterval(img, factory);
-		this.accessor =  extendedRandAcessible.randomAccess();
+		this(new ExtendedRandomAccessibleInterval(img, factory).randomAccess(), type);
 	}
 	
 	// -- public interface --
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> input, long[] point, Complex output)
-	{
-		accessor.setPosition(point);
-		double r = accessor.get().getRealDouble();
-		double i = accessor.get().getImaginaryDouble();
-		output.setCartesian(r,i);
+	public ComplexImageFunction<I,O> copy() {
+		return new ComplexImageFunction<I,O>(accessor.copyRandomAccess(), type);
 	}
 
 	@Override
-	public ComplexImageFunction duplicate() {
-		return new ComplexImageFunction(accessor.copyRandomAccess());
+	public void evaluate(Neighborhood<long[]> neigh, long[] point, O output)
+	{
+		accessor.setPosition(point);
+		output.setReal(accessor.get().getRealDouble());
+		output.setImaginary(accessor.get().getImaginaryDouble());
+	}
+
+	@Override
+	public O createOutput() {
+		return type.createVariable();
 	}
 }

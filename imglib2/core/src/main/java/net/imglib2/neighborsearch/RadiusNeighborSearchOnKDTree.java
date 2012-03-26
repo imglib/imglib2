@@ -60,7 +60,7 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 		this.pos = new double[ n ];
 		this.resultPoints = new ArrayList< Pair< KDTreeNode< T >, Double > >();
 	}
-
+	
 	@Override
 	public void search( final RealLocalizable reference, final double radius, final boolean sortResults )
 	{
@@ -81,6 +81,9 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 		}
 	}
 
+	@Override
+	public int numDimensions() { return n; }
+	
 	protected void searchNode( KDTreeNode< T > current, final double squRadius )
 	{
 		// consider the current node

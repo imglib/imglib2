@@ -86,7 +86,7 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 	@Override
 	final public void fwd( final int d ) 
 	{
-		final long x = ++position[ d ];
+		final long x = ++zeroMinPos[ d ];
 		if ( x == 0 )
 		{
 			dimIsOutOfBounds[ d ] = false;
@@ -94,8 +94,8 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 		}
 		else if ( x == dimension[ d ] )
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
-		
-		final long y = outOfBoundsRandomAccess.getLongPosition( d );
+
+		final long y = outOfBoundsRandomAccess.getLongPosition( d ) - min[ d ];
 		if ( inc[ d ] )
 		{
 			if ( y + 1 == dimension[ d ] )
@@ -115,7 +115,7 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 	@Override
 	final public void bck( final int d )
 	{
-		final long x = position[ d ]--;
+		final long x = zeroMinPos[ d ]--;
 		if ( x == 0 )
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
 		else if ( x == dimension[ d ] )
@@ -123,8 +123,8 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 			dimIsOutOfBounds[ d ] = false;
 			if ( isOutOfBounds ) checkOutOfBounds();
 		}
-		
-		final long y = outOfBoundsRandomAccess.getLongPosition( d );
+
+		final long y = outOfBoundsRandomAccess.getLongPosition( d ) - min[ d ];
 		if ( inc[ d ] )
 		{
 			if ( y == 0 )
@@ -145,7 +145,7 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 	final public void setPosition( long position, final int d )
 	{
 		position -= min[ d ];
-		this.position[ d ] = position;
+		this.zeroMinPos[ d ] = position;
 		final long x = this.p[ d ];
 		final long mod = dimension[ d ];
 		final boolean pos;
@@ -168,19 +168,14 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 			}
 			else
 			{
-				/* catches mod == 1 to no additional cost */
-				try
+				position %= x;
+				if ( position >= mod )
 				{
-					position %= x;
-					if ( position >= mod )
-					{
-						position = x - position - 1;
-						inc[ d ] = !pos;
-					}
-					else
-						inc[ d ] = pos;
+					position = x - position - 1;
+					inc[ d ] = !pos;
 				}
-				catch ( ArithmeticException e ){ position = 0; }
+				else
+					inc[ d ] = pos;
 			}
 		}
 		else
@@ -194,6 +189,6 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 			inc[ d ] = pos;
 		}
 		
-		outOfBoundsRandomAccess.setPosition( position, d );
+		outOfBoundsRandomAccess.setPosition( position + min[ d ], d );
 	}
 }

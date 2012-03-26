@@ -87,7 +87,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] = interpolator.position[ d ];
-			floor[ d ] = interpolator.floor[ d ];
+			discrete[ d ] = interpolator.discrete[ d ];
 		}
 	}
 	
@@ -201,7 +201,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 		return copy();
 	}
 
-	final private void graycodeFwdRecursive ( int dimension )
+	final private void graycodeFwdRecursive ( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -219,7 +219,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 		}
 	}
 
-	final private void graycodeBckRecursive ( int dimension )
+	final private void graycodeBckRecursive ( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
@@ -262,7 +262,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	final private void printCode()
 	{
 		final int maxbits = 4;
-		String binary = Integer.toBinaryString( code );
+		final String binary = Integer.toBinaryString( code );
 		for ( int i = binary.length(); i < maxbits; ++i )
 			System.out.print("0");
 		System.out.print ( binary );

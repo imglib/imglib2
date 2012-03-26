@@ -31,22 +31,21 @@ package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.Real;
-import net.imglib2.ops.RealOutput;
 import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class RealAverageFunction extends RealOutput implements Function<long[],Real> {
+public class RealAverageFunction<T extends RealType<T>> implements Function<long[],T> {
 
-	private final Function<long[],Real> otherFunc;
-	private final Real variable;
+	private final Function<long[],T> otherFunc;
+	private final T variable;
 	private RegionIndexIterator iter;
 	
-	public RealAverageFunction(Function<long[],Real> otherFunc)
+	public RealAverageFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.variable = createOutput();
@@ -54,7 +53,7 @@ public class RealAverageFunction extends RealOutput implements Function<long[],R
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, Real output) {
+	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
 		if (iter == null)
 			iter = new RegionIndexIterator(region);
 		else
@@ -65,7 +64,7 @@ public class RealAverageFunction extends RealOutput implements Function<long[],R
 		while (iter.hasNext()) {
 			iter.fwd();
 			otherFunc.evaluate(region, iter.getPosition(), variable);
-			sum += variable.getReal();
+			sum += variable.getRealDouble();
 			numElements++;
 		}
 		if (numElements == 0)
@@ -75,7 +74,12 @@ public class RealAverageFunction extends RealOutput implements Function<long[],R
 	}
 
 	@Override
-	public RealAverageFunction duplicate() {
-		return new RealAverageFunction(otherFunc.duplicate());
+	public RealAverageFunction<T> copy() {
+		return new RealAverageFunction<T>(otherFunc.copy());
+	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
 }

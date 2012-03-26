@@ -98,18 +98,32 @@ public abstract class AbstractIterableRegionOfInterest extends
 			if (! nextRaster(position, end)) return false;
 		}  
 	}
-	
+
+	protected class AROIIterationOrder
+	{
+		private AbstractIterableRegionOfInterest getEnclosingClass()
+		{
+			return AbstractIterableRegionOfInterest.this;
+		}
+
+		@Override
+		public boolean equals( final Object obj )
+		{
+			if ( ! ( obj instanceof AROIIterationOrder ) )
+				return false;
+
+			final AROIIterationOrder o = ( AROIIterationOrder )obj;
+			return o.getEnclosingClass() == getEnclosingClass();
+		}
+	}
+
 	protected class AROIIterableInterval <T extends Type<T>> implements IterableInterval<T> {
 		protected RandomAccessible<T> src;
 		protected T cached_first_element;
-		
-		private AbstractIterableRegionOfInterest getEnclosingClass() {
-			return AbstractIterableRegionOfInterest.this;
-		}
-		public AROIIterableInterval(RandomAccessible<T> src) {
+
+		public AROIIterableInterval(final RandomAccessible<T> src) {
 			this.src = src;
 		}
-		
 		protected class AROICursor implements Cursor<T> {
 			private RandomAccess<T> randomAccess = AROIIterableInterval.this.src.randomAccess();
 			private long [] position = new long [AbstractIterableRegionOfInterest.this.numDimensions()];
@@ -287,13 +301,14 @@ public abstract class AbstractIterableRegionOfInterest extends
 		}
 
 		@Override
-		public boolean equalIterationOrder(IterableRealInterval<?> f) {
-			if (f instanceof AROIIterableInterval) {
-				@SuppressWarnings("unchecked")
-				AROIIterableInterval<T> af = ((AROIIterableInterval<T>) f);
-				return af.getEnclosingClass() == getEnclosingClass();
-			}
-			return false;
+		public Object iterationOrder()
+		{
+			return new AROIIterationOrder();
+		}
+
+		@Override
+		public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+			return iterationOrder().equals( f.iterationOrder() );
 		}
 
 		@Override

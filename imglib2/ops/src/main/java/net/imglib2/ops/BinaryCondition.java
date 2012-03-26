@@ -29,21 +29,20 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package net.imglib2.ops;
 
-
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public class BinaryCondition<INDEX, T> implements Condition<INDEX> {
+public class BinaryCondition<INDEX,O1,O2> implements Condition<INDEX> {
 
-	private final Function<INDEX,T> f1;
-	private final Function<INDEX,T> f2;
-	private final T f1Val;
-	private final T f2Val;
-	private final BinaryRelation<T> relation;
+	private final Function<INDEX,O1> f1;
+	private final Function<INDEX,O2> f2;
+	private final O1 f1Val;
+	private final O2 f2Val;
+	private final BinaryRelation<O1,O2> relation;
 
-	public BinaryCondition(Function<INDEX,T> f1, Function<INDEX,T> f2, BinaryRelation<T> relation) {
+	public BinaryCondition(Function<INDEX,O1> f1, Function<INDEX,O2> f2, BinaryRelation<O1,O2> relation) {
 		this.f1 = f1;
 		this.f2 = f2;
 		this.f1Val = f1.createOutput();
@@ -52,14 +51,15 @@ public class BinaryCondition<INDEX, T> implements Condition<INDEX> {
 	}
 	
 	@Override
-	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
-		f1.evaluate(neigh, point, f1Val);
-		f2.evaluate(neigh, point, f2Val);
+	public boolean isTrue(Neighborhood<INDEX> region, INDEX point) {
+		f1.evaluate(region, point, f1Val);
+		f2.evaluate(region, point, f2Val);
 		return relation.holds(f1Val,f2Val);
 	}
 	
 	@Override
-	public BinaryCondition<INDEX, T> duplicate() {
-		return new BinaryCondition<INDEX, T>(f1.duplicate(), f2.duplicate(), relation.duplicate());
+	public BinaryCondition<INDEX,O1,O2> copy() {
+		return new BinaryCondition<INDEX,O1,O2>(f1.copy(), f2.copy(), relation.copy());
 	}
+
 }

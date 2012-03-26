@@ -5,12 +5,12 @@ All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
+ * Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
     notice, this list of conditions and the following disclaimer in the
     documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
+ * Neither the name of the Fiji project developers nor the
     names of its contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
 
@@ -25,33 +25,35 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package net.imglib2.ops.operation.unary.complex;
 
-import net.imglib2.ops.ComplexOutput;
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.Complex;
+import net.imglib2.type.numeric.ComplexType;
 
 // Complex Variables and Applications, Brown and Churchill, 7th edition
 
 /**
+ * Sets an output complex number to the exponentiation of an input complex
+ * number (the constant e raised to a complex power).
  * 
  * @author Barry DeZonia
- *
+ * 
  */
-public final class ComplexExp extends ComplexOutput implements UnaryOperation<Complex,Complex> {
+public final class ComplexExp<I extends ComplexType<I>, O extends ComplexType<O>>
+	implements ComplexUnaryOperation<I,O>
+{
+	@Override
+	public O compute(I z, O output) {
+		double constant = Math.exp(z.getRealDouble());
+		double x = constant * Math.cos(z.getImaginaryDouble());
+		double y = constant * Math.sin(z.getImaginaryDouble());
+		output.setComplexNumber(x, y);
+		return output;
+	}
 
 	@Override
-	public void compute(Complex z, Complex output) {
-		double constant = Math.exp(z.getX());
-		double x = constant * Math.cos(z.getY());
-		double y = constant * Math.sin(z.getY());
-		output.setCartesian(x,y);
-	}
-	
-	@Override
-	public ComplexExp duplicate() {
-		return new ComplexExp();
+	public ComplexExp<I,O> copy() {
+		return new ComplexExp<I,O>();
 	}
 }

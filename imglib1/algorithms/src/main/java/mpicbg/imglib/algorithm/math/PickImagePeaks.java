@@ -12,6 +12,7 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
 /**
@@ -22,14 +23,14 @@ import mpicbg.imglib.type.numeric.RealType;
  * {@link LocalizableCursor} irrespective of how it traverses the {@link Image}, and a
  * {@link LocalizableByDimCursor} that is set to its 2^n-connected neighbors (where n is
  * dimensionality).
- * 
+ * <p>
  * The result is that this is a fairly simple, (hopefully) fast peak-picker, but it is accurate
  * only for strict peaks, that is, peaks that have no neighbors of equal value.
- * 
+ * <p>
  * This picker does no pre-processing, so it may be advisable to smooth your peak image before 
  * using this. 
  * 
- * @author Larry Lindsey 
+ * @author Larry Lindsey <br> modified by Jean-Yves Tinevez to allow for border peaks to be found. 
  *
  * @param <T> the {@link ComparableType} representing information stored in the {@link Image} to
  * pick peaks from.
@@ -43,6 +44,8 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 	final private ArrayList<int[]> peakLocList;
 	private final double[] suppressAxis;
 	private double suppressSum;
+	/** If true, peak will be allowed to found at the image top boundaries. False by default. */
+	private boolean allowBorderPeak = false;
 
 	private class Peak implements Comparable<Peak>
 	{
@@ -200,8 +203,12 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 
 		peakImage = peakFactory.createImage(dimensions);
 		imImage = peakFactory.createImage(dimensions);
-		imImagePullCursor = imImage.createLocalizableCursor();		
-		imImagePushCursor = imImage.createLocalizableByDimCursor();
+		imImagePullCursor = imImage.createLocalizableCursor();
+		if (allowBorderPeak) {
+			imImagePushCursor = imImage.createLocalizableByDimCursor(new OutOfBoundsStrategyValueFactory<BitType>(new BitType(true)));
+		} else {
+			imImagePushCursor = imImage.createLocalizableByDimCursor();
+		}
 		//imImagePushCursor is kind of a misnomer.  it'll be used for pulling, too, later.
 		
 		peakImageCursor = peakImage.createLocalizableByDimCursor();
@@ -236,7 +243,8 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 			/* OK. Now we should have a signum-diff image corresponding to
 			 * dimension d in our current image.
 			*/
-			//ImageJFunctions.displayAsVirtualStack(imImage).show();
+//			mpicbg.imglib.image.display.imagej.ImageJFunctions.displayAsVirtualStack(imImage).show();
+			
 			imImagePullCursor.reset();
 			while(imImagePullCursor.hasNext())
 			{
@@ -246,7 +254,7 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 				System.arraycopy(pos, 0, checkPos, 0, pos.length);
 				checkPos[d] += 1;
 				
-				if (checkPos[d] >= dimensions[d])
+				if (!allowBorderPeak && checkPos[d] >= dimensions[d])
 				{
 					//No peaks around the boundary of the image.
 					peakImageCursor.getType().set(false);
@@ -324,6 +332,14 @@ public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<B
 		Arrays.fill(suppressAxis, r);
 		suppressSum = suppressAxis.length * r;
 		
+	}
+
+	/**
+	 * Set the behavior for finding peak at the image boundaries. If set to false (the default),
+	 * peaks will not be found at the top borders of the image.  
+	 */
+	public void setAllowBorderPeak(boolean allowBorderPeak) {
+		this.allowBorderPeak = allowBorderPeak;
 	}
 	
 	/**

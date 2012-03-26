@@ -30,22 +30,23 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.imglib2.ops.relation;
 
 import net.imglib2.ops.BinaryRelation;
-import net.imglib2.ops.Real;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Barry DeZonia
  *
  */
-public final class RealNotEquals implements BinaryRelation<Real> {
+public final class RealNotEquals<T extends RealType<T>,
+	U extends RealType<U>> implements BinaryRelation<T,U> {
 
 	@Override
-	public boolean holds(Real val1, Real val2) {
-		return val1.getReal() != val2.getReal();
+	public boolean holds(T val1, U val2) {
+		return val1.getRealDouble() != val2.getRealDouble();
 	}
 
 	@Override
-	public RealNotEquals duplicate() {
-		return new RealNotEquals();
+	public RealNotEquals<T,U> copy() {
+		return new RealNotEquals<T,U>();
 	}
 }

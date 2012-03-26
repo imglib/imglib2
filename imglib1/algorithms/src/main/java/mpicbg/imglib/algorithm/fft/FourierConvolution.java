@@ -45,6 +45,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	Image<S> kernel;
 	Image<ComplexFloatType> kernelFFT, imgFFT; 
 	FourierTransform<T, ComplexFloatType> fftImage;
+	boolean keepImgFFT = true;
 	
 	final int[] kernelDim;
 
@@ -65,6 +66,9 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		setNumThreads();
 	}
 	
+	public Image< T > getImage() { return image; }
+	public Image< S > getKernel() { return kernel; }
+
 	public boolean replaceImage( final Image<T> img )
 	{
 		if ( !img.getContainer().compareStorageContainerCompatibility( this.image.getContainer() ))
@@ -80,6 +84,13 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			return true;
 		}
 	}
+	
+	/**
+	 * By default, he will not do the computation in-place
+	 * @param keepImgFFT
+	 */
+	public void setKeepImgFFT( final boolean keepImgFFT ) { this.keepImgFFT = keepImgFFT; }
+	public boolean getKeepImgFFT() { return this.keepImgFFT; } 
 
 	public boolean replaceKernel( final Image<S> knl )
 	{
@@ -287,12 +298,19 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		// Multiply in Fourier Space
 		//
-		multiply( imgFFT, kernelFFT );
+		final Image< ComplexFloatType > copy;
+		
+		if ( keepImgFFT )
+			copy = imgFFT.clone();
+		else
+			copy = imgFFT;
+		
+		multiply( copy, kernelFFT );
 		
 		//
 		// Compute inverse Fourier Transform
 		//		
-		final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( imgFFT, fftImage );
+		final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( copy, fftImage );
 		invFFT.setInPlaceTransform( true );
 		invFFT.setNumThreads( this.getNumThreads() );
 
@@ -302,7 +320,13 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			return false;			
 		}
 		
-		imgFFT.close();
+		if ( !keepImgFFT )
+		{
+			// the imgFFT was changed during the multiplication
+			// it cannot be re-used
+			imgFFT.close();
+			imgFFT = null;			
+		}
 		
 		convolved = invFFT.getResult();	
 		
@@ -386,9 +410,11 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		convolved = null;
 		kernel = null;
 		kernelFFT = null;
+		
+		if ( imgFFT != null )
+			imgFFT.close();
 	}
 
 	@Override
 	public String getErrorMessage()  { return errorMessage; }
-
 }

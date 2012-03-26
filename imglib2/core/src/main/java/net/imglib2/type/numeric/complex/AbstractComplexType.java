@@ -1,7 +1,6 @@
 package net.imglib2.type.numeric.complex;
 
 import net.imglib2.type.numeric.ComplexType;
-import net.imglib2.util.Util;
 
 public abstract class AbstractComplexType<T extends AbstractComplexType<T>> implements ComplexType<T>
 {
@@ -76,7 +75,7 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 		final float real = getRealFloat();
 		final float imaginary = getImaginaryFloat();
 
-		return (float)Util.gLog( Math.sqrt( real * real + imaginary * imaginary ), 2 );
+		return (float)Math.sqrt( real * real + imaginary * imaginary );
 	}
 
 	@Override
@@ -85,7 +84,7 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 		final double real = getRealDouble();
 		final double imaginary = getImaginaryDouble();
 
-		return Util.gLog( Math.sqrt( real * real + imaginary * imaginary ), 2 );
+		return Math.sqrt( real * real + imaginary * imaginary );
 	}
 
 	@Override

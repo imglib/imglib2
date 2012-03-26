@@ -27,7 +27,7 @@ public class CopyTest
 
 	long intDataSum;
 
-	CellImg< IntType, ? > intImg;
+	CellImg< IntType, ?, ? > intImg;
 
 	@Before
 	public void createSourceData()
@@ -130,7 +130,7 @@ public class CopyTest
 	@Test
 	public void testCopyToCellContainerWithSourceIteration()
 	{
-		CellImg< IntType, ? > cellImg = new CellImgFactory< IntType >( new int[] {2, 7, 4} ).create( dimensions, new IntType() );
+		CellImg< IntType, ?, ? > cellImg = new CellImgFactory< IntType >( new int[] {2, 7, 4} ).create( dimensions, new IntType() );
 		copyWithSourceIteration( intImg, cellImg );
 		assertArrayEquals( intData, getImgAsInts( cellImg ) );
 	}
@@ -138,7 +138,7 @@ public class CopyTest
 	@Test
 	public void testCopyToCellContainerWithDestIteration()
 	{
-		CellImg< IntType, ? > cellImg = new CellImgFactory< IntType >( new int[] {2, 7, 4} ).create( dimensions, new IntType() );
+		CellImg< IntType, ?, ? > cellImg = new CellImgFactory< IntType >( new int[] {2, 7, 4} ).create( dimensions, new IntType() );
 		copyWithDestIteration( intImg, cellImg );
 		assertArrayEquals( intData, getImgAsInts( cellImg ) );
 	}

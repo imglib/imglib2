@@ -1,0 +1,186 @@
+/**
+ * Copyright (c) 2009--2012, ImgLib2 developers
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.  Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.  Neither the name of the imglib project nor
+ * the names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+package net.imglib2.realtransform;
+
+import net.imglib2.RealLocalizable;
+import net.imglib2.RealPoint;
+import net.imglib2.RealPositionable;
+import Jama.Matrix;
+
+/**
+ * An abstract implementation of an affine transformation that returns
+ * default values referring tot the identity transformation for all fields.
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
+public abstract class AbstractAffineTransform implements AffineGet, AffineSet
+{
+	final protected int n;
+	
+	final protected Matrix a;
+	final protected double[] t;
+	
+	final protected RealPoint[] ds;
+	
+	protected AbstractAffineTransform( final int n, final Object x )
+	{
+		this.n = n;
+		a = new Matrix( n, n );
+		t = new double[ n ];
+		ds = new RealPoint[ n ];
+	}
+	
+	protected AbstractAffineTransform( final Matrix a, final double[] t )
+	{
+		assert
+			a.getRowDimension() == t.length &&
+			a.getColumnDimension() == t.length : "The passed arrays must be n*n and the t-vector n.";
+		
+		this.n = t.length;
+		this.a = a;
+		this.t = t;
+		ds = new RealPoint[ n ];
+		for ( int r = 0; r < n; ++r )
+			ds[ r ] = new RealPoint( n );
+		
+		updateDs();
+	}
+	
+	public AbstractAffineTransform( final Matrix matrix )
+	{
+		this( matrix.getRowDimension(), null );
+		
+		assert matrix.getRowDimension() == matrix.getColumnDimension() - 1 : "The passed affine matrix must be of the format (n-1)*n.";
+		
+		a.setMatrix( 0, n - 1, 0, n - 1, matrix );
+		for ( int r = 0; r < n; ++r )
+		{
+			t[ r ] = matrix.get( r, n );
+			ds[ r ] = new RealPoint( n );
+		}
+		updateDs();
+	}
+	
+	public AbstractAffineTransform( final int n )
+	{
+		this.n = n;
+		a = new Matrix( n, n );
+		ds = new RealPoint[ n ];
+		
+		for ( int r = 0; r < n; ++r )
+		{
+			final RealPoint d = new RealPoint( n );
+			a.set( r, r, 1.0 );
+			d.setPosition( 1.0, r );
+			ds[ r ] = d;
+		}
+		
+		t = new double[ n ];
+	}
+	
+	
+	protected void updateDs()
+	{
+		for ( int c = 0; c < n; ++c )
+		{
+			final RealPoint d = ds[ c ];
+			for ( int r = 0; r < n; ++r )
+				d.setPosition( a.get( r, c ), r );
+		}
+	}
+
+	@Override
+	public int numSourceDimensions()
+	{
+		return n;
+	}
+
+	@Override
+	public int numTargetDimensions()
+	{
+		return n;
+	}
+
+	@Override
+	public void apply( final double[] source, final double[] target )
+	{
+		assert source.length == n && target.length == n : "Source or target vector dimensions do not match with the transformation.";
+		
+		for ( int r = 0; r < n; ++r )
+		{
+			double ar = 0;
+			for ( int c = 0; c < n; ++c )
+				ar += source[ c ] * a.get( r, c );
+			
+			target[ r ] = ar + t[ r ];
+		}
+	}
+
+	@Override
+	public void apply( final RealLocalizable source, final RealPositionable target )
+	{
+		assert source.numDimensions() == n && target.numDimensions() == n : "Source or target vector dimensions do not match with the transformation.";
+		
+		for ( int r = 0; r < n; ++r )
+		{
+			double ar = 0;
+			for ( int c = 0; c < n; ++c )
+				ar += source.getDoublePosition( c ) * a.get( r, c );
+			
+			target.setPosition( ar + t[ r ], r );
+		}
+	}
+
+	@Override
+	public double get( final int row, final int column )
+	{
+		if ( column == n )
+			return t[ row ];
+		else
+			return a.get( row, column );
+	}
+	
+	@Override
+	public double[] getRowPackedCopy()
+	{
+		final double[] copy = new double[ n * n + n ];
+		for ( int r = 0, i = 0; r < n; ++r, ++i )
+		{
+			for ( int c = 0; c < n; ++c, ++i )
+				copy[ i ] = a.get( r, c );
+			copy[ i ] = t[ r ];
+		}
+		return copy;
+	}
+	
+	@Override
+	public RealLocalizable d( final int d )
+	{
+		return ds[ d ];
+	}
+}

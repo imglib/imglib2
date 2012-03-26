@@ -5,9 +5,9 @@
     http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent> 
+  <parent>
     <groupId>net.imglib2</groupId>
-    <artifactId>imglib-pom-imglib2</artifactId>
+    <artifactId>pom-imglib2</artifactId>
     <version>2.0-SNAPSHOT</version>
   </parent>
 
@@ -18,26 +18,31 @@
 
   <dependencies>
     <dependency>
-      <groupId>${bio-formats.groupId}</groupId>
-      <artifactId>bio-formats</artifactId>
-      <version>${bio-formats.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${bio-formats.groupId}</groupId>
-      <artifactId>loci-common</artifactId>
-      <version>${bio-formats.version}</version>
-    </dependency>
-    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>imglib2</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${scifio.groupId}</groupId>
+      <artifactId>loci-common</artifactId>
+      <version>${scifio.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${scifio.groupId}</groupId>
+      <artifactId>ome-xml</artifactId>
+      <version>${scifio.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${scifio.groupId}</groupId>
+      <artifactId>scifio</artifactId>
+      <version>${scifio.version}</version>
+    </dependency>
 
     <dependency>
-      <groupId>${imagej.groupId}</groupId>
-      <artifactId>ij</artifactId>
-      <version>${imagej1.version}</version>
-      <scope>test</scope>
+      <groupId>${scifio.groupId}</groupId>
+      <artifactId>bio-formats</artifactId>
+      <version>${scifio.version}</version>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
@@ -67,11 +72,11 @@
   <repositories>
     <repository>
       <id>imagej.releases</id>
-      <url>http://dev.imagejdev.org/maven2/releases</url>
+      <url>http://maven.imagej.net/content/repositories/releases</url>
     </repository>
     <repository>
       <id>imagej.snapshots</id>
-      <url>http://dev.imagejdev.org/maven2/snapshots</url>
+      <url>http://maven.imagej.net/content/repositories/snapshots</url>
     </repository>
   </repositories>
 

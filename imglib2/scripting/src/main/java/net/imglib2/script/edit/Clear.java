@@ -12,15 +12,17 @@ import net.imglib2.type.numeric.RealType;
  */
 public final class Clear extends UnaryOperation
 {
-	public Clear(IFunction fn) {
+	public Clear(final IFunction fn) {
 		super(fn);
 	}
 
-	public Clear(IterableRealInterval<? extends RealType<?>> img) {
+	public <R extends RealType<R>> Clear(final IterableRealInterval<R> img) {
 		super(img);
 	}
 
-	public Clear(Number val) {
+	/** Present only for completeness. {@param val} is give to {@link UnaryOperation} super constructor,
+	 * but {@link #eval()} always returns 0. */
+	public Clear(final Number val) {
 		super(val);
 	}
 
