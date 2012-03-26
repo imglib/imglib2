@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.roi;
 
 import net.imglib2.img.Img;
@@ -8,9 +9,8 @@ import net.imglib2.type.numeric.RealType;
 /**
  * Median filter / morphological operation.
  * 
- * @author Larry Lindsey
- *
  * @param <T> {@link Image} type.
+ * @author Larry Lindsey
  */
 public class MedianFilter<T extends RealType<T>> extends OrderStatistics<T> {
 

@@ -1,3 +1,4 @@
+
 package tests;
 
 import ij.ImageJ;
@@ -29,8 +30,9 @@ import mpicbg.util.Timer;
 /**
  * 
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @version 0.1a
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class TestShapeList
 {

@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.roi;
 
 
@@ -18,11 +19,11 @@ import net.imglib2.util.Util;
  * DirectConvolution is an ROIAlgorithm designed to do both convolution and cross-correlation 
  * by operating on the image and kernel directly, rather than by using such time-saving tricks as
  * FFT.
- * @author Larry Lindsey
- *
  * @param <T> input image type
  * @param <R> kernel type
  * @param <S> output image type
+ *
+ * @author Larry Lindsey
  */
 public class DirectConvolution
 	<T extends ComplexType<T>, R extends ComplexType<R>, S extends ComplexType<S>>

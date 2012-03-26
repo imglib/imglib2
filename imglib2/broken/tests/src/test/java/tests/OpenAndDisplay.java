@@ -1,3 +1,4 @@
+
 package tests;
 
 import ij.ImageJ;
@@ -18,6 +19,10 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.real.FloatType;
 
+/**
+ * TODO
+ *
+ */
 public class OpenAndDisplay
 {	
 	public static void test( ImgFactory<FloatType> factory )

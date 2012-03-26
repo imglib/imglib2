@@ -1,3 +1,4 @@
+
 import net.imglib2.cursor.LocalizableByDimCursor;
 import net.imglib2.cursor.LocalizableCursor;
 import net.imglib2.cursor.special.RegionOfInterestCursor;
@@ -17,6 +18,10 @@ import net.imglib2.algorithm.ROIAlgorithm;
 
 
 
+/**
+ * TODO
+ *
+ */
 public class TestROIAlgorithm <T extends RealType<T>> extends ROIAlgorithm<T, T> {
 
 	

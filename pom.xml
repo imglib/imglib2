@@ -32,7 +32,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
-					<licenseName>imglib</licenseName>
+					<licenseName>imglib2</licenseName>
 					<licenseResolver>http://code.imagej.net/licenses</licenseResolver>
 					<inceptionYear>2009</inceptionYear>
 					<organizationName>Stephan Preibisch, Stephan Saalfeld, Tobias
