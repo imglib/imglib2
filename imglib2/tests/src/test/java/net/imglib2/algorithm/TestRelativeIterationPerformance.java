@@ -1,4 +1,4 @@
-package net.imglib2.algorithm.fft;
+package net.imglib2.algorithm;
 
 import ij.ImageJ;
 
@@ -20,6 +20,7 @@ import net.imglib2.outofbounds.OutOfBoundsRandomAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 public class TestRelativeIterationPerformance<T extends RealType<T>> implements Benchmark, OutputAlgorithm<Img<FloatType>> {
@@ -32,6 +33,7 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 	
 	public static enum IterationMethod {
 		RANDOM_ACCESS,
+		RANDOM_ACCESS_NO_EXTEND,
 		TRANSLATE_VIEW
 	}
 	
@@ -71,11 +73,54 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 		case TRANSLATE_VIEW:
 			iterateWithViews();
 			break;
+		case RANDOM_ACCESS_NO_EXTEND:
+			iterateWithRandoAccessibleNoOutOfBounds();
+			break;
+		
 		}
 		
 		processingTime = System.currentTimeMillis() - start;
 		
 		return true;
+	}
+	
+	
+	private void iterateWithRandoAccessibleNoOutOfBounds() {
+		long[] dimension = new long[] { input.dimension(0)-2, input.dimension(1)-2 } ;
+		long[] offset = new long[] { 1, 1 };
+		Cursor<FloatType> oc = Views.iterable(Views.offsetInterval(output, offset, dimension)).localizingCursor();
+		RandomAccess<T> ra = input.randomAccess();
+		float I, In, Ine, Ie, Ise, Is, Isw, Iw, Inw;
+		
+		while(oc.hasNext()) {
+			
+			oc.fwd();
+			
+			System.out.println(Util.printCoordinates(oc));// DEBUG
+			
+			ra.setPosition(oc);
+			
+			I = ra.get().getRealFloat();
+			ra.bck(1);
+			In = ra.get().getRealFloat();
+			ra.fwd(0);
+			Ine = ra.get().getRealFloat();
+			ra.fwd(1);
+			Ie = ra.get().getRealFloat();
+			ra.fwd(1);
+			Ise = ra.get().getRealFloat();
+			ra.bck(0);
+			Is = ra.get().getRealFloat();
+			ra.bck(0);
+			Isw = ra.get().getRealFloat();
+			ra.bck(1);
+			Iw = ra.get().getRealFloat();
+			ra.bck(1);
+			Inw = ra.get().getRealFloat();
+		
+			oc.get().set( I - 1/8f * (In+Ine+Ie+Ise+Is+Isw+Iw+Inw));
+		}
+		
 	}
 	
 	
@@ -181,7 +226,7 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 		
 //		File file = new File( "E:/Users/JeanYves/Desktop/Data/Y.tif");
 		File file = new File( "/Users/tinevez/Desktop/Data/Y.tif");
-		int niter = 500;
+		int niter = 100;
 		
 		// Open file in imglib2
 		ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
@@ -221,6 +266,20 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 		ImageJFunctions.show(algo.getResult());
 		System.out.println(String.format("Time taken: %.2f ms/iteration.", (float) totalTime / niter));
 		System.out.println(String.format("or: %.2f µs/pixel.", 1000f * totalTime / ((float) niter * width * height)));
+		
+
+		algo.method = IterationMethod.RANDOM_ACCESS_NO_EXTEND;
+		
+		System.out.println();
+		System.out.println("With random access, no out of bounds access:");
+		totalTime = 0;
+		for (int i = 0; i < niter; i++) {
+			algo.process();
+			totalTime += algo.getProcessingTime();
+		}
+		ImageJFunctions.show(algo.getResult());
+		System.out.println(String.format("Time taken: %.2f ms/iteration.", (float) totalTime / niter));
+		System.out.println(String.format("or: %.2f µs/pixel.", 1000f * totalTime / ((float) niter * (width-2) * (height-2))));
 		
 
 	}
