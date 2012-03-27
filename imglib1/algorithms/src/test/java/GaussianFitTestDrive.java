@@ -1,9 +1,3 @@
-
-
-import ij.ImagePlus;
-import ij.gui.EllipseRoi;
-import ij.gui.Overlay;
-
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -59,14 +53,14 @@ public class GaussianFitTestDrive {
 		addNoiseToImage(img, sigma_noise);
 
 		// Show target image
-		ij.ImageJ.main(args);
-		final ImagePlus imp = mpicbg.imglib.image.display.imagej.ImageJFunctions.copyToImagePlus(img);
-		imp.show();
-		imp.resetDisplayRange();
-		imp.updateAndDraw();
+//		ij.ImageJ.main(args);
+//		final ImagePlus imp = mpicbg.imglib.image.display.imagej.ImageJFunctions.copyToImagePlus(img);
+//		imp.show();
+//		imp.resetDisplayRange();
+//		imp.updateAndDraw();
 
-		final Overlay overlay = new Overlay();
-		imp.setOverlay(overlay);
+//		final Overlay overlay = new Overlay();
+//		imp.setOverlay(overlay);
 
 		// Instantiate fitter once
 		final GaussianPeakFitterND<UnsignedByteType> fitter = new GaussianPeakFitterND<UnsignedByteType>(img);
@@ -125,8 +119,8 @@ public class GaussianFitTestDrive {
 							ar = sx / sy; 
 
 						}
-						overlay.add(new EllipseRoi(x1, y1, x2, y2, ar));
-						imp.updateAndDraw();
+//						overlay.add(new EllipseRoi(x1, y1, x2, y2, ar));
+//						imp.updateAndDraw();
 
 					}
 
