@@ -16,6 +16,14 @@
   <name>ImgLib1 Game of Death</name>
   <description>The Game of Death, similar to Conway's Game of Life, is a cellular automaton, simulating competing life forms. It illustrates the generality of the ImgLib typing mechanism.</description>
 
+  <licenses>
+    <license>
+      <name>GPL 2 or later</name>
+      <url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <dependencies>
     <dependency>
       <groupId>${imagej.groupId}</groupId>
@@ -63,6 +71,14 @@
               <mainClass>game.Arena</mainClass>
             </manifest>
           </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <configuration>
+          <licenseName>gpl_v2</licenseName>
         </configuration>
       </plugin>
     </plugins>

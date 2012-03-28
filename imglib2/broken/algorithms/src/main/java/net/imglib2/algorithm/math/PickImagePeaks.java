@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.math;
 
 import java.util.ArrayList;
@@ -29,10 +30,10 @@ import net.imglib2.util.Util;
  * This picker does no pre-processing, so it may be advisable to smooth your peak image before 
  * using this. 
  * 
- * @author Larry Lindsey 
- *
  * @param <T> the {@link ComparableType} representing information stored in the {@link Image} to
  * pick peaks from.
+ *
+ * @author Larry Lindsey
  */
 public class PickImagePeaks <T extends RealType<T>> implements OutputAlgorithm<Img<BitType>>, Benchmark
 {

@@ -1,3 +1,4 @@
+
 package tests;
 
 import ij.ImageJ;
@@ -19,8 +20,9 @@ import net.imglib2.type.numeric.integer.ByteType;
 /**
  * 
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @version 0.1a
+ *
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class ShapeListBehavior
 {

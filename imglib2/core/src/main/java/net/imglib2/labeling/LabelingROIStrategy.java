@@ -1,20 +1,39 @@
-/**
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * @author Lee Kamentsky
- *
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.labeling;
 
 import java.util.Collection;
@@ -24,26 +43,20 @@ import net.imglib2.roi.RegionOfInterest;
 
 /**
  * A labeling cursor strategy provides label cursors, bounds and other
- * potentially cacheable parameters on the labeling. It may be advantageous
- * to find all pixels for each label only once for sparse labelings,
- * small spaces and labelings that do not change during cursor use.
- *
- * @author leek
- *
+ * potentially cacheable parameters on the labeling. It may be advantageous to
+ * find all pixels for each label only once for sparse labelings, small spaces
+ * and labelings that do not change during cursor use.
+ * 
  * @param <T>
  * @param <L>
- */
-/**
- * @author leek
- *
- * @param <T>
- * @param <L>
+ * 
+ * @author Lee Kamentsky
  */
 public interface LabelingROIStrategy< T extends Comparable< T >, L extends Labeling< T >>
 {
 	/**
 	 * A region of interest designed to be queried for point-membership
-	 *
+	 * 
 	 * @param label
 	 *            - the label of the pixels to be traversed
 	 * @return a region of interest which is a RandomAccessible with a boolean
@@ -54,7 +67,7 @@ public interface LabelingROIStrategy< T extends Comparable< T >, L extends Label
 	/**
 	 * An iterable region of interest, optimized for iteration over the pixels
 	 * in the region of interest.
-	 *
+	 * 
 	 * @param label
 	 *            - the label to be traversed
 	 * @return a cursor over the perimeter of the labeled object
@@ -63,7 +76,7 @@ public interface LabelingROIStrategy< T extends Comparable< T >, L extends Label
 
 	/**
 	 * Get the extents of the bounding box around the labeled object
-	 *
+	 * 
 	 * @param label
 	 *            - the label of the object in question
 	 * @param minExtents
@@ -81,18 +94,18 @@ public interface LabelingROIStrategy< T extends Comparable< T >, L extends Label
 	/**
 	 * The coordinates of the first pixel with the given label when raster
 	 * scanning through the space.
-	 *
+	 * 
 	 * There is a class of algorithms on labeled objects that trace around the
 	 * perimeter or surface of the object, starting with the first pixel
 	 * encountered in a raster scan (given a space S(x[1],..x[D]) of dimension
 	 * D, sort the coordinates of the labeled pixels by increasing x[1], then
 	 * increasing x[2], etc and pick the first in the list). This function can
 	 * be used to find the pixel.
-	 *
+	 * 
 	 * Note: the algorithms typically assume that all similarly labeled pixels
 	 * are connected and that either there are no holes or holes are not
 	 * significant.
-	 *
+	 * 
 	 * @param label
 	 *            - search on pixels of this label
 	 * @param start
@@ -106,14 +119,14 @@ public interface LabelingROIStrategy< T extends Comparable< T >, L extends Label
 	 * Return the area of the labeled object in units of pixels or the volume of
 	 * the labeled object in voxels (or the hyper-volume of the 4/5-d object in
 	 * ?toxels? or ?spectracels? or ?spectratoxels?)
-	 *
+	 * 
 	 * @return the area of the labeled object in pixels.
 	 */
 	public long getArea( T label );
 
 	/**
 	 * Find all of the labels used to label pixels.
-	 *
+	 * 
 	 * @return array of labels used.
 	 */
 	public Collection< T > getLabels();

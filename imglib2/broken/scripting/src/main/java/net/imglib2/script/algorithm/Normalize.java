@@ -1,3 +1,4 @@
+
 package net.imglib2.script.algorithm;
 
 import net.imglib2.algorithm.math.ComputeMinMax;
@@ -28,6 +29,7 @@ import net.imglib2.script.math.fn.IFunction;
  * channel is normalized independently.
  * 
  * When the min equals the max, the result is an image with zero values.
+ *
  */
 public class Normalize<N extends NumericType<N>> extends ImgProxy<N>
 {

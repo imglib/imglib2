@@ -1,19 +1,28 @@
-/**
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
+/*
+ * #%L
+ * ImgLib: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
- * @author Stephan Preibisch
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
  */
+
 package mpicbg.imglib.algorithm.gauss;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,6 +38,11 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 
+/**
+ * TODO
+ *
+ * @author Stephan Preibisch
+ */
 public class GaussianConvolution < T extends NumericType<T> > extends GaussianConvolution3<T, T, T>
 {
 	public GaussianConvolution( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double[] sigma )
@@ -105,7 +119,6 @@ public class GaussianConvolution < T extends NumericType<T> > extends GaussianCo
 	 * @param sigma Standard Derivation of the gaussian function
 	 * @return FloatProcessor The folded image
 	 *
-	 * @author   Stephan Preibisch
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static <T extends NumericType<T>> Image<T> computeGaussFloatArray3D( final Image<T> image, final OutOfBoundsStrategyFactory<T> outOfBoundsFactory, final double[][] kernel, final int numThreads )

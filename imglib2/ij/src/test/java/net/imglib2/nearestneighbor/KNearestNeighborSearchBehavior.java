@@ -1,6 +1,41 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
+
 package net.imglib2.nearestneighbor;
 /**
- * Copyright (c) 2010, Stephan Preibisch & Stephan Saalfeld
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -40,6 +75,8 @@ import net.imglib2.collection.RealPointSampleList;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
+import net.imglib2.interpolation.neighborsearch.InverseDistanceWeightingInterpolator;
+import net.imglib2.interpolation.neighborsearch.InverseDistanceWeightingInterpolatorFactory;
 import net.imglib2.neighborsearch.KNearestNeighborSearch;
 import net.imglib2.neighborsearch.KNearestNeighborSearchOnIterableRealInterval;
 import net.imglib2.neighborsearch.KNearestNeighborSearchOnKDTree;
@@ -50,6 +87,12 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
+/**
+ * TODO
+ *
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
+ */
 public class KNearestNeighborSearchBehavior
 {
 	final static private long[] size = new long[]{ 200, 164 };
@@ -80,7 +123,7 @@ public class KNearestNeighborSearchBehavior
 		}
 		return timer.stop();
 	}
-	
+
 	final static private < T extends RealType< T > > long drawWeightedByDistance(
 			final IterableInterval< T > target,
 			final KNearestNeighborSearch< T > knnSearch,
@@ -119,6 +162,29 @@ public class KNearestNeighborSearchBehavior
 		}
 		return timer.stop();
 	}
+	
+	final static private < T extends RealType< T > > long drawWeightedByDistanceInterpolator(
+			final IterableInterval< T > target,
+			final KNearestNeighborSearch< T > knnSearch,
+			final int k,
+			final double p,
+			final double min,
+			final double max )
+	{
+		final Timer timer = new Timer();
+		timer.start();
+		final Cursor< T > c = target.localizingCursor();
+		final InverseDistanceWeightingInterpolator< T > interpolator= new InverseDistanceWeightingInterpolatorFactory< T >( p ).create( knnSearch, target );
+		while ( c.hasNext() )
+		{
+			c.fwd();
+			interpolator.setPosition( c );
+			c.get().setReal( Math.max(  min, Math.min( max, interpolator.get().getRealDouble() ) ) );
+		}
+		return timer.stop();
+	}
+	
+	
 	
 	
 	
@@ -190,7 +256,7 @@ public class KNearestNeighborSearchBehavior
 			{
 				IJ.log( "  k=" + k + " p=" + String.format( "%.2f", p ) );
 				final ImagePlusImg< UnsignedByteType, ? > img3 = factory.create( size, new UnsignedByteType() );
-				t += drawWeightedByDistance( img3, new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, k ), k, p, 0, 255 );
+				t += drawWeightedByDistanceInterpolator( img3, new KNearestNeighborSearchOnIterableRealInterval< UnsignedByteType >( list, k ), k, p, 0, 255 );
 				try
 				{
 					distanceStack.addSlice( "k=" + k + " p=" + String.format( "%.2f", p ), img3.getImagePlus().getProcessor() );
@@ -269,7 +335,7 @@ public class KNearestNeighborSearchBehavior
 			{
 				IJ.log( "  k=" + k + " p=" + String.format( "%.2f", p ) );
 				final ImagePlusImg< UnsignedByteType, ? > img3 = factory.create( size, new UnsignedByteType() );
-				t += drawWeightedByDistance(
+				t += drawWeightedByDistanceInterpolator(
 						img3,
 						new KNearestNeighborSearchOnKDTree< UnsignedByteType >( kdtree, k ), k, p, 0, 255 );
 				try
