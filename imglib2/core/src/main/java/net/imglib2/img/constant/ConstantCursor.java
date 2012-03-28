@@ -1,22 +1,25 @@
-/**
- * Copyright (c) 2009--2012, Tobias Pietzsch, Stephan Preibisch & Stephan Saalfeld
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,36 +27,43 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.img.constant;
 
 import net.imglib2.AbstractCursor;
-import net.imglib2.type.Type;
 import net.imglib2.util.IntervalIndexer;
 
 /**
  * A simple Cursor that always returns the same value at each location, but iterates the right amount of
  * pixels relative to its size.
  * 
- * @author Stephan Preibisch
- *
  * @param <T>
+ *
+ * @author Tobias Pietzsch
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  */
-public class ConstantCursor < T extends Type< T > > extends AbstractCursor< T >
+public class ConstantCursor < T > extends AbstractCursor< T >
 {
 	long i;
+	final long[] dimensions;
 	
 	final long maxNumPixels;
 	final T type;
-	final ConstantImg< T > container;
-
-	public ConstantCursor( final ConstantImg< T > container ) 
+	
+	public ConstantCursor( final T type, final int numDimensions, final long[] dimensions, final long numPixels ) 
 	{
-		super( container.numDimensions() );
+		super( numDimensions );
 
-		this.maxNumPixels = container.size() - 1;
-		this.type = container.type;
-		this.container = container;
+		this.maxNumPixels = numPixels - 1;
+		this.type = type;
+		this.dimensions = dimensions;
 	}
 	
 	public ConstantCursor( final ConstantCursor< T > cursor )
@@ -62,8 +72,8 @@ public class ConstantCursor < T extends Type< T > > extends AbstractCursor< T >
 		
 		this.maxNumPixels = cursor.maxNumPixels;
 		this.type = cursor.type;
-		this.container = cursor.container;
 		this.i = cursor.i;
+		this.dimensions = cursor.dimensions;
 	}
 	
 	@Override
@@ -79,10 +89,10 @@ public class ConstantCursor < T extends Type< T > > extends AbstractCursor< T >
 	public void fwd() { ++i; }
 
 	@Override
-	public void localize( final long[] position ) { IntervalIndexer.indexToPosition( i, container.dim, position ); }
+	public void localize( final long[] position ) { IntervalIndexer.indexToPosition( i, dimensions, position ); }
 
 	@Override
-	public long getLongPosition( final int d ) { return IntervalIndexer.indexToPosition( i, container.dim, d ); }
+	public long getLongPosition( final int d ) { return IntervalIndexer.indexToPosition( i, dimensions, d ); }
 
 	@Override
 	public ConstantCursor<T> copy()  { return new ConstantCursor< T >( this ); }

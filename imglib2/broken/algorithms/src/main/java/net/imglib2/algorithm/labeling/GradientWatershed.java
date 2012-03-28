@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.labeling;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ import net.imglib2.util.Util;
  *  
  * @param <T> The type of the image.
  * @param <L> The type of the labeling, typically Integer
+ *
  */
 public class GradientWatershed<T extends RealType<T>, L extends Comparable<L>>
 implements OutputAlgorithm<LabelingType<L>>

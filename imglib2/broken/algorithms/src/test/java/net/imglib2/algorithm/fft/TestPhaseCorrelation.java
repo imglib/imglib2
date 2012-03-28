@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.fft;
 
 import ij.ImagePlus;
@@ -7,6 +8,10 @@ import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.real.FloatType;
 
+/**
+ * TODO
+ *
+ */
 public class TestPhaseCorrelation {
 
 	static public final void main(String[] args) {

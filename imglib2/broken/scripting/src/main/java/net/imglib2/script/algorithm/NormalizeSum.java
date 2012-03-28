@@ -1,3 +1,4 @@
+
 package net.imglib2.script.algorithm;
 
 import net.imglib2.script.algorithm.fn.ImgProxy;
@@ -8,6 +9,10 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
+/**
+ * TODO
+ *
+ */
 public class NormalizeSum<T extends RealType<T>> extends ImgProxy<FloatType>
 {
 	public NormalizeSum(final Img<T> img) throws Exception {

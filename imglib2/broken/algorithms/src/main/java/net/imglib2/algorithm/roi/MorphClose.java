@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.roi;
 
 import net.imglib2.algorithm.Benchmark;
@@ -11,9 +12,8 @@ import net.imglib2.type.numeric.RealType;
  * Close morphological operation. Operates by creating a {@link MorphDilate} and a
  * {@link MorphErode}, taking the output from the first, and passing it to the second.
  * 
- * @author Larry Lindsey
- *
  * @param <T> {@link Image} type.
+ * @author Larry Lindsey
  */
 public class MorphClose<T extends RealType<T>> implements OutputAlgorithm<Img<T>>, Benchmark
 {

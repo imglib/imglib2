@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.transformation;
 
 import java.util.ArrayList;
@@ -17,10 +18,10 @@ import net.imglib2.type.numeric.RealType;
  * This abstract class provides some basic functionality for use with arbitrary Hough-like
  * transforms. 
  * 
- * @author lindsey
- *
  * @param <S> the data type used for storing votes, usually IntType, but possibly LongType or even DoubleType.
  * @param <T> the data type of the input image.
+ *
+ * @author lindsey
  */
 public abstract class HoughTransform<S extends RealType<S> & NativeType<S>, T extends Type<T> & Comparable<T>>
 implements OutputAlgorithm<Img<S>>, Benchmark

@@ -1,22 +1,25 @@
-/**
- * Copyright (c) 2009--2012, Tobias Pietzsch, Stephan Preibisch & Stephan Saalfeld
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,66 +27,48 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.img.constant;
 
-import net.imglib2.AbstractRandomAccess;
+import net.imglib2.Point;
 import net.imglib2.RandomAccess;
-import net.imglib2.type.Type;
 
 /**
- * A simple {@link RandomAccess} that always returns the same value at each position, but is positioned correctly.
- * 
- * @author Stephan Preibisch
+ * A simple {@link RandomAccess} that always returns the same value at each
+ * position, but is positioned correctly.
  *
  * @param <T>
+ *
+ * @author Tobias Pietzsch
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  */
-public class ConstantRandomAccess< T extends Type< T > > extends AbstractRandomAccess< T >
+public class ConstantRandomAccess< T > extends Point implements RandomAccess< T >
 {
 	final T type;
-	
-	public ConstantRandomAccess( final ConstantImg< T > container )
+
+	public ConstantRandomAccess( final T type, final int numDimensions )
 	{
-		super( container.numDimensions() );
-		
-		this.type = container.type;
+		super( numDimensions );
+
+		this.type = type;
 	}
-	
+
 	public ConstantRandomAccess( final ConstantRandomAccess< T > cursor )
 	{
 		super( cursor.n );
-		
+
 		this.type = cursor.type;
-		
+
 		for ( int d = 0; d < n; ++d )
 			this.position[ d ] = cursor.position[ d ];
 	}
-
-	@Override
-	public void fwd( final int d ) { ++position[ d ]; }
-
-	@Override
-	public void bck( final int d ) { --position[ d ]; } 
-
-	@Override
-	public void move( final long distance, final int d ) { position[ d ] += distance; }
-
-	@Override
-	public void setPosition( final int[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-			this.position[ d ] = position[ d ];
-	}
-
-	@Override
-	public void setPosition( final long[] position )
-	{
-		for ( int d = 0; d < n; ++d )
-			this.position[ d ] = position[ d ];
-	}
-
-	@Override
-	public void setPosition( final long position, final int d ) { this.position[ d ] = position; }
 
 	@Override
 	public T get() { return type; }

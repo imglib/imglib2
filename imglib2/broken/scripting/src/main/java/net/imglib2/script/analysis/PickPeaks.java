@@ -1,3 +1,4 @@
+
 package net.imglib2.script.analysis;
 
 import java.util.ArrayList;
@@ -10,6 +11,10 @@ import net.imglib2.type.numeric.RealType;
 /** Picks peaks in an image. It is recommended to smooth the image a bit with a Gaussian first.
  * 
  * See underlying algorithm {@link PickImagePeaks}. */
+/**
+ * TODO
+ *
+ */
 public class PickPeaks<T extends RealType<T>> extends ArrayList<float[]>
 {
 	private static final long serialVersionUID = 5392390381529251353L;
