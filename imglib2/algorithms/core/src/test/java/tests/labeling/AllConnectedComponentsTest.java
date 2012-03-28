@@ -50,6 +50,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.labeling.NativeImgLabeling;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.type.numeric.integer.IntType;
 
 import org.junit.Test;
 
@@ -64,10 +65,9 @@ public class AllConnectedComponentsTest
 	{
 		long[] dimensions = new long[] { input.length, input[ 0 ].length };
 		ArrayImgFactory< BitType > imgFactory = new ArrayImgFactory< BitType >();
-		ArrayImgFactory< LabelingType< Integer >> labelingFactory = new ArrayImgFactory< LabelingType< Integer >>();
+		ArrayImgFactory< IntType > labelingFactory = new ArrayImgFactory< IntType >();
 		ArrayImg< BitType, ? > image = imgFactory.create( dimensions, new BitType() );
-		NativeImgLabeling< Integer > labeling = new NativeImgLabeling< Integer >( dimensions, labelingFactory );
-		labeling.setLinkedType( new LabelingType< Integer >( labeling ) );
+		NativeImgLabeling< Integer, IntType > labeling = new NativeImgLabeling< Integer, IntType >( labelingFactory.create( dimensions, new IntType() ) );
 		/*
 		 * Fill the image.
 		 */

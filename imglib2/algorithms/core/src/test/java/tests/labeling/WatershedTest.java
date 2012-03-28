@@ -65,10 +65,8 @@ public class WatershedTest
 		long[] imageDimensions = new long[] { image.length, image[ 0 ].length };
 		long[] seedDimensions = new long[] { seeds.length, seeds[ 0 ].length };
 		long[] outputDimensions = new long[] { expected.length, expected[ 0 ].length };
-		NativeImgLabeling< Integer > seedLabeling = new NativeImgLabeling< Integer >( seedDimensions );
-		seedLabeling.setLinkedType( new LabelingType< Integer >( seedLabeling ) );
-		NativeImgLabeling< Integer > outputLabeling = new NativeImgLabeling< Integer >( outputDimensions );
-		outputLabeling.setLinkedType( new LabelingType< Integer >( outputLabeling ) );
+		NativeImgLabeling< Integer, IntType > seedLabeling = new NativeImgLabeling< Integer, IntType >( new ArrayImgFactory< IntType >().create( seedDimensions, new IntType() ) );
+		NativeImgLabeling< Integer, IntType > outputLabeling = new NativeImgLabeling< Integer, IntType >( new ArrayImgFactory< IntType >().create( outputDimensions, new IntType() ) );
 		NativeImg< IntType, ? extends IntAccess > imageImage = new ArrayImgFactory< IntType >().createIntInstance( imageDimensions, 1 );
 		imageImage.setLinkedType( new IntType( imageImage ) );
 		/*
