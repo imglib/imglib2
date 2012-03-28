@@ -26,27 +26,35 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author Tobias Pietzsch
+ * @modified Christian Dietz
  */
 package net.imglib2.img.sparse;
 
-import net.imglib2.AbstractRandomAccess;
+import net.imglib2.Localizable;
+import net.imglib2.RandomAccess;
 import net.imglib2.img.sparse.NtreeImg.PositionProvider;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Util;
 
 /**
  * @author Tobias Pietzsch
  * 
  */
-public final class NtreeRandomAccess< T extends NativeType< T >> extends AbstractRandomAccess< T > implements PositionProvider
+public final class NtreeRandomAccess< T extends NativeType< T >> implements PositionProvider, RandomAccess< T >
 {
 	private final NtreeImg< T, ? > img;
 
 	private final T type;
 
+	private int n;
+
+	private long[] position;
+
 	public NtreeRandomAccess( final NtreeImg< T, ? > img )
 	{
-		super( img.numDimensions() );
 
+		this.n = img.numDimensions();
+		this.position = new long[ img.numDimensions() ];
 		this.img = img;
 		this.type = img.createLinkedType();
 
@@ -58,8 +66,8 @@ public final class NtreeRandomAccess< T extends NativeType< T >> extends Abstrac
 
 	private NtreeRandomAccess( final NtreeRandomAccess< T > randomAccess )
 	{
-		super( randomAccess.numDimensions() );
-
+		this.n = randomAccess.numDimensions();
+		this.position = new long[ randomAccess.numDimensions() ];
 		this.img = randomAccess.img;
 		this.type = img.createLinkedType();
 
@@ -129,5 +137,126 @@ public final class NtreeRandomAccess< T extends NativeType< T >> extends Abstrac
 	public long[] getPosition()
 	{
 		return position;
+	}
+
+	@Override
+	public void move( final int distance, final int dim )
+	{
+		move( ( long ) distance, dim );
+	}
+
+	@Override
+	public void setPosition( final int position, final int dim )
+	{
+		setPosition( ( long ) position, dim );
+	}
+
+	@Override
+	public void move( final int[] distance )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long dist = distance[ d ];
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void move( final long[] distance )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long dist = distance[ d ];
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void move( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			final long dist = localizable.getLongPosition( d );
+
+			if ( dist != 0 )
+				move( dist, d );
+		}
+	}
+
+	@Override
+	public void setPosition( final Localizable localizable )
+	{
+		for ( int d = 0; d < n; ++d )
+		{
+			setPosition( localizable.getLongPosition( d ), d );
+		}
+	}
+
+	@Override
+	public void localize( final float[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( final double[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public void localize( int[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = ( int ) this.position[ d ];
+	}
+
+	@Override
+	public void localize( long[] pos )
+	{
+		for ( int d = 0; d < n; d++ )
+			pos[ d ] = this.position[ d ];
+	}
+
+	@Override
+	public float getFloatPosition( final int dim )
+	{
+		return position[ dim ];
+	}
+
+	@Override
+	public double getDoublePosition( final int dim )
+	{
+		return position[ dim ];
+	}
+
+	@Override
+	public int getIntPosition( final int dim )
+	{
+		return ( int ) position[ dim ];
+	}
+
+	@Override
+	public long getLongPosition( final int dim )
+	{
+		return position[ dim ];
+	}
+
+	@Override
+	public String toString()
+	{
+		return Util.printCoordinates( position ) + " = " + get();
+	}
+
+	@Override
+	public int numDimensions()
+	{
+		return n;
 	}
 }

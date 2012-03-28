@@ -26,6 +26,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @author Tobias Pietzsch
+ * @modified Christian Dietz
  */
 package net.imglib2.img.sparse;
 
@@ -133,5 +134,12 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public Object iterationOrder()
+	{
+		// TODO: New IterationOrdnet (NTreeIterationOrder?)
+		return null;
 	}
 }
