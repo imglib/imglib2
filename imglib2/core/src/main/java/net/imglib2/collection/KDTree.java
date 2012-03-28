@@ -1,3 +1,39 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
+
 package net.imglib2.collection;
 
 import java.util.ArrayDeque;
@@ -16,9 +52,10 @@ import net.imglib2.util.KthElement;
 
 /**
  * KDTree to access values at RealLocalizable positions.
- * 
+ *
  * @param <T>
  *            type of values stored in the tree.
+ *
  * @author Tobias Pietzsch
  */
 public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
@@ -29,7 +66,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	final protected int n;
 
 	final protected KDTreeNode< T > root;
-	
+
 	/**
 	 * the number of nodes in the tree.
 	 */
@@ -147,12 +184,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Construct a KDTree from the elements in the given list.
-	 * 
+	 *
 	 * <p>
 	 * Note that the constructor can be called with the same list for both
 	 * {@code values == positions} if {@code T extends RealLocalizable}.
 	 * </p>
-	 * 
+	 *
 	 * @param values
 	 *            a list of values
 	 * @param positions
@@ -187,7 +224,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 					max[ d ] = x;
 			}
 		}
-		
+
 		if ( values == positions )
 		{
 			if ( positions instanceof java.util.RandomAccess )
@@ -211,7 +248,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	/**
 	 * Construct a KDTree from the elements of the given
 	 * {@link IterableRealInterval}.
-	 * 
+	 *
 	 * @param interval
 	 *            elements in the tree are obtained by iterating this
 	 */
@@ -235,7 +272,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Check whether all positions in the positions list have dimension n.
-	 * 
+	 *
 	 * @return true, if all positions have dimension n.
 	 */
 	protected static < L extends RealLocalizable > boolean verifyDimensions( final List< L > positions, final int n )
@@ -273,7 +310,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * new node which is returned. The left and right partitions of the sublist
 	 * are processed recursively and form the left and right subtrees of the
 	 * node.
-	 * 
+	 *
 	 * @param positions
 	 *            list of positions
 	 * @param i
@@ -316,7 +353,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * new node which is returned. The left and right partitions of the sublist
 	 * are processed recursively and form the left and right subtrees of the
 	 * node.
-	 * 
+	 *
 	 * @param first
 	 *            first element of the sublist of positions
 	 * @param last
@@ -371,7 +408,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	/**
 	 * {@see #makeNode(List, int, int, int, List, int[])}. Here, no values are
 	 * attached to the nodes (or rather the positions are the values).
-	 * 
+	 *
 	 * @param elements
 	 *            list of elements (positions and values at the same time)
 	 * @param i
@@ -406,7 +443,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * {@see #makeNode(ListIterator, ListIterator, int, List, int[])}. Here, no
 	 * values are attached to the nodes (or rather the positions are the
 	 * values).
-	 * 
+	 *
 	 * @param first
 	 *            first element of the sublist to process
 	 * @param last
@@ -455,17 +492,19 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Construct the tree by recursively adding nodes. The sublist of elements
-	 * between iterators first and last is split at the median element with
+	 * between indices i and j (inclusive) is split at the median element with
 	 * respect to coordinates in the given dimension d. The median becomes the
 	 * new node which is returned. The left and right partitions of the sublist
 	 * are processed recursively and form the left and right subtrees of the
 	 * node. (The elements of the list are RealCursors which provide coordinates
 	 * and values.)
-	 * 
-	 * @param first
-	 *            first element of the sublist to process
-	 * @param last
-	 *            last element of the sublist to process
+	 *
+	 * @param elements
+	 *            list of elements (positions and values at the same time)
+	 * @param i
+	 *            start index of sublist to process
+	 * @param j
+	 *            end index of sublist to process
 	 * @param d
 	 *            dimension along which to split the sublist
 	 * @return a new node containing the subtree of the given sublist of
@@ -493,7 +532,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Get the root node.
-	 * 
+	 *
 	 * @return the root node.
 	 */
 	public KDTreeNode< T > getRoot()
@@ -565,9 +604,15 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	}
 
 	@Override
-	public boolean equalIterationOrder( IterableRealInterval< ? > f )
+	public Object iterationOrder()
 	{
-		return false;
+		return this; // iteration order is only compatible with ourselves
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	public final class KDTreeCursor implements RealCursor< T >
@@ -575,9 +620,9 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		private final KDTree< T > tree;
 
 		private final ArrayDeque< KDTreeNode< T > > nodes;
-		
+
 		private KDTreeNode< T > currentNode;
-		
+
 		public KDTreeCursor( KDTree< T > kdtree )
 		{
 			this.tree = kdtree;
@@ -689,7 +734,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		{
 			return copy();
 		}
-		
+
 	}
 
 	@Override

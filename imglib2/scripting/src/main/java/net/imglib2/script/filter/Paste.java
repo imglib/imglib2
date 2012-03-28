@@ -1,9 +1,34 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
+ */
+
 package net.imglib2.script.filter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.imglib2.AbstractInterval;
+import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -18,6 +43,10 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
+/**
+ * TODO
+ *
+ */
 public class Paste<T extends RealType<T>> extends FloatImageOperation
 {
 	private final T background;
@@ -33,11 +62,11 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 		this.a = new ImageFunction<T>(new RandomAccessibleIntervalImgProxy<T>(
 				Views.interval(
 						Views.translate(Views.extendValue(source, background), offset),
-						new AbstractInterval(Util.intervalDimensions(target)){})));
+						new FinalInterval(Util.intervalDimensions(target)))));
 		this.b = new ImageFunction<R>(target);
 	}
 
-	
+
 	/**
 	 * @param <T> The {@link Type} of the source image.
 	 * @param source The image to paste, which can be smaller than the {@param target} image.
@@ -58,14 +87,14 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 	}
 
 	private static final Interval extractDimensions(final IFunction target) {
-		ArrayList<IterableRealInterval<?>> iris = new ArrayList<IterableRealInterval<?>>();
+		final ArrayList<IterableRealInterval<?>> iris = new ArrayList<IterableRealInterval<?>>();
 		target.findImgs(iris);
-		return new AbstractInterval(
+		return new FinalInterval(
 				iris.isEmpty() ?
 						new long[]{1}
-						: Util.intervalDimensions(iris.get(0))) {};
+						: Util.intervalDimensions(iris.get(0)));
 	}
-	
+
 	/** For cloning this {@link IFunction}. */
 	protected Paste(final ImageFunction<T> a, final IFunction b, final T background) {
 		this.background = background;
@@ -81,7 +110,7 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 		// return the source if inside
 		return background == in ? out : in.getRealDouble();
 	}
-	
+
 	@Override
 	public final void findCursors(final Collection<RealCursor<?>> cursors) {
 		a.findCursors(cursors);
@@ -96,7 +125,7 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 	{
 		return new Paste<T>(a.duplicate(), b.duplicate(), background);
 	}
-	
+
 	@Override
 	public void findImgs(final Collection<IterableRealInterval<?>> iris)
 	{

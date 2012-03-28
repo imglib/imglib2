@@ -1,3 +1,4 @@
+
 package net.imglib2.script.algorithm;
 
 import net.imglib2.script.algorithm.fn.ImgProxy;
@@ -7,6 +8,10 @@ import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 
+/**
+ * TODO
+ *
+ */
 public class HoughLineTransform<T extends RealType<T>> extends ImgProxy<LongType>
 {
 	/** A {@link net.imglib2.algorithm.transformation.HoughLineTransform} with a LongType vote space.*/

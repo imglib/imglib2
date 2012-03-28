@@ -1,22 +1,25 @@
-/**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,54 +27,66 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.img.list;
 
 import java.util.ArrayList;
 
-import net.imglib2.AbstractCursor;
-import net.imglib2.type.Type;
+import net.imglib2.AbstractCursorInt;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * 
+ * {@link Cursor} on a {@link ListImg}.
+ *
  * @param <T>
  *
- * @author Stephan Preibisch and Stephan Saalfeld
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  */
-final public class ListCursor< T extends Type< T > > extends AbstractCursor< T >
+final public class ListCursor< T > extends AbstractCursorInt< T >
 {
 	private int i;
 	final private int maxNumPixels;
-	
+
 	final private ArrayList< T > pixels;
 	final private ListImg< T > container;
-	
+
 	protected ListCursor( final ListCursor< T > cursor )
 	{
 		super( cursor.numDimensions() );
-		
+
 		container = cursor.container;
 		this.pixels = container.pixels;
 		this.maxNumPixels = cursor.maxNumPixels;
-		
+
 		i = cursor.i;
 	}
-	
+
 	public ListCursor( final ListImg< T > container )
 	{
 		super( container.numDimensions() );
-		
+
 		this.container = container;
 		this.pixels = container.pixels;
 		this.maxNumPixels = ( int )container.size() - 1;
-		
+
 		reset();
 	}
-	
+
 	@Override
 	public T get() { return pixels.get( i ); }
-	
+
+	public void set( final T t )
+	{
+		pixels.set( i, t );
+	}
+
 	@Override
 	public ListCursor< T > copy()
 	{
@@ -95,16 +110,16 @@ final public class ListCursor< T extends Type< T > > extends AbstractCursor< T >
 
 	@Override
 	public void reset() { i = -1; }
-	
+
 	@Override
-	public long getLongPosition( final int dim )
+	public void localize( final int[] position )
 	{
-		return IntervalIndexer.indexToPosition( i, container.dim, container.step, dim );
+		IntervalIndexer.indexToPosition( i, container.dim, position );
 	}
 
 	@Override
-	public void localize( final long[] position )
+	public int getIntPosition( final int d )
 	{
-		IntervalIndexer.indexToPosition( i, container.dim, position );
+		return IntervalIndexer.indexToPosition( i, container.dim, container.step, d );
 	}
 }

@@ -1,3 +1,4 @@
+
 package net.imglib2.script.algorithm;
 
 import java.util.Arrays;
@@ -10,6 +11,10 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * TODO
+ *
+ */
 public class MedianFilter<T extends RealType<T>> extends ImgProxy<T>
 {
 	/** A median filter with an {@link OutOfBoundsStrategyMirrorFactory}. */

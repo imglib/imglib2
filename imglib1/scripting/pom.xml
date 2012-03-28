@@ -7,7 +7,7 @@
 
   <parent>
     <groupId>mpicbg</groupId>
-    <artifactId>imglib-pom-imglib1</artifactId>
+    <artifactId>pom-imglib1</artifactId>
     <version>2.0-SNAPSHOT</version>
   </parent>
 
@@ -16,10 +16,13 @@
   <name>ImgLib1 Scripting</name>
   <description>ImgLib scripting infrastructure.</description>
 
-  <organization>
-    <name>Fiji Is Just ImageJ</name>
-    <url>http://pacific.mpi-cbg.de/</url>
-  </organization>
+  <licenses>
+    <license>
+      <name>GPL 2 or later</name>
+      <url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
   <dependencies>
     <dependency>
@@ -79,6 +82,14 @@
           </archive>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <configuration>
+          <licenseName>gpl_v2</licenseName>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -86,11 +97,11 @@
   <repositories>
     <repository>
       <id>imagej.releases</id>
-      <url>http://code.imagej.net/maven2/releases</url>
+      <url>http://maven.imagej.net/content/repositories/releases</url>
     </repository>
     <repository>
       <id>imagej.snapshots</id>
-      <url>http://code.imagej.net/maven2/snapshots</url>
+      <url>http://maven.imagej.net/content/repositories/snapshots</url>
     </repository>
   </repositories>
 

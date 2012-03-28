@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.roi;
 
 import net.imglib2.Localizable;
@@ -9,11 +10,11 @@ import net.imglib2.util.Util;
 
 /**
  * DirectCrossCorr performs direct cross-correlation of a kernel against an image.
- * @author Larry Lindsey
- *
  * @param <T> input image type
  * @param <R> kernel type
  * @param <S> output image type 
+ *
+ * @author Larry Lindsey
  */
 public class DirectCrossCorr
 	<T extends RealType<T>, R extends RealType<R>, S extends RealType<S>>

@@ -1,31 +1,39 @@
 /*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
 
-Copyright (c) 2011, Barry DeZonia.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
-    names of its contributors may be used to endorse or promote products
-    derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-*/
 
 package net.imglib2.ops.image;
 
@@ -63,12 +71,11 @@ import net.imglib2.type.numeric.ComplexType;
 
 /**
  * A multithreaded implementation that assigns the values of a region of
- * an Img<?> to values from a function.
+ * an Img<A> to values from a Function<long[],B>. A and B extend ComplexType<?>.
  *  
  * @author Barry DeZonia
- *
  */
-public class ImageAssignment {
+public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> {
 
 	// -- instance variables --
 
@@ -85,20 +92,20 @@ public class ImageAssignment {
 	 * function for evaluation. Pixels are assigned in the Img<?> if the given
 	 * condition is satisfied at that point.
 	 * 
-	 * @param img - the Img<?> to assign data values to
-	 * @param origin - the origin of the region to assign within the Img<?>
-	 * @param span - the extents of the region to assign within the Img<?>
-	 * @param function - the function to evaluate at each point of the region
+	 * @param img - the Img<A extends ComplexType<A>> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<A>
+	 * @param span - the extents of the region to assign within the Img<A>
+	 * @param function - the Function<long[],B> to evaluate at each point of the region
 	 * @param condition - the condition that must be satisfied
 	 * @param negOffs - the extents in the negative direction of the working neighborhood
 	 * @param posOffs - the extents in the positive direction of the working neighborhood
 	 * 
 	 */
 	public ImageAssignment(
-		Img<? extends ComplexType<?>> img,
+		Img<A> img,
 		long[] origin,
 		long[] span,
-		Function<long[],? extends ComplexType<?>> function,
+		Function<long[],B> function,
 		Condition<long[]> condition,
 		long[] negOffs,
 		long[] posOffs)
@@ -111,22 +118,22 @@ public class ImageAssignment {
 	
 	/**
 	 * Constructor. A working neighborhood is assumed to be a single pixel. This
-	 * neighborhood is moved point by point over the Img<?> and passed to the
-	 * function for evaluation. Pixels are assigned in the Img<?> if the given
+	 * neighborhood is moved point by point over the Img<A> and passed to the
+	 * function for evaluation. Pixels are assigned in the Img<A> if the given
 	 * condition is satisfied at that point.
 	 *
-	 * @param img - the Img<?> to assign data values to
-	 * @param origin - the origin of the region to assign within the Img<?>
-	 * @param span - the extents of the region to assign within the Img<?>
-	 * @param function - the function to evaluate at each point of the region
+	 * @param img - the Img<A extends ComplexType<A>> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<A>
+	 * @param span - the extents of the region to assign within the Img<A>
+	 * @param function - the Function<long[],B> to evaluate at each point of the region
 	 * @param condition - the condition that must be satisfied
 	 * 
 	 */
 	public ImageAssignment(
-		Img<? extends ComplexType<?>> img,
+		Img<A> img,
 		long[] origin,
 		long[] span,
-		Function<long[], ? extends ComplexType<?>> function,
+		Function<long[],B> function,
 		Condition<long[]> condition)
 	{
 		this(img, origin, span, function, condition, new long[origin.length], new long[origin.length]);
@@ -194,10 +201,10 @@ public class ImageAssignment {
 	// -- private helpers --
 
 	private void setupTasks(
-		Img<? extends ComplexType<?>> img,
+		Img<A> img,
 		long[] origin,
 		long[] span,
-		Function<long[],? extends ComplexType<?>> func,
+		Function<long[],B> func,
 		Condition<long[]> cond,
 		long[] negOffs,
 		long[] posOffs)
@@ -262,13 +269,13 @@ public class ImageAssignment {
 	 * The task assigns values to a subset of the output region.
 	 */
 	private Runnable task(
-		Img<? extends ComplexType<?>> img,
+		Img<A> img,
 		long[] imageOrigin,
 		long[] imageSpan,
 		int axis,
 		long startIndex,
 		long length,
-		Function<long[], ? extends ComplexType<?>> fn,
+		Function<long[],B> fn,
 		Condition<long[]> cnd,
 		long[] nOffsets,
 		long[] pOffsets)
@@ -283,7 +290,7 @@ public class ImageAssignment {
 		// we remove typing from RegionRunner it won't compile.
 
 		return
-			new RegionRunner(
+			new RegionRunner<A,B>(
 				img,
 				regOrigin,
 				regSpan,
@@ -297,10 +304,11 @@ public class ImageAssignment {
 	 * RegionRunner is the workhorse for assigning output values from the
 	 * evaluation of the input function across a subset of the output region.
 	 */
-	private class RegionRunner<K extends ComplexType<K>> implements Runnable {
-		
-		private final Img<K> img;
-		private final Function<long[], K> function;
+	private class RegionRunner<U extends ComplexType<U>, V extends ComplexType<V>>
+		implements Runnable
+	{
+		private final Img<U> img;
+		private final Function<long[], V> function;
 		private final Condition<long[]> condition;
 		private final DiscreteNeigh region;
 		private final DiscreteNeigh neighborhood;
@@ -309,10 +317,10 @@ public class ImageAssignment {
 		 * Constructor
 		 */
 		public RegionRunner(
-			Img<K> img,
+			Img<U> img,
 			long[] origin,
 			long[] span,
-			Function<long[], K> func,
+			Function<long[], V> func,
 			Condition<long[]> cond,
 			long[] negOffs,
 			long[] posOffs)
@@ -329,8 +337,8 @@ public class ImageAssignment {
 		 */
 		@Override
 		public void run() {
-			final RandomAccess<K> accessor = img.randomAccess();
-			final K output = function.createOutput();
+			final RandomAccess<U> accessor = img.randomAccess();
+			final V output = function.createOutput();
 			final RegionIndexIterator iter = new RegionIndexIterator(region);
 			while (iter.hasNext()) {
 				iter.fwd();

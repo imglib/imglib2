@@ -7,71 +7,30 @@
 
   <parent>
     <groupId>net.imglib2</groupId>
-    <artifactId>imglib-pom-imglib2</artifactId>
+    <artifactId>pom-imglib2</artifactId>
     <version>2.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>imglib2-algorithms</artifactId>
+  <artifactId>pom-imglib2-algorithms</artifactId>
+  <packaging>pom</packaging>
 
   <name>ImgLib2 Algorithms</name>
-  <description>Useful image processing algorithms.</description>
+  <description>Umbrella project for ImgLib2 algorithms code.</description>
 
-  <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>imglib2</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <!-- TODO: define a real POM for mpicbg project -->
-      <groupId>${mpicbg.groupId}</groupId>
-      <artifactId>mpicbg</artifactId>
-      <version>${mpicbg.version}</version>
-    </dependency>
-    <dependency>
-      <!-- TODO: define a real POM for mines-jtk project -->
-      <groupId>edu.mines</groupId>
-      <artifactId>mines-jtk</artifactId>
-      <version>20100113</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-math</artifactId>
-      <version>3.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <packageName>net.imglib2.algorithm</packageName>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <modules>
+    <module>core</module>
+    <module>gpl</module>
+  </modules>
 
   <!-- NB: for project parent, in case of partial checkout -->
   <repositories>
     <repository>
       <id>imagej.releases</id>
-      <url>http://code.imagej.net/maven2/releases</url>
+      <url>http://maven.imagej.net/content/repositories/releases</url>
     </repository>
     <repository>
       <id>imagej.snapshots</id>
-      <url>http://code.imagej.net/maven2/snapshots</url>
+      <url>http://maven.imagej.net/content/repositories/snapshots</url>
     </repository>
   </repositories>
 
