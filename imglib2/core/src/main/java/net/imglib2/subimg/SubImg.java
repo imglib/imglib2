@@ -22,7 +22,7 @@ public class SubImg< T extends Type< T > > extends IterableRandomAccessibleInter
 		RandomAccessibleInterval< T > slice = Views.translate( srcImg, min );
 		if ( !keepDimsWithSizeOne )
 			for ( int d = n - 1; d >= 0; --d )
-				if ( interval.dimension( d ) == 1 )
+				if ( interval.dimension( d ) == 1 && slice.numDimensions() > 1 )
 					slice = Views.hyperSlice( slice, d, 0 );
 		return slice;
 	}
@@ -53,10 +53,10 @@ public class SubImg< T extends Type< T > > extends IterableRandomAccessibleInter
 	/**
 	 * @return
 	 */
-	public Img<T> getImg() {
+	public Img< T > getImg()
+	{
 		return m_srcImg;
 	}
-
 
 	// Img implementation
 	@Override
