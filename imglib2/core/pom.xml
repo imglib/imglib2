@@ -27,6 +27,14 @@
 
   <build>
     <plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<!-- Target Java 5, for compatibility with SCIFIO. -->
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
