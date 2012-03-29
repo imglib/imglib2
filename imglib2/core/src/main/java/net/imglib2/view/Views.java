@@ -470,6 +470,30 @@ public class Views
 	}
 
 	/**
+	 * Define an interval on a RandomAccessible and translate it such that the
+	 * min corner is at the origin. It is the callers responsibility to ensure
+	 * that the source RandomAccessible is defined in the specified interval.
+	 *
+	 * @param randomAccessible
+	 *            the source
+	 * @param interval
+	 *            the interval on source that should be cut out and translated to the origin.
+	 * @return a RandomAccessibleInterval
+	 */
+	public static < T > IntervalView< T > offsetInterval( final RandomAccessible< T > randomAccessible, Interval interval )
+	{
+		final int n = randomAccessible.numDimensions();
+		final long[] offset = new long[ n ];
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( offset );
+		interval.max( max );
+		for ( int d = 0; d < n; ++d )
+			max[ d ] -= offset[ d ];
+		return interval( translate( randomAccessible, offset ), min, max );
+	}
+
+	/**
 	 * test whether the source interval starts at (0,0,...,0)
 	 *
 	 * @param interval - the {@link Interval} to test
