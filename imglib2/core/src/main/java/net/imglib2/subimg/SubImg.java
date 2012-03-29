@@ -16,12 +16,9 @@ public class SubImg< T extends Type< T > > extends IterableRandomAccessibleInter
 		if ( !Util.contains( srcImg, interval ) )
 			throw new IllegalArgumentException( "In SubImgs the interval min and max must be inside the dimensions of the SrcImg" );
 
-		final int n = interval.numDimensions();
-		final long[] min = new long[ interval.numDimensions() ];
-		interval.min( min );
-		RandomAccessibleInterval< T > slice = Views.translate( srcImg, min );
+		RandomAccessibleInterval< T > slice = Views.offsetInterval( srcImg, interval );
 		if ( !keepDimsWithSizeOne )
-			for ( int d = n - 1; d >= 0; --d )
+			for ( int d = interval.numDimensions() - 1; d >= 0; --d )
 				if ( interval.dimension( d ) == 1 && slice.numDimensions() > 1 )
 					slice = Views.hyperSlice( slice, d, 0 );
 		return slice;

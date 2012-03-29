@@ -28,12 +28,12 @@ public class SubImgTest
 		Cursor< UnsignedByteType > subCursor = subImg.cursor();
 
 		long[] pos = new long[ subCursor.numDimensions() ];
-		subCursor.localize( pos );
 
 		// Cursor position should clearly be 0, as this cursor should only
 		// return values from [1,0,0] to [9,9,9] and only the first value is set
 		assertTrue( subCursor.next().get() == 0 );
 
+		subCursor.localize( pos );
 		// Pos should be at [0,0,0] as the SubImg should act like an img
 		assertArrayEquals( pos, new long[ sourceImg.numDimensions() ] );
 
