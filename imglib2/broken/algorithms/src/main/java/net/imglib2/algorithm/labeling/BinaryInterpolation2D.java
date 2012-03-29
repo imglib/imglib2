@@ -1,7 +1,5 @@
-/** Released under the GPL. Use at your own risk.
- * 
+
  * @author Albert Cardona, Johannes Schindelin
- */
 package net.imglib2.algorithm.labeling;
 
 import java.util.concurrent.Callable;
@@ -37,6 +35,7 @@ import net.imglib2.type.numeric.integer.IntType;
  * 
  * The code was originally created by Johannes Schindelin
  * in the VIB's vib.BinaryInterpolator class, for ij.ImagePlus.
+ *
  */
 public class BinaryInterpolation2D implements OutputAlgorithm<Img<BitType>>
 {

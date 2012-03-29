@@ -6,9 +6,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.github.scijava</groupId>
+    <groupId>org.scijava</groupId>
     <artifactId>pom-scijava</artifactId>
-    <version>1.6</version>
+    <version>1.9</version>
   </parent>
 
   <groupId>net.imglib2</groupId>
@@ -32,7 +32,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
-					<licenseName>imglib</licenseName>
+					<licenseName>imglib2</licenseName>
 					<licenseResolver>http://code.imagej.net/licenses</licenseResolver>
 					<inceptionYear>2009</inceptionYear>
 					<organizationName>Stephan Preibisch, Stephan Saalfeld, Tobias

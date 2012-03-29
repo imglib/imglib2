@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.roi;
 
 import java.util.Arrays;
@@ -22,10 +23,10 @@ import net.imglib2.util.Util;
  * patch of a given size in the input image.  patchOperation() is responsible for setting the
  * value of the pixel at the given position in the output image.
  * 
- * @author Larry Lindsey
- *
  * @param <T>
  * @param <S>
+ *
+ * @author Larry Lindsey
  */
 public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 	implements OutputAlgorithm<Img<S>>, Benchmark

@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm;
 
 import java.util.ArrayList;
@@ -23,6 +24,10 @@ import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 
+/**
+ * TODO
+ *
+ */
 public class AlgorithmPerformance
 {
 	public AlgorithmPerformance( final ImgFactory<FloatType> containerFactory, final int numDimensions )

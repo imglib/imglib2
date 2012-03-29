@@ -1,3 +1,4 @@
+
 package net.imglib2.script.algorithm;
 
 import java.util.Arrays;
@@ -10,6 +11,10 @@ import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.math.Compute;
 
 /** Operates on an {@link Image} or an {@link IFunction}. */
+/**
+ * TODO
+ *
+ */
 public class Erode<T extends RealType<T>> extends ImgProxy<T>
 {
 	@SuppressWarnings("unchecked")

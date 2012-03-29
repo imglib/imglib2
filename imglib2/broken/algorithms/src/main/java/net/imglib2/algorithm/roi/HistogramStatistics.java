@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.roi;
 
 
@@ -8,6 +9,10 @@ import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * TODO
+ *
+ */
 public abstract class HistogramStatistics<T extends RealType<T>> extends OrderStatistics<T>
 {
 

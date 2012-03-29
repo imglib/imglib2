@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.roi;
 
 import net.imglib2.algorithm.histogram.HistogramBinMapper;
@@ -11,6 +12,7 @@ import net.imglib2.type.numeric.RealType;
  * Date: 2/7/11
  * Time: 12:49 PM
  * To change this template use File | Settings | File Templates.
+ *
  */
 public class MedianHistogramFilter<T extends RealType<T>> extends HistogramStatistics<T>
 {
