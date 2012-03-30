@@ -1,11 +1,15 @@
 package net.imglib2.algorithm.pde;
 
+import java.util.Vector;
+
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
+import net.imglib2.multithreading.Chunk;
+import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.outofbounds.OutOfBoundsRandomAccess;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -23,7 +27,7 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends M
 	 * FIELDS
 	 */
 
-	private static final String BASE_ERROR_MESSAGE = "[DiffusionScheme2D] ";
+	private static final String BASE_ERROR_MESSAGE = "["+ExplicitDiffusionScheme2D.class.getSimpleName()+"] ";
 
 	/** The diffusion tensor. */
 	protected RandomAccessibleInterval<FloatType> D;
@@ -71,59 +75,86 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends M
 	@Override
 	public boolean process() {
 
-		OutOfBoundsRandomAccess<T> ura 			= Views.extendMirrorSingle(input).randomAccess();
-		OutOfBoundsRandomAccess<FloatType> dra 	= Views.extendMirrorSingle(D).randomAccess();
-		Cursor<FloatType> incrementCursor 		= increment.localizingCursor();
-		
-		long[] position = new long[input.numDimensions()];
-		
-		float[][] D = new float[3][];
-		D[0] = new float[3];
-		D[1] = new float[9];
-		D[2] = new float[3];
-		float[] U = new float[9];
-		
-		while (incrementCursor.hasNext()) {
+		final Vector<Chunk> chunks = SimpleMultiThreading.divideIntoChunks(input.size(), numThreads);
+		Thread[] threads = SimpleMultiThreading.newThreads(numThreads);
 
-			// Move input cursor.
-			incrementCursor.fwd();
+		for (int i = 0; i < threads.length; i++) {
 
-			// Move local neighborhood input cursor.
-			ura.setPosition(incrementCursor);
-			incrementCursor.localize(position);
+			final Chunk chunk = chunks.get(i);
 
-			// Move diffusion tensor cursor in the fist N dimension
-			for (int i = 0; i < position.length; i++) {
-				dra.setPosition(position[i], i);
-			}
+			threads[i] = new Thread(""+BASE_ERROR_MESSAGE+"thread "+i) {
 
-			// Iterate in local neighborhood and yield values
-			yieldDensity(ura, U);
-			yieldDiffusionTensor(dra, D);
+				@Override
+				public void run() {
 
-			// Compute increment from arrays
-			incrementCursor.get().setReal(diffusionScheme(U, D));
-		} // looping on all pixel
+					OutOfBoundsRandomAccess<T> ura 			= Views.extendMirrorSingle(input).randomAccess();
+					OutOfBoundsRandomAccess<FloatType> dra 	= Views.extendMirrorSingle(D).randomAccess();
+					Cursor<FloatType> incrementCursor 		= increment.localizingCursor();
 
-		// Now add the calculated increment all at once to the source
+					long[] position = new long[input.numDimensions()];
 
-		Cursor<T> inputCursor = input.cursor();
-		Cursor<FloatType> incCursor = increment.cursor();
-		float val, inc, sum;
-		while(inputCursor.hasNext()) {
-			val = inputCursor.next().getRealFloat(); // T type, might be 0
-			inc = incCursor.next().get(); // FloatType, might be negative
+					float[][] D = new float[3][];
+					D[0] = new float[3];
+					D[1] = new float[9];
+					D[2] = new float[3];
+					float[] U = new float[9];
 
-			// Over/Underflow protection
-			sum = val + inc;
-			if (sum > maxVal) {
-				sum = maxVal;
-			}
-			if (sum < minVal) {
-				sum = minVal;
-			}
-			inputCursor.get().setReal(sum);
+					incrementCursor.jumpFwd(chunk.getStartPosition());
+					for (long j = 0; j < chunk.getLoopSize(); j++) {
+
+						// Move input cursor.
+						incrementCursor.fwd();
+
+						// Move local neighborhood input cursor.
+						ura.setPosition(incrementCursor);
+						incrementCursor.localize(position);
+
+						// Move diffusion tensor cursor in the fist N dimension
+						for (int i = 0; i < position.length; i++) {
+							dra.setPosition(position[i], i);
+						}
+
+						// Iterate in local neighborhood and yield values
+						yieldDensity(ura, U);
+						yieldDiffusionTensor(dra, D);
+
+						// Compute increment from arrays
+						incrementCursor.get().setReal(diffusionScheme(U, D));
+					} // looping on all pixel
+
+					// Now add the calculated increment all at once to the source
+
+					Cursor<T> inputCursor = input.cursor();
+					Cursor<FloatType> incCursor = increment.cursor();
+					float val, inc, sum;
+
+					incCursor.reset();
+					incCursor.jumpFwd(chunk.getStartPosition());
+					inputCursor.jumpFwd(chunk.getStartPosition());
+					for (long j = 0; j < chunk.getLoopSize(); j++) {
+
+						val = inputCursor.next().getRealFloat(); // T type, might be 0
+						inc = incCursor.next().get(); // FloatType, might be negative
+
+						// Over/Underflow protection
+						sum = val + inc;
+						if (sum > maxVal) {
+							sum = maxVal;
+						}
+						if (sum < minVal) {
+							sum = minVal;
+						}
+						inputCursor.get().setReal(sum);
+					}
+
+
+				}
+
+
+			};
 		}
+
+		SimpleMultiThreading.startAndJoin(threads);
 
 		return true;
 	}

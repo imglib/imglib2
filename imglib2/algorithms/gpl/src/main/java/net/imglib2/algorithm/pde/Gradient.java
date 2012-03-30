@@ -15,13 +15,15 @@ public class Gradient<T extends RealType<T>> extends MultiThreadedBenchmarkAlgor
 
 	private final Img<T> input;
 	private Img<FloatType> output;
+	private final boolean[] doDimension;
 
 	/*
 	 * CONSTRUCTOR	
 	 */
 
-	public Gradient(final Img<T> input) {
+	public Gradient(final Img<T> input, final boolean[] doDimension) {
 		this.input = input;
+		this.doDimension = doDimension;
 		long[] dimensions = new long[input.numDimensions()+1];
 		for (int i = 0; i < dimensions.length-1; i++) {
 			dimensions[i] = input.dimension(i);
@@ -71,6 +73,9 @@ public class Gradient<T extends RealType<T>> extends MultiThreadedBenchmarkAlgor
 
 			// Gradient
 			for (int i = 0; i < input.numDimensions(); i++) {
+				if (!doDimension[i]) {
+					continue;
+				}
 				ra.fwd(i);
 				diff = central - ra.get().getRealFloat();
 				ra.bck(i);
