@@ -111,7 +111,7 @@ public class VirtualImgTest {
 
 		// test byte only code
 		try {
-			final URL fileURL = getClass().getResource("/TestImage.tif");
+			final URL fileURL = getClass().getResource("TestImage.tif");
 			image = VirtualImg.create(fileURL.getFile(), true);
 		}
 		catch (final Exception e) {
