@@ -34,10 +34,6 @@
  * #L%
  */
 
-
-/**
- *
- */
 package net.imglib2.io.img.virtual;
 
 import net.imglib2.Point;
@@ -45,28 +41,25 @@ import net.imglib2.RandomAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-
 /**
- * This class manages read only spatial access to a virtual image. Data
- * returned from get() can be written to but any changes are never saved
- * to disk.
- *
- *
+ * This class manages read only spatial access to a virtual image. Data returned
+ * from get() can be written to but any changes are never saved to disk.
+ * 
  * @author Barry DeZonia
  */
-public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>>
-	extends Point implements RandomAccess<T>
+public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>> extends
+	Point implements RandomAccess<T>
 {
+
 	private final VirtualImg<T> virtImage;
 	private final VirtualAccessor<T> accessor;
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param image - the VirtualImg to access randomly
 	 */
-	public VirtualRandomAccess(final VirtualImg<T> image)
-	{
+	public VirtualRandomAccess(final VirtualImg<T> image) {
 		super(image.numDimensions());
 		this.accessor = new VirtualAccessor<T>(image);
 		this.virtImage = image;
@@ -77,17 +70,14 @@ public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>>
 		position[d] = pos;
 	}
 
-	@Override
 	public VirtualRandomAccess<T> copy() {
 		return new VirtualRandomAccess<T>(virtImage);
 	}
 
-	@Override
 	public VirtualRandomAccess<T> copyRandomAccess() {
 		return new VirtualRandomAccess<T>(virtImage);
 	}
 
-	@Override
 	public T get() {
 		return accessor.get(position);
 	}
@@ -95,4 +85,5 @@ public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>>
 	public Object getCurrentPlane() {
 		return accessor.getCurrentPlane();
 	}
+
 }
