@@ -28,6 +28,7 @@ package net.imglib2.algorithm.pde;
 import java.util.Vector;
 
 import net.imglib2.Cursor;
+import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
 import net.imglib2.algorithm.region.localneighborhood.LocalNeighborhoodCursor;
@@ -168,7 +169,10 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 					long[] position = new long[image.numDimensions()];
 					Cursor<FloatType> incrementCursor = increment.localizingCursor();
 					RandomAccess<T> ra = image.randomAccess();
-					LocalNeighborhoodCursor<T> neighborhoodCursor = new LocalNeighborhoodCursor<T>(Views.extendMirrorSingle(image), centralPosition);
+
+					// HACK: Explicit assignment is needed for OpenJDK javac.
+					ExtendedRandomAccessibleInterval<T, Img<T>> extendedImage = Views.extendMirrorSingle(image);
+					LocalNeighborhoodCursor<T> neighborhoodCursor = new LocalNeighborhoodCursor<T>(extendedImage, centralPosition);
 
 					incrementCursor.jumpFwd(chunk.getStartPosition());
 

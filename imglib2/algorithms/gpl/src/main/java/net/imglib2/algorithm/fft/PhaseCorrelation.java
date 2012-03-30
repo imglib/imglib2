@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.Cursor;
+import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
@@ -498,8 +499,11 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			peakList.add( new PhaseCorrelationPeak( new long[ numDimensions ], -Float.MAX_VALUE) );
 
 		final Cursor<FloatType> cursor = invPCM.cursor();
+
+		// HACK: Explicit assignment is needed for OpenJDK javac.
+		ExtendedRandomAccessibleInterval<FloatType, Img<FloatType>> extendedInvPCM = Views.extendPeriodic(invPCM);
 		final LocalNeighborhoodCursor<FloatType> localCursor =
-			new LocalNeighborhoodCursor<FloatType>( Views.extendPeriodic(invPCM).randomAccess(), 1 );
+			new LocalNeighborhoodCursor<FloatType>( extendedInvPCM.randomAccess(), 1 );
 
 		final int[] originalOffset1 = fft1.getOriginalOffset();
 		final int[] originalOffset2 = fft2.getOriginalOffset();

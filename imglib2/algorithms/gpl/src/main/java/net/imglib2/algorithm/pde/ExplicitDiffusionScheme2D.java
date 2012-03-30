@@ -3,6 +3,7 @@ package net.imglib2.algorithm.pde;
 import java.util.Vector;
 
 import net.imglib2.Cursor;
+import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
@@ -87,8 +88,14 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends M
 				@Override
 				public void run() {
 
-					OutOfBoundsRandomAccess<T> ura 			= Views.extendMirrorSingle(input).randomAccess();
-					OutOfBoundsRandomAccess<FloatType> dra 	= Views.extendMirrorSingle(D).randomAccess();
+					// HACK: Explicit assignment is needed for OpenJDK javac.
+					ExtendedRandomAccessibleInterval<T, Img<T>> extendedInput = Views.extendMirrorSingle(input);
+					OutOfBoundsRandomAccess<T> ura = extendedInput.randomAccess();
+
+					// HACK: Explicit assignment is needed for OpenJDK javac.
+					ExtendedRandomAccessibleInterval<FloatType, RandomAccessibleInterval<FloatType>> extendedD = Views.extendMirrorSingle(D);
+					OutOfBoundsRandomAccess<FloatType> dra 	= extendedD.randomAccess();
+
 					Cursor<FloatType> incrementCursor 		= increment.localizingCursor();
 
 					long[] position = new long[input.numDimensions()];
