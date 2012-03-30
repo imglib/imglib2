@@ -43,40 +43,53 @@ import net.imglib2.type.numeric.real.FloatType;
 
 public class AnisotropicDiffusionExample {
 
-public static <T extends RealType<T> & NativeType< T >> void  main(String[] args) throws ImgIOException, IncompatibleTypeException {
-		
+	public static <T extends RealType<T> & NativeType< T >> void  main(String[] args) throws ImgIOException, IncompatibleTypeException {
+
 		// Open file in imglib2
-		File file = new File( "E:/Users/JeanYves/Desktop/Data/Y.tif");
-		//		File file = new File( "/Users/tinevez/Desktop/Data/sYn.tif");
-//		File file = new File( "/Users/tinevez/Desktop/Data/cross2.tif");
-		
+		//		File file = new File( "E:/Users/JeanYves/Desktop/Data/Y.tif");
+//		File file = new File( "/Users/tinevez/Desktop/Data/sYn.tif");
+		File file = new File( "/Users/tinevez/Desktop/Data/StarryNight.tif");
+		//		File file = new File( "/Users/tinevez/Desktop/Data/cross2.tif");
+
 		ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
+		
 		Img< T > image = new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
+		Img<T> copy = image.copy();
 
 		// Display it via ImgLib using ImageJ
 		new ImageJ();
-		ImagePlus imp = ImageJFunctions.wrap(image, "source");
-		imp.show();
-		
+
 		// Compute tensor
-		MomentOfInertiaTensor2D<T> tensor = new MomentOfInertiaTensor2D<T>(image, 5);
+		
+		MomentOfInertiaTensor2D<T> tensor = new MomentOfInertiaTensor2D<T>(image, 9);
+//		CoherenceEnhancingDiffusionTensor2D<T> tensor = new CoherenceEnhancingDiffusionTensor2D<T>(image);
+		
+		
 		tensor.process();
 		Img<FloatType> diffusionTensor = tensor.getResult();
-//		ImageJFunctions.show(diffusionTensor);
-		
-		
-		// Instantiate algo
-		NonNegativityDiffusionScheme2D<T> algo = new NonNegativityDiffusionScheme2D<T>(image, diffusionTensor);
 
-		for (int i = 0; i < 60; i++) {
+		ImagePlus imp = ImageJFunctions.wrap(image, "source");
+		imp.show();
+
+		// Instantiate diffusion solver
+		
+		NonNegativityDiffusionScheme2D<T> algo = new NonNegativityDiffusionScheme2D<T>(image, diffusionTensor);
+//		StandardDiffusionScheme2D<T> algo = new StandardDiffusionScheme2D<T>(image, diffusionTensor);
+
+		for (int i = 0; i < 20; i++) {
 			System.out.println("Iteration "+i);
+			tensor.process();
+			diffusionTensor = tensor.getResult();
+			algo.setDiffusionTensor(diffusionTensor);
+			
 			algo.process();
 			imp.getProcessor().setPixels(ImageJFunctions.wrap(image, "result").getProcessor().getPixelsCopy());
 			imp.updateAndDraw();
 		}
 
-//		ImageJFunctions.show(algo.getIncrement());
-
+		//	ImageJFunctions.show(algo.getIncrement());
+		ImageJFunctions.show(diffusionTensor);
+		ImageJFunctions.show(copy);
 	}
-	
+
 }
