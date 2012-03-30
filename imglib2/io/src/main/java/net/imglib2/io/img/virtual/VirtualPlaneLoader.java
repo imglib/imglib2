@@ -40,7 +40,7 @@ import loci.common.DataTools;
 import loci.formats.FormatTools;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.planar.PlanarImg;
-import ome.scifio.img.ImgIOUtils;
+import net.imglib2.io.ImgIOUtils;
 
 /**
  * This class is responsible for loading one plane of data from an image using

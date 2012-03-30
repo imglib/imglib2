@@ -44,6 +44,8 @@ import loci.formats.IFormatReader;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.io.ImgIOException;
+import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.ByteType;
@@ -54,8 +56,6 @@ import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
-import ome.scifio.img.ImgIOException;
-import ome.scifio.img.ImgOpener;
 
 /**
  * This class supports the ability to open an image and only load data into
