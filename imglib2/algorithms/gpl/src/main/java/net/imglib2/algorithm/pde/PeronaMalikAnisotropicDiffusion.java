@@ -28,14 +28,20 @@ package net.imglib2.algorithm.pde;
 import java.util.Vector;
 
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
 import net.imglib2.algorithm.region.localneighborhood.LocalNeighborhoodCursor;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.multithreading.Chunk;
 import net.imglib2.multithreading.SimpleMultiThreading;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
@@ -84,7 +90,7 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 	 */
 
 	private static final String BASE_ERROR_MESSAGE = "["+PeronaMalikAnisotropicDiffusion.class.getSimpleName()+"] ";
-	private final Img<T> image;
+	private final RandomAccessibleInterval<T> image;
 	private Img<FloatType> increment;
 	private double deltat;
 	private DiffusionFunction fun;
@@ -101,22 +107,64 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 	 * @param image  the target image, will be modified in place
 	 * @param deltat  the integration constant for the numerical integration scheme. Typically less that 1.
 	 * @param function  the custom diffusion function.
+	 * @throws IncompatibleTypeException 
 	 * 
 	 * @see DiffusionFunction
 	 */
-	public PeronaMalikAnisotropicDiffusion(Img<T> image, double deltat, DiffusionFunction function) {
+	public PeronaMalikAnisotropicDiffusion( Img<T> img, double deltat, DiffusionFunction function)
+	{
+		this( img, getFloatImgFactory( img ) , deltat, function );
+		
+	}
+
+	/**
+	 * This method creates an {@link ImgFactory} of {@link FloatType} for a given {@link Img}. If the {@link ImgFactory} of the
+	 * given {@link Img} is not compatible with {@link FloatType} it returns an {@link ArrayImgFactory} or a {@link CellImgFactory}
+	 * depending on the size of the {@link Img}
+	 * 
+	 * @param img - the input {@link Img}
+	 * @return a factory for {@link FloatType}
+	 */
+	private static final < T extends Type< T > > ImgFactory< FloatType > getFloatImgFactory( final Img< T > img )
+	{
+		ImgFactory< FloatType > factory;
+		
+		try 
+		{
+			factory = img.factory().imgFactory( new FloatType() );
+		} 
+		catch (IncompatibleTypeException e) 
+		{
+			if ( img.size() >= Integer.MAX_VALUE )
+				factory = new CellImgFactory<FloatType>();
+			else
+				factory = new ArrayImgFactory< FloatType >();
+		}
+		
+		return factory;
+	}
+	
+	/**
+	 * Instantiate the Perona & Malik anisotropic diffusion process, with a custom diffusion function.
+	 *  
+	 * @param image  the target image, will be modified in place
+	 * @param deltat  the integration constant for the numerical integration scheme. Typically less that 1.
+	 * @param function  the custom diffusion function.
+	 * @throws IncompatibleTypeException 
+	 * 
+	 * @see DiffusionFunction
+	 */
+	public PeronaMalikAnisotropicDiffusion(RandomAccessibleInterval<T> image, ImgFactory< FloatType> factory, double deltat, DiffusionFunction function) {
 		this.image = image;
 		this.deltat = deltat;
 		this.fun = function;
 		this.processingTime = 0;
-		try {
-			this.increment = image.factory().imgFactory(new FloatType()).create(image, new FloatType());
-		} catch (IncompatibleTypeException e) {
-			e.printStackTrace();
-		}
+		this.increment = factory.create(image, new FloatType());
+		
 		// Protection against under/overflow
-		this.minVal = (float) image.firstElement().getMinValue();
-		this.maxVal = (float) image.firstElement().getMaxValue();
+		final T tmp = Views.iterable( image ).firstElement();
+		this.minVal = (float) tmp.getMinValue();
+		this.maxVal = (float) tmp.getMaxValue();
 	}
 
 
@@ -132,6 +180,20 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 	 */
 	public PeronaMalikAnisotropicDiffusion(Img<T> image, double deltat, double kappa) {
 		this(image, deltat, new StrongEdgeEnhancer(kappa));
+	}
+
+	/**
+	 * Instantiate the Perona & Malik anisotropic diffusion process, with the default strong-edge
+	 * diffusion function.
+	 *  
+	 * @param image  the target image, will be modified in place
+	 * @param deltat  the integration constant for the numerical integration scheme. Typically less that 1.
+	 * @param kappa  the constant for the diffusion function that sets its gradient threshold 
+	 * 
+	 * @see StrongEdgeEnhancer
+	 */
+	public PeronaMalikAnisotropicDiffusion(RandomAccessibleInterval<T> image, final ImgFactory< FloatType> factory, double deltat, double kappa) {
+		this(image, factory, deltat, new StrongEdgeEnhancer(kappa));
 	}
 
 	/*
@@ -155,7 +217,7 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 	public boolean process() {
 		long start = System.currentTimeMillis();
 
-		final Vector<Chunk> chunks = SimpleMultiThreading.divideIntoChunks(image.size(), numThreads);
+		final Vector<Chunk> chunks = SimpleMultiThreading.divideIntoChunks(increment.size(), numThreads);
 		final Thread[] threads = SimpleMultiThreading.newThreads(numThreads);
 
 		for (int ithread = 0; ithread < threads.length; ithread++) {
@@ -171,7 +233,7 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 					RandomAccess<T> ra = image.randomAccess();
 
 					// HACK: Explicit assignment is needed for OpenJDK javac.
-					ExtendedRandomAccessibleInterval<T, Img<T>> extendedImage = Views.extendMirrorSingle(image);
+					ExtendedRandomAccessibleInterval<T, RandomAccessibleInterval<T>> extendedImage = Views.extendMirrorSingle(image);
 					LocalNeighborhoodCursor<T> neighborhoodCursor = new LocalNeighborhoodCursor<T>(extendedImage, centralPosition);
 
 					incrementCursor.jumpFwd(chunk.getStartPosition());
@@ -214,7 +276,22 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 
 					}
 
-					// Now add the calculated increment all at once to the source
+				}
+			};
+		}
+
+		SimpleMultiThreading.startAndJoin(threads);
+		
+		// Now add the calculated increment all at once to the source			
+		for (int ithread = 0; ithread < threads.length; ithread++) {
+
+			final Chunk chunk = chunks.get( ithread );
+			threads[ithread] = new Thread(""+BASE_ERROR_MESSAGE+"thread "+ithread) {
+
+				public void run() {
+
+					Cursor<FloatType> incrementCursor = increment.localizingCursor();
+					RandomAccess<T> ra = image.randomAccess();
 					
 					float val, inc, sum;
 					incrementCursor.reset();
@@ -236,7 +313,7 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 						ra.get().setReal(sum);
 					}
 
-				};
+				}
 			};
 		}
 
@@ -320,4 +397,103 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 		}
 
 	}
+	
+	/*
+	 * Static methods for easy calling
+	 */
+	public static final < T extends RealType< T > > Img< FloatType > toFloat( final Img< T > input, double deltat, DiffusionFunction function )
+	{
+		final ImgFactory< FloatType > factory = getFloatImgFactory( input );
+		final Img< FloatType > img = copy( input, factory );
+		PeronaMalikAnisotropicDiffusion.inFloatInPlace( img, deltat, function );
+		return img;
+	}
+
+	public static final < T extends RealType< T > > Img< FloatType > toFloat( final Img< T > input, double deltat, double kappa )
+	{
+		final ImgFactory< FloatType > factory = getFloatImgFactory( input );
+		final Img< FloatType > img = copy( input, factory );
+		PeronaMalikAnisotropicDiffusion.inFloatInPlace( img, deltat, kappa );
+		return img;
+	}
+
+	public static final < T extends RealType< T > > Img< FloatType > toFloat( final RandomAccessibleInterval< T > input, final ImgFactory< FloatType > factory, double deltat, DiffusionFunction function )
+	{
+		final Img< FloatType > img = copy( input, factory );
+		PeronaMalikAnisotropicDiffusion.inFloatInPlace( img, deltat, function );
+		return img;
+	}
+
+	public static final < T extends RealType< T > > Img< FloatType > toFloat( final RandomAccessibleInterval< T > input, final ImgFactory< FloatType > factory, double deltat, double kappa )
+	{
+		final Img< FloatType > img = copy( input, factory );
+		PeronaMalikAnisotropicDiffusion.inFloatInPlace( img, deltat, kappa );
+		return img;
+	}
+
+	public static final < T extends RealType< T > > void inFloatInPlace( final Img< T > input, double deltat, DiffusionFunction function )
+	{
+		final PeronaMalikAnisotropicDiffusion< T > diffusion = new PeronaMalikAnisotropicDiffusion<T>( input, deltat, function );
+		diffusion.process();
+	}
+
+	public static final < T extends RealType< T > > void inFloatInPlace( final Img< T > input, double deltat, double kappa )
+	{
+		final PeronaMalikAnisotropicDiffusion< T > diffusion = new PeronaMalikAnisotropicDiffusion<T>( input, deltat, kappa );
+		diffusion.process();
+	}
+
+	public static final < T extends RealType< T > > void inFloatInPlace( final RandomAccessibleInterval< T > input, final ImgFactory< FloatType > factory, double deltat, DiffusionFunction function )
+	{
+		final PeronaMalikAnisotropicDiffusion< T > diffusion = new PeronaMalikAnisotropicDiffusion<T>( input, factory, deltat, function );
+		diffusion.process();
+	}
+	
+	public static final < T extends RealType< T > > void inFloatInPlace( final RandomAccessibleInterval< T > input, final ImgFactory< FloatType > factory, double deltat, double kappa )
+	{
+		final PeronaMalikAnisotropicDiffusion< T > diffusion = new PeronaMalikAnisotropicDiffusion<T>( input, factory, deltat, kappa );
+		diffusion.process();		
+	}
+	
+	/**
+	 * Makes a copy of the {@link RandomAccessibleInterval} into a new {@link Img} of {@link FloatType}.
+	 * 
+	 * @param input
+	 * @param factory
+	 * @return
+	 */
+	protected static final < T extends RealType< T > > Img< FloatType > copy( final RandomAccessibleInterval< T > input, final ImgFactory< FloatType > factory )
+	{
+		final Img< FloatType > img = factory.create( input, new FloatType() );
+		final IterableInterval< T > iterableInput = Views.iterable( input );
+		
+		if ( img.iterationOrder().equals( iterableInput.iterationOrder() ) )
+		{
+			final Cursor< FloatType > out = img.cursor();
+			final Cursor< T > in = iterableInput.cursor();
+			
+			while ( out.hasNext() )
+			{
+				out.fwd();
+				in.fwd();
+				
+				out.get().set( in.get().getRealFloat() );
+			}
+		}
+		else
+		{
+			final Cursor< FloatType > out = img.localizingCursor();
+			final RandomAccess< T > in = input.randomAccess();
+			
+			while ( out.hasNext() )
+			{
+				out.fwd();
+				in.setPosition( out );
+				
+				out.get().set( in.get().getRealFloat() );
+			}			
+		}
+		
+		return img;
+	}	
 }
