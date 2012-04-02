@@ -1,173 +1,37 @@
 package net.imglib2.algorithm.pde;
 
-import java.util.Vector;
-
-import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.multithreading.Chunk;
-import net.imglib2.multithreading.SimpleMultiThreading;
-import net.imglib2.outofbounds.OutOfBoundsRandomAccess;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.view.Views;
 
 /**
- * An abstract class for the solvers of the diffusion equation. 
+ * An abstract class for the 2D solvers of the diffusion equation. 
  * 
- * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> Mar, 2012
- *
+ * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> Mar-April, 2012
  */
-public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends MultiThreadedBenchmarkAlgorithm {
+public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends ExplicitDiffusionScheme<T> {
 
 	/*
 	 * FIELDS
 	 */
 
 	private static final String BASE_ERROR_MESSAGE = "["+ExplicitDiffusionScheme2D.class.getSimpleName()+"] ";
-
-	/** The diffusion tensor. */
-	protected RandomAccessibleInterval<FloatType> D;
-	/** The input image, will be modified by this algorithm. */
-	protected final Img<T> input;
-	/**
-	 * This is a temporary holder were we store the increment to add to the input image 
-	 * at each iteration. More specifically, that is <code>dt</code> times the right-hand-size
-	 * of the diffusion equation. 
-	 */
-	protected Img<FloatType> increment;
-
-	private final float maxVal;
-	private final float minVal;
-	/** The dimension to iterate over to retrieve the tensor components. */
-	private final int tensorComponentDimension;
+	
 
 	/*
 	 * PROTECTED CONSTRUCTOR
 	 */
 
 	public ExplicitDiffusionScheme2D(final Img<T> input, final Img<FloatType> D) {
-		this.input = input;
-		this.D = D;
-		try {
-			this.increment = input.factory().imgFactory(new FloatType()).create( input, new FloatType() );
-		} catch (IncompatibleTypeException e) {
-			e.printStackTrace();
-		}
-		// Protection against under/overflow
-		this.minVal = (float) input.firstElement().getMinValue();
-		this.maxVal = (float) input.firstElement().getMaxValue();
-		// The dimension to iterate over to retrieve the tensor components
-		this.tensorComponentDimension = input.numDimensions();
+		super(input, D);
+		
 	}
 
 	/*
 	 * METHODS
 	 */
 
-
-	/**
-	 * Execute one iteration of explicit scheme of the diffusion equation.
-	 */
-	@Override
-	public boolean process() {
-
-		final Vector<Chunk> chunks = SimpleMultiThreading.divideIntoChunks(input.size(), numThreads);
-		Thread[] threads = SimpleMultiThreading.newThreads(numThreads);
-
-		for (int i = 0; i < threads.length; i++) {
-
-			final Chunk chunk = chunks.get(i);
-
-			threads[i] = new Thread(""+BASE_ERROR_MESSAGE+"thread "+i) {
-
-				@Override
-				public void run() {
-
-					OutOfBoundsRandomAccess<T> ura 			= Views.extendMirrorSingle(input).randomAccess();
-					OutOfBoundsRandomAccess<FloatType> dra 	= Views.extendMirrorSingle(D).randomAccess();
-					Cursor<FloatType> incrementCursor 		= increment.localizingCursor();
-
-					long[] position = new long[input.numDimensions()];
-
-					float[][] D = new float[3][];
-					D[0] = new float[3];
-					D[1] = new float[9];
-					D[2] = new float[3];
-					float[] U = new float[9];
-
-					incrementCursor.jumpFwd(chunk.getStartPosition());
-					for (long j = 0; j < chunk.getLoopSize(); j++) {
-
-						// Move input cursor.
-						incrementCursor.fwd();
-
-						// Move local neighborhood input cursor.
-						ura.setPosition(incrementCursor);
-						incrementCursor.localize(position);
-
-						// Move diffusion tensor cursor in the fist N dimension
-						for (int i = 0; i < position.length; i++) {
-							dra.setPosition(position[i], i);
-						}
-
-						// Iterate in local neighborhood and yield values
-						yieldDensity(ura, U);
-						yieldDiffusionTensor(dra, D);
-
-						// Compute increment from arrays
-						incrementCursor.get().setReal(diffusionScheme(U, D));
-					} // looping on all pixel
-
-					// Now add the calculated increment all at once to the source
-
-					Cursor<T> inputCursor = input.cursor();
-					Cursor<FloatType> incCursor = increment.cursor();
-					float val, inc, sum;
-
-					incCursor.reset();
-					incCursor.jumpFwd(chunk.getStartPosition());
-					inputCursor.jumpFwd(chunk.getStartPosition());
-					for (long j = 0; j < chunk.getLoopSize(); j++) {
-
-						val = inputCursor.next().getRealFloat(); // T type, might be 0
-						inc = incCursor.next().get(); // FloatType, might be negative
-
-						// Over/Underflow protection
-						sum = val + inc;
-						if (sum > maxVal) {
-							sum = maxVal;
-						}
-						if (sum < minVal) {
-							sum = minVal;
-						}
-						inputCursor.get().setReal(sum);
-					}
-
-
-				}
-
-
-			};
-		}
-
-		SimpleMultiThreading.startAndJoin(threads);
-
-		return true;
-	}
-
-
-	/**
-	 * @return the increment to add to the input image 
-	 * at each iteration. More specifically, that is <code>dt</code> times the right-hand-size
-	 * of the diffusion equation. 
-	 */
-	public RandomAccessibleInterval<FloatType> getIncrement() {
-		return increment;
-	}
 
 	/**
 	 * Compute the float increment of the current location, for which is given
@@ -204,37 +68,6 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends M
 		}
 		return true;
 	}
-
-	/**
-	 * Set the diffusion tensor that will be used for the diffusion process.
-	 * <p>
-	 * The diffusion tensor must be a {@link FloatType} {@link RandomAccessibleInterval}, with specific dimensions:
-	 * If the target image has <code>N</code> dimensions, the tensor must have <code>N+1</code> dimensions with:
-	 * <ul>
-	 * 	<li> the first <code>N</code> dimensions size equal to the input size;
-	 * 	<li> the <code>N+1</code> dimension having a size of 3.
-	 * </ul>
-	 * <p>
-	 * The tensor stores the local diffusion intensity and orientation in the shape of a real symmetric 
-	 * <code>2x2</code> matrix. Along the <code>N+1</code> dimension, the tensor components are ordered as:
-	 * <ol start="0">
-	 * 	<li> <code>Dxx</code>  
-	 * 	<li> <code>Dxy</code>  
-	 * 	<li> <code>Dyy</code>  
-	 * </ol>
-	 */
-	public void setDiffusionTensor(RandomAccessibleInterval<FloatType> D) {
-		this.D = D;
-	}
-
-	/**
-	 * @return the diffusion tensor.
-	 * @see #getDiffusionTensor()
-	 */
-	public RandomAccessibleInterval<FloatType> getDiffusionTensor() {
-		return D;
-	}
-
 
 	/**
 	 * Iterate over a 3x3 XY neighborhood around the current {@link RandomAccess} location 

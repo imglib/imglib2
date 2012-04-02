@@ -29,6 +29,7 @@ import java.util.Vector;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
@@ -230,7 +231,10 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 					long[] position = new long[image.numDimensions()];
 					Cursor<FloatType> incrementCursor = increment.localizingCursor();
 					RandomAccess<T> ra = image.randomAccess();
-					LocalNeighborhoodCursor<T> neighborhoodCursor = new LocalNeighborhoodCursor<T>(Views.extendMirrorSingle(image), centralPosition);
+
+					// HACK: Explicit assignment is needed for OpenJDK javac.
+					ExtendedRandomAccessibleInterval<T, RandomAccessibleInterval<T>> extendedImage = Views.extendMirrorSingle(image);
+					LocalNeighborhoodCursor<T> neighborhoodCursor = new LocalNeighborhoodCursor<T>(extendedImage, centralPosition);
 
 					incrementCursor.jumpFwd(chunk.getStartPosition());
 
@@ -272,7 +276,22 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 
 					}
 
-					// Now add the calculated increment all at once to the source
+				}
+			};
+		}
+
+		SimpleMultiThreading.startAndJoin(threads);
+		
+		// Now add the calculated increment all at once to the source			
+		for (int ithread = 0; ithread < threads.length; ithread++) {
+
+			final Chunk chunk = chunks.get( ithread );
+			threads[ithread] = new Thread(""+BASE_ERROR_MESSAGE+"thread "+ithread) {
+
+				public void run() {
+
+					Cursor<FloatType> incrementCursor = increment.localizingCursor();
+					RandomAccess<T> ra = image.randomAccess();
 					
 					float val, inc, sum;
 					incrementCursor.reset();

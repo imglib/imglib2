@@ -34,7 +34,6 @@
  * #L%
  */
 
-
 package net.imglib2.io;
 
 import java.io.File;
@@ -66,14 +65,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.basictypeaccess.array.ByteArray;
-import net.imglib2.img.basictypeaccess.array.CharArray;
-import net.imglib2.img.basictypeaccess.array.DoubleArray;
-import net.imglib2.img.basictypeaccess.array.FloatArray;
-import net.imglib2.img.basictypeaccess.array.IntArray;
-import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.meta.Axes;
@@ -82,22 +73,14 @@ import net.imglib2.sampler.special.OrthoSliceCursor;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.ByteType;
-import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.type.numeric.integer.ShortType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.integer.UnsignedIntType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
-import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.type.numeric.real.FloatType;
 import ome.xml.model.primitives.PositiveFloat;
 
 /**
- * Reads in an {@link ImgPlus} using Bio-Formats.
+ * Reads in an {@link ImgPlus} using SCIFIO.
  * 
+ * @author Curtis Rueden
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Curtis Rueden
  */
 public class ImgOpener implements StatusReporter {
 
@@ -182,14 +165,14 @@ public class ImgOpener implements StatusReporter {
 	 * @throws IncompatibleTypeException if the {@link Type} of the {@link Img} is
 	 *           incompatible with the {@link ImgFactory}
 	 */
-	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
-		final String id, final ImgFactory<?> imgFactory,
-		final boolean computeMinMax) throws ImgIOException,
-		IncompatibleTypeException
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T>
+		openImg(final String id, final ImgFactory<?> imgFactory,
+			final boolean computeMinMax) throws ImgIOException,
+			IncompatibleTypeException
 	{
 		try {
 			final IFormatReader r = initializeReader(id, computeMinMax);
-			final T type = makeType(r.getPixelType());
+			final T type = ImgIOUtils.makeType(r.getPixelType());
 			final ImgFactory<T> imgFactoryT = imgFactory.imgFactory(type);
 			return openImg(r, imgFactoryT, type, computeMinMax);
 		}
@@ -316,86 +299,9 @@ public class ImgOpener implements StatusReporter {
 		return imgPlus;
 	}
 
-	// TODO: eliminate getPlanarAccess in favor of utility method elsewhere.
-
-	/** Obtains planar access instance backing the given img, if any. */
-	@SuppressWarnings("unchecked")
-	public static PlanarAccess<ArrayDataAccess<?>> getPlanarAccess(
-		final ImgPlus<?> img)
-	{
-		if (img.getImg() instanceof PlanarAccess) {
-			return (PlanarAccess<ArrayDataAccess<?>>) img.getImg();
-		}
-		return null;
-	}
-
-	/** Converts Bio-Formats pixel type to imglib Type object. */
-	@SuppressWarnings("unchecked")
-	public static <T extends RealType<T>> T makeType(final int pixelType) {
-		final RealType<?> type;
-		switch (pixelType) {
-			case FormatTools.UINT8:
-				type = new UnsignedByteType();
-				break;
-			case FormatTools.INT8:
-				type = new ByteType();
-				break;
-			case FormatTools.UINT16:
-				type = new UnsignedShortType();
-				break;
-			case FormatTools.INT16:
-				type = new ShortType();
-				break;
-			case FormatTools.UINT32:
-				type = new UnsignedIntType();
-				break;
-			case FormatTools.INT32:
-				type = new IntType();
-				break;
-			case FormatTools.FLOAT:
-				type = new FloatType();
-				break;
-			case FormatTools.DOUBLE:
-				type = new DoubleType();
-				break;
-			default:
-				type = null;
-		}
-		return (T) type;
-	}
-
-	/** Wraps raw primitive array in imglib Array object. */
-	public static ArrayDataAccess<?> makeArray(final Object array) {
-		final ArrayDataAccess<?> access;
-		if (array instanceof byte[]) {
-			access = new ByteArray((byte[]) array);
-		}
-		else if (array instanceof char[]) {
-			access = new CharArray((char[]) array);
-		}
-		else if (array instanceof double[]) {
-			access = new DoubleArray((double[]) array);
-		}
-		else if (array instanceof int[]) {
-			access = new IntArray((int[]) array);
-		}
-		else if (array instanceof float[]) {
-			access = new FloatArray((float[]) array);
-		}
-		else if (array instanceof short[]) {
-			access = new ShortArray((short[]) array);
-		}
-		else if (array instanceof long[]) {
-			access = new LongArray((long[]) array);
-		}
-		else access = null;
-		return access;
-	}
-
 	// -- StatusReporter methods --
 
 	/** Adds a listener to those informed when progress occurs. */
-	@Override
 	public void addStatusListener(final StatusListener l) {
 		synchronized (listeners) {
 			listeners.add(l);
@@ -403,7 +309,6 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Removes a listener from those informed when progress occurs. */
-	@Override
 	public void removeStatusListener(final StatusListener l) {
 		synchronized (listeners) {
 			listeners.remove(l);
@@ -411,7 +316,6 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Notifies registered listeners of progress. */
-	@Override
 	public void notifyListeners(final StatusEvent e) {
 		synchronized (listeners) {
 			for (final StatusListener l : listeners)
@@ -446,7 +350,7 @@ public class ImgOpener implements StatusReporter {
 
 		return r;
 	}
-	
+
 	/** Compiles an N-dimensional list of axis lengths from the given reader. */
 	public static long[] getDimLengths(final IFormatReader r) {
 		final long sizeX = r.getSizeX();
@@ -494,7 +398,7 @@ public class ImgOpener implements StatusReporter {
 
 	// -- Helper methods --
 
-	/** Constructs and initializes a Bio-Formats reader for the given file. */
+	/** Constructs and initializes a SCIFIO reader for the given file. */
 	private IFormatReader initializeReader(final String id,
 		final boolean computeMinMax) throws FormatException, IOException
 	{
@@ -679,15 +583,15 @@ public class ImgOpener implements StatusReporter {
 
 		// PlanarRandomAccess is useful for efficient access to pixels in ImageJ
 		// (e.g., getPixels)
-		// #1 is useful for efficient Bio-Formats import, and useful for tools
+		// #1 is useful for efficient SCIFIO import, and useful for tools
 		// needing byte arrays (e.g., BufferedImage Java3D texturing by reference)
 		// #2 is useful for efficient memory use for tools wanting matching
 		// primitive arrays (e.g., virtual stacks in ImageJ)
 		// #3 is useful for efficient memory use
 
 		// get container
-		final PlanarAccess<?> planarAccess = getPlanarAccess(imgPlus);
-		final T inputType = makeType(r.getPixelType());
+		final PlanarAccess<?> planarAccess = ImgIOUtils.getPlanarAccess(imgPlus);
+		final T inputType = ImgIOUtils.makeType(r.getPixelType());
 		final T outputType = type;
 		final boolean compatibleTypes =
 			outputType.getClass().isAssignableFrom(inputType.getClass());
@@ -732,7 +636,7 @@ public class ImgOpener implements StatusReporter {
 			System.arraycopy(plane, 0, planeCopy, 0, plane.length);
 			planeArray = planeCopy;
 		}
-		planarAccess.setPlane(no, makeArray(planeArray));
+		planarAccess.setPlane(no, ImgIOUtils.makeArray(planeArray));
 	}
 
 	/**
@@ -783,8 +687,8 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Copies the current dimensional position into the given array. */
-	private void getPosition(final IFormatReader r, final int no,
-		final long[] pos)
+	private void
+		getPosition(final IFormatReader r, final int no, final long[] pos)
 	{
 		final int sizeX = r.getSizeX();
 		final int sizeY = r.getSizeY();

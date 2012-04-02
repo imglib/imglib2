@@ -270,7 +270,10 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// instaniate real valued kernel template
 			// which is of the same container type as the image
 			// so that the computation is easy
-			final Img<S> kernelTemplate = kernelImgFactory.create( kernelTemplateDim, Util.getTypeFromInterval( kernel ).createVariable() );
+
+			// HACK: Explicit assignment is needed for OpenJDK javac.
+			S kernelType = Util.getTypeFromInterval( kernel );
+			final Img<S> kernelTemplate = kernelImgFactory.create( kernelTemplateDim, kernelType.createVariable() );
 			
 			// copy the kernel into the kernelTemplate,
 			// the key here is that the center pixel of the kernel (e.g. 13,13,13)

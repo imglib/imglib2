@@ -34,7 +34,6 @@
  * #L%
  */
 
-
 package net.imglib2.io;
 
 import net.imglib2.exception.ImgLibException;
@@ -54,6 +53,10 @@ public class ImgIOException extends ImgLibException {
 
 	public ImgIOException(final Throwable t) {
 		super(t);
+	}
+
+	public ImgIOException(final String s) {
+		super(s);
 	}
 
 }

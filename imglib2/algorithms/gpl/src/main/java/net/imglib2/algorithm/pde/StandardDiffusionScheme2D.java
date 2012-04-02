@@ -33,7 +33,7 @@ public class StandardDiffusionScheme2D<T extends RealType<T>> extends ExplicitDi
 	 */
 
 	@Override
-	protected float diffusionScheme(float[] U, float[][] D) {
+	protected final float diffusionScheme(float[] U, float[][] D) {
 		// Compute increment, following the stencil notation of Weickert and Scharr.
 		float Icp = (U[5]-U[0]) * ( D[2][2] + D[2][0] ) / 2; // A2
 		float Imc = (U[7]-U[0]) * ( D[0][2] + D[0][0] ) / 2; // A4
