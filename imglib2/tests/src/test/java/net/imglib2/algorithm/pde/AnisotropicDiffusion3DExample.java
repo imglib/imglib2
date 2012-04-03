@@ -48,15 +48,15 @@ public class AnisotropicDiffusion3DExample {
 
 	public static <T extends RealType<T> & NativeType< T >> void  main(String[] args) {
 
-		Img<T> image = createExampleImage();
-		Img<T> copy = image.copy();
+		Img image = createExampleImage();
+		Img copy = image.copy();
 
 		// Display it via ImgLib using ImageJ
 		ImageJ.main(args);
 
 		// Compute tensor
 
-		MomentOfInertiaTensor3D<T> tensor = new MomentOfInertiaTensor3D<T>(image, 5);
+		MomentOfInertiaTensor3D tensor = new MomentOfInertiaTensor3D(image, 5);
 //		long[] dimensions = new long[image.numDimensions()];
 //		image.dimensions(dimensions);
 //		IsotropicDiffusionTensor<T> tensor = new IsotropicDiffusionTensor<T>(dimensions , 1);
@@ -69,8 +69,8 @@ public class AnisotropicDiffusion3DExample {
 
 		// Instantiate diffusion solver
 
-//		StandardDiffusionScheme3D<T> algo = new StandardDiffusionScheme3D<T>(image, diffusionTensor);
-		NonNegativityDiffusionScheme3D<T> algo = new NonNegativityDiffusionScheme3D<T>(image, diffusionTensor);
+//		StandardDiffusionScheme3D algo = new StandardDiffusionScheme3D(image, diffusionTensor);
+		NonNegativityDiffusionScheme3D algo = new NonNegativityDiffusionScheme3D(image, diffusionTensor);
 
 		for (int i = 0; i < 10; i++) {
 			System.out.println("Iteration "+(i+1));
@@ -90,7 +90,7 @@ public class AnisotropicDiffusion3DExample {
 		ImageJFunctions.show(copy, "Original image");
 	}
 
-	public static <T extends RealType<T> & NativeType< T >> Img<T> openExampleImage() {
+	public static <T extends RealType<T> & NativeType< T >> Img openExampleImage() {
 		File file = new File( "/Users/tinevez/Desktop/Data/StarryNight.tif");
 
 		ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
@@ -106,8 +106,7 @@ public class AnisotropicDiffusion3DExample {
 		return image;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static <T extends RealType<T> & NativeType< T >> Img<T> createExampleImage() {
+	public static <T extends RealType<T> & NativeType< T >> Img createExampleImage() {
 
 		int size = 128;
 		double[] phis = new double[] { 0 , 45 , 90,  135 ,  180 ,  225 ,270,  315  };
@@ -167,7 +166,7 @@ public class AnisotropicDiffusion3DExample {
 
 		}
 
-		return (Img<T>) image;
+		return image;
 	}
 
 }
