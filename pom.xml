@@ -257,8 +257,8 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
   </mailingLists>
 
   <scm>
-    <connection>scm:git://github.com/imagej/imglib.git</connection>
-    <developerConnection>scm:git@github.com:imagej/imglib.git</developerConnection>
+    <connection>scm:git:git://github.com/imagej/imglib.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:imagej/imglib.git</developerConnection>
     <tag>HEAD</tag>
     <url>http://github.com/imagej/imglib</url>
   </scm>
