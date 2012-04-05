@@ -58,12 +58,18 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 		this.maxVal = (float) input.firstElement().getMaxValue();
 		// The dimension to iterate over to retrieve the tensor components
 		this.tensorComponentDimension = input.numDimensions();
+		this.processingTime = 0;
 	}
 
 	/*
 	 * METHODS
 	 */
 
+	
+	protected abstract float[] initDensityArray();
+	
+	protected abstract float[][] initDiffusionTensorArray();
+	
 
 	/**
 	 * Execute one iteration of explicit scheme of the diffusion equation.
@@ -71,6 +77,7 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 	@Override
 	public boolean process() {
 
+		long start = System.currentTimeMillis();
 		final Vector<Chunk> chunks = SimpleMultiThreading.divideIntoChunks(input.size(), numThreads);
 		Thread[] threads = SimpleMultiThreading.newThreads(numThreads);
 
@@ -84,22 +91,19 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 				public void run() {
 
 					// HACK: Explicit assignment is needed for OpenJDK javac.
-					ExtendedRandomAccessibleInterval<T, Img<T>> extendedInput = Views.extendMirrorSingle(input);
+					ExtendedRandomAccessibleInterval<T, Img<T>> extendedInput = Views.extendMirrorDouble(input);
 					OutOfBoundsRandomAccess<T> ura = extendedInput.randomAccess();
 
 					// HACK: Explicit assignment is needed for OpenJDK javac.
-					ExtendedRandomAccessibleInterval<FloatType, RandomAccessibleInterval<FloatType>> extendedD = Views.extendMirrorSingle(D);
+					ExtendedRandomAccessibleInterval<FloatType, RandomAccessibleInterval<FloatType>> extendedD = Views.extendMirrorDouble(D);
 					OutOfBoundsRandomAccess<FloatType> dra 	= extendedD.randomAccess();
 
 					Cursor<FloatType> incrementCursor 		= increment.localizingCursor();
 
 					long[] position = new long[input.numDimensions()];
 
-					float[][] D = new float[3][];
-					D[0] = new float[3];
-					D[1] = new float[9];
-					D[2] = new float[3];
-					float[] U = new float[9];
+					float[][] D = initDiffusionTensorArray();
+					float[] U = initDensityArray();
 
 					incrementCursor.jumpFwd(chunk.getStartPosition());
 					for (long j = 0; j < chunk.getLoopSize(); j++) {
@@ -124,19 +128,36 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 						incrementCursor.get().setReal(diffusionScheme(U, D));
 					} // looping on all pixel
 
-					// Now add the calculated increment all at once to the source
+				}
 
-					Cursor<T> inputCursor = input.cursor();
-					Cursor<FloatType> incCursor = increment.cursor();
+			};
+		}
+
+		SimpleMultiThreading.startAndJoin(threads);
+		
+		
+		// Now add the calculated increment all at once to the source.
+		// We do this in another multithreading loop to avoid problems with slow
+		// threads. Thanks to Stephan Preibisch who noticed it.
+		
+		for (int ithread = 0; ithread < threads.length; ithread++) {
+
+			final Chunk chunk = chunks.get( ithread );
+			threads[ithread] = new Thread(""+BASE_ERROR_MESSAGE+"thread "+ithread) {
+
+				public void run() {
+
+					Cursor<FloatType> incrementCursor = increment.localizingCursor();
+					RandomAccess<T> ra = input.randomAccess();
+
 					float val, inc, sum;
-
-					incCursor.reset();
-					incCursor.jumpFwd(chunk.getStartPosition());
-					inputCursor.jumpFwd(chunk.getStartPosition());
+					incrementCursor.reset();
+					incrementCursor.jumpFwd(chunk.getStartPosition());
 					for (long j = 0; j < chunk.getLoopSize(); j++) {
 
-						val = inputCursor.next().getRealFloat(); // T type, might be 0
-						inc = incCursor.next().get(); // FloatType, might be negative
+						inc = incrementCursor.next().get(); // FloatType, might be negative
+						ra.setPosition(incrementCursor);
+						val = ra.get().getRealFloat(); // T type, might be 0
 
 						// Over/Underflow protection
 						sum = val + inc;
@@ -146,18 +167,17 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 						if (sum < minVal) {
 							sum = minVal;
 						}
-						inputCursor.get().setReal(sum);
+						ra.get().setReal(sum);
 					}
 
-
 				}
-
-
 			};
 		}
 
 		SimpleMultiThreading.startAndJoin(threads);
 
+		long end = System.currentTimeMillis();
+		processingTime += (end - start);
 		return true;
 	}
 

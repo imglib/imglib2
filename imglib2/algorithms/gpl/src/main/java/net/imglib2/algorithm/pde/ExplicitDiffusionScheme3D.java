@@ -12,9 +12,125 @@ public abstract class ExplicitDiffusionScheme3D<T extends RealType<T>> extends E
 		super(input, D);
 	}
 
+	
 	@Override
-	protected void yieldDensity(RandomAccess<T> ura, float[] target) {
-		// TODO Auto-generated method stub
+	protected float[] initDensityArray() {
+		return new float[19];
+	}
+	
+	@Override
+	protected float[][] initDiffusionTensorArray() {
+		float[][] arr = new float[6][];
+		arr[0] = new float[3];
+		arr[1] = new float[3];
+		arr[2] = new float[3];
+		arr[3] = new float[9];
+		arr[4] = new float[9];
+		arr[5] = new float[9];
+		return arr;
+	}
+	
+	
+	/**
+	 * <pre>
+	 * -------------------------	----------------------------	----------------------------	→ increasing X (first letter)
+	 * | 2 mmm | 1 cmm | 8 pmm |	| 11 mmc | 10 cmc | 9 pmc  |	| 20 mmp | 19 cmp | 18 pmp |
+	 * |------------------------	----------------------------	----------------------------
+	 * | 3 mcm | 0 ccm | 7 pcm |	| 12 mcc | -1 ccc | 16 pcc |	| 21 mcp | 25 ccp | 17 pcp |
+	 * |------------------------	----------------------------	----------------------------
+	 * | 4 mpm | 5 cpm | 6 ppm |	| 13 mpc | 14 cpc | 15 ppc |	| 22 mpp | 23 cpp | 24 ppp |
+	 * -------------------------	----------------------------	----------------------------
+	 * ↓
+	 * increasing Y (second letter)
+	 * </pre>
+	 * In the array, the nerighborhood is stored as following:
+	 * <pre>
+	 * index	0	1	2	3	4	5	6	7	8	
+	 * 	Uccc	Uccm 	Ucmm	Umcm	Ucpm	Upcm	Upmc	Ucmc	Ummc
+	 * 
+	 * index	9	10	11	12	13	14	15	16	17	18
+	 * 	Umcc	Umpc	Ucpc	Uppc	Upcc	Upcp	Ucmp	Umcp	Ucpp	Uccp						 						
+	 * </pre>
+	 * Careful: some values are not used, therefore they are not stored: <pre>mmm, mpm, ppm, pmm, pppm pmp, mmp, mpp</pre>.
+	 */
+	@Override
+	protected final void yieldDensity(RandomAccess<T> ura, float[] target) {
+		final int X = 0;
+		final int Y = 1;
+		final int Z = 2;
+		
+		// -1. ccc
+		target[0] = ura.get().getRealFloat();
+		// 0. ccm
+		ura.bck(Z);
+		target[1] = ura.get().getRealFloat();
+		// 1. cmm
+		ura.bck(Y);
+		target[2] = ura.get().getRealFloat();
+		// 2. mmm - unused, skipped
+		ura.bck(X);
+		// 3. mcm
+		ura.fwd(Y);
+		target[3] = ura.get().getRealFloat();
+		// 4. mpm - unused, skipped
+		ura.fwd(Y);
+		// 5. cpm
+		ura.fwd(X);
+		target[4] = ura.get().getRealFloat();
+		// 6. ppm - unused, skipped
+		ura.fwd(X);
+		// 7. pcm
+		ura.bck(Y);
+		target[5] = ura.get().getRealFloat();
+		// 8. pmm - unused, skipped
+		ura.bck(Y);
+		// 9. pmc
+		ura.fwd(Z);
+		target[6] = ura.get().getRealFloat();
+		// 10. cmc
+		ura.bck(X);
+		target[7] = ura.get().getRealFloat();
+		// 11. mmc
+		ura.bck(X);
+		target[8] = ura.get().getRealFloat();
+		// 12. mcc
+		ura.fwd(Y);
+		target[9] = ura.get().getRealFloat();
+		// 13. mpc
+		ura.fwd(Y);
+		target[10] = ura.get().getRealFloat();
+		// 14. cpc
+		ura.fwd(X);
+		target[11] = ura.get().getRealFloat();
+		// 15. ppc
+		ura.fwd(X);
+		target[12] = ura.get().getRealFloat();
+		// 16. pcc
+		ura.bck(Y);
+		target[13] = ura.get().getRealFloat();
+		// 17. pcp
+		ura.fwd(Z);
+		target[14] = ura.get().getRealFloat();
+		// 18. pmp - unused, skipped
+		ura.bck(Y);
+		// 19. cmp
+		ura.bck(X);
+		target[15] = ura.get().getRealFloat();
+		// 20. mmp - unused, skipped
+		ura.bck(X);
+		// 21. mcp
+		ura.fwd(Y);
+		target[16] = ura.get().getRealFloat();
+		// 22. mpp - unused, skipped
+		ura.fwd(Y);
+		// 23. cpp
+		ura.fwd(X);
+		target[17] = ura.get().getRealFloat();
+		// 24. ppp - unused, not even traversed
+		// 25. ccp
+		ura.bck(Y);
+		target[18] = ura.get().getRealFloat();
+
 		
 	}
 
@@ -30,13 +146,13 @@ public abstract class ExplicitDiffusionScheme3D<T extends RealType<T>> extends E
 	 * We then iterate in a <code>3x3x3</code> neighborhood in the following order:
 	 * <pre>
 	 * upper z plane (z-1)		center z plane (z=0)		lower z plane(z+1) (third letter)
-	 * -------------------------		----------------------------	----------------------------	→ increasing X (first letter)
-	 * | 2 mmm | 1 cmm | 8 pmm |		| 11 mmc | 10 cmc | 9 pmc  |	| 20 mmp | 19 cmp | 18 pmp |
-	 * |------------------------		----------------------------	----------------------------
-	 * | 3 mcm | 0 ccm | 7 pcm |		| 12 mcc | -1 ccc | 16 pcc |	| 21 mcp | 25 ccp | 17 pcp |
-	 * |------------------------		----------------------------	----------------------------
-	 * | 4 mpm | 5 cpm | 6 ppm |		| 13 mpc | 14 cpc | 15 ppc |	| 22 mpp | 23 cpp | 24 ppp |
-	 * -------------------------		----------------------------	----------------------------
+	 * -------------------------	----------------------------	----------------------------	→ increasing X (first letter)
+	 * | 2 mmm | 1 cmm | 8 pmm |	| 11 mmc | 10 cmc | 9 pmc  |	| 20 mmp | 19 cmp | 18 pmp |
+	 * |------------------------	----------------------------	----------------------------
+	 * | 3 mcm | 0 ccm | 7 pcm |	| 12 mcc | -1 ccc | 16 pcc |	| 21 mcp | 25 ccp | 17 pcp |
+	 * |------------------------	----------------------------	----------------------------
+	 * | 4 mpm | 5 cpm | 6 ppm |	| 13 mpc | 14 cpc | 15 ppc |	| 22 mpp | 23 cpp | 24 ppp |
+	 * -------------------------	----------------------------	----------------------------
 	 * ↓
 	 * increasing Y (second letter)
 	 * </pre>
@@ -65,21 +181,21 @@ public abstract class ExplicitDiffusionScheme3D<T extends RealType<T>> extends E
 		final int Y = 1;
 		final int Z = 2;
 		
+		
 
 		// -1: ccc
 		dra.setPosition(A, tensorComponentDimension);
 		target[A][0] = dra.get().get();
-		dra.fwd(2);
+		dra.fwd(tensorComponentDimension);
 		target[B][0] = dra.get().get();
-		dra.fwd(2);
+		dra.fwd(tensorComponentDimension);
 		target[C][0] = dra.get().get();
-		dra.fwd(2);
+		dra.fwd(tensorComponentDimension);
 		target[D][0] = dra.get().get();
-		dra.fwd(2);
+		dra.fwd(tensorComponentDimension);
 		target[E][0] = dra.get().get();
-		dra.fwd(2);
+		dra.fwd(tensorComponentDimension);
 		target[F][0] = dra.get().get();
-		
 		
 		// 0: ccm
 		dra.bck(Z);
@@ -90,7 +206,7 @@ public abstract class ExplicitDiffusionScheme3D<T extends RealType<T>> extends E
 		dra.setPosition(E, tensorComponentDimension);
 		target[E][1] = dra.get().get();
 		
-		dra.fwd(2);
+		dra.fwd(tensorComponentDimension);
 		target[F][1] = dra.get().get();
 		
 		// 1: cmm
@@ -247,7 +363,7 @@ public abstract class ExplicitDiffusionScheme3D<T extends RealType<T>> extends E
 		
 		dra.setPosition(F, tensorComponentDimension);
 		target[F][8] = dra.get().get();
-		
+	
 	}
 
 }
