@@ -438,12 +438,29 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 		
 		preConcatenate( dR );
 	}
-	
+
+	/**
+	 * Translate
+	 *
+	 * @param t 2d translation vector
+	 *
+	 */
+	public void translate( final double... t )
+	{
+		assert t.length == 2 : "2d affine transformations can be translated by 2d vector only.";
+		a.m02 += t[ 0 ];
+		a.m12 += t[ 1 ];
+
+		invert();
+		updateDs();
+		inverse.updateDs();
+	}
+
 	/**
 	 * Scale
-	 * 
-	 * @param d angle in radians
-	 * 
+	 *
+	 * @param d scale factor
+	 *
 	 */
 	public void scale( final double d )
 	{
