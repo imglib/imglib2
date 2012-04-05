@@ -11,7 +11,7 @@ import net.imglib2.view.Views;
 
 public class SubImg< T extends Type< T > > extends IterableRandomAccessibleInterval< T > implements Img< T >
 {
-	private static final < T extends Type< T > > RandomAccessibleInterval< T > getView( final Img< T > srcImg, final Interval interval, final boolean keepDimsWithSizeOne )
+	public static final < T extends Type< T > > RandomAccessibleInterval< T > getView( final RandomAccessibleInterval< T > srcImg, final Interval interval, final boolean keepDimsWithSizeOne )
 	{
 		if ( !Util.contains( srcImg, interval ) )
 			throw new IllegalArgumentException( "In SubImgs the interval min and max must be inside the dimensions of the SrcImg" );
