@@ -95,11 +95,10 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	protected AffineTransform2D( final AffineMatrix2D a )
 	{
 		this.a = a;
-		
-		d0 = new RealPoint( 3 );
-		d1 = new RealPoint( 3 );
+
+		d0 = new RealPoint( 2 );
+		d1 = new RealPoint( 2 );
 		ds = new RealPoint[]{ d0, d1 };
-		
 		updateDs();
 		
 		inverse = new AffineTransform2D( this );
@@ -112,9 +111,9 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 		this.inverse = inverse;
 		
 		a = new AffineMatrix2D();
-		
-		d0 = new RealPoint( 3 );
-		d1 = new RealPoint( 3 );
+
+		d0 = new RealPoint( 2 );
+		d1 = new RealPoint( 2 );
 		ds = new RealPoint[]{ d0, d1 };
 	}
 	
@@ -350,15 +349,15 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	public int numSourceDimensions()
 	{
-		return 3;
+		return 2;
 	}
 
 	@Override
 	public int numTargetDimensions()
 	{
-		return 3;
+		return 2;
 	}
-	
+
 	@Override
 	final public AffineTransform2D preConcatenate( final AffineGet affine )
 	{
