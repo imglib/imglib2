@@ -52,7 +52,7 @@ public class ImglibBenchmark {
 	private final byte[] rawData;
 	private final ByteProcessor byteProc;
 	private final ArrayImg<UnsignedByteType, ByteArray> imgArray;
-	private final CellImg<UnsignedByteType, ByteArray, DefaultCell<ByteArray>> imgCell;
+	private final CellImg<UnsignedByteType, ByteArray, ?> imgCell;
 	private final PlanarImg<UnsignedByteType, ByteArray> imgPlanar;
 	private final ByteImagePlus<UnsignedByteType> imgImagePlus;
 
@@ -178,10 +178,15 @@ public class ImglibBenchmark {
 	private void testCheapPerformance(final int iterationCount) {
 		System.out.println();
 		System.out.println("-- TIME PERFORMANCE - CHEAP OPERATION --");
+		long[] min = new long[ 6 ];
+		long[] max = new long[ 6 ];
+		long[] avg = new long[ 6 ];
+
 		for (int i = 0; i < iterationCount; i++) {
 			System.gc();
 			System.out.println("Iteration #" + (i + 1) + "/" + iterationCount + ":");
 			final List<Long> times = new ArrayList<Long>();
+			
 			times.add(System.currentTimeMillis());
 			if ( rawData != null ) invertRaw(rawData);
 			times.add(System.currentTimeMillis());
@@ -196,14 +201,20 @@ public class ImglibBenchmark {
 			if ( imgImagePlus != null ) invertImagePlusImage(imgImagePlus);
 			times.add(System.currentTimeMillis());
 
-			logTimePerformance(i, times);
+			logTimePerformance(i, times, min, max, avg );
 		}
+		
+		reportMinAvgMax( min, max, avg, iterationCount );
 	}
 
 	/** Measures performance of a computationally more expensive operation. */
 	private void testExpensivePerformance(final int iterationCount) {
 		System.out.println();
 		System.out.println("-- TIME PERFORMANCE - EXPENSIVE OPERATION --");
+		long[] min = new long[ 6 ];
+		long[] max = new long[ 6 ];
+		long[] avg = new long[ 6 ];
+		
 		for (int i = 0; i < iterationCount; i++) {
 			System.gc();
 			System.out.println("Iteration #" + (i + 1) + "/" + iterationCount + ":");
@@ -222,10 +233,24 @@ public class ImglibBenchmark {
 			if ( imgImagePlus != null ) randomizeImagePlusImage(imgImagePlus);
 			times.add(System.currentTimeMillis());
 
-			logTimePerformance(i, times);
+			logTimePerformance(i, times, min, max, avg );
 		}
+		
+		reportMinAvgMax( min, max, avg, iterationCount );
 	}
 
+	private void reportMinAvgMax(final long[] min, final long[] max, final long[] avg, final int iterationCount) {
+		for ( int i = 0; i < avg.length; ++i )
+			avg[ i ] /= iterationCount;
+		
+		System.out.println( "-- SUMMARY --" );
+		System.out.println(METHOD_RAW + " min: " + min[ 0 ] + " avg: " +  avg[ 0 ] + " max: " +  max[ 0 ] );
+		System.out.println(METHOD_IMAGEJ + " min: " + min[ 1 ] + " avg: " +  avg[ 1 ] + " max: " +  max[ 1 ] );
+		System.out.println(METHOD_IMGLIB_ARRAY + " min: " + min[ 2 ] + " avg: " +  avg[ 2 ] + " max: " +  max[ 2 ] );
+		System.out.println(METHOD_IMGLIB_CELL + " min: " + min[ 3 ] + " avg: " +  avg[ 3 ] + " max: " +  max[ 3 ] );
+		System.out.println(METHOD_IMGLIB_PLANAR + " min: " + min[ 4 ] + " avg: " +  avg[ 4 ] + " max: " +  max[ 4 ] );
+		System.out.println(METHOD_IMGLIB_IMAGEPLUS + " min: " + min[ 5 ] + " avg: " +  avg[ 5 ] + " max: " +  max[ 5 ] );		
+	}
 	private long getMemUsage() {
 		Runtime r = Runtime.getRuntime();
 		System.gc();
@@ -250,7 +275,7 @@ public class ImglibBenchmark {
 		System.out.println(METHOD_IMGLIB_IMAGEPLUS + ": " + imgLibImagePlusMem + " bytes");
 	}
 
-	private void logTimePerformance(final int iter, final List<Long> times) {
+	private void logTimePerformance(final int iter, final List<Long> times, final long[] min, final long[] max, final long[] avg) {
 		long rawTime             = computeDifference(times);
 		long ipTime              = computeDifference(times);
 		long imgLibArrayTime     = computeDifference(times);
@@ -285,6 +310,42 @@ public class ImglibBenchmark {
 		reportTime(METHOD_IMGLIB_CELL, imgLibCellTime, rawTime, ipTime);
 		reportTime(METHOD_IMGLIB_PLANAR, imgLibPlanarTime, rawTime, ipTime);
 		reportTime(METHOD_IMGLIB_IMAGEPLUS, imgLibImagePlusTime, rawTime, ipTime);
+		
+		if ( iter == 0 )
+		{
+			min[ 0 ] = max[ 0 ] = avg[ 0 ] = rawTime;
+			min[ 1 ] = max[ 1 ] = avg[ 1 ] = ipTime;
+			min[ 2 ] = max[ 2 ] = avg[ 2 ] = imgLibArrayTime;
+			min[ 3 ] = max[ 3 ] = avg[ 3 ] = imgLibCellTime;
+			min[ 4 ] = max[ 4 ] = avg[ 4 ] = imgLibPlanarTime;
+			min[ 5 ] = max[ 5 ] = avg[ 5 ] = imgLibImagePlusTime;
+		}
+		else
+		{
+			min[ 0 ] = Math.min( min[ 0 ], rawTime );
+			max[ 0 ] = Math.max( max[ 0 ], rawTime );
+			avg[ 0 ] += rawTime;
+
+			min[ 1 ] = Math.min( min[ 1 ], ipTime );
+			max[ 1 ] = Math.max( max[ 1 ], ipTime );
+			avg[ 1 ] += ipTime;
+
+			min[ 2 ] = Math.min( min[ 2 ], imgLibArrayTime );
+			max[ 2 ] = Math.max( max[ 2 ], imgLibArrayTime );
+			avg[ 2 ] += imgLibArrayTime;
+
+			min[ 3 ] = Math.min( min[ 3 ], imgLibCellTime );
+			max[ 3 ] = Math.max( max[ 3 ], imgLibCellTime );
+			avg[ 3 ] += imgLibCellTime;
+			
+			min[ 4 ] = Math.min( min[ 4 ], imgLibPlanarTime );
+			max[ 4 ] = Math.max( max[ 4 ], imgLibPlanarTime );
+			avg[ 4 ] += imgLibPlanarTime;
+			
+			min[ 5 ] = Math.min( min[ 5 ], imgLibImagePlusTime );
+			max[ 5 ] = Math.max( max[ 5 ], imgLibImagePlusTime );
+			avg[ 5 ] += imgLibImagePlusTime;
+		}
 	}
 
 	private long computeDifference(final List<Long> list) {
@@ -372,7 +433,7 @@ public class ImglibBenchmark {
 		return planarContainer;
 	}
 
-	private CellImg<UnsignedByteType, ByteArray, DefaultCell<ByteArray>> createCellImage() {
+	private CellImg<UnsignedByteType, ByteArray, ?> createCellImage() {
 		long[] dims = new long[ numDimensions ];
 		for ( int d = 0; d < numDimensions; ++d )
 			dims[d] = imageSize;
@@ -388,7 +449,7 @@ public class ImglibBenchmark {
 			throw new RuntimeException( "there were rounding errors and cellSize is actually too big" );
 		
 		@SuppressWarnings( "unchecked" )
-		CellImg<UnsignedByteType, ByteArray, DefaultCell<ByteArray>> cellContainer = ( CellImg<UnsignedByteType, ByteArray, DefaultCell<ByteArray>> ) createImage( dims, new CellImgFactory< UnsignedByteType >( cellSize ) );
+		CellImg<UnsignedByteType, ByteArray, ?> cellContainer = ( CellImg<UnsignedByteType, ByteArray, ?> ) createImage( dims, new CellImgFactory< UnsignedByteType >( cellSize ) );
 		return cellContainer;
 	}
 
@@ -456,8 +517,8 @@ public class ImglibBenchmark {
 	}
 
 	/** Explicit cell version. */
-	private void invertCellImage(final CellImg<UnsignedByteType, ByteArray, DefaultCell<ByteArray>> img) {
-		final CellCursor< UnsignedByteType, ByteArray, DefaultCell<ByteArray> > c = img.cursor();
+	private void invertCellImage(final CellImg<UnsignedByteType, ByteArray, ?> img) {
+		final CellCursor< UnsignedByteType, ByteArray, ? > c = img.cursor();
 		while ( c.hasNext() ) {
 			final UnsignedByteType t = c.next();
 			final int value = t.get();
@@ -528,8 +589,8 @@ public class ImglibBenchmark {
 	}
 
 	/** Explicit cell version. */
-	private void randomizeCellImage(final CellImg<UnsignedByteType, ByteArray, DefaultCell<ByteArray>> img) {
-		final CellCursor< UnsignedByteType, ByteArray, DefaultCell<ByteArray> > c = img.cursor();
+	private void randomizeCellImage(final CellImg<UnsignedByteType, ByteArray, ?> img) {
+		final CellCursor< UnsignedByteType, ByteArray, ? > c = img.cursor();
 		while ( c.hasNext() ) {
 			final UnsignedByteType t = c.next();
 			final int value = t.get();
