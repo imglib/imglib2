@@ -173,7 +173,7 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 				}
 			};
 		}
-
+ 
 		SimpleMultiThreading.startAndJoin(threads);
 
 		long end = System.currentTimeMillis();
