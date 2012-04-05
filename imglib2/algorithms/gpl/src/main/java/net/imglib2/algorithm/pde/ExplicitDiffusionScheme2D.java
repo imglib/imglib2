@@ -69,6 +69,18 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends E
 		return true;
 	}
 
+	
+	@Override
+	protected float[] initDensityArray() {
+		return new float[9];
+	}
+
+	@Override
+	protected float[][] initDiffusionTensorArray() {
+		return new float[3][9];
+	}
+
+	
 	/**
 	 * Iterate over a 3x3 XY neighborhood around the current {@link RandomAccess} location 
 	 * for the input image, and store the 9 values as float in an array, in the following order:
