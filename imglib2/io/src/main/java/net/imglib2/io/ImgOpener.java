@@ -302,6 +302,7 @@ public class ImgOpener implements StatusReporter {
 	// -- StatusReporter methods --
 
 	/** Adds a listener to those informed when progress occurs. */
+	@Override
 	public void addStatusListener(final StatusListener l) {
 		synchronized (listeners) {
 			listeners.add(l);
@@ -309,6 +310,7 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Removes a listener from those informed when progress occurs. */
+	@Override
 	public void removeStatusListener(final StatusListener l) {
 		synchronized (listeners) {
 			listeners.remove(l);
@@ -316,6 +318,7 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Notifies registered listeners of progress. */
+	@Override
 	public void notifyListeners(final StatusEvent e) {
 		synchronized (listeners) {
 			for (final StatusListener l : listeners)
