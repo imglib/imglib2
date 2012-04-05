@@ -22,9 +22,11 @@ import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.cell.CellCursor;
 import net.imglib2.img.cell.CellImg;
 import net.imglib2.img.cell.CellImgFactory;
-import net.imglib2.img.cell.DefaultCell;
 import net.imglib2.img.imageplus.ByteImagePlus;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
+import net.imglib2.img.list.ListCursor;
+import net.imglib2.img.list.ListImg;
+import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.img.planar.PlanarCursor;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
@@ -46,6 +48,7 @@ public class ImglibBenchmark {
 	private static final String METHOD_IMGLIB_CELL = "Imglib (Cell)";
 	private static final String METHOD_IMGLIB_PLANAR = "Imglib (Planar)";
 	private static final String METHOD_IMGLIB_IMAGEPLUS = "Imglib (ImagePlus)";
+	private static final String METHOD_IMGLIB_LIST = "Imglib (List)";
 
 	private final int imageSize;
 	private final int numDimensions;
@@ -55,6 +58,7 @@ public class ImglibBenchmark {
 	private final CellImg<UnsignedByteType, ByteArray, ?> imgCell;
 	private final PlanarImg<UnsignedByteType, ByteArray> imgPlanar;
 	private final ByteImagePlus<UnsignedByteType> imgImagePlus;
+	private final ListImg<UnsignedByteType> imgList;
 
 	/**
 	 * List of timing results.
@@ -66,6 +70,7 @@ public class ImglibBenchmark {
 		new ArrayList<Map<String, Long>>();
 
 	public static void main(final String[] args) throws IOException {
+		final boolean testListImg = false;
 		final int iterations = 10;
 		final int size;
 		final int numDimensions;
@@ -79,13 +84,13 @@ public class ImglibBenchmark {
 			size = 500;
 			numDimensions = 3;
 		}
-		final ImglibBenchmark bench = new ImglibBenchmark(size, numDimensions);
+		final ImglibBenchmark bench = new ImglibBenchmark(size, numDimensions, testListImg);
 		bench.testPerformance(iterations);
 		System.exit(0);
 	}
 
 	/** Creates objects and measures memory usage. */
-	public ImglibBenchmark(final int imageSize, final int numDimensions) {
+	public ImglibBenchmark(final int imageSize, final int numDimensions, final boolean testListImg) {
 		this.imageSize = imageSize;
 		this.numDimensions = numDimensions;
 		System.out.println();
@@ -104,6 +109,11 @@ public class ImglibBenchmark {
 		imgPlanar = createPlanarImage(rawData);
 		memUsage.add(getMemUsage());
 		imgImagePlus = createImagePlusImage(byteProc);
+		memUsage.add(getMemUsage());
+		if ( testListImg )
+			imgList = createListImage();
+		else
+			imgList = null;
 		memUsage.add(getMemUsage());
 
 		reportMemoryUsage(memUsage);
@@ -178,9 +188,9 @@ public class ImglibBenchmark {
 	private void testCheapPerformance(final int iterationCount) {
 		System.out.println();
 		System.out.println("-- TIME PERFORMANCE - CHEAP OPERATION --");
-		long[] min = new long[ 6 ];
-		long[] max = new long[ 6 ];
-		long[] avg = new long[ 6 ];
+		long[] min = new long[ 7 ];
+		long[] max = new long[ 7 ];
+		long[] avg = new long[ 7 ];
 
 		for (int i = 0; i < iterationCount; i++) {
 			System.gc();
@@ -200,6 +210,8 @@ public class ImglibBenchmark {
 			times.add(System.currentTimeMillis());
 			if ( imgImagePlus != null ) invertImagePlusImage(imgImagePlus);
 			times.add(System.currentTimeMillis());
+			if ( imgList != null ) invertListImage(imgList);
+			times.add(System.currentTimeMillis());
 
 			logTimePerformance(i, times, min, max, avg );
 		}
@@ -211,9 +223,9 @@ public class ImglibBenchmark {
 	private void testExpensivePerformance(final int iterationCount) {
 		System.out.println();
 		System.out.println("-- TIME PERFORMANCE - EXPENSIVE OPERATION --");
-		long[] min = new long[ 6 ];
-		long[] max = new long[ 6 ];
-		long[] avg = new long[ 6 ];
+		long[] min = new long[ 7 ];
+		long[] max = new long[ 7 ];
+		long[] avg = new long[ 7 ];
 		
 		for (int i = 0; i < iterationCount; i++) {
 			System.gc();
@@ -231,6 +243,8 @@ public class ImglibBenchmark {
 			if ( imgPlanar != null ) randomizePlanarImage(imgPlanar);
 			times.add(System.currentTimeMillis());
 			if ( imgImagePlus != null ) randomizeImagePlusImage(imgImagePlus);
+			times.add(System.currentTimeMillis());
+			if ( imgList != null ) randomizeListImage(imgList);
 			times.add(System.currentTimeMillis());
 
 			logTimePerformance(i, times, min, max, avg );
@@ -250,6 +264,7 @@ public class ImglibBenchmark {
 		System.out.println(METHOD_IMGLIB_CELL + " min: " + min[ 3 ] + " avg: " +  avg[ 3 ] + " max: " +  max[ 3 ] );
 		System.out.println(METHOD_IMGLIB_PLANAR + " min: " + min[ 4 ] + " avg: " +  avg[ 4 ] + " max: " +  max[ 4 ] );
 		System.out.println(METHOD_IMGLIB_IMAGEPLUS + " min: " + min[ 5 ] + " avg: " +  avg[ 5 ] + " max: " +  max[ 5 ] );		
+		System.out.println(METHOD_IMGLIB_LIST + " min: " + min[ 6 ] + " avg: " +  avg[ 6 ] + " max: " +  max[ 6 ] );		
 	}
 	private long getMemUsage() {
 		Runtime r = Runtime.getRuntime();
@@ -265,6 +280,7 @@ public class ImglibBenchmark {
 		final long imgLibCellMem      = computeDifference(memUsage);
 		final long imgLibPlanarMem    = computeDifference(memUsage);
 		final long imgLibImagePlusMem = computeDifference(memUsage);
+		final long imgLibListMem      = computeDifference(memUsage);
 		System.out.println();
 		System.out.println("-- MEMORY OVERHEAD --");
 		System.out.println(METHOD_RAW + ": " + rawMem + " bytes");
@@ -273,6 +289,7 @@ public class ImglibBenchmark {
 		System.out.println(METHOD_IMGLIB_CELL + ": " + imgLibCellMem + " bytes");
 		System.out.println(METHOD_IMGLIB_PLANAR + ": " + imgLibPlanarMem + " bytes");
 		System.out.println(METHOD_IMGLIB_IMAGEPLUS + ": " + imgLibImagePlusMem + " bytes");
+		System.out.println(METHOD_IMGLIB_LIST + ": " + imgLibListMem + " bytes");
 	}
 
 	private void logTimePerformance(final int iter, final List<Long> times, final long[] min, final long[] max, final long[] avg) {
@@ -282,6 +299,7 @@ public class ImglibBenchmark {
 		long imgLibCellTime      = computeDifference(times);
 		long imgLibPlanarTime    = computeDifference(times);
 		long imgLibImagePlusTime = computeDifference(times);
+		long imgLibListTime      = computeDifference(times);
 
 		if ( rawData == null )
 			rawTime = -1;
@@ -295,6 +313,8 @@ public class ImglibBenchmark {
 			imgLibPlanarTime = -1;
 		if ( imgImagePlus == null )
 			imgLibImagePlusTime = -1;
+		if ( imgList == null )
+			imgLibListTime = -1;
 			
 		final Map<String, Long> entry = results.get(iter);
 		entry.put(METHOD_RAW, rawTime);
@@ -303,6 +323,7 @@ public class ImglibBenchmark {
 		entry.put(METHOD_IMGLIB_CELL, imgLibCellTime);
 		entry.put(METHOD_IMGLIB_PLANAR, imgLibPlanarTime);
 		entry.put(METHOD_IMGLIB_IMAGEPLUS, imgLibImagePlusTime);
+		entry.put(METHOD_IMGLIB_LIST, imgLibListTime);
 
 		reportTime(METHOD_RAW, rawTime, rawTime, ipTime);
 		reportTime(METHOD_IMAGEJ, ipTime, rawTime, ipTime);
@@ -310,6 +331,7 @@ public class ImglibBenchmark {
 		reportTime(METHOD_IMGLIB_CELL, imgLibCellTime, rawTime, ipTime);
 		reportTime(METHOD_IMGLIB_PLANAR, imgLibPlanarTime, rawTime, ipTime);
 		reportTime(METHOD_IMGLIB_IMAGEPLUS, imgLibImagePlusTime, rawTime, ipTime);
+		reportTime(METHOD_IMGLIB_LIST, imgLibListTime, rawTime, ipTime);
 		
 		if ( iter == 0 )
 		{
@@ -319,6 +341,7 @@ public class ImglibBenchmark {
 			min[ 3 ] = max[ 3 ] = avg[ 3 ] = imgLibCellTime;
 			min[ 4 ] = max[ 4 ] = avg[ 4 ] = imgLibPlanarTime;
 			min[ 5 ] = max[ 5 ] = avg[ 5 ] = imgLibImagePlusTime;
+			min[ 6 ] = max[ 6 ] = avg[ 6 ] = imgLibListTime;
 		}
 		else
 		{
@@ -345,6 +368,10 @@ public class ImglibBenchmark {
 			min[ 5 ] = Math.min( min[ 5 ], imgLibImagePlusTime );
 			max[ 5 ] = Math.max( max[ 5 ], imgLibImagePlusTime );
 			avg[ 5 ] += imgLibImagePlusTime;
+			
+			min[ 6 ] = Math.min( min[ 6 ], imgLibListTime );
+			max[ 6 ] = Math.max( max[ 6 ], imgLibListTime );
+			avg[ 6 ] += imgLibListTime;
 		}
 	}
 
@@ -468,6 +495,17 @@ public class ImglibBenchmark {
 		return imagePlusContainer;		
 	}
 
+	private ListImg<UnsignedByteType> createListImage() {
+		if ( (long) imageSize * ( long ) imageSize > Integer.MAX_VALUE )
+			return null;
+		long[] dims = new long[ numDimensions ];
+		for ( int d = 0; d < numDimensions; ++d )
+			dims[d] = imageSize;
+		@SuppressWarnings( "unchecked" )
+		ListImg<UnsignedByteType> listContainer = ( ListImg<UnsignedByteType> ) createImage( dims, new ListImgFactory< UnsignedByteType >() );
+		return listContainer;
+	}
+
 	private Img< UnsignedByteType > createImage(final long[] dims, final ImgFactory< UnsignedByteType > cf )
 	{
 		final Img< UnsignedByteType > img = cf.create( dims, new UnsignedByteType() );
@@ -549,6 +587,17 @@ public class ImglibBenchmark {
 		}
 	}
 
+	/** Explicit list version. */
+	private void invertListImage(final ListImg<UnsignedByteType> img) {
+		final ListCursor<UnsignedByteType> c = img.cursor();
+		while ( c.hasNext() ) {
+			final UnsignedByteType t = c.next();
+			final int value = t.get();
+			final int result = 255 - value;
+			t.set(result);
+		}
+	}
+
 	// -- Randomization methods --
 
 	private void randomizeRaw(final byte[] data) {
@@ -613,6 +662,17 @@ public class ImglibBenchmark {
 	/** Explicit ImagePlus version. */
 	private void randomizeImagePlusImage(final ByteImagePlus<UnsignedByteType> img) {
 		final PlanarCursor<UnsignedByteType> c = img.cursor();
+		while ( c.hasNext() ) {
+			final UnsignedByteType t = c.next();
+			final int value = t.get();
+			final double result = expensiveOperation(value);
+			t.set((int) result);
+		}
+	}
+
+	/** Explicit list version. */
+	private void randomizeListImage(final ListImg<UnsignedByteType> img) {
+		final ListCursor<UnsignedByteType> c = img.cursor();
 		while ( c.hasNext() ) {
 			final UnsignedByteType t = c.next();
 			final int value = t.get();
