@@ -82,8 +82,8 @@ public class ImglibBenchmark {
 		}
 		else
 		{
-//			dimensions = new long[] {500, 500, 500};
-			dimensions = new long[] {100, 100, 100, 10, 10, 10};
+			dimensions = new long[] {500, 500, 500};
+			//dimensions = new long[] {100, 100, 100, 10, 10, 10};
 		}
 		final ImglibBenchmark bench = new ImglibBenchmark(dimensions, testListImg);
 		bench.testPerformance(iterations);
