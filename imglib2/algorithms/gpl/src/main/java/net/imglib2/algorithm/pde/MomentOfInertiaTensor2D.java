@@ -179,53 +179,29 @@ implements OutputAlgorithm<Img<FloatType>> {
 							y2 = y * y;
 							mass = neighborhood.get().getRealDouble();
 
-							Ixx += mass * y2;
-							Iyy += mass * x2;
+							Ixx += mass * x2;
+							Iyy += mass * y2;
 							Ixy -= mass * x * y;
 						}
 
-						// Matrix: [ Ixx Ixy ; Ixy Iyy ];
-
-						double mu_1 = 0.5 * (Ixx + Iyy + Math.sqrt( (Ixx-Iyy) * (Ixx-Iyy) + 4*Ixy*Ixy) );
-						double mu_2 = 0.5 * (Ixx + Iyy - Math.sqrt( (Ixx-Iyy) * (Ixx-Iyy) + 4*Ixy*Ixy) );
-
-
-						double cosalpha;
-						double sinalpha;
-
-						if (Iyy > Float.MIN_VALUE) {
-
-							cosalpha = 2 * Ixy;
-							sinalpha = Iyy - Ixx + Math.sqrt( (Ixx-Iyy)*(Ixx-Iyy) + 4*Ixy*Ixy );
-							double norm = Math.sqrt(cosalpha*cosalpha + sinalpha*sinalpha);
-
-							if (norm > Float.MIN_VALUE) {
-								cosalpha /= norm;
-								sinalpha /= norm;
-							} else {
-								cosalpha = 1;
-								sinalpha = 0;
-							}
-
-						} else {
-
-							cosalpha = 1;
-							sinalpha = 0;
-
-						}
-
+						double[] arr = PdeUtil.realSymetricMatrix2x2(Ixx, Iyy, Ixy);
+						double mu_1 = arr[0];
+						double mu_2 = arr[1];
+						double cosalpha = arr[2];
+						double sinalpha = arr[3];
+						
 						double lambda_1, lambda_2; 
 						if ( mu_1 == mu_2) {
 							lambda_1 = epsilon_1;
 							lambda_2 = epsilon_1;
 						} else {
-							lambda_1 = epsilon_2;
-							lambda_2 = epsilon_1;
+							lambda_1 = epsilon_1;
+							lambda_2 = epsilon_2;
 						}
 
 						// Diffusion tensor [ a b ; b c ]
 						double a = lambda_1 * cosalpha * cosalpha + lambda_2 * sinalpha * sinalpha; 
-						double b = (lambda_1 - lambda_2) * cosalpha * sinalpha; 
+						double b = - (lambda_1 - lambda_2) * cosalpha * sinalpha; 
 						double c = lambda_1 * sinalpha * sinalpha + lambda_2 * cosalpha * cosalpha; 
 
 						// Store

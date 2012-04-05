@@ -47,9 +47,9 @@ public class AnisotropicDiffusionExample {
 
 		// Open file in imglib2
 		//		File file = new File( "E:/Users/JeanYves/Desktop/Data/Y.tif");
-//		File file = new File( "/Users/tinevez/Desktop/Data/sYn.tif");
-		File file = new File( "/Users/tinevez/Desktop/Data/StarryNight.tif");
-		//		File file = new File( "/Users/tinevez/Desktop/Data/cross2.tif");
+		File file = new File( "/Users/tinevez/Desktop/Data/sYn.tif");
+//		File file = new File( "/Users/tinevez/Desktop/Data/StarryNight.tif");
+//		File file = new File( "/Users/tinevez/Desktop/Data/cross2.tif");
 
 		ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
 		
@@ -78,9 +78,9 @@ public class AnisotropicDiffusionExample {
 
 		for (int i = 0; i < 20; i++) {
 			System.out.println("Iteration "+i);
-			tensor.process();
-			diffusionTensor = tensor.getResult();
-			algo.setDiffusionTensor(diffusionTensor);
+//			tensor.process();
+//			diffusionTensor = tensor.getResult();
+//			algo.setDiffusionTensor(diffusionTensor);
 			
 			algo.process();
 			imp.getProcessor().setPixels(ImageJFunctions.wrap(image, "result").getProcessor().getPixelsCopy());

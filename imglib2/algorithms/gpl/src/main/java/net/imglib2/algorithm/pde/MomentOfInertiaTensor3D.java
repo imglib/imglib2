@@ -32,7 +32,8 @@ import net.imglib2.view.Views;
  * idea outlined in the following paper:
  * <p>
  * <tt>  <i>Nonlinear anisotropic diffusion filtering of three-dimensional image data from two-photon microscopy</i>
- * Philip. J. Broser, R. Schulte, S. Lang, A. Roth Fritjof, Helmchen, J. Waters, Bert Sakmann, and G. Wittum, <b>J. Biomed. Opt. 9, 1253 (2004)</b>, 
+ * Philip. J. Broser, R. Schulte, S. Lang, A. Roth Fritjof, Helmchen, J. Waters, Bert Sakmann, and G. Wittum, 
+ * <b>J. Biomed. Opt. 9, 1253 (2004)</b>, 
  * DOI:10.1117/1.1806832 </tt>
  * <p>
  * This class limits itself to build a 3D tensor. The source image needs not to be 3D, but only a 3D neighborhood
@@ -198,23 +199,41 @@ implements OutputAlgorithm<Img<FloatType>> {
 							z2 = z * z;
 							mass = neighborhood.get().getRealDouble();
 
-							Ixx += mass * y2;
-							Iyy += mass * x2;
+							Ixx += mass * x2;
+							Iyy += mass * y2;
 							Izz += mass * z2;
 							Ixy -= mass * x * y;
 							Ixz -= mass * x * z;
 							Iyz -= mass * y * z;
 						}
 
-						if (Ixx <= 2 * Float.MIN_VALUE || Iyy <= 2 * Float.MIN_VALUE) {
-							
+						// Deal with degenerate cases, cheaper and more robust then general diagonalization
+						if (Ixx <= 2 * Float.MIN_VALUE && Iyy <= 2 * Float.MIN_VALUE) {
+
 							A = 0;
 							B = 0;
 							C = 1;
 							D = 0;
 							E = 0;
 							F = 0;
-							
+
+						} else if (Iyy <= 2 * Float.MIN_VALUE && Izz <= 2 * Float.MIN_VALUE) { 
+
+							A = 1;
+							B = 0;
+							C = 0;
+							D = 0;
+							E = 0;
+							F = 0;
+
+						} else if  (Izz <= 2 * Float.MIN_VALUE && Ixx <= 2 * Float.MIN_VALUE) {
+
+							A = 0;
+							B = 1;
+							C = 0;
+							D = 0;
+							E = 0;
+							F = 0;
 
 						} else {
 
@@ -248,9 +267,9 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 								Vmatrix = diagonalized.getV();
 								Ematrix = diagonalized.getD();
-								Ematrix.set(0, 0, epsilon_1);
-								Ematrix.set(1, 1, epsilon_2);
-								Ematrix.set(2, 2, epsilon_2);
+								Ematrix.set(0, 0, epsilon_2);
+								Ematrix.set(1, 1, epsilon_1);
+								Ematrix.set(2, 2, epsilon_1);
 
 								Nmatrix = ( Vmatrix.times(Ematrix).times(Vmatrix.transpose()) );
 
@@ -262,7 +281,7 @@ implements OutputAlgorithm<Img<FloatType>> {
 								F = Nmatrix.get(2, 1);
 
 							}
-							
+
 						}
 
 						// Store
@@ -289,7 +308,6 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 		return true;
 	}
-
 
 	@Override
 	public Img<FloatType> getResult() {

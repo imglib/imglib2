@@ -42,10 +42,12 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.Views;
 
 
 public class AnisotropicDiffusion3DExample {
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void main(String[] args) {
 
 		Img<UnsignedByteType> image = createExampleImage(new UnsignedByteType());
@@ -59,7 +61,7 @@ public class AnisotropicDiffusion3DExample {
 		MomentOfInertiaTensor3D tensor = new MomentOfInertiaTensor3D(image, 5);
 //		long[] dimensions = new long[image.numDimensions()];
 //		image.dimensions(dimensions);
-//		IsotropicDiffusionTensor<T> tensor = new IsotropicDiffusionTensor<T>(dimensions , 1);
+//		IsotropicDiffusionTensor tensor = new IsotropicDiffusionTensor(dimensions , 1);
 
 		tensor.process();
 		Img<FloatType> diffusionTensor = tensor.getResult();
@@ -69,8 +71,8 @@ public class AnisotropicDiffusion3DExample {
 
 		// Instantiate diffusion solver
 
-//		StandardDiffusionScheme3D algo = new StandardDiffusionScheme3D(image, diffusionTensor);
-		NonNegativityDiffusionScheme3D algo = new NonNegativityDiffusionScheme3D(image, diffusionTensor);
+		StandardDiffusionScheme3D algo = new StandardDiffusionScheme3D(image, diffusionTensor);
+//		NonNegativityDiffusionScheme3D algo = new NonNegativityDiffusionScheme3D(image, diffusionTensor);
 
 		for (int i = 0; i < 10; i++) {
 			System.out.println("Iteration "+(i+1));
@@ -83,13 +85,14 @@ public class AnisotropicDiffusion3DExample {
 		}
 
 		ImageJFunctions.show(algo.getIncrement(), "Increment");
-//		ImageJFunctions.wrapFloat(diffusionTensor, "Diffusion tensor").show();
-//		for (int i = 0; i < 6; i++) {
-//			ImageJFunctions.show(Views.hyperSlice(diffusionTensor, 3, i));
-//		}
+		ImageJFunctions.wrapFloat(diffusionTensor, "Diffusion tensor").show();
+		for (int i = 0; i < 6; i++) {
+			ImageJFunctions.show(Views.hyperSlice(diffusionTensor, 3, i));
+		}
 		ImageJFunctions.show(copy, "Original image");
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static <T extends RealType<T> & NativeType< T >> Img openExampleImage(T type) {
 		File file = new File( "/Users/tinevez/Desktop/Data/StarryNight.tif");
 
