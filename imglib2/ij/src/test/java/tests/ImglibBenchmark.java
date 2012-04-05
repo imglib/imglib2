@@ -31,6 +31,7 @@ import net.imglib2.img.planar.PlanarCursor;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.util.Util;
 
 /**
  * Modified version of {@link PerformanceBenchmark} to generate
@@ -82,7 +83,8 @@ public class ImglibBenchmark {
 		}
 		else
 		{
-			dimensions = new long[] {500, 500, 500};
+			dimensions = new long[] {24,24,24,24,24,24};
+			//dimensions = new long[] {32, 32, 32, 32, 32, 32 };
 			//dimensions = new long[] {100, 100, 100, 10, 10, 10};
 		}
 		final ImglibBenchmark bench = new ImglibBenchmark(dimensions, testListImg);
@@ -197,6 +199,7 @@ public class ImglibBenchmark {
 		final long[] min = new long[ 7 ];
 		final long[] max = new long[ 7 ];
 		final long[] avg = new long[ 7 ];
+		final long[][] median = new long[ 7 ][ iterationCount ];
 
 		for (int i = 0; i < iterationCount; i++) {
 			System.gc();
@@ -219,10 +222,10 @@ public class ImglibBenchmark {
 			if ( imgList != null ) invertListImage(imgList);
 			times.add(System.currentTimeMillis());
 
-			logTimePerformance(i, times, min, max, avg );
+			logTimePerformance(i, times, min, max, avg, median );
 		}
 
-		reportMinAvgMax( min, max, avg, iterationCount );
+		reportMinAvgMax( min, max, avg, median, iterationCount );
 	}
 
 	/** Measures performance of a computationally more expensive operation. */
@@ -232,6 +235,7 @@ public class ImglibBenchmark {
 		final long[] min = new long[ 7 ];
 		final long[] max = new long[ 7 ];
 		final long[] avg = new long[ 7 ];
+		final long[][] median = new long[ 7 ][ iterationCount ];
 
 		for (int i = 0; i < iterationCount; i++) {
 			System.gc();
@@ -253,24 +257,26 @@ public class ImglibBenchmark {
 			if ( imgList != null ) randomizeListImage(imgList);
 			times.add(System.currentTimeMillis());
 
-			logTimePerformance(i, times, min, max, avg );
+			logTimePerformance(i, times, min, max, avg, median );
 		}
 
-		reportMinAvgMax( min, max, avg, iterationCount );
+		reportMinAvgMax( min, max, avg, median, iterationCount );
 	}
 
-	private void reportMinAvgMax(final long[] min, final long[] max, final long[] avg, final int iterationCount) {
+	private void reportMinAvgMax(final long[] min, final long[] max, final long[] avg, final long[][] median, final int iterationCount) {
 		for ( int i = 0; i < avg.length; ++i )
 			avg[ i ] /= iterationCount;
+		
+		
 
 		System.out.println( "-- SUMMARY --" );
-		System.out.println(METHOD_RAW + " min: " + min[ 0 ] + " avg: " +  avg[ 0 ] + " max: " +  max[ 0 ] );
-		System.out.println(METHOD_IMAGEJ + " min: " + min[ 1 ] + " avg: " +  avg[ 1 ] + " max: " +  max[ 1 ] );
-		System.out.println(METHOD_IMGLIB_ARRAY + " min: " + min[ 2 ] + " avg: " +  avg[ 2 ] + " max: " +  max[ 2 ] );
-		System.out.println(METHOD_IMGLIB_CELL + " min: " + min[ 3 ] + " avg: " +  avg[ 3 ] + " max: " +  max[ 3 ] );
-		System.out.println(METHOD_IMGLIB_PLANAR + " min: " + min[ 4 ] + " avg: " +  avg[ 4 ] + " max: " +  max[ 4 ] );
-		System.out.println(METHOD_IMGLIB_IMAGEPLUS + " min: " + min[ 5 ] + " avg: " +  avg[ 5 ] + " max: " +  max[ 5 ] );
-		System.out.println(METHOD_IMGLIB_LIST + " min: " + min[ 6 ] + " avg: " +  avg[ 6 ] + " max: " +  max[ 6 ] );
+		System.out.println(METHOD_RAW + " min: " + min[ 0 ] + " avg: " +  avg[ 0 ] + " max: " +  max[ 0 ] + " median: " + Util.computeMedian( median[ 0 ] ) );
+		System.out.println(METHOD_IMAGEJ + " min: " + min[ 1 ] + " avg: " +  avg[ 1 ] + " max: " +  max[ 1 ] + " median: " + Util.computeMedian( median[ 1 ] ) );
+		System.out.println(METHOD_IMGLIB_ARRAY + " min: " + min[ 2 ] + " avg: " +  avg[ 2 ] + " max: " +  max[ 2 ] + " median: " + Util.computeMedian( median[ 2 ] ) );
+		System.out.println(METHOD_IMGLIB_CELL + " min: " + min[ 3 ] + " avg: " +  avg[ 3 ] + " max: " +  max[ 3 ] + " median: " + Util.computeMedian( median[ 3 ] ) );
+		System.out.println(METHOD_IMGLIB_PLANAR + " min: " + min[ 4 ] + " avg: " +  avg[ 4 ] + " max: " +  max[ 4 ] + " median: " + Util.computeMedian( median[ 4 ] ) );
+		System.out.println(METHOD_IMGLIB_IMAGEPLUS + " min: " + min[ 5 ] + " avg: " +  avg[ 5 ] + " max: " +  max[ 5 ] + " median: " + Util.computeMedian( median[ 5 ] ) );
+		System.out.println(METHOD_IMGLIB_LIST + " min: " + min[ 6 ] + " avg: " +  avg[ 6 ] + " max: " +  max[ 6 ] + " median: " + Util.computeMedian( median[ 6 ] ) );
 	}
 	private long getMemUsage() {
 		final Runtime r = Runtime.getRuntime();
@@ -298,7 +304,7 @@ public class ImglibBenchmark {
 		System.out.println(METHOD_IMGLIB_LIST + ": " + imgLibListMem + " bytes");
 	}
 
-	private void logTimePerformance(final int iter, final List<Long> times, final long[] min, final long[] max, final long[] avg) {
+	private void logTimePerformance(final int iter, final List<Long> times, final long[] min, final long[] max, final long[] avg, final long[][] median) {
 		long rawTime             = computeDifference(times);
 		long ipTime              = computeDifference(times);
 		long imgLibArrayTime     = computeDifference(times);
@@ -341,42 +347,49 @@ public class ImglibBenchmark {
 
 		if ( iter == 0 )
 		{
-			min[ 0 ] = max[ 0 ] = avg[ 0 ] = rawTime;
-			min[ 1 ] = max[ 1 ] = avg[ 1 ] = ipTime;
-			min[ 2 ] = max[ 2 ] = avg[ 2 ] = imgLibArrayTime;
-			min[ 3 ] = max[ 3 ] = avg[ 3 ] = imgLibCellTime;
-			min[ 4 ] = max[ 4 ] = avg[ 4 ] = imgLibPlanarTime;
-			min[ 5 ] = max[ 5 ] = avg[ 5 ] = imgLibImagePlusTime;
-			min[ 6 ] = max[ 6 ] = avg[ 6 ] = imgLibListTime;
+			min[ 0 ] = max[ 0 ] = avg[ 0 ] = median[ 0 ][ 0 ] = rawTime;
+			min[ 1 ] = max[ 1 ] = avg[ 1 ] = median[ 1 ][ 0 ] = ipTime;
+			min[ 2 ] = max[ 2 ] = avg[ 2 ] = median[ 2 ][ 0 ] = imgLibArrayTime;
+			min[ 3 ] = max[ 3 ] = avg[ 3 ] = median[ 3 ][ 0 ] = imgLibCellTime;
+			min[ 4 ] = max[ 4 ] = avg[ 4 ] = median[ 4 ][ 0 ] = imgLibPlanarTime;
+			min[ 5 ] = max[ 5 ] = avg[ 5 ] = median[ 5 ][ 0 ] = imgLibImagePlusTime;
+			min[ 6 ] = max[ 6 ] = avg[ 6 ] = median[ 6 ][ 0 ] = imgLibListTime;
 		}
 		else
 		{
 			min[ 0 ] = Math.min( min[ 0 ], rawTime );
 			max[ 0 ] = Math.max( max[ 0 ], rawTime );
+			median[ 0 ][ iter ] = rawTime;
 			avg[ 0 ] += rawTime;
 
 			min[ 1 ] = Math.min( min[ 1 ], ipTime );
 			max[ 1 ] = Math.max( max[ 1 ], ipTime );
+			median[ 1 ][ iter ] = ipTime;
 			avg[ 1 ] += ipTime;
 
 			min[ 2 ] = Math.min( min[ 2 ], imgLibArrayTime );
 			max[ 2 ] = Math.max( max[ 2 ], imgLibArrayTime );
+			median[ 2 ][ iter ] = imgLibArrayTime;
 			avg[ 2 ] += imgLibArrayTime;
 
 			min[ 3 ] = Math.min( min[ 3 ], imgLibCellTime );
 			max[ 3 ] = Math.max( max[ 3 ], imgLibCellTime );
+			median[ 3 ][ iter ] = imgLibCellTime;
 			avg[ 3 ] += imgLibCellTime;
 
 			min[ 4 ] = Math.min( min[ 4 ], imgLibPlanarTime );
 			max[ 4 ] = Math.max( max[ 4 ], imgLibPlanarTime );
+			median[ 4 ][ iter ] = imgLibPlanarTime;
 			avg[ 4 ] += imgLibPlanarTime;
 
 			min[ 5 ] = Math.min( min[ 5 ], imgLibImagePlusTime );
 			max[ 5 ] = Math.max( max[ 5 ], imgLibImagePlusTime );
+			median[ 5 ][ iter ] = imgLibImagePlusTime;
 			avg[ 5 ] += imgLibImagePlusTime;
 
 			min[ 6 ] = Math.min( min[ 6 ], imgLibListTime );
 			max[ 6 ] = Math.max( max[ 6 ], imgLibListTime );
+			median[ 6 ][ iter ] = imgLibListTime;
 			avg[ 6 ] += imgLibListTime;
 		}
 	}
