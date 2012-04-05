@@ -78,8 +78,10 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 	 * @param randomAccessible - the {@link RandomAccessible} to work on
 	 * @param alpha - the radius of values to incorporate (typically 2 or 3)
 	 * @param clip - clips the value to range of the {@link RealType}, i.e. tests if the interpolated value is out of range
+	 * @param min - range for clipping (ignored if min==max)
+	 * @param max - range for clipping (ignored if min==max)
 	 */
-	public LanczosInterpolator( final RandomAccessible< T > randomAccessible, final int alpha, final boolean clip )
+	public LanczosInterpolator( final RandomAccessible< T > randomAccessible, final int alpha, final boolean clip, final double min, final double max )
 	{
 		super( randomAccessible.randomAccess(), createOffset( alpha, randomAccessible.numDimensions() ) );
 		
@@ -98,8 +100,17 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 		this.clip = clip;
 		
 		this.interpolatedValue = target.get().createVariable();
-		this.minValue = interpolatedValue.getMinValue();
-		this.maxValue = interpolatedValue.getMaxValue();
+		
+		if ( min == max )
+		{
+			this.minValue = interpolatedValue.getMinValue();
+			this.maxValue = interpolatedValue.getMaxValue();
+		}
+		else
+		{
+			this.minValue = min;
+			this.maxValue = max;
+		}
 	}
 
 	public LanczosInterpolator( final LanczosInterpolator< T > interpolator )
