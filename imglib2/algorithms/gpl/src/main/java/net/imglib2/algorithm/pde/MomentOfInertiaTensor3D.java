@@ -2,9 +2,6 @@ package net.imglib2.algorithm.pde;
 
 import java.util.Vector;
 
-import edu.mines.jtk.la.DMatrix;
-import edu.mines.jtk.la.DMatrixEvd;
-
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -128,10 +125,9 @@ implements OutputAlgorithm<Img<FloatType>> {
 					DomainCursor<T> neighborhood = new DomainCursor<T>(ra.randomAccess(), domain );
 
 					// Holder for eigenvalue utility;s
-					final DMatrix Smatrix = new DMatrix(3, 3); // structure matrix
-					DMatrix Vmatrix, Ematrix, Nmatrix;
-					DMatrixEvd diagonalized;
-					double[] eigenvalues;
+					final double[] L = new double[3];
+					final double[][] V = new double[3][3];
+					final double[] matrix = new double[6];
 
 					double A, B, C, D, E, F; // tensor components: [ A D E ; D B F ; D F C ]
 
@@ -207,6 +203,7 @@ implements OutputAlgorithm<Img<FloatType>> {
 							Iyz -= mass * y * z;
 						}
 
+						
 						// Deal with degenerate cases, cheaper and more robust then general diagonalization
 						if (Ixx <= 2 * Float.MIN_VALUE && Iyy <= 2 * Float.MIN_VALUE) {
 
@@ -237,50 +234,25 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 						} else {
 
-							// Compute eigenvectors
+							matrix[0] = Ixx;
+							matrix[1] = Iyy;
+							matrix[2] = Izz;
+							matrix[3] = Ixy;
+							matrix[4] = Ixz;
+							matrix[5] = Iyz;
+									
+							PdeUtil.dsyevh3(matrix, V, L);
+							
+							L[0] = epsilon_1;
+							L[1] = epsilon_2;
+							L[2] = epsilon_2;
 
-							Smatrix.set(0, 0, Ixx);
-							Smatrix.set(0, 1, Ixy);
-							Smatrix.set(0, 2, Ixz);
-							Smatrix.set(1, 0, Ixy);
-							Smatrix.set(1, 1, Iyy);
-							Smatrix.set(1, 2, Iyz);
-							Smatrix.set(2, 0, Ixz);
-							Smatrix.set(2, 1, Iyz);
-							Smatrix.set(2, 2, Izz);
-
-							diagonalized = new DMatrixEvd(Smatrix);
-							eigenvalues = diagonalized.getRealEigenvalues();
-
-							if (eigenvalues[0] == 0 && eigenvalues[1] == 0 && eigenvalues[2] == 0) {
-
-								// Singular -> put isotropic diffusion
-								A = 1;
-								B = 1;
-								C = 1;
-								D = 0;
-								E = 0;
-								F = 0;
-
-							} else {
-
-
-								Vmatrix = diagonalized.getV();
-								Ematrix = diagonalized.getD();
-								Ematrix.set(0, 0, epsilon_2);
-								Ematrix.set(1, 1, epsilon_1);
-								Ematrix.set(2, 2, epsilon_1);
-
-								Nmatrix = ( Vmatrix.times(Ematrix).times(Vmatrix.transpose()) );
-
-								A = Nmatrix.get(0, 0);
-								B = Nmatrix.get(1, 1);
-								C = Nmatrix.get(2, 2);
-								D = Nmatrix.get(1, 0);
-								E = Nmatrix.get(2, 0);
-								F = Nmatrix.get(2, 1);
-
-							}
+							A = L[0] * V[0][0] * V[0][0] + L[1] * V[1][0] * V[1][0] + L[2] * V[2][0] * V[2][0]; 
+							B = L[0] * V[0][1] * V[0][1] + L[1] * V[1][1] * V[1][1] + L[2] * V[2][1] * V[2][1]; 
+							C = L[0] * V[0][2] * V[0][2] + L[1] * V[1][2] * V[1][2] + L[2] * V[2][2] * V[2][2]; 
+							D = L[0] * V[0][0] * V[0][1] + L[1] * V[1][0] * V[1][1] + L[2] * V[2][0] * V[2][1]; 
+							E = L[0] * V[0][0] * V[0][2] + L[1] * V[1][0] * V[1][2] + L[2] * V[2][0] * V[2][2]; 
+							F = L[0] * V[0][1] * V[0][2] + L[1] * V[1][1] * V[1][2] + L[2] * V[2][1] * V[2][2]; 
 
 						}
 
