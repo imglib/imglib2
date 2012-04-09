@@ -38,7 +38,6 @@
 package net.imglib2.ops.condition;
 
 import net.imglib2.ops.Condition;
-import net.imglib2.ops.Neighborhood;
 
 
 /**
@@ -54,8 +53,8 @@ public class NotCondition<INDEX> implements Condition<INDEX> {
 	}
 	
 	@Override
-	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
-		return ! cond1.isTrue(neigh, point);
+	public boolean isTrue(INDEX point) {
+		return ! cond1.isTrue(point);
 	}
 	
 	@Override
