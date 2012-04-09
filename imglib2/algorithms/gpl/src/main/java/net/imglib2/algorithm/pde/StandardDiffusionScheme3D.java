@@ -1,76 +1,119 @@
 package net.imglib2.algorithm.pde;
 
-public class StandardDiffusionScheme3D {
+import net.imglib2.img.Img;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.FloatType;
 
-	
-	
-	/**
-	 * Real, symmetric diffusion tensor for 3D structures:
-	 * <pre>
-	 * Dxx Dxy Dxz		a d e
-	 * Dyx Dyy Dyz	=	d b f
-	 * Dzx Dzy Dzz		e f c
-	 * </pre>
-	 * @param U
-	 * @param D
-	 * @return
+public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDiffusionScheme3D<T> {
+
+
+	private static final float DEFAULT_DT = 0.15f;
+
+	/** The time-step for the explicit evolution of the diffusion equation. 	 */
+	private float dt;
+
+	/*
+	 * CONSTRUCTORS
 	 */
-	protected final float diffusionScheme(float[] U, float[][] D) {
-		
-//		final float a = 
-		
-//		A2 = 0.5*(-f(:,:,nz)-f(:,py,:));
-//		A4 = 0.5*( e(:,:,nz)+e(nx,:,:));
-//		A5 = ( c(:,:,nz)+c);
-//		A6 = 0.5*(-e(:,:,nz)-e(px,:,:));
-//		A8 = 0.5*( f(:,:,nz)+f(:,ny,:));
-//
-//		B1 = 0.5*(-d(nx,:,:) -d(:,py,:));
-//		B2 = (b(:,py,:)+b);
-//		B3 = 0.5*(d(px,:,:)+ d(:,py,:));
-//		B4 = (a(nx,:,:)+a);
-//		B5 = - (a(nx,:,:) + 2*a + a(px,:,:)) ...
-//		      -(b(:,ny,:) + 2*b + b(:,py,:)) ...
-//		      -(c(:,:,nz) + 2*c + c(:,:,pz));
-//		B6 = (a(px,:,:)+a);
-//		B7 = 0.5*(d(nx,:,:)+d(:,ny,:));
-//		B8 = (b(:,ny,:)+b);
-//		B9 = 0.5*(-d(px,:,:)-d(:,ny,:));
-//
-//		C2 = 0.5*(f(:,:,pz) + f(:,py,:));
-//		C4 = 0.5*(-e(:,:,pz)-e(nx,:,:));
-//		C5 = (c(:,:,pz)+c);
-//		C6 = 0.5*(e(:,:,pz)+e(px,:,:));
-//		C8 = 0.5*(-f(:,:,pz)-f(:,ny,:));
-//
-//		% Perform the diffusion
-//		u=u+ 0.5*dt.*(  ...
-//		        A2.*(u(: ,py,nz )-u) + ...
-//		        A4.*(u(nx ,: ,nz)-u) + ...
-//		        A5.*(u(: ,: ,nz)-u)  + ... 
-//		        A6.*(u(px,: ,nz)-u)  + ... 
-//		        A8.*(u(: ,ny,nz)-u)  + ...
-//		        B1.*(u(nx,py,: )-u)  + ...
-//		        B2.*(u(: ,py,: )-u)  + ...
-//		        B3.*(u(px,py,: )-u)  + ...
-//		        B4.*(u(nx,: ,: )-u)  + ...
-//		        B5.*(u(:,: ,: )-u)  + ...
-//		        B6.*(u(px,: ,: )-u)  + ...
-//		        B7.*(u(nx,ny,: )-u)  + ...
-//		        B8.*(u(: ,ny,: )-u)  + ...
-//		        B9.*(u(px,ny,: )-u)  + ...
-//		        C2.*(u(: ,py,pz)-u)  + ...
-//		        C4.*(u(nx,: ,pz)-u)  + ...
-//		        C5.*(u(: ,: ,pz)-u)  + ...
-//		        C6.*(u(px,: ,pz)-u)  + ...
-//		        C8.*(u(: ,ny,pz)-u));
-//		
-		
-		
-		
-		
-		return 0f;
+
+	public StandardDiffusionScheme3D(Img<T> input, Img<FloatType> D) {
+		this(input, D, DEFAULT_DT);
 	}
 
-	
+	public StandardDiffusionScheme3D(Img<T> input, Img<FloatType> D, float dt) {
+		super(input, D);
+		this.dt = dt;
+	}
+
+	/*
+	 * METHOD
+	 */
+
+	protected final float diffusionScheme(float[] U, float[][] D) {
+
+		final float Uccc = U[0];
+
+		final float Uccm = U[1];
+		final float Ucmm = U[2];
+		final float Umcm = U[3];
+		final float Ucpm = U[4];
+		final float Upcm = U[5];
+
+		final float Upmc = U[6];
+		final float Ucmc = U[7];
+		final float Ummc = U[8];
+		final float Umcc = U[9];
+		final float Umpc = U[10];
+		final float Ucpc = U[11];
+		final float Uppc = U[12];
+		final float Upcc = U[13];
+
+		final float Upcp = U[14];
+		final float Ucmp = U[15];
+		final float Umcp = U[16];
+		final float Ucpp = U[17];
+		final float Uccp = U[18];
+
+		final float Accc = D[0][0];
+		final float Amcc = D[0][1];
+		final float Apcc = D[0][2];
+
+		final float Bccc = D[1][0];
+		final float Bcmc = D[1][1];
+		final float Bcpc = D[1][2];
+
+		final float Cccc = D[2][0];
+		final float Cccm = D[2][1];
+		final float Cccp = D[2][2];
+
+		final float Dcmc = D[3][2];
+		final float Dmcc = D[3][4];
+		final float Dcpc = D[3][6];
+		final float Dpcc = D[3][8];
+
+		final float Eccm = D[4][1];
+		final float Emcc = D[4][4];
+		final float Epcc = D[4][5];
+		final float Eccp = D[4][8];
+
+		final float Fccm = D[5][1];
+		final float Fcmc = D[5][4];
+		final float Fcpc = D[5][5];
+		final float Fccp = D[5][8];
+
+
+		final float Icpm = 0.5f * ( - Fccm - Fcpc ) * ( Ucpm - Uccc );
+		final float Imcm = 0.5f * (   Eccm + Emcc ) * ( Umcm - Uccc );
+		final float Iccm = ( Cccm + Cccc ) * ( Uccm - Uccc );
+		final float Ipcm = 0.5f * ( - Eccm - Epcc ) * ( Upcm - Uccc );
+		final float Icmm = 0.5f * (   Fccm + Fcmc ) * ( Ucmm - Uccc );
+
+		final float Impc = 0.5f * ( - Dmcc - Dcpc ) * ( Umpc - Uccc );
+		final float Icpc = ( Bcpc + Bccc ) * ( Ucpc - Uccc );
+		final float Ippc = 0.5f * (   Dpcc + Dcpc ) * ( Uppc - Uccc );
+		final float Imcc = ( Amcc + Accc ) * ( Umcc - Uccc );
+
+		final float Ipcc = ( Apcc + Accc ) * ( Upcc - Uccc );
+		final float Immc = 0.5f * ( Dmcc + Dcmc ) * ( Ummc - Uccc );
+		final float Icmc = ( Bcmc + Bccc ) * ( Ucmc - Uccc );
+		final float Ipmc = 0.5f * ( - Dpcc - Dcmc ) * ( Upmc - Uccc );
+
+		final float Icpp = 0.5f * (   Fccp + Fcpc ) * ( Ucpp - Uccc );
+		final float Imcp = 0.5f * ( - Eccp - Emcc ) * ( Umcp - Uccc );
+		final float Iccp = ( Cccp + Cccc ) * ( Uccp - Uccc );
+		final float Ipcp = 0.5f * (   Eccp + Epcc ) * ( Upcp - Uccc );
+		final float Icmp = 0.5f * ( - Fccp - Fcmc ) * ( Ucmp - Uccc );
+
+
+		return 0.5f * dt * ( 
+				Icpm + Imcm + Iccm + Ipcm + Icmm
+				+ Impc + Icpc + Ippc + Imcc
+				+ Ipcc + Immc + Icmc + Ipmc 
+				+ Icpp + Imcp + Iccp + Ipcp + Icmp
+				);
+	}
+
+
 }
+
+

@@ -34,16 +34,42 @@ public class StandardDiffusionScheme2D<T extends RealType<T>> extends ExplicitDi
 
 	@Override
 	protected final float diffusionScheme(float[] U, float[][] D) {
-		// Compute increment, following the stencil notation of Weickert and Scharr.
-		float Icp = (U[5]-U[0]) * ( D[2][2] + D[2][0] ) / 2; // A2
-		float Imc = (U[7]-U[0]) * ( D[0][2] + D[0][0] ) / 2; // A4
-		float Ipc = (U[3]-U[0]) * ( D[0][1] + D[0][0] ) / 2; // A6
-		float Icm = (U[1]-U[0]) * ( D[2][1] + D[2][0] ) / 2; // A8
+		
+		final float Ucc = U[0];
 
-		float Imp =  (U[6]-U[0]) * ( D[1][7] - D[1][5] ) / 4; // A1
-		float Ipp =  (U[4]-U[0]) * ( D[1][3] - D[1][5] ) / 4; // A3
-		float Imm =  (U[8]-U[0]) * ( D[1][7] - D[1][1] ) / 4; // A7
-		float Ipm =  (U[2]-U[0]) * ( D[1][3] - D[1][1] ) / 4; // A9
+		final float Ucm = U[1];
+		final float Upm = U[2];
+		final float Upc = U[3];
+		final float Upp = U[4];
+		final float Ucp = U[5];
+
+		final float Ump = U[6];
+		final float Umc = U[7];
+		final float Umm = U[8];
+		
+		final float Acc = D[0][0];
+		final float Apc = D[0][1];
+		final float Amc = D[0][2];
+
+		final float Bcm = D[1][1];
+		final float Bpc = D[1][3];
+		final float Bcp = D[1][5];
+		final float Bmc = D[1][7];
+
+		final float Ccc = D[2][0];
+		final float Ccm = D[2][1];
+		final float Ccp = D[2][2];
+
+		// Compute increment, following the stencil notation of Weickert and Scharr.
+		final float Icp = ( Ucp - Ucc ) * ( Ccp + Ccc ) / 2; // A2
+		final float Imc = ( Umc - Ucc ) * ( Amc + Acc ) / 2; // A4
+		final float Ipc = ( Upc - Ucc ) * ( Apc + Acc ) / 2; // A6
+		final float Icm = ( Ucm - Ucc ) * ( Ccm + Ccc ) / 2; // A8
+
+		final float Imp =  ( Ump - Ucc ) * ( Bmc - Bcp ) / 4; // A1
+		final float Ipp =  ( Upp - Ucc ) * ( Bpc - Bcp ) / 4; // A3
+		final float Imm =  ( Umm - Ucc ) * ( Bmc - Bcm ) / 4; // A7
+		final float Ipm =  ( Upm - Ucc ) * ( Bpc - Bcm ) / 4; // A9
 
 		return dt * (Icm + Ipm + Ipc + Ipp + Icp + Imp + Imc + Imm );
 	}

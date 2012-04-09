@@ -22,7 +22,7 @@ implements OutputAlgorithm<Img<FloatType>> {
 	 * FIELDS
 	 */
 
-	private static final String BASE_ERROR_MESSAGE = "["+CoherenceEnhancingDiffusionTensor2D.class.getSimpleName()+"]";
+	private static final String BASE_ERROR_MESSAGE = "["+CoherenceEnhancingDiffusionTensor2D.class.getSimpleName()+"] ";
 	private final Img<T> input;
 	/** 
 	 * Stores the diffusions tensor. The tensor is stored as a multi-C image, one 
@@ -32,7 +32,7 @@ implements OutputAlgorithm<Img<FloatType>> {
 	 */
 	private Img<FloatType> D;
 
-	private double sigma = 1;
+	private double sigma = 2;
 	private double rho = 4;
 	/** Anisotropic diffusion ratio in Weickert equation. */
 	private double alpha = 1e-3;

@@ -42,24 +42,26 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.Views;
 
 
 public class AnisotropicDiffusion3DExample {
 
-	public static <T extends RealType<T> & NativeType< T >> void  main(String[] args) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static void main(String[] args) {
 
-		Img<T> image = createExampleImage();
-		Img<T> copy = image.copy();
+		Img<UnsignedByteType> image = createExampleImage(new UnsignedByteType());
+		Img<UnsignedByteType> copy = image.copy();
 
 		// Display it via ImgLib using ImageJ
 		ImageJ.main(args);
 
 		// Compute tensor
 
-		MomentOfInertiaTensor3D<T> tensor = new MomentOfInertiaTensor3D<T>(image, 5);
+		MomentOfInertiaTensor3D tensor = new MomentOfInertiaTensor3D(image, 5);
 //		long[] dimensions = new long[image.numDimensions()];
 //		image.dimensions(dimensions);
-//		IsotropicDiffusionTensor<T> tensor = new IsotropicDiffusionTensor<T>(dimensions , 1);
+//		IsotropicDiffusionTensor tensor = new IsotropicDiffusionTensor(dimensions , 1);
 
 		tensor.process();
 		Img<FloatType> diffusionTensor = tensor.getResult();
@@ -69,8 +71,8 @@ public class AnisotropicDiffusion3DExample {
 
 		// Instantiate diffusion solver
 
-//		StandardDiffusionScheme3D<T> algo = new StandardDiffusionScheme3D<T>(image, diffusionTensor);
-		NonNegativityDiffusionScheme3D<T> algo = new NonNegativityDiffusionScheme3D<T>(image, diffusionTensor);
+		StandardDiffusionScheme3D algo = new StandardDiffusionScheme3D(image, diffusionTensor);
+//		NonNegativityDiffusionScheme3D algo = new NonNegativityDiffusionScheme3D(image, diffusionTensor);
 
 		for (int i = 0; i < 10; i++) {
 			System.out.println("Iteration "+(i+1));
@@ -83,14 +85,15 @@ public class AnisotropicDiffusion3DExample {
 		}
 
 		ImageJFunctions.show(algo.getIncrement(), "Increment");
-//		ImageJFunctions.wrapFloat(diffusionTensor, "Diffusion tensor").show();
-//		for (int i = 0; i < 6; i++) {
-//			ImageJFunctions.show(Views.hyperSlice(diffusionTensor, 3, i));
-//		}
+		ImageJFunctions.wrapFloat(diffusionTensor, "Diffusion tensor").show();
+		for (int i = 0; i < 6; i++) {
+			ImageJFunctions.show(Views.hyperSlice(diffusionTensor, 3, i));
+		}
 		ImageJFunctions.show(copy, "Original image");
 	}
 
-	public static <T extends RealType<T> & NativeType< T >> Img<T> openExampleImage() {
+	@SuppressWarnings("rawtypes")
+	public static <T extends RealType<T> & NativeType< T >> Img openExampleImage(T type) {
 		File file = new File( "/Users/tinevez/Desktop/Data/StarryNight.tif");
 
 		ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
@@ -106,20 +109,19 @@ public class AnisotropicDiffusion3DExample {
 		return image;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static <T extends RealType<T> & NativeType< T >> Img<T> createExampleImage() {
+	public static <T extends RealType<T> & NativeType< T >> Img<T> createExampleImage(T type) {
 
 		int size = 128;
 		double[] phis = new double[] { 0 , 45 , 90,  135 ,  180 ,  225 ,270,  315  };
 		double[] thetas = new double[] { 0, 30, 60, 90, 120, 150, 180 };
 
-		final ImgFactory< UnsignedByteType > imgFactory = new ArrayImgFactory<UnsignedByteType>();
-		Img<UnsignedByteType> image = imgFactory.create(new int[] { size, size, size }, new UnsignedByteType());
+		final ImgFactory< T > imgFactory = new ArrayImgFactory<T>();
+		Img<T> image = imgFactory.create(new int[] { size, size, size }, type);
 
 		double phi, theta;
 		Point P1, P2;
 		long x1, x2, y1, y2, z1, z2;
-		BresenhamLine<UnsignedByteType> line = new BresenhamLine<UnsignedByteType>(image);
+		BresenhamLine<T> line = new BresenhamLine<T>(image);
 
 		for (int j = 0; j < thetas.length; j++) {
 
@@ -143,7 +145,7 @@ public class AnisotropicDiffusion3DExample {
 				line.reset(P1, P2);
 
 				while (line.hasNext()) {
-					line.next().set(255);
+					line.next().setReal(255);
 				}
 
 				x1 = Math.round (size/2 + (size/4 + 1) * Math.cos(phi) * Math.sin(theta));
@@ -160,14 +162,14 @@ public class AnisotropicDiffusion3DExample {
 				line.reset(P1, P2);
 
 				while (line.hasNext()) {
-					line.next().set(255);
+					line.next().setReal(255);
 				}
 
 			}
 
 		}
 
-		return (Img<T>) image;
+		return image;
 	}
 
 }
