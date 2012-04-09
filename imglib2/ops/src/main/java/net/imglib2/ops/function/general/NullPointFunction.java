@@ -44,10 +44,10 @@ import net.imglib2.ops.Function;
  * 
  * @author Barry DeZonia
  */
-public class NullPointFunction<INDEX, T> implements Function<INDEX,T> {
+public class NullPointFunction<INPUT, T> implements Function<INPUT,T> {
 
 	@Override
-	public void compute(INDEX point, T output) {
+	public void compute(INPUT point, T output) {
 		// do nothing
 		// TODO : Could set to NaN?
 	}
@@ -64,7 +64,7 @@ public class NullPointFunction<INDEX, T> implements Function<INDEX,T> {
 	}
 
 	@Override
-	public NullPointFunction<INDEX,T> copy() {
-		return new NullPointFunction<INDEX,T>();
+	public NullPointFunction<INPUT,T> copy() {
+		return new NullPointFunction<INPUT,T>();
 	}
 }

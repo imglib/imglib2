@@ -45,25 +45,25 @@ import net.imglib2.type.numeric.ComplexType;
  * 
  * @author Barry DeZonia
  */
-public class ConstantComplexFunction<INDEX, T extends ComplexType<T>> implements Function<INDEX,T> {
-	private final T complex;
+public class ConstantComplexFunction<INPUT, C extends ComplexType<C>> implements Function<INPUT,C> {
+	private final C complex;
 
-	public ConstantComplexFunction(T c) {
+	public ConstantComplexFunction(C c) {
 		complex = c;
 	}
 	
 	@Override
-	public void compute(INDEX point, T c) {
+	public void compute(INPUT input, C c) {
 		c.set(complex);
 	}
 	
 	@Override
-	public ConstantComplexFunction<INDEX,T> copy() {
-		return new ConstantComplexFunction<INDEX,T>(complex);
+	public ConstantComplexFunction<INPUT,C> copy() {
+		return new ConstantComplexFunction<INPUT,C>(complex);
 	}
 
 	@Override
-	public T createOutput() {
+	public C createOutput() {
 		return complex.createVariable();
 	}
 }

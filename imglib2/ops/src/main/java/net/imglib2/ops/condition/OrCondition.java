@@ -44,23 +44,23 @@ import net.imglib2.ops.Condition;
  * 
  * @author Barry DeZonia
  */
-public class OrCondition<INDEX> implements Condition<INDEX> {
+public class OrCondition<T> implements Condition<T> {
 
-	private final Condition<INDEX> cond1;
-	private final Condition<INDEX> cond2;
+	private final Condition<T> cond1;
+	private final Condition<T> cond2;
 
-	public OrCondition(Condition<INDEX> cond1, Condition<INDEX> cond2) {
+	public OrCondition(Condition<T> cond1, Condition<T> cond2) {
 		this.cond1 = cond1;
 		this.cond2 = cond2;
 	}
 	
 	@Override
-	public boolean isTrue(INDEX point) {
+	public boolean isTrue(T point) {
 		return cond1.isTrue(point) || cond2.isTrue(point);
 	}
 
 	@Override
-	public OrCondition<INDEX> copy() {
-		return new OrCondition<INDEX>(cond1.copy(), cond2.copy());
+	public OrCondition<T> copy() {
+		return new OrCondition<T>(cond1.copy(), cond2.copy());
 	}
 }

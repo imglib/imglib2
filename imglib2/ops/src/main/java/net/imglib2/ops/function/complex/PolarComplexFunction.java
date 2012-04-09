@@ -47,16 +47,16 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class PolarComplexFunction<INDEX,R extends RealType<R>, C extends ComplexType<C>>
-	implements Function<INDEX,C> {
+public class PolarComplexFunction<INPUT, R extends RealType<R>, C extends ComplexType<C>>
+	implements Function<INPUT,C> {
 
-	private final Function<INDEX,R> realFunc1;
-	private final Function<INDEX,R> realFunc2;
+	private final Function<INPUT,R> realFunc1;
+	private final Function<INPUT,R> realFunc2;
 	private final R real1;
 	private final R real2;
 	private final C cType;
 	
-	public PolarComplexFunction(Function<INDEX,R> realFunc1, Function<INDEX,R> realFunc2, C cType) {
+	public PolarComplexFunction(Function<INPUT,R> realFunc1, Function<INPUT,R> realFunc2, C cType) {
 		this.cType = cType;
 		this.realFunc1 = realFunc1;
 		this.realFunc2 = realFunc2;
@@ -65,15 +65,15 @@ public class PolarComplexFunction<INDEX,R extends RealType<R>, C extends Complex
 	}
 	
 	@Override
-	public void compute(INDEX point, C value) {
-		realFunc1.compute(point, real1);
-		realFunc2.compute(point, real2);
+	public void compute(INPUT input, C value) {
+		realFunc1.compute(input, real1);
+		realFunc2.compute(input, real2);
 		ComplexHelper.setPolar(value, real1.getRealDouble(), real2.getRealDouble());
 	}
 	
 	@Override
-	public PolarComplexFunction<INDEX,R,C> copy() {
-		return new PolarComplexFunction<INDEX,R,C>(realFunc1.copy(), realFunc2.copy(), cType);
+	public PolarComplexFunction<INPUT,R,C> copy() {
+		return new PolarComplexFunction<INPUT,R,C>(realFunc1.copy(), realFunc2.copy(), cType);
 	}
 
 	@Override

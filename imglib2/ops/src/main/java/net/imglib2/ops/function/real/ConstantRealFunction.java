@@ -45,26 +45,26 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class ConstantRealFunction<INDEX, T extends RealType<T>> implements Function<INDEX,T> {
-	private final T real;
+public class ConstantRealFunction<INPUT, O extends RealType<O>> implements Function<INPUT, O> {
+	private final O real;
 
-	public ConstantRealFunction(T typeHint, double r) {
+	public ConstantRealFunction(O typeHint, double r) {
 		real = typeHint.createVariable();
 		real.setReal(r);
 	}
 	
 	@Override
-	public void compute(INDEX point, T r) {
+	public void compute(INPUT input, O r) {
 		r.set(real);
 	}
 
 	@Override
-	public ConstantRealFunction<INDEX,T> copy() {
-		return new ConstantRealFunction<INDEX,T>(real, real.getRealDouble());
+	public ConstantRealFunction<INPUT,O> copy() {
+		return new ConstantRealFunction<INPUT,O>(real, real.getRealDouble());
 	}
 
 	@Override
-	public T createOutput() {
+	public O createOutput() {
 		return real.createVariable();
 	}
 }
