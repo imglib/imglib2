@@ -58,9 +58,9 @@ public class BinaryCondition<INDEX,O1,O2> implements Condition<INDEX> {
 	}
 	
 	@Override
-	public boolean isTrue(Neighborhood<INDEX> region, INDEX point) {
-		f1.evaluate(region, point, f1Val);
-		f2.evaluate(region, point, f2Val);
+	public boolean isTrue(INDEX point) {
+		f1.compute(point, f1Val);
+		f2.compute(point, f2Val);
 		return relation.holds(f1Val,f2Val);
 	}
 	

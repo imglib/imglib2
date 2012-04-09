@@ -55,8 +55,8 @@ public class UnaryCondition<INDEX, T> implements Condition<INDEX> {
 	}
 	
 	@Override
-	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
-		f1.evaluate(neigh, point, f1Val);
+	public boolean isTrue(INDEX point) {
+		f1.compute(point, f1Val);
 		return relation.holds(f1Val);
 	}
 	
