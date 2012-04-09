@@ -38,11 +38,13 @@
 package net.imglib2.ops;
 
 /**
+ * InputIterator iterates a set of input. The type of input is typically
+ * long[]'s or PointSets. See {@link: InputIteratorFactory}
  * 
  * @author Barry DeZonia
  */
-public interface InputIterator<K> {
+public interface InputIterator<INPUT> {
 	boolean hasNext();
-	K next(K currVal);
+	INPUT next(INPUT currVal);
 	long[] getCurrentPoint();
 }

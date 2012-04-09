@@ -38,11 +38,13 @@
 package net.imglib2.ops;
 
 /**
+ * A BijectiveFunction is simply a Function that also allows one to calculate
+ * an inverse computation.
  * 
  * @author Barry DeZonia
  */
-public interface BijectiveFunction<INPUT_TYPE,OUTPUT_TYPE>
-	extends Function<INPUT_TYPE,OUTPUT_TYPE>
+public interface BijectiveFunction<INPUT,OUTPUT>
+	extends Function<INPUT,OUTPUT>
 {
-	INPUT_TYPE computeInverse(OUTPUT_TYPE output, INPUT_TYPE input);
+	INPUT computeInverse(OUTPUT output, INPUT input);
 }
