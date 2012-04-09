@@ -46,6 +46,12 @@ import net.imglib2.type.numeric.RealType;
 // Reference: Gonzalez and Woods, Digital Image Processing, 2008
 
 /**
+ * A RealAdaptiveMedianFunction applies an adaptive median algorithm to a set of
+ * input data represented by an input function. The adaptive median algorithm
+ * tries to pick the best value from within a PointSet. If it fails to find a
+ * suitable value it searches a larger set of points until it finds a good value
+ * or runs out of sets to search. If it runs out of sets to search it will
+ * return the median value of the last point set searched.
  * 
  * @author Barry DeZonia
  */
@@ -58,7 +64,15 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 	private final RealSampleCollector<T> collector;
 	private final T currValue;
 	private final StatCalculator calculator;
-	
+
+	/**
+	 * Constructs an adaptive median function on a given function and a given set
+	 * of PointSets. PointSets should be ordered by increasing size. Typically one
+	 * would define a set of concentric windows or circles or ellipses etc. 
+	 *
+	 * @param otherFunc
+	 * @param pointSets
+	 */
 	public RealAdaptiveMedianFunction(Function<long[],T> otherFunc, List<PointSet> pointSets) {
 		this.otherFunc = otherFunc;
 		this.pointSets = pointSets;
