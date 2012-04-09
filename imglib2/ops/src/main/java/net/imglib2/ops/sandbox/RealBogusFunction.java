@@ -38,7 +38,6 @@ package net.imglib2.ops.sandbox;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
@@ -79,7 +78,7 @@ public class RealBogusFunction<IN,OUT extends RealType<OUT>> implements Function
 	}
 
 	@Override
-	public void evaluate(Neighborhood<IN> neigh, IN point, OUT output) {
+	public void compute(IN point, OUT output) {
 		// TODO Auto-generated method stub
 		
 	}
