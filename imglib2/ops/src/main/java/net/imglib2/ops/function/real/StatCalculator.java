@@ -40,6 +40,9 @@ package net.imglib2.ops.function.real;
 
 /**
  * 
+ * StatCollector calculates statistics from a list of doubles stored in a
+ * {@link: PrimitiveDoubleArray}.
+ * 
  * @author Barry DeZonia
  *
  */

@@ -50,23 +50,32 @@ import java.util.Random;
 // in the init phase and add() after. But that involves a lot of object
 // creation/destruction via autoboxing. So make a primitive array class
 // that will safely handle varying size PointSets.
-// Note this class runs 2-4times faster than using a combination of
+// Note this class runs 2-4 times faster than using a combination of
 // ArrayLists using add(), clear(), and Collections.sort() does.
 
 /**
+ * A PrimitiveDoubleArray is a fast replacement for ArrayList<Double>. It
+ * avoids autoboxing to improve performance.
  * 
  * @author Barry DeZonia
  *
  */
 public class PrimitiveDoubleArray {
+	
+	// -- instance variables --
+	
 	private double[] values;
 	private int top;
+	
+	// -- constructor --
 	
 	public PrimitiveDoubleArray() {
 		values = new double[9];
 		top = 0;
 	}
 
+	// -- public interface --
+	
 	public void clear() {
 		top = 0;
 	}
@@ -91,6 +100,8 @@ public class PrimitiveDoubleArray {
 		Arrays.sort(values, 0, top);
 	}
 
+	// -- private interface --
+	
 	private static void speedTest() {
 		ArrayList<Double> list = new ArrayList<Double>();
 		PrimitiveDoubleArray array = new PrimitiveDoubleArray();
@@ -126,6 +137,8 @@ public class PrimitiveDoubleArray {
 		System.out.println("Primitive array time = "+(stop-start));
 	}
 
+	// -- test hook --
+	
 	public static void main(String[] args) {
 		speedTest();
 	}

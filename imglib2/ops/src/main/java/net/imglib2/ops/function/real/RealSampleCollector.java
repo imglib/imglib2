@@ -45,6 +45,8 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * A RealSampleCollector collects the set of values a function takes over the
+ * range of a point set.
  * 
  * @author Barry DeZonia
  */
@@ -54,6 +56,9 @@ public class RealSampleCollector<T extends RealType<T>> {
 	private PointSetIterator iter;
 	private T variable;
 
+	/**
+	 * Default constructor (no arguments)
+	 */
 	public RealSampleCollector()
 	{
 		this.lastPointSet = null;
@@ -61,6 +66,14 @@ public class RealSampleCollector<T extends RealType<T>> {
 		this.variable = null;
 	}
 	
+	/**
+	 * Collects the values of a function across a point set. Puts the values in a
+	 * given {@link: PrimitiveDoubleArray}.
+	 * 
+	 * @param ps - the point set to range over
+	 * @param function - the function to sample
+	 * @param values - the output array to store the values in
+	 */
 	public void collect(PointSet ps, Function<long[],T> function, PrimitiveDoubleArray values) {
 		if (ps != lastPointSet) {
 			lastPointSet = ps;
