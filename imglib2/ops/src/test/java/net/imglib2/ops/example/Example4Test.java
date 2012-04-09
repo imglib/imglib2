@@ -38,19 +38,20 @@ package net.imglib2.ops.example;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.Condition;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.condition.OnTheXYCrossCondition;
-import net.imglib2.ops.function.general.ConditionalFunction;
-import net.imglib2.ops.function.real.ConstantRealFunction;
+import net.imglib2.ops.PointSet;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealProductFunction;
+import net.imglib2.ops.input.PointSetInputIterator;
+import net.imglib2.ops.pointset.GeneralPointSet;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.real.DoubleType;
 
 // get values that are an average of the 5 values in a 3x3 cross
@@ -101,7 +102,8 @@ public class Example4Test {
 	public void testCrossNeighborhoodProduct() {
 
 		Img<DoubleType> inputImg = makeInputImage();
-		
+
+		/* old way
 		DiscreteNeigh neigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
 		Condition<long[]> condition = new OnTheXYCrossCondition();
 		Function<long[],DoubleType> input = new RealImageFunction<DoubleType,DoubleType>(inputImg, new DoubleType());
@@ -116,15 +118,40 @@ public class Example4Test {
 				index[1] = y;
 				neigh.moveTo(index);
 				prodFunc.evaluate(neigh, neigh.getKeyPoint(), output);
+				//{
+				//	System.out.println(" FAILURE at ("+x+","+y+"): expected ("
+				//		+expectedValue(x,y)+") actual ("+output.getRealDouble()+")");
+				//	success = false;
+				//}
 				assertTrue(veryClose(output.getRealDouble(), expectedValue(x,y)));
-				/*
-				{
-					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+expectedValue(x,y)+") actual ("+output.getRealDouble()+")");
-					success = false;
-				}
-				*/
 			}
+		}
+		*/
+		
+		ArrayList<long[]> pts = new ArrayList<long[]>();
+		pts.add(new long[]{-1,-1});
+		pts.add(new long[]{-1, 1});
+		pts.add(new long[]{ 0, 0});
+		pts.add(new long[]{ 1,-1});
+		pts.add(new long[]{ 1, 1});
+		GeneralPointSet neigh = new GeneralPointSet(new long[]{0,0}, pts);
+		Function<long[],DoubleType> input = new RealImageFunction<DoubleType,DoubleType>(inputImg, new DoubleType());
+		Function<PointSet,DoubleType> prodFunc = new RealProductFunction<DoubleType>(input);
+		HyperVolumePointSet space = new HyperVolumePointSet(new long[]{1,1}, new long[]{XSIZE-2,YSIZE-2});
+		PointSetInputIterator iter = new PointSetInputIterator(space, neigh);
+		DoubleType output = new DoubleType();
+		PointSet points = null;
+		while (iter.hasNext()) {
+			points = iter.next(points);
+			prodFunc.compute(points, output);
+			int x = (int) points.getAnchor()[0];
+			int y = (int) points.getAnchor()[1];
+			//{
+			//	System.out.println(" Point ("+x+","+y+"): expected ("
+			//		+expectedValue(x,y)+") actual ("+output.getRealDouble()+")");
+			//	success = false;
+			//}
+			assertTrue(veryClose(output.getRealDouble(), expectedValue(x,y)));
 		}
 	}
 }

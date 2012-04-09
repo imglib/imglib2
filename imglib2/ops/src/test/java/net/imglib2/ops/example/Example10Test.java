@@ -44,13 +44,14 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.function.complex.CartesianComplexFunction;
 import net.imglib2.ops.function.complex.DFTFunction;
 import net.imglib2.ops.function.complex.IDFTFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
+import net.imglib2.ops.input.PointInputIterator;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -98,36 +99,33 @@ public class Example10Test {
 		Function<long[],ComplexDoubleType> spatialFunction =
 			new CartesianComplexFunction<long[],DoubleType,DoubleType,ComplexDoubleType>
 			(image,zero,new ComplexDoubleType());
-		dft = new DFTFunction<ComplexDoubleType>(
-				spatialFunction, new long[]{XSIZE,YSIZE}, new long[2], new long[2], new ComplexDoubleType());
+		dft = new DFTFunction<ComplexDoubleType>(spatialFunction, new long[]{XSIZE,YSIZE}, new ComplexDoubleType());
 		// TODO - test something
 		assertTrue(true);
 	}
 	
 	private void testIDFT() {
-		DiscreteNeigh neigh = new DiscreteNeigh(new long[2], new long[2], new long[2]);
 		Function<long[],ComplexDoubleType> idft = new IDFTFunction<ComplexDoubleType>(
 			dft, new long[]{XSIZE,YSIZE}, new long[2], new long[2], new ComplexDoubleType());
 		long[] pos = new long[2];
 		DoubleType original = new DoubleType();
 		ComplexDoubleType computed = new ComplexDoubleType();
-		for (int x = 0; x < XSIZE; x++) {
-			for (int y = 0; y < YSIZE; y++) {
-				pos[0] = x;
-				pos[1] = y;
-				neigh.moveTo(pos);
-				image.evaluate(neigh, pos, original);
-				idft.evaluate(neigh, pos, computed);
-				assertTrue(veryClose(computed.getRealDouble(), original.getRealDouble()));
-				assertTrue(veryClose(computed.getImaginaryDouble(), 0));
-				/*
-				{
-					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-							+original.getRealDouble()+",0) actual ("+computed.getRealDouble()+","+computed.getImaginaryDouble()+")");
-					success = false;
-				}
-				*/
+		HyperVolumePointSet pointSet = new HyperVolumePointSet(new long[]{0,0}, new long[]{XSIZE-1,YSIZE-1});
+		PointInputIterator iter = new PointInputIterator(pointSet);
+		long[] point = null;
+		while (iter.hasNext()) {
+			point = iter.next(point);
+			image.compute(pos, original);
+			idft.compute(pos, computed);
+			/*
+			{
+				System.out.println(" FAILURE at ("+x+","+y+"): expected ("
+						+original.getRealDouble()+",0) actual ("+computed.getRealDouble()+","+computed.getImaginaryDouble()+")");
+				success = false;
 			}
+			*/
+			assertTrue(veryClose(computed.getRealDouble(), original.getRealDouble()));
+			assertTrue(veryClose(computed.getImaginaryDouble(), 0));
 		}
 	}
 

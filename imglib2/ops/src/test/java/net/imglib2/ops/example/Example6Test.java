@@ -44,10 +44,7 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.ContinuousNeigh;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -114,7 +111,6 @@ public class Example6Test {
 	private class RealBilinearInterpolatorFunction<T extends RealType<T>> 
 	implements Function<double[],T> {
 
-		private DiscreteNeigh discreteNeigh;
 		private Function<long[],T> discreteFunc;
 		private long[] index;
 		private T ul, ur, ll, lr;
@@ -126,13 +122,10 @@ public class Example6Test {
 			this.ur = createOutput();
 			this.ll = createOutput();
 			this.lr = createOutput();
-			this.discreteNeigh = null;
 		}
 
 		@Override
-		public void evaluate(Neighborhood<double[]> neigh, double[] point, T output) {
-			if (discreteNeigh == null)
-				initNeigh(neigh);
+		public void compute(double[] point, T output) {
 			long x = (long) Math.floor(point[0]);
 			long y = (long) Math.floor(point[1]);
 			double ix = point[0] - x;
@@ -154,24 +147,9 @@ public class Example6Test {
 		private void getValue(long x, long y, T output) {
 			index[0] = x;
 			index[1] = y;
-			discreteNeigh.moveTo(index);
-			discreteFunc.evaluate(discreteNeigh, index, output);
+			discreteFunc.compute(index, output);
 		}
 		
-		private void initNeigh(Neighborhood<double[]> cNeigh) {
-			long[] keyPt = new long[2];
-			long[] negOffs = new long[2];
-			long[] posOffs = new long[2];
-			
-			keyPt[0] = (long) cNeigh.getKeyPoint()[0];
-			keyPt[1] = (long) cNeigh.getKeyPoint()[1];
-			negOffs[0] = (long) cNeigh.getNegativeOffsets()[0];
-			negOffs[1] = (long) cNeigh.getNegativeOffsets()[1];
-			posOffs[0] = (long) cNeigh.getPositiveOffsets()[0];
-			posOffs[1] = (long) cNeigh.getPositiveOffsets()[1];
-			discreteNeigh = new DiscreteNeigh(keyPt, negOffs, posOffs);
-		}
-
 		@Override
 		public T createOutput() {
 			return discreteFunc.createOutput();
@@ -182,15 +160,13 @@ public class Example6Test {
 		Img<DoubleType> inputImg = makeInputImage();
 		Function<long[],DoubleType> input = new RealImageFunction<DoubleType,DoubleType>(inputImg, new DoubleType());
 		Function<double[],DoubleType> interpolator = new RealBilinearInterpolatorFunction<DoubleType>(input);
-		ContinuousNeigh neigh = new ContinuousNeigh(new double[2], new double[2], new double[2]);
 		DoubleType variable = new DoubleType();
 		double[] point = new double[2];
 		for (int x = 0; x < XSIZE-2; x++) {
 			for (int y = 0; y < YSIZE-2; y++) {
 				point[0] = x + ix;
 				point[1] = y + iy;
-				neigh.moveTo(point);
-				interpolator.evaluate(neigh, point, variable);
+				interpolator.compute(point, variable);
 				assertTrue(veryClose(variable.getRealDouble(), expectedValue(x, y, ix, iy)));
 				/*
 				{

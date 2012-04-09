@@ -44,12 +44,13 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
+import net.imglib2.ops.input.PointInputIterator;
 import net.imglib2.ops.operation.binary.real.RealAdd;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**
@@ -92,9 +93,6 @@ public class Example1Test {
 
 		Img<DoubleType> inputImage = makeInputImage();
 
-		DiscreteNeigh neighborhood = new DiscreteNeigh(new long[2],
-				new long[2], new long[2]);
-
 		Function<long[], DoubleType> constant = new ConstantRealFunction<long[], DoubleType>(
 				inputImage.firstElement(), 15);
 
@@ -104,25 +102,23 @@ public class Example1Test {
 		Function<long[], DoubleType> additionFunc = new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>(
 				constant, image, new RealAdd<DoubleType,DoubleType,DoubleType>(), new DoubleType());
 
-		long[] index = neighborhood.getKeyPoint();
+		HyperVolumePointSet pointSet = new HyperVolumePointSet(new long[2], new long[2], new long[]{XSIZE-1,YSIZE-1});
+		PointInputIterator iter = new PointInputIterator(pointSet);
 
 		DoubleType pointValue = new DoubleType();
-		for (int x = 0; x < XSIZE; x++) {
-			for (int y = 0; y < YSIZE; y++) {
-				index[0] = x;
-				index[1] = y;
-				additionFunc.evaluate(neighborhood, neighborhood.getKeyPoint(),
-						pointValue);
-				assertTrue(veryClose(pointValue.getRealDouble(), (x + y + 15)));
-				/*
-				{
-					System.out.println(" FAILURE at (" + x + "," + y
-							+ "): expected (" + (x + y + 15) + ") actual ("
-							+ pointValue.getRealDouble() + ")");
-					success = false;
-				}
-				*/
+		long[] index = null;
+		while (iter.hasNext()) {
+			index = iter.next(index);
+			additionFunc.compute(index, pointValue);
+			assertTrue(veryClose(pointValue.getRealDouble(), (index[0] + index[1] + 15)));
+			/*
+			{
+				System.out.println(" FAILURE at (" + x + "," + y
+						+ "): expected (" + (x + y + 15) + ") actual ("
+						+ pointValue.getRealDouble() + ")");
+				success = false;
 			}
+			*/
 		}
 	}
 

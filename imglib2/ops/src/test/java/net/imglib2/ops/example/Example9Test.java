@@ -44,14 +44,16 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.PointSet;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
 import net.imglib2.ops.function.real.RealConvolutionFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
+import net.imglib2.ops.input.PointSetInputIterator;
 import net.imglib2.ops.operation.binary.real.RealAdd;
 import net.imglib2.ops.operation.unary.real.RealAbs;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -157,39 +159,40 @@ public class Example9Test {
 	@Test
 	public void testSobel() {
 		img = makeInputImage();
-		DiscreteNeigh neigh = new DiscreteNeigh(new long[2],
+		HyperVolumePointSet neigh = new HyperVolumePointSet(new long[2],
 				new long[] { 1, 1 }, new long[] { 1, 1 });
-		DoubleType outType = new DoubleType();
 		Function<long[], DoubleType> imgFunc = new RealImageFunction<DoubleType,DoubleType>(
 				img, new DoubleType());
 		double[] kernel1 = new double[] { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
 		double[] kernel2 = new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
-		Function<long[], DoubleType> convFunc1 = new RealConvolutionFunction<DoubleType>(
+		Function<PointSet, DoubleType> convFunc1 = new RealConvolutionFunction<DoubleType>(
 				imgFunc, kernel1);
-		Function<long[], DoubleType> convFunc2 = new RealConvolutionFunction<DoubleType>(
+		Function<PointSet, DoubleType> convFunc2 = new RealConvolutionFunction<DoubleType>(
 				imgFunc, kernel2);
-		Function<long[], DoubleType> absFunc1 = new GeneralUnaryFunction<long[], DoubleType, DoubleType>(
+		Function<PointSet, DoubleType> absFunc1 = new GeneralUnaryFunction<PointSet, DoubleType, DoubleType>(
 				convFunc1, new RealAbs<DoubleType,DoubleType>(), new DoubleType());
-		Function<long[], DoubleType> absFunc2 = new GeneralUnaryFunction<long[], DoubleType, DoubleType>(
+		Function<PointSet, DoubleType> absFunc2 = new GeneralUnaryFunction<PointSet, DoubleType, DoubleType>(
 				convFunc2, new RealAbs<DoubleType,DoubleType>(), new DoubleType());
-		Function<long[], DoubleType> addFunc = new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>(
-				absFunc1, absFunc2,	new RealAdd<DoubleType,DoubleType,DoubleType>(), outType);
+		Function<PointSet, DoubleType> addFunc = new GeneralBinaryFunction<PointSet, DoubleType, DoubleType, DoubleType>(
+				absFunc1, absFunc2,	new RealAdd<DoubleType,DoubleType,DoubleType>(), new DoubleType());
 		DoubleType output = new DoubleType();
-		for (int x = 1; x < XSIZE - 1; x++) {
-			for (int y = 1; y < YSIZE - 1; y++) {
-				neigh.getKeyPoint()[0] = x;
-				neigh.getKeyPoint()[1] = y;
-				addFunc.evaluate(neigh, neigh.getKeyPoint(), output);
-				assertTrue(veryClose(output.getRealDouble(), expectedValue(x, y)));
-				/*
-				{
-					System.out.println(" FAILURE at (" + x + "," + y
-							+ "): expected (" + expectedValue(x, y)
-							+ ") actual (" + output.getRealDouble() + ")");
-					success = false;
-				}
-				*/
+		HyperVolumePointSet space = new HyperVolumePointSet(new long[]{1,1}, new long[]{XSIZE-2,YSIZE-2});
+		PointSetInputIterator iter = new PointSetInputIterator(space, neigh);
+		PointSet points = null;
+		while (iter.hasNext()) {
+			points = iter.next(points);
+			addFunc.compute(points, output);
+			int x = (int) points.getAnchor()[0];
+			int y = (int) points.getAnchor()[1];
+			/*
+			{
+				System.out.println(" Point (" + x + "," + y
+						+ "): expected (" + expectedValue(x, y)
+						+ ") actual (" + output.getRealDouble() + ")");
+				success = false;
 			}
+			*/
+			assertTrue(veryClose(output.getRealDouble(), expectedValue(x, y)));
 		}
 	}
 }
