@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.bool;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.type.logic.BitType;
 
 
@@ -54,7 +53,7 @@ public class ConstantBoolFunction<INDEX> implements Function<INDEX,BitType> {
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, BitType b) {
+	public void compute(INDEX point, BitType b) {
 		b.set(bool);
 	}
 	

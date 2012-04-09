@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.complex;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 
@@ -65,9 +64,9 @@ public class CartesianComplexFunction<INDEX,R1 extends RealType<R1>,R2 extends R
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, C value) {
-		realFunc1.evaluate(neigh, point, real1);
-		realFunc2.evaluate(neigh, point, real2);
+	public void compute(INDEX point, C value) {
+		realFunc1.compute(point, real1);
+		realFunc2.compute(point, real2);
 		value.setComplexNumber(real1.getRealDouble(),real2.getRealDouble());
 	}
 	

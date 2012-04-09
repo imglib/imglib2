@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.complex;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.type.numeric.ComplexType;
 
 
@@ -54,7 +53,7 @@ public class ConstantComplexFunction<INDEX, T extends ComplexType<T>> implements
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, T c) {
+	public void compute(INDEX point, T c) {
 		c.set(complex);
 	}
 	
