@@ -49,7 +49,8 @@ import org.junit.Test;
  */
 public class ComplexIntegerPowerTest {
 
-	private ComplexPower opFull = new ComplexPower();
+	private ComplexPower<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType> opFull =
+		new ComplexPower<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType input2 = new ComplexDoubleType();
 	private ComplexDoubleType output1 = new ComplexDoubleType();
@@ -75,7 +76,8 @@ public class ComplexIntegerPowerTest {
 		for (int i = 0; i < 26; i++) {  // NOTE - diverges at 27 or higher
 			ComplexDoubleType power = new ComplexDoubleType();
 			power.setComplexNumber(i, 0);
-			ComplexIntegerPower op = new ComplexIntegerPower(i);
+			ComplexIntegerPower<ComplexDoubleType,ComplexDoubleType> op =
+					new ComplexIntegerPower<ComplexDoubleType,ComplexDoubleType>(i);
 			input1.setComplexNumber(r1, i1);
 			input2.setComplexNumber(r1, i1);
 			op.compute(input1, output1);

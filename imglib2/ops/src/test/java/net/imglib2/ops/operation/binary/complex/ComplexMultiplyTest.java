@@ -48,7 +48,8 @@ import org.junit.Test;
  */
 public class ComplexMultiplyTest {
 
-	private ComplexMultiply op = new ComplexMultiply();
+	private ComplexMultiply<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType> op =
+		new ComplexMultiply<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType input2 = new ComplexDoubleType();
 	private ComplexDoubleType output = new ComplexDoubleType();

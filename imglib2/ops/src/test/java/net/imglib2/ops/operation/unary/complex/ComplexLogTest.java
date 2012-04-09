@@ -48,7 +48,8 @@ import org.junit.Test;
  */
 public class ComplexLogTest {
 
-	private ComplexLog op = new ComplexLog();
+	private ComplexLog<ComplexDoubleType,ComplexDoubleType> op =
+			new ComplexLog<ComplexDoubleType,ComplexDoubleType>();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType output = new ComplexDoubleType();
 
