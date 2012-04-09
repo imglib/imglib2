@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.NumericType;
 
@@ -71,9 +70,8 @@ public class ConverterFunction<INDEX, INTERMEDIATE_TYPE,
 	}
 
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point,
-			FINAL_TYPE output) {
-		intermediateFunc.evaluate(region, point, variable);
+	public void compute(INDEX point, FINAL_TYPE output) {
+		intermediateFunc.compute(point, variable);
 		operation.compute(variable, output);
 	}
 

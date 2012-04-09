@@ -39,7 +39,6 @@ package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
@@ -72,17 +71,16 @@ public class GeneralBinaryFunction<INDEX,
 	}
 
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point,
-			OUTPUT_TYPE output) {
-		f1.evaluate(region, point, input1);
-		f2.evaluate(region, point, input2);
+	public void compute(INDEX point, OUTPUT_TYPE output) {
+		f1.compute(point, input1);
+		f2.compute(point, input2);
 		operation.compute(input1, input2, output);
 	}
 
 	@Override
 	public GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> copy() {
 		return new GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>(
-				f1.copy(), f2.copy(), operation.copy(), type);
+				f1.copy(), f2.copy(), operation.copy(), type.createVariable());
 	}
 
 	@Override

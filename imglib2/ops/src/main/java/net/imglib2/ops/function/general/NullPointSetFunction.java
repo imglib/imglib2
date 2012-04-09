@@ -37,7 +37,6 @@
 
 package net.imglib2.ops.function.general;
 
-import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
 
 
@@ -45,33 +44,27 @@ import net.imglib2.ops.Function;
  * 
  * @author Barry DeZonia
  */
-public class ConditionalFunction<INDEX, T> implements Function<INDEX,T> {
+public class NullPointSetFunction<PointSet, T> implements Function<PointSet,T> {
 
-	private final Condition<INDEX> condition;
-	private final Function<INDEX,T> f1;
-	private final Function<INDEX,T> f2;
-	
-	public ConditionalFunction(Condition<INDEX> condition, Function<INDEX,T> f1, Function<INDEX,T> f2) {
-		this.condition = condition;
-		this.f1 = f1;
-		this.f2 = f2;
-	}
-	
 	@Override
-	public void compute(INDEX point, T output) {
-		if (condition.isTrue(point))
-			f1.compute(point, output);
-		else
-			f2.compute(point, output);
+	public void compute(PointSet points, T output) {
+		// do nothing
+		// TODO : Could set to NaN?
 	}
 
 	@Override
 	public T createOutput() {
-		return f1.createOutput();
+		return null;
+		// TODO - returning null is sort of a problem. Though it makes sense.
+		//  However if we only pass NullFunctions at outermost loop maybe we can avoid
+		//  this method ever being called.
+		//  What good is a null function if outermost loop can count on its own? Null
+		//  function idea originally came about as a way to collect stats without
+		//  destroying existing data. That need may now be obsolete. Investigate.
 	}
-	
+
 	@Override
-	public ConditionalFunction<INDEX,T> copy() {
-		return new ConditionalFunction<INDEX, T>(condition.copy(), f1.copy(), f2.copy());
+	public NullPointSetFunction<PointSet,T> copy() {
+		return new NullPointSetFunction<PointSet,T>();
 	}
 }

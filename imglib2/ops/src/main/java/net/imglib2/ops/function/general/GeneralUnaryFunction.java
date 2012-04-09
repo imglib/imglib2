@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
@@ -64,16 +63,15 @@ public class GeneralUnaryFunction<INDEX, INPUT_TYPE extends ComplexType<INPUT_TY
 	}
 
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point,
-			OUTPUT_TYPE output) {
-		f1.evaluate(region, point, temp);
+	public void compute(INDEX point, OUTPUT_TYPE output) {
+		f1.compute(point, temp);
 		operation.compute(temp, output);
 	}
 
 	@Override
 	public GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE> copy() {
 		return new GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE>(
-			f1.copy(), operation.copy(), type);
+			f1.copy(), operation.copy(), type.createVariable());
 	}
 
 	@Override
