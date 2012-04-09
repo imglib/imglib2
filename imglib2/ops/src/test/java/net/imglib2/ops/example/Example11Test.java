@@ -44,9 +44,10 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.function.real.RealImageFunction;
+import net.imglib2.ops.input.PointInputIterator;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -90,7 +91,6 @@ public class Example11Test {
 	@Test
 	public void testOutOfBounds() {
 		Img<DoubleType> image = makeInputImage();
-		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
 		Function<long[],DoubleType> imageFunc =
 			new RealImageFunction<DoubleType,DoubleType>(
 				image,
@@ -102,61 +102,60 @@ public class Example11Test {
 		DoubleType right = new DoubleType();
 		DoubleType top = new DoubleType();
 		DoubleType bottom = new DoubleType();
-		for (int x = 0; x < XSIZE; x++) {
-			for (int y = 0; y < YSIZE; y++) {
-				currPt[0] = x;
-				currPt[1] = y;
-				inputNeigh.moveTo(currPt);
-				imageFunc.evaluate(inputNeigh, currPt, inbounds);
-				currPt[0] = x - XSIZE;
-				currPt[1] = y;
-				inputNeigh.moveTo(currPt);
-				imageFunc.evaluate(inputNeigh, currPt, left);
-				assertTrue(veryClose(inbounds.getRealDouble(), left.getRealDouble()));
-				/*
-				{
-					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+(inbounds.getRealDouble())+") actual ("+left.getRealDouble()+")");
-					success = false;
-				}
-				*/
-				currPt[0] = x + XSIZE;
-				currPt[1] = y;
-				inputNeigh.moveTo(currPt);
-				imageFunc.evaluate(inputNeigh, currPt, right);
-				assertTrue(veryClose(inbounds.getRealDouble(), right.getRealDouble()));
-				/*
-				{
-					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+(inbounds.getRealDouble())+") actual ("+right.getRealDouble()+")");
-					success = false;
-				}
-				*/
-				currPt[0] = x;
-				currPt[1] = y - YSIZE;
-				inputNeigh.moveTo(currPt);
-				imageFunc.evaluate(inputNeigh, currPt, top);
-				assertTrue(veryClose(inbounds.getRealDouble(), top.getRealDouble()));
-				/*
-				{
-					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+(inbounds.getRealDouble())+") actual ("+top.getRealDouble()+")");
-					success = false;
-				}
-				*/
-				currPt[0] = x;
-				currPt[1] = y + YSIZE;
-				inputNeigh.moveTo(currPt);
-				imageFunc.evaluate(inputNeigh, currPt, bottom);
-				assertTrue(veryClose(inbounds.getRealDouble(), bottom.getRealDouble()));
-				/*
-				{
-					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+(inbounds.getRealDouble())+") actual ("+bottom.getRealDouble()+")");
-					success = false;
-				}
-				*/
+		HyperVolumePointSet pointSet = new HyperVolumePointSet(new long[]{0,0},new long[]{0,0}, new long[]{XSIZE,YSIZE});
+		PointInputIterator iter = new PointInputIterator(pointSet);
+		long[] iterPt = null;
+		while (iter.hasNext()) {
+			iterPt = iter.next(iterPt);
+			long x = iterPt[0];
+			long y = iterPt[1];
+			currPt[0] = x;
+			currPt[1] = y;
+			imageFunc.compute(currPt, inbounds);
+			currPt[0] = x - XSIZE;
+			currPt[1] = y;
+			imageFunc.compute(currPt, left);
+			assertTrue(veryClose(inbounds.getRealDouble(), left.getRealDouble()));
+			/*
+			{
+				System.out.println(" FAILURE at ("+x+","+y+"): expected ("
+					+(inbounds.getRealDouble())+") actual ("+left.getRealDouble()+")");
+				success = false;
 			}
+			*/
+			currPt[0] = x + XSIZE;
+			currPt[1] = y;
+			imageFunc.compute(currPt, right);
+			assertTrue(veryClose(inbounds.getRealDouble(), right.getRealDouble()));
+			/*
+			{
+				System.out.println(" FAILURE at ("+x+","+y+"): expected ("
+					+(inbounds.getRealDouble())+") actual ("+right.getRealDouble()+")");
+				success = false;
+			}
+			*/
+			currPt[0] = x;
+			currPt[1] = y - YSIZE;
+			imageFunc.compute(currPt, top);
+			assertTrue(veryClose(inbounds.getRealDouble(), top.getRealDouble()));
+			/*
+			{
+				System.out.println(" FAILURE at ("+x+","+y+"): expected ("
+					+(inbounds.getRealDouble())+") actual ("+top.getRealDouble()+")");
+				success = false;
+			}
+			*/
+			currPt[0] = x;
+			currPt[1] = y + YSIZE;
+			imageFunc.compute(currPt, bottom);
+			assertTrue(veryClose(inbounds.getRealDouble(), bottom.getRealDouble()));
+			/*
+			{
+				System.out.println(" FAILURE at ("+x+","+y+"): expected ("
+					+(inbounds.getRealDouble())+") actual ("+bottom.getRealDouble()+")");
+				success = false;
+			}
+			*/
 		}
 	}
 }

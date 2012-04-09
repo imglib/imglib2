@@ -37,9 +37,7 @@
 
 package net.imglib2.ops.function.general;
 
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 
 
 /**
@@ -50,25 +48,20 @@ public class DiscreteTranslationFunction<T> implements Function<long[],T> {
 
 	private final Function<long[],T> otherFunc;
 	private final long[] deltas;
-	private final long[] localCtr;
-	private final DiscreteNeigh localRegion;
+	private final long[] localPoint;
 	
-	public DiscreteTranslationFunction(Function<long[],T> otherFunc,
-		DiscreteNeigh region, long[] deltas)
+	public DiscreteTranslationFunction(Function<long[],T> otherFunc, long[] deltas)
 	{
 		this.otherFunc = otherFunc;
 		this.deltas = deltas;
-		this.localRegion = region.copy();
-		this.localCtr = new long[deltas.length];
+		this.localPoint = new long[deltas.length];
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
-		long[] keyPt = region.getKeyPoint();
-		for (int i = 0; i < localCtr.length; i++)
-			localCtr[i] = keyPt[i] + deltas[i];
-		localRegion.moveTo(localCtr);
-		otherFunc.evaluate(localRegion, point, output);
+	public void compute(long[] point, T output) {
+		for (int i = 0; i < deltas.length; i++)
+			localPoint[i] = point[i] + deltas[i];
+		otherFunc.compute(localPoint, output);
 	}
 
 	@Override
@@ -78,6 +71,6 @@ public class DiscreteTranslationFunction<T> implements Function<long[],T> {
 
 	@Override
 	public DiscreteTranslationFunction<T> copy() {
-		return new DiscreteTranslationFunction<T>(otherFunc.copy(), localRegion.copy(), deltas.clone());
+		return new DiscreteTranslationFunction<T>(otherFunc.copy(), deltas.clone());
 	}
 }

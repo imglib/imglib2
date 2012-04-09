@@ -37,9 +37,10 @@
 
 package net.imglib2.ops.function.general;
 
+import java.util.Arrays;
+
 import net.imglib2.ops.DataCopier;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 
 
 /**
@@ -58,7 +59,6 @@ public class CachingFunction<T extends DataCopier<T>> implements Function<long[]
 	// -- instance variables --
 	
 	private final Function<long[],T> otherFunc;
-	private long[] lastKeyPoint;
 	private long[] lastPoint;
 	private final T lastValue;
 
@@ -67,20 +67,20 @@ public class CachingFunction<T extends DataCopier<T>> implements Function<long[]
 	public CachingFunction(Function<long[],T> otherFunc) {
 		this.otherFunc = otherFunc;
 		lastValue = createOutput();
+		lastPoint = null;
 	}
 	
 	// -- public interface --
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
-		if (lastKeyPoint == null) {
-			lastKeyPoint = region.getKeyPoint().clone();
+	public void compute(long[] point, T output) {
+		if (lastPoint == null) {
 			lastPoint = point.clone();
-			otherFunc.evaluate(region, point, lastValue);
+			otherFunc.compute(point, lastValue);
 		}
-		else if (!sameInput(region, point)) {
-			recordInput(region, point);
-			otherFunc.evaluate(region, point, lastValue);
+		else if (!Arrays.equals(point,lastPoint)) {
+			recordInput(point);
+			otherFunc.compute(point, lastValue);
 		}
 		output.setValue(lastValue);
 	}
@@ -98,27 +98,8 @@ public class CachingFunction<T extends DataCopier<T>> implements Function<long[]
 
 	// -- private helpers --
 	
-	private boolean sameInput(Neighborhood<long[]> region, long[] point) {
-		// NOTE - we will expect that this code only ever called with same region
-		// extents so we won't test negative and positive offsets
-		long[] input, cache;
-		input = region.getKeyPoint();
-		cache = lastKeyPoint;
-		for (int i = 0; i < cache.length; i++)
-			if (input[i] != cache[i])
-				return false;
-		input = point;
-		cache = lastPoint;
-		for (int i = 0; i < cache.length; i++)
-			if (input[i] != cache[i])
-				return false;
-		return true;
-	}
-	
-	private void recordInput(Neighborhood<long[]> region, long[] point) {
-		long[] keyPt = region.getKeyPoint();
+	private void recordInput(long[] point) {
 		for (int i = 0; i < lastPoint.length; i++) {
-			lastKeyPoint[i] = keyPt[i];
 			lastPoint[i] = point[i];
 		}
 	}

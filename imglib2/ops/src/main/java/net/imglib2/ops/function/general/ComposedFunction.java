@@ -40,7 +40,7 @@ package net.imglib2.ops.function.general;
 import java.util.ArrayList;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
+import net.imglib2.ops.PointSet;
 
 // TODO - this is a simple implementation. It only works from a fixed point
 // along a axis. Ideally in the future we'd have different shaped functions
@@ -75,52 +75,38 @@ import net.imglib2.ops.Neighborhood;
  */
 public class ComposedFunction<T> implements Function<long[],T> {
 
-	private final int dimension;
-	private final long startIndex;
+	private final int numDims;
+	private final ArrayList<PointSet> regions;
 	private final ArrayList<Function<long[],T>> functions;
-	private final ArrayList<Long> widths;
-	private long[] relativePosition;
-	private Neighborhood<long[]> localNeigh;
 	
-	public ComposedFunction(int dim, long startPoint) {
-		dimension = dim;
-		startIndex = startPoint;
-		functions = new ArrayList<Function<long[],T>>();
-		widths = new ArrayList<Long>();
-		relativePosition = null;
-		localNeigh = null;
+	public ComposedFunction(int numDims) {
+		this.numDims = numDims;
+		this.regions = new ArrayList<PointSet>();
+		this.functions = new ArrayList<Function<long[],T>>();
 	}
 
-	public void add(Function<long[],T> function, long width) {
+	public void add(PointSet region, Function<long[],T> function) {
+		if (region.numDimensions() != numDims)
+			throw new IllegalArgumentException(
+				"ComposedFunction::add() - cannot add region with incompatible dimensions");
+		regions.add(region);
 		functions.add(function);
-		widths.add(width);
-		if (width < 1)
-			throw new IllegalArgumentException("ComposedFunction: function domain width must be positive");
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> neigh, long[] point, T output) {
-		if (relativePosition == null) {
-			relativePosition = new long[point.length];
-			localNeigh = neigh.copy();
-		}
-		for (int i = 0; i < relativePosition.length; i++)
-			relativePosition[i] = point[i];
-		relativePosition[dimension] -= startIndex;
-		long indexVal = point[dimension];
-		long currSpot = startIndex;
-		for (int i = 0; i < functions.size(); i++) {
-			long functionWidth = widths.get(i);
-			if (indexVal < currSpot + functionWidth) {
-				localNeigh.moveTo(relativePosition);
-				functions.get(i).evaluate(localNeigh, relativePosition, output);
+	public void compute(long[] point, T output) {
+		if (point.length != numDims)
+			throw new IllegalArgumentException(
+				"input point does not match dimensionality of composed function");
+		for (int i = 0; i < regions.size(); i++) {
+			final PointSet region = regions.get(i);
+			if (region.includes(point)) {
+				functions.get(i).compute(point, output);
 				return;
 			}
-			currSpot += functionWidth;
-			relativePosition[dimension] -= functionWidth;
 		}
 		throw new IllegalArgumentException(
-				"ComposedFunction::evaluate() - given point is out of bounds");
+				"ComposedFunction::compute() - given point is out of bounds");
 	}
 
 	@Override
@@ -133,9 +119,10 @@ public class ComposedFunction<T> implements Function<long[],T> {
 	
 	@Override
 	public ComposedFunction<T> copy() {
-		ComposedFunction<T> newFunc = new ComposedFunction<T>(dimension, startIndex);
+		ComposedFunction<T> newFunc = new ComposedFunction<T>(numDims);
 		for (int i = 0; i < functions.size(); i++)
-			newFunc.add(functions.get(i).copy(), widths.get(i));
+			newFunc.add(regions.get(i), functions.get(i).copy());
+		// TODO - for thread safety regions should be duplicated FIXME
 		return newFunc;
 	}
 }

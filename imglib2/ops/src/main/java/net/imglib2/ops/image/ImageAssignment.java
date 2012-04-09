@@ -45,9 +45,10 @@ import java.util.concurrent.Executors;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.ops.Condition;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.ops.InputIterator;
+import net.imglib2.ops.InputIteratorFactory;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.ComplexType;
 
 // In old AssignOperation could do many things
@@ -75,7 +76,7 @@ import net.imglib2.type.numeric.ComplexType;
  *  
  * @author Barry DeZonia
  */
-public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> {
+public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>,INPUT> {
 
 	// -- instance variables --
 
@@ -97,46 +98,21 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> 
 	 * @param span - the extents of the region to assign within the Img<A>
 	 * @param function - the Function<long[],B> to evaluate at each point of the region
 	 * @param condition - the condition that must be satisfied
-	 * @param negOffs - the extents in the negative direction of the working neighborhood
-	 * @param posOffs - the extents in the positive direction of the working neighborhood
+	 * @param factory - a factory for generating an input space
 	 * 
 	 */
 	public ImageAssignment(
 		Img<A> img,
 		long[] origin,
 		long[] span,
-		Function<long[],B> function,
-		Condition<long[]> condition,
-		long[] negOffs,
-		long[] posOffs)
+		Function<INPUT,B> function,
+		Condition<INPUT> condition,
+		InputIteratorFactory<INPUT> factory)
 	{
 		this.assigning = false;
 		this.executor = null;
 		this.tasks = null;
-		setupTasks(img, origin, span, function, condition, negOffs, posOffs);
-	}
-	
-	/**
-	 * Constructor. A working neighborhood is assumed to be a single pixel. This
-	 * neighborhood is moved point by point over the Img<A> and passed to the
-	 * function for evaluation. Pixels are assigned in the Img<A> if the given
-	 * condition is satisfied at that point.
-	 *
-	 * @param img - the Img<A extends ComplexType<A>> to assign data values to
-	 * @param origin - the origin of the region to assign within the Img<A>
-	 * @param span - the extents of the region to assign within the Img<A>
-	 * @param function - the Function<long[],B> to evaluate at each point of the region
-	 * @param condition - the condition that must be satisfied
-	 * 
-	 */
-	public ImageAssignment(
-		Img<A> img,
-		long[] origin,
-		long[] span,
-		Function<long[],B> function,
-		Condition<long[]> condition)
-	{
-		this(img, origin, span, function, condition, new long[origin.length], new long[origin.length]);
+		setupTasks(img, origin, span, function, condition, factory);
 	}
 		
 	// -- public interface --
@@ -204,10 +180,9 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> 
 		Img<A> img,
 		long[] origin,
 		long[] span,
-		Function<long[],B> func,
-		Condition<long[]> cond,
-		long[] negOffs,
-		long[] posOffs)
+		Function<INPUT,B> func,
+		Condition<INPUT> cond,
+		InputIteratorFactory<INPUT> factory)
 	{
 		tasks = new ArrayList<Runnable>();
 		int axis = chooseBestAxis(span);
@@ -218,7 +193,7 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> 
 		while (startOffset < span[axis]) {
 			if (startOffset + length > span[axis]) length = span[axis] - startOffset;
 			Runnable task =
-					task(img, origin, span, axis, origin[axis] + startOffset, length, func, cond, negOffs, posOffs);
+					task(img, origin, span, axis, origin[axis] + startOffset, length, func, cond, factory);
 			tasks.add(task);
 			startOffset += length;
 		}
@@ -275,10 +250,9 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> 
 		int axis,
 		long startIndex,
 		long length,
-		Function<long[],B> fn,
-		Condition<long[]> cnd,
-		long[] nOffsets,
-		long[] pOffsets)
+		Function<INPUT,B> fn,
+		Condition<INPUT> cnd,
+		InputIteratorFactory<INPUT> factory)
 	{
 		//System.out.println("axis "+axis+" start "+startIndex+" len "+length);
 		final long[] regOrigin = imageOrigin.clone();
@@ -286,18 +260,22 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> 
 		final long[] regSpan = imageSpan.clone();
 		regSpan[axis] = length;
 		
+		final long[] regMin = regOrigin;
+		final long[] regMax = new long[regMin.length];
+		for (int i = 0; i < regMin.length; i++)
+			regMax[i] = regMin[i] + regSpan[i] - 1;
+		
+		HyperVolumePointSet region = new HyperVolumePointSet(regMin, regMax);
+		
 		// FIXME - warning unavoidable at moment. We don't have the type. If
 		// we remove typing from RegionRunner it won't compile.
 
 		return
 			new RegionRunner<A,B>(
 				img,
-				regOrigin,
-				regSpan,
+				factory.createInputIterator(region),
 				fn.copy(),
-				(cnd == null ? null : cnd.copy()),
-				nOffsets.clone(),
-				pOffsets.clone());
+				(cnd == null ? null : cnd.copy()));
 	}
 
 	/**
@@ -308,28 +286,23 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> 
 		implements Runnable
 	{
 		private final Img<U> img;
-		private final Function<long[], V> function;
-		private final Condition<long[]> condition;
-		private final DiscreteNeigh region;
-		private final DiscreteNeigh neighborhood;
+		private final Function<INPUT, V> function;
+		private final Condition<INPUT> condition;
+		private final InputIterator<INPUT> iter;
 
 		/**
 		 * Constructor
 		 */
 		public RegionRunner(
 			Img<U> img,
-			long[] origin,
-			long[] span,
-			Function<long[], V> func,
-			Condition<long[]> cond,
-			long[] negOffs,
-			long[] posOffs)
+			InputIterator<INPUT> iter,
+			Function<INPUT, V> func,
+			Condition<INPUT> cond)
 		{
 			this.img = img;
 			this.function = func;
 			this.condition = cond;
- 			this.region = buildRegion(origin, span);
-			this.neighborhood = new DiscreteNeigh(new long[negOffs.length], negOffs, posOffs);
+			this.iter = iter;
 		}
 
 		/**
@@ -339,16 +312,13 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> 
 		public void run() {
 			final RandomAccess<U> accessor = img.randomAccess();
 			final V output = function.createOutput();
-			final RegionIndexIterator iter = new RegionIndexIterator(region);
+			INPUT input = null;
 			while (iter.hasNext()) {
-				iter.fwd();
-				neighborhood.moveTo(iter.getPosition());
-				boolean proceed =
-						(condition == null) ||
-						(condition.isTrue(neighborhood,iter.getPosition()));
+				input = iter.next(input);
+				boolean proceed = (condition == null) || (condition.isTrue(input));
 				if (proceed) {
-					function.evaluate(neighborhood, iter.getPosition(), output);
-					accessor.setPosition(iter.getPosition());
+					function.compute(input, output);
+					accessor.setPosition(iter.getCurrentPoint());
 					accessor.get().setReal(output.getRealDouble());
 					accessor.get().setImaginary(output.getImaginaryDouble());
 					// FIXME
@@ -361,18 +331,6 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>> 
 					// version just set R. We could adopt that approach once again.
 				}
 			}
-		}
-		
-		/**
-		 * Builds a DiscreteNeigh region from an origin and span. The
-		 * DiscreteNeigh is needed for use with a RegionIndexIterator.
-		 */
-		private DiscreteNeigh buildRegion(long[] org, long[] spn) {
-			long[] nOffsets = new long[org.length];
-			long[] pOffsets = new long[org.length];
-			for (int i = 0; i < org.length; i++)
-				pOffsets[i] = spn[i] - 1;
-			return new DiscreteNeigh(org, nOffsets, pOffsets);
 		}
 	}
 }

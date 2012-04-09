@@ -39,30 +39,30 @@ package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class GeneralBinaryFunction<INDEX,
-		INPUT1_TYPE extends ComplexType<INPUT1_TYPE>,
-		INPUT2_TYPE extends ComplexType<INPUT2_TYPE>,
-		OUTPUT_TYPE extends ComplexType<OUTPUT_TYPE>>
-	implements Function<INDEX, OUTPUT_TYPE>
+public class GeneralBinaryFunction<INPUT,
+		C1 extends ComplexType<C1>,
+		C2 extends ComplexType<C2>,
+		OUTPUT extends ComplexType<OUTPUT>>
+	implements Function<INPUT, OUTPUT>
 {
-	private final Function<INDEX, INPUT1_TYPE> f1;
-	private final Function<INDEX, INPUT2_TYPE> f2;
-	private final INPUT1_TYPE input1;
-	private final INPUT2_TYPE input2;
-	private final BinaryOperation<INPUT1_TYPE,INPUT2_TYPE,OUTPUT_TYPE> operation;
-	private final OUTPUT_TYPE type;
+	private final Function<INPUT, C1> f1;
+	private final Function<INPUT, C2> f2;
+	private final C1 input1;
+	private final C2 input2;
+	private final BinaryOperation<C1,C2,OUTPUT> operation;
+	private final OUTPUT type;
 
-	public GeneralBinaryFunction(Function<INDEX, INPUT1_TYPE> f1,
-			Function<INDEX, INPUT2_TYPE> f2,
-			BinaryOperation<INPUT1_TYPE,INPUT2_TYPE,OUTPUT_TYPE> operation,
-			OUTPUT_TYPE type) {
+	public GeneralBinaryFunction(Function<INPUT,C1> f1,
+			Function<INPUT,C2> f2,
+			BinaryOperation<C1,C2,OUTPUT> operation,
+			OUTPUT type)
+	{
 		this.type = type;
 		this.f1 = f1;
 		this.f2 = f2;
@@ -72,21 +72,21 @@ public class GeneralBinaryFunction<INDEX,
 	}
 
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point,
-			OUTPUT_TYPE output) {
-		f1.evaluate(region, point, input1);
-		f2.evaluate(region, point, input2);
+	public void compute(INPUT input, OUTPUT output) {
+		f1.compute(input, input1);
+		f2.compute(input, input2);
 		operation.compute(input1, input2, output);
 	}
 
 	@Override
-	public GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE> copy() {
-		return new GeneralBinaryFunction<INDEX, INPUT1_TYPE, INPUT2_TYPE, OUTPUT_TYPE>(
-				f1.copy(), f2.copy(), operation.copy(), type);
+	public GeneralBinaryFunction<INPUT, C1, C2, OUTPUT> copy()
+	{
+		return new GeneralBinaryFunction<INPUT, C1, C2, OUTPUT>(
+				f1.copy(), f2.copy(), operation.copy(), type.createVariable());
 	}
 
 	@Override
-	public OUTPUT_TYPE createOutput() {
+	public OUTPUT createOutput() {
 		return type.createVariable();
 	}
 }

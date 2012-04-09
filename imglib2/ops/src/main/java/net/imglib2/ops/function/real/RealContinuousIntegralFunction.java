@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.type.numeric.RealType;
 
 // TODO - An example implementation of a real integral function.
@@ -58,14 +57,16 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 	
 	private final Function<double[],T> otherFunc;
 	private final double[] deltas;
+	private final double[] ranges;
 	private final double cellSize;
 	private final T variable;
-	private double[] position;
+	private final double[] position;
 	
 	// -- constructor --
 	
-	public RealContinuousIntegralFunction(Function<double[],T> otherFunc, double[] deltas) {
+	public RealContinuousIntegralFunction(Function<double[],T> otherFunc, double[] ranges, double[] deltas) {
 		this.otherFunc = otherFunc;
+		this.ranges = ranges.clone();
 		this.deltas = deltas.clone();
 		this.variable = createOutput();
 		this.cellSize = cellSize(deltas);
@@ -75,25 +76,25 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 	// -- public interface --
 	
 	@Override
-	public void evaluate(Neighborhood<double[]> region, double[] point, T output) {
+	public void compute(double[] point, T output) {
 		
 		for (int i = 0; i < position.length; i++)
-			position[i] = point[i] - region.getNegativeOffsets()[i];
+			position[i] = point[i];
 
 		double sum = 0;
 		
 		boolean done = false;
 		while (!done) {
-			otherFunc.evaluate(region, position, variable);
+			otherFunc.compute(position, variable);
 			sum += variable.getRealDouble() * cellSize;
-			done = !nextPosition(position, region);
+			done = !nextPosition(position, point);
 		}
 		output.setReal(sum);
 	}
 
 	@Override
 	public RealContinuousIntegralFunction<T> copy() {
-		return new RealContinuousIntegralFunction<T>(otherFunc.copy(), deltas);
+		return new RealContinuousIntegralFunction<T>(otherFunc.copy(), ranges, deltas);
 	}
 
 	// -- private helpers --
@@ -106,12 +107,12 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 		return totalSize;
 	}
 	
-	private boolean nextPosition(double[] pos, Neighborhood<double[]> region) {
+	private boolean nextPosition(double[] pos, double[] startPt) {
 		for (int i = 0; i < pos.length; i++) {
 			pos[i] += deltas[i];
-			if (pos[i] <= region.getKeyPoint()[i] + region.getPositiveOffsets()[i])
+			if (pos[i] <= startPt[i] + ranges[i])
 				return true;
-			pos[i] = region.getKeyPoint()[i] - region.getNegativeOffsets()[i];
+			pos[i] = startPt[i];
 		}
 		return false;
 	}

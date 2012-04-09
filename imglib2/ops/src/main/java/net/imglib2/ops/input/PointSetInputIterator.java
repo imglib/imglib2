@@ -35,46 +35,42 @@
  */
 
 
-package net.imglib2.ops;
+package net.imglib2.ops.input;
 
+import net.imglib2.ops.InputIterator;
+import net.imglib2.ops.PointSet;
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class ContinuousNeigh extends Neighborhood<double[]> {
+public class PointSetInputIterator implements InputIterator<PointSet> {
 
-	public ContinuousNeigh(double[] keyPt, double[] negOffs, double[] posOffs) {
-		super(keyPt, negOffs, posOffs);
-		// TODO - do this in base class
-		for (int i = 0; i < keyPt.length; i++) {
-			if ((negOffs[i] < 0) || (posOffs[i] < 0))
-				throw new IllegalArgumentException("ContinuousNeigh() : offsets must be nonnegative in magnitude");
-		}
+	private final PointSet subspace;
+	private final PointInputIterator iter;
+	private long[] pos;
+	
+	public PointSetInputIterator(PointSet space, PointSet subspace) {
+		iter = new PointInputIterator(space);
+		this.subspace = subspace;
+		pos = null;
+	}
+	
+	@Override
+	public boolean hasNext() {
+		return iter.hasNext();
 	}
 
 	@Override
-	public ContinuousNeigh copy() {
-		return new ContinuousNeigh(
-			getKeyPoint().clone(),
-			getNegativeOffsets().clone(),
-			getPositiveOffsets().clone());
+	public PointSet next(PointSet currVal) {
+		pos = iter.next(pos);
+		subspace.setAnchor(pos);
+		return subspace;
 	}
 
 	@Override
-	public void restrict(int dimNumber, double[] twoValues) {
-		if ((twoValues[0] < 0) || (twoValues[1] < 0))
-			throw new IllegalArgumentException("ContinuousNeigh : offsets out of range: each one must be >= 0");
-		getNegativeOffsets()[dimNumber] = twoValues[0];
-		getPositiveOffsets()[dimNumber] = twoValues[1];
+	public long[] getCurrentPoint() {
+		return iter.getCurrentPoint();
 	}
 
-	public double size() {
-		double size = 1;
-		for (int i = 0; i < getNumDims(); i++) {
-			size *= 1 + getNegativeOffsets()[i] + getPositiveOffsets()[i];
-		}
-		return size;
-	}
 }
-

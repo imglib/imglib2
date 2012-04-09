@@ -37,68 +37,46 @@
 
 package net.imglib2.ops.function.real;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.ops.PointSet;
 import net.imglib2.type.numeric.RealType;
+
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class RealMedianFunction<T extends RealType<T>> implements Function<long[],T> {
-
+public class RealMedianFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
+{
+	private final PrimitiveDoubleArray values;
 	private final Function<long[],T> otherFunc;
-	private final T variable;
-	private final ArrayList<Double> values;
-	private RegionIndexIterator iter;
+	private final RealSampleCollector<T> collector;
+	private final StatCalculator calculator;
 	
 	public RealMedianFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
-		this.variable = createOutput();
-		this.values = new ArrayList<Double>();
-		this.iter = null;
+		values = new PrimitiveDoubleArray();
+		collector = new RealSampleCollector<T>();
+		calculator = new StatCalculator();
 	}
-
-	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
-		if (iter == null) {
-			iter = new RegionIndexIterator(region);
-		}
-		else
-			iter.relocate(region.getKeyPoint());
-		iter.reset();
-		int numElements = 0;
-		values.clear();
-		while (iter.hasNext()) {
-			iter.fwd();
-			otherFunc.evaluate(region, iter.getPosition(), variable);
-			values.add(variable.getRealDouble());
-			numElements++;
-		}
-		Collections.sort(values);
-		if (numElements == 0)
-			output.setReal(0);
-		else if ((numElements % 2) == 1)  // odd number of elements
-			output.setReal( values.get(numElements/2) );
-		else { // even number of elements
-			double value1 = values.get((numElements/2) - 1); 
-			double value2 = values.get((numElements/2));
-			output.setReal((value1 + value2) / 2);
-		}
-	}
-
+	
 	@Override
 	public RealMedianFunction<T> copy() {
 		return new RealMedianFunction<T>(otherFunc.copy());
 	}
 
 	@Override
-	public T createOutput() {
-		return this.otherFunc.createOutput();
+	public void compute(PointSet input, T output) {
+		collector.collect(input, otherFunc, values);
+		double value = calculator.median(values);
+		output.setReal(value);
 	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
+	}
+
 }

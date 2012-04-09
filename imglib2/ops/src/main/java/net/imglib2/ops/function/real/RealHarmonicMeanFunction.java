@@ -35,45 +35,48 @@
  */
 
 
-package net.imglib2.ops;
+package net.imglib2.ops.function.real;
+
+import net.imglib2.ops.Function;
+import net.imglib2.ops.PointSet;
+import net.imglib2.type.numeric.RealType;
+
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class DiscreteNeigh extends Neighborhood<long[]> {
-
-	public DiscreteNeigh(long[] keyPt, long[] negOffs, long[] posOffs) {
-		super(keyPt, negOffs, posOffs);
-		// TODO - do this in base class
-		for (int i = 0; i < keyPt.length; i++) {
-			if ((negOffs[i] < 0) || (posOffs[i] < 0))
-				throw new IllegalArgumentException("DiscreteNeigh() : offsets must be nonnegative in magnitude");
-		}
+public class RealHarmonicMeanFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
+{
+	private final PrimitiveDoubleArray values;
+	private final Function<long[],T> otherFunc;
+	private final RealSampleCollector<T> collector;
+	private final StatCalculator calculator;
+	
+	public RealHarmonicMeanFunction(Function<long[],T> otherFunc)
+	{
+		this.otherFunc = otherFunc;
+		values = new PrimitiveDoubleArray();
+		collector = new RealSampleCollector<T>();
+		calculator = new StatCalculator();
 	}
 	
 	@Override
-	public DiscreteNeigh copy() {
-		return new DiscreteNeigh(
-			getKeyPoint().clone(),
-			getNegativeOffsets().clone(),
-			getPositiveOffsets().clone());
+	public RealHarmonicMeanFunction<T> copy() {
+		return new RealHarmonicMeanFunction<T>(otherFunc.copy());
 	}
 
 	@Override
-	public void restrict(int dimNumber, long[] twoValues) {
-		if ((twoValues[0] < 0) || (twoValues[1] < 0))
-			throw new IllegalArgumentException("DiscreteNeigh : offsets out of range: each one must be >= 0");
-		getNegativeOffsets()[dimNumber] = twoValues[0];
-		getPositiveOffsets()[dimNumber] = twoValues[1];
+	public void compute(PointSet input, T output) {
+		collector.collect(input, otherFunc, values);
+		double value = calculator.harmonicMean(values);
+		output.setReal(value);
 	}
 
-	public long size() {
-		long size = 1;
-		for (int i = 0; i < getNumDims(); i++) {
-			size *= 1 + getNegativeOffsets()[i] + getPositiveOffsets()[i];
-		}
-		return size;
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
+
 }
-
