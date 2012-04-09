@@ -45,16 +45,67 @@ package net.imglib2.ops.function.real;
  */
 public class StatCalculator {
 
-	public double min(PrimitiveDoubleArray values) {
+	public double alphaTrimmedMean(PrimitiveDoubleArray values, int halfTrimSize){
+		final int trimSize = halfTrimSize * 2;
+		final int numElements = values.size();
+		if (numElements <= trimSize)
+			throw new IllegalArgumentException(
+				"number of samples must be greater than number of trimmed values");
+		values.sortValues();
+		final int top = values.size() - halfTrimSize;
+		double sum = 0;
+		for (int i = halfTrimSize; i < top; i++) {
+			sum += values.get(i);
+		}
+		return sum / (numElements - trimSize);
+	}
+
+	public double arithmeticMean(PrimitiveDoubleArray values) {
 		final int numElements = values.size();
 		if (numElements <= 0)
 			throw new IllegalArgumentException(
 				"number of samples must be greater than 0");
-		double min = Double.POSITIVE_INFINITY;
+		double sum = 0;
+		for (int i = 0; i < numElements; i++)
+			sum += values.get(i);
+		return sum / numElements;
+	}
+
+	public double contraharmonicMean(PrimitiveDoubleArray values, double order) {
+		final int numElements = values.size();
+		if (numElements <= 0)
+			throw new IllegalArgumentException(
+				"number of samples must be greater than 0");
+		double sum1 = 0;
+		double sum2 = 0;
 		for (int i = 0; i < numElements; i++) {
-			min = Math.min(min, values.get(i));
+			double value = values.get(i);
+			sum1 += Math.pow(value, order+1);
+			sum2 += Math.pow(value, order);
 		}
-		return min;
+		return sum1 / sum2;
+	}
+
+	public double geometricMean(PrimitiveDoubleArray values) {
+		int numElements = values.size();
+		if (numElements <= 0)
+			throw new IllegalArgumentException(
+					"number of samples must be greater than 0");
+		double prod = 1;
+		for (int i = 0; i < numElements; i++)
+			prod *= values.get(i);
+		return Math.pow(prod, 1.0/numElements);
+	}
+	
+	public double harmonicMean(PrimitiveDoubleArray values) {
+		int numElements = values.size();
+		if (numElements <= 0)
+			throw new IllegalArgumentException(
+					"number of samples must be greater than 0");
+		double sum = 0;
+		for (int i = 0; i < numElements; i++)
+			sum += 1 / values.get(i);
+		return numElements / sum; // looks weird but it is correct
 	}
 
 	public double max(PrimitiveDoubleArray values) {
@@ -74,14 +125,17 @@ public class StatCalculator {
 		if (numElements <= 0)
 			throw new IllegalArgumentException(
 				"number of samples must be greater than 0");
+		
 		values.sortValues();
-		if ((numElements % 2) == 1)  // odd number of numElements
+
+		// odd number of elements
+		if ((numElements % 2) == 1)
 			return values.get(numElements/2);
-		else { // even number of numElements
-			double value1 = values.get((numElements/2) - 1); 
-			double value2 = values.get((numElements/2));
-			return (value1 + value2) / 2;
-		}
+		
+		// else an even number of elements
+		double value1 = values.get((numElements/2) - 1); 
+		double value2 = values.get((numElements/2));
+		return (value1 + value2) / 2;
 	}
 	
 	public double midpoint(PrimitiveDoubleArray values) {
@@ -90,95 +144,18 @@ public class StatCalculator {
 		return (min + max) / 2;
 	}
 	
-	public double variance(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 1) return 0;
-		double sum = sumOfSquareDeviations(values);
-		return sum / numElements;
-	}
-	
-	public double sampleVariance(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 1) return 0;
-		double sum = sumOfSquareDeviations(values);
-		return sum / (numElements-1);
-	}
-
-	public double arithmeticMean(PrimitiveDoubleArray values) {
+	public double min(PrimitiveDoubleArray values) {
 		final int numElements = values.size();
 		if (numElements <= 0)
 			throw new IllegalArgumentException(
 				"number of samples must be greater than 0");
-		double sum = 0;
-		for (int i = 0; i < numElements; i++)
-			sum += values.get(i);
-		return sum / numElements;
-	}
-
-	public double harmonicMean(PrimitiveDoubleArray values) {
-		int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-					"number of samples must be greater than 0");
-		double sum = 0;
-		for (int i = 0; i < numElements; i++)
-			sum += 1 / values.get(i);
-		return numElements / sum; // looks weired but it is correct
-	}
-
-	public double geometricMean(PrimitiveDoubleArray values) {
-		int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-					"number of samples must be greater than 0");
-		double prod = 1;
-		for (int i = 0; i < numElements; i++)
-			prod *= values.get(i);
-		return Math.pow(prod, 1.0/numElements);
-	}
-	
-	public double contraharmonicMean(PrimitiveDoubleArray values, double order) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than 0");
-		double sum1 = 0;
-		double sum2 = 0;
+		double min = Double.POSITIVE_INFINITY;
 		for (int i = 0; i < numElements; i++) {
-			double value = values.get(i);
-			sum1 += Math.pow(value, order+1);
-			sum2 += Math.pow(value, order);
+			min = Math.min(min, values.get(i));
 		}
-		return sum1 / sum2;
+		return min;
 	}
 
-	public double alphaTrimmedMean(PrimitiveDoubleArray values, int halfTrimSize) {
-		final int trimSize = halfTrimSize * 2;
-		final int numElements = values.size();
-		if (numElements <= trimSize)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than number of trimmed values");
-		values.sortValues();
-		final int top = values.size() - halfTrimSize;
-		double sum = 0;
-		for (int i = halfTrimSize; i < top; i++) {
-			sum += values.get(i);
-		}
-		return sum / (numElements - trimSize);
-	}
-	
-	public double sum(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than 0");
-		double sum = 0;
-		for (int i = 0; i < numElements; i++)
-			sum += values.get(i);
-		return sum;
-	}
-	
-	
 	public double product(PrimitiveDoubleArray values) {
 		final int numElements = values.size();
 		if (numElements <= 0)
@@ -190,7 +167,25 @@ public class StatCalculator {
 		return prod;
 	}
 	
-	public double sumOfSquareDeviations(PrimitiveDoubleArray values) {
+	public double sampleVariance(PrimitiveDoubleArray values) {
+		final int numElements = values.size();
+		if (numElements <= 1) return 0;
+		double sum = sumOfSquaredDeviations(values);
+		return sum / (numElements-1);
+	}
+
+	public double sum(PrimitiveDoubleArray values) {
+		final int numElements = values.size();
+		if (numElements <= 0)
+			throw new IllegalArgumentException(
+				"number of samples must be greater than 0");
+		double sum = 0;
+		for (int i = 0; i < numElements; i++)
+			sum += values.get(i);
+		return sum;
+	}
+	
+	public double sumOfSquaredDeviations(PrimitiveDoubleArray values) {
 		final int numElements = values.size();
 		if (numElements <= 0) return 0;
 		final double mean = arithmeticMean(values);
@@ -200,5 +195,12 @@ public class StatCalculator {
 			sum += (term * term);
 		}
 		return sum;
+	}
+	
+	public double variance(PrimitiveDoubleArray values) {
+		final int numElements = values.size();
+		if (numElements <= 1) return 0;
+		double sum = sumOfSquaredDeviations(values);
+		return sum / numElements;
 	}
 }
