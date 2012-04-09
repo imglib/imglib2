@@ -46,31 +46,33 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealSumFunction<T extends RealType<T>>
+public class RealAlphaTrimmedMeanFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
-	private final PrimitiveDoubleArray values;
 	private final Function<long[],T> otherFunc;
+	private final int halfTrimSize;
+	private final PrimitiveDoubleArray values;
 	private final RealSampleCollector<T> collector;
 	private final StatCalculator calculator;
 	
-	public RealSumFunction(Function<long[],T> otherFunc)
+	public RealAlphaTrimmedMeanFunction(Function<long[],T> otherFunc, int halfTrimSize)
 	{
 		this.otherFunc = otherFunc;
+		this.halfTrimSize = halfTrimSize;
 		values = new PrimitiveDoubleArray();
 		collector = new RealSampleCollector<T>();
 		calculator = new StatCalculator();
 	}
 	
 	@Override
-	public RealSumFunction<T> copy() {
-		return new RealSumFunction<T>(otherFunc.copy());
+	public RealAlphaTrimmedMeanFunction<T> copy() {
+		return new RealAlphaTrimmedMeanFunction<T>(otherFunc.copy(), halfTrimSize);
 	}
 
 	@Override
 	public void compute(PointSet input, T output) {
 		collector.collect(input, otherFunc, values);
-		double value = calculator.sum(values);
+		double value = calculator.alphaTrimmedMean(values, halfTrimSize);
 		output.setReal(value);
 	}
 

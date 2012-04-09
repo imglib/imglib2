@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 
@@ -55,14 +54,14 @@ public class ImaginaryAdapterFunction<INDEX,C extends ComplexType<C>, R extends 
 	private final R rType;
 	
 	public ImaginaryAdapterFunction(Function<INDEX,C> complexFunc, C cType, R rType) {
-		this.rType = rType;
+		this.rType = rType.createVariable();
 		this.cType = cType.createVariable();
 		this.complexFunc = complexFunc;
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point, R r) {
-		complexFunc.evaluate(region, point, cType);
+	public void compute(INDEX point, R r) {
+		complexFunc.compute(point, cType);
 		r.setReal(cType.getImaginaryDouble());
 	}
 

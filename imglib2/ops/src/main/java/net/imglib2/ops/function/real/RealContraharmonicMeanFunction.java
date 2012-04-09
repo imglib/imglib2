@@ -46,31 +46,33 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealSumFunction<T extends RealType<T>>
+public class RealContraharmonicMeanFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
-	private final PrimitiveDoubleArray values;
 	private final Function<long[],T> otherFunc;
+	private final double order;
+	private final PrimitiveDoubleArray values;
 	private final RealSampleCollector<T> collector;
 	private final StatCalculator calculator;
 	
-	public RealSumFunction(Function<long[],T> otherFunc)
+	public RealContraharmonicMeanFunction(Function<long[],T> otherFunc, double order)
 	{
 		this.otherFunc = otherFunc;
+		this.order = order;
 		values = new PrimitiveDoubleArray();
 		collector = new RealSampleCollector<T>();
 		calculator = new StatCalculator();
 	}
 	
 	@Override
-	public RealSumFunction<T> copy() {
-		return new RealSumFunction<T>(otherFunc.copy());
+	public RealContraharmonicMeanFunction<T> copy() {
+		return new RealContraharmonicMeanFunction<T>(otherFunc.copy(), order);
 	}
 
 	@Override
 	public void compute(PointSet input, T output) {
 		collector.collect(input, otherFunc, values);
-		double value = calculator.sum(values);
+		double value = calculator.contraharmonicMean(values, order);
 		output.setReal(value);
 	}
 

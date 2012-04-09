@@ -46,7 +46,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealSumFunction<T extends RealType<T>>
+public class RealMidpointFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
 	private final PrimitiveDoubleArray values;
@@ -54,7 +54,7 @@ public class RealSumFunction<T extends RealType<T>>
 	private final RealSampleCollector<T> collector;
 	private final StatCalculator calculator;
 	
-	public RealSumFunction(Function<long[],T> otherFunc)
+	public RealMidpointFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		values = new PrimitiveDoubleArray();
@@ -63,14 +63,14 @@ public class RealSumFunction<T extends RealType<T>>
 	}
 	
 	@Override
-	public RealSumFunction<T> copy() {
-		return new RealSumFunction<T>(otherFunc.copy());
+	public RealMidpointFunction<T> copy() {
+		return new RealMidpointFunction<T>(otherFunc.copy());
 	}
 
 	@Override
 	public void compute(PointSet input, T output) {
 		collector.collect(input, otherFunc, values);
-		double value = calculator.sum(values);
+		double value = calculator.midpoint(values);
 		output.setReal(value);
 	}
 

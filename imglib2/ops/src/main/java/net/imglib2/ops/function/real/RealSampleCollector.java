@@ -37,8 +37,10 @@
 
 package net.imglib2.ops.function.real;
 
+
 import net.imglib2.ops.Function;
 import net.imglib2.ops.PointSet;
+import net.imglib2.ops.PointSetIterator;
 import net.imglib2.type.numeric.RealType;
 
 
@@ -46,37 +48,34 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealSumFunction<T extends RealType<T>>
-	implements Function<PointSet,T>
-{
-	private final PrimitiveDoubleArray values;
-	private final Function<long[],T> otherFunc;
-	private final RealSampleCollector<T> collector;
-	private final StatCalculator calculator;
-	
-	public RealSumFunction(Function<long[],T> otherFunc)
+public class RealSampleCollector<T extends RealType<T>> {
+
+	private PointSet lastPointSet;
+	private PointSetIterator iter;
+	private T variable;
+
+	public RealSampleCollector()
 	{
-		this.otherFunc = otherFunc;
-		values = new PrimitiveDoubleArray();
-		collector = new RealSampleCollector<T>();
-		calculator = new StatCalculator();
+		this.lastPointSet = null;
+		this.iter = null;
+		this.variable = null;
 	}
 	
-	@Override
-	public RealSumFunction<T> copy() {
-		return new RealSumFunction<T>(otherFunc.copy());
+	public void collect(PointSet ps, Function<long[],T> function, PrimitiveDoubleArray values) {
+		if (ps != lastPointSet) {
+			lastPointSet = ps;
+			iter = ps.createIterator();
+		}
+		else {
+			iter.reset();
+		}
+		if (variable == null) variable = function.createOutput();
+		values.clear();
+		long[] pt;
+		while (iter.hasNext()) {
+			pt = iter.next();
+			function.compute(pt, variable);
+			values.add(variable.getRealDouble());
+		}
 	}
-
-	@Override
-	public void compute(PointSet input, T output) {
-		collector.collect(input, otherFunc, values);
-		double value = calculator.sum(values);
-		output.setReal(value);
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
-	}
-
 }

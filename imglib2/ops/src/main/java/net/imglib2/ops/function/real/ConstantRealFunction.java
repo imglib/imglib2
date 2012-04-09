@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.type.numeric.RealType;
 
 
@@ -55,7 +54,7 @@ public class ConstantRealFunction<INDEX, T extends RealType<T>> implements Funct
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point, T r) {
+	public void compute(INDEX point, T r) {
 		r.set(real);
 	}
 
