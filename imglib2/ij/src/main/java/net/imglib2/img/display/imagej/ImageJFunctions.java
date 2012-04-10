@@ -49,6 +49,7 @@ import net.imglib2.display.RealUnsignedByteConverter;
 import net.imglib2.display.RealUnsignedShortConverter;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.IntegerType;
@@ -74,7 +75,7 @@ public class ImageJFunctions
 {
 	final static AtomicInteger ai = new AtomicInteger();
 
-	public static <T extends NumericType<T>> Img< T > wrap( final ImagePlus imp ) { return ImagePlusAdapter.wrap( imp ); }
+	public static <T extends NumericType<T> & NativeType<T>> Img< T > wrap( final ImagePlus imp ) { return ImagePlusAdapter.wrap( imp ); }
 
 	public static Img<UnsignedByteType> wrapByte( final ImagePlus imp ) { return ImagePlusAdapter.wrapByte( imp ); }
 

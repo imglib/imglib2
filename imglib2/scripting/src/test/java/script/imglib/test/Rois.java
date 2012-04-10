@@ -33,6 +33,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.script.math.Add;
 import net.imglib2.script.view.RectangleROI;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -42,28 +43,28 @@ import net.imglib2.type.numeric.real.FloatType;
  */
 public class Rois {
 
-	static public final <T extends NumericType<T>> void main(String[] args) {
+	static public final <T extends NumericType<T> & NativeType<T>> void main(final String[] args) {
 		
 		// Generate some data
-		FloatProcessor b1 = new FloatProcessor(512, 512);
+		final FloatProcessor b1 = new FloatProcessor(512, 512);
 		b1.setValue(127);
 		b1.setRoi(new Roi(100, 100, 200, 200));
 		b1.fill();
 		
-		FloatProcessor b2 = new FloatProcessor(512, 512);
+		final FloatProcessor b2 = new FloatProcessor(512, 512);
 		b2.setValue(128);
 		b2.setRoi(new Roi(10, 30, 200, 200));
 		b2.fill();
 		
-		Img<T> img1 = ImageJFunctions.wrap(new ImagePlus("1", b1));
-		Img<T> img2 = ImageJFunctions.wrap(new ImagePlus("2", b2));
+		final Img<T> img1 = ImageJFunctions.wrap(new ImagePlus("1", b1));
+		final Img<T> img2 = ImageJFunctions.wrap(new ImagePlus("2", b2));
 		
 		
 		// Add two ROIs of both images
-		RectangleROI<T> r1 = new RectangleROI<T>(img1, 50, 50, 200, 200);
-		RectangleROI<T> r2 = new RectangleROI<T>(img2, 50, 50, 200, 200);
+		final RectangleROI<T> r1 = new RectangleROI<T>(img1, 50, 50, 200, 200);
+		final RectangleROI<T> r2 = new RectangleROI<T>(img2, 50, 50, 200, 200);
 		try {
-			Img<FloatType> result = new Add(r1, r2).asImage(1);
+			final Img<FloatType> result = new Add(r1, r2).asImage(1);
 			
 			new ImageJ();
 			
@@ -73,7 +74,7 @@ public class Rois {
 			ImageJFunctions.show(img2, "img2");
 			ImageJFunctions.show(result, "added rois");
 
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
