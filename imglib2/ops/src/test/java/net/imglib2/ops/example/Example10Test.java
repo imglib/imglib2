@@ -99,14 +99,17 @@ public class Example10Test {
 		Function<long[],ComplexDoubleType> spatialFunction =
 			new CartesianComplexFunction<long[],DoubleType,DoubleType,ComplexDoubleType>
 			(image,zero,new ComplexDoubleType());
-		dft = new DFTFunction<ComplexDoubleType>(spatialFunction, new long[]{XSIZE,YSIZE}, new ComplexDoubleType());
+		ArrayImgFactory<ComplexDoubleType> factory = new ArrayImgFactory<ComplexDoubleType>();
+		dft = new DFTFunction<ComplexDoubleType>(factory, spatialFunction, new long[]{XSIZE,YSIZE}, new ComplexDoubleType());
 		// TODO - test something
 		assertTrue(true);
 	}
 	
 	private void testIDFT() {
-		Function<long[],ComplexDoubleType> idft = new IDFTFunction<ComplexDoubleType>(
-			dft, new long[]{XSIZE,YSIZE}, new long[2], new long[2], new ComplexDoubleType());
+		ArrayImgFactory<ComplexDoubleType> factory = new ArrayImgFactory<ComplexDoubleType>();
+		Function<long[],ComplexDoubleType> idft =
+				new IDFTFunction<ComplexDoubleType>(
+						factory, dft, new long[]{XSIZE,YSIZE}, new ComplexDoubleType());
 		long[] pos = new long[2];
 		DoubleType original = new DoubleType();
 		ComplexDoubleType computed = new ComplexDoubleType();

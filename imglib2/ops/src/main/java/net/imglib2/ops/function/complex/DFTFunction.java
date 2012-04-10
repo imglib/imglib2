@@ -40,7 +40,6 @@ package net.imglib2.ops.function.complex;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.operation.binary.complex.ComplexAdd;
 import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
@@ -60,9 +59,10 @@ public class DFTFunction<T extends ComplexType<T>>
 {
 	// -- instance variables --
 
-	private Function<long[], T> spatialFunction;
-	private long[] span;
-	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType> dataArray;
+	private final Function<long[], T> spatialFunction;
+	private final long[] span;
+	private final ImgFactory<ComplexDoubleType> imgFactory;
+	private final ComplexImageFunction<ComplexDoubleType,ComplexDoubleType> dataArray;
 
 	// -- temporary per instance working variables --
 	private final ComplexAdd<T,T,T> adder;
@@ -81,7 +81,12 @@ public class DFTFunction<T extends ComplexType<T>>
 
 	// -- constructor --
 
-	public DFTFunction(Function<long[], T> spatialFunction, long[] span, T type) {
+	public DFTFunction(
+		ImgFactory<ComplexDoubleType> factory,
+		Function<long[], T> spatialFunction,
+		long[] span,
+		T type)
+	{
 		if (span.length != 2)
 			throw new IllegalArgumentException(
 					"DFTFunction is only designed for two dimensional functions");
@@ -96,7 +101,8 @@ public class DFTFunction<T extends ComplexType<T>>
 		
 		this.spatialFunction = spatialFunction;
 		this.span = span.clone();
-
+		this.imgFactory = factory;
+		
 		this.MINUS_TWO_PI_I = createOutput();
 		this.constant = createOutput();
 		this.expVal = createOutput();
@@ -118,7 +124,7 @@ public class DFTFunction<T extends ComplexType<T>>
 
 	@Override
 	public DFTFunction<T> copy() {
-		return new DFTFunction<T>(spatialFunction.copy(), span, type);
+		return new DFTFunction<T>(imgFactory, spatialFunction.copy(), span, type);
 	}
 
 	@Override
@@ -131,9 +137,6 @@ public class DFTFunction<T extends ComplexType<T>>
 	// TODO - use a ComplexImageAssignment here instead? Speed. Elegance?
 
 	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType> createDataArray() {
-		// TODO - this factory is always an array in memory with corresponding
-		// limitations
-		final ImgFactory<ComplexDoubleType> imgFactory = new ArrayImgFactory<ComplexDoubleType>();
 		final Img<ComplexDoubleType> img = imgFactory.create(span,
 				new ComplexDoubleType());
 		final RandomAccess<ComplexDoubleType> oAccessor = img.randomAccess();
