@@ -83,9 +83,11 @@ public class ImglibBenchmark {
 		}
 		else
 		{
-			dimensions = new long[] {24,24,24,24,24,24};
-			//dimensions = new long[] {32, 32, 32, 32, 32, 32 };
-			//dimensions = new long[] {100, 100, 100, 10, 10, 10};
+			//dimensions = new long[] {100000000};
+			//dimensions = new long[] {8192,8192};
+			dimensions = new long[] {50000,50000};
+			//dimensions = new long[] {384,384,384};
+			//dimensions = new long[] {28, 28, 28, 28, 28, 28 };
 		}
 		final ImglibBenchmark bench = new ImglibBenchmark(dimensions, testListImg);
 		bench.testPerformance(iterations);
@@ -466,8 +468,11 @@ public class ImglibBenchmark {
 			planarContainer.setLinkedType(new UnsignedByteType(planarContainer));
 			return planarContainer;
 		}
+		if ( dimensions.length == 1 )
+			return null;
 		if ( dimensions[ 0 ] * dimensions[ 1 ] > Integer.MAX_VALUE )
 			return null;
+		
 		@SuppressWarnings( "unchecked" )
 		final
 		PlanarImg<UnsignedByteType, ByteArray> planarContainer = ( PlanarImg<UnsignedByteType, ByteArray> ) createImage( dimensions, new PlanarImgFactory< UnsignedByteType >() );
@@ -493,6 +498,8 @@ public class ImglibBenchmark {
 	}
 
 	private ByteImagePlus<UnsignedByteType> createImagePlusImage(final ImageProcessor ip) {
+		if ( dimensions.length == 1 )
+			return null;
 		if ( ip != null )
 		{
 			final ImagePlus imp = new ImagePlus("image", ip);
