@@ -83,11 +83,14 @@ public class ImglibBenchmark {
 		}
 		else
 		{
+			// sizes for table 1
 			//dimensions = new long[] {100000000};
 			//dimensions = new long[] {8192,8192};
-			dimensions = new long[] {50000,50000};
+			//dimensions = new long[] {50000,50000};
 			//dimensions = new long[] {384,384,384};
 			//dimensions = new long[] {28, 28, 28, 28, 28, 28 };
+			
+			dimensions = new long[] {50000,50000};
 		}
 		final ImglibBenchmark bench = new ImglibBenchmark(dimensions, testListImg);
 		bench.testPerformance(iterations);
