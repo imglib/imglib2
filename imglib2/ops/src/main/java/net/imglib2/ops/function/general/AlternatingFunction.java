@@ -40,7 +40,6 @@ package net.imglib2.ops.function.general;
 import java.util.ArrayList;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 
 // This is a proof of concept implementation that would allow one to interleave
 // a number of input datasets or other functions.
@@ -53,14 +52,12 @@ public class AlternatingFunction<T> implements Function<long[],T> {
 
 	private final ArrayList<Function<long[],T>> functions;
 	private long[] relativePosition;
-	private Neighborhood<long[]> localNeigh;
 	private final int dimension;
 	
 	public AlternatingFunction(int dim) {
 		functions = new ArrayList<Function<long[],T>>();
 		dimension = dim;
 		relativePosition = null;
-		localNeigh = null;
 	}
 
 	public void add(Function<long[],T> function) {
@@ -68,17 +65,15 @@ public class AlternatingFunction<T> implements Function<long[],T> {
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> neigh, long[] point, T output) {
+	public void compute(long[] point, T output) {
 		if (relativePosition == null) {
 			relativePosition = new long[point.length];
-			localNeigh = neigh.copy();
 		}
 		for (int i = 0; i < relativePosition.length; i++)
 			relativePosition[i] = point[i];
 		relativePosition[dimension] /= functions.size();  // TODO - assumes pos >= 0 here
-		localNeigh.moveTo(relativePosition);
 		int funcNum = (int) (point[dimension] % functions.size());
-		functions.get(funcNum).evaluate(localNeigh, relativePosition, output);
+		functions.get(funcNum).compute(relativePosition, output);
 	}
 
 	@Override

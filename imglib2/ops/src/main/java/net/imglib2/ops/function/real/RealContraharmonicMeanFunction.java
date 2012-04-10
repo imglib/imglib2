@@ -35,37 +35,50 @@
  */
 
 
-package net.imglib2.ops.function.general;
+package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
+import net.imglib2.ops.PointSet;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class NullFunction<INDEX, T> implements Function<INDEX,T> {
+public class RealContraharmonicMeanFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
+{
+	private final Function<long[],T> otherFunc;
+	private final double order;
+	private final PrimitiveDoubleArray values;
+	private final RealSampleCollector<T> collector;
+	private final StatCalculator calculator;
+	
+	public RealContraharmonicMeanFunction(Function<long[],T> otherFunc, double order)
+	{
+		this.otherFunc = otherFunc;
+		this.order = order;
+		values = new PrimitiveDoubleArray();
+		collector = new RealSampleCollector<T>();
+		calculator = new StatCalculator();
+	}
+	
+	@Override
+	public RealContraharmonicMeanFunction<T> copy() {
+		return new RealContraharmonicMeanFunction<T>(otherFunc.copy(), order);
+	}
 
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point, T output) {
-		// do nothing
-		// TODO : Could set to NaN?
+	public void compute(PointSet input, T output) {
+		collector.collect(input, otherFunc, values);
+		double value = calculator.contraharmonicMean(values, order);
+		output.setReal(value);
 	}
 
 	@Override
 	public T createOutput() {
-		return null;
-		// TODO - returning null is sort of a problem. Though it makes sense.
-		//  However if we only pass NullFunctions at outermost loop maybe we can avoid
-		//  this method ever being called.
-		//  What good is a null function if outermost loop can count on its own? Null
-		//  function idea originally came about as a way to collect stats without
-		//  destroying existing data. That need may now be obsolete. Investigate.
+		return otherFunc.createOutput();
 	}
 
-	@Override
-	public NullFunction<INDEX,T> copy() {
-		return new NullFunction<INDEX,T>();
-	}
 }

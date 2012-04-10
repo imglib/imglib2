@@ -35,58 +35,67 @@
  */
 
 
-package net.imglib2.ops.function.real;
+package net.imglib2.ops.pointset;
 
-import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.RegionIndexIterator;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.ops.PointSet;
+import net.imglib2.ops.PointSetIterator;
+
+// TODO - calc bounds could walk resulting set and generate min bounds
+
+/*
+* This is not a textbook definition of complement. Complement usually
+* is defined as a set difference. But we handle set difference below.
+* The set difference is a relation between two sets A and B. A is the
+* containing space and B is the set of outside of which we are
+* interested in. In this implementation our Complement treats a given
+* set as both A & B in a set difference. For a full region this will
+* be the empty set. But for a sparse set it will be all the points not
+* contained in the sparse set.
+*/
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class RealAverageFunction<T extends RealType<T>> implements Function<long[],T> {
-
-	private final Function<long[],T> otherFunc;
-	private final T variable;
-	private RegionIndexIterator iter;
+public class PointSetComplement implements PointSet {
+	private final PointSetDifference diff;
 	
-	public RealAverageFunction(Function<long[],T> otherFunc)
-	{
-		this.otherFunc = otherFunc;
-		this.variable = createOutput();
-		this.iter = null;
+	public PointSetComplement(PointSet a) {
+		final HyperVolumePointSet hyper =
+				new HyperVolumePointSet(a.findBoundMin(), a.findBoundMax());
+		diff = new PointSetDifference(hyper, a);
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
-		if (iter == null)
-			iter = new RegionIndexIterator(region);
-		else
-			iter.relocate(region.getKeyPoint());
-		iter.reset();
-		double sum = 0;
-		double numElements = 0;
-		while (iter.hasNext()) {
-			iter.fwd();
-			otherFunc.evaluate(region, iter.getPosition(), variable);
-			sum += variable.getRealDouble();
-			numElements++;
-		}
-		if (numElements == 0)
-			output.setReal(0);
-		else
-			output.setReal(sum / numElements);
+	public long[] getAnchor() {
+		return diff.getAnchor();
 	}
+	
+	@Override
+	public void setAnchor(long[] newAnchor) {
+		diff.setAnchor(newAnchor);
+	}
+	
+	@Override
+	public PointSetIterator createIterator() {
+		return diff.createIterator();
+	}
+	
+	@Override
+	public int numDimensions() { return diff.numDimensions(); }
+	
+	@Override
+	public boolean includes(long[] point) {
+		return diff.includes(point);
+	}
+	
+	@Override
+	public long[] findBoundMin() { return diff.findBoundMin(); }
 
 	@Override
-	public RealAverageFunction<T> copy() {
-		return new RealAverageFunction<T>(otherFunc.copy());
-	}
-
+	public long[] findBoundMax() { return diff.findBoundMax(); }
+	
 	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
-	}
+	public long calcSize() { return diff.calcSize(); }
 }
+

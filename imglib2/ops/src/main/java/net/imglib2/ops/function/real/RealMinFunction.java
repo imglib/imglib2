@@ -38,8 +38,7 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.ops.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 
@@ -47,41 +46,37 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealMinFunction<T extends RealType<T>> implements Function<long[],T> {
-
+public class RealMinFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
+{
+	private final PrimitiveDoubleArray values;
 	private final Function<long[],T> otherFunc;
-	private final T variable;
-	private RegionIndexIterator iter;
+	private final RealSampleCollector<T> collector;
+	private final StatCalculator calculator;
 	
-	public RealMinFunction(Function<long[],T> otherFunc) {
+	public RealMinFunction(Function<long[],T> otherFunc)
+	{
 		this.otherFunc = otherFunc;
-		this.variable = createOutput();
-		this.iter = null;
+		values = new PrimitiveDoubleArray();
+		collector = new RealSampleCollector<T>();
+		calculator = new StatCalculator();
 	}
 	
-	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
-		if (iter == null)
-			iter = new RegionIndexIterator(region);
-		else
-			iter.relocate(region.getKeyPoint());
-		iter.reset();
-		double min = Double.POSITIVE_INFINITY;
-		while (iter.hasNext()) {
-			iter.fwd();
-			otherFunc.evaluate(region, iter.getPosition(), variable);
-			min = Math.min(min, variable.getRealDouble());
-		}
-		output.setReal(min);
-	}
-
 	@Override
 	public RealMinFunction<T> copy() {
 		return new RealMinFunction<T>(otherFunc.copy());
 	}
 
 	@Override
+	public void compute(PointSet input, T output) {
+		collector.collect(input, otherFunc, values);
+		double value = calculator.min(values);
+		output.setReal(value);
+	}
+
+	@Override
 	public T createOutput() {
 		return otherFunc.createOutput();
 	}
+
 }

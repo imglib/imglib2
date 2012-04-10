@@ -42,7 +42,6 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
 
@@ -92,7 +91,7 @@ public class RealImageFunction<I extends RealType<I>, O extends RealType<O>>
 	// -- public interface --
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> input, long[] point, O output)
+	public void compute(long[] point, O output)
 	{
 		accessor.setPosition(point);
 		double r = accessor.get().getRealDouble();

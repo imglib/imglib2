@@ -38,29 +38,28 @@
 package net.imglib2.ops.condition;
 
 import net.imglib2.ops.Condition;
-import net.imglib2.ops.Neighborhood;
 
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class NotCondition<INDEX> implements Condition<INDEX> {
+public class NotCondition<T> implements Condition<T> {
 
-	private final Condition<INDEX> cond1;
+	private final Condition<T> cond1;
 
-	public NotCondition(Condition<INDEX> cond1) {
+	public NotCondition(Condition<T> cond1) {
 		this.cond1 = cond1;
 	}
 	
 	@Override
-	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
-		return ! cond1.isTrue(neigh, point);
+	public boolean isTrue(T point) {
+		return ! cond1.isTrue(point);
 	}
 	
 	@Override
-	public NotCondition<INDEX> copy() {
-		return new NotCondition<INDEX>(cond1.copy());
+	public NotCondition<T> copy() {
+		return new NotCondition<T>(cond1.copy());
 	}
 
 }

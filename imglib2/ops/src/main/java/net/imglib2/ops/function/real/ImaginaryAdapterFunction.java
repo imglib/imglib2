@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 
@@ -47,28 +46,28 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class ImaginaryAdapterFunction<INDEX,C extends ComplexType<C>, R extends RealType<R>> 
-	implements Function<INDEX,R> {
+public class ImaginaryAdapterFunction<INPUT, C extends ComplexType<C>, R extends RealType<R>> 
+	implements Function<INPUT,R> {
 	
-	private final Function<INDEX,C> complexFunc;
+	private final Function<INPUT,C> complexFunc;
 	private final C cType;
 	private final R rType;
 	
-	public ImaginaryAdapterFunction(Function<INDEX,C> complexFunc, C cType, R rType) {
-		this.rType = rType;
+	public ImaginaryAdapterFunction(Function<INPUT,C> complexFunc, C cType, R rType) {
+		this.rType = rType.createVariable();
 		this.cType = cType.createVariable();
 		this.complexFunc = complexFunc;
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point, R r) {
-		complexFunc.evaluate(region, point, cType);
+	public void compute(INPUT input, R r) {
+		complexFunc.compute(input, cType);
 		r.setReal(cType.getImaginaryDouble());
 	}
 
 	@Override
-	public ImaginaryAdapterFunction<INDEX,C,R> copy() {
-		return new ImaginaryAdapterFunction<INDEX,C,R>(complexFunc.copy(),cType,rType);
+	public ImaginaryAdapterFunction<INPUT,C,R> copy() {
+		return new ImaginaryAdapterFunction<INPUT,C,R>(complexFunc.copy(),cType,rType);
 	}
 
 	@Override

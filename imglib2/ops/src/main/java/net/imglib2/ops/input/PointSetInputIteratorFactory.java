@@ -34,36 +34,28 @@
  * #L%
  */
 
-package net.imglib2.ops.condition;
 
-import net.imglib2.ops.Condition;
-import net.imglib2.ops.Neighborhood;
-import net.imglib2.roi.AbstractRegionOfInterest;
+package net.imglib2.ops.input;
+
+import net.imglib2.ops.InputIterator;
+import net.imglib2.ops.InputIteratorFactory;
+import net.imglib2.ops.PointSet;
 
 /**
- * TODO
- *
+ * 
+ * @author Barry DeZonia
  */
-public class InsideRoiCondition implements Condition<double[]> {
+public class PointSetInputIteratorFactory implements InputIteratorFactory<PointSet> {
 
-	// TODO - not abstract === move isMember to RegionOfInterest
+	private final PointSet subspace;
 	
-	private AbstractRegionOfInterest roi;
-	
-	public InsideRoiCondition(AbstractRegionOfInterest roi) {
-		this.roi = roi;
+	public PointSetInputIteratorFactory(PointSet subspace) {
+		this.subspace = subspace;
 	}
 	
 	@Override
-	public boolean isTrue(Neighborhood<double[]> neigh, double[] point) {
-		// return roi.isMember(point); // protected! not public!
-		throw new UnsupportedOperationException("unimplemented");
-	}
-
-	@Override
-	public Condition<double[]> copy() {
-		// TODO should copy ROI
-		return new InsideRoiCondition(roi);
+	public InputIterator<PointSet> createInputIterator(PointSet space) {
+		return new PointSetInputIterator(space,subspace);
 	}
 
 }

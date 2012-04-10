@@ -38,19 +38,22 @@
 package net.imglib2.ops.condition;
 
 import net.imglib2.ops.Condition;
-import net.imglib2.ops.Neighborhood;
+import net.imglib2.ops.PointSet;
+import net.imglib2.ops.Tuple2;
 
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class AtKeyPointCondition implements Condition<long[]> {
+public class AtKeyPointCondition implements Condition<Tuple2<PointSet,long[]>> {
 	
 	@Override
-	public boolean isTrue(Neighborhood<long[]> neigh, long[] point) {
+	public boolean isTrue(Tuple2<PointSet,long[]> context) {
+		long[] keyPoint = context.get1().getAnchor();
+		long[] point = context.get2();
 		for (int i = 0; i < point.length; i++) {
-			if (point[i] != neigh.getKeyPoint()[i]) {
+			if (point[i] != keyPoint[i]) {
 				return false;
 			}
 		}

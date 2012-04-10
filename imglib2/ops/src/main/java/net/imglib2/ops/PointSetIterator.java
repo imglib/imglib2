@@ -37,17 +37,13 @@
 
 package net.imglib2.ops;
 
-
 /**
- * A condition optimized to avoid Neighborhood overhead. If neighborhood is
- * of interest use a SpatialCondition.
+ * PointSetIterators allow one to pull point indices (long[]) out of PointSets.
  * 
  * @author Barry DeZonia
  */
-public interface PointCondition<INDEX> {
-	
-	boolean isTrue(INDEX point);
-	
-	PointCondition<INDEX> copy();
+public interface PointSetIterator {
+	boolean hasNext();
+	long[] next();
+	void reset();
 }
-

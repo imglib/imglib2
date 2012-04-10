@@ -39,31 +39,30 @@ package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class ConditionalFunction<INDEX, T> implements Function<INDEX,T> {
+public class ConditionalFunction<INPUT, T> implements Function<INPUT,T> {
 
-	private final Condition<INDEX> condition;
-	private final Function<INDEX,T> f1;
-	private final Function<INDEX,T> f2;
+	private final Condition<INPUT> condition;
+	private final Function<INPUT,T> f1;
+	private final Function<INPUT,T> f2;
 	
-	public ConditionalFunction(Condition<INDEX> condition, Function<INDEX,T> f1, Function<INDEX,T> f2) {
+	public ConditionalFunction(Condition<INPUT> condition, Function<INPUT,T> f1, Function<INPUT,T> f2) {
 		this.condition = condition;
 		this.f1 = f1;
 		this.f2 = f2;
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point, T output) {
-		if (condition.isTrue(region, point))
-			f1.evaluate(region, point, output);
+	public void compute(INPUT input, T output) {
+		if (condition.isTrue(input))
+			f1.compute(input, output);
 		else
-			f2.evaluate(region, point, output);
+			f2.compute(input, output);
 	}
 
 	@Override
@@ -72,7 +71,7 @@ public class ConditionalFunction<INDEX, T> implements Function<INDEX,T> {
 	}
 	
 	@Override
-	public ConditionalFunction<INDEX,T> copy() {
-		return new ConditionalFunction<INDEX, T>(condition.copy(), f1.copy(), f2.copy());
+	public ConditionalFunction<INPUT,T> copy() {
+		return new ConditionalFunction<INPUT, T>(condition.copy(), f1.copy(), f2.copy());
 	}
 }

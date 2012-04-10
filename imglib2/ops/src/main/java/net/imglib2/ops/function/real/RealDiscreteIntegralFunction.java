@@ -38,7 +38,7 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
+import net.imglib2.ops.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -46,7 +46,7 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  */
 public class RealDiscreteIntegralFunction<T extends RealType<T>>
-	implements Function<long[],T>
+	implements Function<PointSet,T>
 {
 	// -- instance variables --
 
@@ -63,8 +63,8 @@ public class RealDiscreteIntegralFunction<T extends RealType<T>>
 	// -- public interface --
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
-		sumFunc.evaluate(region, point, output);
+	public void compute(PointSet points, T output) {
+		sumFunc.compute(points, output);
 	}
 
 	@Override

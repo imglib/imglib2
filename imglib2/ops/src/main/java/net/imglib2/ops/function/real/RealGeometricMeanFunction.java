@@ -34,40 +34,49 @@
  * #L%
  */
 
-package net.imglib2.ops.function.general;
+
+package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
+import net.imglib2.ops.PointSet;
+import net.imglib2.type.numeric.RealType;
+
 
 /**
- * TODO
- *
+ * 
+ * @author Barry DeZonia
  */
-public class NeighborhoodAdapterFunction<INDEX, T> implements Function<INDEX,T> {
-
-	private final Function<INDEX,T> function;
-	private final Neighborhood<INDEX> localNeigh;
+public class RealGeometricMeanFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
+{
+	private final PrimitiveDoubleArray values;
+	private final Function<long[],T> otherFunc;
+	private final RealSampleCollector<T> collector;
+	private final StatCalculator calculator;
 	
-	public NeighborhoodAdapterFunction(
-			Function<INDEX,T> function, Neighborhood<INDEX> localNeigh)
+	public RealGeometricMeanFunction(Function<long[],T> otherFunc)
 	{
-		this.function = function;
-		this.localNeigh = localNeigh;
+		this.otherFunc = otherFunc;
+		values = new PrimitiveDoubleArray();
+		collector = new RealSampleCollector<T>();
+		calculator = new StatCalculator();
 	}
 	
+	@Override
+	public RealGeometricMeanFunction<T> copy() {
+		return new RealGeometricMeanFunction<T>(otherFunc.copy());
+	}
+
+	@Override
+	public void compute(PointSet input, T output) {
+		collector.collect(input, otherFunc, values);
+		double value = calculator.geometricMean(values);
+		output.setReal(value);
+	}
+
 	@Override
 	public T createOutput() {
-		return function.createOutput();
+		return otherFunc.createOutput();
 	}
 
-	@Override
-	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, T output) {
-		localNeigh.moveTo(point);
-		function.evaluate(localNeigh, point, output);
-	}
-
-	@Override
-	public NeighborhoodAdapterFunction<INDEX, T> copy() {
-		return new NeighborhoodAdapterFunction<INDEX, T>(function.copy(), localNeigh.copy());
-	}
 }
