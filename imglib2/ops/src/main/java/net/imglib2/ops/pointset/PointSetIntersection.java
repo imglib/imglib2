@@ -118,6 +118,11 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 		return numElements;
 	}
 
+	@Override
+	public PointSetIntersection copy() {
+		return new PointSetIntersection(a.copy(), b.copy());
+	}
+	
 	private void calcBounds() {
 		PointSetIterator iter = createIterator();
 		while (iter.hasNext()) {

@@ -91,6 +91,12 @@ public class EmptyPointSet implements PointSet {
 	public long calcSize() {
 		return 0;
 	}
+	
+	@Override
+	public EmptyPointSet copy() {
+		return new EmptyPointSet();
+	}
+	
 	private class EmptyPointSetIterator implements PointSetIterator {
 
 		@Override

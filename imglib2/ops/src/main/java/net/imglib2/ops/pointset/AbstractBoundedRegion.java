@@ -47,11 +47,11 @@ public abstract class AbstractBoundedRegion {
 	public AbstractBoundedRegion() {
 	}
 	
-	public long[] getMin() {
+	protected long[] getMin() {
 		return min;
 	}
 	
-	public long[] getMax() {
+	protected long[] getMax() {
 		return max;
 	}
 	

@@ -119,6 +119,17 @@ public class GeneralPointSet extends AbstractBoundedRegion implements PointSet {
 		return points.size();
 	}
 
+	@Override
+	public GeneralPointSet copy() {
+		ArrayList<long[]> pointsCopied = new ArrayList<long[]>();
+		for (long[] p : points) {
+			long[] newP = p.clone();
+			for (int i = 0; i < newP.length; i++)
+				newP[i] += origAnchor[i];
+		}
+		return new GeneralPointSet(origAnchor.clone(), pointsCopied);
+	}
+	
 	private void calcBounds() {
 		long[] absoluteCoord = new long[anchor.length];
 		setMin(anchor);

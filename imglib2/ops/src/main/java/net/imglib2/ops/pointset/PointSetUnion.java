@@ -126,6 +126,11 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 		}
 		return numElements;
 	}
+	
+	@Override
+	public PointSetUnion copy() {
+		return new PointSetUnion(a.copy(), b.copy());
+	}
 
 	private class PointSetUnionIterator implements PointSetIterator {
 		

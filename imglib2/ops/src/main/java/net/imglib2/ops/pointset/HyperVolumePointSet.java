@@ -153,6 +153,11 @@ public class HyperVolumePointSet implements PointSet {
 		return numElements;
 	}
 
+	@Override
+	public HyperVolumePointSet copy() {
+		return new HyperVolumePointSet(findBoundMin(), findBoundMax());
+	}
+	
 	private class HyperVolumePointSetIterator implements PointSetIterator {
 		final long[] pos;
 		boolean outOfBounds;
