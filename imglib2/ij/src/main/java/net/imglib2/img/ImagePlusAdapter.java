@@ -46,6 +46,7 @@ import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
 import net.imglib2.img.imageplus.IntImagePlus;
 import net.imglib2.img.imageplus.ShortImagePlus;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.ComplexType;
@@ -63,7 +64,7 @@ import net.imglib2.type.numeric.real.FloatType;
 public class ImagePlusAdapter
 {
 	@SuppressWarnings( "unchecked" )
-	public static < T extends NumericType< T > > Img< T > wrap( final ImagePlus imp )
+	public static < T extends NumericType< T > & NativeType< T > > Img< T > wrap( final ImagePlus imp )
 	{
 		return ( Img< T > ) wrapLocal( imp );
 	}
@@ -226,7 +227,7 @@ public class ImagePlusAdapter
 	{
 		/** Luminance times alpha. */
 		@Override
-		public void convert(ARGBType input, FloatType output) {
+		public void convert(final ARGBType input, final FloatType output) {
 			final int v = input.get();
 			output.setReal((v >> 24) * (((v >> 16) & 0xff) * 0.299 + ((v >> 8) & 0xff) * 0.587 + (v & 0xff) * 0.144));
 		}
@@ -235,7 +236,7 @@ public class ImagePlusAdapter
 	static private class NumberToFloatConverter< T extends ComplexType< T > > implements Converter< T, FloatType >
 	{
 		@Override
-		public void convert(T input, FloatType output) {
+		public void convert(final T input, final FloatType output) {
 			output.setReal( input.getRealFloat() );
 		}		
 	}

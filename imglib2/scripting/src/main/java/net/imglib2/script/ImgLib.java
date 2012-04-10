@@ -27,7 +27,6 @@ package net.imglib2.script;
 
 import ij.ImagePlus;
 import ij.io.FileSaver;
-
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImagePlusAdapter;
@@ -54,20 +53,20 @@ public class ImgLib {
 	/** Open an image from a file path or a web URL. 
 	 * @throws IncompatibleTypeException 
 	 * @throws ImgIOException */
-	public static<T extends RealType<T> & NativeType<T>> Img<T> open(String pathOrURL) throws ImgIOException, IncompatibleTypeException {
+	public static<T extends RealType<T> & NativeType<T>> Img<T> open(final String pathOrURL) throws ImgIOException, IncompatibleTypeException {
 		return new ImgOpener().openImg(pathOrURL);
 		// Old:
 		//return wrap(IJ.openImage(pathOrURL));
 	}
 
-	public static<T extends RealType<T> & NativeType<T>> Img<T> openVirtual(String pathOrUrl) throws ImgIOException, IncompatibleTypeException {
+	public static<T extends RealType<T> & NativeType<T>> Img<T> openVirtual(final String pathOrUrl) throws ImgIOException, IncompatibleTypeException {
 		return (Img<T>) VirtualImg.create(pathOrUrl, false);
 	}
 
 	/** Wrap an ImageJ's {@link ImagePlus} as an Imglib {@link Image} of the appropriate type.
 	 * The data is not copied, but merely accessed with a PlanarArrayContainer.
 	 * @see ImagePlusAdapter */
-	public static<T extends RealType<T>> Img<T> wrap(ImagePlus imp) {
+	public static<T extends RealType<T> & NativeType<T>> Img<T> wrap(final ImagePlus imp) {
 		return ImagePlusAdapter.<T>wrap(imp);
 	}
 
@@ -100,7 +99,7 @@ public class ImgLib {
 	 * The data is not copied, but accessed with a special-purpose VirtualStack subclass. 
 	 * @throws ImgLibException */
 	static public final <T extends RealType<T>> ImagePlus show(final Img<T> img, final String title) throws ImgLibException {
-		ImagePlus imp = wrap(img, title);
+		final ImagePlus imp = wrap(img, title);
 		imp.show();
 		return imp;
 	}
@@ -108,8 +107,8 @@ public class ImgLib {
 	/** Save an image in the appropriate file format according to
 	 * the filename extension specified in {@param path}. 
 	 * @throws ImgLibException */
-	public static final <T extends RealType<T> & NativeType<T>> boolean save(Img<T> image, String path) throws ImgLibException {
-		int dot = path.lastIndexOf('.');
+	public static final <T extends RealType<T> & NativeType<T>> boolean save(final Img<T> image, final String path) throws ImgLibException {
+		final int dot = path.lastIndexOf('.');
 		if (dot < 0 || path.length() - dot - 1 > 4)
 			throw new RuntimeException("Could not infer file type from filename: " + path);
 		return save(image, path.substring(dot + 1), path);
@@ -121,10 +120,10 @@ public class ImgLib {
 	 *  When saving as TIFF, if the image has more than 2 dimensions, it will be saved
 	 *  as a stack. 
 	 * @throws ImgLibException */
-	public static<T extends RealType<T> & NativeType<T>> boolean save(Img<T> image, String fileType, String path) throws ImgLibException {
+	public static<T extends RealType<T> & NativeType<T>> boolean save(final Img<T> image, String fileType, final String path) throws ImgLibException {
 		// TODO: use LOCI for this
-		ImagePlus imp = wrap(image);
-		FileSaver saver = new FileSaver(imp);
+		final ImagePlus imp = wrap(image);
+		final FileSaver saver = new FileSaver(imp);
 		fileType = fileType.toLowerCase();
 		if (fileType.equals("tif") || fileType.equals("tiff")) {
 			if (image.numDimensions() > 2) {
