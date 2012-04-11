@@ -309,7 +309,7 @@ public class LabelingMapping< T extends Comparable< T >>
 		{
 			final int intIndex = listsByIndex.size();
 
-			if ( intIndex >= maxNumLabels )
+			if ( intIndex > maxNumLabels )
 				throw new AssertionError( String.format( "Too many labels (or types of multiply-labeled pixels): %d maximum", intIndex ) );
 
 			interned = new InternedList< T >( src, intIndex, this );
