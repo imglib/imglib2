@@ -195,9 +195,9 @@ implements OutputAlgorithm<Img<FloatType>> {
 							z2 = z * z;
 							mass = neighborhood.get().getRealDouble();
 
-							Ixx += mass * x2;
-							Iyy += mass * y2;
-							Izz += mass * z2;
+							Ixx += mass * (y2 + z2);
+							Iyy += mass * (x2 + z2);
+							Izz += mass * (x2 + y2);
 							Ixy -= mass * x * y;
 							Ixz -= mass * x * z;
 							Iyz -= mass * y * z;
@@ -205,34 +205,34 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 						
 						// Deal with degenerate cases, cheaper and more robust then general diagonalization
-						if (Ixx <= 2 * Float.MIN_VALUE && Iyy <= 2 * Float.MIN_VALUE) {
-
-							A = 0;
-							B = 0;
-							C = 1;
-							D = 0;
-							E = 0;
-							F = 0;
-
-						} else if (Iyy <= 2 * Float.MIN_VALUE && Izz <= 2 * Float.MIN_VALUE) { 
-
-							A = 1;
-							B = 0;
-							C = 0;
-							D = 0;
-							E = 0;
-							F = 0;
-
-						} else if  (Izz <= 2 * Float.MIN_VALUE && Ixx <= 2 * Float.MIN_VALUE) {
-
-							A = 0;
-							B = 1;
-							C = 0;
-							D = 0;
-							E = 0;
-							F = 0;
-
-						} else {
+//						if (Ixx <= 2 * Float.MIN_VALUE && Iyy <= 2 * Float.MIN_VALUE) {
+//
+//							A = 0;
+//							B = 0;
+//							C = 1;
+//							D = 0;
+//							E = 0;
+//							F = 0;
+//
+//						} else if (Iyy <= 2 * Float.MIN_VALUE && Izz <= 2 * Float.MIN_VALUE) { 
+//
+//							A = 1;
+//							B = 0;
+//							C = 0;
+//							D = 0;
+//							E = 0;
+//							F = 0;
+//
+//						} else if  (Izz <= 2 * Float.MIN_VALUE && Ixx <= 2 * Float.MIN_VALUE) {
+//
+//							A = 0;
+//							B = 1;
+//							C = 0;
+//							D = 0;
+//							E = 0;
+//							F = 0;
+//
+//						} else {
 
 							matrix[0] = Ixx;
 							matrix[1] = Iyy;
@@ -243,10 +243,24 @@ implements OutputAlgorithm<Img<FloatType>> {
 									
 							PdeUtil.dsyevh3(matrix, V, L);
 							
-							L[0] = epsilon_1;
-							L[1] = epsilon_2;
-							L[2] = epsilon_2;
+							int mavi = 0;
+							double m = L[0];
+							for (int k = 1; k < 3; k++) {
+								if (Math.abs(L[k]) < m) {
+									m = Math.abs(L[k]);
+									mavi = k;
+								}
+								L[k] = epsilon_2;
+							}
+							L[mavi] = epsilon_1;
 
+//							A = L[0] * V[0][0] * V[0][0] + L[1] * V[0][1] * V[0][1] + L[2] * V[0][2] * V[0][2]; 
+//							B = L[0] * V[1][0] * V[1][0] + L[1] * V[1][1] * V[1][1] + L[2] * V[1][2] * V[1][2]; 
+//							C = L[0] * V[2][0] * V[2][0] + L[1] * V[2][1] * V[2][1] + L[2] * V[2][2] * V[2][2]; 
+//							D = L[0] * V[0][0] * V[1][0] + L[1] * V[0][1] * V[1][1] + L[2] * V[0][2] * V[1][2]; 
+//							E = L[0] * V[0][0] * V[2][0] + L[1] * V[0][1] * V[2][1] + L[2] * V[0][2] * V[2][2]; 
+//							F = L[0] * V[1][0] * V[2][0] + L[1] * V[1][1] * V[2][1] + L[2] * V[1][2] * V[2][2]; 
+							
 							A = L[0] * V[0][0] * V[0][0] + L[1] * V[1][0] * V[1][0] + L[2] * V[2][0] * V[2][0]; 
 							B = L[0] * V[0][1] * V[0][1] + L[1] * V[1][1] * V[1][1] + L[2] * V[2][1] * V[2][1]; 
 							C = L[0] * V[0][2] * V[0][2] + L[1] * V[1][2] * V[1][2] + L[2] * V[2][2] * V[2][2]; 
@@ -254,7 +268,8 @@ implements OutputAlgorithm<Img<FloatType>> {
 							E = L[0] * V[0][0] * V[0][2] + L[1] * V[1][0] * V[1][2] + L[2] * V[2][0] * V[2][2]; 
 							F = L[0] * V[0][1] * V[0][2] + L[1] * V[1][1] * V[1][2] + L[2] * V[2][1] * V[2][2]; 
 
-						}
+
+//						}
 
 						// Store
 						Dcursor.setPosition(0, tensorDim);
@@ -269,6 +284,19 @@ implements OutputAlgorithm<Img<FloatType>> {
 						Dcursor.get().setReal(E);
 						Dcursor.fwd(tensorDim);
 						Dcursor.get().setReal(F);
+						
+//						Dcursor.setPosition(0, tensorDim);
+//						Dcursor.get().setReal(Ixx);
+//						Dcursor.fwd(tensorDim);
+//						Dcursor.get().setReal(Iyy);
+//						Dcursor.fwd(tensorDim);
+//						Dcursor.get().setReal(Izz);
+//						Dcursor.fwd(tensorDim);
+//						Dcursor.get().setReal(Ixy);
+//						Dcursor.fwd(tensorDim);
+//						Dcursor.get().setReal(Ixz);
+//						Dcursor.fwd(tensorDim);
+//						Dcursor.get().setReal(Iyz);
 
 					}
 				};
