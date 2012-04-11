@@ -382,40 +382,8 @@ public class EllipseRegionOfInterestTest {
         EllipseRegionOfInterest ellipse = new EllipseRegionOfInterest( 2 );
         ellipse.setOrigin( new double[] { 1, 1 } );
         ellipse.setRadius( 1 );
+        testEllipse(ellipse);
 
-        Img< BitType > img = new ArrayImgFactory< BitType >().create( new long[] { 3, 3 }, new BitType() );
-
-        RandomAccess< BitType > randomAccess = img.randomAccess();
-
-        Cursor< BitType > cursor = img.cursor();
-        long[] pos = new long[ 2 ];
-        int count = 0;
-        while (cursor.hasNext()) {
-            cursor.fwd();
-            cursor.localize( pos );
-            double d2 = 0;
-            for (int i=0; i < pos.length; i++) d2 += Math.pow(pos[i] - 1, 2);
-            if (d2 <= 1.0) {
-            	cursor.get().set(true);
-            	count++;
-            }
-        }
-        
-        cursor = ellipse.getIterableIntervalOverROI( img ).cursor();
-        while ( cursor.hasNext() )
-        {
-            cursor.fwd();
-            cursor.localize( pos );
-            randomAccess.setPosition( cursor );
-            assertTrue(
-            		String.format("Point %d, %d not in set or doubly visited", pos[0], pos[1]),
-            		randomAccess.get().get());
-            randomAccess.get().set(false);
-            count--;
-        }
-        assertEquals(
-        		String.format("%d point(s) unvisited", count),
-        		0, count);
 	}
 	/**
 	 * Second part of Christian Dietz bug - make sure it works for a sphere
@@ -426,19 +394,51 @@ public class EllipseRegionOfInterestTest {
         EllipseRegionOfInterest ellipse = new EllipseRegionOfInterest( 3 );
         ellipse.setOrigin( new double[] { 1, 1, 1 } );
         ellipse.setRadius( 1 );
+        testEllipse(ellipse);
 
-        Img< BitType > img = new ArrayImgFactory< BitType >().create( new long[] { 3, 3, 3 }, new BitType() );
+	}
+	
+	@Test
+	public void testSphereWithNonIntegerOffset() {
+		// This is a corner case. If all dimensions but one
+		// are within the ellipse, but the last one is,
+		// because it's an integer, above or below (= outside)
+		// then you need to skip.
+        EllipseRegionOfInterest ellipse = new EllipseRegionOfInterest( 3 );
+        ellipse.setOrigin( new double[] { 1, 1, 1.1 } );
+        ellipse.setRadius( 1.05 );
+        testEllipse(ellipse);
+        
+        ellipse = new EllipseRegionOfInterest( 3 );
+        ellipse.setOrigin( new double[] { 1.1, 1, 1 } );
+        ellipse.setRadius( 1.05 );
+        testEllipse(ellipse);        
+	}
+
+	private void testEllipse(EllipseRegionOfInterest ellipse) {
+		final long [] eMin = new long[ellipse.numDimensions()];
+		final long [] eMax = new long[ellipse.numDimensions()];
+		ellipse.min(eMin);
+		for (int i=0; i < eMin.length; i++) {
+			assertTrue("Test code won't work if ellipse extends to negative coordinates", eMin[i] >= 0);
+		}
+		ellipse.max(eMax);
+		for (int i=0; i < eMax.length; i++) eMax[i]++;
+		
+		Img< BitType > img = new ArrayImgFactory< BitType >().create( eMax, new BitType() );
 
         RandomAccess< BitType > randomAccess = img.randomAccess();
 
         Cursor< BitType > cursor = img.cursor();
-        long[] pos = new long[ 3 ];
+        long[] pos = new long[ ellipse.numDimensions() ];
         int count = 0;
         while (cursor.hasNext()) {
             cursor.fwd();
             cursor.localize( pos );
             double d2 = 0;
-            for (int i=0; i < pos.length; i++) d2 += Math.pow(pos[i] - 1, 2);
+            for (int i=0; i < pos.length; i++) {
+            	d2 += Math.pow((pos[i] - ellipse.getOrigin(i)) / ellipse.getRadius(i), 2);
+            }
             if (d2 <= 1.0) {
             	cursor.get().set(true);
             	count++;
@@ -452,7 +452,7 @@ public class EllipseRegionOfInterestTest {
             cursor.localize( pos );
             randomAccess.setPosition( cursor );
             assertTrue(
-            		String.format("Point %d, %d, %d not in set or doubly visited", pos[0], pos[1], pos[2]),
+            		String.format("Point %s not in set or doubly visited", pos.toString()),
             		randomAccess.get().get());
             randomAccess.get().set(false);
             count--;
