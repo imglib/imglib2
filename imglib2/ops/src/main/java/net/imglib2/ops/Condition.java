@@ -42,10 +42,10 @@ package net.imglib2.ops;
  * 
  * @author Barry DeZonia
  */
-public interface Condition<INDEX> {
+public interface Condition<T> {
 	
-	boolean isTrue(Neighborhood<INDEX> neigh, INDEX point);
+	boolean isTrue(T val);
 	
-	Condition<INDEX> copy();
+	Condition<T> copy();
 }
 

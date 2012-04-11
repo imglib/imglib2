@@ -44,10 +44,12 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.PointSet;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealConvolutionFunction;
+import net.imglib2.ops.input.PointSetInputIterator;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.real.DoubleType;
 
 // a 3x3 convolution example
@@ -116,26 +118,24 @@ public class Example5Test {
 		// calculate output values as a convolution of 3x3 cells of image with KERNEL
 		
 		Img<DoubleType> image = makeInputImage();
-		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[2], new long[]{1,1}, new long[]{1,1});
+		HyperVolumePointSet inputNeigh = new HyperVolumePointSet(new long[2], new long[]{1,1}, new long[]{1,1});
 		Function<long[],DoubleType> imageFunc = new RealImageFunction<DoubleType,DoubleType>(image, new DoubleType());
-		Function<long[],DoubleType> convFunc = new RealConvolutionFunction<DoubleType>(imageFunc,KERNEL);
-		long[] currPt = new long[2];
+		Function<PointSet,DoubleType> convFunc = new RealConvolutionFunction<DoubleType>(imageFunc,KERNEL);
+		HyperVolumePointSet space = new HyperVolumePointSet(new long[]{1,1}, new long[]{XSIZE-2,YSIZE-2});
+		PointSetInputIterator iter = new PointSetInputIterator(space, inputNeigh);
 		DoubleType variable = new DoubleType();
-		for (int x = 1; x < XSIZE-1; x++) {
-			for (int y = 1; y < YSIZE-1; y++) {
-				currPt[0] = x;
-				currPt[1] = y;
-				inputNeigh.moveTo(currPt);
-				convFunc.evaluate(inputNeigh, currPt, variable);
-				assertTrue(veryClose(variable.getRealDouble(), expectedValue(x, y)));
-				/*
-				{
-					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+expectedValue(x, y)+") actual ("+variable.getRealDouble()+")");
-					success = false;
-				}
-				*/
-			}
+		PointSet points = null;
+		while (iter.hasNext()) {
+			points = iter.next(points);
+			convFunc.compute(points, variable);
+			int x = (int) points.getAnchor()[0];
+			int y = (int) points.getAnchor()[1];
+			//{
+			//	System.out.println(" Point ("+x+","+y+"): expected ("
+			//		+expectedValue(x, y)+") actual ("+variable.getRealDouble()+")");
+			//	success = false;
+			//}
+			assertTrue(veryClose(variable.getRealDouble(), expectedValue(x, y)));
 		}
 	}
 }

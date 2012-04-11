@@ -39,8 +39,8 @@ package net.imglib2.labeling;
 import java.util.Arrays;
 
 /**
- * The bounding box that contains a region from the minimum inclusive to
- * the maximum non-inclusive.
+ * The bounding box that contains a region from the minimum inclusive to the
+ * maximum non-inclusive.
  * 
  * @author Lee Kamentsky
  * @author leek
@@ -69,7 +69,7 @@ public class BoundingBox
 
 	/**
 	 * the minimum and maximum extents of the box
-	 *
+	 * 
 	 * @param destMin
 	 *            - on input, an array of at least size D, the dimension of the
 	 *            space. On output, the minimum extents of the bounding box.
@@ -86,7 +86,7 @@ public class BoundingBox
 
 	/**
 	 * update the minimum and maximum extents with the given coordinates.
-	 *
+	 * 
 	 * @param position
 	 */
 	public void update( final long[] position )

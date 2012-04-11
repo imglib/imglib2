@@ -54,17 +54,17 @@ import net.imglib2.type.numeric.IntegerType;
  * which can be more compactly stored than the set of labelings. The service it
  * provides is an "intern" function that supplies a canonical object for each
  * set of labelings in a container.
- *
+ * 
  * For example, say pixels are labeled with strings and a particular pixel is
  * labeled as belonging to both "Foo" and "Bar" and this is the first label
  * assigned to the container. The caller will ask for the index of { "Foo",
  * "Bar" } and get back the number, "1". LabelingMapping will work faster if the
  * caller first interns { "Foo", "Bar" } and then requests the mapping of the
  * returned object.
- *
+ * 
  * @param <T>
  * @param <N>
- *
+ * 
  * @author Lee Kamentsky
  */
 public class LabelingMapping< T extends Comparable< T >>
@@ -238,7 +238,7 @@ public class LabelingMapping< T extends Comparable< T >>
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -249,7 +249,7 @@ public class LabelingMapping< T extends Comparable< T >>
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		@Override
@@ -258,8 +258,7 @@ public class LabelingMapping< T extends Comparable< T >>
 			if ( obj instanceof InternedList )
 			{
 				@SuppressWarnings( "rawtypes" )
-				final
-				InternedList iobj = ( InternedList ) obj;
+				final InternedList iobj = ( InternedList ) obj;
 				return value.equals( iobj.value );
 			}
 			return value.equals( obj );
@@ -277,7 +276,7 @@ public class LabelingMapping< T extends Comparable< T >>
 
 	/**
 	 * Return the canonical list for the given list
-	 *
+	 * 
 	 * @param src
 	 * @return
 	 */
@@ -344,7 +343,7 @@ public class LabelingMapping< T extends Comparable< T >>
 
 	/**
 	 * Returns the number of indexed labeling lists
-	 *
+	 * 
 	 * @return
 	 */
 	public int numLists()

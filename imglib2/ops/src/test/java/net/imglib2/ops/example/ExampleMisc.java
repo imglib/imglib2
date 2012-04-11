@@ -39,10 +39,11 @@ package net.imglib2.ops.example;
 import net.imglib2.img.Img;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.condition.AtKeyPointCondition;
+import net.imglib2.ops.InputIteratorFactory;
 import net.imglib2.ops.function.complex.ComplexImageFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
 import net.imglib2.ops.image.ImageAssignment;
+import net.imglib2.ops.input.PointInputIteratorFactory;
 import net.imglib2.ops.operation.unary.real.RealSqr;
 import net.imglib2.ops.operation.unary.real.RealUnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
@@ -57,6 +58,23 @@ import net.imglib2.type.numeric.real.DoubleType;
  */
 public class ExampleMisc {
 
+	private static class CoordIsOdd implements Condition<long[]> {
+
+		@Override
+		public boolean isTrue(long[] val) {
+			for (int i = 0; i < val.length; i++) {
+				if (val[i] % 2 == 0) return false;
+			}
+			return true;
+		}
+
+		@Override
+		public CoordIsOdd copy() {
+			return new CoordIsOdd();
+		}
+		
+	}
+	
 	static void basicAssignmentSequence() {
 		Img<UnsignedByteType> inputImg = null; // image 100x200
 		Img<UnsignedByteType> outputImg = null; // image 100x200
@@ -76,11 +94,13 @@ public class ExampleMisc {
 			new GeneralUnaryFunction<long[],DoubleType,DoubleType>(
 					imageFunc, op, new DoubleType());
 
-		Condition<long[]> condition = new AtKeyPointCondition();
+		@SuppressWarnings("synthetic-access")
+		Condition<long[]> condition = new CoordIsOdd();
 
-		ImageAssignment<UnsignedByteType,DoubleType> assigner =
-				new ImageAssignment<UnsignedByteType,DoubleType>(
-				outputImg, origin, span, func, condition);
+		InputIteratorFactory<long[]> factory = new PointInputIteratorFactory();
+		ImageAssignment<UnsignedByteType,DoubleType,long[]> assigner =
+				new ImageAssignment<UnsignedByteType,DoubleType,long[]>(
+				outputImg, origin, span, func, condition, factory);
 
 		assigner.assign(); // processed in parallel
 

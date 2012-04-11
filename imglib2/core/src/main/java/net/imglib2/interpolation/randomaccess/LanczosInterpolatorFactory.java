@@ -50,6 +50,7 @@ public class LanczosInterpolatorFactory<T extends RealType<T>> implements Interp
 {
 	int alpha;
 	boolean clipping;
+	double min, max;
 	
 	/**
 	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc) interpolation in a certain window
@@ -62,6 +63,40 @@ public class LanczosInterpolatorFactory<T extends RealType<T>> implements Interp
 	{
 		this.alpha = alpha;
 		this.clipping = clipping;
+		this.min = this.max = 0;
+	}
+
+	/**
+	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc) interpolation in a certain window
+	 * 
+	 * @param alpha - the rectangular radius of the window for perfoming the lanczos interpolation
+	 * @param min - the lanczos-interpolation can create values that are bigger or smaller than the original values,
+	 *        so they can be clipped to the range of the if wanted
+	 * @param max - the lanczos-interpolation can create values that are bigger or smaller than the original values,
+	 *        so they can be clipped to the range of the if wanted
+	 */
+	public LanczosInterpolatorFactory( final int alpha, final double min, final double max )
+	{
+		this.alpha = alpha;
+		this.clipping = true;
+		this.min = min;
+		this.max = max;
+	}
+
+	/**
+	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc) interpolation in a certain window
+	 * 
+	 * @param min - the lanczos-interpolation can create values that are bigger or smaller than the original values,
+	 *        so they can be clipped to the range of the if wanted
+	 * @param max - the lanczos-interpolation can create values that are bigger or smaller than the original values,
+	 *        so they can be clipped to the range of the if wanted
+	 */
+	public LanczosInterpolatorFactory( final double min, final double max )
+	{
+		this.alpha = 3;
+		this.clipping = true;
+		this.min = min;
+		this.max = max;
 	}
 
 	/**
@@ -75,7 +110,7 @@ public class LanczosInterpolatorFactory<T extends RealType<T>> implements Interp
 	@Override
 	public LanczosInterpolator< T > create( final RandomAccessible< T > randomAccessible )
 	{
-		return new LanczosInterpolator< T >( randomAccessible, alpha, clipping );
+		return new LanczosInterpolator< T >( randomAccessible, alpha, clipping, min, max );
 	}
 
 	/**

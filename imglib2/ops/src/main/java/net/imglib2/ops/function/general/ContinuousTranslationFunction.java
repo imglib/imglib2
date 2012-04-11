@@ -37,7 +37,6 @@
 
 package net.imglib2.ops.function.general;
 
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.Function;
 
 
@@ -49,25 +48,20 @@ public class ContinuousTranslationFunction<T> implements Function<double[],T> {
 
 	private final Function<double[],T> otherFunc;
 	private final double[] deltas;
-	private final double[] localCtr;
-	private final Neighborhood<double[]> localRegion;
+	private final double[] localPoint;
 	
-	public ContinuousTranslationFunction(Function<double[],T> otherFunc,
-		Neighborhood<double[]> region, double[] deltas)
+	public ContinuousTranslationFunction(Function<double[],T> otherFunc, double[] deltas)
 	{
 		this.otherFunc = otherFunc;
 		this.deltas = deltas;
-		this.localRegion = region.copy();
-		this.localCtr = new double[deltas.length];
+		this.localPoint = new double[deltas.length];
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<double[]> region, double[] point, T output) {
-		double[] keyPt = region.getKeyPoint();
-		for (int i = 0; i < localCtr.length; i++)
-			localCtr[i] = keyPt[i] + deltas[i];
-		localRegion.moveTo(localCtr);
-		otherFunc.evaluate(localRegion, point, output);
+	public void compute(double[] point, T output) {
+		for (int i = 0; i < localPoint.length; i++)
+			localPoint[i] = point[i] + deltas[i];
+		otherFunc.compute(localPoint, output);
 	}
 
 	@Override
@@ -77,6 +71,6 @@ public class ContinuousTranslationFunction<T> implements Function<double[],T> {
 	
 	@Override
 	public ContinuousTranslationFunction<T> copy() {
-		return new ContinuousTranslationFunction<T>(otherFunc.copy(), localRegion.copy(), deltas.clone());
+		return new ContinuousTranslationFunction<T>(otherFunc.copy(), deltas.clone());
 	}
 }

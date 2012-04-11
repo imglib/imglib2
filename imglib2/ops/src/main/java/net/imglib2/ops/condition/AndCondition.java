@@ -38,31 +38,30 @@
 package net.imglib2.ops.condition;
 
 import net.imglib2.ops.Condition;
-import net.imglib2.ops.Neighborhood;
 
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class AndCondition<INDEX> implements Condition<INDEX> {
+public class AndCondition<T> implements Condition<T> {
 
-	private final Condition<INDEX> cond1;
-	private final Condition<INDEX> cond2;
+	private final Condition<T> cond1;
+	private final Condition<T> cond2;
 
-	public AndCondition(Condition<INDEX> cond1, Condition<INDEX> cond2) {
+	public AndCondition(Condition<T> cond1, Condition<T> cond2) {
 		this.cond1 = cond1;
 		this.cond2 = cond2;
 	}
 	
 	@Override
-	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
-		return cond1.isTrue(neigh, point) && cond2.isTrue(neigh, point);
+	public boolean isTrue(T point) {
+		return cond1.isTrue(point) && cond2.isTrue(point);
 	}
 	
 	@Override
-	public AndCondition<INDEX> copy() {
-		return new AndCondition<INDEX>(cond1.copy(), cond2.copy());
+	public AndCondition<T> copy() {
+		return new AndCondition<T>(cond1.copy(), cond2.copy());
 	}
 
 }

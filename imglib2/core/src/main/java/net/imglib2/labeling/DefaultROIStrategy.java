@@ -48,12 +48,14 @@ import net.imglib2.roi.IterableRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
 
 /**
- * A relatively conservative strategy suitable for blobby objects - 
- * retain the bounding boxes and raster starts and reconstruct the 
- * cursors by scanning.
+ * A relatively conservative strategy suitable for blobby objects - retain the
+ * bounding boxes and raster starts and reconstruct the cursors by scanning.
  * 
- * @param <T> - the type used to label the space
- * @param <L> - the labeling class that will use this strategy for cursors and random access.
+ * @param <T>
+ *            - the type used to label the space
+ * @param <L>
+ *            - the labeling class that will use this strategy for cursors and
+ *            random access.
  * @author Lee Kamentsky
  */
 public class DefaultROIStrategy< T extends Comparable< T >, L extends Labeling< T >> implements LabelingROIStrategy< T, L >
@@ -198,19 +200,15 @@ public class DefaultROIStrategy< T extends Comparable< T >, L extends Labeling< 
 
 	/**
 	 * Implement a region of interest by linking to the statistics.
-<<<<<<< HEAD
-	 *
-	 * @author leek
-	 *
-=======
 	 * 
->>>>>>> origin/master
+	 * @author leek
+	 * 
 	 */
 	class DefaultRegionOfInterest extends AbstractIterableRegionOfInterest
 	{
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest#size()
 		 */
 		T label;

@@ -56,5 +56,4 @@ public class LabelingOutOfBoundsRandomAccessFactory< T extends Comparable< T >, 
 	{
 		return new LabelingOutOfBoundsRandomAccess< T >( f );
 	}
-
 }
