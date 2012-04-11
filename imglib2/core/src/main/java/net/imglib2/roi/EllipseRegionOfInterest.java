@@ -336,7 +336,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 			 * Advance the position until we get a position within the ellipse.
 			 */
 			position[ i ]++;
-			if ( getPartialDisplacement( position, i ) <= 1 )
+			if ( getPartialDisplacement( position, i ) < 1 )
 			{
 				/*
 				 * Adjust the lesser positions to the start of the ellipse.
