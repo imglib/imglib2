@@ -26,6 +26,7 @@ package net.imglib2.algorithm.pde;
 
 import ij.ImageJ;
 import ij.ImagePlus;
+import ij.gui.ImageWindow;
 
 import java.io.File;
 
@@ -74,7 +75,7 @@ public class AnisotropicDiffusion3DExample {
 		StandardDiffusionScheme3D algo = new StandardDiffusionScheme3D(image, diffusionTensor);
 //		NonNegativityDiffusionScheme3D algo = new NonNegativityDiffusionScheme3D(image, diffusionTensor);
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 1; i++) {
 			System.out.println("Iteration "+(i+1));
 			//			tensor.process();
 			//			diffusionTensor = tensor.getResult();
@@ -85,9 +86,12 @@ public class AnisotropicDiffusion3DExample {
 		}
 
 		ImageJFunctions.show(algo.getIncrement(), "Increment");
-		ImageJFunctions.wrapFloat(diffusionTensor, "Diffusion tensor").show();
+//		ImageJFunctions.wrapFloat(diffusionTensor, "Diffusion tensor").show();
 		for (int i = 0; i < 6; i++) {
-			ImageJFunctions.show(Views.hyperSlice(diffusionTensor, 3, i));
+			ImagePlus diffimp = ImageJFunctions.wrap(Views.hyperSlice(diffusionTensor, 3, i), "DiffTensor"+i);
+			diffimp.show();
+			ImageWindow win = diffimp.getWindow();
+			win.setLocation(300 * (3 - ( i % 3) ), 300 * ( i/3 ));
 		}
 		ImageJFunctions.show(copy, "Original image");
 	}
