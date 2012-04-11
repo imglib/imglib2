@@ -59,7 +59,7 @@ public class RealEqualsConstant<T extends RealType<T>> implements
 	}
 
 	@Override
-	public UnaryRelation<T> copy() {
+	public RealEqualsConstant<T> copy() {
 		return new RealEqualsConstant<T>(m_constant);
 	}
 
