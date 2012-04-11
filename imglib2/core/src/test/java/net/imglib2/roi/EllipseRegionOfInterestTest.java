@@ -40,6 +40,7 @@ import static org.junit.Assert.*;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccess;
 import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.img.Img;
@@ -372,4 +373,92 @@ public class EllipseRegionOfInterestTest {
 		assertFalse(ra.get().get());
 	}
 
+	/**
+	 * Regression test of a bug reported by Christian Dietz.
+	 * This test case is his code and my mangling of it.
+	 */
+	@Test
+	public void testCircleRadiusOne() {
+        EllipseRegionOfInterest ellipse = new EllipseRegionOfInterest( 2 );
+        ellipse.setOrigin( new double[] { 1, 1 } );
+        ellipse.setRadius( 1 );
+
+        Img< BitType > img = new ArrayImgFactory< BitType >().create( new long[] { 3, 3 }, new BitType() );
+
+        RandomAccess< BitType > randomAccess = img.randomAccess();
+
+        Cursor< BitType > cursor = img.cursor();
+        long[] pos = new long[ 2 ];
+        int count = 0;
+        while (cursor.hasNext()) {
+            cursor.fwd();
+            cursor.localize( pos );
+            double d2 = 0;
+            for (int i=0; i < pos.length; i++) d2 += Math.pow(pos[i] - 1, 2);
+            if (d2 <= 1.0) {
+            	cursor.get().set(true);
+            	count++;
+            }
+        }
+        
+        cursor = ellipse.getIterableIntervalOverROI( img ).cursor();
+        while ( cursor.hasNext() )
+        {
+            cursor.fwd();
+            cursor.localize( pos );
+            randomAccess.setPosition( cursor );
+            assertTrue(
+            		String.format("Point %d, %d not in set or doubly visited", pos[0], pos[1]),
+            		randomAccess.get().get());
+            randomAccess.get().set(false);
+            count--;
+        }
+        assertEquals(
+        		String.format("%d point(s) unvisited", count),
+        		0, count);
+	}
+	/**
+	 * Second part of Christian Dietz bug - make sure it works for a sphere
+	 * of radius 1.
+	 */
+	@Test
+	public void testSphereRadiusOne() {
+        EllipseRegionOfInterest ellipse = new EllipseRegionOfInterest( 3 );
+        ellipse.setOrigin( new double[] { 1, 1, 1 } );
+        ellipse.setRadius( 1 );
+
+        Img< BitType > img = new ArrayImgFactory< BitType >().create( new long[] { 3, 3, 3 }, new BitType() );
+
+        RandomAccess< BitType > randomAccess = img.randomAccess();
+
+        Cursor< BitType > cursor = img.cursor();
+        long[] pos = new long[ 3 ];
+        int count = 0;
+        while (cursor.hasNext()) {
+            cursor.fwd();
+            cursor.localize( pos );
+            double d2 = 0;
+            for (int i=0; i < pos.length; i++) d2 += Math.pow(pos[i] - 1, 2);
+            if (d2 <= 1.0) {
+            	cursor.get().set(true);
+            	count++;
+            }
+        }
+        
+        cursor = ellipse.getIterableIntervalOverROI( img ).cursor();
+        while ( cursor.hasNext() )
+        {
+            cursor.fwd();
+            cursor.localize( pos );
+            randomAccess.setPosition( cursor );
+            assertTrue(
+            		String.format("Point %d, %d, %d not in set or doubly visited", pos[0], pos[1], pos[2]),
+            		randomAccess.get().get());
+            randomAccess.get().set(false);
+            count--;
+        }
+        assertEquals(
+        		String.format("%d point(s) unvisited", count),
+        		0, count);
+	}
 }

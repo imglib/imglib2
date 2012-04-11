@@ -267,13 +267,14 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest {
 			end[0] = (long)Math.floor(origin.getDoublePosition(0)+d0) + 1;
 			return true;
 		}
-		for (int i=1; i < numDimensions(); i++) {
+		dimensionloop: for (int i=1; i < numDimensions(); i++) {
 			/*
 			 * Advance the position until we get a position
 			 * within the ellipse.
 			 */
 			position[i]++;
-			if (getPartialDisplacement(position, i) < 1) {
+			final double partialDisplacement = getPartialDisplacement(position, i);
+			if (partialDisplacement < 1) {
 				/*
 				 * Adjust the lesser positions to the start of
 				 * the ellipse.
@@ -286,6 +287,19 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest {
 					} else {
 						end[j] = position[j];
 					}
+				}
+				return true;
+			} else if (partialDisplacement == 1) {
+				/*
+				 * All remaining must be at the origin position
+				 */
+				for (int j=i-1; j >= 0; j--) {
+					double originPosition = origin.getDoublePosition(j);
+					if (Math.floor(originPosition) != originPosition) continue dimensionloop;
+				}
+				for (int j=i-1; j >= 0; j--) {
+					position[j] = (long) origin.getDoublePosition(j);
+					end[j] = (j > 0)? position[j] : (position[j] + 1);
 				}
 				return true;
 			}
