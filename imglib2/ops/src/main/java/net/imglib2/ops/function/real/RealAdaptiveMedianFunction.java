@@ -37,6 +37,7 @@
 
 package net.imglib2.ops.function.real;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.imglib2.ops.Function;
@@ -114,8 +115,12 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 
 	@Override
 	public RealAdaptiveMedianFunction<T> copy() {
-		// TODO - do we need to copy() pointSets????? probably.
-		return new RealAdaptiveMedianFunction<T>(otherFunc.copy(), pointSets);
+		ArrayList<PointSet> pointSetsCopy = new ArrayList<PointSet>();
+		for (int i = 0; i < pointSets.size(); i++) {
+			PointSet ps = pointSets.get(i);
+			pointSetsCopy.add(ps.copy());
+		}
+		return new RealAdaptiveMedianFunction<T>(otherFunc.copy(), pointSetsCopy);
 	}
 
 	@Override

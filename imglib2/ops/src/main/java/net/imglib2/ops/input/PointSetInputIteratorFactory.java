@@ -55,7 +55,7 @@ public class PointSetInputIteratorFactory implements InputIteratorFactory<PointS
 	
 	@Override
 	public InputIterator<PointSet> createInputIterator(PointSet space) {
-		return new PointSetInputIterator(space,subspace);
+		return new PointSetInputIterator(space,subspace.copy());
 	}
 
 }

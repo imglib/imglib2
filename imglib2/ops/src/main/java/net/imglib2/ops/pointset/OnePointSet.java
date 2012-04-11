@@ -93,6 +93,11 @@ public class OnePointSet implements PointSet {
 	}
 
 	@Override
+	public OnePointSet copy() {
+		return new OnePointSet(anchor.clone());
+	}
+	
+	@Override
 	public PointSetIterator createIterator() {
 		return new OnePointSetIterator();
 	}

@@ -118,6 +118,11 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 		return numElements;
 	}
 
+	@Override
+	public PointSetDifference copy() {
+		return new PointSetDifference(a.copy(), b.copy());
+	}
+	
 	private void calcBounds() {
 		PointSetIterator iter = createIterator();
 		while (iter.hasNext()) {

@@ -58,9 +58,11 @@ import net.imglib2.ops.PointSetIterator;
  * @author Barry DeZonia
  */
 public class PointSetComplement implements PointSet {
+	private final PointSet a;
 	private final PointSetDifference diff;
 	
 	public PointSetComplement(PointSet a) {
+		this.a = a;
 		final HyperVolumePointSet hyper =
 				new HyperVolumePointSet(a.findBoundMin(), a.findBoundMax());
 		diff = new PointSetDifference(hyper, a);
@@ -97,5 +99,10 @@ public class PointSetComplement implements PointSet {
 	
 	@Override
 	public long calcSize() { return diff.calcSize(); }
+	
+	@Override
+	public PointSetComplement copy() {
+		return new PointSetComplement(a.copy());
+	}
 }
 

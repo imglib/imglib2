@@ -37,10 +37,78 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.ops.PointSet;
+import net.imglib2.ops.PointSetIterator;
+
 /**
  * 
  * @author Barry DeZonia
  */
-public class UniversalPointSet {
+public class UniversalPointSet implements PointSet {
 
+	private long[] anchor = new long[0];
+	
+	@Override
+	public long[] getAnchor() {
+		return anchor;
+	}
+
+	@Override
+	public void setAnchor(long[] anchor) {
+		this.anchor = anchor;
+	}
+
+	@Override
+	public PointSetIterator createIterator() {
+		return new UniversalPointSetIterator();
+	}
+
+	@Override
+	public int numDimensions() {
+		return 0;
+	}
+
+	@Override
+	public long[] findBoundMin() {
+		return anchor;
+	}
+
+	@Override
+	public long[] findBoundMax() {
+		return anchor;
+	}
+
+	@Override
+	public boolean includes(long[] point) {
+		return true;
+	}
+
+	@Override
+	public long calcSize() {
+		throw new UnsupportedOperationException("UniversalPointSet is infinite in size");
+	}
+
+	@Override
+	public PointSet copy() {
+		return new UniversalPointSet();
+	}
+
+	private class UniversalPointSetIterator implements PointSetIterator {
+
+		@Override
+		public boolean hasNext() {
+			return false;  // noniterable
+		}
+
+		@Override
+		public long[] next() {
+			throw new UnsupportedOperationException("Cannot iterate over UniversalPointSet");
+		}
+
+		@Override
+		public void reset() {
+			// nothing to do
+		}
+		
+	}
 }

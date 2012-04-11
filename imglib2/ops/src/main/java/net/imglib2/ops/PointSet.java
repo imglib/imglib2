@@ -95,6 +95,9 @@ public interface PointSet {
 	 */
 	long calcSize();
 	
-	// TODO ??? PointSet copy();
+	/**
+	 * Make a copy of self. This is useful for multithreaded parallel computation
+	 */
+	PointSet copy();
 }
 

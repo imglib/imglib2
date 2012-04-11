@@ -116,6 +116,11 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 		return numElements;
 	}
 
+	@Override
+	public ConditionalPointSet copy() {
+		return new ConditionalPointSet(pointSet.copy(), condition.copy());
+	}
+	
 	private void calcBounds() {
 		PointSetIterator iter = createIterator();
 		while (iter.hasNext()) {
