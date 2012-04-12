@@ -64,7 +64,7 @@ import org.junit.Test;
  */
 public class SparseLabelingTest
 {
-	protected < T extends Comparable< T >> Labeling< T > makeLabeling( final T exemplar, final long[] dimensions )
+	protected < T extends Comparable< T >> Labeling< T > makeLabeling( final long[] dimensions )
 	{
 		NativeLabeling< T, IntAccess > labeling;
 		labeling = new NativeImgLabeling< T >( dimensions, new NtreeImgFactory< LabelingType< T >>() );
@@ -77,7 +77,7 @@ public class SparseLabelingTest
 	{
 		assertTrue( labels.length > 0 );
 		assertEquals( labels.length, coordinates.length );
-		final Labeling< T > labeling = makeLabeling( labels[ 0 ], dimensions );
+		final Labeling< T > labeling = makeLabeling( dimensions );
 		final RandomAccess< LabelingType< T >> a = labeling.randomAccess();
 		for ( int i = 0; i < coordinates.length; i++ )
 		{
@@ -137,7 +137,7 @@ public class SparseLabelingTest
 	@Test
 	public void testEmptyImage()
 	{
-		final Labeling< String > labeling = makeLabeling( "Foo", new long[] { 5, 6, 7 } );
+		final Labeling< String > labeling = makeLabeling( new long[] { 5, 6, 7 } );
 		assertTrue( labeling.getLabels().isEmpty() );
 		int iterations = 0;
 		for ( final LabelingType< String > t : labeling )
@@ -286,7 +286,7 @@ public class SparseLabelingTest
 	public void testSphere()
 	{
 		final long[] dimensions = new long[] { 20, 20, 20 };
-		final Labeling< String > labeling = makeLabeling( "MyLabels", dimensions );
+		final Labeling< String > labeling = makeLabeling( dimensions );
 		labelSphere( labeling, "Foo", new double[] { 10, 9, 8 }, 5 );
 		/*
 		 * Test the extents
@@ -341,7 +341,7 @@ public class SparseLabelingTest
 	public void testTwoLabels()
 	{
 		final long[] dimensions = new long[] { 20, 20, 40 };
-		final Labeling< String > labeling = makeLabeling( "MyLabels", dimensions );
+		final Labeling< String > labeling = makeLabeling( dimensions );
 		final String[] labels = { "Foo", "Bar" };
 		final double[][] centers = { { 10, 9, 8 }, { 8, 9, 30 } };
 		for ( int i = 0; i < 2; i++ )
@@ -381,7 +381,7 @@ public class SparseLabelingTest
 	public void testOverlappingLabels()
 	{
 		final long[] dimensions = new long[] { 20, 20, 30 };
-		final Labeling< String > labeling = makeLabeling( "MyLabels", dimensions );
+		final Labeling< String > labeling = makeLabeling( dimensions );
 		final String[] labels = { "Foo", "Bar" };
 		final double[][] centers = { { 10, 9, 8 }, { 8, 9, 12 } };
 		for ( int i = 0; i < 2; i++ )
@@ -436,7 +436,7 @@ public class SparseLabelingTest
 	public void TestCopy()
 	{
 		final long[] dimensions = new long[] { 20, 30 };
-		final Labeling< Integer > labeling = makeLabeling( 1, dimensions );
+		final Labeling< Integer > labeling = makeLabeling( dimensions );
 		final Random r = new Random( 202030 );
 		for ( final LabelingType< Integer > t : labeling )
 		{
@@ -461,7 +461,7 @@ public class SparseLabelingTest
 	{
 		final int rounds = 10;
 		final long[] dimensions = new long[] { 1000, 1000, 40 };
-		final Labeling< Integer > labeling = makeLabeling( 1, dimensions );
+		final Labeling< Integer > labeling = makeLabeling( dimensions );
 
 		for ( int r = 0; r < rounds; r++ )
 		{
@@ -477,6 +477,31 @@ public class SparseLabelingTest
 	@Test
 	public void testSparseImgRndAccess()
 	{
+		final long[] dimensions = new long[] { 1000, 1000, 40 };
+		final Img< IntType > tree = new NtreeImgFactory< IntType >().create( dimensions, new IntType() );
 
+		long[] posA = new long[] { 1, 1, 1 };
+		long[] posB = new long[] { 5, 5, 5 };
+
+		int label = 5;
+
+		RandomAccess< IntType > randomAccess = tree.randomAccess();
+
+		// Set 1,1,1 to label
+		randomAccess.setPosition( posA );
+		randomAccess.get().set( label );
+
+		// Set 5,5,5 to label
+		randomAccess.setPosition( posB );
+		randomAccess.get().set( label );
+
+		// Set 1,1,1 to def label (defined in ntree img)
+		randomAccess.setPosition( posA );
+		randomAccess.get().set( 0 );
+
+		// Set tp 5,5,5
+		randomAccess.setPosition( posB );
+
+		assertEquals( ( int ) randomAccess.get().get(), label );
 	}
 }
