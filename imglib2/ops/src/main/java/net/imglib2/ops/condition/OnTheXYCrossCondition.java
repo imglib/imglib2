@@ -49,9 +49,9 @@ import net.imglib2.ops.Tuple2;
 public class OnTheXYCrossCondition implements Condition<Tuple2<PointSet,long[]>> {
 	
 	@Override
-	public boolean isTrue(Tuple2<PointSet,long[]> context) {
-		long[] regionKeyPoint = context.get1().getAnchor();
-		long[] currPoint = context.get2();
+	public boolean isTrue(Tuple2<PointSet,long[]> input) {
+		long[] regionKeyPoint = input.get1().getAnchor();
+		long[] currPoint = input.get2();
 		long dx = currPoint[0] - regionKeyPoint[0];
 		long dy = currPoint[1] - regionKeyPoint[1];
 		return Math.abs(dx) == Math.abs(dy);
