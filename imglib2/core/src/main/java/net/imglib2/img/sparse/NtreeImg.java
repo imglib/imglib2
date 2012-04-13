@@ -32,17 +32,14 @@ package net.imglib2.img.sparse;
 
 import java.io.Serializable;
 
-import net.imglib2.Interval;
-import net.imglib2.IterableRealInterval;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.array.ArrayImg;
 import net.imglib2.type.NativeType;
-import net.imglib2.view.IterableRandomAccessibleInterval;
 
 /**
  * @author Tobias Pietzsch
- * 
+ *
  */
 public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?, A >> extends AbstractNativeImg< T, A > implements Serializable
 {
@@ -86,7 +83,7 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see net.imglib2.RandomAccessible#randomAccess()
 	 */
 	@Override
@@ -120,26 +117,8 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	public FlatIterationOrder iterationOrder()
 	{
-		if ( f.numDimensions() == n && ( NtreeImg.class.isInstance( f ) || ArrayImg.class.isInstance( f ) || IterableRandomAccessibleInterval.class.isInstance( f ) ) )
-		{
-			final Interval fAsInterval = ( Interval ) f;
-			for ( int d = 0; d < n; ++d )
-			{
-				if ( dimension( d ) == fAsInterval.dimension( d ) )
-					continue;
-				return false;
-			}
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public Object iterationOrder()
-	{
-		// TODO: New IterationOrdnet (NTreeIterationOrder?)
-		return null;
+		return new FlatIterationOrder( this );
 	}
 }
