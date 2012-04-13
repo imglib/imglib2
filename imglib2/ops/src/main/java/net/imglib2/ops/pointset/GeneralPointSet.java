@@ -83,7 +83,7 @@ public class GeneralPointSet extends AbstractBoundedRegion implements PointSet {
 	}
 	
 	@Override
-	public GeneralPointSetIterator createIterator() {
+	public PointSetIterator createIterator() {
 		return new GeneralPointSetIterator();
 	}
 	
