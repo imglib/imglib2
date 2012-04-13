@@ -72,7 +72,7 @@ public final class Ntree< T extends Comparable< T >>
 			return children;
 		}
 
-		public void setChildren( NtreeNode< T >[] children )
+		public void setChildren( final NtreeNode< T >[] children )
 		{
 			this.children = children;
 		}
@@ -284,9 +284,14 @@ public final class Ntree< T extends Comparable< T >>
 		if ( parent == null )
 			return node;
 		final NtreeNode< T > child0 = parent.children[ 0 ];
+		if ( child0.hasChildren() )
+			return node;
 		for ( int i = 1; i < numChildren; ++i )
-			if ( child0.getValue().compareTo( parent.children[ i ].getValue() ) != 0 )
+		{
+			final NtreeNode< T > child = parent.children[ i ];
+			if ( child.hasChildren() || child0.getValue().compareTo( child.getValue() ) != 0 )
 				return node;
+		}
 		parent.setValue( child0.getValue() );
 		parent.children = null;
 		return mergeUpwards( parent );
