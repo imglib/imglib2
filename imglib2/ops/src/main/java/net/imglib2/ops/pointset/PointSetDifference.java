@@ -83,7 +83,7 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	}
 	
 	@Override
-	public PointSetDifferenceIterator createIterator() {
+	public PointSetIterator createIterator() {
 		return new PointSetDifferenceIterator();
 	}
 	

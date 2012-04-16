@@ -122,7 +122,7 @@ public class HyperVolumePointSet implements PointSet {
 	}
 	
 	@Override
-	public HyperVolumePointSetIterator createIterator() {
+	public PointSetIterator createIterator() {
 		return new HyperVolumePointSetIterator();
 	}
 	

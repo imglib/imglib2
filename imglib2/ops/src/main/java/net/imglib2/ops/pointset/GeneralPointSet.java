@@ -83,7 +83,7 @@ public class GeneralPointSet extends AbstractBoundedRegion implements PointSet {
 	}
 	
 	@Override
-	public GeneralPointSetIterator createIterator() {
+	public PointSetIterator createIterator() {
 		return new GeneralPointSetIterator();
 	}
 	
@@ -130,6 +130,15 @@ public class GeneralPointSet extends AbstractBoundedRegion implements PointSet {
 		return new GeneralPointSet(origAnchor.clone(), pointsCopied);
 	}
 	
+	public static GeneralPointSet explode(PointSet ps) {
+		final List<long[]> points = new ArrayList<long[]>();
+		final PointSetIterator iter = ps.createIterator();
+		while (iter.hasNext()) {
+			points.add(iter.next().clone());
+		}
+		return new GeneralPointSet(ps.getAnchor().clone(), points);
+	}
+
 	private void calcBounds() {
 		long[] absoluteCoord = new long[anchor.length];
 		setMin(anchor);

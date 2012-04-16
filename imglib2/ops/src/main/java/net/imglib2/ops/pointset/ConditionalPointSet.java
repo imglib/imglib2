@@ -70,7 +70,7 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 	}
 
 	@Override
-	public ConditionalPointSetIterator createIterator() {
+	public PointSetIterator createIterator() {
 		return new ConditionalPointSetIterator();
 	}
 
