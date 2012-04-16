@@ -37,10 +37,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 
-import net.imglib2.display.RealARGBConverter;
+import net.imglib2.converter.Converter;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
 abstract public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T >
@@ -49,6 +50,7 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 	protected double theta = 0.0;
 	protected double scale = 1.0;
 	protected double oTheta = 0;
+	
 	
 	@Override
 	final protected synchronized void copyState()
@@ -80,9 +82,9 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 	final protected AffineTransform2D reducedAffineCopy = new AffineTransform2D();
 	final protected AffineTransform2D reducedRotation = new AffineTransform2D();
 	
-	final protected RealARGBConverter< T > converter;
+	final protected Converter< T, ARGBType > converter;
 	
-	public AbstractInteractive2DViewer( final RealARGBConverter< T > converter )
+	public AbstractInteractive2DViewer( final Converter< T, ARGBType > converter )
 	{
 		this.converter = converter;
 		cp = new ColorProcessor( 800, 600 );
@@ -269,7 +271,7 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 	public void mouseDragged( final MouseEvent e )
 	{
 		final int modifiers = e.getModifiersEx();
-		if ( ( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 )
+		if ( ( modifiers & MouseEvent.BUTTON2_DOWN_MASK ) != 0 )
 		{
 			dX = e.getX() - oX;
 			dY = e.getY() - oY;
