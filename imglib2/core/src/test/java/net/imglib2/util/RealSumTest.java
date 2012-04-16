@@ -27,9 +27,11 @@
  */
 package net.imglib2.util;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -39,11 +41,18 @@ import org.junit.Test;
  */
 public class RealSumTest
 {
-	protected double[] stream = new double[ 10000000 ];
-	final Random rnd = new Random( 12345 );
+	final static protected double[] stream = new double[ 1000000 ];
+	static protected BigDecimal referenceSum = new BigDecimal( 0.0 );
+	final static Random rnd = new Random( 12345 );
+	
+	@BeforeClass
+	public static void init()
 	{
 		for ( int i = 0; i < stream.length; ++i )
-			stream[ i ] = rnd.nextDouble() * 10000000;
+		{
+			stream[ i ] = rnd.nextDouble() * 1000000;
+			referenceSum = referenceSum.add( new BigDecimal( stream[ i ] ) );
+		}
 	}
 	
 	/**
@@ -75,8 +84,19 @@ public class RealSumTest
 		final RealSum sum = new RealSum();
 		for ( int i = 0; i < stream.length; ++i )
 			sum.add( stream[ i ] );
-		System.out.println( sum.getSum() );
-		Assert.assertEquals( sum.getSum(), 50007888308483.57, 0.01 );
+		Assert.assertEquals( sum.getSum(), referenceSum.doubleValue(), 0.0001 );
+	}
+	
+	/**
+	 * Test method for {@link net.imglib2.util.RealSum#getSum()}.
+	 */
+	@Test
+	public void testDoubleSum()
+	{
+		double sum = 0;
+		for ( int i = 0; i < stream.length; ++i )
+			sum += stream[ i ];
+		Assert.assertEquals( sum, referenceSum.doubleValue(), 0.01 );
 	}
 
 	/**
@@ -90,7 +110,22 @@ public class RealSumTest
 			final RealSum sum = new RealSum();
 			for ( int i = 0; i < stream.length; ++i )
 				sum.add( 1 );
-			Assert.assertEquals( sum.getSum(), stream.length, 0.001 );
+			Assert.assertEquals( sum.getSum(), stream.length, 0.0001 );
+		}
+	}
+	
+	/**
+	 * Test method for {@link net.imglib2.util.RealSum#add(double)}.
+	 */
+	@Test
+	public void testDoubleAdd()
+	{
+		for ( int t = 0; t < 20; ++t )
+		{
+			double sum = 0;
+			for ( int i = 0; i < stream.length; ++i )
+				sum += 1;
+			Assert.assertEquals( sum, stream.length, 0.0001 );
 		}
 	}
 }

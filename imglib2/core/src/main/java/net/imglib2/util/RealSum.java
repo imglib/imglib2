@@ -92,15 +92,9 @@ public class RealSum
 	 */
 	final public double getSum()
 	{
-//		System.out.print( "0" );
-//		for ( final double s : sums )
-//			System.out.print( " + " + s );
-		
 		double sum = 0;
 		for ( final double s : sums )
 			sum += s;
-		
-//		System.out.println( " = " + sum );
 		
 		return sum;
 	}
