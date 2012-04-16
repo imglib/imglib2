@@ -49,6 +49,7 @@ import java.util.Map;
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.PointSet;
 import net.imglib2.ops.PointSetIterator;
+import net.imglib2.ops.condition.AndCondition;
 import net.imglib2.ops.condition.OrCondition;
 
 /**
@@ -305,7 +306,7 @@ public class TextSpecifiedPointSet implements PointSet {
 	}
 	
 	private class VariableName implements SpecToken {
-		String name;
+		final String name;
 		VariableName(String name, Map<String,Integer> varMap) {
 			this.name = name;
 			Integer i = varMap.get(name);
@@ -336,14 +337,17 @@ public class TextSpecifiedPointSet implements PointSet {
 	}
 
 	private class Int implements SpecToken {
-		long value;
+		final long value;
 		Int(String num) {
 			value = Long.parseLong(num);
+		}
+		Int(long val) {
+			value = val;
 		}
 	}
 	
 	private class Real implements SpecToken {
-		double value;
+		final double value;
 		Real(String num) {
 			value = Double.parseDouble(num);
 		}
@@ -597,7 +601,7 @@ public class TextSpecifiedPointSet implements PointSet {
 	}
 
 	private class HyperVolumeSpecification implements PointSetSpecification {
-		private long[] minPt, maxPt;
+		private final long[] minPt, maxPt;
 		
 		public HyperVolumeSpecification(long[] min, long[] max) {
 			minPt = min;
@@ -612,10 +616,10 @@ public class TextSpecifiedPointSet implements PointSet {
 	private class DimensionStepRestrictionSpecification
 		implements PointSetSpecification
 	{
-		int dimIndex;
-		long first;
-		long last;
-		long step;
+		final int dimIndex;
+		final long first;
+		final long last;
+		final long step;
 		
 		public DimensionStepRestrictionSpecification(
 			int dimIndex, long first, long last, long step)
@@ -630,8 +634,8 @@ public class TextSpecifiedPointSet implements PointSet {
 	private class DimensionListRestrictionSpecification
 		implements PointSetSpecification
 	{
-		int dimIndex;
-		List<Long> values;
+		final int dimIndex;
+		final List<Long> values;
 		
 		public DimensionListRestrictionSpecification(
 			int dimIndex, List<Long> values)
@@ -645,20 +649,20 @@ public class TextSpecifiedPointSet implements PointSet {
 	// first and restrictions following
 	
 	private PointSet build(List<PointSetSpecification> specs) {
-		HyperVolumeSpecification spec = (HyperVolumeSpecification) specs.get(0);
+		final HyperVolumeSpecification spec = (HyperVolumeSpecification) specs.get(0);
 		PointSet ps = new HyperVolumePointSet(spec.getMinPt(), spec.getMaxPt());
 		for (int i = 1; i < specs.size(); i++) {
-			Condition<long[]> condition = makeCondition(specs.get(i));
+			final Condition<long[]> condition = makeCondition(specs.get(i));
 			ps = new ConditionalPointSet(ps, condition);
 		}
 		return ps;
 	}
 	
 	private class RangeCondition implements Condition<long[]> {
-		int dimIndex;
-		long first;
-		long last;
-		long step;
+		final int dimIndex;
+		final long first;
+		final long last;
+		final long step;
 		
 		RangeCondition(int dimIndex, long first, long last, long step) {
 			this.dimIndex = dimIndex;
@@ -693,29 +697,85 @@ public class TextSpecifiedPointSet implements PointSet {
 		if (spec instanceof DimensionListRestrictionSpecification) {
 			DimensionListRestrictionSpecification dSpec =
 				(DimensionListRestrictionSpecification) spec;
-			return newOrList(dSpec.dimIndex, dSpec.values);
+			return dimListRestriction(dSpec.dimIndex, dSpec.values);
 		}
 		throw new IllegalArgumentException(
 			"unknown restriction specification ("+spec.getClass()+")");
 	}
 	
-	private Condition<long[]> newOrList(int dimIndex, List<Long> values) {
-		DimensionEqualCondition cond1 =
-				new DimensionEqualCondition(dimIndex, values.get(0));
-		DimensionEqualCondition cond2 =
-				new DimensionEqualCondition(dimIndex, values.get(1));
-		OrCondition<long[]> orList = new OrCondition<long[]>(cond1, cond2);
-		for (int i = 2; i < values.size(); i++) {
-			DimensionEqualCondition cond =
-					new DimensionEqualCondition(dimIndex, values.get(i));
-			orList = new OrCondition<long[]>(cond, orList);
+	private class UnionCondition<T> implements Condition<T> {
+		private final Condition<T> condition;
+		
+		public UnionCondition(List<Condition<T>> conditions) {
+			if (conditions.size() == 0)
+				throw new IllegalArgumentException("no conditions provided");
+			else if (conditions.size() == 1)
+				condition = conditions.get(0);
+			else {
+				OrCondition<T> or =
+						new OrCondition<T>(conditions.get(0), conditions.get(1));
+				for (int i = 2; i < conditions.size(); i++)
+					or = new OrCondition<T>(or, conditions.get(i));
+				condition = or;
+			}
 		}
-		return orList;
+
+		@Override
+		public boolean isTrue(T val) {
+			return condition.isTrue(val);
+		}
+
+		@Override
+		public UnionCondition<T> copy() {
+			final List<Condition<T>> conditions = new ArrayList<Condition<T>>();
+			conditions.add(condition.copy());
+			return new UnionCondition<T>(conditions);
+		}
+	}
+	
+	private class IntersectionCondition<T> implements Condition<T> {
+		private final Condition<T> condition;
+		
+		public IntersectionCondition(List<Condition<T>> conditions) {
+			if (conditions.size() == 0)
+				throw new IllegalArgumentException("no conditions provided");
+			else if (conditions.size() == 1)
+				condition = conditions.get(0);
+			else {
+				AndCondition<T> and =
+						new AndCondition<T>(conditions.get(0), conditions.get(1));
+				for (int i = 2; i < conditions.size(); i++)
+					and = new AndCondition<T>(and, conditions.get(i));
+				condition = and;
+			}
+		}
+
+		@Override
+		public boolean isTrue(T val) {
+			return condition.isTrue(val);
+		}
+
+		@Override
+		public IntersectionCondition<T> copy() {
+			final List<Condition<T>> conditions = new ArrayList<Condition<T>>();
+			conditions.add(condition.copy());
+			return new IntersectionCondition<T>(conditions);
+		}
+	}
+	
+	private UnionCondition<long[]> dimListRestriction(int dimIndex, List<Long> values) {
+		final List<Condition<long[]>> dimensionConditions =
+				new ArrayList<Condition<long[]>>();
+		for (long value : values) {
+			final Condition<long[]> cond = new DimensionEqualCondition(dimIndex, value);
+			dimensionConditions.add(cond);
+		}
+		return new UnionCondition<long[]>(dimensionConditions);
 	}
 	
 	private class DimensionEqualCondition implements Condition<long[]> {
-		int dimIndex;
-		long value;
+		final int dimIndex;
+		final long value;
 		
 		public DimensionEqualCondition(int dimIndex, long value) {
 			this.dimIndex = dimIndex;
