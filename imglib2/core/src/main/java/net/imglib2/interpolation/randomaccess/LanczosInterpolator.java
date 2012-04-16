@@ -1,22 +1,25 @@
-/**
- * Copyright (c) 2009--2012, ImgLib2 developers
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the imglib project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,7 +27,13 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.interpolation.randomaccess;
 
 import net.imglib2.RandomAccess;
@@ -37,6 +46,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * n-dimensional double-based Lanczos Interpolation
  * 
+ * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -68,8 +78,10 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 	 * @param randomAccessible - the {@link RandomAccessible} to work on
 	 * @param alpha - the radius of values to incorporate (typically 2 or 3)
 	 * @param clip - clips the value to range of the {@link RealType}, i.e. tests if the interpolated value is out of range
+	 * @param min - range for clipping (ignored if min==max)
+	 * @param max - range for clipping (ignored if min==max)
 	 */
-	public LanczosInterpolator( final RandomAccessible< T > randomAccessible, final int alpha, final boolean clip )
+	public LanczosInterpolator( final RandomAccessible< T > randomAccessible, final int alpha, final boolean clip, final double min, final double max )
 	{
 		super( randomAccessible.randomAccess(), createOffset( alpha, randomAccessible.numDimensions() ) );
 		
@@ -88,8 +100,17 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 		this.clip = clip;
 		
 		this.interpolatedValue = target.get().createVariable();
-		this.minValue = interpolatedValue.getMinValue();
-		this.maxValue = interpolatedValue.getMaxValue();
+		
+		if ( min == max )
+		{
+			this.minValue = interpolatedValue.getMinValue();
+			this.maxValue = interpolatedValue.getMaxValue();
+		}
+		else
+		{
+			this.minValue = min;
+			this.maxValue = max;
+		}
 	}
 
 	public LanczosInterpolator( final LanczosInterpolator< T > interpolator )

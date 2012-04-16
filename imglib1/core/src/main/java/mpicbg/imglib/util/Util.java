@@ -1,19 +1,39 @@
-/**
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
+/*
+ * #%L
+ * ImgLib: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package mpicbg.imglib.util;
 
 import java.util.List;
@@ -21,6 +41,12 @@ import java.util.List;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.ExponentialMathType;
 
+/**
+ * TODO
+ *
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
+ */
 public class Util
 {
 	public static double log2( final double value )
@@ -427,7 +453,53 @@ public class Util
      * @param normalize Normalize integral of gaussian function to 1 or not...
      * @return double[] The gaussian kernel
      *
-     * @author   Stephan Saalfeld
+     */
+    public static double[] createGaussianKernel1DDouble( final double sigma, final boolean normalize, final int precision )
+    {
+            int size = 3;
+            final double[] gaussianKernel;
+
+            if (sigma <= 0)
+            {
+                    gaussianKernel = new double[3];
+                    gaussianKernel[1] = 1;
+            }
+            else
+            {
+                    size = Math.max(3, (2 * (int) (precision * sigma + 0.5) + 1));
+
+                    final double two_sq_sigma = 2 * sigma * sigma;
+                    gaussianKernel = new double[size];
+
+                    for (int x = size / 2; x >= 0; --x)
+                    {
+                            final double val = Math.exp( -(x * x) / two_sq_sigma);
+
+                            gaussianKernel[size / 2 - x] = val;
+                            gaussianKernel[size / 2 + x] = val;
+                    }
+            }
+
+            if (normalize)
+            {
+                    double sum = 0;
+                    for (double value : gaussianKernel)
+                            sum += value;
+
+                    for (int i = 0; i < gaussianKernel.length; ++i)
+                            gaussianKernel[i] /= sum;
+            }
+
+            return gaussianKernel;
+    }
+
+    /**
+     * This method creates a gaussian kernel
+     *
+     * @param sigma Standard Derivation of the gaussian function
+     * @param normalize Normalize integral of gaussian function to 1 or not...
+     * @return double[] The gaussian kernel
+     *
      */
     public static double[] createGaussianKernel1DDouble( final double sigma, final boolean normalize )
     {
@@ -475,7 +547,6 @@ public class Util
      * @param normalize Normalize integral of gaussian function to 1 or not...
      * @return T[] The gaussian kernel
      *
-     * @author  Stephan Preibisch & Stephan Saalfeld
      */
     public static < T extends ExponentialMathType<T> > T[] createGaussianKernel1D( final T sigma, final boolean normalize )
     {

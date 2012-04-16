@@ -8,13 +8,21 @@
   <parent>
     <groupId>mpicbg</groupId>
     <artifactId>pom-imglib1</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>imglib-ij</artifactId>
 
   <name>ImgLib1 ImageJ</name>
   <description>ImgLib display logic using ImageJ.</description>
+
+  <licenses>
+    <license>
+      <name>GPL 2 or later</name>
+      <url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
   <dependencies>
     <dependency>
@@ -63,6 +71,14 @@
               <packageName>mpicbg.imglib.image.display</packageName>
             </manifest>
           </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <configuration>
+          <licenseName>gpl_v2</licenseName>
         </configuration>
       </plugin>
     </plugins>

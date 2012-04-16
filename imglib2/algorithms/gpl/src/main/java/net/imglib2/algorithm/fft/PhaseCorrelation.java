@@ -1,23 +1,28 @@
-/**
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
- * An execption is the 1D FFT implementation of Dave Hale which we use as a
- * library, wich is released under the terms of the Common Public License -
- * v1.0, which is available at http://www.eclipse.org/legal/cpl-v10.html  
- *
- * @author Stephan Preibisch
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
  */
+
 package net.imglib2.algorithm.fft;
 
 import java.util.ArrayList;
@@ -25,6 +30,7 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.Cursor;
+import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
@@ -39,12 +45,19 @@ import net.imglib2.util.Util;
 import net.imglib2.view.RandomAccessibleIntervalCursor;
 import net.imglib2.view.Views;
 
+/**
+ * TODO
+ *
+ * @author Stephan Preibisch
+ */
 public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, Algorithm, Benchmark
 {
 	final int numDimensions;
 	boolean computeFFTinParalell = true;
+	boolean keepInvFFT = false;
 	Img<T> image1;
 	Img<S> image2;
+	Img<FloatType> invPCM;
 	int numPeaks;
 	int[] minOverlapPx;
 	float normalizationThreshold;
@@ -77,6 +90,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		this( image1, image2, 5, true );
 	}
 	
+	public void setKeepPCM( final boolean keep ) { this.keepInvFFT = keep; }
 	public void setComputeFFTinParalell( final boolean computeFFTinParalell ) { this.computeFFTinParalell = computeFFTinParalell; }
 	public void setInvestigateNumPeaks( final int numPeaks ) { this.numPeaks = numPeaks; }
 	public void setNormalizationThreshold( final int normalizationThreshold ) { this.normalizationThreshold = normalizationThreshold; }
@@ -88,6 +102,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			this.minOverlapPx[ d ] = minOverlapPx;
 	}
 	
+	public Img< FloatType > getPCM() { return invPCM; }
+	public boolean getKeepPCM() { return keepInvFFT; }
 	public boolean getComputeFFTinParalell() { return computeFFTinParalell; }
 	public int getInvestigateNumPeaks() { return numPeaks; }
 	public float getNormalizationThreshold() { return normalizationThreshold; }
@@ -202,7 +218,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 				return false;			
 			}
 
-			final Img<FloatType> invPCM = invFFT.getResult();
+			invPCM = invFFT.getResult();
 
 			/*
 		invPCM.getDisplay().setMinMax();
@@ -220,6 +236,9 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 
 			verifyWithCrossCorrelation( phaseCorrelationPeaks, Util.intervalDimensions( invPCM ), image1, image2 );
 
+			if ( !keepInvFFT )
+				invPCM = null;
+			
 			return true;
 			
 		} finally {
@@ -488,8 +507,11 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			peakList.add( new PhaseCorrelationPeak( new long[ numDimensions ], -Float.MAX_VALUE) );
 
 		final Cursor<FloatType> cursor = invPCM.cursor();
+
+		// HACK: Explicit assignment is needed for OpenJDK javac.
+		ExtendedRandomAccessibleInterval<FloatType, Img<FloatType>> extendedInvPCM = Views.extendPeriodic(invPCM);
 		final LocalNeighborhoodCursor<FloatType> localCursor =
-			new LocalNeighborhoodCursor<FloatType>( Views.extendPeriodic(invPCM).randomAccess(), 1 );
+			new LocalNeighborhoodCursor<FloatType>( extendedInvPCM.randomAccess(), 1 );
 
 		final int[] originalOffset1 = fft1.getOriginalOffset();
 		final int[] originalOffset2 = fft2.getOriginalOffset();

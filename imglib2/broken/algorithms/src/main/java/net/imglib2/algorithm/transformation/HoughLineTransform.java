@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.transformation;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import net.imglib2.util.Util;
  * 
  * rho = y * sin(theta) - x * cos(theta)
  * @Override 
+ *
  */
 public class HoughLineTransform <S extends RealType<S> & NativeType<S>, T extends Type<T> & Comparable<T>> extends HoughTransform<S, T>
 {

@@ -11,6 +11,10 @@ import net.imglib2.img.Image;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.logic.BitType;
 
+/**
+ * TODO
+ *
+ */
 public class BinaryInterpolationBehavior {
 
 	static public final void main(String[] args) {

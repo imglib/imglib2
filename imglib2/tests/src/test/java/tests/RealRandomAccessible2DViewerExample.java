@@ -94,7 +94,7 @@ public class RealRandomAccessible2DViewerExample< T extends RealType< T > & Nati
 		
     }
 	
-	final static public void main( final String[] args ) throws ImgIOException
+	final static public void main2( final String[] args ) throws ImgIOException
 	{
 		new ImageJ();
 		
@@ -119,6 +119,36 @@ public class RealRandomAccessible2DViewerExample< T extends RealType< T > & Nati
 			}
 			
 		};
+		
 		new RealRandomAccessible2DViewerExample< UnsignedByteType >( mandelbrot, new RealARGBConverter< UnsignedByteType >( 0, 255 ) ).run( "" );
+	}
+	
+	final static public void main( final String[] args ) throws ImgIOException
+	{
+		new ImageJ();
+		
+		final RealRandomAccessible< UnsignedByteType > juliaset = new RealRandomAccessible< UnsignedByteType >()
+		{
+			@Override
+			public int numDimensions()
+			{
+				return 2;
+			}
+
+			@Override
+			public RealRandomAccess< UnsignedByteType > realRandomAccess()
+			{
+				return new JuliaRealRandomAccess();
+			}
+
+			@Override
+			public RealRandomAccess< UnsignedByteType > realRandomAccess( final RealInterval interval )
+			{
+				return realRandomAccess();
+			}
+			
+		};
+		
+		new RealRandomAccessible2DViewerExample< UnsignedByteType >( juliaset, new RealARGBConverter< UnsignedByteType >( 0, 255 ) ).run( "" );
 	}
 }

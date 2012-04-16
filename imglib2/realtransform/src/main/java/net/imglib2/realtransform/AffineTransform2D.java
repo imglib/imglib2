@@ -1,3 +1,39 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
+
 package net.imglib2.realtransform;
 
 import net.imglib2.RealLocalizable;
@@ -10,8 +46,8 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * 2d-affine transformation models to be applied to points in 3d-space.
  * 
+ *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
- * 
  */
 public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< AffineGet >, PreConcatenable< AffineGet >
 {
@@ -59,11 +95,10 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	protected AffineTransform2D( final AffineMatrix2D a )
 	{
 		this.a = a;
-		
-		d0 = new RealPoint( 3 );
-		d1 = new RealPoint( 3 );
+
+		d0 = new RealPoint( 2 );
+		d1 = new RealPoint( 2 );
 		ds = new RealPoint[]{ d0, d1 };
-		
 		updateDs();
 		
 		inverse = new AffineTransform2D( this );
@@ -76,9 +111,9 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 		this.inverse = inverse;
 		
 		a = new AffineMatrix2D();
-		
-		d0 = new RealPoint( 3 );
-		d1 = new RealPoint( 3 );
+
+		d0 = new RealPoint( 2 );
+		d1 = new RealPoint( 2 );
 		ds = new RealPoint[]{ d0, d1 };
 	}
 	
@@ -314,15 +349,15 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	public int numSourceDimensions()
 	{
-		return 3;
+		return 2;
 	}
 
 	@Override
 	public int numTargetDimensions()
 	{
-		return 3;
+		return 2;
 	}
-	
+
 	@Override
 	final public AffineTransform2D preConcatenate( final AffineGet affine )
 	{
@@ -403,12 +438,29 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 		
 		preConcatenate( dR );
 	}
-	
+
+	/**
+	 * Translate
+	 *
+	 * @param t 2d translation vector
+	 *
+	 */
+	public void translate( final double... t )
+	{
+		assert t.length == 2 : "2d affine transformations can be translated by 2d vector only.";
+		a.m02 += t[ 0 ];
+		a.m12 += t[ 1 ];
+
+		invert();
+		updateDs();
+		inverse.updateDs();
+	}
+
 	/**
 	 * Scale
-	 * 
-	 * @param d angle in radians
-	 * 
+	 *
+	 * @param d scale factor
+	 *
 	 */
 	public void scale( final double d )
 	{

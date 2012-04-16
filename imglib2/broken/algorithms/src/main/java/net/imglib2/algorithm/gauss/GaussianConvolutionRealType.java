@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.gauss;
 
 import net.imglib2.algorithm.Precision.PrecisionReal;
@@ -7,6 +8,10 @@ import net.imglib2.container.ImgRandomAccess;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * TODO
+ *
+ */
 public class GaussianConvolutionRealType<T extends RealType<T>> extends GaussianConvolution<T>
 {
 	protected PrecisionReal precision = PrecisionReal.Double;

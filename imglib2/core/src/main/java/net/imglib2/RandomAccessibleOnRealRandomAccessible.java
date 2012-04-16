@@ -1,22 +1,25 @@
-/**
- * Copyright (c) 2009--2012, ImgLib2 developers
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the imglib project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,7 +27,13 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2;
 
 /**
@@ -33,29 +42,24 @@ package net.imglib2;
  * but only method calls passed through to an actual {@link RealRandomAccess}.
  * Therefore, localization into integer fields performs a Math.round operation
  * per field and is thus not very efficient.  Localization into real fields,
- * however, is passed through and thus performans optimally. 
+ * however, is passed through and thus performs optimally.
  *
+ * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RandomAccessibleOnRealRandomAccessible< T > implements RandomAccessible< T >
+public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclideanSpace implements RandomAccessible< T >
 {
-	final protected int n;
 	final protected RealRandomAccessible< T > target;
-	
+
 	final protected class RandomAccessOnRealRandomAccessible implements RandomAccess< T >
 	{
 		final protected RealRandomAccess< T > targetAccess;
-		
-		public RandomAccessOnRealRandomAccessible()
+
+		public RandomAccessOnRealRandomAccessible( final RealRandomAccess< T > targetAccess )
 		{
-			targetAccess = target.realRandomAccess();
+			this.targetAccess = targetAccess;
 		}
-		
-		public RandomAccessOnRealRandomAccessible( final Interval interval )
-		{
-			targetAccess = target.realRandomAccess( interval );
-		}
-		
+
 		@Override
 		public void localize( final int[] position )
 		{
@@ -187,11 +191,11 @@ public class RandomAccessibleOnRealRandomAccessible< T > implements RandomAccess
 		@Override
 		public RandomAccessOnRealRandomAccessible copy()
 		{
-			return new RandomAccessOnRealRandomAccessible();
+			return new RandomAccessOnRealRandomAccessible( targetAccess.copyRealRandomAccess() );
 		}
 
 		@Override
-		public RandomAccess< T > copyRandomAccess()
+		public RandomAccessOnRealRandomAccessible copyRandomAccess()
 		{
 			return copy();
 		}
@@ -202,29 +206,22 @@ public class RandomAccessibleOnRealRandomAccessible< T > implements RandomAccess
 			return n;
 		}
 	}
-	
+
 	public RandomAccessibleOnRealRandomAccessible( final RealRandomAccessible< T > target )
 	{
+		super( target.numDimensions() );
 		this.target = target;
-		n = target.numDimensions();
-	}
-	
-	@Override
-	public int numDimensions()
-	{
-		return n;
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
-		return new RandomAccessOnRealRandomAccessible();
+		return new RandomAccessOnRealRandomAccessible( target.realRandomAccess() );
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess( final Interval interval )
 	{
-		return new RandomAccessOnRealRandomAccessible( interval );
+		return new RandomAccessOnRealRandomAccessible( target.realRandomAccess( interval ) );
 	}
-	
 }

@@ -1,23 +1,28 @@
-/**
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
+/*
+ * #%L
+ * ImgLib: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
- * An execption is the 1D FFT implementation of Dave Hale which we use as a
- * library, wich is released under the terms of the Common Public License -
- * v1.0, which is available at http://www.eclipse.org/legal/cpl-v10.html  
- *
- * @author Stephan Preibisch
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
  */
+
 package mpicbg.imglib.algorithm.fft;
 
 import mpicbg.imglib.algorithm.Benchmark;
@@ -38,6 +43,11 @@ import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.util.Util;
 
+/**
+ * TODO
+ *
+ * @author Stephan Preibisch
+ */
 public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, OutputAlgorithm<T>, Benchmark
 {
 	final int numDimensions;
@@ -154,7 +164,43 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		
 		return kernelImg;
 	}
-	
+
+	final public static Image<FloatType> createGaussianKernel( final ContainerFactory factory, final double[] sigmas, final int precision )
+	{
+		final int numDimensions = sigmas.length;
+		
+		final int[] imageSize = new int[ numDimensions ];
+		final double[][] kernel = new double[ numDimensions ][];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			kernel[ d ] = Util.createGaussianKernel1DDouble( sigmas[ d ], true, precision );
+			imageSize[ d ] = kernel[ d ].length;
+		}
+		
+		final Image<FloatType> kernelImg = new ImageFactory<FloatType>( new FloatType(), factory ).createImage( imageSize );
+		
+		final LocalizableCursor<FloatType> cursor = kernelImg.createLocalizableByDimCursor();
+		final int[] position = new int[ numDimensions ];
+		
+		while ( cursor.hasNext() )
+		{
+			cursor.fwd();
+			cursor.getPosition( position );
+			
+			double value = 1;
+			
+			for ( int d = 0; d < numDimensions; ++d )
+				value *= kernel[ d ][ position[ d ] ];
+			
+			cursor.getType().set( (float)value );
+		}
+		
+		cursor.close();
+		
+		return kernelImg;
+	}
+
 	final public static <T extends RealType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double sigma, final int numDimensions )
 	{
 		final double[ ] sigmas = new double[ numDimensions ];

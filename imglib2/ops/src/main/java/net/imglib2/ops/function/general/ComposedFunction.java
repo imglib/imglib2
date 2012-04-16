@@ -1,38 +1,46 @@
 /*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
 
-Copyright (c) 2011, Barry DeZonia.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
-    names of its contributors may be used to endorse or promote products
-    derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-*/
 
 package net.imglib2.ops.function.general;
 
 import java.util.ArrayList;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
+import net.imglib2.ops.PointSet;
 
 // TODO - this is a simple implementation. It only works from a fixed point
 // along a axis. Ideally in the future we'd have different shaped functions
@@ -64,56 +72,41 @@ import net.imglib2.ops.Neighborhood;
 /**
  * 
  * @author Barry DeZonia
- *
  */
 public class ComposedFunction<T> implements Function<long[],T> {
 
-	private final int dimension;
-	private final long startIndex;
+	private final int numDims;
+	private final ArrayList<PointSet> regions;
 	private final ArrayList<Function<long[],T>> functions;
-	private final ArrayList<Long> widths;
-	private long[] relativePosition;
-	private Neighborhood<long[]> localNeigh;
 	
-	public ComposedFunction(int dim, long startPoint) {
-		dimension = dim;
-		startIndex = startPoint;
-		functions = new ArrayList<Function<long[],T>>();
-		widths = new ArrayList<Long>();
-		relativePosition = null;
-		localNeigh = null;
+	public ComposedFunction(int numDims) {
+		this.numDims = numDims;
+		this.regions = new ArrayList<PointSet>();
+		this.functions = new ArrayList<Function<long[],T>>();
 	}
 
-	public void add(Function<long[],T> function, long width) {
+	public void add(PointSet region, Function<long[],T> function) {
+		if (region.numDimensions() != numDims)
+			throw new IllegalArgumentException(
+				"ComposedFunction::add() - cannot add region with incompatible dimensions");
+		regions.add(region);
 		functions.add(function);
-		widths.add(width);
-		if (width < 1)
-			throw new IllegalArgumentException("ComposedFunction: function domain width must be positive");
 	}
 	
 	@Override
-	public void evaluate(Neighborhood<long[]> neigh, long[] point, T output) {
-		if (relativePosition == null) {
-			relativePosition = new long[point.length];
-			localNeigh = neigh.copy();
-		}
-		for (int i = 0; i < relativePosition.length; i++)
-			relativePosition[i] = point[i];
-		relativePosition[dimension] -= startIndex;
-		long indexVal = point[dimension];
-		long currSpot = startIndex;
-		for (int i = 0; i < functions.size(); i++) {
-			long functionWidth = widths.get(i);
-			if (indexVal < currSpot + functionWidth) {
-				localNeigh.moveTo(relativePosition);
-				functions.get(i).evaluate(localNeigh, relativePosition, output);
+	public void compute(long[] point, T output) {
+		if (point.length != numDims)
+			throw new IllegalArgumentException(
+				"input point does not match dimensionality of composed function");
+		for (int i = 0; i < regions.size(); i++) {
+			final PointSet region = regions.get(i);
+			if (region.includes(point)) {
+				functions.get(i).compute(point, output);
 				return;
 			}
-			currSpot += functionWidth;
-			relativePosition[dimension] -= functionWidth;
 		}
 		throw new IllegalArgumentException(
-				"ComposedFunction::evaluate() - given point is out of bounds");
+				"ComposedFunction::compute() - given point is out of bounds");
 	}
 
 	@Override
@@ -126,9 +119,10 @@ public class ComposedFunction<T> implements Function<long[],T> {
 	
 	@Override
 	public ComposedFunction<T> copy() {
-		ComposedFunction<T> newFunc = new ComposedFunction<T>(dimension, startIndex);
+		ComposedFunction<T> newFunc = new ComposedFunction<T>(numDims);
 		for (int i = 0; i < functions.size(); i++)
-			newFunc.add(functions.get(i).copy(), widths.get(i));
+			newFunc.add(regions.get(i), functions.get(i).copy());
+		// TODO - for thread safety regions should be duplicated FIXME
 		return newFunc;
 	}
 }

@@ -1,23 +1,28 @@
-/**
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
- * An execption is the 1D FFT implementation of Dave Hale which we use as a
- * library, wich is released under the terms of the Common Public License -
- * v1.0, which is available at http://www.eclipse.org/legal/cpl-v10.html  
- *
- * @author Stephan Preibisch (stephan.preibisch@gmx.de)
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
  */
+
 package net.imglib2.algorithm.fft;
 
 import net.imglib2.Cursor;
@@ -48,10 +53,9 @@ import net.imglib2.util.Util;
  * 
  * The precision of the computation is {@link ComplexFloatType}.
  * 
- * @author Stephan Preibisch (stephan.preibisch@gmx.de)
- *
  * @param <T> - {@link RealType} of the image
  * @param <S> - {@link RealType} of the kernel
+ * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
 public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> implements MultiThreaded, OutputAlgorithm<Img<T>>, Benchmark
 {
@@ -80,6 +84,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	final ImgFactory<ComplexFloatType> fftImgFactory;
 	final ImgFactory<T> imgFactory;
 	final ImgFactory<S> kernelImgFactory;
+	boolean keepImgFFT = true;
 	
 	final int[] kernelDim;
 
@@ -159,6 +164,13 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		this.imgFFT = null;
 		return true;
 	}
+
+	/**
+	 * By default, he will not do the computation in-place and keep the imgFFT
+	 * @param keepImgFFT
+	 */
+	public void setKeepImgFFT( final boolean keepImgFFT ) { this.keepImgFFT = keepImgFFT; }
+	public boolean getKeepImgFFT() { return this.keepImgFFT; } 
 
 	public boolean replaceKernel( final RandomAccessibleInterval<S> knl )
 	{
@@ -266,7 +278,10 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// instaniate real valued kernel template
 			// which is of the same container type as the image
 			// so that the computation is easy
-			final Img<S> kernelTemplate = kernelImgFactory.create( kernelTemplateDim, Util.getTypeFromInterval( kernel ).createVariable() );
+
+			// HACK: Explicit assignment is needed for OpenJDK javac.
+			S kernelType = Util.getTypeFromInterval( kernel );
+			final Img<S> kernelTemplate = kernelImgFactory.create( kernelTemplateDim, kernelType.createVariable() );
 			
 			// copy the kernel into the kernelTemplate,
 			// the key here is that the center pixel of the kernel (e.g. 13,13,13)
@@ -323,12 +338,19 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		// Multiply in Fourier Space
 		//
-		multiply( imgFFT, kernelFFT );
+		final Img< ComplexFloatType > copy;
+		
+		if ( keepImgFFT )
+			copy = imgFFT.copy();
+		else
+			copy = imgFFT;
+		
+		multiply( copy, kernelFFT );
 		
 		//
 		// Compute inverse Fourier Transform
 		//		
-		final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( imgFFT, imgFactory, fftImage );
+		final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( copy, imgFactory, fftImage );
 		invFFT.setNumThreads( this.getNumThreads() );
 
 		if ( !invFFT.checkInput() || !invFFT.process() )
@@ -337,6 +359,13 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			return false;			
 		}
 		
+		if ( !keepImgFFT )
+		{
+			// the imgFFT was changed during the multiplication
+			// it cannot be re-used
+			imgFFT = null;			
+		}
+
 		convolved = invFFT.getResult();	
 		
 		processingTime = System.currentTimeMillis() - startTime;

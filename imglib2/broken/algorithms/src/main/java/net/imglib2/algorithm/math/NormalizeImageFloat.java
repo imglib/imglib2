@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.math;
 
 import net.imglib2.type.numeric.*;
@@ -14,9 +15,8 @@ import mpicbg.util.RealSum;
 /**
  * Normalizes a given {@link Image} so that the sum of all of its pixels is equal to one
  * (or approximately so). 
- * @author Larry Lindsey
- *
  * @param <T> Image type
+ * @author Larry Lindsey
  */
 public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgorithm<Img<FloatType>>, Benchmark
 {

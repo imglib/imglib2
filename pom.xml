@@ -6,14 +6,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.github.scijava</groupId>
+    <groupId>org.scijava</groupId>
     <artifactId>pom-scijava</artifactId>
-    <version>1.4</version>
+    <version>1.10</version>
   </parent>
 
   <groupId>net.imglib2</groupId>
   <artifactId>pom-imglib</artifactId>
-  <version>2.0-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>ImgLib Projects</name>
@@ -26,9 +26,33 @@
     <module>imglib2</module>
   </modules>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<licenseName>imglib2</licenseName>
+					<licenseResolver>http://code.imagej.net/licenses</licenseResolver>
+					<inceptionYear>2009</inceptionYear>
+					<organizationName>Stephan Preibisch, Stephan Saalfeld, Tobias
+Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organizationName>
+					<projectName>ImgLib2: a general-purpose, multidimensional image processing library.</projectName>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.fusesource.mvnplugins</groupId>
+				<artifactId>maven-graph-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
   <licenses>
     <license>
-      <name>BSD</name>
+			<name>Simplified BSD License</name>
+			<url>http://code.imagej.net/licenses/imagej/license.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -233,8 +257,8 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:git://github.com/imagej/imglib.git</connection>
-    <developerConnection>scm:git@github.com:imagej/imglib.git</developerConnection>
+    <connection>scm:git:git://github.com/imagej/imglib.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:imagej/imglib.git</developerConnection>
     <tag>HEAD</tag>
     <url>http://github.com/imagej/imglib</url>
   </scm>
