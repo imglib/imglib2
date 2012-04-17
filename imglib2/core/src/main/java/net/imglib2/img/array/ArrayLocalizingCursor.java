@@ -111,9 +111,30 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 	@Override
 	public void fwd()
 	{
+//		type.incIndex();
+//
+//		for ( int d = 0; d < n; ++d )
+//		{
+//			if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
+//			else break;
+//		}
+		
+		/*
+		 * Benchmarks @ 2012-04-17 demonstrate that the less readable code
+		 * below is reliably 5-10% faster than the almost equivalent commented
+		 * code above.  The reason is NOT simply that d=0 is executed
+		 * outside the loop.  We have tested that and it does not provide
+		 * improved speed when done in the above version of the code.  Below,
+		 * it plays a role.
+		 */
+		if ( ++position[ 0 ] <= max[ 0 ] )
+		{
+			type.incIndex();
+			return;
+		}
+		position[ 0 ] = 0;
 		type.incIndex();
-
-		for ( int d = 0; d < n; ++d )
+		for ( int d = 1; d < n; ++d )
 		{
 			if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
 			else break;
