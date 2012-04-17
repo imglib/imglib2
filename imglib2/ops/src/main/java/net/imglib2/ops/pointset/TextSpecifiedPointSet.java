@@ -278,6 +278,15 @@ public class TextSpecifiedPointSet implements PointSet {
 				i++;
 				tokens.add(new RightParen());
 			}
+			else if (ch == '|') {
+				if ((i < chars.length-1) && (chars[i+1] == '|')) {
+					i += 2;
+					tokens.add(new Or());
+				}
+				else {
+					invalidLexResult(spec, i, chars[i]);
+				}
+			}
 			else if (Character.isWhitespace(ch))
 				i++;
 			else { // invalid char
@@ -292,7 +301,6 @@ public class TextSpecifiedPointSet implements PointSet {
 		if (name.equals("PI")) return new Real(Math.PI);
 		if (name.equals("mod")) return new Mod();
 		if (name.equals("of")) return new Of();
-		if (name.equals("or")) return new Or();
 		if (name.equals("within")) return new Within();
 		return null;
 	}
@@ -800,10 +808,12 @@ public class TextSpecifiedPointSet implements PointSet {
 		// test all tokens
 		String allTokens =
 				" var = [ ] 01234 , 56789.12 .. mod < > <= >= == != of + - / * " +
-						" within ( ) ^ or E PI ";
+						" within ( ) ^ E PI ||";
 		HashMap<String, Integer> varMap = new HashMap<String, Integer>();
 		ps = new TextSpecifiedPointSet("");
-		ps.tokenize(allTokens, varMap);
+		List<SpecToken> tokens = ps.tokenize(allTokens, varMap);
+		System.out.println("last token should be OR and is "+
+				tokens.get(tokens.size()-1).getClass());
 		
 		// test some definitions
 		new TextSpecifiedPointSet("");
