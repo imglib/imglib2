@@ -295,7 +295,7 @@ public class LabelingMapping< T extends Comparable< T >>
 			interned = ( InternedList< T > ) src;
 			if ( interned.owner == this ) { return interned; }
 		}
-		else
+		if ( src.size() != 0 )
 		{
 			final List< T > copy = new ArrayList< T >( src );
 			Collections.sort( copy );
