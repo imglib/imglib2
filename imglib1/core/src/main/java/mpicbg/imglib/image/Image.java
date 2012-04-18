@@ -143,7 +143,8 @@ public class Image<T extends Type<T>> implements ImageProperties, Dimensionality
 	public Image<T> createNewImage( final int[] dimensions, final String name )
 	{
 		final Image< T > newImage = imageFactory.createImage( dimensions, name );
-		newImage.setCalibration( getCalibration() );
+		if ( newImage.getNumDimensions() == this.getNumDimensions() )
+			newImage.setCalibration( getCalibration() );
 		return newImage;
 	}
 

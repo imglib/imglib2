@@ -2,6 +2,9 @@ package net.imglib2.algorithm.pde;
 
 import java.util.Vector;
 
+import edu.mines.jtk.la.DMatrix;
+import edu.mines.jtk.la.DMatrixEvd;
+
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -125,10 +128,10 @@ implements OutputAlgorithm<Img<FloatType>> {
 					DomainCursor<T> neighborhood = new DomainCursor<T>(ra.randomAccess(), domain );
 
 					// Holder for eigenvalue utility;s
-					final double[] L = new double[3];
-					final double[][] V = new double[3][3];
-					final double[] matrix = new double[6];
-
+					final DMatrix M = new DMatrix(3, 3);
+					DMatrix VV, DD;
+					DMatrixEvd VD;
+					
 					double A, B, C, D, E, F; // tensor components: [ A D E ; D B F ; D F C ]
 
 					cursor.jumpFwd(chunk.getStartPosition());
@@ -195,66 +198,41 @@ implements OutputAlgorithm<Img<FloatType>> {
 							z2 = z * z;
 							mass = neighborhood.get().getRealDouble();
 
-							Ixx += mass * x2;
-							Iyy += mass * y2;
-							Izz += mass * z2;
+							Ixx += mass * (y2 + z2);
+							Iyy += mass * (x2 + z2);
+							Izz += mass * (x2 + y2);
 							Ixy -= mass * x * y;
 							Ixz -= mass * x * z;
 							Iyz -= mass * y * z;
 						}
 
-						
-						// Deal with degenerate cases, cheaper and more robust then general diagonalization
-						if (Ixx <= 2 * Float.MIN_VALUE && Iyy <= 2 * Float.MIN_VALUE) {
+						M.set(0, 0, Ixx);
+						M.set(1, 1, Iyy);
+						M.set(2, 2, Izz);
 
-							A = 0;
-							B = 0;
-							C = 1;
-							D = 0;
-							E = 0;
-							F = 0;
+						M.set(0, 1, Ixy);
+						M.set(1, 0, Ixy);
+						M.set(2, 0, Ixz);
+						M.set(0, 2, Ixz);
+						M.set(2, 1, Iyz);
+						M.set(1, 2, Iyz);
 
-						} else if (Iyy <= 2 * Float.MIN_VALUE && Izz <= 2 * Float.MIN_VALUE) { 
+						VD = new DMatrixEvd(M);
+						DD = VD.getD();
+						DD.set(0, 0, epsilon_1);
+						DD.set(1, 1, epsilon_2);
+						DD.set(2, 2, epsilon_2);
 
-							A = 1;
-							B = 0;
-							C = 0;
-							D = 0;
-							E = 0;
-							F = 0;
+						VV = VD.getV();
+						VV = VV.times( DD.times(  VV.transpose()     )     );
 
-						} else if  (Izz <= 2 * Float.MIN_VALUE && Ixx <= 2 * Float.MIN_VALUE) {
+						A = VV.get(0, 0);
+						B = VV.get(1, 1);
+						C = VV.get(2, 2);
+						D = VV.get(0, 1);
+						E = VV.get(0, 2);
+						F = VV.get(1, 2);
 
-							A = 0;
-							B = 1;
-							C = 0;
-							D = 0;
-							E = 0;
-							F = 0;
-
-						} else {
-
-							matrix[0] = Ixx;
-							matrix[1] = Iyy;
-							matrix[2] = Izz;
-							matrix[3] = Ixy;
-							matrix[4] = Ixz;
-							matrix[5] = Iyz;
-									
-							PdeUtil.dsyevh3(matrix, V, L);
-							
-							L[0] = epsilon_1;
-							L[1] = epsilon_2;
-							L[2] = epsilon_2;
-
-							A = L[0] * V[0][0] * V[0][0] + L[1] * V[1][0] * V[1][0] + L[2] * V[2][0] * V[2][0]; 
-							B = L[0] * V[0][1] * V[0][1] + L[1] * V[1][1] * V[1][1] + L[2] * V[2][1] * V[2][1]; 
-							C = L[0] * V[0][2] * V[0][2] + L[1] * V[1][2] * V[1][2] + L[2] * V[2][2] * V[2][2]; 
-							D = L[0] * V[0][0] * V[0][1] + L[1] * V[1][0] * V[1][1] + L[2] * V[2][0] * V[2][1]; 
-							E = L[0] * V[0][0] * V[0][2] + L[1] * V[1][0] * V[1][2] + L[2] * V[2][0] * V[2][2]; 
-							F = L[0] * V[0][1] * V[0][2] + L[1] * V[1][1] * V[1][2] + L[2] * V[2][1] * V[2][2]; 
-
-						}
 
 						// Store
 						Dcursor.setPosition(0, tensorDim);

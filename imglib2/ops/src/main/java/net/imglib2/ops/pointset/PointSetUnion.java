@@ -84,7 +84,7 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	}
 	
 	@Override
-	public PointSetUnionIterator createIterator() {
+	public PointSetIterator createIterator() {
 		return new PointSetUnionIterator();
 	}
 	

@@ -35,80 +35,37 @@
  */
 
 
-package net.imglib2.ops.pointset;
+package net.imglib2.ops.function.real;
 
+import net.imglib2.ops.Function;
 import net.imglib2.ops.PointSet;
-import net.imglib2.ops.PointSetIterator;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class UniversalPointSet implements PointSet {
+public class RealImpulseResponseFunction<T extends RealType<T>> implements Function<PointSet,T> {
 
-	private long[] anchor = new long[0];
+	private final Function<long[],T> otherFunc;
 	
-	@Override
-	public long[] getAnchor() {
-		return anchor;
+	public RealImpulseResponseFunction(Function<long[],T> otherFunc)
+	{
+		this.otherFunc = otherFunc;
 	}
 
 	@Override
-	public void setAnchor(long[] anchor) {
-		this.anchor = anchor;
+	public void compute(PointSet points, T output) {
+		otherFunc.compute(points.getAnchor(), output);
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
-		return new UniversalPointSetIterator();
+	public RealImpulseResponseFunction<T> copy() {
+		return new RealImpulseResponseFunction<T>(otherFunc.copy());
 	}
 
 	@Override
-	public int numDimensions() {
-		return 0;
-	}
-
-	@Override
-	public long[] findBoundMin() {
-		return anchor;
-	}
-
-	@Override
-	public long[] findBoundMax() {
-		return anchor;
-	}
-
-	@Override
-	public boolean includes(long[] point) {
-		return true;
-	}
-
-	@Override
-	public long calcSize() {
-		throw new UnsupportedOperationException("UniversalPointSet is infinite in size");
-	}
-
-	@Override
-	public PointSet copy() {
-		return new UniversalPointSet();
-	}
-
-	private class UniversalPointSetIterator implements PointSetIterator {
-
-		@Override
-		public boolean hasNext() {
-			return false;  // noniterable
-		}
-
-		@Override
-		public long[] next() {
-			throw new UnsupportedOperationException("Cannot iterate over UniversalPointSet");
-		}
-
-		@Override
-		public void reset() {
-			// nothing to do
-		}
-		
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
 }

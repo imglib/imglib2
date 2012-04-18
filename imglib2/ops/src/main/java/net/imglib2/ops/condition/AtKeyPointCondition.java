@@ -37,6 +37,8 @@
 
 package net.imglib2.ops.condition;
 
+import java.util.Arrays;
+
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.PointSet;
 import net.imglib2.ops.Tuple2;
@@ -49,15 +51,10 @@ import net.imglib2.ops.Tuple2;
 public class AtKeyPointCondition implements Condition<Tuple2<PointSet,long[]>> {
 	
 	@Override
-	public boolean isTrue(Tuple2<PointSet,long[]> context) {
-		long[] keyPoint = context.get1().getAnchor();
-		long[] point = context.get2();
-		for (int i = 0; i < point.length; i++) {
-			if (point[i] != keyPoint[i]) {
-				return false;
-			}
-		}
-		return true;
+	public boolean isTrue(Tuple2<PointSet,long[]> input) {
+		long[] keyPoint = input.get1().getAnchor();
+		long[] point = input.get2();
+		return Arrays.equals(point, keyPoint);
 	}
 	
 	@Override

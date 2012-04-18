@@ -71,7 +71,7 @@ public class XYRandomAccessibleProjector< A, B > extends AbstractXYProjector< A,
 		max[ 1 ] = target.max( 1 );
 		final FinalInterval sourceInterval = new FinalInterval( min, max );
 		
-		final long cr = -target.dimension( 0 ) + 1;
+		final long cr = -target.dimension( 0 );
 		
 		final RandomAccess< B > targetRandomAccess = target.randomAccess( target );
 		final RandomAccess< A > sourceRandomAccess = source.randomAccess( sourceInterval );

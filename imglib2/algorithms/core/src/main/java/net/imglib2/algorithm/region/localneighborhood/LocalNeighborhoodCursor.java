@@ -37,6 +37,7 @@
 package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.Cursor;
+import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.iterator.LocalizingZeroMinIntervalIterator;
@@ -115,6 +116,14 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			positionMinus1[ d ] = center[ d ] - 1;
+		
+		reset();
+	}
+
+	public void updateCenter( final Localizable center )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			positionMinus1[ d ] = center.getLongPosition( d ) - 1;
 		
 		reset();
 	}
