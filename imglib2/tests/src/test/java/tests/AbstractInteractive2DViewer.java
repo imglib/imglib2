@@ -25,8 +25,6 @@
 
 package tests;
 import ij.IJ;
-import ij.ImageJ;
-import ij.ImagePlus;
 import ij.process.ColorProcessor;
 
 import java.awt.Color;
@@ -39,36 +37,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 
-import net.imglib2.RandomAccessible;
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYRandomAccessibleProjector;
-import net.imglib2.img.ImgPlus;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.interpolation.Interpolant;
-import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
-import net.imglib2.realtransform.AffineGet;
-import net.imglib2.realtransform.AffineRandomAccessible;
+import net.imglib2.converter.Converter;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.view.Views;
 
-/**
- * TODO
- *
- */
-public class Interactive2DRotationExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T >
+abstract public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T >
 {
-	final static private double step = Math.PI /180;
-	private double theta = 0.0;
-	private double scale = 1.0;
-	private double oTheta = 0;
+	final static protected double step = Math.PI /180;
+	protected double theta = 0.0;
+	protected double scale = 1.0;
+	protected double oTheta = 0;
+	
 	
 	@Override
 	final protected synchronized void copyState()
@@ -88,103 +70,25 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 		graphics.drawString("scale = " + String.format( "%.3f", ( scale ) ), 10, 20 );
 	}
 	
-	final private ImgPlus< T > imgPlus;
-	final private ColorProcessor cp;
+	final protected ColorProcessor cp;
 	
-	final private ArrayList< AffineTransform2D > list = new ArrayList< AffineTransform2D >();
-	final private ArrayList< AffineTransform2D > rotationList = new ArrayList< AffineTransform2D >();
-	final private AffineTransform2D affine = new AffineTransform2D();
-	final private AffineTransform2D centerShift = new AffineTransform2D();
-	final private AffineTransform2D centerUnShift = new AffineTransform2D();
-	final private AffineTransform2D rotation = new AffineTransform2D();
-	final private AffineTransform2D reducedAffine = new AffineTransform2D();
-	final private AffineTransform2D reducedAffineCopy = new AffineTransform2D();
-	final private AffineTransform2D reducedRotation = new AffineTransform2D();
+	final protected ArrayList< AffineTransform2D > list = new ArrayList< AffineTransform2D >();
+	final protected ArrayList< AffineTransform2D > rotationList = new ArrayList< AffineTransform2D >();
+	final protected AffineTransform2D affine = new AffineTransform2D();
+	final protected AffineTransform2D centerShift = new AffineTransform2D();
+	final protected AffineTransform2D centerUnShift = new AffineTransform2D();
+	final protected AffineTransform2D rotation = new AffineTransform2D();
+	final protected AffineTransform2D reducedAffine = new AffineTransform2D();
+	final protected AffineTransform2D reducedAffineCopy = new AffineTransform2D();
+	final protected AffineTransform2D reducedRotation = new AffineTransform2D();
 	
-	final private RealARGBConverter< T > converter;
+	final protected Converter< T, ARGBType > converter;
 	
-	private double yScale;
-	
-	public Interactive2DRotationExample( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
+	public AbstractInteractive2DViewer( final Converter< T, ARGBType > converter )
 	{
-		this.imgPlus = imgPlus;
 		this.converter = converter;
-		img = imgPlus.getImg();
 		cp = new ColorProcessor( 800, 600 );
 	}
-	
-	@Override
-	protected XYRandomAccessibleProjector< T, ARGBType > createProjector(
-			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory )
-	{
-		final T template = img.randomAccess().get().copy();
-		final RandomAccessible< T > extendedImg = Views.extendValue( img, template );
-		final Interpolant< T, RandomAccessible< T > > interpolant = new Interpolant< T, RandomAccessible< T > >( extendedImg, interpolatorFactory );
-		final AffineRandomAccessible< T, AffineGet > mapping = new AffineRandomAccessible< T, AffineGet >( interpolant, reducedAffineCopy.inverse() );
-		screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] )cp.getPixels() );
-		return new XYRandomAccessibleProjector< T, ARGBType >( mapping, screenImage, converter );
-	}
-	
-	@Override
-	public void run( final String arg )
-    {	
-		imp = new ImagePlus( "argbScreenProjection", cp );
-		imp.show();
-		imp.getCanvas().setMagnification( 1.0 );
-		imp.updateAndDraw();
-		
-		list.clear();
-		rotationList.clear();
-		
-		gui = new GUI( imp );
-		
-		if ( Double.isNaN( imgPlus.calibration( 0 ) ) || Double.isNaN( imgPlus.calibration( 1 ) ) )
-			yScale = 1;
-		else
-			yScale = imgPlus.calibration( 1 ) / imgPlus.calibration( 0 );
-		
-		final int w = cp.getWidth();
-		final int h = cp.getHeight();
-		
-		/* un-scale */
-		final AffineTransform2D unScale = new AffineTransform2D();
-		unScale.set(
-			1.0, 0.0, ( cp.getWidth() - img.dimension( 0 ) ) / 2.0,
-			0.0, yScale, ( cp.getHeight() - img.dimension( 1 ) * yScale ) / 2.0 );
-
-		/* center shift */
-		centerShift.set(
-				1, 0, -w / 2.0,
-				0, 1, -h / 2.0 );
-
-		/* center un-shift */
-		centerUnShift.set(
-				1, 0, w / 2.0,
-				0, 1, h / 2.0 );
-
-		/* initialize rotation */
-		rotation.set(
-			1.0, 0.0, 0.0,
-			0.0, 1.0, 0.0 );
-
-		list.add( unScale );
-		list.add( affine );
-		
-		rotationList.add( centerShift );
-		rotationList.add( rotation );
-		rotationList.add( centerUnShift );
-		
-		gui.backupGui();
-		gui.takeOverGui();
-		
-		projector = createProjector( nnFactory );
-		
-		painter = new MappingThread();
-		
-		painter.start();
-		
-		update();
-    }
 	
 	@Override
 	final protected void update()
@@ -209,7 +113,7 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 	}
 	
 	
-	private void rotate( double dTheta )
+	protected void rotate( double dTheta )
 	{
 		while ( dTheta > Math.PI )
 			dTheta -= Math.PI + Math.PI;
@@ -235,7 +139,7 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 		}
 	}
 	
-	private void scale( final double dScale )
+	protected void scale( final double dScale )
 	{
 		scale *= dScale;
 		
@@ -251,7 +155,7 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 		}
 	}
 	
-	private void translate( final double x, final double y )
+	protected void translate( final double x, final double y )
 	{
 		synchronized ( reducedAffine )
 		{
@@ -267,7 +171,7 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 	 * @param list
 	 * @param affine
 	 */
-	final private static void reduceAffineTransformList( final Iterable< AffineTransform2D > list, final AffineTransform2D affine )
+	final protected static void reduceAffineTransformList( final Iterable< AffineTransform2D > list, final AffineTransform2D affine )
 	{
 		final AffineTransform2D a = new AffineTransform2D();
 		for ( final AffineTransform2D t : list )
@@ -367,7 +271,7 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 	public void mouseDragged( final MouseEvent e )
 	{
 		final int modifiers = e.getModifiersEx();
-		if ( ( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 )
+		if ( ( modifiers & MouseEvent.BUTTON2_DOWN_MASK ) != 0 )
 		{
 			dX = e.getX() - oX;
 			dY = e.getY() - oY;
@@ -414,23 +318,5 @@ public class Interactive2DRotationExample< T extends RealType< T > & NativeType<
 			return;
 		
 		oTheta = Math.atan2( dY / a , dX / a );
-	}
-	
-	final static public void main( final String[] args ) throws ImgIOException
-	{
-		new ImageJ();
-		final ImgOpener io = new ImgOpener();
-		final ImgPlus< UnsignedByteType > imgPlus;
-		try
-		{
-			imgPlus = io.openImg( "/home/saalfeld/Desktop/preikestolen.tif", new ArrayImgFactory< UnsignedByteType >(), new UnsignedByteType() );
-		}
-		catch ( final ImgIOException e )
-		{
-			IJ.log( "Problems opening the image, check the error msg." );
-			e.printStackTrace();
-			return;
-		}
-		new Interactive2DRotationExample< UnsignedByteType >( imgPlus, new RealARGBConverter< UnsignedByteType >( 0, 255 ) ).run( "" );
 	}
 }

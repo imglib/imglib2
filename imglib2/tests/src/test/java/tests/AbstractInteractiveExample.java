@@ -248,9 +248,6 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 	
 	protected MappingThread painter;
 	
-	protected Object transform;
-	
-
 	abstract protected XYRandomAccessibleProjector< T, ARGBType > createProjector(
 			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory );
 	
