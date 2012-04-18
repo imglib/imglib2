@@ -54,7 +54,7 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
-import catmaid.CATMAIDRandomAccessible;
+import catmaid.CATMAIDRandomAccessibleInterval;
 
 /**
  * TODO
@@ -100,8 +100,6 @@ public class Interactive2DRotationCATMAIDExample< T extends NumericType< T > & N
 	final private Converter< T, ARGBType > converter;
 	final private RandomAccessible< T > src;
 	
-	private double yScale;
-	
 	public Interactive2DRotationCATMAIDExample( final RandomAccessible< T > img, final Converter< T, ARGBType > converter )
 	{
 		this.converter = converter;
@@ -113,7 +111,6 @@ public class Interactive2DRotationCATMAIDExample< T extends NumericType< T > & N
 	protected XYRandomAccessibleProjector< T, ARGBType > createProjector(
 			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory )
 	{
-		final T template = src.randomAccess().get().copy();
 		final Interpolant< T, RandomAccessible< T > > interpolant = new Interpolant< T, RandomAccessible< T > >( src, interpolatorFactory );
 		final AffineRandomAccessible< T, AffineGet > mapping = new AffineRandomAccessible< T, AffineGet >( interpolant, reducedAffineCopy.inverse() );
 		screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] )cp.getPixels() );
@@ -404,7 +401,7 @@ public class Interactive2DRotationCATMAIDExample< T extends NumericType< T > & N
 	final static public void main( final String[] args ) throws ImgIOException
 	{
 		new ImageJ();
-		final CATMAIDRandomAccessible map = new CATMAIDRandomAccessible();
+		final CATMAIDRandomAccessibleInterval map = new CATMAIDRandomAccessibleInterval( 6016, 4464, 803, "http://catmaid.mpi-cbg.de/map/c-elegans/" );
 		new Interactive2DRotationCATMAIDExample< ARGBType >( map, new TypeIdentity< ARGBType >() ).run( "" );
 	}
 }
