@@ -37,13 +37,14 @@
 package net.imglib2.labeling;
 
 /**
- * A labeling represents the assignment of zero or more labels to the
- * pixels in a space.
+ * A labeling represents the assignment of zero or more labels to the pixels in
+ * a space.
  * 
- * @param <T> - the type used to label the pixels, for instance string
- * names for user-assigned object labels or integers for machine-labeled
- * images.
- *
+ * @param <T>
+ *            - the type used to label the pixels, for instance string names for
+ *            user-assigned object labels or integers for machine-labeled
+ *            images.
+ * 
  * @author Lee Kamentsky
  */
 public abstract class AbstractNativeLabeling< T extends Comparable< T >> extends AbstractLabeling< T > implements NativeLabeling< T >
@@ -62,7 +63,7 @@ public abstract class AbstractNativeLabeling< T extends Comparable< T >> extends
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see net.imglib2.labeling.NativeLabeling#getMapping()
 	 */
 	@Override

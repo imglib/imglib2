@@ -38,11 +38,11 @@ package net.imglib2.labeling;
 
 /**
  * TODO
- *
+ * 
  * @author Lee Kamentsky
  */
-public class DefaultROIStrategyFactory<T extends Comparable<T>> implements
-		LabelingROIStrategyFactory<T> {
+public class DefaultROIStrategyFactory< T extends Comparable< T >> implements LabelingROIStrategyFactory< T >
+{
 
 	@Override
 	public < L extends Labeling< T >> LabelingROIStrategy< T, L > createLabelingROIStrategy( final L labeling )

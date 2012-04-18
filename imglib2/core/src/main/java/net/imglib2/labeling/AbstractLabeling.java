@@ -44,13 +44,14 @@ import net.imglib2.roi.IterableRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
 
 /**
- * A labeling represents the assignment of zero or more labels to the
- * pixels in a space.
+ * A labeling represents the assignment of zero or more labels to the pixels in
+ * a space.
  * 
- * @param <T> - the type used to label the pixels, for instance string
- * names for user-assigned object labels or integers for machine-labeled
- * images.
- *
+ * @param <T>
+ *            - the type used to label the pixels, for instance string names for
+ *            user-assigned object labels or integers for machine-labeled
+ *            images.
+ * 
  * @author Lee Kamentsky
  */
 public abstract class AbstractLabeling< T extends Comparable< T >> extends AbstractInterval implements Labeling< T >
@@ -75,7 +76,7 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 
 	/**
 	 * Use an alternative strategy for making labeling cursors.
-	 *
+	 * 
 	 * @param strategy
 	 *            - a strategy for making labeling cursors.
 	 */
@@ -95,7 +96,7 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * net.imglib2.labeling.Labeling#getRegionOfInterest(java.lang.Comparable)
 	 */
@@ -107,7 +108,7 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see net.imglib2.labeling.Labeling#getIterableRegionOfInterest(java.lang.
 	 * Comparable)
 	 */
@@ -122,7 +123,7 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 	 * minimum extents are inclusive (there will be pixels at the coordinates of
 	 * the minimum extents) and the maximum extents are exclusive(all pixels
 	 * will have coordinates less than the maximum extents)
-	 *
+	 * 
 	 * @param label
 	 *            - find pixels with this label
 	 * @return true if some pixels are labeled, false if none have the label
@@ -135,7 +136,7 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 
 	/**
 	 * Find the first pixel in a raster scan of the object with the given label.
-	 *
+	 * 
 	 * @param label
 	 * @param start
 	 * @return
@@ -148,7 +149,7 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 
 	/**
 	 * Return the area or suitable N-d analog of the labeled object
-	 *
+	 * 
 	 * @param label
 	 *            - label for object in question
 	 * @return area in units of pixel / voxel / etc.
@@ -161,7 +162,7 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 
 	/**
 	 * Find all labels in the space
-	 *
+	 * 
 	 * @return a collection of the labels.
 	 */
 	@Override
