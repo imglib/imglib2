@@ -39,21 +39,20 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 
 import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.XYRandomAccessibleProjector;
-import net.imglib2.img.Img;
 import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.LanczosInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.NumericType;
 
 /**
  * TODO
  *
  */
-public abstract class AbstractInteractiveExample< T extends RealType< T > > implements PlugIn, KeyListener, MouseWheelListener, MouseListener, MouseMotionListener
+public abstract class AbstractInteractiveExample< T extends NumericType< T > > implements PlugIn, KeyListener, MouseWheelListener, MouseListener, MouseMotionListener
 {
 	final protected class GUI
 	{
@@ -219,7 +218,7 @@ public abstract class AbstractInteractiveExample< T extends RealType< T > > impl
 				projector = createProjector( nlFactory );
 				break;
 			case 2:
-				projector = createProjector( laFactory );
+//				projector = createProjector( laFactory );
 				break;
 			}
 			
@@ -232,13 +231,13 @@ public abstract class AbstractInteractiveExample< T extends RealType< T > > impl
 	
 	final static protected String NL = System.getProperty( "line.separator" );
 	
-	protected Img< T > img;
+	protected RandomAccessibleInterval< T > img;
 	protected ImagePlus imp;
 	protected GUI gui;
 	
 	final protected NearestNeighborInterpolatorFactory< T > nnFactory = new NearestNeighborInterpolatorFactory< T >();
 	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
-	final protected LanczosInterpolatorFactory< T > laFactory = new LanczosInterpolatorFactory< T >( 2, true );
+	//final protected LanczosInterpolatorFactory< T > laFactory = new LanczosInterpolatorFactory< T >( 2, true );
 	protected ARGBScreenImage screenImage;
 	protected XYRandomAccessibleProjector< T, ARGBType > projector;
 
