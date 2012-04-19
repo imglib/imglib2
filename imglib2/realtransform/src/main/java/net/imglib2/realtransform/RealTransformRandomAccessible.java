@@ -68,7 +68,7 @@ public class RealTransformRandomAccessible< T, R extends RealTransform > extends
 			this.targetAccess = target.realRandomAccess();
 		}
 
-		private RealTransformRandomAccess( final RealTransformRandomAccess a )
+		protected RealTransformRandomAccess( final RealTransformRandomAccess a )
 		{
 			super( a );
 			this.targetAccess = a.targetAccess.copyRealRandomAccess();
