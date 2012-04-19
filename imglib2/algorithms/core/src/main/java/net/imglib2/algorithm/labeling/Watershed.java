@@ -208,6 +208,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 		if ( output == null )
 		{
 			long[] dimensions = new long[ seeds.numDimensions() ];
+			seeds.dimensions( dimensions );
 			NativeImgLabeling< L, IntType > o = new NativeImgLabeling< L, IntType >( new ArrayImgFactory< IntType >().create( dimensions, new IntType() ) );
 			output = o;
 		}
@@ -300,6 +301,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 					continue;
 				outputLabelingType.setLabeling( l );
 				double intensity = imageAccess.get().getRealDouble();
+				outputAccess.localize( destPosition );
 				pq.add( new PixelIntensity< L >( destPosition, dimensions, intensity, age++, l ) );
 			}
 		}
