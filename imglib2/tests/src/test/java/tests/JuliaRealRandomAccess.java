@@ -107,11 +107,6 @@ public class JuliaRealRandomAccess extends RealPoint implements RealRandomAccess
 	@Override
 	public UnsignedByteType get()
 	{
-		a.set( position[ 0 ], position[ 1 ] );
-		a.mul( a );
-		a.mul( a );
-		a.add( c );
-		a.mul( a );
 		t.set( julia() );
 		return t;
 	}
