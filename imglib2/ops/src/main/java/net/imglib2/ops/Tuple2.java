@@ -41,18 +41,18 @@ package net.imglib2.ops;
  * 
  * @author Barry DeZonia
  */
-public class Tuple2<A,B> {
-	private A a;
-	private B b;
+public class Tuple2<ONE,TWO> {
+	private ONE one;
+	private TWO two;
 	
-	public Tuple2(A a, B b) {
-		this.a = a;
-		this.b = b;
+	public Tuple2(ONE one, TWO two) {
+		this.one = one;
+		this.two = two;
 	}
 	
-	public void set1(A a) { this.a = a; }
-	public void set2(B b) { this.b = b; }
+	public void set1(ONE one) { this.one = one; }
+	public void set2(TWO two) { this.two = two; }
 	
-	public A get1() { return a; }
-	public B get2() { return b; }
+	public ONE get1() { return one; }
+	public TWO get2() { return two; }
 }
