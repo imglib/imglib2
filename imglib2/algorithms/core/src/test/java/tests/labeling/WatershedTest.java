@@ -40,6 +40,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import net.imglib2.Cursor;
 import net.imglib2.algorithm.labeling.AllConnectedComponents;
@@ -144,5 +145,26 @@ public class WatershedTest
 	public final void testTwo()
 	{
 		testSeededCase2D( new int[][] { { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 }, { 0, 0, 0 } }, new int[][] { { 0, 1, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 2, 0 } }, new int[][] { { 1, 1, 1 }, { 1, 1, 1 }, { 2, 2, 2 }, { 2, 2, 2 } }, null, 0 );
+	}
+	@Test
+	public final void testBig()
+	{
+		// Make an image that's composed of two rectangles that require propagation.
+		int [][] image = new int[9][11];
+		for (int i = 0; i<image.length; i++) {
+			image[i][image[0].length / 2] = 1;
+		}
+		// The seeds are placed asymetrically so that the closer to the middle
+		// (= # 2) will propagate first to the ridge.
+		int [][] seeds = new int [9][11];
+		seeds[4][0] = 1;
+		seeds[4][6] = 2;
+		int [][] expected = new int[9][11];
+		for (int i = 0; i < image.length; i++) {
+			for (int j = 0; j < image[0].length; j++) {
+				expected[i][j] = (j < image[0].length / 2) ? 1:2;
+			}
+		}
+		testSeededCase2D( image, seeds, expected, null, 0 );
 	}
 }
