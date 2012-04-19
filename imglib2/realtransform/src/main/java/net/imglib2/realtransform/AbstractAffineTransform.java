@@ -57,14 +57,6 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	
 	final protected RealPoint[] ds;
 	
-	protected AbstractAffineTransform( final int n, final Object x )
-	{
-		this.n = n;
-		a = new Matrix( n, n );
-		t = new double[ n ];
-		ds = new RealPoint[ n ];
-	}
-	
 	protected AbstractAffineTransform( final Matrix a, final double[] t )
 	{
 		assert
@@ -83,10 +75,13 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	
 	public AbstractAffineTransform( final Matrix matrix )
 	{
-		this( matrix.getRowDimension(), null );
-		
 		assert matrix.getRowDimension() == matrix.getColumnDimension() - 1 : "The passed affine matrix must be of the format (n-1)*n.";
 		
+		n = matrix.getRowDimension();
+		a = new Matrix( n, n );
+		t = new double[ n ];
+		ds = new RealPoint[ n ];
+
 		a.setMatrix( 0, n - 1, 0, n - 1, matrix );
 		for ( int r = 0; r < n; ++r )
 		{
@@ -100,6 +95,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	{
 		this.n = n;
 		a = new Matrix( n, n );
+		t = new double[ n ];
 		ds = new RealPoint[ n ];
 		
 		for ( int r = 0; r < n; ++r )
@@ -109,8 +105,6 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 			d.setPosition( 1.0, r );
 			ds[ r ] = d;
 		}
-		
-		t = new double[ n ];
 	}
 	
 	
