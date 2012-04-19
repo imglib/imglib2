@@ -23,8 +23,11 @@ import ij.process.ColorProcessor;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -70,9 +73,17 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 					( this.z == that.z );
 		}
 		
+		/**
+		 * Return a hash code for the long tile index according to
+		 * {@link Long#hashCode()}.  The hash has no collisions if the tile
+		 * index is smaller than 2<sup>32</sup>.
+		 *   
+		 * @return
+		 */
 		@Override
 		public int hashCode() {
-			return new Long( r ).hashCode() * 3 + new Long( c ).hashCode() * 5 + new Long( z ).hashCode() * 7;
+			final long value = ( z * rows + r ) * cols + c;
+			return ( int )( value ^ ( value >>> 32 ) );
 		}
 	}
 	
@@ -511,13 +522,44 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 		}
 	}
 	
-	final protected HashMap< Key, int[] > cache = new HashMap< CATMAIDRandomAccessibleInterval.Key, int[] >();
+	protected class CacheSweeper extends Thread
+	{
+		@Override
+		final public void run()
+		{
+			System.out.print( "Sweeping cache..." );
+			final ArrayList< Key > keys = new ArrayList< Key >();
+			synchronized ( cache )
+			{
+				for ( final Map.Entry< Key, SoftReference< int[] > > entry : cache.entrySet() )
+				{
+					final SoftReference< int[] > ref = entry.getValue();
+					if ( ref == null )
+						keys.add( entry.getKey() );
+					else if ( ref.get() == null )
+						keys.add( entry.getKey() );
+				}
+				final int s = cache.size();
+				for ( final Key k : keys )
+					cache.remove( k );
+				System.out.println( "...removed " + keys.size() + " of " + s + " keys." );
+				cacheSweeper = null;
+			}
+		}
+	}
+	
+	final protected HashMap< Key, SoftReference< int[] > > cache = new HashMap< CATMAIDRandomAccessibleInterval.Key, SoftReference< int[] > >();
 	final protected String baseUrl;
+	final protected long rows, cols;
+	protected Thread cacheSweeper = null;
+	protected long i;
 	
 	public CATMAIDRandomAccessibleInterval( final long width, final long height, final long depth, final String url )
 	{
 		super( new long[]{ width, height, depth } );
 		this.baseUrl = url;
+		cols = ( long )Math.ceil( width / 256.0 );
+		rows = ( long )Math.ceil( height / 256.0 );
 	}
 	
 	@Override
@@ -541,33 +583,52 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 	protected int[] fetchPixels( final long r, final long c, final long z )
 	{
 		final Key key = new Key( r, c, z );
-		final int[] cached = cache.get( key );
-		if ( cached != null )
-			return cached;
-		System.out.println( r + " " + c + " " + cache.size() );
-		final int [] pixels = new int[ 256 * 256 ];
-		try
+		synchronized ( cache )
 		{
-		    final URL url = new URL( baseUrl + z + "/" + r + "_" + c + "_0.jpg" );
-		    System.out.println( url );
-		    final BufferedImage image = ImageIO.read( url );
-//		    new ImagePlus( "", new ColorProcessor( image ) ).show();
-		    final PixelGrabber pg = new PixelGrabber( image, 0, 0, 256, 256, pixels, 0, 256 );
-			pg.grabPixels();
-			cache.put( key, pixels );
-		}
-		catch (final IOException e)
-		{
-			System.out.println( "failed loading r=" + r + " c=" + c );
-			cache.put( key, pixels );
+			final SoftReference< int[] > cachedReference = cache.get( key );
+			if ( cachedReference != null )
+			{
+				final int[] cached = cachedReference.get();
+				if ( cached != null )
+					return cached;
+				else
+					cache.remove( key );
+			}
+//			System.out.println( r + " " + c + " " + cache.size() );
+			
+			if ( ++i > 1000 )
+			{
+				i = 0;
+				if ( cacheSweeper == null )
+				{
+					cacheSweeper = new CacheSweeper();
+					cacheSweeper.start();
+				}
+			}
+			final int [] pixels = new int[ 256 * 256 ];
+			final String urlString = new StringBuffer( baseUrl ).append( z ).append( "/" ).append( r ).append( "_" ).append( c ).append( "_0.jpg" ).toString();
+			try
+			{
+			    final URL url = new URL( urlString );
+//			    System.out.println( url );
+			    final BufferedImage image = ImageIO.read( url );
+			    final PixelGrabber pg = new PixelGrabber( image, 0, 0, 256, 256, pixels, 0, 256 );
+				pg.grabPixels();
+				cache.put( key, new SoftReference< int[] >( pixels ) );
+			}
+			catch (final IOException e)
+			{
+				System.out.println( "failed loading r=" + r + " c=" + c + " url(" + urlString + ")" );
+				cache.put( key, new SoftReference< int[] >( pixels ) );
+				return pixels;
+			}
+			catch (final InterruptedException e)
+			{
+				e.printStackTrace();
+				return pixels;
+			}
 			return pixels;
 		}
-		catch (final InterruptedException e)
-		{
-			e.printStackTrace();
-			return pixels;
-		}
-		return pixels;
 	}
 	
 	final static public void main( final String[] args )
