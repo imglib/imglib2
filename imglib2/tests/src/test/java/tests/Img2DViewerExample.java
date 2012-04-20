@@ -116,7 +116,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		final ImgPlus< UnsignedByteType > imgPlus;
 		try
 		{
-			imgPlus = io.openImg( "/home/saalfeld/Desktop/preikestolen.tif", new ArrayImgFactory< UnsignedByteType >(), new UnsignedByteType() );
+			imgPlus = io.openImg( "src/test/java/resources/preikestolen.tif", new ArrayImgFactory< UnsignedByteType >(), new UnsignedByteType() );
 		}
 		catch ( final ImgIOException e )
 		{
