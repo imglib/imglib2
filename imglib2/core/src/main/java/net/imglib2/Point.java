@@ -46,16 +46,16 @@ package net.imglib2;
 public class Point extends AbstractLocalizable implements Positionable
 {
 	/**
-	 * Protected constructor that re-uses the passed position array.
+	 * Protected constructor that can re-use the passed position array.
 	 *
 	 * @param position
 	 *            array used to store the position.
-	 * @param x
-	 *            unused parameter that changes the method signature
+	 * @param copy
+	 *            flag indicating whether position array should be duplicated.
 	 */
-	protected Point( final long[] position, final Object x )
+	protected Point( final long[] position, final boolean copy )
 	{
-		super( position );
+		super( copy ? position.clone() : position );
 	}
 
 	/**
@@ -79,8 +79,7 @@ public class Point extends AbstractLocalizable implements Positionable
 	 */
 	public Point( final long... position )
 	{
-		super( position.length );
-		setPosition( position );
+		this( position, true );
 	}
 
 	/**
@@ -212,6 +211,6 @@ public class Point extends AbstractLocalizable implements Positionable
 	 */
 	public static Point wrap( final long[] position )
 	{
-		return new Point( position, null );
+		return new Point( position, false );
 	}
 }
