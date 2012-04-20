@@ -1,25 +1,22 @@
-/*
- * #%L
- * ImgLib2: a general-purpose, multidimensional image processing library.
- * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
- * %%
+/**
+ * Copyright (c) 2009--2012, ImgLib2 developers
+ * All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.  Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.  Neither the name of the Fiji project nor
+ * the names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -28,19 +25,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
- * #L%
+ * @author Tobias Pietzsch
  */
-
 package net.imglib2.display;
 
 import java.util.ArrayList;
 
-import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
@@ -54,17 +45,20 @@ import net.imglib2.type.numeric.ARGBType;
  * inclusion in the computed composite value using the {@link #setComposite}
  * methods.
  *
- * @see XYProjector for the code upon which this class was based.
+ * @see CompositeXYProjector for the code upon which this class was based.
+ * @see XYRandomAccessibleProjector for the code upon which this class was
+ *      based.
  *
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  * @author Grant Harris
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
+public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProjector< A, ARGBType >
 {
+	final protected RandomAccessibleInterval< ARGBType > target;
 
-	private final ArrayList< Converter< A, ARGBType >> converters;
+	private final ArrayList< Converter< A, ARGBType > > converters;
 
 	private final int dimIndex;
 
@@ -78,10 +72,10 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 
 	protected final Converter< A, ARGBType >[] currentConverters;
 
-	@SuppressWarnings( "unchecked" )
-	public CompositeXYProjector( final RandomAccessibleInterval< A > source, final IterableInterval< ARGBType > target, final ArrayList< Converter< A, ARGBType >> converters, final int dimIndex )
+	public CompositeXYRandomAccessibleProjector( final RandomAccessibleInterval< A > source, final RandomAccessibleInterval< ARGBType > target, final ArrayList< Converter< A, ARGBType >> converters, final int dimIndex )
 	{
-		super( source, target, null );
+		super( source, null );
+		this.target = target;
 		this.converters = converters;
 		this.dimIndex = dimIndex;
 
@@ -90,6 +84,9 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 		positionMin = dimIndex < 0 ? 0 : source.min( dimIndex );
 		final int converterCount = converters.size();
 		if ( positionCount != converterCount ) { throw new IllegalArgumentException( "Expected " + positionCount + " converters but got " + converterCount ); }
+
+		min[ dimIndex ] = source.min( dimIndex );
+		max[ dimIndex ] = source.max( dimIndex );
 
 		composite = new boolean[ converterCount ];
 		composite[ 0 ] = true;
@@ -100,15 +97,13 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 	// -- CompositeXYProjector methods --
 
 	/** Toggles the given position index's inclusion in composite values. */
-	public void setComposite( final int index, final boolean on )
-	{
-		composite[ index ] = on;
+	public void setComposite(final int index, final boolean on) {
+		composite[index] = on;
 	}
 
 	/** Gets whether the given position index is included in composite values. */
-	public boolean isComposite( final int index )
-	{
-		return composite[ index ];
+	public boolean isComposite(final int index) {
+		return composite[index];
 	}
 
 	/**
@@ -117,18 +112,15 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 	 * consist of only the projector's current position (i.e., non-composite
 	 * mode).
 	 */
-	public void setComposite( final boolean on )
-	{
-		for ( int i = 0; i < composite.length; i++ )
-			composite[ i ] = on;
+	public void setComposite(final boolean on) {
+		for (int i = 0; i < composite.length; i++)
+			composite[i] = on;
 	}
 
 	/** Gets whether composite mode is enabled for all positions. */
-	public boolean isComposite()
-	{
-		for ( int i = 0; i < composite.length; i++ )
-			if ( !composite[ i ] )
-				return false;
+	public boolean isComposite() {
+		for (int i = 0; i < composite.length; i++)
+			if (!composite[i]) return false;
 		return true;
 	}
 
@@ -170,44 +162,53 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 		{
 			// there is only one active converter: converter[0]
 			// use it to map the slice at currentPositions[0]
+			sourceRandomAccess.setPosition( currentPositions[ 0 ], dimIndex );
 			mapSingle( sourceRandomAccess, currentConverters[ 0 ] );
 			return;
 		}
 
-		final Cursor< ARGBType > targetCursor = target.localizingCursor();
 		final ARGBType bi = new ARGBType();
 
-		while ( targetCursor.hasNext() )
-		{
-			targetCursor.fwd();
-			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
-			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
-			int aSum = 0, rSum = 0, gSum = 0, bSum = 0;
-			for ( int i = 0; i < size; i++ )
-			{
-				sourceRandomAccess.setPosition( currentPositions[ i ], dimIndex );
-				currentConverters[ i ].convert( sourceRandomAccess.get(), bi );
+		final RandomAccess< ARGBType > targetRandomAccess = target.randomAccess();
 
-				// accumulate converted result
-				final int value = bi.get();
-				final int a = ARGBType.alpha( value );
-				final int r = ARGBType.red( value );
-				final int g = ARGBType.green( value );
-				final int b = ARGBType.blue( value );
-				aSum += a;
-				rSum += r;
-				gSum += g;
-				bSum += b;
+		targetRandomAccess.setPosition( min[ 1 ], 1 );
+		while (	targetRandomAccess.getLongPosition( 1 ) <= max[ 1 ] )
+		{
+			sourceRandomAccess.setPosition( min[ 0 ], 0 );
+			targetRandomAccess.setPosition( min[ 0 ], 0 );
+			while (	targetRandomAccess.getLongPosition( 0 ) <= max[ 0 ] )
+			{
+				int aSum = 0, rSum = 0, gSum = 0, bSum = 0;
+				for ( int i = 0; i < size; i++ )
+				{
+					sourceRandomAccess.setPosition( currentPositions[ i ], dimIndex );
+					currentConverters[ i ].convert( sourceRandomAccess.get(), bi );
+
+					// accumulate converted result
+					final int value = bi.get();
+					final int a = ARGBType.alpha( value );
+					final int r = ARGBType.red( value );
+					final int g = ARGBType.green( value );
+					final int b = ARGBType.blue( value );
+					aSum += a;
+					rSum += r;
+					gSum += g;
+					bSum += b;
+				}
+				if ( aSum > 255 )
+					aSum = 255;
+				if ( rSum > 255 )
+					rSum = 255;
+				if ( gSum > 255 )
+					gSum = 255;
+				if ( bSum > 255 )
+					bSum = 255;
+				targetRandomAccess.get().set( ARGBType.rgba( rSum, gSum, bSum, aSum ) );
+				sourceRandomAccess.fwd( 0 );
+				targetRandomAccess.fwd( 0 );
 			}
-			if ( aSum > 255 )
-				aSum = 255;
-			if ( rSum > 255 )
-				rSum = 255;
-			if ( gSum > 255 )
-				gSum = 255;
-			if ( bSum > 255 )
-				bSum = 255;
-			targetCursor.get().set( ARGBType.rgba( rSum, gSum, bSum, aSum ) );
+			sourceRandomAccess.fwd( 1 );
+			targetRandomAccess.fwd( 1 );
 		}
 	}
 
@@ -260,13 +261,20 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 
 	protected void mapSingle( final RandomAccess< A > sourceRandomAccess, final Converter< A, ARGBType > converter )
 	{
-		final Cursor< ARGBType > targetCursor = target.localizingCursor();
-		while ( targetCursor.hasNext() )
+		final RandomAccess< ARGBType > targetRandomAccess = target.randomAccess();
+		targetRandomAccess.setPosition( min[ 1 ], 1 );
+		while (	targetRandomAccess.getLongPosition( 1 ) <= max[ 1 ] )
 		{
-			targetCursor.fwd();
-			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
-			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
-			converter.convert( sourceRandomAccess.get(), targetCursor.get() );
+			sourceRandomAccess.setPosition( min[ 0 ], 0 );
+			targetRandomAccess.setPosition( min[ 0 ], 0 );
+			while (	targetRandomAccess.getLongPosition( 0 ) <= max[ 0 ] )
+			{
+				converter.convert( sourceRandomAccess.get(), targetRandomAccess.get() );
+				sourceRandomAccess.fwd( 0 );
+				targetRandomAccess.fwd( 0 );
+			}
+			sourceRandomAccess.fwd( 1 );
+			targetRandomAccess.fwd( 1 );
 		}
 	}
 }

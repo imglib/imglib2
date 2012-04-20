@@ -72,17 +72,24 @@ public class XYProjector< A, B > extends AbstractXYProjector< A, B >
 		max[ 0 ] = target.max( 0 );
 		max[ 1 ] = target.max( 1 );
 		final FinalInterval sourceInterval = new FinalInterval( min, max );
-		
-		final Cursor< B > targetCursor = target.cursor();
+
+		final Cursor< B > targetCursor = target.localizingCursor();
 		final RandomAccess< A > sourceRandomAccess = source.randomAccess( sourceInterval );
 		sourceRandomAccess.setPosition( position );
-		while ( targetCursor.hasNext() )
-		{
-			final B b = targetCursor.next();
-			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
-			if ( numDimensions > 1 )
+		if ( numDimensions > 1 )
+			while ( targetCursor.hasNext() )
+			{
+				final B b = targetCursor.next();
+				sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
 				sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
-			converter.convert( sourceRandomAccess.get(), b );
-		}
+				converter.convert( sourceRandomAccess.get(), b );
+			}
+		else
+			while ( targetCursor.hasNext() )
+			{
+				final B b = targetCursor.next();
+				sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
+				converter.convert( sourceRandomAccess.get(), b );
+			}
 	}
 }
