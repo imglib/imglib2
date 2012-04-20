@@ -41,15 +41,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.imglib2.ops.UnaryOperation;
 import net.imglib2.ops.operation.unary.real.RealAbs;
+import net.imglib2.ops.operation.unary.real.RealArccos;
+import net.imglib2.ops.operation.unary.real.RealArccosh;
+import net.imglib2.ops.operation.unary.real.RealArccot;
+import net.imglib2.ops.operation.unary.real.RealArccoth;
+import net.imglib2.ops.operation.unary.real.RealArccsc;
+import net.imglib2.ops.operation.unary.real.RealArccsch;
+import net.imglib2.ops.operation.unary.real.RealArcsec;
+import net.imglib2.ops.operation.unary.real.RealArcsech;
+import net.imglib2.ops.operation.unary.real.RealArcsin;
+import net.imglib2.ops.operation.unary.real.RealArcsinh;
+import net.imglib2.ops.operation.unary.real.RealArctan;
+import net.imglib2.ops.operation.unary.real.RealArctanh;
 import net.imglib2.ops.operation.unary.real.RealCeil;
+import net.imglib2.ops.operation.unary.real.RealCos;
+import net.imglib2.ops.operation.unary.real.RealCosh;
+import net.imglib2.ops.operation.unary.real.RealCot;
+import net.imglib2.ops.operation.unary.real.RealCoth;
+import net.imglib2.ops.operation.unary.real.RealCsc;
+import net.imglib2.ops.operation.unary.real.RealCsch;
 import net.imglib2.ops.operation.unary.real.RealExp;
 import net.imglib2.ops.operation.unary.real.RealFloor;
 import net.imglib2.ops.operation.unary.real.RealLog;
 import net.imglib2.ops.operation.unary.real.RealRound;
+import net.imglib2.ops.operation.unary.real.RealSec;
+import net.imglib2.ops.operation.unary.real.RealSech;
 import net.imglib2.ops.operation.unary.real.RealSignum;
+import net.imglib2.ops.operation.unary.real.RealSin;
+import net.imglib2.ops.operation.unary.real.RealSinc;
+import net.imglib2.ops.operation.unary.real.RealSincPi;
+import net.imglib2.ops.operation.unary.real.RealSinh;
 import net.imglib2.ops.operation.unary.real.RealSqr;
 import net.imglib2.ops.operation.unary.real.RealSqrt;
+import net.imglib2.ops.operation.unary.real.RealTan;
+import net.imglib2.ops.operation.unary.real.RealTanh;
 import net.imglib2.ops.parse.token.And;
 import net.imglib2.ops.parse.token.Assign;
 import net.imglib2.ops.parse.token.CloseParen;
@@ -228,21 +255,57 @@ public class Lexer {
 	}
 
 	private Token reservedWordLookup(String name, int pos) {
+		//constants
 		if (name.equals("E")) return new Real(pos, name, Math.E);
 		if (name.equals("PI")) return new Real(pos, name, Math.PI);
+	
+		// logical operations
 		if (name.equals("and")) return new And(pos, name);
 		if (name.equals("or")) return new Or(pos, name);
 		if (name.equals("xor")) return new Xor(pos, name);
 		if (name.equals("not")) return new Not(pos, name);
-		if (name.equals("abs")) return new FunctionCall(pos, name, new RealAbs<DoubleType,DoubleType>());
-		if (name.equals("ceil")) return new FunctionCall(pos, name, new RealCeil<DoubleType,DoubleType>());
-		if (name.equals("floor")) return new FunctionCall(pos, name, new RealFloor<DoubleType,DoubleType>());
-		if (name.equals("round")) return new FunctionCall(pos, name, new RealRound<DoubleType,DoubleType>());
-		if (name.equals("sqrt")) return new FunctionCall(pos, name, new RealSqrt<DoubleType,DoubleType>());
-		if (name.equals("sqr")) return new FunctionCall(pos, name, new RealSqr<DoubleType,DoubleType>());
-		if (name.equals("log")) return new FunctionCall(pos, name, new RealLog<DoubleType,DoubleType>());
-		if (name.equals("exp")) return new FunctionCall(pos, name, new RealExp<DoubleType,DoubleType>());
-		if (name.equals("signum")) return new FunctionCall(pos, name, new RealSignum<DoubleType,DoubleType>());
+
+		// predefined functions
+		UnaryOperation<DoubleType, DoubleType> op = null;
+
+		if (name.equals("abs")) op = new RealAbs<DoubleType,DoubleType>();
+		if (name.equals("acos")) op = new RealArccos<DoubleType,DoubleType>();
+		if (name.equals("acosh")) op = new RealArccosh<DoubleType,DoubleType>();
+		if (name.equals("acot")) op = new RealArccot<DoubleType,DoubleType>();
+		if (name.equals("acoth")) op = new RealArccoth<DoubleType,DoubleType>();
+		if (name.equals("acsc")) op = new RealArccsc<DoubleType,DoubleType>();
+		if (name.equals("acsch")) op = new RealArccsch<DoubleType,DoubleType>();
+		if (name.equals("asec")) op = new RealArcsec<DoubleType,DoubleType>();
+		if (name.equals("asech")) op = new RealArcsech<DoubleType,DoubleType>();
+		if (name.equals("asin")) op = new RealArcsin<DoubleType,DoubleType>();
+		if (name.equals("asinh")) op = new RealArcsinh<DoubleType,DoubleType>();
+		if (name.equals("atan")) op = new RealArctan<DoubleType,DoubleType>();
+		if (name.equals("atanh")) op = new RealArctanh<DoubleType,DoubleType>();
+		if (name.equals("ceil")) op = new RealCeil<DoubleType,DoubleType>();
+		if (name.equals("cos")) op = new RealCos<DoubleType,DoubleType>();
+		if (name.equals("cosh")) op = new RealCosh<DoubleType,DoubleType>();
+		if (name.equals("cot")) op = new RealCot<DoubleType,DoubleType>();
+		if (name.equals("coth")) op = new RealCoth<DoubleType,DoubleType>();
+		if (name.equals("csc")) op = new RealCsc<DoubleType,DoubleType>();
+		if (name.equals("csch")) op = new RealCsch<DoubleType,DoubleType>();
+		if (name.equals("exp")) op = new RealExp<DoubleType,DoubleType>();
+		if (name.equals("floor")) op = new RealFloor<DoubleType,DoubleType>();
+		if (name.equals("log")) op = new RealLog<DoubleType,DoubleType>();
+		if (name.equals("round")) op = new RealRound<DoubleType,DoubleType>();
+		if (name.equals("sec")) op = new RealSec<DoubleType,DoubleType>();
+		if (name.equals("sech")) op = new RealSech<DoubleType,DoubleType>();
+		if (name.equals("signum")) op = new RealSignum<DoubleType,DoubleType>();
+		if (name.equals("sin")) op = new RealSin<DoubleType,DoubleType>();
+		if (name.equals("sinc")) op = new RealSinc<DoubleType,DoubleType>();
+		if (name.equals("sincpi")) op = new RealSincPi<DoubleType,DoubleType>();
+		if (name.equals("sinh")) op = new RealSinh<DoubleType,DoubleType>();
+		if (name.equals("sqr")) op = new RealSqr<DoubleType,DoubleType>();
+		if (name.equals("sqrt")) op = new RealSqrt<DoubleType,DoubleType>();
+		if (name.equals("tan")) op = new RealTan<DoubleType,DoubleType>();
+		if (name.equals("tanh")) op = new RealTanh<DoubleType,DoubleType>();
+		
+		if (op != null) return new FunctionCall(pos, name, op);
+		
 		return null;
 	}
 	
