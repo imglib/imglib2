@@ -39,6 +39,7 @@ package net.imglib2.display;
 import java.util.ArrayList;
 
 import net.imglib2.Cursor;
+import net.imglib2.FinalInterval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
@@ -136,23 +137,39 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 	@Override
 	public void map()
 	{
-		final RandomAccess< A > sourceRandomAccess = source.randomAccess();
-		sourceRandomAccess.setPosition( position );
+		for ( int d = 2; d < position.length; ++d )
+			min[ d ] = max[ d ] = position[ d ];
+
+		min[ 0 ] = target.min( 0 );
+		min[ 1 ] = target.min( 1 );
+		max[ 0 ] = target.max( 0 );
+		max[ 1 ] = target.max( 1 );
 
 		if ( dimIndex < 0 )
 		{
 			// there is only converter[0]
 			// use it to map the current position
+			final RandomAccess< A > sourceRandomAccess = source.randomAccess( new FinalInterval( min, max ) );
+			sourceRandomAccess.setPosition( min );
 			mapSingle( sourceRandomAccess, converters.get( 0 ) );
 			return;
 		}
 
 		final int size = updateCurrentArrays();
+
+		min[ dimIndex ] = max[ dimIndex ] = currentPositions[ 0 ];
+		for ( int i = 1; i < size; ++i )
+			if ( currentPositions[ i ] < min[ dimIndex ] )
+				min[ dimIndex ] = currentPositions[ i ];
+			else if ( currentPositions[ i ] > max[ dimIndex ] )
+				max[ dimIndex ] = currentPositions[ i ];
+		final RandomAccess< A > sourceRandomAccess = source.randomAccess( new FinalInterval( min, max ) );
+		sourceRandomAccess.setPosition( min );
+
 		if ( size == 1 )
 		{
 			// there is only one active converter: converter[0]
 			// use it to map the slice at currentPositions[0]
-			sourceRandomAccess.setPosition( currentPositions[ 0 ], dimIndex );
 			mapSingle( sourceRandomAccess, currentConverters[ 0 ] );
 			return;
 		}
