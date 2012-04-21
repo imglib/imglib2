@@ -183,7 +183,7 @@ public class Lexer {
 					tokens.add(new NotEqual(i-2, "!="));
 				}
 				else
-					return lexicalError(spec, i-1, ch);
+					tokens.add(new Not(i-1, "!"));
 			}
 			else if (ch == '=') {
 				i++;
@@ -202,6 +202,33 @@ public class Lexer {
 				}
 				else
 					return lexicalError(spec, i-1, ch);
+			}
+			else if (ch == '&') {
+				i++;
+				if (i < chars.length && chars[i] == '&') {
+					i++;
+					tokens.add(new And(i-2, "&&"));
+				}
+				else
+					return lexicalError(spec, i-1, ch);
+			}
+			else if (ch == '|') {
+				i++;
+				if (i < chars.length && chars[i] == '|') {
+					i++;
+					tokens.add(new Or(i-2, "||"));
+				}
+				else
+					return lexicalError(spec, i-1, ch);
+			}
+			else if (ch == '^') {
+				i++;
+				if (i < chars.length && chars[i] == '^') {
+					i++;
+					tokens.add(new Xor(i-2, "^^"));
+				}
+				else
+					tokens.add(new Exponent(i-1, "^"));
 			}
 			else if (ch == ',') {
 				i++;
@@ -230,10 +257,6 @@ public class Lexer {
 			else if (ch == '-') {
 				i++;
 				tokens.add(new Minus(i-1, "-"));
-			}
-			else if (ch == '^') {
-				i++;
-				tokens.add(new Exponent(i-1, "^"));
 			}
 			else if (ch == '(') {
 				i++;
