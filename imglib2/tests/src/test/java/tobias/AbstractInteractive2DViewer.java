@@ -219,7 +219,7 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_I )
 			{
-				painter.toggleInterpolation();
+				toggleInterpolation();
 				update();
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_E )

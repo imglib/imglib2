@@ -25,11 +25,6 @@
 
 package tobias;
 
-import static net.imglib2.type.numeric.ARGBType.alpha;
-import static net.imglib2.type.numeric.ARGBType.blue;
-import static net.imglib2.type.numeric.ARGBType.green;
-import static net.imglib2.type.numeric.ARGBType.red;
-import static net.imglib2.type.numeric.ARGBType.rgba;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -44,25 +39,15 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 
-import net.imglib2.Cursor;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.ChannelARGBConverter;
-import net.imglib2.display.CompositeXYProjector;
 import net.imglib2.display.XYRandomAccessibleProjector;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.view.Views;
 
 /**
  * TODO
@@ -206,7 +191,7 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 				{
 					copyState();
 					projector.map();
-					paintImgLib2Overlay();
+					logo.paint( screenImage );
 					// imp.setImage( screenImage.image() );
 					visualize();
 					imp.updateAndDraw();
@@ -232,25 +217,6 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 				notify();
 			}
 		}
-
-		public void toggleInterpolation()
-		{
-			++interpolation;
-			interpolation %= 3;
-			switch ( interpolation )
-			{
-			case 0:
-				projector = createProjector( nnFactory );
-				break;
-			case 1:
-				projector = createProjector( nlFactory );
-				break;
-			case 2:
-				// projector = createProjector( laFactory );
-				break;
-			}
-
-		}
 	}
 
 	public AbstractInteractiveExample()
@@ -260,52 +226,10 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 
 	public AbstractInteractiveExample( final String overlayFilename )
 	{
-		imgLib2Overlay = loadImgLib2Overlay( overlayFilename );
+		logo = new LogoPainter();
 	}
 
-	final protected ArrayImg< ARGBType, ? > imgLib2Overlay;
-
-	protected ArrayImg< ARGBType, ? > loadImgLib2Overlay( final String overlayFilename )
-	{
-		Img< UnsignedByteType > overlay;
-		try
-		{
-			overlay = new ImgOpener().openImg( overlayFilename, new ArrayImgFactory< UnsignedByteType >(), new UnsignedByteType() );
-		}
-		catch ( final ImgIOException e )
-		{
-			return null;
-		}
-		final long[] dim = new long[ overlay.numDimensions() - 1 ];
-		for ( int d = 0; d < dim.length; ++d )
-			dim[ d ] = overlay.dimension( d );
-		final ArrayImg< ARGBType, ? > argb = new ArrayImgFactory< ARGBType >().create( dim, new ARGBType() );
-		final CompositeXYProjector< UnsignedByteType > projector = new CompositeXYProjector< UnsignedByteType >( overlay, argb, ChannelARGBConverter.converterListRGBA, 2 );
-		projector.setComposite( true );
-		projector.map();
-		return argb;
-	}
-
-	protected void paintImgLib2Overlay()
-	{
-		if ( imgLib2Overlay != null )
-		{
-			final long border = 5;
-			final long[] overlaySize = new long[] { imgLib2Overlay.dimension( 0 ), imgLib2Overlay.dimension( 1 ) };
-			final long[] overlayMin = new long[] { screenImage.dimension( 0 ) - overlaySize[ 0 ] - border, border };
-			final Cursor< ARGBType > out = Views.iterable( Views.offsetInterval( screenImage, overlayMin, overlaySize ) ).cursor();
-			final Cursor< ARGBType > in = imgLib2Overlay.cursor();
-			while ( out.hasNext() )
-			{
-				final ARGBType t = out.next();
-				final int v1 = t.get();
-				final int v2 = in.next().get();
-				final double a = alpha( v2 ) / 255.0;
-				final double a1 = 1.0 - a;
-				t.set( rgba( a1 * red( v1 ) + a * red( v2 ), a1 * green( v1 ) + a * green( v2 ), a1 * blue( v1 ) + a * blue( v2 ), 255 ) );
-			}
-		}
-	}
+	final protected LogoPainter logo;
 
 	abstract protected void copyState();
 
@@ -323,8 +247,6 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 
 	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
 
-	// final protected LanczosInterpolatorFactory< T > laFactory = new
-	// LanczosInterpolatorFactory< T >( 2, true );
 	protected ARGBScreenImage screenImage;
 
 	protected XYRandomAccessibleProjector< T, ARGBType > projector;
@@ -339,6 +261,21 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 	abstract protected XYRandomAccessibleProjector< T, ARGBType > createProjector( final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory );
 
 	abstract protected void update();
+
+	protected void toggleInterpolation()
+	{
+		++interpolation;
+		interpolation %= 2;
+		switch ( interpolation )
+		{
+		case 0:
+			projector = createProjector( nnFactory );
+			break;
+		case 1:
+			projector = createProjector( nlFactory );
+			break;
+		}
+	}
 
 	final protected float keyModfiedSpeed( final int modifiers )
 	{
