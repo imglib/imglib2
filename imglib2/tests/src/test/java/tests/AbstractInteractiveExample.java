@@ -9,21 +9,22 @@
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 2 of the 
+ * published by the Free Software Foundation, either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public 
+ *
+ * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
 
 package tests;
+
 import static net.imglib2.type.numeric.ARGBType.alpha;
 import static net.imglib2.type.numeric.ARGBType.blue;
 import static net.imglib2.type.numeric.ARGBType.green;
@@ -72,29 +73,32 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 	final protected class GUI
 	{
 		final private ImageWindow window;
+
 		final private Canvas canvas;
-		
+
 		final private ImageJ ij;
-		
+
 		/* backup */
 		private KeyListener[] windowKeyListeners;
+
 		private KeyListener[] canvasKeyListeners;
+
 		private KeyListener[] ijKeyListeners;
-		
+
 		private MouseListener[] canvasMouseListeners;
+
 		private MouseMotionListener[] canvasMouseMotionListeners;
-		
+
 		private MouseWheelListener[] windowMouseWheelListeners;
-		
-		
+
 		GUI( final ImagePlus imp )
 		{
 			window = imp.getWindow();
 			canvas = imp.getCanvas();
-			
+
 			ij = IJ.getInstance();
 		}
-		
+
 		/**
 		 * Add new event handlers.
 		 */
@@ -102,16 +106,17 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 		{
 			canvas.addKeyListener( AbstractInteractiveExample.this );
 			window.addKeyListener( AbstractInteractiveExample.this );
-			
+
 			canvas.addMouseMotionListener( AbstractInteractiveExample.this );
-			
+
 			canvas.addMouseListener( AbstractInteractiveExample.this );
-			
-			ij.addKeyListener( AbstractInteractiveExample.this );
-			
+
+			if ( ij != null )
+				ij.addKeyListener( AbstractInteractiveExample.this );
+
 			window.addMouseWheelListener( AbstractInteractiveExample.this );
 		}
-		
+
 		/**
 		 * Backup old event handlers for restore.
 		 */
@@ -119,13 +124,14 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 		{
 			canvasKeyListeners = canvas.getKeyListeners();
 			windowKeyListeners = window.getKeyListeners();
-			ijKeyListeners = IJ.getInstance().getKeyListeners();
+			if ( ij != null )
+				ijKeyListeners = ij.getKeyListeners();
 			canvasMouseListeners = canvas.getMouseListeners();
 			canvasMouseMotionListeners = canvas.getMouseMotionListeners();
 			windowMouseWheelListeners = window.getMouseWheelListeners();
-			clearGui();	
+			clearGui();
 		}
-		
+
 		/**
 		 * Restore the previously active Event handlers.
 		 */
@@ -136,8 +142,9 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 				canvas.addKeyListener( l );
 			for ( final KeyListener l : windowKeyListeners )
 				window.addKeyListener( l );
-			for ( final KeyListener l : ijKeyListeners )
-				ij.addKeyListener( l );
+			if ( ij != null )
+				for ( final KeyListener l : ijKeyListeners )
+					ij.addKeyListener( l );
 			for ( final MouseListener l : canvasMouseListeners )
 				canvas.addMouseListener( l );
 			for ( final MouseMotionListener l : canvasMouseMotionListeners )
@@ -145,7 +152,7 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 			for ( final MouseWheelListener l : windowMouseWheelListeners )
 				window.addMouseWheelListener( l );
 		}
-		
+
 		/**
 		 * Remove both ours and the backed up event handlers.
 		 */
@@ -155,33 +162,35 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 				canvas.removeKeyListener( l );
 			for ( final KeyListener l : windowKeyListeners )
 				window.removeKeyListener( l );
-			for ( final KeyListener l : ijKeyListeners )
-				ij.removeKeyListener( l );
+			if ( ij != null )
+				for ( final KeyListener l : ijKeyListeners )
+					ij.removeKeyListener( l );
 			for ( final MouseListener l : canvasMouseListeners )
 				canvas.removeMouseListener( l );
 			for ( final MouseMotionListener l : canvasMouseMotionListeners )
 				canvas.removeMouseMotionListener( l );
 			for ( final MouseWheelListener l : windowMouseWheelListeners )
 				window.removeMouseWheelListener( l );
-			
+
 			canvas.removeKeyListener( AbstractInteractiveExample.this );
 			window.removeKeyListener( AbstractInteractiveExample.this );
-			ij.removeKeyListener( AbstractInteractiveExample.this );
+			if ( ij != null )
+				ij.removeKeyListener( AbstractInteractiveExample.this );
 			canvas.removeMouseListener( AbstractInteractiveExample.this );
 			canvas.removeMouseMotionListener( AbstractInteractiveExample.this );
 			window.removeMouseWheelListener( AbstractInteractiveExample.this );
 		}
 	}
-	
+
 	final public class MappingThread extends Thread
 	{
 		private boolean pleaseRepaint;
-		
+
 		public MappingThread()
 		{
 			this.setName( "MappingThread" );
 		}
-		
+
 		@Override
 		public void run()
 		{
@@ -198,7 +207,7 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 					copyState();
 					projector.map();
 					paintImgLib2Overlay();
-					//imp.setImage( screenImage.image() );
+					// imp.setImage( screenImage.image() );
 					visualize();
 					imp.updateAndDraw();
 				}
@@ -206,13 +215,15 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 				{
 					try
 					{
-						if ( !pleaseRepaint ) wait();
+						if ( !pleaseRepaint )
+							wait();
 					}
-					catch ( final InterruptedException e ){}
+					catch ( final InterruptedException e )
+					{}
 				}
 			}
 		}
-		
+
 		public void repaint()
 		{
 			synchronized ( this )
@@ -221,8 +232,9 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 				notify();
 			}
 		}
-		
-		public void toggleInterpolation() {
+
+		public void toggleInterpolation()
+		{
 			++interpolation;
 			interpolation %= 3;
 			switch ( interpolation )
@@ -234,7 +246,7 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 				projector = createProjector( nlFactory );
 				break;
 			case 2:
-//				projector = createProjector( laFactory );
+				// projector = createProjector( laFactory );
 				break;
 			}
 
@@ -283,50 +295,51 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 			final long[] overlayMin = new long[] { screenImage.dimension( 0 ) - overlaySize[ 0 ] - border, border };
 			final Cursor< ARGBType > out = Views.iterable( Views.offsetInterval( screenImage, overlayMin, overlaySize ) ).cursor();
 			final Cursor< ARGBType > in = imgLib2Overlay.cursor();
-			while( out.hasNext() )
+			while ( out.hasNext() )
 			{
 				final ARGBType t = out.next();
 				final int v1 = t.get();
 				final int v2 = in.next().get();
 				final double a = alpha( v2 ) / 255.0;
 				final double a1 = 1.0 - a;
-				t.set( rgba(
-						a1 * red( v1 ) + a * red( v2 ),
-						a1 * green( v1 ) + a * green( v2 ),
-						a1 * blue( v1 ) + a * blue( v2 ),
-						255 ) );
+				t.set( rgba( a1 * red( v1 ) + a * red( v2 ), a1 * green( v1 ) + a * green( v2 ), a1 * blue( v1 ) + a * blue( v2 ), 255 ) );
 			}
 		}
 	}
 
 	abstract protected void copyState();
-	
+
 	abstract protected void visualize();
-	
+
 	final static protected String NL = System.getProperty( "line.separator" );
-	
+
 	protected RandomAccessibleInterval< T > img;
+
 	protected ImagePlus imp;
+
 	protected GUI gui;
-	
+
 	final protected NearestNeighborInterpolatorFactory< T > nnFactory = new NearestNeighborInterpolatorFactory< T >();
+
 	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
-	//final protected LanczosInterpolatorFactory< T > laFactory = new LanczosInterpolatorFactory< T >( 2, true );
+
+	// final protected LanczosInterpolatorFactory< T > laFactory = new
+	// LanczosInterpolatorFactory< T >( 2, true );
 	protected ARGBScreenImage screenImage;
+
 	protected XYRandomAccessibleProjector< T, ARGBType > projector;
 
 	/* coordinates where mouse dragging started and the drag distance */
 	protected double oX, oY, dX, dY;
-	
+
 	protected int interpolation = 0;
-	
+
 	protected MappingThread painter;
-	
-	abstract protected XYRandomAccessibleProjector< T, ARGBType > createProjector(
-			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory );
-	
+
+	abstract protected XYRandomAccessibleProjector< T, ARGBType > createProjector( final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory );
+
 	abstract protected void update();
-	
+
 	final protected float keyModfiedSpeed( final int modifiers )
 	{
 		if ( ( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 )
@@ -351,18 +364,28 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 			oY -= 9 * dY / 10;
 		}
 	}
-	
+
 	@Override
-	public void keyTyped( final KeyEvent e ){}
-	
+	public void keyTyped( final KeyEvent e )
+	{}
+
 	@Override
-	public void mouseMoved( final MouseEvent e ){}
+	public void mouseMoved( final MouseEvent e )
+	{}
+
 	@Override
-	public void mouseClicked( final MouseEvent e ){}
+	public void mouseClicked( final MouseEvent e )
+	{}
+
 	@Override
-	public void mouseEntered( final MouseEvent e ){}
+	public void mouseEntered( final MouseEvent e )
+	{}
+
 	@Override
-	public void mouseExited( final MouseEvent e ){}
+	public void mouseExited( final MouseEvent e )
+	{}
+
 	@Override
-	public void mouseReleased( final MouseEvent e ){}
+	public void mouseReleased( final MouseEvent e )
+	{}
 }

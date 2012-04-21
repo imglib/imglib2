@@ -1,6 +1,5 @@
 package tests;
 import ij.IJ;
-import ij.ImageJ;
 import ij.ImagePlus;
 import net.imglib2.RandomAccessible;
 import net.imglib2.display.ARGBScreenImage;
@@ -26,16 +25,16 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 {
 	final private ImgPlus< T > imgPlus;
 	final private Img< T > img;
-	
+
 	private double yScale;
-	
+
 	public Img2DViewerExample( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
 	{
 		super( converter );
 		this.imgPlus = imgPlus;
 		img = imgPlus.getImg();
 	}
-	
+
 	@Override
 	protected XYRandomAccessibleProjector< T, ARGBType > createProjector(
 			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory )
@@ -47,28 +46,28 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] )cp.getPixels() );
 		return new XYRandomAccessibleProjector< T, ARGBType >( mapping, screenImage, converter );
 	}
-	
+
 	@Override
 	public void run( final String arg )
-    {	
+    {
 		imp = new ImagePlus( "argbScreenProjection", cp );
 		imp.show();
 		imp.getCanvas().setMagnification( 1.0 );
 		imp.updateAndDraw();
-		
+
 		list.clear();
 		rotationList.clear();
-		
+
 		gui = new GUI( imp );
-		
+
 		if ( Double.isNaN( imgPlus.calibration( 0 ) ) || Double.isNaN( imgPlus.calibration( 1 ) ) )
 			yScale = 1;
 		else
 			yScale = imgPlus.calibration( 1 ) / imgPlus.calibration( 0 );
-		
+
 		final int w = cp.getWidth();
 		final int h = cp.getHeight();
-		
+
 		/* un-scale */
 		final AffineTransform2D unScale = new AffineTransform2D();
 		unScale.set(
@@ -92,26 +91,26 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 
 		list.add( unScale );
 		list.add( affine );
-		
+
 		rotationList.add( centerShift );
 		rotationList.add( rotation );
 		rotationList.add( centerUnShift );
-		
+
 		gui.backupGui();
 		gui.takeOverGui();
-		
+
 		projector = createProjector( nnFactory );
-		
+
 		painter = new MappingThread();
-		
+
 		painter.start();
-		
+
 		update();
     }
-	
+
 	final static public void main( final String[] args ) throws ImgIOException
 	{
-		new ImageJ();
+		//new ImageJ();
 		final ImgOpener io = new ImgOpener();
 		final ImgPlus< UnsignedByteType > imgPlus;
 		try
