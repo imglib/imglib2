@@ -1,5 +1,6 @@
 package tobias;
 import ij.IJ;
+import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
 import net.imglib2.RandomAccessible;
@@ -58,9 +59,6 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		imp.getCanvas().setMagnification( 1.0 );
 		imp.updateAndDraw();
 
-		list.clear();
-		rotationList.clear();
-
 		gui = new GUI( imp );
 
 		if ( Double.isNaN( imgPlus.calibration( 0 ) ) || Double.isNaN( imgPlus.calibration( 1 ) ) )
@@ -78,26 +76,28 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 			0.0, yScale, ( cp.getHeight() - img.dimension( 1 ) * yScale ) / 2.0 );
 
 		/* center shift */
+		final AffineTransform2D centerShift = new AffineTransform2D();
 		centerShift.set(
 				1, 0, -w / 2.0,
 				0, 1, -h / 2.0 );
 
 		/* center un-shift */
+		final AffineTransform2D centerUnShift = new AffineTransform2D();
 		centerUnShift.set(
 				1, 0, w / 2.0,
 				0, 1, h / 2.0 );
 
 		/* initialize rotation */
-		rotation.set(
-			1.0, 0.0, 0.0,
-			0.0, 1.0, 0.0 );
+		final AffineTransform2D rotation = new AffineTransform2D();
+		rotation.rotate( 0.05 );
 
+		unScale.preConcatenate( centerShift );
+		unScale.preConcatenate( rotation );
+		unScale.preConcatenate( centerUnShift );
+
+		list.clear();
 		list.add( unScale );
 		list.add( affine );
-
-		rotationList.add( centerShift );
-		rotationList.add( rotation );
-		rotationList.add( centerUnShift );
 
 		gui.takeOverGui();
 

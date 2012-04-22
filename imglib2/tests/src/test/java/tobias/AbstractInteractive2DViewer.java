@@ -86,6 +86,9 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 	{
 		this.converter = converter;
 
+		rotationList.add( centerShift );
+		rotationList.add( rotation );
+		rotationList.add( centerUnShift );
 	}
 
 	@Override
