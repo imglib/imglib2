@@ -25,7 +25,6 @@
 
 package tobias;
 import ij.IJ;
-import ij.process.ColorProcessor;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -70,7 +69,6 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 		graphics.drawString("scale = " + String.format( "%.3f", ( scale ) ), 10, 20 );
 	}
 
-	final protected ColorProcessor cp;
 
 	final protected ArrayList< AffineTransform2D > list = new ArrayList< AffineTransform2D >();
 	final protected ArrayList< AffineTransform2D > rotationList = new ArrayList< AffineTransform2D >();
@@ -87,7 +85,7 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 	public AbstractInteractive2DViewer( final Converter< T, ARGBType > converter )
 	{
 		this.converter = converter;
-		cp = new ColorProcessor( 800, 600 );
+
 	}
 
 	@Override

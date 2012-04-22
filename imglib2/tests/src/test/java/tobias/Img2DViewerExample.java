@@ -1,6 +1,7 @@
 package tobias;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.process.ColorProcessor;
 import net.imglib2.RandomAccessible;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
@@ -25,6 +26,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 {
 	final private ImgPlus< T > imgPlus;
 	final private Img< T > img;
+	final protected ColorProcessor cp;
 
 	private double yScale;
 
@@ -33,6 +35,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		super( converter );
 		this.imgPlus = imgPlus;
 		img = imgPlus.getImg();
+		cp = new ColorProcessor( 800, 600 );
 		run();
 	}
 
