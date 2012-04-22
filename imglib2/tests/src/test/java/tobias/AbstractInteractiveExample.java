@@ -26,12 +26,8 @@
 package tobias;
 
 import ij.ImagePlus;
-import net.imglib2.RandomAccessible;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.XYRandomAccessibleProjector;
-import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 
@@ -139,28 +135,5 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > >
 
 	final static protected String NL = System.getProperty( "line.separator" );
 
-	final protected NearestNeighborInterpolatorFactory< T > nnFactory = new NearestNeighborInterpolatorFactory< T >();
-
-	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
-
-	protected int interpolation = 0;
-
 	protected MappingThread painter;
-
-	abstract protected XYRandomAccessibleProjector< T, ARGBType > createProjector( final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory );
-
-	protected void toggleInterpolation()
-	{
-		++interpolation;
-		interpolation %= 2;
-		switch ( interpolation )
-		{
-		case 0:
-			projector = createProjector( nnFactory );
-			break;
-		case 1:
-			projector = createProjector( nlFactory );
-			break;
-		}
-	}
 }

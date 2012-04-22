@@ -1,25 +1,16 @@
 package tobias;
 import ij.IJ;
 import ij.ImageJ;
-import ij.ImagePlus;
-import ij.process.ColorProcessor;
-import net.imglib2.FinalInterval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.display.ARGBScreenImage;
+import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYRandomAccessibleProjector;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.interpolation.Interpolant;
-import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
-import net.imglib2.realtransform.AffineGet;
-import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.view.Views;
@@ -27,57 +18,26 @@ import net.imglib2.view.Views;
 public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractive2DViewer< T >
 {
 	final private ImgPlus< T > imgPlus;
-	final private Img< T > img;
-	final protected ColorProcessor cp;
 
-	private double yScale;
+	private static < T extends Type< T > > ExtendedRandomAccessibleInterval< T, Img< T > > extend( final ImgPlus< T > imgPlus )
+	{
+		final Img< T > img = imgPlus.getImg();
+		final T template = img.randomAccess().get().copy();
+		return Views.extendValue( img, template );
+	}
 
 	public Img2DViewerExample( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
 	{
-		super( converter );
+		super( 800, 600, extend( imgPlus ), converter );
 		this.imgPlus = imgPlus;
-		img = imgPlus.getImg();
-		cp = new ColorProcessor( 800, 600 );
 		run();
 	}
 
 	@Override
-	protected XYRandomAccessibleProjector< T, ARGBType > createProjector(
-			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory )
-	{
-		final T template = img.randomAccess().get().copy();
-		final RandomAccessible< T > extendedImg = Views.extendValue( img, template );
-		final Interpolant< T, RandomAccessible< T > > interpolant = new Interpolant< T, RandomAccessible< T > >( extendedImg, interpolatorFactory );
-		final AffineRandomAccessible< T, AffineGet > mapping = new AffineRandomAccessible< T, AffineGet >( interpolant, reducedAffineCopy.inverse() );
-		screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] )cp.getPixels() );
-		return new XYRandomAccessibleProjector< T, ARGBType >( mapping, screenImage, converter );
-	}
-
-	@Override
-	public void quit()
-	{
-		painter.interrupt();
-		if ( imp != null )
-		{
-			gui.restoreGui();
-		}
-	}
-
-	protected TransformEventHandler2D transformEventHandler;
-
-	protected GUI< TransformEventHandler2D > gui;
-
 	public void run()
 	{
-		imp = new ImagePlus( "argbScreenProjection", cp );
-		imp.show();
-		imp.getCanvas().setMagnification( 1.0 );
-		imp.updateAndDraw();
 
-		transformEventHandler = new TransformEventHandler2D( new FinalInterval( new long[] { cp.getWidth(), cp.getHeight() } ), this );
-		gui = new GUI< TransformEventHandler2D >( imp );
-		gui.takeOverGui( transformEventHandler );
-
+		double yScale;
 		if ( Double.isNaN( imgPlus.calibration( 0 ) ) || Double.isNaN( imgPlus.calibration( 1 ) ) )
 			yScale = 1;
 		else
@@ -89,8 +49,8 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		/* un-scale */
 		final AffineTransform2D unScale = new AffineTransform2D();
 		unScale.set(
-			1.0, 0.0, ( cp.getWidth() - img.dimension( 0 ) ) / 2.0,
-			0.0, yScale, ( cp.getHeight() - img.dimension( 1 ) * yScale ) / 2.0 );
+			1.0, 0.0, ( cp.getWidth() - imgPlus.dimension( 0 ) ) / 2.0,
+			0.0, yScale, ( cp.getHeight() - imgPlus.dimension( 1 ) * yScale ) / 2.0 );
 
 		/* center shift */
 		final AffineTransform2D centerShift = new AffineTransform2D();
@@ -118,11 +78,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 
 		projector = createProjector( nnFactory );
 
-		painter = new MappingThread();
-
-		painter.start();
-
-		update();
+		super.run();
 	}
 
 	final static public void main( final String[] args ) throws ImgIOException

@@ -24,6 +24,9 @@
  */
 
 package tobias;
+import ij.ImagePlus;
+import ij.process.ColorProcessor;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -31,7 +34,17 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 
+import net.imglib2.FinalInterval;
+import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
+import net.imglib2.display.ARGBScreenImage;
+import net.imglib2.display.XYRandomAccessibleProjector;
+import net.imglib2.interpolation.Interpolant;
+import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import net.imglib2.realtransform.AffineGet;
+import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -39,12 +52,6 @@ import net.imglib2.type.numeric.RealType;
 
 abstract public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T > implements TransformEventHandler2D.TransformListener
 {
-	final static protected double step = Math.PI /180;
-	protected double theta = 0.0;
-	protected double scale = 1.0;
-	protected double oTheta = 0;
-
-
 	@Override
 	final protected synchronized void copyState()
 	{
@@ -59,10 +66,9 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 		graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 		graphics.setPaint( Color.WHITE );
 		graphics.setFont( new Font( "SansSerif", Font.PLAIN, 8 ) );
-		graphics.drawString("theta = " + String.format( "%.3f", ( theta / Math.PI * 180 ) ), 10, 10 );
-		graphics.drawString("scale = " + String.format( "%.3f", ( scale ) ), 10, 20 );
+		graphics.drawString("theta = " + String.format( "%.3f", ( transformEventHandler.getTheta() / Math.PI * 180 ) ), 10, 10 );
+		graphics.drawString("scale = " + String.format( "%.3f", ( transformEventHandler.getScale() ) ), 10, 20 );
 	}
-
 
 	final protected ArrayList< AffineTransform2D > list = new ArrayList< AffineTransform2D >();
 	final protected AffineTransform2D affine = new AffineTransform2D();
@@ -85,11 +91,21 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 	public void quit()
 	{
 		painter.interrupt();
+		if ( imp != null )
+		{
+			gui.restoreGui();
+		}
 	}
 
-	public AbstractInteractive2DViewer( final Converter< T, ARGBType > converter )
+	final protected ColorProcessor cp;
+
+	final protected RandomAccessible< T > source;
+
+	public AbstractInteractive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter )
 	{
 		this.converter = converter;
+		this.source = source;
+		cp = new ColorProcessor( width, height );
 	}
 
 	final protected void update()
@@ -100,5 +116,56 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 		}
 
 		painter.repaint();
+	}
+
+	protected TransformEventHandler2D transformEventHandler;
+
+	protected GUI< TransformEventHandler2D > gui;
+
+	final protected NearestNeighborInterpolatorFactory< T > nnFactory = new NearestNeighborInterpolatorFactory< T >();
+
+	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
+
+	protected int interpolation = 0;
+
+	protected void toggleInterpolation()
+	{
+		++interpolation;
+		interpolation %= 2;
+		switch ( interpolation )
+		{
+		case 0:
+			projector = createProjector( nnFactory );
+			break;
+		case 1:
+			projector = createProjector( nlFactory );
+			break;
+		}
+	}
+
+	protected XYRandomAccessibleProjector< T, ARGBType > createProjector(
+			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory )
+	{
+		final Interpolant< T, RandomAccessible< T > > interpolant = new Interpolant< T, RandomAccessible< T > >( source, interpolatorFactory );
+		final AffineRandomAccessible< T, AffineGet > mapping = new AffineRandomAccessible< T, AffineGet >( interpolant, reducedAffineCopy.inverse() );
+		screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] )cp.getPixels() );
+		return new XYRandomAccessibleProjector< T, ARGBType >( mapping, screenImage, converter );
+	}
+
+	public void run()
+	{
+		imp = new ImagePlus( "argbScreenProjection", cp );
+		imp.show();
+		imp.getCanvas().setMagnification( 1.0 );
+		imp.updateAndDraw();
+
+		transformEventHandler = new TransformEventHandler2D( new FinalInterval( new long[] { imp.getWidth(), imp.getHeight() } ), this );
+		gui = new GUI< TransformEventHandler2D >( imp );
+		gui.takeOverGui( transformEventHandler );
+
+		painter = new MappingThread();
+		painter.start();
+
+		update();
 	}
 }
