@@ -96,7 +96,6 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		rotationList.add( rotation );
 		rotationList.add( centerUnShift );
 
-		gui.backupGui();
 		gui.takeOverGui();
 
 		projector = createProjector( nnFactory );

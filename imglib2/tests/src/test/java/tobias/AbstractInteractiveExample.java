@@ -92,32 +92,19 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 		 */
 		final void takeOverGui()
 		{
+			backupGui();
+			clearGui();
+
 			canvas.addKeyListener( AbstractInteractiveExample.this );
 			window.addKeyListener( AbstractInteractiveExample.this );
-
-			canvas.addMouseMotionListener( AbstractInteractiveExample.this );
-
-			canvas.addMouseListener( AbstractInteractiveExample.this );
 
 			if ( ij != null )
 				ij.addKeyListener( AbstractInteractiveExample.this );
 
-			window.addMouseWheelListener( AbstractInteractiveExample.this );
-		}
+			canvas.addMouseMotionListener( AbstractInteractiveExample.this );
+			canvas.addMouseListener( AbstractInteractiveExample.this );
 
-		/**
-		 * Backup active event handlers for restore.
-		 */
-		final void backupGui()
-		{
-			canvasKeyListeners = canvas.getKeyListeners();
-			windowKeyListeners = window.getKeyListeners();
-			if ( ij != null )
-				ijKeyListeners = ij.getKeyListeners();
-			canvasMouseListeners = canvas.getMouseListeners();
-			canvasMouseMotionListeners = canvas.getMouseMotionListeners();
-			windowMouseWheelListeners = window.getMouseWheelListeners();
-			clearGui();
+			window.addMouseWheelListener( AbstractInteractiveExample.this );
 		}
 
 		/**
@@ -142,9 +129,23 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 		}
 
 		/**
+		 * Backup active event handlers for restore.
+		 */
+		private final void backupGui()
+		{
+			canvasKeyListeners = canvas.getKeyListeners();
+			windowKeyListeners = window.getKeyListeners();
+			if ( ij != null )
+				ijKeyListeners = ij.getKeyListeners();
+			canvasMouseListeners = canvas.getMouseListeners();
+			canvasMouseMotionListeners = canvas.getMouseMotionListeners();
+			windowMouseWheelListeners = window.getMouseWheelListeners();
+		}
+
+		/**
 		 * Remove both ours and the backed up event handlers.
 		 */
-		final void clearGui()
+		private final void clearGui()
 		{
 			for ( final KeyListener l : canvasKeyListeners )
 				canvas.removeKeyListener( l );
@@ -181,8 +182,8 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 	protected ARGBScreenImage screenImage;
 
 	/**
-	 * Currently active projector, used by {@link MappingThread} to re-paint the display.
-	 * It maps the source data to {@link #screenImage}.
+	 * Currently active projector, used by {@link MappingThread} to re-paint the
+	 * display. It maps the source data to {@link #screenImage}.
 	 */
 	protected XYRandomAccessibleProjector< T, ARGBType > projector;
 
@@ -276,9 +277,6 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 
 	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
 
-	/* coordinates where mouse dragging started and the drag distance */
-	protected double oX, oY, dX, dY;
-
 	protected int interpolation = 0;
 
 	protected MappingThread painter;
@@ -314,18 +312,7 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 
 	@Override
 	public void keyReleased( final KeyEvent e )
-	{
-		if ( e.getKeyCode() == KeyEvent.VK_SHIFT )
-		{
-			oX += 9 * dX;
-			oY += 9 * dY;
-		}
-		else if ( e.getKeyCode() == KeyEvent.VK_CONTROL )
-		{
-			oX -= 9 * dX / 10;
-			oY -= 9 * dY / 10;
-		}
-	}
+	{}
 
 	@Override
 	public void keyTyped( final KeyEvent e )

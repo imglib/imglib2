@@ -165,6 +165,9 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 		}
 	}
 
+	/* coordinates where mouse dragging started and the drag distance */
+	protected double oX, oY, dX, dY;
+
 	/**
 	 * Concatenate a list of {@link AffineTransform3D}
 	 *
@@ -251,6 +254,21 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 				scale( 1.0 / ( 1.0 + 0.1 * v ) );
 				update();
 			}
+		}
+	}
+
+	@Override
+	public void keyReleased( final KeyEvent e )
+	{
+		if ( e.getKeyCode() == KeyEvent.VK_SHIFT )
+		{
+			oX += 9 * dX;
+			oY += 9 * dY;
+		}
+		else if ( e.getKeyCode() == KeyEvent.VK_CONTROL )
+		{
+			oX -= 9 * dX / 10;
+			oY -= 9 * dY / 10;
 		}
 	}
 
