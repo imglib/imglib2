@@ -49,11 +49,16 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 
 /**
- * TODO
+ * Base class for interactive ImgLib2 examples.
  *
+ * @author Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public abstract class AbstractInteractiveExample< T extends NumericType< T > > implements KeyListener, MouseWheelListener, MouseListener, MouseMotionListener
 {
+	/**
+	 * Register mouse and key listeners. Backup and restore old listeners.
+	 */
 	final protected class GUI
 	{
 		final private ImageWindow window;
@@ -102,7 +107,7 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 		}
 
 		/**
-		 * Backup old event handlers for restore.
+		 * Backup active event handlers for restore.
 		 */
 		final void backupGui()
 		{
@@ -166,6 +171,35 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 		}
 	}
 
+	/**
+	 * Display.
+	 */
+	protected ImagePlus imp;
+
+	/**
+	 * Wrapped by {@link #imp}.
+	 */
+	protected ARGBScreenImage screenImage;
+
+	/**
+	 * Currently active projector, used by {@link MappingThread} to re-paint the display.
+	 * It maps the source data to {@link #screenImage}.
+	 */
+	protected XYRandomAccessibleProjector< T, ARGBType > projector;
+
+	/**
+	 * ImgLib2 logo overlay painter.
+	 */
+	final protected LogoPainter logo;
+
+	/**
+	 * Repaint display.
+	 *
+	 * @see AbstractInteractiveExample#projector
+	 * @see AbstractInteractiveExample#screenImage
+	 * @see AbstractInteractiveExample#logo
+	 * @see AbstractInteractiveExample#imp
+	 */
 	final public class MappingThread extends Thread
 	{
 		private boolean pleaseRepaint;
@@ -208,6 +242,9 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 			}
 		}
 
+		/**
+		 * request repaint.
+		 */
 		public void repaint()
 		{
 			synchronized ( this )
@@ -228,8 +265,6 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 		logo = new LogoPainter();
 	}
 
-	final protected LogoPainter logo;
-
 	abstract protected void copyState();
 
 	abstract protected void visualize();
@@ -238,17 +273,11 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 
 	protected RandomAccessibleInterval< T > img;
 
-	protected ImagePlus imp;
-
 	protected GUI gui;
 
 	final protected NearestNeighborInterpolatorFactory< T > nnFactory = new NearestNeighborInterpolatorFactory< T >();
 
 	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
-
-	protected ARGBScreenImage screenImage;
-
-	protected XYRandomAccessibleProjector< T, ARGBType > projector;
 
 	/* coordinates where mouse dragging started and the drag distance */
 	protected double oX, oY, dX, dY;
