@@ -25,12 +25,8 @@
 
 package tobias;
 
-import ij.IJ;
-import ij.ImageJ;
 import ij.ImagePlus;
-import ij.gui.ImageWindow;
 
-import java.awt.Canvas;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -55,121 +51,6 @@ import net.imglib2.type.numeric.NumericType;
  */
 public abstract class AbstractInteractiveExample< T extends NumericType< T > > implements KeyListener, MouseWheelListener, MouseListener, MouseMotionListener
 {
-	/**
-	 * Register mouse and key listeners. Backup and restore old listeners.
-	 */
-	final protected class GUI
-	{
-		final private ImageWindow window;
-
-		final private Canvas canvas;
-
-		final private ImageJ ij;
-
-		/* backup */
-		private KeyListener[] windowKeyListeners;
-
-		private KeyListener[] canvasKeyListeners;
-
-		private KeyListener[] ijKeyListeners;
-
-		private MouseListener[] canvasMouseListeners;
-
-		private MouseMotionListener[] canvasMouseMotionListeners;
-
-		private MouseWheelListener[] windowMouseWheelListeners;
-
-		GUI( final ImagePlus imp )
-		{
-			window = imp.getWindow();
-			canvas = imp.getCanvas();
-
-			ij = IJ.getInstance();
-		}
-
-		/**
-		 * Add new event handlers.
-		 */
-		final void takeOverGui()
-		{
-			backupGui();
-			clearGui();
-
-			canvas.addKeyListener( AbstractInteractiveExample.this );
-			window.addKeyListener( AbstractInteractiveExample.this );
-
-			if ( ij != null )
-				ij.addKeyListener( AbstractInteractiveExample.this );
-
-			canvas.addMouseMotionListener( AbstractInteractiveExample.this );
-			canvas.addMouseListener( AbstractInteractiveExample.this );
-
-			window.addMouseWheelListener( AbstractInteractiveExample.this );
-		}
-
-		/**
-		 * Restore the previously active Event handlers.
-		 */
-		final void restoreGui()
-		{
-			clearGui();
-			for ( final KeyListener l : canvasKeyListeners )
-				canvas.addKeyListener( l );
-			for ( final KeyListener l : windowKeyListeners )
-				window.addKeyListener( l );
-			if ( ij != null )
-				for ( final KeyListener l : ijKeyListeners )
-					ij.addKeyListener( l );
-			for ( final MouseListener l : canvasMouseListeners )
-				canvas.addMouseListener( l );
-			for ( final MouseMotionListener l : canvasMouseMotionListeners )
-				canvas.addMouseMotionListener( l );
-			for ( final MouseWheelListener l : windowMouseWheelListeners )
-				window.addMouseWheelListener( l );
-		}
-
-		/**
-		 * Backup active event handlers for restore.
-		 */
-		private final void backupGui()
-		{
-			canvasKeyListeners = canvas.getKeyListeners();
-			windowKeyListeners = window.getKeyListeners();
-			if ( ij != null )
-				ijKeyListeners = ij.getKeyListeners();
-			canvasMouseListeners = canvas.getMouseListeners();
-			canvasMouseMotionListeners = canvas.getMouseMotionListeners();
-			windowMouseWheelListeners = window.getMouseWheelListeners();
-		}
-
-		/**
-		 * Remove both ours and the backed up event handlers.
-		 */
-		private final void clearGui()
-		{
-			for ( final KeyListener l : canvasKeyListeners )
-				canvas.removeKeyListener( l );
-			for ( final KeyListener l : windowKeyListeners )
-				window.removeKeyListener( l );
-			if ( ij != null )
-				for ( final KeyListener l : ijKeyListeners )
-					ij.removeKeyListener( l );
-			for ( final MouseListener l : canvasMouseListeners )
-				canvas.removeMouseListener( l );
-			for ( final MouseMotionListener l : canvasMouseMotionListeners )
-				canvas.removeMouseMotionListener( l );
-			for ( final MouseWheelListener l : windowMouseWheelListeners )
-				window.removeMouseWheelListener( l );
-
-			canvas.removeKeyListener( AbstractInteractiveExample.this );
-			window.removeKeyListener( AbstractInteractiveExample.this );
-			if ( ij != null )
-				ij.removeKeyListener( AbstractInteractiveExample.this );
-			canvas.removeMouseListener( AbstractInteractiveExample.this );
-			canvas.removeMouseMotionListener( AbstractInteractiveExample.this );
-			window.removeMouseWheelListener( AbstractInteractiveExample.this );
-		}
-	}
 
 	/**
 	 * Display.
@@ -265,8 +146,6 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 	abstract protected void visualize();
 
 	final static protected String NL = System.getProperty( "line.separator" );
-
-	protected GUI gui;
 
 	final protected NearestNeighborInterpolatorFactory< T > nnFactory = new NearestNeighborInterpolatorFactory< T >();
 

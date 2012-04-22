@@ -183,20 +183,14 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 		affine.set( a );
 	}
 
+	public abstract void exit();
+
 	@Override
 	public void keyPressed( final KeyEvent e )
 	{
 		if ( e.getKeyCode() == KeyEvent.VK_ESCAPE || e.getKeyCode() == KeyEvent.VK_ENTER )
 		{
-			painter.interrupt();
-
-			if ( imp != null )
-			{
-				if ( e.getKeyCode() == KeyEvent.VK_ESCAPE || e.getKeyCode() == KeyEvent.VK_ENTER )
-				{
-					gui.restoreGui();
-				}
-			}
+			exit();
 		}
 		else if ( e.getKeyCode() == KeyEvent.VK_SHIFT )
 		{

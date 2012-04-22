@@ -52,14 +52,26 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		return new XYRandomAccessibleProjector< T, ARGBType >( mapping, screenImage, converter );
 	}
 
+	@Override
+	public void exit()
+	{
+		painter.interrupt();
+		if ( imp != null )
+		{
+			gui.restoreGui();
+		}
+	}
+
+	protected GUI< Img2DViewerExample< T > > gui;
+
 	public void run()
-    {
+	{
 		imp = new ImagePlus( "argbScreenProjection", cp );
 		imp.show();
 		imp.getCanvas().setMagnification( 1.0 );
 		imp.updateAndDraw();
 
-		gui = new GUI( imp );
+		gui = new GUI< Img2DViewerExample< T > >( imp );
 
 		if ( Double.isNaN( imgPlus.calibration( 0 ) ) || Double.isNaN( imgPlus.calibration( 1 ) ) )
 			yScale = 1;
@@ -99,7 +111,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		list.add( unScale );
 		list.add( affine );
 
-		gui.takeOverGui();
+		gui.takeOverGui( this );
 
 		projector = createProjector( nnFactory );
 
@@ -108,7 +120,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		painter.start();
 
 		update();
-    }
+	}
 
 	final static public void main( final String[] args ) throws ImgIOException
 	{
