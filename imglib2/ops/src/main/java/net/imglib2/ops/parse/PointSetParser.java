@@ -476,17 +476,17 @@ public class PointSetParser {
 		ParseStatus status2 = status1;
 		if (status1.errMsg != null) return status1;
 		if (match(And.class, tokens, status1.tokenNumber)) {
-			status2 = compoundBoolExpression(tokens, status1.tokenNumber);
+			status2 = compoundBoolExpression(tokens, status1.tokenNumber+1);
 			if (status2.errMsg != null) return status2;
 			status2.condition = new AndCondition<long[]>(status1.condition, status2.condition);
 		}
 		else if (match(Or.class, tokens, status1.tokenNumber)) {
-			status2 = compoundBoolExpression(tokens, status1.tokenNumber);
+			status2 = compoundBoolExpression(tokens, status1.tokenNumber+1);
 			if (status2.errMsg != null) return status2;
 			status2.condition = new OrCondition<long[]>(status1.condition, status2.condition);
 		}
 		else if (match(Xor.class, tokens, status1.tokenNumber)) {
-			status2 = compoundBoolExpression(tokens, status1.tokenNumber);
+			status2 = compoundBoolExpression(tokens, status1.tokenNumber+1);
 			if (status2.errMsg != null) return status2;
 			status2.condition = new XorCondition<long[]>(status1.condition, status2.condition);
 		}
