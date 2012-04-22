@@ -199,13 +199,11 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 		}
 		else if ( e.getKeyCode() == KeyEvent.VK_SHIFT )
 		{
-			oX -= 9 * dX / 10;
-			oY -= 9 * dY / 10;
+			// TODO
 		}
 		else if ( e.getKeyCode() == KeyEvent.VK_CONTROL )
 		{
-			oX += 9 * dX;
-			oY += 9 * dY;
+			// TODO
 		}
 		else
 		{
@@ -254,21 +252,6 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 				scale( 1.0 / ( 1.0 + 0.1 * v ) );
 				update();
 			}
-		}
-	}
-
-	@Override
-	public void keyReleased( final KeyEvent e )
-	{
-		if ( e.getKeyCode() == KeyEvent.VK_SHIFT )
-		{
-			oX += 9 * dX;
-			oY += 9 * dY;
-		}
-		else if ( e.getKeyCode() == KeyEvent.VK_CONTROL )
-		{
-			oX -= 9 * dX / 10;
-			oY -= 9 * dY / 10;
 		}
 	}
 
