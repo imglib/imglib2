@@ -3,6 +3,7 @@ import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
+import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
@@ -53,7 +54,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 	}
 
 	@Override
-	public void exit()
+	public void quit()
 	{
 		painter.interrupt();
 		if ( imp != null )
@@ -62,7 +63,9 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		}
 	}
 
-	protected GUI< Img2DViewerExample< T > > gui;
+	protected TransformEventHandler2D transformEventHandler;
+
+	protected GUI< TransformEventHandler2D > gui;
 
 	public void run()
 	{
@@ -71,7 +74,9 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		imp.getCanvas().setMagnification( 1.0 );
 		imp.updateAndDraw();
 
-		gui = new GUI< Img2DViewerExample< T > >( imp );
+		transformEventHandler = new TransformEventHandler2D( new FinalInterval( new long[] { cp.getWidth(), cp.getHeight() } ), this );
+		gui = new GUI< TransformEventHandler2D >( imp );
+		gui.takeOverGui( transformEventHandler );
 
 		if ( Double.isNaN( imgPlus.calibration( 0 ) ) || Double.isNaN( imgPlus.calibration( 1 ) ) )
 			yScale = 1;
@@ -111,8 +116,6 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		list.add( unScale );
 		list.add( affine );
 
-		gui.takeOverGui( this );
-
 		projector = createProjector( nnFactory );
 
 		painter = new MappingThread();
@@ -124,7 +127,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 
 	final static public void main( final String[] args ) throws ImgIOException
 	{
-		//new ImageJ();
+		new ImageJ();
 		final ImgOpener io = new ImgOpener();
 		final ImgPlus< UnsignedByteType > imgPlus;
 		try
@@ -139,4 +142,5 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		}
 		new Img2DViewerExample< UnsignedByteType >( imgPlus, new RealARGBConverter< UnsignedByteType >( 0, 255 ) );
 	}
+
 }

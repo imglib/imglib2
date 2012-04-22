@@ -26,14 +26,6 @@
 package tobias;
 
 import ij.ImagePlus;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelListener;
-
 import net.imglib2.RandomAccessible;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.XYRandomAccessibleProjector;
@@ -49,7 +41,7 @@ import net.imglib2.type.numeric.NumericType;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractInteractiveExample< T extends NumericType< T > > implements KeyListener, MouseWheelListener, MouseListener, MouseMotionListener
+public abstract class AbstractInteractiveExample< T extends NumericType< T > >
 {
 
 	/**
@@ -157,8 +149,6 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 
 	abstract protected XYRandomAccessibleProjector< T, ARGBType > createProjector( final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory );
 
-	abstract protected void update();
-
 	protected void toggleInterpolation()
 	{
 		++interpolation;
@@ -173,50 +163,4 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 			break;
 		}
 	}
-
-	/**
-	 * Return rotate/translate/scale speed resulting from modifier keys.
-	 *
-	 * Normal speed is 1. SHIFT is faster (10). CTRL is slower (0.1).
-	 *
-	 * @param modifiers
-	 * @return speed resulting from modifier keys.
-	 */
-	public static float keyModfiedSpeed( final int modifiers )
-	{
-		if ( ( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 )
-			return 10;
-		else if ( ( modifiers & KeyEvent.CTRL_DOWN_MASK ) != 0 )
-			return 0.1f;
-		else
-			return 1;
-	}
-
-	@Override
-	public void keyReleased( final KeyEvent e )
-	{}
-
-	@Override
-	public void keyTyped( final KeyEvent e )
-	{}
-
-	@Override
-	public void mouseMoved( final MouseEvent e )
-	{}
-
-	@Override
-	public void mouseClicked( final MouseEvent e )
-	{}
-
-	@Override
-	public void mouseEntered( final MouseEvent e )
-	{}
-
-	@Override
-	public void mouseExited( final MouseEvent e )
-	{}
-
-	@Override
-	public void mouseReleased( final MouseEvent e )
-	{}
 }
