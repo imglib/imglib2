@@ -295,7 +295,15 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 		}
 	}
 
-	final protected float keyModfiedSpeed( final int modifiers )
+	/**
+	 * Return rotate/translate/scale speed resulting from modifier keys.
+	 *
+	 * Normal speed is 1. SHIFT is faster (10). CTRL is slower (0.1).
+	 *
+	 * @param modifiers
+	 * @return speed resulting from modifier keys.
+	 */
+	public static float keyModfiedSpeed( final int modifiers )
 	{
 		if ( ( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 )
 			return 10;
