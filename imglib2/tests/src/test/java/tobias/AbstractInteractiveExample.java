@@ -39,7 +39,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 
 import net.imglib2.RandomAccessible;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.XYRandomAccessibleProjector;
 import net.imglib2.interpolation.InterpolatorFactory;
@@ -270,8 +269,6 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 	abstract protected void visualize();
 
 	final static protected String NL = System.getProperty( "line.separator" );
-
-	protected RandomAccessibleInterval< T > img;
 
 	protected GUI gui;
 
