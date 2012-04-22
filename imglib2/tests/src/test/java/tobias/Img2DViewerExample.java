@@ -33,6 +33,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		super( converter );
 		this.imgPlus = imgPlus;
 		img = imgPlus.getImg();
+		run();
 	}
 
 	@Override
@@ -47,8 +48,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 		return new XYRandomAccessibleProjector< T, ARGBType >( mapping, screenImage, converter );
 	}
 
-	@Override
-	public void run( final String arg )
+	public void run()
     {
 		imp = new ImagePlus( "argbScreenProjection", cp );
 		imp.show();
@@ -123,6 +123,6 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > > ext
 			e.printStackTrace();
 			return;
 		}
-		new Img2DViewerExample< UnsignedByteType >( imgPlus, new RealARGBConverter< UnsignedByteType >( 0, 255 ) ).run( "" );
+		new Img2DViewerExample< UnsignedByteType >( imgPlus, new RealARGBConverter< UnsignedByteType >( 0, 255 ) );
 	}
 }

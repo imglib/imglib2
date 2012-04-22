@@ -29,7 +29,6 @@ import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.ImageWindow;
-import ij.plugin.PlugIn;
 
 import java.awt.Canvas;
 import java.awt.event.KeyEvent;
@@ -53,7 +52,7 @@ import net.imglib2.type.numeric.NumericType;
  * TODO
  *
  */
-public abstract class AbstractInteractiveExample< T extends NumericType< T > > implements PlugIn, KeyListener, MouseWheelListener, MouseListener, MouseMotionListener
+public abstract class AbstractInteractiveExample< T extends NumericType< T > > implements KeyListener, MouseWheelListener, MouseListener, MouseMotionListener
 {
 	final protected class GUI
 	{
