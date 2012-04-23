@@ -34,15 +34,120 @@
  * #L%
  */
 
-package net.imglib2.converter.sampler;
+package net.imglib2.converter;
 
-import net.imglib2.Sampler;
+import net.imglib2.Cursor;
 
 /**
  * TODO
  *
  */
-public interface SamplerConverter< A, B >
+abstract public class AbstractConvertedCursor< A, B > implements Cursor< B >
 {
-	public B convert( Sampler< A > sampler );
+	final protected Cursor< A > source;
+
+	public AbstractConvertedCursor( final Cursor< A > source )
+	{
+		this.source = source;
+	}
+
+	@Override
+	public void localize( final int[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public int getIntPosition( final int d )
+	{
+		return source.getIntPosition( d );
+	}
+
+	@Override
+	public long getLongPosition( final int d )
+	{
+		return source.getLongPosition( d );
+	}
+
+	@Override
+	public void localize( final float[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public void localize( final double[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		return source.getFloatPosition( d );
+	}
+
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return source.getDoublePosition( d );
+	}
+
+	@Override
+	public int numDimensions()
+	{
+		return source.numDimensions();
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		source.jumpFwd( steps );
+	}
+
+	@Override
+	public void fwd()
+	{
+		source.fwd();
+	}
+
+	@Override
+	public void reset()
+	{
+		source.reset();
+	}
+
+	@Override
+	public boolean hasNext()
+	{
+		return source.hasNext();
+	}
+
+	@Override
+	public B next()
+	{
+		fwd();
+		return get();
+	}
+
+	@Override
+	public void remove()
+	{
+		source.remove();
+	}
+
+	@Override
+	abstract public AbstractConvertedCursor< A, B > copy();
+
+	@Override
+	public AbstractConvertedCursor< A, B > copyCursor()
+	{
+		return copy();
+	}
 }

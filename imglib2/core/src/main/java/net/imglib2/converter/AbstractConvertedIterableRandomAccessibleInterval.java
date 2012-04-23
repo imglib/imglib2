@@ -42,26 +42,21 @@ import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
-import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
-import net.imglib2.converter.sampler.SamplerConverter;
 
 /**
  * TODO
  *
  */
-public class ConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAccessible< A > & IterableInterval< A > > implements IterableInterval< B >, RandomAccessibleInterval< B >
+abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAccessible< A > & IterableInterval< A > > implements IterableInterval< B >, RandomAccessibleInterval< B >
 {
-	private final S source;
+	final protected S source;
 
-	private final SamplerConverter< A, B > converter;
-
-	public ConvertedIterableRandomAccessibleInterval( final S source, final SamplerConverter< A, B > converter )
+	public AbstractConvertedIterableRandomAccessibleInterval( final S source )
 	{
 		this.source = source;
-		this.converter = converter;
 	}
 
 	@Override
@@ -71,17 +66,11 @@ public class ConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAc
 	}
 
 	@Override
-	public RandomAccess< B > randomAccess()
-	{
-		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess() );
-	}
+	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
 
 	@Override
-	public RandomAccess< B > randomAccess( final Interval interval )
-	{
-		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess( interval ) );
-	}
-
+	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( final Interval interval );
+	
 	@Override
 	public long min( final int d )
 	{
@@ -197,14 +186,8 @@ public class ConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAc
 	}
 
 	@Override
-	public ConvertedCursor< A, B > cursor()
-	{
-		return new ConvertedCursor< A, B >( converter, source.cursor() );
-	}
+	abstract public AbstractConvertedCursor< A, B > cursor();
 
 	@Override
-	public ConvertedCursor< A, B > localizingCursor()
-	{
-		return new ConvertedCursor< A, B >( converter, source.localizingCursor() );
-	}
+	abstract public AbstractConvertedCursor< A, B > localizingCursor();
 }

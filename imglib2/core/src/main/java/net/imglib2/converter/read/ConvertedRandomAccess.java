@@ -34,43 +34,39 @@
  * #L%
  */
 
-package net.imglib2.converter;
+package net.imglib2.converter.read;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.converter.sampler.SamplerConverter;
+import net.imglib2.RandomAccess;
+import net.imglib2.converter.AbstractConvertedRandomAccess;
+import net.imglib2.converter.Converter;
+import net.imglib2.type.Type;
 
 /**
  * TODO
  *
  */
-public class ConvertedRandomAccessible< A, B > implements RandomAccessible< B >
+final public class ConvertedRandomAccess< A, B extends Type< B > > extends AbstractConvertedRandomAccess< A, B >
 {
-	private final RandomAccessible< A > source;
+	final protected Converter< A, B > converter;
+	final protected B converted;
 
-	private final SamplerConverter< A, B > converter;
-
-	public ConvertedRandomAccessible( final RandomAccessible< A > source, final SamplerConverter< A, B > converter )
+	public ConvertedRandomAccess( final RandomAccess< A > source, final Converter< A, B > converter, final B b )
 	{
-		this.source = source;
+		super( source );
 		this.converter = converter;
+		this.converted = b.copy();
 	}
 
 	@Override
-	public int numDimensions()
+	public B get()
 	{
-		return source.numDimensions();
+		converter.convert( source.get(), converted );
+		return converted;
 	}
 
 	@Override
-	public ConvertedRandomAccess< A, B > randomAccess()
+	public ConvertedRandomAccess< A, B > copy()
 	{
-		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess() );
-	}
-
-	@Override
-	public ConvertedRandomAccess< A, B > randomAccess( Interval interval )
-	{
-		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess( interval ) );
+		return new ConvertedRandomAccess< A, B >( source.copyRandomAccess(), converter, converted );
 	}
 }
