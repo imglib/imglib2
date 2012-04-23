@@ -131,7 +131,8 @@ public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< 
 
 	protected int interpolation = 0;
 
-	protected void toggleInterpolation()
+	@Override
+	public void toggleInterpolation()
 	{
 		++interpolation;
 		interpolation %= 2;

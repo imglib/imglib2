@@ -36,6 +36,8 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 	public interface TransformListener
 	{
 		public void setTransform( AffineTransform2D transform );
+		
+		public void toggleInterpolation();
 
 		public void quit();
 	}
@@ -165,11 +167,7 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 	/* coordinates where mouse dragging started and the drag distance */
 	protected double oX, oY, dX, dY;
 
-	public void toggleInterpolation()
-	{
-		// TODO
-	};
-
+	
 	@Override
 	public void keyPressed( final KeyEvent e )
 	{
@@ -200,8 +198,7 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_I )
 			{
-				toggleInterpolation();
-				update();
+				listener.toggleInterpolation();
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_E )
 			{
