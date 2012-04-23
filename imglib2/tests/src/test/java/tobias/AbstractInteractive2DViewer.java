@@ -50,7 +50,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
-abstract public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T > implements TransformEventHandler2D.TransformListener
+public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T > implements TransformEventHandler2D.TransformListener
 {
 	@Override
 	final protected synchronized void copyState()
@@ -101,11 +101,14 @@ abstract public class AbstractInteractive2DViewer< T extends RealType< T > & Nat
 
 	final protected RandomAccessible< T > source;
 
-	public AbstractInteractive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter )
+	public AbstractInteractive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform )
 	{
 		this.converter = converter;
 		this.source = source;
 		cp = new ColorProcessor( width, height );
+		projector = createProjector( nnFactory );
+		list.add( initialTransform );
+		list.add( affine );
 	}
 
 	final protected void update()
