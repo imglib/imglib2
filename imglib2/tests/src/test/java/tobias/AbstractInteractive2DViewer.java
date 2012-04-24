@@ -24,6 +24,7 @@
  */
 
 package tobias;
+
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
 
@@ -52,30 +53,106 @@ import net.imglib2.type.numeric.RealType;
 
 public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T > implements TransformEventHandler2D.TransformListener
 {
-	@Override
-	final protected synchronized void copyState()
-	{
-		reducedAffineCopy.set( reducedAffine );
-	}
+	/**
+	 * the {@link RandomAccessible} to display
+	 */
+	final protected RandomAccessible< T > source;
 
-	@Override
-	final protected void visualize()
-	{
-		final Image image = imp.getImage();
-		final Graphics2D graphics = ( Graphics2D )image.getGraphics();
-		graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
-		graphics.setPaint( Color.WHITE );
-		graphics.setFont( new Font( "SansSerif", Font.PLAIN, 8 ) );
-		graphics.drawString("theta = " + String.format( "%.3f", ( transformEventHandler.getTheta() / Math.PI * 180 ) ), 10, 10 );
-		graphics.drawString("scale = " + String.format( "%.3f", ( transformEventHandler.getScale() ) ), 10, 20 );
-	}
+	/**
+	 * converts {@link #source} type T to ARGBType for display
+	 */
+	final protected Converter< T, ARGBType > converter;
+
+	/**
+	 * Display.
+	 */
+	final protected ImagePlus imp;
+
+	/**
+	 * Used to render into {@link #imp}.
+	 */
+	final protected ARGBScreenImage screenImage;
+
+	/**
+	 * Currently active projector, used to re-paint the display. It maps the
+	 * {@link #source} data to {@link #screenImage}.
+	 */
+	protected XYRandomAccessibleProjector< T, ARGBType > projector;
+
+	/**
+	 * ImgLib2 logo overlay painter.
+	 */
+	final protected LogoPainter logo = new LogoPainter();
+
+	/**
+	 * Key and mouse handler, that maintains the current transformation.
+	 * It triggers {@link #setTransform(AffineTransform2D),
+	 * {@link #toggleInterpolation()}, and {@link #quit()}.
+	 */
+	protected TransformEventHandler2D transformEventHandler;
+
+	/**
+	 * Register and restore key and mouse handlers.
+	 */
+	protected GUI< TransformEventHandler2D > gui;
+
+
+
+	final protected NearestNeighborInterpolatorFactory< T > nnFactory = new NearestNeighborInterpolatorFactory< T >();
+
+	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
+
 
 	final protected ArrayList< AffineTransform2D > list = new ArrayList< AffineTransform2D >();
+
 	final protected AffineTransform2D affine = new AffineTransform2D();
+
 	final protected AffineTransform2D reducedAffine = new AffineTransform2D();
+
 	final protected AffineTransform2D reducedAffineCopy = new AffineTransform2D();
 
-	final protected Converter< T, ARGBType > converter;
+	/**
+	 *
+	 * @param width
+	 *            width of the display window
+	 * @param height
+	 *            height of the display window
+	 * @param source
+	 *            the {@link RandomAccessible} to display
+	 * @param converter
+	 *            converts {@link #source} type T to ARGBType for display
+	 * @param initialTransform
+	 *            initial transformation to apply to the {@link #source}
+	 */
+	public AbstractInteractive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform )
+	{
+		this.converter = converter;
+		this.source = source;
+
+		final ColorProcessor cp = new ColorProcessor( width, height );
+		screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] ) cp.getPixels() );
+		projector = createProjector( nnFactory );
+
+		list.add( initialTransform );
+		list.add( affine );
+		TransformEventHandler2D.reduceAffineTransformList( list, reducedAffine );
+
+		imp = new ImagePlus( "argbScreenProjection", cp );
+		imp.show();
+		imp.getCanvas().setMagnification( 1.0 );
+		imp.updateAndDraw();
+
+		// create and register key and mouse handler
+		transformEventHandler = new TransformEventHandler2D( new FinalInterval( new long[] { imp.getWidth(), imp.getHeight() } ), this );
+		gui = new GUI< TransformEventHandler2D >( imp );
+		gui.takeOverGui( transformEventHandler );
+
+		startPainter();
+		requestRepaint();
+	}
+
+
+	// -- TransformEventHandler2D.TransformListener --
 
 	@Override
 	public void setTransform( final AffineTransform2D transform )
@@ -83,51 +160,20 @@ public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< 
 		synchronized ( reducedAffine )
 		{
 			affine.set( transform );
+			TransformEventHandler2D.reduceAffineTransformList( list, reducedAffine );
 		}
-		update();
+		requestRepaint();
 	}
 
 	@Override
 	public void quit()
 	{
-		painter.interrupt();
+		stopPainter();
 		if ( imp != null )
 		{
 			gui.restoreGui();
 		}
 	}
-
-	final protected ColorProcessor cp;
-
-	final protected RandomAccessible< T > source;
-
-	public AbstractInteractive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform )
-	{
-		this.converter = converter;
-		this.source = source;
-		cp = new ColorProcessor( width, height );
-		projector = createProjector( nnFactory );
-		list.add( initialTransform );
-		list.add( affine );
-	}
-
-	final protected void update()
-	{
-		synchronized ( reducedAffine )
-		{
-			TransformEventHandler2D.reduceAffineTransformList( list, reducedAffine );
-		}
-
-		painter.repaint();
-	}
-
-	protected TransformEventHandler2D transformEventHandler;
-
-	protected GUI< TransformEventHandler2D > gui;
-
-	final protected NearestNeighborInterpolatorFactory< T > nnFactory = new NearestNeighborInterpolatorFactory< T >();
-
-	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
 
 	protected int interpolation = 0;
 
@@ -145,31 +191,40 @@ public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< 
 			projector = createProjector( nlFactory );
 			break;
 		}
+		requestRepaint();
 	}
 
-	protected XYRandomAccessibleProjector< T, ARGBType > createProjector(
-			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory )
+	protected XYRandomAccessibleProjector< T, ARGBType > createProjector( final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory )
 	{
 		final Interpolant< T, RandomAccessible< T > > interpolant = new Interpolant< T, RandomAccessible< T > >( source, interpolatorFactory );
 		final AffineRandomAccessible< T, AffineGet > mapping = new AffineRandomAccessible< T, AffineGet >( interpolant, reducedAffineCopy.inverse() );
-		screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] )cp.getPixels() );
 		return new XYRandomAccessibleProjector< T, ARGBType >( mapping, screenImage, converter );
 	}
 
-	public void run()
+
+	// -- AbstractInteractiveExample --
+
+	@Override
+	public void paint()
 	{
-		imp = new ImagePlus( "argbScreenProjection", cp );
-		imp.show();
-		imp.getCanvas().setMagnification( 1.0 );
+		synchronized ( reducedAffine )
+		{
+			reducedAffineCopy.set( reducedAffine );
+		}
+		projector.map();
+		logo.paint( screenImage );
+		visualize();
 		imp.updateAndDraw();
+	}
 
-		transformEventHandler = new TransformEventHandler2D( new FinalInterval( new long[] { imp.getWidth(), imp.getHeight() } ), this );
-		gui = new GUI< TransformEventHandler2D >( imp );
-		gui.takeOverGui( transformEventHandler );
-
-		painter = new MappingThread();
-		painter.start();
-
-		update();
+	final protected void visualize()
+	{
+		final Image image = imp.getImage();
+		final Graphics2D graphics = ( Graphics2D ) image.getGraphics();
+		graphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+		graphics.setPaint( Color.WHITE );
+		graphics.setFont( new Font( "SansSerif", Font.PLAIN, 8 ) );
+		graphics.drawString( "theta = " + String.format( "%.3f", ( transformEventHandler.getTheta() / Math.PI * 180 ) ), 10, 10 );
+		graphics.drawString( "scale = " + String.format( "%.3f", ( transformEventHandler.getScale() ) ), 10, 20 );
 	}
 }

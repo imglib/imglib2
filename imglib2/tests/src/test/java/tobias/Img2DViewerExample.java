@@ -16,16 +16,11 @@ import net.imglib2.view.Views;
 
 public class Img2DViewerExample< T extends RealType< T > & NativeType< T > >
 {
-	final private ImgPlus< T > imgPlus;
-	final private RealARGBConverter< T > converter;
 	private final int width = 800;
 	private final int height = 600;
 
 	public Img2DViewerExample( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
 	{
-		this.imgPlus = imgPlus;
-		this.converter = converter;
-
 		final Img< T > img = imgPlus.getImg();
 		final T template = img.randomAccess().get().copy();
 		final ExtendedRandomAccessibleInterval< T, Img< T > > source = Views.extendValue( img, template );
@@ -62,7 +57,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > >
 		unScale.preConcatenate( rotation );
 		unScale.preConcatenate( centerUnShift );
 
-		new AbstractInteractive2DViewer< T >( width, height, source, converter, unScale ).run();
+		new AbstractInteractive2DViewer< T >( width, height, source, converter, unScale );
 	}
 
 	final static public void main( final String[] args ) throws ImgIOException

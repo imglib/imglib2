@@ -25,10 +25,6 @@
 
 package tobias;
 
-import ij.ImagePlus;
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.XYRandomAccessibleProjector;
-import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 
 /**
@@ -39,35 +35,8 @@ import net.imglib2.type.numeric.NumericType;
  */
 public abstract class AbstractInteractiveExample< T extends NumericType< T > >
 {
-
 	/**
-	 * Display.
-	 */
-	protected ImagePlus imp;
-
-	/**
-	 * Wrapped by {@link #imp}.
-	 */
-	protected ARGBScreenImage screenImage;
-
-	/**
-	 * Currently active projector, used by {@link MappingThread} to re-paint the
-	 * display. It maps the source data to {@link #screenImage}.
-	 */
-	protected XYRandomAccessibleProjector< T, ARGBType > projector;
-
-	/**
-	 * ImgLib2 logo overlay painter.
-	 */
-	final protected LogoPainter logo;
-
-	/**
-	 * Repaint display.
-	 *
-	 * @see AbstractInteractiveExample#projector
-	 * @see AbstractInteractiveExample#screenImage
-	 * @see AbstractInteractiveExample#logo
-	 * @see AbstractInteractiveExample#imp
+	 * Thread to repaint display.
 	 */
 	final public class MappingThread extends Thread
 	{
@@ -90,14 +59,7 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > >
 					pleaseRepaint = false;
 				}
 				if ( b )
-				{
-					copyState();
-					projector.map();
-					logo.paint( screenImage );
-					// imp.setImage( screenImage.image() );
-					visualize();
-					imp.updateAndDraw();
-				}
+					paint();
 				synchronized ( this )
 				{
 					try
@@ -124,16 +86,46 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > >
 		}
 	}
 
+	private final MappingThread painter;
+
+	/**
+	 * Set up a thread to trigger painting.
+	 * The painter thread is not started yet.
+	 */
 	public AbstractInteractiveExample()
 	{
-		logo = new LogoPainter();
+		painter = new MappingThread();
 	}
 
-	abstract protected void copyState();
+	/**
+	 * Start the painter thread.
+	 */
+	public void startPainter()
+	{
+		painter.run();
+	}
 
-	abstract protected void visualize();
+	/**
+	 * Stop the painter thread.
+	 */
+	public void stopPainter()
+	{
+		painter.interrupt();
+	}
 
-	final static protected String NL = System.getProperty( "line.separator" );
+	/**
+	 * Request a repaint of the display from the painter thread. The painter
+	 * thread will trigger a {@link #paint()} as soon as possible (that is,
+	 * immediately or after the currently running {@link #paint()} has
+	 * completed).
+	 */
+	public void requestRepaint()
+	{
+		painter.repaint();
+	}
 
-	protected MappingThread painter;
+	/**
+	 * This is called by the painter thread to repaint the display.
+	 */
+	public abstract void paint();
 }
