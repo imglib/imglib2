@@ -57,7 +57,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > >
 		unScale.preConcatenate( rotation );
 		unScale.preConcatenate( centerUnShift );
 
-		new AbstractInteractive2DViewer< T >( width, height, source, converter, unScale );
+		new Interactive2DViewer< T >( width, height, source, converter, unScale );
 	}
 
 	final static public void main( final String[] args ) throws ImgIOException

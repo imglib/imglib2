@@ -51,7 +51,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
-public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T > implements TransformEventHandler2D.TransformListener
+public class Interactive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T > implements TransformEventHandler2D.TransformListener
 {
 	/**
 	 * the {@link RandomAccessible} to display
@@ -124,7 +124,7 @@ public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< 
 	 * @param initialTransform
 	 *            initial transformation to apply to the {@link #source}
 	 */
-	public AbstractInteractive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform )
+	public Interactive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform )
 	{
 		this.converter = converter;
 		this.source = source;
@@ -133,7 +133,8 @@ public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< 
 		screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] ) cp.getPixels() );
 		projector = createProjector( nnFactory );
 
-		list.add( initialTransform );
+		if ( initialTransform != null )
+			list.add( initialTransform );
 		list.add( affine );
 		TransformEventHandler2D.reduceAffineTransformList( list, reducedAffine );
 
@@ -147,10 +148,14 @@ public class AbstractInteractive2DViewer< T extends RealType< T > & NativeType< 
 		gui = new GUI< TransformEventHandler2D >( imp );
 		gui.takeOverGui( transformEventHandler );
 
-		startPainter();
 		requestRepaint();
+		startPainter();
 	}
 
+	public Interactive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter )
+	{
+		this( width, height, source, converter, null );
+	}
 
 	// -- TransformEventHandler2D.TransformListener --
 
