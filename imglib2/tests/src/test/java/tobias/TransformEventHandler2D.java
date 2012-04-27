@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import net.imglib2.Interval;
 import net.imglib2.realtransform.AffineTransform2D;
-import net.imglib2.realtransform.AffineTransform3D;
 
 public class TransformEventHandler2D implements KeyListener, MouseWheelListener, MouseListener, MouseMotionListener
 {
@@ -36,15 +35,13 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 	public interface TransformListener
 	{
 		public void setTransform( AffineTransform2D transform );
-		
+
 		public void toggleInterpolation();
 
 		public void quit();
 	}
 
-	/* temp */
-
-	Interval screenImage;
+	Interval windowSize;
 
 	final static protected String NL = System.getProperty( "line.separator" );
 
@@ -67,7 +64,7 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 	}
 
 	/**
-	 * Concatenate a list of {@link AffineTransform3D}
+	 * Concatenate a list of {@link AffineTransform2D}
 	 *
 	 * @param list
 	 * @param affine
@@ -80,30 +77,26 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 		affine.set( a );
 	}
 
-	/* end temp */
-
 	final protected ArrayList< AffineTransform2D > rotationList = new ArrayList< AffineTransform2D >();
 	final protected AffineTransform2D affine = new AffineTransform2D();
 	final protected AffineTransform2D centerShift = new AffineTransform2D();
 	final protected AffineTransform2D centerUnShift = new AffineTransform2D();
 	final protected AffineTransform2D rotation = new AffineTransform2D();
-	final protected AffineTransform2D reducedAffine = new AffineTransform2D();
-	final protected AffineTransform2D reducedAffineCopy = new AffineTransform2D();
 	final protected AffineTransform2D reducedRotation = new AffineTransform2D();
 
 	final TransformListener listener;
 
-	public TransformEventHandler2D( final Interval screenImage, final TransformListener listener )
+	public TransformEventHandler2D( final Interval windowSize, final TransformListener listener )
 	{
-		this.screenImage = screenImage;
+		this.windowSize = windowSize;
 		this.listener = listener;
 
 		centerShift.set(
-				1, 0, -screenImage.dimension( 0 ) / 2.0,
-				0, 1, -screenImage.dimension( 1 ) / 2.0 );
+				1, 0, -windowSize.dimension( 0 ) / 2.0,
+				0, 1, -windowSize.dimension( 1 ) / 2.0 );
 		centerUnShift.set(
-				1, 0, screenImage.dimension( 0 ) / 2.0,
-				0, 1, screenImage.dimension( 1 ) / 2.0 );
+				1, 0, windowSize.dimension( 0 ) / 2.0,
+				0, 1, windowSize.dimension( 1 ) / 2.0 );
 
 		rotationList.add( centerShift );
 		rotationList.add( rotation );
@@ -112,14 +105,13 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 
 	final protected void update()
 	{
-		synchronized ( reducedAffine )
+		synchronized ( rotation )
 		{
 			reduceAffineTransformList( rotationList, reducedRotation );
 			rotation.set(
 					1, 0, 0,
 					0, 1, 0 );
 			affine.preConcatenate( reducedRotation );
-
 			listener.setTransform( affine );
 		}
 	}
@@ -138,7 +130,7 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 		while ( theta < -Math.PI )
 			theta += Math.PI + Math.PI;
 
-		synchronized ( reducedAffine )
+		synchronized ( rotation )
 		{
 			rotation.rotate( dTheta );
 		}
@@ -148,7 +140,7 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 	{
 		scale *= dScale;
 
-		synchronized ( reducedAffine )
+		synchronized ( rotation )
 		{
 			rotation.scale( dScale );
 		}
@@ -156,7 +148,7 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 
 	protected void translate( final double x, final double y )
 	{
-		synchronized ( reducedAffine )
+		synchronized ( rotation )
 		{
 			rotation.set(
 				1, 0, x,
@@ -167,7 +159,7 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 	/* coordinates where mouse dragging started and the drag distance */
 	protected double oX, oY, dX, dY;
 
-	
+
 	@Override
 	public void keyPressed( final KeyEvent e )
 	{
@@ -259,8 +251,8 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 		}
 		else
 		{
-			dX = screenImage.dimension( 0 ) / 2 - e.getX();
-			dY = screenImage.dimension( 1 ) / 2 - e.getY();
+			dX = windowSize.dimension( 0 ) / 2 - e.getX();
+			dY = windowSize.dimension( 1 ) / 2 - e.getY();
 			final double a = Math.sqrt( dX * dX + dY * dY );
 			if ( a == 0 )
 				return;
@@ -279,8 +271,8 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 		oX = e.getX();
 		oY = e.getY();
 
-		dX = screenImage.dimension( 0 ) / 2 - oX;
-		dY = screenImage.dimension( 1 ) / 2 - oY;
+		dX = windowSize.dimension( 0 ) / 2 - oX;
+		dY = windowSize.dimension( 1 ) / 2 - oY;
 		final double a = Math.sqrt( dX * dX + dY * dY );
 		if ( a == 0 )
 			return;
