@@ -1,4 +1,4 @@
-package tobias;
+package gui;
 
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
@@ -27,7 +27,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
-public class Interactive3DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T > implements TransformEventHandler3D.TransformListener
+public class Interactive3DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveViewer implements TransformEventHandler3D.TransformListener
 {
 	/**
 	 * the {@link RandomAccessible} to display

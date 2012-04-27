@@ -1,4 +1,4 @@
-package tobias;
+package gui;
 
 import static net.imglib2.type.numeric.ARGBType.alpha;
 import static net.imglib2.type.numeric.ARGBType.blue;

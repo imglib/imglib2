@@ -23,7 +23,7 @@
  * #L%
  */
 
-package tobias;
+package gui;
 
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
@@ -51,7 +51,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
-public class Interactive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T > implements TransformEventHandler2D.TransformListener
+public class Interactive2DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveViewer implements TransformEventHandler2D.TransformListener
 {
 	/**
 	 * the {@link RandomAccessible} to display

@@ -23,9 +23,8 @@
  * #L%
  */
 
-package tobias;
+package gui;
 
-import net.imglib2.type.numeric.NumericType;
 
 /**
  * Base class for interactive ImgLib2 examples.
@@ -33,7 +32,7 @@ import net.imglib2.type.numeric.NumericType;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractInteractiveExample< T extends NumericType< T > >
+public abstract class AbstractInteractiveViewer
 {
 	/**
 	 * Thread to repaint display.
@@ -92,7 +91,7 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > >
 	 * Set up a thread to trigger painting.
 	 * The painter thread is not started yet.
 	 */
-	public AbstractInteractiveExample()
+	public AbstractInteractiveViewer()
 	{
 		painter = new MappingThread();
 	}

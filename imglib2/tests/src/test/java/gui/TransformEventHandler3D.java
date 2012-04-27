@@ -1,4 +1,4 @@
-package tobias;
+package gui;
 
 import ij.IJ;
 import ij.ImagePlus;
