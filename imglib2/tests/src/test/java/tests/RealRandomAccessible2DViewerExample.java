@@ -1,4 +1,5 @@
 package tests;
+import fractals.JuliaRealRandomAccess;
 import ij.ImageJ;
 import ij.ImagePlus;
 import net.imglib2.RandomAccessible;
