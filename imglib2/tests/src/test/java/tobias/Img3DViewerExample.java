@@ -1,5 +1,6 @@
 package tobias;
 
+import gui.Interactive3DViewer;
 import ij.IJ;
 import ij.ImageJ;
 import net.imglib2.ExtendedRandomAccessibleInterval;

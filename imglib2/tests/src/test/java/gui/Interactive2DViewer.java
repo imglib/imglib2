@@ -152,11 +152,6 @@ public class Interactive2DViewer< T extends RealType< T > & NativeType< T > > ex
 		startPainter();
 	}
 
-	public Interactive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter )
-	{
-		this( width, height, source, converter, null );
-	}
-
 	// -- TransformEventHandler2D.TransformListener --
 
 	@Override
