@@ -208,6 +208,7 @@ public class Interactive2DViewer< T extends RealType< T > & NativeType< T > > ex
 
 
 	// -- AbstractInteractiveExample --
+	long drawtime;
 
 	@Override
 	public void paint()
@@ -216,7 +217,9 @@ public class Interactive2DViewer< T extends RealType< T > & NativeType< T > > ex
 		{
 			reducedAffineCopy.set( reducedAffine );
 		}
+		final long start = System.currentTimeMillis();
 		projector.map();
+		drawtime = System.currentTimeMillis() - start;
 		logo.paint( screenImage );
 		visualize();
 		imp.updateAndDraw();
@@ -231,5 +234,6 @@ public class Interactive2DViewer< T extends RealType< T > & NativeType< T > > ex
 		graphics.setFont( new Font( "SansSerif", Font.PLAIN, 8 ) );
 		graphics.drawString( "theta = " + String.format( "%.3f", ( transformEventHandler.getTheta() / Math.PI * 180 ) ), 10, 10 );
 		graphics.drawString( "scale = " + String.format( "%.3f", ( transformEventHandler.getScale() ) ), 10, 20 );
+		graphics.drawString( "rendered in " + drawtime + "ms", 10, 30 );
 	}
 }
