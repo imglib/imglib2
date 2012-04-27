@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.Cursor;
+import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
@@ -53,8 +54,10 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 {
 	final int numDimensions;
 	boolean computeFFTinParalell = true;
+	boolean keepInvFFT = false;
 	Img<T> image1;
 	Img<S> image2;
+	Img<FloatType> invPCM;
 	int numPeaks;
 	int[] minOverlapPx;
 	float normalizationThreshold;
@@ -87,6 +90,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		this( image1, image2, 5, true );
 	}
 	
+	public void setKeepPCM( final boolean keep ) { this.keepInvFFT = keep; }
 	public void setComputeFFTinParalell( final boolean computeFFTinParalell ) { this.computeFFTinParalell = computeFFTinParalell; }
 	public void setInvestigateNumPeaks( final int numPeaks ) { this.numPeaks = numPeaks; }
 	public void setNormalizationThreshold( final int normalizationThreshold ) { this.normalizationThreshold = normalizationThreshold; }
@@ -98,6 +102,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			this.minOverlapPx[ d ] = minOverlapPx;
 	}
 	
+	public Img< FloatType > getPCM() { return invPCM; }
+	public boolean getKeepPCM() { return keepInvFFT; }
 	public boolean getComputeFFTinParalell() { return computeFFTinParalell; }
 	public int getInvestigateNumPeaks() { return numPeaks; }
 	public float getNormalizationThreshold() { return normalizationThreshold; }
@@ -212,7 +218,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 				return false;			
 			}
 
-			final Img<FloatType> invPCM = invFFT.getResult();
+			invPCM = invFFT.getResult();
 
 			/*
 		invPCM.getDisplay().setMinMax();
@@ -230,6 +236,9 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 
 			verifyWithCrossCorrelation( phaseCorrelationPeaks, Util.intervalDimensions( invPCM ), image1, image2 );
 
+			if ( !keepInvFFT )
+				invPCM = null;
+			
 			return true;
 			
 		} finally {
@@ -498,8 +507,11 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			peakList.add( new PhaseCorrelationPeak( new long[ numDimensions ], -Float.MAX_VALUE) );
 
 		final Cursor<FloatType> cursor = invPCM.cursor();
+
+		// HACK: Explicit assignment is needed for OpenJDK javac.
+		ExtendedRandomAccessibleInterval<FloatType, Img<FloatType>> extendedInvPCM = Views.extendPeriodic(invPCM);
 		final LocalNeighborhoodCursor<FloatType> localCursor =
-			new LocalNeighborhoodCursor<FloatType>( Views.extendPeriodic(invPCM).randomAccess(), 1 );
+			new LocalNeighborhoodCursor<FloatType>( extendedInvPCM.randomAccess(), 1 );
 
 		final int[] originalOffset1 = fft1.getOriginalOffset();
 		final int[] originalOffset2 = fft2.getOriginalOffset();

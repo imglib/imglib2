@@ -41,7 +41,6 @@ import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.ComplexType;
 
@@ -91,7 +90,7 @@ public class ComplexImageFunction<I extends ComplexType<I>,O extends ComplexType
 	}
 
 	@Override
-	public void evaluate(Neighborhood<long[]> neigh, long[] point, O output)
+	public void compute(long[] point, O output)
 	{
 		accessor.setPosition(point);
 		output.setReal(accessor.get().getRealDouble());

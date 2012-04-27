@@ -44,10 +44,12 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
+import net.imglib2.ops.PointSet;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealMedianFunction;
+import net.imglib2.ops.input.PointSetInputIterator;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.integer.LongType;
 
 // a 3x3x3 median example
@@ -95,29 +97,25 @@ public class Example3Test {
 		// calculate output values as a median of 3x3x3 cells of image
 		
 		Img<LongType> image = makeInputImage();
-		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[3], new long[]{1,1,1}, new long[]{1,1,1});
+		HyperVolumePointSet inputNeigh = new HyperVolumePointSet(new long[3], new long[]{1,1,1}, new long[]{1,1,1});
 		Function<long[],LongType> imageFunc = new RealImageFunction<LongType,LongType>(image, new LongType());
-		Function<long[],LongType> medFunc = new RealMedianFunction<LongType>(imageFunc);
-		long[] currPt = new long[3];
+		Function<PointSet,LongType> medFunc = new RealMedianFunction<LongType>(imageFunc);
+		HyperVolumePointSet space = new HyperVolumePointSet(new long[]{1,1,1}, new long[]{XSIZE-2,YSIZE-2,ZSIZE-2});
+		PointSetInputIterator iter = new PointSetInputIterator(space, inputNeigh);
 		LongType variable = new LongType();
-		for (int x = 1; x < XSIZE-1; x++) {
-			for (int y = 1; y < YSIZE-1; y++) {
-				for (int z = 1; z < ZSIZE-1; z++) {
-					currPt[0] = x;
-					currPt[1] = y;
-					currPt[2] = z;
-					inputNeigh.moveTo(currPt);
-					medFunc.evaluate(inputNeigh, currPt, variable);
-					assertTrue(veryClose(variable.getRealDouble(), x + 2*y + 3*z));
-					/*
-					{
-						System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-							+(x + 2*y + 3*z)+") actual ("+variable.getRealDouble()+")");
-						success = false;
-					}
-					 */
-				}
-			}
+		PointSet points = null;
+		while (iter.hasNext()) {
+			points = iter.next(points);
+			medFunc.compute(points, variable);
+			long[] currPos = points.getAnchor();
+			long x = currPos[0];
+			long y = currPos[1];
+			long z = currPos[2];
+			/*
+			System.out.println(" Point ("+x+","+y+","+z+"): expected ("
+				+(x + 2*y + 3*z)+") actual ("+variable.getRealDouble()+")");
+			 */
+			assertTrue(veryClose(variable.getRealDouble(), x + 2*y + 3*z));
 		}
 	}
 }

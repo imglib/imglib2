@@ -44,10 +44,12 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.DiscreteNeigh;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.function.real.RealAverageFunction;
+import net.imglib2.ops.PointSet;
+import net.imglib2.ops.function.real.RealArithmeticMeanFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
+import net.imglib2.ops.input.PointSetInputIterator;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.real.DoubleType;
 
 
@@ -96,26 +98,27 @@ public class Example2Test {
 		// calculate output values as an average of a number of Z planes
 		
 		Img<DoubleType> image = makeInputImage();
-		DiscreteNeigh inputNeigh = new DiscreteNeigh(new long[]{0,0,0}, new long[]{0,0,0}, new long[]{0,0,ZSIZE-1});
+		HyperVolumePointSet xySpace = new HyperVolumePointSet(new long[]{0,0,0}, new long[]{XSIZE-1,YSIZE-1,0});
+		HyperVolumePointSet zNeigh = new HyperVolumePointSet(new long[]{0,0,0}, new long[]{0,0,ZSIZE-1});
 		Function<long[],DoubleType> imageFunc = new RealImageFunction<DoubleType,DoubleType>(image, new DoubleType());
-		Function<long[],DoubleType> aveFunc = new RealAverageFunction<DoubleType>(imageFunc);
-		long[] currPt = inputNeigh.getKeyPoint();
+		Function<PointSet,DoubleType> aveFunc = new RealArithmeticMeanFunction<DoubleType>(imageFunc);
 		DoubleType variable = new DoubleType();
-		for (int x = 0; x < XSIZE; x++) {
-			for (int y = 0; y < YSIZE; y++) {
-				currPt[0] = x;
-				currPt[1] = y;
-				currPt[2] = 0;
-				aveFunc.evaluate(inputNeigh, currPt, variable);
-				assertTrue(veryClose(variable.getRealDouble(), x+y+((0.0+1+2+3+4) / 5.0)));
-				/*
-				{
-					System.out.println(" FAILURE at ("+x+","+y+"): expected ("
-						+(x+y+((0.0+1+2+3+4) / 5.0))+") actual ("+variable.getRealDouble()+")");
-					success = false;
-				}
-				*/
+		PointSetInputIterator iter = new PointSetInputIterator(xySpace, zNeigh);
+		PointSet points = null;
+		while (iter.hasNext()) {
+			points = iter.next(points);
+			aveFunc.compute(zNeigh, variable);
+			long[] currOrigin = points.getAnchor();
+			long x = currOrigin[0];
+			long y = currOrigin[1];
+			assertTrue(veryClose(variable.getRealDouble(), x+y+((0.0+1+2+3+4) / 5.0)));
+			/*
+			{
+				System.out.println(" FAILURE at ("+x+","+y+"): expected ("
+					+(x+y+((0.0+1+2+3+4) / 5.0))+") actual ("+variable.getRealDouble()+")");
+				success = false;
 			}
+			*/
 		}
 	}
 }

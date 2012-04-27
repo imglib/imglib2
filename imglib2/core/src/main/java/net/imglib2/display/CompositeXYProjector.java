@@ -9,13 +9,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,23 +27,23 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
  * #L%
  */
 
-
 package net.imglib2.display;
 
 import java.util.ArrayList;
 
 import net.imglib2.Cursor;
+import net.imglib2.FinalInterval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
@@ -53,52 +53,62 @@ import net.imglib2.type.numeric.ARGBType;
  * the final value. Positions along the axis can be individually toggled for
  * inclusion in the computed composite value using the {@link #setComposite}
  * methods.
- * 
+ *
  * @see XYProjector for the code upon which this class was based.
  *
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  * @author Grant Harris
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class CompositeXYProjector<A> extends
-	XYProjector<A, ARGBType>
+public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 {
 
-	private final ArrayList<Converter<A, ARGBType>> converters;
+	private final ArrayList< Converter< A, ARGBType >> converters;
+
 	private final int dimIndex;
+
 	private final long positionCount;
+
+	private final long positionMin;
+
 	private final boolean[] composite;
 
-	public CompositeXYProjector(final Img<A> source,
-		final IterableInterval<ARGBType> target,
-		final ArrayList<Converter<A, ARGBType>> converters, final int dimIndex)
+	protected final long[] currentPositions;
+
+	protected final Converter< A, ARGBType >[] currentConverters;
+
+	@SuppressWarnings( "unchecked" )
+	public CompositeXYProjector( final RandomAccessibleInterval< A > source, final IterableInterval< ARGBType > target, final ArrayList< Converter< A, ARGBType >> converters, final int dimIndex )
 	{
-		super(source, target, null);
+		super( source, target, null );
 		this.converters = converters;
 		this.dimIndex = dimIndex;
 
 		// check that there is one converter per dimensional position
-		positionCount = dimIndex < 0 ? 1 : source.dimension(dimIndex);
+		positionCount = dimIndex < 0 ? 1 : source.dimension( dimIndex );
+		positionMin = dimIndex < 0 ? 0 : source.min( dimIndex );
 		final int converterCount = converters.size();
-		if (positionCount != converterCount) {
-			throw new IllegalArgumentException("Expected " + positionCount +
-				" converters but got " + converterCount);
-		}
+		if ( positionCount != converterCount ) { throw new IllegalArgumentException( "Expected " + positionCount + " converters but got " + converterCount ); }
 
-		composite = new boolean[converterCount];
-		composite[0] = true;
+		composite = new boolean[ converterCount ];
+		composite[ 0 ] = true;
+		currentPositions = new long[ converterCount ];
+		currentConverters = new Converter[ converterCount ];
 	}
 
 	// -- CompositeXYProjector methods --
 
 	/** Toggles the given position index's inclusion in composite values. */
-	public void setComposite(final int index, final boolean on) {
-		composite[index] = on;
+	public void setComposite( final int index, final boolean on )
+	{
+		composite[ index ] = on;
 	}
 
 	/** Gets whether the given position index is included in composite values. */
-	public boolean isComposite(final int index) {
-		return composite[index];
+	public boolean isComposite( final int index )
+	{
+		return composite[ index ];
 	}
 
 	/**
@@ -107,87 +117,156 @@ public class CompositeXYProjector<A> extends
 	 * consist of only the projector's current position (i.e., non-composite
 	 * mode).
 	 */
-	public void setComposite(final boolean on) {
-		for (int i = 0; i < composite.length; i++)
-			composite[i] = on;
+	public void setComposite( final boolean on )
+	{
+		for ( int i = 0; i < composite.length; i++ )
+			composite[ i ] = on;
 	}
 
 	/** Gets whether composite mode is enabled for all positions. */
-	public boolean isComposite() {
-		for (int i = 0; i < composite.length; i++)
-			if (!composite[i]) return false;
+	public boolean isComposite()
+	{
+		for ( int i = 0; i < composite.length; i++ )
+			if ( !composite[ i ] )
+				return false;
 		return true;
 	}
 
 	// -- Projector methods --
 
 	@Override
-	public void map() {
-		final boolean single = isSingle();
-		final Cursor<ARGBType> targetCursor = target.cursor();
-		final ARGBType bi = targetCursor.get().createVariable();
-		final RandomAccess<A> sourceRandomAccess = source.randomAccess();
-		sourceRandomAccess.setPosition(position);
-		while (targetCursor.hasNext()) {
-			final ARGBType element = targetCursor.next();
-			sourceRandomAccess.setPosition(targetCursor.getLongPosition(0), 0);
-			sourceRandomAccess.setPosition(targetCursor.getLongPosition(1), 1);
-			element.setZero();
-			double aSum = 0, rSum = 0, gSum = 0, bSum = 0;
-			for (int i = 0; i < positionCount; i++) {
-				if (skip(i, single)) continue; // position is excluded from composite
-				if (dimIndex >= 0) sourceRandomAccess.setPosition(i, dimIndex);
-				converters.get(i).convert(sourceRandomAccess.get(), bi);
+	public void map()
+	{
+		for ( int d = 2; d < position.length; ++d )
+			min[ d ] = max[ d ] = position[ d ];
+
+		min[ 0 ] = target.min( 0 );
+		min[ 1 ] = target.min( 1 );
+		max[ 0 ] = target.max( 0 );
+		max[ 1 ] = target.max( 1 );
+
+		if ( dimIndex < 0 )
+		{
+			// there is only converter[0]
+			// use it to map the current position
+			final RandomAccess< A > sourceRandomAccess = source.randomAccess( new FinalInterval( min, max ) );
+			sourceRandomAccess.setPosition( min );
+			mapSingle( sourceRandomAccess, converters.get( 0 ) );
+			return;
+		}
+
+		final int size = updateCurrentArrays();
+
+		min[ dimIndex ] = max[ dimIndex ] = currentPositions[ 0 ];
+		for ( int i = 1; i < size; ++i )
+			if ( currentPositions[ i ] < min[ dimIndex ] )
+				min[ dimIndex ] = currentPositions[ i ];
+			else if ( currentPositions[ i ] > max[ dimIndex ] )
+				max[ dimIndex ] = currentPositions[ i ];
+		final RandomAccess< A > sourceRandomAccess = source.randomAccess( new FinalInterval( min, max ) );
+		sourceRandomAccess.setPosition( min );
+
+		if ( size == 1 )
+		{
+			// there is only one active converter: converter[0]
+			// use it to map the slice at currentPositions[0]
+			mapSingle( sourceRandomAccess, currentConverters[ 0 ] );
+			return;
+		}
+
+		final Cursor< ARGBType > targetCursor = target.localizingCursor();
+		final ARGBType bi = new ARGBType();
+
+		while ( targetCursor.hasNext() )
+		{
+			targetCursor.fwd();
+			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
+			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
+			int aSum = 0, rSum = 0, gSum = 0, bSum = 0;
+			for ( int i = 0; i < size; i++ )
+			{
+				sourceRandomAccess.setPosition( currentPositions[ i ], dimIndex );
+				currentConverters[ i ].convert( sourceRandomAccess.get(), bi );
 
 				// accumulate converted result
 				final int value = bi.get();
-				final int a = ARGBType.alpha(value);
-				final int r = ARGBType.red(value);
-				final int g = ARGBType.green(value);
-				final int b = ARGBType.blue(value);
+				final int a = ARGBType.alpha( value );
+				final int r = ARGBType.red( value );
+				final int g = ARGBType.green( value );
+				final int b = ARGBType.blue( value );
 				aSum += a;
 				rSum += r;
 				gSum += g;
 				bSum += b;
 			}
-			if (aSum > 255) aSum = 255;
-			if (rSum > 255) rSum = 255;
-			if (gSum > 255) gSum = 255;
-			if (bSum > 255) bSum = 255;
-			element.set(ARGBType.rgba(rSum, gSum, bSum, aSum));
+			if ( aSum > 255 )
+				aSum = 255;
+			if ( rSum > 255 )
+				rSum = 255;
+			if ( gSum > 255 )
+				gSum = 255;
+			if ( bSum > 255 )
+				bSum = 255;
+			targetCursor.get().set( ARGBType.rgba( rSum, gSum, bSum, aSum ) );
 		}
 	}
 
 	// -- Helper methods --
 
 	/**
-	 * Indicates whether the projector is in single-position mode. This is true
-	 * iff all dimensional positions along the composited axis are excluded. In
-	 * this case, the current position along that axis is used instead.
+	 * Walk through composite[] and store the currently active converters and
+	 * positions (in dimension {@link #dimIndex}) to {@link #currentConverters}
+	 * and {@link #currentPositions}.
+	 *
+	 * A special cases is single-position mode.
+	 * The projector is in single-position mode iff all dimensional positions
+	 * along the composited axis are excluded. In this case, the current
+	 * position along that axis is used instead. The converter corresponding to
+	 * the current position is used.
+	 *
+	 * @return number of positions to convert
 	 */
-	private boolean isSingle() {
-		for (int i = 0; i < composite.length; i++) {
-			if (composite[i]) return false;
+	protected int updateCurrentArrays()
+	{
+		int currentSize = 0;
+		for ( int i = 0; i < composite.length; i++ )
+			if ( composite[ i ] )
+				++currentSize;
+
+		if ( currentSize == 0 )
+		{
+			// this is the isSingle() case.
+			// map the current position using the converter at that position
+			currentPositions[ 0 ] = position[ dimIndex ];
+			currentConverters[ 0 ] = converters.get( ( int ) ( position[ dimIndex ] - positionMin ) );
+			return 1;
 		}
-		return true;
+		else
+		{
+			// this is the normal case.
+			// fill currentPositions and currentConverters with the active
+			// positions and converters
+			int j = 0;
+			for ( int i = 0; i < composite.length; i++ )
+				if ( composite[ i ] )
+				{
+					currentPositions[ j ] = positionMin + i;
+					currentConverters[ j ] = converters.get( i );
+					++j;
+				}
+			return currentSize;
+		}
 	}
 
-	/**
-	 * Indicates whether the given dimensional position should be skipped.
-	 * 
-	 * @param i The dimensional position along the composited axis.
-	 * @param single True if in single-position (i.e., non-composite) mode.
-	 * @return True if the position should be excluded from the composite.
-	 */
-	private boolean skip(final int i, final boolean single) {
-		if (composite[i]) return false; // position is included in composite
-		if (single && position() == i) return false; // single mode
-		return true;
+	protected void mapSingle( final RandomAccess< A > sourceRandomAccess, final Converter< A, ARGBType > converter )
+	{
+		final Cursor< ARGBType > targetCursor = target.localizingCursor();
+		while ( targetCursor.hasNext() )
+		{
+			targetCursor.fwd();
+			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
+			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
+			converter.convert( sourceRandomAccess.get(), targetCursor.get() );
+		}
 	}
-
-	/** Gets the current position along the composited axis. */
-	private long position() {
-		return dimIndex < 0 ? 0 : position[dimIndex];
-	}
-
 }

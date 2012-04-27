@@ -56,7 +56,7 @@ public abstract class AbstractNativeImg<
 	
 	protected T linkedType;
 	
-	public AbstractNativeImg( long[] dim, final int entitiesPerPixel )
+	public AbstractNativeImg( final long[] dim, final int entitiesPerPixel )
 	{
 		super( dim );
 		this.entitiesPerPixel = entitiesPerPixel;
@@ -70,6 +70,6 @@ public abstract class AbstractNativeImg<
 	public T createLinkedType()
 	{
 		try{ return linkedType.duplicateTypeOnSameNativeImg(); }
-		catch ( NullPointerException e ){ return null; }
+		catch ( final NullPointerException e ){ return null; }
 	}
 }

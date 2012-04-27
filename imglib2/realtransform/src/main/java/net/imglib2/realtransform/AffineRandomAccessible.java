@@ -37,6 +37,7 @@
 package net.imglib2.realtransform;
 
 import net.imglib2.Interval;
+import net.imglib2.Localizable;
 import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
@@ -47,6 +48,7 @@ import net.imglib2.RealRandomAccessible;
  *
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class AffineRandomAccessible< T, R extends AffineGet > extends RealTransformRandomAccessible< T, R >
 {
@@ -64,7 +66,12 @@ public class AffineRandomAccessible< T, R extends AffineGet > extends RealTransf
 		{
 			super();
 		}
-		
+
+		protected AffineRandomAccess( final AffineRandomAccess a )
+		{
+			super( a );
+		}
+
 		protected void scaleMove( final double distance, final int d )
 		{
 			final RealLocalizable dd = transform.d( d );
@@ -96,19 +103,50 @@ public class AffineRandomAccessible< T, R extends AffineGet > extends RealTransf
 		}
 
 		@Override
+		public void move( final int distance, final int d )
+		{
+			move( ( long ) distance, d );
+		}
+
+		@Override
+		public void move( final Localizable localizable )
+		{
+			super.move( localizable );
+			apply();
+		}
+
+		@Override
+		public void move( final int[] distance )
+		{
+			super.move( distance );
+			apply();
+		}
+
+		@Override
+		public void move( final long[] distance )
+		{
+			super.move( distance );
+			apply();
+		}
+
+		@Override
 		public void setPosition( final int[] pos )
 		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = pos[ d ];
+			super.setPosition( pos );
 			apply();
 		}
 
 		@Override
 		public void setPosition( final long[] pos )
 		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = pos[ d ];
+			super.setPosition( pos );
 			apply();
+		}
+
+		@Override
+		public void setPosition( final int position, final int d )
+		{
+			setPosition( ( long ) position, d );
 		}
 
 		@Override
@@ -116,6 +154,13 @@ public class AffineRandomAccessible< T, R extends AffineGet > extends RealTransf
 		{
 			final long distance = pos - position[ d ];
 			move( distance, d );
+		}
+
+		@Override
+		public void setPosition( final Localizable localizable )
+		{
+			localizable.localize( position );
+			apply();
 		}
 
 		@Override
@@ -127,7 +172,7 @@ public class AffineRandomAccessible< T, R extends AffineGet > extends RealTransf
 		@Override
 		public AffineRandomAccess copy()
 		{
-			return new AffineRandomAccess();
+			return new AffineRandomAccess( this );
 		}
 
 		@Override

@@ -41,28 +41,26 @@ package net.imglib2.ops;
  * 
  * @author Barry DeZonia
  */
-public interface Function<INDEX_TYPE, OUTPUT_TYPE> {
+public interface Function<INPUT, OUTPUT> {
 
 	/**
-	 * Evaluate the function using a neighborhood and a point within the
-	 * neighborhood as input. Places result of evaluation in output.
+	 * Compute the function from the input and place the result in output.
 	 * 
-	 * @param neigh
-	 * @param point
+	 * @param input
 	 * @param output
 	 */
-	void evaluate(Neighborhood<INDEX_TYPE> neigh, INDEX_TYPE point, OUTPUT_TYPE output);
+	void compute(INPUT input, OUTPUT output);
 	
 	/**
 	 * A helper that can bypass the limitation of generic classes from creating
 	 * new instances of generic types.
 	 */
-	OUTPUT_TYPE createOutput();
+	OUTPUT createOutput();
 	
 	/**
 	 * A helper that allows one to create a copy of a function. This method is
 	 * key for supporting multithreaded calculations during image assignment.
 	 */
-	Function<INDEX_TYPE,OUTPUT_TYPE> copy();
+	Function<INPUT,OUTPUT> copy();
 }
 

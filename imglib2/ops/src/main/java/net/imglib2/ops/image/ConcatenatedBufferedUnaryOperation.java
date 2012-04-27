@@ -40,54 +40,60 @@ import net.imglib2.ops.UnaryOperation;
 
 /**
  * 
- * @author Christian Dietz
+ * @author Felix Schoenenberger, Christian Dietz
  */
-public class ConcatenatedBufferedUnaryOperation< T > implements UnaryOperation< T, T >
+public abstract class ConcatenatedBufferedUnaryOperation< T > implements UnaryOperation< T, T >
 {
 
 	private UnaryOperation< T, T >[] m_operations;
 
-	protected T m_buffer;
-
-	public ConcatenatedBufferedUnaryOperation( T buffer, UnaryOperation< T, T >... operations )
+	public ConcatenatedBufferedUnaryOperation( UnaryOperation< T, T >... operations )
 	{
 		m_operations = operations;
-		m_buffer = buffer;
-
 	}
 
 	@Override
 	public T compute( T input, T output )
 	{
 
-		if ( m_buffer == null )
+		T buffer = getBuffer( input );
+
+		if ( buffer == null )
 			throw new IllegalArgumentException( "Buffer can't be null in ConcatenatedBufferedUnaryOperation" );
 
 		T tmpOutput = output;
-		T tmpInput = input;
+		T tmpInput = buffer;
+		T tmp;
 
-		for ( UnaryOperation< T, T > op : m_operations )
+		// Check needs to be done as the number of operations may be uneven and
+		// the result may not be written to output
+		if ( m_operations.length % 2 == 0 )
 		{
-			op.compute( tmpInput, tmpOutput );
+			tmpOutput = buffer;
+			tmpInput = output;
+		}
 
+		m_operations[ 0 ].compute( input, tmpOutput );
+
+		for ( int i = 1; i < m_operations.length; i++ )
+		{
+			tmp = tmpInput;
 			tmpInput = tmpOutput;
-			tmpOutput = m_buffer;
+			tmpOutput = tmp;
+			m_operations[ i ].compute( tmpInput, tmpOutput );
 		}
 
 		return output;
 	}
 
-	@SuppressWarnings( "unchecked" )
+	/**
+	 * Method to retrieve the Buffer
+	 * 
+	 * @return
+	 */
+	protected abstract T getBuffer( T input );
+
 	@Override
-	public UnaryOperation< T, T > copy()
-	{
-		UnaryOperation< T, T >[] copyOps = new UnaryOperation[ m_operations.length ];
-
-		int c = 0;
-		for ( UnaryOperation< T, T > op : m_operations )
-			copyOps[ c++ ] = op.copy();
-
-		return new ConcatenatedBufferedUnaryOperation< T >( m_buffer, copyOps );
-	}
+	public abstract UnaryOperation< T, T > copy();
 
 }
