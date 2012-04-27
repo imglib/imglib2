@@ -113,9 +113,16 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 	@Override
 	public NtreeImg< T, A > copy()
 	{
-		NtreeImg< T, A > img = new NtreeImg< T, A >( this );
-		img.setLinkedType( linkedType.duplicateTypeOnSameNativeImg() );
-		return img;
+		// TODO: More efficient way to create a copy of the img
+		final NtreeImg< T, A > copy = ( NtreeImg< T, A > ) factory().create( dimension, firstElement().createVariable() );
+
+		final NtreeCursor< T > source = this.cursor();
+		final NtreeCursor< T > target = copy.cursor();
+
+		while ( source.hasNext() )
+			target.next().set( source.next() );
+
+		return copy;
 	}
 
 	@Override
