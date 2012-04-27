@@ -38,48 +38,28 @@ package net.imglib2.converter;
 
 import java.util.Iterator;
 
-import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
-import net.imglib2.converter.sampler.SamplerConverter;
 
 /**
  * TODO
  *
  */
-public class ConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAccessible< A > & IterableInterval< A > > implements IterableInterval< B >, RandomAccessibleInterval< B >
+abstract public class AbstractConvertedIterableInterval< A, B > implements IterableInterval< B >
 {
-	private final S source;
+	final protected IterableInterval< A > source;
 
-	private final SamplerConverter< A, B > converter;
-
-	public ConvertedIterableRandomAccessibleInterval( final S source, final SamplerConverter< A, B > converter )
+	public AbstractConvertedIterableInterval( final IterableInterval< A > source )
 	{
 		this.source = source;
-		this.converter = converter;
 	}
 
 	@Override
 	public int numDimensions()
 	{
 		return source.numDimensions();
-	}
-
-	@Override
-	public RandomAccess< B > randomAccess()
-	{
-		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess() );
-	}
-
-	@Override
-	public RandomAccess< B > randomAccess( final Interval interval )
-	{
-		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess( interval ) );
 	}
 
 	@Override
@@ -197,14 +177,8 @@ public class ConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAc
 	}
 
 	@Override
-	public ConvertedCursor< A, B > cursor()
-	{
-		return new ConvertedCursor< A, B >( converter, source.cursor() );
-	}
+	abstract public AbstractConvertedCursor< A, B > cursor();
 
 	@Override
-	public ConvertedCursor< A, B > localizingCursor()
-	{
-		return new ConvertedCursor< A, B >( converter, source.localizingCursor() );
-	}
+	abstract public AbstractConvertedCursor< A, B > localizingCursor();
 }

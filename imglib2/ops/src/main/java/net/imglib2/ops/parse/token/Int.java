@@ -35,34 +35,26 @@
  */
 
 
-package net.imglib2.ops.operation.unary.real;
+package net.imglib2.ops.parse.token;
 
-import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output real number -1, 0, or 1 depending
- * upon the relationship of the real component of an input real number to
- * zero. -1 if less than zero. 1 if greater than zero. 0 otherwise.
- * 
- * @author Barry DeZonia
- */
-public final class RealSign<I extends RealType<I>, O extends RealType<O>>
-	implements RealUnaryOperation<I,O>
-{
-	@Override
-	public O compute(I x, O output) {
-		if (x.getRealDouble() < 0)
-			output.setReal(-1);
-		else if (x.getRealDouble() > 0)
-			output.setReal(1);
-		else
-			output.setReal(0);
-		return output;
+* 
+* @author Barry DeZonia
+*
+*/
+public class Int extends Token {
+	private long value;
+	
+	public Int(int start, String text) {
+		super(start, text);
+		value = Long.parseLong(text);
 	}
 
-	@Override
-	public RealSign<I,O> copy() {
-		return new RealSign<I,O>();
+	public Int(int start, String text, long v) {
+		super(start, text);
+		value = v;
 	}
-
+	
+	public long getValue() { return value; }
 }

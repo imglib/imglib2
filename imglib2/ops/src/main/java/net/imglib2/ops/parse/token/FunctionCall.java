@@ -34,55 +34,29 @@
  * #L%
  */
 
-package net.imglib2.converter.sampler;
 
-import net.imglib2.Sampler;
-import net.imglib2.img.basictypeaccess.DoubleAccess;
-import net.imglib2.type.numeric.RealType;
+package net.imglib2.ops.parse.token;
+
+import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**
- * TODO
- *
- */
-public final class RealDoubleSamplerConverter< R extends RealType< R > > implements SamplerConverter< R, DoubleType >
-{
-	@Override
-	public DoubleType convert( Sampler< R > sampler )
+* 
+* @author Barry DeZonia
+*
+*/
+public class FunctionCall extends Token {
+
+	private final UnaryOperation<DoubleType,DoubleType> op;
+
+	public FunctionCall(int start, String text,
+			UnaryOperation<DoubleType,DoubleType> op)
 	{
-		return new DoubleType( new RealConvertingDoubleAccess< R >( sampler ) );
+		super(start, text);
+		this.op = op;
 	}
-
-	private static final class RealConvertingDoubleAccess< R extends RealType< R > > implements DoubleAccess
-	{
-		private final Sampler< R > sampler;
-
-		private RealConvertingDoubleAccess( final Sampler< R > sampler )
-		{
-			this.sampler = sampler;
-		}
-
-		@Override
-		public void close() {}
-
-		/**
-		 * This is only intended to work with DoubleType!
-		 * We ignore index!!!
-		 */
-		@Override
-		public double getValue( int index )
-		{
-			return sampler.get().getRealDouble();
-		}
-
-		/**
-		 * This is only intended to work with DoubleType!
-		 * We ignore index!!!
-		 */
-		@Override
-		public void setValue( int index, double value )
-		{
-			sampler.get().setReal( value );
-		}
+	
+	public UnaryOperation<DoubleType,DoubleType> getOp() {
+		return op;
 	}
 }

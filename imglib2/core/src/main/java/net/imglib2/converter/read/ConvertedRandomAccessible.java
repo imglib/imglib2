@@ -34,130 +34,39 @@
  * #L%
  */
 
-package net.imglib2.converter;
+package net.imglib2.converter.read;
 
 import net.imglib2.Interval;
-import net.imglib2.Positionable;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealPositionable;
-import net.imglib2.converter.sampler.SamplerConverter;
+import net.imglib2.RandomAccessible;
+import net.imglib2.converter.AbstractConvertedRandomAccessible;
+import net.imglib2.converter.Converter;
+import net.imglib2.type.Type;
 
 /**
  * TODO
  *
  */
-public class ConvertedRandomAccessibleInterval< A, B > implements RandomAccessibleInterval< B >
+public class ConvertedRandomAccessible< A, B extends Type< B > > extends AbstractConvertedRandomAccessible< A, B >
 {
-	private final RandomAccessibleInterval< A > source;
+	final protected Converter< A, B > converter;
+	final protected B converted;
 
-	private final SamplerConverter< A, B > converter;
-
-	public ConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source, final SamplerConverter< A, B > converter )
+	public ConvertedRandomAccessible( final RandomAccessible< A > source, final Converter< A, B > converter, final B b )
 	{
-		this.source = source;
+		super( source );
 		this.converter = converter;
+		this.converted = b.copy();
 	}
 
 	@Override
-	public int numDimensions()
+	public ConvertedRandomAccess< A, B > randomAccess()
 	{
-		return source.numDimensions();
+		return new ConvertedRandomAccess< A, B >( source.randomAccess(), converter, converted );
 	}
 
 	@Override
-	public RandomAccess< B > randomAccess()
+	public ConvertedRandomAccess< A, B > randomAccess( final Interval interval )
 	{
-		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess() );
-	}
-
-	@Override
-	public RandomAccess< B > randomAccess( Interval interval )
-	{
-		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess( interval ) );
-	}
-
-	@Override
-	public long min( int d )
-	{
-		return source.min( d );
-	}
-
-	@Override
-	public void min( long[] min )
-	{
-		source.min( min );
-	}
-
-	@Override
-	public void min( Positionable min )
-	{
-		source.min( min );
-	}
-
-	@Override
-	public long max( int d )
-	{
-		return source.max( d );
-	}
-
-	@Override
-	public void max( long[] max )
-	{
-		source.max( max );
-	}
-
-	@Override
-	public void max( Positionable max )
-	{
-		source.max( max );
-	}
-
-	@Override
-	public void dimensions( long[] dimensions )
-	{
-		source.dimensions( dimensions );
-	}
-
-	@Override
-	public long dimension( int d )
-	{
-		return source.dimension( d );
-	}
-
-	@Override
-	public double realMin( int d )
-	{
-		return source.realMin( d );
-	}
-
-	@Override
-	public void realMin( double[] min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public void realMin( RealPositionable min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public double realMax( int d )
-	{
-		return source.realMax( d );
-	}
-
-	@Override
-	public void realMax( double[] max )
-	{
-		source.realMax( max );
-	}
-
-	@Override
-	public void realMax( RealPositionable max )
-	{
-		source.realMax( max );
+		return new ConvertedRandomAccess< A, B >( source.randomAccess( interval ), converter, converted );
 	}
 }
