@@ -255,7 +255,7 @@ public abstract class AbstractInteractiveExample< T extends NumericType< T > > i
 
 	public AbstractInteractiveExample()
 	{
-		this( "src/test/java/resources/imglib2-logo2.png" );
+		this( "src/test/java/resources/imglib2-logo-35x40.png" );
 	}
 
 	public AbstractInteractiveExample( final String overlayFilename )
