@@ -39,7 +39,7 @@ import net.imglib2.type.NativeType;
 
 /**
  * @author Tobias Pietzsch
- *
+ * 
  */
 public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?, A >> extends AbstractNativeImg< T, A > implements Serializable
 {
@@ -83,7 +83,7 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see net.imglib2.RandomAccessible#randomAccess()
 	 */
 	@Override
@@ -113,7 +113,9 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 	@Override
 	public NtreeImg< T, A > copy()
 	{
-		return new NtreeImg< T, A >( this );
+		NtreeImg< T, A > img = new NtreeImg< T, A >( this );
+		img.setLinkedType( linkedType.duplicateTypeOnSameNativeImg() );
+		return img;
 	}
 
 	@Override
