@@ -80,8 +80,8 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements
 			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
 		}
 	}
-	
-	public < F extends Interval & RandomAccessible< T > > AbstractOutOfBoundsValue( final F f, final T value )
+
+	public < F extends Interval & RandomAccessible< T > > AbstractOutOfBoundsValue( final F f )
 	{
 		this.sampler = f.randomAccess();
 		n = f.numDimensions();
