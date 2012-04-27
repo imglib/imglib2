@@ -622,7 +622,8 @@ public class InteractiveCATMAIDRotationExample< T extends NumericType< T > & Nat
 	final static public void main( final String[] args ) throws ImgIOException
 	{
 		new ImageJ();
-		final CATMAIDRandomAccessibleInterval map = new CATMAIDRandomAccessibleInterval( 6016, 4464, 803, "http://catmaid.mpi-cbg.de/map/c-elegans/" );
+//		final CATMAIDRandomAccessibleInterval map = new CATMAIDRandomAccessibleInterval( 6016, 4464, 803, "http://catmaid.mpi-cbg.de/map/c-elegans/" );
+		final CATMAIDRandomAccessibleInterval map = new CATMAIDRandomAccessibleInterval( 6016, 4464, 803, "http://localhost/catmaid/" );
 		new InteractiveCATMAIDRotationExample< ARGBType >( map, new TypeIdentity< ARGBType >() ).run( "" );
 	}
 }
