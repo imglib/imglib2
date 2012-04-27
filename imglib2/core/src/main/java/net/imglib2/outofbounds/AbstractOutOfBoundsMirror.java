@@ -233,16 +233,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	@Override
 	public void move( final int distance, final int d )
 	{
-		if ( distance > 0 )
-		{
-			for ( int i = 0; i < distance; ++i )
-				fwd( d );
-		}
-		else
-		{
-			for ( int i = -distance; i > 0; --i )
-				bck( d );
-		}
+		setPosition( getLongPosition( d ) + distance, d );
 	}
 	
 	@Override
@@ -275,7 +266,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	@Override
 	public void setPosition( final int position, final int d )
 	{
-		setPosition( ( long )position, d );
+		setPosition( position, d );
 	}
 	
 	@Override

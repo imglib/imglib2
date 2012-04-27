@@ -216,31 +216,22 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements
 	}
 	
 	@Override
-	public void move( final int distance, final int dim )
-	{
-		if ( distance > 0 )
-		{
-			for ( int i = 0; i < distance; ++i )
-				fwd( dim );
-		}
-		else
-		{
-			for ( int i = -distance; i > 0; --i )
-				bck( dim );
-		}
-	}
-	
-	@Override
 	public void move( final long distance, final int dim )
 	{
-		move( ( int )distance, dim );
+		setPosition( position[ dim ] + distance, dim );
 	}
-	
+
+	@Override
+	public void move( final int distance, final int dim )
+	{
+		move( distance, dim );
+	}
+
 	@Override
 	public void move( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
-			move( localizable.getIntPosition( d ), d );
+			move( localizable.getLongPosition( d ), d );
 	}
 	
 	@Override
@@ -258,7 +249,7 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements
 	}
 	
 	@Override
-	public void setPosition( final int position, final int dim )
+	public void setPosition( final long position, final int dim )
 	{
 		this.position[ dim ] = position;
 		if ( position < min[ dim ] || position > max[ dim ] )
@@ -278,16 +269,15 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements
 	}
 	
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void setPosition( final int position, final int dim )
 	{
-		setPosition( ( int )position, dim );
+		setPosition( position, dim );
 	}
-	
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
-			setPosition( localizable.getIntPosition( d ), d );
+			setPosition( localizable.getLongPosition( d ), d );
 	}
 	
 	@Override
