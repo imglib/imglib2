@@ -177,12 +177,12 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements
 	{
 		final boolean wasOutOfBounds = isOutOfBounds;
 		final long p = ++position[ dim ];
-		if ( p == 0 )
+		if ( p == min[ dim ] )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
 		}
-		else if ( p == dimension[ dim ] )
+		else if ( p == max[ dim ] + 1 )
 		{
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
 			return;
@@ -200,9 +200,9 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements
 	{
 		final boolean wasOutOfBounds = isOutOfBounds;
 		final long p = position[ dim ]--;
-		if ( p == 0 )
+		if ( p == min[ dim ] )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else if ( p == dimension[ dim ] )
+		else if ( p == max[ dim ] + 1 )
 		{
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
