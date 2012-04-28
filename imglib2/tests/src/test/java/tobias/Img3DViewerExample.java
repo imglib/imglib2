@@ -51,7 +51,7 @@ public class Img3DViewerExample< T extends RealType< T > & NativeType< T > >
 		final AffineTransform3D unScale = new AffineTransform3D();
 		unScale.set(
 			1.0, 0.0, 0.0, ( width - img.dimension( 0 ) ) / 2.0,
-			0.0, yScale, 0.0, ( width - img.dimension( 1 ) * yScale ) / 2.0,
+			0.0, yScale, 0.0, ( height - img.dimension( 1 ) * yScale ) / 2.0,
 			0.0, 0.0, zScale, 0.0 );
 
 		new Interactive3DViewer< T >( width, height, source, img, converter, unScale, yScale, zScale, currentSlice );
