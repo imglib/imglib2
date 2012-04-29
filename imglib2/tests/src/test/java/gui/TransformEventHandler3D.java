@@ -96,14 +96,15 @@ public class TransformEventHandler3D implements KeyListener, MouseWheelListener,
 				1.0, 0.0, 0.0, 0.0,
 				0.0, 1.0, 0.0, 0.0,
 				0.0, 0.0, 1.0, 0.0 );
+		sliceShift.set(
+				1, 0, 0, 0,
+				0, 1, 0, 0,
+				0, 0, 1, -currentSlice );
 
 		list.add( affine );
 		list.add( sliceShift );
 
-		synchronized ( reducedAffine )
-		{
-			reduceAffineTransformList( list, reducedAffine );
-		}
+		update();
 	}
 
 	final protected void update()

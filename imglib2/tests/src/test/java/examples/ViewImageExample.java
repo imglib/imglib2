@@ -1,6 +1,9 @@
-package tobias;
+package examples;
 
 import gui.Interactive2DViewer;
+
+import java.util.ArrayList;
+
 import net.imglib2.FinalInterval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
@@ -57,7 +60,7 @@ public class ViewImageExample
 		initial.set(
 			1, 0, ( width - interval.dimension( 0 ) ) / 2.0 - interval.min( 0 ),
 			0, 1, ( height - interval.dimension( 1 ) ) / 2.0 - interval.min( 1 ) );
-		new Interactive2DViewer< T >( ( int ) width, ( int ) height, source, converter, initial );
+		new Interactive2DViewer< T >( ( int ) width, ( int ) height, source, converter, initial, new ArrayList< Object >() );
 	}
 
 	public static void main( final String[] args ) throws ImgIOException
