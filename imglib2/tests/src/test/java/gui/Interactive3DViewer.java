@@ -75,7 +75,7 @@ public class Interactive3DViewer< T extends NumericType< T > > extends AbstractI
 	/**
 	 * Register and restore key and mouse handlers.
 	 */
-	protected GUI< TransformEventHandler3D > gui;
+	protected GUI gui;
 
 	final protected NearestNeighborInterpolatorFactory< T > nnFactory = new NearestNeighborInterpolatorFactory< T >();
 
@@ -135,8 +135,10 @@ public class Interactive3DViewer< T extends NumericType< T > > extends AbstractI
 
 		// create and register key and mouse handler
 		transformEventHandler = new TransformEventHandler3D( imp, this, yScale, zScale, currentSlice );
-		gui = new GUI< TransformEventHandler3D >( imp );
-		gui.takeOverGui( transformEventHandler );
+		final ArrayList< Object > handlers = new ArrayList< Object >();
+		handlers.add( transformEventHandler );
+		gui = new GUI( imp );
+		gui.takeOverGui( handlers );
 
 		requestRepaint();
 		startPainter();
