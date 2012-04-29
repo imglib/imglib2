@@ -32,7 +32,6 @@ public class Bee
 		ImageJFunctions.show( img );
 //		show( img );
 	}
-
 /*
 		// crop
 		final RandomAccessibleInterval< UnsignedByteType > crop =
@@ -98,10 +97,53 @@ public class Bee
 		};
 
 		final RandomAccessibleInterval< ARGBType > interpolantRotateCropConvert = Converters.convert( interpolantRotateCrop, lut, new ARGBType() );
-		showargb( interpolantRotateCropConvert );
+//		showargb( interpolantRotateCropConvert );
+
+//		show( cropRotateExtend );
+		final SamplerConverter< UnsignedByteType, UnsignedByteType > invert = new SamplerConverter< UnsignedByteType, UnsignedByteType >()
+		{
+			@Override
+			public UnsignedByteType convert( final Sampler< UnsignedByteType > sampler )
+			{
+				return new UnsignedByteType( new InvertingByteAccess( sampler ) );
+			}
+
+			final class InvertingByteAccess implements ByteAccess
+			{
+				private final Sampler< UnsignedByteType > sampler;
+
+				private InvertingByteAccess( final Sampler< UnsignedByteType > sampler )
+				{
+					this.sampler = sampler;
+				}
+
+				@Override
+				public void close() {}
+
+				@Override
+				public void setValue( final int i, final byte coded )
+				{
+					sampler.get().set( 255 - UnsignedByteType.getUnsignedByte( coded ) );
+				}
+
+				@Override
+				public byte getValue( final int index )
+				{
+					return UnsignedByteType.getCodedSignedByte( 255 - sampler.get().get() );
+				}
+			}
+		};
+		final RandomAccessible< UnsignedByteType > readwriteconverted = Converters.convert( cropRotateExtend, invert );
+//		show( readwriteconverted );
+
+//		final Cursor< UnsignedByteType > c = IterableRandomAccessibleInterval.create(
+//				Views.offsetInterval( readwriteconverted, FinalInterval.createMinSize( 150, 130, 20, 20 ) )
+//			).cursor();
+//		while( c.hasNext() )
+//			c.next().set( 255 );
+//		show( cropRotateExtend );
 	}
 */
-
 	public static < T extends RealType< T > & NativeType< T > >
 			Img< T > open( final String filename, final T type ) throws ImgIOException
 	{
