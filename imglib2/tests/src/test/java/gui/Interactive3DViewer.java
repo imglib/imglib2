@@ -23,11 +23,10 @@ import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform3D;
-import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.NumericType;
 
-public class Interactive3DViewer< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveViewer implements TransformEventHandler3D.TransformListener
+public class Interactive3DViewer< T extends NumericType< T > > extends AbstractInteractiveViewer implements TransformEventHandler3D.TransformListener
 {
 	/**
 	 * the {@link RandomAccessible} to display
