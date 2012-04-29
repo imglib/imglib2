@@ -1,4 +1,4 @@
-package tobias;
+package examples;
 
 import gui.Interactive3DViewer;
 import ij.IJ;
@@ -64,7 +64,7 @@ public class Img3DViewerExample< T extends RealType< T > & NativeType< T > >
 		final ImgPlus< UnsignedShortType > imgPlus;
 		try
 		{
-			imgPlus = io.openImg( "/home/tobias/workspace/data/saalfeld/l1-cns.tif", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType() );
+			imgPlus = io.openImg( "/home/saalfeld/Desktop/l1-cns.tif", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType() );
 		}
 		catch ( final ImgIOException e )
 		{

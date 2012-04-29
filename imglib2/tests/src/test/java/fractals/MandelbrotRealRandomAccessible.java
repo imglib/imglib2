@@ -25,103 +25,106 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package tests;
+package fractals;
 
+import net.imglib2.RealInterval;
 import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
-import net.imglib2.type.numeric.complex.ComplexDoubleType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.type.numeric.integer.LongType;
 
 /**
  * A RealRandomAccess that procedurally generates values (iteration count)
  * for the mandelbrot set.
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch
  */
-public class JuliaRealRandomAccess extends RealPoint implements RealRandomAccess< UnsignedByteType >
+public class MandelbrotRealRandomAccessible implements RealRandomAccessible< LongType >
 {
-	final protected UnsignedByteType t;
-	final protected ComplexDoubleType a;
-	final protected ComplexDoubleType c;
-	int maxIterations;
-	double maxAmplitude;
+	final protected LongType t;
+	long maxIterations;
 
-	public JuliaRealRandomAccess()
+	public MandelbrotRealRandomAccessible()
 	{
-		super( 2 );
-		t = new UnsignedByteType();
-		a = new ComplexDoubleType();
-		c = new ComplexDoubleType();
+		t = new LongType();
 		maxIterations = 50;
-		maxAmplitude = 4096;
 	}
 	
-	public JuliaRealRandomAccess(
-			final ComplexDoubleType c,
-			final int maxIterations,
-			final int maxAmplitude )
+	public MandelbrotRealRandomAccessible( final long maxIterations )
 	{
-		super( 2 );
-		t = new UnsignedByteType();
-		a = new ComplexDoubleType();
-		this.c = c;
+		t = new LongType();
 		this.maxIterations = maxIterations;
-		this.maxAmplitude = maxAmplitude;
 	}
 	
-	public void setC( final ComplexDoubleType c )
-	{
-		this.c.set( c );
-	}
-	
-	public void setC( final double r, final double i )
-	{
-		c.set( r, i );
-	}
-	
-	public void setMaxIterations( final int maxIterations )
+	public void setMaxIterations( final long maxIterations )
 	{
 		this.maxIterations = maxIterations;
 	}
 	
-	public void setMaxAmplitude( final int maxAmplitude )
+	public class MandelbrotRealRandomAccess extends RealPoint implements RealRandomAccess< LongType >
 	{
-		this.maxAmplitude = maxAmplitude;
-	}
-	
-	final private int julia()
-	{
-		int i = 0;
-		double v = 0;
-		a.set( position[ 0 ], position[ 1 ] );
-		while ( i < maxIterations && v < 4096 )
+		final LongType t;
+
+		public MandelbrotRealRandomAccess()
 		{
-			a.mul( a );
-			a.add( c );
-			v = a.getPowerDouble();
-			++i;
+			super( 2 ); // number of dimensions is 2
+			t = new LongType();
 		}
-		return i < 0 ? 0 : i > 255 ? 255 : i;
+
+		final private long mandelbrot( final double re0, final double im0, final long maxIterations )
+		{
+			double re = re0;
+			double im = im0;
+			long i = 0;
+			for ( ; i < maxIterations; ++i )
+			{
+				final double squre = re * re;
+				final double squim = im * im;
+				if ( squre + squim > 4 )
+					break;
+				im = 2 * re * im + im0;
+				re = squre - squim + re0;
+			}
+			return i;
+		}
+
+		@Override
+		public LongType get()
+		{
+			t.set( mandelbrot( position[ 0 ], position[ 1 ], maxIterations ) );
+			return t;
+		}
+
+		@Override
+		public MandelbrotRealRandomAccess copyRealRandomAccess()
+		{
+			return copy();
+		}
+
+		@Override
+		public MandelbrotRealRandomAccess copy()
+		{
+			final MandelbrotRealRandomAccess a = new MandelbrotRealRandomAccess();
+			a.setPosition( this );
+			return a;
+		}
 	}
 
 	@Override
-	public UnsignedByteType get()
+	public int numDimensions()
 	{
-		t.set( julia() );
-		return t;
+		return 2;
 	}
 
 	@Override
-	public JuliaRealRandomAccess copyRealRandomAccess()
+	public MandelbrotRealRandomAccess realRandomAccess()
 	{
-		return copy();
+		return new MandelbrotRealRandomAccess();
 	}
 
 	@Override
-	public JuliaRealRandomAccess copy()
+	public MandelbrotRealRandomAccess realRandomAccess( final RealInterval interval )
 	{
-		final JuliaRealRandomAccess copy = new JuliaRealRandomAccess();
-		copy.setPosition( this );
-		return copy;
+		return realRandomAccess();
 	}
 }

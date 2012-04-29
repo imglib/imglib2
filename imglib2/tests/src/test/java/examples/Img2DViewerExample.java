@@ -1,7 +1,10 @@
-package tobias;
+package examples;
 import gui.Interactive2DViewer;
 import ij.IJ;
 import ij.ImageJ;
+
+import java.util.ArrayList;
+
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.img.Img;
@@ -38,27 +41,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > >
 			1.0, 0.0, ( width - imgPlus.dimension( 0 ) ) / 2.0,
 			0.0, yScale, ( height - imgPlus.dimension( 1 ) * yScale ) / 2.0 );
 
-		/* center shift */
-		final AffineTransform2D centerShift = new AffineTransform2D();
-		centerShift.set(
-				1, 0, -width / 2.0,
-				0, 1, -height / 2.0 );
-
-		/* center un-shift */
-		final AffineTransform2D centerUnShift = new AffineTransform2D();
-		centerUnShift.set(
-				1, 0, width / 2.0,
-				0, 1, height / 2.0 );
-
-		/* initialize rotation */
-		final AffineTransform2D rotation = new AffineTransform2D();
-		rotation.rotate( 0.05 );
-
-		unScale.preConcatenate( centerShift );
-		unScale.preConcatenate( rotation );
-		unScale.preConcatenate( centerUnShift );
-
-		new Interactive2DViewer< T >( width, height, source, converter, unScale );
+		new Interactive2DViewer< T >( width, height, source, converter, unScale, new ArrayList< Object >() );
 	}
 
 	final static public void main( final String[] args ) throws ImgIOException

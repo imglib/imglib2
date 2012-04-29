@@ -24,9 +24,11 @@
  */
 
 package tests;
+import fractals.MandelbulbRealRandomAccess;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
+import ij.ImageStack;
 import ij.process.ColorProcessor;
 
 import java.awt.Color;
@@ -41,30 +43,27 @@ import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 
 import net.imglib2.RandomAccessible;
+import net.imglib2.RealInterval;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.converter.Converter;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.XYRandomAccessibleProjector;
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform3D;
-import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
-import net.imglib2.view.Views;
+import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.integer.LongType;
 
 /**
  * TODO
  *
  */
-public class Interactive3DRotationExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractiveExample< T >
+public class Interactive3DRealRandomAccessibleExample< T extends NumericType< T > > extends AbstractInteractiveExample< T >
 {
 	@Override
 	final protected synchronized void copyState()
@@ -128,21 +127,18 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 	@Override
 	final protected void visualize()
 	{
-		final double w = img.dimension( 0 ) - 1;
-		final double h = img.dimension( 1 ) - 1;
-		final double d = img.dimension( 2 ) - 1;
 		final double w2 = screenImage.dimension( 0 ) / 2.0;
 		final double h2 = screenImage.dimension( 0 ) / 2.0;
-		final double d2 = d ;
+		final double d2 = screenImage.dimension( 0 ) / 2.0;
 		
-		final double[] p000 = new double[]{ 0, 0, 0 };
-		final double[] p100 = new double[]{ w, 0, 0 };
-		final double[] p010 = new double[]{ 0, h, 0 };
-		final double[] p110 = new double[]{ w, h, 0 };
-		final double[] p001 = new double[]{ 0, 0, d };
-		final double[] p101 = new double[]{ w, 0, d };
-		final double[] p011 = new double[]{ 0, h, d };
-		final double[] p111 = new double[]{ w, h, d };
+		final double[] p000 = new double[]{ -w/2, -h/2, -d/2 };
+		final double[] p100 = new double[]{ w/2, -h/2, -d/2 };
+		final double[] p010 = new double[]{ -w/2, h/2, -d/2 };
+		final double[] p110 = new double[]{ w/2, h/2, -d/2 };
+		final double[] p001 = new double[]{ -w/2, -h/2, d/2 };
+		final double[] p101 = new double[]{ w/2, -h/2, d/2 };
+		final double[] p011 = new double[]{ -w/2, h/2, d/2 };
+		final double[] p111 = new double[]{ w/2, h/2, d/2 };
 		
 		final double[] q000 = new double[ 3 ];
 		final double[] q100 = new double[ 3 ];
@@ -153,9 +149,9 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 		final double[] q011 = new double[ 3 ];
 		final double[] q111 = new double[ 3 ];
 		
-		final double[] px = new double[]{ w / 2, 0, 0 };
-		final double[] py = new double[]{ 0, h / 2, 0 };
-		final double[] pz = new double[]{ 0, 0, d / 2 };
+		final double[] px = new double[]{ 0, -h/2, -d/2 };
+		final double[] py = new double[]{ -w/2, 0, -d/2 };
+		final double[] pz = new double[]{ -w/2, -h/2, 0 };
 		
 		final double[] qx = new double[ 3 ];
 		final double[] qy = new double[ 3 ];
@@ -222,8 +218,7 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 		
 	}
 	
-	final private ImgPlus< T > imgPlus;
-	final private Img< T > img;
+	final private RealRandomAccessible< T > img;
 	final private ColorProcessor cp;
 	
 	final private ArrayList< AffineTransform3D > list = new ArrayList< AffineTransform3D >();
@@ -233,34 +228,33 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 	final private AffineTransform3D reducedAffine = new AffineTransform3D();
 	final private AffineTransform3D reducedAffineCopy = new AffineTransform3D();
 	
-	final private RealARGBConverter< T > converter;
+	final private double w, h, d;
+	
+	final private Converter< T, ARGBType > converter;
 	
 	final static private float step = ( float )Math.PI / 180;
 
-	private double yScale, zScale;
-	
 	/* the current rotation axis, indexed x->0, y->1, z->2 */
 	private int axis = 0;
 	
 	/* the current slice index (rotated z) in isotropic x,y,z space */
 	private double currentSlice = 0;
 	
-	public Interactive3DRotationExample( final ImgPlus< T > imgPlus, final RealARGBConverter< T > converter )
+	public Interactive3DRealRandomAccessibleExample( final RealRandomAccessible< T > img, final Converter< T, ARGBType > converter )
 	{
-		this.imgPlus = imgPlus;
+		w = 5;
+		h = 5;
+		d = 5; 
 		this.converter = converter;
 		cp = new ColorProcessor( 400, 300 );
-		img = imgPlus.getImg();
+		this.img = img;
 	}
 	
 	@Override
 	protected XYRandomAccessibleProjector< T, ARGBType > createProjector(
 			final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory )
 	{
-		final T template = img.randomAccess().get().copy();
-		final RandomAccessible< T > extendedImg = Views.extendValue( img, template );
-		final Interpolant< T, RandomAccessible< T > > interpolant = new Interpolant< T, RandomAccessible< T > >( extendedImg, interpolatorFactory );
-		final AffineRandomAccessible< T, AffineGet > mapping = new AffineRandomAccessible< T, AffineGet >( interpolant, reducedAffineCopy.inverse() );
+		final AffineRandomAccessible< T, AffineGet > mapping = new AffineRandomAccessible< T, AffineGet >( img, reducedAffineCopy.inverse() );
 		screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] )cp.getPixels() );
 		return new XYRandomAccessibleProjector< T, ARGBType >( mapping, screenImage, converter );
 	}
@@ -279,31 +273,14 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 		
 		gui = new GUI( imp );
 		
+		currentSlice = 0;
 		
-		if ( Double.isNaN( imgPlus.calibration( 0 ) ) )
-			yScale = zScale = 1.0;
-		else
-		{
-			if ( Double.isNaN( imgPlus.calibration( 1 ) ) )
-				yScale = 1.0;
-			else
-				yScale = imgPlus.calibration( 1 ) / imgPlus.calibration( 0 );
-			if ( Double.isNaN( imgPlus.calibration( 2 ) ) )
-				zScale = 1.0;
-			else
-				zScale = imgPlus.calibration( 2 ) / imgPlus.calibration( 0 );
-		}
-		
-		final int d = ( int )img.dimension( 2 );
-		
-		currentSlice = ( d / 2.0 - 0.5 ) * zScale;
-		
-		/* un-scale */
-		final AffineTransform3D unScale = new AffineTransform3D();
-		unScale.set(
-			1.0, 0.0, 0.0, ( cp.getWidth() - img.dimension( 0 ) ) / 2.0,
-			0.0, yScale, 0.0, ( cp.getHeight() - img.dimension( 1 ) * yScale ) / 2.0,
-			0.0, 0.0, zScale, 0.0 );
+		/* center */
+		final AffineTransform3D center = new AffineTransform3D();
+		center.set(
+			1.0, 0.0, 0.0, cp.getWidth() / 2.0,
+			0.0, 1.0, 0.0, cp.getHeight() / 2.0,
+			0.0, 0.0, 1.0, 0.0 );
 
 		/* initialize affine */
 		affine.set(
@@ -317,7 +294,7 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 				0, 1, 0, 0,
 				0, 0, 1, -currentSlice );
 
-		list.add( unScale );
+		list.add( center );
 		list.add( affine );
 		list.add( sliceShift );
 		
@@ -334,6 +311,8 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 		painter = new MappingThread();
 		
 		painter.start();
+		
+		scale( screenImage.dimension( 0 ) / 4 );
 		
 		update();
     }
@@ -359,7 +338,7 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 		/* center shift */
 		t.set(
 				1, 0, 0, -width / 2.0,
-				0, 1, 0, -height / 2.0 * yScale,
+				0, 1, 0, -height / 2.0,
 				0, 0, 1, -currentSlice );
 		
 		affine.preConcatenate( t );
@@ -368,7 +347,7 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 		/* center un-shift */
 		t.set(
 				1, 0, 0, width / 2.0,
-				0, 1, 0, height / 2.0 * yScale,
+				0, 1, 0, height / 2.0,
 				0, 0, 1, currentSlice );
 		
 		affine.preConcatenate( t );
@@ -384,7 +363,7 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 		/* center shift */
 		t.set(
 				1, 0, 0, -width / 2.0,
-				0, 1, 0, -height / 2.0 * yScale,
+				0, 1, 0, -height / 2.0,
 				0, 0, 1, -currentSlice );
 		
 		affine.preConcatenate( t );
@@ -393,7 +372,7 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 		/* center un-shift */
 		t.set(
 				1, 0, 0, width / 2.0,
-				0, 1, 0, height / 2.0 * yScale,
+				0, 1, 0, height / 2.0,
 				0, 0, 1, currentSlice );
 		
 		affine.preConcatenate( t );
@@ -443,10 +422,29 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 			
 			if ( imp != null )
 			{
-				if ( e.getKeyCode() == KeyEvent.VK_ESCAPE || e.getKeyCode() == KeyEvent.VK_ENTER )
+				if ( e.getKeyCode() == KeyEvent.VK_ENTER )
 				{
-					gui.restoreGui();
+					final Thread thread = new Thread(
+							new Runnable()
+							{
+								@Override
+								public void run()
+								{
+									final ImageStack stack = new ImageStack( cp.getWidth(), cp.getHeight() );
+									projector.setPosition( -cp.getHeight() / 2, 2 );
+									for ( int z = 0; z < cp.getHeight(); ++z )
+									{
+										projector.map();
+										stack.addSlice( new ColorProcessor( screenImage.image() ) );
+										IJ.showProgress( z + 1, cp.getHeight() );
+										projector.fwd( 2 );
+									}
+									new ImagePlus( "volume", stack ).show();
+								}
+							} );
+					thread.start();
 				}
+				gui.restoreGui();
 			}
 		}
 		else if ( e.getKeyCode() == KeyEvent.VK_SHIFT )
@@ -641,19 +639,54 @@ public class Interactive3DRotationExample< T extends RealType< T > & NativeType<
 	
 	final static public void main( final String[] args ) throws ImgIOException
 	{
+		final long maxIterations = 20;
+		
 		new ImageJ();
-		final ImgOpener io = new ImgOpener();
-		final ImgPlus< UnsignedShortType > imgPlus;
-		try
+		final RealRandomAccessible< LongType > mandelbulb = new RealRandomAccessible< LongType >()
 		{
-			imgPlus = io.openImg( "/home/saalfeld/Desktop/l1-cns.tif", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType() );
-		}
-		catch ( final ImgIOException e )
-		{
-			IJ.log( "Problems opening the image, check the error msg." );
-			e.printStackTrace();
-			return;
-		}
-		new Interactive3DRotationExample< UnsignedShortType >( imgPlus, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) ).run( "" );
+			@Override
+			public int numDimensions()
+			{
+				return 3;
+			}
+
+			@Override
+			public RealRandomAccess< LongType > realRandomAccess()
+			{
+				return new MandelbulbRealRandomAccess( maxIterations );
+			}
+
+			@Override
+			public RealRandomAccess< LongType > realRandomAccess( final RealInterval interval )
+			{
+				return realRandomAccess();
+			}
+		};
+		new Interactive3DRealRandomAccessibleExample< LongType >( mandelbulb, new RealARGBConverter< LongType >( 0, maxIterations ) ).run( "" );
+		
+//		final RealRandomAccessible< DoubleType > doubleMandelbulb = new RealRandomAccessible< DoubleType >()
+//		{
+//			@Override
+//			public int numDimensions()
+//			{
+//				return 3;
+//			}
+//
+//			@Override
+//			public RealRandomAccess< DoubleType > realRandomAccess()
+//			{
+//				return new MandelbulbDoubleRealRandomAccess( maxIterations );
+//			}
+//
+//			@Override
+//			public RealRandomAccess< DoubleType > realRandomAccess( final RealInterval interval )
+//			{
+//				return realRandomAccess();
+//			}
+//		};
+//		new Interactive3DRealRandomAccessibleExample< DoubleType >( doubleMandelbulb, new RealARGBConverter< DoubleType >( 0, 2 ) ).run( "" );
+		
+//		new Interactive3DRealRandomAccessibleExample< LongType >( new Mandelbox( 3, -1.5, maxIterations ), new RealARGBConverter< LongType >( 0, maxIterations ) ).run( "" );
+//		new Interactive3DRealRandomAccessibleExample< DoubleType >( new DoubleMandelbox( 3, 1.5, maxIterations ), new RealARGBConverter< DoubleType >( 0, 1 ) ).run( "" );
 	}
 }

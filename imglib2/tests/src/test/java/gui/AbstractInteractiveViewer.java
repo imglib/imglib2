@@ -39,7 +39,7 @@ public abstract class AbstractInteractiveViewer
 	 */
 	final public class MappingThread extends Thread
 	{
-		private boolean pleaseRepaint;
+		private boolean pleaseRepaint = true;
 
 		public MappingThread()
 		{

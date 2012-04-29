@@ -249,7 +249,7 @@ public class TransformEventHandler2D implements KeyListener, MouseWheelListener,
 			oY += dY;
 			translate( dX, dY );
 		}
-		else
+		if ( ( modifiers & MouseEvent.BUTTON1_DOWN_MASK ) != 0 )
 		{
 			dX = windowSize.dimension( 0 ) / 2 - e.getX();
 			dY = windowSize.dimension( 1 ) / 2 - e.getY();
