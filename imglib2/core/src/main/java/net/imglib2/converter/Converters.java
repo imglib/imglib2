@@ -27,31 +27,42 @@
  */
 package net.imglib2.converter;
 
+import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.Sampler;
 import net.imglib2.converter.read.ConvertedIterableInterval;
 import net.imglib2.converter.read.ConvertedRandomAccessible;
 import net.imglib2.converter.read.ConvertedRandomAccessibleInterval;
+import net.imglib2.converter.readwrite.SamplerConverter;
+import net.imglib2.converter.readwrite.WriteConvertedIterableInterval;
+import net.imglib2.converter.readwrite.WriteConvertedIterableRandomAccessibleInterval;
+import net.imglib2.converter.readwrite.WriteConvertedRandomAccessible;
+import net.imglib2.converter.readwrite.WriteConvertedRandomAccessibleInterval;
 import net.imglib2.type.Type;
 
 /**
  * Convenience factory methods for sample conversion.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Converters
 {
 	/**
-	 * Create a {@link RandomAccessible} whose
-	 * {@link RandomAccess RandomAccesses} {@link RandomAccess#get()} you a
-	 * converted sample.
-	 * 
+	 * Create a {@link RandomAccessible} whose {@link RandomAccess
+	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
+	 * Conversion is done on-the-fly when reading values. Writing to the
+	 * converted {@link RandomAccessibleInterval} has no effect.
+	 *
 	 * @param source
 	 * @param converter
 	 * @param b
-	 * @return
+	 * @return a converted {@link RandomAccessible} whose {@link RandomAccess
+	 *         RandomAccesses} perform on-the-fly value conversion using the
+	 *         provided converter.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public < A, B extends Type< B > > RandomAccessible< B > convert(
@@ -63,17 +74,38 @@ public class Converters
 			return ( RandomAccessible< B > )source;
 		return new ConvertedRandomAccessible< A, B >( source, converter, b );
 	}
-	
-	
+
 	/**
-	 * Create a {@link RandomAccessibleInterval} whose
-	 * {@link RandomAccess RandomAccesses} {@link RandomAccess#get()} you a
-	 * converted sample.
-	 * 
+	 * Create a {@link RandomAccessible} whose {@link RandomAccess
+	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
+	 * Conversion is done on-the-fly both when reading and writing values.
+	 *
+	 * @param source
+	 * @param converter
+	 * @return a converted {@link RandomAccessible} whose {@link RandomAccess
+	 *         RandomAccesses} perform on-the-fly value conversion using the
+	 *         provided converter.
+	 */
+	final static public < A, B extends Type< B > > WriteConvertedRandomAccessible< A, B > convert(
+			final RandomAccessible< A > source,
+			final SamplerConverter< A, B > converter )
+	{
+		return new WriteConvertedRandomAccessible< A, B >( source, converter );
+	}
+
+
+	/**
+	 * Create a {@link RandomAccessibleInterval} whose {@link RandomAccess
+	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
+	 * Conversion is done on-the-fly when reading values. Writing to the
+	 * converted {@link RandomAccessibleInterval} has no effect.
+	 *
 	 * @param source
 	 * @param converter
 	 * @param b
-	 * @return
+	 * @return a converted {@link RandomAccessibleInterval} whose
+	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
+	 *         conversion using the provided converter.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > convert(
@@ -85,17 +117,37 @@ public class Converters
 			return ( RandomAccessibleInterval< B > )source;
 		return new ConvertedRandomAccessibleInterval< A, B >( source, converter, b );
 	}
-	
-	
+
 	/**
-	 * Create a {@link RandomAccessibleInterval} whose
-	 * {@link RandomAccess RandomAccesses} {@link RandomAccess#get()} you a
-	 * converted sample.
-	 * 
+	 * Create a {@link RandomAccessibleInterval} whose {@link RandomAccess
+	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
+	 * Conversion is done on-the-fly both when reading and writing values.
+	 *
+	 * @param source
+	 * @param converter
+	 * @return a converted {@link RandomAccessibleInterval} whose
+	 *         {@link RandomAccess RandomAccesses} perform on-the-fly value
+	 *         conversion using the provided converter.
+	 */
+	final static public < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convert(
+			final RandomAccessibleInterval< A > source,
+			final SamplerConverter< A, B > converter )
+	{
+		return new WriteConvertedRandomAccessibleInterval< A, B >( source, converter );
+	}
+
+
+	/**
+	 * Create a {@link IterableInterval} whose {@link Cursor Cursors}
+	 * {@link Cursor#get()} you a converted sample. Conversion is done
+	 * on-the-fly when reading values. Writing to the converted
+	 * {@link IterableInterval} has no effect.
+	 *
 	 * @param source
 	 * @param converter
 	 * @param b
-	 * @return
+	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
+	 *         perform on-the-fly value conversion using the provided converter.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public < A, B extends Type< B > > IterableInterval< B > convert(
@@ -106,5 +158,42 @@ public class Converters
 		if ( TypeIdentity.class.isInstance( converter ) )
 			return ( IterableInterval< B > )source;
 		return new ConvertedIterableInterval< A, B >( source, converter, b );
+	}
+
+	/**
+	 * Create an {@link IterableInterval} whose {@link Cursor Cursors}
+	 * {@link Cursor#get()} you a converted sample. Conversion is done
+	 * on-the-fly both when reading and writing values.
+	 *
+	 * @param source
+	 * @param converter
+	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
+	 *         perform on-the-fly value conversion using the provided converter.
+	 */
+	final static public < A, B extends Type< B > > WriteConvertedIterableInterval< A, B > convert(
+			final IterableInterval< A > source,
+			final SamplerConverter< A, B > converter )
+	{
+		return new WriteConvertedIterableInterval< A, B >( source, converter );
+	}
+
+	/**
+	 * Create an {@link WriteConvertedIterableRandomAccessibleInterval} whose
+	 * {@link RandomAccess RandomAccesses} and {@link Cursor Cursors}
+	 * {@link Cursor#get()} you a converted sample. Conversion is done
+	 * on-the-fly both when reading and writing values.
+	 *
+	 * @param source
+	 * @param converter
+	 * @return a {@link WriteConvertedIterableRandomAccessibleInterval} whose
+	 *         {@link Sampler Samplers} perform on-the-fly value conversion
+	 *         using the provided converter.
+	 */
+	final static public < A, B extends Type< B >, S extends RandomAccessible< A > & IterableInterval< A > >
+		WriteConvertedIterableRandomAccessibleInterval< A, B, S > convertRandomAccessibleIterableInterval(
+			final S source,
+			final SamplerConverter< A, B > converter )
+	{
+		return new WriteConvertedIterableRandomAccessibleInterval< A, B, S >( source, converter );
 	}
 }
