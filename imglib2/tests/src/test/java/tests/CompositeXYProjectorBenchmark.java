@@ -1,7 +1,6 @@
 package tests;
 
 import ij.ImageJ;
-import net.imglib2.IterableInterval;
 import net.imglib2.display.ChannelARGBConverter;
 import net.imglib2.display.CompositeXYProjector;
 import net.imglib2.exception.IncompatibleTypeException;
@@ -33,7 +32,7 @@ public class CompositeXYProjectorBenchmark
 		ImageJFunctions.show( argbImg );
 	}
 
-	public void convert( final Img< UnsignedByteType > in, final IterableInterval< ARGBType > out )
+	public void convert( final Img< UnsignedByteType > in,  final Img< ARGBType > out )
 	{
 		final CompositeXYProjector< UnsignedByteType > projector = new CompositeXYProjector< UnsignedByteType >( in, out, ChannelARGBConverter.converterListRGBA, 2 );
 		projector.setComposite( true );
