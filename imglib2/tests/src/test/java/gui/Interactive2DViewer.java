@@ -172,6 +172,7 @@ public class Interactive2DViewer< T extends NumericType< T > > extends AbstractI
 		{
 			gui.restoreGui();
 		}
+		System.exit( 0 );
 	}
 
 	protected int interpolation = 0;
