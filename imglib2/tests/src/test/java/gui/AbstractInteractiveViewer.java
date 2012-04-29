@@ -101,7 +101,7 @@ public abstract class AbstractInteractiveViewer
 	 */
 	public void startPainter()
 	{
-		painter.run();
+		painter.start();
 	}
 
 	/**
