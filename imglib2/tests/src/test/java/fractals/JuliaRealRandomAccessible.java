@@ -27,10 +27,12 @@
  */
 package fractals;
 
+import net.imglib2.RealInterval;
 import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.integer.LongType;
 
 /**
  * A RealRandomAccess that procedurally generates values (iteration count)
@@ -38,31 +40,29 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class JuliaRealRandomAccess extends RealPoint implements RealRandomAccess< UnsignedByteType >
+public class JuliaRealRandomAccessible implements RealRandomAccessible< LongType >
 {
-	final protected UnsignedByteType t;
+	final protected LongType t;
 	final protected ComplexDoubleType a;
 	final protected ComplexDoubleType c;
-	int maxIterations;
+	long maxIterations;
 	double maxAmplitude;
 
-	public JuliaRealRandomAccess()
+	public JuliaRealRandomAccessible()
 	{
-		super( 2 );
-		t = new UnsignedByteType();
+		t = new LongType();
 		a = new ComplexDoubleType();
 		c = new ComplexDoubleType();
 		maxIterations = 50;
 		maxAmplitude = 4096;
 	}
 	
-	public JuliaRealRandomAccess(
+	public JuliaRealRandomAccessible(
 			final ComplexDoubleType c,
 			final int maxIterations,
 			final int maxAmplitude )
 	{
-		super( 2 );
-		t = new UnsignedByteType();
+		t = new LongType();
 		a = new ComplexDoubleType();
 		this.c = c;
 		this.maxIterations = maxIterations;
@@ -79,49 +79,75 @@ public class JuliaRealRandomAccess extends RealPoint implements RealRandomAccess
 		c.set( r, i );
 	}
 	
-	public void setMaxIterations( final int maxIterations )
+	public void setMaxIterations( final long maxIterations )
 	{
 		this.maxIterations = maxIterations;
 	}
 	
-	public void setMaxAmplitude( final int maxAmplitude )
+	public void setMaxAmplitude( final double maxAmplitude )
 	{
 		this.maxAmplitude = maxAmplitude;
 	}
 	
-	final private int julia()
+	public class JuliaRealRandomAccess extends RealPoint implements RealRandomAccess< LongType >
 	{
-		int i = 0;
-		double v = 0;
-		a.set( position[ 0 ], position[ 1 ] );
-		while ( i < maxIterations && v < 4096 )
+		public JuliaRealRandomAccess()
 		{
-			a.mul( a );
-			a.add( c );
-			v = a.getPowerDouble();
-			++i;
+			super( 2 );
 		}
-		return i < 0 ? 0 : i > 255 ? 255 : i;
+		
+		final private long julia( final double x, final double y )
+		{
+			long i = 0;
+			double v = 0;
+			a.set( x, y );
+			while ( i < maxIterations && v < 4096 )
+			{
+				a.mul( a );
+				a.add( c );
+				v = a.getPowerDouble();
+				++i;
+			}
+			return i < 0 ? 0 : i > 255 ? 255 : i;
+		}
+
+		@Override
+		public LongType get()
+		{
+			t.set( julia( position[ 0 ], position[ 1 ] ) );
+			return t;
+		}
+
+		@Override
+		public JuliaRealRandomAccess copyRealRandomAccess()
+		{
+			return copy();
+		}
+
+		@Override
+		public JuliaRealRandomAccess copy()
+		{
+			final JuliaRealRandomAccess copy = new JuliaRealRandomAccess();
+			copy.setPosition( this );
+			return copy;
+		}
 	}
 
 	@Override
-	public UnsignedByteType get()
+	public int numDimensions()
 	{
-		t.set( julia() );
-		return t;
+		return 2;
 	}
 
 	@Override
-	public JuliaRealRandomAccess copyRealRandomAccess()
+	public JuliaRealRandomAccess realRandomAccess()
 	{
-		return copy();
+		return new JuliaRealRandomAccess();
 	}
 
 	@Override
-	public JuliaRealRandomAccess copy()
+	public JuliaRealRandomAccess realRandomAccess( final RealInterval interval )
 	{
-		final JuliaRealRandomAccess copy = new JuliaRealRandomAccess();
-		copy.setPosition( this );
-		return copy;
+		return realRandomAccess();
 	}
 }

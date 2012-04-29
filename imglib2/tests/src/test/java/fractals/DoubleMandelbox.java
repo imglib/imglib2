@@ -27,10 +27,8 @@
  */
 package fractals;
 
-import net.imglib2.RealInterval;
 import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
-import net.imglib2.RealRandomAccessible;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**
@@ -38,18 +36,13 @@ import net.imglib2.type.numeric.real.DoubleType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class DoubleMandelbox implements RealRandomAccessible< DoubleType >
+public class DoubleMandelbox extends AbstractMandelbox< DoubleType >
 {
-	final protected int n;
-	protected double scale;
-	final protected double[] z;
-	protected long maxIterations;
-	
-	public class MandelboxRealRandomAccess extends RealPoint implements RealRandomAccess< DoubleType >
+	public class DoubleMandelboxRealRandomAccess extends RealPoint implements RealRandomAccess< DoubleType >
 	{
 		final DoubleType t = new DoubleType();
 
-		public MandelboxRealRandomAccess()
+		public DoubleMandelboxRealRandomAccess()
 		{
 			super( DoubleMandelbox.this.n );
 		}
@@ -95,15 +88,15 @@ public class DoubleMandelbox implements RealRandomAccessible< DoubleType >
 		}
 
 		@Override
-		public MandelboxRealRandomAccess copyRealRandomAccess()
+		public DoubleMandelboxRealRandomAccess copyRealRandomAccess()
 		{
 			return copy();
 		}
 
 		@Override
-		public MandelboxRealRandomAccess copy()
+		public DoubleMandelboxRealRandomAccess copy()
 		{
-			final MandelboxRealRandomAccess a = new MandelboxRealRandomAccess();
+			final DoubleMandelboxRealRandomAccess a = new DoubleMandelboxRealRandomAccess();
 			a.setPosition( this );
 			return a;
 		}
@@ -111,10 +104,7 @@ public class DoubleMandelbox implements RealRandomAccessible< DoubleType >
 	
 	public DoubleMandelbox( final int n, final double scale, final long maxIterations )
 	{
-		this.n = n;
-		this.scale = scale;
-		this.maxIterations = maxIterations;
-		this.z = new double[ n ];
+		super( n, scale, maxIterations );
 	}
 	
 	public DoubleMandelbox( final int n, final long maxIterations )
@@ -127,32 +117,9 @@ public class DoubleMandelbox implements RealRandomAccessible< DoubleType >
 		this( n, -1.5, 10 );
 	}
 	
-	public double getScale()
-	{
-		return scale;
-	}
-	
-	public void setScale( final double scale )
-	{
-		this.scale = scale;
-	}
-	
 	@Override
-	public int numDimensions()
+	public DoubleMandelboxRealRandomAccess realRandomAccess()
 	{
-		return n;
+		return new DoubleMandelboxRealRandomAccess();
 	}
-
-	@Override
-	public RealRandomAccess< DoubleType > realRandomAccess()
-	{
-		return new MandelboxRealRandomAccess();
-	}
-
-	@Override
-	public RealRandomAccess< DoubleType > realRandomAccess( final RealInterval interval )
-	{
-		return realRandomAccess();
-	}
-
 }

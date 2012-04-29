@@ -27,95 +27,60 @@
  */
 package fractals;
 
-import net.imglib2.RealPoint;
+import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
-import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.RealRandomAccessible;
 
 /**
  * 
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class Mandelbox extends AbstractMandelbox< LongType >
+abstract public class AbstractMandelbox< T > implements RealRandomAccessible< T >
 {
-	public class MandelboxRealRandomAccess extends RealPoint implements RealRandomAccess< LongType >
+	final protected int n;
+	protected double scale;
+	final protected double[] z;
+	protected long maxIterations;
+	
+	public AbstractMandelbox( final int n, final double scale, final long maxIterations )
 	{
-		final LongType t = new LongType();
-
-		public MandelboxRealRandomAccess()
-		{
-			super( Mandelbox.this.n );
-		}
-
-		@Override
-		public LongType get()
-		{
-			for ( int d = 0; d < n; ++d )
-				z[ d ] = position[ d ];
-			
-			long i = 0;
-			double sum = 0;
-			for ( ; i < maxIterations; ++i )
-			{
-				sum = 0;
-				for ( int d = 0; d < n; ++d )
-				{
-					double p = z[ d ];
-					if ( p > 1 )
-						p = 2 - p;
-					else if ( p < -1 )
-						p = -2 - p;
-					z[ d ] = p;
-					sum += p * p;
-				}
-				
-			    if ( sum < 0.25 )
-			    	for ( int d = 0; d < n; ++d )
-			    		z[ d ] = z[ d ] * 4 * scale + position[ d ];		
-			    else if ( sum < 1 )
-			    	for ( int d = 0; d < n; ++d )
-			    		z[ d ] = ( z[ d ] - sum ) * scale + position[ d ];
-			    else if ( sum > 2 )
-			    	break;
-			}
-		    
-			t.set( i );
-			return t;
-		}
-
-		@Override
-		public MandelboxRealRandomAccess copyRealRandomAccess()
-		{
-			return copy();
-		}
-
-		@Override
-		public MandelboxRealRandomAccess copy()
-		{
-			final MandelboxRealRandomAccess a = new MandelboxRealRandomAccess();
-			a.setPosition( this );
-			return a;
-		}
+		this.n = n;
+		this.scale = scale;
+		this.maxIterations = maxIterations;
+		this.z = new double[ n ];
 	}
 	
-	public Mandelbox( final int n, final double scale, final long maxIterations )
-	{
-		super( n, scale, maxIterations );
-	}
-	
-	public Mandelbox( final int n, final long maxIterations )
+	public AbstractMandelbox( final int n, final long maxIterations )
 	{
 		this( n, -1.5, maxIterations );
 	}
 	
-	public Mandelbox( final int n )
+	public AbstractMandelbox( final int n )
 	{
 		this( n, -1.5, 10 );
 	}
 	
-	@Override
-	public MandelboxRealRandomAccess realRandomAccess()
+	public double getScale()
 	{
-		return new MandelboxRealRandomAccess();
+		return scale;
 	}
+	
+	public void setScale( final double scale )
+	{
+		this.scale = scale;
+	}
+	
+	@Override
+	public int numDimensions()
+	{
+		return n;
+	}
+
+	@Override
+	public RealRandomAccess< T > realRandomAccess( final RealInterval interval )
+	{
+		return realRandomAccess();
+	}
+
 }
