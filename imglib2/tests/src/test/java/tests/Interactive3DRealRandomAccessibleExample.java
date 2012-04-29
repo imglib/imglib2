@@ -24,7 +24,7 @@
  */
 
 package tests;
-import fractals.DoubleMandelbox;
+import fractals.MandelbulbRealRandomAccess;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -43,6 +43,8 @@ import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 
 import net.imglib2.RandomAccessible;
+import net.imglib2.RealInterval;
+import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.ARGBScreenImage;
@@ -55,7 +57,7 @@ import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.integer.LongType;
 
 /**
  * TODO
@@ -640,27 +642,27 @@ public class Interactive3DRealRandomAccessibleExample< T extends NumericType< T 
 		final long maxIterations = 20;
 		
 		new ImageJ();
-//		final RealRandomAccessible< LongType > mandelbulb = new RealRandomAccessible< LongType >()
-//		{
-//			@Override
-//			public int numDimensions()
-//			{
-//				return 3;
-//			}
-//
-//			@Override
-//			public RealRandomAccess< LongType > realRandomAccess()
-//			{
-//				return new MandelbulbRealRandomAccess( maxIterations );
-//			}
-//
-//			@Override
-//			public RealRandomAccess< LongType > realRandomAccess( final RealInterval interval )
-//			{
-//				return realRandomAccess();
-//			}
-//		};
-//		new Interactive3DRealRandomAccessibleExample< LongType >( mandelbulb, new RealARGBConverter< LongType >( 0, maxIterations ) ).run( "" );
+		final RealRandomAccessible< LongType > mandelbulb = new RealRandomAccessible< LongType >()
+		{
+			@Override
+			public int numDimensions()
+			{
+				return 3;
+			}
+
+			@Override
+			public RealRandomAccess< LongType > realRandomAccess()
+			{
+				return new MandelbulbRealRandomAccess( maxIterations );
+			}
+
+			@Override
+			public RealRandomAccess< LongType > realRandomAccess( final RealInterval interval )
+			{
+				return realRandomAccess();
+			}
+		};
+		new Interactive3DRealRandomAccessibleExample< LongType >( mandelbulb, new RealARGBConverter< LongType >( 0, maxIterations ) ).run( "" );
 		
 //		final RealRandomAccessible< DoubleType > doubleMandelbulb = new RealRandomAccessible< DoubleType >()
 //		{
@@ -685,6 +687,6 @@ public class Interactive3DRealRandomAccessibleExample< T extends NumericType< T 
 //		new Interactive3DRealRandomAccessibleExample< DoubleType >( doubleMandelbulb, new RealARGBConverter< DoubleType >( 0, 2 ) ).run( "" );
 		
 //		new Interactive3DRealRandomAccessibleExample< LongType >( new Mandelbox( 3, -1.5, maxIterations ), new RealARGBConverter< LongType >( 0, maxIterations ) ).run( "" );
-		new Interactive3DRealRandomAccessibleExample< DoubleType >( new DoubleMandelbox( 3, 1.5, maxIterations ), new RealARGBConverter< DoubleType >( 0, 1 ) ).run( "" );
+//		new Interactive3DRealRandomAccessibleExample< DoubleType >( new DoubleMandelbox( 3, 1.5, maxIterations ), new RealARGBConverter< DoubleType >( 0, 1 ) ).run( "" );
 	}
 }

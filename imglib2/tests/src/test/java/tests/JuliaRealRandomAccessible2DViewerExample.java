@@ -1,13 +1,11 @@
 package tests;
-import fractals.JuliaRealRandomAccess;
+import fractals.JuliaRealRandomAccessible;
 import ij.ImageJ;
 import ij.ImagePlus;
 
 import java.awt.event.MouseEvent;
 
 import net.imglib2.RandomAccessible;
-import net.imglib2.RealInterval;
-import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.ARGBScreenImage;
@@ -20,7 +18,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.integer.LongType;
 
 public class JuliaRealRandomAccessible2DViewerExample< T extends RealType< T > & NativeType< T > > extends AbstractInteractive2DViewer< T >
 {
@@ -140,32 +138,14 @@ public class JuliaRealRandomAccessible2DViewerExample< T extends RealType< T > &
 		
 		final ComplexDoubleType c = new ComplexDoubleType( -0.4, 0.6 );
 		
-		final RealRandomAccessible< UnsignedByteType > juliaset = new RealRandomAccessible< UnsignedByteType >()
-		{
-			@Override
-			public int numDimensions()
-			{
-				return 2;
-			}
-
-			@Override
-			public RealRandomAccess< UnsignedByteType > realRandomAccess()
-			{
-				return new JuliaRealRandomAccess( c, maxIterations, 4096 );
-			}
-
-			@Override
-			public RealRandomAccess< UnsignedByteType > realRandomAccess( final RealInterval interval )
-			{
-				return realRandomAccess();
-			}
-		};
+		final JuliaRealRandomAccessible juliaset = new JuliaRealRandomAccessible( c, maxIterations, 4096 );
 		
-		final Converter< UnsignedByteType, ARGBType > lut = new Converter< UnsignedByteType, ARGBType >()
+		final Converter< LongType, ARGBType > lut = new Converter< LongType, ARGBType >()
 		{
-			final protected int[] rgb = new int[ 256 ];
+			
+			final protected int[] rgb = new int[ maxIterations + 1 ];
 			{
-				for ( int i = 0; i < 256; ++i )
+				for ( int i = 0; i <= maxIterations; ++i )
 				{
 					final double r = 1.0 - ( double )i / maxIterations;
 					final double g = Math.sin( Math.PI * r );
@@ -178,13 +158,14 @@ public class JuliaRealRandomAccessible2DViewerExample< T extends RealType< T > &
 					rgb[ i ] = ( ( ( ri << 8 ) | gi ) << 8 ) | bi | 0xff000000;
 				}
 			}
+			
 			@Override
-			public void convert( final UnsignedByteType input, final ARGBType output )
+			public void convert( final LongType input, final ARGBType output )
 			{
-				output.set( rgb[ input.get() ] );
+				output.set( rgb[ input.getInteger() ] );
 			}
 		};
 		
-		new JuliaRealRandomAccessible2DViewerExample< UnsignedByteType >( juliaset, lut, c ).run( "" );
+		new JuliaRealRandomAccessible2DViewerExample< LongType >( juliaset, lut, c ).run( "" );
 	}
 }
