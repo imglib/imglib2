@@ -89,6 +89,7 @@ import net.imglib2.ops.parse.token.Exponent;
 import net.imglib2.ops.parse.token.FunctionCall;
 import net.imglib2.ops.parse.token.Greater;
 import net.imglib2.ops.parse.token.GreaterEqual;
+import net.imglib2.ops.parse.token.ImgReference;
 import net.imglib2.ops.parse.token.Int;
 import net.imglib2.ops.parse.token.Less;
 import net.imglib2.ops.parse.token.LessEqual;
@@ -115,8 +116,9 @@ public class Lexer {
 
 	public Lexer() {}
 	
-	public ParseStatus tokenize(String spec, Map<String,Integer> varMap) {
-		
+	public ParseStatus tokenize(
+			String spec, Map<String,Integer> varMap)
+	{
 		List<Token> tokens = new ArrayList<Token>();
 		char[] chars = spec.toCharArray();
 		int i = 0;
@@ -281,7 +283,10 @@ public class Lexer {
 		//constants
 		if (name.equals("E")) return new Real(pos, name, Math.E);
 		if (name.equals("PI")) return new Real(pos, name, Math.PI);
-	
+
+		// image reference
+		if (name.equals("img")) return new ImgReference(pos, name);
+		
 		// logical operations
 		if (name.equals("and")) return new And(pos, name);
 		if (name.equals("or")) return new Or(pos, name);
