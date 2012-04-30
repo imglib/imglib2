@@ -123,9 +123,11 @@ public class EquationParser {
 	*/
 	public ParseStatus equation(List<Token> tokens, int pos) {
 		ParseStatus status1 = term(tokens, pos);
+		if (status1.errMsg != null) return status1;
 		ParseStatus status2 = status1;
 		if (ParseUtils.match(Plus.class, tokens, status1.tokenNumber)) {
 			status2 = term(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -134,6 +136,7 @@ public class EquationParser {
 		}
 		else if (ParseUtils.match(Minus.class, tokens, status1.tokenNumber)) {
 			status2 = term(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -152,9 +155,11 @@ public class EquationParser {
 	*/
 	private ParseStatus term(List<Token> tokens, int pos) {
 		ParseStatus status1 = factor(tokens, pos);
+		if (status1.errMsg != null) return status1;
 		ParseStatus status2 = status1;
 		if (ParseUtils.match(Times.class, tokens, status1.tokenNumber)) {
 			status2 = factor(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -163,6 +168,7 @@ public class EquationParser {
 		}
 		else if (ParseUtils.match(Divide.class, tokens, status1.tokenNumber)) {
 			status2 = factor(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -171,6 +177,7 @@ public class EquationParser {
 		}
 		else if (ParseUtils.match(Mod.class, tokens, status1.tokenNumber)) {
 			status2 = factor(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -186,9 +193,11 @@ public class EquationParser {
 	*/
 	private ParseStatus factor(List<Token> tokens, int pos) {
 		ParseStatus status1 = signedAtom(tokens, pos);
+		if (status1.errMsg != null) return status1;
 		ParseStatus status2 = status1;
 		if (ParseUtils.match(Exponent.class, tokens, status1.tokenNumber)) {
 			status2 = signedAtom(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
