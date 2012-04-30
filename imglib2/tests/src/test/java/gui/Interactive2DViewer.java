@@ -25,6 +25,7 @@
 
 package gui;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import net.imglib2.RandomAccessible;
@@ -51,6 +52,10 @@ public class Interactive2DViewer< T extends NumericType< T > > extends AbstractI
 
 	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
 
+	public Interactive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform )
+	{
+		this( width, height, source, converter, initialTransform, new ArrayList< Object > () );
+	}
 
 	/**
 	 *
