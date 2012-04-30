@@ -261,10 +261,10 @@ public class EquationParser<T extends RealType<T>> {
 		}
 		else if (ParseUtils.match(FunctionCall.class, tokens, pos)) {
 			FunctionCall funcCall = (FunctionCall) tokens.get(pos);
-			if (!ParseUtils.match(OpenParen.class, tokens, pos))
-				ParseUtils.syntaxError(pos, tokens.get(pos),
+			if (!ParseUtils.match(OpenParen.class, tokens, pos+1))
+				ParseUtils.syntaxError(pos+1, tokens.get(pos+1),
 							"Function call definition expected a '('");
-			ParseStatus status = equation(tokens, pos+1);
+			ParseStatus status = equation(tokens, pos+2);
 			if (status.errMsg != null) return status;
 			if (!ParseUtils.match(CloseParen.class, tokens, status.tokenNumber))
 				return ParseUtils.syntaxError(
