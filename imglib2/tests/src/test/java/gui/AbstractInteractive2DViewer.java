@@ -159,6 +159,7 @@ public class AbstractInteractive2DViewer< T extends NumericType< T > > extends A
 		{
 			gui.restoreGui();
 		}
+		System.exit( 0 );
 	}
 
 	@Override
