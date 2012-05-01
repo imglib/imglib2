@@ -55,7 +55,9 @@ import net.imglib2.type.numeric.real.DoubleType;
 /*
  * Grammar
  * 
- * statement = axisNames , equation
+ * statement =
+ *   equation |
+ *   axisNames , equation
  * 
  * axisNames = '[' axes ']'
  *
@@ -98,18 +100,26 @@ public class RealEquationFunctionParser {
 	}
 
 	/*
-	 * statement = axisNames , equation
+	 * statement =
+	 *   equation |
+	 *   axisNames , equation
 	 */
 	private ParseStatus statement(List<Token> tokens) {
-		ParseStatus status = axisNames(tokens, 0);
-		if (status.errMsg != null) return status;
-		if (ParseUtils.match(Comma.class, tokens, status.tokenNumber)) {
-			return eqnParser.equation(tokens, status.tokenNumber+1);
+		// is beginning a set of axisNames?
+		if (ParseUtils.match(OpenRange.class, tokens, 0)) {
+			ParseStatus status = axisNames(tokens, 0);
+			if (status.errMsg != null) return status;
+			if (ParseUtils.match(Comma.class, tokens, status.tokenNumber)) {
+				return eqnParser.equation(tokens, status.tokenNumber+1);
+			}
+			else
+				return ParseUtils.syntaxError(
+						status.tokenNumber, tokens.get(status.tokenNumber),
+						"Expected comma after axis designations");
 		}
-		else
-			return ParseUtils.syntaxError(
-					status.tokenNumber, tokens.get(status.tokenNumber),
-					"Expected comma after axis designations");
+		else { // no variables declared
+			return eqnParser.equation(tokens, 0);
+		}
 	}
 	
 	/* 
