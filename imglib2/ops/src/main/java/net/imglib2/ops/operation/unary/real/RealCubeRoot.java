@@ -40,24 +40,23 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output real number to the natural
- * log of the real component of an input real number.
+ * Sets the real component of an output real number to the cube root of
+ * the real component of an input real number.
  * 
  * @author Barry DeZonia
  */
-public final class RealLog<I extends RealType<I>, O extends RealType<O>>
+public final class RealCubeRoot<I extends RealType<I>, O extends RealType<O>>
 	implements RealUnaryOperation<I,O>
 {
 	@Override
 	public O compute(I x, O output) {
-		double value = Math.log(x.getRealDouble());
-		output.setReal(value);
+		output.setReal(Math.cbrt(x.getRealDouble()));
 		return output;
 	}
 
 	@Override
-	public RealLog<I,O> copy() {
-		return new RealLog<I,O>();
+	public RealCubeRoot<I,O> copy() {
+		return new RealCubeRoot<I,O>();
 	}
 
 }

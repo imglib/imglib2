@@ -40,17 +40,17 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output real number to the natural
+ * Sets the real component of an output real number to the 10-based
  * log of the real component of an input real number.
  * 
  * @author Barry DeZonia
  */
-public final class RealLog<I extends RealType<I>, O extends RealType<O>>
+public final class RealLog10<I extends RealType<I>, O extends RealType<O>>
 	implements RealUnaryOperation<I,O>
 {
 	@Override
 	public O compute(I x, O output) {
-		double value = Math.log(x.getRealDouble());
+		double value = Math.log10(x.getRealDouble());
 		output.setReal(value);
 		return output;
 	}
