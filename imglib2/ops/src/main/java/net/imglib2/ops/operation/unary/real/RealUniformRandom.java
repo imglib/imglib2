@@ -37,21 +37,25 @@
 
 package net.imglib2.ops.operation.unary.real;
 
+import java.util.Random;
+
 import net.imglib2.type.numeric.RealType;
 
 /**
  * Sets the real component of an output real number to a random value between
- * 0 and Math.abs(input real number).
+ * 0 and (input real number).
  * 
  * @author Barry DeZonia
  */
 public final class RealUniformRandom<I extends RealType<I>, O extends RealType<O>>
 	implements RealUnaryOperation<I,O>
 {
+	private Random rng = new Random();
+	
 	@Override
 	public O compute(I x, O output) {
-		double r = Math.random();
-		double value = r * Math.abs(x.getRealDouble());
+		double r = rng.nextDouble();
+		double value = r * x.getRealDouble();
 		output.setReal(value);
 		return output;
 	}
