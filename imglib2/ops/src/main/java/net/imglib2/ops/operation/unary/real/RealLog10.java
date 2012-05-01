@@ -56,8 +56,8 @@ public final class RealLog10<I extends RealType<I>, O extends RealType<O>>
 	}
 
 	@Override
-	public RealLog<I,O> copy() {
-		return new RealLog<I,O>();
+	public RealLog10<I,O> copy() {
+		return new RealLog10<I,O>();
 	}
 
 }
