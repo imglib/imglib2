@@ -62,9 +62,13 @@ import net.imglib2.ops.operation.unary.real.RealCot;
 import net.imglib2.ops.operation.unary.real.RealCoth;
 import net.imglib2.ops.operation.unary.real.RealCsc;
 import net.imglib2.ops.operation.unary.real.RealCsch;
+import net.imglib2.ops.operation.unary.real.RealCubeRoot;
 import net.imglib2.ops.operation.unary.real.RealExp;
 import net.imglib2.ops.operation.unary.real.RealFloor;
+import net.imglib2.ops.operation.unary.real.RealGaussianRandom;
 import net.imglib2.ops.operation.unary.real.RealLog;
+import net.imglib2.ops.operation.unary.real.RealLog10;
+import net.imglib2.ops.operation.unary.real.RealNearestInt;
 import net.imglib2.ops.operation.unary.real.RealRound;
 import net.imglib2.ops.operation.unary.real.RealSec;
 import net.imglib2.ops.operation.unary.real.RealSech;
@@ -77,6 +81,7 @@ import net.imglib2.ops.operation.unary.real.RealSqr;
 import net.imglib2.ops.operation.unary.real.RealSqrt;
 import net.imglib2.ops.operation.unary.real.RealTan;
 import net.imglib2.ops.operation.unary.real.RealTanh;
+import net.imglib2.ops.operation.unary.real.RealUniformRandom;
 import net.imglib2.ops.parse.token.And;
 import net.imglib2.ops.parse.token.Assign;
 import net.imglib2.ops.parse.token.CloseParen;
@@ -89,6 +94,7 @@ import net.imglib2.ops.parse.token.Exponent;
 import net.imglib2.ops.parse.token.FunctionCall;
 import net.imglib2.ops.parse.token.Greater;
 import net.imglib2.ops.parse.token.GreaterEqual;
+import net.imglib2.ops.parse.token.ImgReference;
 import net.imglib2.ops.parse.token.Int;
 import net.imglib2.ops.parse.token.Less;
 import net.imglib2.ops.parse.token.LessEqual;
@@ -115,19 +121,24 @@ public class Lexer {
 
 	public Lexer() {}
 	
-	public ParseStatus tokenize(String spec, Map<String,Integer> varMap) {
-		
+	public ParseStatus tokenize(
+			String spec, Map<String,Integer> varMap)
+	{
 		List<Token> tokens = new ArrayList<Token>();
 		char[] chars = spec.toCharArray();
 		int i = 0;
 		while (i < chars.length) {
 			Character ch = chars[i];
 			if (Character.isLetter(ch)) {
-				String name = "";
-				while (i < chars.length && Character.isLetter(chars[i])) {
-					name += chars[i];
+				StringBuilder builder = new StringBuilder();
+				while (i < chars.length &&
+						(Character.isLetter(chars[i]) ||
+							Character.isDigit(chars[i])))
+				{
+					builder.append(chars[i]);
 					i++;
 				}
+				String name = builder.toString();
 				Token token = reservedWordLookup(name, i);
 				if (token != null)
 					tokens.add(token);
@@ -136,10 +147,10 @@ public class Lexer {
 			}
 			else if (Character.isDigit(ch)) {
 				int start = i;
-				String numStr = "";
+				StringBuilder builder = new StringBuilder();
 				boolean isReal = false;
 				while (i < chars.length && (Character.isDigit(chars[i]))) {
-					numStr += chars[i];
+					builder.append(chars[i]);
 					i++;
 					char next = (i < chars.length) ? chars[i] : 0;
 					char next2 = (i < chars.length-1) ? chars[i+1] : 0;
@@ -149,10 +160,11 @@ public class Lexer {
 							return lexicalError(spec, i, chars[i]);
 						// else valid decimal
 						isReal = true;
-						numStr += ".";
+						builder.append(".");
 						i++;
 					}
 				}
+				String numStr = builder.toString();
 				if (isReal)
 					tokens.add(new Real(start, numStr));
 				else
@@ -281,7 +293,10 @@ public class Lexer {
 		//constants
 		if (name.equals("E")) return new Real(pos, name, Math.E);
 		if (name.equals("PI")) return new Real(pos, name, Math.PI);
-	
+
+		// image reference
+		if (name.equals("img")) return new ImgReference(pos, name);
+		
 		// logical operations
 		if (name.equals("and")) return new And(pos, name);
 		if (name.equals("or")) return new Or(pos, name);
@@ -304,6 +319,7 @@ public class Lexer {
 		if (name.equals("asinh")) op = new RealArcsinh<DoubleType,DoubleType>();
 		if (name.equals("atan")) op = new RealArctan<DoubleType,DoubleType>();
 		if (name.equals("atanh")) op = new RealArctanh<DoubleType,DoubleType>();
+		if (name.equals("cbrt")) op = new RealCubeRoot<DoubleType,DoubleType>();
 		if (name.equals("ceil")) op = new RealCeil<DoubleType,DoubleType>();
 		if (name.equals("cos")) op = new RealCos<DoubleType,DoubleType>();
 		if (name.equals("cosh")) op = new RealCosh<DoubleType,DoubleType>();
@@ -313,7 +329,11 @@ public class Lexer {
 		if (name.equals("csch")) op = new RealCsch<DoubleType,DoubleType>();
 		if (name.equals("exp")) op = new RealExp<DoubleType,DoubleType>();
 		if (name.equals("floor")) op = new RealFloor<DoubleType,DoubleType>();
+		if (name.equals("gauss")) op = new RealGaussianRandom<DoubleType,DoubleType>();
 		if (name.equals("log")) op = new RealLog<DoubleType,DoubleType>();
+		if (name.equals("log10")) op = new RealLog10<DoubleType,DoubleType>();
+		if (name.equals("rand")) op = new RealUniformRandom<DoubleType,DoubleType>();
+		if (name.equals("rint")) op = new RealNearestInt<DoubleType,DoubleType>();
 		if (name.equals("round")) op = new RealRound<DoubleType,DoubleType>();
 		if (name.equals("sec")) op = new RealSec<DoubleType,DoubleType>();
 		if (name.equals("sech")) op = new RealSech<DoubleType,DoubleType>();

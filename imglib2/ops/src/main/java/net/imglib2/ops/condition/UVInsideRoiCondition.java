@@ -34,59 +34,39 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+package net.imglib2.ops.condition;
+
+import net.imglib2.RealRandomAccess;
+import net.imglib2.ops.Condition;
+import net.imglib2.roi.RegionOfInterest;
+import net.imglib2.type.logic.BitType;
 
 /**
  * 
- * @param <T>
+ * @author Barry DeZonia
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
-{
-	final protected T value;
-	
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
-	{
-		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
-	}
-	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f );
-		this.value = value;
-	}
+public class UVInsideRoiCondition implements Condition<long[]> {
 
-	/* Sampler */
+	private final RegionOfInterest roi;
+	private final RealRandomAccess<BitType> accessor;
 	
-	@Override
-	final public T get()
-	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		else
-			return sampler.get();
+	public UVInsideRoiCondition(RegionOfInterest roi) {
+		this.roi = roi;
+		this.accessor = roi.realRandomAccess();
 	}
 	
 	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue< T >( this );
+	public boolean isTrue(long[] val) {
+		accessor.setPosition(val[0],0); // U == index 0
+		accessor.setPosition(val[1],1); // V == index 1
+		return accessor.get().get();
 	}
-
-
-	/* RandomAccess */
 
 	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
-	{
-		return copy();
+	public UVInsideRoiCondition copy() {
+		return new UVInsideRoiCondition(roi);
 	}
+	
 }

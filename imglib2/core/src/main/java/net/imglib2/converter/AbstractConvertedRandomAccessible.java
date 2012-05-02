@@ -34,59 +34,33 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
+package net.imglib2.converter;
 
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
 
 /**
- * 
- * @param <T>
+ * TODO
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+abstract public class AbstractConvertedRandomAccessible< A, B > implements RandomAccessible< B >
 {
-	final protected T value;
-	
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
-	{
-		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
-	}
-	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f );
-		this.value = value;
-	}
+	final protected RandomAccessible< A > source;
 
-	/* Sampler */
-	
-	@Override
-	final public T get()
+	public AbstractConvertedRandomAccessible( final RandomAccessible< A > source )
 	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		else
-			return sampler.get();
+		this.source = source;
 	}
-	
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue< T >( this );
-	}
-
-
-	/* RandomAccess */
 
 	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
+	public int numDimensions()
 	{
-		return copy();
+		return source.numDimensions();
 	}
+
+	@Override
+	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
+
+	@Override
+	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( final Interval interval );
 }

@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.imglib2.img.Img;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Tuple2;
 import net.imglib2.ops.parse.token.CloseRange;
@@ -48,12 +49,15 @@ import net.imglib2.ops.parse.token.Comma;
 import net.imglib2.ops.parse.token.OpenRange;
 import net.imglib2.ops.parse.token.Token;
 import net.imglib2.ops.parse.token.Variable;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /*
  * Grammar
  * 
- * statement = axisNames , equation
+ * statement =
+ *   equation |
+ *   axisNames , equation
  * 
  * axisNames = '[' axes ']'
  *
@@ -77,9 +81,11 @@ public class RealEquationFunctionParser {
 	private Map<String, Integer> varMap;
 	private EquationParser eqnParser;
 	
-	public Tuple2<Function<long[],DoubleType>,String> parse(String specification) {
+	public Tuple2<Function<long[],DoubleType>,String>
+		parse(String specification, Img<? extends RealType<?>> img)
+	{
 		varMap = new HashMap<String,Integer>();
-		eqnParser = new EquationParser(varMap);
+		eqnParser = new EquationParser(varMap, img);
 		Lexer lexer = new Lexer();
 		ParseStatus lexResult = lexer.tokenize(specification, varMap);
 		if (lexResult.errMsg != null) {
@@ -94,18 +100,26 @@ public class RealEquationFunctionParser {
 	}
 
 	/*
-	 * statement = axisNames , equation
+	 * statement =
+	 *   equation |
+	 *   axisNames , equation
 	 */
 	private ParseStatus statement(List<Token> tokens) {
-		ParseStatus status = axisNames(tokens, 0);
-		if (status.errMsg != null) return status;
-		if (ParseUtils.match(Comma.class, tokens, status.tokenNumber)) {
-			return eqnParser.equation(tokens, status.tokenNumber+1);
+		// is beginning a set of axisNames?
+		if (ParseUtils.match(OpenRange.class, tokens, 0)) {
+			ParseStatus status = axisNames(tokens, 0);
+			if (status.errMsg != null) return status;
+			if (ParseUtils.match(Comma.class, tokens, status.tokenNumber)) {
+				return eqnParser.equation(tokens, status.tokenNumber+1);
+			}
+			else
+				return ParseUtils.syntaxError(
+						status.tokenNumber, tokens.get(status.tokenNumber),
+						"Expected comma after axis designations");
 		}
-		else
-			return ParseUtils.syntaxError(
-					status.tokenNumber, tokens.get(status.tokenNumber),
-					"Expected comma after axis designations");
+		else { // no variables declared
+			return eqnParser.equation(tokens, 0);
+		}
 	}
 	
 	/* 

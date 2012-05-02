@@ -34,130 +34,48 @@
  * #L%
  */
 
-package net.imglib2.converter;
+package net.imglib2.converter.readwrite;
 
 import net.imglib2.Interval;
-import net.imglib2.Positionable;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealPositionable;
-import net.imglib2.converter.sampler.SamplerConverter;
+import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccessible;
+import net.imglib2.converter.AbstractConvertedIterableRandomAccessibleInterval;
 
 /**
  * TODO
  *
  */
-public class ConvertedRandomAccessibleInterval< A, B > implements RandomAccessibleInterval< B >
+public class WriteConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAccessible< A > & IterableInterval< A > > extends AbstractConvertedIterableRandomAccessibleInterval< A, B, S >
 {
-	private final RandomAccessibleInterval< A > source;
-
 	private final SamplerConverter< A, B > converter;
 
-	public ConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source, final SamplerConverter< A, B > converter )
+	public WriteConvertedIterableRandomAccessibleInterval( final S source, final SamplerConverter< A, B > converter )
 	{
-		this.source = source;
+		super( source );
 		this.converter = converter;
 	}
 
 	@Override
-	public int numDimensions()
+	public WriteConvertedRandomAccess< A, B > randomAccess()
 	{
-		return source.numDimensions();
+		return new WriteConvertedRandomAccess< A, B >( source.randomAccess(), converter );
 	}
 
 	@Override
-	public RandomAccess< B > randomAccess()
+	public WriteConvertedRandomAccess< A, B > randomAccess( final Interval interval )
 	{
-		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess() );
+		return new WriteConvertedRandomAccess< A, B >( source.randomAccess( interval ), converter );
 	}
 
 	@Override
-	public RandomAccess< B > randomAccess( Interval interval )
+	public WriteConvertedCursor< A, B > cursor()
 	{
-		return new ConvertedRandomAccess< A, B >( converter, source.randomAccess( interval ) );
+		return new WriteConvertedCursor< A, B >( source.cursor(), converter );
 	}
 
 	@Override
-	public long min( int d )
+	public WriteConvertedCursor< A, B > localizingCursor()
 	{
-		return source.min( d );
-	}
-
-	@Override
-	public void min( long[] min )
-	{
-		source.min( min );
-	}
-
-	@Override
-	public void min( Positionable min )
-	{
-		source.min( min );
-	}
-
-	@Override
-	public long max( int d )
-	{
-		return source.max( d );
-	}
-
-	@Override
-	public void max( long[] max )
-	{
-		source.max( max );
-	}
-
-	@Override
-	public void max( Positionable max )
-	{
-		source.max( max );
-	}
-
-	@Override
-	public void dimensions( long[] dimensions )
-	{
-		source.dimensions( dimensions );
-	}
-
-	@Override
-	public long dimension( int d )
-	{
-		return source.dimension( d );
-	}
-
-	@Override
-	public double realMin( int d )
-	{
-		return source.realMin( d );
-	}
-
-	@Override
-	public void realMin( double[] min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public void realMin( RealPositionable min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public double realMax( int d )
-	{
-		return source.realMax( d );
-	}
-
-	@Override
-	public void realMax( double[] max )
-	{
-		source.realMax( max );
-	}
-
-	@Override
-	public void realMax( RealPositionable max )
-	{
-		source.realMax( max );
+		return new WriteConvertedCursor< A, B >( source.localizingCursor(), converter );
 	}
 }

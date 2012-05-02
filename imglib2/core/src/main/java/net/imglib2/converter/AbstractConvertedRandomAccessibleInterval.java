@@ -34,55 +34,119 @@
  * #L%
  */
 
-package net.imglib2.converter.sampler;
+package net.imglib2.converter;
 
-import net.imglib2.Sampler;
-import net.imglib2.img.basictypeaccess.FloatAccess;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.Interval;
+import net.imglib2.Positionable;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealPositionable;
 
 /**
  * TODO
  *
  */
-public final class RealFloatSamplerConverter< R extends RealType< R > > implements SamplerConverter< R, FloatType >
+abstract public class AbstractConvertedRandomAccessibleInterval< A, B > implements RandomAccessibleInterval< B >
 {
-	@Override
-	public FloatType convert( Sampler< R > sampler )
+	final protected RandomAccessibleInterval< A > source;
+
+	public AbstractConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source )
 	{
-		return new FloatType( new RealConvertingFloatAccess< R >( sampler ) );
+		this.source = source;
 	}
 
-	private static final class RealConvertingFloatAccess< R extends RealType< R > > implements FloatAccess
+	@Override
+	public int numDimensions()
 	{
-		private final Sampler< R > sampler;
+		return source.numDimensions();
+	}
 
-		private RealConvertingFloatAccess( final Sampler< R > sampler )
-		{
-			this.sampler = sampler;
-		}
+	@Override
+	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
 
-		@Override
-		public void close() {}
+	@Override
+	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( final Interval interval );
 
-		/**
-		 * This is only intended to work with FloatType!
-		 * We ignore index!!!
-		 */
-		@Override
-		public float getValue( int index )
-		{
-			return sampler.get().getRealFloat();
-		}
+	@Override
+	public long min( final int d )
+	{
+		return source.min( d );
+	}
 
-		/**
-		 * This is only intended to work with FloatType!
-		 * We ignore index!!!
-		 */
-		@Override
-		public void setValue( int index, float value )
-		{
-			sampler.get().setReal( value );
-		}
+	@Override
+	public void min( final long[] min )
+	{
+		source.min( min );
+	}
+
+	@Override
+	public void min( final Positionable min )
+	{
+		source.min( min );
+	}
+
+	@Override
+	public long max( final int d )
+	{
+		return source.max( d );
+	}
+
+	@Override
+	public void max( final long[] max )
+	{
+		source.max( max );
+	}
+
+	@Override
+	public void max( final Positionable max )
+	{
+		source.max( max );
+	}
+
+	@Override
+	public void dimensions( final long[] dimensions )
+	{
+		source.dimensions( dimensions );
+	}
+
+	@Override
+	public long dimension( final int d )
+	{
+		return source.dimension( d );
+	}
+
+	@Override
+	public double realMin( final int d )
+	{
+		return source.realMin( d );
+	}
+
+	@Override
+	public void realMin( final double[] min )
+	{
+		source.realMin( min );
+	}
+
+	@Override
+	public void realMin( final RealPositionable min )
+	{
+		source.realMin( min );
+	}
+
+	@Override
+	public double realMax( final int d )
+	{
+		return source.realMax( d );
+	}
+
+	@Override
+	public void realMax( final double[] max )
+	{
+		source.realMax( max );
+	}
+
+	@Override
+	public void realMax( final RealPositionable max )
+	{
+		source.realMax( max );
 	}
 }

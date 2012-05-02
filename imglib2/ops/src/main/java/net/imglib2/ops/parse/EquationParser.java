@@ -40,10 +40,12 @@ package net.imglib2.ops.parse;
 import java.util.List;
 import java.util.Map;
 
+import net.imglib2.img.Img;
 import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
+import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealIndexFunction;
 import net.imglib2.ops.operation.binary.real.RealAdd;
 import net.imglib2.ops.operation.binary.real.RealDivide;
@@ -54,6 +56,7 @@ import net.imglib2.ops.parse.token.CloseParen;
 import net.imglib2.ops.parse.token.Divide;
 import net.imglib2.ops.parse.token.Exponent;
 import net.imglib2.ops.parse.token.FunctionCall;
+import net.imglib2.ops.parse.token.ImgReference;
 import net.imglib2.ops.parse.token.Int;
 import net.imglib2.ops.parse.token.Minus;
 import net.imglib2.ops.parse.token.Mod;
@@ -63,6 +66,7 @@ import net.imglib2.ops.parse.token.Real;
 import net.imglib2.ops.parse.token.Times;
 import net.imglib2.ops.parse.token.Token;
 import net.imglib2.ops.parse.token.Variable;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /* Grammar
@@ -88,6 +92,7 @@ signedAtom
 
 atom =
 identifier |
+"img" |
 function “(“ equation “)” |
 num |
 “(“ equation “)”
@@ -107,12 +112,14 @@ num = real | int | “E” | “PI”
  * @author Barry DeZonia
  *
  */
-public class EquationParser {
+public class EquationParser<T extends RealType<T>> {
 	
 	private Map<String,Integer> varMap;
+	private Img<T> img;
 	
-	public EquationParser(Map<String,Integer> varMap) {
+	public EquationParser(Map<String,Integer> varMap, Img<T> img) {
 		this.varMap = varMap;
+		this.img = img;
 	}
 	
 	/*
@@ -123,9 +130,11 @@ public class EquationParser {
 	*/
 	public ParseStatus equation(List<Token> tokens, int pos) {
 		ParseStatus status1 = term(tokens, pos);
+		if (status1.errMsg != null) return status1;
 		ParseStatus status2 = status1;
 		if (ParseUtils.match(Plus.class, tokens, status1.tokenNumber)) {
 			status2 = term(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -134,6 +143,7 @@ public class EquationParser {
 		}
 		else if (ParseUtils.match(Minus.class, tokens, status1.tokenNumber)) {
 			status2 = term(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -152,9 +162,11 @@ public class EquationParser {
 	*/
 	private ParseStatus term(List<Token> tokens, int pos) {
 		ParseStatus status1 = factor(tokens, pos);
+		if (status1.errMsg != null) return status1;
 		ParseStatus status2 = status1;
 		if (ParseUtils.match(Times.class, tokens, status1.tokenNumber)) {
 			status2 = factor(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -163,6 +175,7 @@ public class EquationParser {
 		}
 		else if (ParseUtils.match(Divide.class, tokens, status1.tokenNumber)) {
 			status2 = factor(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -171,6 +184,7 @@ public class EquationParser {
 		}
 		else if (ParseUtils.match(Mod.class, tokens, status1.tokenNumber)) {
 			status2 = factor(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -186,9 +200,11 @@ public class EquationParser {
 	*/
 	private ParseStatus factor(List<Token> tokens, int pos) {
 		ParseStatus status1 = signedAtom(tokens, pos);
+		if (status1.errMsg != null) return status1;
 		ParseStatus status2 = status1;
 		if (ParseUtils.match(Exponent.class, tokens, status1.tokenNumber)) {
 			status2 = signedAtom(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
@@ -212,7 +228,7 @@ public class EquationParser {
 			ParseStatus status = atom(tokens, pos+1);
 			if (status.errMsg != null) return status;
 			ConstantRealFunction<long[], DoubleType> constant =
-				new ConstantRealFunction<long[], DoubleType>(new DoubleType(), -1);
+				new ConstantRealFunction<long[],DoubleType>(new DoubleType(),-1);
 			status.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					constant, status.function,
@@ -245,10 +261,10 @@ public class EquationParser {
 		}
 		else if (ParseUtils.match(FunctionCall.class, tokens, pos)) {
 			FunctionCall funcCall = (FunctionCall) tokens.get(pos);
-			if (!ParseUtils.match(OpenParen.class, tokens, pos))
-				ParseUtils.syntaxError(pos, tokens.get(pos),
+			if (!ParseUtils.match(OpenParen.class, tokens, pos+1))
+				ParseUtils.syntaxError(pos+1, tokens.get(pos+1),
 							"Function call definition expected a '('");
-			ParseStatus status = equation(tokens, pos+1);
+			ParseStatus status = equation(tokens, pos+2);
 			if (status.errMsg != null) return status;
 			if (!ParseUtils.match(CloseParen.class, tokens, status.tokenNumber))
 				return ParseUtils.syntaxError(
@@ -265,8 +281,21 @@ public class EquationParser {
 			ParseStatus status = equation(tokens, pos+1);
 			if (status.errMsg != null) return status;
 			if (!ParseUtils.match(CloseParen.class, tokens, status.tokenNumber))
-				return ParseUtils.syntaxError(status.tokenNumber, tokens.get(status.tokenNumber), "Expected a ')'");
+				return ParseUtils.syntaxError(
+						status.tokenNumber, tokens.get(status.tokenNumber),
+						"Expected a ')'");
 			status.tokenNumber++;
+			return status;
+		}
+		else if (ParseUtils.match(ImgReference.class, tokens, pos)) {
+			if (img == null)
+				return ParseUtils.syntaxError(
+						pos, tokens.get(pos),
+						"IMG reference not allowed in this context");
+			ParseStatus status = new ParseStatus();
+			status.tokenNumber = pos+1;
+			status.function =
+				new RealImageFunction<T, DoubleType>(img, new DoubleType());
 			return status;
 		}
 		else
@@ -280,27 +309,35 @@ public class EquationParser {
 		if (ParseUtils.match(Real.class, tokens, pos)) {
 			Real r = (Real) tokens.get(pos);
 			ParseStatus status = new ParseStatus();
-			status.function = new ConstantRealFunction<long[],DoubleType>(new DoubleType(),r.getValue());
+			status.function =
+				new ConstantRealFunction<long[],DoubleType>(
+						new DoubleType(),r.getValue());
 			status.tokenNumber = pos + 1;
 			return status;
 		}
 		else if (ParseUtils.match(Int.class, tokens, pos)) {
 			Int i = (Int) tokens.get(pos);
 			ParseStatus status = new ParseStatus();
-			status.function = new ConstantRealFunction<long[],DoubleType>(new DoubleType(),i.getValue());
+			status.function =
+				new ConstantRealFunction<long[],DoubleType>(
+						new DoubleType(),i.getValue());
 			status.tokenNumber = pos + 1;
 			return status;
 		}
 		else
-			return ParseUtils.syntaxError(pos, tokens.get(pos), "Expected a number.");
+			return ParseUtils.syntaxError(
+					pos, tokens.get(pos), "Expected a number.");
 	}
 	
 	// not a great function. will not make public.
 	
-	private class RealMod implements BinaryOperation<DoubleType, DoubleType, DoubleType> {
-
+	private class RealMod
+		implements BinaryOperation<DoubleType, DoubleType, DoubleType>
+	{
 		@Override
-		public DoubleType compute(DoubleType input1, DoubleType input2, DoubleType output) {
+		public DoubleType
+			compute(DoubleType input1, DoubleType input2, DoubleType output)
+		{
 			long value = ((long) input1.get()) % ((long) input2.get());
 			output.set(value);
 			return output;

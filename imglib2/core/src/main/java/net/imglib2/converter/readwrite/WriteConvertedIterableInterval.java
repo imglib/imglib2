@@ -34,59 +34,34 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
+package net.imglib2.converter.readwrite;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+import net.imglib2.IterableInterval;
+import net.imglib2.converter.AbstractConvertedIterableInterval;
 
 /**
- * 
- * @param <T>
+ * TODO
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+public class WriteConvertedIterableInterval< A, B > extends AbstractConvertedIterableInterval< A, B >
 {
-	final protected T value;
-	
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
-	{
-		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
-	}
-	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f );
-		this.value = value;
-	}
+	private final SamplerConverter< A, B > converter;
 
-	/* Sampler */
-	
-	@Override
-	final public T get()
+	public WriteConvertedIterableInterval( final IterableInterval< A > source, final SamplerConverter< A, B > converter )
 	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		else
-			return sampler.get();
+		super( source );
+		this.converter = converter;
 	}
-	
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue< T >( this );
-	}
-
-
-	/* RandomAccess */
 
 	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
+	public WriteConvertedCursor< A, B > cursor()
 	{
-		return copy();
+		return new WriteConvertedCursor< A, B >( source.cursor(), converter );
+	}
+
+	@Override
+	public WriteConvertedCursor< A, B > localizingCursor()
+	{
+		return new WriteConvertedCursor< A, B >( source.localizingCursor(), converter );
 	}
 }

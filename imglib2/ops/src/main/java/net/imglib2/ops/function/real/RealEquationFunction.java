@@ -37,6 +37,7 @@
 
 package net.imglib2.ops.function.real;
 
+import net.imglib2.img.Img;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.Tuple2;
 import net.imglib2.ops.parse.RealEquationFunctionParser;
@@ -60,18 +61,20 @@ public class RealEquationFunction<T extends RealType<T>>
 	private final Function<long[], DoubleType> eqnFunc;
 	private final DoubleType tmp;
 	private final T factory;
+	private final Img<T> img;
 	
-	public RealEquationFunction(String specification, T type) {
+	public RealEquationFunction(String specification, T type, Img<T> img) {
 		final RealEquationFunctionParser parser =
 				new RealEquationFunctionParser();
 		final Tuple2<Function<long[],DoubleType>,String> result =
-				parser.parse(specification);
+				parser.parse(specification, img);
 		if (result.get2() != null)
 			throw new IllegalArgumentException(result.get2());
 		this.eqnFunc = result.get1();
 		this.origSpec = specification;
 		this.tmp = new DoubleType();
 		this.factory = type;
+		this.img = img;
 	}
 
 	@Override
@@ -87,7 +90,7 @@ public class RealEquationFunction<T extends RealType<T>>
 
 	@Override
 	public RealEquationFunction<T> copy() {
-		return new RealEquationFunction<T>(origSpec, createOutput());
+		return new RealEquationFunction<T>(origSpec, createOutput(), img);
 	}
 
 }

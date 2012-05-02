@@ -34,59 +34,37 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
+package net.imglib2.converter.readwrite;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+import net.imglib2.RandomAccess;
+import net.imglib2.converter.AbstractConvertedRandomAccess;
 
 /**
- * 
- * @param <T>
+ * TODO
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+public final class WriteConvertedRandomAccess< A, B > extends AbstractConvertedRandomAccess< A, B >
 {
-	final protected T value;
-	
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
-	{
-		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
-	}
-	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f );
-		this.value = value;
-	}
+	private final SamplerConverter< A, B > converter;
 
-	/* Sampler */
-	
-	@Override
-	final public T get()
-	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		else
-			return sampler.get();
-	}
-	
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue< T >( this );
-	}
+	private final B converted;
 
-
-	/* RandomAccess */
+	public WriteConvertedRandomAccess( final RandomAccess< A > source, final SamplerConverter< A, B > converter )
+	{
+		super( source );
+		this.converter = converter;
+		this.converted = converter.convert( source );
+	}
 
 	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
+	public B get()
 	{
-		return copy();
+		return converted;
+	}
+
+	@Override
+	public WriteConvertedRandomAccess< A, B > copy()
+	{
+		return new WriteConvertedRandomAccess< A, B >( ( RandomAccess< A > ) source.copy(), converter );
 	}
 }

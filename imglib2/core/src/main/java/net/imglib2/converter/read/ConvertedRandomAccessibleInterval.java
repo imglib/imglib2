@@ -34,59 +34,39 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
+package net.imglib2.converter.read;
 
 import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.converter.AbstractConvertedRandomAccessibleInterval;
+import net.imglib2.converter.Converter;
 import net.imglib2.type.Type;
 
 /**
- * 
- * @param <T>
+ * TODO
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+public class ConvertedRandomAccessibleInterval< A, B extends Type< B > > extends AbstractConvertedRandomAccessibleInterval< A, B >
 {
-	final protected T value;
-	
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
-	{
-		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
-	}
-	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f );
-		this.value = value;
-	}
+	final protected Converter< A, B > converter;
+	final protected B converted;
 
-	/* Sampler */
-	
-	@Override
-	final public T get()
+	public ConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source, final Converter< A, B > converter, final B b )
 	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		else
-			return sampler.get();
+		super( source );
+		this.converter = converter;
+		this.converted = b.copy();
 	}
-	
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue< T >( this );
-	}
-
-
-	/* RandomAccess */
 
 	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
+	public ConvertedRandomAccess< A, B > randomAccess()
 	{
-		return copy();
+		return new ConvertedRandomAccess< A, B >( source.randomAccess(), converter, converted );
+	}
+
+	@Override
+	public ConvertedRandomAccess< A, B > randomAccess( final Interval interval )
+	{
+		return new ConvertedRandomAccess< A, B >( source.randomAccess( interval ), converter, converted );
 	}
 }

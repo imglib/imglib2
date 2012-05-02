@@ -34,59 +34,29 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+package net.imglib2.ops.operation.unary.real;
+
+import net.imglib2.type.numeric.RealType;
 
 /**
+ * Sets the real component of an output real number to the cube root of
+ * the real component of an input real number.
  * 
- * @param <T>
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * @author Barry DeZonia
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+public final class RealCubeRoot<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
 {
-	final protected T value;
-	
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
-	{
-		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
-	}
-	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f );
-		this.value = value;
-	}
-
-	/* Sampler */
-	
 	@Override
-	final public T get()
-	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		else
-			return sampler.get();
+	public O compute(I x, O output) {
+		output.setReal(Math.cbrt(x.getRealDouble()));
+		return output;
 	}
-	
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue< T >( this );
-	}
-
-
-	/* RandomAccess */
 
 	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
-	{
-		return copy();
+	public RealCubeRoot<I,O> copy() {
+		return new RealCubeRoot<I,O>();
 	}
+
 }

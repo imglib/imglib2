@@ -34,59 +34,55 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
+package net.imglib2.converter.readwrite;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+import net.imglib2.Sampler;
+import net.imglib2.img.basictypeaccess.DoubleAccess;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.DoubleType;
 
 /**
- * 
- * @param <T>
+ * TODO
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+public final class RealDoubleSamplerConverter< R extends RealType< R > > implements SamplerConverter< R, DoubleType >
 {
-	final protected T value;
-	
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
-	{
-		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
-	}
-	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f );
-		this.value = value;
-	}
-
-	/* Sampler */
-	
 	@Override
-	final public T get()
+	public DoubleType convert( Sampler< R > sampler )
 	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		else
-			return sampler.get();
-	}
-	
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue< T >( this );
+		return new DoubleType( new RealConvertingDoubleAccess< R >( sampler ) );
 	}
 
-
-	/* RandomAccess */
-
-	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
+	private static final class RealConvertingDoubleAccess< R extends RealType< R > > implements DoubleAccess
 	{
-		return copy();
+		private final Sampler< R > sampler;
+
+		private RealConvertingDoubleAccess( final Sampler< R > sampler )
+		{
+			this.sampler = sampler;
+		}
+
+		@Override
+		public void close() {}
+
+		/**
+		 * This is only intended to work with DoubleType!
+		 * We ignore index!!!
+		 */
+		@Override
+		public double getValue( int index )
+		{
+			return sampler.get().getRealDouble();
+		}
+
+		/**
+		 * This is only intended to work with DoubleType!
+		 * We ignore index!!!
+		 */
+		@Override
+		public void setValue( int index, double value )
+		{
+			sampler.get().setReal( value );
+		}
 	}
 }

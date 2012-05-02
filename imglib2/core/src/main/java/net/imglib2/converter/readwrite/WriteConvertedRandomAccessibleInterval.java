@@ -34,136 +34,35 @@
  * #L%
  */
 
-package net.imglib2.converter;
+package net.imglib2.converter.readwrite;
 
-import net.imglib2.Cursor;
-import net.imglib2.converter.sampler.SamplerConverter;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.converter.AbstractConvertedRandomAccessibleInterval;
 
 /**
  * TODO
  *
  */
-public class ConvertedCursor< A, B > implements Cursor< B >
+public class WriteConvertedRandomAccessibleInterval< A, B > extends AbstractConvertedRandomAccessibleInterval< A, B >
 {
 	private final SamplerConverter< A, B > converter;
 
-	private final Cursor< A > source;
-
-	private final B converted;
-
-	public ConvertedCursor( final SamplerConverter< A, B > converter, final Cursor< A > source )
+	public WriteConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source, final SamplerConverter< A, B > converter )
 	{
+		super( source );
 		this.converter = converter;
-		this.source = source;
-		this.converted = converter.convert( source );
 	}
 
 	@Override
-	public void localize( int[] position )
+	public WriteConvertedRandomAccess< A, B > randomAccess()
 	{
-		source.localize( position );
+		return new WriteConvertedRandomAccess< A, B >( source.randomAccess(), converter );
 	}
 
 	@Override
-	public void localize( long[] position )
+	public WriteConvertedRandomAccess< A, B > randomAccess( final Interval interval )
 	{
-		source.localize( position );
-	}
-
-	@Override
-	public int getIntPosition( int d )
-	{
-		return source.getIntPosition( d );
-	}
-
-	@Override
-	public long getLongPosition( int d )
-	{
-		return source.getLongPosition( d );
-	}
-
-	@Override
-	public void localize( float[] position )
-	{
-		source.localize( position );
-	}
-
-	@Override
-	public void localize( double[] position )
-	{
-		source.localize( position );
-	}
-
-	@Override
-	public float getFloatPosition( int d )
-	{
-		return source.getFloatPosition( d );
-	}
-
-	@Override
-	public double getDoublePosition( int d )
-	{
-		return source.getDoublePosition( d );
-	}
-
-	@Override
-	public int numDimensions()
-	{
-		return source.numDimensions();
-	}
-
-	@Override
-	public void jumpFwd( long steps )
-	{
-		source.jumpFwd( steps );
-	}
-
-	@Override
-	public void fwd()
-	{
-		source.fwd();
-	}
-
-	@Override
-	public void reset()
-	{
-		source.reset();
-	}
-
-	@Override
-	public boolean hasNext()
-	{
-		return source.hasNext();
-	}
-
-	@Override
-	public B next()
-	{
-		fwd();
-		return get();
-	}
-
-	@Override
-	public void remove()
-	{
-		source.remove();
-	}
-
-	@Override
-	public B get()
-	{
-		return converted;
-	}
-
-	@Override
-	public ConvertedCursor< A, B > copy()
-	{
-		return new ConvertedCursor< A, B >( converter, ( Cursor< A > ) source.copy() );
-	}
-
-	@Override
-	public ConvertedCursor< A, B > copyCursor()
-	{
-		return copy();
+		return new WriteConvertedRandomAccess< A, B >( source.randomAccess( interval ), converter );
 	}
 }

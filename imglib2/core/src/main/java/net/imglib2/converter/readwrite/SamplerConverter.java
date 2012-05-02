@@ -34,59 +34,15 @@
  * #L%
  */
 
-package net.imglib2.outofbounds;
+package net.imglib2.converter.readwrite;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+import net.imglib2.Sampler;
 
 /**
- * 
- * @param <T>
+ * TODO
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
-public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
+public interface SamplerConverter< A, B >
 {
-	final protected T value;
-	
-	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
-	{
-		super( outOfBounds );
-		this.value = outOfBounds.value.copy();
-	}
-	
-	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
-	{
-		super( f );
-		this.value = value;
-	}
-
-	/* Sampler */
-	
-	@Override
-	final public T get()
-	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
-		if ( isOutOfBounds )
-			return value;
-		else
-			return sampler.get();
-	}
-	
-	@Override
-	final public OutOfBoundsConstantValue< T > copy()
-	{
-		return new OutOfBoundsConstantValue< T >( this );
-	}
-
-
-	/* RandomAccess */
-
-	@Override
-	final public OutOfBoundsConstantValue< T > copyRandomAccess()
-	{
-		return copy();
-	}
+	public B convert( Sampler< A > sampler );
 }
