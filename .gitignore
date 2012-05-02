@@ -6,3 +6,6 @@
 .project
 .settings
 target
+
+# For Fiji #
+*.jar

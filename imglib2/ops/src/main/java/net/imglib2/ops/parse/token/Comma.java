@@ -34,15 +34,17 @@
  * #L%
  */
 
-package net.imglib2.converter.sampler;
 
-import net.imglib2.Sampler;
+package net.imglib2.ops.parse.token;
 
 /**
- * TODO
- *
- */
-public interface SamplerConverter< A, B >
-{
-	public B convert( Sampler< A > sampler );
+* 
+* @author Barry DeZonia
+*
+*/
+public class Comma extends Token {
+
+	public Comma(int start, String text) {
+		super(start, text);
+	}
 }

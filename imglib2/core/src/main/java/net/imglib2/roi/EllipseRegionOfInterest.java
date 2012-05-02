@@ -326,9 +326,12 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 				d0 = getRasterDisplacement( position, i );
 				position[ i ] = ( long ) Math.ceil( origin.getDoublePosition( i ) - d0 );
 			}
-			System.arraycopy( position, 1, end, 1, numDimensions() - 1 );
-			end[ 0 ] = ( long ) Math.floor( origin.getDoublePosition( 0 ) + d0 ) + 1;
-			return true;
+			if ( isMember( position ) )
+			{
+				System.arraycopy( position, 1, end, 1, numDimensions() - 1 );
+				end[ 0 ] = ( long ) Math.floor( origin.getDoublePosition( 0 ) + d0 ) + 1;
+				return true;
+			}
 		}
 		for ( int i = 1; i < numDimensions(); i++ )
 		{
@@ -336,8 +339,29 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 			 * Advance the position until we get a position within the ellipse.
 			 */
 			position[ i ]++;
-			if ( getPartialDisplacement( position, i ) < 1 )
+			final double partialDisplacement = getPartialDisplacement( position, i );
+			if ( partialDisplacement <= 1 )
 			{
+				/*
+				 * Check that we can find a point within the ellipse. It may be
+				 * the case that, for dimension # 0, both the pixel at the floor
+				 * of the origin and at the ceiling of the origin are outside of
+				 * the ellipse even though the origin itself is within the
+				 * ellipse.
+				 */
+				double d = 0;
+				for ( int j = i; j < numDimensions(); j++ )
+				{
+					double diff = ( position[ j ] - origin.getDoublePosition( j ) ) / radii[ j ];
+					d += diff * diff;
+				}
+				for ( int j = 0; j < i; j++ )
+				{
+					double diff = ( origin.getDoublePosition( j ) - Math.round( origin.getDoublePosition( j ) ) ) / radii[ j ];
+					d += diff * diff;
+				}
+				if ( d > 1 )
+					continue;
 				/*
 				 * Adjust the lesser positions to the start of the ellipse.
 				 */
@@ -402,6 +426,23 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 */
 	@Override
 	protected boolean isMember( double[] position )
+	{
+		double accumulator = 0;
+		for ( int i = 0; i < numDimensions(); i++ )
+		{
+			double diff = ( ( position[ i ] - origin.getDoublePosition( i ) ) / radii[ i ] );
+			accumulator += diff * diff;
+		}
+		return accumulator <= 1;
+	}
+
+	/**
+	 * Test to see if an integer position is inside the ellipse.
+	 * 
+	 * @param position
+	 * @return
+	 */
+	public boolean isMember( long[] position )
 	{
 		double accumulator = 0;
 		for ( int i = 0; i < numDimensions(); i++ )

@@ -36,28 +36,67 @@
 
 package net.imglib2.converter;
 
-import java.util.Iterator;
-
-import net.imglib2.IterableInterval;
-import net.imglib2.IterableRealInterval;
-import net.imglib2.Positionable;
-import net.imglib2.RealPositionable;
-import net.imglib2.converter.sampler.SamplerConverter;
+import net.imglib2.Cursor;
 
 /**
  * TODO
  *
  */
-public class ConvertedIterableInterval< A, B > implements IterableInterval< B >
+abstract public class AbstractConvertedCursor< A, B > implements Cursor< B >
 {
-	private final IterableInterval< A > source;
+	final protected Cursor< A > source;
 
-	private final SamplerConverter< A, B > converter;
-
-	public ConvertedIterableInterval( final IterableInterval< A > source, final SamplerConverter< A, B > converter )
+	public AbstractConvertedCursor( final Cursor< A > source )
 	{
 		this.source = source;
-		this.converter = converter;
+	}
+
+	@Override
+	public void localize( final int[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public int getIntPosition( final int d )
+	{
+		return source.getIntPosition( d );
+	}
+
+	@Override
+	public long getLongPosition( final int d )
+	{
+		return source.getLongPosition( d );
+	}
+
+	@Override
+	public void localize( final float[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public void localize( final double[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		return source.getFloatPosition( d );
+	}
+
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return source.getDoublePosition( d );
 	}
 
 	@Override
@@ -67,128 +106,48 @@ public class ConvertedIterableInterval< A, B > implements IterableInterval< B >
 	}
 
 	@Override
-	public long min( final int d )
+	public void jumpFwd( final long steps )
 	{
-		return source.min( d );
+		source.jumpFwd( steps );
 	}
 
 	@Override
-	public void min( final long[] min )
+	public void fwd()
 	{
-		source.min( min );
+		source.fwd();
 	}
 
 	@Override
-	public void min( final Positionable min )
+	public void reset()
 	{
-		source.min( min );
+		source.reset();
 	}
 
 	@Override
-	public long max( final int d )
+	public boolean hasNext()
 	{
-		return source.max( d );
+		return source.hasNext();
 	}
 
 	@Override
-	public void max( final long[] max )
+	public B next()
 	{
-		source.max( max );
+		fwd();
+		return get();
 	}
 
 	@Override
-	public void max( final Positionable max )
+	public void remove()
 	{
-		source.max( max );
+		source.remove();
 	}
 
 	@Override
-	public void dimensions( final long[] dimensions )
-	{
-		source.dimensions( dimensions );
-	}
+	abstract public AbstractConvertedCursor< A, B > copy();
 
 	@Override
-	public long dimension( final int d )
+	public AbstractConvertedCursor< A, B > copyCursor()
 	{
-		return source.dimension( d );
-	}
-
-	@Override
-	public double realMin( final int d )
-	{
-		return source.realMin( d );
-	}
-
-	@Override
-	public void realMin( final double[] min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public void realMin( final RealPositionable min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public double realMax( final int d )
-	{
-		return source.realMax( d );
-	}
-
-	@Override
-	public void realMax( final double[] max )
-	{
-		source.realMax( max );
-	}
-
-	@Override
-	public void realMax( final RealPositionable max )
-	{
-		source.realMax( max );
-	}
-
-	@Override
-	public long size()
-	{
-		return source.size();
-	}
-
-	@Override
-	public Object iterationOrder()
-	{
-		return source.iterationOrder();
-	}
-
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
-	@Override
-	public Iterator< B > iterator()
-	{
-		return cursor();
-	}
-
-	@Override
-	public B firstElement()
-	{
-		return cursor().next();
-	}
-
-	@Override
-	public ConvertedCursor< A, B > cursor()
-	{
-		return new ConvertedCursor< A, B >( converter, source.cursor() );
-	}
-
-	@Override
-	public ConvertedCursor< A, B > localizingCursor()
-	{
-		return new ConvertedCursor< A, B >( converter, source.localizingCursor() );
+		return copy();
 	}
 }

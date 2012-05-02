@@ -42,10 +42,9 @@ import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
-import net.imglib2.Sampler;
-import net.imglib2.converter.ConvertedCursor;
-import net.imglib2.converter.ConvertedRandomAccess;
-import net.imglib2.converter.sampler.SamplerConverter;
+import net.imglib2.converter.Converter;
+import net.imglib2.converter.read.ConvertedCursor;
+import net.imglib2.converter.read.ConvertedRandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.IntegerType;
 
@@ -56,7 +55,7 @@ import net.imglib2.type.numeric.IntegerType;
  * @param <T>
  *            the type of labels assigned to pixels
  * 
- * @author Lee Kamentsky
+ * @author Lee Kamentsky, Christian Dietz, Martin Horn
  */
 public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType< I >> extends AbstractNativeLabeling< T >
 {
@@ -102,7 +101,7 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	{
 		final RandomAccess< I > rndAccess = img.randomAccess();
 
-		return new ConvertedRandomAccess< I, LabelingType< T >>( new LabelingTypeSamplerConverter( rndAccess ), rndAccess );
+		return new ConvertedRandomAccess< I, LabelingType< T >>( rndAccess, new LabelingTypeSamplerConverter(), new LabelingType< T >( rndAccess.get(), mapping, generation ) );
 	}
 
 	/*
@@ -117,14 +116,14 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	{
 
 		final Cursor< I > cursor = img.cursor();
-		return new ConvertedCursor< I, LabelingType< T >>( new LabelingTypeSamplerConverter( cursor ), cursor );
+		return new ConvertedCursor< I, LabelingType< T >>( img.cursor(), new LabelingTypeSamplerConverter(), new LabelingType< T >( cursor.get(), mapping, generation ) );
 	}
 
 	@Override
 	public Cursor< LabelingType< T >> localizingCursor()
 	{
 		final Cursor< I > cursor = img.localizingCursor();
-		return new ConvertedCursor< I, LabelingType< T >>( new LabelingTypeSamplerConverter( cursor ), cursor );
+		return new ConvertedCursor< I, LabelingType< T >>( cursor, new LabelingTypeSamplerConverter(), new LabelingType< T >( cursor.get(), mapping, generation ) );
 	}
 
 	public Img< I > getStorageImg()
@@ -151,20 +150,13 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 
 	}
 
-	class LabelingTypeSamplerConverter implements SamplerConverter< I, LabelingType< T >>
+	class LabelingTypeSamplerConverter implements Converter< I, LabelingType< T >>
 	{
 
-		private final LabelingType< T > type;
-
-		public LabelingTypeSamplerConverter( final Sampler< I > source )
-		{
-			this.type = new LabelingType< T >( source.get(), mapping, generation );
-		}
-
 		@Override
-		public LabelingType< T > convert( final Sampler< I > sampler )
+		public void convert( I input, LabelingType< T > output )
 		{
-			return type;
+			// output.set( type );
 		}
 
 	}

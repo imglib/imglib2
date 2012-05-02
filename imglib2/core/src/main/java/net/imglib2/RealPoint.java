@@ -47,16 +47,16 @@ package net.imglib2;
 public class RealPoint extends AbstractRealLocalizable implements RealPositionable
 {
 	/**
-	 * Protected constructor that re-uses the passed position array.
+	 * Protected constructor that can re-use the passed position array.
 	 *
 	 * @param position
 	 *            array used to store the position.
-	 * @param x
-	 *            unused parameter that changes the method signature
+	 * @param copy
+	 *            flag indicating whether position array should be duplicated.
 	 */
-	protected RealPoint( final double[] position, final Object x )
+	protected RealPoint( final double[] position, final boolean copy )
 	{
-		super( position );
+		super( copy ? position.clone() : position );
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	 */
 	public RealPoint( final double... position )
 	{
-		super( position.clone() );
+		this( position, true );
 	}
 
 	/**
@@ -277,6 +277,6 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	 */
 	public static RealPoint wrap( final double[] position )
 	{
-		return new RealPoint( position, null );
+		return new RealPoint( position, false );
 	}
 }

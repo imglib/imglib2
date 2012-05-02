@@ -60,19 +60,23 @@ public class RealTransformRealRandomAccessible< T, R extends RealTransform > imp
 	 */
 	public class RealTransformRealRandomAccess extends RealPoint implements RealRandomAccess< T >
 	{
-		final protected RealPoint sourcePosition;
 		final protected RealRandomAccess< T > targetAccess;
 
 		protected RealTransformRealRandomAccess()
 		{
 			super( transform.numSourceDimensions() );
-			sourcePosition = RealPoint.wrap( position );
 			this.targetAccess = target.realRandomAccess();
+		}
+
+		private RealTransformRealRandomAccess( final RealTransformRealRandomAccess a )
+		{
+			super( a );
+			this.targetAccess = a.targetAccess.copyRealRandomAccess();
 		}
 
 		final protected void apply()
 		{
-			transform.apply( sourcePosition, targetAccess );
+			transform.apply( this, targetAccess );
 		}
 
 		@Override
@@ -85,7 +89,7 @@ public class RealTransformRealRandomAccessible< T, R extends RealTransform > imp
 		@Override
 		public RealTransformRealRandomAccess copy()
 		{
-			return new RealTransformRealRandomAccess();
+			return new RealTransformRealRandomAccess( this );
 		}
 
 		@Override

@@ -38,71 +38,64 @@ package net.imglib2.converter;
 
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.converter.sampler.SamplerConverter;
 
 /**
  * TODO
  *
  */
-public final class ConvertedRandomAccess< A, B > implements RandomAccess< B >
+abstract public class AbstractConvertedRandomAccess< A, B > implements RandomAccess< B >
 {
-	private final SamplerConverter< A, B > converter;
+	final protected RandomAccess< A > source;
 
-	private final RandomAccess< A > source;
-
-	private final B converted;
-
-	public ConvertedRandomAccess( final SamplerConverter< A, B > converter, final RandomAccess< A > source )
+	public AbstractConvertedRandomAccess( final RandomAccess< A > source )
 	{
-		this.converter = converter;
 		this.source = source;
-		this.converted = converter.convert( source );
 	}
 
 	@Override
-	public void localize( int[] position )
+	public void localize( final int[] position )
 	{
 		source.localize( position );
 	}
 
 	@Override
-	public void localize( long[] position )
+	public void localize( final long[] position )
 	{
 		source.localize( position );
 	}
 
 	@Override
-	public int getIntPosition( int d )
+	public int getIntPosition( final int d )
 	{
 		return source.getIntPosition( d );
 	}
 
 	@Override
-	public long getLongPosition( int d )
+	public long getLongPosition( final int d )
 	{
 		return source.getLongPosition( d );
 	}
 
 	@Override
-	public void localize( float[] position )
+	public void localize( final float[] position )
 	{
 		source.localize( position );
 	}
 
 	@Override
-	public void localize( double[] position )
+	public void localize( final double[] position )
 	{
 		source.localize( position );
 	}
 
 	@Override
-	public float getFloatPosition( int d )
+	public float getFloatPosition( final int d )
 	{
 		return source.getFloatPosition( d );
 	}
 
 	@Override
-	public double getDoublePosition( int d )
+	public double getDoublePosition( final int d )
 	{
 		return source.getDoublePosition( d );
 	}
@@ -114,91 +107,82 @@ public final class ConvertedRandomAccess< A, B > implements RandomAccess< B >
 	}
 
 	@Override
-	public void fwd( int d )
+	public void fwd( final int d )
 	{
 		source.fwd( d );
 	}
 
 	@Override
-	public void bck( int d )
+	public void bck( final int d )
 	{
 		source.bck( d );
 	}
 
 	@Override
-	public void move( int distance, int d )
+	public void move( final int distance, final int d )
 	{
 		source.move( distance, d );
 	}
 
 	@Override
-	public void move( long distance, int d )
+	public void move( final long distance, final int d )
 	{
 		source.move( distance, d );
 	}
 
 	@Override
-	public void move( Localizable localizable )
+	public void move( final Localizable localizable )
 	{
 		source.move( localizable );
 	}
 
 	@Override
-	public void move( int[] distance )
+	public void move( final int[] distance )
 	{
 		source.move( distance );
 	}
 
 	@Override
-	public void move( long[] distance )
+	public void move( final long[] distance )
 	{
 		source.move( distance );
 	}
 
 	@Override
-	public void setPosition( Localizable localizable )
+	public void setPosition( final Localizable localizable )
 	{
 		source.setPosition( localizable );
 	}
 
 	@Override
-	public void setPosition( int[] position )
+	public void setPosition( final int[] position )
 	{
 		source.setPosition( position );
 	}
 
 	@Override
-	public void setPosition( long[] position )
+	public void setPosition( final long[] position )
 	{
 		source.setPosition( position );
 	}
 
 	@Override
-	public void setPosition( int position, int d )
+	public void setPosition( final int position, final int d )
 	{
 		source.setPosition( position, d );
 	}
 
 	@Override
-	public void setPosition( long position, int d )
+	public void setPosition( final long position, final int d )
 	{
 		source.setPosition( position, d );
 	}
 
 	@Override
-	public B get()
-	{
-		return converted;
-	}
+	abstract public AbstractConvertedRandomAccess< A, B > copy();
 
 	@Override
-	public ConvertedRandomAccess< A, B > copy()
-	{
-		return new ConvertedRandomAccess< A, B >( converter, ( RandomAccess< A > ) source.copy() );
-	}
-
-	@Override
-	public ConvertedRandomAccess< A, B > copyRandomAccess()
+	public AbstractConvertedRandomAccess< A, B > copyRandomAccess()
 	{
 		return copy();
 	}
