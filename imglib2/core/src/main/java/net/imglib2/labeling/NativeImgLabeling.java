@@ -101,7 +101,7 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	{
 		final RandomAccess< I > rndAccess = img.randomAccess();
 
-		return new ConvertedRandomAccess< I, LabelingType< T >>( rndAccess, new LabelingTypeSamplerConverter(), new LabelingType< T >( rndAccess.get(), mapping, generation ) );
+		return new ConvertedRandomAccess< I, LabelingType< T >>( rndAccess, new LabelingTypeConverter(), new LabelingType< T >( rndAccess.get(), mapping, generation ) );
 	}
 
 	/*
@@ -114,16 +114,15 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	@Override
 	public Cursor< LabelingType< T >> cursor()
 	{
-
-		final Cursor< I > cursor = img.cursor();
-		return new ConvertedCursor< I, LabelingType< T >>( img.cursor(), new LabelingTypeSamplerConverter(), new LabelingType< T >( cursor.get(), mapping, generation ) );
+		Cursor< I > c = img.cursor();
+		return new ConvertedCursor< I, LabelingType< T >>( c, new LabelingTypeConverter(), new LabelingType< T >( c.get(), mapping, generation ) );
 	}
 
 	@Override
 	public Cursor< LabelingType< T >> localizingCursor()
 	{
-		final Cursor< I > cursor = img.localizingCursor();
-		return new ConvertedCursor< I, LabelingType< T >>( cursor, new LabelingTypeSamplerConverter(), new LabelingType< T >( cursor.get(), mapping, generation ) );
+		Cursor< I > c = img.localizingCursor();
+		return new ConvertedCursor< I, LabelingType< T >>( c, new LabelingTypeConverter(), new LabelingType< T >( c.get(), mapping, generation ) );
 	}
 
 	public Img< I > getStorageImg()
@@ -150,7 +149,7 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 
 	}
 
-	class LabelingTypeSamplerConverter implements Converter< I, LabelingType< T >>
+	class LabelingTypeConverter implements Converter< I, LabelingType< T >>
 	{
 
 		@Override

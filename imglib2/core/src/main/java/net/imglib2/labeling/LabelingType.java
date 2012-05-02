@@ -65,9 +65,12 @@ public class LabelingType< T extends Comparable< T >> implements Type< LabelingT
 	/**
 	 * Constructor for mirroring state with another labeling
 	 * 
-	 * @param storage
+	 * @param type
+	 *            Wrapped type
 	 * @param mapping
+	 *            Mapping from wrapped type to LabelingList
 	 * @param generation
+	 *            Generation of the type
 	 */
 	protected LabelingType( final IntegerType< ? > type, final LabelingMapping< T > mapping, final long[] generation )
 	{
@@ -191,7 +194,7 @@ public class LabelingType< T extends Comparable< T >> implements Type< LabelingT
 	@Override
 	public LabelingType< T > copy()
 	{
-		return new LabelingType< T >( getLabeling() );
+		return new LabelingType< T >( this.type, mapping, generation );
 	}
 
 	@Override
