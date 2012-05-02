@@ -6,7 +6,7 @@ import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.subimg.SubImg;
+import net.imglib2.img.subimg.SubImg;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 import org.junit.Test;
