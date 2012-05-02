@@ -64,10 +64,13 @@ import net.imglib2.ops.operation.unary.real.RealCsc;
 import net.imglib2.ops.operation.unary.real.RealCsch;
 import net.imglib2.ops.operation.unary.real.RealCubeRoot;
 import net.imglib2.ops.operation.unary.real.RealExp;
+import net.imglib2.ops.operation.unary.real.RealExpMinusOne;
 import net.imglib2.ops.operation.unary.real.RealFloor;
 import net.imglib2.ops.operation.unary.real.RealGaussianRandom;
 import net.imglib2.ops.operation.unary.real.RealLog;
 import net.imglib2.ops.operation.unary.real.RealLog10;
+import net.imglib2.ops.operation.unary.real.RealLogOnePlusX;
+import net.imglib2.ops.operation.unary.real.RealLog2;
 import net.imglib2.ops.operation.unary.real.RealNearestInt;
 import net.imglib2.ops.operation.unary.real.RealRound;
 import net.imglib2.ops.operation.unary.real.RealSec;
@@ -81,6 +84,7 @@ import net.imglib2.ops.operation.unary.real.RealSqr;
 import net.imglib2.ops.operation.unary.real.RealSqrt;
 import net.imglib2.ops.operation.unary.real.RealTan;
 import net.imglib2.ops.operation.unary.real.RealTanh;
+import net.imglib2.ops.operation.unary.real.RealUlp;
 import net.imglib2.ops.operation.unary.real.RealUniformRandom;
 import net.imglib2.ops.parse.token.And;
 import net.imglib2.ops.parse.token.Assign;
@@ -328,10 +332,13 @@ public class Lexer {
 		if (name.equals("csc")) op = new RealCsc<DoubleType,DoubleType>();
 		if (name.equals("csch")) op = new RealCsch<DoubleType,DoubleType>();
 		if (name.equals("exp")) op = new RealExp<DoubleType,DoubleType>();
+		if (name.equals("expm1")) op = new RealExpMinusOne<DoubleType,DoubleType>();
 		if (name.equals("floor")) op = new RealFloor<DoubleType,DoubleType>();
 		if (name.equals("gauss")) op = new RealGaussianRandom<DoubleType,DoubleType>();
 		if (name.equals("log")) op = new RealLog<DoubleType,DoubleType>();
+		if (name.equals("log1p")) op = new RealLogOnePlusX<DoubleType,DoubleType>();
 		if (name.equals("log10")) op = new RealLog10<DoubleType,DoubleType>();
+		if (name.equals("log2")) op = new RealLog2<DoubleType,DoubleType>();
 		if (name.equals("rand")) op = new RealUniformRandom<DoubleType,DoubleType>();
 		if (name.equals("rint")) op = new RealNearestInt<DoubleType,DoubleType>();
 		if (name.equals("round")) op = new RealRound<DoubleType,DoubleType>();
@@ -346,6 +353,7 @@ public class Lexer {
 		if (name.equals("sqrt")) op = new RealSqrt<DoubleType,DoubleType>();
 		if (name.equals("tan")) op = new RealTan<DoubleType,DoubleType>();
 		if (name.equals("tanh")) op = new RealTanh<DoubleType,DoubleType>();
+		if (name.equals("ulp")) op = new RealUlp<DoubleType,DoubleType>();
 		
 		if (op != null) return new FunctionCall(pos, name, op);
 		
