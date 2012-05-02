@@ -84,6 +84,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	final ImgFactory<ComplexFloatType> fftImgFactory;
 	final ImgFactory<T> imgFactory;
 	final ImgFactory<S> kernelImgFactory;
+	boolean keepImgFFT = true;
 	
 	final int[] kernelDim;
 
@@ -163,6 +164,13 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		this.imgFFT = null;
 		return true;
 	}
+
+	/**
+	 * By default, he will not do the computation in-place and keep the imgFFT
+	 * @param keepImgFFT
+	 */
+	public void setKeepImgFFT( final boolean keepImgFFT ) { this.keepImgFFT = keepImgFFT; }
+	public boolean getKeepImgFFT() { return this.keepImgFFT; } 
 
 	public boolean replaceKernel( final RandomAccessibleInterval<S> knl )
 	{
@@ -270,7 +278,10 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			// instaniate real valued kernel template
 			// which is of the same container type as the image
 			// so that the computation is easy
-			final Img<S> kernelTemplate = kernelImgFactory.create( kernelTemplateDim, Util.getTypeFromInterval( kernel ).createVariable() );
+
+			// HACK: Explicit assignment is needed for OpenJDK javac.
+			S kernelType = Util.getTypeFromInterval( kernel );
+			final Img<S> kernelTemplate = kernelImgFactory.create( kernelTemplateDim, kernelType.createVariable() );
 			
 			// copy the kernel into the kernelTemplate,
 			// the key here is that the center pixel of the kernel (e.g. 13,13,13)
@@ -327,12 +338,19 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		//
 		// Multiply in Fourier Space
 		//
-		multiply( imgFFT, kernelFFT );
+		final Img< ComplexFloatType > copy;
+		
+		if ( keepImgFFT )
+			copy = imgFFT.copy();
+		else
+			copy = imgFFT;
+		
+		multiply( copy, kernelFFT );
 		
 		//
 		// Compute inverse Fourier Transform
 		//		
-		final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( imgFFT, imgFactory, fftImage );
+		final InverseFourierTransform<T, ComplexFloatType> invFFT = new InverseFourierTransform<T, ComplexFloatType>( copy, imgFactory, fftImage );
 		invFFT.setNumThreads( this.getNumThreads() );
 
 		if ( !invFFT.checkInput() || !invFFT.process() )
@@ -341,6 +359,13 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			return false;			
 		}
 		
+		if ( !keepImgFFT )
+		{
+			// the imgFFT was changed during the multiplication
+			// it cannot be re-used
+			imgFFT = null;			
+		}
+
 		convolved = invFFT.getResult();	
 		
 		processingTime = System.currentTimeMillis() - startTime;

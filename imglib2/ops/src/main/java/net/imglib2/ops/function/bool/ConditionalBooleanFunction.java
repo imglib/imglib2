@@ -39,7 +39,6 @@ package net.imglib2.ops.function.bool;
 
 import net.imglib2.ops.Condition;
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.type.logic.BitType;
 
 
@@ -47,22 +46,22 @@ import net.imglib2.type.logic.BitType;
  * 
  * @author Barry DeZonia
  */
-public class ConditionalBooleanFunction<INDEX> implements Function<INDEX,BitType>
+public class ConditionalBooleanFunction<INPUT> implements Function<INPUT,BitType>
 {
-	private final Condition<INDEX> condition;
+	private final Condition<INPUT> condition;
 
-	public ConditionalBooleanFunction(Condition<INDEX> cond) {
+	public ConditionalBooleanFunction(Condition<INPUT> cond) {
 		this.condition = cond;
 	}
 
 	@Override
-	public void evaluate(Neighborhood<INDEX> neigh, INDEX point, BitType b) {
-		b.set(condition.isTrue(neigh, point));
+	public void compute(INPUT input, BitType b) {
+		b.set(condition.isTrue(input));
 	}
 	
 	@Override
-	public ConditionalBooleanFunction<INDEX> copy() {
-		return new ConditionalBooleanFunction<INDEX>(condition.copy());
+	public ConditionalBooleanFunction<INPUT> copy() {
+		return new ConditionalBooleanFunction<INPUT>(condition.copy());
 	}
 
 	@Override

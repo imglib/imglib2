@@ -48,7 +48,8 @@ import org.junit.Test;
  */
 public class ComplexDivideTest {
 
-	private ComplexDivide op = new ComplexDivide();
+	private ComplexDivide<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType> op =
+		new ComplexDivide<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
 	private ComplexDoubleType input1 = new ComplexDoubleType();
 	private ComplexDoubleType input2 = new ComplexDoubleType();
 	private ComplexDoubleType output = new ComplexDoubleType();

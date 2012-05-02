@@ -77,8 +77,10 @@ public class ComplexReciprocalTest {
 		ComplexDoubleType output2 = new ComplexDoubleType();
 		one.setOne();
 		input.setComplexNumber(r, i);
-		ComplexReciprocal opRecip = new ComplexReciprocal();
-		ComplexDivide opDiv = new ComplexDivide();
+		ComplexReciprocal<ComplexDoubleType,ComplexDoubleType> opRecip =
+				new ComplexReciprocal<ComplexDoubleType,ComplexDoubleType>();
+		ComplexDivide<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType> opDiv =
+				new ComplexDivide<ComplexDoubleType,ComplexDoubleType,ComplexDoubleType>();
 		opRecip.compute(input, output1);
 		opDiv.compute(one, input, output2);
 		assertEquals(output1.getRealDouble(), output2.getRealDouble(), 0.000001);

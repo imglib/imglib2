@@ -651,7 +651,9 @@ A:						while( cursorDim.hasNext() )
 		final int halfSizeDim = sizeDim / 2;
 		final int sizeDimMinus1 = sizeDim - 1;
 
-		final T buffer = Util.getTypeFromInterval( fftImage ).createVariable();
+		// HACK: Explicit assignment is needed for OpenJDK javac.
+		final T fftImageType = Util.getTypeFromInterval( fftImage );
+		final T buffer = fftImageType.createVariable();
 		
 		final RandomAccess<T> cursor1 = fftImage.randomAccess();
 		final RandomAccess<T> cursor2 = fftImage.randomAccess(); 
@@ -713,7 +715,9 @@ A:						while( cursorDim.hasNext() )
 					final int halfSizeDim = sizeDim / 2;
 					final int sizeDimMinus1 = sizeDim - 1;
 		
-					final T buffer = Util.getTypeFromInterval( fftImage ).createVariable();
+					// HACK: Explicit assignment is needed for OpenJDK javac.
+					final T fftImageType = Util.getTypeFromInterval( fftImage );
+					final T buffer = fftImageType.createVariable();
 					
 					final RandomAccess<T> cursor1 = fftImage.randomAccess(); 
 					final RandomAccess<T> cursor2 = fftImage.randomAccess(); 
@@ -805,7 +809,9 @@ A:						while( cursorDim.hasNext() )
 					final int sizeDim = (int)fftImage.dimension( dim );
 					final int halfSizeDim = sizeDim / 2;
 		
-					final T buffer = Util.getTypeFromInterval( fftImage ).createVariable();
+					// HACK: Explicit assignment is needed for OpenJDK javac.
+					final T fftImageType = Util.getTypeFromInterval( fftImage );
+					final T buffer = fftImageType.createVariable();
 					
 					final RandomAccess<T> cursor1 = fftImage.randomAccess(); 
 					final RandomAccess<T> cursor2 = fftImage.randomAccess(); 
@@ -897,8 +903,10 @@ A:						while( cursorDim.hasNext() )
 					final int sizeDimMinus1 = sizeDim - 1;
 					final int halfSizeDim = sizeDim / 2;
 		
-					final T buffer1 = Util.getTypeFromInterval( fftImage ).createVariable();
-					final T buffer2 = Util.getTypeFromInterval( fftImage ).createVariable();
+					// HACK: Explicit assignment is needed for OpenJDK javac.
+					final T fftImageType = Util.getTypeFromInterval( fftImage );
+					final T buffer1 = fftImageType.createVariable();
+					final T buffer2 = fftImageType.createVariable();
 					
 					final RandomAccess<T> cursor1 = fftImage.randomAccess(); 
 					final RandomAccess<T> cursor2 = fftImage.randomAccess(); 

@@ -59,7 +59,7 @@ public class RealLessThanConstant<T extends RealType<T>> implements
 	}
 
 	@Override
-	public UnaryRelation<T> copy() {
+	public RealLessThanConstant<T> copy() {
 		return new RealLessThanConstant<T>(m_constant);
 	}
 

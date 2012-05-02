@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
@@ -46,17 +45,17 @@ import net.imglib2.type.numeric.ComplexType;
  * 
  * @author Barry DeZonia
  */
-public class GeneralUnaryFunction<INDEX, INPUT_TYPE extends ComplexType<INPUT_TYPE>,
-		OUTPUT_TYPE extends ComplexType<OUTPUT_TYPE>>
-	implements Function<INDEX, OUTPUT_TYPE>
+public class GeneralUnaryFunction<INPUT, C extends ComplexType<C>,
+		OUTPUT extends ComplexType<OUTPUT>>
+	implements Function<INPUT, OUTPUT>
 {
-	private final Function<INDEX, INPUT_TYPE> f1;
-	private final INPUT_TYPE temp;
-	private final UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> operation;
-	private final OUTPUT_TYPE type;
+	private final Function<INPUT, C> f1;
+	private final C temp;
+	private final UnaryOperation<C, OUTPUT> operation;
+	private final OUTPUT type;
 
-	public GeneralUnaryFunction(Function<INDEX, INPUT_TYPE> f1,
-			UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> operation, OUTPUT_TYPE type) {
+	public GeneralUnaryFunction(Function<INPUT, C> f1,
+			UnaryOperation<C, OUTPUT> operation, OUTPUT type) {
 		this.type = type;
 		this.f1 = f1;
 		this.temp = f1.createOutput();
@@ -64,20 +63,20 @@ public class GeneralUnaryFunction<INDEX, INPUT_TYPE extends ComplexType<INPUT_TY
 	}
 
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point,
-			OUTPUT_TYPE output) {
-		f1.evaluate(region, point, temp);
+	public void compute(INPUT input, OUTPUT output) {
+		f1.compute(input, temp);
 		operation.compute(temp, output);
 	}
 
 	@Override
-	public GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE> copy() {
-		return new GeneralUnaryFunction<INDEX, INPUT_TYPE, OUTPUT_TYPE>(
-			f1.copy(), operation.copy(), type);
+	public GeneralUnaryFunction<INPUT, C, OUTPUT> copy()
+	{
+		return new GeneralUnaryFunction<INPUT, C, OUTPUT>(
+			f1.copy(), operation.copy(), type.createVariable());
 	}
 
 	@Override
-	public OUTPUT_TYPE createOutput() {
+	public OUTPUT createOutput() {
 		return type.createVariable();
 	}
 }

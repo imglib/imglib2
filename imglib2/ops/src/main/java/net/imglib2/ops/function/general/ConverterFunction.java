@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.UnaryOperation;
 import net.imglib2.type.numeric.NumericType;
 
@@ -51,16 +50,16 @@ import net.imglib2.type.numeric.NumericType;
  * 
  * @author Barry DeZonia
  */
-public class ConverterFunction<INDEX, INTERMEDIATE_TYPE,
+public class ConverterFunction<INPUT, INTERMEDIATE_TYPE,
 		FINAL_TYPE extends NumericType<FINAL_TYPE>>
-	implements Function<INDEX, FINAL_TYPE>
+	implements Function<INPUT, FINAL_TYPE>
 {
-	private final Function<INDEX, INTERMEDIATE_TYPE> intermediateFunc;
+	private final Function<INPUT, INTERMEDIATE_TYPE> intermediateFunc;
 	private final UnaryOperation<INTERMEDIATE_TYPE, FINAL_TYPE> operation;
 	private final INTERMEDIATE_TYPE variable;
 	private final FINAL_TYPE type;
 	
-	public ConverterFunction(Function<INDEX, INTERMEDIATE_TYPE> func,
+	public ConverterFunction(Function<INPUT, INTERMEDIATE_TYPE> func,
 			UnaryOperation<INTERMEDIATE_TYPE, FINAL_TYPE> operation,
 			FINAL_TYPE type)
 	{
@@ -71,9 +70,8 @@ public class ConverterFunction<INDEX, INTERMEDIATE_TYPE,
 	}
 
 	@Override
-	public void evaluate(Neighborhood<INDEX> region, INDEX point,
-			FINAL_TYPE output) {
-		intermediateFunc.evaluate(region, point, variable);
+	public void compute(INPUT input, FINAL_TYPE output) {
+		intermediateFunc.compute(input, variable);
 		operation.compute(variable, output);
 	}
 
@@ -83,8 +81,8 @@ public class ConverterFunction<INDEX, INTERMEDIATE_TYPE,
 	}
 
 	@Override
-	public ConverterFunction<INDEX, INTERMEDIATE_TYPE, FINAL_TYPE> copy() {
-		return new ConverterFunction<INDEX, INTERMEDIATE_TYPE, FINAL_TYPE>(
+	public ConverterFunction<INPUT, INTERMEDIATE_TYPE, FINAL_TYPE> copy() {
+		return new ConverterFunction<INPUT, INTERMEDIATE_TYPE, FINAL_TYPE>(
 				intermediateFunc.copy(), operation.copy(), type);
 	}
 }

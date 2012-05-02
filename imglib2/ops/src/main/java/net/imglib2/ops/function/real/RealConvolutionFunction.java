@@ -38,8 +38,7 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
-import net.imglib2.ops.RegionIndexIterator;
+import net.imglib2.ops.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 // NOTE : convolution and correlation are similar operations whose output is
@@ -59,44 +58,52 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealConvolutionFunction<T extends RealType<T>> implements Function<long[],T> {
-
-	private final Function<long[],T> otherFunc;
-	private final T variable;
+public class RealConvolutionFunction<T extends RealType<T>>
+	extends AbstractRealPointSetFunction<T>
+	implements Function<PointSet,T>
+{
 	private final double[] kernel;
-	private RegionIndexIterator iter;
+	private double sum;
+	private int cell;
+	private PointSet lastPointSet;
 	
-	public RealConvolutionFunction(Function<long[],T> otherFunc, double[] kernel) {
-		this.otherFunc = otherFunc;
-		this.variable = createOutput();
+	public RealConvolutionFunction(Function<long[],T> otherFunc, double[] kernel)
+	{
+		super(otherFunc);
 		this.kernel = kernel;
-		this.iter = null;
+		sum = 0;
+		cell = 0;
+		lastPointSet = null;
 	}
 	
-	@Override
-	public void evaluate(Neighborhood<long[]> region, long[] point, T output) {
-		if (iter == null)
-			iter = new RegionIndexIterator(region);
-		else
-			iter.relocate(region.getKeyPoint());
-		iter.reset();
-		int cell = 0;
-		double sum = 0;
-		while (iter.hasNext()) {
-			iter.fwd();
-			otherFunc.evaluate(region, iter.getPosition(), variable);
-			sum += variable.getRealDouble() * kernel[cell++];
-		}
-		output.setReal(sum);
-	}
-
 	@Override
 	public RealConvolutionFunction<T> copy() {
-		return new RealConvolutionFunction<T>(otherFunc.copy(), kernel.clone());
+		return new RealConvolutionFunction<T>(getOtherFunction().copy(), kernel.clone());
 	}
 
 	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
+	protected void initValue(PointSet ps) {
+		if (ps != lastPointSet) {
+			lastPointSet = ps;
+			long numElements = ps.calcSize();
+			if (numElements != kernel.length)
+				throw new IllegalArgumentException("kernel size does not match size of point set");
+			//NB - this code is a performance optimization to check kernel
+			// size once. However if you move a ConditionalPointSet its
+			// size may vary. Thus this might not work. Probably need a
+			// kernel function rather than a double[]
+		}
+		sum = 0;
+		cell = 0;
+	}
+
+	@Override
+	protected void updateValue(long[] point, double value) {
+		sum += value * kernel[cell++];
+	}
+
+	@Override
+	protected double finalValue() {
+		return sum;
 	}
 }

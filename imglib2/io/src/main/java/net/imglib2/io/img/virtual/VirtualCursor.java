@@ -34,7 +34,6 @@
  * #L%
  */
 
-
 package net.imglib2.io.img.virtual;
 
 import net.imglib2.AbstractCursor;
@@ -42,60 +41,54 @@ import net.imglib2.iterator.IntervalIterator;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-
 /**
  * This class manages read only nonspatial access to a virtual image. Data
- * returned from get() can be written to but any changes are never saved
- * to disk.
- *  
+ * returned from get() can be written to but any changes are never saved to
+ * disk.
+ * 
  * @author Barry DeZonia
  */
-public class VirtualCursor<T extends NativeType<T> & RealType<T>>
-	extends AbstractCursor<T>
+public class VirtualCursor<T extends NativeType<T> & RealType<T>> extends
+	AbstractCursor<T>
 {
-	private VirtualImg<T> virtImage;
-	private IntervalIterator iter;
-	private long[] position;
-	private VirtualAccessor<T> accessor;
-	
-	public VirtualCursor(VirtualImg<T> image) {
+
+	private final VirtualImg<T> virtImage;
+	private final IntervalIterator iter;
+	private final long[] position;
+	private final VirtualAccessor<T> accessor;
+
+	public VirtualCursor(final VirtualImg<T> image) {
 		super(image.numDimensions());
 		this.virtImage = image;
-		long[] fullDimensions = new long[image.numDimensions()];
+		final long[] fullDimensions = new long[image.numDimensions()];
 		image.dimensions(fullDimensions);
 		this.iter = new IntervalIterator(fullDimensions);
 		this.position = new long[fullDimensions.length];
 		this.accessor = new VirtualAccessor<T>(virtImage);
 	}
-	
-	@Override
+
 	public T get() {
 		iter.localize(position);
 		return accessor.get(position);
 	}
 
-	@Override
 	public void fwd() {
 		iter.fwd();
 	}
 
-	@Override
 	public void reset() {
 		iter.reset();
 	}
 
-	@Override
 	public boolean hasNext() {
 		return iter.hasNext();
 	}
 
-	@Override
-	public void localize(long[] pos) {
+	public void localize(final long[] pos) {
 		iter.localize(pos);
 	}
 
-	@Override
-	public long getLongPosition(int d) {
+	public long getLongPosition(final int d) {
 		return iter.getLongPosition(d);
 	}
 
@@ -108,8 +101,9 @@ public class VirtualCursor<T extends NativeType<T> & RealType<T>>
 	public VirtualCursor<T> copyCursor() {
 		return new VirtualCursor<T>(virtImage);
 	}
-	
+
 	public Object getCurrentPlane() {
 		return accessor.getCurrentPlane();
 	}
+
 }

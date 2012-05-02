@@ -164,7 +164,43 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		
 		return kernelImg;
 	}
-	
+
+	final public static Image<FloatType> createGaussianKernel( final ContainerFactory factory, final double[] sigmas, final int precision )
+	{
+		final int numDimensions = sigmas.length;
+		
+		final int[] imageSize = new int[ numDimensions ];
+		final double[][] kernel = new double[ numDimensions ][];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			kernel[ d ] = Util.createGaussianKernel1DDouble( sigmas[ d ], true, precision );
+			imageSize[ d ] = kernel[ d ].length;
+		}
+		
+		final Image<FloatType> kernelImg = new ImageFactory<FloatType>( new FloatType(), factory ).createImage( imageSize );
+		
+		final LocalizableCursor<FloatType> cursor = kernelImg.createLocalizableByDimCursor();
+		final int[] position = new int[ numDimensions ];
+		
+		while ( cursor.hasNext() )
+		{
+			cursor.fwd();
+			cursor.getPosition( position );
+			
+			double value = 1;
+			
+			for ( int d = 0; d < numDimensions; ++d )
+				value *= kernel[ d ][ position[ d ] ];
+			
+			cursor.getType().set( (float)value );
+		}
+		
+		cursor.close();
+		
+		return kernelImg;
+	}
+
 	final public static <T extends RealType<T>> Image<T> getGaussianKernel( final ImageFactory<T> imgFactory, final double sigma, final int numDimensions )
 	{
 		final double[ ] sigmas = new double[ numDimensions ];

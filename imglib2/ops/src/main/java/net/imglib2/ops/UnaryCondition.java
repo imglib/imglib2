@@ -42,26 +42,26 @@ package net.imglib2.ops;
  * 
  * @author Barry DeZonia
  */
-public class UnaryCondition<INDEX, T> implements Condition<INDEX> {
+public class UnaryCondition<INPUT, T> implements Condition<INPUT> {
 
-	private final Function<INDEX,T> f1;
+	private final Function<INPUT,T> f1;
 	private final T f1Val;
 	private final UnaryRelation<T> relation;
 
-	public UnaryCondition(Function<INDEX,T> f1, UnaryRelation<T> relation) {
+	public UnaryCondition(Function<INPUT,T> f1, UnaryRelation<T> relation) {
 		this.f1 = f1;
 		this.f1Val = f1.createOutput();
 		this.relation = relation;
 	}
 	
 	@Override
-	public boolean isTrue(Neighborhood<INDEX> neigh, INDEX point) {
-		f1.evaluate(neigh, point, f1Val);
+	public boolean isTrue(INPUT input) {
+		f1.compute(input, f1Val);
 		return relation.holds(f1Val);
 	}
 	
 	@Override
-	public UnaryCondition<INDEX, T> copy() {
-		return new UnaryCondition<INDEX, T>(f1.copy(), relation.copy());
+	public UnaryCondition<INPUT, T> copy() {
+		return new UnaryCondition<INPUT, T>(f1.copy(), relation.copy());
 	}
 }

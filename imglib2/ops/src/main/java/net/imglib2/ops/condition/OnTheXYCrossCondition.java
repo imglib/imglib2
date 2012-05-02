@@ -38,19 +38,22 @@
 package net.imglib2.ops.condition;
 
 import net.imglib2.ops.Condition;
-import net.imglib2.ops.Neighborhood;
+import net.imglib2.ops.PointSet;
+import net.imglib2.ops.Tuple2;
 
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class OnTheXYCrossCondition implements Condition<long[]> {
+public class OnTheXYCrossCondition implements Condition<Tuple2<PointSet,long[]>> {
 	
 	@Override
-	public boolean isTrue(Neighborhood<long[]> neigh, long[] point) {
-		long dx = point[0] - neigh.getKeyPoint()[0];
-		long dy = point[1] - neigh.getKeyPoint()[1];
+	public boolean isTrue(Tuple2<PointSet,long[]> input) {
+		long[] regionKeyPoint = input.get1().getAnchor();
+		long[] currPoint = input.get2();
+		long dx = currPoint[0] - regionKeyPoint[0];
+		long dy = currPoint[1] - regionKeyPoint[1];
 		return Math.abs(dx) == Math.abs(dy);
 	}
 
