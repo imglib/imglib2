@@ -36,24 +36,31 @@
 
 package net.imglib2.labeling;
 
-import net.imglib2.outofbounds.OutOfBounds;
-import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.Interval;
+import net.imglib2.util.Util;
 
 /**
+ * TODO:
  * 
- * TODO
- * 
- * @author Lee Kamentsky
- * @modified Christian Dietz
+ * @author Christian Dietz
  * 
  * @param <T>
  */
-public class LabelingOutOfBoundsRandomAccessFactory< T extends Comparable< T >, F extends Labeling< T >> implements OutOfBoundsFactory< LabelingType< T >, F >
+public abstract class LabelingFactory< T extends Comparable< T >>
 {
 
-	@Override
-	public OutOfBounds< LabelingType< T >> create( final F f )
+	public abstract Labeling< T > create( final long[] dim );
+
+	public Labeling< T > create( final int[] dim )
 	{
-		return new LabelingOutOfBoundsRandomAccess< T >( f );
+		return create( Util.int2long( dim ) );
+	}
+
+	public Labeling< T > create( final Interval interval )
+	{
+		final long[] dim = new long[ interval.numDimensions() ];
+		interval.dimensions( dim );
+
+		return create( dim );
 	}
 }

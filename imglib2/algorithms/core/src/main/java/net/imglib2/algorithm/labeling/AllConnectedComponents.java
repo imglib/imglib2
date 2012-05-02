@@ -54,127 +54,160 @@ import net.imglib2.type.logic.BitType;
 
 /**
  * Label all 8-connected components of a binary image
- *
+ * 
  * @author Lee Kamentsky
  */
-public class AllConnectedComponents {
-	protected static class PositionStack {
+public class AllConnectedComponents
+{
+	protected static class PositionStack
+	{
 		private final int dimensions;
-		private long [] storage;
+
+		private long[] storage;
+
 		private int position = 0;
-		public PositionStack(int dimensions) {
+
+		public PositionStack( int dimensions )
+		{
 			this.dimensions = dimensions;
-			storage = new long [100 * dimensions];
+			storage = new long[ 100 * dimensions ];
 		}
-		public void push(long [] position) {
+
+		public void push( long[] position )
+		{
 			int insertPoint = this.position * dimensions;
-			if (storage.length == insertPoint) {
-				long [] newStorage = new long [(this.position * 3 / 2) * dimensions];
-				System.arraycopy(storage, 0, newStorage, 0, storage.length);
+			if ( storage.length == insertPoint )
+			{
+				long[] newStorage = new long[ ( this.position * 3 / 2 ) * dimensions ];
+				System.arraycopy( storage, 0, newStorage, 0, storage.length );
 				storage = newStorage;
 			}
-			System.arraycopy(position, 0, storage, insertPoint, dimensions);
+			System.arraycopy( position, 0, storage, insertPoint, dimensions );
 			this.position++;
 		}
-		public void pop(long [] position) {
+
+		public void pop( long[] position )
+		{
 			this.position--;
-			System.arraycopy(storage, this.position * dimensions, 
-					position, 0, dimensions);
+			System.arraycopy( storage, this.position * dimensions, position, 0, dimensions );
 		}
-		public boolean isEmpty() {
+
+		public boolean isEmpty()
+		{
 			return position == 0;
 		}
 	}
+
 	/**
 	 * Label all connected components in the given image using an 8-connected
 	 * structuring element or it's N-dimensional analog (connect if touching
 	 * along diagonals as well as +/- one element in any direction).
-	 * @param <T> the type of the labels to apply
-	 * @param labeling Assign labels to this labeling space
-	 * @param img a binary image where true indicates parts of components
-	 * @param names supplies names for the different components as needed
-	 * @throws NoSuchElementException if there are not enough names
+	 * 
+	 * @param <T>
+	 *            the type of the labels to apply
+	 * @param labeling
+	 *            Assign labels to this labeling space
+	 * @param img
+	 *            a binary image where true indicates parts of components
+	 * @param names
+	 *            supplies names for the different components as needed
+	 * @throws NoSuchElementException
+	 *             if there are not enough names
 	 */
-	public static <T extends Comparable<T>> void labelAllConnectedComponents(
-			Labeling<T> labeling, Img<BitType> img, Iterator<T> names)
-	throws NoSuchElementException
+	public static < T extends Comparable< T >> void labelAllConnectedComponents( Labeling< T > labeling, Img< BitType > img, Iterator< T > names ) throws NoSuchElementException
 	{
-		long [][] offsets = getStructuringElement(img.numDimensions());
-		labelAllConnectedComponents(labeling, img, names, offsets);
+		long[][] offsets = getStructuringElement( img.numDimensions() );
+		labelAllConnectedComponents( labeling, img, names, offsets );
 	}
+
 	/**
 	 * Label all connected components in the given image using an arbitrary
 	 * structuring element.
-	 * @param <T> the type of the labels to apply
-	 * @param labeling Assign labels to this labeling space 
-	 * @param img a binary image where true indicates parts of components
-	 * @param names supplies names for the different components as needed
-	 * @param structuringElement an array of offsets to a pixel of the
-	 * pixels which are considered connected. For instance, a 4-connected
-	 * structuring element would be "new int [][] {{-1,0},{1,0},{0,-1},{0,1}}".
-	 * @throws NoSuchElementException if there are not enough names
+	 * 
+	 * @param <T>
+	 *            the type of the labels to apply
+	 * @param labeling
+	 *            Assign labels to this labeling space
+	 * @param img
+	 *            a binary image where true indicates parts of components
+	 * @param names
+	 *            supplies names for the different components as needed
+	 * @param structuringElement
+	 *            an array of offsets to a pixel of the pixels which are
+	 *            considered connected. For instance, a 4-connected structuring
+	 *            element would be "new int [][] {{-1,0},{1,0},{0,-1},{0,1}}".
+	 * @throws NoSuchElementException
+	 *             if there are not enough names
 	 */
-	public static <T extends Comparable<T>> void labelAllConnectedComponents(
-			Labeling<T> labeling, Img<BitType> img,
-			Iterator<T> names, long [][] structuringElement)
-	throws NoSuchElementException
+	public static < T extends Comparable< T >> void labelAllConnectedComponents( Labeling< T > labeling, Img< BitType > img, Iterator< T > names, long[][] structuringElement ) throws NoSuchElementException
 	{
-		Cursor<BitType> c = img.localizingCursor();
-		RandomAccess<BitType> raSrc = img.randomAccess();
-		OutOfBoundsFactory<LabelingType<T>, Img<LabelingType<T>>> factory =
-			new LabelingOutOfBoundsRandomAccessFactory<T, Img<LabelingType<T>>>();
-		OutOfBounds<LabelingType<T>> oob = factory.create(labeling);
-		OutOfBoundsRandomAccess<LabelingType<T>> raDest = 
-			new OutOfBoundsRandomAccess<LabelingType<T>>(labeling.numDimensions(), oob);
-		long [] srcPosition = new long [img.numDimensions()];
-		long [] destPosition = new long [labeling.numDimensions()];
-		long [] dimensions = new long [labeling.numDimensions()];
-		labeling.dimensions(dimensions);
-		PositionStack toDoList = new PositionStack(img.numDimensions()); 
-		while(c.hasNext()) {
+		Cursor< BitType > c = img.localizingCursor();
+		RandomAccess< BitType > raSrc = img.randomAccess();
+		OutOfBoundsFactory< LabelingType< T >, Labeling< T >> factory = new LabelingOutOfBoundsRandomAccessFactory< T, Labeling< T >>();
+		OutOfBounds< LabelingType< T >> oob = factory.create( labeling );
+		OutOfBoundsRandomAccess< LabelingType< T >> raDest = new OutOfBoundsRandomAccess< LabelingType< T >>( labeling.numDimensions(), oob );
+		long[] srcPosition = new long[ img.numDimensions() ];
+		long[] destPosition = new long[ labeling.numDimensions() ];
+		long[] dimensions = new long[ labeling.numDimensions() ];
+		labeling.dimensions( dimensions );
+		PositionStack toDoList = new PositionStack( img.numDimensions() );
+		while ( c.hasNext() )
+		{
 			BitType t = c.next();
-			if (t.get()) {
-				c.localize(srcPosition);
+			if ( t.get() )
+			{
+				c.localize( srcPosition );
 				boolean outOfBounds = false;
-				for (int i=0; i<dimensions.length; i++) {
-					if (srcPosition[i] >= dimensions[i]) {
+				for ( int i = 0; i < dimensions.length; i++ )
+				{
+					if ( srcPosition[ i ] >= dimensions[ i ] )
+					{
 						outOfBounds = true;
 						break;
 					}
 				}
-				if (outOfBounds) continue;
-				
-				raDest.setPosition(srcPosition);
+				if ( outOfBounds )
+					continue;
+
+				raDest.setPosition( srcPosition );
 				/*
 				 * Assign a label if no label has yet been assigned.
 				 */
-				LabelingType<T> label = raDest.get();
-				if (label.getLabeling().isEmpty()) {
-					List<T> currentLabel = label.intern(names.next());
-					label.setLabeling(currentLabel);
-					toDoList.push(srcPosition);
-					while (! toDoList.isEmpty()) {
+				LabelingType< T > label = raDest.get();
+				if ( label.getLabeling().isEmpty() )
+				{
+					List< T > currentLabel = label.intern( names.next() );
+					label.setLabeling( currentLabel );
+					toDoList.push( srcPosition );
+					while ( !toDoList.isEmpty() )
+					{
 						/*
 						 * Find neighbors at the position
 						 */
-						toDoList.pop(srcPosition);
-						for (long [] offset:structuringElement) {
+						toDoList.pop( srcPosition );
+						for ( long[] offset : structuringElement )
+						{
 							outOfBounds = false;
-							for (int i=0; i<offset.length; i++) {
-								destPosition[i] = srcPosition[i] + offset[i];
-								if ((destPosition[i] < 0) || (destPosition[i] >= dimensions[i])){
+							for ( int i = 0; i < offset.length; i++ )
+							{
+								destPosition[ i ] = srcPosition[ i ] + offset[ i ];
+								if ( ( destPosition[ i ] < 0 ) || ( destPosition[ i ] >= dimensions[ i ] ) )
+								{
 									outOfBounds = true;
 									break;
 								}
 							}
-							if (outOfBounds) continue;
-							raSrc.setPosition(destPosition);
-							if (raSrc.get().get()) { 
-								raDest.setPosition(destPosition);
-								label = raDest.get(); 
-								if (label.getLabeling().isEmpty()) {
-									label.setLabeling(currentLabel);
-									toDoList.push(destPosition);
+							if ( outOfBounds )
+								continue;
+							raSrc.setPosition( destPosition );
+							if ( raSrc.get().get() )
+							{
+								raDest.setPosition( destPosition );
+								label = raDest.get();
+								if ( label.getLabeling().isEmpty() )
+								{
+									label.setLabeling( currentLabel );
+									toDoList.push( destPosition );
 								}
 							}
 						}
@@ -183,33 +216,45 @@ public class AllConnectedComponents {
 			}
 		}
 	}
+
 	/**
 	 * Return an array of offsets to the 8-connected (or N-d equivalent)
-	 * structuring element for the dimension space. The structuring element
-	 * is the list of offsets from the center to the pixels to be examined.
+	 * structuring element for the dimension space. The structuring element is
+	 * the list of offsets from the center to the pixels to be examined.
+	 * 
 	 * @param dimensions
 	 * @return the structuring element.
 	 */
-	static public long [][] getStructuringElement(int dimensions) {
+	static public long[][] getStructuringElement( int dimensions )
+	{
 		int nElements = 1;
-		for (int i=0; i<dimensions; i++) nElements *= 3;
+		for ( int i = 0; i < dimensions; i++ )
+			nElements *= 3;
 		nElements--;
-		long [][] result = new long [nElements][dimensions];
-		long [] position = new long [dimensions];
-		Arrays.fill(position, -1);
-		for (int i=0; i<nElements; i++) {
-			System.arraycopy(position, 0, result[i], 0, dimensions);
+		long[][] result = new long[ nElements ][ dimensions ];
+		long[] position = new long[ dimensions ];
+		Arrays.fill( position, -1 );
+		for ( int i = 0; i < nElements; i++ )
+		{
+			System.arraycopy( position, 0, result[ i ], 0, dimensions );
 			/*
 			 * Special case - skip the center element.
 			 */
-			if (i == nElements / 2 - 1) {
-				position[0] += 2;
-			} else {
-				for (int j=0;j<dimensions;j++) {
-					if (position[j] == 1) {
-						position[j] = -1;
-					} else {
-						position[j]++;
+			if ( i == nElements / 2 - 1 )
+			{
+				position[ 0 ] += 2;
+			}
+			else
+			{
+				for ( int j = 0; j < dimensions; j++ )
+				{
+					if ( position[ j ] == 1 )
+					{
+						position[ j ] = -1;
+					}
+					else
+					{
+						position[ j ]++;
 						break;
 					}
 				}
@@ -217,29 +262,36 @@ public class AllConnectedComponents {
 		}
 		return result;
 	}
+
 	/**
-	 * Return an iterator that (endlessly) dispenses increasing integer
-	 * values for labeling components.
+	 * Return an iterator that (endlessly) dispenses increasing integer values
+	 * for labeling components.
 	 * 
 	 * @param start
 	 * @return an iterator dispensing Integers
 	 */
-	static public Iterator<Integer> getIntegerNames(final int start) {
-		return new Iterator<Integer>() {
+	static public Iterator< Integer > getIntegerNames( final int start )
+	{
+		return new Iterator< Integer >()
+		{
 			int current = start;
+
 			@Override
-			public boolean hasNext() {
+			public boolean hasNext()
+			{
 				return true;
 			}
 
 			@Override
-			public Integer next() {
+			public Integer next()
+			{
 				return current++;
 			}
 
 			@Override
-			public void remove() {
-				
+			public void remove()
+			{
+
 			}
 		};
 	}

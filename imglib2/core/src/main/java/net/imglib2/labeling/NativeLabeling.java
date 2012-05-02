@@ -33,17 +33,10 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-
 package net.imglib2.labeling;
 
-import net.imglib2.img.NativeImg;
-import net.imglib2.img.basictypeaccess.IntAccess;
-
-/**
- * TODO
- *
- */
-public interface NativeLabeling<T extends Comparable<T>, A extends IntAccess> extends Labeling<T>, NativeImg<LabelingType<T>, A> {
-	public LabelingMapping<T, Integer> getMapping();
+public interface NativeLabeling< T extends Comparable< T >> extends Labeling< T >
+{
+	public LabelingMapping< T > getMapping();
 
 }

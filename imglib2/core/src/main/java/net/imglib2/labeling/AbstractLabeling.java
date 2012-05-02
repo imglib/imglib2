@@ -38,65 +38,102 @@ package net.imglib2.labeling;
 
 import java.util.Collection;
 
+import net.imglib2.AbstractInterval;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.roi.IterableRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
 
 /**
- * A labeling represents the assignment of zero or more labels to the
- * pixels in a space.
+ * A labeling represents the assignment of zero or more labels to the pixels in
+ * a space.
  * 
- * @param <T> - the type used to label the pixels, for instance string
- * names for user-assigned object labels or integers for machine-labeled
- * images.
- *
+ * @param <T>
+ *            - the type used to label the pixels, for instance string names for
+ *            user-assigned object labels or integers for machine-labeled
+ *            images.
+ * 
  * @author Lee Kamentsky
  */
-public abstract class AbstractLabeling<T extends Comparable<T>> extends AbstractImg<LabelingType<T>> implements Labeling<T> {
+public abstract class AbstractLabeling< T extends Comparable< T >> extends AbstractInterval implements Labeling< T >
+{
 
-	protected LabelingROIStrategy<T, ? extends Labeling<T>> strategy;
+	protected LabelingROIStrategy< T, ? extends Labeling< T >> strategy;
 
-	protected AbstractLabeling(final long [] size, LabelingROIStrategyFactory<T> factory) {
-		super(size);
-		this.strategy = factory.createLabelingROIStrategy(this);
+	protected long size;
+
+	protected AbstractLabeling( final long[] size, final LabelingROIStrategyFactory< T > factory )
+	{
+		super( size );
+		this.size = AbstractImg.numElements( size );
+		this.strategy = factory.createLabelingROIStrategy( this );
 	}
+
+	@Override
+	public long size()
+	{
+		return size;
+	}
+
 	/**
 	 * Use an alternative strategy for making labeling cursors.
-	 * @param strategy - a strategy for making labeling cursors.
+	 * 
+	 * @param strategy
+	 *            - a strategy for making labeling cursors.
 	 */
-	public void setLabelingCursorStrategy(LabelingROIStrategy<T, ? extends Labeling<T>> strategy) {
+	public void setLabelingCursorStrategy( final LabelingROIStrategy< T, ? extends Labeling< T >> strategy )
+	{
 		this.strategy = strategy;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.labeling.Labeling#getRegionOfInterest(java.lang.Comparable)
+	// /* (non-Javadoc)
+	// * @see
+	// net.imglib2.IterableRealInterval#equalIterationOrder(net.imglib2.IterableRealInterval)
+	// */
+	// @Override
+	// public boolean equalIterationOrder(IterableRealInterval<?> f) {
+	// return false;
+	// }
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.imglib2.labeling.Labeling#getRegionOfInterest(java.lang.Comparable)
 	 */
 	@Override
-	public RegionOfInterest getRegionOfInterest(T label) {
-		return strategy.createRegionOfInterest(label);
+	public RegionOfInterest getRegionOfInterest( final T label )
+	{
+		return strategy.createRegionOfInterest( label );
 	}
 
-	/* (non-Javadoc)
-	 * @see net.imglib2.labeling.Labeling#getIterableRegionOfInterest(java.lang.Comparable)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.imglib2.labeling.Labeling#getIterableRegionOfInterest(java.lang.
+	 * Comparable)
 	 */
 	@Override
-	public IterableRegionOfInterest getIterableRegionOfInterest(T label) {
-		return strategy.createIterableRegionOfInterest(label);
+	public IterableRegionOfInterest getIterableRegionOfInterest( final T label )
+	{
+		return strategy.createIterableRegionOfInterest( label );
 	}
 
 	/**
-	 * find the coordinates of the bounding box around the given 
-	 * label. The the minimum extents are inclusive (there will be pixels
-	 * at the coordinates of the minimum extents) and the maximum
-	 * extents are exclusive(all pixels will have coordinates less than
-	 * the maximum extents)
-	 * @param label - find pixels with this label
+	 * find the coordinates of the bounding box around the given label. The the
+	 * minimum extents are inclusive (there will be pixels at the coordinates of
+	 * the minimum extents) and the maximum extents are exclusive(all pixels
+	 * will have coordinates less than the maximum extents)
+	 * 
+	 * @param label
+	 *            - find pixels with this label
 	 * @return true if some pixels are labeled, false if none have the label
 	 */
-	public boolean getExtents(T label, long [] minExtents, long [] maxExtents) {
-		return strategy.getExtents(label, minExtents, maxExtents);
+	@Override
+	public boolean getExtents( final T label, final long[] minExtents, final long[] maxExtents )
+	{
+		return strategy.getExtents( label, minExtents, maxExtents );
 	}
-	
+
 	/**
 	 * Find the first pixel in a raster scan of the object with the given label.
 	 * 
@@ -104,24 +141,34 @@ public abstract class AbstractLabeling<T extends Comparable<T>> extends Abstract
 	 * @param start
 	 * @return
 	 */
-	public boolean getRasterStart(T label, long [] start) {
-		return strategy.getRasterStart(label, start);
+	@Override
+	public boolean getRasterStart( final T label, final long[] start )
+	{
+		return strategy.getRasterStart( label, start );
 	}
-	
+
 	/**
 	 * Return the area or suitable N-d analog of the labeled object
-	 * @param label - label for object in question
+	 * 
+	 * @param label
+	 *            - label for object in question
 	 * @return area in units of pixel / voxel / etc.
 	 */
-	public long getArea(T label) {
-		return strategy.getArea(label);
+	@Override
+	public long getArea( final T label )
+	{
+		return strategy.getArea( label );
 	}
-	
+
 	/**
 	 * Find all labels in the space
+	 * 
 	 * @return a collection of the labels.
 	 */
-	public Collection<T> getLabels() {
+	@Override
+	public Collection< T > getLabels()
+	{
 		return strategy.getLabels();
 	}
+
 }
