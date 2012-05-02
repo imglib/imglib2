@@ -38,9 +38,10 @@ package net.imglib2.labeling;
 
 /**
  * TODO
- *
+ * 
  * @author Lee Kamentsky
  */
-public interface LabelingROIStrategyFactory<T extends Comparable<T>> {
-	public <L extends Labeling<T>> LabelingROIStrategy<T, L> createLabelingROIStrategy(L labeling);
+public interface LabelingROIStrategyFactory< T extends Comparable< T >>
+{
+	public < L extends Labeling< T >> LabelingROIStrategy< T, L > createLabelingROIStrategy( L labeling );
 }

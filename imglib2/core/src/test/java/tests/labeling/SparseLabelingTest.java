@@ -1,25 +1,22 @@
-/*
- * #%L
- * ImgLib2: a general-purpose, multidimensional image processing library.
- * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
- * %%
+/**
+ * Copyright (c) 2009--2012, ImgLib2 developers
+ * All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.  Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.  Neither the name of the Fiji project nor
+ * the names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -27,13 +24,9 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
- * #L%
+ *
+ * @author Tobias Pietzsch
  */
-
 package tests.labeling;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -52,6 +45,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.sparse.NtreeImgFactory;
 import net.imglib2.labeling.DefaultROIStrategyFactory;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
@@ -63,15 +57,14 @@ import net.imglib2.type.numeric.real.DoubleType;
 import org.junit.Test;
 
 /**
- * TODO
+ * @author Tobias Pietzsch
  * 
- * @author Lee Kamentsky
  */
-public class LabelingTest
+public class SparseLabelingTest
 {
-	protected < T extends Comparable< T >> Labeling< T > makeLabeling( final T exemplar, final long[] dimensions )
+	protected < T extends Comparable< T >> Labeling< T > makeLabeling( final long[] dimensions )
 	{
-		final Labeling< T > labeling = new NativeImgLabeling< T, IntType >( new ArrayImgFactory< IntType >().create( dimensions, new IntType() ) );
+		final Labeling< T > labeling = new NativeImgLabeling< T, IntType >( new NtreeImgFactory< IntType >().create( dimensions, new IntType() ) );
 		return labeling;
 	}
 
@@ -79,7 +72,7 @@ public class LabelingTest
 	{
 		assertTrue( labels.length > 0 );
 		assertEquals( labels.length, coordinates.length );
-		final Labeling< T > labeling = makeLabeling( labels[ 0 ], dimensions );
+		final Labeling< T > labeling = makeLabeling( dimensions );
 		final RandomAccess< LabelingType< T >> a = labeling.randomAccess();
 		for ( int i = 0; i < coordinates.length; i++ )
 		{
@@ -122,7 +115,7 @@ public class LabelingTest
 	public void testDefaultConstructor()
 	{
 		final long[] dimensions = { 5, 6, 7 };
-		final Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new ArrayImgFactory< IntType >().create( dimensions, new IntType() ) );
+		Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new NtreeImgFactory< IntType >().create( dimensions, new IntType() ) );;
 		assertEquals( 3, labeling.numDimensions() );
 	}
 
@@ -130,16 +123,15 @@ public class LabelingTest
 	public void testFactoryConstructor()
 	{
 		final long[] dimensions = { 5, 6, 7 };
-
-		final Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new DefaultROIStrategyFactory< String >(), new ArrayImgFactory< IntType >().create( dimensions, new IntType() ) );
-
+		Labeling< String > labeling;
+		labeling = new NativeImgLabeling< String, IntType >( new DefaultROIStrategyFactory< String >(), new NtreeImgFactory< IntType >().create( dimensions, new IntType() ) );
 		assertEquals( 3, labeling.numDimensions() );
 	}
 
 	@Test
 	public void testEmptyImage()
 	{
-		final Labeling< String > labeling = makeLabeling( "Foo", new long[] { 5, 6, 7 } );
+		final Labeling< String > labeling = makeLabeling( new long[] { 5, 6, 7 } );
 		assertTrue( labeling.getLabels().isEmpty() );
 		int iterations = 0;
 		for ( final LabelingType< String > t : labeling )
@@ -288,7 +280,7 @@ public class LabelingTest
 	public void testSphere()
 	{
 		final long[] dimensions = new long[] { 20, 20, 20 };
-		final Labeling< String > labeling = makeLabeling( "MyLabels", dimensions );
+		final Labeling< String > labeling = makeLabeling( dimensions );
 		labelSphere( labeling, "Foo", new double[] { 10, 9, 8 }, 5 );
 		/*
 		 * Test the extents
@@ -343,7 +335,7 @@ public class LabelingTest
 	public void testTwoLabels()
 	{
 		final long[] dimensions = new long[] { 20, 20, 40 };
-		final Labeling< String > labeling = makeLabeling( "MyLabels", dimensions );
+		final Labeling< String > labeling = makeLabeling( dimensions );
 		final String[] labels = { "Foo", "Bar" };
 		final double[][] centers = { { 10, 9, 8 }, { 8, 9, 30 } };
 		for ( int i = 0; i < 2; i++ )
@@ -383,7 +375,7 @@ public class LabelingTest
 	public void testOverlappingLabels()
 	{
 		final long[] dimensions = new long[] { 20, 20, 30 };
-		final Labeling< String > labeling = makeLabeling( "MyLabels", dimensions );
+		final Labeling< String > labeling = makeLabeling( dimensions );
 		final String[] labels = { "Foo", "Bar" };
 		final double[][] centers = { { 10, 9, 8 }, { 8, 9, 12 } };
 		for ( int i = 0; i < 2; i++ )
@@ -438,7 +430,7 @@ public class LabelingTest
 	public void TestCopy()
 	{
 		final long[] dimensions = new long[] { 20, 30 };
-		final Labeling< Integer > labeling = makeLabeling( 1, dimensions );
+		final Labeling< Integer > labeling = makeLabeling( dimensions );
 		final Random r = new Random( 202030 );
 		for ( final LabelingType< Integer > t : labeling )
 		{
@@ -463,7 +455,7 @@ public class LabelingTest
 	{
 		final int rounds = 10;
 		final long[] dimensions = new long[] { 1000, 1000, 40 };
-		final Labeling< Integer > labeling = makeLabeling( 1, dimensions );
+		final Labeling< Integer > labeling = makeLabeling( dimensions );
 
 		for ( int r = 0; r < rounds; r++ )
 		{
@@ -476,4 +468,34 @@ public class LabelingTest
 		}
 	}
 
+	@Test
+	public void testSparseImgRndAccess()
+	{
+		final long[] dimensions = new long[] { 1000, 1000, 40 };
+		final Img< IntType > tree = new NtreeImgFactory< IntType >().create( dimensions, new IntType() );
+
+		long[] posA = new long[] { 1, 1, 1 };
+		long[] posB = new long[] { 5, 5, 5 };
+
+		int label = 5;
+
+		RandomAccess< IntType > randomAccess = tree.randomAccess();
+
+		// Set 1,1,1 to label
+		randomAccess.setPosition( posA );
+		randomAccess.get().set( label );
+
+		// Set 5,5,5 to label
+		randomAccess.setPosition( posB );
+		randomAccess.get().set( label );
+
+		// Set 1,1,1 to def label (defined in ntree img)
+		randomAccess.setPosition( posA );
+		randomAccess.get().set( 0 );
+
+		// Set tp 5,5,5
+		randomAccess.setPosition( posB );
+
+		assertEquals( ( int ) randomAccess.get().get(), label );
+	}
 }
