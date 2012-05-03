@@ -69,11 +69,12 @@ public class AnisotropicDiffusion3DExample {
 		
 		ImagePlus imp = ImageJFunctions.wrap(image, "Processed");
 		imp.show();
+		imp.getWindow().setLocation(100, 500);
 
 		// Instantiate diffusion solver
 
-		StandardDiffusionScheme3D algo = new StandardDiffusionScheme3D(image, diffusionTensor);
-//		NonNegativityDiffusionScheme3D algo = new NonNegativityDiffusionScheme3D(image, diffusionTensor);
+//		StandardDiffusionScheme3D algo = new StandardDiffusionScheme3D(image, diffusionTensor);
+		NonNegativityDiffusionScheme3D algo = new NonNegativityDiffusionScheme3D(image, diffusionTensor);
 
 		for (int i = 0; i < 1; i++) {
 			System.out.println("Iteration "+(i+1));
@@ -85,13 +86,19 @@ public class AnisotropicDiffusion3DExample {
 			imp.updateAndDraw();
 		}
 
-		ImageJFunctions.show(algo.getIncrement(), "Increment");
+		ImagePlus inc = ImageJFunctions.wrap(algo.getIncrement(), "Increment");
+		inc.show();
+		ImageWindow incWin = inc.getWindow();
+		incWin.setLocation(500, 500);
+		inc.setSlice(inc.getStackSize()/2+1);
+		
 //		ImageJFunctions.wrapFloat(diffusionTensor, "Diffusion tensor").show();
 		for (int i = 0; i < 6; i++) {
-			ImagePlus diffimp = ImageJFunctions.wrap(Views.hyperSlice(diffusionTensor, 3, i), "DiffTensor"+i);
+			ImagePlus diffimp = ImageJFunctions.wrap(Views.hyperSlice(diffusionTensor, 3, i), "DT_"+i);
 			diffimp.show();
 			ImageWindow win = diffimp.getWindow();
 			win.setLocation(300 * (3 - ( i % 3) ), 300 * ( i/3 ));
+			diffimp.setSlice(diffimp.getStackSize()/2+1);
 		}
 		ImageJFunctions.show(copy, "Original image");
 	}

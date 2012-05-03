@@ -37,19 +37,20 @@
 
 package net.imglib2.ops.function.real;
 
+import java.util.Arrays;
+
 import net.imglib2.ops.Function;
 import net.imglib2.ops.PointSet;
+import net.imglib2.ops.Tuple2;
 import net.imglib2.type.numeric.RealType;
-
-// not sure this implementation satisfies the definition of an impulse
-// function. designed as an example.
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class RealImpulseFunction<T extends RealType<T>> implements Function<PointSet,T> {
-
+public class RealImpulseFunction<T extends RealType<T>>
+	implements Function<Tuple2<PointSet,long[]>,T>
+{
 	private final Function<long[],T> otherFunc;
 	
 	public RealImpulseFunction(Function<long[],T> otherFunc)
@@ -58,8 +59,11 @@ public class RealImpulseFunction<T extends RealType<T>> implements Function<Poin
 	}
 
 	@Override
-	public void compute(PointSet points, T output) {
-		otherFunc.compute(points.getAnchor(), output);
+	public void compute(Tuple2<PointSet,long[]> input, T output) {
+		if (Arrays.equals(input.get1().getAnchor(), input.get2()))
+			output.setReal(1);
+		else
+			output.setReal(0);
 	}
 
 	@Override

@@ -9,13 +9,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -47,7 +47,7 @@ import net.imglib2.util.Util;
  * Internally used coordinates use an interval
  * [0<sup><em>n</em></sup>,max<sup><em>n</em></sup>-min<sup><em>n</em></sup>]
  * and compensate for min-shift on localization and positioning.
- * 
+ *
  * @param <T>
  *
  * @author Stephan Saalfeld
@@ -56,7 +56,7 @@ import net.imglib2.util.Util;
 public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 {
 	final protected RandomAccess< T > outOfBoundsRandomAccess;
-	
+
 	final protected int n;
 
 	/**
@@ -74,21 +74,21 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	 * Minimum of the wrapped {@link RandomAccessible}.
 	 */
 	final protected long[] min;
-	
+
 	/**
 	 * Period of the extended interval.
 	 * This depends on whether boundary pixels are mirrored.
 	 * {@see OutOfBoundsMirrorDoubleBoundary} {@see OutOfBoundsMirrorSingleBoundary}.
 	 */
 	final protected long[] p;
-	
+
 	/* true when increasing, false when decreasing */
 	final protected boolean[] inc;
-	
+
 	final protected boolean[] dimIsOutOfBounds;
-	
+
 	protected boolean isOutOfBounds = false;
-	
+
 	protected AbstractOutOfBoundsMirror( final AbstractOutOfBoundsMirror< T > outOfBounds )
 	{
 		n = outOfBounds.numDimensions();
@@ -107,10 +107,10 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
 			inc[ d ] = outOfBounds.inc[ d ];
 		}
-		
+
 		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copyRandomAccess();
 	}
-	
+
 	public < F extends Interval & RandomAccessible< T > > AbstractOutOfBoundsMirror( final F f )
 	{
 		n = f.numDimensions();
@@ -124,10 +124,10 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		inc = new boolean[ n ];
 		for ( int i = 0; i < dimension.length; ++i )
 			inc[ i ] = true;
-		
+
 		outOfBoundsRandomAccess = f.randomAccess();
 	}
-	
+
 	final protected void checkOutOfBounds()
 	{
 		for ( int d = 0; d < n; ++d )
@@ -140,38 +140,38 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		}
 		isOutOfBounds = false;
 	}
-	
-	
+
+
 	/* EuclideanSpace */
-	
+
 	@Override
 	public int numDimensions()
 	{
 		return n;
 	}
-	
+
 	/* OutOfBounds */
-	
+
 	@Override
 	public boolean isOutOfBounds()
 	{
 		return isOutOfBounds;
 	}
-	
+
 	/* Sampler */
-	
+
 	@Override
 	public T get()
 	{
 		return outOfBoundsRandomAccess.get();
 	}
-	
+
 	@Override
 	abstract public AbstractOutOfBoundsMirror< T > copy();
-	
-	
+
+
 	/* Localizable */
-	
+
 	@Override
 	public void localize( final float[] pos )
 	{
@@ -192,14 +192,14 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		for ( int d = 0; d < n; ++d )
 			pos[ d ] = ( int )( this.zeroMinPos[ d ] + min[ d ] );
 	}
-	
+
 	@Override
 	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
 			pos[ d ] = this.zeroMinPos[ d ] + min[ d ];
 	}
-	
+
 	@Override
 	public float getFloatPosition( final int d )
 	{
@@ -223,85 +223,76 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	{
 		return zeroMinPos[ d ] + min[ d ];
 	}
-	
-	
+
+
 	/* Positionable */
-	
+
 	/**
 	 * Override with a more efficient version.
 	 */
 	@Override
-	public void move( final int distance, final int d )
-	{
-		if ( distance > 0 )
-		{
-			for ( int i = 0; i < distance; ++i )
-				fwd( d );
-		}
-		else
-		{
-			for ( int i = -distance; i > 0; --i )
-				bck( d );
-		}
-	}
-	
-	@Override
 	public void move( final long distance, final int d )
 	{
-		move( ( int )distance, d );
+		setPosition( getLongPosition( d ) + distance, d );
 	}
-	
+
+	@Override
+	public void move( final int distance, final int d )
+	{
+		move( ( long ) distance, d );
+	}
+
 	@Override
 	public void move( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
 			move( localizable.getLongPosition( d ), d );
 	}
-	
+
 	@Override
 	public void move( final int[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
 			move( distance[ d ], d );
 	}
-	
+
 	@Override
 	public void move( final long[] distance )
 	{
 		for ( int d = 0; d < n; ++d )
 			move( distance[ d ], d );
 	}
-	
+
 	@Override
 	public void setPosition( final int position, final int d )
 	{
-		setPosition( ( long )position, d );
+		setPosition( ( long ) position, d );
 	}
-	
+
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
 		for ( int d = 0; d < n; ++d )
 			setPosition( localizable.getLongPosition( d ), d );
 	}
-	
+
 	@Override
 	public void setPosition( final int[] position )
 	{
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
 	}
-	
+
 	@Override
 	public void setPosition( final long[] position )
 	{
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
 	}
-	
-	
+
+
 	/* Object */
-	
+
 	@Override
 	public String toString()
 	{

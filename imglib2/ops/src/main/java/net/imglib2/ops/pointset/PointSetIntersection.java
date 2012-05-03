@@ -83,7 +83,7 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	}
 	
 	@Override
-	public PointSetIntersectionIterator createIterator() {
+	public PointSetIterator createIterator() {
 		return new PointSetIntersectionIterator();
 	}
 	

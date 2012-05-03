@@ -324,14 +324,14 @@ public class Util
 	{
 		if (data == null || data.length < 2)return;
 		int i = left, j = right;
-		long x = data[(left + right) / 2];
+		final long x = data[(left + right) / 2];
 		do
 		{
 			while (data[i] < x) i++;
 			while (x < data[j]) j--;
 			if (i <= j)
 			{
-				long temp = data[i];
+				final long temp = data[i];
 				data[i] = data[j];
 				data[j] = temp;
 				i++;
@@ -349,14 +349,14 @@ public class Util
 	{
 		if (data == null || data.length < 2)return;
 		int i = left, j = right;
-		double x = data[(left + right) / 2];
+		final double x = data[(left + right) / 2];
 		do
 		{
 			while (data[i] < x) i++;
 			while (x < data[j]) j--;
 			if (i <= j)
 			{
-				double temp = data[i];
+				final double temp = data[i];
 				data[i] = data[j];
 				data[j] = temp;
 				i++;
@@ -374,14 +374,14 @@ public class Util
 	{
 		if (data == null || data.length < 2)return;
 		int i = left, j = right;
-		float x = data[(left + right) / 2];
+		final float x = data[(left + right) / 2];
 		do
 		{
 			while (data[i] < x) i++;
 			while (x < data[j]) j--;
 			if (i <= j)
 			{
-				float temp = data[i];
+				final float temp = data[i];
 				data[i] = data[j];
 				data[j] = temp;
 				i++;
@@ -397,18 +397,18 @@ public class Util
 	{
 		if (data == null || data.length < 2)return;
 		int i = left, j = right;
-		double x = data[(left + right) / 2];
+		final double x = data[(left + right) / 2];
 		do
 		{
 			while (data[i] < x) i++;
 			while (x < data[j]) j--;
 			if (i <= j)
 			{
-				double temp = data[i];
+				final double temp = data[i];
 				data[i] = data[j];
 				data[j] = temp;
 
-				int temp2 = sortAlso[i];
+				final int temp2 = sortAlso[i];
 				sortAlso[i] = sortAlso[j];
 				sortAlso[j] = temp2;
 
@@ -520,7 +520,7 @@ public class Util
             if (normalize)
             {
                     double sum = 0;
-                    for (double value : gaussianKernel)
+                    for (final double value : gaussianKernel)
                             sum += value;
 
                     for (int i = 0; i < gaussianKernel.length; ++i)
@@ -799,7 +799,7 @@ public class Util
 
 	public static boolean[][] getRecursiveCoordinates( final int numDimensions )
 	{
-		boolean[][] positions = new boolean[ Util.pow( 2, numDimensions ) ][ numDimensions ];
+		final boolean[][] positions = new boolean[ Util.pow( 2, numDimensions ) ][ numDimensions ];
 
 		setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
 
@@ -1120,5 +1120,23 @@ public class Util
 			return getTypeFromRealInterval( (RealRandomAccessibleRealInterval<T>)ra );
 		else
 			return ra.realRandomAccess().get();
+	}
+	
+	/**
+	 * (Hopefully) fast floor log<sub>2</sub> of an unsigned(!) integer value.
+	 * 
+	 * @param v unsigned integer
+	 * @return floor log<sub>2</sub>
+	 */
+	final static public int ldu( int v )
+	{
+	    int c = 0;
+	    do
+	    {
+	    	v >>= 1;
+	        ++c;
+	    }
+	    while ( v > 1 );
+	    return c;
 	}
 }

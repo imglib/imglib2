@@ -36,44 +36,40 @@
 
 package net.imglib2.labeling;
 
-import net.imglib2.img.basictypeaccess.IntAccess;
-
 /**
- * A labeling represents the assignment of zero or more labels to the
- * pixels in a space.
+ * A labeling represents the assignment of zero or more labels to the pixels in
+ * a space.
  * 
- * @param <T> - the type used to label the pixels, for instance string
- * names for user-assigned object labels or integers for machine-labeled
- * images.
- *
+ * @param <T>
+ *            - the type used to label the pixels, for instance string names for
+ *            user-assigned object labels or integers for machine-labeled
+ *            images.
+ * 
  * @author Lee Kamentsky
  */
-public abstract class AbstractNativeLabeling<T extends Comparable<T>, A extends IntAccess> 
-	extends AbstractLabeling<T> implements NativeLabeling<T, A> {
+public abstract class AbstractNativeLabeling< T extends Comparable< T >> extends AbstractLabeling< T > implements NativeLabeling< T >
+{
 
-	protected LabelingType<T> linkedType;
-	protected LabelingMapping<T, Integer> mapping = new LabelingMapping<T, Integer>(0);
-	
-	protected AbstractNativeLabeling(long [] dim, LabelingROIStrategyFactory<T> factory) {
-		super(dim, factory);
+	/**
+	 * Mapping from Label
+	 */
+	protected LabelingMapping< T > mapping;
+
+	protected AbstractNativeLabeling( final long[] dim, final LabelingROIStrategyFactory< T > factory, final LabelingMapping< T > mapping )
+	{
+		super( dim, factory );
+		this.mapping = mapping;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.imglib2.labeling.NativeLabeling#getMapping()
 	 */
 	@Override
-	public LabelingMapping<T, Integer> getMapping() {
+	public LabelingMapping< T > getMapping()
+	{
 		return mapping;
 	}
 
-	@Override
-	public void setLinkedType( final LabelingType<T> type ) { 
-		this.linkedType = type;
-	}
-	
-	@Override
-	public LabelingType<T> createLinkedType()
-	{
-		try{ return linkedType.duplicateTypeOnSameNativeImg(); }
-		catch ( NullPointerException e ){ return null; }
-	}
 }

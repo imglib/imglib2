@@ -8,4 +8,5 @@
 target
 *.class
 *~
+# For Fiji #
 *.jar

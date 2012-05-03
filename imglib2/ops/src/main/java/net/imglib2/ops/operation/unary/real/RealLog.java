@@ -40,8 +40,8 @@ package net.imglib2.ops.operation.unary.real;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Sets the real component of an output real number to the log of
- * the real component of an input real number.
+ * Sets the real component of an output real number to the natural
+ * log of the real component of an input real number.
  * 
  * @author Barry DeZonia
  */
