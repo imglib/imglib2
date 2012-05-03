@@ -34,60 +34,32 @@
  * #L%
  */
 
-package net.imglib2.img.sparse;
 
-import net.imglib2.img.basictypeaccess.ShortAccess;
+package net.imglib2.ops.operation.binary.real;
+
+import net.imglib2.type.numeric.RealType;
 
 /**
+ * A real operation that sets the real component to the modulus value between
+ * the real components of input 1 and input 2.
  * 
- * @author Tobias Pietzsch
+ * @author Barry DeZonia
  */
-public final class ShortNtree implements ShortAccess, NtreeAccess< Short, ShortNtree >
+public final class RealMod<
+		I1 extends RealType<I1>,
+		I2 extends RealType<I2>,
+		O extends RealType<O>>
+	implements RealBinaryOperation<I1, I2, O>
 {
-
-	private long[] position;
-
-	private Ntree< Short > data;
-
-	public ShortNtree( long[] dimenions, final long[] position, short value )
-	{
-		this.data = new Ntree< Short >( dimenions, value );
-		this.position = position;
-	}
-
-	public ShortNtree( Ntree< Short > data, long[] position )
-	{
-		this.data = data;
-		this.position = position;
+	@Override
+	public O compute(I1 x1, I2 x2, O output) {
+		double value = x1.getRealDouble() % x2.getRealDouble();
+		output.setReal(value);
+		return output;
 	}
 
 	@Override
-	public void close()
-	{}
-
-	@Override
-	public short getValue( final int index )
-	{
-		// ignore index, get tree position from RandomAccess/Cursor
-		return data.getNode( position ).getValue();
-	}
-
-	@Override
-	public void setValue( final int index, final short value )
-	{
-		// ignore index, get tree position from RandomAccess/Cursor
-		data.createNodeWithValue( position, value );
-	}
-
-	@Override
-	public Ntree< Short > getCurrentStorageNtree()
-	{
-		return data;
-	}
-
-	@Override
-	public ShortNtree createInstance( long[] position )
-	{
-		return new ShortNtree( data, position );
+	public RealMod<I1,I2,O> copy() {
+		return new RealMod<I1,I2,O>();
 	}
 }

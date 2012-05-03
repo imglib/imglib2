@@ -38,6 +38,7 @@ package net.imglib2.view;
 
 import net.imglib2.EuclideanSpace;
 import net.imglib2.ExtendedRandomAccessibleInterval;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
@@ -45,6 +46,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RandomAccessibleOnRealRandomAccessible;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
@@ -583,6 +585,26 @@ public class Views
 	{
 		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) )
 			return ( IterableInterval< T > )randomAccessibleInterval;
+		else
+			return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
+	}
+
+	/**
+	 * Return an {@link IterableInterval} having {@link FlatIterationOrder}. If
+	 * the passed {@link RandomAccessibleInterval} is already an
+	 * {@link IterableInterval} with {@link FlatIterationOrder} then it is
+	 * returned directly (this is the case for {@link ArrayImg}). If not, then
+	 * an {@link IterableRandomAccessibleInterval} is created.
+	 *
+	 * @param randomAccessibleInterval
+	 *            the source
+	 * @return an {@link IterableInterval} with {@link FlatIterationOrder}
+	 */
+	@SuppressWarnings( "unchecked" )
+	public static < T > IterableInterval< T > flatIterable( final RandomAccessibleInterval< T > randomAccessibleInterval )
+	{
+		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) && FlatIterationOrder.class.isInstance( ( ( IterableInterval< T > ) randomAccessibleInterval ).iterationOrder() ) )
+			return ( IterableInterval< T > ) randomAccessibleInterval;
 		else
 			return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
 	}
