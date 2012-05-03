@@ -60,7 +60,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayCursor;
 import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.cell.CellCursor;
 import net.imglib2.img.cell.CellImgFactory;
@@ -379,8 +378,8 @@ public class PerformanceBenchmark {
 	private Img<UnsignedByteType> createArrayImage(final byte[] data, final int w, final int h) {
 		//return createImage(data, width, height, new ArrayContainerFactory());
 		// NB: Avoid copying the data.
-		final ByteAccess byteAccess = new ByteArray(data);
-		final ArrayImg<UnsignedByteType, ByteAccess> array = new ArrayImg<UnsignedByteType, ByteAccess>( byteAccess, new long[] {w, h}, 1 );
+		final ByteArray byteAccess = new ByteArray(data);
+		final ArrayImg<UnsignedByteType, ByteArray> array = new ArrayImg<UnsignedByteType, ByteArray>( byteAccess, new long[] {w, h}, 1 );
 		array.setLinkedType(new UnsignedByteType(array));
 		return array;
 		//return DevUtil.createImageFromArray(data, new int[] {width, height});

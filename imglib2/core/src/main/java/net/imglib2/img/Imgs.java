@@ -29,13 +29,20 @@ package net.imglib2.img;
 
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.basictypeaccess.BitAccess;
-import net.imglib2.img.basictypeaccess.ByteAccess;
-import net.imglib2.img.basictypeaccess.IntAccess;
-import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.img.basictypeaccess.ShortAccess;
+import net.imglib2.img.basictypeaccess.array.BitArray;
+import net.imglib2.img.basictypeaccess.array.ByteArray;
+import net.imglib2.img.basictypeaccess.array.DoubleArray;
+import net.imglib2.img.basictypeaccess.array.FloatArray;
+import net.imglib2.img.basictypeaccess.array.IntArray;
+import net.imglib2.img.basictypeaccess.array.LongArray;
+import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.img.planar.PlanarImg;
+import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
+import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
@@ -43,6 +50,8 @@ import net.imglib2.type.numeric.integer.ShortType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * Convenience factory methods for creation of the most common {@link Img}
@@ -57,99 +66,323 @@ final public class Imgs
 {
 	private Imgs() {}
 	
+	/* ArrayImg */
+	
 	/**
-	 * Create an {@link ArrayImg}<{@link UnsignedByteType}, {@link ByteAccess}>.
+	 * Create an {@link ArrayImg}<{@link UnsignedByteType}, {@link ByteArray}>.
 	 * 
 	 * @param dim
 	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< UnsignedByteType, ByteAccess > unsignedByteArray( final long... dim )
+	final static public ArrayImg< UnsignedByteType, ByteArray > unsignedByteArray( final long... dim )
 	{
-		return ( ArrayImg< UnsignedByteType, ByteAccess > )new ArrayImgFactory< UnsignedByteType >().create( dim, new UnsignedByteType() );
+		return ( ArrayImg< UnsignedByteType, ByteArray > )new ArrayImgFactory< UnsignedByteType >().create( dim, new UnsignedByteType() );
 	}
 	
 	/**
-	 * Create an {@link ArrayImg}<{@link ByteType}, {@link ByteAccess}>.
+	 * Create an {@link ArrayImg}<{@link ByteType}, {@link ByteArray}>.
 	 * 
 	 * @param dim
 	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< ByteType, ByteAccess > byteArray( final long... dim )
+	final static public ArrayImg< ByteType, ByteArray > byteArray( final long... dim )
 	{
-		return ( ArrayImg< ByteType, ByteAccess > )new ArrayImgFactory< ByteType >().create( dim, new ByteType() );
+		return ( ArrayImg< ByteType, ByteArray > )new ArrayImgFactory< ByteType >().create( dim, new ByteType() );
 	}
 	
 	/**
-	 * Create an {@link ArrayImg}<{@link UnsignedShortType}, {@link ShortAccess}>.
+	 * Create an {@link ArrayImg}<{@link UnsignedShortType}, {@link ShortArray}>.
 	 * 
 	 * @param dim
 	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< UnsignedShortType, ShortAccess > unsignedShortArray( final long... dim )
+	final static public ArrayImg< UnsignedShortType, ShortArray > unsignedShortArray( final long... dim )
 	{
-		return ( ArrayImg< UnsignedShortType, ShortAccess > )new ArrayImgFactory< UnsignedShortType >().create( dim, new UnsignedShortType() );
+		return ( ArrayImg< UnsignedShortType, ShortArray > )new ArrayImgFactory< UnsignedShortType >().create( dim, new UnsignedShortType() );
 	}
 	
 	/**
-	 * Create an {@link ArrayImg}<{@link ShortType}, {@link ShortAccess}>.
+	 * Create an {@link ArrayImg}<{@link ShortType}, {@link ShortArray}>.
 	 * 
 	 * @param dim
 	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< ShortType, ShortAccess > shortArray( final long... dim )
+	final static public ArrayImg< ShortType, ShortArray > shortArray( final long... dim )
 	{
-		return ( ArrayImg< ShortType, ShortAccess > )new ArrayImgFactory< ShortType >().create( dim, new ShortType() );
+		return ( ArrayImg< ShortType, ShortArray > )new ArrayImgFactory< ShortType >().create( dim, new ShortType() );
 	}
 	
 	/**
-	 * Create an {@link ArrayImg}<{@link UnsignedIntType}, {@link IntAccess}>.
+	 * Create an {@link ArrayImg}<{@link UnsignedIntType}, {@link IntArray}>.
 	 * 
 	 * @param dim
 	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< UnsignedIntType, IntAccess > unsignedIntArray( final long... dim )
+	final static public ArrayImg< UnsignedIntType, IntArray > unsignedIntArray( final long... dim )
 	{
-		return ( ArrayImg< UnsignedIntType, IntAccess > )new ArrayImgFactory< UnsignedIntType >().create( dim, new UnsignedIntType() );
+		return ( ArrayImg< UnsignedIntType, IntArray > )new ArrayImgFactory< UnsignedIntType >().create( dim, new UnsignedIntType() );
 	}
 	
 	/**
-	 * Create an {@link ArrayImg}<{@link IntType}, {@link IntAccess}>.
+	 * Create an {@link ArrayImg}<{@link IntType}, {@link IntArray}>.
 	 * 
 	 * @param dim
 	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< IntType, IntAccess > intArray( final long... dim )
+	final static public ArrayImg< IntType, IntArray > intArray( final long... dim )
 	{
-		return ( ArrayImg< IntType, IntAccess > )new ArrayImgFactory< IntType >().create( dim, new IntType() );
+		return ( ArrayImg< IntType, IntArray > )new ArrayImgFactory< IntType >().create( dim, new IntType() );
 	}
 	
 	/**
-	 * Create an {@link ArrayImg}<{@link LongType}, {@link LongAccess}>.
+	 * Create an {@link ArrayImg}<{@link LongType}, {@link LongArray}>.
 	 * 
 	 * @param dim
 	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< LongType, LongAccess > longArray( final long... dim )
+	final static public ArrayImg< LongType, LongArray > longArray( final long... dim )
 	{
-		return ( ArrayImg< LongType, LongAccess > )new ArrayImgFactory< LongType >().create( dim, new LongType() );
+		return ( ArrayImg< LongType, LongArray > )new ArrayImgFactory< LongType >().create( dim, new LongType() );
 	}
 	
 	/**
-	 * Create an {@link ArrayImg}<{@link BitType}, {@link ByteAccess}>.
+	 * Create an {@link ArrayImg}<{@link BitType}, {@link BitArray}>.
 	 * 
 	 * @param dim
 	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< BitType, BitAccess > bitArray( final long... dim )
+	final static public ArrayImg< BitType, BitArray > bitArray( final long... dim )
 	{
-		return ( ArrayImg< BitType, BitAccess > )new ArrayImgFactory< BitType >().create( dim, new BitType() );
+		return ( ArrayImg< BitType, BitArray > )new ArrayImgFactory< BitType >().create( dim, new BitType() );
+	}
+	
+	/**
+	 * Create an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< FloatType, FloatArray > floatArray( final long... dim )
+	{
+		return ( ArrayImg< FloatType, FloatArray > )new ArrayImgFactory< FloatType >().create( dim, new FloatType() );
+	}
+	
+	/**
+	 * Create an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< DoubleType, DoubleArray > doubleArray( final long... dim )
+	{
+		return ( ArrayImg< DoubleType, DoubleArray > )new ArrayImgFactory< DoubleType >().create( dim, new DoubleType() );
+	}
+	
+	/**
+	 * Create an {@link ArrayImg}<{@link ARGBType}, {@link IntArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< ARGBType, IntArray > argbArray( final long... dim )
+	{
+		return ( ArrayImg< ARGBType, IntArray > )new ArrayImgFactory< ARGBType >().create( dim, new ARGBType() );
+	}
+	
+	/**
+	 * Create an {@link ArrayImg}<{@link ComplexFloatType}, {@link FloatArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< ComplexFloatType, FloatArray > complexFloatArray( final long... dim )
+	{
+		return ( ArrayImg< ComplexFloatType, FloatArray > )new ArrayImgFactory< ComplexFloatType >().create( dim, new ComplexFloatType() );
+	}
+	
+	/**
+	 * Create an {@link ArrayImg}<{@link ComplexDoubleType}, {@link DoubleArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< ComplexDoubleType, DoubleArray > complexDoubleArray( final long... dim )
+	{
+		return ( ArrayImg< ComplexDoubleType, DoubleArray > )new ArrayImgFactory< ComplexDoubleType >().create( dim, new ComplexDoubleType() );
+	}
+	
+	
+	
+	
+	/* PlanarImg */
+	
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link UnsignedByteType}, {@link ByteArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< UnsignedByteType, ByteArray > unsignedBytePlanes( final long... dim )
+	{
+		return ( PlanarImg< UnsignedByteType, ByteArray > )new PlanarImgFactory< UnsignedByteType >().create( dim, new UnsignedByteType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link ByteType}, {@link ByteArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< ByteType, ByteArray > bytePlanes( final long... dim )
+	{
+		return ( PlanarImg< ByteType, ByteArray > )new PlanarImgFactory< ByteType >().create( dim, new ByteType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link UnsignedShortType}, {@link ShortArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< UnsignedShortType, ShortArray > unsignedShortPlanes( final long... dim )
+	{
+		return ( PlanarImg< UnsignedShortType, ShortArray > )new PlanarImgFactory< UnsignedShortType >().create( dim, new UnsignedShortType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link ShortType}, {@link ShortArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< ShortType, ShortArray > shortPlanes( final long... dim )
+	{
+		return ( PlanarImg< ShortType, ShortArray > )new PlanarImgFactory< ShortType >().create( dim, new ShortType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link UnsignedIntType}, {@link IntArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< UnsignedIntType, IntArray > unsignedIntPlanes( final long... dim )
+	{
+		return ( PlanarImg< UnsignedIntType, IntArray > )new PlanarImgFactory< UnsignedIntType >().create( dim, new UnsignedIntType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link IntType}, {@link IntArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< IntType, IntArray > intPlanes( final long... dim )
+	{
+		return ( PlanarImg< IntType, IntArray > )new PlanarImgFactory< IntType >().create( dim, new IntType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link LongType}, {@link LongArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< LongType, LongArray > longPlanes( final long... dim )
+	{
+		return ( PlanarImg< LongType, LongArray > )new PlanarImgFactory< LongType >().create( dim, new LongType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link BitType}, {@link BitArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< BitType, BitArray > bitPlanes( final long... dim )
+	{
+		return ( PlanarImg< BitType, BitArray > )new PlanarImgFactory< BitType >().create( dim, new BitType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link FloatType}, {@link FloatArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< FloatType, FloatArray > floatPlanes( final long... dim )
+	{
+		return ( PlanarImg< FloatType, FloatArray > )new PlanarImgFactory< FloatType >().create( dim, new FloatType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link DoubleType}, {@link DoubleArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< DoubleType, DoubleArray > doublePlanes( final long... dim )
+	{
+		return ( PlanarImg< DoubleType, DoubleArray > )new PlanarImgFactory< DoubleType >().create( dim, new DoubleType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link ARGBType}, {@link IntArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< ARGBType, IntArray > argbPlanes( final long... dim )
+	{
+		return ( PlanarImg< ARGBType, IntArray > )new PlanarImgFactory< ARGBType >().create( dim, new ARGBType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link ComplexFloatType}, {@link FloatArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< ComplexFloatType, FloatArray > complexFloatPlanes( final long... dim )
+	{
+		return ( PlanarImg< ComplexFloatType, FloatArray > )new PlanarImgFactory< ComplexFloatType >().create( dim, new ComplexFloatType() );
+	}
+	
+	/**
+	 * Create an {@link PlanarImg}<{@link ComplexDoubleType}, {@link DoubleArray}>.
+	 * 
+	 * @param dim
+	 * @return
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public PlanarImg< ComplexDoubleType, DoubleArray > complexDoublePlanes( final long... dim )
+	{
+		return ( PlanarImg< ComplexDoubleType, DoubleArray > )new PlanarImgFactory< ComplexDoubleType >().create( dim, new ComplexDoubleType() );
 	}
 }

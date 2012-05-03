@@ -36,7 +36,9 @@
 
 package net.imglib2.img.transform;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 
@@ -48,7 +50,7 @@ import net.imglib2.RealPoint;
 import net.imglib2.img.Img;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.basictypeaccess.IntAccess;
+import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.integer.IntType;
 
 import org.junit.Test;
@@ -58,14 +60,14 @@ import org.junit.Test;
  * @author leek
  */
 public class ImgTranslationAdapterTest {
-	private Random r = new Random(12345);
+	private final Random r = new Random(12345);
 
-	private Img<IntType> makeImage(int [][] imgArray) {
-		NativeImg<IntType, IntAccess> img = new ArrayImgFactory<IntType>().createIntInstance(
+	private Img<IntType> makeImage(final int [][] imgArray) {
+		final NativeImg<IntType, IntArray> img = new ArrayImgFactory<IntType>().createIntInstance(
 				new long [] {imgArray[0].length, imgArray.length}, 1);
-		IntType t = new IntType(img);
+		final IntType t = new IntType(img);
 		img.setLinkedType(t);
-		RandomAccess<IntType> ra = img.randomAccess();
+		final RandomAccess<IntType> ra = img.randomAccess();
 		for (int i=0; i<imgArray.length; i++) {
 			ra.setPosition(i, 1);
 			for (int j=0; j<imgArray[i].length; j++) {
@@ -80,7 +82,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testImgTranslationAdapterI() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(makeImage(new int [][] {{1}}));
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(makeImage(new int [][] {{1}}));
 		assertEquals(t.getLongPosition(0), 0);
 		assertEquals(t.getLongPosition(1), 0);
 	}
@@ -90,7 +92,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testImgTranslationAdapterILongArray() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1}}), new long [] { 2, 3} );
 		assertEquals(t.getLongPosition(0), 2);
 		assertEquals(t.getLongPosition(1), 3);
@@ -101,7 +103,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testImgTranslationAdapterILocalizable() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1}}), new Point(new long [] { 2, 3} ));
 		assertEquals(t.getLongPosition(0), 2);
 		assertEquals(t.getLongPosition(1), 3);
@@ -112,9 +114,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testRandomAccess() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
-		RandomAccess<IntType> ra = t.randomAccess();
+		final RandomAccess<IntType> ra = t.randomAccess();
 		ra.setPosition(new long [] { 2,3});
 		assertEquals(ra.get().get(), 1);
 		ra.setPosition(new long [] { 3,3});
@@ -130,9 +132,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testRandomAccessInterval() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
-		RandomAccess<IntType> ra = t.randomAccess(new FinalInterval(new long[] {2,3}, new long [] {4,5}));
+		final RandomAccess<IntType> ra = t.randomAccess(new FinalInterval(new long[] {2,3}, new long [] {4,5}));
 		ra.setPosition(new long [] { 2,3});
 		assertEquals(ra.get().get(), 1);
 		ra.setPosition(new long [] { 3,3});
@@ -148,7 +150,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testMinInt() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
 		assertEquals(t.min(0), 2);
 		assertEquals(t.min(1), 3);
@@ -159,9 +161,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testMinLongArray() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
-		long [] min = new long[2];
+		final long [] min = new long[2];
 		t.min(min);
 		assertEquals(min[0], 2);
 		assertEquals(min[1], 3);
@@ -172,9 +174,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testMinPositionable() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
-		Point min = new Point(2);
+		final Point min = new Point(2);
 		t.min(min);
 		assertEquals(min.getIntPosition(0), 2);
 		assertEquals(min.getIntPosition(1), 3);
@@ -185,7 +187,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testMaxInt() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
 		assertEquals(t.max(0), 3);
 		assertEquals(t.max(1), 4);
@@ -196,9 +198,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testMaxLongArray() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
-		long [] max = new long[2];
+		final long [] max = new long[2];
 		t.max(max);
 		assertEquals(max[0], 3);
 		assertEquals(max[1], 4);
@@ -209,9 +211,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testMaxPositionable() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
-		Point max = new Point(2);
+		final Point max = new Point(2);
 		t.max(max);
 		assertEquals(max.getIntPosition(0), 3);
 		assertEquals(max.getIntPosition(1), 4);
@@ -222,9 +224,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testDimensions() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4},{5,6}}), new long [] { 2, 3} );
-		long [] dimensions = new long[2];
+		final long [] dimensions = new long[2];
 		t.dimensions(dimensions);
 		assertEquals(dimensions[0], 2);
 		assertEquals(dimensions[1], 3);
@@ -235,7 +237,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testDimension() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4},{5,6}}), new long [] { 2, 3} );
 		assertEquals(t.dimension(0), 2);
 		assertEquals(t.dimension(1), 3);
@@ -246,7 +248,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testRealMinInt() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4},{5,6}}), new long [] { 2, 3} );
 		assertEquals(t.realMin(0), 2.0, 0);
 		assertEquals(t.realMin(1), 3.0, 0);
@@ -257,9 +259,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testRealMinDoubleArray() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4},{5,6}}), new long [] { 2, 3} );
-		double [] min = new double[2];
+		final double [] min = new double[2];
 		t.realMin(min);
 		assertEquals(min[0], 2.0, 0);
 		assertEquals(min[1], 3.0, 0);
@@ -270,9 +272,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testRealMinRealPositionable() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4},{5,6}}), new long [] { 2, 3} );
-		RealPoint min = new RealPoint(2);
+		final RealPoint min = new RealPoint(2);
 		t.realMin(min);
 		assertEquals(min.getDoublePosition(0), 2.0, 0);
 		assertEquals(min.getDoublePosition(1), 3.0, 0);
@@ -283,7 +285,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testRealMaxInt() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
 		assertEquals(t.realMax(0), 3.0, 0);
 		assertEquals(t.realMax(1), 4.0, 0);
@@ -294,9 +296,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testRealMaxDoubleArray() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
-		double [] max = new double[2];
+		final double [] max = new double[2];
 		t.realMax(max);
 		assertEquals(max[0], 3.0, 0);
 		assertEquals(max[1], 4.0, 0);
@@ -307,9 +309,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testRealMaxRealPositionable() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
-		RealPoint max = new RealPoint(2);
+		final RealPoint max = new RealPoint(2);
 		t.realMax(max);
 		assertEquals(max.getDoublePosition(0), 3.0, 0);
 		assertEquals(max.getDoublePosition(1), 4.0, 0);
@@ -320,7 +322,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testCursor() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
 		t.cursor();
 	}
@@ -330,7 +332,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testLocalizingCursor() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
 		t.localizingCursor();
 	}
@@ -340,7 +342,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testSize() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
 		assertEquals(t.size(), 4);
 	}
@@ -350,9 +352,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testFirstElement() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{5,2},{3,4}}), new long [] { 2, 3} );
-		IntType first = t.firstElement();
+		final IntType first = t.firstElement();
 		assertEquals(first.get(), 5);
 	}
 
@@ -361,10 +363,10 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testIterator() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
 		int count = 0;
-		for (IntType i:t) {
+		for (final IntType i:t) {
 			assertEquals(i.get(), count+1);
 			count++;
 		}
@@ -376,7 +378,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testFactory() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 3} );
 		t.factory();
 	}
@@ -389,10 +391,10 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testCopyCursor() {
-		ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final ImgTranslationAdapter<IntType, Img<IntType>> t = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} );
-		Cursor<IntType> c1 = t.cursor();
-		Cursor<IntType> c2 = c1.copyCursor();
+		final Cursor<IntType> c1 = t.cursor();
+		final Cursor<IntType> c2 = c1.copyCursor();
 		c1.next();
 		c2.next();
 		c2.next();
@@ -406,9 +408,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testLocalizeIntArray() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
-		int [] position = new int[2];
+		final int [] position = new int[2];
 		c.next();
 		c.localize(position);
 		assertEquals(position[0], 2);
@@ -432,9 +434,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testLocalizeLongArray() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
-		long [] position = new long[2];
+		final long [] position = new long[2];
 		c.next();
 		c.localize(position);
 		assertEquals(position[0], 2);
@@ -446,7 +448,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testGetIntPosition() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
 		c.next();
 		assertEquals(c.getIntPosition(0), 2);
@@ -458,7 +460,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testGetLongPosition() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
 		c.next();
 		assertEquals(c.getLongPosition(0), 2);
@@ -470,9 +472,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testLocalizeFloatArray() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
-		float [] position = new float[2];
+		final float [] position = new float[2];
 		c.next();
 		c.localize(position);
 		assertEquals(position[0], 2, 0);
@@ -484,9 +486,9 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testLocalizeDoubleArray() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
-		double [] position = new double[2];
+		final double [] position = new double[2];
 		c.next();
 		c.localize(position);
 		assertEquals(position[0], 2, 0);
@@ -498,7 +500,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testGetFloatPosition() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
 		c.next();
 		assertEquals(c.getFloatPosition(0), 2, 0);
@@ -510,7 +512,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testGetDoublePosition() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
 		c.next();
 		assertEquals(c.getDoublePosition(0), 2, 0);
@@ -522,7 +524,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testGet() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
 		c.next();
 		assertEquals(c.get().get(), 1);
@@ -539,7 +541,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testHasNext() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
 		for (int i=0; i<4; i++) {
 			assertTrue(c.hasNext());
@@ -553,7 +555,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testJumpFwd() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
 		c.next();
 		c.jumpFwd(2);
@@ -567,7 +569,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testFwd() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
 		c.next();
 		c.fwd();
@@ -581,7 +583,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testReset() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
 		c.next();
 		c.jumpFwd(3);
@@ -598,7 +600,7 @@ public class ImgTranslationAdapterTest {
 	 */
 	@Test
 	public void testNumDimensions() {
-		Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
+		final Cursor<IntType> c = new ImgTranslationAdapter<IntType, Img<IntType>>(
 				makeImage(new int [][] {{1,2},{3,4}}), new long [] { 2, 5} ).cursor();
 		assertEquals(c.numDimensions(), 2);
 	}
