@@ -84,7 +84,7 @@ factor “%” term
 
 factor =
 signedAtom |
-signedAtom “^” signedAtom
+signedAtom “^” factor
 
 signedAtom
  atom |
@@ -197,14 +197,14 @@ public class EquationParser<T extends RealType<T>> {
 	/*
 	factor =
 	 signedAtom |
-	 signedAtom “^” signedAtom
+	 signedAtom “^” factor
 	*/
 	private ParseStatus factor(List<Token> tokens, int pos) {
 		ParseStatus status1 = signedAtom(tokens, pos);
 		if (status1.errMsg != null) return status1;
 		ParseStatus status2 = status1;
 		if (ParseUtils.match(Exponent.class, tokens, status1.tokenNumber)) {
-			status2 = signedAtom(tokens, status1.tokenNumber+1);
+			status2 = factor(tokens, status1.tokenNumber+1);
 			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
