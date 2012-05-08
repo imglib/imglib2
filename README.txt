@@ -12,6 +12,34 @@ developers to use ImgLib2 instead, and migrate existing ImgLib1 programs
 to ImgLib2 whenever possible.
 
 
+== BENEFITS ==
+
+1. By avoiding unnecessarily complex syntax (such as nested loops) ImgLib2
+   allows developers to concentrate on the essence of the algorithm.
+
+2. By being conciser, ImgLib2 makes it much harder to write buggy code.
+
+3. ImgLib2 is dimension-independent. That means that you usually express your
+   code in a way that can be applied to 2-, 3- or even 100-dimensional data.
+
+4. ImgLib2 has no limit on channels. You can have a fine-grained spectrum for
+   every single pixel, if your hardware allows for that.
+
+5. ImgLib2 is actually not limited to images; e.g., we have examples working on
+   RNA sequences.
+
+6. ImgLib2 provides transparent data access. The algorithm does not need to
+   know that it is working on a virtual stack, and the data can actually be
+   generated on the fly. Think about a fractal and being able to zoom in
+   indefinitely; this is an image that you can use with any ImgLib algorithm.
+
+7. ImgLib2 makes it an ultra-cheap operation to work on sections of images.
+   There is no need to copy data around.
+
+8. ImgLib2 is so self-contained that it could serve as the underlying data
+   handling library for every Java-based project.
+
+
 == APPLICATIONS ==
 
 ImgLib2 is the core data model for ImageJ2; see:
