@@ -56,10 +56,6 @@ public final class NtreeIntAccess implements IntAccess
 	}
 
 	@Override
-	public void close()
-	{}
-
-	@Override
 	public int getValue( final int index )
 	{
 		// ignore index, get tree position from RandomAccess/Cursor

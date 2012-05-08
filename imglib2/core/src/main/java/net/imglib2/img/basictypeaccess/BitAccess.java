@@ -42,7 +42,7 @@ package net.imglib2.img.basictypeaccess;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface BitAccess extends DataAccess
+public interface BitAccess
 {
 	public boolean getValue( final int index );
 	public void setValue( final int index, final boolean value );

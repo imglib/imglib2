@@ -40,41 +40,35 @@ import net.imglib2.img.basictypeaccess.LongAccess;
 
 /**
  * LongAccess based on a {@link Ntree}<Longeger>.
- * 
+ *
  * @author Tobias Pietzsch
  */
 public final class LongNtree implements LongAccess, NtreeAccess< Long, LongNtree >
 {
 
-	private long[] position;
+	private final long[] position;
 
-	private Ntree< Long > data;
+	private final Ntree< Long > data;
 
 	/**
 	 * Standard constructor called by factory
-	 * 
+	 *
 	 * @param dimensions
 	 *            The dimensions of the tree
 	 * @param value
 	 *            Uniform value of created nodes of the tree
 	 */
-	public LongNtree( long[] dimensions, long[] position, long value )
+	public LongNtree( final long[] dimensions, final long[] position, final long value )
 	{
 		this.data = new Ntree< Long >( dimensions, value );
 
 		this.position = position;
 	}
 
-	public LongNtree( Ntree< Long > data, long[] position )
+	public LongNtree( final Ntree< Long > data, final long[] position )
 	{
 		this.data = data;
 		this.position = position;
-	}
-
-	@Override
-	public void close()
-	{
-		// TODO:
 	}
 
 	@Override
@@ -98,7 +92,7 @@ public final class LongNtree implements LongAccess, NtreeAccess< Long, LongNtree
 	}
 
 	@Override
-	public LongNtree createInstance( long[] position )
+	public LongNtree createInstance( final long[] position )
 	{
 		return new LongNtree( data, position );
 	}

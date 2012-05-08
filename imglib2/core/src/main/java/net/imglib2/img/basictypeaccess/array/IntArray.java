@@ -39,9 +39,6 @@ package net.imglib2.img.basictypeaccess.array;
 import net.imglib2.img.basictypeaccess.IntAccess;
 
 /**
-*
-*/
-/**
  * TODO
  *
  * @author Stephan Preibisch
@@ -63,12 +60,6 @@ public class IntArray implements IntAccess, ArrayDataAccess< IntArray >
 	}
 
 	@Override
-	public void close()
-	{
-		data = null;
-	}
-
-	@Override
 	public int getValue( final int index )
 	{
 		return data[ index ];
@@ -86,6 +77,7 @@ public class IntArray implements IntAccess, ArrayDataAccess< IntArray >
 		return new IntArray( numEntities );
 	}
 
+	@Override
 	public int[] getCurrentStorageArray()
 	{
 		return data;

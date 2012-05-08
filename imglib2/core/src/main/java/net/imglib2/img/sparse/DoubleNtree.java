@@ -40,31 +40,27 @@ import net.imglib2.img.basictypeaccess.DoubleAccess;
 
 /**
  * DoubleAccess based on a {@link Ntree}<Double>.
- * 
+ *
  * @author Tobias Pietzsch
  */
 public final class DoubleNtree implements DoubleAccess, NtreeAccess< Double, DoubleNtree >
 {
-	private long[] position;
+	private final long[] position;
 
-	private Ntree< Double > data;
+	private final Ntree< Double > data;
 
-	public DoubleNtree( long[] dimenions, final long[] position, Double value )
+	public DoubleNtree( final long[] dimenions, final long[] position, final Double value )
 	{
 		this.data = new Ntree< Double >( dimenions, value );
 		this.position = position;
 	}
 
 	/* Copy constructor */
-	private DoubleNtree( Ntree< Double > data, long[] pos )
+	private DoubleNtree( final Ntree< Double > data, final long[] pos )
 	{
 		this.data = data;
 		this.position = pos;
 	}
-
-	@Override
-	public void close()
-	{}
 
 	@Override
 	public double getValue( final int index )
@@ -87,7 +83,7 @@ public final class DoubleNtree implements DoubleAccess, NtreeAccess< Double, Dou
 	}
 
 	@Override
-	public DoubleNtree createInstance( long[] position )
+	public DoubleNtree createInstance( final long[] position )
 	{
 		return new DoubleNtree( data, position );
 	}
