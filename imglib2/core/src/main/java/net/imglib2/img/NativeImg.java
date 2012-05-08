@@ -37,7 +37,6 @@
 
 package net.imglib2.img;
 
-import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.type.Type;
 
 /**
@@ -46,13 +45,13 @@ import net.imglib2.type.Type;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface NativeImg< T extends Type< T >, A extends DataAccess > extends Img< T >
+public interface NativeImg< T extends Type< T >, A > extends Img< T >
 {
 	/**
 	 * called by type with cursor.
-	 * 
+	 *
 	 * @param updater cursor
-	 * @return native array which is referred to by the updater 
+	 * @return native array which is referred to by the updater
 	 */
 	public A update( final Object updater );
 

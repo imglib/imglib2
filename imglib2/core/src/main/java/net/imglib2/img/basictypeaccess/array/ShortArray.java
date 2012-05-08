@@ -59,12 +59,6 @@ public class ShortArray implements ShortAccess, ArrayDataAccess< ShortArray >
 	}
 
 	@Override
-	public void close()
-	{
-		data = null;
-	}
-
-	@Override
 	public short getValue( final int index )
 	{
 		return data[ index ];
@@ -82,6 +76,7 @@ public class ShortArray implements ShortAccess, ArrayDataAccess< ShortArray >
 		return new ShortArray( numEntities );
 	}
 
+	@Override
 	public short[] getCurrentStorageArray()
 	{
 		return data;

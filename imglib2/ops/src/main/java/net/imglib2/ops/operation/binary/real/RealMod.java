@@ -34,17 +34,32 @@
  * #L%
  */
 
-package net.imglib2.img.basictypeaccess;
+
+package net.imglib2.ops.operation.binary.real;
+
+import net.imglib2.type.numeric.RealType;
 
 /**
- *
- * TODO Do we need this?
+ * A real operation that sets the real component to the modulus value between
+ * the real components of input 1 and input 2.
  * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Barry DeZonia
  */
-public interface DataAccess
+public final class RealMod<
+		I1 extends RealType<I1>,
+		I2 extends RealType<I2>,
+		O extends RealType<O>>
+	implements RealBinaryOperation<I1, I2, O>
 {
-	public void close();
+	@Override
+	public O compute(I1 x1, I2 x2, O output) {
+		double value = x1.getRealDouble() % x2.getRealDouble();
+		output.setReal(value);
+		return output;
+	}
+
+	@Override
+	public RealMod<I1,I2,O> copy() {
+		return new RealMod<I1,I2,O>();
+	}
 }

@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.imglib2.img.Img;
-import net.imglib2.ops.BinaryOperation;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
@@ -49,6 +48,7 @@ import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealIndexFunction;
 import net.imglib2.ops.operation.binary.real.RealAdd;
 import net.imglib2.ops.operation.binary.real.RealDivide;
+import net.imglib2.ops.operation.binary.real.RealMod;
 import net.imglib2.ops.operation.binary.real.RealMultiply;
 import net.imglib2.ops.operation.binary.real.RealPower;
 import net.imglib2.ops.operation.binary.real.RealSubtract;
@@ -73,18 +73,18 @@ import net.imglib2.type.numeric.real.DoubleType;
 
 equation =
 term |
-term “+” term |
-term “-” term
+term “+” equation |
+term “-” equation
 
 term =
 factor |
-factor “*” factor |
-factor “\” factor |
-factor “%” factor
+factor “*” term |
+factor “\” term |
+factor “%” term
 
 factor =
 signedAtom |
-signedAtom “^” signedAtom
+signedAtom “^” factor
 
 signedAtom
  atom |
@@ -125,15 +125,15 @@ public class EquationParser<T extends RealType<T>> {
 	/*
 	equation =
 	 term |
-	 term “+” term |
-	 term “-” term
+	 term “+” equation |
+	 term “-” equation
 	*/
 	public ParseStatus equation(List<Token> tokens, int pos) {
 		ParseStatus status1 = term(tokens, pos);
 		if (status1.errMsg != null) return status1;
 		ParseStatus status2 = status1;
 		if (ParseUtils.match(Plus.class, tokens, status1.tokenNumber)) {
-			status2 = term(tokens, status1.tokenNumber+1);
+			status2 = equation(tokens, status1.tokenNumber+1);
 			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
@@ -142,7 +142,7 @@ public class EquationParser<T extends RealType<T>> {
 					new DoubleType());
 		}
 		else if (ParseUtils.match(Minus.class, tokens, status1.tokenNumber)) {
-			status2 = term(tokens, status1.tokenNumber+1);
+			status2 = equation(tokens, status1.tokenNumber+1);
 			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
@@ -156,16 +156,16 @@ public class EquationParser<T extends RealType<T>> {
 	/*
 	term =
 	 factor |
-	 factor “*” factor |
-	 factor “\” factor |
-	 factor “%” factor
+	 factor “*” term |
+	 factor “\” term |
+	 factor “%” term
 	*/
 	private ParseStatus term(List<Token> tokens, int pos) {
 		ParseStatus status1 = factor(tokens, pos);
 		if (status1.errMsg != null) return status1;
 		ParseStatus status2 = status1;
 		if (ParseUtils.match(Times.class, tokens, status1.tokenNumber)) {
-			status2 = factor(tokens, status1.tokenNumber+1);
+			status2 = term(tokens, status1.tokenNumber+1);
 			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
@@ -174,7 +174,7 @@ public class EquationParser<T extends RealType<T>> {
 					new DoubleType());
 		}
 		else if (ParseUtils.match(Divide.class, tokens, status1.tokenNumber)) {
-			status2 = factor(tokens, status1.tokenNumber+1);
+			status2 = term(tokens, status1.tokenNumber+1);
 			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
@@ -183,12 +183,13 @@ public class EquationParser<T extends RealType<T>> {
 					new DoubleType());
 		}
 		else if (ParseUtils.match(Mod.class, tokens, status1.tokenNumber)) {
-			status2 = factor(tokens, status1.tokenNumber+1);
+			status2 = term(tokens, status1.tokenNumber+1);
 			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					status1.function, status2.function,
-					new RealMod(), new DoubleType());
+					new RealMod<DoubleType,DoubleType,DoubleType>(),
+					new DoubleType());
 		}
 		return status2;
 	}
@@ -196,14 +197,14 @@ public class EquationParser<T extends RealType<T>> {
 	/*
 	factor =
 	 signedAtom |
-	 signedAtom “^” signedAtom
+	 signedAtom “^” factor
 	*/
 	private ParseStatus factor(List<Token> tokens, int pos) {
 		ParseStatus status1 = signedAtom(tokens, pos);
 		if (status1.errMsg != null) return status1;
 		ParseStatus status2 = status1;
 		if (ParseUtils.match(Exponent.class, tokens, status1.tokenNumber)) {
-			status2 = signedAtom(tokens, status1.tokenNumber+1);
+			status2 = factor(tokens, status1.tokenNumber+1);
 			if (status2.errMsg != null) return status2;
 			status2.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
@@ -329,26 +330,4 @@ public class EquationParser<T extends RealType<T>> {
 					pos, tokens.get(pos), "Expected a number.");
 	}
 	
-	// not a great function. will not make public.
-	
-	private class RealMod
-		implements BinaryOperation<DoubleType, DoubleType, DoubleType>
-	{
-		@Override
-		public DoubleType
-			compute(DoubleType input1, DoubleType input2, DoubleType output)
-		{
-			long value = ((long) input1.get()) % ((long) input2.get());
-			output.set(value);
-			return output;
-		}
-
-		@Override
-		public RealMod copy() {
-			return new RealMod();
-		}
-		
-	}
-	
-
 }

@@ -37,8 +37,8 @@
 package net.imglib2.img.imageplus;
 
 import ij.ImagePlus;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.exception.ImgLibException;
+import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.NativeType;
 
@@ -47,14 +47,14 @@ import net.imglib2.type.NativeType;
  * linear array of basic types.  For types that are supported by ImageJ (byte,
  * short, int, float), an actual ImagePlus is created or used to store the
  * data.  Alternatively, an {@link ImagePlusImg} can be created using
- * an already existing {@link ImagePlus} instance. 
- * 
+ * an already existing {@link ImagePlus} instance.
+ *
  * {@link ImagePlusImg ImagePlusContainers} provides a legacy layer to
  * apply imglib-based algorithm implementations directly on the data stored in
  * an ImageJ {@link ImagePlus}.  For all types that are supported by ImageJ, the
  * {@link ImagePlusImg} provides access to the pixels of an
  * {@link ImagePlus} instance that can be accessed via {@link getImagePlus}().
- * 
+ *
  *   Johannes Schindelin
  *
  * @author Funke
@@ -71,7 +71,7 @@ import net.imglib2.type.NativeType;
 public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<A> > extends PlanarImg< T, A >
 {
 	final protected int width, height, depth, frames, channels;
-	
+
 	protected ImagePlusImg(
 			final int width,
 			final int height,
@@ -81,7 +81,7 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 			final int entitiesPerPixel )
 	{
 		super( reduceDimensions( new long[] { width, height, channels, depth, frames } ), entitiesPerPixel );
-		
+
 		this.width = width;
 		this.height = height;
 		this.depth = depth;
@@ -91,21 +91,21 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 
 	/**
 	 * Standard constructor as called by default factories.
-	 * 
+	 *
 	 * <em>Note that this constructor does not know about the meaning of
 	 * dimensions > 1, and will use them in the {@link ImagePlus} default order
 	 * x,y,c,z,t.  That is, from two dimensions, it will create an x,y image,
 	 * from three dimensions, an x,y,c image, and from four dimensions, an
 	 * x,y,c,z image.</em>
-	 * 
+	 *
 	 * @param factory
 	 * @param dim
 	 * @param entitiesPerPixel
 	 */
-	ImagePlusImg( final long[] dim, final int entitiesPerPixel ) 
+	ImagePlusImg( final long[] dim, final int entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
-		
+
 		assert dim.length < 6 : "ImagePlusContainer can only handle up to 5 dimensions.";
 
 		if ( dim.length > 0 )
@@ -133,20 +133,20 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 		else
 			frames = 1;
 	}
-	
-	ImagePlusImg( final A creator, final long[] dim, final int entitiesPerPixel ) 
+
+	ImagePlusImg( final A creator, final long[] dim, final int entitiesPerPixel )
 	{
 		this( dim, entitiesPerPixel );
-		
+
 		mirror.clear();
-		
+
 		for ( int i = 0; i < numSlices; ++i )
 			mirror.add( creator.createArray( width * height * entitiesPerPixel ) );
 	}
 
-	public ImagePlus getImagePlus() throws ImgLibException 
-	{ 
-		throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus" ); 
+	public ImagePlus getImagePlus() throws ImgLibException
+	{
+		throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus" );
 	}
 
 	/*
@@ -154,24 +154,24 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 	{
 		if(dimensions.length >= 5)
 			return dimensions;
-		
+
 		final long[] dim = new long[ 5 ];
 		for ( int d = 0; d < 5; ++d )
 			dim[ d ] = ( dimensions.length >= d ) ? dimensions[ d ] : 1;
 		return dim;
 	}
 	*/
-	
+
 	/**
 	 * Compute the minimal required number of dimensions for a given
 	 * {@link ImagePlus}, whereas width and height are always first.
-	 * 
+	 *
 	 * E.g. a gray-scale 2d time series would have three dimensions
 	 * [width,height,frames], a gray-scale 3d stack [width,height,depth] and a
 	 * 2d composite image [width,height,channels] as well.  A composite 3d
 	 * stack has four dimensions [width,height,channels,depth], as a time
 	 * series five [width,height,channels,depth,frames].
-	 * 
+	 *
 	 * @param imp
 	 * @return
 	 */
@@ -190,38 +190,38 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 		int n = 2;
 		for ( int d = 2; d < impDimensions.length; ++d )
 			if ( impDimensions[ d ] > 1 ) ++n;
-		
+
 		final long[] dim = new long[ n ];
 		dim[ 0 ] = impDimensions[ 0 ];
 		dim[ 1 ] = impDimensions[ 1 ];
-		
+
 		n = 1;
-		
+
 		/* channels */
 		if ( impDimensions[ 2 ] > 1 )
 			dim[ ++n ] = impDimensions[ 2 ];
-		
+
 		/* depth */
 		if ( impDimensions[ 3 ] > 1 )
 			dim[ ++n ] = impDimensions[ 3 ];
-		
+
 		/* frames */
 		if ( impDimensions[ 4 ] > 1 )
 			dim[ ++n ] = impDimensions[ 4 ];
-		
+
 		return dim;
 	}
 
 	public int getWidth() { return width; }
-	
+
 	public int getHeight() { return height; }
-	
+
 	public int getChannels() { return channels; }
-	
+
 	public int getDepth() { return depth; }
-	
+
 	public int getFrames() { return frames; }
-	
+
 	@Override
 	public ImagePlusImgFactory< T > factory()
 	{
@@ -231,14 +231,9 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 	/**
 	 * Free resources.
 	 * The container can no longer be used after calling close().
-	 * 
-	 * Closes the {@link ArrayDataAccess}es in the {@link mirror} array.
+	 *
 	 * Subclasses override this to close the underlying {@link ImagePlus}.
 	 */
 	public void close()
-	{
-		for ( final A array : mirror )
-			if ( array != null )
-				array.close();
-	}
+	{}
 }
