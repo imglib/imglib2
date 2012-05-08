@@ -92,7 +92,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	 *            input image.
 	 * @param componentGenerator
 	 *            provides new {@link Component} instances.
-	 * @param componentOutput
+	 * @param componentHandler
 	 *            receives completed {@link Component}s.
 	 * @param comparator
 	 *            determines ordering of threshold values.
@@ -112,7 +112,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	 *            input image of a comparable value type.
 	 * @param componentGenerator
 	 *            provides new {@link Component} instances.
-	 * @param componentOutput
+	 * @param componentHandler
 	 *            receives completed {@link Component}s.
 	 * @param darkToBright
 	 *            determines ordering of threshold values. If it is true, then
@@ -123,7 +123,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	 *            {@link Component.Generator#createMaxComponent()} should
 	 *            provide a Integer.MIN_VALUE valued component.
 	 */
-	public static < T extends Type< T > & Comparable< T >, C extends Component< T > > void buildComponentTree( final RandomAccessibleInterval< T > input, final Component.Generator< T, C > componentGenerator, final Component.Handler< C > componentHandler, boolean darkToBright )
+	public static < T extends Type< T > & Comparable< T >, C extends Component< T > > void buildComponentTree( final RandomAccessibleInterval< T > input, final Component.Generator< T, C > componentGenerator, final Component.Handler< C > componentHandler, final boolean darkToBright )
 	{
 		new ComponentTree< T, C >( input, componentGenerator, componentHandler, darkToBright ? new DarkToBright< T >() : new BrightToDark< T >() );
 	}
@@ -185,7 +185,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 			return n;
 		}
 
-		public void setNextNeighborIndex( int n )
+		public void setNextNeighborIndex( final int n )
 		{
 			this.n = n;
 		}
@@ -240,7 +240,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		// TODO: this should be some kind of iterator over the neighborhood
 		private final int nextNeighborIndex;
 
-		public BoundaryPixel( final Localizable position, final T value, int nextNeighborIndex )
+		public BoundaryPixel( final Localizable position, final T value, final int nextNeighborIndex )
 		{
 			super( position );
 			this.nextNeighborIndex = nextNeighborIndex;
@@ -258,7 +258,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		}
 
 		@Override
-		public int compareTo( BoundaryPixel o )
+		public int compareTo( final BoundaryPixel o )
 		{
 			return comparator.compare( value, o.value );
 		}
@@ -301,7 +301,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		final long[] dimensions = new long[ input.numDimensions() ];
 		input.dimensions( dimensions );
 
-		ImgFactory< BitType > imgFactory = new ArrayImgFactory< BitType >();
+		final ImgFactory< BitType > imgFactory = new ArrayImgFactory< BitType >();
 		visited = imgFactory.create( dimensions, new BitType() );
 		visitedRandomAccess = visited.randomAccess();
 
@@ -344,11 +344,11 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	 */
 	private void run( final RandomAccessibleInterval< T > input )
 	{
-		RandomAccess< T > current = input.randomAccess();
-		RandomAccess< T > neighbor = input.randomAccess();
+		final RandomAccess< T > current = input.randomAccess();
+		final RandomAccess< T > neighbor = input.randomAccess();
 		input.min( current );
-		T currentLevel = current.get().createVariable();
-		T neighborLevel = current.get().createVariable();
+		final T currentLevel = current.get().createVariable();
+		final T neighborLevel = current.get().createVariable();
 
 		// Note that step numbers in the comments below refer to steps in the
 		// Nister & Stewenius paper.
@@ -389,7 +389,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 			}
 
 			// step 5
-			C component = componentStack.peek();
+			final C component = componentStack.peek();
 			component.addPosition( current );
 
 			// step 6
@@ -399,7 +399,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 				return;
 			}
 
-			BoundaryPixel p = boundaryPixels.poll();
+			final BoundaryPixel p = boundaryPixels.poll();
 			if ( comparator.compare( p.get(), currentLevel ) != 0 )
 			{
 				// step 7
@@ -416,16 +416,16 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	 *
 	 * @param value
 	 */
-	private void processStack( T value )
+	private void processStack( final T value )
 	{
 		while ( true )
 		{
 			// process component on top of stack
-			C component = componentStack.pop();
+			final C component = componentStack.pop();
 			componentOutput.emit( component );
 
 			// get level of second component on stack
-			C secondComponent = componentStack.peek();
+			final C secondComponent = componentStack.peek();
 			try
 			{
 				final int c = comparator.compare( value, secondComponent.getValue() );
@@ -442,7 +442,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 				}
 				return;
 			}
-			catch ( NullPointerException e )
+			catch ( final NullPointerException e )
 			{
 				componentStack.push( component );
 				return;
