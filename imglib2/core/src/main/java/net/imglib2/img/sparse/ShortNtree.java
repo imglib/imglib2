@@ -39,31 +39,27 @@ package net.imglib2.img.sparse;
 import net.imglib2.img.basictypeaccess.ShortAccess;
 
 /**
- * 
+ *
  * @author Tobias Pietzsch
  */
 public final class ShortNtree implements ShortAccess, NtreeAccess< Short, ShortNtree >
 {
 
-	private long[] position;
+	private final long[] position;
 
-	private Ntree< Short > data;
+	private final Ntree< Short > data;
 
-	public ShortNtree( long[] dimenions, final long[] position, short value )
+	public ShortNtree( final long[] dimenions, final long[] position, final short value )
 	{
 		this.data = new Ntree< Short >( dimenions, value );
 		this.position = position;
 	}
 
-	public ShortNtree( Ntree< Short > data, long[] position )
+	public ShortNtree( final Ntree< Short > data, final long[] position )
 	{
 		this.data = data;
 		this.position = position;
 	}
-
-	@Override
-	public void close()
-	{}
 
 	@Override
 	public short getValue( final int index )
@@ -86,7 +82,7 @@ public final class ShortNtree implements ShortAccess, NtreeAccess< Short, ShortN
 	}
 
 	@Override
-	public ShortNtree createInstance( long[] position )
+	public ShortNtree createInstance( final long[] position )
 	{
 		return new ShortNtree( data, position );
 	}

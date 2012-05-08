@@ -40,7 +40,6 @@ import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
-import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
 
@@ -58,7 +57,7 @@ import net.imglib2.util.IntervalIndexer;
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ArrayImg< T extends NativeType< T >, A extends DataAccess > extends AbstractNativeImg< T, A >
+public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg< T, A >
 {
 	final int[] steps, dim;
 

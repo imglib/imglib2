@@ -40,31 +40,27 @@ import net.imglib2.img.basictypeaccess.CharAccess;
 
 /**
  * CharAccess based on a {@link Ntree}<Char>.
- * 
+ *
  * @author Tobias Pietzsch
  */
 public final class CharNtree implements CharAccess, NtreeAccess< Character, CharNtree >
 {
-	private long[] position;
+	private final long[] position;
 
-	private Ntree< Character > data;
+	private final Ntree< Character > data;
 
-	public CharNtree( long[] dimenions, final long[] position, Character value )
+	public CharNtree( final long[] dimenions, final long[] position, final Character value )
 	{
 		this.data = new Ntree< Character >( dimenions, value );
 		this.position = position;
 	}
 
 	/* Copy constructor */
-	private CharNtree( Ntree< Character > data, long[] position )
+	private CharNtree( final Ntree< Character > data, final long[] position )
 	{
 		this.data = data;
 		this.position = position;
 	}
-
-	@Override
-	public void close()
-	{}
 
 	@Override
 	public char getValue( final int index )
@@ -87,7 +83,7 @@ public final class CharNtree implements CharAccess, NtreeAccess< Character, Char
 	}
 
 	@Override
-	public CharNtree createInstance( long[] position )
+	public CharNtree createInstance( final long[] position )
 	{
 		return new CharNtree( data, position );
 	}

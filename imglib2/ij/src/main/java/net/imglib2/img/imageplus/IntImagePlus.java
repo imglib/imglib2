@@ -39,13 +39,13 @@ package net.imglib2.img.imageplus;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ColorProcessor;
-import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.exception.ImgLibException;
+import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.NativeType;
 
 /**
  * {@link ImagePlusImg} for integer-stored data.
- * 
+ *
  * @author Funke
  * @author Preibisch
  * @author Saalfeld
@@ -55,14 +55,14 @@ import net.imglib2.type.NativeType;
  * @author Stephan Saalfeld
  * @author Johannes Schindelin
  */
-public class IntImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, IntArray > 
+public class IntImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, IntArray >
 {
-	final ImagePlus imp;	
-	
-	public IntImagePlus( final long[] dim, final int entitiesPerPixel ) 
+	final ImagePlus imp;
+
+	public IntImagePlus( final long[] dim, final int entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
-		
+
 		if ( entitiesPerPixel == 1 )
 		{
 			final ImageStack stack = new ImageStack( width, height );
@@ -72,8 +72,8 @@ public class IntImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, 
 			imp.setDimensions( channels, depth, frames );
 			if ( numSlices > 1 )
 				imp.setOpenAsHyperStack( true );
-			
-			mirror.clear();		
+
+			mirror.clear();
 			for ( int t = 0; t < frames; ++t )
 				for ( int z = 0; z < depth; ++z )
 					for ( int c = 0; c < channels; ++c )
@@ -83,13 +83,13 @@ public class IntImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, 
 		{
 			imp = null;
 
-			mirror.clear();		
+			mirror.clear();
 			for ( int i = 0; i < numSlices; ++i )
 				mirror.add( new IntArray( width * height * entitiesPerPixel ) );
 		}
 	}
 
-	public IntImagePlus( final ImagePlus imp ) 
+	public IntImagePlus( final ImagePlus imp )
 	{
 		super(
 				imp.getWidth(),
@@ -98,10 +98,10 @@ public class IntImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, 
 				imp.getNFrames(),
 				imp.getNChannels(),
 				1 );
-		
+
 		this.imp = imp;
-		
-		mirror.clear();		
+
+		mirror.clear();
 		for ( int t = 0; t < frames; ++t )
 			for ( int z = 0; z < depth; ++z )
 				for ( int c = 0; c < channels; ++c )
@@ -112,24 +112,23 @@ public class IntImagePlus< T extends NativeType< T > > extends ImagePlusImg< T, 
 	 * This has to be overwritten, otherwise two different instances exist (one in the imageplus, one in the mirror)
 	 */
 	@Override
-	public void setPlane( final int no, final IntArray plane ) 
-	{ 
+	public void setPlane( final int no, final IntArray plane )
+	{
 		System.arraycopy( plane.getCurrentStorageArray(), 0, mirror.get( no ).getCurrentStorageArray(), 0, plane.getCurrentStorageArray().length );
 	}
 
 	@Override
-	public void close() 
+	public void close()
 	{
-		super.close();
 		if ( imp != null )
-			imp.close(); 
+			imp.close();
 	}
 
 	@Override
-	public ImagePlus getImagePlus() throws ImgLibException 
+	public ImagePlus getImagePlus() throws ImgLibException
 	{
 		if ( imp == null )
-			throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus (" + entitiesPerPixel + " entities per pixel)" ); 
+			throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus (" + entitiesPerPixel + " entities per pixel)" );
 		else
 			return imp;
 	}

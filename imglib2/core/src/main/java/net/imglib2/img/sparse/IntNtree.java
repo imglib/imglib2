@@ -40,25 +40,25 @@ import net.imglib2.img.basictypeaccess.IntAccess;
 
 /**
  * IntAccess based on a {@link Ntree}<Integer>.
- * 
+ *
  * @author Tobias Pietzsch
  */
 public final class IntNtree implements IntAccess, NtreeAccess< Integer, IntNtree >
 {
 
-	private long[] position;
+	private final long[] position;
 
-	private Ntree< Integer > data;
+	private final Ntree< Integer > data;
 
 	/**
 	 * Standard constructor called by factory
-	 * 
+	 *
 	 * @param dimensions
 	 *            The dimensions of the tree
 	 * @param value
 	 *            Uniform value of created nodes of the tree
 	 */
-	public IntNtree( long[] dimensions, long[] position, int value )
+	public IntNtree( final long[] dimensions, final long[] position, final int value )
 	{
 		this.data = new Ntree< Integer >( dimensions, value );
 
@@ -67,16 +67,10 @@ public final class IntNtree implements IntAccess, NtreeAccess< Integer, IntNtree
 	}
 
 	/* Copy constructor */
-	private IntNtree( Ntree< Integer > data, long[] position )
+	private IntNtree( final Ntree< Integer > data, final long[] position )
 	{
 		this.data = data;
 		this.position = position;
-	}
-
-	@Override
-	public void close()
-	{
-		// TODO:
 	}
 
 	@Override
@@ -100,7 +94,7 @@ public final class IntNtree implements IntAccess, NtreeAccess< Integer, IntNtree
 	}
 
 	@Override
-	public IntNtree createInstance( long[] pos )
+	public IntNtree createInstance( final long[] pos )
 	{
 		return new IntNtree( data, pos );
 	}
