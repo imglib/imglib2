@@ -71,12 +71,6 @@ public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 	}
 
 	@Override
-	public void close()
-	{
-		data = null;
-	}
-
-	@Override
 	public boolean getValue( final int index )
 	{
 		final int arrayIndex = index / bitsPerEntity;
@@ -100,6 +94,7 @@ public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 			data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset );
 	}
 
+	@Override
 	public int[] getCurrentStorageArray()
 	{
 		return data;

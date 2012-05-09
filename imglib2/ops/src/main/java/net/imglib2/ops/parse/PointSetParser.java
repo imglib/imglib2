@@ -81,6 +81,7 @@ import net.imglib2.ops.relation.RealGreaterThanOrEqual;
 import net.imglib2.ops.relation.RealLessThan;
 import net.imglib2.ops.relation.RealLessThanOrEqual;
 import net.imglib2.ops.relation.RealNotEquals;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /*
@@ -162,7 +163,7 @@ public class PointSetParser {
 		maxDims = new ArrayList<Long>();
 		conditions = new ArrayList<Condition<long[]>>();
 		varMap = new HashMap<String,Integer>();
-		eqnParser = new EquationParser(varMap);
+		eqnParser = new EquationParser(varMap,null);
 		Lexer lexer = new Lexer();
 		ParseStatus lexResult = lexer.tokenize(specification, varMap);
 		if (lexResult.errMsg != null) {

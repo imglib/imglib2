@@ -63,12 +63,6 @@ public class CharArray implements CharAccess, ArrayDataAccess< CharArray >
 	}
 
 	@Override
-	public void close()
-	{
-		data = null;
-	}
-
-	@Override
 	public char getValue( final int index )
 	{
 		return data[ index ];
@@ -80,6 +74,7 @@ public class CharArray implements CharAccess, ArrayDataAccess< CharArray >
 		data[ index ] = value;
 	}
 
+	@Override
 	public char[] getCurrentStorageArray()
 	{
 		return data;

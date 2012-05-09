@@ -48,51 +48,67 @@ import net.imglib2.roi.IterableRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
 
 /**
- * A relatively conservative strategy suitable for blobby objects - 
- * retain the bounding boxes and raster starts and reconstruct the 
- * cursors by scanning.
+ * A relatively conservative strategy suitable for blobby objects - retain the
+ * bounding boxes and raster starts and reconstruct the cursors by scanning.
  * 
- * @param <T> - the type used to label the space
- * @param <L> - the labeling class that will use this strategy for cursors and random access.
+ * @param <T>
+ *            - the type used to label the space
+ * @param <L>
+ *            - the labeling class that will use this strategy for cursors and
+ *            random access.
  * @author Lee Kamentsky
- * @author leek
  */
-public class DefaultROIStrategy<T extends Comparable<T>, L extends Labeling<T>>
-		implements LabelingROIStrategy<T, L> {
+public class DefaultROIStrategy< T extends Comparable< T >, L extends Labeling< T >> implements LabelingROIStrategy< T, L >
+{
 
 	final protected L labeling;
+
 	protected long generation;
-	
-	private class LabelStatistics extends BoundingBox {
-		private long [] rasterStart;
+
+	private class LabelStatistics extends BoundingBox
+	{
+		private final long[] rasterStart;
+
 		private long area = 0;
-		public LabelStatistics(int dimensions) {
-			super(dimensions);
-			rasterStart = new long [dimensions];
-			Arrays.fill(rasterStart, Integer.MAX_VALUE);
+
+		public LabelStatistics( final int dimensions )
+		{
+			super( dimensions );
+			rasterStart = new long[ dimensions ];
+			Arrays.fill( rasterStart, Integer.MAX_VALUE );
 		}
-		
-		public void getRasterStart(long[] start) {
-			System.arraycopy(rasterStart, 0, start, 0, rasterStart.length);
+
+		public void getRasterStart( final long[] start )
+		{
+			System.arraycopy( rasterStart, 0, start, 0, rasterStart.length );
 		}
-		public long getArea() {
+
+		public long getArea()
+		{
 			return area;
 		}
-		public void update(long[] position) {
-			super.update(position);
+
+		@Override
+		public void update( final long[] position )
+		{
+			super.update( position );
 			area++;
-			for (int i = 0; i<rasterStart.length; i++) {
-				if (rasterStart[i] > position[i]) {
-					System.arraycopy(position, 0, rasterStart, 0, rasterStart.length);
-					return;
-				} else if (rasterStart[i] < position[i]) {
+			for ( int i = 0; i < rasterStart.length; i++ )
+			{
+				if ( rasterStart[ i ] > position[ i ] )
+				{
+					System.arraycopy( position, 0, rasterStart, 0, rasterStart.length );
 					return;
 				}
+				else if ( rasterStart[ i ] < position[ i ] ) { return; }
 			}
 		}
 	}
-	protected Map<T, LabelStatistics> statistics;
-	public DefaultROIStrategy(L labeling) {
+
+	protected Map< T, LabelStatistics > statistics;
+
+	public DefaultROIStrategy( final L labeling )
+	{
 		this.labeling = labeling;
 		generation = Long.MIN_VALUE;
 	}
@@ -100,175 +116,218 @@ public class DefaultROIStrategy<T extends Comparable<T>, L extends Labeling<T>>
 	/**
 	 * Compute all statistics on the labels if cache is dirty.
 	 */
-	protected void computeStatistics() {
-		LabelingType<T> type = labeling.firstElement();
-		if ((type == null) || (type.getGeneration() != generation)) {
-			statistics = new HashMap<T, LabelStatistics>();
-			long [] position = new long [labeling.numDimensions()];
+	protected synchronized void computeStatistics()
+	{
+		LabelingType< T > type = labeling.firstElement();
+		if ( ( type == null ) || ( type.getGeneration() != generation ) )
+		{
+			statistics = new HashMap< T, LabelStatistics >();
+			final long[] position = new long[ labeling.numDimensions() ];
 			LabelStatistics last = null;
 			T lastLabel = null;
-			Cursor<LabelingType<T>> c = labeling.localizingCursor();
-			while(c.hasNext()) {
+			final Cursor< LabelingType< T >> c = labeling.localizingCursor();
+			while ( c.hasNext() )
+			{
 				type = c.next();
-				c.localize(position);
-				for (T label: type.getLabeling()) {
-					if ((last == null) || (! label.equals(lastLabel))) {
+				c.localize( position );
+
+				for ( final T label : type.getLabeling() )
+				{
+					if ( ( last == null ) || ( !label.equals( lastLabel ) ) )
+					{
 						lastLabel = label;
-						last = statistics.get(label);
-						if (last == null) {
-							last = new LabelStatistics(labeling.numDimensions());
-							statistics.put(label, last);
+						last = statistics.get( label );
+						if ( last == null )
+						{
+							last = new LabelStatistics( labeling.numDimensions() );
+							statistics.put( label, last );
 						}
 					}
-					last.update(position);
+					last.update( position );
 				}
 			}
+
 			generation = type.getGeneration();
 		}
 	}
 
 	@Override
-	public boolean getExtents(T label, long[] minExtents, long[] maxExtents) {
+	public boolean getExtents( final T label, final long[] minExtents, final long[] maxExtents )
+	{
 		computeStatistics();
-		LabelStatistics stats = statistics.get(label);
-		if (stats == null) {
-			if (minExtents != null)
-				Arrays.fill(minExtents, 0);
-			if (maxExtents != null)
-				Arrays.fill(maxExtents, 0);
+		final LabelStatistics stats = statistics.get( label );
+		if ( stats == null )
+		{
+			if ( minExtents != null )
+				Arrays.fill( minExtents, 0 );
+			if ( maxExtents != null )
+				Arrays.fill( maxExtents, 0 );
 			return false;
-		} else {
-			stats.getExtents(minExtents, maxExtents);
-			return true;
 		}
+		stats.getExtents( minExtents, maxExtents );
+		return true;
 	}
 
 	@Override
-	public boolean getRasterStart(T label, long[] start) {
+	public boolean getRasterStart( final T label, final long[] start )
+	{
 		computeStatistics();
-		LabelStatistics stats = statistics.get(label);
-		if (stats == null) {
-			Arrays.fill(start, 0);
+		final LabelStatistics stats = statistics.get( label );
+		if ( stats == null )
+		{
+			Arrays.fill( start, 0 );
 			return false;
-		} else {
-			stats.getRasterStart(start);
-			return true;
 		}
+		stats.getRasterStart( start );
+		return true;
 	}
 
 	@Override
-	public long getArea(T label) {
+	public long getArea( final T label )
+	{
 		computeStatistics();
-		LabelStatistics stats = statistics.get(label);
-		if (stats == null) {
-			return 0;
-		}
+		final LabelStatistics stats = statistics.get( label );
+		if ( stats == null ) { return 0; }
 		return stats.getArea();
 	}
 
 	@Override
-	public Collection<T> getLabels() {
+	public Collection< T > getLabels()
+	{
 		computeStatistics();
 		return statistics.keySet();
 	}
-	
+
 	/**
 	 * Implement a region of interest by linking to the statistics.
 	 * 
+	 * @author leek
+	 * 
 	 */
-	class DefaultRegionOfInterest extends AbstractIterableRegionOfInterest {
-		/* (non-Javadoc)
+	class DefaultRegionOfInterest extends AbstractIterableRegionOfInterest
+	{
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest#size()
 		 */
 		T label;
-		final RandomAccess<LabelingType<T>> randomAccess;
+
+		final RandomAccess< LabelingType< T >> randomAccess;
+
 		final LabelStatistics labelStats;
-		final long [] min;
-		final long [] max;
-		final long [] firstRaster;
-		final double [] real_min;
-		final double [] real_max;
-		DefaultRegionOfInterest(T label) {
-			super(labeling.numDimensions());
+
+		final long[] min;
+
+		final long[] max;
+
+		final long[] firstRaster;
+
+		final double[] real_min;
+
+		final double[] real_max;
+
+		DefaultRegionOfInterest( final T label )
+		{
+			super( labeling.numDimensions() );
 			this.label = label;
-			randomAccess = new LabelingOutOfBoundsRandomAccess<T>(labeling);
+			randomAccess = new LabelingOutOfBoundsRandomAccess< T >( labeling );
 			computeStatistics();
-			labelStats = statistics.get(label);
-			min = new long [labeling.numDimensions()];
-			max = new long [labeling.numDimensions()];
-			firstRaster = new long [labeling.numDimensions()];
-			labelStats.getExtents(min, max);
-			labelStats.getRasterStart(firstRaster);
-			real_min = new double [labeling.numDimensions()];
-			real_max = new double [labeling.numDimensions()];
-			
-			labelStats.getExtents(min, max);
-			for (int i = 0; i < labeling.numDimensions(); i++) {
-				real_min[i] = min[i];
-				real_max[i] = max[i];
+			labelStats = statistics.get( label );
+			min = new long[ labeling.numDimensions() ];
+			max = new long[ labeling.numDimensions() ];
+			firstRaster = new long[ labeling.numDimensions() ];
+			labelStats.getExtents( min, max );
+			labelStats.getRasterStart( firstRaster );
+			real_min = new double[ labeling.numDimensions() ];
+			real_max = new double[ labeling.numDimensions() ];
+
+			labelStats.getExtents( min, max );
+			for ( int i = 0; i < labeling.numDimensions(); i++ )
+			{
+				real_min[ i ] = min[ i ];
+				real_max[ i ] = max[ i ];
 			}
 		}
 
 		@Override
-		protected long size() {
+		protected long size()
+		{
 			return labelStats.getArea();
 		}
 
 		@Override
-		protected boolean isMember(double[] position) {
-			for (int i = 0; i < position.length; i++) {
-				randomAccess.setPosition((int)position[i], i);
+		protected boolean isMember( final double[] position )
+		{
+			for ( int i = 0; i < position.length; i++ )
+			{
+				randomAccess.setPosition( ( int ) position[ i ], i );
 			}
-			return randomAccess.get().getLabeling().contains(label);
+			return randomAccess.get().getLabeling().contains( label );
 		}
 
 		@Override
-		protected void getExtrema(long[] minima, long[] maxima) {
-			System.arraycopy(min, 0, minima, 0, numDimensions());
-			System.arraycopy(max, 0, maxima, 0, numDimensions());
+		protected void getExtrema( final long[] minima, final long[] maxima )
+		{
+			System.arraycopy( min, 0, minima, 0, numDimensions() );
+			System.arraycopy( max, 0, maxima, 0, numDimensions() );
 		}
 
 		@Override
-		protected boolean nextRaster(long[] position, long[] end) {
-			for (int i=numDimensions()-1; i>=0; i--) {
-				if (position[i] < min[i]) {
-					System.arraycopy(min, 0, position, 0, i+1);
+		protected boolean nextRaster( final long[] position, final long[] end )
+		{
+			for ( int i = numDimensions() - 1; i >= 0; i-- )
+			{
+				if ( position[ i ] < min[ i ] )
+				{
+					System.arraycopy( min, 0, position, 0, i + 1 );
 					// Pre-decrement in anticipation of one increment.
-					position[0]--;
+					position[ 0 ]--;
 					break;
 				}
 			}
-			do {
+			do
+			{
 				int i;
-				for (i = 0; i < numDimensions(); i++) {
-					if (position[i] >= max[i]) {
-						position[i] = min[i];
-					} else {
-						position[i]++;
+				for ( i = 0; i < numDimensions(); i++ )
+				{
+					if ( position[ i ] >= max[ i ] )
+					{
+						position[ i ] = min[ i ];
+					}
+					else
+					{
+						position[ i ]++;
 						break;
 					}
 				}
-				if (i == numDimensions()) return false;
-				randomAccess.setPosition(position);
-			} while (! randomAccess.get().getLabeling().contains(label));
-			System.arraycopy(position, 0, end, 0, numDimensions());
-			do {
-				end[0]++;
-				randomAccess.setPosition(end);
-			} while ((end[0] <= max[0]) && (randomAccess.get().getLabeling().contains(label)));
+				if ( i == numDimensions() )
+					return false;
+				randomAccess.setPosition( position );
+			}
+			while ( !randomAccess.get().getLabeling().contains( label ) );
+			System.arraycopy( position, 0, end, 0, numDimensions() );
+			do
+			{
+				end[ 0 ]++;
+				randomAccess.setPosition( end );
+			}
+			while ( ( end[ 0 ] <= max[ 0 ] ) && ( randomAccess.get().getLabeling().contains( label ) ) );
 			return true;
 		}
 
 	}
 
 	@Override
-	public RegionOfInterest createRegionOfInterest(T label) {
-		return new DefaultRegionOfInterest(label);
+	public RegionOfInterest createRegionOfInterest( final T label )
+	{
+		return new DefaultRegionOfInterest( label );
 	}
 
 	@Override
-	public IterableRegionOfInterest createIterableRegionOfInterest(T label) {
-		return new DefaultRegionOfInterest(label);
+	public IterableRegionOfInterest createIterableRegionOfInterest( final T label )
+	{
+		return new DefaultRegionOfInterest( label );
 	}
 
 }

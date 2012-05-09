@@ -36,7 +36,6 @@
 
 package net.imglib2.img;
 
-import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.type.NativeType;
 
 /**
@@ -45,27 +44,25 @@ import net.imglib2.type.NativeType;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public abstract class AbstractNativeImg<
-		T extends NativeType< T >,
-		A extends DataAccess >
+public abstract class AbstractNativeImg< T extends NativeType< T >, A >
 	extends AbstractImg< T >
 	implements NativeImg< T, A >
 {
 	final protected int entitiesPerPixel;
 	protected long numEntities;
-	
+
 	protected T linkedType;
-	
+
 	public AbstractNativeImg( final long[] dim, final int entitiesPerPixel )
 	{
 		super( dim );
 		this.entitiesPerPixel = entitiesPerPixel;
 		this.numEntities = numPixels * entitiesPerPixel;
 	}
-	
+
 	@Override
 	public void setLinkedType( final T type ) { this.linkedType = type; }
-	
+
 	@Override
 	public T createLinkedType()
 	{

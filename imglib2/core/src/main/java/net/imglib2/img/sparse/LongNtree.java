@@ -34,17 +34,66 @@
  * #L%
  */
 
-package net.imglib2.img.basictypeaccess;
+package net.imglib2.img.sparse;
+
+import net.imglib2.img.basictypeaccess.LongAccess;
 
 /**
+ * LongAccess based on a {@link Ntree}<Longeger>.
  *
- * TODO Do we need this?
- * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch
  */
-public interface DataAccess
+public final class LongNtree implements LongAccess, NtreeAccess< Long, LongNtree >
 {
-	public void close();
+
+	private final long[] position;
+
+	private final Ntree< Long > data;
+
+	/**
+	 * Standard constructor called by factory
+	 *
+	 * @param dimensions
+	 *            The dimensions of the tree
+	 * @param value
+	 *            Uniform value of created nodes of the tree
+	 */
+	public LongNtree( final long[] dimensions, final long[] position, final long value )
+	{
+		this.data = new Ntree< Long >( dimensions, value );
+
+		this.position = position;
+	}
+
+	public LongNtree( final Ntree< Long > data, final long[] position )
+	{
+		this.data = data;
+		this.position = position;
+	}
+
+	@Override
+	public long getValue( final int index )
+	{
+		// ignore index, get tree position from RandomAccess/Cursor
+		return data.getNode( position ).getValue();
+	}
+
+	@Override
+	public void setValue( final int index, final long value )
+	{
+		// ignore index, get tree position from RandomAccess/Cursor
+		data.createNodeWithValue( position, value );
+	}
+
+	@Override
+	public Ntree< Long > getCurrentStorageNtree()
+	{
+		return data;
+	}
+
+	@Override
+	public LongNtree createInstance( final long[] position )
+	{
+		return new LongNtree( data, position );
+	}
 }

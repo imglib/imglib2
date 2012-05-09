@@ -146,7 +146,8 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	@Override
 	public A update( final Object c )
 	{
-		return mirror.get( ( ( PlanarContainerSampler ) c ).getCurrentSliceIndex() );
+		final int i = ( ( PlanarContainerSampler ) c ).getCurrentSliceIndex();
+		return mirror.get( i < 0 ? 0 : ( i >= numSlices ? numSlices - 1 : i ) );
 	}
 
 	/**
