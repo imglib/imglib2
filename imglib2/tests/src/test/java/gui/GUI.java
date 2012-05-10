@@ -33,6 +33,7 @@ public class GUI
 		canvas = imp.getCanvas();
 		ij = IJ.getInstance();
 		backup = backupGui();
+		clearGui();
 		handlers = new ArrayList< Object >();
 	}
 

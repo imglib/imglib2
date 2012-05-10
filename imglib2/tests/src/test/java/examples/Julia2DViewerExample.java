@@ -2,7 +2,6 @@ package examples;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
 
 import net.imglib2.converter.Converter;
 import net.imglib2.io.ImgIOException;
@@ -17,12 +16,12 @@ public class Julia2DViewerExample
 {
 	final protected ComplexDoubleType c;
 	final protected JuliaRealRandomAccessible juliaset;
-	final protected InteractiveReal2DViewer< LongType > viewer; 
-	
+	final protected InteractiveReal2DViewer< LongType > viewer;
+
 	public class JuliaListener implements MouseMotionListener, MouseListener
 	{
 		protected int oX, oY, dX, dY;
-		
+
 		@Override
 		public void mouseDragged( final MouseEvent e )
 		{
@@ -65,7 +64,7 @@ public class Julia2DViewerExample
 	{
 		this.c = c;
 		juliaset = new JuliaRealRandomAccessible( c, maxIterations, maxAmplitude );
-		
+
 		/* center shift */
 		final AffineTransform2D centerShift = new AffineTransform2D();
 		centerShift.set(
@@ -83,22 +82,20 @@ public class Julia2DViewerExample
 		rotation.scale( 200 );
 
 		rotation.preConcatenate( centerUnShift );
-		
-		final ArrayList< Object > handlers = new ArrayList< Object >();
-		handlers.add( new JuliaListener() );
 
-		viewer = new InteractiveReal2DViewer< LongType >( width, height, juliaset, converter, rotation, handlers );
+		viewer = new InteractiveReal2DViewer< LongType >( width, height, juliaset, converter, rotation );
+		viewer.addHandler( new JuliaListener() );
 	}
 
 	final static public void main( final String[] args ) throws ImgIOException
 	{
 		final int maxIterations = 100;
 		final ComplexDoubleType c = new ComplexDoubleType( -0.4, 0.6 );
-		final int maxAmplitude = 4096; 
-		
+		final int maxAmplitude = 4096;
+
 		final Converter< LongType, ARGBType > lut = new Converter< LongType, ARGBType >()
 		{
-			
+
 			final protected int[] rgb = new int[ maxIterations + 1 ];
 			{
 				for ( int i = 0; i <= maxIterations; ++i )
@@ -106,22 +103,22 @@ public class Julia2DViewerExample
 					final double r = 1.0 - ( double )i / maxIterations;
 					final double g = Math.sin( Math.PI * r );
 					final double b = 0.5 - 0.5 * Math.cos( Math.PI * g );
-					
+
 					final int ri = ( int )Math.round( Math.max( 0, 255 * r ) );
 					final int gi = ( int )Math.round( Math.max( 0, 255 * g ) );
 					final int bi = ( int )Math.round( Math.max( 0, 255 * b ) );
-					
+
 					rgb[ i ] = ( ( ( ri << 8 ) | gi ) << 8 ) | bi | 0xff000000;
 				}
 			}
-			
+
 			@Override
 			public void convert( final LongType input, final ARGBType output )
 			{
 				output.set( rgb[ input.getInteger() ] );
 			}
 		};
-		
+
 		new Julia2DViewerExample( c, maxIterations, maxAmplitude, lut );
 	}
 

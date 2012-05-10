@@ -25,8 +25,6 @@
 
 package gui;
 
-import java.util.Collection;
-
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.Converter;
@@ -58,9 +56,9 @@ public class InteractiveReal2DViewer< T extends NumericType< T > & NativeType< T
 	 * @param initialTransform
 	 *            initial transformation to apply to the {@link #source}
 	 */
-	public InteractiveReal2DViewer( final int width, final int height, final RealRandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform, final Collection< Object > handlers )
+	public InteractiveReal2DViewer( final int width, final int height, final RealRandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform )
 	{
-		super( width, height, converter, initialTransform, handlers );
+		super( width, height, converter, initialTransform );
 		this.source = source;
 
 		projector = createProjector();

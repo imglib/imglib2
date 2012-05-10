@@ -2,9 +2,6 @@ package examples;
 import gui.Interactive2DViewer;
 import ij.IJ;
 import ij.ImageJ;
-
-import java.util.ArrayList;
-
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.img.Img;
@@ -41,7 +38,7 @@ public class Img2DViewerExample< T extends RealType< T > & NativeType< T > >
 			1.0, 0.0, ( width - imgPlus.dimension( 0 ) ) / 2.0,
 			0.0, yScale, ( height - imgPlus.dimension( 1 ) * yScale ) / 2.0 );
 
-		new Interactive2DViewer< T >( width, height, source, converter, unScale, new ArrayList< Object >() );
+		new Interactive2DViewer< T >( width, height, source, converter, unScale );
 	}
 
 	final static public void main( final String[] args ) throws ImgIOException

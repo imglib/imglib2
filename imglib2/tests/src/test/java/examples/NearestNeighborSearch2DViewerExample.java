@@ -1,8 +1,5 @@
 package examples;
 import gui.InteractiveReal2DViewer;
-
-import java.util.ArrayList;
-
 import net.imglib2.RealPoint;
 import net.imglib2.collection.KDTree;
 import net.imglib2.collection.RealPointSampleList;
@@ -57,8 +54,7 @@ public class NearestNeighborSearch2DViewerExample< T extends NumericType< T > & 
 				width, height,
 				interpolant,
 				new RealARGBConverter< UnsignedByteType >( 0, 255 ),
-				transform,
-				new ArrayList< Object >() );
+				transform );
 	}
 
 }

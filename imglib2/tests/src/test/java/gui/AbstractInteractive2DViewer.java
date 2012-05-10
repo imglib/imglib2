@@ -34,7 +34,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessible;
@@ -113,7 +112,7 @@ public class AbstractInteractive2DViewer< T extends NumericType< T > > extends A
 	 * @param initialTransform
 	 *            initial transformation to apply to the {@link #source}
 	 */
-	public AbstractInteractive2DViewer( final int width, final int height, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform, final Collection< Object > handlers )
+	public AbstractInteractive2DViewer( final int width, final int height, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform )
 	{
 		this.converter = converter;
 
@@ -132,10 +131,16 @@ public class AbstractInteractive2DViewer< T extends NumericType< T > > extends A
 
 		// create and register key and mouse handler
 		transformEventHandler = new TransformEventHandler2D( new FinalInterval( new long[] { imp.getWidth(), imp.getHeight() } ), this );
-		this.handlers.addAll( handlers );
-		this.handlers.add( transformEventHandler );
 		gui = new GUI( imp );
-		gui.addHandlers( this.handlers );
+		gui.addHandler( transformEventHandler );
+	}
+
+	/**
+	 * Add new event handler.
+	 */
+	public void addHandler( final Object handler )
+	{
+		gui.addHandler( handler );
 	}
 
 	// -- TransformEventHandler2D.TransformListener --

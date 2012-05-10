@@ -25,9 +25,6 @@
 
 package gui;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.XYRandomAccessibleProjector;
@@ -52,11 +49,6 @@ public class Interactive2DViewer< T extends NumericType< T > > extends AbstractI
 
 	final protected NLinearInterpolatorFactory< T > nlFactory = new NLinearInterpolatorFactory< T >();
 
-	public Interactive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform )
-	{
-		this( width, height, source, converter, initialTransform, new ArrayList< Object > () );
-	}
-
 	/**
 	 *
 	 * @param width
@@ -70,9 +62,9 @@ public class Interactive2DViewer< T extends NumericType< T > > extends AbstractI
 	 * @param initialTransform
 	 *            initial transformation to apply to the {@link #source}
 	 */
-	public Interactive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform, final Collection< Object > handlers )
+	public Interactive2DViewer( final int width, final int height, final RandomAccessible< T > source, final Converter< T, ARGBType > converter, final AffineTransform2D initialTransform )
 	{
-		super( width, height, converter, initialTransform, handlers );
+		super( width, height, converter, initialTransform );
 		this.source = source;
 
 		projector = createProjector( nnFactory );

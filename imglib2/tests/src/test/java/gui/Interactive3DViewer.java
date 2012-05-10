@@ -135,13 +135,19 @@ public class Interactive3DViewer< T extends NumericType< T > > extends AbstractI
 
 		// create and register key and mouse handler
 		transformEventHandler = new TransformEventHandler3D( imp, this, yScale, zScale, currentSlice );
-		final ArrayList< Object > handlers = new ArrayList< Object >();
-		handlers.add( transformEventHandler );
 		gui = new GUI( imp );
-		gui.addHandlers( handlers );
+		gui.addHandler( transformEventHandler );
 
 		requestRepaint();
 		startPainter();
+	}
+
+	/**
+	 * Add new event handler.
+	 */
+	public void addHandler( final Object handler )
+	{
+		gui.addHandler( handler );
 	}
 
 	// -- TransformEventHandler3D.TransformListener --

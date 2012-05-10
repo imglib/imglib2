@@ -1,12 +1,8 @@
 package examples;
-import java.util.ArrayList;
-
-import net.imglib2.converter.Converter;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.LongType;
 import fractals.MandelbrotRealRandomAccessible;
@@ -27,7 +23,7 @@ public class Real2DViewerExample< T extends NumericType< T > & NativeType< T > >
 		transform.translate( width / 2.0, height / 2.0 );
 
 		final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
-		new InteractiveReal2DViewer< LongType >( width, height, mandelbrot, converter, transform, new ArrayList< Object >() );
+		new InteractiveReal2DViewer< LongType >( width, height, mandelbrot, converter, transform );
 
 //		final Converter< LongType, ARGBType > lut = new Converter< LongType, ARGBType >()
 //		{
