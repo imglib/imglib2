@@ -21,136 +21,163 @@ import java.util.Collection;
  */
 public class GUI
 {
+	/**
+	 * Backup and clear current key and mouse listeners.
+	 *
+	 * @param imp
+	 *            the ImagePlus in which to install the GUI.
+	 */
+	public GUI( final ImagePlus imp )
+	{
+		window = imp.getWindow();
+		canvas = imp.getCanvas();
+		ij = IJ.getInstance();
+		backup = backupGui();
+		handlers = new ArrayList< Object >();
+	}
+
+	/**
+	 * Add new event handler.
+	 */
+	public void addHandler( final Object handler )
+	{
+		handlers.add( handler );
+
+		if ( KeyListener.class.isInstance( handler ) )
+		{
+			canvas.addKeyListener( ( KeyListener ) handler );
+			window.addKeyListener( ( KeyListener ) handler );
+			if ( ij != null )
+				ij.addKeyListener( ( KeyListener ) handler );
+		}
+
+		if ( MouseMotionListener.class.isInstance( handler ) )
+			canvas.addMouseMotionListener( ( MouseMotionListener ) handler );
+
+		if ( MouseListener.class.isInstance( handler ) )
+			canvas.addMouseListener( ( MouseListener ) handler );
+
+		if ( MouseWheelListener.class.isInstance( handler ) )
+			window.addMouseWheelListener( ( MouseWheelListener ) handler );
+	}
+
+	/**
+	 * Add new event handlers.
+	 */
+	public void addHandlers( final Collection< Object > handlers )
+	{
+		for ( final Object h : handlers )
+			addHandler( h );
+	}
+
+	/**
+	 * Restore the previously active Event handlers.
+	 */
+	public void restoreGui()
+	{
+		restoreGui( backup );
+	}
+
+	/**
+	 * Stores current mouse and keyboard listeners.
+	 */
+	protected class State
+	{
+		final KeyListener[] windowKeyListeners;
+
+		final KeyListener[] canvasKeyListeners;
+
+		final KeyListener[] ijKeyListeners;
+
+		final MouseListener[] canvasMouseListeners;
+
+		final MouseMotionListener[] canvasMouseMotionListeners;
+
+		final MouseWheelListener[] windowMouseWheelListeners;
+
+		public State()
+		{
+			canvasKeyListeners = canvas.getKeyListeners();
+			windowKeyListeners = window.getKeyListeners();
+			ijKeyListeners = ( ij == null ) ? null : ij.getKeyListeners();
+			canvasMouseListeners = canvas.getMouseListeners();
+			canvasMouseMotionListeners = canvas.getMouseMotionListeners();
+			windowMouseWheelListeners = window.getMouseWheelListeners();
+		}
+	}
+
 	final protected ImageWindow window;
 
 	final protected Canvas canvas;
 
 	final protected ImageJ ij;
 
-	protected ArrayList< Object > handlers = new ArrayList< Object >();
+	final protected State backup;
 
-	/* backup */
-	protected KeyListener[] windowKeyListeners;
-
-	protected KeyListener[] canvasKeyListeners;
-
-	protected KeyListener[] ijKeyListeners;
-
-	protected MouseListener[] canvasMouseListeners;
-
-	private MouseMotionListener[] canvasMouseMotionListeners;
-
-	private MouseWheelListener[] windowMouseWheelListeners;
-
-	GUI( final ImagePlus imp )
-	{
-		window = imp.getWindow();
-		canvas = imp.getCanvas();
-
-		ij = IJ.getInstance();
-		handlers.clear();
-	}
+	final protected ArrayList< Object > handlers;
 
 	/**
-	 * Add new event handlers.
+	 * Restore the event handlers from a {@link State}.
+	 *
+	 * @param state
+	 *            the state to restore.
 	 */
-	final void takeOverGui( final Collection< Object > handlers )
-	{
-		this.handlers.addAll( handlers );
-		backupGui();
-		clearGui();
-		
-		for ( final Object h : handlers )
-		{
-			if ( KeyListener.class.isInstance( h ) )
-			{
-				canvas.addKeyListener( ( KeyListener )h );
-				window.addKeyListener( ( KeyListener )h );
-				if ( ij != null )
-					ij.addKeyListener( ( KeyListener )h );
-			}
-			if ( MouseMotionListener.class.isInstance( h ) )
-				canvas.addMouseMotionListener( ( MouseMotionListener )h );
-			
-			if ( MouseListener.class.isInstance( h ) )
-				canvas.addMouseListener( ( MouseListener )h );
-			
-			if ( MouseWheelListener.class.isInstance( h ) )
-				window.addMouseWheelListener( ( MouseWheelListener )h );
-		}
-	}
-
-	/**
-	 * Restore the previously active Event handlers.
-	 */
-	final void restoreGui()
+	protected void restoreGui( final State state )
 	{
 		clearGui();
-		for ( final KeyListener l : canvasKeyListeners )
+		for ( final KeyListener l : state.canvasKeyListeners )
 			canvas.addKeyListener( l );
-		for ( final KeyListener l : windowKeyListeners )
+		for ( final KeyListener l : state.windowKeyListeners )
 			window.addKeyListener( l );
 		if ( ij != null )
-			for ( final KeyListener l : ijKeyListeners )
+			for ( final KeyListener l : state.ijKeyListeners )
 				ij.addKeyListener( l );
-		for ( final MouseListener l : canvasMouseListeners )
+		for ( final MouseListener l : state.canvasMouseListeners )
 			canvas.addMouseListener( l );
-		for ( final MouseMotionListener l : canvasMouseMotionListeners )
+		for ( final MouseMotionListener l : state.canvasMouseMotionListeners )
 			canvas.addMouseMotionListener( l );
-		for ( final MouseWheelListener l : windowMouseWheelListeners )
+		for ( final MouseWheelListener l : state.windowMouseWheelListeners )
 			window.addMouseWheelListener( l );
 	}
 
 	/**
 	 * Backup active event handlers for restore.
 	 */
-	private final void backupGui()
+	protected State backupGui()
 	{
-		canvasKeyListeners = canvas.getKeyListeners();
-		windowKeyListeners = window.getKeyListeners();
-		if ( ij != null )
-			ijKeyListeners = ij.getKeyListeners();
-		canvasMouseListeners = canvas.getMouseListeners();
-		canvasMouseMotionListeners = canvas.getMouseMotionListeners();
-		windowMouseWheelListeners = window.getMouseWheelListeners();
+		return new State();
 	}
 
 	/**
-	 * Remove both ours and the backed up event handlers.
+	 * Remove all event handlers.
 	 */
-	private final void clearGui()
+	protected void clearGui()
 	{
-		for ( final KeyListener l : canvasKeyListeners )
+		KeyListener[] keyListeners = canvas.getKeyListeners();
+		for ( final KeyListener l : keyListeners )
 			canvas.removeKeyListener( l );
-		for ( final KeyListener l : windowKeyListeners )
-			window.removeKeyListener( l );
-		if ( ij != null )
-			for ( final KeyListener l : ijKeyListeners )
-				ij.removeKeyListener( l );
-		for ( final MouseListener l : canvasMouseListeners )
-			canvas.removeMouseListener( l );
-		for ( final MouseMotionListener l : canvasMouseMotionListeners )
-			canvas.removeMouseMotionListener( l );
-		for ( final MouseWheelListener l : windowMouseWheelListeners )
-			window.removeMouseWheelListener( l );
 
-		for ( final Object h : handlers )
+		keyListeners = window.getKeyListeners();
+		for ( final KeyListener l : keyListeners )
+			window.removeKeyListener( l );
+
+		if ( ij != null )
 		{
-			if ( KeyListener.class.isInstance( h ) )
-			{
-				canvas.removeKeyListener( ( KeyListener )h );
-				window.removeKeyListener( ( KeyListener )h );
-				if ( ij != null )
-					ij.removeKeyListener( ( KeyListener )h );
-			}
-			if ( MouseMotionListener.class.isInstance( h ) )
-				canvas.removeMouseMotionListener( ( MouseMotionListener )h );
-			
-			if ( MouseListener.class.isInstance( h ) )
-				canvas.removeMouseListener( ( MouseListener )h );
-			
-			if ( MouseWheelListener.class.isInstance( h ) )
-				window.removeMouseWheelListener( ( MouseWheelListener )h );
+			keyListeners = ij.getKeyListeners();
+			for ( final KeyListener l : keyListeners )
+				ij.removeKeyListener( l );
 		}
+
+		final MouseListener[] mouseListeners = canvas.getMouseListeners();
+		for ( final MouseListener l : mouseListeners )
+			canvas.removeMouseListener( l );
+
+		final MouseMotionListener[] mouseMotionListeners = canvas.getMouseMotionListeners();
+		for ( final MouseMotionListener l : mouseMotionListeners )
+			canvas.removeMouseMotionListener( l );
+
+		final MouseWheelListener[] mouseWheelListeners = window.getMouseWheelListeners();
+		for ( final MouseWheelListener l : mouseWheelListeners )
+			window.removeMouseWheelListener( l );
 	}
 }

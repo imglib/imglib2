@@ -84,7 +84,7 @@ public class AbstractInteractive2DViewer< T extends NumericType< T > > extends A
 	 * List of event handlers
 	 */
 	protected ArrayList< Object > handlers = new ArrayList< Object >();
-	
+
 	/**
 	 * Register and restore key and mouse handlers.
 	 */
@@ -135,9 +135,9 @@ public class AbstractInteractive2DViewer< T extends NumericType< T > > extends A
 		this.handlers.addAll( handlers );
 		this.handlers.add( transformEventHandler );
 		gui = new GUI( imp );
-		gui.takeOverGui( this.handlers );
+		gui.addHandlers( this.handlers );
 	}
-	
+
 	// -- TransformEventHandler2D.TransformListener --
 
 	@Override
@@ -164,7 +164,7 @@ public class AbstractInteractive2DViewer< T extends NumericType< T > > extends A
 
 	@Override
 	public void toggleInterpolation() {}
-	
+
 	public double getScale()
 	{
 		return transformEventHandler.getScale();

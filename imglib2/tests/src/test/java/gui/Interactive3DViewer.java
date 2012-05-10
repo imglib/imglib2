@@ -138,7 +138,7 @@ public class Interactive3DViewer< T extends NumericType< T > > extends AbstractI
 		final ArrayList< Object > handlers = new ArrayList< Object >();
 		handlers.add( transformEventHandler );
 		gui = new GUI( imp );
-		gui.takeOverGui( handlers );
+		gui.addHandlers( handlers );
 
 		requestRepaint();
 		startPainter();
