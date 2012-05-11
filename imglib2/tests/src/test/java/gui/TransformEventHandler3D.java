@@ -45,6 +45,8 @@ public class TransformEventHandler3D implements KeyListener, MouseWheelListener,
 	/* the current slice index (rotated z) in isotropic x,y,z space */
 	private double currentSlice;
 
+	private final double initialCurrentSlice;
+
 	/**
 	 * Return rotate/translate/scale speed resulting from modifier keys.
 	 *
@@ -69,7 +71,7 @@ public class TransformEventHandler3D implements KeyListener, MouseWheelListener,
 	 * @param list
 	 * @param affine
 	 */
-	final protected static void reduceAffineTransformList( final Iterable< AffineTransform3D > list, final AffineTransform3D affine )
+	final public static void reduceAffineTransformList( final Iterable< AffineTransform3D > list, final AffineTransform3D affine )
 	{
 		final AffineTransform3D a = new AffineTransform3D();
 		for ( final AffineTransform3D t : list )
@@ -88,6 +90,7 @@ public class TransformEventHandler3D implements KeyListener, MouseWheelListener,
 		this.yScale = yScale;
 		this.zScale = zScale;
 		this.currentSlice = currentSlice;
+		this.initialCurrentSlice = currentSlice;
 
 		this.windowSize = new FinalInterval( new long[] { imp.getWidth(), imp.getHeight() } );
 		this.imp = imp;
@@ -187,6 +190,19 @@ public class TransformEventHandler3D implements KeyListener, MouseWheelListener,
 				0, 0, 1, -currentSlice );
 	}
 
+	final private void reset()
+	{
+		affine.set(
+				1.0, 0.0, 0.0, 0.0,
+				0.0, 1.0, 0.0, 0.0,
+				0.0, 0.0, 1.0, 0.0 );
+		currentSlice = initialCurrentSlice;
+		sliceShift.set(
+				1, 0, 0, 0,
+				0, 1, 0, 0,
+				0, 0, 1, -currentSlice );
+	}
+
 	/* coordinates where mouse dragging started and the drag distance */
 	protected double oX, oY, dX, dY;
 
@@ -234,6 +250,18 @@ public class TransformEventHandler3D implements KeyListener, MouseWheelListener,
 				rotate( axis, -v );
 				update();
 			}
+			if ( e.getKeyCode() == KeyEvent.VK_UP )
+			{
+				final double dScale = 1.0 + 0.1 * v;
+				scale( dScale );
+				update();
+			}
+			else if ( e.getKeyCode() == KeyEvent.VK_DOWN )
+			{
+				final double dScale = 1.0 + 0.1 * v;
+				scale( 1.0 / dScale );
+				update();
+			}
 			else if ( e.getKeyCode() == KeyEvent.VK_COMMA )
 			{
 				shift( v );
@@ -242,6 +270,11 @@ public class TransformEventHandler3D implements KeyListener, MouseWheelListener,
 			else if ( e.getKeyCode() == KeyEvent.VK_PERIOD )
 			{
 				shift( -v );
+				update();
+			}
+			else if ( e.getKeyCode() == KeyEvent.VK_R )
+			{
+				reset();
 				update();
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_I )
@@ -273,6 +306,7 @@ public class TransformEventHandler3D implements KeyListener, MouseWheelListener,
 						"CTRL - Rotate and browse 10x slower." + NL +
 						"ENTER/ESC - Return." + NL +
 						"I - Toggle interpolation." + NL +
+						"R - Reset the transformation." + NL +
 						"E - Export the current rotation to the log window." );
 			}
 			else if ( e.getKeyCode() == KeyEvent.VK_PLUS || e.getKeyCode() == KeyEvent.VK_EQUALS )
