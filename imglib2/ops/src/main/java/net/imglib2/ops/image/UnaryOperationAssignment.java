@@ -34,7 +34,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.image;
 
 import net.imglib2.Cursor;
@@ -46,8 +45,7 @@ import net.imglib2.type.Type;
  * 
  * @author Christian Dietz
  */
-public class UnaryOperationAssignment< T extends Type< T >, V extends Type< V >>
-	implements UnaryOperation< IterableInterval< T >, IterableInterval< V >>
+public class UnaryOperationAssignment< T extends Type< T >, V extends Type< V >> implements UnaryOperation< IterableInterval< T >, IterableInterval< V >>
 {
 
 	private final UnaryOperation< T, V > m_op;
@@ -60,19 +58,17 @@ public class UnaryOperationAssignment< T extends Type< T >, V extends Type< V >>
 	@Override
 	public IterableInterval< V > compute( IterableInterval< T > input, IterableInterval< V > output )
 	{
+		if ( !IterationOrderUtil.equalInterval( input, output ) ) { throw new IllegalArgumentException( "Intervals in UnaryOperationAssignment are not compatible: different dimensions." ); }
 
-		if ( !IterationOrderUtil.equalIterationOrder( input, output ) ||
-				!IterationOrderUtil.equalInterval( input, output ) ) {
-			throw new IllegalArgumentException( "Intervals are not compatible" );
-		}
+		if ( !input.iterationOrder().equals( output.iterationOrder() ) ) { throw new IllegalArgumentException( "Intervals in UnaryOperationAssignment are not compatible: different size." ); }
 
-		final Cursor< T > opc = input.cursor();
+		final Cursor< T > inCursor = input.cursor();
 		final Cursor< V > outCursor = output.cursor();
-		while ( opc.hasNext() )
+		while ( inCursor.hasNext() )
 		{
-			opc.fwd();
+			inCursor.fwd();
 			outCursor.fwd();
-			m_op.compute( opc.get(), outCursor.get() );
+			m_op.compute( inCursor.get(), outCursor.get() );
 		}
 
 		return output;
