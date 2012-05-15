@@ -50,13 +50,15 @@ import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 
 /**
- * Convenience factory methods for creation of {@link ArrayImg} instances with
- * the most common pixel {@link Type} variants.  Keep in mind that this cannot
- * be a complete collection since the number of existing pixel {@link Type}s
- * may be extended.
+ * <p>Convenience factory methods for creation of {@link ArrayImg} instances
+ * with the most common pixel {@link Type} variants.  The collection includes
+ * factories to re-use existing primitive type arrays as data.  This can be
+ * used for in-place access to data from other libraries such as AWT or ImageJ.
+ * Keep in mind that this cannot be a complete collection since the number of
+ * existing pixel {@link Type}s may be extended.</p>
  * 
- * For pixel {@link Type}s T not present in this collection, use the generic
- * {@link ArrayImgFactory#create(long[], net.imglib2.type.NativeType)}, e.g.
+ * <p>For pixel {@link Type}s T not present in this collection, use the generic
+ * {@link ArrayImgFactory#create(long[], net.imglib2.type.NativeType)}, e.g.</p>
  * 
  * <pre>
  * img = new ArrayImgFactory&lt;MyType&gt;.create(new long[]{100, 200}, new MyType());
@@ -81,6 +83,23 @@ final public class ArrayImgs
 	}
 	
 	/**
+	 * Creates an {@link ArrayImg}<{@link UnsignedByteType}, {@link ByteArray}>
+	 * reusing a passed byte[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< UnsignedByteType, ByteArray > unsignedBytes( final byte[] array, final long... dim )
+	{
+		final ByteArray access = new ByteArray( array );
+		final ArrayImg< UnsignedByteType, ByteArray > img = new ArrayImg< UnsignedByteType, ByteArray >( access, dim, 1 );
+		final UnsignedByteType t = new UnsignedByteType( img );		
+		img.setLinkedType( t );
+		return img;
+	}
+	
+	/**
 	 * Create an {@link ArrayImg}<{@link ByteType}, {@link ByteArray}>.
 	 * 
 	 * @param dim
@@ -90,6 +109,23 @@ final public class ArrayImgs
 	final static public ArrayImg< ByteType, ByteArray > bytes( final long... dim )
 	{
 		return ( ArrayImg< ByteType, ByteArray > )new ArrayImgFactory< ByteType >().create( dim, new ByteType() );
+	}
+	
+	/**
+	 * Creates an {@link ArrayImg}<{@link ByteType}, {@link ByteArray}>
+	 * reusing a passed byte[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< ByteType, ByteArray > bytes( final byte[] array, final long... dim )
+	{
+		final ByteArray access = new ByteArray( array );
+		final ArrayImg< ByteType, ByteArray > img = new ArrayImg< ByteType, ByteArray >( access, dim, 1 );
+		final ByteType t = new ByteType( img );		
+		img.setLinkedType( t );
+		return img;
 	}
 	
 	/**
@@ -105,6 +141,23 @@ final public class ArrayImgs
 	}
 	
 	/**
+	 * Creates an {@link ArrayImg}<{@link UnsignedShortType}, {@link ShortArray}>
+	 * reusing a passed short[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< UnsignedShortType, ShortArray > unsignedShorts( final short[] array, final long... dim )
+	{
+		final ShortArray access = new ShortArray( array );
+		final ArrayImg< UnsignedShortType, ShortArray > img = new ArrayImg< UnsignedShortType, ShortArray >( access, dim, 1 );
+		final UnsignedShortType t = new UnsignedShortType( img );		
+		img.setLinkedType( t );
+		return img;
+	}
+	
+	/**
 	 * Create an {@link ArrayImg}<{@link ShortType}, {@link ShortArray}>.
 	 * 
 	 * @param dim
@@ -114,6 +167,23 @@ final public class ArrayImgs
 	final static public ArrayImg< ShortType, ShortArray > shorts( final long... dim )
 	{
 		return ( ArrayImg< ShortType, ShortArray > )new ArrayImgFactory< ShortType >().create( dim, new ShortType() );
+	}
+	
+	/**
+	 * Creates an {@link ArrayImg}<{@link ShortType}, {@link ShortArray}>
+	 * reusing a passed short[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< ShortType, ShortArray > shorts( final short[] array, final long... dim )
+	{
+		final ShortArray access = new ShortArray( array );
+		final ArrayImg< ShortType, ShortArray > img = new ArrayImg< ShortType, ShortArray >( access, dim, 1 );
+		final ShortType t = new ShortType( img );		
+		img.setLinkedType( t );
+		return img;
 	}
 	
 	/**
@@ -129,6 +199,23 @@ final public class ArrayImgs
 	}
 	
 	/**
+	 * Creates an {@link ArrayImg}<{@link UnsignedIntType}, {@link IntArray}>
+	 * reusing a passed int[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< UnsignedIntType, IntArray > unsignedInts( final int[] array, final long... dim )
+	{
+		final IntArray access = new IntArray( array );
+		final ArrayImg< UnsignedIntType, IntArray > img = new ArrayImg< UnsignedIntType, IntArray >( access, dim, 1 );
+		final UnsignedIntType t = new UnsignedIntType( img );		
+		img.setLinkedType( t );
+		return img;
+	}
+	
+	/**
 	 * Create an {@link ArrayImg}<{@link IntType}, {@link IntArray}>.
 	 * 
 	 * @param dim
@@ -141,6 +228,23 @@ final public class ArrayImgs
 	}
 	
 	/**
+	 * Creates an {@link ArrayImg}<{@link IntType}, {@link IntArray}>
+	 * reusing a passed int[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< IntType, IntArray > ints( final int[] array, final long... dim )
+	{
+		final IntArray access = new IntArray( array );
+		final ArrayImg< IntType, IntArray > img = new ArrayImg< IntType, IntArray >( access, dim, 1 );
+		final IntType t = new IntType( img );	
+		img.setLinkedType( t );
+		return img;
+	}
+	
+	/**
 	 * Create an {@link ArrayImg}<{@link LongType}, {@link LongArray}>.
 	 * 
 	 * @param dim
@@ -150,6 +254,23 @@ final public class ArrayImgs
 	final static public ArrayImg< LongType, LongArray > longs( final long... dim )
 	{
 		return ( ArrayImg< LongType, LongArray > )new ArrayImgFactory< LongType >().create( dim, new LongType() );
+	}
+	
+	/**
+	 * Creates an {@link ArrayImg}<{@link LongType}, {@link LongArray}>
+	 * reusing a passed long[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< LongType, LongArray > longs( final long[] array, final long... dim )
+	{
+		final LongArray access = new LongArray( array );
+		final ArrayImg< LongType, LongArray > img = new ArrayImg< LongType, LongArray >( access, dim, 1 );
+		final LongType t = new LongType( img );	
+		img.setLinkedType( t );
+		return img;
 	}
 	
 	/**
@@ -177,6 +298,23 @@ final public class ArrayImgs
 	}
 	
 	/**
+	 * Creates an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>
+	 * reusing a passed float[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< FloatType, FloatArray > floats( final float[] array, final long... dim )
+	{
+		final FloatArray access = new FloatArray( array );
+		final ArrayImg< FloatType, FloatArray > img = new ArrayImg< FloatType, FloatArray >( access, dim, 1 );
+		final FloatType t = new FloatType( img );	
+		img.setLinkedType( t );
+		return img;
+	}
+	
+	/**
 	 * Create an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>.
 	 * 
 	 * @param dim
@@ -186,6 +324,23 @@ final public class ArrayImgs
 	final static public ArrayImg< DoubleType, DoubleArray > doubles( final long... dim )
 	{
 		return ( ArrayImg< DoubleType, DoubleArray > )new ArrayImgFactory< DoubleType >().create( dim, new DoubleType() );
+	}
+	
+	/**
+	 * Creates an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>
+	 * reusing a passed double[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< DoubleType, DoubleArray > doubles( final double[] array, final long... dim )
+	{
+		final DoubleArray access = new DoubleArray( array );
+		final ArrayImg< DoubleType, DoubleArray > img = new ArrayImg< DoubleType, DoubleArray >( access, dim, 1 );
+		final DoubleType t = new DoubleType( img );	
+		img.setLinkedType( t );
+		return img;
 	}
 	
 	/**
@@ -201,6 +356,23 @@ final public class ArrayImgs
 	}
 	
 	/**
+	 * Creates an {@link ArrayImg}<{@link ARGBType}, {@link IntArray}>
+	 * reusing a passed int[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< ARGBType, IntArray > argbs( final int[] array, final long... dim )
+	{
+		final IntArray access = new IntArray( array );
+		final ArrayImg< ARGBType, IntArray > img = new ArrayImg< ARGBType, IntArray >( access, dim, 1 );
+		final ARGBType t = new ARGBType( img );	
+		img.setLinkedType( t );
+		return img;
+	}
+	
+	/**
 	 * Create an {@link ArrayImg}<{@link ComplexFloatType}, {@link FloatArray}>.
 	 * 
 	 * @param dim
@@ -213,6 +385,23 @@ final public class ArrayImgs
 	}
 	
 	/**
+	 * Creates an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>
+	 * reusing a passed float[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< ComplexFloatType, FloatArray > complexFloats( final float[] array, final long... dim )
+	{
+		final FloatArray access = new FloatArray( array );
+		final ArrayImg< ComplexFloatType, FloatArray > img = new ArrayImg< ComplexFloatType, FloatArray >( access, dim, 2 );
+		final ComplexFloatType t = new ComplexFloatType( img );	
+		img.setLinkedType( t );
+		return img;
+	}
+	
+	/**
 	 * Create an {@link ArrayImg}<{@link ComplexDoubleType}, {@link DoubleArray}>.
 	 * 
 	 * @param dim
@@ -222,5 +411,22 @@ final public class ArrayImgs
 	final static public ArrayImg< ComplexDoubleType, DoubleArray > complexDoubles( final long... dim )
 	{
 		return ( ArrayImg< ComplexDoubleType, DoubleArray > )new ArrayImgFactory< ComplexDoubleType >().create( dim, new ComplexDoubleType() );
+	}
+	
+	/**
+	 * Creates an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>
+	 * reusing a passed double[] array.
+	 * 
+	 * @param array
+	 * @param dim
+	 * @return
+	 */
+	final public static ArrayImg< ComplexDoubleType, DoubleArray > complexDoubles( final double[] array, final long... dim )
+	{
+		final DoubleArray access = new DoubleArray( array );
+		final ArrayImg< ComplexDoubleType, DoubleArray > img = new ArrayImg< ComplexDoubleType, DoubleArray >( access, dim, 2 );
+		final ComplexDoubleType t = new ComplexDoubleType( img );	
+		img.setLinkedType( t );
+		return img;
 	}
 }
