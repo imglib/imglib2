@@ -27,7 +27,7 @@ public class ARGBScreenImageTest
 		System.out.println("Painting on java.awt.Graphics alters original array: " + new ARGBScreenImageTest().testFill());
 		System.out.println("After painting, the image shows a yellow pixel at 0,0: " + new ARGBScreenImageTest().testFillAndGrabPixel());
 		try {
-			System.out.println("After painting onto JPanel and capturing, the imageshows a yellow pixel at 0,0: " + new ARGBScreenImageTest().testFillAndPaintPanelAndGrab());
+			System.out.println("After painting onto JPanel and capturing, the imageshows a red pixel at 100,100: " + new ARGBScreenImageTest().testFillAndPaintPanelAndGrab());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -54,7 +54,7 @@ public class ARGBScreenImageTest
 	
 	private int getPixel(Image img, int x, int y) {
 		int[] pix = new int[1];
-		PixelGrabber pg = new PixelGrabber(img, 0, 0, 1, 1, pix, 0, 1);
+		PixelGrabber pg = new PixelGrabber(img, x, y, 1, 1, pix, 0, 1);
 		try {
 			pg.grabPixels();
 		} catch (InterruptedException e) {
@@ -105,7 +105,7 @@ public class ARGBScreenImageTest
 		g.dispose();
 		
 		final BufferedImage[] capture = new BufferedImage[1];
-		final JFrame[] frame = new JFrame[1];
+		final JFrame[] frame = new JFrame[2];
 		
 		// Show the image in a JFrame
 		SwingUtilities.invokeAndWait(new Runnable() {
@@ -118,24 +118,46 @@ public class ARGBScreenImageTest
 		// Wait for all sorts of asynchronous events
 		Thread.sleep(2000);
 		
+		SwingUtilities.invokeAndWait(new Runnable() {
+			public void run() {
+				// Paint into the image again
+				Graphics g2 = simg.image().getGraphics();
+				g2.setColor(Color.red);
+				g2.fillRect(100, 100, 100, 100);
+				g2.dispose();
+				JPanel panel = (JPanel) frame[0].getContentPane().getComponent(0);
+				panel.invalidate();
+				panel.validate();
+				panel.repaint();
+			}
+		});
+		
+		// Wait for all sorts of asynchronous events
+		Thread.sleep(2000);
+
 		// Capture the image with a Robot
 		SwingUtilities.invokeAndWait(new Runnable() {
-			public void run() {	
+			public void run() {
 				Point panelLocation = frame[0].getContentPane().getComponent(0).getLocationOnScreen();
 				Rectangle panelBounds = new Rectangle(panelLocation.x, panelLocation.y, width, height);				
 				Robot robot;
 				try {
 					robot = new Robot();
 					capture[0] = robot.createScreenCapture(panelBounds);
-					frame(capture[0], "Robot capture").setVisible(true);
+					frame[1] = frame(capture[0], "Robot capture");
+					frame[1].setVisible(true);
 				} catch (AWTException e) {
 					e.printStackTrace();
 				}
+				
+				frame[0].dispose();
+				frame[1].dispose();
 			}
 		});
 		
 
-		return 0x00ffff00 == (getPixel(capture[0], 0, 0) & 0x00ffffff);
+		// Is red:
+		return 0x00ff0000 == (getPixel(capture[0], 100, 100) & 0x00ffffff);
 	}
 	
 	private JFrame frame(final Image img, String title) {
