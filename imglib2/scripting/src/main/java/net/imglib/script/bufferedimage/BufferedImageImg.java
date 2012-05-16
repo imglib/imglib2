@@ -14,7 +14,7 @@ import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.type.numeric.integer.ByteType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 public class BufferedImageImg<T extends NumericType<T> & NativeType<T>> extends ImgProxy<T>
@@ -28,14 +28,15 @@ public class BufferedImageImg<T extends NumericType<T> & NativeType<T>> extends 
 		final long[] dims = new long[]{bi.getWidth(), bi.getHeight()};
 		switch (bi.getType()) {
 		case BufferedImage.TYPE_BYTE_GRAY:
+		case BufferedImage.TYPE_BYTE_INDEXED:
 			ByteArray ba = new ByteArray(((DataBufferByte)bi.getRaster().getDataBuffer()).getData());
-			ArrayImg<ByteType, ByteArray> b = new ArrayImg<ByteType, ByteArray>(ba, dims, 1);
-			b.setLinkedType(new ByteType(ba));
+			ArrayImg<UnsignedByteType, ByteArray> b = new ArrayImg<UnsignedByteType, ByteArray>(ba, dims, 1);
+			b.setLinkedType(new UnsignedByteType(b));
 			return b;
 		case BufferedImage.TYPE_USHORT_GRAY:
 			ShortArray sa = new ShortArray(((DataBufferShort)bi.getRaster().getDataBuffer()).getData());
 			ArrayImg<UnsignedShortType, ShortArray> s = new ArrayImg<UnsignedShortType, ShortArray>(sa, dims, 1);
-			s.setLinkedType(new UnsignedShortType(sa));
+			s.setLinkedType(new UnsignedShortType(s));
 			return s;
 		case BufferedImage.TYPE_INT_RGB:
 		case BufferedImage.TYPE_INT_ARGB:
