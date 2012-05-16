@@ -24,25 +24,25 @@ public class BufferedImageImg<T extends NumericType<T> & NativeType<T>> extends 
 		super((Img<T>)createImg(bi));
 	}
 
-	private static final <T extends NumericType<T> & NativeType<T>> Img<T> createImg(final BufferedImage bi) {
+	private static final Img<?> createImg(final BufferedImage bi) {
 		final long[] dims = new long[]{bi.getWidth(), bi.getHeight()};
 		switch (bi.getType()) {
 		case BufferedImage.TYPE_BYTE_GRAY:
 			ByteArray ba = new ByteArray(((DataBufferByte)bi.getRaster().getDataBuffer()).getData());
 			ArrayImg<ByteType, ByteArray> b = new ArrayImg<ByteType, ByteArray>(ba, dims, 1);
 			b.setLinkedType(new ByteType(ba));
-			return (Img<T>)b;
+			return b;
 		case BufferedImage.TYPE_USHORT_GRAY:
 			ShortArray sa = new ShortArray(((DataBufferShort)bi.getRaster().getDataBuffer()).getData());
 			ArrayImg<UnsignedShortType, ShortArray> s = new ArrayImg<UnsignedShortType, ShortArray>(sa, dims, 1);
 			s.setLinkedType(new UnsignedShortType(sa));
-			return (Img<T>)s;
+			return s;
 		case BufferedImage.TYPE_INT_RGB:
 		case BufferedImage.TYPE_INT_ARGB:
 			IntArray ia = new IntArray(((DataBufferInt)bi.getRaster().getDataBuffer()).getData());
 			ArrayImg<ARGBType, IntArray> i = new ArrayImg<ARGBType, IntArray>(ia, dims, 1);
 			i.setLinkedType(new ARGBType(i));
-			return (Img<T>)i;
+			return i;
 		}
 		throw new UnsupportedOperationException("Cannot wrap images of type " + bi.getType());
 	}
