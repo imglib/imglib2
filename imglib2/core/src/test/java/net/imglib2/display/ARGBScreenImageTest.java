@@ -24,13 +24,10 @@ public class ARGBScreenImageTest
 {
 	static public final void main(String[] args)
 	{
-		System.out.println("Painting on java.awt.Graphics alters original array:");
-		new ARGBScreenImageTest().testFill();
-		System.out.println("After painting, the image shows a yellow pixel at 0,0:");
-		new ARGBScreenImageTest().testFillAndGrabPixel();
+		System.out.println("Painting on java.awt.Graphics alters original array: " + new ARGBScreenImageTest().testFill2());
+		System.out.println("After painting, the image shows a yellow pixel at 0,0: " + new ARGBScreenImageTest().testFillAndGrabPixel2());
 		try {
-			System.out.println("After painting onto JPanel and capturing, the imageshows a red pixel at 100,100:");
-			new ARGBScreenImageTest().testFillAndPaintPanelAndGrab();
+			System.out.println("After painting onto JPanel and capturing, the imageshows a red pixel at 100,100: " + new ARGBScreenImageTest().testFillAndPaintPanelAndGrab2());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
