@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 
-import net.imglib.script.bufferedimage.BufferedImageImg;
+import net.imglib2.script.bufferedimage.BufferedImageImg;
 import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;

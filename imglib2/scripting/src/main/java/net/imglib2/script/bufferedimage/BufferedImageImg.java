@@ -1,4 +1,4 @@
-package net.imglib.script.bufferedimage;
+package net.imglib2.script.bufferedimage;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
