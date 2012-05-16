@@ -63,12 +63,6 @@ public class FloatArray implements FloatAccess, ArrayDataAccess< FloatArray >
 	}
 
 	@Override
-	public void close()
-	{
-		data = null;
-	}
-
-	@Override
 	public float getValue( final int index )
 	{
 		return data[ index ];
@@ -86,6 +80,7 @@ public class FloatArray implements FloatAccess, ArrayDataAccess< FloatArray >
 		return new FloatArray( numEntities );
 	}
 
+	@Override
 	public float[] getCurrentStorageArray()
 	{
 		return data;

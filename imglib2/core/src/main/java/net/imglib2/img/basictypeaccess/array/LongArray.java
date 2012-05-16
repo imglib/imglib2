@@ -39,9 +39,6 @@ package net.imglib2.img.basictypeaccess.array;
 import net.imglib2.img.basictypeaccess.LongAccess;
 
 /**
-*
-*/
-/**
  * TODO
  *
  * @author Stephan Preibisch
@@ -63,12 +60,6 @@ public class LongArray implements LongAccess, ArrayDataAccess< LongArray >
 	}
 
 	@Override
-	public void close()
-	{
-		data = null;
-	}
-
-	@Override
 	public long getValue( final int index )
 	{
 		return data[ index ];
@@ -80,6 +71,7 @@ public class LongArray implements LongAccess, ArrayDataAccess< LongArray >
 		data[ index ] = value;
 	}
 
+	@Override
 	public long[] getCurrentStorageArray()
 	{
 		return data;

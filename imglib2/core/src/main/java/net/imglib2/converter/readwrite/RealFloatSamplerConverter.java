@@ -48,7 +48,7 @@ import net.imglib2.type.numeric.real.FloatType;
 public final class RealFloatSamplerConverter< R extends RealType< R > > implements SamplerConverter< R, FloatType >
 {
 	@Override
-	public FloatType convert( Sampler< R > sampler )
+	public FloatType convert( final Sampler< R > sampler )
 	{
 		return new FloatType( new RealConvertingFloatAccess< R >( sampler ) );
 	}
@@ -62,15 +62,12 @@ public final class RealFloatSamplerConverter< R extends RealType< R > > implemen
 			this.sampler = sampler;
 		}
 
-		@Override
-		public void close() {}
-
 		/**
 		 * This is only intended to work with FloatType!
 		 * We ignore index!!!
 		 */
 		@Override
-		public float getValue( int index )
+		public float getValue( final int index )
 		{
 			return sampler.get().getRealFloat();
 		}
@@ -80,7 +77,7 @@ public final class RealFloatSamplerConverter< R extends RealType< R > > implemen
 		 * We ignore index!!!
 		 */
 		@Override
-		public void setValue( int index, float value )
+		public void setValue( final int index, final float value )
 		{
 			sampler.get().setReal( value );
 		}

@@ -39,9 +39,6 @@ package net.imglib2.img.basictypeaccess.array;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 
 /**
-*
-*/
-/**
  * TODO
  *
  * @author Stephan Preibisch
@@ -63,12 +60,6 @@ public class DoubleArray implements DoubleAccess, ArrayDataAccess< DoubleArray >
 	}
 
 	@Override
-	public void close()
-	{
-		data = null;
-	}
-
-	@Override
 	public double getValue( final int index )
 	{
 		return data[ index ];
@@ -86,6 +77,7 @@ public class DoubleArray implements DoubleAccess, ArrayDataAccess< DoubleArray >
 		return new DoubleArray( numEntities );
 	}
 
+	@Override
 	public double[] getCurrentStorageArray()
 	{
 		return data;

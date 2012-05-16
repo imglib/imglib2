@@ -36,41 +36,41 @@
 
 package net.imglib2.type;
 
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.basictypeaccess.DataAccess;
 
 /**
- * The {@link Type} class is responsible for computing. It can be instantiated as a variable holding one single value only or with
- * a NativeContainer. There is no differentiation between the two cases except for the constructor to avoid double implementations. 
- * 
- * The {@link Type} is the only class that is aware of the actual data type, i.e. which basic type ({@link DataAccess}) is used to 
- * store the data. On the other hand it does not know the storage type ({@link ArrayImg}, {@link Cursor}, ...). This is not necessary for
- * computation and avoid complicated re-implementations. The method public void updateDataArray( Cursor<?> c );	links the NativeContainer and
- * the cursor which define the current position as well as the current storage array.
- * 
- * @param <T> - the specialized version
+ * The {@link Type} interface is responsible for accessing and manipulating (pixel)
+ * values. It can be realized as an object instance holding a single value or
+ * as a proxy ({@link NativeType}) mapping values into a Java primitive type array.
+ *
+ * @param <T>
+ *            the specialized version
  *
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface Type<T extends Type<T>>
-{	
+public interface Type< T extends Type< T > >
+{
 	/**
 	 * Creates a new {@link Type} variable which can only store one value.
-	 * @return - a new {@link Type} variable
+	 *
+	 * @return a new {@link Type} variable
 	 */
 	public T createVariable();
-	
+
 	/**
-	 * Creates a new {@link Type} variable that has the value of this {@link Type}
-	 * @return - a new {@link Type} variable
+	 * Creates a new {@link Type} variable that has the value of this
+	 * {@link Type}
+	 *
+	 * @return a new {@link Type} variable
 	 */
 	public T copy();
 
 	/**
 	 * Sets the value of another {@link Type}.
-	 * @param c - the new value
+	 *
+	 * @param c
+	 *            the new value
 	 */
-	public void set( T c );		
+	public void set( T c );
 }

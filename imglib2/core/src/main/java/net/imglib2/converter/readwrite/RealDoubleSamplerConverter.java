@@ -48,7 +48,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 public final class RealDoubleSamplerConverter< R extends RealType< R > > implements SamplerConverter< R, DoubleType >
 {
 	@Override
-	public DoubleType convert( Sampler< R > sampler )
+	public DoubleType convert( final Sampler< R > sampler )
 	{
 		return new DoubleType( new RealConvertingDoubleAccess< R >( sampler ) );
 	}
@@ -62,15 +62,12 @@ public final class RealDoubleSamplerConverter< R extends RealType< R > > impleme
 			this.sampler = sampler;
 		}
 
-		@Override
-		public void close() {}
-
 		/**
 		 * This is only intended to work with DoubleType!
 		 * We ignore index!!!
 		 */
 		@Override
-		public double getValue( int index )
+		public double getValue( final int index )
 		{
 			return sampler.get().getRealDouble();
 		}
@@ -80,7 +77,7 @@ public final class RealDoubleSamplerConverter< R extends RealType< R > > impleme
 		 * We ignore index!!!
 		 */
 		@Override
-		public void setValue( int index, double value )
+		public void setValue( final int index, final double value )
 		{
 			sampler.get().setReal( value );
 		}

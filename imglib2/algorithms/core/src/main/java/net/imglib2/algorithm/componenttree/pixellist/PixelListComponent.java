@@ -44,7 +44,7 @@ import net.imglib2.type.Type;
 
 /**
  * A connected component of the image thresholded at {@link #value()}. The set
- * of pixels can be accessed by iterating ({@ling #iterator()}) the component.
+ * of pixels can be accessed by iterating ({@link #iterator()}) the component.
  *
  * This is a node in a {@link PixelListComponentTree}. The child and parent
  * nodes can be accessed by {@link #getChildren()} and {@link #getParent()}.
@@ -76,13 +76,15 @@ public final class PixelListComponent< T extends Type< T > > implements Iterable
 	 */
 	private final PixelList pixelList;
 
-	PixelListComponent( PixelListComponentIntermediate< T > intermediate )
+	PixelListComponent( final PixelListComponentIntermediate< T > intermediate )
 	{
 		children = new ArrayList< PixelListComponent< T > >();
 		parent = null;
 		value = intermediate.getValue().copy();
 		pixelList = new PixelList( intermediate.pixelList );
-		for ( PixelListComponentIntermediate< T > c : intermediate.children )
+		if( intermediate.emittedComponent != null )
+			children.add( intermediate.emittedComponent );
+		for ( final PixelListComponentIntermediate< T > c : intermediate.children )
 		{
 			children.add( c.emittedComponent );
 			c.emittedComponent.parent = this;

@@ -36,7 +36,6 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
-import net.imglib2.img.basictypeaccess.DataAccess;
 
 /**
 *
@@ -48,7 +47,7 @@ import net.imglib2.img.basictypeaccess.DataAccess;
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface ArrayDataAccess< A > extends DataAccess
+public interface ArrayDataAccess< A >
 {
 	A createArray( int numEntities );
 	Object getCurrentStorageArray();

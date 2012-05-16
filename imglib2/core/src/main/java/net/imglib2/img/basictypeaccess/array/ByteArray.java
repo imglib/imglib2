@@ -63,12 +63,6 @@ public class ByteArray implements ByteAccess, ArrayDataAccess< ByteArray >
 	}
 
 	@Override
-	public void close()
-	{
-		data = null;
-	}
-
-	@Override
 	public byte getValue( final int index )
 	{
 		return data[ index ];
@@ -80,6 +74,7 @@ public class ByteArray implements ByteAccess, ArrayDataAccess< ByteArray >
 		data[ index ] = value;
 	}
 
+	@Override
 	public byte[] getCurrentStorageArray()
 	{
 		return data;

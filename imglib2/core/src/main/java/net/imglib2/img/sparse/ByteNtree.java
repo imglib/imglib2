@@ -40,31 +40,27 @@ import net.imglib2.img.basictypeaccess.ByteAccess;
 
 /**
  * ByteAccess based on a {@link Ntree}<Byte>.
- * 
+ *
  * @author Tobias Pietzsch
  */
 public final class ByteNtree implements ByteAccess, NtreeAccess< Byte, ByteNtree >
 {
-	private long[] position;
+	private final long[] position;
 
-	private Ntree< Byte > data;
+	private final Ntree< Byte > data;
 
-	public ByteNtree( long[] dimenions, final long[] position, Byte value )
+	public ByteNtree( final long[] dimenions, final long[] position, final Byte value )
 	{
 		this.data = new Ntree< Byte >( dimenions, value );
 		this.position = position;
 	}
 
 	/* Copy constructor */
-	private ByteNtree( Ntree< Byte > data, long[] position )
+	private ByteNtree( final Ntree< Byte > data, final long[] position )
 	{
 		this.data = data;
 		this.position = position;
 	}
-
-	@Override
-	public void close()
-	{}
 
 	@Override
 	public byte getValue( final int index )
@@ -87,7 +83,7 @@ public final class ByteNtree implements ByteAccess, NtreeAccess< Byte, ByteNtree
 	}
 
 	@Override
-	public ByteNtree createInstance( long[] position )
+	public ByteNtree createInstance( final long[] position )
 	{
 		return new ByteNtree( data, position );
 	}

@@ -40,32 +40,28 @@ import net.imglib2.img.basictypeaccess.FloatAccess;
 
 /**
  * FloatAccess based on a {@link Ntree}<Float>.
- * 
+ *
  * @author Tobias Pietzsch
  */
 public final class FloatNtree implements FloatAccess, NtreeAccess< Float, FloatNtree >
 {
-	private long[] position;
+	private final long[] position;
 
-	private Ntree< Float > data;
+	private final Ntree< Float > data;
 
-	public FloatNtree( long[] dimenions, final long[] position, Float value )
+	public FloatNtree( final long[] dimenions, final long[] position, final Float value )
 	{
 		this.data = new Ntree< Float >( dimenions, value );
 		this.position = position;
 	}
 
 	/* Copy constructor */
-	private FloatNtree( Ntree< Float > data, long[] position )
+	private FloatNtree( final Ntree< Float > data, final long[] position )
 	{
 		this.data = data;
 		this.position = position;
 
 	}
-
-	@Override
-	public void close()
-	{}
 
 	@Override
 	public float getValue( final int index )
@@ -88,7 +84,7 @@ public final class FloatNtree implements FloatAccess, NtreeAccess< Float, FloatN
 	}
 
 	@Override
-	public FloatNtree createInstance( long[] pos )
+	public FloatNtree createInstance( final long[] pos )
 	{
 		return new FloatNtree( data, pos );
 	}

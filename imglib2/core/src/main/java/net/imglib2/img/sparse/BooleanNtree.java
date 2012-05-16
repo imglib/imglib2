@@ -40,31 +40,27 @@ import net.imglib2.img.basictypeaccess.BitAccess;
 
 /**
  * BitAccess based on a {@link Ntree}<Boolean>.
- * 
+ *
  * @author Tobias Pietzsch
  */
 public final class BooleanNtree implements BitAccess, NtreeAccess< Boolean, BooleanNtree >
 {
-	private long[] position;
+	private final long[] position;
 
-	private Ntree< Boolean > data;
+	private final Ntree< Boolean > data;
 
-	public BooleanNtree( long[] dimenions, final long[] position, boolean value )
+	public BooleanNtree( final long[] dimenions, final long[] position, final boolean value )
 	{
 		this.data = new Ntree< Boolean >( dimenions, value );
 		this.position = position;
 	}
 
 	/* Copy constructor */
-	private BooleanNtree( Ntree< Boolean > data, long[] position )
+	private BooleanNtree( final Ntree< Boolean > data, final long[] position )
 	{
 		this.data = data;
 		this.position = position;
 	}
-
-	@Override
-	public void close()
-	{}
 
 	@Override
 	public boolean getValue( final int index )
@@ -87,7 +83,7 @@ public final class BooleanNtree implements BitAccess, NtreeAccess< Boolean, Bool
 	}
 
 	@Override
-	public BooleanNtree createInstance( long[] position )
+	public BooleanNtree createInstance( final long[] position )
 	{
 		return new BooleanNtree( data, position );
 	}
