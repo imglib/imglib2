@@ -1,7 +1,6 @@
 package net.imglib2.display;
 
 import java.awt.AWTException;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -18,23 +17,28 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class ARGBScreenImageTest
 {
 	static public final void main(String[] args)
 	{
-		System.out.println("Painting on java.awt.Graphics alters original array: " + new ARGBScreenImageTest().testFill());
-		System.out.println("After painting, the image shows a yellow pixel at 0,0: " + new ARGBScreenImageTest().testFillAndGrabPixel());
+		System.out.println("Painting on java.awt.Graphics alters original array: " + new ARGBScreenImageTest().testFill2());
+		System.out.println("After painting, the image shows a yellow pixel at 0,0: " + new ARGBScreenImageTest().testFillAndGrabPixel2());
 		try {
-			System.out.println("After painting onto JPanel and capturing, the imageshows a red pixel at 100,100: " + new ARGBScreenImageTest().testFillAndPaintPanelAndGrab());
+			System.out.println("After painting onto JPanel and capturing, the imageshows a red pixel at 100,100: " + new ARGBScreenImageTest().testFillAndPaintPanelAndGrab2());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Test
-	public boolean testFill() {
+	public void testFill() {
+		assertTrue("Painting on java.awt.Graphics does not alter original array", testFill2());
+	}
+	
+	private boolean testFill2() {
 		// Define an image
 		int width = 256;
 		int height = 256;
@@ -49,7 +53,7 @@ public class ARGBScreenImageTest
 		g.dispose();
 		
 		// Test whether the original array has changed
-		return 0 != pixels[0];
+		return  0 != pixels[0];
 	}
 	
 	private int getPixel(Image img, int x, int y) {
@@ -64,7 +68,11 @@ public class ARGBScreenImageTest
 	}
 	
 	@Test
-	public boolean testFillAndGrabPixel() {
+	public void testFillAndGrabPixel() {
+		assertTrue("After painting, the image does not show a yellow pixel at 0,0", testFillAndGrabPixel2());
+	}
+	
+	public boolean testFillAndGrabPixel2() {
 		// Define an image
 		int width = 256;
 		int height = 256;
@@ -85,12 +93,15 @@ public class ARGBScreenImageTest
 		g2.dispose();
 		
 		// Test if the first pixel, as seen from the image, is yellow
-		
 		return 0x00ffff00 == (getPixel(bi, 0, 0) & 0x00ffffff);
 	}
 	
 	@Test
-	public boolean testFillAndPaintPanelAndGrab() throws InterruptedException, InvocationTargetException {
+	public void testFillAndPaintPanelAndGrab() throws InterruptedException, InvocationTargetException {
+		assertTrue("After painting onto JPanel and capturing, the image does not show a red pixel at 100,100", testFillAndPaintPanelAndGrab2());
+	}
+
+	public boolean testFillAndPaintPanelAndGrab2() throws InterruptedException, InvocationTargetException {	
 		// Define an image
 		final int width = 256;
 		final int height = 256;
