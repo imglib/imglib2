@@ -64,7 +64,7 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 
 	<developers>
 		<developer>
-			<id>preibisch</id>
+			<id>StephanPreibisch</id>
 			<name>Stephan Preibisch</name>
 			<email>preibisch@mpi-cbg.de</email>
 			<url>http://fly.mpi-cbg.de/~preibisch/</url>
@@ -77,7 +77,7 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			<timezone>+1</timezone>
 		</developer>
 		<developer>
-			<id>saalfeld</id>
+			<id>axtimwalde</id>
 			<name>Stephan Saalfeld</name>
 			<email>saalfeld@mpi-cbg.de</email>
 			<url>http://fly.mpi-cbg.de/~saalfeld/</url>
@@ -90,7 +90,7 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			<timezone>+1</timezone>
 		</developer>
 		<developer>
-			<id>tobias</id>
+			<id>tpietzsch</id>
 			<name>Tobias Pietzsch</name>
 			<email>pietzsch@mpi-cbg.de</email>
 			<organization>MPI-CBG at Dresden</organization>
@@ -125,7 +125,7 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			<timezone>-6</timezone>
 		</developer>
 		<developer>
-			<id>curtis</id>
+			<id>ctrueden</id>
 			<name>Curtis Rueden</name>
 			<email>ctrueden@wisc.edu</email>
 			<url>http://loci.wisc.edu/people/curtis-rueden</url>
@@ -138,7 +138,7 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			<timezone>-6</timezone>
 		</developer>
 		<developer>
-			<id>leek</id>
+			<id>LeeKamentsky</id>
 			<name>Lee Kamentsky</name>
 			<email>leek@broadinstitute.org</email>
 			<url>http://www.broadinstitute.org/~leek/</url>
@@ -150,7 +150,6 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			<timezone>-5</timezone>
 		</developer>
 		<developer>
-			<id>llindsey</id>
 			<name>Larry Lindsey</name>
 			<email>llindsey@clm.utexas.edu</email>
 			<url>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.htm</url>
@@ -162,6 +161,7 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			<timezone>-6</timezone>
 		</developer>
 		<developer>
+			<id>dscho</id>
 			<name>Johannes Schindelin</name>
 			<email>schindelin@wisc.edu</email>
 			<url>http://loci.wisc.edu/people/johannes-schindelin</url>
