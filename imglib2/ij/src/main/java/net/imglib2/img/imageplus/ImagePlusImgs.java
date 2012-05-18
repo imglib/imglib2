@@ -209,8 +209,6 @@ final public class ImagePlusImgs
 	@SuppressWarnings( "unchecked" )
 	final static public < T extends NumericType< T > & NativeType< T > > ImagePlusImg< T, ? > from( final ImagePlus imp )
 	{
-		// This casting madness is necessary for Oracle javac to compile
-		// the syntactically correct version.
-		return ( ImagePlusImg< T, ? > )( Object )ImagePlusAdapter.wrap( imp );
+		return ( ImagePlusImg< T, ? > )ImagePlusAdapter.< T >wrap( imp );
 	}
 }
