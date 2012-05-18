@@ -20,14 +20,14 @@ import javax.swing.SwingUtilities;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
-public class ARGBScreenImageTest
+public class ARGBScreenImageExpectationChecking
 {
 	static public final void main(String[] args)
 	{
-		System.out.println("Painting on java.awt.Graphics alters original array: " + new ARGBScreenImageTest().testFill2());
-		System.out.println("After painting, the image shows a yellow pixel at 0,0: " + new ARGBScreenImageTest().testFillAndGrabPixel2());
+		System.out.println("Painting on java.awt.Graphics alters original array: " + new ARGBScreenImageExpectationChecking().testFill2());
+		System.out.println("After painting, the image shows a yellow pixel at 0,0: " + new ARGBScreenImageExpectationChecking().testFillAndGrabPixel2());
 		try {
-			System.out.println("After painting onto JPanel and capturing, the imageshows a red pixel at 100,100: " + new ARGBScreenImageTest().testFillAndPaintPanelAndGrab2());
+			System.out.println("After painting onto JPanel and capturing, the imageshows a red pixel at 100,100: " + new ARGBScreenImageExpectationChecking().testFillAndPaintPanelAndGrab2());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
