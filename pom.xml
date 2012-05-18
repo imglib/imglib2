@@ -88,9 +88,6 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
         <role>developer</role>
       </roles>
       <timezone>+1</timezone>
-      <properties>
-        <picUrl>http://fly.mpi-cbg.de/~saalfeld/saalfeld.jpg</picUrl>
-      </properties>
     </developer>
     <developer>
       <id>tobias</id>
@@ -114,9 +111,6 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
         <role>developer</role>
       </roles>
       <timezone>+1</timezone>
-      <properties>
-        <picUrl>http://loci.wisc.edu/files/loci/images/people/Cardona_pic1.jpg</picUrl>
-      </properties>
     </developer>
     <developer>
       <id>bdezonia</id>
@@ -129,9 +123,6 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
         <role>developer</role>
       </roles>
       <timezone>-6</timezone>
-      <properties>
-        <picUrl>http://loci.wisc.edu/files/loci/images/people/Barry_DeZonia.jpg</picUrl>
-      </properties>
     </developer>
     <developer>
       <id>curtis</id>
@@ -145,9 +136,6 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
         <role>developer</role>
       </roles>
       <timezone>-6</timezone>
-      <properties>
-        <picUrl>http://loci.wisc.edu/files/loci/images/people/curtis-2010.jpg</picUrl>
-      </properties>
     </developer>
     <developer>
       <id>leek</id>
@@ -160,9 +148,6 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
         <role>developer</role>
       </roles>
       <timezone>-5</timezone>
-      <properties>
-        <picUrl>http://www.broadinstitute.org/~leek/lee_small.jpg</picUrl>
-      </properties>
     </developer>
     <developer>
       <id>llindsey</id>
@@ -175,9 +160,6 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
         <role>developer</role>
       </roles>
       <timezone>-6</timezone>
-      <properties>
-        <picUrl>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.jpg</picUrl>
-      </properties>
     </developer>
     <developer>
       <name>Johannes Schindelin</name>
@@ -189,9 +171,6 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
         <role>developer</role>
       </roles>
       <timezone>-6</timezone>
-      <properties>
-        <picUrl>http://www.loci.wisc.edu/files/loci/images/people/johannes.jpeg</picUrl>
-      </properties>
     </developer>
   </developers>
 
@@ -207,9 +186,6 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
         <role>developer</role>
       </roles>
       <timezone>-5</timezone>
-      <properties>
-        <picUrl>http://www.loci.wisc.edu/files/loci/images/people/GBH-2010.jpg</picUrl>
-      </properties>
     </contributor>
     <contributor><name>Jan Funke</name></contributor>
     <contributor><name>Jean-Yves Tinevez</name></contributor>
