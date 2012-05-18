@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-    http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>net.imglib2</groupId>
-    <artifactId>pom-imglib</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
-  </parent>
+	<parent>
+		<groupId>net.imglib2</groupId>
+		<artifactId>pom-imglib</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
 
-  <groupId>mpicbg</groupId>
-  <artifactId>pom-imglib1</artifactId>
-  <packaging>pom</packaging>
+	<groupId>mpicbg</groupId>
+	<artifactId>pom-imglib1</artifactId>
+	<packaging>pom</packaging>
 
-  <name>ImgLib1 Projects</name>
-  <description>Umbrella project for ImgLib1 projects.</description>
+	<name>ImgLib1 Projects</name>
+	<description>Umbrella project for ImgLib1 projects.</description>
 
-  <modules>
-    <module>GameOfDeath</module>
-    <module>algorithms</module>
-    <module>core</module>
-    <module>ij</module>
-    <module>io</module>
-    <module>ops</module>
-    <module>scripting</module>
-    <module>tests</module>
-  </modules>
+	<modules>
+		<module>GameOfDeath</module>
+		<module>algorithms</module>
+		<module>core</module>
+		<module>ij</module>
+		<module>io</module>
+		<module>ops</module>
+		<module>scripting</module>
+		<module>tests</module>
+	</modules>
 
 	<build>
 		<plugins>
@@ -42,16 +42,16 @@
 		</plugins>
 	</build>
 
-  <!-- NB: for project parent, in case of partial checkout -->
-  <repositories>
-    <repository>
-      <id>imagej.releases</id>
-      <url>http://maven.imagej.net/content/repositories/releases</url>
-    </repository>
-    <repository>
-      <id>imagej.snapshots</id>
-      <url>http://maven.imagej.net/content/repositories/snapshots</url>
-    </repository>
-  </repositories>
+	<!-- NB: for project parent, in case of partial checkout -->
+	<repositories>
+		<repository>
+			<id>imagej.releases</id>
+			<url>http://maven.imagej.net/content/repositories/releases</url>
+		</repository>
+		<repository>
+			<id>imagej.snapshots</id>
+			<url>http://maven.imagej.net/content/repositories/snapshots</url>
+		</repository>
+	</repositories>
 
 </project>
