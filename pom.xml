@@ -195,12 +195,8 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 	</contributors>
 
 	<issueManagement>
-		<!--
-		<system>Trac</system>
-		<url>http://code.imagej.net/trac/imglib/</url>
-		-->
-		<system>Bugzilla</system>
-		<url>http://fiji.sc/cgi-bin/bugzilla/</url>
+		<system>GitHub</system>
+		<url>https://github.com/imagej/imglib/issues</url>
 	</issueManagement>
 
 	<ciManagement>
