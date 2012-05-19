@@ -49,7 +49,7 @@ import net.imglib2.type.numeric.real.AbstractRealType;
 /**
  * A {@link Type} with arbitrary bit depth.
  * Beware that the math defined in superclass {@link AbstractRealType} will not work if the bit depth is larger than 64.
- * For such cases, soon there will be a get method that returns a {@link BigInteger} view of a value.
+ * For such cases, there is the {@link #getBigInteger()} method that returns a {@link BigInteger} view of a value.
  *
  * @author Albert Cardona, Stephan Preibisch
  */
@@ -147,6 +147,20 @@ public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> 
 		}
 
 		return new BigInteger(1, mag);
+	}
+
+	// Naive implementation, likely there's a faster way
+	public void setBigInteger( final BigInteger bigNum ) {
+		final byte[] b = bigNum.toByteArray();
+		for (int ibyte=b.length -1, p=0; ibyte>-1; --ibyte) {
+			final byte b8 = b[ibyte];
+			for (int ibit = 0; ibit < 8; ++ibit) {
+				if (1 == ((b8 >> ibit) & 0x1)) {
+					dataAccess.setValue( j[p], true );
+				}
+				++p;
+			}
+		}
 	}
 
 	@Override

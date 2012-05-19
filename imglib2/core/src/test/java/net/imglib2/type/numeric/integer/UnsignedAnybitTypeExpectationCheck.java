@@ -52,7 +52,8 @@ public class UnsignedAnybitTypeExpectationCheck
 		u.comparePerformanceWith(new Unsigned12BitType(), 12);
 		u.comparePerformanceWith(new BitType(), 1);
 		u.comparePerformanceWith(new UnsignedShortType(), 16);
-		u.testBigInteger();
+		u.testGetBigInteger();
+		u.testSetBigInteger();
 	}
 	
 	@Test
@@ -118,11 +119,27 @@ public class UnsignedAnybitTypeExpectationCheck
 	}
 
 	@Test
-	public void testBigInteger() {
+	public void testGetBigInteger() {
 		for (int i=0; i<1025; ++i) {
 			UnsignedAnyBitType u = new UnsignedAnyBitType( i, 11);
 			System.out.println(i + " : " + u.getBigInteger().toString());
 			assertTrue("BigInteger fails", 0 == u.getBigInteger().compareTo(BigInteger.valueOf(i)));
 		}
+		System.out.println("Get BigInteger passed!");
+	}
+	
+	@Test
+	public void testSetBigInteger() {
+		// Fill in an image with incrementing values
+		Img<UnsignedAnyBitType> img = new UnsignedAnyBitType(0, 11).createSuitableNativeImg( new ArrayImgFactory<UnsignedAnyBitType>(), new long[]{1024, 2});
+		long val = -1;
+		for (UnsignedAnyBitType u : img) {
+			u.setBigInteger( BigInteger.valueOf( ++val ) );
+		}
+		val = -1;
+		for (UnsignedAnyBitType u : img) {
+			assertTrue("BigInteger value is wrong", u.getBigInteger().longValue() == (++val) );
+		}
+		System.out.println("Set and get BigInteger passed!");
 	}
 }
