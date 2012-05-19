@@ -49,11 +49,15 @@ public class UnsignedAnybitTypeExpectationCheck
 	 */
 	public static void main(String[] args) {
 		UnsignedAnybitTypeExpectationCheck u = new UnsignedAnybitTypeExpectationCheck();
+		/*
 		u.comparePerformanceWith(new Unsigned12BitType(), 12);
 		u.comparePerformanceWith(new BitType(), 1);
 		u.comparePerformanceWith(new UnsignedShortType(), 16);
+		*/
 		u.testGetBigInteger();
 		u.testSetBigInteger();
+		//u.comparePerformanceOfSetBigIntegerMethods();
+		//u.comparePerformanceOfGetBigIntegerMethods();
 	}
 	
 	@Test
@@ -142,4 +146,70 @@ public class UnsignedAnybitTypeExpectationCheck
 		}
 		System.out.println("Set and get BigInteger passed!");
 	}
+	
+	/*
+	private final void setMethod1(final Img<UnsignedAnyBitType> img) {
+		long val = -1;
+		for (UnsignedAnyBitType u : img) {
+			u.setBigInteger( BigInteger.valueOf( ++val ) );
+		}
+	}
+	private final void setMethod2(final Img<UnsignedAnyBitType> img) {
+		long val = -1;
+		for (UnsignedAnyBitType u : img) {
+			u.setBigInteger2( BigInteger.valueOf( ++val ) );
+		}
+	}
+
+	@Test
+	public void comparePerformanceOfSetBigIntegerMethods() {
+		Img<UnsignedAnyBitType> img = new UnsignedAnyBitType(0, 16).createSuitableNativeImg( new ArrayImgFactory<UnsignedAnyBitType>(), new long[]{(long) Math.pow(2, 16)});
+
+		long t0 = System.currentTimeMillis();
+		for (int i=0; i<10; ++i) {
+			setMethod1(img);
+		}
+		long t1 = System.currentTimeMillis();
+		for (int i=0; i<10; ++i) {
+			setMethod2(img);
+		}
+		
+		long t2 = System.currentTimeMillis();
+		System.out.println("setBigInteger method 1: " + (t1 - t0) + " ms\nsetBigInteger method 2: " + (t2 - t1) + " ms");
+	}
+	*/
+	
+	/*
+	private final void getMethod1(final Img<UnsignedAnyBitType> img) {
+		for (UnsignedAnyBitType u : img) {
+			u.getBigInteger(); // with byte[]
+		}
+	}
+	private final void getMethod2(final Img<UnsignedAnyBitType> img) {
+		for (UnsignedAnyBitType u : img) {
+			u.getBigInteger2(); // with char[]
+		}
+	}
+	
+	@Test
+	public void comparePerformanceOfGetBigIntegerMethods() {
+		Img<UnsignedAnyBitType> img = new UnsignedAnyBitType(0, 16).createSuitableNativeImg( new ArrayImgFactory<UnsignedAnyBitType>(), new long[]{(long) Math.pow(2, 16)});
+		long val = -1;
+		for (UnsignedAnyBitType u : img) {
+			u.setBigInteger( BigInteger.valueOf( ++val ) );
+		}
+		
+		long t0 = System.currentTimeMillis();
+		for (int i=0; i<10; ++i) {
+			getMethod1(img);
+		}
+		long t1 = System.currentTimeMillis();
+		for (int i=0; i<10; ++i) {
+			getMethod2(img); // twice as slow with String !!!
+		}
+		
+		long t2 = System.currentTimeMillis();
+		System.out.println("getBigInteger method 1: " + (t1 - t0) + " ms\ngetBigInteger method 2: " + (t2 - t1) + " ms");
+	}
+	*/
 }

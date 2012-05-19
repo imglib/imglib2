@@ -149,7 +149,19 @@ public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> 
 		return new BigInteger(1, mag);
 	}
 
+	/*// Twice as slow!
+	public BigInteger getBigInteger2() {
+		final char[] bits = new char[j.length];
+		for (int k=j.length -1; k>-1; --k) {
+			bits[k] = dataAccess.getValue( j[k] ) ? '1' : '0';
+		}
+		return new BigInteger(new String(bits)); // duplicates the char[] !
+	}
+	*/
+
+
 	// Naive implementation, likely there's a faster way
+	/*
 	public void setBigInteger( final BigInteger bigNum ) {
 		final byte[] b = bigNum.toByteArray();
 		for (int ibyte=b.length -1, p=0; ibyte>-1; --ibyte) {
@@ -159,6 +171,16 @@ public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> 
 					dataAccess.setValue( j[p], true );
 				}
 				++p;
+			}
+		}
+	}
+	*/
+
+	// Faster implementation by 10-15 %
+	public void setBigInteger( final BigInteger bigNum ) {
+		for (int k=bigNum.bitLength()-1; k>-1; --k) {
+			if (bigNum.testBit(k)) {
+				dataAccess.setValue( j[k], true);
 			}
 		}
 	}
