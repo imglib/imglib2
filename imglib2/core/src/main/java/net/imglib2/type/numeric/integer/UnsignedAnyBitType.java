@@ -37,16 +37,21 @@
 
 package net.imglib2.type.numeric.integer;
 
+import java.math.BigInteger;
+
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.BitAccess;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.real.AbstractRealType;
 
 /**
- * TODO
+ * A {@link Type} with arbitrary bit depth.
+ * Beware that the math defined in superclass {@link AbstractRealType} will not work if the bit depth is larger than 64.
+ * For such cases, soon there will be a get method that returns a {@link BigInteger} view of a value.
  *
- * @author Stephan Preibisch
+ * @author Albert Cardona, Stephan Preibisch
  */
 public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> implements NativeType<UnsignedAnyBitType>
 {
@@ -54,9 +59,9 @@ public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> 
 
 	final protected NativeImg<UnsignedAnyBitType, ? extends BitAccess> img;
 
-	// the adresses of the bits that we store
-	final int[] j;
-	final long[] jpow;
+	// the addresses of the bits that we store
+	private final int[] j;
+	private final long[] jpow;
 
 	// the DataAccess that holds the information
 	protected BitAccess dataAccess;
@@ -80,7 +85,7 @@ public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> 
 		this( (NativeImg<UnsignedAnyBitType, ? extends BitAccess>)null, nBits );
 		updateIndex( 0 );
 		dataAccess = new BitArray( nBits );
-		setInteger( value );
+		set( value );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
@@ -129,16 +134,29 @@ public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> 
 		for (int k=0; k<j.length; ++k) {
 			dataAccess.setValue( j[k], (value & jpow[k] ) == jpow[k] );
 		}
-	}	
+	}
+
+	public BigInteger getBigInteger() {
+
+		final byte[] mag = new byte[ (j.length / 8) + (0 == j.length % 8 ? 0 : 1) ];
+
+		for (int k=0, m=mag.length-1; k<j.length; ++k) {
+			if ( dataAccess.getValue( j[k] ) ) {
+				mag[m - (k / 8)] |= 1 << (k % 8);
+			}
+		}
+
+		return new BigInteger(1, mag);
+	}
 
 	@Override
-	public int getInteger() { return (int)getIntegerLong(); }
+	public int getInteger() { return (int)get(); }
 
 	@Override
 	public long getIntegerLong() { return get(); }
 
 	@Override
-	public void setInteger( final int f ) { setInteger( (long)f ); }
+	public void setInteger( final int f ) { set( f ); }
 
 	@Override
 	public void setInteger( final long f ) { set( f ); }

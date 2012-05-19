@@ -1,6 +1,9 @@
 package net.imglib2.type.numeric.integer;
 
 import static org.junit.Assert.assertTrue;
+
+import java.math.BigInteger;
+
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -49,6 +52,7 @@ public class UnsignedAnybitTypeExpectationCheck
 		u.comparePerformanceWith(new Unsigned12BitType(), 12);
 		u.comparePerformanceWith(new BitType(), 1);
 		u.comparePerformanceWith(new UnsignedShortType(), 16);
+		u.testBigInteger();
 	}
 	
 	@Test
@@ -110,6 +114,15 @@ public class UnsignedAnybitTypeExpectationCheck
 			}
 		}
 		long time2 = System.currentTimeMillis();
-		System.out.println("Elapset time (" + nIterations + " iterations):\n " + t1.getClass().getSimpleName() + ": " + (time1 - time0) + " ms\n UnsignedAnyBitType: " + (time2 - time1) + " ms");
+		System.out.println("Elapsed time (" + nIterations + " iterations):\n " + t1.getClass().getSimpleName() + ": " + (time1 - time0) + " ms\n UnsignedAnyBitType: " + (time2 - time1) + " ms");
+	}
+
+	@Test
+	public void testBigInteger() {
+		for (int i=0; i<1025; ++i) {
+			UnsignedAnyBitType u = new UnsignedAnyBitType( i, 11);
+			System.out.println(i + " : " + u.getBigInteger().toString());
+			assertTrue("BigInteger fails", 0 == u.getBigInteger().compareTo(BigInteger.valueOf(i)));
+		}
 	}
 }
