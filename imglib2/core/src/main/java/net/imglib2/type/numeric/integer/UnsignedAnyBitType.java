@@ -44,12 +44,16 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.BitAccess;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.real.AbstractRealType;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * A {@link Type} with arbitrary bit depth.
- * Beware that the math defined in superclass {@link AbstractRealType} will not work if the bit depth is larger than 64.
+ * Beware that the math as defined by the interface {@link RealType} will wrap around when overflowing.
  * For such cases, there is the {@link #getBigInteger()} method that returns a {@link BigInteger} view of a value.
+ * 
+ * The performance of this type is traded off for the gain in memory storage.
+ * This type is ideally suited for bit depths smaller than 16,
+ * but will at least work correctly for any arbitrarily large bit depths, albeit slow.
  *
  * @author Albert Cardona, Stephan Preibisch
  */
@@ -294,6 +298,51 @@ public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> 
 			} else {
 				dataAccess.setValue( j[k], true );
 			}
+		}
+	}
+
+	// Crude but correct implementation
+	// One could do ((a and b) xor b) as well
+	@Override
+	public void add(final UnsignedAnyBitType t) {
+		if (j.length < 63 && t.j.length < 63) {
+			// Result stays within the signed 64-bit domain of long
+			set(get() + t.get());
+		} else {
+			setBigInteger(getBigInteger().add(t.getBigInteger()));
+		}
+	}
+
+	// Crude but correct implementation
+	@Override
+	public void sub(final UnsignedAnyBitType t) {
+		if (j.length < 63 && t.j.length < 63) {
+			// Result stays within the signed 64-bit domain of long
+			set(get() - t.get());
+		} else {
+			setBigInteger(getBigInteger().subtract(t.getBigInteger()));
+		}
+	}
+
+	// Crude but correct implementation
+	@Override
+	public void mul(final UnsignedAnyBitType t) {
+		if (j.length < 31 && t.j.length < 31) {
+			// Result stays within the signed 64-bit domain of long
+			set(get() * t.get());
+		} else {
+			setBigInteger(getBigInteger().multiply(t.getBigInteger()));
+		}
+	}
+
+	// Crude but correct implementation
+	@Override
+	public void div(final UnsignedAnyBitType t) {
+		if (j.length < 64) {
+			// Result stays within the signed 64-bit domain of long
+			set(get() / t.get());
+		} else {
+			setBigInteger(getBigInteger().divide(t.getBigInteger()));
 		}
 	}
 }

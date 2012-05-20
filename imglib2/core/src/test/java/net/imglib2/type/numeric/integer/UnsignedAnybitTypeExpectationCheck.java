@@ -60,6 +60,7 @@ public class UnsignedAnybitTypeExpectationCheck
 		//u.comparePerformanceOfGetBigIntegerMethods();
 		u.testInc();
 		u.testDec();
+		u.testAdd();
 	}
 	
 	@Test
@@ -241,5 +242,43 @@ public class UnsignedAnybitTypeExpectationCheck
 		System.out.println("on overlow from dec() u is " + u.get());
 		assertTrue("Failed overflow for dec()", ((long)u.getMaxValue()) == u.get());
 		System.out.println("dec() passed!");
+	}
+	
+	@Test
+	public void testAdd() {
+		UnsignedAnyBitType u1 = new UnsignedAnyBitType(0, 3); // 3 bits
+		UnsignedAnyBitType u2 = new UnsignedAnyBitType(0, 3); // 3 bits
+		// Trivial
+		u1.add(u2);
+		assertTrue("add() failed at trivial: 0 + 0 = " + u1.get(), 0 == u1.get());
+		// Regular
+		u1.set(3);
+		u2.set(4);
+		u1.add(u2);
+		assertTrue("add() failed at regular: 3 + 4 = " + u1.get(), 7 == u1.get());
+		// Wrap around
+		u1.set(7);
+		u2.set(2);
+		u1.add(u2);
+		assertTrue("add() failed at wrap around: 7 + 2 = " + u1.get(), 1 == u1.get());
+		
+		// Now with different bit depth
+		UnsignedAnyBitType u3 = new UnsignedAnyBitType(0, 4); // 4 bits
+		// Trivial
+		u1.set(0);
+		u3.add(u1);
+		assertTrue("add() failed at trivial with different bit depths: 0 + 0 = " + u3.get(), 0 == u3.get());
+		// Regular
+		u1.set(5);
+		u3.set(4);
+		u3.add(u1);
+		assertTrue("add() failed at regular with different bit depths: 5 + 4 = " + u3.get(), 9 == u3.get());
+		// Wrap around
+		u3.set(15);
+		u1.set(3);
+		u3.add(u1);
+		assertTrue("add() failed at wrap around with different bit depths: 15 + 3 = " + u3.get(), 2 == u3.get());
+		
+		System.out.println("add() passed!");
 	}
 }
