@@ -266,4 +266,34 @@ public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> 
 
 	@Override
 	public int getBitsPerPixel() { return j.length; }
+
+	// Increase by shifting
+	// If the last bit is reached, wraps around and becomes max value.
+	@Override
+	public void inc() {
+		// Make the first 0 found be 1, and all 1 found until then be 0.
+		for (int k=0; k<j.length; ++k) {
+			if ( dataAccess.getValue( j[k] ) ) {
+				dataAccess.setValue( j[k], false );
+			} else {
+				dataAccess.setValue( j[k], true );
+				return;
+			}
+		}
+	}
+
+	// Decrease by shifting
+	// If the last bit is reached, wraps around and becomes zero.
+	@Override
+	public void dec() {
+		// Make the first 1 found be 0, and all 0 found until then be 1.
+		for (int k=0; k<j.length; ++k) {
+			if ( dataAccess.getValue( j[k] ) ) {
+				dataAccess.setValue( j[k], false);
+				return;
+			} else {
+				dataAccess.setValue( j[k], true );
+			}
+		}
+	}
 }

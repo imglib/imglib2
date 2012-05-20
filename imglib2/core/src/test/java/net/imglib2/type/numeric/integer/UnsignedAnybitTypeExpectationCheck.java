@@ -58,6 +58,8 @@ public class UnsignedAnybitTypeExpectationCheck
 		u.testSetBigInteger();
 		//u.comparePerformanceOfSetBigIntegerMethods();
 		//u.comparePerformanceOfGetBigIntegerMethods();
+		u.testInc();
+		u.testDec();
 	}
 	
 	@Test
@@ -212,4 +214,32 @@ public class UnsignedAnybitTypeExpectationCheck
 		System.out.println("getBigInteger method 1: " + (t1 - t0) + " ms\ngetBigInteger method 2: " + (t2 - t1) + " ms");
 	}
 	*/
+	
+	@Test
+	public void testInc() {
+		UnsignedAnyBitType u = new UnsignedAnyBitType(0, 3); // 3 bits
+		for (int k=1; k<u.getMaxValue() + 1; ++k) {
+			u.inc();
+			assertTrue("Failed inc()", k == u.get());
+		}
+		// Test wrap around on overflow
+		u.inc();
+		System.out.println("on overlow from inc() u is " + u.get());
+		assertTrue("Failed overflow for inc()", 0 == u.get());
+		System.out.println("inc() passed!");
+	}
+
+	@Test
+	public void testDec() {
+		UnsignedAnyBitType u = new UnsignedAnyBitType(7, 3); // 3 bits
+		for (int k=(int)u.getMaxValue() -1; k > -1; --k) {
+			u.dec();
+			assertTrue("Failed dec()", k == u.get());
+		}
+		// Test wrap around on overflow
+		u.dec();
+		System.out.println("on overlow from dec() u is " + u.get());
+		assertTrue("Failed overflow for dec()", ((long)u.getMaxValue()) == u.get());
+		System.out.println("dec() passed!");
+	}
 }
