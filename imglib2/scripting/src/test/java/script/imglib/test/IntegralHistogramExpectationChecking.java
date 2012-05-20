@@ -3,11 +3,11 @@ package script.imglib.test;
 import ij.ImageJ;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
-import net.imglib2.algorithm.integral.IntegralHistogram;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.script.ImgLib;
+import net.imglib2.script.algorithm.integral.IntegralHistogram;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 

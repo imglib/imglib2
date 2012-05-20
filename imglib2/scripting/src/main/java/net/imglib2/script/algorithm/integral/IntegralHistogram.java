@@ -1,4 +1,4 @@
-package net.imglib2.algorithm.integral;
+package net.imglib2.script.algorithm.integral;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
