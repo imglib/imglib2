@@ -20,11 +20,16 @@ public class Histograms<T extends IntegerType<T>> extends Point implements Rando
 	private final long size;
 	/** Reference image containing the integral histogram. */
 	private final Img<T> integralHistogram;
+	/** RandomAccess over the integralHistogram, with a mirroring strategy for out of bounds. */
 	private final RandomAccess<T> ra;
+	/** Dimensions of the window to be centered at each sample, and for which the histogram is computed. */
 	private final long[] window;
-	/** Reusable histogram. */
+	/** Reusable histogram, returned at every call to get(). */
 	private final Img<LongType> hist;
+	/** Cursor over hist. */
 	private final Cursor<LongType> histCursor;
+	/** All the corner points from which the histogram is computed.
+	 * Derived from window and specified as relative positive and negative offsets for each dimension. */
 	private final Point[] offsets;
 
 	public Histograms(final Img<T> integralHistogram, final long[] window) {
@@ -32,14 +37,14 @@ public class Histograms<T extends IntegerType<T>> extends Point implements Rando
 		this.integralHistogram = integralHistogram;
 		//
 		long s = 1;
-		for (int d=0; d<numDimensions(); ++d) s *= (integralHistogram.dimension(d) -1);
+		for (int d=0; d<numDimensions(); ++d) s *= (integralHistogram.dimension(d) -1); // skip leading zeros
 		this.size = s;
 		//
 		this.ra = Views.extendMirrorDouble(integralHistogram).randomAccess();
 		this.window = window;
 		// The histogram to return at every sample (at every call to get())
 		this.hist = new ArrayImgFactory<LongType>().create(
-				new long[]{this.integralHistogram.dimension(this.integralHistogram.numDimensions() -1)},
+				new long[]{this.integralHistogram.dimension(this.integralHistogram.numDimensions() -1)}, // -1 to skip leading zeros in integralHistogram
 				new LongType());
 		this.histCursor = this.hist.cursor();
 		// N-dimensional corner coordinates, relative to any one pixel location
@@ -70,7 +75,7 @@ public class Histograms<T extends IntegerType<T>> extends Point implements Rando
 			final Point offset = offsets[o];
 			long sign = 1;
 			for (int d=0; d<numDimensions(); ++d) {
-				ra.setPosition(currentPosition[d] + offset.getLongPosition(d), d);
+				ra.setPosition(currentPosition[d] + 1 + offset.getLongPosition(d), d); // +1 to jump over empty values
 				sign *= Math.signum(offset.getLongPosition(d));
 			}
 			histCursor.reset();
