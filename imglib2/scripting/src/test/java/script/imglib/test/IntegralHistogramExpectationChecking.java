@@ -4,19 +4,24 @@ import ij.ImageJ;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.exception.ImgLibException;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.io.ImgIOException;
+import net.imglib2.io.ImgOpener;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.algorithm.integral.IntegralHistogram;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedAnyBitType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.util.Util;
 
 import org.junit.Test;
 
 public class IntegralHistogramExpectationChecking {
 	
 	static public final void main(String[] arg) {
-		new IntegralHistogramExpectationChecking().testIntegralHistogram2d();
+		new IntegralHistogramExpectationChecking().testIntegralHistogram2dB();
 	}
 
 	@Test
@@ -81,6 +86,45 @@ public class IntegralHistogramExpectationChecking {
 		try {
 			ImgLib.wrap((Img)ih, "histogram").show();
 		} catch (ImgLibException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testIntegralHistogram2dB() {
+		try {
+			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop.tif");
+			// Integral histogram with 10 bins
+			Img<? extends RealType<?>> ih = IntegralHistogram.create(img, 0, 255, 10);
+			new ImageJ();
+			try {
+				ImgLib.wrap((Img)ih, "histogram").show();
+			} catch (ImgLibException e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testUnsignedAnyBitImg() {
+		try {
+			Img<UnsignedByteType> img1 = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop.tif");
+			
+			Img<UnsignedAnyBitType> img2 = new UnsignedAnyBitType(10).createSuitableNativeImg(new ArrayImgFactory<UnsignedAnyBitType>(), Util.intervalDimensions(img1));
+
+			Cursor<UnsignedByteType> c1 = img1.cursor();
+			Cursor<UnsignedAnyBitType> c2 = img2.cursor();
+			
+			while (c1.hasNext()) {
+				c1.fwd();
+				c2.fwd();
+				c2.get().set(c1.get().getIntegerLong());
+			}
+			
+			new ImageJ();
+			ImgLib.wrap(img2, "copy").show();
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
