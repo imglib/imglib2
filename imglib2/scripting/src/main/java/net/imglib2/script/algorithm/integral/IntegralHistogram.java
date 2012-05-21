@@ -5,6 +5,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.Unsigned12BitType;
@@ -28,7 +29,7 @@ public class IntegralHistogram
 	 * @param nBins
 	 * @return
 	 */
-	static public <T extends RealType<T>, R extends RealType<R> & NativeType<R>> Img<R> create(
+	static public <T extends RealType<T>, R extends IntegerType<R> & NativeType<R>> Img<R> create(
 			final Img<T> img,
 			final double min,
 			final double max,
