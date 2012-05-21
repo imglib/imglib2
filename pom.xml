@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-    http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.scijava</groupId>
-    <artifactId>pom-scijava</artifactId>
-    <version>1.11</version>
-  </parent>
+	<parent>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>1.13</version>
+	</parent>
 
-  <groupId>net.imglib2</groupId>
-  <artifactId>pom-imglib</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
+	<groupId>net.imglib2</groupId>
+	<artifactId>pom-imglib</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
-  <name>ImgLib Projects</name>
-  <description>Umbrella project for ImgLib projects.</description>
-  <url>http://imglib2.net/</url>
-  <inceptionYear>2009</inceptionYear>
+	<name>ImgLib Projects</name>
+	<description>Umbrella project for ImgLib projects.</description>
+	<url>http://imglib2.net/</url>
+	<inceptionYear>2009</inceptionYear>
 
-  <modules>
-    <module>imglib1</module>
-    <module>imglib2</module>
-  </modules>
+	<modules>
+		<module>imglib1</module>
+		<module>imglib2</module>
+	</modules>
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
@@ -49,230 +53,202 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 		</plugins>
 	</build>
 
-  <licenses>
-    <license>
+	<licenses>
+		<license>
 			<name>Simplified BSD License</name>
 			<url>http://code.imagej.net/licenses/imagej/license.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
-  <organization>
-    <name>Fiji Is Just ImageJ</name>
-    <url>http://fiji.sc/</url>
-  </organization>
+	<organization>
+		<name>Fiji Is Just ImageJ</name>
+		<url>http://fiji.sc/</url>
+	</organization>
 
-  <developers>
-    <developer>
-      <id>preibisch</id>
-      <name>Stephan Preibisch</name>
-      <email>preibisch@mpi-cbg.de</email>
-      <url>http://fly.mpi-cbg.de/~preibisch/</url>
-      <organization>MPI-CBG at Dresden</organization>
-      <organizationUrl>http://mpi-cbg.de/</organizationUrl>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>saalfeld</id>
-      <name>Stephan Saalfeld</name>
-      <email>saalfeld@mpi-cbg.de</email>
-      <url>http://fly.mpi-cbg.de/~saalfeld/</url>
-      <organization>MPI-CBG at Dresden</organization>
-      <organizationUrl>http://mpi-cbg.de/</organizationUrl>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-      <properties>
-        <picUrl>http://fly.mpi-cbg.de/~saalfeld/saalfeld.jpg</picUrl>
-      </properties>
-    </developer>
-    <developer>
-      <id>tobias</id>
-      <name>Tobias Pietzsch</name>
-      <email>pietzsch@mpi-cbg.de</email>
-      <organization>MPI-CBG at Dresden</organization>
-      <organizationUrl>http://mpi-cbg.de/</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-    </developer>
-    <developer>
-      <id>acardona</id>
-      <name>Albert Cardona</name>
-      <email>acardona@ini.phys.ethz.ch</email>
-      <url>http://albert.rierol.net/</url>
-      <organization>Institute of Neuroinformatics, Uni/ETH Zürich</organization>
-      <organizationUrl>http://www.ini.uzh.ch/</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>+1</timezone>
-      <properties>
-        <picUrl>http://loci.wisc.edu/files/loci/images/people/Cardona_pic1.jpg</picUrl>
-      </properties>
-    </developer>
-    <developer>
-      <id>bdezonia</id>
-      <name>Barry DeZonia</name>
-      <email>bdezonia@wisc.edu</email>
-      <url>http://loci.wisc.edu/people/barry-dezonia</url>
-      <organization>UW-Madison LOCI</organization>
-      <organizationUrl>http://loci.wisc.edu/</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>-6</timezone>
-      <properties>
-        <picUrl>http://loci.wisc.edu/files/loci/images/people/Barry_DeZonia.jpg</picUrl>
-      </properties>
-    </developer>
-    <developer>
-      <id>curtis</id>
-      <name>Curtis Rueden</name>
-      <email>ctrueden@wisc.edu</email>
-      <url>http://loci.wisc.edu/people/curtis-rueden</url>
-      <organization>UW-Madison LOCI</organization>
-      <organizationUrl>http://loci.wisc.edu/</organizationUrl>
-      <roles>
-        <role>architect</role>
-        <role>developer</role>
-      </roles>
-      <timezone>-6</timezone>
-      <properties>
-        <picUrl>http://loci.wisc.edu/files/loci/images/people/curtis-2010.jpg</picUrl>
-      </properties>
-    </developer>
-    <developer>
-      <id>leek</id>
-      <name>Lee Kamentsky</name>
-      <email>leek@broadinstitute.org</email>
-      <url>http://www.broadinstitute.org/~leek/</url>
-      <organization>Broad Institute of MIT and Harvard</organization>
-      <organizationUrl>http://www.broadinstitute.org/</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>-5</timezone>
-      <properties>
-        <picUrl>http://www.broadinstitute.org/~leek/lee_small.jpg</picUrl>
-      </properties>
-    </developer>
-    <developer>
-      <id>llindsey</id>
-      <name>Larry Lindsey</name>
-      <email>llindsey@clm.utexas.edu</email>
-      <url>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.htm</url>
-      <organization>University of Texas at Austin</organization>
-      <organizationUrl>http://www.utexas.edu/</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>-6</timezone>
-      <properties>
-        <picUrl>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.jpg</picUrl>
-      </properties>
-    </developer>
-    <developer>
-      <name>Johannes Schindelin</name>
-      <email>schindelin@wisc.edu</email>
-      <url>http://loci.wisc.edu/people/johannes-schindelin</url>
-      <organization>UW-Madison LOCI</organization>
-      <organizationUrl>http://loci.wisc.edu/</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>-6</timezone>
-      <properties>
-        <picUrl>http://www.loci.wisc.edu/files/loci/images/people/johannes.jpeg</picUrl>
-      </properties>
-    </developer>
-  </developers>
+	<developers>
+		<developer>
+			<id>StephanPreibisch</id>
+			<name>Stephan Preibisch</name>
+			<email>preibisch@mpi-cbg.de</email>
+			<url>http://fly.mpi-cbg.de/~preibisch/</url>
+			<organization>MPI-CBG at Dresden</organization>
+			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>axtimwalde</id>
+			<name>Stephan Saalfeld</name>
+			<email>saalfeld@mpi-cbg.de</email>
+			<url>http://fly.mpi-cbg.de/~saalfeld/</url>
+			<organization>MPI-CBG at Dresden</organization>
+			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>tpietzsch</id>
+			<name>Tobias Pietzsch</name>
+			<email>pietzsch@mpi-cbg.de</email>
+			<organization>MPI-CBG at Dresden</organization>
+			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>acardona</id>
+			<name>Albert Cardona</name>
+			<email>acardona@ini.phys.ethz.ch</email>
+			<url>http://albert.rierol.net/</url>
+			<organization>Institute of Neuroinformatics, Uni/ETH Zürich</organization>
+			<organizationUrl>http://www.ini.uzh.ch/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>bdezonia</id>
+			<name>Barry DeZonia</name>
+			<email>bdezonia@wisc.edu</email>
+			<url>http://loci.wisc.edu/people/barry-dezonia</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+		<developer>
+			<id>ctrueden</id>
+			<name>Curtis Rueden</name>
+			<email>ctrueden@wisc.edu</email>
+			<url>http://loci.wisc.edu/people/curtis-rueden</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+		<developer>
+			<id>LeeKamentsky</id>
+			<name>Lee Kamentsky</name>
+			<email>leek@broadinstitute.org</email>
+			<url>http://www.broadinstitute.org/~leek/</url>
+			<organization>Broad Institute of MIT and Harvard</organization>
+			<organizationUrl>http://www.broadinstitute.org/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<name>Larry Lindsey</name>
+			<email>llindsey@clm.utexas.edu</email>
+			<url>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.htm</url>
+			<organization>University of Texas at Austin</organization>
+			<organizationUrl>http://www.utexas.edu/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+		<developer>
+			<id>dscho</id>
+			<name>Johannes Schindelin</name>
+			<email>schindelin@wisc.edu</email>
+			<url>http://loci.wisc.edu/people/johannes-schindelin</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>
 
-  <contributors>
-    <contributor><name>Christian Dietz</name></contributor>
-    <contributor>
-      <name>Grant Harris</name>
-      <email>gharris@mbl.edu</email>
-      <url>http://loci.wisc.edu/people/grant-harris</url>
-      <organization>MBL at Woods Hole</organization>
-      <organizationUrl>http://www.mbl.edu/</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>-5</timezone>
-      <properties>
-        <picUrl>http://www.loci.wisc.edu/files/loci/images/people/GBH-2010.jpg</picUrl>
-      </properties>
-    </contributor>
-    <contributor><name>Jan Funke</name></contributor>
-    <contributor><name>Jean-Yves Tinevez</name></contributor>
-    <contributor><name>Mark Longair</name></contributor>
-    <contributor><name>Nick Perry</name></contributor>
-    <contributor><name>Steffen Jaensch</name></contributor>
-  </contributors>
+	<contributors>
+		<contributor><name>Christian Dietz</name></contributor>
+		<contributor>
+			<name>Grant Harris</name>
+			<email>gharris@mbl.edu</email>
+			<url>http://loci.wisc.edu/people/grant-harris</url>
+			<organization>MBL at Woods Hole</organization>
+			<organizationUrl>http://www.mbl.edu/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-5</timezone>
+		</contributor>
+		<contributor><name>Jan Funke</name></contributor>
+		<contributor><name>Jean-Yves Tinevez</name></contributor>
+		<contributor><name>Mark Longair</name></contributor>
+		<contributor><name>Nick Perry</name></contributor>
+		<contributor><name>Steffen Jaensch</name></contributor>
+	</contributors>
 
-  <issueManagement>
-    <!--
-    <system>Trac</system>
-    <url>http://code.imagej.net/trac/imglib/</url>
-    -->
-    <system>Bugzilla</system>
-    <url>http://fiji.sc/cgi-bin/bugzilla/</url>
-  </issueManagement>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/imagej/imglib/issues</url>
+	</issueManagement>
 
-  <ciManagement>
-    <system>Jenkins</system>
-    <url>http://jenkins.imagej.net/</url>
-  </ciManagement>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://jenkins.imagej.net/</url>
+	</ciManagement>
 
-  <mailingLists>
-    <mailingList>
-      <name>ImageJ-devel</name>
-      <subscribe>http://imagej.net/mailman/listinfo/imagej-devel</subscribe>
-      <unsubscribe>http://imagej.net/mailman/listinfo/imagej-devel</unsubscribe>
-      <post>imagej-devel@imagej.net</post>
-      <archive>http://imagej.net/pipermail/imagej-devel/</archive>
-    </mailingList>
-    <mailingList>
-      <name>Fiji-users</name>
-      <subscribe>http://groups.google.com/group/fiji-users</subscribe>
-      <unsubscribe>http://groups.google.com/group/fiji-users</unsubscribe>
-      <post>fiji-users@googlegroups.com</post>
-      <archive>http://groups.google.com/group/fiji-users</archive>
-    </mailingList>
-    <mailingList>
-      <name>Fiji-devel</name>
-      <subscribe>http://groups.google.com/group/fiji-devel</subscribe>
-      <unsubscribe>http://groups.google.com/group/fiji-devel</unsubscribe>
-      <post>fiji-devel@googlegroups.com</post>
-      <archive>http://groups.google.com/group/fiji-devel</archive>
-    </mailingList>
-  </mailingLists>
+	<mailingLists>
+		<mailingList>
+			<name>ImageJ-devel</name>
+			<subscribe>http://imagej.net/mailman/listinfo/imagej-devel</subscribe>
+			<unsubscribe>http://imagej.net/mailman/listinfo/imagej-devel</unsubscribe>
+			<post>imagej-devel@imagej.net</post>
+			<archive>http://imagej.net/pipermail/imagej-devel/</archive>
+		</mailingList>
+		<mailingList>
+			<name>Fiji-users</name>
+			<subscribe>http://groups.google.com/group/fiji-users</subscribe>
+			<unsubscribe>http://groups.google.com/group/fiji-users</unsubscribe>
+			<post>fiji-users@googlegroups.com</post>
+			<archive>http://groups.google.com/group/fiji-users</archive>
+		</mailingList>
+		<mailingList>
+			<name>Fiji-devel</name>
+			<subscribe>http://groups.google.com/group/fiji-devel</subscribe>
+			<unsubscribe>http://groups.google.com/group/fiji-devel</unsubscribe>
+			<post>fiji-devel@googlegroups.com</post>
+			<archive>http://groups.google.com/group/fiji-devel</archive>
+		</mailingList>
+	</mailingLists>
 
-  <scm>
-    <connection>scm:git:git://github.com/imagej/imglib.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com:imagej/imglib.git</developerConnection>
-    <tag>HEAD</tag>
-    <url>http://github.com/imagej/imglib</url>
-  </scm>
+	<scm>
+		<connection>scm:git:git://github.com/imagej/imglib.git</connection>
+		<developerConnection>scm:git:git@github.com:imagej/imglib.git</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/imagej/imglib</url>
+	</scm>
 
-  <!-- NB: for project parent -->
-  <repositories>
-    <repository>
-      <id>imagej.releases</id>
-      <url>http://maven.imagej.net/content/repositories/releases</url>
-    </repository>
-    <repository>
-      <id>imagej.snapshots</id>
-      <url>http://maven.imagej.net/content/repositories/snapshots</url>
-    </repository>
-  </repositories>
+	<!-- NB: for project parent -->
+	<repositories>
+		<repository>
+			<id>imagej.releases</id>
+			<url>http://maven.imagej.net/content/repositories/releases</url>
+		</repository>
+		<repository>
+			<id>imagej.snapshots</id>
+			<url>http://maven.imagej.net/content/repositories/snapshots</url>
+		</repository>
+	</repositories>
 
 </project>

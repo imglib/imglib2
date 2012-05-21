@@ -32,10 +32,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.basictypeaccess.IntAccess;
-import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.ARGBType;
 
 import org.jfree.chart.ChartPanel;
@@ -52,8 +51,8 @@ public class ChartUtils {
 	}
 
 	public static final Img<ARGBType> asImage(final JFreeChart chart, int width, int height) {
-		ChartPanel panel = new ChartPanel(chart);
-		Dimension d = panel.getPreferredSize();
+		final ChartPanel panel = new ChartPanel(chart);
+		final Dimension d = panel.getPreferredSize();
 		if (-1 == width && -1 == height) {
 			width = d.width;
 			height = d.height;
@@ -62,21 +61,21 @@ public class ChartUtils {
 			panel.setSize(width, height);
 		}
 		layoutComponent(panel);
-		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = bi.createGraphics();
+		final BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		final Graphics2D g = bi.createGraphics();
 		if (!panel.isOpaque()){
 			g.setColor(panel.getBackground() );
 			g.fillRect(0, 0, width, height);
 		}
 		panel.paint(g);
-		int[] pixels = new int[width * height];
-		PixelGrabber pg = new PixelGrabber(bi, 0, 0, width, height, pixels, 0, width);
+		final int[] pixels = new int[width * height];
+		final PixelGrabber pg = new PixelGrabber(bi, 0, 0, width, height, pixels, 0, width);
 		try {
 			pg.grabPixels();
-		} catch (InterruptedException e) {}
+		} catch (final InterruptedException e) {}
 		g.dispose();
 		
-		ArrayImg<ARGBType, IntAccess> a = new ArrayImg<ARGBType, IntAccess>(new IntArray(pixels), new long[]{width, height}, 1);
+		final ArrayImg<ARGBType, IntArray> a = new ArrayImg<ARGBType, IntArray>(new IntArray(pixels), new long[]{width, height}, 1);
 		
 		// create a Type that is linked to the container
 		final ARGBType linkedType = new ARGBType( a );
@@ -90,7 +89,7 @@ public class ChartUtils {
 		synchronized (c.getTreeLock()) {
 			c.doLayout();
 			if (c instanceof Container) {
-				for (Component child : ((Container)c).getComponents()) {
+				for (final Component child : ((Container)c).getComponents()) {
 					layoutComponent(child);
 				}
 			}

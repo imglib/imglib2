@@ -37,8 +37,6 @@
 package net.imglib2.util;
 
 import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.basictypeaccess.ByteAccess;
-import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -63,11 +61,11 @@ final public class DevUtil
 	 * 
 	 * @return the instance of {@link ArrayImg} using the given byte array
 	 */
-	final public static ArrayImg<UnsignedByteType, ByteAccess> createImageFromArray( final byte[] data, final long[] dim )
+	final public static ArrayImg<UnsignedByteType, ByteArray> createImageFromArray( final byte[] data, final long[] dim )
 	{
-		final ByteAccess byteAccess = new ByteArray( data );
-		final ArrayImg<UnsignedByteType, ByteAccess> array = 
-			new ArrayImg<UnsignedByteType, ByteAccess>( byteAccess, dim, 1 );
+		final ByteArray byteArray = new ByteArray( data );
+		final ArrayImg<UnsignedByteType, ByteArray> array = 
+			new ArrayImg<UnsignedByteType, ByteArray>( byteArray, dim, 1 );
 			
 		// create a Type that is linked to the container
 		final UnsignedByteType linkedType = new UnsignedByteType( array );
@@ -86,11 +84,11 @@ final public class DevUtil
 	 * 
 	 * @return the instance of {@link ArrayImg} using the given float array
 	 */
-	final public static ArrayImg<FloatType,FloatAccess> createImageFromArray( final float[] data, final long[] dim )
+	final public static ArrayImg<FloatType,FloatArray> createImageFromArray( final float[] data, final long[] dim )
 	{
-		final FloatAccess floatAccess = new FloatArray( data );
-		final ArrayImg<FloatType, FloatAccess> array = 
-			new ArrayImg<FloatType, FloatAccess>( floatAccess, dim, 1 );
+		final FloatArray floatArray = new FloatArray( data );
+		final ArrayImg<FloatType, FloatArray> array = 
+			new ArrayImg<FloatType, FloatArray>( floatArray, dim, 1 );
 			
 		// create a Type that is linked to the container
 		final FloatType linkedType = new FloatType( array );

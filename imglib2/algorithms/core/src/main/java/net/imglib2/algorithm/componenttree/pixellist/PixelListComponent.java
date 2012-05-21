@@ -82,6 +82,8 @@ public final class PixelListComponent< T extends Type< T > > implements Iterable
 		parent = null;
 		value = intermediate.getValue().copy();
 		pixelList = new PixelList( intermediate.pixelList );
+		if( intermediate.emittedComponent != null )
+			children.add( intermediate.emittedComponent );
 		for ( final PixelListComponentIntermediate< T > c : intermediate.children )
 		{
 			children.add( c.emittedComponent );
