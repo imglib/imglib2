@@ -7,15 +7,15 @@ import net.imglib2.Sampler;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.script.algorithm.integral.IntegralHistogram;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Util;
-import net.imglib2.view.Views;
 
 /** A {@link RandomAccess} with dimensions N-1, over an {@link Img} of dimensions N
  * that contains the {@link IntegralHistogram}. */
-public class Histograms<T extends IntegerType<T>> extends Point implements RandomAccess<Img<LongType>>, Cursor<Img<LongType>>
+public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point implements RandomAccess<Img<LongType>>, Cursor<Img<LongType>>
 {
 	/** Index of last sample that can be retrieved. */
 	private final long lastIndex;
@@ -23,8 +23,8 @@ public class Histograms<T extends IntegerType<T>> extends Point implements Rando
 	private final Img<T> integralHistogram;
 	/** RandomAccess over the integralHistogram, with a mirroring strategy for out of bounds. */
 	private final RandomAccess<T> ra;
-	/** Dimensions of the window to be centered at each sample, and for which the histogram is computed. */
-	private final long[] window;
+	/** Radius in each dimension. */
+	private final long[] radius;
 	/** Reusable histogram, returned at every call to get(). */
 	private final Img<LongType> hist;
 	/** Cursor over hist. */
@@ -35,25 +35,39 @@ public class Histograms<T extends IntegerType<T>> extends Point implements Rando
 	/** Correlated with offsets, holds the sign to add or subtract the histogram at that Point. */
 	private final int[] signs;
 	
+	/** The dimensions over which this Cursor/RandomAccess is defined, which are one less than
+	 * in the integralHistogram, and each dimension one less as well. */
 	private final long[] dimensions;
 
-	public Histograms(final Img<T> integralHistogram, final long[] window) {
+	public Histograms(final Img<T> integralHistogram, final long[] radius) {
 		super(integralHistogram.numDimensions() -1);
 		this.integralHistogram = integralHistogram;
-		this.dimensions = new long[numDimensions()];
-		for (int d=0; d<numDimensions(); ++d) this.dimensions[d] = integralHistogram.dimension(d) -1;
+		this.radius = radius;
+		
+		// Establish the dimensions where this Cursor/RandomAccess is defined:
+		this.dimensions = new long[n];
+		for (int d=0; d<n; ++d) this.dimensions[d] = integralHistogram.dimension(d) -1;
+		
 		// Compute the size of the underlying, original image from which the integralHistogram was computed:
 		long s = 1;
-		for (int d=0; d<numDimensions(); ++d) s *= (integralHistogram.dimension(d) -1); // skip leading zeros
+		for (int d=0; d<n; ++d) s *= this.dimensions[d];
+		// ... and set the lastIndex, for Cursor.hasNext:
 		this.lastIndex = s - 1;
-		//
-		this.ra = Views.extendMirrorDouble(integralHistogram).randomAccess();
-		this.window = window;
+		
+		// Set starting index at -1
+		reset();
+		
+		// TODO can't do out of bounds with integral images!
+		// Instead, I have to send the coords back to the nearest existing within the domain.
+		this.ra = this.integralHistogram.randomAccess();
+		
 		// The histogram to return at every sample (at every call to get())
 		this.hist = new ArrayImgFactory<LongType>().create(
 				new long[]{this.integralHistogram.dimension(this.integralHistogram.numDimensions() -1)}, // the size is the number of histogram bins
 				new LongType());
+		// A Cursor over the hist
 		this.histCursor = this.hist.cursor();
+		
 		// N-dimensional corner coordinates, relative to any one pixel location
 		this.offsets = new Point[(int)Math.pow(2, numDimensions())];
 		for (int i=0; i<offsets.length; ++i) {
@@ -64,37 +78,56 @@ public class Histograms<T extends IntegerType<T>> extends Point implements Rando
 			final int flip = (int)Math.pow(2, d);
 			int sign = -1;
 			for (int i=0; i<offsets.length;) {
-				int delta = (int)(window[d] / 2);
-				if (-1 == sign) delta += window[d] % 2; // window may be larger towards 0
-				offsets[i].setPosition(sign * delta, d);
+				long delta = radius[d];
+				// increasing is inclusive, but decreasing is exclusive. This way, a radius of zero also works.
+				offsets[i].setPosition(sign * delta + (-1 == sign ? -1 : 0), d);
 				++i; // done before flipping sign, so coords will be (almost) in order
 				if (0 == i % flip) sign *= -1;
 			}
 			++d;
 		}
-		// Compute the sign of each corner histogram
+
+		// Compute the sign of each corner
 		this.signs = new int[offsets.length];
 		for (int o=0; o<offsets.length; ++o) {
-			signs[o] = 1;
+			signs[o] = 0;
 			for (d=0; d<numDimensions(); ++d) {
-				signs[o] *= offsets[o].getLongPosition(d) < 0 ? -1 : 1;
+				signs[o] += offsets[o].getLongPosition(d) < 0 ? 1 : 0;
 			}
+			System.out.println("Count of negatives: " + signs[o]);
+			signs[o] = signs[o] % 2 != 0 ? -1 : 1;
 		}
 		
+		// DEBUG
 		for (int k=0; k<offsets.length; ++k) {
 			System.out.println(Util.printCoordinates(offsets[k]) + " : " + signs[k]);
 		}
-	
+
+		// DEBUG
 		System.out.println("dimensions of h: " + Util.printCoordinates(dimensions));
+		System.out.println("radius: " + Util.printCoordinates(radius) + ", signs: " + Util.printCoordinates(signs));
+	}
+
+	private final long inside(final long pos, final int d) {
+		return Math.min(integralHistogram.dimension(d) -1, Math.max(0, pos));
 	}
 
 	/** Returns the histogram at each location. The same instance of {@code Img<T>} is returned every time. */
 	@Override
 	public Img<LongType> get() {
+		histCursor.reset();
+		while (histCursor.hasNext()) {
+			histCursor.fwd();
+			histCursor.get().setZero();
+		}
 		for (int o=0; o<offsets.length; ++o) {
 			final Point offset = offsets[o];
 			for (int d=0; d<n; ++d) {
-				ra.setPosition(position[d] + 1 + offset.getLongPosition(d), d); // +1 to jump over empty values
+				// position[d] is here
+				// + 1 to move over the leading zeros
+				// + offset to go to the right corner
+				final long pos = position[d] + 1 + offset.getLongPosition(d);
+				ra.setPosition(inside(pos, d), d);
 			}
 			histCursor.reset();
 			while (histCursor.hasNext()) {
@@ -111,12 +144,12 @@ public class Histograms<T extends IntegerType<T>> extends Point implements Rando
 
 	@Override
 	public Sampler<Img<LongType>> copy() {
-		return new Histograms<T>(this.integralHistogram, window);
+		return new Histograms<T>(this.integralHistogram, radius);
 	}
 
 	@Override
 	public RandomAccess<Img<LongType>> copyRandomAccess() {
-		return new Histograms<T>(this.integralHistogram, window);
+		return new Histograms<T>(this.integralHistogram, radius);
 	}
 
 	@Override
@@ -153,6 +186,6 @@ public class Histograms<T extends IntegerType<T>> extends Point implements Rando
 
 	@Override
 	public Cursor<Img<LongType>> copyCursor() {
-		return new Histograms<T>(integralHistogram, window);
+		return new Histograms<T>(integralHistogram, radius);
 	}
 }

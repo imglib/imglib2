@@ -10,21 +10,26 @@ import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.algorithm.integral.IntegralHistogram;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.util.Util;
 
 public class TestHistograms {
 
 	static public final void main(String[] arg) {
 		new ImageJ();
 		TestHistograms t = new TestHistograms();
-		t.testFeatures();
-		//t.testHistogramOf3x3Img();
+		//t.testFeatures();
+		t.testHistogramOf3x3Img();
 	}
 	
 	public void testCorners() {
@@ -50,10 +55,10 @@ public class TestHistograms {
 	
 	public void testFeatures() {
 		try {
-			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop.tif");
+			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop-streched-smoothed.tif");
 			ImgLib.wrap(img, "Original").show();
-			long[] window = new long[]{1, 1};
-			HistogramFeatures<UnsignedByteType> features = new HistogramFeatures<UnsignedByteType>(img, 0, 255, 32, window);
+			long[] window = new long[]{3, 3}; // 3x3 is equivalent to ImageJ's radius=1 in RankFilters
+			HistogramFeatures<UnsignedByteType> features = new HistogramFeatures<UnsignedByteType>(img, 0, 255, 256, window);
 			ImgLib.wrap(features, "Features for " + window[0] + "x" + window[1]).show();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -62,16 +67,16 @@ public class TestHistograms {
 	
 	/**
 	 * 
-	 * 1 2 3 = 6
-	 * 2 4 6 = 12
-	 * 3 6 9 = 18
+	 * 1 2 3
+	 * 2 4 6
+	 * 3 6 9
 	 * 
 	 * In the histogram, the bottom right should have:
 	 * {1:1, 2:2, 3:2, 4:1, 5:0, 6:2, 7:0, 8:0, 9:0}
 	 * 
 	 */
 	@Test
-	public void testHistogramOf3x3Img() {
+	public <T extends IntegerType<T> & NativeType<T> >void testHistogramOf3x3Img() {
 		Img<UnsignedByteType> img =
 				new UnsignedByteType().createSuitableNativeImg(
 						new ArrayImgFactory<UnsignedByteType>(),
@@ -95,12 +100,12 @@ public class TestHistograms {
 			e.printStackTrace();
 		}
 		// Histogram
-		Img<? extends IntegerType<?>> h = IntegralHistogram.create(img, 1, 9, 9);
+		Img<T> h = IntegralHistogram.create(img, 1, 9, 9);
 		
 		// Expected cummulative:
 		final int[] expected = new int[]{1, 2, 2, 1, 0, 2, 0, 0, 1};
 		
-		RandomAccess<? extends IntegerType<?>> ra = h.randomAccess();
+		RandomAccess<T> ra = h.randomAccess();
 		StringBuilder sb = new StringBuilder("{");
 		ra.setPosition(3, 0);
 		ra.setPosition(3, 1);
@@ -118,5 +123,95 @@ public class TestHistograms {
 		} catch (ImgLibException e) {
 			e.printStackTrace();
 		}
+		
+		// Test extracting the histogram for the last pixel
+		long[] px = new long[]{1, 2, 1, 2};
+		long[] py = new long[]{1, 1, 2, 2};
+		int[] sign = new int[]{1, -1, -1, 1};
+		long[] hist = new long[9];
+		for (int i=0; i<4; ++i) {
+			ra.setPosition(px[i] + 1, 0);
+			ra.setPosition(py[i] + 1, 1);
+			for (int bin=0; bin<9; ++bin) {
+				ra.setPosition(bin, 2);
+				hist[bin] += sign[i] * ra.get().getIntegerLong();
+			}
+		}
+		for (int bin=0; bin<9; ++bin) {
+			if (8 == bin) assertTrue(1 == hist[bin]);
+			else assertTrue(0 == hist[bin]);
+		}
+		System.out.println(Util.printCoordinates(hist));
+		
+		// Test extracting the histogram for the lower right 2x2 area
+		px = new long[]{0, 2, 0, 2};
+		py = new long[]{0, 0, 2, 2};
+		sign = new int[]{1, -1, -1, 1};
+		hist = new long[9];
+		for (int i=0; i<4; ++i) {
+			ra.setPosition(px[i] + 1, 0);
+			ra.setPosition(py[i] + 1, 1);
+			for (int bin=0; bin<9; ++bin) {
+				ra.setPosition(bin, 2);
+				hist[bin] += sign[i] * ra.get().getIntegerLong();
+			}
+		}
+		for (int bin=0; bin<9; ++bin) {
+			switch (bin) {
+			case 3:
+			case 8:
+				assertTrue(1 == hist[bin]);
+				break;
+			case 5:
+				assertTrue(2 == hist[bin]);
+				break;
+			default:
+				assertTrue(0 == hist[bin]);
+				break;
+			}
+		}
+		System.out.println(Util.printCoordinates(hist));
+		
+		// Histograms
+		long[] radius = new long[]{0, 0};
+		Histograms<T> hs = new Histograms<T>(h, radius);
+		hs.setPosition(2, 0);
+		hs.setPosition(2, 1);
+		hist = ((ArrayImg<LongType,LongArray>)hs.get()).update(null).getCurrentStorageArray();
+		System.out.println("From Histograms, 0x0: " + Util.printCoordinates(hist));
+		for (int bin=0; bin<9; ++bin) {
+			if (8 == bin) assertTrue(1 == hist[bin]);
+			else assertTrue(0 == hist[bin]);
+		}
+		
+		radius = new long[]{1, 1}; // means 3x3 centered on the pixel
+		hs = new Histograms<T>(h, radius);
+		hs.setPosition(2, 0);
+		hs.setPosition(2, 1);
+		hist = ((ArrayImg<LongType,LongArray>)hs.get()).update(null).getCurrentStorageArray();
+		System.out.println("From Histograms, 3x3: " + Util.printCoordinates(hist));
+		for (int bin=0; bin<9; ++bin) {
+			switch (bin) {
+			case 3:
+			case 8:
+				assertTrue(1 == hist[bin]);
+				break;
+			case 5:
+				assertTrue(2 == hist[bin]);
+				break;
+			default:
+				assertTrue(0 == hist[bin]);
+				break;
+			}
+		}
+		
+		radius = new long[]{0, 0};
+		HistogramFeatures<UnsignedByteType> features = new HistogramFeatures<UnsignedByteType>(img, 1, 9, 9, radius);
+		try {
+			ImgLib.wrap(features, "features for 0x0").show();
+		} catch (ImgLibException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
