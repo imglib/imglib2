@@ -11,29 +11,29 @@ import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 
-public class HistogramFeatures<T extends RealType<T> & NativeType<T>> extends ImgProxy<T>
+public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends IntegerType<P> & NativeType<P>> extends ImgProxy<T>
 {
-	static public final int NUM_FEATURES = 3;
+	static public final int NUM_FEATURES = 4;
 	
 	public HistogramFeatures(
 			final Img<T> img,
+			final Img<P> integralHistogram,
 			final double min,
 			final double max,
 			final int nBins,
 			final long[] radius) {
-		super(create(img, min, max, nBins, radius));
+		super(create(img, integralHistogram, min, max, nBins, radius));
 	}
 
 	private static final <R extends RealType<R> & NativeType<R>, P extends IntegerType<P> & NativeType<P>>
 	Img<R> create(
 			final Img<R> img,
+			final Img<P> integralHistogram,
 			final double min,
 			final double max,
 			final int nBins,
 			final long[] radius)
-	{
-		final Img<P> integralHistogram = IntegralHistogram.create(img, min, max, nBins);
-		
+	{	
 		final long[] dims = new long[img.numDimensions() + 1];
 		for (int d=0; d<dims.length -1; ++d) dims[d] = img.dimension(d);
 		dims[dims.length -1] = NUM_FEATURES;
@@ -47,6 +47,8 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>> extends Im
 		final double K = nBins - 1;
 		final double range = max - min;
 		
+		final int lastDimension = fr.numDimensions() -1;
+		
 		while (h.hasNext()) {
 			h.fwd();
 			for (int d=0; d<h.numDimensions(); ++d) {
@@ -58,6 +60,7 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>> extends Im
 			double imgMin = 0;
 			double imgMax = 0;
 			double imgMean = 0;
+			double imgMedian = 0;
 			long nValues = 0;
 			
 			for (int i=0; i<bins.length; ++i) {
@@ -72,20 +75,38 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>> extends Im
 				}
 				// Find the maximum value
 				if (binCount > 0 && binValue > imgMax) {
-					imgMax = binValue;	
+					imgMax = binValue;
 				}
-				imgMean += binValue * binCount; // TODO may overflow for large images
-				nValues += binCount; // isn't this the same as the window dimensions? No need to recompute TODO
+				// Estimate mean, first by summing up all values
+				imgMean += binValue * binCount; // TODO may overflow for large radius
+				// Cumulative pixel count
+				nValues += binCount;
 			}
+			// .. then by dividing by the total
 			imgMean /= nValues;
+
+			// Can't compute from radius because it would fail at the edges of the image
+			final long halfNValues = nValues / 2;
 			
+			nValues = 0;
+			for (int i=0; i<bins.length; ++i) {
+				// Find the approximate median value
+				nValues += bins[i];
+				if (nValues > halfNValues) {
+					imgMedian = (min + (i / K) * range) + (range / (nBins -1)) / 2;
+					break;
+				}
+			}
+
 			// Store
-			fr.setPosition(0, fr.numDimensions() -1);
+			fr.setPosition(0, lastDimension);
 			fr.get().setReal(imgMin);
-			fr.setPosition(1, fr.numDimensions() -1);
+			fr.setPosition(1, lastDimension);
 			fr.get().setReal(imgMax);
-			fr.setPosition(2, fr.numDimensions() -1);
+			fr.setPosition(2, lastDimension);
 			fr.get().setReal(imgMean);
+			fr.setPosition(3, lastDimension);
+			fr.get().setReal(imgMedian);
 		}
 
 		return features;

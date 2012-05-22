@@ -23,8 +23,10 @@ import net.imglib2.script.algorithm.integral.IntegralHistogram;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.Util;
 
 public class TestHistograms {
@@ -63,7 +65,8 @@ public class TestHistograms {
 			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop-streched-smoothed.tif");
 			ImgLib.wrap(img, "Original").show();
 			long[] radius = new long[]{10, 10}; // radius=1 is equivalent to ImageJ's radius=1 in RankFilters
-			HistogramFeatures<UnsignedByteType> features = new HistogramFeatures<UnsignedByteType>(img, 0, 255, 256, radius);
+			Img<UnsignedShortType> integralHistogram = IntegralHistogram.create(img, 0, 255, 256, new UnsignedShortType());
+			HistogramFeatures<UnsignedByteType, UnsignedShortType> features = new HistogramFeatures<UnsignedByteType, UnsignedShortType>(img, integralHistogram, 0, 255, 256, radius);
 			ImgLib.wrap(features, "Features for " + radius[0] + "x" + radius[1]).show();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,12 +75,19 @@ public class TestHistograms {
 	
 	public void comparePerformance() {
 		try {
+			ij.Prefs.setThreads(1);
 			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge.tif");
 			ImgLib.wrap(img, "Original").show();
 			
 			long t0 = System.currentTimeMillis();
+			final double min = 0;
+			final double max = 255;
+			final int nBins = 128; // 32 delivers speeds close to ImageJ's when not using median
+			final Img<IntType> integralHistogram = IntegralHistogram.create(img, min, max, nBins, new IntType());
+			System.out.println("Creating integral histogram took " + (System.currentTimeMillis() - t0) + " ms");
 			long[] radius = new long[]{25, 25}; // radius=1 is equivalent to ImageJ's radius=1 in RankFilters
-			HistogramFeatures<UnsignedByteType> features = new HistogramFeatures<UnsignedByteType>(img, 0, 255, 256, radius);
+			HistogramFeatures<UnsignedByteType, IntType> features =
+					new HistogramFeatures<UnsignedByteType, IntType>(img, integralHistogram, min, max, nBins, radius);
 			long t1 = System.currentTimeMillis();
 			
 			ImagePlus imp = ImgLib.wrap(img);
@@ -90,6 +100,8 @@ public class TestHistograms {
 			rf.rank(ip2, radius[0], RankFilters.MAX);
 			ImageProcessor ip3 = imp.getProcessor().duplicate();
 			rf.rank(ip3, radius[0], RankFilters.MEAN);
+			ImageProcessor ip4 = imp.getProcessor().duplicate();
+			rf.rank(ip4, radius[0], RankFilters.MEDIAN);
 			long t3 = System.currentTimeMillis();
 			
 			System.out.println("Integral features: " + (t1 - t0) + " ms");
@@ -101,6 +113,7 @@ public class TestHistograms {
 			stack.addSlice("min", ip1);
 			stack.addSlice("max", ip2);
 			stack.addSlice("mean", ip3);
+			stack.addSlice("median", ip4);
 			new ImagePlus("Regular features for " + radius[0] + "x" + radius[1], stack).show();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -248,7 +261,8 @@ public class TestHistograms {
 		}
 		
 		radius = new long[]{0, 0};
-		HistogramFeatures<UnsignedByteType> features = new HistogramFeatures<UnsignedByteType>(img, 1, 9, 9, radius);
+		Img<UnsignedByteType> integralHistogram = IntegralHistogram.create(img, 1, 9, 9, new UnsignedByteType());
+		HistogramFeatures<UnsignedByteType, UnsignedByteType> features = new HistogramFeatures<UnsignedByteType, UnsignedByteType>(img, integralHistogram, 1, 9, 9, radius);
 		try {
 			ImgLib.wrap(features, "features for 0x0").show();
 		} catch (ImgLibException e) {

@@ -22,6 +22,13 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 public class IntegralHistogram
 {
 	
+	static private final int computeBits(final Img<?> img) {
+		// What bit depth is necessary to represent the count of pixels in img?
+		double nBits = Math.log10(img.size()) / Math.log10(2);
+		if (0 != nBits % 2) nBits += 1;
+		return (int) nBits;
+	}
+	
 	/**
 	 * TODO support images larger than 2 Gb
 	 * 
@@ -35,9 +42,29 @@ public class IntegralHistogram
 			final double max,
 			final int nBins)
 	{
-		// What bit depth is necessary to represent the count of pixels in img?
-		double nBits = Math.log10(img.size()) / Math.log10(2);
-		if (0 != nBits % 2) nBits += 1;
+		return create(img, min, max, nBins, (R) chooseType(computeBits(img)));
+	}
+
+	/**
+	 * 
+	 * @param img
+	 * @param min
+	 * @param max
+	 * @param nBins
+	 * @param type
+	 * @return
+	 */
+	static public <T extends RealType<T>, R extends IntegerType<R> & NativeType<R>> Img<R> create(
+			final Img<T> img,
+			final double min,
+			final double max,
+			final int nBins,
+			final R type)
+	{
+		// Sanity check
+		if (Math.pow(2, type.getBitsPerPixel() / type.getEntitiesPerPixel()) < img.size()) {
+			throw new RuntimeException("Cannot write histogram with type " + type.getClass());
+		}
 		// Dimensions of integral image: one more than the input img, and +1 element in the image dimensions
 		final long[] dims = new long[img.numDimensions() + 1];
 		for (int i=0; i<img.numDimensions(); ++i) {
@@ -45,8 +72,7 @@ public class IntegralHistogram
 		}
 		dims[dims.length -1] = nBins;
 		// Create an image to hold the integral histogram
-		final Img<R> integralHistogram =
-				(Img<R>) chooseType((int)nBits).createSuitableNativeImg(new ArrayImgFactory(), dims);
+		final Img<R> integralHistogram = type.createSuitableNativeImg(new ArrayImgFactory<R>(), dims);
 
 		System.out.println("bits per pixel: " + integralHistogram.firstElement().getBitsPerPixel());
 		
