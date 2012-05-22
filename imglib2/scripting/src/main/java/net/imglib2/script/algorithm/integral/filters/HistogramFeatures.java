@@ -53,18 +53,18 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>> extends Im
 				fr.setPosition(h.getLongPosition(d), d);
 			}
 			// Compute features
-			final Cursor<LongType> bins = h.get().cursor();
+			final long[] bins = h.get();
 				
 			double imgMin = 0;
 			double imgMax = 0;
 			double imgMean = 0;
 			long nValues = 0;
-			while (bins.hasNext()) {
-				bins.fwd();
+			
+			for (int i=0; i<bins.length; ++i) {
 				// binValue is the value that the bin has in the range from min to max
-				final double binValue = min + (bins.getLongPosition(0) / K) * range;
+				final double binValue = min + (i / K) * range;
 				// binCount is the number stored in each bin
-				final long binCount = bins.get().get();
+				final long binCount = bins[i];
 				// Find the minimum value of region defined by radius by finding the minimum value of the histogram
 				if (0 == imgMin && binCount > 0) {
 					// this condition happens only once

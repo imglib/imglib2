@@ -5,6 +5,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import ij.ImageJ;
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.plugin.filter.RankFilters;
+import ij.process.ImageProcessor;
 import net.imglib2.Cursor;
 import net.imglib2.Point;
 import net.imglib2.RandomAccess;
@@ -28,8 +32,9 @@ public class TestHistograms {
 	static public final void main(String[] arg) {
 		new ImageJ();
 		TestHistograms t = new TestHistograms();
-		t.testFeatures();
+		//t.testFeatures();
 		//t.testHistogramOf3x3Img();
+		t.comparePerformance();
 	}
 	
 	public void testCorners() {
@@ -60,6 +65,43 @@ public class TestHistograms {
 			long[] radius = new long[]{10, 10}; // radius=1 is equivalent to ImageJ's radius=1 in RankFilters
 			HistogramFeatures<UnsignedByteType> features = new HistogramFeatures<UnsignedByteType>(img, 0, 255, 256, radius);
 			ImgLib.wrap(features, "Features for " + radius[0] + "x" + radius[1]).show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void comparePerformance() {
+		try {
+			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge.tif");
+			ImgLib.wrap(img, "Original").show();
+			
+			long t0 = System.currentTimeMillis();
+			long[] radius = new long[]{25, 25}; // radius=1 is equivalent to ImageJ's radius=1 in RankFilters
+			HistogramFeatures<UnsignedByteType> features = new HistogramFeatures<UnsignedByteType>(img, 0, 255, 256, radius);
+			long t1 = System.currentTimeMillis();
+			
+			ImagePlus imp = ImgLib.wrap(img);
+			
+			long t2 = System.currentTimeMillis();
+			RankFilters rf = new RankFilters();
+			ImageProcessor ip1 = imp.getProcessor().duplicate();
+			rf.rank(ip1, radius[0], RankFilters.MIN);
+			ImageProcessor ip2 = imp.getProcessor().duplicate();
+			rf.rank(ip2, radius[0], RankFilters.MAX);
+			ImageProcessor ip3 = imp.getProcessor().duplicate();
+			rf.rank(ip3, radius[0], RankFilters.MEAN);
+			long t3 = System.currentTimeMillis();
+			
+			System.out.println("Integral features: " + (t1 - t0) + " ms");
+			System.out.println("Regular features: " + (t3 - t2) + " ms");
+			
+			// Show them both
+			ImgLib.wrap(features, "Integral Histogram Features for " + radius[0] + "x" + radius[1]).show();
+			ImageStack stack = new ImageStack(imp.getWidth(), imp.getHeight());
+			stack.addSlice("min", ip1);
+			stack.addSlice("max", ip2);
+			stack.addSlice("mean", ip3);
+			new ImagePlus("Regular features for " + radius[0] + "x" + radius[1], stack).show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -177,7 +219,7 @@ public class TestHistograms {
 		Histograms<T> hs = new Histograms<T>(h, radius);
 		hs.setPosition(2, 0);
 		hs.setPosition(2, 1);
-		hist = ((ArrayImg<LongType,LongArray>)hs.get()).update(null).getCurrentStorageArray();
+		hist = hs.get();
 		System.out.println("From Histograms, 0x0: " + Util.printCoordinates(hist));
 		for (int bin=0; bin<9; ++bin) {
 			if (8 == bin) assertTrue(1 == hist[bin]);
@@ -188,7 +230,7 @@ public class TestHistograms {
 		hs = new Histograms<T>(h, radius);
 		hs.setPosition(2, 0);
 		hs.setPosition(2, 1);
-		hist = ((ArrayImg<LongType,LongArray>)hs.get()).update(null).getCurrentStorageArray();
+		hist = hs.get();
 		System.out.println("From Histograms, 3x3: " + Util.printCoordinates(hist));
 		for (int bin=0; bin<9; ++bin) {
 			switch (bin) {
