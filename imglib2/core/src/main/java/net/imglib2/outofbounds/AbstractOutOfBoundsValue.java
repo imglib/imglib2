@@ -36,12 +36,12 @@
 
 package net.imglib2.outofbounds;
 
+import net.imglib2.AbstractLocalizable;
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.type.Type;
-import net.imglib2.util.Util;
 
 /**
  *
@@ -49,14 +49,13 @@ import net.imglib2.util.Util;
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements OutOfBounds< T >
+public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends AbstractLocalizable implements OutOfBounds< T >
 {
 	final protected RandomAccess< T > sampler;
 
-	final protected int n;
-
-	final protected long[] dimension, min, max, position;
+	final protected long[] dimension, min, max;
 
 	final protected boolean[] dimIsOutOfBounds;
 
@@ -64,12 +63,11 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements
 
 	protected AbstractOutOfBoundsValue( final AbstractOutOfBoundsValue< T > outOfBounds )
 	{
+		super( outOfBounds.numDimensions() );
 		this.sampler = outOfBounds.sampler.copyRandomAccess();
-		n = outOfBounds.n;
 		dimension = new long[ n ];
 		min = new long[ n ];
 		max = new long[ n ];
-		position = new long[ n ];
 		dimIsOutOfBounds = new boolean[ n ];
 		for ( int d = 0; d < n; ++d )
 		{
@@ -83,15 +81,14 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements
 
 	public < F extends Interval & RandomAccessible< T > > AbstractOutOfBoundsValue( final F f )
 	{
+		super( f.numDimensions() );
 		this.sampler = f.randomAccess();
-		n = f.numDimensions();
 		dimension = new long[ n ];
 		f.dimensions( dimension );
 		min = new long[ n ];
 		f.min( min );
 		max = new long[ n ];
 		f.max( max );
-		position = new long[ n ];
 		dimIsOutOfBounds = new boolean[ n ];
 	}
 
@@ -109,12 +106,6 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements
 	}
 
 
-	/* Dimensionality */
-
-	@Override
-	public int numDimensions(){ return n; }
-
-
 	/* OutOfBounds */
 
 	@Override
@@ -124,53 +115,8 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > implements
 		return isOutOfBounds;
 	}
 
-	/* RasterLocalizable */
 
-	@Override
-	public void localize( final float[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( final double[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( final int[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = ( int )this.position[ d ];
-	}
-
-	@Override
-	public void localize( final long[] pos )
-	{
-		for ( int d = 0; d < n; d++ )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public float getFloatPosition( final int dim ){ return position[ dim ]; }
-
-	@Override
-	public double getDoublePosition( final int dim ){ return position[ dim ]; }
-
-	@Override
-	public int getIntPosition( final int dim ){ return ( int )position[ dim ]; }
-
-	@Override
-	public long getLongPosition( final int dim ){ return position[ dim ]; }
-
-	@Override
-	public String toString() { return Util.printCoordinates( position ) + " = " + get(); }
-
-
-	/* RasterPositionable */
+	/* Positionable */
 
 	@Override
 	public void fwd( final int dim )

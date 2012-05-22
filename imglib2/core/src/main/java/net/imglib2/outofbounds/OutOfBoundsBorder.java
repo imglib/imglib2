@@ -35,7 +35,7 @@
  */
 package net.imglib2.outofbounds;
 
-import net.imglib2.AbstractEuclideanSpace;
+import net.imglib2.AbstractLocalizable;
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
@@ -48,14 +48,9 @@ import net.imglib2.util.Util;
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class OutOfBoundsBorder< T > extends AbstractEuclideanSpace implements OutOfBounds< T >
+public class OutOfBoundsBorder< T > extends AbstractLocalizable implements OutOfBounds< T >
 {
 	final protected RandomAccess< T > outOfBoundsRandomAccess;
-
-	/**
-	 * Current position.
-	 */
-	final protected long[] position;
 
 	/**
 	 * Minimum of the wrapped {@link RandomAccessible}.
@@ -82,7 +77,6 @@ public class OutOfBoundsBorder< T > extends AbstractEuclideanSpace implements Ou
 		beforeMin = new long[ n ];
 		max = new long[ n ];
 		pastMax = new long[ n ];
-		position = new long[ n ];
 		dimIsOutOfBounds = new boolean[ n ];
 		for ( int d = 0; d < n; ++d )
 		{
@@ -111,7 +105,6 @@ public class OutOfBoundsBorder< T > extends AbstractEuclideanSpace implements Ou
 			beforeMin[ d ] = min[ d ] - 1;
 			pastMax[ d ] = max[ d ] + 1;
 		}
-		position = new long[ n ];
 		dimIsOutOfBounds = new boolean[ n ];
 
 		outOfBoundsRandomAccess = f.randomAccess();
@@ -158,60 +151,6 @@ public class OutOfBoundsBorder< T > extends AbstractEuclideanSpace implements Ou
 	final public OutOfBoundsBorder< T > copyRandomAccess()
 	{
 		return copy();
-	}
-
-	/* Localizable */
-
-	@Override
-	public void localize( final float[] pos )
-	{
-		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( final double[] pos )
-	{
-		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( final int[] pos )
-	{
-		for ( int d = 0; d < n; ++d )
-			pos[ d ] = ( int ) ( this.position[ d ] );
-	}
-
-	@Override
-	public void localize( final long[] pos )
-	{
-		for ( int d = 0; d < n; ++d )
-			pos[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public float getFloatPosition( final int d )
-	{
-		return position[ d ];
-	}
-
-	@Override
-	public double getDoublePosition( final int d )
-	{
-		return position[ d ];
-	}
-
-	@Override
-	public int getIntPosition( final int d )
-	{
-		return ( int ) ( position[ d ] );
-	}
-
-	@Override
-	public long getLongPosition( final int d )
-	{
-		return position[ d ];
 	}
 
 	/* Positionable */
