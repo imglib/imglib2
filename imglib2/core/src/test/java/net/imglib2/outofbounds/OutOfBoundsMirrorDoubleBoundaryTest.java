@@ -69,9 +69,9 @@ public class OutOfBoundsMirrorDoubleBoundaryTest
 	static private CellImg< IntType, ?, ? > cellImage;
 	static private Img< IntType > listImage;
 	
-	static private OutOfBoundsRandomAccess< IntType > cArray;
-	static private OutOfBoundsRandomAccess< IntType > cCell;
-	static private OutOfBoundsRandomAccess< IntType > cList;
+	static private OutOfBounds< IntType > cArray;
+	static private OutOfBounds< IntType > cCell;
+	static private OutOfBounds< IntType > cList;
 	
 	/**
 	 * @throws java.lang.Exception

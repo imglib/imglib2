@@ -11,7 +11,7 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.multithreading.Chunk;
 import net.imglib2.multithreading.SimpleMultiThreading;
-import net.imglib2.outofbounds.OutOfBoundsRandomAccess;
+import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
@@ -92,11 +92,11 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 
 					// HACK: Explicit assignment is needed for OpenJDK javac.
 					ExtendedRandomAccessibleInterval<T, Img<T>> extendedInput = Views.extendMirrorDouble(input);
-					OutOfBoundsRandomAccess<T> ura = extendedInput.randomAccess();
+					OutOfBounds<T> ura = extendedInput.randomAccess();
 
 					// HACK: Explicit assignment is needed for OpenJDK javac.
 					ExtendedRandomAccessibleInterval<FloatType, RandomAccessibleInterval<FloatType>> extendedD = Views.extendMirrorDouble(D);
-					OutOfBoundsRandomAccess<FloatType> dra 	= extendedD.randomAccess();
+					OutOfBounds<FloatType> dra 	= extendedD.randomAccess();
 
 					Cursor<FloatType> incrementCursor 		= increment.localizingCursor();
 
