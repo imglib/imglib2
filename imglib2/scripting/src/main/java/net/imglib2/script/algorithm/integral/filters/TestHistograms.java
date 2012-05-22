@@ -28,8 +28,8 @@ public class TestHistograms {
 	static public final void main(String[] arg) {
 		new ImageJ();
 		TestHistograms t = new TestHistograms();
-		//t.testFeatures();
-		t.testHistogramOf3x3Img();
+		t.testFeatures();
+		//t.testHistogramOf3x3Img();
 	}
 	
 	public void testCorners() {
@@ -57,9 +57,9 @@ public class TestHistograms {
 		try {
 			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop-streched-smoothed.tif");
 			ImgLib.wrap(img, "Original").show();
-			long[] window = new long[]{3, 3}; // 3x3 is equivalent to ImageJ's radius=1 in RankFilters
-			HistogramFeatures<UnsignedByteType> features = new HistogramFeatures<UnsignedByteType>(img, 0, 255, 256, window);
-			ImgLib.wrap(features, "Features for " + window[0] + "x" + window[1]).show();
+			long[] radius = new long[]{10, 10}; // radius=1 is equivalent to ImageJ's radius=1 in RankFilters
+			HistogramFeatures<UnsignedByteType> features = new HistogramFeatures<UnsignedByteType>(img, 0, 255, 256, radius);
+			ImgLib.wrap(features, "Features for " + radius[0] + "x" + radius[1]).show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

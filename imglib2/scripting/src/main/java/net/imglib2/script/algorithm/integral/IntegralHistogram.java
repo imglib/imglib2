@@ -158,9 +158,9 @@ public class IntegralHistogram
 		final RandomAccess<R> rh = integralHistogram.randomAccess();
 		final long[] position = new long[ integralHistogram.numDimensions() ];
 
-		System.out.println("dimensions of the img: " + img.dimension(0) + " x " + img.dimension(1));
-		System.out.println("nBins: " + nBins + ", min, max: "+ min + "," + max);
-		System.out.println("dimensions of integralHistogram: " + integralHistogram.dimension(0) + " x " + integralHistogram.dimension(1) + " x " + integralHistogram.dimension(2));
+		//System.out.println("dimensions of the img: " + img.dimension(0) + " x " + img.dimension(1));
+		//System.out.println("nBins: " + nBins + ", min, max: "+ min + "," + max);
+		//System.out.println("dimensions of integralHistogram: " + integralHistogram.dimension(0) + " x " + integralHistogram.dimension(1) + " x " + integralHistogram.dimension(2));
 		
 		
 		// 1. For each pixel in the original image, add 1 to its corresponding bin in the histogram at that pixel

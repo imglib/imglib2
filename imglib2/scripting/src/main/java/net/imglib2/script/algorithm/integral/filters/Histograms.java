@@ -94,18 +94,8 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 			for (d=0; d<numDimensions(); ++d) {
 				signs[o] += offsets[o].getLongPosition(d) < 0 ? 1 : 0;
 			}
-			System.out.println("Count of negatives: " + signs[o]);
 			signs[o] = signs[o] % 2 != 0 ? -1 : 1;
 		}
-		
-		// DEBUG
-		for (int k=0; k<offsets.length; ++k) {
-			System.out.println(Util.printCoordinates(offsets[k]) + " : " + signs[k]);
-		}
-
-		// DEBUG
-		System.out.println("dimensions of h: " + Util.printCoordinates(dimensions));
-		System.out.println("radius: " + Util.printCoordinates(radius) + ", signs: " + Util.printCoordinates(signs));
 	}
 
 	private final long inside(final long pos, final int d) {
@@ -115,6 +105,7 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 	/** Returns the histogram at each location. The same instance of {@code Img<T>} is returned every time. */
 	@Override
 	public Img<LongType> get() {
+		// Reset the 1-dimensional image used as histogram
 		histCursor.reset();
 		while (histCursor.hasNext()) {
 			histCursor.fwd();
@@ -124,7 +115,7 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 			final Point offset = offsets[o];
 			for (int d=0; d<n; ++d) {
 				// position[d] is here
-				// + 1 to move over the leading zeros
+				// + 1 to move over the leading zeros in integralHistogram
 				// + offset to go to the right corner
 				final long pos = position[d] + 1 + offset.getLongPosition(d);
 				ra.setPosition(inside(pos, d), d);
