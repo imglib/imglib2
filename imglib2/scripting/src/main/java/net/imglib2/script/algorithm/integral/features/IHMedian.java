@@ -8,7 +8,7 @@ public class IHMedian<T extends RealType<T>> extends IHAbstractFeature<T> {
 
 	@Override
 	public double get(final double min, final double max,
-			final long[] histogram, final double[] binValues, long nPixels) {
+			final long[] histogram, final double[] binValues, final long nPixels) {
 		final long halfNPixels = nPixels / 2;
 		final double range = max - min;
 		final double K = histogram.length -1;

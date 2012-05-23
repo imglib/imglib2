@@ -10,6 +10,7 @@ import net.imglib2.script.algorithm.integral.features.IHMax;
 import net.imglib2.script.algorithm.integral.features.IHMean;
 import net.imglib2.script.algorithm.integral.features.IHMedian;
 import net.imglib2.script.algorithm.integral.features.IHMin;
+import net.imglib2.script.algorithm.integral.features.IHStdDev;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
@@ -18,7 +19,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 
 public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends IntegerType<P> & NativeType<P>> extends ImgProxy<T>
 {
-	static public final int NUM_FEATURES = 4;
+	static public final int NUM_FEATURES = 5;
 	
 	public HistogramFeatures(
 			final Img<T> img,
@@ -58,6 +59,7 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 		final IHMax<DoubleType> ihMax = new IHMax<DoubleType>();
 		final IHMean<DoubleType> ihMean = new IHMean<DoubleType>();
 		final IHMedian<DoubleType> ihMedian = new IHMedian<DoubleType>();
+		final IHStdDev<DoubleType> ihStdDev = new IHStdDev<DoubleType>();
 		final double[] binValues = new double[nBins];
 		for (int i=0; i<nBins; ++i) {
 			binValues[i] = min + (i / K) * range;
@@ -123,6 +125,7 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 			double imgMax = ihMax.get(min, max, bins, binValues, nPixels);
 			double imgMean = ihMean.get(min, max, bins, binValues, nPixels);
 			double imgMedian = ihMedian.get(min, max, bins, binValues, nPixels);
+			double imgStdDev = ihStdDev.get(min, max, bins, binValues, nPixels, imgMedian);
 
 			// Store
 			fr.setPosition(0, lastDimension);
@@ -133,6 +136,8 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 			fr.get().setReal(imgMean);
 			fr.setPosition(3, lastDimension);
 			fr.get().setReal(imgMedian);
+			fr.setPosition(4, lastDimension);
+			fr.get().setReal(imgStdDev);
 		}
 
 		return features;
