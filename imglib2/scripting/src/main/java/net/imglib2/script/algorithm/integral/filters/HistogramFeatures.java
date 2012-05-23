@@ -6,10 +6,15 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.algorithm.integral.IntegralHistogram;
+import net.imglib2.script.algorithm.integral.features.IHMax;
+import net.imglib2.script.algorithm.integral.features.IHMean;
+import net.imglib2.script.algorithm.integral.features.IHMedian;
+import net.imglib2.script.algorithm.integral.features.IHMin;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.type.numeric.real.DoubleType;
 
 public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends IntegerType<P> & NativeType<P>> extends ImgProxy<T>
 {
@@ -49,6 +54,15 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 		
 		final int lastDimension = fr.numDimensions() -1;
 		
+		final IHMin<DoubleType> ihMin = new IHMin<DoubleType>();
+		final IHMax<DoubleType> ihMax = new IHMax<DoubleType>();
+		final IHMean<DoubleType> ihMean = new IHMean<DoubleType>();
+		final IHMedian<DoubleType> ihMedian = new IHMedian<DoubleType>();
+		final double[] binValues = new double[nBins];
+		for (int i=0; i<nBins; ++i) {
+			binValues[i] = min + (i / K) * range;
+		}
+		
 		while (h.hasNext()) {
 			h.fwd();
 			for (int d=0; d<h.numDimensions(); ++d) {
@@ -56,7 +70,8 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 			}
 			// Compute features
 			final long[] bins = h.get();
-				
+
+			/*
 			double imgMin = 0;
 			double imgMax = 0;
 			double imgMean = 0;
@@ -97,6 +112,17 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 					break;
 				}
 			}
+			*/
+
+			long nPixels = 0;
+			for (int i=0; i<nBins; ++i) {
+				nPixels += bins[i];
+			}
+			
+			double imgMin = ihMin.get(min, max, bins, binValues, nPixels);
+			double imgMax = ihMax.get(min, max, bins, binValues, nPixels);
+			double imgMean = ihMean.get(min, max, bins, binValues, nPixels);
+			double imgMedian = ihMedian.get(min, max, bins, binValues, nPixels);
 
 			// Store
 			fr.setPosition(0, lastDimension);
