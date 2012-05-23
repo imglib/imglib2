@@ -50,7 +50,6 @@ import net.imglib2.labeling.NativeImgLabeling;
 import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
-import net.imglib2.outofbounds.OutOfBoundsRandomAccess;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 
@@ -219,13 +218,12 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 		 * deep valley.
 		 */
 		OutOfBoundsFactory< LabelingType< L >, Labeling< L >> factory = new LabelingOutOfBoundsRandomAccessFactory< L, Labeling< L >>();
-		OutOfBounds< LabelingType< L >> oob = factory.create( output );
+		OutOfBounds< LabelingType< L >> outputAccess = factory.create( output );
 
-		OutOfBoundsRandomAccess< LabelingType< L >> outputAccess = new OutOfBoundsRandomAccess< LabelingType< L >>( output.numDimensions(), oob );
 		T maxVal = image.firstElement().createVariable();
 		maxVal.setReal( maxVal.getMaxValue() );
 		OutOfBoundsFactory< T, Img< T >> oobImageFactory = new OutOfBoundsConstantValueFactory< T, Img< T >>( maxVal );
-		OutOfBoundsRandomAccess< T > imageAccess = new OutOfBoundsRandomAccess< T >( output.numDimensions(), oobImageFactory.create( image ) );
+		OutOfBounds< T > imageAccess = oobImageFactory.create( image );
 
 		/*
 		 * Start by loading up a priority queue with the seeded pixels
