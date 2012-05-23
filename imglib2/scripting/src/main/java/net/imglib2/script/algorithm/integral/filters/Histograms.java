@@ -5,6 +5,7 @@ import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.img.Img;
+import net.imglib2.script.algorithm.integral.Histogram;
 import net.imglib2.script.algorithm.integral.IntegralHistogram;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
@@ -12,7 +13,7 @@ import net.imglib2.util.IntervalIndexer;
 
 /** A {@link RandomAccess} with dimensions N-1, over an {@link Img} of dimensions N
  * that contains the {@link IntegralHistogram}. */
-public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point implements RandomAccess<long[]>, Cursor<long[]>
+public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point implements RandomAccess<Histogram>, Cursor<Histogram>
 {
 	/** Index of last sample that can be retrieved. */
 	private final long lastIndex;
@@ -24,6 +25,7 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 	private final long[] radius;
 	/** Reusable histogram, returned at every call to get(). */
 	private final long[] hist;
+	private final Histogram histogram;
 	/** All the corner points from which the histogram is computed.
 	 * Derived from window and specified as relative positive and negative offsets for each dimension. */
 	private final Point[] offsets;
@@ -59,6 +61,8 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 		// The histogram to return at every sample (at every call to get())
 		this.hist = new long[(int)this.integralHistogram.dimension(this.integralHistogram.numDimensions() -1)];// the size is the number of histogram bins
 		
+		this.histogram = new Histogram(this.hist, n);
+		
 		// N-dimensional corner coordinates, relative to any one pixel location
 		this.offsets = new Point[(int)Math.pow(2, numDimensions())];
 		for (int i=0; i<offsets.length; ++i) {
@@ -81,10 +85,12 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 		// Compute the sign of each corner
 		this.signs = new int[offsets.length];
 		for (int o=0; o<offsets.length; ++o) {
+			// Count the number of negative signs
 			signs[o] = 0;
 			for (d=0; d<numDimensions(); ++d) {
 				signs[o] += offsets[o].getLongPosition(d) < 0 ? 1 : 0;
 			}
+			// Set the proper sign
 			signs[o] = signs[o] % 2 != 0 ? -1 : 1;
 		}
 	}
@@ -95,9 +101,11 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 
 	/** Returns the histogram at each location. The same instance of {@code Img<T>} is returned every time. */
 	@Override
-	public long[] get() {
-		// Reset the 1-dimensional image used as histogram
-		for (int i=0; i<hist.length; ++i) hist[i] = 0;
+	public Histogram get() {
+		// Set all bins to zero
+		histogram.clearBins();
+		// Setup to compute cell dimensions
+		histogram.initPositions(this, 1);
 		//
 		for (int o=0; o<offsets.length; ++o) {
 			final Point offset = offsets[o];
@@ -105,8 +113,9 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 				// position[d] is here
 				// + 1 to move over the leading zeros in integralHistogram
 				// + offset to go to the right corner
-				final long pos = position[d] + 1 + offset.getLongPosition(d);
-				ra.setPosition(inside(pos, d), d);
+				final long pos = inside(position[d] + 1 + offset.getLongPosition(d), d);
+				histogram.updatePositions(pos, d);
+				ra.setPosition(pos, d);
 			}
 			for (int i=0; i<hist.length; ++i) {
 				ra.setPosition(i, n); // n coincides with the index of the last dimension of the integral histogram image
@@ -114,18 +123,18 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 			}
 		}
 		
-		// TODO hist could be just a naked long[] array. No need to make it an Img<LongType>
-		
-		return hist;
+		histogram.updatePixelCount();
+
+		return histogram;
 	}
 
 	@Override
-	public Sampler<long[]> copy() {
+	public Sampler<Histogram> copy() {
 		return new Histograms<T>(this.integralHistogram, radius);
 	}
 
 	@Override
-	public RandomAccess<long[]> copyRandomAccess() {
+	public RandomAccess<Histogram> copyRandomAccess() {
 		return new Histograms<T>(this.integralHistogram, radius);
 	}
 
@@ -151,7 +160,7 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 	}
 
 	@Override
-	public long[] next() {
+	public Histogram next() {
 		fwd();
 		return get();
 	}
@@ -162,7 +171,7 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 	}
 
 	@Override
-	public Cursor<long[]> copyCursor() {
+	public Cursor<Histogram> copyCursor() {
 		return new Histograms<T>(integralHistogram, radius);
 	}
 }

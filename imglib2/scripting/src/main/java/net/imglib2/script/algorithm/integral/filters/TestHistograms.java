@@ -232,7 +232,7 @@ public class TestHistograms {
 		Histograms<T> hs = new Histograms<T>(h, radius);
 		hs.setPosition(2, 0);
 		hs.setPosition(2, 1);
-		hist = hs.get();
+		hist = hs.get().bins;
 		System.out.println("From Histograms, 0x0: " + Util.printCoordinates(hist));
 		for (int bin=0; bin<9; ++bin) {
 			if (8 == bin) assertTrue(1 == hist[bin]);
@@ -243,7 +243,7 @@ public class TestHistograms {
 		hs = new Histograms<T>(h, radius);
 		hs.setPosition(2, 0);
 		hs.setPosition(2, 1);
-		hist = hs.get();
+		hist = hs.get().bins;
 		System.out.println("From Histograms, 3x3: " + Util.printCoordinates(hist));
 		for (int bin=0; bin<9; ++bin) {
 			switch (bin) {

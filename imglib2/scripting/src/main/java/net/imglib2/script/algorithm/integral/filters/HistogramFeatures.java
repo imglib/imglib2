@@ -5,6 +5,7 @@ import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.script.algorithm.fn.ImgProxy;
+import net.imglib2.script.algorithm.integral.Histogram;
 import net.imglib2.script.algorithm.integral.IntegralHistogram;
 import net.imglib2.script.algorithm.integral.features.IHMax;
 import net.imglib2.script.algorithm.integral.features.IHMean;
@@ -71,7 +72,8 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 				fr.setPosition(h.getLongPosition(d), d);
 			}
 			// Compute features
-			final long[] bins = h.get();
+			final Histogram histogram = h.get();
+			final long[] bins = histogram.bins;
 
 			/*
 			double imgMin = 0;
@@ -116,10 +118,13 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 			}
 			*/
 
-			long nPixels = 0;
+
+			/*long nPixels = 0;
 			for (int i=0; i<nBins; ++i) {
 				nPixels += bins[i];
 			}
+			*/
+			final long nPixels = histogram.nPixels;
 			
 			double imgMin = ihMin.get(min, max, bins, binValues, nPixels);
 			double imgMax = ihMax.get(min, max, bins, binValues, nPixels);
@@ -127,6 +132,11 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 			double imgMedian = ihMedian.get(min, max, bins, binValues, nPixels);
 			double imgStdDev = ihStdDev.get(min, max, bins, binValues, nPixels, imgMedian);
 
+			// TODO above, the features should be composable, so that some features depend on others
+			// like stdDev depends on the median (or the mean).
+			// But in the end the results must return in order, with perhaps some results being a vector of multiple results.
+
+			
 			// Store
 			fr.setPosition(0, lastDimension);
 			fr.get().setReal(imgMin);
