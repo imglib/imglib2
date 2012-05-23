@@ -19,8 +19,7 @@ public class IHMedian<T extends RealType<T>> extends IHAbstractFeature<T> {
 			if (count > halfNPixels) {
 				// The min
 				// + the value of the current ith bin in the histogram
-				// + half the size of a bin
-				return histogram.min + (i / K) * range + (range / K) / 2;
+				return histogram.min + (i / K) * range;
 			}
 		}
 		return 0; // never happens, histogram cannot be empty
