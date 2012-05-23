@@ -10,7 +10,8 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.script.ImgLib;
-import net.imglib2.script.algorithm.integral.IntegralHistogram;
+import net.imglib2.script.algorithm.integral.histogram.IntegralHistogram;
+import net.imglib2.script.algorithm.integral.histogram.LinearHistogram;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedAnyBitType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -40,7 +41,8 @@ public class IntegralHistogramExpectationChecking {
 			if (0 == i % 2) ++next;
 		}
 		//
-		Img<? extends RealType<?>> ih = IntegralHistogram.create(img, 0, 7, 16);
+		LinearHistogram lh = new LinearHistogram(new long[16], 1, 0, 7);
+		Img<? extends RealType<?>> ih = IntegralHistogram.create(img, lh);
 		
 		new ImageJ();
 		try {
@@ -81,7 +83,8 @@ public class IntegralHistogramExpectationChecking {
 			c.get().setInteger(p[0] * p[1]);
 		}
 		// Create integral histogram with 10 bins
-		Img<? extends RealType<?>> ih = IntegralHistogram.create(img, 0, 81, 10);
+		LinearHistogram lh = new LinearHistogram(new long[10], 2, 0, 81);
+		Img<? extends RealType<?>> ih = IntegralHistogram.create(img, lh);
 		new ImageJ();
 		try {
 			ImgLib.wrap((Img)ih, "histogram").show();
@@ -94,7 +97,8 @@ public class IntegralHistogramExpectationChecking {
 		try {
 			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop.tif");
 			// Integral histogram with 10 bins
-			Img<? extends RealType<?>> ih = IntegralHistogram.create(img, 0, 255, 10);
+			LinearHistogram lh = new LinearHistogram(new long[10], 2, 0, 255);
+			Img<? extends RealType<?>> ih = IntegralHistogram.create(img, lh);
 			new ImageJ();
 			try {
 				ImgLib.wrap((Img)ih, "histogram").show();

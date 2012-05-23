@@ -1,27 +1,34 @@
-package net.imglib2.script.algorithm.integral;
+package net.imglib2.script.algorithm.integral.histogram;
 
 import net.imglib2.Localizable;
 
-public final class Histogram
+public abstract class Histogram
 {
+	public final double min, max, range;
 	public final long[] bins;
+	public final double[] binValues;
 	public final long[] maxPositions, minPositions;
 	public long nPixels;
-	
-	/**
-	 * 
-	 * @param bins The ordered histogram bins.
-	 * @param cellDimensions The dimensions of the area, volume, etc. from which the histogram was extracted.
-	 */
+
 	public Histogram(
 			final long[] bins,
-			final int numDimensions)
+			final int numDimensions,
+			final double min,
+			final double max)
 	{
 		this.bins = bins;
 		this.maxPositions = new long[numDimensions];
 		this.minPositions = new long[numDimensions];
+		this.min = min;
+		this.max = max;
+		this.range = max - min;
+		this.binValues = new double[bins.length];
 	}
 	
+	public abstract int computeBin(final double value);
+	
+	public final int nBins() { return bins.length; }
+
 	public final void clearBins() {
 		for (int i=0; i<bins.length; ++i) {
 			bins[i] = 0;

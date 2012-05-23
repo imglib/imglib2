@@ -1,4 +1,4 @@
-package net.imglib2.script.algorithm.integral;
+package net.imglib2.script.algorithm.integral.histogram;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
@@ -29,36 +29,17 @@ public class IntegralHistogram
 		return (int) nBits;
 	}
 	
-	/**
-	 * TODO support images larger than 2 Gb
-	 * 
-	 * @param img
-	 * @param nBins
-	 * @return
-	 */
+
 	static public <T extends RealType<T>, R extends IntegerType<R> & NativeType<R>> Img<R> create(
 			final Img<T> img,
-			final double min,
-			final double max,
-			final int nBins)
+			final Histogram histogram)
 	{
-		return create(img, min, max, nBins, (R) chooseType(computeBits(img)));
+		return create(img, histogram, (R) chooseType(computeBits(img)));
 	}
 
-	/**
-	 * 
-	 * @param img
-	 * @param min
-	 * @param max
-	 * @param nBins
-	 * @param type
-	 * @return
-	 */
 	static public <T extends RealType<T>, R extends IntegerType<R> & NativeType<R>> Img<R> create(
 			final Img<T> img,
-			final double min,
-			final double max,
-			final int nBins,
+			final Histogram histogram,
 			final R type)
 	{
 		// Sanity check
@@ -70,7 +51,7 @@ public class IntegralHistogram
 		for (int i=0; i<img.numDimensions(); ++i) {
 			dims[i] = img.dimension(i) + 1;
 		}
-		dims[dims.length -1] = nBins;
+		dims[dims.length -1] = histogram.nBins();
 		// Create an image to hold the integral histogram
 		final Img<R> integralHistogram = type.createSuitableNativeImg(new ArrayImgFactory<R>(), dims);
 
@@ -78,10 +59,10 @@ public class IntegralHistogram
 		
 		switch ( img.numDimensions() ) {
 			case 1:
-				populate1( integralHistogram, img, min, max, nBins );
+				populate1( integralHistogram, img, histogram );
 				break;
 			case 2:
-				populate2( integralHistogram, img, min, max, nBins );
+				populate2( integralHistogram, img, histogram );
 				break;
 			default:
 				throw new IllegalArgumentException("Cannot compute an integral histogram for an Img with dimensions " + img.numDimensions());
@@ -124,12 +105,8 @@ public class IntegralHistogram
 	static private final <T extends RealType<T>, R extends RealType<R> & NativeType<R>> void populate1(
 			final Img<R> integralHistogram,
 			final Img<T> img,
-			final double min,
-			final double max,
-			final int nBins )
+			final Histogram histogram)
 	{
-		final double range = max - min;
-		final double K = nBins - 1;
 		final Cursor<T> c = img.cursor();
 		final RandomAccess<R> rh = integralHistogram.randomAccess();
 		final long[] position = new long[ integralHistogram.numDimensions() ];
@@ -141,7 +118,7 @@ public class IntegralHistogram
 			// Compute the bin to add to
 			// (First element is empty in the integral, so displace by 1)
 			position[0] += 1;
-			position[1] = (int)(((Math.max(min, Math.min(max, c.get().getRealDouble())) - min) / range) * K + 0.5);
+			position[1] = histogram.computeBin(c.get().getRealDouble());
 			rh.setPosition(position);
 			rh.get().inc();
 		}
@@ -174,12 +151,8 @@ public class IntegralHistogram
 	static private final <T extends RealType<T>, R extends RealType<R> & NativeType<R>> void populate2(
 			final Img<R> integralHistogram,
 			final Img<T> img,
-			final double min,
-			final double max,
-			final int nBins )
+			final Histogram histogram )
 	{
-		final double range = max - min;
-		final double K = nBins - 1;
 		final Cursor<T> c = img.cursor();
 		final RandomAccess<R> rh = integralHistogram.randomAccess();
 		final long[] position = new long[ integralHistogram.numDimensions() ];
@@ -197,7 +170,7 @@ public class IntegralHistogram
 			// (First element is empty in the integral, so displace by 1)
 			position[0] += 1;
 			position[1] += 1;
-			position[2] = (int)(((Math.min(max, Math.max(min, c.get().getRealDouble())) - min) / range) * K + 0.5);
+			position[2] = histogram.computeBin(c.get().getRealDouble());
 			//System.out.println("position: " + position[0] + ", " + position[1] + ", " + position[2] + "; value: " + c.get().getRealDouble());
 			rh.setPosition(position);
 			rh.get().inc();
