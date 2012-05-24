@@ -41,7 +41,7 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * Sets the real component of an output real number to the exponentiation of
- * the real component of an input real number. (e raised to a power)
+ * the real component of an input real number.
  * 
  * @author Barry DeZonia
  */

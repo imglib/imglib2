@@ -43,7 +43,7 @@ import net.imglib2.type.numeric.ComplexType;
 
 /**
  * Sets an output complex number to the exponentiation of an input complex
- * number (the constant e raised to a complex power).
+ * number.
  * 
  * @author Barry DeZonia
  */
