@@ -1,7 +1,9 @@
 package net.imglib2.algorithm.gradient;
 
+import java.util.ArrayList;
+
+import net.imglib2.BenchmarkHelper;
 import net.imglib2.Interval;
-import net.imglib2.algorithm.gradient.PartialDerivative;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -34,28 +36,28 @@ public class GradientExample
 
 		// compute partial derivatives of input in all dimension
 		for ( int d = 0; d < n; ++d )
-			PartialDerivative.gradientCentralDifference( input, Views.interval( Views.hyperSlice( gradients, n, d ), gradientComputationInterval ), d );
+			PartialDerivative.gradientCentralDifference3( input, Views.interval( Views.hyperSlice( gradients, n, d ), gradientComputationInterval ), d );
 
 		ImageJFunctions.show( gradients );
 
-//		final int numRuns = 20;
-//		final boolean printIndividualTimes = true;
-//		final ArrayList< Long > times = BenchmarkHelper.benchmark( numRuns, new Runnable() {
-//			@Override
-//			public void run()
-//			{
-//				for ( int i = 0; i < 10; ++i )
-//					for ( int d = 0; d < n; ++d )
-//						PartialDerivative.gradientCentralDifference( input, Views.interval( Views.hyperSlice( gradients, n, d ), gradientComputationInterval ), d );
-//			}
-//		} );
-//		if ( printIndividualTimes )
-//		{
-//			for ( int i = 0; i < numRuns; ++i )
-//				System.out.println( "run " + i + ": " + times.get( i ) + " ms" );
-//			System.out.println();
-//		}
-//		System.out.println( "median: " + BenchmarkHelper.median( times ) + " ms" );
+		final int numRuns = 20;
+		final boolean printIndividualTimes = true;
+		final ArrayList< Long > times = BenchmarkHelper.benchmark( numRuns, new Runnable() {
+			@Override
+			public void run()
+			{
+				for ( int i = 0; i < 10; ++i )
+					for ( int d = 0; d < n; ++d )
+						PartialDerivative.gradientCentralDifference3( input, Views.interval( Views.hyperSlice( gradients, n, d ), gradientComputationInterval ), d );
+			}
+		} );
+		if ( printIndividualTimes )
+		{
+			for ( int i = 0; i < numRuns; ++i )
+				System.out.println( "run " + i + ": " + times.get( i ) + " ms" );
+			System.out.println();
+		}
+		System.out.println( "median: " + BenchmarkHelper.median( times ) + " ms" );
 	}
 
 	public static void main( final String[] args )
