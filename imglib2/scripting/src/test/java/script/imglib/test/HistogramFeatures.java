@@ -1,9 +1,11 @@
-package net.imglib2.script.algorithm.integral.histogram;
+package script.imglib.test;
 
 
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.script.algorithm.fn.ImgProxy;
+import net.imglib2.script.algorithm.integral.histogram.Histogram;
+import net.imglib2.script.algorithm.integral.histogram.IntegralHistogramCursor;
 import net.imglib2.script.algorithm.integral.histogram.features.IHMax;
 import net.imglib2.script.algorithm.integral.histogram.features.IHMean;
 import net.imglib2.script.algorithm.integral.histogram.features.IHMedian;
@@ -41,7 +43,7 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 		final RandomAccess<R> fr = features.randomAccess();
 		
 		// One histogram per pixel position, representing the histogram of the window centered at that pixel
-		final Histograms<P> h = new Histograms<P>(integralHistogram, histogram, radius);
+		final IntegralHistogramCursor<P> h = new IntegralHistogramCursor<P>(integralHistogram, histogram, radius);
 		
 		final int lastDimension = fr.numDimensions() -1;
 		
@@ -74,13 +76,13 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 			// Store
 			fr.setPosition(0, lastDimension);
 			fr.get().setReal(imgMin);
-			fr.setPosition(1, lastDimension);
+			fr.move(1, lastDimension);
 			fr.get().setReal(imgMax);
-			fr.setPosition(2, lastDimension);
+			fr.move(1, lastDimension);
 			fr.get().setReal(imgMean);
-			fr.setPosition(3, lastDimension);
+			fr.move(1, lastDimension);
 			fr.get().setReal(imgMedian);
-			fr.setPosition(4, lastDimension);
+			fr.move(1, lastDimension);
 			fr.get().setReal(imgStdDev);
 		}
 

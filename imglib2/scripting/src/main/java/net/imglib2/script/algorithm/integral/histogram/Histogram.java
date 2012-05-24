@@ -27,6 +27,8 @@ public abstract class Histogram
 	
 	public abstract int computeBin(final double value);
 	
+	public abstract Histogram clone();
+	
 	public final int nBins() { return bins.length; }
 
 	public final void clearBins() {

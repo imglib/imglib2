@@ -24,4 +24,9 @@ public final class LinearHistogram extends Histogram
 	public final int computeBin(final double value) {
 		return (int)(((Math.min(max, Math.max(min, value)) - min) / range) * K + 0.5);
 	}
+
+	@Override
+	public Histogram clone() {
+		return new LinearHistogram(bins.clone(), maxPositions.length, min, max);
+	}
 }

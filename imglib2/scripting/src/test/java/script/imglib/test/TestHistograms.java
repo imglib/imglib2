@@ -14,8 +14,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.script.ImgLib;
-import net.imglib2.script.algorithm.integral.histogram.HistogramFeatures;
-import net.imglib2.script.algorithm.integral.histogram.Histograms;
+import net.imglib2.script.algorithm.integral.histogram.IntegralHistogramCursor;
 import net.imglib2.script.algorithm.integral.histogram.IntegralHistogram;
 import net.imglib2.script.algorithm.integral.histogram.LinearHistogram;
 import net.imglib2.type.NativeType;
@@ -233,7 +232,7 @@ public class TestHistograms {
 		// Histograms
 		long[] radius = new long[]{0, 0};
 		lh = new LinearHistogram(new long[9], 2, min, max);
-		Histograms<T> hs = new Histograms<T>(h, lh, radius);
+		IntegralHistogramCursor<T> hs = new IntegralHistogramCursor<T>(h, lh, radius);
 		hs.setPosition(2, 0);
 		hs.setPosition(2, 1);
 		hist = hs.get().bins;
@@ -244,7 +243,7 @@ public class TestHistograms {
 		}
 		
 		radius = new long[]{1, 1}; // means 3x3 centered on the pixel
-		hs = new Histograms<T>(h, lh, radius);
+		hs = new IntegralHistogramCursor<T>(h, lh, radius);
 		hs.setPosition(2, 0);
 		hs.setPosition(2, 1);
 		hist = hs.get().bins;

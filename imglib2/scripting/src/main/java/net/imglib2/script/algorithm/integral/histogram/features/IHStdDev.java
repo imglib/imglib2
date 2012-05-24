@@ -3,7 +3,7 @@ package net.imglib2.script.algorithm.integral.histogram.features;
 import net.imglib2.script.algorithm.integral.histogram.Histogram;
 import net.imglib2.type.numeric.RealType;
 
-public class IHStdDev<T extends RealType<T>> implements IHUnaryDependentFeature<T> {
+public class IHStdDev<T extends RealType<T>> extends IHAbstractUnitaryDependentFeature<T> {
 
 	public IHStdDev() {}
 
@@ -16,11 +16,5 @@ public class IHStdDev<T extends RealType<T>> implements IHUnaryDependentFeature<
 		// If nBins is a power of 2, and nPixels as well, then we could do bit shifting instead
 		// but seems like a silly optimization
 		return Math.sqrt(s / histogram.nPixels);
-	}
-
-	@Override
-	public double get(Histogram histogram) {
-		// Could compute it, but the point is to avoid doing so
-		throw new UnsupportedOperationException("Must define median!");
 	}
 }

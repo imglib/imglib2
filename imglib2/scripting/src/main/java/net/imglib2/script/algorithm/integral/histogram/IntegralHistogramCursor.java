@@ -8,9 +8,9 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.util.IntervalIndexer;
 
-/** A {@link RandomAccess} with dimensions N-1, over an {@link Img} of dimensions N
+/** A {@link Cursor} and {@link RandomAccess} with dimensions N-1, over an {@link Img} of dimensions N
  * that contains the {@link IntegralHistogram}. */
-public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point implements RandomAccess<Histogram>, Cursor<Histogram>
+public class IntegralHistogramCursor<T extends IntegerType<T> & NativeType<T>> extends Point implements RandomAccess<Histogram>, Cursor<Histogram>
 {
 	/** Index of last sample that can be retrieved. */
 	private final long lastIndex;
@@ -32,7 +32,15 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 	 * in the integralHistogram, and each dimension one less as well. */
 	private final long[] dimensions;
 
-	public Histograms(
+	/**
+	 * 
+	 * @param integralHistogram The {@link Img} containing the integral histogram.
+	 * @param histogram The {@link Histogram} to use.
+	 * @param radius The dimensions of the box to use, the radius being just half that value.
+	 * 
+	 * @see IntegralHistogram
+	 */
+	public IntegralHistogramCursor(
 			final Img<T> integralHistogram,
 			final Histogram histogram,
 			final long[] radius) {
@@ -60,7 +68,7 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 		// The histogram to return at every sample (at every call to get())
 		//this.hist = new long[(int)this.integralHistogram.dimension(this.integralHistogram.numDimensions() -1)];// the size is the number of histogram bins
 		
-		this.histogram = histogram;
+		this.histogram = histogram.clone();
 		
 		// N-dimensional corner coordinates, relative to any one pixel location
 		this.offsets = new Point[(int)Math.pow(2, numDimensions())];
@@ -127,13 +135,13 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 	}
 
 	@Override
-	public Histograms<T> copy() {
+	public IntegralHistogramCursor<T> copy() {
 		return copyRandomAccess();
 	}
 
 	@Override
-	public Histograms<T> copyRandomAccess() {
-		return new Histograms<T>(this.integralHistogram, histogram, radius);
+	public IntegralHistogramCursor<T> copyRandomAccess() {
+		return new IntegralHistogramCursor<T>(this.integralHistogram, histogram, radius);
 	}
 
 	@Override
@@ -169,7 +177,7 @@ public class Histograms<T extends IntegerType<T> & NativeType<T>> extends Point 
 	}
 
 	@Override
-	public Histograms<T> copyCursor() {
+	public IntegralHistogramCursor<T> copyCursor() {
 		return copy();
 	}
 }

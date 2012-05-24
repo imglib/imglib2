@@ -3,7 +3,7 @@ package net.imglib2.script.algorithm.integral.histogram.features;
 import net.imglib2.script.algorithm.integral.histogram.Histogram;
 import net.imglib2.type.numeric.RealType;
 
-public class IHMedian<T extends RealType<T>> extends IHAbstractFeature<T> {
+public class IHMedian<T extends RealType<T>> extends IHAbstractUnitaryFeature<T> {
 
 	public IHMedian() {}
 

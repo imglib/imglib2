@@ -9,7 +9,6 @@ import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.Unsigned12BitType;
-import net.imglib2.type.numeric.integer.UnsignedAnyBitType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -34,7 +33,7 @@ public class IntegralHistogram
 			final Img<T> img,
 			final Histogram histogram)
 	{
-		return create(img, histogram, (R) chooseType(computeBits(img)));
+		return create(img, histogram, (R) chooseBestType(computeBits(img)));
 	}
 
 	static public <T extends RealType<T>, R extends IntegerType<R> & NativeType<R>> Img<R> create(
@@ -71,7 +70,15 @@ public class IntegralHistogram
 		return integralHistogram;
 	}
 	
-	static private final <R extends RealType<R> & NativeType<R>> R chooseType(final int nBits) {
+	static private final <R extends RealType<R> & NativeType<R>> R chooseBestType(final int nBits) {
+		
+		if (nBits < 9) return (R) new UnsignedByteType();
+		else if (nBits< 13) return (R) new Unsigned12BitType();
+		else if (nBits < 17) return (R) new UnsignedShortType();
+		else if (nBits < 33) return (R) new UnsignedIntType();
+		else if (nBits < 65) return (R) new LongType();
+		else throw new IllegalArgumentException("Cannot do an histogram of " + nBits + " bits.");
+		/*
 		switch (nBits) {
 			case 8:
 				return (R) new UnsignedByteType();
@@ -86,6 +93,7 @@ public class IntegralHistogram
 			default:
 				return (R) new UnsignedAnyBitType(nBits);
 		}
+		*/
 	}
 
 	// TODO the maximum value cannot be captured unless one the bins is used for it.
