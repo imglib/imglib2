@@ -87,7 +87,7 @@ public class ExampleIntegralHistograms
 			final double median1 = ihMedian.get(h1);
 			ra.get().setReal(median1);
 			ra.move(1, histDim);
-			ra.get().setReal(ihStdDev.get(h1, median1));
+			ra.get().setReal(ihStdDev.get(h1, mean1));
 			
 			// Features for h2
 			ra.move(1, histDim);
@@ -101,7 +101,7 @@ public class ExampleIntegralHistograms
 			final double median2 = ihMedian.get(h2);
 			ra.get().setReal(median2);
 			ra.move(1, histDim);
-			ra.get().setReal(ihStdDev.get(h2, median2));
+			ra.get().setReal(ihStdDev.get(h2, mean2));
 
 			// Features combining both
 			ra.move(1, histDim);
