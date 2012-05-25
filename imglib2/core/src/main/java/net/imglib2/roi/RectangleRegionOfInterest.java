@@ -82,12 +82,12 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	/**
 	 * Write the origin position to this array
 	 * 
-	 * @param origin
+	 * @param org
 	 *            write position here
 	 */
-	public void getOrigin( final double[] origin )
+	public void getOrigin( final double[] org )
 	{
-		System.arraycopy( this.origin, 0, origin, 0, numDimensions() );
+		System.arraycopy( this.origin, 0, org, 0, numDimensions() );
 	}
 
 	/**
@@ -183,12 +183,12 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	/**
 	 * Copy the extents of the rectangle into the array provided
 	 * 
-	 * @param extent
+	 * @param ext
 	 *            on output, the extent of the rectangle
 	 */
-	public void getExtent( double[] extent )
+	public void getExtent( double[] ext )
 	{
-		System.arraycopy( this.extent, 0, extent, 0, numDimensions() );
+		System.arraycopy( this.extent, 0, ext, 0, numDimensions() );
 	}
 
 	/**
@@ -277,4 +277,15 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 		}
 	}
 
+	@Override
+	public void move(double displacement, int d) {
+		double newVal = getOrigin(d) + displacement;
+		setOrigin(newVal, d);
+	}
+	
+	@Override
+	public void move(double[] displacement) {
+		for (int i = 0; i < displacement.length; i++)
+			move(displacement[i],i);
+	}
 }

@@ -47,4 +47,7 @@ import net.imglib2.type.logic.BitType;
  * @author Lee Kamentsky
  */
 public interface RegionOfInterest extends RealRandomAccessibleRealInterval< BitType >
-{}
+{
+	void move(double displacement, int d);
+	void move(double[] displacement);
+}

@@ -93,6 +93,16 @@ public class TestAbstractRegionOfInterest {
 			end[1] = position[1];
 			return true;
 		}
+
+		@Override
+		public void move(double displacement, int d) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void move(double[] displacement) {
+			throw new UnsupportedOperationException();
+		}
 		
 	}
 

@@ -104,7 +104,7 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 * complicated operation involving division by the width if the number of
 	 * steps is greater.
 	 * 
-	 * @param steps
+	 * @param totalSteps
 	 *            - number of steps to move
 	 * @param position
 	 *            - the internal position which should be advanced by the number
@@ -113,8 +113,9 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 *            - the end position of the current raster on entry and on exit.
 	 * @return true if taking that number of steps still lands within the ROI.
 	 */
-	protected boolean jumpFwd( long steps, long[] position, long[] end )
+	protected boolean jumpFwd( long totalSteps, long[] position, long[] end )
 	{
+		long steps = totalSteps;
 		while ( true )
 		{
 			if ( position[ 0 ] + steps < end[ 0 ] )
@@ -206,7 +207,7 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 			public void localize( float[] pos )
 			{
 				for ( int d = 0; d < pos.length; d++ )
-					pos[ d ] = ( float ) this.position[ d ];
+					pos[ d ] = this.position[ d ];
 			}
 
 			@Override
@@ -234,7 +235,7 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 			@Override
 			public float getFloatPosition( int dim )
 			{
-				return ( float ) position[ dim ];
+				return position[ dim ];
 			}
 
 			@Override
@@ -495,8 +496,6 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 * default method acquires successive rasters using nextRaster to get a sum
 	 * of pixels. The implementer should consider overriding this to provide a
 	 * more efficient implementation.
-	 * 
-	 * @return
 	 */
 	protected long size()
 	{
@@ -569,6 +568,7 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 * @param minima
 	 * @param maxima
 	 */
+	@Override
 	protected void getRealExtrema( double[] minima, double[] maxima )
 	{
 		validateExtremaCache();
@@ -588,18 +588,19 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 * @param position
 	 *            - position that should be removed from the ROI.
 	 */
-	protected void remove( final long[] position )
-	{}
+	protected void remove( final long[] position ) {
+		/* default behavior is to do nothing */
+	}
 
 	private void validateExtremaCache()
 	{
 		if ( cached_max == null )
 		{
-			long[] cached_min = new long[ numDimensions() ];
-			long[] cached_max = new long[ numDimensions() ];
-			getExtrema( cached_min, cached_max );
-			this.cached_min = cached_min;
-			this.cached_max = cached_max;
+			long[] min = new long[ numDimensions() ];
+			long[] max = new long[ numDimensions() ];
+			getExtrema( min, max );
+			this.cached_min = min;
+			this.cached_max = max;
 		}
 	}
 
