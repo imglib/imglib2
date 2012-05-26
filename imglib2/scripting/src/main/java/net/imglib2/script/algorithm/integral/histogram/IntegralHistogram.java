@@ -238,10 +238,9 @@ public class IntegralHistogram
 			c.localize(position);
 			// Compute the bin to add to
 			// (First element is empty in the integral, so displace by 1)
-			position[0] += 1;
-			position[1] += 1;
+			position[0] += 1L;
+			position[1] += 1L;
 			position[2] = histogram.computeBin(c.get());
-			//System.out.println("position: " + position[0] + ", " + position[1] + ", " + position[2] + "; value: " + c.get().getRealDouble());
 			rh.setPosition(position);
 			rh.get().inc();
 		}

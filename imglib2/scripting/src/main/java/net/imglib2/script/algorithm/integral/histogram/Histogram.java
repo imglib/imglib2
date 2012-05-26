@@ -54,7 +54,7 @@ public abstract class Histogram<T extends RealType<T>>
 		this.accessBinValues = this.binValues.randomAccess();
 	}
 	
-	public abstract int computeBin(final T value);
+	public abstract long computeBin(final T value);
 	
 	public T binValue(final long index) {
 		this.accessBinValues.setPosition(index, 0);

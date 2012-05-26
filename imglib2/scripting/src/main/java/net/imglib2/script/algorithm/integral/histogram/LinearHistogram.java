@@ -36,8 +36,8 @@ public final class LinearHistogram<T extends RealType<T>> extends Histogram<T>
 	}
 
 	@Override
-	public final int computeBin(final T value) {
-		return (int)(((Math.min(dmax, Math.max(dmin, value.getRealDouble())) - dmin) / drange) * K + 0.5);
+	public final long computeBin(final T value) {
+		return (long)(((Math.min(dmax, Math.max(dmin, value.getRealDouble())) - dmin) / drange) * K + 0.5);
 	}
 
 	@Override
