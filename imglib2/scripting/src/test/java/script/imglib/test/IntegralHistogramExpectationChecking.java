@@ -4,10 +4,8 @@ import ij.ImageJ;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.exception.ImgLibException;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.algorithm.integral.histogram.IntegralHistogram;
@@ -22,7 +20,11 @@ import org.junit.Test;
 public class IntegralHistogramExpectationChecking {
 	
 	static public final void main(String[] arg) {
-		new IntegralHistogramExpectationChecking().testIntegralHistogram2dB();
+		IntegralHistogramExpectationChecking I = new IntegralHistogramExpectationChecking();
+		//I.testIntegralHistogram2dB();
+		//I.testIntegralHistogram1d();
+		I.testIntegralHistogram2d();
+		//I.testUnsignedAnyBitImg();
 	}
 
 	@Test
@@ -41,7 +43,7 @@ public class IntegralHistogramExpectationChecking {
 			if (0 == i % 2) ++next;
 		}
 		//
-		LinearHistogram lh = new LinearHistogram(16, 1, 0, 7);
+		LinearHistogram<UnsignedByteType> lh = new LinearHistogram<UnsignedByteType>(16, 1, new UnsignedByteType(0), new UnsignedByteType(7));
 		Img<? extends RealType<?>> ih = IntegralHistogram.create(img, lh);
 		
 		new ImageJ();
@@ -83,7 +85,7 @@ public class IntegralHistogramExpectationChecking {
 			c.get().setInteger(p[0] * p[1]);
 		}
 		// Create integral histogram with 10 bins
-		LinearHistogram lh = new LinearHistogram(10, 2, 0, 81);
+		LinearHistogram<UnsignedByteType> lh = new LinearHistogram<UnsignedByteType>(10, 2, new UnsignedByteType(0), new UnsignedByteType(81));
 		Img<? extends RealType<?>> ih = IntegralHistogram.create(img, lh);
 		new ImageJ();
 		try {
@@ -97,7 +99,7 @@ public class IntegralHistogramExpectationChecking {
 		try {
 			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop.tif");
 			// Integral histogram with 10 bins
-			LinearHistogram lh = new LinearHistogram(10, 2, 0, 255);
+			LinearHistogram<UnsignedByteType> lh = new LinearHistogram<UnsignedByteType>(10, 2, new UnsignedByteType(0), new UnsignedByteType(255));
 			Img<? extends RealType<?>> ih = IntegralHistogram.create(img, lh);
 			new ImageJ();
 			try {

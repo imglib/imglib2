@@ -62,7 +62,7 @@ public class TestHistograms {
 			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop-streched-smoothed.tif");
 			ImgLib.wrap(img, "Original").show();
 			long[] radius = new long[]{10, 10}; // radius=1 is equivalent to ImageJ's radius=1 in RankFilters
-			LinearHistogram lh = new LinearHistogram(256, img.numDimensions(), 0, 255);
+			LinearHistogram<UnsignedByteType> lh = new LinearHistogram<UnsignedByteType>(256, img.numDimensions(), new UnsignedByteType(0), new UnsignedByteType(255));
 			Img<UnsignedShortType> integralHistogram = IntegralHistogram.create(img, lh, new UnsignedShortType());
 			HistogramFeatures<UnsignedByteType, UnsignedShortType> features = new HistogramFeatures<UnsignedByteType, UnsignedShortType>(img, integralHistogram, lh, radius);
 			ImgLib.wrap(features, "Features for " + radius[0] + "x" + radius[1]).show();
@@ -78,10 +78,10 @@ public class TestHistograms {
 			ImgLib.wrap(img, "Original").show();
 			
 			long t0 = System.currentTimeMillis();
-			final double min = 0;
-			final double max = 255;
+			final UnsignedByteType min = new UnsignedByteType(0);
+			final UnsignedByteType max = new UnsignedByteType(255);
 			final int nBins = 128; // 32 delivers speeds close to ImageJ's when not using median
-			final LinearHistogram lh = new LinearHistogram(nBins, img.numDimensions(), min, max);
+			final LinearHistogram<UnsignedByteType> lh = new LinearHistogram<UnsignedByteType>(nBins, img.numDimensions(), min, max);
 			final Img<IntType> integralHistogram = IntegralHistogram.create(img, lh, new IntType());
 			System.out.println("Creating integral histogram took " + (System.currentTimeMillis() - t0) + " ms");
 			long[] radius = new long[]{25, 25}; // radius=1 is equivalent to ImageJ's radius=1 in RankFilters
@@ -154,9 +154,9 @@ public class TestHistograms {
 			e.printStackTrace();
 		}
 		// Histogram
-		double min = 1;
-		double max = 9;
-		LinearHistogram lh = new LinearHistogram(9, img.numDimensions(), min, max);
+		UnsignedByteType min = new UnsignedByteType(1);
+		UnsignedByteType max = new UnsignedByteType(9);
+		LinearHistogram<UnsignedByteType> lh = new LinearHistogram<UnsignedByteType>(9, img.numDimensions(), min, max);
 		Img<T> h = IntegralHistogram.create(img, lh);
 		
 		// Expected cummulative:
@@ -231,8 +231,8 @@ public class TestHistograms {
 		
 		// Histograms
 		long[] radius = new long[]{0, 0};
-		lh = new LinearHistogram(9, 2, min, max);
-		IntegralHistogramCursor<T> hs = new IntegralHistogramCursor<T>(h, lh, radius);
+		lh = new LinearHistogram<UnsignedByteType>(9, 2, min, max);
+		IntegralHistogramCursor<T, UnsignedByteType> hs = new IntegralHistogramCursor<T, UnsignedByteType>(h, lh, radius);
 		hs.setPosition(2, 0);
 		hs.setPosition(2, 1);
 		hist = hs.get().bins;
@@ -243,7 +243,7 @@ public class TestHistograms {
 		}
 		
 		radius = new long[]{1, 1}; // means 3x3 centered on the pixel
-		hs = new IntegralHistogramCursor<T>(h, lh, radius);
+		hs = new IntegralHistogramCursor<T, UnsignedByteType>(h, lh, radius);
 		hs.setPosition(2, 0);
 		hs.setPosition(2, 1);
 		hist = hs.get().bins;
@@ -264,7 +264,7 @@ public class TestHistograms {
 		}
 		
 		radius = new long[]{0, 0};
-		lh = new LinearHistogram(9, 2, 1, 9);
+		lh = new LinearHistogram<UnsignedByteType>(9, 2, new UnsignedByteType(1), new UnsignedByteType(9));
 		Img<UnsignedByteType> integralHistogram = IntegralHistogram.create(img, lh, new UnsignedByteType());
 		HistogramFeatures<UnsignedByteType, UnsignedByteType> features =
 				new HistogramFeatures<UnsignedByteType, UnsignedByteType>(img, integralHistogram, lh, radius);

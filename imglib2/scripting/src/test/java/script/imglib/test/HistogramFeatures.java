@@ -23,7 +23,7 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 	public HistogramFeatures(
 			final Img<T> img,
 			final Img<P> integralHistogram,
-			final Histogram histogram,
+			final Histogram<T> histogram,
 			final long[] radius) {
 		super(create(img, integralHistogram, histogram, radius));
 	}
@@ -32,7 +32,7 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 	Img<R> create(
 			final Img<R> img,
 			final Img<P> integralHistogram,
-			final Histogram histogram,
+			final Histogram<R> histogram,
 			final long[] radius)
 	{	
 		final long[] dims = new long[img.numDimensions() + 1];
@@ -43,15 +43,17 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 		final RandomAccess<R> fr = features.randomAccess();
 		
 		// One histogram per pixel position, representing the histogram of the window centered at that pixel
-		final IntegralHistogramCursor<P> h = new IntegralHistogramCursor<P>(integralHistogram, histogram, radius);
+		final IntegralHistogramCursor<P, R> h = new IntegralHistogramCursor<P, R>(integralHistogram, histogram, radius);
 		
 		final int lastDimension = fr.numDimensions() -1;
 		
-		final IHMin<DoubleType> ihMin = new IHMin<DoubleType>();
-		final IHMax<DoubleType> ihMax = new IHMax<DoubleType>();
-		final IHMean<DoubleType> ihMean = new IHMean<DoubleType>();
-		final IHMedian<DoubleType> ihMedian = new IHMedian<DoubleType>();
-		final IHStdDev<DoubleType> ihStdDev = new IHStdDev<DoubleType>();
+		final IHMin<R> ihMin = new IHMin<R>();
+		final IHMax<R> ihMax = new IHMax<R>();
+		final IHMean<R, DoubleType> ihMean = new IHMean<R, DoubleType>(new DoubleType());
+		final IHMedian<R> ihMedian = new IHMedian<R>();
+		final IHStdDev<R, DoubleType> ihStdDev = new IHStdDev<R, DoubleType>(new DoubleType());
+		
+		final R tmp = img.firstElement().createVariable();
 		
 		while (h.hasNext()) {
 			h.fwd();
@@ -60,13 +62,7 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 			}
 			// Compute features: gets put into the histogram, which is reused,
 			// but the local pointer helps performance
-			final Histogram hist = h.get();
-			
-			double imgMin = ihMin.get(hist);
-			double imgMax = ihMax.get(hist);
-			double imgMean = ihMean.get(hist);
-			double imgMedian = ihMedian.get(hist);
-			double imgStdDev = ihStdDev.get(hist, imgMedian);
+			final Histogram<R> hist = h.get();
 
 			// TODO above, the features should be composable, so that some features depend on others
 			// like stdDev depends on the median (or the mean).
@@ -75,15 +71,16 @@ public class HistogramFeatures<T extends RealType<T> & NativeType<T>, P extends 
 			
 			// Store
 			fr.setPosition(0, lastDimension);
-			fr.get().setReal(imgMin);
+			ihMin.compute(hist, fr.get());
 			fr.move(1, lastDimension);
-			fr.get().setReal(imgMax);
+			ihMax.compute(hist, fr.get());
 			fr.move(1, lastDimension);
-			fr.get().setReal(imgMean);
+			ihMean.compute(hist, fr.get());
 			fr.move(1, lastDimension);
-			fr.get().setReal(imgMedian);
+			ihMedian.compute(hist, fr.get());
+			tmp.set(fr.get()); // store the median
 			fr.move(1, lastDimension);
-			fr.get().setReal(imgStdDev);
+			ihStdDev.compute(hist, tmp, fr.get());
 		}
 
 		return features;

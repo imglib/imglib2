@@ -6,11 +6,20 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.IntervalIndexer;
 
-/** A {@link Cursor} and {@link RandomAccess} with dimensions N-1, over an {@link Img} of dimensions N
- * that contains the {@link IntegralHistogram}. */
-public class IntegralHistogramCursor<T extends IntegerType<T> & NativeType<T>> extends Point implements RandomAccess<Histogram>, Cursor<Histogram>
+/**
+ * A {@link Cursor} and {@link RandomAccess} with dimensions N-1, over an {@link Img} of dimensions N
+ * that contains the {@link IntegralHistogram}.
+ * 
+ * @author Albert Cardona
+ *
+ * @param <T> The type of the bins, containing the counts.
+ * @param <R> The type of the image from which the {@link Histogram} is computed.
+ */
+public class IntegralHistogramCursor<T extends IntegerType<T> & NativeType<T>, R extends RealType<R>>
+extends Point implements RandomAccess<Histogram<R>>, Cursor<Histogram<R>>
 {
 	/** Index of last sample that can be retrieved. */
 	private final long lastIndex;
@@ -21,7 +30,7 @@ public class IntegralHistogramCursor<T extends IntegerType<T> & NativeType<T>> e
 	/** Radius in each dimension. */
 	private final long[] radius;
 	/** Reusable histogram, returned at every call to get(). */
-	private final Histogram histogram;
+	private final Histogram<R> histogram;
 	/** All the corner points from which the histogram is computed.
 	 * Derived from window and specified as relative positive and negative offsets for each dimension. */
 	private final Point[] offsets;
@@ -42,7 +51,7 @@ public class IntegralHistogramCursor<T extends IntegerType<T> & NativeType<T>> e
 	 */
 	public IntegralHistogramCursor(
 			final Img<T> integralHistogram,
-			final Histogram histogram,
+			final Histogram<R> histogram,
 			final long[] radius) {
 		super(integralHistogram.numDimensions() -1);
 		this.integralHistogram = integralHistogram;
@@ -108,7 +117,7 @@ public class IntegralHistogramCursor<T extends IntegerType<T> & NativeType<T>> e
 
 	/** Returns the histogram at each location. The same instance of {@code Img<T>} is returned every time. */
 	@Override
-	public Histogram get() {
+	public Histogram<R> get() {
 		// Set all bins to zero
 		histogram.clearBins();
 		// Setup to compute cell dimensions
@@ -135,13 +144,13 @@ public class IntegralHistogramCursor<T extends IntegerType<T> & NativeType<T>> e
 	}
 
 	@Override
-	public IntegralHistogramCursor<T> copy() {
+	public IntegralHistogramCursor<T, R> copy() {
 		return copyRandomAccess();
 	}
 
 	@Override
-	public IntegralHistogramCursor<T> copyRandomAccess() {
-		return new IntegralHistogramCursor<T>(this.integralHistogram, histogram, radius);
+	public IntegralHistogramCursor<T, R> copyRandomAccess() {
+		return new IntegralHistogramCursor<T, R>(this.integralHistogram, histogram, radius);
 	}
 
 	@Override
@@ -166,7 +175,7 @@ public class IntegralHistogramCursor<T extends IntegerType<T> & NativeType<T>> e
 	}
 
 	@Override
-	public Histogram next() {
+	public Histogram<R> next() {
 		fwd();
 		return get();
 	}
@@ -177,7 +186,7 @@ public class IntegralHistogramCursor<T extends IntegerType<T> & NativeType<T>> e
 	}
 
 	@Override
-	public IntegralHistogramCursor<T> copyCursor() {
+	public IntegralHistogramCursor<T, R> copyCursor() {
 		return copy();
 	}
 }

@@ -31,14 +31,14 @@ public class IntegralHistogram
 
 	static public <T extends RealType<T>, R extends IntegerType<R> & NativeType<R>> Img<R> create(
 			final Img<T> img,
-			final Histogram histogram)
+			final Histogram<T> histogram)
 	{
 		return create(img, histogram, (R) chooseBestType(computeBits(img)));
 	}
 
 	static public <T extends RealType<T>, R extends IntegerType<R> & NativeType<R>> Img<R> create(
 			final Img<T> img,
-			final Histogram histogram,
+			final Histogram<T> histogram,
 			final R type)
 	{
 		// Sanity check
@@ -113,7 +113,7 @@ public class IntegralHistogram
 	static private final <T extends RealType<T>, R extends RealType<R> & NativeType<R>> void populate1(
 			final Img<R> integralHistogram,
 			final Img<T> img,
-			final Histogram histogram)
+			final Histogram<T> histogram)
 	{
 		final Cursor<T> c = img.cursor();
 		final RandomAccess<R> rh = integralHistogram.randomAccess();
@@ -126,7 +126,7 @@ public class IntegralHistogram
 			// Compute the bin to add to
 			// (First element is empty in the integral, so displace by 1)
 			position[0] += 1;
-			position[1] = histogram.computeBin(c.get().getRealDouble());
+			position[1] = histogram.computeBin(c.get());
 			rh.setPosition(position);
 			rh.get().inc();
 		}
@@ -159,7 +159,7 @@ public class IntegralHistogram
 	static private final <T extends RealType<T>, R extends RealType<R> & NativeType<R>> void populate2(
 			final Img<R> integralHistogram,
 			final Img<T> img,
-			final Histogram histogram )
+			final Histogram<T> histogram )
 	{
 		final Cursor<T> c = img.cursor();
 		final RandomAccess<R> rh = integralHistogram.randomAccess();
@@ -178,7 +178,7 @@ public class IntegralHistogram
 			// (First element is empty in the integral, so displace by 1)
 			position[0] += 1;
 			position[1] += 1;
-			position[2] = histogram.computeBin(c.get().getRealDouble());
+			position[2] = histogram.computeBin(c.get());
 			//System.out.println("position: " + position[0] + ", " + position[1] + ", " + position[2] + "; value: " + c.get().getRealDouble());
 			rh.setPosition(position);
 			rh.get().inc();

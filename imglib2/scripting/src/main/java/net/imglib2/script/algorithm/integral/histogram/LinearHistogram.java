@@ -1,33 +1,47 @@
 package net.imglib2.script.algorithm.integral.histogram;
 
+import net.imglib2.type.numeric.RealType;
 
-public final class LinearHistogram extends Histogram
+/**
+ * 
+ * @author Albert Cardona
+ *
+ * @param <T> The {@link RealType} of the data of the image from which the histogram is computed.
+ */
+public final class LinearHistogram<T extends RealType<T>> extends Histogram<T>
 {
 	
-	private final double K;
+	// For clarity and perhaps for performance
+	private final double K, dmin, dmax, drange;
 	
 	/** @see Histogram */
 	public LinearHistogram(
 			final int nBins,
 			final int numDimensions,
-			final double min,
-			final double max)
+			final T min,
+			final T max)
 	{
 		super(nBins, numDimensions, min, max);
 		// Compute values of each bin
-		this.K = bins.length -1;
-		for (int i=0; i<binValues.length; ++i) {
-			binValues[i] = min + (i / this.K) * range;
+		this.K = nBins -1;
+		int i = -1;
+		for (final T bin : binValues) {
+			bin.set(range);
+			bin.mul(++i / this.K);
+			bin.add(min);
 		}
+		dmin = min.getRealDouble();
+		dmax = max.getRealDouble();
+		drange = range.getRealDouble();
 	}
 
 	@Override
-	public final int computeBin(final double value) {
-		return (int)(((Math.min(max, Math.max(min, value)) - min) / range) * K + 0.5);
+	public final int computeBin(final T value) {
+		return (int)(((Math.min(dmax, Math.max(dmin, value.getRealDouble())) - dmin) / drange) * K + 0.5);
 	}
 
 	@Override
-	public Histogram clone() {
-		return new LinearHistogram(bins.length, maxPositions.length, min, max);
+	public Histogram<T> clone() {
+		return new LinearHistogram<T>(nBins(), maxPositions.length, min, max);
 	}
 }
