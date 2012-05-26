@@ -4,7 +4,6 @@ import ij.ImageJ;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.algorithm.integral.histogram.Histogram;
