@@ -94,14 +94,7 @@ public class IntegralHistogram
 				return (R) new UnsignedAnyBitType(nBits);
 		}
 		*/
-	}
-
-	// TODO the maximum value cannot be captured unless one the bins is used for it.
-	// This means the bins span from 0 to 1*binSize, 2*binSize ... (nBins-1)*binSize, nBins
-	// .. where the last one has no width, it's only for the maximum value.
-	// Either that or values are put into bins by rounding towards nearest bin,
-	// where bins are then points.
-	
+	}	
 	
 	/**
 	 * Integral histogram of a 1d {@link Img}.
