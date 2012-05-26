@@ -6,13 +6,14 @@ public final class LinearHistogram extends Histogram
 	
 	private final double K;
 	
+	/** @see Histogram */
 	public LinearHistogram(
-			final long[] bins,
+			final int nBins,
 			final int numDimensions,
 			final double min,
 			final double max)
 	{
-		super(bins, numDimensions, min, max);
+		super(nBins, numDimensions, min, max);
 		// Compute values of each bin
 		this.K = bins.length -1;
 		for (int i=0; i<binValues.length; ++i) {
@@ -27,6 +28,6 @@ public final class LinearHistogram extends Histogram
 
 	@Override
 	public Histogram clone() {
-		return new LinearHistogram(bins.clone(), maxPositions.length, min, max);
+		return new LinearHistogram(bins.length, maxPositions.length, min, max);
 	}
 }

@@ -41,7 +41,7 @@ public class IntegralHistogramExpectationChecking {
 			if (0 == i % 2) ++next;
 		}
 		//
-		LinearHistogram lh = new LinearHistogram(new long[16], 1, 0, 7);
+		LinearHistogram lh = new LinearHistogram(16, 1, 0, 7);
 		Img<? extends RealType<?>> ih = IntegralHistogram.create(img, lh);
 		
 		new ImageJ();
@@ -83,7 +83,7 @@ public class IntegralHistogramExpectationChecking {
 			c.get().setInteger(p[0] * p[1]);
 		}
 		// Create integral histogram with 10 bins
-		LinearHistogram lh = new LinearHistogram(new long[10], 2, 0, 81);
+		LinearHistogram lh = new LinearHistogram(10, 2, 0, 81);
 		Img<? extends RealType<?>> ih = IntegralHistogram.create(img, lh);
 		new ImageJ();
 		try {
@@ -97,7 +97,7 @@ public class IntegralHistogramExpectationChecking {
 		try {
 			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop.tif");
 			// Integral histogram with 10 bins
-			LinearHistogram lh = new LinearHistogram(new long[10], 2, 0, 255);
+			LinearHistogram lh = new LinearHistogram(10, 2, 0, 255);
 			Img<? extends RealType<?>> ih = IntegralHistogram.create(img, lh);
 			new ImageJ();
 			try {

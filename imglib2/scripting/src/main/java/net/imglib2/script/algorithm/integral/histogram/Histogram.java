@@ -10,13 +10,20 @@ public abstract class Histogram
 	public final long[] maxPositions, minPositions;
 	public long nPixels;
 
+	/**
+	 * 
+	 * @param nBins The desired number of bins.
+	 * @param numDimensions The dimensions of the image region from which the histogram is computed.
+	 * @param min The minimum value, from which the first bin starts; all values under min will be added to the first bin.
+	 * @param max The maximum value, at which the last bin ends; all values over max will be added to the last bin.
+	 */
 	public Histogram(
-			final long[] bins,
+			final int nBins,
 			final int numDimensions,
 			final double min,
 			final double max)
 	{
-		this.bins = bins;
+		this.bins = new long[nBins];
 		this.maxPositions = new long[numDimensions];
 		this.minPositions = new long[numDimensions];
 		this.min = min;

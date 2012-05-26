@@ -62,7 +62,7 @@ public class TestHistograms {
 			Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge-crop-streched-smoothed.tif");
 			ImgLib.wrap(img, "Original").show();
 			long[] radius = new long[]{10, 10}; // radius=1 is equivalent to ImageJ's radius=1 in RankFilters
-			LinearHistogram lh = new LinearHistogram(new long[256], 2, 0, 255);
+			LinearHistogram lh = new LinearHistogram(256, img.numDimensions(), 0, 255);
 			Img<UnsignedShortType> integralHistogram = IntegralHistogram.create(img, lh, new UnsignedShortType());
 			HistogramFeatures<UnsignedByteType, UnsignedShortType> features = new HistogramFeatures<UnsignedByteType, UnsignedShortType>(img, integralHistogram, lh, radius);
 			ImgLib.wrap(features, "Features for " + radius[0] + "x" + radius[1]).show();
@@ -81,7 +81,7 @@ public class TestHistograms {
 			final double min = 0;
 			final double max = 255;
 			final int nBins = 128; // 32 delivers speeds close to ImageJ's when not using median
-			final LinearHistogram lh = new LinearHistogram(new long[nBins], 2, min, max);
+			final LinearHistogram lh = new LinearHistogram(nBins, img.numDimensions(), min, max);
 			final Img<IntType> integralHistogram = IntegralHistogram.create(img, lh, new IntType());
 			System.out.println("Creating integral histogram took " + (System.currentTimeMillis() - t0) + " ms");
 			long[] radius = new long[]{25, 25}; // radius=1 is equivalent to ImageJ's radius=1 in RankFilters
@@ -156,7 +156,7 @@ public class TestHistograms {
 		// Histogram
 		double min = 1;
 		double max = 9;
-		LinearHistogram lh = new LinearHistogram(new long[9], 2, min, max);
+		LinearHistogram lh = new LinearHistogram(9, img.numDimensions(), min, max);
 		Img<T> h = IntegralHistogram.create(img, lh);
 		
 		// Expected cummulative:
@@ -231,7 +231,7 @@ public class TestHistograms {
 		
 		// Histograms
 		long[] radius = new long[]{0, 0};
-		lh = new LinearHistogram(new long[9], 2, min, max);
+		lh = new LinearHistogram(9, 2, min, max);
 		IntegralHistogramCursor<T> hs = new IntegralHistogramCursor<T>(h, lh, radius);
 		hs.setPosition(2, 0);
 		hs.setPosition(2, 1);
@@ -264,7 +264,7 @@ public class TestHistograms {
 		}
 		
 		radius = new long[]{0, 0};
-		lh = new LinearHistogram(new long[9], 2, 1, 9);
+		lh = new LinearHistogram(9, 2, 1, 9);
 		Img<UnsignedByteType> integralHistogram = IntegralHistogram.create(img, lh, new UnsignedByteType());
 		HistogramFeatures<UnsignedByteType, UnsignedByteType> features =
 				new HistogramFeatures<UnsignedByteType, UnsignedByteType>(img, integralHistogram, lh, radius);

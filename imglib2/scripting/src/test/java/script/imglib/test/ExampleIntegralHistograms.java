@@ -24,22 +24,23 @@ public class ExampleIntegralHistograms
 {
 	public ExampleIntegralHistograms() throws Exception {
 		// Open an image
-		Img<UnsignedByteType> img = new ImgOpener().openImg("/home/albert/Desktop/t2/bridge.tif");
+		String src = "/home/albert/lab/TEM/abd/microvolumes/Seg/180-220-int/180-220-int-00.tif";
+		Img<UnsignedByteType> img = new ImgOpener().openImg(src);
 
 		// Create an histogram
 		int nBins = 128; // overkill for most purposes
 		double min = 0;
 		double max = 255;
-		Histogram histogram = new LinearHistogram(new long[nBins], img.numDimensions(), min, max);
+		Histogram histogram = new LinearHistogram(nBins, img.numDimensions(), min, max);
 		
 		// Create an integral histogram with a storage type sufficient for the dimensions of img
 		Img<IntType> integralHistogram = IntegralHistogram.create(img, histogram, new IntType());
 		
 		// Create cursors over the integral histogram, with different windows:
-		long[] radius1 = new long[]{25, 25};
+		long[] radius1 = new long[]{5, 5};
 		IntegralHistogramCursor<IntType> hs1 = new IntegralHistogramCursor<IntType>(integralHistogram, histogram, radius1);
 		
-		long[] radius2 = new long[]{50, 50};
+		long[] radius2 = new long[]{10, 10};
 		IntegralHistogramCursor<IntType> hs2 = new IntegralHistogramCursor<IntType>(integralHistogram, histogram, radius2);
 		
 		// Define a set of features to use
@@ -71,7 +72,8 @@ public class ExampleIntegralHistograms
 			
 			final Histogram h1 = hs1.get();
 			final Histogram h2 = hs2.get();
-			
+
+			// The original image
 			ra.setPosition(0, dims.length -1);
 			ra.get().setReal(c.get().get());
 			
