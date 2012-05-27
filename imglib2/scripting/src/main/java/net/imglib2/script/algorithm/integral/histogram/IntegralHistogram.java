@@ -12,6 +12,7 @@ import net.imglib2.type.numeric.integer.Unsigned12BitType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.util.Util;
 
 /**
  * 
@@ -53,8 +54,6 @@ public class IntegralHistogram
 		dims[dims.length -1] = histogram.nBins();
 		// Create an image to hold the integral histogram
 		final Img<R> integralHistogram = type.createSuitableNativeImg(new ArrayImgFactory<R>(), dims);
-
-		System.out.println("bits per pixel: " + integralHistogram.firstElement().getBitsPerPixel());
 		
 		switch ( img.numDimensions() ) {
 			case 1:
@@ -129,12 +128,12 @@ public class IntegralHistogram
 		final R sum = integralHistogram.firstElement().createVariable();
 		// Start at 1; first value is the one extra and always zero
 		// For every bin of the histogram:
-		for (int dh = 0; dh < integralHistogram.dimension(1); ++dh) {
-			rh.setPosition(dh, 1);
+		for (long bin = 0; bin < integralHistogram.dimension(1); ++bin) {
+			rh.setPosition(bin, 1);
 			sum.setZero();
 			// For every value in the original image
-			for (int d0 = 1; d0 < integralHistogram.dimension(0); ++d0) {
-				rh.setPosition(d0, 0);
+			for (long pos0 = 1; pos0 < integralHistogram.dimension(0); ++pos0) {
+				rh.setPosition(pos0, 0);
 				sum.add(rh.get());
 				rh.get().set(sum);
 			}
@@ -158,11 +157,6 @@ public class IntegralHistogram
 		final Cursor<T> c = img.cursor();
 		final RandomAccess<R> rh = integralHistogram.randomAccess();
 		final long[] position = new long[ integralHistogram.numDimensions() ];
-
-		//System.out.println("dimensions of the img: " + img.dimension(0) + " x " + img.dimension(1));
-		//System.out.println("nBins: " + nBins + ", min, max: "+ min + "," + max);
-		//System.out.println("dimensions of integralHistogram: " + integralHistogram.dimension(0) + " x " + integralHistogram.dimension(1) + " x " + integralHistogram.dimension(2));
-		
 		
 		// 1. For each pixel in the original image, add 1 to its corresponding bin in the histogram at that pixel
 		while (c.hasNext()) {
@@ -173,7 +167,6 @@ public class IntegralHistogram
 			position[0] += 1;
 			position[1] += 1;
 			position[2] = histogram.computeBin(c.get());
-			//System.out.println("position: " + position[0] + ", " + position[1] + ", " + position[2] + "; value: " + c.get().getRealDouble());
 			rh.setPosition(position);
 			rh.get().inc();
 		}
@@ -189,10 +182,10 @@ public class IntegralHistogram
 			// Integrate one dimension at a time
 			// Add first in dimension 0
 			rh.setPosition(1L, 1);
-			for (long d1 = 1; d1 < integralHistogram.dimension(1); ++d1) { // for every row
+			for (long pos1 = 1; pos1 < integralHistogram.dimension(1); ++pos1) { // for every row
 				sum.setZero();
 				rh.setPosition(1L, 0);
-				for (long d0 = 1; d0 < integralHistogram.dimension(0); ++d0) { // for every element in row
+				for (long pos0 = 1; pos0 < integralHistogram.dimension(0); ++pos0) { // for every element in row
 					sum.add(rh.get());
 					rh.get().set(sum);
 					rh.move(1L, 0);
@@ -201,10 +194,10 @@ public class IntegralHistogram
 			}
 			// Then add in dimension 1
 			rh.setPosition(1L, 0);
-			for (long d0 = 1; d0 < integralHistogram.dimension(0); ++d0) { // for every column
+			for (long pos0 = 1; pos0 < integralHistogram.dimension(0); ++pos0) { // for every column
 				sum.setZero();
 				rh.setPosition(1L, 1);
-				for (long d1 = 1; d1 < integralHistogram.dimension(1); ++d1) { // for every element in column
+				for (long pos1 = 1; pos1 < integralHistogram.dimension(1); ++pos1) { // for every element in column
 					sum.add(rh.get());
 					rh.get().set(sum);
 					rh.move(1L, 1);
@@ -233,14 +226,16 @@ public class IntegralHistogram
 		
 		
 		// 1. For each pixel in the original image, add 1 to its corresponding bin in the histogram at that pixel
+		final int histIndex = position.length -1;
 		while (c.hasNext()) {
 			c.fwd();
 			c.localize(position);
 			// Compute the bin to add to
 			// (First element is empty in the integral, so displace by 1)
-			position[0] += 1L;
-			position[1] += 1L;
-			position[2] = histogram.computeBin(c.get());
+			for (int k=0; k<histIndex; ++k) {
+				position[k] += 1L;
+			}
+			position[histIndex] = histogram.computeBin(c.get());
 			rh.setPosition(position);
 			rh.get().inc();
 		}
@@ -251,40 +246,81 @@ public class IntegralHistogram
 		final R sum = integralHistogram.firstElement().createVariable();
 		// Start at 1; first value is the one extra and always zero, for all dimensions except the histogram dimension
 		final int lastDimensionIndex = integralHistogram.numDimensions() -1; // the dimension containing the histogram bins
+		// The dimensions that are neither the rowDimension nor the histogram bins 
+		final int[] rowDims = new int[lastDimensionIndex -1];
 		// For every bin of the histogram:
-		for (int bin = 0; bin < integralHistogram.dimension(lastDimensionIndex); ++bin) {
+		for (long bin = 0; bin < integralHistogram.dimension(lastDimensionIndex); ++bin) {
 			rh.setPosition(bin, lastDimensionIndex);
 			// Integrate one dimension at a time
 			//
 			// 'rowDimension' is the dimension over which the interval is integrated (a row, a column, etc).
-			// 'd' is the current dimension over which the next interval is found, and that is not the rowDimension.
 			//
-			for (int rowDimension = 0, d = 0; rowDimension < lastDimensionIndex; ++rowDimension, d = 0) {
-				// Reset
+			for (int rowDimension = 0; rowDimension < lastDimensionIndex; ++rowDimension) {
+				// Reset position
 				for (int i=0; i<lastDimensionIndex; ++i) {
-					rh.setPosition(1, i);
+					rh.setPosition(1L, i);
 				}
 				
-				while (d < lastDimensionIndex) {
-					if (d == rowDimension) ++d;
-					
+				// Prepare the set of dimensions to iterate over
+				for (int i=0, k=0; i<rowDims.length; ++i, ++k) {
+					if (i == rowDimension) ++k;
+					rowDims[i] = k;
+				}
+
+				// Iterate over all dimensions other than rowDimension
+				rows: while (true) {
 					// Integrate an interval over rowDimension
 					sum.setZero();
 					rh.setPosition(1L, rowDimension);
-					for (long i = 0; i < integralHistogram.dimension(rowDimension) -1L; ++i) {
+					for (long i = 1; i < integralHistogram.dimension(rowDimension); ++i) {
 						sum.add(rh.get());
 						rh.get().set(sum);
 						rh.move(1L, rowDimension);
 					}
 					
 					// Advance to the next interval to integrate
-					rh.move(1L, d);
-					if (rh.getLongPosition(d) == integralHistogram.dimension(d)) {
-						// Reset the position for the current d
-						rh.setPosition(0L, d);
-						// ... and advance d
-						++d;
+					/*// works but a tiny bit slower than the rowDims approach
+					for (int k=0; k<lastDimensionIndex; ++k) {
+						if (k == rowDimension) {
+							// If last, end
+							if (k == lastDimensionIndex -1) break rows;
+							// Else, skip the rowDimension
+							continue;
+						}
+						// Advance to the next interval to integrate
+						rh.move(1L, k);
+						// If beyond bounds in the k dimension
+						if (rh.getLongPosition(k) == integralHistogram.dimension(k)) {
+							// If k dimension was last, end
+							if (k == lastDimensionIndex -1) {
+								break rows;
+							}
+							// Reset the k dimension
+							rh.setPosition(1L, k);
+							// Go to the next
+							continue;
+						}
+						// Else integrate the next interval
+						break;
 					}
+					*/
+					
+					for (int i=0; i<rowDims.length; ++i) {
+						// Advance to the next interval to integrate
+						rh.move(1L, rowDims[i]);
+						// If beyond bounds in the d dimension
+						if (rh.getLongPosition(rowDims[i]) == integralHistogram.dimension(rowDims[i])) {
+							// Reset the d dimension
+							rh.setPosition(1L, rowDims[i]);
+							// Advance the next dimension
+							continue;
+						}
+						// Else integrate the next interval
+						continue rows;
+					}
+					
+					// Done
+					break;
 				}
 			}
 		}
