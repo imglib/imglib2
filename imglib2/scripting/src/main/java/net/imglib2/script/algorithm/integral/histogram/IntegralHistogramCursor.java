@@ -109,6 +109,11 @@ extends Point implements RandomAccess<Histogram<R>>, Cursor<Histogram<R>>
 			// Set the proper sign
 			signs[o] = signs[o] % 2 != 0 ? -1 : 1;
 		}
+		
+		// DEBUG: print corners and signs
+		//for (int o=0; o<offsets.length; ++o) {
+		//	System.out.println(o + ": " + signs[o] + ", " + offsets[o].toString());
+		//}
 	}
 
 	private final long inside(final long pos, final int d) {
