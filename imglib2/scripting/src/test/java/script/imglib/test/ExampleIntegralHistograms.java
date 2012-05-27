@@ -1,6 +1,5 @@
 package script.imglib.test;
 
-import ij.CompositeImage;
 import ij.ImageJ;
 import ij.ImagePlus;
 import net.imglib2.Cursor;
@@ -11,8 +10,8 @@ import net.imglib2.img.imageplus.ImagePlusImgFactory;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.algorithm.integral.histogram.Histogram;
-import net.imglib2.script.algorithm.integral.histogram.IntegralHistogramCursor;
 import net.imglib2.script.algorithm.integral.histogram.IntegralHistogram;
+import net.imglib2.script.algorithm.integral.histogram.IntegralHistogramCursor;
 import net.imglib2.script.algorithm.integral.histogram.LinearHistogram;
 import net.imglib2.script.algorithm.integral.histogram.features.IHMax;
 import net.imglib2.script.algorithm.integral.histogram.features.IHMean;
