@@ -266,7 +266,6 @@ public class IntegralHistogram
 				}
 
 				// Iterate over all dimensions other than rowDimension
-				//rows: while (rh.getLongPosition(rowDims[rowDims.length-1]) < integralHistogram.dimension(rowDims[rowDims.length-1])) {
 				rows: while (true) {
 					// Integrate an interval over rowDimension
 					sum.setZero();
