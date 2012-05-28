@@ -102,7 +102,7 @@ public class CompareIntegralImages
 			
 			long t2 = System.currentTimeMillis();
 			
-			final FastIntegralImg<T, I> fii = new FastIntegralImg<T, I>(img, integralType.createVariable(), converter);
+			final FastIntegralImg<T, I> fii = new FastIntegralImg<T, I>(img, integralType.createVariable());
 			
 			long t3 = System.currentTimeMillis();
 			

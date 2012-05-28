@@ -18,6 +18,7 @@ import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
@@ -26,6 +27,7 @@ import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.RealSum;
 import net.imglib2.view.Views;
 
 /**
@@ -38,53 +40,135 @@ import net.imglib2.view.Views;
  *  13 ms for special-purpose 2d method when both images are backed up by arrays.
  * 
  * There are special-purpose methods for 2d images that are backed up by arrays, and whose dimensions
- * are under {@link Integer#MAX_VALUE}, whose type is {@link UnsignedByteType} or {@link UnsignedShortType},
- * and whose target integral image type is {@link LongType} or {@link UnsignedIntType}.
+ * are under {@link Integer#MAX_VALUE}, for the following type combinations:
+ * 
+ * 1) Input {@link Img} of type {@link UnsignedByteType} and integral image of type {@link UnsignedIntType};
+ * 2) Input {@link Img} of type {@link UnsignedByteType} and integral image of type {@link UnsignedLongType};
+ * 3) Input {@link Img} of type {@link UnsignedShortType} and integral image of type {@link UnsignedIntType};
+ * 4) Input {@link Img} of type {@link UnsignedShortType} and integral image of type {@link UnsignedLongType};
+ * 5) Input {@link Img} of type {@link FloatType} and integral image of type {@link DoubleType};
  * 
  * For these special-purpose methods, the converter is ignored.
  * 
  * @author Albert Cardona
  *
- * @param <R>
- * @param <T>
+ * @param <R> The {@link RealType} of the input {@link Img}.
+ * @param <T> The {@link RealType} of the integral {@link Img}.
  */
 public class FastIntegralImg<R extends RealType<R>, T extends NativeType<T> & NumericType<T>> extends ImgProxy<T>
 {
+	/** Chooses the smallest type possible to hold the sums; may have to iterate all values and sum them to find out. */
+	@SuppressWarnings("unchecked")
+	public FastIntegralImg(final Img<R> img) {
+		super(create(img, (T) computeSmallestType(img), null));
+	}
+	
 	/** Chooses the smallest type possible to hold the sums. */
 	@SuppressWarnings("unchecked")
 	public FastIntegralImg(final Img<R> img, final Converter<R, T> converter) {
-		this(img, (T) chooseType(img), converter);
-	}
-	
-	@SuppressWarnings("unchecked")
-	private static final <R extends RealType<R>, T extends NativeType<T> & NumericType<T>> T chooseType(final Img<R> img) {
-		final long maxSum = (long) (img.size() * (Math.pow(2, img.firstElement().getBitsPerPixel()) -1));
-		if (maxSum < Math.pow(2, 8)) return (T) new UnsignedByteType();
-		if (maxSum < Math.pow(2, 16)) return (T) new UnsignedShortType();
-		if (maxSum < Math.pow(2, 32)) return (T) new UnsignedIntType();
-		if (maxSum < Math.pow(2, 64)) return (T) new LongType();
-		throw new UnsupportedOperationException("Target image is too large!");
+		super(create(img, (T) computeSmallestType(img), converter));
 	}
 
+
+	/**
+	 * 
+	 * @param img The input {@link Img}.
+	 * @param type The type of {@param img}.
+	 */
+	public FastIntegralImg(final Img<R> img, final T type) {
+		super(create(img, type, null));
+	}
+
+	/**
+	 * 
+	 * @param img The input {@link Img}.
+	 * @param type The type of {@param img}.
+	 * @param converter How to read out {@param img} and write it to the integral image.
+	 */
 	public FastIntegralImg(final Img<R> img, final T type, final Converter<R, T> converter) {
 		super(create(img, type, converter));
 	}
 	
+	/**
+	 * Determine the smallest type that will correctly store the sums.
+	 * For {@link Img} whose type has integer precision, the largest type is {@link LongType}.
+	 * For {@link Img} whose type has floating-point precision, the largest type is {@link DoubleType}.
+	 * 
+	 * @param img The input {@link Img}.
+	 * @return
+	 */
+	static public final <R extends RealType<R>, T extends NativeType<T> & NumericType<T>> T computeSmallestType(final Img<R> img) {
+		final R type = img.firstElement();
+		final long maxSum = (long) (img.size() * (Math.pow(2, type.getBitsPerPixel()) -1));
+		T smallest = chooseSmallestType(type, maxSum);
+		if (null != smallest) return smallest;
+		// Else, slow way: sum all values and determine the smallest type
+		final RealSum sum = new RealSum();
+		for (final R r : img) sum.add(r.getRealDouble());
+		smallest = chooseSmallestType(type, sum.getSum());
+		if (null != smallest) return smallest;
+		throw new UnsupportedOperationException("Target image is too large!");
+	}
+	
+	@SuppressWarnings("unchecked")
+	static private final <R extends RealType<R>, T extends NativeType<T> & NumericType<T>> T chooseSmallestType(final R srcType, final double maxSum) {
+		if (IntegerType.class.isAssignableFrom(srcType.getClass())) {
+			if (maxSum < Math.pow(2, 8)) return (T) new UnsignedByteType();
+			if (maxSum < Math.pow(2, 16)) return (T) new UnsignedShortType();
+			if (maxSum < Math.pow(2, 32)) return (T) new UnsignedIntType();
+			if (maxSum < Math.pow(2, 64)) return (T) new LongType();
+		} else {
+			if (maxSum <= Float.MAX_VALUE) return (T) new FloatType();
+			if (maxSum <= Double.MAX_VALUE) return (T) new DoubleType();
+		}
+		return null;
+	}
+	
 	static private final <R extends NumericType<R>, T extends NativeType<T> & NumericType<T>> Img<T> create(final Img<R> img, final T type, final Converter<R, T> converter) {
 		final Img<T> iimg = type.createSuitableNativeImg(new ArrayImgFactory<T>(), dimensions(img));
+		integrateInto(img, iimg, type, converter);
+		return iimg;
+	}
+	
+	/**
+	 * Integrate the image in place using generic n-d methods; the values will overflow if the type
+	 * does not have sufficient capacity.
+	 * @param img
+	 */
+	static public final <T extends NumericType<T>> void integrateInPlace(final Img<T> img) {
+		integrateN(img, img.firstElement().createVariable());
+	}
+	
+	/**
+	 * Integrate the {@param} img into the {@param integralImg}, using generic methods
+	 * or special-purpose fast methods for 2d images of a subset of input and output type combinations.
+	 * 
+	 * @param img The input {@link Img}.
+	 * @param integralImg The image to use as integral image, whose dimensions are each larger than those of {@param img} by 1.
+	 * @param type The {@link RealType} of the integral image.
+	 * @param converter The {@link Converter} to transfer from {@param img} to {@param integrlaImg}.
+	 * @return
+	 */
+	static public final <R extends NumericType<R>, T extends NumericType<T>> void integrateInto(final Img<R> img, final Img<T> integralImg, final T type, final Converter<R, T> converter) {
+		
 		final T sum = type.createVariable();
 
 		switch (img.numDimensions()) {
 		case 1:
-			populate1(img, iimg, converter, sum);
+			populate1(img, integralImg, converter, sum);
 			break;
 		case 2:
+			if (null != converter) {
+				populate2(img, integralImg, converter, sum);
+				break;
+			}
+			// Else, check if fast special-purpose implementations apply
 			final long w = img.dimension(0),
 			            h = img.dimension(1);
 			if (w < Integer.MAX_VALUE && h < Integer.MAX_VALUE) {
 				if (type.getClass() == LongType.class) {
 					final ArrayDataAccess<?> a1 = extractArray2d(img);
-					final ArrayDataAccess<?> a2 = extractArray2d(iimg);
+					final ArrayDataAccess<?> a2 = extractArray2d(integralImg);
 					if (null != a1 && null != a2) {
 						try {
 							final Class<?> imgType = img.firstElement().getClass();
@@ -110,7 +194,7 @@ public class FastIntegralImg<R extends RealType<R>, T extends NativeType<T> & Nu
 					}
 				} else if (type.getClass() == UnsignedIntType.class) {
 					final ArrayDataAccess<?> a1 = extractArray2d(img);
-					final ArrayDataAccess<?> a2 = extractArray2d(iimg);
+					final ArrayDataAccess<?> a2 = extractArray2d(integralImg);
 					if (null != a1 && null != a2) {
 						try {
 							final Class<?> imgType = img.firstElement().getClass();
@@ -136,7 +220,7 @@ public class FastIntegralImg<R extends RealType<R>, T extends NativeType<T> & Nu
 					}
 				} else if (type.getClass() == DoubleType.class) {
 					final ArrayDataAccess<?> a1 = extractArray2d(img);
-					final ArrayDataAccess<?> a2 = extractArray2d(iimg);
+					final ArrayDataAccess<?> a2 = extractArray2d(integralImg);
 					if (null != a1 && null != a2) {
 						try {
 							final Class<?> imgType = img.firstElement().getClass();
@@ -155,16 +239,34 @@ public class FastIntegralImg<R extends RealType<R>, T extends NativeType<T> & Nu
 					}
 				}
 			}
-			// Else:
-			populate2(img, iimg, converter, sum);
+			// Else, fall back to generic 2d method
+			populate2(img, integralImg, (Converter<R,T>) (img.firstElement() instanceof IntegerType && type instanceof IntegerType ? identityIntegerTypeConverter() : identityRealTypeConverter()), sum);
 			break;
 		default:
-			populateN(img, iimg, converter, sum);
+			transferN(img, integralImg, converter);
+			integrateN(integralImg, sum);
 			break;
 		}
-		
-		return iimg;
 	}
+	
+	static private final Converter<RealType<?>, RealType<?>> identityRealTypeConverter() {
+		return new Converter<RealType<?>, RealType<?>>() {
+			@Override
+			public final void convert(final RealType<?> input, final RealType<?> output) {
+				output.setReal(input.getRealDouble());
+			}
+		};
+	}
+	
+	static private final Converter<IntegerType<?>, IntegerType<?>> identityIntegerTypeConverter() {
+		return new Converter<IntegerType<?>, IntegerType<?>>() {
+			@Override
+			public final void convert(final IntegerType<?> input, final IntegerType<?> output) {
+				output.setInteger(input.getIntegerLong());
+			}
+		};
+	}
+	
 	
 	static private final long[] dimensions(final Img<?> img) {
 		final long[] ds = new long[img.numDimensions()];
@@ -397,30 +499,36 @@ public class FastIntegralImg<R extends RealType<R>, T extends NativeType<T> & Nu
 		}
 	}
 
-	static private final <R extends NumericType<R>, T extends NumericType<T>> void populateN(
+	
+	/** Copy img into iimg, offset by 1 in every dimension. */
+	static private final <R extends NumericType<R>, T extends NumericType<T>> void transferN(
 			final Img<R> img,
 			final Img<T> iimg,
-			final Converter<R, T> converter,
+			final Converter<R, T> converter)
+	{
+		// Copy img to iimg, with an offset of 1 in every dimension
+		final long[] min = new long[img.numDimensions()];
+		final long[] max = new long[min.length];
+		for (int i=0; i<min.length; ++i) {
+			min[i] = 1;
+			max[i] = img.dimension(i);
+		}
+		final Cursor<R> c1 = img.cursor();
+		final RandomAccess<T> r = Views.zeroMin(Views.interval(iimg, min, max)).randomAccess();
+		while (c1.hasNext()) {
+			c1.fwd();
+			r.setPosition(c1);
+			converter.convert(c1.get(), r.get());
+		}
+	}
+	
+	/** In place; assumes iimg already contains the information of the image to integrate. */
+	static private final <T extends NumericType<T>> void integrateN(
+			final Img<T> iimg,
 			final T sum)
 	{
 		final RandomAccess<T> r2 = iimg.randomAccess();
-		final int numDimensions = img.numDimensions();
-		// Copy img to iimg, with an offset of 1 in every dimension
-		{
-			final long[] min = new long[img.numDimensions()];
-			final long[] max = new long[min.length];
-			for (int i=0; i<min.length; ++i) {
-				min[i] = 1;
-				max[i] = img.dimension(i);
-			}
-			final Cursor<R> c1 = img.cursor();
-			final RandomAccess<T> r = Views.zeroMin(Views.interval(iimg, min, max)).randomAccess();
-			while (c1.hasNext()) {
-				c1.fwd();
-				r.setPosition(c1);
-				converter.convert(c1.get(), r.get());
-			}
-		}
+		final int numDimensions = iimg.numDimensions();
 		// Integrate iimg by summing over all possible kinds of rows
 		final int[] rowDims = new int[numDimensions -1];
 		for (int rowDimension = 0; rowDimension < numDimensions; ++rowDimension) {
