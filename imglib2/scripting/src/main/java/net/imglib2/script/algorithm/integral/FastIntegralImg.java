@@ -436,33 +436,51 @@ public class FastIntegralImg<R extends RealType<R>, T extends NativeType<T> & Nu
 			}
 
 			// Iterate over all dimensions other than rowDimension
-			rows: while (true) {
-				// Integrate an interval over rowDimension
-				sum.setZero();
-				r2.setPosition(1L, rowDimension);
-				for (long i = 1; i < iimg.dimension(rowDimension); ++i) {
-					sum.add(r2.get());
-					r2.get().set(sum);
-					r2.fwd(rowDimension);
+			integrateRows(rowDimension, iimg, r2, sum, rowDims);
+		}
+	}
+	
+	static private final <R extends NumericType<R>, T extends NumericType<T>> void integrateRows(
+			final int rowDimension,
+			final Interval iimg,
+			final RandomAccess<T> r2,
+			final T sum,
+			final int[] rowDims) {
+		long nRows = 1;
+		for (int i=0; i<rowDims.length; ++i) nRows *= iimg.dimension(rowDims[i]) -1;
+		
+		while (0 != nRows) {
+			// Integrate an interval over rowDimension
+			integrateRow(rowDimension, iimg, r2, sum);
+			--nRows;
+			
+			for (int i=0; i<rowDims.length; ++i) {
+				// Advance to the next interval to integrate
+				r2.fwd(rowDims[i]);
+				// If beyond bounds in the d dimension
+				if (r2.getLongPosition(rowDims[i]) == iimg.dimension(rowDims[i])) {
+					// Reset the d dimension
+					r2.setPosition(1L, rowDims[i]);
+					// Advance the next dimension
+					continue;
 				}
-				
-				for (int i=0; i<rowDims.length; ++i) {
-					// Advance to the next interval to integrate
-					r2.fwd(rowDims[i]);
-					// If beyond bounds in the d dimension
-					if (r2.getLongPosition(rowDims[i]) == iimg.dimension(rowDims[i])) {
-						// Reset the d dimension
-						r2.setPosition(1L, rowDims[i]);
-						// Advance the next dimension
-						continue;
-					}
-					// Else integrate the next interval
-					continue rows;
-				}
-				
-				// Done
+				// Else integrate the next interval
 				break;
 			}
+		}
+	}
+
+	static private final <R extends NumericType<R>, T extends NumericType<T>> void integrateRow(
+			final int rowDimension,
+			final Interval iimg,
+			final RandomAccess<T> r2,
+			final T sum) {
+		sum.setZero();
+		r2.setPosition(1L, rowDimension);
+		for (long i = 1; i < iimg.dimension(rowDimension); ++i) {
+			sum.add(r2.get());
+			r2.get().set(sum);
+			r2.fwd(rowDimension);
 		}
 	}
 }
