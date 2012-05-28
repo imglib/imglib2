@@ -1,6 +1,7 @@
 package net.imglib2.script.algorithm.integral;
 
 import net.imglib2.Cursor;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.converter.Converter;
 import net.imglib2.img.Img;
@@ -12,6 +13,8 @@ import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.basictypeaccess.array.IntArray;
+import net.imglib2.img.basictypeaccess.array.DoubleArray;
+import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.type.NativeType;
@@ -21,6 +24,9 @@ import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.Views;
 
 /**
  * Integral image class tweaked for maximum performance.
@@ -128,6 +134,25 @@ public class FastIntegralImg<R extends RealType<R>, T extends NativeType<T> & Nu
 							System.out.println(FastIntegralImg.class.getSimpleName() + ": fall back to generic 2d method -- " + t);
 						}
 					}
+				} else if (type.getClass() == DoubleType.class) {
+					final ArrayDataAccess<?> a1 = extractArray2d(img);
+					final ArrayDataAccess<?> a2 = extractArray2d(iimg);
+					if (null != a1 && null != a2) {
+						try {
+							final Class<?> imgType = img.firstElement().getClass();
+							if (FloatType.class == imgType) {
+								populateFloatToDouble2(
+										((FloatArray)a1).getCurrentStorageArray(),
+										((DoubleArray)a2).getCurrentStorageArray(),
+										(int)w,
+										(int)h);
+								break;
+							}
+						} catch (Throwable t) {
+							// Fall back to generic method
+							System.out.println(FastIntegralImg.class.getSimpleName() + ": fall back to generic 2d method -- " + t);
+						}
+					}
 				}
 			}
 			// Else:
@@ -158,6 +183,9 @@ public class FastIntegralImg<R extends RealType<R>, T extends NativeType<T> & Nu
 		}
 		if (img.getClass() == PlanarImg.class) {
 			return ((PlanarImg<?,?>)img).getPlane(0);
+		}
+		if (img.getClass() == ImgProxy.class) {
+			return extractArray2d(((ImgProxy<?>)img).image());
 		}
 		return null;
 	}
@@ -296,6 +324,36 @@ public class FastIntegralImg<R extends RealType<R>, T extends NativeType<T> & Nu
 		}
 	}
 	
+	static private final void populateFloatToDouble2(
+			final float[] b,
+			final double[] f,
+			final int w,
+			final int h)
+	{
+		final int w2 = w + 1;
+		final int h2 = h + 1;
+		// Sum rows
+		for (int y=0, offset1=0, offset2=w2+1; y<h; ++y) {
+			double s = b[offset1];
+			f[offset2] = s;
+			for (int x=1; x<w; ++x) {
+				s += b[offset1 + x];
+				f[offset2 + x] = s;
+			}
+			offset1 += w;
+			offset2 += w2;
+		}
+		// Sum columns over the summed rows
+		for (int x=1; x<w2; ++x) {
+			 double s = 0;
+			 for (int y=1, i=w2+x; y<h2; ++y) {
+				 s += f[i];
+				 f[i] = s;
+				 i += w2;
+			 }
+		}
+	}
+	
 	/** The offsets of 1,1 are due to the integral image being +1 larger in every dimension.
 	 * 
 	 * @param img
@@ -345,20 +403,22 @@ public class FastIntegralImg<R extends RealType<R>, T extends NativeType<T> & Nu
 			final Converter<R, T> converter,
 			final T sum)
 	{
-		final Cursor<R> c1 = img.cursor();
 		final RandomAccess<T> r2 = iimg.randomAccess();
 		final int numDimensions = img.numDimensions();
 		// Copy img to iimg, with an offset of 1 in every dimension
 		{
-			final long[] position = new long[img.numDimensions()];
+			final long[] min = new long[img.numDimensions()];
+			final long[] max = new long[min.length];
+			for (int i=0; i<min.length; ++i) {
+				min[i] = 1;
+				max[i] = img.dimension(i);
+			}
+			final Cursor<R> c1 = img.cursor();
+			final RandomAccess<T> r = Views.zeroMin(Views.interval(iimg, min, max)).randomAccess();
 			while (c1.hasNext()) {
 				c1.fwd();
-				c1.localize(position);
-				for (int d=0; d<numDimensions; ++d) {
-					++position[d];
-				}
-				r2.setPosition(position);
-				converter.convert(c1.get(), r2.get());
+				r.setPosition(c1);
+				converter.convert(c1.get(), r.get());
 			}
 		}
 		// Integrate iimg by summing over all possible kinds of rows
