@@ -33,7 +33,6 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-
 package net.imglib2.outofbounds;
 
 import net.imglib2.AbstractLocalizable;
@@ -41,58 +40,77 @@ import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.type.Type;
+import net.imglib2.util.Util;
 
 /**
+ * Repeat the boundary pixels. That is, for every out-of-bounds coordinate
+ * {@link #get()} returns the nearest within-bounds pixel.
  *
- * @param <T>
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends AbstractLocalizable implements OutOfBounds< T >
+public class OutOfBoundsBorder< T > extends AbstractLocalizable implements OutOfBounds< T >
 {
-	final protected RandomAccess< T > sampler;
+	final protected RandomAccess< T > outOfBoundsRandomAccess;
 
-	final protected long[] dimension, min, max;
+	/**
+	 * Minimum of the wrapped {@link RandomAccessible}.
+	 */
+	final protected long[] min;
+
+	final protected long[] beforeMin;
+
+	/**
+	 * Maximum of the wrapped {@link RandomAccessible}.
+	 */
+	final protected long[] max;
+
+	final protected long[] pastMax;
 
 	final protected boolean[] dimIsOutOfBounds;
 
 	protected boolean isOutOfBounds = false;
 
-	protected AbstractOutOfBoundsValue( final AbstractOutOfBoundsValue< T > outOfBounds )
+	public OutOfBoundsBorder( final OutOfBoundsBorder< T > outOfBounds )
 	{
 		super( outOfBounds.numDimensions() );
-		this.sampler = outOfBounds.sampler.copyRandomAccess();
-		dimension = new long[ n ];
 		min = new long[ n ];
+		beforeMin = new long[ n ];
 		max = new long[ n ];
+		pastMax = new long[ n ];
 		dimIsOutOfBounds = new boolean[ n ];
 		for ( int d = 0; d < n; ++d )
 		{
-			dimension[ d ] = outOfBounds.dimension[ d ];
 			min[ d ] = outOfBounds.min[ d ];
+			beforeMin[ d ] = outOfBounds.beforeMin[ d ];
 			max[ d ] = outOfBounds.max[ d ];
+			pastMax[ d ] = outOfBounds.pastMax[ d ];
 			position[ d ] = outOfBounds.position[ d ];
 			dimIsOutOfBounds[ d ] = outOfBounds.dimIsOutOfBounds[ d ];
 		}
+
+		outOfBoundsRandomAccess = outOfBounds.outOfBoundsRandomAccess.copyRandomAccess();
 	}
 
-	public < F extends Interval & RandomAccessible< T > > AbstractOutOfBoundsValue( final F f )
+	public < F extends Interval & RandomAccessible< T > > OutOfBoundsBorder( final F f )
 	{
 		super( f.numDimensions() );
-		this.sampler = f.randomAccess();
-		dimension = new long[ n ];
-		f.dimensions( dimension );
 		min = new long[ n ];
 		f.min( min );
 		max = new long[ n ];
 		f.max( max );
+		beforeMin = new long[ n ];
+		pastMax = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			beforeMin[ d ] = min[ d ] - 1;
+			pastMax[ d ] = max[ d ] + 1;
+		}
 		dimIsOutOfBounds = new boolean[ n ];
+
+		outOfBoundsRandomAccess = f.randomAccess();
 	}
 
-	final private void checkOutOfBounds()
+	final protected void checkOutOfBounds()
 	{
 		for ( int d = 0; d < n; ++d )
 		{
@@ -105,72 +123,105 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends Ab
 		isOutOfBounds = false;
 	}
 
-
 	/* OutOfBounds */
 
 	@Override
 	public boolean isOutOfBounds()
 	{
-		checkOutOfBounds();
 		return isOutOfBounds;
 	}
 
+	/* Sampler */
+
+	@Override
+	public T get()
+	{
+		return outOfBoundsRandomAccess.get();
+	}
+
+	@Override
+	final public OutOfBoundsBorder< T > copy()
+	{
+		return new OutOfBoundsBorder< T >( this );
+	}
+
+	/* RandomAccess */
+
+	@Override
+	final public OutOfBoundsBorder< T > copyRandomAccess()
+	{
+		return copy();
+	}
 
 	/* Positionable */
 
 	@Override
-	public void fwd( final int dim )
+	final public void fwd( final int d )
 	{
-		final boolean wasOutOfBounds = isOutOfBounds;
-		final long p = ++position[ dim ];
-		if ( p == min[ dim ] )
+		final long p = ++position[ d ];
+		if ( p == min[ d ] )
 		{
-			dimIsOutOfBounds[ dim ] = false;
+			dimIsOutOfBounds[ d ] = false;
 			checkOutOfBounds();
 		}
-		else if ( p == max[ dim ] + 1 )
-		{
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-			return;
-		}
-
-		if ( isOutOfBounds ) return;
-		if ( wasOutOfBounds )
-			sampler.setPosition( position );
-		else
-			sampler.fwd( dim );
+		else if ( p == pastMax[ d ] )
+			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
+		else if ( !dimIsOutOfBounds[ d ] )
+			outOfBoundsRandomAccess.fwd( d );
 	}
 
 	@Override
-	public void bck( final int dim )
+	final public void bck( final int d )
 	{
-		final boolean wasOutOfBounds = isOutOfBounds;
-		final long p = position[ dim ]--;
-		if ( p == min[ dim ] )
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else if ( p == max[ dim ] + 1 )
+		final long p = --position[ d ];
+		if ( p == beforeMin[ d ] )
+			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
+		else if ( p == max[ d ] )
 		{
-			dimIsOutOfBounds[ dim ] = false;
+			dimIsOutOfBounds[ d ] = false;
 			checkOutOfBounds();
 		}
+		else if ( !dimIsOutOfBounds[ d ] )
+			outOfBoundsRandomAccess.bck( d );
+	}
 
-		if ( isOutOfBounds ) return;
-		if ( wasOutOfBounds )
-			sampler.setPosition( position );
+	@Override
+	final public void setPosition( final long position, final int d )
+	{
+		this.position[ d ] = position;
+		final long minD = min[ d ];
+		final long maxD = max[ d ];
+		if ( position < minD )
+		{
+			outOfBoundsRandomAccess.setPosition( minD, d );
+			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
+		}
+		else if ( position > maxD )
+		{
+			outOfBoundsRandomAccess.setPosition( maxD, d );
+			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
+		}
 		else
-			sampler.bck( dim );
+		{
+			outOfBoundsRandomAccess.setPosition( position, d );
+			if ( isOutOfBounds )
+			{
+				dimIsOutOfBounds[ d ] = false;
+				checkOutOfBounds();
+			}
+		}
 	}
 
 	@Override
-	public void move( final long distance, final int dim )
+	public void move( final long distance, final int d )
 	{
-		setPosition( position[ dim ] + distance, dim );
+		setPosition( getLongPosition( d ) + distance, d );
 	}
 
 	@Override
-	public void move( final int distance, final int dim )
+	public void move( final int distance, final int d )
 	{
-		move( ( long ) distance, dim );
+		move( ( long ) distance, d );
 	}
 
 	@Override
@@ -195,29 +246,9 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends Ab
 	}
 
 	@Override
-	public void setPosition( final long position, final int dim )
+	public void setPosition( final int position, final int d )
 	{
-		this.position[ dim ] = position;
-		if ( position < min[ dim ] || position > max[ dim ] )
-			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else
-		{
-			final boolean wasOutOfBounds = isOutOfBounds;
-			dimIsOutOfBounds[ dim ] = false;
-			checkOutOfBounds();
-
-			if ( isOutOfBounds ) return;
-			if ( wasOutOfBounds )
-				sampler.setPosition( this.position );
-			else
-				sampler.setPosition( position, dim );
-		}
-	}
-
-	@Override
-	public void setPosition( final int position, final int dim )
-	{
-		setPosition( ( long ) position, dim );
+		setPosition( ( long ) position, d );
 	}
 
 	@Override
@@ -239,5 +270,13 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends Ab
 	{
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
+	}
+
+	/* Object */
+
+	@Override
+	public String toString()
+	{
+		return Util.printCoordinates( position ) + " = " + get();
 	}
 }

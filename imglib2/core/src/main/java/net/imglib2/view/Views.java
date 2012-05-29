@@ -49,6 +49,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.outofbounds.OutOfBoundsBorderFactory;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
@@ -183,6 +184,20 @@ public class Views
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendPeriodic( final F randomAccessible )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsPeriodicFactory< T, F >() );
+	}
+
+	/**
+	 * Extend a RandomAccessibleInterval with an out-of-bounds
+	 * strategy to repeat border pixels. {@see OutOfBoundsBorder}.
+	 *
+	 * @param randomAccessible
+	 *            the interval to extend.
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity.
+	 */
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendBorder( final F randomAccessible )
+	{
+		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsBorderFactory< T, F >() );
 	}
 
 	/**
@@ -482,7 +497,7 @@ public class Views
 	 *            the interval on source that should be cut out and translated to the origin.
 	 * @return a RandomAccessibleInterval
 	 */
-	public static < T > IntervalView< T > offsetInterval( final RandomAccessible< T > randomAccessible, Interval interval )
+	public static < T > IntervalView< T > offsetInterval( final RandomAccessible< T > randomAccessible, final Interval interval )
 	{
 		final int n = randomAccessible.numDimensions();
 		final long[] offset = new long[ n ];

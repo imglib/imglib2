@@ -6,7 +6,7 @@ import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.outofbounds.OutOfBoundsRandomAccess;
+import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
@@ -50,7 +50,7 @@ public class Gradient<T extends RealType<T>> extends MultiThreadedBenchmarkAlgor
 		Cursor<T> in = input.localizingCursor();
 		RandomAccess<FloatType> oc = output.randomAccess();
 		T zero = input.firstElement().createVariable();
-		OutOfBoundsRandomAccess<T> ra = Views.extendValue(input, zero).randomAccess();
+		OutOfBounds<T> ra = Views.extendValue(input, zero).randomAccess();
 		
 		float central, diff;
 		

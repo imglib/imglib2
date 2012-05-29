@@ -52,7 +52,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
-import net.imglib2.outofbounds.OutOfBoundsRandomAccess;
+import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -416,7 +416,7 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 	private void iterateWithRandoAccessible() {
 
 
-		final OutOfBoundsRandomAccess<T> ra = Views.extendMirrorSingle(input).randomAccess();
+		final OutOfBounds<T> ra = Views.extendMirrorSingle(input).randomAccess();
 		final Cursor<T> cursor = input.localizingCursor();
 		final RandomAccess<FloatType> oc = output.randomAccess();
 
