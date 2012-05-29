@@ -317,7 +317,6 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 		public void max( long[] max )
 		{
 			validate();
-			System.arraycopy( maxima, 0, max, 0, numDimensions() );
 			for (int i = 0; i < numDimensions(); i++)
 				max[i] = maxima[i] + (long) origin[i];
 		}
