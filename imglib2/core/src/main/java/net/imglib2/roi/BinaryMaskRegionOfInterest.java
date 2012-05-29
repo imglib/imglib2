@@ -74,7 +74,7 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 
 	long[] maxima;
 	
-	long[] origin;
+	double[] origin;
 
 	protected class BMROIIterationOrder
 	{
@@ -160,7 +160,7 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 			@Override
 			public long getLongPosition( int d )
 			{
-				return this.position[ d ] + origin[ d ];
+				return this.position[ d ] + (long)origin[ d ];
 			}
 
 			@Override
@@ -284,7 +284,7 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 		public long min( int d )
 		{
 			validate();
-			return minima[ d ] + origin[d];
+			return minima[ d ] + (long) origin[d];
 		}
 
 		@Override
@@ -299,15 +299,16 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 		public void min( Positionable min )
 		{
 			validate();
-			min.setPosition( minima );
-			min.move(origin);
+			for (int i = 0; i < min.numDimensions(); i++) {
+				min.setPosition( minima[i] + (long)origin[i], i );
+			}
 		}
 
 		@Override
 		public long max( int d )
 		{
 			validate();
-			return maxima[ d ] + origin[d];
+			return maxima[ d ] + (long) origin[d];
 		}
 
 		@Override
@@ -322,8 +323,9 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 		public void max( Positionable max )
 		{
 			validate();
-			max.setPosition( maxima );
-			max.move(origin);
+			for (int i = 0; i < max.numDimensions(); i++) {
+				max.setPosition( maxima[i] + (long)origin[i], i );
+			}
 		}
 
 		@Override
@@ -355,7 +357,7 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 	{
 		super( img.numDimensions() );
 		this.img = img;
-		origin = new long[ img.numDimensions() ];
+		origin = new double[ img.numDimensions() ];
 		randomAccess = new ThreadLocal< RandomAccess< T >>()
 		{
 
@@ -483,5 +485,5 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 	
 	public I getImg() { return img; }
 	
-	public long[] getOrigin() { return origin; }
+	public double[] getOrigin() { return origin; }
 }
