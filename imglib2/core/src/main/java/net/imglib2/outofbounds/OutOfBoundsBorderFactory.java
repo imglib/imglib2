@@ -33,59 +33,22 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+package net.imglib2.outofbounds;
 
-package net.imglib2;
-
-import net.imglib2.outofbounds.OutOfBounds;
-import net.imglib2.outofbounds.OutOfBoundsFactory;
-import net.imglib2.util.Util;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessible;
 
 /**
- * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
- * through an {@link OutOfBoundsFactory}.
- * Note that it is not an Interval itself.
+ * Strategy to repeat the boundary pixels (creates
+ * {@link OutOfBoundsBorder}).
  *
- * @author ImgLib2 developers
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
- * @author Tobias Pietzsch
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >
+public class OutOfBoundsBorderFactory< T, F extends Interval & RandomAccessible< T > > implements OutOfBoundsFactory< T, F >
 {
-	final protected F source;
-	final protected OutOfBoundsFactory< T, ? super F > factory;
-
-	public ExtendedRandomAccessibleInterval( final F source, final OutOfBoundsFactory< T, ? super F > factory )
-	{
-		this.source = source;
-		this.factory = factory;
-	}
-
 	@Override
-	final public int numDimensions()
+	public OutOfBoundsBorder< T > create( final F f )
 	{
-		return source.numDimensions();
-	}
-
-	@Override
-	final public OutOfBounds< T > randomAccess()
-	{
-		return factory.create( source );
-	}
-
-	@Override
-	final public RandomAccess< T > randomAccess( final Interval interval )
-	{
-		assert source.numDimensions() == interval.numDimensions();
-
-		if ( Util.contains( source, interval ) )
-		{
-			return source.randomAccess( interval );
-		}
-		return randomAccess();
-	}
-
-	public F getSource()
-	{
-		return source;
+		return new OutOfBoundsBorder< T >( f );
 	}
 }
