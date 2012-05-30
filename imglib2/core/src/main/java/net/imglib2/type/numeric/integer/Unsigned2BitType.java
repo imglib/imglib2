@@ -45,13 +45,10 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 
 /**
- * A {@link Type} with arbitrary bit depth up to maximum 64 bits.
- * The behavior beyond 64 bits is undefined.
+ * A {@link Type} with a bit depth of 2.
  * 
  * The performance of this type is traded off for the gain in memory storage.
- * The {@link #set(long)} operation takes have the time as the {@link #get} operation.
- * The performance may degrade very slightly with increasing bit depth, but the decrease is barely noticeable.
- *
+ * 
  * @author Albert Cardona
  */
 public class Unsigned2BitType extends AbstractIntegerType<Unsigned2BitType> implements NativeType<Unsigned2BitType>
