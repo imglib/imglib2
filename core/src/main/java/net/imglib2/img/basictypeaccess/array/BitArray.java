@@ -40,22 +40,15 @@ package net.imglib2.img.basictypeaccess.array;
 import net.imglib2.img.basictypeaccess.BitAccess;
 
 /**
-*
-*/
-/**
- * TODO
- *
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 {
-	final static protected int bitsPerEntity = Integer.SIZE;
+	final static protected int bitsPerEntity = Long.SIZE;
 
 	final protected int n;
 
-	protected int data[];
+	protected long data[];
 
 	public BitArray( final int numEntities )
 	{
@@ -68,7 +61,7 @@ public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 		else
 			numElements = this.n / bitsPerEntity + 1;
 
-		this.data = new int[ numElements ];
+		this.data = new long[ numElements ];
 	}
 
 	@Override
@@ -77,8 +70,8 @@ public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 		final int arrayIndex = index / bitsPerEntity;
 		final int arrayOffset = index % bitsPerEntity;
 
-		final int entry = data[ arrayIndex ];
-		final int value = ( entry & ( 1 << arrayOffset ) );
+		final long entry = data[ arrayIndex ];
+		final long value = ( entry & ( 1 << arrayOffset ) );
 
 		return value != 0;
 	}
@@ -99,7 +92,7 @@ public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 	}
 
 	@Override
-	public int[] getCurrentStorageArray()
+	public long[] getCurrentStorageArray()
 	{
 		return data;
 	}
