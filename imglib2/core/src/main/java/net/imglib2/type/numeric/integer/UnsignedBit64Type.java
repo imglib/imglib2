@@ -132,19 +132,20 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 		final int k = i * nBits;
 		final int i1 = k >>> 6; // k / 64;
 		final long shift = k % 64;
-		final long antiShift = 64 - shift;
+		final long v = dataAccess.getValue(i1);
 		if (0 == shift) {
 			// Number contained in a single long, ending exactly at the first bit
-			return dataAccess.getValue(i1) & mask;
+			return v & mask;
 		} else {
+			final long antiShift = 64 - shift;
 			if (antiShift < nBits) {
 				// Number split between two adjacent long
-				final long v1 = (dataAccess.getValue(i1) >>> shift) & (mask >>> (nBits - antiShift)); // lower part, stored at the upper end
+				final long v1 = (v >>> shift) & (mask >>> (nBits - antiShift)); // lower part, stored at the upper end
 				final long v2 = (dataAccess.getValue(i1 + 1) & (mask >>> antiShift)) << antiShift; // upper part, stored at the lower end
 				return v1 | v2;
 			} else {
 				// Number contained inside a single long
-				return (dataAccess.getValue(i1) >>> shift) & mask;
+				return (v >>> shift) & mask;
 			}
 		}
 	}
@@ -154,12 +155,12 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 		final int k = i * nBits;
 		final int i1 = k >>> 6; // k / 64;
 		final long shift = k % 64;
-		final long antiShift = 64 - shift;
 		final long safeValue = value & mask;
 		if (0 == shift) {
 			// Number contained in a single long, ending exactly at the first bit
 			dataAccess.setValue(i1, (dataAccess.getValue(i1) & invMask) | safeValue);
 		} else {
+			final long antiShift = 64 - shift;
 			final long v = dataAccess.getValue(i1);
 			if (antiShift < nBits) {
 				// Number split between two adjacent longs
