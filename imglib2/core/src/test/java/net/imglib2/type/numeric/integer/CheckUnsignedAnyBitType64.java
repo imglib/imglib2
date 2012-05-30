@@ -5,6 +5,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.Unsigned12BitType;
 import net.imglib2.type.numeric.integer.UnsignedBit64Type;
@@ -37,6 +38,12 @@ public class CheckUnsignedAnyBitType64 {
 		final UnsignedBit64Type ua50 = new UnsignedBit64Type(50);
 		final Img<UnsignedBit64Type> imgua50 = ua50.createSuitableNativeImg(new ArrayImgFactory<UnsignedBit64Type>(), dims);
 		
+		final BitType bt = new BitType();
+		final Img<BitType> imgbt = bt.createSuitableNativeImg(new ArrayImgFactory<BitType>(), dims);
+		final UnsignedBit64Type ua1 = new UnsignedBit64Type(1);
+		final Img<UnsignedBit64Type> imgua1 = ua1.createSuitableNativeImg(new ArrayImgFactory<UnsignedBit64Type>(), dims);
+		
+		
 		final int nIterations = 5;
 		
 		for (int i=0; i<nIterations; ++i) {
@@ -65,6 +72,15 @@ public class CheckUnsignedAnyBitType64 {
 		for (int i=0; i<nIterations; ++i) {
 			timeSet(imgua50);
 			timeGet(imgua50);
+		}
+		for (int i=0; i<nIterations; ++i) {
+			timeSet(imgbt);
+			timeGet(imgbt);
+		}
+		System.out.println("ua1");
+		for (int i=0; i<nIterations; ++i) {
+			timeSet(imgua1);
+			timeGet(imgua1);
 		}
 	}
 	
