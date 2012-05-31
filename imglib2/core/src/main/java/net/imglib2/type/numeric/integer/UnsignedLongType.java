@@ -83,18 +83,6 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	// this is the constructor if you want it to be a variable
 	public UnsignedLongType() { this( 0 ); }
 
-	public static int getCodedSignedIntChecked( long unsignedInt )
-	{
-		if ( unsignedInt < 0 )
-			unsignedInt = 0;
-		else if ( unsignedInt > 0xffffffffL )
-			unsignedInt = 0xffffffffL;
-
-		return getCodedSignedInt( unsignedInt );
-	}
-	public static int getCodedSignedInt( final long unsignedInt ) { return (int)( unsignedInt & 0xffffffff ); }
-	public static long getUnsignedInt( final int signedInt ) { return signedInt & 0xffffffffL; }
-
 	@Override
 	public NativeImg<UnsignedLongType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedLongType> storageFactory, final long dim[] )
 	{
