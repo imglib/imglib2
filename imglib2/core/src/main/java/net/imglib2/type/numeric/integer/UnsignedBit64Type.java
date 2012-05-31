@@ -111,7 +111,7 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 	public NativeImg<UnsignedBit64Type, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedBit64Type> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<UnsignedBit64Type, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 64 / nBits + (0 == 64 % nBits ? 0 : 1) );
+		final NativeImg<UnsignedBit64Type, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 ); // TODO should be ceil(nBits / 64.0) !
 
 		// create a Type that is linked to the container
 		final UnsignedBit64Type linkedType = new UnsignedBit64Type( container, nBits );
@@ -272,6 +272,6 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 
 	@Override
 	public void div(final UnsignedBit64Type t) {
-		set(get() / t.get());
+		set( UnsignedLongType.divide( get(), t.get() ) );
 	}
 }
