@@ -274,4 +274,10 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 	public void div(final UnsignedBit64Type t) {
 		set( UnsignedLongType.divide( get(), t.get() ) );
 	}
+	
+	/** @see UnsignedLongType#compare(long, long) */
+	@Override
+	public int compareTo( final UnsignedBit64Type t ) {
+		return UnsignedLongType.compare( get(), t.get() );
+	}
 }
