@@ -119,36 +119,46 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	}
 
 	/**
-	 * See "Division by Invariant Integers using Multiplication",
-	 * by Torbjorn Granlund and Peter L. Montgomery, 1994.
-	 * http://gmplib.org/~tege/divcnst-pldi94.pdf
-	 * 
-	 * @throws ArithmeticException when c equals zero.
+	 * @see #divide(long, long)
 	 */
 	@Override
 	public void div( final UnsignedLongType c )
 	{
-		final long d1 = get();
-		final long d2 = c.get();
-		
-		if (d2 < 0) {
+		set( divide( get(), c.get() ) );
+	}
+
+	/**
+	 * Unsigned division of {@param d1} by {@param d2}.
+	 *
+	 * See "Division by Invariant Integers using Multiplication",
+	 * by Torbjorn Granlund and Peter L. Montgomery, 1994.
+	 * http://gmplib.org/~tege/divcnst-pldi94.pdf
+	 *
+	 * @throws ArithmeticException when c equals zero.
+	 */
+	static public final long divide( final long d1, final long d2 )
+	{	
+		if ( d2 < 0 ) {
 			// d2 is larger than the maximum signed long value
-			if (-1 == compare(d1, d2)) {
+			if ( -1 == compare( d1, d2 ) ) {
 				// d1 is smaller than d2
-				set( 0L );
+				return 0;
 			} else {
-				// d1 is larger than d2
-				set( 1L );
+				// d1 is larger or equal than d2
+				return 1;
 			}
-		} else if (d1 >= 0) {
-			// Exact division, given that d2 is smaller than the maximum signed long value
-			set( d1 / d2 );
-		} else {
+		}
+		
+		if ( d1 < 0 ) {
 			// Approximate division: exact or one less than the actual value
 			final long quotient = ((d1 >>> 1) / d2) << 1;
 			final long reminder = d1 - quotient * d2;
-			set( quotient + (-1 == compare(d2, reminder) ? 0 : 1) );
+			return quotient + (-1 == compare(d2, reminder) ? 0 : 1);
 		}
+		
+		// Exact division, given that both d1 and d2 are smaller than
+		// or equal to the maximum signed long value
+		return d1 / d2;
 	}
 
 	@Override
