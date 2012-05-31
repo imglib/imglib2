@@ -52,8 +52,8 @@ import net.imglib2.type.numeric.NumericType;
  * A {@link Type} with a bit depth of 128.
  * Each value is stored in two adjacent long in an array,
  * with the lower long first, then the upper long.
- * Currently the math methods defined in the superinterface {@link NumericType} are implemented using {@link BigInteger}.
- * This class is not {@link Thread}-safe; do a {@link #copy()} first to operate on a different {@link Thread}.
+ * Currently the math methods defined in the superinterface {@link NumericType} are implemented using {@link BigInteger} and {@link BigDecimal}.
+ * This class is not {@link Thread}-safe; do a {@link #copy()} first to operate on a different {@link Thread}s.
  * 
  * @author Albert Cardona
  */
@@ -137,7 +137,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 		bytes[15] = (byte) (lower         & 0xffL);
 	}
 	
-	/** The first byte is the most significant byte. Only the first 16 bytes are read, if there are many. */
+	/** The first byte is the most significant byte, like in {@link BigInteger#toByteArray()}. Only the first 16 bytes are read, if there are many. */
 	public void set( final byte[] bytes ) {
 		final int k = i * 2;
 		int b = Math.min(16, bytes.length) - 1;
