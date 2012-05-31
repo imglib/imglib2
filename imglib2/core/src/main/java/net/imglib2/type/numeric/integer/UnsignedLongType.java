@@ -118,10 +118,37 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 		set( get() + c.get() );
 	}
 
+	/**
+	 * See "Division by Invariant Integers using Multiplication",
+	 * by Torbjorn Granlund and Peter L. Montgomery, 1994.
+	 * http://gmplib.org/~tege/divcnst-pldi94.pdf
+	 * 
+	 * @throws ArithmeticException when c equals zero.
+	 */
 	@Override
 	public void div( final UnsignedLongType c )
 	{
-		set( get() / c.get() );
+		final long d1 = get();
+		final long d2 = c.get();
+		
+		if (d2 < 0) {
+			// d2 is larger than the maximum signed long value
+			if (-1 == compare(d1, d2)) {
+				// d1 is smaller than d2
+				set( 0L );
+			} else {
+				// d1 is larger than d2
+				set( 1L );
+			}
+		} else if (d1 >= 0) {
+			// Exact division, given that d2 is smaller than the maximum signed long value
+			set( d1 / d2 );
+		} else {
+			// Approximate division: exact or one less than the actual value
+			final long quotient = ((d1 >>> 1) / d2) << 1;
+			final long reminder = d1 - quotient * d2;
+			set( quotient + (-1 == compare(d2, reminder) ? 0 : 1) );
+		}
 	}
 
 	@Override
@@ -181,9 +208,16 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	@Override
 	public int compareTo( final UnsignedLongType c )
 	{
-		final long a = get();
-		final long b = c.get();
-
+		return compare( get(), c.get() );
+	}
+	
+	/**
+	 * 
+	 * @param a
+	 * @param b
+	 * @return -1 if a < b, 0 if a == b, 1 if a > b.
+	 */
+	static public final int compare( long a, long b) {
 		if (a == b)
 			return 0;
 		else {
