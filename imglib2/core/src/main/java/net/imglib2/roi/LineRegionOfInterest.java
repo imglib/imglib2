@@ -123,9 +123,9 @@ public class LineRegionOfInterest extends AbstractRegionOfInterest {
 		realMax(max);
 		if (!outOfBounds(min,max,position)) return true;
 		// somewhere outside narrow bounds of p1 and p2
-		// super close to one endpoint?
+		// close enough to one endpoint?
 		if (dist(p1, position) < TOLERANCE) return true;
-		// super close to other endpoint?
+		// close enough to other endpoint?
 		if (dist(p2, position) < TOLERANCE) return true;
 		// else its too far away
 		return false;
