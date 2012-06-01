@@ -282,10 +282,4 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 		double newVal = getOrigin(d) + displacement;
 		setOrigin(newVal, d);
 	}
-	
-	@Override
-	public void move(double[] displacement) {
-		for (int i = 0; i < displacement.length; i++)
-			move(displacement[i],i);
-	}
 }

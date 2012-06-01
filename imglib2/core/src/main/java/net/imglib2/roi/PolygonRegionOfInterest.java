@@ -925,9 +925,4 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 		invalidateCachedState();
 		stripes = null;
 	}
-
-	@Override
-	public void move(double[] displacement) {
-		for (int i = 0; i < displacement.length; i++) move(displacement[i], i);
-	}
 }

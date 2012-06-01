@@ -479,12 +479,6 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 		origin[d] += displacement;
 	}
 
-	@Override
-	public void move(double[] displacement) {
-		for (int i = 0; i < displacement.length; i++)
-			move(displacement[i], i);
-	}
-	
 	public I getImg() { return img; }
 	
 	public double[] getOrigin() { return origin; }
