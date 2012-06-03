@@ -41,7 +41,6 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.util.Fraction;
 
@@ -55,15 +54,8 @@ import net.imglib2.util.Fraction;
  *
  * @author Albert Cardona
  */
-public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> implements NativeType<UnsignedBit64Type>
-{
-	private int i = 0;
-
-	final protected NativeImg<UnsignedBit64Type, ? extends LongAccess> img;
-
-	// the DataAccess that holds the information
-	protected LongAccess dataAccess;
-	
+public class UnsignedBit64Type extends AbstractBitType<UnsignedBit64Type>
+{	
 	// the number of bits per pixel
 	private final int nBits;
 
@@ -79,13 +71,12 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 			? extends LongAccess> bitStorage,
 			final int nBits)
 	{
+		super( bitStorage );
 		if (nBits < 1 || nBits > 64)
 			throw new IllegalArgumentException("Supports only bit depths between 1 and 64, can't take " + nBits);
-		img = bitStorage;
 		this.nBits = nBits;
 		this.mask = ((long)(Math.pow(2, nBits) -1));
 		this.invMask = ~mask;
-		updateIndex( 0 );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -130,8 +121,8 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 	public UnsignedBit64Type duplicateTypeOnSameNativeImg() { return new UnsignedBit64Type( img, nBits ); }
 
 	public long get() {
-		final int k = i * nBits;
-		final int i1 = k >>> 6; // k / 64;
+		final long k = i * nBits;
+		final int i1 = (int)(k >>> 6); // k / 64;
 		final long shift = k % 64;
 		final long v = dataAccess.getValue(i1);
 		if (0 == shift) {
@@ -153,8 +144,8 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 
 	// Crops value to within mask
 	public void set( final long value ) {
-		final int k = i * nBits;
-		final int i1 = k >>> 6; // k / 64;
+		final long k = i * nBits;
+		final int i1 = (int)(k >>> 6); // k / 64;
 		final long shift = k % 64;
 		final long safeValue = value & mask;
 		if (0 == shift) {
@@ -187,90 +178,15 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 	}
 
 	@Override
-	public int getInteger() { return (int)get(); }
-
-	@Override
-	public long getIntegerLong() { return get(); }
-
-	@Override
-	public void setInteger( final int f ) { set( f ); }
-
-	@Override
-	public void setInteger( final long f ) { set( f ); }
-
-	/** The maximum value that can be stored is {@code Math.pow(2, nBits) -1}. */
-	@Override
-	public double getMaxValue() { return Math.pow(2, nBits) -1; }
-	@Override
-	public double getMinValue()  { return 0; }
-
-	@Override
-	public int getIndex() { return i; }
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
-	}
-
-	@Override
 	public UnsignedBit64Type createVariable(){ return new UnsignedBit64Type( nBits ); }
 
 	@Override
 	public UnsignedBit64Type copy(){ return new UnsignedBit64Type( get(), nBits ); }
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction( nBits, 64 ); }
-
-	@Override
 	public int getBitsPerPixel() { return nBits; }
 
-	@Override
-	public void inc() {
-		set(get() + 1);
-	}
-
-	@Override
-	public void dec() {
-		set(get() - 1);
-	}
-
-	@Override
-	public void add(final UnsignedBit64Type t) {
-		set(get() + t.get());
-	}
-
-	@Override
-	public void sub(final UnsignedBit64Type t) {
-		set(get() - t.get());
-	}
-
-	@Override
-	public void mul(final UnsignedBit64Type t) {
-		set(get() * t.get());
-	}
-
+	/** @see UnsignedLongType#divide(long, long) */
 	@Override
 	public void div(final UnsignedBit64Type t) {
 		set( UnsignedLongType.divide( get(), t.get() ) );
