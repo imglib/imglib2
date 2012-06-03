@@ -42,6 +42,7 @@ import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ExponentialMathType;
+import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
 /**
@@ -87,7 +88,7 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 	public NativeImg<DoubleType, ? extends DoubleAccess> createSuitableNativeImg( final NativeImgFactory<DoubleType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );
+		final NativeImg<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, new Fraction() );
 		
 		// create a Type that is linked to the container
 		final DoubleType linkedType = new DoubleType( container );
@@ -137,7 +138,7 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 	public void round() { set( Util.round( get() ) ); }
 	
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public Fraction getEntitiesPerPixel() { return new Fraction(); }
 	
 	@Override
 	public void updateIndex( final int index ) { i = index; }

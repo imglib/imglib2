@@ -40,6 +40,7 @@ import net.imglib2.Cursor;
 import net.imglib2.EuclideanSpace;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.util.Fraction;
 
 /**
  * An array of {@link AbstractCell}s to store the data of a {@link CellImg}.
@@ -86,7 +87,7 @@ public interface Cells< A extends ArrayDataAccess< A >, C extends AbstractCell< 
 	 */
 	public int cellDimension( int d );
 
-	public int getEntitiesPerPixel();
+	public Fraction getEntitiesPerPixel();
 
 	/**
 	 * Get a {@link RandomAccess} on the cells array.

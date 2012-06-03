@@ -46,6 +46,7 @@ import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.ShortAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -69,19 +70,19 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	}
 
 	/* basic type containers */
-	public abstract NativeImg< T, ? extends BitAccess > createBitInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract NativeImg< T, ? extends BitAccess > createBitInstance( long[] dimensions, Fraction entitiesPerPixel );
 
-	public abstract NativeImg< T, ? extends ByteAccess > createByteInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract NativeImg< T, ? extends ByteAccess > createByteInstance( long[] dimensions, Fraction entitiesPerPixel );
 
-	public abstract NativeImg< T, ? extends CharAccess > createCharInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract NativeImg< T, ? extends CharAccess > createCharInstance( long[] dimensions, Fraction entitiesPerPixel );
 
-	public abstract NativeImg< T, ? extends ShortAccess > createShortInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract NativeImg< T, ? extends ShortAccess > createShortInstance( long[] dimensions, Fraction entitiesPerPixel );
 
-	public abstract NativeImg< T, ? extends IntAccess > createIntInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract NativeImg< T, ? extends IntAccess > createIntInstance( long[] dimensions, Fraction entitiesPerPixel );
 
-	public abstract NativeImg< T, ? extends LongAccess > createLongInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract NativeImg< T, ? extends LongAccess > createLongInstance( long[] dimensions, Fraction entitiesPerPixel );
 
-	public abstract NativeImg< T, ? extends FloatAccess > createFloatInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract NativeImg< T, ? extends FloatAccess > createFloatInstance( long[] dimensions, Fraction entitiesPerPixel );
 
-	public abstract NativeImg< T, ? extends DoubleAccess > createDoubleInstance( long[] dimensions, int entitiesPerPixel );
+	public abstract NativeImg< T, ? extends DoubleAccess > createDoubleInstance( long[] dimensions, Fraction entitiesPerPixel );
 }

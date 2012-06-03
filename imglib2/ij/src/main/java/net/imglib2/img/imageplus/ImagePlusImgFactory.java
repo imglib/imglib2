@@ -50,6 +50,7 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * Factory that creates an appropriate {@link ImagePlusImg}.
@@ -81,7 +82,7 @@ public class ImagePlusImgFactory< T extends NativeType< T > > extends PlanarImgF
 	}
 
 	@Override
-	public NativeImg< T, BitArray > createBitInstance( long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, BitArray > createBitInstance( long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
@@ -90,7 +91,7 @@ public class ImagePlusImgFactory< T extends NativeType< T > > extends PlanarImgF
 	}
 
 	@Override
-	public NativeImg< T, ByteArray > createByteInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, ByteArray > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
@@ -99,7 +100,7 @@ public class ImagePlusImgFactory< T extends NativeType< T > > extends PlanarImgF
 	}
 
 	@Override
-	public NativeImg< T, CharArray > createCharInstance( long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, CharArray > createCharInstance( long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
@@ -108,7 +109,7 @@ public class ImagePlusImgFactory< T extends NativeType< T > > extends PlanarImgF
 	}
 
 	@Override
-	public NativeImg< T, DoubleArray > createDoubleInstance( long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, DoubleArray > createDoubleInstance( long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
@@ -117,7 +118,7 @@ public class ImagePlusImgFactory< T extends NativeType< T > > extends PlanarImgF
 	}
 
 	@Override
-	public NativeImg< T, FloatArray > createFloatInstance( long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, FloatArray > createFloatInstance( long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
@@ -126,7 +127,7 @@ public class ImagePlusImgFactory< T extends NativeType< T > > extends PlanarImgF
 	}
 
 	@Override
-	public NativeImg< T, IntArray > createIntInstance( long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, IntArray > createIntInstance( long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
@@ -135,7 +136,7 @@ public class ImagePlusImgFactory< T extends NativeType< T > > extends PlanarImgF
 	}
 
 	@Override
-	public NativeImg< T, LongArray > createLongInstance( long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, LongArray > createLongInstance( long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );
@@ -144,7 +145,7 @@ public class ImagePlusImgFactory< T extends NativeType< T > > extends PlanarImgF
 	}
 
 	@Override
-	public NativeImg< T, ShortArray > createShortInstance( long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, ShortArray > createShortInstance( long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		if ( dimensions.length > 5 )
 			throw new RuntimeException( "Unsupported dimensionality: " + dimensions.length );

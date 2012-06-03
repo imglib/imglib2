@@ -31,6 +31,7 @@ import net.imglib2.img.planar.PlanarCursor;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
 /**
@@ -455,7 +456,7 @@ public class ImglibBenchmark {
 		if ( data == null )
 			return null;
 		final ByteArray byteAccess = new ByteArray(data);
-		final ArrayImg<UnsignedByteType, ByteArray> array = new ArrayImg<UnsignedByteType, ByteArray>( byteAccess, dimensions, 1 );
+		final ArrayImg<UnsignedByteType, ByteArray> array = new ArrayImg<UnsignedByteType, ByteArray>( byteAccess, dimensions, new Fraction() );
 		array.setLinkedType(new UnsignedByteType(array));
 		return array;
 		//return DevUtil.createImageFromArray(data, new int[] {width, height});
@@ -466,7 +467,7 @@ public class ImglibBenchmark {
 		if ( numDimensions == 2 && data != null )
 		{
 			// NB: Avoid copying the data.
-			final PlanarImg<UnsignedByteType, ByteArray> planarContainer = new PlanarImg<UnsignedByteType, ByteArray>(dimensions, 1);
+			final PlanarImg<UnsignedByteType, ByteArray> planarContainer = new PlanarImg<UnsignedByteType, ByteArray>(dimensions, new Fraction());
 			planarContainer.setPlane(0, new ByteArray(data));
 			planarContainer.setLinkedType(new UnsignedByteType(planarContainer));
 			return planarContainer;
@@ -484,13 +485,15 @@ public class ImglibBenchmark {
 
 	private CellImg<UnsignedByteType, ByteArray, ?> createCellImage() {
 		final UnsignedByteType type = new UnsignedByteType();
-		final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel(), 1.0 / numDimensions );
+		final Fraction f = type.getEntitiesPerPixel();
+		f.invert();
+		final int cellSize = ( int ) Math.pow( Math.min( Integer.MAX_VALUE, f.mulCeil( Integer.MAX_VALUE ) ), 1.0 / numDimensions );
 
 		// test whether there were rounding errors and cellSize is actually too big
 		long t = 1;
 		for ( int d = 0; d < numDimensions; ++d )
 			t *= cellSize;
-		t *= type.getEntitiesPerPixel();
+		t = type.getEntitiesPerPixel().mulCeil( t );
 		if ( t > Integer.MAX_VALUE )
 			throw new RuntimeException( "there were rounding errors and cellSize is actually too big" );
 

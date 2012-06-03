@@ -52,6 +52,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.util.Fraction;
 
 import org.junit.Test;
 
@@ -64,7 +65,7 @@ public class ImgTranslationAdapterTest {
 
 	private Img<IntType> makeImage(final int [][] imgArray) {
 		final NativeImg<IntType, IntArray> img = new ArrayImgFactory<IntType>().createIntInstance(
-				new long [] {imgArray[0].length, imgArray.length}, 1);
+				new long [] {imgArray[0].length, imgArray.length}, new Fraction());
 		final IntType t = new IntType(img);
 		img.setLinkedType(t);
 		final RandomAccess<IntType> ra = img.randomAccess();

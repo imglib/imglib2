@@ -41,6 +41,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.AbstractNativeType;
+import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
 /**
@@ -77,7 +78,7 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 	public NativeImg<ARGBType, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<ARGBType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<ARGBType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		final NativeImg<ARGBType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, new Fraction() );
 		
 		// create a Type that is linked to the container
 		final ARGBType linkedType = new ARGBType( container );
@@ -208,5 +209,5 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public Fraction getEntitiesPerPixel() { return new Fraction(); }
 }

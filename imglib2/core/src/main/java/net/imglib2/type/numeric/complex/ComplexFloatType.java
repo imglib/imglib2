@@ -41,6 +41,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -88,7 +89,7 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	public NativeImg<ComplexFloatType, ? extends FloatAccess> createSuitableNativeImg( final NativeImgFactory<ComplexFloatType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 2 );
+		final NativeImg<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, new Fraction( 2, 1 ) );
 
 		// create a Type that is linked to the container
 		final ComplexFloatType linkedType = new ComplexFloatType( container );
@@ -195,7 +196,7 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	public ComplexFloatType copy(){ return new ComplexFloatType( getRealFloat(), getImaginaryFloat() ); }
 
 	@Override
-	public int getEntitiesPerPixel() { return 2; }
+	public Fraction getEntitiesPerPixel() { return new Fraction( 2, 1 ); }
 
 	@Override
 	public void updateIndex( final int index )

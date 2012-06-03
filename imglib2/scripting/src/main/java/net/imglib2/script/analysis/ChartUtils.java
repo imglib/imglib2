@@ -36,6 +36,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.util.Fraction;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -75,7 +76,7 @@ public class ChartUtils {
 		} catch (final InterruptedException e) {}
 		g.dispose();
 		
-		final ArrayImg<ARGBType, IntArray> a = new ArrayImg<ARGBType, IntArray>(new IntArray(pixels), new long[]{width, height}, 1);
+		final ArrayImg<ARGBType, IntArray> a = new ArrayImg<ARGBType, IntArray>(new IntArray(pixels), new long[]{width, height}, new Fraction());
 		
 		// create a Type that is linked to the container
 		final ARGBType linkedType = new ARGBType( a );

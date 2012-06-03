@@ -31,6 +31,7 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.script.algorithm.fn.AlgorithmUtil;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Fraction;
 
 /** Create a new n-dimensional image based on an array of float. */
 /**
@@ -48,7 +49,7 @@ public class FloatImage extends ArrayImg<FloatType, FloatArray>
 	}
 
 	public FloatImage(final long[] dim, final float[] pixels) {
-		super(new FloatArray(pixels), dim, 1);
+		super(new FloatArray(pixels), dim, new Fraction());
 		setLinkedType(new FloatType(this));
 	}
 }

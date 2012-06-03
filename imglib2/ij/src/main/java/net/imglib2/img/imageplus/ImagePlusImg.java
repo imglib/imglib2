@@ -41,6 +41,7 @@ import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * A container that stores data in an array of 2d-slices each as a
@@ -78,7 +79,7 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 			final int depth,
 			final int frames,
 			final int channels,
-			final int entitiesPerPixel )
+			final Fraction entitiesPerPixel )
 	{
 		super( reduceDimensions( new long[] { width, height, channels, depth, frames } ), entitiesPerPixel );
 
@@ -102,7 +103,7 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 	 * @param dim
 	 * @param entitiesPerPixel
 	 */
-	ImagePlusImg( final long[] dim, final int entitiesPerPixel )
+	ImagePlusImg( final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
 
@@ -134,14 +135,14 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 			frames = 1;
 	}
 
-	ImagePlusImg( final A creator, final long[] dim, final int entitiesPerPixel )
+	ImagePlusImg( final A creator, final long[] dim, final Fraction entitiesPerPixel )
 	{
 		this( dim, entitiesPerPixel );
 
 		mirror.clear();
 
 		for ( int i = 0; i < numSlices; ++i )
-			mirror.add( creator.createArray( width * height * entitiesPerPixel ) );
+			mirror.add( creator.createArray( (int)entitiesPerPixel.mulCeil( width * height ) ) );
 	}
 
 	public ImagePlus getImagePlus() throws ImgLibException

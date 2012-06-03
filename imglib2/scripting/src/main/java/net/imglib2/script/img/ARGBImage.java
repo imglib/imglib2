@@ -31,6 +31,7 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.script.algorithm.fn.AlgorithmUtil;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.util.Fraction;
 
 /** Create a new n-dimensional image based on an array of byte. */
 /**
@@ -48,7 +49,7 @@ public class ARGBImage extends ArrayImg<ARGBType, IntArray>
 	}
 
 	public ARGBImage(final long[] dim, final int[] pixels) {
-		super(new IntArray(pixels), dim, 1);
+		super(new IntArray(pixels), dim, new Fraction());
 		setLinkedType(new ARGBType(this));
 	}
 }

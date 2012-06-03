@@ -42,6 +42,7 @@ import net.imglib2.img.list.ListImg;
 import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.img.list.ListLocalizingCursor;
 import net.imglib2.img.list.ListRandomAccess;
+import net.imglib2.util.Fraction;
 
 /**
  * Implementation of {@link Cells} that uses {@link DefaultCell}s and keeps
@@ -54,13 +55,13 @@ import net.imglib2.img.list.ListRandomAccess;
  */
 public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A, DefaultCell< A > >
 {
-	private final int entitiesPerPixel;
+	private final Fraction entitiesPerPixel;
 	private final int n;
 	private final long[] dimensions;
 	private final int[] cellDimensions;
 	private final ListImg< DefaultCell< A > > cells;
 
-	public ListImgCells( final A creator, final int entitiesPerPixel, final long[] dimensions, final int[] cellDimensions  )
+	public ListImgCells( final A creator, final Fraction entitiesPerPixel, final long[] dimensions, final int[] cellDimensions  )
 	{
 		this.entitiesPerPixel = entitiesPerPixel;
 		this.n = dimensions.length;
@@ -145,7 +146,7 @@ public class ListImgCells< A extends ArrayDataAccess< A > > implements Cells< A,
 	}
 
 	@Override
-	public int getEntitiesPerPixel()
+	public Fraction getEntitiesPerPixel()
 	{
 		return entitiesPerPixel;
 	}

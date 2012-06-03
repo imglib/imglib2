@@ -42,6 +42,7 @@ import net.imglib2.FlatIterationOrder;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * @author Tobias Pietzsch
@@ -58,7 +59,7 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 	// final Ntree<?> ntree;
 	final A data;
 
-	public NtreeImg( final A data, final long[] dim, final int entitiesPerPixel )
+	public NtreeImg( final A data, final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
 
@@ -68,7 +69,7 @@ public final class NtreeImg< T extends NativeType< T >, A extends NtreeAccess< ?
 
 	private NtreeImg( final NtreeImg< T, A > img )
 	{
-		super( img.dimension, 1 );
+		super( img.dimension, new Fraction() );
 
 		// this.ntree = new Ntree<Integer>(img.dimension, 0);
 		this.data = img.data;

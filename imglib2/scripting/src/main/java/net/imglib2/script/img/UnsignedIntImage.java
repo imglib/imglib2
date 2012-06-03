@@ -31,6 +31,7 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.script.algorithm.fn.AlgorithmUtil;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
+import net.imglib2.util.Fraction;
 
 /** Create a new n-dimensional image based on an array of float. */
 /**
@@ -48,7 +49,7 @@ public class UnsignedIntImage extends ArrayImg<UnsignedIntType, IntArray>
 	}
 
 	public UnsignedIntImage(final long[] dim, final int[] pixels) {
-		super(new IntArray(pixels), dim, 1);
+		super(new IntArray(pixels), dim, new Fraction());
 		setLinkedType(new UnsignedIntType(this));
 	}
 }

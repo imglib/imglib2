@@ -51,6 +51,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.util.Fraction;
 
 /**
  *
@@ -79,7 +80,7 @@ public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements S
 	/** Create an {@link Image} with {@param data}. Writing to the {@param data} array will update the {@link Image}. */
 	public ARGBScreenImage( final int width, final int height, final int[] data )
 	{
-		super( new IntArray( data ), new long[]{ width, height }, 1 );
+		super( new IntArray( data ), new long[]{ width, height }, new Fraction() );
 		setLinkedType( new ARGBType( this ) );
 		this.data = data;
 

@@ -39,6 +39,7 @@ package net.imglib2.type.numeric.integer;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ByteAccess;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -64,7 +65,7 @@ public class ByteType extends GenericByteType<ByteType>
 	public NativeImg<ByteType, ? extends ByteAccess> createSuitableNativeImg( final NativeImgFactory<ByteType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
+		final NativeImg<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, new Fraction() );
 
 		// create a Type that is linked to the container
 		final ByteType linkedType = new ByteType( container );

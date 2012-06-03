@@ -42,6 +42,7 @@ import ij.process.FloatProcessor;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * {@link ImagePlusImg} for float-stored data.
@@ -59,11 +60,11 @@ public class FloatImagePlus< T extends NativeType< T > > extends ImagePlusImg< T
 {
 	final ImagePlus imp;
 
-	public FloatImagePlus( final long[] dim, final int entitiesPerPixel )
+	public FloatImagePlus( final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
 
-		if ( entitiesPerPixel == 1 )
+		if ( entitiesPerPixel.getNumerator() / entitiesPerPixel.getDenominator() == 1 && entitiesPerPixel.getNumerator() % entitiesPerPixel.getDenominator() == 1 )
 		{
 			final ImageStack stack = new ImageStack( width, height );
 			for ( int i = 0; i < numSlices; ++i )
@@ -85,7 +86,7 @@ public class FloatImagePlus< T extends NativeType< T > > extends ImagePlusImg< T
 
 			mirror.clear();
 			for ( int i = 0; i < numSlices; ++i )
-				mirror.add( new FloatArray( width * height * entitiesPerPixel ) );
+				mirror.add( new FloatArray( (int)entitiesPerPixel.mulCeil( width * height ) ) );
 		}
 	}
 
@@ -97,7 +98,7 @@ public class FloatImagePlus< T extends NativeType< T > > extends ImagePlusImg< T
 				imp.getNSlices(),
 				imp.getNFrames(),
 				imp.getNChannels(),
-				1 );
+				new Fraction() );
 
 		this.imp = imp;
 

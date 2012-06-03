@@ -34,71 +34,73 @@
  * #L%
  */
 
-package net.imglib2.type.numeric.integer;
-
-import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.IntAccess;
-import net.imglib2.util.Fraction;
+package net.imglib2.util;
 
 /**
- * TODO
- *
+ * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ *
  */
-public class IntType extends GenericIntType<IntType>
+public class Fraction 
 {
-	// this is the constructor if you want it to read from an array
-	public IntType( final NativeImg<IntType, ? extends IntAccess> img ) { super( img ); }
-
-	// this is the constructor if you want it to be a variable
-	public IntType( final int value ) { super( value ); }
-
-	// this is the constructor if you want to specify the dataAccess
-	public IntType( final IntAccess access ) { super( access ); }
-
-	// this is the constructor if you want it to be a variable
-	public IntType() { super( 0 ); }
-
-	@Override
-	public NativeImg<IntType, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<IntType> storageFactory, final long dim[] )
+	long numerator, denominator;
+	
+	public Fraction( final long numerator, final long denominator )
 	{
-		// create the container
-		final NativeImg<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, new Fraction() );
-
-		// create a Type that is linked to the container
-		final IntType linkedType = new IntType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
+		this.numerator = numerator;
+		this.denominator = denominator;
+	}
+	
+	/**
+	 * Instantiate a {@link Fraction} with a value of 1
+	 */
+	public Fraction() { this( 1, 1 ); }
+	
+	public long getNumerator() { return numerator; }
+	public long getDenominator() { return denominator; }
+	
+	/**
+	 * Inverts this fraction by exchanging numerator and denominator
+	 */
+	public void invert()
+	{
+		final long tmp = numerator;
+		numerator = denominator;
+		denominator = tmp;
+	}
+	
+	public void mul( final Fraction fraction )
+	{
+		this.numerator *= fraction.getNumerator();
+		this.denominator *= fraction.getDenominator();
 	}
 
-	@Override
-	public IntType duplicateTypeOnSameNativeImg() { return new IntType( img ); }
+	public void div( final Fraction fraction )
+	{
+		this.numerator *= fraction.getDenominator();
+		this.denominator *= fraction.getNumerator();
+	}
 
-	public int get() { return getValue(); }
-	public void set( final int b ) { setValue( b ); }
-
+	/**
+	 * Multiply the value with this fraction. Return the ceiled
+	 * value (e.g. 10.2 = 11) if the result is a fraction. 
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public long mulCeil( final long value ) 
+	{ 
+		final long tmp = value * numerator;
+		
+		if ( tmp % denominator != 0 )
+			return tmp / denominator + 1;
+		else
+			return tmp / denominator;
+	}
+	
 	@Override
-	public int getInteger(){ return get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ){ set( f ); }
-	@Override
-	public void setInteger( final long f ){ set( (int)f ); }
-
-	@Override
-	public double getMaxValue() { return Integer.MAX_VALUE; }
-	@Override
-	public double getMinValue()  { return Integer.MIN_VALUE; }
-
-	@Override
-	public IntType createVariable(){ return new IntType( 0 ); }
-
-	@Override
-	public IntType copy(){ return new IntType( getValue() ); }
+	public Fraction clone()
+	{
+		return new Fraction( numerator, denominator );
+	}
 }

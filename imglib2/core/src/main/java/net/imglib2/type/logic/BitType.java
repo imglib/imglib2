@@ -44,6 +44,7 @@ import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.AbstractIntegerType;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -88,7 +89,7 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	public NativeImg<BitType, ? extends BitAccess> createSuitableNativeImg( final NativeImgFactory<BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
+		final NativeImg<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, new Fraction() );
 
 		// create a Type that is linked to the container
 		final BitType linkedType = new BitType( container );
@@ -225,7 +226,7 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public Fraction getEntitiesPerPixel() { return new Fraction(); }
 
 	@Override
 	public void updateIndex( final int index ) { this.i = index; }

@@ -48,6 +48,7 @@ import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -141,7 +142,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	}
 
 	@Override
-	public CellImg< T, BitArray, DefaultCell< BitArray > > createBitInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, BitArray, DefaultCell< BitArray > > createBitInstance( long[] dimensions, Fraction entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -149,7 +150,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	}
 
 	@Override
-	public CellImg< T, ByteArray, DefaultCell< ByteArray > > createByteInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, ByteArray, DefaultCell< ByteArray > > createByteInstance( long[] dimensions, Fraction entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -157,7 +158,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	}
 
 	@Override
-	public CellImg< T, CharArray, DefaultCell< CharArray > > createCharInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, CharArray, DefaultCell< CharArray > > createCharInstance( long[] dimensions, Fraction entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -165,7 +166,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	}
 
 	@Override
-	public CellImg< T, ShortArray, DefaultCell< ShortArray > > createShortInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, ShortArray, DefaultCell< ShortArray > > createShortInstance( long[] dimensions, Fraction entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -173,7 +174,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	}
 
 	@Override
-	public CellImg< T, IntArray, DefaultCell< IntArray > > createIntInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, IntArray, DefaultCell< IntArray > > createIntInstance( long[] dimensions, Fraction entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -181,7 +182,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	}
 
 	@Override
-	public CellImg< T, LongArray, DefaultCell< LongArray > > createLongInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, LongArray, DefaultCell< LongArray > > createLongInstance( long[] dimensions, Fraction entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -189,7 +190,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	}
 
 	@Override
-	public CellImg< T, FloatArray, DefaultCell< FloatArray > > createFloatInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, FloatArray, DefaultCell< FloatArray > > createFloatInstance( long[] dimensions, Fraction entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
@@ -197,7 +198,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	}
 
 	@Override
-	public CellImg< T, DoubleArray, DefaultCell< DoubleArray > > createDoubleInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, DoubleArray, DefaultCell< DoubleArray > > createDoubleInstance( long[] dimensions, Fraction entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
