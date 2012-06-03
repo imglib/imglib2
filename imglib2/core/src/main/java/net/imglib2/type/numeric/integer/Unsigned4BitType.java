@@ -116,15 +116,19 @@ public class Unsigned4BitType extends AbstractIntegerType<Unsigned4BitType> impl
 	public Unsigned4BitType duplicateTypeOnSameNativeImg() { return new Unsigned4BitType( img ); }
 
 	public long get() {
-		final int k = i * 4;
-		return (dataAccess.getValue(k >>> 6) >>> (k % 64)) & mask;
+		return (dataAccess.getValue(i >>> 4) >>> ((i % 16) << 2)) & mask;
 	}
 
 	// Crops value to within mask
 	public void set( final long value ) {
+		/*
 		final int k = i * 4;
 		final int i1 = k >>> 6; // k / 64;
 		final long shift = k % 64;
+		*/
+		// Same as above minus one multiplication, plus one shift (to multiply by 4)
+		final int i1 = i >>> 16;
+		final long shift = (i % 16) << 2;
 		// Clear the bits first, then and the masked value
 		dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
 	}

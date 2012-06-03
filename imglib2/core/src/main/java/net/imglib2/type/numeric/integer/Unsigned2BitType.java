@@ -54,6 +54,7 @@ import net.imglib2.util.Fraction;
  */
 public class Unsigned2BitType extends AbstractIntegerType<Unsigned2BitType> implements NativeType<Unsigned2BitType>
 {
+	// Maximum count is Integer.MAX_VALUE * (64 / 2)
 	private int i = 0;
 
 	final protected NativeImg<Unsigned2BitType, ? extends LongAccess> img;
@@ -116,15 +117,24 @@ public class Unsigned2BitType extends AbstractIntegerType<Unsigned2BitType> impl
 	public Unsigned2BitType duplicateTypeOnSameNativeImg() { return new Unsigned2BitType( img ); }
 
 	public long get() {
+		/*
 		final int k = i * 2;
 		return (dataAccess.getValue(k >>> 6) >>> (k % 64)) & mask;
+		*/
+		// Same as above minus one multiplication, plus one shift to multiply the reminder by 2
+		return (dataAccess.getValue(i >>> 5) >>> ((i % 32) << 1)) & mask;
 	}
 
 	// Crops value to within mask
 	public void set( final long value ) {
+		/*
 		final int k = i * 2;
 		final int i1 = k >>> 6; // k / 64;
 		final long shift = k % 64;
+		*/
+		// Same as above, minus one multiplication, plus one shift to multiply the reminder by 2
+		final int i1 = i >>> 5; // k / (64 / 2)
+		final long shift = (i % 32) << 1;
 		// Clear the bits first, then and the masked value
 		dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
 	}
