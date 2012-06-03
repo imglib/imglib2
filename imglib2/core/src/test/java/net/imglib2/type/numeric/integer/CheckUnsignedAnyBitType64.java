@@ -43,9 +43,22 @@ public class CheckUnsignedAnyBitType64 {
 		final UnsignedBit64Type ua1 = new UnsignedBit64Type(1);
 		final Img<UnsignedBit64Type> imgua1 = ua1.createSuitableNativeImg(new ArrayImgFactory<UnsignedBit64Type>(), dims);
 		
+		final Unsigned2BitType u2 = new Unsigned2BitType();
+		final Img<Unsigned2BitType> imgu2 = u2.createSuitableNativeImg(new ArrayImgFactory<Unsigned2BitType>(), dims);
+		final UnsignedBit64Type ua2 = new UnsignedBit64Type(2);
+		final Img<UnsignedBit64Type> imgua2 = ua2.createSuitableNativeImg(new ArrayImgFactory<UnsignedBit64Type>(), dims);
+		
+		final Unsigned4BitType u4 = new Unsigned4BitType();
+		final Img<Unsigned4BitType> imgu4 = u4.createSuitableNativeImg(new ArrayImgFactory<Unsigned4BitType>(), dims);
+		final UnsignedBit64Type ua4 = new UnsignedBit64Type(4);
+		final Img<UnsignedBit64Type> imgua4 = ua4.createSuitableNativeImg(new ArrayImgFactory<UnsignedBit64Type>(), dims);
+		
+		
 		
 		final int nIterations = 5;
 		
+		
+		// Performance is very sensitive to who gets JITed first, so commenting out a few for now:
 		for (int i=0; i<nIterations; ++i) {
 			timeSet(imgub);
 			timeGet(imgub);
@@ -81,6 +94,26 @@ public class CheckUnsignedAnyBitType64 {
 		for (int i=0; i<nIterations; ++i) {
 			timeSet(imgua1);
 			timeGet(imgua1);
+		}		
+
+		for (int i=0; i<nIterations; ++i) {
+			timeSet(imgu2);
+			timeGet(imgu2);
+		}
+		System.out.println("ua2");
+		for (int i=0; i<nIterations; ++i) {
+			timeSet(imgua2);
+			timeGet(imgua2);
+		}
+		
+		for (int i=0; i<nIterations; ++i) {
+			timeSet(imgu4);
+			timeGet(imgu4);
+		}
+		System.out.println("ua4");
+		for (int i=0; i<nIterations; ++i) {
+			timeSet(imgua4);
+			timeGet(imgua4);
 		}
 	}
 	
@@ -117,6 +150,7 @@ public class CheckUnsignedAnyBitType64 {
 		r.setPosition(9, 0);
 		r.get().set(9);
 		long[] array = ((ArrayImg<UnsignedBit64Type,LongArray>)img).update(null).getCurrentStorageArray();
+		System.out.println("Length of underlying long[]: " + array.length);
 		System.out.println("[0]: " + bits(array[0]));
 		System.out.println("[1]: " + bits(array[1]));
 		System.out.println("[2]: " + bits(array[2]));

@@ -45,6 +45,7 @@ import net.imglib2.img.basictypeaccess.BitAccess;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Fraction;
 
 /**
  * A {@link Type} with arbitrary bit depth.
@@ -107,7 +108,7 @@ public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> 
 	public NativeImg<UnsignedAnyBitType, ? extends BitAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedAnyBitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<UnsignedAnyBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, j.length );
+		final NativeImg<UnsignedAnyBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, new Fraction( 1, j.length) );
 
 		// create a Type that is linked to the container
 		final UnsignedAnyBitType linkedType = new UnsignedAnyBitType( container, j.length );
@@ -266,7 +267,7 @@ public class UnsignedAnyBitType extends AbstractIntegerType<UnsignedAnyBitType> 
 	public UnsignedAnyBitType copy(){ return new UnsignedAnyBitType( get(), j.length ); }
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public Fraction getEntitiesPerPixel() { return new Fraction( 1, j.length); }
 
 	@Override
 	public int getBitsPerPixel() { return j.length; }

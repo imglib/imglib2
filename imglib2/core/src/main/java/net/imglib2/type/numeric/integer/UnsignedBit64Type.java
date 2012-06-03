@@ -43,6 +43,7 @@ import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
+import net.imglib2.util.Fraction;
 
 /**
  * A {@link Type} with arbitrary bit depth up to maximum 64 bits.
@@ -111,7 +112,7 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 	public NativeImg<UnsignedBit64Type, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedBit64Type> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<UnsignedBit64Type, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 ); // TODO should be ceil(nBits / 64.0) !
+		final NativeImg<UnsignedBit64Type, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( nBits, 64 ) );
 
 		// create a Type that is linked to the container
 		final UnsignedBit64Type linkedType = new UnsignedBit64Type( container, nBits );
@@ -240,7 +241,7 @@ public class UnsignedBit64Type extends AbstractIntegerType<UnsignedBit64Type> im
 	public UnsignedBit64Type copy(){ return new UnsignedBit64Type( get(), nBits ); }
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public Fraction getEntitiesPerPixel() { return new Fraction( nBits, 64 ); }
 
 	@Override
 	public int getBitsPerPixel() { return nBits; }

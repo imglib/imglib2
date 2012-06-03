@@ -43,6 +43,7 @@ import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
+import net.imglib2.util.Fraction;
 
 /**
  * A {@link Type} with a bit depth of 4.
@@ -97,7 +98,7 @@ public class Unsigned4BitType extends AbstractIntegerType<Unsigned4BitType> impl
 	public NativeImg<Unsigned4BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned4BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<Unsigned4BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 32 );
+		final NativeImg<Unsigned4BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( 4, 64 ) );
 
 		// create a Type that is linked to the container
 		final Unsigned4BitType linkedType = new Unsigned4BitType( container );
@@ -183,7 +184,7 @@ public class Unsigned4BitType extends AbstractIntegerType<Unsigned4BitType> impl
 	public Unsigned4BitType copy(){ return new Unsigned4BitType( get() ); }
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public Fraction getEntitiesPerPixel() { return new Fraction( 4, 64 ); }
 
 	@Override
 	public int getBitsPerPixel() { return 4; }

@@ -41,6 +41,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
 /**
@@ -87,7 +88,7 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	public NativeImg<UnsignedLongType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedLongType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<UnsignedLongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
+		final NativeImg<UnsignedLongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction() );
 
 		// create a Type that is linked to the container
 		final UnsignedLongType linkedType = new UnsignedLongType( container );
@@ -251,8 +252,8 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	}
 
 	@Override
-	public int getEntitiesPerPixel() {
-		return 1;
+	public Fraction getEntitiesPerPixel() {
+		return new Fraction();
 	}
 
 	@Override

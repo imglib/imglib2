@@ -47,6 +47,7 @@ import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
+import net.imglib2.util.Fraction;
 
 /**
  * A {@link Type} with a bit depth of 128.
@@ -101,7 +102,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	public NativeImg<Unsigned128BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned128BitType> storageFactory, final long dim[] )
 	{
 		// create the container:
-		final NativeImg<Unsigned128BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 2 );
+		final NativeImg<Unsigned128BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( 2, 1 ) );
 
 		// create a Type that is linked to the container
 		final Unsigned128BitType linkedType = new Unsigned128BitType( container );
@@ -255,7 +256,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public Fraction getEntitiesPerPixel() { return new Fraction( 2, 1 ); }
 
 	@Override
 	public int getBitsPerPixel() { return 128; }

@@ -6,7 +6,9 @@ import org.junit.Test;
 
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
 
@@ -33,6 +35,10 @@ public class TestUnsigned2And4BitTypes {
 	private static <T extends IntegerType<T> & NativeType<T>> void checkAccuracy(final T u) {
 		final Img<T> img = u.createSuitableNativeImg(
 				new ArrayImgFactory<T>(), new long[]{(long) u.getMaxValue()});
+		
+		long[] array = ((ArrayImg<T,LongArray>)img).update(null).getCurrentStorageArray();
+		System.out.println(u.getClass().getSimpleName() + ": stored in long[" + array.length + "]");
+		
 		final Cursor<T> c = img.cursor();
 		long i = 0;
 		while (c.hasNext()) {
