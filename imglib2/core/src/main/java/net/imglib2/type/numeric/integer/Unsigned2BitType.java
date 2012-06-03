@@ -108,7 +108,9 @@ public class Unsigned2BitType extends AbstractBitType<Unsigned2BitType>
 		return (dataAccess.getValue(k >>> 6) >>> (k % 64)) & mask;
 		*/
 		// Same as above minus one multiplication, plus one shift to multiply the reminder by 2
-		return (dataAccess.getValue((int)(i >>> 5)) >>> ((i % 32) << 1)) & mask;
+		//return (dataAccess.getValue((int)(i >>> 5)) >>> ((i % 32) << 1)) & mask;
+		// Even less operations
+		return (dataAccess.getValue((int)(i >>> 5)) >>> ((i & 31) << 1)) & mask;
 	}
 
 	// Crops value to within mask
@@ -120,8 +122,8 @@ public class Unsigned2BitType extends AbstractBitType<Unsigned2BitType>
 		final long shift = k % 64;
 		*/
 		// Same as above, minus one multiplication, plus one shift to multiply the reminder by 2
-		final int i1 = (int)(i >>> 5); // k / (64 / 2)
-		final long shift = (i % 32) << 1;
+		final int i1 = (int)(i >>> 5); // Same as (i * 2) / 64 = (i << 1) >>> 6
+		final long shift = (i << 1) & 63; // Same as (i * 2) % 64
 		// Clear the bits first, then and the masked value
 		dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
 	}

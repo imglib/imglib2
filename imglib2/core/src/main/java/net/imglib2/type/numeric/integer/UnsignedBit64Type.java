@@ -123,7 +123,7 @@ public class UnsignedBit64Type extends AbstractBitType<UnsignedBit64Type>
 	public long get() {
 		final long k = i * nBits;
 		final int i1 = (int)(k >>> 6); // k / 64;
-		final long shift = k % 64;
+		final long shift = k & 63; // Same as k % 64;
 		final long v = dataAccess.getValue(i1);
 		if (0 == shift) {
 			// Number contained in a single long, ending exactly at the first bit
@@ -146,7 +146,7 @@ public class UnsignedBit64Type extends AbstractBitType<UnsignedBit64Type>
 	public void set( final long value ) {
 		final long k = i * nBits;
 		final int i1 = (int)(k >>> 6); // k / 64;
-		final long shift = k % 64;
+		final long shift = k & 63; // Same as k % 64;
 		final long safeValue = value & mask;
 		if (0 == shift) {
 			// Number contained in a single long, ending exactly at the first bit
