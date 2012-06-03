@@ -62,7 +62,12 @@ public class Unsigned12BitType2 extends AbstractBitType<Unsigned12BitType2>
 	public long get() {
 		final long k = i * 12;
 		final int i1 = (int)(k >>> 6); // k / 64;
-		final long shift = k % 64;
+		final long shift = k & 63; // k % 64;
+		// equivalent: seems like less operations but it is a tiny bit slower
+		//final long k = (i << 1) + i;
+		//final int i1 = (int)(k >>> 4);
+		//final long shift = (k & 15) << 2;
+		
 		final long v = dataAccess.getValue(i1);
 		if (0 == shift) {
 			// Number contained in a single long, ending exactly at the first bit
@@ -86,33 +91,29 @@ public class Unsigned12BitType2 extends AbstractBitType<Unsigned12BitType2>
 	public void set( final long value ) {
 		final long k = i * 12;
 		final int i1 = (int)(k >>> 6); // k / 64;
-		final long shift = k % 64;
+		final long shift = k & 63; // k % 64;
 		final long safeValue = value & mask;
-		if (0 == shift) {
-			// Number contained in a single long, ending exactly at the first bit
-			dataAccess.setValue(i1, (dataAccess.getValue(i1) & invMask) | safeValue);
+
+		final long antiShift = 64 - shift;
+		final long v = dataAccess.getValue(i1);
+		if (antiShift < 12) {
+			// Number split between two adjacent longs
+			// 1. Store the lower bits of safeValue at the upper bits of v1
+			final long v1 = (v & (0xffffffffffffffffL >>> antiShift)) // clear upper bits, keep other values
+					| ((safeValue & (mask >>> (12 - antiShift))) << shift); // the lower part of safeValue, stored at the upper end
+			dataAccess.setValue(i1, v1);
+			// 2. Store the upper bits of safeValue at the lower bits of v2
+			final long v2 = (dataAccess.getValue(i1 + 1) & (0xffffffffffffffffL << (12 - antiShift))) // other
+					| (safeValue >>> antiShift); // upper part of safeValue, stored at the lower end
+			dataAccess.setValue(i1 + 1, v2);
 		} else {
-			final long antiShift = 64 - shift;
-			final long v = dataAccess.getValue(i1);
-			if (antiShift < 12) {
-				// Number split between two adjacent longs
-				// 1. Store the lower bits of safeValue at the upper bits of v1
-				final long v1 = (v & (0xffffffffffffffffL >>> antiShift)) // clear upper bits, keep other values
-						| ((safeValue & (mask >>> (12 - antiShift))) << shift); // the lower part of safeValue, stored at the upper end
-				dataAccess.setValue(i1, v1);
-				// 2. Store the upper bits of safeValue at the lower bits of v2
-				final long v2 = (dataAccess.getValue(i1 + 1) & (0xffffffffffffffffL << (12 - antiShift))) // other
-						| (safeValue >>> antiShift); // upper part of safeValue, stored at the lower end
-				dataAccess.setValue(i1 + 1, v2);
+			// Number contained inside a single long
+			if (0 == v) {
+				// Trivial case
+				dataAccess.setValue(i1, safeValue << shift);
 			} else {
-				// Number contained inside a single long
-				if (0 == v) {
-					// Trivial case
-					dataAccess.setValue(i1, safeValue << shift);
-				} else {
-					// Clear the bits first
-					dataAccess.setValue(i1, (v & ~(mask << shift)) | (safeValue << shift));
-				}
+				// Clear the bits first
+				dataAccess.setValue(i1, (v & ~(mask << shift)) | (safeValue << shift));
 			}
 		}
 	}
