@@ -42,6 +42,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
 /**
@@ -87,7 +88,7 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	public NativeImg<LongType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<LongType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, 1 );
+		final NativeImg<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction() );
 
 		// create a Type that is linked to the container
 		final LongType linkedType = new LongType( container );
@@ -200,7 +201,7 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	public LongType copy(){ return new LongType( get() ); }
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public Fraction getEntitiesPerPixel() { return new Fraction(); }
 
 	@Override
 	public void updateIndex( final int index ) { this.i = index; }

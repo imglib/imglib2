@@ -41,6 +41,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
 /**
@@ -83,7 +84,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	protected GenericByteType() { this( ( byte )0 ); }
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public Fraction getEntitiesPerPixel() { return new Fraction(); }
 
 	@Override
 	public void updateContainer( final Object c )

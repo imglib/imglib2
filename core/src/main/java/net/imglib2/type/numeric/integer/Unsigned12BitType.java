@@ -42,6 +42,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.BitAccess;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -91,7 +92,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	public NativeImg<Unsigned12BitType, ? extends BitAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned12BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
+		final NativeImg<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, new Fraction( 12, 1 ) );
 
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );
@@ -258,7 +259,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	public Unsigned12BitType copy(){ return new Unsigned12BitType( get() ); }
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public Fraction getEntitiesPerPixel() { return new Fraction( 12, 1 ); }
 
 	@Override
 	public int getBitsPerPixel() { return 12; }

@@ -44,6 +44,7 @@ import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.type.AbstractNativeType;
 import net.imglib2.type.BasePairType;
 import net.imglib2.type.label.BasePairBitType.Base;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -54,7 +55,7 @@ import net.imglib2.type.label.BasePairBitType.Base;
 public class BasePairCharType extends AbstractNativeType<BasePairCharType> implements BasePairType<BasePairCharType>
 {
 	@Override
-	public int getEntitiesPerPixel() { return 1; } 
+	public Fraction getEntitiesPerPixel() { return new Fraction(); }
 
 	final protected NativeImg<BasePairCharType, ? extends CharAccess> img;
 	
@@ -90,7 +91,7 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	public NativeImg<BasePairCharType, ? extends CharAccess> createSuitableNativeImg( final NativeImgFactory<BasePairCharType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );
+		final NativeImg<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, new Fraction() );
 		
 		// create a Type that is linked to the container
 		final BasePairCharType linkedType = new BasePairCharType( container );

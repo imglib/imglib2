@@ -51,6 +51,7 @@ import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.labeling.NativeImgLabeling;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.util.Fraction;
 
 import org.junit.Test;
 
@@ -68,7 +69,7 @@ public class WatershedTest
 		long[] outputDimensions = new long[] { expected.length, expected[ 0 ].length };
 		NativeImgLabeling< Integer, IntType > seedLabeling = new NativeImgLabeling< Integer, IntType >( new ArrayImgFactory< IntType >().create( seedDimensions, new IntType() ) );
 		NativeImgLabeling< Integer, IntType > outputLabeling = new NativeImgLabeling< Integer, IntType >( new ArrayImgFactory< IntType >().create( outputDimensions, new IntType() ) );
-		NativeImg< IntType, ? extends IntAccess > imageImage = new ArrayImgFactory< IntType >().createIntInstance( imageDimensions, 1 );
+		NativeImg< IntType, ? extends IntAccess > imageImage = new ArrayImgFactory< IntType >().createIntInstance( imageDimensions, new Fraction() );
 		imageImage.setLinkedType( new IntType( imageImage ) );
 		/*
 		 * Fill the image.

@@ -55,6 +55,7 @@ import net.imglib2.RealPositionable;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.util.Fraction;
 
 /**
  * 
@@ -97,7 +98,7 @@ public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< U
 	public UnsignedByteScreenImage( final int width, final int height, final byte[] data )
 	{
 		this.data = data;
-		argbArray = new ArrayImg< UnsignedByteType, ByteArray >( new ByteArray( data ), new long[]{ width, height }, 1 );
+		argbArray = new ArrayImg< UnsignedByteType, ByteArray >( new ByteArray( data ), new long[]{ width, height }, new Fraction() );
 		argbArray.setLinkedType( new UnsignedByteType( argbArray ) );
 
 		SampleModel sampleModel = GRAY_LUT.createCompatibleWritableRaster( 1, 1 )

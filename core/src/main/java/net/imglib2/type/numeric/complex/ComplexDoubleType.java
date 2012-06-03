@@ -42,6 +42,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -89,7 +90,7 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	public NativeImg<ComplexDoubleType, ? extends DoubleAccess> createSuitableNativeImg( final NativeImgFactory<ComplexDoubleType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 2 );
+		final NativeImg<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, new Fraction( 2, 1 ) );
 
 		// create a Type that is linked to the container
 		final ComplexDoubleType linkedType = new ComplexDoubleType( container );
@@ -144,7 +145,7 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	public ComplexDoubleType copy(){ return new ComplexDoubleType( getRealFloat(), getImaginaryFloat() ); }
 
 	@Override
-	public int getEntitiesPerPixel() { return 2; }
+	public Fraction getEntitiesPerPixel() { return new Fraction( 2, 1 ); }
 
 	@Override
 	public void updateIndex( final int index )

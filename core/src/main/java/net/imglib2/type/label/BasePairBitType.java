@@ -43,6 +43,7 @@ import net.imglib2.img.basictypeaccess.BitAccess;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.type.BasePairType;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -57,7 +58,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	public static enum Base { gap, N, A, T, G, C; }
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; } 
+	public Fraction getEntitiesPerPixel() { return new Fraction( 3, 1 ); }
 
 	final protected NativeImg<BasePairBitType, ? extends BitAccess> img;
 	
@@ -90,7 +91,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	public NativeImg<BasePairBitType, ? extends BitAccess> createSuitableNativeImg( final NativeImgFactory<BasePairBitType> storageFactory, final long dim[] )	
 	{
 		// create the container
-		final NativeImg<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 3 );
+		final NativeImg<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, new Fraction( 3, 1 ) );
 		
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );

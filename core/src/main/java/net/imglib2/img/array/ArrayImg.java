@@ -42,6 +42,7 @@ import net.imglib2.Interval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 import net.imglib2.util.IntervalIndexer;
 
 /**
@@ -74,7 +75,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	 * @param dim
 	 * @param entitiesPerPixel
 	 */
-	public ArrayImg( final A data, final long[] dim, final int entitiesPerPixel )
+	public ArrayImg( final A data, final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
 		this.dim = new int[ n ];
