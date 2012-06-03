@@ -54,7 +54,8 @@ import net.imglib2.util.Fraction;
  */
 public class Unsigned4BitType extends AbstractIntegerType<Unsigned4BitType> implements NativeType<Unsigned4BitType>
 {
-	private int i = 0;
+	// Maximum count is Integer.MAX_VALUE * (64 / 4)
+	private long i = 0;
 
 	final protected NativeImg<Unsigned4BitType, ? extends LongAccess> img;
 
@@ -116,7 +117,7 @@ public class Unsigned4BitType extends AbstractIntegerType<Unsigned4BitType> impl
 	public Unsigned4BitType duplicateTypeOnSameNativeImg() { return new Unsigned4BitType( img ); }
 
 	public long get() {
-		return (dataAccess.getValue(i >>> 4) >>> ((i % 16) << 2)) & mask;
+		return (dataAccess.getValue((int)(i >>> 4)) >>> ((i % 16) << 2)) & mask;
 	}
 
 	// Crops value to within mask
@@ -127,7 +128,7 @@ public class Unsigned4BitType extends AbstractIntegerType<Unsigned4BitType> impl
 		final long shift = k % 64;
 		*/
 		// Same as above minus one multiplication, plus one shift (to multiply by 4)
-		final int i1 = i >>> 16;
+		final int i1 = (int)(i >>> 16);
 		final long shift = (i % 16) << 2;
 		// Clear the bits first, then and the masked value
 		dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
@@ -152,7 +153,7 @@ public class Unsigned4BitType extends AbstractIntegerType<Unsigned4BitType> impl
 	public double getMinValue()  { return 0; }
 
 	@Override
-	public int getIndex() { return i; }
+	public int getIndex() { return (int)i; }
 
 	@Override
 	public void updateIndex( final int index )

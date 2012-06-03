@@ -20,6 +20,8 @@ public class TestUnsigned2And4BitTypes {
 	public static void main(String[] args) {
 		checkAccuracy(new Unsigned2BitType());
 		checkAccuracy(new Unsigned4BitType());
+		checkMaxDimensions(new Unsigned2BitType());
+		checkMaxDimensions(new Unsigned4BitType());
 	}
 
 	@Test
@@ -30,6 +32,25 @@ public class TestUnsigned2And4BitTypes {
 	@Test
 	public void check4Bit() {
 		checkAccuracy(new Unsigned4BitType());
+	}
+	
+	@Test
+	public void check2BitMaxImgSize() {
+		checkMaxDimensions(new Unsigned2BitType());
+	}
+	
+	@Test
+	public void check4BitMaxImgSize() {
+		checkMaxDimensions(new Unsigned4BitType());
+	}
+	
+	private static <T extends IntegerType<T> & NativeType<T>> void checkMaxDimensions(final T u) {
+		// VERY IMPORTANT: 64L, notice the L to make it a long, otherwise the math is done with 32-bit int.
+		final long[] dims = new long[]{Integer.MAX_VALUE * (64L / u.getBitsPerPixel())};
+		final Img<T> img = u.createSuitableNativeImg(
+				new ArrayImgFactory<T>(), dims);
+		System.out.println("Created Img<" + u.getClass().getSimpleName() + "> of size " + img.size()
+				+ ", which is " + (Integer.MAX_VALUE / img.size()) + " * Integer.MAX_VALUE");
 	}
 	
 	private static <T extends IntegerType<T> & NativeType<T>> void checkAccuracy(final T u) {
