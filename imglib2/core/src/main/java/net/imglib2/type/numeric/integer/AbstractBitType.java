@@ -38,95 +38,118 @@
 package net.imglib2.type.numeric.integer;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.type.Type;
+import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 
 /**
- * A {@link Type} with a bit depth of 2.
- * 
  * The performance of this type is traded off for the gain in memory storage.
  * 
  * @author Albert Cardona
  */
-public class Unsigned4BitType extends AbstractBitType<Unsigned4BitType>
+public abstract class AbstractBitType<T extends AbstractBitType<T>> extends AbstractIntegerType<T> implements NativeType<T>
 {
-	// A mask for bit and, containing nBits of 1
-	private final long mask;
+	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
+	protected long i = 0;
+
+	final protected NativeImg<T, ? extends LongAccess> img;
+
+	// the DataAccess that holds the information
+	protected LongAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public Unsigned4BitType(
-			final NativeImg<Unsigned4BitType,
+	public AbstractBitType(
+			final NativeImg<T,
 			? extends LongAccess> bitStorage)
 	{
-		super( bitStorage );
-		this.mask = 15; // 1111 in binary
+		img = bitStorage;
 	}
 
-	// this is the constructor if you want it to be a variable
-	public Unsigned4BitType( final long value )
+	@Override
+	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
+
+	public abstract long get();
+
+	public abstract void set( final long value );
+
+	@Override
+	public int getInteger() { return (int)get(); }
+
+	@Override
+	public long getIntegerLong() { return get(); }
+
+	@Override
+	public void setInteger( final int f ) { set( f ); }
+
+	@Override
+	public void setInteger( final long f ) { set( f ); }
+
+	/** The maximum value that can be stored is {@code Math.pow(2, nBits) -1}. */
+	@Override
+	public double getMaxValue() { return Math.pow(2, getBitsPerPixel()) -1; }
+	@Override
+	public double getMinValue()  { return 0; }
+
+	@Override
+	public int getIndex() { return (int)i; }
+
+	@Override
+	public void updateIndex( final int index )
 	{
-		this( (NativeImg<Unsigned4BitType, ? extends LongAccess>)null );
-		dataAccess = new LongArray( 1 );
-		set( value );
+		i = index;
 	}
 
-	// this is the constructor if you want to specify the dataAccess
-	public Unsigned4BitType( final LongAccess access )
+	@Override
+	public void incIndex()
 	{
-		this( (NativeImg<Unsigned4BitType, ? extends LongAccess>)null );
-		dataAccess = access;
+		++i;
 	}
-
-	// this is the constructor if you want it to be a variable
-	public Unsigned4BitType() { this( 0 ); }
-
 	@Override
-	public NativeImg<Unsigned4BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned4BitType> storageFactory, final long dim[] )
+	public void incIndex( final int increment )
 	{
-		// create the container
-		final NativeImg<Unsigned4BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
-
-		// create a Type that is linked to the container
-		final Unsigned4BitType linkedType = new Unsigned4BitType( container );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
+		i += increment;
+	}
+	@Override
+	public void decIndex()
+	{
+		--i;
+	}
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
 	}
 
 	@Override
-	public Unsigned4BitType duplicateTypeOnSameNativeImg() { return new Unsigned4BitType( img ); }
+	public Fraction getEntitiesPerPixel() { return new Fraction( getBitsPerPixel(), 64 ); }
 
 	@Override
-	public long get() {
-		return (dataAccess.getValue((int)(i >>> 4)) >>> ((i % 16) << 2)) & mask;
-	}
-
-	// Crops value to within mask
-	@Override
-	public void set( final long value ) {
-		/*
-		final int k = i * 4;
-		final int i1 = k >>> 6; // k / 64;
-		final long shift = k % 64;
-		*/
-		// Same as above minus one multiplication, plus one shift (to multiply by 4)
-		final int i1 = (int)(i >>> 16);
-		final long shift = (i % 16) << 2;
-		// Clear the bits first, then and the masked value
-		dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
+	public void inc() {
+		set(get() + 1);
 	}
 
 	@Override
-	public Unsigned4BitType createVariable(){ return new Unsigned4BitType( 0 ); }
+	public void dec() {
+		set(get() - 1);
+	}
 
 	@Override
-	public Unsigned4BitType copy(){ return new Unsigned4BitType( get() ); }
+	public void add(final T t) {
+		set(get() + t.get());
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 4; }
+	public void sub(final T t) {
+		set(get() - t.get());
+	}
+
+	@Override
+	public void mul(final T t) {
+		set(get() * t.get());
+	}
+
+	@Override
+	public void div(final T t) {
+		set(get() / t.get());
+	}
 }

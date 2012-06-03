@@ -41,7 +41,6 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.util.Fraction;
 
@@ -52,16 +51,8 @@ import net.imglib2.util.Fraction;
  * 
  * @author Albert Cardona
  */
-public class Unsigned2BitType extends AbstractIntegerType<Unsigned2BitType> implements NativeType<Unsigned2BitType>
+public class Unsigned2BitType extends AbstractBitType<Unsigned2BitType>
 {
-	// Maximum count is Integer.MAX_VALUE * (64 / 2)
-	private long i = 0;
-
-	final protected NativeImg<Unsigned2BitType, ? extends LongAccess> img;
-
-	// the DataAccess that holds the information
-	protected LongAccess dataAccess;
-
 	// A mask for bit and, containing nBits of 1
 	private final long mask;
 
@@ -70,16 +61,14 @@ public class Unsigned2BitType extends AbstractIntegerType<Unsigned2BitType> impl
 			final NativeImg<Unsigned2BitType,
 			? extends LongAccess> bitStorage)
 	{
-		img = bitStorage;
+		super( bitStorage );
 		this.mask = 3; // 11 in binary
-		updateIndex( 0 );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public Unsigned2BitType( final long value )
 	{
 		this( (NativeImg<Unsigned2BitType, ? extends LongAccess>)null );
-		updateIndex( 0 );
 		dataAccess = new LongArray( 1 );
 		set( value );
 	}
@@ -88,7 +77,6 @@ public class Unsigned2BitType extends AbstractIntegerType<Unsigned2BitType> impl
 	public Unsigned2BitType( final LongAccess access )
 	{
 		this( (NativeImg<Unsigned2BitType, ? extends LongAccess>)null );
-		updateIndex( 0 );
 		dataAccess = access;
 	}
 
@@ -99,7 +87,7 @@ public class Unsigned2BitType extends AbstractIntegerType<Unsigned2BitType> impl
 	public NativeImg<Unsigned2BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned2BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<Unsigned2BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( 2, 64 ) );
+		final NativeImg<Unsigned2BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
 
 		// create a Type that is linked to the container
 		final Unsigned2BitType linkedType = new Unsigned2BitType( container );
@@ -111,11 +99,9 @@ public class Unsigned2BitType extends AbstractIntegerType<Unsigned2BitType> impl
 	}
 
 	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
-
-	@Override
 	public Unsigned2BitType duplicateTypeOnSameNativeImg() { return new Unsigned2BitType( img ); }
 
+	@Override
 	public long get() {
 		/*
 		final int k = i * 2;
@@ -126,6 +112,7 @@ public class Unsigned2BitType extends AbstractIntegerType<Unsigned2BitType> impl
 	}
 
 	// Crops value to within mask
+	@Override
 	public void set( final long value ) {
 		/*
 		final int k = i * 2;
@@ -140,92 +127,11 @@ public class Unsigned2BitType extends AbstractIntegerType<Unsigned2BitType> impl
 	}
 
 	@Override
-	public int getInteger() { return (int)get(); }
-
-	@Override
-	public long getIntegerLong() { return get(); }
-
-	@Override
-	public void setInteger( final int f ) { set( f ); }
-
-	@Override
-	public void setInteger( final long f ) { set( f ); }
-
-	/** The maximum value that can be stored is {@code Math.pow(2, nBits) -1}. */
-	@Override
-	public double getMaxValue() { return 3; }
-	@Override
-	public double getMinValue()  { return 0; }
-
-	@Override
-	public int getIndex() { return (int)i; }
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
-	}
-
-	@Override
 	public Unsigned2BitType createVariable(){ return new Unsigned2BitType( 0 ); }
 
 	@Override
 	public Unsigned2BitType copy(){ return new Unsigned2BitType( get() ); }
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction( 2, 64 ); }
-
-	@Override
 	public int getBitsPerPixel() { return 2; }
-
-	@Override
-	public void inc() {
-		set(get() + 1);
-	}
-
-	@Override
-	public void dec() {
-		set(get() - 1);
-	}
-
-	@Override
-	public void add(final Unsigned2BitType t) {
-		set(get() + t.get());
-	}
-
-	@Override
-	public void sub(final Unsigned2BitType t) {
-		set(get() - t.get());
-	}
-
-	@Override
-	public void mul(final Unsigned2BitType t) {
-		set(get() * t.get());
-	}
-
-	@Override
-	public void div(final Unsigned2BitType t) {
-		set(get() / t.get());
-	}
 }
