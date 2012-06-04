@@ -10,7 +10,6 @@ public class Unsigned12BitType2 extends AbstractBitType<Unsigned12BitType2>
 {
 	// A mask for bit and, containing nBits of 1
 	private final long mask;
-	private final long invMask;
 
 	// this is the constructor if you want it to read from an array
 	public Unsigned12BitType2(
@@ -19,7 +18,6 @@ public class Unsigned12BitType2 extends AbstractBitType<Unsigned12BitType2>
 	{
 		super( bitStorage );
 		this.mask = 4095; // 111111111111 in binary
-		this.invMask = ~this.mask;
 	}
 
 	// this is the constructor if you want it to be a variable
