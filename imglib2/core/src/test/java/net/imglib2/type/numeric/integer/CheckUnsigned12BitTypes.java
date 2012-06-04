@@ -19,11 +19,6 @@ public class CheckUnsigned12BitTypes
 	}
 	
 	@Test
-	public void testUnsigned12BitType2() {
-		test(new Unsigned12BitType2());
-	}
-	
-	@Test
 	public void testUnsignedBit64TypeWith12() {
 		test(new UnsignedBit64Type(12));
 	}

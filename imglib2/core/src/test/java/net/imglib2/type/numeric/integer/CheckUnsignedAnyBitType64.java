@@ -34,9 +34,6 @@ public class CheckUnsignedAnyBitType64 {
 		final Img<Unsigned12BitType> imgu12 = u12.createSuitableNativeImg(new ArrayImgFactory<Unsigned12BitType>(), dims);
 		final UnsignedBit64Type ua12 = new UnsignedBit64Type(12);
 		final Img<UnsignedBit64Type> imgua12 = ua12.createSuitableNativeImg(new ArrayImgFactory<UnsignedBit64Type>(), dims);
-		final Unsigned12BitType2 u12_2 = new Unsigned12BitType2();
-		final Img<Unsigned12BitType2> imgu12_2 = u12_2.createSuitableNativeImg(new ArrayImgFactory<Unsigned12BitType2>(), dims);
-		
 		
 		
 		final UnsignedBit64Type ua16 = new UnsignedBit64Type(16);
@@ -80,10 +77,6 @@ public class CheckUnsignedAnyBitType64 {
 		for (int i=0; i<nIterations; ++i) {
 			timeSet(imgu12);
 			timeGet(imgu12);
-		}
-		for (int i=0; i<nIterations; ++i) {
-			timeSet(imgu12_2);
-			timeGet(imgu12_2);
 		}
 		System.out.println("ua12");
 		for (int i=0; i<nIterations; ++i) {
