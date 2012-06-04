@@ -14,7 +14,7 @@ public class CheckUnsigned12BitTypes
 	final long[] values = new long[100];
 	{
 		for (int k=0; k<values.length; ++k) {
-			values[k] = (long)(Math.random() * 1023);
+			values[k] = (long)(Math.random() * 4095);
 		}
 	}
 	
@@ -45,7 +45,6 @@ public class CheckUnsigned12BitTypes
 		c1.reset();
 		k = 0;
 		while (c1.hasNext()) {
-			// Fails:
 			assertTrue(c1.next().getIntegerLong() == values[k]);
 			++k;
 		}
