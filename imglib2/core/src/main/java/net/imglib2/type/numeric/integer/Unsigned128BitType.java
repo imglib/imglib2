@@ -54,7 +54,7 @@ import net.imglib2.util.Fraction;
  * Each value is stored in two adjacent long in an array,
  * with the lower long first, then the upper long.
  * Currently the math methods defined in the superinterface {@link NumericType} are implemented using {@link BigInteger} and {@link BigDecimal}.
- * This class is not {@link Thread}-safe; do a {@link #copy()} first to operate on a different {@link Thread}s.
+ * This class is not {@link Thread}-safe; do a {@link #copy()} first to operate on a different {@link Thread}.
  * 
  * @author Albert Cardona
  */
@@ -64,7 +64,8 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 
 	final protected NativeImg<Unsigned128BitType, ? extends LongAccess> img;
 
-	final protected byte[] bytes = new byte[16];
+	// 17, so the first byte is 0 to mean positive integer
+	final protected byte[] bytes = new byte[17];
 	
 	// the DataAccess that holds the information
 	protected LongAccess dataAccess;
@@ -75,23 +76,28 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 			? extends LongAccess> bitStorage)
 	{
 		img = bitStorage;
-		updateIndex( 0 );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public Unsigned128BitType( final long lower, final long upper )
 	{
 		this( (NativeImg<Unsigned128BitType, ? extends LongAccess>)null );
-		updateIndex( 0 );
-		dataAccess = new LongArray( 1 );
+		dataAccess = new LongArray( 2 );
 		set( lower, upper );
+	}
+	
+	// this is the constructor if you want it to be a variable
+	public Unsigned128BitType( final BigInteger value )
+	{
+		this ( (NativeImg<Unsigned128BitType, ? extends LongAccess>)null );
+		dataAccess = new LongArray( 2 );
+		set( value );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
 	public Unsigned128BitType( final LongAccess access )
 	{
 		this( (NativeImg<Unsigned128BitType, ? extends LongAccess>)null );
-		updateIndex( 0 );
 		dataAccess = access;
 	}
 
@@ -120,40 +126,50 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	public Unsigned128BitType duplicateTypeOnSameNativeImg() { return new Unsigned128BitType( img ); }
 
 	private final void intoBytes( final long lower, final long upper ) {
-		bytes[ 0] = (byte)((upper >>> 56) & 0xffL);
-		bytes[ 1] = (byte)((upper >>> 48) & 0xffL);
-		bytes[ 2] = (byte)((upper >>> 40) & 0xffL);
-		bytes[ 3] = (byte)((upper >>> 32) & 0xffL);
-		bytes[ 4] = (byte)((upper >>> 24) & 0xffL);
-		bytes[ 5] = (byte)((upper >>> 16) & 0xffL);
-		bytes[ 6] = (byte)((upper >>>  8) & 0xffL);
-		bytes[ 7] = (byte) (upper         & 0xffL);
-		bytes[ 8] = (byte)((lower >>> 56) & 0xffL);
-		bytes[ 9] = (byte)((lower >>> 48) & 0xffL);
-		bytes[10] = (byte)((lower >>> 40) & 0xffL);
-		bytes[11] = (byte)((lower >>> 32) & 0xffL);
-		bytes[12] = (byte)((lower >>> 24) & 0xffL);
-		bytes[13] = (byte)((lower >>> 16) & 0xffL);
-		bytes[14] = (byte)((lower >>>  8) & 0xffL);
-		bytes[15] = (byte) (lower         & 0xffL);
+		bytes[ 0] = 0; // so the number is non-negative
+		bytes[ 1] = (byte)((upper >>> 56) & 0xffL);
+		bytes[ 2] = (byte)((upper >>> 48) & 0xffL);
+		bytes[ 3] = (byte)((upper >>> 40) & 0xffL);
+		bytes[ 4] = (byte)((upper >>> 32) & 0xffL);
+		bytes[ 5] = (byte)((upper >>> 24) & 0xffL);
+		bytes[ 6] = (byte)((upper >>> 16) & 0xffL);
+		bytes[ 7] = (byte)((upper >>>  8) & 0xffL);
+		bytes[ 8] = (byte) (upper         & 0xffL);
+		bytes[ 9] = (byte)((lower >>> 56) & 0xffL);
+		bytes[10] = (byte)((lower >>> 48) & 0xffL);
+		bytes[11] = (byte)((lower >>> 40) & 0xffL);
+		bytes[12] = (byte)((lower >>> 32) & 0xffL);
+		bytes[13] = (byte)((lower >>> 24) & 0xffL);
+		bytes[14] = (byte)((lower >>> 16) & 0xffL);
+		bytes[15] = (byte)((lower >>>  8) & 0xffL);
+		bytes[16] = (byte) (lower         & 0xffL);
 	}
 	
-	/** The first byte is the most significant byte, like in {@link BigInteger#toByteArray()}. Only the first 16 bytes are read, if there are many. */
+	/** The first byte is the most significant byte, like in {@link BigInteger#toByteArray()}.
+	 * Only the last 16 bytes are read, if there are more. */
 	public void set( final byte[] bytes ) {
 		final int k = i * 2;
-		int b = Math.min(16, bytes.length) - 1;
+		int b = bytes.length -1;
+		int cut = b - 8;
 		long u = 0;
-		if ( b > 7 ) {
-			for (; b > 7; --b) {
-				u |= bytes[ b ] << ( ( b - 8) * 8 );
+
+		// Set lower
+		if ( b > cut ) {
+			for (int p = 0; b > cut; --b, ++p) {
+				u |= ( bytes[ b ] & 0xffL ) << ( p * 8 );
 			}
-			dataAccess.setValue( k + 1, u );
 		}
+		dataAccess.setValue( k, u );
+
+		// Set upper
 		u = 0;
-		for (; b > -1; --b) {
-			u |= bytes[ b ] << ( b * 8 );
+		cut = Math.max( -1, cut - 8 );
+		if ( b > cut ) {
+			for (int p = 0; b > cut; --b, ++p) {
+				u |= ( bytes[ b ] & 0xffL ) << ( p * 8 );
+			}
 		}
-		dataAccess.setValue( i * 2, u );
+		dataAccess.setValue( k + 1, u );
 	}
 	
 	public BigInteger get() {
@@ -175,19 +191,19 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	/** Return the lowest 32 bits, like {@link BigInteger#intValue()}. */
 	@Override
 	public int getInteger() {
-		return (int)(dataAccess.getValue( i * 2 + 1 ) & 0xffffffffL);
+		return (int)(dataAccess.getValue( i * 2 ) & 0xffffffffL);
 	}
 
 	/** Return the lowest 64 bits, like {@link BigInteger#intValue()}. */
 	@Override
 	public long getIntegerLong() {
-		return dataAccess.getValue( i * 2 + 1 );
+		return dataAccess.getValue( i * 2 );
 	}
 
 	@Override
 	public void setInteger( final int value ) {
-		final int k = i * 1;
-		dataAccess.setValue( k + 1, (dataAccess.getValue( k ) & 0xffffffff00000000L) | value );
+		final int k = i * 2;
+		dataAccess.setValue( k, (dataAccess.getValue( k ) & 0xffffffff00000000L) | value );
 		dataAccess.setValue( k + 1, 0 );
 	}
 	
@@ -199,14 +215,16 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	}
 
 	/** The maximum value that can be stored is {@code Math.pow(2, 128) -1},
-	 * which cannot be represented with a double; this method returns 0. */
+	 * which cannot be represented with a double; this method returns {@link Double#MAX_VALUE}. */
 	@Override
-	public double getMaxValue() { return 0; } // WRONG value in purpose
+	public double getMaxValue() { return Double.MAX_VALUE; } // WRONG value in purpose
 
-	/** The true maximum value, unlike {@link #getMaxValue()} which cannot represent it in a {@code double}. */
+	/** The true maximum value, unlike {@link #getMaxValue()} which cannot represent
+	 * it in a {@code double}. */
 	public BigInteger getMaxBigIntegerValue() {
-		for (int b=0; b<bytes.length; ++b) {
-			bytes[b] = (byte)0xff;
+		bytes[0] = 0;
+		for (int b=1; b<bytes.length; ++b) {
+			bytes[b] = -1; // 0xff
 		}
 		return new BigInteger(bytes);
 	}
@@ -282,10 +300,10 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	public void dec() {
 		final int k = i * 2;
 		final long lower = dataAccess.getValue( k );
-		if ( 0xffffffffffffffffL == lower - 1 ) {
+		if ( 0 == lower ) {
 			dataAccess.setValue( k, 0xffffffffffffffffL );
 			final long upper = dataAccess.getValue( k + 1 );
-			if ( 0xffffffffffffffffL == lower - 1 ) {
+			if ( 0 == upper ) {
 				dataAccess.setValue( k + 1, 0xffffffffffffffffL );
 			} else {
 				dataAccess.setValue( k + 1, upper - 1 );
@@ -338,5 +356,19 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	@Override
 	public void div(final Unsigned128BitType t) {
 		set( get().divide( t.get() ).toByteArray() );
+	}
+
+	@Override
+	public int compareTo( final Unsigned128BitType t ) {
+		final long upper1 = dataAccess.getValue( i * 2 + 1 ),
+		            upper2 = t.dataAccess.getValue( t.i * 2 + 1 );
+		if ( -1 == UnsignedLongType.compare( upper1, upper2 ) ) {
+			return -1;
+		} else if ( upper1 == upper2 ) {
+			final long lower1 = dataAccess.getValue( i * 2 ),
+			            lower2 = t.dataAccess.getValue( t.i * 2 );
+			return UnsignedLongType.compare( lower1, lower2 );
+		}
+		return 1;
 	}
 }
