@@ -19,7 +19,7 @@ public class CheckUnsignedAnyBitType64 {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		checkAccuracy();
+		//checkAccuracy();
 		checkPerformance();
 	}
 	
@@ -29,10 +29,16 @@ public class CheckUnsignedAnyBitType64 {
 		final Img<UnsignedByteType> imgub = ub.createSuitableNativeImg(new ArrayImgFactory<UnsignedByteType>(), dims);
 		final UnsignedShortType us = new UnsignedShortType();
 		final Img<UnsignedShortType> imgus = us.createSuitableNativeImg(new ArrayImgFactory<UnsignedShortType>(), dims);
+		
 		final Unsigned12BitType u12 = new Unsigned12BitType();
 		final Img<Unsigned12BitType> imgu12 = u12.createSuitableNativeImg(new ArrayImgFactory<Unsigned12BitType>(), dims);
 		final UnsignedBit64Type ua12 = new UnsignedBit64Type(12);
 		final Img<UnsignedBit64Type> imgua12 = ua12.createSuitableNativeImg(new ArrayImgFactory<UnsignedBit64Type>(), dims);
+		final Unsigned12BitType2 u12_2 = new Unsigned12BitType2();
+		final Img<Unsigned12BitType2> imgu12_2 = u12_2.createSuitableNativeImg(new ArrayImgFactory<Unsigned12BitType2>(), dims);
+		
+		
+		
 		final UnsignedBit64Type ua16 = new UnsignedBit64Type(16);
 		final Img<UnsignedBit64Type> imgua16 = ua16.createSuitableNativeImg(new ArrayImgFactory<UnsignedBit64Type>(), dims);
 		final UnsignedBit64Type ua50 = new UnsignedBit64Type(50);
@@ -59,6 +65,7 @@ public class CheckUnsignedAnyBitType64 {
 		
 		
 		// Performance is very sensitive to who gets JITed first, so commenting out a few for now:
+		/*
 		for (int i=0; i<nIterations; ++i) {
 			timeSet(imgub);
 			timeGet(imgub);
@@ -67,15 +74,25 @@ public class CheckUnsignedAnyBitType64 {
 			timeSet(imgus);
 			timeGet(imgus);
 		}
+		*/
+		
+		
 		for (int i=0; i<nIterations; ++i) {
 			timeSet(imgu12);
 			timeGet(imgu12);
+		}
+		for (int i=0; i<nIterations; ++i) {
+			timeSet(imgu12_2);
+			timeGet(imgu12_2);
 		}
 		System.out.println("ua12");
 		for (int i=0; i<nIterations; ++i) {
 			timeSet(imgua12);
 			timeGet(imgua12);
 		}
+		
+		
+		/*
 		System.out.println("ua16");
 		for (int i=0; i<nIterations; ++i) {
 			timeSet(imgua16);
@@ -94,18 +111,11 @@ public class CheckUnsignedAnyBitType64 {
 		for (int i=0; i<nIterations; ++i) {
 			timeSet(imgua1);
 			timeGet(imgua1);
-		}		
+		}
+		*/	
 
-		for (int i=0; i<nIterations; ++i) {
-			timeSet(imgu2);
-			timeGet(imgu2);
-		}
-		System.out.println("ua2");
-		for (int i=0; i<nIterations; ++i) {
-			timeSet(imgua2);
-			timeGet(imgua2);
-		}
-		
+
+		/*
 		for (int i=0; i<nIterations; ++i) {
 			timeSet(imgu4);
 			timeGet(imgu4);
@@ -115,6 +125,18 @@ public class CheckUnsignedAnyBitType64 {
 			timeSet(imgua4);
 			timeGet(imgua4);
 		}
+		
+		for (int i=0; i<nIterations; ++i) {
+			timeSet(imgu2);
+			timeGet(imgu2);
+		}
+		System.out.println("ua2");
+		for (int i=0; i<nIterations; ++i) {
+			timeSet(imgua2);
+			timeGet(imgua2);
+		}
+		*/
+		
 	}
 	
 	private static final <T extends IntegerType<T>> void timeSet(final Img<T> img) {

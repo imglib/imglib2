@@ -117,6 +117,7 @@ extends Point implements RandomAccess<Histogram<R>>, Cursor<Histogram<R>>
 	}
 
 	private final long inside(final long pos, final int d) {
+		// TODO isn't this dimensions[d], without the -1?
 		return Math.min(integralHistogram.dimension(d) -1, Math.max(0, pos));
 	}
 

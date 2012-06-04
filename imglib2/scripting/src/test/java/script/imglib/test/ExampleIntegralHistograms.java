@@ -146,7 +146,7 @@ public class ExampleIntegralHistograms<T extends RealType<T> & NativeType<T>>
 			// Open an image
 			String src;
 			long[] radius1, radius2;
-			switch (3) {
+			switch (1) {
 			case 1:
 				src = "/home/albert/lab/TEM/abd/microvolumes/Seg/180-220-int/180-220-int-00.tif"; // 2d
 				radius1 = new long[]{5, 5};
