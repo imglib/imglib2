@@ -124,7 +124,7 @@ public class Unsigned2BitType extends AbstractBitType<Unsigned2BitType>
 		// Same as above, minus one multiplication, plus one shift to multiply the reminder by 2
 		final int i1 = (int)(i >>> 5); // Same as (i * 2) / 64 = (i << 1) >>> 6
 		final long shift = (i << 1) & 63; // Same as (i * 2) % 64
-		// Clear the bits first, then and the masked value
+		// Clear the bits first, then or the masked value
 		dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
 	}
 

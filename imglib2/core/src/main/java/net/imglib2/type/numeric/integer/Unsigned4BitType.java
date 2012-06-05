@@ -117,7 +117,7 @@ public class Unsigned4BitType extends AbstractBitType<Unsigned4BitType>
 		// Same as above minus one multiplication, plus one shift (to multiply by 4)
 		final int i1 = (int)(i >>> 4); //  Same as (i * 4) / 64 = ((i << 2) >>> 6)
 		final long shift = (i << 2) & 63; // Same as (i * 4) % 64
-		// Clear the bits first, then and the masked value
+		// Clear the bits first, then or the masked value
 		dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
 	}
 
