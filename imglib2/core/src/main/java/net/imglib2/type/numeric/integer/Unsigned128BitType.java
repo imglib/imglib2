@@ -283,10 +283,10 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	public void inc() {
 		final int k = i * 2;
 		final long lower = dataAccess.getValue( k );
-		if ( 0 == lower + 1 ) {
+		if ( 0xffffffffffffffffL == lower ) {
 			dataAccess.setValue( k, 0 );
 			final long upper = dataAccess.getValue( k + 1 );
-			if ( 0 == upper + 1 ) {
+			if ( 0xffffffffffffffffL == upper ) {
 				dataAccess.setValue( k + 1, 0 );
 			} else {
 				dataAccess.setValue( k + 1, upper + 1 );
