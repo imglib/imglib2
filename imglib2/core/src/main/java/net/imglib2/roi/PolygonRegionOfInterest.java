@@ -915,4 +915,14 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 		sb.append( ")" );
 		return sb.toString();
 	}
+
+	@Override
+	public void move(double displacement, int d) {
+		for (RealPoint p : points) {
+			double currPos = p.getDoublePosition(d);
+			p.setPosition(currPos + displacement, d);
+		}
+		invalidateCachedState();
+		stripes = null;
+	}
 }

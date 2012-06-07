@@ -153,6 +153,12 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 		operations.put( roi, Operation.NOT );
 	}
 
+	@Override
+	public void move(double displacement, int d) {
+		for (RegionOfInterest roi : rois)
+			roi.move(displacement, d);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

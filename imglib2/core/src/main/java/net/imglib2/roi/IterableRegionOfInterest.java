@@ -60,7 +60,6 @@ public interface IterableRegionOfInterest extends RegionOfInterest
 	 *            - a RandomAccessible that can generate RandomAccess objects.
 	 *            The cursors that IterableInterval generates will use "src" to
 	 *            generate a RandomAccess to sample the space.
-	 * @return
 	 */
 	public < T extends Type< T >> IterableInterval< T > getIterableIntervalOverROI( RandomAccessible< T > src );
 

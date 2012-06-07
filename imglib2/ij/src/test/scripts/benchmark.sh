@@ -45,7 +45,7 @@ TARGET="$DIR/../../../target"
 
 CP=\
 $TARGET'/dependency/*':\
-$TARGET/imglib2-ij-2.0-SNAPSHOT.jar:\
+$TARGET/classes:\
 $TARGET/test-classes
 
 JAVA=java

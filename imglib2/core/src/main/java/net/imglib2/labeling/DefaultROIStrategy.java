@@ -316,6 +316,18 @@ public class DefaultROIStrategy< T extends Comparable< T >, L extends Labeling< 
 			return true;
 		}
 
+		@Override
+		public void move(double displacement, int d) {
+			// TODO - BDZ: may need to add this functionality
+			throw new UnsupportedOperationException("yet to be implemented");
+		}
+
+		@Override
+		public void move(double[] displacement) {
+			// TODO - BDZ: may need to add this functionality
+			throw new UnsupportedOperationException("yet to be implemented");
+		}
+
 	}
 
 	@Override
