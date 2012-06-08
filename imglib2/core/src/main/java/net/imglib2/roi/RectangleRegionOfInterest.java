@@ -234,7 +234,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	protected boolean isMember( double[] position )
+	public boolean contains( double[] position )
 	{
 		for ( int i = 0; i < numDimensions(); i++ )
 		{

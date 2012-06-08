@@ -112,7 +112,7 @@ public class LineRegionOfInterest extends AbstractRegionOfInterest {
 	//   derive an n-dim equation though.
 	
 	@Override
-	protected boolean isMember(double[] position) {
+	public boolean contains(double[] position) {
 		double sum = 0;
 		for (int i = 0; i < coeffs.length; i++) {
 			sum += position[i] * coeffs[i];

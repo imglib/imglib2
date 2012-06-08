@@ -424,7 +424,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @see net.imglib2.roi.AbstractRegionOfInterest#isMember(double[])
 	 */
 	@Override
-	protected boolean isMember( double[] position )
+	public boolean contains( double[] position )
 	{
 		double accumulator = 0;
 		for ( int i = 0; i < numDimensions(); i++ )

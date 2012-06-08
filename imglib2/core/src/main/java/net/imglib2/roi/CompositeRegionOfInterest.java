@@ -165,7 +165,7 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 	 * @see net.imglib2.roi.AbstractRegionOfInterest#isMember(double[])
 	 */
 	@Override
-	protected boolean isMember( double[] position )
+	public boolean contains( double[] position )
 	{
 		boolean result = false;
 		for ( RegionOfInterest roi : rois )

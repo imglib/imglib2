@@ -69,13 +69,13 @@ public class TestAbstractRegionOfInterest {
 		}
 
 		@Override
-		public boolean isMember(double[] position) {
+		public boolean contains(double[] position) {
 			return r.contains(position[0], position[1]);
 		}
 
 		@Override
 		protected boolean nextRaster(long[] position, long[] end) {
-			assertFalse(isMember(new double [] {position[0], position[1]}));
+			assertFalse(contains(new double [] {position[0], position[1]}));
 			if ((position[1] < r.y) || ((position[1] == r.y) && (position[0] < r.x))) {
 				position[0] = r.x;
 				position[1] = r.y;
