@@ -2,7 +2,6 @@ package net.imglib2.algorithm.gradient;
 
 import java.util.ArrayList;
 
-import net.imglib2.BenchmarkHelper;
 import net.imglib2.Interval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
@@ -13,6 +12,7 @@ import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.BenchmarkHelper;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
