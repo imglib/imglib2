@@ -35,20 +35,6 @@ public class PartialDerivative
 		}
 	}
 
-	public static < T extends NumericType< T > > void gradientCentralDifference3( final RandomAccessible< T > source, final RandomAccessibleInterval< T > gradient, final int dimension )
-	{
-		final long[] fwd = new long[ source.numDimensions() ];
-		final long[] bck = new long[ source.numDimensions() ];
-		fwd[ dimension ] = 1;
-		bck[ dimension ] = -1;
-		for( final Triple< T, T, T > t : new TripleIterableInterval< T, T, T >( gradient, Views.translate( source, fwd ), Views.translate( source, bck ) ) )
-		{
-			t.a.set( t.b );
-			t.a.sub( t.c );
-			t.a.mul( 0.5 );
-		}
-	}
-
 	// fast version
 	/**
 	 * Compute the partial derivative of source in a particular dimension.
