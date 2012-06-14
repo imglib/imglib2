@@ -58,16 +58,16 @@ import org.junit.Test;
 public class RectangleRegionOfInterestTest {
 
 	/**
-	 * Test method for {@link net.imglib2.roi.RectangleRegionOfInterest#isMember(double[])}.
+	 * Test method for {@link net.imglib2.roi.RectangleRegionOfInterest#contains(double[])}.
 	 */
 	@Test
 	public void testIsMember() {
 		RectangleRegionOfInterest r = new RectangleRegionOfInterest(
 				new double [] { 1.3, 10.5, 2.6 },
 				new double [] { 5.6, 2.1, 3.3 } );
-		assertTrue(r.isMember(new double [] { 1.3, 10.5, 2.6 }));
-		assertFalse(r.isMember( new double [] { 1.3+5.6, 10.5+2.1, 2.6+3.3} ));
-		assertTrue(r.isMember(new double [] { 1.5, 10.8, 2.7} ));
+		assertTrue(r.contains(new double [] { 1.3, 10.5, 2.6 }));
+		assertFalse(r.contains( new double [] { 1.3+5.6, 10.5+2.1, 2.6+3.3} ));
+		assertTrue(r.contains(new double [] { 1.5, 10.8, 2.7} ));
 	}
 
 	/**

@@ -257,7 +257,7 @@ public class DefaultROIStrategy< T extends Comparable< T >, L extends Labeling< 
 		}
 
 		@Override
-		protected boolean isMember( final double[] position )
+		public boolean contains( final double[] position )
 		{
 			for ( int i = 0; i < position.length; i++ )
 			{

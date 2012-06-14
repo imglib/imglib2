@@ -293,7 +293,7 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest
 
 		protected void updateCachedMembershipStatus()
 		{
-			bit_type.set( isMember( position ) );
+			bit_type.set( contains( position ) );
 		}
 
 		@Override
@@ -333,15 +333,6 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest
 	{
 		this.nDimensions = nDimensions;
 	}
-
-	/**
-	 * Determine whether a point is a member of the region of interest
-	 * 
-	 * @param position
-	 *            position in question
-	 * @return true if a member
-	 */
-	abstract protected boolean isMember( double[] position );
 
 	/**
 	 * Get the minimum and maximum corners of a bounding hypercube using real

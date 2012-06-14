@@ -38,11 +38,11 @@ package net.imglib2.img.cell;
 
 import java.util.Random;
 
-import net.imglib2.BenchmarkHelper;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.util.BenchmarkHelper;
 import net.imglib2.util.IntervalIndexer;
 
 /**

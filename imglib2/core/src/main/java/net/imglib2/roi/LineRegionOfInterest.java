@@ -36,6 +36,7 @@
 
 package net.imglib2.roi;
 
+
 /**
  * 
  * @author Barry DeZonia
@@ -44,9 +45,12 @@ package net.imglib2.roi;
 public class LineRegionOfInterest extends AbstractRegionOfInterest {
 
 	// -- declarations --
-	private static final double TOLERANCE = 0.5;
-	private final double[] p1, p2, min, max;
-	private final double[] coeffs;
+	private static final double SLOPE_TOLERANCE = 0.01;
+	private static final double UNIT_TOLERANCE = 0.5;
+	private final double[] p1, p2;
+	private final double[] tmpMin, tmpMax;
+	private final double[] lineVector;
+	private final double[] tmpVector;
 	
 	// -- constructors --
 	
@@ -56,11 +60,12 @@ public class LineRegionOfInterest extends AbstractRegionOfInterest {
 		assert pt1.length == pt2.length;
 		this.p1 = pt1.clone();
 		this.p2 = pt2.clone();
-		this.min = new double[pt1.length];
-		this.max = new double[pt1.length];
-		this.coeffs = new double[pt1.length];
+		this.tmpMin = new double[pt1.length];
+		this.tmpMax = new double[pt1.length];
+		this.lineVector = new double[pt1.length];
+		this.tmpVector = new double[pt1.length];
 		invalidateCachedState();
-		setupAuxVariables();
+		calcLineVector();
 	}
 
 	// -- LineRegionOfInterest methods --
@@ -76,13 +81,13 @@ public class LineRegionOfInterest extends AbstractRegionOfInterest {
 	public void setPoint1(double[] pt) {
 		System.arraycopy(pt, 0, p1, 0, p1.length);
 		invalidateCachedState();
-		setupAuxVariables();
+		calcLineVector();
 	}
 	
 	public void setPoint2(double[] pt) {
 		System.arraycopy(pt, 0, p2, 0, p2.length);
 		invalidateCachedState();
-		setupAuxVariables();
+		calcLineVector();
 	}
 
 	// -- RegionOfInterest methods --
@@ -92,7 +97,7 @@ public class LineRegionOfInterest extends AbstractRegionOfInterest {
 		p1[d] += displacement;
 		p2[d] += displacement;
 		invalidateCachedState();
-		setupAuxVariables();
+		calcLineVector();
 	}
 
 	// Could just calc the N-dim line equation, calc the value and compare it to
@@ -110,29 +115,51 @@ public class LineRegionOfInterest extends AbstractRegionOfInterest {
 	//   might only be 2 dimensional.
 	// - calc the perpendicular distance of the point from the line. need to
 	//   derive an n-dim equation though.
+
+	// Another method. Form two vectors. Use dot product to see if they are
+	// parallel. Check points for nearness when necessary. There is some drift
+	// inaccuracy here. The farther away from one endpoint you are the more
+	// you can deviate from the line and be considered "on".
 	
 	@Override
-	protected boolean isMember(double[] position) {
-		double sum = 0;
-		for (int i = 0; i < coeffs.length; i++) {
-			sum += position[i] * coeffs[i];
-		}
-		if (sum >= TOLERANCE) return false;
-		// else its near the line
-		realMin(min);
-		realMax(max);
-		if (!outOfBounds(min,max,position)) return true;
-		// somewhere outside narrow bounds of p1 and p2
+	public boolean contains(double[] position) {
 		// close enough to one endpoint?
-		if (dist(p1, position) < TOLERANCE) return true;
+		if (dist(p1, position) < UNIT_TOLERANCE) return true;
 		// close enough to other endpoint?
-		if (dist(p2, position) < TOLERANCE) return true;
-		// else its too far away
+		if (dist(p2, position) < UNIT_TOLERANCE) return true;
+		// create vector from p1 to position
+		for (int i = 0; i < p1.length; i++)
+			tmpVector[i] = position[i] - p1[1];
+		// calc dot prodiuct
+		double dotProduct = dot(lineVector, tmpVector);
+		// calc magnitude product
+		double magnitudeProduct = dist(p1, p2);
+		magnitudeProduct *= dist(p1, position);
+		// the cosine value is the ratio
+		double cosTheta = dotProduct / magnitudeProduct;
+		// test if nowhere near 180 degrees or -180 degrees
+		boolean nearCos0 =
+				(cosTheta > 1.0-SLOPE_TOLERANCE) &&
+				(cosTheta < 1.0+SLOPE_TOLERANCE);
+		boolean nearCos180 =
+				(cosTheta > -1.0-SLOPE_TOLERANCE) &&
+				(cosTheta < -1.0+SLOPE_TOLERANCE);
+		if ((!nearCos0 && !nearCos180)) return false;
+		// else its near the line
+		// check that it is between the endpoints
+		// for rotated lines this could be insufficient but those cases handled
+		//   by endpoint distance check earlier
+		realMin(tmpMin);
+		realMax(tmpMax);
+		if (!outOfBounds(tmpMin,tmpMax,position)) return true;
+		// somewhere outside narrow bounds of p1 and p2
+		// already know its not near an endpoint
+		// so too far away
 		return false;
 	}
 
 	// -- AbstractRegionOfInterest methods --
-	
+
 	@Override
 	protected void getRealExtrema(double[] minima, double[] maxima) {
 		for (int i = 0; i < p1.length; i++) {
@@ -142,10 +169,10 @@ public class LineRegionOfInterest extends AbstractRegionOfInterest {
 	}
 
 	// -- private helpers --
-	
-	private void setupAuxVariables() {
-		// TODO - calc coeffs from two endpoints
-		throw new UnsupportedOperationException("must implement");
+
+	private void calcLineVector() {
+		for (int i = 0; i < p1.length; i++)
+			lineVector[i] = p2[i] - p1[i];
 	}
 
 	private double dist(double[] pt1, double[] pt2) {
@@ -156,9 +183,15 @@ public class LineRegionOfInterest extends AbstractRegionOfInterest {
 		}
 		return Math.sqrt(sum);
 	}
+
+	private double dot(double[] vec1, double[] vec2) {
+		double sum = 0;
+		for (int i = 0; i < p1.length; i++)
+			sum += vec1[i] * vec2[i];
+		return sum;
+	}
 	
 	private boolean outOfBounds(double[] mn, double[] mx, double[] pt) {
-		
 		for (int i = 0; i < p1.length; i++) {
 			if (pt[i] < mn[i]) return true;
 			if (pt[i] > mx[i]) return true;

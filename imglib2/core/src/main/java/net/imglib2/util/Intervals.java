@@ -31,6 +31,9 @@ package net.imglib2.util;
 
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
+import net.imglib2.Localizable;
+import net.imglib2.RealInterval;
+import net.imglib2.RealLocalizable;
 
 /**
  * Convenience methods for manipulating {@link Interval Intervals}.
@@ -150,5 +153,47 @@ public class Intervals
 		min[ d ] += t;
 		max[ d ] += t;
 		return new FinalInterval( min, max );
+	}
+
+	/**
+	 * Test whether the {@code containing} interval contains the
+	 * {@code contained} point. The interval is closed, that is, boundary points
+	 * are contained.
+	 *
+	 * @return true, iff {@code contained} is in {@code containing}.
+	 */
+	public static boolean contains( final Interval containing, final Localizable contained )
+	{
+		assert containing.numDimensions() == contained.numDimensions();
+
+		final int n = containing.numDimensions();
+		for ( int d = 0; d < n; ++d )
+		{
+			final long p = contained.getLongPosition( d );
+			if ( p < containing.min( d ) || p > containing.max( d ) )
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Test whether the {@code containing} interval contains the
+	 * {@code contained} point. The interval is closed, that is, boundary points
+	 * are contained.
+	 *
+	 * @return true, iff {@code contained} is in {@code containing}.
+	 */
+	public static boolean contains( final RealInterval containing, final RealLocalizable contained )
+	{
+		assert containing.numDimensions() == contained.numDimensions();
+
+		final int n = containing.numDimensions();
+		for ( int d = 0; d < n; ++d )
+		{
+			final double p = contained.getDoublePosition( d );
+			if ( p < containing.realMin( d ) || p > containing.realMax( d ) )
+				return false;
+		}
+		return true;
 	}
 }

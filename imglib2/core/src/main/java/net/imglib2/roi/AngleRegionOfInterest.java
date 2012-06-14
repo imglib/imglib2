@@ -116,8 +116,8 @@ public class AngleRegionOfInterest extends AbstractRegionOfInterest {
 	}
 
 	@Override
-	protected boolean isMember(double[] position) {
-		return line1.isMember(position) || line2.isMember(position);
+	public boolean contains(double[] position) {
+		return line1.contains(position) || line2.contains(position);
 	}
 
 	// -- AbstractRegionOfInterest methods --

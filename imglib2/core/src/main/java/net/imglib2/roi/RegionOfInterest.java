@@ -48,6 +48,15 @@ import net.imglib2.type.logic.BitType;
  */
 public interface RegionOfInterest extends RealRandomAccessibleRealInterval< BitType >
 {
+	/**
+	 * Determine whether a point is a member of the region of interest
+	 * 
+	 * @param position
+	 *            position in question
+	 * @return true if a member
+	 */
+	boolean contains( double[] position );
+
 	void move(double displacement, int d);
 	void move(double[] displacement);
 }

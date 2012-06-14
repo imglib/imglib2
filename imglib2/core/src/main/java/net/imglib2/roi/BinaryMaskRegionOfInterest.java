@@ -388,7 +388,7 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 	 * @see net.imglib2.roi.AbstractRegionOfInterest#isMember(double[])
 	 */
 	@Override
-	protected boolean isMember( double[] position )
+	public boolean contains( double[] position )
 	{
 		/*
 		 * Quantize by nearest-neighbor (-0.5 < x < 0.5)

@@ -744,7 +744,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	protected boolean isMember( double[] position )
+	public boolean contains( double[] position )
 	{
 		validate();
 

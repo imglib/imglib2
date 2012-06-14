@@ -1011,7 +1011,9 @@ public class Util
 	/**
 	 * Test whether the {@code containing} interval completely contains the
 	 * {@code contained} interval.
-	 * 
+	 *
+	 * TODO: move to {@link Intervals}
+	 *
 	 * @param containing
 	 * @param contained
 	 * @return
@@ -1032,7 +1034,9 @@ public class Util
 	/**
 	 * Test whether the {@code containing} interval completely contains the
 	 * {@code contained} interval.
-	 * 
+	 *
+	 * TODO: move to {@link Intervals}.
+	 *
 	 * @param containing
 	 * @param contained
 	 * @return
