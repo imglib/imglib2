@@ -170,7 +170,7 @@ public class FFT
 		return true;
 	}
 
-	final public static < T extends ComplexType< T >, S extends ComplexType< S > > boolean complexToComplex( final RandomAccessibleInterval< T > data, final int dim, final int numThreads )
+	final public static < T extends ComplexType< T >, S extends ComplexType< S > > boolean complexToComplex( final RandomAccessibleInterval< T > data, final int dim, final boolean forward, final int numThreads )
 	{
 		final int numDimensions = data.numDimensions();
 		
@@ -246,7 +246,7 @@ public class FFT
 								randomAccess.setPosition( randomAccessPosition );
 								
 								// compute the FFT along the 1d vector and write it into the output
-								computeComplexToComplex1dFFT( fft, randomAccess, dim, tempIn, tempOut );
+								computeComplexToComplex1dFFT( fft, forward, randomAccess, dim, tempIn, tempOut );
 							}
 						}				
 					}
@@ -270,7 +270,7 @@ public class FFT
 			randomAccess.setPosition( (int)data.min( 0 ), 0 );
 			
 			// compute the FFT along the 1d vector and write it into the output
-			computeComplexToComplex1dFFT( fft, randomAccess, dim, tempIn, tempOut );
+			computeComplexToComplex1dFFT( fft, forward, randomAccess, dim, tempIn, tempOut );
 		}
 		
 		return true;
@@ -303,7 +303,7 @@ public class FFT
 		randomAccessOut.get().setComplexNumber( tempOut[ complexMax * 2 ] / realSize, tempOut[ complexMax * 2 + 1 ] / realSize );		
 	}
 
-	final private static < T extends ComplexType< T >, S extends ComplexType< S > > void computeComplexToComplex1dFFT( final FftComplex fft, final RandomAccess< T > randomAccess, final int dim, final float[] tempIn, final float[] tempOut )
+	final private static < T extends ComplexType< T >, S extends ComplexType< S > > void computeComplexToComplex1dFFT( final FftComplex fft, final boolean forward, final RandomAccess< T > randomAccess, final int dim, final float[] tempIn, final float[] tempOut )
 	{
 		final int size = tempIn.length;
 		final int max = size - 1;
@@ -318,8 +318,11 @@ public class FFT
 		tempIn[ max * 2 ] = randomAccess.get().getRealFloat();
 		tempIn[ max * 2 + 1 ] = randomAccess.get().getImaginaryFloat();
 		
-		// compute the fft in dimension dim (complex -> complex) 
-		fft.complexToComplex( -1, tempIn, tempOut);
+		// compute the fft in dimension dim (complex -> complex)
+		if ( forward )
+			fft.complexToComplex( -1, tempIn, tempOut);
+		else
+			fft.complexToComplex( 1, tempIn, tempOut);
 		
 		// move the randomAccess back
 		randomAccess.move( -max, dim );
