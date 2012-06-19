@@ -334,27 +334,6 @@ public class FFT
 		randomAccess.get().setComplexNumber( tempOut[ max * 2 ] / size, tempOut[ max * 2 + 1 ] / size );
 	}
 
-	final public static < T extends RealType< T >, S extends ComplexType< S > > boolean complexToComplex( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< S > output, final int dim, final boolean scale )
-	{
-		final int numDimensions = input.numDimensions();
-		
-		final int imageSize[] = new int[ numDimensions ];
-		final int complexSize[] = new int[ numDimensions ];
-
-		// the size of the input and output image
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			imageSize[ d ] = (int)input.dimension( d );
-			complexSize[ d ] = (int)output.dimension( d );
-		}
-		
-		// test if those are valid sizes in case of real to complex
-		if ( !verifyComplexToComplexFFTSize( imageSize[ dim ], complexSize[ dim ] ) )
-			return false;
-		
-		return true;
-	}
-
 	final public static boolean verifyRealToComplexFFTSize( final int inputSize, final int outputSize )
 	{
 		if ( FftReal.nfftFast( inputSize ) == outputSize || FftReal.nfftSmall( inputSize ) == outputSize )
