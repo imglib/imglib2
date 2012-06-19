@@ -662,8 +662,8 @@ A:						while( cursorDim.hasNext() )
 		cursor1.setPosition( 0, 0 );
 		
 		// and a second one to the middle for rapid exchange of the quadrants
-		cursor2.setPosition( 0,  sizeDimMinus1 );
-						
+		cursor2.setPosition( sizeDimMinus1, 0 );
+
 		// now do a triangle-exchange
 		for ( int i = 0; i < halfSizeDim-1; ++i )
 		{
