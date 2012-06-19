@@ -36,13 +36,12 @@ import edu.mines.jtk.dsp.FftComplex;
 import edu.mines.jtk.dsp.FftReal;
 
 /**
- * Compute a FFT transform, either real-to-complex or complex-to-complex. It can be computed for individual dimensions or for conseqcuetively for all
+ * Compute a FFT transform, either real-to-complex or complex-to-complex. It can be computed for individual dimensions or for consecutively for all
  * 
  * Unfortunately only supports a maximal size of INT in each dimension as the one-dimensional FFT is based on arrays.
  * 
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
-
 public class FFT
 {
 	final public static < T extends RealType< T >, S extends ComplexType< S > > boolean realToComplex( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< S > output, final int dim, final int numThreads )
@@ -290,7 +289,7 @@ public class FFT
 			tempIn[ x ] = randomAccessIn.get().getRealFloat();									
 			randomAccessIn.fwd( dim );
 		}
-		tempIn[ (realMax) ] = randomAccessIn.get().getRealFloat();
+		tempIn[ realMax ] = randomAccessIn.get().getRealFloat();
 
 		// compute the fft in dimension dim ( real -> complex )
 		fft.realToComplex( -1, tempIn, tempOut );
