@@ -26,6 +26,7 @@ package net.imglib2.algorithm.fft2;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
@@ -534,13 +535,12 @@ public class FFTMethods
 		return true;
 	}
 
-	final private static < R extends RealType< R >, C extends ComplexType< C > > void computeRealToComplex1dFFT( final FftReal fft, final RandomAccess< R > randomAccessIn, final RandomAccess< C > randomAccessOut, final int dim, final float[] tempIn, final float[] tempOut, final boolean scale )
+	final private static < R extends RealType< R >, C extends ComplexType< C > > void computeRealToComplex1dFFT( final FftReal fft, final RandomAccess< R > randomAccessIn, final RandomAccess< C > randomAccessOut, final Interval range, final int dim, final float[] tempIn, final float[] tempOut, final boolean scale )
 	{
 		final int realSize = tempIn.length;
 		final int complexSize = tempOut.length / 2;
 		final int realMax = realSize - 1;
 		final int complexMax = complexSize - 1;
-		final int complexMax2 = complexMax * 2;
 		
 		// fill the input array with image data
 		for ( int i = 0; i < realMax; ++i )
@@ -554,9 +554,26 @@ public class FFTMethods
 		fft.realToComplex( -1, tempIn, tempOut );
 
 		// write back the fft data
+		
+		// check if only a certain portion of the data is desired (maybe if windowing was applied that should undone)
+		final int min, max;
+		
+		if ( range == null )
+		{
+			min = 0;
+			max = complexMax;
+		}
+		else
+		{
+			min = (int)range.min( dim );
+			max = (int)range.max( dim );			
+		}
+		
+		final int complexMax2 = max * 2;
+
 		if ( scale )
 		{
-			for ( int i = 0; i < complexMax; ++i )
+			for ( int i = min; i < max; ++i )
 			{
 				final int j = i * 2;
 				
@@ -567,7 +584,7 @@ public class FFTMethods
 		}
 		else
 		{
-			for ( int i = 0; i < complexMax; ++i )
+			for ( int i = min; i < max; ++i )
 			{
 				final int j = i * 2;
 				
@@ -578,7 +595,7 @@ public class FFTMethods
 		}
 	}
 
-	final private static < C extends ComplexType< C >, R extends RealType< R > > void computeComplexToReal1dFFT( final FftReal fft, final RandomAccess< C > randomAccessIn, final RandomAccess< R > randomAccessOut, final int dim, final float[] tempIn, final float[] tempOut, final boolean scale )
+	final private static < C extends ComplexType< C >, R extends RealType< R > > void computeComplexToReal1dFFT( final FftReal fft, final RandomAccess< C > randomAccessIn, final RandomAccess< R > randomAccessOut, final Interval range, final int dim, final float[] tempIn, final float[] tempOut, final boolean scale )
 	{
 		final int complexSize = tempIn.length / 2;
 		final int realSize = tempOut.length;
@@ -603,23 +620,38 @@ public class FFTMethods
 		fft.complexToReal( 1, tempIn, tempOut );
 		
 		// write back the real data
+		
+		// check if only a certain portion of the data is desired (maybe if windowing was applied that should undone)
+		final int min, max;
+		
+		if ( range == null )
+		{
+			min = 0;
+			max = realMax;
+		}
+		else
+		{
+			min = (int)range.min( dim );
+			max = (int)range.max( dim );			
+		}
+		
 		if ( scale )
 		{
-			for ( int x = 0; x < realMax; ++x )
+			for ( int x = min; x < max; ++x )
 			{
 				randomAccessOut.get().setReal( tempOut[ x ] / realSize );
 				randomAccessOut.fwd( 0 );
 			}
-			randomAccessOut.get().setReal( tempOut[ realMax ] / realSize );
+			randomAccessOut.get().setReal( tempOut[ max ] / realSize );
 		}
 		else
 		{
-			for ( int x = 0; x < realMax; ++x )
+			for ( int x = min; x < max; ++x )
 			{
 				randomAccessOut.get().setReal( tempOut[ x ] );
 				randomAccessOut.fwd( 0 );
 			}
-			randomAccessOut.get().setReal( tempOut[ realMax ] );
+			randomAccessOut.get().setReal( tempOut[ max ] );
 		}
 	}
 	
@@ -673,6 +705,81 @@ public class FFTMethods
 			}
 			randomAccess.get().setComplexNumber( tempOut[ max2 ], tempOut[ max2 + 1 ] );
 		}
+	}
+	
+	/**
+	 * Computes the padding interval required to perform an FFT when the padding dimensions are known.
+	 * It will define the padding area around the input. If the extension is not even, it will add the
+	 * one pixel more on the right side. 
+	 * 
+	 * @param input - the input interval
+	 * @param paddingDimensions - the dimensions of the padding
+	 * @return - a new Interval with the correct dimensions.
+	 */
+	final public static Interval paddingIntervalCentered( final Interval input, final int[] paddingDimensions )
+	{
+		final long[] min = new long[ input.numDimensions() ];
+		final long[] max = new long[ input.numDimensions() ];
+		
+		for ( int d = 0; d < input.numDimensions(); ++d )
+		{
+			final long difference = paddingDimensions[ d ] - input.dimension( d );
+			
+			if ( difference % 2 == 0 )
+			{
+				// left and right the same amount of pixels
+				min[ d ] = input.min( d ) - difference / 2;
+				max[ d ] = input.max( d ) + difference / 2;
+			}
+			else
+			{
+				// right side gets on more pixel than left side
+				min[ d ] = input.min( d ) - difference / 2;
+				max[ d ] = input.max( d ) + difference / 2 + 1;
+			}	
+		}
+		
+		return new FinalInterval( min, max );
+	}
+
+	/**
+	 * Computes the un-padding interval required to extract the original sized image from an inverse
+	 * FFT when padding was applying upon the FFT. It assumes that the original padding was computed
+	 * using the method paddingIntervalCentered( final Interval input, final int[] paddingDimensions ).
+	 * 
+	 * Therefore, it will define the padding area around the input. If the extension is not even, it 
+	 * will add the one pixel more on the right side. 
+	 * 
+	 * @param input - the input interval
+	 * @param originalDimensions - the dimensions of the padding
+	 * @return - a new Interval with the correct dimensions.
+	 */
+	final public static Interval unpaddingIntervalCentered( final Interval fftDimensions, final int[] originalDimensions )
+	{
+		final long[] min = new long[ fftDimensions.numDimensions() ];
+		final long[] max = new long[ fftDimensions.numDimensions() ];
+		
+		final long realSize = ( fftDimensions.dimension( 0 ) - 1 ) * 2;
+		
+		for ( int d = 1; d < fftDimensions.numDimensions(); ++d )
+		{
+			final long difference = paddingDimensions[ d ] - input.dimension( d );
+			
+			if ( difference % 2 == 0 )
+			{
+				// left and right the same amount of pixels
+				min[ d ] = input.min( d ) - difference / 2;
+				max[ d ] = input.max( d ) + difference / 2;
+			}
+			else
+			{
+				// right side gets on more pixel than left side
+				min[ d ] = input.min( d ) - difference / 2;
+				max[ d ] = input.max( d ) + difference / 2 + 1;
+			}	
+		}
+		
+		return new FinalInterval( min, max );
 	}
 
 	/**
