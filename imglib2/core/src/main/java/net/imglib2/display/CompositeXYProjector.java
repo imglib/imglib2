@@ -139,7 +139,7 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 	@Override
 	public void map()
 	{
-		System.out.println("    CompositeXYProjector::map() : call #"+(++calls));
+		//System.out.println("    CompositeXYProjector::map() : call #"+(++calls));
 		for ( int d = 2; d < position.length; ++d )
 			min[ d ] = max[ d ] = position[ d ];
 
