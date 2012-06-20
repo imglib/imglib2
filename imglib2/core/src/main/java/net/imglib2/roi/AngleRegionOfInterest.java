@@ -103,6 +103,33 @@ public class AngleRegionOfInterest extends AbstractRegionOfInterest {
 		invalidateCachedState();
 	}
 
+	public double getPoint1(int dim) {
+		return end1[dim];
+	}
+	
+	public double getPoint2(int dim) {
+		return end2[dim];
+	}
+	
+	public double getCenter(int dim) {
+		return ctr[dim];
+	}
+	
+	public void setPoint1(double val, int dim) {
+		end1[dim] = val;
+		invalidateCachedState();
+	}
+	
+	public void setPoint2(double val, int dim) {
+		end2[dim] = val;
+		invalidateCachedState();
+	}
+
+	public void setCenter(double val, int dim) {
+		ctr[dim] = val;
+		invalidateCachedState();
+	}
+
 	// -- RegionOfInterest methods --
 	
 	@Override

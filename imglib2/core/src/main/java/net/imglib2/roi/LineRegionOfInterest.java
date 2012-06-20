@@ -90,6 +90,26 @@ public class LineRegionOfInterest extends AbstractRegionOfInterest {
 		calcLineVector();
 	}
 
+	public double getPoint1(int dim) {
+		return p1[dim];
+	}
+	
+	public double getPoint2(int dim) {
+		return p2[dim];
+	}
+	
+	public void setPoint1(double val, int dim) {
+		p1[dim] = val;
+		invalidateCachedState();
+		calcLineVector();
+	}
+	
+	public void setPoint2(double val, int dim) {
+		p2[dim] = val;
+		invalidateCachedState();
+		calcLineVector();
+	}
+
 	// -- RegionOfInterest methods --
 	
 	@Override
