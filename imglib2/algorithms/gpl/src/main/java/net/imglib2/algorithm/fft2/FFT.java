@@ -482,7 +482,7 @@ public class FFT
 	
 	final private static < C extends ComplexType< C > > void computeComplexToComplex1dFFT( final FftComplex fft, final boolean forward, final RandomAccess< C > randomAccess, final int dim, final float[] tempIn, final float[] tempOut )
 	{
-		final int size = tempIn.length;
+		final int size = tempIn.length / 2;
 		final int max = size - 1;
 
 		// get the input line
