@@ -66,7 +66,10 @@ public class FFT
 		
 		// test if those are valid sizes in case of real to complex
 		if ( !verifyRealToComplexfftDimensions( outputSize[ dim ], inputSize[ dim ] ) )
+		{
+			System.out.println( "Unsupported combination of dimensionality of input and output" );
 			return false;
+		}
 		
 		// perform the complex-to-real fft in a dimension multithreaded if more than one dimension exisits
 		final int complexSize = inputSize[ dim ];
@@ -326,7 +329,10 @@ public class FFT
 		
 		// test if those are valid sizes in case of real to complex
 		if ( !verifyComplexToComplexfftDimensions( dataSize[ dim ], dataSize[ dim ] ) )
+		{
+			System.out.println( "Unsupported combination of dimensionality of input and output" );
 			return false;
+		}
 		
 		// perform the real-to-complex fft in a dimension multithreaded if more than one dimension exisits
 		final int size = dataSize[ dim ];
@@ -465,11 +471,8 @@ public class FFT
 		tempIn[ complexMax * 2 ] = randomAccessIn.get().getRealFloat();
 		tempIn[ complexMax * 2 + 1 ] = randomAccessIn.get().getImaginaryFloat();
 		
-		// compute the fft in dimension 0 ( real -> complex )
+		// compute the fft in dimension 0 ( complex -> real )
 		fft.complexToReal( 1, tempIn, tempOut );
-		
-		// set the cursor in the fft output image to 0 in the first (and only) dimension
-		randomAccessOut.setPosition( 0, 0 );
 		
 		// write back the real data
 		for ( int x = 0; x < realMax; ++x )
