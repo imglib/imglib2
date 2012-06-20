@@ -26,6 +26,7 @@ package net.imglib2.algorithm.fft2;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.iterator.LocalizingZeroMinIntervalIterator;
@@ -44,7 +45,12 @@ import edu.mines.jtk.dsp.FftReal;
  */
 public class FFT
 {
-	final public static < T extends RealType< T >, S extends ComplexType< S > > boolean realToComplex( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< S > output, final int dim, final int numThreads )
+	final public static < C extends ComplexType< C >, R extends RealType< R > > boolean complexToReal( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output, final int dim )
+	{
+		return complexToReal( input, output, dim, Runtime.getRuntime().availableProcessors() );
+	}
+	
+	final public static < C extends ComplexType< C >, R extends RealType< R > > boolean complexToReal( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output, final int dim, final int numThreads )
 	{
 		final int numDimensions = input.numDimensions();
 		
@@ -59,8 +65,141 @@ public class FFT
 		}
 		
 		// test if those are valid sizes in case of real to complex
-		if ( !verifyRealToComplexFFTSize( inputSize[ dim ], outputSize[ dim ] ) )
+		if ( !verifyRealToComplexfftDimensions( outputSize[ dim ], inputSize[ dim ] ) )
 			return false;
+		
+		// perform the complex-to-real fft in a dimension multithreaded if more than one dimension exisits
+		final int complexSize = inputSize[ dim ];
+		final int realSize = outputSize[ dim ];
+		
+		if ( numDimensions > 1  )
+		{
+			final AtomicInteger ai = new AtomicInteger( 0 );
+			Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+			
+			for ( int ithread = 0; ithread < threads.length; ++ithread )
+				threads[ithread] = new Thread(new Runnable()
+				{
+					public void run()
+					{
+						final int myNumber = ai.getAndIncrement();
+						
+						// the temporary 1-d arrays for the fft
+						final float[] tempIn = new float[ realSize ];				
+						final float[] tempOut = new float[ complexSize * 2 ];
+						
+						final FftReal fft = new FftReal( realSize );
+						
+						final RandomAccess< C > randomAccessIn = input.randomAccess();
+						final RandomAccess< R > randomAccessOut = output.randomAccess(); 
+						
+						/**
+						 * Here we use a LocalizingZeroMinIntervalIterator to iterate through all dimensions except the one we are computing the inverse fft in 
+						 */	
+						final int[] fakeSize = new int[ numDimensions - 1 ];
+						final int[] cursorInPosition = new int[ numDimensions ];
+						final int[] cursorOutPosition = new int[ numDimensions ];
+						
+						// get all dimensions except the one we are doing the real-to-complex fft on
+						int countDim = 0;						
+						for ( int d = 0; d < numDimensions; ++d )
+							if ( d != dim )
+								fakeSize[ countDim++ ] = inputSize[ d ];
+						
+						final LocalizingZeroMinIntervalIterator cursorDim = new LocalizingZeroMinIntervalIterator( fakeSize );						
+						
+						// iterate over all dimensions except the one we are computing the fft in, which is dim=0 here
+						while ( cursorDim.hasNext() )
+						{
+							cursorDim.fwd();							
+	
+							if ( cursorDim.getIntPosition( 0 ) % numThreads == myNumber )
+							{							
+								// get all dimensions except the one we are currently doing the fft on
+								cursorDim.localize( fakeSize );
+								
+								// the location on the one-dimensional vector of which we compute the fft
+								// is simply the first pixel
+								cursorInPosition[ dim ] = (int)input.min( dim );
+								cursorOutPosition[ dim ] = (int)output.min( dim );
+								
+								// get the position in all dimensions except the on we compute the fft in
+								// which we get from the iterator that iterates n-1 dimensions
+								countDim = 0;						
+								for ( int d = 0; d < numDimensions; ++d )
+								{
+									if ( d != dim )
+									{
+										cursorInPosition[ d ] = fakeSize[ countDim ] + (int)input.min( d );
+										cursorOutPosition[ d ] = fakeSize[ countDim ] + (int)output.min( d );
+										++countDim;
+									}
+								}
+	
+								// set the cursor to the beginning of the correct line
+								randomAccessIn.setPosition( cursorInPosition );
+								
+								// set the cursor in the fft output image to the right line
+								randomAccessOut.setPosition( cursorOutPosition );
+								
+								// compute the FFT along the 1d vector and write it into the output
+								computeComplexToReal1dFFT( fft, randomAccessIn, randomAccessOut, dim, tempIn, tempOut );
+							}
+						}				
+					}
+				});
+			
+			SimpleMultiThreading.startAndJoin(threads);			
+		}
+		else
+		{
+			// the temporary 1-d arrays for the fft
+			final float[] tempIn = new float[ complexSize * 2 ];				
+			final float[] tempOut = new float[ realSize ];
+			
+			final FftReal fft = new FftReal( realSize );
+			
+			final RandomAccess< C > randomAccessIn = input.randomAccess();
+			final RandomAccess< R > randomAccessOut = output.randomAccess(); 
+			
+			// set the cursor to 0 in the first (and only) dimension
+			randomAccessIn.setPosition( (int)input.min( 0 ), 0 );
+			
+			// set the cursor in the fft output image to 0 in the first (and only) dimension
+			randomAccessOut.setPosition( (int)output.min( 0 ), 0 );
+			
+			// compute the FFT along the 1d vector and write it into the output
+			computeComplexToReal1dFFT( fft, randomAccessIn, randomAccessOut, 0, tempIn, tempOut );		
+		}
+		
+		return true;
+	}
+
+	final public static < R extends RealType< R >, C extends ComplexType< C > > boolean realToComplex( final RandomAccessibleInterval< R > input, final RandomAccessibleInterval< C > output, final int dim )
+	{
+		return realToComplex( input, output, dim, Runtime.getRuntime().availableProcessors() );
+	}
+	
+	final public static < R extends RealType< R >, C extends ComplexType< C > > boolean realToComplex( final RandomAccessibleInterval< R > input, final RandomAccessibleInterval< C > output, final int dim, final int numThreads )
+	{
+		final int numDimensions = input.numDimensions();
+		
+		final int inputSize[] = new int[ numDimensions ];
+		final int outputSize[] = new int[ numDimensions ];
+
+		// the size of the input and output image
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			inputSize[ d ] = (int)input.dimension( d );
+			outputSize[ d ] = (int)output.dimension( d );
+		}
+		
+		// test if those are valid sizes in case of real to complex
+		if ( !verifyRealToComplexfftDimensions( inputSize[ dim ], outputSize[ dim ] ) )
+		{
+			System.out.println( "Unsupported combination of dimensionality of input and output" );
+			return false;
+		}
 		
 		// perform the real-to-complex fft in a dimension multithreaded if more than one dimension exisits
 		final int realSize = inputSize[ dim ];
@@ -84,8 +223,8 @@ public class FFT
 						
 						final FftReal fft = new FftReal( realSize );
 						
-						final RandomAccess< T > randomAccessIn = input.randomAccess();
-						final RandomAccess< S > randomAccessOut = output.randomAccess(); 
+						final RandomAccess< R > randomAccessIn = input.randomAccess();
+						final RandomAccess< C > randomAccessOut = output.randomAccess(); 
 						
 						/**
 						 * Here we use a LocalizingZeroMinIntervalIterator to iterate through all dimensions except the one we are computing the inverse fft in 
@@ -155,8 +294,8 @@ public class FFT
 			
 			final FftReal fft = new FftReal( realSize );
 			
-			final RandomAccess< T > randomAccessIn = input.randomAccess();
-			final RandomAccess< S > randomAccessOut = output.randomAccess(); 
+			final RandomAccess< R > randomAccessIn = input.randomAccess();
+			final RandomAccess< C > randomAccessOut = output.randomAccess(); 
 			
 			// set the cursor to 0 in the first (and only) dimension
 			randomAccessIn.setPosition( (int)input.min( 0 ), 0 );
@@ -170,7 +309,12 @@ public class FFT
 		return true;
 	}
 
-	final public static < T extends ComplexType< T >, S extends ComplexType< S > > boolean complexToComplex( final RandomAccessibleInterval< T > data, final int dim, final boolean forward, final int numThreads )
+	final public static < C extends ComplexType< C > > boolean complexToComplex( final RandomAccessibleInterval< C > data, final int dim, final boolean forward )
+	{
+		return complexToComplex( data, dim, forward, Runtime.getRuntime().availableProcessors() );
+	}
+	
+	final public static < C extends ComplexType< C > > boolean complexToComplex( final RandomAccessibleInterval< C > data, final int dim, final boolean forward, final int numThreads )
 	{
 		final int numDimensions = data.numDimensions();
 		
@@ -181,7 +325,7 @@ public class FFT
 			dataSize[ d ] = (int)data.dimension( d );
 		
 		// test if those are valid sizes in case of real to complex
-		if ( !verifyComplexToComplexFFTSize( dataSize[ dim ], dataSize[ dim ] ) )
+		if ( !verifyComplexToComplexfftDimensions( dataSize[ dim ], dataSize[ dim ] ) )
 			return false;
 		
 		// perform the real-to-complex fft in a dimension multithreaded if more than one dimension exisits
@@ -205,7 +349,7 @@ public class FFT
 						
 						final FftComplex fft = new FftComplex( size );
 						
-						final RandomAccess< T > randomAccess = data.randomAccess();
+						final RandomAccess< C > randomAccess = data.randomAccess();
 						
 						/**
 						 * Here we use a LocalizingZeroMinIntervalIterator to iterate through all dimensions except the one we are computing the inverse fft in 
@@ -264,7 +408,7 @@ public class FFT
 			
 			final FftComplex fft = new FftComplex( size );
 			
-			final RandomAccess< T > randomAccess = data.randomAccess();
+			final RandomAccess< C > randomAccess = data.randomAccess();
 			
 			// set the cursor to 0 in the first (and only) dimension
 			randomAccess.setPosition( (int)data.min( 0 ), 0 );
@@ -276,7 +420,7 @@ public class FFT
 		return true;
 	}
 
-	final private static < T extends RealType< T >, S extends ComplexType< S > > void computeRealToComplex1dFFT( final FftReal fft, final RandomAccess< T > randomAccessIn, final RandomAccess< S > randomAccessOut, final int dim, final float[] tempIn, final float[] tempOut )
+	final private static < R extends RealType< R >, C extends ComplexType< C > > void computeRealToComplex1dFFT( final FftReal fft, final RandomAccess< R > randomAccessIn, final RandomAccess< C > randomAccessOut, final int dim, final float[] tempIn, final float[] tempOut )
 	{
 		final int realSize = tempIn.length;
 		final int complexSize = tempOut.length / 2;
@@ -303,7 +447,40 @@ public class FFT
 		randomAccessOut.get().setComplexNumber( tempOut[ complexMax * 2 ] / realSize, tempOut[ complexMax * 2 + 1 ] / realSize );		
 	}
 
-	final private static < T extends ComplexType< T >, S extends ComplexType< S > > void computeComplexToComplex1dFFT( final FftComplex fft, final boolean forward, final RandomAccess< T > randomAccess, final int dim, final float[] tempIn, final float[] tempOut )
+	final private static < C extends ComplexType< C >, R extends RealType< R > > void computeComplexToReal1dFFT( final FftReal fft, final RandomAccess< C > randomAccessIn, final RandomAccess< R > randomAccessOut, final int dim, final float[] tempIn, final float[] tempOut )
+	{
+		final int complexSize = tempIn.length / 2;
+		final int realSize = tempOut.length;
+		final int complexMax = complexSize - 1;
+		final int realMax = realSize - 1;
+		
+		// get the input data
+		// fill the input array with complex image data
+		for ( int i = 0; i < complexMax; ++i )
+		{
+			tempIn[ i * 2 ] = randomAccessIn.get().getRealFloat();
+			tempIn[ i * 2 + 1 ] = randomAccessIn.get().getImaginaryFloat();
+			randomAccessIn.fwd( 0 );
+		}
+		tempIn[ complexMax * 2 ] = randomAccessIn.get().getRealFloat();
+		tempIn[ complexMax * 2 + 1 ] = randomAccessIn.get().getImaginaryFloat();
+		
+		// compute the fft in dimension 0 ( real -> complex )
+		fft.complexToReal( 1, tempIn, tempOut );
+		
+		// set the cursor in the fft output image to 0 in the first (and only) dimension
+		randomAccessOut.setPosition( 0, 0 );
+		
+		// write back the real data
+		for ( int x = 0; x < realMax; ++x )
+		{
+			randomAccessOut.get().setReal( (tempOut[ x ] / realSize) );
+			randomAccessOut.fwd( 0 );
+		}
+		randomAccessOut.get().setReal( (tempOut[ realMax ] / realSize) );
+	}
+	
+	final private static < C extends ComplexType< C > > void computeComplexToComplex1dFFT( final FftComplex fft, final boolean forward, final RandomAccess< C > randomAccess, final int dim, final float[] tempIn, final float[] tempOut )
 	{
 		final int size = tempIn.length;
 		final int max = size - 1;
@@ -336,15 +513,215 @@ public class FFT
 		randomAccess.get().setComplexNumber( tempOut[ max * 2 ] / size, tempOut[ max * 2 + 1 ] / size );
 	}
 
-	final public static boolean verifyRealToComplexFFTSize( final int inputSize, final int outputSize )
+	/**
+	 * Computes the supported dimensionality of an input dataset (of complex numbers) for an inverse FFT of the entire dataset AS SMALL AS POSSIBLE
+	 * 
+	 * @param interval - the dimensions of the complex-valued input
+	 * @param paddedDimensions - the required dimensions of the complex-valued input (computed)
+	 * @param realSize - the dimensions of the real-valued output after the inverse fast fourier transform (computed), i.e. which dimensions are required for the output
+	 */
+	final static public void dimensionsComplexToRealSmall( final Interval interval, final int[] paddedDimensions, final int[] realSize )
 	{
-		if ( FftReal.nfftFast( inputSize ) == outputSize || FftReal.nfftSmall( inputSize ) == outputSize )
+		// compute what the dimensionality corresponds to in real-valued pixels
+		final int d0 = ( (int)interval.dimension( 0 ) - 1 ) * 2;
+		
+		// compute which dimensionality we could get from that
+		paddedDimensions[ 0 ] = FftReal.nfftSmall( d0 ) / 2 + 1;
+		
+		// and which final dimensionality this will give in real space
+		realSize[ 0 ] = ( paddedDimensions[ 0 ] - 1 ) * 2;
+		
+		for ( int d = 1; d < interval.numDimensions(); ++d )
+			realSize[ d ] = paddedDimensions[ d ] = FftComplex.nfftSmall( (int)interval.dimension( d ) );				
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of complex numbers) for an inverse FFT of the entire dataset AS FAST AS POSSIBLE
+	 * 
+	 * @param interval - the dimensions of the complex-valued input
+	 * @param paddedDimensions - the required dimensions of the complex-valued input (computed)
+	 * @param realSize - the dimensions of the real-valued output after the inverse fast fourier transform (computed), i.e. which dimensions are required for the output
+	 */
+	final static public void dimensionsComplexToRealFast( final Interval interval, final int[] paddedDimensions, final int[] realSize )
+	{
+		// compute what the dimensionality corresponds to in real-valued pixels
+		final int d0 = ( (int)interval.dimension( 0 ) - 1 ) * 2;
+		
+		// compute which dimensionality we could get from that
+		paddedDimensions[ 0 ] = FftReal.nfftFast( d0 ) / 2 + 1;
+		
+		// and which final dimensionality this will give in real space
+		realSize[ 0 ] = ( paddedDimensions[ 0 ] - 1 ) * 2;
+		
+		for ( int d = 1; d < interval.numDimensions(); ++d )
+			realSize[ d ] = paddedDimensions[ d ] = FftComplex.nfftFast( (int)interval.dimension( d ) );		
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of complex numbers) for an inverse FFT of the entire dataset AS SMALL AS POSSIBLE
+	 * 
+	 * @param intervalDimensions - the dimensions of the complex-valued input
+	 * @param paddedDimensions - the required dimensions of the complex-valued input (computed)
+	 * @param realSize - the dimensions of the real-valued output after the inverse fast fourier transform (computed), i.e. which dimensions are required for the output
+	 */
+	final static public void dimensionsComplexToRealSmall( final int[] intervalDimensions, final int[] paddedDimensions, final int[] realSize )
+	{
+		// compute what the dimensionality corresponds to in real-valued pixels
+		final int d0 = ( intervalDimensions[ 0 ] - 1 ) * 2;
+		
+		// compute which dimensionality we could get from that
+		paddedDimensions[ 0 ] = FftReal.nfftSmall( d0 ) / 2 + 1;
+		
+		// and which final dimensionality this will give in real space
+		realSize[ 0 ] = ( paddedDimensions[ 0 ] - 1 ) * 2;
+		
+		for ( int d = 1; d < intervalDimensions.length; ++d )
+			realSize[ d ] = paddedDimensions[ d ] = FftComplex.nfftSmall( intervalDimensions[ d ] );		
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of complex numbers) for an inverse FFT of the entire dataset AS FAST AS POSSIBLE
+	 * 
+	 * @param intervalDimensions - the dimensions of the complex-valued input
+	 * @param paddedDimensions - the required dimensions of the complex-valued input (computed)
+	 * @param realSize - the dimensions of the real-valued output after the inverse fast fourier transform (computed), i.e. which dimensions are required for the output
+	 */
+	final static public void dimensionsComplexToRealFast( final int[] intervalDimensions, final int[] paddedDimensions, final int[] realSize )
+	{
+		// compute what the dimensionality corresponds to in real-valued pixels
+		final int d0 = ( intervalDimensions[ 0 ] - 1 ) * 2;
+		
+		// compute which dimensionality we could get from that
+		paddedDimensions[ 0 ] = FftReal.nfftFast( d0 ) / 2 + 1;
+		
+		// and which final dimensionality this will give in real space
+		realSize[ 0 ] = ( paddedDimensions[ 0 ] - 1 ) * 2;
+		
+		for ( int d = 1; d < intervalDimensions.length; ++d )
+			realSize[ d ] = paddedDimensions[ d ] = FftComplex.nfftFast( intervalDimensions[ d ] );
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of real numbers) for a forward FFT of the entire dataset AS FAST AS POSSIBLE
+	 * 
+	 * @param interval - the dimensions of the real-valued input
+	 * @param paddedDimensions - the required dimensions of the real-valued input (computed)
+	 * @param fftDimensions - the dimensions of the complex-valued fft after the fast fourier transform (computed), i.e. which dimensions are required for the output
+	 */
+	final static public void dimensionsRealToComplexFast( final Interval interval, final int[] paddedDimensions, final int[] fftDimensions )
+	{
+		paddedDimensions[ 0 ] = FftReal.nfftFast( (int)interval.dimension( 0 ) );
+		fftDimensions[ 0 ] = ( paddedDimensions[ 0 ]  / 2 + 1 );
+		
+		for ( int d = 1; d < interval.numDimensions(); ++d )
+			fftDimensions[ d ] = paddedDimensions[ d ] = FftComplex.nfftFast( (int)interval.dimension( d ) );
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of real numbers) for a forward FFT of the entire dataset AS SMALL AS POSSIBLE
+	 * 
+	 * @param interval - the dimensions of the real-valued input
+	 * @param paddedDimensions - the required dimensions of the real-valued input (computed)
+	 * @param fftDimensions - the dimensions of the complex-valued fft after the fast fourier transform (computed), i.e. which dimensions are required for the output
+	 */
+	final static public void dimensionsRealToComplexSmall( final Interval interval, final int[] paddedDimensions, final int[] fftDimensions )
+	{
+		paddedDimensions[ 0 ] = FftReal.nfftSmall( (int)interval.dimension( 0 ) );
+		fftDimensions[ 0 ] = ( paddedDimensions[ 0 ]  / 2 + 1 );
+		
+		for ( int d = 1; d < interval.numDimensions(); ++d )
+			fftDimensions[ d ] = paddedDimensions[ d ] = FftComplex.nfftSmall( (int)interval.dimension( d ) );
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of real numbers) for a forward FFT of the entire dataset AS FAST AS POSSIBLE
+	 * 
+	 * @param interval - the dimensions of the real-valued input
+	 * @param paddedDimensions - the required dimensions of the real-valued input (computed)
+	 * @param fftDimensions - the dimensions of the complex-valued fft after the fast fourier transform (computed), i.e. which dimensions are required for the output
+	 */
+	final static public void dimensionsRealToComplexFast( final int[] intervalDimensions, final int[] paddedDimensions, final int[] fftDimensions )
+	{
+		paddedDimensions[ 0 ] = FftReal.nfftFast( intervalDimensions[ 0 ] );
+		fftDimensions[ 0 ] = ( paddedDimensions[ 0 ]  / 2 + 1 );
+		
+		for ( int d = 1; d < intervalDimensions.length; ++d )
+			fftDimensions[ d ] = paddedDimensions[ d ] = FftComplex.nfftFast( intervalDimensions[ d ] );
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of real numbers) for a forward FFT of the entire dataset AS SMALL AS POSSIBLE
+	 * 
+	 * @param interval - the dimensions of the real-valued input
+	 * @param paddedDimensions - the required dimensions of the real-valued input (computed)
+	 * @param fftDimensions - the dimensions of the complex-valued fft after the fast fourier transform (computed), i.e. which dimensions are required for the output
+	 */
+	final static public void dimensionsRealToComplexSmall( final int[] intervalDimensions, final int[] paddedDimensions, final int[] fftDimensions )
+	{
+		paddedDimensions[ 0 ] = FftReal.nfftSmall( intervalDimensions[ 0 ] );
+		fftDimensions[ 0 ] = ( paddedDimensions[ 0 ]  / 2 + 1 );
+		
+		for ( int d = 1; d < intervalDimensions.length; ++d )
+			fftDimensions[ d ] = paddedDimensions[ d ] = FftComplex.nfftSmall( intervalDimensions[ d ] );
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of complex numbers) for a forward/inverse FFT of the entire dataset AS FAST AS POSSIBLE
+	 * 
+	 * @param intervalDimensions - the dimensions of the input
+	 * @param paddedDimensions - the required dimensions of the input/output (computed)
+	 */
+	final static public void dimensionsComplexToComplexFast( final Interval interval, final int[] paddedDimensions )
+	{
+		for ( int d = 0; d < interval.numDimensions(); ++d )
+			paddedDimensions[ d ] = FftComplex.nfftFast( (int)interval.dimension( d ) );
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of complex numbers) for a forward/inverse FFT of the entire dataset AS SMALL AS POSSIBLE
+	 * 
+	 * @param intervalDimensions - the dimensions of the input
+	 * @param paddedDimensions - the required dimensions of the input/output (computed)
+	 */
+	final static public void dimensionsComplexToComplexSmall( final Interval interval, final int[] paddedDimensions )
+	{
+		for ( int d = 0; d < interval.numDimensions(); ++d )
+			paddedDimensions[ d ] = FftComplex.nfftSmall( (int)interval.dimension( d ) );
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of complex numbers) for a forward/inverse FFT of the entire dataset AS FAST AS POSSIBLE
+	 * 
+	 * @param intervalDimensions - the dimensions of the input
+	 * @param paddedDimensions - the required dimensions of the input/output (computed)
+	 */
+	final static public void dimensionsComplexToComplexFast( final int[] intervalDimensions, final int[] paddedDimensions )
+	{
+		for ( int d = 0; d < intervalDimensions.length; ++d )
+			paddedDimensions[ d ] = FftComplex.nfftFast( intervalDimensions[ d ] );
+	}
+
+	/**
+	 * Computes the supported dimensionality of an input dataset (of complex numbers) for a forward/inverse FFT of the entire dataset AS SMALL AS POSSIBLE
+	 * 
+	 * @param intervalDimensions - the dimensions of the input
+	 * @param paddedDimensions - the required dimensions of the input/output (computed)
+	 */
+	final static public void dimensionsComplexToComplexSmall( final int[] intervalDimensions, final int[] paddedDimensions )
+	{
+		for ( int d = 0; d < intervalDimensions.length; ++d )
+			paddedDimensions[ d ] = FftComplex.nfftSmall( intervalDimensions[ d ] );
+	}
+
+	final protected static boolean verifyRealToComplexfftDimensions( final int inputSize, final int outputSize )
+	{
+		if ( FftReal.nfftFast( inputSize ) / 2 + 1 == outputSize || FftReal.nfftSmall( inputSize ) / 2 + 1 == outputSize )
 			return true;
 		else
 			return false;
 	}
 
-	final public static boolean verifyComplexToComplexFFTSize( final int inputSize, final int outputSize )
+	final protected static boolean verifyComplexToComplexfftDimensions( final int inputSize, final int outputSize )
 	{
 		if ( FftComplex.nfftFast( inputSize ) == outputSize || FftComplex.nfftSmall( inputSize ) == outputSize )
 			return true;
