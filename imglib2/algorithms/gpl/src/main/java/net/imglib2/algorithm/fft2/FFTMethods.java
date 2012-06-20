@@ -42,7 +42,7 @@ import edu.mines.jtk.dsp.FftReal;
  * 
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
-public class FFT
+public class FFTMethods
 {
 	/**
 	 * Computes a complex-to-real inverse FFT transform of an n-dimensional dataset in a certain dimension (typically dim = 0). 
