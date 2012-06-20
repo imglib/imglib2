@@ -762,6 +762,54 @@ public class FFTMethods
 		for ( int d = 1; d < intervalDimensions.length; ++d )
 			realSize[ d ] = paddedDimensions[ d ] = FftComplex.nfftFast( intervalDimensions[ d ] );
 	}
+	
+	/**
+	 * A helper method to test if padding is actually necessary
+	 * 
+	 * @param interval - the dimensions of a dataset
+	 * @param paddedDimensions - the dimensions of a dataset
+	 * @return true if the dimensions are equal, otherwise false
+	 */
+	final public static boolean dimensionsEqual( final Interval interval, final int[] paddedDimensions )
+	{
+		for ( int d = 0; d < interval.numDimensions(); ++d )
+			if ( interval.dimension( d ) != paddedDimensions[ d ] )
+				return false;
+		
+		return true;
+	}
+
+	/**
+	 * A helper method to test if padding is actually necessary
+	 * 
+	 * @param intervalDimensions - the dimensions of a dataset
+	 * @param paddedDimensions - the dimensions of a dataset
+	 * @return true if the dimensions are equal, otherwise false
+	 */
+	final public static boolean dimensionsEqual( final int[] intervalDimensions, final int[] paddedDimensions )
+	{
+		for ( int d = 0; d < intervalDimensions.length; ++d )
+			if ( intervalDimensions[ d ] != paddedDimensions[ d ] )
+				return false;
+		
+		return true;
+	}
+
+	/**
+	 * A helper method to test if padding is actually necessary
+	 * 
+	 * @param interval - the dimensions of a dataset
+	 * @param padded - the dimensions of a dataset
+	 * @return true if the dimensions are equal, otherwise false
+	 */
+	final public static boolean dimensionsEqual( final Interval interval, final Interval padded )
+	{
+		for ( int d = 0; d < interval.numDimensions(); ++d )
+			if ( interval.dimension( d ) != padded.dimension( d ) )
+				return false;
+		
+		return true;
+	}
 
 	/**
 	 * Computes the supported dimensionality of an input dataset (of real numbers) for a forward FFT of the entire dataset AS FAST AS POSSIBLE
