@@ -153,22 +153,6 @@ public class FFTMethods
 			return false;
 		}
 		
-		// test that the dimensions of the defined interval are not bigger than the output and not bigger than the result of the inverse FFT transform
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			if ( interval.dimension( d ) > output.dimension( d ) )
-			{
-				System.out.println( "Defined interval is larger than the output" );
-				return false;				
-			}
-			
-			if ( interval.dimension( d ) > realSize )
-			{
-				System.out.println( "Defined interval is larger than the real-valued result from the inverse FFT." );
-				return false;								
-			}
-		}
-		
 		// perform the complex-to-real fft in a dimension multithreaded if more than one dimension exisits	
 		if ( numDimensions > 1  )
 		{
@@ -234,7 +218,7 @@ A:						while ( cursorDim.hasNext() )
 											continue A;
 										
 										cursorInPosition[ d ] = fakeSize[ countDim ] + (int)input.min( d );
-										cursorOutPosition[ d ] = fakeSize[ countDim ] + (int)output.min( d );
+										cursorOutPosition[ d ] = fakeSize[ countDim ] + (int)output.min( d ) - (int)interval.min( d );
 										++countDim;
 									}
 								}
@@ -385,22 +369,6 @@ A:						while ( cursorDim.hasNext() )
 			System.out.println( "Input dimensions not supported by FFT." );
 			return false;
 		}
-		
-		// test that the dimensions of the defined interval are not bigger than the output and not bigger than the result of the inverse FFT transform
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			if ( interval.dimension( d ) > output.dimension( d ) )
-			{
-				System.out.println( "Defined interval is larger than the output" );
-				return false;				
-			}
-			
-			if ( interval.dimension( d ) > complexSize )
-			{
-				System.out.println( "Defined interval is larger than the complex-valued result from the FFT." );
-				return false;								
-			}
-		}
 
 		// perform the real-to-complex fft in a dimension multithreaded if more than one dimension exisits
 		if ( numDimensions > 1 )
@@ -465,10 +433,9 @@ A:						while ( cursorDim.hasNext() )
 										// then we do not have to compute the fft here
 										if ( fakeSize[ countDim ] < interval.min( d ) || fakeSize [ countDim ] > interval.max( d ) )
 											continue A;
-										
-										
+
 										cursorInPosition[ d ] = fakeSize[ countDim ] + (int)input.min( d );
-										cursorOutPosition[ d ] = fakeSize[ countDim ] + (int)output.min( d );
+										cursorOutPosition[ d ] = fakeSize[ countDim ] + (int)output.min( d ) - (int)interval.min( d );
 										++countDim;
 									}
 								}
@@ -878,8 +845,8 @@ A:						while ( cursorDim.hasNext() )
 	 * FFT when padding was applying upon the FFT. It assumes that the original padding was computed
 	 * using the method paddingIntervalCentered( final Interval input, final int[] paddingDimensions ).
 	 * 
-	 * Therefore, it will define the padding area around the input. If the extension is not even, it 
-	 * will add the one pixel more on the right side. 
+	 * Therefore, it will define the padding area around the input. If the extension is not even on
+	 * all sides, it will assume the one pixel to be on the right side. 
 	 * 
 	 * @param input - the input interval
 	 * @param originalDimensions - the dimensions of the padding
@@ -890,24 +857,57 @@ A:						while ( cursorDim.hasNext() )
 		final long[] min = new long[ fftDimensions.numDimensions() ];
 		final long[] max = new long[ fftDimensions.numDimensions() ];
 		
+		// first dimension is different as its size changes
 		final long realSize = ( fftDimensions.dimension( 0 ) - 1 ) * 2;
+		long difference = realSize - originalDimensions[ 0 ];
+		
+		min[ 0 ] = fftDimensions.min( 0 ) + difference / 2;
+		max[ 0 ] = min[ 0 ] + originalDimensions[ 0 ] - 1;
+				
+		for ( int d = 1; d < fftDimensions.numDimensions(); ++d )
+		{
+			difference = fftDimensions.dimension( d ) - originalDimensions[ d ];
+			
+			// left and right the same amount of pixels
+			min[ d ] = fftDimensions.min( d ) + difference / 2;
+			max[ d ] = min[ d ] + originalDimensions[ d ] - 1;
+		}
+		
+		return new FinalInterval( min, max );
+	}
+
+	/**
+	 * Computes the un-padding interval required to extract the original sized image from an inverse
+	 * FFT when padding was applying upon the FFT. It assumes that the original padding was computed
+	 * using the method paddingIntervalCentered( final Interval input, final int[] paddingDimensions ).
+	 * 
+	 * Therefore, it will define the padding area around the input. If the extension is not even on
+	 * all sides, it will assume the one pixel to be on the right side. 
+	 * 
+	 * @param input - the input interval
+	 * @param originalDimensions - the dimensions of the padding
+	 * @return - a new Interval with the correct dimensions.
+	 */
+	final public static Interval unpaddingIntervalCentered( final Interval fftDimensions, final Interval originalDimensions )
+	{
+		final long[] min = new long[ fftDimensions.numDimensions() ];
+		final long[] max = new long[ fftDimensions.numDimensions() ];
+		
+		// first dimension is different as its size changes
+		final long realSize = ( fftDimensions.dimension( 0 ) - 1 ) * 2;
+		long difference = realSize - originalDimensions.dimension( 0 );
+		
+		min[ 0 ] = fftDimensions.min( 0 ) + difference / 2;
+		max[ 0 ] = min[ 0 ] + originalDimensions.dimension( 0 ) - 1;
+		
 		
 		for ( int d = 1; d < fftDimensions.numDimensions(); ++d )
 		{
-			final long difference = paddingDimensions[ d ] - input.dimension( d );
+			difference = fftDimensions.dimension( d ) - originalDimensions.dimension( d );
 			
-			if ( difference % 2 == 0 )
-			{
-				// left and right the same amount of pixels
-				min[ d ] = input.min( d ) - difference / 2;
-				max[ d ] = input.max( d ) + difference / 2;
-			}
-			else
-			{
-				// right side gets on more pixel than left side
-				min[ d ] = input.min( d ) - difference / 2;
-				max[ d ] = input.max( d ) + difference / 2 + 1;
-			}	
+			// left and right the same amount of pixels
+			min[ d ] = fftDimensions.min( d ) + difference / 2;
+			max[ d ] = min[ d ] + originalDimensions.dimension( d ) - 1;
 		}
 		
 		return new FinalInterval( min, max );
