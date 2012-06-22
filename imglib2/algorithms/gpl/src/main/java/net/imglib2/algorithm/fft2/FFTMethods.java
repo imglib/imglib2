@@ -38,7 +38,7 @@ import edu.mines.jtk.dsp.FftComplex;
 import edu.mines.jtk.dsp.FftReal;
 
 /**
- * Compute a FFT transform, either real-to-complex or complex-to-complex. It can be computed for individual dimensions or for consecutively for all
+ * Compute a FFT transform, either real-to-complex or complex-to-complex, or complex-to-real for individual dimensions.
  * Unfortunately only supports a maximal size of INT in each dimension as the one-dimensional FFT is based on arrays.
  * 
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
