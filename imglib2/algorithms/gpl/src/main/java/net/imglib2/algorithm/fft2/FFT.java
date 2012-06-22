@@ -1,6 +1,9 @@
 package net.imglib2.algorithm.fft2;
 
+import net.imglib2.Cursor;
 import net.imglib2.Interval;
+import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
@@ -19,7 +22,7 @@ import net.imglib2.view.Views;
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
 public class FFT 
-{
+{	
 	final public static < R extends RealType< R > > Img< ComplexFloatType > realToComplex( final RandomAccessibleInterval< R > input, final ImgFactory< ComplexFloatType > factory )
 	{
 		return realToComplex( Views.extendValue( input, Util.getTypeFromInterval( input ).createVariable() ), input, factory, new ComplexFloatType() );
