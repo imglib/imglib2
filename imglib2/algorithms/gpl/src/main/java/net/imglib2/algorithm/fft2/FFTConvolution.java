@@ -24,8 +24,11 @@ public class FFTConvolution
 		final int[] newDimensions = new int[ numDimensions ];
 		
 		for ( int d = 0; d < numDimensions; ++d )
+		{
 			newDimensions[ d ] = (int)imgInterval.dimension( d ) + (int)kernelInterval.dimension( d ) - 1;
-
+			System.out.println( newDimensions[ d ] );
+		}
+		
 		// compute the size of the complex-valued output and the required padding
 		// based on the prior extended input image
 		final int[] paddedDimensions = new int[ numDimensions ];
