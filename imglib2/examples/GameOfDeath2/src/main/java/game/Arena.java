@@ -38,9 +38,6 @@ package game;
 
 import ij.ImageJ;
 import ij.ImagePlus;
-import ij.ImageStack;
-import ij.process.ColorProcessor;
-import ij.process.ImageProcessor;
 
 import java.text.NumberFormat;
 import java.util.Random;
@@ -48,28 +45,28 @@ import java.util.Random;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.gauss.Gauss;
-import net.imglib2.algorithm.gauss.GaussGeneral;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
-import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
-import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
+import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 
 /**
- * TODO
+ * 
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public class Arena
 {
+	// a central random number generator
+	final static Random rnd = new Random( System.currentTimeMillis() );
+	
 	// number of seeds for LifeForms
-	final int numSeeds = 100;
+	final int numSeeds = 100000;
 	
 	// we simulate with 3 races
-	final int numRaces = 3;
+	final int numRaces = 5;
 
 	// the overall growth of all races per round
 	final float growth = 1.05f;
@@ -77,14 +74,17 @@ public class Arena
 	// all races above this weight will die of lack of food
 	final float maxWeight = 1.1f;
 	
+	// chance for a epedemic (in percent)
+	final float epedemic = 0.5f;
+	
 	// the width and height of the image
 	final int width = 384;
 	final int height = 256;
 	
 	// the out of bounds strategy to use for gaussian convolution
 	// makes a significant difference to the result
-	final OutOfBoundsFactory< LifeForm, RandomAccessibleInterval< LifeForm > > outofbounds = 
-			new OutOfBoundsMirrorFactory< LifeForm, RandomAccessibleInterval< LifeForm > >( Boundary.SINGLE );
+	//final OutOfBoundsFactory< LifeForm, RandomAccessibleInterval< LifeForm > > outofbounds = new OutOfBoundsMirrorFactory< LifeForm, RandomAccessibleInterval< LifeForm > >( Boundary.SINGLE );
+	final OutOfBoundsFactory< LifeForm, RandomAccessibleInterval< LifeForm > > outofbounds = new OutOfBoundsPeriodicFactory< LifeForm, RandomAccessibleInterval< LifeForm > >();
 	
 	public Arena( )
 	{
@@ -118,7 +118,7 @@ public class Arena
 		
 				// if they grow too much they will die because of lack of food
 				if ( t.getWeight() > maxWeight )
-					t.setWeight( 0 );
+					t.setWeight( 0.001f );
 			}
 			
 			// simulate diffusion by gaussian convolution
@@ -126,9 +126,10 @@ public class Arena
 			
 			// compute and display frames per second
 			final double fps = ++numFrames*1000 / (double)( System.currentTimeMillis() - start );
+			imp.setTitle( "fps: " +  NumberFormat.getInstance().format( fps ) + " frame: " + numFrames );
 			
-			if ( numFrames % 5 == 0 )
-				imp.setTitle( "fps: " +  NumberFormat.getInstance().format( fps ) );
+			// we regularly have an epidemic
+			epidemic( arena, epedemic, numRaces );
 			
 			// update the LifeFormARGBConverter to the current min and max value of the weight
 			display.setMin( 0 );
@@ -138,6 +139,53 @@ public class Arena
 			updateDisplay( imp, arena, display );
 		}
 	}
+
+	/**
+	 * Given a certain chance there is an epidemic killing 90% of the dominant race
+	 * 
+	 * @param arena - the simulation
+	 * @param chance - the chance of having an epidemic
+	 * @param numRaces - the number of races
+	 */
+	protected void epidemic( final Img< LifeForm > arena, final float chance, final int numRaces )
+	{
+		// is there an epedemic?
+		if ( rnd.nextFloat() * 100 < chance )
+		{
+			// which race does it hit?
+			final int race = dominantLifeForm( arena, numRaces );
+			
+			for ( final LifeForm l : arena )
+				if ( l.getName() == race )
+					l.mul( 0.1f );
+		}
+	}
+
+	/**
+	 * Returns which LifeForm is currently dominating
+	 * 
+	 * @param arena - the simulation
+	 * @return - index of the dominant LifeForm 
+	 */
+	protected int dominantLifeForm( final Img< LifeForm > arena, final int numRaces )
+	{
+		final double[] countRaces = new double[ numRaces ];
+		
+		for ( final LifeForm l : arena )
+			countRaces[ l.getName() ] += l.getWeight();
+		
+		double last = countRaces[ 0 ];
+		int race = 0;
+		
+		for ( int i = 1; i < numRaces; ++i )
+			if ( countRaces[ i ] > last )
+			{
+				last = countRaces[ i ];
+				race = i;
+			}
+		
+		return race;
+	}
 	
 	/**
 	 * Seed the arena with a number of random life forms
@@ -146,12 +194,10 @@ public class Arena
 	 * @param numSeeds - the number of seeds
 	 * @param numRaces - the number of races to use
 	 */
-	public void seedArena( final Img<LifeForm> arena, final int numSeeds, final int numRaces )
+	protected void seedArena( final Img<LifeForm> arena, final int numSeeds, final int numRaces )
 	{
 		final int numDimensions = arena.numDimensions();
-		
 		final RandomAccess<LifeForm> randomAccess = arena.randomAccess();
-		final Random rnd = new Random( System.currentTimeMillis() );
 		
 		for ( int i = 0; i < numSeeds; ++i )
 		{
@@ -168,7 +214,7 @@ public class Arena
 	 * @param img - the Img containing the state of the simulation
 	 * @return the maximum weight
 	 */
-	public float getMax( final Img< LifeForm > img )
+	protected float getMax( final Img< LifeForm > img )
 	{
 		final LifeForm max = img.firstElement();
 		
