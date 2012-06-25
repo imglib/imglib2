@@ -52,7 +52,27 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 
 /**
+ * In order to show the power of generality ImgLib2 offers, we develop a program that
+ * simulates the growth of life forms (i.e. bacteria) in a certain area, called arena.
  * 
+ * The simulation seeds the ground with several races of life forms. Each life form has
+ * a certain name (race) and a weight representing its population at a spot. They grow
+ * every round by a certain percentage (e.g. 10%) and die of hunger if the population becomes
+ * too large. In every round they spread to their local neighborhood, trying to invade new
+ * space. If the same race is present in their vicinity, their population simply adds up. If 
+ * another race is present they will fight for the spot. The race with higher population 
+ * will survive, however they will loose as much population as the attacking (loosing)
+ * race lost.
+ * 
+ * This complex behaviour can be simulated by gaussian convolution on a new NumericType
+ * called LifeForm. Both operations, growth and fight can be simulated by implementing 
+ * specialized mul() and add() methods, respectively (see LifeForm.java). 
+ * Multiplying a LifeForm with a certain value represent growth (or shrinkage) while
+ * addition of two LifeForms represents the fight for a certain spot.
+ * 
+ * The simulation always converges to a point where one race wins at the end. Therefore, we
+ * added the possibility of a epidemic which kills 90% of the dominating race, keeping the
+ * entire system in a equilibrium.
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -65,7 +85,7 @@ public class Arena
 	// number of seeds for LifeForms
 	final int numSeeds = 100000;
 	
-	// we simulate with 3 races
+	// we simulate with 5 races
 	final int numRaces = 5;
 
 	// the overall growth of all races per round
@@ -75,7 +95,7 @@ public class Arena
 	final float maxWeight = 1.1f;
 	
 	// chance for a epedemic (in percent)
-	final float epedemic = 0.5f;
+	final float epidemic = 0.5f;
 	
 	// the width and height of the image
 	final int width = 384;
@@ -83,7 +103,6 @@ public class Arena
 	
 	// the out of bounds strategy to use for gaussian convolution
 	// makes a significant difference to the result
-	//final OutOfBoundsFactory< LifeForm, RandomAccessibleInterval< LifeForm > > outofbounds = new OutOfBoundsMirrorFactory< LifeForm, RandomAccessibleInterval< LifeForm > >( Boundary.SINGLE );
 	final OutOfBoundsFactory< LifeForm, RandomAccessibleInterval< LifeForm > > outofbounds = new OutOfBoundsPeriodicFactory< LifeForm, RandomAccessibleInterval< LifeForm > >();
 	
 	public Arena( )
@@ -122,14 +141,14 @@ public class Arena
 			}
 			
 			// simulate diffusion by gaussian convolution
-			Gauss.inNumericTypeInPlace( new double[]{ 1.5, 1.5 }, arena, outofbounds );
+			Gauss.inNumericTypeInPlace( new double[]{ 1., 1.5 }, arena, outofbounds );
 			
 			// compute and display frames per second
 			final double fps = ++numFrames*1000 / (double)( System.currentTimeMillis() - start );
 			imp.setTitle( "fps: " +  NumberFormat.getInstance().format( fps ) + " frame: " + numFrames );
 			
 			// we regularly have an epidemic
-			epidemic( arena, epedemic, numRaces );
+			epidemic( arena, epidemic, numRaces );
 			
 			// update the LifeFormARGBConverter to the current min and max value of the weight
 			display.setMin( 0 );
