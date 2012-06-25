@@ -95,11 +95,11 @@ public class Arena
 	final float maxWeight = 1.1f;
 	
 	// chance for a epedemic (in percent)
-	final float epidemic = 0.5f;
+	final float epidemic = 0.1f;
 	
 	// the width and height of the image
 	final int width = 384;
-	final int height = 256;
+	final int height = 384;
 	
 	// the out of bounds strategy to use for gaussian convolution
 	// makes a significant difference to the result
@@ -141,7 +141,7 @@ public class Arena
 			}
 			
 			// simulate diffusion by gaussian convolution
-			Gauss.inNumericTypeInPlace( new double[]{ 1., 1.5 }, arena, outofbounds );
+			Gauss.inNumericTypeInPlace( new double[]{ 1.5, 1.5 }, arena, outofbounds );
 			
 			// compute and display frames per second
 			final double fps = ++numFrames*1000 / (double)( System.currentTimeMillis() - start );
