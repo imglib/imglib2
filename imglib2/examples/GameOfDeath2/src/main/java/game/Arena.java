@@ -46,10 +46,14 @@ import java.text.NumberFormat;
 import java.util.Random;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.algorithm.gauss.Gauss;
 import net.imglib2.algorithm.gauss.GaussGeneral;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 
@@ -59,109 +63,103 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class Arena2
+public class Arena
 {
-	// export the simulation as a movie
-	final boolean exportAsStack = true;
-	
-	// number of frames for the movie
-	final int numFramesMovie = 1000;
+	// number of seeds for LifeForms
+	final int numSeeds = 100;
 	
 	// we simulate with 3 races
-	final int maxRace = 3;
-	final static int raceA = 0;
-	final static int raceB = 1;
-	final static int raceC = 2;
+	final int numRaces = 3;
+
+	// the overall growth of all races per round
+	final float growth = 1.05f;
+
+	// all races above this weight will die of lack of food
+	final float maxWeight = 1.1f;
 	
 	// the width and height of the image
 	final int width = 384;
 	final int height = 256;
 	
-	public Arena2( )
-	{
-		ImageStack stack = null;
-		
-		if ( exportAsStack )
-			stack = new ImageStack( width, height );
-		
-		final ArrayImgFactory<LifeForm> factory = new ArrayImgFactory<LifeForm>();
-		Img<LifeForm> arena = factory.create( new long[] { width, height }, new LifeForm() );
+	// the out of bounds strategy to use for gaussian convolution
+	// makes a significant difference to the result
+	final OutOfBoundsFactory< LifeForm, RandomAccessibleInterval< LifeForm > > outofbounds = 
+			new OutOfBoundsMirrorFactory< LifeForm, RandomAccessibleInterval< LifeForm > >( Boundary.SINGLE );
 	
-		final RandomAccess<LifeForm> cursor = arena.randomAccess();
+	public Arena( )
+	{
+		// create a new ArrayImgFactory for LifeForm
+		final ArrayImgFactory< LifeForm > factory = new ArrayImgFactory< LifeForm >();
 		
-		Random rnd = new Random( System.currentTimeMillis() );
+		// create the ArrayImg containing the simulation
+		Img<LifeForm> arena = factory.create( new long[] { width, height }, new LifeForm() );
+
+		// seed the arena with a number of random life forms
+		seedArena( arena, numSeeds, numRaces );
 		
-		for ( int i = 0; i < 100000; ++i )
-		{
-			final int x = Math.round( rnd.nextFloat() * (arena.dimension( 0 ) - 1) ); 
-			final int y = Math.round( rnd.nextFloat() * (arena.dimension( 1 ) - 1) );
-			
-			cursor.setPosition( new int[]{ x, y } );
-			
-			if ( i % 3 == 0 )
-				cursor.get().set( raceA, 1 );
-			else if ( i % 3 == 1 )
-				cursor.get().set( raceB, 1 );
-			else
-				cursor.get().set( raceC, 1 );
-		}
+		// init the display
+		final LifeFormARGBConverter display = new LifeFormARGBConverter();
 		
-		final LifeFormARGBConverter display = new LifeFormARGBConverter( 0, 1 );
-		final ImagePlus imp = ImageJFunctions.wrapRGB( arena, display, "Arena2" ); //ImageJFunctions.copyToImagePlus( arena, ImageJFunctions.COLOR_RGB );
+		// show the initial image (will be updated in each step)
+		final ImagePlus imp = ImageJFunctions.wrapRGB( arena, display, "Arena" );
 		imp.show();
-		
-		if ( exportAsStack )
-		{
-			ImageProcessor ip = (ImageProcessor)imp.getProcessor().clone();
-			stack.addSlice( "", ip );
-		}
-		
-		final float growth = 1.05f;
-		
-		long numFrames = 0;
+
+		// for computing the frames per second
 		final long start = System.currentTimeMillis();
+		long numFrames = 0;
 		
+		// repeat until cancelled
 		while ( true )
 		{			
-			/* growth */
+			// growth of each life form every round
 			for ( final LifeForm t : arena )
 			{
 				t.mul( growth );
 		
-				if ( t.getWeight() > 1.1f )
+				// if they grow too much they will die because of lack of food
+				if ( t.getWeight() > maxWeight )
 					t.setWeight( 0 );
 			}
 			
-			/* diffusion */
-			final GaussGeneral<LifeForm> gauss = new GaussGeneral<LifeForm>( new double[]{ 1.5, 1.5 }, arena, new OutOfBoundsMirrorFactory<LifeForm,Img<LifeForm>>( Boundary.SINGLE ) );
-			gauss.call();
-			arena = (Img<LifeForm>) gauss.getResult();
+			// simulate diffusion by gaussian convolution
+			Gauss.inNumericTypeInPlace( new double[]{ 1.5, 1.5 }, arena, outofbounds );
 			
-			++numFrames;
-			final long time = System.currentTimeMillis() - start;
-			double fps = numFrames*1000 / (double)time;
+			// compute and display frames per second
+			final double fps = ++numFrames*1000 / (double)( System.currentTimeMillis() - start );
 			
-			if ( numFrames % 25 == 0 )
-				imp.setTitle( "fps: " + fps );
+			if ( numFrames % 5 == 0 )
+				imp.setTitle( "fps: " +  NumberFormat.getInstance().format( fps ) );
 			
-			//arena.getDisplay().setMinMax();
+			// update the LifeFormARGBConverter to the current min and max value of the weight
 			display.setMin( 0 );
 			display.setMax( getMax( arena ) );
 
+			// update the ImageJ display to the current state of the simulation
 			updateDisplay( imp, arena, display );
-			
-			if ( exportAsStack )
-			{
-				if ( numFrames <= numFramesMovie )
-				{
-					ImageProcessor ip = (ImageProcessor)imp.getProcessor().clone();
-					stack.addSlice( "", ip );
-				}
-				
-				if ( numFrames == numFramesMovie )
-					new ImagePlus( "movie", stack ).show();
-			}
 		}
+	}
+	
+	/**
+	 * Seed the arena with a number of random life forms
+	 * 
+	 * @param arena - the Img containing the Life forms
+	 * @param numSeeds - the number of seeds
+	 * @param numRaces - the number of races to use
+	 */
+	public void seedArena( final Img<LifeForm> arena, final int numSeeds, final int numRaces )
+	{
+		final int numDimensions = arena.numDimensions();
+		
+		final RandomAccess<LifeForm> randomAccess = arena.randomAccess();
+		final Random rnd = new Random( System.currentTimeMillis() );
+		
+		for ( int i = 0; i < numSeeds; ++i )
+		{
+			for ( int d = 0; d < numDimensions; ++d )
+				randomAccess.setPosition( Math.round( rnd.nextFloat() * ( arena.dimension( d ) - 1 ) ), d );
+			
+			randomAccess.get().set( i % numRaces, 1 );
+		}		
 	}
 	
 	/**
@@ -202,10 +200,10 @@ public class Arena2
 	
 	public static void main( String[] args )
 	{
-		/* initImageJWindow() */
+		// init ImageJ Window
 		new ImageJ();
 		
-		/* Start the fight */
-		new Arena2();		
+		// Start the fight
+		new Arena();		
 	}
 }

@@ -41,24 +41,38 @@ import net.imglib2.display.AbstractLinearRange;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
- * 
+ * Create an ARGB representation of a {@link LifeForm}. LifeForms with name=0 will
+ * be displayed as red, name=1 as green and name=2 as blue. The weight will represent
+ * its intensity scaling float values between min...max to 0...255
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Stephan Preibisch <preibisch@mpi-cbg.de>
  */
 public class LifeFormARGBConverter extends AbstractLinearRange implements Converter< LifeForm, ARGBType >
 {
+	/**
+	 * Instantiate a new LifeFormARGBConverter where min=0 and max=1
+	 */
 	public LifeFormARGBConverter()
 	{
 		super();
 	}
 	
+	/**
+	 * Instantiate a new LifeFormARGBConverter
+	 * @param min - the minimal weight for display (will map to intensity 0)
+	 * @param max - the maximal weight for display (will map to intensity 255)
+	 */
 	public LifeFormARGBConverter( final double min, final double max )
 	{
 		super( min, max );
 	}
 	
+	/** 
+	 * Convert the LifeForm to an ARGB value
+	 * @param input - the LifeForm to convert
+	 * @param output - the ARGBType that will contain the RGB representation 
+	 */
 	@Override
 	public void convert( final LifeForm input, final ARGBType output )
 	{
@@ -72,6 +86,11 @@ public class LifeFormARGBConverter extends AbstractLinearRange implements Conver
 			output.set( col );
 	}
 	
+	/**
+	 * norm the weight of the LifeForm to 0...255 using min and max
+	 * @param c
+	 * @return
+	 */
 	public float normFloat( final float c )
 	{
 		double value = ( c - min ) / ( max - min );
