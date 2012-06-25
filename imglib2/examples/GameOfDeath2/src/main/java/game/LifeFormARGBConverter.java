@@ -78,12 +78,22 @@ public class LifeFormARGBConverter extends AbstractLinearRange implements Conver
 	{
 		final int col = (short)Math.round( normFloat( input.getWeight() ) * 255 );
 		
-		if( input.getName() == 0 )
+		final int name = input.getName();
+		
+		if ( name == 0 )
 			output.set( col<<16 );
-		else if ( input.getName() == 1 )
+		else if ( name == 1 )
 			output.set( col<<8 );
-		else
+		else if ( name == 2 )
 			output.set( col );
+		else if ( name == 3 )
+			output.set( (col<<16) + (col<<8) );
+		else if ( name == 4 )
+			output.set( (col<<16) + (col<<8) + col );
+		else if ( name == 5 )
+			output.set( (col<<16) + col );
+		else if ( name == 6 )
+			output.set( (col<<8) + col );
 	}
 	
 	/**
