@@ -38,15 +38,15 @@ package net.imglib2.algorithm.gauss;
 
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
-import net.imglib2.Location;
+import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.converter.readwrite.RealDoubleSamplerConverter;
+import net.imglib2.converter.readwrite.RealFloatSamplerConverter;
 import net.imglib2.converter.readwrite.WriteConvertedIterableRandomAccessibleInterval;
 import net.imglib2.converter.readwrite.WriteConvertedRandomAccessible;
 import net.imglib2.converter.readwrite.WriteConvertedRandomAccessibleInterval;
-import net.imglib2.converter.readwrite.RealDoubleSamplerConverter;
-import net.imglib2.converter.readwrite.RealFloatSamplerConverter;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -152,7 +152,7 @@ public class Gauss
 				final RandomAccessible<FloatType> rIn = Views.extend( new WriteConvertedRandomAccessibleInterval< T, FloatType >( img, new RealFloatSamplerConverter<T>()), outofbounds );
 				final RandomAccessible<FloatType> rOut = new WriteConvertedRandomAccessible< T, FloatType >( output, new RealFloatSamplerConverter<T>());
 				
-				inFloat( sigma, rIn, img, rOut, new Location( sigma.length ), img.factory().imgFactory( new FloatType() ) );
+				inFloat( sigma, rIn, img, rOut, new Point( sigma.length ), img.factory().imgFactory( new FloatType() ) );
 				
 				return output;
 			}
@@ -192,12 +192,12 @@ public class Gauss
 			{
 				@SuppressWarnings( { "rawtypes", "unchecked" } )
 				final Img< FloatType > img2 = (Img) img;
-				gauss = new GaussFloat( sigma, Views.extend( img2, outofbounds ), img2, img2, new Location( sigma.length ), img2.factory().imgFactory( new FloatType() ) );
+				gauss = new GaussFloat( sigma, Views.extend( img2, outofbounds ), img2, img2, new Point( sigma.length ), img2.factory().imgFactory( new FloatType() ) );
 			}
 			else
 			{
 				final RandomAccessibleInterval<FloatType> rIn = new WriteConvertedIterableRandomAccessibleInterval< T, FloatType, Img<T> >( img, new RealFloatSamplerConverter<T>());
-				gauss = new GaussFloat( sigma, Views.extend( rIn, outofbounds ), img, rIn, new Location( sigma.length ), img.factory().imgFactory( new FloatType() ) );
+				gauss = new GaussFloat( sigma, Views.extend( rIn, outofbounds ), img, rIn, new Point( sigma.length ), img.factory().imgFactory( new FloatType() ) );
 			}
 		}
 		catch (final IncompatibleTypeException e)
@@ -331,7 +331,7 @@ public class Gauss
 				final RandomAccessible<DoubleType> rIn = Views.extend( new WriteConvertedRandomAccessibleInterval< T, DoubleType >( img, new RealDoubleSamplerConverter<T>()), outofbounds );
 				final RandomAccessible<DoubleType> rOut = new WriteConvertedRandomAccessible< T, DoubleType >( output, new RealDoubleSamplerConverter<T>());
 				
-				inDouble( sigma, rIn, img, rOut, new Location( sigma.length ), img.factory().imgFactory( new DoubleType() ) );
+				inDouble( sigma, rIn, img, rOut, new Point( sigma.length ), img.factory().imgFactory( new DoubleType() ) );
 				
 				return output;
 			}
@@ -371,12 +371,12 @@ public class Gauss
 			{
 				@SuppressWarnings( { "rawtypes", "unchecked" } )
 				final Img< DoubleType > img2 = (Img) img;
-				gauss = new GaussDouble( sigma, Views.extend( img2, outofbounds ), img2, img2, new Location( sigma.length ), img2.factory().imgFactory( new DoubleType() ) );
+				gauss = new GaussDouble( sigma, Views.extend( img2, outofbounds ), img2, img2, new Point( sigma.length ), img2.factory().imgFactory( new DoubleType() ) );
 			}
 			else
 			{
 				final RandomAccessibleInterval<DoubleType> rIn = new WriteConvertedIterableRandomAccessibleInterval< T, DoubleType, Img<T> >( img, new RealDoubleSamplerConverter<T>());
-				gauss = new GaussDouble( sigma, Views.extend( rIn, outofbounds ), img, rIn, new Location( sigma.length ), img.factory().imgFactory( new DoubleType() ) );
+				gauss = new GaussDouble( sigma, Views.extend( rIn, outofbounds ), img, rIn, new Point( sigma.length ), img.factory().imgFactory( new DoubleType() ) );
 			}
 		}
 		catch (final IncompatibleTypeException e)
@@ -452,7 +452,7 @@ public class Gauss
 			final OutOfBoundsFactory< T, RandomAccessibleInterval< T > > outofbounds )
 	{
 		final Img< T > output = img.factory().create( img, img.firstElement() );
-		inNumericType( sigma, Views.extend( img, outofbounds ), img, output, new Location( sigma.length ), img.factory() );
+		inNumericType( sigma, Views.extend( img, outofbounds ), img, output, new Point( sigma.length ), img.factory() );
 		return output;
 	}
 
@@ -478,7 +478,7 @@ public class Gauss
 	public static <T extends NumericType<T>> void inNumericTypeInPlace( final double[] sigma, final Img< T > img,
 			final OutOfBoundsFactory< T, RandomAccessibleInterval< T > > outofbounds )
 	{
-		inNumericType( sigma, Views.extend( img, outofbounds ), img, img, new Location( sigma.length ), img.factory() );
+		inNumericType( sigma, Views.extend( img, outofbounds ), img, img, new Point( sigma.length ), img.factory() );
 	}
 	
 	/**
