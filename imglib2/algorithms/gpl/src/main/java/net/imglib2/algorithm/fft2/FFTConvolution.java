@@ -4,17 +4,94 @@ import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.Localizable;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
+import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
-public class FFTConvolution 
+public class FFTConvolution < R extends RealType< R > > implements Runnable
 {
+	Img< ComplexFloatType > fftImg, fftKernel;
+	ImgFactory< ComplexFloatType > fftFactory;
+	
+	RandomAccessible< R > img, kernel;
+	Interval imgInterval, kernelInterval;
+	RandomAccessibleInterval< R > output;
+	
+	boolean keepImgFFT = false;
+	boolean keepKernelFFT = false;
+
+	/**
+	 * Compute a Fourier Convolution in-place (img will be replaced by the convolved result)
+	 * 
+	 * @param img - the image
+	 * @param kernel - the convolution kernel
+	 */
+	public FFTConvolution( final Img< R > img, final Img< R > kernel )
+	{
+		this ( img, kernel, img );
+		Localizable f;
+		Positionable fg;
+	}	
+
+	/**
+	 * Compute a Fourier Convolution
+	 * 
+	 * @param img - the image
+	 * @param kernel - the convolution kernel
+	 * @param output - the result of the convolution
+	 */
+	public FFTConvolution( final Img< R > img, final Img< R > kernel, final RandomAccessibleInterval< R > output )
+	{
+		this ( img, kernel, output, getFFTFactory( img ) );
+	}	
+
+	
+	public FFTConvolution( final RandomAccessibleInterval< R > img, final RandomAccessibleInterval< R > kernel, final ImgFactory< ComplexFloatType > factory )
+	{
+		this ( img, kernel, img, factory );
+	}
+
+	public FFTConvolution( final RandomAccessibleInterval< R > img, final RandomAccessibleInterval< R > kernel, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory )
+	{
+		this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, factory );
+	}
+
+	public FFTConvolution( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final ImgFactory< ComplexFloatType > factory )
+	{
+		this.img = img;
+		this.imgInterval = imgInterval;
+		this.kernel = kernel;
+		this.kernelInterval = kernelInterval;
+		this.fftFactory = factory;
+	}
+
+	public void setKeepImgFFT( final boolean keep ) { this.keepImgFFT = true; }
+	public void setKeepKernelFFT( final boolean keep ) { this.keepKernelFFT = true; }
+	public boolean keepImgFFT() { return keepImgFFT; }
+	public boolean keepKernelFFT() { return keepKernelFFT; }
+	public void setFFTImgFactory( final ImgFactory< ComplexFloatType > factory ) { this.fftFactory = factory; }
+	public ImgFactory< ComplexFloatType > fftImgFactory() { return fftFactory; }
+	public Img< ComplexFloatType > imgFFT() { return fftImg; }
+	public Img< ComplexFloatType > kernelFFT() { return fftKernel; }
+	
+	@Override
+	public void run() 
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
 	final public static < R extends RealType< R > > void convolve( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final ImgFactory< ComplexFloatType > factory )
 	{
 		final int numDimensions = imgInterval.numDimensions();
@@ -96,4 +173,18 @@ public class FFTConvolution
 		}
 	}
 
+	protected static ImgFactory< ComplexFloatType > getFFTFactory( final Img< ? extends RealType< ? > > img )
+	{
+		try 
+		{
+			return img.factory().imgFactory( new ComplexFloatType() );
+		} 
+		catch (IncompatibleTypeException e) 
+		{
+			if ( img.size() > Integer.MAX_VALUE / 2 )
+				return new CellImgFactory<ComplexFloatType>( 1024 );
+			else
+				return new ArrayImgFactory< ComplexFloatType >();
+		}
+	}
 }
