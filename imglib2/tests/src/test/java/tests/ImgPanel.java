@@ -34,7 +34,7 @@
  * #L%
  */
 
-package net.imglib2.ui;
+package tests;
 
 import java.awt.Adjustable;
 import java.awt.Dimension;
@@ -55,11 +55,11 @@ import javax.swing.border.TitledBorder;
 
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
-
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.XYProjector;
 import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgIOUtils;
@@ -69,8 +69,9 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * TODO
+ * A simple UI that demonstrates display of {@link Img}s.
  *
+ * @author Curtis Rueden
  */
 public class ImgPanel extends JPanel {
 
@@ -119,7 +120,6 @@ public class ImgPanel extends JPanel {
 						final int value = bar.getValue();
 						imgData.projector.setPosition(value, dim);
 						imgData.projector.map();
-						System.out.println("dim #" + dim + ": value->" + value);// TEMP
 						imgData.owner.repaint();
 					}
 				});
@@ -164,7 +164,6 @@ public class ImgPanel extends JPanel {
 		final String[] args)
 	{
 		final String[] urls = {
-			"http://loci.wisc.edu/files/software/data/mitosis-test.zip",
 			"http://loci.wisc.edu/files/software/ome-tiff/z-series.zip"
 		};
 		final JFrame frame = new JFrame("ImgPanel Test Frame");
