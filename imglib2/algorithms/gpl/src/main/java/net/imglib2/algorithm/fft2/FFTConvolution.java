@@ -4,8 +4,6 @@ import net.imglib2.Cursor;
 import net.imglib2.FinalDimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
-import net.imglib2.IterableInterval;
-import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.exception.IncompatibleTypeException;
@@ -18,6 +16,24 @@ import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
+/**
+ * Computes the convolution of an image with an arbitrary kernel. Computation is based on the Convolution Theorem (http://en.wikipedia.org/wiki/Convolution_theorem).
+ * By default computation is performed in-place, i.e. the input is replaced by the convolution. A separate output can, however, be specified.
+ * 
+ * The class supports to sequentially convolve the same image with different kernels. To achieve that, you have to call setKeepImgFFT(true) and for each sequential
+ * run replace the kernel by either calling setKernel(RandomAccessibleInterval< R > kernel) or setKernel(RandomAccessible< R > kernel, Interval kernelInterval).
+ * The Fourier convolution will keep the FFT of the image which will speed up all convolutions after the initial run() call.
+ * NOTE: There is no checking if the sizes are compatible. If the new kernel has smaller or larger dimensions, it will simply fail. It is up to you to look for that.
+ * NOTE: This is not influenced by whether the computation is performed in-place or not, just the FFT of the image is kept.
+ * 
+ * In the same way, you can sequentially convolve varying images with the same kernel. For that, you simply have to replace the image after the first run() call by
+ * calling either setImg(RandomAccessibleInterval< R > img) or setImg(RandomAccessible< R > img, Interval imgInterval). The Fourier convolution will keep the FFT of 
+ * the kernel which will speed up all convolutions after the initial run() call.
+ * NOTE: There is no checking if the sizes are compatible. If the new input has smaller or larger dimensions, it will simply fail. It is up to you to look for that.
+ * NOTE: This is not influenced by whether the computation is performed in-place or not, just the FFT of the kernel is kept.
+ * 
+ * @author Stephan Preibisch
+ */
 public class FFTConvolution < R extends RealType< R > > implements Runnable
 {
 	Img< ComplexFloatType > fftImg, fftKernel;
@@ -28,10 +44,12 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 	RandomAccessibleInterval< R > output;
 	
 	boolean keepImgFFT = false;
-	boolean keepKernelFFT = false;
 
 	/**
-	 * Compute a Fourier Convolution in-place (img will be replaced by the convolved result)
+	 * Compute a Fourier space based convolution in-place (img will be replaced by the convolved result). 
+	 * The image will be extended by mirroring with single boundary, the kernel will be zero-padded.
+	 * The {@link ImgFactory} for creating the FFT will be identical to the one used by the 'img' if 
+	 * possible, otherwise an {@link ArrayImgFactory} or {@link CellImgFactory} depending on the size.
 	 * 
 	 * @param img - the image
 	 * @param kernel - the convolution kernel
@@ -42,7 +60,10 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 	}	
 
 	/**
-	 * Compute a Fourier Convolution
+	 * Compute a Fourier space based convolution 
+	 * The image will be extended by mirroring with single boundary, the kernel will be zero-padded.
+	 * The {@link ImgFactory} for creating the FFT will be identical to the one used by the 'img' if 
+	 * possible, otherwise an {@link ArrayImgFactory} or {@link CellImgFactory} depending on the size.
 	 * 
 	 * @param img - the image
 	 * @param kernel - the convolution kernel
@@ -51,32 +72,109 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 	public FFTConvolution( final Img< R > img, final Img< R > kernel, final RandomAccessibleInterval< R > output )
 	{
 		this ( img, kernel, output, getFFTFactory( img ) );
-	}	
-
+	}
 	
+	/**
+	 * Compute a Fourier space based convolution in-place (img will be replaced by the convolved result). 
+	 * The image will be extended by mirroring with single boundary, the kernel will be zero-padded.
+	 * 
+	 * @param img - the image
+	 * @param kernel - the convolution kernel
+	 * @param factory - the {@link ImgFactory} to create the fourier transforms
+	 */
 	public FFTConvolution( final RandomAccessibleInterval< R > img, final RandomAccessibleInterval< R > kernel, final ImgFactory< ComplexFloatType > factory )
 	{
 		this ( img, kernel, img, factory );
 	}
 
+	/**
+	 * Compute a Fourier space based convolution 
+	 * The image will be extended by mirroring with single boundary, the kernel will be zero-padded.
+	 * 
+	 * @param img - the image
+	 * @param kernel - the convolution kernel
+	 * @param output - the output
+	 * @param factory - the {@link ImgFactory} to create the fourier transforms
+	 */
 	public FFTConvolution( final RandomAccessibleInterval< R > img, final RandomAccessibleInterval< R > kernel, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory )
 	{
-		this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, factory );
+		this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, output, factory );
 	}
 
+	/**
+	 * Compute a Fourier space based convolution in-place (img will be replaced by the convolved result).
+	 * The input as well as the kernel need to be extended or infinite already as the {@link Interval} required 
+	 * to perform the Fourier convolution is significantly bigger than the {@link Interval} provided here.
+	 * 
+	 * Interval size of img and kernel: size(img) + 2*(size(kernel)-1) + pad to fft compatible size
+	 * 
+	 * @param img - the input
+	 * @param imgInterval - the input interval (i.e. the area to be convolved)
+	 * @param kernel - the kernel
+	 * @param kernelInterval - the kernel interval
+	 * @param factory - the {@link ImgFactory} to create the fourier transforms
+	 */
 	public FFTConvolution( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final ImgFactory< ComplexFloatType > factory )
+	{
+		this( img, imgInterval, kernel, kernelInterval, Views.interval( img, imgInterval ), factory );
+	}
+
+	/**
+	 * Compute a Fourier space based convolution.
+	 * The input as well as the kernel need to be extended or infinite already as the {@link Interval} required 
+	 * to perform the Fourier convolution is significantly bigger than the {@link Interval} provided here.
+	 * 
+	 * Interval size of img and kernel: size(img) + 2*(size(kernel)-1) + pad to fft compatible size
+	 * 
+	 * @param img - the input
+	 * @param imgInterval - the input interval (i.e. the area to be convolved)
+	 * @param kernel - the kernel
+	 * @param kernelInterval - the kernel interval
+	 * @param output - the output data+interval
+	 * @param factory - the {@link ImgFactory} to create the fourier transforms
+	 */
+	public FFTConvolution( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory )
 	{
 		this.img = img;
 		this.imgInterval = imgInterval;
 		this.kernel = kernel;
 		this.kernelInterval = kernelInterval;
+		this.output = output;
 		this.fftFactory = factory;
 	}
 
+	public void setImg( final RandomAccessibleInterval< R > img )
+	{
+		this.img = img;
+		this.imgInterval = img;
+		this.fftImg = null;
+	}
+
+	public void setImg( final RandomAccessible< R > img, final Interval imgInterval )
+	{
+		this.img = img;
+		this.imgInterval = imgInterval;
+		this.fftImg = null;
+	}
+
+	public void setKernel( final RandomAccessibleInterval< R > kernel )
+	{
+		this.kernel = kernel;
+		this.kernelInterval = kernel;
+		this.fftKernel = null;
+	}
+
+	public void setKernel( final RandomAccessible< R > kernel, final Interval kernelInterval )
+	{
+		this.kernel = kernel;
+		this.kernelInterval = kernelInterval;
+		this.fftKernel = null;
+	}
+
+	public void setOutput( final RandomAccessibleInterval< R > output ) { this.output = output; }
+	
 	public void setKeepImgFFT( final boolean keep ) { this.keepImgFFT = true; }
-	public void setKeepKernelFFT( final boolean keep ) { this.keepKernelFFT = true; }
 	public boolean keepImgFFT() { return keepImgFFT; }
-	public boolean keepKernelFFT() { return keepKernelFFT; }
 	public void setFFTImgFactory( final ImgFactory< ComplexFloatType > factory ) { this.fftFactory = factory; }
 	public ImgFactory< ComplexFloatType > fftImgFactory() { return fftFactory; }
 	public Img< ComplexFloatType > imgFFT() { return fftImg; }
@@ -85,11 +183,65 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 	@Override
 	public void run() 
 	{
-		// TODO Auto-generated method stub
+		final int numDimensions = imgInterval.numDimensions();
 		
+		// the image has to be extended at least by kernelDimensions/2-1 in each dimension so that
+		// the pixels outside of the interval are used for the convolution.
+		final long[] newDimensions = new long[ numDimensions ];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+			newDimensions[ d ] = (int)imgInterval.dimension( d ) + (int)kernelInterval.dimension( d ) - 1;
+		
+		// compute the size of the complex-valued output and the required padding
+		// based on the prior extended input image
+		final long[] paddedDimensions = new long[ numDimensions ];
+		final long[] fftDimensions = new long[ numDimensions ];
+		
+		FFTMethods.dimensionsRealToComplexFast( FinalDimensions.wrap( newDimensions ), paddedDimensions, fftDimensions );
+
+		// compute the new interval for the input image
+		final Interval imgConvolutionInterval = FFTMethods.paddingIntervalCentered( imgInterval, FinalDimensions.wrap( paddedDimensions ) );
+		
+		// compute the new interval for the kernel image
+		final Interval kernelConvolutionInterval = FFTMethods.paddingIntervalCentered( kernelInterval, FinalDimensions.wrap( paddedDimensions ) );
+
+		// compute where to place the final Interval for the kernel so that the coordinate in the center
+		// of the kernel is at position (0,0)
+		final long[] min = new long[ numDimensions ];
+		final long[] max = new long[ numDimensions ];
+		
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			min[ d ] = kernelInterval.min( d ) + kernelInterval.dimension( d ) / 2;
+			max[ d ] = min[ d ] + kernelConvolutionInterval.dimension( d ) - 1;
+		}
+		
+		// assemble the correct kernel (size of the input + extended periodic + top left at center of input kernel)
+		final RandomAccessibleInterval< R > kernelInput = Views.interval( Views.extendPeriodic( Views.interval( kernel, kernelConvolutionInterval ) ), new FinalInterval( min, max ) );
+		final RandomAccessibleInterval< R > imgInput = Views.interval( img, imgConvolutionInterval );
+		
+		// compute the FFT's if they do not exist yet
+		if ( fftImg == null )
+			fftImg = FFT.realToComplex( imgInput, fftFactory );
+		
+		if( fftKernel == null )
+			fftKernel = FFT.realToComplex( kernelInput, fftFactory );
+		
+		final Img< ComplexFloatType > fftconvolved;
+		
+		if ( keepImgFFT )
+			fftconvolved = fftImg.copy();
+		else
+			fftconvolved = fftImg;
+		
+		// multiply in place
+		multiplyComplex( fftconvolved, fftKernel );
+		
+		// inverse FFT in place
+		FFT.complexToRealUnpad( fftconvolved, output );
 	}
 	
-	final public static < R extends RealType< R > > void convolve( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final ImgFactory< ComplexFloatType > factory )
+	final public static < R extends RealType< R > > void convolve( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory )
 	{
 		final int numDimensions = imgInterval.numDimensions();
 		
@@ -98,10 +250,7 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 		final long[] newDimensions = new long[ numDimensions ];
 		
 		for ( int d = 0; d < numDimensions; ++d )
-		{
 			newDimensions[ d ] = (int)imgInterval.dimension( d ) + (int)kernelInterval.dimension( d ) - 1;
-			System.out.println( newDimensions[ d ] );
-		}
 		
 		// compute the size of the complex-valued output and the required padding
 		// based on the prior extended input image
@@ -139,35 +288,16 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 		multiplyComplex( fftImg, fftKernel );
 		
 		// inverse FFT in place
-		FFT.complexToRealUnpad( fftImg, Views.interval( img, imgInterval ) );
+		FFT.complexToRealUnpad( fftImg, output );
 	}
 	
-	final public static void multiplyComplex( final RandomAccessibleInterval< ComplexFloatType > img, final RandomAccessibleInterval< ComplexFloatType > kernel )
+	final public static void multiplyComplex( final Img< ComplexFloatType > img, final Img< ComplexFloatType > kernel )
 	{
-		final IterableInterval< ComplexFloatType > iterableImg = Views.iterable( img );
-		final IterableInterval< ComplexFloatType > iterableKernel = Views.iterable( kernel );
+		final Cursor< ComplexFloatType > cursorA = img.cursor();
+		final Cursor< ComplexFloatType > cursorB = kernel.cursor();
 		
-		if ( iterableImg.iterationOrder().equals( iterableKernel.iterationOrder() ) )
-		{
-			final Cursor< ComplexFloatType > cursorA = iterableImg.cursor();
-			final Cursor< ComplexFloatType > cursorB = iterableKernel.cursor();
-			
-			while ( cursorA.hasNext() )
-				cursorA.next().mul( cursorB.next() );
-		}
-		else
-		{
-			final Cursor< ComplexFloatType > cursorA = iterableImg.localizingCursor();
-			final RandomAccess< ComplexFloatType > randomAccess = kernel.randomAccess();
-			
-			while ( cursorA.hasNext() )
-			{
-				final ComplexFloatType t = cursorA.next();
-				randomAccess.setPosition( cursorA );
-				
-				t.mul( randomAccess.get() );
-			}						
-		}
+		while ( cursorA.hasNext() )
+			cursorA.next().mul( cursorB.next() );
 	}
 
 	protected static ImgFactory< ComplexFloatType > getFFTFactory( final Img< ? extends RealType< ? > > img )
