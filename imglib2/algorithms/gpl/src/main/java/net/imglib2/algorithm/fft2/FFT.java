@@ -1,9 +1,7 @@
 package net.imglib2.algorithm.fft2;
 
-import net.imglib2.Cursor;
+import net.imglib2.FinalDimensions;
 import net.imglib2.Interval;
-import net.imglib2.IterableInterval;
-import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
@@ -36,8 +34,8 @@ public class FFT
 	final public static < R extends RealType< R >, C extends ComplexType< C > > Img< C > realToComplex( final RandomAccessible< R > input, Interval inputInterval, final ImgFactory< C > factory, final C type )
 	{
 		// compute the size of the complex-valued output and the required padding
-		final int[] paddedDimensions = new int[ input.numDimensions() ];
-		final int[] fftDimensions = new int[ input.numDimensions() ];
+		final long[] paddedDimensions = new long[ input.numDimensions() ];
+		final long[] fftDimensions = new long[ input.numDimensions() ];
 		
 		FFTMethods.dimensionsRealToComplexFast( inputInterval, paddedDimensions, fftDimensions );
 
@@ -46,7 +44,7 @@ public class FFT
 
 		// if the input size is not the right size adjust the interval
 		if ( !FFTMethods.dimensionsEqual( inputInterval, paddedDimensions ) )
-			inputInterval = FFTMethods.paddingIntervalCentered( inputInterval, paddedDimensions );
+			inputInterval = FFTMethods.paddingIntervalCentered( inputInterval, FinalDimensions.wrap( paddedDimensions ) );
 		
 		// real-to-complex fft
 		realToComplex( Views.interval( input, inputInterval ), fft );
@@ -74,8 +72,8 @@ public class FFT
 		final int numDimensions = input.numDimensions();
 		
 		// compute the size of the complex-valued output and the required padding
-		final int[] paddedDimensions = new int[ numDimensions ];
-		final int[] realDimensions = new int[ numDimensions ];
+		final long[] paddedDimensions = new long[ numDimensions ];
+		final long[] realDimensions = new long[ numDimensions ];
 		
 		FFTMethods.dimensionsComplexToRealFast( inputInterval, paddedDimensions, realDimensions );
 		
@@ -83,7 +81,7 @@ public class FFT
 		if ( !FFTMethods.dimensionsEqual( inputInterval, paddedDimensions ) )
 		{
 			System.out.println( "adjusting complex input" );
-			inputInterval = FFTMethods.paddingIntervalCentered( inputInterval, paddedDimensions );
+			inputInterval = FFTMethods.paddingIntervalCentered( inputInterval, FinalDimensions.wrap( paddedDimensions ) );
 		}
 		
 		final RandomAccessibleInterval< C > fft = Views.interval( input, inputInterval );

@@ -1,11 +1,10 @@
 package net.imglib2.algorithm.fft2;
 
 import net.imglib2.Cursor;
+import net.imglib2.FinalDimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
-import net.imglib2.Localizable;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -40,8 +39,6 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 	public FFTConvolution( final Img< R > img, final Img< R > kernel )
 	{
 		this ( img, kernel, img );
-		Localizable f;
-		Positionable fg;
 	}	
 
 	/**
@@ -98,7 +95,7 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 		
 		// the image has to be extended at least by kernelDimensions/2-1 in each dimension so that
 		// the pixels outside of the interval are used for the convolution.
-		final int[] newDimensions = new int[ numDimensions ];
+		final long[] newDimensions = new long[ numDimensions ];
 		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
@@ -108,16 +105,16 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 		
 		// compute the size of the complex-valued output and the required padding
 		// based on the prior extended input image
-		final int[] paddedDimensions = new int[ numDimensions ];
-		final int[] fftDimensions = new int[ numDimensions ];
+		final long[] paddedDimensions = new long[ numDimensions ];
+		final long[] fftDimensions = new long[ numDimensions ];
 		
-		FFTMethods.dimensionsRealToComplexFast( newDimensions, paddedDimensions, fftDimensions );
+		FFTMethods.dimensionsRealToComplexFast( FinalDimensions.wrap( newDimensions ), paddedDimensions, fftDimensions );
 
 		// compute the new interval for the input image
-		final Interval imgConvolutionInterval = FFTMethods.paddingIntervalCentered( imgInterval, paddedDimensions );
+		final Interval imgConvolutionInterval = FFTMethods.paddingIntervalCentered( imgInterval, FinalDimensions.wrap( paddedDimensions ) );
 		
 		// compute the new interval for the kernel image
-		final Interval kernelConvolutionInterval = FFTMethods.paddingIntervalCentered( kernelInterval, paddedDimensions );
+		final Interval kernelConvolutionInterval = FFTMethods.paddingIntervalCentered( kernelInterval, FinalDimensions.wrap( paddedDimensions ) );
 
 		// compute where to place the final Interval for the kernel so that the coordinate in the center
 		// of the kernel is at position (0,0)
