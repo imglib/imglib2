@@ -61,7 +61,7 @@ package net.imglib2;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Stephan Preibisch
  */
-public interface Interval extends RealInterval
+public interface Interval extends RealInterval, Dimensions
 {
 	/**
 	 * 
@@ -104,21 +104,7 @@ public interface Interval extends RealInterval
 	 * @param max
 	 */
 	public void max( Positionable max );
-	
-	/**
-	 * Write the number of pixels in each dimension into long[].
-	 * 
-	 * @param dimensions
-	 */
-	public void dimensions( long[] dimensions );
-	
-	/**
-	 * Get the number of pixels in a given dimension <em>d</em>.
-	 * 
-	 * @param d
-	 */
-	public long dimension( int d );
-	
+		
 //	/**
 //	 * Get the interval's size.  Note that you will get the actual array
 //	 * storing the size, that is, writing into it will change the properties
