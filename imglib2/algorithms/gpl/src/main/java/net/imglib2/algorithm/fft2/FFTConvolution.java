@@ -145,7 +145,7 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 
 	public void setImg( final RandomAccessibleInterval< R > img )
 	{
-		this.img = img;
+		this.img = Views.extendMirrorSingle( img );
 		this.imgInterval = img;
 		this.fftImg = null;
 	}
@@ -159,7 +159,7 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 
 	public void setKernel( final RandomAccessibleInterval< R > kernel )
 	{
-		this.kernel = kernel;
+		this.kernel = Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() );
 		this.kernelInterval = kernel;
 		this.fftKernel = null;
 	}
