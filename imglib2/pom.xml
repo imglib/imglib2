@@ -27,7 +27,6 @@
 		<module>realtransform</module>
 		<module>scripting</module>
 		<module>tests</module>
-		<module>ui</module>
 	</modules>
 
 	<!-- NB: for project parent, in case of partial checkout -->

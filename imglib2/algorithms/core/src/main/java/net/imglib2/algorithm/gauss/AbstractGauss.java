@@ -54,6 +54,7 @@ import net.imglib2.iterator.LocalizingZeroMinIntervalIterator;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
+import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 
 /**
@@ -196,7 +197,7 @@ public abstract class AbstractGauss< T extends NumericType< T > >
 		final RandomAccess< T > randomAccess;
 		
 		if ( dim == 0 )
-			randomAccess = input.randomAccess();
+			randomAccess = input.randomAccess( Intervals.expand( range, kernel[ dim ].length / 2, dim ) );
 		else if ( dim % 2 == 1 )
 			randomAccess = tmp1.randomAccess(); // odd dimensions
 		else
