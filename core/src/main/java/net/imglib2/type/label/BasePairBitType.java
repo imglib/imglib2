@@ -40,9 +40,14 @@ package net.imglib2.type.label;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.BitAccess;
+import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.type.BasePairType;
 import net.imglib2.type.NativeType;
+import net.imglib2.img.basictypeaccess.array.LongArray;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.BasePairType;
+import net.imglib2.type.logic.BitType;
 import net.imglib2.util.Fraction;
 
 /**
@@ -53,23 +58,27 @@ import net.imglib2.util.Fraction;
  */
 public class BasePairBitType implements BasePairType<BasePairBitType>, NativeType<BasePairBitType>
 {
-	private int i = 0;
+	// A mask for bit and, containing nBits of 1
+	private final static long mask = 7; // 111 in binary
+		
+	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
+	protected int i = 0;
+
+	final protected NativeImg<BasePairBitType, ? extends LongAccess> img;
+
+	// the DataAccess that holds the information
+	protected LongAccess dataAccess;
 	
-	public static enum Base { gap, N, A, T, G, C; }
+	public static enum Base { gap, N, A, T, G, C, U; }
 
 	@Override
 	public Fraction getEntitiesPerPixel() { return new Fraction( 3, 1 ); }
-
-	final protected NativeImg<BasePairBitType, ? extends BitAccess> img;
-	
-	// the DataAccess that holds the information 
-	protected BitAccess dataAccess;
 	
 	// the adresses of the bits that we store
 	int j1, j2, j3;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( NativeImg<BasePairBitType, ? extends BitAccess> bitStorage )
+	public BasePairBitType( NativeImg<BasePairBitType, ? extends LongAccess> bitStorage )
 	{
 		img = bitStorage;
 		updateIndex( 0 );
@@ -80,7 +89,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	{
 		img = null;
 		updateIndex( 0 );
-		dataAccess = new BitArray( 3 );
+		dataAccess = new LongArray( 1 );
 		set( value );
 	}	
 
@@ -88,10 +97,10 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	public BasePairBitType() { this( Base.N ); }
 	
 	@Override
-	public NativeImg<BasePairBitType, ? extends BitAccess> createSuitableNativeImg( final NativeImgFactory<BasePairBitType> storageFactory, final long dim[] )	
+	public NativeImg<BasePairBitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<BasePairBitType> storageFactory, final long dim[] )	
 	{
 		// create the container
-		final NativeImg<BasePairBitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, new Fraction( 3, 1 ) );
+		final NativeImg<BasePairBitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( 3, 64 ) );
 		
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );
@@ -160,59 +169,13 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	@Override
 	public void set( final Base base ) 
 	{
-		// the bits to set
-		final boolean b1, b2, b3;
-		
-		switch ( base )
-		{
-			case A: b1 = b2 = b3 = false;        	   break;
-			case T: b1 = b2 = false; b3 = true;  	   break;
-			case G: b1 = b2 = true;  b3 = false; 	   break;
-			case C: b1 = false; b2 = b3 = true;        break;
-			case gap: b1 = true; b2 = b3 = false;      break;
-			default: b1 = true; b2 = false; b3 = true; break;
-		}
-		
-		dataAccess.setValue( j1, b1 );
-		dataAccess.setValue( j2, b2 );
-		dataAccess.setValue( j3, b3 );
+		// can go over longs
 	}
 	
 	@Override
 	public Base get() 
-	{
-		final boolean b1 = dataAccess.getValue( j1 );
-		final boolean b2 = dataAccess.getValue( j2 );
-		final boolean b3 = dataAccess.getValue( j3 );
-		
-		final Base base;
-		
-		if ( !b1 )
-		{
-			if ( !b2 )
-			{
-				if ( !b3 )
-					base = Base.A;
-				else
-					base = Base.T;
-			}
-			else
-			{
-				if ( !b3 )
-					base = Base.G;
-				else
-					base = Base.C;				
-			}
-		}
-		else
-		{
-			if ( !b3 )
-				base = Base.gap;
-			else
-				base = Base.N;
-		}
-		
-		return base;
+	{		
+		// can go over longs
 	}
 	
 	@Override
