@@ -203,7 +203,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	@Override
 	public void setInteger( final int value ) {
 		final int k = i * 2;
-		dataAccess.setValue( k, (dataAccess.getValue( k ) & 0xffffffff00000000L) | value );
+		dataAccess.setValue( k, value );
 		dataAccess.setValue( k + 1, 0 );
 	}
 	
@@ -215,9 +215,9 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	}
 
 	/** The maximum value that can be stored is {@code Math.pow(2, 128) -1},
-	 * which cannot be represented with a double; this method returns {@link Double#MAX_VALUE}. */
+	 * which cannot be represented with precision using a double */
 	@Override
-	public double getMaxValue() { return Double.MAX_VALUE; } // WRONG value in purpose
+	public double getMaxValue() { return Math.pow( 2, 128 ) - 1; } // imprecise
 
 	/** The true maximum value, unlike {@link #getMaxValue()} which cannot represent
 	 * it in a {@code double}. */

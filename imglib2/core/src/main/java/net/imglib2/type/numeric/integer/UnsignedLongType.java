@@ -228,7 +228,7 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	 * @param b
 	 * @return -1 if a < b, 0 if a == b, 1 if a > b.
 	 */
-	static public final int compare( long a, long b) {
+	static public final int compare( final long a, final long b ) {
 		if (a == b)
 			return 0;
 		else {

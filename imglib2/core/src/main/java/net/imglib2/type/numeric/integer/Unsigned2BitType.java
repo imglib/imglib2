@@ -54,7 +54,7 @@ import net.imglib2.util.Fraction;
 public class Unsigned2BitType extends AbstractBitType<Unsigned2BitType>
 {
 	// A mask for bit and, containing nBits of 1
-	private final long mask;
+	private final static long mask = 3; // 11 in binary
 
 	// this is the constructor if you want it to read from an array
 	public Unsigned2BitType(
@@ -62,7 +62,6 @@ public class Unsigned2BitType extends AbstractBitType<Unsigned2BitType>
 			? extends LongAccess> bitStorage)
 	{
 		super( bitStorage );
-		this.mask = 3; // 11 in binary
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -110,6 +109,7 @@ public class Unsigned2BitType extends AbstractBitType<Unsigned2BitType>
 		// Same as above minus one multiplication, plus one shift to multiply the reminder by 2
 		//return (dataAccess.getValue((int)(i >>> 5)) >>> ((i % 32) << 1)) & mask;
 		// Even less operations
+		// div 32 == shr 5
 		return (dataAccess.getValue((int)(i >>> 5)) >>> ((i & 31) << 1)) & mask;
 	}
 

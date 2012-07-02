@@ -54,7 +54,7 @@ import net.imglib2.util.Fraction;
 public class Unsigned4BitType extends AbstractBitType<Unsigned4BitType>
 {
 	// A mask for bit and, containing nBits of 1
-	private final long mask;
+	private final static long mask = 15; // 1111 in binary
 
 	// this is the constructor if you want it to read from an array
 	public Unsigned4BitType(
@@ -62,7 +62,6 @@ public class Unsigned4BitType extends AbstractBitType<Unsigned4BitType>
 			? extends LongAccess> bitStorage)
 	{
 		super( bitStorage );
-		this.mask = 15; // 1111 in binary
 	}
 
 	// this is the constructor if you want it to be a variable
