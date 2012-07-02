@@ -43,6 +43,7 @@ import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
+import net.imglib2.util.Fraction;
 
 /**
  * The LifeForm class stores the current state of a life form, i.e. its name and its weight. 
@@ -116,7 +117,7 @@ public class LifeForm implements NumericType<LifeForm>, NativeType<LifeForm>
 	public NativeImg<LifeForm, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<LifeForm> storageFactory, final long dim[] )
 	{
 		// create the container (int, 2 values per pixel)
-		final NativeImg<LifeForm, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 2 );
+		final NativeImg<LifeForm, ? extends IntAccess> container = storageFactory.createIntInstance( dim, new Fraction( 2, 1 ) );
 		
 		// create a Type that is linked to the container
 		final LifeForm linkedType = new LifeForm( container );
@@ -352,5 +353,5 @@ public class LifeForm implements NumericType<LifeForm>, NativeType<LifeForm>
 	 * @return - how many entities per pixel are used
 	 */
 	@Override
-	public int getEntitiesPerPixel(){ return 2; }
+	public Fraction getEntitiesPerPixel(){ return new Fraction( 2, 1 ); }
 }
