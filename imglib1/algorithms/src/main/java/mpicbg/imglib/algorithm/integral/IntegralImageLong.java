@@ -40,9 +40,9 @@ import mpicbg.imglib.type.numeric.integer.LongType;
 public class IntegralImageLong< R extends NumericType< R > > extends IntegralImage< R, LongType >
 {
 
-	public IntegralImageLong( final Image<R> img, final LongType type, final Converter<R, LongType> converter) 
+	public IntegralImageLong( final Image<R> img, final Converter<R, LongType> converter) 
 	{
-		super( img, type, converter );
+		super( img, new LongType(), converter );
 	}
 	
 	@Override
@@ -73,10 +73,11 @@ public class IntegralImageLong< R extends NumericType< R > > extends IntegralIma
 
 		for ( int i = 2; i < size; ++i )
 		{
-			cursor.fwd( d );
-
-			sum2 += cursor.getType().get();
-			cursor.getType().set( sum2 );
+			cursor.fwd( d );			
+			final LongType type = cursor.getType();
+			
+			sum2 += type.get();
+			type.set( sum2 );
 		}
 	}
 }
