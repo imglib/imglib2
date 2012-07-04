@@ -220,7 +220,9 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 		}
 		
 		// assemble the correct kernel (size of the input + extended periodic + top left at center of input kernel)
-		final RandomAccessibleInterval< R > kernelInput = Views.interval( Views.extendPeriodic( Views.interval( kernel, kernelConvolutionInterval ) ), new FinalInterval( min, max ) );
+		// final RandomAccessibleInterval< R > kernelInput = Views.interval( Views.extendPeriodic( Views.interval( kernel, kernelConvolutionInterval ) ), new FinalInterval( min, max ) );
+		// workaround for Javac bug:
+		final RandomAccessibleInterval< R > kernelInput = (RandomAccessibleInterval)((Object)Views.interval( Views.extendPeriodic( Views.interval( kernel, kernelConvolutionInterval ) ), new FinalInterval( min, max ) ));
 		final RandomAccessibleInterval< R > imgInput = Views.interval( img, imgConvolutionInterval );
 		
 		// compute the FFT's if they do not exist yet
@@ -280,7 +282,9 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 		}
 		
 		// assemble the correct kernel (size of the input + extended periodic + top left at center of input kernel)
-		final RandomAccessibleInterval< R > kernelInput = Views.interval( Views.extendPeriodic( Views.interval( kernel, kernelConvolutionInterval ) ), new FinalInterval( min, max ) );
+		// final RandomAccessibleInterval< R > kernelInput = Views.interval( Views.extendPeriodic( Views.interval( kernel, kernelConvolutionInterval ) ), new FinalInterval( min, max ) );
+		// workaround for Javac bug:
+		final RandomAccessibleInterval< R > kernelInput = (RandomAccessibleInterval)((Object)Views.interval( Views.extendPeriodic( Views.interval( kernel, kernelConvolutionInterval ) ), new FinalInterval( min, max ) ));
 		final RandomAccessibleInterval< R > imgInput = Views.interval( img, imgConvolutionInterval );
 		
 		// compute the FFT's
