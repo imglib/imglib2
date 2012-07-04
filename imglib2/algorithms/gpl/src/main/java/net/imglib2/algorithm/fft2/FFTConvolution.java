@@ -13,7 +13,6 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
-import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 /**
@@ -98,7 +97,9 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 	 */
 	public FFTConvolution( final RandomAccessibleInterval< R > img, final RandomAccessibleInterval< R > kernel, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory )
 	{
-		this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, output, factory );
+		//this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, output, factory );
+		// Javac bug workaround:
+		this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, FFT.getTypeInstance( kernel ) ), kernel, output, factory );
 	}
 
 	/**
@@ -159,7 +160,9 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 
 	public void setKernel( final RandomAccessibleInterval< R > kernel )
 	{
-		this.kernel = Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() );
+		//this.kernel = Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() );
+		// Javac bug workaround:
+		this.kernel = Views.extendValue( kernel, FFT.getTypeInstance( kernel ) );
 		this.kernelInterval = kernel;
 		this.fftKernel = null;
 	}
