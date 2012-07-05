@@ -44,29 +44,39 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 
 /**
- * The LifeForm class stores the current state of a life form, i.e. its name and its weight. Furthermore,
- * it implements a subset of the NumericType methods (add, mul) that allows to run a Gaussian convolution
- * on a dataset consisting of life forms. 
- * To store the name and weight we use an Integer-backed array where we store two int's per pixel. The second
- * int storing the weight is bit-wise converted to a float. 
- * 
- * The implemented math works as follows:
- * 
+ * The LifeForm class stores the current state of a life form, i.e. its name and its weight. 
+ * Furthermore, it implements a subset of the NumericType methods (add, mul) that allows to 
+ * run a Gaussian convolution on a dataset consisting of life forms.
+ *  
+ * LifeForm implements the interfaces NumericType and NativeType. The NumericType type interface 
+ * requires implementation of the standard mathematical operation add(), mul(), div() and sub(). 
+ * This enables to run Gaussian Convolution on a dataset consisting of LifeForms. As we only 
+ * require add() and mul() for the simulation, we simply did not implement div() and sub().
+ * The NativeType interface requires the implementation of methods that allow LifeForm to act 
+ * as proxy type, which means it can map itself into a Java native array. To store the name 
+ * and weight we use an native integer-backed array using two int's per pixel. The second int 
+ * storing the weight is bit-wise converted to a float. Note that the simulation would run as 
+ * well if it would not implement NativeType, however using significantly more memory as each 
+ * pixel has to be an individual object. Addtionally this requires using a ListImg instead of 
+ * an ArrayImg or CellImg.
+ *  
+ * The mathematical operations are implemented as follows: 
+ *  
  * add( LifeForm c )
- * - if 'c' has the same name, their weights will be added
- * - if 'c' has a different name, the resulting LifeForm is the one with the higher weight, but the weight
- * from the "deceased" LifeForm is subtracted
- * 
+ *  - if 'c' has the same name, the weight of 'c' will be added to this LifeForm
+ *  - if 'c' has a different name, this LifeForm will take the name of the LifeForm with the 
+ *    higher weight, but the weight of the defeated LifeForm is subtracted
+ *  
  * mul( double c )
- * - the weight is multiplied by 'c'
+ *  - the weight of this LifeForm is multiplied by 'c'
  * 
- * Running a Gaussian Convolution on such a dataset will simulate the diffusion of each of the LifeForms to
- * its neighboring area. 
+ * Running a Gaussian Convolution on such a dataset will simulate the diffusion of each of the 
+ * LifeForms to its neighboring area. 
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class LifeForm implements NumericType<LifeForm>, Comparable<LifeForm>, NativeType<LifeForm>
+public class LifeForm implements NumericType<LifeForm>, NativeType<LifeForm>
 {
 	// the current index of the cursor or randomAccess
 	protected int i = 0;
@@ -256,23 +266,6 @@ public class LifeForm implements NumericType<LifeForm>, Comparable<LifeForm>, Na
 	 */
 	@Override
 	public void set( final LifeForm c ) { set( c.getName(), c.getWeight() ); }
-
-	/**
-	 * Compares the weights of two LifeForms
-	 * @param c - LifeForm to compare to
-	 */
-	@Override
-	public int compareTo( final LifeForm c )
-	{
-		final double a = getWeight();
-		final double b = c.getWeight();
-		if ( a > b )
-			return 1;
-		else if ( a < b )
-			return -1;
-		else 
-			return 0;
-	}
 	
 	/**
 	 * @param i - set the index in the IntAccess (called by cursor/randomAccess)

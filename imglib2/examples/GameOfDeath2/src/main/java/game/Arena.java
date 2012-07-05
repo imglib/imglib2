@@ -52,27 +52,37 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 
 /**
- * In order to show the power of generality ImgLib2 offers, we develop a program that
- * simulates the growth of life forms (i.e. bacteria) in a certain area, called arena.
+ * In order to illustrate the level of generality ImgLib2 offers, we developed a program that 
+ * efficiently simulates the growth and death of life forms in a certain area, the so-called 
+ * Arena. Several life forms grow and fight to become the dominant race.
  * 
- * The simulation seeds the ground with several races of life forms. Each life form has
- * a certain name (race) and a weight representing its population at a spot. They grow
- * every round by a certain percentage (e.g. 10%) and die of hunger if the population becomes
- * too large. In every round they spread to their local neighborhood, trying to invade new
- * space. If the same race is present in their vicinity, their population simply adds up. If 
- * another race is present they will fight for the spot. The race with higher population 
- * will survive, however they will loose as much population as the attacking (loosing)
- * race lost.
+ * The simulation seeds the Arena with several races of a life forms. Each life form has a 
+ * certain name (i.e. its race) and a weight representing its population at a spot. They grow 
+ * every round by a certain percentage (e.g. 10%) and die of hunger if the population at a 
+ * spot becomes too large. Every round each race at each spot tries to spread into their local 
+ * neighborhood, trying to invade new space. If a neighboring spot is empty they will simply 
+ * occpy it and start growing. If the same race is present in their vicinity, their population 
+ * simply adds up. If another race is present they will fight for the spot. The race with the 
+ * higher population at this spot will survive, however their population will decrease by the 
+ * amount of population the defeated race lost.
  * 
- * This complex behaviour can be simulated by gaussian convolution on a new NumericType
- * called LifeForm. Both operations, growth and fight can be simulated by implementing 
- * specialized mul() and add() methods, respectively (see LifeForm.java). 
- * Multiplying a LifeForm with a certain value represent growth (or shrinkage) while
- * addition of two LifeForms represents the fight for a certain spot.
+ * Using only these parameters, the simulation always converges to a point where one race wins. 
+ * Therefore, we added the possibility of a epidemic which kills 90% of the dominating race, 
+ * keeping the entire system in an equilibrium.
  * 
- * The simulation always converges to a point where one race wins at the end. Therefore, we
- * added the possibility of a epidemic which kills 90% of the dominating race, keeping the
- * entire system in a equilibrium.
+ * In order to simulate this relatively complex behaviour we implemented a new NumericType called
+ * LifeForm. Both operations, growth and fight can be simulated by implementing specialized 
+ * multiplication and addition methods, respectively (see LifeForm.java). Multiplying a 
+ * LifeForm with a floating-point value represent growth (or shrinkage in case of an epidemic) 
+ * while addition of two LifeForms represents the fight for a certain spot. The actual dynamics 
+ * in the Arena, i.e. the spreading and the fight for every spot are very efficiently simulated 
+ * running the generic implementation of the Gaussian Convolution, treating each spot of the Arena
+ *  as a pixel in a RandomAccessibleInterval (or simply Img).
+ *  
+ * The entire source code for the simulation consists of three classes. Arena.java is the main class 
+ * running the simulation, LifeForm implements the specialized mathematical operations required for 
+ * the simulation, and LifeFormARGBConverter implements methods to map the state of a Life Form into
+ * an ARGB value for display.
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -97,9 +107,12 @@ public class Arena
 	// chance for a epedemic (in percent)
 	final float epidemic = 0.1f;
 	
+	// the sigma of the gaussian convolution, determines how far each race spreads from a spot
+	final float sigma = 2.5f;
+	
 	// the width and height of the image
-	final int width = 384;
-	final int height = 384;
+	final int width = 640;
+	final int height = 480;
 	
 	// the out of bounds strategy to use for gaussian convolution
 	// makes a significant difference to the result
@@ -141,7 +154,7 @@ public class Arena
 			}
 			
 			// simulate diffusion by gaussian convolution
-			Gauss.inNumericTypeInPlace( new double[]{ 1.5, 1.5 }, arena, outofbounds );
+			Gauss.inNumericTypeInPlace( new double[]{ sigma, sigma }, arena, outofbounds );
 			
 			// compute and display frames per second
 			final double fps = ++numFrames*1000 / (double)( System.currentTimeMillis() - start );
@@ -235,13 +248,13 @@ public class Arena
 	 */
 	protected float getMax( final Img< LifeForm > img )
 	{
-		final LifeForm max = img.firstElement();
+		float max = img.firstElement().getWeight();
 		
 		for ( final LifeForm l : img )
-			if ( l.compareTo( max ) > 0 )
-				max.set( l );
+			if ( l.getWeight() > max )
+				max = l.getWeight();
 		
-		return max.getWeight();
+		return max;
 	}
 	
 	/**
