@@ -99,7 +99,7 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 	{
 		//this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, output, factory );
 		// Javac bug workaround, crazy, this one needs to be casted as well, OMG:
-		this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, ((R)(Object)FFT.getTypeInstance( kernel )) ), kernel, output, factory );
+		this ( (RandomAccessibleInterval< R >)(Object) Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, ((R)(Object)FFT.getTypeInstance( kernel )) ), kernel, output, factory );
 	}
 
 	/**
