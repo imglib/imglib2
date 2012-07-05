@@ -12,6 +12,7 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
+import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 /**
@@ -25,8 +26,8 @@ public class FFT
 	final public static < R extends RealType< R > > Img< ComplexFloatType > realToComplex( final RandomAccessibleInterval< R > input, final ImgFactory< ComplexFloatType > factory )
 	{
 		//return realToComplex( Views.extendValue( input, Util.getTypeFromInterval( input ).createVariable() ), input, factory, new ComplexFloatType() );
-		// Javac bug workaround:
-		return realToComplex( Views.extendValue( input, FFT.getTypeInstance( input ) ), input, factory, new ComplexFloatType() );
+		// HACK: Javac bug workaround:
+		return realToComplex( Views.extendValue( input, ((R)(Object)Util.getTypeFromInterval( input )).createVariable() ), input, factory, new ComplexFloatType() );
 	}
 	
 	final public static < R extends RealType< R > > Img< ComplexFloatType > realToComplex( final RandomAccessibleInterval< R > input, final OutOfBoundsFactory< R, RandomAccessibleInterval< R > > oobs, final ImgFactory< ComplexFloatType > factory )
@@ -150,25 +151,5 @@ public class FFT
 			FFTMethods.complexToComplex( input, d, false );
 		
 		FFTMethods.complexToReal( input, output, FFTMethods.unpaddingIntervalCentered( input, output ), 0 );
-	}
-	
-	/**
-	 * Workaround for bug in javac, he would not compile:
-	 * Util.getTypeFromInterval( interval ).createVariable()
-	 * 
-	 * This method states explicitly the same thing again. It creates a new type instance of type T by 
-	 * getting the pixel at the min[] location of the interval and performing a createVariable().
-	 * 
-	 * @param interval
-	 * @return - a new type instance of type T
-	 */
-	final public static < T extends Type< T > > T getTypeInstance( final RandomAccessibleInterval< T > interval )
-	{
-		final RandomAccess< T > randomAccess = interval.randomAccess();
-		final long[] min = new long[ interval.numDimensions() ];
-		interval.min( min );
-		randomAccess.setPosition( min );
-		final T type = randomAccess.get();
-		return type.createVariable();
 	}
 }
