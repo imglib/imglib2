@@ -2,22 +2,23 @@ package net.imglib2.algorithm.pde;
 
 import java.util.Vector;
 
-import edu.mines.jtk.la.DMatrix;
-import edu.mines.jtk.la.DMatrixEvd;
-
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
 import net.imglib2.algorithm.OutputAlgorithm;
-import net.imglib2.algorithm.region.localneighborhood.DomainCursor;
+import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhood;
+import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodCursor;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.multithreading.Chunk;
 import net.imglib2.multithreading.SimpleMultiThreading;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorExpWindowingFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.view.Views;
+import edu.mines.jtk.la.DMatrix;
+import edu.mines.jtk.la.DMatrixEvd;
 
 /**
  * A class to compute a diffusion tensor for anisotropic diffusion, based on 
@@ -114,7 +115,6 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 					Cursor<T> cursor = input.localizingCursor();
 					RandomAccess<FloatType> Dcursor = D.randomAccess();
-					RandomAccessible<T> ra = Views.extendMirrorSingle(input);
 
 					// Main cursor position
 					final long[] position = new long[input.numDimensions()];
@@ -124,9 +124,13 @@ implements OutputAlgorithm<Img<FloatType>> {
 					long[] domain = new long[input.numDimensions()];
 					domain[0] = (scale-1)/2;
 					domain[1] = (scale-1)/2;
-					domain[2] = (scale-1)/2;// iterate only over X & Y, but for all pixels
-					DomainCursor<T> neighborhood = new DomainCursor<T>(ra.randomAccess(), domain );
-
+					domain[2] = (scale-1)/2;// iterate only over X & Y & Z, but for all pixels
+					
+					OutOfBoundsFactory<T, RandomAccessibleInterval<T>> oobf = new OutOfBoundsMirrorExpWindowingFactory<T, RandomAccessibleInterval<T>>((scale-1)/2);
+					RectangleNeighborhood<T> neighborhood = new RectangleNeighborhood<T>(input, oobf);
+					RectangleNeighborhoodCursor<T> neighborhoodCursor = neighborhood.cursor();
+					neighborhood.setSpan(domain);
+					
 					// Holder for eigenvalue utility;s
 					final DMatrix M = new DMatrix(3, 3);
 					DMatrix VV, DD;
@@ -154,13 +158,14 @@ implements OutputAlgorithm<Img<FloatType>> {
 						double cmy = 0;
 						double cmz = 0;
 
-						neighborhood.reset(position);
-						while (neighborhood.hasNext()) {
+						neighborhood.setPosition(position);
+						neighborhoodCursor.reset();
+						while (neighborhoodCursor.hasNext()) {
 
-							neighborhood.fwd();
-							neighborhood.localize(pos);
+							neighborhoodCursor.fwd();
+							neighborhoodCursor.localize(pos);
 
-							mass = neighborhood.get().getRealDouble();
+							mass = neighborhoodCursor.get().getRealDouble();
 							totalmass += mass;
 
 							cmx += mass * pos[0];
@@ -184,11 +189,11 @@ implements OutputAlgorithm<Img<FloatType>> {
 						double Ixz = 0;
 						double Iyz = 0;
 
-						neighborhood.reset();
-						while (neighborhood.hasNext()) {
+						neighborhoodCursor.reset();
+						while (neighborhoodCursor.hasNext()) {
 
-							neighborhood.fwd();
-							neighborhood.localize(pos);
+							neighborhoodCursor.fwd();
+							neighborhoodCursor.localize(pos);
 
 							x = (pos[0] - cmx);
 							y = (pos[1] - cmy);
@@ -196,7 +201,7 @@ implements OutputAlgorithm<Img<FloatType>> {
 							x2 = x * x;
 							y2 = y * y;
 							z2 = z * z;
-							mass = neighborhood.get().getRealDouble();
+							mass = neighborhoodCursor.get().getRealDouble();
 
 							Ixx += mass * (y2 + z2);
 							Iyy += mass * (x2 + z2);

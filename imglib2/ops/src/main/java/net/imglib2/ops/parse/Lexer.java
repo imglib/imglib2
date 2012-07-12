@@ -103,6 +103,7 @@ import net.imglib2.ops.parse.token.Int;
 import net.imglib2.ops.parse.token.Less;
 import net.imglib2.ops.parse.token.LessEqual;
 import net.imglib2.ops.parse.token.Minus;
+import net.imglib2.ops.parse.token.Mod;
 import net.imglib2.ops.parse.token.Not;
 import net.imglib2.ops.parse.token.NotEqual;
 import net.imglib2.ops.parse.token.OpenParen;
@@ -273,6 +274,10 @@ public class Lexer {
 			else if (ch == '-') {
 				i++;
 				tokens.add(new Minus(i-1, "-"));
+			}
+			else if (ch == '%') {
+				i++;
+				tokens.add(new Mod(i-1, "%"));
 			}
 			else if (ch == '(') {
 				i++;

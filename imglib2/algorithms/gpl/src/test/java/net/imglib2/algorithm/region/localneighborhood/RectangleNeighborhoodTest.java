@@ -1,8 +1,7 @@
 package net.imglib2.algorithm.region.localneighborhood;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import net.imglib2.Cursor;
-import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -10,7 +9,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 import org.junit.Test;
 
-public class DomainCursorTest {
+public class RectangleNeighborhoodTest {
 
 	private static final int DIM = 100;
 	private static final int VAL = 1;
@@ -25,13 +24,14 @@ public class DomainCursorTest {
 		long[] center = new long[] { 50, 50 , 50 }; // the middle
 		long[] span = new long[] { 30, 30, 0 }; // a single plane in the middle 
 
-		RandomAccess<UnsignedByteType> ra = image.randomAccess();
-		ra.setPosition(center);
-
 		// Write into the image
-		DomainCursor<UnsignedByteType> cursor = new DomainCursor<UnsignedByteType>(ra, span);
-		while (cursor.hasNext()) {
-			cursor.next().set(new UnsignedByteType(VAL));
+		RectangleNeighborhood<UnsignedByteType> rectangle = new RectangleNeighborhood<UnsignedByteType>(image);
+		rectangle.setPosition(center);
+		rectangle.setSpan(span);
+		
+		UnsignedByteType val = new UnsignedByteType(VAL);
+		for(UnsignedByteType pixel : rectangle) {
+			pixel.set(val);
 		}
 		
 		// Test the image is as expected
