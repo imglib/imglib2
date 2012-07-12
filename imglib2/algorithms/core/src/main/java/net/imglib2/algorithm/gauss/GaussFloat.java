@@ -39,7 +39,7 @@ package net.imglib2.algorithm.gauss;
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
 import net.imglib2.Localizable;
-import net.imglib2.Location;
+import net.imglib2.Point;
 import net.imglib2.RandomAccessible;
 import net.imglib2.Sampler;
 import net.imglib2.converter.Converter;
@@ -75,12 +75,12 @@ final public class GaussFloat extends AbstractGauss< FloatType >
 	 */
 	public GaussFloat( final double[] sigma, final RandomAccessible<FloatType> input, final Interval interval, final ImgFactory<FloatType> factory )
 	{
-		super( sigma, input, interval, factory.create( interval, new FloatType() ), new Location( sigma.length ), factory, new FloatType() );
+		super( sigma, input, interval, factory.create( interval, new FloatType() ), new Point( sigma.length ), factory, new FloatType() );
 	}
 
 	/**
 	 * Computes a Gaussian convolution with float precision on a {@link RandomAccessible} of {@link FloatType} in a certain {@link Interval}
-	 * and writes it into a given {@link RandomAccessible} at a specific location
+	 * and writes it into a given {@link RandomAccessible} at a specific Point
 	 * 
 	 * @param sigma - the sigma for the convolution
 	 * @param input - the {@link RandomAccessible} to work on

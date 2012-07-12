@@ -38,7 +38,7 @@ package net.imglib2.algorithm.gauss;
 
 import net.imglib2.Iterator;
 import net.imglib2.Localizable;
-import net.imglib2.Location;
+import net.imglib2.Point;
 import net.imglib2.Positionable;
 import net.imglib2.converter.Converter;
 
@@ -84,7 +84,7 @@ public abstract class AbstractLineIterator implements Iterator
 				
 		// store the initial position
 		if ( positionable == offset )
-			this.offset = new Location( offset );
+			this.offset = new Point( offset );
 		else
 			this.offset = offset;
 		
