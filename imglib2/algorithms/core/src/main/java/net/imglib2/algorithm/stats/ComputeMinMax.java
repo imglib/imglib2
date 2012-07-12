@@ -45,6 +45,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
+import net.imglib2.img.Img;
 import net.imglib2.multithreading.Chunk;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.Type;
@@ -78,6 +79,11 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 	int numThreads;
 	long processingTime;
 	
+	public ComputeMinMax( final Img< T > img, final T min, final T max )
+	{
+		this( (IterableInterval<T>) img, min, max );
+	}
+
 	public ComputeMinMax( final IterableInterval<T> interval, final T min, final T max )
 	{
 		setNumThreads();
@@ -91,6 +97,11 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 	public ComputeMinMax( final RandomAccessibleInterval<T> interval, final T min, final T max )
 	{
 		this( Views.iterable( interval ), min, max );
+	}
+
+	public ComputeMinMax( final Img< T > img )
+	{
+		this( (IterableInterval<T>) img );
 	}
 
 	public ComputeMinMax( final IterableInterval< T > interval )
