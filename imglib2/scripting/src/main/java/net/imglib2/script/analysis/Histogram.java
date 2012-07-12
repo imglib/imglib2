@@ -33,6 +33,7 @@ import java.util.TreeMap;
 import javax.swing.JFrame;
 
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
 import net.imglib2.algorithm.stats.ComputeMinMax;
 import net.imglib2.img.Img;
 import net.imglib2.script.algorithm.fn.AlgorithmUtil;
@@ -77,7 +78,7 @@ public class Histogram<T extends RealType<T>> extends TreeMap<Double,Long>
 	@SuppressWarnings("unchecked")
 	public Histogram(final Object fn, final int nBins) throws Exception {
 		this.img = AlgorithmUtil.wrap(fn);
-		ComputeMinMax<T> cmm = new ComputeMinMax<T>(this.img);
+		ComputeMinMax<T> cmm = new ComputeMinMax<T>((IterableInterval<T>)this.img);
 		cmm.process();
 		this.min = cmm.getMin().getRealDouble();
 		this.max = cmm.getMax().getRealDouble();
