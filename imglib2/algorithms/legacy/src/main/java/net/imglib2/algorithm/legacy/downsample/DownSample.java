@@ -23,7 +23,7 @@
  * #L%
  */
 
-package net.imglib2.algorithm.downsample;
+package net.imglib2.algorithm.legacy.downsample;
 
 import net.imglib2.Cursor;
 import net.imglib2.RealRandomAccess;
