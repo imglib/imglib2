@@ -38,7 +38,6 @@ import net.imglib2.algorithm.function.Function;
 import net.imglib2.algorithm.function.SubtractNormReal;
 import net.imglib2.algorithm.gauss.Gauss;
 import net.imglib2.algorithm.region.localneighborhood.LocalNeighborhoodCursor;
-import net.imglib2.converter.Converter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.multithreading.SimpleMultiThreading;
