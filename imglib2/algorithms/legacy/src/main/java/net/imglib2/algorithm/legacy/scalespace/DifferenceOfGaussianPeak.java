@@ -114,6 +114,11 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 		for ( int d = 0; d < pixelLocation.length; ++d )
 			this.pixelLocation[ d ] = pixelLocation[ d ];
 	}
+	public void setPixelLocation( final long[] pixelLocation )
+	{
+		for ( int d = 0; d < pixelLocation.length; ++d )
+			this.pixelLocation[ d ] = pixelLocation[ d ];
+	}
 	public void setImgValue( final T value ) 
 	{ 
 		this.value.set( value );

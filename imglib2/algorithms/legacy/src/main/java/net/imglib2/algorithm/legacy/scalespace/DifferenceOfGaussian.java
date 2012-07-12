@@ -38,7 +38,6 @@ import net.imglib2.algorithm.function.Function;
 import net.imglib2.algorithm.function.SubtractNormReal;
 import net.imglib2.algorithm.gauss.Gauss;
 import net.imglib2.algorithm.region.localneighborhood.LocalNeighborhoodCursor;
-import net.imglib2.converter.Converter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.multithreading.SimpleMultiThreading;
@@ -64,7 +63,6 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 	double normalizationFactor, minPeakValue, negMinPeakValue;
 	
 	protected final ArrayList<DifferenceOfGaussianPeak<FloatType>> peaks = new ArrayList<DifferenceOfGaussianPeak<FloatType>>();
-	protected final Converter<A, FloatType> converter;
 	
 	boolean computeConvolutionsParalell, keepDoGImg;
 	long processingTime;
@@ -82,11 +80,11 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 
 	/** Calls the DifferenceOfGaussian constructor with the given sigmas copied into double[] arrays,
 	 * one entry per {@param img} dimension. */
-	public DifferenceOfGaussian( final Img<A> img, final ImgFactory<FloatType> factory, final Converter<A, FloatType> converter,
+	public DifferenceOfGaussian( final Img<A> img, final ImgFactory<FloatType> factory,
 		    final OutOfBoundsFactory<FloatType, RandomAccessibleInterval<FloatType>> outOfBoundsFactory, 
 		    final double sigma1, final double sigma2, final double minPeakValue, final double normalizationFactor )
 	{
-		this( img, factory, converter, outOfBoundsFactory, asArray(img.numDimensions(), sigma1),
+		this( img, factory, outOfBoundsFactory, asArray(img.numDimensions(), sigma1),
 				asArray(img.numDimensions(), sigma2), minPeakValue, normalizationFactor );
 	}
 
@@ -104,14 +102,13 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 	 * 
 	 * @param img - The input {@link Img}<A>
 	 * @param factory - The {@link ImgFactory}<FloatType> which defines the datatype in which the computation is performed
-	 * @param converter - The {@link Converter}<A,B> which defines how to convert <A> into <FloatType>
 	 * @param outOfBoundsFactory - The {@link OutOfBoundsStrategyFactory} necessary for the {@link GaussianConvolution}
 	 * @param sigma1 - The lower sigma
 	 * @param sigma2 - The higher sigma
 	 * @param minPeakValue - 
 	 * @param normalizationFactor
 	 */
-	public DifferenceOfGaussian( final Img<A> img, final ImgFactory<FloatType> factory, final Converter<A, FloatType> converter,
+	public DifferenceOfGaussian( final Img<A> img, final ImgFactory<FloatType> factory,
 			    final OutOfBoundsFactory<FloatType, RandomAccessibleInterval<FloatType>> outOfBoundsFactory, 
 			    final double[] sigma1, final double[] sigma2, final double minPeakValue, final double normalizationFactor )
 	{
@@ -122,7 +119,6 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 		this.image = img;
 		this.factory = factory;
 		this.outOfBoundsFactory = outOfBoundsFactory;
-		this.converter = converter;
 		
 		this.sigma1 = sigma1;
 		this.sigma2 = sigma2;
