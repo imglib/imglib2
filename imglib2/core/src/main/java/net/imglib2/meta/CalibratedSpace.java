@@ -74,9 +74,9 @@ public interface CalibratedSpace extends EuclideanSpace {
 	/** Sets the image calibration for the given dimension. */
 	void setCalibration(double cal, int d);
 
-	/** Sets the image calibration for the given dimension. */
+	/** Sets the image calibration for all dimensions. */
 	void setCalibration(double[] cal);
 
-	/** Sets the image calibration for the given dimension. */
+	/** Sets the image calibration for all dimensions. */
 	void setCalibration(float[] cal);
 }
