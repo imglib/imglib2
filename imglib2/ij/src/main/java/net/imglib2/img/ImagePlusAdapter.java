@@ -64,12 +64,26 @@ import net.imglib2.type.numeric.real.FloatType;
 public class ImagePlusAdapter
 {
 	@SuppressWarnings( "unchecked" )
-	public static < T extends NumericType< T > & NativeType< T > > Img< T > wrap( final ImagePlus imp )
+	public static < T extends NumericType< T > & NativeType< T > > ImagePlusImg< T, ? > wrap( final ImagePlus imp )
 	{
-		return ( Img< T > ) wrapLocal( imp );
+		return ( ImagePlusImg< T, ? > ) wrapLocal( imp );
 	}
 
-	protected static Img< ? > wrapLocal( final ImagePlus imp )
+	public static < T extends NumericType< T > & NativeType< T > > ImgPlus< T > wrapImgPlus( final ImagePlus imp )
+	{
+		Img< T > img = wrap( imp );
+		ImgPlus< T > image = new ImgPlus< T >( img );
+		
+		// set calibration
+		setCalibrationFromImagePlus1( image, imp );
+		
+		// set title
+		image.setName( imp.getTitle() );
+		
+		return image;
+	}
+	
+	protected static ImagePlusImg< ?, ? > wrapLocal( final ImagePlus imp )
 	{
 		switch( imp.getType() )
 		{		
@@ -96,7 +110,7 @@ public class ImagePlusAdapter
 		}
 	}
 
-	protected static void setCalibrationFromImagePlus( final Img<?> image, final ImagePlus imp ) 
+	protected static < T extends NumericType< T > & NativeType< T > > void setCalibrationFromImagePlus1( final ImgPlus<T> image, final ImagePlus imp ) 
 	{
 		final int d = image.numDimensions();
 		final float [] spacing = new float[d];
@@ -118,9 +132,7 @@ public class ImagePlusAdapter
 				spacing[3] = (float)c.frameInterval;
 		}
 
-		// TODO calibration?
-		System.out.println("WARNING: copying calibration from ImagePlus is not yet implemented");
-		//image.setCalibration( spacing );
+		image.setCalibration( spacing );
 	}
 	
 	public static ByteImagePlus<UnsignedByteType> wrapByte( final ImagePlus imp )
@@ -135,8 +147,6 @@ public class ImagePlusAdapter
 		
 		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
-		
-		setCalibrationFromImagePlus( container, imp );
 		
 		return container;
 	}
@@ -153,8 +163,6 @@ public class ImagePlusAdapter
 		
 		// pass it to the DirectAccessContainer
 		container.setLinkedType( linkedType );
-
-		setCalibrationFromImagePlus( container, imp );
 		
 		return container;						
 	}
@@ -171,8 +179,6 @@ public class ImagePlusAdapter
 		
 		// pass it to the DirectAccessContainer
 		container.setLinkedType( linkedType );
-
-		setCalibrationFromImagePlus( container, imp );
 		
 		return container;				
 	}	
@@ -189,8 +195,6 @@ public class ImagePlusAdapter
 		
 		// pass it to the DirectAccessContainer
 		container.setLinkedType( linkedType );
-
-		setCalibrationFromImagePlus( container, imp );
 		
 		return container;				
 	}	
