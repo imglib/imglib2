@@ -13,9 +13,9 @@ public abstract class AbstractNeighborhoodCursor<T> implements Cursor<T>, Bounde
 	 * CONSTRUCTOR
 	 */
 
-	public AbstractNeighborhoodCursor(AbstractNeighborhood<T> rectangle) {
-		this.neighborhood = rectangle;
-		this.ra = rectangle.extendedSource.randomAccess();
+	public AbstractNeighborhoodCursor(AbstractNeighborhood<T> neighborhood) {
+		this.neighborhood = neighborhood;
+		this.ra = neighborhood.extendedSource.randomAccess();
 	}
 	
 	/*
