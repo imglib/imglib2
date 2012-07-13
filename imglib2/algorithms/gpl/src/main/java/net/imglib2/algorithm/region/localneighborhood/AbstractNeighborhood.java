@@ -137,15 +137,6 @@ public abstract class AbstractNeighborhood<T>  implements Positionable, Iterable
 		center[ d ] = position;
 	}
 
-	@Override
-	public long size() {
-		long size = 1;
-		for (int d = 0; d < span.length; d++) {
-			size *= (2 * span[d] + 1);
-		}
-		return size;
-	}
-
 	/**
 	 * Return the element at the top-left corner of this nD rectangle.
 	 */

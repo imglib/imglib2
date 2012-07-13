@@ -55,7 +55,9 @@ public class RectangleNeighborhood<T> extends AbstractNeighborhood<T> {
 	 */
 	@Override
 	public RectangleNeighborhoodCursor<T> cursor() {
-		return new RectangleNeighborhoodCursor<T>(this);
+		RectangleNeighborhoodCursor<T> cursor = new RectangleNeighborhoodCursor<T>(this);
+		cursor.reset();
+		return cursor;
 	}
 
 	/** 
@@ -72,6 +74,15 @@ public class RectangleNeighborhood<T> extends AbstractNeighborhood<T> {
 	@Override
 	public RectangleNeighborhoodCursor<T> iterator() {
 		return cursor();
+	}
+
+	@Override
+	public long size() {
+		long size = 1;
+		for (int d = 0; d < span.length; d++) {
+			size *= (2 * span[d] + 1);
+		}
+		return size;
 	}
 
 }
