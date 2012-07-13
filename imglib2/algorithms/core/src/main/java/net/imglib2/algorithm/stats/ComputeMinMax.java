@@ -70,6 +70,9 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 	{ 
 		ComputeMinMax< T > c = new ComputeMinMax<T>( interval );
 		c.process();
+		
+		min.set( c.getMin() );
+		max.set( c.getMax() );
 	}
 
 	final IterableInterval< T > image;
