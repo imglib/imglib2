@@ -42,7 +42,7 @@ import java.util.Deque;
 import java.util.PriorityQueue;
 
 import net.imglib2.Localizable;
-import net.imglib2.Location;
+import net.imglib2.Point;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -233,7 +233,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	 * A pixel position on the heap of boundary pixels to be processed next. The
 	 * heap is sorted by pixel values.
 	 */
-	private final class BoundaryPixel extends Location implements Comparable< BoundaryPixel >
+	private final class BoundaryPixel extends Point implements Comparable< BoundaryPixel >
 	{
 		private final T value;
 
