@@ -275,8 +275,11 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 						else
 							peakPosition[ d ] -= dimInvPCM[ d ];
 					}
-				}				
-				newPeakList.add( new PhaseCorrelationPeak( peakPosition, peak.getPhaseCorrelationPeak() ) );
+				}
+				
+				final PhaseCorrelationPeak newPeak = new PhaseCorrelationPeak( peakPosition, peak.getPhaseCorrelationPeak() );
+				newPeak.setOriginalInvPCMPosition( peak.getOriginalInvPCMPosition() );
+				newPeakList.add( newPeak );
 			}			
 		}
 		
