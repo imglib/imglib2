@@ -109,7 +109,7 @@ public class ImgOpener implements StatusReporter {
 	 * 
 	 * @throws ImgIOException - if file could not be found, if it is too big for the memory or if it is incompatible with the opener
 	 */
-	public < T extends RealType< T > & NativeType< T > > ImgPlus< T > open( final String id ) throws ImgIOException
+	public static < T extends RealType< T > & NativeType< T > > ImgPlus< T > open( final String id ) throws ImgIOException
 	{
 		ImgPlus< T > img = null;
 		ImgOpener opener = new ImgOpener();
