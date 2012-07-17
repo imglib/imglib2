@@ -74,7 +74,6 @@ import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
-import net.imglib2.sampler.special.OrthoSliceCursor;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
@@ -826,8 +825,7 @@ public class ImgOpener implements StatusReporter {
 				randomAccess.fwd( planeX );
 			}
 			
-			randomAccess.get().setReal( decodeWord( plane, index++, pixelType, little ) );
-			
+			randomAccess.get().setReal( decodeWord( plane, index++, pixelType, little ) );			
 		}
 	}
 
