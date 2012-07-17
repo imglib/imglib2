@@ -58,6 +58,7 @@ import loci.formats.MinMaxCalculator;
 import loci.formats.ReaderWrapper;
 import loci.formats.meta.IMetadata;
 import loci.formats.services.OMEXMLService;
+import net.imglib2.RandomAccess;
 import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
 import net.imglib2.exception.IncompatibleTypeException;
@@ -73,7 +74,6 @@ import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
-import net.imglib2.sampler.special.OrthoSliceCursor;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
@@ -794,7 +794,6 @@ public class ImgOpener implements StatusReporter {
 	private <T extends RealType<T>> void populatePlane(final IFormatReader r,
 		final int no, final byte[] plane, final ImgPlus<T> img)
 	{
-		final int sizeX = r.getSizeX();
 		final int pixelType = r.getPixelType();
 		final boolean little = r.isLittleEndian();
 
@@ -805,16 +804,28 @@ public class ImgOpener implements StatusReporter {
 		final int planeY = 1;
 
 		getPosition(r, no, pos);
-
-		final OrthoSliceCursor<T> cursor =
-			new OrthoSliceCursor<T>(img, planeX, planeY, pos);
-
-		while (cursor.hasNext()) {
-			cursor.fwd();
-			final int index =
-				cursor.getIntPosition(planeX) + cursor.getIntPosition(planeY) * sizeX;
-			final double value = decodeWord(plane, index, pixelType, little);
-			cursor.get().setReal(value);
+		
+		final int sX = (int)img.dimension( 0 );
+		final int sY = (int)img.dimension( 1 );
+		
+		final RandomAccess< T > randomAccess = img.randomAccess();
+		
+		int index = 0;
+		
+		for ( int y = 0; y < sY; ++y )
+		{
+			pos[ planeX ] = 0;
+			pos[ planeY ] = y;
+			
+			randomAccess.setPosition( pos );
+			
+			for ( int x = 1; x < sX; ++x )
+			{
+				randomAccess.get().setReal( decodeWord( plane, index++, pixelType, little ) );
+				randomAccess.fwd( planeX );
+			}
+			
+			randomAccess.get().setReal( decodeWord( plane, index++, pixelType, little ) );			
 		}
 	}
 

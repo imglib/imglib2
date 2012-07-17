@@ -36,6 +36,7 @@
 
 package net.imglib2.algorithm.gauss;
 
+import net.imglib2.EuclideanSpace;
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.Point;
@@ -66,7 +67,19 @@ import net.imglib2.view.Views;
  *
  */
 public class Gauss
-{		
+{	
+	/**
+	 * Computes a Gaussian convolution with float precision on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @return the convolved img as {@link FloatType}
+	 */
+	public static <T extends RealType<T>> Img<FloatType> toFloat( final double sigma, final Img< T > img )
+	{
+		return toFloat( getSigmaDim( sigma, img ), img );
+	}
+
 	/**
 	 * Computes a Gaussian convolution with float precision on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
 	 *
@@ -79,6 +92,20 @@ public class Gauss
 		return toFloat( sigma, img, new OutOfBoundsMirrorFactory< FloatType, RandomAccessibleInterval< FloatType > >( Boundary.SINGLE ) );
 	}
 
+	/**
+	 * Computes a Gaussian convolution with float precision on an entire {@link Img}
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @param outofbounds - the {@link OutOfBoundsFactory}
+	 * @return the convolved img as {@link FloatType}
+	 */
+	public static <T extends RealType<T>> Img<FloatType> toFloat( final double sigma, final Img< T > img,
+			final OutOfBoundsFactory< FloatType, RandomAccessibleInterval< FloatType > > outofbounds )
+	{
+		return toFloat( getSigmaDim( sigma, img ), img, outofbounds );
+	}
+	
 	/**
 	 * Computes a Gaussian convolution with float precision on an entire {@link Img}
 	 *
@@ -122,11 +149,37 @@ public class Gauss
 	 * @param img - the img {@link Img}
 	 * @return the convolved img with img precision
 	 */
+	public static <T extends RealType<T>> Img< T > inFloat( final double sigma, final Img< T > img )
+	{
+		return inFloat( getSigmaDim( sigma, img), img );
+	}
+	
+	/**
+	 * Computes a Gaussian convolution with float precision on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @return the convolved img with img precision
+	 */
 	public static <T extends RealType<T>> Img< T > inFloat( final double[] sigma, final Img< T > img )
 	{
 		return inFloat( sigma, img, new OutOfBoundsMirrorFactory< FloatType, RandomAccessibleInterval< FloatType > >( Boundary.SINGLE ) );
 	}
 
+	/**
+	 * Computes a Gaussian convolution with float precision on an entire {@link Img}
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @param outofbounds - the {@link OutOfBoundsFactory}
+	 * @return the convolved img with img precision
+	 */
+	public static <T extends RealType<T>> Img<T> inFloat( final double sigma, final Img< T > img,
+			final OutOfBoundsFactory< FloatType, RandomAccessibleInterval< FloatType > > outofbounds )
+	{
+		return inFloat( getSigmaDim( sigma, img ), img, outofbounds );
+	}
+	
 	/**
 	 * Computes a Gaussian convolution with float precision on an entire {@link Img}
 	 *
@@ -171,11 +224,36 @@ public class Gauss
 	 * @param img - the img {@link Img}
 	 * @return the convolved img
 	 */
+	public static <T extends RealType<T>> void inFloatInPlace( final double sigma, final Img< T > img )
+	{
+		inFloatInPlace( getSigmaDim( sigma, img ), img );
+	}
+	
+	/**
+	 * Computes a Gaussian convolution in-place (temporary imgs are necessary) with float precision on an entire {@link Img}
+	 * using the {@link OutOfBoundsMirrorFactory} with single boundary
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @return the convolved img
+	 */
 	public static <T extends RealType<T>> void inFloatInPlace( final double[] sigma, final Img< T > img )
 	{
 		inFloatInPlace( sigma, img, new OutOfBoundsMirrorFactory< FloatType, RandomAccessibleInterval< FloatType > >( Boundary.SINGLE ) );
 	}
 
+	/**
+	 * Computes a Gaussian convolution in-place (temporary imgs are necessary) with float precision on an entire {@link Img}
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img} that will be convolved in place
+	 */
+	public static <T extends RealType<T>> void inFloatInPlace( final double sigma, final Img< T > img,
+			final OutOfBoundsFactory< FloatType, RandomAccessibleInterval< FloatType > > outofbounds )
+	{
+		inFloatInPlace( getSigmaDim( sigma, img ), img, outofbounds );
+	}
+	
 	/**
 	 * Computes a Gaussian convolution in-place (temporary imgs are necessary) with float precision on an entire {@link Img}
 	 *
@@ -202,10 +280,27 @@ public class Gauss
 		}
 		catch (final IncompatibleTypeException e)
 		{
+			System.out.println( e );
 			return;
 		}
 
 		gauss.call();
+	}
+
+	/**
+	 * Computes a Gaussian convolution with float precision on an infinite {@link RandomAccessible}
+	 * 
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link RandomAccessible} (infinite -> Views.extend( ... ) )
+	 * @param interval - the interval which should be convolved
+	 * @param output - the output {@link RandomAccessible} (img and output can be the same)
+	 * @param origin - the origin in the output where the result should be placed
+	 * @param imgFactory - the {@link ImgFactory} for {@link FloatType} which is needed for temporary imgs
+	 */
+	public static <T extends RealType<T>> void inFloat( final double sigma, final RandomAccessible< T > img, final Interval interval, 
+			final RandomAccessible< T > output, final Localizable origin, final ImgFactory< FloatType > imgFactory )
+	{
+		inFloat( getSigmaDim( sigma, img ), img, interval, output, origin, imgFactory );
 	}
 	
 	/**
@@ -253,11 +348,37 @@ public class Gauss
 	 * @param img - the img {@link Img}
 	 * @return the convolved img in {@link DoubleType}
 	 */
+	public static <T extends RealType<T>> Img<DoubleType> toDouble( final double sigma, final Img< T > img )
+	{
+		return toDouble( getSigmaDim( sigma, img ), img );
+	}
+
+	/**
+	 * Computes a Gaussian convolution with double precision on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @return the convolved img in {@link DoubleType}
+	 */
 	public static <T extends RealType<T>> Img<DoubleType> toDouble( final double[] sigma, final Img< T > img )
 	{
 		return toDouble( sigma, img, new OutOfBoundsMirrorFactory< DoubleType, RandomAccessibleInterval< DoubleType > >( Boundary.SINGLE ) );
 	}
 
+	/**
+	 * Computes a Gaussian convolution with double precision on an entire {@link Img}
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @param outofbounds - the {@link OutOfBoundsFactory}
+	 * @return the convolved img in {@link DoubleType}
+	 */
+	public static <T extends RealType<T>> Img<DoubleType> toDouble( final double sigma, final Img< T > img,
+			final OutOfBoundsFactory< DoubleType, RandomAccessibleInterval< DoubleType > > outofbounds )
+	{
+		return toDouble( getSigmaDim( sigma, img ), img, outofbounds );
+	}
+	
 	/**
 	 * Computes a Gaussian convolution with double precision on an entire {@link Img}
 	 *
@@ -293,7 +414,18 @@ public class Gauss
 
 		return (Img<DoubleType>)gauss.getResult();
 	}
-
+	/**
+	 * Computes a Gaussian convolution with double precision on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @return the convolved img having the input type
+	 */
+	public static <T extends RealType<T>> Img<T> inDouble( final double sigma, final Img< T > img )
+	{
+		return inDouble( getSigmaDim( sigma, img ), img );
+	}
+	
 	/**
 	 * Computes a Gaussian convolution with double precision on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
 	 *
@@ -306,6 +438,20 @@ public class Gauss
 		return inDouble( sigma, img, new OutOfBoundsMirrorFactory< DoubleType, RandomAccessibleInterval< DoubleType > >( Boundary.SINGLE ) );
 	}
 
+	/**
+	 * Computes a Gaussian convolution with double precision on an entire {@link Img}
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @param outofbounds - the {@link OutOfBoundsFactory}
+	 * @return the convolved img having the input type
+	 */
+	public static <T extends RealType<T>> Img<T> inDouble( final double sigma, final Img< T > img,
+			final OutOfBoundsFactory< DoubleType, RandomAccessibleInterval< DoubleType > > outofbounds )
+	{
+		return inDouble( getSigmaDim( sigma, img ), img, outofbounds );
+	}
+	
 	/**
 	 * Computes a Gaussian convolution with double precision on an entire {@link Img}
 	 *
@@ -350,11 +496,36 @@ public class Gauss
 	 * @param img - the img {@link Img}
 	 * @return the convolved img
 	 */
+	public static <T extends RealType<T>> void inDoubleInPlace( final double sigma, final Img< T > img )
+	{
+		inDoubleInPlace( getSigmaDim( sigma, img ), img );
+	}
+	
+	/**
+	 * Computes a Gaussian convolution in-place (temporary imgs are necessary) with double precision on an entire {@link Img}
+	 * using the {@link OutOfBoundsMirrorFactory} with single boundary
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @return the convolved img
+	 */
 	public static <T extends RealType<T>> void inDoubleInPlace( final double[] sigma, final Img< T > img )
 	{
 		inDoubleInPlace( sigma, img, new OutOfBoundsMirrorFactory< DoubleType, RandomAccessibleInterval< DoubleType > >( Boundary.SINGLE ) );
 	}
 
+	/**
+	 * Computes a Gaussian convolution in-place (temporary imgs are necessary) with double precision on an entire {@link Img}
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img} that will be convolved in place
+	 */
+	public static <T extends RealType<T>> void inDoubleInPlace( final double sigma, final Img< T > img,
+			final OutOfBoundsFactory< DoubleType, RandomAccessibleInterval< DoubleType > > outofbounds )
+	{
+		inDoubleInPlace( getSigmaDim( sigma, img ), img, outofbounds );
+	}
+	
 	/**
 	 * Computes a Gaussian convolution in-place (temporary imgs are necessary) with double precision on an entire {@link Img}
 	 *
@@ -385,6 +556,22 @@ public class Gauss
 		}
 
 		gauss.call();
+	}
+
+	/**
+	 * Computes a Gaussian convolution with double precision on an infinite {@link RandomAccessible}
+	 * 
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link RandomAccessible} (infinite -> Views.extend( ... ) )
+	 * @param interval - the interval which should be convolved
+	 * @param output - the output {@link RandomAccessible} (img and output can be the same)
+	 * @param origin - the origin in the output where the result should be placed
+	 * @param imgFactory - the {@link ImgFactory} for {@link DoubleType} which is needed for temporary imgs
+	 */
+	public static <T extends RealType<T>> void inDouble( final double sigma, final RandomAccessible< T > img, final Interval interval, 
+			final RandomAccessible< T > output, final Localizable origin, final ImgFactory< DoubleType > imgFactory )
+	{
+		inDouble( getSigmaDim( sigma, img ), img, interval, output, origin, imgFactory );
 	}
 	
 	/**
@@ -425,7 +612,18 @@ public class Gauss
 		}
 	}
 
-	// here
+	/**
+	 * Computes a Gaussian convolution with the precision of the type provided 
+	 * on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @return the convolved img
+	 */
+	public static <T extends NumericType<T>> Img<T> inNumericType( final double sigma, final Img< T > img )
+	{
+		return inNumericType( getSigmaDim( sigma, img ), img );
+	}
 	
 	/**
 	 * Computes a Gaussian convolution with the precision of the type provided 
@@ -440,6 +638,20 @@ public class Gauss
 		return inNumericType( sigma, img, new OutOfBoundsMirrorFactory< T, RandomAccessibleInterval< T > >( Boundary.SINGLE ) );
 	}
 
+	/**
+	 * Computes a Gaussian convolution with the precision of the type provided on an entire {@link Img}
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @param outofbounds - the {@link OutOfBoundsFactory}
+	 * @return the convolved img
+	 */
+	public static <T extends NumericType<T>> Img<T> inNumericType( final double sigma, final Img< T > img,
+			final OutOfBoundsFactory< T, RandomAccessibleInterval< T > > outofbounds )
+	{
+		return inNumericType( getSigmaDim( sigma, img ), img, outofbounds );
+	}
+	
 	/**
 	 * Computes a Gaussian convolution with the precision of the type provided on an entire {@link Img}
 	 *
@@ -464,6 +676,19 @@ public class Gauss
 	 * @param img - the img {@link Img}
 	 * @return the convolved img
 	 */
+	public static <T extends NumericType<T>> void inNumericTypeInPlace( final double sigma, final Img< T > img )
+	{
+		inNumericTypeInPlace( getSigmaDim( sigma, img ), img );
+	}
+	
+	/**
+	 * Computes a Gaussian convolution in-place (temporary imgs are necessary) with the precision of the type provided on an entire {@link Img}
+	 * using the {@link OutOfBoundsMirrorFactory} with single boundary
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img}
+	 * @return the convolved img
+	 */
 	public static <T extends NumericType<T>> void inNumericTypeInPlace( final double[] sigma, final Img< T > img )
 	{
 		inNumericTypeInPlace( sigma, img, new OutOfBoundsMirrorFactory< T, RandomAccessibleInterval< T > >( Boundary.SINGLE ) );
@@ -475,10 +700,38 @@ public class Gauss
 	 * @param sigma - the sigma for the convolution
 	 * @param img - the img {@link Img} that will be convolved in place
 	 */
+	public static <T extends NumericType<T>> void inNumericTypeInPlace( final double sigma, final Img< T > img,
+			final OutOfBoundsFactory< T, RandomAccessibleInterval< T > > outofbounds )
+	{
+		inNumericTypeInPlace( getSigmaDim( sigma, img ), img, outofbounds );
+	}
+	
+	/**
+	 * Computes a Gaussian convolution in-place (temporary imgs are necessary) with the precision of the type provided on an entire {@link Img}
+	 *
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link Img} that will be convolved in place
+	 */
 	public static <T extends NumericType<T>> void inNumericTypeInPlace( final double[] sigma, final Img< T > img,
 			final OutOfBoundsFactory< T, RandomAccessibleInterval< T > > outofbounds )
 	{
 		inNumericType( sigma, Views.extend( img, outofbounds ), img, img, new Point( sigma.length ), img.factory() );
+	}
+
+	/**
+	 * Computes a Gaussian convolution with the precision of the type provided on an infinite {@link RandomAccessible}
+	 * 
+	 * @param sigma - the sigma for the convolution
+	 * @param img - the img {@link RandomAccessible} (infinite -> Views.extend( ... ) )
+	 * @param interval - the interval which should be convolved
+	 * @param output - the output {@link RandomAccessible} (img and output can be the same)
+	 * @param origin - the origin in the output where the result should be placed
+	 * @param imgFactory - the {@link ImgFactory} for T which is needed for temporary imgs
+	 */
+	public static <T extends NumericType<T>> void inNumericType( final double sigma, final RandomAccessible< T > img, final Interval interval, 
+			final RandomAccessible< T > output, final Localizable origin, final ImgFactory< T > imgFactory )
+	{
+		inNumericType( getSigmaDim( sigma, img ), img, interval, output, origin, imgFactory );
 	}
 	
 	/**
@@ -521,4 +774,14 @@ public class Gauss
 		final GaussNativeType< T > gauss = new GaussNativeType< T >( sigma, img, interval, output, origin, imgFactory, (T)type );
 		gauss.call();
 	}
+
+	private static final double[] getSigmaDim( final double sigma, final EuclideanSpace img )
+	{
+		final double s[] = new double[ img.numDimensions() ];
+		
+		for ( int d = 0; d < img.numDimensions(); ++d )
+			s[ d ] = sigma;
+		
+		return s;
+	}	
 }
