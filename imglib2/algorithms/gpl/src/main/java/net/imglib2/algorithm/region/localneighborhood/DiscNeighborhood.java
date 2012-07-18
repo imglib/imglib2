@@ -1,19 +1,15 @@
 package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealLocalizable;
-import net.imglib2.RealPositionable;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 
-public class DiscNeighborhood<T> extends RectangleNeighborhood<T> implements RealPositionable {
+public class DiscNeighborhood<T> extends RealPositionableAbstractNeighborhood<T> {
 	
 	/** The radius of the sphere, in calibrated units. */
 	protected double radius;
-	/** The spatial calibration of the first 3 dimensions. 	 */
-	protected final double[] calibration = new double[3];
 
 	/*
 	 * CONSTRUCTORS
@@ -22,9 +18,6 @@ public class DiscNeighborhood<T> extends RectangleNeighborhood<T> implements Rea
 	public DiscNeighborhood(final ImgPlus<T> source, final double radius, final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds) {
 		super(source, outOfBounds);
 		this.radius = radius;
-		for (int d = 0; d < 2; d++) {
-			calibration[ d ] = source.calibration(d); 
-		}
 		setRadius(radius);
 	}
 
@@ -88,64 +81,5 @@ public class DiscNeighborhood<T> extends RectangleNeighborhood<T> implements Rea
 		return cursor();
 	}
 
-	@Override
-	public void move(float distance, int d) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void move(double distance, int d) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void move(RealLocalizable localizable) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void move(float[] distance) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void move(double[] distance) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setPosition(RealLocalizable localizable) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setPosition(float[] position) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setPosition(double[] position) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setPosition(float position, int d) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setPosition(double position, int d) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

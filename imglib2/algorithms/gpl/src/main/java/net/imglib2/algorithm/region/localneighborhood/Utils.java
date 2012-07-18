@@ -114,15 +114,4 @@ public class Utils {
 			lineBounds[x] = y;
 		}
 	}
-
-	/**
-	 * Return a copy of the double array where every value has been casted to float
-	 */
-	public static float[] copyDoubleArrayToFloat(final double[] array) {
-		final float[] casted = new float[array.length];
-		for (int i = 0; i < casted.length; i++) 
-			casted[i] = (float) array[i];
-		return casted;
-	}
-
 }

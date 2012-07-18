@@ -74,7 +74,7 @@ public class SphereNeighborhoodTest {
 	public void testSize() {
 
 		AxisType[] axes = new AxisType[] { Axes.X, Axes.Y, Axes.Z };
-		int NTRIALS = 100;
+		int NTRIALS = 10;
 		final ImgFactory< UnsignedByteType > imgFactory = new ArrayImgFactory<UnsignedByteType>();
 		Img<UnsignedByteType> img = imgFactory.create(new int[] { DIM, DIM, DIM }, new UnsignedByteType());
 
