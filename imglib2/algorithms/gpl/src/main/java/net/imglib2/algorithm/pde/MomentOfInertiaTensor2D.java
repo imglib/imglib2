@@ -8,7 +8,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhood;
-import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodCursor;
+import net.imglib2.algorithm.region.localneighborhood.RectangleCursor;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.multithreading.Chunk;
@@ -127,7 +127,7 @@ implements OutputAlgorithm<Img<FloatType>> {
 					RectangleNeighborhood<T> neighborhood = new RectangleNeighborhood<T>(input, oobf);
 					neighborhood.setSpan(domain);
 					
-					RectangleNeighborhoodCursor<T> neighborhoodCursor = neighborhood.cursor();
+					RectangleCursor<T> neighborhoodCursor = neighborhood.cursor();
 
 					cursor.jumpFwd(chunk.getStartPosition());
 					for (long j = 0; j < chunk.getLoopSize(); j++) {

@@ -11,7 +11,7 @@ import net.imglib2.Sampler;
  * 
  * @author Jean-Yves Tinevez
  */
-public class RectangleNeighborhoodCursor<T> extends AbstractNeighborhoodCursor<T>  { 
+public class RectangleCursor<T> extends AbstractNeighborhoodCursor<T>  { 
 
 	/*
 	 * FIELDS
@@ -27,7 +27,7 @@ public class RectangleNeighborhoodCursor<T> extends AbstractNeighborhoodCursor<T
 	 */
 	
 	
-	public RectangleNeighborhoodCursor(AbstractNeighborhood<T> rectangle) {
+	public RectangleCursor(AbstractNeighborhood<T> rectangle) {
 		super(rectangle);
 		this.position = new long[ rectangle.source.numDimensions() ];
 		reset();
@@ -99,7 +99,7 @@ public class RectangleNeighborhoodCursor<T> extends AbstractNeighborhoodCursor<T
 
 	@Override
 	public Cursor<T> copyCursor() {
-		return new RectangleNeighborhoodCursor<T>(this.neighborhood);
+		return new RectangleCursor<T>(this.neighborhood);
 	}
 
 }

@@ -46,7 +46,7 @@ public class RectangleNeighborhoodExample {
 			RectangleNeighborhood<UnsignedByteType> rectangle = new RectangleNeighborhood<UnsignedByteType>(image);
 			rectangle.setPosition(center);
 			rectangle.setSpan(span);
-			RectangleNeighborhoodCursor<UnsignedByteType> cursor = rectangle.cursor();
+			RectangleCursor<UnsignedByteType> cursor = rectangle.cursor();
 
 			System.out.println("Center: " + Util.printCoordinates(center));// DEBUG
 			System.out.println("Span: " + Util.printCoordinates(span));// DEBUG

@@ -64,7 +64,8 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 	/** Is true when all Z and Y have been done, just the last line is to be drawn. */
 	private boolean allDone;
 	private boolean hasNext;
-	private int[] position;
+	/** Current relative position of the cursor, with respect to the ellipsoid center. */
+	protected int[] position;
 
 	private final int smallAxisdim, largeAxisDim;
 
@@ -84,7 +85,9 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 
 	public EllipsoidCursor(AbstractNeighborhood<T> ellipsoid) {
 		super(ellipsoid);
-		// Permute dimension in case of Y axis too small
+		/* We have to check what is the smallest dimension between the 1st and the 2nd one.
+		 * The precision of the calculation we make to find the ellipse bounds is only
+		 * acceptable when we pass it the largest dimension. */
 		if (ellipsoid.span[1] < ellipsoid.span[0]) {
 			smallAxisdim = 1;
 			largeAxisDim = 0;
@@ -272,14 +275,14 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 	
 	
 	/**
-	 * Return the current inclination with respect to this sphere center. Will be in
+	 * Return the current inclination with respect to this ellipsoid center. Will be in
 	 * the range [0, π]. 
 	 * <p>
 	 * In spherical coordinates, the inclination is the angle 
 	 * between the Z axis and the line OM where O is the sphere center and M is 
 	 * the point location.
 	 */
-	public final double getTheta() {
+	public double getTheta() {
 		return Math.acos( position[2] / getDistanceSquared() );
 	}
 	
@@ -291,16 +294,16 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 	 * the X axis and the line OH where O is the sphere center and H is the orthogonal 
 	 * projection of the point M on the XY plane.
 	 */
-	public final double getPhi() {
+	public double getPhi() {
 		return Math.atan2( position[1] , position[0] );
 	}
 	
 
 	/**
-	 * Return the square distance measured from the center of the disc to the current
-	 * cursor position, in physical units.
+	 * Return the square distance measured from the center of the ellipsoid to the current
+	 * cursor position, in pixel units.
 	 */
-	public final double getDistanceSquared() {
+	public double getDistanceSquared() {
 		double sum = 0;
 		for (int i = 0; i < position.length; i++)
 			sum += position[i] * position[i];
