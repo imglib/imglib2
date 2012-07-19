@@ -1,6 +1,6 @@
 package net.imglib2.algorithm.region.localneighborhood;
 
-public final class DiscCursor <T>  extends RectangleCursor<T> {
+public final class DiscCursor <T>  extends AbstractNeighborhoodCursor<T> implements RealPositionableNeighborhoodCursor<T> {
 
 	/** The state of the cursor. */
 	protected CursorState state, nextState;
@@ -12,7 +12,8 @@ public final class DiscCursor <T>  extends RectangleCursor<T> {
 	protected boolean allDone;
 	protected final double[] calibration;
 	protected final double radius;
-	private boolean hasNext;
+	protected boolean hasNext;
+	protected long[] position;
 	
 	/**
 	 * Indicates what state the cursor is currently in, so as to choose the right routine 
@@ -61,12 +62,12 @@ public final class DiscCursor <T>  extends RectangleCursor<T> {
 	}
 	
 	/**
-	 * Return the square distance measured from the center of the ellipsoid to the current
+	 * Return the square distance measured from the center of the disc to the current
 	 * cursor position, in <b>calibrated</b> units.
 	 */
 	public double getDistanceSquared() {
 		double sum = 0;
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < numDimensions(); i++)
 			sum += calibration[i] * calibration[i] * position[i] * position[i];
 		return sum;
 	}
@@ -75,7 +76,7 @@ public final class DiscCursor <T>  extends RectangleCursor<T> {
 	public void reset() {
 		ra.setPosition(neighborhood.center);
 		state = CursorState.INITIALIZED;
-		position = new long[2];
+		position = new long[numDimensions()];
 		hasNext = true;
 		allDone = false;
 	}
@@ -159,5 +160,14 @@ public final class DiscCursor <T>  extends RectangleCursor<T> {
 	public DiscCursor<T> copyCursor() {
 		return copy();
 	}
-	
+
+	/**
+	 * Return the relative <b>calibrated</b> distance from the center
+	 * as a double position array.
+	 */
+	public void getRelativePosition(double[] position) {
+		for (int d = 0; d < numDimensions(); d++)
+			position[d] = calibration[d] * this.position[d];
+	}
+
 }

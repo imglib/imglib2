@@ -16,14 +16,14 @@ import net.imglib2.view.Views;
  * e.g. in filtering operation.
  * <p>
  * This particular class implements a movable nD domain, defined by a <code>span long[]</code> array.
- * The <code>span</code> array is such that the size of the neighborhood in dimension 
+ * The <code>span</code> array is such that the bounding box of the neighborhood in dimension 
  * <code>d</code> will be <code>2 x span[d] + 1</code>.
  */
 public abstract class AbstractNeighborhood<T>  implements Positionable, IterableInterval<T>  {
 
 	/** The pixel coordinates of the center of this regions. */
 	protected final long[] center;
-	/** The span of this rectangle, such that the size of the rectangle in dimension 
+	/** The span of this neighborhood, such that the size of the bounding box in dimension 
 	 * <code>d</code> will be <code>2 x span[d] + 1</code>. */
 	protected final long[] span;
 	protected final ExtendedRandomAccessibleInterval<T, RandomAccessibleInterval<T>> extendedSource;
@@ -138,7 +138,7 @@ public abstract class AbstractNeighborhood<T>  implements Positionable, Iterable
 	}
 
 	/**
-	 * Return the element at the top-left corner of this nD rectangle.
+	 * Return the element at the top-left corner of this nD neighborhood.
 	 */
 	@Override
 	public T firstElement() {

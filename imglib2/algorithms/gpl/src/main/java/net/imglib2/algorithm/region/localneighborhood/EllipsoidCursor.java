@@ -114,7 +114,7 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 		mirrorZ = false;
 		doneZ = false;
 		allDone = false;
-		position = new int[3];
+		position = new int[numDimensions()];
 		hasNext = true;	
 	}
 

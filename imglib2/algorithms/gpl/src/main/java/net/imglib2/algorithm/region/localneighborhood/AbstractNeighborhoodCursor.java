@@ -51,6 +51,23 @@ public abstract class AbstractNeighborhoodCursor<T> implements Cursor<T>, Bounde
 	public T get() {
 		return ra.get();
 	}
+	
+
+	/**
+	 * This dummy method just calls {@link #fwd()} multiple times.
+	 */
+	@Override
+	public void jumpFwd(long steps) {
+		for (int i = 0; i < steps; i++) {
+			fwd();
+		}
+	}
+
+	@Override
+	public T next() {
+		fwd();
+		return ra.get();
+	}
 
 	@Override
 	public void remove() {

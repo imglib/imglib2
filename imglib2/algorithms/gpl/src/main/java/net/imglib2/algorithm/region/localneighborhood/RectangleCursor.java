@@ -4,7 +4,6 @@
 package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.Cursor;
-import net.imglib2.Sampler;
 
 /**
  * A {@link Cursor} that iterates over a {@link RectangleNeighborhood}.
@@ -39,8 +38,8 @@ public class RectangleCursor<T> extends AbstractNeighborhoodCursor<T>  {
 	
 
 	@Override
-	public Sampler<T> copy() {
-		return ra.copy();
+	public RectangleCursor<T> copy() {
+		return copyCursor();
 	}
 
 	/**
@@ -98,7 +97,7 @@ public class RectangleCursor<T> extends AbstractNeighborhoodCursor<T>  {
 	}
 
 	@Override
-	public Cursor<T> copyCursor() {
+	public RectangleCursor<T> copyCursor() {
 		return new RectangleCursor<T>(this.neighborhood);
 	}
 

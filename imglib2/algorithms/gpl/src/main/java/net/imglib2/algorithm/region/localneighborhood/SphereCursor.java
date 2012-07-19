@@ -19,7 +19,7 @@ import net.imglib2.Cursor;
  * 
  * @author Jean-Yves Tinevez (jeanyves.tinevez@gmail.com) -  2012
  */
-public final class SphereCursor<T> extends EllipsoidCursor<T> {
+public final class SphereCursor<T> extends EllipsoidCursor<T> implements RealPositionableNeighborhoodCursor<T> {
 
 	protected final double[] calibration;
 
@@ -35,6 +35,17 @@ public final class SphereCursor<T> extends EllipsoidCursor<T> {
 	/*
 	 * METHODS adapted for calibrated units
 	 */
+	
+	/**
+	 * Return the square distance measured from the center of the sphere to the current
+	 * cursor position, in <b>calibrated</b> units.
+	 */
+	public double getDistanceSquared() {
+		double sum = 0;
+		for (int i = 0; i < numDimensions(); i++)
+			sum += calibration[i] * calibration[i] * position[i] * position[i];
+		return sum;
+	}
 	
 	/**
 	 * Return the current inclination with respect to this sphere center. Will be in
@@ -60,17 +71,6 @@ public final class SphereCursor<T> extends EllipsoidCursor<T> {
 		return Math.atan2(position[1] * calibration[1], position[0] * calibration[0]);
 	}
 	
-	/**
-	 * Return the square distance measured from the center of the ellipsoid to the current
-	 * cursor position, in <b>calibrated</b> units.
-	 */
-	public double getDistanceSquared() {
-		double sum = 0;
-		for (int i = 0; i < position.length; i++)
-			sum += calibration[i] * calibration[i] * position[i] * position[i];
-		return sum;
-	}
-
 	@Override
 	public SphereCursor<T> copy() {
 		return new SphereCursor<T>( (SphereNeighborhood<T>) neighborhood);
@@ -79,6 +79,15 @@ public final class SphereCursor<T> extends EllipsoidCursor<T> {
 	@Override
 	public SphereCursor<T> copyCursor() {
 		return copy();
+	}
+
+	/**
+	 * Return the relative <b>calibrated</b> distance from the center
+	 * as a double position array.
+	 */
+	public void getRelativePosition(double[] position) {
+		for (int d = 0; d < numDimensions(); d++)
+			position[d] = calibration[d] * this.position[d];
 	}
 	
 }
