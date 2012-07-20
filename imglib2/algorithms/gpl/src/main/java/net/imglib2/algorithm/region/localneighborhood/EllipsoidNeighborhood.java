@@ -30,6 +30,7 @@ public class EllipsoidNeighborhood<T> extends AbstractNeighborhood<T> {
 	 * CONSTRUCTORS
 	 */
 
+
 	public EllipsoidNeighborhood(RandomAccessibleInterval<T> source, OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds) {
 		super(source, outOfBounds);
 		if (numDimensions() < 2) {

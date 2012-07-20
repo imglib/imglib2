@@ -21,6 +21,7 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
  */
 public class SphereNeighborhood<T> extends RealPositionableAbstractNeighborhood<T> {
 
+	protected final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds;
 	/** The radius of the sphere, in calibrated units. */
 	protected double radius;
 	/** An {@link EllipsoidNeighborhood} in sync with this sphere, used tfor size computation. */
@@ -32,12 +33,13 @@ public class SphereNeighborhood<T> extends RealPositionableAbstractNeighborhood<
 	
 	public SphereNeighborhood(final ImgPlus<T> source, final double radius, final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds) {
 		super(source, outOfBounds);
+		this.outOfBounds = outOfBounds;
 		this.ellipsoid = new EllipsoidNeighborhood<T>(source);
 		setRadius(radius);
 	}
 
 	public SphereNeighborhood(final ImgPlus<T> source, final double radius) {
-		this(source, radius, new OutOfBoundsMirrorFactory<T, RandomAccessibleInterval<T>>(Boundary.DOUBLE));
+		this(source, radius, new OutOfBoundsMirrorFactory<T, RandomAccessibleInterval<T>>(Boundary.SINGLE));
 	}
 	
 	/*
