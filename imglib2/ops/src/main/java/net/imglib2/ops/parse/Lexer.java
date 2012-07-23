@@ -93,6 +93,7 @@ import net.imglib2.ops.parse.token.CloseParen;
 import net.imglib2.ops.parse.token.CloseRange;
 import net.imglib2.ops.parse.token.Comma;
 import net.imglib2.ops.parse.token.DimensionReference;
+import net.imglib2.ops.parse.token.DistanceFromCenterReference;
 import net.imglib2.ops.parse.token.Divide;
 import net.imglib2.ops.parse.token.DotDot;
 import net.imglib2.ops.parse.token.Equal;
@@ -315,6 +316,9 @@ public class Lexer {
 		// type bound reference
 		if (name.equals("tmin")) return new TypeBoundReference(pos, name, true);
 		if (name.equals("tmax")) return new TypeBoundReference(pos, name, false);
+		
+		// center distance reference
+		if (name.equals("dctr")) return new DistanceFromCenterReference(pos, name);
 		
 		// logical operations
 		if (name.equals("and")) return new And(pos, name);

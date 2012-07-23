@@ -44,6 +44,7 @@ import net.imglib2.img.Img;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
+import net.imglib2.ops.function.real.RealDistanceFromCenterFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealIndexFunction;
 import net.imglib2.ops.operation.binary.real.RealAdd;
@@ -54,6 +55,7 @@ import net.imglib2.ops.operation.binary.real.RealPower;
 import net.imglib2.ops.operation.binary.real.RealSubtract;
 import net.imglib2.ops.parse.token.CloseParen;
 import net.imglib2.ops.parse.token.DimensionReference;
+import net.imglib2.ops.parse.token.DistanceFromCenterReference;
 import net.imglib2.ops.parse.token.Divide;
 import net.imglib2.ops.parse.token.Exponent;
 import net.imglib2.ops.parse.token.FunctionCall;
@@ -280,15 +282,6 @@ public class EquationParser<T extends RealType<T>> {
 			status.tokenNumber++;
 			return status;
 		}
-		else if (ParseUtils.match(OpenParen.class, tokens, pos)) {
-			ParseStatus status = equation(tokens, pos+1);
-			if (status.errMsg != null) return status;
-			if (!ParseUtils.match(CloseParen.class, tokens, status.tokenNumber))
-				return ParseUtils.syntaxError(
-						status.tokenNumber, tokens, "Expected a ')'");
-			status.tokenNumber++;
-			return status;
-		}
 		else if (ParseUtils.match(ImgReference.class, tokens, pos)) {
 			if (img == null)
 				return ParseUtils.syntaxError(
@@ -334,6 +327,31 @@ public class EquationParser<T extends RealType<T>> {
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+4;
 			status.function =	new ConstantRealFunction<long[],DoubleType>(new DoubleType(), constant);
+			return status;
+		}
+		else if (ParseUtils.match(DistanceFromCenterReference.class, tokens, pos)) {
+			if (img == null)
+				return ParseUtils.syntaxError(
+					pos, tokens,
+					"Center distance references only work in equations that are associated with an Img");
+			long[] dims = new long[img.numDimensions()];
+			img.dimensions(dims);
+			double[] ctr = new double[dims.length];
+			for (int i = 0; i < dims.length; i++) {
+				ctr[i] = dims[i] / 2.0;
+			}
+			ParseStatus status = new ParseStatus();
+			status.tokenNumber = pos+1;
+			status.function =	new RealDistanceFromCenterFunction<DoubleType>(ctr, new DoubleType());
+			return status;
+		}
+		else if (ParseUtils.match(OpenParen.class, tokens, pos)) {
+			ParseStatus status = equation(tokens, pos+1);
+			if (status.errMsg != null) return status;
+			if (!ParseUtils.match(CloseParen.class, tokens, status.tokenNumber))
+				return ParseUtils.syntaxError(
+						status.tokenNumber, tokens, "Expected a ')'");
+			status.tokenNumber++;
 			return status;
 		}
 		else
