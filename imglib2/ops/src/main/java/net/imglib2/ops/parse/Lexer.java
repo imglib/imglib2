@@ -92,6 +92,7 @@ import net.imglib2.ops.parse.token.Assign;
 import net.imglib2.ops.parse.token.CloseParen;
 import net.imglib2.ops.parse.token.CloseRange;
 import net.imglib2.ops.parse.token.Comma;
+import net.imglib2.ops.parse.token.DimensionReference;
 import net.imglib2.ops.parse.token.Divide;
 import net.imglib2.ops.parse.token.DotDot;
 import net.imglib2.ops.parse.token.Equal;
@@ -114,7 +115,7 @@ import net.imglib2.ops.parse.token.Plus;
 import net.imglib2.ops.parse.token.Real;
 import net.imglib2.ops.parse.token.Times;
 import net.imglib2.ops.parse.token.Token;
-import net.imglib2.ops.parse.token.TypeBound;
+import net.imglib2.ops.parse.token.TypeBoundReference;
 import net.imglib2.ops.parse.token.Variable;
 import net.imglib2.ops.parse.token.Xor;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -308,9 +309,12 @@ public class Lexer {
 		// image reference
 		if (name.equals("img")) return new ImgReference(pos, name);
 		
+		// dimension reference
+		if (name.equals("dim")) return new DimensionReference(pos, name);
+		
 		// type bound reference
-		if (name.equals("tmin")) return new TypeBound(pos, name, true);
-		if (name.equals("tmax")) return new TypeBound(pos, name, false);
+		if (name.equals("tmin")) return new TypeBoundReference(pos, name, true);
+		if (name.equals("tmax")) return new TypeBoundReference(pos, name, false);
 		
 		// logical operations
 		if (name.equals("and")) return new And(pos, name);

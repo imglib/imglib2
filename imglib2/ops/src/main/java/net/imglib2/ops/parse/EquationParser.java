@@ -53,6 +53,7 @@ import net.imglib2.ops.operation.binary.real.RealMultiply;
 import net.imglib2.ops.operation.binary.real.RealPower;
 import net.imglib2.ops.operation.binary.real.RealSubtract;
 import net.imglib2.ops.parse.token.CloseParen;
+import net.imglib2.ops.parse.token.DimensionReference;
 import net.imglib2.ops.parse.token.Divide;
 import net.imglib2.ops.parse.token.Exponent;
 import net.imglib2.ops.parse.token.FunctionCall;
@@ -65,7 +66,7 @@ import net.imglib2.ops.parse.token.Plus;
 import net.imglib2.ops.parse.token.Real;
 import net.imglib2.ops.parse.token.Times;
 import net.imglib2.ops.parse.token.Token;
-import net.imglib2.ops.parse.token.TypeBound;
+import net.imglib2.ops.parse.token.TypeBoundReference;
 import net.imglib2.ops.parse.token.Variable;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -298,8 +299,8 @@ public class EquationParser<T extends RealType<T>> {
 				new RealImageFunction<T, DoubleType>(img, new DoubleType());
 			return status;
 		}
-		else if (ParseUtils.match(TypeBound.class, tokens, pos)) {
-			TypeBound bound = (TypeBound) tokens.get(pos);
+		else if (ParseUtils.match(TypeBoundReference.class, tokens, pos)) {
+			TypeBoundReference bound = (TypeBoundReference) tokens.get(pos);
 			if (img == null)
 				return ParseUtils.syntaxError(
 						pos, tokens,
@@ -308,6 +309,30 @@ public class EquationParser<T extends RealType<T>> {
 			double constant = (bound.isMin() ? type.getMinValue() : type.getMaxValue());
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+1;
+			status.function =	new ConstantRealFunction<long[],DoubleType>(new DoubleType(), constant);
+			return status;
+		}
+		else if (ParseUtils.match(DimensionReference.class, tokens, pos)) {
+			if (!ParseUtils.match(OpenParen.class, tokens, pos+1))
+				return ParseUtils.syntaxError(pos+1, tokens, "Expected a '('.");
+			if (!ParseUtils.match(Variable.class, tokens, pos+2))
+				return ParseUtils.syntaxError(pos+2, tokens, "Expected a dimension variable reference.");
+			Variable var = (Variable) tokens.get(pos+2);
+			if (!ParseUtils.match(CloseParen.class, tokens, pos+3))
+				return ParseUtils.syntaxError(pos+3, tokens, "Expected a ')'.");
+			// if here then structured okay
+			Integer reference = varMap.get(var.getText());
+			if (reference == null)
+				return ParseUtils.syntaxError(pos+2, tokens, "Unknown variable.");
+			if (reference < 0)
+				return ParseUtils.syntaxError(pos+2, tokens, "Undeclared variable.");
+			if (img == null)
+				return ParseUtils.syntaxError(
+						pos, tokens,
+						"Dimension bounds only work in equations that are associated with an Img");
+			double constant = img.dimension(reference);
+			ParseStatus status = new ParseStatus();
+			status.tokenNumber = pos+4;
 			status.function =	new ConstantRealFunction<long[],DoubleType>(new DoubleType(), constant);
 			return status;
 		}

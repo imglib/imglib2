@@ -42,15 +42,9 @@ package net.imglib2.ops.parse.token;
 * @author Barry DeZonia
 *
 */
-public class TypeBound extends Token {
+public class DimensionReference extends Token {
 
-	private boolean isMin;
-	
-	public TypeBound(int start, String text, boolean isMin) {
+	public DimensionReference(int start, String text) {
 		super(start, text);
-		this.isMin = isMin;
 	}
-	
-	public boolean isMin() { return isMin; }
-	public boolean isMax() { return !isMin; }
 }
