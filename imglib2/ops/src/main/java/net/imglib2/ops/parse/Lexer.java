@@ -82,6 +82,7 @@ import net.imglib2.ops.operation.unary.real.RealSincPi;
 import net.imglib2.ops.operation.unary.real.RealSinh;
 import net.imglib2.ops.operation.unary.real.RealSqr;
 import net.imglib2.ops.operation.unary.real.RealSqrt;
+import net.imglib2.ops.operation.unary.real.RealStep;
 import net.imglib2.ops.operation.unary.real.RealTan;
 import net.imglib2.ops.operation.unary.real.RealTanh;
 import net.imglib2.ops.operation.unary.real.RealUlp;
@@ -113,6 +114,7 @@ import net.imglib2.ops.parse.token.Plus;
 import net.imglib2.ops.parse.token.Real;
 import net.imglib2.ops.parse.token.Times;
 import net.imglib2.ops.parse.token.Token;
+import net.imglib2.ops.parse.token.TypeBound;
 import net.imglib2.ops.parse.token.Variable;
 import net.imglib2.ops.parse.token.Xor;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -299,12 +301,16 @@ public class Lexer {
 	}
 
 	private Token reservedWordLookup(String name, int pos) {
-		//constants
+		// constants
 		if (name.equals("E")) return new Real(pos, name, Math.E);
 		if (name.equals("PI")) return new Real(pos, name, Math.PI);
 
 		// image reference
 		if (name.equals("img")) return new ImgReference(pos, name);
+		
+		// type bound reference
+		if (name.equals("tmin")) return new TypeBound(pos, name, true);
+		if (name.equals("tmax")) return new TypeBound(pos, name, false);
 		
 		// logical operations
 		if (name.equals("and")) return new And(pos, name);
@@ -356,6 +362,7 @@ public class Lexer {
 		if (name.equals("sinh")) op = new RealSinh<DoubleType,DoubleType>();
 		if (name.equals("sqr")) op = new RealSqr<DoubleType,DoubleType>();
 		if (name.equals("sqrt")) op = new RealSqrt<DoubleType,DoubleType>();
+		if (name.equals("step")) op = new RealStep<DoubleType,DoubleType>();
 		if (name.equals("tan")) op = new RealTan<DoubleType,DoubleType>();
 		if (name.equals("tanh")) op = new RealTanh<DoubleType,DoubleType>();
 		if (name.equals("ulp")) op = new RealUlp<DoubleType,DoubleType>();

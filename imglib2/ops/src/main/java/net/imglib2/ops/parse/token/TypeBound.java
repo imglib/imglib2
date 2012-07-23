@@ -35,48 +35,22 @@
  */
 
 
-package net.imglib2.ops.parse;
-
-import java.util.List;
-
-import net.imglib2.ops.parse.token.Token;
-import net.imglib2.ops.pointset.EmptyPointSet;
+package net.imglib2.ops.parse.token;
 
 /**
- * Static methods used by various parsers
- * 
- * @author Barry DeZonia
- *
- */
-public class ParseUtils {
+* 
+* @author Barry DeZonia
+*
+*/
+public class TypeBound extends Token {
 
-	private ParseUtils() {}
+	private boolean isMin;
 	
-	public static boolean match(Class<?> expectedClass, List<Token> tokens, int pos) {
-		if (pos >= tokens.size()) return false;
-		return tokens.get(pos).getClass() == expectedClass;
-	}
-
-	public static ParseStatus syntaxError(Integer tokenNumber, List<Token> tokens, String err) {
-		ParseStatus status = new ParseStatus();
-		status.columnNumber = -1;
-		status.tokenNumber = tokenNumber;
-		status.pointSet = new EmptyPointSet();
-		if (tokenNumber < tokens.size()) {
-			Token token = tokens.get(tokenNumber);
-			status.errMsg = "Syntax error with token ("+token.getText()+") near column "+token.getStart()+": "+err;
-		}
-		else {
-			Token token = tokens.get(tokenNumber-1);
-			status.errMsg = "Unexpected end of input after token ("+token.getText()+") near column "+token.getStart()+": context - "+err;
-		}
-		return status;
-	}
-
-	public static ParseStatus nextPosition(int pos) {
-		ParseStatus status = new ParseStatus();
-		status.tokenNumber = pos;
-		return status;
+	public TypeBound(int start, String text, boolean isMin) {
+		super(start, text);
+		this.isMin = isMin;
 	}
 	
+	public boolean isMin() { return isMin; }
+	public boolean isMax() { return !isMin; }
 }

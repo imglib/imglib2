@@ -35,48 +35,33 @@
  */
 
 
-package net.imglib2.ops.parse;
+package net.imglib2.ops.operation.unary.real;
 
-import java.util.List;
-
-import net.imglib2.ops.parse.token.Token;
-import net.imglib2.ops.pointset.EmptyPointSet;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Static methods used by various parsers
+ * Sets an output real number to 0 if the input real number is less than 0.
+ * Otherwise sets the output real number to 1. This implements a step function
+ * similar to Mathematica's unitstep function. It is a Heaviside step function
+ * with h(0) = 1 rather than 0.5.
  * 
  * @author Barry DeZonia
- *
  */
-public class ParseUtils {
-
-	private ParseUtils() {}
-	
-	public static boolean match(Class<?> expectedClass, List<Token> tokens, int pos) {
-		if (pos >= tokens.size()) return false;
-		return tokens.get(pos).getClass() == expectedClass;
+public final class RealStep<I extends RealType<I>, O extends RealType<O>>
+	implements RealUnaryOperation<I,O>
+{
+	@Override
+	public O compute(I x, O output) {
+		if (x.getRealDouble() < 0)
+			output.setZero();
+		else
+			output.setOne();
+		return output;
 	}
 
-	public static ParseStatus syntaxError(Integer tokenNumber, List<Token> tokens, String err) {
-		ParseStatus status = new ParseStatus();
-		status.columnNumber = -1;
-		status.tokenNumber = tokenNumber;
-		status.pointSet = new EmptyPointSet();
-		if (tokenNumber < tokens.size()) {
-			Token token = tokens.get(tokenNumber);
-			status.errMsg = "Syntax error with token ("+token.getText()+") near column "+token.getStart()+": "+err;
-		}
-		else {
-			Token token = tokens.get(tokenNumber-1);
-			status.errMsg = "Unexpected end of input after token ("+token.getText()+") near column "+token.getStart()+": context - "+err;
-		}
-		return status;
+	@Override
+	public RealStep<I,O> copy() {
+		return new RealStep<I,O>();
 	}
 
-	public static ParseStatus nextPosition(int pos) {
-		ParseStatus status = new ParseStatus();
-		status.tokenNumber = pos;
-		return status;
-	}
-	
 }
