@@ -46,22 +46,22 @@ import net.imglib2.type.numeric.RealType;
 * @author Barry DeZonia
 *
 */
-public class RealDistanceFromCenterFunction<T extends RealType<T>>
+public class RealDistanceFromPointFunction<T extends RealType<T>>
 	implements Function<long[],T> {
 
 	private final T var;
-	private final double[] ctr;
+	private final double[] pt;
 	
-	public RealDistanceFromCenterFunction(double[] ctr, T var) {
+	public RealDistanceFromPointFunction(double[] pt, T var) {
 		this.var = var.createVariable();
-		this.ctr = ctr.clone();
+		this.pt = pt.clone();
 	}
 	
 	@Override
 	public void compute(long[] input, T output) {
 		double sum = 0;
 		for (int i = 0; i < input.length; i++) {
-			double delta = input[i] - ctr[i];
+			double delta = input[i] - pt[i];
 			sum += delta * delta;
 		}
 		double dist = Math.sqrt(sum);
@@ -74,8 +74,8 @@ public class RealDistanceFromCenterFunction<T extends RealType<T>>
 	}
 
 	@Override
-	public RealDistanceFromCenterFunction<T> copy() {
-		return new RealDistanceFromCenterFunction<T>(ctr, var);
+	public RealDistanceFromPointFunction<T> copy() {
+		return new RealDistanceFromPointFunction<T>(pt, var);
 	}
 	
 }

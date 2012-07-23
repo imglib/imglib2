@@ -44,7 +44,7 @@ import net.imglib2.img.Img;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
-import net.imglib2.ops.function.real.RealDistanceFromCenterFunction;
+import net.imglib2.ops.function.real.RealDistanceFromPointFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealIndexFunction;
 import net.imglib2.ops.operation.binary.real.RealAdd;
@@ -342,7 +342,7 @@ public class EquationParser<T extends RealType<T>> {
 			}
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+1;
-			status.function =	new RealDistanceFromCenterFunction<DoubleType>(ctr, new DoubleType());
+			status.function =	new RealDistanceFromPointFunction<DoubleType>(ctr, new DoubleType());
 			return status;
 		}
 		else if (ParseUtils.match(OpenParen.class, tokens, pos)) {
