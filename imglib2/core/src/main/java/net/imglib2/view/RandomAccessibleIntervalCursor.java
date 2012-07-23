@@ -104,8 +104,8 @@ public final class RandomAccessibleIntervalCursor< T > extends AbstractInterval 
 	{
 		index += steps;
 		maxIndexOnLine = ( index < 0 ) ? ( dimensions[ 0 ] - 1 ) : ( ( 1 + index / dimensions[ 0 ] ) * dimensions[ 0 ] - 1 );
-		IntervalIndexer.indexToPosition( steps, dimensions, tmp );
-		randomAccess.move( tmp );
+		IntervalIndexer.indexToPosition( index, dimensions, tmp );
+		randomAccess.setPosition( tmp );
 	}
 
 	@Override
