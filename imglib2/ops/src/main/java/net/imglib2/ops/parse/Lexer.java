@@ -88,6 +88,7 @@ import net.imglib2.ops.operation.unary.real.RealTanh;
 import net.imglib2.ops.operation.unary.real.RealUlp;
 import net.imglib2.ops.operation.unary.real.RealUniformRandom;
 import net.imglib2.ops.parse.token.And;
+import net.imglib2.ops.parse.token.AngleReference;
 import net.imglib2.ops.parse.token.Assign;
 import net.imglib2.ops.parse.token.CloseParen;
 import net.imglib2.ops.parse.token.CloseRange;
@@ -317,8 +318,11 @@ public class Lexer {
 		if (name.equals("tmin")) return new TypeBoundReference(pos, name, true);
 		if (name.equals("tmax")) return new TypeBoundReference(pos, name, false);
 		
-		// center distance reference
+		// distance from center reference
 		if (name.equals("dctr")) return new DistanceFromCenterReference(pos, name);
+
+		// angle reference
+		if (name.equals("angle")) return new AngleReference(pos, name);
 		
 		// logical operations
 		if (name.equals("and")) return new And(pos, name);

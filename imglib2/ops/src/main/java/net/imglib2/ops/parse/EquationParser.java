@@ -44,6 +44,7 @@ import net.imglib2.img.Img;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
 import net.imglib2.ops.function.real.ConstantRealFunction;
+import net.imglib2.ops.function.real.RealAngleFromOriginFunction;
 import net.imglib2.ops.function.real.RealDistanceFromPointFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealIndexFunction;
@@ -53,7 +54,9 @@ import net.imglib2.ops.operation.binary.real.RealMod;
 import net.imglib2.ops.operation.binary.real.RealMultiply;
 import net.imglib2.ops.operation.binary.real.RealPower;
 import net.imglib2.ops.operation.binary.real.RealSubtract;
+import net.imglib2.ops.parse.token.AngleReference;
 import net.imglib2.ops.parse.token.CloseParen;
+import net.imglib2.ops.parse.token.Comma;
 import net.imglib2.ops.parse.token.DimensionReference;
 import net.imglib2.ops.parse.token.DistanceFromCenterReference;
 import net.imglib2.ops.parse.token.Divide;
@@ -343,6 +346,32 @@ public class EquationParser<T extends RealType<T>> {
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+1;
 			status.function =	new RealDistanceFromPointFunction<DoubleType>(ctr, new DoubleType());
+			return status;
+		}
+		else if (ParseUtils.match(AngleReference.class, tokens, pos)) {
+			if (!ParseUtils.match(OpenParen.class, tokens, pos+1))
+				return ParseUtils.syntaxError(pos+1, tokens, "Expected a '('.");
+			if (!ParseUtils.match(Variable.class, tokens, pos+2))
+				return ParseUtils.syntaxError(pos+2, tokens, "Expected a variable reference.");
+			if (!ParseUtils.match(Comma.class, tokens, pos+3))
+				return ParseUtils.syntaxError(pos+3, tokens, "Expected a ','.");
+			if (!ParseUtils.match(Variable.class, tokens, pos+4))
+				return ParseUtils.syntaxError(pos+4, tokens, "Expected a variable reference.");
+			if (!ParseUtils.match(CloseParen.class, tokens, pos+5))
+				return ParseUtils.syntaxError(pos+5, tokens, "Expected a ')'.");
+			Variable var1 = (Variable) tokens.get(pos+2);
+			Variable var2 = (Variable) tokens.get(pos+4);
+			int axis1 = varMap.get(var1.getText());
+			int axis2 = varMap.get(var2.getText());
+			if (axis1 < 0)
+				return ParseUtils.syntaxError(pos+2, tokens, "Undeclared variable.");
+			if (axis2 < 0)
+				return ParseUtils.syntaxError(pos+4, tokens, "Undeclared variable.");
+			if (axis1 == axis2)
+				return ParseUtils.syntaxError(pos, tokens, "Cannot reference same axis variable twice.");
+			ParseStatus status = new ParseStatus();
+			status.tokenNumber = pos+6;
+			status.function =	new RealAngleFromOriginFunction<DoubleType>(axis1, axis2, new DoubleType());
 			return status;
 		}
 		else if (ParseUtils.match(OpenParen.class, tokens, pos)) {
