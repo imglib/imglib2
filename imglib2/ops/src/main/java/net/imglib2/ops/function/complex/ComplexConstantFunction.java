@@ -45,10 +45,10 @@ import net.imglib2.type.numeric.ComplexType;
  * 
  * @author Barry DeZonia
  */
-public class ConstantComplexFunction<INPUT, C extends ComplexType<C>> implements Function<INPUT,C> {
+public class ComplexConstantFunction<INPUT, C extends ComplexType<C>> implements Function<INPUT,C> {
 	private final C complex;
 
-	public ConstantComplexFunction(C c) {
+	public ComplexConstantFunction(C c) {
 		complex = c;
 	}
 	
@@ -58,8 +58,8 @@ public class ConstantComplexFunction<INPUT, C extends ComplexType<C>> implements
 	}
 	
 	@Override
-	public ConstantComplexFunction<INPUT,C> copy() {
-		return new ConstantComplexFunction<INPUT,C>(complex);
+	public ComplexConstantFunction<INPUT,C> copy() {
+		return new ComplexConstantFunction<INPUT,C>(complex);
 	}
 
 	@Override

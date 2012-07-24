@@ -45,10 +45,10 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class ConstantRealFunction<INPUT, O extends RealType<O>> implements Function<INPUT, O> {
+public class RealConstantFunction<INPUT, O extends RealType<O>> implements Function<INPUT, O> {
 	private final O real;
 
-	public ConstantRealFunction(O typeHint, double r) {
+	public RealConstantFunction(O typeHint, double r) {
 		real = typeHint.createVariable();
 		real.setReal(r);
 	}
@@ -59,8 +59,8 @@ public class ConstantRealFunction<INPUT, O extends RealType<O>> implements Funct
 	}
 
 	@Override
-	public ConstantRealFunction<INPUT,O> copy() {
-		return new ConstantRealFunction<INPUT,O>(real, real.getRealDouble());
+	public RealConstantFunction<INPUT,O> copy() {
+		return new RealConstantFunction<INPUT,O>(real, real.getRealDouble());
 	}
 
 	@Override

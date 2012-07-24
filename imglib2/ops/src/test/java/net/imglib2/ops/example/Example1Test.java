@@ -46,7 +46,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.Function;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
-import net.imglib2.ops.function.real.ConstantRealFunction;
+import net.imglib2.ops.function.real.RealConstantFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.input.PointInputIterator;
 import net.imglib2.ops.operation.binary.real.RealAdd;
@@ -93,7 +93,7 @@ public class Example1Test {
 
 		Img<DoubleType> inputImage = makeInputImage();
 
-		Function<long[], DoubleType> constant = new ConstantRealFunction<long[], DoubleType>(
+		Function<long[], DoubleType> constant = new RealConstantFunction<long[], DoubleType>(
 				inputImage.firstElement(), 15);
 
 		Function<long[], DoubleType> image = new RealImageFunction<DoubleType,DoubleType>(

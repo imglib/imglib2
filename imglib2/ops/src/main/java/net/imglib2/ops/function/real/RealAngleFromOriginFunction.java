@@ -34,12 +34,16 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.Function;
 import net.imglib2.type.numeric.RealType;
 
+// TODO - could make this relative to a point rather than the origin. This would
+// be more general. However at construction time you might not know the number
+// of dimensions the input indices will take in the compute() method. This makes
+// specifying a point tricky. If a point is supported later it should be in
+// double coords for consistency with RealDistanceFromPointFunction
 
 /**
 * 
@@ -61,8 +65,8 @@ public class RealAngleFromOriginFunction<T extends RealType<T>>
 	
 	@Override
 	public void compute(long[] input, T output) {
-		long du = input[axisU];
-		long dv = input[axisV];
+		double du = input[axisU];
+		double dv = input[axisV];
 		output.setReal(Math.atan2(dv, du));
 	}
 

@@ -43,7 +43,7 @@ import java.util.Map;
 import net.imglib2.img.Img;
 import net.imglib2.ops.function.general.GeneralBinaryFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
-import net.imglib2.ops.function.real.ConstantRealFunction;
+import net.imglib2.ops.function.real.RealConstantFunction;
 import net.imglib2.ops.function.real.RealAngleFromOriginFunction;
 import net.imglib2.ops.function.real.RealDistanceFromPointFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
@@ -235,8 +235,8 @@ public class EquationParser<T extends RealType<T>> {
 		else if (ParseUtils.match(Minus.class, tokens, pos)) {
 			ParseStatus status = atom(tokens, pos+1);
 			if (status.errMsg != null) return status;
-			ConstantRealFunction<long[], DoubleType> constant =
-				new ConstantRealFunction<long[],DoubleType>(new DoubleType(),-1);
+			RealConstantFunction<long[], DoubleType> constant =
+				new RealConstantFunction<long[],DoubleType>(new DoubleType(),-1);
 			status.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					constant, status.function,
@@ -305,7 +305,7 @@ public class EquationParser<T extends RealType<T>> {
 			double constant = (bound.isMin() ? type.getMinValue() : type.getMaxValue());
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+1;
-			status.function =	new ConstantRealFunction<long[],DoubleType>(new DoubleType(), constant);
+			status.function =	new RealConstantFunction<long[],DoubleType>(new DoubleType(), constant);
 			return status;
 		}
 		else if (ParseUtils.match(DimensionReference.class, tokens, pos)) {
@@ -329,7 +329,7 @@ public class EquationParser<T extends RealType<T>> {
 			double constant = img.dimension(reference);
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+4;
-			status.function =	new ConstantRealFunction<long[],DoubleType>(new DoubleType(), constant);
+			status.function =	new RealConstantFunction<long[],DoubleType>(new DoubleType(), constant);
 			return status;
 		}
 		else if (ParseUtils.match(DistanceFromCenterReference.class, tokens, pos)) {
@@ -339,6 +339,9 @@ public class EquationParser<T extends RealType<T>> {
 					"Center distance references only work in equations that are associated with an Img");
 			long[] dims = new long[img.numDimensions()];
 			img.dimensions(dims);
+			// calc center of image
+			// TODO - is this off by a little (such as a half)? Depends where we
+			// define pixel locations (left or center).
 			double[] ctr = new double[dims.length];
 			for (int i = 0; i < dims.length; i++) {
 				ctr[i] = dims[i] / 2.0;
@@ -395,7 +398,7 @@ public class EquationParser<T extends RealType<T>> {
 			Real r = (Real) tokens.get(pos);
 			ParseStatus status = new ParseStatus();
 			status.function =
-				new ConstantRealFunction<long[],DoubleType>(
+				new RealConstantFunction<long[],DoubleType>(
 						new DoubleType(),r.getValue());
 			status.tokenNumber = pos + 1;
 			return status;
@@ -404,7 +407,7 @@ public class EquationParser<T extends RealType<T>> {
 			Int i = (Int) tokens.get(pos);
 			ParseStatus status = new ParseStatus();
 			status.function =
-				new ConstantRealFunction<long[],DoubleType>(
+				new RealConstantFunction<long[],DoubleType>(
 						new DoubleType(),i.getValue());
 			status.tokenNumber = pos + 1;
 			return status;
