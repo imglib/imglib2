@@ -12,104 +12,109 @@ import net.imglib2.meta.AxisType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
 
-public class DiscNeighborhoodExample {
+public class DiscNeighborhoodExample
+{
 
 	private static final int DIM = 100; // also N points
 
-	public static void main(String[] args) {
-		ImageJ.main(args);
+	public static void main( String[] args )
+	{
+		ImageJ.main( args );
 		example1();
 		example2();
 		example3();
 	}
 
-	public static void example2() {
+	public static void example2()
+	{
 
-
-		final ImgFactory< UnsignedByteType > imgFactory = new ArrayImgFactory<UnsignedByteType>();
-		Img<UnsignedByteType> img = imgFactory.create(new int[] { DIM, DIM }, new UnsignedByteType());
+		final ImgFactory< UnsignedByteType > imgFactory = new ArrayImgFactory< UnsignedByteType >();
+		Img< UnsignedByteType > img = imgFactory.create( new int[] { DIM, DIM }, new UnsignedByteType() );
 		double[] cal = new double[] { 0.2, 0.2 };
 		AxisType[] axes = new AxisType[] { Axes.X, Axes.Y };
-		ImgPlus<UnsignedByteType> image = new ImgPlus<UnsignedByteType>(img, "Test", axes, cal);
-		
-		long[] center = new long[2];
+		ImgPlus< UnsignedByteType > image = new ImgPlus< UnsignedByteType >( img, "Test", axes, cal );
 
-		RandomAccess<UnsignedByteType> ra = image.randomAccess();
+		long[] center = new long[ 2 ];
 
-		for (int i = 0; i < DIM/10; i++) {
+		RandomAccess< UnsignedByteType > ra = image.randomAccess();
 
-			center[0] = (long) (Math.random() * DIM);
-			center[1] = (long) (Math.random() * DIM);
+		for ( int i = 0; i < DIM / 10; i++ )
+		{
 
-			ra.setPosition(center);
+			center[ 0 ] = ( long ) ( Math.random() * DIM );
+			center[ 1 ] = ( long ) ( Math.random() * DIM );
+
+			ra.setPosition( center );
 
 			double radius = Math.random() / 10 * DIM;
 
-			DiscNeighborhood<UnsignedByteType> disc = new DiscNeighborhood<UnsignedByteType>(image, radius);
-			disc.setPosition(center);
-			DiscCursor<UnsignedByteType> cursor = disc.cursor();
+			DiscNeighborhood< UnsignedByteType, ImgPlus< UnsignedByteType >> disc = new DiscNeighborhood< UnsignedByteType, ImgPlus< UnsignedByteType > >( image, radius );
+			disc.setPosition( center );
+			DiscCursor< UnsignedByteType, ImgPlus< UnsignedByteType > > cursor = disc.cursor();
 
-			System.out.println("Center: " + Util.printCoordinates(center));
-			System.out.println("Radius: " + radius);
+			System.out.println( "Center: " + Util.printCoordinates( center ) );
+			System.out.println( "Radius: " + radius );
 
-			while (cursor.hasNext()) {
+			while ( cursor.hasNext() )
+			{
 
 				cursor.fwd();
-				if (cursor.isOutOfBounds())
+				if ( cursor.isOutOfBounds() )
 					continue;
-				cursor.get().add(new UnsignedByteType(50));
+				cursor.get().add( new UnsignedByteType( 50 ) );
 
 			}
 
 		}
 
-		ImageJFunctions.show(image);
+		ImageJFunctions.show( image );
 
 	}
 
-
-	public static void example3() {
+	public static void example3()
+	{
 		long[] center = new long[] { 100, 100 }; // the middle
 		double radius = 15;
-		final ImgFactory< UnsignedByteType > imgFactory = new ArrayImgFactory<UnsignedByteType>();
-		Img<UnsignedByteType> img = imgFactory.create(new int[] { 200, 200}, new UnsignedByteType());
+		final ImgFactory< UnsignedByteType > imgFactory = new ArrayImgFactory< UnsignedByteType >();
+		Img< UnsignedByteType > img = imgFactory.create( new int[] { 200, 200 }, new UnsignedByteType() );
 		double[] cal = new double[] { 0.2, 0.3 };
 		AxisType[] axes = new AxisType[] { Axes.X, Axes.Y };
-		ImgPlus<UnsignedByteType> image = new ImgPlus<UnsignedByteType>(img, "Radius "+radius, axes, cal);
-
+		ImgPlus< UnsignedByteType > image = new ImgPlus< UnsignedByteType >( img, "Radius " + radius, axes, cal );
 
 		// Write into the image
-		DiscNeighborhood<UnsignedByteType> disc = new DiscNeighborhood<UnsignedByteType>(image, radius);
-		disc.setPosition(center);
-		DiscCursor<UnsignedByteType> cursor = disc.cursor();
-		while(cursor.hasNext()) {
+		DiscNeighborhood< UnsignedByteType, ImgPlus< UnsignedByteType >> disc = new DiscNeighborhood< UnsignedByteType, ImgPlus< UnsignedByteType >>( image, radius );
+		disc.setPosition( center );
+		DiscCursor< UnsignedByteType, ImgPlus< UnsignedByteType > > cursor = disc.cursor();
+		while ( cursor.hasNext() )
+		{
 			cursor.fwd();
-			cursor.get().set((int) cursor.getDistanceSquared());
+			cursor.get().set( ( int ) cursor.getDistanceSquared() );
 		}
-		
 
-		ImageJFunctions.show(image);
+		ImageJFunctions.show( image );
 	}
-	
-	public static void example1() {
-		long[] center = new long[] { 50, 50 , 50 }; // the middle
+
+	public static void example1()
+	{
+		long[] center = new long[] { 50, 50, 50 }; // the middle
 		double radius = 5;
 
-		final ImgFactory< UnsignedByteType > imgFactory = new ArrayImgFactory<UnsignedByteType>();
-		Img<UnsignedByteType> img = imgFactory.create(new int[] { DIM, DIM }, new UnsignedByteType());
+		final ImgFactory< UnsignedByteType > imgFactory = new ArrayImgFactory< UnsignedByteType >();
+		Img< UnsignedByteType > img = imgFactory.create( new int[] { DIM, DIM }, new UnsignedByteType() );
 		double[] cal = new double[] { 0.2, 0.2 };
 		AxisType[] axes = new AxisType[] { Axes.X, Axes.Y };
-		ImgPlus<UnsignedByteType> image = new ImgPlus<UnsignedByteType>(img, "Radius "+radius, axes, cal);
+		ImgPlus< UnsignedByteType > image = new ImgPlus< UnsignedByteType >( img, "Radius " + radius, axes, cal );
 
 		// Write into the image
-		DiscNeighborhood<UnsignedByteType> disc = new DiscNeighborhood<UnsignedByteType>(image, radius);
-		disc.setPosition(center);
+		DiscNeighborhood< UnsignedByteType, ImgPlus< UnsignedByteType > > disc = new DiscNeighborhood< UnsignedByteType, ImgPlus< UnsignedByteType > >( image, radius );
+		disc.setPosition( center );
 
-		UnsignedByteType val = new UnsignedByteType(200);
-		for(UnsignedByteType pixel : disc) {
-			pixel.set(val);
+		UnsignedByteType val = new UnsignedByteType( 200 );
+		for ( UnsignedByteType pixel : disc )
+		{
+			pixel.set( val );
 		}
 
-		ImageJFunctions.show(image);
+		ImageJFunctions.show( image );
 	}
 }
