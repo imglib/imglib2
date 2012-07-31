@@ -136,6 +136,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	{
 		points.add( index, new RealPoint( p ) );
 		invalidateCachedState();
+		stripes = null;
 	}
 
 	/**
@@ -148,6 +149,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	{
 		points.remove( index );
 		invalidateCachedState();
+		stripes = null;
 	}
 
 	/**
@@ -161,6 +163,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	{
 		points.get( index ).setPosition( position );
 		invalidateCachedState();
+		stripes = null;
 	}
 
 	/**
@@ -174,6 +177,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	{
 		points.get( index ).setPosition( position );
 		invalidateCachedState();
+		stripes = null;
 	}
 
 	/**
@@ -188,6 +192,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	{
 		points.get( index ).setPosition( localizable );
 		invalidateCachedState();
+		stripes = null;
 	}
 
 	/**

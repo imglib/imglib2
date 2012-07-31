@@ -304,8 +304,26 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
+	public void calibration(final float[] target) {
+		for (int i = 0; i < target.length; i++)
+			target[i] = (float)cal[i];
+	}
+
+	@Override
 	public void setCalibration(final double value, final int d) {
 		cal[d] = value;
+	}
+
+	@Override
+	public void setCalibration(final double[] cal) {
+		for ( int d = 0; d < cal.length; ++d )
+			this.cal[d] = cal[ d ];
+	}
+
+	@Override
+	public void setCalibration(final float[] cal) {
+		for ( int d = 0; d < cal.length; ++d )
+			this.cal[d] = cal[ d ];
 	}
 
 	@Override

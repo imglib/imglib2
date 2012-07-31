@@ -40,9 +40,9 @@ import mpicbg.imglib.type.numeric.real.DoubleType;
 public class IntegralImageDouble< R extends NumericType< R > > extends IntegralImage< R, DoubleType >
 {
 
-	public IntegralImageDouble( final Image<R> img, final DoubleType type, final Converter<R, DoubleType> converter) 
+	public IntegralImageDouble( final Image<R> img, final Converter<R, DoubleType> converter) 
 	{
-		super( img, type, converter );
+		super( img, new DoubleType(), converter );
 	}
 
 	@Override
@@ -74,9 +74,10 @@ public class IntegralImageDouble< R extends NumericType< R > > extends IntegralI
 		for ( int i = 2; i < size; ++i )
 		{
 			cursor.fwd( d );
-
-			sum2 += cursor.getType().get();
-			cursor.getType().set( sum2 );
+			final DoubleType type = cursor.getType();
+			
+			sum2 += type.get();
+			type.set( sum2 );
 		}
 	}
 	

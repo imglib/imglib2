@@ -41,37 +41,68 @@ import net.imglib2.display.AbstractLinearRange;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
- * 
+ * The LifeFormARGBConverter creates an ARGB representation of a LifeForm by implementing the interface 
+ * Converter< LifeForm, ARGBType >. Currently, up to seven different races can be mapped into seven different
+ * colors for display. Note that the simulation itself supports an arbitrary number of Life Forms. The weight 
+ * of a LifeForm will represent its intensity by mapping its float value to a value between 0...255, based on
+ * the minimal and maximal weight of the entire Arena.
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Stephan Preibisch <preibisch@mpi-cbg.de>
  */
 public class LifeFormARGBConverter extends AbstractLinearRange implements Converter< LifeForm, ARGBType >
 {
+	/**
+	 * Instantiate a new LifeFormARGBConverter where min=0 and max=1
+	 */
 	public LifeFormARGBConverter()
 	{
 		super();
 	}
 	
+	/**
+	 * Instantiate a new LifeFormARGBConverter
+	 * @param min - the minimal weight for display (will map to intensity 0)
+	 * @param max - the maximal weight for display (will map to intensity 255)
+	 */
 	public LifeFormARGBConverter( final double min, final double max )
 	{
 		super( min, max );
 	}
 	
+	/** 
+	 * Convert the LifeForm to an ARGB value
+	 * @param input - the LifeForm to convert
+	 * @param output - the ARGBType that will contain the RGB representation 
+	 */
 	@Override
 	public void convert( final LifeForm input, final ARGBType output )
 	{
 		final int col = (short)Math.round( normFloat( input.getWeight() ) * 255 );
 		
-		if( input.getName() == 0 )
+		final int name = input.getName();
+		
+		if ( name == 0 )
 			output.set( col<<16 );
-		else if ( input.getName() == 1 )
+		else if ( name == 1 )
 			output.set( col<<8 );
-		else
+		else if ( name == 2 )
 			output.set( col );
+		else if ( name == 3 )
+			output.set( (col<<16) + (col<<8) );
+		else if ( name == 4 )
+			output.set( (col<<16) + (col<<8) + col );
+		else if ( name == 5 )
+			output.set( (col<<16) + col );
+		else if ( name == 6 )
+			output.set( (col<<8) + col );
 	}
 	
+	/**
+	 * norm the weight of the LifeForm to 0...255 using min and max
+	 * @param c
+	 * @return
+	 */
 	public float normFloat( final float c )
 	{
 		double value = ( c - min ) / ( max - min );

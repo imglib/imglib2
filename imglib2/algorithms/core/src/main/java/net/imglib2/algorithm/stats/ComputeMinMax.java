@@ -40,6 +40,8 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
@@ -48,6 +50,7 @@ import net.imglib2.multithreading.Chunk;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.Type;
 import net.imglib2.util.Util;
+import net.imglib2.view.Views;
 
 /**
  * TODO
@@ -56,21 +59,67 @@ import net.imglib2.util.Util;
  */
 public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorithm, MultiThreaded, Benchmark
 {
-	final Img<T> image;
+	/**
+	 * Computes minimal and maximal value in a given interval
+	 * 
+	 * @param interval
+	 * @param min
+	 * @param max
+	 */
+	final public static < T extends Comparable< T > & Type< T > > void computeMinMax( final RandomAccessibleInterval< T > interval, final T min, final T max )
+	{ 
+		ComputeMinMax< T > c = new ComputeMinMax<T>( interval );
+		c.process();
+		
+		min.set( c.getMin() );
+		max.set( c.getMax() );
+	}
+
+	final IterableInterval< T > image;
 	final T min, max;
 	
 	String errorMessage = "";
 	int numThreads;
 	long processingTime;
 	
-	public ComputeMinMax( final Img<T> image )
+	public ComputeMinMax( final Img< T > img, final T min, final T max )
+	{
+		this( (IterableInterval<T>) img, min, max );
+	}
+
+	public ComputeMinMax( final IterableInterval<T> interval, final T min, final T max )
 	{
 		setNumThreads();
 		
-		this.image = image;
+		this.image = interval;
+	
+		this.min = min;
+		this.max = max;
+	}
+
+	public ComputeMinMax( final RandomAccessibleInterval<T> interval, final T min, final T max )
+	{
+		this( Views.iterable( interval ), min, max );
+	}
+
+	public ComputeMinMax( final Img< T > img )
+	{
+		this( (IterableInterval<T>) img );
+	}
+
+	public ComputeMinMax( final IterableInterval< T > interval )
+	{
+		setNumThreads();
+		
+		this.image = interval;
 	
 		this.min = image.firstElement().createVariable();
 		this.max = this.min.copy();
+	}
+
+	public ComputeMinMax( final RandomAccessibleInterval< T > interval )
+	{
+		this( Views.iterable( interval ) );
 	}
 	
 	public T getMin() { return min; }

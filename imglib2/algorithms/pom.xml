@@ -20,6 +20,7 @@
 	<modules>
 		<module>core</module>
 		<module>gpl</module>
+		<module>legacy</module>
 	</modules>
 
 	<!-- NB: for project parent, in case of partial checkout -->

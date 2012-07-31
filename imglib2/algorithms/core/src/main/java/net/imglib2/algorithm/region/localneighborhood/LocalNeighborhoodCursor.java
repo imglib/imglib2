@@ -92,6 +92,37 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 		this.centralPositionIndex = IntervalIndexer.positionToIndex( dim2, dim );
 	}
 	
+	/**
+	 * Create new {@link LocalNeighborhoodCursor} on a {@link RandomAccessible} at a certain location.
+	 * 
+	 * Note: the location can be updated without need to re-instantiate all the times.
+	 * 
+	 * @param source - the data as {@link RandomAccessible}
+	 * @param center - the center location of the 3x3x3...x3 environment that will be skipped
+	 */
+	public LocalNeighborhoodCursor( final RandomAccessible< T > source, final Localizable center )
+	{
+		this.source = source;
+		this.randomAccess = source.randomAccess();
+		
+		this.numDimensions = source.numDimensions();
+		this.tmp = new long[ numDimensions ];
+		this.positionMinus1 = new long[ numDimensions ];
+
+		final int[] dim = new int[ numDimensions ];
+		final int[] dim2 = new int[ numDimensions ];
+
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			dim[ d ] = 3;
+			dim2[ d ] = 1;
+			positionMinus1[ d ] = center.getLongPosition( d ) - 1;
+		}
+		
+		this.driver = new LocalizingZeroMinIntervalIterator( dim );
+		this.centralPositionIndex = IntervalIndexer.positionToIndex( dim2, dim );
+	}
+	
 	public LocalNeighborhoodCursor( final LocalNeighborhoodCursor< T > cursor )
 	{
 		this.source = cursor.source;

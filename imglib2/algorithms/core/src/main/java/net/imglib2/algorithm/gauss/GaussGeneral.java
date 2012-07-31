@@ -38,7 +38,7 @@ package net.imglib2.algorithm.gauss;
 
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
-import net.imglib2.Location;
+import net.imglib2.Point;
 import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -70,12 +70,12 @@ public class GaussGeneral< T extends NumericType< T > > extends AbstractGauss< T
 	 */
 	public GaussGeneral( final double[] sigma, final RandomAccessible<T> input, final Interval interval, final ImgFactory<T> factory, final T type )
 	{
-		super( sigma, input, interval, factory.create( interval, type ), new Location( sigma.length ), factory, type );
+		super( sigma, input, interval, factory.create( interval, type ), new Point( sigma.length ), factory, type );
 	}
 
 	/**
 	 * Computes a Gaussian convolution with any precision on a {@link RandomAccessible} in a certain {@link Interval}
-	 * and writes it into a given {@link RandomAccessible} at a specific location
+	 * and writes it into a given {@link RandomAccessible} at a specific Point
 	 *
 	 * WARNING: This is a very slow implementation as it is not written for {@link NativeType}. If your type is {@link NativeType},
 	 * use {@link GaussNativeType} instead!

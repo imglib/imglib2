@@ -49,13 +49,6 @@
 			<artifactId>ij</artifactId>
 			<version>${imagej1.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>${scifio.groupId}</groupId>
-			<artifactId>bio-formats</artifactId>
-			<version>${scifio.version}</version>
-			<scope>runtime</scope>
-		</dependency>
 	</dependencies>
 
 	<build>

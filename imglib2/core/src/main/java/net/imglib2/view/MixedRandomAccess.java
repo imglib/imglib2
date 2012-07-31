@@ -214,8 +214,11 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		{
 			final long distance = localizable.getLongPosition( d );
 			position[ d ] += distance;
-			final int td = sourceComponent[ d ];
-			tmpDistance[ td ] = sourceInv[ d ] ? -distance : distance;
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpDistance[ td ] = sourceInv[ d ] ? -distance : distance;
+			}
 		}
 		s.move( tmpDistance );
 	}
@@ -231,8 +234,11 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] += distance[ d ];
-			final int td = sourceComponent[ d ];
-			tmpDistance[ td ] = sourceInv[ d ] ? -distance[ d ] : distance[ d ];
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpDistance[ td ] = sourceInv[ d ] ? -distance[ d ] : distance[ d ];
+			}
 		}
 		s.move( tmpDistance );
 	}
@@ -248,8 +254,11 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] += distance[ d ];
-			final int td = sourceComponent[ d ];
-			tmpDistance[ td ] = sourceInv[ d ] ? -distance[ d ] : distance[ d ];
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpDistance[ td ] = sourceInv[ d ] ? -distance[ d ] : distance[ d ];
+			}
 		}
 		s.move( tmpDistance );
 	}
@@ -267,8 +276,11 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		{
 			final long p = localizable.getLongPosition( d );
 			this.position[ d ] = p;
-			final int td = sourceComponent[ d ];
-			tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			}
 		}
 		s.setPosition( tmpPosition );
 	}
@@ -286,8 +298,11 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		{
 			final long p = position[ d ];
 			this.position[ d ] = p;
-			final int td = sourceComponent[ d ];
-			tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			}
 		}
 		s.setPosition( tmpPosition );
 	}
@@ -305,8 +320,11 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		{
 			final long p = position[ d ];
 			this.position[ d ] = p;
-			final int td = sourceComponent[ d ];
-			tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			}
 		}
 		s.setPosition( tmpPosition );
 	}
@@ -317,9 +335,12 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 	{
 		assert d < n;
 		this.position[ d ] = position;
-		final int td = sourceComponent[ d ];
-		final long targetPos = translation[ td ] + ( sourceInv[ d ] ? -position : position );
-		s.setPosition( targetPos, td );
+		if ( !sourceZero[ d ] )
+		{
+			final int td = sourceComponent[ d ];
+			final long targetPos = translation[ td ] + ( sourceInv[ d ] ? -position : position );
+			s.setPosition( targetPos, td );
+		}
 	}
 
 	@Override
@@ -327,9 +348,12 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 	{
 		assert d < n;
 		this.position[ d ] = position;
-		final int td = sourceComponent[ d ];
-		final long targetPos = translation[ td ] + ( sourceInv[ d ] ? -position : position );
-		s.setPosition( targetPos, td );
+		if ( !sourceZero[ d ] )
+		{
+			final int td = sourceComponent[ d ];
+			final long targetPos = translation[ td ] + ( sourceInv[ d ] ? -position : position );
+			s.setPosition( targetPos, td );
+		}
 	}
 
 	@Override

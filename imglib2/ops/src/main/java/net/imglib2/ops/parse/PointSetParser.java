@@ -81,7 +81,6 @@ import net.imglib2.ops.relation.RealGreaterThanOrEqual;
 import net.imglib2.ops.relation.RealLessThan;
 import net.imglib2.ops.relation.RealLessThanOrEqual;
 import net.imglib2.ops.relation.RealNotEquals;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /*
@@ -226,27 +225,26 @@ public class PointSetParser {
 	*/
 	private ParseStatus dimension(List<Token> tokens, int pos) {
 		if (!ParseUtils.match(Variable.class, tokens, pos))
-			return ParseUtils.syntaxError(pos, tokens.get(pos),
+			return ParseUtils.syntaxError(pos, tokens,
 					"Expected a variable name.");
 		if (!ParseUtils.match(Assign.class, tokens, pos+1))
-			return ParseUtils.syntaxError(pos, tokens.get(pos+1),
+			return ParseUtils.syntaxError(pos+1, tokens,
 					"Expected an assignment symbol '='.");
 		if (!ParseUtils.match(OpenRange.class, tokens, pos+2))
-			return ParseUtils.syntaxError(pos, tokens.get(pos+2),
+			return ParseUtils.syntaxError(pos+2, tokens,
 					"Expected an open bracket symbol '['.");
 		ParseStatus valsStatus = values(tokens, pos+3);
 		if (valsStatus.errMsg != null) return valsStatus;
 		if (!ParseUtils.match(CloseRange.class, tokens, valsStatus.tokenNumber))
-			return ParseUtils.syntaxError(valsStatus.tokenNumber,
-					tokens.get(valsStatus.tokenNumber),
+			return ParseUtils.syntaxError(valsStatus.tokenNumber, tokens,
 					"Expected a close bracket symbol ']'.");
 
 		Variable var = (Variable) tokens.get(pos);
 		int dimIndex = varMap.get(var.getText());
 		if (dimIndex >= 0)
-			return ParseUtils.syntaxError(pos, tokens.get(pos),
+			return ParseUtils.syntaxError(pos, tokens,
 				"Cannot declare dimension ("+var.getText()+") more than once");
-		varMap.put(var.getText(), (-dimIndex)-1);  // mark bound
+		varMap.put(var.getText(), (-dimIndex)-1);  // mark variable as bound
 		
 		minDims.add(valsStatus.minDim);
 		maxDims.add(valsStatus.maxDim);
@@ -285,8 +283,7 @@ public class PointSetParser {
 			long second = status2.minDim;
 			if (first > second)
 				return ParseUtils.syntaxError(
-						status2.tokenNumber,
-						tokens.get(status2.tokenNumber),
+						status2.tokenNumber, tokens,
 						"In a range the first value must be <= last value.");
 			ParseStatus status = new ParseStatus();
 			conditions.add(
@@ -301,8 +298,7 @@ public class PointSetParser {
 			if (status2.errMsg != null) return status2;
 			if (!ParseUtils.match(DotDot.class, tokens, status2.tokenNumber))
 				return ParseUtils.syntaxError(
-						status2.tokenNumber,
-						tokens.get(status2.tokenNumber),
+						status2.tokenNumber, tokens,
 						"Expected '..' after integer in range definition.");
 			ParseStatus status3 = integer(tokens, status2.tokenNumber+1);
 			if (status3.errMsg != null) return status3;
@@ -312,14 +308,12 @@ public class PointSetParser {
 			long by = second - first;
 			if (by <= 0)
 				return ParseUtils.syntaxError(
-						status2.tokenNumber,
-						tokens.get(status2.tokenNumber),
+						status2.tokenNumber, tokens,
 						"In a range the difference between the 1st and "+
 						"2nd number must be >= 0.");
 			if (first > third)
 				return ParseUtils.syntaxError(
-						status3.tokenNumber,
-						tokens.get(status3.tokenNumber),
+						status3.tokenNumber, tokens,
 						"In a range the 1st integer must be <= 3rd integer.");
 			// do some minor dimension optimization - find real last value
 			long last = first;
@@ -333,7 +327,7 @@ public class PointSetParser {
 			return status3;
 		}
 		else
-			return ParseUtils.syntaxError(pos+1, tokens.get(pos+1),
+			return ParseUtils.syntaxError(pos+1, tokens,
 					"Unexpected token in range definition.");
 	}
 
@@ -374,7 +368,7 @@ public class PointSetParser {
 			multiplier = -1;
 		}
 		if (!ParseUtils.match(Int.class, tokens, p))
-			return ParseUtils.syntaxError(p, tokens.get(p), "Expected an integer.");
+			return ParseUtils.syntaxError(p, tokens, "Expected an integer.");
 		Int i = (Int) tokens.get(p);
 		long value = multiplier * i.getValue();
 		ParseStatus status = new ParseStatus();
@@ -491,7 +485,7 @@ public class PointSetParser {
 			status.tokenNumber = pos + 1;
 		}
 		else
-			return ParseUtils.syntaxError(pos, tokens.get(pos), "Expected a relational operator.");
+			return ParseUtils.syntaxError(pos, tokens, "Expected a relational operator.");
 		
 		return status;
 	}

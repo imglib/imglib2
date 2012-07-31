@@ -39,7 +39,7 @@ package net.imglib2.algorithm.gauss;
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
 import net.imglib2.Localizable;
-import net.imglib2.Location;
+import net.imglib2.Point;
 import net.imglib2.RandomAccessible;
 import net.imglib2.Sampler;
 import net.imglib2.converter.Converter;
@@ -75,12 +75,12 @@ public class GaussNativeType< T extends NumericType< T > & NativeType< T > > ext
 	 */
 	public GaussNativeType( final double[] sigma, final RandomAccessible<T> input, final Interval interval, final ImgFactory<T> factory, final T type )
 	{
-		super( sigma, input, interval, factory.create( interval, type ), new Location( sigma.length ), factory, type );
+		super( sigma, input, interval, factory.create( interval, type ), new Point( sigma.length ), factory, type );
 	}
 
 	/**
 	 * Computes a Gaussian convolution with any precision on a {@link RandomAccessible} in a certain {@link Interval}
-	 * and writes it into a given {@link RandomAccessible} at a specific location
+	 * and writes it into a given {@link RandomAccessible} at a specific Point
 	 * 
 	 * @param sigma - the sigma for the convolution
 	 * @param input - the {@link RandomAccessible} to work on

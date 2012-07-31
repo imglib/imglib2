@@ -48,7 +48,7 @@ import net.imglib2.ops.Function;
 import net.imglib2.ops.function.complex.CartesianComplexFunction;
 import net.imglib2.ops.function.complex.DFTFunction;
 import net.imglib2.ops.function.complex.IDFTFunction;
-import net.imglib2.ops.function.real.ConstantRealFunction;
+import net.imglib2.ops.function.real.RealConstantFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.input.PointInputIterator;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
@@ -95,7 +95,7 @@ public class Example10Test {
 
 	private void testDFT() {
 		image = new RealImageFunction<DoubleType,DoubleType>(testImg, new DoubleType());
-		Function<long[],DoubleType> zero = new ConstantRealFunction<long[],DoubleType>(new DoubleType(),0);
+		Function<long[],DoubleType> zero = new RealConstantFunction<long[],DoubleType>(new DoubleType(),0);
 		Function<long[],ComplexDoubleType> spatialFunction =
 			new CartesianComplexFunction<long[],DoubleType,DoubleType,ComplexDoubleType>
 			(image,zero,new ComplexDoubleType());
