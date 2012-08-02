@@ -36,7 +36,8 @@
 
 package net.imglib2.img.imageplus;
 
-import net.imglib2.Interval;
+import net.imglib2.Dimensions;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
@@ -72,12 +73,12 @@ public class ImagePlusImgFactory< T extends NativeType< T > > extends PlanarImgF
 	}
 
 	@Override
-	public ImagePlusImg< T, ? > create( final Interval interval, final T type )
+	public ImagePlusImg< T, ? > create( final Dimensions dim, final T type )
 	{
-		final long[] dim = new long[ interval.numDimensions() ];
-		interval.dimensions( dim );
-		
-		return create( dim, type );
+		final long[] size = new long[ dim.numDimensions() ];
+		dim.dimensions( size );
+
+		return create( size, type );
 	}
 
 	@Override
