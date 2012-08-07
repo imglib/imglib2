@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
-import net.imglib2.img.subset.IntervalComperator;
 import net.imglib2.ops.UnaryOutputOperation;
 
 public final class MergeIntervals implements UnaryOutputOperation< Interval[], Interval[] >
