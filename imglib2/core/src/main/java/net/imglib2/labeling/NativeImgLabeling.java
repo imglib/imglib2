@@ -1,3 +1,4 @@
+package net.imglib2.labeling;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -34,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.labeling;
+
 
 import java.util.Iterator;
 
@@ -149,17 +150,6 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 
 	}
 
-	class LabelingTypeConverter implements Converter< I, LabelingType< T >>
-	{
-
-		@Override
-		public void convert( I input, LabelingType< T > output )
-		{
-			// output.set( type );
-		}
-
-	}
-
 	@Override
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
@@ -185,6 +175,12 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	}
 
 	@Override
+	public Object iterationOrder()
+	{
+		return img.iterationOrder();
+	}
+
+	@Override
 	public < LL extends Comparable< LL >> LabelingFactory< LL > factory()
 	{
 		return new LabelingFactory< LL >()
@@ -199,10 +195,16 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 		};
 	}
 
-	@Override
-	public Object iterationOrder()
+	// Empty converter
+	private class LabelingTypeConverter implements Converter< I, LabelingType< T >>
 	{
-		return img.iterationOrder();
+
+		@Override
+		public void convert( I input, LabelingType< T > output )
+		{
+			// Nothing to do here
+		}
+
 	}
 
 }
