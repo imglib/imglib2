@@ -25,6 +25,9 @@
 
 package mpicbg.imglib.algorithm.fft;
 
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
@@ -37,6 +40,8 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.multithreading.Chunk;
+import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
@@ -351,7 +356,29 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		else
 			copy = imgFFT;
 		
-		multiply( copy, kernelFFT );
+		long numPixels = copy.getDimension( 0 );
+		for ( int d = 1; d < copy.getNumDimensions(); ++d )
+			numPixels *= copy.getDimension( d );
+		
+		final Vector< Chunk > threadChunks = SimpleMultiThreading.divideIntoChunks( numPixels, getNumThreads() );
+		
+		final AtomicInteger ai = new AtomicInteger(0);					
+        final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+        for ( int ithread = 0; ithread < threads.length; ++ithread )
+            threads[ithread] = new Thread(new Runnable()
+            {
+                public void run()
+                {
+                	// get chunk of pixels to process
+                	final Chunk myChunk = threadChunks.get( ai.getAndIncrement() );
+                	
+            		multiply( myChunk.getStartPosition(), myChunk.getLoopSize(), copy, kernelFFT );
+                }
+            });
+        
+        SimpleMultiThreading.startAndJoin( threads );
+
+		//multiply( copy, kernelFFT );
 		
 		//
 		// Compute inverse Fourier Transform
@@ -392,6 +419,26 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		final Cursor<ComplexFloatType> cursorB = b.createCursor();
 		
 		while ( cursorA.hasNext() )
+		{
+			cursorA.fwd();
+			cursorB.fwd();
+			
+			cursorA.getType().mul( cursorB.getType() );
+		}
+		
+		cursorA.close();
+		cursorB.close();
+	}
+
+	private final static void multiply( final long start, final long loopSize, final Image< ComplexFloatType > a, final Image< ComplexFloatType > b )
+	{
+		final Cursor<ComplexFloatType> cursorA = a.createCursor();
+		final Cursor<ComplexFloatType> cursorB = b.createCursor();
+		
+		cursorA.fwd( start );
+		cursorB.fwd( start );
+		
+		for ( long l = 0; l < loopSize; ++l )
 		{
 			cursorA.fwd();
 			cursorB.fwd();
