@@ -13,6 +13,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
+import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 /**
@@ -97,9 +98,9 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 	 */
 	public FFTConvolution( final RandomAccessibleInterval< R > img, final RandomAccessibleInterval< R > kernel, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory )
 	{
-		//this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, output, factory );
+		this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, output, factory );
 		// Javac bug workaround:
-		this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, FFT.getTypeInstance( kernel ) ), kernel, output, factory );
+		//this ( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, FFT.getTypeInstance( kernel ) ), kernel, output, factory );
 	}
 
 	/**
@@ -272,8 +273,8 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 
 		// compute where to place the final Interval for the kernel so that the coordinate in the center
 		// of the kernel is at position (0,0)
-		long[] min = new long[ numDimensions ];
-		long[] max = new long[ numDimensions ];
+		final long[] min = new long[ numDimensions ];
+		final long[] max = new long[ numDimensions ];
 		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
@@ -313,7 +314,7 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 		{
 			return img.factory().imgFactory( new ComplexFloatType() );
 		} 
-		catch (IncompatibleTypeException e) 
+		catch (final IncompatibleTypeException e) 
 		{
 			if ( img.size() > Integer.MAX_VALUE / 2 )
 				return new CellImgFactory<ComplexFloatType>( 1024 );

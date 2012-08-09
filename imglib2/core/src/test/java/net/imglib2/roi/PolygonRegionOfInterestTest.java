@@ -69,7 +69,7 @@ public class PolygonRegionOfInterestTest {
 		return p;
 	}
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#PolygonRegionOfInterest()}.
+	 * Test method for {@link PolygonRegionOfInterest#PolygonRegionOfInterest()}.
 	 */
 	@Test
 	public void testPolygonRegionOfInterest() {
@@ -78,7 +78,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#getVertexCount()}.
+	 * Test method for {@link PolygonRegionOfInterest#getVertexCount()}.
 	 */
 	@Test
 	public void testGetVertexCount() {
@@ -87,7 +87,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#getVertex(int)}.
+	 * Test method for {@link PolygonRegionOfInterest#getVertex(int)}.
 	 */
 	@Test
 	public void testGetVertex() {
