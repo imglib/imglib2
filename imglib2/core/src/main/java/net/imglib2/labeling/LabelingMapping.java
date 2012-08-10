@@ -1,3 +1,4 @@
+package net.imglib2.labeling;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -34,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.labeling;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -280,7 +281,7 @@ public class LabelingMapping< T extends Comparable< T >>
 	 * @param src
 	 * @return
 	 */
-	public List< T > intern( final List< T > src )
+	public synchronized List< T > intern( final List< T > src )
 	{
 		return internImpl( src );
 	}
