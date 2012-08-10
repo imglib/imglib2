@@ -56,6 +56,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	Image<ComplexFloatType> kernelFFT, imgFFT; 
 	FourierTransform<T, ComplexFloatType> fftImage;
 	boolean keepImgFFT = true;
+	boolean extendImgByKernelSize = true;
 	
 	final int[] kernelDim;
 
@@ -94,6 +95,15 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			return true;
 		}
 	}
+	
+	/**
+	 * Defines if the image is extended by half the kernelsize all around its edges before computation.
+	 * This way, the outoufbounds will be correct.
+	 * 
+	 * @param extend
+	 */
+	public void setExtendImageByKernelSize( final boolean extend ) { this.extendImgByKernelSize = extend; }
+	public boolean getExtendImageByKernelSize() { return extendImgByKernelSize; }
 	
 	/**
 	 * By default, he will not do the computation in-place
@@ -256,20 +266,24 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			fftImage = new FourierTransform<T, ComplexFloatType>( image, new ComplexFloatType() );
 			fftImage.setNumThreads( this.getNumThreads() );
 			
-			// how to extend the input image out of its boundaries for computing the FFT,
-			// we simply mirror the content at the borders
-			fftImage.setPreProcessing( PreProcessing.EXTEND_MIRROR );		
 			// we do not rearrange the fft quadrants
 			fftImage.setRearrangement( Rearrangement.UNCHANGED );
+						
+			if ( extendImgByKernelSize )
+			{
+				// how to extend the input image out of its boundaries for computing the FFT,
+				// we simply mirror the content at the borders
+				fftImage.setPreProcessing( PreProcessing.EXTEND_MIRROR );
 			
-			// the image has to be extended by the size of the kernel-1
-			// as the kernel is always odd, e.g. if kernel size is 3, we need to add
-			// one pixel out of bounds in each dimension (3-1=2 pixel all together) so that the
-			// convolution works
-			final int[] imageExtension = kernelDim.clone();		
-			for ( int d = 0; d < numDimensions; ++d )
-				--imageExtension[ d ];		
-			fftImage.setImageExtension( imageExtension );
+				// the image has to be extended by the size of the kernel-1
+				// as the kernel is always odd, e.g. if kernel size is 3, we need to add
+				// one pixel out of bounds in each dimension (3-1=2 pixel all together) so that the
+				// convolution works
+				final int[] imageExtension = kernelDim.clone();		
+				for ( int d = 0; d < numDimensions; ++d )
+					--imageExtension[ d ];		
+				fftImage.setImageExtension( imageExtension );
+			}
 			
 			if ( !fftImage.checkInput() || !fftImage.process() )
 			{
