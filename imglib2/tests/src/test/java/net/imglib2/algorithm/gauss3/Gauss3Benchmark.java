@@ -46,6 +46,7 @@ import net.imglib2.algorithm.gauss.GaussGeneral;
 import net.imglib2.algorithm.gauss.GaussNativeType;
 import net.imglib2.converter.readwrite.RealFloatSamplerConverter;
 import net.imglib2.converter.readwrite.WriteConvertedRandomAccessibleInterval;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -127,7 +128,14 @@ public class Gauss3Benchmark
 			@Override
 			public void run()
 			{
-				Gauss3.gauss( sigmas, Views.extendMirrorSingle( img ), convolved );
+				try
+				{
+					Gauss3.gauss( sigmas, Views.extendMirrorSingle( img ), convolved );
+				}
+				catch ( final IncompatibleTypeException e )
+				{
+					e.printStackTrace();
+				}
 			}
 	    } );
 

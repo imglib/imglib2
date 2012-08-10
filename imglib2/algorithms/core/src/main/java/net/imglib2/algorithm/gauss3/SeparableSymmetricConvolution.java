@@ -46,6 +46,7 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -69,10 +70,14 @@ public final class SeparableSymmetricConvolution
 {
 	/**
 	 * Convolve source with a separable symmetric kernel and write the result to
-	 * output. In-place operation (source==target) is supported. If T is
-	 * {@link DoubleType}, all calculations are done in double precision. For
-	 * all other {@link RealType RealTypes} float is used. General
-	 * {@link NumericType NumericTypes} are computed in their own precision.
+	 * output. In-place operation (source==target) is supported.
+	 *
+	 * <p>
+	 * If the target type T is {@link DoubleType}, all calculations are done in
+	 * double precision. For all other target {@link RealType RealTypes} float
+	 * precision is used. General {@link NumericType NumericTypes} are computed
+	 * in their own precision. The source type S and target type T are either
+	 * both {@link RealType RealTypes} or both the same type.
 	 *
 	 * @param halfkernels
 	 *            an array containing half-kernels for every dimension. A
@@ -87,26 +92,36 @@ public final class SeparableSymmetricConvolution
 	 *            target image.
 	 * @param numThreads
 	 *            how many threads to use for the computation.
+	 * @param <S>
+	 *            source type
+	 * @param <T>
+	 *            target type
+	 * @throws IncompatibleTypeException
+	 *             if source and target type are not compatible (they must be
+	 *             either both {@link RealType RealTypes} or the same type).
 	 */
 	@SuppressWarnings( { "rawtypes", "unchecked" } )
-	public static < T extends NumericType< T > > void convolve( final double[][] halfkernels, final RandomAccessible< T > source, final RandomAccessibleInterval< T > target, final int numThreads )
+	public static < S extends NumericType< S >, T extends NumericType< T > > void convolve( final double[][] halfkernels, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final int numThreads ) throws IncompatibleTypeException
 	{
-		final T type = Util.getTypeFromInterval( target );
-		if ( type instanceof RealType )
+		final T targetType = Util.getTypeFromInterval( target );
+		final S sourceType = getType( source, target );
+		if ( targetType instanceof RealType )
 		{
-			if ( type instanceof DoubleType )
+			if ( ! ( sourceType instanceof RealType ) )
+				throw new IncompatibleTypeException( sourceType, "RealType source required for convolving into a RealType target" );
+			if ( targetType instanceof DoubleType )
 				convolveRealTypeDouble( halfkernels, ( RandomAccessible ) source, ( RandomAccessibleInterval ) target, numThreads );
 			else
 				convolveRealTypeFloat( halfkernels, ( RandomAccessible ) source, ( RandomAccessibleInterval ) target, numThreads );
 		}
-		else if ( type instanceof NativeType )
-		{
-			convolveNativeType( halfkernels, ( RandomAccessible ) source, ( RandomAccessibleInterval ) target, numThreads );
-		}
 		else
 		{
-			final ConvolverFactory< T, T > convfac = ConvolverNumericType.factory( type );
-			convolve( halfkernels, source, target, convfac, convfac, convfac, convfac, new ListImgFactory< T >(), type, numThreads );
+			if ( ! targetType.getClass().isInstance( sourceType ) )
+				throw new IncompatibleTypeException( sourceType, targetType.getClass().getCanonicalName() + " source required for convolving into a " + targetType.getClass().getCanonicalName() + " target" );
+			if ( targetType instanceof NativeType )
+				convolveNativeType( halfkernels, ( RandomAccessible ) source, ( RandomAccessibleInterval ) target, numThreads );
+			else
+				convolveNumericType( halfkernels, ( RandomAccessible ) source, ( RandomAccessibleInterval ) target, numThreads );
 		}
 	}
 
@@ -161,6 +176,29 @@ public final class SeparableSymmetricConvolution
 		convolve( halfkernels, source, target, convfac, convfac, convfac, convfac, imgfac, type, numThreads );
 	}
 
+	private static < T extends NumericType< T > > void convolveNumericType( final double[][] halfkernels,
+			final RandomAccessible< T > source, final RandomAccessibleInterval< T > target, final int numThreads )
+	{
+		final T type = Util.getTypeFromInterval( target );
+		final ConvolverFactory< T, T > convfac = ConvolverNumericType.factory( type );
+		convolve( halfkernels, source, target, convfac, convfac, convfac, convfac, new ListImgFactory< T >(), type, numThreads );
+	}
+
+	/**
+	 * Get an instance of type T from a {@link RandomAccess} on accessible that
+	 * is positioned at the min of interval.
+	 *
+	 * @param accessible
+	 * @param interval
+	 * @return type instance
+	 */
+	private static < T extends NumericType< T > > T getType( final RandomAccessible< T > accessible, final Interval interval )
+	{
+		final RandomAccess< T > a = accessible.randomAccess();
+		interval.min( a );
+		return a.get();
+	}
+
 	public static < S, T > void convolve1d( final double[] halfkernel,
 			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target,
 			final ConvolverFactory< S, T > convolverFactoryST )
@@ -171,10 +209,8 @@ public final class SeparableSymmetricConvolution
 
 	/**
 	 * Convolve source with a separable symmetric kernel and write the result to
-	 * output. In-place operation (source==target) is supported. If T is
-	 * {@link DoubleType}, all calculations are done in double precision. For
-	 * all other {@link RealType RealTypes} float is used. General
-	 * {@link NumericType NumericTypes} are computed in their own precision.
+	 * output. In-place operation (source==target) is supported. Calculations are
+	 * done in the intermediate type determined by the {@link ConvolverFactory ConvolverFactories}.
 	 *
 	 * @param halfkernels
 	 *            an array containing half-kernels for every dimension. A
