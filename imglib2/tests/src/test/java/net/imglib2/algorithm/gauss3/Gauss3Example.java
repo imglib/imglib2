@@ -36,6 +36,7 @@
 
 package net.imglib2.algorithm.gauss3;
 
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.array.ArrayImgs;
@@ -61,8 +62,15 @@ public class Gauss3Example
 		img.dimensions( dims );
 		final Img< FloatType > convolved = ArrayImgs.floats( dims );
 
-		Gauss3.gauss( 3, Views.extendMirrorSingle( img ), convolved );
-//		Gauss3.gauss( 5, img, Views.interval( convolved, Intervals.createMinSize( 200, 100, 200, 150 ) ) );
+		try
+		{
+			Gauss3.gauss( 3, Views.extendMirrorSingle( img ), convolved );
+//			Gauss3.gauss( 5, img, Views.interval( convolved, Intervals.createMinSize( 200, 100, 200, 150 ) ) );
+		}
+		catch ( final IncompatibleTypeException e )
+		{
+			e.printStackTrace();
+		}
 		ImageJFunctions.show( convolved );
 	}
 }
