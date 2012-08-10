@@ -123,16 +123,16 @@ public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V
 	@SuppressWarnings( { "rawtypes", "unchecked" } )
 	private synchronized < TT extends Type< TT >, II extends RandomAccessibleInterval< TT > > II createSubType( final Interval i, final II in )
 	{
-		if ( in instanceof Labeling ) { return ( II ) new LabelingView( SubsetViews.iterableSubsetView( ( NativeImgLabeling ) in, i ), ( ( NativeImgLabeling ) in ).factory() ); }
+		if ( in instanceof Labeling ) { return ( II ) new LabelingView( SubsetViews.iterableSubsetView( in, i ), ( ( NativeImgLabeling ) in ).factory() ); }
 
 		if ( in instanceof ImgPlus )
 		{
-			ImgPlusView< T > imgPlusView = new ImgPlusView< T >( SubsetViews.iterableSubsetView( ( ImgPlus ) in, i ), ( ( ImgPlus ) in ).factory() );
+			ImgPlusView< TT > imgPlusView = new ImgPlusView< TT >( SubsetViews.iterableSubsetView( in, i ), ( ( ImgPlus ) in ).factory() );
 			new CopyMetadata( new CopyNamed(), new CopySourced(), new CopyImageMetadata(), new CopyCalibratedSpace( i ) ).compute( ( ImgPlus ) in, imgPlusView );;
 			return ( II ) imgPlusView;
 		}
 
-		if ( in instanceof Img ) { return ( II ) new ImgView( SubsetViews.iterableSubsetView( ( Img ) in, i ), ( ( Img ) in ).factory() ); }
+		if ( in instanceof Img ) { return ( II ) new ImgView< TT >( SubsetViews.iterableSubsetView( in, i ), ( ( Img ) in ).factory() ); }
 
 		return ( II ) SubsetViews.iterableSubsetView( in, i );
 	}
