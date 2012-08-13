@@ -36,16 +36,12 @@
 
 package net.imglib2.algorithm.fft;
 
-import net.imglib2.Cursor;
+import static org.junit.Assert.assertEquals;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.array.ArrayImgs;
-
-import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
-
-import static org.junit.Assert.assertEquals;
+import net.imglib2.type.numeric.real.DoubleType;
 
 import org.junit.Test;
 

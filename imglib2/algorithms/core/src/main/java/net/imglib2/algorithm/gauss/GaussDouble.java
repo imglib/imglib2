@@ -39,7 +39,7 @@ package net.imglib2.algorithm.gauss;
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
 import net.imglib2.Localizable;
-import net.imglib2.Location;
+import net.imglib2.Point;
 import net.imglib2.RandomAccessible;
 import net.imglib2.Sampler;
 import net.imglib2.converter.Converter;
@@ -75,12 +75,12 @@ final public class GaussDouble extends AbstractGauss< DoubleType >
 	 */
 	public GaussDouble( final double[] sigma, final RandomAccessible<DoubleType> input, final Interval interval, final ImgFactory<DoubleType> factory )
 	{
-		super( sigma, input, interval, factory.create( interval, new DoubleType() ), new Location( sigma.length ), factory, new DoubleType() );
+		super( sigma, input, interval, factory.create( interval, new DoubleType() ), new Point( sigma.length ), factory, new DoubleType() );
 	}
 
 	/**
 	 * Computes a Gaussian convolution with double precision on a {@link RandomAccessible} of {@link DoubleType} in a certain {@link Interval}
-	 * and writes it into a given {@link RandomAccessible} at a specific location
+	 * and writes it into a given {@link RandomAccessible} at a specific Point
 	 * 
 	 * @param sigma - the sigma for the convolution
 	 * @param input - the {@link RandomAccessible} to work on

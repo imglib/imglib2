@@ -58,21 +58,27 @@ import loci.formats.MinMaxCalculator;
 import loci.formats.ReaderWrapper;
 import loci.formats.meta.IMetadata;
 import loci.formats.services.OMEXMLService;
+import net.imglib2.RandomAccess;
 import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.ImgPlus;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
+import net.imglib2.img.cell.CellImg;
+import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
-import net.imglib2.sampler.special.OrthoSliceCursor;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.real.FloatType;
 import ome.xml.model.primitives.PositiveFloat;
 
 /**
@@ -88,6 +94,144 @@ public class ImgOpener implements StatusReporter {
 
 	private final List<StatusListener> listeners =
 		new ArrayList<StatusListener>();
+
+	// -- static methods --
+	
+	/**
+	 * Opens an {@link Img} in a format it is in (unsigned byte, float, int, ...) using the respective {@link RealType}. 
+	 * It returns an {@link ImgPlus} which contains the Calibration and name.
+	 * 
+	 * The {@link Img} containing the data could be either {@link ArrayImg}, {@link PlanarImg} or {@link CellImg}. It
+	 * tries opening it in exactly this order.
+	 * 
+	 * @param id - the location of the file/http address to open
+	 * @return - the {@link ImgPlus} or null 
+	 * 
+	 * @throws ImgIOException - if file could not be found, if it is too big for the memory or if it is incompatible with the opener
+	 */
+	public static < T extends RealType< T > & NativeType< T > > ImgPlus< T > open( final String id ) throws ImgIOException
+	{
+		ImgPlus< T > img = null;
+		ImgOpener opener = new ImgOpener();
+		
+		try
+		{
+			try
+			{
+				img = opener.openImg( id, new ArrayImgFactory< FloatType >() );
+			} 
+			catch ( NegativeArraySizeException e1 )
+			{
+				try
+				{
+					img = opener.openImg( id, new PlanarImgFactory< FloatType >() );
+				}
+				catch ( NegativeArraySizeException e2 )
+				{
+					try
+					{
+						img = opener.openImg( id, new CellImgFactory< FloatType >( 256 ) );
+					}
+					catch ( Exception e )
+					{
+						throw new ImgIOException( "Cannot open file '"+ id + "': " + e );
+					}
+				}
+			}
+		} 
+		catch ( IncompatibleTypeException e ) 
+		{
+			throw new ImgIOException( "File is incompatible with opener (not a real type?) '"+ id + "': " + e );			
+		}
+		
+		return img;
+	}
+	
+	/**
+	 * Opens an {@link Img} as {@link FloatType}. It returns an {@link ImgPlus} which contains the Calibration and name.
+	 * 
+	 * The {@link Img} containing the data could be either {@link ArrayImg}, {@link PlanarImg} or {@link CellImg}. It
+	 * tries opening it in exactly this order.
+	 * 
+	 * @param id - the location of the file/http address to open
+	 * @return - the {@link ImgPlus} or null 
+	 * 
+	 * @throws ImgIOException - if file could not be found or is too big for the memory
+	 */
+	public static ImgPlus< FloatType > openFloat( final String id ) throws ImgIOException
+	{
+		final FloatType tmp = new FloatType();
+		ImgPlus< FloatType > img = null;
+		ImgOpener opener = new ImgOpener();
+		
+		try
+		{
+			img = opener.openImg( id, new ArrayImgFactory< FloatType >(), tmp );
+		} 
+		catch ( NegativeArraySizeException e1 )
+		{
+			try
+			{
+				img = opener.openImg( id, new PlanarImgFactory< FloatType >(), tmp );
+			}
+			catch ( NegativeArraySizeException e2 )
+			{
+				try
+				{
+					img = opener.openImg( id, new CellImgFactory< FloatType >( 256 ), tmp );
+				}
+				catch ( Exception e )
+				{
+					throw new ImgIOException( "Cannot open file '"+ id + "': " + e );
+				}
+			}
+		}
+		
+		return img;
+	}
+
+	/**
+	 * Opens an {@link Img} as {@link DoubleType}. It returns an {@link ImgPlus} which contains the Calibration and name.
+	 * 
+	 * The {@link Img} containing the data could be either {@link ArrayImg}, {@link PlanarImg} or {@link CellImg}. It
+	 * tries opening it in exactly this order.
+	 * 
+	 * @param id - the location of the file/http address to open
+	 * @return - the {@link ImgPlus} or null 
+	 * 
+	 * @throws ImgIOException - if file could not be found or is too big for the memory
+	 */
+	public static ImgPlus< DoubleType > openDouble( final String id ) throws ImgIOException
+	{
+		final DoubleType tmp = new DoubleType();
+		ImgPlus< DoubleType > img = null;
+		ImgOpener opener = new ImgOpener();
+		
+		try
+		{
+			img = opener.openImg( id, new ArrayImgFactory< DoubleType >(), tmp );
+		} 
+		catch ( NegativeArraySizeException e1 )
+		{
+			try
+			{
+				img = opener.openImg( id, new PlanarImgFactory< DoubleType >(), tmp );
+			}
+			catch ( NegativeArraySizeException e2 )
+			{
+				try
+				{
+					img = opener.openImg( id, new CellImgFactory< DoubleType >( 256 ), tmp );
+				}
+				catch ( Exception e )
+				{
+					throw new ImgIOException( "Cannot open file '"+ id + "': " + e );
+				}
+			}
+		}
+		
+		return img;
+	}
 
 	// -- ImgOpener methods --
 
@@ -650,7 +794,6 @@ public class ImgOpener implements StatusReporter {
 	private <T extends RealType<T>> void populatePlane(final IFormatReader r,
 		final int no, final byte[] plane, final ImgPlus<T> img)
 	{
-		final int sizeX = r.getSizeX();
 		final int pixelType = r.getPixelType();
 		final boolean little = r.isLittleEndian();
 
@@ -661,16 +804,28 @@ public class ImgOpener implements StatusReporter {
 		final int planeY = 1;
 
 		getPosition(r, no, pos);
-
-		final OrthoSliceCursor<T> cursor =
-			new OrthoSliceCursor<T>(img, planeX, planeY, pos);
-
-		while (cursor.hasNext()) {
-			cursor.fwd();
-			final int index =
-				cursor.getIntPosition(planeX) + cursor.getIntPosition(planeY) * sizeX;
-			final double value = decodeWord(plane, index, pixelType, little);
-			cursor.get().setReal(value);
+		
+		final int sX = (int)img.dimension( 0 );
+		final int sY = (int)img.dimension( 1 );
+		
+		final RandomAccess< T > randomAccess = img.randomAccess();
+		
+		int index = 0;
+		
+		for ( int y = 0; y < sY; ++y )
+		{
+			pos[ planeX ] = 0;
+			pos[ planeY ] = y;
+			
+			randomAccess.setPosition( pos );
+			
+			for ( int x = 1; x < sX; ++x )
+			{
+				randomAccess.get().setReal( decodeWord( plane, index++, pixelType, little ) );
+				randomAccess.fwd( planeX );
+			}
+			
+			randomAccess.get().setReal( decodeWord( plane, index++, pixelType, little ) );			
 		}
 	}
 

@@ -37,6 +37,7 @@
 package net.imglib2.img.display.imagej;
 
 import ij.ImagePlus;
+import ij.measure.Calibration;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -49,6 +50,8 @@ import net.imglib2.display.RealUnsignedByteConverter;
 import net.imglib2.display.RealUnsignedShortConverter;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgPlus;
+import net.imglib2.meta.Axes;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.ComplexType;
@@ -147,27 +150,59 @@ public class ImageJFunctions
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static < T extends NumericType< T > > ImagePlus wrap( final RandomAccessibleInterval< T > img, final String title )
 	{
+		ImagePlus target;
 		final T t = Util.getTypeFromInterval( img );
 
 		/* Casting madness thanks to a long standing javac bug, see e.g. http://bugs.sun.com/view_bug.do?bug_id=6548436 */
 		/* TODO remove casting madness as soon as the bug is fixed */
 		if ( ARGBType.class.isInstance( t ) )
-			return wrapRGB( ( RandomAccessibleInterval< ARGBType > )( Object )img, title );
+			target = wrapRGB( ( RandomAccessibleInterval< ARGBType > )( Object )img, title );
 		else if ( UnsignedByteType.class.isInstance( t ) )
-			return wrapUnsignedByte( ( RandomAccessibleInterval< RealType > )( Object )img, title );
+			target = wrapUnsignedByte( ( RandomAccessibleInterval< RealType > )( Object )img, title );
 		else if ( IntegerType.class.isInstance( t ) )
-			return wrapUnsignedShort( ( RandomAccessibleInterval< RealType > )( Object )img, title );
+			target = wrapUnsignedShort( ( RandomAccessibleInterval< RealType > )( Object )img, title );
 		else if ( RealType.class.isInstance( t ) )
-			return wrapFloat( ( RandomAccessibleInterval< RealType > )( Object )img, title );
+			target = wrapFloat( ( RandomAccessibleInterval< RealType > )( Object )img, title );
 		else if ( ComplexType.class.isInstance( t ) )
-			return wrapFloat( ( RandomAccessibleInterval< ComplexType > )( Object )img, new ComplexPowerGLogFloatConverter(), title );
+			target = wrapFloat( ( RandomAccessibleInterval< ComplexType > )( Object )img, new ComplexPowerGLogFloatConverter(), title );
 		else
 		{
 			System.out.println( "Do not know how to display Type " + t.getClass().getSimpleName() );
-			return null;
+			target = null;
 		}
-	}
+		
+		// Retrieve and set calibration if we can. ImgPlus has calibration and axis types
+		if (null != target && img instanceof ImgPlus) {
+			
+			ImgPlus<T> imgplus = (ImgPlus<T>) img;
+			Calibration impcal = target.getCalibration();
+			
+			int xaxis = imgplus.getAxisIndex(Axes.X);
+			if (xaxis >= 0) {
+				impcal.pixelWidth = imgplus.calibration(xaxis);
+			}
 
+			int yaxis = imgplus.getAxisIndex(Axes.Y);
+			if (yaxis >= 0) {
+				impcal.pixelHeight = imgplus.calibration(yaxis);
+			}
+			
+			int zaxis = imgplus.getAxisIndex(Axes.Z);
+			if (zaxis >= 0) {
+				impcal.pixelDepth = imgplus.calibration(zaxis);
+			}
+			
+			int taxis = imgplus.getAxisIndex(Axes.TIME);
+			if (taxis >= 0) {
+				impcal.frameInterval = imgplus.calibration(taxis);
+			}
+			target.setTitle( imgplus.getName() );
+		}
+		
+		return target;
+	}
+	
+	
 
 	public static < T extends NumericType< T > > ImagePlus show( final RandomAccessibleInterval< T > img, final String title )
 	{
@@ -504,4 +539,5 @@ public class ImageJFunctions
 	}
 	*/
 
+	
 }

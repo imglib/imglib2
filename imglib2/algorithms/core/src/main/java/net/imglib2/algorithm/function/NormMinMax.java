@@ -59,5 +59,4 @@ public class NormMinMax< A extends RealType<A> > implements Converter< A, A >
 	{
 		output.setReal( (input.getRealDouble() - min) / tmp );	
 	}
-
 }

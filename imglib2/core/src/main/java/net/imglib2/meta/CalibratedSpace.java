@@ -68,7 +68,15 @@ public interface CalibratedSpace extends EuclideanSpace {
 	/** Copies the {@link Img}'s calibration into the given array. */
 	void calibration(double[] cal);
 
+	/** Copies the {@link Img}'s calibration into the given array. */
+	void calibration(float[] cal);
+
 	/** Sets the image calibration for the given dimension. */
 	void setCalibration(double cal, int d);
 
+	/** Sets the image calibration for all dimensions. */
+	void setCalibration(double[] cal);
+
+	/** Sets the image calibration for all dimensions. */
+	void setCalibration(float[] cal);
 }

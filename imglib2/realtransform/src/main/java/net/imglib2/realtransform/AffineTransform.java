@@ -224,8 +224,11 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public void set( final double value, final int row, final int column )
 	{
-		a.set( row, column, value );
-		
+		if( column == n )
+			t[ row ] = value;
+		else
+			a.set( row, column, value );
+
 		updateDs();
 		invert();
 		inverse.updateDs();
@@ -239,8 +242,9 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 		int i = 0;
 		for ( int r = 0; r < n; ++r )
 		{
-			for ( int c = 0; c <= n; ++c, ++i )
+			for ( int c = 0; c < n; ++c, ++i )
 				a.set( r, c, values[ i ] );
+			t[ r ] = values[ i++ ];
 		}
 		
 		updateDs();

@@ -63,6 +63,7 @@ public class AffineRealRandomAccessible< T, R extends AffineGet > extends RealTr
 		protected AffineRealRandomAccess()
 		{
 			super();
+			apply();
 		}
 		
 		final private void scaleMove( final double distance, final int d )

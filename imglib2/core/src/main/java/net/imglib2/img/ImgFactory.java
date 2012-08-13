@@ -36,7 +36,7 @@
 
 package net.imglib2.img;
 
-import net.imglib2.Interval;
+import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
@@ -58,7 +58,22 @@ public abstract class ImgFactory< T >
 	 * @return {@link Img}
 	 */
 	public abstract Img< T > create( final long[] dim, final T type );
-	
+
+	/**
+	 * The {@link ImgFactory} can decide how to create the
+	 * {@link Img}.  A {@link NativeImgFactory} will ask the
+	 * {@link Type} to create a suitable {@link NativeImg}.
+	 * 
+	 * @return {@link Img}
+	 */
+	public Img< T > create( final Dimensions dim, final T type )
+	{
+		final long[] size = new long[ dim.numDimensions() ];
+		dim.dimensions( size );
+		
+		return create( size, type );
+	}
+
 	/**
 	 * The {@link ImgFactory} can decide how to create the
 	 * {@link Img}.  A {@link NativeImgFactory} will ask the
@@ -67,23 +82,8 @@ public abstract class ImgFactory< T >
 	 * @return {@link Img}
 	 */
 	public Img< T > create( final int[] dim, final T type )
-	{ 
-		return create( Util.int2long( dim ), type );
-	}
-	
-	/**
-	 * The {@link ImgFactory} can decide how to create the
-	 * {@link Img}.  A {@link NativeImgFactory} will ask the
-	 * {@link Type} to create a suitable {@link NativeImg}.
-	 * 
-	 * @return {@link Img}
-	 */
-	public Img< T > create( final Interval interval, final T type )
 	{
-		final long[] dim = new long[ interval.numDimensions() ];
-		interval.dimensions( dim );
-		
-		return create( dim, type );
+		return create( Util.int2long( dim ), type );
 	}
 	
 	/**

@@ -114,7 +114,7 @@ public class RealEquationFunctionParser {
 			}
 			else
 				return ParseUtils.syntaxError(
-						status.tokenNumber, tokens.get(status.tokenNumber),
+						status.tokenNumber, tokens,
 						"Expected comma after axis designations");
 		}
 		else { // no variables declared
@@ -127,13 +127,13 @@ public class RealEquationFunctionParser {
 	 */
 	private ParseStatus axisNames(List<Token> tokens, int pos) {
 		if (!ParseUtils.match(OpenRange.class, tokens, pos))
-			return ParseUtils.syntaxError(pos, tokens.get(pos),
+			return ParseUtils.syntaxError(pos, tokens,
 					"Expected a '[' before axis name definitions");
 		ParseStatus status = axes(tokens, pos+1);
 		if (status.errMsg != null) return status;
 		if (!ParseUtils.match(CloseRange.class, tokens, status.tokenNumber))
 			return ParseUtils.syntaxError(
-					status.tokenNumber, tokens.get(status.tokenNumber),
+					status.tokenNumber, tokens,
 					"Expected a ']' after axis name definitions");
 		return ParseUtils.nextPosition(status.tokenNumber+1);
 	}
@@ -146,11 +146,11 @@ public class RealEquationFunctionParser {
 	private ParseStatus axes(List<Token> tokens, int pos) {
 		if (!ParseUtils.match(Variable.class, tokens, pos))
 			return ParseUtils.syntaxError(
-					pos, tokens.get(pos), "Expected a name of an axis");
+					pos, tokens, "Expected a name of an axis");
 		Variable var = (Variable) tokens.get(pos);
 		int dimIndex = varMap.get(var.getText());
 		if (dimIndex >= 0)
-			return ParseUtils.syntaxError(pos, tokens.get(pos),
+			return ParseUtils.syntaxError(pos, tokens,
 				"Cannot declare axis name ("+var.getText()+") more than once");
 		varMap.put(var.getText(), (-dimIndex)-1);  // mark bound
 		if (ParseUtils.match(Comma.class, tokens, pos+1))

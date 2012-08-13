@@ -9,13 +9,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -44,6 +44,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
+import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.RealRandomAccessibleRealInterval;
@@ -63,7 +64,7 @@ public class Util
 	{
 		return (T[])( new Object[ length ] );
 	}
-	
+
 	public static double log2( final double value )
 	{
 		return Math.log( value ) / Math.log( 2.0 );
@@ -98,7 +99,7 @@ public class Util
 
 		return values;
 	}
-	
+
 	public static long[] getArrayFromValue( final long value, final int numDimensions )
 	{
 		final long[] values = new long[ numDimensions ];
@@ -107,6 +108,21 @@ public class Util
 			values[ d ] = value;
 
 		return values;
+	}
+
+	final public static float computeDistance( final RealLocalizable position1, final RealLocalizable position2 )
+	{
+		float dist = 0;
+
+		final int n = position1.numDimensions();
+		for ( int d = 0; d < n; ++d )
+		{
+			final float pos = position2.getFloatPosition( d ) - position1.getFloatPosition( d );
+
+			dist += pos*pos;
+		}
+
+		return (float)Math.sqrt( dist );
 	}
 
 	final public static float computeDistance( final int[] position1, final int[] position2 )
@@ -122,7 +138,7 @@ public class Util
 
 		return (float)Math.sqrt( dist );
 	}
-	
+
 	final public static float computeDistance( final long[] position1, final long[] position2 )
 	{
 		float dist = 0;
@@ -209,9 +225,9 @@ public class Util
 	{
 		final double temp[] = values.clone();
 		final int length = temp.length;
-		
+
 		quicksort( temp );
-		
+
 		return temp[ Math.min( length - 1, Math.max(0 ,(int)Math.round( (length - 1) * percentile ) ) ) ];
 	}
 
@@ -302,7 +318,7 @@ public class Util
 
 		return max;
 	}
-	
+
 	public static float computeMedian( final float[] values )
 	{
 		final float temp[] = values.clone();
@@ -725,7 +741,7 @@ public class Util
 			out += ", " + interval.dimension( i );
 
 		out += ")";
-		
+
 		return out;
 	}
 
@@ -897,15 +913,15 @@ public class Util
 		}
 
 	}
-	
+
 	/**
 	 * <p>Create a long[] with the dimensions of an {@link Interval}.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new long[]
 	 */
 	final static public long[] intervalDimensions( final Interval interval )
@@ -918,7 +934,7 @@ public class Util
 	final static public int[] long2int( final long[] a )
 	{
 		final int[] i = new int[ a.length ];
-		
+
 		for ( int d = 0; d < a.length; ++d )
 			i[ d ] = (int)a[ d ];
 
@@ -928,7 +944,7 @@ public class Util
 	final static public long[] int2long( final int[] i )
 	{
 		final long[] l = new long[ i.length ];
-		
+
 		for ( int d = 0; d < l.length; ++d )
 			l[ d ] = i[ d ];
 
@@ -937,12 +953,12 @@ public class Util
 
 	/**
 	 * <p>Create a long[] with the max coordinates of an {@link Interval}.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new long[]
 	 */
 	final static public long[] intervalMax( final Interval interval )
@@ -954,12 +970,12 @@ public class Util
 
 	/**
 	 * <p>Create a long[] with the min coordinates of an {@link Interval}.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new long[]
 	 */
 	final static public long[] intervalMin( final Interval interval )
@@ -968,23 +984,23 @@ public class Util
 		interval.min( min );
 		return min;
 	}
-	
+
 	/**
 	 * <p>Create a double[] with the dimensions of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new double[]
 	 */
 	final static public double[] realIntervalDimensions( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
 		final double[] dimensions = new double[ interval.numDimensions() ];
-		
+
 		for ( int d = 0; d < n; ++d )
 			dimensions[ d ] = interval.realMax( d ) - interval.realMin( d );
 
@@ -994,41 +1010,41 @@ public class Util
 	/**
 	 * <p>Create a double[] with the max coordinates of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new double[]
 	 */
 	final static public double[] realIntervalMax( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
 		final double[] max = new double[ interval.numDimensions() ];
-		
+
 		for ( int d = 0; d < n; ++d )
 			max[ d ] = interval.realMax( d );
 
 		return max;
 	}
-	
+
 	/**
 	 * <p>Create a double[] with the min coordinates of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new double[]
 	 */
 	final static public double[] realIntervalMin( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
 		final double[] min = new double[ interval.numDimensions() ];
-		
+
 		for ( int d = 0; d < n; ++d )
 			min[ d ] = interval.realMin( d );
 
@@ -1048,7 +1064,7 @@ public class Util
 	final static public boolean contains( final Interval containing, final Interval contained )
 	{
 		assert containing.numDimensions() == contained.numDimensions();
-		
+
 		final int n = containing.numDimensions();
 		for ( int d = 0; d < n; ++d )
 		{
@@ -1071,7 +1087,7 @@ public class Util
 	final static public boolean contains( final RealInterval containing, final RealInterval contained )
 	{
 		assert containing.numDimensions() == contained.numDimensions();
-		
+
 		final int n = containing.numDimensions();
 		for ( int d = 0; d < n; ++d )
 		{
@@ -1080,10 +1096,10 @@ public class Util
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Gets an instance of T from the {@link RandomAccessibleInterval} by querying the value at the min coordinate
-	 * 
+	 *
 	 * @param <T> - the T
 	 * @param rai - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
@@ -1092,17 +1108,17 @@ public class Util
 	{
 		// create RandomAccess
 		final RandomAccess< T > randomAccess = rai.randomAccess();
-		
+
 		// place it at the first pixel
 		for ( int d = 0; d < rai.numDimensions(); ++d )
 			randomAccess.setPosition( rai.min(d), d );
-		
+
 		return randomAccess.get();
 	}
 
 	/**
 	 * Gets an instance of T from the {@link RandomAccessible}
-	 * 
+	 *
 	 * @param <T> - the T
 	 * @param rai - the {@link RandomAccessible}
 	 * @return - an instance of T
@@ -1119,7 +1135,7 @@ public class Util
 
 	/**
 	 * Gets an instance of T from the {@link RandomAccessibleInterval} by querying the value at the min coordinate
-	 * 
+	 *
 	 * @param <T> - the T
 	 * @param rai - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
@@ -1128,17 +1144,17 @@ public class Util
 	{
 		// create RealRandomAccess
 		final RealRandomAccess< T > realRandomAccess = rai.realRandomAccess();
-		
+
 		// place it at the first pixel
 		for ( int d = 0; d < rai.numDimensions(); ++d )
 			realRandomAccess.setPosition( rai.realMin( d ), d );
-		
+
 		return realRandomAccess.get();
 	}
 
 	/**
 	 * Gets an instance of T from the {@link RealRandomAccessible}
-	 * 
+	 *
 	 * @param <T> - the T
 	 * @param rai - the {@link RealRandomAccessible}
 	 * @return - an instance of T
@@ -1152,10 +1168,10 @@ public class Util
 		else
 			return ra.realRandomAccess().get();
 	}
-	
+
 	/**
 	 * (Hopefully) fast floor log<sub>2</sub> of an unsigned(!) integer value.
-	 * 
+	 *
 	 * @param v unsigned integer
 	 * @return floor log<sub>2</sub>
 	 */

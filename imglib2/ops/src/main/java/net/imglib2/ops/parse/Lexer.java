@@ -82,15 +82,19 @@ import net.imglib2.ops.operation.unary.real.RealSincPi;
 import net.imglib2.ops.operation.unary.real.RealSinh;
 import net.imglib2.ops.operation.unary.real.RealSqr;
 import net.imglib2.ops.operation.unary.real.RealSqrt;
+import net.imglib2.ops.operation.unary.real.RealStep;
 import net.imglib2.ops.operation.unary.real.RealTan;
 import net.imglib2.ops.operation.unary.real.RealTanh;
 import net.imglib2.ops.operation.unary.real.RealUlp;
 import net.imglib2.ops.operation.unary.real.RealUniformRandom;
 import net.imglib2.ops.parse.token.And;
+import net.imglib2.ops.parse.token.AngleReference;
 import net.imglib2.ops.parse.token.Assign;
 import net.imglib2.ops.parse.token.CloseParen;
 import net.imglib2.ops.parse.token.CloseRange;
 import net.imglib2.ops.parse.token.Comma;
+import net.imglib2.ops.parse.token.DimensionReference;
+import net.imglib2.ops.parse.token.DistanceFromCenterReference;
 import net.imglib2.ops.parse.token.Divide;
 import net.imglib2.ops.parse.token.DotDot;
 import net.imglib2.ops.parse.token.Equal;
@@ -103,6 +107,7 @@ import net.imglib2.ops.parse.token.Int;
 import net.imglib2.ops.parse.token.Less;
 import net.imglib2.ops.parse.token.LessEqual;
 import net.imglib2.ops.parse.token.Minus;
+import net.imglib2.ops.parse.token.Mod;
 import net.imglib2.ops.parse.token.Not;
 import net.imglib2.ops.parse.token.NotEqual;
 import net.imglib2.ops.parse.token.OpenParen;
@@ -112,6 +117,7 @@ import net.imglib2.ops.parse.token.Plus;
 import net.imglib2.ops.parse.token.Real;
 import net.imglib2.ops.parse.token.Times;
 import net.imglib2.ops.parse.token.Token;
+import net.imglib2.ops.parse.token.TypeBoundReference;
 import net.imglib2.ops.parse.token.Variable;
 import net.imglib2.ops.parse.token.Xor;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -274,6 +280,10 @@ public class Lexer {
 				i++;
 				tokens.add(new Minus(i-1, "-"));
 			}
+			else if (ch == '%') {
+				i++;
+				tokens.add(new Mod(i-1, "%"));
+			}
 			else if (ch == '(') {
 				i++;
 				tokens.add(new OpenParen(i-1, "("));
@@ -294,12 +304,25 @@ public class Lexer {
 	}
 
 	private Token reservedWordLookup(String name, int pos) {
-		//constants
+		// constants
 		if (name.equals("E")) return new Real(pos, name, Math.E);
 		if (name.equals("PI")) return new Real(pos, name, Math.PI);
 
 		// image reference
 		if (name.equals("img")) return new ImgReference(pos, name);
+		
+		// dimension reference
+		if (name.equals("dim")) return new DimensionReference(pos, name);
+		
+		// type bound reference
+		if (name.equals("tmin")) return new TypeBoundReference(pos, name, true);
+		if (name.equals("tmax")) return new TypeBoundReference(pos, name, false);
+		
+		// distance from center reference
+		if (name.equals("dctr")) return new DistanceFromCenterReference(pos, name);
+
+		// angle reference
+		if (name.equals("angle")) return new AngleReference(pos, name);
 		
 		// logical operations
 		if (name.equals("and")) return new And(pos, name);
@@ -351,6 +374,7 @@ public class Lexer {
 		if (name.equals("sinh")) op = new RealSinh<DoubleType,DoubleType>();
 		if (name.equals("sqr")) op = new RealSqr<DoubleType,DoubleType>();
 		if (name.equals("sqrt")) op = new RealSqrt<DoubleType,DoubleType>();
+		if (name.equals("step")) op = new RealStep<DoubleType,DoubleType>();
 		if (name.equals("tan")) op = new RealTan<DoubleType,DoubleType>();
 		if (name.equals("tanh")) op = new RealTanh<DoubleType,DoubleType>();
 		if (name.equals("ulp")) op = new RealUlp<DoubleType,DoubleType>();

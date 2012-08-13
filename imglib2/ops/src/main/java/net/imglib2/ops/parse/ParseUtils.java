@@ -57,12 +57,19 @@ public class ParseUtils {
 		return tokens.get(pos).getClass() == expectedClass;
 	}
 
-	public static ParseStatus syntaxError(Integer tokenNumber, Token token, String err) {
+	public static ParseStatus syntaxError(Integer tokenNumber, List<Token> tokens, String err) {
 		ParseStatus status = new ParseStatus();
 		status.columnNumber = -1;
 		status.tokenNumber = tokenNumber;
 		status.pointSet = new EmptyPointSet();
-		status.errMsg = "Syntax error with token ("+token.getText()+") near column "+token.getStart()+": "+err;
+		if (tokenNumber < tokens.size()) {
+			Token token = tokens.get(tokenNumber);
+			status.errMsg = "Syntax error with token ("+token.getText()+") near column "+token.getStart()+": "+err;
+		}
+		else {
+			Token token = tokens.get(tokenNumber-1);
+			status.errMsg = "Unexpected end of input after token ("+token.getText()+") near column "+token.getStart()+": context - "+err;
+		}
 		return status;
 	}
 

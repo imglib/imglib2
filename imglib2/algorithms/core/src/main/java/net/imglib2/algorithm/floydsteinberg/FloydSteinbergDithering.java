@@ -40,6 +40,7 @@ import java.util.Random;
 
 import net.imglib2.Cursor;
 import net.imglib2.ExtendedRandomAccessibleInterval;
+import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.OutputAlgorithm;
@@ -93,7 +94,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 	{		
 		final long startTime = System.currentTimeMillis();
 
-		ComputeMinMax<T> cmm = new ComputeMinMax<T>(img);
+		ComputeMinMax<T> cmm = new ComputeMinMax<T>((IterableInterval<T>)img);
 		cmm.process();
 		final float minValue = cmm.getMin().getRealFloat();
 		final float maxValue = cmm.getMax().getRealFloat();
