@@ -29,7 +29,7 @@ public final class RectangleNeighborhoodCursor< T > extends RectangleNeighborhoo
 		reset();
 	}
 
-	protected RectangleNeighborhoodCursor( final RectangleNeighborhoodCursor< T > c )
+	private RectangleNeighborhoodCursor( final RectangleNeighborhoodCursor< T > c )
 	{
 		super( c );
 		dimensions = c.dimensions.clone();
