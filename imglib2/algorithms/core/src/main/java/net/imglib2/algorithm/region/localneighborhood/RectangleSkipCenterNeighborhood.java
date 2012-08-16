@@ -18,13 +18,15 @@ public final class RectangleSkipCenterNeighborhood< T > extends AbstractLocaliza
 
 	private final long[] currentMax;
 
-	private final RandomAccess< T > sourceRandomAccess;
-
-	private final long size;
-
 	private final long[] dimensions;
 
-	private final Interval span;
+	private final RandomAccess< T > sourceRandomAccess;
+
+	private final Interval structuringElementBoundingBox;
+
+	private final long maxIndex;
+
+	private final long midIndex;
 
 	RectangleSkipCenterNeighborhood( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
 	{
@@ -33,21 +35,22 @@ public final class RectangleSkipCenterNeighborhood< T > extends AbstractLocaliza
 		this.currentMax = currentMax;
 		dimensions = new long[ n ];
 		span.dimensions( dimensions );
-		size = Util.pow( ( int ) dimensions[ 0 ], n ) - 1; // TODO: do it right, span is not isotropic
+		maxIndex = Util.pow( ( int ) dimensions[ 0 ], n ); // TODO: do it right, span is not isotropic
+		midIndex = maxIndex / 2 + 1; // TODO do it right, span is not symmetric
 		this.sourceRandomAccess = sourceRandomAccess;
-		this.span = span;
+		this.structuringElementBoundingBox = span;
 	}
 
 	@Override
 	public Interval getStructuringElementBoundingBox()
 	{
-		return span;
+		return structuringElementBoundingBox;
 	}
 
 	@Override
 	public long size()
 	{
-		return size;
+		return maxIndex - 1; // -1 because we skip the center pixel
 	}
 
 	@Override
@@ -75,17 +78,17 @@ public final class RectangleSkipCenterNeighborhood< T > extends AbstractLocaliza
 	}
 
 	@Override
-	public void realMin( final double[] minimum )
+	public void realMin( final double[] min )
 	{
 		for ( int d = 0; d < n; ++d )
-			minimum[ d ] = currentMin[ d ];
+			min[ d ] = currentMin[ d ];
 	}
 
 	@Override
-	public void realMin( final RealPositionable minimum )
+	public void realMin( final RealPositionable min )
 	{
 		for ( int d = 0; d < n; ++d )
-			minimum.setPosition( currentMin[ d ], d );
+			min.setPosition( currentMin[ d ], d );
 	}
 
 	@Override
@@ -95,17 +98,17 @@ public final class RectangleSkipCenterNeighborhood< T > extends AbstractLocaliza
 	}
 
 	@Override
-	public void realMax( final double[] maximum )
+	public void realMax( final double[] max )
 	{
 		for ( int d = 0; d < n; ++d )
-			maximum[ d ] = currentMax[ d ];
+			max[ d ] = currentMax[ d ];
 	}
 
 	@Override
-	public void realMax( final RealPositionable maximum )
+	public void realMax( final RealPositionable max )
 	{
 		for ( int d = 0; d < n; ++d )
-			maximum.setPosition( currentMax[ d ], d );
+			max.setPosition( currentMax[ d ], d );
 	}
 
 	@Override
@@ -121,17 +124,17 @@ public final class RectangleSkipCenterNeighborhood< T > extends AbstractLocaliza
 	}
 
 	@Override
-	public void min( final long[] minimum )
+	public void min( final long[] min )
 	{
 		for ( int d = 0; d < n; ++d )
-			minimum[ d ] = currentMin[ d ];
+			min[ d ] = currentMin[ d ];
 	}
 
 	@Override
-	public void min( final Positionable minimum )
+	public void min( final Positionable min )
 	{
 		for ( int d = 0; d < n; ++d )
-			minimum.setPosition( currentMin[ d ], d );
+			min.setPosition( currentMin[ d ], d );
 	}
 
 	@Override
@@ -141,17 +144,17 @@ public final class RectangleSkipCenterNeighborhood< T > extends AbstractLocaliza
 	}
 
 	@Override
-	public void max( final long[] maximum )
+	public void max( final long[] max )
 	{
 		for ( int d = 0; d < n; ++d )
-			maximum[ d ] = currentMax[ d ];
+			max[ d ] = currentMax[ d ];
 	}
 
 	@Override
-	public void max( final Positionable maximum )
+	public void max( final Positionable max )
 	{
 		for ( int d = 0; d < n; ++d )
-			maximum.setPosition( currentMax[ d ], d );
+			max.setPosition( currentMax[ d ], d );
 	}
 
 	@Override
@@ -168,44 +171,36 @@ public final class RectangleSkipCenterNeighborhood< T > extends AbstractLocaliza
 	}
 
 	@Override
-	public CurrentNeighborhoodCursor cursor()
+	public LocalCursor cursor()
 	{
-		return new CurrentNeighborhoodCursor( sourceRandomAccess.copyRandomAccess() );
+		return new LocalCursor( sourceRandomAccess.copyRandomAccess() );
 	}
 
 	@Override
-	public CurrentNeighborhoodCursor localizingCursor()
+	public LocalCursor localizingCursor()
 	{
 		return cursor();
 	}
 
-	public final class CurrentNeighborhoodCursor extends AbstractEuclideanSpace implements Cursor< T >
+	public final class LocalCursor extends AbstractEuclideanSpace implements Cursor< T >
 	{
 		final RandomAccess< T > source;
 
-		private final long maxCount; // TODO: move to outer class?
-
-		private final long midIndex; // TODO: move to outer class?
-
-		private long index;
+		long index;
 
 		private long maxIndexOnLine;
 
-		public CurrentNeighborhoodCursor( final RandomAccess< T > source )
+		public LocalCursor( final RandomAccess< T > source )
 		{
 			super( source.numDimensions() );
-			maxCount = ( long ) Math.pow( dimensions[ 0 ], n ); // TODO: do it right, span is not isotropic
-			midIndex = maxCount / 2 + 1; // TODO do it right, span is not symmetric
 			this.source = source;
 			reset();
 		}
 
-		private CurrentNeighborhoodCursor( final CurrentNeighborhoodCursor c )
+		protected LocalCursor( final LocalCursor c )
 		{
 			super( c.numDimensions() );
 			source = c.source.copyRandomAccess();
-			maxCount = c.maxCount;
-			midIndex = c.midIndex;
 			index = c.index;
 		}
 
@@ -240,6 +235,26 @@ public final class RectangleSkipCenterNeighborhood< T > extends AbstractLocaliza
 		}
 
 		@Override
+		public void jumpFwd( final long steps )
+		{
+			for ( long i = 0; i < steps; ++i )
+				fwd();
+		}
+
+		@Override
+		public T next()
+		{
+			fwd();
+			return get();
+		}
+
+		@Override
+		public void remove()
+		{
+			// NB: no action.
+		}
+
+		@Override
 		public void reset()
 		{
 			source.setPosition( currentMin );
@@ -251,7 +266,7 @@ public final class RectangleSkipCenterNeighborhood< T > extends AbstractLocaliza
 		@Override
 		public boolean hasNext()
 		{
-			return index < maxCount;
+			return index < maxIndex;
 		}
 
 		@Override
@@ -303,35 +318,15 @@ public final class RectangleSkipCenterNeighborhood< T > extends AbstractLocaliza
 		}
 
 		@Override
-		public CurrentNeighborhoodCursor copy()
+		public LocalCursor copy()
 		{
-			return new CurrentNeighborhoodCursor( this );
+			return new LocalCursor( this );
 		}
 
 		@Override
-		public CurrentNeighborhoodCursor copyCursor()
+		public LocalCursor copyCursor()
 		{
 			return copy();
-		}
-
-		@Override
-		public void jumpFwd( final long steps )
-		{
-			for ( long i = 0; i < steps; ++i )
-				fwd();
-		}
-
-		@Override
-		public T next()
-		{
-			fwd();
-			return get();
-		}
-
-		@Override
-		public void remove()
-		{
-			// NB: no action.
 		}
 	}
 }

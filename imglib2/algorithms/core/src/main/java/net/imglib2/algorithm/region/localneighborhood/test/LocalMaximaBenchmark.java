@@ -4,7 +4,6 @@ import java.util.Random;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
-import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.region.localneighborhood.LocalNeighborhood;
 import net.imglib2.algorithm.region.localneighborhood.LocalNeighborhood2;
@@ -86,15 +85,15 @@ public class LocalMaximaBenchmark
 		}
 		final FinalInterval span = new FinalInterval( min, max );
 		final RectangleNeighborhoodCursor< T > neighborhoods = new RectangleNeighborhoodCursor< T >( Views.interval( img, Intervals.expand( img, -1 ) ), span );
-		final RandomAccess< T > center = img.randomAccess();
-//		final Cursor< T > center = Views.iterable( Views.interval( img, Intervals.expand( img, -1 ) ) ).localizingCursor();
+//		final RandomAccess< T > center = img.randomAccess();
+		final Cursor< T > center = Views.iterable( Views.interval( img, Intervals.expand( img, -1 ) ) ).localizingCursor();
 		final Cursor< T > nc = neighborhoods.get().cursor();
 A:		while ( neighborhoods.hasNext() )
 		{
 			neighborhoods.fwd();
 			nc.reset();
-//			center.fwd();
-			center.setPosition( neighborhoods );
+			center.fwd();
+//			center.setPosition( neighborhoods );
 			final T c = center.get();
 			while ( nc.hasNext() )
 				if ( nc.next().compareTo( c ) > 0 )
