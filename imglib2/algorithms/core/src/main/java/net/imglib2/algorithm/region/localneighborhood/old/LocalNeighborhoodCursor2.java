@@ -34,7 +34,7 @@
  * #L%
  */
 
-package net.imglib2.algorithm.region.localneighborhood;
+package net.imglib2.algorithm.region.localneighborhood.old;
 
 import net.imglib2.AbstractCursor;
 import net.imglib2.RandomAccess;
