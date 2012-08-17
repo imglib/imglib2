@@ -34,7 +34,7 @@ public class MinFilterExample
 	public static void main( final String[] args ) throws ImgIOException
 	{
 		final String fn = "/home/tobias/workspace/data/DrosophilaWing.tif";
-		final int span = 1;
+		final int span = 3;
 
 		final ArrayImgFactory< FloatType > factory = new ArrayImgFactory< FloatType >();
 		final FloatType type = new FloatType();
@@ -46,6 +46,7 @@ public class MinFilterExample
 		final RandomAccessibleInterval< FloatType > output = Views.interval( imgOutput, computationInterval );
 
 		minFilter( input, output, new RectangleShape( span, false ) );
+//		minFilter( input, output, new HyperSphereShape( span ) );
 
 		ImageJFunctions.show( imgInput, "input" );
 		ImageJFunctions.show( imgOutput, "min filtered" );
