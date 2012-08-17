@@ -20,7 +20,7 @@ public class MinFilterExample
 	void minFilter( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< T > output, final Shape shape )
 	{
 		final RandomAccess< T > out = output.randomAccess();
-		for ( final Neighborhood< T > neighborhood : shape.neighborhoodsSafe( input ) )
+		for ( final Neighborhood< T > neighborhood : shape.neighborhoods( input ) )
 		{
 			out.setPosition( neighborhood );
 			final T o = out.get();
