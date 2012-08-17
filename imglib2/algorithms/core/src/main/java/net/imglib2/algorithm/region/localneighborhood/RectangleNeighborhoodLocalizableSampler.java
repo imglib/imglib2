@@ -6,13 +6,15 @@ import net.imglib2.Localizable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
 
-public abstract class RectangleNeighborhoodLocalizableSampler< T > extends AbstractInterval implements Localizable, Sampler< RectangleSkipCenterNeighborhood< T > >
+public abstract class RectangleNeighborhoodLocalizableSampler< T > extends AbstractInterval implements Localizable, Sampler< Neighborhood< T > >
 {
 	protected final RandomAccessibleInterval< T > source;
 
 	protected final Interval span;
 
-	protected final RectangleSkipCenterNeighborhood< T > currentNeighborhood;
+	protected final RectangleNeighborhoodFactory< T > neighborhoodFactory;
+
+	protected final Neighborhood< T > currentNeighborhood;
 
 	protected final long[] currentPos;
 
@@ -20,15 +22,16 @@ public abstract class RectangleNeighborhoodLocalizableSampler< T > extends Abstr
 
 	protected final long[] currentMax;
 
-	public RectangleNeighborhoodLocalizableSampler( final RandomAccessibleInterval< T > source, final Interval span )
+	public RectangleNeighborhoodLocalizableSampler( final RandomAccessibleInterval< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory )
 	{
 		super( source );
 		this.source = source;
 		this.span = span;
+		neighborhoodFactory = factory;
 		currentPos = new long[ n ];
 		currentMin = new long[ n ];
 		currentMax = new long[ n ];
-		currentNeighborhood = new RectangleSkipCenterNeighborhood< T >( currentPos, currentMin, currentMax, span, source.randomAccess() );
+		currentNeighborhood = neighborhoodFactory.create( currentPos, currentMin, currentMax, span, source.randomAccess() );
 	}
 
 	protected RectangleNeighborhoodLocalizableSampler( final RectangleNeighborhoodLocalizableSampler< T > c )
@@ -36,14 +39,15 @@ public abstract class RectangleNeighborhoodLocalizableSampler< T > extends Abstr
 		super( c.source );
 		source = c.source;
 		span = c.span;
+		neighborhoodFactory = c.neighborhoodFactory;
 		currentPos = c.currentPos.clone();
 		currentMin = c.currentMin.clone();
 		currentMax = c.currentMax.clone();
-		currentNeighborhood = new RectangleSkipCenterNeighborhood< T >( currentPos, currentMin, currentMax, span, source.randomAccess() );
+		currentNeighborhood = neighborhoodFactory.create( currentPos, currentMin, currentMax, span, source.randomAccess() );
 	}
 
 	@Override
-	public RectangleSkipCenterNeighborhood< T > get()
+	public Neighborhood< T > get()
 	{
 		return currentNeighborhood;
 	}

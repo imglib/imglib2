@@ -5,12 +5,11 @@ import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 
-
-public final class RectangleNeighborhoodRandomAccess< T > extends RectangleNeighborhoodLocalizableSampler< T > implements RandomAccess< RectangleSkipCenterNeighborhood< T > >
+public final class RectangleNeighborhoodRandomAccess< T > extends RectangleNeighborhoodLocalizableSampler< T > implements RandomAccess< Neighborhood< T > >
 {
-	public RectangleNeighborhoodRandomAccess( final RandomAccessibleInterval< T > source, final Interval span )
+	public RectangleNeighborhoodRandomAccess( final RandomAccessibleInterval< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory  )
 	{
-		super( source, span );
+		super( source, span, factory );
 	}
 
 	private RectangleNeighborhoodRandomAccess( final RectangleNeighborhoodRandomAccess< T > c )

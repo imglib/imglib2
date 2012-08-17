@@ -6,7 +6,7 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.util.IntervalIndexer;
 
-public final class RectangleNeighborhoodCursor< T > extends RectangleNeighborhoodLocalizableSampler< T > implements Cursor< RectangleSkipCenterNeighborhood< T > >
+public final class RectangleNeighborhoodCursor< T > extends RectangleNeighborhoodLocalizableSampler< T > implements Cursor< Neighborhood< T > >
 {
 	private final long[] dimensions;
 
@@ -16,9 +16,9 @@ public final class RectangleNeighborhoodCursor< T > extends RectangleNeighborhoo
 
 	private long maxIndexOnLine;
 
-	public RectangleNeighborhoodCursor( final RandomAccessibleInterval< T > source, final Interval span )
+	public RectangleNeighborhoodCursor( final RandomAccessibleInterval< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory )
 	{
-		super( source, span );
+		super( source, span, factory );
 
 		dimensions = new long[ n ];
 		dimensions( dimensions );
@@ -103,7 +103,7 @@ public final class RectangleNeighborhoodCursor< T > extends RectangleNeighborhoo
 	}
 
 	@Override
-	public RectangleSkipCenterNeighborhood< T > next()
+	public Neighborhood< T > next()
 	{
 		fwd();
 		return get();
