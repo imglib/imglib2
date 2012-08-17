@@ -1,4 +1,4 @@
-package net.imglib2.algorithm.region.localneighborhood.test;
+package net.imglib2.algorithm.region.localneighborhood;
 
 import java.util.Random;
 
@@ -14,13 +14,13 @@ import net.imglib2.algorithm.region.localneighborhood.LocalNeighborhood2;
 import net.imglib2.algorithm.region.localneighborhood.LocalNeighborhoodCursor;
 import net.imglib2.algorithm.region.localneighborhood.LocalNeighborhoodCursor2;
 import net.imglib2.algorithm.region.localneighborhood.Neighborhood;
-import net.imglib2.algorithm.region.localneighborhood.Neighborhoods;
+import net.imglib2.algorithm.region.localneighborhood.Shape;
 import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodCursor;
 import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodFactory;
 import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodRandomAccess;
-import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoods;
+import net.imglib2.algorithm.region.localneighborhood.RectangleShape;
 import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodSkipCenter;
-import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodSkipCenterSingle;
+import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodSkipCenterUnsafe;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.Type;
@@ -197,7 +197,7 @@ A:		while ( neighborhoods.hasNext() )
 		}
 		final FinalInterval span = new FinalInterval( min, max );
 
-		final RandomAccessibleInterval< Neighborhood< T > > theAccessible = new TheAccessible< T >( Views.interval( img, Intervals.expand( img, -1 ) ), span, RectangleNeighborhoodSkipCenterSingle.< T >factory() );
+		final RandomAccessibleInterval< Neighborhood< T > > theAccessible = new TheAccessible< T >( Views.interval( img, Intervals.expand( img, -1 ) ), span, RectangleNeighborhoodSkipCenterUnsafe.< T >factory() );
 		final Cursor< T > center = Views.iterable( Views.interval( img, Intervals.expand( img, -1 ) ) ).cursor();
 A:		for ( final Neighborhood< T > neighborhood : Views.iterable( theAccessible ) )
 		{
@@ -213,12 +213,12 @@ A:		for ( final Neighborhood< T > neighborhood : Views.iterable( theAccessible )
 		return nMaxima;
 	}
 
-	public static < T extends Type< T > & Comparable< T > > int countLocalMaxima( final RandomAccessibleInterval< T > img, final Neighborhoods neighborhoods )
+	public static < T extends Type< T > & Comparable< T > > int countLocalMaxima( final RandomAccessibleInterval< T > img, final Shape neighborhoods )
 	{
 		int nMaxima = 0;
 		final RandomAccessibleInterval< T > source = Views.interval( img, Intervals.expand( img, -1 ) );
 		final Cursor< T > center = Views.iterable( source ).cursor();
-		final IterableInterval< Neighborhood< T > > allneighborhoods = Views.iterable( neighborhoods.neighborhoodsSingle( source ) );
+		final IterableInterval< Neighborhood< T > > allneighborhoods = Views.iterable( neighborhoods.neighborhoodsRandomAccessible( source ) );
 A:		for ( final Neighborhood< T > neighborhood : allneighborhoods )
 		{
 			final T c = center.next();
@@ -232,7 +232,7 @@ A:		for ( final Neighborhood< T > neighborhood : allneighborhoods )
 
 	public static < T extends Type< T > & Comparable< T > > int findLocalMaximaNeighborhood6( final RandomAccessibleInterval< T > img )
 	{
-		final RectangleNeighborhoods neighborhoods = new RectangleNeighborhoods( 1, true );
+		final RectangleShape neighborhoods = new RectangleShape( 1, true );
 		return countLocalMaxima( img, neighborhoods );
 	}
 

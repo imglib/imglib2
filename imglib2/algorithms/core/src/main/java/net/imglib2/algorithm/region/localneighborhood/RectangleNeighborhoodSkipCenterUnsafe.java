@@ -3,7 +3,7 @@ package net.imglib2.algorithm.region.localneighborhood;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 
-public final class RectangleNeighborhoodSkipCenterSingle< T > extends RectangleNeighborhoodSkipCenter< T > implements Neighborhood< T >
+public final class RectangleNeighborhoodSkipCenterUnsafe< T > extends RectangleNeighborhoodSkipCenter< T > implements Neighborhood< T >
 {
 	public static < T > RectangleNeighborhoodFactory< T > factory()
 	{
@@ -11,7 +11,7 @@ public final class RectangleNeighborhoodSkipCenterSingle< T > extends RectangleN
 			@Override
 			public Neighborhood< T > create( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
 			{
-				return new RectangleNeighborhoodSkipCenterSingle< T >( position, currentMin, currentMax, span, sourceRandomAccess );
+				return new RectangleNeighborhoodSkipCenterUnsafe< T >( position, currentMin, currentMax, span, sourceRandomAccess );
 			}
 		};
 	}
@@ -20,7 +20,7 @@ public final class RectangleNeighborhoodSkipCenterSingle< T > extends RectangleN
 
 	private final LocalCursor firstElementCursor;
 
-	RectangleNeighborhoodSkipCenterSingle( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
+	RectangleNeighborhoodSkipCenterUnsafe( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
 	{
 		super( position, currentMin, currentMax, span, sourceRandomAccess );
 		theCursor = super.cursor();
