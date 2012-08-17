@@ -10,9 +10,9 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealPositionable;
-import net.imglib2.util.Util;
+import net.imglib2.util.IntervalIndexer;
 
-public class RectangleSkipCenterNeighborhood< T > extends AbstractLocalizable implements Neighborhood< T >
+public class RectangleNeighborhoodSkipCenter< T > extends AbstractLocalizable implements Neighborhood< T >
 {
 	public static < T > RectangleNeighborhoodFactory< T > factory()
 	{
@@ -20,7 +20,7 @@ public class RectangleSkipCenterNeighborhood< T > extends AbstractLocalizable im
 			@Override
 			public Neighborhood< T > create( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
 			{
-				return new RectangleSkipCenterNeighborhood< T >( position, currentMin, currentMax, span, sourceRandomAccess );
+				return new RectangleNeighborhoodSkipCenter< T >( position, currentMin, currentMax, span, sourceRandomAccess );
 			}
 		};
 	}
@@ -39,15 +39,24 @@ public class RectangleSkipCenterNeighborhood< T > extends AbstractLocalizable im
 
 	private final long midIndex;
 
-	RectangleSkipCenterNeighborhood( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
+	RectangleNeighborhoodSkipCenter( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
 	{
 		super( position );
 		this.currentMin = currentMin;
 		this.currentMax = currentMax;
 		dimensions = new long[ n ];
 		span.dimensions( dimensions );
-		maxIndex = Util.pow( ( int ) dimensions[ 0 ], n ); // TODO: do it right, span is not isotropic
-		midIndex = maxIndex / 2 + 1; // TODO do it right, span is not symmetric
+
+		long mi = dimensions[ 0 ];
+		for ( int d = 1; d < n; ++d )
+			mi *= dimensions[ d ];
+		maxIndex = mi;
+
+		final long[] centerOffset = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+			centerOffset[ d ] = -span.min( d );
+		midIndex = IntervalIndexer.positionToIndex( centerOffset, dimensions ) + 1;
+
 		this.sourceRandomAccess = sourceRandomAccess;
 		this.structuringElementBoundingBox = span;
 	}

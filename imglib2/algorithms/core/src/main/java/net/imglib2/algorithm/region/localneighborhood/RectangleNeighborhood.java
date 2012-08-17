@@ -10,9 +10,8 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealPositionable;
-import net.imglib2.util.Util;
 
-public final class RectangleSkipCenterNeighborhoodSingle< T > extends AbstractLocalizable implements Neighborhood< T >
+public class RectangleNeighborhood< T > extends AbstractLocalizable implements Neighborhood< T >
 {
 	public static < T > RectangleNeighborhoodFactory< T > factory()
 	{
@@ -20,7 +19,7 @@ public final class RectangleSkipCenterNeighborhoodSingle< T > extends AbstractLo
 			@Override
 			public Neighborhood< T > create( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
 			{
-				return new RectangleSkipCenterNeighborhoodSingle< T >( position, currentMin, currentMax, span, sourceRandomAccess );
+				return new RectangleNeighborhood< T >( position, currentMin, currentMax, span, sourceRandomAccess );
 			}
 		};
 	}
@@ -31,27 +30,26 @@ public final class RectangleSkipCenterNeighborhoodSingle< T > extends AbstractLo
 
 	private final long[] dimensions;
 
+	private final RandomAccess< T > sourceRandomAccess;
+
 	private final Interval structuringElementBoundingBox;
 
 	private final long maxIndex;
 
-	private final long midIndex;
-
-	private final LocalCursor theCursor;
-
-	private final LocalCursor firstElementCursor;
-
-	RectangleSkipCenterNeighborhoodSingle( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
+	RectangleNeighborhood( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
 	{
 		super( position );
 		this.currentMin = currentMin;
 		this.currentMax = currentMax;
 		dimensions = new long[ n ];
 		span.dimensions( dimensions );
-		maxIndex = Util.pow( ( int ) dimensions[ 0 ], n ); // TODO: do it right, span is not isotropic
-		midIndex = maxIndex / 2 + 1; // TODO do it right, span is not symmetric
-		theCursor = new LocalCursor( sourceRandomAccess );
-		firstElementCursor = new LocalCursor( sourceRandomAccess.copyRandomAccess() );
+
+		long mi = dimensions[ 0 ];
+		for ( int d = 1; d < n; ++d )
+			mi *= dimensions[ d ];
+		maxIndex = mi;
+
+		this.sourceRandomAccess = sourceRandomAccess;
 		this.structuringElementBoundingBox = span;
 	}
 
@@ -70,8 +68,7 @@ public final class RectangleSkipCenterNeighborhoodSingle< T > extends AbstractLo
 	@Override
 	public T firstElement()
 	{
-		firstElementCursor.reset();
-		return firstElementCursor.next();
+		return cursor().next();
 	}
 
 	@Override
@@ -188,8 +185,7 @@ public final class RectangleSkipCenterNeighborhoodSingle< T > extends AbstractLo
 	@Override
 	public LocalCursor cursor()
 	{
-		theCursor.reset();
-		return theCursor;
+		return new LocalCursor( sourceRandomAccess.copyRandomAccess() );
 	}
 
 	@Override
@@ -232,8 +228,6 @@ public final class RectangleSkipCenterNeighborhoodSingle< T > extends AbstractLo
 			source.fwd( 0 );
 			if ( ++index > maxIndexOnLine )
 				nextLine();
-			if ( index == midIndex )
-				fwd();
 		}
 
 		private void nextLine()

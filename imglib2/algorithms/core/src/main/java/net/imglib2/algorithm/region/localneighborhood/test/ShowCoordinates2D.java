@@ -4,7 +4,7 @@ import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.algorithm.region.localneighborhood.Neighborhood;
 import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodCursor;
-import net.imglib2.algorithm.region.localneighborhood.RectangleSkipCenterNeighborhood;
+import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodSkipCenter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.list.ListImgFactory;
@@ -34,7 +34,7 @@ public class ShowCoordinates2D
 //			System.out.println( nc.next() );
 
 		final Interval span = Intervals.createMinMax( -1, -1, 1, 1 );
-		final Cursor< Neighborhood< CoordinateType > > n3 = new RectangleNeighborhoodCursor< CoordinateType >( Views.interval( img, Intervals.expand( img, -1 ) ), span, RectangleSkipCenterNeighborhood.< CoordinateType >factory() );
+		final Cursor< Neighborhood< CoordinateType > > n3 = new RectangleNeighborhoodCursor< CoordinateType >( Views.interval( img, Intervals.expand( img, -1 ) ), span, RectangleNeighborhoodSkipCenter.< CoordinateType >factory() );
 		while ( n3.hasNext() )
 		{
 			for ( final CoordinateType t : n3.next() )
