@@ -100,7 +100,7 @@ public interface Shape
 	 * Every time, a {@link Cursor} is requested from a {@link Neighborhood}
 	 * (where the neighborhood in turn is obtained from a cursor on the
 	 * IterableInterval returned by this method) a new {@link Cursor} instance
-	 * is re-used. If you want to use enhanced for loops on the
+	 * is created. If you want to use enhanced for loops on the
 	 * {@link Neighborhood neighborhoods}, consider using
 	 * {@link #neighborhoods(RandomAccessibleInterval)} which re-uses the same
 	 * instance every time (but therefore has to be used carefully).
@@ -128,7 +128,7 @@ public interface Shape
 	 * Every time, a {@link Cursor} is requested from a {@link Neighborhood}
 	 * (where the neighborhood in turn is obtained from a cursor on the
 	 * IterableInterval returned by this method) a new {@link Cursor} instance
-	 * is re-used. If you want to use enhanced for loops on the
+	 * is created. If you want to use enhanced for loops on the
 	 * {@link Neighborhood neighborhoods}, consider using
 	 * {@link #neighborhoods(RandomAccessibleInterval)} which re-uses the same
 	 * instance every time (but therefore has to be used carefully).
