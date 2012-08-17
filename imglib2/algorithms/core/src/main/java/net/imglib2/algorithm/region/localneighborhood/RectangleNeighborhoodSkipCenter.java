@@ -204,9 +204,9 @@ public class RectangleNeighborhoodSkipCenter< T > extends AbstractLocalizable im
 
 	public final class LocalCursor extends AbstractEuclideanSpace implements Cursor< T >
 	{
-		final RandomAccess< T > source;
+		private final RandomAccess< T > source;
 
-		long index;
+		private long index;
 
 		private long maxIndexOnLine;
 
