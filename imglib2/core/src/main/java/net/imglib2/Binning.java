@@ -74,9 +74,11 @@ public class Binning {
     public static long exclusiveValueToBin(long bins, double min, double max, double value) {
         long returnValue;
         if (max == min) {
+            // degenerate case
             returnValue = bins / 2;
         }
         else if (value == max) {
+            // special case, otherwise 1.0 * bins is bins
             returnValue = bins - 1;
         }
         else {
