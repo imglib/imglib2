@@ -37,12 +37,14 @@
 package net.imglib2;
 
 /**
- * Static helper methods to convert from a value to a bin, useful for dealing
+ * Static utility methods to convert from a value to a bin, useful for dealing
  * with histograms and LUTs.
  * 
  * @author Aivar Grislis
  */
 public class Binning {
+    
+    //-- Utility methods --
 
     /**
      * Convert value to bin number.<p>
@@ -54,8 +56,8 @@ public class Binning {
      * @param value
      * @return bin number 0...(bins-1)
      */
-    public static long valueToBin(long bins, double min, double max, double value) {
-        long bin = exclusiveValueToBin(bins, min, max, value);
+    public static int valueToBin(int bins, double min, double max, double value) {
+        int bin = exclusiveValueToBin(bins, min, max, value);
         bin = Math.max(bin, 0);
         bin = Math.min(bin, bins - 1);
         return bin;
@@ -71,25 +73,67 @@ public class Binning {
      * @param value
      * @return 
      */
-    public static long exclusiveValueToBin(long bins, double min, double max, double value) {
-        long returnValue;
-        if (max == min) {
-            // degenerate case
-            returnValue = bins / 2;
-        }
-        else if (value == max) {
-            // special case, otherwise 1.0 * bins is bins
-            returnValue = bins - 1;
-        }
-        else {
-            double temp = (value - min) / (max - min);
-            returnValue = (long)(temp * bins); // Not (bins - 1)!
-            
-            // handle edge case
-            if (temp < 0 && returnValue == 0) {
-                --returnValue;
+    public static int exclusiveValueToBin(int bins, double min, double max, double value) {
+        int bin;
+        if (max != min) {
+            if (value != max) {
+                // convert in-range values to 0.0...1.0
+                double temp = (value - min) / (max - min);
+                
+                // note multiply by bins, not (bins - 1)
+                // note floor is needed so that small negative values go to -1
+                bin = (int) Math.floor(temp * bins);
+            }
+            else {
+                // value == max, special case, otherwise 1.0 * bins is bins  
+                bin = bins - 1;
             }
         }
-        return returnValue;
+        else {
+            // max == min, degenerate case
+            bin = bins / 2;
+        }
+        return bin;
+    }
+ 
+    /**
+     * Returns array of left edge values for each bin.
+     * 
+     * @param bins
+     * @param min
+     * @param max
+     * @return 
+     */
+    public static double[] edgeValuesPerBin(int bins, double min, double max) {
+        double[] edgeValues = new double[bins];
+        double binSize = (max - min) / bins;
+        
+        for (int i = 0; i < bins; ++i) {
+            edgeValues[i] = min + i * binSize;
+        }
+        return edgeValues;
+    }
+ 
+    /**
+     * Returns array of center values for each bin.
+     * 
+     * @param bins
+     * @param min
+     * @param max
+     * @return 
+     */
+    public static double[] centerValuesPerBin(int bins, double min, double max) {
+        double[] edgeValues = edgeValuesPerBin(bins, min, max);
+        double[] centerValues = new double[(int) bins];
+        
+        // average the edge values to get centers
+        for (int i = 0; i < bins - 1; ++i) {
+            centerValues[i] = (edgeValues[i] + edgeValues[i + 1]) / 2;
+        }
+        
+        // special case for last bin
+        centerValues[bins - 1] = (edgeValues[bins - 1] + max) / 2;
+        
+        return centerValues;
     }
 }
