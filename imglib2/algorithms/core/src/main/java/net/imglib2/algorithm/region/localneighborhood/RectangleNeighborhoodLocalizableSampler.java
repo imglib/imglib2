@@ -1,6 +1,7 @@
 package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.AbstractInterval;
+import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccessibleInterval;
@@ -31,7 +32,16 @@ public abstract class RectangleNeighborhoodLocalizableSampler< T > extends Abstr
 		currentPos = new long[ n ];
 		currentMin = new long[ n ];
 		currentMax = new long[ n ];
-		currentNeighborhood = neighborhoodFactory.create( currentPos, currentMin, currentMax, span, source.randomAccess() );
+		final long[] accessMin = new long[ n ];
+		final long[] accessMax = new long[ n ];
+		source.min( accessMin );
+		source.max( accessMax );
+		for ( int d = 0; d < n; ++d )
+		{
+			accessMin[ d ] += span.min( d );
+			accessMax[ d ] += span.max( d );
+		}
+		currentNeighborhood = neighborhoodFactory.create( currentPos, currentMin, currentMax, span, source.randomAccess( new FinalInterval( accessMin, accessMax ) ) );
 	}
 
 	protected RectangleNeighborhoodLocalizableSampler( final RectangleNeighborhoodLocalizableSampler< T > c )
