@@ -109,7 +109,7 @@ public final class SeparableSymmetricConvolution
 		{
 			if ( ! ( sourceType instanceof RealType ) )
 				throw new IncompatibleTypeException( sourceType, "RealType source required for convolving into a RealType target" );
-			if ( targetType instanceof DoubleType )
+			if ( ( ( Object ) targetType ) instanceof DoubleType )
 				convolveRealTypeDouble( halfkernels, ( RandomAccessible ) source, ( RandomAccessibleInterval ) target, numThreads );
 			else
 				convolveRealTypeFloat( halfkernels, ( RandomAccessible ) source, ( RandomAccessibleInterval ) target, numThreads );
