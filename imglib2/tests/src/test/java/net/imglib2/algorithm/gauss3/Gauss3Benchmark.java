@@ -318,7 +318,7 @@ public class Gauss3Benchmark
 			@Override
 			public void run()
 			{
-			    final ConvolverFactory< FloatType, FloatType > cff = FloatConvolverRealTypeBuffered.factory();
+			    final ConvolverFactory< FloatType, FloatType > cff = FloatConvolverRealTypeBuffered.< FloatType, FloatType >factory();
 				final RandomAccessibleInterval< FloatType > rIn = new WriteConvertedRandomAccessibleInterval< UnsignedByteType, FloatType >( img, new RealFloatSamplerConverter< UnsignedByteType >() );
 				final RandomAccessibleInterval< FloatType > rOut = new WriteConvertedRandomAccessibleInterval< UnsignedByteType, FloatType >( convolved, new RealFloatSamplerConverter< UnsignedByteType >() );
 				final double[][] halfkernels = Gauss3.halfkernels( sigmas );
@@ -332,10 +332,10 @@ public class Gauss3Benchmark
 			@Override
 			public void run()
 			{
-			    final ConvolverFactory< FloatType, FloatType > cff = FloatConvolverRealTypeBuffered.factory();
-			    final ConvolverFactory< FloatType, UnsignedByteType > cfi = FloatConvolverRealTypeBuffered.factory();
-			    final ConvolverFactory< UnsignedByteType, FloatType > cif = FloatConvolverRealTypeBuffered.factory();
-			    final ConvolverFactory< UnsignedByteType, UnsignedByteType > cii = FloatConvolverRealTypeBuffered.factory();
+			    final ConvolverFactory< FloatType, FloatType > cff = FloatConvolverRealTypeBuffered.< FloatType, FloatType >factory();
+			    final ConvolverFactory< FloatType, UnsignedByteType > cfi = FloatConvolverRealTypeBuffered.< FloatType, UnsignedByteType >factory();
+			    final ConvolverFactory< UnsignedByteType, FloatType > cif = FloatConvolverRealTypeBuffered.< UnsignedByteType, FloatType >factory();
+			    final ConvolverFactory< UnsignedByteType, UnsignedByteType > cii = FloatConvolverRealTypeBuffered.< UnsignedByteType, UnsignedByteType >factory();
 				final double[][] halfkernels = Gauss3.halfkernels( sigmas );
 				final int numthreads = Runtime.getRuntime().availableProcessors();
 				SeparableSymmetricConvolution.convolve( halfkernels, Views.extendMirrorSingle( img ), convolved, cif, cff, cfi, cii, floatFactory, floatType, numthreads );
