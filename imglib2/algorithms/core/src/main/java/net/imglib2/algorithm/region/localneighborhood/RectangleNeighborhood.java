@@ -62,7 +62,7 @@ public class RectangleNeighborhood< T > extends AbstractLocalizable implements N
 	@Override
 	public long size()
 	{
-		return maxIndex - 1; // -1 because we skip the center pixel
+		return maxIndex; // -1 because we skip the center pixel
 	}
 
 	@Override
