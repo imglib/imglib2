@@ -3,7 +3,25 @@ package net.imglib2.display.projectors;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.display.Projector;
+import net.imglib2.display.projectors.specializedprojectors.ArrayImgXYByteProjector;
 
+/**
+ * Base class for 2D projectors. Projecting means in this case projecting from a source
+ * format to a target format (A->B).
+ * 2D hints that the result is something 2 dimensional.
+ * The base class provides methods to select a reference point in a multi-dimensional data object. Sub
+ * classes like  {@link Projector2D}, {@link DimProjector2D} or {@link ArrayImgXYByteProjector} specify a mapping that uses the
+ * reference point to project data into a 2 dimensional representation.
+ * <br>
+ * A basic example is the extraction of a data plain (containing the reference point) by sampling two axes
+ * 
+ * 
+ * 
+ * @author zinsmaie
+ *
+ * @param <A>
+ * @param <B>
+ */
 public abstract class Abstract2DProjector<A, B> implements Projector<A, B>,
 		Positionable, Localizable {
 
@@ -12,6 +30,11 @@ public abstract class Abstract2DProjector<A, B> implements Projector<A, B>,
 	protected final long[] max;
 	protected final int numDimensions;
 	
+	/**
+	 * initializes a reference point with the specified number of dimensions.
+	 * Start position is 0,0,...,0
+	 * @param numDims
+	 */
 	public Abstract2DProjector(int numDims) {
 
 		// as this is an 2D projector, we need at least two dimensions,
