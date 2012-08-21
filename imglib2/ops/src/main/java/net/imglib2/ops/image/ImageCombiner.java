@@ -71,11 +71,11 @@ import net.imglib2.type.numeric.real.FloatType;
  * @author Barry DeZonia
  *
  */
-public class ImageCreator
+public class ImageCombiner
 {
 	// -- default constructor --
 	
-	public ImageCreator() { }
+	public ImageCombiner() { }
 	
 	// -- public API --
 	
@@ -231,7 +231,7 @@ public class ImageCreator
 		BinaryOperation<UnsignedByteType, FloatType, ShortType> addOp =
 				new RealAdd<UnsignedByteType, FloatType, ShortType>();
 		
-		ImageCreator creator = new ImageCreator();
+		ImageCombiner creator = new ImageCombiner();
 		
 		Img<ShortType> output =
 				creator.applyOp(addOp, img1, img2, imgFactory, new ShortType());
@@ -251,7 +251,7 @@ public class ImageCreator
 		BinaryOperation<UnsignedByteType, FloatType, ShortType> addOp =
 				new RealAdd<UnsignedByteType, FloatType, ShortType>();
 		
-		ImageCreator creator = new ImageCreator();
+		ImageCombiner creator = new ImageCombiner();
 		
 		creator.applyOp(addOp, img1, img2, output);
 
@@ -269,7 +269,7 @@ public class ImageCreator
 		
 		UnaryOperation<DoubleType, IntType> maxOp =	new RealMaxConstant<DoubleType,IntType>(150.0);
 		
-		ImageCreator creator =	new ImageCreator();
+		ImageCombiner creator =	new ImageCombiner();
 		
 		Img<IntType> output =
 				creator.applyOp(maxOp, img, imgFactory, new IntType());
@@ -286,7 +286,7 @@ public class ImageCreator
 		
 		UnaryOperation<DoubleType, IntType> maxOp =	new RealMaxConstant<DoubleType,IntType>(150.0);
 		
-		ImageCreator creator =	new ImageCreator();
+		ImageCombiner creator =	new ImageCombiner();
 		
 		creator.applyOp(maxOp, img, output);
 
@@ -305,7 +305,7 @@ public class ImageCreator
 		BinaryOperation<UnsignedByteType, UnsignedByteType, IntType> xorOp =
 				new RealXor<UnsignedByteType, UnsignedByteType, IntType>();
 		
-		ImageCreator creator =	new ImageCreator();
+		ImageCombiner creator =	new ImageCombiner();
 		
 		Img<IntType> output =
 				creator.applyOp(xorOp, img1, img2, imgFactory, new IntType());
@@ -325,7 +325,7 @@ public class ImageCreator
 		BinaryOperation<UnsignedByteType, UnsignedByteType, IntType> xorOp =
 				new RealXor<UnsignedByteType, UnsignedByteType, IntType>();
 		
-		ImageCreator creator =	new ImageCreator();
+		ImageCombiner creator =	new ImageCombiner();
 		
 		creator.applyOp(xorOp, img1, img2, output);
 
