@@ -81,7 +81,7 @@ public class RectangleShape implements Shape
 		return new FinalInterval( min, max );
 	}
 
-	private static final class NeighborhoodsAccessible< T > extends AbstractInterval implements RandomAccessibleInterval< Neighborhood< T > >, IterableInterval< Neighborhood< T > >
+	public static final class NeighborhoodsAccessible< T > extends AbstractInterval implements RandomAccessibleInterval< Neighborhood< T > >, IterableInterval< Neighborhood< T > >
 	{
 		final RandomAccessibleInterval< T > source;
 
