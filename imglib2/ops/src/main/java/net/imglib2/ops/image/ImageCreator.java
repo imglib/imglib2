@@ -62,6 +62,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 
+// TODO - move example code out to its own test class elsewhere
 
 /**
  * A class used to create images from input images in conjunction with unary or
@@ -93,24 +94,36 @@ public class ImageCreator
 	public
 		<I1 extends RealType<I1>,
 			I2 extends RealType<I2>,
-			O extends RealType<O>> Img<O> 
-		applyOp(BinaryOperation<O,O,O> op, Img<I1> input1,
-						Img<I2> input2, ImgFactory<O> imgFactory, O type)
+			O extends RealType<O>>
+		Img<O> applyOp(BinaryOperation<O,O,O> op, Img<I1> input1,
+										Img<I2> input2, ImgFactory<O> imgFactory, O type)
 	{
 		long[] span = determineSharedExtents(input1, input2);
-		long[] origin = new long[span.length];
 		Img<O> output = imgFactory.create(span, type);
-		final Function<long[], O> f1 = new RealImageFunction<I1, O>(input1, type.copy());
-		final Function<long[], O> f2 = new RealImageFunction<I2, O>(input2, type.copy());
-		final Function<long[], O> binFunc =
-			new GeneralBinaryFunction<long[], O, O, O>(f1, f2, op, type.copy());
-		final InputIteratorFactory<long[]> inputFactory = new PointInputIteratorFactory();
-		final ImageAssignment<O, O, long[]> assigner =
-			new ImageAssignment<O, O, long[]>(output, origin, span, binFunc, null, inputFactory);
-		assigner.assign();
+		binaryAssign(op, input1, input2, output, span);
 		return output;
 	}
 
+	/**
+	 * Fills an output image by applying a BinaryOperation to two input images.
+	 * The region to fill in the output image is determined as the region of
+	 * overlap of all three images.
+	 * 
+	 * @param op The BinaryOperation used to generate the output image from the input images.
+	 * @param input1 The first input Img.
+	 * @param input2 The second input Img.
+	 * @param output The output Img to fill.
+	 */
+	public
+		<I1 extends RealType<I1>,
+			I2 extends RealType<I2>,
+			O extends RealType<O>>
+		void applyOp(BinaryOperation<O,O,O> op, Img<I1> input1, Img<I2> input2, Img<O> output)
+	{
+		long[] span = determineSharedExtents(input1, input2, output);
+		binaryAssign(op, input1, input2, output, span);
+	}
+	
 	/**
 	 * Creates an output image by applying a UnaryOperation to an input image.
 	 * The size of the output image matches the size of the input image.
@@ -121,37 +134,80 @@ public class ImageCreator
 	 * @param type The type of the output image.
 	 * @return The computed pixel output image of specified type.
 	 */
-	public <I extends RealType<I>, O extends RealType<O>> Img<O>
-		applyOp(UnaryOperation<O,O> op, Img<I> input, ImgFactory<O> imgFactory, O type)
+	public <I extends RealType<I>, O extends RealType<O>>
+		Img<O> applyOp(UnaryOperation<O,O> op, Img<I> input, ImgFactory<O> imgFactory, O type)
 	{
 		long[] span = new long[input.numDimensions()];
-		long[] origin = new long[span.length];
 		input.dimensions(span);
 		Img<O> output = imgFactory.create(span, type);
+		unaryAssign(op, input, output, span);
+		return output;
+	}
+	
+	
+	/**
+	 * Fills an output image by applying a UnaryOperation to an input image.
+	 * The region to fill in the output image is determined as the region of
+	 * overlap of both images.
+	 * 
+	 * @param op The UnaryOperation used to generate the output image from the input image.
+	 * @param input The input Img.
+	 * @param output The output Img to fill.
+	 */
+	public <I extends RealType<I>, O extends RealType<O>>
+		void applyOp(UnaryOperation<O,O> op, Img<I> input, Img<O> output)
+	{
+		long[] span = determineSharedExtents(input, output);
+		unaryAssign(op, input, output, span);
+	}
+
+	// -- helpers --
+	
+	private long[] determineSharedExtents(Img<?> ... imgs) {
+		if (imgs.length == 0)
+			throw new IllegalArgumentException("at least one image must be provided");
+		int numDims = imgs[0].numDimensions();
+		long[] commonRegion = new long[numDims];
+		imgs[0].dimensions(commonRegion);
+		for (int i = 1; i < imgs.length; i++) {
+			if (imgs[i].numDimensions() != numDims)
+				throw new IllegalArgumentException(
+					"images do not have compatible dimensions");
+			for (int d = 0; d < numDims; d++) {
+				commonRegion[d] = Math.min(imgs[i].dimension(d), commonRegion[d]);
+			}
+		}
+		return commonRegion;
+	}
+
+	private <I1 extends RealType<I1>, I2 extends RealType<I2>, O extends RealType<O>>
+		void binaryAssign(BinaryOperation<O,O,O> op, Img<I1> input1, Img<I2> input2, Img<O> output, long[] span)
+	{
+		long[] origin = new long[span.length];
+		O type = output.firstElement();
+		final Function<long[], O> f1 = new RealImageFunction<I1, O>(input1, type.copy());
+		final Function<long[], O> f2 = new RealImageFunction<I2, O>(input2, type.copy());
+		final Function<long[], O> binFunc =
+			new GeneralBinaryFunction<long[], O, O, O>(f1, f2, op, type.copy());
+		final InputIteratorFactory<long[]> inputFactory = new PointInputIteratorFactory();
+		final ImageAssignment<O, O, long[]> assigner =
+			new ImageAssignment<O, O, long[]>(output, origin, span, binFunc, null, inputFactory);
+		assigner.assign();
+	}
+	
+	private <I extends RealType<I>, O extends RealType<O>>
+		void unaryAssign(UnaryOperation<O,O> op, Img<I> input, Img<O> output, long[] span)
+	{
+		final O type = output.firstElement();
 		final Function<long[], O> f1 = new RealImageFunction<I, O>(input, type.copy());
 		final Function<long[], O> unaryFunc =
 			new GeneralUnaryFunction<long[], O, O>(f1, op, type.copy());
 		final InputIteratorFactory<long[]> inputFactory = new PointInputIteratorFactory();
 		final ImageAssignment<O, O, long[]> assigner =
-			new ImageAssignment<O, O, long[]>(output, origin, span, unaryFunc, null, inputFactory);
+			new ImageAssignment<O, O, long[]>(output, new long[span.length], span, unaryFunc, null, inputFactory);
 		assigner.assign();
-		return output;
 	}
 	
-	
-	// -- helpers --
-	
-	private long[] determineSharedExtents(Img<?> img1, Img<?> img2) {
-		int numDims = img1.numDimensions();
-		if (img2.numDimensions() != numDims)
-			throw new IllegalArgumentException("images do not have compatible dimensions");
-		long[] commonRegion = new long[numDims];
-		for (int i = 0; i < numDims; i++) {
-			commonRegion[i] = Math.min(img1.dimension(i), img2.dimension(i));
-		}
-		return commonRegion;
-	}
-
 	// -- example code --
 	
 	public static void main(String[] args) {
