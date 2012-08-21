@@ -21,14 +21,9 @@ import static org.junit.Assert.*;
  */
 public class BinningTest {
     private static final double EPSILON_FACTOR = 1000000;
-    private static final double SMALLEST_POSITIVE = 0x0.0000000000001P-1022;
-    private static final double SMALLEST_NEGATIVE = -0x0.0000000000001P-1022;
-    private static final int MAX_PLACES = 13;
-    private static final String MAX_DIGITS = "fffffffffffff";
-    private static final String MIN_DIGITS = "0000000000000";
-    private static final int LAST_HEX_DIGIT_INDEX = 12;
     private static final int MIN_EXPONENT = -1022;
     private static final int MAX_EXPONENT = 1023;
+    private static final boolean TEST_INTERNAL = false;
     
     public BinningTest() {
     }
@@ -51,19 +46,22 @@ public class BinningTest {
     
     @Test
     public void testInternal() {
-        System.out.println("testInternal");
-        double value;
-        int number;
+        // avoid lengthy test in build; tests internal method
+        if (TEST_INTERNAL) {
+            System.out.println("testInternal");
+            double value;
+            int number;
 
-        // test going from negative to zero to positive
-        value = -0x0.0000000000010P-1022;
-        number = 1024;
-        testNextDouble(value, number);
- 
-        // test going from unnormalizable to normalizable
-        value = 0x0.ffffffffffff0P-1022;
-        number = 1024;
-        testNextDouble(value, number);
+            // test going from negative to zero to positive
+            value = -0x0.0000000000010P-1022;
+            number = 1024;
+            testNextDouble(value, number);
+
+            // test going from unnormalizable to normalizable
+            value = 0x0.ffffffffffff0P-1022;
+            number = 1024;
+            testNextDouble(value, number);
+        }
     }
 
     /**
@@ -219,12 +217,17 @@ public class BinningTest {
         }
  
         // make sure edge value is the first double that maps to that bin
+        // (this won't pass if bins/min/max are too oddball)
+        bins = 256;
+        min = 0.0;
+        max = 1.0;
+        edgeValues = Binning.edgeValuesPerBin(bins, min, max);
         for (int i = 0; i < bins; ++i) {
             int edgeBin = Binning.exclusiveValueToBin(bins, min, max, edgeValues[i]);
             assertEquals(i, edgeBin);
  
             // previous double should map to previous bin
-            double prevValue = nextDouble(edgeValues[i], false);
+            double prevValue = DoubleUtil.nextDouble(edgeValues[i], false);
             int prevBin = Binning.exclusiveValueToBin(bins, min, max, prevValue);
             assertEquals(i - 1, prevBin);
         }
@@ -387,7 +390,7 @@ public class BinningTest {
         int bin;
 
         // get two adjacent doubles
-        double d2 = nextDouble(d1, true);
+        double d2 = DoubleUtil.nextDouble(d1, true);
         if (d2 < d1) {
             // allow for negative numbers
             double tmp = d1;
@@ -471,7 +474,7 @@ public class BinningTest {
         values[i] = value;
         do {
             double prev = values[i++];
-            double next = nextDouble(prev, true);
+            double next = DoubleUtil.nextDouble(prev, true);
             values[i] = next;
         }
         while (i < number - 1);
@@ -479,192 +482,10 @@ public class BinningTest {
         // go down the list backwards
         do {
             double next = values[i--];
-            double prev = nextDouble(next, false);
+            double prev = DoubleUtil.nextDouble(next, false);
             assertEquals(values[i], prev, prev / EPSILON_FACTOR);
         }
         while (i > 0);
-    }
-
-    /**
-     * Given a double value returns the next representable double.
-     * 
-     * @param value
-     * @param inc
-     * @return 
-     */
-    private double nextDouble(double value, boolean inc) {
-        double nextValue;
-        double sign;
-
-        // hardcode values around zero
-        if (0x0.0p0 == value) {
-            if (inc) {
-                nextValue = SMALLEST_POSITIVE;
-            }
-            else {
-                nextValue = SMALLEST_NEGATIVE;
-            }
-        }
-        else if (SMALLEST_NEGATIVE == value && inc) {
-            nextValue = 0.0;
-        }
-        else if (SMALLEST_POSITIVE == value && !inc) {
-            nextValue = 0.0;
-        }
-        else {
-            // increment/decrement hex string value
-            String hexString;
-            boolean actualInc = ((value > 0 && inc) || (value < 0 && !inc));
-            hexString = nextDoubleHexString(Double.toHexString(value), actualInc);
-
-            // convert hex string value to double
-            try {
-                nextValue = Double.parseDouble(hexString);
-            }
-            catch (Exception e) {
-                System.out.println("Error parsing " + hexString);
-                nextValue = 0.0;
-            }
-        }
-        return nextValue;
-    }
-
-    /**
-     * Parses double as hex string and generates next double hex string.
-     * 
-     * @param hex
-     * @boolean inc
-     * @return 
-     */
-    private String nextDoubleHexString(String hex, boolean inc) {
-        String returnValue = null;
-
-        // save & restore negative sign
-        boolean negative = false;
-        if ('-' == hex.charAt(0)) {
-            negative = true;
-            hex = hex.substring(1);
-        }
- 
-        // get leading digit, 0 or 1
-        int leadingDigit = 0;
-        try {
-            leadingDigit = Integer.parseInt(hex.substring(2, 3));
-        }
-        catch (Exception e) {
-            System.out.println("Error parsing " + hex.substring(2, 3) + " " + e);
-        }
- 
-        // get fractional value in hexadecimal
-        int pIndex = hex.indexOf('p');
-        String hexDigits = hex.substring(4, pIndex);
-        hexDigits = padWithZeros(hexDigits);
- 
-        // get exponent
-        int power = 0;
-        try {
-            power = Integer.parseInt(hex.substring(pIndex + 1));
-        }
-        catch (Exception e) {
-            System.out.println("Error parsing " + hex.substring(pIndex + 1) + " " + e);
-        }
-        
-        if (inc) {
-            // increment hexadecimal numeric value
-            if (MAX_DIGITS.equals(hexDigits)) {
-                if (1 == leadingDigit) {
-                    // next after 0x1.fffffffffffffp1 is 0x1.0p2
-                    ++power;
-                }
-                else {
-                    // next after 0x0.fffffffffffffp-1022 is 0x1.0p-1022
-                    ++leadingDigit;
-                }
-                hexDigits = MIN_DIGITS;
-            }
-            else {
-                char[] hexChars = hexDigits.toCharArray();
-
-                int i = LAST_HEX_DIGIT_INDEX;
-                boolean carry;
-                do {
-                    ++hexChars[i];
-
-                    if (hexChars[i] == 'f' + 1) {
-                        hexChars[i] = '0';
-
-                        // carry to preceding digit
-                        carry = true;
-                        --i;
-
-                    }
-                    else {
-
-                        // no carry
-                        carry = false;
-
-                        // patch hexadecimal
-                        if (hexChars[i] == '9' + 1) {
-                            hexChars[i] = 'a';
-                        }
-                    } 
-                }
-                while (i >= 0 && carry);
-
-                hexDigits = new String(hexChars);
-            }
-        }
-        else {
-            // decrement hexadecimal numeric value
-            if (MIN_DIGITS.equals(hexDigits)) {
-                // previous before 0x1.0000000000000p1 is 0x1.fffffffffffffp0
-                --power;
-                hexDigits = MAX_DIGITS;
-            }
-            else {
-                char[] hexChars = hexDigits.toCharArray();
-                
-                int i = LAST_HEX_DIGIT_INDEX;
-                boolean borrow;
-                do {
-                    --hexChars[i];
-                    
-                    if (hexChars[i] == '0' - 1) {
-                        hexChars[i] = 'f';
-                        
-                        // borrow from preceding digit
-                        borrow = true;
-                        --i;
-                    }
-                    else {
-                        // no borrow
-                        borrow = false;
-                        
-                        // patch hexadecimal
-                        if (hexChars[i] == 'a' - 1) {
-                            hexChars[i] = '9';
-                        }
-                    }
-                }
-                while (i >= 0 && borrow);
-                
-                hexDigits = new String(hexChars);
-            }
-        }
-        return (negative ? "-" : "") + "0x" + leadingDigit + "." + hexDigits + "p" + power;
-    }
-
-    /**
-     * Cheap way to pad with zeros.
-     * 
-     * @param hexDigits
-     * @return 
-     */
-    private String padWithZeros(String hexDigits) {
-        while (hexDigits.length() < MAX_PLACES) {
-            hexDigits += "0";
-        }
-        return hexDigits;
     }
 
 }

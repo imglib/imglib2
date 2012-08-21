@@ -106,10 +106,9 @@ public class Binning {
      */
     public static double[] edgeValuesPerBin(int bins, double min, double max) {
         double[] edgeValues = new double[bins];
-        double binSize = (max - min) / bins;
         
         for (int i = 0; i < bins; ++i) {
-            edgeValues[i] = min + i * binSize;
+            edgeValues[i] = min + (max - min) * i / bins;
         }
         return edgeValues;
     }
