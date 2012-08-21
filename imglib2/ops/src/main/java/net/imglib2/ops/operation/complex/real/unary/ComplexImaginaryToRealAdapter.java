@@ -35,7 +35,7 @@
  */
 
 
-package net.imglib2.ops.operation.mixed.unary;
+package net.imglib2.ops.operation.complex.real.unary;
 
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;

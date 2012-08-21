@@ -35,7 +35,7 @@
  */
 
 
-package net.imglib2.ops.operation.mixed.unary;
+package net.imglib2.ops.operation.real.complex.unary;
 
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
@@ -47,23 +47,24 @@ import net.imglib2.type.numeric.RealType;
 // and passing it to a ConverterFunction in ops.function.general.
 
 /**
- * Sets an output complex number from an input real number. The imaginary
- * component of the output will be 0. The real component of the output will
- * equal the value of the real input.
+ * Sets an output complex number from an input real number. The real component
+ * of the output will be 0. The imaginary component of the output will equal the
+ * value of the real input.
  * 
  * @author Barry DeZonia
  */
-public final class RealToComplexRealAdapter
-		implements UnaryOperation<RealType<?>, ComplexType<?>>
-{
+public final class RealToComplexImaginaryAdapter
+		implements UnaryOperation<RealType<?>, ComplexType<?>> {
+
 	@Override
 	public ComplexType<?> compute(RealType<?> x, ComplexType<?> output) {
-		output.setComplexNumber(x.getRealDouble(), 0);
+		output.setComplexNumber(0, x.getRealDouble());
 		return output;
 	}
 
 	@Override
-	public RealToComplexRealAdapter copy() {
-		return new RealToComplexRealAdapter();
+	public RealToComplexImaginaryAdapter copy() {
+		return new RealToComplexImaginaryAdapter();
 	}
+
 }

@@ -35,36 +35,34 @@
  */
 
 
-package net.imglib2.ops.operation.mixed.unary;
+package net.imglib2.ops.operation.complex.real.unary;
 
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 
 // This is an example implementation of a mixed parameter UnaryOperation.
-// There is a ComplexAdapterFunction in the ops.function.complex package.
+// There is a RealAdapterFunction in the ops.function.real package.
 // But that can be replaced with more general code using this operation
 // and passing it to a ConverterFunction in ops.function.general.
 
 /**
- * Sets an output complex number from an input real number. The real component
- * of the output will be 0. The imaginary component of the output will equal the
- * value of the real input.
+ * Sets an output real to the real component of a complex number.
  * 
  * @author Barry DeZonia
  */
-public final class RealToComplexImaginaryAdapter
-		implements UnaryOperation<RealType<?>, ComplexType<?>> {
+public final class ComplexRealToRealAdapter
+		implements UnaryOperation<ComplexType<?>, RealType<?>> {
 
 	@Override
-	public ComplexType<?> compute(RealType<?> x, ComplexType<?> output) {
-		output.setComplexNumber(0, x.getRealDouble());
+	public RealType<?> compute(ComplexType<?> input, RealType<?> output) {
+		output.setReal(input.getRealDouble());
 		return output;
 	}
 
 	@Override
-	public RealToComplexImaginaryAdapter copy() {
-		return new RealToComplexImaginaryAdapter();
+	public ComplexRealToRealAdapter copy() {
+		return new ComplexRealToRealAdapter();
 	}
 
 }
