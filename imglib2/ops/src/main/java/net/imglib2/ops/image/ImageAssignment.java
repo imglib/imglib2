@@ -72,12 +72,16 @@ import net.imglib2.type.numeric.ComplexType;
 
 /**
  * A multithreaded implementation that assigns the values of a region of
- * an Img<A> to values from a Function<long[],B>. A and B extend ComplexType<?>.
+ * an Img<OUTPUT> to values from a Function<long[],INTERMEDIATE>. OUTPUT and
+ * INTERMEDIATE extend ComplexType<?>.
  *  
  * @author Barry DeZonia
  */
-public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>,INPUT> {
-
+public class ImageAssignment
+	<OUTPUT extends ComplexType<OUTPUT>,
+		INTERMEDIATE extends ComplexType<INTERMEDIATE>,
+		INPUT>
+{
 	// -- instance variables --
 
 	private ExecutorService executor;
@@ -93,19 +97,19 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>,I
 	 * function for evaluation. Pixels are assigned in the Img<?> if the given
 	 * condition is satisfied at that point.
 	 * 
-	 * @param img - the Img<A extends ComplexType<A>> to assign data values to
-	 * @param origin - the origin of the region to assign within the Img<A>
-	 * @param span - the extents of the region to assign within the Img<A>
-	 * @param function - the Function<long[],B> to evaluate at each point of the region
+	 * @param img - the Img<OUTPUT> to assign data values to
+	 * @param origin - the origin of the region to assign within the Img<OUTPUT>
+	 * @param span - the extents of the region to assign within the Img<OUTPUT>
+	 * @param function - the Function<INPUT,INTERMEDIATE> to evaluate at each point of the region
 	 * @param condition - the condition that must be satisfied
 	 * @param factory - a factory for generating an input space
 	 * 
 	 */
 	public ImageAssignment(
-		Img<A> img,
+		Img<OUTPUT> img,
 		long[] origin,
 		long[] span,
-		Function<INPUT,B> function,
+		Function<INPUT,INTERMEDIATE> function,
 		Condition<INPUT> condition,
 		InputIteratorFactory<INPUT> factory)
 	{
@@ -177,10 +181,10 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>,I
 	// -- private helpers --
 
 	private void setupTasks(
-		Img<A> img,
+		Img<OUTPUT> img,
 		long[] origin,
 		long[] span,
-		Function<INPUT,B> func,
+		Function<INPUT,INTERMEDIATE> func,
 		Condition<INPUT> cond,
 		InputIteratorFactory<INPUT> factory)
 	{
@@ -244,13 +248,13 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>,I
 	 * The task assigns values to a subset of the output region.
 	 */
 	private Runnable task(
-		Img<A> img,
+		Img<OUTPUT> img,
 		long[] imageOrigin,
 		long[] imageSpan,
 		int axis,
 		long startIndex,
 		long length,
-		Function<INPUT,B> fn,
+		Function<INPUT,INTERMEDIATE> fn,
 		Condition<INPUT> cnd,
 		InputIteratorFactory<INPUT> factory)
 	{
@@ -271,7 +275,7 @@ public class ImageAssignment<A extends ComplexType<A>,B extends ComplexType<B>,I
 		// we remove typing from RegionRunner it won't compile.
 
 		return
-			new RegionRunner<A,B>(
+			new RegionRunner<OUTPUT,INTERMEDIATE>(
 				img,
 				factory.createInputIterator(region),
 				fn.copy(),
