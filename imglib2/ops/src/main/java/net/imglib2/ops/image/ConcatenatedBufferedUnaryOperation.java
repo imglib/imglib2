@@ -36,7 +36,7 @@
 
 package net.imglib2.ops.image;
 
-import net.imglib2.ops.UnaryOperation;
+import net.imglib2.ops.operation.UnaryOperation;
 
 /**
  * 

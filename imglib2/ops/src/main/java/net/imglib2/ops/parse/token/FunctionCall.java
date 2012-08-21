@@ -37,7 +37,7 @@
 
 package net.imglib2.ops.parse.token;
 
-import net.imglib2.ops.UnaryOperation;
+import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**

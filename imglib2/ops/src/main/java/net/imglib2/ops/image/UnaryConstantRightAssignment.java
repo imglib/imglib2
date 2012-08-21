@@ -39,7 +39,7 @@ package net.imglib2.ops.image;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.BinaryOperation;
+import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**

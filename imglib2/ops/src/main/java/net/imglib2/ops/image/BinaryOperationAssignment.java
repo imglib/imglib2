@@ -2,7 +2,7 @@ package net.imglib2.ops.image;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.BinaryOperation;
+import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.Type;
 
 /**
@@ -15,7 +15,7 @@ public final class BinaryOperationAssignment< I extends Type< I >, V extends Typ
 	/* Operation to be wrapped */
 	private final BinaryOperation< I, V, O > m_op;
 
-	public BinaryOperationAssignment( final net.imglib2.ops.BinaryOperation< I, V, O > op )
+	public BinaryOperationAssignment( final net.imglib2.ops.operation.BinaryOperation< I, V, O > op )
 	{
 		m_op = op;
 	}

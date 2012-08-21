@@ -16,12 +16,12 @@ import net.imglib2.img.subset.SubsetViews;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.NativeImgLabeling;
 import net.imglib2.meta.Metadata;
-import net.imglib2.ops.BinaryOperation;
-import net.imglib2.ops.operation.unary.metadata.CopyCalibratedSpace;
-import net.imglib2.ops.operation.unary.metadata.CopyImageMetadata;
-import net.imglib2.ops.operation.unary.metadata.CopyMetadata;
-import net.imglib2.ops.operation.unary.metadata.CopyNamed;
-import net.imglib2.ops.operation.unary.metadata.CopySourced;
+import net.imglib2.ops.operation.BinaryOperation;
+import net.imglib2.ops.operation.metadata.unary.CopyCalibratedSpace;
+import net.imglib2.ops.operation.metadata.unary.CopyImageMetadata;
+import net.imglib2.ops.operation.metadata.unary.CopyMetadata;
+import net.imglib2.ops.operation.metadata.unary.CopyNamed;
+import net.imglib2.ops.operation.metadata.unary.CopySourced;
 import net.imglib2.type.Type;
 
 /**

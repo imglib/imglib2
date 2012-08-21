@@ -38,6 +38,7 @@ package net.imglib2.ops.operation.binary.bool;
 
 import static org.junit.Assert.*;
 
+import net.imglib2.ops.operation.bool.binary.BinaryXor;
 import net.imglib2.type.logic.BitType;
 
 import org.junit.Test;

@@ -39,8 +39,8 @@ package net.imglib2.ops.image;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.UnaryRelation;
+import net.imglib2.ops.operation.UnaryOperation;
+import net.imglib2.ops.relation.UnaryRelation;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 

@@ -37,8 +37,8 @@
 package net.imglib2.ops.sandbox;
 
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.UnaryOperation;
+import net.imglib2.ops.function.Function;
+import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**

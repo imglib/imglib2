@@ -37,7 +37,7 @@
 
 package net.imglib2.ops.sandbox;
 
-import net.imglib2.ops.DataCopier;
+import net.imglib2.ops.util.DataCopier;
 
 /**
  * 

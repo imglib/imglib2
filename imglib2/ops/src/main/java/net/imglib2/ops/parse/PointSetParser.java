@@ -42,10 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.imglib2.ops.Condition;
-import net.imglib2.ops.PointSet;
-import net.imglib2.ops.Tuple2;
 import net.imglib2.ops.condition.AndCondition;
+import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.condition.DimensionEqualCondition;
 import net.imglib2.ops.condition.NotCondition;
 import net.imglib2.ops.condition.OrCondition;
@@ -75,12 +73,14 @@ import net.imglib2.ops.parse.token.Variable;
 import net.imglib2.ops.parse.token.Xor;
 import net.imglib2.ops.pointset.ConditionalPointSet;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
-import net.imglib2.ops.relation.RealEquals;
-import net.imglib2.ops.relation.RealGreaterThan;
-import net.imglib2.ops.relation.RealGreaterThanOrEqual;
-import net.imglib2.ops.relation.RealLessThan;
-import net.imglib2.ops.relation.RealLessThanOrEqual;
-import net.imglib2.ops.relation.RealNotEquals;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.ops.relation.real.binary.RealEquals;
+import net.imglib2.ops.relation.real.binary.RealGreaterThan;
+import net.imglib2.ops.relation.real.binary.RealGreaterThanOrEqual;
+import net.imglib2.ops.relation.real.binary.RealLessThan;
+import net.imglib2.ops.relation.real.binary.RealLessThanOrEqual;
+import net.imglib2.ops.relation.real.binary.RealNotEquals;
+import net.imglib2.ops.util.Tuple2;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /*

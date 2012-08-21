@@ -44,10 +44,10 @@ import java.util.concurrent.Executors;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
-import net.imglib2.ops.Condition;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.InputIterator;
-import net.imglib2.ops.InputIteratorFactory;
+import net.imglib2.ops.condition.Condition;
+import net.imglib2.ops.function.Function;
+import net.imglib2.ops.input.InputIterator;
+import net.imglib2.ops.input.InputIteratorFactory;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.ComplexType;
 

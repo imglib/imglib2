@@ -38,9 +38,9 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.img.Img;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.Tuple2;
+import net.imglib2.ops.function.Function;
 import net.imglib2.ops.parse.RealEquationFunctionParser;
+import net.imglib2.ops.util.Tuple2;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 

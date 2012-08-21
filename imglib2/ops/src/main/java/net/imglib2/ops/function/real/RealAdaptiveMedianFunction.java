@@ -40,8 +40,8 @@ package net.imglib2.ops.function.real;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.imglib2.ops.Function;
-import net.imglib2.ops.PointSet;
+import net.imglib2.ops.function.Function;
+import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 // Reference: Gonzalez and Woods, Digital Image Processing, 2008

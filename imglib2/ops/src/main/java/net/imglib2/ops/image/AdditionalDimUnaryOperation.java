@@ -44,8 +44,8 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.subset.ImgView;
 import net.imglib2.img.subset.SubsetViews;
-import net.imglib2.ops.UnaryOperation;
-import net.imglib2.ops.UnaryOutputOperation;
+import net.imglib2.ops.operation.UnaryOperation;
+import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.Type;
 
 /**
