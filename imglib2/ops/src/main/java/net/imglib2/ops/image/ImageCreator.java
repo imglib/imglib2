@@ -230,9 +230,9 @@ public class ImageCreator
 		return image;
 	}
 	
-	private static void fillImage(Img<? extends RealType<?>> img) {
+	private static <O extends RealType<O>> void fillImage(Img<O> img) {
 		Random rng = new Random();
-		Cursor<? extends RealType<?>> cursor = img.cursor();
+		Cursor<O> cursor = img.cursor();
 		while (cursor.hasNext()) {
 			double value = 256 * rng.nextDouble();
 			cursor.next().setReal(value);
