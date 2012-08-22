@@ -3,12 +3,11 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.operation.UnaryOperation;
-import net.imglib2.ops.operation.iterableinterval.unary.MakeHistogram;
 import net.imglib2.type.numeric.RealType;
 
 /**
  * 
- * @author hornm, University of Konstanz
+ * @author hornm, dietzc University of Konstanz
  */
 public class EqualizeHistogram< T extends RealType< T >, I extends IterableInterval< T >> implements UnaryOperation< I, I >
 {
