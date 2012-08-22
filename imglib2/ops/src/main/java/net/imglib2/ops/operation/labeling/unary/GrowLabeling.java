@@ -8,7 +8,7 @@ import net.imglib2.Cursor;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.UnaryOperation;
-import net.imglib2.ops.operation.randomaccessibleinterval.regiongrowing.AbstractRegionGrowing;
+import net.imglib2.ops.operation.randomaccessibleinterval.regiongrowing.unary.AbstractRegionGrowing;
 import net.imglib2.util.Pair;
 
 /**

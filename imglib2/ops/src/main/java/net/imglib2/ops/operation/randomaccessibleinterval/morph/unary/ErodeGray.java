@@ -1,4 +1,4 @@
-package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
+package net.imglib2.ops.operation.randomaccessibleinterval.morph.unary;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;

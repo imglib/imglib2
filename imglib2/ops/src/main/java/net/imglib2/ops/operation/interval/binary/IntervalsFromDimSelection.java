@@ -3,7 +3,7 @@ package net.imglib2.ops.operation.interval.binary;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.ops.operation.BinaryOutputOperation;
-import net.imglib2.ops.operation.subset.IterateUnaryOperation;
+import net.imglib2.ops.operation.subset.unary.IterateUnaryOperation;
 
 /**
  * Merges an interval array

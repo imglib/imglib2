@@ -1,4 +1,4 @@
-package net.imglib2.ops.operation.randomaccessible;
+package net.imglib2.ops.operation.randomaccessible.binary;
 
 import java.util.Arrays;
 import java.util.LinkedList;

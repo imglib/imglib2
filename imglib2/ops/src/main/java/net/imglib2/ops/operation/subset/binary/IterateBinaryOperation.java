@@ -1,4 +1,4 @@
-package net.imglib2.ops.operation.subset;
+package net.imglib2.ops.operation.subset.binary;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;

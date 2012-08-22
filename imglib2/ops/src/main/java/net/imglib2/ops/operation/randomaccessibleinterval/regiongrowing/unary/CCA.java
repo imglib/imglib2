@@ -1,4 +1,4 @@
-package net.imglib2.ops.operation.randomaccessibleinterval.regiongrowing;
+package net.imglib2.ops.operation.randomaccessibleinterval.regiongrowing.unary;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;

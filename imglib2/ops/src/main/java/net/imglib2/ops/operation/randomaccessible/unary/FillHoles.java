@@ -1,9 +1,10 @@
-package net.imglib2.ops.operation.randomaccessible;
+package net.imglib2.ops.operation.randomaccessible.unary;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.ops.operation.UnaryOperation;
+import net.imglib2.ops.operation.randomaccessible.binary.FloodFill;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.logic.BitType;
 

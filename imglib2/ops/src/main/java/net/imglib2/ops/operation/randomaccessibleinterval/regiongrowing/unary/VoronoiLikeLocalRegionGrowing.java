@@ -48,7 +48,7 @@
  * History
  *   7 Dec 2011 (hornm): created
  */
-package net.imglib2.ops.operation.randomaccessibleinterval.regiongrowing;
+package net.imglib2.ops.operation.randomaccessibleinterval.regiongrowing.unary;
 
 import java.util.Collection;
 

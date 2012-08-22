@@ -7,7 +7,7 @@ import net.imglib2.Cursor;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.UnaryOperation;
-import net.imglib2.ops.operation.randomaccessibleinterval.unary.morph.StructuringElementCursor;
+import net.imglib2.ops.operation.randomaccessibleinterval.morph.unary.StructuringElementCursor;
 import net.imglib2.view.Views;
 
 /**

@@ -1,4 +1,4 @@
-package net.imglib2.ops.operation.iterableinterval.unary.multilevelthresholder;
+package net.imglib2.ops.operation.iterableinterval.multilevelthresholder.unary;
 
 import java.util.Arrays;
 
