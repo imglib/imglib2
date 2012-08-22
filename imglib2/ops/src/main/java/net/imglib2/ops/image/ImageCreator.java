@@ -34,7 +34,7 @@
  * #L%
  */
 
-package net.imglib2.ops.img;
+package net.imglib2.ops.image;
 
 import java.util.Random;
 
