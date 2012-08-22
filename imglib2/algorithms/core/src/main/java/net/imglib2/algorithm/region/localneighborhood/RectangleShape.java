@@ -14,11 +14,11 @@ import net.imglib2.RandomAccessibleInterval;
 
 /**
  * A factory for Accessibles on rectangular neighboorhoods.
- *
+ * 
  * TODO: support non-isotropic, non-symmetric rectangular neighboorhood shapes.
  * (the Neighborhood implementation supports it already, we just need to change
  * this factory.)
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class RectangleShape implements Shape
@@ -46,9 +46,7 @@ public class RectangleShape implements Shape
 	@Override
 	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessible( final RandomAccessibleInterval< T > source )
 	{
-		final RectangleNeighborhoodFactory< T > f = skipCenter ?
-				RectangleNeighborhoodSkipCenterUnsafe.< T >factory() :
-				RectangleNeighborhoodUnsafe.< T >factory();
+		final RectangleNeighborhoodFactory< T > f = skipCenter ? RectangleNeighborhoodSkipCenterUnsafe.< T >factory() : RectangleNeighborhoodUnsafe.< T >factory();
 		final Interval spanInterval = createSpan( source.numDimensions() );
 		return new NeighborhoodsAccessible< T >( source, spanInterval, f );
 	}
@@ -62,9 +60,7 @@ public class RectangleShape implements Shape
 	@Override
 	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessibleSafe( final RandomAccessibleInterval< T > source )
 	{
-		final RectangleNeighborhoodFactory< T > f = skipCenter ?
-				RectangleNeighborhoodSkipCenter.< T >factory() :
-				RectangleNeighborhood.< T >factory();
+		final RectangleNeighborhoodFactory< T > f = skipCenter ? RectangleNeighborhoodSkipCenter.< T >factory() : RectangleNeighborhood.< T >factory();
 		final Interval spanInterval = createSpan( source.numDimensions() );
 		return new NeighborhoodsAccessible< T >( source, spanInterval, f );
 	}

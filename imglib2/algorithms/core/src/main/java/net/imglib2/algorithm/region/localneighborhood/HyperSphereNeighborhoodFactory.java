@@ -4,9 +4,9 @@ import net.imglib2.RandomAccess;
 
 /**
  * INCOMPLETE !!!
- *
+ * 
  * TODO
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface HyperSphereNeighborhoodFactory< T >

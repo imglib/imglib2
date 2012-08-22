@@ -6,7 +6,8 @@ public final class HyperSphereNeighborhoodUnsafe< T > extends HyperSphereNeighbo
 {
 	public static < T > HyperSphereNeighborhoodFactory< T > factory()
 	{
-		return new HyperSphereNeighborhoodFactory< T >() {
+		return new HyperSphereNeighborhoodFactory< T >()
+		{
 			@Override
 			public Neighborhood< T > create( final long[] position, final long radius, final RandomAccess< T > sourceRandomAccess )
 			{

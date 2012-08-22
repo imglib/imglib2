@@ -1,7 +1,5 @@
 package net.imglib2.algorithm.region.localneighborhood;
 
-
-
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.util.IntervalIndexer;
@@ -105,7 +103,6 @@ public final class HyperSphereNeighborhoodCursor< T > extends HypersphereNeighbo
 	{
 		return new HyperSphereNeighborhoodCursor< T >( this );
 	}
-
 
 	@Override
 	public HyperSphereNeighborhoodCursor< T > copyCursor()

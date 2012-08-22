@@ -14,7 +14,7 @@ import net.imglib2.view.Views;
 
 /**
  * A factory for Accessibles on hyper-sphere neighboorhoods.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class HyperSphereShape implements Shape
@@ -55,7 +55,7 @@ public class HyperSphereShape implements Shape
 		final RandomAccessibleInterval< T > source;
 
 		final long radius;
-		
+
 		final long size;
 
 		final HyperSphereNeighborhoodFactory< T > factory;
@@ -66,8 +66,8 @@ public class HyperSphereShape implements Shape
 			this.source = source;
 			this.radius = radius;
 			this.factory = factory;
-			
-			long s = source.dimension(0);
+
+			long s = source.dimension( 0 );
 			for ( int d = 1; d < n; ++d )
 				s *= source.dimension( d );
 			size = s;
@@ -86,38 +86,44 @@ public class HyperSphereShape implements Shape
 		}
 
 		@Override
-		public long size() {
+		public long size()
+		{
 			return size;
 		}
 
 		@Override
-		public Neighborhood<T> firstElement() {
+		public Neighborhood< T > firstElement()
+		{
 			return cursor().next();
 		}
 
 		@Override
-		public Object iterationOrder() {
-			return new FlatIterationOrder(this);
+		public Object iterationOrder()
+		{
+			return new FlatIterationOrder( this );
 		}
 
 		@Override
-		public boolean equalIterationOrder(IterableRealInterval<?> f) {
-			return  iterationOrder().equals( f.iterationOrder() );
+		public boolean equalIterationOrder( IterableRealInterval< ? > f )
+		{
+			return iterationOrder().equals( f.iterationOrder() );
 		}
 
 		@Override
-		public Iterator<Neighborhood<T>> iterator() {
+		public Iterator< Neighborhood< T >> iterator()
+		{
 			return cursor();
 		}
 
 		@Override
 		public Cursor< Neighborhood< T >> cursor()
 		{
-			return new HyperSphereNeighborhoodCursor<T>(source, radius, factory );
+			return new HyperSphereNeighborhoodCursor< T >( source, radius, factory );
 		}
 
 		@Override
-		public Cursor<Neighborhood<T>> localizingCursor() {
+		public Cursor< Neighborhood< T >> localizingCursor()
+		{
 			return cursor();
 		}
 	}

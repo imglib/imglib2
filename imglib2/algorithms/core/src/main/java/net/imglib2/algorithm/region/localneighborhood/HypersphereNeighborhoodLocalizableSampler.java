@@ -17,7 +17,7 @@ public abstract class HypersphereNeighborhoodLocalizableSampler< T > extends Abs
 	protected final long[] currentPos;
 
 	protected final long radius;
-	
+
 	public HypersphereNeighborhoodLocalizableSampler( final RandomAccessibleInterval< T > source, final long radius, final HyperSphereNeighborhoodFactory< T > factory )
 	{
 		super( source );
