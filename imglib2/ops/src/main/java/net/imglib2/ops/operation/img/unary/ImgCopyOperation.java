@@ -45,10 +45,10 @@ import net.imglib2.type.Type;
  * TODO
  *
  */
-public class ImgCopyIOperation<T extends Type<T>> implements
+public class ImgCopyOperation<T extends Type<T>> implements
 		UnaryOperation<Img<T>, Img<T>> {
 
-	public ImgCopyIOperation() {
+	public ImgCopyOperation() {
 
 	}
 
@@ -69,8 +69,8 @@ public class ImgCopyIOperation<T extends Type<T>> implements
 	}
 
 	@Override
-	public ImgCopyIOperation<T> copy() {
-		return new ImgCopyIOperation<T>();
+	public ImgCopyOperation<T> copy() {
+		return new ImgCopyOperation<T>();
 	}
 
 }
