@@ -48,76 +48,93 @@
 package net.imglib2.ops.operation.randomaccessibleinterval.unary;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.ops.operation.UnaryOperation;
+import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.numeric.RealType;
-
-import org.knime.knip.core.types.ConnectedType;
 
 /**
  * @author muethingc, University of Konstanz
  */
-public class GrayscaleReconstructionByErosion<T extends RealType<T>, V extends RealType<V>, MASK extends RandomAccessibleInterval<T>, MARKER extends RandomAccessibleInterval<V>> extends AbstractGrayscaleReconstruction<T, V, MASK, MARKER> {
+public class GrayscaleReconstructionByErosion< T extends RealType< T >, V extends RealType< V >, MASK extends RandomAccessibleInterval< T >, MARKER extends RandomAccessibleInterval< V >> extends AbstractGrayscaleReconstruction< T, V, MASK, MARKER >
+{
 
-    public GrayscaleReconstructionByErosion(final ConnectedType connection) {
-        super(connection);
-    }
+	public GrayscaleReconstructionByErosion( final ConnectedType connection )
+	{
+		super( connection );
+	}
 
-        public GrayscaleReconstructionByErosion(
-                        final GrayscaleReconstructionByErosion<T, V, MASK, MARKER> copy) {
-                super(copy);
-        }
-
-    @Override
-    protected final boolean checkPixelFromQueue(final V p, final V q, final T i) {
-        double pd = p.getRealDouble();
-        double qd = q.getRealDouble();
-        double id = i.getRealDouble();
-
-        if (qd > pd && qd != id) return true;
-        else return false;
-    }
-
-    @Override
-    protected final V morphOp(final V a, final V b) {
-        if (a.getRealDouble() < b.getRealDouble()) return a;
-        else return b;
-    }
-
-    @Override
-    protected final V pointwiseOp(final V a, final T b) {
-        if (a.getRealDouble() > b.getRealDouble()) {
-            return a;
-        } else {
-            V r = a.createVariable();
-            r.setReal(b.getRealDouble());
-            return r;
-        }
-    }
-
-    @Override
-    protected final boolean checkPixelAddToQueue(final V p, final V q, final T i) {
-        double pd = p.getRealDouble();
-        double qd = q.getRealDouble();
-        double id = i.getRealDouble();
-
-        if (qd > pd && qd > id) return true;
-        else return false;
-    }
-
-    @Override
-    protected V getVMinValue(final V var) {
-        var.setReal(var.getMinValue());
-        return var;
-    }
-
-    @Override
-    protected T getTMinValue(final T var) {
-        var.setReal(var.getMinValue());
-        return var;
-    }
+	public GrayscaleReconstructionByErosion( final GrayscaleReconstructionByErosion< T, V, MASK, MARKER > copy )
+	{
+		super( copy );
+	}
 
 	@Override
-	public UnaryOperation<MASK, MARKER> copy() {
-                return new GrayscaleReconstructionByErosion<T, V, MASK, MARKER>(
-                                this);
+	protected final boolean checkPixelFromQueue( final V p, final V q, final T i )
+	{
+		double pd = p.getRealDouble();
+		double qd = q.getRealDouble();
+		double id = i.getRealDouble();
+
+		if ( qd > pd && qd != id )
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	protected final V morphOp( final V a, final V b )
+	{
+		if ( a.getRealDouble() < b.getRealDouble() )
+			return a;
+		else
+			return b;
+	}
+
+	@Override
+	protected final V pointwiseOp( final V a, final T b )
+	{
+		if ( a.getRealDouble() > b.getRealDouble() )
+		{
+			return a;
+		}
+		else
+		{
+			V r = a.createVariable();
+			r.setReal( b.getRealDouble() );
+			return r;
+		}
+	}
+
+	@Override
+	protected final boolean checkPixelAddToQueue( final V p, final V q, final T i )
+	{
+		double pd = p.getRealDouble();
+		double qd = q.getRealDouble();
+		double id = i.getRealDouble();
+
+		if ( qd > pd && qd > id )
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	protected V getVMinValue( final V var )
+	{
+		var.setReal( var.getMinValue() );
+		return var;
+	}
+
+	@Override
+	protected T getTMinValue( final T var )
+	{
+		var.setReal( var.getMinValue() );
+		return var;
+	}
+
+	@Override
+	public UnaryOperation< MASK, MARKER > copy()
+	{
+		return new GrayscaleReconstructionByErosion< T, V, MASK, MARKER >( this );
 	}
 }

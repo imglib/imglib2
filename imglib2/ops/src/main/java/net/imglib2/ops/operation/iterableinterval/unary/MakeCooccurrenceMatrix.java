@@ -21,6 +21,23 @@ import net.imglib2.type.numeric.RealType;
 public class MakeCooccurrenceMatrix< T extends RealType< T >> implements UnaryOperation< IterableInterval< T >, CooccurrenceMatrix >
 {
 
+	public static enum HaralickFeature
+	{
+		ASM, Contrast, Correlation, Variance, IFDM, SumAverage, SumVariance, SumEntropy, Entropy, DifferenceVariance, DifferenceEntropy, ICM1, ICM2,
+		/* non haralick extensions */
+		ClusterShade, ClusterProminence;
+
+		public static int getIndex( HaralickFeature feature )
+		{
+			for ( int i = 0; i < values().length; i++ )
+			{
+				if ( values()[ i ] == feature ) { return i; }
+			}
+			// could not happen
+			return -1;
+		}
+	}
+
 	/**
 	 * To avoid calculation of log(0).
 	 */

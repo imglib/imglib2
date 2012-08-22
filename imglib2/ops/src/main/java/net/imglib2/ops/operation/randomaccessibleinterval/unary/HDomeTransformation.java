@@ -5,159 +5,165 @@ import net.imglib2.ops.img.BinaryOperationAssignment;
 import net.imglib2.ops.img.UnaryOperationAssignment;
 import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.ops.operation.UnaryOperation;
+import net.imglib2.ops.operation.img.unary.ImgCopyOperation;
 import net.imglib2.ops.operation.real.binary.RealSubtract;
+import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.numeric.RealType;
 
-import org.knime.knip.core.types.ConnectedType;
-import org.knime.knip.core.util.ImgUtils;
+public class HDomeTransformation< T extends RealType< T >> implements UnaryOperation< Img< T >, Img< T >>
+{
 
-public class HDomeTransformation<T extends RealType<T>> implements
-                UnaryOperation<Img<T>, Img<T>> {
+	private final ConnectedType m_type;
 
-        private final ConnectedType m_type;
-        private final double m_height;
-        private final double m_substractBefore;
+	private final double m_height;
 
-        public HDomeTransformation(ConnectedType type, double height,
-                        double substractBefore) {
-                m_type = type;
-                m_height = height;
-                m_substractBefore = substractBefore;
-        }
+	private final double m_substractBefore;
 
-        @Override
-        public Img<T> compute(Img<T> input, Img<T> output) {
+	public HDomeTransformation( ConnectedType type, double height, double substractBefore )
+	{
+		m_type = type;
+		m_height = height;
+		m_substractBefore = substractBefore;
+	}
 
-                // calculate the regional maxima that should be
-                // subtracted
-                // before real run
+	@Override
+	public Img< T > compute( Img< T > input, Img< T > output )
+	{
 
-                if (m_substractBefore > 0.0) {
-                        Img<T> noSingular = ImgUtils.createEmptyCopy(input);
-                        getRegionalMaxima(input, m_substractBefore, noSingular);
-                        // subtract these maxima from the
-                        // original image
-                        input = subtract(input, noSingular);
-                }
+		// calculate the regional maxima that should be
+		// subtracted
+		// before real run
 
-                // now calculate the desired regional maxima
+		if ( m_substractBefore > 0.0 )
+		{
+			Img< T > noSingular = input.factory().create( input, input.firstElement().createVariable() );
+			getRegionalMaxima( input, m_substractBefore, noSingular );
+			// subtract these maxima from the
+			// original image
+			input = subtract( input, noSingular );
+		}
 
-                if (m_height > 0.0) {
-                        output = getRegionalMaxima(input, m_height, output);
-                } else {
-                        new CopyImgOperation<T>().compute(input, output);
-                }
+		// now calculate the desired regional maxima
 
-                return output;
-        }
+		if ( m_height > 0.0 )
+		{
+			output = getRegionalMaxima( input, m_height, output );
+		}
+		else
+		{
+			new ImgCopyOperation< T >().compute( input, output );
+		}
 
-        @Override
-        public UnaryOperation<Img<T>, Img<T>> copy() {
-                return new HDomeTransformation<T>(m_type, m_height,
-                                m_substractBefore);
-        }
+		return output;
+	}
 
-        private Img<T> getRegionalMaxima(final Img<T> img, double height,
-                        Img<T> output) {
+	@Override
+	public UnaryOperation< Img< T >, Img< T >> copy()
+	{
+		return new HDomeTransformation< T >( m_type, m_height, m_substractBefore );
+	}
 
-                // compute the marker image, i.e. subtract
-                // height from image
-                UnaryOperation<Img<T>, Img<T>> op = new SubstractConstantOp(
-                                height);
+	private Img< T > getRegionalMaxima( final Img< T > img, double height, Img< T > output )
+	{
 
-                op.compute(img, output);
+		// compute the marker image, i.e. subtract
+		// height from image
+		UnaryOperation< Img< T >, Img< T >> op = new SubstractConstantOp( height );
 
-                // reconstruct the image from the marker and the
-                // original image
-                GrayscaleReconstructionByDilation<T, T, Img<T>, Img<T>> op2 = new GrayscaleReconstructionByDilation<T, T, Img<T>, Img<T>>(
-                                m_type);
+		op.compute( img, output );
 
-                output = op2.compute(img, output);
+		// reconstruct the image from the marker and the
+		// original image
+		GrayscaleReconstructionByDilation< T, T, Img< T >, Img< T >> op2 = new GrayscaleReconstructionByDilation< T, T, Img< T >, Img< T >>( m_type );
 
-                // subtract the reconstructed image from the
-                // original image to
-                // obtain height
-                return subtract(img, output);
-        }
+		output = op2.compute( img, output );
 
-        /**
-         * ATTENTION: Subtrahend will be overwritten.
-         */
-        private Img<T> subtract(final Img<T> minuend, final Img<T> subtrahend) {
+		// subtract the reconstructed image from the
+		// original image to
+		// obtain height
+		return subtract( img, output );
+	}
 
-                BinaryOperation<Img<T>, Img<T>, Img<T>> subtract = new SubstractImgFromImgOp();
+	/**
+	 * ATTENTION: Subtrahend will be overwritten.
+	 */
+	private Img< T > subtract( final Img< T > minuend, final Img< T > subtrahend )
+	{
 
-                subtract.compute(minuend, subtrahend, subtrahend);
-                return subtrahend;
-        }
+		BinaryOperation< Img< T >, Img< T >, Img< T >> subtract = new SubstractImgFromImgOp();
 
-        private class SubstractConstantOp implements
-                        UnaryOperation<Img<T>, Img<T>> {
+		subtract.compute( minuend, subtrahend, subtrahend );
+		return subtrahend;
+	}
 
-                private final double height;
+	private class SubstractConstantOp implements UnaryOperation< Img< T >, Img< T >>
+	{
 
-                public SubstractConstantOp(double height) {
-                        this.height = height;
-                }
+		private final double height;
 
-                @Override
-                public Img<T> compute(Img<T> input, Img<T> output) {
-                        new UnaryOperationAssignment<T, T>(
-                                        new RealSubtractConstantBounded<T>(
-                                                        height)).compute(input,
-                                        output);
-                        return output;
-                }
+		public SubstractConstantOp( double height )
+		{
+			this.height = height;
+		}
 
-                @Override
-                public UnaryOperation<Img<T>, Img<T>> copy() {
-                        return new SubstractConstantOp(height);
-                }
+		@Override
+		public Img< T > compute( Img< T > input, Img< T > output )
+		{
+			new UnaryOperationAssignment< T, T >( new RealSubtractConstantBounded< T >( height ) ).compute( input, output );
+			return output;
+		}
 
-        }
+		@Override
+		public UnaryOperation< Img< T >, Img< T >> copy()
+		{
+			return new SubstractConstantOp( height );
+		}
 
-        private class RealSubtractConstantBounded<I extends RealType<I>>
-                        implements UnaryOperation<I, I> {
+	}
 
-                private final double constant;
+	private class RealSubtractConstantBounded< I extends RealType< I >> implements UnaryOperation< I, I >
+	{
 
-                public RealSubtractConstantBounded(final double constant) {
-                        this.constant = constant;
-                }
+		private final double constant;
 
-                @Override
-                public I compute(I input, I output) {
+		public RealSubtractConstantBounded( final double constant )
+		{
+			this.constant = constant;
+		}
 
-                        double val = Math.max(output.getMinValue(),
-                                        input.getRealDouble() - this.constant);
-                        output.setReal(val);
+		@Override
+		public I compute( I input, I output )
+		{
 
-                        return output;
-                }
+			double val = Math.max( output.getMinValue(), input.getRealDouble() - this.constant );
+			output.setReal( val );
 
-                @Override
-                public UnaryOperation<I, I> copy() {
-                        return new RealSubtractConstantBounded<I>(this.constant);
-                }
+			return output;
+		}
 
-        }
+		@Override
+		public UnaryOperation< I, I > copy()
+		{
+			return new RealSubtractConstantBounded< I >( this.constant );
+		}
 
-        private class SubstractImgFromImgOp implements
-                        BinaryOperation<Img<T>, Img<T>, Img<T>> {
+	}
 
-                @Override
-                public Img<T> compute(Img<T> input1, Img<T> input2,
-                                Img<T> output) {
-                        new BinaryOperationAssignment<T, T, T>(
-                                        new RealSubtract<T, T, T>()).compute(
-                                        input1, input2, output);
-                        return output;
-                }
+	private class SubstractImgFromImgOp implements BinaryOperation< Img< T >, Img< T >, Img< T >>
+	{
 
-                @Override
-                public BinaryOperation<Img<T>, Img<T>, Img<T>> copy() {
-                        return new SubstractImgFromImgOp();
-                }
+		@Override
+		public Img< T > compute( Img< T > input1, Img< T > input2, Img< T > output )
+		{
+			new BinaryOperationAssignment< T, T, T >( new RealSubtract< T, T, T >() ).compute( input1, input2, output );
+			return output;
+		}
 
-        }
+		@Override
+		public BinaryOperation< Img< T >, Img< T >, Img< T >> copy()
+		{
+			return new SubstractImgFromImgOp();
+		}
+
+	}
 }

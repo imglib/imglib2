@@ -23,7 +23,7 @@ public final class FillHoles< K extends RandomAccessible< BitType > & IterableIn
 	@Override
 	public final K compute( final K op, final K r )
 	{
-		if ( !r.iterationOrder().equals( op.iterationOrder() ) ) { throw new ImageNotCompatibleException( "Intervals are not compatible (IterationOrder)" ); }
+		if ( !r.iterationOrder().equals( op.iterationOrder() ) ) { throw new IllegalStateException( "Intervals are not compatible (IterationOrder)" ); }
 		FloodFill< BitType, K > ff = new FloodFill< BitType, K >( m_connectedType );
 		long[] dim = new long[ r.numDimensions() ];
 		r.dimensions( dim );

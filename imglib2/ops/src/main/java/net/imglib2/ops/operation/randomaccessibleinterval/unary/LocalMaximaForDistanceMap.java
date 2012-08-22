@@ -23,6 +23,33 @@ import net.imglib2.view.Views;
 public class LocalMaximaForDistanceMap< T extends RealType< T >, K extends RandomAccessibleInterval< T > & IterableInterval< T >> implements UnaryOperation< K, List< long[] >>
 {
 
+	public enum NeighborhoodType
+	{
+
+		EIGHT( -1, 3 ), SIXTEEN( -2, 5 ), THIRTYTWO( -3, 7 );
+
+		private int m_offset;
+
+		private int m_extend;
+
+		private NeighborhoodType( int offset, int extend )
+		{
+			m_offset = offset;
+			m_extend = extend;
+		}
+
+		public final int getOffset()
+		{
+			return m_offset;
+		}
+
+		public final int getExtend()
+		{
+			return m_extend;
+		}
+
+	}
+
 	/* Inital origin of the sliding window */
 	private double[] m_roiOrigin;
 
