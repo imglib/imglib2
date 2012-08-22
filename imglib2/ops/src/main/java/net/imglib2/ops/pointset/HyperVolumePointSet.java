@@ -43,19 +43,24 @@ package net.imglib2.ops.pointset;
  * @author Barry DeZonia
  */
 public class HyperVolumePointSet implements PointSet {
+	
+	// -- instance variables --
+	
 	private final long[] anchor;
 	private final long[] negOffsets;
 	private final long[] posOffsets;
 	private final long[] boundMin;
 	private final long[] boundMax;
 
+	// -- constructors --
+	
 	/**
 	 * Constructor taking an anchor point and offsets relative to that anchor
 	 * point. These parameters define a hypervolume.
 	 * 
-	 * @param anchor
-	 * @param negOffsets - (note: must be positive values)
-	 * @param posOffsets - (note: must be positive values)
+	 * @param anchor The key point around which the hypervolume is defined.
+	 * @param negOffsets Span in the negative direction beyond the anchor point (note: must be positive values).
+	 * @param posOffsets - Span in the positive direction beyond the anchor point (note: must be positive values).
 	 */
 	public HyperVolumePointSet(long[] anchor, long[] negOffsets, long[] posOffsets) {
 		if (anchor.length != negOffsets.length)
@@ -102,6 +107,19 @@ public class HyperVolumePointSet implements PointSet {
 		}
 		this.anchor = boundMin.clone();
 	}
+	
+	/**
+	 * Constructor that takes a span array. The hypervolume is defined from the
+	 * origin extending for the given span. This means that if a span component
+	 * equals X then the hypervolume goes from 0 to X-1.
+	 * 
+	 * @param span The values specifying width, height, depth, etc. of the hypervolume.
+	 */
+	public HyperVolumePointSet(long[] span) {
+		this(new long[span.length], lastPoint(span));
+	}
+	
+	// -- public api --
 	
 	@Override
 	public long[] getAnchor() { return anchor; }
@@ -156,6 +174,16 @@ public class HyperVolumePointSet implements PointSet {
 		return new HyperVolumePointSet(findBoundMin(), findBoundMax());
 	}
 	
+	// -- private helpers --
+	
+	private static long[] lastPoint(long[] span) {
+		long[] lastPoint = new long[span.length];
+		for (int i = 0; i < span.length; i++) {
+			lastPoint[i] = span[i] - 1;
+		}
+		return lastPoint;
+	}
+
 	private class HyperVolumePointSetIterator implements PointSetIterator {
 		final long[] pos;
 		boolean outOfBounds;
