@@ -3,7 +3,7 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 import net.imglib2.IterableInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.ops.image.UnaryOperationAssignment;
+import net.imglib2.ops.img.UnaryOperationAssignment;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.real.binary.Normalize;
 import net.imglib2.type.numeric.IntegerType;

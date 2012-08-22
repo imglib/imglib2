@@ -41,7 +41,7 @@ import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.complex.ComplexImageFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
-import net.imglib2.ops.image.ImageAssignment;
+import net.imglib2.ops.img.ImageAssignment;
 import net.imglib2.ops.input.InputIteratorFactory;
 import net.imglib2.ops.input.PointInputIteratorFactory;
 import net.imglib2.ops.operation.real.unary.RealSqr;

@@ -2,7 +2,7 @@ package net.imglib2.ops.operation.img.unary;
 
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.ops.image.UnaryOperationAssignment;
+import net.imglib2.ops.img.UnaryOperationAssignment;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.ops.operation.iterableinterval.unary.NormalizeIterableInterval;
 import net.imglib2.ops.operation.real.binary.Convert;
@@ -17,6 +17,50 @@ import net.imglib2.view.Views;
  */
 public class ImgConvert< I extends RealType< I >, O extends RealType< O >> implements UnaryOutputOperation< Img< I >, Img< O >>
 {
+
+	public enum ImgConversionTypes
+	{
+		DIRECT( "Copy" ), DIRECTCLIP( "Clip" ), SCALE( "Scale" ), NORMALIZESCALE( "Normalize and scale" ), NORMALIZEDIRECT( "Normalize" ), NORMALIZEDIRECTCLIP( "Normalize (clipped)" );
+
+		private final String m_label;
+
+		public static String[] labelsAsStringArray()
+		{
+			ImgConversionTypes[] types = ImgConversionTypes.values();
+			String[] res = new String[ types.length ];
+			for ( int i = 0; i < res.length; i++ )
+			{
+				res[ i ] = types[ i ].getLabel();
+			}
+
+			return res;
+
+		}
+
+		/**
+		 * @param label
+		 * @return the conversion type for the label, null, if doesn't match any
+		 */
+		public static ImgConversionTypes getByLabel( String label )
+		{
+			for ( ImgConversionTypes t : ImgConversionTypes.values() )
+			{
+				if ( t.getLabel().equals( label ) ) { return t; }
+			}
+			return null;
+		}
+
+		private ImgConversionTypes( String label )
+		{
+			m_label = label;
+		}
+
+		public String getLabel()
+		{
+			return m_label;
+		}
+
+	}
 
 	private final O m_outType;
 

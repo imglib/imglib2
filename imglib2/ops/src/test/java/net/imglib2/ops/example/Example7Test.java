@@ -48,7 +48,7 @@ import net.imglib2.ops.condition.AndCondition;
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.general.ConditionalFunction;
-import net.imglib2.ops.image.ImageAssignment;
+import net.imglib2.ops.img.ImageAssignment;
 import net.imglib2.ops.input.InputIteratorFactory;
 import net.imglib2.ops.input.PointInputIteratorFactory;
 import net.imglib2.type.numeric.RealType;

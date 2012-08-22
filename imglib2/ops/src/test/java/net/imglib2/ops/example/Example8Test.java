@@ -52,7 +52,7 @@ import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.real.RealArithmeticMeanFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealMedianFunction;
-import net.imglib2.ops.image.ImageAssignment;
+import net.imglib2.ops.img.ImageAssignment;
 import net.imglib2.ops.input.InputIteratorFactory;
 import net.imglib2.ops.input.PointSetInputIterator;
 import net.imglib2.ops.input.PointSetInputIteratorFactory;
