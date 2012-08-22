@@ -1,5 +1,3 @@
-package net.imglib2.ops.operation.subset.views;
-
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -35,6 +33,8 @@ package net.imglib2.ops.operation.subset.views;
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+package net.imglib2.ops.operation.subset.views;
 
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.ImgFactory;

@@ -34,15 +34,15 @@
  * #L%
  */
 
-
 package net.imglib2.ops.operation;
 
 /**
  * 
  * @author Barry DeZonia
  */
-public interface UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> {
-	OUTPUT_TYPE compute(INPUT_TYPE input, OUTPUT_TYPE output);
+public interface UnaryOperation< INPUT_TYPE, OUTPUT_TYPE >
+{
+	OUTPUT_TYPE compute( INPUT_TYPE input, OUTPUT_TYPE output );
 
-	UnaryOperation<INPUT_TYPE, OUTPUT_TYPE> copy();
+	UnaryOperation< INPUT_TYPE, OUTPUT_TYPE > copy();
 }

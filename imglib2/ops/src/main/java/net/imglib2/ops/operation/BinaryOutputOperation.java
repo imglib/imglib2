@@ -34,15 +34,15 @@
  * #L%
  */
 
-
 package net.imglib2.ops.operation;
 
-
-/** 
+/**
  * 
  * @author Christian Dietz
  */
-public interface BinaryOutputOperation<INPUT1,INPUT2,OUTPUT> extends BinaryOperation<INPUT1,INPUT2,OUTPUT> {
-	OUTPUT createEmptyOutput(INPUT1 in1, INPUT2 in2);
-	OUTPUT compute(INPUT1 in1, INPUT2 in2);
+public interface BinaryOutputOperation< INPUT1, INPUT2, OUTPUT > extends BinaryOperation< INPUT1, INPUT2, OUTPUT >
+{
+	OUTPUT createEmptyOutput( INPUT1 in1, INPUT2 in2 );
+
+	OUTPUT compute( INPUT1 in1, INPUT2 in2 );
 }

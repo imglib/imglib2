@@ -36,7 +36,6 @@
 
 package net.imglib2.ops.operation;
 
-
 /**
  * Class should only be used if the output can't be known by the user in
  * advance. For example if the operation produces an double[] of unknown size,

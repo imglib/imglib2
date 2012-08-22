@@ -43,34 +43,38 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- *
+ * 
  */
-public class ImgCopyOperation<T extends Type<T>> implements
-		UnaryOperation<Img<T>, Img<T>> {
+public class ImgCopyOperation< T extends Type< T >> implements UnaryOperation< Img< T >, Img< T >>
+{
 
-	public ImgCopyOperation() {
+	public ImgCopyOperation()
+	{
 
 	}
 
 	// NOTE / TODO - incomplete. Assumes equal iteration order and sizes between
 	// input and output.
-	
+
 	@Override
-	public Img<T> compute(Img<T> input, Img<T> output) {
-		Cursor<T> c1 = input.cursor();
-		Cursor<T> c2 = output.cursor();
-		while ((c1.hasNext() && c2.hasNext())) {
+	public Img< T > compute( Img< T > input, Img< T > output )
+	{
+		Cursor< T > c1 = input.cursor();
+		Cursor< T > c2 = output.cursor();
+		while ( ( c1.hasNext() && c2.hasNext() ) )
+		{
 			c1.fwd();
 			c2.fwd();
-			c2.get().set(c1.get());
+			c2.get().set( c1.get() );
 		}
-		
+
 		return output;
 	}
 
 	@Override
-	public ImgCopyOperation<T> copy() {
-		return new ImgCopyOperation<T>();
+	public ImgCopyOperation< T > copy()
+	{
+		return new ImgCopyOperation< T >();
 	}
 
 }
