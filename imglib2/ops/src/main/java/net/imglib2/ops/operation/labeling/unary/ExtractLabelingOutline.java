@@ -19,7 +19,7 @@ public class ExtractLabelingOutline< L extends Comparable< L >> implements Unary
 
 	public ExtractLabelingOutline( ConnectedType ct )
 	{
-		this( ct, );
+		m_ct = ct;
 	}
 
 	@Override
