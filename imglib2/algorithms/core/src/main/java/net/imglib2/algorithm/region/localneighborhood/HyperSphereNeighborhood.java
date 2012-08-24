@@ -41,6 +41,8 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 
 	private final long size;
 
+	private final Interval structuringElementBoundingBox;
+
 	HyperSphereNeighborhood( final long[] position, final long radius, final RandomAccess< T > sourceRandomAccess )
 	{
 		super( position );
@@ -48,6 +50,17 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		this.radius = radius;
 		maxDim = n - 1;
 		size = computeSize();
+
+		long[] min = new long[ n ];
+		long[] max = new long[ n ];
+
+		for ( int d = 0; d < n; d++ )
+		{
+			min[ d ] = -radius;
+			max[ d ] = radius;
+		}
+
+		structuringElementBoundingBox = new FinalInterval( min, max );
 	}
 
 	/**
@@ -240,17 +253,7 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 	@Override
 	public Interval getStructuringElementBoundingBox()
 	{
-
-		long[] min = new long[ n ];
-		long[] max = new long[ n ];
-
-		for ( int d = 0; d < n; d++ )
-		{
-			min[ d ] = position[ d ] - radius;
-			max[ d ] = position[ d ] + radius;
-		}
-
-		return new FinalInterval( min, max );
+		return structuringElementBoundingBox;
 	}
 
 	@Override
