@@ -54,20 +54,20 @@ import net.imglib2.type.NativeType;
 public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLocalizableInt implements RandomAccess< T >
 {
 	protected final T type;
-	final ArrayImg< T, ? > container;
+	final ArrayImg< T, ? > img;
 
 	protected ArrayRandomAccess( final ArrayRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
 
-		this.container = randomAccess.container;
-		this.type = container.createLinkedType();
+		this.img = randomAccess.img;
+		this.type = img.createLinkedType();
 
 		int index = 0;
 		for ( int d = 0; d < n; d++ )
 		{
 			position[ d ] = randomAccess.position[ d ];
-			index += position[ d ] * container.steps[ d ];
+			index += position[ d ] * img.steps[ d ];
 		}
 
 		type.updateContainer( this );
@@ -78,7 +78,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	{
 		super( container.numDimensions() );
 
-		this.container = container;
+		this.img = container;
 		this.type = container.createLinkedType();
 
 		for ( int d = 0; d < n; d++ )
@@ -97,28 +97,28 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	@Override
 	public void fwd( final int d )
 	{
-		type.incIndex( container.steps[ d ] );
+		type.incIndex( img.steps[ d ] );
 		++position[ d ];
 	}
 
 	@Override
 	public void bck( final int d )
 	{
-		type.decIndex( container.steps[ d ] );
+		type.decIndex( img.steps[ d ] );
 		--position[ d ];
 	}
 
 	@Override
 	public void move( final int distance, final int d )
 	{
-		type.incIndex( container.steps[ d ] * distance );
+		type.incIndex( img.steps[ d ] * distance );
 		position[ d ] += distance;
 	}
 
 	@Override
 	public void move( final long distance, final int d )
 	{
-		type.incIndex( container.steps[ d ] * ( int )distance );
+		type.incIndex( img.steps[ d ] * ( int )distance );
 		position[ d ] += distance;
 	}
 
@@ -130,7 +130,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 		{
 			final int distance = localizable.getIntPosition( d );
 			position[ d ] += distance;
-			index += distance * container.steps[ d ];
+			index += distance * img.steps[ d ];
 		}
 		type.incIndex( index );
 	}
@@ -142,7 +142,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] += distance[ d ];
-			index += distance[ d ] * container.steps[ d ];
+			index += distance[ d ] * img.steps[ d ];
 		}
 		type.incIndex( index );
 	}
@@ -154,7 +154,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] += distance[ d ];
-			index += distance[ d ] * container.steps[ d ];
+			index += distance[ d ] * img.steps[ d ];
 		}
 		type.incIndex( index );
 	}
@@ -166,7 +166,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 		localizable.localize( position );
 		int index = 0;
 		for ( int d = 0; d < n; ++d )
-			index += position[ d ] * container.steps[ d ];
+			index += position[ d ] * img.steps[ d ];
 		type.updateIndex( index );
 	}
 
@@ -177,7 +177,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] = pos[ d ];
-			index += pos[ d ] * container.steps[ d ];
+			index += pos[ d ] * img.steps[ d ];
 		}
 		type.updateIndex( index );
 	}
@@ -190,7 +190,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 		{
 			final int p = ( int )pos[ d ];
 			position[ d ] = p;
-			index += p * container.steps[ d ];
+			index += p * img.steps[ d ];
 		}
 		type.updateIndex( index );
 	}
@@ -198,14 +198,14 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	@Override
 	public void setPosition( final int pos, final int d )
 	{
-		type.incIndex( ( pos - position[ d ] ) * container.steps[ d ] );
+		type.incIndex( ( pos - position[ d ] ) * img.steps[ d ] );
 		position[ d ] = pos;
 	}
 
 	@Override
 	public void setPosition( final long pos, final int d )
 	{
-		type.incIndex( ( ( int ) pos - position[ d ] ) * container.steps[ d ] );
+		type.incIndex( ( ( int ) pos - position[ d ] ) * img.steps[ d ] );
 		position[ d ] = ( int ) pos;
 	}
 
