@@ -72,11 +72,6 @@ import net.imglib2.type.numeric.real.FloatType;
  */
 public class ImageCombiner
 {
-	// -- default constructor --
-
-	public ImageCombiner()
-	{}
-
 	// -- public API --
 
 	/**
@@ -97,7 +92,11 @@ public class ImageCombiner
 	 *            The type of the output image.
 	 * @return The combined pixel output image of specified type.
 	 */
-	public < I1 extends RealType< I1 >, I2 extends RealType< I2 >, O extends RealType< O >> Img< O > applyOp( BinaryOperation< I1, I2, O > op, Img< I1 > input1, Img< I2 > input2, ImgFactory< O > imgFactory, O type )
+	public static < I1 extends RealType< I1 >, I2 extends RealType< I2 >,
+									O extends RealType< O >>
+	Img< O > applyOp(
+			BinaryOperation< I1, I2, O > op, Img< I1 > input1, Img< I2 > input2,
+			ImgFactory< O > imgFactory, O type )
 	{
 		long[] span = determineSharedExtents( input1, input2 );
 		Img< O > output = imgFactory.create( span, type );
@@ -120,7 +119,11 @@ public class ImageCombiner
 	 * @param output
 	 *            The output Img to fill.
 	 */
-	public < I1 extends RealType< I1 >, I2 extends RealType< I2 >, O extends RealType< O >> void applyOp( BinaryOperation< I1, I2, O > op, Img< I1 > input1, Img< I2 > input2, Img< O > output )
+	public static < I1 extends RealType< I1 >, I2 extends RealType< I2 >, 
+									O extends RealType< O >>
+	void applyOp( 
+		BinaryOperation< I1, I2, O > op, Img< I1 > input1, Img< I2 > input2,
+		Img< O > output )
 	{
 		long[] span = determineSharedExtents( input1, input2, output );
 		binaryAssign( op, input1, input2, output, span );
@@ -141,7 +144,10 @@ public class ImageCombiner
 	 *            The type of the output image.
 	 * @return The computed pixel output image of specified type.
 	 */
-	public < I extends RealType< I >, O extends RealType< O >> Img< O > applyOp( UnaryOperation< I, O > op, Img< I > input, ImgFactory< O > imgFactory, O type )
+	public static < I extends RealType< I >, O extends RealType< O >>
+	Img< O > applyOp(
+		UnaryOperation< I, O > op, Img< I > input, ImgFactory< O > imgFactory,
+		O type )
 	{
 		long[] span = new long[ input.numDimensions() ];
 		input.dimensions( span );
@@ -163,7 +169,9 @@ public class ImageCombiner
 	 * @param output
 	 *            The output Img to fill.
 	 */
-	public < I extends RealType< I >, O extends RealType< O >> void applyOp( UnaryOperation< I, O > op, Img< I > input, Img< O > output )
+	public static < I extends RealType< I >, O extends RealType< O >>
+	void applyOp(
+		UnaryOperation< I, O > op, Img< I > input, Img< O > output )
 	{
 		long[] span = determineSharedExtents( input, output );
 		unaryAssign( op, input, output, span );
@@ -171,44 +179,63 @@ public class ImageCombiner
 
 	// -- helpers --
 
-	private long[] determineSharedExtents( Img< ? >... imgs )
+	private static long[] determineSharedExtents( Img< ? >... imgs )
 	{
 		if ( imgs.length == 0 )
-			throw new IllegalArgumentException( "at least one image must be provided" );
+			throw new IllegalArgumentException(
+				"at least one image must be provided" );
 		int numDims = imgs[ 0 ].numDimensions();
 		long[] commonRegion = new long[ numDims ];
 		imgs[ 0 ].dimensions( commonRegion );
 		for ( int i = 1; i < imgs.length; i++ )
 		{
 			if ( imgs[ i ].numDimensions() != numDims )
-				throw new IllegalArgumentException( "images do not have compatible dimensions" );
+				throw new IllegalArgumentException(
+					"images do not have compatible dimensions" );
 			for ( int d = 0; d < numDims; d++ )
 			{
-				commonRegion[ d ] = Math.min( imgs[ i ].dimension( d ), commonRegion[ d ] );
+				commonRegion[d] = Math.min( imgs[i].dimension(d), commonRegion[d] );
 			}
 		}
 		return commonRegion;
 	}
 
-	private < I1 extends RealType< I1 >, I2 extends RealType< I2 >, O extends RealType< O >> void binaryAssign( BinaryOperation< I1, I2, O > op, Img< I1 > input1, Img< I2 > input2, Img< O > output, long[] span )
+	private static < I1 extends RealType< I1 >, I2 extends RealType< I2 >,
+										O extends RealType< O >>
+	void binaryAssign( BinaryOperation< I1, I2, O > op, Img< I1 > input1,
+											Img< I2 > input2, Img< O > output, long[] span )
 	{
 		long[] origin = new long[ span.length ];
 		O type = output.firstElement();
-		final Function< long[], I1 > f1 = new RealImageFunction< I1, I1 >( input1, input1.firstElement() );
-		final Function< long[], I2 > f2 = new RealImageFunction< I2, I2 >( input2, input2.firstElement() );
-		final Function< long[], O > binFunc = new GeneralBinaryFunction< long[], I1, I2, O >( f1, f2, op, type.copy() );
-		final InputIteratorFactory< long[] > inputFactory = new PointInputIteratorFactory();
-		final ImageAssignment< O, O, long[] > assigner = new ImageAssignment< O, O, long[] >( output, origin, span, binFunc, null, inputFactory );
+		final Function< long[], I1 > f1 =
+				new RealImageFunction< I1, I1 >( input1, input1.firstElement() );
+		final Function< long[], I2 > f2 =
+				new RealImageFunction< I2, I2 >( input2, input2.firstElement() );
+		final Function< long[], O > binFunc =
+				new GeneralBinaryFunction< long[], I1, I2, O >(f1, f2, op, type.copy());
+		final InputIteratorFactory< long[] > inputFactory =
+				new PointInputIteratorFactory();
+		final ImageAssignment< O, O, long[] > assigner = 
+				new ImageAssignment< O, O, long[] >(
+						output, origin, span, binFunc, null, inputFactory );
 		assigner.assign();
 	}
 
-	private < I extends RealType< I >, O extends RealType< O >> void unaryAssign( UnaryOperation< I, O > op, Img< I > input, Img< O > output, long[] span )
+	private static < I extends RealType< I >, O extends RealType< O >>
+	void unaryAssign(
+		UnaryOperation< I, O > op, Img< I > input, Img< O > output, long[] span )
 	{
 		final O type = output.firstElement();
-		final Function< long[], I > f1 = new RealImageFunction< I, I >( input, input.firstElement() );
-		final Function< long[], O > unaryFunc = new GeneralUnaryFunction< long[], I, O >( f1, op, type.copy() );
-		final InputIteratorFactory< long[] > inputFactory = new PointInputIteratorFactory();
-		final ImageAssignment< O, O, long[] > assigner = new ImageAssignment< O, O, long[] >( output, new long[ span.length ], span, unaryFunc, null, inputFactory );
+		final Function< long[], I > f1 =
+				new RealImageFunction< I, I >( input, input.firstElement() );
+		final Function< long[], O > unaryFunc =
+				new GeneralUnaryFunction< long[], I, O >( f1, op, type.copy() );
+		final InputIteratorFactory< long[] > inputFactory =
+				new PointInputIteratorFactory();
+		final ImageAssignment< O, O, long[] > assigner =
+				new ImageAssignment< O, O, long[] >(
+						output, new long[ span.length ],
+						span, unaryFunc, null, inputFactory );
 		assigner.assign();
 	}
 
@@ -229,120 +256,154 @@ public class ImageCombiner
 
 	private static void addCreateExample()
 	{
-		Img< UnsignedByteType > img1 = makeTestImage( new long[] { 100, 200 }, new UnsignedByteType() );
-		Img< FloatType > img2 = makeTestImage( new long[] { 75, 225 }, new FloatType() );
+		Img< UnsignedByteType > img1 =
+				makeTestImage( new long[] { 100, 200 }, new UnsignedByteType() );
+		
+		Img< FloatType > img2 =
+				makeTestImage( new long[] { 75, 225 }, new FloatType() );
 
 		ImgFactory< ShortType > imgFactory = new ArrayImgFactory< ShortType >();
 
-		BinaryOperation< UnsignedByteType, FloatType, ShortType > addOp = new RealAdd< UnsignedByteType, FloatType, ShortType >();
+		BinaryOperation< UnsignedByteType, FloatType, ShortType > addOp =
+				new RealAdd< UnsignedByteType, FloatType, ShortType >();
 
-		ImageCombiner creator = new ImageCombiner();
-
-		Img< ShortType > output = creator.applyOp( addOp, img1, img2, imgFactory, new ShortType() );
+		Img< ShortType > output =
+				ImageCombiner.applyOp( addOp, img1, img2, imgFactory, new ShortType() );
 
 		System.out.println( "--- add create test ---" );
-		System.out.println( "Input image one is " + img1.dimension( 0 ) + " x " + img1.dimension( 1 ) );
-		System.out.println( "Input image two is " + img2.dimension( 0 ) + " x " + img2.dimension( 1 ) );
-		System.out.println( "Output image is " + output.dimension( 0 ) + " x " + output.dimension( 1 ) );
+		System.out.println( "Input image one is " +
+				img1.dimension( 0 ) + " x " + img1.dimension( 1 ) );
+		System.out.println( "Input image two is " +
+				img2.dimension( 0 ) + " x " + img2.dimension( 1 ) );
+		System.out.println( "Output image is " +
+				output.dimension( 0 ) + " x " + output.dimension( 1 ) );
 		System.out.println();
 	}
 
 	private static void addFillExample()
 	{
-		Img< UnsignedByteType > img1 = makeTestImage( new long[] { 100, 200 }, new UnsignedByteType() );
-		Img< FloatType > img2 = makeTestImage( new long[] { 75, 225 }, new FloatType() );
-		Img< ShortType > output = makeTestImage( new long[] { 75, 225 }, new ShortType() );
+		Img< UnsignedByteType > img1 =
+				makeTestImage( new long[] { 100, 200 }, new UnsignedByteType() );
+		
+		Img< FloatType > img2 =
+				makeTestImage( new long[] { 75, 225 }, new FloatType() );
+		
+		Img< ShortType > output =
+				makeTestImage( new long[] { 75, 225 }, new ShortType() );
 
-		BinaryOperation< UnsignedByteType, FloatType, ShortType > addOp = new RealAdd< UnsignedByteType, FloatType, ShortType >();
+		BinaryOperation< UnsignedByteType, FloatType, ShortType > addOp =
+				new RealAdd< UnsignedByteType, FloatType, ShortType >();
 
-		ImageCombiner creator = new ImageCombiner();
-
-		creator.applyOp( addOp, img1, img2, output );
+		ImageCombiner.applyOp( addOp, img1, img2, output );
 
 		System.out.println( "--- add fill test ---" );
-		System.out.println( "Input image one is " + img1.dimension( 0 ) + " x " + img1.dimension( 1 ) );
-		System.out.println( "Input image two is " + img2.dimension( 0 ) + " x " + img2.dimension( 1 ) );
-		System.out.println( "Output image is " + output.dimension( 0 ) + " x " + output.dimension( 1 ) );
+		System.out.println( "Input image one is " +
+				img1.dimension( 0 ) + " x " + img1.dimension( 1 ) );
+		System.out.println( "Input image two is " +
+				img2.dimension( 0 ) + " x " + img2.dimension( 1 ) );
+		System.out.println( "Output image is " +
+				output.dimension( 0 ) + " x " + output.dimension( 1 ) );
 		System.out.println();
 	}
 
 	private static void maxCreateExample()
 	{
-		Img< DoubleType > img = makeTestImage( new long[] { 512, 512 }, new DoubleType() );
+		Img< DoubleType > img =
+				makeTestImage( new long[] { 512, 512 }, new DoubleType() );
 
 		ImgFactory< IntType > imgFactory = new ArrayImgFactory< IntType >();
 
-		UnaryOperation< DoubleType, IntType > maxOp = new RealMaxConstant< DoubleType, IntType >( 150.0 );
+		UnaryOperation< DoubleType, IntType > maxOp =
+				new RealMaxConstant< DoubleType, IntType >( 150.0 );
 
-		ImageCombiner creator = new ImageCombiner();
-
-		Img< IntType > output = creator.applyOp( maxOp, img, imgFactory, new IntType() );
+		Img< IntType > output =
+				ImageCombiner.applyOp( maxOp, img, imgFactory, new IntType() );
 
 		System.out.println( "--- max create test ---" );
-		System.out.println( "Input image is " + img.dimension( 0 ) + " x " + img.dimension( 1 ) );
-		System.out.println( "Output image is " + output.dimension( 0 ) + " x " + output.dimension( 1 ) );
+		System.out.println( "Input image is " +
+				img.dimension( 0 ) + " x " + img.dimension( 1 ) );
+		System.out.println( "Output image is " +
+				output.dimension( 0 ) + " x " + output.dimension( 1 ) );
 		System.out.println();
 	}
 
 	private static void maxFillExample()
 	{
-		Img< DoubleType > img = makeTestImage( new long[] { 512, 512 }, new DoubleType() );
-		Img< IntType > output = makeTestImage( new long[] { 512, 512 }, new IntType() );
+		Img< DoubleType > img =
+				makeTestImage( new long[] { 512, 512 }, new DoubleType() );
+		
+		Img< IntType > output =
+				makeTestImage( new long[] { 512, 512 }, new IntType() );
 
-		UnaryOperation< DoubleType, IntType > maxOp = new RealMaxConstant< DoubleType, IntType >( 150.0 );
+		UnaryOperation< DoubleType, IntType > maxOp =
+				new RealMaxConstant< DoubleType, IntType >( 150.0 );
 
-		ImageCombiner creator = new ImageCombiner();
-
-		creator.applyOp( maxOp, img, output );
+		ImageCombiner.applyOp( maxOp, img, output );
 
 		System.out.println( "--- max fill test ---" );
-		System.out.println( "Input image is " + img.dimension( 0 ) + " x " + img.dimension( 1 ) );
-		System.out.println( "Output image is " + output.dimension( 0 ) + " x " + output.dimension( 1 ) );
+		System.out.println( "Input image is " +
+				img.dimension( 0 ) + " x " + img.dimension( 1 ) );
+		System.out.println( "Output image is " +
+				output.dimension( 0 ) + " x " + output.dimension( 1 ) );
 		System.out.println();
 	}
 
 	private static void xorCreateExample()
 	{
-		Img< UnsignedByteType > img1 = makeTestImage( new long[] { 400, 300 }, new UnsignedByteType() );
-		Img< UnsignedByteType > img2 = makeTestImage( new long[] { 300, 400 }, new UnsignedByteType() );
+		Img< UnsignedByteType > img1 =
+				makeTestImage( new long[] { 400, 300 }, new UnsignedByteType() );
+		
+		Img< UnsignedByteType > img2 =
+				makeTestImage( new long[] { 300, 400 }, new UnsignedByteType() );
 
 		ImgFactory< IntType > imgFactory = new ArrayImgFactory< IntType >();
 
-		BinaryOperation< UnsignedByteType, UnsignedByteType, IntType > xorOp = new RealXor< UnsignedByteType, UnsignedByteType, IntType >();
+		BinaryOperation< UnsignedByteType, UnsignedByteType, IntType > xorOp =
+				new RealXor< UnsignedByteType, UnsignedByteType, IntType >();
 
-		ImageCombiner creator = new ImageCombiner();
-
-		Img< IntType > output = creator.applyOp( xorOp, img1, img2, imgFactory, new IntType() );
+		Img< IntType > output =
+				ImageCombiner.applyOp( xorOp, img1, img2, imgFactory, new IntType() );
 
 		System.out.println( "--- xor create test ---" );
-		System.out.println( "Input image one is " + img1.dimension( 0 ) + " x " + img1.dimension( 1 ) );
-		System.out.println( "Input image two is " + img2.dimension( 0 ) + " x " + img2.dimension( 1 ) );
-		System.out.println( "Output image is " + output.dimension( 0 ) + " x " + output.dimension( 1 ) );
+		System.out.println( "Input image one is " +
+				img1.dimension( 0 ) + " x " + img1.dimension( 1 ) );
+		System.out.println( "Input image two is " +
+				img2.dimension( 0 ) + " x " + img2.dimension( 1 ) );
+		System.out.println( "Output image is " +
+				output.dimension( 0 ) + " x " + output.dimension( 1 ) );
 		System.out.println();
 	}
 
 	private static void xorFillExample()
 	{
-		Img< UnsignedByteType > img1 = makeTestImage( new long[] { 400, 300 }, new UnsignedByteType() );
-		Img< UnsignedByteType > img2 = makeTestImage( new long[] { 300, 400 }, new UnsignedByteType() );
-		Img< IntType > output = makeTestImage( new long[] { 300, 400 }, new IntType() );
+		Img< UnsignedByteType > img1 =
+				makeTestImage( new long[] { 400, 300 }, new UnsignedByteType() );
+		
+		Img< UnsignedByteType > img2 =
+				makeTestImage( new long[] { 300, 400 }, new UnsignedByteType() );
+		
+		Img< IntType > output =
+				makeTestImage( new long[] { 300, 400 }, new IntType() );
 
-		BinaryOperation< UnsignedByteType, UnsignedByteType, IntType > xorOp = new RealXor< UnsignedByteType, UnsignedByteType, IntType >();
+		BinaryOperation< UnsignedByteType, UnsignedByteType, IntType > xorOp =
+				new RealXor< UnsignedByteType, UnsignedByteType, IntType >();
 
-		ImageCombiner creator = new ImageCombiner();
-
-		creator.applyOp( xorOp, img1, img2, output );
+		ImageCombiner.applyOp( xorOp, img1, img2, output );
 
 		System.out.println( "--- xor fill test ---" );
-		System.out.println( "Input image one is " + img1.dimension( 0 ) + " x " + img1.dimension( 1 ) );
-		System.out.println( "Input image two is " + img2.dimension( 0 ) + " x " + img2.dimension( 1 ) );
-		System.out.println( "Output image is " + output.dimension( 0 ) + " x " + output.dimension( 1 ) );
+		System.out.println( "Input image one is " +
+				img1.dimension( 0 ) + " x " + img1.dimension( 1 ) );
+		System.out.println( "Input image two is " +
+				img2.dimension( 0 ) + " x " + img2.dimension( 1 ) );
+		System.out.println( "Output image is " +
+				output.dimension( 0 ) + " x " + output.dimension( 1 ) );
 		System.out.println();
 	}
 
 	// -- example support code --
 
-	private static < O extends RealType< O > & NativeType< O >> Img< O > makeTestImage( long[] dims, O type )
+	private static < O extends RealType< O > & NativeType< O >>
+	Img< O > makeTestImage( long[] dims, O type )
 	{
 		ImgFactory< O > imgFactory = new ArrayImgFactory< O >();
 		Img< O > image = imgFactory.create( dims, type );
