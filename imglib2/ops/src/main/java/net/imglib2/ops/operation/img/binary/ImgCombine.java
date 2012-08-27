@@ -85,7 +85,7 @@ implements BinaryOperation< Img< U >, Img< V >, Img< W > >
 		RandomAccess<U> accessor1 = input1.randomAccess();
 		RandomAccess<V> accessor2 = input2.randomAccess();
 		while (cursor.hasNext()) {
-			cursor.next();
+			cursor.fwd();
 			cursor.localize(position);
 			accessor1.setPosition(position);
 			accessor2.setPosition(position);
