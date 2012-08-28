@@ -1,0 +1,63 @@
+[33mcommit 7d75aed1bfa989bb762a2d3fbd4447c641d009f3[m
+Author: dietzc <christian.dietz@uni-konstanz.de>
+Date:   Sun Jul 22 20:20:30 2012 +0200
+
+    Incooperated hack to fix RandomAccessibleIntervalCursor
+
+[33mcommit adf82dc24dc7a3ea3cb56ccdeabf603c3942b1ab[m
+Author: dietzc <christian.dietz@uni-konstanz.de>
+Date:   Sat Jul 21 21:51:49 2012 +0200
+
+    Added updateSource method in AbstractNeigh
+
+[33mcommit e973eac7250e1d2e7ad4a48bceda8501fbf96fb5[m
+Author: dietzc <christian.dietz@uni-konstanz.de>
+Date:   Sat Jul 21 18:48:10 2012 +0200
+
+    Parametrized AbstractNeighborhoods
+
+[33mcommit 70399d54c2adc9fe44f034023708a224d9bf608b[m
+Author: dietzc <christian.dietz@uni-konstanz.de>
+Date:   Sat Jul 21 16:30:05 2012 +0200
+
+    Fixed another bug in HyperSphereNeighborhood
+
+[33mcommit e26796c926be5e63db16dc87afc880d94aae3353[m
+Author: dietzc <christian.dietz@uni-konstanz.de>
+Date:   Sat Jul 21 16:17:17 2012 +0200
+
+    Fixed bug in HyperSphere and BufferedRectangleCurs
+
+[33mcommit 6deefecdffb35092a6627b072a41b2f43a262449[m
+Author: dietzc <christian.dietz@uni-konstanz.de>
+Date:   Sat Jul 21 15:10:20 2012 +0200
+
+    Removed update source
+
+[33mcommit dcfae80a2b5a7e9c3cf3664652294a620b16f422[m
+Author: dietzc <christian.dietz@uni-konstanz.de>
+Date:   Sat Jul 21 13:52:26 2012 +0200
+
+    Adopted neighborhoods. Fixed bug in ImgOpener.
+
+[33mcommit 550a90754e126d14e669c142de6203df71fa3fca[m
+Author: dietzc <christian.dietz@uni-konstanz.de>
+Date:   Sat Jul 21 12:11:02 2012 +0200
+
+    Fixed bug in IterableSubViewCursor: planePos-1
+
+[33mcommit 1a811c01d19b2fc4027588f24c61e1330c68c296[m
+Author: dietzc <christian.dietz@uni-konstanz.de>
+Date:   Sat Jul 21 12:07:41 2012 +0200
+
+    ImgOpener current version. Fixes in unary ops.
+
+[33mcommit c2f9894970f1b8dcd8e371503fff6de5d58e1938[m
+Merge: 1999ebe d58c9ab
+Author: Christian.Dietz <Christian.Dietz@uni-konstanz.de>
+Date:   Sat Jul 21 11:23:48 2012 +0200
+
+    Merge remote-tracking branch 'origin/master' into knip_deployment
+    
+    Conflicts:
+    	imglib2/core/src/main/java/net/im

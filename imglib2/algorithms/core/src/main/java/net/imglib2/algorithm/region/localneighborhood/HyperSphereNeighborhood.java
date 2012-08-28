@@ -5,6 +5,7 @@ import java.util.Iterator;
 import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.AbstractLocalizable;
 import net.imglib2.Cursor;
+import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
@@ -12,10 +13,8 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RealPositionable;
 
 /**
- * INCOMPLETE !!!
- *
  * TODO
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Preibisch <preibisch@mpi-cbg.de>
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -24,7 +23,8 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 {
 	public static < T > HyperSphereNeighborhoodFactory< T > factory()
 	{
-		return new HyperSphereNeighborhoodFactory< T >() {
+		return new HyperSphereNeighborhoodFactory< T >()
+		{
 			@Override
 			public Neighborhood< T > create( final long[] position, final long radius, final RandomAccess< T > sourceRandomAccess )
 			{
@@ -39,13 +39,48 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 
 	private final int maxDim;
 
+	private final long size;
+
+	private final Interval structuringElementBoundingBox;
+
 	HyperSphereNeighborhood( final long[] position, final long radius, final RandomAccess< T > sourceRandomAccess )
 	{
 		super( position );
 		this.sourceRandomAccess = sourceRandomAccess;
 		this.radius = radius;
 		maxDim = n - 1;
+		size = computeSize();
+
+		long[] min = new long[ n ];
+		long[] max = new long[ n ];
+
+		for ( int d = 0; d < n; d++ )
+		{
+			min[ d ] = -radius;
+			max[ d ] = radius;
+		}
+
+		structuringElementBoundingBox = new FinalInterval( min, max );
 	}
+
+	/**
+	 * Compute the number of elements for iteration
+	 */
+	protected long computeSize()
+	{
+		final LocalCursor cursor = new LocalCursor( sourceRandomAccess );
+
+		// "compute number of pixels"
+		long size = 0;
+		while ( cursor.hasNext() )
+		{
+			cursor.fwd();
+			++size;
+		}
+
+		return size;
+	}
+
 	public final class LocalCursor extends AbstractEuclideanSpace implements Cursor< T >
 	{
 		private final RandomAccess< T > source;
@@ -103,12 +138,13 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 				final long rd = r[ d ];
 				final long pd = rd - s[ d ];
 
-				final long rad = (long)( Math.sqrt( rd * rd - pd * pd ) );
+				final long rad = ( long ) ( Math.sqrt( rd * rd - pd * pd ) );
 				s[ e ] = 2 * rad;
 				r[ e ] = rad;
 
 				source.setPosition( position[ e ] - rad, e );
 			}
+
 		}
 
 		@Override
@@ -140,10 +176,11 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 				source.setPosition( position[ d ], d );
 			}
 
-			source.setPosition( position[ maxDim ] - radius - 1, maxDim  );
+			source.setPosition( position[ maxDim ] - radius - 1, maxDim );
 
 			r[ maxDim ] = radius;
 			s[ maxDim ] = 1 + 2 * radius;
+
 		}
 
 		@Override
@@ -216,15 +253,13 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 	@Override
 	public Interval getStructuringElementBoundingBox()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return structuringElementBoundingBox;
 	}
 
 	@Override
 	public long size()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return size;
 	}
 
 	@Override
@@ -248,43 +283,49 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 	@Override
 	public double realMin( final int d )
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return position[ d ] - radius;
 	}
 
 	@Override
 	public void realMin( final double[] min )
 	{
-		// TODO Auto-generated method stub
-
+		for ( int d = 0; d < min.length; d++ )
+		{
+			min[ d ] = position[ d ] - radius;
+		}
 	}
 
 	@Override
 	public void realMin( final RealPositionable min )
 	{
-		// TODO Auto-generated method stub
-
+		for ( int d = 0; d < min.numDimensions(); d++ )
+		{
+			min.setPosition( position[ d ] - radius, d );
+		}
 	}
 
 	@Override
 	public double realMax( final int d )
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return position[ d ] + radius;
 	}
 
 	@Override
 	public void realMax( final double[] max )
 	{
-		// TODO Auto-generated method stub
-
+		for ( int d = 0; d < max.length; d++ )
+		{
+			max[ d ] = position[ d ] + radius;
+		}
 	}
 
 	@Override
 	public void realMax( final RealPositionable max )
 	{
-		// TODO Auto-generated method stub
-
+		for ( int d = 0; d < max.numDimensions(); d++ )
+		{
+			max.setPosition( position[ d ] + radius, d );
+		}
 	}
 
 	@Override
@@ -296,57 +337,64 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 	@Override
 	public long min( final int d )
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return position[ d ] - radius;
 	}
 
 	@Override
 	public void min( final long[] min )
 	{
-		// TODO Auto-generated method stub
-
+		for ( int d = 0; d < min.length; d++ )
+		{
+			min[ d ] = position[ d ] - radius;
+		}
 	}
 
 	@Override
 	public void min( final Positionable min )
 	{
-		// TODO Auto-generated method stub
-
+		for ( int d = 0; d < min.numDimensions(); d++ )
+		{
+			min.setPosition( position[ d ] - radius, d );
+		}
 	}
 
 	@Override
 	public long max( final int d )
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return position[ d ] + radius;
 	}
 
 	@Override
 	public void max( final long[] max )
 	{
-		// TODO Auto-generated method stub
-
+		for ( int d = 0; d < max.length; d++ )
+		{
+			max[ d ] = position[ d ] + radius;
+		}
 	}
 
 	@Override
 	public void max( final Positionable max )
 	{
-		// TODO Auto-generated method stub
-
+		for ( int d = 0; d < max.numDimensions(); d++ )
+		{
+			max.setPosition( position[ d ] + radius, d );
+		}
 	}
 
 	@Override
 	public void dimensions( final long[] dimensions )
 	{
-		// TODO Auto-generated method stub
-
+		for ( int d = 0; d < dimensions.length; d++ )
+		{
+			dimensions[ d ] = ( 2 * radius ) + 1;
+		}
 	}
 
 	@Override
 	public long dimension( final int d )
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return ( 2 * radius ) + 1;
 	}
 
 	@Override
@@ -360,4 +408,5 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 	{
 		return cursor();
 	}
+
 }

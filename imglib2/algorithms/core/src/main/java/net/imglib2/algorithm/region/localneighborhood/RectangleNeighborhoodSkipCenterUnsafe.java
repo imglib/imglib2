@@ -7,7 +7,8 @@ public final class RectangleNeighborhoodSkipCenterUnsafe< T > extends RectangleN
 {
 	public static < T > RectangleNeighborhoodFactory< T > factory()
 	{
-		return new RectangleNeighborhoodFactory< T >() {
+		return new RectangleNeighborhoodFactory< T >()
+		{
 			@Override
 			public Neighborhood< T > create( final long[] position, final long[] currentMin, final long[] currentMax, final Interval span, final RandomAccess< T > sourceRandomAccess )
 			{
