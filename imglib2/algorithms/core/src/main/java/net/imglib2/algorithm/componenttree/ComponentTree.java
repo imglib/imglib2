@@ -211,7 +211,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		 * @return false if the neighbor position is out of bounds, true
 		 *         otherwise.
 		 */
-		public boolean next( final Localizable current, final Positionable neighbor )
+		public boolean next( final Localizable current, final Positionable neighbor, final Positionable neighbor2 )
 		{
 			final int d = n / 2;
 			final boolean bck = (n == 2*d); // n % 2 == 0
@@ -219,15 +219,20 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 			if ( bck )
 			{
 				if ( d > 0 )
+				{
 					neighbor.setPosition( current.getLongPosition( d - 1 ), d - 1 );
+					neighbor2.setPosition( current.getLongPosition( d - 1 ), d - 1 );
+				}
 				final long dpos = current.getLongPosition( d ) - 1;
 				neighbor.setPosition( dpos, d );
+				neighbor2.setPosition( dpos, d );
 				return dpos >= 0;
 			}
 			else
 			{
 				final long dpos = current.getLongPosition( d ) + 1;
 				neighbor.setPosition( dpos, d );
+				neighbor2.setPosition( dpos, d );
 				return dpos < dimensions[ d ];
 			}
 		}
@@ -344,24 +349,6 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	}
 
 	/**
-	 * Mark the given pixel location as visited.
-	 */
-	private void visit( final Localizable position )
-	{
-		visitedRandomAccess.setPosition( position );
-		visitedRandomAccess.get().set( true );
-	}
-
-	/**
-	 * Was the given pixel location already visited?
-	 */
-	private boolean wasVisited( final Localizable position )
-	{
-		visitedRandomAccess.setPosition( position );
-		return visitedRandomAccess.get().get();
-	}
-
-	/**
 	 * Main loop of the algorithm. This follows exactly along steps of the
 	 * algorithm as described in the paper.
 	 *
@@ -373,7 +360,8 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		final RandomAccess< T > current = input.randomAccess();
 		final RandomAccess< T > neighbor = input.randomAccess();
 		input.min( current );
-		input.min( neighbor );
+		neighbor.setPosition( current );
+		visitedRandomAccess.setPosition( current );
 		final T currentLevel = current.get().createVariable();
 		final T neighborLevel = current.get().createVariable();
 
@@ -381,7 +369,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		// Nister & Stewenius paper.
 
 		// step 2
-		visit( current );
+		visitedRandomAccess.get().set( true );
 		currentLevel.set( current.get() );
 
 		// step 3
@@ -392,9 +380,9 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		{
 			while ( neighborhood.hasNext() )
 			{
-				if ( !neighborhood.next( current, neighbor ) )
+				if ( !neighborhood.next( current, neighbor, visitedRandomAccess ) )
 					continue;
-				if ( !wasVisited( neighbor ) )
+				if ( !visitedRandomAccess.get().get() )
 				{
 					// actually we could
 					//   visit( neighbor );
@@ -439,6 +427,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 			}
 			current.setPosition( p );
 			neighbor.setPosition( current );
+			visitedRandomAccess.setPosition( current );
 			currentLevel.set( p.get() );
 			neighborhood.setNextNeighborIndex( p.getNextNeighborIndex() );
 			freeBoundaryPixel( p );
