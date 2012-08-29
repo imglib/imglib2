@@ -86,7 +86,7 @@ public class Intervals
 	 *            the input interval
 	 * @param border
 	 *            how many pixels to add on every side
-	 * @return shrunk interval
+	 * @return expanded interval
 	 */
 	public static FinalInterval expand( final Interval interval, final long border )
 	{
@@ -115,7 +115,7 @@ public class Intervals
 	 *            how many pixels to add on every side
 	 * @param d
 	 *            in which dimension
-	 * @return shrunk interval
+	 * @return expanded interval
 	 */
 	public static FinalInterval expand( final Interval interval, final long border, final int d )
 	{

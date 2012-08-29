@@ -43,6 +43,7 @@ import ij.process.ImageProcessor;
 import ij.process.ShortProcessor;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -597,9 +598,22 @@ public class LOCI
 		// read many 2d-images if it is a directory
 		if ( dir.isDirectory() )
 		{
-			final String[] files = dir.list();
+			final String[] files = dir.list( new FilenameFilter() 
+			{	
+				@Override
+				public boolean accept( final File dir, final String name) 
+				{
+					final File newFile = new File( dir, name );
+					
+					// ignore directories and hidden files
+					if ( newFile.isHidden() || newFile.isDirectory() )
+						return false;
+					else
+						return true;
+				}
+			});
 			Arrays.sort( files );
-			final int depth = dir.list().length;
+			final int depth = files.length;
 			
 			// get size of first image
 			final Opener io = new Opener();

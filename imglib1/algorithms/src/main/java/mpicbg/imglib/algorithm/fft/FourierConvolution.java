@@ -25,6 +25,9 @@
 
 package mpicbg.imglib.algorithm.fft;
 
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
@@ -37,6 +40,8 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.multithreading.Chunk;
+import mpicbg.imglib.multithreading.SimpleMultiThreading;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
@@ -56,6 +61,7 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	Image<ComplexFloatType> kernelFFT, imgFFT; 
 	FourierTransform<T, ComplexFloatType> fftImage;
 	boolean keepImgFFT = true;
+	boolean extendImgByKernelSize = true;
 	
 	final int[] kernelDim;
 
@@ -94,6 +100,15 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			return true;
 		}
 	}
+	
+	/**
+	 * Defines if the image is extended by half the kernelsize all around its edges before computation.
+	 * This way, the outoufbounds will be correct.
+	 * 
+	 * @param extend
+	 */
+	public void setExtendImageByKernelSize( final boolean extend ) { this.extendImgByKernelSize = extend; }
+	public boolean getExtendImageByKernelSize() { return extendImgByKernelSize; }
 	
 	/**
 	 * By default, he will not do the computation in-place
@@ -256,20 +271,24 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			fftImage = new FourierTransform<T, ComplexFloatType>( image, new ComplexFloatType() );
 			fftImage.setNumThreads( this.getNumThreads() );
 			
-			// how to extend the input image out of its boundaries for computing the FFT,
-			// we simply mirror the content at the borders
-			fftImage.setPreProcessing( PreProcessing.EXTEND_MIRROR );		
 			// we do not rearrange the fft quadrants
 			fftImage.setRearrangement( Rearrangement.UNCHANGED );
+						
+			if ( extendImgByKernelSize )
+			{
+				// how to extend the input image out of its boundaries for computing the FFT,
+				// we simply mirror the content at the borders
+				fftImage.setPreProcessing( PreProcessing.EXTEND_MIRROR );
 			
-			// the image has to be extended by the size of the kernel-1
-			// as the kernel is always odd, e.g. if kernel size is 3, we need to add
-			// one pixel out of bounds in each dimension (3-1=2 pixel all together) so that the
-			// convolution works
-			final int[] imageExtension = kernelDim.clone();		
-			for ( int d = 0; d < numDimensions; ++d )
-				--imageExtension[ d ];		
-			fftImage.setImageExtension( imageExtension );
+				// the image has to be extended by the size of the kernel-1
+				// as the kernel is always odd, e.g. if kernel size is 3, we need to add
+				// one pixel out of bounds in each dimension (3-1=2 pixel all together) so that the
+				// convolution works
+				final int[] imageExtension = kernelDim.clone();		
+				for ( int d = 0; d < numDimensions; ++d )
+					--imageExtension[ d ];		
+				fftImage.setImageExtension( imageExtension );
+			}
 			
 			if ( !fftImage.checkInput() || !fftImage.process() )
 			{
@@ -351,7 +370,29 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		else
 			copy = imgFFT;
 		
-		multiply( copy, kernelFFT );
+		long numPixels = copy.getDimension( 0 );
+		for ( int d = 1; d < copy.getNumDimensions(); ++d )
+			numPixels *= copy.getDimension( d );
+		
+		final Vector< Chunk > threadChunks = SimpleMultiThreading.divideIntoChunks( numPixels, getNumThreads() );
+		
+		final AtomicInteger ai = new AtomicInteger(0);					
+        final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+        for ( int ithread = 0; ithread < threads.length; ++ithread )
+            threads[ithread] = new Thread(new Runnable()
+            {
+                public void run()
+                {
+                	// get chunk of pixels to process
+                	final Chunk myChunk = threadChunks.get( ai.getAndIncrement() );
+                	
+            		multiply( myChunk.getStartPosition(), myChunk.getLoopSize(), copy, kernelFFT );
+                }
+            });
+        
+        SimpleMultiThreading.startAndJoin( threads );
+
+		//multiply( copy, kernelFFT );
 		
 		//
 		// Compute inverse Fourier Transform
@@ -392,6 +433,26 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 		final Cursor<ComplexFloatType> cursorB = b.createCursor();
 		
 		while ( cursorA.hasNext() )
+		{
+			cursorA.fwd();
+			cursorB.fwd();
+			
+			cursorA.getType().mul( cursorB.getType() );
+		}
+		
+		cursorA.close();
+		cursorB.close();
+	}
+
+	private final static void multiply( final long start, final long loopSize, final Image< ComplexFloatType > a, final Image< ComplexFloatType > b )
+	{
+		final Cursor<ComplexFloatType> cursorA = a.createCursor();
+		final Cursor<ComplexFloatType> cursorB = b.createCursor();
+		
+		cursorA.fwd( start );
+		cursorB.fwd( start );
+		
+		for ( long l = 0; l < loopSize; ++l )
 		{
 			cursorA.fwd();
 			cursorB.fwd();
