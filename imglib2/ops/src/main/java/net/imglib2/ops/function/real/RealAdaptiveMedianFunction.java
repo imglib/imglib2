@@ -93,17 +93,13 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 			pointSet.setAnchor(points.getAnchor());
 			collector.collect(pointSet, otherFunc, values);
 			zMed = calculator.median(values);
-			// take advantage of fact that median() sorts values
+			// HACK - take advantage of fact that median() sorts values
 			double zMin = values.get(0);
 			double zMax = values.get(values.size()-1);
-			double a1 = zMed - zMin;
-			double a2 = zMed - zMax;
-			if (a1 > 0 && a2 < 0) {
+			if (zMin < zMed && zMed < zMax) {
 				otherFunc.compute(pointSet.getAnchor(), currValue);
 				double zXY = currValue.getRealDouble();
-				double b1 = zXY - zMin;
-				double b2 = zXY - zMax;
-				if ((b1 > 0) && (b2 < 0))
+				if ((zMin < zXY) && (zXY < zMax))
 					output.setReal(zXY);
 				else
 					output.setReal(zMed);
