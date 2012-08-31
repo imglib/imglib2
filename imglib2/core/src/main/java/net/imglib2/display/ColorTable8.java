@@ -43,7 +43,7 @@ package net.imglib2.display;
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
-public class ColorTable8 extends ColorTable<byte[]> {
+public class ColorTable8 extends AbstractColorTable<byte[]> {
 
 	/** Initializes an 8-bit color table with a linear grayscale ramp. */
 	public ColorTable8() {
@@ -61,8 +61,24 @@ public class ColorTable8 extends ColorTable<byte[]> {
 	}
 
 	@Override
-	public int get(final int c, final int i) {
-		return values[c][i] & 0xff;
+	public int getBits() {
+		return 8;
+	}
+
+	@Override
+	public int get(final int comp, final int bin) {
+		return getNative(comp, bin);
+	}
+
+	@Override
+	public int getNative(final int comp, final int bin) {
+		return values[comp][bin] & 0xff;
+	}
+
+	@Override
+	public int getResampled(final int comp, final int bins, final int bin) {
+		final int newBin = (int)((long) getLength() * bin / bins);
+		return getNative(comp, newBin);
 	}
 
 	// -- Helper methods --

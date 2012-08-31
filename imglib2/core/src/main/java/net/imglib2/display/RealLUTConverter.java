@@ -37,9 +37,9 @@
 
 package net.imglib2.display;
 
-import net.imglib2.Binning;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.AbstractLinearRange;
+import net.imglib2.display.ColorTable;
 import net.imglib2.display.ColorTable8;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.type.numeric.ARGBType;
@@ -60,32 +60,31 @@ public class RealLUTConverter<R extends RealType<R>> extends
 	AbstractLinearRange implements Converter<R, ARGBType>
 {
 
-	private ColorTable8 lut = null;
+	private ColorTable lut = null;
 
 	public RealLUTConverter() {
 		super();
 	}
 
 	public RealLUTConverter(final double min, final double max,
-		final ColorTable8 lut)
+		final ColorTable lut)
 	{
 		super(min, max);
 		setLUT(lut);
 	}
 
-	public ColorTable8 getLUT() {
+	public ColorTable getLUT() {
 		return lut;
 	}
 
-	public void setLUT(final ColorTable8 lut) {
+	public void setLUT(final ColorTable lut) {
 		this.lut = lut == null ? new ColorTable8() : lut;
 	}
 
 	@Override
 	public void convert(final R input, final ARGBType output) {
 		final double a = input.getRealDouble();
-		final int b = Binning.valueToBin(256, min, max, a);
-		final int argb = lut.argb(b);
+		final int argb = lut.lookupARGB(min, max, a);
 		output.set(argb);
 	}
 
