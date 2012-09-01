@@ -197,4 +197,12 @@ public final class PixelList implements Iterable< Localizable >
 	{
 		return size;
 	}
+
+	/**
+	 * empty the list.
+	 */
+	public void clear()
+	{
+		size = 0;
+	}
 }
