@@ -38,7 +38,6 @@ package net.imglib2.algorithm.componenttree;
 
 import java.util.ArrayDeque;
 import java.util.Comparator;
-import java.util.Deque;
 import java.util.PriorityQueue;
 
 import net.imglib2.Localizable;
@@ -203,28 +202,38 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		/**
 		 * Set neighbor to the next (according to
 		 * {@link ComponentTree.Neighborhood#n}) neighbor position of current.
+		 * Assumes that prior to any call to next() neighbor was a the same
+		 * position as current, i.e. neighbor position is only modified
+		 * incrementally.
 		 *
 		 * @param current
 		 * @param neighbor
 		 * @return false if the neighbor position is out of bounds, true
 		 *         otherwise.
 		 */
-		public boolean next( final Localizable current, final Positionable neighbor )
+		public boolean next( final Localizable current, final Positionable neighbor, final Positionable neighbor2 )
 		{
-			// TODO: can setting full position be avoided?
-			neighbor.setPosition( current );
 			final int d = n / 2;
-			if ( n % 2 == 0 )
+			final boolean bck = (n == 2*d); // n % 2 == 0
+			++n;
+			if ( bck )
 			{
-				neighbor.move( -1, d );
-				++n;
-				return current.getLongPosition( d ) - 1 >= 0;
+				if ( d > 0 )
+				{
+					neighbor.setPosition( current.getLongPosition( d - 1 ), d - 1 );
+					neighbor2.setPosition( current.getLongPosition( d - 1 ), d - 1 );
+				}
+				final long dpos = current.getLongPosition( d ) - 1;
+				neighbor.setPosition( dpos, d );
+				neighbor2.setPosition( dpos, d );
+				return dpos >= 0;
 			}
 			else
 			{
-				neighbor.move( 1, d );
-				++n;
-				return current.getLongPosition( d ) + 1 < dimensions[ d ];
+				final long dpos = current.getLongPosition( d ) + 1;
+				neighbor.setPosition( dpos, d );
+				neighbor2.setPosition( dpos, d );
+				return dpos < dimensions[ d ];
 			}
 		}
 	}
@@ -238,7 +247,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		private final T value;
 
 		// TODO: this should be some kind of iterator over the neighborhood
-		private final int nextNeighborIndex;
+		private int nextNeighborIndex;
 
 		public BoundaryPixel( final Localizable position, final T value, final int nextNeighborIndex )
 		{
@@ -264,6 +273,27 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		}
 	}
 
+	private final ArrayDeque< BoundaryPixel > reusableBoundaryPixels;
+
+	private BoundaryPixel createBoundaryPixel( final Localizable position, final T value, final int nextNeighborIndex )
+	{
+		if ( reusableBoundaryPixels.isEmpty() )
+			return new BoundaryPixel( position, value, nextNeighborIndex );
+		else
+		{
+			final BoundaryPixel p = reusableBoundaryPixels.pop();
+			p.setPosition( position );
+			p.value.set( value );
+			p.nextNeighborIndex = nextNeighborIndex;
+			return p;
+		}
+	}
+
+	private void freeBoundaryPixel( final BoundaryPixel p )
+	{
+		reusableBoundaryPixels.push( p );
+	}
+
 	private final Component.Generator< T, C > componentGenerator;
 
 	private final Component.Handler< C > componentOutput;
@@ -276,7 +306,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 
 	private final PriorityQueue< BoundaryPixel > boundaryPixels;
 
-	private final Deque< C > componentStack;
+	private final ArrayDeque< C > componentStack;
 
 	private final Comparator< T > comparator;
 
@@ -295,6 +325,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	 */
 	private ComponentTree( final RandomAccessibleInterval< T > input, final Component.Generator< T, C > componentGenerator, final Component.Handler< C > componentOutput, final Comparator< T > comparator )
 	{
+		reusableBoundaryPixels = new ArrayDeque< BoundaryPixel >();
 		this.componentGenerator = componentGenerator;
 		this.componentOutput = componentOutput;
 
@@ -318,24 +349,6 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	}
 
 	/**
-	 * Mark the given pixel location as visited.
-	 */
-	private void visit( final Localizable position )
-	{
-		visitedRandomAccess.setPosition( position );
-		visitedRandomAccess.get().set( true );
-	}
-
-	/**
-	 * Was the given pixel location already visited?
-	 */
-	private boolean wasVisited( final Localizable position )
-	{
-		visitedRandomAccess.setPosition( position );
-		return visitedRandomAccess.get().get();
-	}
-
-	/**
 	 * Main loop of the algorithm. This follows exactly along steps of the
 	 * algorithm as described in the paper.
 	 *
@@ -347,6 +360,8 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		final RandomAccess< T > current = input.randomAccess();
 		final RandomAccess< T > neighbor = input.randomAccess();
 		input.min( current );
+		neighbor.setPosition( current );
+		visitedRandomAccess.setPosition( current );
 		final T currentLevel = current.get().createVariable();
 		final T neighborLevel = current.get().createVariable();
 
@@ -354,7 +369,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		// Nister & Stewenius paper.
 
 		// step 2
-		visit( current );
+		visitedRandomAccess.get().set( true );
 		currentLevel.set( current.get() );
 
 		// step 3
@@ -365,9 +380,9 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		{
 			while ( neighborhood.hasNext() )
 			{
-				if ( !neighborhood.next( current, neighbor ) )
+				if ( !neighborhood.next( current, neighbor, visitedRandomAccess ) )
 					continue;
-				if ( !wasVisited( neighbor ) )
+				if ( !visitedRandomAccess.get().get() )
 				{
 					// actually we could
 					//   visit( neighbor );
@@ -378,11 +393,11 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 					neighborLevel.set( neighbor.get() );
 					if ( comparator.compare( neighborLevel, currentLevel ) >= 0 )
 					{
-						boundaryPixels.add( new BoundaryPixel( neighbor, neighborLevel, 0 ) );
+						boundaryPixels.add( createBoundaryPixel( neighbor, neighborLevel, 0 ) );
 					}
 					else
 					{
-						boundaryPixels.add( new BoundaryPixel( current, currentLevel, neighborhood.getNextNeighborIndex() ) );
+						boundaryPixels.add( createBoundaryPixel( current, currentLevel, neighborhood.getNextNeighborIndex() ) );
 						current.setPosition( neighbor );
 						currentLevel.set( neighborLevel );
 
@@ -411,8 +426,11 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 				processStack( p.get() );
 			}
 			current.setPosition( p );
+			neighbor.setPosition( current );
+			visitedRandomAccess.setPosition( current );
 			currentLevel.set( p.get() );
 			neighborhood.setNextNeighborIndex( p.getNextNeighborIndex() );
+			freeBoundaryPixel( p );
 		}
 	}
 

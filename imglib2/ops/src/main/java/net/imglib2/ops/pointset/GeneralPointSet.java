@@ -41,8 +41,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.imglib2.ops.PointSet;
-import net.imglib2.ops.PointSetIterator;
 
 /**
  * 

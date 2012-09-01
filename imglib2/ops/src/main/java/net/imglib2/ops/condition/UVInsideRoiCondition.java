@@ -38,7 +38,6 @@
 package net.imglib2.ops.condition;
 
 import net.imglib2.RealRandomAccess;
-import net.imglib2.ops.Condition;
 import net.imglib2.roi.RegionOfInterest;
 import net.imglib2.type.logic.BitType;
 

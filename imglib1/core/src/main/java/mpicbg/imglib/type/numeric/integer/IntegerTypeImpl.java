@@ -59,7 +59,7 @@ public abstract class IntegerTypeImpl<T extends IntegerTypeImpl<T>> extends Real
 	public double getMinIncrement() { return 1; }
 
 	@Override
-	public float getRealFloat() { return getInteger(); }
+	public float getRealFloat() { return (float) getIntegerLong(); }
 	@Override
 	public double getRealDouble() { return getIntegerLong(); }
 	

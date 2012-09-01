@@ -156,6 +156,32 @@ public class Intervals
 	}
 
 	/**
+	 * Compute the intersection of two intervals.
+	 *
+	 * Create a {@link FinalInterval} , which is the intersection of the input intervals (i.e., the area contained in both input intervals).
+	 *
+	 * @param intervalA
+	 *            input interval
+	 * @param intervalB
+	 *            input interval
+	 * @return intersection of input intervals
+	 */
+	public static FinalInterval intersect( final Interval intervalA, final Interval intervalB )
+	{
+		assert intervalA.numDimensions() == intervalB.numDimensions();
+
+		final int n = intervalA.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] = Math.max( intervalA.min( d ), intervalB.min( d ) );
+			max[ d ] = Math.min( intervalA.max( d ), intervalB.max( d ) );
+		}
+		return new FinalInterval( min, max );
+	}
+
+	/**
 	 * Test whether the {@code containing} interval contains the
 	 * {@code contained} point. The interval is closed, that is, boundary points
 	 * are contained.

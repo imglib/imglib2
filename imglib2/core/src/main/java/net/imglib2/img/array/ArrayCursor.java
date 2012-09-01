@@ -9,13 +9,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -52,7 +52,7 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 {
 	protected final T type;
 
-	protected final ArrayImg< T, ? > container;
+	protected final ArrayImg< T, ? > img;
 
 	protected final int lastIndex;
 
@@ -60,21 +60,21 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 	{
 		super( cursor.numDimensions() );
 
-		this.container = cursor.container;
-		this.type = container.createLinkedType();
-		this.lastIndex = ( int )container.size() - 1;
+		this.img = cursor.img;
+		this.type = img.createLinkedType();
+		this.lastIndex = ( int )img.size() - 1;
 
 		type.updateIndex( cursor.type.getIndex() );
 		type.updateContainer( this );
 	}
 
-	public ArrayCursor( final ArrayImg< T, ? > container )
+	public ArrayCursor( final ArrayImg< T, ? > img )
 	{
-		super( container.numDimensions() );
+		super( img.numDimensions() );
 
-		this.type = container.createLinkedType();
-		this.container = container;
-		this.lastIndex = ( int )container.size() - 1;
+		this.type = img.createLinkedType();
+		this.img = img;
+		this.lastIndex = ( int )img.size() - 1;
 
 		reset();
 	}
@@ -119,13 +119,13 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 	@Override
 	public int getIntPosition( final int dim )
 	{
-		return IntervalIndexer.indexToPosition( type.getIndex(), container.dim, dim );
+		return IntervalIndexer.indexToPosition( type.getIndex(), img.dim, dim );
 	}
 
 	@Override
 	public void localize( final int[] position )
 	{
-		IntervalIndexer.indexToPosition( type.getIndex(), container.dim, position );
+		IntervalIndexer.indexToPosition( type.getIndex(), img.dim, position );
 	}
 
 	@Override
