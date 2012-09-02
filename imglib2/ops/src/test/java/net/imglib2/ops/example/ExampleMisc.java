@@ -37,15 +37,15 @@
 package net.imglib2.ops.example;
 
 import net.imglib2.img.Img;
-import net.imglib2.ops.Condition;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.InputIteratorFactory;
+import net.imglib2.ops.condition.Condition;
+import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.complex.ComplexImageFunction;
 import net.imglib2.ops.function.general.GeneralUnaryFunction;
-import net.imglib2.ops.image.ImageAssignment;
+import net.imglib2.ops.img.ImageAssignment;
+import net.imglib2.ops.input.InputIteratorFactory;
 import net.imglib2.ops.input.PointInputIteratorFactory;
-import net.imglib2.ops.operation.unary.real.RealSqr;
-import net.imglib2.ops.operation.unary.real.RealUnaryOperation;
+import net.imglib2.ops.operation.real.unary.RealSqr;
+import net.imglib2.ops.operation.real.unary.RealUnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;

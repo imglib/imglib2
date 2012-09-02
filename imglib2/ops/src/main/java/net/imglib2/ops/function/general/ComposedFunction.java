@@ -39,8 +39,8 @@ package net.imglib2.ops.function.general;
 
 import java.util.ArrayList;
 
-import net.imglib2.ops.Function;
-import net.imglib2.ops.PointSet;
+import net.imglib2.ops.function.Function;
+import net.imglib2.ops.pointset.PointSet;
 
 // TODO - this is a simple implementation. It only works from a fixed point
 // along a axis. Ideally in the future we'd have different shaped functions

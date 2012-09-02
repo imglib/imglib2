@@ -37,7 +37,7 @@
 
 package net.imglib2.ops.function.complex;
 
-import net.imglib2.ops.Function;
+import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.ComplexType;
 
 

@@ -40,7 +40,7 @@ package net.imglib2.ops.function.complex;
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
-import net.imglib2.ops.Function;
+import net.imglib2.ops.function.Function;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.ComplexType;
 

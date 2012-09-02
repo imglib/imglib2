@@ -45,13 +45,13 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.PointSet;
+import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealProductFunction;
 import net.imglib2.ops.input.PointSetInputIterator;
 import net.imglib2.ops.pointset.GeneralPointSet;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
+import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.real.DoubleType;
 
 // get values that are an average of the 5 values in a 3x3 cross

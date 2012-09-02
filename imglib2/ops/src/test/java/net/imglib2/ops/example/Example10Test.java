@@ -44,7 +44,7 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.Function;
+import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.complex.CartesianComplexFunction;
 import net.imglib2.ops.function.complex.DFTFunction;
 import net.imglib2.ops.function.complex.IDFTFunction;

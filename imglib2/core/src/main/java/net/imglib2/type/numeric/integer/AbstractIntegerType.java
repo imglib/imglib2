@@ -50,7 +50,7 @@ public abstract class AbstractIntegerType<T extends AbstractIntegerType<T>> exte
 	public double getMinIncrement() { return 1; }
 
 	@Override
-	public float getRealFloat() { return getInteger(); }
+	public float getRealFloat() { return getIntegerLong(); }
 	@Override
 	public double getRealDouble() { return getIntegerLong(); }
 	

@@ -43,7 +43,7 @@ import org.junit.Test;
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.operation.binary.real.RealAdd;
+import net.imglib2.ops.operation.real.binary.RealAdd;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**

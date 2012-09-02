@@ -37,8 +37,6 @@
 
 package net.imglib2.ops.pointset;
 
-import net.imglib2.ops.PointSet;
-import net.imglib2.ops.PointSetIterator;
 
 /**
  * 

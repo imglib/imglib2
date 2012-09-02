@@ -40,10 +40,10 @@ package net.imglib2.ops.function.complex;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.operation.binary.complex.ComplexAdd;
-import net.imglib2.ops.operation.binary.complex.ComplexMultiply;
-import net.imglib2.ops.operation.unary.complex.ComplexExp;
+import net.imglib2.ops.function.Function;
+import net.imglib2.ops.operation.complex.binary.ComplexAdd;
+import net.imglib2.ops.operation.complex.binary.ComplexMultiply;
+import net.imglib2.ops.operation.complex.unary.ComplexExp;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 

@@ -40,10 +40,8 @@ package net.imglib2.ops.pointset;
 
 import java.util.Arrays;
 
-import net.imglib2.ops.PointSet;
-import net.imglib2.ops.PointSetIterator;
-import net.imglib2.ops.Tuple2;
 import net.imglib2.ops.parse.PointSetParser;
+import net.imglib2.ops.util.Tuple2;
 
 /**
  * Class for defining complex PointSets from a text string. Syntax is similar

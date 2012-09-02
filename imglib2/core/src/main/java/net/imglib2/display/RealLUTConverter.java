@@ -37,6 +37,7 @@
 
 package net.imglib2.display;
 
+import net.imglib2.Binning;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.AbstractLinearRange;
 import net.imglib2.display.ColorTable8;
@@ -83,8 +84,7 @@ public class RealLUTConverter<R extends RealType<R>> extends
 	@Override
 	public void convert(final R input, final ARGBType output) {
 		final double a = input.getRealDouble();
-		final int b =
-			Math.min(255, roundPositive(Math.max(0, ((a - min) / scale * 255.0))));
+		final int b = Binning.valueToBin(256, min, max, a);
 		final int argb = lut.argb(b);
 		output.set(argb);
 	}
