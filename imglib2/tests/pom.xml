@@ -45,6 +45,12 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>imglib2-algorithms-legacy</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2-ij</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
