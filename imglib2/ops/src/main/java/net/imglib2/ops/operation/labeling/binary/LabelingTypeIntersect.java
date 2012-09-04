@@ -6,23 +6,21 @@ import java.util.List;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.BinaryOperation;
 
-public class LabelingIntersect<L extends Comparable<L>> implements
+/**
+ * Computes the intersection between two labelings types
+ * 
+ */
+public class LabelingTypeIntersect<L extends Comparable<L>> implements
 		BinaryOperation<LabelingType<L>, LabelingType<L>, LabelingType<L>> {
 
 	@Override
 	public LabelingType<L> compute(LabelingType<L> input1,
 			LabelingType<L> input2, LabelingType<L> output) {
 
-		if (input1.getLabeling().size() != 0
-				&& input2.getLabeling().size() != 0) {
-
-			output.setLabeling(intersect(
-					new ArrayList<L>(input1.getLabeling()), new ArrayList<L>(
-							input2.getLabeling())));
-			return output;
-		}
-
+		output.setLabeling(intersect(new ArrayList<L>(input1.getLabeling()),
+				new ArrayList<L>(input2.getLabeling())));
 		return output;
+
 	}
 
 	private List<L> intersect(List<L> labelingsA, List<L> labelingsB) {
@@ -37,7 +35,7 @@ public class LabelingIntersect<L extends Comparable<L>> implements
 
 	@Override
 	public BinaryOperation<LabelingType<L>, LabelingType<L>, LabelingType<L>> copy() {
-		return new LabelingIntersect<L>();
+		return new LabelingTypeIntersect<L>();
 	}
 
 }
