@@ -46,8 +46,7 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealPositionable;
-import net.imglib2.display.ColorTable16;
-import net.imglib2.display.ColorTable8;
+import net.imglib2.display.ColorTable;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.Metadata;
@@ -78,8 +77,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	private ArrayList<Double> channelMax;
 
 	private int compositeChannelCount = 1;
-	private final ArrayList<ColorTable8> lut8;
-	private final ArrayList<ColorTable16> lut16;
+	private final ArrayList<ColorTable> colorTable;
 
 	// -- Constructors --
 
@@ -102,8 +100,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		compositeChannelCount = metadata.getCompositeChannelCount();
 		final int count = metadata.getColorTableCount();
 		for (int i = 0; i < count; i++) {
-			lut8.add(metadata.getColorTable8(i));
-			lut16.add(metadata.getColorTable16(i));
+			colorTable.add(metadata.getColorTable(i));
 		}
 	}
 
@@ -116,8 +113,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		this.cal = validateCalibration(img.numDimensions(), cal);
 		channelMin = new ArrayList<Double>();
 		channelMax = new ArrayList<Double>();
-		lut8 = new ArrayList<ColorTable8>();
-		lut16 = new ArrayList<ColorTable16>();
+		colorTable = new ArrayList<ColorTable>();
 		setSource("");
 	}
 
@@ -383,42 +379,28 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public ColorTable8 getColorTable8(final int no) {
-		if (no >= lut8.size()) return null;
-		return lut8.get(no);
+	public ColorTable getColorTable(final int no) {
+		if (no >= colorTable.size()) return null;
+		return colorTable.get(no);
 	}
 
 	@Override
-	public void setColorTable(final ColorTable8 lut, final int no) {
-		lut8.set(no, lut);
-	}
-
-	@Override
-	public ColorTable16 getColorTable16(final int no) {
-		if (no >= lut16.size()) return null;
-		return lut16.get(no);
-	}
-
-	@Override
-	public void setColorTable(final ColorTable16 lut, final int no) {
-		lut16.set(no, lut);
+	public void setColorTable(final ColorTable cT, final int no) {
+		colorTable.set(no, cT);
 	}
 
 	@Override
 	public void initializeColorTables(final int count) {
-		lut8.ensureCapacity(count);
-		lut16.ensureCapacity(count);
-		lut8.clear();
-		lut16.clear();
+		colorTable.ensureCapacity(count);
+		colorTable.clear();
 		for (int i = 0; i < count; i++) {
-			lut8.add(null);
-			lut16.add(null);
+			colorTable.add(null);
 		}
 	}
 
 	@Override
 	public int getColorTableCount() {
-		return lut8.size();
+		return colorTable.size();
 	}
 
 	@Override

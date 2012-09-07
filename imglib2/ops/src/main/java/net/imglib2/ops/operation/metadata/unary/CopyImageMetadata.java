@@ -57,8 +57,7 @@ public class CopyImageMetadata< M extends ImageMetadata > implements UnaryOperat
 		output.initializeColorTables( input.getColorTableCount() );
 		for ( int n = 0; n < input.getColorTableCount(); n++ )
 		{
-			output.setColorTable( input.getColorTable16( n ), n );
-			output.setColorTable( input.getColorTable8( n ), n );
+			output.setColorTable( input.getColorTable( n ), n );
 		}
 
 		return output;
