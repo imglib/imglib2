@@ -8,6 +8,10 @@
 
 set -e
 
+msg () {
+	printf '\n%s\n' "$*" >&2
+}
+
 DIR="$(dirname "$0")/.."
 
 cd "$DIR"
@@ -19,11 +23,13 @@ scifio="$4"
 
 if [ -z "$old" -o -z "$new" -o -z "$imagej1" -o -z "$scifio" ];
 then
-	echo 'Usage:'
-	echo "   tag-release.sh old.version new.version imagej1.version scifio.version"
-	echo
-	echo 'E.g.:'
-	echo "   tag-release.sh 2.0.0-SNAPSHOT 2.0.0-beta3 1.46r 4.4.0"
+	cat >&2 << EOF
+Usage:
+   tag-release.sh old.version new.version imagej1.version scifio.version
+
+E.g.:
+   tag-release.sh 2.0.0-SNAPSHOT 2.0.0-beta3 1.46r 4.4.0
+EOF
 	exit 1
 fi
 
@@ -38,37 +44,33 @@ echo "Tag = $tag"
 
 cd "$DIR"
 
-if [ -n "$(git tag -l | grep "$tag")" ];
+msg '====== Fetching the latest commits and tags ======'
+git fetch --all --tags --prune
+
+if [ -n "$(git tag -l "$tag")" ];
 then
-	echo
-	echo "Tag '$tag' already exists. Delete it, or use a different version."
-	exit 2
+	msg "Tag '$tag' already exists. Delete it, or use a different version."
+	exit 1
 fi
 
-echo
-echo '====== Updating master branch to the latest ======'
-git fetch --all --tags --prune
+msg '====== Updating master branch to the latest ======'
 git checkout master
 git merge 'HEAD@{u}'
 
-echo
-echo '====== Updating version numbers ======'
+msg '====== Updating version numbers ======'
 
 # update project versions
-mvn -P broken versions:set -DoldVersion="$old" -DnewVersion="$new" \
-	-DgenerateBackupPoms=false
+mvn -P broken versions:set -DoldVersion="$old" -DnewVersion="$new" -DgenerateBackupPoms=false
 
-# replace any remaining SNAPSHOT versions (especially in broken subtree)
-set +e # grep returns non-zero when nothing matches, which kills the script
-if [ -n "git grep -zl \"$old\" imglib1 imglib2" ];
-then
-	# NB: We cannot use the xargs "-r" flag because it is a GNU extension only.
-	git grep -zl "$old" imglib1 imglib2 | xargs -0 sed -i '' -e "s/$old/$new/"
-fi
-set -e
+# verify there are no remaining SNAPSHOT versions
+files="$(git grep -l "$old" imglib1 imglib2)" && {
+	msg "There are still references to '$old'"
+	msg "$files"
+	exit 1
+}
 
 # add needed properties block to toplevel POM
-sed -E -i '' -e 's_(</build>)_\1\
+sed -E -i'' -e 's_(</build>)_\1\
 \
 	<properties>\
 		<imglib1.version>${project.version}</imglib1.version>\
@@ -77,8 +79,7 @@ sed -E -i '' -e 's_(</build>)_\1\
 		<scifio.version>'"$scifio"'</scifio.version>\
 	</properties>_' pom.xml
 
-echo
-echo '====== Making release commit ======'
+msg '====== Making release commit ======'
 
 # create a temporary branch using "detached HEAD"
 git checkout HEAD^0 > /dev/null 2>&1
@@ -92,11 +93,9 @@ This release uses the following dependency versions:
 # do the commit
 git commit . -m "$msg"
 
-echo
-echo '====== Tagging the release ======'
+msg '====== Tagging the release ======'
 
 # create the tag
 git tag -a "$tag" -m "$msg"
 
-echo
-echo '====== Work complete ======'
+msg '====== Work complete ======'
