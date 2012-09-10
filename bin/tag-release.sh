@@ -44,7 +44,7 @@ echo "Tag = $tag"
 
 cd "$DIR"
 
-if [ -n "$(git tag -l | grep "$tag")" ];
+if [ -n "$(git tag -l "$tag")" ];
 then
 	msg "Tag '$tag' already exists. Delete it, or use a different version."
 	exit 1
