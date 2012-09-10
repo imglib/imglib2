@@ -44,6 +44,9 @@ echo "Tag = $tag"
 
 cd "$DIR"
 
+msg '====== Fetching the latest commits and tags ======'
+git fetch --all --tags --prune
+
 if [ -n "$(git tag -l "$tag")" ];
 then
 	msg "Tag '$tag' already exists. Delete it, or use a different version."
@@ -51,7 +54,6 @@ then
 fi
 
 msg '====== Updating master branch to the latest ======'
-git fetch --all --tags --prune
 git checkout master
 git merge 'HEAD@{u}'
 
