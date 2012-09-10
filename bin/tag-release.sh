@@ -8,6 +8,10 @@
 
 set -e
 
+msg () {
+	printf '\n%s\n' "$*" >&2
+}
+
 DIR="$(dirname "$0")/.."
 
 cd "$DIR"
@@ -19,11 +23,13 @@ scifio="$4"
 
 if [ -z "$old" -o -z "$new" -o -z "$imagej1" -o -z "$scifio" ];
 then
-	echo 'Usage:'
-	echo "   tag-release.sh old.version new.version imagej1.version scifio.version"
-	echo
-	echo 'E.g.:'
-	echo "   tag-release.sh 2.0.0-SNAPSHOT 2.0.0-beta3 1.46r 4.4.0"
+	cat >&2 << EOF
+Usage:
+   tag-release.sh old.version new.version imagej1.version scifio.version
+
+E.g.:
+   tag-release.sh 2.0.0-SNAPSHOT 2.0.0-beta3 1.46r 4.4.0
+EOF
 	exit 1
 fi
 
@@ -40,19 +46,16 @@ cd "$DIR"
 
 if [ -n "$(git tag -l | grep "$tag")" ];
 then
-	echo
-	echo "Tag '$tag' already exists. Delete it, or use a different version."
-	exit 2
+	msg "Tag '$tag' already exists. Delete it, or use a different version."
+	exit 1
 fi
 
-echo
-echo '====== Updating master branch to the latest ======'
+msg '====== Updating master branch to the latest ======'
 git fetch --all --tags --prune
 git checkout master
 git merge 'HEAD@{u}'
 
-echo
-echo '====== Updating version numbers ======'
+msg '====== Updating version numbers ======'
 
 # update project versions
 mvn -P broken versions:set -DoldVersion="$old" -DnewVersion="$new" \
@@ -77,8 +80,7 @@ sed -E -i'' -e 's_(</build>)_\1\
 		<scifio.version>'"$scifio"'</scifio.version>\
 	</properties>_' pom.xml
 
-echo
-echo '====== Making release commit ======'
+msg '====== Making release commit ======'
 
 # create a temporary branch using "detached HEAD"
 git checkout HEAD^0 > /dev/null 2>&1
@@ -92,11 +94,9 @@ This release uses the following dependency versions:
 # do the commit
 git commit . -m "$msg"
 
-echo
-echo '====== Tagging the release ======'
+msg '====== Tagging the release ======'
 
 # create the tag
 git tag -a "$tag" -m "$msg"
 
-echo
-echo '====== Work complete ======'
+msg '====== Work complete ======'
