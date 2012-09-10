@@ -55,7 +55,7 @@ echo
 echo '====== Updating version numbers ======'
 
 # update project versions
-mvn versions:set -DoldVersion="$old" -DnewVersion="$new" \
+mvn -P broken versions:set -DoldVersion="$old" -DnewVersion="$new" \
 	-DgenerateBackupPoms=false
 
 # replace any remaining SNAPSHOT versions (especially in broken subtree)
