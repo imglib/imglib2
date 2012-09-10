@@ -68,7 +68,7 @@ fi
 set -e
 
 # add needed properties block to toplevel POM
-sed -E -i '' -e 's_(</build>)_\1\
+sed -E -i'' -e 's_(</build>)_\1\
 \
 	<properties>\
 		<imglib1.version>${project.version}</imglib1.version>\
