@@ -40,7 +40,6 @@ package net.imglib2.ops.condition;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.imglib2.ops.Condition;
 
 /**
 * 

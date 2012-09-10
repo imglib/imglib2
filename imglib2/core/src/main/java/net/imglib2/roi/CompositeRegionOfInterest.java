@@ -48,10 +48,15 @@ import net.imglib2.type.logic.BitType;
 /**
  * A composite region of interest contains all points in its member regions of
  * interest
- * 
+ *
+ * <b>Note</b>: please use the class {@link GeneralPathRegionOfInterest} instead.
+ *
+ * @deprecated
+ *
  * @author Stephan Saalfeld
  * @author Lee Kamentsky
  */
+@Deprecated
 public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 {
 	private enum Operation

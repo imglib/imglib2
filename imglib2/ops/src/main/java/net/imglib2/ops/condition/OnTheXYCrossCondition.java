@@ -37,9 +37,8 @@
 
 package net.imglib2.ops.condition;
 
-import net.imglib2.ops.Condition;
-import net.imglib2.ops.PointSet;
-import net.imglib2.ops.Tuple2;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.ops.util.Tuple2;
 
 
 /**

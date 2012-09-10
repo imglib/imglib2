@@ -37,7 +37,6 @@
 
 package net.imglib2.ops.condition;
 
-import net.imglib2.ops.Condition;
 
 /**
 * 

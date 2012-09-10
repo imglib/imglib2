@@ -86,7 +86,7 @@ public class Intervals
 	 *            the input interval
 	 * @param border
 	 *            how many pixels to add on every side
-	 * @return shrunk interval
+	 * @return expanded interval
 	 */
 	public static FinalInterval expand( final Interval interval, final long border )
 	{
@@ -115,7 +115,7 @@ public class Intervals
 	 *            how many pixels to add on every side
 	 * @param d
 	 *            in which dimension
-	 * @return shrunk interval
+	 * @return expanded interval
 	 */
 	public static FinalInterval expand( final Interval interval, final long border, final int d )
 	{
@@ -152,6 +152,32 @@ public class Intervals
 		interval.max( max );
 		min[ d ] += t;
 		max[ d ] += t;
+		return new FinalInterval( min, max );
+	}
+
+	/**
+	 * Compute the intersection of two intervals.
+	 *
+	 * Create a {@link FinalInterval} , which is the intersection of the input intervals (i.e., the area contained in both input intervals).
+	 *
+	 * @param intervalA
+	 *            input interval
+	 * @param intervalB
+	 *            input interval
+	 * @return intersection of input intervals
+	 */
+	public static FinalInterval intersect( final Interval intervalA, final Interval intervalB )
+	{
+		assert intervalA.numDimensions() == intervalB.numDimensions();
+
+		final int n = intervalA.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] = Math.max( intervalA.min( d ), intervalB.min( d ) );
+			max[ d ] = Math.min( intervalA.max( d ), intervalB.max( d ) );
+		}
 		return new FinalInterval( min, max );
 	}
 

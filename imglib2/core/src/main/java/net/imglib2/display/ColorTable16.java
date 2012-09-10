@@ -33,24 +33,26 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-
-
 package net.imglib2.display;
 
 /**
  * 16-bit color lookup table.
- * 
+ *
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
-public class ColorTable16 extends ColorTable<short[]> {
+public class ColorTable16 extends AbstractColorTable<short[]> {
 
-	/** Initializes a 16-bit color table with a linear grayscale ramp. */
+	/**
+	 * Initializes a 16-bit color table with a linear grayscale ramp.
+	 */
 	public ColorTable16() {
 		super(gray());
 	}
 
-	/** Initializes a 16-bit color table with the given table values. */
+	/**
+	 * Initializes a 16-bit color table with the given table values.
+	 */
 	public ColorTable16(final short[]... values) {
 		super(values);
 	}
@@ -61,13 +63,32 @@ public class ColorTable16 extends ColorTable<short[]> {
 	}
 
 	@Override
-	public int get(final int c, final int i) {
+	public int getBits() {
+		return 16;
+	}
+
+	@Override
+	public int get(final int comp, final int bin) {
+		// convert 0xffff to 0xff
+		return getNative(comp, bin) >> 8;
+	}
+
+	@Override
+	public int getNative(final int c, final int i) {
+		// returns short value as unsigned, expressed as int
 		return values[c][i] & 0xffff;
 	}
 
-	// -- Helper methods --
+	@Override
+	public int getResampled(final int comp, final int bins, final int bin) {
+		final int newBin = (int)((long) getLength() * bin / bins);
+		return get(comp, newBin);
+	}
 
-	/** Creates a linear grayscale ramp with 3 components and 65536 values. */
+	// -- Helper methods --
+	/**
+	 * Creates a linear grayscale ramp with 3 components and 65536 values.
+	 */
 	private static short[][] gray() {
 		final short[][] gray = new short[3][65536];
 		for (int j = 0; j < gray.length; j++) {
@@ -77,5 +98,4 @@ public class ColorTable16 extends ColorTable<short[]> {
 		}
 		return gray;
 	}
-
 }

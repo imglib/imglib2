@@ -36,7 +36,7 @@
 
 package net.imglib2.ops.function.real;
 
-import net.imglib2.ops.Function;
+import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.RealType;
 
 // TODO - could make this relative to a point rather than the origin. This would

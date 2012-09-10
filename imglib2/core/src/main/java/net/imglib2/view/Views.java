@@ -306,7 +306,7 @@ public class Views
 	 * @param randomAccessible
 	 *            the source
 	 */
-	public static < T > MixedTransformView< T > translate( final RandomAccessible< T > randomAccessible, final long[] offset )
+	public static < T > MixedTransformView< T > translate( final RandomAccessible< T > randomAccessible, final long... offset )
 	{
 		final int n = randomAccessible.numDimensions();
 		final MixedTransform t = new MixedTransform( n, n );
@@ -321,7 +321,7 @@ public class Views
 	 * @param randomAccessible
 	 *            the source
 	 */
-	public static < T > IntervalView< T > translate( final RandomAccessibleInterval< T > interval, final long[] offset )
+	public static < T > IntervalView< T > translate( final RandomAccessibleInterval< T > interval, final long... offset )
 	{
 		final int n = interval.numDimensions();
 		final long[] min = new long[ n ];
