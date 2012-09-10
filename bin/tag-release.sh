@@ -60,15 +60,15 @@ git merge 'HEAD@{u}'
 msg '====== Updating version numbers ======'
 
 # update project versions
-mvn -P broken versions:set -DoldVersion="$old" -DnewVersion="$new" \
-	-DgenerateBackupPoms=false
+mvn -P broken versions:set -DoldVersion="$old" -DnewVersion="$new" -DgenerateBackupPoms=false
 
 # replace any remaining SNAPSHOT versions (especially in broken subtree)
 set +e # grep returns non-zero when nothing matches, which kills the script
 if [ -n "$(git grep -l "$old" imglib1 imglib2)" ];
 then
 	# NB: We cannot use the xargs "-r" flag because it is a GNU extension only.
-	git grep -zl "$old" imglib1 imglib2 | xargs -0 sed -i '' -e "s/$old/$new/"
+	git grep -zl "$old" imglib1 imglib2 |
+	xargs -0 sed -i '' -e "s/$old/$new/"
 fi
 set -e
 
