@@ -41,4 +41,13 @@
 		</repository>
 	</repositories>
 
+	<profiles>
+		<profile>
+			<id>broken</id>
+			<modules>
+				<module>broken</module>
+			</modules>
+		</profile>
+	</profiles>
+
 </project>
