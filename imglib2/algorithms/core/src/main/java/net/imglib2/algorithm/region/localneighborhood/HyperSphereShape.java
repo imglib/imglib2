@@ -14,7 +14,7 @@ import net.imglib2.view.Views;
 
 /**
  * A factory for Accessibles on hyper-sphere neighboorhoods.
- * 
+ *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class HyperSphereShape implements Shape
@@ -50,7 +50,7 @@ public class HyperSphereShape implements Shape
 		return new NeighborhoodsAccessible< T >( source, radius, HyperSphereNeighborhood.< T >factory() );
 	}
 
-	private static final class NeighborhoodsAccessible< T > extends AbstractInterval implements RandomAccessibleInterval< Neighborhood< T > >, IterableInterval< Neighborhood< T > >
+	public static final class NeighborhoodsAccessible< T > extends AbstractInterval implements RandomAccessibleInterval< Neighborhood< T > >, IterableInterval< Neighborhood< T > >
 	{
 		final RandomAccessibleInterval< T > source;
 
@@ -104,7 +104,7 @@ public class HyperSphereShape implements Shape
 		}
 
 		@Override
-		public boolean equalIterationOrder( IterableRealInterval< ? > f )
+		public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 		{
 			return iterationOrder().equals( f.iterationOrder() );
 		}
