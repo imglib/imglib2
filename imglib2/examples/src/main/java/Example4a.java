@@ -40,9 +40,9 @@ public class Example4a
 		}
 		catch ( ImgLibException e )
 		{
-			System.out.println( "This ImagePlusImg does not hold a native ImagePlus as container,
-				either because the dimensionality is too high or because the type is not
-				supported." );
+			System.out.println( "This ImagePlusImg does not hold a native " +
+				"ImagePlus as container, either because the dimensionality is too " +
+				"high or because the type is not supported." );
 			ImageJFunctions.show( img );
 		}
 	}

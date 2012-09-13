@@ -18,9 +18,9 @@ import net.imglib2.type.numeric.RealType;
  * @author Stephan Preibisch & Stephan Saalfeld
  *
  */
-public class Example3a
+public class Example3a1
 {
-	public < T extends RealType< T > & NativeType< T > > Example3a()
+	public < T extends RealType< T > & NativeType< T > > Example3a1()
 		throws ImgIOException, IncompatibleTypeException
 	{
 		// open with ImgOpener (he will decide which Img is best)
@@ -80,6 +80,6 @@ public class Example3a
 		new ImageJ();
 
 		// run the example
-		new Example3a();
+		new Example3a1();
 	}
 }

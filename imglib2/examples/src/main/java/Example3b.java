@@ -1,5 +1,5 @@
 import ij.ImageJ;
-import mpicbg.util.RealSum;
+import util.RealSum;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.io.ImgIOException;

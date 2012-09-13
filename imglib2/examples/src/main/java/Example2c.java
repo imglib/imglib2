@@ -21,9 +21,9 @@ import net.imglib2.view.Views;
  * @author Stephan Preibisch & Stephan Saalfeld
  *
  */
-public class Example2d
+public class Example2c
 {
-	public Example2d() throws ImgIOException, IncompatibleTypeException
+	public Example2c() throws ImgIOException, IncompatibleTypeException
 	{
 		// open with ImgOpener using an ArrayImgFactory
 		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
@@ -95,6 +95,6 @@ public class Example2d
 		new ImageJ();
 
 		// run the example
-		new Example2d();
+		new Example2c();
 	}
 }

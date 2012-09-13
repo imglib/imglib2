@@ -1,5 +1,6 @@
 import ij.ImageJ;
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
