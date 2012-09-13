@@ -1,3 +1,4 @@
+
 package net.imglib2.script.algorithm;
 
 import net.imglib2.script.algorithm.fn.ImgProxy;
@@ -6,6 +7,10 @@ import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * TODO
+ *
+ */
 public class Downsample<T extends RealType<T>> extends ImgProxy<T> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

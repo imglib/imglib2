@@ -1,46 +1,69 @@
-/**
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  * 
- * @author Lee Kamentsky
- *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.labeling;
 
 import java.util.Collection;
 
-import net.imglib2.img.Img;
+import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.roi.IterableRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
 
 /**
- * @author leek
- *
- *A labeling provides methods to get at ROIs representing each of the labeled objects
- *in addition to image-like methods to discover the labels at given pixels.
+ * A labeling provides methods to get at ROIs representing each of the labeled
+ * objects in addition to image-like methods to discover the labels at given
+ * pixels.
+ * 
+ * @author Lee Kamentsky
  */
-public interface Labeling<T extends Comparable<T>> extends Img<LabelingType<T>> {
+public interface Labeling< T extends Comparable< T >> extends RandomAccessibleInterval< LabelingType< T >>, IterableInterval< LabelingType< T >>
+{
 	/**
-	 * find the coordinates of the bounding box around the given 
-	 * label. The the minimum extents are inclusive (there will be pixels
-	 * at the coordinates of the minimum extents) and the maximum
-	 * extents are exclusive(all pixels will have coordinates less than
-	 * the maximum extents)
-	 * @param label - find pixels with this label
+	 * find the coordinates of the bounding box around the given label. The the
+	 * minimum extents are inclusive (there will be pixels at the coordinates of
+	 * the minimum extents) and the maximum extents are exclusive(all pixels
+	 * will have coordinates less than the maximum extents)
+	 * 
+	 * @param label
+	 *            - find pixels with this label
 	 * @return true if some pixels are labeled, false if none have the label
 	 */
-	public boolean getExtents(T label, long [] minExtents, long [] maxExtents);
-	
+	public boolean getExtents( T label, long[] minExtents, long[] maxExtents );
+
 	/**
 	 * Find the first pixel in a raster scan of the object with the given label.
 	 * 
@@ -48,33 +71,53 @@ public interface Labeling<T extends Comparable<T>> extends Img<LabelingType<T>> 
 	 * @param start
 	 * @return
 	 */
-	public boolean getRasterStart(T label, long [] start);
-	
+	public boolean getRasterStart( T label, long[] start );
+
 	/**
 	 * Return the area or suitable N-d analog of the labeled object
-	 * @param label - label for object in question
+	 * 
+	 * @param label
+	 *            - label for object in question
 	 * @return area in units of pixel / voxel / etc.
 	 */
-	public long getArea(T label);
-	
+	public long getArea( T label );
+
 	/**
 	 * Find all labels in the space
+	 * 
 	 * @return a collection of the labels.
 	 */
-	public Collection<T> getLabels();
-	
-	
+	public Collection< T > getLabels();
+
 	/**
 	 * Get a region of interest optimized to determine point membership
-	 * @param label The ROI will represent the area labeled with this label
+	 * 
+	 * @param label
+	 *            The ROI will represent the area labeled with this label
 	 * @return a region of interest
 	 */
-	public RegionOfInterest getRegionOfInterest(T label);
+	public RegionOfInterest getRegionOfInterest( T label );
+
 	/**
 	 * Get a ROI that represents the pixels with the given label
 	 * 
 	 * @param label
 	 * @return
 	 */
-	public IterableRegionOfInterest getIterableRegionOfInterest(T label);
+	public IterableRegionOfInterest getIterableRegionOfInterest( T label );
+
+	/**
+	 * Copy method
+	 * 
+	 * @return copy of the labeling
+	 */
+	public Labeling< T > copy();
+
+	/**
+	 * Factory
+	 * 
+	 * @return create new labeling
+	 */
+	public < LL extends Comparable< LL >> LabelingFactory< LL > factory();
+
 }

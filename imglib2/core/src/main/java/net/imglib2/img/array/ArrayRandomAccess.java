@@ -1,22 +1,25 @@
-/**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,87 +27,147 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.img.array;
 
-import net.imglib2.AbstractRandomAccessInt;
+import net.imglib2.AbstractLocalizableInt;
+import net.imglib2.Localizable;
+import net.imglib2.RandomAccess;
 import net.imglib2.type.NativeType;
 
 /**
- * 
+ * {@link RandomAccess} on an {@link ArrayImg}.
+ *
  * @param <T>
  *
- * @author Stephan Preibisch, Stephan Saalfeld, Tobias Pietzsch
+ * @author ImgLib2 developers
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
-public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRandomAccessInt< T >
+public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLocalizableInt implements RandomAccess< T >
 {
 	protected final T type;
-	final ArrayImg< T, ? > container;
-	
-	protected ArrayRandomAccess( final ArrayRandomAccess< T > randomAccess ) 
+	final ArrayImg< T, ? > img;
+
+	protected ArrayRandomAccess( final ArrayRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
-		
-		this.container = randomAccess.container;
-		this.type = container.createLinkedType();
-		
+
+		this.img = randomAccess.img;
+		this.type = img.createLinkedType();
+
 		int index = 0;
 		for ( int d = 0; d < n; d++ )
 		{
 			position[ d ] = randomAccess.position[ d ];
-			index += position[ d ] * container.steps[ d ];
+			index += position[ d ] * img.steps[ d ];
 		}
-		
+
 		type.updateContainer( this );
 		type.updateIndex( index );
 	}
-	
-	public ArrayRandomAccess( final ArrayImg< T, ? > container ) 
+
+	public ArrayRandomAccess( final ArrayImg< T, ? > container )
 	{
 		super( container.numDimensions() );
-		
-		this.container = container;
+
+		this.img = container;
 		this.type = container.createLinkedType();
-		
+
 		for ( int d = 0; d < n; d++ )
 			position[ d ] = 0;
 
 		type.updateContainer( this );
 		type.updateIndex( 0 );
-	}	
-	
+	}
+
 	@Override
 	public T get()
 	{
 		return type;
 	}
-	
+
 	@Override
-	public void fwd( final int dim )
+	public void fwd( final int d )
 	{
-		type.incIndex( container.steps[ dim ] );
-		++position[ dim ];
+		type.incIndex( img.steps[ d ] );
+		++position[ d ];
 	}
 
 	@Override
-	public void bck( final int dim )
+	public void bck( final int d )
 	{
-		type.decIndex( container.steps[ dim ] );
-		--position[ dim ];
+		type.decIndex( img.steps[ d ] );
+		--position[ d ];
 	}
 
 	@Override
-	public void move( final int distance, final int dim )
+	public void move( final int distance, final int d )
 	{
-		type.incIndex( container.steps[ dim ] * distance );
-		position[ dim ] += distance;
+		type.incIndex( img.steps[ d ] * distance );
+		position[ d ] += distance;
 	}
-	
+
 	@Override
-	public void move( final long distance, final int dim )
+	public void move( final long distance, final int d )
 	{
-		type.incIndex( container.steps[ dim ] * ( int )distance );
-		position[ dim ] += distance;
+		type.incIndex( img.steps[ d ] * ( int )distance );
+		position[ d ] += distance;
+	}
+
+	@Override
+	public void move( final Localizable localizable )
+	{
+		int index = 0;
+		for ( int d = 0; d < n; ++d )
+		{
+			final int distance = localizable.getIntPosition( d );
+			position[ d ] += distance;
+			index += distance * img.steps[ d ];
+		}
+		type.incIndex( index );
+	}
+
+	@Override
+	public void move( final int[] distance )
+	{
+		int index = 0;
+		for ( int d = 0; d < n; ++d )
+		{
+			position[ d ] += distance[ d ];
+			index += distance[ d ] * img.steps[ d ];
+		}
+		type.incIndex( index );
+	}
+
+	@Override
+	public void move( final long[] distance )
+	{
+		int index = 0;
+		for ( int d = 0; d < n; ++d )
+		{
+			position[ d ] += distance[ d ];
+			index += distance[ d ] * img.steps[ d ];
+		}
+		type.incIndex( index );
+	}
+
+
+	@Override
+	public void setPosition( final Localizable localizable )
+	{
+		localizable.localize( position );
+		int index = 0;
+		for ( int d = 0; d < n; ++d )
+			index += position[ d ] * img.steps[ d ];
+		type.updateIndex( index );
 	}
 
 	@Override
@@ -114,31 +177,38 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] = pos[ d ];
-			index += pos[ d ] * container.steps[ d ];
+			index += pos[ d ] * img.steps[ d ];
 		}
 		type.updateIndex( index );
 	}
-	
+
 	@Override
-	public void setPosition( long[] pos )
+	public void setPosition( final long[] pos )
 	{
 		int index = 0;
 		for ( int d = 0; d < n; ++d )
 		{
 			final int p = ( int )pos[ d ];
 			position[ d ] = p;
-			index += p * container.steps[ d ];
+			index += p * img.steps[ d ];
 		}
 		type.updateIndex( index );
 	}
 
 	@Override
-	public void setPosition( final int pos, final int dim )
+	public void setPosition( final int pos, final int d )
 	{
-		type.incIndex( ( pos - position[ dim ] ) * container.steps[ dim ] );
-		position[ dim ] = pos;
+		type.incIndex( ( pos - position[ d ] ) * img.steps[ d ] );
+		position[ d ] = pos;
 	}
-	
+
+	@Override
+	public void setPosition( final long pos, final int d )
+	{
+		type.incIndex( ( ( int ) pos - position[ d ] ) * img.steps[ d ] );
+		position[ d ] = ( int ) pos;
+	}
+
 	@Override
 	public ArrayRandomAccess< T > copy()
 	{
@@ -150,9 +220,9 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 	{
 		return copy();
 	}
-	
+
 	/* Special methods for access in one-dimensional arrays only */
-	
+
 	/**
 	 * Moves one step forward in dimension 0
 	 */
@@ -173,7 +243,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 
 	/**
 	 * Moves n steps in dimension 0
-	 * 
+	 *
 	 * @param distance - how many steps (positive or negative)
 	 */
 	public void moveDim0( final int distance )
@@ -181,10 +251,10 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 		type.incIndex( distance );
 		position[ 0 ] += distance;
 	}
-	
+
 	/**
 	 * Moves n steps in dimension 0
-	 * 
+	 *
 	 * @param distance - how many steps (positive or negative)
 	 */
 	public void move( final long distance )
@@ -195,9 +265,9 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 
 	/**
 	 * Sets the {@link ArrayRandomAccess} to a certain position in dimension 0
-	 * 
+	 *
 	 * Careful: it assumes that it is only a one-dimensional image, all other dimensions would be set to zero (this saves one subtraction)
-	 * 
+	 *
 	 * @param pos - the new position
 	 */
 	public void setPositionDim0( final int pos )
@@ -208,9 +278,9 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 
 	/**
 	 * Sets the {@link ArrayRandomAccess} to a certain position in dimension 0
-	 * 
+	 *
 	 * Careful: it assumes that it is only a one-dimensional image, all other dimensions would be set to zero (this saves one subtraction)
-	 * 
+	 *
 	 * @param pos - the new position
 	 */
 	public void setPositionDim0( final long pos )
@@ -218,5 +288,4 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractRand
 		type.updateIndex( (int)pos );
 		position[ 0 ] = (int)pos;
 	}
-	
 }

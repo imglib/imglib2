@@ -1,19 +1,39 @@
-/**
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.util;
 
 import java.util.List;
@@ -24,9 +44,19 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
+import net.imglib2.RealLocalizable;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.RealRandomAccessibleRealInterval;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ExponentialMathType;
 
+/**
+ * TODO
+ *
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
+ */
 public class Util
 {
 	@SuppressWarnings("unchecked")
@@ -34,7 +64,7 @@ public class Util
 	{
 		return (T[])( new Object[ length ] );
 	}
-	
+
 	public static double log2( final double value )
 	{
 		return Math.log( value ) / Math.log( 2.0 );
@@ -69,7 +99,7 @@ public class Util
 
 		return values;
 	}
-	
+
 	public static long[] getArrayFromValue( final long value, final int numDimensions )
 	{
 		final long[] values = new long[ numDimensions ];
@@ -78,6 +108,21 @@ public class Util
 			values[ d ] = value;
 
 		return values;
+	}
+
+	final public static float computeDistance( final RealLocalizable position1, final RealLocalizable position2 )
+	{
+		float dist = 0;
+
+		final int n = position1.numDimensions();
+		for ( int d = 0; d < n; ++d )
+		{
+			final float pos = position2.getFloatPosition( d ) - position1.getFloatPosition( d );
+
+			dist += pos*pos;
+		}
+
+		return (float)Math.sqrt( dist );
 	}
 
 	final public static float computeDistance( final int[] position1, final int[] position2 )
@@ -93,7 +138,7 @@ public class Util
 
 		return (float)Math.sqrt( dist );
 	}
-	
+
 	final public static float computeDistance( final long[] position1, final long[] position2 )
 	{
 		float dist = 0;
@@ -180,9 +225,9 @@ public class Util
 	{
 		final double temp[] = values.clone();
 		final int length = temp.length;
-		
+
 		quicksort( temp );
-		
+
 		return temp[ Math.min( length - 1, Math.max(0 ,(int)Math.round( (length - 1) * percentile ) ) ) ];
 	}
 
@@ -273,7 +318,7 @@ public class Util
 
 		return max;
 	}
-	
+
 	public static float computeMedian( final float[] values )
 	{
 		final float temp[] = values.clone();
@@ -295,14 +340,14 @@ public class Util
 	{
 		if (data == null || data.length < 2)return;
 		int i = left, j = right;
-		long x = data[(left + right) / 2];
+		final long x = data[(left + right) / 2];
 		do
 		{
 			while (data[i] < x) i++;
 			while (x < data[j]) j--;
 			if (i <= j)
 			{
-				long temp = data[i];
+				final long temp = data[i];
 				data[i] = data[j];
 				data[j] = temp;
 				i++;
@@ -320,14 +365,14 @@ public class Util
 	{
 		if (data == null || data.length < 2)return;
 		int i = left, j = right;
-		double x = data[(left + right) / 2];
+		final double x = data[(left + right) / 2];
 		do
 		{
 			while (data[i] < x) i++;
 			while (x < data[j]) j--;
 			if (i <= j)
 			{
-				double temp = data[i];
+				final double temp = data[i];
 				data[i] = data[j];
 				data[j] = temp;
 				i++;
@@ -345,14 +390,14 @@ public class Util
 	{
 		if (data == null || data.length < 2)return;
 		int i = left, j = right;
-		float x = data[(left + right) / 2];
+		final float x = data[(left + right) / 2];
 		do
 		{
 			while (data[i] < x) i++;
 			while (x < data[j]) j--;
 			if (i <= j)
 			{
-				float temp = data[i];
+				final float temp = data[i];
 				data[i] = data[j];
 				data[j] = temp;
 				i++;
@@ -368,18 +413,18 @@ public class Util
 	{
 		if (data == null || data.length < 2)return;
 		int i = left, j = right;
-		double x = data[(left + right) / 2];
+		final double x = data[(left + right) / 2];
 		do
 		{
 			while (data[i] < x) i++;
 			while (x < data[j]) j--;
 			if (i <= j)
 			{
-				double temp = data[i];
+				final double temp = data[i];
 				data[i] = data[j];
 				data[j] = temp;
 
-				int temp2 = sortAlso[i];
+				final int temp2 = sortAlso[i];
 				sortAlso[i] = sortAlso[j];
 				sortAlso[j] = temp2;
 
@@ -461,7 +506,6 @@ public class Util
      * @param normalize Normalize integral of gaussian function to 1 or not...
      * @return double[] The gaussian kernel
      *
-     * @author   Stephan Saalfeld
      */
     public static double[] createGaussianKernel1DDouble( final double sigma, final boolean normalize )
     {
@@ -492,7 +536,7 @@ public class Util
             if (normalize)
             {
                     double sum = 0;
-                    for (double value : gaussianKernel)
+                    for (final double value : gaussianKernel)
                             sum += value;
 
                     for (int i = 0; i < gaussianKernel.length; ++i)
@@ -509,7 +553,6 @@ public class Util
      * @param normalize Normalize integral of gaussian function to 1 or not...
      * @return T[] The gaussian kernel
      *
-     * @author  Stephan Preibisch & Stephan Saalfeld
      */
     public static < T extends ExponentialMathType<T> > T[] createGaussianKernel1D( final T sigma, final boolean normalize )
     {
@@ -641,6 +684,23 @@ public class Util
 		return out;
 	}
 
+	public static String printCoordinates( final double[] value )
+	{
+		String out = "(Array empty)";
+
+		if ( value == null || value.length == 0 )
+			return out;
+		else
+			out = "(" + value[0];
+
+		for ( int i = 1; i < value.length; i++ )
+			out += ", " + value[ i ];
+
+		out += ")";
+
+		return out;
+	}
+
 	public static String printCoordinates( final Localizable localizable )
 	{
 		String out = "(Localizable empty)";
@@ -652,6 +712,33 @@ public class Util
 
 		for ( int i = 1; i < localizable.numDimensions(); i++ )
 			out += ", " + localizable.getFloatPosition( i );
+
+		out += ")";
+
+		return out;
+	}
+
+	public static String printInterval( final Interval interval )
+	{
+		String out = "(Interval empty)";
+
+		if ( interval == null || interval.numDimensions() == 0 )
+			return out;
+
+		out = "[" + interval.min( 0 );
+
+		for ( int i = 1; i < interval.numDimensions(); i++ )
+			out += ", " + interval.min( i );
+
+		out += "] -> [" + interval.max( 0 );
+
+		for ( int i = 1; i < interval.numDimensions(); i++ )
+			out += ", " + interval.max( i );
+
+		out += "], dimensions (" + interval.dimension( 0 );
+
+		for ( int i = 1; i < interval.numDimensions(); i++ )
+			out += ", " + interval.dimension( i );
 
 		out += ")";
 
@@ -755,7 +842,7 @@ public class Util
 
 	public static boolean[][] getRecursiveCoordinates( final int numDimensions )
 	{
-		boolean[][] positions = new boolean[ Util.pow( 2, numDimensions ) ][ numDimensions ];
+		final boolean[][] positions = new boolean[ Util.pow( 2, numDimensions ) ][ numDimensions ];
 
 		setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
 
@@ -826,15 +913,15 @@ public class Util
 		}
 
 	}
-	
+
 	/**
 	 * <p>Create a long[] with the dimensions of an {@link Interval}.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new long[]
 	 */
 	final static public long[] intervalDimensions( final Interval interval )
@@ -847,7 +934,7 @@ public class Util
 	final static public int[] long2int( final long[] a )
 	{
 		final int[] i = new int[ a.length ];
-		
+
 		for ( int d = 0; d < a.length; ++d )
 			i[ d ] = (int)a[ d ];
 
@@ -857,7 +944,7 @@ public class Util
 	final static public long[] int2long( final int[] i )
 	{
 		final long[] l = new long[ i.length ];
-		
+
 		for ( int d = 0; d < l.length; ++d )
 			l[ d ] = i[ d ];
 
@@ -866,12 +953,12 @@ public class Util
 
 	/**
 	 * <p>Create a long[] with the max coordinates of an {@link Interval}.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new long[]
 	 */
 	final static public long[] intervalMax( final Interval interval )
@@ -883,12 +970,12 @@ public class Util
 
 	/**
 	 * <p>Create a long[] with the min coordinates of an {@link Interval}.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new long[]
 	 */
 	final static public long[] intervalMin( final Interval interval )
@@ -897,23 +984,23 @@ public class Util
 		interval.min( min );
 		return min;
 	}
-	
+
 	/**
 	 * <p>Create a double[] with the dimensions of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new double[]
 	 */
 	final static public double[] realIntervalDimensions( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
 		final double[] dimensions = new double[ interval.numDimensions() ];
-		
+
 		for ( int d = 0; d < n; ++d )
 			dimensions[ d ] = interval.realMax( d ) - interval.realMin( d );
 
@@ -923,41 +1010,41 @@ public class Util
 	/**
 	 * <p>Create a double[] with the max coordinates of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new double[]
 	 */
 	final static public double[] realIntervalMax( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
 		final double[] max = new double[ interval.numDimensions() ];
-		
+
 		for ( int d = 0; d < n; ++d )
 			max[ d ] = interval.realMax( d );
 
 		return max;
 	}
-	
+
 	/**
 	 * <p>Create a double[] with the min coordinates of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
-	 * 
+	 *
 	 * <p>Keep in mind that creating arrays wildly is not good practice and
 	 * consider using the interval directly.</p>
-	 * 
+	 *
 	 * @param interval
-	 * 
+	 *
 	 * @return dimensions of the interval as a new double[]
 	 */
 	final static public double[] realIntervalMin( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
 		final double[] min = new double[ interval.numDimensions() ];
-		
+
 		for ( int d = 0; d < n; ++d )
 			min[ d ] = interval.realMin( d );
 
@@ -967,7 +1054,9 @@ public class Util
 	/**
 	 * Test whether the {@code containing} interval completely contains the
 	 * {@code contained} interval.
-	 * 
+	 *
+	 * TODO: move to {@link Intervals}
+	 *
 	 * @param containing
 	 * @param contained
 	 * @return
@@ -975,7 +1064,7 @@ public class Util
 	final static public boolean contains( final Interval containing, final Interval contained )
 	{
 		assert containing.numDimensions() == contained.numDimensions();
-		
+
 		final int n = containing.numDimensions();
 		for ( int d = 0; d < n; ++d )
 		{
@@ -988,7 +1077,9 @@ public class Util
 	/**
 	 * Test whether the {@code containing} interval completely contains the
 	 * {@code contained} interval.
-	 * 
+	 *
+	 * TODO: move to {@link Intervals}.
+	 *
 	 * @param containing
 	 * @param contained
 	 * @return
@@ -996,7 +1087,7 @@ public class Util
 	final static public boolean contains( final RealInterval containing, final RealInterval contained )
 	{
 		assert containing.numDimensions() == contained.numDimensions();
-		
+
 		final int n = containing.numDimensions();
 		for ( int d = 0; d < n; ++d )
 		{
@@ -1005,10 +1096,10 @@ public class Util
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Gets an instance of T from the {@link RandomAccessibleInterval} by querying the value at the min coordinate
-	 * 
+	 *
 	 * @param <T> - the T
 	 * @param rai - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
@@ -1017,17 +1108,17 @@ public class Util
 	{
 		// create RandomAccess
 		final RandomAccess< T > randomAccess = rai.randomAccess();
-		
+
 		// place it at the first pixel
 		for ( int d = 0; d < rai.numDimensions(); ++d )
 			randomAccess.setPosition( rai.min(d), d );
-		
+
 		return randomAccess.get();
 	}
 
 	/**
 	 * Gets an instance of T from the {@link RandomAccessible}
-	 * 
+	 *
 	 * @param <T> - the T
 	 * @param rai - the {@link RandomAccessible}
 	 * @return - an instance of T
@@ -1040,5 +1131,59 @@ public class Util
 			return getTypeFromInterval( (RandomAccessibleInterval<T>)ra );
 		else
 			return ra.randomAccess().get();
+	}
+
+	/**
+	 * Gets an instance of T from the {@link RandomAccessibleInterval} by querying the value at the min coordinate
+	 *
+	 * @param <T> - the T
+	 * @param rai - the {@link RandomAccessibleInterval}
+	 * @return - an instance of T
+	 */
+	final public static <T, F extends RealInterval & RealRandomAccessible< T >> T getTypeFromRealInterval( final F rai )
+	{
+		// create RealRandomAccess
+		final RealRandomAccess< T > realRandomAccess = rai.realRandomAccess();
+
+		// place it at the first pixel
+		for ( int d = 0; d < rai.numDimensions(); ++d )
+			realRandomAccess.setPosition( rai.realMin( d ), d );
+
+		return realRandomAccess.get();
+	}
+
+	/**
+	 * Gets an instance of T from the {@link RealRandomAccessible}
+	 *
+	 * @param <T> - the T
+	 * @param rai - the {@link RealRandomAccessible}
+	 * @return - an instance of T
+	 */
+	final public static <T> T getTypeFromRealRandomAccess( final RealRandomAccessible<T> ra )
+	{
+		// test that it is not an interval, because in this case a simple get()
+		// at the position of creation will fail
+		if ( RealRandomAccessibleRealInterval.class.isInstance( ra ) )
+			return getTypeFromRealInterval( (RealRandomAccessibleRealInterval<T>)ra );
+		else
+			return ra.realRandomAccess().get();
+	}
+
+	/**
+	 * (Hopefully) fast floor log<sub>2</sub> of an unsigned(!) integer value.
+	 *
+	 * @param v unsigned integer
+	 * @return floor log<sub>2</sub>
+	 */
+	final static public int ldu( int v )
+	{
+	    int c = 0;
+	    do
+	    {
+	    	v >>= 1;
+	        ++c;
+	    }
+	    while ( v > 1 );
+	    return c;
 	}
 }

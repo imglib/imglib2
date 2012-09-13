@@ -1,12 +1,46 @@
-/**
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.roi;
 
 import static org.junit.Assert.*;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccess;
 import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.img.Img;
@@ -17,8 +51,8 @@ import net.imglib2.type.numeric.integer.IntType;
 import org.junit.Test;
 
 /**
- * @author leek
  *
+ * @author leek
  */
 public class EllipseRegionOfInterestTest {
 
@@ -339,4 +373,92 @@ public class EllipseRegionOfInterestTest {
 		assertFalse(ra.get().get());
 	}
 
+	/**
+	 * Regression test of a bug reported by Christian Dietz.
+	 * This test case is his code and my mangling of it.
+	 */
+	@Test
+	public void testCircleRadiusOne() {
+        EllipseRegionOfInterest ellipse = new EllipseRegionOfInterest( 2 );
+        ellipse.setOrigin( new double[] { 1, 1 } );
+        ellipse.setRadius( 1 );
+        testEllipse(ellipse);
+
+	}
+	/**
+	 * Second part of Christian Dietz bug - make sure it works for a sphere
+	 * of radius 1.
+	 */
+	@Test
+	public void testSphereRadiusOne() {
+        EllipseRegionOfInterest ellipse = new EllipseRegionOfInterest( 3 );
+        ellipse.setOrigin( new double[] { 1, 1, 1 } );
+        ellipse.setRadius( 1 );
+        testEllipse(ellipse);
+
+	}
+	
+	@Test
+	public void testSphereWithNonIntegerOffset() {
+		// This is a corner case. If all dimensions but one
+		// are within the ellipse, but the last one is,
+		// because it's an integer, above or below (= outside)
+		// then you need to skip.
+        EllipseRegionOfInterest ellipse = new EllipseRegionOfInterest( 3 );
+        ellipse.setOrigin( new double[] { 1, 1, 1.1 } );
+        ellipse.setRadius( 1.05 );
+        testEllipse(ellipse);
+        
+        ellipse = new EllipseRegionOfInterest( 3 );
+        ellipse.setOrigin( new double[] { 1.1, 1, 1 } );
+        ellipse.setRadius( 1.05 );
+        testEllipse(ellipse);        
+	}
+
+	private void testEllipse(EllipseRegionOfInterest ellipse) {
+		final long [] eMin = new long[ellipse.numDimensions()];
+		final long [] eMax = new long[ellipse.numDimensions()];
+		ellipse.min(eMin);
+		for (int i=0; i < eMin.length; i++) {
+			assertTrue("Test code won't work if ellipse extends to negative coordinates", eMin[i] >= 0);
+		}
+		ellipse.max(eMax);
+		for (int i=0; i < eMax.length; i++) eMax[i]++;
+		
+		Img< BitType > img = new ArrayImgFactory< BitType >().create( eMax, new BitType() );
+
+        RandomAccess< BitType > randomAccess = img.randomAccess();
+
+        Cursor< BitType > cursor = img.cursor();
+        long[] pos = new long[ ellipse.numDimensions() ];
+        int count = 0;
+        while (cursor.hasNext()) {
+            cursor.fwd();
+            cursor.localize( pos );
+            double d2 = 0;
+            for (int i=0; i < pos.length; i++) {
+            	d2 += Math.pow((pos[i] - ellipse.getOrigin(i)) / ellipse.getRadius(i), 2);
+            }
+            if (d2 <= 1.0) {
+            	cursor.get().set(true);
+            	count++;
+            }
+        }
+        
+        cursor = ellipse.getIterableIntervalOverROI( img ).cursor();
+        while ( cursor.hasNext() )
+        {
+            cursor.fwd();
+            cursor.localize( pos );
+            randomAccess.setPosition( cursor );
+            assertTrue(
+            		String.format("Point %s not in set or doubly visited", pos.toString()),
+            		randomAccess.get().get());
+            randomAccess.get().set(false);
+            count--;
+        }
+        assertEquals(
+        		String.format("%d point(s) unvisited", count),
+        		0, count);
+	}
 }

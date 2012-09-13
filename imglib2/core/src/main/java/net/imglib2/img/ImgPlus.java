@@ -1,22 +1,25 @@
-/**
- * Copyright (c) 2009--2010, Stephan Preibisch & Stephan Saalfeld
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the Fiji project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,9 +27,13 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Stephan Preibisch & Stephan Saalfeld
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 
 package net.imglib2.img;
 
@@ -39,8 +46,7 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealPositionable;
-import net.imglib2.display.ColorTable16;
-import net.imglib2.display.ColorTable8;
+import net.imglib2.display.ColorTable;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.Metadata;
@@ -49,6 +55,9 @@ import net.imglib2.meta.Metadata;
  * A simple container for storing an {@link Img} together with its metadata.
  * Metadata includes name, dimensional axes and calibration information.
  * 
+ *
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  * @author Curtis Rueden ctrueden at wisc.edu
  */
 public class ImgPlus<T> implements Img<T>, Metadata {
@@ -59,6 +68,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	private final Img<T> img;
 
 	private String name;
+	private String source = "";
 	private final AxisType[] axes;
 	private final double[] cal;
 	private int validBits;
@@ -67,8 +77,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	private ArrayList<Double> channelMax;
 
 	private int compositeChannelCount = 1;
-	private final ArrayList<ColorTable8> lut8;
-	private final ArrayList<ColorTable16> lut16;
+	private final ArrayList<ColorTable> colorTable;
 
 	// -- Constructors --
 
@@ -91,8 +100,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		compositeChannelCount = metadata.getCompositeChannelCount();
 		final int count = metadata.getColorTableCount();
 		for (int i = 0; i < count; i++) {
-			lut8.add(metadata.getColorTable8(i));
-			lut16.add(metadata.getColorTable16(i));
+			colorTable.add(metadata.getColorTable(i));
 		}
 	}
 
@@ -105,8 +113,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		this.cal = validateCalibration(img.numDimensions(), cal);
 		channelMin = new ArrayList<Double>();
 		channelMax = new ArrayList<Double>();
-		lut8 = new ArrayList<ColorTable8>();
-		lut16 = new ArrayList<ColorTable16>();
+		colorTable = new ArrayList<ColorTable>();
+		setSource("");
 	}
 
 	// -- ImgPlus methods --
@@ -223,8 +231,15 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
-		return img.equalIterationOrder(f);
+	public Object iterationOrder()
+	{
+		return img.iterationOrder();
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 
 	@Override
@@ -285,8 +300,26 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
+	public void calibration(final float[] target) {
+		for (int i = 0; i < target.length; i++)
+			target[i] = (float)cal[i];
+	}
+
+	@Override
 	public void setCalibration(final double value, final int d) {
 		cal[d] = value;
+	}
+
+	@Override
+	public void setCalibration(final double[] cal) {
+		for ( int d = 0; d < cal.length; ++d )
+			this.cal[d] = cal[ d ];
+	}
+
+	@Override
+	public void setCalibration(final float[] cal) {
+		for ( int d = 0; d < cal.length; ++d )
+			this.cal[d] = cal[ d ];
 	}
 
 	@Override
@@ -346,44 +379,40 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	@Override
-	public ColorTable8 getColorTable8(final int no) {
-		if (no >= lut8.size()) return null;
-		return lut8.get(no);
+	public ColorTable getColorTable(final int no) {
+		if (no >= colorTable.size()) return null;
+		return colorTable.get(no);
 	}
 
 	@Override
-	public void setColorTable(final ColorTable8 lut, final int no) {
-		lut8.set(no, lut);
-	}
-
-	@Override
-	public ColorTable16 getColorTable16(final int no) {
-		if (no >= lut16.size()) return null;
-		return lut16.get(no);
-	}
-
-	@Override
-	public void setColorTable(final ColorTable16 lut, final int no) {
-		lut16.set(no, lut);
+	public void setColorTable(final ColorTable cT, final int no) {
+		colorTable.set(no, cT);
 	}
 
 	@Override
 	public void initializeColorTables(final int count) {
-		lut8.ensureCapacity(count);
-		lut16.ensureCapacity(count);
-		lut8.clear();
-		lut16.clear();
+		colorTable.ensureCapacity(count);
+		colorTable.clear();
 		for (int i = 0; i < count; i++) {
-			lut8.add(null);
-			lut16.add(null);
+			colorTable.add(null);
 		}
 	}
 
 	@Override
 	public int getColorTableCount() {
-		return lut8.size();
+		return colorTable.size();
 	}
 
+	@Override
+	public String getSource() {
+		return source;
+	}
+	
+	@Override
+	public void setSource(String source) {
+		this.source = source;
+	}
+	
 	// -- Utility methods --
 
 	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */

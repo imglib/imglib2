@@ -1,57 +1,68 @@
 /*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
 
-Copyright (c) 2011, Barry DeZonia.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
-    names of its contributors may be used to endorse or promote products
-    derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-*/
 
 package net.imglib2.ops.function.complex;
 
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
+import net.imglib2.ops.function.Function;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * ComplexImageFunction wraps an Img<? extends ComplexType<?>> and allows one to
+ * treat it as a function. ComplexImageFunction has two types <I,O>. I is the
+ * type of the image data (such as ComplexFloatType) while O is the type of
+ * output the function should assign to (such as ComplexDoubleType).
  * 
  * @author Barry DeZonia
- *
  */
-public class ComplexImageFunction<T extends ComplexType<T>> implements Function<long[],T>
+public class ComplexImageFunction<I extends ComplexType<I>,O extends ComplexType<O>>
+	implements Function<long[],O>
 {
 	// -- instance variables --
 	
-	private final RandomAccess<T> accessor;
-	private final T type;
+	private final RandomAccess<I> accessor;
+	private final O type;
 	
 	// -- private constructor used by duplicate() --
 	
-	private ComplexImageFunction(RandomAccess<T> accessor, T type)
+	private ComplexImageFunction(RandomAccess<I> accessor, O type)
 	{
 		this.accessor = accessor;
 		this.type = type;
@@ -59,14 +70,14 @@ public class ComplexImageFunction<T extends ComplexType<T>> implements Function<
 	
 	// -- public constructors --
 	
-	public ComplexImageFunction(Img<T> img, T type) {
+	public ComplexImageFunction(Img<I> img, O type) {
 		this(img.randomAccess(), type);
 	}
 	
 	@SuppressWarnings({"rawtypes","unchecked"})
 	public ComplexImageFunction(
-		Img<T> img,
-		OutOfBoundsFactory<T,Img<T>> factory, T type)
+		Img<I> img,
+		OutOfBoundsFactory<I,Img<I>> factory, O type)
 	{
 		this(new ExtendedRandomAccessibleInterval(img, factory).randomAccess(), type);
 	}
@@ -74,20 +85,20 @@ public class ComplexImageFunction<T extends ComplexType<T>> implements Function<
 	// -- public interface --
 	
 	@Override
-	public ComplexImageFunction<T> copy() {
-		return new ComplexImageFunction<T>(accessor.copyRandomAccess(), type);
+	public ComplexImageFunction<I,O> copy() {
+		return new ComplexImageFunction<I,O>(accessor.copyRandomAccess(), type);
 	}
 
 	@Override
-	public void evaluate(Neighborhood<long[]> neigh, long[] point,
-			T output)
+	public void compute(long[] point, O output)
 	{
 		accessor.setPosition(point);
-		output.set(accessor.get());
+		output.setReal(accessor.get().getRealDouble());
+		output.setImaginary(accessor.get().getImaginaryDouble());
 	}
 
 	@Override
-	public T createOutput() {
+	public O createOutput() {
 		return type.createVariable();
 	}
 }

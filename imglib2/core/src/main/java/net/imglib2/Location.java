@@ -1,22 +1,25 @@
-/**
- * Copyright (c) 2011, Tobias Pietzsch & Stephan Preibisch & Stephan Saalfeld
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the imglib project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,103 +27,45 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2;
 
 
 /**
  * Provides an instance of {@link Localizable} that can store positions
- * 
+ *
+ * TODO: replace this by Point everywhere it is used. Then remove it.
+ *
+ * @author Tobias Pietzsch
  * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  */
-public class Location implements Localizable 
+@Deprecated
+public class Location extends Point
 {
-	final long[] position;
-	final int numDimensions;
-
 	public Location ( final Localizable position )
 	{
-		this( position.numDimensions() );
-
-		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position.getLongPosition( d );
+		super( position );
 	}
 
 	public Location ( final long[] position )
 	{
-		this( position.length );
-
-		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position[ d ];
+		super( position );
 	}
 
 	public Location ( final int[] position )
 	{
-		this( position.length );
-
-		for ( int d = 0; d < numDimensions; ++d )
-			this.position[ d ] = position[ d ];
+		super( position );
 	}
 
 	public Location ( final int numDimensions )
 	{
-		this.numDimensions = numDimensions;
-		this.position = new long[ numDimensions ];
+		super( numDimensions );
 	}
-	
-	@Override
-	public void localize( final float[] position )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public void localize( final double[] position )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public float getFloatPosition( final int d ) { return position[ d ]; }
-
-	@Override
-	public double getDoublePosition( final int d ) { return position[ d ]; }
-
-	@Override
-	public int numDimensions() { return numDimensions;	}
-
-	@Override
-	public void localize( final int[] position )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = (int)this.position[ d ];
-	}
-
-	@Override
-	public void localize( final long[] position )
-	{
-		for ( int d = 0; d < numDimensions; ++d )
-			position[ d ] = this.position[ d ];
-	}
-
-	@Override
-	public int getIntPosition( final int d ) { return (int)position[ d ]; }
-
-	@Override
-	public long getLongPosition( final int d )  { return position[ d ]; }
-	
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		char c = '(';
-		for (int i=0; i<numDimensions(); i++) {
-			sb.append(c);
-			sb.append(position[i]);
-			c = ',';
-		}
-		sb.append(")");
-		return sb.toString();
-	}	
 }

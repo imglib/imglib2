@@ -1,6 +1,42 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
+
 package net.imglib2.view;
 
-import net.imglib2.AbstractRandomAccess;
+import net.imglib2.AbstractLocalizable;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.transform.integer.Mixed;
@@ -9,11 +45,10 @@ import net.imglib2.transform.integer.Mixed;
  * Wrap a {@code source} RandomAccess which is related to this by a {@link Mixed}
  * {@code transformToSource}.
  *
- * @author Tobias Pietzsch
- *
  * @param <T>
+ * @author Tobias Pietzsch
  */
-public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
+public final class MixedRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >
 {
 	/**
 	 * source RandomAccess. note that this is the <em>target</em> of the
@@ -148,6 +183,16 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		}
 	}
 
+
+	@Override
+	public void move( final int distance, final int d )
+	{
+		assert d < n;
+		position[ d ] += distance;
+		if ( !sourceZero[ d ] )
+			s.move( sourceInv[ d ] ? -distance : distance, sourceComponent[ d ] );
+	}
+
 	@Override
 	public void move( final long distance, final int d )
 	{
@@ -169,8 +214,11 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		{
 			final long distance = localizable.getLongPosition( d );
 			position[ d ] += distance;
-			final int td = sourceComponent[ d ];
-			tmpDistance[ td ] = sourceInv[ d ] ? -distance : distance;
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpDistance[ td ] = sourceInv[ d ] ? -distance : distance;
+			}
 		}
 		s.move( tmpDistance );
 	}
@@ -186,8 +234,11 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] += distance[ d ];
-			final int td = sourceComponent[ d ];
-			tmpDistance[ td ] = sourceInv[ d ] ? -distance[ d ] : distance[ d ];
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpDistance[ td ] = sourceInv[ d ] ? -distance[ d ] : distance[ d ];
+			}
 		}
 		s.move( tmpDistance );
 	}
@@ -203,8 +254,11 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] += distance[ d ];
-			final int td = sourceComponent[ d ];
-			tmpDistance[ td ] = sourceInv[ d ] ? -distance[ d ] : distance[ d ];
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpDistance[ td ] = sourceInv[ d ] ? -distance[ d ] : distance[ d ];
+			}
 		}
 		s.move( tmpDistance );
 	}
@@ -222,8 +276,11 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		{
 			final long p = localizable.getLongPosition( d );
 			this.position[ d ] = p;
-			final int td = sourceComponent[ d ];
-			tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			}
 		}
 		s.setPosition( tmpPosition );
 	}
@@ -241,8 +298,11 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		{
 			final long p = position[ d ];
 			this.position[ d ] = p;
-			final int td = sourceComponent[ d ];
-			tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			}
 		}
 		s.setPosition( tmpPosition );
 	}
@@ -260,10 +320,27 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 		{
 			final long p = position[ d ];
 			this.position[ d ] = p;
-			final int td = sourceComponent[ d ];
-			tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			if ( !sourceZero[ d ] )
+			{
+				final int td = sourceComponent[ d ];
+				tmpPosition[ td ] = translation[ td ] + ( sourceInv[ d ] ? -p : p );
+			}
 		}
 		s.setPosition( tmpPosition );
+	}
+
+
+	@Override
+	public void setPosition( final int position, final int d )
+	{
+		assert d < n;
+		this.position[ d ] = position;
+		if ( !sourceZero[ d ] )
+		{
+			final int td = sourceComponent[ d ];
+			final long targetPos = translation[ td ] + ( sourceInv[ d ] ? -position : position );
+			s.setPosition( targetPos, td );
+		}
 	}
 
 	@Override
@@ -271,9 +348,12 @@ public final class MixedRandomAccess< T > extends AbstractRandomAccess< T >
 	{
 		assert d < n;
 		this.position[ d ] = position;
-		final int td = sourceComponent[ d ];
-		final long targetPos = translation[ td ] + ( sourceInv[ d ] ? -position : position );
-		s.setPosition( targetPos, td );
+		if ( !sourceZero[ d ] )
+		{
+			final int td = sourceComponent[ d ];
+			final long targetPos = translation[ td ] + ( sourceInv[ d ] ? -position : position );
+			s.setPosition( targetPos, td );
+		}
 	}
 
 	@Override

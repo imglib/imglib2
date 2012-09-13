@@ -1,32 +1,38 @@
 /*
-ImgLib I/O logic using Bio-Formats.
-
-Copyright (c) 2009, Stephan Preibisch & Stephan Saalfeld.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
-    names of its contributors may be used to endorse or promote products
-    derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-*/
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
 
 package net.imglib2.io;
 
@@ -52,45 +58,35 @@ import loci.formats.MinMaxCalculator;
 import loci.formats.ReaderWrapper;
 import loci.formats.meta.IMetadata;
 import loci.formats.services.OMEXMLService;
+import net.imglib2.RandomAccess;
 import net.imglib2.display.ColorTable16;
 import net.imglib2.display.ColorTable8;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.ImgPlus;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.basictypeaccess.array.ByteArray;
-import net.imglib2.img.basictypeaccess.array.CharArray;
-import net.imglib2.img.basictypeaccess.array.DoubleArray;
-import net.imglib2.img.basictypeaccess.array.FloatArray;
-import net.imglib2.img.basictypeaccess.array.IntArray;
-import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.img.cell.CellImg;
+import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
-import net.imglib2.sampler.special.OrthoSliceCursor;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.ByteType;
-import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.type.numeric.integer.ShortType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.integer.UnsignedIntType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.util.Util;
 import ome.xml.model.primitives.PositiveFloat;
 
 /**
- * Reads in an {@link ImgPlus} using Bio-Formats.
+ * Reads in an {@link ImgPlus} using SCIFIO.
  * 
  * @author Curtis Rueden
  * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  */
 public class ImgOpener implements StatusReporter {
 
@@ -98,6 +94,144 @@ public class ImgOpener implements StatusReporter {
 
 	private final List<StatusListener> listeners =
 		new ArrayList<StatusListener>();
+
+	// -- static methods --
+	
+	/**
+	 * Opens an {@link Img} in a format it is in (unsigned byte, float, int, ...) using the respective {@link RealType}. 
+	 * It returns an {@link ImgPlus} which contains the Calibration and name.
+	 * 
+	 * The {@link Img} containing the data could be either {@link ArrayImg}, {@link PlanarImg} or {@link CellImg}. It
+	 * tries opening it in exactly this order.
+	 * 
+	 * @param id - the location of the file/http address to open
+	 * @return - the {@link ImgPlus} or null 
+	 * 
+	 * @throws ImgIOException - if file could not be found, if it is too big for the memory or if it is incompatible with the opener
+	 */
+	public static < T extends RealType< T > & NativeType< T > > ImgPlus< T > open( final String id ) throws ImgIOException
+	{
+		ImgPlus< T > img = null;
+		ImgOpener opener = new ImgOpener();
+		
+		try
+		{
+			try
+			{
+				img = opener.openImg( id, new ArrayImgFactory< FloatType >() );
+			} 
+			catch ( NegativeArraySizeException e1 )
+			{
+				try
+				{
+					img = opener.openImg( id, new PlanarImgFactory< FloatType >() );
+				}
+				catch ( NegativeArraySizeException e2 )
+				{
+					try
+					{
+						img = opener.openImg( id, new CellImgFactory< FloatType >( 256 ) );
+					}
+					catch ( Exception e )
+					{
+						throw new ImgIOException( "Cannot open file '"+ id + "': " + e );
+					}
+				}
+			}
+		} 
+		catch ( IncompatibleTypeException e ) 
+		{
+			throw new ImgIOException( "File is incompatible with opener (not a real type?) '"+ id + "': " + e );			
+		}
+		
+		return img;
+	}
+	
+	/**
+	 * Opens an {@link Img} as {@link FloatType}. It returns an {@link ImgPlus} which contains the Calibration and name.
+	 * 
+	 * The {@link Img} containing the data could be either {@link ArrayImg}, {@link PlanarImg} or {@link CellImg}. It
+	 * tries opening it in exactly this order.
+	 * 
+	 * @param id - the location of the file/http address to open
+	 * @return - the {@link ImgPlus} or null 
+	 * 
+	 * @throws ImgIOException - if file could not be found or is too big for the memory
+	 */
+	public static ImgPlus< FloatType > openFloat( final String id ) throws ImgIOException
+	{
+		final FloatType tmp = new FloatType();
+		ImgPlus< FloatType > img = null;
+		ImgOpener opener = new ImgOpener();
+		
+		try
+		{
+			img = opener.openImg( id, new ArrayImgFactory< FloatType >(), tmp );
+		} 
+		catch ( NegativeArraySizeException e1 )
+		{
+			try
+			{
+				img = opener.openImg( id, new PlanarImgFactory< FloatType >(), tmp );
+			}
+			catch ( NegativeArraySizeException e2 )
+			{
+				try
+				{
+					img = opener.openImg( id, new CellImgFactory< FloatType >( 256 ), tmp );
+				}
+				catch ( Exception e )
+				{
+					throw new ImgIOException( "Cannot open file '"+ id + "': " + e );
+				}
+			}
+		}
+		
+		return img;
+	}
+
+	/**
+	 * Opens an {@link Img} as {@link DoubleType}. It returns an {@link ImgPlus} which contains the Calibration and name.
+	 * 
+	 * The {@link Img} containing the data could be either {@link ArrayImg}, {@link PlanarImg} or {@link CellImg}. It
+	 * tries opening it in exactly this order.
+	 * 
+	 * @param id - the location of the file/http address to open
+	 * @return - the {@link ImgPlus} or null 
+	 * 
+	 * @throws ImgIOException - if file could not be found or is too big for the memory
+	 */
+	public static ImgPlus< DoubleType > openDouble( final String id ) throws ImgIOException
+	{
+		final DoubleType tmp = new DoubleType();
+		ImgPlus< DoubleType > img = null;
+		ImgOpener opener = new ImgOpener();
+		
+		try
+		{
+			img = opener.openImg( id, new ArrayImgFactory< DoubleType >(), tmp );
+		} 
+		catch ( NegativeArraySizeException e1 )
+		{
+			try
+			{
+				img = opener.openImg( id, new PlanarImgFactory< DoubleType >(), tmp );
+			}
+			catch ( NegativeArraySizeException e2 )
+			{
+				try
+				{
+					img = opener.openImg( id, new CellImgFactory< DoubleType >( 256 ), tmp );
+				}
+				catch ( Exception e )
+				{
+					throw new ImgIOException( "Cannot open file '"+ id + "': " + e );
+				}
+			}
+		}
+		
+		return img;
+	}
 
 	// -- ImgOpener methods --
 
@@ -175,14 +309,14 @@ public class ImgOpener implements StatusReporter {
 	 * @throws IncompatibleTypeException if the {@link Type} of the {@link Img} is
 	 *           incompatible with the {@link ImgFactory}
 	 */
-	public <T extends RealType<T> & NativeType<T>> ImgPlus<T> openImg(
-		final String id, final ImgFactory<?> imgFactory,
-		final boolean computeMinMax) throws ImgIOException,
-		IncompatibleTypeException
+	public <T extends RealType<T> & NativeType<T>> ImgPlus<T>
+		openImg(final String id, final ImgFactory<?> imgFactory,
+			final boolean computeMinMax) throws ImgIOException,
+			IncompatibleTypeException
 	{
 		try {
 			final IFormatReader r = initializeReader(id, computeMinMax);
-			final T type = makeType(r.getPixelType());
+			final T type = ImgIOUtils.makeType(r.getPixelType());
 			final ImgFactory<T> imgFactoryT = imgFactory.imgFactory(type);
 			return openImg(r, imgFactoryT, type, computeMinMax);
 		}
@@ -300,88 +434,13 @@ public class ImgOpener implements StatusReporter {
 		catch (final IOException e) {
 			throw new ImgIOException(e);
 		}
+		imgPlus.setSource(id);
 		final long endTime = System.currentTimeMillis();
 		final float time = (endTime - startTime) / 1000f;
 		notifyListeners(new StatusEvent(planeCount, planeCount, id + ": read " +
 			planeCount + " planes in " + time + "s"));
 
 		return imgPlus;
-	}
-
-	// TODO: eliminate getPlanarAccess in favor of utility method elsewhere.
-
-	/** Obtains planar access instance backing the given img, if any. */
-	@SuppressWarnings("unchecked")
-	public static PlanarAccess<ArrayDataAccess<?>> getPlanarAccess(
-		final ImgPlus<?> img)
-	{
-		if (img.getImg() instanceof PlanarAccess) {
-			return (PlanarAccess<ArrayDataAccess<?>>) img.getImg();
-		}
-		return null;
-	}
-
-	/** Converts Bio-Formats pixel type to imglib Type object. */
-	@SuppressWarnings("unchecked")
-	public static <T extends RealType<T>> T makeType(final int pixelType) {
-		final RealType<?> type;
-		switch (pixelType) {
-			case FormatTools.UINT8:
-				type = new UnsignedByteType();
-				break;
-			case FormatTools.INT8:
-				type = new ByteType();
-				break;
-			case FormatTools.UINT16:
-				type = new UnsignedShortType();
-				break;
-			case FormatTools.INT16:
-				type = new ShortType();
-				break;
-			case FormatTools.UINT32:
-				type = new UnsignedIntType();
-				break;
-			case FormatTools.INT32:
-				type = new IntType();
-				break;
-			case FormatTools.FLOAT:
-				type = new FloatType();
-				break;
-			case FormatTools.DOUBLE:
-				type = new DoubleType();
-				break;
-			default:
-				type = null;
-		}
-		return (T) type;
-	}
-
-	/** Wraps raw primitive array in imglib Array object. */
-	public static ArrayDataAccess<?> makeArray(final Object array) {
-		final ArrayDataAccess<?> access;
-		if (array instanceof byte[]) {
-			access = new ByteArray((byte[]) array);
-		}
-		else if (array instanceof char[]) {
-			access = new CharArray((char[]) array);
-		}
-		else if (array instanceof double[]) {
-			access = new DoubleArray((double[]) array);
-		}
-		else if (array instanceof int[]) {
-			access = new IntArray((int[]) array);
-		}
-		else if (array instanceof float[]) {
-			access = new FloatArray((float[]) array);
-		}
-		else if (array instanceof short[]) {
-			access = new ShortArray((short[]) array);
-		}
-		else if (array instanceof long[]) {
-			access = new LongArray((long[]) array);
-		}
-		else access = null;
-		return access;
 	}
 
 	// -- StatusReporter methods --
@@ -438,7 +497,7 @@ public class ImgOpener implements StatusReporter {
 
 		return r;
 	}
-	
+
 	/** Compiles an N-dimensional list of axis lengths from the given reader. */
 	public static long[] getDimLengths(final IFormatReader r) {
 		final long sizeX = r.getSizeX();
@@ -486,7 +545,7 @@ public class ImgOpener implements StatusReporter {
 
 	// -- Helper methods --
 
-	/** Constructs and initializes a Bio-Formats reader for the given file. */
+	/** Constructs and initializes a SCIFIO reader for the given file. */
 	private IFormatReader initializeReader(final String id,
 		final boolean computeMinMax) throws FormatException, IOException
 	{
@@ -671,15 +730,15 @@ public class ImgOpener implements StatusReporter {
 
 		// PlanarRandomAccess is useful for efficient access to pixels in ImageJ
 		// (e.g., getPixels)
-		// #1 is useful for efficient Bio-Formats import, and useful for tools
+		// #1 is useful for efficient SCIFIO import, and useful for tools
 		// needing byte arrays (e.g., BufferedImage Java3D texturing by reference)
 		// #2 is useful for efficient memory use for tools wanting matching
 		// primitive arrays (e.g., virtual stacks in ImageJ)
 		// #3 is useful for efficient memory use
 
 		// get container
-		final PlanarAccess<?> planarAccess = getPlanarAccess(imgPlus);
-		final T inputType = makeType(r.getPixelType());
+		final PlanarAccess<?> planarAccess = ImgIOUtils.getPlanarAccess(imgPlus);
+		final T inputType = ImgIOUtils.makeType(r.getPixelType());
 		final T outputType = type;
 		final boolean compatibleTypes =
 			outputType.getClass().isAssignableFrom(inputType.getClass());
@@ -724,7 +783,7 @@ public class ImgOpener implements StatusReporter {
 			System.arraycopy(plane, 0, planeCopy, 0, plane.length);
 			planeArray = planeCopy;
 		}
-		planarAccess.setPlane(no, makeArray(planeArray));
+		planarAccess.setPlane(no, ImgIOUtils.makeArray(planeArray));
 	}
 
 	/**
@@ -735,7 +794,6 @@ public class ImgOpener implements StatusReporter {
 	private <T extends RealType<T>> void populatePlane(final IFormatReader r,
 		final int no, final byte[] plane, final ImgPlus<T> img)
 	{
-		final int sizeX = r.getSizeX();
 		final int pixelType = r.getPixelType();
 		final boolean little = r.isLittleEndian();
 
@@ -746,16 +804,28 @@ public class ImgOpener implements StatusReporter {
 		final int planeY = 1;
 
 		getPosition(r, no, pos);
-
-		final OrthoSliceCursor<T> cursor =
-			new OrthoSliceCursor<T>(img, planeX, planeY, pos);
-
-		while (cursor.hasNext()) {
-			cursor.fwd();
-			final int index =
-				cursor.getIntPosition(planeX) + cursor.getIntPosition(planeY) * sizeX;
-			final double value = decodeWord(plane, index, pixelType, little);
-			cursor.get().setReal(value);
+		
+		final int sX = (int)img.dimension( 0 );
+		final int sY = (int)img.dimension( 1 );
+		
+		final RandomAccess< T > randomAccess = img.randomAccess();
+		
+		int index = 0;
+		
+		for ( int y = 0; y < sY; ++y )
+		{
+			pos[ planeX ] = 0;
+			pos[ planeY ] = y;
+			
+			randomAccess.setPosition( pos );
+			
+			for ( int x = 1; x < sX; ++x )
+			{
+				randomAccess.get().setReal( decodeWord( plane, index++, pixelType, little ) );
+				randomAccess.fwd( planeX );
+			}
+			
+			randomAccess.get().setReal( decodeWord( plane, index++, pixelType, little ) );			
 		}
 	}
 
@@ -775,8 +845,8 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	/** Copies the current dimensional position into the given array. */
-	private void getPosition(final IFormatReader r, final int no,
-		final long[] pos)
+	private void
+		getPosition(final IFormatReader r, final int no, final long[] pos)
 	{
 		final int sizeX = r.getSizeX();
 		final int sizeY = r.getSizeY();

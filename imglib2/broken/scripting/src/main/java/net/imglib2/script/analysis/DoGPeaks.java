@@ -1,3 +1,4 @@
+
 package net.imglib2.script.analysis;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import net.imglib2.script.algorithm.fn.AlgorithmUtil;
  * becomes the {@link List} of found peaks, each as a float[] array that specifies its position.
  * 
  * See also {@link DifferenceOfGaussian, DifferenceOfGaussianPeak}.
+ *
  */
 public class DoGPeaks<N extends RealType<N>> extends ArrayList<float[]>
 {

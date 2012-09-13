@@ -1,3 +1,4 @@
+
 package tests;
 
 import ij.IJ;
@@ -20,6 +21,7 @@ import net.imglib2.type.numeric.real.FloatType;
  * A very simple imglib test that squares an image.
  * Displays both input and output images onscreen using ImgJ.
  * 
+ *
  * @author Curtis Rueden ctrueden at wisc.edu
  */
 public class SquareTest {

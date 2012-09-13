@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.roi;
 
 import net.imglib2.img.ImgCursor;
@@ -6,6 +7,10 @@ import net.imglib2.img.basictypeaccess.BitAccess;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.type.logic.BitType;
 
+/**
+ * TODO
+ *
+ */
 public class StructuringElement extends ArrayImg<BitType,BitAccess> {
 	
 	private final long[] offset;

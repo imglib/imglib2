@@ -1,22 +1,25 @@
-/**
- * Copyright (c) 2009--2011, Stephan Saalfeld
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the imglib project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,237 +27,295 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.roi;
 
 import net.imglib2.Localizable;
+import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.type.logic.BitType;
 
 /**
- * The AbstractRegionOfInterest implements the IterableRegionOfInterest
- * using a raster function and a membership function that are
- * implemented by a derived class.
- *
+ * The AbstractRegionOfInterest implements the IterableRegionOfInterest using a
+ * raster function and a membership function that are implemented by a derived
+ * class.
+ * 
+ * @author Stephan Saalfeld
  * @author Lee Kamentsky
+ * @author leek
  */
-public abstract class AbstractRegionOfInterest implements RegionOfInterest {
+public abstract class AbstractRegionOfInterest implements RegionOfInterest
+{
 	protected int nDimensions;
-	private double [] cached_real_min;
-	private double [] cached_real_max;
-	/**
-	 * @author leek
-	 *The AROIRandomAccess inner class implements the random access part of the
-	 *ROI, allowing random sampling of pixel membership in the ROI.
-	 */
-	protected class AROIRandomAccess implements RealRandomAccess<BitType> {
 
-		private BitType bit_type = new BitType();
-		private double [] position;
-		
-		protected AROIRandomAccess( final AROIRandomAccess randomAccess ) {
+	private double[] cached_real_min;
+
+	private double[] cached_real_max;
+
+	/**
+	 * The AROIRandomAccess inner class implements the random access part of the
+	 * ROI, allowing random sampling of pixel membership in the ROI.
+	 */
+	protected class AROIRandomAccess implements RealRandomAccess< BitType >
+	{
+
+		private final BitType bit_type = new BitType();
+
+		private final double[] position;
+
+		protected AROIRandomAccess( final AROIRandomAccess randomAccess )
+		{
 			position = randomAccess.position.clone();
 		}
-		
-		public AROIRandomAccess() {
-			position = new double[nDimensions];
+
+		public AROIRandomAccess()
+		{
+			position = new double[ nDimensions ];
 		}
+
 		@Override
-		public void localize(float[] pos) {
-			for (int i = 0; i < pos.length; i++) {
-				pos[i] = (float)this.position[i];
+		public void localize( final float[] pos )
+		{
+			for ( int i = 0; i < pos.length; i++ )
+			{
+				pos[ i ] = ( float ) this.position[ i ];
 			}
 		}
 
 		@Override
-		public void localize(double[] pos) {
-			for (int i = 0; i < pos.length; i++) {
-				pos[i] = this.position[i];
+		public void localize( final double[] pos )
+		{
+			for ( int i = 0; i < pos.length; i++ )
+			{
+				pos[ i ] = this.position[ i ];
 			}
 		}
 
 		@Override
-		public float getFloatPosition(int dim) {
-			return (float)position[dim];
+		public float getFloatPosition( final int dim )
+		{
+			return ( float ) position[ dim ];
 		}
 
 		@Override
-		public double getDoublePosition(int dim) {
-			return position[dim];
+		public double getDoublePosition( final int dim )
+		{
+			return position[ dim ];
 		}
 
 		@Override
-		public int numDimensions() {
+		public int numDimensions()
+		{
 			// TODO Auto-generated method stub
 			return nDimensions;
 		}
 
 		@Override
-		public void move(float distance, int dim) {
-			position[dim] += distance;
+		public void move( final float distance, final int dim )
+		{
+			position[ dim ] += distance;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(double distance, int dim) {
-			position[dim] += distance;
+		public void move( final double distance, final int dim )
+		{
+			position[ dim ] += distance;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(int distance, int dim) {
-			position[dim] += distance;
+		public void move( final int distance, final int dim )
+		{
+			position[ dim ] += distance;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(long distance, int dim) {
-			position[dim] += distance;
+		public void move( final long distance, final int dim )
+		{
+			position[ dim ] += distance;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(RealLocalizable localizable) {
-			for (int i = 0; i < position.length; i++) {
-				position[i] += localizable.getDoublePosition(i);
+		public void move( final RealLocalizable localizable )
+		{
+			for ( int i = 0; i < position.length; i++ )
+			{
+				position[ i ] += localizable.getDoublePosition( i );
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(Localizable localizable) {
-			for (int i = 0; i < position.length; i++) {
-				position[i] += localizable.getDoublePosition(i);
+		public void move( final Localizable localizable )
+		{
+			for ( int i = 0; i < position.length; i++ )
+			{
+				position[ i ] += localizable.getDoublePosition( i );
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(float[] pos) {
-			for (int i = 0; i < pos.length; i++) {
-				this.position[i] += pos[i];
+		public void move( final float[] pos )
+		{
+			for ( int i = 0; i < pos.length; i++ )
+			{
+				this.position[ i ] += pos[ i ];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(double[] pos) {
-			for (int i = 0; i < pos.length; i++) {
-				this.position[i] += pos[i];
+		public void move( final double[] pos )
+		{
+			for ( int i = 0; i < pos.length; i++ )
+			{
+				this.position[ i ] += pos[ i ];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(int[] pos) {
-			for (int i = 0; i < pos.length; i++) {
-				this.position[i] += pos[i];
+		public void move( final int[] pos )
+		{
+			for ( int i = 0; i < pos.length; i++ )
+			{
+				this.position[ i ] += pos[ i ];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void move(long[] pos) {
-			for (int i = 0; i < pos.length; i++) {
-				this.position[i] += pos[i];
+		public void move( final long[] pos )
+		{
+			for ( int i = 0; i < pos.length; i++ )
+			{
+				this.position[ i ] += pos[ i ];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(RealLocalizable localizable) {
-			localizable.localize(position);
+		public void setPosition( final RealLocalizable localizable )
+		{
+			localizable.localize( position );
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(Localizable localizable) {
-			for (int i = 0; i < position.length; i++) {
-				this.position[i] = localizable.getDoublePosition(i);
+		public void setPosition( final Localizable localizable )
+		{
+			for ( int i = 0; i < position.length; i++ )
+			{
+				this.position[ i ] = localizable.getDoublePosition( i );
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(float[] position) {
-			for (int i = 0; i < position.length; i++) {
-				this.position[i] = position[i];
+		public void setPosition( final float[] position )
+		{
+			for ( int i = 0; i < position.length; i++ )
+			{
+				this.position[ i ] = position[ i ];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(double[] position) {
-			for (int i = 0; i < position.length; i++) {
-				this.position[i] = position[i];
+		public void setPosition( final double[] position )
+		{
+			for ( int i = 0; i < position.length; i++ )
+			{
+				this.position[ i ] = position[ i ];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(int[] position) {
-			for (int i = 0; i < position.length; i++) {
-				this.position[i] = position[i];
+		public void setPosition( final int[] position )
+		{
+			for ( int i = 0; i < position.length; i++ )
+			{
+				this.position[ i ] = position[ i ];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(long[] position) {
-			for (int i = 0; i < position.length; i++) {
-				this.position[i] = position[i];
+		public void setPosition( final long[] position )
+		{
+			for ( int i = 0; i < position.length; i++ )
+			{
+				this.position[ i ] = position[ i ];
 			}
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(float position, int dim) {
-			this.position[dim] = position;
+		public void setPosition( final float position, final int dim )
+		{
+			this.position[ dim ] = position;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(double position, int dim) {
-			this.position[dim] = position;
-			updateCachedMembershipStatus();
-		}
-
-
-		@Override
-		public void setPosition(int position, int dim) {
-			this.position[dim] = position;
+		public void setPosition( final double position, final int dim )
+		{
+			this.position[ dim ] = position;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void setPosition(long position, int dim) {
-			this.position[dim] = position;
-			updateCachedMembershipStatus();
-		}
-
-		protected void updateCachedMembershipStatus() {
-			bit_type.set(isMember(position));
-		}
-		
-		@Override
-		public void fwd(int dim) {
-			position[dim] += 1;
+		public void setPosition( final int position, final int dim )
+		{
+			this.position[ dim ] = position;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public void bck(int dim) {
-			position[dim] -= 1;
+		public void setPosition( final long position, final int dim )
+		{
+			this.position[ dim ] = position;
+			updateCachedMembershipStatus();
+		}
+
+		protected void updateCachedMembershipStatus()
+		{
+			bit_type.set( contains( position ) );
+		}
+
+		@Override
+		public void fwd( final int dim )
+		{
+			position[ dim ] += 1;
 			updateCachedMembershipStatus();
 		}
 
 		@Override
-		public BitType get() {
+		public void bck( final int dim )
+		{
+			position[ dim ] -= 1;
+			updateCachedMembershipStatus();
+		}
+
+		@Override
+		public BitType get()
+		{
 			return bit_type;
-		}	
-		
+		}
+
 		@Override
 		public AROIRandomAccess copy()
 		{
@@ -267,107 +328,142 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest {
 			return copy();
 		}
 	}
-	
-	protected AbstractRegionOfInterest(int nDimensions) {
+
+	protected AbstractRegionOfInterest( final int nDimensions )
+	{
 		this.nDimensions = nDimensions;
 	}
-	
+
 	/**
-	 * Determine whether a point is a member of the region of interest
-	 * @param position position in question
-	 * @return true if a member
-	 */
-	abstract protected boolean isMember(double [] position);
-	
-	/**
-	 * Get the minimum and maximum corners of a bounding hypercube
-	 * using real coordinates (which might have fractional components)
+	 * Get the minimum and maximum corners of a bounding hypercube using real
+	 * coordinates (which might have fractional components)
 	 * 
 	 * @param minima
 	 * @param maxima
 	 */
-	abstract protected void getRealExtrema(double [] minima, double [] maxima);
+	abstract protected void getRealExtrema( double[] minima, double[] maxima );
 
-	protected void validateRealExtremaCache() {
-		if (cached_real_min == null) {
-			double [] cachedRealMin = new double[nDimensions];
-			double [] cachedRealMax = new double[nDimensions];
-			getRealExtrema(cachedRealMin, cachedRealMax);
+	protected void validateRealExtremaCache()
+	{
+		if ( cached_real_min == null )
+		{
+			final double[] cachedRealMin = new double[ nDimensions ];
+			final double[] cachedRealMax = new double[ nDimensions ];
+			getRealExtrema( cachedRealMin, cachedRealMax );
 			cached_real_min = cachedRealMin;
 			cached_real_max = cachedRealMax;
 		}
 	}
-	
-	protected void invalidateCachedState() {
+
+	protected void invalidateCachedState()
+	{
 		cached_real_min = null;
 		cached_real_max = null;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.imglib2.RealInterval#realMin(int)
 	 */
 	@Override
-	public double realMin(int d) {
+	public double realMin( final int d )
+	{
 		validateRealExtremaCache();
-		return cached_real_min[d];
+		return cached_real_min[ d ];
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.imglib2.RealInterval#realMin(double[])
 	 */
 	@Override
-	public void realMin(double[] min) {
+	public void realMin( final double[] min )
+	{
 		validateRealExtremaCache();
-		for (int i = 0; i < min.length; i++) {
-			min[i] = cached_real_min[i];
+		for ( int i = 0; i < min.length; i++ )
+		{
+			min[ i ] = cached_real_min[ i ];
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.imglib2.RealInterval#realMin(net.imglib2.RealPositionable)
 	 */
 	@Override
-	public void realMin(RealPositionable min) {
+	public void realMin( final RealPositionable min )
+	{
 		validateRealExtremaCache();
 		min.setPosition( cached_real_min );
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.imglib2.RealInterval#realMax(int)
 	 */
 	@Override
-	public double realMax(int d) {
+	public double realMax( final int d )
+	{
 		validateRealExtremaCache();
-		return cached_real_max[d];
+		return cached_real_max[ d ];
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.imglib2.RealInterval#realMax(double[])
 	 */
 	@Override
-	public void realMax(double[] max) {
+	public void realMax( final double[] max )
+	{
 		validateRealExtremaCache();
-		for (int i = 0; i < max.length; i++) {
-			max[i] = cached_real_max[i];
+		for ( int i = 0; i < max.length; i++ )
+		{
+			max[ i ] = cached_real_max[ i ];
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.imglib2.RealInterval#realMax(net.imglib2.RealPositionable)
 	 */
 	@Override
-	public void realMax(RealPositionable max) {
+	public void realMax( final RealPositionable max )
+	{
 		validateRealExtremaCache();
 		max.setPosition( cached_real_max );
 	}
 
 	@Override
-	public int numDimensions() {
+	public int numDimensions()
+	{
 		return nDimensions;
 	}
 
 	@Override
-	public RealRandomAccess<BitType> realRandomAccess() {
+	public RealRandomAccess< BitType > realRandomAccess()
+	{
 		return new AROIRandomAccess();
 	}
 
+	/**
+	 * TODO Check if constraining real random access to an interval could be
+	 * exploited for a more efficient solution.
+	 */
+	@Override
+	public RealRandomAccess< BitType > realRandomAccess( final RealInterval interval )
+	{
+		return realRandomAccess();
+	}
+	
+	@Override
+	public void move(double[] displacement) {
+		for (int i = 0; i < displacement.length; i++)
+			move(displacement[i],i);
+	}
 }

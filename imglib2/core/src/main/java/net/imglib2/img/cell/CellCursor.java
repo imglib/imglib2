@@ -1,3 +1,39 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
+
 package net.imglib2.img.cell;
 
 import net.imglib2.AbstractCursor;
@@ -5,51 +41,59 @@ import net.imglib2.Cursor;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 
-public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractCursor< T > implements CellImg.CellContainerSampler< T, A >
+/**
+ * {@link Cursor} on a {@link CellImg}.
+ *
+ *
+ * @author ImgLib2 developers
+ * @author Tobias Pietzsch
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
+public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends AbstractCursor< T > implements CellImg.CellContainerSampler< T, A, C >
 {
 	protected final T type;
-	
-	protected final Cursor< Cell< A > > cursorOnCells;
+
+	protected final Cursor< C > cursorOnCells;
 
 	protected int lastIndexInCell;
 
 	/**
 	 * The current index of the type.
-	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 * It is faster to duplicate this here than to access it through type.getIndex().
 	 */
 	protected int index;
-	
+
 	/**
 	 * Caches cursorOnCells.hasNext().
 	 */
 	protected boolean isNotLastCell;
 
-	protected CellCursor( final CellCursor< T, A > cursor )
+	protected CellCursor( final CellCursor< T, A, C > cursor )
 	{
 		super( cursor.numDimensions() );
-		
+
 		this.type = cursor.type.duplicateTypeOnSameNativeImg();
 		this.cursorOnCells = cursor.cursorOnCells.copyCursor();
 		isNotLastCell = cursor.isNotLastCell;
 		lastIndexInCell = cursor.lastIndexInCell;
 		index = cursor.index;
-		
+
 		type.updateContainer( this );
 		type.updateIndex( index );
 	}
-	
-	public CellCursor( final CellImg< T, A > container )
+
+	public CellCursor( final CellImg< T, A, C > container )
 	{
 		super( container.numDimensions() );
-		
+
 		this.type = container.createLinkedType();
 		this.cursorOnCells = container.cells.cursor();
-		
+
 		reset();
 	}
 
 	@Override
-	public Cell< A > getCell()
+	public C getCell()
 	{
 		return cursorOnCells.get();
 	}
@@ -59,26 +103,26 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	{
 		return type;
 	}
-	
+
 	@Override
-	public CellCursor< T, A > copy()
+	public CellCursor< T, A, C > copy()
 	{
-		return new CellCursor< T, A >( this );
+		return new CellCursor< T, A, C >( this );
 	}
 
 	@Override
-	public CellCursor< T, A > copyCursor() {
+	public CellCursor< T, A, C > copyCursor() {
 		return copy();
 	}
 
 	@Override
 	public boolean hasNext()
 	{
-		return isNotLastCell || ( index < lastIndexInCell );
+		return ( index < lastIndexInCell ) || isNotLastCell;
 	}
 
 	@Override
-	public void jumpFwd( long steps )
+	public void jumpFwd( final long steps )
 	{
 		long newIndex = index + steps;
 		while ( newIndex > lastIndexInCell )
@@ -92,7 +136,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 		type.updateIndex( index );
 		type.updateContainer( this );
 	}
-	
+
 	@Override
 	public void fwd()
 	{
@@ -119,7 +163,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 	}
 
 	@Override
-	public long getLongPosition( int dim )
+	public long getLongPosition( final int dim )
 	{
 		return getCell().indexToGlobalPosition( index, dim );
 	}
@@ -132,7 +176,7 @@ public class CellCursor< T extends NativeType< T >, A extends ArrayDataAccess< A
 
 	/**
 	 * Move cursor right before the first element of the next cell.
-	 * Update type and index variables. 
+	 * Update type and index variables.
 	 */
 	private void moveToNextCell()
 	{

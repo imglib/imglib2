@@ -1,3 +1,4 @@
+
 package net.imglib2.algorithm.roi;
 
 import java.util.Arrays;
@@ -9,6 +10,10 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgCursor;
 import net.imglib2.img.ImgRandomAccess;
 
+/**
+ * TODO
+ *
+ */
 public class StructuringElementCursor<T extends Type<T>> implements ImgCursor<T> {
 
 	private ImgCursor<?> patchCenterCursor;

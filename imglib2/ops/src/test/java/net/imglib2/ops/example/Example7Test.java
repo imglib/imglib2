@@ -1,31 +1,39 @@
 /*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
 
-Copyright (c) 2011, Barry DeZonia.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-  * Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  * Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-  * Neither the name of the Fiji project developers nor the
-    names of its contributors may be used to endorse or promote products
-    derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-*/
 
 package net.imglib2.ops.example;
 
@@ -36,12 +44,13 @@ import org.junit.Test;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.Condition;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.Neighborhood;
 import net.imglib2.ops.condition.AndCondition;
+import net.imglib2.ops.condition.Condition;
+import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.general.ConditionalFunction;
-import net.imglib2.ops.image.ImageAssignment;
+import net.imglib2.ops.img.ImageAssignment;
+import net.imglib2.ops.input.InputIteratorFactory;
+import net.imglib2.ops.input.PointInputIteratorFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -56,7 +65,6 @@ import net.imglib2.type.numeric.real.DoubleType;
 /**
  * 
  * @author Barry DeZonia
- *
  */
 public class Example7Test {
 
@@ -74,7 +82,7 @@ public class Example7Test {
 	public class XValueCondition implements Condition<long[]> {
 
 		@Override
-		public boolean isTrue(Neighborhood<long[]> neigh, long[] point) {
+		public boolean isTrue(long[] point) {
 			return point[0] < X_CONSTANT;
 		}
 		
@@ -87,7 +95,7 @@ public class Example7Test {
 	public class XSquaredFunction implements Function<long[],DoubleType> {
 
 		@Override
-		public void evaluate(Neighborhood<long[]> neigh, long[] point, DoubleType output) {
+		public void compute(long[] point, DoubleType output) {
 			output.setReal(point[0]*point[0]);
 		}
 		
@@ -106,7 +114,7 @@ public class Example7Test {
 	public class YLineFunction implements Function<long[],DoubleType> {
 
 		@Override
-		public void evaluate(Neighborhood<long[]> neigh, long[] point, DoubleType output) {
+		public void compute(long[] point, DoubleType output) {
 			output.setReal(3*point[1]+19);
 		}
 		
@@ -132,7 +140,7 @@ public class Example7Test {
 		}
 		
 		@Override
-		public boolean isTrue(Neighborhood<long[]> neigh, long[] point) {
+		public boolean isTrue(long[] point) {
 			long dx = point[0] - ctrX;
 			long dy = point[1] - ctrY;
 			double dist = Math.sqrt(dx*dx + dy*dy);
@@ -152,7 +160,7 @@ public class Example7Test {
 		}
 		
 		@Override
-		public boolean isTrue(Neighborhood<long[]> neigh, long[] point) {
+		public boolean isTrue(long[] point) {
 			return (point[0] + point[1]) > LINE_CONSTANT;
 		}
 		
@@ -207,12 +215,14 @@ public class Example7Test {
 		Function<long[],DoubleType> function =
 			new ConditionalFunction<long[],DoubleType>(xValCond, xSquaredFunc, yLineFunc);
 		Img<DoubleType> image = allocateImage();
-		// FIXME - ugly hack to avoid compiler issues
-		//final Function<long[],RealType<?>> castFunc = (Function<long[],RealType<?>>) ((Function)function);
 		Condition<long[]> circleCond = new CircularCondition();
 		Condition<long[]> sumCond = new XYSumCondition();
 		Condition<long[]> compositeCondition = new AndCondition<long[]>(circleCond,sumCond);
-		ImageAssignment assigner = new ImageAssignment(image, new long[2], new long[]{XSIZE,YSIZE}, function, compositeCondition, new long[2], new long[2]);
+		InputIteratorFactory<long[]> factory = new PointInputIteratorFactory();
+		ImageAssignment<DoubleType,DoubleType,long[]> assigner =
+				new ImageAssignment<DoubleType,DoubleType,long[]>(
+						image, new long[2], new long[]{XSIZE,YSIZE}, function,
+						compositeCondition, factory);
 		assigner.assign();
 		testValues(image);
 	}

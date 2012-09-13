@@ -1,22 +1,25 @@
-/**
- * Copyright (c) 2009--2011, Stephan Saalfeld
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the imglib project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,7 +27,13 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.roi;
 
 import java.util.Iterator;
@@ -43,96 +52,141 @@ import net.imglib2.type.logic.BitType;
 
 /**
  * TODO
- *
+ * 
+ * @author Stephan Saalfeld
  * @author Lee Kamentsky
+ * @author leek
  */
-public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> extends
-		AbstractRegionOfInterest implements IterableRegionOfInterest {
+public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> extends AbstractRegionOfInterest implements IterableRegionOfInterest
+{
 	final I img;
+
 	/*
 	 * One RandomAccess per thread so that the thread can call setPosition.
 	 */
-	final ThreadLocal<RandomAccess<T>> randomAccess;
-	long cached_size = -1;
-	long [] firstPosition;
-	long [] minima;
-	long [] maxima;
-	
-	protected class BMROIIterableInterval<TT extends Type<TT>> implements IterableInterval<TT> {
-		final RandomAccess<TT> src;
-		
-		/**
-		 * @author leek
-		 * 
-		 * The cursor works by managing a cursor from the original image. It
-		 * advances the underlying cursor to the next true position
-		 * with each fwd() step. 
-		 */
-		protected class BMROICursor extends AbstractCursor<TT> {
-			boolean nextIsValid;
-			boolean cursorHasNext;
-			Cursor<T> cursor;
-			final long [] position;
+	final ThreadLocal< RandomAccess< T >> randomAccess;
 
-			protected BMROICursor() {
-				super(BMROIIterableInterval.this.numDimensions());
+	long cached_size = -1;
+
+	long[] firstRelPos;
+
+	long[] minima;
+
+	long[] maxima;
+	
+	double[] origin;
+
+	protected class BMROIIterationOrder
+	{
+		protected I getImg()
+		{
+			return img;
+		}
+
+		@Override
+		public boolean equals( final Object obj )
+		{
+			if ( !( obj instanceof BinaryMaskRegionOfInterest.BMROIIterationOrder ) )
+				return false;
+
+			@SuppressWarnings( "unchecked" )
+			final BMROIIterationOrder o = ( BMROIIterationOrder ) obj;
+			return o.getImg() == getImg();
+		}
+	}
+
+	protected class BMROIIterableInterval< TT extends Type< TT >> implements IterableInterval< TT >
+	{
+		final RandomAccess< TT > src;
+
+		/**
+		 * The cursor works by managing a cursor from the original image. It
+		 * advances the underlying cursor to the next true position with each
+		 * fwd() step.
+		 */
+		protected class BMROICursor extends AbstractCursor< TT >
+		{
+			boolean nextIsValid;
+
+			boolean cursorHasNext;
+
+			Cursor< T > cursor;
+
+			final long[] position;
+
+			protected BMROICursor()
+			{
+				super( BMROIIterableInterval.this.numDimensions() );
 				cursor = img.localizingCursor();
-				position = new long[BMROIIterableInterval.this.numDimensions()];
+				position = new long[ BMROIIterableInterval.this.numDimensions() ];
 			}
-			
+
 			@Override
-			public TT get() {
-				src.setPosition(this);
+			public TT get()
+			{
+				src.setPosition( this );
 				return src.get();
 			}
 
 			@Override
-			public void fwd() {
+			public void fwd()
+			{
 				validateNext();
-				cursor.localize(position);
+				cursor.localize( position );
 				nextIsValid = false;
 			}
 
 			@Override
-			public void reset() {
+			public void reset()
+			{
 				cursor.reset();
 				nextIsValid = false;
 			}
 
 			@Override
-			public boolean hasNext() {
+			public boolean hasNext()
+			{
 				validateNext();
 				return cursorHasNext;
 			}
 
 			@Override
-			public void localize(long[] position) {
-				System.arraycopy(this.position, 0, position, 0, numDimensions());
+			public void localize( long[] pos )
+			{
+				for (int i = 0; i < numDimensions(); i++)
+					pos[i] = position[i] + (long) origin[i];
 			}
 
 			@Override
-			public long getLongPosition(int d) {
-				return this.position[d];
+			public long getLongPosition( int d )
+			{
+				return this.position[ d ] + (long) origin[ d ];
 			}
 
 			@Override
-			public AbstractCursor<TT> copy() {
+			public AbstractCursor< TT > copy()
+			{
 				return copyCursor();
 			}
 
 			@Override
-			public AbstractCursor<TT> copyCursor() {
+			public AbstractCursor< TT > copyCursor()
+			{
 				BMROICursor c = new BMROICursor();
 				c.cursor = cursor.copyCursor();
-				System.arraycopy(position, 0, c.position, 0, numDimensions());
+				System.arraycopy( position, 0, c.position, 0, numDimensions() );
 				c.nextIsValid = nextIsValid;
 				return c;
 			}
-			
-			private void validateNext() {
-				if (! nextIsValid) {
-					while(cursor.hasNext()) {
-						if (cursor.next().get()) {
+
+			private void validateNext()
+			{
+				if ( !nextIsValid )
+				{
+					while ( cursor.hasNext() )
+					{
+						if ( cursor.next().get() )
+						{
 							nextIsValid = true;
 							cursorHasNext = true;
 							return;
@@ -143,215 +197,289 @@ public class BinaryMaskRegionOfInterest<T extends BitType, I extends Img<T>> ext
 				}
 			}
 		}
-		protected BMROIIterableInterval(RandomAccess<TT> src) {
+
+		protected BMROIIterableInterval( final RandomAccess< TT > src )
+		{
 			this.src = src;
 		}
 
 		@Override
-		public long size() {
+		public long size()
+		{
 			return getCachedSize();
 		}
 
 		@Override
-		public TT firstElement() {
-			src.setPosition(getFirstPosition());
+		public TT firstElement()
+		{
+			src.setPosition( getFirstRelativePosition() );
 			return src.get();
 		}
 
 		@Override
-		public boolean equalIterationOrder(IterableRealInterval<?> f) {
-			if (f instanceof BMROIIterableInterval) {
-				BMROIIterableInterval<?> other = (BMROIIterableInterval<?>) f;
-				return other.getImg() == img;
-			}
-			return false;
+		public Object iterationOrder()
+		{
+			return new BMROIIterationOrder();
 		}
 
 		@Override
-		public double realMin(int d) {
-			return img.realMin(d);
+		public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+		{
+			return iterationOrder().equals( f.iterationOrder() );
 		}
 
 		@Override
-		public void realMin(double[] min) {
-			img.realMin(min);
+		public double realMin( int d )
+		{
+			return img.realMin( d ) + origin[d];
 		}
 
 		@Override
-		public void realMin(RealPositionable min) {
-			img.realMin(min);
+		public void realMin( double[] min )
+		{
+			img.realMin( min );
+			for (int i = 0; i < min.length; i++)
+				min[i] += origin[i];
 		}
 
 		@Override
-		public double realMax(int d) {
-			return img.realMax(d);
+		public void realMin( RealPositionable min )
+		{
+			img.realMin( min );
+			min.move(origin);
 		}
 
 		@Override
-		public void realMax(double[] max) {
-			img.realMax(max);
+		public double realMax( int d )
+		{
+			return img.realMax( d ) + origin[d];
 		}
 
 		@Override
-		public void realMax(RealPositionable max) {
-			img.realMax(max);
+		public void realMax( double[] max )
+		{
+			img.realMax( max );
+			for (int i = 0; i < max.length; i++)
+				max[i] += origin[i];
 		}
 
 		@Override
-		public int numDimensions() {
+		public void realMax( RealPositionable max )
+		{
+			img.realMax( max );
+			max.move(origin);
+		}
+
+		@Override
+		public int numDimensions()
+		{
 			return BinaryMaskRegionOfInterest.this.numDimensions();
 		}
 
 		@Override
-		public Iterator<TT> iterator() {
+		public Iterator< TT > iterator()
+		{
 			return new BMROICursor();
 		}
 
 		@Override
-		public long min(int d) {
+		public long min( int d )
+		{
 			validate();
-			return minima[d];
+			return minima[ d ] + (long) origin[d];
 		}
 
 		@Override
-		public void min(long[] min) {
+		public void min( long[] min )
+		{
 			validate();
-			System.arraycopy(minima, 0, min, 0, numDimensions());
+			for (int i = 0; i < numDimensions(); i++)
+				min[i] = minima[i] + (long) origin[i];
 		}
 
 		@Override
-		public void min(Positionable min) {
+		public void min( Positionable min )
+		{
 			validate();
-			min.setPosition( minima );
+			for (int i = 0; i < min.numDimensions(); i++) {
+				min.setPosition( minima[i] + (long) origin[i], i );
+			}
 		}
 
 		@Override
-		public long max(int d) {
+		public long max( int d )
+		{
 			validate();
-			return maxima[d];
+			return maxima[ d ] + (long) origin[d];
 		}
 
 		@Override
-		public void max(long[] max) {
+		public void max( long[] max )
+		{
 			validate();
-			System.arraycopy(maxima, 0, max, 0, numDimensions());
+			for (int i = 0; i < numDimensions(); i++)
+				max[i] = maxima[i] + (long) origin[i];
 		}
 
 		@Override
-		public void max(Positionable max) {
+		public void max( Positionable max )
+		{
 			validate();
-			max.setPosition( maxima );
-		}
-		
-		@Override
-		public void dimensions(long[] dimensions) {
-			img.dimensions(dimensions);
+			for (int i = 0; i < max.numDimensions(); i++) {
+				max.setPosition( maxima[i] + (long) origin[i], i );
+			}
 		}
 
 		@Override
-		public long dimension(int d) {
-			return img.dimension(d);
+		public void dimensions( long[] dimensions )
+		{
+			img.dimensions( dimensions );
 		}
 
 		@Override
-		public Cursor<TT> cursor() {
+		public long dimension( int d )
+		{
+			return img.dimension( d );
+		}
+
+		@Override
+		public Cursor< TT > cursor()
+		{
 			return new BMROICursor();
 		}
 
 		@Override
-		public Cursor<TT> localizingCursor() {
+		public Cursor< TT > localizingCursor()
+		{
 			return new BMROICursor();
-		}
-		
-		protected I getImg() {
-			return img;
 		}
 	}
-	public BinaryMaskRegionOfInterest(final I img) {
-		super(img.numDimensions());
-		this.img = img;
-		randomAccess = new ThreadLocal<RandomAccess<T>>() {
 
-			/* (non-Javadoc)
+	public BinaryMaskRegionOfInterest( final I img )
+	{
+		super( img.numDimensions() );
+		this.img = img;
+		origin = new double[ img.numDimensions() ];
+		randomAccess = new ThreadLocal< RandomAccess< T >>()
+		{
+
+			/*
+			 * (non-Javadoc)
+			 * 
 			 * @see java.lang.ThreadLocal#initialValue()
 			 */
 			@Override
-			protected RandomAccess<T> initialValue() {
+			protected RandomAccess< T > initialValue()
+			{
 				return img.randomAccess();
 			}
 		};
 	}
+
 	@Override
-	public <TT extends Type<TT>> IterableInterval<TT> getIterableIntervalOverROI(
-			RandomAccessible<TT> src) {
-		return new BMROIIterableInterval<TT>(src.randomAccess());
+	public < TT extends Type< TT >> IterableInterval< TT > getIterableIntervalOverROI( RandomAccessible< TT > src )
+	{
+		return new BMROIIterableInterval< TT >( src.randomAccess() );
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.imglib2.roi.AbstractRegionOfInterest#isMember(double[])
 	 */
 	@Override
-	protected boolean isMember(double[] position) {
+	public boolean contains( double[] position )
+	{
 		/*
 		 * Quantize by nearest-neighbor (-0.5 < x < 0.5)
 		 */
 		validate();
-		for (int i=0; i<numDimensions(); i++) {
-			long lPosition = Math.round(position[i]);
-			if ((lPosition < minima[i]) || (lPosition > maxima[i]))
+		for ( int i = 0; i < numDimensions(); i++ )
+		{
+			long lPosition = (long) ( position[i] - origin[i] );
+			if ( ( lPosition < minima[ i ] ) || ( lPosition > maxima[ i ] ) )
 				return false;
-			randomAccess.get().setPosition(lPosition, i);
+			randomAccess.get().setPosition( lPosition, i );
 		}
 		return randomAccess.get().get().get();
 	}
+
 	@Override
-	protected void getRealExtrema(double[] minima, double[] maxima) {
+	protected void getRealExtrema( double[] min, double[] max )
+	{
 		validate();
-		for (int i=0; i<numDimensions(); i++) {
-			minima[i] = this.minima[i];
-			maxima[i] = this.maxima[i];
+		for ( int i = 0; i < numDimensions(); i++ )
+		{
+			min[ i ] = this.minima[ i ] + origin[ i ];
+			max[ i ] = this.maxima[ i ] + origin[ i ];
 		}
 	}
-	
+
 	/**
 	 * Scan the image, counting bits once, then return the cached value.
-	 * @return
 	 */
-	protected long getCachedSize() {
+	protected long getCachedSize()
+	{
 		validate();
 		return cached_size;
 	}
-	
-	protected long [] getFirstPosition() {
-		validate();
-		return firstPosition;
+
+	protected long[] getFirstPosition()
+	{
+		long[] pos = getFirstRelativePosition();
+		for (int i = 0; i < pos.length; i++)
+			pos[i] += origin[i];
+		return pos;
 	}
 
-	protected void validate() {
-		if (cached_size == -1) {
+	protected long[] getFirstRelativePosition()
+	{
+		validate();
+		return firstRelPos;
+	}
+
+	protected void validate()
+	{
+		if ( cached_size == -1 )
+		{
 			cached_size = 0;
-			minima = new long [numDimensions()];
-			maxima = new long [numDimensions()];
-			Cursor<T> c = img.localizingCursor();
-			while(c.hasNext()) {
-				if (c.next().get()) {
+			minima = new long[ numDimensions() ];
+			maxima = new long[ numDimensions() ];
+			Cursor< T > c = img.localizingCursor();
+			while ( c.hasNext() )
+			{
+				if ( c.next().get() )
+				{
 					cached_size = 1;
-					firstPosition = new long[numDimensions()];
-					c.localize(firstPosition);
-					c.localize(minima);
-					c.localize(maxima);
+					firstRelPos = new long[ numDimensions() ];
+					c.localize( firstRelPos );
+					c.localize( minima );
+					c.localize( maxima );
 					break;
 				}
 			}
-			while(c.hasNext()) {
-				if (c.next().get()) {
+			while ( c.hasNext() )
+			{
+				if ( c.next().get() )
+				{
 					cached_size++;
-					for (int i=0; i<numDimensions(); i++) {
-						long pos = c.getLongPosition(i);
-						minima[i] = Math.min(minima[i], pos);
-						maxima[i] = Math.max(maxima[i], pos);
+					for ( int i = 0; i < numDimensions(); i++ )
+					{
+						long pos = c.getLongPosition( i );
+						minima[ i ] = Math.min( minima[ i ], pos );
+						maxima[ i ] = Math.max( maxima[ i ], pos );
 					}
 				}
 			}
 		}
 	}
+
+	@Override
+	public void move(double displacement, int d) {
+		origin[d] += displacement;
+	}
+
+	public I getImg() { return img; }
+	
+	public double[] getOrigin() { return origin; }
 }

@@ -1,19 +1,28 @@
-/**
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
+/*
+ * #%L
+ * ImgLib: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
- * @author Stephan Preibisch
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
  */
+
 package mpicbg.imglib.algorithm.gauss;
 
 import java.util.Vector;
@@ -39,11 +48,11 @@ import mpicbg.imglib.util.Util;
  * Computes a Gaussian Convolution on any {@link Type}(A) for which is defined how to convert it into a {@link NumericType}(B) on which the convolution is performed and back to the desired output {@link Type}(C). 
  * Of course A and C can be same. Note that the kernel precision is limited to double here.
  * 
- * @author Stephan Preibisch
- *
  * @param <A> - The input {@link Type}
  * @param <B> - The {@link NumericType} used to compute the gaussian convolution
  * @param <C> - The output {@link Type}
+ *
+ * @author Stephan Preibisch
  */
 public class GaussianConvolution3< A extends Type<A>, B extends NumericType<B>, C extends Type<C> > implements MultiThreaded, OutputAlgorithm<C>, Benchmark
 {	
