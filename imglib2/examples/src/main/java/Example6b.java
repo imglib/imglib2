@@ -40,7 +40,7 @@ public class Example6b
 		// open with ImgOpener using an ArrayImgFactory
 		Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWing.tif",
 			new ArrayImgFactory< FloatType >(), new FloatType() );
-		Img< FloatType > kernel = new ImgOpener().openImg( "kernel.tif",
+		Img< FloatType > kernel = new ImgOpener().openImg( "kernelGauss.tif",
 			new ArrayImgFactory< FloatType >(), new FloatType() );
 
 		// normalize the kernel, otherwise we add energy to the image
