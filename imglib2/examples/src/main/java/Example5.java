@@ -1,65 +1,88 @@
 import ij.ImageJ;
-import ij.ImagePlus;
-
-import java.io.File;
-
+import net.imglib2.ExtendedRandomAccessibleInterval;
+import net.imglib2.FinalInterval;
+import net.imglib2.RandomAccessible;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
+import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.Views;
 
 /**
- * Illustrate what the outside strategies do
- *
- * @author Stephan Preibisch &amp; Stephan Saalfeld
+ * Illustrate outside strategies
  *
  */
 public class Example5
 {
-	public Example5()
+	public Example5() throws ImgIOException, IncompatibleTypeException
 	{
-		// define the file to open
-		File file = new File( "DrosophilaWingSmall.tif" );
+		// open with ImgOpener using an ArrayImgFactory
+		Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWingSmall.tif",
+			new ArrayImgFactory< FloatType >(), new FloatType() );
 
-		// open with ImgOpener using an ArrayContainer
-		Img<FloatType> image = new ImgOpener().openImg( file.getAbsolutePath(), new ArrayImgFactory<FloatType>() );
+		// create an infinite view where all values outside of the Interval are 0
+		RandomAccessible< FloatType> infinite1 =
+			Views.extendValue( image, new FloatType( 0 ) );
 
-		// test serveral out of bounds strategies
-		testCanvas( image, new OutOfBoundsStrategyValueFactory<FloatType>() );
-		testCanvas( image, new OutOfBoundsStrategyValueFactory<FloatType>( new FloatType( 128 ) ) );
-		testCanvas( image, new OutOfBoundsStrategyMirrorFactory<FloatType>() );
-		testCanvas( image, new OutOfBoundsStrategyPeriodicFactory<FloatType>() );
-		testCanvas( image, new OutOfBoundsStrategyMirrorExpWindowingFactory<FloatType>( 0.5f ) );
+		// create an infinite view where all values outside of the Interval are 128
+		RandomAccessible< FloatType> infinite2 =
+			Views.extendValue( image, new FloatType( 128 ) );
+
+		// create an infinite view where all outside valuesare random in a range of 0-255
+		RandomAccessible< FloatType> infinite3 = Views.extendRandom( image, 0, 255 );
+
+		// create an infinite view where all values outside of the Interval are
+		// the mirrored content, the mirror is the last pixel
+		RandomAccessible< FloatType> infinite4 = Views.extendMirrorSingle( image );
+
+		// create an infinite view where all values outside of the Interval are
+		// the mirrored content, the mirror is BEHIND the last pixel,
+		// i.e. the first and last pixel are always duplicated
+		RandomAccessible< FloatType> infinite5 = Views.extendMirrorDouble( image );
+
+		// all values outside of the Interval periodically repeat the image content
+		// (like the Fourier space assumes)
+		RandomAccessible< FloatType> infinite6 = Views.extendPeriodic( image );
+
+		// if you implemented your own strategy that you want to instantiate, it will look like this
+		RandomAccessible< FloatType> infinite7 =
+			new ExtendedRandomAccessibleInterval< FloatType, Img< FloatType > >( image,
+				new OutOfBoundsConstantValueFactory< FloatType, Img< FloatType > >(
+				new FloatType( 255 ) ) );
+
+		// visualize the outofbounds strategies
+
+		// in order to visualize them, we have to define a new interval
+		// on them which can be displayed
+		long[] min = new long[ image.numDimensions() ];
+		long[] max = new long[ image.numDimensions() ];
+
+		for ( int d = 0; d < image.numDimensions(); ++d )
+		{
+			// we add/subtract another 30 pixels here to illustrate
+			// that it is really infinite and does not only work once
+			min[ d ] = -image.dimension( d ) - 90 ;
+			max[ d ] = image.dimension( d ) * 2 - 1 + 90;
+		}
+
+		// define the Interval on the infinite random accessibles
+		FinalInterval interval = new FinalInterval( min, max );
+
+		// now define the interval on the infinite view and display
+		ImageJFunctions.show( Views.interval( infinite1, interval ) );
+		ImageJFunctions.show( Views.interval( infinite2, interval ) );
+		ImageJFunctions.show( Views.interval( infinite3, interval ) );
+		ImageJFunctions.show( Views.interval( infinite4, interval ) );
+		ImageJFunctions.show( Views.interval( infinite5, interval ) );
+		ImageJFunctions.show( Views.interval( infinite6, interval ) );
+		ImageJFunctions.show( Views.interval( infinite7, interval ) );
 	}
 
-	public <T extends RealType<T>> void testCanvas( final Img<T> img, final OutOfBoundsStrategyFactory<T> outofboundsFactory )
-	{
-		final int[] newSize = new int[ img.getNumDimensions() ];
-
-		for ( int d = 0; d < img.getNumDimensions(); ++d )
-			newSize[ d ] = Util.round( img.getDimension( d ) * 3 );
-
-		final CanvasImage<T> canvas = new CanvasImage<T>( img, newSize, outofboundsFactory );
-
-		if ( canvas.checkInput() && canvas.process() )
-		{
-			Img<T> out = canvas.getResult();
-
-			final ImagePlus imp = ImageJFunctions.show( out );
-			imp.resetDisplayRange();
-			imp.setTitle( outofboundsFactory.getClass().getSimpleName() + " took " + canvas.getProcessingTime() + " ms." );
-			imp.show();
-		}
-		else
-		{
-			System.out.println( canvas.getErrorMessage() );
-		}
-	}
-
-
-	public static void main( String[] args )
+	public static void main( String[] args ) throws ImgIOException, IncompatibleTypeException
 	{
 		// open an ImageJ window
 		new ImageJ();

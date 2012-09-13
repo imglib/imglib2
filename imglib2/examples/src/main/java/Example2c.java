@@ -1,84 +1,100 @@
-import java.io.File;
-
+import ij.ImageJ;
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.FloatType;
-
-import ij.ImageJ;
+import net.imglib2.view.Views;
 
 /**
  * Here we want to copy an Image into another with a different Container one using a generic method,
  * using a LocalizingCursor and a RandomAccess
  *
- * @author Stephan Preibisch &amp; Stephan Saalfeld
+ * @author Stephan Preibisch & Stephan Saalfeld
  *
  */
-public class Example2c
+public class Example2d
 {
-	public Example2c() throws ImgIOException
+	public Example2d() throws ImgIOException, IncompatibleTypeException
 	{
-		// define the file to open
-		File file = new File( "DrosophilaWing.tif" );
+		// open with ImgOpener using an ArrayImgFactory
+		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
+			new ArrayImgFactory< FloatType >(), new FloatType() );
 
-		// open with ImgOpener using an ArrayContainer
-		Img< FloatType > image = new ImgOpener().openImg( file.getAbsolutePath(), new ArrayImgFactory<FloatType>(), new FloatType() );
-
-		// copy the image
-		Img<FloatType> duplicate = copyImage( image, new CellImgFactory< FloatType >( 20 ) );
-
-		// display the copy
+		// copy & display an image
+		Img< FloatType > duplicate = img.factory().create( img, img.firstElement() );
+		copy( img, duplicate );
 		ImageJFunctions.show( duplicate );
+
+		// use a View to define an interval as source for copying
+		//
+		// Views.offsetInterval() does not only define where it is, but also adds a translation
+		// so that the minimal coordinate (upper left) of the view maps to (0,0)
+		RandomAccessibleInterval< FloatType > viewSource = Views.offsetInterval( img,
+			new long[] { 100, 100 }, new long[]{ 250, 150 } );
+
+		// and as target
+		RandomAccessibleInterval< FloatType > viewTarget = Views.offsetInterval( img,
+			new long[] { 500, 200 }, new long[]{ 250, 150 } );
+
+		// now we make the target iterable
+		// (which is possible because it is a RandomAccessibleInterval)
+		IterableInterval< FloatType > iterableTarget = Views.iterable( viewTarget );
+
+		// copy it into the original image (overwriting part of img)
+		copy( viewSource, iterableTarget );
+
+		// show the original image
+		ImageJFunctions.show( img );
 	}
 
-	public <T extends Type<T>> Img<T> copyImage( final Img<T> input, final ImgFactory<T> imgFactory )
+	/**
+	 * Copy from a source that is just RandomAccessible to an IterableInterval. Latter one defines
+	 * size and location of the copy operation. It will query the same pixel locations of the
+	 * IterableInterval in the RandomAccessible. It is up to the developer to ensure that these
+	 * coordinates match.
+	 *
+	 * Note that both, input and output could be Views, Img or anything that implements
+	 * those interfaces.
+	 *
+	 * @param source - a RandomAccess as source that can be infinite
+	 * @param target - an IterableInterval as target
+	 */
+	public < T extends Type< T > > void copy( final RandomAccessible< T > source,
+		final IterableInterval< T > target )
 	{
-		// create a new Image with the same dimensions but the other imgFactory
-		// note that the input provides the size for the new image as it implements the Interval interface
-		Img<T> output = imgFactory.create( input, input.firstElement() );
-
 		// create a cursor that automatically localizes itself on every move
-		Cursor<T> cursorInput = input.localizingCursor();
-		RandomAccess<T> cursorOutput = output.randomAccess();
+		Cursor< T > targetCursor = target.localizingCursor();
+		RandomAccess< T > sourceRandomAccess = source.randomAccess();
 
 		// iterate over the input cursor
-		while ( cursorInput.hasNext() )
+		while ( targetCursor.hasNext())
 		{
 			// move input cursor forward
-			cursorInput.fwd();
+			targetCursor.fwd();
 
 			// set the output cursor to the position of the input cursor
-			cursorOutput.setPosition( cursorInput );
+			sourceRandomAccess.setPosition( targetCursor );
 
 			// set the value of this pixel of the output image, every Type supports T.set( T type )
-			cursorOutput.get().set( cursorInput.get() );
+			targetCursor.get().set( sourceRandomAccess.get() );
 		}
-
-		//. return the copy
-		return output;
 	}
 
-	public static void main( String[] args )
+	public static void main( String[] args ) throws ImgIOException, IncompatibleTypeException
 	{
 		// open an ImageJ window
 		new ImageJ();
 
 		// run the example
-		try
-		{
-			new Example2c();
-		}
-		catch (ImgIOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		new Example2d();
 	}
 }

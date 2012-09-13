@@ -3,23 +3,24 @@ import java.io.File;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.NumericType;
 
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.io.Opener;
 
-
 /**
  * Opens a file with ImageJ and wraps it into an ImgLib {@link Image}.
  *
- * @author Stephan Preibisch &amp; Stephan Saalfeld
+ * @author Stephan Preibisch & Stephan Saalfeld
  *
  */
 public class Example1a
 {
-	// within this method we define <T> to be a RealType
-	public < T extends RealType<T> > Example1a()
+	// within this method we define <T> to be a NumericType (depends on the type of ImagePlus)
+	// you might want to define it as RealType if you know it cannot be an ImageJ RGB Color image
+	public < T extends NumericType< T > & NativeType< T > > Example1a()
 	{
 		// define the file to open
 		File file = new File( "DrosophilaWing.tif" );
@@ -31,12 +32,11 @@ public class Example1a
 		imp.show();
 
 		// wrap it into an ImgLib image (no copying)
-		final Img<T> image = ImagePlusAdapter.wrap( imp );
+		final Img< T > image = ImagePlusAdapter.wrap( imp );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image );
 	}
-
 
 	public static void main( String[] args )
 	{
