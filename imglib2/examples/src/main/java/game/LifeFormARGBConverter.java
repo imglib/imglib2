@@ -100,8 +100,6 @@ public class LifeFormARGBConverter extends AbstractLinearRange implements Conver
 	
 	/**
 	 * norm the weight of the LifeForm to 0...255 using min and max
-	 * @param c
-	 * @return
 	 */
 	public float normFloat( final float c )
 	{

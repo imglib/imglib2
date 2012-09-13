@@ -44,8 +44,8 @@ public class Example3a3
 	 * Note that we do not use a LocalizingCursor as localization just happens from time to time.
 	 *
 	 * @param input - the input that has to just be {@link IterableInterval}
-	 * @param min - the location for the minimal value
-	 * @param max - the location of the maximal value
+	 * @param minLocation - the location for the minimal value
+	 * @param maxLocation - the location of the maximal value
 	 */
 	public < T extends Comparable< T > & Type< T > > void computeMinMaxLocation(
 		final IterableInterval< T > input, final Point minLocation, final Point maxLocation )

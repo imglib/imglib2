@@ -316,7 +316,6 @@ public class LifeForm implements NumericType<LifeForm>, NativeType<LifeForm>
 
 	/**
 	 * decrease the index in the IntAccess by 'increment' (called by cursor/randomAccess)
-	 * @param increment
 	 */
 	@Override
 	public void decIndex( final int decrement ) 
