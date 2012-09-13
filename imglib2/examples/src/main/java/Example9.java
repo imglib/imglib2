@@ -1,5 +1,3 @@
-package net.imglib2.examples;
-
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;

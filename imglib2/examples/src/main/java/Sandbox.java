@@ -1,5 +1,3 @@
-package net.imglib2.examples;
-
 import ij.ImageJ;
 
 public class Sandbox

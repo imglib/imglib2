@@ -1,9 +1,6 @@
-package net.imglib2.examples;
-
 import java.io.File;
 
 import net.imglib2.Cursor;
-import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -18,19 +15,20 @@ import ij.ImageJ;
 
 /**
  * Here we want to copy an Image into another with a different Container one using a generic method,
- * using a LocalizingCursor and a RandomAccess
+ * but we cannot do it with simple Cursors as we use different {@link ImgFactory}s
  *
  * @author Stephan Preibisch &amp; Stephan Saalfeld
  *
  */
-public class Example2c
+public class Example2b
 {
-	public Example2c() throws ImgIOException
+
+	public Example2b() throws ImgIOException
 	{
 		// define the file to open
 		File file = new File( "DrosophilaWing.tif" );
 
-		// open with ImgOpener using an ArrayContainer
+		// open with ImgOpener using an ArrayImgFactory as FloatType
 		Img< FloatType > image = new ImgOpener().openImg( file.getAbsolutePath(), new ArrayImgFactory<FloatType>(), new FloatType() );
 
 		// copy the image
@@ -46,18 +44,16 @@ public class Example2c
 		// note that the input provides the size for the new image as it implements the Interval interface
 		Img<T> output = imgFactory.create( input, input.firstElement() );
 
-		// create a cursor that automatically localizes itself on every move
-		Cursor<T> cursorInput = input.localizingCursor();
-		RandomAccess<T> cursorOutput = output.randomAccess();
+		// create a cursor for both images
+		Cursor<T> cursorInput = input.cursor();
+		Cursor<T> cursorOutput = output.cursor();
 
 		// iterate over the input cursor
 		while ( cursorInput.hasNext() )
 		{
-			// move input cursor forward
+			// move both forward
 			cursorInput.fwd();
-
-			// set the output cursor to the position of the input cursor
-			cursorOutput.setPosition( cursorInput );
+			cursorOutput.fwd();
 
 			// set the value of this pixel of the output image, every Type supports T.set( T type )
 			cursorOutput.get().set( cursorInput.get() );
@@ -75,7 +71,7 @@ public class Example2c
 		// run the example
 		try
 		{
-			new Example2c();
+			new Example2b();
 		}
 		catch (ImgIOException e)
 		{

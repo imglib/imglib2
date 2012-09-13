@@ -1,5 +1,6 @@
 /* BSD-licensed reimplementation */
-package net.imglib2.examples.util;
+
+package util;
 
 /**
  * A simple accumulator of double values.

@@ -1,5 +1,3 @@
-package net.imglib2.examples;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
