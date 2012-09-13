@@ -8,11 +8,9 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.region.hypersphere.HyperSphere;
 import net.imglib2.algorithm.region.hypersphere.HyperSphereCursor;
 import net.imglib2.exception.ImgLibException;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
-import net.imglib2.io.ImgIOException;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
@@ -22,7 +20,7 @@ import net.imglib2.util.Util;
  */
 public class Example4a
 {
-	public Example4a() throws ImgIOException, IncompatibleTypeException
+	public Example4a()
 	{
 		// open with ImgOpener using an ImagePlusImg
 		ImagePlusImg< UnsignedByteType, ?> img
@@ -119,7 +117,7 @@ public class Example4a
 		}
 	}
 
-	public static void main( String[] args ) throws ImgIOException, IncompatibleTypeException
+	public static void main( String[] args )
 	{
 		// open an ImageJ window
 		new ImageJ();

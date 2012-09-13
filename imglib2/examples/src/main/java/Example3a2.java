@@ -5,9 +5,7 @@ import java.util.Iterator;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.io.ImgIOException;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -76,7 +74,7 @@ public class Example3a2
 		}
 	}
 
-	public static void main( String[] args ) throws ImgIOException, IncompatibleTypeException
+	public static void main( String[] args )
 	{
 		// open an ImageJ window
 		new ImageJ();

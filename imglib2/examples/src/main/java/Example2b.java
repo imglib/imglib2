@@ -1,7 +1,6 @@
 import ij.ImageJ;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -22,7 +21,7 @@ import net.imglib2.type.numeric.real.FloatType;
 public class Example2b
 {
 
-	public Example2b() throws ImgIOException, IncompatibleTypeException
+	public Example2b() throws ImgIOException
 	{
 		// open with ImgOpener using an ArrayImgFactory
 		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
@@ -64,7 +63,7 @@ public class Example2b
     return output;
   }
 
-	public static void main( String[] args ) throws ImgIOException, IncompatibleTypeException
+	public static void main( String[] args ) throws ImgIOException
 	{
 		// open an ImageJ window
 		new ImageJ();
