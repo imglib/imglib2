@@ -1,3 +1,4 @@
+import ij.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
@@ -7,7 +8,6 @@ import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
-import ij.ImageJ;
 
 /**
  * Open an ArrayImg< FloatType > and display partly and rotated

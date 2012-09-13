@@ -1,3 +1,4 @@
+import ij.ImageJ;
 import net.imglib2.Cursor;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.RealInterval;
@@ -16,7 +17,6 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
-import ij.ImageJ;
 
 /**
  * Use three different interpolators to 10x magnify a small area

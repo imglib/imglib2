@@ -1,3 +1,7 @@
+import ij.ImageJ;
+import ij.ImagePlus;
+import ij.io.Opener;
+
 import java.io.File;
 
 import net.imglib2.img.ImagePlusAdapter;
@@ -6,12 +10,8 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 
-import ij.ImageJ;
-import ij.ImagePlus;
-import ij.io.Opener;
-
 /**
- * Opens a file with ImageJ and wraps it into an ImgLib {@link Image}.
+ * Opens a file with ImageJ and wraps it into an ImgLib {@link Img}.
  *
  * @author Stephan Preibisch & Stephan Saalfeld
  *

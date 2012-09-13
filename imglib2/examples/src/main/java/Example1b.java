@@ -1,3 +1,5 @@
+import ij.ImageJ;
+
 import java.io.File;
 
 import net.imglib2.exception.IncompatibleTypeException;
@@ -11,8 +13,6 @@ import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
-
-import ij.ImageJ;
 
 /**
  * Opens a file with ImgOpener Bioformats as an ImgLib2 Img.

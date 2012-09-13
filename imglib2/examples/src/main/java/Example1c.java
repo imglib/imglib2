@@ -1,9 +1,9 @@
+import ij.ImageJ;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.real.FloatType;
-import ij.ImageJ;
 
 /**
  * Create a new ImgLib2 Img of Type FloatType

@@ -1,3 +1,4 @@
+import ij.ImageJ;
 import net.imglib2.algorithm.fft.FourierConvolution;
 import net.imglib2.algorithm.fft.FourierTransform;
 import net.imglib2.algorithm.fft.InverseFourierTransform;
@@ -12,7 +13,6 @@ import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
-import ij.ImageJ;
 
 /**
  * Perform template matching by convolution in the Fourier domain

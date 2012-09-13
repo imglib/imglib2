@@ -2,7 +2,6 @@ import ij.ImageJ;
 import net.imglib2.Point;
 import net.imglib2.RandomAccessible;
 import net.imglib2.algorithm.gauss.Gauss;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;

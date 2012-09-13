@@ -18,6 +18,8 @@
  *
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
+import ij.ImageJ;
+import mpicbg.util.RealSum;
 import net.imglib2.algorithm.fft.FourierConvolution;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
@@ -27,8 +29,6 @@ import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
-import ij.ImageJ;
-import mpicbg.util.RealSum;
 
 /**
  * Perform a gaussian convolution using fourier convolution
