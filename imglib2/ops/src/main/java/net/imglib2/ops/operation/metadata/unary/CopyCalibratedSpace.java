@@ -58,13 +58,18 @@ public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryO
 	public CS compute( CS input, CS output )
 	{
 
+		int offset = 0;
 		for ( int d = 0; d < input.numDimensions(); d++ )
 		{
 			if ( interval != null && interval.dimension( d ) == 1 )
-				continue;
-
-			output.setAxis( input.axis( d ), d );
-			output.setCalibration( input.calibration( d ), d );
+			{
+				offset++;
+			}
+			else
+			{
+				output.setAxis( input.axis( d ), d - offset );
+				output.setCalibration( input.calibration( d ), d - offset );
+			}
 		}
 
 		return output;
