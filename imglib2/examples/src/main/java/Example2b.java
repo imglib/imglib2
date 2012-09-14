@@ -28,14 +28,48 @@ public class Example2b
 			new ArrayImgFactory< FloatType >(), new FloatType() );
 
 		// copy the image into a CellImg with a cellsize of 20x20
-		Img< FloatType > duplicate = copyImage( img, new CellImgFactory< FloatType >( 20 ) );
+//		Img< FloatType > duplicate = copyImageWrong( img, new CellImgFactory< FloatType >( 20 ) );
+		Img< FloatType > duplicate = copyImageCorrect( img, new CellImgFactory< FloatType >( 20 ) );
 
 		// display the copy and the original
 		ImageJFunctions.show( img );
 		ImageJFunctions.show( duplicate );
 	}
 
-  public < T extends Type< T >> Img< T > copyImage( final Img< T > input,
+	/**
+	 * WARNING: This method makes a mistake on purpose!
+	 */
+	public < T extends Type< T >> Img< T > copyImageWrong( final Img< T > input,
+		final ImgFactory< T > imgFactory )
+	{
+		// create a new Image with the same dimensions but the other imgFactory
+		// note that the input provides the size for the new image as it
+		// implements the Interval interface
+		Img< T > output = imgFactory.create( input, input.firstElement() );
+
+		// create a cursor for both images
+		Cursor< T > cursorInput = input.cursor();
+		Cursor< T > cursorOutput = output.cursor();
+
+		// iterate over the input cursor
+		while ( cursorInput.hasNext())
+		{
+			// move both forward
+			cursorInput.fwd();
+			cursorOutput.fwd();
+
+			// set the value of this pixel of the output image, every Type supports T.set( T type )
+			cursorOutput.get().set( cursorInput.get() );
+		}
+
+		// return the copy
+		return output;
+	}
+
+	/**
+	 * This method copies the image correctly, using a RandomAccess.
+	 */
+  public < T extends Type< T >> Img< T > copyImageCorrect( final Img< T > input,
     final ImgFactory< T > imgFactory )
   {
     // create a new Image with the same dimensions but the other imgFactory
