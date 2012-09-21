@@ -36,9 +36,9 @@
 
 package net.imglib2.ops.example;
 
-import net.imglib2.ops.operation.binary.complex.ComplexDivide;
-import net.imglib2.ops.operation.unary.complex.ComplexCos;
-import net.imglib2.ops.operation.unary.complex.ComplexReciprocal;
+import net.imglib2.ops.operation.complex.binary.ComplexDivide;
+import net.imglib2.ops.operation.complex.unary.ComplexCos;
+import net.imglib2.ops.operation.complex.unary.ComplexReciprocal;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 /**

@@ -39,7 +39,7 @@ package net.imglib2.ops.function.general;
 
 import java.util.ArrayList;
 
-import net.imglib2.ops.Function;
+import net.imglib2.ops.function.Function;
 
 // This is a proof of concept implementation that would allow one to interleave
 // a number of input datasets or other functions.

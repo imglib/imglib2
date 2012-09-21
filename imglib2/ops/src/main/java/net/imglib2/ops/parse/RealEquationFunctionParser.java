@@ -42,13 +42,13 @@ import java.util.List;
 import java.util.Map;
 
 import net.imglib2.img.Img;
-import net.imglib2.ops.Function;
-import net.imglib2.ops.Tuple2;
+import net.imglib2.ops.function.Function;
 import net.imglib2.ops.parse.token.CloseRange;
 import net.imglib2.ops.parse.token.Comma;
 import net.imglib2.ops.parse.token.OpenRange;
 import net.imglib2.ops.parse.token.Token;
 import net.imglib2.ops.parse.token.Variable;
+import net.imglib2.ops.util.Tuple2;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 

@@ -38,7 +38,8 @@ package net.imglib2.ops.operation.unary.complex;
 
 import static org.junit.Assert.*;
 
-import net.imglib2.ops.operation.binary.complex.ComplexDivide;
+import net.imglib2.ops.operation.complex.binary.ComplexDivide;
+import net.imglib2.ops.operation.complex.unary.ComplexReciprocal;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 
 import org.junit.Test;

@@ -37,9 +37,8 @@
 
 package net.imglib2.ops.input;
 
-import net.imglib2.ops.InputIterator;
-import net.imglib2.ops.PointSet;
-import net.imglib2.ops.PointSetIterator;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.ops.pointset.PointSetIterator;
 
 /**
  * 

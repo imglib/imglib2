@@ -60,6 +60,22 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 		this.errorMessage = "";
 	}
 
+	public DifferenceOfGaussianPeak( final Localizable pixelLocation, final T value, final SpecialPoint specialPoint )
+	{
+		this.numDimensions = pixelLocation.numDimensions();
+		this.specialPoint = specialPoint;
+		this.pixelLocation = new long[ numDimensions ];
+		pixelLocation.localize( this.pixelLocation );
+		this.subPixelLocationOffset = new float[ numDimensions ];
+
+		this.value = value.copy();
+		this.sumValue = value.copy();
+		this.fitValue = value.createVariable();
+		this.fitValue.setZero();
+
+		this.errorMessage = "";
+	}
+
 	public DifferenceOfGaussianPeak<T> copy()
 	{
 		final DifferenceOfGaussianPeak<T> copy = new DifferenceOfGaussianPeak<T>(
