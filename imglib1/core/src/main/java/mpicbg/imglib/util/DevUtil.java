@@ -40,14 +40,17 @@ import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.container.basictypecontainer.ByteAccess;
 import mpicbg.imglib.container.basictypecontainer.DoubleAccess;
+import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 import mpicbg.imglib.container.basictypecontainer.ShortAccess;
 import mpicbg.imglib.container.basictypecontainer.array.ByteArray;
 import mpicbg.imglib.container.basictypecontainer.array.DoubleArray;
+import mpicbg.imglib.container.basictypecontainer.array.FloatArray;
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 import mpicbg.imglib.type.numeric.integer.UnsignedShortType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 /**
  * TODO
@@ -87,6 +90,20 @@ final public class DevUtil
 		return new Image<UnsignedShortType>(array, new UnsignedShortType());
 	}
 	
+	final public static Image<FloatType> createImageFromArray( final float[] data, final int[] dim )
+	{
+		final FloatAccess access = new FloatArray( data );
+		final Array<FloatType, FloatAccess> array = 
+			new Array<FloatType, FloatAccess>(new ArrayContainerFactory(), access, dim, 1 );
+			
+		// create a Type that is linked to the container
+		final FloatType linkedType = new FloatType( array );
+		
+		// pass it to the DirectAccessContainer
+		array.setLinkedType( linkedType );
+		
+		return new Image<FloatType>(array, new FloatType());
+	}
 
 	final public static Image<DoubleType> createImageFromArray( final double[] data, final int[] dim )
 	{
