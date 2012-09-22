@@ -1,7 +1,7 @@
 import ij.ImageJ;
-import net.imglib2.Point;
 import net.imglib2.RandomAccessible;
-import net.imglib2.algorithm.gauss.Gauss;
+import net.imglib2.algorithm.gauss3.Gauss3;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -19,7 +19,7 @@ import net.imglib2.view.Views;
  */
 public class Example6a2
 {
-	public Example6a2() throws ImgIOException
+	public Example6a2() throws ImgIOException, IncompatibleTypeException
 	{
 		// open with ImgOpener using an ArrayImgFactory
 		Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWing.tif",
@@ -39,18 +39,14 @@ public class Example6a2
 		//
 		// sigma .. the sigma
 		// infiniteImg ... the RandomAccessible that is the source for the convolution
-		// image ... defines the Interval in which convolution is performed
-		// image ... defines the RandomAccessible target of the convolution
-		// new Point( image.numDimensions() ) ... defines the offset for the target, here it is (0,0)
-		// image.factory ... the image factory which is required to create temporary images
-		Gauss.inFloat( sigma, infiniteImg, image, image,
-			new Point( image.numDimensions() ), image.factory() );
+		// image ... defines the RandomAccessibleInterval that is the target of the convolution
+		Gauss3.gauss( sigma, infiniteImg, image );
 
 		// show the in-place convolved image (note the different outofboundsstrategy at the edges)
 		ImageJFunctions.show( image );
 	}
 
-	public static void main( String[] args ) throws ImgIOException
+	public static void main( String[] args ) throws ImgIOException, IncompatibleTypeException
 	{
 		// open an ImageJ window
 		new ImageJ();

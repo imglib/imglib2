@@ -1,7 +1,7 @@
 import ij.ImageJ;
-import net.imglib2.Point;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.algorithm.gauss.Gauss;
+import net.imglib2.algorithm.gauss3.Gauss3;
+import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -18,7 +18,7 @@ import net.imglib2.view.Views;
  */
 public class Example6a4
 {
-	public Example6a4() throws ImgIOException
+	public Example6a4() throws ImgIOException, IncompatibleTypeException
 	{
 		// open with ImgOpener using an ArrayImgFactory
 		Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWing.tif",
@@ -43,15 +43,14 @@ public class Example6a4
 						Views.hyperSlice( image, dim, pos );
 
 					// compute the gauss in-place on the view
-					Gauss.inFloat( sigma, Views.extendMirrorSingle( view ), view, view,
-						new Point( view.numDimensions() ), image.factory() );
+					Gauss3.gauss( sigma, Views.extendMirrorSingle( view ), view );
 				}
 
 		// show the result
 		ImageJFunctions.show( image );
 	}
 
-	public static void main( String[] args ) throws ImgIOException
+	public static void main( String[] args ) throws ImgIOException, IncompatibleTypeException
 	{
 		// open an ImageJ window
 		new ImageJ();
