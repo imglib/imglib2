@@ -3,7 +3,8 @@ import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.gauss.Gauss;
 import net.imglib2.algorithm.region.hypersphere.HyperSphere;
-import net.imglib2.algorithm.region.localneighborhood.LocalNeighborhood;
+import net.imglib2.algorithm.region.localneighborhood.Neighborhood;
+import net.imglib2.algorithm.region.localneighborhood.RectangleShape;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -77,24 +78,19 @@ public class Example4b
 
 		// create a Cursor that iterates over the source and checks in a 8-neighborhood
 		// if it is a minima
-		Cursor< T > cursor = Views.iterable( source ).localizingCursor();
+		final Cursor< T > center = Views.iterable( source ).cursor();
 
-		// instantiate a local neighborhood that we will use all the time
-		// it iterates all pixels adjacent to the center, but skips the center
-		// pixel (this corresponds to an 8-neighborhood in 2d or 26-neighborhood in 3d, ...)
-		LocalNeighborhood< T > localNeighborhood =
-			new LocalNeighborhood< T >( source, cursor );
+		// instantiate a RectangleShape to access rectangular local neighborhoods
+		// of radius 1 (that is 3x3x...x3 neighborhoods), skipping the center pixel
+		// (this corresponds to an 8-neighborhood in 2d or 26-neighborhood in 3d, ...)
+		final RectangleShape shape = new RectangleShape( 1, true );
 
-		// iterate over the image
-		while ( cursor.hasNext() )
+		// iterate over the set of neighborhoods in the image
+		for ( final Neighborhood< T > localNeighborhood : shape.neighborhoods( source ) )
 		{
-			cursor.fwd();
-
-			// update the local neighborhood cursor to the position of the cursor
-			localNeighborhood.updateCenter( cursor );
-
-			// what is the value that we investigate
-			final T centerValue = cursor.get();
+			// what is the value that we investigate?
+			// (the center cursor runs over the image in the same iteration order as neighborhood)
+			final T centerValue = center.next();
 
 			// keep this boolean true as long as no other value in the local neighborhood
 			// is larger or equal
@@ -114,7 +110,7 @@ public class Example4b
 			if ( isMinimum )
 			{
 				// draw a sphere of radius one in the new image
-				HyperSphere< U > hyperSphere = new HyperSphere< U >( output, cursor, 1 );
+				HyperSphere< U > hyperSphere = new HyperSphere< U >( output, center, 1 );
 
 				// set every value inside the sphere to 1
 				for ( U value : hyperSphere )
