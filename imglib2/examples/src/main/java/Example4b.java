@@ -1,5 +1,6 @@
 import ij.ImageJ;
 import net.imglib2.Cursor;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.gauss.Gauss;
 import net.imglib2.algorithm.region.hypersphere.HyperSphere;
@@ -15,6 +16,7 @@ import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
 /**
@@ -55,26 +57,16 @@ public class Example4b
 			RandomAccessibleInterval< T > source,
 			ImgFactory< U > imageFactory, U outputType )
 	{
-		// we need the number of dimensions a lot
-		final int numDimensions = source.numDimensions();
-
 		// Create a new image for the output
 		Img< U > output = imageFactory.create( source, outputType );
 
 		// define an interval that is one pixel smaller on each side in each dimension,
 		// so that the search in the 8-neighborhood (3x3x3...x3) never goes outside
 		// of the defined interval
-		long[] min = new long[ numDimensions ];
-		long[] max = new long[ numDimensions ];
-
-		for ( int d = 0; d < numDimensions; ++d )
-		{
-			min[ d ] = source.min( d ) + 1;
-			max[ d ] = source.max( d ) - 1;
-		}
+		Interval interval = Intervals.expand( source, -1 );
 
 		// create a view on the source with this interval
-		source = Views.interval( source, min, max );
+		source = Views.interval( source, interval );
 
 		// create a Cursor that iterates over the source and checks in a 8-neighborhood
 		// if it is a minima
