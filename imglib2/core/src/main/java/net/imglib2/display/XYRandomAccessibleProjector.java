@@ -47,11 +47,12 @@ import net.imglib2.converter.Converter;
  *
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class XYRandomAccessibleProjector< A, B > extends AbstractXYProjector< A, B >
 {
 	final protected RandomAccessibleInterval< B > target;
-	
+
 	public XYRandomAccessibleProjector( final RandomAccessible< A > source, final RandomAccessibleInterval< B > target, final Converter< A, B > converter )
 	{
 		super( source, converter );
@@ -63,27 +64,36 @@ public class XYRandomAccessibleProjector< A, B > extends AbstractXYProjector< A,
 	{
 		for ( int d = 2; d < position.length; ++d )
 			min[ d ] = max[ d ] = position[ d ];
-		
+
 		min[ 0 ] = target.min( 0 );
 		min[ 1 ] = target.min( 1 );
 		max[ 0 ] = target.max( 0 );
 		max[ 1 ] = target.max( 1 );
 		final FinalInterval sourceInterval = new FinalInterval( min, max );
-		
+
 		final long cr = -target.dimension( 0 );
-		
+
 		final RandomAccess< B > targetRandomAccess = target.randomAccess( target );
 		final RandomAccess< A > sourceRandomAccess = source.randomAccess( sourceInterval );
-		
-		for (
-				sourceRandomAccess.setPosition( min ), targetRandomAccess.setPosition( min[ 0 ], 0 ), targetRandomAccess.setPosition( min[ 1 ], 1 );
-				targetRandomAccess.getLongPosition( 1 ) <= max[ 1 ];
-				sourceRandomAccess.move( cr, 0 ), targetRandomAccess.move( cr, 0 ), sourceRandomAccess.fwd( 1 ), targetRandomAccess.fwd( 1 ) )
+
+		final long width = target.dimension( 0 );
+		final long height = target.dimension( 1 );
+
+		sourceRandomAccess.setPosition( min );
+		targetRandomAccess.setPosition( min[ 0 ], 0 );
+		targetRandomAccess.setPosition( min[ 1 ], 1 );
+		for ( long y = 0; y < height; ++y )
 		{
-			for ( ;
-					targetRandomAccess.getLongPosition( 0 ) <= max[ 0 ];
-					sourceRandomAccess.fwd( 0 ), targetRandomAccess.fwd( 0 ) )
+			for ( long x = 0; x < width; ++x )
+			{
 				converter.convert( sourceRandomAccess.get(), targetRandomAccess.get() );
+				sourceRandomAccess.fwd( 0 );
+				targetRandomAccess.fwd( 0 );
+			}
+			sourceRandomAccess.move( cr, 0 );
+			targetRandomAccess.move( cr, 0 );
+			sourceRandomAccess.fwd( 1 );
+			targetRandomAccess.fwd( 1 );
 		}
 	}
 }
