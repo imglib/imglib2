@@ -206,7 +206,6 @@ final public class ImagePlusImgs
 	 * @param dim
 	 * @return
 	 */
-	@SuppressWarnings( "unchecked" )
 	final static public < T extends NumericType< T > & NativeType< T > > ImagePlusImg< T, ? > from( final ImagePlus imp )
 	{
 		return ( ImagePlusImg< T, ? > )ImagePlusAdapter.< T >wrap( imp );
