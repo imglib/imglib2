@@ -523,6 +523,16 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 		preConcatenate( dR );
 	}
 
+	/**
+	 * Set to identity transform
+	 */
+	public void identity()
+	{
+		set( 1, 0, 0, 0,
+			 0, 1, 0, 0,
+			 0, 0, 1, 0 );
+	}
+
 	final public void set( final AffineTransform3D m )
 	{
 		a.m00 = m.a.m00;
