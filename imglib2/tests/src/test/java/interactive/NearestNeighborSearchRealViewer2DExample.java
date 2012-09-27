@@ -1,5 +1,4 @@
-package examples;
-import gui.InteractiveReal2DViewer;
+package interactive;
 import net.imglib2.RealPoint;
 import net.imglib2.collection.KDTree;
 import net.imglib2.collection.RealPointSampleList;
@@ -13,8 +12,9 @@ import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.ui.InteractiveRealViewer2D;
 
-public class NearestNeighborSearch2DViewerExample< T extends NumericType< T > & NativeType< T > >
+public class NearestNeighborSearchRealViewer2DExample< T extends NumericType< T > & NativeType< T > >
 {
 	final static protected int width = 800;
 	final static protected int height = 600;
@@ -50,11 +50,17 @@ public class NearestNeighborSearch2DViewerExample< T extends NumericType< T > & 
 		final AffineTransform2D transform = new AffineTransform2D();
 		transform.scale( 2 );
 
-		new InteractiveReal2DViewer< UnsignedByteType >(
-				width, height,
-				interpolant,
-				new RealARGBConverter< UnsignedByteType >( 0, 255 ),
-				transform );
+		final LogoPainter logo = new LogoPainter();
+		final RealARGBConverter< UnsignedByteType > converter = new RealARGBConverter< UnsignedByteType >( 0, 255 );
+		new InteractiveRealViewer2D< UnsignedByteType >( width, height, interpolant, transform, converter )
+		{
+			@Override
+			public void drawScreenImage()
+			{
+				super.drawScreenImage();
+				logo.paint( screenImage );
+			}
+		};
 	}
 
 }

@@ -1,4 +1,4 @@
-package examples;
+package interactive;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -9,14 +9,22 @@ import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.ui.InteractiveRealViewer2D;
 import fractals.JuliaRealRandomAccessible;
-import gui.InteractiveReal2DViewer;
 
-public class Julia2DViewerExample
+public class JuliaRealViewer2DExample
 {
 	final protected ComplexDoubleType c;
 	final protected JuliaRealRandomAccessible juliaset;
-	final protected InteractiveReal2DViewer< LongType > viewer;
+	final protected InteractiveRealViewer2D< LongType > viewer;
+
+	public double getScale()
+	{
+		final AffineTransform2D a = viewer.getDisplay().getViewerTransform();
+		final double ax = a.get( 0, 0 );
+		final double ay = a.get( 0, 1 );
+		return Math.sqrt( ax * ax + ay * ay );
+	}
 
 	public class JuliaListener implements MouseMotionListener, MouseListener
 	{
@@ -32,7 +40,7 @@ public class Julia2DViewerExample
 				dY = e.getY() - oY;
 				oX += dX;
 				oY += dY;
-				c.set( c.getRealDouble() + dX / 2000.0 / viewer.getScale(), c.getImaginaryDouble() + dY / 2000.0 / viewer.getScale() );
+				c.set( c.getRealDouble() + dX / 2000.0 / getScale(), c.getImaginaryDouble() + dY / 2000.0 / getScale() );
 			}
 		}
 
@@ -56,7 +64,7 @@ public class Julia2DViewerExample
 	private final int width = 800;
 	private final int height = 600;
 
-	public Julia2DViewerExample(
+	public JuliaRealViewer2DExample(
 			final ComplexDoubleType c,
 			final int maxIterations,
 			final int maxAmplitude,
@@ -83,8 +91,17 @@ public class Julia2DViewerExample
 
 		rotation.preConcatenate( centerUnShift );
 
-		viewer = new InteractiveReal2DViewer< LongType >( width, height, juliaset, converter, rotation );
-		viewer.addHandler( new JuliaListener() );
+		final LogoPainter logo = new LogoPainter();
+		viewer = new InteractiveRealViewer2D< LongType >( width, height, juliaset, rotation, converter )
+		{
+			@Override
+			public void drawScreenImage()
+			{
+				super.drawScreenImage();
+				logo.paint( screenImage );
+			}
+		};
+		viewer.getDisplay().addHandler( new JuliaListener() );
 	}
 
 	final static public void main( final String[] args ) throws ImgIOException
@@ -119,7 +136,7 @@ public class Julia2DViewerExample
 			}
 		};
 
-		new Julia2DViewerExample( c, maxIterations, maxAmplitude, lut );
+		new JuliaRealViewer2DExample( c, maxIterations, maxAmplitude, lut );
 	}
 
 }
