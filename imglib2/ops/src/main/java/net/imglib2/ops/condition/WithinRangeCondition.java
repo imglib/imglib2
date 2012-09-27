@@ -46,13 +46,13 @@ import net.imglib2.type.numeric.RealType;
  *
  * @param <T>
  */
-public class ThresholdCondition<T extends RealType<T>> implements Condition<long[]> {
+public class WithinRangeCondition<T extends RealType<T>> implements Condition<long[]> {
 
 	private Function<long[],T> valueFunc;
 	private double min,max;
 	private T tmp;
 	
-	public ThresholdCondition(Function<long[],T> func, double min, double max, T type) {
+	public WithinRangeCondition(Function<long[],T> func, double min, double max, T type) {
 		this.valueFunc = func;
 		this.min = min;
 		this.max = max;
@@ -67,8 +67,8 @@ public class ThresholdCondition<T extends RealType<T>> implements Condition<long
 	}
 
 	@Override
-	public ThresholdCondition<T> copy() {
-		return new ThresholdCondition<T>(valueFunc, min, max, tmp);
+	public WithinRangeCondition<T> copy() {
+		return new WithinRangeCondition<T>(valueFunc, min, max, tmp);
 	}
 	
 }
