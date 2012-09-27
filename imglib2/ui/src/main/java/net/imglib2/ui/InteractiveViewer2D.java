@@ -75,7 +75,7 @@ public class InteractiveViewer2D< T extends NumericType< T > > extends AbstractI
 		++interpolation;
 		interpolation %= 2;
 		projector = createProjector();
-		getDisplay().requestRepaint();
+		display.requestRepaint();
 	}
 
 	@Override

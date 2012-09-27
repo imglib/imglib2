@@ -1,5 +1,6 @@
 package interactive;
 
+import interactive.fractals.MandelbulbRealRandomAccess;
 import net.imglib2.Interval;
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
@@ -10,7 +11,6 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.ui.InteractiveRealViewer3D;
 import net.imglib2.util.Intervals;
-import fractals.MandelbulbRealRandomAccess;
 
 public class Interactive3DRealRandomAccessibleExample
 {

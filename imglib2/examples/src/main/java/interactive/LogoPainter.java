@@ -37,7 +37,7 @@ public class LogoPainter
 
 	public LogoPainter()
 	{
-		this( "src/test/java/resources/imglib2-logo-35x40.png" );
+		this( "imglib2-logo-35x40.png" );
 	}
 
 	public LogoPainter( final String overlayFilename )

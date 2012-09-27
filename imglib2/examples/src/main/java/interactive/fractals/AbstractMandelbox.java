@@ -25,7 +25,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package fractals;
+package interactive.fractals;
 
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;

@@ -25,35 +25,58 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package fractals;
+package interactive.fractals;
 
 import net.imglib2.RealInterval;
 import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.integer.LongType;
 
 /**
  * A RealRandomAccess that procedurally generates values (iteration count)
  * for the mandelbrot set.
  *
- * @author Tobias Pietzsch
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class MandelbrotRealRandomAccessible implements RealRandomAccessible< LongType >
+public class JuliaRealRandomAccessible implements RealRandomAccessible< LongType >
 {
 	final protected LongType t;
+	final protected ComplexDoubleType a;
+	final protected ComplexDoubleType c;
 	long maxIterations;
+	double maxAmplitude;
 
-	public MandelbrotRealRandomAccessible()
+	public JuliaRealRandomAccessible()
 	{
 		t = new LongType();
+		a = new ComplexDoubleType();
+		c = new ComplexDoubleType();
 		maxIterations = 50;
+		maxAmplitude = 4096;
 	}
 	
-	public MandelbrotRealRandomAccessible( final long maxIterations )
+	public JuliaRealRandomAccessible(
+			final ComplexDoubleType c,
+			final int maxIterations,
+			final int maxAmplitude )
 	{
 		t = new LongType();
+		a = new ComplexDoubleType();
+		this.c = c;
 		this.maxIterations = maxIterations;
+		this.maxAmplitude = maxAmplitude;
+	}
+	
+	public void setC( final ComplexDoubleType c )
+	{
+		this.c.set( c );
+	}
+	
+	public void setC( final double r, final double i )
+	{
+		c.set( r, i );
 	}
 	
 	public void setMaxIterations( final long maxIterations )
@@ -61,52 +84,52 @@ public class MandelbrotRealRandomAccessible implements RealRandomAccessible< Lon
 		this.maxIterations = maxIterations;
 	}
 	
-	public class MandelbrotRealRandomAccess extends RealPoint implements RealRandomAccess< LongType >
+	public void setMaxAmplitude( final double maxAmplitude )
 	{
-		final LongType t;
-
-		public MandelbrotRealRandomAccess()
+		this.maxAmplitude = maxAmplitude;
+	}
+	
+	public class JuliaRealRandomAccess extends RealPoint implements RealRandomAccess< LongType >
+	{
+		public JuliaRealRandomAccess()
 		{
-			super( 2 ); // number of dimensions is 2
-			t = new LongType();
+			super( 2 );
 		}
-
-		final private long mandelbrot( final double re0, final double im0, final long maxIterations )
+		
+		final private long julia( final double x, final double y )
 		{
-			double re = re0;
-			double im = im0;
 			long i = 0;
-			for ( ; i < maxIterations; ++i )
+			double v = 0;
+			a.set( x, y );
+			while ( i < maxIterations && v < 4096 )
 			{
-				final double squre = re * re;
-				final double squim = im * im;
-				if ( squre + squim > 4 )
-					break;
-				im = 2 * re * im + im0;
-				re = squre - squim + re0;
+				a.mul( a );
+				a.add( c );
+				v = a.getPowerDouble();
+				++i;
 			}
-			return i;
+			return i < 0 ? 0 : i > 255 ? 255 : i;
 		}
 
 		@Override
 		public LongType get()
 		{
-			t.set( mandelbrot( position[ 0 ], position[ 1 ], maxIterations ) );
+			t.set( julia( position[ 0 ], position[ 1 ] ) );
 			return t;
 		}
 
 		@Override
-		public MandelbrotRealRandomAccess copyRealRandomAccess()
+		public JuliaRealRandomAccess copyRealRandomAccess()
 		{
 			return copy();
 		}
 
 		@Override
-		public MandelbrotRealRandomAccess copy()
+		public JuliaRealRandomAccess copy()
 		{
-			final MandelbrotRealRandomAccess a = new MandelbrotRealRandomAccess();
-			a.setPosition( this );
-			return a;
+			final JuliaRealRandomAccess copy = new JuliaRealRandomAccess();
+			copy.setPosition( this );
+			return copy;
 		}
 	}
 
@@ -117,13 +140,13 @@ public class MandelbrotRealRandomAccessible implements RealRandomAccessible< Lon
 	}
 
 	@Override
-	public MandelbrotRealRandomAccess realRandomAccess()
+	public JuliaRealRandomAccess realRandomAccess()
 	{
-		return new MandelbrotRealRandomAccess();
+		return new JuliaRealRandomAccess();
 	}
 
 	@Override
-	public MandelbrotRealRandomAccess realRandomAccess( final RealInterval interval )
+	public JuliaRealRandomAccess realRandomAccess( final RealInterval interval )
 	{
 		return realRandomAccess();
 	}

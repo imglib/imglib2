@@ -1,4 +1,6 @@
 package interactive;
+import interactive.fractals.JuliaRealRandomAccessible;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -10,7 +12,6 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.ui.InteractiveRealViewer2D;
-import fractals.JuliaRealRandomAccessible;
 
 public class JuliaRealViewer2DExample
 {
