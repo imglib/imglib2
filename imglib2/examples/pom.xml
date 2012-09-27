@@ -16,12 +16,6 @@
 	<name>ImgLib2 Examples</name>
 	<description>This project shows ten increasingly complex examples of how to program with ImgLib2. The intention of these examples are not to explain ImgLib2 concepts, but rather to give some practical hints how to work with the library and to grasp the principles in a learning-by-doing way. Also included is the Game of Death (similar to Conway's Game of Life): a cellular automaton, simulating competing life forms, which illustrates the generality of the ImgLib2 typing mechanism.</description>
 
-<!--	<modules>
-		<module>GameOfDeath2</module>
-		<module>tutorial</module>
-	</modules> -->
-
-
 	<url>http://fiji.sc/ImgLib2_Examples</url>
 
 	<dependencies>
