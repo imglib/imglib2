@@ -59,7 +59,7 @@ public class GUI
 			canvas.addMouseListener( ( MouseListener ) handler );
 
 		if ( MouseWheelListener.class.isInstance( handler ) )
-			window.addMouseWheelListener( ( MouseWheelListener ) handler );
+			canvas.addMouseWheelListener( ( MouseWheelListener ) handler );
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class GUI
 
 		final MouseMotionListener[] canvasMouseMotionListeners;
 
-		final MouseWheelListener[] windowMouseWheelListeners;
+		final MouseWheelListener[] canvasMouseWheelListeners;
 
 		public State()
 		{
@@ -103,7 +103,7 @@ public class GUI
 			ijKeyListeners = ( ij == null ) ? null : ij.getKeyListeners();
 			canvasMouseListeners = canvas.getMouseListeners();
 			canvasMouseMotionListeners = canvas.getMouseMotionListeners();
-			windowMouseWheelListeners = window.getMouseWheelListeners();
+			canvasMouseWheelListeners = canvas.getMouseWheelListeners();
 		}
 	}
 
@@ -137,8 +137,8 @@ public class GUI
 			canvas.addMouseListener( l );
 		for ( final MouseMotionListener l : state.canvasMouseMotionListeners )
 			canvas.addMouseMotionListener( l );
-		for ( final MouseWheelListener l : state.windowMouseWheelListeners )
-			window.addMouseWheelListener( l );
+		for ( final MouseWheelListener l : state.canvasMouseWheelListeners )
+			canvas.addMouseWheelListener( l );
 	}
 
 	/**
@@ -179,6 +179,6 @@ public class GUI
 
 		final MouseWheelListener[] mouseWheelListeners = window.getMouseWheelListeners();
 		for ( final MouseWheelListener l : mouseWheelListeners )
-			window.removeMouseWheelListener( l );
+			canvas.removeMouseWheelListener( l );
 	}
 }
