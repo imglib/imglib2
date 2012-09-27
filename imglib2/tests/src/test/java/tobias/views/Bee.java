@@ -1,6 +1,5 @@
 package tobias.views;
 
-import gui.Interactive2DViewer;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.TypeIdentity;
@@ -15,6 +14,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.ui.InteractiveViewer2D;
 import net.imglib2.view.Views;
 
 /**
@@ -160,7 +160,7 @@ public class Bee
 		if ( source instanceof RandomAccessibleInterval )
 			source = Views.extendValue( ( RandomAccessibleInterval< UnsignedByteType > ) source, new UnsignedByteType( 0 ) );
 		final RealARGBConverter< UnsignedByteType > converter = new RealARGBConverter< UnsignedByteType >( 0, 255 );
-		new Interactive2DViewer< UnsignedByteType >( width, height, source, converter, null );
+		new InteractiveViewer2D< UnsignedByteType >( width, height, source, converter );
 	}
 
 	public static void showargb( RandomAccessible< ARGBType > source )
@@ -169,6 +169,6 @@ public class Bee
 		final int height = 374;
 		if ( source instanceof RandomAccessibleInterval )
 			source = Views.extendValue( ( RandomAccessibleInterval< ARGBType > ) source, new ARGBType() );
-		new Interactive2DViewer< ARGBType >( width, height, source, new TypeIdentity< ARGBType >(), null );
+		new InteractiveViewer2D< ARGBType >( width, height, source, new TypeIdentity< ARGBType >() );
 	}
 }
