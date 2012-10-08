@@ -55,6 +55,8 @@ import net.imglib2.ops.util.Tuple2;
  * <p>
  * "x=[1,4..20]" (this one results in values 1,4,7,10,13,16,19)
  * <p>
+ * "x=[0..499], y=[0..399], (x-200)^2 + (y-200)^2 < (80)^2"
+ * <p>
  * "x=[0..499], y=[0..399], angle(x,y) < (PI/6)"
  * 
  * @author Barry DeZonia
