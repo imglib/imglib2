@@ -171,13 +171,7 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 
 		case INCREMENT_Y:
 
-			position[largeAxisDim] = -position[largeAxisDim] + 1; // y should be
-																	// negative
-																	// (coming
-																	// from
-																	// mirroring
-																	// or init =
-																	// 0)
+			position[largeAxisDim] = -position[largeAxisDim] + 1; // y should be negative (coming from mirroring or init =  0)
 			rx = rxs[position[largeAxisDim]];
 
 			ra.setPosition(neighborhood.center[largeAxisDim]

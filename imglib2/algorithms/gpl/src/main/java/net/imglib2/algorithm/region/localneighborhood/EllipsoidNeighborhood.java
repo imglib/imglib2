@@ -30,8 +30,7 @@ public class EllipsoidNeighborhood<T, IN extends RandomAccessibleInterval<T>>
 	 * CONSTRUCTORS
 	 */
 
-	public EllipsoidNeighborhood(int numDims,
-			OutOfBoundsFactory<T, IN> outOfBounds) {
+	public EllipsoidNeighborhood(int numDims, OutOfBoundsFactory<T, IN> outOfBounds) {
 		super(numDims, outOfBounds);
 		if (numDimensions() < 2) {
 			throw new IllegalArgumentException(
@@ -39,11 +38,7 @@ public class EllipsoidNeighborhood<T, IN extends RandomAccessibleInterval<T>>
 		}
 	}
 
-	/*
-	 * CONSTRUCTORS
-	 */
-	public EllipsoidNeighborhood(IN source,
-			OutOfBoundsFactory<T, IN> outOfBounds) {
+	public EllipsoidNeighborhood(IN source, OutOfBoundsFactory<T, IN> outOfBounds) {
 		super(source.numDimensions(), outOfBounds);
 		if (numDimensions() < 2) {
 			throw new IllegalArgumentException(
