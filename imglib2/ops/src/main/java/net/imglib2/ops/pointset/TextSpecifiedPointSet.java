@@ -47,6 +47,16 @@ import net.imglib2.ops.util.Tuple2;
  * Class for defining complex PointSets from a text string. Syntax is similar
  * to list comprehension syntax in Haskell.
  * 
+ * Some examples:
+ * <p>
+ * "x=[1..100], y=[200..400]"
+ * <p>
+ * "x=[1..100], y=[200..400], x + y > 250, x + y < 400"
+ * <p>
+ * "x=[1,4..20]" (this one results in values 1,4,7,10,13,16,19)
+ * <p>
+ * "x=[0..499], y=[0..399], angle(x,y) < (PI/6)"
+ * 
  * @author Barry DeZonia
  *
  */
