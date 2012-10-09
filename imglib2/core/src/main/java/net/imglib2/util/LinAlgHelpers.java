@@ -87,6 +87,25 @@ public class LinAlgHelpers
 	}
 
 	/**
+	 * set C = A, where A is a matrix.
+	 * Dimensions of A and C must match.
+	 *
+	 * @param A
+	 * @param C
+	 */
+	public static void copy( final double[][] A, final double[][] C )
+	{
+		assert rows( A ) == rows( C ) && cols( A ) == cols( C );
+
+		final int rows = rows( A );
+		final int cols = cols( A );
+
+		for ( int i = 0; i < rows; ++i )
+			for ( int j = 0; j < cols; ++j )
+				C[ i ][ j ] = A[ i ][ j ];
+	}
+
+	/**
 	 * set c = a - b. Dimensions of a, b, and c must match.
 	 * In place subtraction (c==a) is permitted.
 	 *
