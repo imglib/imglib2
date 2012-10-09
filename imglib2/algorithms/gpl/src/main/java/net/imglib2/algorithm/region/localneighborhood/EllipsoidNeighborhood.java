@@ -23,33 +23,25 @@ import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
  * 
  * @param <T>
  */
-public class EllipsoidNeighborhood<T, IN extends RandomAccessibleInterval<T>>
-		extends AbstractNeighborhood<T, IN> {
+public class EllipsoidNeighborhood<T, IN extends RandomAccessibleInterval<T>> extends AbstractNeighborhood<T, IN> {
 
 	/*
 	 * CONSTRUCTORS
 	 */
 
-	public EllipsoidNeighborhood(int numDims, OutOfBoundsFactory<T, IN> outOfBounds) {
-		super(numDims, outOfBounds);
-		if (numDimensions() < 2) {
-			throw new IllegalArgumentException(
-					"[EllipsoidNeighborhood] source must be at least of dimension 3.");
-		}
-	}
-
-	public EllipsoidNeighborhood(IN source, OutOfBoundsFactory<T, IN> outOfBounds) {
+	public EllipsoidNeighborhood(final IN source, final long[] center, final long[] radiuses, final OutOfBoundsFactory<T, IN> outOfBounds) {
 		super(source.numDimensions(), outOfBounds);
 		if (numDimensions() < 2) {
 			throw new IllegalArgumentException(
 					"[EllipsoidNeighborhood] source must be at least of dimension 3.");
 		}
-
+		setSpan(radiuses);
+		setPosition(center);
 		updateSource(source);
 	}
 
-	public EllipsoidNeighborhood(IN source) {
-		this(source, new OutOfBoundsPeriodicFactory<T, IN>());
+	public EllipsoidNeighborhood(final IN source, final long[] center, final long[] radiuses) {
+		this(source, center, radiuses, new OutOfBoundsPeriodicFactory<T, IN>());
 	}
 
 	/*
@@ -128,11 +120,8 @@ public class EllipsoidNeighborhood<T, IN extends RandomAccessibleInterval<T>>
 	}
 
 	@Override
-	public AbstractNeighborhood<T, IN> copy() {
-		if (source != null)
-			return new EllipsoidNeighborhood<T, IN>(source, outOfBounds);
-		else
-			return new EllipsoidNeighborhood<T, IN>(n, outOfBounds);
+	public EllipsoidNeighborhood<T, IN> copy() {
+		return new EllipsoidNeighborhood<T, IN>(source, center, span, outOfBounds);
 	}
 
 }

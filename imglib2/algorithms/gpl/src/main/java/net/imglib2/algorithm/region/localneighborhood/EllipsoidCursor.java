@@ -90,8 +90,7 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 	 * CONSTRUCTOR
 	 */
 
-	public EllipsoidCursor(
-			AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> ellipsoid) {
+	public EllipsoidCursor(AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> ellipsoid) {
 		super(ellipsoid);
 		/*
 		 * We have to check what is the smallest dimension between the 1st and
@@ -140,7 +139,7 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 			position[smallAxisdim]++;
 			if (position[smallAxisdim] >= rx) {
 				state = nextState;
-				if (allDone)
+				if (allDone || ry == 0)
 					hasNext = false;
 			}
 			break;
@@ -284,7 +283,16 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 	}
 
 	/**
-	 * Return the current inclination with respect to this ellipsoid center.
+	 * @return a reference to the current relative position array, 
+	 * measured with respect to the neighborhood center.
+	 */
+	public int[] getRelativePosition() {
+		return position;
+	}
+	
+	
+	/**
+	 * @return the current inclination with respect to this ellipsoid center.
 	 * Will be in the range [0, π].
 	 * <p>
 	 * In spherical coordinates, the inclination is the angle between the Z axis
@@ -295,7 +303,7 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 	}
 
 	/**
-	 * Return the azimuth of the spherical coordinates of this cursor, with
+	 * @return the azimuth of the spherical coordinates of this cursor, with
 	 * respect to its center. Will be in the range ]-π, π].
 	 * <p>
 	 * In spherical coordinates, the azimuth is the angle measured in the plane
@@ -307,7 +315,7 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 	}
 
 	/**
-	 * Return the square distance measured from the center of the ellipsoid to
+	 * @return the square distance measured from the center of the ellipsoid to
 	 * the current cursor position, in pixel units.
 	 */
 	public double getDistanceSquared() {

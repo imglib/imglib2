@@ -15,8 +15,7 @@ public abstract class AbstractNeighborhoodCursor<T> implements Cursor<T>,
 	 * CONSTRUCTOR
 	 */
 
-	public AbstractNeighborhoodCursor(
-			AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> neighborhood) {
+	public AbstractNeighborhoodCursor(AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> neighborhood) {
 		this.neighborhood = neighborhood;
 		this.ra = neighborhood.extendedSource.randomAccess();
 	}
@@ -73,9 +72,7 @@ public abstract class AbstractNeighborhoodCursor<T> implements Cursor<T>,
 
 	@Override
 	public void remove() {
-		throw new UnsupportedOperationException(
-				"remove() is not implemented for "
-						+ getClass().getCanonicalName());
+		throw new UnsupportedOperationException("remove() is not implemented for "+ getClass().getCanonicalName());
 	}
 
 	@Override
