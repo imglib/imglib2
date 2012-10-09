@@ -5,7 +5,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
 import net.imglib2.algorithm.region.localneighborhood.AbstractNeighborhoodCursor;
 import net.imglib2.algorithm.region.localneighborhood.Utils;
-import net.imglib2.outofbounds.OutOfBounds;
 
 public final class EllipseCursor <T> extends AbstractNeighborhoodCursor<T> {
 
@@ -20,7 +19,6 @@ public final class EllipseCursor <T> extends AbstractNeighborhoodCursor<T> {
 
 	protected boolean allDone;
 	protected boolean hasNext;
-	protected final OutOfBounds<T> ra;
 
 	
 	/**
@@ -48,7 +46,6 @@ public final class EllipseCursor <T> extends AbstractNeighborhoodCursor<T> {
 	 */
 	public EllipseCursor(AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> ellipse) {
 		super(ellipse);
-		this.ra = ellipse.extendedSource.randomAccess();
 		rxs = new int [ (int) ( Math.max( ellipse.dimension(0), ellipse.dimension(1) ) - 1 ) / 2  +  1 ];
 		reset();
 	}
