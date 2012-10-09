@@ -57,26 +57,14 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	}
 	
 	@Override
-	public long[] getAnchor() {
-		return a.getAnchor();
+	public long[] getOrigin() {
+		return a.getOrigin();
 	}
 	
 	@Override
-	public void setAnchor(long[] newAnchor) {
-		long[] currAnchor = getAnchor();
-		if (currAnchor.length != newAnchor.length)
-			throw new IllegalArgumentException();
-		long[] bAnchor = b.getAnchor();
-		long[] deltas = new long[currAnchor.length];
-		for (int i = 0; i < currAnchor.length; i++) {
-			deltas[i] = newAnchor[i] - currAnchor[i];
-		}
-		long[] newAnchor2 = new long[currAnchor.length];
-		for (int i = 0; i < currAnchor.length; i++) {
-			newAnchor2[i] = bAnchor[i] + deltas[i];
-		}
-		a.setAnchor(newAnchor);
-		b.setAnchor(newAnchor2);
+	public void translate(long[] deltas) {
+		a.translate(deltas);
+		b.translate(deltas);
 		boundsInvalid = true;
 	}
 	
@@ -86,7 +74,7 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	}
 	
 	@Override
-	public int numDimensions() { return getAnchor().length; }
+	public int numDimensions() { return a.numDimensions(); }
 	
 	@Override
 	public boolean includes(long[] point) {

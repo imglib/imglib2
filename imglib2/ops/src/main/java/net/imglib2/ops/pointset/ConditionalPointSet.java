@@ -57,13 +57,13 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 	}
 	
 	@Override
-	public long[] getAnchor() {
-		return pointSet.getAnchor();
+	public long[] getOrigin() {
+		return pointSet.getOrigin();
 	}
 
 	@Override
-	public void setAnchor(long[] anchor) {
-		pointSet.setAnchor(anchor);
+	public void translate(long[] deltas) {
+		pointSet.translate(deltas);
 		this.boundsInvalid = true;
 	}
 

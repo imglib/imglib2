@@ -46,43 +46,41 @@ import java.util.Arrays;
  */
 public class OnePointSet implements PointSet {
 
-	private long[] anchor;
+	private long[] point;
 	
 	public OnePointSet(long[] point) {
-		anchor = point;
+		this.point = point;
 	}
 	
 	@Override
-	public long[] getAnchor() {
-		return anchor;
+	public long[] getOrigin() {
+		return point;
 	}
 
 	@Override
-	public void setAnchor(long[] point) {
-		if (point != anchor)
-			if (point.length != anchor.length)
-				throw new IllegalArgumentException();
-		anchor = point;
+	public void translate(long[] deltas) {
+		for (int i = 0; i < point.length; i++)
+			point[i] += deltas[i];
 	}
 
 	@Override
 	public int numDimensions() {
-		return anchor.length;
+		return point.length;
 	}
 
 	@Override
 	public long[] findBoundMin() {
-		return anchor;
+		return point;
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		return anchor;
+		return point;
 	}
 
 	@Override
-	public boolean includes(long[] point) {
-		return Arrays.equals(anchor, point);
+	public boolean includes(long[] pt) {
+		return Arrays.equals(this.point, pt);
 	}
 
 	@Override
@@ -92,7 +90,7 @@ public class OnePointSet implements PointSet {
 
 	@Override
 	public OnePointSet copy() {
-		return new OnePointSet(anchor.clone());
+		return new OnePointSet(point.clone());
 	}
 	
 	@Override
@@ -112,7 +110,7 @@ public class OnePointSet implements PointSet {
 		@Override
 		public long[] next() {
 			hasNext = false;
-			return anchor;
+			return point;
 		}
 
 		@Override

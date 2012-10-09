@@ -46,7 +46,7 @@ public class HyperVolumePointSet implements PointSet {
 	
 	// -- instance variables --
 	
-	private final long[] anchor;
+	private final long[] origin;
 	private final long[] negOffsets;
 	private final long[] posOffsets;
 	private final long[] boundMin;
@@ -58,29 +58,29 @@ public class HyperVolumePointSet implements PointSet {
 	 * Constructor taking an anchor point and offsets relative to that anchor
 	 * point. These parameters define a hypervolume.
 	 * 
-	 * @param anchor The key point around which the hypervolume is defined.
+	 * @param origin The key point around which the hypervolume is defined.
 	 * @param negOffsets Span in the negative direction beyond the anchor point (note: must be positive values).
 	 * @param posOffsets - Span in the positive direction beyond the anchor point (note: must be positive values).
 	 */
-	public HyperVolumePointSet(long[] anchor, long[] negOffsets, long[] posOffsets) {
-		if (anchor.length != negOffsets.length)
+	public HyperVolumePointSet(long[] origin, long[] negOffsets, long[] posOffsets) {
+		if (origin.length != negOffsets.length)
 			throw new IllegalArgumentException();
-		if (anchor.length != posOffsets.length)
+		if (origin.length != posOffsets.length)
 			throw new IllegalArgumentException();
-		for (int i = 0; i < anchor.length; i++) {
+		for (int i = 0; i < origin.length; i++) {
 			if (negOffsets[i] < 0)
 				throw new IllegalArgumentException("all offsets must be >= 0");
 			if (posOffsets[i] < 0)
 				throw new IllegalArgumentException("all offsets must be >= 0");
 		}
-		this.anchor = anchor.clone();
+		this.origin = origin.clone();
 		this.negOffsets = negOffsets.clone();
 		this.posOffsets = posOffsets.clone();
-		this.boundMin = new long[anchor.length];
-		this.boundMax = new long[anchor.length];
-		for (int i = 0; i < anchor.length; i++) {
-			boundMin[i] = anchor[i] - negOffsets[i];
-			boundMax[i] = anchor[i] + posOffsets[i];
+		this.boundMin = new long[origin.length];
+		this.boundMax = new long[origin.length];
+		for (int i = 0; i < origin.length; i++) {
+			boundMin[i] = origin[i] - negOffsets[i];
+			boundMax[i] = origin[i] + posOffsets[i];
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class HyperVolumePointSet implements PointSet {
 		for (int i = 0; i < pt1.length; i++) {
 			posOffsets[i] = boundMax[i] - boundMin[i];
 		}
-		this.anchor = boundMin.clone();
+		this.origin = boundMin.clone();
 	}
 	
 	/**
@@ -122,17 +122,14 @@ public class HyperVolumePointSet implements PointSet {
 	// -- public api --
 	
 	@Override
-	public long[] getAnchor() { return anchor; }
+	public long[] getOrigin() { return origin; }
 	
 	@Override
-	public void setAnchor(long[] newAnchor) {
-		if (anchor != newAnchor)
-			if (anchor.length != newAnchor.length)
-				throw new IllegalArgumentException();
-		for (int i = 0; i < anchor.length; i++) {
-			anchor[i] = newAnchor[i];
-			boundMin[i] = newAnchor[i] - negOffsets[i];
-			boundMax[i] = newAnchor[i] + posOffsets[i];
+	public void translate(long[] deltas) {
+		for (int i = 0; i < origin.length; i++) {
+			origin[i] += deltas[i];
+			boundMin[i] += deltas[i];
+			boundMax[i] += deltas[i];
 		}
 		//for (PointSetIterator iter : iters) iter.reset();
 	}
@@ -143,7 +140,7 @@ public class HyperVolumePointSet implements PointSet {
 	}
 	
 	@Override
-	public int numDimensions() { return anchor.length; }
+	public int numDimensions() { return origin.length; }
 	
 	@Override
 	public long[] findBoundMin() { return boundMin; }
@@ -153,9 +150,9 @@ public class HyperVolumePointSet implements PointSet {
 	
 	@Override
 	public boolean includes(long[] point) {
-		for (int i = 0; i < anchor.length; i++) {
-			if (point[i] < boundMin[i]) return false;
-			if (point[i] > boundMax[i]) return false;
+		for (int i = 0; i < origin.length; i++) {
+			if (point[i] < origin[i] - negOffsets[i]) return false;
+			if (point[i] > origin[i] + posOffsets[i]) return false;
 		}
 		return true;
 	}
@@ -163,7 +160,7 @@ public class HyperVolumePointSet implements PointSet {
 	@Override
 	public long calcSize() {
 		long numElements = 1;
-		for (int i = 0; i < anchor.length; i++) {
+		for (int i = 0; i < origin.length; i++) {
 			numElements *= 1 + negOffsets[i] + posOffsets[i];
 		}
 		return numElements;
@@ -190,9 +187,9 @@ public class HyperVolumePointSet implements PointSet {
 		final boolean emptySpace;
 		
 		HyperVolumePointSetIterator() {
-			emptySpace = anchor.length == 0;
+			emptySpace = origin.length == 0;
 			outOfBounds = true;
-			pos = new long[anchor.length];
+			pos = new long[origin.length];
 		}
 		
 		@Override
@@ -204,7 +201,7 @@ public class HyperVolumePointSet implements PointSet {
 		public boolean hasNext() {
 			if (emptySpace) return false;
 			if (outOfBounds) return true;
-			for (int i = 0; i < anchor.length; i++) {
+			for (int i = 0; i < origin.length; i++) {
 				if (pos[i] < boundMax[i]) return true;
 			}
 			return false;
@@ -214,14 +211,14 @@ public class HyperVolumePointSet implements PointSet {
 		public long[] next() {
 			if (outOfBounds) {
 				outOfBounds = false;
-				for (int i = 0; i < anchor.length; i++) {
+				for (int i = 0; i < origin.length; i++) {
 					pos[i] = boundMin[i];
 				}
 				return pos;
 			}
 			
 			// else outOfBounds == false
-			for (int i = 0; i < anchor.length; i++) {
+			for (int i = 0; i < origin.length; i++) {
 				pos[i]++;
 				if (pos[i] <= boundMax[i]) return pos;
 				pos[i] = boundMin[i];
@@ -231,4 +228,3 @@ public class HyperVolumePointSet implements PointSet {
 		}
 	}
 }
-

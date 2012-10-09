@@ -144,8 +144,8 @@ public class Example4Test {
 		while (iter.hasNext()) {
 			points = iter.next(points);
 			prodFunc.compute(points, output);
-			int x = (int) points.getAnchor()[0];
-			int y = (int) points.getAnchor()[1];
+			int x = (int) points.getOrigin()[0];
+			int y = (int) points.getOrigin()[1];
 			//{
 			//	System.out.println(" Point ("+x+","+y+"): expected ("
 			//		+expectedValue(x,y)+") actual ("+output.getRealDouble()+")");

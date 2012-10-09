@@ -60,7 +60,7 @@ public class RealImpulseFunction<T extends RealType<T>>
 
 	@Override
 	public void compute(Tuple2<PointSet,long[]> input, T output) {
-		if (Arrays.equals(input.get1().getAnchor(), input.get2()))
+		if (Arrays.equals(input.get1().getOrigin(), input.get2()))
 			output.setReal(1);
 		else
 			output.setReal(0);

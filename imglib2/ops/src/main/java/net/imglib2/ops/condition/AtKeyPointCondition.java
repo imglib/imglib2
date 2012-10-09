@@ -51,7 +51,7 @@ public class AtKeyPointCondition implements Condition<Tuple2<PointSet,long[]>> {
 	
 	@Override
 	public boolean isTrue(Tuple2<PointSet,long[]> input) {
-		long[] keyPoint = input.get1().getAnchor();
+		long[] keyPoint = input.get1().getOrigin();
 		long[] point = input.get2();
 		return Arrays.equals(point, keyPoint);
 	}

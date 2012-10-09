@@ -47,15 +47,15 @@ package net.imglib2.ops.pointset;
 public interface PointSet {
 	
 	/**
-	 * Gets the current anchor point (or origin point) of the PointSet
+	 * Gets the current origin point of the PointSet
 	 */
-	long[] getAnchor();
+	long[] getOrigin();
 
 	/**
-	 * Moves the PointSet to a new anchor point (or origin point). Any existing
+	 * Moves the PointSet by a set of deltas. Any existing
 	 * PointSetIterators will automatically iterate the new bounds.
 	 */
-	void setAnchor(long[] anchor);
+	void translate(long[] delta);
 	
 	/**
 	 * Creates an iterator that can be used to pull point indices out of the

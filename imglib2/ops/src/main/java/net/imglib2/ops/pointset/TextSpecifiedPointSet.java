@@ -75,13 +75,13 @@ public class TextSpecifiedPointSet implements PointSet {
 	}
 	
 	@Override
-	public long[] getAnchor() {
-		return set.getAnchor();
+	public long[] getOrigin() {
+		return set.getOrigin();
 	}
 
 	@Override
-	public void setAnchor(long[] anchor) {
-		set.setAnchor(anchor);
+	public void translate(long[] deltas) {
+		set.translate(deltas);
 	}
 
 	@Override

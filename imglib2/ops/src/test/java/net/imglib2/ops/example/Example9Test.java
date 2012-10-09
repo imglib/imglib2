@@ -182,8 +182,8 @@ public class Example9Test {
 		while (iter.hasNext()) {
 			points = iter.next(points);
 			addFunc.compute(points, output);
-			int x = (int) points.getAnchor()[0];
-			int y = (int) points.getAnchor()[1];
+			int x = (int) points.getOrigin()[0];
+			int y = (int) points.getOrigin()[1];
 			/*
 			{
 				System.out.println(" Point (" + x + "," + y

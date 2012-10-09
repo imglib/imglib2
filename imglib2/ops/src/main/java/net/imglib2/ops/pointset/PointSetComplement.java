@@ -67,13 +67,13 @@ public class PointSetComplement implements PointSet {
 	}
 	
 	@Override
-	public long[] getAnchor() {
-		return diff.getAnchor();
+	public long[] getOrigin() {
+		return diff.getOrigin();
 	}
 	
 	@Override
-	public void setAnchor(long[] newAnchor) {
-		diff.setAnchor(newAnchor);
+	public void translate(long[] deltas) {
+		diff.translate(deltas);
 	}
 	
 	@Override

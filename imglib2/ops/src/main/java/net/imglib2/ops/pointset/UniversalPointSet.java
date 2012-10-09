@@ -44,16 +44,20 @@ package net.imglib2.ops.pointset;
  */
 public class UniversalPointSet implements PointSet {
 
-	private long[] anchor = new long[0];
+	private final long[] origin;
+
+	public UniversalPointSet() {
+		origin = new long[0];
+	}
 	
 	@Override
-	public long[] getAnchor() {
-		return anchor;
+	public long[] getOrigin() {
+		return origin;
 	}
 
 	@Override
-	public void setAnchor(long[] anchor) {
-		this.anchor = anchor;
+	public void translate(long[] deltas) {
+		// do nothing
 	}
 
 	@Override
@@ -68,12 +72,12 @@ public class UniversalPointSet implements PointSet {
 
 	@Override
 	public long[] findBoundMin() {
-		return anchor;
+		return origin;
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		return anchor;
+		return origin;
 	}
 
 	@Override

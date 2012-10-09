@@ -185,8 +185,8 @@ public class Example8Test {
 		while (iter.hasNext()) {
 			points = iter.next(points);
 			medianFunc.compute(points, output);
-			int x = (int) points.getAnchor()[0];
-			int y = (int) points.getAnchor()[1];
+			int x = (int) points.getOrigin()[0];
+			int y = (int) points.getOrigin()[1];
 			/*
 			{
 				System.out.println(" FAILURE at ("+x+","+y+"): expected ("

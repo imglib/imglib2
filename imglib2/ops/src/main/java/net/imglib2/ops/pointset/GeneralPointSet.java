@@ -46,38 +46,42 @@ import java.util.List;
  * 
  * @author Barry DeZonia
  */
-public class GeneralPointSet extends AbstractBoundedRegion implements PointSet {
-	private long[] anchor;
+public class GeneralPointSet implements PointSet {
+	private long[] origin;
+	private long[] boundMin;
+	private long[] boundMax;
 	private final List<long[]> points;
-	private final long[] origAnchor;
-	private final long[] tmpPoint;
-	private boolean boundsInvalid = true;
+	private final long[] tmpIncludePoint;
 
-	public GeneralPointSet(long[] anchor, List<long[]> pts) {
-		this.anchor = anchor;
+	public GeneralPointSet(long[] origin, List<long[]> pts) {
+		this.origin = origin.clone();
+		this.boundMin = origin.clone();
+		this.boundMax = origin.clone();
 		this.points = new ArrayList<long[]>();
 		this.points.addAll(pts);
-		this.origAnchor = anchor.clone();
-		this.tmpPoint = new long[origAnchor.length];
-		for (int i = 1; i < points.size(); i++) {
+		this.tmpIncludePoint = new long[origin.length];
+		// calc bounds BEFORE relativizing points
+		calcBounds(origin, points);
+		// relativize points: this makes translate() fast
+		for (int i = 0; i < points.size(); i++) {
 			long[] p = points.get(i);
-			if (p.length != origAnchor.length)
+			if (p.length != origin.length)
 				throw new IllegalArgumentException();
-			for (int k = 0; k < origAnchor.length; k++)
-				p[k] -= anchor[k];
+			for (int k = 0; k < origin.length; k++)
+				p[k] -= origin[k];
 		}
-		boundsInvalid = true;
 	}
 
 	@Override
-	public long[] getAnchor() { return anchor; }
+	public long[] getOrigin() { return origin; }
 	
 	@Override
-	public void setAnchor(long[] newAnchor) {
-		if (newAnchor.length != origAnchor.length)
-			throw new IllegalArgumentException();
-		this.anchor = newAnchor;
-		boundsInvalid = true;
+	public void translate(long[] deltas) {
+		for (int i = 0; i < origin.length; i++) {
+			origin[i] += deltas[i];
+			boundMin[i] += deltas[i];
+			boundMax[i] += deltas[i];
+		}
 	}
 	
 	@Override
@@ -86,30 +90,28 @@ public class GeneralPointSet extends AbstractBoundedRegion implements PointSet {
 	}
 	
 	@Override
-	public int numDimensions() { return origAnchor.length; }
+	public int numDimensions() { return origin.length; }
 	
 	// TODO a spatial data structure would speed this up greatly
 	
 	@Override
 	public boolean includes(long[] point) {
-		for (int i = 0; i < origAnchor.length; i++)
-			tmpPoint[i] = point[i] - anchor[i];
+		for (int i = 0; i < origin.length; i++)
+			tmpIncludePoint[i] = point[i] - origin[i];
 		for (long[] p : points) {
-			if (Arrays.equals(tmpPoint, p)) return true;
+			if (Arrays.equals(tmpIncludePoint, p)) return true;
 		}
 		return false;
 	}
 
 	@Override
 	public long[] findBoundMin() {
-		if (boundsInvalid) calcBounds();
-		return getMin();
+		return boundMin;
 	}
 	
 	@Override
 	public long[] findBoundMax() {
-		if (boundsInvalid) calcBounds();
-		return getMax();
+		return boundMax;
 	}
 	
 	@Override
@@ -123,9 +125,10 @@ public class GeneralPointSet extends AbstractBoundedRegion implements PointSet {
 		for (long[] p : points) {
 			long[] newP = p.clone();
 			for (int i = 0; i < newP.length; i++)
-				newP[i] += origAnchor[i];
+				newP[i] += origin[i];
+			pointsCopied.add(newP);
 		}
-		return new GeneralPointSet(origAnchor.clone(), pointsCopied);
+		return new GeneralPointSet(origin, pointsCopied);
 	}
 	
 	public static GeneralPointSet explode(PointSet ps) {
@@ -134,30 +137,29 @@ public class GeneralPointSet extends AbstractBoundedRegion implements PointSet {
 		while (iter.hasNext()) {
 			points.add(iter.next().clone());
 		}
-		return new GeneralPointSet(ps.getAnchor().clone(), points);
+		return new GeneralPointSet(ps.getOrigin(), points);
 	}
 
-	private void calcBounds() {
-		long[] absoluteCoord = new long[anchor.length];
-		setMin(anchor);
-		setMax(anchor);
-		for (long[] point : points) {
-			for (int i = 0; i < anchor.length; i++) {
-				absoluteCoord[i] = anchor[i] + point[i];
-			}
-			updateMin(absoluteCoord);
-			updateMax(absoluteCoord);
+	private void calcBounds(long[] org, List<long[]> pts) {
+		for (int i = 0; i < org.length; i++) {
+			boundMin[i] = org[i];
+			boundMax[i] = org[i];
 		}
-		boundsInvalid = false;
+		for (long[] point : points) {
+			for (int i = 0; i < org.length; i++) {
+				if (point[i] < boundMin[i]) boundMin[i] = point[i];
+				if (point[i] > boundMax[i]) boundMax[i] = point[i];
+			}
+		}
 	}
 	
 	private class GeneralPointSetIterator implements PointSetIterator {
 		private int index;
-		private long[] tmpPosition;
+		private long[] tmpNextPoint;
 		
 		public GeneralPointSetIterator() {
 			index = -1;
-			tmpPosition = new long[GeneralPointSet.this.origAnchor.length];
+			tmpNextPoint = new long[GeneralPointSet.this.origin.length];
 		}
 		
 		@Override
@@ -169,9 +171,9 @@ public class GeneralPointSet extends AbstractBoundedRegion implements PointSet {
 		public long[] next() {
 			index++;
 			long[] p = points.get(index);
-			for (int i = 0; i < origAnchor.length; i++)
-				tmpPosition[i] = p[i] + anchor[i];
-			return tmpPosition;
+			for (int i = 0; i < origin.length; i++)
+				tmpNextPoint[i] = p[i] + origin[i];
+			return tmpNextPoint;
 		}
 		
 		@Override
