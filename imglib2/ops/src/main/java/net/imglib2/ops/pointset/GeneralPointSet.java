@@ -145,7 +145,7 @@ public class GeneralPointSet implements PointSet {
 			boundMin[i] = org[i];
 			boundMax[i] = org[i];
 		}
-		for (long[] point : points) {
+		for (long[] point : pts) {
 			for (int i = 0; i < org.length; i++) {
 				if (point[i] < boundMin[i]) boundMin[i] = point[i];
 				if (point[i] > boundMax[i]) boundMax[i] = point[i];
