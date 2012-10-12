@@ -127,9 +127,10 @@ public class HyperVolumePointSet implements PointSet {
 	@Override
 	public void translate(long[] deltas) {
 		for (int i = 0; i < origin.length; i++) {
-			origin[i] += deltas[i];
-			boundMin[i] += deltas[i];
-			boundMax[i] += deltas[i];
+			long delta = deltas[i];
+			origin[i] += delta;
+			boundMin[i] += delta;
+			boundMax[i] += delta;
 		}
 		//for (PointSetIterator iter : iters) iter.reset();
 	}
@@ -151,8 +152,8 @@ public class HyperVolumePointSet implements PointSet {
 	@Override
 	public boolean includes(long[] point) {
 		for (int i = 0; i < origin.length; i++) {
-			if (point[i] < origin[i] - negOffsets[i]) return false;
-			if (point[i] > origin[i] + posOffsets[i]) return false;
+			if (point[i] < boundMin[i]) return false;
+			if (point[i] > boundMax[i]) return false;
 		}
 		return true;
 	}
