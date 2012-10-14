@@ -39,6 +39,8 @@ package net.imglib2.ops.pointset;
 
 
 /**
+ * HyperVolumePointSet is a {@link PointSet} that spans a contiguous region of
+ * space. It can be thought of as a regularly spaced n-dimensional grid.
  * 
  * @author Barry DeZonia
  */
@@ -110,7 +112,7 @@ public class HyperVolumePointSet implements PointSet {
 		this(new long[span.length], lastPoint(span));
 	}
 	
-	// -- public api --
+	// -- PointSet methods --
 	
 	@Override
 	public long[] getOrigin() { return origin; }

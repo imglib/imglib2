@@ -39,12 +39,19 @@ package net.imglib2.ops.pointset;
 
 
 /**
+ * PointSetUnion is a {@link PointSet} that contains all the points present
+ * in two input PointSets (the logical union).
  * 
  * @author Barry DeZonia
  */
 public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
+	
+	// -- instance variables --
+	
 	private final PointSet a, b;
 	private boolean minInvalid, maxInvalid;
+	
+	// -- constructor --
 	
 	public PointSetUnion(PointSet a, PointSet b) {
 		if (a.numDimensions() != b.numDimensions())
@@ -54,6 +61,8 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 		minInvalid = true;
 		maxInvalid = true;
 	}
+	
+	// -- PointSet methods --
 	
 	@Override
 	public long[] getOrigin() {
@@ -117,6 +126,8 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 		return new PointSetUnion(a.copy(), b.copy());
 	}
 
+	// -- private helpers --
+	
 	private class PointSetUnionIterator implements PointSetIterator {
 		
 		private final PointSetIterator aIter;

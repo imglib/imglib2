@@ -38,8 +38,6 @@
 package net.imglib2.ops.pointset;
 
 
-// TODO - calc bounds could walk resulting set and generate min bounds
-
 /*
 * This is not a textbook definition of complement. Complement usually
 * is defined as a set difference. But we handle set difference below.
@@ -52,12 +50,22 @@ package net.imglib2.ops.pointset;
 */
 
 /**
+ * PointSetComplement is a {@link PointSet} consisting of all the points not
+ * in an input PointSet. This complement is relative to the input PointSet's
+ * bounds. Thus for a {@link HyperVolumePointSet} it's complement is the
+ * empty set. To make a complement of a PointSet that includes all of space
+ * use {@link PointSetDifference}.
  * 
  * @author Barry DeZonia
  */
 public class PointSetComplement implements PointSet {
+	
+	// -- instance variables --
+	
 	private final PointSet a;
 	private final PointSetDifference diff;
+	
+	// -- constructor --
 	
 	public PointSetComplement(PointSet a) {
 		this.a = a;
@@ -65,6 +73,8 @@ public class PointSetComplement implements PointSet {
 				new HyperVolumePointSet(a.findBoundMin(), a.findBoundMax());
 		diff = new PointSetDifference(hyper, a);
 	}
+	
+	// -- PointSet methods --
 	
 	@Override
 	public long[] getOrigin() {

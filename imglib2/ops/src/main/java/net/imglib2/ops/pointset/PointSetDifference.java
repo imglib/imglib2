@@ -38,15 +38,22 @@
 package net.imglib2.ops.pointset;
 
 
-// TODO - calc bounds could walk resulting set and generate min bounds
-
 /**
+ * PointSetDifference is a {@link PointSet} that includes all the points in
+ * one PointSet that are not in another PointSet. Thus a logical operation
+ * between two sets: the first set minus the intersection of the first set
+ * and the second.
  * 
  * @author Barry DeZonia
  */
 public class PointSetDifference extends AbstractBoundedRegion implements PointSet {
+	
+	// -- instance variables --
+	
 	private final PointSet a, b;
 	private boolean boundsInvalid;
+	
+	// -- constructor --
 	
 	public PointSetDifference(PointSet a, PointSet b) {
 		if (a.numDimensions() != b.numDimensions())
@@ -55,6 +62,8 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 		this.b = b;
 		boundsInvalid = true;
 	}
+	
+	// -- PointSet methods --
 	
 	@Override
 	public long[] getOrigin() {
@@ -108,6 +117,8 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	public PointSetDifference copy() {
 		return new PointSetDifference(a.copy(), b.copy());
 	}
+
+	// -- private helpers --
 	
 	private void calcBounds() {
 		PointSetIterator iter = createIterator();

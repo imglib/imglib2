@@ -41,16 +41,23 @@ import java.util.Arrays;
 
 
 /**
+ * OnePointSet represents a {@link PointSet} that contains exactly one point.
  * 
  * @author Barry DeZonia
  */
 public class OnePointSet implements PointSet {
 
+	// -- instance varaibles --
+	
 	private long[] point;
+	
+	// -- constructor --
 	
 	public OnePointSet(long[] point) {
 		this.point = point;
 	}
+	
+	// -- PointSet methods --
 	
 	@Override
 	public long[] getOrigin() {
@@ -98,6 +105,8 @@ public class OnePointSet implements PointSet {
 		return new OnePointSetIterator();
 	}
 
+	// -- private helpers --
+	
 	private class OnePointSetIterator implements PointSetIterator {
 
 		private boolean hasNext = true;

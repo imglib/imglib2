@@ -38,15 +38,21 @@
 package net.imglib2.ops.pointset;
 
 
-// TODO - calc bounds could walk resulting set and generate min bounds
-
 /**
+ * PointSetIntersection is a {@link PointSet} that consists of the set of
+ * points that are in the intersection set of two other PointSets. Thus
+ * those points that are members of both input PointSets.
  * 
  * @author Barry DeZonia
  */
 public class PointSetIntersection extends AbstractBoundedRegion implements PointSet {
+	
+	// -- instance variables --
+	
 	private final PointSet a, b;
 	private boolean boundsInvalid;
+	
+	// -- constructor --
 	
 	public PointSetIntersection(PointSet a, PointSet b) {
 		if (a.numDimensions() != b.numDimensions())
@@ -55,6 +61,8 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 		this.b = b;
 		boundsInvalid = true;
 	}
+	
+	// -- PointSet methods --
 	
 	@Override
 	public long[] getOrigin() {
@@ -108,6 +116,8 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	public PointSetIntersection copy() {
 		return new PointSetIntersection(a.copy(), b.copy());
 	}
+	
+	// -- private helpers --
 	
 	private void calcBounds() {
 		PointSetIterator iter = createIterator();

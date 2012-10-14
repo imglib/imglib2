@@ -53,12 +53,16 @@ import net.imglib2.roi.RegionOfInterest;
  */
 public class RoiPointSet implements PointSet {
 
+	// -- instance variables --
+	
 	private final int numD;
 	private final RegionOfInterest roi;
 	private final long[] origin;
 	private final long[] boundMin;
 	private final long[] boundMax;
 	private final double[] tmpCoord;
+	
+	// -- constructor --
 	
 	public RoiPointSet(RegionOfInterest roi) {
 		this.roi = roi;
@@ -68,6 +72,8 @@ public class RoiPointSet implements PointSet {
 		boundMax = new long[numD];
 		tmpCoord = new double[numD];
 	}
+	
+	// -- PointSet methods --
 	
 	@Override
 	public long[] getOrigin() {
