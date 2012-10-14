@@ -49,7 +49,7 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	// -- instance variables --
 	
 	private final PointSet a, b;
-	private boolean minInvalid, maxInvalid;
+	private boolean boundsInvalid;
 	
 	// -- constructor --
 	
@@ -58,8 +58,7 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 			throw new IllegalArgumentException();
 		this.a = a;
 		this.b = b;
-		minInvalid = true;
-		maxInvalid = true;
+		boundsInvalid = true;
 	}
 	
 	// -- PointSet methods --
@@ -73,8 +72,7 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	public void translate(long[] deltas) {
 		a.translate(deltas);
 		b.translate(deltas);
-		minInvalid = true;
-		maxInvalid = true;
+		boundsInvalid = true;
 	}
 	
 	@Override
@@ -92,20 +90,18 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	
 	@Override
 	public long[] findBoundMin() {
-		if (minInvalid) {
-			minInvalid = false;
-			setMin(a.findBoundMin());
-			updateMin(b.findBoundMin());
+		if (boundsInvalid) {
+			boundsInvalid = false;
+			calcBounds();
 		}
 		return getMin();
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		if (maxInvalid) {
-			maxInvalid = false;
-			setMax(a.findBoundMax());
-			updateMax(b.findBoundMax());
+		if (boundsInvalid) {
+			boundsInvalid = false;
+			calcBounds();
 		}
 		return getMax();
 	}
@@ -127,6 +123,13 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	}
 
 	// -- private helpers --
+
+	private void calcBounds() {
+		setMin(a.findBoundMin());
+		setMax(a.findBoundMax());
+		updateMin(b.findBoundMin());
+		updateMax(b.findBoundMax());
+	}
 	
 	private class PointSetUnionIterator implements PointSetIterator {
 		
