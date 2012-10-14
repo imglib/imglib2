@@ -47,6 +47,7 @@ import java.util.List;
  * @author Barry DeZonia
  */
 public class GeneralPointSet implements PointSet {
+	private final int numD;
 	private long[] origin;
 	private long[] boundMin;
 	private long[] boundMax;
@@ -54,20 +55,24 @@ public class GeneralPointSet implements PointSet {
 	private final long[] tmpIncludePoint;
 
 	public GeneralPointSet(long[] origin, List<long[]> pts) {
+		if (pts.size() == 0)
+			throw new IllegalArgumentException("no points specified!");
+		this.numD = origin.length;
 		this.origin = origin.clone();
-		this.boundMin = origin.clone();
-		this.boundMax = origin.clone();
+		this.boundMin = new long[numD];
+		this.boundMax = new long[numD];
 		this.points = new ArrayList<long[]>();
 		this.points.addAll(pts);
-		this.tmpIncludePoint = new long[origin.length];
+		this.tmpIncludePoint = new long[numD];
 		// calc bounds BEFORE relativizing points
 		calcBounds(origin, points);
 		// relativize points: this makes translate() fast
 		for (int i = 0; i < points.size(); i++) {
 			long[] p = points.get(i);
-			if (p.length != origin.length)
-				throw new IllegalArgumentException();
-			for (int k = 0; k < origin.length; k++)
+			if (p.length != numD)
+				throw new IllegalArgumentException(
+						"points have differing dimensions");
+			for (int k = 0; k < numD; k++)
 				p[k] -= origin[k];
 		}
 	}
@@ -77,10 +82,11 @@ public class GeneralPointSet implements PointSet {
 	
 	@Override
 	public void translate(long[] deltas) {
-		for (int i = 0; i < origin.length; i++) {
-			origin[i] += deltas[i];
-			boundMin[i] += deltas[i];
-			boundMax[i] += deltas[i];
+		for (int i = 0; i < numD; i++) {
+			long delta = deltas[i];
+			origin[i] += delta;
+			boundMin[i] += delta;
+			boundMax[i] += delta;
 		}
 	}
 	
@@ -90,13 +96,13 @@ public class GeneralPointSet implements PointSet {
 	}
 	
 	@Override
-	public int numDimensions() { return origin.length; }
+	public int numDimensions() { return numD; }
 	
 	// TODO a spatial data structure would speed this up greatly
 	
 	@Override
 	public boolean includes(long[] point) {
-		for (int i = 0; i < origin.length; i++)
+		for (int i = 0; i < numD; i++)
 			tmpIncludePoint[i] = point[i] - origin[i];
 		for (long[] p : points) {
 			if (Arrays.equals(tmpIncludePoint, p)) return true;
@@ -124,7 +130,7 @@ public class GeneralPointSet implements PointSet {
 		ArrayList<long[]> pointsCopied = new ArrayList<long[]>();
 		for (long[] p : points) {
 			long[] newP = p.clone();
-			for (int i = 0; i < newP.length; i++)
+			for (int i = 0; i < numD; i++)
 				newP[i] += origin[i];
 			pointsCopied.add(newP);
 		}
@@ -141,14 +147,16 @@ public class GeneralPointSet implements PointSet {
 	}
 
 	private void calcBounds(long[] org, List<long[]> pts) {
-		for (int i = 0; i < org.length; i++) {
-			boundMin[i] = org[i];
-			boundMax[i] = org[i];
+		for (int i = 0; i < numD; i++) {
+			long val = pts.get(0)[i];
+			boundMin[i] = val;
+			boundMax[i] = val;
 		}
-		for (long[] point : pts) {
-			for (int i = 0; i < org.length; i++) {
-				if (point[i] < boundMin[i]) boundMin[i] = point[i];
-				if (point[i] > boundMax[i]) boundMax[i] = point[i];
+		for (int i = 1; i < pts.size(); i++) {
+			long[] point = pts.get(i);
+			for (int j = 0; j < numD; j++) {
+				if (point[j] < boundMin[j]) boundMin[j] = point[j];
+				if (point[j] > boundMax[j]) boundMax[j] = point[j];
 			}
 		}
 	}
@@ -159,7 +167,7 @@ public class GeneralPointSet implements PointSet {
 		
 		public GeneralPointSetIterator() {
 			index = -1;
-			tmpNextPoint = new long[GeneralPointSet.this.origin.length];
+			tmpNextPoint = new long[numD];
 		}
 		
 		@Override
@@ -171,7 +179,7 @@ public class GeneralPointSet implements PointSet {
 		public long[] next() {
 			index++;
 			long[] p = points.get(index);
-			for (int i = 0; i < origin.length; i++)
+			for (int i = 0; i < numD; i++)
 				tmpNextPoint[i] = p[i] + origin[i];
 			return tmpNextPoint;
 		}
