@@ -43,10 +43,14 @@ import java.util.List;
 
 
 /**
+ * Treats a general collection of points as a PointSet.
  * 
  * @author Barry DeZonia
  */
 public class GeneralPointSet implements PointSet {
+	
+	// -- instance variables --
+	
 	private final int numD;
 	private long[] origin;
 	private long[] boundMin;
@@ -54,6 +58,8 @@ public class GeneralPointSet implements PointSet {
 	private final List<long[]> points;
 	private final long[] tmpIncludePoint;
 
+	// -- constructor --
+	
 	public GeneralPointSet(long[] origin, List<long[]> pts) {
 		if (pts.size() == 0)
 			throw new IllegalArgumentException("no points specified!");
@@ -65,7 +71,7 @@ public class GeneralPointSet implements PointSet {
 		this.points.addAll(pts);
 		this.tmpIncludePoint = new long[numD];
 		// calc bounds BEFORE relativizing points
-		calcBounds(origin, points);
+		calcBounds(points);
 		// relativize points: this makes translate() fast
 		for (int i = 0; i < points.size(); i++) {
 			long[] p = points.get(i);
@@ -77,6 +83,8 @@ public class GeneralPointSet implements PointSet {
 		}
 	}
 
+	// -- PointSet methods --
+	
 	@Override
 	public long[] getOrigin() { return origin; }
 	
@@ -137,6 +145,8 @@ public class GeneralPointSet implements PointSet {
 		return new GeneralPointSet(origin, pointsCopied);
 	}
 	
+	// -- GeneralPointSet methods --
+	
 	public static GeneralPointSet explode(PointSet ps) {
 		final List<long[]> points = new ArrayList<long[]>();
 		final PointSetIterator iter = ps.createIterator();
@@ -146,7 +156,9 @@ public class GeneralPointSet implements PointSet {
 		return new GeneralPointSet(ps.getOrigin(), points);
 	}
 
-	private void calcBounds(long[] org, List<long[]> pts) {
+	// -- private helpers --
+	
+	private void calcBounds(List<long[]> pts) {
 		for (int i = 0; i < numD; i++) {
 			long val = pts.get(0)[i];
 			boundMin[i] = val;
