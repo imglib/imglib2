@@ -56,7 +56,7 @@ public class RealImpulseResponseFunction<T extends RealType<T>> implements Funct
 
 	@Override
 	public void compute(PointSet points, T output) {
-		otherFunc.compute(points.getAnchor(), output);
+		otherFunc.compute(points.getOrigin(), output);
 	}
 
 	@Override

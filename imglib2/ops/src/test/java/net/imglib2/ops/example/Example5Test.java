@@ -128,8 +128,8 @@ public class Example5Test {
 		while (iter.hasNext()) {
 			points = iter.next(points);
 			convFunc.compute(points, variable);
-			int x = (int) points.getAnchor()[0];
-			int y = (int) points.getAnchor()[1];
+			int x = (int) points.getOrigin()[0];
+			int y = (int) points.getOrigin()[1];
 			//{
 			//	System.out.println(" Point ("+x+","+y+"): expected ("
 			//		+expectedValue(x, y)+") actual ("+variable.getRealDouble()+")");

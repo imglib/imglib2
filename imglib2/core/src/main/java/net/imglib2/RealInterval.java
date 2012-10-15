@@ -88,9 +88,9 @@ public interface RealInterval extends EuclideanSpace
 	public void realMax( double[] max );
 
 	/**
-	 * Sets a {@link RealPositionable} to the minimum of this {@link Interval}
+	 * Sets a {@link RealPositionable} to the maximum of this {@link Interval}
 	 * 
-	 * @param min
+	 * @param max
 	 */
 	public void realMax( RealPositionable max );
 }

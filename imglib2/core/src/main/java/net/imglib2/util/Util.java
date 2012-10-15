@@ -1110,8 +1110,7 @@ public class Util
 		final RandomAccess< T > randomAccess = rai.randomAccess();
 
 		// place it at the first pixel
-		for ( int d = 0; d < rai.numDimensions(); ++d )
-			randomAccess.setPosition( rai.min(d), d );
+		rai.min( randomAccess );
 
 		return randomAccess.get();
 	}
@@ -1146,8 +1145,7 @@ public class Util
 		final RealRandomAccess< T > realRandomAccess = rai.realRandomAccess();
 
 		// place it at the first pixel
-		for ( int d = 0; d < rai.numDimensions(); ++d )
-			realRandomAccess.setPosition( rai.realMin( d ), d );
+		rai.realMin( realRandomAccess );
 
 		return realRandomAccess.get();
 	}

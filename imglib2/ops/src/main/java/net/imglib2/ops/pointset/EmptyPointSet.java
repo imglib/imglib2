@@ -39,25 +39,33 @@ package net.imglib2.ops.pointset;
 
 
 /**
+ * EmptyPointSet is a {@link PointSet} that has no members. It is meant for
+ * use by PointSets that may combine other PointSets.
  * 
  * @author Barry DeZonia
  */
 public class EmptyPointSet implements PointSet {
 
-	private long[] anchor;
+	// -- instance variables --
+	
+	private final long[] origin;
+	
+	// -- constructor --
 	
 	public EmptyPointSet() {
-		anchor = new long[0];
+		origin = new long[0];
 	}
 	
+	// -- PointSet methods --
+	
 	@Override
-	public long[] getAnchor() {
-		return anchor;
+	public long[] getOrigin() {
+		return origin;
 	}
 
 	@Override
-	public void setAnchor(long[] anchor) {
-		throw new IllegalArgumentException("cannot set anchor of EmptyPointSet");
+	public void translate(long[] deltas) {
+		throw new IllegalArgumentException("cannot translate an EmptyPointSet");
 	}
 
 	@Override
@@ -72,12 +80,12 @@ public class EmptyPointSet implements PointSet {
 
 	@Override
 	public long[] findBoundMin() {
-		return anchor;
+		return origin;
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		return anchor;
+		return origin;
 	}
 
 	@Override
@@ -94,6 +102,8 @@ public class EmptyPointSet implements PointSet {
 	public EmptyPointSet copy() {
 		return new EmptyPointSet();
 	}
+	
+	// -- private helpers --
 	
 	private class EmptyPointSetIterator implements PointSetIterator {
 

@@ -39,21 +39,33 @@ package net.imglib2.ops.pointset;
 
 
 /**
+ * UniversalPointSet is a {@link PointSet} that includes all points in
+ * space.
  * 
  * @author Barry DeZonia
  */
 public class UniversalPointSet implements PointSet {
 
-	private long[] anchor = new long[0];
+	// -- instance variables --
+	
+	private final long[] origin;
+
+	// -- constructor --
+	
+	public UniversalPointSet() {
+		origin = new long[0];
+	}
+	
+	// -- PointSet methods --
 	
 	@Override
-	public long[] getAnchor() {
-		return anchor;
+	public long[] getOrigin() {
+		return origin;
 	}
 
 	@Override
-	public void setAnchor(long[] anchor) {
-		this.anchor = anchor;
+	public void translate(long[] deltas) {
+		// do nothing
 	}
 
 	@Override
@@ -68,12 +80,12 @@ public class UniversalPointSet implements PointSet {
 
 	@Override
 	public long[] findBoundMin() {
-		return anchor;
+		return origin;
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		return anchor;
+		return origin;
 	}
 
 	@Override
@@ -91,6 +103,8 @@ public class UniversalPointSet implements PointSet {
 		return new UniversalPointSet();
 	}
 
+	// -- private helpers --
+	
 	private class UniversalPointSetIterator implements PointSetIterator {
 
 		@Override

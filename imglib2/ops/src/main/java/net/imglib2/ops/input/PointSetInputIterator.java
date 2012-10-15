@@ -48,11 +48,13 @@ public class PointSetInputIterator implements InputIterator<PointSet> {
 	private final PointSet subspace;
 	private final PointInputIterator iter;
 	private long[] pos;
+	private long[] deltas;
 	
 	public PointSetInputIterator(PointSet space, PointSet subspace) {
 		iter = new PointInputIterator(space);
 		this.subspace = subspace;
 		pos = null;
+		deltas = new long[space.numDimensions()];
 	}
 	
 	@Override
@@ -63,7 +65,14 @@ public class PointSetInputIterator implements InputIterator<PointSet> {
 	@Override
 	public PointSet next(PointSet currVal) {
 		pos = iter.next(pos);
-		subspace.setAnchor(pos);
+
+		// translate subspace through space
+		long[] oldPosition = subspace.getOrigin();
+		for (int i = 0; i < deltas.length; i++) {
+			deltas[i] = pos[i] - oldPosition[i];
+		}
+		subspace.translate(deltas);
+		
 		return subspace;
 	}
 
@@ -71,5 +80,4 @@ public class PointSetInputIterator implements InputIterator<PointSet> {
 	public long[] getCurrentPoint() {
 		return iter.getCurrentPoint();
 	}
-
 }

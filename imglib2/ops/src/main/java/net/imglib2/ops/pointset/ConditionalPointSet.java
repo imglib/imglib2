@@ -40,15 +40,26 @@ package net.imglib2.ops.pointset;
 import net.imglib2.ops.condition.Condition;
 
 /**
+ * ConditionalPointSet is a {@link PointSet} implementation that constrains
+ * another PointSet by a {@link Condition}. For instance you could specify
+ * a set that contains all the points in a hyper volume whose Y coordinate
+ * is odd.
+ * <p>
+ * Note that Conditions can be compound. Alternatively ConditionalPointSets
+ * can be nested.
  * 
  * @author Barry DeZonia
  *
  */
 public class ConditionalPointSet extends AbstractBoundedRegion implements PointSet {
 
+	// -- instance variables --
+	
 	private final PointSet pointSet;
 	private final Condition<long[]> condition;
 	private boolean boundsInvalid;
+	
+	// -- constructor --
 	
 	public ConditionalPointSet(PointSet pointSet, Condition<long[]> condition) {
 		this.pointSet = pointSet;
@@ -56,14 +67,16 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 		this.boundsInvalid = true;
 	}
 	
+	// -- PointSet methods --
+	
 	@Override
-	public long[] getAnchor() {
-		return pointSet.getAnchor();
+	public long[] getOrigin() {
+		return pointSet.getOrigin();
 	}
 
 	@Override
-	public void setAnchor(long[] anchor) {
-		pointSet.setAnchor(anchor);
+	public void translate(long[] deltas) {
+		pointSet.translate(deltas);
 		this.boundsInvalid = true;
 	}
 
@@ -77,21 +90,12 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 		return pointSet.numDimensions();
 	}
 
-	// TODO - is this too inaccurate? need to iterate first?
-	// Maybe need to get rid of the whole bounds concept.
-	// For instance PointSetIntersection is also iffy on this.
-	// Or maybe rename to calcBoundMin() and calcBoundMax().
-	// This way it is clear it can be expensive. Then each
-	// PointSet can calc using iterators if needed.
-	
 	@Override
 	public long[] findBoundMin() {
 		if (boundsInvalid) calcBounds();
 		return getMin();
 	}
 
-	// TODO - comment for getBoundMin() applies here too
-	
 	@Override
 	public long[] findBoundMax() {
 		if (boundsInvalid) calcBounds();
@@ -118,6 +122,8 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 	public ConditionalPointSet copy() {
 		return new ConditionalPointSet(pointSet.copy(), condition.copy());
 	}
+
+	// -- private helpers --
 	
 	private void calcBounds() {
 		PointSetIterator iter = createIterator();

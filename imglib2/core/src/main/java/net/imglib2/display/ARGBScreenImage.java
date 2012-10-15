@@ -61,7 +61,7 @@ import net.imglib2.type.numeric.ARGBType;
 public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements ScreenImage, IterableInterval< ARGBType >, RandomAccessibleInterval< ARGBType >
 {
 	final protected int[] data;
-	final protected Image image;
+	final protected BufferedImage image;
 
 	static final public ColorModel ARGB_COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
 
@@ -91,7 +91,7 @@ public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements S
 	}
 
 	@Override
-	public Image image()
+	public BufferedImage image()
 	{
 		return image;
 	}
