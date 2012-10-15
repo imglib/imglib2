@@ -300,13 +300,61 @@ public class Views
 	}
 
 	/**
-	 * Translate such that pixel at offset in randomAccessible is
-	 * pixel 0 in the resulting view.
+	 * Translate the source view by the given translation vector. Pixel
+	 * <em>x</em> in the source view has coordinates <em>(x + translation)</em>
+	 * in the resulting view.
 	 *
 	 * @param randomAccessible
 	 *            the source
+	 * @param translation
+	 *            offset of the source view. The pixel at offset becomes the
+	 *            origin of resulting view.
 	 */
-	public static < T > MixedTransformView< T > translate( final RandomAccessible< T > randomAccessible, final long... offset )
+	public static < T > MixedTransformView< T > translate( final RandomAccessible< T > randomAccessible, final long... translation )
+	{
+		final int n = randomAccessible.numDimensions();
+		final MixedTransform t = new MixedTransform( n, n );
+		t.setInverseTranslation( translation );
+		return new MixedTransformView< T >( randomAccessible, t );
+	}
+
+	/**
+	 * Translate the source view by the given translation vector. Pixel
+	 * <em>x</em> in the source view has coordinates <em>(x + translation)</em>
+	 * in the resulting view.
+	 *
+	 * @param randomAccessible
+	 *            the source
+	 * @param translation
+	 *            offset of the source view. The pixel at offset becomes the
+	 *            origin of resulting view.
+	 */
+	public static < T > IntervalView< T > translate( final RandomAccessibleInterval< T > interval, final long... translation )
+	{
+		final int n = interval.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] += translation[ d ];
+			max[ d ] += translation[ d ];
+		}
+		return interval( translate( ( RandomAccessible< T > ) interval, translation ), min, max );
+	}
+
+	/**
+	 * Translate such that pixel at offset in randomAccessible is at the origin
+	 * in the resulting view. This is equivalent to translating by -offset.
+	 *
+	 * @param randomAccessible
+	 *            the source
+	 * @param offset
+	 *            offset of the source view. The pixel at offset becomes the
+	 *            origin of resulting view.
+	 */
+	public static < T > MixedTransformView< T > offset( final RandomAccessible< T > randomAccessible, final long... offset )
 	{
 		final int n = randomAccessible.numDimensions();
 		final MixedTransform t = new MixedTransform( n, n );
@@ -315,13 +363,16 @@ public class Views
 	}
 
 	/**
-	 * Translate such that pixel at offset in interval is
-	 * pixel 0 in the resulting view.
+	 * Translate such that pixel at offset in interval is at the origin in the
+	 * resulting view. This is equivalent to translating by -offset.
 	 *
 	 * @param randomAccessible
 	 *            the source
+	 * @param offset
+	 *            offset of the source view. The pixel at offset becomes the
+	 *            origin of resulting view.
 	 */
-	public static < T > IntervalView< T > translate( final RandomAccessibleInterval< T > interval, final long... offset )
+	public static < T > IntervalView< T > offset( final RandomAccessibleInterval< T > interval, final long... offset )
 	{
 		final int n = interval.numDimensions();
 		final long[] min = new long[ n ];
@@ -333,7 +384,7 @@ public class Views
 			min[ d ] -= offset[ d ];
 			max[ d ] -= offset[ d ];
 		}
-		return interval( translate( ( RandomAccessible< T > ) interval, offset ), min, max );
+		return interval( offset( ( RandomAccessible< T > ) interval, offset ), min, max );
 	}
 
 	/**
@@ -483,7 +534,7 @@ public class Views
 		final long[] max = new long[ n ];
 		for ( int d = 0; d < n; ++d )
 			max[ d ] = dimension[ d ] - 1;
-		return interval( translate( randomAccessible, offset ), min, max );
+		return interval( offset( randomAccessible, offset ), min, max );
 	}
 
 	/**
@@ -507,7 +558,7 @@ public class Views
 		interval.max( max );
 		for ( int d = 0; d < n; ++d )
 			max[ d ] -= offset[ d ];
-		return interval( translate( randomAccessible, offset ), min, max );
+		return interval( offset( randomAccessible, offset ), min, max );
 	}
 
 	/**
