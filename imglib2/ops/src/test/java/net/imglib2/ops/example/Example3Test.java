@@ -107,7 +107,7 @@ public class Example3Test {
 		while (iter.hasNext()) {
 			points = iter.next(points);
 			medFunc.compute(points, variable);
-			long[] currPos = points.getAnchor();
+			long[] currPos = points.getOrigin();
 			long x = currPos[0];
 			long y = currPos[1];
 			long z = currPos[2];

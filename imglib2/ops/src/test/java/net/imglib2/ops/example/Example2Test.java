@@ -108,7 +108,7 @@ public class Example2Test {
 		while (iter.hasNext()) {
 			points = iter.next(points);
 			aveFunc.compute(zNeigh, variable);
-			long[] currOrigin = points.getAnchor();
+			long[] currOrigin = points.getOrigin();
 			long x = currOrigin[0];
 			long y = currOrigin[1];
 			assertTrue(veryClose(variable.getRealDouble(), x+y+((0.0+1+2+3+4) / 5.0)));

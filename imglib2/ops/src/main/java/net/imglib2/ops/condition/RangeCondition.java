@@ -39,6 +39,11 @@ package net.imglib2.ops.condition;
 
 
 /**
+* RangeCondition supports the testing of a specific axis of a dimensional
+* position. A range is defined as "from first to last by step". So from
+* 1 to 9 by 2 would be an example. The construction specifies which axis
+* to test. The specified range makes up a set of step values that are
+* tested against in isTrue().
 * 
 * @author Barry DeZonia
 *
@@ -49,6 +54,21 @@ public class RangeCondition implements Condition<long[]> {
 	final long last;
 	final long step;
 	
+	/**
+	 * Specifies the range values to test a positional axis against. For
+	 * instance given a set of data whose Y axis is axis 1 we can test that
+	 * Y values range from 1 to 10 by 4. Note that the last value may not be
+	 * part of the range (i.e. in this case 1, 5, and 9 are in the range).
+	 * 
+	 * @param dimIndex
+	 *   The axis number of interest
+	 * @param first
+	 *   The first value in the range
+	 * @param last
+	 *   The last value in the range.
+	 * @param step
+	 *   The step between values in the range
+	 */
 	public RangeCondition(int dimIndex, long first, long last, long step) {
 		this.dimIndex = dimIndex;
 		this.first = first;
@@ -56,6 +76,10 @@ public class RangeCondition implements Condition<long[]> {
 		this.step = step;
 	}
 
+	/**
+	 * Returns true if the given point whose position in the predetermined axis
+	 * is one of the step values specified in the constructor. 
+	 */
 	@Override
 	public boolean isTrue(long[] val) {
 		long value = val[dimIndex];

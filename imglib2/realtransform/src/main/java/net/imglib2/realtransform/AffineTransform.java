@@ -39,6 +39,7 @@ package net.imglib2.realtransform;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 import net.imglib2.concatenate.Concatenable;
+import net.imglib2.concatenate.PreConcatenable;
 import Jama.Matrix;
 
 /**
@@ -47,7 +48,7 @@ import Jama.Matrix;
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class AffineTransform extends AbstractAffineTransform implements Concatenable< AffineGet >
+public class AffineTransform extends AbstractAffineTransform implements Concatenable< AffineGet >, PreConcatenable< AffineGet >
 {
 	final protected AffineTransform inverse;
 	
@@ -185,10 +186,10 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	}
 
 	@Override
-	public Concatenable< AffineGet > concatenate( final AffineGet affine )
+	public AffineTransform concatenate( final AffineGet affine )
 	{
 		assert affine.numSourceDimensions() == numSourceDimensions() : "Dimensions do not match.";
-		
+
 		final Matrix matrix = new Matrix( n, n );
 		final double[] translation = new double[ n ];
 		for ( int r = 0; r < n; ++r )
@@ -217,6 +218,43 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 
 	@Override
 	public Class< AffineGet > getConcatenableClass()
+	{
+		return AffineGet.class;
+	}
+
+	@Override
+	public AffineTransform preConcatenate( final AffineGet affine )
+	{
+		assert affine.numSourceDimensions() == numSourceDimensions() : "Dimensions do not match.";
+
+		final Matrix matrix = new Matrix( n, n );
+		final double[] translation = new double[ n ];
+		for ( int r = 0; r < n; ++r )
+		{
+			for ( int c = 0; c < n; ++c )
+			{
+				double ar = affine.get( r, 0 ) * get( 0, c );
+				for ( int k = 1; k < n; ++k )
+					ar += affine.get( r, k ) * get( k, c );
+				matrix.set( r, c, ar );
+			}
+			double tr = affine.get( r, n ) + affine.get( r, 0 ) * get( 0, n );
+			for ( int k = 1; k < n; ++k )
+				tr += affine.get( r, k ) * get( k, n );
+			translation[ r ] = tr;
+		}
+		a.setMatrix( 0, n - 1, 0, n -  1, matrix );
+		System.arraycopy( translation, 0, t, 0, t.length );
+
+		updateDs();
+		invert();
+		inverse.updateDs();
+
+		return this;
+	}
+
+	@Override
+	public Class< AffineGet > getPreConcatenableClass()
 	{
 		return AffineGet.class;
 	}

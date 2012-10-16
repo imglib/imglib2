@@ -39,46 +39,40 @@ package net.imglib2.ops.pointset;
 
 
 /**
+ * PointSetUnion is a {@link PointSet} that contains all the points present
+ * in two input PointSets (the logical union).
  * 
  * @author Barry DeZonia
  */
 public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
+	
+	// -- instance variables --
+	
 	private final PointSet a, b;
-	private boolean minInvalid, maxInvalid;
+	private boolean boundsInvalid;
+	
+	// -- constructor --
 	
 	public PointSetUnion(PointSet a, PointSet b) {
 		if (a.numDimensions() != b.numDimensions())
 			throw new IllegalArgumentException();
 		this.a = a;
 		this.b = b;
-		minInvalid = true;
-		maxInvalid = true;
+		boundsInvalid = true;
+	}
+	
+	// -- PointSet methods --
+	
+	@Override
+	public long[] getOrigin() {
+		return a.getOrigin();
 	}
 	
 	@Override
-	public long[] getAnchor() {
-		return a.getAnchor();
-	}
-	
-	@Override
-	public void setAnchor(long[] newAnchor) {
-		long[] currAnchor = getAnchor();
-		if (currAnchor.length != newAnchor.length)
-			throw new IllegalArgumentException();
-		//long[] anchor1 = a.getAnchor();
-		long[] anchor2 = b.getAnchor();
-		long[] deltas = new long[currAnchor.length];
-		for (int i = 0; i < currAnchor.length; i++) {
-			deltas[i] = newAnchor[i] - currAnchor[i];
-		}
-		long[] newAnchor2 = new long[currAnchor.length];
-		for (int i = 0; i < currAnchor.length; i++) {
-			newAnchor2[i] = anchor2[i] + deltas[i];
-		}
-		a.setAnchor(newAnchor);
-		b.setAnchor(newAnchor2);
-		minInvalid = true;
-		maxInvalid = true;
+	public void translate(long[] deltas) {
+		a.translate(deltas);
+		b.translate(deltas);
+		boundsInvalid = true;
 	}
 	
 	@Override
@@ -87,7 +81,7 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	}
 	
 	@Override
-	public int numDimensions() { return getAnchor().length; }
+	public int numDimensions() { return a.numDimensions(); }
 	
 	@Override
 	public boolean includes(long[] point) {
@@ -96,20 +90,18 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	
 	@Override
 	public long[] findBoundMin() {
-		if (minInvalid) {
-			minInvalid = false;
-			setMin(a.findBoundMin());
-			updateMin(b.findBoundMin());
+		if (boundsInvalid) {
+			boundsInvalid = false;
+			calcBounds();
 		}
 		return getMin();
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		if (maxInvalid) {
-			maxInvalid = false;
-			setMax(a.findBoundMax());
-			updateMax(b.findBoundMax());
+		if (boundsInvalid) {
+			boundsInvalid = false;
+			calcBounds();
 		}
 		return getMax();
 	}
@@ -130,6 +122,15 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 		return new PointSetUnion(a.copy(), b.copy());
 	}
 
+	// -- private helpers --
+
+	private void calcBounds() {
+		setMin(a.findBoundMin());
+		setMax(a.findBoundMax());
+		updateMin(b.findBoundMin());
+		updateMax(b.findBoundMax());
+	}
+	
 	private class PointSetUnionIterator implements PointSetIterator {
 		
 		private final PointSetIterator aIter;

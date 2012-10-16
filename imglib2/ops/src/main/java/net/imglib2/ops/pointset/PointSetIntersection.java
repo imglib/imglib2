@@ -38,15 +38,21 @@
 package net.imglib2.ops.pointset;
 
 
-// TODO - calc bounds could walk resulting set and generate min bounds
-
 /**
+ * PointSetIntersection is a {@link PointSet} that consists of the set of
+ * points that are in the intersection set of two other PointSets. Thus
+ * those points that are members of both input PointSets.
  * 
  * @author Barry DeZonia
  */
 public class PointSetIntersection extends AbstractBoundedRegion implements PointSet {
+	
+	// -- instance variables --
+	
 	private final PointSet a, b;
 	private boolean boundsInvalid;
+	
+	// -- constructor --
 	
 	public PointSetIntersection(PointSet a, PointSet b) {
 		if (a.numDimensions() != b.numDimensions())
@@ -56,27 +62,17 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 		boundsInvalid = true;
 	}
 	
+	// -- PointSet methods --
+	
 	@Override
-	public long[] getAnchor() {
-		return a.getAnchor();
+	public long[] getOrigin() {
+		return a.getOrigin();
 	}
 	
 	@Override
-	public void setAnchor(long[] newAnchor) {
-		long[] currAnchor = getAnchor();
-		if (currAnchor.length != newAnchor.length)
-			throw new IllegalArgumentException();
-		long[] bAnchor = b.getAnchor();
-		long[] deltas = new long[currAnchor.length];
-		for (int i = 0; i < currAnchor.length; i++) {
-			deltas[i] = newAnchor[i] - currAnchor[i];
-		}
-		long[] newAnchor2 = new long[currAnchor.length];
-		for (int i = 0; i < currAnchor.length; i++) {
-			newAnchor2[i] = bAnchor[i] + deltas[i];
-		}
-		a.setAnchor(newAnchor);
-		b.setAnchor(newAnchor2);
+	public void translate(long[] deltas) {
+		a.translate(deltas);
+		b.translate(deltas);
 		boundsInvalid = true;
 	}
 	
@@ -86,7 +82,7 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	}
 	
 	@Override
-	public int numDimensions() { return getAnchor().length; }
+	public int numDimensions() { return a.numDimensions(); }
 	
 	@Override
 	public boolean includes(long[] point) {
@@ -120,6 +116,8 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	public PointSetIntersection copy() {
 		return new PointSetIntersection(a.copy(), b.copy());
 	}
+	
+	// -- private helpers --
 	
 	private void calcBounds() {
 		PointSetIterator iter = createIterator();

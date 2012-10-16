@@ -45,6 +45,16 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>imglib2-realtransform</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>imglib2-ui</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
 			<version>${imagej1.version}</version>
