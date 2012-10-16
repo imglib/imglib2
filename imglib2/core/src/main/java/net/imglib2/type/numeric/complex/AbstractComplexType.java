@@ -142,13 +142,7 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 	@Override
 	public double getPhaseDouble()
 	{
-		final double real = getRealDouble();
-		final double imaginary = getImaginaryDouble();
-
-		if ( real != 0.0 || imaginary != 0)
-			return (float)Math.atan2( imaginary, real );
-		else
-			return 0;
+		return Math.atan2( getImaginaryDouble(), getRealDouble() );
 	}
 
 	@Override
