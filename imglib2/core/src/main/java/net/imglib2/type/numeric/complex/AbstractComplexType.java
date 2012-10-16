@@ -112,8 +112,8 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 	@Override
 	public float getPowerFloat()
 	{
-		final float real = getRealFloat();
-		final float imaginary = getImaginaryFloat();
+		final double real = getRealDouble();
+		final double imaginary = getImaginaryDouble();
 
 		return (float)Math.sqrt( real * real + imaginary * imaginary );
 	}
