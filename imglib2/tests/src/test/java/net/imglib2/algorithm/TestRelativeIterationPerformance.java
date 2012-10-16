@@ -182,14 +182,14 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 
 		final ExtendedRandomAccessibleInterval<T, Img<T>> extended = Views.extendMirrorSingle(input);
 
-		final Cursor<T> northCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {0, -1}), input) ).cursor();
-		final Cursor<T> northEastCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {1, -1}), input) ).cursor();
-		final Cursor<T> eastCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {1, 0}), input) ).cursor();
-		final Cursor<T> southEastCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {1, 1}), input) ).cursor();
-		final Cursor<T> southCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {0, 1}), input) ).cursor();
-		final Cursor<T> southWestCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {-1, 1}), input) ).cursor();
-		final Cursor<T> westCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {-1, 0}), input) ).cursor();
-		final Cursor<T> northWestCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {-1, 1}), input) ).cursor();
+		final Cursor<T> northCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {0, -1}), input) ).cursor();
+		final Cursor<T> northEastCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {1, -1}), input) ).cursor();
+		final Cursor<T> eastCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {1, 0}), input) ).cursor();
+		final Cursor<T> southEastCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {1, 1}), input) ).cursor();
+		final Cursor<T> southCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {0, 1}), input) ).cursor();
+		final Cursor<T> southWestCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {-1, 1}), input) ).cursor();
+		final Cursor<T> westCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {-1, 0}), input) ).cursor();
+		final Cursor<T> northWestCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {-1, 1}), input) ).cursor();
 
 		final Cursor<T> cursor = input.localizingCursor();
 		final RandomAccess<FloatType> oc = output.randomAccess();
@@ -218,14 +218,14 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 
 		final ExtendedRandomAccessibleInterval<T, Img<T>> extended = Views.extendMirrorSingle(input);
 
-		final Cursor<T> northCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {0, -1}), input) ).cursor();
-		final Cursor<T> northEastCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {1, -1}), input) ).cursor();
-		final Cursor<T> eastCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {1, 0}), input) ).cursor();
-		final Cursor<T> southEastCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {1, 1}), input) ).cursor();
-		final Cursor<T> southCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {0, 1}), input) ).cursor();
-		final Cursor<T> southWestCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {-1, 1}), input) ).cursor();
-		final Cursor<T> westCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {-1, 0}), input) ).cursor();
-		final Cursor<T> northWestCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {-1, 1}), input) ).cursor();
+		final Cursor<T> northCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {0, -1}), input) ).cursor();
+		final Cursor<T> northEastCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {1, -1}), input) ).cursor();
+		final Cursor<T> eastCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {1, 0}), input) ).cursor();
+		final Cursor<T> southEastCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {1, 1}), input) ).cursor();
+		final Cursor<T> southCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {0, 1}), input) ).cursor();
+		final Cursor<T> southWestCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {-1, 1}), input) ).cursor();
+		final Cursor<T> westCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {-1, 0}), input) ).cursor();
+		final Cursor<T> northWestCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {-1, 1}), input) ).cursor();
 
 		final Cursor<T> cursor = input.cursor();
 		final Cursor<FloatType> oc = output.cursor();
@@ -294,14 +294,14 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 
 		final ExtendedRandomAccessibleInterval<T, Img<T>> extended = Views.extendMirrorSingle(input);
 
-		final Cursor<T> northCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {0, -1}), interval) ).cursor();
-		final Cursor<T> northEastCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {1, -1}), interval) ).cursor();
-		final Cursor<T> eastCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {1, 0}), interval) ).cursor();
-		final Cursor<T> southEastCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {1, 1}), interval) ).cursor();
-		final Cursor<T> southCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {0, 1}), interval) ).cursor();
-		final Cursor<T> southWestCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {-1, 1}), interval) ).cursor();
-		final Cursor<T> westCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {-1, 0}), interval) ).cursor();
-		final Cursor<T> northWestCursor = Views.iterable(Views.interval(Views.translate(extended, new long[] {-1, 1}), interval) ).cursor();
+		final Cursor<T> northCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {0, -1}), interval) ).cursor();
+		final Cursor<T> northEastCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {1, -1}), interval) ).cursor();
+		final Cursor<T> eastCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {1, 0}), interval) ).cursor();
+		final Cursor<T> southEastCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {1, 1}), interval) ).cursor();
+		final Cursor<T> southCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {0, 1}), interval) ).cursor();
+		final Cursor<T> southWestCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {-1, 1}), interval) ).cursor();
+		final Cursor<T> westCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {-1, 0}), interval) ).cursor();
+		final Cursor<T> northWestCursor = Views.iterable(Views.interval(Views.offset(extended, new long[] {-1, 1}), interval) ).cursor();
 
 		final Cursor<T> cursor = Views.iterable(Views.interval( extended, interval )).cursor();
 		final Cursor<FloatType> oc = Views.iterable(Views.interval( output, interval )).cursor();

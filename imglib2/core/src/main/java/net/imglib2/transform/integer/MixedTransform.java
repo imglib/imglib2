@@ -152,6 +152,13 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 			translation[ d ] = t[ d ];
 	}
 
+	public void setInverseTranslation( final long[] tinv )
+	{
+		assert tinv.length == numTargetDimensions;
+		for ( int d = 0; d < numTargetDimensions; ++d )
+			translation[ d ] = -tinv[ d ];
+	}
+
 	@Override
 	public void getComponentZero( @SuppressWarnings( "hiding" ) final boolean[] zero )
 	{
