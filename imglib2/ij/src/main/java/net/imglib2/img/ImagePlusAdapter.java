@@ -70,6 +70,12 @@ public class ImagePlusAdapter
 		return ( ImagePlusImg< T, ? > ) wrapLocal( imp );
 	}
 
+	@SuppressWarnings( { "rawtypes" } )
+	public static ImagePlusImg wrapReal( final ImagePlus imp )
+	{
+		return wrapLocalReal( imp );
+	}
+
 	public static < T extends NumericType< T > & NativeType< T > > ImgPlus< T > wrapImgPlus( final ImagePlus imp )
 	{
 		Img< T > img = wrap( imp );
@@ -82,7 +88,6 @@ public class ImagePlusAdapter
 		image.setName( imp.getTitle() );
 
 		// set axes
-
 		setAxesFromImagePlus( image, imp );
 
 		return image;
@@ -111,6 +116,29 @@ public class ImagePlusAdapter
 		default :
 		{
 			throw new RuntimeException("Only 8, 16, 32-bit and RGB supported!");
+		}
+		}
+	}
+
+	protected static ImagePlusImg< ?, ? > wrapLocalReal( final ImagePlus imp )
+	{
+		switch( imp.getType() )
+		{		
+		case ImagePlus.GRAY8 : 
+		{
+			return wrapByte( imp );
+		}
+		case ImagePlus.GRAY16 : 
+		{
+			return wrapShort( imp );
+		}
+		case ImagePlus.GRAY32 : 
+		{
+			return wrapFloat( imp );
+		}
+		default :
+		{
+			throw new RuntimeException("Only 8, 16 and 32-bit supported!");
 		}
 		}
 	}
