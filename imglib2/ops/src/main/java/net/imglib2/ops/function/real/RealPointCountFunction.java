@@ -35,29 +35,43 @@
  */
 
 
-package net.imglib2.ops.condition;
+package net.imglib2.ops.function.real;
 
-import java.util.Arrays;
-
+import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
-import net.imglib2.ops.util.Tuple2;
-
+import net.imglib2.type.numeric.RealType;
 
 /**
+ * Computes the number of points of an input {@link PointSet}.
  * 
  * @author Barry DeZonia
+ *
+ * @param <T>
+ *   A {@link RealType} representing the output type filled during the
+ *   call to compute().
  */
-public class AtKeyPointCondition implements Condition<Tuple2<PointSet,long[]>> {
+public class RealPointCountFunction <T extends RealType<T>>
+	implements Function<PointSet,T>
+{
+	private final T type;
 	
-	@Override
-	public boolean isTrue(Tuple2<PointSet,long[]> input) {
-		long[] keyPoint = input.get1().getOrigin();
-		long[] point = input.get2();
-		return Arrays.equals(point, keyPoint);
+	public RealPointCountFunction(T type) {
+		this.type = type;
 	}
 	
 	@Override
-	public AtKeyPointCondition copy() {
-		return new AtKeyPointCondition();
+	public void compute(PointSet input, T output) {
+		output.setReal(input.calcSize());
 	}
+
+	@Override
+	public T createOutput() {
+		return type.createVariable();
+	}
+
+	@Override
+	public RealPointCountFunction<T> copy() {
+		return new RealPointCountFunction<T>(type.copy());
+	}
+
 }

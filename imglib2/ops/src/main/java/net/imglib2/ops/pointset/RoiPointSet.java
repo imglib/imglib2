@@ -37,135 +37,142 @@
 
 package net.imglib2.ops.pointset;
 
-import net.imglib2.ops.condition.Condition;
+import net.imglib2.roi.RegionOfInterest;
+
+// TODO - when the efforts of people working with SciJava resolves Roi
+// implementations (real and integer, RegionOfInterest and PointSet)
+// this class can go away.
 
 /**
- * ConditionalPointSet is a {@link PointSet} implementation that constrains
- * another PointSet by a {@link Condition}. For instance you could specify
- * a set that contains all the points in a hyper volume whose Y coordinate
- * is odd.
- * <p>
- * Note that Conditions can be compound. Alternatively ConditionalPointSets
- * can be nested.
+ * Wraps a (real based) {@link RegionOfInterest} as a (integer based)
+ * {@link PointSet}. An adapter class that brings the functionality
+ * of PointSets to RegionOfInterests.
  * 
  * @author Barry DeZonia
  *
  */
-public class ConditionalPointSet extends AbstractBoundedRegion implements PointSet {
+public class RoiPointSet implements PointSet {
 
 	// -- instance variables --
 	
-	private final PointSet pointSet;
-	private final Condition<long[]> condition;
-	private boolean boundsInvalid;
+	private final int numD;
+	private final RegionOfInterest roi;
+	private final long[] origin;
+	private final long[] boundMin;
+	private final long[] boundMax;
+	private final double[] tmpCoord;
 	
 	// -- constructor --
 	
-	public ConditionalPointSet(PointSet pointSet, Condition<long[]> condition) {
-		this.pointSet = pointSet;
-		this.condition = condition;
-		this.boundsInvalid = true;
+	public RoiPointSet(RegionOfInterest roi) {
+		this.roi = roi;
+		numD = roi.numDimensions();
+		origin = new long[numD];
+		boundMin = new long[numD];
+		boundMax = new long[numD];
+		tmpCoord = new double[numD];
 	}
 	
 	// -- PointSet methods --
 	
 	@Override
 	public long[] getOrigin() {
-		return pointSet.getOrigin();
+		for (int i = 0; i < numD; i++)
+			origin[i] = (long) Math.ceil(roi.realMin(i));
+		return origin;
 	}
 
 	@Override
-	public void translate(long[] deltas) {
-		pointSet.translate(deltas);
-		this.boundsInvalid = true;
+	public void translate(long[] delta) {
+		for (int i = 0; i < numD; i++) {
+			roi.move(delta[i], i);
+		}
 	}
 
 	@Override
 	public PointSetIterator createIterator() {
-		return new ConditionalPointSetIterator();
+		return new RoiPointSetIterator();
 	}
 
 	@Override
 	public int numDimensions() {
-		return pointSet.numDimensions();
+		return roi.numDimensions();
 	}
 
 	@Override
 	public long[] findBoundMin() {
-		if (boundsInvalid) calcBounds();
-		return getMin();
+		for (int i = 0; i < numD; i++) {
+			boundMin[i] = (long) Math.ceil(roi.realMin(i));
+		}
+		return boundMin;
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		if (boundsInvalid) calcBounds();
-		return getMax();
+		for (int i = 0; i < numD; i++) {
+			boundMax[i] = (long) Math.floor(roi.realMax(i));
+		}
+		return boundMax;
 	}
 
 	@Override
 	public boolean includes(long[] point) {
-		return pointSet.includes(point) && condition.isTrue(point);
+		for (int i = 0; i < numD; i++) {
+			tmpCoord[i] = point[i];
+		}
+		return roi.contains(tmpCoord);
 	}
 
 	@Override
 	public long calcSize() {
-		long numElements = 0;
+		long numElems = 0;
 		PointSetIterator iter = createIterator();
 		while (iter.hasNext()) {
 			iter.next();
-			numElements++;
+			numElems++;
 		}
-		return numElements;
+		return numElems;
 	}
 
 	@Override
-	public ConditionalPointSet copy() {
-		return new ConditionalPointSet(pointSet.copy(), condition.copy());
+	public PointSet copy() {
+		return new RoiPointSet(roi); // TODO - no copying possible. threading issues?
 	}
 
 	// -- private helpers --
-	
-	private void calcBounds() {
-		PointSetIterator iter = createIterator();
-		while (iter.hasNext()) {
-			long[] point = iter.next();
-			if (boundsInvalid) {
-				boundsInvalid = false;
-				setMax(point);
-				setMin(point);
-			}
-			else {
-				updateMax(point);
-				updateMin(point);
-			}
-		}
-	}
-	
-	private class ConditionalPointSetIterator implements PointSetIterator {
-		private final PointSetIterator iter;
-		private long[] next;
-		
-		public ConditionalPointSetIterator() {
-			iter = pointSet.createIterator();
-		}
 
+	// TODO - internally it could instead make a ConditionalPointSet with a custom
+	// RoiContainsPoint condition and use its iterator.
+	
+	private class RoiPointSetIterator implements PointSetIterator {
+
+		private PointSetIterator iter;
+		private long[] pos;
+		
+		public RoiPointSetIterator() {
+			reset();
+		}
+		
 		@Override
 		public boolean hasNext() {
 			while (iter.hasNext()) {
-				next = iter.next();
-				if (condition.isTrue(next)) return true;
+				pos = iter.next();
+				if (includes(pos)) return true;
 			}
 			return false;
 		}
 
 		@Override
 		public long[] next() {
-			return next;
+			return pos;
 		}
 
 		@Override
 		public void reset() {
-			iter.reset();
+			HyperVolumePointSet vol =
+				new HyperVolumePointSet(findBoundMin(), findBoundMax());
+			iter = vol.createIterator();
 		}
+		
 	}
 }

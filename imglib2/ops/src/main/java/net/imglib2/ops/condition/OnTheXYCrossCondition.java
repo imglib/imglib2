@@ -49,7 +49,7 @@ public class OnTheXYCrossCondition implements Condition<Tuple2<PointSet,long[]>>
 	
 	@Override
 	public boolean isTrue(Tuple2<PointSet,long[]> input) {
-		long[] regionKeyPoint = input.get1().getAnchor();
+		long[] regionKeyPoint = input.get1().getOrigin();
 		long[] currPoint = input.get2();
 		long dx = currPoint[0] - regionKeyPoint[0];
 		long dy = currPoint[1] - regionKeyPoint[1];

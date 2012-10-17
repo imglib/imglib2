@@ -65,6 +65,7 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 	private final RealSampleCollector<T> collector;
 	private final T currValue;
 	private final StatCalculator calculator;
+	private final long[] tmpDeltas;
 
 	/**
 	 * Constructs an adaptive median function on a given function and a given set
@@ -74,7 +75,9 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 	 * @param otherFunc
 	 * @param pointSets
 	 */
-	public RealAdaptiveMedianFunction(Function<long[],T> otherFunc, List<PointSet> pointSets) {
+	public RealAdaptiveMedianFunction(
+		Function<long[],T> otherFunc, List<PointSet> pointSets)
+	{
 		this.otherFunc = otherFunc;
 		this.pointSets = pointSets;
 		this.values = new PrimitiveDoubleArray();
@@ -83,6 +86,12 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 		this.currValue = createOutput();
 		if (pointSets.size() < 1)
 			throw new IllegalArgumentException("must provide at least one point set");
+		for (PointSet ps : pointSets) {
+			if (ps.numDimensions() != pointSets.get(0).numDimensions())
+				throw new IllegalArgumentException(
+					"all point sets must have same dimensionality");
+		}
+		this.tmpDeltas = new long[pointSets.get(0).numDimensions()];
 	}
 	
 	@Override
@@ -90,14 +99,14 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 		double zMed = 0;
 		for (int p = 0; p < pointSets.size(); p++) {
 			PointSet pointSet = pointSets.get(p);
-			pointSet.setAnchor(points.getAnchor());
+			move(pointSet, points.getOrigin());
 			collector.collect(pointSet, otherFunc, values);
 			zMed = calculator.median(values);
 			// HACK - take advantage of fact that median() sorts values
 			double zMin = values.get(0);
 			double zMax = values.get(values.size()-1);
 			if (zMin < zMed && zMed < zMax) {
-				otherFunc.compute(pointSet.getAnchor(), currValue);
+				otherFunc.compute(pointSet.getOrigin(), currValue);
 				double zXY = currValue.getRealDouble();
 				if ((zMin < zXY) && (zXY < zMax))
 					output.setReal(zXY);
@@ -122,6 +131,21 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 	@Override
 	public T createOutput() {
 		return otherFunc.createOutput();
+	}
+
+	// unfortunately the removal from PointSet of getAnchor() and setAnchor() and
+	// replacement with getOrigin() and translate(deltas) causes this code to be
+	// slower. It used to copy an object ref. Now it does numerous math
+	// calculations.
+	
+	private void move(PointSet ps, long[] origin) {
+		boolean mustTranslate = false;
+		long[] psOrg = ps.getOrigin();
+		for (int i = 0; i < tmpDeltas.length; i++) {
+			tmpDeltas[i] = origin[i] - psOrg[i];
+			mustTranslate |= tmpDeltas[i] != 0;
+		}
+		if (mustTranslate) ps.translate(tmpDeltas);
 	}
 }
 

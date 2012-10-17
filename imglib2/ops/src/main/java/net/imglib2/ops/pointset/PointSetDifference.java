@@ -38,15 +38,22 @@
 package net.imglib2.ops.pointset;
 
 
-// TODO - calc bounds could walk resulting set and generate min bounds
-
 /**
+ * PointSetDifference is a {@link PointSet} that includes all the points in
+ * one PointSet that are not in another PointSet. Thus a logical operation
+ * between two sets: the first set minus the intersection of the first set
+ * and the second.
  * 
  * @author Barry DeZonia
  */
 public class PointSetDifference extends AbstractBoundedRegion implements PointSet {
+	
+	// -- instance variables --
+	
 	private final PointSet a, b;
 	private boolean boundsInvalid;
+	
+	// -- constructor --
 	
 	public PointSetDifference(PointSet a, PointSet b) {
 		if (a.numDimensions() != b.numDimensions())
@@ -56,27 +63,17 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 		boundsInvalid = true;
 	}
 	
+	// -- PointSet methods --
+	
 	@Override
-	public long[] getAnchor() {
-		return a.getAnchor();
+	public long[] getOrigin() {
+		return a.getOrigin();
 	}
 	
 	@Override
-	public void setAnchor(long[] newAnchor) {
-		long[] currAnchor = getAnchor();
-		if (currAnchor.length != newAnchor.length)
-			throw new IllegalArgumentException();
-		long[] bAnchor = b.getAnchor();
-		long[] deltas = new long[currAnchor.length];
-		for (int i = 0; i < currAnchor.length; i++) {
-			deltas[i] = newAnchor[i] - currAnchor[i];
-		}
-		long[] newAnchor2 = new long[currAnchor.length];
-		for (int i = 0; i < currAnchor.length; i++) {
-			newAnchor2[i] = bAnchor[i] + deltas[i];
-		}
-		a.setAnchor(newAnchor);
-		b.setAnchor(newAnchor2);
+	public void translate(long[] deltas) {
+		a.translate(deltas);
+		b.translate(deltas);
 		boundsInvalid = true;
 	}
 	
@@ -86,7 +83,7 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	}
 	
 	@Override
-	public int numDimensions() { return getAnchor().length; }
+	public int numDimensions() { return a.numDimensions(); }
 	
 	@Override
 	public boolean includes(long[] point) {
@@ -120,6 +117,8 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	public PointSetDifference copy() {
 		return new PointSetDifference(a.copy(), b.copy());
 	}
+
+	// -- private helpers --
 	
 	private void calcBounds() {
 		PointSetIterator iter = createIterator();

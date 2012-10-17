@@ -64,9 +64,13 @@ import net.imglib2.ops.util.Tuple2;
  */
 public class TextSpecifiedPointSet implements PointSet {
 
+	// -- instance variables --
+	
 	private PointSet set;
 	private String origInput;
 	private String error;
+	
+	// -- constructor --
 	
 	public TextSpecifiedPointSet(String specification) {
 		origInput = specification;
@@ -74,14 +78,16 @@ public class TextSpecifiedPointSet implements PointSet {
 		set = construct(specification);
 	}
 	
+	// -- PointSet methods --
+	
 	@Override
-	public long[] getAnchor() {
-		return set.getAnchor();
+	public long[] getOrigin() {
+		return set.getOrigin();
 	}
 
 	@Override
-	public void setAnchor(long[] anchor) {
-		set.setAnchor(anchor);
+	public void translate(long[] deltas) {
+		set.translate(deltas);
 	}
 
 	@Override
@@ -123,6 +129,8 @@ public class TextSpecifiedPointSet implements PointSet {
 		return error;
 	}
 	
+	// -- private helpers --
+	
 	private PointSet construct(String spec) {
 		PointSetParser parser = new PointSetParser();
 		Tuple2<PointSet,String> results = parser.parse(spec);
@@ -133,6 +141,8 @@ public class TextSpecifiedPointSet implements PointSet {
 		return results.get1();
 	}
 
+	// -- test stub code --
+	
 	public static void main(String[] args) {
 		TextSpecifiedPointSet ps;
 		PointSetIterator iter;
