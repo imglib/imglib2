@@ -106,6 +106,8 @@ import net.imglib2.ops.parse.token.ImgReference;
 import net.imglib2.ops.parse.token.Int;
 import net.imglib2.ops.parse.token.Less;
 import net.imglib2.ops.parse.token.LessEqual;
+import net.imglib2.ops.parse.token.Max;
+import net.imglib2.ops.parse.token.Min;
 import net.imglib2.ops.parse.token.Minus;
 import net.imglib2.ops.parse.token.Mod;
 import net.imglib2.ops.parse.token.Not;
@@ -323,6 +325,10 @@ public class Lexer {
 
 		// angle reference
 		if (name.equals("angle")) return new AngleReference(pos, name);
+		
+		// min/max call
+		if (name.equals("min")) return new Min(pos, name);
+		if (name.equals("max")) return new Max(pos, name);
 		
 		// logical operations
 		if (name.equals("and")) return new And(pos, name);
