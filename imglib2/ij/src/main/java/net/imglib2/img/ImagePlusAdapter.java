@@ -76,6 +76,12 @@ public class ImagePlusAdapter
 		return wrapLocalReal( imp );
 	}
 
+	@SuppressWarnings( { "rawtypes" } )
+	public static ImagePlusImg wrapNumeric( final ImagePlus imp )
+	{
+		return wrapLocal( imp );
+	}
+
 	public static < T extends NumericType< T > & NativeType< T > > ImgPlus< T > wrapImgPlus( final ImagePlus imp )
 	{
 		Img< T > img = wrap( imp );

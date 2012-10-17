@@ -83,6 +83,14 @@ public class ImageJFunctions
 	@SuppressWarnings("unchecked")
 	public static < T extends RealType<T> > Img< T > wrapReal( final ImagePlus imp ) { return ImagePlusAdapter.wrapReal( imp ); }
 
+	@SuppressWarnings("unchecked")
+	public static < T extends RealType<T> & NativeType<T>> Img< T > wrapRealNative( final ImagePlus imp ) { return ImagePlusAdapter.wrapReal( imp ); }
+
+	@SuppressWarnings("unchecked")
+	public static < T extends NumericType<T> > Img< T > wrapNumeric( final ImagePlus imp ) { return ImagePlusAdapter.wrapNumeric( imp ); }
+
+	public static < T extends NumericType<T> & NativeType<T>> Img< T > wrapNumericNative( final ImagePlus imp ) { return wrap( imp ); }
+
 	public static Img<UnsignedByteType> wrapByte( final ImagePlus imp ) { return ImagePlusAdapter.wrapByte( imp ); }
 
 	public static Img<UnsignedShortType> wrapShort( final ImagePlus imp ) { return ImagePlusAdapter.wrapShort( imp ); }
