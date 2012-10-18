@@ -34,6 +34,11 @@
  * #L%
  */
 
+// TODO - this class suffers from the weakness that one needs to
+// correctly build the weights without maybe knowing the order of points in
+// the PointSet. We will need helper methods in that build a PointSet
+// compatible set of weights from a PointSet and some other hints.
+	
 
 package net.imglib2.ops.function.real;
 
@@ -41,36 +46,37 @@ import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
-
 /**
  * 
  * @author Barry DeZonia
  */
-public class RealVarianceFunction<T extends RealType<T>>
+public class RealWeightedAverageFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
 	private final PrimitiveDoubleArray values;
 	private final Function<long[],T> otherFunc;
 	private final RealSampleCollector<T> collector;
 	private final StatCalculator calculator;
+	private final double[] weights;
 	
-	public RealVarianceFunction(Function<long[],T> otherFunc)
+	public RealWeightedAverageFunction(Function<long[],T> otherFunc, double[] weights)
 	{
 		this.otherFunc = otherFunc;
 		values = new PrimitiveDoubleArray();
 		collector = new RealSampleCollector<T>();
 		calculator = new StatCalculator();
+		this.weights = weights;
 	}
 	
 	@Override
-	public RealVarianceFunction<T> copy() {
-		return new RealVarianceFunction<T>(otherFunc.copy());
+	public RealWeightedAverageFunction<T> copy() {
+		return new RealWeightedAverageFunction<T>(otherFunc.copy(), weights.clone());
 	}
 
 	@Override
 	public void compute(PointSet input, T output) {
 		collector.collect(input, otherFunc, values);
-		double value = calculator.variance(values);
+		double value = calculator.weightedAverage(values, weights);
 		output.setReal(value);
 	}
 
