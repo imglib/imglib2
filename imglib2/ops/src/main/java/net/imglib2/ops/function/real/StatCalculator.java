@@ -114,28 +114,33 @@ public class StatCalculator {
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 	
 	public double kurtosisBiased(PrimitiveDoubleArray values) {
-		int n = values.size();
-		if (n < 3)
+		final int numElements = values.size();
+		if (numElements <= 0)
 			throw new IllegalArgumentException(
-					"number of samples must be at least 3");
+					"number of samples must be greater than 0");
 		double xbar = arithmeticMean(values); 
 		double s2 = 0;
 		double s4 = 0;
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < numElements; i++) {
 			double v = values.get(i) - xbar;
 			double v2 = v * v;
-			double v3 = v2 * v;
-			double v4 = v3 * v;
+			double v4 = v2 * v2;
 			s2 += v2;
 			s4 += v4;
 		}
+		double n = numElements;
 		double m2 = s2 / n;
 		double m4 = s4 / n;
 		return m4 / (m2 * m2);
 	}
 	
+	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
+
 	public double kurtosisUnbiased(PrimitiveDoubleArray values) {
-		int n = values.size();
+		final int numElements = values.size();
+		if (numElements < 4)
+			throw new IllegalArgumentException("number of samples must be at least 4");
+		double n = numElements;
 		double biasedValue = kurtosisBiased(values);
 		double unbiasedValue = biasedValue * (n+1) + 6;
 		unbiasedValue *= (n-1) / ((n-2) * (n-3));
@@ -148,6 +153,8 @@ public class StatCalculator {
 		return kurtosisBiased(values) - 3;
 	}
 	
+	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
+
 	public double kurtosisExcessUnbiased(PrimitiveDoubleArray values) {
 		return kurtosisUnbiased(values) - 3;
 	}
@@ -214,28 +221,32 @@ public class StatCalculator {
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 	
 	public double skewBiased(PrimitiveDoubleArray values) {
-		int n = values.size();
-		if (n < 3)
+		int numElements = values.size();
+		if (numElements <= 0)
 			throw new IllegalArgumentException(
-					"number of samples must be at least 3");
+					"number of samples must be greater than 0");
 		double xbar = arithmeticMean(values); 
 		double s2 = 0;
 		double s3 = 0;
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < numElements; i++) {
 			double v = values.get(i) - xbar;
 			double v2 = v * v;
 			double v3 = v2 * v;
 			s2 += v2;
 			s3 += v3;
 		}
+		double n = numElements;
 		double m2 = s2 / n;
 		double m3 = s3 / n;
 		return m3 / Math.pow(m2, 1.5);
 	}
 	
 	public double skewUnbiased(PrimitiveDoubleArray values) {
+		final int numElements = values.size();
+		if (numElements < 3)
+			throw new IllegalArgumentException("number of samples must be at least 3");
+		double n = numElements;
 		double biasedValue = skewBiased(values);
-		int n = values.size();
 		double unbiasedValue = biasedValue * Math.sqrt(n * (n-1)) / (n-2);
 		return unbiasedValue;
 	}
@@ -290,6 +301,9 @@ public class StatCalculator {
 		if (numElements <= 0)
 			throw new IllegalArgumentException(
 				"number of samples must be greater than 0");
+		if (numElements != weights.length)
+			throw new IllegalArgumentException(
+				"number of weights does not equal number of samples");
 		double sum = weightedSum(values, weights);
 		return sum / numElements;
 	}
