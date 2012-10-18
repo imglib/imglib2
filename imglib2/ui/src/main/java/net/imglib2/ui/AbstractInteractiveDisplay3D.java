@@ -9,7 +9,7 @@ public abstract class AbstractInteractiveDisplay3D extends AbstractInteractiveDi
 	 *
 	 * The 3D displays use two transformations.
 	 * The first one is the <em>source transform</em>.
-	 * This is used for example for anisotropic scaling the source interval.
+	 * This is used for example for anisotropic scaling of the source interval.
 	 * The second is the <em>interactive transform</em> that is modified by the user.
 	 * The final source-to-screen transform is a concatenation of the two.
 	 */

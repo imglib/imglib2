@@ -127,6 +127,8 @@ public class SwingInteractiveDisplay2D extends AbstractInteractiveDisplay2D impl
 
 	final protected class Viewer2DCanvas extends JComponent
 	{
+		private static final long serialVersionUID = -8868693317975626367L;
+
 		public Viewer2DCanvas( final int w, final int h )
 		{
 			super();
