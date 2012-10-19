@@ -38,17 +38,54 @@
 
 package net.imglib2.ops.function.real;
 
+import net.imglib2.ops.function.Function;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.ops.pointset.PointSetIterator;
+import net.imglib2.type.numeric.RealType;
+
 /**
  * 
- * StatCollector calculates statistics from a list of doubles stored in a
- * {@link: PrimitiveDoubleArray}.
+ * StatCollector calculates statistics from a {@link PointSet} region of a
+ * {@link Function}. Most methods use minimal memory.
  * 
  * @author Barry DeZonia
  *
  */
-public class StatCalculator {
+public class StatCalculator<T extends RealType<T>> {
 
-	public double alphaTrimmedMean(PrimitiveDoubleArray values, int halfTrimSize){
+	private Function<long[],T> func;
+	private PointSet region;
+	private PointSetIterator iter;
+	private final PrimitiveDoubleArray values;
+	
+	public StatCalculator(Function<long[],T> func, PointSet region) {
+		this.func = func;
+		this.region = region;
+		this.iter = region.createIterator();
+		this.values = new PrimitiveDoubleArray();
+	}
+
+	public void reset(Function<long[],T> newFunc, PointSet newRegion) {
+		func = newFunc;
+		if (newRegion == region) {
+			iter.reset();
+		}
+		else {
+			region = newRegion;
+			iter = region.createIterator();
+		}
+		values.clear();
+	}
+	
+	public double alphaTrimmedMean(int halfTrimSize){
+		T tmp = func.createOutput();
+		values.clear();
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			values.add(tmp.getRealDouble());
+		}
 		final int trimSize = halfTrimSize * 2;
 		final int numElements = values.size();
 		if (numElements <= trimSize)
@@ -63,66 +100,69 @@ public class StatCalculator {
 		return sum / (numElements - trimSize);
 	}
 
-	public double arithmeticMean(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than 0");
+	public double arithmeticMean() {
+		T tmp = func.createOutput();
 		double sum = 0;
-		for (int i = 0; i < numElements; i++)
-			sum += values.get(i);
+		long numElements = 0;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			sum += tmp.getRealDouble();
+			numElements++;
+		}
 		return sum / numElements;
 	}
 
-	public double contraharmonicMean(PrimitiveDoubleArray values, double order) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than 0");
+	public double contraharmonicMean(double order) {
+		T tmp = func.createOutput();
 		double sum1 = 0;
 		double sum2 = 0;
-		for (int i = 0; i < numElements; i++) {
-			double value = values.get(i);
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
 			sum1 += Math.pow(value, order+1);
 			sum2 += Math.pow(value, order);
 		}
 		return sum1 / sum2;
 	}
 
-	public double geometricMean(PrimitiveDoubleArray values) {
-		int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-					"number of samples must be greater than 0");
-		double prod = 1;
-		for (int i = 0; i < numElements; i++)
-			prod *= values.get(i);
-		return Math.pow(prod, 1.0/numElements);
+	public double geometricMean() {
+		return Math.pow(product(), 1.0/region.calcSize());
 	}
 	
-	public double harmonicMean(PrimitiveDoubleArray values) {
-		int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-					"number of samples must be greater than 0");
+	public double harmonicMean() {
+		T tmp = func.createOutput();
 		double sum = 0;
-		for (int i = 0; i < numElements; i++)
-			sum += 1 / values.get(i);
+		long numElements = 0;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
+			sum += 1 / value;
+			numElements++;
+		}
 		return numElements / sum; // looks weird but it is correct
 	}
 
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 	
-	public double kurtosisBiased(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-					"number of samples must be greater than 0");
-		double xbar = arithmeticMean(values); 
+	public double kurtosisBiased() {
+		T tmp = func.createOutput();
+		double xbar = arithmeticMean(); 
 		double s2 = 0;
 		double s4 = 0;
-		for (int i = 0; i < numElements; i++) {
-			double v = values.get(i) - xbar;
+		long numElements = 0;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
+			numElements++;
+			double v = value - xbar;
 			double v2 = v * v;
 			double v4 = v2 * v2;
 			s2 += v2;
@@ -136,12 +176,9 @@ public class StatCalculator {
 	
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 
-	public double kurtosisUnbiased(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements < 4)
-			throw new IllegalArgumentException("number of samples must be at least 4");
-		double n = numElements;
-		double biasedValue = kurtosisBiased(values);
+	public double kurtosisUnbiased() {
+		double n = region.calcSize();
+		double biasedValue = kurtosisBiased();
 		double unbiasedValue = biasedValue * (n+1) + 6;
 		unbiasedValue *= (n-1) / ((n-2) * (n-3));
 		return unbiasedValue;
@@ -149,29 +186,38 @@ public class StatCalculator {
 	
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 	
-	public double kurtosisExcessBiased(PrimitiveDoubleArray values) {
-		return kurtosisBiased(values) - 3;
+	public double kurtosisExcessBiased() {
+		return kurtosisBiased() - 3;
 	}
 	
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 
-	public double kurtosisExcessUnbiased(PrimitiveDoubleArray values) {
-		return kurtosisUnbiased(values) - 3;
+	public double kurtosisExcessUnbiased() {
+		return kurtosisUnbiased() - 3;
 	}
 	
-	public double max(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than 0");
+	public double max() {
+		T tmp = func.createOutput();
 		double max = Double.NEGATIVE_INFINITY;
-		for (int i = 0; i < numElements; i++) {
-			max = Math.max(max, values.get(i));
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
+			max = Math.max(max, value);
 		}
 		return max;
 	}
 	
-	public double median(PrimitiveDoubleArray values) {
+	public double median() {
+		T tmp = func.createOutput();
+		values.clear();
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			values.add(tmp.getRealDouble());
+		}
 		final int numElements = values.size();
 		if (numElements <= 0)
 			throw new IllegalArgumentException(
@@ -189,47 +235,51 @@ public class StatCalculator {
 		return (value1 + value2) / 2;
 	}
 	
-	public double midpoint(PrimitiveDoubleArray values) {
-		double min = min(values);
-		double max = max(values);
-		return (min + max) / 2;
+	public double midpoint() {
+		return (min() + max()) / 2;
 	}
 	
-	public double min(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than 0");
+	public double min() {
+		T tmp = func.createOutput();
 		double min = Double.POSITIVE_INFINITY;
-		for (int i = 0; i < numElements; i++) {
-			min = Math.min(min, values.get(i));
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
+			min = Math.min(min, value);
 		}
 		return min;
 	}
 
-	public double product(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than 0");
+	public double product() {
+		T tmp = func.createOutput();
 		double prod = 1;
-		for (int i = 0; i < numElements; i++)
-			prod *= values.get(i);
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
+			prod *= value;
+		}
 		return prod;
 	}
 
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 	
-	public double skewBiased(PrimitiveDoubleArray values) {
-		int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-					"number of samples must be greater than 0");
-		double xbar = arithmeticMean(values); 
+	public double skewBiased() {
+		T tmp = func.createOutput();
+		double xbar = arithmeticMean(); 
 		double s2 = 0;
 		double s3 = 0;
-		for (int i = 0; i < numElements; i++) {
-			double v = values.get(i) - xbar;
+		long numElements = 0;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
+			numElements++;
+			double v = value - xbar;
 			double v2 = v * v;
 			double v3 = v2 * v;
 			s2 += v2;
@@ -241,84 +291,85 @@ public class StatCalculator {
 		return m3 / Math.pow(m2, 1.5);
 	}
 	
-	public double skewUnbiased(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements < 3)
-			throw new IllegalArgumentException("number of samples must be at least 3");
-		double n = numElements;
-		double biasedValue = skewBiased(values);
+	public double skewUnbiased() {
+		double n = region.calcSize();
+		double biasedValue = skewBiased();
 		double unbiasedValue = biasedValue * Math.sqrt(n * (n-1)) / (n-2);
 		return unbiasedValue;
 	}
 	
-	public double stdDevBiased(PrimitiveDoubleArray values) {
-		return Math.sqrt(varianceBiased(values));
+	public double stdDevBiased() {
+		return Math.sqrt(varianceBiased());
 	}
 	
-	public double stdDevUnbiased(PrimitiveDoubleArray values) {
-		return Math.sqrt(varianceUnbiased(values));
+	public double stdDevUnbiased() {
+		return Math.sqrt(varianceUnbiased());
 	}
 	
-	public double sum(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than 0");
+	public double sum() {
+		T tmp = func.createOutput();
 		double sum = 0;
-		for (int i = 0; i < numElements; i++)
-			sum += values.get(i);
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
+			sum += value;
+		}
 		return sum;
 	}
 	
-	public double sumOfSquaredDeviations(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 0) return 0;
-		final double mean = arithmeticMean(values);
+	public double sumOfSquaredDeviations() {
+		T tmp = func.createOutput();
+		final double xbar = arithmeticMean();
 		double sum = 0;
-		for (int i = 0; i < numElements; i++) {
-			double term = values.get(i) - mean;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
+			double term = value - xbar;
 			sum += (term * term);
 		}
 		return sum;
 	}
 	
-	public double varianceBiased(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 1) return 0;
-		double sum = sumOfSquaredDeviations(values);
+	public double varianceBiased() {
+		double sum = sumOfSquaredDeviations();
+		long numElements = region.calcSize();
 		return sum / numElements;
 	}
 
-	public double varianceUnbiased(PrimitiveDoubleArray values) {
-		final int numElements = values.size();
-		if (numElements <= 1) return 0;
-		double sum = sumOfSquaredDeviations(values);
+	public double varianceUnbiased() {
+		double sum = sumOfSquaredDeviations();
+		long numElements = region.calcSize();
 		return sum / (numElements-1);
 	}
 	
-	public double weightedAverage(PrimitiveDoubleArray values, double[] weights) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than 0");
+	public double weightedAverage(double[] weights) {
+		long numElements = region.calcSize();
 		if (numElements != weights.length)
 			throw new IllegalArgumentException(
 				"number of weights does not equal number of samples");
-		double sum = weightedSum(values, weights);
+		double sum = weightedSum(weights);
 		return sum / numElements;
 	}
 	
-	public double weightedSum(PrimitiveDoubleArray values, double[] weights) {
-		final int numElements = values.size();
-		if (numElements <= 0)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than 0");
+	public double weightedSum(double[] weights) {
+		long numElements = region.calcSize();
 		if (numElements != weights.length)
 			throw new IllegalArgumentException(
 				"number of weights does not equal number of samples");
+		T tmp = func.createOutput();
 		double sum = 0;
-		for (int i = 0; i < numElements; i++)
-			sum += weights[i] * values.get(i);
+		int i = 0;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
+			sum += weights[i++] * value;
+		}
 		return sum;
 	}
 }

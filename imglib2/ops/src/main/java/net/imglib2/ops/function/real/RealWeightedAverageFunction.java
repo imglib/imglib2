@@ -53,18 +53,14 @@ import net.imglib2.type.numeric.RealType;
 public class RealWeightedAverageFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
-	private final PrimitiveDoubleArray values;
 	private final Function<long[],T> otherFunc;
-	private final RealSampleCollector<T> collector;
-	private final StatCalculator calculator;
+	private StatCalculator<T> calculator;
 	private final double[] weights;
 	
 	public RealWeightedAverageFunction(Function<long[],T> otherFunc, double[] weights)
 	{
 		this.otherFunc = otherFunc;
-		values = new PrimitiveDoubleArray();
-		collector = new RealSampleCollector<T>();
-		calculator = new StatCalculator();
+		this.calculator = null;
 		this.weights = weights;
 	}
 	
@@ -75,8 +71,9 @@ public class RealWeightedAverageFunction<T extends RealType<T>>
 
 	@Override
 	public void compute(PointSet input, T output) {
-		collector.collect(input, otherFunc, values);
-		double value = calculator.weightedAverage(values, weights);
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.weightedAverage(weights);
 		output.setReal(value);
 	}
 
