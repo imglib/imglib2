@@ -3,8 +3,6 @@ package net.imglib2.algorithm.region.localneighborhood;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
-import net.imglib2.algorithm.region.localneighborhood.AbstractNeighborhoodCursor;
-import net.imglib2.algorithm.region.localneighborhood.Utils;
 
 public final class EllipseCursor <T> extends AbstractNeighborhoodCursor<T> {
 
@@ -46,7 +44,7 @@ public final class EllipseCursor <T> extends AbstractNeighborhoodCursor<T> {
 	 */
 	public EllipseCursor(AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> ellipse) {
 		super(ellipse);
-		rxs = new int [ (int) ( Math.max( ellipse.dimension(0), ellipse.dimension(1) ) - 1 ) / 2  +  1 ];
+		rxs = new int [ (int) (Math.max( ellipse.span[0], ellipse.span[1] )  +  1) ];
 		reset();
 	}
 
@@ -91,6 +89,7 @@ public final class EllipseCursor <T> extends AbstractNeighborhoodCursor<T> {
 	
 	@Override
 	public void fwd() {
+
 		switch(state) {
 
 		case DRAWING_LINE:
