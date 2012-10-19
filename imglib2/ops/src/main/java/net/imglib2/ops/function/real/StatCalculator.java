@@ -53,11 +53,22 @@ import net.imglib2.type.numeric.RealType;
  */
 public class StatCalculator<T extends RealType<T>> {
 
+	// -- instance varaibles --
+	
 	private Function<long[],T> func;
 	private PointSet region;
 	private PointSetIterator iter;
 	private final PrimitiveDoubleArray values;
 	
+	// -- constructor --
+
+	/**
+	 * Create a StatCalculator upon a region of a function.
+	 * @param func
+	 * The {@link Function} to gather samples from
+	 * @param region
+	 * The {@link PointSet} region over which to gather samples
+	 */
 	public StatCalculator(Function<long[],T> func, PointSet region) {
 		this.func = func;
 		this.region = region;
@@ -65,6 +76,17 @@ public class StatCalculator<T extends RealType<T>> {
 		this.values = new PrimitiveDoubleArray();
 	}
 
+	// -- public api --
+
+	/**
+	 * Resets the StatCalculator to work with a new function and/or region. The
+	 * calculator does the minimum amount of reinitialization.
+	 * 
+	 * @param newFunc
+	 * The new {@link Function} to use for obtaining sample values
+	 * @param newRegion
+	 * The new {@link PointSet} region over which to gather samples
+	 */
 	public void reset(Function<long[],T> newFunc, PointSet newRegion) {
 		func = newFunc;
 		if (newRegion == region) {
@@ -76,7 +98,17 @@ public class StatCalculator<T extends RealType<T>> {
 		}
 		values.clear();
 	}
-	
+
+	/**
+	 * Computes an alpha trimmed mean upon the current region of the current
+	 * function. Note that this method uses memory to make a copy of the input
+	 * values. Larger input regions might require a lot of memory.
+	 * 
+	 * @param halfTrimSize
+	 * The number of samples to ignore from each end of the data
+	 * @return
+	 * The measured value
+	 */
 	public double alphaTrimmedMean(int halfTrimSize){
 		T tmp = func.createOutput();
 		values.clear();
@@ -100,6 +132,13 @@ public class StatCalculator<T extends RealType<T>> {
 		return sum / (numElements - trimSize);
 	}
 
+	/**
+	 * Computes the arithmetic mean (or average) upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double arithmeticMean() {
 		T tmp = func.createOutput();
 		double sum = 0;
@@ -114,6 +153,13 @@ public class StatCalculator<T extends RealType<T>> {
 		return sum / numElements;
 	}
 
+	/**
+	 * Computes the contraharmonic mean upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double contraharmonicMean(double order) {
 		T tmp = func.createOutput();
 		double sum1 = 0;
@@ -129,10 +175,24 @@ public class StatCalculator<T extends RealType<T>> {
 		return sum1 / sum2;
 	}
 
+	/**
+	 * Computes the geometric mean upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double geometricMean() {
 		return Math.pow(product(), 1.0/region.calcSize());
 	}
 	
+	/**
+	 * Computes the harmonic mean upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double harmonicMean() {
 		T tmp = func.createOutput();
 		double sum = 0;
@@ -150,6 +210,13 @@ public class StatCalculator<T extends RealType<T>> {
 
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 	
+	/**
+	 * Computes the (biased) kurtosis value upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double kurtosisBiased() {
 		T tmp = func.createOutput();
 		double xbar = arithmeticMean(); 
@@ -176,6 +243,13 @@ public class StatCalculator<T extends RealType<T>> {
 	
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 
+	/**
+	 * Computes the (unbiased) kurtosis value upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double kurtosisUnbiased() {
 		double n = region.calcSize();
 		double biasedValue = kurtosisBiased();
@@ -186,16 +260,37 @@ public class StatCalculator<T extends RealType<T>> {
 	
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 	
+	/**
+	 * Computes the (biased) kurtosis excess value upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double kurtosisExcessBiased() {
 		return kurtosisBiased() - 3;
 	}
 	
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 
+	/**
+	 * Computes the (unbiased) kurtosis excess value upon the current region of
+	 * the current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double kurtosisExcessUnbiased() {
 		return kurtosisUnbiased() - 3;
 	}
 	
+	/**
+	 * Computes the maximum value upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double max() {
 		T tmp = func.createOutput();
 		double max = Double.NEGATIVE_INFINITY;
@@ -209,6 +304,14 @@ public class StatCalculator<T extends RealType<T>> {
 		return max;
 	}
 	
+	/**
+	 * Computes the median upon the current region of the current
+	 * function. Note that this method uses memory to make a copy of the input
+	 * values. Larger input regions might require a lot of memory.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double median() {
 		T tmp = func.createOutput();
 		values.clear();
@@ -235,10 +338,24 @@ public class StatCalculator<T extends RealType<T>> {
 		return (value1 + value2) / 2;
 	}
 	
+	/**
+	 * Computes the midpoint value upon the current region of the
+	 * current function. Midpoint = (min + max) / 2;
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double midpoint() {
 		return (min() + max()) / 2;
 	}
 	
+	/**
+	 * Computes the minimum value upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double min() {
 		T tmp = func.createOutput();
 		double min = Double.POSITIVE_INFINITY;
@@ -252,6 +369,13 @@ public class StatCalculator<T extends RealType<T>> {
 		return min;
 	}
 
+	/**
+	 * Computes the product of all the values of the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double product() {
 		T tmp = func.createOutput();
 		double prod = 1;
@@ -267,6 +391,13 @@ public class StatCalculator<T extends RealType<T>> {
 
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 	
+	/**
+	 * Computes the (biased) skew value upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double skewBiased() {
 		T tmp = func.createOutput();
 		double xbar = arithmeticMean(); 
@@ -291,6 +422,13 @@ public class StatCalculator<T extends RealType<T>> {
 		return m3 / Math.pow(m2, 1.5);
 	}
 	
+	/**
+	 * Computes the (unbiased) skew value upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double skewUnbiased() {
 		double n = region.calcSize();
 		double biasedValue = skewBiased();
@@ -298,14 +436,35 @@ public class StatCalculator<T extends RealType<T>> {
 		return unbiasedValue;
 	}
 	
+	/**
+	 * Computes the (biased) standard deviation upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double stdDevBiased() {
 		return Math.sqrt(varianceBiased());
 	}
 	
+	/**
+	 * Computes the (unbiased) standard deviation upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double stdDevUnbiased() {
 		return Math.sqrt(varianceUnbiased());
 	}
 	
+	/**
+	 * Computes the sum of all the values of the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double sum() {
 		T tmp = func.createOutput();
 		double sum = 0;
@@ -319,6 +478,13 @@ public class StatCalculator<T extends RealType<T>> {
 		return sum;
 	}
 	
+	/**
+	 * Computes the sum of squared deviations of the values of the current region
+	 * of the current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double sumOfSquaredDeviations() {
 		T tmp = func.createOutput();
 		final double xbar = arithmeticMean();
@@ -334,18 +500,40 @@ public class StatCalculator<T extends RealType<T>> {
 		return sum;
 	}
 	
+	/**
+	 * Computes the (biased) variance upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double varianceBiased() {
 		double sum = sumOfSquaredDeviations();
 		long numElements = region.calcSize();
 		return sum / numElements;
 	}
 
+	/**
+	 * Computes the (unbiased) variance upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double varianceUnbiased() {
 		double sum = sumOfSquaredDeviations();
 		long numElements = region.calcSize();
 		return sum / (numElements-1);
 	}
 	
+	/**
+	 * Computes a weighted average of the current function values over the current
+	 * region. The weights are provided and there must be as many weights as there
+	 * are points in the current region.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double weightedAverage(double[] weights) {
 		long numElements = region.calcSize();
 		if (numElements != weights.length)
@@ -355,6 +543,14 @@ public class StatCalculator<T extends RealType<T>> {
 		return sum / numElements;
 	}
 	
+	/**
+	 * Computes a weighted sum of the current function values over the current
+	 * region. The weights are provided and there must be as many weights as there
+	 * are points in the current region.
+	 * 
+	 * @return
+	 * The measured value
+	 */
 	public double weightedSum(double[] weights) {
 		long numElements = region.calcSize();
 		if (numElements != weights.length)
