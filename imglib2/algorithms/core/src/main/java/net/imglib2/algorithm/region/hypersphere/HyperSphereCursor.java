@@ -37,6 +37,7 @@
 package net.imglib2.algorithm.region.hypersphere;
 
 import net.imglib2.Cursor;
+import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 
@@ -69,7 +70,7 @@ public class HyperSphereCursor< T > implements Cursor< T >
 	public HyperSphereCursor( final RandomAccessible< T > source, final long[] center, final long radius )
 	{
 		this.source = source;
-		this.center = center;
+		this.center = center.clone();
 		this.radius = radius;
 		this.numDimensions = source.numDimensions();
 		this.maxDim = numDimensions - 1;
@@ -83,7 +84,7 @@ public class HyperSphereCursor< T > implements Cursor< T >
 	public HyperSphereCursor( final HyperSphereCursor< T > cursor )
 	{
 		this.source = cursor.source;
-		this.center = cursor.center;
+		this.center = cursor.center.clone();
 		this.radius = cursor.radius;
 		this.numDimensions = cursor.numDimensions();
 		this.maxDim = cursor.maxDim;
@@ -93,6 +94,22 @@ public class HyperSphereCursor< T > implements Cursor< T >
 		
 		this.randomAccess = source.randomAccess();
 		this.randomAccess.setPosition( cursor.randomAccess );
+	}
+
+	public void updateCenter( final long[] center )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.center[ d ] = center[ d ];
+		
+		reset();
+	}
+	
+	public void updateCenter( final Localizable center )
+	{
+		for ( int d = 0; d < numDimensions; ++d )
+			this.center[ d ] = center.getLongPosition( d );
+		
+		reset();
 	}
 
 	@Override
