@@ -48,15 +48,15 @@ import net.imglib2.view.Views;
 import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
- * This {@link Img} stores an image in a single linear array of basic
- * types.  By that, it provides the fastest possible access to data while
- * limiting the number of basic types stored to {@link Integer#MAX_VALUE}.
- * Keep in mind that this does not necessarily reflect the number of pixels,
- * because a pixel can be stored in less than or more than a basic type entry.
- *
+ * This {@link Img} stores an image in a single linear array of basic types. By
+ * that, it provides the fastest possible access to data while limiting the
+ * number of basic types stored to {@link Integer#MAX_VALUE}. Keep in mind that
+ * this does not necessarily reflect the number of pixels, because a pixel can
+ * be stored in less than or more than a basic type entry.
+ * 
  * @param <T>
  * @param <A>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -69,9 +69,9 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	final private A data;
 
 	/**
-	 * TODO check for the size of numPixels being < Integer.MAX_VALUE?
-	 * TODO Type is suddenly not necessary anymore
-	 *
+	 * TODO check for the size of numPixels being < Integer.MAX_VALUE? TODO Type
+	 * is suddenly not necessary anymore
+	 * 
 	 * @param factory
 	 * @param data
 	 * @param dim
@@ -82,7 +82,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 		super( dim, entitiesPerPixel );
 		this.dim = new int[ n ];
 		for ( int d = 0; d < n; ++d )
-			this.dim[ d ] = ( int )dim[ d ];
+			this.dim[ d ] = ( int ) dim[ d ];
 
 		this.steps = new int[ n ];
 		IntervalIndexer.createAllocationSteps( this.dim, this.steps );
@@ -96,16 +96,28 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	}
 
 	@Override
-	public ArrayCursor< T > cursor() { return new ArrayCursor< T >( this ); }
+	public ArrayCursor< T > cursor()
+	{
+		return new ArrayCursor< T >( this );
+	}
 
 	@Override
-	public ArrayLocalizingCursor< T > localizingCursor() { return new ArrayLocalizingCursor< T >( this ); }
+	public ArrayLocalizingCursor< T > localizingCursor()
+	{
+		return new ArrayLocalizingCursor< T >( this );
+	}
 
 	@Override
-	public ArrayRandomAccess< T > randomAccess() { return new ArrayRandomAccess< T >( this ); }
+	public ArrayRandomAccess< T > randomAccess()
+	{
+		return new ArrayRandomAccess< T >( this );
+	}
 
 	@Override
-	public ArrayRandomAccess< T > randomAccess( final Interval interval ){ return randomAccess(); }
+	public ArrayRandomAccess< T > randomAccess( final Interval interval )
+	{
+		return randomAccess();
+	}
 
 	@Override
 	public FlatIterationOrder iterationOrder()
@@ -114,7 +126,10 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	}
 
 	@Override
-	public ArrayImgFactory<T> factory() { return new ArrayImgFactory<T>(); }
+	public ArrayImgFactory< T > factory()
+	{
+		return new ArrayImgFactory< T >();
+	}
 
 	@Override
 	public ArrayImg< T, ? > copy()
@@ -131,24 +146,90 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	}
 
 	/**
-	 * Dummy implementation.
-	 * TODO: add optimized ArrayCursor.
+	 * Dummy implementation. TODO: add optimized ArrayCursor.
 	 */
 	@Override
 	public Cursor< T > cursor( final Interval interval )
 	{
 		System.out.println( "cursor( " + Util.printInterval( interval ) + " )" );
-		return Views.iterable( Views.interval( this, interval ) ).cursor();
+
+		int dimLength = fastCursorAvailable( interval );
+		if ( dimLength >= 0 )
+		{
+
+			return new ArraySubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
+		}
+		else
+		{
+			return Views.iterable( Views.interval( this, interval ) ).cursor();
+		}
+
+	}
+
+	private long size( Interval interval, int length )
+	{
+		long size = interval.dimension( 0 );
+		for ( int d = 1; d < length; d++ )
+		{
+			size *= interval.dimension( d );
+		}
+
+		return size;
+	}
+
+	private long offset( Interval interval, int length )
+	{
+		final int maxDim = numDimensions() - 1;
+		long i = interval.min( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * dimension( d ) + interval.min( d );
+
+		return i;
+	}
+
+	/*
+	 * If method returns -1 no fast cursor is available, else the amount of dims
+	 * (starting from zero) which can be iterated fast are returned
+	 */
+	private int fastCursorAvailable( Interval interval )
+	{
+		int dimIdx = 0;
+
+		// Find equal dims
+		for ( int d = 0; d < interval.numDimensions(); d++, dimIdx++ )
+		{
+			if ( interval.dimension( d ) != dimension( d ) )
+			{
+				dimIdx++;
+				break;
+			}
+		}
+
+		for ( int d = dimIdx; d < interval.numDimensions(); d++ )
+		{
+			if ( interval.dimension( d ) != 1 )
+				return -1;
+		}
+
+		return dimIdx;
 	}
 
 	/**
-	 * Dummy implementation.
-	 * TODO: add optimized ArrayLocalizingCursor.
+	 * Dummy implementation. TODO: add optimized ArrayLocalizingCursor.
 	 */
 	@Override
 	public Cursor< T > localizingCursor( final Interval interval )
 	{
 		System.out.println( "localizingCursor( " + Util.printInterval( interval ) + " )" );
-		return Views.iterable( Views.interval( this, interval ) ).cursor();
+
+		int dimLength = fastCursorAvailable( interval );
+		if ( dimLength > 0 )
+		{
+			return new ArrayLocalizingSubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
+		}
+		else
+		{
+			return Views.iterable( Views.interval( this, interval ) ).cursor();
+		}
 	}
 }

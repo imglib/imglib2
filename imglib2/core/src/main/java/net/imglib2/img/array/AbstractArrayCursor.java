@@ -36,34 +36,115 @@
 
 package net.imglib2.img.array;
 
-import net.imglib2.Cursor;
+import net.imglib2.AbstractCursorInt;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.IntervalIndexer;
 
 /**
  * {@link Cursor} on an {@link ArrayImg}.
  * 
  * @param <T>
  * 
- * @author Tobias Pietzsch
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  * @author Christian Dietz
+ * @author Tobias Pietzsch
  */
-public final class ArrayCursor< T extends NativeType< T > > extends AbstractArrayCursor< T >
+public abstract class AbstractArrayCursor< T extends NativeType< T > > extends AbstractCursorInt< T >
 {
 
-	protected ArrayCursor( final ArrayCursor< T > cursor )
+	protected final int offset;
+
+	protected final int size;
+
+	protected final T type;
+
+	protected final ArrayImg< T, ? > img;
+
+	protected final int lastIndex;
+
+	protected AbstractArrayCursor( final AbstractArrayCursor< T > cursor )
 	{
-		super( cursor );
+		super( cursor.numDimensions() );
+
+		this.img = cursor.img;
+		this.type = img.createLinkedType();
+		this.offset = cursor.offset;
+		this.size = cursor.size;
+		this.lastIndex = cursor.lastIndex;
+
+		type.updateIndex( cursor.type.getIndex() );
+		type.updateContainer( this );
+
+		reset();
 	}
 
-	public ArrayCursor( final ArrayImg< T, ? > img )
+	public AbstractArrayCursor( final ArrayImg< T, ? > img, int offset, int size )
 	{
-		super( img, 0, ( int ) img.size() );
+		super( img.numDimensions() );
+
+		this.type = img.createLinkedType();
+		this.img = img;
+		this.lastIndex = offset + size - 1;
+		this.offset = offset;
+		this.size = size;
+
+		reset();
 	}
 
 	@Override
-	public ArrayCursor< T > copy()
+	public T get()
 	{
-		return new ArrayCursor< T >( this );
+		return type;
+	}
+
+	@Override
+	public boolean hasNext()
+	{
+		return type.getIndex() < lastIndex;
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		type.incIndex( ( int ) steps );
+	}
+
+	@Override
+	public void fwd()
+	{
+		type.incIndex();
+	}
+
+	@Override
+	public void reset()
+	{
+		type.updateIndex( offset - 1 );
+		type.updateContainer( this );
+	}
+
+	@Override
+	public String toString()
+	{
+		return type.toString();
+	}
+
+	@Override
+	public int getIntPosition( final int dim )
+	{
+		return IntervalIndexer.indexToPosition( type.getIndex(), img.dim, dim );
+	}
+
+	@Override
+	public void localize( final int[] position )
+	{
+		IntervalIndexer.indexToPosition( type.getIndex(), img.dim, position );
+	}
+
+	@Override
+	public AbstractArrayCursor< T > copyCursor()
+	{
+		return ( AbstractArrayCursor< T > ) copy();
 	}
 
 }
