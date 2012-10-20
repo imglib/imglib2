@@ -41,6 +41,7 @@ import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RandomAccessibleOnRealRandomAccessible;
@@ -61,8 +62,16 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 
 /**
- * TODO
+ * Create light-weight views into {@link RandomAccessible RandomAccessibles}.
  *
+ * A view is itself a {@link RandomAccessible} or
+ * {@link RandomAccessibleInterval} that provides {@link RandomAccess accessors}
+ * that transform coordinates on-the-fly without copying the underlying data.
+ * Consecutive transformations are concatenated and simplified to provide
+ * optimally efficient accessors. Note, that accessors provided by a view are
+ * read/write. Changing pixels in a view changes the underlying image data.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Views
 {
