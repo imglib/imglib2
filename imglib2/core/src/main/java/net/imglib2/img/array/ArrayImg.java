@@ -44,6 +44,7 @@ import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Util;
+import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 import net.imglib2.view.iteration.SubIntervalIterable;
 
@@ -137,8 +138,8 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	@Override
 	public Cursor< T > cursor( final Interval interval )
 	{
-		System.out.println( "cursor( " + Util.printInterval( interval ) + " )" );
-		return Views.iterable( Views.interval( this, interval ) ).cursor();
+		System.out.println( "ArrayImg.cursor( " + Util.printInterval( interval ) + " )" );
+		return new IterableRandomAccessibleInterval< T >( Views.interval( this, interval ) ).cursor();
 	}
 
 	/**
@@ -148,7 +149,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	@Override
 	public Cursor< T > localizingCursor( final Interval interval )
 	{
-		System.out.println( "localizingCursor( " + Util.printInterval( interval ) + " )" );
-		return Views.iterable( Views.interval( this, interval ) ).cursor();
+		System.out.println( "ArrayImg.localizingCursor( " + Util.printInterval( interval ) + " )" );
+		return new IterableRandomAccessibleInterval< T >( Views.interval( this, interval ) ).cursor();
 	}
 }
