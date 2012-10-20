@@ -54,8 +54,12 @@ import net.imglib2.transform.integer.TranslationTransform;
 import net.imglib2.util.Util;
 
 /**
- * TODO
+ * The "brain" of the Views framework. Simplifies View cascades to provide the
+ * most efficient accessor for a specified Interval.
  *
+ * @see #getEfficientRandomAccessible(Interval, RandomAccessible)
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class TransformBuilder< T >
 {
@@ -82,20 +86,20 @@ public class TransformBuilder< T >
 	/**
 	 * Provides the untransformed random access.
 	 */
-	RandomAccessible< T > source;
+	protected RandomAccessible< T > source;
 
 	/**
 	 * Interval transformed to the currently visited view. null means that the
 	 * interval is infinite.
 	 */
-	BoundingBox boundingBox;
+	protected BoundingBox boundingBox;
 
 	/**
 	 * List of transforms that have to be applied when wrapping the
 	 * {@link #source} RandomAccess to obtain a RandomAccess in the target
 	 * coordinate system.
 	 */
-	LinkedList< Transform > transforms;
+	protected LinkedList< Transform > transforms;
 
 	/**
 	 * Create a new TransformBuilder. Starting from {@code randomAccessible}, go
@@ -112,12 +116,13 @@ public class TransformBuilder< T >
 	 *            the view hierarchy.
 	 * @param randomAccessible
 	 */
-	TransformBuilder( final Interval interval, final RandomAccessible< T > randomAccessible )
+	protected TransformBuilder( final Interval interval, final RandomAccessible< T > randomAccessible )
 	{
 		transforms = new LinkedList< Transform >();
 		boundingBox = ( interval == null) ? null : new BoundingBox( interval );
 		// System.out.println( randomAccessible );
 		visit( randomAccessible );
+		simplifyTransforms();
 	}
 
 	/**
@@ -274,16 +279,19 @@ public class TransformBuilder< T >
 	}
 
 	/**
-	 * Simplify the transforms list and create a sequence of wrapped
-	 * RandomAccessibles.
-	 *
-	 * @return RandomAccessible on the interval specified in the constructor.
+	 * Simplify the {@link #transforms} list.
+	 * First, concatenate neighboring transforms if possible.
+	 * Then, for every {@link Mixed} transform:
+	 * <ul>
+	 * <li> remove it if it is the identity transforms.
+	 * <li> replace it by a {@link TranslationTransform} if it is a pure translation.
+	 * <li> replace it by a {@link SlicingTransform} if it is a pure slicing.
+	 * </ul>
 	 */
-	protected RandomAccessible< T > build()
+	protected void simplifyTransforms()
 	{
 		net.imglib2.concatenate.Util.join( transforms );
 
-		// TODO: simplify transform list
 		for ( final ListIterator< Transform > i = transforms.listIterator(); i.hasNext(); )
 		{
 			final Transform t = i.next();
@@ -331,8 +339,15 @@ public class TransformBuilder< T >
 				}
 			}
 		}
+	}
 
-		// build RandomAccessibles
+	/**
+	 * Create a sequence of wrapped RandomAccessibles from the {@link #transforms} list.
+	 *
+	 * @return RandomAccessible on the interval specified in the constructor.
+	 */
+	protected RandomAccessible< T > build()
+	{
 		RandomAccessible< T > result = source;
 		for ( final ListIterator< Transform > i = transforms.listIterator(); i.hasNext(); )
 		{
