@@ -516,6 +516,55 @@ public class Views
 	}
 
 	/**
+	 * Create view which adds a dimension to the source {@link RandomAccessible}.
+	 *
+	 * The additional dimension is the last dimension. For example, an XYZ view
+	 * is created for an XY source. When accessing an XYZ sample in the view,
+	 * the final coordinate is discarded and the source XY sample is accessed.
+	 *
+	 * @param randomAccessible
+	 *            the source
+	 */
+	public static < T > MixedTransformView< T > addDimension( final RandomAccessible< T > randomAccessible )
+	{
+		final int m = randomAccessible.numDimensions();
+		final int n = m + 1;
+		final MixedTransform t = new MixedTransform( n, m );
+		return new MixedTransformView< T >( randomAccessible, t );
+	}
+
+	/**
+	 * Create view which adds a dimension to the source
+	 * {@link RandomAccessibleInterval}. The {@link Interval} boundaries in the
+	 * additional dimension are set to the specified values.
+	 *
+	 * The additional dimension is the last dimension. For example, an XYZ view
+	 * is created for an XY source. When accessing an XYZ sample in the view,
+	 * the final coordinate is discarded and the source XY sample is accessed.
+	 *
+	 * @param interval
+	 *            the source
+	 * @param minOfNewDim
+	 *            Interval min in the additional dimension.
+	 * @param maxOfNewDim
+	 *            Interval max in the additional dimension.
+	 */
+	public static < T > IntervalView< T > addDimension( final RandomAccessibleInterval< T > interval, final long minOfNewDim, final long maxOfNewDim )
+	{
+		final int m = interval.numDimensions();
+		final long[] min = new long[ m + 1 ];
+		final long[] max = new long[ m + 1 ];
+		for ( int d = 0; d < m; ++d )
+		{
+			min[ d ] = interval.min( d );
+			max[ d ] = interval.max( d );
+		}
+		min[ m ] = minOfNewDim;
+		max[ m ] = maxOfNewDim;
+		return interval( addDimension( interval ), min, max );
+	}
+
+	/**
 	 * Invert the d-axis.
 	 *
 	 * @param randomAccessible
