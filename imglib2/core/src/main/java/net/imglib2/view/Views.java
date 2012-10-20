@@ -300,6 +300,49 @@ public class Views
 	}
 
 	/**
+	 * Create view with permuted axes. fromAxis and toAxis are swapped.
+	 *
+	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source view
+	 * is mapped to the Z-Axis of the permuted view and vice versa. For a XYZ
+	 * source, a ZYX view would be created.
+	 */
+	public static < T > MixedTransformView< T > permute( final RandomAccessible< T > randomAccessible, final int fromAxis, final int toAxis )
+	{
+		final int n = randomAccessible.numDimensions();
+		final int[] component = new int[ n ];
+		for ( int e = 0; e < n; ++e )
+			component[ e ] = e;
+		component[ fromAxis ] = toAxis;
+		component[ toAxis ] = fromAxis;
+		final MixedTransform t = new MixedTransform( n, n );
+		t.setComponentMapping( component );
+		return new MixedTransformView< T >( randomAccessible, t );
+	}
+
+	/**
+	 * Create view with permuted axes. fromAxis and toAxis are swapped.
+	 *
+	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source view
+	 * is mapped to the Z-Axis of the permuted view and vice versa. For a XYZ
+	 * source, a ZYX view would be created.
+	 */
+	public static < T > IntervalView< T > permute( final RandomAccessibleInterval< T > interval, final int fromAxis, final int toAxis )
+	{
+		final int n = interval.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		final long fromMinNew = min[ toAxis ];
+		final long fromMaxNew = max[ toAxis ];
+		min[ toAxis ] = min[ fromAxis ];
+		max[ toAxis ] = max[ fromAxis ];
+		min[ fromAxis ] = fromMinNew;
+		max[ fromAxis ] = fromMaxNew;
+		return interval( permute( ( RandomAccessible< T > ) interval, fromAxis, toAxis ), min, max );
+	}
+
+	/**
 	 * Translate the source view by the given translation vector. Pixel
 	 * <em>x</em> in the source view has coordinates <em>(x + translation)</em>
 	 * in the resulting view.

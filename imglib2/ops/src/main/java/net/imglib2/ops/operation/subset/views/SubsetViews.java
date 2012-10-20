@@ -84,29 +84,6 @@ public class SubsetViews {
 	}
 
 	/**
-	 * Permutates RandomAccessible
-	 * 
-	 * @param <T>
-	 * @param randomAccessible
-	 * @param fromAxis
-	 * @param toAxis
-	 * @return
-	 */
-	public static <T> MixedTransformView<T> permutate(
-			final RandomAccessible<T> randomAccessible, final int fromAxis,
-			final int toAxis) {
-		final int n = randomAccessible.numDimensions();
-		final int[] component = new int[n];
-		for (int e = 0; e < n; ++e)
-			component[e] = e;
-		component[fromAxis] = toAxis;
-		component[toAxis] = fromAxis;
-		final MixedTransform t = new MixedTransform(n, n);
-		t.setComponentMapping(component);
-		return new MixedTransformView<T>(randomAccessible, t);
-	}
-
-	/**
 	 * View on interval of a source. If wanted, dims with size 1 are removed.
 	 * 
 	 * @param src
@@ -249,7 +226,7 @@ public class SubsetViews {
 			int srcIdx = resSpace.getAxisIndex(targetSpace.axis(d));
 
 			if (srcIdx != d) {
-				resRndAccessible = permutate(resRndAccessible, srcIdx, d);
+				resRndAccessible = Views.permute(resRndAccessible, srcIdx, d);
 
 				// also permutate calibrated space
 				AxisType tmp = resSpace.axis(d);
