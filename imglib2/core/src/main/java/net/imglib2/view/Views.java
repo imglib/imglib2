@@ -41,6 +41,7 @@ import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RandomAccessibleOnRealRandomAccessible;
@@ -61,8 +62,16 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 
 /**
- * TODO
+ * Create light-weight views into {@link RandomAccessible RandomAccessibles}.
  *
+ * A view is itself a {@link RandomAccessible} or
+ * {@link RandomAccessibleInterval} that provides {@link RandomAccess accessors}
+ * that transform coordinates on-the-fly without copying the underlying data.
+ * Consecutive transformations are concatenated and simplified to provide
+ * optimally efficient accessors. Note, that accessors provided by a view are
+ * read/write. Changing pixels in a view changes the underlying image data.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Views
 {
@@ -300,6 +309,49 @@ public class Views
 	}
 
 	/**
+	 * Create view with permuted axes. fromAxis and toAxis are swapped.
+	 *
+	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source view
+	 * is mapped to the Z-Axis of the permuted view and vice versa. For a XYZ
+	 * source, a ZYX view would be created.
+	 */
+	public static < T > MixedTransformView< T > permute( final RandomAccessible< T > randomAccessible, final int fromAxis, final int toAxis )
+	{
+		final int n = randomAccessible.numDimensions();
+		final int[] component = new int[ n ];
+		for ( int e = 0; e < n; ++e )
+			component[ e ] = e;
+		component[ fromAxis ] = toAxis;
+		component[ toAxis ] = fromAxis;
+		final MixedTransform t = new MixedTransform( n, n );
+		t.setComponentMapping( component );
+		return new MixedTransformView< T >( randomAccessible, t );
+	}
+
+	/**
+	 * Create view with permuted axes. fromAxis and toAxis are swapped.
+	 *
+	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source view
+	 * is mapped to the Z-Axis of the permuted view and vice versa. For a XYZ
+	 * source, a ZYX view would be created.
+	 */
+	public static < T > IntervalView< T > permute( final RandomAccessibleInterval< T > interval, final int fromAxis, final int toAxis )
+	{
+		final int n = interval.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		final long fromMinNew = min[ toAxis ];
+		final long fromMaxNew = max[ toAxis ];
+		min[ toAxis ] = min[ fromAxis ];
+		max[ toAxis ] = max[ fromAxis ];
+		min[ fromAxis ] = fromMinNew;
+		max[ fromAxis ] = fromMaxNew;
+		return interval( permute( ( RandomAccessible< T > ) interval, fromAxis, toAxis ), min, max );
+	}
+
+	/**
 	 * Translate the source view by the given translation vector. Pixel
 	 * <em>x</em> in the source view has coordinates <em>(x + translation)</em>
 	 * in the resulting view.
@@ -470,6 +522,55 @@ public class Views
 			}
 		}
 		return interval( hyperSlice( ( RandomAccessible< T > ) view, d, pos), min, max );
+	}
+
+	/**
+	 * Create view which adds a dimension to the source {@link RandomAccessible}.
+	 *
+	 * The additional dimension is the last dimension. For example, an XYZ view
+	 * is created for an XY source. When accessing an XYZ sample in the view,
+	 * the final coordinate is discarded and the source XY sample is accessed.
+	 *
+	 * @param randomAccessible
+	 *            the source
+	 */
+	public static < T > MixedTransformView< T > addDimension( final RandomAccessible< T > randomAccessible )
+	{
+		final int m = randomAccessible.numDimensions();
+		final int n = m + 1;
+		final MixedTransform t = new MixedTransform( n, m );
+		return new MixedTransformView< T >( randomAccessible, t );
+	}
+
+	/**
+	 * Create view which adds a dimension to the source
+	 * {@link RandomAccessibleInterval}. The {@link Interval} boundaries in the
+	 * additional dimension are set to the specified values.
+	 *
+	 * The additional dimension is the last dimension. For example, an XYZ view
+	 * is created for an XY source. When accessing an XYZ sample in the view,
+	 * the final coordinate is discarded and the source XY sample is accessed.
+	 *
+	 * @param interval
+	 *            the source
+	 * @param minOfNewDim
+	 *            Interval min in the additional dimension.
+	 * @param maxOfNewDim
+	 *            Interval max in the additional dimension.
+	 */
+	public static < T > IntervalView< T > addDimension( final RandomAccessibleInterval< T > interval, final long minOfNewDim, final long maxOfNewDim )
+	{
+		final int m = interval.numDimensions();
+		final long[] min = new long[ m + 1 ];
+		final long[] max = new long[ m + 1 ];
+		for ( int d = 0; d < m; ++d )
+		{
+			min[ d ] = interval.min( d );
+			max[ d ] = interval.max( d );
+		}
+		min[ m ] = minOfNewDim;
+		max[ m ] = maxOfNewDim;
+		return interval( addDimension( interval ), min, max );
 	}
 
 	/**

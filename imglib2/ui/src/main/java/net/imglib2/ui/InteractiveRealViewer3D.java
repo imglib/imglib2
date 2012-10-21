@@ -47,16 +47,6 @@ public class InteractiveRealViewer3D< T extends NumericType< T > > extends Abstr
 		display.startPainter();
 	}
 
-	protected int interpolation = 0;
-
-	protected void toggleInterpolation()
-	{
-		++interpolation;
-		interpolation %= 2;
-		projector = createProjector();
-		display.requestRepaint();
-	}
-
 	@Override
 	protected XYRandomAccessibleProjector< T, ARGBType > createProjector()
 	{

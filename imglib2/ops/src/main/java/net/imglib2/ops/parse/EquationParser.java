@@ -49,7 +49,10 @@ import net.imglib2.ops.function.real.RealDistanceFromPointFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealIndexFunction;
 import net.imglib2.ops.operation.real.binary.RealAdd;
+import net.imglib2.ops.operation.real.binary.RealBinaryOperation;
 import net.imglib2.ops.operation.real.binary.RealDivide;
+import net.imglib2.ops.operation.real.binary.RealMax;
+import net.imglib2.ops.operation.real.binary.RealMin;
 import net.imglib2.ops.operation.real.binary.RealMod;
 import net.imglib2.ops.operation.real.binary.RealMultiply;
 import net.imglib2.ops.operation.real.binary.RealPower;
@@ -64,6 +67,8 @@ import net.imglib2.ops.parse.token.Exponent;
 import net.imglib2.ops.parse.token.FunctionCall;
 import net.imglib2.ops.parse.token.ImgReference;
 import net.imglib2.ops.parse.token.Int;
+import net.imglib2.ops.parse.token.Max;
+import net.imglib2.ops.parse.token.Min;
 import net.imglib2.ops.parse.token.Minus;
 import net.imglib2.ops.parse.token.Mod;
 import net.imglib2.ops.parse.token.OpenParen;
@@ -375,6 +380,30 @@ public class EquationParser<T extends RealType<T>> {
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+6;
 			status.function =	new RealAngleFromOriginFunction<DoubleType>(axis1, axis2, new DoubleType());
+			return status;
+		}
+		else if (ParseUtils.match(Min.class, tokens, pos) ||
+							ParseUtils.match(Max.class, tokens, pos))
+		{
+			if (!ParseUtils.match(OpenParen.class, tokens, pos+1))
+				return ParseUtils.syntaxError(pos+1, tokens, "Expected a '('.");
+			ParseStatus status1 = equation(tokens, pos+2);
+			if (status1.errMsg != null) return status1;
+			if (!ParseUtils.match(Comma.class, tokens, status1.tokenNumber))
+				return ParseUtils.syntaxError(status1.tokenNumber, tokens, "Expected a ','.");
+			ParseStatus status2 = equation(tokens, status1.tokenNumber+1);
+			if (status2.errMsg != null) return status2;
+			if (!ParseUtils.match(CloseParen.class, tokens, status2.tokenNumber))
+				return ParseUtils.syntaxError(status2.tokenNumber, tokens, "Expected a ')'.");
+			ParseStatus status = new ParseStatus();
+			status.tokenNumber = status2.tokenNumber+1;
+			RealBinaryOperation<DoubleType,DoubleType,DoubleType> op =
+					ParseUtils.match(Min.class, tokens, pos) ?
+						new RealMin<DoubleType,DoubleType,DoubleType>() :
+						new RealMax<DoubleType,DoubleType,DoubleType>();
+			status.function =
+					new GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
+							status1.function, status2.function, op, new DoubleType());
 			return status;
 		}
 		else if (ParseUtils.match(OpenParen.class, tokens, pos)) {

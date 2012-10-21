@@ -222,4 +222,18 @@ public class Intervals
 		}
 		return true;
 	}
+
+	/**
+	 * Compute the number of elements contained in an (integer) {@link Interval}.
+	 *
+	 * @return number of elements in {@code interval}.
+	 */
+	public static long numElements( final Interval interval )
+	{
+		long numPixels = interval.dimension( 0 );
+		final int n = interval.numDimensions();
+		for ( int d = 1; d < n; ++d )
+			numPixels *= interval.dimension( d );
+		return numPixels;
+	}
 }
