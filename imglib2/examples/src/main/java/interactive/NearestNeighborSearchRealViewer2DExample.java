@@ -55,10 +55,11 @@ public class NearestNeighborSearchRealViewer2DExample< T extends NumericType< T 
 		new InteractiveRealViewer2D< UnsignedByteType >( width, height, interpolant, transform, converter )
 		{
 			@Override
-			public void drawScreenImage()
+			public boolean drawScreenImage()
 			{
-				super.drawScreenImage();
+				final boolean valid = super.drawScreenImage();
 				logo.paint( screenImage );
+				return valid;
 			}
 		};
 	}

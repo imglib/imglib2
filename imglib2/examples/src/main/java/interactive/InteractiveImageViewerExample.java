@@ -79,10 +79,11 @@ public class InteractiveImageViewerExample
 			new InteractiveViewer2D< T >( ( int ) width, ( int ) height, source, initial, converter, DisplayTypes.DISPLAY_SWING )
 			{
 				@Override
-				public void drawScreenImage()
+				public boolean drawScreenImage()
 				{
-					super.drawScreenImage();
+					final boolean valid = super.drawScreenImage();
 					logo.paint( screenImage );
+					return valid;
 				}
 			};
 		}
@@ -108,13 +109,14 @@ public class InteractiveImageViewerExample
 				0,      0, zScale, -interval.dimension( 2 ) * zScale / 2.0 );
 
 //			final InteractiveViewer3D< T > viewer = new InteractiveViewer3D< T >( ( int ) width, ( int ) height, source, interval, initial, converter, DisplayTypes.DISPLAY_IMAGEPLUS )
-			final InteractiveViewer3D< T > viewer = new InteractiveViewer3D< T >( ( int ) width, ( int ) height, source, interval, initial, converter, DisplayTypes.DISPLAY_SWING )
+			new InteractiveViewer3D< T >( ( int ) width, ( int ) height, source, interval, initial, converter, DisplayTypes.DISPLAY_SWING )
 			{
 				@Override
-				public void drawScreenImage()
+				public boolean drawScreenImage()
 				{
-					super.drawScreenImage();
+					final boolean valid = super.drawScreenImage();
 					logo.paint( screenImage );
+					return valid;
 				}
 			};
 		}

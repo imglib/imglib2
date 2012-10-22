@@ -27,10 +27,11 @@ public class MandelbrotRealViewer2DExample< T extends NumericType< T > & NativeT
 		new InteractiveRealViewer2D< LongType >( width, height, mandelbrot, transform, converter )
 		{
 			@Override
-			public void drawScreenImage()
+			public boolean drawScreenImage()
 			{
-				super.drawScreenImage();
+				final boolean valid = super.drawScreenImage();
 				logo.paint( screenImage );
+				return valid;
 			}
 		};
 	}

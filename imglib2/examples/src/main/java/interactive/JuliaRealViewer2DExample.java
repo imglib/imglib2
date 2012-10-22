@@ -96,10 +96,11 @@ public class JuliaRealViewer2DExample
 		viewer = new InteractiveRealViewer2D< LongType >( width, height, juliaset, rotation, converter )
 		{
 			@Override
-			public void drawScreenImage()
+			public boolean drawScreenImage()
 			{
-				super.drawScreenImage();
+				final boolean valid = super.drawScreenImage();
 				logo.paint( screenImage );
+				return valid;
 			}
 		};
 		viewer.getDisplay().addHandler( new JuliaListener() );

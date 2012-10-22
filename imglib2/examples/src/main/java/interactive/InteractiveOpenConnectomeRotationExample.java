@@ -33,10 +33,11 @@ public class InteractiveOpenConnectomeRotationExample
 		new InteractiveViewer3D< VolatileRealType< UnsignedByteType > >( w, h, extended, map, initial, new VolatileRealTypeARGBConverter( 0, 255 ) )
 		{
 			@Override
-			public void drawScreenImage()
+			public boolean drawScreenImage()
 			{
-				super.drawScreenImage();
+				final boolean valid = super.drawScreenImage();
 				logo.paint( screenImage );
+				return valid;
 			}
 		};
 	}
