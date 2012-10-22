@@ -49,17 +49,13 @@ import net.imglib2.type.numeric.RealType;
 public class RealProductFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
-	private final PrimitiveDoubleArray values;
 	private final Function<long[],T> otherFunc;
-	private final RealSampleCollector<T> collector;
-	private final StatCalculator calculator;
+	private StatCalculator<T> calculator;
 	
 	public RealProductFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
-		values = new PrimitiveDoubleArray();
-		collector = new RealSampleCollector<T>();
-		calculator = new StatCalculator();
+		this.calculator = null;
 	}
 	
 	@Override
@@ -69,8 +65,9 @@ public class RealProductFunction<T extends RealType<T>>
 
 	@Override
 	public void compute(PointSet input, T output) {
-		collector.collect(input, otherFunc, values);
-		double value = calculator.product(values);
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.product();
 		output.setReal(value);
 	}
 

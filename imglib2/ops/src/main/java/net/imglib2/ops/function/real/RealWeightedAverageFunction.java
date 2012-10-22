@@ -34,6 +34,11 @@
  * #L%
  */
 
+// TODO - this class suffers from the weakness that one needs to
+// correctly build the weights without maybe knowing the order of points in
+// the PointSet. We will need helper methods in that build a PointSet
+// compatible set of weights from a PointSet and some other hints.
+	
 
 package net.imglib2.ops.function.real;
 
@@ -41,33 +46,34 @@ import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
-
 /**
  * 
  * @author Barry DeZonia
  */
-public class RealHarmonicMeanFunction<T extends RealType<T>>
+public class RealWeightedAverageFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
+	private final double[] weights;
 	
-	public RealHarmonicMeanFunction(Function<long[],T> otherFunc)
+	public RealWeightedAverageFunction(Function<long[],T> otherFunc, double[] weights)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
+		this.weights = weights;
 	}
 	
 	@Override
-	public RealHarmonicMeanFunction<T> copy() {
-		return new RealHarmonicMeanFunction<T>(otherFunc.copy());
+	public RealWeightedAverageFunction<T> copy() {
+		return new RealWeightedAverageFunction<T>(otherFunc.copy(), weights.clone());
 	}
 
 	@Override
 	public void compute(PointSet input, T output) {
 		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
 		else calculator.reset(otherFunc, input);
-		double value = calculator.harmonicMean();
+		double value = calculator.weightedAverage(weights);
 		output.setReal(value);
 	}
 

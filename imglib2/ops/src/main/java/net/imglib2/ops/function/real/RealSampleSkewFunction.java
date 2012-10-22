@@ -46,31 +46,28 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealVarianceFunction<T extends RealType<T>>
+public class RealSampleSkewFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
-	private final PrimitiveDoubleArray values;
 	private final Function<long[],T> otherFunc;
-	private final RealSampleCollector<T> collector;
-	private final StatCalculator calculator;
+	private StatCalculator<T> calculator;
 	
-	public RealVarianceFunction(Function<long[],T> otherFunc)
+	public RealSampleSkewFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
-		values = new PrimitiveDoubleArray();
-		collector = new RealSampleCollector<T>();
-		calculator = new StatCalculator();
+		this.calculator = null;
 	}
 	
 	@Override
-	public RealVarianceFunction<T> copy() {
-		return new RealVarianceFunction<T>(otherFunc.copy());
+	public RealSampleSkewFunction<T> copy() {
+		return new RealSampleSkewFunction<T>(otherFunc.copy());
 	}
 
 	@Override
 	public void compute(PointSet input, T output) {
-		collector.collect(input, otherFunc, values);
-		double value = calculator.variance(values);
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.skewUnbiased();
 		output.setReal(value);
 	}
 
