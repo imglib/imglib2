@@ -53,8 +53,8 @@ abstract public class AbstractXYProjector< A, B > extends Point implements Proje
 {
 	final protected RandomAccessible< A > source;
 	final protected Converter< ? super A, B > converter;
-	final long[] min;
-	final long[] max;
+	final protected long[] min;
+	final protected long[] max;
 
 	public AbstractXYProjector( final RandomAccessible< A > source, final Converter< ? super A, B > converter )
 	{
