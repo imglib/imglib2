@@ -54,10 +54,11 @@ public class Interactive3DRealRandomAccessibleExample
 		new InteractiveRealViewer3D< LongType >( w, h, mandelbulb, sourceInterval, initial, converter )
 		{
 			@Override
-			public void drawScreenImage()
+			public boolean drawScreenImage()
 			{
 				super.drawScreenImage();
 				logo.paint( screenImage );
+				return true;
 			}
 		};
 	}

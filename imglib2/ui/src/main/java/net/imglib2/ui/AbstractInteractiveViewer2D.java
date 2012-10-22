@@ -39,6 +39,7 @@ package net.imglib2.ui;
 import java.awt.Graphics;
 
 import net.imglib2.display.ARGBScreenImage;
+import net.imglib2.display.VolatileXYRandomAccessibleProjector;
 import net.imglib2.display.XYRandomAccessibleProjector;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
@@ -50,7 +51,7 @@ import net.imglib2.ui.swing.SwingInteractiveDisplay2D;
  * 
  * @param <T>
  *
- * @author TobiasPietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public abstract class AbstractInteractiveViewer2D< T extends NumericType< T > > implements ScreenImageRenderer, TransformListener2D
@@ -118,7 +119,7 @@ public abstract class AbstractInteractiveViewer2D< T extends NumericType< T > > 
 	protected abstract XYRandomAccessibleProjector< T, ARGBType > createProjector();
 
 	@Override
-	public void drawScreenImage()
+	public boolean drawScreenImage()
 	{
 		synchronized( viewerTransform )
 		{
@@ -126,6 +127,10 @@ public abstract class AbstractInteractiveViewer2D< T extends NumericType< T > > 
 		}
 		sourceToScreen.concatenate( sourceTransform );
 		projector.map();
+		if ( VolatileXYRandomAccessibleProjector.class.isInstance( projector ) )
+			return ( ( VolatileXYRandomAccessibleProjector< ?, ?, ? > )projector ).isValid();
+		else
+			return true;
 	}
 
 	@Override

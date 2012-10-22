@@ -16,7 +16,6 @@
  */
 package interactive.remote.openconnectome;
 
-import interactive.remote.VolatileRealType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,6 +30,7 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 import net.imglib2.Interval;
+import net.imglib2.display.VolatileRealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 /**

@@ -57,13 +57,16 @@ public abstract class AbstractInteractiveDisplay
 					b = pleaseRepaint;
 					pleaseRepaint = false;
 				}
+				final boolean valid;
 				if ( b )
-					paint();
+					valid = paint();
+				else
+					valid = false;
 				synchronized ( this )
 				{
 					try
 					{
-						if ( !pleaseRepaint )
+						if ( !pleaseRepaint && valid )
 							wait();
 					}
 					catch ( final InterruptedException e )
@@ -125,8 +128,12 @@ public abstract class AbstractInteractiveDisplay
 
 	/**
 	 * This is called by the painter thread to repaint the display.
+	 * 
+	 * @return true if painting was successful AND complete, returning false
+	 *   does not mean that the result is entirely unusable but it may not
+	 *   be complete.
 	 */
-	public abstract void paint();
+	public abstract boolean paint();
 
 	/**
 	 * Add new event handler.

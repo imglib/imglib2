@@ -13,8 +13,12 @@ public interface ScreenImageRenderer
 
 	/**
 	 * Render the {@link #screenImage}.
+	 * 
+	 * @return true if drawing was successful AND complete, returning false
+	 *   does not mean that the result is entirely unusable but it may not
+	 *   be complete.
 	 */
-	public void drawScreenImage();
+	public boolean drawScreenImage();
 
 	/**
 	 * Render overlays.

@@ -50,7 +50,7 @@ import net.imglib2.type.numeric.NumericType;
  * 
  * @param <T>
  *
- * @author TobiasPietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class InteractiveRealViewer2D< T extends NumericType< T > > extends AbstractInteractiveViewer2D< T >

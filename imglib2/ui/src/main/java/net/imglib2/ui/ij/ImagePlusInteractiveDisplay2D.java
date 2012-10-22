@@ -101,17 +101,18 @@ public class ImagePlusInteractiveDisplay2D extends AbstractInteractiveDisplay2D 
 	 * Add new event handler.
 	 */
 	@Override
-	public void addHandler( final Object handler )
+	public void addHandler( final Object h )
 	{
-		gui.addHandler( handler );
+		gui.addHandler( h );
 	}
 
 	@Override
-	public void paint()
+	public boolean paint()
 	{
-		renderer.drawScreenImage();
+		final boolean valid = renderer.drawScreenImage();
 		renderer.drawOverlays( screenImage.image().getGraphics() );
 		imp.draw();
+		return valid;
 	}
 
 	@Override

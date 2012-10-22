@@ -1,9 +1,9 @@
 package interactive;
 
-import interactive.remote.VolatileRealType;
-import interactive.remote.VolatileRealTypeARGBConverter;
 import interactive.remote.openconnectome.VolatileOpenConnectomeRandomAccessibleInterval;
 import net.imglib2.RandomAccessible;
+import net.imglib2.display.VolatileRealType;
+import net.imglib2.display.VolatileRealTypeARGBConverter;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.integer.UnsignedByteType;

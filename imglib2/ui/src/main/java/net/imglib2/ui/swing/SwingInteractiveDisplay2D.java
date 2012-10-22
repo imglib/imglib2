@@ -1,3 +1,28 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
+ */
+
 package net.imglib2.ui.swing;
 
 import java.awt.Dimension;
@@ -110,19 +135,19 @@ public class SwingInteractiveDisplay2D extends AbstractInteractiveDisplay2D impl
 	 * Add new event handler.
 	 */
 	@Override
-	public void addHandler( final Object handler )
+	public void addHandler( final Object h )
 	{
-		if ( KeyListener.class.isInstance( handler ) )
-			frame.addKeyListener( ( KeyListener ) handler );
+		if ( KeyListener.class.isInstance( h ) )
+			frame.addKeyListener( ( KeyListener ) h );
 
-		if ( MouseMotionListener.class.isInstance( handler ) )
-			canvas.addMouseMotionListener( ( MouseMotionListener ) handler );
+		if ( MouseMotionListener.class.isInstance( h ) )
+			canvas.addMouseMotionListener( ( MouseMotionListener ) h );
 
-		if ( MouseListener.class.isInstance( handler ) )
-			canvas.addMouseListener( ( MouseListener ) handler );
+		if ( MouseListener.class.isInstance( h ) )
+			canvas.addMouseListener( ( MouseListener ) h );
 
-		if ( MouseWheelListener.class.isInstance( handler ) )
-			canvas.addMouseWheelListener( ( MouseWheelListener ) handler );
+		if ( MouseWheelListener.class.isInstance( h ) )
+			canvas.addMouseWheelListener( ( MouseWheelListener ) h );
 	}
 
 	final protected class Viewer2DCanvas extends JComponent
@@ -158,7 +183,7 @@ public class SwingInteractiveDisplay2D extends AbstractInteractiveDisplay2D impl
 	}
 
 	@Override
-	public void paint()
+	public boolean paint()
 	{
 		final int w = canvas.getWidth();
 		final int h = canvas.getHeight();
@@ -167,8 +192,9 @@ public class SwingInteractiveDisplay2D extends AbstractInteractiveDisplay2D impl
 			screenImage = new ARGBScreenImage( w, h );
 			renderer.screenImageChanged( screenImage );
 		}
-		renderer.drawScreenImage();
+		final boolean valid = renderer.drawScreenImage();
 		canvas.repaint();
+		return valid;
 	}
 
 	@Override
