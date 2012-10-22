@@ -57,17 +57,16 @@ public abstract class AbstractInteractiveDisplay
 					b = pleaseRepaint;
 					pleaseRepaint = false;
 				}
-				final boolean valid;
 				if ( b )
-					valid = paint();
-				else
-					valid = false;
+					pleaseRepaint = !paint();
 				synchronized ( this )
 				{
 					try
 					{
-						if ( !pleaseRepaint && valid )
+						if ( !pleaseRepaint )
 							wait();
+//						else
+//							System.out.println( "painting" );
 					}
 					catch ( final InterruptedException e )
 					{}

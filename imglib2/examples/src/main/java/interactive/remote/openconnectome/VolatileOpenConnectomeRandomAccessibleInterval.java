@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -48,8 +47,25 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class VolatileOpenConnectomeRandomAccessibleInterval extends AbstractOpenConnectomeRandomAccessibleInterval< VolatileRealType< UnsignedByteType > >
+public class VolatileOpenConnectomeRandomAccessibleInterval extends
+		AbstractOpenConnectomeRandomAccessibleInterval< VolatileRealType< UnsignedByteType >, VolatileOpenConnectomeRandomAccessibleInterval.Entry >
 {
+	public class Entry extends AbstractOpenConnectomeRandomAccessibleInterval< VolatileRealType< UnsignedByteType >, Entry >.Entry
+	{
+		public boolean valid;
+		final public byte[] data;
+		
+		public Entry( final Key key, final byte[] data, final boolean valid )
+		{
+			super( key );
+			this.data = data;
+			this.valid = valid;
+		}
+		
+		public boolean isValid() { return valid; }
+		public void setValid( final boolean valid ) { this.valid = valid; }
+	}
+	
 	protected class Fetcher extends Thread
 	{
 		@Override
@@ -79,12 +95,12 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends AbstractOpen
 						entry = ref.get();
 						if ( entry != null )
 						{
-							/* replace WeakReferences by SoftReferences which promotes cache entries from third to second class citizens */
-							synchronized ( cache )
-							{
-								cache.remove( entry.key );
-								cache.put( entry.key, new SoftReference< Entry >( entry ) );
-							}
+//							/* replace WeakReferences by SoftReferences which promotes cache entries from third to second class citizens */
+//							synchronized ( cache )
+//							{
+//								cache.remove( entry.key );
+//								cache.put( entry.key, new SoftReference< Entry >( entry ) );
+//							}
 						}
 					}
 					
@@ -123,6 +139,7 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends AbstractOpen
 							final Inflater inflater = new Inflater();
 							inflater.setInput( zippedBytes );
 							inflater.inflate( entry.data );
+							entry.setValid( true );
 								
 							inflater.end();
 							byteStream.close();
@@ -145,6 +162,8 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends AbstractOpen
 	
 	public class VolatileOpenConnectomeRandomAccess extends AbstractOpenConnectomeRandomAccess
 	{
+		protected Entry entry;
+		
 		public VolatileOpenConnectomeRandomAccess()
 		{
 			super( new VolatileRealType< UnsignedByteType >( new UnsignedByteType() ) );
@@ -158,7 +177,8 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends AbstractOpen
 		@Override
 		public VolatileRealType< UnsignedByteType > get()
 		{
-			t.get().set( 0xff & pixels[ ( zMod * cellHeight + yMod ) * cellWidth + xMod ] );
+			t.get().set( 0xff & entry.data[ ( zMod * cellHeight + yMod ) * cellWidth + xMod ] );
+			t.setValid( entry.valid );
 			return t;
 		}
 
@@ -172,6 +192,12 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends AbstractOpen
 		public VolatileOpenConnectomeRandomAccess copyRandomAccess()
 		{
 			return copy();
+		}
+		
+		@Override
+		protected void fetchPixels()
+		{
+			entry = VolatileOpenConnectomeRandomAccessibleInterval.this.fetchPixels( xDiv, yDiv, zDiv );
 		}
 	}
 	
@@ -216,22 +242,24 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends AbstractOpen
 	}
 		
 	@Override
-	protected byte[] fetchPixels2( final long x, final long y, final long z )
+	protected Entry fetchPixels2( final long x, final long y, final long z )
 	{
 		final Reference< Entry > ref;
+		final Key key;
 		synchronized ( cache )
 		{
-			final Key key = new Key( x, y, z );
+			key = new Key( x, y, z );
 			final Reference< Entry > cachedReference = cache.get( key );
 			if ( cachedReference != null )
 			{
 				final Entry cachedEntry = cachedReference.get();
 				if ( cachedEntry != null )
-					return cachedEntry.data;
+					return cachedEntry;
 			}
 			
 			final byte[] bytes = new byte[ cellWidth * cellHeight * cellDepth ];
-			ref = new WeakReference< Entry >( new Entry( key, bytes ) );
+			//ref = new WeakReference< Entry >( new Entry( key, bytes, false ) );
+			ref = new SoftReference< Entry >( new Entry( key, bytes, false ) );
 			cache.put( key, ref );
 			queue.add( ref );
 		}
@@ -242,10 +270,9 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends AbstractOpen
 		
 		final Entry entry = ref.get();
 		if ( entry != null )
-			return entry.data;
+			return entry;
 		else
-			return new byte[ cellWidth * cellHeight * cellDepth ];
-		
+			return new Entry( key, new byte[ cellWidth * cellHeight * cellDepth ], false );
 	}
 	
 	@Override

@@ -21,8 +21,6 @@ import interactive.remote.AbstractRemoteRandomAccessibleInterval;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -47,7 +45,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-abstract public class AbstractOpenConnectomeRandomAccessibleInterval< T extends RealType< T > > extends AbstractRemoteRandomAccessibleInterval< T, AbstractOpenConnectomeRandomAccessibleInterval< T >.Key, AbstractOpenConnectomeRandomAccessibleInterval< T >.Entry >
+abstract public class AbstractOpenConnectomeRandomAccessibleInterval< T extends RealType< T >, E extends AbstractRemoteRandomAccessibleInterval< T, AbstractOpenConnectomeRandomAccessibleInterval< T, E >.Key, E >.Entry > extends AbstractRemoteRandomAccessibleInterval< T, AbstractOpenConnectomeRandomAccessibleInterval< T, E >.Key, E >
 {
 	public class Key
 	{
@@ -91,22 +89,10 @@ abstract public class AbstractOpenConnectomeRandomAccessibleInterval< T extends 
 		}
 	}
 	
-	class Entry extends AbstractRemoteRandomAccessibleInterval< T, Key, Entry >.Entry
-	{
-		final public byte[] data;
-		
-		public Entry( final Key key, final byte[] data )
-		{
-			super( key );
-			this.data = data;
-		}
-	}
-	
 	abstract public class AbstractOpenConnectomeRandomAccess extends AbstractLocalizable implements RandomAccess< T >
 	{
 		protected long xDiv, yDiv, zDiv;
 		protected int xMod, yMod, zMod;
-		protected byte[] pixels;
 		final T t;
 
 		public AbstractOpenConnectomeRandomAccess( final T t )
@@ -133,14 +119,9 @@ abstract public class AbstractOpenConnectomeRandomAccessibleInterval< T extends 
 			xMod = template.xMod;
 			yMod = template.yMod;
 			zMod = template.zMod;
-			
-			pixels = template.pixels;
 		}
 		
-		protected void fetchPixels()
-		{
-			pixels = AbstractOpenConnectomeRandomAccessibleInterval.this.fetchPixels( xDiv, yDiv, zDiv );
-		}
+		abstract protected void fetchPixels();
 		
 		@Override
 		public void fwd( final int d )
@@ -663,30 +644,9 @@ abstract public class AbstractOpenConnectomeRandomAccessibleInterval< T extends 
 		}
 	}
 		
-	protected byte[] fetchPixels2( final long x, final long y, final long z )
-	{
-		final SoftReference< Entry > ref;
-		final byte[] bytes;
-		synchronized ( cache )
-		{
-			final Key key = new Key( x, y, z );
-			final Reference< Entry > cachedReference = cache.get( key );
-			if ( cachedReference != null )
-			{
-				final Entry cachedEntry = cachedReference.get();
-				if ( cachedEntry != null )
-					return cachedEntry.data;
-			}
-			
-			bytes = new byte[ cellWidth * cellHeight * cellDepth ];
-			ref = new SoftReference< Entry >( new Entry( key, bytes ) );
-			cache.put( key, ref );
-		}
-		fetchPixels3( bytes, x, y, z );
-		return bytes;
-	}
+	abstract protected E fetchPixels2( final long x, final long y, final long z );
 	
-	protected byte[] fetchPixels( final long x, final long y, final long z )
+	protected E fetchPixels( final long x, final long y, final long z )
 	{
 		try
 		{

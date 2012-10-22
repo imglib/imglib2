@@ -16,6 +16,9 @@
  */
 package interactive.remote.openconnectome;
 
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
+
 import net.imglib2.Interval;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
@@ -34,10 +37,24 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class OpenConnectomeRandomAccessibleInterval extends AbstractOpenConnectomeRandomAccessibleInterval< UnsignedByteType >
+public class OpenConnectomeRandomAccessibleInterval extends
+	AbstractOpenConnectomeRandomAccessibleInterval< UnsignedByteType, OpenConnectomeRandomAccessibleInterval.Entry >
 {
+	public class Entry extends AbstractOpenConnectomeRandomAccessibleInterval< UnsignedByteType, Entry >.Entry
+	{
+		final public byte[] data;
+		
+		public Entry( final Key key, final byte[] data )
+		{
+			super( key );
+			this.data = data;
+		}
+	}
+	
 	public class OpenConnectomeRandomAccess extends AbstractOpenConnectomeRandomAccess
 	{
+		protected byte[] pixels;
+		
 		public OpenConnectomeRandomAccess()
 		{
 			super( new UnsignedByteType() );
@@ -46,6 +63,7 @@ public class OpenConnectomeRandomAccessibleInterval extends AbstractOpenConnecto
 		public OpenConnectomeRandomAccess( final OpenConnectomeRandomAccess template )
 		{
 			super( template );
+			pixels = template.pixels;
 		}
 		
 		@Override
@@ -65,6 +83,13 @@ public class OpenConnectomeRandomAccessibleInterval extends AbstractOpenConnecto
 		public OpenConnectomeRandomAccess copyRandomAccess()
 		{
 			return copy();
+		}
+		
+		@Override
+		protected void fetchPixels()
+		{
+			final Entry entry = OpenConnectomeRandomAccessibleInterval.this.fetchPixels( xDiv, yDiv, zDiv );
+			pixels = entry.data;
 		}
 	}
 	
@@ -93,5 +118,31 @@ public class OpenConnectomeRandomAccessibleInterval extends AbstractOpenConnecto
 	public OpenConnectomeRandomAccess randomAccess( final Interval interval )
 	{
 		return randomAccess();
+	}
+	
+	@Override
+	protected Entry fetchPixels2( final long x, final long y, final long z )
+	{
+		final SoftReference< Entry > ref;
+		final Entry entry;
+		final byte[] bytes;
+		synchronized ( cache )
+		{
+			final Key key = new Key( x, y, z );
+			final Reference< Entry > cachedReference = cache.get( key );
+			if ( cachedReference != null )
+			{
+				final Entry cachedEntry = cachedReference.get();
+				if ( cachedEntry != null )
+					return cachedEntry;
+			}
+			
+			bytes = new byte[ cellWidth * cellHeight * cellDepth ];
+			entry = new Entry( key, bytes );
+			ref = new SoftReference< Entry >( entry );
+			cache.put( key, ref );
+		}
+		fetchPixels3( bytes, x, y, z );
+		return entry;
 	}
 }

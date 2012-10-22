@@ -4,8 +4,16 @@ import interactive.remote.openconnectome.VolatileOpenConnectomeRandomAccessibleI
 import net.imglib2.RandomAccessible;
 import net.imglib2.display.VolatileRealType;
 import net.imglib2.display.VolatileRealTypeARGBConverter;
+import net.imglib2.display.VolatileXYRandomAccessibleProjector;
+import net.imglib2.interpolation.Interpolant;
+import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.io.ImgIOException;
+import net.imglib2.realtransform.AffineGet;
+import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.ui.InteractiveViewer3D;
 import net.imglib2.view.Views;
@@ -15,11 +23,11 @@ public class InteractiveOpenConnectomeRotationExample
 	final static public void main( final String[] args ) throws ImgIOException
 	{
 //		final OpenConnectomeRandomAccessibleInterval map = new OpenConnectomeRandomAccessibleInterval( "http://openconnecto.me/emca/kasthuri11", 21504, 26624, 1850, 64, 64, 8, 1 );
-		final VolatileOpenConnectomeRandomAccessibleInterval map = new VolatileOpenConnectomeRandomAccessibleInterval( "http://openconnecto.me/emca/kasthuri11", 21504, 26624, 1850, 64, 64, 8, 1 );
+		final VolatileOpenConnectomeRandomAccessibleInterval map = new VolatileOpenConnectomeRandomAccessibleInterval( "http://openconnecto.me/emca/kasthuri11", 21504, 26624, 1850, 50, 50, 5, 1 );
 		
 		final int w = 400, h = 300;
 
-		final double yScale = 1.0, zScale = 12.0;
+		final double yScale = 1.0, zScale = 10.0;
 		final AffineTransform3D initial = new AffineTransform3D();
 		initial.set(
 			1.0, 0.0, 0.0, ( w - map.dimension( 0 ) ) / 2.0,
@@ -38,6 +46,27 @@ public class InteractiveOpenConnectomeRotationExample
 				final boolean valid = super.drawScreenImage();
 				logo.paint( screenImage );
 				return valid;
+			}
+			
+			@Override
+			protected VolatileXYRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType > createProjector()
+			{
+				final InterpolatorFactory< VolatileRealType< UnsignedByteType >, RandomAccessible< VolatileRealType< UnsignedByteType > > > interpolatorFactory;
+				switch ( interpolation )
+				{
+				case 0:
+					interpolatorFactory = new NearestNeighborInterpolatorFactory< VolatileRealType< UnsignedByteType > >();
+					break;
+				case 1:
+				default:
+					interpolatorFactory = new NLinearInterpolatorFactory< VolatileRealType< UnsignedByteType > >();
+					break;
+				}
+				final Interpolant< VolatileRealType< UnsignedByteType >, RandomAccessible< VolatileRealType< UnsignedByteType > > > interpolant =
+						new Interpolant< VolatileRealType< UnsignedByteType >, RandomAccessible< VolatileRealType< UnsignedByteType > > >( source, interpolatorFactory );
+				final AffineRandomAccessible< VolatileRealType< UnsignedByteType >, AffineGet > mapping =
+						new AffineRandomAccessible< VolatileRealType< UnsignedByteType >, AffineGet >( interpolant, sourceToScreen.inverse() );
+				return new VolatileXYRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType >( mapping, screenImage, converter );
 			}
 		};
 	}
