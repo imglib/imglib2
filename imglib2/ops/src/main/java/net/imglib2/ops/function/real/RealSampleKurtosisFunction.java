@@ -46,28 +46,28 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealKurtosisBiasedFunction<T extends RealType<T>>
+public class RealSampleKurtosisFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
 	
-	public RealKurtosisBiasedFunction(Function<long[],T> otherFunc)
+	public RealSampleKurtosisFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
 	}
 	
 	@Override
-	public RealKurtosisBiasedFunction<T> copy() {
-		return new RealKurtosisBiasedFunction<T>(otherFunc.copy());
+	public RealSampleKurtosisFunction<T> copy() {
+		return new RealSampleKurtosisFunction<T>(otherFunc.copy());
 	}
 
 	@Override
 	public void compute(PointSet input, T output) {
 		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
 		else calculator.reset(otherFunc, input);
-		double value = calculator.kurtosisBiased();
+		double value = calculator.kurtosisUnbiased();
 		output.setReal(value);
 	}
 

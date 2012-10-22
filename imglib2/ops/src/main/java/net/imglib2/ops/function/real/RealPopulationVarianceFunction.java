@@ -46,28 +46,28 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealStdDevUnbiasedFunction<T extends RealType<T>>
+public class RealPopulationVarianceFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
 	
-	public RealStdDevUnbiasedFunction(Function<long[],T> otherFunc)
+	public RealPopulationVarianceFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
 	}
 	
 	@Override
-	public RealStdDevUnbiasedFunction<T> copy() {
-		return new RealStdDevUnbiasedFunction<T>(otherFunc.copy());
+	public RealPopulationVarianceFunction<T> copy() {
+		return new RealPopulationVarianceFunction<T>(otherFunc.copy());
 	}
 
 	@Override
 	public void compute(PointSet input, T output) {
 		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
 		else calculator.reset(otherFunc, input);
-		double value = calculator.stdDevUnbiased();
+		double value = calculator.varianceBiased();
 		output.setReal(value);
 	}
 
