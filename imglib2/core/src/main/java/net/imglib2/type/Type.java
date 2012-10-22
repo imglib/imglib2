@@ -36,15 +36,15 @@
 
 package net.imglib2.type;
 
-
 /**
- * The {@link Type} interface is responsible for accessing and manipulating (pixel)
- * values. It can be realized as an object instance holding a single value or
- * as a proxy ({@link NativeType}) mapping values into a Java primitive type array.
- *
+ * The {@link Type} interface is responsible for accessing and manipulating
+ * (pixel) values. It can be realized as an object instance holding a single
+ * value or as a proxy ({@link NativeType}) mapping values into a Java primitive
+ * type array.
+ * 
  * @param <T>
  *            the specialized version
- *
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -53,7 +53,7 @@ public interface Type< T extends Type< T > >
 {
 	/**
 	 * Creates a new {@link Type} variable which can only store one value.
-	 *
+	 * 
 	 * @return a new {@link Type} variable
 	 */
 	public T createVariable();
@@ -61,14 +61,14 @@ public interface Type< T extends Type< T > >
 	/**
 	 * Creates a new {@link Type} variable that has the value of this
 	 * {@link Type}
-	 *
+	 * 
 	 * @return a new {@link Type} variable
 	 */
 	public T copy();
 
 	/**
 	 * Sets the value of another {@link Type}.
-	 *
+	 * 
 	 * @param c
 	 *            the new value
 	 */
