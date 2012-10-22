@@ -67,7 +67,7 @@ public class RealSampleSkewFunction<T extends RealType<T>>
 	public void compute(PointSet input, T output) {
 		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
 		else calculator.reset(otherFunc, input);
-		double value = calculator.skewUnbiased();
+		double value = calculator.sampleSkew();
 		output.setReal(value);
 	}
 

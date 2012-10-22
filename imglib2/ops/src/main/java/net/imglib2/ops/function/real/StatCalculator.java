@@ -208,82 +208,6 @@ public class StatCalculator<T extends RealType<T>> {
 		return numElements / sum; // looks weird but it is correct
 	}
 
-	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
-	
-	/**
-	 * Computes the (biased) kurtosis value upon the current region of the
-	 * current function.
-	 * 
-	 * @return
-	 * The measured value
-	 */
-	public double kurtosisBiased() {
-		T tmp = func.createOutput();
-		double xbar = arithmeticMean(); 
-		double s2 = 0;
-		double s4 = 0;
-		long numElements = 0;
-		iter.reset();
-		while (iter.hasNext()) {
-			long[] pos = iter.next();
-			func.compute(pos, tmp);
-			double value = tmp.getRealDouble();
-			numElements++;
-			double v = value - xbar;
-			double v2 = v * v;
-			double v4 = v2 * v2;
-			s2 += v2;
-			s4 += v4;
-		}
-		double n = numElements;
-		double m2 = s2 / n;
-		double m4 = s4 / n;
-		return m4 / (m2 * m2);
-	}
-	
-	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
-
-	/**
-	 * Computes the (unbiased) kurtosis value upon the current region of the
-	 * current function.
-	 * 
-	 * @return
-	 * The measured value
-	 */
-	public double kurtosisUnbiased() {
-		double n = region.calcSize();
-		double biasedValue = kurtosisBiased();
-		double unbiasedValue = biasedValue * (n+1) + 6;
-		unbiasedValue *= (n-1) / ((n-2) * (n-3));
-		return unbiasedValue;
-	}
-	
-	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
-	
-	/**
-	 * Computes the (biased) kurtosis excess value upon the current region of the
-	 * current function.
-	 * 
-	 * @return
-	 * The measured value
-	 */
-	public double kurtosisExcessBiased() {
-		return kurtosisBiased() - 3;
-	}
-	
-	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
-
-	/**
-	 * Computes the (unbiased) kurtosis excess value upon the current region of
-	 * the current function.
-	 * 
-	 * @return
-	 * The measured value
-	 */
-	public double kurtosisExcessUnbiased() {
-		return kurtosisUnbiased() - 3;
-	}
-	
 	/**
 	 * Computes the maximum value upon the current region of the
 	 * current function.
@@ -369,26 +293,52 @@ public class StatCalculator<T extends RealType<T>> {
 		return min;
 	}
 
+	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
+	
 	/**
-	 * Computes the product of all the values of the current region of the
+	 * Computes the (biased) kurtosis value upon the current region of the
 	 * current function.
 	 * 
 	 * @return
 	 * The measured value
 	 */
-	public double product() {
+	public double populationKurtosis() {
 		T tmp = func.createOutput();
-		double prod = 1;
+		double xbar = arithmeticMean(); 
+		double s2 = 0;
+		double s4 = 0;
+		long numElements = 0;
 		iter.reset();
 		while (iter.hasNext()) {
 			long[] pos = iter.next();
 			func.compute(pos, tmp);
 			double value = tmp.getRealDouble();
-			prod *= value;
+			numElements++;
+			double v = value - xbar;
+			double v2 = v * v;
+			double v4 = v2 * v2;
+			s2 += v2;
+			s4 += v4;
 		}
-		return prod;
+		double n = numElements;
+		double m2 = s2 / n;
+		double m4 = s4 / n;
+		return m4 / (m2 * m2);
 	}
-
+	
+	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
+	
+	/**
+	 * Computes the (biased) kurtosis excess value upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
+	public double populationKurtosisExcess() {
+		return populationKurtosis() - 3;
+	}
+	
 	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
 	
 	/**
@@ -398,7 +348,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * @return
 	 * The measured value
 	 */
-	public double skewBiased() {
+	public double populationSkew() {
 		T tmp = func.createOutput();
 		double xbar = arithmeticMean(); 
 		double s2 = 0;
@@ -423,28 +373,91 @@ public class StatCalculator<T extends RealType<T>> {
 	}
 	
 	/**
-	 * Computes the (unbiased) skew value upon the current region of the
-	 * current function.
-	 * 
-	 * @return
-	 * The measured value
-	 */
-	public double skewUnbiased() {
-		double n = region.calcSize();
-		double biasedValue = skewBiased();
-		double unbiasedValue = biasedValue * Math.sqrt(n * (n-1)) / (n-2);
-		return unbiasedValue;
-	}
-	
-	/**
 	 * Computes the (biased) standard deviation upon the current region of the
 	 * current function.
 	 * 
 	 * @return
 	 * The measured value
 	 */
-	public double stdDevBiased() {
-		return Math.sqrt(varianceBiased());
+	public double populationStdDev() {
+		return Math.sqrt(populationVariance());
+	}
+	
+	/**
+	 * Computes the (biased) variance upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
+	public double populationVariance() {
+		double sum = sumOfSquaredDeviations();
+		long numElements = region.calcSize();
+		return sum / numElements;
+	}
+
+	/**
+	 * Computes the product of all the values of the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
+	public double product() {
+		T tmp = func.createOutput();
+		double prod = 1;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double value = tmp.getRealDouble();
+			prod *= value;
+		}
+		return prod;
+	}
+
+	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
+
+	/**
+	 * Computes the (unbiased) kurtosis value upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
+	public double sampleKurtosis() {
+		double n = region.calcSize();
+		double biasedValue = populationKurtosis();
+		double unbiasedValue = biasedValue * (n+1) + 6;
+		unbiasedValue *= (n-1) / ((n-2) * (n-3));
+		return unbiasedValue;
+	}
+	
+	// reference: http://www.tc3.edu/instruct/sbrown/stat/shape.htm
+
+	/**
+	 * Computes the (unbiased) kurtosis excess value upon the current region of
+	 * the current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
+	public double sampleKurtosisExcess() {
+		return sampleKurtosis() - 3;
+	}
+	
+	/**
+	 * Computes the (unbiased) skew value upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
+	public double sampleSkew() {
+		double n = region.calcSize();
+		double biasedValue = populationSkew();
+		double unbiasedValue = biasedValue * Math.sqrt(n * (n-1)) / (n-2);
+		return unbiasedValue;
 	}
 	
 	/**
@@ -454,8 +467,21 @@ public class StatCalculator<T extends RealType<T>> {
 	 * @return
 	 * The measured value
 	 */
-	public double stdDevUnbiased() {
-		return Math.sqrt(varianceUnbiased());
+	public double sampleStdDev() {
+		return Math.sqrt(sampleVariance());
+	}
+	
+	/**
+	 * Computes the (unbiased) variance upon the current region of the
+	 * current function.
+	 * 
+	 * @return
+	 * The measured value
+	 */
+	public double sampleVariance() {
+		double sum = sumOfSquaredDeviations();
+		long numElements = region.calcSize();
+		return sum / (numElements-1);
 	}
 	
 	/**
@@ -498,32 +524,6 @@ public class StatCalculator<T extends RealType<T>> {
 			sum += (term * term);
 		}
 		return sum;
-	}
-	
-	/**
-	 * Computes the (biased) variance upon the current region of the
-	 * current function.
-	 * 
-	 * @return
-	 * The measured value
-	 */
-	public double varianceBiased() {
-		double sum = sumOfSquaredDeviations();
-		long numElements = region.calcSize();
-		return sum / numElements;
-	}
-
-	/**
-	 * Computes the (unbiased) variance upon the current region of the
-	 * current function.
-	 * 
-	 * @return
-	 * The measured value
-	 */
-	public double varianceUnbiased() {
-		double sum = sumOfSquaredDeviations();
-		long numElements = region.calcSize();
-		return sum / (numElements-1);
 	}
 	
 	/**

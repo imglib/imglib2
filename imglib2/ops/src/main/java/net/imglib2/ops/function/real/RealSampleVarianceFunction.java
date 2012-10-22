@@ -67,7 +67,7 @@ public class RealSampleVarianceFunction<T extends RealType<T>>
 	public void compute(PointSet input, T output) {
 		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
 		else calculator.reset(otherFunc, input);
-		double value = calculator.varianceUnbiased();
+		double value = calculator.sampleVariance();
 		output.setReal(value);
 	}
 
