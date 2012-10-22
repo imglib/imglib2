@@ -51,17 +51,13 @@ public class RealContraharmonicMeanFunction<T extends RealType<T>>
 {
 	private final Function<long[],T> otherFunc;
 	private final double order;
-	private final PrimitiveDoubleArray values;
-	private final RealSampleCollector<T> collector;
-	private final StatCalculator calculator;
+	private StatCalculator<T> calculator;
 	
 	public RealContraharmonicMeanFunction(Function<long[],T> otherFunc, double order)
 	{
 		this.otherFunc = otherFunc;
 		this.order = order;
-		values = new PrimitiveDoubleArray();
-		collector = new RealSampleCollector<T>();
-		calculator = new StatCalculator();
+		this.calculator = null;
 	}
 	
 	@Override
@@ -71,8 +67,9 @@ public class RealContraharmonicMeanFunction<T extends RealType<T>>
 
 	@Override
 	public void compute(PointSet input, T output) {
-		collector.collect(input, otherFunc, values);
-		double value = calculator.contraharmonicMean(values, order);
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.contraharmonicMean(order);
 		output.setReal(value);
 	}
 

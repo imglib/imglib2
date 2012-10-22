@@ -46,28 +46,28 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealHarmonicMeanFunction<T extends RealType<T>>
+public class RealPopulationKurtosisExcessFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
 	
-	public RealHarmonicMeanFunction(Function<long[],T> otherFunc)
+	public RealPopulationKurtosisExcessFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
 	}
 	
 	@Override
-	public RealHarmonicMeanFunction<T> copy() {
-		return new RealHarmonicMeanFunction<T>(otherFunc.copy());
+	public RealPopulationKurtosisExcessFunction<T> copy() {
+		return new RealPopulationKurtosisExcessFunction<T>(otherFunc.copy());
 	}
 
 	@Override
 	public void compute(PointSet input, T output) {
 		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
 		else calculator.reset(otherFunc, input);
-		double value = calculator.harmonicMean();
+		double value = calculator.kurtosisExcessBiased();
 		output.setReal(value);
 	}
 
