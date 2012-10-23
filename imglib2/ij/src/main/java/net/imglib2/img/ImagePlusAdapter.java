@@ -312,7 +312,7 @@ public class ImagePlusAdapter
 		@Override
 		public void convert(final ARGBType input, final FloatType output) {
 			final int v = input.get();
-			output.setReal((v >> 24) * (((v >> 16) & 0xff) * 0.299 + ((v >> 8) & 0xff) * 0.587 + (v & 0xff) * 0.144));
+			output.setReal( ((v >> 24) & 0xff) * (((v >> 16) & 0xff) * 0.299 + ((v >> 8) & 0xff) * 0.587 + (v & 0xff) * 0.144));
 		}
 	}
 
