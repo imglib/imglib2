@@ -1,13 +1,15 @@
-package net.imglib2.ops.measure;
+package net.imglib2.ops.measure.measurements;
+
+import net.imglib2.ops.measure.SamplingMeasurement;
 
 
 
-public class Moment2AboutZero implements SamplingMeasurement {
+public class Moment4AboutZero implements SamplingMeasurement {
 	private ElementCount numElems;
 	private double sum;
 	private boolean calculated = false;
 
-	public Moment2AboutZero(ElementCount numElems) {
+	public Moment4AboutZero(ElementCount numElems) {
 		this.numElems = numElems;
 	}
 	
@@ -18,7 +20,7 @@ public class Moment2AboutZero implements SamplingMeasurement {
 	
 	@Override
 	public void dataValue(long[] position, double value) {
-		sum += value*value;
+		sum += value*value*value*value;
 	}
 	
 	@Override

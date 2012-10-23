@@ -1,29 +1,26 @@
-package net.imglib2.ops.measure;
+package net.imglib2.ops.measure.measurements;
+
+import net.imglib2.ops.measure.SamplingMeasurement;
 
 
 
-public class Moment2AboutMean implements SamplingMeasurement {
-	private Mean mean;
+public class Moment1AboutZero implements SamplingMeasurement {
 	private ElementCount numElems;
-	private double sumDevs;
-	private double meanVal;
+	private double sum;
 	private boolean calculated = false;
 
-	public Moment2AboutMean(Mean mean, ElementCount numElems) {
-		this.mean = mean;
+	public Moment1AboutZero(ElementCount numElems) {
 		this.numElems = numElems;
 	}
 	
 	@Override
 	public void preprocess(long[] origin) {
-		sumDevs = 0;
-		meanVal = mean.getValue();
+		sum = 0;
 	}
 	
 	@Override
 	public void dataValue(long[] position, double value) {
-		double dev = value - meanVal;
-		sumDevs += dev*dev;
+		sum += value;
 	}
 	
 	@Override
@@ -34,7 +31,7 @@ public class Moment2AboutMean implements SamplingMeasurement {
 	@Override
 	public double getValue() {
 		if (!calculated) return Double.NaN;
-		return sumDevs / numElems.getValue();
+		return sum / numElems.getValue();
 	}
 	
 }

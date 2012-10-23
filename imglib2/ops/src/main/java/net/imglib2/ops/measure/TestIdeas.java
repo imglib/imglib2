@@ -2,6 +2,11 @@ package net.imglib2.ops.measure;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.real.RealEquationFunction;
+import net.imglib2.ops.measure.measurements.ElementCount;
+import net.imglib2.ops.measure.measurements.Mean;
+import net.imglib2.ops.measure.measurements.SampleKurtosisExcess;
+import net.imglib2.ops.measure.measurements.SampleStdDev;
+import net.imglib2.ops.measure.measurements.SampleVariance;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.real.DoubleType;

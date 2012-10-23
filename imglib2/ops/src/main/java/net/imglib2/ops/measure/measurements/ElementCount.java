@@ -1,21 +1,24 @@
-package net.imglib2.ops.measure;
+package net.imglib2.ops.measure.measurements;
+
+import net.imglib2.ops.measure.SamplingMeasurement;
 
 
 
-public class Product implements SamplingMeasurement {
+public class ElementCount implements SamplingMeasurement {
+
 	private boolean calculated = false;
-	private double prod;
+	private long numElems;
 	
-	public Product() {}
+	public ElementCount() {}
 	
 	@Override
 	public void preprocess(long[] origin) {
-		prod = 1;
+		numElems = 0;
 	}
 
 	@Override
 	public void dataValue(long[] position, double value) {
-		prod *= value;
+		numElems++;
 	}
 
 	@Override
@@ -26,7 +29,8 @@ public class Product implements SamplingMeasurement {
 	@Override
 	public double getValue() {
 		if (!calculated) return Double.NaN;
-		return prod;
+		return numElems;
 	}
+
 }
 
