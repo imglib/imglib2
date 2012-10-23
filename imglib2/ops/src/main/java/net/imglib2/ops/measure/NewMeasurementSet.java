@@ -27,9 +27,11 @@ import net.imglib2.type.numeric.RealType;
 //   passed in T derived from ComplexType
 
 // - note: something you can't do with this design: define a measurement that is
-//   half some other generic measurment. In ctor work obtain() would have a
+//   half some other generic measurement. In ctor work obtain() would have a
 //   Measurement (rather than something specific) and would not know what to
-//   obtain.
+//   obtain. Solution: same as weights idea - one says something like:
+//   set.use(Half.class, Mean.class) which would see that Half constructor
+//   would construct on a Mean and that is obtain()'ed as usual.
 
 public class NewMeasurementSet {
 	
