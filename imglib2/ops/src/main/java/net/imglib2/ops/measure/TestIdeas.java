@@ -15,8 +15,14 @@ import net.imglib2.type.numeric.real.DoubleType;
 public class TestIdeas {
 
 	public static void main(String[] args) {
+		/* See here that any Img can be sampled as a Function
+		Img<UnsignedByteType> img = null;
 		Function<long[],DoubleType> func =
-				new RealEquationFunction<DoubleType>("[x,y], 2*x + 3*y + 7", new DoubleType(), null);
+			new RealImageFunction(img, new DoubleType());
+		 */
+		Function<long[],DoubleType> func =
+				new RealEquationFunction<DoubleType>(
+						"[x,y], 2*x + 3*y + 7", new DoubleType(), null);
 		PointSet region = new HyperVolumePointSet(new long[]{25,25});
 		NewMeasurementSet measures = new NewMeasurementSet();
 		// add measures - order does not matter - dependencies resolved as needed
