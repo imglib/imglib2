@@ -17,7 +17,7 @@ public class SampleVariance implements Measurement {
 	@Override
 	public double getValue() {
 		double n = numElems.getValue();
-		return n / (n-1) * popVar.getValue();
+		return (n / (n-1)) * popVar.getValue();
 	}
 	
 }
