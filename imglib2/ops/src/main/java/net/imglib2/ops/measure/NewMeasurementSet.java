@@ -75,6 +75,7 @@ public class NewMeasurementSet {
 		T tmp = func.createOutput();
 		PointSetIterator iter = region.createIterator();
 		for (List<SamplingMeasurement> level : samplingLevels) {
+			if (level.size() == 0) continue;
 			for (SamplingMeasurement measurement : level) {
 				measurement.preprocess(region.getOrigin());
 			}
