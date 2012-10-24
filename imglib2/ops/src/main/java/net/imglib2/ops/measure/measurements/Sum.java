@@ -1,34 +1,18 @@
 package net.imglib2.ops.measure.measurements;
 
-import net.imglib2.ops.measure.SamplingMeasurement;
+import net.imglib2.ops.measure.Measurement;
 
+public class Sum implements Measurement {
 
-
-public class Sum implements SamplingMeasurement {
-	private boolean calculated = false;
-	private double sum;
+	private Sum1 sum;
 	
-	public Sum() {}
+	public Sum(Sum1 sum) {
+		this.sum = sum;
+	}
 	
-	@Override
-	public void preprocess(long[] origin) {
-		sum = 0;
-	}
-
-	@Override
-	public void dataValue(long[] pos, double value) {
-		sum += value;
-	}
-
-	@Override
-	public void postprocess() {
-		calculated = true;
-	}
-
 	@Override
 	public double getValue() {
-		if (!calculated) return Double.NaN;
-		return sum;
+		return sum.getValue();
 	}
-}
 
+}
