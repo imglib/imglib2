@@ -159,17 +159,17 @@ public class NewMeasurementSet {
 	
 	private int determineLevel(Measurement measure) {
 		try {
-			int max = 0;
+			int maxChildLevel = -1;
 			Field[] fields = measure.getClass().getDeclaredFields();
 			for (Field field : fields) {
 				field.setAccessible(true);
 				Object value = field.get(measure);
 				if (value instanceof Measurement) {
 					int level = determineLevel((Measurement)value);
-					max = Math.max(max, level+1);
+					maxChildLevel = Math.max(maxChildLevel, level);
 				}
 			}
-			return max;
+			return maxChildLevel+1;
 		} catch (Exception e) {
 			return 0;
 		}
