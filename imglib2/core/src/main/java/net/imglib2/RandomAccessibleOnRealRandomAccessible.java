@@ -119,7 +119,7 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 		@Override
 		public void bck( final int d )
 		{
-			targetAccess.fwd( d );
+			targetAccess.bck( d );
 		}
 
 		@Override
