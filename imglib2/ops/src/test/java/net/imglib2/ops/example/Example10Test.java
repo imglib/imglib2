@@ -100,7 +100,7 @@ public class Example10Test {
 			new CartesianComplexFunction<long[],DoubleType,DoubleType,ComplexDoubleType>
 			(image,zero,new ComplexDoubleType());
 		ArrayImgFactory<ComplexDoubleType> factory = new ArrayImgFactory<ComplexDoubleType>();
-		dft = new DFTFunction<ComplexDoubleType>(factory, spatialFunction, new long[]{XSIZE,YSIZE}, new ComplexDoubleType());
+		dft = new DFTFunction<ComplexDoubleType>(factory, spatialFunction, new long[]{XSIZE,YSIZE});
 		// TODO - test something
 		assertTrue(true);
 	}
@@ -109,7 +109,7 @@ public class Example10Test {
 		ArrayImgFactory<ComplexDoubleType> factory = new ArrayImgFactory<ComplexDoubleType>();
 		Function<long[],ComplexDoubleType> idft =
 				new IDFTFunction<ComplexDoubleType>(
-						factory, dft, new long[]{XSIZE,YSIZE}, new ComplexDoubleType());
+						factory, dft, new long[]{XSIZE,YSIZE});
 		long[] pos = new long[2];
 		DoubleType original = new DoubleType();
 		ComplexDoubleType computed = new ComplexDoubleType();

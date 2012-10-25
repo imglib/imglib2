@@ -41,21 +41,32 @@ import net.imglib2.ops.function.Function;
 
 
 /**
+ * Translates the coordinate values of one Function into the
+ * coordinate space of another. Values can then be pulled out
+ * of the alternate space. Continuous (double[]) version.
  * 
  * @author Barry DeZonia
  */
-public class ContinuousTranslationFunction<T> implements Function<double[],T> {
-
+public class ContinuousTranslationFunction<T>
+	implements Function<double[],T>
+{
+	// -- instance variables --
+	
 	private final Function<double[],T> otherFunc;
 	private final double[] deltas;
 	private final double[] localPoint;
 	
-	public ContinuousTranslationFunction(Function<double[],T> otherFunc, double[] deltas)
+	// -- constructor --
+	
+	public ContinuousTranslationFunction(
+			Function<double[],T> otherFunc, double[] deltas)
 	{
 		this.otherFunc = otherFunc;
 		this.deltas = deltas;
 		this.localPoint = new double[deltas.length];
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(double[] point, T output) {
@@ -71,6 +82,7 @@ public class ContinuousTranslationFunction<T> implements Function<double[],T> {
 	
 	@Override
 	public ContinuousTranslationFunction<T> copy() {
-		return new ContinuousTranslationFunction<T>(otherFunc.copy(), deltas.clone());
+		return new ContinuousTranslationFunction<T>(
+				otherFunc.copy(), deltas.clone());
 	}
 }

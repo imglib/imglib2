@@ -42,17 +42,24 @@ import net.imglib2.type.numeric.ComplexType;
 
 
 /**
+ * A {@link Function} that always returns NaN values.
  * 
  * @author Barry DeZonia
  */
 public class NullNumericFunction<INPUT, T extends ComplexType<T>>
 	implements Function<INPUT,T>
 {
+	// -- instance variables --
+	
 	private T type;
+	
+	// -- constructor --
 	
 	public NullNumericFunction(T type) {
 		this.type = type;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(INPUT point, T output) {

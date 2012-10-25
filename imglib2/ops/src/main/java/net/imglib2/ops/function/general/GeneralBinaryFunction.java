@@ -42,7 +42,9 @@ import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
- * 
+ * Combines the output of two other {@link Function}s into an output type.
+ * Combines the two outputs using a {@link BinaryOperation}.
+ *  
  * @author Barry DeZonia
  */
 public class GeneralBinaryFunction<INPUT,
@@ -51,6 +53,8 @@ public class GeneralBinaryFunction<INPUT,
 		OUTPUT extends ComplexType<OUTPUT>>
 	implements Function<INPUT, OUTPUT>
 {
+	// -- instance variables --
+	
 	private final Function<INPUT, C1> f1;
 	private final Function<INPUT, C2> f2;
 	private final C1 input1;
@@ -58,6 +62,8 @@ public class GeneralBinaryFunction<INPUT,
 	private final BinaryOperation<C1,C2,OUTPUT> operation;
 	private final OUTPUT type;
 
+	// -- constructor --
+	
 	public GeneralBinaryFunction(Function<INPUT,C1> f1,
 			Function<INPUT,C2> f2,
 			BinaryOperation<C1,C2,OUTPUT> operation,
@@ -71,6 +77,8 @@ public class GeneralBinaryFunction<INPUT,
 		this.operation = operation;
 	}
 
+	// -- Function methods --
+	
 	@Override
 	public void compute(INPUT input, OUTPUT output) {
 		f1.compute(input, input1);
