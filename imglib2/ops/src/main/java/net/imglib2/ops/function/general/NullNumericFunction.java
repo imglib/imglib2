@@ -38,14 +38,14 @@
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.type.numeric.NumericType;
+import net.imglib2.type.numeric.ComplexType;
 
 
 /**
  * 
  * @author Barry DeZonia
  */
-public class NullNumericFunction<INPUT, T extends NumericType<T>>
+public class NullNumericFunction<INPUT, T extends ComplexType<T>>
 	implements Function<INPUT,T>
 {
 	private T type;
@@ -56,7 +56,7 @@ public class NullNumericFunction<INPUT, T extends NumericType<T>>
 	
 	@Override
 	public void compute(INPUT point, T output) {
-		output.setZero();
+		output.setComplexNumber(Double.NaN, Double.NaN);
 	}
 
 	@Override
