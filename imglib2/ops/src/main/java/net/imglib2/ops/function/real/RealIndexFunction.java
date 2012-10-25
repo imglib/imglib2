@@ -42,18 +42,38 @@ import net.imglib2.type.numeric.real.DoubleType;
 
 
 /**
+* RealIndexFunction is a {@link Function} that returns one of the coordinates
+* of an input coordinate long[]. The coordinate to select is specified in the
+* constructor.
 * 
 * @author Barry DeZonia
 *
 */
 public class RealIndexFunction implements Function<long[],DoubleType> {
 
+	// -- instance variables -- 
+	
 	private final int position;
 	
+	// -- constructor --
+	
+	/**
+	 * Constructor. Takes the position of the axis of interest within the input
+	 * long[] coordinate.
+	 * 
+	 * @param position
+	 * The axis of interest (ranging from 0 to max-1).
+	 */
 	public RealIndexFunction(int position) {
 		this.position = position;
 	}
 	
+	// -- Function methods --
+
+	/**
+	 * Computes the output value from the input. In this case the output contains
+	 * the value of the input coordinate at the axis position of interest.
+	 */
 	@Override
 	public void compute(long[] input, DoubleType output) {
 		output.setReal(input[position]);
