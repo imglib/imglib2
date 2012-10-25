@@ -43,20 +43,28 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the sum of squared deviations from the mean the values of another
+ * function take over a region.
  * 
  * @author Barry DeZonia
  */
 public class RealSumOfSquaredDeviationsFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealSumOfSquaredDeviationsFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealSumOfSquaredDeviationsFunction<T> copy() {

@@ -55,15 +55,21 @@ import net.imglib2.type.numeric.RealType;
 //   than just an array of user supplied reals).
 
 /**
+ * Computes the convolution of the values of another function over a region with
+ * a set of weights. The weights are specified in the constructor.
  * 
  * @author Barry DeZonia
  */
 public class RealConvolutionFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private final double[] kernel;
 	private final RealWeightedSumFunction<T> weightedSum;
+	
+	// -- constructor --
 	
 	public RealConvolutionFunction(Function<long[],T> otherFunc, double[] kernel)
 	{
@@ -71,6 +77,8 @@ public class RealConvolutionFunction<T extends RealType<T>>
 		this.kernel = kernel;
 		this.weightedSum = new RealWeightedSumFunction<T>(otherFunc, kernel);
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(PointSet input, T output) {

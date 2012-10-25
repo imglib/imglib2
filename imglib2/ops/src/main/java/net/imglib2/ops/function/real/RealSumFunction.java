@@ -43,20 +43,27 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the sum of all the values of another function over a region.
  * 
  * @author Barry DeZonia
  */
 public class RealSumFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealSumFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealSumFunction<T> copy() {

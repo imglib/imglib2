@@ -43,20 +43,30 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the standard deviation of a population of values of another function.
+ * Normally one is interested in the standard deviation of a sample of values
+ * and in such cases one should use {@link RealSampleStdDevFunction}. But if
+ * the values in the region contain the full population of values then use this.
  * 
  * @author Barry DeZonia
  */
 public class RealPopulationStdDevFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealPopulationStdDevFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealPopulationStdDevFunction<T> copy() {

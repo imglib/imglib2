@@ -42,6 +42,8 @@ import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * Computes an integral of a discrete function over a region. Such an integral
+ * is actually just a sum.
  * 
  * @author Barry DeZonia
  */
@@ -60,7 +62,7 @@ public class RealDiscreteIntegralFunction<T extends RealType<T>>
 		this.sumFunc = new RealSumFunction<T>(otherFunc);
 	}
 	
-	// -- public interface --
+	// -- Function methods --
 	
 	@Override
 	public void compute(PointSet points, T output) {

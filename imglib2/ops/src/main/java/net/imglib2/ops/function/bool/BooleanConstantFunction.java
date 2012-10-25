@@ -42,15 +42,24 @@ import net.imglib2.type.logic.BitType;
 
 
 /**
+ * Returns a boolean constant value whenever queried (regardless of input data).
  * 
  * @author Barry DeZonia
  */
-public class ConstantBoolFunction<INPUT> implements Function<INPUT,BitType> {
+public class BooleanConstantFunction<INPUT>
+	implements Function<INPUT,BitType>
+{
+	// -- instance variables --
+	
 	private final boolean bool;
 
-	public ConstantBoolFunction(boolean b) {
+	// -- constructor --
+	
+	public BooleanConstantFunction(boolean b) {
 		bool = b;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(INPUT input, BitType b) {
@@ -58,8 +67,8 @@ public class ConstantBoolFunction<INPUT> implements Function<INPUT,BitType> {
 	}
 	
 	@Override
-	public ConstantBoolFunction<INPUT> copy() {
-		return new ConstantBoolFunction<INPUT>(bool);
+	public BooleanConstantFunction<INPUT> copy() {
+		return new BooleanConstantFunction<INPUT>(bool);
 	}
 
 	@Override

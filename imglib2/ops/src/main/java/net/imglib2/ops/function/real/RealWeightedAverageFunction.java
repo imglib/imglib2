@@ -47,15 +47,21 @@ import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * Computes a weighted average of the values of another function over a region.
+ * The weights are specified in the constructor.
  * 
  * @author Barry DeZonia
  */
 public class RealWeightedAverageFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
 	private final double[] weights;
+	
+	// -- constructor --
 	
 	public RealWeightedAverageFunction(Function<long[],T> otherFunc, double[] weights)
 	{
@@ -63,6 +69,8 @@ public class RealWeightedAverageFunction<T extends RealType<T>>
 		this.calculator = null;
 		this.weights = weights;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealWeightedAverageFunction<T> copy() {

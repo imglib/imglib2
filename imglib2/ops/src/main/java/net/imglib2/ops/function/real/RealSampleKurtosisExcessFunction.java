@@ -43,20 +43,27 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the kurtosis excess of a sample of values of another function.
  * 
  * @author Barry DeZonia
  */
 public class RealSampleKurtosisExcessFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealSampleKurtosisExcessFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealSampleKurtosisExcessFunction<T> copy() {

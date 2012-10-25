@@ -43,20 +43,30 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the kurtosis of a population of values of another function.
+ * Normally one is interested in the kurtosis of a sample of values and
+ * in such cases one should use {@link RealSampleKurtosisFunction}. But if
+ * the values in the region contain the full population of values then use this.
  * 
  * @author Barry DeZonia
  */
 public class RealPopulationKurtosisFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealPopulationKurtosisFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealPopulationKurtosisFunction<T> copy() {
