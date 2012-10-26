@@ -47,9 +47,10 @@ import net.imglib2.type.numeric.NumericType;
 // kind of operation/function to generalize a ConditionalFunction.
 
 /**
- * Wraps a {@link Function} of one output type to a Function of another output
- * type. The translation between types passes through a {@link UnaryOperation}
- * first.
+ * Couples a {@link Function} and a {@link UnaryOperation}. The Function can
+ * return values of any type. This type is an intermediate type. The
+ * UnaryOperation converts values from the intermediate type to the final type
+ * of this Function. The final type must be some kind of {@link NumericType}.
  *   
  * @author Barry DeZonia
  */
