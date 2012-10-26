@@ -42,6 +42,8 @@ import java.util.List;
 
 
 /**
+* A {@link Condition} that aggregates a list of other Conditions as a group.
+* This Condition is true when any of the other Conditions are true.
 * 
 * @author Barry DeZonia
 *

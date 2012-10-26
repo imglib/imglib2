@@ -39,19 +39,29 @@ package net.imglib2.ops.condition;
 
 
 /**
+* A {@link Condition} that returns true when the value of a coordinate axis
+* equals a certain value. The axis of interest and the value are both specified
+* in the constructor.
 * 
 * @author Barry DeZonia
 *
 */
 public class DimensionEqualCondition implements Condition<long[]> {
+	
+	// -- instance variables --
+	
 	final int dimIndex;
 	final long value;
+	
+	// -- constructor --
 	
 	public DimensionEqualCondition(int dimIndex, long value) {
 		this.dimIndex = dimIndex;
 		this.value = value;
 	}
 
+	// -- Condition methods --
+	
 	@Override
 	public boolean isTrue(long[] index) {
 		return index[dimIndex] == value;

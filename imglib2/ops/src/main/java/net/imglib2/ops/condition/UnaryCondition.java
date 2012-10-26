@@ -42,20 +42,29 @@ import net.imglib2.ops.relation.UnaryRelation;
 
 
 /**
+ * A {@link Condition} on a {@link Function}. The Condition is true when
+ * a given {@link UnaryRelation} is satisfied on the Function for a
+ * specific input.
  * 
  * @author Barry DeZonia
  */
 public class UnaryCondition<INPUT, T> implements Condition<INPUT> {
 
+	// -- instance variables --
+	
 	private final Function<INPUT,T> f1;
 	private final T f1Val;
 	private final UnaryRelation<T> relation;
 
+	// -- constructor --
+	
 	public UnaryCondition(Function<INPUT,T> f1, UnaryRelation<T> relation) {
 		this.f1 = f1;
 		this.f1Val = f1.createOutput();
 		this.relation = relation;
 	}
+	
+	// -- Condition methods --
 	
 	@Override
 	public boolean isTrue(INPUT input) {

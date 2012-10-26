@@ -41,23 +41,30 @@ import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * A {@link Condition} that returns true when a given {@link Function} has a
+ * value within a user specified range at a given point. The Function and the
+ * value range are specified in the constructor.
  * 
  * @author Barry DeZonia
- *
- * @param <T>
  */
 public class WithinRangeCondition<T extends RealType<T>> implements Condition<long[]> {
 
+	// -- instance variables --
+	
 	private Function<long[],T> valueFunc;
 	private double min,max;
 	private T tmp;
 	
-	public WithinRangeCondition(Function<long[],T> func, double min, double max, T type) {
+	// -- constructor --
+	
+	public WithinRangeCondition(Function<long[],T> func, double min, double max) {
 		this.valueFunc = func;
 		this.min = min;
 		this.max = max;
-		tmp = type.createVariable();
+		tmp = func.createOutput();
 	}
+	
+	// -- Condition methods --
 	
 	@Override
 	public boolean isTrue(long[] input) {
@@ -68,7 +75,7 @@ public class WithinRangeCondition<T extends RealType<T>> implements Condition<lo
 
 	@Override
 	public WithinRangeCondition<T> copy() {
-		return new WithinRangeCondition<T>(valueFunc, min, max, tmp);
+		return new WithinRangeCondition<T>(valueFunc, min, max);
 	}
 	
 }

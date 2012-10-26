@@ -35,47 +35,37 @@
  */
 
 
-package net.imglib2.ops.condition;
+package net.imglib2.ops.relation.general.binary;
 
-import net.imglib2.ops.function.Function;
 import net.imglib2.ops.relation.BinaryRelation;
-import net.imglib2.type.numeric.real.DoubleType;
 
 /**
-* 
-* @author Barry DeZonia
-*
-*/
-public class RelationalCondition implements Condition<long[]> {
+ * Combines two other {@link BinaryRelation}s in an XOR fashion. The relation
+ * holds if one and only one of the child relations hold.
+ * 
+ * @author Barry DeZonia
+ */
+public final class XorRelation<T,U> implements BinaryRelation<T,U> {
+
+	private final BinaryRelation<T,U> rel1;
+	private final BinaryRelation<T,U> rel2;
+
+	public XorRelation(BinaryRelation<T,U> rel1,BinaryRelation<T,U> rel2) {
+		this.rel1 = rel1;
+		this.rel2 = rel2;
+	}
 	
-	private BinaryRelation<DoubleType,DoubleType> relop;
-	private Function<long[],DoubleType> f1;
-	private Function<long[],DoubleType> f2;
-	private DoubleType tmp1;
-	private DoubleType tmp2;
-	
-	public RelationalCondition(
-		BinaryRelation<DoubleType,DoubleType> relop,
-		Function<long[],DoubleType> f1,
-		Function<long[],DoubleType> f2)
-	{
-		this.relop = relop;
-		this.f1 = f1;
-		this.f2 = f2;
-		tmp1 = new DoubleType();
-		tmp2 = new DoubleType();
+	@Override
+	public boolean holds(T val1, U val2) {
+		boolean oneHolds = rel1.holds(val1, val2);
+		boolean twoHolds = rel2.holds(val1, val2);
+		if (oneHolds & !twoHolds) return true;
+		if (!oneHolds & twoHolds) return true;
+		return false;
 	}
 
 	@Override
-	public boolean isTrue(long[] input) {
-		f1.compute(input, tmp1);
-		f2.compute(input, tmp2);
-		return relop.holds(tmp1, tmp2);
-	}
-
-	@Override
-	public RelationalCondition copy() {
-		return new RelationalCondition(
-				relop.copy(), f1.copy(), f2.copy());
+	public XorRelation<T,U> copy() {
+		return new XorRelation<T,U>(rel1.copy(), rel2.copy());
 	}
 }

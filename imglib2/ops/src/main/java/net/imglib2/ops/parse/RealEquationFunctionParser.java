@@ -71,7 +71,8 @@ import net.imglib2.type.numeric.real.DoubleType;
 /**
  * Parses an equation string and attempts to build a
  * Function<long[],DoubleType> that matches the string
- * specification.
+ * specification. The language is documented at:
+ * http://wiki.imagej.net/ImageJ2/Documentation/Process/Math/Equation
  * 
  * @author Barry DeZonia
  *

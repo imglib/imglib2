@@ -38,20 +38,29 @@
 package net.imglib2.ops.util;
 
 /**
- *
+ * Tuple3 allows three classes to be joined as a class. This is useful for
+ * methods that would like to return three values from a computation.
+ * 
  * @author Barry DeZonia
  */
 public class Tuple3<ONE,TWO,THREE> {
+	
+	// -- instance variables --
+	
 	private ONE one;
 	private TWO two;
 	private THREE three;
 
+	// -- constructor --
+	
 	public Tuple3(final ONE one, final TWO two, final THREE three) {
 		this.one = one;
 		this.two = two;
 		this.three = three;
 	}
 
+	// -- Tuple3 methods --
+	
 	public void set1(final ONE one) { this.one = one; }
 	public void set2(final TWO two) { this.two = two; }
 	public void set3(final THREE three) { this.three = three; }

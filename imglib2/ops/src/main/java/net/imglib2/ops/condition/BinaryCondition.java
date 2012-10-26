@@ -41,17 +41,24 @@ import net.imglib2.ops.function.Function;
 import net.imglib2.ops.relation.BinaryRelation;
 
 /**
+ * A {@link Condition} between two {@link Function}s. The Condition is true when
+ * a given {@link BinaryRelation} is satisfied between the two Functions for a
+ * specific input.
  * 
  * @author Barry DeZonia
  */
 public class BinaryCondition<INPUT,O1,O2> implements Condition<INPUT> {
 
+	// -- instance variables --
+	
 	private final Function<INPUT,O1> f1;
 	private final Function<INPUT,O2> f2;
 	private final O1 f1Val;
 	private final O2 f2Val;
 	private final BinaryRelation<O1,O2> relation;
 
+	// -- constructor --
+	
 	public BinaryCondition(Function<INPUT,O1> f1, Function<INPUT,O2> f2, BinaryRelation<O1,O2> relation) {
 		this.f1 = f1;
 		this.f2 = f2;
@@ -59,6 +66,8 @@ public class BinaryCondition<INPUT,O1,O2> implements Condition<INPUT> {
 		this.f2Val = f2.createOutput();
 		this.relation = relation;
 	}
+	
+	// -- Condition methods --
 	
 	@Override
 	public boolean isTrue(INPUT input) {

@@ -42,12 +42,15 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Given two real values returns true of the first is less than the second.
  * 
  * @author Barry DeZonia
  */
 public final class RealLessThan<T extends RealType<T>,U extends RealType<U>>
-	implements BinaryRelation<T,U> {
-
+	implements BinaryRelation<T,U>
+{
+	// -- BinaryRelation methods --
+	
 	@Override
 	public boolean holds(T val1, U val2) {
 		return val1.getRealDouble() < val2.getRealDouble();
