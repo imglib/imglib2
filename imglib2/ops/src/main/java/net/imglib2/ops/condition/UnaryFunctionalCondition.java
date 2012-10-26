@@ -48,7 +48,7 @@ import net.imglib2.ops.relation.UnaryRelation;
  * 
  * @author Barry DeZonia
  */
-public class UnaryCondition<INPUT, T> implements Condition<INPUT> {
+public class UnaryFunctionalCondition<INPUT, T> implements Condition<INPUT> {
 
 	// -- instance variables --
 	
@@ -58,7 +58,7 @@ public class UnaryCondition<INPUT, T> implements Condition<INPUT> {
 
 	// -- constructor --
 	
-	public UnaryCondition(Function<INPUT,T> f1, UnaryRelation<T> relation) {
+	public UnaryFunctionalCondition(Function<INPUT,T> f1, UnaryRelation<T> relation) {
 		this.f1 = f1;
 		this.f1Val = f1.createOutput();
 		this.relation = relation;
@@ -73,7 +73,7 @@ public class UnaryCondition<INPUT, T> implements Condition<INPUT> {
 	}
 	
 	@Override
-	public UnaryCondition<INPUT, T> copy() {
-		return new UnaryCondition<INPUT, T>(f1.copy(), relation.copy());
+	public UnaryFunctionalCondition<INPUT, T> copy() {
+		return new UnaryFunctionalCondition<INPUT, T>(f1.copy(), relation.copy());
 	}
 }

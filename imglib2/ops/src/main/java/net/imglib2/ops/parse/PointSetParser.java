@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.imglib2.ops.condition.AndCondition;
-import net.imglib2.ops.condition.BinaryCondition;
+import net.imglib2.ops.condition.BinaryFunctionalCondition;
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.condition.DimensionEqualCondition;
 import net.imglib2.ops.condition.NotCondition;
@@ -452,7 +452,7 @@ public class PointSetParser {
 		if (status2.errMsg != null) return status2;
 		ParseStatus status3 = eqnParser.equation(tokens, status2.tokenNumber);
 		if (status3.errMsg != null) return status3;
-		status3.condition = new BinaryCondition<long[],DoubleType,DoubleType>(
+		status3.condition = new BinaryFunctionalCondition<long[],DoubleType,DoubleType>(
 				status1.function, status3.function, status2.relop);
 		return status3;
 	}

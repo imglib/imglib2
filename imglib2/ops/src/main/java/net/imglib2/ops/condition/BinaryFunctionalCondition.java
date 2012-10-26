@@ -47,7 +47,7 @@ import net.imglib2.ops.relation.BinaryRelation;
  * 
  * @author Barry DeZonia
  */
-public class BinaryCondition<INPUT,O1,O2> implements Condition<INPUT> {
+public class BinaryFunctionalCondition<INPUT,O1,O2> implements Condition<INPUT> {
 
 	// -- instance variables --
 	
@@ -59,7 +59,7 @@ public class BinaryCondition<INPUT,O1,O2> implements Condition<INPUT> {
 
 	// -- constructor --
 	
-	public BinaryCondition(Function<INPUT,O1> f1, Function<INPUT,O2> f2, BinaryRelation<O1,O2> relation) {
+	public BinaryFunctionalCondition(Function<INPUT,O1> f1, Function<INPUT,O2> f2, BinaryRelation<O1,O2> relation) {
 		this.f1 = f1;
 		this.f2 = f2;
 		this.f1Val = f1.createOutput();
@@ -77,8 +77,8 @@ public class BinaryCondition<INPUT,O1,O2> implements Condition<INPUT> {
 	}
 	
 	@Override
-	public BinaryCondition<INPUT,O1,O2> copy() {
-		return new BinaryCondition<INPUT,O1,O2>(f1.copy(), f2.copy(), relation.copy());
+	public BinaryFunctionalCondition<INPUT,O1,O2> copy() {
+		return new BinaryFunctionalCondition<INPUT,O1,O2>(f1.copy(), f2.copy(), relation.copy());
 	}
 
 }
