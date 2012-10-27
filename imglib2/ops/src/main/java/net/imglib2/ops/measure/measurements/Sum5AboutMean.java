@@ -5,12 +5,12 @@ import net.imglib2.ops.measure.SamplingMeasurement;
 
 
 public class Sum5AboutMean implements SamplingMeasurement {
-	private Mean mean;
+	private SampleMean mean;
 	private double sumDevs;
 	private double meanVal;
 	private boolean calculated = false;
 
-	public Sum5AboutMean(Mean mean) {
+	public Sum5AboutMean(SampleMean mean) {
 		this.mean = mean;
 	}
 	

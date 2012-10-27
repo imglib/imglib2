@@ -3,7 +3,7 @@ package net.imglib2.ops.measure;
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.real.RealEquationFunction;
 import net.imglib2.ops.measure.measurements.ElementCount;
-import net.imglib2.ops.measure.measurements.Mean;
+import net.imglib2.ops.measure.measurements.SampleMean;
 import net.imglib2.ops.measure.measurements.SampleKurtosisExcess;
 import net.imglib2.ops.measure.measurements.SampleStdDev;
 import net.imglib2.ops.measure.measurements.SampleVariance;
@@ -26,7 +26,7 @@ public class TestIdeas {
 		PointSet region = new HyperVolumePointSet(new long[]{25,25});
 		NewMeasurementSet measures = new NewMeasurementSet();
 		// add measures - order does not matter - dependencies resolved as needed
-		measures.addMeasure("mean", Mean.class);
+		measures.addMeasure("mean", SampleMean.class);
 		measures.addMeasure("stdev", SampleStdDev.class);
 		measures.addMeasure("count", ElementCount.class);
 		measures.addMeasure("kurt ex", SampleKurtosisExcess.class);
