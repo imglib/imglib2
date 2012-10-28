@@ -42,6 +42,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.function.Function;
@@ -94,7 +95,7 @@ public class Example11Test {
 		Function<long[],DoubleType> imageFunc =
 			new RealImageFunction<DoubleType,DoubleType>(
 				image,
-				new OutOfBoundsPeriodicFactory<DoubleType, Img<DoubleType>>(),
+				new OutOfBoundsPeriodicFactory<DoubleType, RandomAccessibleInterval<DoubleType>>(),
 				new DoubleType());
 		long[] currPt = new long[2];
 		DoubleType inbounds = new DoubleType();
