@@ -39,7 +39,7 @@ package net.imglib2.ops.operation.iterableinterval.unary.multilevelthresholder;
 import java.util.Arrays;
 
 /**
- * friedrichm (University of Konstanz)
+ * @author Markus Friedrich (University of Konstanz)
  */
 public class ThresholdValueCollection
 {

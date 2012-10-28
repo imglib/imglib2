@@ -54,8 +54,7 @@ import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
 
 /**
- * 
- * @author hornm, University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  */
 public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type< T > & Comparable< T >> extends AbstractRegionGrowing< LabelingType< L >, L, Labeling< L >, Labeling< L >>
 {

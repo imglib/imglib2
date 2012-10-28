@@ -46,7 +46,7 @@ import net.imglib2.type.Type;
 /**
  * Copies a sub interval into a target interval.
  * 
- * @author hornm, University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  * @param <T>
  *                image type
  */

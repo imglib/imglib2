@@ -44,7 +44,7 @@ import net.imglib2.ops.operation.iterableinterval.unary.OpsHistogram;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * friedrichm (University of Konstanz)
+ * @author Markus Friedrich (University of Konstanz)
  */
 public class OtsuMultilevelThresholder< T extends RealType< T >, IN extends IterableInterval< T > & RandomAccessibleInterval< T >> implements UnaryOutputOperation< IN, ThresholdValueCollection >
 {

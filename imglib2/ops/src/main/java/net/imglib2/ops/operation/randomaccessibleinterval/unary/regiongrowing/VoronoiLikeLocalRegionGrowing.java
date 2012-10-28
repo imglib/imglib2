@@ -48,7 +48,7 @@ import net.imglib2.type.Type;
 /**
  * First attempt to voronoi-like local region growing. NOT FINISHED YET!
  * 
- * @author hornm, University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  */
 public class VoronoiLikeLocalRegionGrowing< L extends Comparable< L >, T extends Type< T > & Comparable< T >> extends VoronoiLikeRegionGrowing< L, T >
 {

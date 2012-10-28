@@ -38,6 +38,11 @@ package net.imglib2.ops.operation.iterable.unary;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 
+/**
+ * @author Felix Schönenberger (University of Konstanz)
+ *
+ * @param <T>
+ */
 public class Fill< T extends Type< T >, ITER extends Iterable< T >> implements UnaryOperation< T, ITER >
 {
 

@@ -61,7 +61,7 @@ import net.imglib2.util.Pair;
 /**
  * TODO: Efficiency!!!!
  * 
- * @author hornm, dietzc, schoenenf, University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  */
 public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comparable< L >, I extends IterableInterval< T > & RandomAccessibleInterval< T >, LL extends RandomAccessibleInterval< LabelingType< L >> & IterableInterval< LabelingType< L >>> implements UnaryOperation< I, LL >
 {

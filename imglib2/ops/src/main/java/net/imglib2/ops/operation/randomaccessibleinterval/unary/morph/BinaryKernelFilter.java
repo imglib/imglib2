@@ -50,7 +50,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
 /**
- * @author schoenen, dietzc, hornm University of Konstanz
+ * @author Felix Schonenberger (University of Konstanz)
  */
 public final class BinaryKernelFilter< T extends RealType< T >, K extends RandomAccessibleInterval< T > & IterableInterval< T >> implements UnaryOperation< K, K >
 {

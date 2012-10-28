@@ -54,7 +54,7 @@ import net.imglib2.view.Views;
 /**
  * Wrapper for and {@link RandomAccessibleInterval} of type {@link LabelingType}
  * 
- * @author Christian Dietz, University of Konstanz
+ * @author Christian Dietz (University of Konstanz)
  */
 public class LabelingView< L extends Comparable< L >> extends IterableRandomAccessibleInterval< LabelingType< L >> implements Labeling< L >
 {

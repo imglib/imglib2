@@ -45,7 +45,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * QuantileFilter
  *
- * @author tcriess, University of Konstanz
+ * @author Thorsten Riess (University of Konstanz)
  */
 public class QuantileFilter<T extends RealType<T>, K extends IterableInterval<T> & RandomAccessibleInterval<T>>
                 implements UnaryOperation<K, K> {

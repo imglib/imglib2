@@ -47,7 +47,7 @@ import net.imglib2.view.Views;
 
 /**
  * 
- * @author hornm, University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  */
 public class ImgRotate2D< T extends Type< T > & Comparable< T >> implements UnaryOutputOperation< Img< T >, Img< T >>
 {
@@ -106,7 +106,6 @@ public class ImgRotate2D< T extends Type< T > & Comparable< T >> implements Unar
 		}
 		else
 		{
-
 			// rotate all for egde points and take the maximum
 			// coordinate to
 			// determine the new image size

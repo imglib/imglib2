@@ -43,7 +43,7 @@ import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * friedrichm (University of Konstanz)
+ * @author Markus Friedrich (University of Konstanz)
  */
 public class MultilevelThresholderOp< T extends RealType< T >, IN extends IterableInterval< T >, OUT extends IterableInterval< T >> implements UnaryOperation< IN, OUT >
 {
