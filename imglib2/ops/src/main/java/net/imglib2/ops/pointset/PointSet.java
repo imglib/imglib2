@@ -37,6 +37,8 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.EuclideanSpace;
+
 /**
  * PointSets define a set of point indices (long[]). PointSets can be moved
  * to new locations in space. This allows one to do sliding window type of
@@ -44,7 +46,7 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public interface PointSet {
+public interface PointSet extends EuclideanSpace {
 	
 	/**
 	 * Gets the current origin point of the PointSet
@@ -64,8 +66,9 @@ public interface PointSet {
 	PointSetIterator createIterator();
 
 	/**
-	 * Returns the dimensionality of the points contained in tbe PointSet
+	 * Returns the dimensionality of the points contained in the PointSet
 	 */
+	@Override
 	int numDimensions();
 	
 	/**
