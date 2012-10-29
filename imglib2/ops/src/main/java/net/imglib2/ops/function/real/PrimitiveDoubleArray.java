@@ -53,6 +53,11 @@ import java.util.Random;
 // Note this class runs 2-4 times faster than using a combination of
 // ArrayLists using add(), clear(), and Collections.sort() does.
 
+// TODO: write an Img<DoubleType> that replaces this functionality. It should
+// be primitive based. It should be growable. Maybe not all memory resident.
+// And the key features is that it is sortable in the subset of values present
+// (rather than all allocated entries). This is used by median calcs elsewhere.
+
 /**
  * A PrimitiveDoubleArray is a fast replacement for ArrayList<Double>. It
  * avoids autoboxing to improve performance.

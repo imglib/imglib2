@@ -42,23 +42,20 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 
 /**
- * TODO
- * 
+ * @author Christian Dietz (University of Konstanz)
+ * @author Martin Horn (University of Konstanz)
  */
 public class ImgCopyOperation< T extends Type< T >> implements UnaryOperation< Img< T >, Img< T >>
 {
 
-	public ImgCopyOperation()
-	{
-
-	}
-
-	// NOTE / TODO - incomplete. Assumes equal iteration order and sizes between
-	// input and output.
-
 	@Override
 	public Img< T > compute( Img< T > input, Img< T > output )
 	{
+		
+		if(!input.iterationOrder().equals(output.iterationOrder())){
+			throw new IllegalArgumentException("Incompatible IterationOrder");
+		}
+		
 		Cursor< T > c1 = input.cursor();
 		Cursor< T > c2 = output.cursor();
 		while ( ( c1.hasNext() && c2.hasNext() ) )

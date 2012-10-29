@@ -43,24 +43,27 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the harmonic mean of the values of another function over a region.
  * 
  * @author Barry DeZonia
  */
 public class RealHarmonicMeanFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
-	private final PrimitiveDoubleArray values;
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
-	private final RealSampleCollector<T> collector;
-	private final StatCalculator calculator;
+	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealHarmonicMeanFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
-		values = new PrimitiveDoubleArray();
-		collector = new RealSampleCollector<T>();
-		calculator = new StatCalculator();
+		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealHarmonicMeanFunction<T> copy() {
@@ -69,8 +72,9 @@ public class RealHarmonicMeanFunction<T extends RealType<T>>
 
 	@Override
 	public void compute(PointSet input, T output) {
-		collector.collect(input, otherFunc, values);
-		double value = calculator.harmonicMean(values);
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.harmonicMean();
 		output.setReal(value);
 	}
 

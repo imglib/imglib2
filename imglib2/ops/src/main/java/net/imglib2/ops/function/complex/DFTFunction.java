@@ -51,6 +51,8 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 //   - textbook definitions and thus SLOW
 
 /**
+ * A {@link Function} that represents the Discrete Fourier Transform 
+ * (frequency domain) of another (spatial) Function.
  * 
  * @author Barry DeZonia
  */
@@ -77,21 +79,26 @@ public class DFTFunction<T extends ComplexType<T>>
 
 	private ComplexDoubleType tmp;
 
-	private final T type;
-
 	// -- constructor --
 
+	/**
+	 * Creates a DFTFunction from inputs.
+	 * 
+	 * @param factory
+	 * The factory that is used when creating internal data representations
+	 * @param spatialFunction
+	 * The function in image space that is to be sampled
+	 * @param span
+	 * The dimensions for the internal frequency image
+	 */
 	public DFTFunction(
 		ImgFactory<ComplexDoubleType> factory,
 		Function<long[], T> spatialFunction,
-		long[] span,
-		T type)
+		long[] span)
 	{
 		if (span.length != 2)
 			throw new IllegalArgumentException(
-					"DFTFunction is only designed for two dimensional functions");
-
-		this.type = type;
+				"DFTFunction is only designed for two dimensional functions");
 
 		this.tmp = new ComplexDoubleType();
 
@@ -124,21 +131,24 @@ public class DFTFunction<T extends ComplexType<T>>
 
 	@Override
 	public DFTFunction<T> copy() {
-		return new DFTFunction<T>(imgFactory, spatialFunction.copy(), span, type);
+		return new DFTFunction<T>(
+				imgFactory, spatialFunction.copy(), span.clone());
 	}
 
 	@Override
 	public T createOutput() {
-		return type.createVariable();
+		return spatialFunction.createOutput();
 	}
 
 	// -- private helpers --
 
 	// TODO - use a ComplexImageAssignment here instead? Speed. Elegance?
 
-	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType> createDataArray() {
-		final Img<ComplexDoubleType> img = imgFactory.create(span,
-				new ComplexDoubleType());
+	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>
+	createDataArray()
+	{
+		final Img<ComplexDoubleType> img =
+				imgFactory.create(span, new ComplexDoubleType());
 		final RandomAccess<ComplexDoubleType> oAccessor = img.randomAccess();
 		final long[] iPosition = new long[2];
 		final long[] oPosition = new long[2];
@@ -162,8 +172,8 @@ public class DFTFunction<T extends ComplexType<T>>
 						sum.getImaginaryDouble());
 			}
 		}
-		return new ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>(img,
-				new ComplexDoubleType());
+		return new ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>(
+				img, new ComplexDoubleType());
 	}
 
 	private void calcTermAtPoint(long[] oPosition, long[] iPosition, T xyTerm) {

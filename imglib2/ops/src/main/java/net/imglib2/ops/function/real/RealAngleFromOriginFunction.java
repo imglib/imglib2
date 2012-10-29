@@ -46,22 +46,30 @@ import net.imglib2.type.numeric.RealType;
 // double coords for consistency with RealDistanceFromPointFunction
 
 /**
+* Computes the angle (in radians) the given long[] coordinate makes with any two
+* axes and the origin. The two axes of interest are specified in the constructor.
 * 
 * @author Barry DeZonia
 *
 */
 public class RealAngleFromOriginFunction<T extends RealType<T>>
-	implements Function<long[],T> {
-
+	implements Function<long[],T>
+{
+	// -- instance variables --
+	
 	private final T var;
 	private final int axisU;
 	private final int axisV;
+	
+	// -- constructor --
 	
 	public RealAngleFromOriginFunction(int axisU, int axisV, T var) {
 		this.var = var.createVariable();
 		this.axisU = axisU;
 		this.axisV = axisV;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(long[] input, T output) {

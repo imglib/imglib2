@@ -43,6 +43,9 @@ import java.util.List;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * @author Christian Dietz (University of Konstanz)
+ */
 public class MedianOp< T extends RealType< T >, V extends RealType< V >> implements UnaryOperation< Iterator< T >, V >
 {
 

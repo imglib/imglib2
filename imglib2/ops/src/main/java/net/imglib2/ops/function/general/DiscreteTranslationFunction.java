@@ -41,21 +41,32 @@ import net.imglib2.ops.function.Function;
 
 
 /**
+ * Translates the coordinate values of one Function into the
+ * coordinate space of another. Values can then be pulled out
+ * of the alternate space. Discrete (long[]) version.
  * 
  * @author Barry DeZonia
  */
-public class DiscreteTranslationFunction<T> implements Function<long[],T> {
-
+public class DiscreteTranslationFunction<T>
+	implements Function<long[],T>
+{
+	// -- private instance --
+	
 	private final Function<long[],T> otherFunc;
 	private final long[] deltas;
 	private final long[] localPoint;
 	
-	public DiscreteTranslationFunction(Function<long[],T> otherFunc, long[] deltas)
+	// -- constructor --
+	
+	public DiscreteTranslationFunction(
+			Function<long[],T> otherFunc, long[] deltas)
 	{
 		this.otherFunc = otherFunc;
 		this.deltas = deltas;
 		this.localPoint = new long[deltas.length];
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(long[] point, T output) {
@@ -71,6 +82,7 @@ public class DiscreteTranslationFunction<T> implements Function<long[],T> {
 
 	@Override
 	public DiscreteTranslationFunction<T> copy() {
-		return new DiscreteTranslationFunction<T>(otherFunc.copy(), deltas.clone());
+		return new DiscreteTranslationFunction<T>(
+				otherFunc.copy(), deltas.clone());
 	}
 }

@@ -38,38 +38,42 @@
 package net.imglib2.ops.condition;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.relation.BinaryRelation;
+import net.imglib2.ops.relation.UnaryRelation;
+
 
 /**
+ * A {@link Condition} on a {@link Function}. The Condition is true when
+ * a given {@link UnaryRelation} is satisfied on the Function for a
+ * specific input.
  * 
  * @author Barry DeZonia
  */
-public class BinaryCondition<INPUT,O1,O2> implements Condition<INPUT> {
+public class UnaryFunctionalCondition<INPUT, T> implements Condition<INPUT> {
 
-	private final Function<INPUT,O1> f1;
-	private final Function<INPUT,O2> f2;
-	private final O1 f1Val;
-	private final O2 f2Val;
-	private final BinaryRelation<O1,O2> relation;
+	// -- instance variables --
+	
+	private final Function<INPUT,T> f1;
+	private final T f1Val;
+	private final UnaryRelation<T> relation;
 
-	public BinaryCondition(Function<INPUT,O1> f1, Function<INPUT,O2> f2, BinaryRelation<O1,O2> relation) {
+	// -- constructor --
+	
+	public UnaryFunctionalCondition(Function<INPUT,T> f1, UnaryRelation<T> relation) {
 		this.f1 = f1;
-		this.f2 = f2;
 		this.f1Val = f1.createOutput();
-		this.f2Val = f2.createOutput();
 		this.relation = relation;
 	}
+	
+	// -- Condition methods --
 	
 	@Override
 	public boolean isTrue(INPUT input) {
 		f1.compute(input, f1Val);
-		f2.compute(input, f2Val);
-		return relation.holds(f1Val,f2Val);
+		return relation.holds(f1Val);
 	}
 	
 	@Override
-	public BinaryCondition<INPUT,O1,O2> copy() {
-		return new BinaryCondition<INPUT,O1,O2>(f1.copy(), f2.copy(), relation.copy());
+	public UnaryFunctionalCondition<INPUT, T> copy() {
+		return new UnaryFunctionalCondition<INPUT, T>(f1.copy(), relation.copy());
 	}
-
 }

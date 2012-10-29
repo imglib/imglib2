@@ -44,7 +44,7 @@ package net.imglib2.ops.operation;
  * If the output can be known, e.g. {@link Img<T>} to {@link Img<T>} of same
  * dimensionality {@link UnaryOperation} should be used.
  * 
- * @author dietzc (University of Konstanz)
+ * @author Christian Dietz (University of Konstanz)
  */
 public interface UnaryOutputOperation< INPUT_TYPE, OUTPUT_TYPE > extends UnaryOperation< INPUT_TYPE, OUTPUT_TYPE >
 {

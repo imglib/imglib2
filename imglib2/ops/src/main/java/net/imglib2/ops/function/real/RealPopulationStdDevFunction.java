@@ -34,119 +34,56 @@
  * #L%
  */
 
-package net.imglib2.converter;
 
-import net.imglib2.Interval;
-import net.imglib2.Positionable;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealPositionable;
+package net.imglib2.ops.function.real;
+
+import net.imglib2.ops.function.Function;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.type.numeric.RealType;
+
 
 /**
- * TODO
- *
+ * Computes the standard deviation of a population of values of another function.
+ * Normally one is interested in the standard deviation of a sample of values
+ * and in such cases one should use {@link RealSampleStdDevFunction}. But if
+ * the values in the region contain the full population of values then use this.
+ * 
+ * @author Barry DeZonia
  */
-abstract public class AbstractConvertedRandomAccessibleInterval< A, B > implements RandomAccessibleInterval< B >
+public class RealPopulationStdDevFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
 {
-	final protected RandomAccessibleInterval< A > source;
-
-	public AbstractConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source )
+	// -- instance variables --
+	
+	private final Function<long[],T> otherFunc;
+	private StatCalculator<T> calculator;
+	
+	// -- constructor --
+	
+	public RealPopulationStdDevFunction(Function<long[],T> otherFunc)
 	{
-		this.source = source;
+		this.otherFunc = otherFunc;
+		this.calculator = null;
+	}
+	
+	// -- Function methods --
+	
+	@Override
+	public RealPopulationStdDevFunction<T> copy() {
+		return new RealPopulationStdDevFunction<T>(otherFunc.copy());
 	}
 
 	@Override
-	public int numDimensions()
-	{
-		return source.numDimensions();
+	public void compute(PointSet input, T output) {
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.populationStdDev();
+		output.setReal(value);
 	}
 
 	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
-
-	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( final Interval interval );
-
-	@Override
-	public long min( final int d )
-	{
-		return source.min( d );
+	public T createOutput() {
+		return otherFunc.createOutput();
 	}
 
-	@Override
-	public void min( final long[] min )
-	{
-		source.min( min );
-	}
-
-	@Override
-	public void min( final Positionable min )
-	{
-		source.min( min );
-	}
-
-	@Override
-	public long max( final int d )
-	{
-		return source.max( d );
-	}
-
-	@Override
-	public void max( final long[] max )
-	{
-		source.max( max );
-	}
-
-	@Override
-	public void max( final Positionable max )
-	{
-		source.max( max );
-	}
-
-	@Override
-	public void dimensions( final long[] dimensions )
-	{
-		source.dimensions( dimensions );
-	}
-
-	@Override
-	public long dimension( final int d )
-	{
-		return source.dimension( d );
-	}
-
-	@Override
-	public double realMin( final int d )
-	{
-		return source.realMin( d );
-	}
-
-	@Override
-	public void realMin( final double[] min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public void realMin( final RealPositionable min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public double realMax( final int d )
-	{
-		return source.realMax( d );
-	}
-
-	@Override
-	public void realMax( final double[] max )
-	{
-		source.realMax( max );
-	}
-
-	@Override
-	public void realMax( final RealPositionable max )
-	{
-		source.realMax( max );
-	}
 }

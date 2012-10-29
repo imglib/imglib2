@@ -38,7 +38,8 @@
 package net.imglib2.ops.function;
 
 /**
- * 
+ * Functions map input values to output values.
+ *  
  * @author Barry DeZonia
  */
 public interface Function<INPUT, OUTPUT> {

@@ -41,6 +41,11 @@ import java.util.Iterator;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * @author Felix Schönenberger (University of Konstanz)
+ *
+ * @param <T>
+ */
 public class Max< T extends RealType< T >, V extends RealType< V >> implements UnaryOperation< Iterator< T >, V >
 {
 

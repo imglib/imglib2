@@ -33,61 +33,63 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+package net.imglib2.ops.img;
 
-
-package net.imglib2.ops.function.real;
-
-
-import net.imglib2.ops.function.Function;
-import net.imglib2.ops.pointset.PointSet;
-import net.imglib2.ops.pointset.PointSetIterator;
-import net.imglib2.type.numeric.RealType;
-
+import net.imglib2.ops.operation.BinaryOperation;
+import net.imglib2.ops.operation.UnaryOperation;
 
 /**
- * 
- * @author Barry DeZonia
+ * @author Christian Dietz (University of Konstanz)
+ *
+ * @param <A>
+ * @param <B>
+ * @param <C>
+ * @param <D>
  */
-public abstract class AbstractRealPointSetFunction<T extends RealType<T>> {
+public abstract class UnaryBinaryOperationAdapter< A, B, C, D > implements UnaryOperation< A, D >
+{
 
-	private final Function<long[],T> otherFunc;
-	private final T variable;
-	private PointSet lastPointSet;
-	private PointSetIterator iter;
+	private final BinaryOperation< B, C, D > binaryOp;
 
-	protected abstract void initValue(PointSet ps);
-	protected abstract void updateValue(long[] pt, double value);
-	protected abstract double finalValue();
-	
-	public AbstractRealPointSetFunction(Function<long[],T> otherFunc)
+	private final UnaryOperation< A, B > unaryOp1;
+
+	private final UnaryOperation< A, C > unaryOp2;
+
+	public UnaryBinaryOperationAdapter( UnaryOperation< A, B > op1, UnaryOperation< A, C > op2, BinaryOperation< B, C, D > binaryOp )
 	{
-		this.otherFunc = otherFunc;
-		this.variable = createOutput();
-		this.lastPointSet = null;
-		this.iter = null;
+		this.binaryOp = binaryOp;
+		this.unaryOp1 = op1;
+		this.unaryOp2 = op2;
 	}
-	
-	public void compute(PointSet ps, T output) {
-		if (ps != lastPointSet) {
-			lastPointSet = ps;
-			iter = ps.createIterator();
-		}
-		else {
-			iter.reset();
-		}
-		initValue(ps);
-		long[] pt;
-		while (iter.hasNext()) {
-			pt = iter.next();
-			otherFunc.compute(pt, variable);
-			updateValue(pt, variable.getRealDouble());
-		}
-		output.setReal(finalValue());
+
+	public D compute( A input, D output )
+	{
+		return binaryOp.compute( unaryOp1.compute( input, getOp1Buffer() ), unaryOp2.compute( input, getOp2Buffer() ), output );
+	};
+
+	@Override
+	public UnaryOperation< A, D > copy()
+	{
+		return new UnaryBinaryOperationAdapter< A, B, C, D >( unaryOp1.copy(), unaryOp2.copy(), binaryOp.copy() )
+		{
+
+			@Override
+			protected B getOp1Buffer()
+			{
+				return this.getOp1Buffer();
+			}
+
+			@Override
+			protected C getOp2Buffer()
+			{
+				return this.getOp2Buffer();
+			}
+
+		};
 	}
-	
-	public T createOutput() {
-		return otherFunc.createOutput();
-	}
-	
-	public Function<long[],T> getOtherFunction() { return otherFunc; }
+
+	protected abstract B getOp1Buffer();
+
+	protected abstract C getOp2Buffer();
+
 }

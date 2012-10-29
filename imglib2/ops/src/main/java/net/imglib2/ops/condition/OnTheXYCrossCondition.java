@@ -42,10 +42,15 @@ import net.imglib2.ops.util.Tuple2;
 
 
 /**
+ * A {@link Condition} that returns true when an input point within a PointSet
+ * is on the diagonal line in the XY plane radiating out from the key point of
+ * the PointSet.
  * 
  * @author Barry DeZonia
  */
 public class OnTheXYCrossCondition implements Condition<Tuple2<PointSet,long[]>> {
+	
+	// -- Condition methods --
 	
 	@Override
 	public boolean isTrue(Tuple2<PointSet,long[]> input) {

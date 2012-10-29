@@ -35,47 +35,44 @@
  */
 
 
-package net.imglib2.ops.condition;
+package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.relation.BinaryRelation;
-import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.type.numeric.ComplexType;
+
 
 /**
-* 
-* @author Barry DeZonia
-*
-*/
-public class RelationalCondition implements Condition<long[]> {
+ * A {@link Function} that always returns NaN values.
+ * 
+ * @author Barry DeZonia
+ */
+public class NullNumericFunction<INPUT, T extends ComplexType<T>>
+	implements Function<INPUT,T>
+{
+	// -- instance variables --
 	
-	private BinaryRelation<DoubleType,DoubleType> relop;
-	private Function<long[],DoubleType> f1;
-	private Function<long[],DoubleType> f2;
-	private DoubleType tmp1;
-	private DoubleType tmp2;
+	private T type;
 	
-	public RelationalCondition(
-		BinaryRelation<DoubleType,DoubleType> relop,
-		Function<long[],DoubleType> f1,
-		Function<long[],DoubleType> f2)
-	{
-		this.relop = relop;
-		this.f1 = f1;
-		this.f2 = f2;
-		tmp1 = new DoubleType();
-		tmp2 = new DoubleType();
+	// -- constructor --
+	
+	public NullNumericFunction(T type) {
+		this.type = type;
+	}
+	
+	// -- Function methods --
+	
+	@Override
+	public void compute(INPUT point, T output) {
+		output.setComplexNumber(Double.NaN, Double.NaN);
 	}
 
 	@Override
-	public boolean isTrue(long[] input) {
-		f1.compute(input, tmp1);
-		f2.compute(input, tmp2);
-		return relop.holds(tmp1, tmp2);
+	public T createOutput() {
+		return type.createVariable();
 	}
 
 	@Override
-	public RelationalCondition copy() {
-		return new RelationalCondition(
-				relop.copy(), f1.copy(), f2.copy());
+	public NullNumericFunction<INPUT,T> copy() {
+		return new NullNumericFunction<INPUT,T>(type.copy());
 	}
 }

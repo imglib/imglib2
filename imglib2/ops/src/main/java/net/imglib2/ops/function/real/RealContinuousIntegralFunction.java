@@ -46,13 +46,13 @@ import net.imglib2.type.numeric.RealType;
 // or simpson's or some appropriate integration fit.
 
 /**
- * 
+ * Does a numerical integration of another function over a user specified region.
+ *  
  * @author Barry DeZonia
  */
 public class RealContinuousIntegralFunction<T extends RealType<T>>
 	implements Function<double[],T>
 {
-
 	// -- instance variables --
 	
 	private final Function<double[],T> otherFunc;
@@ -64,7 +64,9 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 	
 	// -- constructor --
 	
-	public RealContinuousIntegralFunction(Function<double[],T> otherFunc, double[] ranges, double[] deltas) {
+	public RealContinuousIntegralFunction(
+		Function<double[],T> otherFunc, double[] ranges, double[] deltas)
+	{
 		this.otherFunc = otherFunc;
 		this.ranges = ranges.clone();
 		this.deltas = deltas.clone();
@@ -73,7 +75,7 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 		this.position = new double[deltas.length];
 	}
 	
-	// -- public interface --
+	// -- Function methods --
 	
 	@Override
 	public void compute(double[] point, T output) {
@@ -97,6 +99,11 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 		return new RealContinuousIntegralFunction<T>(otherFunc.copy(), ranges, deltas);
 	}
 
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
+	}
+
 	// -- private helpers --
 	
 	private double cellSize(double[] sizes) {
@@ -115,10 +122,5 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 			pos[i] = startPt[i];
 		}
 		return false;
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
 	}
 }

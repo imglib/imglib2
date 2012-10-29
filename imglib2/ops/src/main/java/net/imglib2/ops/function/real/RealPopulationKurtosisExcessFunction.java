@@ -35,36 +35,55 @@
  */
 
 
-package net.imglib2.ops.function.general;
+package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the kurtosis excess of a population of values of another function.
+ * Normally one is interested in the kurtosis excess of a sample of values and
+ * in such cases one should use {@link RealSampleKurtosisExcessFunction}. But if
+ * the values in the region contain the full population of values then use this.
  * 
  * @author Barry DeZonia
  */
-public class NullPointFunction<INPUT, T> implements Function<INPUT,T> {
+public class RealPopulationKurtosisExcessFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
+{
+	// -- instance variables --
+	
+	private final Function<long[],T> otherFunc;
+	private StatCalculator<T> calculator;
+	
+	// -- constructor --
+	
+	public RealPopulationKurtosisExcessFunction(Function<long[],T> otherFunc)
+	{
+		this.otherFunc = otherFunc;
+		this.calculator = null;
+	}
+	
+	// -- Function methods --
+	
+	@Override
+	public RealPopulationKurtosisExcessFunction<T> copy() {
+		return new RealPopulationKurtosisExcessFunction<T>(otherFunc.copy());
+	}
 
 	@Override
-	public void compute(INPUT point, T output) {
-		// do nothing
-		// TODO : Could set to NaN?
+	public void compute(PointSet input, T output) {
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.populationKurtosisExcess();
+		output.setReal(value);
 	}
 
 	@Override
 	public T createOutput() {
-		return null;
-		// TODO - returning null is sort of a problem. Though it makes sense.
-		//  However if we only pass NullFunctions at outermost loop maybe we can avoid
-		//  this method ever being called.
-		//  What good is a null function if outermost loop can count on its own? Null
-		//  function idea originally came about as a way to collect stats without
-		//  destroying existing data. That need may now be obsolete. Investigate.
+		return otherFunc.createOutput();
 	}
 
-	@Override
-	public NullPointFunction<INPUT,T> copy() {
-		return new NullPointFunction<INPUT,T>();
-	}
 }

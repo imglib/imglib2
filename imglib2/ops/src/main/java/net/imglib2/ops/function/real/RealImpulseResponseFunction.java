@@ -42,18 +42,27 @@ import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * 
+ * Computes a value of another function across a region. Actually returns the
+ * value of the other function at the keypoint of the given region.
+ *  
  * @author Barry DeZonia
  */
-public class RealImpulseResponseFunction<T extends RealType<T>> implements Function<PointSet,T> {
-
+public class RealImpulseResponseFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
+{
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
+	
+	// -- constructor --
 	
 	public RealImpulseResponseFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 	}
 
+	// -- Function methods --
+	
 	@Override
 	public void compute(PointSet points, T output) {
 		otherFunc.compute(points.getOrigin(), output);

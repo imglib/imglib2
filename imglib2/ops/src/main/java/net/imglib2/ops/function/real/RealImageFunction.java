@@ -40,7 +40,7 @@ package net.imglib2.ops.function.real;
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.img.Img;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.function.Function;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
@@ -71,14 +71,14 @@ public class RealImageFunction<I extends RealType<I>, O extends RealType<O>>
 	
 	// -- public constructors --
 	
-	public RealImageFunction(Img<I> img, O type) {
+	public RealImageFunction(RandomAccessibleInterval<I> img, O type) {
 		this.accessor = img.randomAccess();
 		this.type = type;
 	}
 	
 	public RealImageFunction(
-		Img<I> img,
-		OutOfBoundsFactory<I,Img<I>> factory,
+		RandomAccessibleInterval<I> img,
+		OutOfBoundsFactory<I,RandomAccessibleInterval<I>> factory,
 		O type)
 	{
 		@SuppressWarnings({"rawtypes","unchecked"})

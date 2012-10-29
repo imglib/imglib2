@@ -42,6 +42,9 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.logic.BitType;
 
+/**
+ * @author Felix Schoenenberger (University of Konstanz)
+ */
 public final class Erode< I extends RandomAccessibleInterval< BitType > & IterableInterval< BitType >> implements UnaryOperation< I, I >
 {
 

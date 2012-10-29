@@ -35,36 +35,55 @@
  */
 
 
-package net.imglib2.ops.condition;
+package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.relation.UnaryRelation;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the kurtosis of a population of values of another function.
+ * Normally one is interested in the kurtosis of a sample of values and
+ * in such cases one should use {@link RealSampleKurtosisFunction}. But if
+ * the values in the region contain the full population of values then use this.
  * 
  * @author Barry DeZonia
  */
-public class UnaryCondition<INPUT, T> implements Condition<INPUT> {
-
-	private final Function<INPUT,T> f1;
-	private final T f1Val;
-	private final UnaryRelation<T> relation;
-
-	public UnaryCondition(Function<INPUT,T> f1, UnaryRelation<T> relation) {
-		this.f1 = f1;
-		this.f1Val = f1.createOutput();
-		this.relation = relation;
+public class RealPopulationKurtosisFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
+{
+	// -- instance variables --
+	
+	private final Function<long[],T> otherFunc;
+	private StatCalculator<T> calculator;
+	
+	// -- constructor --
+	
+	public RealPopulationKurtosisFunction(Function<long[],T> otherFunc)
+	{
+		this.otherFunc = otherFunc;
+		this.calculator = null;
 	}
 	
-	@Override
-	public boolean isTrue(INPUT input) {
-		f1.compute(input, f1Val);
-		return relation.holds(f1Val);
-	}
+	// -- Function methods --
 	
 	@Override
-	public UnaryCondition<INPUT, T> copy() {
-		return new UnaryCondition<INPUT, T>(f1.copy(), relation.copy());
+	public RealPopulationKurtosisFunction<T> copy() {
+		return new RealPopulationKurtosisFunction<T>(otherFunc.copy());
 	}
+
+	@Override
+	public void compute(PointSet input, T output) {
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.populationKurtosis();
+		output.setReal(value);
+	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
+	}
+
 }

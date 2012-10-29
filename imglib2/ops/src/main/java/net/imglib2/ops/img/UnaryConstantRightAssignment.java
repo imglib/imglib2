@@ -42,8 +42,7 @@ import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * 
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  */
 public class UnaryConstantRightAssignment< T extends RealType< T >, V extends RealType< V >, O extends RealType< O >> implements BinaryOperation< IterableInterval< T >, V, IterableInterval< O >>
 {

@@ -34,21 +34,53 @@
  * #L%
  */
 
-package net.imglib2.ops.operation.randomaccessibleinterval.unary.regiongrowing;
 
-public class ThreadSafeLabelNumbers
+package net.imglib2.ops.function.real;
+
+import net.imglib2.ops.function.Function;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.type.numeric.RealType;
+
+
+/**
+ * Computes the kurtosis excess of a sample of values of another function.
+ * 
+ * @author Barry DeZonia
+ */
+public class RealSampleKurtosisExcessFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
 {
-
-	// Current labelnumber
-	private int m_labelNumber;
-
-	public ThreadSafeLabelNumbers()
+	// -- instance variables --
+	
+	private final Function<long[],T> otherFunc;
+	private StatCalculator<T> calculator;
+	
+	// -- constructor --
+	
+	public RealSampleKurtosisExcessFunction(Function<long[],T> otherFunc)
 	{
-		m_labelNumber = 1;
+		this.otherFunc = otherFunc;
+		this.calculator = null;
+	}
+	
+	// -- Function methods --
+	
+	@Override
+	public RealSampleKurtosisExcessFunction<T> copy() {
+		return new RealSampleKurtosisExcessFunction<T>(otherFunc.copy());
 	}
 
-	public final synchronized int aquireNewLabelNumber()
-	{
-		return m_labelNumber++;
+	@Override
+	public void compute(PointSet input, T output) {
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.sampleKurtosisExcess();
+		output.setReal(value);
 	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
+	}
+
 }

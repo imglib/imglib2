@@ -35,36 +35,55 @@
  */
 
 
-package net.imglib2.ops.function.bool;
+package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.type.logic.BitType;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the skew of a population of values of another function.
+ * Normally one is interested in the skew of a sample of values and
+ * in such cases one should use {@link RealSampleSkewFunction}. But if
+ * the values in the region contain the full population of values then use this.
  * 
  * @author Barry DeZonia
  */
-public class ConstantBoolFunction<INPUT> implements Function<INPUT,BitType> {
-	private final boolean bool;
-
-	public ConstantBoolFunction(boolean b) {
-		bool = b;
+public class RealPopulationSkewFunction<T extends RealType<T>>
+	implements Function<PointSet,T>
+{
+	// -- instance variables --
+	
+	private final Function<long[],T> otherFunc;
+	private StatCalculator<T> calculator;
+	
+	// -- constructor --
+	
+	public RealPopulationSkewFunction(Function<long[],T> otherFunc)
+	{
+		this.otherFunc = otherFunc;
+		this.calculator = null;
 	}
 	
-	@Override
-	public void compute(INPUT input, BitType b) {
-		b.set(bool);
-	}
+	// -- Function methods --
 	
 	@Override
-	public ConstantBoolFunction<INPUT> copy() {
-		return new ConstantBoolFunction<INPUT>(bool);
+	public RealPopulationSkewFunction<T> copy() {
+		return new RealPopulationSkewFunction<T>(otherFunc.copy());
 	}
 
 	@Override
-	public BitType createOutput() {
-		return new BitType();
+	public void compute(PointSet input, T output) {
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.populationSkew();
+		output.setReal(value);
 	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
+	}
+
 }
-

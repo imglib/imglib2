@@ -40,18 +40,27 @@ package net.imglib2.ops.condition;
 
 
 /**
+ * A {@link Condition} that combines two other Conditions in an OR fashion.
+ * The Condition is true if one or more of the child conditions are true and
+ * false otherwise.
  * 
  * @author Barry DeZonia
  */
 public class OrCondition<T> implements Condition<T> {
 
+	// -- instance variables --
+	
 	private final Condition<T> cond1;
 	private final Condition<T> cond2;
 
+	// -- constructor --
+	
 	public OrCondition(Condition<T> cond1, Condition<T> cond2) {
 		this.cond1 = cond1;
 		this.cond2 = cond2;
 	}
+	
+	// -- Condition methods --
 	
 	@Override
 	public boolean isTrue(T point) {

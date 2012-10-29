@@ -42,8 +42,7 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * 
- * @author hornm, dietzc University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  */
 public class EqualizeHistogram< T extends RealType< T >, I extends IterableInterval< T >> implements UnaryOperation< I, I >
 {

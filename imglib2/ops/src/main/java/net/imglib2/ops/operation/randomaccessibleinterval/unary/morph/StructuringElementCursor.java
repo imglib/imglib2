@@ -53,7 +53,7 @@ import net.imglib2.type.numeric.IntegerType;
  * Something like a neighborhood cursor. Neighborhood is defined a long[][] of
  * offsets.
  * 
- * @author schonenf
+ * @author Felix Schoenenberger (University of Konstanz)
  * 
  * @param <T>
  */

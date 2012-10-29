@@ -56,7 +56,7 @@ import net.imglib2.type.Type;
  * Reduces the dimensions of an image by removing all dimensions having only one
  * pixel.
  * 
- * @author hornm, dietzc University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  */
 public class ImgPlusRemove1Dims< T extends Type< T >> implements UnaryOutputOperation< ImgPlus< T >, ImgPlus< T >>
 {

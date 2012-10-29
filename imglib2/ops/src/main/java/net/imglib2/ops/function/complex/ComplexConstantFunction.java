@@ -42,15 +42,24 @@ import net.imglib2.type.numeric.ComplexType;
 
 
 /**
+ * Returns a complex constant value whenever queried (regardless of input data).
  * 
  * @author Barry DeZonia
  */
-public class ComplexConstantFunction<INPUT, C extends ComplexType<C>> implements Function<INPUT,C> {
+public class ComplexConstantFunction<INPUT, C extends ComplexType<C>>
+	implements Function<INPUT,C>
+{
+	// -- instance variables --
+	
 	private final C complex;
 
+	// -- constructor --
+	
 	public ComplexConstantFunction(C c) {
 		complex = c;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(INPUT input, C c) {

@@ -52,9 +52,10 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**
- * Img projection.
+ * Projects an {@link Img} in a given dimension.
  * 
- * @author dietzc, hornm, University of Konstanz
+ * @author Christian Dietz (University of Konstanz)
+ * @author Martin Horn (University of Konstanz)
  */
 public class ImgProject< T extends RealType< T >> implements UnaryOutputOperation< Img< T >, Img< T >>
 {

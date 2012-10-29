@@ -38,14 +38,23 @@
 package net.imglib2.ops.pointset;
 
 /**
+ * Helper class for tracking bounds of a region. Used by some {@link PointSet}
+ * implementations.
  * 
  * @author Barry DeZonia
  */
 public abstract class AbstractBoundedRegion {
+	
+	// -- instance variables --
+	
 	private long[] min, max;
 
+	// -- constructor --
+	
 	public AbstractBoundedRegion() {
 	}
+	
+	// -- protected API --
 	
 	protected long[] getMin() {
 		return min;

@@ -42,6 +42,9 @@ import net.imglib2.ops.data.Histogram2D;
 import net.imglib2.ops.operation.BinaryOutputOperation;
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * Felix Schoenenberger (University of Konstanz)
+ */
 public final class MakeHistogram2D< T extends RealType< T >> implements BinaryOutputOperation< IterableInterval< T >, IterableInterval< T >, Histogram2D >
 {
 
@@ -54,7 +57,7 @@ public final class MakeHistogram2D< T extends RealType< T >> implements BinaryOu
 	@Override
 	public final Histogram2D compute( final IterableInterval< T > op0, final IterableInterval< T > op1, final Histogram2D r )
 	{
-		if ( !op0.iterationOrder().equals( op1.iterationOrder() ) ) { throw new IllegalStateException( "Intervals are not compatible in Histogram2D" ); }
+		if ( !op0.iterationOrder().equals( op1.iterationOrder() ) ) { throw new IllegalStateException( "IterationOrders are not compatible in Histogram2D" ); }
 		Cursor< T > opc0 = op0.cursor();
 		Cursor< T > opc1 = op1.cursor();
 		r.clear();

@@ -44,6 +44,11 @@ import net.imglib2.ops.operation.randomaccessible.binary.FloodFill;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.logic.BitType;
 
+/**
+ * Martin Horn  (University of Konstanz)
+ *
+ * @param <K>
+ */
 public final class FillHoles< K extends RandomAccessible< BitType > & IterableInterval< BitType >> implements UnaryOperation< K, K >
 {
 

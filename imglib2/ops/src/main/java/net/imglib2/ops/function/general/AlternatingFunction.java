@@ -45,14 +45,20 @@ import net.imglib2.ops.function.Function;
 // a number of input datasets or other functions.
 
 /**
+ * AlternatingFunction interleaves data from a set of input {@link Function}s.
  * 
  * @author Barry DeZonia
  */
-public class AlternatingFunction<T> implements Function<long[],T> {
-
+public class AlternatingFunction<T>
+	implements Function<long[],T>
+{
+	// -- instance variables --
+	
 	private final ArrayList<Function<long[],T>> functions;
 	private long[] relativePosition;
 	private final int dimension;
+	
+	// -- constructor --
 	
 	public AlternatingFunction(int dim) {
 		functions = new ArrayList<Function<long[],T>>();
@@ -60,9 +66,13 @@ public class AlternatingFunction<T> implements Function<long[],T> {
 		relativePosition = null;
 	}
 
+	// -- AlternatingFunction methods --
+	
 	public void add(Function<long[],T> function) {
 		functions.add(function);
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(long[] point, T output) {

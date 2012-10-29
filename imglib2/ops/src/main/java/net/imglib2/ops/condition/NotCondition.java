@@ -40,16 +40,23 @@ package net.imglib2.ops.condition;
 
 
 /**
+ * A {@link Condition} that negates the result of another Condition.
  * 
  * @author Barry DeZonia
  */
 public class NotCondition<T> implements Condition<T> {
 
+	// -- instance variables --
+	
 	private final Condition<T> cond1;
 
+	// -- constructor -
+	
 	public NotCondition(Condition<T> cond1) {
 		this.cond1 = cond1;
 	}
+	
+	// -- Condition methods --
 	
 	@Override
 	public boolean isTrue(T point) {

@@ -43,17 +43,25 @@ import net.imglib2.type.logic.BitType;
 
 
 /**
+ * A {@link Function} that sets an output {@link BitType} boolean to the result
+ * of an evaluation of a {@link Condition} for a set of input.
  * 
  * @author Barry DeZonia
  */
 public class ConditionalBooleanFunction<INPUT> implements Function<INPUT,BitType>
 {
+	// -- instance variables --
+	
 	private final Condition<INPUT> condition;
 
+	// -- constructor --
+	
 	public ConditionalBooleanFunction(Condition<INPUT> cond) {
 		this.condition = cond;
 	}
 
+	// -- Function methods --
+	
 	@Override
 	public void compute(INPUT input, BitType b) {
 		b.set(condition.isTrue(input));

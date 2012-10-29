@@ -40,14 +40,19 @@ package net.imglib2.ops.input;
 import net.imglib2.ops.pointset.PointSet;
 
 /**
+ * A {@link InputIteratorFactory} used to create a {@link PointInputIterator}.
  * 
  * @author Barry DeZonia
  */
 public class PointInputIteratorFactory implements InputIteratorFactory<long[]>{
 
+	// -- constructor --
+	
 	public PointInputIteratorFactory() {
 	}
 
+	// -- InputIteratorFactory methods --
+	
 	@Override
 	public InputIterator<long[]> createInputIterator(PointSet ps) {
 		return new PointInputIterator(ps);

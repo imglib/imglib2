@@ -37,7 +37,9 @@
 package net.imglib2.ops.operation;
 
 /**
- * TODO
+ * This interface specifies a contract for combining two inputs into a single
+ * output. Data is changed by reference and it is implicit in the design that
+ * no changes to the inputs are to be made by implementors of this interface.
  * 
  * @author Barry DeZonia
  */

@@ -44,52 +44,52 @@ package net.imglib2;
  */
 public abstract class AbstractWrappedRealInterval< I extends RealInterval > implements RealInterval
 {
-	protected final I source;
+	protected final I sourceInterval;
 
 	public AbstractWrappedRealInterval( final I source )
 	{
-		this.source = source;
+		this.sourceInterval = source;
 	}
 
 	@Override
 	public double realMin( final int d )
 	{
-		return source.realMin( d );
+		return sourceInterval.realMin( d );
 	}
 
 	@Override
 	public void realMin( final double[] min )
 	{
-		source.realMin( min );
+		sourceInterval.realMin( min );
 	}
 
 	@Override
 	public void realMin( final RealPositionable min )
 	{
-		source.realMin( min );
+		sourceInterval.realMin( min );
 	}
 
 	@Override
 	public double realMax( final int d )
 	{
-		return source.realMax( d );
+		return sourceInterval.realMax( d );
 	}
 
 	@Override
 	public void realMax( final double[] max )
 	{
-		source.realMax( max );
+		sourceInterval.realMax( max );
 	}
 
 	@Override
 	public void realMax( final RealPositionable max )
 	{
-		source.realMax( max );
+		sourceInterval.realMax( max );
 	}
 
 	@Override
 	public int numDimensions()
 	{
-		return source.numDimensions();
+		return sourceInterval.numDimensions();
 	}
 }

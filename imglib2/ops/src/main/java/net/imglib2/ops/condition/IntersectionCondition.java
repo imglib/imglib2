@@ -42,12 +42,19 @@ import java.util.List;
 
 
 /**
+* A {@link Condition} that aggregates a list of other Conditions as a group.
+* This Condition is true when all of the other Conditions are true.
 * 
 * @author Barry DeZonia
 *
 */
 public class IntersectionCondition<T> implements Condition<T> {
+	
+	// -- instance variables --
+	
 	private final Condition<T> condition;
+	
+	// -- constructor --
 	
 	public IntersectionCondition(List<Condition<T>> conditions) {
 		if (conditions.size() == 0)
@@ -63,6 +70,8 @@ public class IntersectionCondition<T> implements Condition<T> {
 		}
 	}
 
+	// -- Condition methods --
+	
 	@Override
 	public boolean isTrue(T val) {
 		return condition.isTrue(val);

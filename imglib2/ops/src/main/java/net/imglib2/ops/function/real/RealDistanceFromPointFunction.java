@@ -42,20 +42,28 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+* Computes the distance an input point resides from a reference point. The
+* reference point is spcified in the constructor.
 * 
 * @author Barry DeZonia
 *
 */
 public class RealDistanceFromPointFunction<T extends RealType<T>>
-	implements Function<long[],T> {
-
+	implements Function<long[],T>
+{
+	// -- instance variables --
+	
 	private final T var;
 	private final double[] pt;
+	
+	// -- constructor --
 	
 	public RealDistanceFromPointFunction(double[] pt, T var) {
 		this.var = var.createVariable();
 		this.pt = pt.clone();
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(long[] input, T output) {

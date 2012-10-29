@@ -47,8 +47,10 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Pair;
 
 /**
+ * @author Christian Dietz (University of Konstanz)
+ * @author Martin Horn (University of Konstanz)
+ * @author Felix Schoenenberger (University of Konstanz)
  * 
- * @author dietzc, hornm, schoenenbergerf University of Konstanz
  * @param <T>
  *            The type of the {@link Img} which will be normalized. Must be
  *            {@link RealType}

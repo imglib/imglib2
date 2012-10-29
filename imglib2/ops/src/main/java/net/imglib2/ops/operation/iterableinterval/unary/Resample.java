@@ -50,6 +50,13 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
+/**
+ * 
+ * @author Christian Dietz (University of Konstanz)
+ *
+ * @param <T>
+ * @param <II>
+ */
 public class Resample< T extends RealType< T >, II extends IterableInterval< T > & RandomAccessibleInterval< T >> implements UnaryOperation< II, II >
 {
 
