@@ -167,5 +167,10 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 		public void reset() {
 			iter.reset();
 		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }

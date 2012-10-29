@@ -163,6 +163,11 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 		public void reset() {
 			aIter.reset();
 		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }
 

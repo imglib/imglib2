@@ -127,5 +127,9 @@ public class OnePointSet implements PointSet {
 			hasNext = true;
 		}
 		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }

@@ -165,6 +165,11 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 		public void reset() {
 			aIter.reset();
 		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 	
 }

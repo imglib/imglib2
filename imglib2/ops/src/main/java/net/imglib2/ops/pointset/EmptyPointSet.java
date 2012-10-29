@@ -122,6 +122,10 @@ public class EmptyPointSet implements PointSet {
 			// do nothing
 		}
 		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 }

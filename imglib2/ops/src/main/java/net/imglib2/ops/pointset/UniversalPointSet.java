@@ -122,5 +122,10 @@ public class UniversalPointSet implements PointSet {
 			// nothing to do
 		}
 		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+		
 	}
 }

@@ -165,6 +165,11 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 			aIter.reset();
 			bIter.reset();
 		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }
 

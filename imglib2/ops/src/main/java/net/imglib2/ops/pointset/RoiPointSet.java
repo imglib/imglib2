@@ -175,5 +175,9 @@ public class RoiPointSet implements PointSet {
 			iter = vol.createIterator();
 		}
 		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }

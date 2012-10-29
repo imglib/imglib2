@@ -160,5 +160,9 @@ public class IterableIntervalPointSet implements PointSet
 			cursor.reset();
 		}
 		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }

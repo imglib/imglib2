@@ -200,5 +200,10 @@ public class GeneralPointSet implements PointSet {
 		public void reset() {
 			index = -1;
 		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }
