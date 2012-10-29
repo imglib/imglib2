@@ -87,7 +87,7 @@ public class IterableIntervalPointSet implements PointSet
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new IntervalIterator();
 	}
 

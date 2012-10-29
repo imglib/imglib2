@@ -77,7 +77,7 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new PointSetIntersectionIterator();
 	}
 	
@@ -104,7 +104,7 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	@Override
 	public long calcSize() {
 		long numElements = 0;
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			iter.next();
 			numElements++;
@@ -120,7 +120,7 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	// -- private helpers --
 	
 	private void calcBounds() {
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			long[] point = iter.next();
 			if (boundsInvalid) {
@@ -141,7 +141,7 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 		private long[] next;
 		
 		public PointSetIntersectionIterator() {
-			aIter = a.createIterator();
+			aIter = a.iterator();
 			next = null;
 		}
 		

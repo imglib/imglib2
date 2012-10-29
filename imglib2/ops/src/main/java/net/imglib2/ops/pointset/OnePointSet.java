@@ -101,7 +101,7 @@ public class OnePointSet implements PointSet {
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new OnePointSetIterator();
 	}
 

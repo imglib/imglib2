@@ -78,7 +78,7 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new PointSetDifferenceIterator();
 	}
 	
@@ -105,7 +105,7 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	@Override
 	public long calcSize() {
 		long numElements = 0;
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			iter.next();
 			numElements++;
@@ -121,7 +121,7 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	// -- private helpers --
 	
 	private void calcBounds() {
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			long[] point = iter.next();
 			if (boundsInvalid) {
@@ -142,7 +142,7 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 		private long[] aNext;
 		
 		public PointSetDifferenceIterator() {
-			aIter = a.createIterator();
+			aIter = a.iterator();
 			aNext = null;
 		}
 		

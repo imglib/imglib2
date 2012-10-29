@@ -37,6 +37,7 @@
 
 package net.imglib2.ops.pointset;
 
+
 import net.imglib2.ops.condition.Condition;
 
 /**
@@ -81,7 +82,7 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new ConditionalPointSetIterator();
 	}
 
@@ -110,7 +111,7 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 	@Override
 	public long calcSize() {
 		long numElements = 0;
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			iter.next();
 			numElements++;
@@ -123,10 +124,11 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 		return new ConditionalPointSet(pointSet.copy(), condition.copy());
 	}
 
+
 	// -- private helpers --
 	
 	private void calcBounds() {
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			long[] point = iter.next();
 			if (boundsInvalid) {
@@ -146,7 +148,7 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 		private long[] next;
 		
 		public ConditionalPointSetIterator() {
-			iter = pointSet.createIterator();
+			iter = pointSet.iterator();
 		}
 
 		@Override

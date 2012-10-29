@@ -69,7 +69,7 @@ public class UniversalPointSet implements PointSet {
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new UniversalPointSetIterator();
 	}
 

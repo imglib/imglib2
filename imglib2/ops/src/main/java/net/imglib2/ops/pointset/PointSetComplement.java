@@ -87,8 +87,8 @@ public class PointSetComplement implements PointSet {
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
-		return diff.createIterator();
+	public PointSetIterator iterator() {
+		return diff.iterator();
 	}
 	
 	@Override

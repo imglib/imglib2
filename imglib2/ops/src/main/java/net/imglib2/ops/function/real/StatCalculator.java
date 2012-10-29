@@ -72,7 +72,7 @@ public class StatCalculator<T extends RealType<T>> {
 	public StatCalculator(Function<long[],T> func, PointSet region) {
 		this.func = func;
 		this.region = region;
-		this.iter = region.createIterator();
+		this.iter = region.iterator();
 		this.values = new PrimitiveDoubleArray();
 	}
 
@@ -94,7 +94,7 @@ public class StatCalculator<T extends RealType<T>> {
 		}
 		else {
 			region = newRegion;
-			iter = region.createIterator();
+			iter = region.iterator();
 		}
 		values.clear();
 	}

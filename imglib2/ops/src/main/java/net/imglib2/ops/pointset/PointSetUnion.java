@@ -76,7 +76,7 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new PointSetUnionIterator();
 	}
 	
@@ -109,7 +109,7 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	@Override
 	public long calcSize() {
 		long numElements = 0;
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			iter.next();
 			numElements++;
@@ -138,8 +138,8 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 		private long[] bNext;
 		
 		public PointSetUnionIterator() {
-			aIter = a.createIterator();
-			bIter = b.createIterator();
+			aIter = a.iterator();
+			bIter = b.iterator();
 			bNext = null;
 		}
 		

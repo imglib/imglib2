@@ -46,7 +46,7 @@ import net.imglib2.EuclideanSpace;
  * 
  * @author Barry DeZonia
  */
-public interface PointSet extends EuclideanSpace {
+public interface PointSet extends EuclideanSpace, Iterable<long[]> {
 	
 	/**
 	 * Gets the current origin point of the PointSet
@@ -63,7 +63,8 @@ public interface PointSet extends EuclideanSpace {
 	 * Creates an iterator that can be used to pull point indices out of the
 	 * PointSet.
 	 */
-	PointSetIterator createIterator();
+	@Override
+	PointSetIterator iterator();
 
 	/**
 	 * Returns the dimensionality of the points contained in the PointSet

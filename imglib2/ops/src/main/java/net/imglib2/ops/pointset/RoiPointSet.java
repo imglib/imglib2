@@ -90,7 +90,7 @@ public class RoiPointSet implements PointSet {
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new RoiPointSetIterator();
 	}
 
@@ -126,7 +126,7 @@ public class RoiPointSet implements PointSet {
 	@Override
 	public long calcSize() {
 		long numElems = 0;
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			iter.next();
 			numElems++;
@@ -172,7 +172,7 @@ public class RoiPointSet implements PointSet {
 			// can't just reset iterator as Roi may have moved. recalc bounds.
 			HyperVolumePointSet vol =
 				new HyperVolumePointSet(findBoundMin(), findBoundMax());
-			iter = vol.createIterator();
+			iter = vol.iterator();
 		}
 		
 		@Override

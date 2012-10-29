@@ -56,7 +56,7 @@ public class PointInputIterator implements InputIterator<long[]> {
 	// -- constructor --
 	
 	public PointInputIterator(PointSet ps) {
-		iter = ps.createIterator();
+		iter = ps.iterator();
 		pos = null;
 	}
 	

@@ -77,7 +77,7 @@ public class RealSampleCollector<T extends RealType<T>> {
 	public void collect(PointSet ps, Function<long[],T> function, PrimitiveDoubleArray values) {
 		if (ps != lastPointSet) {
 			lastPointSet = ps;
-			iter = ps.createIterator();
+			iter = ps.iterator();
 		}
 		else {
 			iter.reset();
