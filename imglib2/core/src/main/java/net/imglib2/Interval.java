@@ -38,79 +38,64 @@ package net.imglib2;
 
 /**
  * <p>{x&isin;Z<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;<em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;<em>n</em>-1}}</p>
- * 
+ *
  * <p>An {@link Interval} over the discrete source domain.  <em>Note</em>
  * that this does <em>not</em> imply that for <em>all</em> coordinates in the
  * {@link Interval} function values exist or can be generated.  It only
  * defines where the minimum and maximum source coordinates are.  E.g. an
- * {@link IterableRealInterval} & {@link RandomAccessible} has a limited number
+ * {@link IterableInterval} has a limited number
  * of values and a source coordinate for each.  By that, minimum and maximum
  * are defined but the {@link Interval} does not define a value for all
  * coordinates in between.</p>
- * 
- * <p>TODO Check if array returning getters are a good idea:</p>
- *   <dl>
- *     <dt>pro:</dt>
- *     <dd>simplifies constructors that copy this field</dd>
- *     <dd>provide convenience in some situations where a copy is required</dd>
- *     <dt>con:</dt>
- *     <dd>exposes an internal array to the pubic that should be immutable</dd>
- *   </dl>
  *
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Stephan Preibisch
  */
 public interface Interval extends RealInterval, Dimensions
 {
 	/**
-	 * 
-	 * @param d dimension
-	 * @return minimum
+	 * Get the minimum in dimension d.
+	 *
+	 * @param d
+	 *            dimension
+	 * @return minimum in dimension d.
 	 */
 	public long min( final int d );
-	
+
 	/**
 	 * Write the minimum of each dimension into long[].
-	 * 
+	 *
 	 * @param min
 	 */
 	public void min( long[] min );
-	
+
 	/**
 	 * Sets a {@link Positionable} to the minimum of this {@link Interval}
-	 * 
+	 *
 	 * @param min
 	 */
 	public void min( Positionable min );
-	
+
 	/**
-	 * 
-	 * @param d dimension
-	 * @return maximum
+	 * Get the maximum in dimension d.
+	 *
+	 * @param d
+	 *            dimension
+	 * @return maximum in dimension d.
 	 */
 	public long max( final int d );
-	
+
 	/**
 	 * Write the maximum of each dimension into long[].
-	 * 
+	 *
 	 * @param max
 	 */
 	public void max( long[] max );
 
 	/**
 	 * Sets a {@link Positionable} to the maximum of this {@link Interval}
-	 * 
+	 *
 	 * @param max
 	 */
 	public void max( Positionable max );
-		
-//	/**
-//	 * Get the interval's size.  Note that you will get the actual array
-//	 * storing the size, that is, writing into it will change the properties
-//	 * of the {@link IntegerInterval} and lead to unexpected results.
-//	 * 
-//	 * @return max
-//	 */
-//	public long[] getSize();
 }
