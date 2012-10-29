@@ -9,13 +9,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -38,15 +38,14 @@ package net.imglib2.view;
 
 import java.util.Iterator;
 
+import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealPositionable;
 
 /**
  * Generates {@link Cursor Cursors} that iterate a
@@ -56,9 +55,8 @@ import net.imglib2.RealPositionable;
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class IterableRandomAccessibleInterval< T > implements IterableInterval< T >, RandomAccessibleInterval< T >
+public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterval< RandomAccessibleInterval< T > > implements IterableInterval< T >, RandomAccessibleInterval< T >
 {
-	final protected RandomAccessibleInterval< T > interval;
 	final long size;
 
 	public static < T > IterableRandomAccessibleInterval< T > create( final RandomAccessibleInterval< T > interval )
@@ -68,8 +66,8 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 
 	public IterableRandomAccessibleInterval( final RandomAccessibleInterval< T > interval )
 	{
-		this.interval = interval;
-		final int n = interval.numDimensions();
+		super( interval );
+		final int n = numDimensions();
 		long s = interval.dimension( 0 );
 		for ( int d = 1; d < n; ++d )
 			s *= interval.dimension( d );
@@ -93,7 +91,7 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 	@Override
 	public FlatIterationOrder iterationOrder()
 	{
-		return new FlatIterationOrder( interval );
+		return new FlatIterationOrder( sourceInterval );
 	}
 
 	@Override
@@ -103,105 +101,15 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 	}
 
 	@Override
-	public double realMin( final int d )
-	{
-		return interval.realMin( d );
-	}
-
-	@Override
-	public void realMin( final double[] min )
-	{
-		interval.realMin( min );
-	}
-
-	@Override
-	public void realMin( final RealPositionable min )
-	{
-		interval.realMin( min );
-	}
-
-	@Override
-	public double realMax( final int d )
-	{
-		return interval.realMax( d );
-	}
-
-	@Override
-	public void realMax( final double[] max )
-	{
-		interval.realMax( max );
-	}
-
-	@Override
-	public void realMax( final RealPositionable max )
-	{
-		interval.realMax( max );
-	}
-
-	@Override
-	public int numDimensions()
-	{
-		return interval.numDimensions();
-	}
-
-	@Override
 	public Iterator< T > iterator()
 	{
 		return cursor();
 	}
 
 	@Override
-	public long min( final int d )
-	{
-		return interval.min( d );
-	}
-
-	@Override
-	public void min( final long[] min )
-	{
-		interval.min( min );
-	}
-
-	@Override
-	public void min( final Positionable min )
-	{
-		interval.min( min );
-	}
-
-	@Override
-	public long max( final int d )
-	{
-		return interval.max( d );
-	}
-
-	@Override
-	public void max( final long[] max )
-	{
-		interval.max( max );
-	}
-
-	@Override
-	public void max( final Positionable max )
-	{
-		interval.max( max );
-	}
-
-	@Override
-	public void dimensions( final long[] dimensions )
-	{
-		interval.dimensions( dimensions );
-	}
-
-	@Override
-	public long dimension( final int d )
-	{
-		return interval.dimension( d );
-	}
-
-	@Override
 	public Cursor< T > cursor()
 	{
-		return new RandomAccessibleIntervalCursor< T >( interval );
+		return new RandomAccessibleIntervalCursor< T >( sourceInterval );
 	}
 
 	@Override
@@ -213,12 +121,12 @@ public class IterableRandomAccessibleInterval< T > implements IterableInterval< 
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
-		return interval.randomAccess();
+		return sourceInterval.randomAccess();
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess( final Interval i )
 	{
-		return interval.randomAccess( i );
+		return sourceInterval.randomAccess( i );
 	}
 }

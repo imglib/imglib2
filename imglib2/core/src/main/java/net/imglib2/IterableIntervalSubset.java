@@ -9,13 +9,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -46,35 +46,35 @@ import java.util.Iterator;
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class IterableIntervalSubset< T > implements IterableInterval< T >
+final public class IterableIntervalSubset< T > extends AbstractWrappedInterval< IterableInterval< T > > implements IterableInterval< T >
 {
 	final private class IISCursor implements Cursor< T >
 	{
 		private long index;
-		
+
 		final private Cursor< T > cursor;
-		final private boolean localizing; 
-		
+		final private boolean localizing;
+
 		private IISCursor( final IISCursor cursor )
 		{
 			this.localizing = cursor.localizing;
 			if ( localizing )
-				this.cursor = interval.localizingCursor();
+				this.cursor = sourceInterval.localizingCursor();
 			else
-				this.cursor = interval.cursor();
-			
+				this.cursor = sourceInterval.cursor();
+
 			index = cursor.index;
 			cursor.jumpFwd( index + 1 );
 		}
-		
+
 		IISCursor( final boolean localizing )
 		{
 			this.localizing = localizing;
 			if ( localizing )
-				cursor = interval.localizingCursor();
+				cursor = sourceInterval.localizingCursor();
 			else
-				cursor = interval.cursor();
-			
+				cursor = sourceInterval.cursor();
+
 			index = firstIndex - 1;
 			cursor.jumpFwd( firstIndex );
 		}
@@ -106,7 +106,7 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 		@Override
 		final public int numDimensions()
 		{
-			return interval.numDimensions();
+			return sourceInterval.numDimensions();
 		}
 
 		@Override
@@ -207,7 +207,7 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 
 		IterableInterval< T > interval()
 		{
-			return interval;
+			return sourceInterval;
 		}
 
 		@Override
@@ -231,38 +231,36 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 	final private long size;
 	final protected long lastIndex;
 
-	final protected IterableInterval< T > interval;
-
 	/**
 	 * Make sure that size and last index are dictated by the parent
 	 * {@link IterableInterval} or the {@link IterableIntervalSubset},
 	 * depending on which finishes earlier.
-	 * 
+	 *
 	 * @param interval
 	 * @param firstIndex
 	 * @param size
 	 */
 	public IterableIntervalSubset( final IterableInterval< T > interval, final long firstIndex, final long size )
 	{
+		super( interval );
 		this.firstIndex = firstIndex;
 		this.size = Math.min( size, interval.size() - firstIndex );
 		lastIndex = firstIndex + this.size - 1;
-		this.interval = interval;
 	}
 
 	@Override
 	final public Cursor< T > cursor()
 	{
-		if ( firstIndex == 0 && size == interval.size() )
-			return interval.cursor();
+		if ( firstIndex == 0 && size == sourceInterval.size() )
+			return sourceInterval.cursor();
 		return new IISCursor( false );
 	}
 
 	@Override
 	final public Cursor< T > localizingCursor()
 	{
-		if ( firstIndex == 0 && size == interval.size() )
-			return interval.localizingCursor();
+		if ( firstIndex == 0 && size == sourceInterval.size() )
+			return sourceInterval.localizingCursor();
 		return new IISCursor( true );
 	}
 
@@ -290,98 +288,8 @@ final public class IterableIntervalSubset< T > implements IterableInterval< T >
 	}
 
 	@Override
-	final public double realMax( final int d )
-	{
-		return interval.realMax( d );
-	}
-
-	@Override
-	final public void realMax( final double[] max )
-	{
-		interval.realMax( max );		
-	}
-
-	@Override
-	final public void realMax( final RealPositionable max )
-	{
-		interval.realMax( max );		
-	}
-
-	@Override
-	final public double realMin( final int d )
-	{
-		return realMin( d );
-	}
-
-	@Override
-	final public void realMin( final double[] min )
-	{
-		interval.realMin( min );
-	}
-
-	@Override
-	final public void realMin( final RealPositionable min )
-	{
-		interval.realMin( min );
-	}
-
-	@Override
-	final public int numDimensions()
-	{
-		return interval.numDimensions();
-	}
-
-	@Override
 	final public Iterator< T > iterator()
 	{
 		return cursor();
-	}
-
-	@Override
-	final public long dimension( final int d )
-	{
-		return interval.dimension( d );
-	}
-
-	@Override
-	final public void dimensions( final long[] dimensions )
-	{
-		dimensions( dimensions );
-	}
-
-	@Override
-	final public long max( final int d )
-	{
-		return interval.max( d );
-	}
-
-	@Override
-	final public void max( final long[] max )
-	{
-		interval.max( max );
-	}
-
-	@Override
-	final public void max( final Positionable max )
-	{
-		interval.max( max );
-	}
-
-	@Override
-	final public long min( final int d )
-	{
-		return interval.min( d );
-	}
-
-	@Override
-	final public void min( final long[] min )
-	{
-		interval.min( min );
-	}
-	
-	@Override
-	final public void min( final Positionable min )
-	{
-		interval.min( min );
 	}
 }
