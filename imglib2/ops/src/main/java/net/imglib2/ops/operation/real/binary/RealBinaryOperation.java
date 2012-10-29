@@ -42,7 +42,6 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
- *
  * @author Barry DeZonia
  */
 public interface RealBinaryOperation<

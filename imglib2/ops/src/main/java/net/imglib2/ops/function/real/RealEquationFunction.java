@@ -57,11 +57,15 @@ import net.imglib2.type.numeric.real.DoubleType;
 public class RealEquationFunction<T extends RealType<T>>
 	implements Function<long[], T>
 {
+	// -- instance variables --
+	
 	private final String origSpec;
 	private final Function<long[], DoubleType> eqnFunc;
 	private final DoubleType tmp;
 	private final T factory;
 	private final Img<T> img;
+	
+	// -- constructor --
 	
 	public RealEquationFunction(String specification, T type, Img<T> img) {
 		final RealEquationFunctionParser parser =
@@ -77,6 +81,8 @@ public class RealEquationFunction<T extends RealType<T>>
 		this.img = img;
 	}
 
+	// -- Function methods --
+	
 	@Override
 	public void compute(long[] input, T output) {
 		eqnFunc.compute(input, tmp);

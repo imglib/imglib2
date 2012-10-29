@@ -43,20 +43,27 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the geometric mean of the values of another function over a region.
  * 
  * @author Barry DeZonia
  */
 public class RealGeometricMeanFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealGeometricMeanFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealGeometricMeanFunction<T> copy() {

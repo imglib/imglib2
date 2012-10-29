@@ -67,12 +67,12 @@ public class ConvertedIterableInterval< A, B extends Type< B > > extends Abstrac
 	@Override
 	public ConvertedCursor< A, B > cursor()
 	{
-		return new ConvertedCursor< A, B >( source.cursor(), converter, converted );
+		return new ConvertedCursor< A, B >( sourceInterval.cursor(), converter, converted );
 	}
 
 	@Override
 	public ConvertedCursor< A, B > localizingCursor()
 	{
-		return new ConvertedCursor< A, B >( source.localizingCursor(), converter, converted );
+		return new ConvertedCursor< A, B >( sourceInterval.localizingCursor(), converter, converted );
 	}
 }

@@ -39,6 +39,10 @@ package net.imglib2.ops.operation.metadata.unary;
 import net.imglib2.meta.Named;
 import net.imglib2.ops.operation.UnaryOperation;
 
+/**
+ * @author Christian Dietz (University of Konstanz)
+ * @param <K>
+ */
 public class CopyNamed< K extends Named > implements UnaryOperation< K, K >
 {
 

@@ -42,12 +42,15 @@ import net.imglib2.type.numeric.ComplexType;
 
 
 /**
+ * Returns true if two complex values are not equal and false otherwise.
  * 
  * @author Barry DeZonia
  */
 public final class ComplexNotEquals<T extends ComplexType<T>,U extends ComplexType<U>>
 	implements BinaryRelation<T,U>
 {
+	// -- BinaryRelation methods --
+	
 	@Override
 	public boolean holds(T val1, U val2) {
 		return (val1.getRealDouble() != val2.getRealDouble()) ||

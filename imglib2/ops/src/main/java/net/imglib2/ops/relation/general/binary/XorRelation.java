@@ -34,119 +34,38 @@
  * #L%
  */
 
-package net.imglib2.converter;
 
-import net.imglib2.Interval;
-import net.imglib2.Positionable;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealPositionable;
+package net.imglib2.ops.relation.general.binary;
+
+import net.imglib2.ops.relation.BinaryRelation;
 
 /**
- * TODO
- *
+ * Combines two other {@link BinaryRelation}s in an XOR fashion. The relation
+ * holds if one and only one of the child relations hold.
+ * 
+ * @author Barry DeZonia
  */
-abstract public class AbstractConvertedRandomAccessibleInterval< A, B > implements RandomAccessibleInterval< B >
-{
-	final protected RandomAccessibleInterval< A > source;
+public final class XorRelation<T,U> implements BinaryRelation<T,U> {
 
-	public AbstractConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source )
-	{
-		this.source = source;
+	private final BinaryRelation<T,U> rel1;
+	private final BinaryRelation<T,U> rel2;
+
+	public XorRelation(BinaryRelation<T,U> rel1,BinaryRelation<T,U> rel2) {
+		this.rel1 = rel1;
+		this.rel2 = rel2;
+	}
+	
+	@Override
+	public boolean holds(T val1, U val2) {
+		boolean oneHolds = rel1.holds(val1, val2);
+		boolean twoHolds = rel2.holds(val1, val2);
+		if (oneHolds & !twoHolds) return true;
+		if (!oneHolds & twoHolds) return true;
+		return false;
 	}
 
 	@Override
-	public int numDimensions()
-	{
-		return source.numDimensions();
-	}
-
-	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
-
-	@Override
-	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( final Interval interval );
-
-	@Override
-	public long min( final int d )
-	{
-		return source.min( d );
-	}
-
-	@Override
-	public void min( final long[] min )
-	{
-		source.min( min );
-	}
-
-	@Override
-	public void min( final Positionable min )
-	{
-		source.min( min );
-	}
-
-	@Override
-	public long max( final int d )
-	{
-		return source.max( d );
-	}
-
-	@Override
-	public void max( final long[] max )
-	{
-		source.max( max );
-	}
-
-	@Override
-	public void max( final Positionable max )
-	{
-		source.max( max );
-	}
-
-	@Override
-	public void dimensions( final long[] dimensions )
-	{
-		source.dimensions( dimensions );
-	}
-
-	@Override
-	public long dimension( final int d )
-	{
-		return source.dimension( d );
-	}
-
-	@Override
-	public double realMin( final int d )
-	{
-		return source.realMin( d );
-	}
-
-	@Override
-	public void realMin( final double[] min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public void realMin( final RealPositionable min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public double realMax( final int d )
-	{
-		return source.realMax( d );
-	}
-
-	@Override
-	public void realMax( final double[] max )
-	{
-		source.realMax( max );
-	}
-
-	@Override
-	public void realMax( final RealPositionable max )
-	{
-		source.realMax( max );
+	public XorRelation<T,U> copy() {
+		return new XorRelation<T,U>(rel1.copy(), rel2.copy());
 	}
 }

@@ -38,17 +38,26 @@
 package net.imglib2.ops.util;
 
 /**
+ * Tuple2 allows two classes to be joined as a class. This is useful for
+ * methods that would like to return two values from a computation.
  * 
  * @author Barry DeZonia
  */
 public class Tuple2<ONE,TWO> {
+	
+	// -- instance variables --
+	
 	private ONE one;
 	private TWO two;
+	
+	// -- constructor --
 	
 	public Tuple2(ONE one, TWO two) {
 		this.one = one;
 		this.two = two;
 	}
+	
+	// -- Tuple2 methods --
 	
 	public void set1(ONE one) { this.one = one; }
 	public void set2(TWO two) { this.two = two; }

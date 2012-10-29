@@ -35,41 +35,45 @@
  */
 
 
-package net.imglib2.ops.condition;
+package net.imglib2.ops.function.bool;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.relation.BinaryRelation;
+import net.imglib2.type.logic.BitType;
+
 
 /**
+ * Returns a boolean constant value whenever queried (regardless of input data).
  * 
  * @author Barry DeZonia
  */
-public class BinaryCondition<INPUT,O1,O2> implements Condition<INPUT> {
+public class BooleanConstantFunction<INPUT>
+	implements Function<INPUT,BitType>
+{
+	// -- instance variables --
+	
+	private final boolean bool;
 
-	private final Function<INPUT,O1> f1;
-	private final Function<INPUT,O2> f2;
-	private final O1 f1Val;
-	private final O2 f2Val;
-	private final BinaryRelation<O1,O2> relation;
-
-	public BinaryCondition(Function<INPUT,O1> f1, Function<INPUT,O2> f2, BinaryRelation<O1,O2> relation) {
-		this.f1 = f1;
-		this.f2 = f2;
-		this.f1Val = f1.createOutput();
-		this.f2Val = f2.createOutput();
-		this.relation = relation;
+	// -- constructor --
+	
+	public BooleanConstantFunction(boolean b) {
+		bool = b;
+	}
+	
+	// -- Function methods --
+	
+	@Override
+	public void compute(INPUT input, BitType b) {
+		b.set(bool);
 	}
 	
 	@Override
-	public boolean isTrue(INPUT input) {
-		f1.compute(input, f1Val);
-		f2.compute(input, f2Val);
-		return relation.holds(f1Val,f2Val);
-	}
-	
-	@Override
-	public BinaryCondition<INPUT,O1,O2> copy() {
-		return new BinaryCondition<INPUT,O1,O2>(f1.copy(), f2.copy(), relation.copy());
+	public BooleanConstantFunction<INPUT> copy() {
+		return new BooleanConstantFunction<INPUT>(bool);
 	}
 
+	@Override
+	public BitType createOutput() {
+		return new BitType();
+	}
 }
+

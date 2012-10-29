@@ -37,142 +37,127 @@
 
 package net.imglib2.ops.pointset;
 
-import net.imglib2.roi.RegionOfInterest;
-
-// TODO - when the efforts of people working with SciJava resolves Roi
-// implementations (real and integer, RegionOfInterest and PointSet)
-// this class can go away.
+import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
 
 /**
- * Wraps a (real based) {@link RegionOfInterest} as a (integer based)
- * {@link PointSet}. An adapter class that brings the functionality
- * of PointSets to RegionOfInterests.
+ * This class is an adapter that allows any {@link IterableInterval} to be
+ * treated as a {@link PointSet}. The only limitation is that this PointSet
+ * implementation does not support the translate() method.
  * 
  * @author Barry DeZonia
  *
  */
-public class RoiPointSet implements PointSet {
-
+public class IterableIntervalPointSet implements PointSet
+{
 	// -- instance variables --
 	
-	private final int numD;
-	private final RegionOfInterest roi;
-	private final long[] origin;
-	private final long[] boundMin;
-	private final long[] boundMax;
-	private final double[] tmpCoord;
+	private final IterableInterval<?> interval;
+	private final long[] boundMin, boundMax;
+	private final long size;
 	
 	// -- constructor --
 	
-	public RoiPointSet(RegionOfInterest roi) {
-		this.roi = roi;
-		numD = roi.numDimensions();
-		origin = new long[numD];
-		boundMin = new long[numD];
-		boundMax = new long[numD];
-		tmpCoord = new double[numD];
+	public IterableIntervalPointSet(IterableInterval<?> interval) {
+		this.interval = interval;
+		int numDims = interval.numDimensions();
+		boundMin = new long[numDims];
+		boundMax = new long[numDims];
+		interval.min(boundMin);
+		interval.max(boundMax);
+		long sum = 1;
+		for (int i = 0; i < numDims; i++) {
+			sum *= 1 + boundMax[i] - boundMin[i];
+		}
+		size = sum;
 	}
 	
 	// -- PointSet methods --
 	
 	@Override
 	public long[] getOrigin() {
-		for (int i = 0; i < numD; i++)
-			origin[i] = (long) Math.floor(roi.realMin(i));
-		return origin;
+		return boundMin;
 	}
 
+	/** Note: this method unsupported! */
 	@Override
 	public void translate(long[] delta) {
-		for (int i = 0; i < numD; i++) {
-			roi.move(delta[i], i);
-		}
+		throw new UnsupportedOperationException(
+				"IterableIntervals cannot be moved through space");
 	}
 
 	@Override
 	public PointSetIterator createIterator() {
-		return new RoiPointSetIterator();
+		return new IntervalIterator();
 	}
 
 	@Override
 	public int numDimensions() {
-		return roi.numDimensions();
+		return interval.numDimensions();
 	}
 
 	@Override
 	public long[] findBoundMin() {
-		for (int i = 0; i < numD; i++) {
-			boundMin[i] = (long) Math.floor(roi.realMin(i));
-		}
 		return boundMin;
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		for (int i = 0; i < numD; i++) {
-			boundMax[i] = (long) Math.ceil(roi.realMax(i));
-		}
 		return boundMax;
 	}
 
 	@Override
 	public boolean includes(long[] point) {
-		for (int i = 0; i < numD; i++) {
-			tmpCoord[i] = point[i];
+		for (int i = 0; i < point.length; i++) {
+			long val = point[i];
+			if (val < boundMin[i] || val > boundMax[i]) return false;
 		}
-		return roi.contains(tmpCoord);
+		return true;
 	}
 
 	@Override
 	public long calcSize() {
-		long numElems = 0;
-		PointSetIterator iter = createIterator();
-		while (iter.hasNext()) {
-			iter.next();
-			numElems++;
-		}
-		return numElems;
+		return size;
 	}
 
 	@Override
-	public PointSet copy() {
-		return new RoiPointSet(roi); // TODO - no copying possible. threading issues?
+	public IterableIntervalPointSet copy() {
+		return new IterableIntervalPointSet(interval);
 	}
-
-	// -- private helpers --
-
-	// TODO - internally it could instead make a ConditionalPointSet with a custom
-	// RoiContainsPoint condition and use its iterator.
 	
-	private class RoiPointSetIterator implements PointSetIterator {
-
-		private PointSetIterator iter;
-		private long[] pos;
+	// -- private helpers --
+	
+	private class IntervalIterator implements PointSetIterator {
 		
-		public RoiPointSetIterator() {
-			reset();
+		// -- instance variables --
+		
+		private final Cursor<?> cursor;
+		private final long[] pos;
+		
+		// -- constructor --
+		
+		public IntervalIterator() {
+			cursor = interval.localizingCursor();
+			pos = new long[interval.numDimensions()];
 		}
+		
+		// -- PointSetIterator methods --
 		
 		@Override
 		public boolean hasNext() {
-			while (iter.hasNext()) {
-				pos = iter.next();
-				if (includes(pos)) return true;
-			}
-			return false;
+			return cursor.hasNext();
 		}
 
 		@Override
 		public long[] next() {
+			cursor.next();
+			cursor.localize(pos);
 			return pos;
 		}
 
 		@Override
 		public void reset() {
-			// can't just reset iterator as Roi may have moved. recalc bounds.
-			HyperVolumePointSet vol =
-				new HyperVolumePointSet(findBoundMin(), findBoundMax());
-			iter = vol.createIterator();
+			cursor.reset();
 		}
 		
 	}

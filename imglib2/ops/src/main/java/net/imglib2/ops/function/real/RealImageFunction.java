@@ -40,16 +40,17 @@ package net.imglib2.ops.function.real;
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.img.Img;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.function.Function;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * RealImageFunction wraps an Img<? extends RealType<?>> and allows one to treat
- * it as a function. RealImageFunction has two types <I,O>. I is the type of
- * the image data (such as UnsignedByteType) while O is the type of output the
- * function should assign to (such as DoubleType).
+ * RealImageFunction wraps {@link RandomAccessibleInterval}s or
+ * {@link RandomAccess}es of {@link RealType} and allows one to treat
+ * it as a {@link Function}. RealImageFunction has two types <I,O>. I is the
+ * type of the accessible data (such as UnsignedByteType) while O is the type
+ * of output the function should assign to (such as DoubleType).
  * 
  * @author Barry DeZonia
  */
@@ -71,14 +72,14 @@ public class RealImageFunction<I extends RealType<I>, O extends RealType<O>>
 	
 	// -- public constructors --
 	
-	public RealImageFunction(Img<I> img, O type) {
+	public RealImageFunction(RandomAccessibleInterval<I> img, O type) {
 		this.accessor = img.randomAccess();
 		this.type = type;
 	}
 	
 	public RealImageFunction(
-		Img<I> img,
-		OutOfBoundsFactory<I,Img<I>> factory,
+		RandomAccessibleInterval<I> img,
+		OutOfBoundsFactory<I,RandomAccessibleInterval<I>> factory,
 		O type)
 	{
 		@SuppressWarnings({"rawtypes","unchecked"})

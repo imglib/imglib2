@@ -47,7 +47,9 @@ import net.imglib2.type.NativeType;
 /**
  * nD Connected Component Analysis.
  * 
- * @author hornm, dietzc University of Konstanz
+ * @author Felix Schoenenberger (University of Konstanz)
+ * @author Christian Dietz (University of Konstanz)
+ * @author Martin Horn (University of Konstanz)
  */
 public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomAccessibleInterval< T > & IterableInterval< T >, LL extends RandomAccessibleInterval< LabelingType< Integer >> & IterableInterval< LabelingType< Integer >>> extends AbstractRegionGrowing< T, Integer, I, LL >
 {
@@ -146,5 +148,27 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	public UnaryOperation< I, LL > copy()
 	{
 		return new CCA< T, I, LL >( m_structuringElement.clone(), m_background.copy(), m_synchronizer );
+	}
+	
+	/**
+	 * Simple helper class
+	 * 
+	 * @author Christian Dietz (University of Konstanz)
+	 */
+	private class ThreadSafeLabelNumbers
+	{
+
+		// Current labelnumber
+		private int m_labelNumber;
+
+		protected ThreadSafeLabelNumbers()
+		{
+			m_labelNumber = 1;
+		}
+
+		protected final synchronized int aquireNewLabelNumber()
+		{
+			return m_labelNumber++;
+		}
 	}
 }

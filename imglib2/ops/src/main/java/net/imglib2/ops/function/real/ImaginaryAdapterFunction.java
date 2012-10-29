@@ -43,21 +43,28 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Wraps the imaginary values of a complex {@link Function} as a real Function.
  * 
  * @author Barry DeZonia
  */
 public class ImaginaryAdapterFunction<INPUT, C extends ComplexType<C>, R extends RealType<R>> 
-	implements Function<INPUT,R> {
+	implements Function<INPUT,R>
+{
+	// -- instance variables --
 	
 	private final Function<INPUT,C> complexFunc;
 	private final C cType;
 	private final R rType;
+
+	// -- constructor --
 	
 	public ImaginaryAdapterFunction(Function<INPUT,C> complexFunc, C cType, R rType) {
 		this.rType = rType.createVariable();
 		this.cType = cType.createVariable();
 		this.complexFunc = complexFunc;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(INPUT input, R r) {

@@ -125,16 +125,21 @@ import net.imglib2.ops.parse.token.Xor;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**
+* Responsible for turning a input String in the equation language into a set
+* of tokens for use later by a parser.
 * 
 * @author Barry DeZonia
 *
 */
 public class Lexer {
 
+	// -- constructor --
+	
 	public Lexer() {}
 	
-	public ParseStatus tokenize(
-			String spec, Map<String,Integer> varMap)
+	// -- Lexer methods --
+	
+	public ParseStatus tokenize(String spec, Map<String,Integer> varMap)
 	{
 		List<Token> tokens = new ArrayList<Token>();
 		char[] chars = spec.toCharArray();
@@ -305,6 +310,8 @@ public class Lexer {
 		return status;
 	}
 
+	// -- private helpers --
+	
 	private Token reservedWordLookup(String name, int pos) {
 		// constants
 		if (name.equals("E")) return new Real(pos, name, Math.E);

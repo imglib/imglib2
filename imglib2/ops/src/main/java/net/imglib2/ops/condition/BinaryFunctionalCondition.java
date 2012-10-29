@@ -35,36 +35,50 @@
  */
 
 
-package net.imglib2.ops.function.bool;
+package net.imglib2.ops.condition;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.type.logic.BitType;
-
+import net.imglib2.ops.relation.BinaryRelation;
 
 /**
+ * A {@link Condition} between two {@link Function}s. The Condition is true when
+ * a given {@link BinaryRelation} is satisfied between the two Functions for a
+ * specific input.
  * 
  * @author Barry DeZonia
  */
-public class ConstantBoolFunction<INPUT> implements Function<INPUT,BitType> {
-	private final boolean bool;
+public class BinaryFunctionalCondition<INPUT,O1,O2> implements Condition<INPUT> {
 
-	public ConstantBoolFunction(boolean b) {
-		bool = b;
+	// -- instance variables --
+	
+	private final Function<INPUT,O1> f1;
+	private final Function<INPUT,O2> f2;
+	private final O1 f1Val;
+	private final O2 f2Val;
+	private final BinaryRelation<O1,O2> relation;
+
+	// -- constructor --
+	
+	public BinaryFunctionalCondition(Function<INPUT,O1> f1, Function<INPUT,O2> f2, BinaryRelation<O1,O2> relation) {
+		this.f1 = f1;
+		this.f2 = f2;
+		this.f1Val = f1.createOutput();
+		this.f2Val = f2.createOutput();
+		this.relation = relation;
+	}
+	
+	// -- Condition methods --
+	
+	@Override
+	public boolean isTrue(INPUT input) {
+		f1.compute(input, f1Val);
+		f2.compute(input, f2Val);
+		return relation.holds(f1Val,f2Val);
 	}
 	
 	@Override
-	public void compute(INPUT input, BitType b) {
-		b.set(bool);
-	}
-	
-	@Override
-	public ConstantBoolFunction<INPUT> copy() {
-		return new ConstantBoolFunction<INPUT>(bool);
+	public BinaryFunctionalCondition<INPUT,O1,O2> copy() {
+		return new BinaryFunctionalCondition<INPUT,O1,O2>(f1.copy(), f2.copy(), relation.copy());
 	}
 
-	@Override
-	public BitType createOutput() {
-		return new BitType();
-	}
 }
-

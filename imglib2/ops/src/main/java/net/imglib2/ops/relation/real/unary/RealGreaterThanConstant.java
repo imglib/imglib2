@@ -41,8 +41,7 @@ import net.imglib2.ops.relation.UnaryRelation;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * 
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  */
 public class RealGreaterThanConstant<T extends RealType<T>> implements
 		UnaryRelation<T> {

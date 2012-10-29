@@ -43,9 +43,12 @@ import net.imglib2.type.Type;
  * {@link Cursor} wrapping another cursor. Iterates a given number of steps
  * (planeSize) from a given planePos.
  * 
- * @author Christian Dietz, University of Konstanz
+ * @author Christian Dietz (University of Konstanz)
  * 
  * @param <T>
+ * 
+ * IMPORTANT: WILL BE INTEGRATED IN VIEW FRAMEWORK IN THE FUTURE
+ * 
  */
 class IterableSubsetViewCursor< T extends Type< T >> implements Cursor< T >
 {

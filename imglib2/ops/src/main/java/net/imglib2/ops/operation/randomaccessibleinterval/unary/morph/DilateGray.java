@@ -46,7 +46,7 @@ import net.imglib2.view.Views;
 /**
  * Dilate operation on gray-level.
  * 
- * @author schoenenf
+ * @author Felix Schoenenberger (University of Konstanz)
  * 
  * @param <T>
  */

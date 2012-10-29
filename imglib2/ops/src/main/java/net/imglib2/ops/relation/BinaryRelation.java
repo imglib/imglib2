@@ -39,6 +39,8 @@ package net.imglib2.ops.relation;
 
 
 /**
+ * A binary relation tests whether a relationship exists between two input
+ * values. The relationship is defined by the API user.
  * 
  * @author Barry DeZonia
  */

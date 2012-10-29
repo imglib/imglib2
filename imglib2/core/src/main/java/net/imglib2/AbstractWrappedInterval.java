@@ -52,48 +52,48 @@ public abstract class AbstractWrappedInterval< I extends Interval > extends Abst
 	@Override
 	public void dimensions( final long[] dimensions )
 	{
-		source.dimensions( dimensions );
+		sourceInterval.dimensions( dimensions );
 	}
 
 	@Override
 	public long dimension( final int d )
 	{
-		return source.dimension( d );
+		return sourceInterval.dimension( d );
 	}
 
 	@Override
 	public long min( final int d )
 	{
-		return source.min( d );
+		return sourceInterval.min( d );
 	}
 
 	@Override
 	public void min( final long[] min )
 	{
-		source.min( min );
+		sourceInterval.min( min );
 	}
 
 	@Override
 	public void min( final Positionable min )
 	{
-		source.min( min );
+		sourceInterval.min( min );
 	}
 
 	@Override
 	public long max( final int d )
 	{
-		return source.max( d );
+		return sourceInterval.max( d );
 	}
 
 	@Override
 	public void max( final long[] max )
 	{
-		source.max( max );
+		sourceInterval.max( max );
 	}
 
 	@Override
 	public void max( final Positionable max )
 	{
-		source.max( max );
+		sourceInterval.max( max );
 	}
 }

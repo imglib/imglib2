@@ -35,36 +35,45 @@
  */
 
 
-package net.imglib2.ops.function.general;
+package net.imglib2.ops.condition;
 
 import net.imglib2.ops.function.Function;
+import net.imglib2.ops.relation.UnaryRelation;
 
 
 /**
+ * A {@link Condition} on a {@link Function}. The Condition is true when
+ * a given {@link UnaryRelation} is satisfied on the Function for a
+ * specific input.
  * 
  * @author Barry DeZonia
  */
-public class NullPointFunction<INPUT, T> implements Function<INPUT,T> {
+public class UnaryFunctionalCondition<INPUT, T> implements Condition<INPUT> {
 
-	@Override
-	public void compute(INPUT point, T output) {
-		// do nothing
-		// TODO : Could set to NaN?
+	// -- instance variables --
+	
+	private final Function<INPUT,T> f1;
+	private final T f1Val;
+	private final UnaryRelation<T> relation;
+
+	// -- constructor --
+	
+	public UnaryFunctionalCondition(Function<INPUT,T> f1, UnaryRelation<T> relation) {
+		this.f1 = f1;
+		this.f1Val = f1.createOutput();
+		this.relation = relation;
 	}
-
+	
+	// -- Condition methods --
+	
 	@Override
-	public T createOutput() {
-		return null;
-		// TODO - returning null is sort of a problem. Though it makes sense.
-		//  However if we only pass NullFunctions at outermost loop maybe we can avoid
-		//  this method ever being called.
-		//  What good is a null function if outermost loop can count on its own? Null
-		//  function idea originally came about as a way to collect stats without
-		//  destroying existing data. That need may now be obsolete. Investigate.
+	public boolean isTrue(INPUT input) {
+		f1.compute(input, f1Val);
+		return relation.holds(f1Val);
 	}
-
+	
 	@Override
-	public NullPointFunction<INPUT,T> copy() {
-		return new NullPointFunction<INPUT,T>();
+	public UnaryFunctionalCondition<INPUT, T> copy() {
+		return new UnaryFunctionalCondition<INPUT, T>(f1.copy(), relation.copy());
 	}
 }

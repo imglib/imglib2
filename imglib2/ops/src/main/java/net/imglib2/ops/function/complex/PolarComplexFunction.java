@@ -44,19 +44,32 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * This {@link Function} class weds two input Functions of {@link RealType}
+ * into a Function of {@link ComplexType}. The separate real values are
+ * treated as inputs to a complex number of a polar (r,theta) type.
  * 
  * @author Barry DeZonia
  */
-public class PolarComplexFunction<INPUT, R extends RealType<R>, C extends ComplexType<C>>
-	implements Function<INPUT,C> {
-
-	private final Function<INPUT,R> realFunc1;
-	private final Function<INPUT,R> realFunc2;
-	private final R real1;
-	private final R real2;
+public class PolarComplexFunction<
+		INPUT,
+		R1 extends RealType<R1>,
+		R2 extends RealType<R2>,
+		C extends ComplexType<C>>
+	implements Function<INPUT,C>
+{
+	// -- instance variables --
+	
+	private final Function<INPUT,R1> realFunc1;
+	private final Function<INPUT,R2> realFunc2;
+	private final R1 real1;
+	private final R2 real2;
 	private final C cType;
 	
-	public PolarComplexFunction(Function<INPUT,R> realFunc1, Function<INPUT,R> realFunc2, C cType) {
+	// -- constructor --
+	
+	public PolarComplexFunction(
+			Function<INPUT,R1> realFunc1, Function<INPUT,R2> realFunc2, C cType)
+	{
 		this.cType = cType;
 		this.realFunc1 = realFunc1;
 		this.realFunc2 = realFunc2;
@@ -64,16 +77,20 @@ public class PolarComplexFunction<INPUT, R extends RealType<R>, C extends Comple
 		this.real2 = realFunc2.createOutput();
 	}
 	
+	// -- Function methods --
+	
 	@Override
 	public void compute(INPUT input, C value) {
 		realFunc1.compute(input, real1);
 		realFunc2.compute(input, real2);
-		ComplexHelper.setPolar(value, real1.getRealDouble(), real2.getRealDouble());
+		ComplexHelper.setPolar(
+				value, real1.getRealDouble(), real2.getRealDouble());
 	}
 	
 	@Override
-	public PolarComplexFunction<INPUT,R,C> copy() {
-		return new PolarComplexFunction<INPUT,R,C>(realFunc1.copy(), realFunc2.copy(), cType);
+	public PolarComplexFunction<INPUT,R1,R2,C> copy() {
+		return new PolarComplexFunction<INPUT,R1,R2,C>(
+				realFunc1.copy(), realFunc2.copy(), cType.copy());
 	}
 
 	@Override

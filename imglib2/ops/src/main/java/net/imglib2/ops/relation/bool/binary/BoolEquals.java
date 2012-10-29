@@ -42,11 +42,14 @@ import net.imglib2.type.logic.BitType;
 
 
 /**
+ * Returns true if two boolean values are equal and false otherwise.
  * 
  * @author Barry DeZonia
  */
 public final class BoolEquals implements BinaryRelation<BitType,BitType> {
 
+	// -- BinaryRelation methods --
+	
 	@Override
 	public boolean holds(BitType val1, BitType val2) {
 		return val1.get() == val2.get();

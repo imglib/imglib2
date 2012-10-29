@@ -41,6 +41,12 @@ import java.util.Iterator;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * 
+ * @author Felix Schoenenberger (University of Konstanz)
+ *
+ * @param <T>
+ */
 public final class MakeHistogram< T extends RealType< T >> implements UnaryOutputOperation< Iterable< T >, OpsHistogram >
 {
 

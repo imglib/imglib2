@@ -56,12 +56,12 @@ public class WriteConvertedIterableInterval< A, B > extends AbstractConvertedIte
 	@Override
 	public WriteConvertedCursor< A, B > cursor()
 	{
-		return new WriteConvertedCursor< A, B >( source.cursor(), converter );
+		return new WriteConvertedCursor< A, B >( sourceInterval.cursor(), converter );
 	}
 
 	@Override
 	public WriteConvertedCursor< A, B > localizingCursor()
 	{
-		return new WriteConvertedCursor< A, B >( source.localizingCursor(), converter );
+		return new WriteConvertedCursor< A, B >( sourceInterval.localizingCursor(), converter );
 	}
 }

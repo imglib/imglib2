@@ -39,6 +39,10 @@ package net.imglib2.ops.operation.metadata.unary;
 import net.imglib2.meta.Sourced;
 import net.imglib2.ops.operation.UnaryOperation;
 
+/**
+ * @author Christian Dietz (University of Konstanz)
+ * @param <S>
+ */
 public class CopySourced< S extends Sourced > implements UnaryOperation< S, S >
 {
 

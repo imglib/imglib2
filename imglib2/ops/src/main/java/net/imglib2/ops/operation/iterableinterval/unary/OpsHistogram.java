@@ -38,6 +38,13 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * Histogramm class
+ * 
+ * @author Felix Schoenenberger (University of Konstanz)
+ * @author Christian Dietz (University of Konstanz)
+ * @author Martin Horn (University of Konstanz)
+ */
 public final class OpsHistogram
 {
 

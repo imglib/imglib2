@@ -41,24 +41,28 @@ import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
-// TODO - very similar to RealConvolutionFunction : make one call other?
-
 // TODO - this class suffers from the weakness that one needs to
 // correctly build the weights without maybe knowing the order of points in
-// the PointSet. We will need helper methods in that build a PointSet
+// the PointSet. We will need helper methods that build a PointSet
 // compatible set of weights from a PointSet and some other hints.
 
 
 /**
+ * Computes a weighted sum of the values of another function over a region.
+ * The weights are specified in the constructor.
  * 
  * @author Barry DeZonia
  */
 public class RealWeightedSumFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
 	private final double[] weights;
+	
+	// -- constructor --
 	
 	public RealWeightedSumFunction(Function<long[],T> otherFunc, double[] weights)
 	{
@@ -66,6 +70,8 @@ public class RealWeightedSumFunction<T extends RealType<T>>
 		this.calculator = null;
 		this.weights = weights;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealWeightedSumFunction<T> copy() {

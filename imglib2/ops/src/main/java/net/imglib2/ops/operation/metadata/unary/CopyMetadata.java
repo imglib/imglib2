@@ -40,9 +40,7 @@ import net.imglib2.meta.Metadata;
 import net.imglib2.ops.operation.UnaryOperation;
 
 /**
- * 
- * @author dietzc
- * 
+ * @author Christian Dietz (University of Konstanz)
  */
 public class CopyMetadata implements UnaryOperation< Metadata, Metadata >
 {

@@ -47,7 +47,7 @@ import net.imglib2.ops.operation.randomaccessibleinterval.unary.IterateUnaryOper
  * {@link IntervalwiseUnaryManipulation}, {@link IterateUnaryOperation},
  * {@link IterateUnaryOperation} or {@link IterativeBinaryImgTransformation}.
  * 
- * @author dietzc
+ * @author Christian Dietz (University of Konstanz)
  */
 public class IntervalsFromDimSelection implements BinaryOutputOperation< int[], Interval[], Interval[] >
 {

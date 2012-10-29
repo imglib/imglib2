@@ -47,6 +47,9 @@ import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.numeric.IntegerType;
 
+/**
+ *  @author Martin Horn (University of Konstanz)
+ */
 public final class FloodFill< T extends IntegerType< T >, K extends RandomAccessible< T > & IterableInterval< T >> implements BinaryOperation< K, Localizable, K >
 {
 

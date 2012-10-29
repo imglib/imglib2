@@ -51,7 +51,8 @@ import net.imglib2.view.Views;
  * Helper class to create a {@link ImgView} on an
  * {@link RandomAccessibleInterval} which behaves exactly as an {@link Img}.
  * 
- * @author Tobias Pietzsch, Christian Dietz
+ * @author Tobias Pietzsch
+ * @author Christian Dietz (University of Konstanz)
  */
 public class ImgView< T extends Type< T > > extends IterableRandomAccessibleInterval< T > implements Img< T >
 {

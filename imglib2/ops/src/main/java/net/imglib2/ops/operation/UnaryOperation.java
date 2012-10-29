@@ -37,6 +37,9 @@
 package net.imglib2.ops.operation;
 
 /**
+ * This interface specifies a contract for mutating one input into an output.
+ * Data is changed by reference and it is implicit in the design that
+ * no changes to the input is to be made by implementors of this interface.
  * 
  * @author Barry DeZonia
  */

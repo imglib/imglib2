@@ -38,33 +38,41 @@
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.function.Function;
+import net.imglib2.type.numeric.ComplexType;
 
 
 /**
+ * A {@link Function} that always returns NaN values.
  * 
  * @author Barry DeZonia
  */
-public class NullPointSetFunction<PointSet, T> implements Function<PointSet,T> {
-
+public class NullNumericFunction<INPUT, T extends ComplexType<T>>
+	implements Function<INPUT,T>
+{
+	// -- instance variables --
+	
+	private T type;
+	
+	// -- constructor --
+	
+	public NullNumericFunction(T type) {
+		this.type = type;
+	}
+	
+	// -- Function methods --
+	
 	@Override
-	public void compute(PointSet points, T output) {
-		// do nothing
-		// TODO : Could set to NaN?
+	public void compute(INPUT point, T output) {
+		output.setComplexNumber(Double.NaN, Double.NaN);
 	}
 
 	@Override
 	public T createOutput() {
-		return null;
-		// TODO - returning null is sort of a problem. Though it makes sense.
-		//  However if we only pass NullFunctions at outermost loop maybe we can avoid
-		//  this method ever being called.
-		//  What good is a null function if outermost loop can count on its own? Null
-		//  function idea originally came about as a way to collect stats without
-		//  destroying existing data. That need may now be obsolete. Investigate.
+		return type.createVariable();
 	}
 
 	@Override
-	public NullPointSetFunction<PointSet,T> copy() {
-		return new NullPointSetFunction<PointSet,T>();
+	public NullNumericFunction<INPUT,T> copy() {
+		return new NullNumericFunction<INPUT,T>(type.copy());
 	}
 }

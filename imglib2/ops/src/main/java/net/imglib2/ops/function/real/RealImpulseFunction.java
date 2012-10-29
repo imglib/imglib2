@@ -45,19 +45,26 @@ import net.imglib2.ops.util.Tuple2;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * Returns 1.0 when evaluated at the keypoint of a region. Otherwise returns 0.
  * 
  * @author Barry DeZonia
  */
 public class RealImpulseFunction<T extends RealType<T>>
 	implements Function<Tuple2<PointSet,long[]>,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
+	
+	// -- constructor --
 	
 	public RealImpulseFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 	}
 
+	// -- Function methods --
+	
 	@Override
 	public void compute(Tuple2<PointSet,long[]> input, T output) {
 		if (Arrays.equals(input.get1().getOrigin(), input.get2()))

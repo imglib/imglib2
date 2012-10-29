@@ -46,7 +46,7 @@ import net.imglib2.util.Pair;
 
 /**
  * 
- * @author dietzc
+ * @author Christian Dietz (University of Konstanz)
  * 
  * @param <T>
  */

@@ -55,55 +55,44 @@ import net.imglib2.type.numeric.RealType;
 //   than just an array of user supplied reals).
 
 /**
+ * Computes the convolution of the values of another function over a region with
+ * a set of weights. The weights are specified in the constructor.
  * 
  * @author Barry DeZonia
  */
 public class RealConvolutionFunction<T extends RealType<T>>
-	extends AbstractRealPointSetFunction<T>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
+	private final Function<long[],T> otherFunc;
 	private final double[] kernel;
-	private double sum;
-	private int cell;
-	private PointSet lastPointSet;
+	private final RealWeightedSumFunction<T> weightedSum;
+	
+	// -- constructor --
 	
 	public RealConvolutionFunction(Function<long[],T> otherFunc, double[] kernel)
 	{
-		super(otherFunc);
+		this.otherFunc = otherFunc;
 		this.kernel = kernel;
-		sum = 0;
-		cell = 0;
-		lastPointSet = null;
+		this.weightedSum = new RealWeightedSumFunction<T>(otherFunc, kernel);
 	}
 	
+	// -- Function methods --
+	
+	@Override
+	public void compute(PointSet input, T output) {
+		weightedSum.compute(input, output);
+	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
+	}
+
 	@Override
 	public RealConvolutionFunction<T> copy() {
-		return new RealConvolutionFunction<T>(getOtherFunction().copy(), kernel.clone());
+		return new RealConvolutionFunction<T>(otherFunc.copy(), kernel.clone());
 	}
 
-	@Override
-	protected void initValue(PointSet ps) {
-		if (ps != lastPointSet) {
-			lastPointSet = ps;
-			long numElements = ps.calcSize();
-			if (numElements != kernel.length)
-				throw new IllegalArgumentException("kernel size does not match size of point set");
-			//NB - this code is a performance optimization to check kernel
-			// size once. However if you move a ConditionalPointSet its
-			// size may vary. Thus this might not work. Probably need a
-			// kernel function rather than a double[]
-		}
-		sum = 0;
-		cell = 0;
-	}
-
-	@Override
-	protected void updateValue(long[] point, double value) {
-		sum += value * kernel[cell++];
-	}
-
-	@Override
-	protected double finalValue() {
-		return sum;
-	}
 }

@@ -63,8 +63,10 @@ import net.imglib2.view.Views;
  * instanceof IterableInterval.
  * 
  * 
- * @author Christian Dietz, University of Konstanz
+ * @author Christian Dietz (University of Konstanz)
  * @param <T>
+ * 
+ * IMPORTANT: WILL BE INTEGRATED IN VIEW FRAMEWORK IN THE FUTURE
  */
 public class IterableSubsetView< T extends Type< T >> extends IterableRandomAccessibleInterval< T >
 {

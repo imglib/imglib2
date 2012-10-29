@@ -43,15 +43,22 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the contraharmonic mean of the values of another function over a
+ * region. Such a mean can be parameterized with a real valued "order" which is
+ * specified in the constructor.
  * 
  * @author Barry DeZonia
  */
 public class RealContraharmonicMeanFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private final double order;
 	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealContraharmonicMeanFunction(Function<long[],T> otherFunc, double order)
 	{
@@ -59,6 +66,8 @@ public class RealContraharmonicMeanFunction<T extends RealType<T>>
 		this.order = order;
 		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealContraharmonicMeanFunction<T> copy() {

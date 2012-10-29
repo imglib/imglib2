@@ -43,21 +43,16 @@ import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.ImgPlus;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.ops.util.metadata.CalibratedSpaceImpl;
 import net.imglib2.type.Type;
-import net.imglib2.type.logic.BitType;
 import net.imglib2.util.Util;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**
- * @author dietzc, hornm (University of Konstanz)
- * 
+ * @author Christian Dietz (University of Konstanz)
  */
 public class SubsetViews {
 
@@ -283,27 +278,27 @@ public class SubsetViews {
 		return true;
 	}
 
-	public static void main(String[] args) {
-		ImgPlus<BitType> a = new ImgPlus<BitType>(
-				new ArrayImgFactory<BitType>().create(
-						new long[] { 10, 15, 5, 2 }, new BitType()));
-
-		a.setAxis(Axes.get("X"), 0);
-		a.setAxis(Axes.get("Y"), 1);
-		a.setAxis(Axes.get("T"), 2);
-
-		ImgPlus<BitType> b = new ImgPlus<BitType>(
-				new ArrayImgFactory<BitType>().create(
-						new long[] { 15, 5, 10, 1 }, new BitType()));
-
-		b.setAxis(Axes.get("Y"), 0);
-		b.setAxis(Axes.get("T"), 1);
-		b.setAxis(Axes.get("Channel"), 2);
-		b.setAxis(Axes.get("X"), 3);
-
-		RandomAccessibleInterval<BitType> res = SubsetViews
-				.synchronizeDimensionality(a, a, b, b);
-
-	}
+//	public static void main(String[] args) {
+//		ImgPlus<BitType> a = new ImgPlus<BitType>(
+//				new ArrayImgFactory<BitType>().create(
+//						new long[] { 10, 15, 5, 2 }, new BitType()));
+//
+//		a.setAxis(Axes.get("X"), 0);
+//		a.setAxis(Axes.get("Y"), 1);
+//		a.setAxis(Axes.get("T"), 2);
+//
+//		ImgPlus<BitType> b = new ImgPlus<BitType>(
+//				new ArrayImgFactory<BitType>().create(
+//						new long[] { 15, 5, 10, 1 }, new BitType()));
+//
+//		b.setAxis(Axes.get("Y"), 0);
+//		b.setAxis(Axes.get("T"), 1);
+//		b.setAxis(Axes.get("Channel"), 2);
+//		b.setAxis(Axes.get("X"), 3);
+//
+//		RandomAccessibleInterval<BitType> res = SubsetViews
+//				.synchronizeDimensionality(a, a, b, b);
+//
+//	}
 
 }

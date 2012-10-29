@@ -43,20 +43,29 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the midpoint value another function takes on across a region. The
+ * midpoint is defined as the average of the minimum and maximum values found
+ * within the region.
  * 
  * @author Barry DeZonia
  */
 public class RealMidpointFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealMidpointFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
 		this.calculator = null;
 	}
+
+	// -- Function methods --
 	
 	@Override
 	public RealMidpointFunction<T> copy() {

@@ -50,7 +50,7 @@ import net.imglib2.type.Type;
 
 /**
  * 
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  */
 public class ResultAsAdditionalDimOp< T extends Type< T >, O extends Type< O >, IN extends RandomAccessibleInterval< T >> implements UnaryOutputOperation< IN, Img< O > >
 {
