@@ -181,7 +181,7 @@ public class IterableSubsetView< T extends Type< T >> extends IterableRandomAcce
 		if ( isOptimizable )
 			return new IterableSubsetViewCursor< T >( Views.iterable( src ).cursor(), ( int ) super.size(), planeOffset, numPlaneDims );
 		else
-			return Views.iterable( super.interval ).cursor();
+			return Views.iterable( super.sourceInterval ).cursor();
 	}
 
 	@Override
@@ -190,7 +190,7 @@ public class IterableSubsetView< T extends Type< T >> extends IterableRandomAcce
 		if ( isOptimizable )
 			return new IterableSubsetViewCursor< T >( Views.iterable( src ).localizingCursor(), ( int ) super.size(), planeOffset, numPlaneDims );
 		else
-			return Views.iterable( super.interval ).cursor();
+			return Views.iterable( super.sourceInterval ).cursor();
 	}
 
 }
