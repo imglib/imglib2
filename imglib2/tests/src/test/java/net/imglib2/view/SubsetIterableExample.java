@@ -35,9 +35,8 @@ public class SubsetIterableExample
 
 	public static void main( final String[] args ) throws ImgIOException
 	{
-		final String filename = "/home/tobias/workspace/tutorial-imagejconf/t1-head.tif";
+		final String filename = "/home/tobias/workspace/advanced-imglib2/images/t1-head.tif";
 		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< FloatType >(), new FloatType() );
-		testInterval( img.getImg() );
 		testInterval( img );
 		testSlice( img );
 	}

@@ -43,9 +43,6 @@ import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
-import net.imglib2.util.Util;
-import net.imglib2.view.IterableRandomAccessibleInterval;
-import net.imglib2.view.Views;
 import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
@@ -138,22 +135,14 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	@Override
 	public Cursor< T > cursor( final Interval interval )
 	{
-		System.out.println( "cursor( " + Util.printInterval( interval ) + " )" );
+//		System.out.println( "optimized cursor( " + Util.printInterval( interval ) + " )" );
+		final int dimLength = fastCursorAvailable( interval );
+		assert dimLength > 0;
 
-		int dimLength = fastCursorAvailable( interval );
-		if ( dimLength >= 0 )
-		{
-
-			return new ArraySubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
-		}
-		else
-		{
-			return Views.iterable( Views.interval( this, interval ) ).cursor();
-		}
-
+		return new ArraySubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
 	}
 
-	private long size( Interval interval, int length )
+	private long size( final Interval interval, final int length )
 	{
 		long size = interval.dimension( 0 );
 		for ( int d = 1; d < length; d++ )
@@ -164,7 +153,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 		return size;
 	}
 
-	private long offset( Interval interval, int length )
+	private long offset( final Interval interval, final int length )
 	{
 		final int maxDim = numDimensions() - 1;
 		long i = interval.min( maxDim );
@@ -178,7 +167,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	 * If method returns -1 no fast cursor is available, else the amount of dims
 	 * (starting from zero) which can be iterated fast are returned
 	 */
-	private int fastCursorAvailable( Interval interval )
+	private int fastCursorAvailable( final Interval interval )
 	{
 		int dimIdx = 0;
 
@@ -201,23 +190,25 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 		return dimIdx;
 	}
 
-	/**
-	 * Dummy implementation.
-	 * TODO: add optimized ArrayLocalizingCursor.
-	 */
 	@Override
 	public Cursor< T > localizingCursor( final Interval interval )
 	{
-		System.out.println( "localizingCursor( " + Util.printInterval( interval ) + " )" );
+//		System.out.println( "optimized localizingCursor( " + Util.printInterval( interval ) + " )" );
+		final int dimLength = fastCursorAvailable( interval );
+		assert dimLength > 0;
 
-		int dimLength = fastCursorAvailable( interval );
-		if ( dimLength > 0 )
-		{
-			return new ArrayLocalizingSubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
-		}
-		else
-		{
-			return Views.iterable( Views.interval( this, interval ) ).cursor();
-		}
+		return new ArrayLocalizingSubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
+	}
+
+	@Override
+	public boolean supportsOptimizedCursor( final Interval interval )
+	{
+		return fastCursorAvailable( interval ) > 0;
+	}
+
+	@Override
+	public Object subIntervalIterationOrder( final Interval interval )
+	{
+		return new FlatIterationOrder( interval );
 	}
 }
