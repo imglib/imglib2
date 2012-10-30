@@ -41,8 +41,8 @@ import net.imglib2.img.Img;
 import net.imglib2.ops.img.UnaryOperationAssignment;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.ops.operation.iterableinterval.unary.NormalizeIterableInterval;
-import net.imglib2.ops.operation.real.binary.Convert;
-import net.imglib2.ops.operation.real.binary.Convert.TypeConversionTypes;
+import net.imglib2.ops.operation.real.unary.Convert;
+import net.imglib2.ops.operation.real.unary.Convert.TypeConversionTypes;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
