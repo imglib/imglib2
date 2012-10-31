@@ -37,6 +37,7 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
 
 /**
  * PointSetUnion is a {@link PointSet} that contains all the points present
@@ -131,44 +132,87 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 		updateMax(b.findBoundMax());
 	}
 	
-	private class PointSetUnionIterator implements PointSetIterator {
-		
+	private class PointSetUnionIterator extends AbstractCursor<long[]> implements
+		PointSetIterator
+	{
 		private final PointSetIterator aIter;
 		private final PointSetIterator bIter;
-		private long[] bNext;
+		private long[] curr;
+		private long[] nextCache;
 		
 		public PointSetUnionIterator() {
+			super(a.numDimensions());
 			aIter = a.iterator();
 			bIter = b.iterator();
-			bNext = null;
+			reset();
 		}
 		
 		@Override
 		public boolean hasNext() {
-			bNext = null;
-			if (aIter.hasNext()) return true;
-			while (bIter.hasNext()) {
-				bNext = bIter.next();
-				if (!a.includes(bNext)) return true;
-			}
-			return false;
-		}
-		
-		@Override
-		public long[] next() {
-			if (bNext != null) return bNext;
-			return aIter.next();
+			if (nextCache != null) return true;
+			return positionToNext();
 		}
 		
 		@Override
 		public void reset() {
 			aIter.reset();
 			bIter.reset();
+			curr = null;
+			nextCache = null;
 		}
-		
+
 		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
+		public long[] get() {
+			return curr;
+		}
+
+		@Override
+		public void fwd() {
+			if ((nextCache != null) || (positionToNext())) {
+				if (curr == null) curr = new long[n];
+				for (int i = 0; i < n; i++)
+					curr[i] = nextCache[i];
+				nextCache = null;
+				return;
+			}
+			throw new IllegalArgumentException("fwd() cannot go beyond end");
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++)
+				position[i] = curr[i];
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return curr[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new PointSetUnionIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
+
+		private boolean positionToNext() {
+			nextCache = null;
+			if (aIter.hasNext()) {
+				nextCache = aIter.next();
+				return true;
+			}
+			while (bIter.hasNext()) {
+				long[] pos = bIter.next();
+				if (!a.includes(pos)) {
+					nextCache = pos;
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }

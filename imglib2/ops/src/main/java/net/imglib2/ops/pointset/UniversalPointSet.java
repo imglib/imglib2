@@ -37,6 +37,8 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
+
 
 /**
  * UniversalPointSet is a {@link PointSet} that includes all points in
@@ -105,7 +107,13 @@ public class UniversalPointSet implements PointSet {
 
 	// -- private helpers --
 	
-	private class UniversalPointSetIterator implements PointSetIterator {
+	private class UniversalPointSetIterator extends AbstractCursor<long[]>
+		implements PointSetIterator
+	{
+
+		public UniversalPointSetIterator() {
+			super(0);
+		}
 
 		@Override
 		public boolean hasNext() {
@@ -123,8 +131,36 @@ public class UniversalPointSet implements PointSet {
 		}
 		
 		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
+		public long[] get() {
+			throw new UnsupportedOperationException(
+				"Cannot get values from a UniversalPointSet");
+		}
+
+		@Override
+		public void fwd() {
+			// nothing to do
+		}
+
+		@Override
+		public void localize(long[] position) {
+			throw new UnsupportedOperationException(
+				"Cannot localize from a UniversalPointSet");
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			throw new UnsupportedOperationException(
+				"Cannot get positions from a UniversalPointSet");
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new UniversalPointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
 		}
 		
 	}

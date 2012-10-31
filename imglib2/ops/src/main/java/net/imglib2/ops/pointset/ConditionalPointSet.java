@@ -38,6 +38,7 @@
 package net.imglib2.ops.pointset;
 
 
+import net.imglib2.AbstractCursor;
 import net.imglib2.ops.condition.Condition;
 
 /**
@@ -143,36 +144,82 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 		}
 	}
 	
-	private class ConditionalPointSetIterator implements PointSetIterator {
+	private class ConditionalPointSetIterator extends AbstractCursor<long[]>
+		implements PointSetIterator
+	{
 		private final PointSetIterator iter;
-		private long[] next;
+		private long[] curr;
+		private long[] nextCache;
 		
 		public ConditionalPointSetIterator() {
+			super(pointSet.numDimensions());
 			iter = pointSet.iterator();
+			reset();
 		}
 
 		@Override
 		public boolean hasNext() {
-			while (iter.hasNext()) {
-				next = iter.next();
-				if (condition.isTrue(next)) return true;
-			}
-			return false;
-		}
-
-		@Override
-		public long[] next() {
-			return next;
+			if (nextCache != null) return true;
+			return positionToNext();
 		}
 
 		@Override
 		public void reset() {
 			iter.reset();
+			curr = null;
+			nextCache = null;
 		}
 		
 		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
+		public long[] get() {
+			return curr;
 		}
+
+		@Override
+		public void fwd() {
+			if ((nextCache != null) || (positionToNext())) {
+				if (curr == null) curr = new long[n];
+				for (int i = 0; i < n; i++)
+					curr[i] = nextCache[i];
+				nextCache = null;
+				return;
+			}
+			throw new IllegalArgumentException("fwd() cannot go beyond end");
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++) {
+				position[i] = curr[i];
+			}
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return curr[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new ConditionalPointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
+
+		private boolean positionToNext() {
+			nextCache = null;
+			while (iter.hasNext()) {
+				long[] pos = iter.next();
+				if (condition.isTrue(pos)) {
+					nextCache = pos;
+					return true;
+				}
+			}
+			return false;
+		}
+
 	}
 }

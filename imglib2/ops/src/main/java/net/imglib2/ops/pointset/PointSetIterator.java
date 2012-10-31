@@ -37,13 +37,13 @@
 
 package net.imglib2.ops.pointset;
 
-import java.util.Iterator;
+import net.imglib2.Cursor;
 
 /**
  * PointSetIterators allow one to pull point indices (long[]) out of PointSets.
  * 
  * @author Barry DeZonia
  */
-public interface PointSetIterator extends Iterator<long[]> {
-	void reset();
+public interface PointSetIterator extends Cursor<long[]> {
+	// void reset();
 }

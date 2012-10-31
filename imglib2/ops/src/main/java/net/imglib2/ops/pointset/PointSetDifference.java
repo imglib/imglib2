@@ -37,6 +37,8 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
+
 
 /**
  * PointSetDifference is a {@link PointSet} that includes all the points in
@@ -136,40 +138,82 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 		}
 	}
 	
-	private class PointSetDifferenceIterator implements PointSetIterator {
-		
+	private class PointSetDifferenceIterator extends AbstractCursor<long[]>
+		implements PointSetIterator
+	{
 		private final PointSetIterator aIter;
-		private long[] aNext;
+		private long[] curr;
+		private long[] nextCache;
 		
 		public PointSetDifferenceIterator() {
+			super(a.numDimensions());
 			aIter = a.iterator();
-			aNext = null;
+			reset();
 		}
 		
 		@Override
 		public boolean hasNext() {
-			aNext = null;
-			while (aIter.hasNext()) {
-				aNext = aIter.next();
-				if (!b.includes(aNext)) return true;
-			}
-			return false;
-		}
-		
-		@Override
-		public long[] next() {
-			return aNext;
+			if (nextCache != null) return true;
+			return positionToNext();
 		}
 		
 		@Override
 		public void reset() {
 			aIter.reset();
+			curr = null;
+			nextCache = null;
 		}
 		
 		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
+		public long[] get() {
+			return curr;
 		}
+
+		@Override
+		public void fwd() {
+			if ((nextCache != null) || (positionToNext())) {
+				if (curr == null) curr = new long[n];
+				for (int i = 0; i < n; i++)
+					curr[i] = nextCache[i];
+				nextCache = null;
+				return;
+			}
+			throw new IllegalArgumentException("fwd() cannot go beyond end");
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++)
+				position[i] = curr[i];
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return curr[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new PointSetDifferenceIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
+
+		private boolean positionToNext() {
+			nextCache = null;
+			while (aIter.hasNext()) {
+				long[] pos = aIter.next();
+				if (!b.includes(pos)) {
+					nextCache = pos;
+					return true;
+				}
+			}
+			return false;
+		}
+
 	}
 	
 }

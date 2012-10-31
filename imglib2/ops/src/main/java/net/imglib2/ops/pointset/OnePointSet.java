@@ -39,6 +39,8 @@ package net.imglib2.ops.pointset;
 
 import java.util.Arrays;
 
+import net.imglib2.AbstractCursor;
+
 
 /**
  * OnePointSet represents a {@link PointSet} that contains exactly one point.
@@ -107,9 +109,15 @@ public class OnePointSet implements PointSet {
 
 	// -- private helpers --
 	
-	private class OnePointSetIterator implements PointSetIterator {
+	private class OnePointSetIterator extends AbstractCursor<long[]> implements
+		PointSetIterator
+	{
 
 		private boolean hasNext = true;
+
+		public OnePointSetIterator() {
+			super(point.length);
+		}
 		
 		@Override
 		public boolean hasNext() {
@@ -126,10 +134,36 @@ public class OnePointSet implements PointSet {
 		public void reset() {
 			hasNext = true;
 		}
-		
+
 		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
+		public long[] get() {
+			return point;
+		}
+
+		@Override
+		public void fwd() {
+			if (hasNext) hasNext = false;
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++)
+				position[i] = point[i];
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return point[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new OnePointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
 		}
 	}
 }

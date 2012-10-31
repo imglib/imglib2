@@ -64,12 +64,14 @@ public interface PointSet extends EuclideanSpace, Iterable<long[]> {
 	 * PointSet.
 	 */
 	@Override
+	// overriding to specify better javadoc
 	PointSetIterator iterator();
 
 	/**
 	 * Returns the dimensionality of the points contained in the PointSet
 	 */
 	@Override
+	// overriding to specify better javadoc
 	int numDimensions();
 	
 	/**
