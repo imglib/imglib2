@@ -45,21 +45,24 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
+public class PointSetUnion implements PointSet {
 	
 	// -- instance variables --
 	
 	private final PointSet a, b;
-	private boolean boundsInvalid;
+	private final long[] min, max;
+	private final int numD;
 	
 	// -- constructor --
 	
 	public PointSetUnion(PointSet a, PointSet b) {
-		if (a.numDimensions() != b.numDimensions())
+		numD = a.numDimensions();
+		if (numD != b.numDimensions())
 			throw new IllegalArgumentException();
 		this.a = a;
 		this.b = b;
-		boundsInvalid = true;
+		min = new long[numD];
+		max = new long[numD];
 	}
 	
 	// -- PointSet methods --
@@ -73,7 +76,6 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	public void translate(long[] deltas) {
 		a.translate(deltas);
 		b.translate(deltas);
-		boundsInvalid = true;
 	}
 	
 	@Override
@@ -82,7 +84,9 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	}
 	
 	@Override
-	public int numDimensions() { return a.numDimensions(); }
+	public int numDimensions() {
+		return numD;
+	}
 	
 	@Override
 	public boolean includes(long[] point) {
@@ -91,20 +95,22 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	
 	@Override
 	public long[] findBoundMin() {
-		if (boundsInvalid) {
-			boundsInvalid = false;
-			calcBounds();
+		long[] minA = a.findBoundMin();
+		long[] minB = b.findBoundMin();
+		for (int i = 0; i < numD; i++) {
+			min[i] = Math.min(minA[i], minB[i]);
 		}
-		return getMin();
+		return min;
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		if (boundsInvalid) {
-			boundsInvalid = false;
-			calcBounds();
+		long[] maxA = a.findBoundMax();
+		long[] maxB = b.findBoundMax();
+		for (int i = 0; i < numD; i++) {
+			max[i] = Math.max(maxA[i], maxB[i]);
 		}
-		return getMax();
+		return max;
 	}
 	
 	@Override
@@ -125,13 +131,6 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 
 	// -- private helpers --
 
-	private void calcBounds() {
-		setMin(a.findBoundMin());
-		setMax(a.findBoundMax());
-		updateMin(b.findBoundMin());
-		updateMax(b.findBoundMax());
-	}
-	
 	private class PointSetUnionIterator extends AbstractCursor<long[]> implements
 		PointSetIterator
 	{
@@ -141,7 +140,7 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 		private long[] nextCache;
 		
 		public PointSetUnionIterator() {
-			super(a.numDimensions());
+			super(numD);
 			aIter = a.iterator();
 			bIter = b.iterator();
 			reset();

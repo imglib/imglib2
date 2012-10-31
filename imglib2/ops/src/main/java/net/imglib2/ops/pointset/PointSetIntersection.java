@@ -46,11 +46,12 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class PointSetIntersection extends AbstractBoundedRegion implements PointSet {
+public class PointSetIntersection implements PointSet {
 	
 	// -- instance variables --
 	
 	private final PointSet a, b;
+	private final BoundsCalculator calculator;
 	private boolean boundsInvalid;
 	
 	// -- constructor --
@@ -60,6 +61,7 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 			throw new IllegalArgumentException();
 		this.a = a;
 		this.b = b;
+		calculator = new BoundsCalculator();
 		boundsInvalid = true;
 	}
 	
@@ -92,14 +94,20 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	
 	@Override
 	public long[] findBoundMin() {
-		if (boundsInvalid) calcBounds();
-		return getMin();
+		if (boundsInvalid) {
+			calculator.calc(this);
+			boundsInvalid = false;
+		}
+		return calculator.getMin();
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		if (boundsInvalid) calcBounds();
-		return getMax();
+		if (boundsInvalid) {
+			calculator.calc(this);
+			boundsInvalid = false;
+		}
+		return calculator.getMax();
 	}
 
 	@Override
@@ -119,22 +127,6 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	}
 	
 	// -- private helpers --
-	
-	private void calcBounds() {
-		PointSetIterator iter = iterator();
-		while (iter.hasNext()) {
-			long[] point = iter.next();
-			if (boundsInvalid) {
-				boundsInvalid = false;
-				setMax(point);
-				setMin(point);
-			}
-			else {
-				updateMax(point);
-				updateMin(point);
-			}
-		}
-	}
 	
 	private class PointSetIntersectionIterator extends AbstractCursor<long[]>
 		implements PointSetIterator

@@ -53,12 +53,13 @@ import net.imglib2.ops.condition.Condition;
  * @author Barry DeZonia
  *
  */
-public class ConditionalPointSet extends AbstractBoundedRegion implements PointSet {
+public class ConditionalPointSet implements PointSet {
 
 	// -- instance variables --
 	
 	private final PointSet pointSet;
 	private final Condition<long[]> condition;
+	private final BoundsCalculator calculator;
 	private boolean boundsInvalid;
 	
 	// -- constructor --
@@ -66,6 +67,7 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 	public ConditionalPointSet(PointSet pointSet, Condition<long[]> condition) {
 		this.pointSet = pointSet;
 		this.condition = condition;
+		this.calculator = new BoundsCalculator();
 		this.boundsInvalid = true;
 	}
 	
@@ -94,14 +96,20 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 
 	@Override
 	public long[] findBoundMin() {
-		if (boundsInvalid) calcBounds();
-		return getMin();
+		if (boundsInvalid) {
+			calculator.calc(this);
+			boundsInvalid = false;
+		}
+		return calculator.getMin();
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		if (boundsInvalid) calcBounds();
-		return getMax();
+		if (boundsInvalid) {
+			calculator.calc(this);
+			boundsInvalid = false;
+		}
+		return calculator.getMax();
 	}
 
 	@Override
@@ -127,22 +135,6 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 
 
 	// -- private helpers --
-	
-	private void calcBounds() {
-		PointSetIterator iter = iterator();
-		while (iter.hasNext()) {
-			long[] point = iter.next();
-			if (boundsInvalid) {
-				boundsInvalid = false;
-				setMax(point);
-				setMin(point);
-			}
-			else {
-				updateMax(point);
-				updateMin(point);
-			}
-		}
-	}
 	
 	private class ConditionalPointSetIterator extends AbstractCursor<long[]>
 		implements PointSetIterator

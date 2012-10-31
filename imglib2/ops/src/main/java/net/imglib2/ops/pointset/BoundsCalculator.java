@@ -43,7 +43,7 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public abstract class AbstractBoundedRegion {
+public class BoundsCalculator {
 	
 	// -- instance variables --
 	
@@ -51,34 +51,51 @@ public abstract class AbstractBoundedRegion {
 
 	// -- constructor --
 	
-	public AbstractBoundedRegion() {
+	public BoundsCalculator() {
 	}
 	
 	// -- protected API --
 	
-	protected long[] getMin() {
+	public long[] getMin() {
 		return min;
 	}
 	
-	protected long[] getMax() {
+	public long[] getMax() {
 		return max;
 	}
 	
-	protected void setMin(long[] p) {
+	public void calc(PointSet ps) {
+		PointSetIterator iter = ps.iterator();
+		boolean invalid = true;
+		while (iter.hasNext()) {
+			long[] point = iter.next();
+			if (invalid) {
+				invalid = false;
+				setMax(point);
+				setMin(point);
+			}
+			else {
+				updateMax(point);
+				updateMin(point);
+			}
+		}
+	}
+
+	private void setMin(long[] p) {
 		min = p.clone();
 	}
 	
-	protected void setMax(long[] p) {
+	private void setMax(long[] p) {
 		max = p.clone();
 	}
 	
-	protected void updateMin(long[] p) {
+	private void updateMin(long[] p) {
 		for (int i = 0; i < min.length; i++) {
 			if (p[i] < min[i]) min[i] = p[i];
 		}
 	}
 	
-	protected void updateMax(long[] p) {
+	private void updateMax(long[] p) {
 		for (int i = 0; i < max.length; i++) {
 			if (p[i] > max[i]) max[i] = p[i];
 		}

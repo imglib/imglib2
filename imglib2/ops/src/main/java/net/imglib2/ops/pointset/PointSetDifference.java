@@ -48,11 +48,12 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class PointSetDifference extends AbstractBoundedRegion implements PointSet {
+public class PointSetDifference implements PointSet {
 	
 	// -- instance variables --
 	
 	private final PointSet a, b;
+	private final BoundsCalculator calculator;
 	private boolean boundsInvalid;
 	
 	// -- constructor --
@@ -62,6 +63,7 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 			throw new IllegalArgumentException();
 		this.a = a;
 		this.b = b;
+		calculator = new BoundsCalculator();
 		boundsInvalid = true;
 	}
 	
@@ -94,14 +96,20 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 
 	@Override
 	public long[] findBoundMin() {
-		if (boundsInvalid) calcBounds();
-		return getMin();
+		if (boundsInvalid) {
+			calculator.calc(this);
+			boundsInvalid = false;
+		}
+		return calculator.getMin();
 	}
 
 	@Override
 	public long[] findBoundMax() {
-		if (boundsInvalid) calcBounds();
-		return getMax();
+		if (boundsInvalid) {
+			calculator.calc(this);
+			boundsInvalid = false;
+		}
+		return calculator.getMax();
 	}
 
 	@Override
@@ -121,22 +129,6 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	}
 
 	// -- private helpers --
-	
-	private void calcBounds() {
-		PointSetIterator iter = iterator();
-		while (iter.hasNext()) {
-			long[] point = iter.next();
-			if (boundsInvalid) {
-				boundsInvalid = false;
-				setMax(point);
-				setMin(point);
-			}
-			else {
-				updateMax(point);
-				updateMin(point);
-			}
-		}
-	}
 	
 	private class PointSetDifferenceIterator extends AbstractCursor<long[]>
 		implements PointSetIterator
