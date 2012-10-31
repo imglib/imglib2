@@ -237,9 +237,9 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 					}
 				if ( optimizable )
 				{
-					System.out.println( "interval = " + Util.printInterval( interval ) );
+//					System.out.println( "interval = " + Util.printInterval( interval ) );
 					final Interval sliceInterval = t.transform( new BoundingBox( interval ) ).getInterval();
-					System.out.println( "transformed interval = " + Util.printInterval( sliceInterval ) );
+//					System.out.println( "transformed interval = " + Util.printInterval( sliceInterval ) );
 					if ( iterableSource.supportsOptimizedCursor( sliceInterval ) )
 					{
 						// check for FlatIterationOrder

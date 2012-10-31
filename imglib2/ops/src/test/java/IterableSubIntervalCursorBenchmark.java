@@ -6,6 +6,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.operation.subset.views.IterableSubsetView;
+import net.imglib2.ops.operation.subset.views.SubsetViews;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.view.Views;
@@ -79,7 +80,29 @@ public class IterableSubIntervalCursorBenchmark
 	public void benchmarkSubsetCursor()
 	{
 		long start = System.currentTimeMillis();
+		int ctr = 0;
+		for ( int i = 0; i < numRuns; i++ )
+		{
+			for ( int k = 0; k < dimensions[ 2 ]; k++ )
+			{
+				Cursor< IntType > intCursor = SubsetViews.subsetView( intImg, new FinalInterval( new long[] { 0, 0, k }, new long[] { 999, 999, k } ) ).cursor();
 
+				while ( intCursor.hasNext() )
+				{
+					intCursor.next().get();
+					ctr++;
+				}
+			}
+		}
+
+		System.out.println( "Time ImgLib2 Subset Implementation (" + ctr + ") " + ( System.currentTimeMillis() - start ) );
+	}
+
+	// Test new ImgLib2 implementation
+	@Test
+	public void benchmarkIntervalCursor()
+	{
+		long start = System.currentTimeMillis();
 		int ctr = 0;
 		for ( int i = 0; i < numRuns; i++ )
 		{
@@ -95,6 +118,6 @@ public class IterableSubIntervalCursorBenchmark
 			}
 		}
 
-		System.out.println( "Time ImgLib2 Implementation (" + ctr + ") " + ( System.currentTimeMillis() - start ) );
+		System.out.println( "Time ImgLib2 Interval Implementation (" + ctr + ") " + ( System.currentTimeMillis() - start ) );
 	}
 }
