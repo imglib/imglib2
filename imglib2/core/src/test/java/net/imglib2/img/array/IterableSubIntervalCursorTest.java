@@ -12,6 +12,7 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.view.Views;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -77,22 +78,25 @@ public class IterableSubIntervalCursorTest
 	{
 
 		// Testing Cursor
-		assertTrue( ( intImg.cursor( intervalA ) instanceof AbstractArrayCursor ) );
+		assertTrue( ( Views.interval( intImg, intervalA ).cursor() instanceof ArraySubIntervalCursor ) );
 
 		// Testing Localizing Cursor
-		assertTrue( ( intImg.localizingCursor( intervalA ) instanceof AbstractArrayLocalizingCursor ) );
+		// assertTrue( ( Views.interval( intImg, intervalA ).localizingCursor()
+		// instanceof AbstractArrayLocalizingCursor ) );
 
 		// Testing Cursor
-		assertFalse( ( intImg.cursor( intervalB ) instanceof AbstractArrayCursor ) );
+		assertFalse( ( Views.interval( intImg, intervalB ).cursor() instanceof ArraySubIntervalCursor ) );
 
 		// Testing Localizing Cursor
-		assertFalse( ( intImg.localizingCursor( intervalB ) instanceof AbstractArrayLocalizingCursor ) );
+		// assertFalse( ( Views.interval( intImg, intervalB ).localizingCursor()
+		// instanceof AbstractArrayLocalizingCursor ) );
 
 		// Testing Cursor
-		assertTrue( ( intImg.cursor( intervalC ) instanceof AbstractArrayCursor ) );
+		assertTrue( ( Views.interval( intImg, intervalC ).cursor() instanceof ArraySubIntervalCursor ) );
 
 		// Testing Localizing Cursor
-		assertTrue( ( intImg.localizingCursor( intervalC ) instanceof AbstractArrayLocalizingCursor ) );
+		// assertTrue( ( Views.interval( intImg, intervalC ).localizingCursor()
+		// instanceof AbstractArrayLocalizingCursor ) );
 	}
 
 	@Test
@@ -122,7 +126,7 @@ public class IterableSubIntervalCursorTest
 	@Test
 	public void testIterationShifted()
 	{
-		Cursor< IntType > cursor = intImg.cursor( intervalC );
+		Cursor< IntType > cursor = Views.interval( intImg, intervalC ).cursor();
 
 		long[] position = new long[ cursor.numDimensions() ];
 		long[] tmp = new long[ cursor.numDimensions() ];
@@ -151,7 +155,7 @@ public class IterableSubIntervalCursorTest
 	@Test
 	public void testJumpFwdFast()
 	{
-		Cursor< IntType > cursor = intImg.cursor( intervalA );
+		Cursor< IntType > cursor = Views.interval( intImg, intervalA ).cursor();
 
 		long[] position = new long[ cursor.numDimensions() ];
 		long[] ref = new long[ cursor.numDimensions() ];
@@ -168,7 +172,7 @@ public class IterableSubIntervalCursorTest
 	@Test
 	public void testJumpFwdShifted()
 	{
-		Cursor< IntType > cursor = intImg.cursor( intervalC );
+		Cursor< IntType > cursor = Views.interval( intImg, intervalC ).cursor();
 
 		long[] position = new long[ cursor.numDimensions() ];
 		long[] ref = new long[ cursor.numDimensions() ];
