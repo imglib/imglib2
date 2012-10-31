@@ -83,10 +83,10 @@ public interface PointSet extends EuclideanSpace, Iterable<long[]> {
 	long[] findBoundMin();
 
 	/**
-	 * Returns the upper bound of the space containing the PointSet. This
-	 * can be an expensive operation (potentially iterating the whole set
-	 * to calculate). These results are cached when possible. Subsequent
-	 * calls to setAnchor() will invalidate bounds.
+	 * Returns the upper bound of the space containing the PointSet. This can be
+	 * an expensive operation (potentially iterating the whole set to calculate).
+	 * These results are cached when possible. Subsequent calls to translate()
+	 * will invalidate bounds.
 	 */
 	long[] findBoundMax();
 	
