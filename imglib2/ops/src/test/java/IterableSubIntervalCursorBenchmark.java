@@ -8,6 +8,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.operation.subset.views.IterableSubsetView;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.view.Views;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -84,7 +85,7 @@ public class IterableSubIntervalCursorBenchmark
 		{
 			for ( int k = 0; k < dimensions[ 2 ]; k++ )
 			{
-				Cursor< IntType > intCursor = intImg.cursor( new FinalInterval( new FinalInterval( new long[] { 0, 0, k }, new long[] { 999, 999, k } ) ) );
+				Cursor< IntType > intCursor = Views.interval( intImg, new FinalInterval( new long[] { 0, 0, k }, new long[] { 999, 999, k } ) ).cursor();
 
 				while ( intCursor.hasNext() )
 				{
