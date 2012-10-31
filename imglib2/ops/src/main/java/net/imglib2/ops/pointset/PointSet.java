@@ -75,10 +75,10 @@ public interface PointSet extends EuclideanSpace, Iterable<long[]> {
 	int numDimensions();
 	
 	/**
-	 * Returns the lower bound of the space containing the PointSet. This
-	 * can be an expensive operation (potentially iterating the whole set
-	 * to calculate). These results are cached when possible. Subsequent
-	 * calls to setAnchor() will invalidate bounds.
+	 * Returns the lower bound of the space containing the PointSet. This can be
+	 * an expensive operation (potentially iterating the whole set to calculate).
+	 * These results are cached when possible. Subsequent calls to translate()
+	 * will invalidate bounds.
 	 */
 	long[] findBoundMin();
 
