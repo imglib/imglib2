@@ -183,7 +183,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * The measured value
 	 */
 	public double geometricMean() {
-		return Math.pow(product(), 1.0/region.calcSize());
+		return Math.pow(product(), 1.0/region.size());
 	}
 	
 	/**
@@ -392,7 +392,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 */
 	public double populationVariance() {
 		double sum = sumOfSquaredDeviations();
-		long numElements = region.calcSize();
+		long numElements = region.size();
 		return sum / numElements;
 	}
 
@@ -426,7 +426,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * The measured value
 	 */
 	public double sampleKurtosis() {
-		double n = region.calcSize();
+		double n = region.size();
 		double biasedValue = populationKurtosis();
 		double unbiasedValue = biasedValue * (n+1) + 6;
 		unbiasedValue *= (n-1) / ((n-2) * (n-3));
@@ -454,7 +454,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * The measured value
 	 */
 	public double sampleSkew() {
-		double n = region.calcSize();
+		double n = region.size();
 		double biasedValue = populationSkew();
 		double unbiasedValue = biasedValue * Math.sqrt(n * (n-1)) / (n-2);
 		return unbiasedValue;
@@ -480,7 +480,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 */
 	public double sampleVariance() {
 		double sum = sumOfSquaredDeviations();
-		long numElements = region.calcSize();
+		long numElements = region.size();
 		return sum / (numElements-1);
 	}
 	
@@ -535,7 +535,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * The measured value
 	 */
 	public double weightedAverage(double[] weights) {
-		long numElements = region.calcSize();
+		long numElements = region.size();
 		if (numElements != weights.length)
 			throw new IllegalArgumentException(
 				"number of weights does not equal number of samples");
@@ -552,7 +552,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * The measured value
 	 */
 	public double weightedSum(double[] weights) {
-		long numElements = region.calcSize();
+		long numElements = region.size();
 		if (numElements != weights.length)
 			throw new IllegalArgumentException(
 				"number of weights does not equal number of samples");
