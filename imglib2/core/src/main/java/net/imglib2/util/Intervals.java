@@ -224,6 +224,48 @@ public class Intervals
 	}
 
 	/**
+	 * Test whether the {@code containing} interval completely contains the
+	 * {@code contained} interval.
+	 *
+	 * @param containing
+	 * @param contained
+	 * @return
+	 */
+	final static public boolean contains( final Interval containing, final Interval contained )
+	{
+		assert containing.numDimensions() == contained.numDimensions();
+
+		final int n = containing.numDimensions();
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( containing.min( d ) > contained.min( d ) || containing.max( d ) < contained.max( d ) )
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Test whether the {@code containing} interval completely contains the
+	 * {@code contained} interval.
+	 *
+	 * @param containing
+	 * @param contained
+	 * @return
+	 */
+	final static public boolean contains( final RealInterval containing, final RealInterval contained )
+	{
+		assert containing.numDimensions() == contained.numDimensions();
+
+		final int n = containing.numDimensions();
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( containing.realMin( d ) > contained.realMin( d ) || containing.realMax( d ) < contained.realMax( d ) )
+				return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Compute the number of elements contained in an (integer) {@link Interval}.
 	 *
 	 * @return number of elements in {@code interval}.

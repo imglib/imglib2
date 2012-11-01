@@ -38,7 +38,7 @@ package net.imglib2;
 
 import net.imglib2.outofbounds.RealOutOfBoundsFactory;
 import net.imglib2.outofbounds.RealOutOfBoundsRealRandomAccess;
-import net.imglib2.util.Util;
+import net.imglib2.util.Intervals;
 
 /**
  * Implements {@link RealRandomAccessible} for a {@link RealRandomAccessibleRealInterval}
@@ -76,7 +76,7 @@ final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRa
 	{
 		assert source.numDimensions() == interval.numDimensions();
 		
-		if ( Util.contains( source, interval ) )
+		if ( Intervals.contains( source, interval ) )
 		{
 			return source.realRandomAccess();
 		}

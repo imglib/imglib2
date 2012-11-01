@@ -47,7 +47,7 @@ import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.ops.util.metadata.CalibratedSpaceImpl;
 import net.imglib2.type.Type;
-import net.imglib2.util.Util;
+import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
@@ -102,7 +102,7 @@ public class SubsetViews {
 			return src;
 
 		RandomAccessibleInterval<T> res;
-		if (Util.contains(src, interval))
+		if (Intervals.contains(src, interval))
 			res = Views.offsetInterval(src, interval);
 		else
 			throw new IllegalArgumentException(
