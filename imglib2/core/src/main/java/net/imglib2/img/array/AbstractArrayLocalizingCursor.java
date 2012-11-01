@@ -168,9 +168,9 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 	@Override
 	public void reset()
 	{
-		type.updateIndex( offset - 1 );
+		type.updateIndex( offset );
 
-		IntervalIndexer.indexToPosition( offset - 1, img.dim, position );
+		IntervalIndexer.indexToPosition( offset , img.dim, position );
 
 		position[ 0 ]--;
 

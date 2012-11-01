@@ -47,7 +47,7 @@ import net.imglib2.type.NativeType;
  * @author Tobias Pietzsch
  * @author Christian Dietz
  */
-public final class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractArrayCursor< T >
+public final class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractArrayLocalizingCursor< T >
 {
 
 	protected ArrayLocalizingCursor( final ArrayLocalizingCursor< T > cursor )
