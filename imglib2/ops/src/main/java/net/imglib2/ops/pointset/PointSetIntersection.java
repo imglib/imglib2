@@ -77,6 +77,7 @@ public class PointSetIntersection extends AbstractPointSet implements PointSet {
 		a.translate(deltas);
 		b.translate(deltas);
 		boundsInvalid = true;
+		invalidateBounds();
 	}
 	
 	@Override

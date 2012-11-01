@@ -91,6 +91,7 @@ public class GeneralPointSet extends AbstractPointSet implements PointSet {
 			boundMin[i] += delta;
 			boundMax[i] += delta;
 		}
+		invalidateBounds();
 	}
 	
 	@Override

@@ -67,7 +67,7 @@ public class EmptyPointSet extends AbstractPointSet implements PointSet {
 
 	@Override
 	public void translate(long[] deltas) {
-		// do nothing
+		invalidateBounds();
 	}
 
 	@Override

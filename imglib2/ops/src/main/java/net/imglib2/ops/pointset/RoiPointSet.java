@@ -88,6 +88,7 @@ public class RoiPointSet extends AbstractPointSet implements PointSet {
 		for (int i = 0; i < numD; i++) {
 			roi.move(delta[i], i);
 		}
+		invalidateBounds();
 	}
 
 	@Override

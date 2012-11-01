@@ -70,6 +70,7 @@ public class OnePointSet extends AbstractPointSet implements PointSet {
 	public void translate(long[] deltas) {
 		for (int i = 0; i < point.length; i++)
 			point[i] += deltas[i];
+		invalidateBounds();
 	}
 
 	@Override

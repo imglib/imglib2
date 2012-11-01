@@ -84,6 +84,7 @@ public class PointSetComplement extends AbstractPointSet implements PointSet {
 	@Override
 	public void translate(long[] deltas) {
 		diff.translate(deltas);
+		invalidateBounds();
 	}
 	
 	@Override

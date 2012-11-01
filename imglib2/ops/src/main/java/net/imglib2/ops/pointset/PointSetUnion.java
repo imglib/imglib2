@@ -76,6 +76,7 @@ public class PointSetUnion extends AbstractPointSet implements PointSet {
 	public void translate(long[] deltas) {
 		a.translate(deltas);
 		b.translate(deltas);
+		invalidateBounds();
 	}
 	
 	@Override

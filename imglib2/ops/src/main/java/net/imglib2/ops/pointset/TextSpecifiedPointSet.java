@@ -87,7 +87,8 @@ public class TextSpecifiedPointSet extends AbstractPointSet implements PointSet 
 
 	@Override
 	public void translate(long[] deltas) {
-		set.translate(deltas);
+		set.translate(deltas); // TODO - is this valid for a text pointset?
+		invalidateBounds();
 	}
 
 	@Override

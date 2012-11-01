@@ -82,6 +82,7 @@ public class ConditionalPointSet extends AbstractPointSet implements PointSet {
 	public void translate(long[] deltas) {
 		pointSet.translate(deltas);
 		this.boundsInvalid = true;
+		invalidateBounds();
 	}
 
 	@Override
