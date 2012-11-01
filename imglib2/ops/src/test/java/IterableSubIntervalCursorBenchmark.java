@@ -9,6 +9,7 @@ import net.imglib2.ops.operation.subset.views.IterableSubsetView;
 import net.imglib2.ops.operation.subset.views.SubsetViews;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
 import org.junit.Before;
@@ -18,7 +19,7 @@ public class IterableSubIntervalCursorBenchmark
 {
 	ArrayImg< IntType, ? > intImg;
 
-	private int numRuns = 100;
+	private final int numRuns = 100;
 
 	private long[] dimensions;
 
@@ -31,17 +32,17 @@ public class IterableSubIntervalCursorBenchmark
 		for ( int d = 0; d < dimensions.length; ++d )
 			numValues *= dimensions[ d ];
 
-		int[] intData = new int[ numValues ];
-		Random random = new Random( 0 );
+		final int[] intData = new int[ numValues ];
+		final Random random = new Random( 0 );
 		for ( int i = 0; i < numValues; ++i )
 		{
 			intData[ i ] = random.nextInt();
 		}
 
-		intImg = ( ArrayImg< IntType, ? > ) new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		intImg = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
 
-		long[] pos = new long[ dimensions.length ];
-		RandomAccess< IntType > a = intImg.randomAccess();
+		final long[] pos = new long[ dimensions.length ];
+		final RandomAccess< IntType > a = intImg.randomAccess();
 
 		for ( int i = 0; i < numValues; ++i )
 		{
@@ -55,15 +56,15 @@ public class IterableSubIntervalCursorBenchmark
 	@Test
 	public void benchmarkSubsetView()
 	{
-		long start = System.currentTimeMillis();
+		final long start = System.currentTimeMillis();
 
 		int ctr = 0;
 		for ( int i = 0; i < numRuns; i++ )
 		{
 			for ( int k = 0; k < dimensions[ 2 ]; k++ )
 			{
-				IterableSubsetView< IntType > iterable = new IterableSubsetView< IntType >( intImg, new FinalInterval( new long[] { 0, 0, k }, new long[] { 999, 999, k } ) );
-				Cursor< IntType > intCursor = iterable.cursor();
+				final IterableSubsetView< IntType > iterable = new IterableSubsetView< IntType >( intImg, new FinalInterval( new long[] { 0, 0, k }, new long[] { 999, 999, k } ) );
+				final Cursor< IntType > intCursor = iterable.cursor();
 
 				while ( intCursor.hasNext() )
 				{
@@ -79,13 +80,13 @@ public class IterableSubIntervalCursorBenchmark
 	@Test
 	public void benchmarkSubsetCursor()
 	{
-		long start = System.currentTimeMillis();
+		final long start = System.currentTimeMillis();
 		int ctr = 0;
 		for ( int i = 0; i < numRuns; i++ )
 		{
 			for ( int k = 0; k < dimensions[ 2 ]; k++ )
 			{
-				Cursor< IntType > intCursor = SubsetViews.subsetView( intImg, new FinalInterval( new long[] { 0, 0, k }, new long[] { 999, 999, k } ) ).cursor();
+				final Cursor< IntType > intCursor = SubsetViews.subsetView( intImg, new FinalInterval( new long[] { 0, 0, k }, new long[] { 999, 999, k } ) ).cursor();
 
 				while ( intCursor.hasNext() )
 				{
@@ -100,15 +101,39 @@ public class IterableSubIntervalCursorBenchmark
 
 	// Test new ImgLib2 implementation
 	@Test
-	public void benchmarkIntervalCursor()
+	public void benchmarkHyperSliceCursor()
 	{
-		long start = System.currentTimeMillis();
+		final long start = System.currentTimeMillis();
 		int ctr = 0;
 		for ( int i = 0; i < numRuns; i++ )
 		{
 			for ( int k = 0; k < dimensions[ 2 ]; k++ )
 			{
-				Cursor< IntType > intCursor = Views.interval( intImg, new FinalInterval( new long[] { 0, 0, k }, new long[] { 999, 999, k } ) ).cursor();
+				final Cursor< IntType > intCursor = Views.hyperSlice( intImg, 2, k ).cursor();
+
+				while ( intCursor.hasNext() )
+				{
+					intCursor.next().get();
+					ctr++;
+				}
+			}
+		}
+
+		System.out.println( "Time ImgLib2 Hyperslice Implementation (" + ctr + ") " + ( System.currentTimeMillis() - start ) );
+	}
+
+	// Test new ImgLib2 implementation
+	@Test
+	public void benchmarkIntervalCursor()
+	{
+		final long start = System.currentTimeMillis();
+		int ctr = 0;
+		for ( int i = 0; i < numRuns; i++ )
+		{
+			for ( int k = 0; k < dimensions[ 2 ]; k++ )
+			{
+//				final Cursor< IntType > intCursor = Views.interval( intImg, new FinalInterval( new long[] { 0, 0, k }, new long[] { 999, 999, k } ) ).cursor();
+				final Cursor< IntType > intCursor = Views.interval( intImg, Intervals.createMinMax( 0, 0, k, 999, 999, k ) ).cursor();
 
 				while ( intCursor.hasNext() )
 				{

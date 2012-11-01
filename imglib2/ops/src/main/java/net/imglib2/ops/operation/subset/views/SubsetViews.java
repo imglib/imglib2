@@ -270,7 +270,7 @@ public class SubsetViews
 	}
 
 	/**
-	 * Checks weather to intervals have same dimensionality
+	 * Checks whether two intervals have same dimensionality
 	 * 
 	 * @param a
 	 * @param b
