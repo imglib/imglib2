@@ -81,22 +81,19 @@ public class IterableSubIntervalCursorTest
 		assertTrue( ( Views.interval( intImg, intervalA ).cursor() instanceof ArraySubIntervalCursor ) );
 
 		// Testing Localizing Cursor
-		// assertTrue( ( Views.interval( intImg, intervalA ).localizingCursor()
-		// instanceof AbstractArrayLocalizingCursor ) );
+		assertTrue( ( Views.interval( intImg, intervalA ).localizingCursor() instanceof AbstractArrayLocalizingCursor ) );
 
 		// Testing Cursor
 		assertFalse( ( Views.interval( intImg, intervalB ).cursor() instanceof ArraySubIntervalCursor ) );
 
 		// Testing Localizing Cursor
-		// assertFalse( ( Views.interval( intImg, intervalB ).localizingCursor()
-		// instanceof AbstractArrayLocalizingCursor ) );
+		assertFalse( ( Views.interval( intImg, intervalB ).localizingCursor() instanceof AbstractArrayLocalizingCursor ) );
 
 		// Testing Cursor
 		assertTrue( ( Views.interval( intImg, intervalC ).cursor() instanceof ArraySubIntervalCursor ) );
 
 		// Testing Localizing Cursor
-		// assertTrue( ( Views.interval( intImg, intervalC ).localizingCursor()
-		// instanceof AbstractArrayLocalizingCursor ) );
+		assertTrue( ( Views.interval( intImg, intervalC ).localizingCursor() instanceof AbstractArrayLocalizingCursor ) );
 	}
 
 	@Test

@@ -48,7 +48,6 @@ import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.BoundingBoxTransform;
 import net.imglib2.transform.integer.SlicingTransform;
 import net.imglib2.util.Intervals;
-import net.imglib2.util.Util;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.TransformBuilder;
 import net.imglib2.view.Views;
@@ -141,7 +140,7 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 		@Override
 		public Cursor< T > localizingCursor()
 		{
-			return iterableSource.cursor( interval );
+			return iterableSource.localizingCursor( interval );
 		}
 	}
 
