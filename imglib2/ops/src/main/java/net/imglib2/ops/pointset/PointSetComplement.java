@@ -58,7 +58,7 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public class PointSetComplement implements PointSet {
+public class PointSetComplement extends AbstractPointSet implements PointSet {
 	
 	// -- instance variables --
 	
@@ -106,7 +106,7 @@ public class PointSetComplement implements PointSet {
 	public long[] findBoundMax() { return diff.findBoundMax(); }
 	
 	@Override
-	public long calcSize() { return diff.calcSize(); }
+	public long size() { return diff.size(); }
 	
 	@Override
 	public PointSetComplement copy() {

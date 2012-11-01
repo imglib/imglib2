@@ -53,7 +53,7 @@ import net.imglib2.ops.condition.Condition;
  * @author Barry DeZonia
  *
  */
-public class ConditionalPointSet implements PointSet {
+public class ConditionalPointSet extends AbstractPointSet implements PointSet {
 
 	// -- instance variables --
 	
@@ -118,7 +118,7 @@ public class ConditionalPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElements = 0;
 		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {

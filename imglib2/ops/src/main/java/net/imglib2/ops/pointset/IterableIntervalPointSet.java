@@ -49,7 +49,7 @@ import net.imglib2.IterableInterval;
  * @author Barry DeZonia
  *
  */
-public class IterableIntervalPointSet implements PointSet
+public class IterableIntervalPointSet extends AbstractPointSet implements PointSet
 {
 	// -- instance variables --
 	
@@ -117,7 +117,7 @@ public class IterableIntervalPointSet implements PointSet
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		return size;
 	}
 

@@ -52,7 +52,7 @@ import net.imglib2.roi.RegionOfInterest;
  * @author Barry DeZonia
  *
  */
-public class RoiPointSet implements PointSet {
+public class RoiPointSet extends AbstractPointSet implements PointSet {
 
 	// -- instance variables --
 	
@@ -125,7 +125,7 @@ public class RoiPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElems = 0;
 		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {

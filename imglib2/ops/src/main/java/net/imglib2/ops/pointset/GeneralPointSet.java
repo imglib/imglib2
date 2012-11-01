@@ -48,7 +48,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class GeneralPointSet implements PointSet {
+public class GeneralPointSet extends AbstractPointSet implements PointSet {
 	
 	// -- instance variables --
 	
@@ -122,7 +122,7 @@ public class GeneralPointSet implements PointSet {
 	}
 	
 	@Override
-	public long calcSize() {
+	public long size() {
 		return points.size();
 	}
 

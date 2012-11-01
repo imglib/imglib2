@@ -37,7 +37,7 @@
 
 package net.imglib2.ops.pointset;
 
-import net.imglib2.EuclideanSpace;
+import net.imglib2.IterableInterval;
 
 /**
  * PointSets define a set of point indices (long[]). PointSets can be moved
@@ -46,7 +46,7 @@ import net.imglib2.EuclideanSpace;
  * 
  * @author Barry DeZonia
  */
-public interface PointSet extends EuclideanSpace, Iterable<long[]> {
+public interface PointSet extends IterableInterval<long[]> {
 	
 	/**
 	 * Gets the current origin point of the PointSet
@@ -99,7 +99,8 @@ public interface PointSet extends EuclideanSpace, Iterable<long[]> {
 	 * Calculates the number of elements in the PointSet. This can be an
 	 * expensive operation (potentially iterating the whole set to count).
 	 */
-	long calcSize();
+	@Override
+	long size();
 	
 	/**
 	 * Make a copy of self. This is useful for multithreaded parallel computation

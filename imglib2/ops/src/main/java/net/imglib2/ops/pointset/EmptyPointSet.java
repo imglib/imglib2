@@ -46,7 +46,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class EmptyPointSet implements PointSet {
+public class EmptyPointSet extends AbstractPointSet implements PointSet {
 
 	// -- instance variables --
 	
@@ -67,7 +67,7 @@ public class EmptyPointSet implements PointSet {
 
 	@Override
 	public void translate(long[] deltas) {
-		throw new IllegalArgumentException("cannot translate an EmptyPointSet");
+		// do nothing
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class EmptyPointSet implements PointSet {
 	}
 	
 	@Override
-	public long calcSize() {
+	public long size() {
 		return 0;
 	}
 	

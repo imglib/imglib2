@@ -46,7 +46,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class UniversalPointSet implements PointSet {
+public class UniversalPointSet extends AbstractPointSet implements PointSet {
 
 	// -- instance variables --
 	
@@ -96,7 +96,7 @@ public class UniversalPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		throw new UnsupportedOperationException("UniversalPointSet is infinite in size");
 	}
 

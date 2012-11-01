@@ -46,7 +46,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class HyperVolumePointSet implements PointSet {
+public class HyperVolumePointSet extends AbstractPointSet implements PointSet {
 	
 	// -- instance variables --
 	
@@ -193,7 +193,7 @@ public class HyperVolumePointSet implements PointSet {
 	}
 	
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElements = 1;
 		for (int i = 0; i < origin.length; i++) {
 			numElements *= boundMax[i] - boundMin[i] + 1;

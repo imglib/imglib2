@@ -46,7 +46,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class PointSetIntersection implements PointSet {
+public class PointSetIntersection extends AbstractPointSet implements PointSet {
 	
 	// -- instance variables --
 	
@@ -111,7 +111,7 @@ public class PointSetIntersection implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElements = 0;
 		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
