@@ -49,8 +49,7 @@ import net.imglib2.IterableInterval;
  * @author Barry DeZonia
  *
  */
-public class IterableIntervalPointSet extends AbstractPointSet implements PointSet
-{
+public class IterableIntervalPointSet extends AbstractPointSet {
 	// -- instance variables --
 	
 	private final IterableInterval<?> interval;
@@ -62,15 +61,15 @@ public class IterableIntervalPointSet extends AbstractPointSet implements PointS
 	public IterableIntervalPointSet(IterableInterval<?> interval) {
 		this.interval = interval;
 		int numDims = interval.numDimensions();
-		boundMin = new long[numDims];
-		boundMax = new long[numDims];
+		this.boundMin = new long[numDims];
+		this.boundMax = new long[numDims];
 		interval.min(boundMin);
 		interval.max(boundMax);
 		long sum = 1;
 		for (int i = 0; i < numDims; i++) {
 			sum *= 1 + boundMax[i] - boundMin[i];
 		}
-		size = sum;
+		this.size = sum;
 	}
 	
 	// -- PointSet methods --
@@ -98,12 +97,12 @@ public class IterableIntervalPointSet extends AbstractPointSet implements PointS
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return boundMin;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return boundMax;
 	}
 

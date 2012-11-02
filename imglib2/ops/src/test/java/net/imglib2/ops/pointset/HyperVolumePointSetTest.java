@@ -1,8 +1,8 @@
 package net.imglib2.ops.pointset;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -21,12 +21,6 @@ public class HyperVolumePointSetTest {
 		assertEquals(4, ps.realMin(1), 0);
 		assertEquals(5, ps.realMax(0), 0);
 		assertEquals(7, ps.realMax(1), 0);
-		long[] bounds = ps.findBoundMin();
-		assertEquals(2, bounds[0]);
-		assertEquals(4, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(5, bounds[0]);
-		assertEquals(7, bounds[1]);
 		assertEquals(4, ps.dimension(0));
 		assertEquals(4, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{2,4}));
@@ -49,12 +43,6 @@ public class HyperVolumePointSetTest {
 		assertEquals(6, ps.realMin(1), 0);
 		assertEquals(6, ps.realMax(0), 0);
 		assertEquals(9, ps.realMax(1), 0);
-		bounds = ps.findBoundMin();
-		assertEquals(3, bounds[0]);
-		assertEquals(6, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(6, bounds[0]);
-		assertEquals(9, bounds[1]);
 		assertEquals(4, ps.dimension(0));
 		assertEquals(4, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{3,6}));

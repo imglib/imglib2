@@ -38,6 +38,7 @@
 package net.imglib2.ops.pointset;
 
 import net.imglib2.AbstractCursor;
+import net.imglib2.FlatIterationOrder;
 
 
 /**
@@ -46,13 +47,14 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class HyperVolumePointSet extends AbstractPointSet implements PointSet {
+public class HyperVolumePointSet extends AbstractPointSet {
 	
 	// -- instance variables --
 	
 	private final long[] origin;
 	private final long[] boundMin;
 	private final long[] boundMax;
+	private final long size;
 
 	// -- constructors --
 	
@@ -82,6 +84,7 @@ public class HyperVolumePointSet extends AbstractPointSet implements PointSet {
 			boundMin[i] = origin[i] - negOffsets[i];
 			boundMax[i] = origin[i] + posOffsets[i];
 		}
+		this.size = calcSize();
 	}
 	
 	/**
@@ -101,6 +104,7 @@ public class HyperVolumePointSet extends AbstractPointSet implements PointSet {
 			boundMax[i] = Math.max(pt1[i], pt2[i]);
 		}
 		this.origin = pt1.clone();
+		this.size = calcSize();
 	}
 	
 	/**
@@ -140,10 +144,14 @@ public class HyperVolumePointSet extends AbstractPointSet implements PointSet {
 	public int numDimensions() { return origin.length; }
 	
 	@Override
-	public long[] findBoundMin() { return boundMin; }
+	protected long[] findBoundMin() {
+		return boundMin;
+	}
 
 	@Override
-	public long[] findBoundMax() { return boundMax; }
+	protected long[] findBoundMax() {
+		return boundMax;
+	}
 	
 	@Override
 	public boolean includes(long[] point) {
@@ -156,11 +164,7 @@ public class HyperVolumePointSet extends AbstractPointSet implements PointSet {
 	
 	@Override
 	public long size() {
-		long numElements = 1;
-		for (int i = 0; i < origin.length; i++) {
-			numElements *= boundMax[i] - boundMin[i] + 1;
-		}
-		return numElements;
+		return size;
 	}
 
 	@Override
@@ -168,6 +172,11 @@ public class HyperVolumePointSet extends AbstractPointSet implements PointSet {
 		return new HyperVolumePointSet(findBoundMin(), findBoundMax());
 	}
 	
+	@Override
+	public Object iterationOrder() {
+		return new FlatIterationOrder(this);
+	}
+
 	// -- private helpers --
 	
 	private static long[] lastPoint(long[] span) {
@@ -176,6 +185,14 @@ public class HyperVolumePointSet extends AbstractPointSet implements PointSet {
 			lastPoint[i] = span[i] - 1;
 		}
 		return lastPoint;
+	}
+
+	private long calcSize() {
+		long numElements = 1;
+		for (int i = 0; i < origin.length; i++) {
+			numElements *= boundMax[i] - boundMin[i] + 1;
+		}
+		return numElements;
 	}
 
 	private class HyperVolumePointSetIterator extends AbstractCursor<long[]>
@@ -254,5 +271,6 @@ public class HyperVolumePointSet extends AbstractPointSet implements PointSet {
 		public AbstractCursor<long[]> copyCursor() {
 			return copy();
 		}
+
 	}
 }

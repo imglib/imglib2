@@ -1,7 +1,8 @@
 package net.imglib2.ops.pointset;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.condition.RangeCondition;
 
@@ -27,14 +28,6 @@ public class ConditionalPointSetTest {
 		assertEquals(10, ps.realMax(0), 0);
 		assertEquals(14, ps.realMax(1), 0);
 		
-		long[] bounds = ps.findBoundMin();
-		assertEquals(1, bounds[0]);
-		assertEquals(0, bounds[1]);
-		
-		bounds = ps.findBoundMax();
-		assertEquals(10, bounds[0]);
-		assertEquals(14, bounds[1]);
-		
 		assertEquals(10, ps.dimension(0));
 		assertEquals(15, ps.dimension(1));
 	
@@ -58,14 +51,6 @@ public class ConditionalPointSetTest {
 		assertEquals(2, ps.realMin(1), 0);
 		assertEquals(10, ps.realMax(0), 0);
 		assertEquals(16, ps.realMax(1), 0);
-		
-		bounds = ps.findBoundMin();
-		assertEquals(1, bounds[0]);
-		assertEquals(2, bounds[1]);
-		
-		bounds = ps.findBoundMax();
-		assertEquals(10, bounds[0]);
-		assertEquals(16, bounds[1]);
 	}
 
 }

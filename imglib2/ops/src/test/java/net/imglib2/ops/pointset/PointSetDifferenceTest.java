@@ -1,6 +1,8 @@
 package net.imglib2.ops.pointset;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -17,10 +19,6 @@ public class PointSetDifferenceTest {
 		assertEquals(3, ps.max(0));
 		assertEquals(0, ps.realMin(0), 0);
 		assertEquals(3, ps.realMax(0), 0);
-		long[] bounds = ps.findBoundMin();
-		assertEquals(0, bounds[0]);
-		bounds = ps.findBoundMax();
-		assertEquals(3, bounds[0]);
 		assertEquals(4, ps.dimension(0));
 		assertTrue(ps.includes(new long[]{0}));
 		assertTrue(ps.includes(new long[]{1}));
@@ -36,10 +34,6 @@ public class PointSetDifferenceTest {
 		assertEquals(5, ps.max(0));
 		assertEquals(2, ps.realMin(0), 0);
 		assertEquals(5, ps.realMax(0), 0);
-		bounds = ps.findBoundMin();
-		assertEquals(2, bounds[0]);
-		bounds = ps.findBoundMax();
-		assertEquals(5, bounds[0]);
 		assertEquals(4, ps.dimension(0));
 		assertTrue(ps.includes(new long[]{2}));
 		assertTrue(ps.includes(new long[]{3}));

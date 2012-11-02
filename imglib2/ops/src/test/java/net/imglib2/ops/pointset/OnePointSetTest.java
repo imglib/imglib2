@@ -1,6 +1,8 @@
 package net.imglib2.ops.pointset;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -19,12 +21,6 @@ public class OnePointSetTest {
 		assertEquals(45, ps.realMin(1), 0);
 		assertEquals(73, ps.realMax(0), 0);
 		assertEquals(45, ps.realMax(1), 0);
-		long[] bounds = ps.findBoundMin();
-		assertEquals(73, bounds[0]);
-		assertEquals(45, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(73, bounds[0]);
-		assertEquals(45, bounds[1]);
 		assertEquals(1, ps.dimension(0));
 		assertEquals(1, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{73,45}));
@@ -43,12 +39,6 @@ public class OnePointSetTest {
 		assertEquals(47, ps.realMin(1), 0);
 		assertEquals(74, ps.realMax(0), 0);
 		assertEquals(47, ps.realMax(1), 0);
-		bounds = ps.findBoundMin();
-		assertEquals(74, bounds[0]);
-		assertEquals(47, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(74, bounds[0]);
-		assertEquals(47, bounds[1]);
 		assertEquals(1, ps.dimension(0));
 		assertEquals(1, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{74,47}));

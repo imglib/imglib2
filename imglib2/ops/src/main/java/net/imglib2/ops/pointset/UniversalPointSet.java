@@ -46,7 +46,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class UniversalPointSet extends AbstractPointSet implements PointSet {
+public class UniversalPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
@@ -81,12 +81,12 @@ public class UniversalPointSet extends AbstractPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return origin;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return origin;
 	}
 

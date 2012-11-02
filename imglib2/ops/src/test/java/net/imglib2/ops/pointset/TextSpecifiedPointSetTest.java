@@ -1,6 +1,8 @@
 package net.imglib2.ops.pointset;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -19,12 +21,6 @@ public class TextSpecifiedPointSetTest {
 		assertEquals(1, ps.realMin(1), 0);
 		assertEquals(4, ps.realMax(0), 0);
 		assertEquals(2, ps.realMax(1), 0);
-		long[] bounds = ps.findBoundMin();
-		assertEquals(3, bounds[0]);
-		assertEquals(1, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(4, bounds[0]);
-		assertEquals(2, bounds[1]);
 		assertEquals(2, ps.dimension(0));
 		assertEquals(2, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{3,1}));
@@ -47,12 +43,6 @@ public class TextSpecifiedPointSetTest {
 		assertEquals(2, ps.realMin(1), 0);
 		assertEquals(4, ps.realMax(0), 0);
 		assertEquals(2, ps.realMax(1), 0);
-		bounds = ps.findBoundMin();
-		assertEquals(3, bounds[0]);
-		assertEquals(2, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(4, bounds[0]);
-		assertEquals(2, bounds[1]);
 		assertEquals(2, ps.dimension(0));
 		assertEquals(1, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{3,2}));

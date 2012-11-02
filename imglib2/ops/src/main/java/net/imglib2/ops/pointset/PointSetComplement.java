@@ -58,7 +58,7 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public class PointSetComplement extends AbstractPointSet implements PointSet {
+public class PointSetComplement extends AbstractPointSet {
 	
 	// -- instance variables --
 	
@@ -69,8 +69,11 @@ public class PointSetComplement extends AbstractPointSet implements PointSet {
 	
 	public PointSetComplement(PointSet a) {
 		this.a = a;
-		final HyperVolumePointSet hyper =
-				new HyperVolumePointSet(a.findBoundMin(), a.findBoundMax());
+		long[] min = new long[a.numDimensions()];
+		long[] max = min.clone();
+		a.min(min);
+		a.max(max);
+		HyperVolumePointSet hyper = new HyperVolumePointSet(min, max);
 		diff = new PointSetDifference(hyper, a);
 	}
 	
@@ -101,10 +104,14 @@ public class PointSetComplement extends AbstractPointSet implements PointSet {
 	}
 	
 	@Override
-	public long[] findBoundMin() { return diff.findBoundMin(); }
+	protected long[] findBoundMin() {
+		return diff.findBoundMin();
+	}
 
 	@Override
-	public long[] findBoundMax() { return diff.findBoundMax(); }
+	protected long[] findBoundMax() {
+		return diff.findBoundMax();
+	}
 	
 	@Override
 	public long size() { return diff.size(); }

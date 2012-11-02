@@ -1,7 +1,9 @@
 package net.imglib2.ops.pointset;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import net.imglib2.IterableInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -26,12 +28,6 @@ public class IterableIntervalPointSetTest {
 		assertEquals(0, ps.realMin(1), 0);
 		assertEquals(2, ps.realMax(0), 0);
 		assertEquals(2, ps.realMax(1), 0);
-		long[] bounds = ps.findBoundMin();
-		assertEquals(0, bounds[0]);
-		assertEquals(0, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(2, bounds[0]);
-		assertEquals(2, bounds[1]);
 		assertEquals(3, ps.dimension(0));
 		assertEquals(3, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{0,0}));

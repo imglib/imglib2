@@ -1,6 +1,8 @@
 package net.imglib2.ops.pointset;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -17,10 +19,6 @@ public class PointSetIntersectionTest {
 		assertEquals(10, ps.max(0));
 		assertEquals(7, ps.realMin(0), 0);
 		assertEquals(10, ps.realMax(0), 0);
-		long[] bounds = ps.findBoundMin();
-		assertEquals(7, bounds[0]);
-		bounds = ps.findBoundMax();
-		assertEquals(10, bounds[0]);
 		assertEquals(4, ps.dimension(0));
 		assertTrue(ps.includes(new long[]{7}));
 		assertTrue(ps.includes(new long[]{8}));
@@ -36,10 +34,6 @@ public class PointSetIntersectionTest {
 		assertEquals(12, ps.max(0));
 		assertEquals(9, ps.realMin(0), 0);
 		assertEquals(12, ps.realMax(0), 0);
-		bounds = ps.findBoundMin();
-		assertEquals(9, bounds[0]);
-		bounds = ps.findBoundMax();
-		assertEquals(12, bounds[0]);
 		assertEquals(4, ps.dimension(0));
 		assertTrue(ps.includes(new long[]{9}));
 		assertTrue(ps.includes(new long[]{10}));

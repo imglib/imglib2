@@ -6,9 +6,32 @@ import net.imglib2.RealPositionable;
 
 public abstract class AbstractPointSet implements PointSet {
 
+	// -- instance variables --
+
 	protected long[] minBounds;
 	protected long[] maxBounds;
+
+	// -- abstract methods --
+
+	/**
+	 * Returns the lower bound of the space containing the PointSet. This can be
+	 * an expensive operation (potentially iterating the whole set to calculate).
+	 * These results are cached when possible. Subsequent calls to translate()
+	 * will invalidate bounds.
+	 */
+	abstract protected long[] findBoundMin();
+
+	/**
+	 * Returns the upper bound of the space containing the PointSet. This can be
+	 * an expensive operation (potentially iterating the whole set to calculate).
+	 * These results are cached when possible. Subsequent calls to translate()
+	 * will invalidate bounds.
+	 */
+	abstract protected long[] findBoundMax();
 	
+
+	// -- IterableInterval methods --
+
 	@Override
 	public long[] firstElement() {
 		return cursor().get();
@@ -126,22 +149,27 @@ public abstract class AbstractPointSet implements PointSet {
 		maybeSetBounds();
 		return maxBounds[d] - minBounds[d] + 1;
 	}
-	
-	protected void maybeSetBounds() {
-		if (boundsInvalid()) findBounds();
-	}
-	
-	protected boolean boundsInvalid() {
-		return maxBounds == null || minBounds == null;
-	}
-	
-	protected void findBounds() {
-		maxBounds = findBoundMax().clone();
-		minBounds = findBoundMin().clone();
-	}
+
+	// -- protected api --
 	
 	protected void invalidateBounds() {
 		maxBounds = null;
 		minBounds = null;
 	}
+
+	// -- private helpers --
+
+	private void maybeSetBounds() {
+		if (boundsInvalid()) findBounds();
+	}
+	
+	private boolean boundsInvalid() {
+		return maxBounds == null || minBounds == null;
+	}
+	
+	private void findBounds() {
+		maxBounds = findBoundMax().clone();
+		minBounds = findBoundMin().clone();
+	}
+	
 }

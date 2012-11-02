@@ -47,7 +47,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class OnePointSet extends AbstractPointSet implements PointSet {
+public class OnePointSet extends AbstractPointSet {
 
 	// -- instance varaibles --
 	
@@ -79,12 +79,12 @@ public class OnePointSet extends AbstractPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return point;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return point;
 	}
 
@@ -144,6 +144,7 @@ public class OnePointSet extends AbstractPointSet implements PointSet {
 		@Override
 		public void fwd() {
 			if (hasNext) hasNext = false;
+			else throw new IllegalArgumentException("Cannot fwd() beyond end.");
 		}
 
 		@Override

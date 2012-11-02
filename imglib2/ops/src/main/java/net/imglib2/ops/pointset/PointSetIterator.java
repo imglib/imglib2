@@ -45,5 +45,4 @@ import net.imglib2.Cursor;
  * @author Barry DeZonia
  */
 public interface PointSetIterator extends Cursor<long[]> {
-	// void reset();
 }

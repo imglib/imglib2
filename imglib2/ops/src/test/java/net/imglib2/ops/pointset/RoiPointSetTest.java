@@ -1,7 +1,8 @@
 package net.imglib2.ops.pointset;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import net.imglib2.roi.RectangleRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
 
@@ -25,12 +26,6 @@ public class RoiPointSetTest {
 		assertEquals(0, ps.realMin(1), 0);
 		assertEquals(2, ps.realMax(0), 0);
 		assertEquals(2, ps.realMax(1), 0);
-		long[] bounds = ps.findBoundMin();
-		assertEquals(0, bounds[0]);
-		assertEquals(0, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(2, bounds[0]);
-		assertEquals(2, bounds[1]);
 		assertEquals(3, ps.dimension(0));
 		assertEquals(3, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{0,0}));
@@ -52,12 +47,6 @@ public class RoiPointSetTest {
 		assertEquals(2, ps.realMin(1), 0);
 		assertEquals(3, ps.realMax(0), 0);
 		assertEquals(4, ps.realMax(1), 0);
-		bounds = ps.findBoundMin();
-		assertEquals(1, bounds[0]);
-		assertEquals(2, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(3, bounds[0]);
-		assertEquals(4, bounds[1]);
 		assertEquals(3, ps.dimension(0));
 		assertEquals(3, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{1,2}));

@@ -54,7 +54,7 @@ public class BoundsCalculator {
 	public BoundsCalculator() {
 	}
 	
-	// -- protected API --
+	// -- BoundsCalculator methods --
 	
 	public long[] getMin() {
 		return min;
@@ -80,6 +80,8 @@ public class BoundsCalculator {
 			}
 		}
 	}
+
+	// -- private helpers --
 
 	private void setMin(long[] p) {
 		min = p.clone();

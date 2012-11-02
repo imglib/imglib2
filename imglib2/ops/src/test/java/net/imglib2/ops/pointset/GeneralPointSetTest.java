@@ -1,6 +1,8 @@
 package net.imglib2.ops.pointset;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
@@ -26,12 +28,6 @@ public class GeneralPointSetTest {
 		assertEquals(1, ps.realMin(1), 0);
 		assertEquals(7, ps.realMax(0), 0);
 		assertEquals(12, ps.realMax(1), 0);
-		long[] bounds = ps.findBoundMin();
-		assertEquals(1, bounds[0]);
-		assertEquals(1, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(7, bounds[0]);
-		assertEquals(12, bounds[1]);
 		assertEquals(7, ps.dimension(0));
 		assertEquals(12, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{1,1}));
@@ -53,12 +49,6 @@ public class GeneralPointSetTest {
 		assertEquals(3, ps.realMin(1), 0);
 		assertEquals(8, ps.realMax(0), 0);
 		assertEquals(14, ps.realMax(1), 0);
-		bounds = ps.findBoundMin();
-		assertEquals(2, bounds[0]);
-		assertEquals(3, bounds[1]);
-		bounds = ps.findBoundMax();
-		assertEquals(8, bounds[0]);
-		assertEquals(14, bounds[1]);
 		assertEquals(7, ps.dimension(0));
 		assertEquals(12, ps.dimension(1));
 		assertTrue(ps.includes(new long[]{2,3}));

@@ -75,22 +75,6 @@ public interface PointSet extends IterableInterval<long[]> {
 	int numDimensions();
 	
 	/**
-	 * Returns the lower bound of the space containing the PointSet. This can be
-	 * an expensive operation (potentially iterating the whole set to calculate).
-	 * These results are cached when possible. Subsequent calls to translate()
-	 * will invalidate bounds.
-	 */
-	long[] findBoundMin();
-
-	/**
-	 * Returns the upper bound of the space containing the PointSet. This can be
-	 * an expensive operation (potentially iterating the whole set to calculate).
-	 * These results are cached when possible. Subsequent calls to translate()
-	 * will invalidate bounds.
-	 */
-	long[] findBoundMax();
-	
-	/**
 	 * Returns true if a given point is a member of the PointSet
 	 */
 	boolean includes(long[] point);
