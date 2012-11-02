@@ -40,8 +40,8 @@ import net.imglib2.ops.function.Function;
 
 /**
  * This class allows one to pass double[] input coordinates to a
- * {@link Function} that expects to receive long[] input coordinates. The coords
- * are truncated during translation.
+ * {@link Function} that expects to receive long[] input coordinates. The
+ * coordinates are rounded during translation.
  * 
  * @author Barry DeZonia
  */
@@ -65,7 +65,7 @@ public class RealCoordinateAdapterFunction<T> implements Function<double[], T> {
 	public void compute(double[] input, T output) {
 		if (coords == null) coords = new long[input.length];
 		for (int i = 0; i < input.length; i++)
-			coords[i] = (long) input[i];
+			coords[i] = Math.round(input[i]);
 		func.compute(coords, output);
 	}
 
