@@ -108,7 +108,7 @@ public class RectangleShape implements Shape
 		@Override
 		public Cursor< Neighborhood< T >> cursor()
 		{
-			return new RectangleNeighborhoodCursor< T >( source, span, factory );
+			return new RectangleNeighborhoodCursor2< T >( source, span, factory );
 		}
 
 		@Override
