@@ -25,6 +25,7 @@
 		<module>io</module>
 		<module>ops</module>
 		<module>realtransform</module>
+		<module>roi</module>
 		<module>scripting</module>
 		<module>tests</module>
 		<module>ui</module>
