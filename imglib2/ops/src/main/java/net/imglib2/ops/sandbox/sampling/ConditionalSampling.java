@@ -102,6 +102,7 @@ public class ConditionalSampling extends AbstractSampling {
 		@Override
 		public void reset() {
 			iter.reset();
+			cached = false;
 		}
 
 		@Override
