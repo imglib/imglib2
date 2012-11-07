@@ -63,6 +63,11 @@ import net.imglib2.type.numeric.RealType;
 // space. Thus reset() does not become inefficient. And moving
 // ConditionalPointSets does not cause incorrect calculations and crashes.
 
+// TODO: define a class that is an Img<DoubleType> that replaces
+// PrimitiveDoubleArray. It should auto expand. It should have the concept of
+// an allocated size and a used element size. Finally one should be able to
+// efficiently sort the used values within it.
+
 /**
  * 
  * StatCollector calculates statistics from a {@link PointSet} region of a
