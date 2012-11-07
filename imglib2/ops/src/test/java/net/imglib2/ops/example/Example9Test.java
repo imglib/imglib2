@@ -37,10 +37,7 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -56,6 +53,8 @@ import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 // A Sobel filter / gradient example
 
@@ -75,7 +74,8 @@ public class Example9Test {
 	private static RandomAccess<? extends RealType<?>> queryAccessor;
 
 	private static Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+			new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[] { XSIZE, YSIZE }, new DoubleType());
 	}
 
@@ -161,22 +161,28 @@ public class Example9Test {
 		img = makeInputImage();
 		HyperVolumePointSet neigh = new HyperVolumePointSet(new long[2],
 				new long[] { 1, 1 }, new long[] { 1, 1 });
-		Function<long[], DoubleType> imgFunc = new RealImageFunction<DoubleType,DoubleType>(
-				img, new DoubleType());
+		Function<long[], DoubleType> imgFunc =
+			new RealImageFunction<DoubleType, DoubleType>(img, new DoubleType());
 		double[] kernel1 = new double[] { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
 		double[] kernel2 = new double[] { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
-		Function<PointSet, DoubleType> convFunc1 = new RealConvolutionFunction<DoubleType>(
-				imgFunc, kernel1);
-		Function<PointSet, DoubleType> convFunc2 = new RealConvolutionFunction<DoubleType>(
-				imgFunc, kernel2);
-		Function<PointSet, DoubleType> absFunc1 = new GeneralUnaryFunction<PointSet, DoubleType, DoubleType>(
-				convFunc1, new RealAbs<DoubleType,DoubleType>(), new DoubleType());
-		Function<PointSet, DoubleType> absFunc2 = new GeneralUnaryFunction<PointSet, DoubleType, DoubleType>(
-				convFunc2, new RealAbs<DoubleType,DoubleType>(), new DoubleType());
-		Function<PointSet, DoubleType> addFunc = new GeneralBinaryFunction<PointSet, DoubleType, DoubleType, DoubleType>(
-				absFunc1, absFunc2,	new RealAdd<DoubleType,DoubleType,DoubleType>(), new DoubleType());
+		Function<PointSet, DoubleType> convFunc1 =
+			new RealConvolutionFunction<DoubleType>(imgFunc, kernel1);
+		Function<PointSet, DoubleType> convFunc2 =
+			new RealConvolutionFunction<DoubleType>(imgFunc, kernel2);
+		Function<PointSet, DoubleType> absFunc1 =
+			new GeneralUnaryFunction<PointSet, DoubleType, DoubleType>(convFunc1,
+				new RealAbs<DoubleType, DoubleType>(), new DoubleType());
+		Function<PointSet, DoubleType> absFunc2 =
+			new GeneralUnaryFunction<PointSet, DoubleType, DoubleType>(convFunc2,
+				new RealAbs<DoubleType, DoubleType>(), new DoubleType());
+		Function<PointSet, DoubleType> addFunc =
+			new GeneralBinaryFunction<PointSet, DoubleType, DoubleType, DoubleType>(
+				absFunc1, absFunc2, new RealAdd<DoubleType, DoubleType, DoubleType>(),
+				new DoubleType());
 		DoubleType output = new DoubleType();
-		HyperVolumePointSet space = new HyperVolumePointSet(new long[]{1,1}, new long[]{XSIZE-2,YSIZE-2});
+		HyperVolumePointSet space =
+			new HyperVolumePointSet(new long[] { 1, 1 }, new long[] { XSIZE - 2,
+				YSIZE - 2 });
 		PointSetInputIterator iter = new PointSetInputIterator(space, neigh);
 		PointSet points = null;
 		while (iter.hasNext()) {
