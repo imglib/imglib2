@@ -44,7 +44,7 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.real.unary.Normalize;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 
 /**
  * @author Christian Dietz (University of Konstanz)
@@ -62,7 +62,7 @@ public class NormalizeIterableInterval< T extends RealType< T >, I extends Itera
 
 	private boolean m_manuallyMinMax;
 
-	private Pair< T, T > m_minMax;
+	private ValuePair< T, T > m_minMax;
 
 	private MinMax< T > m_minMaxOp;
 
@@ -94,7 +94,7 @@ public class NormalizeIterableInterval< T extends RealType< T >, I extends Itera
 	public NormalizeIterableInterval( T min, T max )
 	{
 
-		m_minMax = new Pair< T, T >( min, max );
+		m_minMax = new ValuePair< T, T >( min, max );
 		m_manuallyMinMax = true;
 	}
 
@@ -120,7 +120,7 @@ public class NormalizeIterableInterval< T extends RealType< T >, I extends Itera
 	@Override
 	public I compute( I in, I res )
 	{
-		Pair< T, T > minmax;
+		ValuePair< T, T > minmax;
 		if ( !m_manuallyMinMax )
 		{
 			if ( m_minMaxOp == null )
@@ -162,7 +162,7 @@ public class NormalizeIterableInterval< T extends RealType< T >, I extends Itera
 		T type = interval.firstElement().createVariable();
 		MinMax< T > minMax = new MinMax< T >( saturation, type );
 
-		Pair< T, T > pair = minMax.compute( interval );
+		ValuePair< T, T > pair = minMax.compute( interval );
 		return new double[] { 1 / ( pair.b.getRealDouble() - pair.a.getRealDouble() ) * ( type.getMaxValue() - type.getMinValue() ), pair.a.getRealDouble() };
 	}
 

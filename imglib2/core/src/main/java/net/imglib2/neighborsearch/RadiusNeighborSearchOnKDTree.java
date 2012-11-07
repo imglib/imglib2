@@ -45,7 +45,7 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
 import net.imglib2.collection.KDTree;
 import net.imglib2.collection.KDTreeNode;
-import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 
 /**
  * Implementation of {@link RadiusNeighborSearch} search for kd-trees.
@@ -60,14 +60,14 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 
 	protected final double[] pos;
 
-	protected ArrayList< Pair< KDTreeNode< T >, Double > > resultPoints;
+	protected ArrayList< ValuePair< KDTreeNode< T >, Double > > resultPoints;
 
 	public RadiusNeighborSearchOnKDTree( KDTree< T > tree )
 	{
 		this.tree = tree;
 		this.n = tree.numDimensions();
 		this.pos = new double[ n ];
-		this.resultPoints = new ArrayList< Pair< KDTreeNode< T >, Double > >();
+		this.resultPoints = new ArrayList< ValuePair< KDTreeNode< T >, Double > >();
 	}
 	
 	@Override
@@ -79,10 +79,10 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 		searchNode( tree.getRoot(), radius * radius );
 		if ( sortResults )
 		{
-			Collections.sort( resultPoints, new Comparator< Pair< KDTreeNode< T >, Double > >()
+			Collections.sort( resultPoints, new Comparator< ValuePair< KDTreeNode< T >, Double > >()
 			{
 				@Override
-				public int compare( Pair< KDTreeNode< T >, Double > o1, Pair< KDTreeNode< T >, Double > o2 )
+				public int compare( ValuePair< KDTreeNode< T >, Double > o1, ValuePair< KDTreeNode< T >, Double > o2 )
 				{
 					return Double.compare( o1.b, o2.b );
 				}
@@ -99,7 +99,7 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 		final double squDistance = current.squDistanceTo( pos );
 		if ( squDistance <= squRadius )
 		{
-			resultPoints.add( new Pair< KDTreeNode< T >, Double >( current, squDistance ) );
+			resultPoints.add( new ValuePair< KDTreeNode< T >, Double >( current, squDistance ) );
 		}
 
 		final double axisDiff = pos[ current.getSplitDimension() ] - current.getSplitCoordinate();
