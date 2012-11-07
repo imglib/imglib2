@@ -48,7 +48,7 @@ import net.imglib2.collection.KDTree;
 import net.imglib2.neighborsearch.KNearestNeighborSearchOnKDTree;
 import net.imglib2.neighborsearch.NearestNeighborSearchOnKDTree;
 import net.imglib2.neighborsearch.RadiusNeighborSearchOnKDTree;
-import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 
 import org.junit.Test;
 
@@ -312,7 +312,7 @@ public class KDTreeTest
 		{
 			kd.search( t, radius, true );
 			final int neighbors = kd.numNeighbors();
-			final ArrayList< Pair< RealPoint, Double > > radiusExhaustive = findNeighborsRadiusExhaustive( points, t, radius, true );
+			final ArrayList< ValuePair< RealPoint, Double > > radiusExhaustive = findNeighborsRadiusExhaustive( points, t, radius, true );
 
 			if ( neighbors != radiusExhaustive.size() )
 				return false;
@@ -356,7 +356,7 @@ public class KDTreeTest
 
 		start = System.currentTimeMillis();
 		for ( RealPoint t : testpoints ) {
-			final ArrayList< Pair< RealPoint, Double > > radiusExhaustive = findNeighborsRadiusExhaustive( points, t, radius, true );
+			final ArrayList< ValuePair< RealPoint, Double > > radiusExhaustive = findNeighborsRadiusExhaustive( points, t, radius, true );
 			if( radiusExhaustive.size() > 0 )
 				radiusExhaustive.get( 0 ).getClass();
 		}
@@ -366,9 +366,9 @@ public class KDTreeTest
 		return true;
 	}
 
-	private static ArrayList< Pair< RealPoint, Double > > findNeighborsRadiusExhaustive( final ArrayList< RealPoint > points, final RealPoint t, final double radius, final boolean sortResults ) 		
+	private static ArrayList< ValuePair< RealPoint, Double > > findNeighborsRadiusExhaustive( final ArrayList< RealPoint > points, final RealPoint t, final double radius, final boolean sortResults ) 		
 	{
-		final ArrayList< Pair< RealPoint, Double > > withinRadius = new ArrayList< Pair< RealPoint, Double > >(); 
+		final ArrayList< ValuePair< RealPoint, Double > > withinRadius = new ArrayList< ValuePair< RealPoint, Double > >(); 
 		
 		final int n = t.numDimensions();
 		final float[] tpos = new float[ n ];
@@ -383,15 +383,15 @@ public class KDTreeTest
 			dist = Math.sqrt( dist );
 
 			if ( dist <= radius )
-				withinRadius.add( new Pair< RealPoint, Double >( p, dist ) );
+				withinRadius.add( new ValuePair< RealPoint, Double >( p, dist ) );
 		}
 		
 		if ( sortResults )
 		{
-			Collections.sort( withinRadius, new Comparator< Pair< RealPoint, Double > >()
+			Collections.sort( withinRadius, new Comparator< ValuePair< RealPoint, Double > >()
 			{
 				@Override
-				public int compare( Pair< RealPoint, Double > o1, Pair< RealPoint, Double > o2 )
+				public int compare( ValuePair< RealPoint, Double > o1, ValuePair< RealPoint, Double > o2 )
 				{
 					return Double.compare( o1.b, o2.b );
 				}
