@@ -1,4 +1,4 @@
-package net.imglib2.newroi.util;
+package net.imglib2;
 
 import net.imglib2.AbstractInterval;
 import net.imglib2.Interval;
