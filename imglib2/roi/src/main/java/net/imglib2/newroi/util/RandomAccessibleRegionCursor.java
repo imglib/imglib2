@@ -68,6 +68,7 @@ public class RandomAccessibleRegionCursor< T extends BooleanType< T > > extends 
 
 	private void nextLine()
 	{
+		lineIndex = 0;
 		randomAccess.setPosition( min( 0 ), 0 );
 		for ( int d = 1; d < n; ++d )
 		{
