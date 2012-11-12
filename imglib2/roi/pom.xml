@@ -33,6 +33,11 @@
 			<version>4.9</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-ij</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
