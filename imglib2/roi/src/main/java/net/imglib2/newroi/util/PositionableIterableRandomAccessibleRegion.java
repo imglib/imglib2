@@ -2,35 +2,37 @@ package net.imglib2.newroi.util;
 
 import java.util.Iterator;
 
-import net.imglib2.AbstractWrappedInterval;
+import net.imglib2.AbstractWrappedPositionableInterval;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
+import net.imglib2.Localizable;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.BooleanType;
 
 /**
- * Make a boolean {@link RandomAccessibleInterval} iterable. The resulting
- * {@link IterableInterval} contains all samples of the source interval that
- * evaluate to {@code true}.
+ * Make a positionable boolean {@link RandomAccessibleInterval} iterable. The
+ * resulting {@link IterableInterval} is positionable as well. It contains all
+ * samples of the source interval that evaluate to {@code true}.
  *
  * {@link Cursor Cursors} are realized by wrapping source {@link RandomAccess
  * RandomAccesses} (using {@link RandomAccessibleRegionCursor}).
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class IterableRandomAccessibleRegion< T extends BooleanType< T > >
-	extends AbstractWrappedInterval< RandomAccessibleInterval< T > > implements IterableInterval< T >
+public class PositionableIterableRandomAccessibleRegion< T extends BooleanType< T >, I extends RandomAccessibleInterval< T > & Localizable & Positionable >
+	extends AbstractWrappedPositionableInterval< I > implements PositionableIterableInterval< T >
 {
 	final long size;
 
-	public static < T extends BooleanType< T > > IterableRandomAccessibleRegion< T > create( final RandomAccessibleInterval< T > interval )
+	public static < T extends BooleanType< T >, I extends RandomAccessibleInterval< T > & Localizable & Positionable > PositionableIterableRandomAccessibleRegion< T, I > create( final I interval )
 	{
-		return new IterableRandomAccessibleRegion< T >( interval, Util.countTrue( interval ) );
+		return new PositionableIterableRandomAccessibleRegion< T, I >( interval, Util.countTrue( interval ) );
 	}
 
-	public IterableRandomAccessibleRegion( final RandomAccessibleInterval< T > interval, final long size )
+	public PositionableIterableRandomAccessibleRegion( final I interval, final long size )
 	{
 		super( interval );
 		this.size = size;
