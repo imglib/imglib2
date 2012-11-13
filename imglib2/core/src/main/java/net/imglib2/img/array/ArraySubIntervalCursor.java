@@ -44,26 +44,26 @@ import net.imglib2.type.NativeType;
  * 
  * @param <T>
  * 
- * @author Tobias Pietzsch
- * @author Christian Dietz
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  */
-public final class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractArrayLocalizingCursor< T >
+public final class ArraySubIntervalCursor< T extends NativeType< T > > extends AbstractArrayCursor< T >
 {
 
-	protected ArrayLocalizingCursor( final ArrayLocalizingCursor< T > cursor )
+	protected ArraySubIntervalCursor( final ArraySubIntervalCursor< T > cursor )
 	{
 		super( cursor );
 	}
 
-	public ArrayLocalizingCursor( final ArrayImg< T, ? > img )
+	public ArraySubIntervalCursor( final ArrayImg< T, ? > img, int offset, int size )
 	{
-		super( img, 0, ( int ) img.size() );
+		super( img, offset, size );
 	}
 
 	@Override
-	public ArrayLocalizingCursor< T > copy()
+	public ArraySubIntervalCursor< T > copy()
 	{
-		return new ArrayLocalizingCursor< T >( this );
+		return new ArraySubIntervalCursor< T >( this );
 	}
 
 }

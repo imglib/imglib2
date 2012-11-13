@@ -34,7 +34,7 @@
  * #L%
  */
 
-package net.imglib2.img.cell;
+package net.imglib2.img.array;
 
 import java.util.ArrayList;
 import java.util.Collections;

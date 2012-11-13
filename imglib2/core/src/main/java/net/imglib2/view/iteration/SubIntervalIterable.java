@@ -33,37 +33,40 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-
-package net.imglib2.img.array;
+package net.imglib2.view.iteration;
 
 import net.imglib2.Cursor;
-import net.imglib2.type.NativeType;
+import net.imglib2.Interval;
 
 /**
- * {@link Cursor} on an {@link ArrayImg}.
- * 
- * @param <T>
- * 
- * @author Tobias Pietzsch
- * @author Christian Dietz
+ * TODO
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public final class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractArrayLocalizingCursor< T >
+public interface SubIntervalIterable< T >
 {
+	// TODO: How to deal with iterationOrder() ???
+	//       Enforce FlatIterationOrder?
 
-	protected ArrayLocalizingCursor( final ArrayLocalizingCursor< T > cursor )
-	{
-		super( cursor );
-	}
+	public boolean supportsOptimizedCursor( Interval interval );
 
-	public ArrayLocalizingCursor( final ArrayImg< T, ? > img )
-	{
-		super( img, 0, ( int ) img.size() );
-	}
+	public Object subIntervalIterationOrder( Interval interval );
 
-	@Override
-	public ArrayLocalizingCursor< T > copy()
-	{
-		return new ArrayLocalizingCursor< T >( this );
-	}
+	/**
+	 * TODO
+	 *
+	 * @param interval
+	 *            interval over which to iterate
+	 * @return
+	 */
+	public Cursor< T > cursor( Interval interval );
 
+	/**
+	 * TODO
+	 *
+	 * @param interval
+	 *            interval over which to iterate
+	 * @return
+	 */
+	public Cursor< T > localizingCursor( Interval interval );
 }
