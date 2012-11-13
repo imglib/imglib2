@@ -28,8 +28,8 @@ package net.imglib2.algorithm.pde;
 import java.util.Vector;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
 import net.imglib2.ExtendedRandomAccessibleInterval;
+import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;

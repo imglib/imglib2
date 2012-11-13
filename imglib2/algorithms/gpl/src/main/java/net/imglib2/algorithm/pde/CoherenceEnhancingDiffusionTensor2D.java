@@ -2,7 +2,6 @@ package net.imglib2.algorithm.pde;
 
 import java.util.Vector;
 
-import mpicbg.util.Util;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
@@ -14,6 +13,7 @@ import net.imglib2.multithreading.Chunk;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Util;
 
 public class CoherenceEnhancingDiffusionTensor2D<T extends RealType<T>> extends MultiThreadedBenchmarkAlgorithm 
 implements OutputAlgorithm<Img<FloatType>> {
@@ -205,7 +205,7 @@ implements OutputAlgorithm<Img<FloatType>> {
 						}
 
 						di = lambda2 - lambda1;
-						scale = Util.pow(di*di, m);
+						scale = Util.pow((int) (di*di), m);
 						newLambda1 = alpha + (1 - alpha) * Math.exp(- C / scale ); 
 						newLambda2 = alpha; 
 

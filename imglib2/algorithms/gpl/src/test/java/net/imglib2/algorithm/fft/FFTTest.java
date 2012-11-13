@@ -36,7 +36,6 @@
 
 package net.imglib2.algorithm.fft;
 
-import static org.junit.Assert.assertEquals;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
@@ -44,10 +43,11 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Make sure that FFT works alright
- *
+ * 
  * @author Johannes Schindelin
  */
 public class FFTTest {
@@ -57,10 +57,11 @@ public class FFTTest {
 	@Test
 	public void oneDimensional() throws IncompatibleTypeException {
 		double[] values = { 0, 1, 0, -1, 0 };
-		final Img< DoubleType > img = ArrayImgs.doubles(values, 5);
-		final FourierTransform< DoubleType, ComplexDoubleType > fft = new FourierTransform< DoubleType, ComplexDoubleType >( img, new ComplexDoubleType() );
+		final Img<DoubleType> img = ArrayImgs.doubles(values, 5);
+		final FourierTransform<DoubleType, ComplexDoubleType> fft = new FourierTransform<DoubleType, ComplexDoubleType>(
+				img, new ComplexDoubleType());
 		fft.process();
 		Img<ComplexDoubleType> convolved = fft.getResult();
-		assertEquals( convolved.numDimensions(), 1 );
+		assertEquals(convolved.numDimensions(), 1);
 	}
 }
