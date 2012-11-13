@@ -34,19 +34,33 @@
  * #L%
  */
 
-package net.imglib2.ops.operation;
+package net.imglib2.ops.img;
+
+import net.imglib2.converter.Converter;
+import net.imglib2.ops.operation.UnaryOperation;
 
 /**
- * This interface specifies a contract for combining two inputs into a single
- * output. Data is changed by reference and it is implicit in the design that
- * no changes to the inputs are to be made by implementors of this interface.
  * 
- * @author Barry DeZonia
- * @author Christian Dietz
+ * Converter using an UnaryOperation to convert pixels
+ * 
+ * @author Christian Dietz (University of Konstanz)
+ * @param <A>
+ * @param <B>
  */
-public interface BinaryOperation< A, B, C >
+public class UnaryOperationBasedConverter< A, B > implements Converter< A, B >
 {
-	C compute( A inputA, B inputB, C output );
 
-	BinaryOperation< A, B, C > copy();
+	private final UnaryOperation< A, B > op;
+
+	public UnaryOperationBasedConverter( UnaryOperation< A, B > op )
+	{
+		this.op = op;
+	}
+
+	@Override
+	public void convert( A input, B output )
+	{
+		op.compute( input, output );
+	}
+
 }

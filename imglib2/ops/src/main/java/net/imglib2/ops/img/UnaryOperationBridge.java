@@ -34,19 +34,64 @@
  * #L%
  */
 
-package net.imglib2.ops.operation;
+package net.imglib2.ops.img;
+
+import net.imglib2.ops.operation.UnaryOutputOperation;
 
 /**
- * This interface specifies a contract for combining two inputs into a single
- * output. Data is changed by reference and it is implicit in the design that
- * no changes to the inputs are to be made by implementors of this interface.
+ * @author Christian Dietz (University of Konstanz)
  * 
- * @author Barry DeZonia
- * @author Christian Dietz
+ * @param <A>
+ * @param <B>
+ * @param <C>
  */
-public interface BinaryOperation< A, B, C >
-{
-	C compute( A inputA, B inputB, C output );
+public class UnaryOperationBridge<A, B, C> implements
+		UnaryOutputOperation<A, C> {
 
-	BinaryOperation< A, B, C > copy();
-}
+	private final UnaryOutputOperation<A, B> first;
+
+	private final UnaryOutputOperation<B, C> second;
+
+	// Some tmp variables
+	private B buf;
+
+	private A currentInput;
+
+	public UnaryOperationBridge(UnaryOutputOperation<A, B> first,
+			UnaryOutputOperation<B, C> second) {
+		this.first = first;
+		this.second = second;
+		this.buf = null;
+		this.currentInput = null;
+	}
+
+	@Override
+	public C compute(A input, C output) {
+		return second.compute(first.compute(input, getBuf(input)), output);
+	}
+
+	private B getBuf(A input) {
+		if (buf == null && input != currentInput) {
+			currentInput = input;
+			buf = first.bufferFactory().instantiate(input);
+		}
+		return buf;
+	}
+
+	@Override
+	public UnaryOutputOperation<A, C> copy() {
+		return new UnaryOperationBridge<A, B, C>(first.copy(), second.copy());
+	}
+
+	@Override
+	public UnaryObjectFactory<A, C> bufferFactory() {
+		return new UnaryObjectFactory<A, C>() {
+
+			@Override
+			public C instantiate(A a) {
+				return second.bufferFactory().instantiate(buf);
+			}
+		};
+	}
+
+};

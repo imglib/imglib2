@@ -39,45 +39,44 @@ package net.imglib2.ops.img;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.operation.BinaryOperation;
-import net.imglib2.type.Type;
+import net.imglib2.util.Util;
 
 /**
  * @author Christian Dietz (University of Konstanz)
  */
-public final class BinaryOperationAssignment< I extends Type< I >, V extends Type< V >, O extends Type< O >> implements BinaryOperation< IterableInterval< I >, IterableInterval< V >, IterableInterval< O >>
-{
+public final class BinaryOperationAssignment<A, B, C>
+		implements
+		BinaryOperation<IterableInterval<A>, IterableInterval<B>, IterableInterval<C>> {
 	/* Operation to be wrapped */
-	private final BinaryOperation< I, V, O > m_op;
+	private final BinaryOperation<A, B, C> op;
 
-	public BinaryOperationAssignment( final net.imglib2.ops.operation.BinaryOperation< I, V, O > op )
-	{
-		m_op = op;
+	public BinaryOperationAssignment(final BinaryOperation<A, B, C> op) {
+		this.op = op;
 	}
 
 	@Override
-	public IterableInterval< O > compute( IterableInterval< I > input1, IterableInterval< V > input2, IterableInterval< O > output )
-	{
+	public IterableInterval<C> compute(IterableInterval<A> inputA,
+			IterableInterval<B> inputB, IterableInterval<C> output) {
 
-		if ( !input1.iterationOrder().equals( input2.iterationOrder() ) || !input1.iterationOrder().equals( output.iterationOrder() ) ) { throw new IllegalArgumentException( "Intervals are not compatible" ); }
+		if (!Util.sameIterationOrder(inputA, inputB, output))
+			throw new IllegalStateException("Incompatible IterationOrder");
 
-		Cursor< I > c1 = input1.cursor();
-		Cursor< V > c2 = input2.cursor();
-		Cursor< O > resC = output.cursor();
+		Cursor<A> cA = inputA.cursor();
+		Cursor<B> cB = inputB.cursor();
+		Cursor<C> resC = output.cursor();
 
-		while ( c1.hasNext() )
-		{
-			c1.fwd();
-			c2.fwd();
+		while (cA.hasNext()) {
+			cA.fwd();
+			cB.fwd();
 			resC.fwd();
-			m_op.compute( c1.get(), c2.get(), resC.get() );
+			op.compute(cA.get(), cB.get(), resC.get());
 		}
 		return output;
 	}
 
 	@Override
-	public BinaryOperation< IterableInterval< I >, IterableInterval< V >, IterableInterval< O >> copy()
-	{
-		return new BinaryOperationAssignment< I, V, O >( m_op.copy() );
+	public BinaryOperation<IterableInterval<A>, IterableInterval<B>, IterableInterval<C>> copy() {
+		return new BinaryOperationAssignment<A, B, C>(op.copy());
 	}
 
 }

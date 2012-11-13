@@ -34,19 +34,35 @@
  * #L%
  */
 
-package net.imglib2.ops.operation;
+package net.imglib2.ops.img;
+
+import net.imglib2.combiner.Combiner;
+import net.imglib2.ops.operation.BinaryOperation;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * This interface specifies a contract for combining two inputs into a single
- * output. Data is changed by reference and it is implicit in the design that
- * no changes to the inputs are to be made by implementors of this interface.
  * 
- * @author Barry DeZonia
- * @author Christian Dietz
+ * Combiner using an BinaryOperation to convert pixels
+ * 
+ * @author Christian Dietz (University of Konstanz)
+ * 
+ * @param <A>
+ * @param <B>
  */
-public interface BinaryOperation< A, B, C >
+public class BinaryOperationBasedCombiner< A extends RealType< A >, B extends RealType< B >, C extends RealType< C >> implements Combiner< A, B, C >
 {
-	C compute( A inputA, B inputB, C output );
 
-	BinaryOperation< A, B, C > copy();
+	private final BinaryOperation< A, B, C > m_op;
+
+	public BinaryOperationBasedCombiner( BinaryOperation< A, B, C > op )
+	{
+		m_op = op;
+	}
+
+	@Override
+	public void combine( A inputT, B inputV, C output )
+	{
+		m_op.compute( inputT, inputV, output );
+	}
+
 }

@@ -49,6 +49,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.labeling.NativeImgLabeling;
+import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.IntegerType;
@@ -82,16 +83,6 @@ public final class MergeLabelings< L extends Comparable< L >> implements UnaryOu
 	{
 		m_resType = resType;
 		m_adjustDimensionality = adjustDimensionality;
-	}
-
-	@Override
-	public final NativeImgLabeling< L, ? extends IntegerType< ? >> createEmptyOutput( final Labeling< L >[] src )
-	{
-		long[] resDims = initConstants( src );
-
-		@SuppressWarnings( "unchecked" )
-		NativeImgLabeling< L, ? extends IntegerType< ? >> res = new NativeImgLabeling( new ArrayImgFactory().create( resDims, ( NativeType ) m_resType ) );
-		return res;
 	}
 
 	private long[] initConstants( final Labeling< L >[] src )
@@ -150,7 +141,8 @@ public final class MergeLabelings< L extends Comparable< L >> implements UnaryOu
 			initConstants( intervals );
 
 		RandomAccess< LabelingType< L >> randomAccess = res.randomAccess();
-		Arrays.sort( intervals, new Comparator<Interval>() {	
+		Arrays.sort( intervals, new Comparator< Interval >()
+		{
 			@Override
 			public int compare( Interval o1, Interval o2 )
 			{
@@ -164,7 +156,7 @@ public final class MergeLabelings< L extends Comparable< L >> implements UnaryOu
 
 				return 0;
 			}
-		});
+		} );
 
 		long[] offset = new long[ intervals[ 0 ].numDimensions() ];
 		long[] intervalWidth = new long[ intervals[ 0 ].numDimensions() ];
@@ -229,14 +221,26 @@ public final class MergeLabelings< L extends Comparable< L >> implements UnaryOu
 		return new MergeLabelings< L >( m_resType.copy(), m_adjustDimensionality );
 	}
 
-	@Override
-	public NativeImgLabeling< L, ? extends IntegerType< ? >> compute( Labeling< L >[] op )
-	{
-		return compute( op, createEmptyOutput( op ) );
-	}
-
 	public List< Integer > getInvalidDims()
 	{
 		return m_invalidDims;
+	}
+
+	@Override
+	public UnaryObjectFactory< Labeling< L >[], NativeImgLabeling< L, ? extends IntegerType< ? >>> bufferFactory()
+	{
+		return new UnaryObjectFactory< Labeling< L >[], NativeImgLabeling< L, ? extends IntegerType< ? >> >()
+		{
+
+			@Override
+			public NativeImgLabeling< L, ? extends IntegerType< ? >> instantiate( Labeling< L >[] a )
+			{
+				long[] resDims = initConstants( a );
+
+				@SuppressWarnings( "unchecked" )
+				NativeImgLabeling< L, ? extends IntegerType< ? >> res = new NativeImgLabeling( new ArrayImgFactory().create( resDims, ( NativeType ) m_resType ) );
+				return res;
+			}
+		};
 	}
 }

@@ -48,6 +48,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.numeric.RealType;
 
@@ -91,11 +92,21 @@ public final class MergeIterableIntervals< T extends RealType< T >> implements U
 	}
 
 	@Override
-	public final Img< T > createEmptyOutput( final IterableInterval< T >[] src )
+	public final UnaryObjectFactory< IterableInterval< T >[], Img< T > > bufferFactory()
 	{
-		long[] resDims = initConstants( src );
 
-		return m_factory.create( resDims, src[ 0 ].firstElement().createVariable() );
+		return new UnaryObjectFactory< IterableInterval< T >[], Img< T > >()
+		{
+
+			@Override
+			public Img< T > instantiate( IterableInterval< T >[] a )
+			{
+				long[] resDims = initConstants( a );
+
+				return m_factory.create( resDims, a[ 0 ].firstElement().createVariable() );
+			}
+		};
+
 	}
 
 	private long[] initConstants( final IterableInterval< T >[] src )
@@ -155,7 +166,8 @@ public final class MergeIterableIntervals< T extends RealType< T >> implements U
 			initConstants( intervals );
 
 		RandomAccess< T > randomAccess = res.randomAccess();
-		Arrays.sort( intervals, new Comparator<Interval>() {	
+		Arrays.sort( intervals, new Comparator< Interval >()
+		{
 			@Override
 			public int compare( Interval o1, Interval o2 )
 			{
@@ -169,8 +181,7 @@ public final class MergeIterableIntervals< T extends RealType< T >> implements U
 
 				return 0;
 			}
-		});
-
+		} );
 
 		long[] offset = new long[ intervals[ 0 ].numDimensions() ];
 		long[] intervalWidth = new long[ intervals[ 0 ].numDimensions() ];
@@ -233,12 +244,6 @@ public final class MergeIterableIntervals< T extends RealType< T >> implements U
 	public UnaryOutputOperation< IterableInterval< T >[], Img< T >> copy()
 	{
 		return new MergeIterableIntervals< T >( m_factory, m_adjustDimensionality );
-	}
-
-	@Override
-	public Img< T > compute( IterableInterval< T >[] in )
-	{
-		return compute( in, createEmptyOutput( in ) );
 	}
 
 	public List< Integer > getInvalidDims()

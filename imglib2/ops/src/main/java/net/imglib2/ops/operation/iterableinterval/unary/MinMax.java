@@ -39,6 +39,7 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 import java.util.Iterator;
 
 import net.imglib2.IterableInterval;
+import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
@@ -53,13 +54,15 @@ import net.imglib2.util.Pair;
 public final class MinMax< T extends RealType< T >> implements UnaryOutputOperation< IterableInterval< T >, Pair< T, T >>
 {
 
-	private double m_saturation;
+	private double saturation;
 
-	private MakeHistogram< T > m_histOp;
+	private MakeHistogram< T > histOp;
+
+	private UnaryObjectFactory< Iterable< T >, OpsHistogram > bufferFactory;
 
 	public MinMax( double saturation, T type )
 	{
-		m_saturation = saturation;
+		this.saturation = saturation;
 
 		if ( saturation != 0 )
 		{
@@ -74,23 +77,14 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 				bins = ( int ) ( type.getMaxValue() - type.getMinValue() + 1 );
 			}
 
-			m_histOp = new MakeHistogram< T >( bins );
+			histOp = new MakeHistogram< T >( bins );
+			bufferFactory = histOp.bufferFactory();
 		}
 	}
 
 	public MinMax()
 	{
 		this( 0, null );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Pair< T, T > createEmptyOutput( IterableInterval< T > op )
-	{
-		final T t = op.iterator().next();
-		return new Pair< T, T >( t.createVariable(), t.createVariable() );
 	}
 
 	/**
@@ -102,7 +96,7 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 	public Pair< T, T > compute( IterableInterval< T > op, Pair< T, T > r )
 	{
 
-		if ( m_saturation == 0 )
+		if ( saturation == 0 )
 		{
 			final Iterator< T > it = op.iterator();
 			r.a.setReal( r.a.getMaxValue() );
@@ -118,7 +112,7 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		}
 		else
 		{
-			calcMinMaxWithSaturation( op, r, m_histOp.compute( op, m_histOp.createEmptyOutput( op ) ) );
+			calcMinMaxWithSaturation( op, r, histOp.compute( op, bufferFactory.instantiate( op ) ) );
 		}
 
 		return r;
@@ -127,7 +121,7 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 	private void calcMinMaxWithSaturation( IterableInterval< T > interval, Pair< T, T > r, OpsHistogram hist )
 	{
 		int histMin = 0, histMax;
-		int threshold = ( int ) ( interval.size() * m_saturation / 200.0 );
+		int threshold = ( int ) ( interval.size() * saturation / 200.0 );
 
 		// find min
 		int pCount = 0;
@@ -164,8 +158,17 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 	}
 
 	@Override
-	public Pair< T, T > compute( IterableInterval< T > in )
+	public UnaryObjectFactory< IterableInterval< T >, Pair< T, T >> bufferFactory()
 	{
-		return compute( in, createEmptyOutput( in ) );
+		return new UnaryObjectFactory< IterableInterval< T >, Pair< T, T > >()
+		{
+
+			@Override
+			public Pair< T, T > instantiate( IterableInterval< T > a )
+			{
+				final T t = a.iterator().next();
+				return new Pair< T, T >( t.createVariable(), t.createVariable() );
+			}
+		};
 	}
 }

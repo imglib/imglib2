@@ -39,42 +39,44 @@ package net.imglib2.ops.img;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.operation.UnaryOperation;
-import net.imglib2.type.Type;
+import net.imglib2.util.Util;
 
 /**
  * @author Christian Dietz (University of Konstanz)
  */
-public class UnaryOperationAssignment< T extends Type< T >, V extends Type< V >> implements UnaryOperation< IterableInterval< T >, IterableInterval< V >>
-{
+public class UnaryOperationAssignment<T, V> implements
+		UnaryOperation<IterableInterval<T>, IterableInterval<V>> {
 
-	private final UnaryOperation< T, V > m_op;
+	private final UnaryOperation<T, V> op;
 
-	public UnaryOperationAssignment( final UnaryOperation< T, V > op )
-	{
-		m_op = op;
+	public UnaryOperationAssignment(final UnaryOperation<T, V> op) {
+		this.op = op;
+	}
+
+	public UnaryOperation<T, V> op() {
+		return op;
 	}
 
 	@Override
-	public IterableInterval< V > compute( IterableInterval< T > input, IterableInterval< V > output )
-	{
+	public IterableInterval<V> compute(IterableInterval<T> input,
+			IterableInterval<V> output) {
+		if (!Util.sameIterationOrder(input, output)) {
+			throw new IllegalArgumentException("Incompatible IterationOrders");
+		}
 
-		if ( !input.iterationOrder().equals( output.iterationOrder() ) ) { throw new IllegalArgumentException( "Intervals in UnaryOperationAssignment are not compatible: different dimensions." ); }
-
-		final Cursor< T > inCursor = input.cursor();
-		final Cursor< V > outCursor = output.cursor();
-		while ( inCursor.hasNext() )
-		{
+		final Cursor<T> inCursor = input.cursor();
+		final Cursor<V> outCursor = output.cursor();
+		while (inCursor.hasNext()) {
 			inCursor.fwd();
 			outCursor.fwd();
-			m_op.compute( inCursor.get(), outCursor.get() );
+			op.compute(inCursor.get(), outCursor.get());
 		}
 
 		return output;
 	}
 
 	@Override
-	public UnaryOperation< IterableInterval< T >, IterableInterval< V >> copy()
-	{
-		return new UnaryOperationAssignment< T, V >( m_op.copy() );
+	public UnaryOperation<IterableInterval<T>, IterableInterval<V>> copy() {
+		return new UnaryOperationAssignment<T, V>(op.copy());
 	}
 }

@@ -43,9 +43,9 @@ package net.imglib2.ops.operation;
  * 
  * @author Barry DeZonia
  */
-public interface UnaryOperation< INPUT_TYPE, OUTPUT_TYPE >
+public interface UnaryOperation< A, B >
 {
-	OUTPUT_TYPE compute( INPUT_TYPE input, OUTPUT_TYPE output );
+	B compute( A input, B output );
 
-	UnaryOperation< INPUT_TYPE, OUTPUT_TYPE > copy();
+	UnaryOperation< A, B > copy();
 }

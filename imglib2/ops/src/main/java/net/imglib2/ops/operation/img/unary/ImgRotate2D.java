@@ -41,6 +41,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
+import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.Type;
 import net.imglib2.view.Views;
@@ -98,53 +99,61 @@ public class ImgRotate2D< T extends Type< T > & Comparable< T >> implements Unar
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Img< T > createEmptyOutput( Img< T > op )
+	public UnaryObjectFactory< Img< T >, Img< T > > bufferFactory()
 	{
-		if ( m_keepSize )
+
+		return new UnaryObjectFactory< Img< T >, Img< T > >()
 		{
-			return op.factory().create( op, op.randomAccess().get().createVariable() );
-		}
-		else
-		{
-			// rotate all for egde points and take the maximum
-			// coordinate to
-			// determine the new image size
-			long[] min = new long[ op.numDimensions() ];
-			long[] max = new long[ op.numDimensions() ];
 
-			op.min( min );
-			op.max( max );
-			min[ m_dimIdx1 ] = min[ m_dimIdx2 ] = Long.MAX_VALUE;
-			max[ m_dimIdx1 ] = max[ m_dimIdx2 ] = Long.MIN_VALUE;
-
-			double[] center = calcCenter( op );
-
-			double x;
-			double y;
-
-			for ( Long orgX : new long[] { 0, op.max( m_dimIdx1 ) } )
+			@Override
+			public Img< T > instantiate( Img< T > a )
 			{
-				for ( Long orgY : new long[] { 0, op.max( m_dimIdx2 ) } )
+				if ( m_keepSize )
 				{
-					x = ( orgX - center[ m_dimIdx1 ] ) * Math.cos( m_angle ) - ( orgY - center[ m_dimIdx2 ] ) * Math.sin( m_angle );
+					return a.factory().create( a, a.randomAccess().get().createVariable() );
+				}
+				else
+				{
+					// rotate all for egde points and take the maximum
+					// coordinate to
+					// determine the new image size
+					long[] min = new long[ a.numDimensions() ];
+					long[] max = new long[ a.numDimensions() ];
 
-					y = ( orgX - center[ m_dimIdx1 ] ) * Math.sin( m_angle ) + ( orgY - center[ m_dimIdx2 ] ) * Math.cos( m_angle );
-					min[ m_dimIdx1 ] = ( int ) Math.round( Math.min( x, min[ m_dimIdx1 ] ) );
-					min[ m_dimIdx2 ] = ( int ) Math.round( Math.min( y, min[ m_dimIdx2 ] ) );
-					max[ m_dimIdx1 ] = ( int ) Math.round( Math.max( x, max[ m_dimIdx1 ] ) );
-					max[ m_dimIdx2 ] = ( int ) Math.round( Math.max( y, max[ m_dimIdx2 ] ) );
+					a.min( min );
+					a.max( max );
+					min[ m_dimIdx1 ] = min[ m_dimIdx2 ] = Long.MAX_VALUE;
+					max[ m_dimIdx1 ] = max[ m_dimIdx2 ] = Long.MIN_VALUE;
+
+					double[] center = calcCenter( a );
+
+					double x;
+					double y;
+
+					for ( Long orgX : new long[] { 0, a.max( m_dimIdx1 ) } )
+					{
+						for ( Long orgY : new long[] { 0, a.max( m_dimIdx2 ) } )
+						{
+							x = ( orgX - center[ m_dimIdx1 ] ) * Math.cos( m_angle ) - ( orgY - center[ m_dimIdx2 ] ) * Math.sin( m_angle );
+
+							y = ( orgX - center[ m_dimIdx1 ] ) * Math.sin( m_angle ) + ( orgY - center[ m_dimIdx2 ] ) * Math.cos( m_angle );
+							min[ m_dimIdx1 ] = ( int ) Math.round( Math.min( x, min[ m_dimIdx1 ] ) );
+							min[ m_dimIdx2 ] = ( int ) Math.round( Math.min( y, min[ m_dimIdx2 ] ) );
+							max[ m_dimIdx1 ] = ( int ) Math.round( Math.max( x, max[ m_dimIdx1 ] ) );
+							max[ m_dimIdx2 ] = ( int ) Math.round( Math.max( y, max[ m_dimIdx2 ] ) );
+						}
+					}
+
+					long[] dims = new long[ min.length ];
+					for ( int i = 0; i < dims.length; i++ )
+					{
+						dims[ i ] = max[ i ] - min[ i ];
+					}
+
+					return a.factory().create( new FinalInterval( dims ), a.randomAccess().get().createVariable() );
 				}
 			}
-
-			long[] dims = new long[ min.length ];
-			for ( int i = 0; i < dims.length; i++ )
-			{
-				dims[ i ] = max[ i ] - min[ i ];
-			}
-
-			return op.factory().create( new FinalInterval( dims ), op.randomAccess().get().createVariable() );
-
-		}
+		};
 	}
 
 	/**
@@ -214,11 +223,4 @@ public class ImgRotate2D< T extends Type< T > & Comparable< T >> implements Unar
 	{
 		return new ImgRotate2D< T >( m_angle, m_dimIdx1, m_dimIdx2, m_keepSize, m_outOfBoundsType, m_center );
 	}
-
-	@Override
-	public Img< T > compute( Img< T > arg0 )
-	{
-		return compute( arg0, createEmptyOutput( arg0 ) );
-	}
-
 }

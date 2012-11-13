@@ -38,6 +38,7 @@ package net.imglib2.ops.operation.img.unary;
 
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
+import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.img.UnaryOperationAssignment;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.ops.operation.iterableinterval.unary.NormalizeIterableInterval;
@@ -126,19 +127,26 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O >> imple
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Img< O > createEmptyOutput( Img< I > op )
+	public UnaryObjectFactory< Img< I >, Img< O > > bufferFactory()
 	{
-		try
+		return new UnaryObjectFactory< Img< I >, Img< O > >()
 		{
-			long[] dims = new long[ op.numDimensions() ];
-			op.dimensions( dims );
-			return op.factory().imgFactory( m_outType ).create( dims, m_outType.createVariable() );
-		}
-		catch ( IncompatibleTypeException e )
-		{
-			throw new RuntimeException( e );
-		}
+			@Override
+			public Img< O > instantiate( Img< I > a )
+			{
+				try
+				{
+					long[] dims = new long[ a.numDimensions() ];
+					a.dimensions( dims );
+					return a.factory().imgFactory( m_outType ).create( dims, m_outType.createVariable() );
+				}
+				catch ( IncompatibleTypeException e )
+				{
+					throw new RuntimeException( e );
+				}
+			}
 
+		};
 	}
 
 	/**
@@ -197,11 +205,5 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O >> imple
 	public UnaryOutputOperation< Img< I >, Img< O >> copy()
 	{
 		return new ImgConvert< I, O >( m_inType.copy(), m_outType.copy(), m_conversionType );
-	}
-
-	@Override
-	public Img< O > compute( Img< I > in )
-	{
-		return compute( in, createEmptyOutput( in ) );
 	}
 }

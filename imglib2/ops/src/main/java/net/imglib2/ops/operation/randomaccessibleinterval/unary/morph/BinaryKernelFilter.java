@@ -233,7 +233,7 @@ public final class BinaryKernelFilter< T extends RealType< T >, K extends Random
 				cr.setPosition( ii );
 				cr.setPosition( x0, m_dimIndex0 );
 				// cr.get().set(calculateType());
-				cr.get().set( m_op.compute( m_kernelReferenceArray, m_op.createEmptyOutput( m_kernelReferenceArray ) ) );
+				cr.get().set( m_op.compute( m_kernelReferenceArray, m_op.bufferFactory().instantiate( m_kernelReferenceArray ) ) );
 			}
 		}
 

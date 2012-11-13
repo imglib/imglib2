@@ -44,6 +44,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
+import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.Type;
 
@@ -76,29 +77,38 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ImgPlus< T > createEmptyOutput( ImgPlus< T > op )
+	public UnaryObjectFactory< ImgPlus< T >, ImgPlus< T >> bufferFactory()
 	{
 
-		AxisType[] axes = new AxisType[ op.numDimensions() ];
-		op.axes( axes );
-		m_isNewDim.clear();
-		for ( int d = 0; d < m_newDimensions.length; d++ )
+		return new UnaryObjectFactory< ImgPlus< T >, ImgPlus< T >>()
 		{
-			for ( int a = 0; a < axes.length; a++ )
+
+			@Override
+			public ImgPlus< T > instantiate( ImgPlus< T > a )
 			{
-				if ( !axes[ a ].getLabel().equals( m_newDimensions[ d ] ) )
+				AxisType[] axes = new AxisType[ a.numDimensions() ];
+				a.axes( axes );
+				m_isNewDim.clear();
+				for ( int d = 0; d < m_newDimensions.length; d++ )
 				{
-					m_isNewDim.set( d );
+					for ( int i = 0; i < axes.length; i++ )
+					{
+						if ( !axes[ i ].getLabel().equals( m_newDimensions[ d ] ) )
+						{
+							m_isNewDim.set( d );
+						}
+					}
 				}
+				long[] newDims = new long[ a.numDimensions() + m_isNewDim.cardinality() ];
+				Arrays.fill( newDims, 1 );
+				for ( int i = 0; i < a.numDimensions(); i++ )
+				{
+					newDims[ i ] = a.dimension( i );
+				}
+				return new ImgPlus< T >( a.factory().create( newDims, a.firstElement().createVariable() ) );
 			}
-		}
-		long[] newDims = new long[ op.numDimensions() + m_isNewDim.cardinality() ];
-		Arrays.fill( newDims, 1 );
-		for ( int i = 0; i < op.numDimensions(); i++ )
-		{
-			newDims[ i ] = op.dimension( i );
-		}
-		return new ImgPlus< T >( op.factory().create( newDims, op.firstElement().createVariable() ) );
+		};
+
 	}
 
 	/**
@@ -148,11 +158,4 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 	{
 		return new ImgPlusExtendDims< T >( m_newDimensions );
 	}
-
-	@Override
-	public ImgPlus< T > compute( ImgPlus< T > in )
-	{
-		return compute( in, createEmptyOutput( in ) );
-	}
-
 }

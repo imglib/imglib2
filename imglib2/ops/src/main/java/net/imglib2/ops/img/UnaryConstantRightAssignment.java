@@ -40,6 +40,7 @@ import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Util;
 
 /**
  * @author Christian Dietz (University of Konstanz)
@@ -47,18 +48,18 @@ import net.imglib2.type.numeric.RealType;
 public class UnaryConstantRightAssignment< T extends RealType< T >, V extends RealType< V >, O extends RealType< O >> implements BinaryOperation< IterableInterval< T >, V, IterableInterval< O >>
 {
 
-	private BinaryOperation< T, V, O > m_op;
+	private BinaryOperation< T, V, O > op;
 
 	public UnaryConstantRightAssignment( BinaryOperation< T, V, O > op )
 	{
-		m_op = op;
+		this.op = op;
 	}
 
 	@Override
 	public IterableInterval< O > compute( IterableInterval< T > input, V constant, IterableInterval< O > output )
 	{
 
-		if ( !input.iterationOrder().equals( output.iterationOrder() ) ) { throw new IllegalArgumentException( "Intervals are not compatible" ); }
+		if ( !Util.sameIterationOrder( input, output ) ) { throw new IllegalArgumentException( "Incompatible IterationOrders" ); }
 
 		Cursor< T > inCursor = input.cursor();
 		Cursor< O > outCursor = output.cursor();
@@ -67,7 +68,7 @@ public class UnaryConstantRightAssignment< T extends RealType< T >, V extends Re
 		{
 			inCursor.fwd();
 			outCursor.fwd();
-			m_op.compute( inCursor.get(), constant, outCursor.get() );
+			op.compute( inCursor.get(), constant, outCursor.get() );
 		}
 
 		return output;
@@ -76,7 +77,7 @@ public class UnaryConstantRightAssignment< T extends RealType< T >, V extends Re
 	@Override
 	public BinaryOperation< IterableInterval< T >, V, IterableInterval< O >> copy()
 	{
-		return new UnaryConstantRightAssignment< T, V, O >( m_op );
+		return new UnaryConstantRightAssignment< T, V, O >( op );
 	}
 
 }

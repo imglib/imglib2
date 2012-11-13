@@ -38,6 +38,8 @@ package net.imglib2.ops.operation.iterableinterval.unary.multilevelthresholder;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.ops.img.UnaryObjectFactory;
+import net.imglib2.ops.operation.Operations;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.ops.operation.iterableinterval.unary.MakeHistogram;
 import net.imglib2.ops.operation.iterableinterval.unary.OpsHistogram;
@@ -81,7 +83,7 @@ public class OtsuMultilevelThresholder< T extends RealType< T >, IN extends Iter
 		// Thresholds must be scaled
 		T inVar = input.firstElement().createVariable();
 
-		OpsHistogram histogram = new MakeHistogram< T >( ( int ) Math.min( m_numBins, inVar.getMinValue() - inVar.getMaxValue() ) ).compute( input );
+		OpsHistogram histogram = Operations.compute( new MakeHistogram< T >( ( int ) Math.min( m_numBins, inVar.getMinValue() - inVar.getMaxValue() ) ), input );
 
 		m_maxValue = 0.0;
 
@@ -175,21 +177,23 @@ public class OtsuMultilevelThresholder< T extends RealType< T >, IN extends Iter
 	}
 
 	@Override
-	public ThresholdValueCollection createEmptyOutput( IN in )
-	{
-		return new ThresholdValueCollection( m_numberOfLevels );
-	}
-
-	@Override
 	public UnaryOutputOperation< IN, ThresholdValueCollection > copy()
 	{
 		return new OtsuMultilevelThresholder< T, IN >( m_numberOfLevels, m_numBins );
 	}
 
 	@Override
-	public ThresholdValueCollection compute( IN in )
+	public UnaryObjectFactory< IN, ThresholdValueCollection > bufferFactory()
 	{
-		return compute( in, createEmptyOutput( in ) );
+		return new UnaryObjectFactory< IN, ThresholdValueCollection >()
+		{
+
+			@Override
+			public ThresholdValueCollection instantiate( IN a )
+			{
+				return new ThresholdValueCollection( m_numberOfLevels );
+			}
+		};
 	}
 
 }

@@ -41,6 +41,7 @@ import java.util.Comparator;
 
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
+import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 
 /**
@@ -51,16 +52,25 @@ public final class MergeIntervals implements UnaryOutputOperation< Interval[], I
 {
 
 	@Override
-	public final Interval[] createEmptyOutput( final Interval[] src )
+	public final UnaryObjectFactory< Interval[], Interval[] > bufferFactory()
 	{
-		return new Interval[ src.length ];
+		return new UnaryObjectFactory< Interval[], Interval[] >()
+		{
+
+			@Override
+			public Interval[] instantiate( Interval[] a )
+			{
+				return new Interval[ a.length ];
+			}
+		};
 	}
 
 	@Override
 	public final Interval[] compute( final Interval[] intervals, final Interval[] res )
 	{
 
-		Arrays.sort( intervals, new Comparator<Interval>() {	
+		Arrays.sort( intervals, new Comparator< Interval >()
+		{
 			@Override
 			public int compare( Interval o1, Interval o2 )
 			{
@@ -74,7 +84,7 @@ public final class MergeIntervals implements UnaryOutputOperation< Interval[], I
 
 				return 0;
 			}
-		});
+		} );
 
 		long[] offset = new long[ intervals[ 0 ].numDimensions() ];
 		long[] intervalWidth = new long[ intervals[ 0 ].numDimensions() ];
@@ -126,11 +136,4 @@ public final class MergeIntervals implements UnaryOutputOperation< Interval[], I
 	{
 		return new MergeIntervals();
 	}
-
-	@Override
-	public Interval[] compute( Interval[] op )
-	{
-		return compute( op, createEmptyOutput( op ) );
-	}
-
 }

@@ -38,13 +38,14 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 
 import java.util.Iterator;
 
+import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
  * 
  * @author Felix Schoenenberger (University of Konstanz)
- *
+ * 
  * @param <T>
  */
 public final class MakeHistogram< T extends RealType< T >> implements UnaryOutputOperation< Iterable< T >, OpsHistogram >
@@ -63,9 +64,16 @@ public final class MakeHistogram< T extends RealType< T >> implements UnaryOutpu
 	}
 
 	@Override
-	public final OpsHistogram createEmptyOutput( Iterable< T > op )
+	public final UnaryObjectFactory< Iterable< T >, OpsHistogram > bufferFactory()
 	{
-		return m_numBins <= 0 ? new OpsHistogram( op.iterator().next().createVariable() ) : new OpsHistogram( m_numBins, op.iterator().next().createVariable() );
+		return new UnaryObjectFactory< Iterable< T >, OpsHistogram >()
+		{
+			@Override
+			public OpsHistogram instantiate( Iterable< T > a )
+			{
+				return m_numBins <= 0 ? new OpsHistogram( a.iterator().next().createVariable() ) : new OpsHistogram( m_numBins, a.iterator().next().createVariable() );
+			}
+		};
 	}
 
 	@Override
@@ -79,12 +87,6 @@ public final class MakeHistogram< T extends RealType< T >> implements UnaryOutpu
 		}
 
 		return r;
-	}
-
-	@Override
-	public OpsHistogram compute( Iterable< T > op )
-	{
-		return compute( op, createEmptyOutput( op ) );
 	}
 
 	@Override

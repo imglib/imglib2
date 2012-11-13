@@ -41,6 +41,7 @@ import java.util.Iterator;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
+import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.ops.operation.iterable.unary.Max;
@@ -92,26 +93,34 @@ public class ImgProject< T extends RealType< T >> implements UnaryOutputOperatio
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Img< T > createEmptyOutput( Img< T > op )
+	public UnaryObjectFactory< Img< T >, Img< T > > bufferFactory()
 	{
-		/* The new dimensions of the projected image */
-		long[] projectedImgDimSizes = new long[ op.numDimensions() - 1 ];
-		for ( int d = 0; d < op.numDimensions(); d++ )
+		return new UnaryObjectFactory< Img< T >, Img< T > >()
 		{
-			if ( d < m_projectionDim )
-			{
-				projectedImgDimSizes[ d ] = op.dimension( d );
-			}
-			if ( d > m_projectionDim )
-			{
-				projectedImgDimSizes[ d - 1 ] = op.dimension( d );
-			}
-		}
 
-		/* The projected Image */
-		Img< T > projectedImage = op.factory().create( projectedImgDimSizes, op.randomAccess().get().createVariable() );
+			@Override
+			public Img< T > instantiate( Img< T > a )
+			{
+				/* The new dimensions of the projected image */
+				long[] projectedImgDimSizes = new long[ a.numDimensions() - 1 ];
+				for ( int d = 0; d < a.numDimensions(); d++ )
+				{
+					if ( d < m_projectionDim )
+					{
+						projectedImgDimSizes[ d ] = a.dimension( d );
+					}
+					if ( d > m_projectionDim )
+					{
+						projectedImgDimSizes[ d - 1 ] = a.dimension( d );
+					}
+				}
 
-		return projectedImage;
+				/* The projected Image */
+				Img< T > projectedImage = a.factory().create( projectedImgDimSizes, a.randomAccess().get().createVariable() );
+
+				return projectedImage;
+			}
+		};
 	}
 
 	/**
@@ -214,11 +223,4 @@ public class ImgProject< T extends RealType< T >> implements UnaryOutputOperatio
 	{
 		return new ImgProject< T >( m_projectionType, m_projectionDim );
 	}
-
-	@Override
-	public Img< T > compute( Img< T > arg0 )
-	{
-		return compute( arg0, createEmptyOutput( arg0 ) );
-	}
-
 }

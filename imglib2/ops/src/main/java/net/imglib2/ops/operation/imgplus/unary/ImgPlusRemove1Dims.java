@@ -44,6 +44,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Metadata;
+import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.ops.operation.metadata.unary.CopyCalibratedSpace;
 import net.imglib2.ops.operation.metadata.unary.CopyImageMetadata;
@@ -65,32 +66,40 @@ public class ImgPlusRemove1Dims< T extends Type< T >> implements UnaryOutputOper
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ImgPlus< T > createEmptyOutput( ImgPlus< T > op )
+	public UnaryObjectFactory< ImgPlus< T >, ImgPlus< T > > bufferFactory()
 	{
-
-		BitSet isLength1 = new BitSet( op.numDimensions() );
-		for ( int d = 0; d < op.numDimensions(); d++ )
+		return new UnaryObjectFactory< ImgPlus< T >, ImgPlus< T > >()
 		{
-			if ( op.dimension( d ) == 1 )
-			{
-				isLength1.set( d );
-			}
-		}
 
-		long[] min = new long[ op.numDimensions() - isLength1.cardinality() ];
-		long[] max = new long[ min.length ];
-
-		int d = 0;
-		for ( int i = 0; i < op.numDimensions(); i++ )
-		{
-			if ( !isLength1.get( i ) )
+			@Override
+			public ImgPlus< T > instantiate( ImgPlus< T > a )
 			{
-				max[ d ] = op.dimension( i ) - 1;
-				d++;
+				BitSet isLength1 = new BitSet( a.numDimensions() );
+				for ( int d = 0; d < a.numDimensions(); d++ )
+				{
+					if ( a.dimension( d ) == 1 )
+					{
+						isLength1.set( d );
+					}
+				}
+
+				long[] min = new long[ a.numDimensions() - isLength1.cardinality() ];
+				long[] max = new long[ min.length ];
+
+				int d = 0;
+				for ( int i = 0; i < a.numDimensions(); i++ )
+				{
+					if ( !isLength1.get( i ) )
+					{
+						max[ d ] = a.dimension( i ) - 1;
+						d++;
+					}
+				}
+				Img< T > res = a.factory().create( new FinalInterval( min, max ), a.firstElement().createVariable() );
+				return new ImgPlus< T >( res );
 			}
-		}
-		Img< T > res = op.factory().create( new FinalInterval( min, max ), op.firstElement().createVariable() );
-		return new ImgPlus< T >( res );
+		};
+
 	}
 
 	/**
@@ -138,11 +147,4 @@ public class ImgPlusRemove1Dims< T extends Type< T >> implements UnaryOutputOper
 	{
 		return new ImgPlusRemove1Dims< T >();
 	}
-
-	@Override
-	public ImgPlus< T > compute( ImgPlus< T > op )
-	{
-		return compute( op, createEmptyOutput( op ) );
-	}
-
 }

@@ -38,6 +38,7 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.ops.operation.Operations;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
@@ -56,8 +57,7 @@ public class EqualizeHistogram< T extends RealType< T >, I extends IterableInter
 	public I compute( I in, I r )
 	{
 
-		MakeHistogram< T > histogramOp = new MakeHistogram< T >();
-		int[] histo = new MakeHistogram< T >().compute( r, histogramOp.createEmptyOutput( in ) ).hist();
+		int[] histo = Operations.compute( new MakeHistogram< T >(), in ).hist();
 
 		T val = r.firstElement().createVariable();
 

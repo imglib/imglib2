@@ -38,6 +38,7 @@ package net.imglib2.ops.operation.iterableinterval.unary.multilevelthresholder;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.ops.operation.Operations;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.numeric.RealType;
@@ -70,7 +71,7 @@ public class MultilevelThresholderOp< T extends RealType< T >, IN extends Iterab
 		Cursor< T > outputCursor = out.cursor();
 		Cursor< T > inputCursor = input.cursor();
 
-		ThresholdValueCollection thresholdValues = m_op.compute( input );
+		ThresholdValueCollection thresholdValues = Operations.compute( m_op, input );
 
 		double[] sortedValues = thresholdValues.getSortedVector();
 

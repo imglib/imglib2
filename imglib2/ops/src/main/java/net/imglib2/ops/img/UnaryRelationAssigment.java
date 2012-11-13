@@ -42,42 +42,42 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.relation.UnaryRelation;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Util;
 
 /**
  * @author Christian Dietz (University of Konstanz)
  */
-public class UnaryRelationAssigment< T extends RealType< T >> implements UnaryOperation< IterableInterval< T >, IterableInterval< BitType >>
-{
+public class UnaryRelationAssigment<T extends RealType<T>> implements
+		UnaryOperation<IterableInterval<T>, IterableInterval<BitType>> {
 
-	private UnaryRelation< T > m_rel;
+	private UnaryRelation<T> rel;
 
-	public UnaryRelationAssigment( UnaryRelation< T > rel )
-	{
-		m_rel = rel;
+	public UnaryRelationAssigment(UnaryRelation<T> rel) {
+		this.rel = rel;
 	}
 
 	@Override
-	public IterableInterval< BitType > compute( IterableInterval< T > input, IterableInterval< BitType > output )
-	{
+	public IterableInterval<BitType> compute(IterableInterval<T> input,
+			IterableInterval<BitType> output) {
 
-		if ( !input.iterationOrder().equals( output.iterationOrder() ) ) { throw new IllegalArgumentException( "Intervals are not compatible" ); }
+		if (!Util.sameIterationOrder(input, output)) {
+			throw new IllegalArgumentException("Incompatible IterationOrders");
+		}
 
-		Cursor< T > inCursor = input.cursor();
-		Cursor< BitType > outCursor = output.cursor();
+		Cursor<T> inCursor = input.cursor();
+		Cursor<BitType> outCursor = output.cursor();
 
-		while ( outCursor.hasNext() )
-		{
+		while (outCursor.hasNext()) {
 			inCursor.fwd();
 			outCursor.fwd();
-			outCursor.get().set( m_rel.holds( inCursor.get() ) );
+			outCursor.get().set(rel.holds(inCursor.get()));
 		}
 		return output;
 	}
 
 	@Override
-	public UnaryOperation< IterableInterval< T >, IterableInterval< BitType >> copy()
-	{
-		return new UnaryRelationAssigment< T >( m_rel.copy() );
+	public UnaryOperation<IterableInterval<T>, IterableInterval<BitType>> copy() {
+		return new UnaryRelationAssigment<T>(rel.copy());
 	}
 
 }

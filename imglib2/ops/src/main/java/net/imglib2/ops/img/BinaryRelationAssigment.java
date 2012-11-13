@@ -43,50 +43,51 @@ import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.ops.relation.BinaryRelation;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Util;
 
 /**
- * 
  * @author Christian Dietz
  */
-public class BinaryRelationAssigment< T extends RealType< T >, V extends RealType< V >> implements BinaryOperation< IterableInterval< T >, IterableInterval< V >, IterableInterval< BitType >>
+public class BinaryRelationAssigment< A extends RealType< A >, B extends RealType< B >> implements BinaryOperation< IterableInterval< A >, IterableInterval< B >, IterableInterval< BitType >>
 {
 
-	private BinaryRelation< T, V > m_rel;
+	private BinaryRelation< A, B > relation;
 
-	private ImgFactory< BitType > m_fac;
+	private ImgFactory< BitType > fac;
 
-	public BinaryRelationAssigment( ImgFactory< BitType > fac, BinaryRelation< T, V > rel )
+	public BinaryRelationAssigment( ImgFactory< BitType > fac, BinaryRelation< A, B > rel )
 	{
-		m_rel = rel;
-		m_fac = fac;
+		this.relation = rel;
+		this.fac = fac;
 	}
 
 	@Override
-	public IterableInterval< BitType > compute( IterableInterval< T > input1, IterableInterval< V > input2, IterableInterval< BitType > output )
+	public IterableInterval< BitType > compute( IterableInterval< A > inputA, IterableInterval< B > inputB, IterableInterval< BitType > output )
 	{
-		if ( !input1.iterationOrder().equals( input2.iterationOrder() ) || !input1.iterationOrder().equals( output.iterationOrder() ) ) { throw new IllegalArgumentException( "Intervals are not compatible" ); }
+		if ( !Util.sameIterationOrder( inputA, inputB, output ) )
+			throw new IllegalStateException( "Incompatible IterationOrder" );
 
-		Cursor< T > inCursor1 = input1.cursor();
-		Cursor< V > inCursor2 = input2.cursor();
+		Cursor< A > inCursorA = inputA.cursor();
+		Cursor< B > inCursorB = inputB.cursor();
 
 		Cursor< BitType > outCursor = output.cursor();
 
 		while ( outCursor.hasNext() )
 		{
 			outCursor.fwd();
-			inCursor1.fwd();
-			inCursor2.fwd();
+			inCursorA.fwd();
+			inCursorB.fwd();
 
-			outCursor.get().set( m_rel.holds( inCursor1.get(), inCursor2.get() ) );
+			outCursor.get().set( relation.holds( inCursorA.get(), inCursorB.get() ) );
 		}
 		return output;
 
 	}
 
 	@Override
-	public BinaryOperation< IterableInterval< T >, IterableInterval< V >, IterableInterval< BitType >> copy()
+	public BinaryOperation< IterableInterval< A >, IterableInterval< B >, IterableInterval< BitType >> copy()
 	{
-		return new BinaryRelationAssigment< T, V >( m_fac, m_rel.copy() );
+		return new BinaryRelationAssigment< A, B >( fac, relation.copy() );
 	}
 
 }

@@ -40,6 +40,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.ops.img.UnaryOperationAssignment;
+import net.imglib2.ops.operation.Operations;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.real.unary.Normalize;
 import net.imglib2.type.numeric.IntegerType;
@@ -127,7 +128,7 @@ public class NormalizeIterableInterval< T extends RealType< T >, I extends Itera
 			{
 				m_minMaxOp = new MinMax< T >( m_saturation, in.firstElement().createVariable() );
 			}
-			minmax = m_minMaxOp.compute( in );
+			minmax = Operations.compute( m_minMaxOp, in );
 			m_normalize = new Normalize< T >( minmax.a, minmax.b );
 		}
 		else
@@ -162,7 +163,7 @@ public class NormalizeIterableInterval< T extends RealType< T >, I extends Itera
 		T type = interval.firstElement().createVariable();
 		MinMax< T > minMax = new MinMax< T >( saturation, type );
 
-		Pair< T, T > pair = minMax.compute( interval );
+		Pair< T, T > pair = Operations.compute( minMax, interval );
 		return new double[] { 1 / ( pair.b.getRealDouble() - pair.a.getRealDouble() ) * ( type.getMaxValue() - type.getMinValue() ), pair.a.getRealDouble() };
 	}
 
