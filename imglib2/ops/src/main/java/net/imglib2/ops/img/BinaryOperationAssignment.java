@@ -58,7 +58,7 @@ public final class BinaryOperationAssignment<A, B, C>
 	public IterableInterval<C> compute(IterableInterval<A> inputA,
 			IterableInterval<B> inputB, IterableInterval<C> output) {
 
-		if (!Util.sameIterationOrder(inputA, inputB, output))
+		if (!Util.equalIterationOrder(inputA, inputB, output))
 			throw new IllegalStateException("Incompatible IterationOrder");
 
 		Cursor<A> cA = inputA.cursor();

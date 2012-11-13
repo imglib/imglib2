@@ -90,7 +90,7 @@ public class SubsetViews {
 				.numDimensions() == targetSpace.numDimensions());
 
 		// Check direction of conversion
-		if (Intervals.intervalEquals(src, target)
+		if (Intervals.equals(src, target)
 				&& spaceEquals(srcSpace, targetSpace))
 			return src;
 
@@ -165,7 +165,7 @@ public class SubsetViews {
 		RandomAccessibleInterval<T> res = src;
 
 		// Check direction of conversion
-		if (Intervals.intervalEquals(src, target))
+		if (Intervals.equals(src, target))
 			return res;
 
 		// adjust dimensions

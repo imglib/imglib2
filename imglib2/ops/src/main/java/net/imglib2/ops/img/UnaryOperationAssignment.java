@@ -60,7 +60,7 @@ public class UnaryOperationAssignment<T, V> implements
 	@Override
 	public IterableInterval<V> compute(IterableInterval<T> input,
 			IterableInterval<V> output) {
-		if (!Util.sameIterationOrder(input, output)) {
+		if (!Util.equalIterationOrder(input, output)) {
 			throw new IllegalArgumentException("Incompatible IterationOrders");
 		}
 

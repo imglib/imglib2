@@ -64,7 +64,7 @@ public class BinaryRelationAssigment< A extends RealType< A >, B extends RealTyp
 	@Override
 	public IterableInterval< BitType > compute( IterableInterval< A > inputA, IterableInterval< B > inputB, IterableInterval< BitType > output )
 	{
-		if ( !Util.sameIterationOrder( inputA, inputB, output ) )
+		if ( !Util.equalIterationOrder( inputA, inputB, output ) )
 			throw new IllegalStateException( "Incompatible IterationOrder" );
 
 		Cursor< A > inCursorA = inputA.cursor();

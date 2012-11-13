@@ -59,7 +59,7 @@ public class UnaryConstantRightAssignment< T extends RealType< T >, V extends Re
 	public IterableInterval< O > compute( IterableInterval< T > input, V constant, IterableInterval< O > output )
 	{
 
-		if ( !Util.sameIterationOrder( input, output ) ) { throw new IllegalArgumentException( "Incompatible IterationOrders" ); }
+		if ( !Util.equalIterationOrder( input, output ) ) { throw new IllegalArgumentException( "Incompatible IterationOrders" ); }
 
 		Cursor< T > inCursor = input.cursor();
 		Cursor< O > outCursor = output.cursor();

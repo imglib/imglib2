@@ -140,28 +140,4 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 	{
 		return ( LabelingFactory< LL > ) m_fac;
 	}
-
-	@Override
-	public boolean supportsOptimizedCursor(Interval interval) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Object subIntervalIterationOrder(Interval interval) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Cursor<LabelingType<L>> cursor(Interval interval) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Cursor<LabelingType<L>> localizingCursor(Interval interval) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

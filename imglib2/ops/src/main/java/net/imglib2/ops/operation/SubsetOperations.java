@@ -158,7 +158,7 @@ public final class SubsetOperations {
 			}
 		}
 
-		if (Intervals.intervalEquals(in, i) && !oneSizedDims)
+		if (Intervals.equals(in, i) && !oneSizedDims)
 			return in;
 
 		IntervalView<T> res;

@@ -60,7 +60,7 @@ public class UnaryRelationAssigment<T extends RealType<T>> implements
 	public IterableInterval<BitType> compute(IterableInterval<T> input,
 			IterableInterval<BitType> output) {
 
-		if (!Util.sameIterationOrder(input, output)) {
+		if (!Util.equalIterationOrder(input, output)) {
 			throw new IllegalArgumentException("Incompatible IterationOrders");
 		}
 
