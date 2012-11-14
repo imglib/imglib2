@@ -44,6 +44,7 @@ import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.converter.Converter;
+import net.imglib2.converter.Converters;
 import net.imglib2.converter.read.ConvertedCursor;
 import net.imglib2.converter.read.ConvertedRandomAccess;
 import net.imglib2.img.Img;
@@ -56,7 +57,9 @@ import net.imglib2.type.numeric.IntegerType;
  * @param <T>
  *            the type of labels assigned to pixels
  * 
- * @author Lee Kamentsky, Christian Dietz, Martin Horn
+ * @author Lee Kamentsky
+ * @author Christian Dietz
+ * @author Martin Horn
  */
 public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType< I >> extends AbstractNativeLabeling< T >
 {
@@ -116,7 +119,7 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	public Cursor< LabelingType< T >> cursor()
 	{
 		Cursor< I > c = img.cursor();
-		return new ConvertedCursor< I, LabelingType< T >>( c, new LabelingTypeConverter(), new LabelingType< T >( c.get(), mapping, generation ) );
+		return new ConvertedCursor< I, LabelingType< T >>( c, new LabelingTypeConverter(), new LabelingType< T >(, mapping, generation ) );
 	}
 
 	@Override
@@ -196,8 +199,8 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	}
 
 	// Empty converter
-	private class LabelingTypeConverter implements Converter< I, LabelingType< T >>
-	{
+	private class LabelingTypeConverter implements
+			Converter<I, LabelingType<T>>	{
 
 		@Override
 		public void convert( I input, LabelingType< T > output )

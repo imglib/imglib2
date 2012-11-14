@@ -47,17 +47,18 @@ package net.imglib2.labeling;
  * 
  * @author Lee Kamentsky
  */
-public abstract class AbstractNativeLabeling< T extends Comparable< T >> extends AbstractLabeling< T > implements NativeLabeling< T >
-{
+public abstract class AbstractNativeLabeling<T extends Comparable<T>> extends
+		AbstractLabeling<T> implements NativeLabeling<T> {
 
 	/**
 	 * Mapping from Label
 	 */
-	protected LabelingMapping< T > mapping;
+	protected LabelingMapping<T> mapping;
 
-	protected AbstractNativeLabeling( final long[] dim, final LabelingROIStrategyFactory< T > factory, final LabelingMapping< T > mapping )
-	{
-		super( dim, factory );
+	protected AbstractNativeLabeling(final long[] dim,
+			final LabelingROIStrategyFactory<T> factory,
+			final LabelingMapping<T> mapping) {
+		super(dim, factory);
 		this.mapping = mapping;
 	}
 
@@ -67,8 +68,7 @@ public abstract class AbstractNativeLabeling< T extends Comparable< T >> extends
 	 * @see net.imglib2.labeling.NativeLabeling#getMapping()
 	 */
 	@Override
-	public LabelingMapping< T > getMapping()
-	{
+	public LabelingMapping<T> getMapping() {
 		return mapping;
 	}
 
