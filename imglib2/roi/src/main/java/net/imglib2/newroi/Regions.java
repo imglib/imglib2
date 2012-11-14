@@ -17,6 +17,8 @@ import net.imglib2.type.BooleanType;
 
 public class Regions
 {
+	// TODO: out-of-bounds / clipping
+
 	public static < P, T > RandomAccessible< Pair< P, T > > bind( final RandomAccessible< P > region, final RandomAccessible< T > img )
 	{
 		return new PairRandomAccessible< P, T >( region, img );
