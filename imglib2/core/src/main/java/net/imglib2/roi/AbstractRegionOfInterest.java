@@ -44,13 +44,11 @@ import net.imglib2.RealRandomAccess;
 import net.imglib2.type.logic.BitType;
 
 /**
- * The AbstractRegionOfInterest implements the IterableRegionOfInterest using a
- * raster function and a membership function that are implemented by a derived
- * class.
- * 
+ * The AbstractRegionOfInterest implements the RegionOfInterest using a
+ * membership function that is implemented by a derived class.
+ *
  * @author Stephan Saalfeld
  * @author Lee Kamentsky
- * @author leek
  */
 public abstract class AbstractRegionOfInterest implements RegionOfInterest
 {

@@ -51,8 +51,10 @@ import net.imglib2.RealPositionable;
 import net.imglib2.type.Type;
 
 /**
- * TODO
- * 
+ * The AbstractIterableRegionOfInterest implements the IterableRegionOfInterest
+ * using a raster function and a membership function that are implemented by a
+ * derived class.
+ *
  * @author Stephan Saalfeld
  */
 public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfInterest implements IterableRegionOfInterest
@@ -244,10 +246,10 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 					next_position[ d ] = cursor.next_position[ d ];
 					raster_end[ d ] = cursor.raster_end[ d ];
 					next_raster_end[ d ] = cursor.next_raster_end[ d ];
-					next_is_valid = cursor.next_is_valid;
-					has_next = cursor.has_next;
-					src_is_valid = cursor.src_is_valid;
 				}
+				next_is_valid = cursor.next_is_valid;
+				has_next = cursor.has_next;
+				src_is_valid = cursor.src_is_valid;
 			}
 
 			public AROICursor()
