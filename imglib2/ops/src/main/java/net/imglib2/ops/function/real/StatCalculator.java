@@ -43,6 +43,31 @@ import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.ops.pointset.PointSetIterator;
 import net.imglib2.type.numeric.RealType;
 
+// NOTE:
+//   For a couple methods this class uses a PrimitiveDoubleArray to store copies
+// of data. It could use an Img<DoubleType> instead in many cases and we should
+// work towards the elimination of PrimitiveDoubleArray.
+//   However there are cases where we cannot do so both efficiently and safely.
+// Imagine you have a ConditionalPointSet where it constrains the values of the
+// coords to be in a rectangle. You compute median and the set has 10 values.
+// Now you translate() the ConditionalPointSet. If you calc the size() of the
+// moved set the number of elements may have changed. A fixed Img<DoubleType>
+// is inadequate for this. You may try to access beyond the end or incorrectly
+// calc the median by including some uninitialized values. And for efficiency's
+// sake we don't want to reallocate the Img every time reset() is called since
+// it may be called once per point as a region slides over an image point by
+// point. And also we want to avoid pointSet.size() calls because they can be
+// expensive.
+//   PrimitiveDoubleArray is useful here. It records value within an auto
+// expanding array. You can query and sort values within a subset of allocated
+// space. Thus reset() does not become inefficient. And moving
+// ConditionalPointSets does not cause incorrect calculations and crashes.
+
+// TODO: define a class that is an Img<DoubleType> that replaces
+// PrimitiveDoubleArray. It should auto expand. It should have the concept of
+// an allocated size and a used element size. Finally one should be able to
+// efficiently sort the used values within it.
+
 /**
  * 
  * StatCollector calculates statistics from a {@link PointSet} region of a
@@ -58,7 +83,7 @@ public class StatCalculator<T extends RealType<T>> {
 	private Function<long[],T> func;
 	private PointSet region;
 	private PointSetIterator iter;
-	private final PrimitiveDoubleArray values;
+	private final PrimitiveDoubleArray values; // see NOTE at top re: this use
 	
 	// -- constructor --
 
@@ -124,7 +149,7 @@ public class StatCalculator<T extends RealType<T>> {
 			throw new IllegalArgumentException(
 				"number of samples must be greater than number of trimmed values");
 		values.sortValues();
-		final int top = values.size() - halfTrimSize;
+		final int top = numElements - halfTrimSize;
 		double sum = 0;
 		for (int i = halfTrimSize; i < top; i++) {
 			sum += values.get(i);
@@ -183,7 +208,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * The measured value
 	 */
 	public double geometricMean() {
-		return Math.pow(product(), 1.0/region.calcSize());
+		return Math.pow(product(), 1.0/region.size());
 	}
 	
 	/**
@@ -392,7 +417,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 */
 	public double populationVariance() {
 		double sum = sumOfSquaredDeviations();
-		long numElements = region.calcSize();
+		long numElements = region.size();
 		return sum / numElements;
 	}
 
@@ -426,7 +451,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * The measured value
 	 */
 	public double sampleKurtosis() {
-		double n = region.calcSize();
+		double n = region.size();
 		double biasedValue = populationKurtosis();
 		double unbiasedValue = biasedValue * (n+1) + 6;
 		unbiasedValue *= (n-1) / ((n-2) * (n-3));
@@ -454,7 +479,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * The measured value
 	 */
 	public double sampleSkew() {
-		double n = region.calcSize();
+		double n = region.size();
 		double biasedValue = populationSkew();
 		double unbiasedValue = biasedValue * Math.sqrt(n * (n-1)) / (n-2);
 		return unbiasedValue;
@@ -480,7 +505,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 */
 	public double sampleVariance() {
 		double sum = sumOfSquaredDeviations();
-		long numElements = region.calcSize();
+		long numElements = region.size();
 		return sum / (numElements-1);
 	}
 	
@@ -535,7 +560,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * The measured value
 	 */
 	public double weightedAverage(double[] weights) {
-		long numElements = region.calcSize();
+		long numElements = region.size();
 		if (numElements != weights.length)
 			throw new IllegalArgumentException(
 				"number of weights does not equal number of samples");
@@ -552,7 +577,7 @@ public class StatCalculator<T extends RealType<T>> {
 	 * The measured value
 	 */
 	public double weightedSum(double[] weights) {
-		long numElements = region.calcSize();
+		long numElements = region.size();
 		if (numElements != weights.length)
 			throw new IllegalArgumentException(
 				"number of weights does not equal number of samples");

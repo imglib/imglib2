@@ -36,15 +36,14 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.operation.real.binary.RealAdd;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 /**
  * TODO
@@ -60,7 +59,8 @@ public class Example12Test {
 	}
 
 	private Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+			new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[] { XSIZE, YSIZE }, new DoubleType());
 	}
 

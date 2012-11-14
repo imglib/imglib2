@@ -38,6 +38,7 @@
 package net.imglib2.ops.pointset;
 
 import net.imglib2.AbstractCursor;
+import net.imglib2.FlatIterationOrder;
 
 
 /**
@@ -46,13 +47,14 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class HyperVolumePointSet implements PointSet {
+public class HyperVolumePointSet extends AbstractPointSet {
 	
 	// -- instance variables --
 	
 	private final long[] origin;
 	private final long[] boundMin;
 	private final long[] boundMax;
+	private final long size;
 
 	// -- constructors --
 	
@@ -65,8 +67,6 @@ public class HyperVolumePointSet implements PointSet {
 	 * @param posOffsets - Span in the positive direction beyond the anchor point (note: must be positive values).
 	 */
 	public HyperVolumePointSet(long[] origin, long[] negOffsets, long[] posOffsets) {
-		// super(minOffsetPoint(origin, negOffsets),
-		// maxOffsetPoint(origin, posOffsets));
 		if (origin.length != negOffsets.length)
 			throw new IllegalArgumentException();
 		if (origin.length != posOffsets.length)
@@ -84,44 +84,9 @@ public class HyperVolumePointSet implements PointSet {
 			boundMin[i] = origin[i] - negOffsets[i];
 			boundMax[i] = origin[i] + posOffsets[i];
 		}
+		this.size = calcSize();
 	}
 	
-	/* for support of IterableInterval<long[]>
-
-	private static long[] minOffsetPoint(long[] o, long[] n) {
-		long[] min = new long[o.length];
-		for (int i = 0; i < o.length; i++) {
-			min[i] = o[i] - n[i];
-		}
-		return min;
-	}
-	
-	private static long[] maxOffsetPoint(long[] o, long[] p) {
-		long[] max = new long[o.length];
-		for (int i = 0; i < o.length; i++) {
-			max[i] = o[i] + p[i];
-		}
-		return max;
-	}
-
-	private static long[] minBound(long[] p1, long[] p2) {
-		long[] min = new long[p1.length];
-		for (int i = 0; i < p1.length; i++) {
-			min[i] = Math.min(p1[i], p2[i]);
-		}
-		return min;
-	}
-	
-	private static long[] maxBound(long[] p1, long[] p2) {
-		long[] max = new long[p1.length];
-		for (int i = 0; i < p1.length; i++) {
-			max[i] = Math.max(p1[i], p2[i]);
-		}
-		return max;
-	}
-	
-	 */
-
 	/**
 	 * Constructor that takes a minimum point and a maximum point. The
 	 * hypervolume is defined between and including these points.
@@ -130,7 +95,6 @@ public class HyperVolumePointSet implements PointSet {
 	 * @param pt2
 	 */
 	public HyperVolumePointSet(long[] pt1, long[] pt2) {
-		// super(minBound(pt1,pt2), maxBound(pt1,pt2));
 		if (pt1.length != pt2.length)
 			throw new IllegalArgumentException();
 		this.boundMin = new long[pt1.length];
@@ -140,6 +104,7 @@ public class HyperVolumePointSet implements PointSet {
 			boundMax[i] = Math.max(pt1[i], pt2[i]);
 		}
 		this.origin = pt1.clone();
+		this.size = calcSize();
 	}
 	
 	/**
@@ -166,6 +131,7 @@ public class HyperVolumePointSet implements PointSet {
 			boundMin[i] += delta;
 			boundMax[i] += delta;
 		}
+		invalidateBounds();
 		//for (PointSetIterator iter : iters) iter.reset();
 	}
 	
@@ -178,10 +144,14 @@ public class HyperVolumePointSet implements PointSet {
 	public int numDimensions() { return origin.length; }
 	
 	@Override
-	public long[] findBoundMin() { return boundMin; }
+	protected long[] findBoundMin() {
+		return boundMin;
+	}
 
 	@Override
-	public long[] findBoundMax() { return boundMax; }
+	protected long[] findBoundMax() {
+		return boundMax;
+	}
 	
 	@Override
 	public boolean includes(long[] point) {
@@ -193,12 +163,8 @@ public class HyperVolumePointSet implements PointSet {
 	}
 	
 	@Override
-	public long calcSize() {
-		long numElements = 1;
-		for (int i = 0; i < origin.length; i++) {
-			numElements *= boundMax[i] - boundMin[i] + 1;
-		}
-		return numElements;
+	public long size() {
+		return size;
 	}
 
 	@Override
@@ -206,41 +172,10 @@ public class HyperVolumePointSet implements PointSet {
 		return new HyperVolumePointSet(findBoundMin(), findBoundMax());
 	}
 	
-	/* for support of IterableInterval<long[]>
-
-	@Override
-	public Cursor<long[]> cursor() {
-		return new PointSetCursor(this);
-	}
-
-	@Override
-	public Cursor<long[]> localizingCursor() {
-		return cursor(); // TODO support later
-	}
-
-	@Override
-	public long size() {
-		return calcSize();
-	}
-
-	@Override
-	public long[] firstElement() {
-		PointSetIterator iter = iterator();
-		if (iter.hasNext()) return iter.next();
-		return null;
-	}
-
 	@Override
 	public Object iterationOrder() {
 		return new FlatIterationOrder(this);
 	}
-
-	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return false; // TODO - support this later
-	}
-
-	*/
 
 	// -- private helpers --
 	
@@ -250,6 +185,14 @@ public class HyperVolumePointSet implements PointSet {
 			lastPoint[i] = span[i] - 1;
 		}
 		return lastPoint;
+	}
+
+	private long calcSize() {
+		long numElements = 1;
+		for (int i = 0; i < origin.length; i++) {
+			numElements *= boundMax[i] - boundMin[i] + 1;
+		}
+		return numElements;
 	}
 
 	private class HyperVolumePointSetIterator extends AbstractCursor<long[]>
@@ -328,5 +271,6 @@ public class HyperVolumePointSet implements PointSet {
 		public AbstractCursor<long[]> copyCursor() {
 			return copy();
 		}
+
 	}
 }

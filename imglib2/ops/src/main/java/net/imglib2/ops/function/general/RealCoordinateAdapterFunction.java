@@ -34,61 +34,49 @@
  * #L%
  */
 
+package net.imglib2.ops.function.general;
 
-package net.imglib2.ops.pointset;
-
-import net.imglib2.IterableInterval;
+import net.imglib2.ops.function.Function;
 
 /**
- * PointSets define a set of point indices (long[]). PointSets can be moved
- * to new locations in space. This allows one to do sliding window type of
- * analyses. But a PointSet can be irregularly shaped.
+ * This class allows one to pass double[] input coordinates to a
+ * {@link Function} that expects to receive long[] input coordinates. The
+ * coordinates are rounded during translation.
  * 
  * @author Barry DeZonia
  */
-public interface PointSet extends IterableInterval<long[]> {
-	
-	/**
-	 * Gets the current origin point of the PointSet
-	 */
-	long[] getOrigin();
+public class RealCoordinateAdapterFunction<T> implements Function<double[], T> {
 
-	/**
-	 * Moves the PointSet by a set of deltas. Any existing
-	 * PointSetIterators will automatically iterate the new bounds.
-	 */
-	void translate(long[] delta);
-	
-	/**
-	 * Creates an iterator that can be used to pull point indices out of the
-	 * PointSet.
-	 */
-	@Override
-	// overriding to specify better javadoc
-	PointSetIterator iterator();
+	// -- instance variables --
 
-	/**
-	 * Returns the dimensionality of the points contained in the PointSet
-	 */
+	private final Function<long[], T> func;
+	private long[] coords;
+
+	// -- constructor --
+
+	public RealCoordinateAdapterFunction(Function<long[], T> func) {
+		this.func = func;
+		this.coords = null;
+	}
+
+	// -- Function methods --
+
 	@Override
-	// overriding to specify better javadoc
-	int numDimensions();
-	
-	/**
-	 * Returns true if a given point is a member of the PointSet
-	 */
-	boolean includes(long[] point);
-	
-	/**
-	 * Calculates the number of elements in the PointSet. This can be an
-	 * expensive operation (potentially iterating the whole set to count).
-	 */
+	public void compute(double[] input, T output) {
+		if (coords == null) coords = new long[input.length];
+		for (int i = 0; i < input.length; i++)
+			coords[i] = Math.round(input[i]);
+		func.compute(coords, output);
+	}
+
 	@Override
-	long size();
-	
-	/**
-	 * Make a copy of self. This is useful for multithreaded parallel computation
-	 */
-	PointSet copy();
+	public T createOutput() {
+		return func.createOutput();
+	}
+
+	@Override
+	public RealCoordinateAdapterFunction<T> copy() {
+		return new RealCoordinateAdapterFunction<T>(func.copy());
+	}
+
 }
-

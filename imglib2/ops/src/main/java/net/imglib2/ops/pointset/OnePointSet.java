@@ -47,7 +47,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class OnePointSet implements PointSet {
+public class OnePointSet extends AbstractPointSet {
 
 	// -- instance varaibles --
 	
@@ -70,6 +70,7 @@ public class OnePointSet implements PointSet {
 	public void translate(long[] deltas) {
 		for (int i = 0; i < point.length; i++)
 			point[i] += deltas[i];
+		invalidateBounds();
 	}
 
 	@Override
@@ -78,12 +79,12 @@ public class OnePointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return point;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return point;
 	}
 
@@ -93,7 +94,7 @@ public class OnePointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		return 1;
 	}
 
@@ -143,6 +144,7 @@ public class OnePointSet implements PointSet {
 		@Override
 		public void fwd() {
 			if (hasNext) hasNext = false;
+			else throw new IllegalArgumentException("Cannot fwd() beyond end.");
 		}
 
 		@Override

@@ -46,7 +46,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class UniversalPointSet implements PointSet {
+public class UniversalPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
@@ -67,7 +67,7 @@ public class UniversalPointSet implements PointSet {
 
 	@Override
 	public void translate(long[] deltas) {
-		// do nothing
+		invalidateBounds();
 	}
 
 	@Override
@@ -81,12 +81,12 @@ public class UniversalPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return origin;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return origin;
 	}
 
@@ -96,7 +96,7 @@ public class UniversalPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		throw new UnsupportedOperationException("UniversalPointSet is infinite in size");
 	}
 

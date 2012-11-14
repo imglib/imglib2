@@ -48,7 +48,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class GeneralPointSet implements PointSet {
+public class GeneralPointSet extends AbstractPointSet {
 	
 	// -- instance variables --
 	
@@ -69,7 +69,7 @@ public class GeneralPointSet implements PointSet {
 		this.boundMax = new long[numD];
 		this.points = new ArrayList<long[]>();
 		this.points.addAll(pts);
-		calcBounds(points);
+		calcBounds(pts);
 	}
 
 	// -- PointSet methods --
@@ -91,6 +91,7 @@ public class GeneralPointSet implements PointSet {
 			boundMin[i] += delta;
 			boundMax[i] += delta;
 		}
+		invalidateBounds();
 	}
 	
 	@Override
@@ -112,17 +113,17 @@ public class GeneralPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return boundMin;
 	}
 	
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return boundMax;
 	}
 	
 	@Override
-	public long calcSize() {
+	public long size() {
 		return points.size();
 	}
 

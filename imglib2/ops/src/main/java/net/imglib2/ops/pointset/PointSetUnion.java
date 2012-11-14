@@ -45,7 +45,7 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class PointSetUnion implements PointSet {
+public class PointSetUnion extends AbstractPointSet {
 	
 	// -- instance variables --
 	
@@ -76,6 +76,7 @@ public class PointSetUnion implements PointSet {
 	public void translate(long[] deltas) {
 		a.translate(deltas);
 		b.translate(deltas);
+		invalidateBounds();
 	}
 	
 	@Override
@@ -94,27 +95,23 @@ public class PointSetUnion implements PointSet {
 	}
 	
 	@Override
-	public long[] findBoundMin() {
-		long[] minA = a.findBoundMin();
-		long[] minB = b.findBoundMin();
+	protected long[] findBoundMin() {
 		for (int i = 0; i < numD; i++) {
-			min[i] = Math.min(minA[i], minB[i]);
+			min[i] = Math.min(a.min(i), b.min(i));
 		}
 		return min;
 	}
 
 	@Override
-	public long[] findBoundMax() {
-		long[] maxA = a.findBoundMax();
-		long[] maxB = b.findBoundMax();
+	protected long[] findBoundMax() {
 		for (int i = 0; i < numD; i++) {
-			max[i] = Math.max(maxA[i], maxB[i]);
+			max[i] = Math.max(a.max(i), b.max(i));
 		}
 		return max;
 	}
 	
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElements = 0;
 		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {

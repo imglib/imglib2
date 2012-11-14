@@ -52,7 +52,7 @@ import net.imglib2.roi.RegionOfInterest;
  * @author Barry DeZonia
  *
  */
-public class RoiPointSet implements PointSet {
+public class RoiPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
@@ -88,6 +88,7 @@ public class RoiPointSet implements PointSet {
 		for (int i = 0; i < numD; i++) {
 			roi.move(delta[i], i);
 		}
+		invalidateBounds();
 	}
 
 	@Override
@@ -101,7 +102,7 @@ public class RoiPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		for (int i = 0; i < numD; i++) {
 			boundMin[i] = (long) Math.floor(roi.realMin(i));
 		}
@@ -109,7 +110,7 @@ public class RoiPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		for (int i = 0; i < numD; i++) {
 			boundMax[i] = (long) Math.ceil(roi.realMax(i));
 		}
@@ -125,7 +126,7 @@ public class RoiPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElems = 0;
 		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {

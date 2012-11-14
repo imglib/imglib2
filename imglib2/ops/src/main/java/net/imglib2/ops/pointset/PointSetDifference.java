@@ -48,13 +48,13 @@ import net.imglib2.AbstractCursor;
  * 
  * @author Barry DeZonia
  */
-public class PointSetDifference implements PointSet {
+public class PointSetDifference extends AbstractPointSet {
 	
 	// -- instance variables --
 	
 	private final PointSet a, b;
 	private final BoundsCalculator calculator;
-	private boolean boundsInvalid;
+	private boolean needsCalc;
 	
 	// -- constructor --
 	
@@ -64,7 +64,7 @@ public class PointSetDifference implements PointSet {
 		this.a = a;
 		this.b = b;
 		calculator = new BoundsCalculator();
-		boundsInvalid = true;
+		needsCalc = true;
 	}
 	
 	// -- PointSet methods --
@@ -78,7 +78,8 @@ public class PointSetDifference implements PointSet {
 	public void translate(long[] deltas) {
 		a.translate(deltas);
 		b.translate(deltas);
-		boundsInvalid = true;
+		needsCalc = true;
+		invalidateBounds();
 	}
 	
 	@Override
@@ -95,25 +96,25 @@ public class PointSetDifference implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
-		if (boundsInvalid) {
+	protected long[] findBoundMin() {
+		if (needsCalc) {
 			calculator.calc(this);
-			boundsInvalid = false;
+			needsCalc = false;
 		}
 		return calculator.getMin();
 	}
 
 	@Override
-	public long[] findBoundMax() {
-		if (boundsInvalid) {
+	protected long[] findBoundMax() {
+		if (needsCalc) {
 			calculator.calc(this);
-			boundsInvalid = false;
+			needsCalc = false;
 		}
 		return calculator.getMax();
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElements = 0;
 		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {

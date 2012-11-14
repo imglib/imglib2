@@ -62,7 +62,7 @@ import net.imglib2.ops.util.Tuple2;
  * @author Barry DeZonia
  *
  */
-public class TextSpecifiedPointSet implements PointSet {
+public class TextSpecifiedPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
@@ -87,7 +87,8 @@ public class TextSpecifiedPointSet implements PointSet {
 
 	@Override
 	public void translate(long[] deltas) {
-		set.translate(deltas);
+		set.translate(deltas); // TODO - is this valid for a text pointset?
+		invalidateBounds();
 	}
 
 	@Override
@@ -101,13 +102,17 @@ public class TextSpecifiedPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
-		return set.findBoundMin();
+	protected long[] findBoundMin() {
+		long[] min = new long[set.numDimensions()];
+		set.min(min);
+		return min;
 	}
 
 	@Override
-	public long[] findBoundMax() {
-		return set.findBoundMax();
+	protected long[] findBoundMax() {
+		long[] max = new long[set.numDimensions()];
+		set.max(max);
+		return max;
 	}
 
 	@Override
@@ -116,8 +121,8 @@ public class TextSpecifiedPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
-		return set.calcSize();
+	public long size() {
+		return set.size();
 	}
 
 	@Override
@@ -128,7 +133,7 @@ public class TextSpecifiedPointSet implements PointSet {
 	public String getErrorString() {
 		return error;
 	}
-	
+
 	// -- private helpers --
 	
 	private PointSet construct(String spec) {

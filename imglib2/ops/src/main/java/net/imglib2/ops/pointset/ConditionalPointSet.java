@@ -53,14 +53,14 @@ import net.imglib2.ops.condition.Condition;
  * @author Barry DeZonia
  *
  */
-public class ConditionalPointSet implements PointSet {
+public class ConditionalPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
 	private final PointSet pointSet;
 	private final Condition<long[]> condition;
 	private final BoundsCalculator calculator;
-	private boolean boundsInvalid;
+	private boolean needsCalc;
 	
 	// -- constructor --
 	
@@ -68,7 +68,7 @@ public class ConditionalPointSet implements PointSet {
 		this.pointSet = pointSet;
 		this.condition = condition;
 		this.calculator = new BoundsCalculator();
-		this.boundsInvalid = true;
+		this.needsCalc = true;
 	}
 	
 	// -- PointSet methods --
@@ -81,7 +81,8 @@ public class ConditionalPointSet implements PointSet {
 	@Override
 	public void translate(long[] deltas) {
 		pointSet.translate(deltas);
-		this.boundsInvalid = true;
+		invalidateBounds();
+		needsCalc = true;
 	}
 
 	@Override
@@ -95,19 +96,19 @@ public class ConditionalPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
-		if (boundsInvalid) {
+	protected long[] findBoundMin() {
+		if (needsCalc) {
 			calculator.calc(this);
-			boundsInvalid = false;
+			needsCalc = false;
 		}
 		return calculator.getMin();
 	}
 
 	@Override
-	public long[] findBoundMax() {
-		if (boundsInvalid) {
+	protected long[] findBoundMax() {
+		if (needsCalc) {
 			calculator.calc(this);
-			boundsInvalid = false;
+			needsCalc = false;
 		}
 		return calculator.getMax();
 	}
@@ -118,7 +119,7 @@ public class ConditionalPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElements = 0;
 		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
