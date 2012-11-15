@@ -7,7 +7,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
 import net.imglib2.algorithm.OutputAlgorithm;
-import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhood;
+import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodGPL;
 import net.imglib2.algorithm.region.localneighborhood.RectangleCursor;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
@@ -142,7 +142,7 @@ public class MomentOfInertiaTensor2D< T extends RealType< T >> extends MultiThre
 														// but for all pixels
 
 					OutOfBoundsFactory< T, RandomAccessibleInterval< T >> oobf = new OutOfBoundsMirrorExpWindowingFactory< T, RandomAccessibleInterval< T >>( ( scale - 1 ) / 2 );
-					RectangleNeighborhood< T, RandomAccessibleInterval< T >> neighborhood = new RectangleNeighborhood< T, RandomAccessibleInterval< T >>( input, oobf );
+					RectangleNeighborhoodGPL< T, RandomAccessibleInterval< T >> neighborhood = new RectangleNeighborhoodGPL< T, RandomAccessibleInterval< T >>( input, oobf );
 					neighborhood.setSpan( domain );
 
 					RectangleCursor< T > neighborhoodCursor = neighborhood.cursor();
