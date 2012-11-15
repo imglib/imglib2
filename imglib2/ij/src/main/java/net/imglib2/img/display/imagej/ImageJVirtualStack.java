@@ -51,6 +51,8 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.IntervalIndexer;
+import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 /**
@@ -63,6 +65,7 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 
 	final private int size;
 	final private int numDimensions;
+	final private long[] higherSourceDimensions;
 
 	final private int bitDepth;
 
@@ -74,13 +77,20 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 
 		assert source.numDimensions() > 1;
 
-		this.size = ( source.numDimensions() > 2 ) ? ( int ) source.dimension( 2 ) : 1;
+		int tmpsize = 1;
+		for ( int d = 2; d < source.numDimensions(); ++d )
+			tmpsize *= (int)source.dimension(d);
+		this.size = tmpsize;
 
 		final int sizeX = ( int ) source.dimension( 0 );
 		final int sizeY = getDimension1Size( source );
 
 		final ArrayImg< T, ? > img = new ArrayImgFactory< T >().create( new long[] { sizeX, sizeY }, type );
 
+		higherSourceDimensions = new long[3];
+		higherSourceDimensions[ 0 ] = ( source.numDimensions() > 2 ) ? source.dimension( 2 ) : 1;
+		higherSourceDimensions[ 1 ] = ( source.numDimensions() > 3 ) ? source.dimension( 3 ) : 1;
+		higherSourceDimensions[ 2 ] = ( source.numDimensions() > 4 ) ? source.dimension( 4 ) : 1;
 		this.numDimensions = source.numDimensions();
 
 		// if the source interval is not zero-min, we wrap it into a view that translates it to the origin
@@ -132,7 +142,15 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	public ImageProcessor getProcessor( final int n )
 	{
 		if ( numDimensions > 2 )
-			projector.setPosition( n - 1, 2 );
+		{
+			final int[] position = new int[3];
+			IntervalIndexer.indexToPosition( n - 1, higherSourceDimensions, position );
+			projector.setPosition( position[0], 2 );
+			if ( numDimensions > 3 )
+				projector.setPosition( position[1], 3 );
+			if ( numDimensions > 4 )
+				projector.setPosition( position[2], 4 );
+		}
 
 		projector.map();
 		return imageProcessor;
