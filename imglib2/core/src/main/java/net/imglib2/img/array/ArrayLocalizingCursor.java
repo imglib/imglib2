@@ -57,7 +57,7 @@ public final class ArrayLocalizingCursor< T extends NativeType< T > > extends Ab
 
 	public ArrayLocalizingCursor( final ArrayImg< T, ? > img )
 	{
-		super( img, 0, ( int ) img.size() );
+		super( img, img );
 	}
 
 	@Override

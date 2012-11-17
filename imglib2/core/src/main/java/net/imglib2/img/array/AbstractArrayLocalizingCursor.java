@@ -37,8 +37,10 @@
 package net.imglib2.img.array;
 
 import net.imglib2.AbstractLocalizingCursorInt;
+import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.util.Intervals;
 
 /**
  * Localizing {@link Cursor} on an {@link ArrayImg}.
@@ -94,24 +96,26 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 		reset();
 	}
 
-	public AbstractArrayLocalizingCursor( final ArrayImg< T, ? > img, final int offset, final int size )
+	public AbstractArrayLocalizingCursor( final ArrayImg< T, ? > img, Interval interval)
 	{
 		super( img.numDimensions() );
 
 		this.img = img;
-		this.offset = offset;
-		this.size = size;
+		this.offset = ( int ) offset(interval);
+		this.size = ( int ) Intervals.numElements(interval);
 
 		this.type = img.createLinkedType();
-		this.lastIndex = ( int ) img.size() - 1;
+		this.lastIndex = ( int ) offset + size - 1;
 
 		max = new int[ n ];
+		
 		for ( int d = 0; d < n; ++d )
-			max[ d ] = ( int ) img.max( d );
-
+			max[ d ] = ( int ) interval.max(d);
+		
 		reset();
 	}
-
+	
+	
 	@Override
 	public T get()
 	{
@@ -180,5 +184,16 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 	public AbstractArrayLocalizingCursor< T > copyCursor()
 	{
 		return ( AbstractArrayLocalizingCursor< T > ) copy();
+	}
+
+
+	private long offset( final Interval interval)
+	{
+		final int maxDim = numDimensions() - 1;
+		long i = interval.min( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * img.dimension( d ) + interval.min( d );
+
+		return i;
 	}
 }

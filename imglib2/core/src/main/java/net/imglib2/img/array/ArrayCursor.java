@@ -57,7 +57,7 @@ public final class ArrayCursor< T extends NativeType< T > > extends AbstractArra
 
 	public ArrayCursor( final ArrayImg< T, ? > img )
 	{
-		super( img, 0, ( int ) img.size() );
+		super( img,  img );
 	}
 
 	@Override

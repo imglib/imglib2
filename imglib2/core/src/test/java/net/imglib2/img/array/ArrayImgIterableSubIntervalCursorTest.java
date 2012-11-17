@@ -17,7 +17,7 @@ import net.imglib2.view.Views;
 import org.junit.Before;
 import org.junit.Test;
 
-public class IterableSubIntervalCursorTest
+public class ArrayImgIterableSubIntervalCursorTest
 {
 	long[] dimensions;
 
@@ -97,7 +97,93 @@ public class IterableSubIntervalCursorTest
 	}
 
 	@Test
-	public void testIterationFast()
+	public void testIterationLocalizingCursor()
+	{
+		Cursor< IntType > cursor = intImg.localizingCursor( intervalA );
+
+		long[] position = new long[ cursor.numDimensions() ];
+		long[] max = new long[ cursor.numDimensions() ];
+
+		int ctr = 0;
+
+		while ( cursor.hasNext() )
+		{
+			cursor.next();
+			cursor.localize( position );
+			ctr++;
+		}
+
+		intervalA.max( max );
+
+		assertTrue( Arrays.equals( max, position ) );
+		assertTrue( ctr == fastintervalsize );
+	}
+
+	@Test
+	public void testIterationLocalizingCursorShifted()
+	{
+		Cursor< IntType > cursor = Views.interval( intImg, intervalC ).localizingCursor();
+
+		long[] position = new long[ cursor.numDimensions() ];
+		long[] tmp = new long[ cursor.numDimensions() ];
+
+		intervalC.min( tmp );
+
+		cursor.fwd();
+		cursor.localize( position );
+		assertTrue( Arrays.equals( tmp, position ) );
+
+		cursor.reset();
+		int ctr = 0;
+		while ( cursor.hasNext() )
+		{
+			cursor.next();
+			cursor.localize( position );
+			ctr++;
+		}
+
+		intervalC.max( tmp );
+
+		assertTrue( Arrays.equals( tmp, position ) );
+		assertTrue( ctr == shiftedintervalsize );
+	}
+
+	@Test
+	public void testJumpFwdLocalizingCursor()
+	{
+		Cursor< IntType > cursor = Views.interval( intImg, intervalA ).localizingCursor();
+
+		long[] position = new long[ cursor.numDimensions() ];
+		long[] ref = new long[ cursor.numDimensions() ];
+
+		intervalA.min( ref );
+
+		ref[ 0 ] += 17;
+		cursor.jumpFwd( 18 );
+		cursor.localize( position );
+
+		assertTrue( Arrays.equals( ref, position ) );
+	}
+
+	@Test
+	public void testJumpFwdShiftedLocalizingCursor()
+	{
+		Cursor< IntType > cursor = Views.interval( intImg, intervalC ).localizingCursor();
+
+		long[] position = new long[ cursor.numDimensions() ];
+		long[] ref = new long[ cursor.numDimensions() ];
+
+		intervalC.min( ref );
+
+		ref[ 0 ] += 17;
+		cursor.jumpFwd( 18 );
+		cursor.localize( position );
+
+		assertTrue( Arrays.equals( ref, position ) );
+	}
+
+	@Test
+	public void testIterationCursor()
 	{
 		Cursor< IntType > cursor = intImg.cursor( intervalA );
 
@@ -117,11 +203,10 @@ public class IterableSubIntervalCursorTest
 
 		assertTrue( Arrays.equals( max, position ) );
 		assertTrue( ctr == fastintervalsize );
-
 	}
 
 	@Test
-	public void testIterationShifted()
+	public void testIterationCursorShifted()
 	{
 		Cursor< IntType > cursor = Views.interval( intImg, intervalC ).cursor();
 
@@ -150,7 +235,7 @@ public class IterableSubIntervalCursorTest
 	}
 
 	@Test
-	public void testJumpFwdFast()
+	public void testJumpFwdCursor()
 	{
 		Cursor< IntType > cursor = Views.interval( intImg, intervalA ).cursor();
 
@@ -167,7 +252,7 @@ public class IterableSubIntervalCursorTest
 	}
 
 	@Test
-	public void testJumpFwdShifted()
+	public void testJumpFwdShiftedLCursor()
 	{
 		Cursor< IntType > cursor = Views.interval( intImg, intervalC ).cursor();
 

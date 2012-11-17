@@ -37,8 +37,10 @@
 package net.imglib2.img.array;
 
 import net.imglib2.AbstractCursorInt;
+import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.util.Intervals;
 
 /**
  * {@link Cursor} on an {@link ArrayImg}.
@@ -79,15 +81,16 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 		reset();
 	}
 
-	public AbstractArrayCursor( final ArrayImg< T, ? > img, int offset, int size )
+	public AbstractArrayCursor( final ArrayImg< T, ? > img, Interval interval )
 	{
 		super( img.numDimensions() );
 
 		this.type = img.createLinkedType();
 		this.img = img;
+		this.offset = ( int ) offset(interval);
+		this.size = (int) Intervals.numElements(interval);
 		this.lastIndex = offset + size - 1;
-		this.offset = offset;
-		this.size = size;
+
 
 		reset();
 	}
@@ -146,5 +149,14 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 	{
 		return ( AbstractArrayCursor< T > ) copy();
 	}
+	
+	private long offset( final Interval interval)
+	{
+		final int maxDim = numDimensions() - 1;
+		long i = interval.min( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * img.dimension( d ) + interval.min( d );
 
+		return i;
+	}
 }

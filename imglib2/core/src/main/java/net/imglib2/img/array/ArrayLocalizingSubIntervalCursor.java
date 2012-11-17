@@ -37,6 +37,7 @@
 package net.imglib2.img.array;
 
 import net.imglib2.AbstractLocalizingCursorInt;
+import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
 
 /**
@@ -50,9 +51,9 @@ import net.imglib2.type.NativeType;
 public final class ArrayLocalizingSubIntervalCursor< T extends NativeType< T > > extends AbstractArrayLocalizingCursor< T >
 {
 
-	protected ArrayLocalizingSubIntervalCursor( final ArrayImg< T, ? > img, int offset, int size )
+	protected ArrayLocalizingSubIntervalCursor( final ArrayImg< T, ? > img, Interval interval )
 	{
-		super( img, offset, size );
+		super( img, interval );
 	}
 
 	protected ArrayLocalizingSubIntervalCursor( AbstractArrayLocalizingCursor< T > cursor )
@@ -65,5 +66,4 @@ public final class ArrayLocalizingSubIntervalCursor< T extends NativeType< T > >
 	{
 		return new ArrayLocalizingSubIntervalCursor< T >( this );
 	}
-
 }

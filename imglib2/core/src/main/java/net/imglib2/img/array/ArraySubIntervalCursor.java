@@ -37,6 +37,7 @@
 package net.imglib2.img.array;
 
 import net.imglib2.Cursor;
+import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
 
 /**
@@ -55,9 +56,9 @@ public final class ArraySubIntervalCursor< T extends NativeType< T > > extends A
 		super( cursor );
 	}
 
-	public ArraySubIntervalCursor( final ArrayImg< T, ? > img, int offset, int size )
+	public ArraySubIntervalCursor( final ArrayImg< T, ? > img, Interval interval )
 	{
-		super( img, offset, size );
+		super( img, interval );
 	}
 
 	@Override
