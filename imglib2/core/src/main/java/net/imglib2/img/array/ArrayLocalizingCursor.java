@@ -36,34 +36,170 @@
 
 package net.imglib2.img.array;
 
-import net.imglib2.Cursor;
+import net.imglib2.AbstractLocalizingCursorInt;
+import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.IntervalIndexer;
+import net.imglib2.util.Intervals;
 
 /**
- * {@link Cursor} on an {@link ArrayImg}.
- * 
+ * Localizing {@link Cursor} on an {@link ArrayImg}.
+ *
  * @param <T>
- * 
- * @author Tobias Pietzsch
+ *
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  * @author Christian Dietz
+ * @author Tobias Pietzsch
+ *
  */
-public final class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractArrayLocalizingCursor< T >
+public class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T >
 {
+
+	protected final int size;
+
+	protected final int offset;
+
+	protected final T type;
+
+	protected final ArrayImg< T, ? > img;
+
+	protected final int lastIndex;
+
+	/**
+	 * Maximum of the {@link ArrayImg} in every dimension. This is used to check
+	 * isOutOfBounds().
+	 */
+	protected final int[] max;
 
 	protected ArrayLocalizingCursor( final ArrayLocalizingCursor< T > cursor )
 	{
-		super( cursor );
+		super( cursor.numDimensions() );
+
+		this.img = cursor.img;
+		this.type = img.createLinkedType();
+		this.offset = cursor.offset;
+		this.size = cursor.size;
+
+		this.lastIndex = offset + size - 1;
+
+		max = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			position[ d ] = cursor.position[ d ];
+			max[ d ] = cursor.max[ d ];
+		}
+
+		type.updateIndex( cursor.type.getIndex() );
+		type.updateContainer( this );
+
+		reset();
 	}
 
-	public ArrayLocalizingCursor( final ArrayImg< T, ? > img )
+	public ArrayLocalizingCursor( final ArrayImg< T, ? > img, Interval interval)
 	{
-		super( img, img );
+		super( img.numDimensions() );
+
+		this.img = img;
+		this.offset = ( int ) offset(interval);
+		this.size = ( int ) Intervals.numElements(interval);
+
+		this.type = img.createLinkedType();
+		this.lastIndex = ( int ) offset + size - 1;
+
+		max = new int[ n ];
+		
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = ( int ) interval.max(d);
+		
+		reset();
+	}
+	
+	
+	@Override
+	public T get()
+	{
+		return type;
 	}
 
 	@Override
-	public ArrayLocalizingCursor< T > copy()
+	public boolean hasNext()
 	{
-		return new ArrayLocalizingCursor< T >( this );
+		return type.getIndex() < lastIndex;
 	}
 
+	@Override
+	public void fwd()
+	{
+		// type.incIndex();
+		//
+		// for ( int d = 0; d < n; ++d )
+		// {
+		// if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
+		// else break;
+		// }
+
+		/*
+		 * Benchmarks @ 2012-04-17 demonstrate that the less readable code below
+		 * is reliably 5-10% faster than the almost equivalent commented code
+		 * above. The reason is NOT simply that d=0 is executed outside the
+		 * loop. We have tested that and it does not provide improved speed when
+		 * done in the above version of the code. Below, it plays a role.
+		 */
+		if ( ++position[ 0 ] <= max[ 0 ] )
+		{
+			type.incIndex();
+			return;
+		}
+		position[ 0 ] = 0;
+		type.incIndex();
+		for ( int d = 1; d < n; ++d )
+		{
+			if ( ++position[ d ] > max[ d ] )
+				position[ d ] = 0;
+			else
+				break;
+		}
+	}
+
+	@Override
+	public void jumpFwd( final long steps )
+	{
+		type.incIndex( ( int ) steps );
+		IntervalIndexer.indexToPosition( type.getIndex(), img.dim, position );
+	}
+
+	@Override
+	public void reset()
+	{
+		type.updateIndex( offset - 1 );
+
+		IntervalIndexer.indexToPosition( offset, img.dim, position );
+		
+		position[ 0 ]--;
+
+		type.updateContainer( this );
+	}
+
+	@Override
+	public ArrayLocalizingCursor< T > copyCursor()
+	{
+		return ( ArrayLocalizingCursor< T > ) copy();
+	}
+
+
+	private long offset( final Interval interval)
+	{
+		final int maxDim = numDimensions() - 1;
+		long i = interval.min( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * img.dimension( d ) + interval.min( d );
+
+		return i;
+	}
+
+	@Override
+	public AbstractLocalizingCursorInt<T> copy() {
+		return new ArrayLocalizingCursor<T>( this );
+	}
 }

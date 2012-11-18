@@ -38,12 +38,15 @@ package net.imglib2.img.planar;
 
 import java.util.ArrayList;
 
+import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
+import net.imglib2.Interval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
+import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
  * A {@link NativeImg} that stores data in an array of 2d-slices each as a
@@ -68,7 +71,7 @@ import net.imglib2.type.NativeType;
  * @author Johannes Schindelin
  * @author Tobias Pietzsch
  */
-public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeImg< T, A > implements PlanarAccess< A >
+public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeImg< T, A > implements PlanarAccess< A >, SubIntervalIterable< T >
 {
 	final protected int numSlices;
 
@@ -306,5 +309,41 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 			cursor2.next().set( cursor1.next() );
 
 		return copy;
+	}
+
+
+	@Override
+	public boolean supportsOptimizedCursor( final Interval interval )
+	{
+		int dimIdx = 0;
+
+		// Find equal dims
+		for ( int d = 0; d < interval.numDimensions(); d++, dimIdx++ )
+			if ( interval.dimension( d ) != dimension( d ) )
+			{
+				dimIdx++;
+				break;
+			}
+
+		for ( int d = dimIdx; d < interval.numDimensions(); d++ )
+			if ( interval.dimension( d ) != 1 )
+				return false;
+
+		return true;
+	}
+
+	@Override
+	public Object subIntervalIterationOrder(Interval interval) {
+		return new FlatIterationOrder( interval );
+	}
+
+	@Override
+	public Cursor<T> cursor(Interval interval) {
+		return new PlanarSubsetCursor<T>(this, interval);
+	}
+
+	@Override
+	public Cursor<T> localizingCursor(Interval interval) {
+		return new PlanarSubsetLocalizingCursor<T>(this, interval);
 	}
 }

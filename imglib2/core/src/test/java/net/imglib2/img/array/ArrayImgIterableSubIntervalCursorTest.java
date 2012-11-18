@@ -13,6 +13,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.view.Views;
+import net.imglib2.view.iteration.SlicingCursor;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -71,29 +72,6 @@ public class ArrayImgIterableSubIntervalCursorTest
 			a.setPosition( pos );
 			a.get().set( intData[ i ] );
 		}
-	}
-
-	@Test
-	public void testOptimizable()
-	{
-
-		// Testing Cursor
-		assertTrue( ( Views.interval( intImg, intervalA ).cursor() instanceof ArraySubIntervalCursor ) );
-
-		// Testing Localizing Cursor
-		assertTrue( ( Views.interval( intImg, intervalA ).localizingCursor() instanceof AbstractArrayLocalizingCursor ) );
-
-		// Testing Cursor
-		assertFalse( ( Views.interval( intImg, intervalB ).cursor() instanceof ArraySubIntervalCursor ) );
-
-		// Testing Localizing Cursor
-		assertFalse( ( Views.interval( intImg, intervalB ).localizingCursor() instanceof AbstractArrayLocalizingCursor ) );
-
-		// Testing Cursor
-		assertTrue( ( Views.interval( intImg, intervalC ).cursor() instanceof ArraySubIntervalCursor ) );
-
-		// Testing Localizing Cursor
-		assertTrue( ( Views.interval( intImg, intervalC ).localizingCursor() instanceof AbstractArrayLocalizingCursor ) );
 	}
 
 	@Test
