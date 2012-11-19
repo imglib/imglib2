@@ -45,7 +45,7 @@ import net.imglib2.type.numeric.ARGBType;
  * @author Curtis Rueden
  * @author Mark Hiner
  */
-public abstract class AbstractColorTable<T> implements ColorTable {
+public abstract class AbstractColorTable<T> implements ArrayColorTable<T> {
 
   // -- Fields --
   
@@ -133,4 +133,11 @@ public abstract class AbstractColorTable<T> implements ColorTable {
    * @return The value of the table at the specified position.
    */
   public abstract int getResampled(final int comp, final int bins, final int bin);
+  
+  // -- ArrayColorTable API Methods --
+  
+  /* @see ArrayColorTable#getValues() */
+  public T[] getValues() {
+    return values.clone();
+  }
 }
