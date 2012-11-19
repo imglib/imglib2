@@ -43,27 +43,27 @@ import net.imglib2.type.numeric.ARGBType;
  *
  * @author Stephan Saalfeld
  * @author Curtis Rueden
+ * @author Mark Hiner
  */
 public abstract class AbstractColorTable<T> implements ColorTable {
 
+  // -- Fields --
+  
 	/**
 	 * Actual color table values.
 	 */
 	protected final T[] values;
 
+	// -- Constructor --
+	
 	/**
 	 * Initializes a color table with the given table values.
 	 */
 	public AbstractColorTable(final T... values) {
 		this.values = values;
 	}
-
-	/**
-	 * Gets a copy of the entire color table.
-	 */
-	public T[] getValues() {
-		return values.clone();
-	}
+	
+	// -- AbstractColorTable Methods --
 
 	/**
 	 * Converts the tuple at the given position into a packed ARGB value.
@@ -77,33 +77,9 @@ public abstract class AbstractColorTable<T> implements ColorTable {
 	}
 
 	/**
-	 * Gets the number of color components in the table (typically 3 for RGB or
-	 * 4 for RGBA).
-	 */
-	public int getComponentCount() {
-		return values.length;
-	}
-
-	/**
-	 * Gets the number of elements for each color component in the table.
-	 */
-	public abstract int getLength();
-
-	/**
 	 * Gets the number of bits in each color component value.
 	 */
 	public abstract int getBits();
-
-	/**
-	 * Gets an individual value from the color table.
-	 * <p>
-	 * Value is unsigned 8 bits.
-	 *
-	 * @param comp The color component to query.
-	 * @param bin The index into the color table.
-	 * @return The value of the table at the specified position.
-	 */
-	public abstract int get(final int comp, final int bin);
 
 	/**
 	 * Gets an individual value from the color table.
@@ -116,24 +92,45 @@ public abstract class AbstractColorTable<T> implements ColorTable {
 	 */
 	public abstract int getNative(final int comp, final int bin);
 
-	/**
-	 * Gets an individual value from a color table with given number of bins.
-	 * <p>
-	 * Specifying total bins allows for resampling.
-	 * <p>
-	 * Value is unsigned 8 bits.
-	 *
-	 * @param comp The color component to query.
-	 * @param bins The total number of bins.
-	 * @param bin The index into the color table.
-	 * @return The value of the table at the specified position.
-	 */
-	public abstract int getResampled(final int comp, final int bins, final int bin);
-
-	@Override
-	public int lookupARGB(final double min, final double max, final double value) {
-		int bins = getLength();
-		int bin = Binning.valueToBin(bins, min, max, value);
-		return argb(bin);
+  // -- ColorTable API Methods --
+	
+  /* @see ColorTable#lookupARGB(double, double, double) */
+  public int lookupARGB(final double min, final double max, final double value) {
+    int bins = getLength();
+    int bin = Binning.valueToBin(bins, min, max, value);
+    return argb(bin);
 	}
+	
+  /**
+   * Gets the number of color components in the table (typically 3 for RGB or
+   * 4 for RGBA).
+   */
+  public int getComponentCount() {
+    return values.length;
+  }
+  
+  /**
+   * Gets an individual value from the color table.
+   * <p>
+   * Value is unsigned 8 bits.
+   *
+   * @param comp The color component to query.
+   * @param bin The index into the color table.
+   * @return The value of the table at the specified position.
+   */
+  public abstract int get(final int comp, final int bin);
+	
+  /**
+   * Gets an individual value from a color table with given number of bins.
+   * <p>
+   * Specifying total bins allows for resampling.
+   * <p>
+   * Value is unsigned 8 bits.
+   *
+   * @param comp The color component to query.
+   * @param bins The total number of bins.
+   * @param bin The index into the color table.
+   * @return The value of the table at the specified position.
+   */
+  public abstract int getResampled(final int comp, final int bins, final int bin);
 }
