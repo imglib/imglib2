@@ -41,11 +41,19 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;
 
 /**
- * 
- * 
- * 
+ * {@link ImgFactory} for {@link ListImg} of any type T. You can us {@link Type}
+ * s or arbitrary {@link Object}s. If you use non-{@link Type} pixels, note,
+ * that you cannot use {@link Type#set(Type)} to change the value stored in
+ * every reference in the {@link ListImg}. Instead, you can use the
+ * {@link ListCursor#set(Object)} and {@link ListRandomAccess#set(Object)}
+ * methods to alter the underlying {@link ArrayList}.
+ *
+ * @param <T>
+ *            The value type of the pixels.
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class ListImgFactory< T > extends ImgFactory< T >
 {
@@ -54,15 +62,11 @@ public class ListImgFactory< T > extends ImgFactory< T >
 	{
 		return new ListImg< T >( dim, type );
 	}
-	
+
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
 	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
 	{
-		if ( Type.class.isInstance( type ) )
-			return new ListImgFactory();
-		else
-			throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement Type." );
+		return new ListImgFactory();
 	}
-	
 }
