@@ -9,13 +9,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -36,8 +36,6 @@
 
 package net.imglib2.img.list;
 
-import java.util.ArrayList;
-
 import net.imglib2.AbstractCursorInt;
 import net.imglib2.util.IntervalIndexer;
 
@@ -45,46 +43,49 @@ import net.imglib2.util.IntervalIndexer;
  * {@link Cursor} on a {@link ListImg}.
  *
  * @param <T>
+ *            the pixel type
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 final public class ListCursor< T > extends AbstractCursorInt< T >
 {
 	private int i;
+
 	final private int maxNumPixels;
 
-	final private ArrayList< T > pixels;
-	final private ListImg< T > container;
+	final private AbstractListImg< T > img;
 
 	protected ListCursor( final ListCursor< T > cursor )
 	{
 		super( cursor.numDimensions() );
 
-		container = cursor.container;
-		this.pixels = container.pixels;
+		img = cursor.img;
 		this.maxNumPixels = cursor.maxNumPixels;
 
 		i = cursor.i;
 	}
 
-	public ListCursor( final ListImg< T > container )
+	public ListCursor( final AbstractListImg< T > img )
 	{
-		super( container.numDimensions() );
+		super( img.numDimensions() );
 
-		this.container = container;
-		this.pixels = container.pixels;
-		this.maxNumPixels = ( int )container.size() - 1;
+		this.img = img;
+		this.maxNumPixels = ( int ) img.size() - 1;
 
 		reset();
 	}
 
 	@Override
-	public T get() { return pixels.get( i ); }
+	public T get()
+	{
+		return img.getPixel( i );
+	}
 
 	public void set( final T t )
 	{
-		pixels.set( i, t );
+		img.setPixel( i, t );
 	}
 
 	@Override
@@ -100,26 +101,38 @@ final public class ListCursor< T > extends AbstractCursorInt< T >
 	}
 
 	@Override
-	public boolean hasNext() { return i < maxNumPixels; }
+	public boolean hasNext()
+	{
+		return i < maxNumPixels;
+	}
 
 	@Override
-	public void jumpFwd( final long steps )  { i += steps; }
+	public void jumpFwd( final long steps )
+	{
+		i += steps;
+	}
 
 	@Override
-	public void fwd() { ++i; }
+	public void fwd()
+	{
+		++i;
+	}
 
 	@Override
-	public void reset() { i = -1; }
+	public void reset()
+	{
+		i = -1;
+	}
 
 	@Override
 	public void localize( final int[] position )
 	{
-		IntervalIndexer.indexToPosition( i, container.dim, position );
+		IntervalIndexer.indexToPosition( i, img.dim, position );
 	}
 
 	@Override
 	public int getIntPosition( final int d )
 	{
-		return IntervalIndexer.indexToPosition( i, container.dim, container.step, d );
+		return IntervalIndexer.indexToPosition( i, img.dim, img.step, d );
 	}
 }
