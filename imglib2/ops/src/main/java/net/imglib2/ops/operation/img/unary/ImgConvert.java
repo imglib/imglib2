@@ -147,7 +147,7 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 			break;
 		case NORMALIZEDIRECT:
 			oldMinMax = new MinMax< I >( 0, img.firstElement() ).compute( img );
-			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_outType.getMinValue(), m_outType.getMaxValue() );
+			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
 
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALE );
 
@@ -157,7 +157,7 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 			break;
 		case NORMALIZESCALE:
 			oldMinMax = new MinMax< I >( 0, img.firstElement() ).compute( img );
-			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_outType.getMinValue(), m_outType.getMaxValue() );
+			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
 
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALE );
 			convertOp.setFactor( convertOp.getFactor() / factor );
@@ -165,7 +165,7 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 			break;
 		case NORMALIZEDIRECTCLIP:
 			oldMinMax = new MinMax< I >( 0, img.firstElement() ).compute( img );
-			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_outType.getMinValue(), m_outType.getMaxValue() );
+			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
 
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALECLIP );
 			convertOp.setFactor( convertOp.getFactor() / factor );
