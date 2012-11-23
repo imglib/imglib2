@@ -34,39 +34,80 @@
  * #L%
  */
 
-package net.imglib2.img.list;
 
-import net.imglib2.exception.IncompatibleTypeException;
-import net.imglib2.img.ImgFactory;
-import net.imglib2.type.Type;
+package net.imglib2.ops.function.real;
+
+import net.imglib2.ops.function.Function;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * {@link ImgFactory} for {@link ListImg} of any type T. You can us {@link Type}
- * s or arbitrary {@link Object}s. If you use non-{@link Type} pixels, note,
- * that you cannot use {@link Type#set(Type)} to change the value stored in
- * every reference in the {@link ListImg}. Instead, you can use the
- * {@link ListCursor#set(Object)} and {@link ListRandomAccess#set(Object)}
- * methods to alter the underlying {@link ArrayList}.
+ * 
+ * @author Barry DeZonia
  *
  * @param <T>
- *            The value type of the pixels.
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class ListImgFactory< T > extends ImgFactory< T >
+public class RealBilinearInterpolatingFunction<T extends RealType<T>> 
+	implements Function<double[],T>
 {
-	@Override
-	public ListImg< T > create( final long[] dim, final T type )
-	{
-		return new ListImg< T >( dim, type );
+	// -- instance variables --
+	
+	private Function<long[],T> discreteFunc;
+	private long[] index;
+	private T ul, ur, ll, lr;
+	
+	// -- constructor --
+	
+	public RealBilinearInterpolatingFunction(Function<long[],T> discreteFunc) {
+		this.discreteFunc = discreteFunc;
+		this.index = new long[2];
+		this.ul = createOutput();
+		this.ur = createOutput();
+		this.ll = createOutput();
+		this.lr = createOutput();
 	}
 
-	@SuppressWarnings( { "unchecked", "rawtypes" } )
+	// -- Function methods --
+	
 	@Override
-	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
-	{
-		return new ListImgFactory();
+	public void compute(double[] point, T output) {
+		long x = (long) Math.floor(point[0]);
+		long y = (long) Math.floor(point[1]);
+		double ix = point[0] - x;
+		double iy = point[1] - y;
+		getValue((x+0),(y+0),ul);
+		getValue((x+1),(y+0),ur);
+		getValue((x+0),(y+1),ll);
+		getValue((x+1),(y+1),lr);
+		double value = interpolate(ix, iy, ul.getRealDouble(), 
+				ur.getRealDouble(), ll.getRealDouble(), lr.getRealDouble());
+		output.setReal(value);
 	}
+	
+	@Override
+	public RealBilinearInterpolatingFunction<T> copy() {
+		return new RealBilinearInterpolatingFunction<T>(discreteFunc.copy());
+	}
+	
+	@Override
+	public T createOutput() {
+		return discreteFunc.createOutput();
+	}
+
+	// -- private helpers --
+	
+	private double interpolate(double ix, double iy, double ul, double ur, double ll, double lr) {
+		double value = 0;
+		value += (1-ix)*(1-iy)*ul;
+		value += (1-ix)*(iy)*ll;
+		value += (ix)*(1-iy)*ur;
+		value += (ix)*(iy)*lr;
+		return value;
+	}
+
+	private void getValue(long x, long y, T output) {
+		index[0] = x;
+		index[1] = y;
+		discreteFunc.compute(index, output);
+	}
+	
 }

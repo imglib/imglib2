@@ -62,6 +62,8 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 
 	private final T m_background;
 
+	private T m_currentLabel;
+
 	private ThreadSafeLabelNumbers m_synchronizer;
 
 	/**
@@ -112,6 +114,7 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 			if ( srcCur.get().compareTo( m_background ) != 0 )
 			{
 				srcCur.localize( seedPos );
+				m_currentLabel = srcCur.get().copy();
 				return m_labelNumber;
 			}
 		}
@@ -131,7 +134,7 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	protected boolean includeInRegion( int[] oldPos, int[] nextPos, Integer label )
 	{
 		srcRA.setPosition( nextPos );
-		return srcRA.get().compareTo( m_background ) != 0;
+		return srcRA.get().compareTo( m_currentLabel ) == 0;
 	}
 
 	/**
@@ -149,7 +152,7 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	{
 		return new CCA< T, I, LL >( m_structuringElement.clone(), m_background.copy(), m_synchronizer );
 	}
-	
+
 	/**
 	 * Simple helper class
 	 * 
