@@ -38,13 +38,14 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.ops.operation.Operations;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
  * @author Martin Horn (University of Konstanz)
  */
-public class EqualizeHistogram< T extends RealType< T >, I extends IterableInterval< T >> implements UnaryOperation< I, I >
+public class EqualizeHistogram< T extends RealType< T >> implements UnaryOperation< IterableInterval< T >, IterableInterval< T > >
 {
 
 	/**
@@ -53,11 +54,12 @@ public class EqualizeHistogram< T extends RealType< T >, I extends IterableInter
 	 * @return
 	 */
 	@Override
-	public I compute( I in, I r )
+	public IterableInterval< T > compute( IterableInterval< T > in, IterableInterval< T > r )
 	{
 
-		MakeHistogram< T > histogramOp = new MakeHistogram< T >();
-		int[] histo = new MakeHistogram< T >().compute( r, histogramOp.createEmptyOutput( in ) ).hist();
+		assert ( in.iterationOrder().equals( r.iterationOrder() ) );
+
+		int[] histo = Operations.compute( new MakeHistogram< T >(), in ).hist();
 
 		T val = r.firstElement().createVariable();
 
@@ -76,27 +78,31 @@ public class EqualizeHistogram< T extends RealType< T >, I extends IterableInter
 		double gmax = val.getMaxValue();
 		double gmin = val.getMinValue();
 
-		Cursor< T > c = r.cursor();
+		Cursor< T > cin = in.cursor();
+		Cursor< T > cout = r.cursor();
+
 		long numPix = r.size();
 
-		while ( c.hasNext() )
+		while ( cin.hasNext() )
 		{
-			c.fwd();
-			val = c.get();
+			cin.fwd();
+			cout.fwd();
+
+			val = cin.get();
 			int p = histo[ ( int ) val.getRealFloat() - ( int ) gmin ];
 			double t = ( p - min );
 			t /= numPix - min;
 			t *= gmax;
 			p = ( int ) Math.round( t );
-			c.get().setReal( p );
+			cout.get().setReal( p );
 		}
 		return r;
 
 	}
 
 	@Override
-	public UnaryOperation< I, I > copy()
+	public UnaryOperation< IterableInterval< T >, IterableInterval< T > > copy()
 	{
-		return new EqualizeHistogram< T, I >();
+		return new EqualizeHistogram< T >();
 	}
 }
