@@ -66,7 +66,7 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		{
 
 			int bins;
-			if ( !( type instanceof IntegerType ) || type instanceof LongType )
+			if ( !(type.getMaxValue() < Integer.MAX_VALUE))
 			{
 				bins = Short.MAX_VALUE * 2;
 			}
