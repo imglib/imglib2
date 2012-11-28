@@ -889,31 +889,29 @@ public class Util
 	}
 
 	/**
-	 * recursively get coordinates covering all binary combinations for the
-	 * given dimensionality
-	 * 
+	 * recursively get coordinates covering all binary combinations for the given dimensionality
+	 *
 	 * example for 3d:
-	 * 
-	 * x y z index 0 0 0 [0] 1 0 0 [1] 0 1 0 [2] 1 1 0 [3] 0 0 1 [4] 1 0 1 [5] 0
-	 * 1 1 [6] 1 1 1 [7]
-	 * 
+	 *
+	 * x y z index
+	 * 0 0 0 [0]
+	 * 1 0 0 [1]
+	 * 0 1 0 [2]
+	 * 1 1 0 [3]
+	 * 0 0 1 [4]
+	 * 1 0 1 [5]
+	 * 0 1 1 [6]
+	 * 1 1 1 [7]
+	 *
 	 * All typical call will look like that:
-	 * 
-	 * boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][
-	 * numDimensions ]; MathLib.setCoordinateRecursive( numDimensions - 1,
-	 * numDimensions, new int[ numDimensions ], positions );
-	 * 
-	 * @param dimension
-	 *            - recusively changed current dimension, init with
-	 *            numDimensions - 1
-	 * @param numDimensions
-	 *            - the number of dimensions
-	 * @param location
-	 *            - recursively changed current state, init with new int[
-	 *            numDimensions ]
-	 * @param result
-	 *            - where the result will be stored when finished, needes a
-	 *            boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ]
+	 *
+	 * boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ];
+	 * MathLib.setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
+	 *
+	 * @param dimension - recusively changed current dimension, init with numDimensions - 1
+	 * @param numDimensions - the number of dimensions
+	 * @param location - recursively changed current state, init with new int[ numDimensions ]
+	 * @param result - where the result will be stored when finished, needes a boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ]
 	 */
 	public static void setCoordinateRecursive( final int dimension, final int numDimensions, final int[] location, final boolean[][] result )
 	{
@@ -1217,7 +1215,7 @@ public class Util
 	}
 
 	/**
-	 * Checks weather n {@link IterableInterval} have the same iteration order
+	 * Checks whether n {@link IterableInterval} have the same iteration order
 	 * 
 	 * @param intervals
 	 * @return
