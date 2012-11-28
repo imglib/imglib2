@@ -45,7 +45,7 @@ import net.imglib2.type.numeric.ARGBType;
  * @author Curtis Rueden
  * @author Mark Hiner
  */
-public abstract class AbstractColorTable<T> implements ArrayColorTable<T> {
+public abstract class AbstractArrayColorTable<T> implements ArrayColorTable<T> {
 
 	// -- Fields --
 
@@ -59,7 +59,7 @@ public abstract class AbstractColorTable<T> implements ArrayColorTable<T> {
 	/**
 	 * Initializes a color table with the given table values.
 	 */
-	public AbstractColorTable(final T... values) {
+	public AbstractArrayColorTable(final T... values) {
 		this.values = values;
 	}
 

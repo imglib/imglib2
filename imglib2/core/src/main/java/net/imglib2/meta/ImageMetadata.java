@@ -36,7 +36,7 @@
 
 package net.imglib2.meta;
 
-import net.imglib2.display.AbstractColorTable;
+import net.imglib2.display.AbstractArrayColorTable;
 import net.imglib2.display.ColorTable;
 import net.imglib2.img.Img;
 
