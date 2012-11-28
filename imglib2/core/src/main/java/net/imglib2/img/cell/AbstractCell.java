@@ -41,9 +41,7 @@ import net.imglib2.util.IntervalIndexer;
 /**
  * A cell of an {@link CellImg}.
  *
- * @param <A>
  * @author ImgLib2 developers
- * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public abstract class AbstractCell< A >
@@ -51,11 +49,14 @@ public abstract class AbstractCell< A >
 	final protected int n;
 
 	final int[] dimensions;
+
 	final int[] steps;
+
 	final long[] min;
+
 	final long[] max;
 
-	protected int numPixels;
+	final protected int numPixels;
 
 	public AbstractCell( final int[] dimensions, final long[] min )
 	{
@@ -66,14 +67,12 @@ public abstract class AbstractCell< A >
 		this.min = min.clone();
 
 		max = new long[ n ];
-		for ( int d = 0; d < n; ++d ) {
+		for ( int d = 0; d < n; ++d )
 			max[ d ] = min[ d ] + dimensions[ d ] - 1;
-		}
 
 		int nPixels = dimensions[ 0 ];
-		for ( int d = 1; d < n; ++d ) {
+		for ( int d = 1; d < n; ++d )
 			nPixels *= dimensions[ d ];
-		}
 		numPixels = nPixels;
 	}
 
@@ -102,11 +101,12 @@ public abstract class AbstractCell< A >
 	}
 
 	/**
-	 * compute the index in the underlying flat array of this cell
-	 * which corresponds to a local position (i.e., relative to the
-	 * origin of this cell).
+	 * compute the index in the underlying flat array of this cell which
+	 * corresponds to a local position (i.e., relative to the origin of this
+	 * cell).
 	 *
-	 * @param position   a local position
+	 * @param position
+	 *            a local position
 	 * @return corresponding index
 	 */
 	public int localPositionToIndex( final long[] position )
@@ -116,7 +116,8 @@ public abstract class AbstractCell< A >
 
 	/**
 	 *
-	 * @param d dimension
+	 * @param d
+	 *            dimension
 	 * @return minimum
 	 */
 	public long min( final int d )

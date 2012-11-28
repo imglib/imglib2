@@ -39,7 +39,6 @@ package net.imglib2.img.cell;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 
 /**
@@ -52,7 +51,7 @@ import net.imglib2.type.NativeType;
  * cells at the max boundary of the image may have non-standard sizes). Each
  * basic type array corresponds to a cell.
  *
- *
+ * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 final public class CellImg< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractNativeImg< T, A >

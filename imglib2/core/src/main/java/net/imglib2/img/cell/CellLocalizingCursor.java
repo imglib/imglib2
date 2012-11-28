@@ -43,9 +43,7 @@ import net.imglib2.type.NativeType;
 /**
  * Localizing {@link Cursor} on a {@link CellImg}.
  *
- *
  * @author ImgLib2 developers
- * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class CellLocalizingCursor< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A, C >
@@ -55,12 +53,14 @@ public class CellLocalizingCursor< T extends NativeType< T >, A, C extends Abstr
 	protected final Cursor< C > cursorOnCells;
 
 	protected int lastIndexInCell;
+
 	protected long[] currentCellMin;
+
 	protected long[] currentCellMax;
 
 	/**
-	 * The current index of the type.
-	 * It is faster to duplicate this here than to access it through type.getIndex().
+	 * The current index of the type. It is faster to duplicate this here than
+	 * to access it through type.getIndex().
 	 */
 	protected int index;
 
@@ -106,7 +106,6 @@ public class CellLocalizingCursor< T extends NativeType< T >, A, C extends Abstr
 		return cursorOnCells.get();
 	}
 
-
 	@Override
 	public T get()
 	{
@@ -140,7 +139,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A, C extends Abstr
 			newIndex -= lastIndexInCell + 1;
 			cursorOnCells.fwd();
 			isNotLastCell = cursorOnCells.hasNext();
-			lastIndexInCell = ( int )( getCell().size() - 1);
+			lastIndexInCell = ( int ) ( getCell().size() - 1 );
 		}
 
 		final C cell = getCell();
@@ -183,8 +182,8 @@ public class CellLocalizingCursor< T extends NativeType< T >, A, C extends Abstr
 	}
 
 	/**
-	 * Move cursor right before the first element of the next cell.
-	 * Update type, position, and index variables.
+	 * Move cursor right before the first element of the next cell. Update type,
+	 * position, and index variables.
 	 */
 	private void moveToNextCell()
 	{
@@ -192,7 +191,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A, C extends Abstr
 		isNotLastCell = cursorOnCells.hasNext();
 		final C cell = getCell();
 
-		lastIndexInCell = ( int )( cell.size() - 1);
+		lastIndexInCell = ( int ) ( cell.size() - 1 );
 		currentCellMin = cell.min;
 		currentCellMax = cell.max;
 

@@ -44,12 +44,10 @@ import net.imglib2.type.NativeType;
 /**
  * {@link RandomAccess} on a {@link CellImg}.
  *
- * The boundaries of the current cell are cached, so that
- * position changes within the same cell have minimal overhead.
- *
+ * The boundaries of the current cell are cached, so that position changes
+ * within the same cell have minimal overhead.
  *
  * @author ImgLib2 developers
- * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractLocalizable implements RandomAccess< T >, CellImg.CellContainerSampler< T, A, C >
@@ -63,16 +61,20 @@ public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractC
 	protected final long[] tmp;
 
 	protected int[] currentCellSteps;
+
 	protected long[] currentCellMin;
+
 	protected long[] currentCellMax;
 
 	protected boolean isOutOfBounds;
+
 	protected final long[] oobCellMin;
+
 	protected final long[] oobCellMax;
 
 	/**
-	 * The current index of the type.
-	 * It is faster to duplicate this here than to access it through type.getIndex().
+	 * The current index of the type. It is faster to duplicate this here than
+	 * to access it through type.getIndex().
 	 */
 	protected int index;
 
@@ -85,8 +87,7 @@ public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractC
 		randomAccessOnCells = randomAccess.randomAccessOnCells.copyRandomAccess();
 		tmp = new long[ n ];
 
-		for ( int d = 0; d < n; ++d )
-			position[ d ] = randomAccess.position[ d ];
+		randomAccess.localize( position );
 
 		currentCellSteps = randomAccess.currentCellSteps;
 		currentCellMin = randomAccess.currentCellMin;
@@ -329,7 +330,6 @@ public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractC
 		type.updateIndex( index );
 	}
 
-
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
@@ -435,11 +435,13 @@ public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractC
 	}
 
 	/**
-	 * Update type to currentCellSteps, currentCellMin, and type after
-	 * switching cells. This is called after randomAccessOnCells and position
-	 * fields have been set.
+	 * Update type to currentCellSteps, currentCellMin, and type after switching
+	 * cells. This is called after randomAccessOnCells and position fields have
+	 * been set.
 	 *
-	 * @param updateD the (first) dimension that triggered the call by moving out of current cell range.
+	 * @param updateD
+	 *            the (first) dimension that triggered the call by moving out of
+	 *            current cell range.
 	 */
 	private void updatePosition( final boolean movedOutOfBounds )
 	{
@@ -463,10 +465,11 @@ public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractC
 						break;
 					}
 
-				if ( ! isOutOfBounds )
+				if ( !isOutOfBounds )
 				{
 					// yes. we came back into the image.
-					// re-initialize randomAccessOnCells to the correct position.
+					// re-initialize randomAccessOnCells to the correct
+					// position.
 					img.getCellPosition( position, tmp );
 					randomAccessOnCells.setPosition( tmp );
 				}

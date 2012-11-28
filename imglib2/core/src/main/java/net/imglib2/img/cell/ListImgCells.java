@@ -53,16 +53,17 @@ public class ListImgCells< A extends ArrayDataAccess< A > > extends AbstractCell
 {
 	private final ListImg< DefaultCell< A > > cells;
 
-	public ListImgCells( final A creator, final int entitiesPerPixel, final long[] dimensions, final int[] cellDimensions  )
+	public ListImgCells( final A creator, final int entitiesPerPixel, final long[] dimensions, final int[] cellDimensions )
 	{
 		super( entitiesPerPixel, dimensions, cellDimensions );
-		cells = new ListImgFactory< DefaultCell< A > >().create( numCells, new DefaultCell< A >( creator, new int[1], new long[1], entitiesPerPixel ) );
+		cells = new ListImgFactory< DefaultCell< A > >().create( numCells, new DefaultCell< A >( creator, new int[ 1 ], new long[ 1 ], entitiesPerPixel ) );
 
 		final long[] cellGridPosition = new long[ n ];
 		final long[] cellMin = new long[ n ];
 		final int[] cellDims = new int[ n ];
-		final ListLocalizingCursor< DefaultCell < A > > cellCursor = cells.localizingCursor();
-		while ( cellCursor.hasNext() ) {
+		final ListLocalizingCursor< DefaultCell< A > > cellCursor = cells.localizingCursor();
+		while ( cellCursor.hasNext() )
+		{
 			cellCursor.fwd();
 			cellCursor.localize( cellGridPosition );
 			getCellDimensions( cellGridPosition, cellMin, cellDims );
