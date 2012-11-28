@@ -37,11 +37,12 @@ package net.imglib2.display;
 
 /**
  * Interface for all {@link ColorTable} implementations that use an array to
- * store their color table information. This interface provides an accessor
- * to that value array, and the generic type of this table corresponds to
- * the array type that is returned.
+ * store their color table information. This interface provides an accessor to
+ * that value array and other conveniences, and the generic type of this table
+ * corresponds to the array type that is returned.
  * 
  * @author Mark Hiner
+ * @author Curtis Rueden
  */
 public interface ArrayColorTable<T> extends ColorTable {
 
@@ -49,5 +50,26 @@ public interface ArrayColorTable<T> extends ColorTable {
 	 * Gets a copy of the entire color table.
 	 */
 	T[] getValues();
+
+	/**
+	 * Converts the tuple at the given position into a packed ARGB value.
+	 */
+	int argb(int i);
+
+	/**
+	 * Gets the number of bits in each color component value.
+	 */
+	int getBits();
+
+	/**
+	 * Gets an individual value from the color table.
+	 * <p>
+	 * Value is unsigned with {@link #getBits} bits.
+	 *
+	 * @param comp The color component to query.
+	 * @param bin The index into the color table.
+	 * @return The value of the table at the specified position.
+	 */
+	int getNative(int comp, int bin);
 
 }

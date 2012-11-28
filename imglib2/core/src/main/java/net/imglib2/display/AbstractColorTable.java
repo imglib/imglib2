@@ -39,7 +39,7 @@ import net.imglib2.Binning;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
- * Abstract superclass for color lookup tables.
+ * Abstract superclass for array-based color lookup tables.
  *
  * @author Stephan Saalfeld
  * @author Curtis Rueden
@@ -63,39 +63,20 @@ public abstract class AbstractColorTable<T> implements ArrayColorTable<T> {
 		this.values = values;
 	}
 
-	// -- AbstractColorTable methods --
+	// -- ArrayColorTable methods --
 
-	/**
-	 * Converts the tuple at the given position into a packed ARGB value.
-	 */
+	@Override
+	public T[] getValues() {
+		return values.clone();
+	}
+
+	@Override
 	public int argb(final int i) {
 		final int r = values.length > 0 ? get(ColorTable.RED,   i) : 0;
 		final int g = values.length > 1 ? get(ColorTable.GREEN, i) : 0;
 		final int b = values.length > 2 ? get(ColorTable.BLUE,  i) : 0;
 		final int a = values.length > 3 ? get(ColorTable.ALPHA, i) : 0xff;
 		return ARGBType.rgba(r, g, b, a);
-	}
-
-	/**
-	 * Gets the number of bits in each color component value.
-	 */
-	public abstract int getBits();
-
-	/**
-	 * Gets an individual value from the color table.
-	 * <p>
-	 * Value is unsigned with {@link getBits} bits.
-	 *
-	 * @param comp The color component to query.
-	 * @param bin The index into the color table.
-	 * @return The value of the table at the specified position.
-	 */
-	public abstract int getNative(final int comp, final int bin);
-
-	// -- ArrayColorTable methods --
-
-	public T[] getValues() {
-		return values.clone();
 	}
 
 	// -- ColorTable methods --
