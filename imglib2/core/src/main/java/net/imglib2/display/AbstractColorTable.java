@@ -81,7 +81,6 @@ public abstract class AbstractColorTable<T> implements ArrayColorTable<T> {
 
 	// -- ColorTable methods --
 
-	/* @see ColorTable#lookupARGB(double, double, double) */
 	@Override
 	public int lookupARGB(final double min, final double max, final double value) {
 		int bins = getLength();
@@ -89,38 +88,25 @@ public abstract class AbstractColorTable<T> implements ArrayColorTable<T> {
 		return argb(bin);
 	}
 
-	/**
-	 * Gets the number of color components in the table (typically 3 for RGB or
-	 * 4 for RGBA).
-	 */
 	@Override
 	public int getComponentCount() {
 		return values.length;
 	}
 
 	/**
-	 * Gets an individual value from the color table.
+	 * {@inheritDoc}
 	 * <p>
 	 * Value is unsigned 8 bits.
-	 *
-	 * @param comp The color component to query.
-	 * @param bin The index into the color table.
-	 * @return The value of the table at the specified position.
+	 * </p>
 	 */
 	@Override
 	public abstract int get(final int comp, final int bin);
 
 	/**
-	 * Gets an individual value from a color table with given number of bins.
-	 * <p>
-	 * Specifying total bins allows for resampling.
+	 * {@inheritDoc}
 	 * <p>
 	 * Value is unsigned 8 bits.
-	 *
-	 * @param comp The color component to query.
-	 * @param bins The total number of bins.
-	 * @param bin The index into the color table.
-	 * @return The value of the table at the specified position.
+	 * </p>
 	 */
 	@Override
 	public abstract int getResampled(final int comp, final int bins, final int bin);
