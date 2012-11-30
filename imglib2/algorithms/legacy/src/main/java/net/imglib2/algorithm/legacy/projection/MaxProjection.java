@@ -133,7 +133,8 @@ public class MaxProjection< T extends Comparable< T > & Type< T > > implements O
 			for (int ithread = 0; ithread < threads.length; ++ithread)
 	            threads[ithread] = new Thread(new Runnable()
 	            {
-	                public void run()
+	                @Override
+									public void run()
 	                {
 	                	// Thread ID
 	                	final int myNumber = ai.getAndIncrement();

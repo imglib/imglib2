@@ -214,7 +214,6 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	{
 		if ( NativeType.class.isInstance( type ) )
 			return new CellImgFactory( defaultCellDimensions );
-		else
-			throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
+		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 }

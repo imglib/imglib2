@@ -436,7 +436,7 @@ public class BinningTest {
 
         // fill up the histogram with uniform values
         for (double value = min; value <= max; value += inc) {
-            int bin = (int) Binning.valueToBin(bins, min, max, value);
+            int bin = Binning.valueToBin(bins, min, max, value);
             ++histogram[bin];
         }
 

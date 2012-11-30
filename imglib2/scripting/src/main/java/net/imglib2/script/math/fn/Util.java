@@ -42,7 +42,6 @@ public class Util
 	/** Return an IFunction constructed from the {@param ob}.
 	 * 
 	 * @param ob May be any of {@link IterableRealInterval}, {@link IFunction} or {@link Number}.
-	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	static public final IFunction wrap(final Object ob) {

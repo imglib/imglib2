@@ -45,6 +45,7 @@ import net.imglib2.type.numeric.RealType;
  */
 public class StdDeviation< T extends RealType< T >, V extends RealType< V >> extends Variance< T, V >
 {
+	@Override
 	public V compute( Iterator< T > input, V output )
 	{
 		super.compute( input, output );

@@ -87,9 +87,6 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * Euclidean distance to the reference. Data is accessed through a
 	 * {@link Sampler} that guarantees write access if the underlying data set
 	 * is writable.
-	 * 
-	 * @param i
-	 * @return
 	 */
 	public Sampler< T > getSampler( final int i );
 
@@ -97,9 +94,6 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * Access the position of the <em>i</em><sup>th</sup> neighbor within
 	 * radius. If {@code sortResults} was set to true, neighbors are ordered by
 	 * square Euclidean distance to the reference.
-	 * 
-	 * @param i
-	 * @return
 	 */
 	public RealLocalizable getPosition( final int i );
 
@@ -108,18 +102,12 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * used for the last search and the <em>i</em><sup>th</sup> neighbor. If
 	 * {@code sortResults} was set to true, neighbors are ordered by square
 	 * Euclidean distance to the reference.
-	 * 
-	 * @param i
-	 * @return
 	 */
 	public double getSquareDistance( final int i );
 
 	/**
 	 * Access the Euclidean distance between the reference location as used for
 	 * the last search and the <em>i</em><sup>th</sup> neighbor.
-	 * 
-	 * @param i
-	 * @return
 	 */
 	public double getDistance( final int i );
 }

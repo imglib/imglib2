@@ -57,7 +57,7 @@ public class MidGrey< T extends RealType< T >, IN extends Iterator< T >> impleme
 	public BitType compute( IN input, T px, BitType output )
 	{
 
-		double min = Double.MAX_VALUE;;
+		double min = Double.MAX_VALUE;
 		double max = -Double.MAX_VALUE;
 
 		while ( input.hasNext() )

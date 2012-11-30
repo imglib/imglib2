@@ -127,9 +127,6 @@ public class ListImg< T > extends AbstractListImg< T >
 		{
 			return copyWithType( ( ListImg< Type > ) this );
 		}
-		else
-		{
-			return new ListImg< T >( this.pixels, dimension );
-		}
+		return new ListImg< T >( this.pixels, dimension );
 	}
 }

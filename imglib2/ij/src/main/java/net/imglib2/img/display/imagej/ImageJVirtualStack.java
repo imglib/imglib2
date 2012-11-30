@@ -129,8 +129,8 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	{
 		if ( interval.numDimensions() == 1 )
 			return 1;
-		else
-			return ( int ) interval.dimension( 1 );
+
+		return ( int ) interval.dimension( 1 );
 	}
 
 	/**

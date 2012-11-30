@@ -165,8 +165,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	{
 		if ( column == n )
 			return t[ row ];
-		else
-			return a.get( row, column );
+		return a.get( row, column );
 	}
 	
 	@Override

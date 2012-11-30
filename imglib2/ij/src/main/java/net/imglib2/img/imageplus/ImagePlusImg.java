@@ -171,9 +171,6 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 	 * 2d composite image [width,height,channels] as well.  A composite 3d
 	 * stack has four dimensions [width,height,channels,depth], as a time
 	 * series five [width,height,channels,depth,frames].
-	 *
-	 * @param imp
-	 * @return
 	 */
 	protected static long[] reduceDimensions( final ImagePlus imp )
 	{

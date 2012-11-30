@@ -108,7 +108,7 @@ public class RandomAccessTest
 		for( int d = 0; d < a.numDimensions(); ++d )
 		{
 			Assert.assertTrue( expected[ d ] == a.getLongPosition( d ) );
-			Assert.assertTrue( expected[ d ] == (long) a.getIntPosition( d ) );
+			Assert.assertTrue( expected[ d ] == a.getIntPosition( d ) );
 			Assert.assertTrue( expected[ d ] == (long) a.getFloatPosition( d ) );
 			Assert.assertTrue( expected[ d ] == (long) a.getDoublePosition( d ) );
 		}

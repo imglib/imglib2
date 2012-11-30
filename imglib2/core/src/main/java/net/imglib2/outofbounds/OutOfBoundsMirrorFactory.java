@@ -54,7 +54,7 @@ import net.imglib2.RandomAccessible;
  */
 public class OutOfBoundsMirrorFactory< T, F extends Interval & RandomAccessible< T > > implements OutOfBoundsFactory< T, F >
 {
-	static public enum Boundary { SINGLE, DOUBLE };
+	static public enum Boundary { SINGLE, DOUBLE }
 	
 	final protected Boundary boundary;
 	
@@ -68,7 +68,6 @@ public class OutOfBoundsMirrorFactory< T, F extends Interval & RandomAccessible<
 	{
 		if ( boundary == Boundary.SINGLE )
 			return new OutOfBoundsMirrorSingleBoundary< T >( f );
-		else
-			return new OutOfBoundsMirrorDoubleBoundary< T >( f );
+		return new OutOfBoundsMirrorDoubleBoundary< T >( f );
 	}
 }

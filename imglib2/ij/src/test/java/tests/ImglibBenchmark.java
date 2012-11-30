@@ -519,7 +519,6 @@ public class ImglibBenchmark {
 	private ListImg<UnsignedByteType> createListImage() {
 		if ( dimensions[ 0 ] * dimensions[ 1 ] > Integer.MAX_VALUE )
 			return null;
-		@SuppressWarnings( "unchecked" )
 		final
 		ListImg<UnsignedByteType> listContainer = ( ListImg<UnsignedByteType> ) createImage( dimensions, new ListImgFactory< UnsignedByteType >() );
 		return listContainer;

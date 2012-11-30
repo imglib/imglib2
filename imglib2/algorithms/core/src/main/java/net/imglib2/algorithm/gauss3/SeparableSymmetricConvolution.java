@@ -109,7 +109,7 @@ public final class SeparableSymmetricConvolution
 		{
 			if ( ! ( sourceType instanceof RealType ) )
 				throw new IncompatibleTypeException( sourceType, "RealType source required for convolving into a RealType target" );
-			if ( ( ( Object ) targetType ) instanceof DoubleType )
+			if ( ( targetType ) instanceof DoubleType )
 				convolveRealTypeDouble( halfkernels, ( RandomAccessible ) source, ( RandomAccessibleInterval ) target, numThreads );
 			else
 				convolveRealTypeFloat( halfkernels, ( RandomAccessible ) source, ( RandomAccessibleInterval ) target, numThreads );
@@ -419,10 +419,7 @@ public final class SeparableSymmetricConvolution
 	{
 		if ( canUseArrayImgFactory( targetsize, halfkernels ) )
 			return new ArrayImgFactory< T >();
-		else
-		{
-			final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel(), 1.0 / targetsize.numDimensions() );
-			return new CellImgFactory< T >( cellSize );
-		}
+		final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel(), 1.0 / targetsize.numDimensions() );
+		return new CellImgFactory< T >( cellSize );
 	}
 }

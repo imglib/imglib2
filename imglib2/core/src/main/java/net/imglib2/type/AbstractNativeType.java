@@ -47,12 +47,18 @@ public abstract class AbstractNativeType<T extends AbstractNativeType<T>> implem
 {
 	protected int i = 0;
 
+	@Override
 	public void updateIndex( final int j ) { this.i = j; }
+	@Override
 	public int getIndex() { return i; }
 	
+	@Override
 	public void incIndex() { ++i; }
+	@Override
 	public void incIndex( final int increment ) { i += increment; }
+	@Override
 	public void decIndex() { --i; }
+	@Override
 	public void decIndex( final int decrement ) { i -= decrement; }
 		
 	@Override

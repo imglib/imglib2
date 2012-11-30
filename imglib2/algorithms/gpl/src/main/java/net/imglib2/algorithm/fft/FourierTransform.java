@@ -219,9 +219,9 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		{
 			// how much do we want to extend
 			if ( inputSize == null )
-				imageExtension[ d ] = (int)Util.round( interval.dimension( d ) * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
+				imageExtension[ d ] = Util.round( interval.dimension( d ) * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
 			else
-				imageExtension[ d ] = (int)Util.round( inputSize[ d ] * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
+				imageExtension[ d ] = Util.round( inputSize[ d ] * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
 			
 			if ( imageExtension[ d ] < minExtension )
 				imageExtension[ d ] = minExtension;
@@ -251,15 +251,13 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	{
 		if ( inputSize == null )
 			return originalOffset;
-		else
-			return inputSizeOffset;
+		return inputSizeOffset;
 	}
 	public int[] getFFTInputSize( )
 	{
 		if ( inputSize == null )
 			return originalSize.clone();
-		else
-			return inputSize.clone();
+		return inputSize.clone();
 	}
 	
 	@Override

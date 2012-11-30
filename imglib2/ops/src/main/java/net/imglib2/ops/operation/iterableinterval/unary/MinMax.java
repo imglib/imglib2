@@ -44,10 +44,11 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Pair;
 
 /**
+ * TODO
  * 
  * @author Christian Dietz (University of Konstanz)
  * 
- * @param <T>
+ * @param <T> TODO
  */
 public final class MinMax< T extends RealType< T >> implements UnaryOutputOperation< IterableInterval< T >, Pair< T, T >>
 {
@@ -82,9 +83,6 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		this( 0, null );
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Pair< T, T > createEmptyOutput( IterableInterval< T > op )
 	{
@@ -92,11 +90,6 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		return new Pair< T, T >( t.createVariable(), t.createVariable() );
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public Pair< T, T > compute( IterableInterval< T > op, Pair< T, T > r )
 	{

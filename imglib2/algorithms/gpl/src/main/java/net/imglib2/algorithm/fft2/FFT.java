@@ -99,18 +99,15 @@ public class FFT
 
 			return output;
 		}
-		else
-		{
-			// with cropping, computed based on the original size of the input image
-			final Img< R > output =  factory.create( outputDimensions, type );
+		// with cropping, computed based on the original size of the input image
+		final Img< R > output =  factory.create( outputDimensions, type );
 
-			for ( int d = numDimensions - 1; d > 0; --d )
-				FFTMethods.complexToComplex( fft, d, false );
-			
-			FFTMethods.complexToReal( fft, output, FFTMethods.unpaddingIntervalCentered( inputInterval, outputDimensions ), 0 );
-			
-			return output;
-		}
+		for ( int d = numDimensions - 1; d > 0; --d )
+			FFTMethods.complexToComplex( fft, d, false );
+		
+		FFTMethods.complexToReal( fft, output, FFTMethods.unpaddingIntervalCentered( inputInterval, outputDimensions ), 0 );
+		
+		return output;
 	}	
 
 	final public static < R extends RealType< R >, C extends ComplexType< C > > void realToComplex( final RandomAccessibleInterval< R > input, final RandomAccessibleInterval< C > output )

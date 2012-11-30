@@ -475,32 +475,28 @@ public class Util
 	{
 		if ( c == 0 )
 			return z;
-		else
-			return Math.log10( ( z + Math.sqrt( z * z + c * c ) ) / 2.0 );
+		return Math.log10( ( z + Math.sqrt( z * z + c * c ) ) / 2.0 );
 	}
 
 	public static float gLog( final float z, final float c )
 	{
 		if ( c == 0 )
 			return z;
-		else
-			return ( float ) Math.log10( ( z + Math.sqrt( z * z + c * c ) ) / 2.0 );
+		return ( float ) Math.log10( ( z + Math.sqrt( z * z + c * c ) ) / 2.0 );
 	}
 
 	public static double gLogInv( final double w, final double c )
 	{
 		if ( c == 0 )
 			return w;
-		else
-			return Math.pow( 10, w ) - ( ( ( c * c ) * Math.pow( 10, -w ) ) / 4.0 );
+		return Math.pow( 10, w ) - ( ( ( c * c ) * Math.pow( 10, -w ) ) / 4.0 );
 	}
 
 	public static double gLogInv( final float w, final float c )
 	{
 		if ( c == 0 )
 			return w;
-		else
-			return Math.pow( 10, w ) - ( ( ( c * c ) * Math.pow( 10, -w ) ) / 4.0 );
+		return Math.pow( 10, w ) - ( ( ( c * c ) * Math.pow( 10, -w ) ) / 4.0 );
 	}
 
 	public static boolean isApproxEqual( final float a, final float b, final float threshold )
@@ -712,8 +708,7 @@ public class Util
 
 		if ( value == null || value.length == 0 )
 			return out;
-		else
-			out = "(" + value[ 0 ];
+		out = "(" + value[ 0 ];
 
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
@@ -729,8 +724,7 @@ public class Util
 
 		if ( value == null || value.length == 0 )
 			return out;
-		else
-			out = "(" + value[ 0 ];
+		out = "(" + value[ 0 ];
 
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
@@ -746,8 +740,7 @@ public class Util
 
 		if ( localizable == null || localizable.numDimensions() == 0 )
 			return out;
-		else
-			out = "(" + localizable.getFloatPosition( 0 );
+		out = "(" + localizable.getFloatPosition( 0 );
 
 		for ( int i = 1; i < localizable.numDimensions(); i++ )
 			out += ", " + localizable.getFloatPosition( i );
@@ -790,8 +783,7 @@ public class Util
 
 		if ( value == null || value.length == 0 )
 			return out;
-		else
-			out = "(" + value[ 0 ];
+		out = "(" + value[ 0 ];
 
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
@@ -807,8 +799,7 @@ public class Util
 
 		if ( value == null || value.length == 0 )
 			return out;
-		else
-			out = "(" + value[ 0 ];
+		out = "(" + value[ 0 ];
 
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
@@ -824,8 +815,7 @@ public class Util
 
 		if ( value == null || value.length == 0 )
 			return out;
-		else
-			out = "(";
+		out = "(";
 
 		if ( value[ 0 ] )
 			out += "1";
@@ -867,16 +857,14 @@ public class Util
 	{
 		if ( value1.compareTo( value2 ) >= 0 )
 			return value1;
-		else
-			return value2;
+		return value2;
 	}
 
 	public static < T extends Type< T > & Comparable< T >> T min( final T value1, final T value2 )
 	{
 		if ( value1.compareTo( value2 ) <= 0 )
 			return value1;
-		else
-			return value2;
+		return value2;
 	}
 
 	public static boolean[][] getRecursiveCoordinates( final int numDimensions )
@@ -1151,8 +1139,7 @@ public class Util
 		// at the position of creation will fail
 		if ( RandomAccessibleInterval.class.isInstance( ra ) )
 			return getTypeFromInterval( ( RandomAccessibleInterval< T > ) ra );
-		else
-			return ra.randomAccess().get();
+		return ra.randomAccess().get();
 	}
 
 	/**
@@ -1191,8 +1178,7 @@ public class Util
 		// at the position of creation will fail
 		if ( RealRandomAccessibleRealInterval.class.isInstance( ra ) )
 			return getTypeFromRealInterval( ( RealRandomAccessibleRealInterval< T > ) ra );
-		else
-			return ra.realRandomAccess().get();
+		return ra.realRandomAccess().get();
 	}
 
 	/**
@@ -1215,10 +1201,7 @@ public class Util
 	}
 
 	/**
-	 * Checks whether n {@link IterableInterval} have the same iteration order
-	 * 
-	 * @param intervals
-	 * @return
+	 * Checks whether n {@link IterableInterval} have the same iteration order.
 	 */
 	public static boolean equalIterationOrder( IterableInterval< ? >... intervals )
 	{

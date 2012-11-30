@@ -74,11 +74,6 @@ public class ConvexHull2D< K extends RandomAccessibleInterval< BitType > & Itera
 		m_fill = fill;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public K compute( final K in, final K r )
 	{

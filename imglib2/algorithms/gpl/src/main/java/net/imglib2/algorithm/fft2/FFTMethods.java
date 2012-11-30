@@ -164,6 +164,7 @@ public class FFTMethods
 			for ( int ithread = 0; ithread < threads.length; ++ithread )
 				threads[ithread] = new Thread(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						final int myNumber = ai.getAndIncrement();
@@ -381,6 +382,7 @@ A:						while ( cursorDim.hasNext() )
 			for ( int ithread = 0; ithread < threads.length; ++ithread )
 				threads[ithread] = new Thread(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						final int myNumber = ai.getAndIncrement();
@@ -497,8 +499,7 @@ A:						while ( cursorDim.hasNext() )
 	{
 		if ( forward )
 			return complexToComplex( data, dim, forward, false, Runtime.getRuntime().availableProcessors() );
-		else
-			return complexToComplex( data, dim, forward, true );
+		return complexToComplex( data, dim, forward, true );
 	}
 
 	/**
@@ -554,6 +555,7 @@ A:						while ( cursorDim.hasNext() )
 			for ( int ithread = 0; ithread < threads.length; ++ithread )
 				threads[ithread] = new Thread(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						final int myNumber = ai.getAndIncrement();
@@ -1015,15 +1017,13 @@ A:						while ( cursorDim.hasNext() )
 	{
 		if ( FftReal.nfftFast( inputSize ) / 2 + 1 == outputSize || FftReal.nfftSmall( inputSize ) / 2 + 1 == outputSize )
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	final protected static boolean verifyComplexToComplexfftDimensions( final int inputSize, final int outputSize )
 	{
 		if ( FftComplex.nfftFast( inputSize ) == outputSize || FftComplex.nfftSmall( inputSize ) == outputSize )
 			return true;
-		else
-			return false;
+		return false;
 	}
 }

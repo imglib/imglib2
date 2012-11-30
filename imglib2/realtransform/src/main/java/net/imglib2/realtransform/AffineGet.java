@@ -52,26 +52,17 @@ public interface AffineGet extends InvertibleRealTransform
 	/**
 	 * Get a field of the <em>n</em>&times;(<em>n</em>+1) affine transformation
 	 * matrix.
-	 * 
-	 * @param row
-	 * @param column
-	 * @return
 	 */
 	public double get( final int row, final int column );
 	
 	/**
 	 * Get a copy of the <em>n</em>&times;(<em>n</em>+1) affine transformation
 	 * matrix as a row packed array similar to Jama.
-	 *  
-	 * @return
 	 */
 	public double[] getRowPackedCopy();
 	
 	/**
 	 * Get the constant partial differential vector for dimension d.
-	 * 
-	 * @param d
-	 * @return
 	 */
 	public RealLocalizable d( int d );
 	

@@ -136,12 +136,12 @@ public class NewIterableInterval<T> extends AbstractInterval implements Iterable
 
 		@Override
 		public float getFloatPosition(int d) {
-			return (float) getLongPosition(d);
+			return getLongPosition(d);
 		}
 
 		@Override
 		public double getDoublePosition(int d) {
-			return (double) getLongPosition(d);
+			return getLongPosition(d);
 		}
 
 		@Override

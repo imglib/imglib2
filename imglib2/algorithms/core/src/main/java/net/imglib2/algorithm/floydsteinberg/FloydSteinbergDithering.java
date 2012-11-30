@@ -221,79 +221,76 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 			
 			return kernel;			
 		}
-		else
+		final Img<FloatType> kernel = factory.create( Util.getArrayFromValue( 3L, numDimensions), new FloatType() );				
+		final Cursor<FloatType> cursor = kernel.cursor();
+		
+		final int numValues = (int) ( kernel.size() / 2 );
+		final float[] rndValues = new float[ numValues ];
+		float sum = 0;
+		Random rnd = new Random( 435345 );
+		
+		for ( int i = 0; i < numValues; ++i )
 		{
-			final Img<FloatType> kernel = factory.create( Util.getArrayFromValue( 3L, numDimensions), new FloatType() );				
-			final Cursor<FloatType> cursor = kernel.cursor();
-			
-			final int numValues = (int) ( kernel.size() / 2 );
-			final float[] rndValues = new float[ numValues ];
-			float sum = 0;
-			Random rnd = new Random( 435345 );
-			
-			for ( int i = 0; i < numValues; ++i )
-			{
-				rndValues[ i ] = rnd.nextFloat();
-				sum += rndValues[ i ];
-			}
-
-			for ( int i = 0; i < numValues; ++i )
-				rndValues[ i ] /= sum;
-
-			int count = 0;
-			while ( cursor.hasNext() )
-			{
-				cursor.fwd();
-				
-				if ( count > numValues )
-					cursor.get().setReal( rndValues[ count - numValues - 1 ] );				
-				
-				++count;
-			}
-			
-			//
-			// Optimize
-			//
-			for ( int i = 0; i < 100; ++i )
-			for ( int d = 0; d < numDimensions; ++d )
-			{
-				cursor.reset();
-				
-				float sumD = 0;
-				
-				while ( cursor.hasNext() )
-				{
-					cursor.fwd();
-					if ( cursor.getIntPosition( d ) != 1 )
-						sumD += cursor.get().get(); 				
-				}
-				
-				cursor.reset();
-				while ( cursor.hasNext() )
-				{
-					cursor.fwd();
-
-					if ( cursor.getIntPosition( d ) != 1 )
-						cursor.get().set( cursor.get().get() / sumD );
-				}
-			}
-
-			sum = 0;
-			
-			cursor.reset();
-			while ( cursor.hasNext() )
-			{
-				cursor.fwd();
-				sum += cursor.get().get();
-			}
-
-			cursor.reset();
-			while ( cursor.hasNext() )
-			{
-				cursor.fwd();
-				cursor.get().set( cursor.get().get() / sum );
-			}
-			return kernel;			
+			rndValues[ i ] = rnd.nextFloat();
+			sum += rndValues[ i ];
 		}
+
+		for ( int i = 0; i < numValues; ++i )
+			rndValues[ i ] /= sum;
+
+		int count = 0;
+		while ( cursor.hasNext() )
+		{
+			cursor.fwd();
+			
+			if ( count > numValues )
+				cursor.get().setReal( rndValues[ count - numValues - 1 ] );				
+			
+			++count;
+		}
+		
+		//
+		// Optimize
+		//
+		for ( int i = 0; i < 100; ++i )
+		for ( int d = 0; d < numDimensions; ++d )
+		{
+			cursor.reset();
+			
+			float sumD = 0;
+			
+			while ( cursor.hasNext() )
+			{
+				cursor.fwd();
+				if ( cursor.getIntPosition( d ) != 1 )
+					sumD += cursor.get().get(); 				
+			}
+			
+			cursor.reset();
+			while ( cursor.hasNext() )
+			{
+				cursor.fwd();
+
+				if ( cursor.getIntPosition( d ) != 1 )
+					cursor.get().set( cursor.get().get() / sumD );
+			}
+		}
+
+		sum = 0;
+		
+		cursor.reset();
+		while ( cursor.hasNext() )
+		{
+			cursor.fwd();
+			sum += cursor.get().get();
+		}
+
+		cursor.reset();
+		while ( cursor.hasNext() )
+		{
+			cursor.fwd();
+			cursor.get().set( cursor.get().get() / sum );
+		}
+		return kernel;
 	}
 }

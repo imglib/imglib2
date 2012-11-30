@@ -217,6 +217,7 @@ public class JUnitTestBase {
 			this.factor = factor;
 		}
 
+		@Override
 		public float calculate( long[] pos ) {
 			return 1 + pos[0] + 2 * (pos[0] + 1) * pos[1] + factor * pos[2] * pos[2];
 		}
@@ -234,6 +235,7 @@ public class JUnitTestBase {
 			this.x = x; this.y = y; this.z = z;
 		}
 
+		@Override
 		public float calculate( long[] pos ) {
 			return pos[0] == x && pos[1] == y && pos[2] == z ? 1 : 0;
 		}

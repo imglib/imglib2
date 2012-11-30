@@ -63,10 +63,7 @@ public class GrayscaleReconstructionByErosion< T extends RealType< T >, V extend
 		double qd = q.getRealDouble();
 		double id = i.getRealDouble();
 
-		if ( qd > pd && qd != id )
-			return true;
-		else
-			return false;
+		return qd > pd && qd != id;
 	}
 
 	@Override
@@ -74,8 +71,7 @@ public class GrayscaleReconstructionByErosion< T extends RealType< T >, V extend
 	{
 		if ( a.getRealDouble() < b.getRealDouble() )
 			return a;
-		else
-			return b;
+		return b;
 	}
 
 	@Override
@@ -85,12 +81,9 @@ public class GrayscaleReconstructionByErosion< T extends RealType< T >, V extend
 		{
 			return a;
 		}
-		else
-		{
-			V r = a.createVariable();
-			r.setReal( b.getRealDouble() );
-			return r;
-		}
+		V r = a.createVariable();
+		r.setReal( b.getRealDouble() );
+		return r;
 	}
 
 	@Override
@@ -100,10 +93,7 @@ public class GrayscaleReconstructionByErosion< T extends RealType< T >, V extend
 		double qd = q.getRealDouble();
 		double id = i.getRealDouble();
 
-		if ( qd > pd && qd > id )
-			return true;
-		else
-			return false;
+		return qd > pd && qd > id;
 	}
 
 	@Override

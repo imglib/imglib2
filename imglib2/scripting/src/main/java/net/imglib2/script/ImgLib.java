@@ -128,9 +128,8 @@ public class ImgLib {
 		if (fileType.equals("tif") || fileType.equals("tiff")) {
 			if (image.numDimensions() > 2) {
 				return saver.saveAsTiffStack(path);
-			} else {
-				return saver.saveAsTiff(path);
 			}
+			return saver.saveAsTiff(path);
 		} else if (fileType.equals("zip"))
 			return saver.saveAsZip(path);
 		else if (fileType.equals("gif"))

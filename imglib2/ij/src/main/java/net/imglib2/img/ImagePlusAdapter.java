@@ -324,11 +324,6 @@ public class ImagePlusAdapter
 		}		
 	}
 
-	/**
-	 * @param <T>
-	 * @param input
-	 * @return
-	 */
 	protected static < T extends Type< T > > Img< FloatType > convertToFloat(
 			final Img< T > input, final Converter< T, FloatType > c )
 			{		

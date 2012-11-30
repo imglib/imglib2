@@ -63,8 +63,7 @@ import net.imglib2.type.numeric.IntegerType;
  * caller first interns { "Foo", "Bar" } and then requests the mapping of the
  * returned object.
  * 
- * @param <T>
- * @param <N>
+ * @param <T> TODO
  * 
  * @author Lee Kamentsky
  */
@@ -277,9 +276,6 @@ public class LabelingMapping< T extends Comparable< T >>
 
 	/**
 	 * Return the canonical list for the given list
-	 * 
-	 * @param src
-	 * @return
 	 */
 	public synchronized List< T > intern( final List< T > src )
 	{
@@ -344,8 +340,6 @@ public class LabelingMapping< T extends Comparable< T >>
 
 	/**
 	 * Returns the number of indexed labeling lists
-	 * 
-	 * @return
 	 */
 	public int numLists()
 	{
@@ -353,6 +347,8 @@ public class LabelingMapping< T extends Comparable< T >>
 	}
 
 	/**
+	 * TODO
+	 * 
 	 * @return the labels defined in the mapping.
 	 */
 	public List< T > getLabels()

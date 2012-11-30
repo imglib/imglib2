@@ -130,6 +130,7 @@ public class MomentOfInertiaTensor3D< T extends RealType< T >> extends MultiThre
 			threads[ i ] = new Thread( "" + BASE_ERROR_MESSAGE + "thread " + i )
 			{
 
+				@Override
 				public void run()
 				{
 
@@ -280,7 +281,7 @@ public class MomentOfInertiaTensor3D< T extends RealType< T >> extends MultiThre
 						Dcursor.get().setReal( F );
 
 					}
-				};
+				}
 			};
 
 		}

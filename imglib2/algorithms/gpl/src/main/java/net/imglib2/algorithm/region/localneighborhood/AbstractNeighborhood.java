@@ -269,9 +269,7 @@ public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterva
 	}
 
 	/**
-	 * Updates the source
-	 * 
-	 * @param source
+	 * Updates the source.
 	 */
 	public void updateSource(IN source) {
 		this.source = source;
@@ -279,10 +277,7 @@ public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterva
 	}
 
 	/**
-	 * Copy the {@link AbstractNeighborhood}
-	 * 
-	 * @param <K>
-	 * @return
+	 * Copies the {@link AbstractNeighborhood}.
 	 */
 	public abstract AbstractNeighborhood<T, IN> copy();
 

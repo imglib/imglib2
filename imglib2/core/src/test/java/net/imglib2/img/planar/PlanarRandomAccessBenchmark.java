@@ -127,12 +127,11 @@ public class PlanarRandomAccessBenchmark
 
 		if (values.size() % 2 == 1)
 			return values.get((values.size() + 1) / 2 - 1);
-		else {
-			long lower = values.get(values.size() / 2 - 1);
-			long upper = values.get(values.size() / 2);
 
-			return (lower + upper) / 2;
-		}
+		long lower = values.get(values.size() / 2 - 1);
+		long upper = values.get(values.size() / 2);
+
+		return (lower + upper) / 2;
 	}
 
 	public interface Benchmark
@@ -168,6 +167,7 @@ public class PlanarRandomAccessBenchmark
 		System.out.println( "benchmarking fill" );
 		benchmark( new Benchmark()
 		{
+			@Override
 			public void run()
 			{
 				randomAccessBenchmark.fillImage();
@@ -179,6 +179,7 @@ public class PlanarRandomAccessBenchmark
 		System.out.println( "benchmarking copy planar to planar" );
 		benchmark( new Benchmark()
 		{
+			@Override
 			public void run()
 			{
 				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
@@ -190,6 +191,7 @@ public class PlanarRandomAccessBenchmark
 		System.out.println( "benchmarking copy planar to array" );
 		benchmark( new Benchmark()
 		{
+			@Override
 			public void run()
 			{
 				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
@@ -199,6 +201,7 @@ public class PlanarRandomAccessBenchmark
 		System.out.println( "benchmarking copy array to planar" );
 		benchmark( new Benchmark()
 		{
+			@Override
 			public void run()
 			{
 				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImgCopy, randomAccessBenchmark.intImg );

@@ -126,7 +126,8 @@ public class ImageCalculator< S extends Type<S>, T extends Type<T>, U extends Ty
         for (int ithread = 0; ithread < threads.length; ++ithread)
             threads[ithread] = new Thread(new Runnable()
             {
-                public void run()
+                @Override
+								public void run()
                 {
                 	// Thread ID
                 	final int myNumber = ai.getAndIncrement();
@@ -215,7 +216,6 @@ public class ImageCalculator< S extends Type<S>, T extends Type<T>, U extends Ty
 	{
 		if ( factory == null || size == null || type == null )
 			return null;
-		else 
-			return factory.create( size, type );			
+		return factory.create( size, type );			
 	}
 }

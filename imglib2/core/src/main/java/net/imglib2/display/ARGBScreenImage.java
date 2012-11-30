@@ -46,8 +46,6 @@ import java.awt.image.Raster;
 import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 
-import net.imglib2.IterableInterval;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.ARGBType;
@@ -58,7 +56,7 @@ import net.imglib2.type.numeric.ARGBType;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements ScreenImage, IterableInterval< ARGBType >, RandomAccessibleInterval< ARGBType >
+public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements ScreenImage
 {
 	final protected int[] data;
 	final protected BufferedImage image;
@@ -70,13 +68,13 @@ public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements S
 		this( width, height, new int[ width * height ] );
 	}
 
-	/** Create an {@link Image} with {@param data}. Writing to the {@param data} array will update the {@link Image}. */
+	/** Create an {@link Image} with {@code data}. Writing to the {@code data} array will update the {@link Image}. */
 	public ARGBScreenImage( final int width, final int height, final IntArray data )
 	{
 		this( width, height, data.getCurrentStorageArray() );
 	}
 
-	/** Create an {@link Image} with {@param data}. Writing to the {@param data} array will update the {@link Image}. */
+	/** Create an {@link Image} with {@code data}. Writing to the {@code data} array will update the {@link Image}. */
 	public ARGBScreenImage( final int width, final int height, final int[] data )
 	{
 		super( new IntArray( data ), new long[]{ width, height }, 1 );
@@ -97,7 +95,7 @@ public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements S
 	}
 
 	/** The underlying array holding the data. Writing to this array will change
-	 * the content of the {@link Image} returned by {@link ARGBScreenImage#image() */
+	 * the content of the {@link Image} returned by {@link ARGBScreenImage#image()} */
 	public int[] getData()
 	{
 		return data;

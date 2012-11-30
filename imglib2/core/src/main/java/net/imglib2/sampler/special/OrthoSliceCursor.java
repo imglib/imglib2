@@ -63,7 +63,7 @@ import net.imglib2.type.Type;
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 @Deprecated
-public class OrthoSliceCursor< T extends Type< T > > extends AbstractWrappedInterval< Interval > implements Cursor< T >, Interval
+public class OrthoSliceCursor< T extends Type< T > > extends AbstractWrappedInterval< Interval > implements Cursor< T >
 {
 	/* index of x and y dimensions */
 	final protected int x, y;

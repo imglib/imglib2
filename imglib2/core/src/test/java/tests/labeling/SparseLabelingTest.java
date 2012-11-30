@@ -115,7 +115,7 @@ public class SparseLabelingTest
 	public void testDefaultConstructor()
 	{
 		final long[] dimensions = { 5, 6, 7 };
-		Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new NtreeImgFactory< IntType >().create( dimensions, new IntType() ) );;
+		Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new NtreeImgFactory< IntType >().create( dimensions, new IntType() ) );
 		assertEquals( 3, labeling.numDimensions() );
 	}
 
@@ -496,6 +496,6 @@ public class SparseLabelingTest
 		// Set tp 5,5,5
 		randomAccess.setPosition( posB );
 
-		assertEquals( ( int ) randomAccess.get().get(), label );
+		assertEquals( randomAccess.get().get(), label );
 	}
 }

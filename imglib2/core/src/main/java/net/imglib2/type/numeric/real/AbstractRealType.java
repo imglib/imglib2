@@ -84,7 +84,7 @@ public abstract class AbstractRealType<T extends AbstractRealType<T>> extends Ab
 	@Override
 	public void setZero() { setReal( 0 ); }
 	@Override
-	public void setOne() { setReal( 1 ); };	
+	public void setOne() { setReal( 1 ); }
 	
 	@Override
 	public int compareTo( final T c ) 

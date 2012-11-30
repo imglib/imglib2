@@ -65,6 +65,7 @@ public class InverseFourierConvolution< T extends RealType< T >, S extends RealT
 	 * @param a
 	 * @param b
 	 */
+	@Override
 	protected void multiply( final Img< ComplexFloatType > a, final Img< ComplexFloatType > b )
 	{
 		final Cursor<ComplexFloatType> cursorA = a.cursor();

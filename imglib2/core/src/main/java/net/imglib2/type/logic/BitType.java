@@ -218,10 +218,7 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	{
 		final boolean value = dataAccess.getValue(i);
 
-		if ( value )
-			return "1";
-		else
-			return "0";
+		return value ? "1" : "0";
 	}
 
 	@Override

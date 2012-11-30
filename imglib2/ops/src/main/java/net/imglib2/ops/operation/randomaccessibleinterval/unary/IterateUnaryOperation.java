@@ -121,8 +121,7 @@ public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V
 			{
 				if ( m_service.isShutdown() )
 					return out;
-				else
-					futures[ i ] = m_service.submit( t );
+				futures[ i ] = m_service.submit( t );
 			}
 			else
 			{
@@ -163,7 +162,7 @@ public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V
 		if ( in instanceof ImgPlus )
 		{
 			ImgPlusView< TT > imgPlusView = new ImgPlusView< TT >( SubsetViews.iterableSubsetView( in, i ), ( ( ImgPlus ) in ).factory() );
-			new CopyMetadata( new CopyNamed(), new CopySourced(), new CopyImageMetadata(), new CopyCalibratedSpace( i ) ).compute( ( ImgPlus ) in, imgPlusView );;
+			new CopyMetadata( new CopyNamed(), new CopySourced(), new CopyImageMetadata(), new CopyCalibratedSpace( i ) ).compute( ( ImgPlus ) in, imgPlusView );
 			return ( II ) imgPlusView;
 		}
 

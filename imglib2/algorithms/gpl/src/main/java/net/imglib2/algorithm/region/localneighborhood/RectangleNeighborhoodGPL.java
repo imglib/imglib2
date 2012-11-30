@@ -106,8 +106,7 @@ public class RectangleNeighborhoodGPL<T, IN extends RandomAccessibleInterval<T>>
 	public AbstractNeighborhood<T, IN> copy() {
 		if (source != null)
 			return new RectangleNeighborhoodGPL<T, IN>(source, outOfBounds);
-		else
-			return new RectangleNeighborhoodGPL<T, IN>(n, outOfBounds);
+		return new RectangleNeighborhoodGPL<T, IN>(n, outOfBounds);
 	}
 
 }

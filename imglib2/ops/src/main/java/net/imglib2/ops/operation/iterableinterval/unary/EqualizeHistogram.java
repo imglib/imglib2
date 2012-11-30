@@ -42,16 +42,13 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * TODO
+ * 
  * @author Martin Horn (University of Konstanz)
  */
 public class EqualizeHistogram<T extends RealType<T>> implements
 		UnaryOperation<IterableInterval<T>, IterableInterval<T>> {
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public IterableInterval<T> compute(IterableInterval<T> in,
 			IterableInterval<T> r) {

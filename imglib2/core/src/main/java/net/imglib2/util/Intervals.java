@@ -227,10 +227,6 @@ public class Intervals
 	/**
 	 * Test whether the {@code containing} interval completely contains the
 	 * {@code contained} interval.
-	 * 
-	 * @param containing
-	 * @param contained
-	 * @return
 	 */
 	final static public boolean contains( final Interval containing, final Interval contained )
 	{
@@ -248,10 +244,6 @@ public class Intervals
 	/**
 	 * Test whether the {@code containing} interval completely contains the
 	 * {@code contained} interval.
-	 * 
-	 * @param containing
-	 * @param contained
-	 * @return
 	 */
 	final static public boolean contains( final RealInterval containing, final RealInterval contained )
 	{
@@ -267,8 +259,7 @@ public class Intervals
 	}
 
 	/**
-	 * Compute the number of elements contained in an (integer) {@link Interval}
-	 * .
+	 * Compute the number of elements contained in an (integer) {@link Interval}.
 	 * 
 	 * @return number of elements in {@code interval}.
 	 */
@@ -283,10 +274,6 @@ public class Intervals
 
 	/**
 	 * Tests weather two intervals are equal in their min / max
-	 * 
-	 * @param a
-	 * @param b
-	 * @return
 	 */
 	public static boolean equals( Interval a, Interval b )
 	{

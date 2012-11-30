@@ -125,6 +125,7 @@ public class MomentOfInertiaTensor2D< T extends RealType< T >> extends MultiThre
 			threads[ i ] = new Thread( "" + BASE_ERROR_MESSAGE + "thread " + i )
 			{
 
+				@Override
 				public void run()
 				{
 
@@ -245,7 +246,7 @@ public class MomentOfInertiaTensor2D< T extends RealType< T >> extends MultiThre
 						Dcursor.fwd( tensorDim );
 						Dcursor.get().setReal( c );
 					}
-				};
+				}
 			};
 
 		}

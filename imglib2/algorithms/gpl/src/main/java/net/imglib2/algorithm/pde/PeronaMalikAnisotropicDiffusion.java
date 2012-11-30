@@ -53,7 +53,7 @@ import net.imglib2.view.Views;
  * 
  * This algorithm implements the so-called anisotropic diffusion scheme of Perona & Malik, 1990,
  * with imglib. For details on the anisotropic diffusion principles, see 
- * {@link http://en.wikipedia.org/wiki/Anisotropic_diffusion}, and the original paper:
+ * {@link "http://en.wikipedia.org/wiki/Anisotropic_diffusion"}, and the original paper:
  * <pre>
  * Perona and Malik. 
  * Scale-Space and Edge Detection Using Anisotropic Diffusion. 
@@ -104,10 +104,9 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 	/**
 	 * Instantiate the Perona & Malik anisotropic diffusion process, with a custom diffusion function.
 	 *  
-	 * @param image  the target image, will be modified in place
+	 * @param img  the target image, will be modified in place
 	 * @param deltat  the integration constant for the numerical integration scheme. Typically less that 1.
 	 * @param function  the custom diffusion function.
-	 * @throws IncompatibleTypeException 
 	 * 
 	 * @see DiffusionFunction
 	 */
@@ -150,7 +149,6 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 	 * @param image  the target image, will be modified in place
 	 * @param deltat  the integration constant for the numerical integration scheme. Typically less that 1.
 	 * @param function  the custom diffusion function.
-	 * @throws IncompatibleTypeException 
 	 * 
 	 * @see DiffusionFunction
 	 */
@@ -225,6 +223,7 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 			final Chunk chunk = chunks.get( ithread );
 			threads[ithread] = new Thread(""+BASE_ERROR_MESSAGE+"thread "+ithread) {
 
+				@Override
 				public void run() {
 
 					long[] centralPosition = new long[image.numDimensions()];
@@ -288,6 +287,7 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 			final Chunk chunk = chunks.get( ithread );
 			threads[ithread] = new Thread(""+BASE_ERROR_MESSAGE+"thread "+ithread) {
 
+				@Override
 				public void run() {
 
 					Cursor<FloatType> incrementCursor = increment.localizingCursor();
@@ -457,10 +457,6 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 	
 	/**
 	 * Makes a copy of the {@link RandomAccessibleInterval} into a new {@link Img} of {@link FloatType}.
-	 * 
-	 * @param input
-	 * @param factory
-	 * @return
 	 */
 	protected static final < T extends RealType< T > > Img< FloatType > copy( final RandomAccessibleInterval< T > input, final ImgFactory< FloatType > factory )
 	{

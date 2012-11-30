@@ -1,6 +1,7 @@
 package interactive;
 import interactive.fractals.JuliaRealRandomAccessible;
 
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -35,7 +36,7 @@ public class JuliaRealViewer2DExample
 		public void mouseDragged( final MouseEvent e )
 		{
 			final int modifiers = e.getModifiersEx();
-			if ( ( modifiers & MouseEvent.BUTTON3_DOWN_MASK ) != 0 )
+			if ( ( modifiers & InputEvent.BUTTON3_DOWN_MASK ) != 0 )
 			{
 				dX = e.getX() - oX;
 				dY = e.getY() - oY;
@@ -61,7 +62,7 @@ public class JuliaRealViewer2DExample
 			oX = e.getX();
 			oY = e.getY();
 		}
-	};
+	}
 	private final int width = 800;
 	private final int height = 600;
 

@@ -29,7 +29,7 @@ import net.imglib2.view.Views;
 
 public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm, MultiThreaded, Benchmark
 {
-	public static enum SpecialPoint { INVALID, MIN, MAX };
+	public static enum SpecialPoint { INVALID, MIN, MAX }
 
 	protected final Img<A> image;
 	protected Img<FloatType> dogImg;

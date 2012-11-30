@@ -91,8 +91,7 @@ public class IntegralImg< R extends NumericType< R >, T extends NumericType< T >
 		// not enough RAM or disc space
 		if ( integral == null )
 			return false;
-		else
-			this.integral = integral;
+		this.integral = integral;
 
 		if ( numDimensions > 1 )
 		{
