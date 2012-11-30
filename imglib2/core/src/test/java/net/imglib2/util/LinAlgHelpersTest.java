@@ -3,8 +3,6 @@ package net.imglib2.util;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import net.imglib2.util.LinAlgHelpers;
-
 import org.junit.Test;
 
 public class LinAlgHelpersTest

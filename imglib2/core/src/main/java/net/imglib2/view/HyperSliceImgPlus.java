@@ -52,9 +52,6 @@ import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.transform.integer.MixedTransform;
-import net.imglib2.view.MixedTransformView;
-import net.imglib2.view.TransformBuilder;
-import net.imglib2.view.Views;
 
 /**
  * This class offers access to a <code>n-1</code>-dimensional view of a source {@link ImgPlus},

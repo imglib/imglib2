@@ -25,6 +25,9 @@
 
 package net.imglib2.algorithm.legacy.scalespace;
 
+import Jama.Matrix;
+import Jama.SingularValueDecomposition;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -41,9 +44,6 @@ import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.view.Views;
-
-import Jama.Matrix;
-import Jama.SingularValueDecomposition;
 
 /**
  * TODO

@@ -36,6 +36,8 @@
 
 package net.imglib2.img.list;
 
+import java.util.ArrayList;
+
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;

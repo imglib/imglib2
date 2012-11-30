@@ -40,6 +40,7 @@ import java.util.Iterator;
 
 import mpicbg.imglib.container.Container;
 import mpicbg.imglib.container.array.Array;
+import mpicbg.imglib.container.cell.CellContainer;
 import mpicbg.imglib.cursor.vector.Dimensionality;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;

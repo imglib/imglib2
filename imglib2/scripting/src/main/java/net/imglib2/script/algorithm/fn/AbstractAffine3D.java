@@ -25,8 +25,6 @@
 
 package net.imglib2.script.algorithm.fn;
 
-import java.awt.Image;
-
 import mpicbg.models.AffineModel2D;
 import mpicbg.models.AffineModel3D;
 import net.imglib2.ExtendedRandomAccessibleInterval;

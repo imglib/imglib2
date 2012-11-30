@@ -36,7 +36,6 @@
 
 package net.imglib2.img.planar;
 
-import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.NativeType;
 
 /**

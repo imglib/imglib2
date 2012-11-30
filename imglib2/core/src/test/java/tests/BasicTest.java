@@ -36,12 +36,10 @@
 
 package tests;
 
+import static org.junit.Assert.assertTrue;
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
-
 import net.imglib2.type.numeric.real.FloatType;
-
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 

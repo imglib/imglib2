@@ -29,12 +29,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.imglib2.algorithm.fft.FourierTransform;
+import net.imglib2.img.Img;
 import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
-
-import net.imglib2.algorithm.fft.FourierTransform;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 

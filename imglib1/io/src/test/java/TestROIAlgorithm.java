@@ -34,22 +34,18 @@
  * #L%
  */
 
+import ij.IJ;
+import ij.ImagePlus;
+import ij.io.OpenDialog;
+import mpicbg.imglib.algorithm.ROIAlgorithm;
+import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
-import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImagePlusAdapter;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.numeric.RealType;
-import ij.IJ;
-import ij.ImagePlus;
-
-import ij.io.OpenDialog;
-
-import mpicbg.imglib.algorithm.ROIAlgorithm;
-
-import mpicbg.imglib.container.array.ArrayContainerFactory;
 
 
 

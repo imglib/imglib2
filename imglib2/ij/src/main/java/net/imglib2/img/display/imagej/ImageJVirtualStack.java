@@ -52,7 +52,6 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
-import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 /**

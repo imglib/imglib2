@@ -25,12 +25,12 @@
 
 package script.imglib.algorithm;
 
-import script.imglib.math.Compute;
-import script.imglib.math.fn.IFunction;
 import mpicbg.imglib.algorithm.math.NormalizeImageFloat;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import script.imglib.math.Compute;
+import script.imglib.math.fn.IFunction;
 
 /**
  * TODO

@@ -36,10 +36,9 @@
 
 package net.imglib2.roi;
 
-import java.util.Random;
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import java.util.Random;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
@@ -50,6 +49,8 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.integer.IntType;
+
+import org.junit.Test;
 
 
 /**

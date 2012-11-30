@@ -28,7 +28,6 @@ package net.imglib2.script.algorithm;
 import net.imglib2.img.Img;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.script.math.fn.IFunction;
 
 /** Scale a 2D or 3D image, resizing only the 2D planes as necessary. The Z axis is left untouched.
  * 

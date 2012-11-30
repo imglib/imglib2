@@ -26,11 +26,12 @@
 package net.imglib2.script.algorithm;
 
 import net.imglib2.img.Img;
-import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
-import net.imglib2.type.numeric.NumericType;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.script.algorithm.fn.AbstractAffine3D;
 import net.imglib2.script.algorithm.fn.AlgorithmUtil;
+import net.imglib2.script.math.fn.IFunction;
+import net.imglib2.type.numeric.NumericType;
 
 /** Performs a mathematically correct transformation of an image.
  * This means that an image of 2000x2000 scaled by a factor of 2

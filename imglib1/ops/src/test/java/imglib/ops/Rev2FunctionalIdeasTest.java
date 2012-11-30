@@ -46,14 +46,13 @@ import imglib.ops.function.pn.ConstFunction;
 import imglib.ops.operation.AssignOperation;
 import imglib.ops.operator.UnaryOperator;
 import imglib.ops.operator.unary.Sqr;
-
-import org.junit.Test;
-
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
+
+import org.junit.Test;
 
 @SuppressWarnings("unchecked")
 

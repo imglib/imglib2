@@ -25,6 +25,7 @@
 
 package net.imglib2.script.math;
 
+import java.awt.Container;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,17 +33,16 @@ import java.util.Set;
 import net.imglib2.Cursor;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RealCursor;
-import net.imglib2.script.math.fn.IFunction;
-import net.imglib2.script.math.fn.ImageFunction;
-import net.imglib2.script.math.fn.Util;
-
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.outofbounds.OutOfBounds;
+import net.imglib2.script.math.fn.IFunction;
+import net.imglib2.script.math.fn.ImageFunction;
+import net.imglib2.script.math.fn.Util;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;

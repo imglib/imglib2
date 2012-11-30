@@ -40,9 +40,7 @@ import java.util.Iterator;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.operation.UnaryOutputOperation;
-import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.util.Pair;
 
 /**

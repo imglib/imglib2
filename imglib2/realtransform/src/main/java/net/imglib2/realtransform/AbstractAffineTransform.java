@@ -36,10 +36,10 @@
 
 package net.imglib2.realtransform;
 
+import Jama.Matrix;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
-import Jama.Matrix;
 
 /**
  * An abstract implementation of an affine transformation that returns

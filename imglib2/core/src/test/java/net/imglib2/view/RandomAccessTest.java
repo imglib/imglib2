@@ -37,7 +37,6 @@
 package net.imglib2.view;
 
 import static org.junit.Assert.assertTrue;
-
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;

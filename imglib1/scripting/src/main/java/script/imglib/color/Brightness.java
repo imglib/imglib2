@@ -25,9 +25,9 @@
 
 package script.imglib.color;
 
-import script.imglib.color.fn.HSBOp;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
+import script.imglib.color.fn.HSBOp;
 
 /** Extracts the HSB saturation of an RGB pixel. */
 /**

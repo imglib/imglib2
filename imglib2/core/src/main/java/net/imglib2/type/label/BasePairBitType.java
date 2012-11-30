@@ -40,8 +40,8 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.BitAccess;
 import net.imglib2.img.basictypeaccess.array.BitArray;
-import net.imglib2.type.NativeType;
 import net.imglib2.type.BasePairType;
+import net.imglib2.type.NativeType;
 
 /**
  * TODO

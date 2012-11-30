@@ -25,13 +25,14 @@
 
 package mpicbg.imglib.image.display.imagej;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
 import mpicbg.imglib.image.display.Display;
 import mpicbg.imglib.interpolation.Interpolator;
 import mpicbg.imglib.type.Type;

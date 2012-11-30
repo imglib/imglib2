@@ -1,5 +1,7 @@
 package net.imglib2.display;
 
+import static org.junit.Assert.assertTrue;
+
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,7 +19,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class ARGBScreenImageExpectationChecking

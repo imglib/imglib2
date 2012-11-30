@@ -30,7 +30,6 @@ import java.awt.geom.AffineTransform;
 import net.imglib2.img.Img;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.script.math.fn.IFunction;
 
 /** 
 * Expects matrix values in the same order that {@link AffineTransform} uses.

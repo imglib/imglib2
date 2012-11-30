@@ -36,13 +36,13 @@
 
 package net.imglib2.img.display.imagej;
 
+import ij.IJ;
+import ij.ImagePlus;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
-import ij.IJ;
-import ij.ImagePlus;
 
 /**
  * TODO

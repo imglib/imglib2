@@ -48,7 +48,6 @@ import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Localizable;
 import net.imglib2.Point;
-import net.imglib2.RealPositionable;
 
 /**
  * A list of data samples at explicit {@link Localizable integer coordinates}.
