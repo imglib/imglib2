@@ -40,6 +40,9 @@ package net.imglib2.ops.function.real;
 import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.RealType;
 
+// TODO - this code does bilinear interpolation in X & Y for a multidim image.
+// It should be possible to blend across other dims too.
+
 /**
  * 
  * @author Barry DeZonia
@@ -59,7 +62,7 @@ public class RealBilinearInterpolatingFunction<T extends RealType<T>>
 	
 	public RealBilinearInterpolatingFunction(Function<long[],T> discreteFunc) {
 		this.discreteFunc = discreteFunc;
-		this.index = new long[2];
+		this.index = null;
 		this.ul = createOutput();
 		this.ur = createOutput();
 		this.ll = createOutput();
@@ -70,6 +73,7 @@ public class RealBilinearInterpolatingFunction<T extends RealType<T>>
 	
 	@Override
 	public void compute(double[] point, T output) {
+		if (index == null) index = new long[point.length];
 		long x = (long) Math.floor(point[0]);
 		long y = (long) Math.floor(point[1]);
 		double ix = point[0] - x;
