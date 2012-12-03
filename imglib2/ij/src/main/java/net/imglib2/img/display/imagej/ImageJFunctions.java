@@ -146,18 +146,20 @@ public class ImageJFunctions
 		ImagePlus target;
 		final T t = Util.getTypeFromInterval( img );
 
-		/* Casting madness thanks to a long standing javac bug, see e.g. http://bugs.sun.com/view_bug.do?bug_id=6548436 */
-		/* TODO remove casting madness as soon as the bug is fixed */
+		// NB: Casting madness thanks to a long standing javac bug;
+		// see e.g. http://bugs.sun.com/view_bug.do?bug_id=6548436
+		// TODO: remove casting madness as soon as the bug is fixed
+		final Object oImg = img;
 		if ( ARGBType.class.isInstance( t ) )
-			target = wrapRGB( ( RandomAccessibleInterval< ARGBType > )img, title );
+			target = wrapRGB( ( RandomAccessibleInterval< ARGBType > )oImg, title );
 		else if ( UnsignedByteType.class.isInstance( t ) )
-			target = wrapUnsignedByte( ( RandomAccessibleInterval< RealType > )img, title );
+			target = wrapUnsignedByte( ( RandomAccessibleInterval< RealType > )oImg, title );
 		else if ( IntegerType.class.isInstance( t ) )
-			target = wrapUnsignedShort( ( RandomAccessibleInterval< RealType > )img, title );
+			target = wrapUnsignedShort( ( RandomAccessibleInterval< RealType > )oImg, title );
 		else if ( RealType.class.isInstance( t ) )
-			target = wrapFloat( ( RandomAccessibleInterval< RealType > )img, title );
+			target = wrapFloat( ( RandomAccessibleInterval< RealType > )oImg, title );
 		else if ( ComplexType.class.isInstance( t ) )
-			target = wrapFloat( ( RandomAccessibleInterval< ComplexType > )img, new ComplexPowerGLogFloatConverter(), title );
+			target = wrapFloat( ( RandomAccessibleInterval< ComplexType > )oImg, new ComplexPowerGLogFloatConverter(), title );
 		else
 		{
 			System.out.println( "Do not know how to display Type " + t.getClass().getSimpleName() );
