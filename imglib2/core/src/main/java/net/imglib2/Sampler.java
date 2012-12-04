@@ -36,6 +36,9 @@
 
 package net.imglib2;
 
+import java.util.Collection;
+
+import net.imglib2.img.array.ArrayCursor;
 import net.imglib2.type.NativeType;
 
 /** 

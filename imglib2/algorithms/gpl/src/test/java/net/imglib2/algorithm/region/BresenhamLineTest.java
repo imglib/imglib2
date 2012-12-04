@@ -1,5 +1,6 @@
 package net.imglib2.algorithm.region;
 
+import static org.junit.Assert.assertEquals;
 import net.imglib2.Cursor;
 import net.imglib2.Point;
 import net.imglib2.RandomAccess;
@@ -9,8 +10,6 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class BresenhamLineTest {
 

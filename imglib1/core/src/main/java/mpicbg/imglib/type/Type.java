@@ -40,6 +40,7 @@ import mpicbg.imglib.container.DirectAccessContainer;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.DataAccess;
+import mpicbg.imglib.container.cell.Cell;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.cursor.array.ArrayCursor;
 import mpicbg.imglib.cursor.cell.CellCursor;

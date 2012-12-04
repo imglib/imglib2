@@ -30,11 +30,13 @@ import net.imglib2.script.analysis.fn.NumericReduceOperation;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.numeric.RealType;
 
-/** Add all values and when done divide by the total number of values.
+/**
+ * Add all values and when done divide by the total number of values.
  * 
- * @see ImgIterativeMean, Reduction, ReduceFn
- *
  * @author Albert Cardona
+ * @see ImgIterativeMean
+ * @see Reduction
+ * @see ReduceFn
  */
 public final class ImgMean extends NumericReduceOperation
 {

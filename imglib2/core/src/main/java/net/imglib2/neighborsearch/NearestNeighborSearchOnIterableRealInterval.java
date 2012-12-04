@@ -62,9 +62,6 @@ public class NearestNeighborSearchOnIterableRealInterval< T > implements Nearest
 	/**
 	 * Calculate the square Euclidean distance of a query location to the
 	 * location stored in referenceLocation.
-	 * 
-	 * @param query
-	 * @return
 	 */
 	final protected double squareDistance( final RealLocalizable query )
 	{

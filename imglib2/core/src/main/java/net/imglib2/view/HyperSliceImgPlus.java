@@ -52,9 +52,6 @@ import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.transform.integer.MixedTransform;
-import net.imglib2.view.MixedTransformView;
-import net.imglib2.view.TransformBuilder;
-import net.imglib2.view.Views;
 
 /**
  * This class offers access to a <code>n-1</code>-dimensional view of a source {@link ImgPlus},
@@ -205,8 +202,7 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 	public long min(final int d) {
 		if (d < targetDimension)
 			return source.min( d );
-		else 
-			return source.min( d + 1 );
+		return source.min( d + 1 );
 	}
 
 	@Override
@@ -233,8 +229,7 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 	public long max(final int d) {
 		if (d < targetDimension)
 			return source.max( d );
-		else 
-			return source.max( d + 1 );
+		return source.max( d + 1 );
 	}
 
 	@Override
@@ -271,16 +266,14 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 	public long dimension(final int d) {
 		if (d < targetDimension)
 			return source.dimension( d );
-		else 
-			return source.dimension(d + 1);
+		return source.dimension(d + 1);
 	}
 
 	@Override
 	public double realMin(final int d) {
 		if (d < targetDimension)
 			return source.realMin( d );
-		else 
-			return source.realMin( d + 1 );
+		return source.realMin( d + 1 );
 	}
 
 	@Override
@@ -307,8 +300,7 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 	public double realMax(final int d) {
 		if (d < targetDimension)
 			return source.realMax( d );
-		else 
-			return source.realMax( d + 1 );
+		return source.realMax( d + 1 );
 	}
 
 	@Override
@@ -403,9 +395,8 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 		if (targetDim < 0) {
 			// not found
 			return source;
-		} else {
-			return new HyperSliceImgPlus<T>(source, targetDim, pos);
 		}
+		return new HyperSliceImgPlus<T>(source, targetDim, pos);
 	}
 	
 	/**

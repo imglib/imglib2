@@ -45,20 +45,20 @@ import net.imglib2.ops.operation.UnaryOutputOperation;
  * @param <B>
  * @param <C>
  */
-public class UnaryOperationBridge<A, B, C> implements
-		UnaryOutputOperation<A, C> {
+public class UnaryOperationBridge< A, B, C > implements UnaryOutputOperation< A, C >
+{
 
-	private final UnaryOutputOperation<A, B> first;
+	private final UnaryOutputOperation< A, B > first;
 
-	private final UnaryOutputOperation<B, C> second;
+	private final UnaryOutputOperation< B, C > second;
 
 	// Some tmp variables
 	private B buf;
 
 	private A currentInput;
 
-	public UnaryOperationBridge(UnaryOutputOperation<A, B> first,
-			UnaryOutputOperation<B, C> second) {
+	public UnaryOperationBridge( UnaryOutputOperation< A, B > first, UnaryOutputOperation< B, C > second )
+	{
 		this.first = first;
 		this.second = second;
 		this.buf = null;
@@ -66,30 +66,36 @@ public class UnaryOperationBridge<A, B, C> implements
 	}
 
 	@Override
-	public C compute(A input, C output) {
-		return second.compute(first.compute(input, getBuf(input)), output);
+	public C compute( A input, C output )
+	{
+		return second.compute( first.compute( input, getBuf( input ) ), output );
 	}
 
-	private B getBuf(A input) {
-		if (buf == null && input != currentInput) {
+	private B getBuf( A input )
+	{
+		if ( buf == null && input != currentInput )
+		{
 			currentInput = input;
-			buf = first.bufferFactory().instantiate(input);
+			buf = first.bufferFactory().instantiate( input );
 		}
 		return buf;
 	}
 
 	@Override
-	public UnaryOutputOperation<A, C> copy() {
-		return new UnaryOperationBridge<A, B, C>(first.copy(), second.copy());
+	public UnaryOutputOperation< A, C > copy()
+	{
+		return new UnaryOperationBridge< A, B, C >( first.copy(), second.copy() );
 	}
 
 	@Override
-	public UnaryObjectFactory<A, C> bufferFactory() {
-		return new UnaryObjectFactory<A, C>() {
-
+	public UnaryObjectFactory< A, C > bufferFactory()
+	{
+		return new UnaryObjectFactory< A, C >()
+		{
 			@Override
-			public C instantiate(A a) {
-				return second.bufferFactory().instantiate(buf);
+			public C instantiate( A a )
+			{
+				return second.bufferFactory().instantiate( buf );
 			}
 		};
 	}

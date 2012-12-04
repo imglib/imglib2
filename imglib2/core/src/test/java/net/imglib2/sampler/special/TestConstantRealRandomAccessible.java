@@ -36,8 +36,7 @@
 
 package net.imglib2.sampler.special;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.Sampler;
 

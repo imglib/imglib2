@@ -409,8 +409,7 @@ public class TransformBuilder< T >
 			{
 				if ( full )
 					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
-				else
-					return new MixedRandomAccess< T >( s.randomAccess(), t );
+				return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
 
 			@Override
@@ -418,8 +417,7 @@ public class TransformBuilder< T >
 			{
 				if ( full )
 					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
-				else
-					return new MixedRandomAccess< T >( s.randomAccess(), t );
+				return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
 		};
 	}

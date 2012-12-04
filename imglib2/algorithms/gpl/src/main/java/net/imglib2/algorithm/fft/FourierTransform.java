@@ -25,6 +25,8 @@
 
 package net.imglib2.algorithm.fft;
 
+import edu.mines.jtk.dsp.FftComplex;
+import edu.mines.jtk.dsp.FftReal;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Benchmark;
@@ -41,8 +43,6 @@ import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
-import edu.mines.jtk.dsp.FftComplex;
-import edu.mines.jtk.dsp.FftReal;
 
 /**
  * Computes the Fourier Transform of a given {@link RandomAccessibleInterval} or {@link Img}.
@@ -219,9 +219,9 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 		{
 			// how much do we want to extend
 			if ( inputSize == null )
-				imageExtension[ d ] = (int)Util.round( interval.dimension( d ) * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
+				imageExtension[ d ] = Util.round( interval.dimension( d ) * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
 			else
-				imageExtension[ d ] = (int)Util.round( inputSize[ d ] * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
+				imageExtension[ d ] = Util.round( inputSize[ d ] * ( 1 + extensionRatio ) ) - (int)interval.dimension( d );
 			
 			if ( imageExtension[ d ] < minExtension )
 				imageExtension[ d ] = minExtension;
@@ -251,15 +251,13 @@ public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> i
 	{
 		if ( inputSize == null )
 			return originalOffset;
-		else
-			return inputSizeOffset;
+		return inputSizeOffset;
 	}
 	public int[] getFFTInputSize( )
 	{
 		if ( inputSize == null )
 			return originalSize.clone();
-		else
-			return inputSize.clone();
+		return inputSize.clone();
 	}
 	
 	@Override

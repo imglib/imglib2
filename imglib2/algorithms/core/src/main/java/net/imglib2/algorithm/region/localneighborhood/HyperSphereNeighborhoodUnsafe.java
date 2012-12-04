@@ -2,7 +2,7 @@ package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.RandomAccess;
 
-public final class HyperSphereNeighborhoodUnsafe< T > extends HyperSphereNeighborhood< T > implements Neighborhood< T >
+public final class HyperSphereNeighborhoodUnsafe< T > extends HyperSphereNeighborhood< T >
 {
 	public static < T > HyperSphereNeighborhoodFactory< T > factory()
 	{

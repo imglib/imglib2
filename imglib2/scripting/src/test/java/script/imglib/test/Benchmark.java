@@ -270,7 +270,6 @@ public class Benchmark {
 		}
 	}
 	
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		try {
 			

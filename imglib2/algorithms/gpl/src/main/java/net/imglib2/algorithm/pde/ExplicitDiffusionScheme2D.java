@@ -42,6 +42,7 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends E
 	 * @see #yieldDensity(RandomAccess, float[])
 	 * @see #yieldDiffusionTensor(RandomAccess, float[][]) 
 	 */
+	@Override
 	protected abstract float diffusionScheme(float[] U, float[][]D);
 
 
@@ -93,6 +94,7 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends E
 	 * @param ura  the {@link RandomAccess} 
 	 * @param target  the float array in which the value will be stored
 	 */
+	@Override
 	protected final void yieldDensity(final RandomAccess<T> ura, final float[] target) {
 		// center
 		target[0] = ura.get().getRealFloat();
@@ -141,6 +143,7 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends E
 	 * @param dra
 	 * @param target
 	 */
+	@Override
 	protected final void yieldDiffusionTensor(final RandomAccess<FloatType> dra, final float[][] target) {
 		// center CC
 		dra.setPosition(0, tensorComponentDimension);

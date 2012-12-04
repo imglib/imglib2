@@ -25,10 +25,10 @@
 
 package script.imglib.math;
 
-import script.imglib.math.fn.BinaryOperation;
-import script.imglib.math.fn.IFunction;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
+import script.imglib.math.fn.BinaryOperation;
+import script.imglib.math.fn.IFunction;
 
 /**
  * TODO

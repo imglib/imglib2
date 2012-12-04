@@ -182,11 +182,8 @@ A:		while ( proceed )
 					products[ d ] = lookUpLanczos( position[ d ] - p ) * products[ ++d ];
 					continue A;
 				}
-				else
-				{
-					target.move( -size[ d ], d );
-					accumulate( d );
-				}
+				target.move( -size[ d ], d );
+				accumulate( d );
 			}
 			proceed = false;
 		}
@@ -209,8 +206,7 @@ A:		while ( proceed )
 	{
 		if ( x == 0 )
 			return 1;
-		else
-			return (( a * Math.sin( Math.PI * x ) * Math.sin( Math.PI * x / a ) ) / ( piSquare * x * x ));
+		return (( a * Math.sin( Math.PI * x ) * Math.sin( Math.PI * x / a ) ) / ( piSquare * x * x ));
 	}
 	
 	final private double lookUpLanczos( final double x )

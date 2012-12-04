@@ -36,9 +36,11 @@
 
 package mpicbg.imglib.container.basictypecontainer.array;
 
-import mpicbg.imglib.container.basictypecontainer.FloatAccess;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 
-import java.nio.*;
+import mpicbg.imglib.container.basictypecontainer.FloatAccess;
 
 /**
  * Core array type used for float[] data

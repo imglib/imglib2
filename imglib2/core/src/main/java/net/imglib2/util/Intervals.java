@@ -40,7 +40,8 @@ import net.imglib2.RealLocalizable;
  * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class Intervals {
+public class Intervals
+{
 	/**
 	 * Create a {@link FinalInterval} from a parameter list comprising minimum
 	 * coordinates and size. For example, to create a 2D interval from (10, 10)
@@ -53,8 +54,9 @@ public class Intervals {
 	 *            specify the dimensions of the interval.
 	 * @return interval with the specified boundaries
 	 */
-	public static FinalInterval createMinSize(final long... minsize) {
-		return FinalInterval.createMinSize(minsize);
+	public static FinalInterval createMinSize( final long... minsize )
+	{
+		return FinalInterval.createMinSize( minsize );
 	}
 
 	/**
@@ -69,8 +71,9 @@ public class Intervals {
 	 *            specify the maximum of the interval.
 	 * @return interval with the specified boundaries
 	 */
-	public static FinalInterval createMinMax(final long... minmax) {
-		return FinalInterval.createMinMax(minmax);
+	public static FinalInterval createMinMax( final long... minmax )
+	{
+		return FinalInterval.createMinMax( minmax );
 	}
 
 	/**
@@ -85,18 +88,19 @@ public class Intervals {
 	 *            how many pixels to add on every side
 	 * @return expanded interval
 	 */
-	public static FinalInterval expand(final Interval interval,
-			final long border) {
+	public static FinalInterval expand( final Interval interval, final long border )
+	{
 		final int n = interval.numDimensions();
-		final long[] min = new long[n];
-		final long[] max = new long[n];
-		interval.min(min);
-		interval.max(max);
-		for (int d = 0; d < n; ++d) {
-			min[d] -= border;
-			max[d] += border;
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] -= border;
+			max[ d ] += border;
 		}
-		return new FinalInterval(min, max);
+		return new FinalInterval( min, max );
 	}
 
 	/**
@@ -113,16 +117,16 @@ public class Intervals {
 	 *            in which dimension
 	 * @return expanded interval
 	 */
-	public static FinalInterval expand(final Interval interval,
-			final long border, final int d) {
+	public static FinalInterval expand( final Interval interval, final long border, final int d )
+	{
 		final int n = interval.numDimensions();
-		final long[] min = new long[n];
-		final long[] max = new long[n];
-		interval.min(min);
-		interval.max(max);
-		min[d] -= border;
-		max[d] += border;
-		return new FinalInterval(min, max);
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		min[ d ] -= border;
+		max[ d ] += border;
+		return new FinalInterval( min, max );
 	}
 
 	/**
@@ -139,16 +143,16 @@ public class Intervals {
 	 *            in which dimension
 	 * @return translated interval
 	 */
-	public static FinalInterval translate(final Interval interval,
-			final long t, final int d) {
+	public static FinalInterval translate( final Interval interval, final long t, final int d )
+	{
 		final int n = interval.numDimensions();
-		final long[] min = new long[n];
-		final long[] max = new long[n];
-		interval.min(min);
-		interval.max(max);
-		min[d] += t;
-		max[d] += t;
-		return new FinalInterval(min, max);
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		min[ d ] += t;
+		max[ d ] += t;
+		return new FinalInterval( min, max );
 	}
 
 	/**
@@ -163,18 +167,19 @@ public class Intervals {
 	 *            input interval
 	 * @return intersection of input intervals
 	 */
-	public static FinalInterval intersect(final Interval intervalA,
-			final Interval intervalB) {
+	public static FinalInterval intersect( final Interval intervalA, final Interval intervalB )
+	{
 		assert intervalA.numDimensions() == intervalB.numDimensions();
 
 		final int n = intervalA.numDimensions();
-		final long[] min = new long[n];
-		final long[] max = new long[n];
-		for (int d = 0; d < n; ++d) {
-			min[d] = Math.max(intervalA.min(d), intervalB.min(d));
-			max[d] = Math.min(intervalA.max(d), intervalB.max(d));
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] = Math.max( intervalA.min( d ), intervalB.min( d ) );
+			max[ d ] = Math.min( intervalA.max( d ), intervalB.max( d ) );
 		}
-		return new FinalInterval(min, max);
+		return new FinalInterval( min, max );
 	}
 
 	/**
@@ -184,14 +189,15 @@ public class Intervals {
 	 * 
 	 * @return true, iff {@code contained} is in {@code containing}.
 	 */
-	public static boolean contains(final Interval containing,
-			final Localizable contained) {
+	public static boolean contains( final Interval containing, final Localizable contained )
+	{
 		assert containing.numDimensions() == contained.numDimensions();
 
 		final int n = containing.numDimensions();
-		for (int d = 0; d < n; ++d) {
-			final long p = contained.getLongPosition(d);
-			if (p < containing.min(d) || p > containing.max(d))
+		for ( int d = 0; d < n; ++d )
+		{
+			final long p = contained.getLongPosition( d );
+			if ( p < containing.min( d ) || p > containing.max( d ) )
 				return false;
 		}
 		return true;
@@ -204,14 +210,15 @@ public class Intervals {
 	 * 
 	 * @return true, iff {@code contained} is in {@code containing}.
 	 */
-	public static boolean contains(final RealInterval containing,
-			final RealLocalizable contained) {
+	public static boolean contains( final RealInterval containing, final RealLocalizable contained )
+	{
 		assert containing.numDimensions() == contained.numDimensions();
 
 		final int n = containing.numDimensions();
-		for (int d = 0; d < n; ++d) {
-			final double p = contained.getDoublePosition(d);
-			if (p < containing.realMin(d) || p > containing.realMax(d))
+		for ( int d = 0; d < n; ++d )
+		{
+			final double p = contained.getDoublePosition( d );
+			if ( p < containing.realMin( d ) || p > containing.realMax( d ) )
 				return false;
 		}
 		return true;
@@ -220,19 +227,15 @@ public class Intervals {
 	/**
 	 * Test whether the {@code containing} interval completely contains the
 	 * {@code contained} interval.
-	 * 
-	 * @param containing
-	 * @param contained
-	 * @return
 	 */
-	final static public boolean contains(final Interval containing,
-			final Interval contained) {
+	final static public boolean contains( final Interval containing, final Interval contained )
+	{
 		assert containing.numDimensions() == contained.numDimensions();
 
 		final int n = containing.numDimensions();
-		for (int d = 0; d < n; ++d) {
-			if (containing.min(d) > contained.min(d)
-					|| containing.max(d) < contained.max(d))
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( containing.min( d ) > contained.min( d ) || containing.max( d ) < contained.max( d ) )
 				return false;
 		}
 		return true;
@@ -241,52 +244,45 @@ public class Intervals {
 	/**
 	 * Test whether the {@code containing} interval completely contains the
 	 * {@code contained} interval.
-	 * 
-	 * @param containing
-	 * @param contained
-	 * @return
 	 */
-	final static public boolean contains(final RealInterval containing,
-			final RealInterval contained) {
+	final static public boolean contains( final RealInterval containing, final RealInterval contained )
+	{
 		assert containing.numDimensions() == contained.numDimensions();
 
 		final int n = containing.numDimensions();
-		for (int d = 0; d < n; ++d) {
-			if (containing.realMin(d) > contained.realMin(d)
-					|| containing.realMax(d) < contained.realMax(d))
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( containing.realMin( d ) > contained.realMin( d ) || containing.realMax( d ) < contained.realMax( d ) )
 				return false;
 		}
 		return true;
 	}
 
 	/**
-	 * Compute the number of elements contained in an (integer) {@link Interval}
-	 * .
+	 * Compute the number of elements contained in an (integer) {@link Interval}.
 	 * 
 	 * @return number of elements in {@code interval}.
 	 */
-	public static long numElements(final Interval interval) {
-		long numPixels = interval.dimension(0);
+	public static long numElements( final Interval interval )
+	{
+		long numPixels = interval.dimension( 0 );
 		final int n = interval.numDimensions();
-		for (int d = 1; d < n; ++d)
-			numPixels *= interval.dimension(d);
+		for ( int d = 1; d < n; ++d )
+			numPixels *= interval.dimension( d );
 		return numPixels;
 	}
 
 	/**
 	 * Tests weather two intervals are equal in their min / max
-	 * 
-	 * @param a
-	 * @param b
-	 * @return
 	 */
-	public static boolean equals(Interval a, Interval b) {
+	public static boolean equals( Interval a, Interval b )
+	{
 
-		if (a.numDimensions() != b.numDimensions())
+		if ( a.numDimensions() != b.numDimensions() )
 			return false;
 
-		for (int d = 0; d < a.numDimensions(); d++)
-			if (a.min(d) != b.min(d) || a.max(d) != b.max(d))
+		for ( int d = 0; d < a.numDimensions(); d++ )
+			if ( a.min( d ) != b.min( d ) || a.max( d ) != b.max( d ) )
 				return false;
 
 		return true;

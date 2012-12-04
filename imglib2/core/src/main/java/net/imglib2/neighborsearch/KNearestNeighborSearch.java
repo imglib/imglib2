@@ -72,9 +72,6 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	 * Access the data of the <em>i</em><sup>th</sup> nearest neighbor, ordered
 	 * by square Euclidean distance.  Data is accessed through a {@link Sampler}
 	 * that guarantees write access if the underlying data set is writable.
-	 *
-	 * @param i
-	 * @return
 	 */
 	public Sampler< T > getSampler( final int i );
 
@@ -82,9 +79,6 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	/**
 	 * Access the position of the <em>i</em><sup>th</sup> nearest neighbor,
 	 * ordered by square Euclidean distance.
-	 *
-	 * @param i
-	 * @return
 	 */
 	public RealLocalizable getPosition( final int i );
 
@@ -93,9 +87,6 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	 * Access the square Euclidean distance between the reference location
 	 * as used for the last search and the <em>i</em><sup>th</sup> nearest
 	 * neighbor, ordered by square Euclidean distance.
-	 *
-	 * @param i
-	 * @return
 	 */
 	public double getSquareDistance( final int i );
 
@@ -104,9 +95,6 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	 * Access the Euclidean distance between the reference location as used for
 	 * the last search and the <em>i</em><sup>th</sup> nearest neighbor,
 	 * ordered by square Euclidean distance.
-	 *
-	 * @param i
-	 * @return
 	 */
 	public double getDistance( final int i );
 

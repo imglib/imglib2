@@ -65,8 +65,7 @@ public class GrayscaleReconstructionByDilation< T extends RealType< T >, V exten
 
 		if ( qd < pd && qd != id )
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	@Override
@@ -74,8 +73,7 @@ public class GrayscaleReconstructionByDilation< T extends RealType< T >, V exten
 	{
 		if ( a.getRealDouble() > b.getRealDouble() )
 			return a;
-		else
-			return b;
+		return b;
 	}
 
 	@Override
@@ -85,12 +83,9 @@ public class GrayscaleReconstructionByDilation< T extends RealType< T >, V exten
 		{
 			return a;
 		}
-		else
-		{
-			V r = a.createVariable();
-			r.setReal( b.getRealDouble() );
-			return r;
-		}
+		V r = a.createVariable();
+		r.setReal( b.getRealDouble() );
+		return r;
 	}
 
 	@Override
@@ -102,8 +97,7 @@ public class GrayscaleReconstructionByDilation< T extends RealType< T >, V exten
 
 		if ( qd < pd && qd < id )
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	@Override

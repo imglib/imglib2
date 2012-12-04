@@ -25,11 +25,11 @@
 
 package script.imglib.algorithm;
 
-import script.imglib.math.Compute;
-import script.imglib.math.fn.IFunction;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.integer.LongType;
+import script.imglib.math.Compute;
+import script.imglib.math.fn.IFunction;
 
 /**
  * TODO

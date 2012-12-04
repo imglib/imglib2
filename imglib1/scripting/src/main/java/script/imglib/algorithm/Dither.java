@@ -25,13 +25,13 @@
 
 package script.imglib.algorithm;
 
-import script.imglib.math.Compute;
-import script.imglib.math.fn.IFunction;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.algorithm.floydsteinberg.FloydSteinbergDithering;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.RealType;
+import script.imglib.math.Compute;
+import script.imglib.math.fn.IFunction;
 
 /** Perform {@link FloydSteinbergDithering} on an image. */
 /**

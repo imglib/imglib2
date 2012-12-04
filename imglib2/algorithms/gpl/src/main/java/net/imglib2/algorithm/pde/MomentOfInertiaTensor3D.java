@@ -2,16 +2,13 @@ package net.imglib2.algorithm.pde;
 
 import java.util.Vector;
 
-import edu.mines.jtk.lapack.DMatrix;
-import edu.mines.jtk.lapack.DMatrixEvd;
-
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.algorithm.region.localneighborhood.RectangleCursor;
-import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhood;
+import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodGPL;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.multithreading.Chunk;
@@ -20,6 +17,8 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorExpWindowingFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import edu.mines.jtk.la.DMatrix;
+import edu.mines.jtk.la.DMatrixEvd;
 
 /**
  * A class to compute a diffusion tensor for anisotropic diffusion, based on
@@ -130,6 +129,7 @@ public class MomentOfInertiaTensor3D< T extends RealType< T >> extends MultiThre
 			threads[ i ] = new Thread( "" + BASE_ERROR_MESSAGE + "thread " + i )
 			{
 
+				@Override
 				public void run()
 				{
 
@@ -148,7 +148,7 @@ public class MomentOfInertiaTensor3D< T extends RealType< T >> extends MultiThre
 													// Z, but for all pixels
 
 					OutOfBoundsFactory< T, RandomAccessibleInterval< T >> oobf = new OutOfBoundsMirrorExpWindowingFactory< T, RandomAccessibleInterval< T >>( ( scale - 1 ) / 2 );
-					RectangleNeighborhood< T, RandomAccessibleInterval< T >> neighborhood = new RectangleNeighborhood< T, RandomAccessibleInterval< T >>( input, oobf );
+					RectangleNeighborhoodGPL< T, RandomAccessibleInterval< T >> neighborhood = new RectangleNeighborhoodGPL< T, RandomAccessibleInterval< T >>( input, oobf );
 					RectangleCursor< T > neighborhoodCursor = neighborhood.cursor();
 					neighborhood.setSpan( domain );
 
@@ -280,7 +280,7 @@ public class MomentOfInertiaTensor3D< T extends RealType< T >> extends MultiThre
 						Dcursor.get().setReal( F );
 
 					}
-				};
+				}
 			};
 
 		}

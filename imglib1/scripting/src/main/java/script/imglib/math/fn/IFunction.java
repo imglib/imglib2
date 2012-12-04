@@ -26,6 +26,7 @@
 package script.imglib.math.fn;
 
 import java.util.Collection;
+
 import mpicbg.imglib.cursor.Cursor;
 
 /**

@@ -25,8 +25,8 @@
 
 package net.imglib2.script.math.fn;
 
-import net.imglib2.script.math.Compute;
 import net.imglib2.img.Img;
+import net.imglib2.script.math.Compute;
 import net.imglib2.type.numeric.real.FloatType;
 
 /** Convenient class to define methods to create

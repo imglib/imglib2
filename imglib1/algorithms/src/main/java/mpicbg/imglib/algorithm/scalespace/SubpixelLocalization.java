@@ -25,11 +25,12 @@
 
 package mpicbg.imglib.algorithm.scalespace;
 
+import Jama.Matrix;
+import Jama.SingularValueDecomposition;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import Jama.Matrix;
-import Jama.SingularValueDecomposition;
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.MultiThreaded;

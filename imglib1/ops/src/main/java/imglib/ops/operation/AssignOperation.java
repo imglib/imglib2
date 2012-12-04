@@ -36,14 +36,14 @@
 
 package imglib.ops.operation;
 
-import java.util.Observable;
-
 import imglib.ops.condition.Condition;
 import imglib.ops.function.RealFunction;
 import imglib.ops.observer.IterationStatus;
 import imglib.ops.observer.IterationStatus.Message;
 
+import java.util.Observable;
 import java.util.Observer;
+
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;

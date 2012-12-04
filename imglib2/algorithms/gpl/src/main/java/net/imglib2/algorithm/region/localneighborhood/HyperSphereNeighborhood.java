@@ -69,8 +69,7 @@ public class HyperSphereNeighborhood<T, IN extends RandomAccessibleInterval<T>>
 		if (source != null)
 			return new HyperSphereNeighborhood<T, IN>(source, outOfBounds,
 					radius);
-		else
-			return new HyperSphereNeighborhood<T, IN>(n, outOfBounds, radius);
+		return new HyperSphereNeighborhood<T, IN>(n, outOfBounds, radius);
 	}
 
 }

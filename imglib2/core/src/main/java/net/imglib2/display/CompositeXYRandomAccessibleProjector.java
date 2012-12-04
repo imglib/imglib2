@@ -242,21 +242,18 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProject
 			currentConverters[ 0 ] = converters.get( ( int ) ( position[ dimIndex ] - positionMin ) );
 			return 1;
 		}
-		else
-		{
-			// this is the normal case.
-			// fill currentPositions and currentConverters with the active
-			// positions and converters
-			int j = 0;
-			for ( int i = 0; i < composite.length; i++ )
-				if ( composite[ i ] )
-				{
-					currentPositions[ j ] = positionMin + i;
-					currentConverters[ j ] = converters.get( i );
-					++j;
-				}
-			return currentSize;
-		}
+		// this is the normal case.
+		// fill currentPositions and currentConverters with the active
+		// positions and converters
+		int j = 0;
+		for ( int i = 0; i < composite.length; i++ )
+			if ( composite[ i ] )
+			{
+				currentPositions[ j ] = positionMin + i;
+				currentConverters[ j ] = converters.get( i );
+				++j;
+			}
+		return currentSize;
 	}
 
 	protected void mapSingle( final RandomAccess< A > sourceRandomAccess, final Converter< A, ARGBType > converter )

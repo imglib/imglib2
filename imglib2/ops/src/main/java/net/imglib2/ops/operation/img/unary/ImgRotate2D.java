@@ -101,7 +101,6 @@ public class ImgRotate2D< T extends Type< T > & Comparable< T >> implements Unar
 	@Override
 	public UnaryObjectFactory< Img< T >, Img< T > > bufferFactory()
 	{
-
 		return new UnaryObjectFactory< Img< T >, Img< T > >()
 		{
 

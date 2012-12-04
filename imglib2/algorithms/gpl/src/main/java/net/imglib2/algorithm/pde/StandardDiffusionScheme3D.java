@@ -29,6 +29,7 @@ public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDi
 	 * METHOD
 	 */
 
+	@Override
 	protected final float diffusionScheme(float[] U, float[][] D) {
 
 		final float Uccc = U[0];

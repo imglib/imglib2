@@ -30,11 +30,13 @@ import net.imglib2.script.analysis.fn.NumericReduceOperation;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.numeric.RealType;
 
-/** Find the maximum value.
- * 
- * @see ImgMin, Reduction, ReduceFn
+/**
+ * Find the maximum value.
  *
  * @author Albert Cardona
+ * @see ImgMin
+ * @see Reduction
+ * @see ReduceFn
  */
 public final class ImgMax extends NumericReduceOperation
 {

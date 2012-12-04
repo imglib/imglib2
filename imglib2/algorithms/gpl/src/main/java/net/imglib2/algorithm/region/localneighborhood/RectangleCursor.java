@@ -7,7 +7,7 @@ import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 
 /**
- * A {@link Cursor} that iterates over a {@link RectangleNeighborhood}.
+ * A {@link Cursor} that iterates over a {@link RectangleNeighborhoodGPL}.
  * 
  * @author Jean-Yves Tinevez
  */

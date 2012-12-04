@@ -272,7 +272,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 	 * it to (-x,-y). In this case, this will be [true, true].
 	 * </p>
 	 *
-	 * @param component
+	 * @param invert
 	 *            array that says for each component of the target vector
 	 *            (before translation) whether the source vector component it is
 	 *            taken from should be inverted (true).
@@ -337,7 +337,7 @@ public class MixedTransform extends AbstractMixedTransform implements Concatenab
 			long pos = translation[ d ];
 			if ( !zero[ d ] )
 			{
-				final long v = source.getLongPosition( component[ d ] );;
+				final long v = source.getLongPosition( component[ d ] );
 				if ( invert[ d ] )
 					pos -= v;
 				else

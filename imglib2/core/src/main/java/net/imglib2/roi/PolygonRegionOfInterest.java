@@ -529,9 +529,6 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	/**
 	 * Given an interpolated value, assign a ceiling accounting for roundoff
 	 * error.
-	 * 
-	 * @param x
-	 * @return
 	 */
 	private static long ceil( double x )
 	{
@@ -541,9 +538,6 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	/**
 	 * Given an interpolated value, assign a floor accounting for roundoff
 	 * error.
-	 * 
-	 * @param x
-	 * @return
 	 */
 	private static long floor( double x )
 	{
@@ -578,10 +572,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 					y = ceil( stripe.yMin );
 					continue;
 				}
-				else
-				{
-					stripe = stripes.get( index );
-				}
+				stripe = stripes.get( index );
 			}
 			if ( stripe.yMax <= y )
 			{
@@ -732,7 +723,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 					if ( ( x < xInterpolated ) && ( xInterpolated > xInterpolatedLast ) )
 					{
 						position[ 0 ] = xInterpolatedLast;
-						position[ 1 ] = ( long ) y;
+						position[ 1 ] = y;
 						end[ 0 ] = ( long ) xInterpolated;
 						end[ 1 ] = position[ 1 ];
 						return true;

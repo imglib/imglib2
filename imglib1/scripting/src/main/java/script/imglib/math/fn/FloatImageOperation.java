@@ -25,9 +25,9 @@
 
 package script.imglib.math.fn;
 
-import script.imglib.math.Compute;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import script.imglib.math.Compute;
 
 /** Convenient class to define methods to create
  * a result {@code Image<FloatType>} out of an {@link IFunction}. */

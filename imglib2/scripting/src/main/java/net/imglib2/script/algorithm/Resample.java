@@ -28,6 +28,12 @@ package net.imglib2.script.algorithm;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccess;
+import net.imglib2.img.Img;
+import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
+import net.imglib2.script.algorithm.fn.AbstractAffine3D;
 import net.imglib2.script.algorithm.fn.AbstractAffine3D.Mode;
 import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.color.Alpha;
@@ -36,11 +42,6 @@ import net.imglib2.script.color.Green;
 import net.imglib2.script.color.RGBA;
 import net.imglib2.script.color.Red;
 import net.imglib2.script.math.Compute;
-import net.imglib2.img.Img;
-import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
@@ -61,9 +62,9 @@ public class Resample<N extends NumericType<N>> extends ImgProxy<N>
 {
 	static public final Mode LINEAR = Affine3D.Mode.LINEAR;
 	static public final Mode NEAREST_NEIGHBOR = Affine3D.Mode.NEAREST_NEIGHBOR;
-	static public final Mode BEST = Affine3D.BEST;
+	static public final Mode BEST = AbstractAffine3D.BEST;
 
-	/** Resample an {@link Image} with the best possible mode. */
+	/** Resample an {@link Img} with the best possible mode. */
 	public Resample(final Img<N> img, final Number scale) throws Exception {
 		this(img, asDimArray(img, scale), BEST);
 	}
@@ -103,7 +104,7 @@ public class Resample<N extends NumericType<N>> extends ImgProxy<N>
 		if (ARGBType.class.isAssignableFrom(type.getClass())) { // type instanceof RGBALegacyType fails to compile
 			return (Img)processRGBA((Img)img, dim, mode);
 		} else if (type instanceof RealType<?>) {
-			return (Img)processReal((Img)img, dim, mode);
+			return processReal((Img)img, dim, mode);
 		} else {
 			throw new Exception("Affine transform: cannot handle type " + type.getClass());
 		}

@@ -32,8 +32,8 @@ import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
-import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.logic.BitType;
+import mpicbg.imglib.type.numeric.RealType;
 
 /**
  * StatisticalOperation provides the framework to create Order Statistic operations.  It operates

@@ -25,8 +25,6 @@
 
 package net.imglib2.script.algorithm.fn;
 
-import java.awt.Image;
-
 import mpicbg.models.AffineModel2D;
 import mpicbg.models.AffineModel3D;
 import net.imglib2.ExtendedRandomAccessibleInterval;
@@ -102,7 +100,7 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProx
 		final NumericType t = img.firstElement().createVariable();
 		if (ARGBType.class.isAssignableFrom(t.getClass())) {
 			int i = val.intValue();
-			t.set((NumericType)new ARGBType(i));
+			t.set(new ARGBType(i));
 		} else {
 			((RealType)t).setReal(val.doubleValue());
 		}
@@ -120,7 +118,7 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProx
 		if (ARGBType.class.isAssignableFrom(type.getClass())) { // type instanceof RGBALegacyType fails to compile
 			return (Img)processRGBA((Img)img, matrix, mode, (OutOfBoundsFactory)oobf);
 		} else if (type instanceof RealType<?>) {
-			return (Img)processReal((Img)img, matrix, mode, (OutOfBoundsFactory)oobf);
+			return processReal((Img)img, matrix, mode, (OutOfBoundsFactory)oobf);
 		} else {
 			throw new Exception("Affine transform: cannot handle type " + type.getClass());
 		}

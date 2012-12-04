@@ -66,10 +66,6 @@ public interface Labeling< T extends Comparable< T >> extends RandomAccessibleIn
 
 	/**
 	 * Find the first pixel in a raster scan of the object with the given label.
-	 * 
-	 * @param label
-	 * @param start
-	 * @return
 	 */
 	public boolean getRasterStart( T label, long[] start );
 
@@ -100,9 +96,6 @@ public interface Labeling< T extends Comparable< T >> extends RandomAccessibleIn
 
 	/**
 	 * Get a ROI that represents the pixels with the given label
-	 * 
-	 * @param label
-	 * @return
 	 */
 	public IterableRegionOfInterest getIterableRegionOfInterest( T label );
 

@@ -142,7 +142,7 @@ public final class Gauss3
 
 		kernel[ 0 ] = 1;
 		for ( int x = 1; x < size; ++x )
-			kernel[ x ] = Math.exp( -( x * x ) / two_sq_sigma );;
+			kernel[ x ] = Math.exp( -( x * x ) / two_sq_sigma );
 
 		if ( normalize )
 		{

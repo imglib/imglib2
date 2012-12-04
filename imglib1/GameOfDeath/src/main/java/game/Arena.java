@@ -39,8 +39,6 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.image.display.imagej.ImageJVirtualStack;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
-import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 
 /**
  * TODO

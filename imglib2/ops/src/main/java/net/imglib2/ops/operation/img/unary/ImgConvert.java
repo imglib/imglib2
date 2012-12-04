@@ -40,11 +40,15 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.img.UnaryOperationAssignment;
+import net.imglib2.ops.operation.Operations;
 import net.imglib2.ops.operation.UnaryOutputOperation;
-import net.imglib2.ops.operation.iterableinterval.unary.NormalizeIterableInterval;
+import net.imglib2.ops.operation.iterableinterval.unary.MinMax;
 import net.imglib2.ops.operation.real.unary.Convert;
 import net.imglib2.ops.operation.real.unary.Convert.TypeConversionTypes;
+import net.imglib2.ops.operation.real.unary.Normalize;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Pair;
 import net.imglib2.view.Views;
 
 /**
@@ -52,7 +56,7 @@ import net.imglib2.view.Views;
  * 
  * @author hornm, dietzc, University of Konstanz
  */
-public class ImgConvert< I extends RealType< I >, O extends RealType< O >> implements UnaryOutputOperation< Img< I >, Img< O >>
+public class ImgConvert< I extends RealType< I >, O extends RealType< O > & NativeType< O >> implements UnaryOutputOperation< Img< I >, Img< O >>
 {
 
 	public enum ImgConversionTypes
@@ -156,8 +160,10 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O >> imple
 	public Img< O > compute( Img< I > img, Img< O > r )
 	{
 
-		double[] normPar;
+		double factor;
+		Pair< I, I > oldMinMax;
 		Convert< I, O > convertOp = null;
+
 		switch ( m_conversionType )
 		{
 		case DIRECT:
@@ -167,26 +173,30 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O >> imple
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.DIRECTCLIP );
 			break;
 		case NORMALIZEDIRECT:
-			normPar = new NormalizeIterableInterval< I, Img< I >>().getNormalizationProperties( img, 0 );
+			oldMinMax = Operations.compute( new MinMax< I >( 0, img.firstElement() ), img);
+			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
 
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALE );
 
-			convertOp.setFactor( convertOp.getFactor() / normPar[ 0 ] );
+			convertOp.setFactor( convertOp.getFactor() / factor );
 			convertOp.setInMin( 0 );
 			convertOp.setOutMin( 0 );
 			break;
 		case NORMALIZESCALE:
-			normPar = new NormalizeIterableInterval< I, Img< I >>().getNormalizationProperties( img, 0 );
+			oldMinMax = Operations.compute( new MinMax< I >( 0, img.firstElement() ), img);
+			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
 
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALE );
-			convertOp.setFactor( convertOp.getFactor() / normPar[ 0 ] );
-			convertOp.setInMin( normPar[ 1 ] );
+			convertOp.setFactor( convertOp.getFactor() / factor );
+			convertOp.setInMin( oldMinMax.a.getRealDouble() );
 			break;
 		case NORMALIZEDIRECTCLIP:
-			normPar = new NormalizeIterableInterval< I, Img< I >>().getNormalizationProperties( img, 0 );
+			oldMinMax = Operations.compute( new MinMax< I >( 0, img.firstElement() ), img);
+			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
+
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALECLIP );
-			convertOp.setFactor( convertOp.getFactor() / normPar[ 0 ] );
-			convertOp.setInMin( normPar[ 1 ] );
+			convertOp.setFactor( convertOp.getFactor() / factor );
+			convertOp.setInMin( oldMinMax.a.getRealDouble() );
 			break;
 		case SCALE:
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALE );
