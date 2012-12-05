@@ -26,6 +26,10 @@
 		<module>imglib2</module>
 	</modules>
 
+	<properties>
+		<mpicbg.version>0.6.0-SNAPSHOT</mpicbg.version>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
