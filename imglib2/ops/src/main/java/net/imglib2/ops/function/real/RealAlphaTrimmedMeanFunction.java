@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 
@@ -51,22 +50,26 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealAlphaTrimmedMeanFunction<T extends RealType<T>>
-	implements Function<PointSet,T>
+public class RealAlphaTrimmedMeanFunction<T extends RealType<T>> extends
+	AbstractRealStatFunction<T>
 {
 	// -- instance variables --
 	
-	private final Function<long[],T> otherFunc;
 	private final int halfTrimSize;
-	private StatCalculator<T> calculator;
 	
 	// -- constructor --
 	
 	public RealAlphaTrimmedMeanFunction(Function<long[],T> otherFunc, int halfTrimSize)
 	{
-		this.otherFunc = otherFunc;
+		super(otherFunc);
 		this.halfTrimSize = halfTrimSize;
-		this.calculator = null;
+	}
+
+	// -- abstract method overrides
+
+	@Override
+	protected double value(StatCalculator<T> calc) {
+		return calc.alphaTrimmedMean(halfTrimSize);
 	}
 	
 	// -- Function methods --
@@ -74,19 +77,6 @@ public class RealAlphaTrimmedMeanFunction<T extends RealType<T>>
 	@Override
 	public RealAlphaTrimmedMeanFunction<T> copy() {
 		return new RealAlphaTrimmedMeanFunction<T>(otherFunc.copy(), halfTrimSize);
-	}
-
-	@Override
-	public void compute(PointSet input, T output) {
-		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
-		else calculator.reset(otherFunc, input);
-		double value = calculator.alphaTrimmedMean(halfTrimSize);
-		output.setReal(value);
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
 	}
 
 }
