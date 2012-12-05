@@ -39,6 +39,7 @@ package net.imglib2.util;
 import java.util.List;
 
 import net.imglib2.Interval;
+import net.imglib2.IterableInterval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -53,16 +54,16 @@ import net.imglib2.type.numeric.ExponentialMathType;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public class Util
 {
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	public static < T > T[] genericArray( final int length )
 	{
-		return (T[])( new Object[ length ] );
+		return ( T[] ) ( new Object[ length ] );
 	}
 
 	public static double log2( final double value )
@@ -119,10 +120,10 @@ public class Util
 		{
 			final float pos = position2.getFloatPosition( d ) - position1.getFloatPosition( d );
 
-			dist += pos*pos;
+			dist += pos * pos;
 		}
 
-		return (float)Math.sqrt( dist );
+		return ( float ) Math.sqrt( dist );
 	}
 
 	final public static float computeDistance( final int[] position1, final int[] position2 )
@@ -133,10 +134,10 @@ public class Util
 		{
 			final int pos = position2[ d ] - position1[ d ];
 
-			dist += pos*pos;
+			dist += pos * pos;
 		}
 
-		return (float)Math.sqrt( dist );
+		return ( float ) Math.sqrt( dist );
 	}
 
 	final public static float computeDistance( final long[] position1, final long[] position2 )
@@ -147,10 +148,10 @@ public class Util
 		{
 			final long pos = position2[ d ] - position1[ d ];
 
-			dist += pos*pos;
+			dist += pos * pos;
 		}
 
-		return (float)Math.sqrt( dist );
+		return ( float ) Math.sqrt( dist );
 	}
 
 	final public static float computeLength( final int[] position )
@@ -161,10 +162,10 @@ public class Util
 		{
 			final int pos = position[ d ];
 
-			dist += pos*pos;
+			dist += pos * pos;
 		}
 
-		return (float)Math.sqrt( dist );
+		return ( float ) Math.sqrt( dist );
 	}
 
 	final public static float computeLength( final long[] position )
@@ -175,10 +176,10 @@ public class Util
 		{
 			final long pos = position[ d ];
 
-			dist += pos*pos;
+			dist += pos * pos;
 		}
 
-		return (float)Math.sqrt( dist );
+		return ( float ) Math.sqrt( dist );
 	}
 
 	public static long computeMedian( final long[] values )
@@ -190,10 +191,11 @@ public class Util
 
 		quicksort( temp, 0, length - 1 );
 
-		if (length % 2 == 1) //odd length
-			median = temp[length / 2];
-		else //even length
-			median = (temp[length / 2] + temp[(length / 2) - 1]) / 2;
+		if ( length % 2 == 1 ) // odd length
+			median = temp[ length / 2 ];
+		else
+			// even length
+			median = ( temp[ length / 2 ] + temp[ ( length / 2 ) - 1 ] ) / 2;
 
 		return median;
 	}
@@ -207,18 +209,23 @@ public class Util
 
 		quicksort( temp, 0, length - 1 );
 
-		if (length % 2 == 1) //odd length
-			median = temp[length / 2];
-		else //even length
-			median = (temp[length / 2] + temp[(length / 2) - 1]) / 2;
+		if ( length % 2 == 1 ) // odd length
+			median = temp[ length / 2 ];
+		else
+			// even length
+			median = ( temp[ length / 2 ] + temp[ ( length / 2 ) - 1 ] ) / 2;
 
 		return median;
 	}
 
 	/**
-	 * Computes the percentile of a collection of doubles (percentile 0.5 roughly corresponds to median)
-	 * @param values - the values
-	 * @param percentile - the percentile [0...1]
+	 * Computes the percentile of a collection of doubles (percentile 0.5
+	 * roughly corresponds to median)
+	 * 
+	 * @param values
+	 *            - the values
+	 * @param percentile
+	 *            - the percentile [0...1]
 	 * @return the corresponding value
 	 */
 	public static double computePercentile( final double[] values, final double percentile )
@@ -228,10 +235,10 @@ public class Util
 
 		quicksort( temp );
 
-		return temp[ Math.min( length - 1, Math.max(0 ,(int)Math.round( (length - 1) * percentile ) ) ) ];
+		return temp[ Math.min( length - 1, Math.max( 0, ( int ) Math.round( ( length - 1 ) * percentile ) ) ) ];
 	}
 
-	public static double computeAverageDouble( final List<Double> values )
+	public static double computeAverageDouble( final List< Double > values )
 	{
 		final double size = values.size();
 		double avg = 0;
@@ -242,7 +249,7 @@ public class Util
 		return avg;
 	}
 
-	public static float computeAverageFloat( final List<Float> values )
+	public static float computeAverageFloat( final List< Float > values )
 	{
 		final double size = values.size();
 		double avg = 0;
@@ -250,10 +257,10 @@ public class Util
 		for ( final double v : values )
 			avg += v / size;
 
-		return (float)avg;
+		return ( float ) avg;
 	}
 
-	public static float computeMinimum( final List<Float> values )
+	public static float computeMinimum( final List< Float > values )
 	{
 		float min = Float.MAX_VALUE;
 
@@ -264,7 +271,7 @@ public class Util
 		return min;
 	}
 
-	public static float computeMaximum( final List<Float> values )
+	public static float computeMaximum( final List< Float > values )
 	{
 		float max = -Float.MAX_VALUE;
 
@@ -283,7 +290,7 @@ public class Util
 		for ( final float v : values )
 			avg += v / size;
 
-		return (float)avg;
+		return ( float ) avg;
 	}
 
 	public static double computeAverage( final double[] values )
@@ -328,344 +335,372 @@ public class Util
 
 		quicksort( temp, 0, length - 1 );
 
-		if (length % 2 == 1) //odd length
-			median = temp[length / 2];
-		else //even length
-			median = (temp[length / 2] + temp[(length / 2) - 1]) / 2;
+		if ( length % 2 == 1 ) // odd length
+			median = temp[ length / 2 ];
+		else
+			// even length
+			median = ( temp[ length / 2 ] + temp[ ( length / 2 ) - 1 ] ) / 2;
 
 		return median;
 	}
 
 	public static void quicksort( final long[] data, final int left, final int right )
 	{
-		if (data == null || data.length < 2)return;
+		if ( data == null || data.length < 2 )
+			return;
 		int i = left, j = right;
-		final long x = data[(left + right) / 2];
+		final long x = data[ ( left + right ) / 2 ];
 		do
 		{
-			while (data[i] < x) i++;
-			while (x < data[j]) j--;
-			if (i <= j)
+			while ( data[ i ] < x )
+				i++;
+			while ( x < data[ j ] )
+				j--;
+			if ( i <= j )
 			{
-				final long temp = data[i];
-				data[i] = data[j];
-				data[j] = temp;
+				final long temp = data[ i ];
+				data[ i ] = data[ j ];
+				data[ j ] = temp;
 				i++;
 				j--;
 			}
 		}
-		while (i <= j);
-		if (left < j) quicksort(data, left, j);
-		if (i < right) quicksort(data, i, right);
+		while ( i <= j );
+		if ( left < j )
+			quicksort( data, left, j );
+		if ( i < right )
+			quicksort( data, i, right );
 	}
 
-	public static void quicksort( final double[] data ) { quicksort( data, 0, data.length - 1 ); }
+	public static void quicksort( final double[] data )
+	{
+		quicksort( data, 0, data.length - 1 );
+	}
 
 	public static void quicksort( final double[] data, final int left, final int right )
 	{
-		if (data == null || data.length < 2)return;
+		if ( data == null || data.length < 2 )
+			return;
 		int i = left, j = right;
-		final double x = data[(left + right) / 2];
+		final double x = data[ ( left + right ) / 2 ];
 		do
 		{
-			while (data[i] < x) i++;
-			while (x < data[j]) j--;
-			if (i <= j)
+			while ( data[ i ] < x )
+				i++;
+			while ( x < data[ j ] )
+				j--;
+			if ( i <= j )
 			{
-				final double temp = data[i];
-				data[i] = data[j];
-				data[j] = temp;
+				final double temp = data[ i ];
+				data[ i ] = data[ j ];
+				data[ j ] = temp;
 				i++;
 				j--;
 			}
 		}
-		while (i <= j);
-		if (left < j) quicksort(data, left, j);
-		if (i < right) quicksort(data, i, right);
+		while ( i <= j );
+		if ( left < j )
+			quicksort( data, left, j );
+		if ( i < right )
+			quicksort( data, i, right );
 	}
 
-	public static void quicksort( final float[] data ) { quicksort( data, 0, data.length - 1 ); }
+	public static void quicksort( final float[] data )
+	{
+		quicksort( data, 0, data.length - 1 );
+	}
 
 	public static void quicksort( final float[] data, final int left, final int right )
 	{
-		if (data == null || data.length < 2)return;
+		if ( data == null || data.length < 2 )
+			return;
 		int i = left, j = right;
-		final float x = data[(left + right) / 2];
+		final float x = data[ ( left + right ) / 2 ];
 		do
 		{
-			while (data[i] < x) i++;
-			while (x < data[j]) j--;
-			if (i <= j)
+			while ( data[ i ] < x )
+				i++;
+			while ( x < data[ j ] )
+				j--;
+			if ( i <= j )
 			{
-				final float temp = data[i];
-				data[i] = data[j];
-				data[j] = temp;
+				final float temp = data[ i ];
+				data[ i ] = data[ j ];
+				data[ j ] = temp;
 				i++;
 				j--;
 			}
 		}
-		while (i <= j);
-		if (left < j) quicksort(data, left, j);
-		if (i < right) quicksort(data, i, right);
+		while ( i <= j );
+		if ( left < j )
+			quicksort( data, left, j );
+		if ( i < right )
+			quicksort( data, i, right );
 	}
 
 	public static void quicksort( final double[] data, final int[] sortAlso, final int left, final int right )
 	{
-		if (data == null || data.length < 2)return;
+		if ( data == null || data.length < 2 )
+			return;
 		int i = left, j = right;
-		final double x = data[(left + right) / 2];
+		final double x = data[ ( left + right ) / 2 ];
 		do
 		{
-			while (data[i] < x) i++;
-			while (x < data[j]) j--;
-			if (i <= j)
+			while ( data[ i ] < x )
+				i++;
+			while ( x < data[ j ] )
+				j--;
+			if ( i <= j )
 			{
-				final double temp = data[i];
-				data[i] = data[j];
-				data[j] = temp;
+				final double temp = data[ i ];
+				data[ i ] = data[ j ];
+				data[ j ] = temp;
 
-				final int temp2 = sortAlso[i];
-				sortAlso[i] = sortAlso[j];
-				sortAlso[j] = temp2;
+				final int temp2 = sortAlso[ i ];
+				sortAlso[ i ] = sortAlso[ j ];
+				sortAlso[ j ] = temp2;
 
 				i++;
 				j--;
 			}
 		}
-		while (i <= j);
-		if (left < j) quicksort(data, sortAlso, left, j);
-		if (i < right) quicksort(data, sortAlso, i, right);
+		while ( i <= j );
+		if ( left < j )
+			quicksort( data, sortAlso, left, j );
+		if ( i < right )
+			quicksort( data, sortAlso, i, right );
 	}
 
 	public static double gLog( final double z, final double c )
 	{
-		if (c == 0)
+		if ( c == 0 )
 			return z;
-		else
-			return Math.log10((z + Math.sqrt(z * z + c * c)) / 2.0);
+		return Math.log10( ( z + Math.sqrt( z * z + c * c ) ) / 2.0 );
 	}
 
 	public static float gLog( final float z, final float c )
 	{
-		if (c == 0)
+		if ( c == 0 )
 			return z;
-		else
-			return (float)Math.log10((z + Math.sqrt(z * z + c * c)) / 2.0);
+		return ( float ) Math.log10( ( z + Math.sqrt( z * z + c * c ) ) / 2.0 );
 	}
 
 	public static double gLogInv( final double w, final double c )
 	{
-		if (c == 0)
+		if ( c == 0 )
 			return w;
-		else
-			return Math.pow(10, w) - (((c * c) * Math.pow(10,-w)) / 4.0);
+		return Math.pow( 10, w ) - ( ( ( c * c ) * Math.pow( 10, -w ) ) / 4.0 );
 	}
 
 	public static double gLogInv( final float w, final float c )
 	{
-		if (c == 0)
+		if ( c == 0 )
 			return w;
-		else
-			return Math.pow(10, w) - (((c * c) * Math.pow(10,-w)) / 4.0);
+		return Math.pow( 10, w ) - ( ( ( c * c ) * Math.pow( 10, -w ) ) / 4.0 );
 	}
 
 	public static boolean isApproxEqual( final float a, final float b, final float threshold )
 	{
-		if (a==b)
-		  return true;
-		else if (a + threshold > b && a - threshold < b)
-		  return true;
+		if ( a == b )
+			return true;
+		else if ( a + threshold > b && a - threshold < b )
+			return true;
 		else
-		  return false;
+			return false;
 	}
 
 	public static boolean isApproxEqual( final double a, final double b, final double threshold )
 	{
-		if (a==b)
-		  return true;
-		else if (a + threshold > b && a - threshold < b)
-		  return true;
+		if ( a == b )
+			return true;
+		else if ( a + threshold > b && a - threshold < b )
+			return true;
 		else
-		  return false;
+			return false;
 	}
 
 	public static int round( final float value )
 	{
-		return (int)( value + (0.5f * Math.signum( value ) ) );
+		return ( int ) ( value + ( 0.5f * Math.signum( value ) ) );
 	}
 
 	public static long round( final double value )
 	{
-		return (long)( value + (0.5d * Math.signum( value ) ) );
+		return ( long ) ( value + ( 0.5d * Math.signum( value ) ) );
 	}
 
-    /**
-     * This method creates a gaussian kernel
-     *
-     * @param sigma Standard Derivation of the gaussian function
-     * @param normalize Normalize integral of gaussian function to 1 or not...
-     * @return double[] The gaussian kernel
-     *
-     */
-    public static double[] createGaussianKernel1DDouble( final double sigma, final boolean normalize )
-    {
-            int size = 3;
-            final double[] gaussianKernel;
+	/**
+	 * This method creates a gaussian kernel
+	 * 
+	 * @param sigma
+	 *            Standard Derivation of the gaussian function
+	 * @param normalize
+	 *            Normalize integral of gaussian function to 1 or not...
+	 * @return double[] The gaussian kernel
+	 * 
+	 */
+	public static double[] createGaussianKernel1DDouble( final double sigma, final boolean normalize )
+	{
+		int size = 3;
+		final double[] gaussianKernel;
 
-            if (sigma <= 0)
-            {
-                    gaussianKernel = new double[3];
-                    gaussianKernel[1] = 1;
-            }
-            else
-            {
-                    size = Math.max(3, (2 * (int) (3 * sigma + 0.5) + 1));
+		if ( sigma <= 0 )
+		{
+			gaussianKernel = new double[ 3 ];
+			gaussianKernel[ 1 ] = 1;
+		}
+		else
+		{
+			size = Math.max( 3, ( 2 * ( int ) ( 3 * sigma + 0.5 ) + 1 ) );
 
-                    final double two_sq_sigma = 2 * sigma * sigma;
-                    gaussianKernel = new double[size];
+			final double two_sq_sigma = 2 * sigma * sigma;
+			gaussianKernel = new double[ size ];
 
-                    for (int x = size / 2; x >= 0; --x)
-                    {
-                            final double val = Math.exp( -(x * x) / two_sq_sigma);
+			for ( int x = size / 2; x >= 0; --x )
+			{
+				final double val = Math.exp( -( x * x ) / two_sq_sigma );
 
-                            gaussianKernel[size / 2 - x] = val;
-                            gaussianKernel[size / 2 + x] = val;
-                    }
-            }
+				gaussianKernel[ size / 2 - x ] = val;
+				gaussianKernel[ size / 2 + x ] = val;
+			}
+		}
 
-            if (normalize)
-            {
-                    double sum = 0;
-                    for (final double value : gaussianKernel)
-                            sum += value;
+		if ( normalize )
+		{
+			double sum = 0;
+			for ( final double value : gaussianKernel )
+				sum += value;
 
-                    for (int i = 0; i < gaussianKernel.length; ++i)
-                            gaussianKernel[i] /= sum;
-            }
+			for ( int i = 0; i < gaussianKernel.length; ++i )
+				gaussianKernel[ i ] /= sum;
+		}
 
-            return gaussianKernel;
-    }
+		return gaussianKernel;
+	}
 
-    /**
-     * This method creates a gaussian kernel
-     *
-     * @param sigma Standard Derivation of the gaussian function in the desired {@link Type}
-     * @param normalize Normalize integral of gaussian function to 1 or not...
-     * @return T[] The gaussian kernel
-     *
-     */
-    public static < T extends ExponentialMathType<T> > T[] createGaussianKernel1D( final T sigma, final boolean normalize )
-    {
-            final T[] gaussianKernel;
-            int kernelSize;
+	/**
+	 * This method creates a gaussian kernel
+	 * 
+	 * @param sigma
+	 *            Standard Derivation of the gaussian function in the desired
+	 *            {@link Type}
+	 * @param normalize
+	 *            Normalize integral of gaussian function to 1 or not...
+	 * @return T[] The gaussian kernel
+	 * 
+	 */
+	public static < T extends ExponentialMathType< T > > T[] createGaussianKernel1D( final T sigma, final boolean normalize )
+	{
+		final T[] gaussianKernel;
+		int kernelSize;
 
-            final T zero = sigma.createVariable();
-            final T two = sigma.createVariable();
-            final T one = sigma.createVariable();
-            final T minusOne = sigma.createVariable();
-            final T two_sq_sigma = zero.createVariable();
-            final T sum = sigma.createVariable();
-            final T value = sigma.createVariable();
-            final T xPos = sigma.createVariable();
-            final T cs = sigma.createVariable();
+		final T zero = sigma.createVariable();
+		final T two = sigma.createVariable();
+		final T one = sigma.createVariable();
+		final T minusOne = sigma.createVariable();
+		final T two_sq_sigma = zero.createVariable();
+		final T sum = sigma.createVariable();
+		final T value = sigma.createVariable();
+		final T xPos = sigma.createVariable();
+		final T cs = sigma.createVariable();
 
-            zero.setZero();
-            one.setOne();
+		zero.setZero();
+		one.setOne();
 
-            two.setOne();
-            two.add( one );
+		two.setOne();
+		two.add( one );
 
+		minusOne.setZero();
+		minusOne.sub( one );
 
-            minusOne.setZero();
-            minusOne.sub( one );
+		if ( sigma.compareTo( zero ) <= 0 )
+		{
+			kernelSize = 3;
+			// NB: Need explicit cast to T[] to satisfy javac;
+			// See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6302954
+			gaussianKernel = ( T[] ) genericArray( 3 ); // zero.createArray1D( 3
+														// );
+			gaussianKernel[ 1 ].set( one );
+		}
+		else
+		{
+			// size = Math.max(3, (int) (2 * (int) (3 * sigma + 0.5) + 1));
+			cs.set( sigma );
+			cs.mul( 3.0 );
+			cs.round();
+			cs.mul( 2.0 );
+			cs.add( one );
 
-            if ( sigma.compareTo( zero ) <= 0 )
-            {
-            		kernelSize = 3;
-								// NB: Need explicit cast to T[] to satisfy javac;
-								// See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6302954
-                gaussianKernel = (T[]) genericArray( 3 ); //zero.createArray1D( 3 );
-                gaussianKernel[ 1 ].set( one );
-            }
-            else
-            {
-                	//size = Math.max(3, (int) (2 * (int) (3 * sigma + 0.5) + 1));
-                	cs.set( sigma );
-                	cs.mul( 3.0 );
-                	cs.round();
-                	cs.mul( 2.0 );
-                	cs.add( one );
+			kernelSize = Util.round( cs.getRealFloat() );
 
-                	kernelSize = Util.round( cs.getRealFloat() );
+			// kernelsize has to be at least 3
+			kernelSize = Math.max( 3, kernelSize );
 
-                	// kernelsize has to be at least 3
-            		kernelSize = Math.max( 3, kernelSize );
+			// kernelsize has to be odd
+			if ( kernelSize % 2 == 0 )
+				++kernelSize;
 
-            		// kernelsize has to be odd
-            		if ( kernelSize % 2 == 0 )
-            			++kernelSize;
+			// two_sq_sigma = 2 * sigma * sigma;
+			two_sq_sigma.set( two );
+			two_sq_sigma.mul( sigma );
+			two_sq_sigma.mul( sigma );
 
-                    // two_sq_sigma = 2 * sigma * sigma;
-                    two_sq_sigma.set( two );
-                    two_sq_sigma.mul( sigma );
-                    two_sq_sigma.mul( sigma );
+			// NB: Need explicit cast to T[] to satisfy javac;
+			// See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6302954
+			gaussianKernel = ( T[] ) genericArray( kernelSize ); // zero.createArray1D(
+																	// kernelSize
+																	// );
 
-										// NB: Need explicit cast to T[] to satisfy javac;
-										// See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6302954
-                    gaussianKernel = (T[]) genericArray( kernelSize ); //zero.createArray1D( kernelSize );
+			for ( int i = 0; i < gaussianKernel.length; ++i )
+				gaussianKernel[ i ] = zero.createVariable();
 
-                    for ( int i = 0; i < gaussianKernel.length; ++i )
-                    	gaussianKernel[ i ] = zero.createVariable();
+			// set the xPos to kernelSize/2
+			xPos.setZero();
+			for ( int x = 1; x <= kernelSize / 2; ++x )
+				xPos.add( one );
 
-                    // set the xPos to kernelSize/2
-                    xPos.setZero();
-                    for ( int x = 1; x <= kernelSize / 2; ++x )
-                    	xPos.add( one );
+			for ( int x = kernelSize / 2; x >= 0; --x )
+			{
+				// final double val = Math.exp( -(x * x) / two_sq_sigma );
+				value.set( xPos );
+				value.mul( xPos );
+				value.mul( minusOne );
+				value.div( two_sq_sigma );
+				value.exp();
 
+				gaussianKernel[ kernelSize / 2 - x ].set( value );
+				gaussianKernel[ kernelSize / 2 + x ].set( value );
 
-                    for ( int x = kernelSize / 2; x >= 0; --x )
-                    {
-                        //final double val = Math.exp( -(x * x) / two_sq_sigma );
-                    	value.set( xPos );
-                    	value.mul( xPos );
-                    	value.mul( minusOne );
-                    	value.div( two_sq_sigma );
-                    	value.exp();
+				xPos.sub( one );
+			}
+		}
 
-                        gaussianKernel[ kernelSize / 2 - x ].set( value );
-                        gaussianKernel[ kernelSize / 2 + x ].set( value );
+		if ( normalize )
+		{
+			sum.setZero();
 
-                        xPos.sub( one );
-                    }
-            }
+			for ( final T val : gaussianKernel )
+				sum.add( val );
 
-            if (normalize)
-            {
-                    sum.setZero();
+			for ( int i = 0; i < gaussianKernel.length; ++i )
+				gaussianKernel[ i ].div( sum );
+		}
 
-                    for ( final T val : gaussianKernel )
-                            sum.add(  val );
+		for ( int i = 0; i < gaussianKernel.length; ++i )
+			System.out.println( gaussianKernel[ i ] );
 
-                    for (int i = 0; i < gaussianKernel.length; ++i)
-                            gaussianKernel[ i ].div( sum );
-            }
+		return gaussianKernel;
+	}
 
-            for ( int i = 0; i < gaussianKernel.length; ++i )
-            	System.out.println( gaussianKernel[ i ] );
+	public static int getSuggestedKernelDiameter( final double sigma )
+	{
+		int size = 3;
 
-            return gaussianKernel;
-    }
+		if ( sigma > 0 )
+			size = Math.max( 3, ( 2 * ( int ) ( 3 * sigma + 0.5 ) + 1 ) );
 
-
-    public static int getSuggestedKernelDiameter( final double sigma )
-    {
-        int size = 3;
-
-        if ( sigma > 0 )
-            size = Math.max(3, (2 * (int) (3 * sigma + 0.5) + 1));
-
-        return size;
-    }
+		return size;
+	}
 
 	public static String printCoordinates( final float[] value )
 	{
@@ -673,8 +708,7 @@ public class Util
 
 		if ( value == null || value.length == 0 )
 			return out;
-		else
-			out = "(" + value[0];
+		out = "(" + value[ 0 ];
 
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
@@ -690,8 +724,7 @@ public class Util
 
 		if ( value == null || value.length == 0 )
 			return out;
-		else
-			out = "(" + value[0];
+		out = "(" + value[ 0 ];
 
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
@@ -707,8 +740,7 @@ public class Util
 
 		if ( localizable == null || localizable.numDimensions() == 0 )
 			return out;
-		else
-			out = "(" + localizable.getFloatPosition( 0 );
+		out = "(" + localizable.getFloatPosition( 0 );
 
 		for ( int i = 1; i < localizable.numDimensions(); i++ )
 			out += ", " + localizable.getFloatPosition( i );
@@ -751,8 +783,7 @@ public class Util
 
 		if ( value == null || value.length == 0 )
 			return out;
-		else
-			out = "(" + value[0];
+		out = "(" + value[ 0 ];
 
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
@@ -768,8 +799,7 @@ public class Util
 
 		if ( value == null || value.length == 0 )
 			return out;
-		else
-			out = "(" + value[0];
+		out = "(" + value[ 0 ];
 
 		for ( int i = 1; i < value.length; i++ )
 			out += ", " + value[ i ];
@@ -785,8 +815,7 @@ public class Util
 
 		if ( value == null || value.length == 0 )
 			return out;
-		else
-			out = "(";
+		out = "(";
 
 		if ( value[ 0 ] )
 			out += "1";
@@ -809,35 +838,33 @@ public class Util
 
 	public static int pow( final int a, final int b )
 	{
-		if (b == 0)
+		if ( b == 0 )
 			return 1;
-		else if (b == 1)
+		else if ( b == 1 )
 			return a;
 		else
 		{
 			int result = a;
 
-			for (int i = 1; i < b; i++)
+			for ( int i = 1; i < b; i++ )
 				result *= a;
 
 			return result;
 		}
 	}
 
-	public static <T extends Type<T> & Comparable<T>> T max( final T value1, final T value2 )
+	public static < T extends Type< T > & Comparable< T >> T max( final T value1, final T value2 )
 	{
-		if( value1.compareTo( value2 ) >= 0 )
+		if ( value1.compareTo( value2 ) >= 0 )
 			return value1;
-		else
-			return value2;
+		return value2;
 	}
 
-	public static <T extends Type<T> & Comparable<T>> T min( final T value1, final T value2 )
+	public static < T extends Type< T > & Comparable< T >> T min( final T value1, final T value2 )
 	{
-		if( value1.compareTo( value2 ) <= 0 )
+		if ( value1.compareTo( value2 ) <= 0 )
 			return value1;
-		else
-			return value2;
+		return value2;
 	}
 
 	public static boolean[][] getRecursiveCoordinates( final int numDimensions )
@@ -890,7 +917,8 @@ public class Util
 
 		if ( dimension == 0 )
 		{
-			// compute the index in the result array ( binary to decimal conversion )
+			// compute the index in the result array ( binary to decimal
+			// conversion )
 			int index0 = 0, index1 = 0;
 
 			for ( int d = 0; d < numDimensions; d++ )
@@ -902,8 +930,8 @@ public class Util
 			// fill the result array
 			for ( int d = 0; d < numDimensions; d++ )
 			{
-				result[ index0 ][ d ] = (newLocation0[ d ] == 1);
-				result[ index1 ][ d ] = (newLocation1[ d ] == 1);
+				result[ index0 ][ d ] = ( newLocation0[ d ] == 1 );
+				result[ index1 ][ d ] = ( newLocation1[ d ] == 1 );
 			}
 		}
 		else
@@ -915,13 +943,17 @@ public class Util
 	}
 
 	/**
-	 * <p>Create a long[] with the dimensions of an {@link Interval}.</p>
-	 *
-	 * <p>Keep in mind that creating arrays wildly is not good practice and
-	 * consider using the interval directly.</p>
-	 *
+	 * <p>
+	 * Create a long[] with the dimensions of an {@link Interval}.
+	 * </p>
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
 	 * @param interval
-	 *
+	 * 
 	 * @return dimensions of the interval as a new long[]
 	 */
 	final static public long[] intervalDimensions( final Interval interval )
@@ -936,7 +968,7 @@ public class Util
 		final int[] i = new int[ a.length ];
 
 		for ( int d = 0; d < a.length; ++d )
-			i[ d ] = (int)a[ d ];
+			i[ d ] = ( int ) a[ d ];
 
 		return i;
 	}
@@ -952,13 +984,17 @@ public class Util
 	}
 
 	/**
-	 * <p>Create a long[] with the max coordinates of an {@link Interval}.</p>
-	 *
-	 * <p>Keep in mind that creating arrays wildly is not good practice and
-	 * consider using the interval directly.</p>
-	 *
+	 * <p>
+	 * Create a long[] with the max coordinates of an {@link Interval}.
+	 * </p>
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
 	 * @param interval
-	 *
+	 * 
 	 * @return dimensions of the interval as a new long[]
 	 */
 	final static public long[] intervalMax( final Interval interval )
@@ -969,13 +1005,17 @@ public class Util
 	}
 
 	/**
-	 * <p>Create a long[] with the min coordinates of an {@link Interval}.</p>
-	 *
-	 * <p>Keep in mind that creating arrays wildly is not good practice and
-	 * consider using the interval directly.</p>
-	 *
+	 * <p>
+	 * Create a long[] with the min coordinates of an {@link Interval}.
+	 * </p>
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
 	 * @param interval
-	 *
+	 * 
 	 * @return dimensions of the interval as a new long[]
 	 */
 	final static public long[] intervalMin( final Interval interval )
@@ -986,14 +1026,18 @@ public class Util
 	}
 
 	/**
-	 * <p>Create a double[] with the dimensions of a {@link RealInterval}.
-	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
-	 *
-	 * <p>Keep in mind that creating arrays wildly is not good practice and
-	 * consider using the interval directly.</p>
-	 *
+	 * <p>
+	 * Create a double[] with the dimensions of a {@link RealInterval}.
+	 * Dimensions are returned as <em>max</em> - <em>min</em>.
+	 * </p>
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
 	 * @param interval
-	 *
+	 * 
 	 * @return dimensions of the interval as a new double[]
 	 */
 	final static public double[] realIntervalDimensions( final RealInterval interval )
@@ -1008,14 +1052,18 @@ public class Util
 	}
 
 	/**
-	 * <p>Create a double[] with the max coordinates of a {@link RealInterval}.
-	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
-	 *
-	 * <p>Keep in mind that creating arrays wildly is not good practice and
-	 * consider using the interval directly.</p>
-	 *
+	 * <p>
+	 * Create a double[] with the max coordinates of a {@link RealInterval}.
+	 * Dimensions are returned as <em>max</em> - <em>min</em>.
+	 * </p>
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
 	 * @param interval
-	 *
+	 * 
 	 * @return dimensions of the interval as a new double[]
 	 */
 	final static public double[] realIntervalMax( final RealInterval interval )
@@ -1030,14 +1078,18 @@ public class Util
 	}
 
 	/**
-	 * <p>Create a double[] with the min coordinates of a {@link RealInterval}.
-	 * Dimensions are returned as <em>max</em> - <em>min</em>.</p>
-	 *
-	 * <p>Keep in mind that creating arrays wildly is not good practice and
-	 * consider using the interval directly.</p>
-	 *
+	 * <p>
+	 * Create a double[] with the min coordinates of a {@link RealInterval}.
+	 * Dimensions are returned as <em>max</em> - <em>min</em>.
+	 * </p>
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
 	 * @param interval
-	 *
+	 * 
 	 * @return dimensions of the interval as a new double[]
 	 */
 	final static public double[] realIntervalMin( final RealInterval interval )
@@ -1052,59 +1104,16 @@ public class Util
 	}
 
 	/**
-	 * Test whether the {@code containing} interval completely contains the
-	 * {@code contained} interval.
-	 *
-	 * TODO: move to {@link Intervals}
-	 *
-	 * @param containing
-	 * @param contained
-	 * @return
-	 */
-	final static public boolean contains( final Interval containing, final Interval contained )
-	{
-		assert containing.numDimensions() == contained.numDimensions();
-
-		final int n = containing.numDimensions();
-		for ( int d = 0; d < n; ++d )
-		{
-			if ( containing.min( d ) > contained.min( d ) || containing.max( d ) < contained.max( d ) )
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Test whether the {@code containing} interval completely contains the
-	 * {@code contained} interval.
-	 *
-	 * TODO: move to {@link Intervals}.
-	 *
-	 * @param containing
-	 * @param contained
-	 * @return
-	 */
-	final static public boolean contains( final RealInterval containing, final RealInterval contained )
-	{
-		assert containing.numDimensions() == contained.numDimensions();
-
-		final int n = containing.numDimensions();
-		for ( int d = 0; d < n; ++d )
-		{
-			if ( containing.realMin( d ) > contained.realMin( d ) || containing.realMax( d ) < contained.realMax( d ) )
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Gets an instance of T from the {@link RandomAccessibleInterval} by querying the value at the min coordinate
-	 *
-	 * @param <T> - the T
-	 * @param rai - the {@link RandomAccessibleInterval}
+	 * Gets an instance of T from the {@link RandomAccessibleInterval} by
+	 * querying the value at the min coordinate
+	 * 
+	 * @param <T>
+	 *            - the T
+	 * @param rai
+	 *            - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
 	 */
-	final public static <T, F extends Interval & RandomAccessible< T >> T getTypeFromInterval( final F rai )
+	final public static < T, F extends Interval & RandomAccessible< T >> T getTypeFromInterval( final F rai )
 	{
 		// create RandomAccess
 		final RandomAccess< T > randomAccess = rai.randomAccess();
@@ -1117,29 +1126,33 @@ public class Util
 
 	/**
 	 * Gets an instance of T from the {@link RandomAccessible}
-	 *
-	 * @param <T> - the T
-	 * @param rai - the {@link RandomAccessible}
+	 * 
+	 * @param <T>
+	 *            - the T
+	 * @param rai
+	 *            - the {@link RandomAccessible}
 	 * @return - an instance of T
 	 */
-	final public static <T> T getTypeFromRandomAccess( final RandomAccessible<T> ra )
+	final public static < T > T getTypeFromRandomAccess( final RandomAccessible< T > ra )
 	{
 		// test that it is not an interval, because in this case a simple get()
 		// at the position of creation will fail
 		if ( RandomAccessibleInterval.class.isInstance( ra ) )
-			return getTypeFromInterval( (RandomAccessibleInterval<T>)ra );
-		else
-			return ra.randomAccess().get();
+			return getTypeFromInterval( ( RandomAccessibleInterval< T > ) ra );
+		return ra.randomAccess().get();
 	}
 
 	/**
-	 * Gets an instance of T from the {@link RandomAccessibleInterval} by querying the value at the min coordinate
-	 *
-	 * @param <T> - the T
-	 * @param rai - the {@link RandomAccessibleInterval}
+	 * Gets an instance of T from the {@link RandomAccessibleInterval} by
+	 * querying the value at the min coordinate
+	 * 
+	 * @param <T>
+	 *            - the T
+	 * @param rai
+	 *            - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
 	 */
-	final public static <T, F extends RealInterval & RealRandomAccessible< T >> T getTypeFromRealInterval( final F rai )
+	final public static < T, F extends RealInterval & RealRandomAccessible< T >> T getTypeFromRealInterval( final F rai )
 	{
 		// create RealRandomAccess
 		final RealRandomAccess< T > realRandomAccess = rai.realRandomAccess();
@@ -1152,36 +1165,53 @@ public class Util
 
 	/**
 	 * Gets an instance of T from the {@link RealRandomAccessible}
-	 *
-	 * @param <T> - the T
-	 * @param rai - the {@link RealRandomAccessible}
+	 * 
+	 * @param <T>
+	 *            - the T
+	 * @param rai
+	 *            - the {@link RealRandomAccessible}
 	 * @return - an instance of T
 	 */
-	final public static <T> T getTypeFromRealRandomAccess( final RealRandomAccessible<T> ra )
+	final public static < T > T getTypeFromRealRandomAccess( final RealRandomAccessible< T > ra )
 	{
 		// test that it is not an interval, because in this case a simple get()
 		// at the position of creation will fail
 		if ( RealRandomAccessibleRealInterval.class.isInstance( ra ) )
-			return getTypeFromRealInterval( (RealRandomAccessibleRealInterval<T>)ra );
-		else
-			return ra.realRandomAccess().get();
+			return getTypeFromRealInterval( ( RealRandomAccessibleRealInterval< T > ) ra );
+		return ra.realRandomAccess().get();
 	}
 
 	/**
 	 * (Hopefully) fast floor log<sub>2</sub> of an unsigned(!) integer value.
-	 *
-	 * @param v unsigned integer
+	 * 
+	 * @param v
+	 *            unsigned integer
 	 * @return floor log<sub>2</sub>
 	 */
 	final static public int ldu( int v )
 	{
-	    int c = 0;
-	    do
-	    {
-	    	v >>= 1;
-	        ++c;
-	    }
-	    while ( v > 1 );
-	    return c;
+		int c = 0;
+		do
+		{
+			v >>= 1;
+			++c;
+		}
+		while ( v > 1 );
+		return c;
+	}
+
+	/**
+	 * Checks whether n {@link IterableInterval} have the same iteration order.
+	 */
+	public static boolean equalIterationOrder( IterableInterval< ? >... intervals )
+	{
+		Object order = intervals[ 0 ].iterationOrder();
+		for ( int i = 1; i < intervals.length; i++ )
+		{
+			if ( !order.equals( intervals[ i ].iterationOrder() ) )
+				return false;
+		}
+
+		return true;
 	}
 }

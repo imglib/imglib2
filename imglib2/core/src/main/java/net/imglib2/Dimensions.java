@@ -37,6 +37,8 @@
 package net.imglib2;
 
 /**
+ * Defines an extent in <em>n</em>-dimensional discrete space.
+ *
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -45,14 +47,14 @@ public interface Dimensions extends EuclideanSpace
 {
 	/**
 	 * Write the number of pixels in each dimension into long[].
-	 * 
+	 *
 	 * @param dimensions
 	 */
 	public void dimensions( long[] dimensions );
-	
+
 	/**
 	 * Get the number of pixels in a given dimension <em>d</em>.
-	 * 
+	 *
 	 * @param d
 	 */
 	public long dimension( int d );

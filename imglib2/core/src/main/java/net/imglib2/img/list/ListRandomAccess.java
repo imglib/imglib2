@@ -9,13 +9,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -35,8 +35,6 @@
  */
 
 package net.imglib2.img.list;
-
-import java.util.ArrayList;
 
 import net.imglib2.AbstractLocalizableInt;
 import net.imglib2.Localizable;
@@ -46,8 +44,8 @@ import net.imglib2.RandomAccess;
  * {@link RandomAccess} on a {@link ListImg}.
  *
  * @param <T>
+ *            the pixel type
  *
- * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -56,15 +54,13 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 {
 	private int i;
 
-	private final ArrayList< T > pixels;
-	private final ListImg< T > container;
+	private final AbstractListImg< T > img;
 
 	public ListRandomAccess( final ListRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
 
-		container = randomAccess.container;
-		this.pixels = randomAccess.pixels;
+		img = randomAccess.img;
 
 		for ( int d = 0; d < n; ++d )
 			position[ d ] = randomAccess.position[ d ];
@@ -72,12 +68,11 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 		i = randomAccess.i;
 	}
 
-	public ListRandomAccess( final ListImg< T > container )
+	public ListRandomAccess( final AbstractListImg< T > img )
 	{
-		super( container.numDimensions() );
+		super( img.numDimensions() );
 
-		this.container = container;
-		this.pixels = container.pixels;
+		this.img = img;
 
 		i = 0;
 	}
@@ -85,32 +80,32 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 	@Override
 	public T get()
 	{
-		return pixels.get( i );
+		return img.getPixel( i );
 	}
 
 	public void set( final T t )
 	{
-		pixels.set( i, t );
+		img.setPixel( i, t );
 	}
 
 	@Override
 	public void fwd( final int d )
 	{
-		i += container.step[ d ];
+		i += img.step[ d ];
 		++position[ d ];
 	}
 
 	@Override
 	public void bck( final int d )
 	{
-		i -= container.step[ d ];
+		i -= img.step[ d ];
 		--position[ d ];
 	}
 
 	@Override
 	public void move( final int distance, final int d )
 	{
-		i += container.step[ d ] * distance;
+		i += img.step[ d ] * distance;
 		position[ d ] += distance;
 	}
 
@@ -147,7 +142,7 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 		localizable.localize( position );
 		i = position[ 0 ];
 		for ( int d = 1; d < n; ++d )
-			i += position[ d ] * container.step[ d ];
+			i += position[ d ] * img.step[ d ];
 	}
 
 	@Override
@@ -158,7 +153,7 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 		for ( int d = 1; d < n; ++d )
 		{
 			final int p = position[ d ];
-			i += p * container.step[ d ];
+			i += p * img.step[ d ];
 			this.position[ d ] = p;
 		}
 	}
@@ -171,7 +166,7 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 		for ( int d = 1; d < n; ++d )
 		{
 			final int p = ( int ) position[ d ];
-			i += p * container.step[ d ];
+			i += p * img.step[ d ];
 			this.position[ d ] = p;
 		}
 	}
@@ -179,14 +174,14 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 	@Override
 	public void setPosition( final int position, final int d )
 	{
-		i += container.step[ d ] * (position - this.position[ d ]);
+		i += img.step[ d ] * (position - this.position[ d ]);
 		this.position[ d ] = position;
 	}
 
 	@Override
 	public void setPosition( final long position, final int d )
 	{
-		i += container.step[ d ] * (position - this.position[ d ]);
+		i += img.step[ d ] * (position - this.position[ d ]);
 		this.position[ d ] = ( int ) position;
 	}
 

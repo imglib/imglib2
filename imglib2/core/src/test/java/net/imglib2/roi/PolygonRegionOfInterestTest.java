@@ -36,7 +36,9 @@
 
 package net.imglib2.roi;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.awt.geom.Path2D;
 import java.util.Random;
@@ -69,7 +71,7 @@ public class PolygonRegionOfInterestTest {
 		return p;
 	}
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#PolygonRegionOfInterest()}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#PolygonRegionOfInterest()}.
 	 */
 	@Test
 	public void testPolygonRegionOfInterest() {
@@ -78,7 +80,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#getVertexCount()}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#getVertexCount()}.
 	 */
 	@Test
 	public void testGetVertexCount() {
@@ -87,7 +89,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#getVertex(int)}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#getVertex(int)}.
 	 */
 	@Test
 	public void testGetVertex() {
@@ -106,7 +108,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#addVertex(int, mpicbg.imglib.RealLocalizable)}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#addVertex(int, net.imglib2.RealLocalizable)}.
 	 */
 	@Test
 	public void testAddVertex() {
@@ -114,7 +116,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#removeVertex(int)}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#removeVertex(int)}.
 	 */
 	@Test
 	public void testRemoveVertex() {
@@ -134,7 +136,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#setVertexPosition(int, double[])}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#setVertexPosition(int, double[])}.
 	 */
 	@Test
 	public void testSetVertexPositionIntDoubleArray() {
@@ -152,7 +154,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#setVertexPosition(int, float[])}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#setVertexPosition(int, float[])}.
 	 */
 	@Test
 	public void testSetVertexPositionIntFloatArray() {
@@ -172,7 +174,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#setVertexPosition(int, mpicbg.imglib.RealLocalizable)}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#setVertexPosition(int, net.imglib2.RealLocalizable)}.
 	 */
 	@Test
 	public void testSetVertexPositionIntRealLocalizable() {
@@ -190,7 +192,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#getEdgeStart(int)}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#getEdgeStart(int)}.
 	 */
 	@Test
 	public void testGetEdgeStart() {
@@ -205,7 +207,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#getEdgeEnd(int)}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#getEdgeEnd(int)}.
 	 */
 	@Test
 	public void testGetEdgeEnd() {
@@ -220,7 +222,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#isHorizontal(int)}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#isHorizontal(int)}.
 	 */
 	@Test
 	public void testIsHorizontal() {
@@ -232,7 +234,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.PolygonRegionOfInterest#interpolateEdgeXAtY(int, double)}.
+	 * Test method for {@link net.imglib2.roi.PolygonRegionOfInterest#interpolateEdgeXAtY(int, double)}.
 	 */
 	@Test
 	public void testInterpolateEdgeXAtY() {
@@ -255,7 +257,7 @@ public class PolygonRegionOfInterestTest {
 		return img;
 	}
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.AbstractIterableRegionOfInterest#getIterableIntervalOverROI(mpicbg.imglib.RandomAccessible)}.
+	 * Test method for {@link net.imglib2.roi.AbstractIterableRegionOfInterest#getIterableIntervalOverROI(net.imglib2.RandomAccessible)}.
 	 */
 	@Test
 	public void testGetIterableIntervalOverROI() {
@@ -318,11 +320,7 @@ public class PolygonRegionOfInterestTest {
 		}
 	}
 	/**
-	 * Determine whether the given position is on an edge of the polygon
-	 * @param x
-	 * @param y
-	 * @param p
-	 * @return
+	 * Determine whether the given position is on an edge of the polygon.
 	 */
 	protected static boolean isOnEdge(double x, double y, PolygonRegionOfInterest p) {
 		for (int k=0; k < p.getVertexCount(); k++) {
@@ -347,7 +345,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.AbstractRegionOfInterest#numDimensions()}.
+	 * Test method for {@link net.imglib2.roi.AbstractRegionOfInterest#numDimensions()}.
 	 */
 	@Test
 	public void testNumDimensions() {
@@ -355,7 +353,7 @@ public class PolygonRegionOfInterestTest {
 	}
 
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.AbstractRegionOfInterest#realRandomAccess()}.
+	 * Test method for {@link net.imglib2.roi.AbstractRegionOfInterest#realRandomAccess()}.
 	 */
 	@Test
 	public void testRealRandomAccess() {
@@ -400,7 +398,7 @@ public class PolygonRegionOfInterestTest {
 	}
 	
 	/**
-	 * Test method for {@link mpicbg.imglib.roi.AbstractRegionOfInterest#realRandomAccess().size()}.
+	 * Test method for {@link net.imglib2.roi.AbstractRegionOfInterest#realRandomAccess()} {@code size()}.
 	 */
 	@Test
 	public void testSize() {

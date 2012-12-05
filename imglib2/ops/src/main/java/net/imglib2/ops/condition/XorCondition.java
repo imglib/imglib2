@@ -40,18 +40,27 @@ package net.imglib2.ops.condition;
 
 
 /**
+ * A {@link Condition} that combines two other Conditions in an XOR fashion.
+ * The Condition is true if exactly one of the child conditions is true and
+ * false otherwise.
  * 
  * @author Barry DeZonia
  */
 public class XorCondition<T> implements Condition<T> {
 
+	// -- instance variables --
+	
 	private final Condition<T> cond1;
 	private final Condition<T> cond2;
 
+	// -- constructor --
+	
 	public XorCondition(Condition<T> cond1, Condition<T> cond2) {
 		this.cond1 = cond1;
 		this.cond2 = cond2;
 	}
+	
+	// -- Condition methods --
 	
 	@Override
 	public boolean isTrue(T point) {

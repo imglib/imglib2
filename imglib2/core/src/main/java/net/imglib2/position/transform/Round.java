@@ -107,8 +107,7 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 		final long roundDistance = roundPosition - target.getIntPosition( d );
 		if ( roundDistance == 0 )
 			return;
-		else
-			target.move( roundDistance, d );
+		target.move( roundDistance, d );
 	}
 
 	@Override
@@ -120,8 +119,7 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 		final long roundDistance = roundPosition - target.getIntPosition( d );
 		if ( roundDistance == 0 )
 			return;
-		else
-			target.move( roundDistance, d );
+		target.move( roundDistance, d );
 	}
 
 	@Override

@@ -40,8 +40,8 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.BitAccess;
 import net.imglib2.img.basictypeaccess.array.BitArray;
-import net.imglib2.type.NativeType;
 import net.imglib2.type.BasePairType;
+import net.imglib2.type.NativeType;
 
 /**
  * TODO
@@ -155,6 +155,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 		j3 -= dec3;
 	}
 
+	@Override
 	public void set( final Base base ) 
 	{
 		// the bits to set
@@ -175,6 +176,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 		dataAccess.setValue( j3, b3 );
 	}
 	
+	@Override
 	public Base get() 
 	{
 		final boolean b1 = dataAccess.getValue( j1 );
@@ -221,17 +223,14 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 		{
 			return 0;
 		}
-		else
+		switch ( input )
 		{
-			switch ( input )
-			{
-				case gap: return -1; 
-				case N: if ( compare == Base.gap ) return 1; else return -1;
-				case A: if ( compare == Base.gap || compare == Base.N ) return 1; else return -1;
-				case T: if ( compare == Base.G || compare == Base.C ) return -1; else return 1;
-				case G: if ( compare == Base.C ) return -1; else return 1;
-				default: return 1;
-			}
+			case gap: return -1; 
+			case N: return compare == Base.gap ? 1 : -1;
+			case A: return compare == Base.gap || compare == Base.N ? 1 : -1;
+			case T: return compare == Base.G || compare == Base.C ? -1 : 1;
+			case G: return compare == Base.C ? -1 : 1;
+			default: return 1;
 		}
 	}
 	

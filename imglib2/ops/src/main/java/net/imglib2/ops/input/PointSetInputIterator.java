@@ -40,15 +40,22 @@ package net.imglib2.ops.input;
 import net.imglib2.ops.pointset.PointSet;
 
 /**
+ * This class is an {@link InputIterator} that iterates a region (given as a
+ * {@link PointSet}) a point at a time returning each PointSet anchored at the
+ * point of iteration.
  * 
  * @author Barry DeZonia
  */
 public class PointSetInputIterator implements InputIterator<PointSet> {
 
+	// -- instance variables --
+	
 	private final PointSet subspace;
 	private final PointInputIterator iter;
 	private long[] pos;
 	private long[] deltas;
+	
+	// -- constructor --
 	
 	public PointSetInputIterator(PointSet space, PointSet subspace) {
 		iter = new PointInputIterator(space);
@@ -56,6 +63,8 @@ public class PointSetInputIterator implements InputIterator<PointSet> {
 		pos = null;
 		deltas = new long[space.numDimensions()];
 	}
+	
+	// -- InputIterator methods --
 	
 	@Override
 	public boolean hasNext() {

@@ -171,6 +171,7 @@ final public class GaussFloat extends AbstractGauss< FloatType >
 	 *  
 	 * @param input - the {@link Iterator}/{@link Sampler} over the current input line.
 	 */
+	@Override
 	protected void processLine( final SamplingLineIterator< FloatType > input, final double[] kernel )
 	{
 		if ( !isArray() )

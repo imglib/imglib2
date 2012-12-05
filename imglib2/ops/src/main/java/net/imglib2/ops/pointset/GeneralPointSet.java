@@ -41,13 +41,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.imglib2.AbstractCursor;
 
 /**
  * Treats a general collection of points as a PointSet.
  * 
  * @author Barry DeZonia
  */
-public class GeneralPointSet implements PointSet {
+public class GeneralPointSet extends AbstractPointSet {
 	
 	// -- instance variables --
 	
@@ -56,7 +57,6 @@ public class GeneralPointSet implements PointSet {
 	private long[] boundMin;
 	private long[] boundMax;
 	private final List<long[]> points;
-	private final long[] tmpIncludePoint;
 
 	// -- constructor --
 	
@@ -69,18 +69,7 @@ public class GeneralPointSet implements PointSet {
 		this.boundMax = new long[numD];
 		this.points = new ArrayList<long[]>();
 		this.points.addAll(pts);
-		this.tmpIncludePoint = new long[numD];
-		// calc bounds BEFORE relativizing points
-		calcBounds(points);
-		// relativize points: this makes translate() fast
-		for (int i = 0; i < points.size(); i++) {
-			long[] p = points.get(i);
-			if (p.length != numD)
-				throw new IllegalArgumentException(
-						"points have differing dimensions");
-			for (int k = 0; k < numD; k++)
-				p[k] -= origin[k];
-		}
+		calcBounds(pts);
 	}
 
 	// -- PointSet methods --
@@ -90,16 +79,23 @@ public class GeneralPointSet implements PointSet {
 	
 	@Override
 	public void translate(long[] deltas) {
+		// translate all points in the set
+		for (long[] pt : points) {
+			for (int i = 0; i < numD; i++)
+				pt[i] += deltas[i];
+		}
+		// translate other related fields
 		for (int i = 0; i < numD; i++) {
 			long delta = deltas[i];
 			origin[i] += delta;
 			boundMin[i] += delta;
 			boundMax[i] += delta;
 		}
+		invalidateBounds();
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new GeneralPointSetIterator();
 	}
 	
@@ -110,26 +106,24 @@ public class GeneralPointSet implements PointSet {
 	
 	@Override
 	public boolean includes(long[] point) {
-		for (int i = 0; i < numD; i++)
-			tmpIncludePoint[i] = point[i] - origin[i];
 		for (long[] p : points) {
-			if (Arrays.equals(tmpIncludePoint, p)) return true;
+			if (Arrays.equals(point, p)) return true;
 		}
 		return false;
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return boundMin;
 	}
 	
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return boundMax;
 	}
 	
 	@Override
-	public long calcSize() {
+	public long size() {
 		return points.size();
 	}
 
@@ -137,10 +131,7 @@ public class GeneralPointSet implements PointSet {
 	public GeneralPointSet copy() {
 		ArrayList<long[]> pointsCopied = new ArrayList<long[]>();
 		for (long[] p : points) {
-			long[] newP = p.clone();
-			for (int i = 0; i < numD; i++)
-				newP[i] += origin[i];
-			pointsCopied.add(newP);
+			pointsCopied.add(p.clone());
 		}
 		return new GeneralPointSet(origin, pointsCopied);
 	}
@@ -149,7 +140,7 @@ public class GeneralPointSet implements PointSet {
 	
 	public static GeneralPointSet explode(PointSet ps) {
 		final List<long[]> points = new ArrayList<long[]>();
-		final PointSetIterator iter = ps.createIterator();
+		final PointSetIterator iter = ps.iterator();
 		while (iter.hasNext()) {
 			points.add(iter.next().clone());
 		}
@@ -159,11 +150,13 @@ public class GeneralPointSet implements PointSet {
 	// -- private helpers --
 	
 	private void calcBounds(List<long[]> pts) {
+		// init bounds to first point's values
 		for (int i = 0; i < numD; i++) {
 			long val = pts.get(0)[i];
 			boundMin[i] = val;
 			boundMax[i] = val;
 		}
+		// modify bounds to include the rest of the points
 		for (int i = 1; i < pts.size(); i++) {
 			long[] point = pts.get(i);
 			for (int j = 0; j < numD; j++) {
@@ -173,13 +166,14 @@ public class GeneralPointSet implements PointSet {
 		}
 	}
 	
-	private class GeneralPointSetIterator implements PointSetIterator {
+	private class GeneralPointSetIterator extends AbstractCursor<long[]>
+		implements PointSetIterator
+	{
 		private int index;
-		private long[] tmpNextPoint;
 		
 		public GeneralPointSetIterator() {
+			super(GeneralPointSet.this.numD);
 			index = -1;
-			tmpNextPoint = new long[numD];
 		}
 		
 		@Override
@@ -188,17 +182,41 @@ public class GeneralPointSet implements PointSet {
 		}
 		
 		@Override
-		public long[] next() {
-			index++;
-			long[] p = points.get(index);
-			for (int i = 0; i < numD; i++)
-				tmpNextPoint[i] = p[i] + origin[i];
-			return tmpNextPoint;
-		}
-		
-		@Override
 		public void reset() {
 			index = -1;
+		}
+
+		@Override
+		public long[] get() {
+			if (index < 0) return null;
+			return points.get(index);
+		}
+
+		@Override
+		public void fwd() {
+			index++;
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < numD; i++) {
+				position[i] = getLongPosition(i);
+			}
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return get()[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new GeneralPointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
 		}
 	}
 }

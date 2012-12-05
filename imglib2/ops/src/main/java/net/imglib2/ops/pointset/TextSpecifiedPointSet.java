@@ -62,7 +62,7 @@ import net.imglib2.ops.util.Tuple2;
  * @author Barry DeZonia
  *
  */
-public class TextSpecifiedPointSet implements PointSet {
+public class TextSpecifiedPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
@@ -87,12 +87,13 @@ public class TextSpecifiedPointSet implements PointSet {
 
 	@Override
 	public void translate(long[] deltas) {
-		set.translate(deltas);
+		set.translate(deltas); // TODO - is this valid for a text pointset?
+		invalidateBounds();
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
-		return set.createIterator();
+	public PointSetIterator iterator() {
+		return set.iterator();
 	}
 
 	@Override
@@ -101,13 +102,17 @@ public class TextSpecifiedPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
-		return set.findBoundMin();
+	protected long[] findBoundMin() {
+		long[] min = new long[set.numDimensions()];
+		set.min(min);
+		return min;
 	}
 
 	@Override
-	public long[] findBoundMax() {
-		return set.findBoundMax();
+	protected long[] findBoundMax() {
+		long[] max = new long[set.numDimensions()];
+		set.max(max);
+		return max;
 	}
 
 	@Override
@@ -116,8 +121,8 @@ public class TextSpecifiedPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
-		return set.calcSize();
+	public long size() {
+		return set.size();
 	}
 
 	@Override
@@ -128,7 +133,7 @@ public class TextSpecifiedPointSet implements PointSet {
 	public String getErrorString() {
 		return error;
 	}
-	
+
 	// -- private helpers --
 	
 	private PointSet construct(String spec) {
@@ -180,7 +185,7 @@ public class TextSpecifiedPointSet implements PointSet {
 		// iterate some definitions
 		System.out.println("Iterate x = [5]");
 		ps = new TextSpecifiedPointSet("x = [5]");
-		iter = ps.createIterator();
+		iter = ps.iterator();
 		while (iter.hasNext()) {
 			long[] next = iter.next();
 			System.out.println(" " + Arrays.toString(next));
@@ -188,7 +193,7 @@ public class TextSpecifiedPointSet implements PointSet {
 		
 		System.out.println("Iterate x = [1..3], y = [3..5]");
 		ps = new TextSpecifiedPointSet("x = [1..3], y = [3..5]");
-		iter = ps.createIterator();
+		iter = ps.iterator();
 		while (iter.hasNext()) {
 			long[] next = iter.next();
 			System.out.println(" " + Arrays.toString(next));
@@ -196,7 +201,7 @@ public class TextSpecifiedPointSet implements PointSet {
 
 		System.out.println("Iterate x = [1,3..7], y = [5,8..14]");
 		ps = new TextSpecifiedPointSet("x = [1,3..7], y = [5,8..14]");
-		iter = ps.createIterator();
+		iter = ps.iterator();
 		while (iter.hasNext()) {
 			long[] next = iter.next();
 			System.out.println(" " + Arrays.toString(next));
@@ -204,7 +209,7 @@ public class TextSpecifiedPointSet implements PointSet {
 
 		System.out.println("Iterate x = [1,4,9], y = [2,3,5,8]");
 		ps = new TextSpecifiedPointSet("x = [1,4,9], y = [2,3,5,8]");
-		iter = ps.createIterator();
+		iter = ps.iterator();
 		while (iter.hasNext()) {
 			long[] next = iter.next();
 			System.out.println(" " + Arrays.toString(next));
@@ -212,7 +217,7 @@ public class TextSpecifiedPointSet implements PointSet {
 
 		System.out.println("Iterate x = [-2..2], y = [-1,1..5]");
 		ps = new TextSpecifiedPointSet("x = [-2..2], y = [-1,1..5]");
-		iter = ps.createIterator();
+		iter = ps.iterator();
 		while (iter.hasNext()) {
 			long[] next = iter.next();
 			System.out.println(" " + Arrays.toString(next));
@@ -220,7 +225,7 @@ public class TextSpecifiedPointSet implements PointSet {
 		
 		System.out.println("Iterate x=[1..5],y=[1,5..50]");
 		ps = new TextSpecifiedPointSet("x=[1..5],y=[1,5..50]");
-		iter = ps.createIterator();
+		iter = ps.iterator();
 		while (iter.hasNext()) {
 			long[] next = iter.next();
 			System.out.println(" " + Arrays.toString(next));
@@ -231,7 +236,7 @@ public class TextSpecifiedPointSet implements PointSet {
 		if (ps.getErrorString() != null)
 			System.out.println(ps.getErrorString());
 		else {
-			iter = ps.createIterator();
+			iter = ps.iterator();
 			while (iter.hasNext()) {
 				long[] next = iter.next();
 				System.out.println(" " + Arrays.toString(next));
@@ -243,7 +248,7 @@ public class TextSpecifiedPointSet implements PointSet {
 		if (ps.getErrorString() != null)
 			System.out.println(ps.getErrorString());
 		else {
-			iter = ps.createIterator();
+			iter = ps.iterator();
 			while (iter.hasNext()) {
 				long[] next = iter.next();
 				System.out.println(" " + Arrays.toString(next));

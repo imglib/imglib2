@@ -37,7 +37,7 @@
 package net.imglib2.ops.operation.iterableinterval.unary.multilevelthresholder;
 
 /**
- * friedrichm (University of Konstanz)
+ * @author Markus Friedrich (University of Konstanz)
  */
 public enum MultilevelThresholderType
 {

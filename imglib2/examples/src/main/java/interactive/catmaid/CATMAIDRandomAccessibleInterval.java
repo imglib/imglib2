@@ -75,8 +75,6 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 		 * Return a hash code for the long tile index according to
 		 * {@link Long#hashCode()}.  The hash has no collisions if the tile
 		 * index is smaller than 2<sup>32</sup>.
-		 *   
-		 * @return
 		 */
 		@Override
 		public int hashCode() {

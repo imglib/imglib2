@@ -50,7 +50,7 @@ import net.imglib2.type.Type;
 
 /**
  * 
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  */
 public class ResultAsAdditionalDimOp< T extends Type< T >, O extends Type< O >, IN extends RandomAccessibleInterval< T >> implements UnaryOutputOperation< IN, Img< O > >
 {
@@ -105,11 +105,7 @@ public class ResultAsAdditionalDimOp< T extends Type< T >, O extends Type< O >, 
 			dims[ dims.length - 1 ] = m_operations.length;
 			return m_fac.create( dims, m_resType );
 		}
-		else
-		{
-
-			return m_fac.create( in, m_resType );
-		}
+		return m_fac.create( in, m_resType );
 	}
 
 	@Override

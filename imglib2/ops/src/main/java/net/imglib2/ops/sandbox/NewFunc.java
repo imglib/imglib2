@@ -36,7 +36,6 @@
 
 package net.imglib2.ops.sandbox;
 
-import net.imglib2.Cursor;
 
 /**
  * TODO

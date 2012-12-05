@@ -38,12 +38,16 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.operation.UnaryOutputOperation;
+import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 
+/**
+ * @author Felix Schoenenberger (University of Konstanz)
+ * @author Christian Dietz (University of Konstanz)
+ */
 public final class Centroid
                 implements
-                UnaryOutputOperation<IterableInterval<? extends Type<?>>, double[]> {
+                UnaryOperation<IterableInterval<? extends Type<?>>, double[]> {
 
         @Override
         public final double[] compute(
@@ -72,17 +76,7 @@ public final class Centroid
         }
 
         @Override
-        public UnaryOutputOperation<IterableInterval<? extends Type<?>>, double[]> copy() {
+        public UnaryOperation<IterableInterval<? extends Type<?>>, double[]> copy() {
                 return new Centroid();
-        }
-
-        @Override
-        public double[] createEmptyOutput(IterableInterval<? extends Type<?>> in) {
-                return new double[in.numDimensions()];
-        }
-
-        @Override
-        public double[] compute(IterableInterval<? extends Type<?>> in) {
-                return compute(in, createEmptyOutput(in));
         }
 }

@@ -47,6 +47,11 @@ import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.numeric.IntegerType;
 
+/**
+ * TODO
+ * 
+ * @author Martin Horn (University of Konstanz)
+ */
 public final class FloodFill< T extends IntegerType< T >, K extends RandomAccessible< T > & IterableInterval< T >> implements BinaryOperation< K, Localizable, K >
 {
 
@@ -58,6 +63,7 @@ public final class FloodFill< T extends IntegerType< T >, K extends RandomAccess
 	}
 
 	/**
+	 * TODO
 	 * 
 	 * @param r
 	 *            The segmentation image.
@@ -65,7 +71,6 @@ public final class FloodFill< T extends IntegerType< T >, K extends RandomAccess
 	 *            Source intensity image.
 	 * @param op1
 	 *            Start position.
-	 * @return
 	 */
 	@Override
 	public final K compute( final K op0, final Localizable op1, final K r )
@@ -78,6 +83,7 @@ public final class FloodFill< T extends IntegerType< T >, K extends RandomAccess
 	}
 
 	/**
+	 * TODO
 	 * 
 	 * @param r
 	 *            The segmentation image.

@@ -61,7 +61,7 @@ import net.imglib2.util.Pair;
 /**
  * TODO: Efficiency!!!!
  * 
- * @author hornm, dietzc, schoenenf, University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  */
 public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comparable< L >, I extends IterableInterval< T > & RandomAccessibleInterval< T >, LL extends RandomAccessibleInterval< LabelingType< L >> & IterableInterval< LabelingType< L >>> implements UnaryOperation< I, LL >
 {
@@ -309,10 +309,7 @@ public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comp
 		{
 			return m_visitedLabRA.get().getLabeling().contains( label );
 		}
-		else
-		{
-			return m_visitedRA.get().get();
-		}
+		return m_visitedRA.get().get();
 	}
 
 	/*
@@ -364,9 +361,6 @@ public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comp
 	 */
 	protected abstract void queueProcessed();
 
-	/**
-	 * @return
-	 */
 	protected boolean hasMoreSeedingPoints()
 	{
 		return false;

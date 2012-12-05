@@ -40,18 +40,26 @@ package net.imglib2.ops.relation.general.binary;
 import net.imglib2.ops.relation.BinaryRelation;
 
 /**
+ * Combines two other {@link BinaryRelation}s in an AND fashion. The relation
+ * holds if both of the child relations hold.
  * 
  * @author Barry DeZonia
  */
 public final class AndRelation<T,U> implements BinaryRelation<T,U> {
 
+	// -- instance variables --
+	
 	private final BinaryRelation<T,U> rel1;
 	private final BinaryRelation<T,U> rel2;
 
+	// -- constructor --
+	
 	public AndRelation(BinaryRelation<T,U> rel1,BinaryRelation<T,U> rel2) {
 		this.rel1 = rel1;
 		this.rel2 = rel2;
 	}
+	
+	// -- BinaryRelation methods --
 	
 	@Override
 	public boolean holds(T val1, U val2) {

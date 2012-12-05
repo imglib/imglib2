@@ -41,15 +41,21 @@ import net.imglib2.ops.relation.BinaryRelation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Returns true if two complex numbers are near each other in a cartesian (x,y)
+ * sense. The tolerances can be specified in the constructor.
  * 
  * @author Barry DeZonia
  */
 public final class ComplexCartesianNear<T extends ComplexType<T>,U extends ComplexType<U>>
 	implements BinaryRelation<T,U>
 {
+	// -- instance variables --
+	
 	private final double rTol;
 	private final double iTol;
 
+	// -- constructors --
+	
 	public ComplexCartesianNear() {
 		rTol = 0.000001;
 		iTol = 0.000001;
@@ -59,6 +65,8 @@ public final class ComplexCartesianNear<T extends ComplexType<T>,U extends Compl
 		this.rTol = rTol;
 		this.iTol = iTol;
 	}
+	
+	// -- BinaryRelation methods --
 	
 	@Override
 	public boolean holds(T val1, U val2) {

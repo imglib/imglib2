@@ -42,6 +42,11 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.logic.BitType;
 
+/**
+ * @author Felix Schonenberger (University of Konstanz)
+ *
+ * @param <I>
+ */
 public final class Dilate< I extends RandomAccessibleInterval< BitType > & IterableInterval< BitType >> implements UnaryOperation< I, I >
 {
 

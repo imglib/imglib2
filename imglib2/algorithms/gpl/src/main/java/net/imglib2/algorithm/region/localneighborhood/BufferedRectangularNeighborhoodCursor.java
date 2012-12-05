@@ -109,9 +109,8 @@ public class BufferedRectangularNeighborhoodCursor<T extends Type<T>> extends
 				if (ra.getLongPosition(d) < max[d]) {
 					ra.fwd(d);
 					break;
-				} else
-					ra.move(bck[d], d);
-
+				}
+				ra.move(bck[d], d);
 			}
 			buffer[bufferPtr].set(ra.get());
 		}

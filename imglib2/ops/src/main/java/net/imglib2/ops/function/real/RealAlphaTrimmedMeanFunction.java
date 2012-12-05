@@ -43,26 +43,33 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * This class facilitates the computation of trimmed means of another function
+ * over a region. A trimmed mean is a mean calculated from a sorted distribution
+ * where the outermost (perhaps outlier) values are not included in the
+ * calculation. The number of values to trim from each end is specified in the
+ * constructor.
  * 
  * @author Barry DeZonia
  */
 public class RealAlphaTrimmedMeanFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
 	private final int halfTrimSize;
-	private final PrimitiveDoubleArray values;
-	private final RealSampleCollector<T> collector;
-	private final StatCalculator calculator;
+	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealAlphaTrimmedMeanFunction(Function<long[],T> otherFunc, int halfTrimSize)
 	{
 		this.otherFunc = otherFunc;
 		this.halfTrimSize = halfTrimSize;
-		values = new PrimitiveDoubleArray();
-		collector = new RealSampleCollector<T>();
-		calculator = new StatCalculator();
+		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealAlphaTrimmedMeanFunction<T> copy() {
@@ -71,8 +78,9 @@ public class RealAlphaTrimmedMeanFunction<T extends RealType<T>>
 
 	@Override
 	public void compute(PointSet input, T output) {
-		collector.collect(input, otherFunc, values);
-		double value = calculator.alphaTrimmedMean(values, halfTrimSize);
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.alphaTrimmedMean(halfTrimSize);
 		output.setReal(value);
 	}
 

@@ -43,25 +43,16 @@ import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.ops.util.metadata.CalibratedSpaceImpl;
-import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.Type;
-import net.imglib2.type.logic.BitType;
-import net.imglib2.util.Util;
-import net.imglib2.view.IntervalView;
+import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
-import net.imglib2.view.MixedTransformView;
 import net.imglib2.view.Views;
 
 /**
- * @author dietzc, hornm (University of Konstanz)
- * 
+ * @author Christian Dietz (University of Konstanz)
  */
 public class SubsetViews {
 
@@ -69,41 +60,17 @@ public class SubsetViews {
 	 * See SubsetViews.subsetView(...) Difference: If possible an optimized
 	 * {@link Cursor} will be created.
 	 * 
-	 * 
 	 * @param <T>
+	 *            TODO
 	 * @param src
 	 *            Source {@link RandomAccessibleInterval}
 	 * @param interval
 	 *            Interval defining dimensionality of resulting
 	 *            {@link IterableRandomAccessibleInterval}
-	 * @return
 	 */
 	public static final <T extends Type<T>> IterableRandomAccessibleInterval<T> iterableSubsetView(
 			final RandomAccessibleInterval<T> src, final Interval interval) {
 		return new IterableSubsetView<T>(src, interval);
-	}
-
-	/**
-	 * Permutates RandomAccessible
-	 * 
-	 * @param <T>
-	 * @param randomAccessible
-	 * @param fromAxis
-	 * @param toAxis
-	 * @return
-	 */
-	public static <T> MixedTransformView<T> permutate(
-			final RandomAccessible<T> randomAccessible, final int fromAxis,
-			final int toAxis) {
-		final int n = randomAccessible.numDimensions();
-		final int[] component = new int[n];
-		for (int e = 0; e < n; ++e)
-			component[e] = e;
-		component[fromAxis] = toAxis;
-		component[toAxis] = fromAxis;
-		final MixedTransform t = new MixedTransform(n, n);
-		t.setComponentMapping(component);
-		return new MixedTransformView<T>(randomAccessible, t);
 	}
 
 	/**
@@ -113,10 +80,6 @@ public class SubsetViews {
 	 *            The source {@link RandomAccessibleInterval}
 	 * @param interval
 	 *            Interval
-	 * @param keepDimsWithSizeOne
-	 *            If false, dimensions with size one will be virtually removed
-	 *            from the resulting view
-	 * @return
 	 */
 	public static final <T extends Type<T>> RandomAccessibleInterval<T> subsetView(
 			final RandomAccessibleInterval<T> src, final Interval interval) {
@@ -134,7 +97,7 @@ public class SubsetViews {
 			return src;
 
 		RandomAccessibleInterval<T> res;
-		if (Util.contains(src, interval))
+		if (Intervals.contains(src, interval))
 			res = Views.offsetInterval(src, interval);
 		else
 			throw new IllegalArgumentException(
@@ -145,44 +108,6 @@ public class SubsetViews {
 				res = Views.hyperSlice(res, d, 0);
 
 		return res;
-	}
-
-	/**
-	 * Adds an dimension to the end of a {@link RandomAccessible}
-	 * 
-	 * @param <T>
-	 * @param view
-	 * @return
-	 */
-	public static <T> MixedTransformView<T> addDimension(
-			final RandomAccessible<T> view) {
-		final int m = view.numDimensions();
-		final int n = m + 1;
-		final MixedTransform t = new MixedTransform(n, m);
-		return new MixedTransformView<T>(view, t);
-	}
-
-	/**
-	 * Adds Dimension with given min and max to end of
-	 * {@link RandomAccessibleInterval}
-	 * 
-	 * @param <T>
-	 * @param view
-	 * @return
-	 */
-	public static <T> IntervalView<T> addDimension(
-			final RandomAccessibleInterval<T> view, final long minOfNewDim,
-			final long maxOfNewDim) {
-		final int m = view.numDimensions();
-		final long[] min = new long[m + 1];
-		final long[] max = new long[m + 1];
-		for (int d = 0; d < m; ++d) {
-			min[d] = view.min(d);
-			max[d] = view.max(d);
-		}
-		min[m] = minOfNewDim;
-		max[m] = maxOfNewDim;
-		return Views.interval(addDimension(view), min, max);
 	}
 
 	/**
@@ -234,9 +159,9 @@ public class SubsetViews {
 
 		// Dimensions are added and resSpace is synchronized with res
 		i = srcSpace.numDimensions() - dispensable.length;
-		for (AxisType type : missing) {
-			int idx = targetSpace.getAxisIndex(type);
-			res = addDimension(res, target.min(idx), target.max(idx));
+		for (final AxisType type : missing) {
+			final int idx = targetSpace.getAxisIndex(type);
+			res = Views.addDimension(res, target.min(idx), target.max(idx));
 			resSpace.setAxis(type, i++);
 		}
 
@@ -249,7 +174,7 @@ public class SubsetViews {
 			int srcIdx = resSpace.getAxisIndex(targetSpace.axis(d));
 
 			if (srcIdx != d) {
-				resRndAccessible = permutate(resRndAccessible, srcIdx, d);
+				resRndAccessible = Views.permute(resRndAccessible, srcIdx, d);
 
 				// also permutate calibrated space
 				AxisType tmp = resSpace.axis(d);
@@ -283,7 +208,7 @@ public class SubsetViews {
 		// adjust dimensions
 		if (res.numDimensions() < target.numDimensions()) {
 			for (int d = res.numDimensions(); d < target.numDimensions(); d++) {
-				res = addDimension(res, target.min(d), target.max(d));
+				res = Views.addDimension(res, target.min(d), target.max(d));
 			}
 		} else {
 			for (int d = res.numDimensions() - 1; d >= target.numDimensions(); --d)
@@ -328,11 +253,7 @@ public class SubsetViews {
 	}
 
 	/**
-	 * Checks weather to intervals have same dimensionality
-	 * 
-	 * @param a
-	 * @param b
-	 * @return
+	 * Checks whether to intervals have same dimensionality.
 	 */
 	public static synchronized boolean intervalEquals(Interval a, Interval b) {
 
@@ -348,27 +269,27 @@ public class SubsetViews {
 		return true;
 	}
 
-	public static void main(String[] args) {
-		ImgPlus<BitType> a = new ImgPlus<BitType>(
-				new ArrayImgFactory<BitType>().create(
-						new long[] { 10, 15, 5, 2 }, new BitType()));
-
-		a.setAxis(Axes.get("X"), 0);
-		a.setAxis(Axes.get("Y"), 1);
-		a.setAxis(Axes.get("T"), 2);
-
-		ImgPlus<BitType> b = new ImgPlus<BitType>(
-				new ArrayImgFactory<BitType>().create(
-						new long[] { 15, 5, 10, 1 }, new BitType()));
-
-		b.setAxis(Axes.get("Y"), 0);
-		b.setAxis(Axes.get("T"), 1);
-		b.setAxis(Axes.get("Channel"), 2);
-		b.setAxis(Axes.get("X"), 3);
-
-		RandomAccessibleInterval<BitType> res = SubsetViews
-				.synchronizeDimensionality(a, a, b, b);
-
-	}
+//	public static void main(String[] args) {
+//		ImgPlus<BitType> a = new ImgPlus<BitType>(
+//				new ArrayImgFactory<BitType>().create(
+//						new long[] { 10, 15, 5, 2 }, new BitType()));
+//
+//		a.setAxis(Axes.get("X"), 0);
+//		a.setAxis(Axes.get("Y"), 1);
+//		a.setAxis(Axes.get("T"), 2);
+//
+//		ImgPlus<BitType> b = new ImgPlus<BitType>(
+//				new ArrayImgFactory<BitType>().create(
+//						new long[] { 15, 5, 10, 1 }, new BitType()));
+//
+//		b.setAxis(Axes.get("Y"), 0);
+//		b.setAxis(Axes.get("T"), 1);
+//		b.setAxis(Axes.get("Channel"), 2);
+//		b.setAxis(Axes.get("X"), 3);
+//
+//		RandomAccessibleInterval<BitType> res = SubsetViews
+//				.synchronizeDimensionality(a, a, b, b);
+//
+//	}
 
 }

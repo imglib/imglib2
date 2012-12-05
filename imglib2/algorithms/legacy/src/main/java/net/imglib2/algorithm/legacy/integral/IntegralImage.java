@@ -86,8 +86,8 @@ public class IntegralImage< R extends NumericType< R >, T extends NumericType< T
 		// not enough RAM or disc space
 		if ( integral == null )
 			return false;
-		else
-			this.integral = integral;
+		
+		this.integral = integral;
 
 		if ( numDimensions > 1 )
 		{
@@ -109,7 +109,8 @@ public class IntegralImage< R extends NumericType< R >, T extends NumericType< T
 	        for (int ithread = 0; ithread < threads.length; ++ithread)
 	            threads[ithread] = new Thread(new Runnable()
 	            {
-	                public void run()
+	                @Override
+									public void run()
 	                {
 	                	// Thread ID
 	                	final int myNumber = ai.getAndIncrement();
@@ -227,7 +228,8 @@ main:					for ( long j = 0; j < loopSize; ++j )
 	        for (int ithread = 0; ithread < threads.length; ++ithread)
 	            threads[ithread] = new Thread(new Runnable()
 	            {
-	                public void run()
+	                @Override
+									public void run()
 	                {
 	                	// Thread ID
 	                	final int myNumber = ai.getAndIncrement();

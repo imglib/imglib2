@@ -3,7 +3,7 @@ package net.imglib2.algorithm.region.localneighborhood;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 
-public final class RectangleNeighborhoodUnsafe< T > extends RectangleNeighborhood< T > implements Neighborhood< T >
+public final class RectangleNeighborhoodUnsafe< T > extends RectangleNeighborhood< T >
 {
 	public static < T > RectangleNeighborhoodFactory< T > factory()
 	{

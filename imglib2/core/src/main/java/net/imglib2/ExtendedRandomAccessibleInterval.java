@@ -38,7 +38,7 @@ package net.imglib2;
 
 import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
-import net.imglib2.util.Util;
+import net.imglib2.util.Intervals;
 
 /**
  * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
@@ -77,7 +77,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	{
 		assert source.numDimensions() == interval.numDimensions();
 
-		if ( Util.contains( source, interval ) )
+		if ( Intervals.contains( source, interval ) )
 		{
 			return source.randomAccess( interval );
 		}

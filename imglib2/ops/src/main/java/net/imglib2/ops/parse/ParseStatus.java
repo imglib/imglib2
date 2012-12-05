@@ -47,6 +47,9 @@ import net.imglib2.ops.relation.BinaryRelation;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**
+* A class that holds the various values that a parsing step can return as a 
+* result. Only a couple are set at any time and a given parser knows it's
+* context and thus which are valid at a given step.
 * 
 * @author Barry DeZonia
 *

@@ -36,8 +36,7 @@
 
 package net.imglib2.ops.operation.unary.complex;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.ops.operation.complex.binary.ComplexPower;
 import net.imglib2.ops.operation.complex.unary.ComplexIntegerPower;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;

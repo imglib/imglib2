@@ -33,7 +33,6 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-
 package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 
 import net.imglib2.Cursor;
@@ -46,7 +45,7 @@ import net.imglib2.view.Views;
 /**
  * Erode operation on gray-level.
  * 
- * @author schoenenf
+ * @author Felix Schoenenberger (University of Konstanz)
  * 
  * @param <T>
  */

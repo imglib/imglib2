@@ -38,16 +38,17 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
 import net.imglib2.Cursor;
+import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
-import net.imglib2.ops.util.IntervalComperator;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -60,7 +61,7 @@ import net.imglib2.type.numeric.RealType;
  * and merge them back again.
  * 
  * 
- * @author dietzc, hornm University of Konstanz
+ * @author Christian Dietz (University of Konstanz)
  * 
  */
 public final class MergeIterableIntervals< T extends RealType< T >> implements UnaryOutputOperation< IterableInterval< T >[], Img< T >>
@@ -154,7 +155,22 @@ public final class MergeIterableIntervals< T extends RealType< T >> implements U
 			initConstants( intervals );
 
 		RandomAccess< T > randomAccess = res.randomAccess();
-		Arrays.sort( intervals, new IntervalComperator() );
+		Arrays.sort( intervals, new Comparator<Interval>() {	
+			@Override
+			public int compare( Interval o1, Interval o2 )
+			{
+				for ( int d = 0; d < Math.min( o1.numDimensions(), o2.numDimensions() ); d++ )
+				{
+					if ( o1.min( d ) == o2.min( d ) )
+						continue;
+
+					return ( int ) o1.min( d ) - ( int ) o2.min( d );
+				}
+
+				return 0;
+			}
+		});
+
 
 		long[] offset = new long[ intervals[ 0 ].numDimensions() ];
 		long[] intervalWidth = new long[ intervals[ 0 ].numDimensions() ];

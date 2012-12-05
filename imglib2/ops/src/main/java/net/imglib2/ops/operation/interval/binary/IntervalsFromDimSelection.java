@@ -47,14 +47,11 @@ import net.imglib2.ops.operation.randomaccessibleinterval.unary.IterateUnaryOper
  * {@link IntervalwiseUnaryManipulation}, {@link IterateUnaryOperation},
  * {@link IterateUnaryOperation} or {@link IterativeBinaryImgTransformation}.
  * 
- * @author dietzc
+ * @author Christian Dietz (University of Konstanz)
  */
 public class IntervalsFromDimSelection implements BinaryOutputOperation< int[], Interval[], Interval[] >
 {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Interval[] createEmptyOutput( int[] op0, Interval[] op1 )
 	{
@@ -67,11 +64,6 @@ public class IntervalsFromDimSelection implements BinaryOutputOperation< int[], 
 		return new Interval[ totalSteps ];
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public Interval[] compute( int[] selectedDims, Interval[] incomingIntervals, Interval[] resIntervals )
 	{
@@ -133,19 +125,12 @@ public class IntervalsFromDimSelection implements BinaryOutputOperation< int[], 
 		return resIntervals;
 	}
 
-	/**
-	 * 
-	 */
-
+	@Override
 	public Interval[] compute( int[] in1, Interval[] in2 )
 	{
 		return compute( in1, in2, createEmptyOutput( in1, in2 ) );
 	}
 
-	/**
-	 * @param dims
-	 * @return
-	 */
 	private final static synchronized int getNumIterationSteps( int[] selectedDims, Interval interval )
 	{
 
@@ -162,9 +147,6 @@ public class IntervalsFromDimSelection implements BinaryOutputOperation< int[], 
 		return steps;
 	}
 
-	/**
-	 * @return
-	 */
 	private final static synchronized int[] getUnselectedDimIndices( int[] selectedDims, int numDims )
 	{
 		final boolean[] tmp = new boolean[ numDims ];

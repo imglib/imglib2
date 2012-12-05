@@ -42,19 +42,27 @@ import net.imglib2.roi.RegionOfInterest;
 import net.imglib2.type.logic.BitType;
 
 /**
- * 
+ * A {@link Condition} that returns true when a given coordinate's first two
+ * axis values are part of a {@link RegionOfInterest}'s XY region.
+ *   
  * @author Barry DeZonia
  *
  */
 public class UVInsideRoiCondition implements Condition<long[]> {
 
+	// -- instance variables --
+	
 	private final RegionOfInterest roi;
 	private final RealRandomAccess<BitType> accessor;
+	
+	// -- constructor --
 	
 	public UVInsideRoiCondition(RegionOfInterest roi) {
 		this.roi = roi;
 		this.accessor = roi.realRandomAccess();
 	}
+	
+	// -- Condition methods --
 	
 	@Override
 	public boolean isTrue(long[] val) {

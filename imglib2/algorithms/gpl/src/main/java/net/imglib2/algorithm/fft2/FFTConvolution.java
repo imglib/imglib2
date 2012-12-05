@@ -310,8 +310,7 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 		{
 			if ( img.size() > Integer.MAX_VALUE / 2 )
 				return new CellImgFactory<ComplexFloatType>( 1024 );
-			else
-				return new ArrayImgFactory< ComplexFloatType >();
+			return new ArrayImgFactory< ComplexFloatType >();
 		}
 	}
 }

@@ -40,6 +40,7 @@ package net.imglib2.ops.input;
 import net.imglib2.ops.pointset.PointSet;
 
 /**
+ * A {@link InputIteratorFactory} used to create a {@link PointSetInputIterator}.
  * 
  * @author Barry DeZonia
  */

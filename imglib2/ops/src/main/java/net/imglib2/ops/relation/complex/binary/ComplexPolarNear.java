@@ -41,17 +41,25 @@ import net.imglib2.ops.relation.BinaryRelation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Returns true if two complex numbers are near each other in a polar (r,theta)
+ * sense. The tolerances can be specified in the constructor.
  * 
  * @author Barry DeZonia
  */
 public final class ComplexPolarNear<T extends ComplexType<T>,U extends ComplexType<U>>
 	implements BinaryRelation<T,U>
 {
+	// -- constants --
+	
 	private static final double TWO_PI = 2 * Math.PI;
+	
+	// -- instance variables --
 	
 	private final double rTol;
 	private final double thetaTol;
 
+	// -- constructors --
+	
 	public ComplexPolarNear() {
 		rTol = 0.000001;
 		thetaTol = 0.000001;
@@ -61,6 +69,8 @@ public final class ComplexPolarNear<T extends ComplexType<T>,U extends ComplexTy
 		this.rTol = rTol;
 		this.thetaTol = tTol;
 	}
+	
+	// -- BinaryRelation methods --
 	
 	@Override
 	public boolean holds(T val1, U val2) {

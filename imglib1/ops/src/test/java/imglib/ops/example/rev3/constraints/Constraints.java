@@ -36,10 +36,10 @@
 
 package imglib.ops.example.rev3.constraints;
 
-import java.util.ArrayList;
-
 import imglib.ops.example.rev3.condition.Condition;
 import imglib.ops.example.rev3.function.IntegerIndexedScalarFunction;
+
+import java.util.ArrayList;
 
 /**
  * TODO

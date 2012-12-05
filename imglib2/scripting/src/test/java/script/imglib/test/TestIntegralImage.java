@@ -41,7 +41,6 @@ import net.imglib2.type.numeric.real.FloatType;
  */
 public class TestIntegralImage {
 
-	@SuppressWarnings("unused")
 	static public final void main(String[] args) {
 		try {
 			FloatImage fi = new FloatImage(new long[]{10, 10, 10});

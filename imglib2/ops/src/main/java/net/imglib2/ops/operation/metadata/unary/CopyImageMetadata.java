@@ -39,6 +39,11 @@ package net.imglib2.ops.operation.metadata.unary;
 import net.imglib2.meta.ImageMetadata;
 import net.imglib2.ops.operation.UnaryOperation;
 
+/**
+ * @author Christian Dietz (University of Konstanz)
+ *
+ * @param <M>
+ */
 public class CopyImageMetadata< M extends ImageMetadata > implements UnaryOperation< M, M >
 {
 

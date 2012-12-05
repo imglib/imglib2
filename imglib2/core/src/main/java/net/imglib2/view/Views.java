@@ -41,6 +41,7 @@ import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RandomAccessibleOnRealRandomAccessible;
@@ -61,17 +62,21 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 
 /**
- * TODO
+ * Create light-weight views into {@link RandomAccessible RandomAccessibles}.
  *
+ * A view is itself a {@link RandomAccessible} or
+ * {@link RandomAccessibleInterval} that provides {@link RandomAccess accessors}
+ * that transform coordinates on-the-fly without copying the underlying data.
+ * Consecutive transformations are concatenated and simplified to provide
+ * optimally efficient accessors. Note, that accessors provided by a view are
+ * read/write. Changing pixels in a view changes the underlying image data.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Views
 {
 	/**
 	 * Returns a {@link RealRandomAccessible} using interpolation
-	 *
-	 * @param source
-	 * @param factory
-	 * @return
 	 */
 	public static < T, F extends EuclideanSpace > RealRandomAccessible< T > interpolate( final F source, final InterpolatorFactory< T, F > factory )
 	{
@@ -112,13 +117,13 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with a mirroring out-of-bounds
-	 * strategy. Boundary pixels are not repeated. {@see
-	 * OutOfBoundsMirrorSingleBoundary}.
-	 *
+	 * strategy. Boundary pixels are not repeated.
+	 * 
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsMirrorSingleBoundary
 	 */
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendMirrorSingle( final F randomAccessible )
 	{
@@ -127,13 +132,13 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with a mirroring out-of-bounds
-	 * strategy. Boundary pixels are repeated. {@see
-	 * OutOfBoundsMirrorDoubleBoundary}.
+	 * strategy. Boundary pixels are repeated.
 	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsMirrorDoubleBoundary
 	 */
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendMirrorDouble( final F randomAccessible )
 	{
@@ -142,12 +147,13 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
-	 * strategy. {@see OutOfBoundsConstantValue}.
+	 * strategy.
 	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
 	 */
 	public static < T extends Type< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F randomAccessible, final T value )
 	{
@@ -156,7 +162,7 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with a random-value out-of-bounds
-	 * strategy. {@see OutOfBoundsRandomValue}.
+	 * strategy.
 	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
@@ -166,6 +172,7 @@ public class Views
 	 *            the maximal random value
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsRandomValue
 	 */
 	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendRandom( final F randomAccessible, final double min, final double max )
 	{
@@ -174,12 +181,13 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with a periodic out-of-bounds
-	 * strategy. {@see OutOfBoundsPeriodic}.
+	 * strategy.
 	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsPeriodic
 	 */
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendPeriodic( final F randomAccessible )
 	{
@@ -188,12 +196,13 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with an out-of-bounds
-	 * strategy to repeat border pixels. {@see OutOfBoundsBorder}.
+	 * strategy to repeat border pixels.
 	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsBorder
 	 */
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendBorder( final F randomAccessible )
 	{
@@ -300,6 +309,49 @@ public class Views
 	}
 
 	/**
+	 * Create view with permuted axes. fromAxis and toAxis are swapped.
+	 *
+	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source view
+	 * is mapped to the Z-Axis of the permuted view and vice versa. For a XYZ
+	 * source, a ZYX view would be created.
+	 */
+	public static < T > MixedTransformView< T > permute( final RandomAccessible< T > randomAccessible, final int fromAxis, final int toAxis )
+	{
+		final int n = randomAccessible.numDimensions();
+		final int[] component = new int[ n ];
+		for ( int e = 0; e < n; ++e )
+			component[ e ] = e;
+		component[ fromAxis ] = toAxis;
+		component[ toAxis ] = fromAxis;
+		final MixedTransform t = new MixedTransform( n, n );
+		t.setComponentMapping( component );
+		return new MixedTransformView< T >( randomAccessible, t );
+	}
+
+	/**
+	 * Create view with permuted axes. fromAxis and toAxis are swapped.
+	 *
+	 * If fromAxis=0 and toAxis=2, this means that the X-axis of the source view
+	 * is mapped to the Z-Axis of the permuted view and vice versa. For a XYZ
+	 * source, a ZYX view would be created.
+	 */
+	public static < T > IntervalView< T > permute( final RandomAccessibleInterval< T > interval, final int fromAxis, final int toAxis )
+	{
+		final int n = interval.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		final long fromMinNew = min[ toAxis ];
+		final long fromMaxNew = max[ toAxis ];
+		min[ toAxis ] = min[ fromAxis ];
+		max[ toAxis ] = max[ fromAxis ];
+		min[ fromAxis ] = fromMinNew;
+		max[ fromAxis ] = fromMaxNew;
+		return interval( permute( ( RandomAccessible< T > ) interval, fromAxis, toAxis ), min, max );
+	}
+
+	/**
 	 * Translate the source view by the given translation vector. Pixel
 	 * <em>x</em> in the source view has coordinates <em>(x + translation)</em>
 	 * in the resulting view.
@@ -323,7 +375,7 @@ public class Views
 	 * <em>x</em> in the source view has coordinates <em>(x + translation)</em>
 	 * in the resulting view.
 	 *
-	 * @param randomAccessible
+	 * @param interval
 	 *            the source
 	 * @param translation
 	 *            offset of the source view. The pixel at offset becomes the
@@ -366,7 +418,7 @@ public class Views
 	 * Translate such that pixel at offset in interval is at the origin in the
 	 * resulting view. This is equivalent to translating by -offset.
 	 *
-	 * @param randomAccessible
+	 * @param interval
 	 *            the source
 	 * @param offset
 	 *            offset of the source view. The pixel at offset becomes the
@@ -470,6 +522,55 @@ public class Views
 			}
 		}
 		return interval( hyperSlice( ( RandomAccessible< T > ) view, d, pos), min, max );
+	}
+
+	/**
+	 * Create view which adds a dimension to the source {@link RandomAccessible}.
+	 *
+	 * The additional dimension is the last dimension. For example, an XYZ view
+	 * is created for an XY source. When accessing an XYZ sample in the view,
+	 * the final coordinate is discarded and the source XY sample is accessed.
+	 *
+	 * @param randomAccessible
+	 *            the source
+	 */
+	public static < T > MixedTransformView< T > addDimension( final RandomAccessible< T > randomAccessible )
+	{
+		final int m = randomAccessible.numDimensions();
+		final int n = m + 1;
+		final MixedTransform t = new MixedTransform( n, m );
+		return new MixedTransformView< T >( randomAccessible, t );
+	}
+
+	/**
+	 * Create view which adds a dimension to the source
+	 * {@link RandomAccessibleInterval}. The {@link Interval} boundaries in the
+	 * additional dimension are set to the specified values.
+	 *
+	 * The additional dimension is the last dimension. For example, an XYZ view
+	 * is created for an XY source. When accessing an XYZ sample in the view,
+	 * the final coordinate is discarded and the source XY sample is accessed.
+	 *
+	 * @param interval
+	 *            the source
+	 * @param minOfNewDim
+	 *            Interval min in the additional dimension.
+	 * @param maxOfNewDim
+	 *            Interval max in the additional dimension.
+	 */
+	public static < T > IntervalView< T > addDimension( final RandomAccessibleInterval< T > interval, final long minOfNewDim, final long maxOfNewDim )
+	{
+		final int m = interval.numDimensions();
+		final long[] min = new long[ m + 1 ];
+		final long[] max = new long[ m + 1 ];
+		for ( int d = 0; d < m; ++d )
+		{
+			min[ d ] = interval.min( d );
+			max[ d ] = interval.max( d );
+		}
+		min[ m ] = minOfNewDim;
+		max[ m ] = maxOfNewDim;
+		return interval( addDimension( interval ), min, max );
 	}
 
 	/**
@@ -651,8 +752,7 @@ public class Views
 	{
 		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) )
 			return ( IterableInterval< T > )randomAccessibleInterval;
-		else
-			return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
+		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
 	}
 
 	/**
@@ -671,7 +771,6 @@ public class Views
 	{
 		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) && FlatIterationOrder.class.isInstance( ( ( IterableInterval< T > ) randomAccessibleInterval ).iterationOrder() ) )
 			return ( IterableInterval< T > ) randomAccessibleInterval;
-		else
-			return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
+		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
 	}
 }

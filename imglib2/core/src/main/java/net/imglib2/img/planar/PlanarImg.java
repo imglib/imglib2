@@ -252,8 +252,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	{
 		if ( n == 1 )
 			return new PlanarRandomAccess1D<T>( this );
-		else
-			return new PlanarRandomAccess<T>( this );
+		return new PlanarRandomAccess<T>( this );
 	}
 
 	@Override

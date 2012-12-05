@@ -29,13 +29,12 @@ import java.util.Collection;
 
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RealCursor;
+import net.imglib2.img.Img;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.ImageComputation;
 import net.imglib2.script.math.fn.NumberFunction;
 import net.imglib2.script.math.fn.Util;
-
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 

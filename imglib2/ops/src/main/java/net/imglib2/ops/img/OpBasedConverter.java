@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * Converter using an UnaryOperation to convert pixels
  * 
- * @author dietzc
+ * @author Christian Dietz (University of Konstanz)
  * 
  * @param <T>
  * @param <V>

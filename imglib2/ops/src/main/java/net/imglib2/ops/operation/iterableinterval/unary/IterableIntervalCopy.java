@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  *
- * @author hornm, University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  */
 public class IterableIntervalCopy<T extends RealType<T>> implements
                 UnaryOperation<IterableInterval<T>, IterableInterval<T>> {

@@ -26,7 +26,6 @@
 package script.imglib.test;
 
 import ij.ImageJ;
-
 import net.imglib2.img.Img;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.slice.SliceXY;

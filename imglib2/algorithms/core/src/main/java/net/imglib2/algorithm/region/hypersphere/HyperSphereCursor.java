@@ -129,11 +129,8 @@ public class HyperSphereCursor< T > implements Cursor< T >
 				randomAccess.fwd( d );
 				break;
 			}
-			else
-			{
-				s[ d ] = r[ d ] = 0;
-				randomAccess.setPosition( center[ d ], d );
-			}
+			s[ d ] = r[ d ] = 0;
+			randomAccess.setPosition( center[ d ], d );
 		}
 
 		if ( d > 0 )

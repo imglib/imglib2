@@ -42,16 +42,25 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Returns a real constant value whenever queried (regardless of input data).
  * 
  * @author Barry DeZonia
  */
-public class RealConstantFunction<INPUT, O extends RealType<O>> implements Function<INPUT, O> {
+public class RealConstantFunction<INPUT, O extends RealType<O>>
+	implements Function<INPUT, O>
+{
+	// -- instance variables --
+	
 	private final O real;
 
+	// -- constructor --
+	
 	public RealConstantFunction(O typeHint, double r) {
 		real = typeHint.createVariable();
 		real.setReal(r);
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(INPUT input, O r) {

@@ -42,7 +42,7 @@ public class LocalNeighborhoodCursor<T> extends AbstractCursor<T>
 	
 	/** 
 	 * 
-	 * @param parent A copy of it will be made internally, to be updated by {@link #reset(long[]).
+	 * @param parent A copy of it will be made internally, to be updated by {@link #reset(long[])}.
 	 * @param span Iterates from -span to +span in each dimension.
 	 */
 	public LocalNeighborhoodCursor( final RandomAccess<T> parent, final long span ) {

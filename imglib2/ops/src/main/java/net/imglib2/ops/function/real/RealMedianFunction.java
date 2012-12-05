@@ -43,24 +43,27 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the median value another function takes on across a region.
  * 
  * @author Barry DeZonia
  */
 public class RealMedianFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
-	private final PrimitiveDoubleArray values;
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
-	private final RealSampleCollector<T> collector;
-	private final StatCalculator calculator;
+	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealMedianFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
-		values = new PrimitiveDoubleArray();
-		collector = new RealSampleCollector<T>();
-		calculator = new StatCalculator();
+		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealMedianFunction<T> copy() {
@@ -69,8 +72,9 @@ public class RealMedianFunction<T extends RealType<T>>
 
 	@Override
 	public void compute(PointSet input, T output) {
-		collector.collect(input, otherFunc, values);
-		double value = calculator.median(values);
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.median();
 		output.setReal(value);
 	}
 

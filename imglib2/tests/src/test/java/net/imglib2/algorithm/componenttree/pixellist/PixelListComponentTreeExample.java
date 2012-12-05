@@ -27,8 +27,6 @@ package net.imglib2.algorithm.componenttree.pixellist;
 
 import net.imglib2.Cursor;
 import net.imglib2.Localizable;
-import net.imglib2.algorithm.componenttree.pixellist.PixelListComponent;
-import net.imglib2.algorithm.componenttree.pixellist.PixelListComponentTree;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;

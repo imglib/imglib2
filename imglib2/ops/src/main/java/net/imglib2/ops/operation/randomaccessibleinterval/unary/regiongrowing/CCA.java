@@ -47,7 +47,9 @@ import net.imglib2.type.NativeType;
 /**
  * nD Connected Component Analysis.
  * 
- * @author hornm, dietzc University of Konstanz
+ * @author Felix Schoenenberger (University of Konstanz)
+ * @author Christian Dietz (University of Konstanz)
+ * @author Martin Horn (University of Konstanz)
  */
 public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomAccessibleInterval< T > & IterableInterval< T >, LL extends RandomAccessibleInterval< LabelingType< Integer >> & IterableInterval< LabelingType< Integer >>> extends AbstractRegionGrowing< T, Integer, I, LL >
 {
@@ -59,6 +61,8 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	private Integer m_labelNumber;
 
 	private final T m_background;
+
+	private T m_currentLabel;
 
 	private ThreadSafeLabelNumbers m_synchronizer;
 
@@ -110,6 +114,7 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 			if ( srcCur.get().compareTo( m_background ) != 0 )
 			{
 				srcCur.localize( seedPos );
+				m_currentLabel = srcCur.get().copy();
 				return m_labelNumber;
 			}
 		}
@@ -129,7 +134,7 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	protected boolean includeInRegion( int[] oldPos, int[] nextPos, Integer label )
 	{
 		srcRA.setPosition( nextPos );
-		return srcRA.get().compareTo( m_background ) != 0;
+		return srcRA.get().compareTo( m_currentLabel ) == 0;
 	}
 
 	/**
@@ -146,5 +151,27 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	public UnaryOperation< I, LL > copy()
 	{
 		return new CCA< T, I, LL >( m_structuringElement.clone(), m_background.copy(), m_synchronizer );
+	}
+
+	/**
+	 * Simple helper class
+	 * 
+	 * @author Christian Dietz (University of Konstanz)
+	 */
+	private class ThreadSafeLabelNumbers
+	{
+
+		// Current labelnumber
+		private int m_labelNumber;
+
+		protected ThreadSafeLabelNumbers()
+		{
+			m_labelNumber = 1;
+		}
+
+		protected final synchronized int aquireNewLabelNumber()
+		{
+			return m_labelNumber++;
+		}
 	}
 }

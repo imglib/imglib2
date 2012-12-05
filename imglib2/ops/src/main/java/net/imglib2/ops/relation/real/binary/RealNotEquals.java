@@ -41,12 +41,15 @@ import net.imglib2.ops.relation.BinaryRelation;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * Returns true if two real values are not equal and false otherwise.
  * 
  * @author Barry DeZonia
  */
-public final class RealNotEquals<T extends RealType<T>,
-	U extends RealType<U>> implements BinaryRelation<T,U> {
-
+public final class RealNotEquals<T extends RealType<T>,	U extends RealType<U>>
+	implements BinaryRelation<T,U>
+{
+	// -- BinaryRelation methods --
+	
 	@Override
 	public boolean holds(T val1, U val2) {
 		return val1.getRealDouble() != val2.getRealDouble();

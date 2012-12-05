@@ -37,8 +37,6 @@
 package net.imglib2.img.cell;
 
 import static org.junit.Assert.assertArrayEquals;
-import net.imglib2.img.cell.CellImg;
-import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.integer.IntType;

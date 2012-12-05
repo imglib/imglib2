@@ -61,8 +61,7 @@ public class ConstantImgFactory< T extends Type< T > > extends ImgFactory< T >
 	{
 		if ( Type.class.isInstance( type ) )
 			return new ConstantImgFactory();
-		else
-			throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement Type." );
+		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement Type." );
 	}
 	
 }

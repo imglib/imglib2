@@ -70,14 +70,17 @@ public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>> extends
 		position[d] = pos;
 	}
 
+	@Override
 	public VirtualRandomAccess<T> copy() {
 		return new VirtualRandomAccess<T>(virtImage);
 	}
 
+	@Override
 	public VirtualRandomAccess<T> copyRandomAccess() {
 		return new VirtualRandomAccess<T>(virtImage);
 	}
 
+	@Override
 	public T get() {
 		return accessor.get(position);
 	}

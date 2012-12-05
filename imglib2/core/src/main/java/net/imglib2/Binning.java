@@ -66,12 +66,6 @@ public class Binning {
     /**
      * Convert value to bin number.<p>
      * This variant is exclusive, not all values map to the range 0...(bins-1).
-     * 
-     * @param bins
-     * @param min
-     * @param max
-     * @param value
-     * @return 
      */
     public static int exclusiveValueToBin(int bins, double min, double max, double value) {
         int bin;
@@ -98,11 +92,6 @@ public class Binning {
  
     /**
      * Returns array of left edge values for each bin.
-     * 
-     * @param bins
-     * @param min
-     * @param max
-     * @return 
      */
     public static double[] edgeValuesPerBin(int bins, double min, double max) {
         double[] edgeValues = new double[bins];
@@ -115,15 +104,10 @@ public class Binning {
  
     /**
      * Returns array of center values for each bin.
-     * 
-     * @param bins
-     * @param min
-     * @param max
-     * @return 
      */
     public static double[] centerValuesPerBin(int bins, double min, double max) {
         double[] edgeValues = edgeValuesPerBin(bins, min, max);
-        double[] centerValues = new double[(int) bins];
+        double[] centerValues = new double[bins];
         
         // average the edge values to get centers
         for (int i = 0; i < bins - 1; ++i) {

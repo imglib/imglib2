@@ -37,6 +37,7 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
 import net.imglib2.roi.RegionOfInterest;
 
 // TODO - when the efforts of people working with SciJava resolves Roi
@@ -51,7 +52,7 @@ import net.imglib2.roi.RegionOfInterest;
  * @author Barry DeZonia
  *
  */
-public class RoiPointSet implements PointSet {
+public class RoiPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
@@ -78,7 +79,7 @@ public class RoiPointSet implements PointSet {
 	@Override
 	public long[] getOrigin() {
 		for (int i = 0; i < numD; i++)
-			origin[i] = (long) Math.ceil(roi.realMin(i));
+			origin[i] = (long) Math.floor(roi.realMin(i));
 		return origin;
 	}
 
@@ -87,10 +88,11 @@ public class RoiPointSet implements PointSet {
 		for (int i = 0; i < numD; i++) {
 			roi.move(delta[i], i);
 		}
+		invalidateBounds();
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new RoiPointSetIterator();
 	}
 
@@ -100,17 +102,17 @@ public class RoiPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		for (int i = 0; i < numD; i++) {
-			boundMin[i] = (long) Math.ceil(roi.realMin(i));
+			boundMin[i] = (long) Math.floor(roi.realMin(i));
 		}
 		return boundMin;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		for (int i = 0; i < numD; i++) {
-			boundMax[i] = (long) Math.floor(roi.realMax(i));
+			boundMax[i] = (long) Math.ceil(roi.realMax(i));
 		}
 		return boundMax;
 	}
@@ -124,9 +126,9 @@ public class RoiPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElems = 0;
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			iter.next();
 			numElems++;
@@ -144,35 +146,84 @@ public class RoiPointSet implements PointSet {
 	// TODO - internally it could instead make a ConditionalPointSet with a custom
 	// RoiContainsPoint condition and use its iterator.
 	
-	private class RoiPointSetIterator implements PointSetIterator {
-
+	private class RoiPointSetIterator extends AbstractCursor<long[]> implements
+		PointSetIterator
+	{
 		private PointSetIterator iter;
-		private long[] pos;
+		private long[] curr;
+		private long[] nextCache;
 		
 		public RoiPointSetIterator() {
+			super(roi.numDimensions());
 			reset();
 		}
 		
 		@Override
 		public boolean hasNext() {
-			while (iter.hasNext()) {
-				pos = iter.next();
-				if (includes(pos)) return true;
-			}
-			return false;
-		}
-
-		@Override
-		public long[] next() {
-			return pos;
+			if (nextCache != null) return true;
+			return positionToNext();
 		}
 
 		@Override
 		public void reset() {
+			// can't just reset iterator as Roi may have moved. recalc bounds.
 			HyperVolumePointSet vol =
 				new HyperVolumePointSet(findBoundMin(), findBoundMax());
-			iter = vol.createIterator();
+			iter = vol.iterator();
+			curr = null;
+			nextCache = null;
 		}
 		
+		@Override
+		public long[] get() {
+			return curr;
+		}
+
+		@Override
+		public void fwd() {
+			if ((nextCache != null) || (positionToNext())) {
+				if (curr == null) curr = new long[n];
+				for (int i = 0; i < n; i++)
+					curr[i] = nextCache[i];
+				nextCache = null;
+				return;
+			}
+			throw new IllegalArgumentException("fwd() cannot go beyond end");
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++) {
+				position[i] = curr[i];
+			}
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return curr[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new RoiPointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
+
+		private boolean positionToNext() {
+			nextCache = null;
+			while (iter.hasNext()) {
+				long[] pos = iter.next();
+				if (includes(pos)) {
+					nextCache = pos;
+					return true;
+				}
+			}
+			return false;
+		}
+
 	}
 }

@@ -27,8 +27,8 @@ package net.imglib2.script.algorithm;
 
 import net.imglib2.img.Img;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
+import net.imglib2.script.algorithm.fn.AbstractAffine3D;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.script.math.fn.IFunction;
 
 /** Scale an image in 3D, resizing the X,Y,Z dimensions as necessary.
  *  
@@ -46,7 +46,7 @@ public class Scale3D<N extends NumericType<N>> extends Affine3D<N>
 {
 	/** Scale the given image in 2D using the best interpolation available. */
 	public Scale3D(final Object fn, final Number scale) throws Exception {
-		this(fn, scale, Affine3D.BEST);
+		this(fn, scale, AbstractAffine3D.BEST);
 	}
 
 	public Scale3D(final Object fn, final Number scale, final Mode mode) throws Exception {
@@ -54,7 +54,7 @@ public class Scale3D<N extends NumericType<N>> extends Affine3D<N>
 	}
 
 	public Scale3D(final Object fn, final Number scaleX, final Number scaleY, final Number scaleZ) throws Exception {
-		this(fn, scaleX.floatValue(), scaleY.floatValue(), scaleZ.floatValue(), Affine3D.BEST);
+		this(fn, scaleX.floatValue(), scaleY.floatValue(), scaleZ.floatValue(), AbstractAffine3D.BEST);
 	}
 
 	public Scale3D(final Object fn, final Number scaleX, final Number scaleY, final Number scaleZ, final Mode mode) throws Exception {

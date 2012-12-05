@@ -38,8 +38,8 @@ package mpicbg.imglib.cursor.planar;
 
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.planar.PlanarContainer;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.Localizable;
+import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;

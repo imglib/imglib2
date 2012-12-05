@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * Sets the real component of an output real number to a random value using a
  * gaussian distribution. The input value is considered the standard deviation
- * of the desired distributionand must be positive. The output value has mean
+ * of the desired distribution and must be positive. The output value has mean
  * value 0.
  * 
  * @author Barry DeZonia

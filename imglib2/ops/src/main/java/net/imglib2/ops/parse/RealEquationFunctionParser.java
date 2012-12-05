@@ -71,7 +71,8 @@ import net.imglib2.type.numeric.real.DoubleType;
 /**
  * Parses an equation string and attempts to build a
  * Function<long[],DoubleType> that matches the string
- * specification.
+ * specification. The language is documented at:
+ * http://wiki.imagej.net/ImageJ2/Documentation/Process/Math/Equation
  * 
  * @author Barry DeZonia
  *
@@ -112,14 +113,11 @@ public class RealEquationFunctionParser {
 			if (ParseUtils.match(Comma.class, tokens, status.tokenNumber)) {
 				return eqnParser.equation(tokens, status.tokenNumber+1);
 			}
-			else
-				return ParseUtils.syntaxError(
-						status.tokenNumber, tokens,
-						"Expected comma after axis designations");
+			return ParseUtils.syntaxError(
+					status.tokenNumber, tokens,
+					"Expected comma after axis designations");
 		}
-		else { // no variables declared
-			return eqnParser.equation(tokens, 0);
-		}
+		return eqnParser.equation(tokens, 0);
 	}
 	
 	/* 

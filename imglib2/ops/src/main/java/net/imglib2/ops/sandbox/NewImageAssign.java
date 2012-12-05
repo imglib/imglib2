@@ -39,8 +39,8 @@ package net.imglib2.ops.sandbox;
 import java.util.Arrays;
 
 import net.imglib2.Cursor;
-import net.imglib2.img.Img;
 import net.imglib2.IterableInterval;
+import net.imglib2.img.Img;
 import net.imglib2.roi.RectangleRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
 import net.imglib2.type.numeric.ComplexType;

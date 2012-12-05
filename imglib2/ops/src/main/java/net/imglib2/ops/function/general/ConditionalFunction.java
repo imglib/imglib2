@@ -42,20 +42,43 @@ import net.imglib2.ops.function.Function;
 
 
 /**
+ * A {@link Function} that takes on one of two Function values depending upon
+ * the value of a {@link Condition} at an input region.
  * 
  * @author Barry DeZonia
  */
-public class ConditionalFunction<INPUT, T> implements Function<INPUT,T> {
-
+public class ConditionalFunction<INPUT, T>
+	implements Function<INPUT,T>
+{
+	// -- instance variables --
+	
 	private final Condition<INPUT> condition;
 	private final Function<INPUT,T> f1;
 	private final Function<INPUT,T> f2;
 	
-	public ConditionalFunction(Condition<INPUT> condition, Function<INPUT,T> f1, Function<INPUT,T> f2) {
+	// -- constructor --
+	
+	/**
+	 * Constructs a ConditionalFunction from inputs.
+	 * 
+	 * @param condition
+	 * The condition used to determine which function to choose
+	 * @param f1
+	 * The function to pull values from if the condition is true
+	 * @param f2
+	 * The function to pull values from if the condition is false
+	 */
+	public ConditionalFunction(
+			Condition<INPUT> condition,
+			Function<INPUT,T> f1,
+			Function<INPUT,T> f2)
+	{
 		this.condition = condition;
 		this.f1 = f1;
 		this.f2 = f2;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(INPUT input, T output) {

@@ -1,6 +1,6 @@
 package net.imglib2.algorithm.region;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import net.imglib2.Cursor;
 import net.imglib2.Point;
 import net.imglib2.RandomAccess;

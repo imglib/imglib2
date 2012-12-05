@@ -129,28 +129,34 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends
 		return correctlyTypedVirtualImg(dimensions, rdr);
 	}
 
+	@Override
 	public VirtualRandomAccess<T> randomAccess() {
 		return new VirtualRandomAccess<T>(this);
 	}
 
+	@Override
 	public VirtualCursor<T> cursor() {
 		return new VirtualCursor<T>(this);
 	}
 
+	@Override
 	public VirtualCursor<T> localizingCursor() {
 		// TODO - not supporting actual localizing cursor
 		return new VirtualCursor<T>(this);
 	}
 
+	@Override
 	public Object iterationOrder() {
 		// TODO maybe support. For now, for simplicity, don't support
 		return this; // iteration order is only compatible with ourselves
 	}
 
+	@Override
 	public ImgFactory<T> factory() {
 		return new VirtualImgFactory<T>();
 	}
 
+	@Override
 	public Img<T> copy() {
 		return new VirtualImg<T>(dims, reader, type, bytesOnly);
 	}

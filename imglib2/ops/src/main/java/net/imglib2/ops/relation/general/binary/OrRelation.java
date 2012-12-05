@@ -40,6 +40,8 @@ package net.imglib2.ops.relation.general.binary;
 import net.imglib2.ops.relation.BinaryRelation;
 
 /**
+ * Combines two other {@link BinaryRelation}s in an OR fashion. The relation
+ * holds if either of the child relations hold.
  * 
  * @author Barry DeZonia
  */

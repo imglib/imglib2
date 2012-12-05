@@ -30,11 +30,13 @@ import net.imglib2.script.analysis.fn.NumericReduceOperation;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.numeric.RealType;
 
-/** Add every value divided by the total number of values, to avoid overflow.
- * 
- * @see ImgMean, Reduction, ReduceFn
+/**
+ * Add every value divided by the total number of values, to avoid overflow.
  *
  * @author Albert Cardona
+ * @see ImgMean
+ * @see Reduction
+ * @see ReduceFn
  */
 public class ImgIterativeMean extends NumericReduceOperation
 {

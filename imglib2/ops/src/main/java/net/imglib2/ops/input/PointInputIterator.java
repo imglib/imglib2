@@ -41,18 +41,26 @@ import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.ops.pointset.PointSetIterator;
 
 /**
+ * This class is an {@link InputIterator} that iterates a region (given as a
+ * {@link PointSet}) a point at a time returning each long[] coordinate.
  * 
  * @author Barry DeZonia
  */
 public class PointInputIterator implements InputIterator<long[]> {
 
+	// -- instance variables --
+	
 	private final PointSetIterator iter;
 	private long[] pos;
 	
+	// -- constructor --
+	
 	public PointInputIterator(PointSet ps) {
-		iter = ps.createIterator();
+		iter = ps.iterator();
 		pos = null;
 	}
+	
+	// -- InputIterator methods --
 	
 	@Override
 	public boolean hasNext() {

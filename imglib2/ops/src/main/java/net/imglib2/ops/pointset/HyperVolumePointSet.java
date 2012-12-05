@@ -37,6 +37,9 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
+import net.imglib2.FlatIterationOrder;
+
 
 /**
  * HyperVolumePointSet is a {@link PointSet} that spans a contiguous region of
@@ -44,13 +47,14 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public class HyperVolumePointSet implements PointSet {
+public class HyperVolumePointSet extends AbstractPointSet {
 	
 	// -- instance variables --
 	
 	private final long[] origin;
 	private final long[] boundMin;
 	private final long[] boundMax;
+	private final long size;
 
 	// -- constructors --
 	
@@ -80,6 +84,7 @@ public class HyperVolumePointSet implements PointSet {
 			boundMin[i] = origin[i] - negOffsets[i];
 			boundMax[i] = origin[i] + posOffsets[i];
 		}
+		this.size = calcSize();
 	}
 	
 	/**
@@ -99,6 +104,7 @@ public class HyperVolumePointSet implements PointSet {
 			boundMax[i] = Math.max(pt1[i], pt2[i]);
 		}
 		this.origin = pt1.clone();
+		this.size = calcSize();
 	}
 	
 	/**
@@ -125,11 +131,12 @@ public class HyperVolumePointSet implements PointSet {
 			boundMin[i] += delta;
 			boundMax[i] += delta;
 		}
+		invalidateBounds();
 		//for (PointSetIterator iter : iters) iter.reset();
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new HyperVolumePointSetIterator();
 	}
 	
@@ -137,10 +144,14 @@ public class HyperVolumePointSet implements PointSet {
 	public int numDimensions() { return origin.length; }
 	
 	@Override
-	public long[] findBoundMin() { return boundMin; }
+	protected long[] findBoundMin() {
+		return boundMin;
+	}
 
 	@Override
-	public long[] findBoundMax() { return boundMax; }
+	protected long[] findBoundMax() {
+		return boundMax;
+	}
 	
 	@Override
 	public boolean includes(long[] point) {
@@ -152,12 +163,8 @@ public class HyperVolumePointSet implements PointSet {
 	}
 	
 	@Override
-	public long calcSize() {
-		long numElements = 1;
-		for (int i = 0; i < origin.length; i++) {
-			numElements *= boundMax[i] - boundMin[i] + 1;
-		}
-		return numElements;
+	public long size() {
+		return size;
 	}
 
 	@Override
@@ -165,6 +172,11 @@ public class HyperVolumePointSet implements PointSet {
 		return new HyperVolumePointSet(findBoundMin(), findBoundMax());
 	}
 	
+	@Override
+	public Object iterationOrder() {
+		return new FlatIterationOrder(this);
+	}
+
 	// -- private helpers --
 	
 	private static long[] lastPoint(long[] span) {
@@ -175,15 +187,26 @@ public class HyperVolumePointSet implements PointSet {
 		return lastPoint;
 	}
 
-	private class HyperVolumePointSetIterator implements PointSetIterator {
+	private long calcSize() {
+		long numElements = 1;
+		for (int i = 0; i < origin.length; i++) {
+			numElements *= boundMax[i] - boundMin[i] + 1;
+		}
+		return numElements;
+	}
+
+	private class HyperVolumePointSetIterator extends AbstractCursor<long[]>
+		implements PointSetIterator
+	{
 		final long[] pos;
 		boolean outOfBounds;
 		final boolean emptySpace;
 		
-		HyperVolumePointSetIterator() {
-			emptySpace = origin.length == 0;
+		public HyperVolumePointSetIterator() {
+			super(origin.length);
+			emptySpace = n == 0;
 			outOfBounds = true;
-			pos = new long[origin.length];
+			pos = new long[n];
 		}
 		
 		@Override
@@ -195,30 +218,59 @@ public class HyperVolumePointSet implements PointSet {
 		public boolean hasNext() {
 			if (emptySpace) return false;
 			if (outOfBounds) return true;
-			for (int i = 0; i < origin.length; i++) {
+			for (int i = 0; i < n; i++) {
 				if (pos[i] < boundMax[i]) return true;
 			}
 			return false;
 		}
 		
 		@Override
-		public long[] next() {
+		public long[] get() {
+			return pos;
+		}
+
+		@Override
+		public void fwd() {
 			if (outOfBounds) {
 				outOfBounds = false;
-				for (int i = 0; i < origin.length; i++) {
+				for (int i = 0; i < n; i++) {
 					pos[i] = boundMin[i];
 				}
-				return pos;
+				return;
 			}
 			
 			// else outOfBounds == false
-			for (int i = 0; i < origin.length; i++) {
+			for (int i = 0; i < n; i++) {
 				pos[i]++;
-				if (pos[i] <= boundMax[i]) return pos;
+				if (pos[i] <= boundMax[i]) return;
 				pos[i] = boundMin[i];
 			}
 			
-			throw new IllegalArgumentException("can't call next() beyond last position");
+			throw new IllegalArgumentException(
+				"can't call fwd() beyond last position");
 		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++) {
+				position[i] = pos[i];
+			}
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return pos[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new HyperVolumePointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
+
 	}
 }

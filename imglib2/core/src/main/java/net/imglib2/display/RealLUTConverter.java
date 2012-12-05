@@ -38,10 +38,6 @@
 package net.imglib2.display;
 
 import net.imglib2.converter.Converter;
-import net.imglib2.display.AbstractLinearRange;
-import net.imglib2.display.ColorTable;
-import net.imglib2.display.ColorTable8;
-import net.imglib2.display.RealARGBConverter;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 

@@ -62,9 +62,6 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	/**
 	 * Calculate the square Euclidean distance of a query location to the
 	 * location stored in referenceLocation.
-	 * 
-	 * @param query
-	 * @return
 	 */
 	final protected double squareDistance( final RealLocalizable query )
 	{
@@ -84,7 +81,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 		this.k = k;
 		n = iterable.numDimensions();
 		
-		elements = ( RealCursor< T >[] )( new RealCursor[ k ] );
+		elements = ( new RealCursor[ k ] );
 		squareDistances = new double[ k ];
 		referenceLocation = new double[ n ];
 	}

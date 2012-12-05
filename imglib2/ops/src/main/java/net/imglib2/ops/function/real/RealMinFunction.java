@@ -43,24 +43,27 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the minimum value another function takes on across a region.
  * 
  * @author Barry DeZonia
  */
 public class RealMinFunction<T extends RealType<T>>
 	implements Function<PointSet,T>
 {
-	private final PrimitiveDoubleArray values;
+	// -- instance variables --
+	
 	private final Function<long[],T> otherFunc;
-	private final RealSampleCollector<T> collector;
-	private final StatCalculator calculator;
+	private StatCalculator<T> calculator;
+	
+	// -- constructor --
 	
 	public RealMinFunction(Function<long[],T> otherFunc)
 	{
 		this.otherFunc = otherFunc;
-		values = new PrimitiveDoubleArray();
-		collector = new RealSampleCollector<T>();
-		calculator = new StatCalculator();
+		this.calculator = null;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealMinFunction<T> copy() {
@@ -69,8 +72,9 @@ public class RealMinFunction<T extends RealType<T>>
 
 	@Override
 	public void compute(PointSet input, T output) {
-		collector.collect(input, otherFunc, values);
-		double value = calculator.min(values);
+		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
+		else calculator.reset(otherFunc, input);
+		double value = calculator.min();
 		output.setReal(value);
 	}
 

@@ -61,7 +61,7 @@ public class RealPointCountFunction <T extends RealType<T>>
 	
 	@Override
 	public void compute(PointSet input, T output) {
-		output.setReal(input.calcSize());
+		output.setReal(input.size());
 	}
 
 	@Override

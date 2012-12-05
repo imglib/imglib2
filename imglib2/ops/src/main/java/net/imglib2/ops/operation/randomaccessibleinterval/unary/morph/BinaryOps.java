@@ -48,8 +48,7 @@ import net.imglib2.type.logic.BitType;
 import net.imglib2.view.Views;
 
 /**
- * 
- * @author schoenen, dietzc, hornm
+ * @author Felix Schoenenberger (University of Konstanz)
  */
 public class BinaryOps< K extends RandomAccessibleInterval< BitType > & IterableInterval< BitType >>
 {

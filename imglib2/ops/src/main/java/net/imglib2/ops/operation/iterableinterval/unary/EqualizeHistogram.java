@@ -42,34 +42,29 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * TODO
  * 
- * @author hornm, dietzc University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  */
-public class EqualizeHistogram< T extends RealType< T >, I extends IterableInterval< T >> implements UnaryOperation< I, I >
-{
+public class EqualizeHistogram<T extends RealType<T>> implements
+		UnaryOperation<IterableInterval<T>, IterableInterval<T>> {
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
-	public I compute( I in, I r )
-	{
+	public IterableInterval<T> compute(IterableInterval<T> in,
+			IterableInterval<T> r) {
 
-		MakeHistogram< T > histogramOp = new MakeHistogram< T >();
-		int[] histo = new MakeHistogram< T >().compute( r, histogramOp.createEmptyOutput( in ) ).hist();
+		assert (in.iterationOrder().equals(r.iterationOrder()));
+
+		int[] histo = new MakeHistogram<T>().compute(in).hist();
 
 		T val = r.firstElement().createVariable();
 
-		int min = ( int ) val.getMaxValue();
+		int min = (int) val.getMaxValue();
 		// calc cumulated histogram
-		for ( int i = 1; i < histo.length; i++ )
-		{
-			histo[ i ] = histo[ i ] + histo[ i - 1 ];
-			if ( histo[ i ] != 0 )
-			{
-				min = Math.min( min, histo[ i ] );
+		for (int i = 1; i < histo.length; i++) {
+			histo[i] = histo[i] + histo[i - 1];
+			if (histo[i] != 0) {
+				min = Math.min(min, histo[i]);
 			}
 		}
 
@@ -77,27 +72,29 @@ public class EqualizeHistogram< T extends RealType< T >, I extends IterableInter
 		double gmax = val.getMaxValue();
 		double gmin = val.getMinValue();
 
-		Cursor< T > c = r.cursor();
+		Cursor<T> cin = in.cursor();
+		Cursor<T> cout = r.cursor();
+
 		long numPix = r.size();
 
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			val = c.get();
-			int p = histo[ ( int ) val.getRealFloat() - ( int ) gmin ];
-			double t = ( p - min );
+		while (cin.hasNext()) {
+			cin.fwd();
+			cout.fwd();
+
+			val = cin.get();
+			int p = histo[(int) val.getRealFloat() - (int) gmin];
+			double t = (p - min);
 			t /= numPix - min;
 			t *= gmax;
-			p = ( int ) Math.round( t );
-			c.get().setReal( p );
+			p = (int) Math.round(t);
+			cout.get().setReal(p);
 		}
 		return r;
 
 	}
 
 	@Override
-	public UnaryOperation< I, I > copy()
-	{
-		return new EqualizeHistogram< T, I >();
+	public UnaryOperation<IterableInterval<T>, IterableInterval<T>> copy() {
+		return new EqualizeHistogram<T>();
 	}
 }

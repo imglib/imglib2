@@ -42,18 +42,24 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
- * 
+ * Mutates the output of another {@link Function} into an output type.
+ * The mutation is done using a {@link UnaryOperation}.
+ *  
  * @author Barry DeZonia
  */
 public class GeneralUnaryFunction<INPUT, C extends ComplexType<C>,
 		OUTPUT extends ComplexType<OUTPUT>>
 	implements Function<INPUT, OUTPUT>
 {
+	// -- instance variables --
+	
 	private final Function<INPUT, C> f1;
 	private final C temp;
 	private final UnaryOperation<C, OUTPUT> operation;
 	private final OUTPUT type;
 
+	// -- constructor --
+	
 	public GeneralUnaryFunction(Function<INPUT, C> f1,
 			UnaryOperation<C, OUTPUT> operation, OUTPUT type) {
 		this.type = type;
@@ -62,6 +68,8 @@ public class GeneralUnaryFunction<INPUT, C extends ComplexType<C>,
 		this.operation = operation;
 	}
 
+	// -- Function methods --
+	
 	@Override
 	public void compute(INPUT input, OUTPUT output) {
 		f1.compute(input, temp);

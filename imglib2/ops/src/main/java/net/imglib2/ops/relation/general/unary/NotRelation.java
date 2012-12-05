@@ -40,16 +40,24 @@ package net.imglib2.ops.relation.general.unary;
 import net.imglib2.ops.relation.UnaryRelation;
 
 /**
+ * Negates the result of another {@link UnaryRelation}. Returns true if the
+ * child relation is false and vice versa.
  * 
  * @author Barry DeZonia
  */
 public final class NotRelation<T> implements UnaryRelation<T> {
 
+	// -- instance variables --
+	
 	private final UnaryRelation<T> relation;
 
+	// -- constructor --
+	
 	public NotRelation(UnaryRelation<T> rel) {
 		this.relation = rel;
 	}
+	
+	// -- UnaryRelation methods --
 	
 	@Override
 	public boolean holds(T val) {

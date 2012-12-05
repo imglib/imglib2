@@ -26,14 +26,12 @@
 package tests.labeling;
 
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 import mpicbg.imglib.algorithm.labeling.AllConnectedComponents;
 import mpicbg.imglib.container.DirectAccessContainerFactory;
@@ -44,6 +42,8 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.labeling.Labeling;
 import mpicbg.imglib.labeling.LabelingType;
 import mpicbg.imglib.type.logic.BitType;
+
+import org.junit.Test;
 
 /**
  * TODO

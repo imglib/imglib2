@@ -66,8 +66,6 @@ public interface NearestNeighborSearch< T > extends EuclideanSpace
 	 * Access the data of the nearest neighbor.  Data is accessed through a
 	 * {@link Sampler} that guarantees write access if the underlying data set
 	 * is writable.
-	 * 
-	 * @return
 	 */
 	public Sampler< T > getSampler();
 	
@@ -75,8 +73,6 @@ public interface NearestNeighborSearch< T > extends EuclideanSpace
 	/**
 	 * Access the position of the nearest neighbor, ordered by square Euclidean
 	 * distance.
-	 * 
-	 * @return
 	 */
 	public RealLocalizable getPosition();
 	
@@ -85,8 +81,6 @@ public interface NearestNeighborSearch< T > extends EuclideanSpace
 	 * Access the square Euclidean distance between the reference location
 	 * as used for the last search and the nearest neighbor, ordered by square
 	 * Euclidean distance.
-	 * 
-	 * @return
 	 */
 	public double getSquareDistance();
 	
@@ -95,8 +89,6 @@ public interface NearestNeighborSearch< T > extends EuclideanSpace
 	 * Access the Euclidean distance between the reference location as used for
 	 * the last search and the nearest neighbor, ordered by square Euclidean
 	 * distance.
-	 * 
-	 * @return
 	 */
 	public double getDistance();
 	

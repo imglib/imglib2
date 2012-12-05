@@ -44,10 +44,14 @@ import net.imglib2.ops.util.Tuple2;
 
 
 /**
+ * A {@link Condition} that returns true when an input point is at the key point
+ * of an input {@link PointSet}.
  * 
  * @author Barry DeZonia
  */
 public class AtKeyPointCondition implements Condition<Tuple2<PointSet,long[]>> {
+	
+	// -- Condition methods --
 	
 	@Override
 	public boolean isTrue(Tuple2<PointSet,long[]> input) {
