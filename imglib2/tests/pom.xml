@@ -74,6 +74,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>${scifio.groupId}</groupId>
+			<artifactId>scifio-devel</artifactId>
+			<version>${scifio.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>jama</groupId>
 			<artifactId>jama</artifactId>
 			<version>1.0.2</version>
