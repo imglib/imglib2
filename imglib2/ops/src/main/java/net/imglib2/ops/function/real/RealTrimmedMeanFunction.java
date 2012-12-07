@@ -34,56 +34,56 @@
  * #L%
  */
 
+
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.RealType;
 
+
 /**
- * This class facilitates the computation of an alpha trimmed mean of another
- * function over a region. An alpha trimmed mean is a trimmed mean calculated
- * from a sorted distribution where the outermost (perhaps outlier) values are
- * not included in the calculation. The proportion of values to trim from each
- * end is specified in the constructor.
+ * This class facilitates the computation of a trimmed mean of another function
+ * over a region. A trimmed mean is a mean calculated from a sorted distribution
+ * where the outermost (perhaps outlier) values are not included in the
+ * calculation. The number of values to trim from each end is specified in the
+ * constructor.
  * 
  * @author Barry DeZonia
  */
-public class RealAlphaTrimmedMeanFunction<T extends RealType<T>> extends
+public class RealTrimmedMeanFunction<T extends RealType<T>> extends
 	AbstractRealStatFunction<T>
 {
-
 	// -- instance variables --
-
-	private final double alpha;
-
+	
+	private final int halfTrimSize;
+	
 	// -- constructor --
-
+	
 	/**
 	 * Constructor
 	 * 
 	 * @param otherFunc The other function to pull data values from
-	 * @param alpha The proportion (>= 0.0 and < 0.5) of values to trim from each
-	 *          end when calculating the final value.
+	 * @param halfTrimSize The number of values to trim from each end when
+	 *          calculating the final value.
 	 */
-	public RealAlphaTrimmedMeanFunction(Function<long[], T> otherFunc,
-		double alpha)
+	public RealTrimmedMeanFunction(Function<long[],T> otherFunc, int halfTrimSize)
 	{
 		super(otherFunc);
-		this.alpha = alpha;
+		this.halfTrimSize = halfTrimSize;
 	}
 
 	// -- abstract method overrides
 
 	@Override
 	protected double value(StatCalculator<T> calc) {
-		return calc.alphaTrimmedMean(alpha);
+		return calc.trimmedMean(halfTrimSize);
 	}
-
+	
 	// -- Function methods --
-
+	
 	@Override
-	public RealAlphaTrimmedMeanFunction<T> copy() {
-		return new RealAlphaTrimmedMeanFunction<T>(otherFunc.copy(), alpha);
+	public RealTrimmedMeanFunction<T> copy() {
+		return new RealTrimmedMeanFunction<T>(otherFunc.copy(), halfTrimSize);
 	}
 
 }
