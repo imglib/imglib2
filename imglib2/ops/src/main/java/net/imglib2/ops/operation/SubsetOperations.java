@@ -53,6 +53,7 @@ import net.imglib2.ops.operation.subset.views.ImgPlusView;
 import net.imglib2.ops.operation.subset.views.ImgView;
 import net.imglib2.ops.operation.subset.views.LabelingView;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
@@ -60,23 +61,26 @@ import net.imglib2.view.Views;
 @SuppressWarnings("unchecked")
 public final class SubsetOperations {
 
-	public static <T extends Type<T>, U extends Type<U>, V extends Type<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
+	public static <T extends Type<T>, U extends Type<U>, V extends RealType<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
 			BinaryOperation<A, B, C> op, int[] selectedDims, A in1, B in2, C out) {
 		return iterate(op, selectedDims, in1, in2, out, null);
 	}
 
-	public static <T extends Type<T>, U extends Type<U>, V extends Type<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
+	public static <T extends Type<T>, U extends Type<U>, V extends RealType<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
 			BinaryOperation<A, B, C> op, int[] selectedDims, A in1, B in2,
 			C out, ExecutorService service) {
 
-		Interval[] inIntervals1 = IntervalsFromDimSelection.compute(
-				selectedDims, in1);
+		return iterate(op,
+				IntervalsFromDimSelection.compute(selectedDims, in1),
+				IntervalsFromDimSelection.compute(selectedDims, in2),
+				IntervalsFromDimSelection.compute(selectedDims, out), in1, in2,
+				out, service);
+	}
 
-		Interval[] inIntervals2 = IntervalsFromDimSelection.compute(
-				selectedDims, in2);
-
-		Interval[] outIntervals = IntervalsFromDimSelection.compute(
-				selectedDims, out);
+	public static <T extends Type<T>, U extends Type<U>, V extends RealType<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
+			BinaryOperation<A, B, C> op, Interval[] inIntervals1,
+			Interval[] inIntervals2, Interval[] outIntervals, A in1, B in2,
+			C out, ExecutorService service) {
 
 		RandomAccessibleInterval<T>[] inRes1 = new RandomAccessibleInterval[inIntervals1.length];
 		RandomAccessibleInterval<U>[] inRes2 = new RandomAccessibleInterval[inIntervals2.length];
@@ -100,14 +104,8 @@ public final class SubsetOperations {
 	}
 
 	public static <T extends Type<T>, U extends Type<U>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>> B iterate(
-			UnaryOperation<A, B> op, int[] selectedDims, A in, B out,
-			ExecutorService service) {
-
-		Interval[] inIntervals = IntervalsFromDimSelection.compute(
-				selectedDims, in);
-
-		Interval[] outIntervals = IntervalsFromDimSelection.compute(
-				selectedDims, out);
+			UnaryOperation<A, B> op, Interval[] inIntervals,
+			Interval[] outIntervals, A in, B out, ExecutorService service) {
 
 		RandomAccessibleInterval<T>[] inRes = new RandomAccessibleInterval[inIntervals.length];
 		RandomAccessibleInterval<U>[] outRes = new RandomAccessibleInterval[outIntervals.length];
@@ -119,6 +117,15 @@ public final class SubsetOperations {
 
 		MultithreadedOps.run(op, (A[]) inRes, (B[]) outRes, service);
 		return out;
+	}
+
+	public static <T extends Type<T>, U extends Type<U>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>> B iterate(
+			UnaryOperation<A, B> op, int[] selectedDims, A in, B out,
+			ExecutorService service) {
+
+		return iterate(op, IntervalsFromDimSelection.compute(selectedDims, in),
+				IntervalsFromDimSelection.compute(selectedDims, out), in, out,
+				service);
 	}
 
 	// TODO: Ask Tobias. This is ugly.
