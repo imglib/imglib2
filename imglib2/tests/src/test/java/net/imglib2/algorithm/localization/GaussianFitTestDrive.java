@@ -31,10 +31,8 @@ import ij.gui.Overlay;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import net.imglib2.Cursor;
 import net.imglib2.Localizable;
 import net.imglib2.Point;
-import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
@@ -72,9 +70,9 @@ public class GaussianFitTestDrive {
 			sigma_y[i] = 2 + 0.5 * rangen.nextGaussian();
 
 			double[] params = new double[] { A[i], x0[i], y0[i], 1/sigma_x[i]/sigma_x[i], 1/sigma_y[i]/sigma_y[i] };
-			addGaussianSpotToImage(img, params, width, height);
+			LocalizationUtils.addGaussianSpotToImage(img, params);
 		}
-		addNoiseToImage(img, sigma_noise);
+		LocalizationUtils.addGaussianNoiseToImage(img, sigma_noise);
 
 		// Show target image
 		ij.ImageJ.main(args);
@@ -161,30 +159,5 @@ public class GaussianFitTestDrive {
 		System.out.println(String.format("Time for %d spots: %.2f s.", nspots, (end-start)/1e3f));
 
 
-	}
-	
-	public static final void addGaussianSpotToImage(Img<UnsignedByteType> img, double[] params, int width, int height) {
-		GaussianMultiDLM g = new GaussianMultiDLM();
-		Cursor<UnsignedByteType> lc = img.localizingCursor();
-		double[] position = new double[img.numDimensions()];
-		float val;
-		while (lc.hasNext()) {
-			lc.fwd();
-			position[0] = lc.getDoublePosition(0);
-			position[1] = lc.getDoublePosition(1);
-			val = (float) g.val(position, params);
-			lc.get().add(new UnsignedByteType((int)val));
-		}
-	}
-
-	public static final void addNoiseToImage(Img<UnsignedByteType> img, double sigma_noise) {
-		Cursor<UnsignedByteType> lc = img.localizingCursor();
-		float val;
-		Random ran = new Random();
-		while (lc.hasNext()) {
-			lc.fwd();
-			val = (float) Math.max(0, sigma_noise * ran.nextGaussian());
-			lc.get().add(new UnsignedByteType((int)val));
-		}
 	}
 }
