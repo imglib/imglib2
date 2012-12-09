@@ -53,7 +53,6 @@ import net.imglib2.ops.operation.subset.views.ImgPlusView;
 import net.imglib2.ops.operation.subset.views.ImgView;
 import net.imglib2.ops.operation.subset.views.LabelingView;
 import net.imglib2.type.Type;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
@@ -61,12 +60,12 @@ import net.imglib2.view.Views;
 @SuppressWarnings("unchecked")
 public final class SubsetOperations {
 
-	public static <T extends Type<T>, U extends Type<U>, V extends RealType<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
+	public static <T extends Type<T>, U extends Type<U>, V extends Type<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
 			BinaryOperation<A, B, C> op, int[] selectedDims, A in1, B in2, C out) {
 		return iterate(op, selectedDims, in1, in2, out, null);
 	}
 
-	public static <T extends Type<T>, U extends Type<U>, V extends RealType<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
+	public static <T extends Type<T>, U extends Type<U>, V extends Type<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
 			BinaryOperation<A, B, C> op, int[] selectedDims, A in1, B in2,
 			C out, ExecutorService service) {
 
@@ -77,7 +76,7 @@ public final class SubsetOperations {
 				out, service);
 	}
 
-	public static <T extends Type<T>, U extends Type<U>, V extends RealType<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
+	public static <T extends Type<T>, U extends Type<U>, V extends Type<V>, A extends RandomAccessibleInterval<T>, B extends RandomAccessibleInterval<U>, C extends RandomAccessibleInterval<V>> C iterate(
 			BinaryOperation<A, B, C> op, Interval[] inIntervals1,
 			Interval[] inIntervals2, Interval[] outIntervals, A in1, B in2,
 			C out, ExecutorService service) {
