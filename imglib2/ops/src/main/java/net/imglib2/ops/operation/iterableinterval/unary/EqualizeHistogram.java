@@ -36,11 +36,16 @@
 
 package net.imglib2.ops.operation.iterableinterval.unary;
 
+import java.util.Random;
+
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.operation.Operations;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * TODO
@@ -48,54 +53,71 @@ import net.imglib2.type.numeric.RealType;
  * @author Martin Horn (University of Konstanz)
  */
 public class EqualizeHistogram<T extends RealType<T>> implements
-		UnaryOperation<IterableInterval<T>, IterableInterval<T>> {
+        UnaryOperation<IterableInterval<T>, IterableInterval<T>> {
 
-	@Override
-	public IterableInterval<T> compute(IterableInterval<T> in,
-			IterableInterval<T> r) {
+    private final int numBins;
 
-		assert (in.iterationOrder().equals(r.iterationOrder()));
+    public EqualizeHistogram(int numBins) {
+        this.numBins = numBins;
 
-		int[] histo = Operations.compute( new MakeHistogram< T >(), in ).hist();
+    }
 
-		T val = r.firstElement().createVariable();
+    @Override
+    public IterableInterval<T> compute(IterableInterval<T> in,
+            IterableInterval<T> r) {
 
-		int min = (int) val.getMaxValue();
-		// calc cumulated histogram
-		for (int i = 1; i < histo.length; i++) {
-			histo[i] = histo[i] + histo[i - 1];
-			if (histo[i] != 0) {
-				min = Math.min(min, histo[i]);
-			}
-		}
+        assert (in.iterationOrder().equals(r.iterationOrder()));
 
-		// global possible extrema
-		double gmax = val.getMaxValue();
-		double gmin = val.getMinValue();
+        OpsHistogram histo =
+                Operations.compute(new MakeHistogram<T>(numBins), in);
 
-		Cursor<T> cin = in.cursor();
-		Cursor<T> cout = r.cursor();
+        T val = r.firstElement().createVariable();
 
-		long numPix = r.size();
+        int min = (int)val.getMaxValue();
+        // calc cumulated histogram
+        for (int i = 1; i < histo.numBins(); i++) {
+            histo.hist()[i] = histo.get(i) + histo.get(i - 1);
+            if (histo.get(i) != 0) {
+                min = Math.min(min, histo.get(i));
+            }
+        }
 
-		while (cin.hasNext()) {
-			cin.fwd();
-			cout.fwd();
+        double gmax = histo.numBins();
 
-			val = cin.get();
-			int p = histo[(int) val.getRealFloat() - (int) gmin];
-			double t = (p - min);
-			t /= numPix - min;
-			t *= gmax;
-			p = (int) Math.round(t);
-			cout.get().setReal(p);
-		}
-		return r;
+        Cursor<T> cin = in.cursor();
+        Cursor<T> cout = r.cursor();
 
-	}
+        long numPix = r.size();
 
-	@Override
-	public UnaryOperation<IterableInterval<T>, IterableInterval<T>> copy() {
-		return new EqualizeHistogram<T>();
-	}
+        while (cin.hasNext()) {
+            cin.fwd();
+            cout.fwd();
+
+            val = cin.get();
+            int p = histo.getByValue(val.getRealFloat());
+            double t = (p - min);
+            t /= numPix - min;
+            t *= gmax;
+            p = (int)Math.round(t);
+            cout.get().setReal(histo.binToValue(p));
+        }
+        return r;
+
+    }
+
+    @Override
+    public UnaryOperation<IterableInterval<T>, IterableInterval<T>> copy() {
+        return new EqualizeHistogram<T>(numBins);
+    }
+
+    public static void main(String[] args) {
+        Img<FloatType> test =
+                new ArrayImgFactory<FloatType>().create(new int[]{10, 10},
+                        new FloatType());
+        Random rand = new Random();
+        for (FloatType t : test) {
+            t.setReal(rand.nextDouble() * Float.MAX_VALUE);
+        }
+        new EqualizeHistogram<FloatType>(256).compute(test, test);
+    }
 }
