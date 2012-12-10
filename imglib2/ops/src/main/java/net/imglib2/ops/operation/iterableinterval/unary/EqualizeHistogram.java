@@ -42,7 +42,6 @@ import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.operation.Operations;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -68,9 +67,7 @@ public class EqualizeHistogram<T extends RealType<T>> implements
 
         assert (in.iterationOrder().equals(r.iterationOrder()));
 
-        OpsHistogram histo =
-                Operations.compute(new MakeHistogram<T>(numBins), in);
-
+        OpsHistogram histo = new MakeHistogram<T>(numBins).compute(in);
         T val = r.firstElement().createVariable();
 
         int min = (int)val.getMaxValue();
