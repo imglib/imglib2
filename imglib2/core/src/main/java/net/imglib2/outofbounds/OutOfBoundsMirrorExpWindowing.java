@@ -129,10 +129,7 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 			type.mul( getWeight( zeroMinPos ) );
 			return type;
 		}
-		else
-		{
-			return outOfBoundsRandomAccess.get();
-		}
+		return outOfBoundsRandomAccess.get();
 	}
 	
 	final protected float getWeight( final long[] zeroMinPos )

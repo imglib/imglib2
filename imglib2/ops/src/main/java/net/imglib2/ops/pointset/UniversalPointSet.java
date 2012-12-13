@@ -37,6 +37,8 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
+
 
 /**
  * UniversalPointSet is a {@link PointSet} that includes all points in
@@ -44,7 +46,7 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public class UniversalPointSet implements PointSet {
+public class UniversalPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
@@ -65,11 +67,11 @@ public class UniversalPointSet implements PointSet {
 
 	@Override
 	public void translate(long[] deltas) {
-		// do nothing
+		invalidateBounds();
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new UniversalPointSetIterator();
 	}
 
@@ -79,12 +81,12 @@ public class UniversalPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return origin;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return origin;
 	}
 
@@ -94,7 +96,7 @@ public class UniversalPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		throw new UnsupportedOperationException("UniversalPointSet is infinite in size");
 	}
 
@@ -105,7 +107,13 @@ public class UniversalPointSet implements PointSet {
 
 	// -- private helpers --
 	
-	private class UniversalPointSetIterator implements PointSetIterator {
+	private class UniversalPointSetIterator extends AbstractCursor<long[]>
+		implements PointSetIterator
+	{
+
+		public UniversalPointSetIterator() {
+			super(0);
+		}
 
 		@Override
 		public boolean hasNext() {
@@ -120,6 +128,39 @@ public class UniversalPointSet implements PointSet {
 		@Override
 		public void reset() {
 			// nothing to do
+		}
+		
+		@Override
+		public long[] get() {
+			throw new UnsupportedOperationException(
+				"Cannot get values from a UniversalPointSet");
+		}
+
+		@Override
+		public void fwd() {
+			// nothing to do
+		}
+
+		@Override
+		public void localize(long[] position) {
+			throw new UnsupportedOperationException(
+				"Cannot localize from a UniversalPointSet");
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			throw new UnsupportedOperationException(
+				"Cannot get positions from a UniversalPointSet");
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new UniversalPointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
 		}
 		
 	}

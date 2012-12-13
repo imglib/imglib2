@@ -30,12 +30,11 @@ import java.util.Collection;
 import net.imglib2.Cursor;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RealCursor;
-import net.imglib2.script.math.Compute;
-import net.imglib2.script.math.fn.IFunction;
-
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.img.Img;
+import net.imglib2.script.math.Compute;
+import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 

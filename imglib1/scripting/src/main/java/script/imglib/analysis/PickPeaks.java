@@ -27,10 +27,9 @@ package script.imglib.analysis;
 
 import java.util.ArrayList;
 
-import script.imglib.algorithm.fn.AlgorithmUtil;
-
 import mpicbg.imglib.algorithm.math.PickImagePeaks;
 import mpicbg.imglib.type.numeric.RealType;
+import script.imglib.algorithm.fn.AlgorithmUtil;
 
 /** Picks peaks in an image. It is recommended to smooth the image a bit with a Gaussian first.
  * 

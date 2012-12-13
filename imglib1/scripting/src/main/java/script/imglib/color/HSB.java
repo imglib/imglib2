@@ -28,13 +28,11 @@ package script.imglib.color;
 import java.awt.Color;
 import java.util.Collection;
 
-import script.imglib.color.fn.ColorFunction;
-import script.imglib.math.fn.IFunction;
-
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.RealType;
+import script.imglib.color.fn.ColorFunction;
+import script.imglib.math.fn.IFunction;
 
 /** Given up to 3 channels--each represented by an {@link IFunction},
  *  this class composes them into an {@link RGBALegacyType} {@link Image}

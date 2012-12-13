@@ -25,12 +25,6 @@
 
 package script.imglib.algorithm.fn;
 
-import script.imglib.color.Alpha;
-import script.imglib.color.Blue;
-import script.imglib.color.Green;
-import script.imglib.color.RGBA;
-import script.imglib.color.Red;
-import script.imglib.math.Compute;
 import mpicbg.imglib.algorithm.transformation.ImageTransform;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.InterpolatorFactory;
@@ -45,6 +39,12 @@ import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.models.AffineModel2D;
 import mpicbg.models.AffineModel3D;
+import script.imglib.color.Alpha;
+import script.imglib.color.Blue;
+import script.imglib.color.Green;
+import script.imglib.color.RGBA;
+import script.imglib.color.Red;
+import script.imglib.math.Compute;
 
 /** Convenient intermediate class to be able to operate directly on an {@link Image} argument in the constructor. */
 /**

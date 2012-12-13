@@ -156,9 +156,6 @@ public class LabelingType< T extends Comparable< T >> implements Type< LabelingT
 	 * This method returns the canonical object for the given labeling.
 	 * SetLabeling will work faster if you pass it the interned object instead
 	 * of one created by you.
-	 * 
-	 * @param labeling
-	 * @return
 	 */
 	public List< T > intern( final List< T > labeling )
 	{

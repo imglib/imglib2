@@ -30,11 +30,9 @@ import net.imglib2.script.color.fn.ChannelOp;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.numeric.ARGBType;
 
-/** Extracts the pixel value for the desired channel, from 1 to 4,
- *  where RGBA is really ARGB and thus A=4, R=3, G=2, B=1. */
 /**
- * TODO
- *
+ * Extracts the pixel value for the desired channel, from 1 to 4,
+ * where RGBA is really ARGB and thus A=4, R=3, G=2, B=1.
  */
 public class Channel extends ChannelOp {
 
@@ -51,6 +49,7 @@ public class Channel extends ChannelOp {
 	@Override
 	protected final int getShift() { return shift; }
 
+	@Override
 	public IFunction duplicate() {
 		return new Channel(img, channel);
 	}

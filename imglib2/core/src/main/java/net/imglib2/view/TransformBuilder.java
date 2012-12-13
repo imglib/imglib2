@@ -51,7 +51,7 @@ import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.transform.integer.SlicingTransform;
 import net.imglib2.transform.integer.TranslationTransform;
-import net.imglib2.util.Util;
+import net.imglib2.util.Intervals;
 
 /**
  * The "brain" of the Views framework. Simplifies View cascades to provide the
@@ -199,7 +199,7 @@ public class TransformBuilder< T >
 	protected void visitExtended( final ExtendedRandomAccessibleInterval< T, ? > randomAccessible )
 	{
 		final RandomAccessibleInterval< T > sourceInterval = randomAccessible.getSource();
-		if ( ( boundingBox != null ) && Util.contains( sourceInterval, boundingBox.getInterval() ) )
+		if ( ( boundingBox != null ) && Intervals.contains( sourceInterval, boundingBox.getInterval() ) )
 			visit( sourceInterval );
 		else
 			source = randomAccessible;
@@ -404,8 +404,7 @@ public class TransformBuilder< T >
 			{
 				if ( full )
 					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
-				else
-					return new MixedRandomAccess< T >( s.randomAccess(), t );
+				return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
 
 			@Override
@@ -413,8 +412,7 @@ public class TransformBuilder< T >
 			{
 				if ( full )
 					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
-				else
-					return new MixedRandomAccess< T >( s.randomAccess(), t );
+				return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
 		};
 	}

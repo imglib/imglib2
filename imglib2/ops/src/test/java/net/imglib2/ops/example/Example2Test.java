@@ -37,10 +37,7 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -51,6 +48,8 @@ import net.imglib2.ops.input.PointSetInputIterator;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 
 // take an average of the z values of a 3d image
@@ -70,7 +69,8 @@ public class Example2Test {
 	}
 
 	private Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+				new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE,ZSIZE}, new DoubleType());
 	}
 
@@ -98,10 +98,14 @@ public class Example2Test {
 		// calculate output values as an average of a number of Z planes
 		
 		Img<DoubleType> image = makeInputImage();
-		HyperVolumePointSet xySpace = new HyperVolumePointSet(new long[]{0,0,0}, new long[]{XSIZE-1,YSIZE-1,0});
-		HyperVolumePointSet zNeigh = new HyperVolumePointSet(new long[]{0,0,0}, new long[]{0,0,ZSIZE-1});
-		Function<long[],DoubleType> imageFunc = new RealImageFunction<DoubleType,DoubleType>(image, new DoubleType());
-		Function<PointSet,DoubleType> aveFunc = new RealArithmeticMeanFunction<DoubleType>(imageFunc);
+		HyperVolumePointSet xySpace =
+			new HyperVolumePointSet(new long[] { XSIZE, YSIZE, 1 });
+		HyperVolumePointSet zNeigh =
+			new HyperVolumePointSet(new long[] { 1, 1, ZSIZE });
+		Function<long[], DoubleType> imageFunc =
+			new RealImageFunction<DoubleType, DoubleType>(image, new DoubleType());
+		Function<PointSet, DoubleType> aveFunc =
+			new RealArithmeticMeanFunction<DoubleType>(imageFunc);
 		DoubleType variable = new DoubleType();
 		PointSetInputIterator iter = new PointSetInputIterator(xySpace, zNeigh);
 		PointSet points = null;

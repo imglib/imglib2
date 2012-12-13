@@ -37,10 +37,7 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -53,6 +50,8 @@ import net.imglib2.ops.input.InputIteratorFactory;
 import net.imglib2.ops.input.PointInputIteratorFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 // a complicated conditional pixel assignment example
 //   RealImageAssignment tagged with two conditions
@@ -75,7 +74,8 @@ public class Example7Test {
 	private final long X_CONSTANT = 400;
 	
 	private Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+			new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 

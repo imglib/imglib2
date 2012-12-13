@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 
@@ -49,19 +48,21 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  */
 public class RealSumOfSquaredDeviationsFunction<T extends RealType<T>>
-	implements Function<PointSet,T>
+ extends
+	AbstractRealStatFunction<T>
 {
-	// -- instance variables --
-	
-	private final Function<long[],T> otherFunc;
-	private StatCalculator<T> calculator;
-	
 	// -- constructor --
 	
 	public RealSumOfSquaredDeviationsFunction(Function<long[],T> otherFunc)
 	{
-		this.otherFunc = otherFunc;
-		this.calculator = null;
+		super(otherFunc);
+	}
+
+	// -- abstract method overrides --
+
+	@Override
+	protected double value(StatCalculator<T> calc) {
+		return calc.sumOfSquaredDeviations();
 	}
 	
 	// -- Function methods --
@@ -69,19 +70,6 @@ public class RealSumOfSquaredDeviationsFunction<T extends RealType<T>>
 	@Override
 	public RealSumOfSquaredDeviationsFunction<T> copy() {
 		return new RealSumOfSquaredDeviationsFunction<T>(otherFunc.copy());
-	}
-
-	@Override
-	public void compute(PointSet input, T output) {
-		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
-		else calculator.reset(otherFunc, input);
-		double value = calculator.sumOfSquaredDeviations();
-		output.setReal(value);
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
 	}
 
 }

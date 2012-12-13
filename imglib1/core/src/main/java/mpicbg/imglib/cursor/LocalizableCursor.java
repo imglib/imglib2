@@ -36,7 +36,6 @@
 
 package mpicbg.imglib.cursor;
 
-import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.type.Type;
 
 /**

@@ -87,11 +87,14 @@ public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 	{
 		final int arrayIndex = index / bitsPerEntity;
 		final int arrayOffset = index % bitsPerEntity;
-
-		if ( value )
-			data[ arrayIndex ] = data[ arrayIndex ] | ( 1 << arrayOffset );
-		else
-			data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset );
+		
+		synchronized ( data )
+		{
+			if ( value )
+				data[ arrayIndex ] = data[ arrayIndex ] | ( 1 << arrayOffset );
+			else
+				data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset );			
+		}
 	}
 
 	@Override

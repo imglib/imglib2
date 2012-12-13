@@ -25,6 +25,14 @@
 
 package net.imglib2.algorithm.legacy.transform;
 
+import mpicbg.models.AffineModel2D;
+import mpicbg.models.AffineModel3D;
+import mpicbg.models.Boundable;
+import mpicbg.models.InvertibleCoordinateTransform;
+import mpicbg.models.NoninvertibleModelException;
+import mpicbg.models.RigidModel2D;
+import mpicbg.models.TranslationModel2D;
+import mpicbg.models.TranslationModel3D;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -37,14 +45,6 @@ import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.Type;
 import net.imglib2.view.Views;
-import mpicbg.models.AffineModel2D;
-import mpicbg.models.AffineModel3D;
-import mpicbg.models.Boundable;
-import mpicbg.models.InvertibleCoordinateTransform;
-import mpicbg.models.NoninvertibleModelException;
-import mpicbg.models.RigidModel2D;
-import mpicbg.models.TranslationModel2D;
-import mpicbg.models.TranslationModel3D;
 
 /**
  * TODO

@@ -25,12 +25,12 @@
 
 package net.imglib2.script.algorithm;
 
-import net.imglib2.script.algorithm.fn.ImgProxy;
-import net.imglib2.script.math.Compute;
-import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.algorithm.floydsteinberg.FloydSteinbergDithering;
 import net.imglib2.img.Img;
+import net.imglib2.script.algorithm.fn.ImgProxy;
+import net.imglib2.script.math.Compute;
+import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 

@@ -87,10 +87,7 @@ public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractO
 			value.setReal( rnd.nextDouble() * range + min );
 			return value;
 		}
-		else
-		{
-			return sampler.get();
-		}
+		return sampler.get();
 	}
 	
 	@Override

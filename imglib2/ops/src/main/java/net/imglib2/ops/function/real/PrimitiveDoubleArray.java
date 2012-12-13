@@ -87,7 +87,7 @@ public class PrimitiveDoubleArray {
 	
 	public void add(double v) {
 		if (top == values.length) {
-			int newLen = top + (top / 2);
+			int newLen = top * 2;
 			values = Arrays.copyOf(values, newLen);
 		}
 		values[top++] = v;

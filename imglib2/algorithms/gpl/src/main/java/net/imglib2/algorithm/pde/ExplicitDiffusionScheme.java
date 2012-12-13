@@ -145,6 +145,7 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 			final Chunk chunk = chunks.get( ithread );
 			threads[ithread] = new Thread(""+BASE_ERROR_MESSAGE+"thread "+ithread) {
 
+				@Override
 				public void run() {
 
 					Cursor<FloatType> incrementCursor = increment.localizingCursor();
@@ -271,7 +272,7 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 	 * Iterate over a nD equivalent of 3x3 neighborhood, and collect the diffusion tensor values 
 	 * needed in that neighborhood to compute the concrete diffusion scheme. 
 
-	 * @param ura  the {@link RandomAccess} 
+	 * @param dra  the {@link RandomAccess} 
 	 * @param target  the float array in which the value will be stored
 	 */
 	protected abstract void yieldDiffusionTensor(final RandomAccess<FloatType> dra, final float[][] target);

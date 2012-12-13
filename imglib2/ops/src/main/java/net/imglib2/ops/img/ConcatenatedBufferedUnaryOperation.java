@@ -56,7 +56,7 @@ public abstract class ConcatenatedBufferedUnaryOperation< T > implements UnaryOp
 	{
 		// Check wether there exists only one solution
 		if ( m_operations.length == 1 )
-			return m_operations[ 0 ].compute( input, output );;
+			return m_operations[ 0 ].compute( input, output );
 
 		T buffer = getBuffer( input );
 
@@ -90,8 +90,6 @@ public abstract class ConcatenatedBufferedUnaryOperation< T > implements UnaryOp
 
 	/**
 	 * Method to retrieve the Buffer
-	 * 
-	 * @return
 	 */
 	protected abstract T getBuffer( T input );
 

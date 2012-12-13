@@ -27,13 +27,14 @@ package net.imglib2.script.algorithm;
 
 import java.util.List;
 
+import net.imglib2.algorithm.gauss.GaussFloat;
 import net.imglib2.img.Img;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.script.algorithm.fn.AlgorithmUtil;
 import net.imglib2.script.algorithm.fn.ImgProxy;
 import net.imglib2.script.math.Compute;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.script.math.fn.ImageFunction;
-import net.imglib2.algorithm.gauss.GaussFloat;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 

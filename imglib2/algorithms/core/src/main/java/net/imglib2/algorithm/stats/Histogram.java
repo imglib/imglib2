@@ -39,7 +39,6 @@ package net.imglib2.algorithm.stats;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 import net.imglib2.RealCursor;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;

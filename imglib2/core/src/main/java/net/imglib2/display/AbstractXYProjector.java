@@ -36,20 +36,17 @@
 
 package net.imglib2.display;
 
-import net.imglib2.Localizable;
 import net.imglib2.Point;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
 
 /**
+ * TODO
  *
- *
- * @author ImgLib2 developers
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
-abstract public class AbstractXYProjector< A, B > extends Point implements Projector< A, B >, Positionable, Localizable
+abstract public class AbstractXYProjector< A, B > extends Point implements Projector< A, B >
 {
 	final protected RandomAccessible< A > source;
 	final protected Converter< A, B > converter;

@@ -47,7 +47,7 @@ import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.ops.util.metadata.CalibratedSpaceImpl;
 import net.imglib2.type.Type;
-import net.imglib2.util.Util;
+import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
@@ -60,14 +60,13 @@ public class SubsetViews {
 	 * See SubsetViews.subsetView(...) Difference: If possible an optimized
 	 * {@link Cursor} will be created.
 	 * 
-	 * 
 	 * @param <T>
+	 *            TODO
 	 * @param src
 	 *            Source {@link RandomAccessibleInterval}
 	 * @param interval
 	 *            Interval defining dimensionality of resulting
 	 *            {@link IterableRandomAccessibleInterval}
-	 * @return
 	 */
 	public static final <T extends Type<T>> IterableRandomAccessibleInterval<T> iterableSubsetView(
 			final RandomAccessibleInterval<T> src, final Interval interval) {
@@ -81,10 +80,6 @@ public class SubsetViews {
 	 *            The source {@link RandomAccessibleInterval}
 	 * @param interval
 	 *            Interval
-	 * @param keepDimsWithSizeOne
-	 *            If false, dimensions with size one will be virtually removed
-	 *            from the resulting view
-	 * @return
 	 */
 	public static final <T extends Type<T>> RandomAccessibleInterval<T> subsetView(
 			final RandomAccessibleInterval<T> src, final Interval interval) {
@@ -102,7 +97,7 @@ public class SubsetViews {
 			return src;
 
 		RandomAccessibleInterval<T> res;
-		if (Util.contains(src, interval))
+		if (Intervals.contains(src, interval))
 			res = Views.offsetInterval(src, interval);
 		else
 			throw new IllegalArgumentException(
@@ -258,11 +253,7 @@ public class SubsetViews {
 	}
 
 	/**
-	 * Checks weather to intervals have same dimensionality
-	 * 
-	 * @param a
-	 * @param b
-	 * @return
+	 * Checks whether to intervals have same dimensionality.
 	 */
 	public static synchronized boolean intervalEquals(Interval a, Interval b) {
 

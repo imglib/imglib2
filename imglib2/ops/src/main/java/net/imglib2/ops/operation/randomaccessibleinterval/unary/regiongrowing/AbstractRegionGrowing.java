@@ -309,10 +309,7 @@ public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comp
 		{
 			return m_visitedLabRA.get().getLabeling().contains( label );
 		}
-		else
-		{
-			return m_visitedRA.get().get();
-		}
+		return m_visitedRA.get().get();
 	}
 
 	/*
@@ -364,9 +361,6 @@ public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comp
 	 */
 	protected abstract void queueProcessed();
 
-	/**
-	 * @return
-	 */
 	protected boolean hasMoreSeedingPoints()
 	{
 		return false;

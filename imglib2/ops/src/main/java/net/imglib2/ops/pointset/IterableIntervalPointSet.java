@@ -37,6 +37,7 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 
@@ -48,8 +49,7 @@ import net.imglib2.IterableInterval;
  * @author Barry DeZonia
  *
  */
-public class IterableIntervalPointSet implements PointSet
-{
+public class IterableIntervalPointSet extends AbstractPointSet {
 	// -- instance variables --
 	
 	private final IterableInterval<?> interval;
@@ -61,15 +61,15 @@ public class IterableIntervalPointSet implements PointSet
 	public IterableIntervalPointSet(IterableInterval<?> interval) {
 		this.interval = interval;
 		int numDims = interval.numDimensions();
-		boundMin = new long[numDims];
-		boundMax = new long[numDims];
+		this.boundMin = new long[numDims];
+		this.boundMax = new long[numDims];
 		interval.min(boundMin);
 		interval.max(boundMax);
 		long sum = 1;
 		for (int i = 0; i < numDims; i++) {
 			sum *= 1 + boundMax[i] - boundMin[i];
 		}
-		size = sum;
+		this.size = sum;
 	}
 	
 	// -- PointSet methods --
@@ -87,8 +87,8 @@ public class IterableIntervalPointSet implements PointSet
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
-		return new IntervalIterator();
+	public PointSetIterator iterator() {
+		return new IterableIntervalPointSetIterator();
 	}
 
 	@Override
@@ -97,12 +97,12 @@ public class IterableIntervalPointSet implements PointSet
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return boundMin;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return boundMax;
 	}
 
@@ -116,7 +116,7 @@ public class IterableIntervalPointSet implements PointSet
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		return size;
 	}
 
@@ -127,8 +127,10 @@ public class IterableIntervalPointSet implements PointSet
 	
 	// -- private helpers --
 	
-	private class IntervalIterator implements PointSetIterator {
-		
+	private class IterableIntervalPointSetIterator extends AbstractCursor<long[]>
+		implements
+		PointSetIterator
+	{
 		// -- instance variables --
 		
 		private final Cursor<?> cursor;
@@ -136,9 +138,10 @@ public class IterableIntervalPointSet implements PointSet
 		
 		// -- constructor --
 		
-		public IntervalIterator() {
+		public IterableIntervalPointSetIterator() {
+			super(interval.numDimensions());
 			cursor = interval.localizingCursor();
-			pos = new long[interval.numDimensions()];
+			pos = new long[n];
 		}
 		
 		// -- PointSetIterator methods --
@@ -149,16 +152,40 @@ public class IterableIntervalPointSet implements PointSet
 		}
 
 		@Override
-		public long[] next() {
-			cursor.next();
-			cursor.localize(pos);
+		public void reset() {
+			cursor.reset();
+		}
+
+		@Override
+		public long[] get() {
 			return pos;
 		}
 
 		@Override
-		public void reset() {
-			cursor.reset();
+		public void fwd() {
+			cursor.fwd();
+			cursor.localize(pos);
 		}
-		
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++)
+				position[i] = pos[i];
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return pos[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new IterableIntervalPointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
 	}
 }

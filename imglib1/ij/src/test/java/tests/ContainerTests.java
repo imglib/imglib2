@@ -27,8 +27,6 @@ package tests;
 
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import java.util.Random;
 
 import mpicbg.imglib.algorithm.fft.FFTFunctions;
@@ -45,6 +43,8 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyPeriodicFactory;
 import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.util.Util;
+
+import org.junit.Test;
 
 /**
  * TODO

@@ -27,16 +27,15 @@ package script.imglib.color.fn;
 
 import java.util.Collection;
 
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.type.numeric.RGBALegacyType;
+import mpicbg.imglib.type.numeric.RealType;
 import script.imglib.math.Compute;
 import script.imglib.math.fn.IFunction;
 import script.imglib.math.fn.ImageComputation;
 import script.imglib.math.fn.NumberFunction;
 import script.imglib.math.fn.Util;
-
-import mpicbg.imglib.cursor.Cursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.type.numeric.RGBALegacyType;
-import mpicbg.imglib.type.numeric.RealType;
 
 /**
  * TODO

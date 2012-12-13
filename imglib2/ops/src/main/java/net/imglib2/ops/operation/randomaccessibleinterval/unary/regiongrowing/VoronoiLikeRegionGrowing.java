@@ -70,7 +70,10 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 	protected final boolean m_fillHoles;
 
 	/**
-	 * @param m_srcImg
+	 * TODO
+	 * 
+	 * @param srcImg
+	 *            TODO
 	 * @param threshold
 	 *            stops growing if the pixel value falls below that value
 	 * @param fillHoles
@@ -87,11 +90,6 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public Labeling< L > compute( Labeling< L > in, Labeling< L > out )
 	{
@@ -105,9 +103,6 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 		return out;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void initRegionGrowing( Labeling< L > srcImg )
 	{
@@ -115,9 +110,6 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected L nextSeedPosition( int[] seedPos )
 	{
@@ -133,9 +125,6 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected boolean includeInRegion( int[] oldPos, int[] nextPos, L label )
 	{
@@ -143,9 +132,6 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 		return m_srcImgRA.get().compareTo( m_threshold ) >= 0;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void queueProcessed()
 	{
@@ -195,10 +181,12 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 	 * starting from the given background point. If the contiguos background
 	 * region only has 1 neighbour
 	 * 
-	 * @param yStart
-	 *            y coordinate of starting point
-	 * @param xStart
-	 *            x coordinate of starting point
+	 * @param resLab
+	 *            TODO
+	 * @param startPos
+	 *            coordinates of starting point
+	 * @param visitedRA
+	 *            TODO
 	 */
 	private void bfsBackGround( Labeling< L > resLab, int[] startPos, RandomAccess< BitType > visitedRA )
 	{

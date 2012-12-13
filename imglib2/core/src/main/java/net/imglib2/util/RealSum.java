@@ -87,8 +87,6 @@ public class RealSum
 	/**
 	 * Get the current sum by summing up all intermediate sums.  Do not call
 	 * this method repeatedly when the sum has not changed.
-	 * 
-	 * @return
 	 */
 	final public double getSum()
 	{

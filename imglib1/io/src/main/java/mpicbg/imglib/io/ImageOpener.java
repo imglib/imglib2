@@ -42,8 +42,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ome.xml.model.primitives.PositiveFloat;
-
 import loci.common.DataTools;
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
@@ -81,6 +79,7 @@ import mpicbg.imglib.type.numeric.integer.UnsignedIntType;
 import mpicbg.imglib.type.numeric.integer.UnsignedShortType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import ome.xml.model.primitives.PositiveFloat;
 
 /**
  * Reads in an imglib Image using Bio-Formats.

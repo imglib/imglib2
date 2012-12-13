@@ -73,7 +73,7 @@ public class TMP {
 		public Assignment(ComplexOp<K> op) {
 			this.op = op;
 		}
-		public void run() {};
+		public void run() {}
 	}
 	
 	public static void main(String[] args) {

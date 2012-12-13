@@ -31,6 +31,7 @@ import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.NumericType;
 import script.imglib.algorithm.fn.AbstractAffine3D;
 import script.imglib.algorithm.fn.AlgorithmUtil;
+import script.imglib.math.fn.IFunction;
 
 /** Performs a mathematically correct transformation of an image.
  * This means that an image of 2000x2000 scaled by a factor of 2

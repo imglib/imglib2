@@ -173,7 +173,7 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 
 	public void setOutput( final RandomAccessibleInterval< R > output ) { this.output = output; }
 	
-	public void setKeepImgFFT( final boolean keep ) { this.keepImgFFT = true; }
+	public void setKeepImgFFT( final boolean keep ) { this.keepImgFFT = keep; }
 	public boolean keepImgFFT() { return keepImgFFT; }
 	public void setFFTImgFactory( final ImgFactory< ComplexFloatType > factory ) { this.fftFactory = factory; }
 	public ImgFactory< ComplexFloatType > fftImgFactory() { return fftFactory; }
@@ -310,8 +310,7 @@ public class FFTConvolution < R extends RealType< R > > implements Runnable
 		{
 			if ( img.size() > Integer.MAX_VALUE / 2 )
 				return new CellImgFactory<ComplexFloatType>( 1024 );
-			else
-				return new ArrayImgFactory< ComplexFloatType >();
+			return new ArrayImgFactory< ComplexFloatType >();
 		}
 	}
 }

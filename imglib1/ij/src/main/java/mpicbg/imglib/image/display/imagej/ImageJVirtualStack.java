@@ -25,16 +25,16 @@
 
 package mpicbg.imglib.image.display.imagej;
 
-import mpicbg.imglib.cursor.LocalizablePlaneCursor;
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.display.Display;
-import mpicbg.imglib.type.Type;
 import ij.ImagePlus;
 import ij.VirtualStack;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
+import mpicbg.imglib.cursor.LocalizablePlaneCursor;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.image.display.Display;
+import mpicbg.imglib.type.Type;
 
 /**
  * TODO

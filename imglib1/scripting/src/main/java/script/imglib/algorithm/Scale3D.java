@@ -25,10 +25,8 @@
 
 package script.imglib.algorithm;
 
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.type.numeric.NumericType;
-import script.imglib.math.fn.IFunction;
 
 /** Scale an image in 3D, resizing the X,Y,Z dimensions as necessary.
  *  

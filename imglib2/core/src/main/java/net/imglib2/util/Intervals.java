@@ -37,7 +37,7 @@ import net.imglib2.RealLocalizable;
 
 /**
  * Convenience methods for manipulating {@link Interval Intervals}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Intervals
@@ -46,7 +46,7 @@ public class Intervals
 	 * Create a {@link FinalInterval} from a parameter list comprising minimum
 	 * coordinates and size. For example, to create a 2D interval from (10, 10)
 	 * to (20, 40) use createMinSize( 10, 10, 11, 31 ).
-	 *
+	 * 
 	 * @param minsize
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -63,7 +63,7 @@ public class Intervals
 	 * Create a {@link FinalInterval} from a parameter list comprising minimum
 	 * and maximum coordinates. For example, to create a 2D interval from (10,
 	 * 10) to (20, 40) use createMinMax( 10, 10, 20, 40 ).
-	 *
+	 * 
 	 * @param minmax
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -78,10 +78,10 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in all dimensions.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the input interval plus border
 	 * pixels on every side, in every dimension.
-	 *
+	 * 
 	 * @param interval
 	 *            the input interval
 	 * @param border
@@ -105,10 +105,10 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in one dimensions.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the input interval plus border
 	 * pixels on every side, in dimension d.
-	 *
+	 * 
 	 * @param interval
 	 *            the input interval
 	 * @param border
@@ -131,10 +131,10 @@ public class Intervals
 
 	/**
 	 * Translate an interval in one dimension.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the input interval shifted by t
 	 * in dimension d.
-	 *
+	 * 
 	 * @param interval
 	 *            the input interval
 	 * @param t
@@ -157,9 +157,10 @@ public class Intervals
 
 	/**
 	 * Compute the intersection of two intervals.
-	 *
-	 * Create a {@link FinalInterval} , which is the intersection of the input intervals (i.e., the area contained in both input intervals).
-	 *
+	 * 
+	 * Create a {@link FinalInterval} , which is the intersection of the input
+	 * intervals (i.e., the area contained in both input intervals).
+	 * 
 	 * @param intervalA
 	 *            input interval
 	 * @param intervalB
@@ -185,7 +186,7 @@ public class Intervals
 	 * Test whether the {@code containing} interval contains the
 	 * {@code contained} point. The interval is closed, that is, boundary points
 	 * are contained.
-	 *
+	 * 
 	 * @return true, iff {@code contained} is in {@code containing}.
 	 */
 	public static boolean contains( final Interval containing, final Localizable contained )
@@ -206,7 +207,7 @@ public class Intervals
 	 * Test whether the {@code containing} interval contains the
 	 * {@code contained} point. The interval is closed, that is, boundary points
 	 * are contained.
-	 *
+	 * 
 	 * @return true, iff {@code contained} is in {@code containing}.
 	 */
 	public static boolean contains( final RealInterval containing, final RealLocalizable contained )
@@ -224,8 +225,42 @@ public class Intervals
 	}
 
 	/**
+	 * Test whether the {@code containing} interval completely contains the
+	 * {@code contained} interval.
+	 */
+	final static public boolean contains( final Interval containing, final Interval contained )
+	{
+		assert containing.numDimensions() == contained.numDimensions();
+
+		final int n = containing.numDimensions();
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( containing.min( d ) > contained.min( d ) || containing.max( d ) < contained.max( d ) )
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Test whether the {@code containing} interval completely contains the
+	 * {@code contained} interval.
+	 */
+	final static public boolean contains( final RealInterval containing, final RealInterval contained )
+	{
+		assert containing.numDimensions() == contained.numDimensions();
+
+		final int n = containing.numDimensions();
+		for ( int d = 0; d < n; ++d )
+		{
+			if ( containing.realMin( d ) > contained.realMin( d ) || containing.realMax( d ) < contained.realMax( d ) )
+				return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Compute the number of elements contained in an (integer) {@link Interval}.
-	 *
+	 * 
 	 * @return number of elements in {@code interval}.
 	 */
 	public static long numElements( final Interval interval )
@@ -235,5 +270,21 @@ public class Intervals
 		for ( int d = 1; d < n; ++d )
 			numPixels *= interval.dimension( d );
 		return numPixels;
+	}
+
+	/**
+	 * Tests weather two intervals are equal in their min / max
+	 */
+	public static boolean equals( Interval a, Interval b )
+	{
+
+		if ( a.numDimensions() != b.numDimensions() )
+			return false;
+
+		for ( int d = 0; d < a.numDimensions(); d++ )
+			if ( a.min( d ) != b.min( d ) || a.max( d ) != b.max( d ) )
+				return false;
+
+		return true;
 	}
 }

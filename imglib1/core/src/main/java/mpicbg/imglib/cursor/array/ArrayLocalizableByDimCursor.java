@@ -39,16 +39,16 @@ package mpicbg.imglib.cursor.array;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FakeAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-//import mpicbg.imglib.cursor.link.CursorLink;
-//import mpicbg.imglib.cursor.link.NullLink;
 import mpicbg.imglib.cursor.Localizable;
+import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
+//import mpicbg.imglib.cursor.link.CursorLink;
+//import mpicbg.imglib.cursor.link.NullLink;
 
 /**
  * TODO

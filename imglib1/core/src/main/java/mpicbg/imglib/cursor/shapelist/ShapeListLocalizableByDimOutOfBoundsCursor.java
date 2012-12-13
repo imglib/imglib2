@@ -37,8 +37,8 @@
 package mpicbg.imglib.cursor.shapelist;
 
 import mpicbg.imglib.container.shapelist.ShapeList;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.Localizable;
+import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;

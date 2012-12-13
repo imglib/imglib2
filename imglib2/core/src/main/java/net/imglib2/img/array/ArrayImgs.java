@@ -72,9 +72,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link UnsignedByteType}, {@link ByteArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedByteType, ByteArray > unsignedBytes( final long... dim )
@@ -85,10 +82,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link UnsignedByteType}, {@link ByteArray}>
 	 * reusing a passed byte[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< UnsignedByteType, ByteArray > unsignedBytes( final byte[] array, final long... dim )
 	{
@@ -101,9 +94,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link ByteType}, {@link ByteArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ByteType, ByteArray > bytes( final long... dim )
@@ -114,10 +104,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link ByteType}, {@link ByteArray}>
 	 * reusing a passed byte[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< ByteType, ByteArray > bytes( final byte[] array, final long... dim )
 	{
@@ -130,9 +116,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link UnsignedShortType}, {@link ShortArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedShortType, ShortArray > unsignedShorts( final long... dim )
@@ -143,10 +126,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link UnsignedShortType}, {@link ShortArray}>
 	 * reusing a passed short[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< UnsignedShortType, ShortArray > unsignedShorts( final short[] array, final long... dim )
 	{
@@ -159,9 +138,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link ShortType}, {@link ShortArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ShortType, ShortArray > shorts( final long... dim )
@@ -172,10 +148,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link ShortType}, {@link ShortArray}>
 	 * reusing a passed short[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< ShortType, ShortArray > shorts( final short[] array, final long... dim )
 	{
@@ -188,9 +160,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link UnsignedIntType}, {@link IntArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedIntType, IntArray > unsignedInts( final long... dim )
@@ -201,10 +170,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link UnsignedIntType}, {@link IntArray}>
 	 * reusing a passed int[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< UnsignedIntType, IntArray > unsignedInts( final int[] array, final long... dim )
 	{
@@ -217,9 +182,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link IntType}, {@link IntArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< IntType, IntArray > ints( final long... dim )
@@ -230,10 +192,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link IntType}, {@link IntArray}>
 	 * reusing a passed int[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< IntType, IntArray > ints( final int[] array, final long... dim )
 	{
@@ -246,9 +204,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link LongType}, {@link LongArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< LongType, LongArray > longs( final long... dim )
@@ -259,10 +214,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link LongType}, {@link LongArray}>
 	 * reusing a passed long[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< LongType, LongArray > longs( final long[] array, final long... dim )
 	{
@@ -275,9 +226,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link BitType}, {@link BitArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< BitType, BitArray > bits( final long... dim )
@@ -287,9 +235,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< FloatType, FloatArray > floats( final long... dim )
@@ -300,10 +245,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>
 	 * reusing a passed float[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< FloatType, FloatArray > floats( final float[] array, final long... dim )
 	{
@@ -316,9 +257,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< DoubleType, DoubleArray > doubles( final long... dim )
@@ -329,10 +267,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>
 	 * reusing a passed double[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< DoubleType, DoubleArray > doubles( final double[] array, final long... dim )
 	{
@@ -345,9 +279,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link ARGBType}, {@link IntArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ARGBType, IntArray > argbs( final long... dim )
@@ -358,10 +289,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link ARGBType}, {@link IntArray}>
 	 * reusing a passed int[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< ARGBType, IntArray > argbs( final int[] array, final long... dim )
 	{
@@ -374,9 +301,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link ComplexFloatType}, {@link FloatArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ComplexFloatType, FloatArray > complexFloats( final long... dim )
@@ -387,10 +311,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>
 	 * reusing a passed float[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< ComplexFloatType, FloatArray > complexFloats( final float[] array, final long... dim )
 	{
@@ -403,9 +323,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link ComplexDoubleType}, {@link DoubleArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ComplexDoubleType, DoubleArray > complexDoubles( final long... dim )
@@ -416,10 +333,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>
 	 * reusing a passed double[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< ComplexDoubleType, DoubleArray > complexDoubles( final double[] array, final long... dim )
 	{

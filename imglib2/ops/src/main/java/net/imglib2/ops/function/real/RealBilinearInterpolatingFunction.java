@@ -35,52 +35,83 @@
  */
 
 
-package net.imglib2.ops.pointset;
+package net.imglib2.ops.function.real;
+
+import net.imglib2.ops.function.Function;
+import net.imglib2.type.numeric.RealType;
+
+// TODO - this code does bilinear interpolation in X & Y for a multidim image.
+// It should be possible to blend across other dims too.
 
 /**
- * Helper class for tracking bounds of a region. Used by some {@link PointSet}
- * implementations.
  * 
  * @author Barry DeZonia
+ *
+ * @param <T>
  */
-public abstract class AbstractBoundedRegion {
-	
+public class RealBilinearInterpolatingFunction<T extends RealType<T>> 
+	implements Function<double[],T>
+{
 	// -- instance variables --
 	
-	private long[] min, max;
-
+	private Function<long[],T> discreteFunc;
+	private long[] index;
+	private T ul, ur, ll, lr;
+	
 	// -- constructor --
 	
-	public AbstractBoundedRegion() {
+	public RealBilinearInterpolatingFunction(Function<long[],T> discreteFunc) {
+		this.discreteFunc = discreteFunc;
+		this.index = null;
+		this.ul = createOutput();
+		this.ur = createOutput();
+		this.ll = createOutput();
+		this.lr = createOutput();
+	}
+
+	// -- Function methods --
+	
+	@Override
+	public void compute(double[] point, T output) {
+		if (index == null) index = new long[point.length];
+		long x = (long) Math.floor(point[0]);
+		long y = (long) Math.floor(point[1]);
+		double ix = point[0] - x;
+		double iy = point[1] - y;
+		getValue((x+0),(y+0),ul);
+		getValue((x+1),(y+0),ur);
+		getValue((x+0),(y+1),ll);
+		getValue((x+1),(y+1),lr);
+		double value = interpolate(ix, iy, ul.getRealDouble(), 
+				ur.getRealDouble(), ll.getRealDouble(), lr.getRealDouble());
+		output.setReal(value);
 	}
 	
-	// -- protected API --
-	
-	protected long[] getMin() {
-		return min;
+	@Override
+	public RealBilinearInterpolatingFunction<T> copy() {
+		return new RealBilinearInterpolatingFunction<T>(discreteFunc.copy());
 	}
 	
-	protected long[] getMax() {
-		return max;
+	@Override
+	public T createOutput() {
+		return discreteFunc.createOutput();
+	}
+
+	// -- private helpers --
+	
+	private double interpolate(double ix, double iy, double ul, double ur, double ll, double lr) {
+		double value = 0;
+		value += (1-ix)*(1-iy)*ul;
+		value += (1-ix)*(iy)*ll;
+		value += (ix)*(1-iy)*ur;
+		value += (ix)*(iy)*lr;
+		return value;
+	}
+
+	private void getValue(long x, long y, T output) {
+		index[0] = x;
+		index[1] = y;
+		discreteFunc.compute(index, output);
 	}
 	
-	protected void setMin(long[] p) {
-		min = p.clone();
-	}
-	
-	protected void setMax(long[] p) {
-		max = p.clone();
-	}
-	
-	protected void updateMin(long[] p) {
-		for (int i = 0; i < min.length; i++) {
-			if (p[i] < min[i]) min[i] = p[i];
-		}
-	}
-	
-	protected void updateMax(long[] p) {
-		for (int i = 0; i < max.length; i++) {
-			if (p[i] > max[i]) max[i] = p[i];
-		}
-	}
 }

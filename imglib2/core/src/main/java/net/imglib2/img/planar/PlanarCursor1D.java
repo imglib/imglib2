@@ -36,15 +36,12 @@
 
 package net.imglib2.img.planar;
 
-import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.NativeType;
 
 /**
  * Basic Iterator for 1d {@link PlanarImg PlanarContainers}
- * @param <T>
  *
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class PlanarCursor1D< T extends NativeType< T > > extends PlanarCursor< T >
 {
@@ -70,7 +67,6 @@ public class PlanarCursor1D< T extends NativeType< T > > extends PlanarCursor< T
 	{
 		if ( dim == 0 )
 			return type.getIndex();
-		else
-			return 0;
+		return 0;
 	}	
 }

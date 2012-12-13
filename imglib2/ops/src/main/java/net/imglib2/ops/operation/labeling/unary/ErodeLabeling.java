@@ -92,10 +92,7 @@ public class ErodeLabeling< L extends Comparable< L >> implements UnaryOperation
 		{
 			return computeLabelBased( input, output );
 		}
-		else
-		{
-			return computeBinaryBased( input, output );
-		}
+		return computeBinaryBased( input, output );
 	}
 
 	private Labeling< L > computeLabelBased( final Labeling< L > input, final Labeling< L > output )

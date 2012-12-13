@@ -159,8 +159,8 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 		}
 		else
 		{
-			final double stepSizeX = ((double)integralImg.dimension( 0 ) -1) / (double)size[ 0 ];
-			final double stepSizeY = ((double)integralImg.dimension( 1 ) -1) / (double)size[ 1 ];
+			final double stepSizeX = ((double)integralImg.dimension( 0 ) -1) / size[ 0 ];
+			final double stepSizeY = ((double)integralImg.dimension( 1 ) -1) / size[ 1 ];
 			
 			while ( cursor.hasNext() )
 			{

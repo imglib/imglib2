@@ -71,8 +71,7 @@ public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOut
 		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
 		if ( isOutOfBounds )
 			return value;
-		else
-			return sampler.get();
+		return sampler.get();
 	}
 	
 	@Override

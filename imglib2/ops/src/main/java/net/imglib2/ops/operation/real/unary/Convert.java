@@ -33,7 +33,7 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-package net.imglib2.ops.operation.real.binary;
+package net.imglib2.ops.operation.real.unary;
 
 import net.imglib2.converter.Converter;
 import net.imglib2.ops.operation.UnaryOperation;

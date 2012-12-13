@@ -29,8 +29,8 @@ import java.awt.geom.AffineTransform;
 
 import net.imglib2.img.Img;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.script.algorithm.fn.AbstractAffine3D;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.script.math.fn.IFunction;
 
 /** 
 * Expects matrix values in the same order that {@link AffineTransform} uses.
@@ -51,7 +51,7 @@ public class Affine2D<N extends NumericType<N>> extends Affine3D<N>
 		this(fn, scaleX, shearX,
 				 shearY, scaleY,
 				 translateX, translateY,
-				 Affine3D.BEST, 0);
+				 AbstractAffine3D.BEST, 0);
 	}
 
 	/** Affine transform the image with the best interpolation mode available. */
@@ -67,7 +67,7 @@ public class Affine2D<N extends NumericType<N>> extends Affine3D<N>
 	}
 
 	public Affine2D(final Object fn, final AffineTransform aff) throws Exception {
-		this(fn, aff, Affine3D.BEST);
+		this(fn, aff, AbstractAffine3D.BEST);
 	}
 
 	@SuppressWarnings("boxing")
@@ -76,7 +76,7 @@ public class Affine2D<N extends NumericType<N>> extends Affine3D<N>
 	}
 
 	public Affine2D(final Object fn, final AffineTransform aff, final Number outside) throws Exception {
-		this(fn, aff, Affine3D.BEST, outside);
+		this(fn, aff, AbstractAffine3D.BEST, outside);
 	}
 
 	public Affine2D(final Object fn, final AffineTransform aff, final Mode mode, final Number outside) throws Exception {

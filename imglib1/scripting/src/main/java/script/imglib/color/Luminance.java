@@ -25,9 +25,9 @@
 
 package script.imglib.color;
 
-import script.imglib.color.fn.RGBAOp;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
+import script.imglib.color.fn.RGBAOp;
 
 /** Computes the luminance of each RGB value using the weights
  *  r: 0.299, g: 0.587, b: 0.144 */

@@ -36,13 +36,10 @@
 
 package tests;
 
-import mpicbg.imglib.cursor.LocalizableCursor;
-
-import mpicbg.imglib.image.Image;
-
-import mpicbg.imglib.type.numeric.real.FloatType;
-
 import static org.junit.Assert.assertTrue;
+import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.type.numeric.real.FloatType;
 
 import org.junit.Test;
 

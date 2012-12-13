@@ -72,9 +72,6 @@ final public class ImagePlusImgs
 	 * Create a {@link ByteImagePlus}<{@link UnsignedByteType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link ByteProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ByteImagePlus< UnsignedByteType > unsignedBytes( final long... dim )
@@ -86,9 +83,6 @@ final public class ImagePlusImgs
 	 * Create a {@link ByteImagePlus}<{@link ByteType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link ByteProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ByteImagePlus< ByteType > bytes( final long... dim )
@@ -100,9 +94,6 @@ final public class ImagePlusImgs
 	 * Create a {@link ShortImagePlus}<{@link UnsignedShortType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link ShortProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ShortImagePlus< UnsignedShortType > unsignedShorts( final long... dim )
@@ -114,9 +105,6 @@ final public class ImagePlusImgs
 	 * Create a {@link ShortImagePlus}<{@link ShortType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link ShortProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ShortImagePlus< ShortType > shorts( final long... dim )
@@ -130,9 +118,6 @@ final public class ImagePlusImgs
 	 * <p>(In ImageJ that would be a hyperstack of {@link ColorProcessor}s.
 	 * The integers, however, would be displayed as ARGB unsigned byte channels
 	 * and thus look weird.)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public IntImagePlus< UnsignedIntType > unsignedInts( final long... dim )
@@ -146,9 +131,6 @@ final public class ImagePlusImgs
 	 * <p>(In ImageJ that would be a hyperstack of {@link ColorProcessor}s.
 	 * The integers, however, would be displayed as ARGB unsigned byte channels
 	 * and thus look weird.)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public IntImagePlus< IntType > ints( final long... dim )
@@ -160,9 +142,6 @@ final public class ImagePlusImgs
 	 * Create an {@link FloatImagePlusImg}<{@link FloatType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link FloatProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public FloatImagePlus< FloatType > floats( final long... dim )
@@ -174,9 +153,6 @@ final public class ImagePlusImgs
 	 * Create an {@link IntImagePlus}<{@link ARGBType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link ColorProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public IntImagePlus< ARGBType > argbs( final long... dim )
@@ -190,9 +166,6 @@ final public class ImagePlusImgs
 	 * <p>(In ImageJ that would be a hyperstack of {@link FloatProcessor}s
 	 * with real and imaginary numbers interleaved in the plane.  That means it
 	 * would look weird.)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public FloatImagePlus< ComplexFloatType > complexFloats( final long... dim )
@@ -202,13 +175,9 @@ final public class ImagePlusImgs
 	
 	/**
 	 * Create an {@link ImagePlusImg}<{@link ComplexDoubleType}, {@link DoubleArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
-	@SuppressWarnings( "unchecked" )
 	final static public < T extends NumericType< T > & NativeType< T > > ImagePlusImg< T, ? > from( final ImagePlus imp )
 	{
-		return ( ImagePlusImg< T, ? > )ImagePlusAdapter.< T >wrap( imp );
+		return ImagePlusAdapter.< T >wrap( imp );
 	}
 }

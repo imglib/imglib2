@@ -140,12 +140,9 @@ public abstract class AbstractMixedTransform implements Mixed
 			apply( tmp, boundingBox.corner2 );
 			return boundingBox;
 		}
-		else
-		{ // create new BoundingBox with target dimensions
-			BoundingBox b = new BoundingBox( numTargetDimensions );
-			apply( boundingBox.corner1, b.corner1 );
-			apply( boundingBox.corner2, b.corner2 );
-			return b;
-		}
+		BoundingBox b = new BoundingBox( numTargetDimensions );
+		apply( boundingBox.corner1, b.corner1 );
+		apply( boundingBox.corner2, b.corner2 );
+		return b;
 	}
 }

@@ -60,10 +60,11 @@ public abstract class BinaryUnaryOperationAdapter< A, B, C, D > implements Binar
 		this.unaryOp1 = op1;
 	}
 
+	@Override
 	public D compute( A input1, B input2, D output )
 	{
 		return unaryOp1.compute( binaryOp.compute( input1, input2, getBinaryOpBuffer() ), output );
-	};
+	}
 
 	@Override
 	public BinaryOperation< A, B, D > copy()

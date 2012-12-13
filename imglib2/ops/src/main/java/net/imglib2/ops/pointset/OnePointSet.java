@@ -39,13 +39,15 @@ package net.imglib2.ops.pointset;
 
 import java.util.Arrays;
 
+import net.imglib2.AbstractCursor;
+
 
 /**
  * OnePointSet represents a {@link PointSet} that contains exactly one point.
  * 
  * @author Barry DeZonia
  */
-public class OnePointSet implements PointSet {
+public class OnePointSet extends AbstractPointSet {
 
 	// -- instance varaibles --
 	
@@ -68,6 +70,7 @@ public class OnePointSet implements PointSet {
 	public void translate(long[] deltas) {
 		for (int i = 0; i < point.length; i++)
 			point[i] += deltas[i];
+		invalidateBounds();
 	}
 
 	@Override
@@ -76,12 +79,12 @@ public class OnePointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return point;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return point;
 	}
 
@@ -91,7 +94,7 @@ public class OnePointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		return 1;
 	}
 
@@ -101,15 +104,21 @@ public class OnePointSet implements PointSet {
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new OnePointSetIterator();
 	}
 
 	// -- private helpers --
 	
-	private class OnePointSetIterator implements PointSetIterator {
+	private class OnePointSetIterator extends AbstractCursor<long[]> implements
+		PointSetIterator
+	{
 
 		private boolean hasNext = true;
+
+		public OnePointSetIterator() {
+			super(point.length);
+		}
 		
 		@Override
 		public boolean hasNext() {
@@ -126,6 +135,37 @@ public class OnePointSet implements PointSet {
 		public void reset() {
 			hasNext = true;
 		}
-		
+
+		@Override
+		public long[] get() {
+			return point;
+		}
+
+		@Override
+		public void fwd() {
+			if (hasNext) hasNext = false;
+			else throw new IllegalArgumentException("Cannot fwd() beyond end.");
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++)
+				position[i] = point[i];
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return point[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new OnePointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
 	}
 }

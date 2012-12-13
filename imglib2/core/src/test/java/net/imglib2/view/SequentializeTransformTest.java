@@ -37,8 +37,6 @@
 package net.imglib2.view;
 
 import static org.junit.Assert.assertArrayEquals;
-
-
 import net.imglib2.transform.integer.SequentializeTransform;
 
 import org.junit.Test;

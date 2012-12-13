@@ -37,6 +37,8 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
+
 
 /**
  * PointSetDifference is a {@link PointSet} that includes all the points in
@@ -46,12 +48,13 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public class PointSetDifference extends AbstractBoundedRegion implements PointSet {
+public class PointSetDifference extends AbstractPointSet {
 	
 	// -- instance variables --
 	
 	private final PointSet a, b;
-	private boolean boundsInvalid;
+	private final BoundsCalculator calculator;
+	private boolean needsCalc;
 	
 	// -- constructor --
 	
@@ -60,7 +63,8 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 			throw new IllegalArgumentException();
 		this.a = a;
 		this.b = b;
-		boundsInvalid = true;
+		calculator = new BoundsCalculator();
+		needsCalc = true;
 	}
 	
 	// -- PointSet methods --
@@ -74,11 +78,12 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	public void translate(long[] deltas) {
 		a.translate(deltas);
 		b.translate(deltas);
-		boundsInvalid = true;
+		needsCalc = true;
+		invalidateBounds();
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new PointSetDifferenceIterator();
 	}
 	
@@ -91,21 +96,27 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 	}
 
 	@Override
-	public long[] findBoundMin() {
-		if (boundsInvalid) calcBounds();
-		return getMin();
+	protected long[] findBoundMin() {
+		if (needsCalc) {
+			calculator.calc(this);
+			needsCalc = false;
+		}
+		return calculator.getMin();
 	}
 
 	@Override
-	public long[] findBoundMax() {
-		if (boundsInvalid) calcBounds();
-		return getMax();
+	protected long[] findBoundMax() {
+		if (needsCalc) {
+			calculator.calc(this);
+			needsCalc = false;
+		}
+		return calculator.getMax();
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElements = 0;
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			iter.next();
 			numElements++;
@@ -120,51 +131,82 @@ public class PointSetDifference extends AbstractBoundedRegion implements PointSe
 
 	// -- private helpers --
 	
-	private void calcBounds() {
-		PointSetIterator iter = createIterator();
-		while (iter.hasNext()) {
-			long[] point = iter.next();
-			if (boundsInvalid) {
-				boundsInvalid = false;
-				setMax(point);
-				setMin(point);
-			}
-			else {
-				updateMax(point);
-				updateMin(point);
-			}
-		}
-	}
-	
-	private class PointSetDifferenceIterator implements PointSetIterator {
-		
+	private class PointSetDifferenceIterator extends AbstractCursor<long[]>
+		implements PointSetIterator
+	{
 		private final PointSetIterator aIter;
-		private long[] aNext;
+		private long[] curr;
+		private long[] nextCache;
 		
 		public PointSetDifferenceIterator() {
-			aIter = a.createIterator();
-			aNext = null;
+			super(a.numDimensions());
+			aIter = a.iterator();
+			reset();
 		}
 		
 		@Override
 		public boolean hasNext() {
-			aNext = null;
-			while (aIter.hasNext()) {
-				aNext = aIter.next();
-				if (!b.includes(aNext)) return true;
-			}
-			return false;
-		}
-		
-		@Override
-		public long[] next() {
-			return aNext;
+			if (nextCache != null) return true;
+			return positionToNext();
 		}
 		
 		@Override
 		public void reset() {
 			aIter.reset();
+			curr = null;
+			nextCache = null;
 		}
+		
+		@Override
+		public long[] get() {
+			return curr;
+		}
+
+		@Override
+		public void fwd() {
+			if ((nextCache != null) || (positionToNext())) {
+				if (curr == null) curr = new long[n];
+				for (int i = 0; i < n; i++)
+					curr[i] = nextCache[i];
+				nextCache = null;
+				return;
+			}
+			throw new IllegalArgumentException("fwd() cannot go beyond end");
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++)
+				position[i] = curr[i];
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return curr[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new PointSetDifferenceIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
+
+		private boolean positionToNext() {
+			nextCache = null;
+			while (aIter.hasNext()) {
+				long[] pos = aIter.next();
+				if (!b.includes(pos)) {
+					nextCache = pos;
+					return true;
+				}
+			}
+			return false;
+		}
+
 	}
 	
 }

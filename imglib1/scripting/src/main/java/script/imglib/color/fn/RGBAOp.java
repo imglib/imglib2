@@ -27,10 +27,10 @@ package script.imglib.color.fn;
 
 import java.util.Collection;
 
-import script.imglib.math.fn.IFunction;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
+import script.imglib.math.fn.IFunction;
 
 /** Extracts the red pixel value. */
 /**

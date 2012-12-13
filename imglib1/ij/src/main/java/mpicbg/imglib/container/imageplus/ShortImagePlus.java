@@ -28,7 +28,6 @@ package mpicbg.imglib.container.imageplus;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ShortProcessor;
-
 import mpicbg.imglib.container.basictypecontainer.array.ShortArray;
 import mpicbg.imglib.exception.ImgLibException;
 import mpicbg.imglib.type.Type;

@@ -69,7 +69,7 @@ public final class ChannelARGBConverter implements Converter< UnsignedByteType, 
 		converterListRGBA.add( new ChannelARGBConverter( G ) );
 		converterListRGBA.add( new ChannelARGBConverter( B ) );
 		converterListRGBA.add( new ChannelARGBConverter( A ) );
-	};
+	}
 
 	public static enum Channel
 	{

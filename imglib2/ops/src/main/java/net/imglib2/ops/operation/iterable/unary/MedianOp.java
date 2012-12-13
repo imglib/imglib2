@@ -92,60 +92,56 @@ public class MedianOp< T extends RealType< T >, V extends RealType< V >> impleme
 				return array.get( k );
 
 			}
-			else
+			int middle = ( left + right ) >>> 1;
+			swap( array, middle, left + 1 );
+
+			if ( array.get( left ) > array.get( right ) )
 			{
+				swap( array, left, right );
+			}
 
-				int middle = ( left + right ) >>> 1;
-				swap( array, middle, left + 1 );
+			if ( array.get( left + 1 ) > array.get( right ) )
+			{
+				swap( array, left + 1, right );
+			}
 
-				if ( array.get( left ) > array.get( right ) )
+			if ( array.get( left ) > array.get( left + 1 ) )
+			{
+				swap( array, left, left + 1 );
+			}
+
+			int i = left + 1;
+			int j = right;
+			double pivot = array.get( left + 1 );
+
+			while ( true )
+			{
+				do
+					i++;
+				while ( array.get( i ) < pivot );
+				do
+					j--;
+				while ( array.get( j ) > pivot );
+
+				if ( j < i )
 				{
-					swap( array, left, right );
+					break;
 				}
 
-				if ( array.get( left + 1 ) > array.get( right ) )
-				{
-					swap( array, left + 1, right );
-				}
+				swap( array, i, j );
+			}
 
-				if ( array.get( left ) > array.get( left + 1 ) )
-				{
-					swap( array, left, left + 1 );
-				}
+			array.set( left + 1, array.get( j ) );
+			array.set( j, pivot );
 
-				int i = left + 1;
-				int j = right;
-				double pivot = array.get( left + 1 );
+			if ( j >= k )
+			{
+				right = j - 1;
+			}
 
-				while ( true )
-				{
-					do
-						i++;
-					while ( array.get( i ) < pivot );
-					do
-						j--;
-					while ( array.get( j ) > pivot );
-
-					if ( j < i )
-					{
-						break;
-					}
-
-					swap( array, i, j );
-				}
-
-				array.set( left + 1, array.get( j ) );
-				array.set( j, pivot );
-
-				if ( j >= k )
-				{
-					right = j - 1;
-				}
-
-				if ( j <= k )
-				{
-					left = i;
-				}
+			if ( j <= k )
+			{
+				left = i;
 			}
 		}
 	}

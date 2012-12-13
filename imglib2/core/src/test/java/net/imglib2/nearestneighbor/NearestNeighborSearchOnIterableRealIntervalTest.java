@@ -36,6 +36,7 @@
 
 package net.imglib2.nearestneighbor;
 
+import static org.junit.Assert.assertTrue;
 import net.imglib2.RealCursor;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
@@ -45,8 +46,6 @@ import net.imglib2.type.numeric.real.DoubleType;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 
 /**

@@ -39,15 +39,11 @@ package tests;
 import java.util.Arrays;
 
 import mpicbg.imglib.container.array.ArrayContainerFactory;
-
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
-
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
-
 import mpicbg.imglib.type.numeric.RealType;
-
 import mpicbg.imglib.type.numeric.real.FloatType;
 
 /**

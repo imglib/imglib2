@@ -130,8 +130,7 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<Img<T
 	{
 		if ( inPlace )
 			return img;
-		else
-			return output;
+		return output;
 	}
 
 	@Override

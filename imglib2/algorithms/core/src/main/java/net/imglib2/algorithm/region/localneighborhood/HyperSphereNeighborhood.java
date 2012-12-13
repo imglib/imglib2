@@ -125,11 +125,8 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 					source.fwd( d );
 					break;
 				}
-				else
-				{
-					s[ d ] = r[ d ] = 0;
-					source.setPosition( position[ d ], d );
-				}
+				s[ d ] = r[ d ] = 0;
+				source.setPosition( position[ d ], d );
 			}
 
 			if ( d > 0 )

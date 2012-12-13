@@ -85,33 +85,12 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 		this.strategy = strategy;
 	}
 
-	// /* (non-Javadoc)
-	// * @see
-	// net.imglib2.IterableRealInterval#equalIterationOrder(net.imglib2.IterableRealInterval)
-	// */
-	// @Override
-	// public boolean equalIterationOrder(IterableRealInterval<?> f) {
-	// return false;
-	// }
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.imglib2.labeling.Labeling#getRegionOfInterest(java.lang.Comparable)
-	 */
 	@Override
 	public RegionOfInterest getRegionOfInterest( final T label )
 	{
 		return strategy.createRegionOfInterest( label );
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.imglib2.labeling.Labeling#getIterableRegionOfInterest(java.lang.
-	 * Comparable)
-	 */
 	@Override
 	public IterableRegionOfInterest getIterableRegionOfInterest( final T label )
 	{
@@ -136,10 +115,6 @@ public abstract class AbstractLabeling< T extends Comparable< T >> extends Abstr
 
 	/**
 	 * Find the first pixel in a raster scan of the object with the given label.
-	 * 
-	 * @param label
-	 * @param start
-	 * @return
 	 */
 	@Override
 	public boolean getRasterStart( final T label, final long[] start )

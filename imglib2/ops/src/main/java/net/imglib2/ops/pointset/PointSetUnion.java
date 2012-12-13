@@ -37,6 +37,7 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
 
 /**
  * PointSetUnion is a {@link PointSet} that contains all the points present
@@ -44,21 +45,24 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
+public class PointSetUnion extends AbstractPointSet {
 	
 	// -- instance variables --
 	
 	private final PointSet a, b;
-	private boolean boundsInvalid;
+	private final long[] min, max;
+	private final int numD;
 	
 	// -- constructor --
 	
 	public PointSetUnion(PointSet a, PointSet b) {
-		if (a.numDimensions() != b.numDimensions())
+		numD = a.numDimensions();
+		if (numD != b.numDimensions())
 			throw new IllegalArgumentException();
 		this.a = a;
 		this.b = b;
-		boundsInvalid = true;
+		min = new long[numD];
+		max = new long[numD];
 	}
 	
 	// -- PointSet methods --
@@ -72,16 +76,18 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	public void translate(long[] deltas) {
 		a.translate(deltas);
 		b.translate(deltas);
-		boundsInvalid = true;
+		invalidateBounds();
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new PointSetUnionIterator();
 	}
 	
 	@Override
-	public int numDimensions() { return a.numDimensions(); }
+	public int numDimensions() {
+		return numD;
+	}
 	
 	@Override
 	public boolean includes(long[] point) {
@@ -89,27 +95,25 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 	}
 	
 	@Override
-	public long[] findBoundMin() {
-		if (boundsInvalid) {
-			boundsInvalid = false;
-			calcBounds();
+	protected long[] findBoundMin() {
+		for (int i = 0; i < numD; i++) {
+			min[i] = Math.min(a.min(i), b.min(i));
 		}
-		return getMin();
+		return min;
 	}
 
 	@Override
-	public long[] findBoundMax() {
-		if (boundsInvalid) {
-			boundsInvalid = false;
-			calcBounds();
+	protected long[] findBoundMax() {
+		for (int i = 0; i < numD; i++) {
+			max[i] = Math.max(a.max(i), b.max(i));
 		}
-		return getMax();
+		return max;
 	}
 	
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElements = 0;
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			iter.next();
 			numElements++;
@@ -124,46 +128,87 @@ public class PointSetUnion extends AbstractBoundedRegion implements PointSet {
 
 	// -- private helpers --
 
-	private void calcBounds() {
-		setMin(a.findBoundMin());
-		setMax(a.findBoundMax());
-		updateMin(b.findBoundMin());
-		updateMax(b.findBoundMax());
-	}
-	
-	private class PointSetUnionIterator implements PointSetIterator {
-		
+	private class PointSetUnionIterator extends AbstractCursor<long[]> implements
+		PointSetIterator
+	{
 		private final PointSetIterator aIter;
 		private final PointSetIterator bIter;
-		private long[] bNext;
+		private long[] curr;
+		private long[] nextCache;
 		
 		public PointSetUnionIterator() {
-			aIter = a.createIterator();
-			bIter = b.createIterator();
-			bNext = null;
+			super(numD);
+			aIter = a.iterator();
+			bIter = b.iterator();
+			reset();
 		}
 		
 		@Override
 		public boolean hasNext() {
-			bNext = null;
-			if (aIter.hasNext()) return true;
-			while (bIter.hasNext()) {
-				bNext = bIter.next();
-				if (!a.includes(bNext)) return true;
-			}
-			return false;
-		}
-		
-		@Override
-		public long[] next() {
-			if (bNext != null) return bNext;
-			return aIter.next();
+			if (nextCache != null) return true;
+			return positionToNext();
 		}
 		
 		@Override
 		public void reset() {
 			aIter.reset();
 			bIter.reset();
+			curr = null;
+			nextCache = null;
+		}
+
+		@Override
+		public long[] get() {
+			return curr;
+		}
+
+		@Override
+		public void fwd() {
+			if ((nextCache != null) || (positionToNext())) {
+				if (curr == null) curr = new long[n];
+				for (int i = 0; i < n; i++)
+					curr[i] = nextCache[i];
+				nextCache = null;
+				return;
+			}
+			throw new IllegalArgumentException("fwd() cannot go beyond end");
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++)
+				position[i] = curr[i];
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return curr[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new PointSetUnionIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
+
+		private boolean positionToNext() {
+			nextCache = null;
+			if (aIter.hasNext()) {
+				nextCache = aIter.next();
+				return true;
+			}
+			while (bIter.hasNext()) {
+				long[] pos = bIter.next();
+				if (!a.includes(pos)) {
+					nextCache = pos;
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }

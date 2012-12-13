@@ -157,8 +157,8 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 		if( size > Integer.MAX_VALUE ) {
 			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
 			return buildMserTree( input, delta, minSize, maxSize, maxVar, minDiversity, new CellImgFactory< LongType >( cellSize ), darkToBright );
-		} else
-			return buildMserTree( input, delta, minSize, maxSize, maxVar, minDiversity, new ArrayImgFactory< LongType >(), darkToBright );
+		}
+		return buildMserTree( input, delta, minSize, maxSize, maxVar, minDiversity, new ArrayImgFactory< LongType >(), darkToBright );
 	}
 
 	/**
@@ -177,12 +177,12 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 * @param minDiversity
 	 *            minimal diversity of adjacent accepted MSER.
 	 * @param imgFactory
-	 *            used for creating the {@link PixelList} image {@see
-	 *            MserComponentGenerator}.
+	 *            used for creating the {@link PixelList} image
 	 * @param darkToBright
 	 *            whether to apply thresholds from dark to bright (true) or
 	 *            bright to dark (false)
 	 * @return MSER tree of the image.
+	 * @see MserComponentGenerator
 	 */
 	public static < T extends RealType< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final T delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final ImgFactory< LongType > imgFactory, boolean darkToBright )
 	{
@@ -231,8 +231,8 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 		if( size > Integer.MAX_VALUE ) {
 			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
 			return buildMserTree( input, computeDelta, minSize, maxSize, maxVar, minDiversity, new CellImgFactory< LongType >( cellSize ), maxValue, comparator );
-		} else
-			return buildMserTree( input, computeDelta, minSize, maxSize, maxVar, minDiversity, new ArrayImgFactory< LongType >(), maxValue, comparator );
+		}
+		return buildMserTree( input, computeDelta, minSize, maxSize, maxVar, minDiversity, new ArrayImgFactory< LongType >(), maxValue, comparator );
 	}
 
 	/**
@@ -251,14 +251,14 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 * @param minDiversity
 	 *            minimal diversity of adjacent accepted MSER.
 	 * @param imgFactory
-	 *            used for creating the {@link PixelList} image {@see
-	 *            MserComponentGenerator}.
+	 *            used for creating the {@link PixelList} image
 	 * @param maxValue
 	 *            a value (e.g., grey-level) greater than any occurring in the
 	 *            input image.
 	 * @param comparator
 	 *            determines ordering of threshold values.
 	 * @return MSER tree of the image.
+	 * @see MserComponentGenerator
 	 */
 	public static < T extends Type< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final ComputeDelta< T > computeDelta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final ImgFactory< LongType > imgFactory, final T maxValue, final Comparator< T > comparator )
 	{
@@ -311,8 +311,9 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	private final double minDiversity;
 	
 	/**
-	 * The number of minima found {@see #foundNewMinimum(MserEvaluationNode)}
-	 * since the last {@link #pruneDuplicates()}.
+	 * The number of minima found since the last {@link #pruneDuplicates()}.
+	 * 
+	 * @see #foundNewMinimum(MserEvaluationNode)
 	 */
 	private int minimaFoundSinceLastPrune;
 

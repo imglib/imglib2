@@ -30,11 +30,13 @@ import net.imglib2.script.analysis.fn.NumericReduceOperation;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.numeric.RealType;
 
-/** Find the minimum value.
+/**
+ * Find the minimum value.
  * 
- * @see ImgMax, Reduction, ReduceFn
- *
  * @author Albert Cardona
+ * @see ImgMax
+ * @see Reduction
+ * @see ReduceFn
  */
 public final class ImgMin extends NumericReduceOperation
 {

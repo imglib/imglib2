@@ -40,7 +40,6 @@ package net.imglib2.ops.operation.complex.unary;
 import net.imglib2.ops.operation.complex.binary.ComplexAdd;
 import net.imglib2.ops.operation.complex.binary.ComplexDivide;
 import net.imglib2.ops.operation.complex.binary.ComplexMultiply;
-import net.imglib2.ops.operation.complex.unary.ComplexExp;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 

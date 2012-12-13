@@ -131,11 +131,6 @@ public class CLAHE< T extends RealType< T >, K extends RandomAccessibleInterval<
 		m_enableClipping = enableClipping;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public K compute( K in, K r )
 	{
@@ -198,8 +193,6 @@ public class CLAHE< T extends RealType< T >, K extends RandomAccessibleInterval<
 	/**
 	 * Updates the image and applies a bi-linear interpolation scheme to create
 	 * smooth transitions between context areas.
-	 * 
-	 * @throws InvalidCLAHEoperation
 	 */
 	private void interpolate()
 	{
@@ -317,8 +310,6 @@ public class CLAHE< T extends RealType< T >, K extends RandomAccessibleInterval<
 	/**
 	 * Creates the histograms for all contextual regions. The image is scanned
 	 * line by line as this (hopefully) speeds up the underlying image cursor.
-	 * 
-	 * @throws InvalidCLAHEoperation
 	 */
 	private int[] createHistograms( K img )
 	{

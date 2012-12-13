@@ -36,7 +36,6 @@ import mpicbg.imglib.algorithm.math.ImageCalculator;
 import mpicbg.imglib.algorithm.math.ImageConverter;
 import mpicbg.imglib.algorithm.math.NormalizeImageMinMax;
 import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.function.Converter;

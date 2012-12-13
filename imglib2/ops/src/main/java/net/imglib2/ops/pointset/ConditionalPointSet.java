@@ -37,6 +37,8 @@
 
 package net.imglib2.ops.pointset;
 
+
+import net.imglib2.AbstractCursor;
 import net.imglib2.ops.condition.Condition;
 
 /**
@@ -51,20 +53,22 @@ import net.imglib2.ops.condition.Condition;
  * @author Barry DeZonia
  *
  */
-public class ConditionalPointSet extends AbstractBoundedRegion implements PointSet {
+public class ConditionalPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
 	private final PointSet pointSet;
 	private final Condition<long[]> condition;
-	private boolean boundsInvalid;
+	private final BoundsCalculator calculator;
+	private boolean needsCalc;
 	
 	// -- constructor --
 	
 	public ConditionalPointSet(PointSet pointSet, Condition<long[]> condition) {
 		this.pointSet = pointSet;
 		this.condition = condition;
-		this.boundsInvalid = true;
+		this.calculator = new BoundsCalculator();
+		this.needsCalc = true;
 	}
 	
 	// -- PointSet methods --
@@ -77,11 +81,12 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 	@Override
 	public void translate(long[] deltas) {
 		pointSet.translate(deltas);
-		this.boundsInvalid = true;
+		invalidateBounds();
+		needsCalc = true;
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new ConditionalPointSetIterator();
 	}
 
@@ -91,15 +96,21 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 	}
 
 	@Override
-	public long[] findBoundMin() {
-		if (boundsInvalid) calcBounds();
-		return getMin();
+	protected long[] findBoundMin() {
+		if (needsCalc) {
+			calculator.calc(this);
+			needsCalc = false;
+		}
+		return calculator.getMin();
 	}
 
 	@Override
-	public long[] findBoundMax() {
-		if (boundsInvalid) calcBounds();
-		return getMax();
+	protected long[] findBoundMax() {
+		if (needsCalc) {
+			calculator.calc(this);
+			needsCalc = false;
+		}
+		return calculator.getMax();
 	}
 
 	@Override
@@ -108,9 +119,9 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElements = 0;
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			iter.next();
 			numElements++;
@@ -123,49 +134,85 @@ public class ConditionalPointSet extends AbstractBoundedRegion implements PointS
 		return new ConditionalPointSet(pointSet.copy(), condition.copy());
 	}
 
+
 	// -- private helpers --
 	
-	private void calcBounds() {
-		PointSetIterator iter = createIterator();
-		while (iter.hasNext()) {
-			long[] point = iter.next();
-			if (boundsInvalid) {
-				boundsInvalid = false;
-				setMax(point);
-				setMin(point);
-			}
-			else {
-				updateMax(point);
-				updateMin(point);
-			}
-		}
-	}
-	
-	private class ConditionalPointSetIterator implements PointSetIterator {
+	private class ConditionalPointSetIterator extends AbstractCursor<long[]>
+		implements PointSetIterator
+	{
 		private final PointSetIterator iter;
-		private long[] next;
+		private long[] curr;
+		private long[] nextCache;
 		
 		public ConditionalPointSetIterator() {
-			iter = pointSet.createIterator();
+			super(pointSet.numDimensions());
+			iter = pointSet.iterator();
+			reset();
 		}
 
 		@Override
 		public boolean hasNext() {
-			while (iter.hasNext()) {
-				next = iter.next();
-				if (condition.isTrue(next)) return true;
-			}
-			return false;
-		}
-
-		@Override
-		public long[] next() {
-			return next;
+			if (nextCache != null) return true;
+			return positionToNext();
 		}
 
 		@Override
 		public void reset() {
 			iter.reset();
+			curr = null;
+			nextCache = null;
 		}
+		
+		@Override
+		public long[] get() {
+			return curr;
+		}
+
+		@Override
+		public void fwd() {
+			if ((nextCache != null) || (positionToNext())) {
+				if (curr == null) curr = new long[n];
+				for (int i = 0; i < n; i++)
+					curr[i] = nextCache[i];
+				nextCache = null;
+				return;
+			}
+			throw new IllegalArgumentException("fwd() cannot go beyond end");
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++) {
+				position[i] = curr[i];
+			}
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return curr[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new ConditionalPointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
+
+		private boolean positionToNext() {
+			nextCache = null;
+			while (iter.hasNext()) {
+				long[] pos = iter.next();
+				if (condition.isTrue(pos)) {
+					nextCache = pos;
+					return true;
+				}
+			}
+			return false;
+		}
+
 	}
 }

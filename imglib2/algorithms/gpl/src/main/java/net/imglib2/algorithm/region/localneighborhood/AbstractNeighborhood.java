@@ -164,10 +164,10 @@ public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterva
 	@Override
 	@Deprecated
 	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		if (!(f instanceof RectangleNeighborhood)) {
+		if (!(f instanceof RectangleNeighborhoodGPL)) {
 			return false;
 		}
-		RectangleNeighborhood<?, ?> otherRectangle = (RectangleNeighborhood<?, ?>) f;
+		RectangleNeighborhoodGPL<?, ?> otherRectangle = (RectangleNeighborhoodGPL<?, ?>) f;
 		if (otherRectangle.numDimensions() != numDimensions()) {
 			return false;
 		}
@@ -269,9 +269,7 @@ public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterva
 	}
 
 	/**
-	 * Updates the source
-	 * 
-	 * @param source
+	 * Updates the source.
 	 */
 	public void updateSource(IN source) {
 		this.source = source;
@@ -279,10 +277,7 @@ public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterva
 	}
 
 	/**
-	 * Copy the {@link AbstractNeighborhood}
-	 * 
-	 * @param <K>
-	 * @return
+	 * Copies the {@link AbstractNeighborhood}.
 	 */
 	public abstract AbstractNeighborhood<T, IN> copy();
 

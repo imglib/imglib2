@@ -81,6 +81,10 @@ public class RealEquationFunction<T extends RealType<T>>
 		this.img = img;
 	}
 
+	public RealEquationFunction(String specification, T type) {
+		this(specification, type, null);
+	}
+
 	// -- Function methods --
 	
 	@Override

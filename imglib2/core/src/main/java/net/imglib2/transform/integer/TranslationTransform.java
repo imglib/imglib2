@@ -318,7 +318,7 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 		{
 			return Translation.class;
 		}
-	};
+	}
 	
 	@Override
 	public InverseTranslationTransform inverse()

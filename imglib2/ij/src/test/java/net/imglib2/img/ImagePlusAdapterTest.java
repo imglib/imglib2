@@ -1,7 +1,6 @@
 package net.imglib2.img;
 
 import static org.junit.Assert.assertEquals;
-
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import ij.measure.Calibration;

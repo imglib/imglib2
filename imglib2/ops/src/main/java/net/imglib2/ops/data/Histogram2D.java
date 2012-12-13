@@ -38,6 +38,9 @@ package net.imglib2.ops.data;
 
 import net.imglib2.type.numeric.RealType;
 
+/**
+ * @author Felix Schoenenberger (University of Konstanz)
+ */
 public final class Histogram2D
 {
 

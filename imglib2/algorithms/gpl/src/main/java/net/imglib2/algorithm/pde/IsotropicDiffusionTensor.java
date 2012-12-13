@@ -67,6 +67,7 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 			threads[i] = new Thread(""+BASE_ERROR_MESSAGE+"thread "+i) {
 
+				@Override
 				public void run() {
 					
 					Cursor<FloatType> cursor = D.localizingCursor();

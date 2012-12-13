@@ -92,7 +92,7 @@ public abstract class ImgFactory< T >
 	 * If the type "S" does not suit the needs of the {@link ImgFactory} (for example implement {@link NativeType}
 	 * in all {@link NativeImgFactory}, this method will throw an {@link IncompatibleTypeException}.
 	 * 
-	 * @param S - the new type
+	 * @param <S> - the new type
 	 * @param type - an instance of S
 	 * @return {@link ImgFactory} of type S 
 	 * @throws IncompatibleTypeException if type <S> is not compatible
