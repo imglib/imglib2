@@ -73,7 +73,7 @@ public class NewMeasurementSet {
 	void doMeasurements(Function<long[],T> func, PointSet region)
 	{
 		T tmp = func.createOutput();
-		PointSetIterator iter = region.createIterator();
+		PointSetIterator iter = region.iterator();
 		for (List<SamplingMeasurement> level : samplingLevels) {
 			if (level.size() == 0) continue;
 			for (SamplingMeasurement measurement : level) {
