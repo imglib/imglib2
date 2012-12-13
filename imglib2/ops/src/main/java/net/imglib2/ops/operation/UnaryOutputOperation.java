@@ -40,9 +40,11 @@ package net.imglib2.ops.operation;
  * Class should only be used if the output can't be known by the user in
  * advance. For example if the operation produces an double[] of unknown size,
  * this algorithm should know what to do.
- * 
- * If the output can be known, e.g. {@link Img<T>} to {@link Img<T>} of same
- * dimensionality {@link UnaryOperation} should be used.
+ * <p>
+ * If the output can be known, e.g. {@link net.imglib2.img.Img} to
+ * {@link net.imglib2.img.Img} of same dimensionality {@link UnaryOperation}
+ * should be used.
+ * </p>
  * 
  * @author Christian Dietz (University of Konstanz)
  */
@@ -69,5 +71,6 @@ public interface UnaryOutputOperation< INPUT_TYPE, OUTPUT_TYPE > extends UnaryOp
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	UnaryOutputOperation< INPUT_TYPE, OUTPUT_TYPE > copy();
 }

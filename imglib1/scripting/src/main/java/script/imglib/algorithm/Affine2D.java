@@ -27,10 +27,8 @@ package script.imglib.algorithm;
 
 import java.awt.geom.AffineTransform;
 
-import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.NumericType;
-import script.imglib.math.fn.IFunction;
 
 /** 
 * Expects matrix values in the same order that {@link AffineTransform} uses.

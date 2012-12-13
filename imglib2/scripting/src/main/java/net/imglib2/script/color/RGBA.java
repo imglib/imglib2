@@ -31,8 +31,6 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.RealCursor;
 import net.imglib2.script.color.fn.ColorFunction;
 import net.imglib2.script.math.fn.IFunction;
-
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 /** Given up to 4 channels--each represented by an {@link IFunction},

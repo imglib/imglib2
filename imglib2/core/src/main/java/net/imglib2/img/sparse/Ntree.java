@@ -186,7 +186,7 @@ public final class Ntree< T extends Comparable< T >>
 	 *            a position inside the image.
 	 * @return the lowest-level node containing position.
 	 */
-	NtreeNode< T > getNode( final long[] position )
+	synchronized NtreeNode< T > getNode( final long[] position )
 	{
 		NtreeNode< T > current = root;
 		for ( int l = numTreeLevels - 2; l >= 0; --l )
@@ -213,7 +213,7 @@ public final class Ntree< T extends Comparable< T >>
 	 * @return node containing exactly position.
 	 */
 	@SuppressWarnings( "unchecked" )
-	NtreeNode< T > createNode( final long[] position )
+	synchronized NtreeNode< T > createNode( final long[] position )
 	{
 		NtreeNode< T > current = root;
 		for ( int l = numTreeLevels - 2; l >= 0; --l )
@@ -248,7 +248,7 @@ public final class Ntree< T extends Comparable< T >>
 	 * @return node containing position.
 	 */
 	@SuppressWarnings( "unchecked" )
-	NtreeNode< T > createNodeWithValue( final long[] position, final T value )
+	synchronized NtreeNode< T > createNodeWithValue( final long[] position, final T value )
 	{
 		NtreeNode< T > current = root;
 		for ( int l = numTreeLevels - 2; l >= 0; --l )

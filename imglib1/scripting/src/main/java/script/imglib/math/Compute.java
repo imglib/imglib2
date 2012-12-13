@@ -31,9 +31,6 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import script.imglib.math.fn.IFunction;
-import script.imglib.math.fn.ImageFunction;
-
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
@@ -46,6 +43,8 @@ import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
 import mpicbg.imglib.type.numeric.real.FloatType;
+import script.imglib.math.fn.IFunction;
+import script.imglib.math.fn.ImageFunction;
 
 /** Compute an {@link IFunction} into an {@link Image}. In essence, the {@link IFunction}
  * defines an operation with one or two pixels as arguments, such as {@link Multiply},

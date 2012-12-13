@@ -25,16 +25,12 @@
 
 package script.imglib.test;
 
-import java.lang.reflect.Field;
-
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.FloatProcessor;
 import mpicbg.ij.integral.DoubleIntegralImage;
-import net.imglib2.exception.ImgLibException;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.algorithm.IntegralImage;
-import net.imglib2.script.img.DoubleImage;
 import net.imglib2.script.img.FloatImage;
 
 

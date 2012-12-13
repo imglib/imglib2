@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 // TODO - this class suffers from the weakness that one needs to
@@ -54,41 +53,33 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  */
 public class RealWeightedSumFunction<T extends RealType<T>>
-	implements Function<PointSet,T>
+ extends
+	AbstractRealStatFunction<T>
 {
 	// -- instance variables --
 	
-	private final Function<long[],T> otherFunc;
-	private StatCalculator<T> calculator;
 	private final double[] weights;
 	
 	// -- constructor --
 	
 	public RealWeightedSumFunction(Function<long[],T> otherFunc, double[] weights)
 	{
-		this.otherFunc = otherFunc;
-		this.calculator = null;
+		super(otherFunc);
 		this.weights = weights;
 	}
+
+	// -- abstract method overrides --
 	
+	@Override
+	protected double value(StatCalculator<T> calc) {
+		return calc.weightedSum(weights);
+	}
+
 	// -- Function methods --
 	
 	@Override
 	public RealWeightedSumFunction<T> copy() {
 		return new RealWeightedSumFunction<T>(otherFunc.copy(), weights.clone());
-	}
-
-	@Override
-	public void compute(PointSet input, T output) {
-		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
-		else calculator.reset(otherFunc, input);
-		double value = calculator.weightedSum(weights);
-		output.setReal(value);
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
 	}
 
 }

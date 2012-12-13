@@ -25,13 +25,13 @@
 
 package script.imglib.algorithm;
 
-import script.imglib.math.Compute;
-import script.imglib.math.fn.IFunction;
 import mpicbg.imglib.algorithm.gauss.GaussianConvolutionReal;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.type.numeric.RealType;
+import script.imglib.math.Compute;
+import script.imglib.math.fn.IFunction;
 
 /** Performs a {@link GaussianConvolutionReal} operation on an {@link Image} or an {@link IFunction},
  *  the latter computed first into an {@link Image} by using {@link Compute}.inDoubles. */

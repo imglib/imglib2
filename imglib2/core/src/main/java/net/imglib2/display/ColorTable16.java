@@ -41,7 +41,7 @@ package net.imglib2.display;
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
-public class ColorTable16 extends AbstractColorTable<short[]> {
+public class ColorTable16 extends AbstractArrayColorTable<short[]> {
 
 	/**
 	 * Initializes a 16-bit color table with a linear grayscale ramp.

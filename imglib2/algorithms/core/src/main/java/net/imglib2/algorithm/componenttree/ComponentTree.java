@@ -228,13 +228,10 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 				neighbor2.setPosition( dpos, d );
 				return dpos >= 0;
 			}
-			else
-			{
-				final long dpos = current.getLongPosition( d ) + 1;
-				neighbor.setPosition( dpos, d );
-				neighbor2.setPosition( dpos, d );
-				return dpos < dimensions[ d ];
-			}
+			final long dpos = current.getLongPosition( d ) + 1;
+			neighbor.setPosition( dpos, d );
+			neighbor2.setPosition( dpos, d );
+			return dpos < dimensions[ d ];
 		}
 	}
 
@@ -279,14 +276,12 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	{
 		if ( reusableBoundaryPixels.isEmpty() )
 			return new BoundaryPixel( position, value, nextNeighborIndex );
-		else
-		{
-			final BoundaryPixel p = reusableBoundaryPixels.pop();
-			p.setPosition( position );
-			p.value.set( value );
-			p.nextNeighborIndex = nextNeighborIndex;
-			return p;
-		}
+
+		final BoundaryPixel p = reusableBoundaryPixels.pop();
+		p.setPosition( position );
+		p.value.set( value );
+		p.nextNeighborIndex = nextNeighborIndex;
+		return p;
 	}
 
 	private void freeBoundaryPixel( final BoundaryPixel p )

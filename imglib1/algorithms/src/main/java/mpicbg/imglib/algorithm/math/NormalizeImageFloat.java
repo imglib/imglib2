@@ -25,13 +25,15 @@
 
 package mpicbg.imglib.algorithm.math;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.numeric.*;
-import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.cursor.*;
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.util.RealSum;
 
 

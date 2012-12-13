@@ -36,11 +36,11 @@
 
 package net.imglib2.realtransform;
 
+import Jama.Matrix;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.concatenate.PreConcatenable;
-import Jama.Matrix;
 
 /**
  * An <em>n</em>-dimensional affine transformation.

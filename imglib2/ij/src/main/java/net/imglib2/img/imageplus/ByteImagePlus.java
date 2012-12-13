@@ -129,7 +129,6 @@ public class ByteImagePlus< T extends NativeType< T > > extends ImagePlusImg< T,
 	{
 		if ( imp == null )
 			throw new ImgLibException( this, "has no ImagePlus instance, it is not a standard type of ImagePlus (" + entitiesPerPixel + " entities per pixel)" );
-		else
-			return imp;
+		return imp;
 	}
 }

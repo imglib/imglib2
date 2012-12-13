@@ -98,7 +98,7 @@ public class AllConnectedComponentsTest
 			LabelingType< Integer > lt = lc.next();
 			lc.localize( position );
 			List< Integer > labels = lt.getLabeling();
-			int expectedValue = expected[ ( int ) ( position[ 0 ] ) ][ ( int ) ( position[ 1 ] ) ];
+			int expectedValue = expected[ ( position[ 0 ] ) ][ ( position[ 1 ] ) ];
 			if ( expectedValue == background )
 				assertEquals( labels.size(), 0 );
 			else

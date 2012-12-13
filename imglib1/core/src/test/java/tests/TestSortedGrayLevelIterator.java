@@ -37,7 +37,6 @@
 package tests;
 
 import static org.junit.Assert.assertTrue;
-
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.LocalizableCursor;

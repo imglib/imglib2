@@ -40,15 +40,15 @@ import java.util.Iterator;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.operation.UnaryOutputOperation;
-import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Pair;
 
 /**
+ * TODO
  * 
  * @author Christian Dietz (University of Konstanz)
  * 
- * @param <T>
+ * @param <T> TODO
  */
 public final class MinMax< T extends RealType< T >> implements UnaryOutputOperation< IterableInterval< T >, Pair< T, T >>
 {
@@ -65,7 +65,7 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		{
 
 			int bins;
-			if ( !( type instanceof IntegerType ) )
+			if ( !(type.getMaxValue() < Integer.MAX_VALUE))
 			{
 				bins = Short.MAX_VALUE * 2;
 			}
@@ -83,9 +83,6 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		this( 0, null );
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Pair< T, T > createEmptyOutput( IterableInterval< T > op )
 	{
@@ -93,11 +90,6 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		return new Pair< T, T >( t.createVariable(), t.createVariable() );
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public Pair< T, T > compute( IterableInterval< T > op, Pair< T, T > r )
 	{

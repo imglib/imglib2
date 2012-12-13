@@ -1,5 +1,3 @@
-package net.imglib2.algorithm.region.localneighborhood;
-
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -35,6 +33,8 @@ package net.imglib2.algorithm.region.localneighborhood;
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+package net.imglib2.algorithm.region.localneighborhood;
 
 import java.util.Iterator;
 
@@ -93,8 +93,7 @@ public class BufferedRectangularNeighborhood<T extends Type<T>, IN extends Rando
 		if (source != null)
 			return new BufferedRectangularNeighborhood<T, IN>(source,
 					outOfBounds, span);
-		else
-			return new BufferedRectangularNeighborhood<T, IN>(n, outOfBounds,
-					span);
+		return new BufferedRectangularNeighborhood<T, IN>(n, outOfBounds,
+				span);
 	}
 }

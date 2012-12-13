@@ -1,20 +1,21 @@
 package script.imglib.test;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.PixelGrabber;
-
-import net.imglib2.script.bufferedimage.BufferedImageImg;
-import net.imglib2.RandomAccess;
-import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.view.Views;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
+
+import net.imglib2.RandomAccess;
+import net.imglib2.script.bufferedimage.BufferedImageImg;
+import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.view.Views;
 
 public class TestBufferedImageImg {
 

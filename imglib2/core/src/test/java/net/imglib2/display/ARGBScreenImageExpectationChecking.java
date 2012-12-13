@@ -1,5 +1,7 @@
 package net.imglib2.display;
 
+import static org.junit.Assert.assertTrue;
+
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,7 +19,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class ARGBScreenImageExpectationChecking
@@ -120,6 +121,7 @@ public class ARGBScreenImageExpectationChecking
 		
 		// Show the image in a JFrame
 		SwingUtilities.invokeAndWait(new Runnable() {
+			@Override
 			public void run() {
 				frame[0] = frame(simg.image(), "Test ARGBScreenImage");
 				frame[0].setVisible(true);
@@ -130,6 +132,7 @@ public class ARGBScreenImageExpectationChecking
 		Thread.sleep(2000);
 		
 		SwingUtilities.invokeAndWait(new Runnable() {
+			@Override
 			public void run() {
 				// Paint into the image again
 				Graphics g2 = simg.image().getGraphics();
@@ -148,6 +151,7 @@ public class ARGBScreenImageExpectationChecking
 
 		// Capture the image with a Robot
 		SwingUtilities.invokeAndWait(new Runnable() {
+			@Override
 			public void run() {
 				Point panelLocation = frame[0].getContentPane().getComponent(0).getLocationOnScreen();
 				Rectangle panelBounds = new Rectangle(panelLocation.x, panelLocation.y, width, height);				

@@ -56,15 +56,15 @@ public class SamplingLineIterator<T> extends AbstractLineIterator implements Sam
 	final T copy, tmp;
 	
 	/**
-	 * Make a new AbstractSamplingLineIterator which iterates a 1d line of a certain length
+	 * Make a new SamplingLineIterator which iterates a 1d line of a certain length
 	 * and is used as the input for the convolution operation
 	 * 
 	 * @param dim - which dimension to iterate (dimension id)
 	 * @param size - number of pixels to iterate
 	 * @param randomAccess - the {@link RandomAccess} which is moved along the line and is 
 	 * placed at the right location (one pixel left of the starting pixel)
-	 * @param processLine - the line that will be used for processing and is associated with this {@link AbstractSamplingLineIterator},
-	 * this is important for multithreading so that each AbstractSamplingLineIterator has its own temporary space for computing the
+	 * @param processLine - the line that will be used for processing and is associated with this {@link SamplingLineIterator},
+	 * this is important for multithreading so that each SamplingLineIterator has its own temporary space for computing the
 	 * gaussian convolution 
 	 */
 	public SamplingLineIterator( final int dim, final long size, final RandomAccess<T> randomAccess, final Img<T> processLine, final T copy, final T tmp )
@@ -83,7 +83,7 @@ public class SamplingLineIterator<T> extends AbstractLineIterator implements Sam
 	}
 	
 	/**
-	 * @return - the line that is used for processing and is associated with this {@link AbstractSamplingLineIterator}  
+	 * @return - the line that is used for processing and is associated with this {@link SamplingLineIterator}  
 	 */
 	public Img<T> getProcessLine() { return processLine; }
 	

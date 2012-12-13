@@ -146,7 +146,8 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
         	
             threads[ithread] = new Thread(new Runnable()
             {
-                public void run()
+                @Override
+								public void run()
                 {
                 	// Thread ID
                 	final int myNumber = ai.getAndIncrement();

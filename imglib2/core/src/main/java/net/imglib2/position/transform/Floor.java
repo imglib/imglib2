@@ -107,8 +107,7 @@ public class Floor< LocalizablePositionable extends Localizable & Positionable >
 		final long floorDistance = floorPosition - target.getLongPosition( d );
 		if ( floorDistance == 0 )
 			return;
-		else
-			target.move( floorDistance, d );
+		target.move( floorDistance, d );
 	}
 
 	@Override
@@ -120,8 +119,7 @@ public class Floor< LocalizablePositionable extends Localizable & Positionable >
 		final long floorDistance = floorPosition - target.getLongPosition( d );
 		if ( floorDistance == 0 )
 			return;
-		else
-			target.move( floorDistance, d );
+		target.move( floorDistance, d );
 	}
 
 	@Override

@@ -25,6 +25,9 @@
 
 package mpicbg.imglib.algorithm.fft;
 
+import edu.mines.jtk.dsp.FftComplex;
+import edu.mines.jtk.dsp.FftReal;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
@@ -37,8 +40,6 @@ import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
 import mpicbg.imglib.type.numeric.ComplexType;
 import mpicbg.imglib.type.numeric.RealType;
-import edu.mines.jtk.dsp.FftComplex;
-import edu.mines.jtk.dsp.FftReal;
 
 /**
  * TODO

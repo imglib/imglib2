@@ -38,17 +38,13 @@ package tests;
 
 import java.util.Arrays;
 
-
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
-
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
-
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 
@@ -221,6 +217,7 @@ public class JUnitTestBase {
 			this.factor = factor;
 		}
 
+		@Override
 		public float calculate( long[] pos ) {
 			return 1 + pos[0] + 2 * (pos[0] + 1) * pos[1] + factor * pos[2] * pos[2];
 		}
@@ -238,6 +235,7 @@ public class JUnitTestBase {
 			this.x = x; this.y = y; this.z = z;
 		}
 
+		@Override
 		public float calculate( long[] pos ) {
 			return pos[0] == x && pos[1] == y && pos[2] == z ? 1 : 0;
 		}

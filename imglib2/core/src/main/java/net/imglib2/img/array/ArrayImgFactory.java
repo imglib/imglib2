@@ -69,7 +69,7 @@ public class ArrayImgFactory< T extends NativeType<T> > extends NativeImgFactory
 	{
 		final long numEntities = AbstractImg.numElements( dimensions ) * entitiesPerPixel;
 
-		if ( numEntities > ( long ) Integer.MAX_VALUE )
+		if ( numEntities > Integer.MAX_VALUE )
 			throw new RuntimeException( "Number of elements in Container too big, use for example CellContainer instead: " + numEntities + " > " + Integer.MAX_VALUE );
 
 		return ( int ) numEntities;
@@ -144,6 +144,6 @@ public class ArrayImgFactory< T extends NativeType<T> > extends NativeImgFactory
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
 		if ( NativeType.class.isInstance( type ) ) return new ArrayImgFactory();
-		else throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
+		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 }

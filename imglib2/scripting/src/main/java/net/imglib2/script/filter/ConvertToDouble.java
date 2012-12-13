@@ -30,10 +30,11 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**
- * @see LazyConvert, ConverterImgProxy
+ * TODO
  * 
- *
  * @author Albert Cardona
+ * @see LazyConvert
+ * @see net.imglib2.script.filter.fn.ConverterImgProxy
  */
 public class ConvertToDouble extends LazyConvert<DoubleType>
 {

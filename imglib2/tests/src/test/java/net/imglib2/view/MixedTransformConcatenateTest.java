@@ -26,6 +26,7 @@
 package net.imglib2.view;
 
 import static org.junit.Assert.assertTrue;
+import Jama.Matrix;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.transform.integer.SlicingTransform;
@@ -33,8 +34,6 @@ import net.imglib2.transform.integer.TranslationTransform;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import Jama.Matrix;
 
 /**
  * TODO

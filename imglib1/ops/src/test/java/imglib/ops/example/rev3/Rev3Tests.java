@@ -52,7 +52,6 @@ import imglib.ops.example.rev3.operator.UnaryOperator;
 import imglib.ops.example.rev3.operator.binary.AddOperator;
 import imglib.ops.example.rev3.operator.binary.MultiplyOperator;
 import imglib.ops.example.rev3.operator.unary.HalfOperator;
-
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.image.Image;

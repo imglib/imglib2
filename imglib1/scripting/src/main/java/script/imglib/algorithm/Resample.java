@@ -25,13 +25,6 @@
 
 package script.imglib.algorithm;
 
-import script.imglib.algorithm.fn.AbstractAffine3D.Mode;
-import script.imglib.color.Alpha;
-import script.imglib.color.Blue;
-import script.imglib.color.Green;
-import script.imglib.color.RGBA;
-import script.imglib.color.Red;
-import script.imglib.math.Compute;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
@@ -43,6 +36,13 @@ import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.RealType;
+import script.imglib.algorithm.fn.AbstractAffine3D.Mode;
+import script.imglib.color.Alpha;
+import script.imglib.color.Blue;
+import script.imglib.color.Green;
+import script.imglib.color.RGBA;
+import script.imglib.color.Red;
+import script.imglib.math.Compute;
 
 /** Resample an image in all its dimensions by a given scaling factor and interpolation mode.
  *  

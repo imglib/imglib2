@@ -35,9 +35,9 @@ import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.fft.FourierTransform;
+import net.imglib2.algorithm.fft.FourierTransform.Rearrangement;
 import net.imglib2.algorithm.fft.InverseFourierTransform;
 import net.imglib2.algorithm.fft.LocalNeighborhoodCursor;
-import net.imglib2.algorithm.fft.FourierTransform.Rearrangement;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.multithreading.SimpleMultiThreading;
@@ -294,6 +294,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					final int myNumber = ai.getAndIncrement();
@@ -454,8 +455,8 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			avg2 += roiCursor2.get().getRealFloat();
 		}
 
-		avg1 /= (double) numPx;
-		avg2 /= (double) numPx;
+		avg1 /= numPx;
+		avg2 /= numPx;
 				
 		//
 		// compute cross correlation
@@ -482,9 +483,9 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 			var2 += dist2 * dist2;
 		}		
 		
-		var1 /= (double) numPx;
-		var2 /= (double) numPx;
-		coVar /= (double) numPx;
+		var1 /= numPx;
+		var2 /= numPx;
+		coVar /= numPx;
 
 		double stDev1 = Math.sqrt(var1);
 		double stDev2 = Math.sqrt(var2);
@@ -494,8 +495,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		{
 			if ( stDev1 == stDev2 && avg1 == avg2 )
 				return 1;
-			else
-				return 0;
+			return 0;
 		}
 
 		// compute correlation coeffienct
@@ -631,6 +631,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					final int myNumber = ai.getAndIncrement(); 
@@ -710,6 +711,7 @@ public class PhaseCorrelation<T extends RealType<T>, S extends RealType<S>> impl
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					final int myNumber = ai.getAndIncrement(); 

@@ -26,6 +26,7 @@
 package mpicbg.imglib.algorithm.extremafinder;
 
 import java.util.ArrayList;
+
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;

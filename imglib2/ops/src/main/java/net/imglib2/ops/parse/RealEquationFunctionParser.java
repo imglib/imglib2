@@ -113,14 +113,11 @@ public class RealEquationFunctionParser {
 			if (ParseUtils.match(Comma.class, tokens, status.tokenNumber)) {
 				return eqnParser.equation(tokens, status.tokenNumber+1);
 			}
-			else
-				return ParseUtils.syntaxError(
-						status.tokenNumber, tokens,
-						"Expected comma after axis designations");
+			return ParseUtils.syntaxError(
+					status.tokenNumber, tokens,
+					"Expected comma after axis designations");
 		}
-		else { // no variables declared
-			return eqnParser.equation(tokens, 0);
-		}
+		return eqnParser.equation(tokens, 0);
 	}
 	
 	/* 

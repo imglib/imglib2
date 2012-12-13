@@ -37,20 +37,19 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.function.real.RealConvolutionFunction;
+import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.input.PointSetInputIterator;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 // a 3x3 convolution example
 
@@ -93,7 +92,8 @@ public class Example5Test {
 	}
 	
 	private Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+			new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
@@ -118,10 +118,16 @@ public class Example5Test {
 		// calculate output values as a convolution of 3x3 cells of image with KERNEL
 		
 		Img<DoubleType> image = makeInputImage();
-		HyperVolumePointSet inputNeigh = new HyperVolumePointSet(new long[2], new long[]{1,1}, new long[]{1,1});
-		Function<long[],DoubleType> imageFunc = new RealImageFunction<DoubleType,DoubleType>(image, new DoubleType());
-		Function<PointSet,DoubleType> convFunc = new RealConvolutionFunction<DoubleType>(imageFunc,KERNEL);
-		HyperVolumePointSet space = new HyperVolumePointSet(new long[]{1,1}, new long[]{XSIZE-2,YSIZE-2});
+		HyperVolumePointSet inputNeigh =
+			new HyperVolumePointSet(new long[2], new long[] { 1, 1 }, new long[] { 1,
+				1 });
+		Function<long[], DoubleType> imageFunc =
+			new RealImageFunction<DoubleType, DoubleType>(image, new DoubleType());
+		Function<PointSet, DoubleType> convFunc =
+			new RealConvolutionFunction<DoubleType>(imageFunc, KERNEL);
+		HyperVolumePointSet space =
+			new HyperVolumePointSet(new long[] { 1, 1 }, new long[] { XSIZE - 2,
+				YSIZE - 2 });
 		PointSetInputIterator iter = new PointSetInputIterator(space, inputNeigh);
 		DoubleType variable = new DoubleType();
 		PointSet points = null;

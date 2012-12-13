@@ -36,11 +36,11 @@
 
 package net.imglib2.io.img.virtual;
 
-import loci.common.DataTools;
 import loci.formats.FormatTools;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.io.ImgIOUtils;
+import ome.scifio.common.DataTools;
 
 /**
  * This class is responsible for loading one plane of data from an image using

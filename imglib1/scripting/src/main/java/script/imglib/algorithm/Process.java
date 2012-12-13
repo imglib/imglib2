@@ -27,15 +27,14 @@ package script.imglib.algorithm;
 
 import java.util.Collection;
 
-import script.imglib.math.Compute;
-import script.imglib.math.fn.IFunction;
-
 import mpicbg.imglib.algorithm.Algorithm;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
 import mpicbg.imglib.cursor.Cursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.real.DoubleType;
+import script.imglib.math.Compute;
+import script.imglib.math.fn.IFunction;
 
 /** A convenience wrapper for just about any ImgLib {@link Algorithm}.
  *  When combined with other {@link IFunction} instances, the {@code eval()}

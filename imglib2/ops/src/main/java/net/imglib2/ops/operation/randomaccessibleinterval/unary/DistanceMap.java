@@ -50,21 +50,10 @@ import net.imglib2.type.numeric.real.FloatType;
 public class DistanceMap< T extends RealType< T >, K extends RandomAccessibleInterval< T >, M extends RandomAccessibleInterval< FloatType >> implements UnaryOperation< K, M >
 {
 
-	/**
-	 *
-	 */
 	public final static int MAX_DIMS = 4;
 
-	/**
-	 *
-	 */
 	public final static int MIN_DIMS = 2;
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public M compute( final K src, final M res )
 	{

@@ -36,11 +36,9 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-
-import org.junit.Test;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
@@ -53,6 +51,8 @@ import net.imglib2.ops.pointset.GeneralPointSet;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 // get values that are an average of the 5 values in a 3x3 cross
 
@@ -79,7 +79,8 @@ public class Example4Test {
 	}
 	
 	private Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+			new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
@@ -135,9 +136,13 @@ public class Example4Test {
 		pts.add(new long[]{ 1,-1});
 		pts.add(new long[]{ 1, 1});
 		GeneralPointSet neigh = new GeneralPointSet(new long[]{0,0}, pts);
-		Function<long[],DoubleType> input = new RealImageFunction<DoubleType,DoubleType>(inputImg, new DoubleType());
-		Function<PointSet,DoubleType> prodFunc = new RealProductFunction<DoubleType>(input);
-		HyperVolumePointSet space = new HyperVolumePointSet(new long[]{1,1}, new long[]{XSIZE-2,YSIZE-2});
+		Function<long[], DoubleType> input =
+			new RealImageFunction<DoubleType, DoubleType>(inputImg, new DoubleType());
+		Function<PointSet, DoubleType> prodFunc =
+			new RealProductFunction<DoubleType>(input);
+		HyperVolumePointSet space =
+			new HyperVolumePointSet(new long[] { 1, 1 }, new long[] { XSIZE - 2,
+				YSIZE - 2 });
 		PointSetInputIterator iter = new PointSetInputIterator(space, neigh);
 		DoubleType output = new DoubleType();
 		PointSet points = null;

@@ -37,10 +37,7 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -54,6 +51,8 @@ import net.imglib2.ops.input.PointInputIterator;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 
 /**
@@ -74,7 +73,8 @@ public class Example10Test {
 	}
 
 	private Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+			new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
@@ -94,26 +94,33 @@ public class Example10Test {
 	}
 
 	private void testDFT() {
-		image = new RealImageFunction<DoubleType,DoubleType>(testImg, new DoubleType());
-		Function<long[],DoubleType> zero = new RealConstantFunction<long[],DoubleType>(new DoubleType(),0);
+		image =
+			new RealImageFunction<DoubleType, DoubleType>(testImg, new DoubleType());
+		Function<long[], DoubleType> zero =
+			new RealConstantFunction<long[], DoubleType>(new DoubleType(), 0);
 		Function<long[],ComplexDoubleType> spatialFunction =
-			new CartesianComplexFunction<long[],DoubleType,DoubleType,ComplexDoubleType>
-			(image,zero,new ComplexDoubleType());
-		ArrayImgFactory<ComplexDoubleType> factory = new ArrayImgFactory<ComplexDoubleType>();
-		dft = new DFTFunction<ComplexDoubleType>(factory, spatialFunction, new long[]{XSIZE,YSIZE});
+			new CartesianComplexFunction<long[], DoubleType, DoubleType, ComplexDoubleType>(
+				image, zero, new ComplexDoubleType());
+		ArrayImgFactory<ComplexDoubleType> factory =
+			new ArrayImgFactory<ComplexDoubleType>();
+		dft =
+			new DFTFunction<ComplexDoubleType>(factory, spatialFunction, new long[] {
+				XSIZE, YSIZE });
 		// TODO - test something
 		assertTrue(true);
 	}
 	
 	private void testIDFT() {
-		ArrayImgFactory<ComplexDoubleType> factory = new ArrayImgFactory<ComplexDoubleType>();
+		ArrayImgFactory<ComplexDoubleType> factory =
+			new ArrayImgFactory<ComplexDoubleType>();
 		Function<long[],ComplexDoubleType> idft =
-				new IDFTFunction<ComplexDoubleType>(
-						factory, dft, new long[]{XSIZE,YSIZE});
+			new IDFTFunction<ComplexDoubleType>(factory, dft, new long[] { XSIZE,
+				YSIZE });
 		long[] pos = new long[2];
 		DoubleType original = new DoubleType();
 		ComplexDoubleType computed = new ComplexDoubleType();
-		HyperVolumePointSet pointSet = new HyperVolumePointSet(new long[]{0,0}, new long[]{XSIZE-1,YSIZE-1});
+		HyperVolumePointSet pointSet =
+			new HyperVolumePointSet(new long[] { XSIZE, YSIZE });
 		PointInputIterator iter = new PointInputIterator(pointSet);
 		long[] point = null;
 		while (iter.hasNext()) {

@@ -26,13 +26,15 @@
 package net.imglib2.script.algorithm;
 
 import net.imglib2.img.Img;
-import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
-import net.imglib2.type.numeric.NumericType;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.script.algorithm.fn.AbstractAffine3D;
 import net.imglib2.script.algorithm.fn.AlgorithmUtil;
+import net.imglib2.script.math.fn.IFunction;
+import net.imglib2.type.numeric.NumericType;
 
-/** Performs a mathematically correct transformation of an image.
+/**
+ * Performs a mathematically correct transformation of an image.
  * This means that an image of 2000x2000 scaled by a factor of 2
  * will result in an image of 3999x3999 pixels.
  * 
@@ -41,33 +43,34 @@ import net.imglib2.script.algorithm.fn.AlgorithmUtil;
  * 
  * Expects a matrix of 12 elements
  * 
- *  For 2D image it will do:
+ * For 2D image it will do:
  *
- *  AffineModel2D aff = new AffineModel2D();
- *  aff.set(m[0], m[4], m[1], m[5], m[3], m[7]);
+ * AffineModel2D aff = new AffineModel2D();
+ * aff.set(m[0], m[4], m[1], m[5], m[3], m[7]);
  * 
- * 
- *  For 3D image it will do:
+ * For 3D image it will do:
  *  
- *  AffineModel3D aff = new AffineModel3D();
- *  aff.set(m[0], m[1], m[2], m[3],
- *          m[4], m[5], m[6], m[7],
- *          m[8], m[9], m[10], m[11]);
+ * AffineModel3D aff = new AffineModel3D();
+ * aff.set(m[0], m[1], m[2], m[3],
+ *         m[4], m[5], m[6], m[7],
+ *         m[8], m[9], m[10], m[11]);
  *          
- *  For RGBA images, each channel will be transformed independently. Hence,
- *  the operation will take 4 times as long and require 4 times the memory of a single operation.
+ * For RGBA images, each channel will be transformed independently. Hence,
+ * the operation will take 4 times as long and require 4 times the memory of a single operation.
  *          
- *  @param img The {@link Image} to transform.
- *  @param matrix The values of the transformation matrix, ordered as explained above.
- *  @param mode Either LINEAR or NEAREST_NEIGHBOR.
+ * The constructors accept either an {@link Img} or an {@link IFunction} from which an {@link Img} is generated.
  *  
- *  The constructors accept either an {@link Img} or an {@link IFunction} from which an {@link Img} is generated.
- *  
- *  See the underlying transformation model classes: {@link AffineModel2D, AffineModel3D};
- *
+ * See the underlying transformation model classes: {@link mpicbg.models.AffineModel2D}, {@link mpicbg.models.AffineModel3D}.
  */
 public class Affine3D<T extends NumericType<T>> extends AbstractAffine3D<T>
 {	
+	/**
+	 * TODO
+	 * 
+	 * @param img The {@link Img} to transform.
+	 * @param matrix The values of the transformation matrix, ordered as explained above.
+	 * @param mode Either LINEAR or NEAREST_NEIGHBOR.
+	 */
 	public Affine3D(final Img<T> img, final float[] matrix, final Mode mode) throws Exception {
 		this(img, matrix, mode, new OutOfBoundsConstantValueFactory<T,Img<T>>(img.firstElement().createVariable())); // default value is zero
 	}

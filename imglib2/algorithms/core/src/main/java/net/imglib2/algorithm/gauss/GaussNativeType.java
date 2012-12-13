@@ -145,6 +145,7 @@ public class GaussNativeType< T extends NumericType< T > & NativeType< T > > ext
 	 *  
 	 * @param input - the {@link Iterator}/{@link Sampler} over the current input line.
 	 */
+	@Override
 	protected void processLine( final SamplingLineIterator< T > input, final double[] kernel )
 	{
 		if ( !isArray() )

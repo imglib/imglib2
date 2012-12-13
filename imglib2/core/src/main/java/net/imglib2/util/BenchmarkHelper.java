@@ -64,13 +64,10 @@ public class BenchmarkHelper
 
 		if ( values.size() % 2 == 1 )
 			return values.get( ( values.size() + 1 ) / 2 - 1 );
-		else
-		{
-			final long lower = values.get( values.size() / 2 - 1 );
-			final long upper = values.get( values.size() / 2 );
+		final long lower = values.get( values.size() / 2 - 1 );
+		final long upper = values.get( values.size() / 2 );
 
-			return ( lower + upper ) / 2;
-		}
+		return ( lower + upper ) / 2;
 	}
 
 	/**

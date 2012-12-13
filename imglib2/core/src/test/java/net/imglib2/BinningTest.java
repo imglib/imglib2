@@ -4,6 +4,8 @@
  */
 package net.imglib2;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +15,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -435,7 +436,7 @@ public class BinningTest {
 
         // fill up the histogram with uniform values
         for (double value = min; value <= max; value += inc) {
-            int bin = (int) Binning.valueToBin(bins, min, max, value);
+            int bin = Binning.valueToBin(bins, min, max, value);
             ++histogram[bin];
         }
 

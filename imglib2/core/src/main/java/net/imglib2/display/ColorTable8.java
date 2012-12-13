@@ -43,7 +43,7 @@ package net.imglib2.display;
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
-public class ColorTable8 extends AbstractColorTable<byte[]> {
+public class ColorTable8 extends AbstractArrayColorTable<byte[]> {
 
 	/** Initializes an 8-bit color table with a linear grayscale ramp. */
 	public ColorTable8() {
