@@ -41,6 +41,7 @@ package net.imglib2.ops.function.real;
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.ops.pointset.PointSetIterator;
+import net.imglib2.ops.util.Tuple2;
 import net.imglib2.type.numeric.RealType;
 
 // NOTE:
@@ -78,7 +79,7 @@ import net.imglib2.type.numeric.RealType;
  */
 public class StatCalculator<T extends RealType<T>> {
 
-	// -- instance varaibles --
+	// -- instance variables --
 	
 	private Function<long[],T> func;
 	private PointSet region;
@@ -181,11 +182,59 @@ public class StatCalculator<T extends RealType<T>> {
 	}
 
 	/**
-	 * Computes the contraharmonic mean upon the current region of the
-	 * current function.
+	 * Computes the center of mass point of the current region of the current
+	 * function. Returns it as a pair of Doubles. The first element in the pair is
+	 * the x component and the second element is the y component.
 	 * 
-	 * @return
-	 * The measured value
+	 * @return The measured point stored in a Tuple2
+	 */
+	public Tuple2<Double, Double> centerOfMassXY() {
+		T tmp = func.createOutput();
+		double sumV = 0;
+		double sumX = 0;
+		double sumY = 0;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double v = tmp.getRealDouble();
+			sumV += v;
+			sumX += v * pos[0];
+			sumY += v * pos[1];
+		}
+		double cx = (sumX / sumV) + 0.5;
+		double cy = (sumY / sumV) + 0.5;
+		return new Tuple2<Double, Double>(cx, cy);
+	}
+
+	/**
+	 * Computes the centroid point of the current region and returns it as a pair
+	 * of Doubles. The first element in the pair is the x component and the second
+	 * element is the y component.
+	 * 
+	 * @return The measured point stored in a Tuple2
+	 */
+	public Tuple2<Double, Double> centroidXY() {
+		double sumX = 0;
+		double sumY = 0;
+		long numElements = 0;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			sumX += pos[0];
+			sumY += pos[1];
+			numElements++;
+		}
+		double cx = (sumX / numElements) + 0.5;
+		double cy = (sumY / numElements) + 0.5;
+		return new Tuple2<Double, Double>(cx, cy);
+	}
+
+	/**
+	 * Computes the contraharmonic mean upon the current region of the current
+	 * function.
+	 * 
+	 * @return The measured value
 	 */
 	public double contraharmonicMean(double order) {
 		T tmp = func.createOutput();
