@@ -44,7 +44,7 @@ import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.randomaccessibleinterval.unary.regiongrowing.AbstractRegionGrowing;
-import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 
 /**
  * 
@@ -55,9 +55,9 @@ public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrow
 
 	private Cursor< LabelingType< L >> m_seedLabCur;
 
-	private final List< Pair< int[], L >> m_seedingPoints = new ArrayList< Pair< int[], L >>();
+	private final List< ValuePair< int[], L >> m_seedingPoints = new ArrayList< ValuePair< int[], L >>();
 
-	private Iterator< Pair< int[], L >> m_seedIterator;
+	private Iterator< ValuePair< int[], L >> m_seedIterator;
 
 	private boolean m_initSeeds = true;
 
@@ -107,7 +107,7 @@ public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrow
 		{
 			if ( m_seedIterator.hasNext() )
 			{
-				Pair< int[], L > next = m_seedIterator.next();
+				ValuePair< int[], L > next = m_seedIterator.next();
 				for ( int i = 0; i < seedPos.length; i++ )
 				{
 					seedPos[ i ] = next.a[ i ];
@@ -125,7 +125,7 @@ public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrow
 	@Override
 	protected boolean includeInRegion( int[] oldPos, int[] nextPos, L label )
 	{
-		m_seedingPoints.add( new Pair< int[], L >( nextPos, label ) );
+		m_seedingPoints.add( new ValuePair< int[], L >( nextPos, label ) );
 		return false;
 	}
 

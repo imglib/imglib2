@@ -56,7 +56,7 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.integer.IntType;
-import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 
 /**
  * TODO: Efficiency!!!!
@@ -129,7 +129,7 @@ public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comp
 
 		initRegionGrowing( op );
 
-		final LinkedList< Pair< int[], L >> q = new LinkedList< Pair< int[], L >>();
+		final LinkedList< ValuePair< int[], L >> q = new LinkedList< ValuePair< int[], L >>();
 
 		// image and random access to keep track of the already visited
 		// pixel
@@ -172,7 +172,7 @@ public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comp
 				}
 				markAsVisited( label );
 
-				q.addLast( new Pair< int[], L >( pos.clone(), label ) );
+				q.addLast( new ValuePair< int[], L >( pos.clone(), label ) );
 
 				// set new labeling
 				resRA.setPosition( pos );
@@ -197,14 +197,14 @@ public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comp
 	 * The actual growing process. Grows a region by iterativevly calling the
 	 * includeInRegion method till the queue is empty.
 	 */
-	private synchronized void growProcess( LinkedList< Pair< int[], L >> q, RandomAccess< LabelingType< L >> resLabRA, I src )
+	private synchronized void growProcess( LinkedList< ValuePair< int[], L >> q, RandomAccess< LabelingType< L >> resLabRA, I src )
 	{
 		int[] pos, nextPos;
 		L label;
 		boolean outOfBounds;
 		while ( !q.isEmpty() )
 		{
-			Pair< int[], L > p = q.removeFirst();
+			ValuePair< int[], L > p = q.removeFirst();
 			pos = p.a;
 			label = p.b;
 
@@ -241,7 +241,7 @@ public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comp
 	 * Updates a position, i.e. if not visited yet, it marks it as visited, sets
 	 * the according label and adds the position to the queue
 	 */
-	private void updatePosition( RandomAccess< LabelingType< L >> resLabRA, LinkedList< Pair< int[], L >> queue, int[] pos, int[] nextPos, L label )
+	private void updatePosition( RandomAccess< LabelingType< L >> resLabRA, LinkedList< ValuePair< int[], L >> queue, int[] pos, int[] nextPos, L label )
 	{
 		setVisitedPosition( nextPos );
 		// if already visited, return
@@ -252,7 +252,7 @@ public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comp
 		// mark position as processed
 		markAsVisited( label );
 
-		queue.addLast( new Pair< int[], L >( nextPos, label ) );
+		queue.addLast( new ValuePair< int[], L >( nextPos, label ) );
 
 		// update the ra's positions
 		resLabRA.setPosition( nextPos );

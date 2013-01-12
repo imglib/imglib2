@@ -44,6 +44,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.iterator.IntervalIterator;
 import net.imglib2.ops.types.ConnectedType;
+import net.imglib2.outofbounds.OutOfBoundsBorderFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.view.Views;
 
@@ -106,7 +107,7 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 
 		Cursor< BitType > resCur = r.cursor();
 		Cursor< BitType > srcCur = op.localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extendValue( op, new BitType( false ) ).randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
@@ -162,7 +163,7 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 
 		Cursor< BitType > resCur = r.cursor();
 		Cursor< BitType > srcCur = op.localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extendValue( op, new BitType( false ) ).randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
@@ -235,8 +236,8 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 	private void nDEightConnected( final K res, final K src, final long[] dim, final boolean erode, final int count )
 	{
 
-		RandomAccess< BitType > r = Views.extendValue( res, new BitType( false ) ).randomAccess();
-		RandomAccess< BitType > op = Views.extendValue( src, new BitType( false ) ).randomAccess();
+		RandomAccess< BitType > r = Views.extend( res, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
+		RandomAccess< BitType > op = Views.extend( src , new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
 
 		final int kernelSize = ( int ) Math.pow( 3, dim.length );
 		final int[] kernel = new int[ kernelSize ];
@@ -315,7 +316,7 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 	{
 		Cursor< BitType > resCur = r.cursor();
 		Cursor< BitType > srcCur = op.localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extendValue( op, new BitType( false ) ).randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];

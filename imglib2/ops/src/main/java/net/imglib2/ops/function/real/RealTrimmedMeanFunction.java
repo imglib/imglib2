@@ -42,33 +42,48 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
- * Computes the harmonic mean of the values of another function over a region.
+ * This class facilitates the computation of a trimmed mean of another function
+ * over a region. A trimmed mean is a mean calculated from a sorted distribution
+ * where the outermost (perhaps outlier) values are not included in the
+ * calculation. The number of values to trim from each end is specified in the
+ * constructor.
  * 
  * @author Barry DeZonia
  */
-public class RealHarmonicMeanFunction<T extends RealType<T>>
- extends
+public class RealTrimmedMeanFunction<T extends RealType<T>> extends
 	AbstractRealStatFunction<T>
 {
+	// -- instance variables --
+	
+	private final int halfTrimSize;
+	
 	// -- constructor --
 	
-	public RealHarmonicMeanFunction(Function<long[],T> otherFunc)
+	/**
+	 * Constructor
+	 * 
+	 * @param otherFunc The other function to pull data values from
+	 * @param halfTrimSize The number of values to trim from each end when
+	 *          calculating the final value.
+	 */
+	public RealTrimmedMeanFunction(Function<long[],T> otherFunc, int halfTrimSize)
 	{
 		super(otherFunc);
+		this.halfTrimSize = halfTrimSize;
 	}
 
-	// -- abstract method overrides --
+	// -- abstract method overrides
 
 	@Override
 	protected double value(StatCalculator<T> calc) {
-		return calc.harmonicMean();
+		return calc.trimmedMean(halfTrimSize);
 	}
 	
 	// -- Function methods --
 	
 	@Override
-	public RealHarmonicMeanFunction<T> copy() {
-		return new RealHarmonicMeanFunction<T>(otherFunc.copy());
+	public RealTrimmedMeanFunction<T> copy() {
+		return new RealTrimmedMeanFunction<T>(otherFunc.copy(), halfTrimSize);
 	}
 
 }

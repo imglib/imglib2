@@ -38,7 +38,6 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 
@@ -50,21 +49,26 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  */
 public class RealContraharmonicMeanFunction<T extends RealType<T>>
-	implements Function<PointSet,T>
+ extends
+	AbstractRealStatFunction<T>
 {
 	// -- instance variables --
 	
-	private final Function<long[],T> otherFunc;
 	private final double order;
-	private StatCalculator<T> calculator;
 	
 	// -- constructor --
 	
 	public RealContraharmonicMeanFunction(Function<long[],T> otherFunc, double order)
 	{
-		this.otherFunc = otherFunc;
+		super(otherFunc);
 		this.order = order;
-		this.calculator = null;
+	}
+
+	// -- abstract method overrides --
+
+	@Override
+	protected double value(StatCalculator<T> calc) {
+		return calc.contraharmonicMean(order);
 	}
 	
 	// -- Function methods --
@@ -72,19 +76,6 @@ public class RealContraharmonicMeanFunction<T extends RealType<T>>
 	@Override
 	public RealContraharmonicMeanFunction<T> copy() {
 		return new RealContraharmonicMeanFunction<T>(otherFunc.copy(), order);
-	}
-
-	@Override
-	public void compute(PointSet input, T output) {
-		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
-		else calculator.reset(otherFunc, input);
-		double value = calculator.contraharmonicMean(order);
-		output.setReal(value);
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
 	}
 
 }

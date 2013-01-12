@@ -34,41 +34,52 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
+import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
-
 /**
- * Computes the harmonic mean of the values of another function over a region.
+ * Abstract base class used by statistical function classes
  * 
  * @author Barry DeZonia
+ * @param <T>
  */
-public class RealHarmonicMeanFunction<T extends RealType<T>>
- extends
-	AbstractRealStatFunction<T>
+public abstract class AbstractRealStatFunction<T extends RealType<T>> implements
+	Function<PointSet, T>
 {
+	// -- instance variables --
+	
+	protected final Function<long[], T> otherFunc;
+	private StatCalculator<T> calculator;
+	
 	// -- constructor --
 	
-	public RealHarmonicMeanFunction(Function<long[],T> otherFunc)
-	{
-		super(otherFunc);
-	}
-
-	// -- abstract method overrides --
-
-	@Override
-	protected double value(StatCalculator<T> calc) {
-		return calc.harmonicMean();
+	public AbstractRealStatFunction(Function<long[],T> otherFunc) {
+		this.otherFunc = otherFunc;
+		this.calculator = null;
 	}
 	
-	// -- Function methods --
-	
+	// -- public api --
+
 	@Override
-	public RealHarmonicMeanFunction<T> copy() {
-		return new RealHarmonicMeanFunction<T>(otherFunc.copy());
+	public void compute(PointSet input, T output) {
+		if (calculator == null) {
+			calculator = new StatCalculator<T>(otherFunc, input);
+		}
+		else calculator.reset(otherFunc, input);
+		double value = value(calculator);
+		output.setReal(value);
 	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
+	}
+
+	// -- protected api --
+
+	abstract protected double value(StatCalculator<T> calc);
 
 }

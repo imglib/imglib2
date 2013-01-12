@@ -154,6 +154,9 @@ public final class MergeIterableIntervals< T extends RealType< T >> implements U
 		if ( m_invalidDims == null )
 			initConstants( intervals );
 
+		if (res.numDimensions() == 0)
+			return res;
+		
 		RandomAccess< T > randomAccess = res.randomAccess();
 		Arrays.sort( intervals, new Comparator<Interval>() {	
 			@Override
