@@ -42,6 +42,9 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.multithreading.Chunk;
 import mpicbg.imglib.multithreading.SimpleMultiThreading;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategy;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
+import mpicbg.imglib.outofbounds.OutOfBoundsStrategyMirrorFactory;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyValueFactory;
 import mpicbg.imglib.type.numeric.RealType;
 import mpicbg.imglib.type.numeric.complex.ComplexFloatType;
@@ -62,6 +65,8 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	FourierTransform<T, ComplexFloatType> fftImage;
 	boolean keepImgFFT = true;
 	boolean extendImgByKernelSize = true;
+	
+	OutOfBoundsStrategyFactory<T> strategy = new OutOfBoundsStrategyMirrorFactory<T>();
 	
 	final int[] kernelDim;
 
@@ -85,6 +90,9 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 	public Image< T > getImage() { return image; }
 	public Image< S > getKernel() { return kernel; }
 
+	public void setImageOutOfBoundsStrategy( final OutOfBoundsStrategyFactory<T> strategy ) { this.strategy = strategy; }
+	public OutOfBoundsStrategyFactory<T> getImageOutOfBoundsStrategy() { return this.strategy; }
+	
 	public boolean replaceImage( final Image<T> img )
 	{
 		if ( !img.getContainer().compareStorageContainerCompatibility( this.image.getContainer() ))
@@ -278,7 +286,9 @@ public class FourierConvolution<T extends RealType<T>, S extends RealType<S>> im
 			{
 				// how to extend the input image out of its boundaries for computing the FFT,
 				// we simply mirror the content at the borders
-				fftImage.setPreProcessing( PreProcessing.EXTEND_MIRROR );
+				//fftImage.setPreProcessing( PreProcessing.EXTEND_MIRROR );
+				fftImage.setPreProcessing( PreProcessing.USE_GIVEN_OUTOFBOUNDSSTRATEGY );
+				fftImage.setCustomOutOfBoundsStrategy( strategy );
 			
 				// the image has to be extended by the size of the kernel-1
 				// as the kernel is always odd, e.g. if kernel size is 3, we need to add
