@@ -94,13 +94,13 @@ public class ListImg< T > extends AbstractListImg< T >
 
 
 	@Override
-	protected T getPixel( final int index )
+	protected T get( final int index )
 	{
 		return pixels.get( index );
 	}
 
 	@Override
-	protected void setPixel( final int index, final T value )
+	protected void set( final int index, final T value )
 	{
 		pixels.set( index, value );
 	}

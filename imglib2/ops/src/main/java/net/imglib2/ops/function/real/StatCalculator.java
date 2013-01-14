@@ -41,6 +41,7 @@ package net.imglib2.ops.function.real;
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.ops.pointset.PointSetIterator;
+import net.imglib2.ops.util.Tuple2;
 import net.imglib2.type.numeric.RealType;
 
 // NOTE:
@@ -78,7 +79,7 @@ import net.imglib2.type.numeric.RealType;
  */
 public class StatCalculator<T extends RealType<T>> {
 
-	// -- instance varaibles --
+	// -- instance variables --
 	
 	private Function<long[],T> func;
 	private PointSet region;
@@ -129,12 +130,13 @@ public class StatCalculator<T extends RealType<T>> {
 	 * function. Note that this method uses memory to make a copy of the input
 	 * values. Larger input regions might require a lot of memory.
 	 * 
-	 * @param halfTrimSize
-	 * The number of samples to ignore from each end of the data
-	 * @return
-	 * The measured value
+	 * @param alpha A number between 0 and 0.5 specifying the proportion of
+	 *          samples to ignore on each end.
+	 * @return The measured value
 	 */
-	public double alphaTrimmedMean(int halfTrimSize){
+	public double alphaTrimmedMean(double alpha) {
+		if ((alpha < 0) || (alpha >= 0.5))
+				throw new IllegalArgumentException("alpha value must be >= 0 and < 0.5");
 		T tmp = func.createOutput();
 		values.clear();
 		iter.reset();
@@ -143,26 +145,27 @@ public class StatCalculator<T extends RealType<T>> {
 			func.compute(pos, tmp);
 			values.add(tmp.getRealDouble());
 		}
-		final int trimSize = halfTrimSize * 2;
-		final int numElements = values.size();
-		if (numElements <= trimSize)
-			throw new IllegalArgumentException(
-				"number of samples must be greater than number of trimmed values");
 		values.sortValues();
-		final int top = numElements - halfTrimSize;
-		double sum = 0;
-		for (int i = halfTrimSize; i < top; i++) {
-			sum += values.get(i);
+		double tailSize = alpha * values.size();
+		// can we avoid interpolation?
+		if (tailSize == Math.floor(tailSize)) {
+			// yes, trim count is exactly an integer
+			return calcTrimmedMean(values, (int) tailSize);
 		}
-		return sum / (numElements - trimSize);
+		// no, trim count is a float value
+		// calc two trimmed means and interpolate to find the value between them
+		double mean1 = calcTrimmedMean(values, (int) Math.floor(tailSize));
+		double mean2 = calcTrimmedMean(values, (int) Math.ceil(tailSize));
+		double fraction = tailSize - Math.floor(tailSize);
+		double interpolation = ((1 - fraction) * mean1) + (fraction * mean2);
+		return interpolation;
 	}
 
 	/**
 	 * Computes the arithmetic mean (or average) upon the current region of the
 	 * current function.
 	 * 
-	 * @return
-	 * The measured value
+	 * @return The measured value
 	 */
 	public double arithmeticMean() {
 		T tmp = func.createOutput();
@@ -179,11 +182,59 @@ public class StatCalculator<T extends RealType<T>> {
 	}
 
 	/**
-	 * Computes the contraharmonic mean upon the current region of the
-	 * current function.
+	 * Computes the center of mass point of the current region of the current
+	 * function. Returns it as a pair of Doubles. The first element in the pair is
+	 * the x component and the second element is the y component.
 	 * 
-	 * @return
-	 * The measured value
+	 * @return The measured point stored in a Tuple2
+	 */
+	public Tuple2<Double, Double> centerOfMassXY() {
+		T tmp = func.createOutput();
+		double sumV = 0;
+		double sumX = 0;
+		double sumY = 0;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			double v = tmp.getRealDouble();
+			sumV += v;
+			sumX += v * pos[0];
+			sumY += v * pos[1];
+		}
+		double cx = (sumX / sumV) + 0.5;
+		double cy = (sumY / sumV) + 0.5;
+		return new Tuple2<Double, Double>(cx, cy);
+	}
+
+	/**
+	 * Computes the centroid point of the current region and returns it as a pair
+	 * of Doubles. The first element in the pair is the x component and the second
+	 * element is the y component.
+	 * 
+	 * @return The measured point stored in a Tuple2
+	 */
+	public Tuple2<Double, Double> centroidXY() {
+		double sumX = 0;
+		double sumY = 0;
+		long numElements = 0;
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			sumX += pos[0];
+			sumY += pos[1];
+			numElements++;
+		}
+		double cx = (sumX / numElements) + 0.5;
+		double cy = (sumY / numElements) + 0.5;
+		return new Tuple2<Double, Double>(cx, cy);
+	}
+
+	/**
+	 * Computes the contraharmonic mean upon the current region of the current
+	 * function.
+	 * 
+	 * @return The measured value
 	 */
 	public double contraharmonicMean(double order) {
 		T tmp = func.createOutput();
@@ -552,12 +603,33 @@ public class StatCalculator<T extends RealType<T>> {
 	}
 	
 	/**
+	 * Computes a trimmed mean upon the current region of the current function.
+	 * Note that this method uses memory to make a copy of the input values.
+	 * Larger input regions might require a lot of memory.
+	 * 
+	 * @param halfTrimSize The number of samples to ignore from each end of the
+	 *          data
+	 * @return The measured value
+	 */
+	public double trimmedMean(int halfTrimSize) {
+		T tmp = func.createOutput();
+		values.clear();
+		iter.reset();
+		while (iter.hasNext()) {
+			long[] pos = iter.next();
+			func.compute(pos, tmp);
+			values.add(tmp.getRealDouble());
+		}
+		values.sortValues();
+		return calcTrimmedMean(values, halfTrimSize);
+	}
+
+	/**
 	 * Computes a weighted average of the current function values over the current
 	 * region. The weights are provided and there must be as many weights as there
 	 * are points in the current region.
 	 * 
-	 * @return
-	 * The measured value
+	 * @return The measured value
 	 */
 	public double weightedAverage(double[] weights) {
 		long numElements = region.size();
@@ -592,5 +664,22 @@ public class StatCalculator<T extends RealType<T>> {
 			sum += weights[i++] * value;
 		}
 		return sum;
+	}
+
+	// -- helpers --
+
+	// NB - assumes values already sorted
+
+	private double calcTrimmedMean(PrimitiveDoubleArray vals, int halfTrim) {
+		final int trimSize = halfTrim * 2;
+		final int numElements = vals.size();
+		if (numElements <= trimSize) throw new IllegalArgumentException(
+			"number of samples must be greater than number of trimmed values");
+		final int top = numElements - halfTrim;
+		double sum = 0;
+		for (int i = halfTrim; i < top; i++) {
+			sum += vals.get(i);
+		}
+		return sum / (numElements - trimSize);
 	}
 }

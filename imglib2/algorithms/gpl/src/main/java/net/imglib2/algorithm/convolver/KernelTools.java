@@ -10,18 +10,10 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.operation.SubsetOperations;
-import net.imglib2.ops.operation.subset.views.ImgView;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
-
-import org.apache.commons.math3.linear.AbstractRealMatrix;
-import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-import org.apache.commons.math3.linear.BlockRealMatrix;
-import org.apache.commons.math3.linear.RealMatrix;
-import org.apache.commons.math3.linear.RealVector;
-import org.apache.commons.math3.linear.SingularValueDecomposition;
+import Jama.SingularValueDecomposition;
 
 /**
  * @author Martin Horn (University of Konstanz)

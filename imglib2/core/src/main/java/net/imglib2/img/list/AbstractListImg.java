@@ -13,8 +13,8 @@ import net.imglib2.util.IntervalIndexer;
  * array (an {@link ArrayList} or similar).In principle, the number of entities
  * stored is limited to {@link Integer#MAX_VALUE}.
  *
- * Derived classes need to implement the {@link #getPixel(int)} and
- * {@link #setPixel(int, Object)} methods that are used by accessors to access
+ * Derived classes need to implement the {@link #get(int)} and
+ * {@link #set(int, Object)} methods that are used by accessors to access
  * pixels. These could be implemented to fetch pixels from an {@link ArrayList},
  * create them on the fly, cache to disk, etc.
  *
@@ -48,9 +48,9 @@ public abstract class AbstractListImg< T > extends AbstractImg< T >
 		IntervalIndexer.createAllocationSteps( this.dim, step );
 	}
 
-	protected abstract T getPixel( final int index );
+	protected abstract T get( final int index );
 
-	protected abstract void setPixel( final int index, final T value );
+	protected abstract void set( final int index, final T value );
 
 	@Override
 	public ListCursor< T > cursor()

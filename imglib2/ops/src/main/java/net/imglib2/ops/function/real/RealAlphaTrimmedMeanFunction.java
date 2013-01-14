@@ -34,59 +34,56 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
-
 /**
- * This class facilitates the computation of trimmed means of another function
- * over a region. A trimmed mean is a mean calculated from a sorted distribution
- * where the outermost (perhaps outlier) values are not included in the
- * calculation. The number of values to trim from each end is specified in the
- * constructor.
+ * This class facilitates the computation of an alpha trimmed mean of another
+ * function over a region. An alpha trimmed mean is a trimmed mean calculated
+ * from a sorted distribution where the outermost (perhaps outlier) values are
+ * not included in the calculation. The proportion of values to trim from each
+ * end is specified in the constructor.
  * 
  * @author Barry DeZonia
  */
-public class RealAlphaTrimmedMeanFunction<T extends RealType<T>>
-	implements Function<PointSet,T>
+public class RealAlphaTrimmedMeanFunction<T extends RealType<T>> extends
+	AbstractRealStatFunction<T>
 {
+
 	// -- instance variables --
-	
-	private final Function<long[],T> otherFunc;
-	private final int halfTrimSize;
-	private StatCalculator<T> calculator;
-	
+
+	private final double alpha;
+
 	// -- constructor --
-	
-	public RealAlphaTrimmedMeanFunction(Function<long[],T> otherFunc, int halfTrimSize)
+
+	/**
+	 * Constructor
+	 * 
+	 * @param otherFunc The other function to pull data values from
+	 * @param alpha The proportion (>= 0.0 and < 0.5) of values to trim from each
+	 *          end when calculating the final value.
+	 */
+	public RealAlphaTrimmedMeanFunction(Function<long[], T> otherFunc,
+		double alpha)
 	{
-		this.otherFunc = otherFunc;
-		this.halfTrimSize = halfTrimSize;
-		this.calculator = null;
+		super(otherFunc);
+		this.alpha = alpha;
 	}
-	
+
+	// -- abstract method overrides
+
+	@Override
+	protected double value(StatCalculator<T> calc) {
+		return calc.alphaTrimmedMean(alpha);
+	}
+
 	// -- Function methods --
-	
+
 	@Override
 	public RealAlphaTrimmedMeanFunction<T> copy() {
-		return new RealAlphaTrimmedMeanFunction<T>(otherFunc.copy(), halfTrimSize);
-	}
-
-	@Override
-	public void compute(PointSet input, T output) {
-		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
-		else calculator.reset(otherFunc, input);
-		double value = calculator.alphaTrimmedMean(halfTrimSize);
-		output.setReal(value);
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
+		return new RealAlphaTrimmedMeanFunction<T>(otherFunc.copy(), alpha);
 	}
 
 }
