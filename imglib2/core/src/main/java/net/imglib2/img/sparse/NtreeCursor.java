@@ -73,7 +73,6 @@ public final class NtreeCursor<T extends NativeType<T>> extends
 		for (int d = 0; d < n; d++)
 			position[d] = cursor.position[d];
 
-		position[0]--;
 		type.updateContainer(this);
 	}
 
