@@ -43,9 +43,6 @@ import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
-import net.imglib2.converter.Converter;
-import net.imglib2.converter.read.ConvertedCursor;
-import net.imglib2.converter.read.ConvertedRandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.IntegerType;
 
@@ -102,7 +99,7 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	{
 		final RandomAccess< I > rndAccess = img.randomAccess();
 
-		return new ConvertedRandomAccess< I, LabelingType< T >>( rndAccess, new LabelingTypeConverter(), new LabelingType< T >( rndAccess.get(), mapping, generation ) );
+		return new LabelingConvertedRandomAccess< I, T >( rndAccess, generation, mapping );
 	}
 
 	/*
@@ -115,15 +112,15 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	@Override
 	public Cursor< LabelingType< T >> cursor()
 	{
-		Cursor< I > c = img.cursor();
-		return new ConvertedCursor< I, LabelingType< T >>( c, new LabelingTypeConverter(), new LabelingType< T >( c.get(), mapping, generation ) );
+		final Cursor< I > c = img.cursor();
+		return new LabelingConvertedCursor< I, T >( c, generation, mapping );
 	}
 
 	@Override
 	public Cursor< LabelingType< T >> localizingCursor()
 	{
-		Cursor< I > c = img.localizingCursor();
-		return new ConvertedCursor< I, LabelingType< T >>( c, new LabelingTypeConverter(), new LabelingType< T >( c.get(), mapping, generation ) );
+		final Cursor< I > c = img.localizingCursor();
+		return new LabelingConvertedCursor< I, T >( c, generation, mapping );
 	}
 
 	public Img< I > getStorageImg()
@@ -194,17 +191,4 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 
 		};
 	}
-
-	// Empty converter
-	private class LabelingTypeConverter implements Converter< I, LabelingType< T >>
-	{
-
-		@Override
-		public void convert( I input, LabelingType< T > output )
-		{
-			// Nothing to do here
-		}
-
-	}
-
 }

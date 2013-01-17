@@ -191,7 +191,7 @@ public class LabelingType< T extends Comparable< T >> implements Type< LabelingT
 	@Override
 	public LabelingType< T > copy()
 	{
-		return new LabelingType< T >( this.type, mapping, generation );
+		return new LabelingType< T >( getLabeling() );
 	}
 
 	@Override
