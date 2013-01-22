@@ -14,7 +14,7 @@ import net.imglib2.RealPositionable;
 
 /**
  * TODO
- * 
+ *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Preibisch <preibisch@mpi-cbg.de>
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -51,8 +51,8 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		maxDim = n - 1;
 		size = computeSize();
 
-		long[] min = new long[ n ];
-		long[] max = new long[ n ];
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
 
 		for ( int d = 0; d < n; d++ )
 		{
@@ -86,7 +86,10 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		private final RandomAccess< T > source;
 
 		// the current radius in each dimension we are at
-		private final long[] r;
+		private final double[] r;
+
+		// the current radius in each dimension truncated to long
+		private final long[] ri;
 
 		// the remaining number of steps in each dimension we still have to go
 		private final long[] s;
@@ -95,7 +98,8 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		{
 			super( source.numDimensions() );
 			this.source = source;
-			r = new long[ n ];
+			r = new double[ n ];
+			ri = new long[ n ];
 			s = new long[ n ];
 			reset();
 		}
@@ -105,6 +109,7 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 			super( c.numDimensions() );
 			source = c.source.copyRandomAccess();
 			r = c.r.clone();
+			ri = c.ri.clone();
 			s = c.s.clone();
 		}
 
@@ -117,31 +122,36 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		@Override
 		public void fwd()
 		{
-			int d;
-			for ( d = 0; d < n; ++d )
+
+			if ( --s[ 0 ] >= 0 )
+				source.fwd( 0 );
+			else
 			{
-				if ( --s[ d ] >= 0 )
+				int d = 1;
+				for ( ; d < n; ++d )
 				{
-					source.fwd( d );
-					break;
+					if ( --s[ d ] >= 0 )
+					{
+						source.fwd( d );
+						break;
+					}
 				}
-				s[ d ] = r[ d ] = 0;
-				source.setPosition( position[ d ], d );
+
+				for ( ; d > 0; --d )
+				{
+					final int e = d - 1;
+					final double rd = r[ d ];
+					final long pd = s[ d ] - ri[ d ];
+
+					final double rad = Math.sqrt( rd * rd - pd * pd );
+					final long radi = ( long ) rad;
+					r[ e ] = rad;
+					ri[ e ] = radi;
+					s[ e ] = 2 * radi;
+
+					source.setPosition( position[ e ] - radi, e );
+				}
 			}
-
-			if ( d > 0 )
-			{
-				final int e = d - 1;
-				final long rd = r[ d ];
-				final long pd = rd - s[ d ];
-
-				final long rad = ( long ) ( Math.sqrt( rd * rd - pd * pd ) );
-				s[ e ] = 2 * rad;
-				r[ e ] = rad;
-
-				source.setPosition( position[ e ] - rad, e );
-			}
-
 		}
 
 		@Override
@@ -169,15 +179,15 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		{
 			for ( int d = 0; d < maxDim; ++d )
 			{
-				r[ d ] = s[ d ] = 0;
+				r[ d ] = ri[ d ] = s[ d ] = 0;
 				source.setPosition( position[ d ], d );
 			}
 
-			source.setPosition( position[ maxDim ] - radius - 1, maxDim );
+			source.setPosition( position[ maxDim ] - radius - 1, maxDim  );
 
 			r[ maxDim ] = radius;
+			ri[ maxDim ] = radius;
 			s[ maxDim ] = 1 + 2 * radius;
-
 		}
 
 		@Override

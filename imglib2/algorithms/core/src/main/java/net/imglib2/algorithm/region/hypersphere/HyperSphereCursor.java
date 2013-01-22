@@ -50,8 +50,8 @@ import net.imglib2.RandomAccessible;
  * @author Stephan Saalfeld
  * @author Stephan Preibisch <preibisch@mpi-cbg.de>
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-
 public class HyperSphereCursor< T > implements Cursor< T >
 {
 	final RandomAccessible< T > source;
@@ -62,8 +62,11 @@ public class HyperSphereCursor< T > implements Cursor< T >
 	final int numDimensions, maxDim;
 	
 	// the current radius in each dimension we are at
-	final long[] r;
-	
+	final double[] r;
+
+	// the current radius in each dimension truncated to long
+	final long[] ri;
+
 	// the remaining number of steps in each dimension we still have to go
 	final long[] s;
 	
@@ -74,7 +77,8 @@ public class HyperSphereCursor< T > implements Cursor< T >
 		this.radius = radius;
 		this.numDimensions = source.numDimensions();
 		this.maxDim = numDimensions - 1;
-		this.r = new long[ numDimensions ];
+		this.r = new double[ numDimensions ];
+		this.ri = new long[ numDimensions ];
 		this.s = new long[ numDimensions ];
 		this.randomAccess = source.randomAccess();
 		
@@ -90,6 +94,7 @@ public class HyperSphereCursor< T > implements Cursor< T >
 		this.maxDim = cursor.maxDim;
 
 		this.r = cursor.r.clone();
+		this.ri = cursor.ri.clone();
 		this.s = cursor.s.clone();
 		
 		this.randomAccess = source.randomAccess();
@@ -121,47 +126,50 @@ public class HyperSphereCursor< T > implements Cursor< T >
 	@Override
 	public void fwd()
 	{
-		int d;
-		for ( d = 0; d < numDimensions; ++d )
+		if ( --s[ 0 ] >= 0 )
+			randomAccess.fwd( 0 );
+		else
 		{
-			if ( --s[ d ] >= 0 )
+			int d = 1;
+			for ( ; d < numDimensions; ++d )
 			{
-				randomAccess.fwd( d );
-				break;
+				if ( --s[ d ] >= 0 )
+				{
+					randomAccess.fwd( d );
+					break;
+				}
 			}
-			s[ d ] = r[ d ] = 0;
-			randomAccess.setPosition( center[ d ], d );
-		}
 
-		if ( d > 0 )
-		{
-			final int e = d - 1;
-			final long rd = r[ d ];
-			final long pd = rd - s[ d ];
-			
-			final long rad = (long)( Math.sqrt( rd * rd - pd * pd ) );
-			s[ e ] = 2 * rad;
-			r[ e ] = rad;
-			
-			randomAccess.setPosition( center[ e ] - rad, e );
+			for ( ; d > 0; --d )
+			{
+				final int e = d - 1;
+				final double rd = r[ d ];
+				final long pd = s[ d ] - ri[ d ];
+
+				final double rad = Math.sqrt( rd * rd - pd * pd );
+				r[ e ] = rad;
+				ri[ e ] = ( long ) rad;
+				s[ e ] = 2 * ( long ) rad;
+
+				randomAccess.setPosition( center[ e ] - ri[ e ], e );
+			}
 		}
 	}
 
 	@Override
 	public void reset()
-	{		
-		final int maxDim = numDimensions - 1;
-		
+	{
 		for ( int d = 0; d < maxDim; ++d )
 		{
-			r[ d ] = s[ d ] = 0;
-			randomAccess.setPosition( center[ d ], d ); 
+			r[ d ] = ri[ d ] = s[ d ] = 0;
+			randomAccess.setPosition( center[ d ], d );
 		}
-		
+
 		randomAccess.setPosition( center[ maxDim ] - radius - 1, maxDim  );
-		
+
 		r[ maxDim ] = radius;
-		s[ maxDim ] = 1 + 2 * radius;			
+		ri[ maxDim ] = radius;
+		s[ maxDim ] = 1 + 2 * radius;
 	}
 
 	@Override
