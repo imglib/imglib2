@@ -4,117 +4,132 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+public class MultithreadedOps
+{
 
-public class MultithreadedOps {
-
-	public static <A, B, C> void run(
-			final BinaryOperation<A, B, C> op, final A[] in1, final B[] in2,
-			final C[] out) {
-		run(op, in1, in2, out, null);
+	public static < A, B, C > void run( final BinaryOperation< A, B, C > op, final A[] in1, final B[] in2, final C[] out )
+	{
+		run( op, in1, in2, out, null );
 	}
 
-	public static <A, B, C> void run(
-			final BinaryOperation<A, B, C> op, final A[] in1, final B[] in2,
-			final C[] out, ExecutorService service) {
-		compute(new TaskProvider() {
+	public static < A, B, C > void run( final BinaryOperation< A, B, C > op, final A[] in1, final B[] in2, final C[] out, ExecutorService service )
+	{
+		compute( new TaskProvider()
+		{
 
 			@Override
-			public Runnable taskAt(int i) {
-				return new BinaryOperationTask<A, B, C>(op.copy(), in1[i],
-						in2[i], out[i]);
+			public Runnable taskAt( int i )
+			{
+				return new BinaryOperationTask< A, B, C >( op.copy(), in1[ i ], in2[ i ], out[ i ] );
 			}
 
 			@Override
-			public int numTasks() {
+			public int numTasks()
+			{
 				return in1.length;
 			}
-		}, service);
+		}, service );
 	}
 
-	public static <A, B> void run(final UnaryOperation<A, B> op,
-			final A[] in, final B[] out) {
-		run(op, in, out, null);
+	public static < A, B > void run( final UnaryOperation< A, B > op, final A[] in, final B[] out )
+	{
+		run( op, in, out, null );
 	}
 
-	public static <A, B> void run(final UnaryOperation<A, B> op,
-			final A[] in, final B[] out, ExecutorService service) {
-		compute(new TaskProvider() {
+	public static < A, B > void run( final UnaryOperation< A, B > op, final A[] in, final B[] out, ExecutorService service )
+	{
+		compute( new TaskProvider()
+		{
 
 			@Override
-			public Runnable taskAt(int i) {
-				return new UnaryOperationTask<A, B>(op.copy(), in[i], out[i]);
+			public Runnable taskAt( int i )
+			{
+				return new UnaryOperationTask< A, B >( op.copy(), in[ i ], out[ i ] );
 			}
 
 			@Override
-			public int numTasks() {
+			public int numTasks()
+			{
 				return in.length;
 			}
-		}, service);
+		}, service );
 	}
 
-	private static void compute(TaskProvider tasks,
-			ExecutorService service) {
+	private static void compute( TaskProvider tasks, ExecutorService service )
+	{
 
-		Future<?>[] futures = new Future<?>[tasks.numTasks()];
+		Future< ? >[] futures = new Future< ? >[ tasks.numTasks() ];
 
-		for (int i = 0; i < tasks.numTasks(); i++) {
+		for ( int i = 0; i < tasks.numTasks(); i++ )
+		{
 
-			if (Thread.interrupted())
+			if ( Thread.interrupted() )
 				return;
 
-			if (service != null) {
-				if (service.isShutdown())
+			if ( service != null )
+			{
+				if ( service.isShutdown() )
 					return;
 				else
-					futures[i] = service.submit(tasks.taskAt(i));
-			} else {
-				tasks.taskAt(i).run();
+					futures[ i ] = service.submit( tasks.taskAt( i ) );
+			}
+			else
+			{
+				tasks.taskAt( i ).run();
 			}
 		}
 
-		if (service != null) {
-			try {
-				for (Future<?> f : futures) {
-					if (f.isCancelled()) {
-						return;
-					}
+		if ( service != null )
+		{
+			try
+			{
+				for ( Future< ? > f : futures )
+				{
+					if ( f.isCancelled() ) { return; }
 					f.get();
 				}
-			} catch (InterruptedException e) {
+			}
+			catch ( InterruptedException e )
+			{
 				e.printStackTrace();
 				return;
 
-			} catch (ExecutionException e) {
+			}
+			catch ( ExecutionException e )
+			{
 				e.printStackTrace();
 				return;
 			}
 		}
 	}
 
-	private static class UnaryOperationTask<A, B> implements Runnable {
+	private static class UnaryOperationTask< A, B > implements Runnable
+	{
 
-		private final UnaryOperation<A, B> m_op;
+		private final UnaryOperation< A, B > m_op;
 
 		private final A m_in;
 
 		private final B m_out;
 
-		public UnaryOperationTask(final UnaryOperation<A, B> op, final A in,
-				final B out) {
+		public UnaryOperationTask( final UnaryOperation< A, B > op, final A in, final B out )
+		{
 			m_in = in;
 			m_out = out;
 			m_op = op.copy();
 		}
 
 		@Override
-		public void run() {
-			m_op.compute(m_in, m_out);
+		public void run()
+		{
+			m_op.compute( m_in, m_out );
 		}
 	}
 
-	private static class BinaryOperationTask<A, B, C> implements Runnable {
+	private static class BinaryOperationTask< A, B, C > implements Runnable
+	{
 
-		private final BinaryOperation<A, B, C> m_op;
+		private final BinaryOperation< A, B, C > m_op;
 
 		private final A m_in1;
 
@@ -122,8 +137,8 @@ public class MultithreadedOps {
 
 		private final C m_out;
 
-		public BinaryOperationTask(final BinaryOperation<A, B, C> op,
-				final A in1, final B in2, final C out) {
+		public BinaryOperationTask( final BinaryOperation< A, B, C > op, final A in1, final B in2, final C out )
+		{
 			m_in1 = in1;
 			m_in2 = in2;
 			m_out = out;
@@ -131,13 +146,15 @@ public class MultithreadedOps {
 		}
 
 		@Override
-		public void run() {
-			m_op.compute(m_in1, m_in2, m_out);
+		public void run()
+		{
+			m_op.compute( m_in1, m_in2, m_out );
 		}
 	}
 
-	private static interface TaskProvider {
-		Runnable taskAt(int i);
+	private static interface TaskProvider
+	{
+		Runnable taskAt( int i );
 
 		int numTasks();
 	}

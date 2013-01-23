@@ -39,6 +39,7 @@ package net.imglib2.ops.operation.subset.views;
 import java.util.Collection;
 
 import net.imglib2.Cursor;
+import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.labeling.DefaultROIStrategy;
@@ -139,4 +140,5 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 	{
 		return ( LabelingFactory< LL > ) m_fac;
 	}
+
 }
