@@ -59,87 +59,89 @@ import net.imglib2.algorithm.features.FeatureTargetListener;
 import net.imglib2.algorithm.features.ObjectCalcAndCache;
 import net.imglib2.algorithm.features.SharesObjects;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.util.Pair;
 
 /**
  * 
  * @author hornm, dietzc University of Konstanz
  * @param <T>
  */
-public class TamuraFeatureSet<T extends RealType<T>> implements FeatureSet,
-		SharesObjects {
+public class TamuraFeatureSet< T extends RealType< T >> implements FeatureSet, SharesObjects
+{
 
-	public static String[] FEATURES = new String[] { "TamuraGranularity",
-			"TamuraContrast", "TamuraKurtosisOfDirectionality",
-			"TamuraStdDevDirectionality", "TamuraMaxDirectionality",
-			"TamuraSkewness" };
+	public static String[] FEATURES = new String[] { "TamuraGranularity", "TamuraContrast", "TamuraKurtosisOfDirectionality", "TamuraStdDevDirectionality", "TamuraMaxDirectionality", "TamuraSkewness" };
 
-	private Tamura<T> m_tamura;
+	private Tamura< T > m_tamura;
 
 	private DescriptiveStatistics m_stats;
 
 	private double[] m_hist;
 
-	private final List<String> m_enabledFeatures = new ArrayList<String>(
-			FEATURES.length);
+	private final List< String > m_enabledFeatures = new ArrayList< String >( FEATURES.length );
 
 	private ObjectCalcAndCache m_ocac;
 
 	private boolean m_valid;
 
 	@FeatureTargetListener
-	public final void iiUpdated(IterableInterval<T> interval) {
+	public final void iiUpdated( IterableInterval< T > interval )
+	{
 
-		Pair<Integer, Integer> validDims = getValidDims(interval);
+		ValuePair< Integer, Integer > validDims = getValidDims( interval );
 
-		if (validDims == null) {
+		if ( validDims == null )
+		{
 			m_valid = false;
-		} else {
+		}
+		else
+		{
 			m_valid = true;
-			m_tamura = new Tamura<T>(validDims.a, validDims.b,
-					m_enabledFeatures.toArray(new String[m_enabledFeatures
-							.size()]));
-			m_stats = m_ocac.descriptiveStatistics(interval);
-			m_hist = m_tamura.updateROI(interval);
+			m_tamura = new Tamura< T >( validDims.a, validDims.b, m_enabledFeatures.toArray( new String[ m_enabledFeatures.size() ] ) );
+			m_stats = m_ocac.descriptiveStatistics( interval );
+			m_hist = m_tamura.updateROI( interval );
 		}
 	}
 
-	private Pair<Integer, Integer> getValidDims(IterableInterval<T> interval) {
+	private ValuePair< Integer, Integer > getValidDims( IterableInterval< T > interval )
+	{
 
 		int dimX = -1;
 		int dimY = -1;
 
-		for (int d = 0; d < interval.numDimensions(); d++)
-			if (interval.dimension(d) > 1)
-				if (dimX < 0)
+		for ( int d = 0; d < interval.numDimensions(); d++ )
+			if ( interval.dimension( d ) > 1 )
+				if ( dimX < 0 )
 					dimX = d;
-				else if (dimY < 0)
+				else if ( dimY < 0 )
 					dimY = d;
 				else
 					return null;
 
-		if (dimX < 0 || dimY < 0)
+		if ( dimX < 0 || dimY < 0 )
 			return null;
 
-		return new Pair<Integer, Integer>(dimX, dimY);
+		return new ValuePair< Integer, Integer >( dimX, dimY );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public double value(int id) {
+	public double value( int id )
+	{
 
-		if (!m_valid)
+		if ( !m_valid )
 			return Double.NaN;
 
-		switch (id) {
+		switch ( id )
+		{
 		case 0:
-			return m_hist[0];
+			return m_hist[ 0 ];
 		case 1:
-			return m_hist[1];
+			return m_hist[ 1 ];
 		case 2:
 			return m_stats.getKurtosis();
 		case 3:
@@ -150,24 +152,25 @@ public class TamuraFeatureSet<T extends RealType<T>> implements FeatureSet,
 			return m_stats.getSkewness();
 		}
 
-		throw new IllegalStateException(
-				"Feature doesn't exist in Tamura Feature Factory");
+		throw new IllegalStateException( "Feature doesn't exist in Tamura Feature Factory" );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String name(int id) {
-		return FEATURES[id];
+	public String name( int id )
+	{
+		return FEATURES[ id ];
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void enable(int id) {
-		m_enabledFeatures.add(FEATURES[id]);
+	public void enable( int id )
+	{
+		m_enabledFeatures.add( FEATURES[ id ] );
 
 	}
 
@@ -175,7 +178,8 @@ public class TamuraFeatureSet<T extends RealType<T>> implements FeatureSet,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int numFeatures() {
+	public int numFeatures()
+	{
 		return FEATURES.length;
 	}
 
@@ -183,7 +187,8 @@ public class TamuraFeatureSet<T extends RealType<T>> implements FeatureSet,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String featureSetId() {
+	public String featureSetId()
+	{
 		return "Tamura Features";
 	}
 
@@ -191,7 +196,8 @@ public class TamuraFeatureSet<T extends RealType<T>> implements FeatureSet,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<?>[] getSharedObjectClasses() {
+	public Class< ? >[] getSharedObjectClasses()
+	{
 		return new Class[] { ObjectCalcAndCache.class };
 	}
 
@@ -199,8 +205,9 @@ public class TamuraFeatureSet<T extends RealType<T>> implements FeatureSet,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setSharedObjectInstances(Object[] instances) {
-		m_ocac = (ObjectCalcAndCache) instances[0];
+	public void setSharedObjectInstances( Object[] instances )
+	{
+		m_ocac = ( ObjectCalcAndCache ) instances[ 0 ];
 
 	}
 

@@ -2,6 +2,7 @@ package net.imglib2.algorithm.convolver;
 
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**

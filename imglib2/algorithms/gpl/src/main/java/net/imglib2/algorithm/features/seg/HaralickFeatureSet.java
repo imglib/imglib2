@@ -61,15 +61,15 @@ import net.imglib2.ops.data.CooccurrenceMatrix;
 import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
 import net.imglib2.ops.operation.iterableinterval.unary.MakeCooccurrenceMatrix.HaralickFeature;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 
 /**
  * Implementation of Haralick Feature Set
  * 
  * @author dietzc, hornm, selliens University of Konstanz
  */
-public class HaralickFeatureSet<T extends RealType<T>> implements FeatureSet,
-		SharesObjects {
+public class HaralickFeatureSet< T extends RealType< T >> implements FeatureSet, SharesObjects
+{
 
 	private final int m_distance;
 
@@ -79,11 +79,11 @@ public class HaralickFeatureSet<T extends RealType<T>> implements FeatureSet,
 
 	private ObjectCalcAndCache m_ocac;
 
-	private final BitSet enabledFeatures = new BitSet(numFeatures());
+	private final BitSet enabledFeatures = new BitSet( numFeatures() );
 
-	private IterableInterval<T> m_interval;
+	private IterableInterval< T > m_interval;
 
-	private Pair<Integer, Integer> m_validDims;
+	private ValuePair< Integer, Integer > m_validDims;
 
 	private int m_dimX;
 
@@ -96,8 +96,8 @@ public class HaralickFeatureSet<T extends RealType<T>> implements FeatureSet,
 	 * @param distance
 	 * @param target
 	 */
-	public HaralickFeatureSet(int nrGrayLevels, int distance,
-			MatrixOrientation orientation) {
+	public HaralickFeatureSet( int nrGrayLevels, int distance, MatrixOrientation orientation )
+	{
 		super();
 		m_nrGrayLevels = nrGrayLevels;
 		m_distance = distance;
@@ -109,31 +109,32 @@ public class HaralickFeatureSet<T extends RealType<T>> implements FeatureSet,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public double value(int id) {
+	public double value( int id )
+	{
 
-		if (!m_isValid)
+		if ( !m_isValid )
 			return Double.NaN;
 
-		CooccurrenceMatrix coocMat = m_ocac.cooccurenceMatrix(m_interval,
-				m_dimX, m_dimY, m_distance, m_nrGrayLevels,
-				m_matrixOrientation, enabledFeatures);
+		CooccurrenceMatrix coocMat = m_ocac.cooccurenceMatrix( m_interval, m_dimX, m_dimY, m_distance, m_nrGrayLevels, m_matrixOrientation, enabledFeatures );
 
-		return coocMat.getFeature(id);
+		return coocMat.getFeature( id );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String name(int id) {
-		return HaralickFeature.values()[id].toString();
+	public String name( int id )
+	{
+		return HaralickFeature.values()[ id ].toString();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int numFeatures() {
+	public int numFeatures()
+	{
 		return HaralickFeature.values().length;
 	}
 
@@ -141,7 +142,8 @@ public class HaralickFeatureSet<T extends RealType<T>> implements FeatureSet,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String featureSetId() {
+	public String featureSetId()
+	{
 		return "Haralick Feature Factory";
 	}
 
@@ -149,51 +151,58 @@ public class HaralickFeatureSet<T extends RealType<T>> implements FeatureSet,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void enable(int id) {
-		enabledFeatures.set(id);
+	public void enable( int id )
+	{
+		enabledFeatures.set( id );
 	}
 
 	@FeatureTargetListener
-	public final void iiUpdated(IterableInterval<T> interval) {
+	public final void iiUpdated( IterableInterval< T > interval )
+	{
 
-		m_validDims = getValidDims(interval);
+		m_validDims = getValidDims( interval );
 
-		if (m_validDims != null) {
+		if ( m_validDims != null )
+		{
 			m_isValid = true;
 			m_interval = interval;
 			m_dimX = m_validDims.a;
 			m_dimY = m_validDims.b;
-		} else {
+		}
+		else
+		{
 			m_isValid = false;
 		}
 
 	}
 
-	private Pair<Integer, Integer> getValidDims(IterableInterval<T> interval) {
+	private ValuePair< Integer, Integer > getValidDims( IterableInterval< T > interval )
+	{
 
 		int dimX = -1;
 		int dimY = -1;
 
-		for (int d = 0; d < interval.numDimensions(); d++)
-			if (interval.dimension(d) > 1)
-				if (dimX < 0)
+		for ( int d = 0; d < interval.numDimensions(); d++ )
+			if ( interval.dimension( d ) > 1 )
+				if ( dimX < 0 )
 					dimX = d;
-				else if (dimY < 0)
+				else if ( dimY < 0 )
 					dimY = d;
 				else
 					return null;
 
-		if (dimX < 0 || dimY < 0)
+		if ( dimX < 0 || dimY < 0 )
 			return null;
 
-		return new Pair<Integer, Integer>(dimX, dimY);
+		return new ValuePair< Integer, Integer >( dimX, dimY );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<?>[] getSharedObjectClasses() {
+	public Class< ? >[] getSharedObjectClasses()
+	{
 		return new Class[] { ObjectCalcAndCache.class };
 	}
 
@@ -201,8 +210,9 @@ public class HaralickFeatureSet<T extends RealType<T>> implements FeatureSet,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setSharedObjectInstances(Object[] instances) {
-		m_ocac = (ObjectCalcAndCache) instances[0];
+	public void setSharedObjectInstances( Object[] instances )
+	{
+		m_ocac = ( ObjectCalcAndCache ) instances[ 0 ];
 
 	}
 
