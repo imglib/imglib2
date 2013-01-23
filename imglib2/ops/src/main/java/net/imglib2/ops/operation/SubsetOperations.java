@@ -35,6 +35,7 @@
  */
 package net.imglib2.ops.operation;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
 import net.imglib2.Interval;
@@ -60,18 +61,18 @@ import net.imglib2.view.Views;
 public final class SubsetOperations
 {
 
-	public static < T extends Type< T >, U extends Type< U >, V extends Type< V >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >, C extends RandomAccessibleInterval< V >> C iterate( BinaryOperation< A, B, C > op, int[] selectedDims, A in1, B in2, C out )
+	public static < T extends Type< T >, U extends Type< U >, V extends Type< V >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >, C extends RandomAccessibleInterval< V >> C iterate( BinaryOperation< A, B, C > op, int[] selectedDims, A in1, B in2, C out ) throws InterruptedException, ExecutionException
 	{
 		return iterate( op, selectedDims, in1, in2, out, null );
 	}
 
-	public static < T extends Type< T >, U extends Type< U >, V extends Type< V >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >, C extends RandomAccessibleInterval< V >> C iterate( BinaryOperation< A, B, C > op, int[] selectedDims, A in1, B in2, C out, ExecutorService service )
+	public static < T extends Type< T >, U extends Type< U >, V extends Type< V >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >, C extends RandomAccessibleInterval< V >> C iterate( BinaryOperation< A, B, C > op, int[] selectedDims, A in1, B in2, C out, ExecutorService service ) throws InterruptedException, ExecutionException
 	{
 
 		return iterate( op, IntervalsFromDimSelection.compute( selectedDims, in1 ), IntervalsFromDimSelection.compute( selectedDims, in2 ), IntervalsFromDimSelection.compute( selectedDims, out ), in1, in2, out, service );
 	}
 
-	public static < T extends Type< T >, U extends Type< U >, V extends Type< V >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >, C extends RandomAccessibleInterval< V >> C iterate( BinaryOperation< A, B, C > op, Interval[] inIntervals1, Interval[] inIntervals2, Interval[] outIntervals, A in1, B in2, C out, ExecutorService service )
+	public static < T extends Type< T >, U extends Type< U >, V extends Type< V >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >, C extends RandomAccessibleInterval< V >> C iterate( BinaryOperation< A, B, C > op, Interval[] inIntervals1, Interval[] inIntervals2, Interval[] outIntervals, A in1, B in2, C out, ExecutorService service ) throws InterruptedException, ExecutionException
 	{
 
 		RandomAccessibleInterval< T >[] inRes1 = new RandomAccessibleInterval[ inIntervals1.length ];
@@ -90,12 +91,12 @@ public final class SubsetOperations
 		return out;
 	}
 
-	public static < T extends Type< T >, U extends Type< U >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >> B iterate( UnaryOperation< A, B > op, int[] selectedDims, A in, B out )
+	public static < T extends Type< T >, U extends Type< U >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >> B iterate( UnaryOperation< A, B > op, int[] selectedDims, A in, B out ) throws InterruptedException, ExecutionException
 	{
 		return iterate( op, selectedDims, in, out, null );
 	}
 
-	public static < T extends Type< T >, U extends Type< U >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >> B iterate( UnaryOperation< A, B > op, Interval[] inIntervals, Interval[] outIntervals, A in, B out, ExecutorService service )
+	public static < T extends Type< T >, U extends Type< U >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >> B iterate( UnaryOperation< A, B > op, Interval[] inIntervals, Interval[] outIntervals, A in, B out, ExecutorService service ) throws InterruptedException, ExecutionException
 	{
 
 		RandomAccessibleInterval< T >[] inRes = new RandomAccessibleInterval[ inIntervals.length ];
@@ -111,7 +112,7 @@ public final class SubsetOperations
 		return out;
 	}
 
-	public static < T extends Type< T >, U extends Type< U >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >> B iterate( UnaryOperation< A, B > op, int[] selectedDims, A in, B out, ExecutorService service )
+	public static < T extends Type< T >, U extends Type< U >, A extends RandomAccessibleInterval< T >, B extends RandomAccessibleInterval< U >> B iterate( UnaryOperation< A, B > op, int[] selectedDims, A in, B out, ExecutorService service ) throws InterruptedException, ExecutionException
 	{
 
 		return iterate( op, IntervalsFromDimSelection.compute( selectedDims, in ), IntervalsFromDimSelection.compute( selectedDims, out ), in, out, service );

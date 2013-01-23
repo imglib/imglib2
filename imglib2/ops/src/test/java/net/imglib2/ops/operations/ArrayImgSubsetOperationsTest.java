@@ -3,6 +3,7 @@ package net.imglib2.ops.operations;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -57,8 +58,19 @@ public class ArrayImgSubsetOperationsTest {
 	@Test
 	public void testUnaryOperationIteration() {
 
-		SubsetOperations.iterate(new DummyOp<IntType, IntType>(),
-				new int[] { 0, 1 }, intImg, outImg, null);
+		try
+		{
+			SubsetOperations.iterate(new DummyOp<IntType, IntType>(),
+					new int[] { 0, 1 }, intImg, outImg, null);
+		}
+		catch ( InterruptedException e )
+		{
+			e.printStackTrace();
+		}
+		catch ( ExecutionException e )
+		{
+			e.printStackTrace();
+		}
 	}
 
 	private class DummyOp<T extends RealType<T>, V extends RealType<V>>

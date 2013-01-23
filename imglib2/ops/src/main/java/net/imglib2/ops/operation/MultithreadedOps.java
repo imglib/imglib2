@@ -7,12 +7,12 @@ import java.util.concurrent.Future;
 public class MultithreadedOps
 {
 
-	public static < A, B, C > void run( final BinaryOperation< A, B, C > op, final A[] in1, final B[] in2, final C[] out )
+	public static < A, B, C > void run( final BinaryOperation< A, B, C > op, final A[] in1, final B[] in2, final C[] out ) throws InterruptedException, ExecutionException
 	{
 		run( op, in1, in2, out, null );
 	}
 
-	public static < A, B, C > void run( final BinaryOperation< A, B, C > op, final A[] in1, final B[] in2, final C[] out, ExecutorService service )
+	public static < A, B, C > void run( final BinaryOperation< A, B, C > op, final A[] in1, final B[] in2, final C[] out, ExecutorService service ) throws InterruptedException, ExecutionException
 	{
 		compute( new TaskProvider()
 		{
@@ -31,12 +31,12 @@ public class MultithreadedOps
 		}, service );
 	}
 
-	public static < A, B > void run( final UnaryOperation< A, B > op, final A[] in, final B[] out )
+	public static < A, B > void run( final UnaryOperation< A, B > op, final A[] in, final B[] out ) throws InterruptedException, ExecutionException
 	{
 		run( op, in, out, null );
 	}
 
-	public static < A, B > void run( final UnaryOperation< A, B > op, final A[] in, final B[] out, ExecutorService service )
+	public static < A, B > void run( final UnaryOperation< A, B > op, final A[] in, final B[] out, ExecutorService service ) throws InterruptedException, ExecutionException
 	{
 		compute( new TaskProvider()
 		{
@@ -55,7 +55,7 @@ public class MultithreadedOps
 		}, service );
 	}
 
-	private static void compute( TaskProvider tasks, ExecutorService service )
+	private static void compute( TaskProvider tasks, ExecutorService service ) throws InterruptedException, ExecutionException
 	{
 
 		Future< ? >[] futures = new Future< ? >[ tasks.numTasks() ];
@@ -81,24 +81,10 @@ public class MultithreadedOps
 
 		if ( service != null )
 		{
-			try
+			for ( Future< ? > f : futures )
 			{
-				for ( Future< ? > f : futures )
-				{
-					if ( f.isCancelled() ) { return; }
-					f.get();
-				}
-			}
-			catch ( InterruptedException e )
-			{
-				e.printStackTrace();
-				return;
-
-			}
-			catch ( ExecutionException e )
-			{
-				e.printStackTrace();
-				return;
+				if ( f.isCancelled() ) { return; }
+				f.get();
 			}
 		}
 	}
