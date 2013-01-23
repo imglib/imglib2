@@ -518,6 +518,39 @@ public class LinAlgHelpers
 		pq[ 3 ] = pw * qz + pz * qw + px * qy - py * qx;
 	}
 
+	/**
+	 * compute the power of a quaternion q raised to the exponent a.
+	 *
+	 * @param q
+	 *            unit quaternion (w, x, y, z).
+	 * @param a
+	 *            exponent.
+	 * @param qa
+	 *            q^a is stored here.
+	 */
+	public static void quaternionPower( final double[] q, final double a, final double[] qa )
+	{
+		assert rows( q ) >= 4;
+		assert rows( qa ) >= 4;
+
+		final double theta2 = Math.acos( q[ 0 ] );
+		final double s = Math.sin( a * theta2 ) / Math.sin( theta2 );
+		if ( Double.isNaN( s ) )
+		{
+			qa[ 0 ] = 1;
+			qa[ 1 ] = 0;
+			qa[ 2 ] = 0;
+			qa[ 3 ] = 0;
+		}
+		else
+		{
+			qa[ 0 ] = Math.cos( a * theta2 );
+			qa[ 1 ] = s * q[ 1 ];
+			qa[ 2 ] = s * q[ 2 ];
+			qa[ 3 ] = s * q[ 3 ];
+		}
+	}
+
 
 	/**
 	 * invert quaternion, set q = p^{-1}.

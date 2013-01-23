@@ -40,7 +40,6 @@ import java.util.List;
 
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
-import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -734,9 +733,9 @@ public class Util
 		return out;
 	}
 
-	public static String printCoordinates( final Localizable localizable )
+	public static String printCoordinates( final RealLocalizable localizable )
 	{
-		String out = "(Localizable empty)";
+		String out = "(RealLocalizable empty)";
 
 		if ( localizable == null || localizable.numDimensions() == 0 )
 			return out;

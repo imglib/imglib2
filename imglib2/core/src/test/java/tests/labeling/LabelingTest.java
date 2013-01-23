@@ -459,6 +459,44 @@ public class LabelingTest
 	}
 
 	@Test
+	public void testCopyCursor()
+	{
+		final long[] dimensions = new long[] { 2, 2 };
+		final Labeling< Integer > labeling = makeLabeling( 1, dimensions );
+
+		final Cursor< LabelingType< Integer >> c = labeling.cursor();
+		c.fwd();
+		c.get().setLabel( 1 );
+		c.fwd();
+		c.get().setLabel( 2 );
+
+		final Cursor< LabelingType< Integer >> c2 = labeling.cursor().copyCursor();
+		c2.fwd();
+		assertTrue( c2.get().getLabeling().contains( 1 ) );
+		c2.fwd();
+		assertTrue( c2.get().getLabeling().contains( 2 ) );
+	}
+
+	@Test
+	public void testCopyRandomAccess()
+	{
+		final long[] dimensions = new long[] { 2, 2 };
+		final Labeling< Integer > labeling = makeLabeling( 1, dimensions );
+
+		final RandomAccess< LabelingType< Integer >> a = labeling.randomAccess();
+		a.setPosition( new long[] { 0, 0 } );
+		a.get().setLabel( 1 );
+		a.setPosition( new long[] { 1, 1 } );
+		a.get().setLabel( 2 );
+
+		final RandomAccess< LabelingType< Integer >> a2 = labeling.randomAccess().copyRandomAccess();
+		a2.setPosition( new long[] { 0, 0 } );
+		assertTrue( a2.get().getLabeling().contains( 1 ) );
+		a2.setPosition( new long[] { 1, 1 } );
+		assertTrue( a2.get().getLabeling().contains( 2 ) );
+	}
+
+	@Test
 	public void testPerformance()
 	{
 		final int rounds = 10;
