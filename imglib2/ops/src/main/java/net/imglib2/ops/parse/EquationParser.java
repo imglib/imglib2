@@ -241,7 +241,7 @@ public class EquationParser<T extends RealType<T>> {
 			ParseStatus status = atom(tokens, pos+1);
 			if (status.errMsg != null) return status;
 			RealConstantFunction<long[], DoubleType> constant =
-				new RealConstantFunction<long[],DoubleType>(new DoubleType(),-1);
+				new RealConstantFunction<long[], DoubleType>(new DoubleType(-1));
 			status.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					constant, status.function,
@@ -310,7 +310,8 @@ public class EquationParser<T extends RealType<T>> {
 			double constant = (bound.isMin() ? type.getMinValue() : type.getMaxValue());
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+1;
-			status.function =	new RealConstantFunction<long[],DoubleType>(new DoubleType(), constant);
+			status.function =
+				new RealConstantFunction<long[], DoubleType>(new DoubleType(constant));
 			return status;
 		}
 		else if (ParseUtils.match(DimensionReference.class, tokens, pos)) {
@@ -334,7 +335,8 @@ public class EquationParser<T extends RealType<T>> {
 			double constant = img.dimension(reference);
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+4;
-			status.function =	new RealConstantFunction<long[],DoubleType>(new DoubleType(), constant);
+			status.function =
+				new RealConstantFunction<long[], DoubleType>(new DoubleType(constant));
 			return status;
 		}
 		else if (ParseUtils.match(DistanceFromCenterReference.class, tokens, pos)) {
@@ -428,7 +430,8 @@ public class EquationParser<T extends RealType<T>> {
 			ParseStatus status = new ParseStatus();
 			status.function =
 				new RealConstantFunction<long[],DoubleType>(
-						new DoubleType(),r.getValue());
+new DoubleType(r
+					.getValue()));
 			status.tokenNumber = pos + 1;
 			return status;
 		}
@@ -437,7 +440,8 @@ public class EquationParser<T extends RealType<T>> {
 			ParseStatus status = new ParseStatus();
 			status.function =
 				new RealConstantFunction<long[],DoubleType>(
-						new DoubleType(),i.getValue());
+new DoubleType(i
+					.getValue()));
 			status.tokenNumber = pos + 1;
 			return status;
 		}

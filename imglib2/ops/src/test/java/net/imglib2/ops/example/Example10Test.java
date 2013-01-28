@@ -97,7 +97,7 @@ public class Example10Test {
 		image =
 			new RealImageFunction<DoubleType, DoubleType>(testImg, new DoubleType());
 		Function<long[], DoubleType> zero =
-			new RealConstantFunction<long[], DoubleType>(new DoubleType(), 0);
+			new RealConstantFunction<long[], DoubleType>(new DoubleType(0));
 		Function<long[],ComplexDoubleType> spatialFunction =
 			new CartesianComplexFunction<long[], DoubleType, DoubleType, ComplexDoubleType>(
 				image, zero, new ComplexDoubleType());

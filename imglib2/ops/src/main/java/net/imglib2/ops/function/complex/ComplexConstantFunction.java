@@ -56,7 +56,7 @@ public class ComplexConstantFunction<INPUT, C extends ComplexType<C>>
 	// -- constructor --
 	
 	public ComplexConstantFunction(C c) {
-		complex = c;
+		complex = c.copy();
 	}
 	
 	// -- Function methods --

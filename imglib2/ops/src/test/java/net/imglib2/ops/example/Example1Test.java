@@ -94,8 +94,7 @@ public class Example1Test {
 		Img<DoubleType> inputImage = makeInputImage();
 
 		Function<long[], DoubleType> constant =
-			new RealConstantFunction<long[], DoubleType>(inputImage.firstElement(),
-				15);
+			new RealConstantFunction<long[], DoubleType>(new DoubleType(15));
 
 		Function<long[], DoubleType> image =
 			new RealImageFunction<DoubleType, DoubleType>(inputImage,

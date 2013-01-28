@@ -55,9 +55,8 @@ public class RealConstantFunction<INPUT, O extends RealType<O>>
 
 	// -- constructor --
 	
-	public RealConstantFunction(O typeHint, double r) {
-		real = typeHint.createVariable();
-		real.setReal(r);
+	public RealConstantFunction(O value) {
+		real = value.copy();
 	}
 	
 	// -- Function methods --
@@ -69,7 +68,7 @@ public class RealConstantFunction<INPUT, O extends RealType<O>>
 
 	@Override
 	public RealConstantFunction<INPUT,O> copy() {
-		return new RealConstantFunction<INPUT,O>(real, real.getRealDouble());
+		return new RealConstantFunction<INPUT, O>(real);
 	}
 
 	@Override
