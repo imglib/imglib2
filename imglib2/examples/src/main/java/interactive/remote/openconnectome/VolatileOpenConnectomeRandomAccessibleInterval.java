@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -95,12 +96,12 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 						entry = ref.get();
 						if ( entry != null )
 						{
-//							/* replace WeakReferences by SoftReferences which promotes cache entries from third to second class citizens */
-//							synchronized ( cache )
-//							{
-//								cache.remove( entry.key );
-//								cache.put( entry.key, new SoftReference< Entry >( entry ) );
-//							}
+							/* replace WeakReferences by SoftReferences which promotes cache entries from third to second class citizens */
+							synchronized ( cache )
+							{
+								cache.remove( entry.key );
+								cache.put( entry.key, new SoftReference< Entry >( entry ) );
+							}
 						}
 					}
 					
@@ -258,8 +259,8 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 			}
 			
 			final byte[] bytes = new byte[ cellWidth * cellHeight * cellDepth ];
-			//ref = new WeakReference< Entry >( new Entry( key, bytes, false ) );
-			ref = new SoftReference< Entry >( new Entry( key, bytes, false ) );
+			ref = new WeakReference< Entry >( new Entry( key, bytes, false ) );
+			//ref = new SoftReference< Entry >( new Entry( key, bytes, false ) );
 			cache.put( key, ref );
 			queue.add( ref );
 		}
