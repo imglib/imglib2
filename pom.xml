@@ -27,6 +27,7 @@
 	</modules>
 
 	<properties>
+		<project.rootdir>${basedir}</project.rootdir>
 		<mpicbg.version>0.6.0-SNAPSHOT</mpicbg.version>
 	</properties>
 
