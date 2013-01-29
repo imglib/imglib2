@@ -1,4 +1,3 @@
-package interactive;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -35,6 +34,8 @@ package interactive;
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+package interactive;
 
 import ij.IJ;
 import net.imglib2.IterableInterval;

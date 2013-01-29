@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.legacy.scalespace;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -24,6 +23,8 @@ package net.imglib2.algorithm.legacy.scalespace;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+package net.imglib2.algorithm.legacy.scalespace;
 
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.ImgPlus;

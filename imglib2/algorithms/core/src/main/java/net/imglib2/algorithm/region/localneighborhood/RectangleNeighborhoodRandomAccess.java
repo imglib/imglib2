@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.region.localneighborhood;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -35,6 +34,8 @@ package net.imglib2.algorithm.region.localneighborhood;
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.Interval;
 import net.imglib2.Localizable;

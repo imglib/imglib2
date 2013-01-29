@@ -1,4 +1,3 @@
-package tests;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -35,6 +34,8 @@ package tests;
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+package tests;
 
 import ij.ImagePlus;
 import ij.process.ByteProcessor;

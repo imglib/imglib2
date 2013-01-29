@@ -1,4 +1,3 @@
-package tests;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -24,6 +23,8 @@ package tests;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+package tests;
 
 import ij.ImageJ;
 import net.imglib2.display.ChannelARGBConverter;

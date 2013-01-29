@@ -35,13 +35,12 @@
  * #L%
  */
 
+package net.imglib2.ops.function.real;
+
 // TODO - this class suffers from the weakness that one needs to
 // correctly build the weights without maybe knowing the order of points in
 // the PointSet. We will need helper methods in that build a PointSet
 // compatible set of weights from a PointSet and some other hints.
-	
-
-package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.RealType;

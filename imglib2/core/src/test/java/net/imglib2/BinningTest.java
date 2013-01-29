@@ -1,9 +1,4 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package net.imglib2;
-/*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
@@ -39,6 +34,8 @@ package net.imglib2;
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+package net.imglib2;
 
 import static org.junit.Assert.assertEquals;
 
