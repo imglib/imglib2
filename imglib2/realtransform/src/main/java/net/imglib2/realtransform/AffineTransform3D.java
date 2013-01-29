@@ -617,16 +617,16 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	public void toArray( final double[] data )
 	{
 		data[ 0 ] = a.m00;
-		data[ 1 ] = a.m10;
-		data[ 2 ] = a.m20;
-		data[ 3 ] = a.m01;
-		data[ 4 ] = a.m11;
-		data[ 5 ] = a.m21;
-		data[ 6 ] = a.m02;
-		data[ 7 ] = a.m12;
-		data[ 8 ] = a.m22;
-		data[ 9 ] = a.m03;
-		data[ 10 ] = a.m13;
+		data[ 1 ] = a.m01;
+		data[ 2 ] = a.m02;
+		data[ 3 ] = a.m03;
+		data[ 4 ] = a.m10;
+		data[ 5 ] = a.m11;
+		data[ 6 ] = a.m12;
+		data[ 7 ] = a.m13;
+		data[ 8 ] = a.m20;
+		data[ 9 ] = a.m21;
+		data[ 10 ] = a.m22;
 		data[ 11 ] = a.m23;
 	}
 

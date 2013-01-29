@@ -500,10 +500,10 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	public void toArray( final double[] data )
 	{
 		data[ 0 ] = a.m00;
-		data[ 1 ] = a.m10;
-		data[ 3 ] = a.m01;
-		data[ 4 ] = a.m11;
-		data[ 6 ] = a.m02;
+		data[ 1 ] = a.m01;
+		data[ 3 ] = a.m02;
+		data[ 4 ] = a.m10;
+		data[ 6 ] = a.m11;
 		data[ 7 ] = a.m12;
 	}
 
