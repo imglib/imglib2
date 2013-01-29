@@ -128,7 +128,9 @@ public class InteractiveImageViewerExample
 
 	public static void main( final String[] args ) throws ImgIOException
 	{
-		final String filename = "DrosophilaWing.tif";
+//		final String filename = "DrosophilaWing.tif";
+		final String filename = "src/main/resources/l1-cns.tif";
+//		final String filename = "src/main/resources/preikestolen.tif";
 //		final String filename = "/home/tobias/workspace/data/DM_MV_110629_TL0_Ch0_Angle0_fragment.tif";
 		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< FloatType >(), new FloatType() );
 //		show( Views.interval( img, FinalInterval.createMinSize( 200, 10, 200, 200 ) ) );
