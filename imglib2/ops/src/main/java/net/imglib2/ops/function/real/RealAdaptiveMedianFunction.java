@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -64,7 +65,6 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 	private final PrimitiveDoubleArray values;
 	private final RealSampleCollector<T> collector;
 	private final T currValue;
-	private final StatCalculator calculator;
 	private final long[] tmpDeltas;
 
 	/**
@@ -82,7 +82,6 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 		this.pointSets = pointSets;
 		this.values = new PrimitiveDoubleArray();
 		this.collector = new RealSampleCollector<T>();
-		this.calculator = new StatCalculator();
 		this.currValue = createOutput();
 		if (pointSets.size() < 1)
 			throw new IllegalArgumentException("must provide at least one point set");
@@ -101,10 +100,10 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 			PointSet pointSet = pointSets.get(p);
 			move(pointSet, points.getOrigin());
 			collector.collect(pointSet, otherFunc, values);
-			zMed = calculator.median(values);
-			// HACK - take advantage of fact that median() sorts values
-			double zMin = values.get(0);
-			double zMax = values.get(values.size()-1);
+			values.sortValues();
+			zMed = medianValue();
+			double zMin = minValue();
+			double zMax = maxValue();
 			if (zMin < zMed && zMed < zMax) {
 				otherFunc.compute(pointSet.getOrigin(), currValue);
 				double zXY = currValue.getRealDouble();
@@ -133,6 +132,30 @@ public class RealAdaptiveMedianFunction<T extends RealType<T>>
 		return otherFunc.createOutput();
 	}
 
+	private double medianValue() {
+		int numElements = values.size();
+		
+		if (numElements == 0)
+			throw new IllegalArgumentException(
+				"cannot find median: no samples provided");
+		
+		if ((numElements % 2) == 1)
+			return values.get(numElements/2);
+		
+		// else an even number of elements
+		double value1 = values.get((numElements/2) - 1); 
+		double value2 = values.get((numElements/2));
+		return (value1 + value2) / 2;
+	}
+
+	private double minValue() {
+		return values.get(0);
+	}
+	
+	private double maxValue() {
+		return values.get(values.size()-1);
+	}
+	
 	// unfortunately the removal from PointSet of getAnchor() and setAnchor() and
 	// replacement with getOrigin() and translate(deltas) causes this code to be
 	// slower. It used to copy an object ref. Now it does numerous math

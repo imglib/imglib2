@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,11 +38,9 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.function.Function;
@@ -50,6 +49,8 @@ import net.imglib2.ops.input.PointInputIterator;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 // an example testing out of bounds access for a real image function
 
@@ -69,7 +70,8 @@ public class Example11Test {
 	}
 
 	private Img<DoubleType> allocateRealImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+			new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
@@ -91,10 +93,10 @@ public class Example11Test {
 	@Test
 	public void testOutOfBounds() {
 		Img<DoubleType> image = makeInputImage();
+		OutOfBoundsPeriodicFactory<DoubleType, RandomAccessibleInterval<DoubleType>> oobFact =
+			new OutOfBoundsPeriodicFactory<DoubleType, RandomAccessibleInterval<DoubleType>>();
 		Function<long[],DoubleType> imageFunc =
-			new RealImageFunction<DoubleType,DoubleType>(
-				image,
-				new OutOfBoundsPeriodicFactory<DoubleType, Img<DoubleType>>(),
+			new RealImageFunction<DoubleType, DoubleType>(image, oobFact,
 				new DoubleType());
 		long[] currPt = new long[2];
 		DoubleType inbounds = new DoubleType();
@@ -102,7 +104,8 @@ public class Example11Test {
 		DoubleType right = new DoubleType();
 		DoubleType top = new DoubleType();
 		DoubleType bottom = new DoubleType();
-		HyperVolumePointSet pointSet = new HyperVolumePointSet(new long[]{0,0},new long[]{0,0}, new long[]{XSIZE,YSIZE});
+		HyperVolumePointSet pointSet =
+			new HyperVolumePointSet(new long[] { XSIZE, YSIZE });
 		PointInputIterator iter = new PointInputIterator(pointSet);
 		long[] iterPt = null;
 		while (iter.hasNext()) {

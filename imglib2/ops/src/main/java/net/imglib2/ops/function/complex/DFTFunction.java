@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,6 +52,8 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 //   - textbook definitions and thus SLOW
 
 /**
+ * A {@link Function} that represents the Discrete Fourier Transform 
+ * (frequency domain) of another (spatial) Function.
  * 
  * @author Barry DeZonia
  */
@@ -77,21 +80,26 @@ public class DFTFunction<T extends ComplexType<T>>
 
 	private ComplexDoubleType tmp;
 
-	private final T type;
-
 	// -- constructor --
 
+	/**
+	 * Creates a DFTFunction from inputs.
+	 * 
+	 * @param factory
+	 * The factory that is used when creating internal data representations
+	 * @param spatialFunction
+	 * The function in image space that is to be sampled
+	 * @param span
+	 * The dimensions for the internal frequency image
+	 */
 	public DFTFunction(
 		ImgFactory<ComplexDoubleType> factory,
 		Function<long[], T> spatialFunction,
-		long[] span,
-		T type)
+		long[] span)
 	{
 		if (span.length != 2)
 			throw new IllegalArgumentException(
-					"DFTFunction is only designed for two dimensional functions");
-
-		this.type = type;
+				"DFTFunction is only designed for two dimensional functions");
 
 		this.tmp = new ComplexDoubleType();
 
@@ -124,21 +132,24 @@ public class DFTFunction<T extends ComplexType<T>>
 
 	@Override
 	public DFTFunction<T> copy() {
-		return new DFTFunction<T>(imgFactory, spatialFunction.copy(), span, type);
+		return new DFTFunction<T>(
+				imgFactory, spatialFunction.copy(), span.clone());
 	}
 
 	@Override
 	public T createOutput() {
-		return type.createVariable();
+		return spatialFunction.createOutput();
 	}
 
 	// -- private helpers --
 
 	// TODO - use a ComplexImageAssignment here instead? Speed. Elegance?
 
-	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType> createDataArray() {
-		final Img<ComplexDoubleType> img = imgFactory.create(span,
-				new ComplexDoubleType());
+	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>
+	createDataArray()
+	{
+		final Img<ComplexDoubleType> img =
+				imgFactory.create(span, new ComplexDoubleType());
 		final RandomAccess<ComplexDoubleType> oAccessor = img.randomAccess();
 		final long[] iPosition = new long[2];
 		final long[] oPosition = new long[2];
@@ -162,8 +173,8 @@ public class DFTFunction<T extends ComplexType<T>>
 						sum.getImaginaryDouble());
 			}
 		}
-		return new ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>(img,
-				new ComplexDoubleType());
+		return new ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>(
+				img, new ComplexDoubleType());
 	}
 
 	private void calcTermAtPoint(long[] oPosition, long[] iPosition, T xyTerm) {

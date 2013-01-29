@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,6 +52,8 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 //   - textbook definitions and thus SLOW
 
 /**
+ * A {@link Function} that represents the Inverse Discrete Fourier Transform
+ * (spatial domain) of another (frequency) Function.
  * 
  * @author Barry DeZonia
  */
@@ -78,20 +81,26 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 
 	private final ComplexDoubleType tmp;
 
-	private final T type;
-
 	// -- constructor --
 
+	/**
+	 * Creates an IDFTFunction from inputs.
+	 * 
+	 * @param factory
+	 * The factory that is used when creating internal data representations
+	 * @param freqFunction
+	 * The function in frequency space that is to be sampled
+	 * @param span
+	 * The dimensions for the internal spatial image
+	 */
 	public IDFTFunction(
 		ImgFactory<ComplexDoubleType> factory,
 		Function<long[], T> freqFunction,
-		long[] span,
-		T type)
+		long[] span)
 	{
 		if (span.length != 2)
 			throw new IllegalArgumentException(
-					"IDFTFunction is only designed for two dimensional functions");
-		this.type = type;
+				"IDFTFunction is only designed for two dimensional functions");
 
 		this.tmp = new ComplexDoubleType();
 
@@ -103,12 +112,12 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 		exper = new ComplexExp<T,T>();
 		multiplier = new ComplexMultiply<T,T,T>();
 
-		TWO_PI_I = type.createVariable();
+		TWO_PI_I = freqFunction.createOutput();
 
-		constant = type.createVariable();
-		expVal = type.createVariable();
-		funcVal = type.createVariable();
-		spatialExponent = type.createVariable();
+		constant = freqFunction.createOutput();
+		expVal = freqFunction.createOutput();
+		funcVal = freqFunction.createOutput();
+		spatialExponent = freqFunction.createOutput();
 
 		TWO_PI_I.setComplexNumber(0, 2 * Math.PI);
 
@@ -125,12 +134,13 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 
 	@Override
 	public IDFTFunction<T> copy() {
-		return new IDFTFunction<T>(imgFactory, freqFunction.copy(), span, type);
+		return new IDFTFunction<T>(
+				imgFactory, freqFunction.copy(), span.clone());
 	}
 
 	@Override
 	public T createOutput() {
-		return type.createVariable();
+		return freqFunction.createOutput();
 	}
 
 	// -- private helpers --
@@ -139,14 +149,16 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 
 	// NOTE - may be centered over 0,0 instead of over M/2, N/2
 
-	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType> createDataArray() {
+	private ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>
+	createDataArray()
+	{
 		final Img<ComplexDoubleType> img = imgFactory.create(span,
 				new ComplexDoubleType());
 		final RandomAccess<ComplexDoubleType> oAccessor = img.randomAccess();
 		final long[] iPosition = new long[2];
 		final long[] oPosition = new long[2];
-		final T sum = type.createVariable();
-		final T uvTerm = type.createVariable();
+		final T sum = freqFunction.createOutput();
+		final T uvTerm = freqFunction.createOutput();
 		for (int ou = 0; ou < span[0]; ou++) {
 			oPosition[0] = ou;
 			for (int ov = 0; ov < span[1]; ov++) {
@@ -167,8 +179,8 @@ public class IDFTFunction<T extends ComplexType<T>> implements
 						sum.getImaginaryDouble());
 			}
 		}
-		return new ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>(img,
-				new ComplexDoubleType());
+		return new ComplexImageFunction<ComplexDoubleType,ComplexDoubleType>(
+				img, new ComplexDoubleType());
 	}
 
 	private void calcTermAtPoint(long[] oPosition, long[] iPosition, T uvTerm) {

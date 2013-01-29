@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,17 +39,26 @@
 package net.imglib2.ops.util;
 
 /**
+ * Tuple2 allows two classes to be joined as a class. This is useful for
+ * methods that would like to return two values from a computation.
  * 
  * @author Barry DeZonia
  */
 public class Tuple2<ONE,TWO> {
+	
+	// -- instance variables --
+	
 	private ONE one;
 	private TWO two;
+	
+	// -- constructor --
 	
 	public Tuple2(ONE one, TWO two) {
 		this.one = one;
 		this.two = two;
 	}
+	
+	// -- Tuple2 methods --
 	
 	public void set1(ONE one) { this.one = one; }
 	public void set2(TWO two) { this.two = two; }

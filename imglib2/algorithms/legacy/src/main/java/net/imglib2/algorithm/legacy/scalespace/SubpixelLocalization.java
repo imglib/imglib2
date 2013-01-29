@@ -1,11 +1,12 @@
 /*
  * #%L
- * ImgLib: a general-purpose, multidimensional Img processing library.
+ * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -25,6 +26,9 @@
 
 package net.imglib2.algorithm.legacy.scalespace;
 
+import Jama.Matrix;
+import Jama.SingularValueDecomposition;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -41,9 +45,6 @@ import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.view.Views;
-
-import Jama.Matrix;
-import Jama.SingularValueDecomposition;
 
 /**
  * TODO
@@ -117,7 +118,8 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 	        threads[ithread] = new Thread(new Runnable()
 	        {
-	            public void run()
+	            @Override
+							public void run()
 	            {
 	            	final int myNumber = ai.getAndIncrement();
 	            	
@@ -439,7 +441,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	 * defined by the position of the {@link LocalizableByDimCursor}.
 	 * 
 	 * @param cursor - the position for which to compute the Hessian Matrix
-	 * @param Img<DoubleType> - the derivative, which is essentially a one-dimensional {@link DoubleType} {@link Img} of size [numDimensions]
+	 * @param derivativeVector - the derivative, which is essentially a one-dimensional {@link DoubleType} {@link Img} of size [numDimensions]
 	 */
 	final public static <T extends RealType<T>> void computeDerivativeVector( final RandomAccess<T> cursor, final Img<DoubleType> derivativeVector )
 	{
@@ -500,7 +502,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	 * defined by the position of the {@link LocalizableByDimCursor}.
 	 * 
 	 * @param cursor - the position for which to compute the Hessian Matrix
-	 * @param Img<DoubleType> - the hessian matrix, which is essentially a two-dimensional {@link DoubleType} {@link Img} of size [numDimensions][numDimensions]
+	 * @param hessianMatrix - the hessian matrix, which is essentially a two-dimensional {@link DoubleType} {@link Img} of size [numDimensions][numDimensions]
 	 */
 	final public static <T extends RealType<T>> void computeHessianMatrix( final RandomAccess<T> cursor, final Img<DoubleType> hessianMatrix )
 	{

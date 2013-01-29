@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,54 +37,54 @@
 
 package net.imglib2.sampler.special;
 
-import java.awt.Image;
-
+import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.Iterator;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.type.Type;
 
 /**
+ * TODO: Remove or fix (currently assumes that the underlying RandomAccessibleInterval has min=0).
+ *
  * Generic {@link Iterator} for orthogonal 2d-slices.  This implementation
  * iterates row by row from top left to bottom right mapping <em>x</em> and
  * <em>y</em> to two arbitrary dimensions using a
  * {@link RandomAccess} provided either directly or through an
- * {@link Image}.  While, for most {@link Img Containers}, this is the
+ * {@link Img}.  While, for most {@link Img Containers}, this is the
  * sufficient implementation, sometimes, a different iteration order is
  * required.  Such {@link Img Containers} are expected to provide their
  * own adapted implementation.
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Interval
+@Deprecated
+public class OrthoSliceCursor< T extends Type< T > > extends AbstractWrappedInterval< Interval > implements Cursor< T >
 {
 	/* index of x and y dimensions */
-	final protected Interval interval;
 	final protected int x, y;
 	final protected long w, h, maxX, maxY;
 	protected boolean initialState;
-	
+
 	final protected RandomAccess< T > sampler;
-	
+
 	/*
 	private static long[] intToLong( final int[] i )
 	{
 		final long[] l = new long[ i.length ];
-		
+
 		for ( int d = 0; d < i.length; ++d )
 			l[ d ] = i[ d ];
-		
+
 		return l;
 	}
 	*/
-	
+
 	/**
 	 * @param f The {@link RandomAccessible} and {@link Interval} object, such as an {@link Img}.
 	 * @param x One of the two dimensions of the orthoslice plane.
@@ -92,22 +93,22 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	 */
 	public < F extends RandomAccessible< T > & Interval > OrthoSliceCursor( final F f, final int x, final int y, final long[] position )
 	{
-		interval = f;
+		super( f );
 		this.sampler = f.randomAccess();
 		this.x = x;
 		this.y = y;
-		w = interval.dimension( x );
-		h = interval.dimension( y );
+		w = f.dimension( x );
+		h = f.dimension( y );
 		maxX = w - 1;
 		maxY = h - 1;
-		
+
 		sampler.setPosition( position );
 		reset();
 	}
 
 	protected OrthoSliceCursor( final OrthoSliceCursor< T > cursor )
 	{
-		this.interval = cursor.interval;
+		super( cursor.sourceInterval );
 		this.sampler = cursor.sampler.copyRandomAccess();
 		this.x = cursor.x;
 		this.y = cursor.y;
@@ -122,12 +123,6 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	public T get()
 	{
 		return sampler.get();
-	}
-
-	@Override
-	public int numDimensions()
-	{
-		return sampler.numDimensions();
 	}
 
 	@Override
@@ -175,7 +170,7 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	@Override
 	public void localize( final float[] position )
 	{
-		sampler.localize( position );	
+		sampler.localize( position );
 	}
 
 	@Override
@@ -191,7 +186,7 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 		if ( xi == maxX )
 		{
 			sampler.setPosition( 0, x );
-			
+
 			if ( initialState )
 				initialState = false;
 			else
@@ -226,7 +221,7 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 	@Override
 	public boolean hasNext()
 	{
-		// if we do not query for the initial state, hasNext is false if the 
+		// if we do not query for the initial state, hasNext is false if the
 		// size of the second dimension is only 1
 		return sampler.getIntPosition( y ) < maxY || sampler.getIntPosition( x ) < maxX || initialState;
 	}
@@ -240,90 +235,6 @@ public class OrthoSliceCursor< T extends Type< T > > implements Cursor< T >, Int
 
 	@Override
 	public void remove() {}
-
-	@Override
-	public long min( final int d )
-	{
-		return interval.min( d );
-	}
-
-	@Override
-	public void min( final long[] min )
-	{
-		interval.min( min );
-	}
-
-	@Override
-	public void min( final Positionable min )
-	{
-		interval.min( min );
-	}
-
-	@Override
-	public long max( final int d )
-	{
-		return interval.max( d );
-	}
-
-	@Override
-	public void max( final long[] max )
-	{
-		interval.max( max );
-	}
-
-	@Override
-	public void max( final Positionable max )
-	{
-		interval.max( max );
-	}
-
-	@Override
-	public void dimensions( final long[] size )
-	{
-		interval.dimensions( size );
-	}
-
-	@Override
-	public long dimension( final int d )
-	{
-		return interval.dimension( d );
-	}
-
-	@Override
-	public double realMin( final int d )
-	{
-		return interval.realMax( d );
-	}
-
-	@Override
-	public void realMin( final double[] min )
-	{
-		interval.realMax( min );
-	}
-
-	@Override
-	public void realMin( final RealPositionable min )
-	{
-		interval.realMax( min );
-	}
-
-	@Override
-	public double realMax( final int d )
-	{
-		return interval.realMax( d );
-	}
-
-	@Override
-	public void realMax( final double[] max )
-	{
-		interval.realMax( max );
-	}
-
-	@Override
-	public void realMax( final RealPositionable max )
-	{
-		interval.realMax( max );
-	}
 
 	@Override
 	public OrthoSliceCursor< T > copy()

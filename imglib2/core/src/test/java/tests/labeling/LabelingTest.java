@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -456,6 +457,44 @@ public class LabelingTest
 			assertEquals( y.size(), 1 );
 			assertEquals( x.get( 0 ), y.get( 0 ) );
 		}
+	}
+
+	@Test
+	public void testCopyCursor()
+	{
+		final long[] dimensions = new long[] { 2, 2 };
+		final Labeling< Integer > labeling = makeLabeling( 1, dimensions );
+
+		final Cursor< LabelingType< Integer >> c = labeling.cursor();
+		c.fwd();
+		c.get().setLabel( 1 );
+		c.fwd();
+		c.get().setLabel( 2 );
+
+		final Cursor< LabelingType< Integer >> c2 = labeling.cursor().copyCursor();
+		c2.fwd();
+		assertTrue( c2.get().getLabeling().contains( 1 ) );
+		c2.fwd();
+		assertTrue( c2.get().getLabeling().contains( 2 ) );
+	}
+
+	@Test
+	public void testCopyRandomAccess()
+	{
+		final long[] dimensions = new long[] { 2, 2 };
+		final Labeling< Integer > labeling = makeLabeling( 1, dimensions );
+
+		final RandomAccess< LabelingType< Integer >> a = labeling.randomAccess();
+		a.setPosition( new long[] { 0, 0 } );
+		a.get().setLabel( 1 );
+		a.setPosition( new long[] { 1, 1 } );
+		a.get().setLabel( 2 );
+
+		final RandomAccess< LabelingType< Integer >> a2 = labeling.randomAccess().copyRandomAccess();
+		a2.setPosition( new long[] { 0, 0 } );
+		assertTrue( a2.get().getLabeling().contains( 1 ) );
+		a2.setPosition( new long[] { 1, 1 } );
+		assertTrue( a2.get().getLabeling().contains( 2 ) );
 	}
 
 	@Test

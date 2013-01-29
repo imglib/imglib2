@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,21 +44,28 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Wraps the real values of a complex {@link Function} as a real Function.
  * 
  * @author Barry DeZonia
  */
 public class RealAdapterFunction<INPUT, C extends ComplexType<C>, R extends RealType<R>> 
 	implements Function<INPUT,R>
 {
+	// -- instance variables --
+	
 	private final Function<INPUT,C> complexFunc;
 	private final C cType;
 	private final R rType;
+	
+	// -- constructor --
 	
 	public RealAdapterFunction(Function<INPUT,C> complexFunc, C cType, R rType) {
 		this.rType = rType.createVariable();
 		this.cType = cType.createVariable();
 		this.complexFunc = complexFunc;
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(INPUT input, R r) {

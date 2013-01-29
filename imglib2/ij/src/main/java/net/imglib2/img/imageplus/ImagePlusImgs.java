@@ -26,6 +26,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 package net.imglib2.img.imageplus;
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
 
 import ij.ImagePlus;
 import ij.process.ByteProcessor;
@@ -72,9 +108,6 @@ final public class ImagePlusImgs
 	 * Create a {@link ByteImagePlus}<{@link UnsignedByteType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link ByteProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ByteImagePlus< UnsignedByteType > unsignedBytes( final long... dim )
@@ -86,9 +119,6 @@ final public class ImagePlusImgs
 	 * Create a {@link ByteImagePlus}<{@link ByteType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link ByteProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ByteImagePlus< ByteType > bytes( final long... dim )
@@ -100,9 +130,6 @@ final public class ImagePlusImgs
 	 * Create a {@link ShortImagePlus}<{@link UnsignedShortType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link ShortProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ShortImagePlus< UnsignedShortType > unsignedShorts( final long... dim )
@@ -114,9 +141,6 @@ final public class ImagePlusImgs
 	 * Create a {@link ShortImagePlus}<{@link ShortType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link ShortProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ShortImagePlus< ShortType > shorts( final long... dim )
@@ -130,9 +154,6 @@ final public class ImagePlusImgs
 	 * <p>(In ImageJ that would be a hyperstack of {@link ColorProcessor}s.
 	 * The integers, however, would be displayed as ARGB unsigned byte channels
 	 * and thus look weird.)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public IntImagePlus< UnsignedIntType > unsignedInts( final long... dim )
@@ -146,9 +167,6 @@ final public class ImagePlusImgs
 	 * <p>(In ImageJ that would be a hyperstack of {@link ColorProcessor}s.
 	 * The integers, however, would be displayed as ARGB unsigned byte channels
 	 * and thus look weird.)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public IntImagePlus< IntType > ints( final long... dim )
@@ -160,9 +178,6 @@ final public class ImagePlusImgs
 	 * Create an {@link FloatImagePlusImg}<{@link FloatType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link FloatProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public FloatImagePlus< FloatType > floats( final long... dim )
@@ -174,9 +189,6 @@ final public class ImagePlusImgs
 	 * Create an {@link IntImagePlus}<{@link ARGBType}>.
 	 * 
 	 * <p>(in ImageJ that would be a hyperstack of {@link ColorProcessor}s)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public IntImagePlus< ARGBType > argbs( final long... dim )
@@ -190,9 +202,6 @@ final public class ImagePlusImgs
 	 * <p>(In ImageJ that would be a hyperstack of {@link FloatProcessor}s
 	 * with real and imaginary numbers interleaved in the plane.  That means it
 	 * would look weird.)</p>
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public FloatImagePlus< ComplexFloatType > complexFloats( final long... dim )
@@ -202,12 +211,9 @@ final public class ImagePlusImgs
 	
 	/**
 	 * Create an {@link ImagePlusImg}<{@link ComplexDoubleType}, {@link DoubleArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	final static public < T extends NumericType< T > & NativeType< T > > ImagePlusImg< T, ? > from( final ImagePlus imp )
 	{
-		return ( ImagePlusImg< T, ? > )ImagePlusAdapter.< T >wrap( imp );
+		return ImagePlusAdapter.< T >wrap( imp );
 	}
 }

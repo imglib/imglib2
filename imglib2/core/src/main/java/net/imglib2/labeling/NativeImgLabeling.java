@@ -3,10 +3,11 @@ package net.imglib2.labeling;
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,9 +44,6 @@ import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
-import net.imglib2.converter.Converter;
-import net.imglib2.converter.read.ConvertedCursor;
-import net.imglib2.converter.read.ConvertedRandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.IntegerType;
 
@@ -102,7 +100,7 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	{
 		final RandomAccess< I > rndAccess = img.randomAccess();
 
-		return new ConvertedRandomAccess< I, LabelingType< T >>( rndAccess, new LabelingTypeConverter(), new LabelingType< T >( rndAccess.get(), mapping, generation ) );
+		return new LabelingConvertedRandomAccess< I, T >( rndAccess, generation, mapping );
 	}
 
 	/*
@@ -115,15 +113,15 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	@Override
 	public Cursor< LabelingType< T >> cursor()
 	{
-		Cursor< I > c = img.cursor();
-		return new ConvertedCursor< I, LabelingType< T >>( c, new LabelingTypeConverter(), new LabelingType< T >( c.get(), mapping, generation ) );
+		final Cursor< I > c = img.cursor();
+		return new LabelingConvertedCursor< I, T >( c, generation, mapping );
 	}
 
 	@Override
 	public Cursor< LabelingType< T >> localizingCursor()
 	{
-		Cursor< I > c = img.localizingCursor();
-		return new ConvertedCursor< I, LabelingType< T >>( c, new LabelingTypeConverter(), new LabelingType< T >( c.get(), mapping, generation ) );
+		final Cursor< I > c = img.localizingCursor();
+		return new LabelingConvertedCursor< I, T >( c, generation, mapping );
 	}
 
 	public Img< I > getStorageImg()
@@ -194,17 +192,4 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 
 		};
 	}
-
-	// Empty converter
-	private class LabelingTypeConverter implements Converter< I, LabelingType< T >>
-	{
-
-		@Override
-		public void convert( I input, LabelingType< T > output )
-		{
-			// Nothing to do here
-		}
-
-	}
-
 }

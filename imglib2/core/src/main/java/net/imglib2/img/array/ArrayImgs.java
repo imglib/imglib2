@@ -26,6 +26,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 package net.imglib2.img.array;
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
 
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
@@ -72,9 +108,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link UnsignedByteType}, {@link ByteArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedByteType, ByteArray > unsignedBytes( final long... dim )
@@ -85,10 +118,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link UnsignedByteType}, {@link ByteArray}>
 	 * reusing a passed byte[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< UnsignedByteType, ByteArray > unsignedBytes( final byte[] array, final long... dim )
 	{
@@ -101,9 +130,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link ByteType}, {@link ByteArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ByteType, ByteArray > bytes( final long... dim )
@@ -114,10 +140,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link ByteType}, {@link ByteArray}>
 	 * reusing a passed byte[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< ByteType, ByteArray > bytes( final byte[] array, final long... dim )
 	{
@@ -130,9 +152,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link UnsignedShortType}, {@link ShortArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedShortType, ShortArray > unsignedShorts( final long... dim )
@@ -143,10 +162,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link UnsignedShortType}, {@link ShortArray}>
 	 * reusing a passed short[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< UnsignedShortType, ShortArray > unsignedShorts( final short[] array, final long... dim )
 	{
@@ -159,9 +174,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link ShortType}, {@link ShortArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ShortType, ShortArray > shorts( final long... dim )
@@ -172,10 +184,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link ShortType}, {@link ShortArray}>
 	 * reusing a passed short[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< ShortType, ShortArray > shorts( final short[] array, final long... dim )
 	{
@@ -188,9 +196,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link UnsignedIntType}, {@link IntArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedIntType, IntArray > unsignedInts( final long... dim )
@@ -201,10 +206,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link UnsignedIntType}, {@link IntArray}>
 	 * reusing a passed int[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< UnsignedIntType, IntArray > unsignedInts( final int[] array, final long... dim )
 	{
@@ -217,9 +218,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link IntType}, {@link IntArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< IntType, IntArray > ints( final long... dim )
@@ -230,10 +228,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link IntType}, {@link IntArray}>
 	 * reusing a passed int[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< IntType, IntArray > ints( final int[] array, final long... dim )
 	{
@@ -246,9 +240,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link LongType}, {@link LongArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< LongType, LongArray > longs( final long... dim )
@@ -259,10 +250,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link LongType}, {@link LongArray}>
 	 * reusing a passed long[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< LongType, LongArray > longs( final long[] array, final long... dim )
 	{
@@ -275,9 +262,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link BitType}, {@link BitArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< BitType, BitArray > bits( final long... dim )
@@ -287,9 +271,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< FloatType, FloatArray > floats( final long... dim )
@@ -300,10 +281,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>
 	 * reusing a passed float[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< FloatType, FloatArray > floats( final float[] array, final long... dim )
 	{
@@ -316,9 +293,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< DoubleType, DoubleArray > doubles( final long... dim )
@@ -329,10 +303,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>
 	 * reusing a passed double[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< DoubleType, DoubleArray > doubles( final double[] array, final long... dim )
 	{
@@ -345,9 +315,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link ARGBType}, {@link IntArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ARGBType, IntArray > argbs( final long... dim )
@@ -358,10 +325,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link ARGBType}, {@link IntArray}>
 	 * reusing a passed int[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< ARGBType, IntArray > argbs( final int[] array, final long... dim )
 	{
@@ -374,9 +337,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link ComplexFloatType}, {@link FloatArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ComplexFloatType, FloatArray > complexFloats( final long... dim )
@@ -387,10 +347,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>
 	 * reusing a passed float[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< ComplexFloatType, FloatArray > complexFloats( final float[] array, final long... dim )
 	{
@@ -403,9 +359,6 @@ final public class ArrayImgs
 	
 	/**
 	 * Create an {@link ArrayImg}<{@link ComplexDoubleType}, {@link DoubleArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ComplexDoubleType, DoubleArray > complexDoubles( final long... dim )
@@ -416,10 +369,6 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>
 	 * reusing a passed double[] array.
-	 * 
-	 * @param array
-	 * @param dim
-	 * @return
 	 */
 	final public static ArrayImg< ComplexDoubleType, DoubleArray > complexDoubles( final double[] array, final long... dim )
 	{

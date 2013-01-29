@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,16 +39,17 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
 import net.imglib2.Cursor;
+import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
-import net.imglib2.ops.util.IntervalComperator;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -60,7 +62,7 @@ import net.imglib2.type.numeric.RealType;
  * and merge them back again.
  * 
  * 
- * @author dietzc, hornm University of Konstanz
+ * @author Christian Dietz (University of Konstanz)
  * 
  */
 public final class MergeIterableIntervals< T extends RealType< T >> implements UnaryOutputOperation< IterableInterval< T >[], Img< T >>
@@ -153,8 +155,26 @@ public final class MergeIterableIntervals< T extends RealType< T >> implements U
 		if ( m_invalidDims == null )
 			initConstants( intervals );
 
+		if (res.numDimensions() == 0)
+			return res;
+		
 		RandomAccess< T > randomAccess = res.randomAccess();
-		Arrays.sort( intervals, new IntervalComperator() );
+		Arrays.sort( intervals, new Comparator<Interval>() {	
+			@Override
+			public int compare( Interval o1, Interval o2 )
+			{
+				for ( int d = 0; d < Math.min( o1.numDimensions(), o2.numDimensions() ); d++ )
+				{
+					if ( o1.min( d ) == o2.min( d ) )
+						continue;
+
+					return ( int ) o1.min( d ) - ( int ) o2.min( d );
+				}
+
+				return 0;
+			}
+		});
+
 
 		long[] offset = new long[ intervals[ 0 ].numDimensions() ];
 		long[] intervalWidth = new long[ intervals[ 0 ].numDimensions() ];

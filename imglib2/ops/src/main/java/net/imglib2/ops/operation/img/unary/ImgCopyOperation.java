@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,23 +43,20 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 
 /**
- * TODO
- * 
+ * @author Christian Dietz (University of Konstanz)
+ * @author Martin Horn (University of Konstanz)
  */
 public class ImgCopyOperation< T extends Type< T >> implements UnaryOperation< Img< T >, Img< T >>
 {
 
-	public ImgCopyOperation()
-	{
-
-	}
-
-	// NOTE / TODO - incomplete. Assumes equal iteration order and sizes between
-	// input and output.
-
 	@Override
 	public Img< T > compute( Img< T > input, Img< T > output )
 	{
+		
+		if(!input.iterationOrder().equals(output.iterationOrder())){
+			throw new IllegalArgumentException("Incompatible IterationOrder");
+		}
+		
 		Cursor< T > c1 = input.cursor();
 		Cursor< T > c2 = output.cursor();
 		while ( ( c1.hasNext() && c2.hasNext() ) )

@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,64 +43,55 @@ import java.util.List;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.Point;
-import net.imglib2.ops.operation.UnaryOutputOperation;
+import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.real.DoubleType;
 
+/**
+ * @author Felix Schoenenberger (University of Konstanz)
+ * @author Christian Dietz (University of Konstanz)
+ */
 public class CalculateDiameter implements
-                UnaryOutputOperation<IterableInterval<BitType>, DoubleType> {
+		UnaryOperation<IterableInterval<BitType>, DoubleType> {
 
-        @Override
-        public DoubleType compute(IterableInterval<BitType> input,
-                        DoubleType output) {
-                double diameter = 0.0f;
+	@Override
+	public DoubleType compute(IterableInterval<BitType> input, DoubleType output) {
+		double diameter = 0.0f;
 
-                Cursor<BitType> cursor = input.localizingCursor();
+		Cursor<BitType> cursor = input.localizingCursor();
 
-                List<Point> points = new ArrayList<Point>((int) input.size());
+		List<Point> points = new ArrayList<Point>((int) input.size());
 
-                int[] position = new int[cursor.numDimensions()];
-                while (cursor.hasNext()) {
-                        cursor.fwd();
-                        if (cursor.get().get()) {
-                                cursor.localize(position);
-                                points.add(new Point(position));
-                        }
-                }
+		int[] position = new int[cursor.numDimensions()];
+		while (cursor.hasNext()) {
+			cursor.fwd();
+			if (cursor.get().get()) {
+				cursor.localize(position);
+				points.add(new Point(position));
+			}
+		}
 
-                for (Point p : points) {
-                        for (Point p2 : points) {
-                                double dist = 0.0f;
-                                for (int i = 0; i < p.numDimensions(); i++) {
-                                        dist += (p.getIntPosition(i) - p2
-                                                        .getIntPosition(i))
-                                                        * (p.getIntPosition(i) - p2
-                                                                        .getIntPosition(i));
-                                }
-                                diameter = Math.max(diameter, dist);
-                        }
-                }
+		for (Point p : points) {
+			for (Point p2 : points) {
+				double dist = 0.0f;
+				for (int i = 0; i < p.numDimensions(); i++) {
+					dist += (p.getIntPosition(i) - p2.getIntPosition(i))
+							* (p.getIntPosition(i) - p2.getIntPosition(i));
+				}
+				diameter = Math.max(diameter, dist);
+			}
+		}
 
-                // sqrt for euclidean
-                diameter = Math.sqrt(diameter);
+		// sqrt for euclidean
+		diameter = Math.sqrt(diameter);
 
-                output.set(diameter);
-                return output;
-        }
+		output.set(diameter);
+		return output;
+	}
 
-        @Override
-        public DoubleType createEmptyOutput(IterableInterval<BitType> in) {
-                return new DoubleType();
-        }
-
-        @Override
-        public DoubleType compute(IterableInterval<BitType> in) {
-                return compute(in, createEmptyOutput(in));
-        }
-
-        @Override
-        public UnaryOutputOperation<IterableInterval<BitType>, DoubleType> copy() {
-                return new CalculateDiameter();
-        }
+	@Override
+	public UnaryOperation<IterableInterval<BitType>, DoubleType> copy() {
+		return new CalculateDiameter();
+	}
 
 }

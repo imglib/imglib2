@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,21 +42,32 @@ import net.imglib2.ops.function.Function;
 
 
 /**
+ * Translates the coordinate values of one Function into the
+ * coordinate space of another. Values can then be pulled out
+ * of the alternate space. Continuous (double[]) version.
  * 
  * @author Barry DeZonia
  */
-public class ContinuousTranslationFunction<T> implements Function<double[],T> {
-
+public class ContinuousTranslationFunction<T>
+	implements Function<double[],T>
+{
+	// -- instance variables --
+	
 	private final Function<double[],T> otherFunc;
 	private final double[] deltas;
 	private final double[] localPoint;
 	
-	public ContinuousTranslationFunction(Function<double[],T> otherFunc, double[] deltas)
+	// -- constructor --
+	
+	public ContinuousTranslationFunction(
+			Function<double[],T> otherFunc, double[] deltas)
 	{
 		this.otherFunc = otherFunc;
 		this.deltas = deltas;
 		this.localPoint = new double[deltas.length];
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(double[] point, T output) {
@@ -71,6 +83,7 @@ public class ContinuousTranslationFunction<T> implements Function<double[],T> {
 	
 	@Override
 	public ContinuousTranslationFunction<T> copy() {
-		return new ContinuousTranslationFunction<T>(otherFunc.copy(), deltas.clone());
+		return new ContinuousTranslationFunction<T>(
+				otherFunc.copy(), deltas.clone());
 	}
 }

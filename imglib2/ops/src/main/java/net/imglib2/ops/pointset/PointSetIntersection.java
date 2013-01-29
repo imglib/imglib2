@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,6 +38,7 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
 
 /**
  * PointSetIntersection is a {@link PointSet} that consists of the set of
@@ -45,12 +47,13 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public class PointSetIntersection extends AbstractBoundedRegion implements PointSet {
+public class PointSetIntersection extends AbstractPointSet {
 	
 	// -- instance variables --
 	
 	private final PointSet a, b;
-	private boolean boundsInvalid;
+	private final BoundsCalculator calculator;
+	private boolean needsCalc;
 	
 	// -- constructor --
 	
@@ -59,7 +62,8 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 			throw new IllegalArgumentException();
 		this.a = a;
 		this.b = b;
-		boundsInvalid = true;
+		calculator = new BoundsCalculator();
+		needsCalc = true;
 	}
 	
 	// -- PointSet methods --
@@ -73,11 +77,12 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	public void translate(long[] deltas) {
 		a.translate(deltas);
 		b.translate(deltas);
-		boundsInvalid = true;
+		needsCalc = true;
+		invalidateBounds();
 	}
 	
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new PointSetIntersectionIterator();
 	}
 	
@@ -90,21 +95,27 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	}
 	
 	@Override
-	public long[] findBoundMin() {
-		if (boundsInvalid) calcBounds();
-		return getMin();
+	protected long[] findBoundMin() {
+		if (needsCalc) {
+			calculator.calc(this);
+			needsCalc = false;
+		}
+		return calculator.getMin();
 	}
 
 	@Override
-	public long[] findBoundMax() {
-		if (boundsInvalid) calcBounds();
-		return getMax();
+	protected long[] findBoundMax() {
+		if (needsCalc) {
+			calculator.calc(this);
+			needsCalc = false;
+		}
+		return calculator.getMax();
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		long numElements = 0;
-		PointSetIterator iter = createIterator();
+		PointSetIterator iter = iterator();
 		while (iter.hasNext()) {
 			iter.next();
 			numElements++;
@@ -119,50 +130,83 @@ public class PointSetIntersection extends AbstractBoundedRegion implements Point
 	
 	// -- private helpers --
 	
-	private void calcBounds() {
-		PointSetIterator iter = createIterator();
-		while (iter.hasNext()) {
-			long[] point = iter.next();
-			if (boundsInvalid) {
-				boundsInvalid = false;
-				setMax(point);
-				setMin(point);
-			}
-			else {
-				updateMax(point);
-				updateMin(point);
-			}
-		}
-	}
-	
-	private class PointSetIntersectionIterator implements PointSetIterator {
-		
+	private class PointSetIntersectionIterator extends AbstractCursor<long[]>
+		implements PointSetIterator
+	{
 		private final PointSetIterator aIter;
-		private long[] next;
+		private long[] curr;
+		private long[] nextCache;
 		
 		public PointSetIntersectionIterator() {
-			aIter = a.createIterator();
-			next = null;
+			super(a.numDimensions());
+			aIter = a.iterator();
+			reset();
 		}
 		
 		@Override
 		public boolean hasNext() {
-			while (aIter.hasNext()) {
-				next = aIter.next();
-				if (b.includes(next)) return true;
-			}
-			return false;
-		}
-		
-		@Override
-		public long[] next() {
-			return next;
+			if (nextCache != null) return true;
+			return positionToNext();
 		}
 		
 		@Override
 		public void reset() {
 			aIter.reset();
+			curr = null;
+			nextCache = null;
 		}
+		
+		@Override
+		public long[] get() {
+			return curr;
+		}
+
+		@Override
+		public void fwd() {
+			if ((nextCache != null) || (positionToNext())) {
+				if (curr == null) curr = new long[n];
+				for (int i = 0; i < n; i++)
+					curr[i] = nextCache[i];
+				nextCache = null;
+				return;
+			}
+			throw new IllegalArgumentException("fwd() cannot go beyond end");
+		}
+
+		@Override
+		public void localize(long[] position) {
+			for (int i = 0; i < n; i++) {
+				position[i] = curr[i];
+			}
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return curr[d];
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new PointSetIntersectionIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
+
+		private boolean positionToNext() {
+			nextCache = null;
+			while (aIter.hasNext()) {
+				long[] pos = aIter.next();
+				if (b.includes(pos)) {
+					nextCache = pos;
+					return true;
+				}
+			}
+			return false;
+		}
+
 	}
 }
 

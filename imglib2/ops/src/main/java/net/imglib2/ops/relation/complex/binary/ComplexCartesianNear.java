@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,15 +42,21 @@ import net.imglib2.ops.relation.BinaryRelation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * Returns true if two complex numbers are near each other in a cartesian (x,y)
+ * sense. The tolerances can be specified in the constructor.
  * 
  * @author Barry DeZonia
  */
 public final class ComplexCartesianNear<T extends ComplexType<T>,U extends ComplexType<U>>
 	implements BinaryRelation<T,U>
 {
+	// -- instance variables --
+	
 	private final double rTol;
 	private final double iTol;
 
+	// -- constructors --
+	
 	public ComplexCartesianNear() {
 		rTol = 0.000001;
 		iTol = 0.000001;
@@ -59,6 +66,8 @@ public final class ComplexCartesianNear<T extends ComplexType<T>,U extends Compl
 		this.rTol = rTol;
 		this.iTol = iTol;
 	}
+	
+	// -- BinaryRelation methods --
 	
 	@Override
 	public boolean holds(T val1, U val2) {

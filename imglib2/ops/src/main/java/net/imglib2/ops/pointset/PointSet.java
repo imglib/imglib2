@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,6 +38,8 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.IterableInterval;
+
 /**
  * PointSets define a set of point indices (long[]). PointSets can be moved
  * to new locations in space. This allows one to do sliding window type of
@@ -44,7 +47,7 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public interface PointSet {
+public interface PointSet extends IterableInterval<long[]> {
 	
 	/**
 	 * Gets the current origin point of the PointSet
@@ -61,28 +64,16 @@ public interface PointSet {
 	 * Creates an iterator that can be used to pull point indices out of the
 	 * PointSet.
 	 */
-	PointSetIterator createIterator();
+	@Override
+	// overriding to specify better javadoc
+	PointSetIterator iterator();
 
 	/**
-	 * Returns the dimensionality of the points contained in tbe PointSet
+	 * Returns the dimensionality of the points contained in the PointSet
 	 */
+	@Override
+	// overriding to specify better javadoc
 	int numDimensions();
-	
-	/**
-	 * Returns the lower bound of the space containing the PointSet. This
-	 * can be an expensive operation (potentially iterating the whole set
-	 * to calculate). These results are cached when possible. Subsequent
-	 * calls to setAnchor() will invalidate bounds.
-	 */
-	long[] findBoundMin();
-
-	/**
-	 * Returns the upper bound of the space containing the PointSet. This
-	 * can be an expensive operation (potentially iterating the whole set
-	 * to calculate). These results are cached when possible. Subsequent
-	 * calls to setAnchor() will invalidate bounds.
-	 */
-	long[] findBoundMax();
 	
 	/**
 	 * Returns true if a given point is a member of the PointSet
@@ -93,7 +84,8 @@ public interface PointSet {
 	 * Calculates the number of elements in the PointSet. This can be an
 	 * expensive operation (potentially iterating the whole set to count).
 	 */
-	long calcSize();
+	@Override
+	long size();
 	
 	/**
 	 * Make a copy of self. This is useful for multithreaded parallel computation

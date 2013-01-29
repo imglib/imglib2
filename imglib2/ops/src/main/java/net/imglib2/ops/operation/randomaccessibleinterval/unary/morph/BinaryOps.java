@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,12 +45,12 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.iterator.IntervalIterator;
 import net.imglib2.ops.types.ConnectedType;
+import net.imglib2.outofbounds.OutOfBoundsBorderFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.view.Views;
 
 /**
- * 
- * @author schoenen, dietzc, hornm
+ * @author Felix Schoenenberger (University of Konstanz)
  */
 public class BinaryOps< K extends RandomAccessibleInterval< BitType > & IterableInterval< BitType >>
 {
@@ -107,7 +108,7 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 
 		Cursor< BitType > resCur = r.cursor();
 		Cursor< BitType > srcCur = op.localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extendValue( op, new BitType( false ) ).randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
@@ -163,7 +164,7 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 
 		Cursor< BitType > resCur = r.cursor();
 		Cursor< BitType > srcCur = op.localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extendValue( op, new BitType( false ) ).randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
@@ -236,8 +237,8 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 	private void nDEightConnected( final K res, final K src, final long[] dim, final boolean erode, final int count )
 	{
 
-		RandomAccess< BitType > r = Views.extendValue( res, new BitType( false ) ).randomAccess();
-		RandomAccess< BitType > op = Views.extendValue( src, new BitType( false ) ).randomAccess();
+		RandomAccess< BitType > r = Views.extend( res, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
+		RandomAccess< BitType > op = Views.extend( src , new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
 
 		final int kernelSize = ( int ) Math.pow( 3, dim.length );
 		final int[] kernel = new int[ kernelSize ];
@@ -316,7 +317,7 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 	{
 		Cursor< BitType > resCur = r.cursor();
 		Cursor< BitType > srcCur = op.localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extendValue( op, new BitType( false ) ).randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];

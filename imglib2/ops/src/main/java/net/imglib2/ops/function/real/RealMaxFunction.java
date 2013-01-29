@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,45 +39,36 @@
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Computes the maximum value another function takes on across a region.
  * 
  * @author Barry DeZonia
  */
-public class RealMaxFunction<T extends RealType<T>>
-	implements Function<PointSet,T>
+public class RealMaxFunction<T extends RealType<T>> extends
+	AbstractRealStatFunction<T>
 {
-	private final PrimitiveDoubleArray values;
-	private final Function<long[],T> otherFunc;
-	private final RealSampleCollector<T> collector;
-	private final StatCalculator calculator;
+	// -- constructor --
 	
 	public RealMaxFunction(Function<long[],T> otherFunc)
 	{
-		this.otherFunc = otherFunc;
-		values = new PrimitiveDoubleArray();
-		collector = new RealSampleCollector<T>();
-		calculator = new StatCalculator();
+		super(otherFunc);
 	}
+
+	// -- abstract method overrides --
+
+	@Override
+	protected double value(StatCalculator<T> calc) {
+		return calc.max();
+	}
+	
+	// -- Function methods --
 	
 	@Override
 	public RealMaxFunction<T> copy() {
 		return new RealMaxFunction<T>(otherFunc.copy());
-	}
-
-	@Override
-	public void compute(PointSet input, T output) {
-		collector.collect(input, otherFunc, values);
-		double value = calculator.max(values);
-		output.setReal(value);
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
 	}
 
 }

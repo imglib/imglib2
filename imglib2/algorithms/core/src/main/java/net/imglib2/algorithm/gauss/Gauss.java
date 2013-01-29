@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -198,17 +199,14 @@ public class Gauss
 			{
 				return (Img)toFloat( sigma, img, outofbounds );
 			}
-			else
-			{
-				final Img< T > output = img.factory().create( img, img.firstElement() );
-				
-				final RandomAccessible<FloatType> rIn = Views.extend( new WriteConvertedRandomAccessibleInterval< T, FloatType >( img, new RealFloatSamplerConverter<T>()), outofbounds );
-				final RandomAccessible<FloatType> rOut = new WriteConvertedRandomAccessible< T, FloatType >( output, new RealFloatSamplerConverter<T>());
-				
-				inFloat( sigma, rIn, img, rOut, new Point( sigma.length ), img.factory().imgFactory( new FloatType() ) );
-				
-				return output;
-			}
+			final Img< T > output = img.factory().create( img, img.firstElement() );
+			
+			final RandomAccessible<FloatType> rIn = Views.extend( new WriteConvertedRandomAccessibleInterval< T, FloatType >( img, new RealFloatSamplerConverter<T>()), outofbounds );
+			final RandomAccessible<FloatType> rOut = new WriteConvertedRandomAccessible< T, FloatType >( output, new RealFloatSamplerConverter<T>());
+			
+			inFloat( sigma, rIn, img, rOut, new Point( sigma.length ), img.factory().imgFactory( new FloatType() ) );
+			
+			return output;
 		}
 		catch (final IncompatibleTypeException e)
 		{
@@ -222,7 +220,6 @@ public class Gauss
 	 *
 	 * @param sigma - the sigma for the convolution
 	 * @param img - the img {@link Img}
-	 * @return the convolved img
 	 */
 	public static <T extends RealType<T>> void inFloatInPlace( final double sigma, final Img< T > img )
 	{
@@ -235,7 +232,6 @@ public class Gauss
 	 *
 	 * @param sigma - the sigma for the convolution
 	 * @param img - the img {@link Img}
-	 * @return the convolved img
 	 */
 	public static <T extends RealType<T>> void inFloatInPlace( final double[] sigma, final Img< T > img )
 	{
@@ -470,17 +466,14 @@ public class Gauss
 			{
 				return (Img)toDouble( sigma, img, outofbounds );
 			}
-			else
-			{
-				final Img< T > output = img.factory().create( img, img.firstElement() );
-				
-				final RandomAccessible<DoubleType> rIn = Views.extend( new WriteConvertedRandomAccessibleInterval< T, DoubleType >( img, new RealDoubleSamplerConverter<T>()), outofbounds );
-				final RandomAccessible<DoubleType> rOut = new WriteConvertedRandomAccessible< T, DoubleType >( output, new RealDoubleSamplerConverter<T>());
-				
-				inDouble( sigma, rIn, img, rOut, new Point( sigma.length ), img.factory().imgFactory( new DoubleType() ) );
-				
-				return output;
-			}
+			final Img< T > output = img.factory().create( img, img.firstElement() );
+			
+			final RandomAccessible<DoubleType> rIn = Views.extend( new WriteConvertedRandomAccessibleInterval< T, DoubleType >( img, new RealDoubleSamplerConverter<T>()), outofbounds );
+			final RandomAccessible<DoubleType> rOut = new WriteConvertedRandomAccessible< T, DoubleType >( output, new RealDoubleSamplerConverter<T>());
+			
+			inDouble( sigma, rIn, img, rOut, new Point( sigma.length ), img.factory().imgFactory( new DoubleType() ) );
+			
+			return output;
 		}
 		catch (final IncompatibleTypeException e)
 		{
@@ -494,7 +487,6 @@ public class Gauss
 	 *
 	 * @param sigma - the sigma for the convolution
 	 * @param img - the img {@link Img}
-	 * @return the convolved img
 	 */
 	public static <T extends RealType<T>> void inDoubleInPlace( final double sigma, final Img< T > img )
 	{
@@ -507,7 +499,6 @@ public class Gauss
 	 *
 	 * @param sigma - the sigma for the convolution
 	 * @param img - the img {@link Img}
-	 * @return the convolved img
 	 */
 	public static <T extends RealType<T>> void inDoubleInPlace( final double[] sigma, final Img< T > img )
 	{
@@ -674,7 +665,6 @@ public class Gauss
 	 *
 	 * @param sigma - the sigma for the convolution
 	 * @param img - the img {@link Img}
-	 * @return the convolved img
 	 */
 	public static <T extends NumericType<T>> void inNumericTypeInPlace( final double sigma, final Img< T > img )
 	{
@@ -687,7 +677,6 @@ public class Gauss
 	 *
 	 * @param sigma - the sigma for the convolution
 	 * @param img - the img {@link Img}
-	 * @return the convolved img
 	 */
 	public static <T extends NumericType<T>> void inNumericTypeInPlace( final double[] sigma, final Img< T > img )
 	{

@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,7 +52,7 @@ import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.transform.integer.SlicingTransform;
 import net.imglib2.transform.integer.TranslationTransform;
-import net.imglib2.util.Util;
+import net.imglib2.util.Intervals;
 
 /**
  * The "brain" of the Views framework. Simplifies View cascades to provide the
@@ -199,7 +200,7 @@ public class TransformBuilder< T >
 	protected void visitExtended( final ExtendedRandomAccessibleInterval< T, ? > randomAccessible )
 	{
 		final RandomAccessibleInterval< T > sourceInterval = randomAccessible.getSource();
-		if ( ( boundingBox != null ) && Util.contains( sourceInterval, boundingBox.getInterval() ) )
+		if ( ( boundingBox != null ) && Intervals.contains( sourceInterval, boundingBox.getInterval() ) )
 			visit( sourceInterval );
 		else
 			source = randomAccessible;
@@ -404,8 +405,7 @@ public class TransformBuilder< T >
 			{
 				if ( full )
 					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
-				else
-					return new MixedRandomAccess< T >( s.randomAccess(), t );
+				return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
 
 			@Override
@@ -413,8 +413,7 @@ public class TransformBuilder< T >
 			{
 				if ( full )
 					return new FullSourceMapMixedRandomAccess< T >( s.randomAccess(), t );
-				else
-					return new MixedRandomAccess< T >( s.randomAccess(), t );
+				return new MixedRandomAccess< T >( s.randomAccess(), t );
 			}
 		};
 	}

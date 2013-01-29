@@ -2,10 +2,11 @@
  * #%L
  * ImgLib: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,16 +40,16 @@ package mpicbg.imglib.cursor.array;
 import mpicbg.imglib.container.array.Array;
 import mpicbg.imglib.container.basictypecontainer.FakeAccess;
 import mpicbg.imglib.container.basictypecontainer.array.FakeArray;
-import mpicbg.imglib.cursor.LocalizableByDimCursor;
-//import mpicbg.imglib.cursor.link.CursorLink;
-//import mpicbg.imglib.cursor.link.NullLink;
 import mpicbg.imglib.cursor.Localizable;
+import mpicbg.imglib.cursor.LocalizableByDimCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursor;
 import mpicbg.imglib.cursor.special.LocalNeighborhoodCursorFactory;
 import mpicbg.imglib.cursor.special.RegionOfInterestCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.label.FakeType;
+//import mpicbg.imglib.cursor.link.CursorLink;
+//import mpicbg.imglib.cursor.link.NullLink;
 
 /**
  * TODO

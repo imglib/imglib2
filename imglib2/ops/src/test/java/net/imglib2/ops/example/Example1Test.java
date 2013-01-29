@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,10 +38,7 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -52,6 +50,8 @@ import net.imglib2.ops.input.PointInputIterator;
 import net.imglib2.ops.operation.real.binary.RealAdd;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 /**
  * 
@@ -67,7 +67,8 @@ public class Example1Test {
 	}
 
 	private Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+			new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[] { XSIZE, YSIZE }, new DoubleType());
 	}
 
@@ -93,24 +94,30 @@ public class Example1Test {
 
 		Img<DoubleType> inputImage = makeInputImage();
 
-		Function<long[], DoubleType> constant = new RealConstantFunction<long[], DoubleType>(
-				inputImage.firstElement(), 15);
+		Function<long[], DoubleType> constant =
+			new RealConstantFunction<long[], DoubleType>(new DoubleType(15));
 
-		Function<long[], DoubleType> image = new RealImageFunction<DoubleType,DoubleType>(
-				inputImage, new DoubleType());
+		Function<long[], DoubleType> image =
+			new RealImageFunction<DoubleType, DoubleType>(inputImage,
+				new DoubleType());
 
-		Function<long[], DoubleType> additionFunc = new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>(
-				constant, image, new RealAdd<DoubleType,DoubleType,DoubleType>(), new DoubleType());
+		RealAdd<DoubleType, DoubleType, DoubleType> op =
+			new RealAdd<DoubleType, DoubleType, DoubleType>();
 
-		HyperVolumePointSet pointSet = new HyperVolumePointSet(new long[2], new long[2], new long[]{XSIZE-1,YSIZE-1});
+		Function<long[], DoubleType> additionFunc =
+			new GeneralBinaryFunction<long[], DoubleType, DoubleType, DoubleType>(
+				constant, image, op, new DoubleType());
+
+		HyperVolumePointSet pointSet =
+			new HyperVolumePointSet(new long[] { XSIZE, YSIZE });
 		PointInputIterator iter = new PointInputIterator(pointSet);
 
-		DoubleType pointValue = new DoubleType();
+		DoubleType value = new DoubleType();
 		long[] index = null;
 		while (iter.hasNext()) {
 			index = iter.next(index);
-			additionFunc.compute(index, pointValue);
-			assertTrue(veryClose(pointValue.getRealDouble(), (index[0] + index[1] + 15)));
+			additionFunc.compute(index, value);
+			assertTrue(veryClose(value.getRealDouble(), (index[0] + index[1] + 15)));
 			/*
 			{
 				System.out.println(" FAILURE at (" + x + "," + y

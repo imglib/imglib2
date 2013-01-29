@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,31 +44,53 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 
 /**
- * TODO
- *
+ * IntervalView is a view that puts {@link Interval} boundaries on its source
+ * {@link RandomAccessible}. IntervalView uses {@link TransformBuilder} to
+ * create efficient {@link RandomAccess accessors}. Usually an IntervalView is
+ * created through the {@link Views#interval(RandomAccessible, Interval)} method
+ * instead.
  */
 public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >
 {
 	protected final RandomAccessible< T > source;
-	
+
 	protected RandomAccessible< T > fullViewRandomAccessible;
-	
-	public IntervalView( RandomAccessible< T > source, final Interval interval )
+
+	/**
+	 * Create a view that defines an interval on a source. It is the callers
+	 * responsibility to ensure that the source is defined in the specified
+	 * interval.
+	 *
+	 * @see Views#interval(RandomAccessible, Interval)
+	 */
+	public IntervalView( final RandomAccessible< T > source, final Interval interval )
 	{
 		super( interval );
 		assert( source.numDimensions() == interval.numDimensions() );
 
 		this.source = source;
-		this.fullViewRandomAccessible = null;		
+		this.fullViewRandomAccessible = null;
 	}
 
-	public IntervalView( RandomAccessible< T > source, final long[] min, final long[] max )
+	/**
+	 * Create a view that defines an interval on a source. It is the callers
+	 * responsibility to ensure that the source is defined in the specified
+	 * interval.
+	 *
+	 * @see Views#interval(RandomAccessible, Interval)
+	 *
+	 * @param min
+	 *            minimum coordinate of the interval.
+	 * @param max
+	 *            maximum coordinate of the interval.
+	 */
+	public IntervalView( final RandomAccessible< T > source, final long[] min, final long[] max )
 	{
 		super( min, max );
 		assert( source.numDimensions() == min.length );
 
 		this.source = source;
-		this.fullViewRandomAccessible = null;		
+		this.fullViewRandomAccessible = null;
 	}
 
 	public RandomAccessible< T > getSource()
@@ -76,16 +99,16 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	}
 
 	@Override
-	public RandomAccess< T > randomAccess( Interval interval )
+	public RandomAccess< T > randomAccess( final Interval interval )
 	{
-		return TransformBuilder.getEfficientRandomAccessible( interval, this ).randomAccess(); 
+		return TransformBuilder.getEfficientRandomAccessible( interval, this ).randomAccess();
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
 		if ( fullViewRandomAccessible == null )
-			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( this, this ); 
+			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( this, this );
 		return fullViewRandomAccessible.randomAccess();
 	}
 }

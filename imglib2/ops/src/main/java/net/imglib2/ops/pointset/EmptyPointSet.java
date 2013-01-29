@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,6 +38,8 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
+
 
 /**
  * EmptyPointSet is a {@link PointSet} that has no members. It is meant for
@@ -44,7 +47,7 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public class EmptyPointSet implements PointSet {
+public class EmptyPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
@@ -65,11 +68,11 @@ public class EmptyPointSet implements PointSet {
 
 	@Override
 	public void translate(long[] deltas) {
-		throw new IllegalArgumentException("cannot translate an EmptyPointSet");
+		invalidateBounds();
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new EmptyPointSetIterator();
 	}
 
@@ -79,12 +82,12 @@ public class EmptyPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return origin;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return origin;
 	}
 
@@ -94,7 +97,7 @@ public class EmptyPointSet implements PointSet {
 	}
 	
 	@Override
-	public long calcSize() {
+	public long size() {
 		return 0;
 	}
 	
@@ -105,7 +108,13 @@ public class EmptyPointSet implements PointSet {
 	
 	// -- private helpers --
 	
-	private class EmptyPointSetIterator implements PointSetIterator {
+	private class EmptyPointSetIterator extends AbstractCursor<long[]> implements
+		PointSetIterator
+	{
+
+		public EmptyPointSetIterator() {
+			super(0);
+		}
 
 		@Override
 		public boolean hasNext() {
@@ -113,15 +122,42 @@ public class EmptyPointSet implements PointSet {
 		}
 
 		@Override
-		public long[] next() {
-			throw new IllegalArgumentException("cannot iterate EmptyPointSet");
-		}
-
-		@Override
 		public void reset() {
 			// do nothing
 		}
 		
+		@Override
+		public long[] get() {
+			throw new UnsupportedOperationException(
+				"Cannot get values from an EmptyPointSet");
+		}
+
+		@Override
+		public void fwd() {
+			// do nothing
+		}
+
+		@Override
+		public void localize(long[] position) {
+			throw new UnsupportedOperationException(
+				"Cannot localize from an EmptyPointSet");
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			throw new UnsupportedOperationException(
+				"Cannot get positions from an EmptyPointSet");
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new EmptyPointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
+		}
 	}
 
 }

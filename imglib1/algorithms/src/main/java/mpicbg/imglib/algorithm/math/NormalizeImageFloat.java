@@ -2,10 +2,11 @@
  * #%L
  * ImgLib: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -25,13 +26,15 @@
 
 package mpicbg.imglib.algorithm.math;
 
-import mpicbg.imglib.image.Image;
-import mpicbg.imglib.image.ImageFactory;
-import mpicbg.imglib.type.numeric.*;
-import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.imglib.algorithm.Benchmark;
 import mpicbg.imglib.algorithm.OutputAlgorithm;
-import mpicbg.imglib.cursor.*;
+import mpicbg.imglib.cursor.Cursor;
+import mpicbg.imglib.cursor.LocalizableByDimCursor;
+import mpicbg.imglib.cursor.LocalizableCursor;
+import mpicbg.imglib.image.Image;
+import mpicbg.imglib.image.ImageFactory;
+import mpicbg.imglib.type.numeric.RealType;
+import mpicbg.imglib.type.numeric.real.FloatType;
 import mpicbg.util.RealSum;
 
 

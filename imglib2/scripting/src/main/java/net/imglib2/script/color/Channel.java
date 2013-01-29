@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -30,11 +31,9 @@ import net.imglib2.script.color.fn.ChannelOp;
 import net.imglib2.script.math.fn.IFunction;
 import net.imglib2.type.numeric.ARGBType;
 
-/** Extracts the pixel value for the desired channel, from 1 to 4,
- *  where RGBA is really ARGB and thus A=4, R=3, G=2, B=1. */
 /**
- * TODO
- *
+ * Extracts the pixel value for the desired channel, from 1 to 4,
+ * where RGBA is really ARGB and thus A=4, R=3, G=2, B=1.
  */
 public class Channel extends ChannelOp {
 
@@ -51,6 +50,7 @@ public class Channel extends ChannelOp {
 	@Override
 	protected final int getShift() { return shift; }
 
+	@Override
 	public IFunction duplicate() {
 		return new Channel(img, channel);
 	}
