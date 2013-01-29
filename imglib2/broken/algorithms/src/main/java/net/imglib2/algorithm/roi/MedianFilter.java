@@ -5,7 +5,6 @@ import net.imglib2.img.Img;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
 
-
 /**
  * Median filter / morphological operation.
  * 

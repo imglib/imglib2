@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.meta;
 
 import net.imglib2.img.ImgPlus;

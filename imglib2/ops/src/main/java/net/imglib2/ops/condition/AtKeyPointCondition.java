@@ -35,14 +35,12 @@
  * #L%
  */
 
-
 package net.imglib2.ops.condition;
 
 import java.util.Arrays;
 
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.ops.util.Tuple2;
-
 
 /**
  * A {@link Condition} that returns true when an input point is at the key point

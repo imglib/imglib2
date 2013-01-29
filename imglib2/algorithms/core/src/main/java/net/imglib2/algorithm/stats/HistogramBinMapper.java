@@ -37,7 +37,6 @@
 
 package net.imglib2.algorithm.stats;
 
-
 /**
  * An interface used by the Histogram class to map Type objects to histogram
  * bins.

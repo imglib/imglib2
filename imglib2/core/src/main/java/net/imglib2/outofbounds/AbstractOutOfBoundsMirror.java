@@ -142,7 +142,6 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		isOutOfBounds = false;
 	}
 
-
 	/* EuclideanSpace */
 
 	@Override
@@ -169,7 +168,6 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 
 	@Override
 	abstract public AbstractOutOfBoundsMirror< T > copy();
-
 
 	/* Localizable */
 
@@ -224,7 +222,6 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	{
 		return zeroMinPos[ d ] + min[ d ];
 	}
-
 
 	/* Positionable */
 
@@ -290,7 +287,6 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
 	}
-
 
 	/* Object */
 

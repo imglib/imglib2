@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.img;
 
 import net.imglib2.type.Type;

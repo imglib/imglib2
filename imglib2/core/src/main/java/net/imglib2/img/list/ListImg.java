@@ -93,7 +93,6 @@ public class ListImg< T > extends AbstractListImg< T >
 		pixels.addAll( collection );
 	}
 
-
 	@Override
 	protected T get( final int index )
 	{

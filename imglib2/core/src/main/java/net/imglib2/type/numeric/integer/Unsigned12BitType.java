@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.type.numeric.integer;
 
 import net.imglib2.img.NativeImg;

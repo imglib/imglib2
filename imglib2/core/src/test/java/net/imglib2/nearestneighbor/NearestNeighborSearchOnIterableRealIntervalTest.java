@@ -48,7 +48,6 @@ import net.imglib2.type.numeric.real.DoubleType;
 import org.junit.Before;
 import org.junit.Test;
 
-
 /**
  * TODO
  *

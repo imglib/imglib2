@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.collection;
 
 import java.util.ArrayList;

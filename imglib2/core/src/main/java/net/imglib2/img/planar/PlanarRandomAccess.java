@@ -76,7 +76,6 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 		type.updateIndex( randomAccess.type.getIndex() );
 	}
 
-
 	public PlanarRandomAccess( final PlanarImg< T, ? > container )
 	{
 		super( container.numDimensions() );
@@ -276,7 +275,6 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	{
 		setPosition( ( int ) pos, d );
 	}
-
 
 	@Override
 	public void setPosition( final Localizable localizable )

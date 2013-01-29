@@ -32,7 +32,6 @@ import java.util.Random;
 
 import mpicbg.imglib.algorithm.kdtree.node.SimpleNode;
 
-
 /**
  * TODO
  *

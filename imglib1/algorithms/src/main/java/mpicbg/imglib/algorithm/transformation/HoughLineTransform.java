@@ -38,7 +38,6 @@ import mpicbg.imglib.type.numeric.integer.LongType;
 import mpicbg.imglib.type.numeric.integer.ShortType;
 import mpicbg.imglib.util.Util;
 
-
 /**
  * A class that extends {@link HoughTransform} to handle Hough Line voting over an edge map.
  * This implementation uses a threshold to determine whether a pixel at a certain point is 

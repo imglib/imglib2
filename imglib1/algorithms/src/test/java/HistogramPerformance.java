@@ -24,7 +24,6 @@
  * #L%
  */
 
-
 import mpicbg.imglib.algorithm.histogram.Histogram;
 import mpicbg.imglib.algorithm.histogram.HistogramBinFactory;
 import mpicbg.imglib.algorithm.histogram.discrete.DiscreteIntHistogramBinFactory;

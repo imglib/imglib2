@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.pointset;
 
 import net.imglib2.AbstractCursor;
 import net.imglib2.FlatIterationOrder;
-
 
 /**
  * HyperVolumePointSet is a {@link PointSet} that spans a contiguous region of

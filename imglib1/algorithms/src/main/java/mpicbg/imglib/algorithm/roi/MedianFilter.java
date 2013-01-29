@@ -31,7 +31,6 @@ import mpicbg.imglib.image.Image;
 import mpicbg.imglib.outofbounds.OutOfBoundsStrategyFactory;
 import mpicbg.imglib.type.numeric.RealType;
 
-
 /**
  * Median filter / morphological operation.
  * 

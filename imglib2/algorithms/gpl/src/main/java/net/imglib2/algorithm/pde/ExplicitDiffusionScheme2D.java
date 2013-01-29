@@ -57,7 +57,6 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends E
 	 * METHODS
 	 */
 
-
 	/**
 	 * Compute the float increment of the current location, for which is given
 	 * the density neighborhood and the diffusion tensor neighborhood.
@@ -69,7 +68,6 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends E
 	 */
 	@Override
 	protected abstract float diffusionScheme(float[] U, float[][]D);
-
 
 	@Override
 	public boolean checkInput() {
@@ -226,7 +224,5 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends E
 		dra.setPosition(1, tensorComponentDimension);
 		target[1][8] = dra.get().get();
 	}
-
-
 
 }

@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.neighborsearch;
 
 import net.imglib2.IterableRealInterval;

@@ -45,7 +45,6 @@ import java.awt.event.MouseWheelListener;
 
 import net.imglib2.realtransform.AffineTransform3D;
 
-
 public class TransformEventHandler3D implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener
 {
 	/**

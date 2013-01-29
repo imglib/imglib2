@@ -36,8 +36,6 @@ package net.imglib2.labeling;
  * #L%
  */
 
-
-
 import java.util.Iterator;
 
 import net.imglib2.Cursor;

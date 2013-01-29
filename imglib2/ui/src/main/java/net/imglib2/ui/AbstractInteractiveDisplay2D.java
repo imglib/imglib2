@@ -38,7 +38,6 @@ package net.imglib2.ui;
 
 import net.imglib2.realtransform.AffineTransform2D;
 
-
 public abstract class AbstractInteractiveDisplay2D extends AbstractInteractiveDisplay
 {
 	/**

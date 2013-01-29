@@ -129,7 +129,6 @@ public class Converters
 		return new WriteConvertedRandomAccessible< A, B >( source, converter );
 	}
 
-
 	/**
 	 * Create a {@link RandomAccessibleInterval} whose {@link RandomAccess
 	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
@@ -171,7 +170,6 @@ public class Converters
 	{
 		return new WriteConvertedRandomAccessibleInterval< A, B >( source, converter );
 	}
-
 
 	/**
 	 * Create a {@link IterableInterval} whose {@link Cursor Cursors}

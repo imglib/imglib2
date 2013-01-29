@@ -35,11 +35,9 @@
  * #L%
  */
 
-
 package net.imglib2.ops.pointset;
 
 import net.imglib2.AbstractCursor;
-
 
 /**
  * UniversalPointSet is a {@link PointSet} that includes all points in

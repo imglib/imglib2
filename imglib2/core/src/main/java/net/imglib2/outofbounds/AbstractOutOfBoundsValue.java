@@ -106,7 +106,6 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends Ab
 		isOutOfBounds = false;
 	}
 
-
 	/* OutOfBounds */
 
 	@Override
@@ -115,7 +114,6 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends Ab
 		checkOutOfBounds();
 		return isOutOfBounds;
 	}
-
 
 	/* Positionable */
 

@@ -108,7 +108,6 @@ public class DoGBenchmark
 			final DifferenceOfGaussian<FloatType> dogNew = new DifferenceOfGaussian<FloatType>( image.getImg(), image.factory(), oobsFactory, sigmaDiff[0], sigmaDiff[1], minInitialPeakValue, K_MIN1_INV );
 			dogNew.setKeepDoGImg( true );
 
-
 			System.out.println( "DifferenceOfGaussian old" );
 			BenchmarkHelper.benchmarkAndPrint( numRuns, printIndividualTimes, new Runnable() {
 				@Override

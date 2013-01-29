@@ -35,15 +35,12 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
-
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.ops.pointset.PointSetIterator;
 import net.imglib2.type.numeric.RealType;
-
 
 /**
  * A RealSampleCollector collects the set of values a function takes over the

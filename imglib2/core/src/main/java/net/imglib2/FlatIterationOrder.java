@@ -37,7 +37,6 @@
 
 package net.imglib2;
 
-
 /**
  * A flat iteration order on an {@link IterableInterval}.
  * Flat iteration order means that cursors iterate line by line, plane by plane, etc.

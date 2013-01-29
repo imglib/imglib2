@@ -14,7 +14,6 @@ import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.ShortType;
 import net.imglib2.util.Util;
 
-
 /**
  * A class that extends {@link HoughTransform} to handle Hough Line voting over an edge map.
  * This implementation uses a threshold to determine whether a pixel at a certain point is 

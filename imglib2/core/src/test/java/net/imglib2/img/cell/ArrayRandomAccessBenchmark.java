@@ -86,7 +86,6 @@ public class ArrayRandomAccessBenchmark
 		intImg = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
 	}
 
-
 	/**
 	 * Fill intImg (a CellContainer with 40x40x40 cells) with data using flat array iteration order.
 	 */
@@ -121,7 +120,6 @@ public class ArrayRandomAccessBenchmark
 		}
 	}
 
-
 	public void copyWithIterationBoth(Img< IntType > srcImg, Img< IntType > dstImg)
 	{
 		Cursor< IntType > src = srcImg.cursor();
@@ -130,8 +128,6 @@ public class ArrayRandomAccessBenchmark
 			dst.next().set( src.next().get() );
 		}
 	}
-
-
 
 	public static Long median( ArrayList<Long> values )
 	{

@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.relation.bool.binary;
 
 import net.imglib2.ops.relation.BinaryRelation;
 import net.imglib2.type.logic.BitType;
-
 
 /**
  * Returns true if two boolean values are not equal and false otherwise.

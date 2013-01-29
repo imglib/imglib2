@@ -46,7 +46,6 @@ import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 
-
 /**
  * A {@link NativeImg} that stores data in an array of 2d-slices each as a
  * linear array of basic types.  For types that are supported by ImageJ (byte,

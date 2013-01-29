@@ -72,7 +72,6 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 		floor = new long[ n ];
 	}
 
-
 	/* RealPositionable */
 
 	@Override
@@ -150,7 +149,6 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 		source.setPosition( position, d );
 		target.setPosition( Floor.floor( position ), d );
 	}
-
 
 	/* Positionable */
 
@@ -237,7 +235,6 @@ public class RealPositionableFloorPositionable< P extends RealLocalizable & Real
 		source.setPosition( position, d );
 		target.setPosition( position, d );
 	}
-
 
 	/* RealLocalizable */
 

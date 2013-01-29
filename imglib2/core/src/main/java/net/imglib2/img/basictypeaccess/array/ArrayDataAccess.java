@@ -37,7 +37,6 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
-
 /**
 *
 */

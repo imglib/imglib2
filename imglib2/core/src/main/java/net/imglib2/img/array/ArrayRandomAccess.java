@@ -160,7 +160,6 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 		type.incIndex( index );
 	}
 
-
 	@Override
 	public void setPosition( final Localizable localizable )
 	{

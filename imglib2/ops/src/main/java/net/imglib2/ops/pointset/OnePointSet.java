@@ -35,13 +35,11 @@
  * #L%
  */
 
-
 package net.imglib2.ops.pointset;
 
 import java.util.Arrays;
 
 import net.imglib2.AbstractCursor;
-
 
 /**
  * OnePointSet represents a {@link PointSet} that contains exactly one point.

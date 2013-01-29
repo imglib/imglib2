@@ -56,7 +56,6 @@ public class ExampleQuadtree
 
 		ImageJFunctions.show( array, "array" );
 
-
 		final NtreeImgFactory< IntType > ntreeFactory = new NtreeImgFactory< IntType >();
 		final Img< IntType > quadtree = ntreeFactory.create( array, new IntType() );
 

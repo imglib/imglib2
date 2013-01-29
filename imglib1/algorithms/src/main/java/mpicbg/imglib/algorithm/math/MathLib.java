@@ -26,7 +26,6 @@
 
 package mpicbg.imglib.algorithm.math;
 
-
 /**
  * TODO
  *

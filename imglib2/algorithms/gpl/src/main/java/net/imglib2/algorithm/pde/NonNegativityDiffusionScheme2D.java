@@ -79,5 +79,4 @@ public class NonNegativityDiffusionScheme2D<T extends RealType<T>> extends Expli
 
 	
 
-
 }

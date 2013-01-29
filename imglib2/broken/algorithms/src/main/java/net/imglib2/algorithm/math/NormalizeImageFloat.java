@@ -11,7 +11,6 @@ import net.imglib2.img.ImgRandomAccess;
 import net.imglib2.exception.IncompatibleTypeException;
 import mpicbg.util.RealSum;
 
-
 /**
  * Normalizes a given {@link Image} so that the sum of all of its pixels is equal to one
  * (or approximately so). 
@@ -97,7 +96,6 @@ public class NormalizeImageFloat <T extends RealType<T>> implements OutputAlgori
 	public String getErrorMessage() {
 		return errorMsg;
 	}
-
 
 	@Override
 	public long getProcessingTime() {		

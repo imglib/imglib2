@@ -71,7 +71,6 @@ implements OutputAlgorithm<Img<FloatType>> {
 		this.D = factory.create(tensorDims, new FloatType());
 	}
 
-
 	@Override
 	public boolean checkInput() {
 		return true;

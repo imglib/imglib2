@@ -37,7 +37,6 @@
 
 package net.imglib2.util;
 
-
 /**
  * N-dimensional data is often stored in a flat 1-dimensional array.
  * This class provides convenience methods to translate between N-dimensional
@@ -290,9 +289,6 @@ public class IntervalIndexer
 		return indexToPosition( index, dimensions, steps, dimension ) + offsets[ dimension ];
 	}
 
-
-
-
 	/**
 	 * Create allocation step array from the dimensions of an N-dimensional array.
 	 *
@@ -318,7 +314,5 @@ public class IntervalIndexer
 		for ( int d = 1; d < dimensions.length; ++d )
 			steps[ d ] = steps[ d - 1 ] * dimensions[ d - 1 ];
 	}
-
-
 
 }

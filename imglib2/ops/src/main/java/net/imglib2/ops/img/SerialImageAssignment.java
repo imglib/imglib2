@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.img;
 
 import net.imglib2.RandomAccess;
@@ -44,7 +43,6 @@ import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.input.InputIterator;
 import net.imglib2.type.numeric.ComplexType;
-
 
 /**
  * <P>

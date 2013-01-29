@@ -40,7 +40,6 @@ public class MorphErode<T extends RealType<T> & Comparable<T>> extends ROIAlgori
         this(imageIn, path, new OutOfBoundsConstantValueFactory<T,Img<T>>(imageIn.firstElement().createVariable()));
     }
 
-
     @Override
     protected boolean patchOperation(StructuringElementCursor<T> strelCursor,
                                      T outputType) {

@@ -17,7 +17,6 @@ import net.imglib2.container.array.ArrayContainerFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.integer.IntType;
 
-
 /** Given two binary images of the same dimensions,
  * generate an interpolated image that sits somewhere
  * in between, as specified by the weight.

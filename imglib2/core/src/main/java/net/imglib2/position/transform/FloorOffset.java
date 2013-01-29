@@ -136,7 +136,6 @@ public class FloorOffset< LocalizablePositionable extends Localizable & Position
 			f[ d ] = f( r.getDoublePosition( d ), offset[ d ] );
 	}
 
-
 	/* RealPositionable */
 
 	@Override

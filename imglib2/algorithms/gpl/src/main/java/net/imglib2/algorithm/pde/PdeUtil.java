@@ -25,7 +25,6 @@ package net.imglib2.algorithm.pde;
  * #L%
  */
 
-
 /**
  * A collection of util static methods related to partial differential equations.
  */
@@ -44,7 +43,6 @@ public class PdeUtil {
 
 		double mu_1 = 0.5 * (ixx + iyy + Math.sqrt( (ixx-iyy) * (ixx-iyy) + 4*ixy*ixy) );
 		double mu_2 = 0.5 * (ixx + iyy - Math.sqrt( (ixx-iyy) * (ixx-iyy) + 4*ixy*ixy) );
-
 
 		double cosalpha;
 		double sinalpha;
@@ -73,6 +71,5 @@ public class PdeUtil {
 		return new double[] { mu_1, mu_2, cosalpha, sinalpha };
 
 	}
-
 
 }

@@ -41,7 +41,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
-
 public class AnisotropicDiffusionExample {
 
 	public static <T extends RealType<T> & NativeType< T >> void  main(String[] args) throws ImgIOException, IncompatibleTypeException {

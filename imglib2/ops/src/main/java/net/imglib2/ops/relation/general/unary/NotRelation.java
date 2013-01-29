@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.relation.general.unary;
 
 import net.imglib2.ops.relation.UnaryRelation;

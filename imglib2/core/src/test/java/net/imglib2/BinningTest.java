@@ -496,7 +496,6 @@ public class BinningTest {
         assertEquals(v1 + 1, v2);
     }
 
-
     /**
      * Tests generating next doubles.
      * 

@@ -35,9 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.relation;
-
 
 /**
  * A unary relation tests whether a relationship exists on an input

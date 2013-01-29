@@ -96,7 +96,6 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 			f[ d ] = round( r.getDoublePosition( d ) );
 	}
 
-
 	/* RealPositionable */
 
 	@Override

@@ -15,9 +15,6 @@ import ij.io.OpenDialog;
 
 import net.imglib2.algorithm.ROIAlgorithm;
 
-
-
-
 /**
  * TODO
  *

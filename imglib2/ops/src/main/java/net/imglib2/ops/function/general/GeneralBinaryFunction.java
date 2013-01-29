@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.function.Function;

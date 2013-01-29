@@ -26,7 +26,6 @@
 
 package mpicbg.imglib.algorithm.kdtree.node;
 
-
 /**
  * TODO
  *

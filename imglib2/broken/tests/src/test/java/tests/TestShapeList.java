@@ -66,7 +66,6 @@ public class TestShapeList
 		//shapeListImp.updateAndDraw();
 		/* ----------------------------------------------------------------- */
 
-
 		
 		
 		/* Copy content into another container */

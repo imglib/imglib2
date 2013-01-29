@@ -323,7 +323,6 @@ public class StructuringElementCursor<T extends Type<T>> implements ImgCursor<T>
 		return strelPos[(int)dim];
 	}
 
-
 	public String getPositionAsString() {
 	    String pos = "(" + strelPos[ 0 ];
         

@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.nearestneighbor;
 
 import ij.CompositeImage;

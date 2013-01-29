@@ -36,8 +36,6 @@ package net.imglib2.labeling;
  * #L%
  */
 
-
-
 import java.util.Collection;
 
 import net.imglib2.roi.IterableRegionOfInterest;

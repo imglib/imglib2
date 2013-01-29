@@ -196,7 +196,6 @@ public class CellCursorTest
 		assertArrayEquals( p1, p2 );
 	}
 
-
 	@Test
 	public void testSumWithRandomAccess()
 	{

@@ -24,7 +24,6 @@
  * #L%
  */
 
-
 package net.imglib2.algorithm.legacy.projection;
 
 import java.util.Vector;

@@ -88,7 +88,6 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 			final StructuringElementCursor<T> cursor,
 			final S outputType);
 
-
     protected StructuringElementCursor<T> getStrelCursor()
     {
         return strelCursor;
@@ -108,7 +107,6 @@ public abstract class ROIAlgorithm <T extends Type<T>, S extends Type<S>>
 		return name;
 	}
 	
-
 
 	/**
 	 * Returns the {@link Image} that will eventually become the result of this

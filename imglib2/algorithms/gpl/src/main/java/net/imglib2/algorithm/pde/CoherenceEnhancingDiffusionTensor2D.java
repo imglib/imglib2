@@ -64,7 +64,6 @@ implements OutputAlgorithm<Img<FloatType>> {
 	private double C = 1;
 	private int m = 1;
 
-
 	/*
 	 * CONSTRUCTOR
 	 */
@@ -81,7 +80,6 @@ implements OutputAlgorithm<Img<FloatType>> {
 	public Img<FloatType> getResult() {
 		return D;
 	}
-
 
 	@Override
 	public boolean process() {
@@ -158,11 +156,9 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 		SimpleMultiThreading.startAndJoin(threads);
 
-
 		/* 3.5 Smoooth the structure tensor. */
 
 		Gauss.inFloat(new double[] { rho, rho, 0 }, J);
-
 
 		/* 4. Construct Diffusion tensor. */
 
@@ -256,13 +252,9 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 	}
 
-
-
 	@Override
 	public boolean checkInput() {
 		return true;
 	}
-
-
 
 }

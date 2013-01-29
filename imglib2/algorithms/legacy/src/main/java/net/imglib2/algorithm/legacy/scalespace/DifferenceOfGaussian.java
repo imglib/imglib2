@@ -71,7 +71,6 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 	int numThreads;
 	String errorMessage = "";
 
-
 	static private final double[] asArray( final int nDim, final double sigma )
 	{
 		final double[] s = new double[ nDim ];
@@ -277,7 +276,6 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 		}
 		return SpecialPoint.MIN; // all neighboring pixels have the same value. count it as MIN.
 	}
-
 
 	public ArrayList<DifferenceOfGaussianPeak<FloatType>> findPeaks( final Img<FloatType> laPlace )
 	{

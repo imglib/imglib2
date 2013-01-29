@@ -56,7 +56,6 @@ public class LocalNeighborhoodCursor<T> extends AbstractCursor<T>
 		reset();
 	}
 
-
 	@Override
 	public T get() {
 		return parent.get();

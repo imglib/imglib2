@@ -35,9 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function;
-
 
 /**
  * A {@link BijectiveFunction} is simply a {@link Function} that also allows one

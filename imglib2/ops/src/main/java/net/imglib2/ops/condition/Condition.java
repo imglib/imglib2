@@ -35,9 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.condition;
-
 
 /**
  * An interface that can be tested for truth or falsity for a given input.

@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.img;
 
 import java.util.ArrayList;
@@ -69,7 +68,6 @@ import net.imglib2.type.numeric.ComplexType;
 //   dimensional space and handled as one dataset
 // TODO
 // - add listeners in assign (like progress indicators, stat collectors, etc.)
-
 
 /**
  * A multithreaded implementation that assigns the values of a region of

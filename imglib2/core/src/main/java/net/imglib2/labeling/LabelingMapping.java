@@ -36,8 +36,6 @@ package net.imglib2.labeling;
  * #L%
  */
 
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

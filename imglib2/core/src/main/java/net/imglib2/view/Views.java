@@ -84,7 +84,6 @@ public class Views
 		return new Interpolant< T, F >( source, factory );
 	}
 
-
 	/**
 	 * Turns a {@link RealRandomAccessible} into a {@link RandomAccessible},
 	 * providing {@link RandomAccess} at integer coordinates.
@@ -613,9 +612,6 @@ public class Views
 		return interval( invertAxis( ( RandomAccessible< T > ) interval, d ), min, max );
 	}
 
-
-
-
 	/**
 	 * Define an interval on a RandomAccessible and translate it such that the
 	 * min corner is at the origin. It is the callers responsibility to ensure
@@ -677,7 +673,6 @@ public class Views
 
 		return true;
 	}
-
 
 	/**
 	 * Invert the d-axis and shift the resulting view to the origin.

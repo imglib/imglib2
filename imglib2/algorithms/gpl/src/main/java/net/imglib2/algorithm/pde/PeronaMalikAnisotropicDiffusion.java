@@ -166,7 +166,6 @@ public class PeronaMalikAnisotropicDiffusion <T extends RealType<T>> extends Mul
 		this.maxVal = (float) tmp.getMaxValue();
 	}
 
-
 	/**
 	 * Instantiate the Perona & Malik anisotropic diffusion process, with the default strong-edge
 	 * diffusion function.

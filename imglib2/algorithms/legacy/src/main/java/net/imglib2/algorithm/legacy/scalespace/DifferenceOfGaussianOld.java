@@ -69,7 +69,6 @@ public class DifferenceOfGaussianOld < A extends RealType<A> > implements Algori
 	int numThreads;
 	String errorMessage = "";
 
-
 	static private final double[] asArray( final int nDim, final double sigma )
 	{
 		final double[] s = new double[ nDim ];

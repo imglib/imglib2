@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.operation.real.unary;
 
 import java.util.Random;

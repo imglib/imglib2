@@ -37,7 +37,6 @@
 
 package net.imglib2.util;
 
-
 /**
  * {@link RealSum} implements a method to reduce numerical instabilities
  * when summing up a very large number of double precision numbers.  Numerical

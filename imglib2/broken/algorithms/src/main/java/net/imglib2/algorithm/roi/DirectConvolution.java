@@ -1,7 +1,6 @@
 
 package net.imglib2.algorithm.roi;
 
-
 import java.util.Arrays;
 
 import net.imglib2.Localizable;

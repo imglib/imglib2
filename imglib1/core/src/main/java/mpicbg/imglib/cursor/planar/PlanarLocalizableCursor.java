@@ -107,7 +107,6 @@ public class PlanarLocalizableCursor<T extends Type<T>> extends PlanarCursor<T> 
 		hasNext = true;
 	}
 
-
 	@Override
 	public void getPosition( int[] pos )
 	{

@@ -26,7 +26,6 @@
 
 package net.imglib2.algorithm.localization;
 
-
 /**
  * A n-dimensional Gaussian peak function, representing an elliptical Gaussian,
  * with axis constrained to be aligned with the main axis. 
@@ -121,7 +120,6 @@ public class GaussianMultiDLM implements FitFunction {
 				final double di = x[dim] - a[dim+1];
 				return 2 * a[0] * E(x, a) * a[dim+ndims] * ( 2 * a[dim+ndims] * di * di - 1 );
 
-
 			} else {
 				// d²G / dsi²
 				final int dim = c - ndims - 1;
@@ -159,7 +157,6 @@ public class GaussianMultiDLM implements FitFunction {
 
 	}
 
-
 	/*
 	 * PRIVATE METHODS
 	 */
@@ -175,7 +172,5 @@ public class GaussianMultiDLM implements FitFunction {
 		return Math.exp(-sum);
 	}
 	
-
-
 
 }

@@ -120,5 +120,4 @@ public class ConstantContainer< T extends Type< T > > extends ContainerImpl< T >
 	@Override
 	public boolean compareStorageContainerCompatibility( Container<?> img ) { return false; }
 
-
 }

@@ -115,7 +115,6 @@ public class Gradient<T extends RealType<T>> extends MultiThreadedBenchmarkAlgor
 		return true;
 	}
 
-
 	@Override
 	public Img<FloatType> getResult() {
 		return output;

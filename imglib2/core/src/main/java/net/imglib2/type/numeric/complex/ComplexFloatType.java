@@ -181,7 +181,6 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 		setImaginary( a );
 	}
 
-
 	@Override
 	public void set( final ComplexFloatType c )
 	{

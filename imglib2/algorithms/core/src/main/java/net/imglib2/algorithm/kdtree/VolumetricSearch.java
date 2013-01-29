@@ -51,7 +51,6 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.collection.KDTree;
 import net.imglib2.collection.KDTreeNode;
 
-
 /**
  *The volumetric search uses a K-D tree to search for all hyper-rectangular nodes
  *that contain a given point.

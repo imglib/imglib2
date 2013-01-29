@@ -43,7 +43,6 @@ public class GaussianPeakFitterNDTest {
 	private static final double LOCALIZATION_TOLERANCE_NO_NOISE = 1;
 	private static final double SIGMA_TOLERANCE_NO_NOISE = 1;
 
-
 	@Test
 	public void testProcessNoNoise() {
 		

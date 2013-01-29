@@ -193,7 +193,6 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 		return fullViewRandomAccessible.randomAccess();
 	}
 
-
 	@Override
 	public int numDimensions() {
 		return nDimensions;

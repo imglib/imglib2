@@ -85,7 +85,6 @@ public class PlanarRandomAccessBenchmark
 		intImg = new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
 	}
 
-
 	/**
 	 * Fill intImg (a CellContainer with 40x40x40 cells) with data using flat array iteration order.
 	 */
@@ -119,8 +118,6 @@ public class PlanarRandomAccessBenchmark
 			dst.get().set( src.get() );
 		}
 	}
-
-
 
 	public static Long median( ArrayList<Long> values )
 	{

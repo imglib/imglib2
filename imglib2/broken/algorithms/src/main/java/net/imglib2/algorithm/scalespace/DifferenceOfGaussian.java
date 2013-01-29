@@ -50,7 +50,6 @@ public class DifferenceOfGaussian < A extends Type<A>, B extends NumericType<B> 
 	int numThreads;
 	String errorMessage = "";
 
-
 	static private final double[] asArray( final int nDim, final double sigma )
 	{
 		final double[] s = new double[ nDim ];

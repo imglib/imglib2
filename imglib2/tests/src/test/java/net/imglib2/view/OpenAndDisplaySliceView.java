@@ -35,7 +35,6 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.real.FloatType;
 
-
 /**
  * TODO
  *

@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.RealType;
-
 
 /**
  * This class facilitates the computation of a trimmed mean of another function

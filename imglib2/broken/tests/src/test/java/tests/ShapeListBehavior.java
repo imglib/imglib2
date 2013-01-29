@@ -54,7 +54,6 @@ public class ShapeListBehavior
 		//shapeListImp.updateAndDraw();
 		/* ----------------------------------------------------------------- */
 
-
 		
 		
 		/* Copy content into another container */

@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.neighborsearch;
 
 import net.imglib2.RealLocalizable;
@@ -76,13 +75,11 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	 */
 	public Sampler< T > getSampler( final int i );
 
-
 	/**
 	 * Access the position of the <em>i</em><sup>th</sup> nearest neighbor,
 	 * ordered by square Euclidean distance.
 	 */
 	public RealLocalizable getPosition( final int i );
-
 
 	/**
 	 * Access the square Euclidean distance between the reference location
@@ -90,7 +87,6 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	 * neighbor, ordered by square Euclidean distance.
 	 */
 	public double getSquareDistance( final int i );
-
 
 	/**
 	 * Access the Euclidean distance between the reference location as used for

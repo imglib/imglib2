@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.util;
 
 import net.imglib2.type.numeric.ComplexType;

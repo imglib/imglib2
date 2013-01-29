@@ -32,7 +32,6 @@ import net.imglib2.type.numeric.real.FloatType;
 
 public abstract class ExplicitDiffusionScheme3D<T extends RealType<T>> extends ExplicitDiffusionScheme<T> {
 
-
 	public ExplicitDiffusionScheme3D(Img<T> input, Img<FloatType> D) {
 		super(input, D);
 	}
@@ -158,7 +157,6 @@ public abstract class ExplicitDiffusionScheme3D<T extends RealType<T>> extends E
 
 		
 	}
-
 
 	/**
 	 * Real, symmetric diffusion tensor for 3D structures. The following notations are used, 

@@ -42,7 +42,6 @@ import mpicbg.imglib.type.numeric.integer.UnsignedByteType;
 
 public class GaussianFitTestDrive {
 
-
 	public static void main(String[] args) {
 
 		int width = 100;
@@ -155,13 +154,11 @@ public class GaussianFitTestDrive {
 			};
 		}	
 
-
 		long start = System.currentTimeMillis();
 		SimpleMultiThreading.startAndJoin(threads);
 		long end = System.currentTimeMillis();
 
 		System.out.println(String.format("Time for %d spots: %.2f s.", nspots, (end-start)/1e3f));
-
 
 	}
 
@@ -194,6 +191,5 @@ public class GaussianFitTestDrive {
 		}
 		lc.close();
 	}
-
 
 }

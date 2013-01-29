@@ -36,7 +36,6 @@ package net.imglib2.algorithm.region.localneighborhood;
  * #L%
  */
 
-
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -156,7 +155,6 @@ public final class RectangleNeighborhoodCursor< T > extends RectangleNeighborhoo
 	{
 		return new RectangleNeighborhoodCursor< T >( this );
 	}
-
 
 	@Override
 	public RectangleNeighborhoodCursor< T > copyCursor()

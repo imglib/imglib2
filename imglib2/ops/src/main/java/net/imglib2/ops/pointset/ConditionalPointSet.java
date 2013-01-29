@@ -35,9 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.pointset;
-
 
 import net.imglib2.AbstractCursor;
 import net.imglib2.ops.condition.Condition;
@@ -134,7 +132,6 @@ public class ConditionalPointSet extends AbstractPointSet {
 	public ConditionalPointSet copy() {
 		return new ConditionalPointSet(pointSet.copy(), condition.copy());
 	}
-
 
 	// -- private helpers --
 	

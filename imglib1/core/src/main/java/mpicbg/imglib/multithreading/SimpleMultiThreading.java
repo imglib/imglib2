@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package mpicbg.imglib.multithreading;
 
 import java.util.Vector;

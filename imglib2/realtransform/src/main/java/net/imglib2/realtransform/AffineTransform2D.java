@@ -43,7 +43,6 @@ import net.imglib2.RealPositionable;
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.concatenate.PreConcatenable;
 
-
 /**
  * 2d-affine transformation models to be applied to points in 3d-space.
  * 

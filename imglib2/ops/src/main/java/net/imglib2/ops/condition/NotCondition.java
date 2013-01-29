@@ -35,10 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.condition;
-
-
 
 /**
  * A {@link Condition} that negates the result of another Condition.

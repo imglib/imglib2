@@ -37,8 +37,6 @@
 
 package net.imglib2.transform.integer;
 
-
-
 /**
  * TODO
  *

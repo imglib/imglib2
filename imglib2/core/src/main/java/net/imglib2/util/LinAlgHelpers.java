@@ -587,7 +587,6 @@ public class LinAlgHelpers
 		}
 	}
 
-
 	/**
 	 * invert quaternion, set q = p^{-1}.
 	 * In place inversion (p==q) is permitted.

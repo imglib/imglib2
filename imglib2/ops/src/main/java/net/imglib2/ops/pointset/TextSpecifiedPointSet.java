@@ -35,9 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.pointset;
-
 
 import java.util.Arrays;
 

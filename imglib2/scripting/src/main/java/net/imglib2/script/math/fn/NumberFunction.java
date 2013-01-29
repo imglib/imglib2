@@ -26,7 +26,6 @@
 
 package net.imglib2.script.math.fn;
 
-
 import java.util.Collection;
 
 import net.imglib2.IterableRealInterval;

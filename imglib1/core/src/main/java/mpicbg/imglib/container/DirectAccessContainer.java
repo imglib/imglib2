@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package mpicbg.imglib.container;
 
 import mpicbg.imglib.container.basictypecontainer.DataAccess;

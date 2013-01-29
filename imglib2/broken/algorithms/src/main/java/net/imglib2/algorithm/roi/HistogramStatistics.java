@@ -1,7 +1,6 @@
 
 package net.imglib2.algorithm.roi;
 
-
 import net.imglib2.algorithm.histogram.Histogram;
 import net.imglib2.algorithm.histogram.HistogramBinMapper;
 import net.imglib2.img.Img;
@@ -45,8 +44,6 @@ public abstract class HistogramStatistics<T extends RealType<T>> extends OrderSt
     {
         return statArray;
     }
-
-
 
 	protected double[] getArray()
 	{

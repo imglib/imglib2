@@ -40,7 +40,6 @@ package imglib.ops.condition;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.type.numeric.RealType;
 
-
 /**
  * TODO
  *

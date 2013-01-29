@@ -37,7 +37,6 @@
 
 package net.imglib2.img.sparse;
 
-
 public interface NtreeAccess< L extends Comparable< L >, A extends NtreeAccess< L, A > >
 {
 

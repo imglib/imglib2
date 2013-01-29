@@ -37,7 +37,6 @@
 
 package net.imglib2;
 
-
 /**
  * Implementation of the {@link Interval} interface.
  *

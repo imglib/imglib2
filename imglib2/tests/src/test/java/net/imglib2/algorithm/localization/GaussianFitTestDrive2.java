@@ -38,7 +38,6 @@ import net.imglib2.view.HyperSliceImgPlus;
 
 public class GaussianFitTestDrive2 {
 
-
 	public static <T extends RealType<T> & NativeType<T>> void main(String[] args) {
 
 		/*
@@ -108,7 +107,6 @@ public class GaussianFitTestDrive2 {
 			
 		}
 		
-
 
 	}
 }
