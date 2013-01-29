@@ -49,8 +49,7 @@ import net.imglib2.type.numeric.RealType;
  * @param <T>  the type of the given image, must extend {@link RealType}, for
  * we operate on real values.
  *
- * @author Jean-Yves Tinevez (tinevez@pasteur.fr)
- * @author 2011-2012
+ * @author Jean-Yves Tinevez (tinevez@pasteur.fr) 2011-2013
  */
 public class GaussianPeakFitterND <T extends RealType<T>> {
 
@@ -59,19 +58,34 @@ public class GaussianPeakFitterND <T extends RealType<T>> {
 	private final Img<T> image;
 	private final int ndims;
 	private String errorMessage;
+	private final int maxIteration;
+	private final double lambda;
+	private final double termEpsilon;
 
 	/*
 	 * CONSTRUCTOR
 	 */
 
 	/**
-	 * Instantiate a 2D gaussian peak fitter that will operate on the given image. 
+	 * Instantiate a 2D gaussian peak fitter that will operate on the given image.
 	 * It is important that the image has a 0 background for this class to 
 	 * operate properly. 
+	 * <p>
+	 * @param image the image to operate on.
+	 * @param maxIteration the maximal number of iterations for fitting individual peaks.
+	 * @param lambda blend between steepest descent (lambda high) and jump to bottom of quadratic (lambda zero).
+	 * @param termEpsilon the termination accuracy for the fitting process.
 	 */
-	public GaussianPeakFitterND(final Img<T> image) {
+	public GaussianPeakFitterND(final Img<T> image, int maxIteration, double lambda, double termEpsilon) {
 		this.image = image;
 		this.ndims = image.numDimensions();
+		this.maxIteration = maxIteration;
+		this.lambda = lambda;
+		this.termEpsilon = termEpsilon;
+	}
+	
+	public GaussianPeakFitterND(final Img<T> image) {
+		this(image, 300, 1e-3d, 1e-1d);
 	}
 
 	/*
@@ -84,6 +98,18 @@ public class GaussianPeakFitterND <T extends RealType<T>> {
 	public boolean checkInput() {
 		if (null == image) {
 			errorMessage = BASE_ERROR_MESSAGE + "Image is null.";
+			return false;
+		}
+		if (maxIteration < 1) {
+			errorMessage = BASE_ERROR_MESSAGE + "maxIteration is below 1.";
+			return false;
+		}
+		if (lambda < 0) {
+			errorMessage = BASE_ERROR_MESSAGE + "lambda is negative.";
+			return false;
+		}
+		if (termEpsilon < 0) {
+			errorMessage = BASE_ERROR_MESSAGE + "termEpsilon is negative.";
 			return false;
 		}
 		return true;
@@ -138,13 +164,9 @@ public class GaussianPeakFitterND <T extends RealType<T>> {
 		}
 		
 		// Prepare optimizer
-		int maxiter = 300;
-		double lambda = 1e-3;
-		double termepsilon = 1e-1;
-		
 		final double[] a = start_param.clone();
 		try {
-			LevenbergMarquardtSolver.solve(X, a, I, new GaussianMultiDLM(), lambda , termepsilon, maxiter);
+			LevenbergMarquardtSolver.solve(X, a, I, new GaussianMultiDLM(), lambda , termEpsilon, maxIteration);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
@@ -287,7 +309,7 @@ public class GaussianPeakFitterND <T extends RealType<T>> {
 	 * coordinates as a 2D double array. 
 	 */
 	private static class Observation {
-		public double[] I;
-		public double[][] X;
+		private double[] I;
+		private double[][] X;
 	} 
 }
