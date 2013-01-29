@@ -91,7 +91,9 @@ public class GaussianFitTestDrive2 {
 			
 			ImgPlus<T> currentSlice = new HyperSliceImgPlus<T>(img, 2, z);
 			GaussianPeakFitterND<T> peakFitter = new GaussianPeakFitterND<T>(currentSlice, maxIteration, lambda, termEpsilon);
-			Localizable startPoint = new Point(x0, y0);
+			// NB: Calling "new Point(x0, y0)" results in a compile error with javac.
+			// So we force Javac to use the "Point(int...)" constructor explicitly.
+			Localizable startPoint = new Point(new int[] {x0, y0});
 			double[] results = peakFitter.process(startPoint , new double[] { sigma0, sigma0 });
 			
 			double A = results[0];
