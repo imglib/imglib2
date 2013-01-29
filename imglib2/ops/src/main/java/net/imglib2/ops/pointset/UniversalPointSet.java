@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,6 +38,8 @@
 
 package net.imglib2.ops.pointset;
 
+import net.imglib2.AbstractCursor;
+
 
 /**
  * UniversalPointSet is a {@link PointSet} that includes all points in
@@ -44,7 +47,7 @@ package net.imglib2.ops.pointset;
  * 
  * @author Barry DeZonia
  */
-public class UniversalPointSet implements PointSet {
+public class UniversalPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
@@ -65,11 +68,11 @@ public class UniversalPointSet implements PointSet {
 
 	@Override
 	public void translate(long[] deltas) {
-		// do nothing
+		invalidateBounds();
 	}
 
 	@Override
-	public PointSetIterator createIterator() {
+	public PointSetIterator iterator() {
 		return new UniversalPointSetIterator();
 	}
 
@@ -79,12 +82,12 @@ public class UniversalPointSet implements PointSet {
 	}
 
 	@Override
-	public long[] findBoundMin() {
+	protected long[] findBoundMin() {
 		return origin;
 	}
 
 	@Override
-	public long[] findBoundMax() {
+	protected long[] findBoundMax() {
 		return origin;
 	}
 
@@ -94,7 +97,7 @@ public class UniversalPointSet implements PointSet {
 	}
 
 	@Override
-	public long calcSize() {
+	public long size() {
 		throw new UnsupportedOperationException("UniversalPointSet is infinite in size");
 	}
 
@@ -105,7 +108,13 @@ public class UniversalPointSet implements PointSet {
 
 	// -- private helpers --
 	
-	private class UniversalPointSetIterator implements PointSetIterator {
+	private class UniversalPointSetIterator extends AbstractCursor<long[]>
+		implements PointSetIterator
+	{
+
+		public UniversalPointSetIterator() {
+			super(0);
+		}
 
 		@Override
 		public boolean hasNext() {
@@ -120,6 +129,39 @@ public class UniversalPointSet implements PointSet {
 		@Override
 		public void reset() {
 			// nothing to do
+		}
+		
+		@Override
+		public long[] get() {
+			throw new UnsupportedOperationException(
+				"Cannot get values from a UniversalPointSet");
+		}
+
+		@Override
+		public void fwd() {
+			// nothing to do
+		}
+
+		@Override
+		public void localize(long[] position) {
+			throw new UnsupportedOperationException(
+				"Cannot localize from a UniversalPointSet");
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			throw new UnsupportedOperationException(
+				"Cannot get positions from a UniversalPointSet");
+		}
+
+		@Override
+		public AbstractCursor<long[]> copy() {
+			return new UniversalPointSetIterator();
+		}
+
+		@Override
+		public AbstractCursor<long[]> copyCursor() {
+			return copy();
 		}
 		
 	}

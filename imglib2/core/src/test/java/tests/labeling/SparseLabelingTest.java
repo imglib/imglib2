@@ -28,6 +28,42 @@
  * @author Tobias Pietzsch
  */
 package tests.labeling;
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -115,7 +151,7 @@ public class SparseLabelingTest
 	public void testDefaultConstructor()
 	{
 		final long[] dimensions = { 5, 6, 7 };
-		Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new NtreeImgFactory< IntType >().create( dimensions, new IntType() ) );;
+		Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new NtreeImgFactory< IntType >().create( dimensions, new IntType() ) );
 		assertEquals( 3, labeling.numDimensions() );
 	}
 
@@ -451,6 +487,44 @@ public class SparseLabelingTest
 	}
 
 	@Test
+	public void testCopyCursor()
+	{
+		final long[] dimensions = new long[] { 2, 2 };
+		final Labeling< Integer > labeling = makeLabeling( dimensions );
+
+		final Cursor< LabelingType< Integer >> c = labeling.cursor();
+		c.fwd();
+		c.get().setLabel( 1 );
+		c.fwd();
+		c.get().setLabel( 2 );
+
+		final Cursor< LabelingType< Integer >> c2 = labeling.cursor().copyCursor();
+		c2.fwd();
+		assertTrue( c2.get().getLabeling().contains( 1 ) );
+		c2.fwd();
+		assertTrue( c2.get().getLabeling().contains( 2 ) );
+	}
+
+	@Test
+	public void testCopyRandomAccess()
+	{
+		final long[] dimensions = new long[] { 2, 2 };
+		final Labeling< Integer > labeling = makeLabeling( dimensions );
+
+		final RandomAccess< LabelingType< Integer >> a = labeling.randomAccess();
+		a.setPosition( new long[] { 0, 0 } );
+		a.get().setLabel( 1 );
+		a.setPosition( new long[] { 1, 1 } );
+		a.get().setLabel( 2 );
+
+		final RandomAccess< LabelingType< Integer >> a2 = labeling.randomAccess().copyRandomAccess();
+		a2.setPosition( new long[] { 0, 0 } );
+		assertTrue( a2.get().getLabeling().contains( 1 ) );
+		a2.setPosition( new long[] { 1, 1 } );
+		assertTrue( a2.get().getLabeling().contains( 2 ) );
+	}
+
+	@Test
 	public void testPerformance()
 	{
 		final int rounds = 10;
@@ -496,6 +570,6 @@ public class SparseLabelingTest
 		// Set tp 5,5,5
 		randomAccess.setPosition( posB );
 
-		assertEquals( ( int ) randomAccess.get().get(), label );
+		assertEquals( randomAccess.get().get(), label );
 	}
 }

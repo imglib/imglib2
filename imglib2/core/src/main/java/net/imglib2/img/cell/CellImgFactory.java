@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,17 +51,21 @@ import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.NativeType;
 
 /**
- * TODO
+ * Factory for creating {@link CellImg CellImgs}. The cell dimensions for a
+ * standard cell can be supplied in the constructor of the factory. If no cell
+ * dimensions are given, the factory creates cells of size
+ * <em>10 x 10 x ... x 10</em>.
  *
+ * @author ImgLib2 developers
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory< T >
+public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
 	protected int[] defaultCellDimensions = { 10 };
 
 	public CellImgFactory()
-	{
-	}
-	
+	{}
+
 	public CellImgFactory( final int cellSize )
 	{
 		defaultCellDimensions[ 0 ] = cellSize;
@@ -70,7 +75,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	{
 		if ( cellDimensions == null || cellDimensions.length == 0 )
 		{
-			System.err.println( "CellContainerFactory(): cellSize is null. Using equal cell size of " + defaultCellDimensions[0]);
+			System.err.println( "CellContainerFactory(): cellSize is null. Using equal cell size of " + defaultCellDimensions[ 0 ] );
 			return;
 		}
 
@@ -106,7 +111,7 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 		return dimensions;
 	}
 
-	protected int[] checkCellSize( int[] cellDimensions, long[] dimensions )
+	protected int[] checkCellSize( int[] cellDimensions, final long[] dimensions )
 	{
 		if ( cellDimensions == null )
 		{
@@ -117,8 +122,8 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 
 		if ( cellDimensions.length != dimensions.length )
 		{
-			// System.err.println( "CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality." );
-			int[] cellDimensionsNew = new int[ dimensions.length ];
+//			System.err.println( "CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality." );
+			final int[] cellDimensionsNew = new int[ dimensions.length ];
 
 			for ( int i = 0; i < dimensions.length; i++ )
 			{
@@ -141,76 +146,75 @@ public class CellImgFactory< T extends NativeType<T> > extends NativeImgFactory<
 	}
 
 	@Override
-	public CellImg< T, BitArray, DefaultCell< BitArray > > createBitInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, BitArray, DefaultCell< BitArray > > createBitInstance( long[] dimensions, final int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		final int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellImg< T, BitArray, DefaultCell< BitArray > >( this, new ListImgCells< BitArray >( new BitArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, ByteArray, DefaultCell< ByteArray > > createByteInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, ByteArray, DefaultCell< ByteArray > > createByteInstance( long[] dimensions, final int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		final int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellImg< T, ByteArray, DefaultCell< ByteArray > >( this, new ListImgCells< ByteArray >( new ByteArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, CharArray, DefaultCell< CharArray > > createCharInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, CharArray, DefaultCell< CharArray > > createCharInstance( long[] dimensions, final int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		final int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellImg< T, CharArray, DefaultCell< CharArray > >( this, new ListImgCells< CharArray >( new CharArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, ShortArray, DefaultCell< ShortArray > > createShortInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, ShortArray, DefaultCell< ShortArray > > createShortInstance( long[] dimensions, final int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		final int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellImg< T, ShortArray, DefaultCell< ShortArray > >( this, new ListImgCells< ShortArray >( new ShortArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, IntArray, DefaultCell< IntArray > > createIntInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, IntArray, DefaultCell< IntArray > > createIntInstance( long[] dimensions, final int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		final int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellImg< T, IntArray, DefaultCell< IntArray > >( this, new ListImgCells< IntArray >( new IntArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, LongArray, DefaultCell< LongArray > > createLongInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, LongArray, DefaultCell< LongArray > > createLongInstance( long[] dimensions, final int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		final int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellImg< T, LongArray, DefaultCell< LongArray > >( this, new ListImgCells< LongArray >( new LongArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, FloatArray, DefaultCell< FloatArray > > createFloatInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, FloatArray, DefaultCell< FloatArray > > createFloatInstance( long[] dimensions, final int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		final int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellImg< T, FloatArray, DefaultCell< FloatArray > >( this, new ListImgCells< FloatArray >( new FloatArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@Override
-	public CellImg< T, DoubleArray, DefaultCell< DoubleArray > > createDoubleInstance( long[] dimensions, int entitiesPerPixel )
+	public CellImg< T, DoubleArray, DefaultCell< DoubleArray > > createDoubleInstance( long[] dimensions, final int entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
-		int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
+		final int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
 		return new CellImg< T, DoubleArray, DefaultCell< DoubleArray > >( this, new ListImgCells< DoubleArray >( new DoubleArray( 1 ), entitiesPerPixel, dimensions, cellSize ) );
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
-	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
+	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
 		if ( NativeType.class.isInstance( type ) )
 			return new CellImgFactory( defaultCellDimensions );
-		else
-			throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
+		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 }

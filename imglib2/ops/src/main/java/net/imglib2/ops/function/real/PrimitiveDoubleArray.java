@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -53,6 +54,11 @@ import java.util.Random;
 // Note this class runs 2-4 times faster than using a combination of
 // ArrayLists using add(), clear(), and Collections.sort() does.
 
+// TODO: write an Img<DoubleType> that replaces this functionality. It should
+// be primitive based. It should be growable. Maybe not all memory resident.
+// And the key features is that it is sortable in the subset of values present
+// (rather than all allocated entries). This is used by median calcs elsewhere.
+
 /**
  * A PrimitiveDoubleArray is a fast replacement for ArrayList<Double>. It
  * avoids autoboxing to improve performance.
@@ -82,7 +88,7 @@ public class PrimitiveDoubleArray {
 	
 	public void add(double v) {
 		if (top == values.length) {
-			int newLen = top + (top / 2);
+			int newLen = top * 2;
 			values = Arrays.copyOf(values, newLen);
 		}
 		values[top++] = v;

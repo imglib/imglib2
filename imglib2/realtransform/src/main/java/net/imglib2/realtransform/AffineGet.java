@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,26 +53,17 @@ public interface AffineGet extends InvertibleRealTransform
 	/**
 	 * Get a field of the <em>n</em>&times;(<em>n</em>+1) affine transformation
 	 * matrix.
-	 * 
-	 * @param row
-	 * @param column
-	 * @return
 	 */
 	public double get( final int row, final int column );
 	
 	/**
 	 * Get a copy of the <em>n</em>&times;(<em>n</em>+1) affine transformation
 	 * matrix as a row packed array similar to Jama.
-	 *  
-	 * @return
 	 */
 	public double[] getRowPackedCopy();
 	
 	/**
 	 * Get the constant partial differential vector for dimension d.
-	 * 
-	 * @param d
-	 * @return
 	 */
 	public RealLocalizable d( int d );
 	

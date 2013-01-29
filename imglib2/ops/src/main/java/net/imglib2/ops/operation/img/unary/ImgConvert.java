@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,12 +39,16 @@ package net.imglib2.ops.operation.img.unary;
 
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.img.UnaryOperationAssignment;
 import net.imglib2.ops.operation.UnaryOutputOperation;
-import net.imglib2.ops.operation.iterableinterval.unary.NormalizeIterableInterval;
-import net.imglib2.ops.operation.real.binary.Convert;
-import net.imglib2.ops.operation.real.binary.Convert.TypeConversionTypes;
+import net.imglib2.ops.operation.iterableinterval.unary.MinMax;
+import net.imglib2.ops.operation.real.unary.Convert;
+import net.imglib2.ops.operation.real.unary.Convert.TypeConversionTypes;
+import net.imglib2.ops.operation.real.unary.Normalize;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.ValuePair;
 import net.imglib2.view.Views;
 
 /**
@@ -51,7 +56,7 @@ import net.imglib2.view.Views;
  * 
  * @author hornm, dietzc, University of Konstanz
  */
-public class ImgConvert< I extends RealType< I >, O extends RealType< O >> implements UnaryOutputOperation< Img< I >, Img< O >>
+public class ImgConvert< I extends RealType< I >, O extends RealType< O > & NativeType< O >> implements UnaryOutputOperation< Img< I >, Img< O >>
 {
 
 	public enum ImgConversionTypes
@@ -126,30 +131,13 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O >> imple
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Img< O > createEmptyOutput( Img< I > op )
-	{
-		try
-		{
-			long[] dims = new long[ op.numDimensions() ];
-			op.dimensions( dims );
-			return op.factory().imgFactory( m_outType ).create( dims, m_outType.createVariable() );
-		}
-		catch ( IncompatibleTypeException e )
-		{
-			throw new RuntimeException( e );
-		}
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public Img< O > compute( Img< I > img, Img< O > r )
 	{
 
-		double[] normPar;
+		double factor;
+		ValuePair< I, I > oldMinMax;
 		Convert< I, O > convertOp = null;
+
 		switch ( m_conversionType )
 		{
 		case DIRECT:
@@ -159,26 +147,30 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O >> imple
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.DIRECTCLIP );
 			break;
 		case NORMALIZEDIRECT:
-			normPar = new NormalizeIterableInterval< I, Img< I >>().getNormalizationProperties( img, 0 );
+			oldMinMax = new MinMax< I >( 0, img.firstElement() ).compute( img );
+			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
 
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALE );
 
-			convertOp.setFactor( convertOp.getFactor() / normPar[ 0 ] );
+			convertOp.setFactor( convertOp.getFactor() / factor );
 			convertOp.setInMin( 0 );
 			convertOp.setOutMin( 0 );
 			break;
 		case NORMALIZESCALE:
-			normPar = new NormalizeIterableInterval< I, Img< I >>().getNormalizationProperties( img, 0 );
+			oldMinMax = new MinMax< I >( 0, img.firstElement() ).compute( img );
+			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
 
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALE );
-			convertOp.setFactor( convertOp.getFactor() / normPar[ 0 ] );
-			convertOp.setInMin( normPar[ 1 ] );
+			convertOp.setFactor( convertOp.getFactor() / factor );
+			convertOp.setInMin( oldMinMax.a.getRealDouble() );
 			break;
 		case NORMALIZEDIRECTCLIP:
-			normPar = new NormalizeIterableInterval< I, Img< I >>().getNormalizationProperties( img, 0 );
+			oldMinMax = new MinMax< I >( 0, img.firstElement() ).compute( img );
+			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
+
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALECLIP );
-			convertOp.setFactor( convertOp.getFactor() / normPar[ 0 ] );
-			convertOp.setInMin( normPar[ 1 ] );
+			convertOp.setFactor( convertOp.getFactor() / factor );
+			convertOp.setInMin( oldMinMax.a.getRealDouble() );
 			break;
 		case SCALE:
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALE );
@@ -197,6 +189,19 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O >> imple
 	public UnaryOutputOperation< Img< I >, Img< O >> copy()
 	{
 		return new ImgConvert< I, O >( m_inType.copy(), m_outType.copy(), m_conversionType );
+	}
+
+	@Override
+	public Img< O > createEmptyOutput( Img< I > in )
+	{
+		try
+		{
+			return in.factory().imgFactory( m_outType ).create( in, m_outType );
+		}
+		catch ( IncompatibleTypeException e )
+		{
+			return new ArrayImgFactory< O >().create( in, m_outType );
+		}
 	}
 
 	@Override

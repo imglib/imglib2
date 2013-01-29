@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,21 +44,16 @@ import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.ImgPlus;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.ops.util.metadata.CalibratedSpaceImpl;
 import net.imglib2.type.Type;
-import net.imglib2.type.logic.BitType;
-import net.imglib2.util.Util;
+import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**
- * @author dietzc, hornm (University of Konstanz)
- * 
+ * @author Christian Dietz (University of Konstanz)
  */
 public class SubsetViews {
 
@@ -65,14 +61,13 @@ public class SubsetViews {
 	 * See SubsetViews.subsetView(...) Difference: If possible an optimized
 	 * {@link Cursor} will be created.
 	 * 
-	 * 
 	 * @param <T>
+	 *            TODO
 	 * @param src
 	 *            Source {@link RandomAccessibleInterval}
 	 * @param interval
 	 *            Interval defining dimensionality of resulting
 	 *            {@link IterableRandomAccessibleInterval}
-	 * @return
 	 */
 	public static final <T extends Type<T>> IterableRandomAccessibleInterval<T> iterableSubsetView(
 			final RandomAccessibleInterval<T> src, final Interval interval) {
@@ -86,10 +81,6 @@ public class SubsetViews {
 	 *            The source {@link RandomAccessibleInterval}
 	 * @param interval
 	 *            Interval
-	 * @param keepDimsWithSizeOne
-	 *            If false, dimensions with size one will be virtually removed
-	 *            from the resulting view
-	 * @return
 	 */
 	public static final <T extends Type<T>> RandomAccessibleInterval<T> subsetView(
 			final RandomAccessibleInterval<T> src, final Interval interval) {
@@ -107,7 +98,7 @@ public class SubsetViews {
 			return src;
 
 		RandomAccessibleInterval<T> res;
-		if (Util.contains(src, interval))
+		if (Intervals.contains(src, interval))
 			res = Views.offsetInterval(src, interval);
 		else
 			throw new IllegalArgumentException(
@@ -263,11 +254,7 @@ public class SubsetViews {
 	}
 
 	/**
-	 * Checks weather to intervals have same dimensionality
-	 * 
-	 * @param a
-	 * @param b
-	 * @return
+	 * Checks whether to intervals have same dimensionality.
 	 */
 	public static synchronized boolean intervalEquals(Interval a, Interval b) {
 
@@ -283,27 +270,27 @@ public class SubsetViews {
 		return true;
 	}
 
-	public static void main(String[] args) {
-		ImgPlus<BitType> a = new ImgPlus<BitType>(
-				new ArrayImgFactory<BitType>().create(
-						new long[] { 10, 15, 5, 2 }, new BitType()));
-
-		a.setAxis(Axes.get("X"), 0);
-		a.setAxis(Axes.get("Y"), 1);
-		a.setAxis(Axes.get("T"), 2);
-
-		ImgPlus<BitType> b = new ImgPlus<BitType>(
-				new ArrayImgFactory<BitType>().create(
-						new long[] { 15, 5, 10, 1 }, new BitType()));
-
-		b.setAxis(Axes.get("Y"), 0);
-		b.setAxis(Axes.get("T"), 1);
-		b.setAxis(Axes.get("Channel"), 2);
-		b.setAxis(Axes.get("X"), 3);
-
-		RandomAccessibleInterval<BitType> res = SubsetViews
-				.synchronizeDimensionality(a, a, b, b);
-
-	}
+//	public static void main(String[] args) {
+//		ImgPlus<BitType> a = new ImgPlus<BitType>(
+//				new ArrayImgFactory<BitType>().create(
+//						new long[] { 10, 15, 5, 2 }, new BitType()));
+//
+//		a.setAxis(Axes.get("X"), 0);
+//		a.setAxis(Axes.get("Y"), 1);
+//		a.setAxis(Axes.get("T"), 2);
+//
+//		ImgPlus<BitType> b = new ImgPlus<BitType>(
+//				new ArrayImgFactory<BitType>().create(
+//						new long[] { 15, 5, 10, 1 }, new BitType()));
+//
+//		b.setAxis(Axes.get("Y"), 0);
+//		b.setAxis(Axes.get("T"), 1);
+//		b.setAxis(Axes.get("Channel"), 2);
+//		b.setAxis(Axes.get("X"), 3);
+//
+//		RandomAccessibleInterval<BitType> res = SubsetViews
+//				.synchronizeDimensionality(a, a, b, b);
+//
+//	}
 
 }

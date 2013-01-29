@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,17 +41,17 @@ import java.util.Iterator;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.operation.UnaryOutputOperation;
-import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.util.Pair;
+import net.imglib2.util.ValuePair;
 
 /**
+ * TODO
  * 
- * @author dietzc
+ * @author Christian Dietz (University of Konstanz)
  * 
- * @param <T>
+ * @param <T> TODO
  */
-public final class MinMax< T extends RealType< T >> implements UnaryOutputOperation< IterableInterval< T >, Pair< T, T >>
+public final class MinMax< T extends RealType< T >> implements UnaryOutputOperation< IterableInterval< T >, ValuePair< T, T >>
 {
 
 	private double m_saturation;
@@ -65,7 +66,7 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		{
 
 			int bins;
-			if ( !( type instanceof IntegerType ) )
+			if ( !(type.getMaxValue() < Integer.MAX_VALUE))
 			{
 				bins = Short.MAX_VALUE * 2;
 			}
@@ -83,23 +84,15 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		this( 0, null );
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public Pair< T, T > createEmptyOutput( IterableInterval< T > op )
+	public ValuePair< T, T > createEmptyOutput( IterableInterval< T > op )
 	{
 		final T t = op.iterator().next();
-		return new Pair< T, T >( t.createVariable(), t.createVariable() );
+		return new ValuePair< T, T >( t.createVariable(), t.createVariable() );
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
-	public Pair< T, T > compute( IterableInterval< T > op, Pair< T, T > r )
+	public ValuePair< T, T > compute( IterableInterval< T > op, ValuePair< T, T > r )
 	{
 
 		if ( m_saturation == 0 )
@@ -124,7 +117,7 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		return r;
 	}
 
-	private void calcMinMaxWithSaturation( IterableInterval< T > interval, Pair< T, T > r, OpsHistogram hist )
+	private void calcMinMaxWithSaturation( IterableInterval< T > interval, ValuePair< T, T > r, OpsHistogram hist )
 	{
 		int histMin = 0, histMax;
 		int threshold = ( int ) ( interval.size() * m_saturation / 200.0 );
@@ -158,13 +151,13 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 	}
 
 	@Override
-	public UnaryOutputOperation< IterableInterval< T >, Pair< T, T >> copy()
+	public UnaryOutputOperation< IterableInterval< T >, ValuePair< T, T >> copy()
 	{
 		return new MinMax< T >();
 	}
 
 	@Override
-	public Pair< T, T > compute( IterableInterval< T > in )
+	public ValuePair< T, T > compute( IterableInterval< T > in )
 	{
 		return compute( in, createEmptyOutput( in ) );
 	}

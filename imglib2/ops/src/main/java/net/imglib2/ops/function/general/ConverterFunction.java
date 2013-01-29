@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,17 +48,27 @@ import net.imglib2.type.numeric.NumericType;
 // kind of operation/function to generalize a ConditionalFunction.
 
 /**
- * 
+ * Couples a {@link Function} and a {@link UnaryOperation}. The Function can
+ * return values of any type. This type is an intermediate type. The
+ * UnaryOperation converts values from the intermediate type to the final type
+ * of this Function. The final type must be some kind of {@link NumericType}.
+ *   
  * @author Barry DeZonia
  */
-public class ConverterFunction<INPUT, INTERMEDIATE_TYPE,
+public class ConverterFunction<
+		INPUT,
+		INTERMEDIATE_TYPE,
 		FINAL_TYPE extends NumericType<FINAL_TYPE>>
 	implements Function<INPUT, FINAL_TYPE>
 {
+	// -- instance variables --
+	
 	private final Function<INPUT, INTERMEDIATE_TYPE> intermediateFunc;
 	private final UnaryOperation<INTERMEDIATE_TYPE, FINAL_TYPE> operation;
 	private final INTERMEDIATE_TYPE variable;
 	private final FINAL_TYPE type;
+	
+	// -- constructor --
 	
 	public ConverterFunction(Function<INPUT, INTERMEDIATE_TYPE> func,
 			UnaryOperation<INTERMEDIATE_TYPE, FINAL_TYPE> operation,
@@ -69,6 +80,8 @@ public class ConverterFunction<INPUT, INTERMEDIATE_TYPE,
 		this.variable = func.createOutput();
 	}
 
+	// -- Function methods --
+	
 	@Override
 	public void compute(INPUT input, FINAL_TYPE output) {
 		intermediateFunc.compute(input, variable);
@@ -83,6 +96,6 @@ public class ConverterFunction<INPUT, INTERMEDIATE_TYPE,
 	@Override
 	public ConverterFunction<INPUT, INTERMEDIATE_TYPE, FINAL_TYPE> copy() {
 		return new ConverterFunction<INPUT, INTERMEDIATE_TYPE, FINAL_TYPE>(
-				intermediateFunc.copy(), operation.copy(), type);
+				intermediateFunc.copy(), operation.copy(), type.copy());
 	}
 }

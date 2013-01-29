@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,11 +37,9 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-
-import org.junit.Test;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
@@ -53,6 +52,8 @@ import net.imglib2.ops.pointset.GeneralPointSet;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 // get values that are an average of the 5 values in a 3x3 cross
 
@@ -79,7 +80,8 @@ public class Example4Test {
 	}
 	
 	private Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+			new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
@@ -135,9 +137,13 @@ public class Example4Test {
 		pts.add(new long[]{ 1,-1});
 		pts.add(new long[]{ 1, 1});
 		GeneralPointSet neigh = new GeneralPointSet(new long[]{0,0}, pts);
-		Function<long[],DoubleType> input = new RealImageFunction<DoubleType,DoubleType>(inputImg, new DoubleType());
-		Function<PointSet,DoubleType> prodFunc = new RealProductFunction<DoubleType>(input);
-		HyperVolumePointSet space = new HyperVolumePointSet(new long[]{1,1}, new long[]{XSIZE-2,YSIZE-2});
+		Function<long[], DoubleType> input =
+			new RealImageFunction<DoubleType, DoubleType>(inputImg, new DoubleType());
+		Function<PointSet, DoubleType> prodFunc =
+			new RealProductFunction<DoubleType>(input);
+		HyperVolumePointSet space =
+			new HyperVolumePointSet(new long[] { 1, 1 }, new long[] { XSIZE - 2,
+				YSIZE - 2 });
 		PointSetInputIterator iter = new PointSetInputIterator(space, neigh);
 		DoubleType output = new DoubleType();
 		PointSet points = null;

@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,7 +43,9 @@ import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
- * 
+ * Combines the output of two other {@link Function}s into an output type.
+ * Combines the two outputs using a {@link BinaryOperation}.
+ *  
  * @author Barry DeZonia
  */
 public class GeneralBinaryFunction<INPUT,
@@ -51,6 +54,8 @@ public class GeneralBinaryFunction<INPUT,
 		OUTPUT extends ComplexType<OUTPUT>>
 	implements Function<INPUT, OUTPUT>
 {
+	// -- instance variables --
+	
 	private final Function<INPUT, C1> f1;
 	private final Function<INPUT, C2> f2;
 	private final C1 input1;
@@ -58,6 +63,8 @@ public class GeneralBinaryFunction<INPUT,
 	private final BinaryOperation<C1,C2,OUTPUT> operation;
 	private final OUTPUT type;
 
+	// -- constructor --
+	
 	public GeneralBinaryFunction(Function<INPUT,C1> f1,
 			Function<INPUT,C2> f2,
 			BinaryOperation<C1,C2,OUTPUT> operation,
@@ -71,6 +78,8 @@ public class GeneralBinaryFunction<INPUT,
 		this.operation = operation;
 	}
 
+	// -- Function methods --
+	
 	@Override
 	public void compute(INPUT input, OUTPUT output) {
 		f1.compute(input, input1);

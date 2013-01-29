@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -24,8 +25,6 @@
  */
 
 package net.imglib2.script.algorithm.fn;
-
-import java.awt.Image;
 
 import mpicbg.models.AffineModel2D;
 import mpicbg.models.AffineModel3D;
@@ -102,7 +101,7 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProx
 		final NumericType t = img.firstElement().createVariable();
 		if (ARGBType.class.isAssignableFrom(t.getClass())) {
 			int i = val.intValue();
-			t.set((NumericType)new ARGBType(i));
+			t.set(new ARGBType(i));
 		} else {
 			((RealType)t).setReal(val.doubleValue());
 		}
@@ -120,7 +119,7 @@ public abstract class AbstractAffine3D<T extends NumericType<T>> extends ImgProx
 		if (ARGBType.class.isAssignableFrom(type.getClass())) { // type instanceof RGBALegacyType fails to compile
 			return (Img)processRGBA((Img)img, matrix, mode, (OutOfBoundsFactory)oobf);
 		} else if (type instanceof RealType<?>) {
-			return (Img)processReal((Img)img, matrix, mode, (OutOfBoundsFactory)oobf);
+			return processReal((Img)img, matrix, mode, (OutOfBoundsFactory)oobf);
 		} else {
 			throw new Exception("Affine transform: cannot handle type " + type.getClass());
 		}

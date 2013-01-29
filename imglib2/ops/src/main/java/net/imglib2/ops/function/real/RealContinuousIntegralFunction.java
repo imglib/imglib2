@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,13 +47,13 @@ import net.imglib2.type.numeric.RealType;
 // or simpson's or some appropriate integration fit.
 
 /**
- * 
+ * Does a numerical integration of another function over a user specified region.
+ *  
  * @author Barry DeZonia
  */
 public class RealContinuousIntegralFunction<T extends RealType<T>>
 	implements Function<double[],T>
 {
-
 	// -- instance variables --
 	
 	private final Function<double[],T> otherFunc;
@@ -64,7 +65,9 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 	
 	// -- constructor --
 	
-	public RealContinuousIntegralFunction(Function<double[],T> otherFunc, double[] ranges, double[] deltas) {
+	public RealContinuousIntegralFunction(
+		Function<double[],T> otherFunc, double[] ranges, double[] deltas)
+	{
 		this.otherFunc = otherFunc;
 		this.ranges = ranges.clone();
 		this.deltas = deltas.clone();
@@ -73,7 +76,7 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 		this.position = new double[deltas.length];
 	}
 	
-	// -- public interface --
+	// -- Function methods --
 	
 	@Override
 	public void compute(double[] point, T output) {
@@ -97,6 +100,11 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 		return new RealContinuousIntegralFunction<T>(otherFunc.copy(), ranges, deltas);
 	}
 
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
+	}
+
 	// -- private helpers --
 	
 	private double cellSize(double[] sizes) {
@@ -115,10 +123,5 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 			pos[i] = startPt[i];
 		}
 		return false;
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
 	}
 }

@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -529,9 +530,6 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	/**
 	 * Given an interpolated value, assign a ceiling accounting for roundoff
 	 * error.
-	 * 
-	 * @param x
-	 * @return
 	 */
 	private static long ceil( double x )
 	{
@@ -541,9 +539,6 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	/**
 	 * Given an interpolated value, assign a floor accounting for roundoff
 	 * error.
-	 * 
-	 * @param x
-	 * @return
 	 */
 	private static long floor( double x )
 	{
@@ -578,10 +573,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 					y = ceil( stripe.yMin );
 					continue;
 				}
-				else
-				{
-					stripe = stripes.get( index );
-				}
+				stripe = stripes.get( index );
 			}
 			if ( stripe.yMax <= y )
 			{
@@ -732,7 +724,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 					if ( ( x < xInterpolated ) && ( xInterpolated > xInterpolatedLast ) )
 					{
 						position[ 0 ] = xInterpolatedLast;
-						position[ 1 ] = ( long ) y;
+						position[ 1 ] = y;
 						end[ 0 ] = ( long ) xInterpolated;
 						end[ 1 ] = position[ 1 ];
 						return true;

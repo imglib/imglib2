@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -29,8 +30,8 @@ import java.awt.geom.AffineTransform;
 
 import net.imglib2.img.Img;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.script.algorithm.fn.AbstractAffine3D;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.script.math.fn.IFunction;
 
 /** 
 * Expects matrix values in the same order that {@link AffineTransform} uses.
@@ -51,7 +52,7 @@ public class Affine2D<N extends NumericType<N>> extends Affine3D<N>
 		this(fn, scaleX, shearX,
 				 shearY, scaleY,
 				 translateX, translateY,
-				 Affine3D.BEST, 0);
+				 AbstractAffine3D.BEST, 0);
 	}
 
 	/** Affine transform the image with the best interpolation mode available. */
@@ -67,7 +68,7 @@ public class Affine2D<N extends NumericType<N>> extends Affine3D<N>
 	}
 
 	public Affine2D(final Object fn, final AffineTransform aff) throws Exception {
-		this(fn, aff, Affine3D.BEST);
+		this(fn, aff, AbstractAffine3D.BEST);
 	}
 
 	@SuppressWarnings("boxing")
@@ -76,7 +77,7 @@ public class Affine2D<N extends NumericType<N>> extends Affine3D<N>
 	}
 
 	public Affine2D(final Object fn, final AffineTransform aff, final Number outside) throws Exception {
-		this(fn, aff, Affine3D.BEST, outside);
+		this(fn, aff, AbstractAffine3D.BEST, outside);
 	}
 
 	public Affine2D(final Object fn, final AffineTransform aff, final Mode mode, final Number outside) throws Exception {

@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -27,8 +28,8 @@ package net.imglib2.script.algorithm;
 
 import net.imglib2.img.Img;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
+import net.imglib2.script.algorithm.fn.AbstractAffine3D;
 import net.imglib2.type.numeric.NumericType;
-import net.imglib2.script.math.fn.IFunction;
 
 /** Scale a 2D or 3D image, resizing only the 2D planes as necessary. The Z axis is left untouched.
  * 
@@ -41,7 +42,7 @@ public class Scale2D<N extends NumericType<N>> extends Affine3D<N>
 {
 	/** Scale the given image in 2D using the best interpolation available. */
 	public Scale2D(final Object fn, final Number scale) throws Exception {
-		this(fn, scale.floatValue(), scale.floatValue(), Affine3D.BEST);
+		this(fn, scale.floatValue(), scale.floatValue(), AbstractAffine3D.BEST);
 	}
 
 	public Scale2D(final Object fn, final Number scale, final Mode mode) throws Exception {
@@ -49,7 +50,7 @@ public class Scale2D<N extends NumericType<N>> extends Affine3D<N>
 	}
 
 	public Scale2D(final Object fn, final Number scaleX, Number scaleY) throws Exception {
-		this(fn, scaleX.floatValue(), scaleY.floatValue(), Affine3D.BEST);
+		this(fn, scaleX.floatValue(), scaleY.floatValue(), AbstractAffine3D.BEST);
 	}
 
 	public Scale2D(final Object fn, final Number scaleX, Number scaleY, final Mode mode) throws Exception {

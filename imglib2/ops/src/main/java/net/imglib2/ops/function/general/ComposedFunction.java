@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,14 +71,27 @@ import net.imglib2.ops.pointset.PointSet;
 // needs to be thought about more.
 
 /**
+ * <p>A {@link Function} that is composed of other Functions. Each Function
+ * that makes up the ComposedFunction is associated with a region. Regions
+ * do not have to be continuous and can overlap.
+ * <p>
+ * When a point is handed to a ComposedFunction it determines which region
+ * the point falls in and hands the calculation off to the associated
+ * Function. When a point falls within multiple regions the computation is
+ * done by the first matching region as input to the add() method.
  * 
  * @author Barry DeZonia
  */
-public class ComposedFunction<T> implements Function<long[],T> {
-
+public class ComposedFunction<T>
+	implements Function<long[],T>
+{
+	// -- instance variables --
+	
 	private final int numDims;
 	private final ArrayList<PointSet> regions;
 	private final ArrayList<Function<long[],T>> functions;
+	
+	// -- constructor --
 	
 	public ComposedFunction(int numDims) {
 		this.numDims = numDims;
@@ -85,6 +99,8 @@ public class ComposedFunction<T> implements Function<long[],T> {
 		this.functions = new ArrayList<Function<long[],T>>();
 	}
 
+	// -- ComposedFunction methods --
+	
 	public void add(PointSet region, Function<long[],T> function) {
 		if (region.numDimensions() != numDims)
 			throw new IllegalArgumentException(
@@ -92,6 +108,8 @@ public class ComposedFunction<T> implements Function<long[],T> {
 		regions.add(region);
 		functions.add(function);
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(long[] point, T output) {
@@ -121,8 +139,7 @@ public class ComposedFunction<T> implements Function<long[],T> {
 	public ComposedFunction<T> copy() {
 		ComposedFunction<T> newFunc = new ComposedFunction<T>(numDims);
 		for (int i = 0; i < functions.size(); i++)
-			newFunc.add(regions.get(i), functions.get(i).copy());
-		// TODO - for thread safety regions should be duplicated FIXME
+			newFunc.add(regions.get(i).copy(), functions.get(i).copy());
 		return newFunc;
 	}
 }

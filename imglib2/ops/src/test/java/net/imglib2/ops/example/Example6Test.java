@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,10 +38,7 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -48,6 +46,8 @@ import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 // an interpolation example:
 //   uses continuous neighborhoods
@@ -68,7 +68,8 @@ public class Example6Test {
 	private final int YSIZE = 400;
 	
 	private Img<DoubleType> allocateImage() {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+			new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(new long[]{XSIZE,YSIZE}, new DoubleType());
 	}
 
@@ -91,12 +92,14 @@ public class Example6Test {
 		return Math.abs(d1-d2) < 0.00001;
 	}
 
-	public double interpolate(double ix, double iy, double ul, double ur, double ll, double lr) {
+	public double interpolate(double ix, double iy, double ul, double ur,
+		double ll, double lr)
+	{
 		double value = 0;
-		value += (1-ix)*(1-iy)*ul;
-		value += (1-ix)*(iy)*ll;
-		value += (ix)*(1-iy)*ur;
-		value += (ix)*(iy)*lr;
+		value += (1 - ix) * (1 - iy) * ul;
+		value += (1 - ix) * (iy) * ll;
+		value += (ix) * (1 - iy) * ur;
+		value += (ix) * (iy) * lr;
 		return value;
 	}
 
@@ -109,8 +112,8 @@ public class Example6Test {
 	}
 	
 	private class RealBilinearInterpolatorFunction<T extends RealType<T>> 
-	implements Function<double[],T> {
-
+		implements Function<double[], T>
+	{
 		private Function<long[],T> discreteFunc;
 		private long[] index;
 		private T ul, ur, ll, lr;
@@ -130,10 +133,10 @@ public class Example6Test {
 			long y = (long) Math.floor(point[1]);
 			double ix = point[0] - x;
 			double iy = point[1] - y;
-			getValue((x+0),(y+0),ul);
-			getValue((x+1),(y+0),ur);
-			getValue((x+0),(y+1),ll);
-			getValue((x+1),(y+1),lr);
+			getValue((x + 0), (y + 0), ul);
+			getValue((x + 1), (y + 0), ur);
+			getValue((x + 0), (y + 1), ll);
+			getValue((x + 1), (y + 1), lr);
 			double value = interpolate(ix, iy, ul.getRealDouble(), 
 					ur.getRealDouble(), ll.getRealDouble(), lr.getRealDouble());
 			output.setReal(value);
@@ -158,8 +161,10 @@ public class Example6Test {
 
 	private void doTestCase(double ix, double iy) {
 		Img<DoubleType> inputImg = makeInputImage();
-		Function<long[],DoubleType> input = new RealImageFunction<DoubleType,DoubleType>(inputImg, new DoubleType());
-		Function<double[],DoubleType> interpolator = new RealBilinearInterpolatorFunction<DoubleType>(input);
+		Function<long[], DoubleType> input =
+			new RealImageFunction<DoubleType, DoubleType>(inputImg, new DoubleType());
+		Function<double[], DoubleType> interpolator =
+			new RealBilinearInterpolatorFunction<DoubleType>(input);
 		DoubleType variable = new DoubleType();
 		double[] point = new double[2];
 		for (int x = 0; x < XSIZE-2; x++) {

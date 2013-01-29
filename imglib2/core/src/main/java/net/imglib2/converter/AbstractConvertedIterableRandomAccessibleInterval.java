@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,31 +39,22 @@ package net.imglib2.converter;
 
 import java.util.Iterator;
 
+import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealPositionable;
 
 /**
  * TODO
  *
  */
-abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAccessible< A > & IterableInterval< A > > implements IterableInterval< B >, RandomAccessibleInterval< B >
+abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAccessible< A > & IterableInterval< A > > extends AbstractWrappedInterval< S > implements IterableInterval< B >, RandomAccessibleInterval< B >
 {
-	final protected S source;
-
 	public AbstractConvertedIterableRandomAccessibleInterval( final S source )
 	{
-		this.source = source;
-	}
-
-	@Override
-	public int numDimensions()
-	{
-		return source.numDimensions();
+		super( source );
 	}
 
 	@Override
@@ -70,101 +62,17 @@ abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S
 
 	@Override
 	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( final Interval interval );
-	
-	@Override
-	public long min( final int d )
-	{
-		return source.min( d );
-	}
-
-	@Override
-	public void min( final long[] min )
-	{
-		source.min( min );
-	}
-
-	@Override
-	public void min( final Positionable min )
-	{
-		source.min( min );
-	}
-
-	@Override
-	public long max( final int d )
-	{
-		return source.max( d );
-	}
-
-	@Override
-	public void max( final long[] max )
-	{
-		source.max( max );
-	}
-
-	@Override
-	public void max( final Positionable max )
-	{
-		source.max( max );
-	}
-
-	@Override
-	public void dimensions( final long[] dimensions )
-	{
-		source.dimensions( dimensions );
-	}
-
-	@Override
-	public long dimension( final int d )
-	{
-		return source.dimension( d );
-	}
-
-	@Override
-	public double realMin( final int d )
-	{
-		return source.realMin( d );
-	}
-
-	@Override
-	public void realMin( final double[] min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public void realMin( final RealPositionable min )
-	{
-		source.realMin( min );
-	}
-
-	@Override
-	public double realMax( final int d )
-	{
-		return source.realMax( d );
-	}
-
-	@Override
-	public void realMax( final double[] max )
-	{
-		source.realMax( max );
-	}
-
-	@Override
-	public void realMax( final RealPositionable max )
-	{
-		source.realMax( max );
-	}
 
 	@Override
 	public long size()
 	{
-		return source.size();
+		return sourceInterval.size();
 	}
 
 	@Override
 	public Object iterationOrder()
 	{
-		return source.iterationOrder();
+		return sourceInterval.iterationOrder();
 	}
 
 	@Override

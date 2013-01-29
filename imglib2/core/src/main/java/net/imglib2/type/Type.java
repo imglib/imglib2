@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,15 +37,15 @@
 
 package net.imglib2.type;
 
-
 /**
- * The {@link Type} interface is responsible for accessing and manipulating (pixel)
- * values. It can be realized as an object instance holding a single value or
- * as a proxy ({@link NativeType}) mapping values into a Java primitive type array.
- *
+ * The {@link Type} interface is responsible for accessing and manipulating
+ * (pixel) values. It can be realized as an object instance holding a single
+ * value or as a proxy ({@link NativeType}) mapping values into a Java primitive
+ * type array.
+ * 
  * @param <T>
  *            the specialized version
- *
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -53,7 +54,7 @@ public interface Type< T extends Type< T > >
 {
 	/**
 	 * Creates a new {@link Type} variable which can only store one value.
-	 *
+	 * 
 	 * @return a new {@link Type} variable
 	 */
 	public T createVariable();
@@ -61,14 +62,14 @@ public interface Type< T extends Type< T > >
 	/**
 	 * Creates a new {@link Type} variable that has the value of this
 	 * {@link Type}
-	 *
+	 * 
 	 * @return a new {@link Type} variable
 	 */
 	public T copy();
 
 	/**
 	 * Sets the value of another {@link Type}.
-	 *
+	 * 
 	 * @param c
 	 *            the new value
 	 */

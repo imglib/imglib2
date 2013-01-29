@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,10 +38,7 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -51,6 +49,8 @@ import net.imglib2.ops.input.PointSetInputIterator;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.integer.LongType;
+
+import org.junit.Test;
 
 // a 3x3x3 median example
 
@@ -97,10 +97,16 @@ public class Example3Test {
 		// calculate output values as a median of 3x3x3 cells of image
 		
 		Img<LongType> image = makeInputImage();
-		HyperVolumePointSet inputNeigh = new HyperVolumePointSet(new long[3], new long[]{1,1,1}, new long[]{1,1,1});
-		Function<long[],LongType> imageFunc = new RealImageFunction<LongType,LongType>(image, new LongType());
-		Function<PointSet,LongType> medFunc = new RealMedianFunction<LongType>(imageFunc);
-		HyperVolumePointSet space = new HyperVolumePointSet(new long[]{1,1,1}, new long[]{XSIZE-2,YSIZE-2,ZSIZE-2});
+		HyperVolumePointSet inputNeigh =
+			new HyperVolumePointSet(new long[3], new long[] { 1, 1, 1 }, new long[] {
+				1, 1, 1 });
+		Function<long[], LongType> imageFunc =
+			new RealImageFunction<LongType, LongType>(image, new LongType());
+		Function<PointSet, LongType> medFunc =
+			new RealMedianFunction<LongType>(imageFunc);
+		HyperVolumePointSet space =
+			new HyperVolumePointSet(new long[] { 1, 1, 1 }, new long[] { XSIZE - 2,
+				YSIZE - 2, ZSIZE - 2 });
 		PointSetInputIterator iter = new PointSetInputIterator(space, inputNeigh);
 		LongType variable = new LongType();
 		PointSet points = null;

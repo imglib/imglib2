@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,16 +43,24 @@ import net.imglib2.type.numeric.RealType;
 
 
 /**
+ * Returns a real constant value whenever queried (regardless of input data).
  * 
  * @author Barry DeZonia
  */
-public class RealConstantFunction<INPUT, O extends RealType<O>> implements Function<INPUT, O> {
+public class RealConstantFunction<INPUT, O extends RealType<O>>
+	implements Function<INPUT, O>
+{
+	// -- instance variables --
+	
 	private final O real;
 
-	public RealConstantFunction(O typeHint, double r) {
-		real = typeHint.createVariable();
-		real.setReal(r);
+	// -- constructor --
+	
+	public RealConstantFunction(O value) {
+		real = value.copy();
 	}
+	
+	// -- Function methods --
 	
 	@Override
 	public void compute(INPUT input, O r) {
@@ -60,7 +69,7 @@ public class RealConstantFunction<INPUT, O extends RealType<O>> implements Funct
 
 	@Override
 	public RealConstantFunction<INPUT,O> copy() {
-		return new RealConstantFunction<INPUT,O>(real, real.getRealDouble());
+		return new RealConstantFunction<INPUT, O>(real);
 	}
 
 	@Override

@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -109,6 +110,7 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	public char getChar() { return dataAccess.getValue( i ); }
 	public void setChar( final char f ) { dataAccess.setValue( i, f ); }
 
+	@Override
 	public void set( final Base base ) 
 	{
 		switch ( base )
@@ -122,6 +124,7 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 		}
 	}
 	
+	@Override
 	public Base get() 
 	{
 		final char value = getChar();
@@ -150,17 +153,14 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 		{
 			return 0;
 		}
-		else
+		switch ( input )
 		{
-			switch ( input )
-			{
-				case ' ': return -1; 
-				case 'N': if ( compare == ' ' ) return 1; else return -1;
-				case 'A': if ( compare == ' ' || compare == 'N' ) return 1; else return -1;
-				case 'T': if ( compare == 'G' || compare == 'C' ) return -1; else return 1;
-				case 'G': if ( compare == 'C' ) return -1; else return 1;
-				default: return 1;
-			}
+			case ' ': return -1; 
+			case 'N': return compare == ' ' ? 1 : -1;
+			case 'A': return compare == ' ' || compare == 'N' ? 1 : -1;
+			case 'T': return compare == 'G' || compare == 'C' ? -1 : 1;
+			case 'G': return compare == 'C' ? -1 : 1;
+			default: return 1;
 		}
 	}
 

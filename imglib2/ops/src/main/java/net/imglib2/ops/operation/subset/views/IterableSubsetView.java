@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -63,8 +64,10 @@ import net.imglib2.view.Views;
  * instanceof IterableInterval.
  * 
  * 
- * @author Christian Dietz, University of Konstanz
+ * @author Christian Dietz (University of Konstanz)
  * @param <T>
+ * 
+ * IMPORTANT: WILL BE INTEGRATED IN VIEW FRAMEWORK IN THE FUTURE
  */
 public class IterableSubsetView< T extends Type< T >> extends IterableRandomAccessibleInterval< T >
 {
@@ -178,8 +181,7 @@ public class IterableSubsetView< T extends Type< T >> extends IterableRandomAcce
 	{
 		if ( isOptimizable )
 			return new IterableSubsetViewCursor< T >( Views.iterable( src ).cursor(), ( int ) super.size(), planeOffset, numPlaneDims );
-		else
-			return Views.iterable( super.interval ).cursor();
+		return Views.iterable( super.sourceInterval ).cursor();
 	}
 
 	@Override
@@ -187,8 +189,7 @@ public class IterableSubsetView< T extends Type< T >> extends IterableRandomAcce
 	{
 		if ( isOptimizable )
 			return new IterableSubsetViewCursor< T >( Views.iterable( src ).localizingCursor(), ( int ) super.size(), planeOffset, numPlaneDims );
-		else
-			return Views.iterable( super.interval ).cursor();
+		return Views.iterable( super.sourceInterval ).cursor();
 	}
 
 }

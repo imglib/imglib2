@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,18 +41,26 @@ package net.imglib2.ops.relation.general.binary;
 import net.imglib2.ops.relation.BinaryRelation;
 
 /**
+ * Combines two other {@link BinaryRelation}s in an AND fashion. The relation
+ * holds if both of the child relations hold.
  * 
  * @author Barry DeZonia
  */
 public final class AndRelation<T,U> implements BinaryRelation<T,U> {
 
+	// -- instance variables --
+	
 	private final BinaryRelation<T,U> rel1;
 	private final BinaryRelation<T,U> rel2;
 
+	// -- constructor --
+	
 	public AndRelation(BinaryRelation<T,U> rel1,BinaryRelation<T,U> rel2) {
 		this.rel1 = rel1;
 		this.rel2 = rel2;
 	}
+	
+	// -- BinaryRelation methods --
 	
 	@Override
 	public boolean holds(T val1, U val2) {

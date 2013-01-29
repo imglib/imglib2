@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,8 +55,7 @@ import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
 
 /**
- * 
- * @author hornm, University of Konstanz
+ * @author Martin Horn (University of Konstanz)
  */
 public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type< T > & Comparable< T >> extends AbstractRegionGrowing< LabelingType< L >, L, Labeling< L >, Labeling< L >>
 {
@@ -71,7 +71,10 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 	protected final boolean m_fillHoles;
 
 	/**
-	 * @param m_srcImg
+	 * TODO
+	 * 
+	 * @param srcImg
+	 *            TODO
 	 * @param threshold
 	 *            stops growing if the pixel value falls below that value
 	 * @param fillHoles
@@ -88,11 +91,6 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public Labeling< L > compute( Labeling< L > in, Labeling< L > out )
 	{
@@ -106,9 +104,6 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 		return out;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void initRegionGrowing( Labeling< L > srcImg )
 	{
@@ -116,9 +111,6 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected L nextSeedPosition( int[] seedPos )
 	{
@@ -134,9 +126,6 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected boolean includeInRegion( int[] oldPos, int[] nextPos, L label )
 	{
@@ -144,9 +133,6 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 		return m_srcImgRA.get().compareTo( m_threshold ) >= 0;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void queueProcessed()
 	{
@@ -196,10 +182,12 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 	 * starting from the given background point. If the contiguos background
 	 * region only has 1 neighbour
 	 * 
-	 * @param yStart
-	 *            y coordinate of starting point
-	 * @param xStart
-	 *            x coordinate of starting point
+	 * @param resLab
+	 *            TODO
+	 * @param startPos
+	 *            coordinates of starting point
+	 * @param visitedRA
+	 *            TODO
 	 */
 	private void bfsBackGround( Labeling< L > resLab, int[] startPos, RandomAccess< BitType > visitedRA )
 	{

@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -129,28 +130,34 @@ public class VirtualImg<T extends NativeType<T> & RealType<T>> extends
 		return correctlyTypedVirtualImg(dimensions, rdr);
 	}
 
+	@Override
 	public VirtualRandomAccess<T> randomAccess() {
 		return new VirtualRandomAccess<T>(this);
 	}
 
+	@Override
 	public VirtualCursor<T> cursor() {
 		return new VirtualCursor<T>(this);
 	}
 
+	@Override
 	public VirtualCursor<T> localizingCursor() {
 		// TODO - not supporting actual localizing cursor
 		return new VirtualCursor<T>(this);
 	}
 
+	@Override
 	public Object iterationOrder() {
 		// TODO maybe support. For now, for simplicity, don't support
 		return this; // iteration order is only compatible with ourselves
 	}
 
+	@Override
 	public ImgFactory<T> factory() {
 		return new VirtualImgFactory<T>();
 	}
 
+	@Override
 	public Img<T> copy() {
 		return new VirtualImg<T>(dims, reader, type, bytesOnly);
 	}

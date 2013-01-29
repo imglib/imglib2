@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -62,9 +63,6 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	/**
 	 * Calculate the square Euclidean distance of a query location to the
 	 * location stored in referenceLocation.
-	 * 
-	 * @param query
-	 * @return
 	 */
 	final protected double squareDistance( final RealLocalizable query )
 	{
@@ -84,7 +82,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 		this.k = k;
 		n = iterable.numDimensions();
 		
-		elements = ( RealCursor< T >[] )( new RealCursor[ k ] );
+		elements = ( new RealCursor[ k ] );
 		squareDistances = new double[ k ];
 		referenceLocation = new double[ n ];
 	}

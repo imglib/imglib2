@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,12 +38,11 @@
 
 package net.imglib2.ops.example;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import org.junit.Test;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
@@ -59,6 +59,8 @@ import net.imglib2.ops.input.PointSetInputIteratorFactory;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.real.DoubleType;
+
+import org.junit.Test;
 
 // a dual neighborhood example that also uses an out of bounds strategy.
 // each point of output equals the median of the 3x3 XY neighborhood of the 1xZ averages of a 3d image
@@ -86,7 +88,8 @@ public class Example8Test {
 	private Img<DoubleType> img;
 	
 	private Img<DoubleType> allocateImage(long[] dims) {
-		final ArrayImgFactory<DoubleType> imgFactory = new ArrayImgFactory<DoubleType>();
+		final ArrayImgFactory<DoubleType> imgFactory =
+				new ArrayImgFactory<DoubleType>();
 		return imgFactory.create(dims, new DoubleType());
 	}
 
@@ -166,20 +169,30 @@ public class Example8Test {
 	public void testTwoNeighborhoodFunction() {
 		img = makeInputImage();
 		Img<DoubleType> tmpImg = makeTmpImage();
-		Function<long[],DoubleType> imgFunc = new RealImageFunction<DoubleType,DoubleType>(img, new DoubleType());
-		Function<PointSet,DoubleType> avgFunc = new RealArithmeticMeanFunction<DoubleType>(imgFunc);
-		HyperVolumePointSet avgNeigh = new HyperVolumePointSet(new long[]{0,0,0}, new long[]{0,0,ZSIZE-1});
-		InputIteratorFactory<PointSet> factory = new PointSetInputIteratorFactory(avgNeigh);
+		Function<long[],DoubleType> imgFunc =
+				new RealImageFunction<DoubleType,DoubleType>(img, new DoubleType());
+		Function<PointSet,DoubleType> avgFunc =
+				new RealArithmeticMeanFunction<DoubleType>(imgFunc);
+		HyperVolumePointSet avgNeigh =
+			new HyperVolumePointSet(new long[] { 1, 1, ZSIZE });
+		InputIteratorFactory<PointSet> factory =
+			new PointSetInputIteratorFactory(avgNeigh);
 		ImageAssignment<DoubleType,DoubleType,PointSet> assigner =
-			new ImageAssignment<DoubleType,DoubleType,PointSet>(
-				tmpImg, new long[]{0,0,0}, new long[]{XSIZE,YSIZE,1}, avgFunc, null, factory);
+			new ImageAssignment<DoubleType, DoubleType, PointSet>(tmpImg,
+				new long[3], new long[] { XSIZE, YSIZE, 1 }, avgFunc, null, factory);
 		assigner.assign();
 		testAssignmentResults(tmpImg);
-		Function<long[],DoubleType> tmpImgFunc = new RealImageFunction<DoubleType,DoubleType>(tmpImg, new DoubleType());
-		HyperVolumePointSet medianNeigh = new HyperVolumePointSet(new long[3], new long[]{1,1,0}, new long[]{1,1,0});
-		Function<PointSet,DoubleType> medianFunc = new RealMedianFunction<DoubleType>(tmpImgFunc);
+		Function<long[], DoubleType> tmpImgFunc =
+			new RealImageFunction<DoubleType, DoubleType>(tmpImg, new DoubleType());
+		HyperVolumePointSet medianNeigh =
+			new HyperVolumePointSet(new long[3], new long[] { 1, 1, 0 }, new long[] {
+				1, 1, 0 });
+		Function<PointSet, DoubleType> medianFunc =
+			new RealMedianFunction<DoubleType>(tmpImgFunc);
 		DoubleType output = new DoubleType();
-		HyperVolumePointSet space = new HyperVolumePointSet(new long[]{1,1,0}, new long[]{XSIZE-2,YSIZE-2,0});
+		HyperVolumePointSet space =
+			new HyperVolumePointSet(new long[] { 1, 1, 0 }, new long[] { XSIZE - 2,
+				YSIZE - 2, 0 });
 		PointSetInputIterator iter = new PointSetInputIterator(space, medianNeigh);
 		PointSet points = null;
 		while (iter.hasNext()) {

@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -24,6 +25,9 @@
  */
 package net.imglib2.algorithm.fft2;
 
+import edu.mines.jtk.dsp.FftComplex;
+import edu.mines.jtk.dsp.FftReal;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.Dimensions;
@@ -35,8 +39,6 @@ import net.imglib2.iterator.LocalizingZeroMinIntervalIterator;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
-import edu.mines.jtk.dsp.FftComplex;
-import edu.mines.jtk.dsp.FftReal;
 
 /**
  * Compute a FFT transform, either real-to-complex or complex-to-complex, or complex-to-real for individual dimensions.
@@ -163,6 +165,7 @@ public class FFTMethods
 			for ( int ithread = 0; ithread < threads.length; ++ithread )
 				threads[ithread] = new Thread(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						final int myNumber = ai.getAndIncrement();
@@ -380,6 +383,7 @@ A:						while ( cursorDim.hasNext() )
 			for ( int ithread = 0; ithread < threads.length; ++ithread )
 				threads[ithread] = new Thread(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						final int myNumber = ai.getAndIncrement();
@@ -496,8 +500,7 @@ A:						while ( cursorDim.hasNext() )
 	{
 		if ( forward )
 			return complexToComplex( data, dim, forward, false, Runtime.getRuntime().availableProcessors() );
-		else
-			return complexToComplex( data, dim, forward, true );
+		return complexToComplex( data, dim, forward, true );
 	}
 
 	/**
@@ -553,6 +556,7 @@ A:						while ( cursorDim.hasNext() )
 			for ( int ithread = 0; ithread < threads.length; ++ithread )
 				threads[ithread] = new Thread(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						final int myNumber = ai.getAndIncrement();
@@ -1014,15 +1018,13 @@ A:						while ( cursorDim.hasNext() )
 	{
 		if ( FftReal.nfftFast( inputSize ) / 2 + 1 == outputSize || FftReal.nfftSmall( inputSize ) / 2 + 1 == outputSize )
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	final protected static boolean verifyComplexToComplexfftDimensions( final int inputSize, final int outputSize )
 	{
 		if ( FftComplex.nfftFast( inputSize ) == outputSize || FftComplex.nfftSmall( inputSize ) == outputSize )
 			return true;
-		else
-			return false;
+		return false;
 	}
 }

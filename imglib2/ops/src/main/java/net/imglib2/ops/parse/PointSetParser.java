@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,12 +44,12 @@ import java.util.List;
 import java.util.Map;
 
 import net.imglib2.ops.condition.AndCondition;
+import net.imglib2.ops.condition.BinaryFunctionalCondition;
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.condition.DimensionEqualCondition;
 import net.imglib2.ops.condition.NotCondition;
 import net.imglib2.ops.condition.OrCondition;
 import net.imglib2.ops.condition.RangeCondition;
-import net.imglib2.ops.condition.RelationalCondition;
 import net.imglib2.ops.condition.UnionCondition;
 import net.imglib2.ops.condition.XorCondition;
 import net.imglib2.ops.parse.token.And;
@@ -145,10 +146,13 @@ equation = (see EquationParser)
 */
 
 /**
-* 
-* @author Barry DeZonia
-*
-*/
+ * Parses a point set language string and attempts to build a PointSet that
+ * matches the string specification. The language is documented at:
+ * http://wiki.imagej.net/ImageJ2/Documentation/PointSetDemo
+ * 
+ * @author Barry DeZonia
+ *
+ */
 public class PointSetParser {
 
 	private Map<String, Integer> varMap;
@@ -449,8 +453,8 @@ public class PointSetParser {
 		if (status2.errMsg != null) return status2;
 		ParseStatus status3 = eqnParser.equation(tokens, status2.tokenNumber);
 		if (status3.errMsg != null) return status3;
-		status3.condition = new RelationalCondition(
-				status2.relop, status1.function, status3.function);
+		status3.condition = new BinaryFunctionalCondition<long[],DoubleType,DoubleType>(
+				status1.function, status3.function, status2.relop);
 		return status3;
 	}
 

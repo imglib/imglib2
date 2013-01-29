@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -66,12 +67,6 @@ public class Binning {
     /**
      * Convert value to bin number.<p>
      * This variant is exclusive, not all values map to the range 0...(bins-1).
-     * 
-     * @param bins
-     * @param min
-     * @param max
-     * @param value
-     * @return 
      */
     public static int exclusiveValueToBin(int bins, double min, double max, double value) {
         int bin;
@@ -98,11 +93,6 @@ public class Binning {
  
     /**
      * Returns array of left edge values for each bin.
-     * 
-     * @param bins
-     * @param min
-     * @param max
-     * @return 
      */
     public static double[] edgeValuesPerBin(int bins, double min, double max) {
         double[] edgeValues = new double[bins];
@@ -115,15 +105,10 @@ public class Binning {
  
     /**
      * Returns array of center values for each bin.
-     * 
-     * @param bins
-     * @param min
-     * @param max
-     * @return 
      */
     public static double[] centerValuesPerBin(int bins, double min, double max) {
         double[] edgeValues = edgeValuesPerBin(bins, min, max);
-        double[] centerValues = new double[(int) bins];
+        double[] centerValues = new double[bins];
         
         // average the edge values to get centers
         for (int i = 0; i < bins - 1; ++i) {

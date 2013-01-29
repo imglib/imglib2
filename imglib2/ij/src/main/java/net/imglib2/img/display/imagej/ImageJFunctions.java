@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -107,10 +108,6 @@ public class ImageJFunctions
 	 * (ImagePlus.GRAY8, ImagePlus.GRAY16, ImagePlus.GRAY32, ImagePlus.COLOR_256
 	 * or ImagePlus.COLOR_RGB) is inferred from the generic type of the input
 	 * {@link RandomAccessibleInterval}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @return
 	 */
 	public static <T extends NumericType<T>> ImagePlus show( final RandomAccessibleInterval<T> img )
 	{
@@ -119,10 +116,6 @@ public class ImageJFunctions
 
 	/**
 	 * Displays a complex type as power spectrum, phase spectrum, real values or imaginary values depending on the converter 
-	 * 
-	 * @param img
-	 * @param converter
-	 * @return
 	 */
 	public static <T extends ComplexType<T>> ImagePlus show( final RandomAccessibleInterval<T> img, final Converter< T, FloatType > converter )
 	{
@@ -131,11 +124,6 @@ public class ImageJFunctions
 
 	/**
 	 * Displays a complex type as power spectrum, phase spectrum, real values or imaginary values depending on the converter 
-	 * 
-	 * @param img
-	 * @param converter
-	 * @param title
-	 * @return
 	 */
 	public static <T extends ComplexType<T>> ImagePlus show( final RandomAccessibleInterval<T> img, final Converter< T, FloatType > converter, final String title )
 	{
@@ -152,11 +140,6 @@ public class ImageJFunctions
 	 * (ImagePlus.GRAY8, ImagePlus.GRAY16, ImagePlus.GRAY32, ImagePlus.COLOR_256
 	 * or ImagePlus.COLOR_RGB) is inferred from the generic type of the input
 	 * {@link RandomAccessibleInterval}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param title
-	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static < T extends NumericType< T > > ImagePlus wrap( final RandomAccessibleInterval< T > img, final String title )
@@ -164,18 +147,20 @@ public class ImageJFunctions
 		ImagePlus target;
 		final T t = Util.getTypeFromInterval( img );
 
-		/* Casting madness thanks to a long standing javac bug, see e.g. http://bugs.sun.com/view_bug.do?bug_id=6548436 */
-		/* TODO remove casting madness as soon as the bug is fixed */
+		// NB: Casting madness thanks to a long standing javac bug;
+		// see e.g. http://bugs.sun.com/view_bug.do?bug_id=6548436
+		// TODO: remove casting madness as soon as the bug is fixed
+		final Object oImg = img;
 		if ( ARGBType.class.isInstance( t ) )
-			target = wrapRGB( ( RandomAccessibleInterval< ARGBType > )( Object )img, title );
+			target = wrapRGB( ( RandomAccessibleInterval< ARGBType > )oImg, title );
 		else if ( UnsignedByteType.class.isInstance( t ) )
-			target = wrapUnsignedByte( ( RandomAccessibleInterval< RealType > )( Object )img, title );
+			target = wrapUnsignedByte( ( RandomAccessibleInterval< RealType > )oImg, title );
 		else if ( IntegerType.class.isInstance( t ) )
-			target = wrapUnsignedShort( ( RandomAccessibleInterval< RealType > )( Object )img, title );
+			target = wrapUnsignedShort( ( RandomAccessibleInterval< RealType > )oImg, title );
 		else if ( RealType.class.isInstance( t ) )
-			target = wrapFloat( ( RandomAccessibleInterval< RealType > )( Object )img, title );
+			target = wrapFloat( ( RandomAccessibleInterval< RealType > )oImg, title );
 		else if ( ComplexType.class.isInstance( t ) )
-			target = wrapFloat( ( RandomAccessibleInterval< ComplexType > )( Object )img, new ComplexPowerGLogFloatConverter(), title );
+			target = wrapFloat( ( RandomAccessibleInterval< ComplexType > )oImg, new ComplexPowerGLogFloatConverter(), title );
 		else
 		{
 			System.out.println( "Do not know how to display Type " + t.getClass().getSimpleName() );
@@ -231,30 +216,39 @@ public class ImageJFunctions
 	/**
 	 * Create a single channel 32-bit float {@link ImagePlus}
 	 * from a {@link RandomAccessibleInterval} using a custom {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param converter
-	 * @param title
-	 * @return
 	 */
 	public static < T extends RealType< T > > ImagePlus wrapFloat(
 			final RandomAccessibleInterval< T > img,
 			final String title )
 	{
 		final ImageJVirtualStackFloat< T > stack = new ImageJVirtualStackFloat< T >( img, new RealFloatConverter< T >() );
-		return new ImagePlus( title, stack );
+		final ImagePlus imp = new ImagePlus( title, stack );
+		final int n = img.numDimensions();
+		if ( n > 2 )
+		{
+			imp.setOpenAsHyperStack( true );
+			final int c = ( int )img.dimension( 2 ), s, f;
+			if ( n > 3 )
+			{
+				s = ( int )img.dimension( 3 );
+				if ( n > 4 )
+					f = ( int )img.dimension( 4 );
+				else
+					f = 1;
+			}
+			else
+			{
+				s = 1;
+				f = 1;
+			}
+			imp.setDimensions( c, s, f );
+		}
+		return imp;
 	}
 
 	/**
 	 * Create a single channel 32-bit float {@link ImagePlus}
 	 * from a {@link RandomAccessibleInterval} using a custom {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param converter
-	 * @param title
-	 * @return
 	 */
 	public static < T > ImagePlus wrapFloat(
 			final RandomAccessibleInterval< T > img,
@@ -268,12 +262,6 @@ public class ImageJFunctions
 	/**
 	 * Show a {@link RandomAccessibleInterval} as single channel 32-bit float
 	 * {@link ImagePlus} using a custom {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param converter
-	 * @param title
-	 * @return
 	 */
 	public static < T > ImagePlus showFloat(
 			final RandomAccessibleInterval< T > img,
@@ -289,11 +277,6 @@ public class ImageJFunctions
 	/**
 	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
 	 * single channel 32-bit float using a default {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param title
-	 * @return
 	 */
 	public static < T extends RealType< T > > ImagePlus showFloat( final RandomAccessibleInterval< T > img, final String title )
 	{
@@ -303,10 +286,6 @@ public class ImageJFunctions
 	/**
 	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
 	 * single channel 32-bit float using a default {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @return
 	 */
 	public static < T extends RealType< T > > ImagePlus showFloat( final RandomAccessibleInterval< T > img )
 	{
@@ -317,11 +296,6 @@ public class ImageJFunctions
 	 * Create a 24bit RGB {@link ImagePlus} from a
 	 * {@link RandomAccessibleInterval} a using a default (identity)
 	 * {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param title
-	 * @return
 	 */
 	public static ImagePlus wrapRGB( final RandomAccessibleInterval< ARGBType > img, final String title )
 	{
@@ -331,12 +305,6 @@ public class ImageJFunctions
 	/**
 	 * Create a 24bit RGB {@link ImagePlus} from a
 	 * {@link RandomAccessibleInterval} a using a custom {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param converter
-	 * @param title
-	 * @return
 	 */
 	public static < T > ImagePlus wrapRGB( final RandomAccessibleInterval< T > img, final Converter< T, ARGBType > converter, final String title )
 	{
@@ -348,12 +316,6 @@ public class ImageJFunctions
 	/**
 	 * Show a {@link RandomAccessibleInterval} as 24bit RGB  {@link ImagePlus}
 	 * using a custom {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param converter
-	 * @param title
-	 * @return
 	 */
 	public static < T > ImagePlus showRGB( final RandomAccessibleInterval< T > img, final Converter< T, ARGBType > converter, final String title )
 	{
@@ -366,11 +328,6 @@ public class ImageJFunctions
 	/**
 	 * Create a single channel 8-bit unsigned integer {@link ImagePlus}
 	 * from a {@link RandomAccessibleInterval} using a custom {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param title
-	 * @return
 	 */
 	public static < T extends RealType< T > > ImagePlus wrapUnsignedByte(
 			final RandomAccessibleInterval< T > img,
@@ -382,12 +339,6 @@ public class ImageJFunctions
 	/**
 	 * Create a single channel 8-bit unsigned integer {@link ImagePlus}
 	 * from a {@link RandomAccessibleInterval} using a custom {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param converter
-	 * @param title
-	 * @return
 	 */
 	public static < T > ImagePlus wrapUnsignedByte(
 			final RandomAccessibleInterval< T > img,
@@ -402,12 +353,6 @@ public class ImageJFunctions
 	/**
 	 * Show a {@link RandomAccessibleInterval} as single channel 8-bit unsigned
 	 * integer {@link ImagePlus} using a custom {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param converter
-	 * @param title
-	 * @return
 	 */
 	public static < T > ImagePlus showUnsignedByte(
 			final RandomAccessibleInterval< T > img,
@@ -425,11 +370,6 @@ public class ImageJFunctions
 	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
 	 * single channel 8-bit unsigned integer {@link ImagePlus} using a default
 	 * {@link Converter} (clamp values to range [0, 255]).
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param title
-	 * @return
 	 */
 	public static < T extends RealType< T > > ImagePlus showUnsignedByte(
 			final RandomAccessibleInterval< T > img,
@@ -442,10 +382,6 @@ public class ImageJFunctions
 	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
 	 * single channel 8-bit unsigned integer {@link ImagePlus} using a default
 	 * {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @return
 	 */
 	public static < T extends RealType< T > > ImagePlus showUnsignedByte( final RandomAccessibleInterval< T > img )
 	{
@@ -456,11 +392,6 @@ public class ImageJFunctions
 	 * Create a single channel 16-bit unsigned integer {@link ImagePlus} from a
 	 * {@link RandomAccessibleInterval} using a default {@link Converter} (clamp
 	 * values to range [0, 65535]).
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param title
-	 * @return
 	 */
 	public static < T extends RealType < T > > ImagePlus wrapUnsignedShort(
 			final RandomAccessibleInterval< T > img,
@@ -472,12 +403,6 @@ public class ImageJFunctions
 	/**
 	 * Create a single channel 16-bit unsigned integer {@link ImagePlus}
 	 * from a {@link RandomAccessibleInterval} using a custom {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param converter
-	 * @param title
-	 * @return
 	 */
 	public static < T > ImagePlus wrapUnsignedShort(
 			final RandomAccessibleInterval< T > img,
@@ -492,12 +417,6 @@ public class ImageJFunctions
 	/**
 	 * Show a {@link RandomAccessibleInterval} as single channel 16-bit
 	 * unsigned integer {@link ImagePlus} using a custom {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param converter
-	 * @param title
-	 * @return
 	 */
 	public static < T > ImagePlus showUnsignedShort(
 			final RandomAccessibleInterval< T > img,
@@ -515,11 +434,6 @@ public class ImageJFunctions
 	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
 	 * single channel 16-bit unsigned integer {@link ImagePlus} using a default
 	 * {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param title
-	 * @return
 	 */
 	public static < T extends RealType< T > > ImagePlus showUnsignedShort(
 			final RandomAccessibleInterval< T > img,
@@ -532,11 +446,6 @@ public class ImageJFunctions
 	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
 	 * single channel 16-bit unsigned integer {@link ImagePlus} using a default
 	 * {@link Converter}.
-	 *
-	 * @param <T>
-	 * @param img
-	 * @param title
-	 * @return
 	 */
 	public static < T extends RealType< T > > ImagePlus showUnsignedShort(
 			final RandomAccessibleInterval< T > img )
