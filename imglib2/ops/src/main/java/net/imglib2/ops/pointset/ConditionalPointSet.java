@@ -57,17 +57,25 @@ public class ConditionalPointSet extends AbstractPointSet {
 	// -- instance variables --
 	
 	private final PointSet pointSet;
-	private final Condition<long[]> condition;
+	private Condition<long[]> condition;
 	private final BoundsCalculator calculator;
 	private boolean needsCalc;
 	
-	// -- constructor --
+	// -- ConditionalPointSet methods --
 	
 	public ConditionalPointSet(PointSet pointSet, Condition<long[]> condition) {
 		this.pointSet = pointSet;
 		this.condition = condition;
 		this.calculator = new BoundsCalculator();
 		this.needsCalc = true;
+	}
+	
+	public Condition<long[]> getCondition() { return condition; }
+	
+	public void setCondition(Condition<long[]> condition) {
+		this.condition = condition;
+		invalidateBounds();
+		needsCalc = true;
 	}
 	
 	// -- PointSet methods --
