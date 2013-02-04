@@ -77,7 +77,13 @@ public class PointSetRegionOfInterest extends AbstractRegionOfInterest implement
 
 	@Override
 	public void move(double displacement, int d) {
-		// do nothing - these things shouldn't move
+		if (Math.floor(displacement) != Math.ceil(displacement)) {
+			throw new IllegalArgumentException(
+				"PointSetRegionsOfInterest can only move in increments of 1.0.");
+		}
+		long[] deltas = new long[pos.length];
+		deltas[d] = (long) displacement;
+		points.translate(deltas);
 	}
 
 	@Override
