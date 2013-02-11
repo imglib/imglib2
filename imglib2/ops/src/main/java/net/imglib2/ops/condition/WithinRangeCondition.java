@@ -52,8 +52,9 @@ public class WithinRangeCondition<T extends RealType<T>> implements Condition<lo
 	// -- instance variables --
 	
 	private Function<long[],T> valueFunc;
-	private double min,max;
-	private T tmp;
+	private double min;
+	private double max;
+	private final T tmp;
 	
 	// -- WithinRangeCondition methods --
 	
@@ -64,11 +65,29 @@ public class WithinRangeCondition<T extends RealType<T>> implements Condition<lo
 		tmp = func.createOutput();
 	}
 	
-	public double getMin() { return min; }
-	public void setMin(double min) { this.min = min; }
+	public double getMin() {
+		return min;
+	}
+
+	public void setMin(double min) {
+		this.min = min;
+	}
+
+	public double getMax() {
+		return max;
+	}
+
+	public void setMax(double max) {
+		this.max = max;
+	}
+
+	public Function<long[], T> getFunction() {
+		return valueFunc;
+	}
 	
-	public double getMax() { return max; }
-	public void setMax(double max) { this.max = max; }
+	public void setFunction(Function<long[], T> func) {
+		valueFunc = func;
+	}
 	
 	// -- Condition methods --
 	

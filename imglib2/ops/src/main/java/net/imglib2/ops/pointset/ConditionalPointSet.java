@@ -56,7 +56,7 @@ public class ConditionalPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
-	private final PointSet pointSet;
+	private PointSet pointSet;
 	private Condition<long[]> condition;
 	private final BoundsCalculator calculator;
 	private boolean needsCalc;
@@ -78,6 +78,16 @@ public class ConditionalPointSet extends AbstractPointSet {
 		needsCalc = true;
 	}
 	
+	public PointSet getPointSet() {
+		return pointSet;
+	}
+
+	public void setPointSet(PointSet ps) {
+		pointSet = ps;
+		invalidateBounds();
+		needsCalc = true;
+	}
+
 	// -- PointSet methods --
 	
 	@Override
