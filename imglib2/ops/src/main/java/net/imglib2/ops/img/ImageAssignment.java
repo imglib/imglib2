@@ -43,7 +43,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.input.InputIterator;
@@ -68,12 +68,13 @@ import net.imglib2.type.numeric.ComplexType;
 //   dimensional space and handled as one dataset
 // TODO
 // - add listeners in assign (like progress indicators, stat collectors, etc.)
+// - rename? It no longer is Img oriented but instead RandomAccessibleInterval.
 
 /**
- * A multithreaded implementation that assigns the values of a region of
- * an Img<OUTPUT> to values from a Function<long[],INTERMEDIATE>. OUTPUT and
- * INTERMEDIATE extend ComplexType<?>.
- *  
+ * A multithreaded implementation that assigns the values of a region of an
+ * RandomAccessibleInterval<OUTPUT> to values from a
+ * Function<long[],INTERMEDIATE>. OUTPUT and INTERMEDIATE extend ComplexType<?>.
+ * 
  * @author Barry DeZonia
  */
 public class ImageAssignment
@@ -92,20 +93,23 @@ public class ImageAssignment
 	/**
 	 * Constructor. A working neighborhood is built using negOffs and posOffs. If
 	 * they are zero in extent the working neighborhood is a single pixel. This
-	 * neighborhood is moved point by point over the Img<?> and passed to the
-	 * function for evaluation. Pixels are assigned in the Img<?> if the given
+	 * neighborhood is moved point by point over the
+	 * {@link RandomAccessibleInterval} and passed to the function for evaluation.
+	 * Pixels are assigned in the {@link RandomAccessibleInterval} if the given
 	 * condition is satisfied at that point.
 	 * 
-	 * @param img - the Img<OUTPUT> to assign data values to
-	 * @param origin - the origin of the region to assign within the Img<OUTPUT>
-	 * @param span - the extents of the region to assign within the Img<OUTPUT>
-	 * @param function - the Function<INPUT,INTERMEDIATE> to evaluate at each point of the region
+	 * @param interval - the {@link RandomAccessibleInterval} to assign data
+	 *          values to
+	 * @param origin - the origin of the region to assign within the
+	 *          {@link RandomAccessibleInterval}
+	 * @param span - the extents of the region to assign within the
+	 *          {@link RandomAccessibleInterval}
+	 * @param function - the Function<INPUT,INTERMEDIATE> to evaluate at each
+	 *          point of the region
 	 * @param condition - the condition that must be satisfied
 	 * @param factory - a factory for generating an input space
-	 * 
 	 */
-	public ImageAssignment(
-		Img<OUTPUT> img,
+	public ImageAssignment(RandomAccessibleInterval<OUTPUT> interval,
 		long[] origin,
 		long[] span,
 		Function<INPUT,INTERMEDIATE> function,
@@ -115,7 +119,7 @@ public class ImageAssignment
 		this.assigning = false;
 		this.executor = null;
 		this.tasks = null;
-		setupTasks(img, origin, span, function, condition, factory);
+		setupTasks(interval, origin, span, function, condition, factory);
 	}
 		
 	// -- public interface --
@@ -179,8 +183,7 @@ public class ImageAssignment
 
 	// -- private helpers --
 
-	private void setupTasks(
-		Img<OUTPUT> img,
+	private void setupTasks(RandomAccessibleInterval<OUTPUT> interval,
 		long[] origin,
 		long[] span,
 		Function<INPUT,INTERMEDIATE> func,
@@ -196,7 +199,8 @@ public class ImageAssignment
 		while (startOffset < span[axis]) {
 			if (startOffset + length > span[axis]) length = span[axis] - startOffset;
 			Runnable task =
-					task(img, origin, span, axis, origin[axis] + startOffset, length, func, cond, factory);
+				task(interval, origin, span, axis, origin[axis] + startOffset, length,
+					func, cond, factory);
 			tasks.add(task);
 			startOffset += length;
 		}
@@ -246,8 +250,7 @@ public class ImageAssignment
 	/** Creates a Runnable task that can be submitted to the thread executor.
 	 * The task assigns values to a subset of the output region.
 	 */
-	private Runnable task(
-		Img<OUTPUT> img,
+	private Runnable task(RandomAccessibleInterval<OUTPUT> interval,
 		long[] imageOrigin,
 		long[] imageSpan,
 		int axis,
@@ -275,7 +278,7 @@ public class ImageAssignment
 
 		return
 			new RegionRunner<OUTPUT,INTERMEDIATE>(
-				img,
+interval,
 				factory.createInputIterator(region),
 				fn.copy(),
 				(cnd == null ? null : cnd.copy()));
@@ -288,7 +291,8 @@ public class ImageAssignment
 	private class RegionRunner<U extends ComplexType<U>, V extends ComplexType<V>>
 		implements Runnable
 	{
-		private final Img<U> img;
+
+		private final RandomAccessibleInterval<U> interval;
 		private final Function<INPUT, V> function;
 		private final Condition<INPUT> condition;
 		private final InputIterator<INPUT> iter;
@@ -297,12 +301,12 @@ public class ImageAssignment
 		 * Constructor
 		 */
 		public RegionRunner(
-			Img<U> img,
+RandomAccessibleInterval<U> interval,
 			InputIterator<INPUT> iter,
 			Function<INPUT, V> func,
 			Condition<INPUT> cond)
 		{
-			this.img = img;
+			this.interval = interval;
 			this.function = func;
 			this.condition = cond;
 			this.iter = iter;
@@ -313,7 +317,7 @@ public class ImageAssignment
 		 */
 		@Override
 		public void run() {
-			final RandomAccess<U> accessor = img.randomAccess();
+			final RandomAccess<U> accessor = interval.randomAccess();
 			final V output = function.createOutput();
 			INPUT input = null;
 			while (iter.hasNext()) {
