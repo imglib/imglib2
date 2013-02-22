@@ -47,35 +47,35 @@ public interface BinMapper<T> {
 	 * Returns the grid dimensions mapped by this BinMapper. For instance a 4 X 3
 	 * grid would return int[]{4,3}.
 	 */
-	int[] getBinDimensions();
+	long[] getBinDimensions();
 
 	/**
 	 * Determine the gridded bin position of a data value.
 	 */
-	int[] getBinPosition(T value);
+	long[] getBinPosition(T value);
 
 	/**
 	 * Returns the data value associated with the center of a bin.
 	 */
-	T getCenterValue(int[] binPos);
+	T getCenterValue(long[] binPos);
 
 	/**
 	 * Returns the data value associated with the smallest edge of a bin.
 	 */
-	T getMinValue(int[] binPos); // left edge of a 1d bin
+	T getMinValue(long[] binPos); // left edge of a 1d bin
 
 	/**
 	 * Returns the data value associated with the largest edge of a bin.
 	 */
-	T getMaxValue(int binNum); // right edge of a 1d bin
+	T getMaxValue(long[] binPos); // right edge of a 1d bin
 
 	/**
 	 * Returns true if a given bin includes values on the smallest edge of a bin.
 	 */
-	boolean includesMinValue(int[] binPos);
+	boolean includesMinValue(long[] binPos);
 
 	/**
 	 * Returns true if a given bin includes values on the largest edge of a bin.
 	 */
-	boolean includesMaxValue(int[] binPos);
+	boolean includesMaxValue(long[] binPos);
 }

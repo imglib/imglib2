@@ -37,80 +37,78 @@
 
 package net.imglib2.histogram;
 
-import net.imglib2.Cursor;
-import net.imglib2.EuclideanSpace;
-import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * This class represents an n-dimensional set of counters. Histogram
- * implementations use these for tracking value counts.
- * 
  * @author Barry DeZonia
+ * @param <T>
  */
-public class BinnedDistribution implements EuclideanSpace {
+public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 
-	private Img<LongType> counts;
-	private RandomAccess<LongType> accessor;
-	private long totalValues = 0;
+	private final long binDimension;
+	private final double minVal, maxVal;
+	private T[] minEdges;
+	private T[] centers;
+	private T[] maxEdges;
+	private long[] binPos = new long[1];
 
-	/**
-	 * Construct an n-dimensional counter
-	 */
-	public BinnedDistribution(long[] binCounts)
-	{
-		// check inputs for issues
-
-		for (int i = 0; i < binCounts.length; i++) {
-			if (binCounts[i] <= 0) {
-				throw new IllegalArgumentException("invalid bin count (<= 0)");
-			}
+	public Real1dBinMapper(long bins, double minVal, double maxVal) {
+		this.binDimension = bins;
+		this.minVal = minVal;
+		this.maxVal = maxVal;
+		if (bins <= 0) {
+			throw new IllegalArgumentException(
+				"invalid RealBinMapper: nonpositive dimension");
 		}
-
-		// then build object
-
-		counts = new ArrayImgFactory<LongType>().create(binCounts, new LongType());
-
-		accessor = counts.randomAccess();
+		if (minVal >= maxVal) {
+			throw new IllegalArgumentException(
+				"invalid RealBinMapper: nonpositive bin width");
+		}
 	}
 
 	@Override
-	public int numDimensions() {
-		return counts.numDimensions();
+	public long[] getBinDimensions() {
+		return new long[] { binDimension };
 	}
 
-	public long dimension(int d) {
-		return counts.dimension(d);
+	@Override
+	public long[] getBinPosition(T value) {
+		double val = value.getRealDouble();
+		if (val < minVal) val = minVal;
+		if (val > maxVal) val = maxVal;
+		double relPos = (val - minVal) / (maxVal - minVal);
+		binPos[0] = Math.round(relPos * (binDimension - 1));
+		return binPos;
 	}
 
-	public void dimensions(long[] dims) {
-		counts.dimensions(dims);
+	@Override
+	public T getCenterValue(long[] binPos) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public void resetCounters() {
-		Cursor<LongType> cursor = counts.cursor();
-		while (cursor.hasNext()) {
-			cursor.next().setZero();
-		}
-		totalValues = 0;
+	@Override
+	public T getMinValue(long[] binPos) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public long numValues(long[] binPos) {
-		accessor.setPosition(binPos);
-		return accessor.get().get();
+	@Override
+	public T getMaxValue(long[] binPos) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public double proportionOfValues(long[] binPos) {
-		if (totalValues == 0) return 0;
-		return 1.0 * numValues(binPos) / totalValues;
+	@Override
+	public boolean includesMinValue(long[] binPos) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-	public void increment(long[] binPos) {
-		accessor.setPosition(binPos);
-		accessor.get().inc();
-		totalValues++;
+	@Override
+	public boolean includesMaxValue(long[] binPos) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	/*

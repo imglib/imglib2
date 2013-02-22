@@ -1,6 +1,5 @@
 package net.imglib2.histogram;
 
-import net.imglib2.Cursor;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -69,15 +68,14 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		// build histogram with Histogram implementation
 		System.out.print("Building histogram... ");
 		start = System.currentTimeMillis();
-		BinnedDistribution distrib =
-			new BinnedDistribution(1, new double[] { 0 }, new double[] { max },
-				new long[] { max });
-		double[] value = new double[1];
-		Cursor<T> cursor = img.cursor();
-		while (cursor.hasNext()) {
-			value[0] = cursor.next().getRealDouble();
-			distrib.countValue(value);
-		}
+		Real1dBinMapper<T> binMapper = new Real1dBinMapper<T>(max, 0, max - 1);
+		DefaultHistogram<T> hist = new DefaultHistogram<T>(img, binMapper);
+		// double[] value = new double[1];
+		// Cursor<T> cursor = img.cursor();
+		// while (cursor.hasNext()) {
+		// value[0] = cursor.next().getRealDouble();
+		// distrib.countValue(value);
+		// }
 		end = System.currentTimeMillis();
 		long histMillis = end - start;
 		System.out.println(histMillis + " ms");
@@ -95,12 +93,10 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		System.out.println(manualMillis + " ms");
 
 		// check results
-		// final T k = img.firstElement();
-		double[] val = new double[1];
+		T val = img.firstElement();
 		for (int i = 0; i < max; i++) {
-			// k.setReal(i);
-			val[0] = i;
-			final long actual = distrib.numValues(val);
+			val.setReal(i);
+			final long actual = hist.numValues(val);
 			final int expect = bins[i];
 			if (actual != expect) {
 				System.out.println("Error: for bin #" + i + ": expected=" + expect +
