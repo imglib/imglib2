@@ -45,13 +45,14 @@ public class DefaultHistogram<T> {
 
 	private final Iterable<T> iterable;
 	private final BinMapper<T> binMapper;
-	private final BinnedDistribution binDistrib;
-
+	private final DiscreteFrequencyDistribution binDistrib;
+	private final long[] tmpPos = new long[1];
+	
 	public DefaultHistogram(Iterable<T> iterable, BinMapper<T> binMapper)
 	{
 		this.iterable = iterable;
 		this.binMapper = binMapper;
-		this.binDistrib = new BinnedDistribution(binMapper.getBinDimensions());
+		this.binDistrib = new DiscreteFrequencyDistribution(binMapper.getBinDimensions());
 		populateBins();
 	}
 
@@ -60,14 +61,14 @@ public class DefaultHistogram<T> {
 		return pos[0];
 	}
 
-	public long numValues(T value) {
-		long[] pos = binMapper.getBinPosition(value);
-		return binDistrib.numValues(pos);
+	public long frequency(long binPos) {
+		tmpPos[0] = binPos;
+		return binDistrib.frequency(tmpPos);
 	}
 
-	public double proportionOfValues(T value) {
-		long[] pos = binMapper.getBinPosition(value);
-		return binDistrib.proportionOfValues(pos);
+	public double relativeFrequency(long binPos) {
+		tmpPos[0] = binPos;
+		return binDistrib.relativeFrequency(tmpPos);
 	}
 
 	public void recalc() {

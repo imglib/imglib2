@@ -50,7 +50,7 @@ import net.imglib2.type.numeric.integer.LongType;
  * 
  * @author Barry DeZonia
  */
-public class BinnedDistribution implements EuclideanSpace {
+public class DiscreteFrequencyDistribution implements EuclideanSpace {
 
 	private Img<LongType> counts;
 	private RandomAccess<LongType> accessor;
@@ -59,7 +59,7 @@ public class BinnedDistribution implements EuclideanSpace {
 	/**
 	 * Construct an n-dimensional counter
 	 */
-	public BinnedDistribution(long[] binCounts)
+	public DiscreteFrequencyDistribution(long[] binCounts)
 	{
 		// check inputs for issues
 
@@ -97,14 +97,14 @@ public class BinnedDistribution implements EuclideanSpace {
 		totalValues = 0;
 	}
 
-	public long numValues(long[] binPos) {
+	public long frequency(long[] binPos) {
 		accessor.setPosition(binPos);
 		return accessor.get().get();
 	}
 
-	public double proportionOfValues(long[] binPos) {
+	public double relativeFrequency(long[] binPos) {
 		if (totalValues == 0) return 0;
-		return 1.0 * numValues(binPos) / totalValues;
+		return 1.0 * frequency(binPos) / totalValues;
 	}
 
 	public void increment(long[] binPos) {

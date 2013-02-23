@@ -98,7 +98,7 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		// double[] value = new double[1];
 		// Cursor<T> cursor = img.cursor();
 		// while (cursor.hasNext()) {
-		// value[0] = cursor.next().getRealDouble();
+		// value[0] = cursor.next().get`RealDouble();
 		// distrib.countValue(value);
 		// }
 		end = System.currentTimeMillis();
@@ -109,7 +109,8 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		T val = img.firstElement();
 		for (int i = 0; i < max; i++) {
 			val.setReal(i);
-			final long actual = hist.numValues(val);
+			final long binPos = hist.getBinPos(val);
+			final long actual = hist.frequency(binPos);
 			final int expect = bins[i];
 			if (actual != expect) {
 				System.out.println("Error: for bin #" + i + ": expected=" + expect +
