@@ -92,8 +92,7 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		// build histogram with Histogram implementation
 		System.out.print("Building histogram... ");
 		start = System.currentTimeMillis();
-		Real1dBinMapper<T> binMapper =
-			new Real1dBinMapper<T>(max, 0, max - 1, type);
+		Real1dBinMapper<T> binMapper = new Real1dBinMapper<T>(max, 0, max - 1);
 		DefaultHistogram<T> hist = new DefaultHistogram<T>(img, binMapper);
 		// double[] value = new double[1];
 		// Cursor<T> cursor = img.cursor();

@@ -43,31 +43,33 @@ package net.imglib2.histogram;
  */
 public interface BinMapper<T> {
 
+	int numDimensions();
+	
 	/**
-	 * Returns the grid dimensions mapped by this BinMapper. For instance a 4 X 3
-	 * grid would return int[]{4,3}.
+	 * Get the grid dimensions mapped by this BinMapper. For instance a 4 X 3
+	 * grid would fill the dims array with {4,3}.
 	 */
-	long[] getBinDimensions();
+	void getBinDimensions(long[] dims);
 
 	/**
 	 * Determine the gridded bin position of a data value.
 	 */
-	long[] getBinPosition(T value);
+	void getBinPosition(T value, long[] binPos);
 
 	/**
 	 * Returns the data value associated with the center of a bin.
 	 */
-	T getCenterValue(long[] binPos);
+	void getCenterValue(long[] binPos, T value);
 
 	/**
 	 * Returns the data value associated with the smallest edge of a bin.
 	 */
-	T getMinValue(long[] binPos); // left edge of a 1d bin
+	void getMinValue(long[] binPos, T value); // left edge of a 1d bin
 
 	/**
 	 * Returns the data value associated with the largest edge of a bin.
 	 */
-	T getMaxValue(long[] binPos); // right edge of a 1d bin
+	void getMaxValue(long[] binPos, T value); // right edge of a 1d bin
 
 	/**
 	 * Returns true if a given bin includes values on the smallest edge of a bin.

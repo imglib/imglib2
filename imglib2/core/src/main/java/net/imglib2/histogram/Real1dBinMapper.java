@@ -37,9 +37,6 @@
 
 package net.imglib2.histogram;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -51,12 +48,8 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	private final long bins;
 	private final long[] binDimensions;
 	private final double minVal, maxVal;
-	private final List<T> minEdges;
-	private final List<T> centers;
-	private final List<T> maxEdges;
-	private long[] tmpPos = new long[1];
 
-	public Real1dBinMapper(long bins, double minVal, double maxVal, T type) {
+	public Real1dBinMapper(long bins, double minVal, double maxVal) {
 		this.bins = bins;
 		this.binDimensions = new long[] { bins };
 		this.minVal = minVal;
@@ -69,51 +62,41 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 			throw new IllegalArgumentException(
 				"invalid RealBinMapper: nonpositive bin width");
 		}
-		minEdges = new ArrayList<T>();
-		maxEdges = new ArrayList<T>();
-		centers = new ArrayList<T>();
-		for (long i = 0; i < bins; i++) {
-			T mn = type.createVariable();
-			T mx = type.createVariable();
-			T ct = type.createVariable();
-			mn.setReal(minVal + (1.0 * (i) / bins) * (maxVal - minVal));
-			mx.setReal(minVal + (1.0 * (i + 1) / bins) * (maxVal - minVal));
-			double midPt = (mn.getRealDouble() + mx.getRealDouble()) / 2;
-			ct.setReal(midPt);
-			minEdges.add(mn);
-			maxEdges.add(mx);
-			centers.add(ct);
-		}
 	}
 
 	@Override
-	public long[] getBinDimensions() {
-		return binDimensions;
+	public int numDimensions() {
+		return binDimensions.length;
+	}
+	
+	@Override
+	public void getBinDimensions(long[] dims) {
+		for (int i = 0; i < binDimensions.length; i++)
+			dims[i] = binDimensions[i];
 	}
 
 	@Override
-	public long[] getBinPosition(T value) {
+	public void getBinPosition(T value, long[] binPos) {
 		double val = value.getRealDouble();
 		if (val < minVal) val = minVal;
 		if (val > maxVal) val = maxVal;
 		double relPos = (val - minVal) / (maxVal - minVal);
-		tmpPos[0] = Math.round(relPos * (bins - 1));
-		return tmpPos;
+		binPos[0] = Math.round(relPos * (bins - 1));
 	}
 
 	@Override
-	public T getCenterValue(long[] binPos) {
-		return centers.get((int) binPos[0]);
+	public void getCenterValue(long[] binPos, T value) {
+		value.setReal(center(binPos[0]));
 	}
 
 	@Override
-	public T getMinValue(long[] binPos) {
-		return minEdges.get((int) binPos[0]);
+	public void getMinValue(long[] binPos, T value) {
+		value.setReal(min(binPos[0]));
 	}
 
 	@Override
-	public T getMaxValue(long[] binPos) {
-		return maxEdges.get((int) binPos[0]);
+	public void getMaxValue(long[] binPos, T value) {
+		value.setReal(max(binPos[0]));
 	}
 
 	@Override
@@ -125,6 +108,18 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	public boolean includesMaxValue(long[] binPos) {
 		if (binPos[0] == bins - 1) return true;
 		return false;
+	}
+
+	private double min(long pos) {
+		return minVal + (1.0 * (pos) / bins) * (maxVal - minVal);
+	}
+
+	private double max(long pos) {
+		return minVal + (1.0 * (pos+1) / bins) * (maxVal - minVal);
+	}
+	
+	private double center(long pos) {
+		return (min(pos) + max(pos)) / 2;
 	}
 
 	/*
@@ -188,5 +183,4 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 		}
 	}
 	*/
-
 }

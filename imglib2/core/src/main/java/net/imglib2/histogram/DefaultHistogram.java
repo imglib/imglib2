@@ -52,13 +52,15 @@ public class DefaultHistogram<T> {
 	{
 		this.iterable = iterable;
 		this.binMapper = binMapper;
-		this.binDistrib = new DiscreteFrequencyDistribution(binMapper.getBinDimensions());
+		long[] binDims = new long[binMapper.numDimensions()];
+		binMapper.getBinDimensions(binDims);
+		this.binDistrib = new DiscreteFrequencyDistribution(binDims);
 		populateBins();
 	}
 
 	public long getBinPos(T value) {
-		long[] pos = binMapper.getBinPosition(value);
-		return pos[0];
+		binMapper.getBinPosition(value, tmpPos);
+		return tmpPos[0];
 	}
 
 	public long frequency(long binPos) {
@@ -78,9 +80,9 @@ public class DefaultHistogram<T> {
 	private void populateBins() {
 		binDistrib.resetCounters();
 		for (T value : iterable) {
-			long[] binPos = binMapper.getBinPosition(value);
+			binMapper.getBinPosition(value, tmpPos);
 			// System.out.println("bin pos = " + binPos[0]);
-			binDistrib.increment(binPos);
+			binDistrib.increment(tmpPos);
 		}
 	}
 }
