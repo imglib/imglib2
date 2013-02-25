@@ -80,7 +80,7 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		// build histogram through manual pixel counting
 		System.out.print("Counting pixel values manually... ");
 		start = System.currentTimeMillis();
-		final int[] bins = new int[max];
+		final long[] bins = new long[max];
 		for (T t : img) {
 			double v = t.getRealDouble();
 			bins[(int) v]++;
@@ -92,8 +92,8 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		// build histogram with Histogram implementation
 		System.out.print("Building histogram... ");
 		start = System.currentTimeMillis();
-		Real1dBinMapper<T> binMapper = new Real1dBinMapper<T>(max, 0, max - 1);
-		DefaultHistogram<T> hist = new DefaultHistogram<T>(img, binMapper);
+		Integer1dBinMapper<T> binMapper = new Integer1dBinMapper<T>(0, max, false);
+		Histogram1d<T> hist = new Histogram1d<T>(img, binMapper);
 		// double[] value = new double[1];
 		// Cursor<T> cursor = img.cursor();
 		// while (cursor.hasNext()) {
@@ -108,9 +108,9 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		T val = img.firstElement();
 		for (int i = 0; i < max; i++) {
 			val.setReal(i);
-			final long binPos = hist.getBinPos(val);
+			final long binPos = hist.getBinPosition(val);
 			final long actual = hist.frequency(binPos);
-			final int expect = bins[i];
+			final long expect = bins[i];
 			if (actual != expect) {
 				System.out.println("Error: for bin #" + i + ": expected=" + expect +
 					", actual=" + actual);

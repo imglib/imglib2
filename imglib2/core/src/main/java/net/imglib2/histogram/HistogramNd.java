@@ -37,47 +37,65 @@
 
 package net.imglib2.histogram;
 
-import net.imglib2.EuclideanSpace;
-
 /**
  * @author Barry DeZonia
  * @param <T>
  */
-public interface BinMapper<T> extends EuclideanSpace {
+public class HistogramNd<T> {
 
-	/**
-	 * Get the grid dimensions mapped by this BinMapper. For instance a 4 X 3
-	 * grid would fill the dims array with {4,3}.
-	 */
-	void getBinDimensions(long[] dims);
+	// -- instance variables --
 
-	/**
-	 * Determine the gridded bin position of a data value.
-	 */
-	void getBinPosition(T value, long[] binPos);
+	private final Iterable<T> iterable;
+	private final BinMapper<T> binMapper;
+	private final DiscreteFrequencyDistribution binDistrib;
+	private final long[] tmpPos = new long[1];
 
-	/**
-	 * Returns the data value associated with the center of a bin.
-	 */
-	void getCenterValue(long[] binPos, T value);
+	// -- public api --
 
-	/**
-	 * Returns the data value associated with the smallest edge of a bin.
-	 */
-	void getMinValue(long[] binPos, T value); // left edge of a 1d bin
+	public HistogramNd(Iterable<T> iterable, BinMapper<T> binMapper) {
+		this.iterable = iterable;
+		this.binMapper = binMapper;
+		long[] binDims = new long[binMapper.numDimensions()];
+		binMapper.getBinDimensions(binDims);
+		this.binDistrib = new DiscreteFrequencyDistribution(binDims);
+		populateBins();
+	}
 
-	/**
-	 * Returns the data value associated with the largest edge of a bin.
-	 */
-	void getMaxValue(long[] binPos, T value); // right edge of a 1d bin
+	public void getBinPosition(T value, long[] binPos) {
+		binMapper.getBinPosition(value, binPos);
+	}
 
-	/**
-	 * Returns true if a given bin includes values on the smallest edge of a bin.
-	 */
-	boolean includesMinValue(long[] binPos);
+	public long frequency(long[] binPos) {
+		return binDistrib.frequency(binPos);
+	}
 
-	/**
-	 * Returns true if a given bin includes values on the largest edge of a bin.
-	 */
-	boolean includesMaxValue(long[] binPos);
+	public double relativeFrequency(long[] binPos) {
+		return binDistrib.relativeFrequency(binPos);
+	}
+
+	public void recalc() {
+		populateBins();
+	}
+
+	public void getCenterValue(long[] binPos, T value) {
+		binMapper.getCenterValue(binPos, value);
+	}
+
+	public void getMinValue(long[] binPos, T value) {
+		binMapper.getMinValue(binPos, value);
+	}
+
+	public void getMaxValue(long[] binPos, T value) {
+		binMapper.getMaxValue(binPos, value);
+	}
+
+	// -- private helpers --
+
+	private void populateBins() {
+		binDistrib.resetCounters();
+		for (T value : iterable) {
+			binMapper.getBinPosition(value, tmpPos);
+			binDistrib.increment(tmpPos);
+		}
+	}
 }

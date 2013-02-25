@@ -37,38 +37,39 @@
 
 package net.imglib2.histogram;
 
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.IntegerType;
 
 /**
  * @author Barry DeZonia
  * @param <T>
  */
-public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
+public class Integer1dBinMapper<T extends IntegerType<T>> implements
+	BinMapper<T>
+{
 
 	// -- instance variables --
 
 	private final long bins;
 	private final long[] binDimensions;
-	private final double minVal, maxVal;
+	private final long minVal, maxVal;
 	private final boolean tailBins;
 
 	// -- constructor --
 
-	public Real1dBinMapper(double minVal, double maxVal, long numBins,
-		boolean tailBins)
-	{
+	public Integer1dBinMapper(long minVal, long numBins, boolean tailBins) {
 		this.bins = numBins;
 		this.binDimensions = new long[] { numBins };
-		this.minVal = minVal;
-		this.maxVal = maxVal;
 		this.tailBins = tailBins;
+		this.minVal = minVal;
+		if (tailBins) {
+			this.maxVal = minVal + numBins - 1 - 2;
+		}
+		else {
+			this.maxVal = minVal + numBins - 1;
+		}
 		if (bins <= 0) {
 			throw new IllegalArgumentException(
-				"invalid RealBinMapper: nonpositive dimension");
-		}
-		if (minVal >= maxVal) {
-			throw new IllegalArgumentException(
-				"invalid RealBinMapper: nonpositive bin width");
+				"invalid IntegerBinMapper: nonpositive dimension");
 		}
 	}
 
@@ -78,7 +79,7 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	public int numDimensions() {
 		return binDimensions.length;
 	}
-	
+
 	@Override
 	public void getBinDimensions(long[] dims) {
 		for (int i = 0; i < binDimensions.length; i++)
@@ -87,82 +88,49 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 
 	@Override
 	public void getBinPosition(T value, long[] binPos) {
+		long val = value.getIntegerLong();
 		long pos;
-		double val = value.getRealDouble();
 		if (val < minVal) pos = 0;
 		else if (val > maxVal) pos = bins - 1;
 		else {
-			double relPos = (val - minVal) / (maxVal - minVal);
-			if (tailBins) {
-				pos = 1 + Math.round(relPos * (bins - 2));
-			}
-			else {
-				pos = Math.round(relPos * bins);
-			}
+			if (tailBins) pos = val - minVal + 1;
+			else pos = val - minVal;
 		}
 		binPos[0] = pos;
 	}
 
 	@Override
 	public void getCenterValue(long[] binPos, T value) {
-		value.setReal(center(binPos[0]));
+		long pos = binPos[0];
+		long val;
+		if (tailBins) {
+			if (pos == 0) val = minVal - 1; // HACK - what is best to return?
+			else if (pos == bins - 1) val = maxVal + 1; // same HACK
+			else val = minVal + pos - 1;
+		}
+		else { // no tail bins
+			val = minVal + pos;
+		}
+		value.setInteger(val);
 	}
 
 	@Override
 	public void getMinValue(long[] binPos, T value) {
-		value.setReal(min(binPos[0]));
+		getCenterValue(binPos, value);
 	}
 
 	@Override
 	public void getMaxValue(long[] binPos, T value) {
-		value.setReal(max(binPos[0]));
+		getCenterValue(binPos, value);
 	}
 
 	@Override
 	public boolean includesMinValue(long[] binPos) {
-		if (tailBins && binPos[0] == bins - 1) return false;
 		return true;
 	}
 
 	@Override
 	public boolean includesMaxValue(long[] binPos) {
-		if (tailBins) {
-			if (binPos[0] == bins - 2) return true;
-		}
-		else { // no tail bins
-			if (binPos[0] == bins - 1) return true;
-		}
-		return false;
+		return true;
 	}
-
-	// -- helpers --
-
-	private double min(long pos) {
-		if (pos < 0 || pos > bins - 1) {
-			throw new IllegalArgumentException("invalid bin position specified");
-		}
-		if (tailBins) {
-			if (pos == 0) return Double.NEGATIVE_INFINITY;
-			if (pos == bins - 1) return maxVal;
-			return minVal + (1.0 * (pos - 1) / (bins - 2)) * (maxVal - minVal);
-		}
-		return minVal + (1.0 * pos / (bins)) * (maxVal - minVal);
-	}
-
-	private double max(long pos) {
-		if (pos < 0 || pos > bins - 1) {
-			throw new IllegalArgumentException("invalid bin position specified");
-		}
-		if (tailBins) {
-			if (pos == 0) return minVal;
-			if (pos == bins - 1) return Double.POSITIVE_INFINITY;
-			return minVal + (1.0 * pos / (bins - 2)) * (maxVal - minVal);
-		}
-		return minVal + (1.0 * (pos + 1) / (bins)) * (maxVal - minVal);
-	}
-	
-	private double center(long pos) {
-		return (min(pos) + max(pos)) / 2;
-	}
-
 }

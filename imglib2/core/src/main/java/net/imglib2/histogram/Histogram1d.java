@@ -41,48 +41,55 @@ package net.imglib2.histogram;
  * @author Barry DeZonia
  * @param <T>
  */
-public class DefaultHistogram<T> {
+public class Histogram1d<T> {
 
-	private final Iterable<T> iterable;
-	private final BinMapper<T> binMapper;
-	private final DiscreteFrequencyDistribution binDistrib;
+	// -- instance variables --
+
+	private final HistogramNd<T> histN;
 	private final long[] tmpPos = new long[1];
+
+	// -- public api --
 	
-	public DefaultHistogram(Iterable<T> iterable, BinMapper<T> binMapper)
+	public Histogram1d(Iterable<T> iterable, BinMapper<T> binMapper)
 	{
-		this.iterable = iterable;
-		this.binMapper = binMapper;
-		long[] binDims = new long[binMapper.numDimensions()];
-		binMapper.getBinDimensions(binDims);
-		this.binDistrib = new DiscreteFrequencyDistribution(binDims);
-		populateBins();
+		if (binMapper.numDimensions() != 1) {
+			throw new IllegalArgumentException(
+				"This histogram requires a 1d bin mapper");
+		}
+		histN = new HistogramNd<T>(iterable, binMapper);
 	}
 
-	public long getBinPos(T value) {
-		binMapper.getBinPosition(value, tmpPos);
+	public long getBinPosition(T value) {
+		histN.getBinPosition(value, tmpPos);
 		return tmpPos[0];
 	}
 
 	public long frequency(long binPos) {
 		tmpPos[0] = binPos;
-		return binDistrib.frequency(tmpPos);
+		return histN.frequency(tmpPos);
 	}
 
 	public double relativeFrequency(long binPos) {
 		tmpPos[0] = binPos;
-		return binDistrib.relativeFrequency(tmpPos);
+		return histN.relativeFrequency(tmpPos);
 	}
 
 	public void recalc() {
-		populateBins();
+		histN.recalc();
 	}
 
-	private void populateBins() {
-		binDistrib.resetCounters();
-		for (T value : iterable) {
-			binMapper.getBinPosition(value, tmpPos);
-			// System.out.println("bin pos = " + binPos[0]);
-			binDistrib.increment(tmpPos);
-		}
+	public void getCenterValue(long binPos, T value) {
+		tmpPos[0] = binPos;
+		histN.getCenterValue(tmpPos, value);
+	}
+
+	public void getMinValue(long binPos, T value) {
+		tmpPos[0] = binPos;
+		histN.getMinValue(tmpPos, value);
+	}
+
+	public void getMaxValue(long binPos, T value) {
+		tmpPos[0] = binPos;
+		histN.getMaxValue(tmpPos, value);
 	}
 }
