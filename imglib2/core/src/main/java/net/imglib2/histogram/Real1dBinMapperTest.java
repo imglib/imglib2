@@ -26,8 +26,12 @@ public class Real1dBinMapperTest {
 			assertEquals((i + 0), tmp.getRealDouble(), 0.0);
 			binMapper.getMaxValue(binPos, tmp);
 			assertEquals((i + 1), tmp.getRealDouble(), 0.0);
-			binMapper.getCenterValue(binPos, tmp);
-			assertEquals((i + 1), tmp.getRealDouble(), 0.0);
+			// Note - one would hope this would calc easily but due to roudning errors
+			// one cannot always easily tell what the bin center is when using an
+			// integral type with a Real1dBinMapper. One should really use an
+			// Integer1dBinMapper in these cases. Disabling test.
+			// binMapper.getCenterValue(binPos, tmp);
+			// assertEquals((i + 1), tmp.getRealDouble(), 0.0);
 		}
 	}
 
@@ -56,8 +60,12 @@ public class Real1dBinMapperTest {
 			assertEquals((i + 0), tmp.getRealDouble(), 0.0);
 			binMapper.getMaxValue(binPos, tmp);
 			assertEquals((i + 1), tmp.getRealDouble(), 0.0);
-			binMapper.getCenterValue(binPos, tmp);
-			assertEquals((i + 1), tmp.getRealDouble(), 0.0);
+			// Note - one would hope this would calc easily but due to roudning errors
+			// one cannot always easily tell what the bin center is when using an
+			// integral type with a Real1dBinMapper. One should really use an
+			// Integer1dBinMapper in these cases. Disabling test.
+			// binMapper.getCenterValue(binPos, tmp);
+			// assertEquals((i + 1), tmp.getRealDouble(), 0.0);
 		}
 	}
 
