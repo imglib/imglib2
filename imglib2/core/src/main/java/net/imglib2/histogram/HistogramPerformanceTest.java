@@ -59,12 +59,10 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 	public static void main(String[] args) {
 		System.out.println("== UNSIGNED 8-BIT ==");
 		new HistogramPerformanceTest<UnsignedByteType>().run(
-			new UnsignedByteType(),
-			256);
+			new UnsignedByteType(), 256);
 		System.out.println("== UNSIGNED 16-BIT ==");
 		new HistogramPerformanceTest<UnsignedShortType>().run(
-			new UnsignedShortType(),
-			65536);
+			new UnsignedShortType(), 65536);
 	}
 
 	public void run(T type, int max) {

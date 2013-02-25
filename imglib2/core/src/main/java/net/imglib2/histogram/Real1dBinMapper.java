@@ -127,7 +127,7 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	@Override
 	public boolean includesMaxValue(long[] binPos) {
 		if (tailBins) {
-			if (binPos[0] == bins - 2) return true;
+			if (binPos[0] >= bins - 2) return true;
 		}
 		else { // no tail bins
 			if (binPos[0] == bins - 1) return true;
