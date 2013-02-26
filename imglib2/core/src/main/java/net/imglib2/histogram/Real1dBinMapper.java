@@ -59,13 +59,11 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 
 	// -- constructor --
 
-	// TODO - do we just ignore values outside bins when tailbins == false?
-
 	/**
 	 * Specify a mapping of real data from a user defined range into a specified
 	 * number of bins. If tailBins is true then there will be two bins that count
-	 * values outside the user specified ranges. If false then any values outside
-	 * the range are counted in the two outermost bins.
+	 * values outside the user specified ranges. If false then values outside the
+	 * range fail to map to any bin.
 	 * 
 	 * @param minVal The first data value of interest.
 	 * @param maxVal The last data value of interest.
@@ -114,21 +112,31 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	}
 
 	@Override
-	public void getBinPosition(List<T> values, long[] binPos) {
-		long pos;
+	public boolean getBinPosition(List<T> values, long[] binPos) {
 		double val = values.get(0).getRealDouble();
-		if (val < minVal) pos = 0;
-		else if (val > maxVal) pos = bins - 1;
-		else {
-			double relPos = (val - minVal) / (maxVal - minVal);
-			if (tailBins) {
+		long pos;
+		if (tailBins) {
+			if (val < minVal) pos = 0;
+			else if (val > maxVal) pos = bins - 1;
+			else {
+				double relPos = (val - minVal) / (maxVal - minVal);
 				pos = 1 + Math.round(relPos * (bins - 2));
+				if (pos == bins - 1) pos = bins - 2;
+			}
+		}
+		else { // no tail bins
+			if (val >= minVal && val <= maxVal) {
+				double relPos = (val - minVal) / (maxVal - minVal);
+				pos = Math.round(relPos * (bins));
+				if (pos == bins) pos = bins - 1;
 			}
 			else {
-				pos = Math.round(relPos * bins);
+				binPos[0] = Long.MIN_VALUE;
+				return false;
 			}
 		}
 		binPos[0] = pos;
+		return true;
 	}
 
 	@Override

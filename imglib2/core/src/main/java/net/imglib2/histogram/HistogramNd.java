@@ -179,8 +179,9 @@ public class HistogramNd<T> {
 				for (int i = 0; i < iters.size(); i++) {
 					vals.set(i, iters.get(i).next());
 				}
-				binMapper.getBinPosition(vals, tmpPos);
-				binDistrib.increment(tmpPos);
+				if (binMapper.getBinPosition(vals, tmpPos)) {
+					binDistrib.increment(tmpPos);
+				}
 			}
 		}
 		while (hasNext);

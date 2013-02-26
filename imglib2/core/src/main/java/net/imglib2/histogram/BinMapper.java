@@ -63,9 +63,11 @@ public interface BinMapper<T> extends EuclideanSpace {
 	void getBinDimensions(long[] dims);
 
 	/**
-	 * Determine the gridded bin position of a set of n-dim data values.
+	 * Determine the gridded bin position of a set of n-dim data values. Returns
+	 * true if the data values are within the user specified data range. Otherwise
+	 * returns false.
 	 */
-	void getBinPosition(List<T> values, long[] binPos);
+	boolean getBinPosition(List<T> values, long[] binPos);
 
 	/**
 	 * Determines the n-dim data values associated with the center of a bin.

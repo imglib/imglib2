@@ -64,8 +64,8 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	/**
 	 * Specify a mapping of integral data from a user defined range into a
 	 * specified number of bins. If tailBins is true then there will be two bins
-	 * that count values outside the user specified ranges. If false then any
-	 * values outside the range are counted in the two outermost bins.
+	 * that count values outside the user specified ranges. If false then values
+	 * outside the range fail to map to any bin.
 	 * 
 	 * @param minVal The first data value of interest.
 	 * @param numBins The total number of bins to create.
@@ -112,16 +112,25 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	}
 
 	@Override
-	public void getBinPosition(List<T> values, long[] binPos) {
+	public boolean getBinPosition(List<T> values, long[] binPos) {
 		long val = values.get(0).getIntegerLong();
 		long pos;
-		if (val < minVal) pos = 0;
-		else if (val > maxVal) pos = bins - 1;
-		else {
-			if (tailBins) pos = val - minVal + 1;
-			else pos = val - minVal;
+		if (tailBins) {
+			if (val < minVal) pos = 0;
+			else if (val > maxVal) pos = bins - 1;
+			else pos = val - minVal + 1;
+		}
+		else { // no tail bins
+			if (val >= minVal && val <= maxVal) {
+				pos = val - minVal;
+			}
+			else {
+				binPos[0] = Long.MIN_VALUE;
+				return false;
+			}
 		}
 		binPos[0] = pos;
+		return true;
 	}
 
 	@Override
