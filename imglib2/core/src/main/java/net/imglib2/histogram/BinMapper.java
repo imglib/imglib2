@@ -52,8 +52,13 @@ import net.imglib2.EuclideanSpace;
 public interface BinMapper<T> extends EuclideanSpace {
 
 	/**
-	 * Get the grid dimensions mapped by this BinMapper. For instance a 4 X 3
-	 * grid would fill the dims array with {4,3}.
+	 * Returns the total number of bins defined by this BinMapper.
+	 */
+	long getBinCount();
+
+	/**
+	 * Get the grid dimensions mapped by this BinMapper. For instance a 4 X 3 grid
+	 * would fill the dims array with {4,3}.
 	 */
 	void getBinDimensions(long[] dims);
 

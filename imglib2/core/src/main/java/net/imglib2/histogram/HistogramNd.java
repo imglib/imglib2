@@ -88,6 +88,13 @@ public class HistogramNd<T> {
 	}
 
 	/**
+	 * Returns the total number of bins defined for this histogram.
+	 */
+	public long getBinCount() {
+		return binMapper.getBinCount();
+	}
+
+	/**
 	 * Returns the bin number associated with the given values.
 	 */
 	public void getBinPosition(List<T> values, long[] binPos) {

@@ -97,6 +97,15 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	}
 
 	@Override
+	public long getBinCount() {
+		if (binDimensions.length == 0) return 0;
+		long tot = 1;
+		for (long dim : binDimensions)
+			tot *= dim;
+		return tot;
+	}
+
+	@Override
 	public void getBinDimensions(long[] dims) {
 		for (int i = 0; i < binDimensions.length; i++)
 			dims[i] = binDimensions[i];
