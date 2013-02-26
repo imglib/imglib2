@@ -91,7 +91,7 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		System.out.print("Building histogram... ");
 		start = System.currentTimeMillis();
 		Integer1dBinMapper<T> binMapper = new Integer1dBinMapper<T>(0, max, false);
-		Histogram1d<T> hist = new Histogram1d<T>(img, binMapper);
+		Histogram1d<T> hist = new Histogram1d<T>(img, binMapper, type);
 		// double[] value = new double[1];
 		// Cursor<T> cursor = img.cursor();
 		// while (cursor.hasNext()) {

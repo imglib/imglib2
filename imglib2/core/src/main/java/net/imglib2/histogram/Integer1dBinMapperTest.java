@@ -39,6 +39,10 @@ package net.imglib2.histogram;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+import java.util.List;
+
 import net.imglib2.type.numeric.integer.IntType;
 
 import org.junit.Test;
@@ -51,6 +55,7 @@ public class Integer1dBinMapperTest {
 	@Test
 	public void testNoTail() {
 		IntType tmp = new IntType();
+		List<IntType> tmpList = Arrays.asList(tmp);
 		Integer1dBinMapper<IntType> binMapper =
 			new Integer1dBinMapper<IntType>(0, 100, false);
 		long[] tmpArr = new long[1];
@@ -59,13 +64,13 @@ public class Integer1dBinMapperTest {
 		for (int i = 0; i < 100; i++) {
 			tmp.setInteger(i);
 			long[] binPos = new long[] { i };
-			binMapper.getBinPosition(tmp, tmpArr);
+			binMapper.getBinPosition(tmpList, tmpArr);
 			assertEquals(i, tmpArr[0]);
-			binMapper.getMinValue(binPos, tmp);
+			binMapper.getMinValues(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
-			binMapper.getMaxValue(binPos, tmp);
+			binMapper.getMaxValues(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
-			binMapper.getCenterValue(binPos, tmp);
+			binMapper.getCenterValues(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
 		}
 	}
@@ -73,6 +78,7 @@ public class Integer1dBinMapperTest {
 	@Test
 	public void testTail() {
 		IntType tmp = new IntType();
+		List<IntType> tmpList = Arrays.asList(tmp);
 		Integer1dBinMapper<IntType> binMapper =
 			new Integer1dBinMapper<IntType>(0, 100, true);
 		long[] tmpArr = new long[1];
@@ -81,25 +87,25 @@ public class Integer1dBinMapperTest {
 		// test the interior areas
 		for (int i = 0; i < 98; i++) {
 			tmp.setInteger(i);
-			binMapper.getBinPosition(tmp, tmpArr);
+			binMapper.getBinPosition(tmpList, tmpArr);
 			assertEquals(i + 1, tmpArr[0]);
 			long[] binPos = tmpArr.clone();
-			binMapper.getMinValue(binPos, tmp);
+			binMapper.getMinValues(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
-			binMapper.getMaxValue(binPos, tmp);
+			binMapper.getMaxValues(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
-			binMapper.getCenterValue(binPos, tmp);
+			binMapper.getCenterValues(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
 		}
 
 		// test the lower tail
 		tmp.setInteger(-1);
-		binMapper.getBinPosition(tmp, tmpArr);
+		binMapper.getBinPosition(tmpList, tmpArr);
 		assertEquals(0, tmpArr[0]);
 
 		// test the upper tail
 		tmp.setInteger(98);
-		binMapper.getBinPosition(tmp, tmpArr);
+		binMapper.getBinPosition(tmpList, tmpArr);
 		assertEquals(99, tmpArr[0]);
 	}
 

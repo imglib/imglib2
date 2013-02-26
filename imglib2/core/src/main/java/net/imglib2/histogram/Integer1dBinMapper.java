@@ -37,6 +37,8 @@
 
 package net.imglib2.histogram;
 
+import java.util.List;
+
 import net.imglib2.type.numeric.IntegerType;
 
 /**
@@ -55,6 +57,8 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	private final boolean tailBins;
 
 	// -- constructor --
+
+	// TODO - numBins? or numBins and maxVal also?
 
 	public Integer1dBinMapper(long minVal, long numBins, boolean tailBins) {
 		this.bins = numBins;
@@ -87,8 +91,8 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	}
 
 	@Override
-	public void getBinPosition(T value, long[] binPos) {
-		long val = value.getIntegerLong();
+	public void getBinPosition(List<T> values, long[] binPos) {
+		long val = values.get(0).getIntegerLong();
 		long pos;
 		if (val < minVal) pos = 0;
 		else if (val > maxVal) pos = bins - 1;
@@ -100,7 +104,7 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	}
 
 	@Override
-	public void getCenterValue(long[] binPos, T value) {
+	public void getCenterValues(long[] binPos, List<T> values) {
 		long pos = binPos[0];
 		long val;
 		if (tailBins) {
@@ -111,26 +115,26 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 		else { // no tail bins
 			val = minVal + pos;
 		}
-		value.setInteger(val);
+		values.get(0).setInteger(val);
 	}
 
 	@Override
-	public void getMinValue(long[] binPos, T value) {
-		getCenterValue(binPos, value);
+	public void getMinValues(long[] binPos, List<T> values) {
+		getCenterValues(binPos, values);
 	}
 
 	@Override
-	public void getMaxValue(long[] binPos, T value) {
-		getCenterValue(binPos, value);
+	public void getMaxValues(long[] binPos, List<T> values) {
+		getCenterValues(binPos, values);
 	}
 
 	@Override
-	public boolean includesMinValue(long[] binPos) {
+	public boolean includesMinValues(long[] binPos) {
 		return true;
 	}
 
 	@Override
-	public boolean includesMaxValue(long[] binPos) {
+	public boolean includesMaxValues(long[] binPos) {
 		return true;
 	}
 }

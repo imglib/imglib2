@@ -37,6 +37,8 @@
 
 package net.imglib2.histogram;
 
+import java.util.List;
+
 import net.imglib2.EuclideanSpace;
 
 /**
@@ -54,30 +56,30 @@ public interface BinMapper<T> extends EuclideanSpace {
 	/**
 	 * Determine the gridded bin position of a data value.
 	 */
-	void getBinPosition(T value, long[] binPos);
+	void getBinPosition(List<T> values, long[] binPos);
 
 	/**
 	 * Returns the data value associated with the center of a bin.
 	 */
-	void getCenterValue(long[] binPos, T value);
+	void getCenterValues(long[] binPos, List<T> values);
 
 	/**
 	 * Returns the data value associated with the smallest edge of a bin.
 	 */
-	void getMinValue(long[] binPos, T value); // left edge of a 1d bin
+	void getMinValues(long[] binPos, List<T> values); // smallest corner of bin
 
 	/**
 	 * Returns the data value associated with the largest edge of a bin.
 	 */
-	void getMaxValue(long[] binPos, T value); // right edge of a 1d bin
+	void getMaxValues(long[] binPos, List<T> values); // largest corner of bin
 
 	/**
 	 * Returns true if a given bin includes values on the smallest edge of a bin.
 	 */
-	boolean includesMinValue(long[] binPos);
+	boolean includesMinValues(long[] binPos);
 
 	/**
 	 * Returns true if a given bin includes values on the largest edge of a bin.
 	 */
-	boolean includesMaxValue(long[] binPos);
+	boolean includesMaxValues(long[] binPos);
 }

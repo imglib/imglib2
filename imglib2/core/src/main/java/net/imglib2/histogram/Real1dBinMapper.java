@@ -37,6 +37,8 @@
 
 package net.imglib2.histogram;
 
+import java.util.List;
+
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -86,9 +88,9 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	}
 
 	@Override
-	public void getBinPosition(T value, long[] binPos) {
+	public void getBinPosition(List<T> values, long[] binPos) {
 		long pos;
-		double val = value.getRealDouble();
+		double val = values.get(0).getRealDouble();
 		if (val < minVal) pos = 0;
 		else if (val > maxVal) pos = bins - 1;
 		else {
@@ -104,28 +106,28 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	}
 
 	@Override
-	public void getCenterValue(long[] binPos, T value) {
-		value.setReal(center(binPos[0]));
+	public void getCenterValues(long[] binPos, List<T> values) {
+		values.get(0).setReal(center(binPos[0]));
 	}
 
 	@Override
-	public void getMinValue(long[] binPos, T value) {
-		value.setReal(min(binPos[0]));
+	public void getMinValues(long[] binPos, List<T> values) {
+		values.get(0).setReal(min(binPos[0]));
 	}
 
 	@Override
-	public void getMaxValue(long[] binPos, T value) {
-		value.setReal(max(binPos[0]));
+	public void getMaxValues(long[] binPos, List<T> values) {
+		values.get(0).setReal(max(binPos[0]));
 	}
 
 	@Override
-	public boolean includesMinValue(long[] binPos) {
+	public boolean includesMinValues(long[] binPos) {
 		if (tailBins && binPos[0] == bins - 1) return false;
 		return true;
 	}
 
 	@Override
-	public boolean includesMaxValue(long[] binPos) {
+	public boolean includesMaxValues(long[] binPos) {
 		if (tailBins) {
 			if (binPos[0] >= bins - 2) return true;
 		}

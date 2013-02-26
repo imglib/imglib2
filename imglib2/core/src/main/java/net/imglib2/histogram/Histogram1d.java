@@ -37,6 +37,9 @@
 
 package net.imglib2.histogram;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Barry DeZonia
  * @param <T>
@@ -46,21 +49,29 @@ public class Histogram1d<T> {
 	// -- instance variables --
 
 	private final HistogramNd<T> histN;
-	private final long[] tmpPos = new long[1];
+	private final long[] tmpPos;
+	private final List<Iterable<T>> iterables;
+	private final List<T> vals;
 
 	// -- public api --
 	
-	public Histogram1d(Iterable<T> iterable, BinMapper<T> binMapper)
+	public Histogram1d(Iterable<T> iterable, BinMapper<T> binMapper, T val)
 	{
 		if (binMapper.numDimensions() != 1) {
 			throw new IllegalArgumentException(
 				"This histogram requires a 1d bin mapper");
 		}
-		histN = new HistogramNd<T>(iterable, binMapper);
+		iterables = new ArrayList<Iterable<T>>();
+		iterables.add(iterable);
+		vals = new ArrayList<T>();
+		vals.add(val);
+		histN = new HistogramNd<T>(iterables, binMapper, vals);
+		tmpPos = new long[1];
 	}
 
 	public long getBinPosition(T value) {
-		histN.getBinPosition(value, tmpPos);
+		vals.set(0, value);
+		histN.getBinPosition(vals, tmpPos);
 		return tmpPos[0];
 	}
 
@@ -80,16 +91,19 @@ public class Histogram1d<T> {
 
 	public void getCenterValue(long binPos, T value) {
 		tmpPos[0] = binPos;
-		histN.getCenterValue(tmpPos, value);
+		vals.set(0, value);
+		histN.getCenterValues(tmpPos, vals);
 	}
 
 	public void getMinValue(long binPos, T value) {
 		tmpPos[0] = binPos;
-		histN.getMinValue(tmpPos, value);
+		vals.set(0, value);
+		histN.getMinValues(tmpPos, vals);
 	}
 
 	public void getMaxValue(long binPos, T value) {
 		tmpPos[0] = binPos;
-		histN.getMaxValue(tmpPos, value);
+		vals.set(0, value);
+		histN.getMaxValues(tmpPos, vals);
 	}
 }

@@ -37,6 +37,15 @@
 
 package net.imglib2.histogram;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+// Limitation: all Iterables must be of same type. For instance this assumes
+// a 3d coord would have three iterators of same type (like ubyte for RGB).
+// However Larry's code may have intended to allow classification of a tuple
+// such as this: (5.0,'a',Colors.RED). Look at HistogramKey to learn more.
+
 /**
  * @author Barry DeZonia
  * @param <T>
@@ -45,24 +54,29 @@ public class HistogramNd<T> {
 
 	// -- instance variables --
 
-	private final Iterable<T> iterable;
+	private final List<Iterable<T>> iterables;
 	private final BinMapper<T> binMapper;
 	private final DiscreteFrequencyDistribution binDistrib;
-	private final long[] tmpPos = new long[1];
+	private final long[] tmpPos;
+	private final List<T> vals;
 
 	// -- public api --
 
-	public HistogramNd(Iterable<T> iterable, BinMapper<T> binMapper) {
-		this.iterable = iterable;
+	public HistogramNd(List<Iterable<T>> iterables, BinMapper<T> binMapper,
+		List<T> values)
+	{
+		this.iterables = iterables;
 		this.binMapper = binMapper;
+		this.vals = values;
 		long[] binDims = new long[binMapper.numDimensions()];
 		binMapper.getBinDimensions(binDims);
 		this.binDistrib = new DiscreteFrequencyDistribution(binDims);
+		this.tmpPos = new long[binMapper.numDimensions()];
 		populateBins();
 	}
 
-	public void getBinPosition(T value, long[] binPos) {
-		binMapper.getBinPosition(value, binPos);
+	public void getBinPosition(List<T> values, long[] binPos) {
+		binMapper.getBinPosition(values, binPos);
 	}
 
 	public long frequency(long[] binPos) {
@@ -77,25 +91,39 @@ public class HistogramNd<T> {
 		populateBins();
 	}
 
-	public void getCenterValue(long[] binPos, T value) {
-		binMapper.getCenterValue(binPos, value);
+	public void getCenterValues(long[] binPos, List<T> values) {
+		binMapper.getCenterValues(binPos, values);
 	}
 
-	public void getMinValue(long[] binPos, T value) {
-		binMapper.getMinValue(binPos, value);
+	public void getMinValues(long[] binPos, List<T> values) {
+		binMapper.getMinValues(binPos, values);
 	}
 
-	public void getMaxValue(long[] binPos, T value) {
-		binMapper.getMaxValue(binPos, value);
+	public void getMaxValues(long[] binPos, List<T> values) {
+		binMapper.getMaxValues(binPos, values);
 	}
 
 	// -- private helpers --
 
 	private void populateBins() {
 		binDistrib.resetCounters();
-		for (T value : iterable) {
-			binMapper.getBinPosition(value, tmpPos);
-			binDistrib.increment(tmpPos);
+		List<Iterator<T>> iters = new ArrayList<Iterator<T>>();
+		for (int i = 0; i < iterables.size(); i++) {
+			iters.add(iterables.get(i).iterator());
 		}
+		boolean hasNext = true;
+		do {
+			for (int i = 0; i < iters.size(); i++) {
+				if (!iters.get(i).hasNext()) hasNext = false;
+			}
+			if (hasNext) {
+				for (int i = 0; i < iters.size(); i++) {
+					vals.set(i, iters.get(i).next());
+				}
+				binMapper.getBinPosition(vals, tmpPos);
+				binDistrib.increment(tmpPos);
+			}
+		}
+		while (hasNext);
 	}
 }
