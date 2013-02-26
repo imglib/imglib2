@@ -51,6 +51,8 @@ import net.imglib2.type.numeric.real.FloatType;
 import org.junit.Test;
 
 /**
+ * Tests the Real1dBinMapper class.
+ * 
  * @author Barry DeZonia
  */
 public class Real1dBinMapperTest {

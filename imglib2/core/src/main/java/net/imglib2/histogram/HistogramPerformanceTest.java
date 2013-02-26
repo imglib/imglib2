@@ -45,6 +45,9 @@ import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 
+// Adapted by BDZ from the imglib1 HistogramPerformanceTest code by CTR to work
+// with newer histogram implementations.
+
 /**
  * TODO
  * 

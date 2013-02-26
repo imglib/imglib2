@@ -42,8 +42,9 @@ import java.util.List;
 import net.imglib2.type.numeric.IntegerType;
 
 /**
+ * Maps integer values into a 1-d set of bins.
+ * 
  * @author Barry DeZonia
- * @param <T>
  */
 public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	BinMapper<T>
@@ -58,8 +59,19 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 
 	// -- constructor --
 
-	// TODO - numBins? or numBins and maxVal also?
+	// TODO - do we just ignore values outside bins when tailbins == false?
 
+	/**
+	 * Specify a mapping of integral data from a user defined range into a
+	 * specified number of bins. If tailBins is true then there will be two bins
+	 * that count values outside the user specified ranges. If false then any
+	 * values outside the range are counted in the two outermost bins.
+	 * 
+	 * @param minVal The first data value of interest.
+	 * @param numBins The total number of bins to create.
+	 * @param tailBins A boolean specifying whether to have catch all bins for
+	 *          values outside the user defined range.
+	 */
 	public Integer1dBinMapper(long minVal, long numBins, boolean tailBins) {
 		this.bins = numBins;
 		this.binDimensions = new long[] { numBins };

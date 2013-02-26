@@ -52,9 +52,13 @@ import net.imglib2.type.numeric.integer.LongType;
  */
 public class DiscreteFrequencyDistribution implements EuclideanSpace {
 
+	// -- instance variables --
+
 	private Img<LongType> counts;
 	private RandomAccess<LongType> accessor;
 	private long totalValues = 0;
+
+	// -- public api --
 
 	/**
 	 * Construct an n-dimensional counter
@@ -81,14 +85,23 @@ public class DiscreteFrequencyDistribution implements EuclideanSpace {
 		return counts.numDimensions();
 	}
 
+	/**
+	 * Returns the dimension of the specified axis of the distribution.
+	 */
 	public long dimension(int d) {
 		return counts.dimension(d);
 	}
 
+	/**
+	 * Gets the dimensions of all the axes of the distribution.
+	 */
 	public void dimensions(long[] dims) {
 		counts.dimensions(dims);
 	}
 
+	/**
+	 * Resets all frequency counts to zero.
+	 */
 	public void resetCounters() {
 		Cursor<LongType> cursor = counts.cursor();
 		while (cursor.hasNext()) {
@@ -97,16 +110,25 @@ public class DiscreteFrequencyDistribution implements EuclideanSpace {
 		totalValues = 0;
 	}
 
+	/**
+	 * Returns the frequency count associated with a given bin.
+	 */
 	public long frequency(long[] binPos) {
 		accessor.setPosition(binPos);
 		return accessor.get().get();
 	}
 
+	/**
+	 * Returns the relative frequency (0 <= f <= 1) associated with a given bin.
+	 */
 	public double relativeFrequency(long[] binPos) {
 		if (totalValues == 0) return 0;
 		return 1.0 * frequency(binPos) / totalValues;
 	}
 
+	/**
+	 * Increments the frequency count of a specified bin.
+	 */
 	public void increment(long[] binPos) {
 		accessor.setPosition(binPos);
 		accessor.get().inc();

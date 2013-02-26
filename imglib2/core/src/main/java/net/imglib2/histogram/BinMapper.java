@@ -42,6 +42,10 @@ import java.util.List;
 import net.imglib2.EuclideanSpace;
 
 /**
+ * A BinMapper maps a list of values to a bin position. This code used for
+ * histogram calculation. This class also can be queried for bin attributes
+ * (such as key points, boundaries, etc.)
+ * 
  * @author Barry DeZonia
  * @param <T>
  */
@@ -54,22 +58,23 @@ public interface BinMapper<T> extends EuclideanSpace {
 	void getBinDimensions(long[] dims);
 
 	/**
-	 * Determine the gridded bin position of a data value.
+	 * Determine the gridded bin position of a set of n-dim data values.
 	 */
 	void getBinPosition(List<T> values, long[] binPos);
 
 	/**
-	 * Returns the data value associated with the center of a bin.
+	 * Determines the n-dim data values associated with the center of a bin.
 	 */
 	void getCenterValues(long[] binPos, List<T> values);
 
 	/**
-	 * Returns the data value associated with the smallest edge of a bin.
+	 * Determines the n-dim data values associated with the smallest edge of a
+	 * bin.
 	 */
 	void getMinValues(long[] binPos, List<T> values); // smallest corner of bin
 
 	/**
-	 * Returns the data value associated with the largest edge of a bin.
+	 * Determines the n-dim data values associated with the largest edge of a bin.
 	 */
 	void getMaxValues(long[] binPos, List<T> values); // largest corner of bin
 

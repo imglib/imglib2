@@ -48,6 +48,8 @@ import net.imglib2.type.numeric.integer.IntType;
 import org.junit.Test;
 
 /**
+ * Tests the Integer1dBinMapper class.
+ * 
  * @author Barry DeZonia
  */
 public class Integer1dBinMapperTest {

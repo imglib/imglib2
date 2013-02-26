@@ -47,6 +47,8 @@ import java.util.List;
 // such as this: (5.0,'a',Colors.RED). Look at HistogramKey to learn more.
 
 /**
+ * An n-dimensional histogram implementation.
+ * 
  * @author Barry DeZonia
  * @param <T>
  */
@@ -62,6 +64,16 @@ public class HistogramNd<T> {
 
 	// -- public api --
 
+	/**
+	 * Constructs a histogram on a set of Iterable data sources. The algorithm for
+	 * mapping values to bins must be provided. A set that can contain scratch
+	 * variables must be provided also.
+	 * 
+	 * @param iterables The set of iterable data sources to iterate and count.
+	 * @param binMapper The algorithm used to map values to bins.
+	 * @param values A list of values that can be used internally for temporary
+	 *          work.
+	 */
 	public HistogramNd(List<Iterable<T>> iterables, BinMapper<T> binMapper,
 		List<T> values)
 	{
@@ -75,30 +87,52 @@ public class HistogramNd<T> {
 		populateBins();
 	}
 
+	/**
+	 * Returns the bin number associated with the given values.
+	 */
 	public void getBinPosition(List<T> values, long[] binPos) {
 		binMapper.getBinPosition(values, binPos);
 	}
 
+	/**
+	 * Returns the count of values mapped to a specified bin number.
+	 */
 	public long frequency(long[] binPos) {
 		return binDistrib.frequency(binPos);
 	}
 
+	/**
+	 * Returns the relative frequency of values mapped to a specified bin number.
+	 */
 	public double relativeFrequency(long[] binPos) {
 		return binDistrib.relativeFrequency(binPos);
 	}
 
+	/**
+	 * Recalculates the frequency distribution of the earlier specified Iterable
+	 * data sources.
+	 */
 	public void recalc() {
 		populateBins();
 	}
 
+	/**
+	 * Gets the data values of the center of a given bin number.
+	 */
 	public void getCenterValues(long[] binPos, List<T> values) {
 		binMapper.getCenterValues(binPos, values);
 	}
 
+	/**
+	 * Gets the data values of the leftmost point of a given bin number.
+	 */
 	public void getMinValues(long[] binPos, List<T> values) {
 		binMapper.getMinValues(binPos, values);
 	}
 
+	/**
+	 * Gets the data values of the rightmost point of a given bin number.
+	 */
 	public void getMaxValues(long[] binPos, List<T> values) {
 		binMapper.getMaxValues(binPos, values);
 	}

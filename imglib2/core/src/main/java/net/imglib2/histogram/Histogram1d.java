@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A one dimensional histogram implementation.
+ * 
  * @author Barry DeZonia
  * @param <T>
  */
@@ -55,6 +57,15 @@ public class Histogram1d<T> {
 
 	// -- public api --
 	
+	/**
+	 * Constructs a histogram on an Iterable set of data. The algorithm for
+	 * mapping values to bins must be provided. A scratch variable must be
+	 * provided also.
+	 * 
+	 * @param iterable The set of data to iterate and count.
+	 * @param binMapper The algorithm used to map values to bins.
+	 * @param val A variable that can be used internally for temporary work.
+	 */
 	public Histogram1d(Iterable<T> iterable, BinMapper<T> binMapper, T val)
 	{
 		if (binMapper.numDimensions() != 1) {
@@ -69,38 +80,60 @@ public class Histogram1d<T> {
 		tmpPos = new long[1];
 	}
 
+	/**
+	 * Returns the bin number associated with the given value.
+	 */
 	public long getBinPosition(T value) {
 		vals.set(0, value);
 		histN.getBinPosition(vals, tmpPos);
 		return tmpPos[0];
 	}
 
+	/**
+	 * Returns the count of values mapped to a specified bin number.
+	 */
 	public long frequency(long binPos) {
 		tmpPos[0] = binPos;
 		return histN.frequency(tmpPos);
 	}
 
+	/**
+	 * Returns the relative frequency of values mapped to a specified bin number.
+	 */
 	public double relativeFrequency(long binPos) {
 		tmpPos[0] = binPos;
 		return histN.relativeFrequency(tmpPos);
 	}
 
+	/**
+	 * Recalculates the frequency distribution of the earlier specified Iterable
+	 * data source.
+	 */
 	public void recalc() {
 		histN.recalc();
 	}
 
+	/**
+	 * Gets the data value of the center of a given bin number.
+	 */
 	public void getCenterValue(long binPos, T value) {
 		tmpPos[0] = binPos;
 		vals.set(0, value);
 		histN.getCenterValues(tmpPos, vals);
 	}
 
+	/**
+	 * Gets the data value of the left edge of a given bin number.
+	 */
 	public void getMinValue(long binPos, T value) {
 		tmpPos[0] = binPos;
 		vals.set(0, value);
 		histN.getMinValues(tmpPos, vals);
 	}
 
+	/**
+	 * Gets the data value of the right edge of a given bin number.
+	 */
 	public void getMaxValue(long binPos, T value) {
 		tmpPos[0] = binPos;
 		vals.set(0, value);
