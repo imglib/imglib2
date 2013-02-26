@@ -137,6 +137,24 @@ public class HistogramNd<T> {
 		binMapper.getMaxValues(binPos, values);
 	}
 
+	/**
+	 * Returns true if the bin specified by bin position includes data points
+	 * matching the bin's maximum edge values. Otherwise the max values are
+	 * considered just outside the bin.
+	 */
+	public boolean includesMaxValues(long[] binPos) {
+		return binMapper.includesMaxValues(binPos);
+	}
+
+	/**
+	 * Returns true if the bin specified by bin position includes data points
+	 * matching the bin's minimum edge values. Otherwise the min values are
+	 * considered just outside the bin.
+	 */
+	public boolean includesMinValues(long[] binPos) {
+		return binMapper.includesMinValues(binPos);
+	}
+
 	// -- private helpers --
 
 	private void populateBins() {

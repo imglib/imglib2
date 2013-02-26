@@ -139,4 +139,24 @@ public class Histogram1d<T> {
 		vals.set(0, value);
 		histN.getMaxValues(tmpPos, vals);
 	}
+
+	/**
+	 * Returns true if the bin specified by bin position includes data points
+	 * matching the bin's maximum edge value. Otherwise the max value is
+	 * considered just outside the bin.
+	 */
+	public boolean includesMaxValue(long binPos) {
+		tmpPos[0] = binPos;
+		return histN.includesMaxValues(tmpPos);
+	}
+
+	/**
+	 * Returns true if the bin specified by bin position includes data points
+	 * matching the bin's minimum edge value. Otherwise the min value is
+	 * considered just outside the bin.
+	 */
+	public boolean includesMinValue(long binPos) {
+		tmpPos[0] = binPos;
+		return histN.includesMinValues(tmpPos);
+	}
 }
