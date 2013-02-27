@@ -56,6 +56,7 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	private final long[] binDimensions;
 	private final double minVal, maxVal;
 	private final boolean tailBins;
+	private final double binWidth;
 
 	// -- constructor --
 
@@ -79,14 +80,16 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 		this.minVal = minVal;
 		this.maxVal = maxVal;
 		this.tailBins = tailBins;
-		if (bins <= 0) {
+		if (bins <= 0 || (tailBins && bins <= 2)) {
 			throw new IllegalArgumentException(
-				"invalid RealBinMapper: nonpositive dimension");
+				"invalid RealBinMapper: no data bins specified");
 		}
 		if (minVal >= maxVal) {
 			throw new IllegalArgumentException(
-				"invalid RealBinMapper: nonpositive bin width");
+				"invalid RealBinMapper: nonpositive data range specified");
 		}
+		if (tailBins) binWidth = (maxVal - minVal) / (bins - 2);
+		else binWidth = (maxVal - minVal) / (bins);
 	}
 
 	// -- BinMapper methods --
@@ -115,28 +118,21 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	public boolean getBinPosition(List<T> values, long[] binPos) {
 		double val = values.get(0).getRealDouble();
 		long pos;
-		if (tailBins) {
-			if (val < minVal) pos = 0;
-			else if (val > maxVal) pos = bins - 1;
-			else {
-				double relPos = (val - minVal) / (maxVal - minVal);
-				pos = 1 + Math.round(relPos * (bins - 2));
-				if (pos == bins - 1) pos = bins - 2;
-			}
+		if (val >= minVal && val <= maxVal) {
+			double bin = (val - minVal) / binWidth;
+			pos = (long) Math.floor(bin);
+			if (val == maxVal) pos--;
+			if (tailBins) pos++;
 		}
-		else { // no tail bins
-			if (val >= minVal && val <= maxVal) {
-				double relPos = (val - minVal) / (maxVal - minVal);
-				pos = Math.round(relPos * (bins));
-				if (pos == bins) pos = bins - 1;
-			}
-			else {
-				binPos[0] = Long.MIN_VALUE;
-				return false;
-			}
+		else if (tailBins) {
+			if (val < minVal) pos = 0;
+			else pos = bins - 1;
+		}
+		else { // no tail bins and we are outside
+			pos = Long.MIN_VALUE;
 		}
 		binPos[0] = pos;
-		return true;
+		return pos != Long.MIN_VALUE;
 	}
 
 	@Override
