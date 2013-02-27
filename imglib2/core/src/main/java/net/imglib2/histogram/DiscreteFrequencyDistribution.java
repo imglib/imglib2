@@ -38,7 +38,7 @@
 package net.imglib2.histogram;
 
 import net.imglib2.Cursor;
-import net.imglib2.EuclideanSpace;
+import net.imglib2.Dimensions;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -50,7 +50,7 @@ import net.imglib2.type.numeric.integer.LongType;
  * 
  * @author Barry DeZonia
  */
-public class DiscreteFrequencyDistribution implements EuclideanSpace {
+public class DiscreteFrequencyDistribution implements Dimensions {
 
 	// -- instance variables --
 
@@ -80,21 +80,26 @@ public class DiscreteFrequencyDistribution implements EuclideanSpace {
 		accessor = counts.randomAccess();
 	}
 
+	/**
+	 * Returns the number of dimensions of the distribution.
+	 */
 	@Override
 	public int numDimensions() {
 		return counts.numDimensions();
 	}
 
 	/**
-	 * Returns the dimension of the specified axis of the distribution.
+	 * Returns the dimensional size of the specified axis of the distribution.
 	 */
+	@Override
 	public long dimension(int d) {
 		return counts.dimension(d);
 	}
 
 	/**
-	 * Gets the dimensions of all the axes of the distribution.
+	 * Gets the dimensional sizes of all the axes of the distribution.
 	 */
+	@Override
 	public void dimensions(long[] dims) {
 		counts.dimensions(dims);
 	}
