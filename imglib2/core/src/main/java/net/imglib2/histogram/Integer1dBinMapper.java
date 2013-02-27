@@ -69,8 +69,8 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	 * 
 	 * @param minVal The first data value of interest.
 	 * @param numBins The total number of bins to create.
-	 * @param tailBins A boolean specifying whether to have catch all bins for
-	 *          values outside the user defined range.
+	 * @param tailBins A boolean specifying whether to have a bin in each tail to
+	 *          count values outside the user defined range.
 	 */
 	public Integer1dBinMapper(long minVal, long numBins, boolean tailBins) {
 		this.bins = numBins;
@@ -83,9 +83,9 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 		else {
 			this.maxVal = minVal + numBins - 1;
 		}
-		if (bins <= 0) {
+		if ((bins <= 0) || (tailBins && bins <= 2)) {
 			throw new IllegalArgumentException(
-				"invalid IntegerBinMapper: nonpositive dimension");
+				"invalid Integer1dBinMapper: no data bins specified");
 		}
 	}
 

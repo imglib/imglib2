@@ -69,8 +69,8 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	 * @param minVal The first data value of interest.
 	 * @param maxVal The last data value of interest.
 	 * @param numBins The total number of bins to create.
-	 * @param tailBins A boolean specifying whether to have catch all bins for
-	 *          values outside the user defined range.
+	 * @param tailBins A boolean specifying whether to have a bin in each tail to
+	 *          count values outside the user defined range.
 	 */
 	public Real1dBinMapper(double minVal, double maxVal, long numBins,
 		boolean tailBins)
@@ -80,13 +80,13 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 		this.minVal = minVal;
 		this.maxVal = maxVal;
 		this.tailBins = tailBins;
-		if (bins <= 0 || (tailBins && bins <= 2)) {
+		if (numBins <= 0 || (tailBins && numBins <= 2)) {
 			throw new IllegalArgumentException(
-				"invalid RealBinMapper: no data bins specified");
+				"invalid Real1dBinMapper: no data bins specified");
 		}
 		if (minVal >= maxVal) {
 			throw new IllegalArgumentException(
-				"invalid RealBinMapper: nonpositive data range specified");
+				"invalid Real1dBinMapper: nonpositive data range specified");
 		}
 		if (tailBins) binWidth = (maxVal - minVal) / (bins - 2);
 		else binWidth = (maxVal - minVal) / (bins);
