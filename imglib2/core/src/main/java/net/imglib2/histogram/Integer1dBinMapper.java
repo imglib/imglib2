@@ -115,22 +115,19 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	public boolean getBinPosition(List<T> values, long[] binPos) {
 		long val = values.get(0).getIntegerLong();
 		long pos;
-		if (tailBins) {
-			if (val < minVal) pos = 0;
-			else if (val > maxVal) pos = bins - 1;
-			else pos = val - minVal + 1;
+		if (val >= minVal && val <= maxVal) {
+			pos = val - minVal;
+			if (tailBins) pos++;
 		}
-		else { // no tail bins
-			if (val >= minVal && val <= maxVal) {
-				pos = val - minVal;
-			}
-			else {
-				binPos[0] = Long.MIN_VALUE;
-				return false;
-			}
+		else if (tailBins) {
+			if (val < minVal) pos = 0;
+			else pos = bins - 1;
+		}
+		else { // no tail bins and we are outside
+			pos = Long.MIN_VALUE;
 		}
 		binPos[0] = pos;
-		return true;
+		return pos != Long.MIN_VALUE;
 	}
 
 	@Override
