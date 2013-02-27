@@ -95,12 +95,6 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		start = System.currentTimeMillis();
 		Integer1dBinMapper<T> binMapper = new Integer1dBinMapper<T>(0, max, false);
 		Histogram1d<T> hist = new Histogram1d<T>(img, binMapper, type);
-		// double[] value = new double[1];
-		// Cursor<T> cursor = img.cursor();
-		// while (cursor.hasNext()) {
-		// value[0] = cursor.next().get`RealDouble();
-		// distrib.countValue(value);
-		// }
 		end = System.currentTimeMillis();
 		long histMillis = end - start;
 		System.out.println(histMillis + " ms");
