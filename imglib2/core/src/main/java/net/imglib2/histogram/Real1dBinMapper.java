@@ -145,23 +145,23 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper<T> {
 	}
 
 	@Override
-	public void getMinValues(long[] binPos, List<T> values) {
+	public void getLowerBounds(long[] binPos, List<T> values) {
 		values.get(0).setReal(min(binPos[0]));
 	}
 
 	@Override
-	public void getMaxValues(long[] binPos, List<T> values) {
+	public void getUpperBounds(long[] binPos, List<T> values) {
 		values.get(0).setReal(max(binPos[0]));
 	}
 
 	@Override
-	public boolean includesMinValues(long[] binPos) {
+	public boolean includesLowerBounds(long[] binPos) {
 		if (tailBins && binPos[0] == bins - 1) return false;
 		return true;
 	}
 
 	@Override
-	public boolean includesMaxValues(long[] binPos) {
+	public boolean includesUpperBounds(long[] binPos) {
 		if (tailBins) {
 			if (binPos[0] >= bins - 2) return true;
 		}

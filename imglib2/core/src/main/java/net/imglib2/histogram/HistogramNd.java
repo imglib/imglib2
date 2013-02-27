@@ -133,15 +133,15 @@ public class HistogramNd<T> {
 	/**
 	 * Gets the data values of the leftmost point of a given bin number.
 	 */
-	public void getMinValues(long[] binPos, List<T> values) {
-		binMapper.getMinValues(binPos, values);
+	public void getLowerBounds(long[] binPos, List<T> values) {
+		binMapper.getLowerBounds(binPos, values);
 	}
 
 	/**
 	 * Gets the data values of the rightmost point of a given bin number.
 	 */
-	public void getMaxValues(long[] binPos, List<T> values) {
-		binMapper.getMaxValues(binPos, values);
+	public void getUpperBounds(long[] binPos, List<T> values) {
+		binMapper.getUpperBounds(binPos, values);
 	}
 
 	/**
@@ -149,8 +149,8 @@ public class HistogramNd<T> {
 	 * matching the bin's maximum edge values. Otherwise the max values are
 	 * considered just outside the bin.
 	 */
-	public boolean includesMaxValues(long[] binPos) {
-		return binMapper.includesMaxValues(binPos);
+	public boolean includesUpperBounds(long[] binPos) {
+		return binMapper.includesUpperBounds(binPos);
 	}
 
 	/**
@@ -158,8 +158,8 @@ public class HistogramNd<T> {
 	 * matching the bin's minimum edge values. Otherwise the min values are
 	 * considered just outside the bin.
 	 */
-	public boolean includesMinValues(long[] binPos) {
-		return binMapper.includesMinValues(binPos);
+	public boolean includesLowerBounds(long[] binPos) {
+		return binMapper.includesLowerBounds(binPos);
 	}
 
 	// -- private helpers --

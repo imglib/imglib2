@@ -78,20 +78,20 @@ public interface BinMapper<T> extends EuclideanSpace {
 	 * Determines the n-dim data values associated with the smallest edge of a
 	 * bin.
 	 */
-	void getMinValues(long[] binPos, List<T> values); // smallest corner of bin
+	void getLowerBounds(long[] binPos, List<T> values); // smallest corner of bin
 
 	/**
 	 * Determines the n-dim data values associated with the largest edge of a bin.
 	 */
-	void getMaxValues(long[] binPos, List<T> values); // largest corner of bin
+	void getUpperBounds(long[] binPos, List<T> values); // largest corner of bin
 
 	/**
 	 * Returns true if a given bin includes values on the smallest edge of a bin.
 	 */
-	boolean includesMinValues(long[] binPos);
+	boolean includesLowerBounds(long[] binPos);
 
 	/**
 	 * Returns true if a given bin includes values on the largest edge of a bin.
 	 */
-	boolean includesMaxValues(long[] binPos);
+	boolean includesUpperBounds(long[] binPos);
 }

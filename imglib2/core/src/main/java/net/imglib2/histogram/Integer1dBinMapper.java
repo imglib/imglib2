@@ -149,22 +149,22 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	}
 
 	@Override
-	public void getMinValues(long[] binPos, List<T> values) {
+	public void getLowerBounds(long[] binPos, List<T> values) {
 		getCenterValues(binPos, values);
 	}
 
 	@Override
-	public void getMaxValues(long[] binPos, List<T> values) {
+	public void getUpperBounds(long[] binPos, List<T> values) {
 		getCenterValues(binPos, values);
 	}
 
 	@Override
-	public boolean includesMinValues(long[] binPos) {
+	public boolean includesLowerBounds(long[] binPos) {
 		return true;
 	}
 
 	@Override
-	public boolean includesMaxValues(long[] binPos) {
+	public boolean includesUpperBounds(long[] binPos) {
 		return true;
 	}
 }

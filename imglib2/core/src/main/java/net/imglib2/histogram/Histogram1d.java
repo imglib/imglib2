@@ -132,19 +132,19 @@ public class Histogram1d<T> {
 	/**
 	 * Gets the data value of the left edge of a given bin number.
 	 */
-	public void getMinValue(long binPos, T value) {
+	public void getLowerBound(long binPos, T value) {
 		tmpPos[0] = binPos;
 		vals.set(0, value);
-		histN.getMinValues(tmpPos, vals);
+		histN.getLowerBounds(tmpPos, vals);
 	}
 
 	/**
 	 * Gets the data value of the right edge of a given bin number.
 	 */
-	public void getMaxValue(long binPos, T value) {
+	public void getUpperBound(long binPos, T value) {
 		tmpPos[0] = binPos;
 		vals.set(0, value);
-		histN.getMaxValues(tmpPos, vals);
+		histN.getUpperBounds(tmpPos, vals);
 	}
 
 	/**
@@ -152,9 +152,9 @@ public class Histogram1d<T> {
 	 * matching the bin's maximum edge value. Otherwise the max value is
 	 * considered just outside the bin.
 	 */
-	public boolean includesMaxValue(long binPos) {
+	public boolean includesUpperBound(long binPos) {
 		tmpPos[0] = binPos;
-		return histN.includesMaxValues(tmpPos);
+		return histN.includesUpperBounds(tmpPos);
 	}
 
 	/**
@@ -162,8 +162,8 @@ public class Histogram1d<T> {
 	 * matching the bin's minimum edge value. Otherwise the min value is
 	 * considered just outside the bin.
 	 */
-	public boolean includesMinValue(long binPos) {
+	public boolean includesLowerBound(long binPos) {
 		tmpPos[0] = binPos;
-		return histN.includesMinValues(tmpPos);
+		return histN.includesLowerBounds(tmpPos);
 	}
 }

@@ -68,9 +68,9 @@ public class Integer1dBinMapperTest {
 			long[] binPos = new long[] { i };
 			binMapper.getBinPosition(tmpList, tmpArr);
 			assertEquals(i, tmpArr[0]);
-			binMapper.getMinValues(binPos, tmpList);
+			binMapper.getLowerBounds(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
-			binMapper.getMaxValues(binPos, tmpList);
+			binMapper.getUpperBounds(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
 			binMapper.getCenterValues(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
@@ -92,9 +92,9 @@ public class Integer1dBinMapperTest {
 			binMapper.getBinPosition(tmpList, tmpArr);
 			assertEquals(i + 1, tmpArr[0]);
 			long[] binPos = tmpArr.clone();
-			binMapper.getMinValues(binPos, tmpList);
+			binMapper.getLowerBounds(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
-			binMapper.getMaxValues(binPos, tmpList);
+			binMapper.getUpperBounds(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
 			binMapper.getCenterValues(binPos, tmpList);
 			assertEquals(i, tmp.getIntegerLong());
