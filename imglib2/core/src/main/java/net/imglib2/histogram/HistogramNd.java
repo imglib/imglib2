@@ -77,6 +77,14 @@ public class HistogramNd<T> {
 	public HistogramNd(List<Iterable<T>> iterables, BinMapper<T> binMapper,
 		List<T> values)
 	{
+		if (iterables.size() != binMapper.numDimensions()) {
+			throw new IllegalArgumentException(
+				"the number of data sources must equal bin mapper dimension count");
+		}
+		if (values.size() != binMapper.numDimensions()) {
+			throw new IllegalArgumentException(
+				"the number of temp variables must equal bin mapper dimension count");
+		}
 		this.iterables = iterables;
 		this.binMapper = binMapper;
 		this.vals = values;
