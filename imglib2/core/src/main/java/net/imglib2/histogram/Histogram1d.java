@@ -104,11 +104,37 @@ public class Histogram1d<T> {
 	}
 
 	/**
+	 * Returns the count of values in the bin mapped from a given value.
+	 */
+	public long frequency(T value) {
+		vals.set(0, value);
+		histN.getBinPosition(vals, tmpPos);
+		return histN.frequency(tmpPos);
+	}
+
+	/**
 	 * Returns the relative frequency of values mapped to a specified bin number.
 	 */
 	public double relativeFrequency(long binPos) {
 		tmpPos[0] = binPos;
 		return histN.relativeFrequency(tmpPos);
+	}
+
+	/**
+	 * Returns the relative frequency of values within the bin containing a
+	 * specified value.
+	 */
+	public double relativeFrequency(T value) {
+		vals.set(0, value);
+		histN.getBinPosition(vals, tmpPos);
+		return histN.relativeFrequency(tmpPos);
+	}
+
+	/**
+	 * Returns the count of the values contained in the histogram bins.
+	 */
+	public long totalValues() {
+		return histN.totalValues();
 	}
 
 	/**

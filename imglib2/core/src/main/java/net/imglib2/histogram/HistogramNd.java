@@ -124,7 +124,7 @@ public class HistogramNd<T> {
 	}
 
 	/**
-	 * Returns the bin number associated with the given values.
+	 * Assigns the bin number associated with the given values.
 	 */
 	public void getBinPosition(List<T> values, long[] binPos) {
 		binMapper.getBinPosition(values, binPos);
@@ -138,10 +138,34 @@ public class HistogramNd<T> {
 	}
 
 	/**
+	 * Returns the count of values in the bin mapped from a given set of values.
+	 */
+	public long frequency(List<T> values) {
+		getBinPosition(values, tmpPos);
+		return binDistrib.frequency(tmpPos);
+	}
+
+	/**
 	 * Returns the relative frequency of values mapped to a specified bin number.
 	 */
 	public double relativeFrequency(long[] binPos) {
 		return binDistrib.relativeFrequency(binPos);
+	}
+
+	/**
+	 * Returns the relative frequency of values within the bin containing a
+	 * specified set of values.
+	 */
+	public double relativeFrequency(List<T> values) {
+		getBinPosition(values, tmpPos);
+		return binDistrib.relativeFrequency(tmpPos);
+	}
+
+	/**
+	 * Returns the count of the values contained in the histogram bins.
+	 */
+	public long totalValues() {
+		return binDistrib.totalValues();
 	}
 
 	/**

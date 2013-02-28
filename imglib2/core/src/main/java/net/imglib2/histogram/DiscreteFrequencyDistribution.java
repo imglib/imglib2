@@ -119,6 +119,9 @@ public class DiscreteFrequencyDistribution implements Dimensions {
 	 * Returns the frequency count associated with a given bin.
 	 */
 	public long frequency(long[] binPos) {
+		for (int i = 0; i < accessor.numDimensions(); i++) {
+			if (binPos[i] < 0 || binPos[i] >= dimension(i)) return 0;
+		}
 		accessor.setPosition(binPos);
 		return accessor.get().get();
 	}
@@ -140,4 +143,10 @@ public class DiscreteFrequencyDistribution implements Dimensions {
 		totalValues++;
 	}
 
+	/**
+	 * Returns the total number of values counted by this distribution.
+	 */
+	public long totalValues() {
+		return totalValues;
+	}
 }
