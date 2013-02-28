@@ -44,7 +44,6 @@ import java.util.List;
  * A one dimensional histogram implementation.
  * 
  * @author Barry DeZonia
- * @param <T>
  */
 public class Histogram1d<T> {
 

@@ -50,17 +50,17 @@ import java.util.List;
  * An n-dimensional histogram implementation.
  * 
  * @author Barry DeZonia
- * @param <T>
  */
 public class HistogramNd<T> {
 
 	// -- instance variables --
 
+	private final Iterable<List<T>> iterable;
 	private final List<Iterable<T>> iterables;
-	private final BinMapper<T> binMapper;
-	private final DiscreteFrequencyDistribution binDistrib;
-	private final long[] tmpPos;
-	private final List<T> vals;
+	private BinMapper<T> binMapper;
+	private DiscreteFrequencyDistribution binDistrib;
+	private long[] tmpPos;
+	private List<T> vals;
 
 	// -- public api --
 
@@ -85,9 +85,30 @@ public class HistogramNd<T> {
 			throw new IllegalArgumentException(
 				"the number of temp variables must equal bin mapper dimension count");
 		}
+		this.iterable = null;
 		this.iterables = iterables;
-		this.binMapper = binMapper;
 		this.vals = values;
+		init(binMapper);
+	}
+
+	/**
+	 * Constructs a histogram on an Iterable data source that returns a set of
+	 * data values at each step. The algorithm for mapping values to bins must be
+	 * provided. A set that can contain scratch variables must be provided also.
+	 * 
+	 * @param iterable The iterable data source to iterate and count.
+	 * @param binMapper The algorithm used to map values to bins.
+	 */
+	public HistogramNd(Iterable<List<T>> iterable, BinMapper<T> binMapper)
+	{
+		this.iterable = iterable;
+		this.iterables = null;
+		this.vals = null;
+		init(binMapper);
+	}
+
+	private void init(BinMapper<T> mapper) {
+		this.binMapper = mapper;
 		long[] binDims = new long[binMapper.numDimensions()];
 		binMapper.getBinDimensions(binDims);
 		this.binDistrib = new DiscreteFrequencyDistribution(binDims);
@@ -173,6 +194,11 @@ public class HistogramNd<T> {
 	// -- private helpers --
 
 	private void populateBins() {
+		if (iterable != null) populateBinsFromSingleIterable();
+		else populateBinsFromListOfIterables();
+	}
+
+	private void populateBinsFromListOfIterables() {
 		binDistrib.resetCounters();
 		List<Iterator<T>> iters = new ArrayList<Iterator<T>>();
 		for (int i = 0; i < iterables.size(); i++) {
@@ -193,5 +219,16 @@ public class HistogramNd<T> {
 			}
 		}
 		while (hasNext);
+	}
+
+	private void populateBinsFromSingleIterable() {
+		binDistrib.resetCounters();
+		Iterator<List<T>> iter = iterable.iterator();
+		while (iter.hasNext()) {
+			List<T> values = iter.next();
+			if (binMapper.getBinPosition(values, tmpPos)) {
+				binDistrib.increment(tmpPos);
+			}
+		}
 	}
 }
