@@ -97,6 +97,7 @@ public class ImgOpener implements StatusReporter {
 		new ArrayList<StatusListener>();
 
 	private boolean groupFiles = false;
+	private boolean allowOpen = true;
 
 	// -- static methods --
 	
@@ -253,6 +254,26 @@ public class ImgOpener implements StatusReporter {
 	 */
 	public void setGroupFiles(boolean groupFiles) {
 		this.groupFiles = groupFiles;
+	}
+
+	/**
+	 * Set SCIFIO's option whether to allow opening files many times to
+	 * determine the appropriate reader.
+	 * 
+	 * By default, SCIFIO wants to let every reader open the file to determine
+	 * whether it is the appropriate reader. Unfortunately, this does not reuse
+	 * the random-access input stream so in the worst case, it reads and
+	 * re-reads the file many dozens of times.
+	 * 
+	 * This setting lets the caller switch off that behavior, at the expense of
+	 * maybe not picking the correct reader.
+	 * 
+	 * @param allowOpen
+	 *            whether to allow SCIFIO to allow every reader to open a stream
+	 *            just to detect whether it is this type
+	 */
+	public void setGetReaderSlow(boolean allowOpen) {
+		this.allowOpen = allowOpen;
 	}
 
 	/**
@@ -494,15 +515,16 @@ public class ImgOpener implements StatusReporter {
 	public static IFormatReader createReader(final String id,
 			final boolean computeMinMax) throws FormatException, IOException
 	{
-		return createReader(id, computeMinMax, false);
+		return createReader(id, computeMinMax, false, true);
 	}
 
 	private static IFormatReader createReader(final String id,
-		final boolean computeMinMax, boolean groupFiles) throws FormatException, IOException
+		final boolean computeMinMax, boolean groupFiles, boolean allowOpen) throws FormatException, IOException
 	{
 		IFormatReader r = null;
 		final ImageReader reader = new ImageReader();
 		reader.setGroupFiles(groupFiles);
+		reader.setAllowOpenFiles(allowOpen);
 		r = new ChannelFiller(reader);
 		r = new ChannelSeparator(r);
 		if (computeMinMax) r = new MinMaxCalculator(r);
@@ -579,7 +601,7 @@ public class ImgOpener implements StatusReporter {
 	{
 		notifyListeners(new StatusEvent("Initializing " + id));
 
-		return createReader(id, computeMinMax, groupFiles);
+		return createReader(id, computeMinMax, groupFiles, allowOpen);
 	}
 
 	/** Compiles an N-dimensional list of axis types from the given reader. */
