@@ -72,6 +72,27 @@ public class BenchmarkHelper
 	}
 
 	/**
+	 * Compute minimum of a list of {@link Long}s.
+	 *
+	 * @param values
+	 *            list of values.
+	 * @return min of values.
+	 */
+	public static Long min( final ArrayList< Long > values )
+	{
+		if (values.size() == 0) {
+			return Long.valueOf( Long.MAX_VALUE );
+		}
+		Long result = values.get(0);
+		for (int i = values.size() - 1; i > 0; i--) {
+			if (result.compareTo( values.get( i ) ) > 0) {
+				result = values.get( i );
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Run a benchmark numRuns times and record the milliseconds taken for each
 	 * run.
 	 *
@@ -121,7 +142,7 @@ public class BenchmarkHelper
 				System.out.println( "run " + i + ": " + times.get( i ) + " ms" );
 			System.out.println();
 		}
-		System.out.println( "median: " + median( times ) + " ms" );
+		System.out.println( "best of " + numRuns + ": " + min( times ) + " ms" );
 		System.out.println();
 	}
 }
