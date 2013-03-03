@@ -43,7 +43,7 @@ import java.util.Collections;
 /**
  * Tools for setting up basic benchmarks.
  *
- * Call {@link BenchmarkHelper#benchmark(int, Benchmark)} with the number of
+ * Call {@link #benchmark(int, Runnable)} with the number of
  * iterations and a {@link Runnable} to benchmark to obtain a list of run-times
  * in milliseconds. Use {@link BenchmarkHelper#median(ArrayList)} to compute the
  * median run-time.
@@ -122,9 +122,8 @@ public class BenchmarkHelper
 	 *            how many times to run the benchmark.
 	 * @param printIndividualTimes
 	 * 			  whether to print the time for every individual run or just the median.
-	 * @param benchmark
+	 * @param b
 	 *            the benchmark.
-	 * @return run-times for each run (in milliseconds).
 	 */
 	public static void benchmarkAndPrint( final int numRuns, final boolean printIndividualTimes, final Runnable b )
 	{
