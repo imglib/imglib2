@@ -96,6 +96,8 @@ public class ImgOpener implements StatusReporter {
 	private final List<StatusListener> listeners =
 		new ArrayList<StatusListener>();
 
+	private boolean groupFiles = true;
+
 	// -- static methods --
 	
 	/**
@@ -235,6 +237,23 @@ public class ImgOpener implements StatusReporter {
 	}
 
 	// -- ImgOpener methods --
+
+	/**
+	 * Set SCIFIO's option whether to group files.
+	 * 
+	 * By default, SCIFIO wants to read all files in the same directory, to
+	 * determine for some file formats whether they are grouped and should be
+	 * read as if they were in one file. However, for most formats this only
+	 * slows down the performance dramatically. So allow the user to prevent
+	 * that.
+	 * 
+	 * @param groupFiles
+	 *            whether allow SCIFIO to inspect other files in the same
+	 *            directory
+	 */
+	public void setGroupFiles(boolean groupFiles) {
+		this.groupFiles = groupFiles;
+	}
 
 	/**
 	 * Reads in an {@link ImgPlus} from the given source. It will read it into a
@@ -471,12 +490,20 @@ public class ImgOpener implements StatusReporter {
 		}
 	}
 
+	@Deprecated
 	public static IFormatReader createReader(final String id,
-		final boolean computeMinMax) throws FormatException, IOException
+			final boolean computeMinMax) throws FormatException, IOException
+	{
+		return createReader(id, computeMinMax, true);
+	}
+
+	private static IFormatReader createReader(final String id,
+		final boolean computeMinMax, boolean groupFiles) throws FormatException, IOException
 	{
 		IFormatReader r = null;
-		r = new ImageReader();
-		r = new ChannelFiller(r);
+		final ImageReader reader = new ImageReader();
+		reader.setGroupFiles(groupFiles);
+		r = new ChannelFiller(reader);
 		r = new ChannelSeparator(r);
 		if (computeMinMax) r = new MinMaxCalculator(r);
 
@@ -552,7 +579,7 @@ public class ImgOpener implements StatusReporter {
 	{
 		notifyListeners(new StatusEvent("Initializing " + id));
 
-		return createReader(id, computeMinMax);
+		return createReader(id, computeMinMax, groupFiles);
 	}
 
 	/** Compiles an N-dimensional list of axis types from the given reader. */
