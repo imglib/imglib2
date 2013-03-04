@@ -131,23 +131,33 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 
 	@Override
 	public void getLowerBound(long binPos, T value) {
-		getCenterValue(binPos, value);
+		if (tailBins && (binPos == 0 || binPos == bins - 1)) {
+			if (binPos == 0) value.setInteger(Long.MIN_VALUE + 1);
+			else value.setInteger(maxVal + 1);
+		}
+		else {
+			getCenterValue(binPos, value);
+		}
 	}
 
 	@Override
 	public void getUpperBound(long binPos, T value) {
-		getCenterValue(binPos, value);
+		if (tailBins && (binPos == 0 || binPos == bins - 1)) {
+			if (binPos == 0) value.setInteger(minVal - 1);
+			else value.setInteger(Long.MAX_VALUE - 1);
+		}
+		else {
+			getCenterValue(binPos, value);
+		}
 	}
 
 	@Override
 	public boolean includesLowerBound(long binPos) {
-		// TODO what about tail bins?
 		return true;
 	}
 
 	@Override
 	public boolean includesUpperBound(long binPos) {
-		// TODO what about tail bins?
 		return true;
 	}
 
