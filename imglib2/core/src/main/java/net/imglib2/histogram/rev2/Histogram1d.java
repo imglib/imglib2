@@ -8,6 +8,7 @@ public class Histogram1d<T> {
 	private Iterable<T> data;
 	private DiscreteFrequencyDistribution distrib;
 	private long[] pos;
+	private long ignoredCount;
 
 	public Histogram1d(Iterable<T> data, BinMapper1d<T> mapper) {
 		this.data = data;
@@ -15,6 +16,7 @@ public class Histogram1d<T> {
 		this.distrib =
 			new DiscreteFrequencyDistribution(new long[] { mapper.getBinCount() });
 		this.pos = new long[1];
+		this.ignoredCount = 0;
 		populateBins();
 	}
 
@@ -38,8 +40,16 @@ public class Histogram1d<T> {
 		return totalCount() - lowerTailCount() - upperTailCount();
 	}
 
-	long totalCount() {
+	long distributionCount() {
 		return distrib.totalValues();
+	}
+
+	long ignoredCount() {
+		return ignoredCount;
+	}
+
+	long totalCount() {
+		return distributionCount() + ignoredCount();
 	}
 
 	long frequency(T value) {
@@ -96,8 +106,6 @@ public class Histogram1d<T> {
 		return mapper.includesLowerBound(binPos);
 	}
 
-	// TODO - what about out of bounds bins : Long.min or Long.max?
-
 	boolean isInLowerTail(T value) {
 		if (!hasTails()) return false;
 		long bin = mapper.map(value);
@@ -120,9 +128,13 @@ public class Histogram1d<T> {
 
 	private void populateBins() {
 		distrib.resetCounters();
+		ignoredCount = 0;
 		for (T value : data) {
 			long bin = mapper.map(value);
-			if (bin == Long.MIN_VALUE || bin == Long.MAX_VALUE) continue;
+			if (bin == Long.MIN_VALUE || bin == Long.MAX_VALUE) {
+				ignoredCount++;
+				continue;
+			}
 			pos[0] = bin;
 			distrib.increment(pos);
 		}

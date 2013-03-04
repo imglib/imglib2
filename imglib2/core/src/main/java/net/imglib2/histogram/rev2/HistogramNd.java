@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+// TODO - calculate lazily but should be able to count upper/lower/middle in
+// one pass rather than the multiple passes that are now in place.
+
 public class HistogramNd<T> {
 
 	private List<BinMapper1d<T>> mappers;
@@ -11,6 +14,7 @@ public class HistogramNd<T> {
 	private Iterable<List<T>> iterable;
 	private List<Iterable<T>> iterables;
 	private long[] pos;
+	private long ignoredCount;
 
 	public HistogramNd(Iterable<List<T>> data, List<BinMapper1d<T>> mappers) {
 		this.iterable = data;
@@ -33,6 +37,7 @@ public class HistogramNd<T> {
 		}
 		distrib = new DiscreteFrequencyDistribution(dims);
 		pos = new long[mappers.size()];
+		ignoredCount = 0;
 		populateBins();
 	}
 	
@@ -109,8 +114,16 @@ public class HistogramNd<T> {
 		return sum;
 	}
 
-	long totalCount() {
+	long distributionCount() {
 		return distrib.totalValues();
+	}
+
+	long ignoredCount() {
+		return ignoredCount;
+	}
+
+	long totalCount() {
+		return distributionCount() + ignoredCount();
 	}
 
 	long frequency(List<T> values) {
@@ -223,11 +236,6 @@ public class HistogramNd<T> {
 		return true;
 	}
 
-	// TODO
-	// am I counting correctly? I had thought that I need to count values that
-	// would be tail values when someone chooses no tails so that I can still get
-	// relative frequencies in a variety ways.
-
 	private void populateBins() {
 		if (iterable != null) populateBinsFromSingleIterable();
 		else populateBinsFromListOfIterables();
@@ -235,13 +243,16 @@ public class HistogramNd<T> {
 
 	private void populateBinsFromSingleIterable() {
 		distrib.resetCounters();
+		ignoredCount = 0;
 		Iterator<List<T>> iter = iterable.iterator();
 		while (iter.hasNext()) {
 			List<T> values = iter.next();
 			map(values, pos);
 			for (int i = 0; i < pos.length; i++) {
-				// TODO - record number of invalid values? counting correctly?
-				if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) continue;
+				if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
+					ignoredCount++;
+					continue;
+				}
 			}
 			distrib.increment(pos);
 		}
@@ -249,6 +260,7 @@ public class HistogramNd<T> {
 
 	private void populateBinsFromListOfIterables() {
 		distrib.resetCounters();
+		ignoredCount = 0;
 		List<T> vals = new ArrayList<T>(mappers.size());
 		List<Iterator<T>> iters = new ArrayList<Iterator<T>>();
 		for (int i = 0; i < iterables.size(); i++) {
@@ -266,7 +278,10 @@ public class HistogramNd<T> {
 				map(vals, pos);
 				// TODO - record number of invalid values? counting correctly?
 				for (int i = 0; i < pos.length; i++) {
-					if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) continue;
+					if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
+						ignoredCount++;
+						continue;
+					}
 				}
 				distrib.increment(pos);
 			}
