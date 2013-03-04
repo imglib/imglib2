@@ -96,7 +96,7 @@ public class ImgOpener implements StatusReporter {
 	private final List<StatusListener> listeners =
 		new ArrayList<StatusListener>();
 
-	private boolean groupFiles = true;
+	private boolean groupFiles = false;
 
 	// -- static methods --
 	
@@ -494,7 +494,7 @@ public class ImgOpener implements StatusReporter {
 	public static IFormatReader createReader(final String id,
 			final boolean computeMinMax) throws FormatException, IOException
 	{
-		return createReader(id, computeMinMax, true);
+		return createReader(id, computeMinMax, false);
 	}
 
 	private static IFormatReader createReader(final String id,
