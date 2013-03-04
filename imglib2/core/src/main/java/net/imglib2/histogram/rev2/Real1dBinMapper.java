@@ -37,50 +37,55 @@
 
 package net.imglib2.histogram.rev2;
 
-import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.numeric.RealType;
 
 /**
- * Maps integer values into a 1-d set of bins.
+ * Maps real values into a 1-d set of bins. Though this class will work with
+ * integral data types it is really more appropriate to do so using a
+ * {@link Integer1dBinMapper}.
  * 
  * @author Barry DeZonia
  */
-public class Integer1dBinMapper<T extends IntegerType<T>> implements
-	BinMapper1d<T>
-{
+public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 
 	// -- instance variables --
 
 	private final long bins;
-	private final long minVal, maxVal;
+	private final double minVal, maxVal;
 	private final boolean tailBins;
+	private final double binWidth;
 
 	// -- constructor --
 
 	/**
-	 * Specify a mapping of integral data from a user defined range into a
-	 * specified number of bins. If tailBins is true then there will be two bins
-	 * that count values outside the user specified ranges. If false then values
-	 * outside the range fail to map to any bin.
+	 * Specify a mapping of real data from a user defined range into a specified
+	 * number of bins. If tailBins is true then there will be two bins that count
+	 * values outside the user specified ranges. If false then values outside the
+	 * range fail to map to any bin.
 	 * 
 	 * @param minVal The first data value of interest.
+	 * @param maxVal The last data value of interest.
 	 * @param numBins The total number of bins to create.
 	 * @param tailBins A boolean specifying whether to have a bin in each tail to
 	 *          count values outside the user defined range.
 	 */
-	public Integer1dBinMapper(long minVal, long numBins, boolean tailBins) {
+	public Real1dBinMapper(double minVal, double maxVal, long numBins,
+		boolean tailBins)
+	{
 		this.bins = numBins;
-		this.tailBins = tailBins;
 		this.minVal = minVal;
-		if (tailBins) {
-			this.maxVal = minVal + numBins - 1 - 2;
-		}
-		else {
-			this.maxVal = minVal + numBins - 1;
-		}
-		if ((bins <= 0) || (tailBins && bins <= 2)) {
+		this.maxVal = maxVal;
+		this.tailBins = tailBins;
+		if (numBins <= 0 || (tailBins && numBins <= 2)) {
 			throw new IllegalArgumentException(
-				"invalid Integer1dBinMapper: no data bins specified");
+				"invalid Real1dBinMapper: no data bins specified");
 		}
+		if (minVal >= maxVal) {
+			throw new IllegalArgumentException(
+				"invalid Real1dBinMapper: nonpositive data range specified");
+		}
+		if (tailBins) binWidth = (maxVal - minVal) / (bins - 2);
+		else binWidth = (maxVal - minVal) / (bins);
 	}
 
 	// -- BinMapper methods --
@@ -97,10 +102,12 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 
 	@Override
 	public long map(T value) {
-		long val = value.getIntegerLong();
+		double val = value.getRealDouble();
 		long pos;
 		if (val >= minVal && val <= maxVal) {
-			pos = val - minVal;
+			double bin = (val - minVal) / binWidth;
+			pos = (long) Math.floor(bin);
+			if (val == maxVal) pos--;
 			if (tailBins) pos++;
 		}
 		else if (tailBins) {
@@ -116,43 +123,69 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 
 	@Override
 	public void getCenterValue(long binPos, T value) {
-		long pos = binPos;
-		long val;
-		if (tailBins) {
-			if (pos == 0) val = minVal - 1; // TODO HACK - what is best to return?
-			else if (pos == bins - 1) val = maxVal + 1; // TODO same HACK
-			else val = minVal + pos - 1;
-		}
-		else { // no tail bins
-			val = minVal + pos;
-		}
-		value.setInteger(val);
+		value.setReal(center(binPos));
 	}
 
 	@Override
 	public void getLowerBound(long binPos, T value) {
-		getCenterValue(binPos, value);
+		value.setReal(min(binPos));
 	}
 
 	@Override
 	public void getUpperBound(long binPos, T value) {
-		getCenterValue(binPos, value);
+		value.setReal(max(binPos));
 	}
 
 	@Override
 	public boolean includesLowerBound(long binPos) {
-		// TODO what about tail bins?
+		if (tailBins && binPos == bins - 1) return false;
 		return true;
 	}
 
 	@Override
 	public boolean includesUpperBound(long binPos) {
-		// TODO what about tail bins?
-		return true;
+		if (tailBins) {
+			if (binPos >= bins - 2) return true;
+		}
+		else { // no tail bins
+			if (binPos == bins - 1) return true;
+		}
+		return false;
 	}
 
 	@Override
 	public boolean hasTails() {
 		return tailBins;
 	}
+
+	// -- helpers --
+
+	private double min(long pos) {
+		if (pos < 0 || pos > bins - 1) {
+			throw new IllegalArgumentException("invalid bin position specified");
+		}
+		if (tailBins) {
+			if (pos == 0) return Double.NEGATIVE_INFINITY;
+			if (pos == bins - 1) return maxVal;
+			return minVal + (1.0 * (pos - 1) / (bins - 2)) * (maxVal - minVal);
+		}
+		return minVal + (1.0 * pos / (bins)) * (maxVal - minVal);
+	}
+
+	private double max(long pos) {
+		if (pos < 0 || pos > bins - 1) {
+			throw new IllegalArgumentException("invalid bin position specified");
+		}
+		if (tailBins) {
+			if (pos == 0) return minVal;
+			if (pos == bins - 1) return Double.POSITIVE_INFINITY;
+			return minVal + (1.0 * pos / (bins - 2)) * (maxVal - minVal);
+		}
+		return minVal + (1.0 * (pos + 1) / (bins)) * (maxVal - minVal);
+	}
+
+	private double center(long pos) {
+		return (min(pos) + max(pos)) / 2;
+	}
+
 }

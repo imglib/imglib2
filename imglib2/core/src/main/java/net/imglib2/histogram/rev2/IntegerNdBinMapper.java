@@ -37,49 +37,40 @@
 
 package net.imglib2.histogram.rev2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.imglib2.type.numeric.IntegerType;
 
 /**
- * Maps integer values into a 1-d set of bins.
+ * An n-dimensional integral BinMapper. Composed of 1-dimensional integral
+ * BinMappers internally.
  * 
  * @author Barry DeZonia
  */
-public class Integer1dBinMapper<T extends IntegerType<T>> implements
-	BinMapper1d<T>
+public class IntegerNdBinMapper<T extends IntegerType<T>> implements
+	BinMapperNd<T>
 {
 
 	// -- instance variables --
 
-	private final long bins;
-	private final long minVal, maxVal;
-	private final boolean tailBins;
+	private List<Integer1dBinMapper<T>> binMappers;
 
 	// -- constructor --
 
-	/**
-	 * Specify a mapping of integral data from a user defined range into a
-	 * specified number of bins. If tailBins is true then there will be two bins
-	 * that count values outside the user specified ranges. If false then values
-	 * outside the range fail to map to any bin.
-	 * 
-	 * @param minVal The first data value of interest.
-	 * @param numBins The total number of bins to create.
-	 * @param tailBins A boolean specifying whether to have a bin in each tail to
-	 *          count values outside the user defined range.
-	 */
-	public Integer1dBinMapper(long minVal, long numBins, boolean tailBins) {
-		this.bins = numBins;
-		this.tailBins = tailBins;
-		this.minVal = minVal;
-		if (tailBins) {
-			this.maxVal = minVal + numBins - 1 - 2;
-		}
-		else {
-			this.maxVal = minVal + numBins - 1;
-		}
-		if ((bins <= 0) || (tailBins && bins <= 2)) {
+	public IntegerNdBinMapper(long[] minVals, long[] numBins, boolean[] tailBins)
+	{
+		if ((minVals.length != numBins.length) ||
+			(minVals.length != tailBins.length))
+		{
 			throw new IllegalArgumentException(
-				"invalid Integer1dBinMapper: no data bins specified");
+				"IntegerNdBinMapper: differing input array sizes");
+		}
+		binMappers = new ArrayList<Integer1dBinMapper<T>>();
+		for (int i = 0; i < minVals.length; i++) {
+			Integer1dBinMapper<T> mapper =
+				new Integer1dBinMapper<T>(minVals[i], numBins[i], tailBins[i]);
+			binMappers.add(mapper);
 		}
 	}
 
@@ -87,72 +78,78 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 
 	@Override
 	public int numDimensions() {
-		return 1;
+		return binMappers.size();
+	}
+
+	@Override
+	public long getBinCount(int dim) {
+		return binMappers.get(dim).getBinCount();
 	}
 
 	@Override
 	public long getBinCount() {
-		return bins;
+		if (binMappers.size() == 0) return 0;
+		long size = 1;
+		for (int i = 0; i < binMappers.size(); i++) {
+			size *= getBinCount(i);
+		}
+		return size;
 	}
 
 	@Override
-	public long map(T value) {
-		long val = value.getIntegerLong();
-		long pos;
-		if (val >= minVal && val <= maxVal) {
-			pos = val - minVal;
-			if (tailBins) pos++;
+	public void map(List<T> values, long[] binPos) {
+		for (int i = 0; i < binMappers.size(); i++) {
+			binPos[i] = binMappers.get(i).map(values.get(i));
 		}
-		else if (tailBins) {
-			if (val < minVal) pos = 0;
-			else pos = bins - 1;
-		}
-		else { // no tail bins and we are outside
-			if (val < minVal) pos = Long.MIN_VALUE;
-			else pos = Long.MAX_VALUE;
-		}
-		return pos;
 	}
 
 	@Override
-	public void getCenterValue(long binPos, T value) {
-		long pos = binPos;
-		long val;
-		if (tailBins) {
-			if (pos == 0) val = minVal - 1; // TODO HACK - what is best to return?
-			else if (pos == bins - 1) val = maxVal + 1; // TODO same HACK
-			else val = minVal + pos - 1;
+	public void getCenterValues(long[] binPos, List<T> values) {
+		for (int i = 0; i < binMappers.size(); i++) {
+			binMappers.get(i).getCenterValue(binPos[i], values.get(i));
 		}
-		else { // no tail bins
-			val = minVal + pos;
+	}
+
+	@Override
+	public void getLowerBounds(long[] binPos, List<T> values) {
+		for (int i = 0; i < binMappers.size(); i++) {
+			binMappers.get(i).getLowerBound(binPos[i], values.get(i));
 		}
-		value.setInteger(val);
 	}
 
 	@Override
-	public void getLowerBound(long binPos, T value) {
-		getCenterValue(binPos, value);
+	public void getUpperBounds(long[] binPos, List<T> values) {
+		for (int i = 0; i < binMappers.size(); i++) {
+			binMappers.get(i).getUpperBound(binPos[i], values.get(i));
+		}
 	}
 
 	@Override
-	public void getUpperBound(long binPos, T value) {
-		getCenterValue(binPos, value);
-	}
-
-	@Override
-	public boolean includesLowerBound(long binPos) {
-		// TODO what about tail bins?
+	public boolean includesLowerBounds(long[] binPos) {
+		for (int i = 0; i < binMappers.size(); i++) {
+			if (!binMappers.get(i).includesLowerBound(binPos[i])) return false;
+		}
 		return true;
 	}
 
 	@Override
-	public boolean includesUpperBound(long binPos) {
-		// TODO what about tail bins?
+	public boolean includesUpperBounds(long[] binPos) {
+		for (int i = 0; i < binMappers.size(); i++) {
+			if (!binMappers.get(i).includesUpperBound(binPos[i])) return false;
+		}
 		return true;
 	}
 
 	@Override
 	public boolean hasTails() {
-		return tailBins;
+		for (int i = 0; i < binMappers.size(); i++) {
+			if (hasTails(i)) return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean hasTails(int dim) {
+		return binMappers.get(dim).hasTails();
 	}
 }
