@@ -46,23 +46,74 @@ import net.imglib2.EuclideanSpace;
  */
 public interface BinMapperNd<T> extends EuclideanSpace {
 
+	/**
+	 * Returns true if this bin mapping has bins on the ends of the distribution
+	 * that count out of bounds values.
+	 */
 	boolean hasTails();
 
+	/**
+	 * Returns true if this bin mapping has bins on the ends of the distribution
+	 * for the given dimension that count out of bounds values.
+	 */
 	boolean hasTails(int dim);
 
+	/**
+	 * Returns the number of bins within this bin mapping distribution.
+	 */
 	long getBinCount();
 
+	/**
+	 * Returns the number of bins within this bin mapping distribution for the
+	 * given dimension.
+	 */
 	long getBinCount(int dim);
 
+	/**
+	 * Converts a set of data values to a long[] index within the bin
+	 * distribution.
+	 */
 	void map(List<T> values, long[] binPos);
 
+	/**
+	 * Gets the data values associated with the center of a bin.
+	 * 
+	 * @param binPos
+	 * @param values Outputs to contain center data values
+	 */
 	void getCenterValues(long[] binPos, List<T> values);
 
+	/**
+	 * Gets the data values associated with the left edge of a bin.
+	 * 
+	 * @param binPos Bin index of interest
+	 * @param values Output to contain left edge data values
+	 */
 	void getLowerBounds(long[] binPos, List<T> values);
 
+	/**
+	 * Gets the data values associated with the right edge of a bin.
+	 * 
+	 * @param binPos Bin index of interest
+	 * @param values Output to contain right edge data values
+	 */
 	void getUpperBounds(long[] binPos, List<T> values);
 
+	/**
+	 * Returns true if values matching the right edge data values for a given bin
+	 * are counted in the distribution. Basically is this bin interval closed at
+	 * the rightmost end point or not.
+	 * 
+	 * @param binPos Bin number of interest
+	 */
 	boolean includesUpperBounds(long[] binPos);
 
+	/**
+	 * Returns true if values matching the left edge data values for a given bin
+	 * are counted in the distribution. Basically is this bin interval closed at
+	 * the leftmost end point or not.
+	 * 
+	 * @param binPos Bin number of interest
+	 */
 	boolean includesLowerBounds(long[] binPos);
 }

@@ -103,7 +103,7 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		T val = img.firstElement();
 		for (int i = 0; i < max; i++) {
 			val.setReal(i);
-			final long binPos = hist.getBinPosition(val);
+			final long binPos = hist.map(val);
 			final long actual = hist.frequency(binPos);
 			final long expect = bins[i];
 			if (actual != expect) {
