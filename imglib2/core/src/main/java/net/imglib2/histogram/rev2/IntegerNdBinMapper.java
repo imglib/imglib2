@@ -38,23 +38,21 @@
 package net.imglib2.histogram.rev2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.imglib2.type.numeric.IntegerType;
 
 /**
- * An n-dimensional integral BinMapper. Composed of 1-dimensional integral
- * BinMappers internally.
+ * An n-dimensional set of Integer1dBinMapper definitions.
  * 
  * @author Barry DeZonia
  */
-public class IntegerNdBinMapper<T extends IntegerType<T>> implements
-	BinMapperNd<T>
-{
+public class IntegerNdBinMapper<T extends IntegerType<T>> {
 
 	// -- instance variables --
 
-	private List<Integer1dBinMapper<T>> binMappers;
+	private List<BinMapper1d<T>> binMappers;
 
 	// -- constructor --
 
@@ -66,7 +64,7 @@ public class IntegerNdBinMapper<T extends IntegerType<T>> implements
 			throw new IllegalArgumentException(
 				"IntegerNdBinMapper: differing input array sizes");
 		}
-		binMappers = new ArrayList<Integer1dBinMapper<T>>();
+		binMappers = new ArrayList<BinMapper1d<T>>();
 		for (int i = 0; i < minVals.length; i++) {
 			Integer1dBinMapper<T> mapper =
 				new Integer1dBinMapper<T>(minVals[i], numBins[i], tailBins[i]);
@@ -74,82 +72,13 @@ public class IntegerNdBinMapper<T extends IntegerType<T>> implements
 		}
 	}
 
-	// -- BinMapper methods --
+	// -- public methods --
 
-	@Override
 	public int numDimensions() {
 		return binMappers.size();
 	}
 
-	@Override
-	public long getBinCount(int dim) {
-		return binMappers.get(dim).getBinCount();
-	}
-
-	@Override
-	public long getBinCount() {
-		if (binMappers.size() == 0) return 0;
-		long size = 1;
-		for (int i = 0; i < binMappers.size(); i++) {
-			size *= getBinCount(i);
-		}
-		return size;
-	}
-
-	@Override
-	public void map(List<T> values, long[] binPos) {
-		for (int i = 0; i < binMappers.size(); i++) {
-			binPos[i] = binMappers.get(i).map(values.get(i));
-		}
-	}
-
-	@Override
-	public void getCenterValues(long[] binPos, List<T> values) {
-		for (int i = 0; i < binMappers.size(); i++) {
-			binMappers.get(i).getCenterValue(binPos[i], values.get(i));
-		}
-	}
-
-	@Override
-	public void getLowerBounds(long[] binPos, List<T> values) {
-		for (int i = 0; i < binMappers.size(); i++) {
-			binMappers.get(i).getLowerBound(binPos[i], values.get(i));
-		}
-	}
-
-	@Override
-	public void getUpperBounds(long[] binPos, List<T> values) {
-		for (int i = 0; i < binMappers.size(); i++) {
-			binMappers.get(i).getUpperBound(binPos[i], values.get(i));
-		}
-	}
-
-	@Override
-	public boolean includesLowerBounds(long[] binPos) {
-		for (int i = 0; i < binMappers.size(); i++) {
-			if (!binMappers.get(i).includesLowerBound(binPos[i])) return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean includesUpperBounds(long[] binPos) {
-		for (int i = 0; i < binMappers.size(); i++) {
-			if (!binMappers.get(i).includesUpperBound(binPos[i])) return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean hasTails() {
-		for (int i = 0; i < binMappers.size(); i++) {
-			if (hasTails(i)) return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean hasTails(int dim) {
-		return binMappers.get(dim).hasTails();
+	public List<BinMapper1d<T>> definitions() {
+		return Collections.unmodifiableList(binMappers);
 	}
 }
