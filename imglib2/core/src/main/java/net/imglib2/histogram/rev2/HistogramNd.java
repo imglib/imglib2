@@ -106,23 +106,22 @@ public class HistogramNd<T> {
 		}
 		distrib = new DiscreteFrequencyDistribution(dims);
 		pos = new long[mappers.size()];
-		ignoredCount = 0;
 		populateBins();
 	}
 	
 	// -- public api --
 
 	/**
-	 * Returns true if the histogram has tail bins for the given dimension which
-	 * count extreme values.
+	 * Returns true if the histogram has tail bins which count extreme values for
+	 * the given dimension.
 	 */
 	public boolean hasTails(int dim) {
 		return mappers.get(dim).hasTails();
 	}
 
 	/**
-	 * Returns true if the histogram has tail bins at some ends which count
-	 * extreme values.
+	 * Returns true if the histogram has tail bins which count extreme values for
+	 * one or more dimensions
 	 */
 	public boolean hasTails() {
 		for (int i = 0; i < mappers.size(); i++) {
@@ -205,36 +204,58 @@ public class HistogramNd<T> {
 	 * for a given dimension.
 	 */
 	public long valueCount(int dim) {
-		return distributionCount(dim) - lowerTailCount(dim) - upperTailCount(dim);
+		boolean hasTails = hasTails(dim);
+		long dimSize = mappers.get(dim).getBinCount();
+		long sum = 0;
+		Points points = new Points();
+		while (points.hasNext()) {
+			long[] binPos = points.next();
+			boolean inTail = false;
+			if (hasTails && (binPos[dim] == 0) || (binPos[dim] == dimSize - 1)) {
+				inTail = true;
+			}
+			if (!inTail) sum += distrib.frequency(binPos);
+		}
+		return sum;
 	}
-
-	// TODO - next func is double counting parts of tails!
 
 	/**
 	 * Returns the frequency count of all values in the middle of the
 	 * distribution.
 	 */
 	public long valueCount() {
-		return distributionCount() - lowerTailCount() - upperTailCount();
-	}
-
-	// TODO - code does not seem to match description
-
-	/**
-	 * Returns the frequency count of all values in the distribution: lower tail +
-	 * middle + upper tail. Does not include ignored values. Applied only to the
-	 * specified dimension.
-	 */
-	public long distributionCount(int dim) {
-		boolean hasTails = hasTails(dim);
+		// NB : would like to do this:
+		// return distributionCount() - lowerTailCount() - upperTailCount();
+		//   But this double counts some tail bins.
+		if (!hasTails()) return distributionCount();
 		long sum = 0;
 		Points points = new Points();
 		while (points.hasNext()) {
 			long[] binPos = points.next();
-			if (hasTails) {
-				if (binPos[dim] == 0) continue;
-				if (binPos[dim] == mappers.get(dim).getBinCount() - 1) continue;
+			boolean inTail = false;
+			for (int i = 0; i < binPos.length; i++) {
+				if ((binPos[i] == 0) || (binPos[i] == mappers.get(i).getBinCount() - 1))
+				{
+					inTail = true;
+					break;
+				}
 			}
+			if (!inTail) sum += distrib.frequency(binPos);
+		}
+		return sum;
+	}
+
+	/**
+	 * Returns the frequency count of all values in the specified dimension of the
+	 * distribution: lower tail + middle + upper tail. Does not include ignored
+	 * values.
+	 */
+	public long distributionCount(int dim, long dimVal) {
+		long sum = 0;
+		Points points = new Points();
+		while (points.hasNext()) {
+			long[] binPos = points.next();
+			if (binPos[dim] != dimVal) continue;
 			sum += distrib.frequency(binPos);
 		}
 		return sum;

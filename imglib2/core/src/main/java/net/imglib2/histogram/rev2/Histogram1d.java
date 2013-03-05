@@ -73,7 +73,6 @@ public class Histogram1d<T> {
 		this.distrib =
 			new DiscreteFrequencyDistribution(new long[] { mapper.getBinCount() });
 		this.pos = new long[1];
-		this.ignoredCount = 0;
 		populateBins();
 	}
 
@@ -326,10 +325,11 @@ public class Histogram1d<T> {
 			long bin = mapper.map(value);
 			if (bin == Long.MIN_VALUE || bin == Long.MAX_VALUE) {
 				ignoredCount++;
-				continue;
 			}
-			pos[0] = bin;
-			distrib.increment(pos);
+			else {
+				pos[0] = bin;
+				distrib.increment(pos);
+			}
 		}
 	}
 }
