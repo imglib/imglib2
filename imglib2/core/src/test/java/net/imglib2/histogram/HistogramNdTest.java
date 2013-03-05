@@ -38,10 +38,16 @@
 package net.imglib2.histogram;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import net.imglib2.Cursor;
+import net.imglib2.img.Img;
+import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 import org.junit.Test;
@@ -264,6 +270,25 @@ public class HistogramNdTest {
 		assertEquals(0, hist.frequency(list));
 	}
 
+	@Test
+	public void testRgbHist() {
+		/*
+		// NOTE: COMMENTED OUT BECAUSE IT REQUIRES TOO MUCH RAM
+		ArrayImgFactory<ARGBType> factory = new ArrayImgFactory<ARGBType>();
+		Img<ARGBType> img = factory.create(new long[] { 100, 200 }, new ARGBType());
+		RgbIterator data = new RgbIterator(img);
+		long[] minVals = new long[] { 0, 0, 0 };
+		long[] numBins = new long[] { 256, 256, 256 };
+		boolean[] tailBins = new boolean[] { false, false, false };
+		IntegerNdBinMapper<IntType> mapper =
+			new IntegerNdBinMapper<IntType>(minVals, numBins, tailBins);
+		HistogramNd<IntType> hist =
+			new HistogramNd<IntType>(data, mapper.definitions());
+		assertNotNull(hist);
+		*/
+		assertTrue(true);
+	}
+
 	private List<UnsignedByteType> getData1() {
 		List<UnsignedByteType> data = new ArrayList<UnsignedByteType>();
 		data.add(new UnsignedByteType(5));
@@ -294,5 +319,51 @@ public class HistogramNdTest {
 		data.add(new UnsignedByteType(12));
 		data.add(new UnsignedByteType(0));
 		return data;
+	}
+
+	private class RgbIterator implements Iterable<List<IntType>> {
+
+		private Img<ARGBType> img;
+
+		public RgbIterator(Img<ARGBType> img) {
+			this.img = img;
+		}
+
+		@Override
+		public Iterator<List<IntType>> iterator() {
+			return new Iterator<List<IntType>>() {
+
+				private Cursor<ARGBType> cursor;
+				private List<IntType> tuple;
+
+				@Override
+				public boolean hasNext() {
+					if (cursor == null) {
+						cursor = img.cursor();
+						tuple = new ArrayList<IntType>();
+						tuple.add(new IntType());
+						tuple.add(new IntType());
+						tuple.add(new IntType());
+					}
+					return cursor.hasNext();
+				}
+
+				@Override
+				public List<IntType> next() {
+					ARGBType argbValue = cursor.next();
+					tuple.get(0).set((argbValue.get() >> 16) & 0xff);
+					tuple.get(1).set((argbValue.get() >> 8) & 0xff);
+					tuple.get(2).set((argbValue.get() >> 0) & 0xff);
+					return tuple;
+				}
+
+				@Override
+				public void remove() {
+					// do nothing
+				}
+
+			};
+		}
+
 	}
 }
