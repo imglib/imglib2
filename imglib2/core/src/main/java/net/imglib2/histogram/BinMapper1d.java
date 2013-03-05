@@ -35,50 +35,70 @@
  * #L%
  */
 
-package net.imglib2.histogram.rev2;
+package net.imglib2.histogram;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.EuclideanSpace;
 
 /**
- * An n-dimensional set of Integer1dBinMapper definitions.
- * 
  * @author Barry DeZonia
  */
-public class IntegerNdBinMapper<T extends IntegerType<T>> {
+public interface BinMapper1d<T> extends EuclideanSpace {
 
-	// -- instance variables --
+	/**
+	 * Returns true if this bin mapping has bins on the ends of the distribution
+	 * that count out of bounds values.
+	 */
+	boolean hasTails();
 
-	private List<BinMapper1d<T>> binMappers;
+	/**
+	 * Returns the number of bins within this bin mapping distribution.
+	 */
+	long getBinCount();
 
-	// -- constructor --
+	/**
+	 * Converts a data value to a long index within the bin distribution.
+	 */
+	long map(T value);
 
-	public IntegerNdBinMapper(long[] minVals, long[] numBins, boolean[] tailBins)
-	{
-		if ((minVals.length != numBins.length) ||
-			(minVals.length != tailBins.length))
-		{
-			throw new IllegalArgumentException(
-				"IntegerNdBinMapper: differing input array sizes");
-		}
-		binMappers = new ArrayList<BinMapper1d<T>>();
-		for (int i = 0; i < minVals.length; i++) {
-			Integer1dBinMapper<T> mapper =
-				new Integer1dBinMapper<T>(minVals[i], numBins[i], tailBins[i]);
-			binMappers.add(mapper);
-		}
-	}
+	/**
+	 * Gets the data value associated with the center of a bin.
+	 * 
+	 * @param binPos
+	 * @param value Output to contain center data value
+	 */
+	void getCenterValue(long binPos, T value);
 
-	// -- public methods --
+	/**
+	 * Gets the data value associated with the left edge of a bin.
+	 * 
+	 * @param binPos Bin number of interest
+	 * @param value Output to contain left edge data value
+	 */
+	void getLowerBound(long binPos, T value);
 
-	public int numDimensions() {
-		return binMappers.size();
-	}
+	/**
+	 * Gets the data value associated with the right edge of a bin.
+	 * 
+	 * @param binPos Bin number of interest
+	 * @param value Output to contain right edge data value
+	 */
+	void getUpperBound(long binPos, T value);
 
-	public List<BinMapper1d<T>> definitions() {
-		return Collections.unmodifiableList(binMappers);
-	}
+	/**
+	 * Returns true if values matching the right edge data value for a given bin
+	 * are counted in the distribution. Basically is this bin interval closed on
+	 * the right or not.
+	 * 
+	 * @param binPos Bin number of interest
+	 */
+	boolean includesUpperBound(long binPos);
+
+	/**
+	 * Returns true if values matching the left edge data value for a given bin
+	 * are counted in the distribution. Basically is this bin interval closed on
+	 * the left or not.
+	 * 
+	 * @param binPos Bin number of interest
+	 */
+	boolean includesLowerBound(long binPos);
 }

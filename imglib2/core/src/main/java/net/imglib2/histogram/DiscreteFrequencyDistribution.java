@@ -63,8 +63,7 @@ public class DiscreteFrequencyDistribution implements Dimensions {
 	/**
 	 * Construct an n-dimensional counter
 	 */
-	public DiscreteFrequencyDistribution(long[] binCounts)
-	{
+	public DiscreteFrequencyDistribution(long[] binCounts) {
 		// check inputs for issues
 
 		for (int i = 0; i < binCounts.length; i++) {

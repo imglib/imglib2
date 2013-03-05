@@ -94,7 +94,7 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		System.out.print("Building histogram... ");
 		start = System.currentTimeMillis();
 		Integer1dBinMapper<T> binMapper = new Integer1dBinMapper<T>(0, max, false);
-		Histogram1d<T> hist = new Histogram1d<T>(img, binMapper, type);
+		Histogram1d<T> hist = new Histogram1d<T>(img, binMapper);
 		end = System.currentTimeMillis();
 		long histMillis = end - start;
 		System.out.println(histMillis + " ms");
@@ -103,7 +103,7 @@ public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
 		T val = img.firstElement();
 		for (int i = 0; i < max; i++) {
 			val.setReal(i);
-			final long binPos = hist.getBinPosition(val);
+			final long binPos = hist.map(val);
 			final long actual = hist.frequency(binPos);
 			final long expect = bins[i];
 			if (actual != expect) {

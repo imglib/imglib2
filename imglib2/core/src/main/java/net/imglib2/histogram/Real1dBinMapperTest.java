@@ -37,14 +37,9 @@
 
 package net.imglib2.histogram;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
-
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -61,23 +56,20 @@ public class Real1dBinMapperTest {
 
 	@Test
 	public void testIntNoTails() {
+		long binPos;
 		IntType tmp = new IntType();
-		List<IntType> tmpList = Arrays.asList(tmp);
 		Real1dBinMapper<IntType> binMapper =
 			new Real1dBinMapper<IntType>(0.0, 100.0, 100, false);
-		long[] tmpArr = new long[1];
-		binMapper.getBinDimensions(tmpArr);
-		assertArrayEquals(new long[] { 100 }, tmpArr);
+		assertEquals(100, binMapper.getBinCount());
 		for (double i = 0; i <= 100; i += 0.125) {
 			tmp.setReal(i);
-			binMapper.getBinPosition(tmpList, tmpArr);
+			binPos = binMapper.map(tmp);
 			double expectedBin = Math.round(i);
 			if (i >= 99.5) expectedBin--;
-			assertEquals(expectedBin, tmpArr[0], 0);
-			long[] binPos = tmpArr;
-			binMapper.getLowerBounds(binPos, tmpList);
+			assertEquals(expectedBin, binPos, 0);
+			binMapper.getLowerBound(binPos, tmp);
 			assertEquals(expectedBin, tmp.getRealDouble(), 0.0);
-			binMapper.getUpperBounds(binPos, tmpList);
+			binMapper.getUpperBound(binPos, tmp);
 			assertEquals(expectedBin + 1, tmp.getRealDouble(), 0.0);
 			// Note - one would hope this would calc easily but due to rounding errors
 			// one cannot always easily tell what the bin center is when using an
@@ -87,32 +79,29 @@ public class Real1dBinMapperTest {
 			// assertEquals(expectedBin + 1, tmp.getRealDouble(), 0.0);
 		}
 		tmp.setReal(-1);
-		assertFalse(binMapper.getBinPosition(tmpList, tmpArr));
+		assertEquals(Long.MIN_VALUE, binMapper.map(tmp));
 		tmp.setReal(101);
-		assertFalse(binMapper.getBinPosition(tmpList, tmpArr));
+		assertEquals(Long.MAX_VALUE, binMapper.map(tmp));
 	}
 
 	// DONE
 
 	@Test
 	public void testIntTails() {
+		long binPos;
 		IntType tmp = new IntType();
-		List<IntType> tmpList = Arrays.asList(tmp);
 		Real1dBinMapper<IntType> binMapper =
 			new Real1dBinMapper<IntType>(0.0, 100.0, 102, true);
-		long[] tmpArr = new long[1];
-		binMapper.getBinDimensions(tmpArr);
-		assertArrayEquals(new long[] { 102 }, tmpArr);
+		assertEquals(102, binMapper.getBinCount());
 		for (double i = 0; i <= 100; i += 0.125) {
 			tmp.setReal(i);
-			binMapper.getBinPosition(tmpList, tmpArr);
+			binPos = binMapper.map(tmp);
 			double expectedBin = Math.round(i) + 1;
 			if (i >= 99.5) expectedBin--;
-			assertEquals(expectedBin, tmpArr[0], 0);
-			long[] binPos = tmpArr;
-			binMapper.getLowerBounds(binPos, tmpList);
+			assertEquals(expectedBin, binPos, 0);
+			binMapper.getLowerBound(binPos, tmp);
 			assertEquals(expectedBin - 1, tmp.getRealDouble(), 0.0);
-			binMapper.getUpperBounds(binPos, tmpList);
+			binMapper.getUpperBound(binPos, tmp);
 			assertEquals(expectedBin, tmp.getRealDouble(), 0.0);
 			// Note - one would hope this would calc easily but due to rounding errors
 			// one cannot always easily tell what the bin center is when using an
@@ -122,174 +111,162 @@ public class Real1dBinMapperTest {
 			// assertEquals(expectedBin + 1, tmp.getRealDouble(), 0.0);
 		}
 		tmp.setReal(-1);
-		assertTrue(binMapper.getBinPosition(tmpList, tmpArr));
-		assertEquals(0, tmpArr[0]);
+		assertEquals(0, binMapper.map(tmp));
 		tmp.setReal(101);
-		assertTrue(binMapper.getBinPosition(tmpList, tmpArr));
-		assertEquals(101, tmpArr[0]);
+		assertEquals(101, binMapper.map(tmp));
 	}
 
 	// DONE
 
 	@Test
 	public void testFloatNoTails() {
+		long binPos;
 		FloatType tmp = new FloatType();
-		List<FloatType> tmpList = Arrays.asList(tmp);
 		Real1dBinMapper<FloatType> binMapper =
 			new Real1dBinMapper<FloatType>(0.0, 100.0, 100, false);
-		long[] tmpArr = new long[1];
-		binMapper.getBinDimensions(tmpArr);
-		assertArrayEquals(new long[] { 100 }, tmpArr);
+		assertEquals(100, binMapper.getBinCount());
 		for (double i = 0; i <= 100; i += 0.125) {
 			tmp.setReal(i);
-			binMapper.getBinPosition(tmpList, tmpArr);
+			binPos = binMapper.map(tmp);
 			double expectedBin = Math.floor(i);
 			if (i == 100.0) expectedBin--;
-			assertEquals(expectedBin, tmpArr[0], 0);
-			long[] binPos = tmpArr;
-			binMapper.getLowerBounds(binPos, tmpList);
+			assertEquals(expectedBin, binPos, 0);
+			binMapper.getLowerBound(binPos, tmp);
 			assertEquals(expectedBin, tmp.getRealDouble(), 0.0);
-			binMapper.getUpperBounds(binPos, tmpList);
+			binMapper.getUpperBound(binPos, tmp);
 			assertEquals(expectedBin + 1, tmp.getRealDouble(), 0.0);
-			binMapper.getCenterValues(binPos, tmpList);
+			binMapper.getCenterValue(binPos, tmp);
 			assertEquals(expectedBin + 0.5, tmp.getRealDouble(), 0.0);
 		}
 		tmp.setReal(-0.0001);
-		assertFalse(binMapper.getBinPosition(tmpList, tmpArr));
+		assertEquals(Long.MIN_VALUE, binMapper.map(tmp));
 		tmp.setReal(100.0001);
-		assertFalse(binMapper.getBinPosition(tmpList, tmpArr));
+		assertEquals(Long.MAX_VALUE, binMapper.map(tmp));
 	}
 
 	// DONE
 
 	@Test
 	public void testFloatTails() {
+		long binPos;
 		FloatType tmp = new FloatType();
-		List<FloatType> tmpList = Arrays.asList(tmp);
 		Real1dBinMapper<FloatType> binMapper =
 			new Real1dBinMapper<FloatType>(0.0, 100.0, 102, true);
-		long[] tmpArr = new long[1];
-		binMapper.getBinDimensions(tmpArr);
-		assertArrayEquals(new long[] { 102 }, tmpArr);
+		assertEquals(102, binMapper.getBinCount());
 		for (double i = 0; i <= 100; i += 0.125) {
 			tmp.setReal(i);
-			binMapper.getBinPosition(tmpList, tmpArr);
+			binPos = binMapper.map(tmp);
 			double expectedBin = Math.floor(i) + 1;
 			if (i == 100.0) expectedBin--;
-			assertEquals(expectedBin, tmpArr[0], 0);
-			long[] binPos = tmpArr;
-			binMapper.getLowerBounds(binPos, tmpList);
+			assertEquals(expectedBin, binPos, 0);
+			binMapper.getLowerBound(binPos, tmp);
 			assertEquals(expectedBin - 1, tmp.getRealDouble(), 0.0);
-			binMapper.getUpperBounds(binPos, tmpList);
+			binMapper.getUpperBound(binPos, tmp);
 			assertEquals(expectedBin, tmp.getRealDouble(), 0.0);
-			binMapper.getCenterValues(binPos, tmpList);
+			binMapper.getCenterValue(binPos, tmp);
 			assertEquals(expectedBin - 0.5, tmp.getRealDouble(), 0.0);
 		}
 		tmp.setReal(-0.0001);
-		assertTrue(binMapper.getBinPosition(tmpList, tmpArr));
-		assertEquals(0, tmpArr[0]);
+		assertEquals(0, binMapper.map(tmp));
 		tmp.setReal(100.0001);
-		assertTrue(binMapper.getBinPosition(tmpList, tmpArr));
-		assertEquals(101, tmpArr[0]);
+		assertEquals(101, binMapper.map(tmp));
 	}
 
 	// DONE
 
 	@Test
 	public void testBinBoundariesTails() {
+		long pos;
 		FloatType tmp = new FloatType();
-		List<FloatType> tmpList = Arrays.asList(tmp);
-		long[] pos = new long[1];
 		Real1dBinMapper<FloatType> binMapper;
 
+		pos = 0;
 		binMapper = new Real1dBinMapper<FloatType>(0.0, 4.0, 4, true);
-		pos[0] = 0;
-		binMapper.getLowerBounds(pos, tmpList);
+		binMapper.getLowerBound(pos, tmp);
 		assertEquals(Double.NEGATIVE_INFINITY, tmp.getRealDouble(), 0);
-		assertTrue(binMapper.includesLowerBounds(pos));
-		binMapper.getUpperBounds(pos, tmpList);
+		assertTrue(binMapper.includesLowerBound(pos));
+		binMapper.getUpperBound(pos, tmp);
 		assertEquals(0, tmp.getRealDouble(), 0);
-		assertFalse(binMapper.includesUpperBounds(pos));
+		assertFalse(binMapper.includesUpperBound(pos));
 
-		pos[0] = 1;
-		binMapper.getLowerBounds(pos, tmpList);
+		pos = 1;
+		binMapper.getLowerBound(pos, tmp);
 		assertEquals(0, tmp.getRealDouble(), 0);
-		assertTrue(binMapper.includesLowerBounds(pos));
-		binMapper.getUpperBounds(pos, tmpList);
+		assertTrue(binMapper.includesLowerBound(pos));
+		binMapper.getUpperBound(pos, tmp);
 		assertEquals(2, tmp.getRealDouble(), 0);
-		assertFalse(binMapper.includesUpperBounds(pos));
+		assertFalse(binMapper.includesUpperBound(pos));
 
-		pos[0] = 2;
-		binMapper.getLowerBounds(pos, tmpList);
+		pos = 2;
+		binMapper.getLowerBound(pos, tmp);
 		assertEquals(2, tmp.getRealDouble(), 0);
-		assertTrue(binMapper.includesLowerBounds(pos));
-		binMapper.getUpperBounds(pos, tmpList);
+		assertTrue(binMapper.includesLowerBound(pos));
+		binMapper.getUpperBound(pos, tmp);
 		assertEquals(4, tmp.getRealDouble(), 0);
-		assertTrue(binMapper.includesUpperBounds(pos));
+		assertTrue(binMapper.includesUpperBound(pos));
 
-		pos[0] = 3;
-		binMapper.getLowerBounds(pos, tmpList);
+		pos = 3;
+		binMapper.getLowerBound(pos, tmp);
 		assertEquals(4, tmp.getRealDouble(), 0);
-		assertFalse(binMapper.includesLowerBounds(pos));
-		binMapper.getUpperBounds(pos, tmpList);
+		assertFalse(binMapper.includesLowerBound(pos));
+		binMapper.getUpperBound(pos, tmp);
 		assertEquals(Double.POSITIVE_INFINITY, tmp.getRealDouble(), 0);
-		assertTrue(binMapper.includesUpperBounds(pos));
+		assertTrue(binMapper.includesUpperBound(pos));
 
 		tmp.setReal(-0.001);
-		binMapper.getBinPosition(tmpList, pos);
-		assertEquals(0, pos[0]);
+		pos = binMapper.map(tmp);
+		assertEquals(0, pos);
 
 		tmp.setReal(4.001);
-		binMapper.getBinPosition(tmpList, pos);
-		assertEquals(3, pos[0]);
+		pos = binMapper.map(tmp);
+		assertEquals(3, pos);
 	}
 
 	// DONE
 
 	@Test
 	public void testBinBoundariesNoTails() {
+		long pos;
 		FloatType tmp = new FloatType();
-		List<FloatType> tmpList = Arrays.asList(tmp);
-		long[] pos = new long[1];
 		Real1dBinMapper<FloatType> binMapper;
 
 		binMapper = new Real1dBinMapper<FloatType>(0.0, 4.0, 4, false);
-		pos[0] = 0;
-		binMapper.getLowerBounds(pos, tmpList);
+		pos = 0;
+		binMapper.getLowerBound(pos, tmp);
 		assertEquals(0, tmp.getRealDouble(), 0);
-		assertTrue(binMapper.includesLowerBounds(pos));
-		binMapper.getUpperBounds(pos, tmpList);
+		assertTrue(binMapper.includesLowerBound(pos));
+		binMapper.getUpperBound(pos, tmp);
 		assertEquals(1, tmp.getRealDouble(), 0);
-		assertFalse(binMapper.includesUpperBounds(pos));
+		assertFalse(binMapper.includesUpperBound(pos));
 
-		pos[0] = 1;
-		binMapper.getLowerBounds(pos, tmpList);
+		pos = 1;
+		binMapper.getLowerBound(pos, tmp);
 		assertEquals(1, tmp.getRealDouble(), 0);
-		assertTrue(binMapper.includesLowerBounds(pos));
-		binMapper.getUpperBounds(pos, tmpList);
+		assertTrue(binMapper.includesLowerBound(pos));
+		binMapper.getUpperBound(pos, tmp);
 		assertEquals(2, tmp.getRealDouble(), 0);
-		assertFalse(binMapper.includesUpperBounds(pos));
+		assertFalse(binMapper.includesUpperBound(pos));
 
-		pos[0] = 2;
-		binMapper.getLowerBounds(pos, tmpList);
+		pos = 2;
+		binMapper.getLowerBound(pos, tmp);
 		assertEquals(2, tmp.getRealDouble(), 0);
-		assertTrue(binMapper.includesLowerBounds(pos));
-		binMapper.getUpperBounds(pos, tmpList);
+		assertTrue(binMapper.includesLowerBound(pos));
+		binMapper.getUpperBound(pos, tmp);
 		assertEquals(3, tmp.getRealDouble(), 0);
-		assertFalse(binMapper.includesUpperBounds(pos));
+		assertFalse(binMapper.includesUpperBound(pos));
 
-		pos[0] = 3;
-		binMapper.getLowerBounds(pos, tmpList);
+		pos = 3;
+		binMapper.getLowerBound(pos, tmp);
 		assertEquals(3, tmp.getRealDouble(), 0);
-		assertTrue(binMapper.includesLowerBounds(pos));
-		binMapper.getUpperBounds(pos, tmpList);
+		assertTrue(binMapper.includesLowerBound(pos));
+		binMapper.getUpperBound(pos, tmp);
 		assertEquals(4, tmp.getRealDouble(), 0);
-		assertTrue(binMapper.includesUpperBounds(pos));
+		assertTrue(binMapper.includesUpperBound(pos));
 
 		tmp.setReal(-0.001);
-		assertFalse(binMapper.getBinPosition(tmpList, pos));
+		assertEquals(Long.MIN_VALUE, binMapper.map(tmp));
 
 		tmp.setReal(4.001);
-		assertFalse(binMapper.getBinPosition(tmpList, pos));
+		assertEquals(Long.MAX_VALUE, binMapper.map(tmp));
 	}
 }

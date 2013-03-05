@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.histogram.rev2;
+package net.imglib2.histogram;
 
 import static org.junit.Assert.assertEquals;
 

@@ -37,8 +37,6 @@
 
 package net.imglib2.histogram;
 
-import java.util.List;
-
 import net.imglib2.type.numeric.IntegerType;
 
 /**
@@ -47,19 +45,16 @@ import net.imglib2.type.numeric.IntegerType;
  * @author Barry DeZonia
  */
 public class Integer1dBinMapper<T extends IntegerType<T>> implements
-	BinMapper<T>
+	BinMapper1d<T>
 {
 
 	// -- instance variables --
 
 	private final long bins;
-	private final long[] binDimensions;
 	private final long minVal, maxVal;
 	private final boolean tailBins;
 
 	// -- constructor --
-
-	// TODO - do we just ignore values outside bins when tailbins == false?
 
 	/**
 	 * Specify a mapping of integral data from a user defined range into a
@@ -74,7 +69,6 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	 */
 	public Integer1dBinMapper(long minVal, long numBins, boolean tailBins) {
 		this.bins = numBins;
-		this.binDimensions = new long[] { numBins };
 		this.tailBins = tailBins;
 		this.minVal = minVal;
 		if (tailBins) {
@@ -93,27 +87,17 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 
 	@Override
 	public int numDimensions() {
-		return binDimensions.length;
+		return 1;
 	}
 
 	@Override
 	public long getBinCount() {
-		if (binDimensions.length == 0) return 0;
-		long tot = 1;
-		for (long dim : binDimensions)
-			tot *= dim;
-		return tot;
+		return bins;
 	}
 
 	@Override
-	public void getBinDimensions(long[] dims) {
-		for (int i = 0; i < binDimensions.length; i++)
-			dims[i] = binDimensions[i];
-	}
-
-	@Override
-	public boolean getBinPosition(List<T> values, long[] binPos) {
-		long val = values.get(0).getIntegerLong();
+	public long map(T value) {
+		long val = value.getIntegerLong();
 		long pos;
 		if (val >= minVal && val <= maxVal) {
 			pos = val - minVal;
@@ -124,44 +108,61 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 			else pos = bins - 1;
 		}
 		else { // no tail bins and we are outside
-			pos = Long.MIN_VALUE;
+			if (val < minVal) pos = Long.MIN_VALUE;
+			else pos = Long.MAX_VALUE;
 		}
-		binPos[0] = pos;
-		return pos != Long.MIN_VALUE;
+		return pos;
 	}
 
 	@Override
-	public void getCenterValues(long[] binPos, List<T> values) {
-		long pos = binPos[0];
+	public void getCenterValue(long binPos, T value) {
+		long pos = binPos;
 		long val;
 		if (tailBins) {
-			if (pos == 0) val = minVal - 1; // HACK - what is best to return?
-			else if (pos == bins - 1) val = maxVal + 1; // same HACK
+			if (pos == 0) val = minVal - 1; // TODO HACK - what is best to return?
+			else if (pos == bins - 1) val = maxVal + 1; // TODO same HACK
 			else val = minVal + pos - 1;
 		}
 		else { // no tail bins
 			val = minVal + pos;
 		}
-		values.get(0).setInteger(val);
+		value.setInteger(val);
 	}
 
 	@Override
-	public void getLowerBounds(long[] binPos, List<T> values) {
-		getCenterValues(binPos, values);
+	public void getLowerBound(long binPos, T value) {
+		if (tailBins && (binPos == 0 || binPos == bins - 1)) {
+			if (binPos == 0) value.setInteger(Long.MIN_VALUE + 1);
+			else value.setInteger(maxVal + 1);
+		}
+		else {
+			getCenterValue(binPos, value);
+		}
 	}
 
 	@Override
-	public void getUpperBounds(long[] binPos, List<T> values) {
-		getCenterValues(binPos, values);
+	public void getUpperBound(long binPos, T value) {
+		if (tailBins && (binPos == 0 || binPos == bins - 1)) {
+			if (binPos == 0) value.setInteger(minVal - 1);
+			else value.setInteger(Long.MAX_VALUE - 1);
+		}
+		else {
+			getCenterValue(binPos, value);
+		}
 	}
 
 	@Override
-	public boolean includesLowerBounds(long[] binPos) {
+	public boolean includesLowerBound(long binPos) {
 		return true;
 	}
 
 	@Override
-	public boolean includesUpperBounds(long[] binPos) {
+	public boolean includesUpperBound(long binPos) {
 		return true;
+	}
+
+	@Override
+	public boolean hasTails() {
+		return tailBins;
 	}
 }

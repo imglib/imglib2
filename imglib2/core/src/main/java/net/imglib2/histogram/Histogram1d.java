@@ -37,11 +37,14 @@
 
 package net.imglib2.histogram;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * A one dimensional histogram implementation.
+ * A Histogram1d is a histogram that tracks up to four kinds of values: 1)
+ * values in the center of the distribution 2) values to the left of the center
+ * of the distribution (lower tail) 3) values to the right of the center of the
+ * distribution (upper tail) 4) values outside the other areas
+ * <p>
+ * Note: the last three classifications may not be present depending upon the
+ * makeup of the input data.
  * 
  * @author Barry DeZonia
  */
@@ -49,146 +52,284 @@ public class Histogram1d<T> {
 
 	// -- instance variables --
 
-	private final HistogramNd<T> histN;
-	private final long[] tmpPos;
-	private final List<Iterable<T>> iterables;
-	private final List<T> vals;
+	private BinMapper1d<T> mapper;
+	private Iterable<T> data;
+	private DiscreteFrequencyDistribution distrib;
+	private long[] pos;
+	private long ignoredCount;
+
+	// -- constructor --
+
+	/**
+	 * Construct a histogram from an iterable set of data and a bin mapping
+	 * algorithm.
+	 * 
+	 * @param data The iterable set of values to calculate upon
+	 * @param mapper The algorithm used to map values to bins
+	 */
+	public Histogram1d(Iterable<T> data, BinMapper1d<T> mapper) {
+		this.data = data;
+		this.mapper = mapper;
+		this.distrib =
+			new DiscreteFrequencyDistribution(new long[] { mapper.getBinCount() });
+		this.pos = new long[1];
+		populateBins();
+	}
 
 	// -- public api --
-	
+
 	/**
-	 * Constructs a histogram on an Iterable set of data. The algorithm for
-	 * mapping values to bins must be provided. A scratch variable must be
-	 * provided also.
+	 * Returns true if the histogram has tail bins at both ends which count
+	 * extreme values.
+	 */
+	public boolean hasTails() {
+		return mapper.hasTails();
+	}
+
+	/**
+	 * Returns the frequency count of values in the lower tail bin (if any).
+	 */
+	public long lowerTailCount() {
+		if (!hasTails()) return 0;
+		pos[0] = 0;
+		return distrib.frequency(pos);
+	}
+
+	/**
+	 * Returns the frequency count of values in the upper tail bin (if any).
+	 */
+	public long upperTailCount() {
+		if (!hasTails()) return 0;
+		pos[0] = mapper.getBinCount() - 1;
+		return distrib.frequency(pos);
+	}
+
+	/**
+	 * Returns the frequency count of all values in the middle of the
+	 * distribution.
+	 */
+	public long valueCount() {
+		return distributionCount() - lowerTailCount() - upperTailCount();
+	}
+
+	/**
+	 * Returns the frequency count of all values in the distribution: lower tail +
+	 * middle + upper tail. Does not include ignored values.
+	 */
+	public long distributionCount() {
+		return distrib.totalValues();
+	}
+
+	/**
+	 * Returns the frequency count of values that were ignored because they could
+	 * not be mapped to any bin.
+	 */
+	public long ignoredCount() {
+		return ignoredCount;
+	}
+
+	/**
+	 * Returns the total count of all values observed; both within and without the
+	 * entire distribution. Thus it includes ignored values. One should decide
+	 * carefully between using distributionCount() and totalCount().
+	 */
+	public long totalCount() {
+		return distributionCount() + ignoredCount();
+	}
+
+	/**
+	 * Returns the frequency count of values within a bin using a representative
+	 * value. Not that multiple values can be mapped to one bin so this is NOT the
+	 * frequency count of this exact value in the distribution.
 	 * 
-	 * @param iterable The set of data to iterate and count.
-	 * @param binMapper The algorithm used to map values to bins.
-	 * @param val A variable that can be used internally for temporary work.
-	 */
-	public Histogram1d(Iterable<T> iterable, BinMapper<T> binMapper, T val)
-	{
-		if (binMapper.numDimensions() != 1) {
-			throw new IllegalArgumentException(
-				"This histogram requires a 1d bin mapper");
-		}
-		iterables = new ArrayList<Iterable<T>>();
-		iterables.add(iterable);
-		vals = new ArrayList<T>();
-		vals.add(val);
-		histN = new HistogramNd<T>(iterables, binMapper, vals);
-		tmpPos = new long[1];
-	}
-
-	/**
-	 * Returns the total number of bins defined for this histogram.
-	 */
-	public long getBinCount() {
-		return histN.getBinCount();
-	}
-
-	/**
-	 * Returns the bin number associated with the given value.
-	 */
-	public long getBinPosition(T value) {
-		vals.set(0, value);
-		histN.getBinPosition(vals, tmpPos);
-		return tmpPos[0];
-	}
-
-	/**
-	 * Returns the count of values mapped to a specified bin number.
-	 */
-	public long frequency(long binPos) {
-		tmpPos[0] = binPos;
-		return histN.frequency(tmpPos);
-	}
-
-	/**
-	 * Returns the count of values in the bin mapped from a given value.
+	 * @param value A representative value of interest
 	 */
 	public long frequency(T value) {
-		vals.set(0, value);
-		histN.getBinPosition(vals, tmpPos);
-		return histN.frequency(tmpPos);
+		long bin = mapper.map(value);
+		return frequency(bin);
 	}
 
 	/**
-	 * Returns the relative frequency of values mapped to a specified bin number.
+	 * Returns the frequency count of the values within a bin.
 	 */
-	public double relativeFrequency(long binPos) {
-		tmpPos[0] = binPos;
-		return histN.relativeFrequency(tmpPos);
+	public long frequency(long binPos) {
+		if (binPos < 0 || binPos >= mapper.getBinCount()) return 0;
+		pos[0] = binPos;
+		return distrib.frequency(pos);
 	}
 
 	/**
-	 * Returns the relative frequency of values within the bin containing a
-	 * specified value.
+	 * Returns the relative frequency of values within a bin using a
+	 * representative value. Note that multiple values can be mapped to one bin so
+	 * this is NOT the relative frequency of this exact value in the distribution.
+	 * <p>
+	 * This calculation is of the number of values in the bin divided by either
+	 * the number of values in the distribution or the number of values in the
+	 * center of the distribution (tails ignored).
+	 * <p>
+	 * One can devise other ways to count relative frequencies that consider
+	 * ignored values also. If needed one can use the various count methods and
+	 * frequency methods to calculate any relative frequency desired.
+	 * 
+	 * @param value A representative value of interest
+	 * @param includeTails Flag for determining whether to include tails in
+	 *          calculation.
 	 */
-	public double relativeFrequency(T value) {
-		vals.set(0, value);
-		histN.getBinPosition(vals, tmpPos);
-		return histN.relativeFrequency(tmpPos);
+	public double relativeFrequency(T value, boolean includeTails) {
+		long bin = mapper.map(value);
+		return relativeFrequency(bin, includeTails);
 	}
 
 	/**
-	 * Returns the count of the values contained in the histogram bins.
+	 * Returns the relative frequency of values within a bin.
+	 * <p>
+	 * This calculation is of the number of values in the bin divided by either
+	 * the number of values in the distribution or the number of values in the
+	 * center of the distribution (tails ignored).
+	 * <p>
+	 * One can devise other ways to count relative frequencies that consider
+	 * ignored values also. If needed one can use the various count methods and
+	 * frequency methods to calculate any relative frequency desired.
+	 * 
+	 * @param binPos The position of the bin of interest
+	 * @param includeTails Flag for determining whether to include tails in
+	 *          calculation.
 	 */
-	public long totalValues() {
-		return histN.totalValues();
+	public double relativeFrequency(long binPos, boolean includeTails) {
+		double numer = frequency(binPos);
+		long denom = includeTails ? distributionCount() : valueCount();
+		return numer / denom;
 	}
 
 	/**
-	 * Recalculates the frequency distribution of the earlier specified Iterable
-	 * data source.
+	 * Returns the number of bins contained in the histogram.
+	 */
+	public long getBinCount() {
+		return mapper.getBinCount();
+	}
+
+	/**
+	 * Returns a bin position by mapping from a representative value.
+	 */
+	public long map(T value) {
+		return mapper.map(value);
+	}
+
+	/**
+	 * Recalculates the underlying bin distribution. Use this if the iterable data
+	 * source has changed after this histogram was built.
 	 */
 	public void recalc() {
-		histN.recalc();
+		populateBins();
 	}
 
 	/**
-	 * Gets the data value of the center of a given bin number.
+	 * Gets the value associated with the center of a bin.
+	 * 
+	 * @param binPos The bin number of interest
+	 * @param value The output to fill with the center value
 	 */
 	public void getCenterValue(long binPos, T value) {
-		tmpPos[0] = binPos;
-		vals.set(0, value);
-		histN.getCenterValues(tmpPos, vals);
+		mapper.getCenterValue(binPos, value);
 	}
 
 	/**
-	 * Gets the data value of the left edge of a given bin number.
+	 * Gets the value associated with the left edge of a bin.
+	 * 
+	 * @param binPos The bin number of interest
+	 * @param value The output to fill with the left edge value
 	 */
 	public void getLowerBound(long binPos, T value) {
-		tmpPos[0] = binPos;
-		vals.set(0, value);
-		histN.getLowerBounds(tmpPos, vals);
+		mapper.getLowerBound(binPos, value);
 	}
 
 	/**
-	 * Gets the data value of the right edge of a given bin number.
+	 * Gets the value associated with the right edge of the bin.
+	 * 
+	 * @param binPos The bin number of interest
+	 * @param value The output to fill with the right edge value
 	 */
 	public void getUpperBound(long binPos, T value) {
-		tmpPos[0] = binPos;
-		vals.set(0, value);
-		histN.getUpperBounds(tmpPos, vals);
+		mapper.getUpperBound(binPos, value);
 	}
 
 	/**
-	 * Returns true if the bin specified by bin position includes data points
-	 * matching the bin's maximum edge value. Otherwise the max value is
-	 * considered just outside the bin.
+	 * Returns true if the given bin interval is closed on the right
+	 * 
+	 * @param binPos The bin number of the interval of interest
 	 */
 	public boolean includesUpperBound(long binPos) {
-		tmpPos[0] = binPos;
-		return histN.includesUpperBounds(tmpPos);
+		return mapper.includesUpperBound(binPos);
 	}
 
 	/**
-	 * Returns true if the bin specified by bin position includes data points
-	 * matching the bin's minimum edge value. Otherwise the min value is
-	 * considered just outside the bin.
+	 * Returns true if the given bin interval is closed on the left
+	 * 
+	 * @param binPos The bin number of the interval of interest
 	 */
 	public boolean includesLowerBound(long binPos) {
-		tmpPos[0] = binPos;
-		return histN.includesLowerBounds(tmpPos);
+		return mapper.includesLowerBound(binPos);
+	}
+
+	/**
+	 * Returns true if a given value is mapped to the lower tail of the
+	 * distribution.
+	 * 
+	 * @param value The value to determine the location of
+	 */
+	public boolean isInLowerTail(T value) {
+		if (!hasTails()) return false;
+		long bin = mapper.map(value);
+		return bin == 0;
+	}
+
+	/**
+	 * Returns true if a given value is mapped to the upper tail of the
+	 * distribution.
+	 * 
+	 * @param value The value to determine the location of
+	 */
+	public boolean isInUpperTail(T value) {
+		if (!hasTails()) return false;
+		long bin = mapper.map(value);
+		return bin == getBinCount() - 1;
+	}
+
+	/**
+	 * Returns true if a given value is mapped to the middle of the distribution.
+	 * 
+	 * @param value The value to determine the location of
+	 */
+	public boolean isInMiddle(T value) {
+		if (!hasTails()) return true;
+		long bin = mapper.map(value);
+		return (bin > 0) && (bin < getBinCount() - 1);
+	}
+
+	/**
+	 * Returns true if a given value is outside the distribution.
+	 * 
+	 * @param value The value to determine the location of
+	 */
+	public boolean isOutside(T value) {
+		long bin = mapper.map(value);
+		return (bin == Long.MIN_VALUE) || (bin == Long.MAX_VALUE);
+	}
+
+	// -- helpers --
+
+	private void populateBins() {
+		distrib.resetCounters();
+		ignoredCount = 0;
+		for (T value : data) {
+			long bin = mapper.map(value);
+			if (bin == Long.MIN_VALUE || bin == Long.MAX_VALUE) {
+				ignoredCount++;
+			}
+			else {
+				pos[0] = bin;
+				distrib.increment(pos);
+			}
+		}
 	}
 }
