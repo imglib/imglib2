@@ -147,12 +147,20 @@ public class HistogramNd<T> {
 	}
 
 	/**
-	 * Returns the frequency count of values in the lower tail bin (if any).
+	 * Returns the frequency count of values in all lower tail bins (if any).
 	 */
 	public long lowerTailCount() {
+		if (!hasTails()) return 0;
 		long sum = 0;
-		for (int i = 0; i < mappers.size(); i++) {
-			sum += lowerTailCount(i);
+		Points points = new Points();
+		while (points.hasNext()) {
+			long[] binPos = points.next();
+			for (int i = 0; i < mappers.size(); i++) {
+				if (binPos[i] == 0) {
+					sum += distrib.frequency(binPos);
+					break;
+				}
+			}
 		}
 		return sum;
 	}
@@ -174,12 +182,20 @@ public class HistogramNd<T> {
 	}
 
 	/**
-	 * Returns the frequency count of values in the upper tail bin (if any).
+	 * Returns the frequency count of values in all upper tail bins (if any).
 	 */
 	public long upperTailCount() {
+		if (!hasTails()) return 0;
 		long sum = 0;
-		for (int i = 0; i < mappers.size(); i++) {
-			sum += upperTailCount(i);
+		Points points = new Points();
+		while (points.hasNext()) {
+			long[] binPos = points.next();
+			for (int i = 0; i < mappers.size(); i++) {
+				if (binPos[i] == mappers.get(i).getBinCount() - 1) {
+					sum += distrib.frequency(binPos);
+					break;
+				}
+			}
 		}
 		return sum;
 	}
@@ -192,6 +208,8 @@ public class HistogramNd<T> {
 		return distributionCount(dim) - lowerTailCount(dim) - upperTailCount(dim);
 	}
 
+	// TODO - next func is double counting parts of tails!
+
 	/**
 	 * Returns the frequency count of all values in the middle of the
 	 * distribution.
@@ -199,6 +217,8 @@ public class HistogramNd<T> {
 	public long valueCount() {
 		return distributionCount() - lowerTailCount() - upperTailCount();
 	}
+
+	// TODO - code does not seem to match description
 
 	/**
 	 * Returns the frequency count of all values in the distribution: lower tail +
@@ -484,13 +504,15 @@ public class HistogramNd<T> {
 		while (iter.hasNext()) {
 			List<T> values = iter.next();
 			map(values, pos);
+			boolean ignored = false;
 			for (int i = 0; i < pos.length; i++) {
 				if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
-					ignoredCount++;
-					continue;
+					ignored = true;
+					break;
 				}
 			}
-			distrib.increment(pos);
+			if (ignored) ignoredCount++;
+			else distrib.increment(pos);
 		}
 	}
 
@@ -501,6 +523,7 @@ public class HistogramNd<T> {
 		List<Iterator<T>> iters = new ArrayList<Iterator<T>>();
 		for (int i = 0; i < iterables.size(); i++) {
 			iters.add(iterables.get(i).iterator());
+			vals.add(null);
 		}
 		boolean hasNext = true;
 		do {
@@ -512,13 +535,15 @@ public class HistogramNd<T> {
 					vals.set(i, iters.get(i).next());
 				}
 				map(vals, pos);
+				boolean ignored = false;
 				for (int i = 0; i < pos.length; i++) {
 					if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
-						ignoredCount++;
-						continue;
+						ignored = true;
+						break;
 					}
 				}
-				distrib.increment(pos);
+				if (ignored) ignoredCount++;
+				else distrib.increment(pos);
 			}
 		}
 		while (hasNext);
