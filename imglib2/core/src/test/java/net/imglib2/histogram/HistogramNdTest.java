@@ -38,7 +38,7 @@
 package net.imglib2.histogram;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,6 +46,7 @@ import java.util.List;
 
 import net.imglib2.Cursor;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -272,21 +273,21 @@ public class HistogramNdTest {
 
 	@Test
 	public void testRgbHist() {
-		/*
-		// NOTE: COMMENTED OUT BECAUSE IT REQUIRES TOO MUCH RAM
 		ArrayImgFactory<ARGBType> factory = new ArrayImgFactory<ARGBType>();
 		Img<ARGBType> img = factory.create(new long[] { 100, 200 }, new ARGBType());
+		for (ARGBType v : img) {
+			v.set((int) (Math.random() * Integer.MAX_VALUE));
+		}
 		RgbIterator data = new RgbIterator(img);
-		long[] minVals = new long[] { 0, 0, 0 };
-		long[] numBins = new long[] { 256, 256, 256 };
+		double[] minVals = new double[] { 0, 0, 0 };
+		double[] maxVals = new double[] { 255, 255, 255 };
+		long[] numBins = new long[] { 16, 16, 16 }; // 16^3 uses less mem than 256^3
 		boolean[] tailBins = new boolean[] { false, false, false };
-		IntegerNdBinMapper<IntType> mapper =
-			new IntegerNdBinMapper<IntType>(minVals, numBins, tailBins);
+		RealNdBinMapper<IntType> mapper =
+			new RealNdBinMapper<IntType>(minVals, maxVals, numBins, tailBins);
 		HistogramNd<IntType> hist =
 			new HistogramNd<IntType>(data, mapper.definitions());
 		assertNotNull(hist);
-		*/
-		assertTrue(true);
 	}
 
 	private List<UnsignedByteType> getData1() {
