@@ -37,6 +37,8 @@
 
 package net.imglib2.histogram.rev2;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +53,7 @@ import org.junit.Test;
 public class HistogramNdTest {
 
 	@Test
-	public void test() {
+	public void testUnconstrainedNoTails() {
 
 		List<UnsignedByteType> data1 = getData1();
 		List<UnsignedByteType> data2 = getData2();
@@ -60,59 +62,206 @@ public class HistogramNdTest {
 		data.add(data1);
 		data.add(data2);
 
-		List<BinMapper1d<UnsignedByteType>> binMappers;
+		long[] minVals = new long[] { 0, 0 };
+		long[] numBins = new long[] { 256, 256 };
+		boolean[] tailBins = new boolean[] { false, false };
 
-		/*
-		BinMapper1d<UnsignedByteType> binMapper =
-			new IntegerNdBinMapper<UnsignedByteType>(new long[] { 0, 0 }, new long[] {
-				256, 256 }, new boolean[] { false, false });
+		IntegerNdBinMapper<UnsignedByteType> binMapper =
+			new IntegerNdBinMapper<UnsignedByteType>(minVals, numBins, tailBins);
 
 		HistogramNd<UnsignedByteType> hist =
-			new HistogramNd<UnsignedByteType>(data, binMappers);
+			new HistogramNd<UnsignedByteType>(data, binMapper.definitions());
 
-		assertEquals(256, hist.getBinCount());
+		assertEquals(256 * 256, hist.getBinCount());
 		assertEquals(11, hist.totalCount());
-		assertEquals(1, hist.frequency(new UnsignedByteType(3)));
-		assertEquals(3, hist.frequency(new UnsignedByteType(5)));
-		assertEquals(1, hist.frequency(new UnsignedByteType(7)));
-		assertEquals(3, hist.frequency(new UnsignedByteType(9)));
-		assertEquals(3, hist.frequency(new UnsignedByteType(10)));
 		assertEquals(0, hist.lowerTailCount());
+		assertEquals(0, hist.lowerTailCount(0));
+		assertEquals(0, hist.lowerTailCount(1));
 		assertEquals(0, hist.upperTailCount());
+		assertEquals(0, hist.upperTailCount(0));
+		assertEquals(0, hist.upperTailCount(1));
+		assertEquals(0, hist.ignoredCount());
 
-		binMapper =
-			new IntegerNdBinMapper<UnsignedByteType>(new long[] { 4, 4 }, new long[] {
-				8, 8 }, new boolean[] { true, true });
+		List<UnsignedByteType> list = new ArrayList<UnsignedByteType>();
+		list.add(null);
+		list.add(null);
 
-		hist = new HistogramNd<UnsignedByteType>(data, binMappers);
+		list.set(0, new UnsignedByteType(5));
+		list.set(1, new UnsignedByteType(4));
+		assertEquals(1, hist.frequency(list));
 
-		assertEquals(8, hist.getBinCount());
+		list.set(0, new UnsignedByteType(3));
+		list.set(1, new UnsignedByteType(4));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(5));
+		list.set(1, new UnsignedByteType(7));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(9));
+		list.set(1, new UnsignedByteType(7));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(10));
+		list.set(1, new UnsignedByteType(1));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(7));
+		list.set(1, new UnsignedByteType(1));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(10));
+		list.set(1, new UnsignedByteType(9));
+		assertEquals(2, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(9));
+		list.set(1, new UnsignedByteType(12));
+		assertEquals(2, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(5));
+		list.set(1, new UnsignedByteType(0));
+		assertEquals(1, hist.frequency(list));
+	}
+
+	@Test
+	public void testConstrainedWithTails() {
+		List<UnsignedByteType> data1 = getData1();
+		List<UnsignedByteType> data2 = getData2();
+		List<Iterable<UnsignedByteType>> data =
+			new ArrayList<Iterable<UnsignedByteType>>();
+		data.add(data1);
+		data.add(data2);
+
+		List<UnsignedByteType> list = new ArrayList<UnsignedByteType>();
+		list.add(null);
+		list.add(null);
+
+		long[] minVals = new long[] { 4, 4 };
+		long[] numBins = new long[] { 8, 8 };
+		boolean[] tailBins = new boolean[] { true, true };
+
+		IntegerNdBinMapper<UnsignedByteType> binMapper =
+			new IntegerNdBinMapper<UnsignedByteType>(minVals, numBins, tailBins);
+
+		HistogramNd<UnsignedByteType> hist =
+			new HistogramNd<UnsignedByteType>(data, binMapper.definitions());
+
+		assertEquals(8 * 8, hist.getBinCount());
 		assertEquals(11, hist.distributionCount());
-		assertEquals(1, hist.frequency(new UnsignedByteType(3)));
-		assertEquals(3, hist.frequency(new UnsignedByteType(5)));
-		assertEquals(1, hist.frequency(new UnsignedByteType(7)));
-		assertEquals(3, hist.frequency(new UnsignedByteType(9)));
-		assertEquals(3, hist.frequency(new UnsignedByteType(10)));
-		assertEquals(1, hist.lowerTailCount());
-		assertEquals(3, hist.upperTailCount());
+		assertEquals(4, hist.lowerTailCount());
+		assertEquals(1, hist.lowerTailCount(0));
+		assertEquals(3, hist.lowerTailCount(1));
+		assertEquals(5, hist.upperTailCount());
+		assertEquals(3, hist.upperTailCount(0));
+		assertEquals(2, hist.upperTailCount(1));
+		assertEquals(0, hist.ignoredCount());
 
-		binMapper =
-			new IntegerNdBinMapper<UnsignedByteType>(new long[] { 5, 5 }, new long[] {
-				5, 5 }, new boolean[] { false, false });
+		list.set(0, new UnsignedByteType(5));
+		list.set(1, new UnsignedByteType(4));
+		assertEquals(1, hist.frequency(list));
 
-		hist = new HistogramNd<UnsignedByteType>(data, binMappers);
+		list.set(0, new UnsignedByteType(3));
+		list.set(1, new UnsignedByteType(4));
+		assertEquals(1, hist.frequency(list));
 
-		assertEquals(5, hist.getBinCount());
-		assertEquals(7, hist.distributionCount());
-		assertEquals(0, hist.frequency(new UnsignedByteType(3)));
-		assertEquals(3, hist.frequency(new UnsignedByteType(5)));
-		assertEquals(1, hist.frequency(new UnsignedByteType(7)));
-		assertEquals(3, hist.frequency(new UnsignedByteType(9)));
-		assertEquals(0, hist.frequency(new UnsignedByteType(10)));
+		list.set(0, new UnsignedByteType(5));
+		list.set(1, new UnsignedByteType(7));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(9));
+		list.set(1, new UnsignedByteType(7));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(10));
+		list.set(1, new UnsignedByteType(1));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(7));
+		list.set(1, new UnsignedByteType(1));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(10));
+		list.set(1, new UnsignedByteType(9));
+		assertEquals(2, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(9));
+		list.set(1, new UnsignedByteType(12));
+		assertEquals(2, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(5));
+		list.set(1, new UnsignedByteType(0));
+		assertEquals(1, hist.frequency(list));
+	}
+
+	@Test
+	public void testConstrainedWithNoTails() {
+
+		List<UnsignedByteType> data1 = getData1();
+		List<UnsignedByteType> data2 = getData2();
+		List<Iterable<UnsignedByteType>> data =
+			new ArrayList<Iterable<UnsignedByteType>>();
+		data.add(data1);
+		data.add(data2);
+
+		List<UnsignedByteType> list = new ArrayList<UnsignedByteType>();
+		list.add(null);
+		list.add(null);
+
+		long[] minVals = new long[] { 5, 5 };
+		long[] numBins = new long[] { 5, 5 };
+		boolean[] tailBins = new boolean[] { false, false };
+
+		IntegerNdBinMapper<UnsignedByteType> binMapper =
+			new IntegerNdBinMapper<UnsignedByteType>(minVals, numBins, tailBins);
+
+		HistogramNd<UnsignedByteType> hist =
+			new HistogramNd<UnsignedByteType>(data, binMapper.definitions());
+
+		assertEquals(5 * 5, hist.getBinCount());
+		assertEquals(2, hist.distributionCount());
 		assertEquals(0, hist.lowerTailCount());
+		assertEquals(0, hist.lowerTailCount(0));
+		assertEquals(0, hist.lowerTailCount(1));
 		assertEquals(0, hist.upperTailCount());
+		assertEquals(0, hist.upperTailCount(0));
+		assertEquals(0, hist.upperTailCount(1));
+		assertEquals(9, hist.ignoredCount());
 		
-		*/
+		list.set(0, new UnsignedByteType(5));
+		list.set(1, new UnsignedByteType(4));
+		assertEquals(0, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(3));
+		list.set(1, new UnsignedByteType(4));
+		assertEquals(0, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(5));
+		list.set(1, new UnsignedByteType(7));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(9));
+		list.set(1, new UnsignedByteType(7));
+		assertEquals(1, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(10));
+		list.set(1, new UnsignedByteType(1));
+		assertEquals(0, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(7));
+		list.set(1, new UnsignedByteType(1));
+		assertEquals(0, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(10));
+		list.set(1, new UnsignedByteType(9));
+		assertEquals(0, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(9));
+		list.set(1, new UnsignedByteType(12));
+		assertEquals(0, hist.frequency(list));
+
+		list.set(0, new UnsignedByteType(5));
+		list.set(1, new UnsignedByteType(0));
+		assertEquals(0, hist.frequency(list));
 	}
 
 	private List<UnsignedByteType> getData1() {
