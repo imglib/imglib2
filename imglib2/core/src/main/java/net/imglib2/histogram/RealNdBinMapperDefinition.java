@@ -56,8 +56,8 @@ public class RealNdBinMapperDefinition<T extends RealType<T>> {
 
 	// -- constructor --
 
-	public RealNdBinMapperDefinition(double[] minVals, double[] maxVals, long[] numBins,
-		boolean[] tailBins)
+	public RealNdBinMapperDefinition(double[] minVals, double[] maxVals,
+		long[] numBins, boolean[] tailBins)
 	{
 		if ((minVals.length != numBins.length) ||
 			(minVals.length != tailBins.length))

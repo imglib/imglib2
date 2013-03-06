@@ -41,6 +41,8 @@ import java.util.List;
 
 import net.imglib2.EuclideanSpace;
 
+// NOTE - this interface not in use at the moment
+
 /**
  * @author Barry DeZonia
  */

@@ -56,7 +56,8 @@ public class IntegerNdBinMapperDefinition<T extends IntegerType<T>> {
 
 	// -- constructor --
 
-	public IntegerNdBinMapperDefinition(long[] minVals, long[] numBins, boolean[] tailBins)
+	public IntegerNdBinMapperDefinition(long[] minVals, long[] numBins,
+		boolean[] tailBins)
 	{
 		if ((minVals.length != numBins.length) ||
 			(minVals.length != tailBins.length))

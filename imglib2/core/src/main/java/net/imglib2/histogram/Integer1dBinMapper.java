@@ -116,15 +116,14 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 
 	@Override
 	public void getCenterValue(long binPos, T value) {
-		long pos = binPos;
 		long val;
 		if (tailBins) {
-			if (pos == 0) val = minVal - 1; // TODO HACK - what is best to return?
-			else if (pos == bins - 1) val = maxVal + 1; // TODO same HACK
-			else val = minVal + pos - 1;
+			if (binPos == 0) val = minVal - 1; // TODO HACK - what is best to return?
+			else if (binPos == bins - 1) val = maxVal + 1; // TODO same HACK
+			else val = minVal + binPos - 1;
 		}
 		else { // no tail bins
-			val = minVal + pos;
+			val = minVal + binPos;
 		}
 		value.setInteger(val);
 	}
