@@ -48,7 +48,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Barry DeZonia
  */
-public class RealNdBinMapper<T extends RealType<T>> {
+public class RealNdBinMapperDefinition<T extends RealType<T>> {
 
 	// -- instance variables --
 
@@ -56,7 +56,7 @@ public class RealNdBinMapper<T extends RealType<T>> {
 
 	// -- constructor --
 
-	public RealNdBinMapper(double[] minVals, double[] maxVals, long[] numBins,
+	public RealNdBinMapperDefinition(double[] minVals, double[] maxVals, long[] numBins,
 		boolean[] tailBins)
 	{
 		if ((minVals.length != numBins.length) ||

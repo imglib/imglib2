@@ -73,8 +73,8 @@ public class HistogramNdTest {
 		long[] numBins = new long[] { 256, 256 };
 		boolean[] tailBins = new boolean[] { false, false };
 
-		IntegerNdBinMapper<UnsignedByteType> binMapper =
-			new IntegerNdBinMapper<UnsignedByteType>(minVals, numBins, tailBins);
+		IntegerNdBinMapperDefinition<UnsignedByteType> binMapper =
+			new IntegerNdBinMapperDefinition<UnsignedByteType>(minVals, numBins, tailBins);
 
 		HistogramNd<UnsignedByteType> hist =
 			new HistogramNd<UnsignedByteType>(data, binMapper.definitions());
@@ -147,8 +147,8 @@ public class HistogramNdTest {
 		long[] numBins = new long[] { 8, 8 };
 		boolean[] tailBins = new boolean[] { true, true };
 
-		IntegerNdBinMapper<UnsignedByteType> binMapper =
-			new IntegerNdBinMapper<UnsignedByteType>(minVals, numBins, tailBins);
+		IntegerNdBinMapperDefinition<UnsignedByteType> binMapper =
+			new IntegerNdBinMapperDefinition<UnsignedByteType>(minVals, numBins, tailBins);
 
 		HistogramNd<UnsignedByteType> hist =
 			new HistogramNd<UnsignedByteType>(data, binMapper.definitions());
@@ -218,8 +218,8 @@ public class HistogramNdTest {
 		long[] numBins = new long[] { 5, 5 };
 		boolean[] tailBins = new boolean[] { false, false };
 
-		IntegerNdBinMapper<UnsignedByteType> binMapper =
-			new IntegerNdBinMapper<UnsignedByteType>(minVals, numBins, tailBins);
+		IntegerNdBinMapperDefinition<UnsignedByteType> binMapper =
+			new IntegerNdBinMapperDefinition<UnsignedByteType>(minVals, numBins, tailBins);
 
 		HistogramNd<UnsignedByteType> hist =
 			new HistogramNd<UnsignedByteType>(data, binMapper.definitions());
@@ -283,8 +283,8 @@ public class HistogramNdTest {
 		double[] maxVals = new double[] { 255, 255, 255 };
 		long[] numBins = new long[] { 16, 16, 16 }; // 16^3 uses less mem than 256^3
 		boolean[] tailBins = new boolean[] { false, false, false };
-		RealNdBinMapper<IntType> mapper =
-			new RealNdBinMapper<IntType>(minVals, maxVals, numBins, tailBins);
+		RealNdBinMapperDefinition<IntType> mapper =
+			new RealNdBinMapperDefinition<IntType>(minVals, maxVals, numBins, tailBins);
 		HistogramNd<IntType> hist =
 			new HistogramNd<IntType>(data, mapper.definitions());
 		assertNotNull(hist);

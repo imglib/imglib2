@@ -48,7 +48,7 @@ import net.imglib2.type.numeric.IntegerType;
  * 
  * @author Barry DeZonia
  */
-public class IntegerNdBinMapper<T extends IntegerType<T>> {
+public class IntegerNdBinMapperDefinition<T extends IntegerType<T>> {
 
 	// -- instance variables --
 
@@ -56,7 +56,7 @@ public class IntegerNdBinMapper<T extends IntegerType<T>> {
 
 	// -- constructor --
 
-	public IntegerNdBinMapper(long[] minVals, long[] numBins, boolean[] tailBins)
+	public IntegerNdBinMapperDefinition(long[] minVals, long[] numBins, boolean[] tailBins)
 	{
 		if ((minVals.length != numBins.length) ||
 			(minVals.length != tailBins.length))
