@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.imglib2.Dimensions;
+
 // TODO - calculate lazily but should be able to count upper/lower/middle in
 // one pass rather than the multiple passes that are now in place.
 
@@ -55,7 +57,7 @@ import java.util.List;
  * 
  * @author Barry DeZonia
  */
-public class HistogramNd<T> {
+public class HistogramNd<T> implements Dimensions {
 
 	// -- instance variables --
 
@@ -509,6 +511,33 @@ public class HistogramNd<T> {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Return the number of dimensions of the frequency distribution of this
+	 * histogram.
+	 */
+	@Override
+	public int numDimensions() {
+		return distrib.numDimensions();
+	}
+
+	/**
+	 * Return the size of the given dimension of the frequency distribution of
+	 * this histogram.
+	 */
+	@Override
+	public long dimension(int d) {
+		return distrib.dimension(d);
+	}
+
+	/**
+	 * Fill the provided long[] with the sizes of all dimensions of the frequency
+	 * distribution of this histogram.
+	 */
+	@Override
+	public void dimensions(long[] dims) {
+		distrib.dimensions(dims);
 	}
 
 	// -- helpers --
