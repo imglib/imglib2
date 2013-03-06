@@ -73,7 +73,7 @@ public class HistogramNd<T> implements Dimensions {
 	/**
 	 * Construct a histogram from an iterable set of data and a list of bin
 	 * mapping algorithms. Must be given one iterable data source that returns
-	 * muitlple data values at each point.
+	 * multiple data values at each point.
 	 * 
 	 * @param data The iterable set of values to calculate upon
 	 * @param mappers The algorithms used to map values to bins
@@ -442,6 +442,28 @@ public class HistogramNd<T> implements Dimensions {
 			if (!mappers.get(i).includesLowerBound(binPos[i])) return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Returns true if the given bin interval is closed on the right for the given
+	 * dimension.
+	 * 
+	 * @param dim The dimension of interest
+	 * @param binPos The bin number of the interval of interest
+	 */
+	public boolean includesUpperBound(int dim, long binPos) {
+		return mappers.get(dim).includesUpperBound(binPos);
+	}
+
+	/**
+	 * Returns true if the given bin interval is closed on the left for the given
+	 * dimension.
+	 * 
+	 * @param dim The dimension of interest
+	 * @param binPos The bin number of the interval of interest
+	 */
+	public boolean includesLowerBound(int dim, long binPos) {
+		return mappers.get(dim).includesLowerBound(binPos);
 	}
 
 	/**
