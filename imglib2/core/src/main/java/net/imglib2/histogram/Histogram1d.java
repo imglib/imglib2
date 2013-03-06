@@ -37,6 +37,8 @@
 
 package net.imglib2.histogram;
 
+import net.imglib2.Dimensions;
+
 /**
  * A Histogram1d is a histogram that tracks up to four kinds of values: 1)
  * values in the center of the distribution 2) values to the left of the center
@@ -48,7 +50,7 @@ package net.imglib2.histogram;
  * 
  * @author Barry DeZonia
  */
-public class Histogram1d<T> {
+public class Histogram1d<T> implements Dimensions {
 
 	// -- instance variables --
 
@@ -314,6 +316,33 @@ public class Histogram1d<T> {
 	public boolean isOutside(T value) {
 		long bin = mapper.map(value);
 		return (bin == Long.MIN_VALUE) || (bin == Long.MAX_VALUE);
+	}
+
+	/**
+	 * Return the number of dimensions of the frequency distribution of this
+	 * histogram.
+	 */
+	@Override
+	public int numDimensions() {
+		return distrib.numDimensions();
+	}
+
+	/**
+	 * Return the size of the given dimension of the frequency distribution of
+	 * this histogram.
+	 */
+	@Override
+	public long dimension(int d) {
+		return distrib.dimension(d);
+	}
+
+	/**
+	 * Fill the provided long[] with the sizes of all dimensions of the frequency
+	 * distribution of this histogram.
+	 */
+	@Override
+	public void dimensions(long[] dims) {
+		distrib.dimensions(dims);
 	}
 
 	// -- helpers --
