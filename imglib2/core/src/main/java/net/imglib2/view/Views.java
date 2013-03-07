@@ -359,8 +359,9 @@ public class Views
 	 * @param randomAccessible
 	 *            the source
 	 * @param translation
-	 *            offset of the source view. The pixel at offset becomes the
-	 *            origin of resulting view.
+	 *            translation vector of the source view. The pixel at <em>x</em>
+	 *            in the source view becomes <em>(x + translation)</em> in the
+	 *            resulting view.
 	 */
 	public static < T > MixedTransformView< T > translate( final RandomAccessible< T > randomAccessible, final long... translation )
 	{
@@ -378,8 +379,9 @@ public class Views
 	 * @param interval
 	 *            the source
 	 * @param translation
-	 *            offset of the source view. The pixel at offset becomes the
-	 *            origin of resulting view.
+	 *            translation vector of the source view. The pixel at <em>x</em>
+	 *            in the source view becomes <em>(x + translation)</em> in the
+	 *            resulting view.
 	 */
 	public static < T > IntervalView< T > translate( final RandomAccessibleInterval< T > interval, final long... translation )
 	{
