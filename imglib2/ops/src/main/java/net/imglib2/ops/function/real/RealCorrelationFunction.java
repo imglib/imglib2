@@ -39,11 +39,10 @@ package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
-import net.imglib2.ops.pointset.PointSetIterator;
 import net.imglib2.type.numeric.RealType;
 
 // TODO
-//   A convolution is really a GeneralBinaryOperation between an input function
+//   A correlation is really a GeneralBinaryOperation between an input function
 //   and a kernel function. For efficiency this class exists. For generality a
 //   kernel function could calculate in evaluate(neigh,point,output) the relation
 //   of neigh and point and choose the correct index into the kernel. By doing
@@ -51,56 +50,39 @@ import net.imglib2.type.numeric.RealType;
 //   than just an array of user supplied reals).
 
 /**
- * Computes the convolution of the values of another function over a region with
+ * Computes the correlation of the values of another function over a region with
  * a set of weights. The weights are specified in the constructor. The order of
  * the kernel is defined spatially from upper left to lower right. Being
- * convolution the kernel is applied in reverse order. API users should choose
- * carefully between convolution and correlation (see
- * {@link RealCorrelationFunction}).
+ * correlation the kernel is applied in precisely that order. API users should
+ * choose carefully between convolution and correlation (see
+ * {@link RealConvolutionFunction}).
  * 
  * @author Barry DeZonia
  */
-public class RealConvolutionFunction<T extends RealType<T>>
-	implements Function<PointSet,T>
+public class RealCorrelationFunction<T extends RealType<T>> implements
+	Function<PointSet, T>
 {
+
 	// -- instance variables --
-	
-	private final Function<long[],T> otherFunc;
+
+	private final Function<long[], T> otherFunc;
 	private final double[] kernel;
-	private PointSet ps;
-	private PointSetIterator iter;
-	private T tmp;
-	private double sum;
-	
+	private final RealWeightedSumFunction<T> weightedSum;
+
 	// -- constructor --
-	
-	public RealConvolutionFunction(Function<long[],T> otherFunc, double[] kernel)
+
+	public RealCorrelationFunction(Function<long[], T> otherFunc, double[] kernel)
 	{
 		this.otherFunc = otherFunc;
 		this.kernel = kernel;
-		this.ps = null;
-		this.iter = null;
-		this.tmp = createOutput();
+		this.weightedSum = new RealWeightedSumFunction<T>(otherFunc, kernel);
 	}
-	
+
 	// -- Function methods --
-	
+
 	@Override
 	public void compute(PointSet input, T output) {
-		if (ps != input) {
-			ps = input;
-			iter = ps.iterator();
-		}
-		long[] pos;
-		int i = kernel.length - 1;
-		sum = 0;
-		iter.reset();
-		while (iter.hasNext()) {
-			pos = iter.next();
-			otherFunc.compute(pos, tmp);
-			sum += tmp.getRealDouble() * kernel[i--];
-		}
-		output.setReal(sum);
+		weightedSum.compute(input, output);
 	}
 
 	@Override
@@ -109,8 +91,8 @@ public class RealConvolutionFunction<T extends RealType<T>>
 	}
 
 	@Override
-	public RealConvolutionFunction<T> copy() {
-		return new RealConvolutionFunction<T>(otherFunc.copy(), kernel.clone());
+	public RealCorrelationFunction<T> copy() {
+		return new RealCorrelationFunction<T>(otherFunc.copy(), kernel.clone());
 	}
 
 }
