@@ -91,7 +91,7 @@ public class HyperSliceImgPlusTest {
 		}
 		source.setName(name);
 
-		// Set up first hyerpslice
+		// Set up first hyperslice
 		imgplusZ = new HyperSliceImgPlus<UnsignedByteType>(source, REMOVED_DIM_1, dim[REMOVED_DIM_1]/2);
 
 		// Set up second hyperslice
@@ -103,7 +103,7 @@ public class HyperSliceImgPlusTest {
 			type.setZero();
 		}
 	}
-
+	
 	@Test
 	public void testMetadata() {
 		int index1 = 0;
