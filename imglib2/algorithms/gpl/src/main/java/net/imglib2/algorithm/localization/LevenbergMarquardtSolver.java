@@ -26,8 +26,7 @@
 
 package net.imglib2.algorithm.localization;
 
-import edu.mines.jtk.la.DMatrix;
-import edu.mines.jtk.la.DMatrixLud;
+import Jama.Matrix;
 
 /**
  * A collection of static utils implementing a plain Levenberg-Marquardt least-square curve fitting algorithm.
@@ -113,33 +112,18 @@ public class LevenbergMarquardtSolver {
 					g[r] += (y[i]-f.val(xi,a)) * f.grad(xi, a, r);
 				}
 			} //npts
-
-			// solve H d = -g, evaluate error at new location
-			//double[] d = DoubleMatrix.solve(H, g);
+			
 			double[] d = null;
-			try {
-				DMatrix mat1 = new DMatrix(H);
-				DMatrixLud lu = new DMatrixLud(mat1);
-				DMatrix mat2 = new DMatrix(nparm, nparm, 0d);
-				for (int i = 0; i < nparm; i++) {
-					mat2.set(i, i, g[i]);
-				}
-				DMatrix res = lu.solve(mat2);
-				d = res.getPackedRows();
-			} catch (RuntimeException re) {
-				// Matrix is singular
-				lambda *= 10.;
-				continue;
-			}
-			DMatrix amat = new DMatrix(nparm, nparm, 0d);
-			DMatrix dmat = new DMatrix(nparm, nparm, 0d);
-			for (int i = 0; i < nparm; i++) {
-				amat.set(i, i, a[i]);
-				dmat.set(i, i, d[i]);
-			}
-			double[] na = amat.plus(dmat).getPackedRows();
-			double e1 = chiSquared(x, na, y, f);
-
+            try {
+                    d = (new Matrix(H)).lu().solve(new Matrix(g, nparm)).getRowPackedCopy();
+            } catch (RuntimeException re) {
+                    // Matrix is singular
+                    lambda *= 10.;
+                    continue;
+            }
+            double[] na = (new Matrix(a, nparm)).plus(new Matrix(d,nparm)).getRowPackedCopy();
+            double e1 = chiSquared(x, na, y, f);
+			
 			// termination test (slightly different than NR)
 			if (Math.abs(e1-e0) > termepsilon) {
 				term = 0;

@@ -44,7 +44,8 @@ public class GaussianFitTestDrive2 {
 		 *  Load image
 		 */
 		
-		File file = new File("/Users/tinevez/Projects/MElBeheiry/Data/zstack4a.tif");
+//		File file = new File("/Users/tinevez/Projects/MElBeheiry/Data/zstack4a.tif");
+		File file = new File("/Users/JeanYves/Desktop/Data/test_stack.tif");
 		ImgPlus<T> img ;
 		try {
 			img = ImgOpener.open(file.getAbsolutePath());
@@ -70,9 +71,9 @@ public class GaussianFitTestDrive2 {
 		 */
 		
 		// Peak position
-		int x0 = 22;
-		int y0 = 20;
-		double sigma0 = 5;
+		int x0 = 21;
+		int y0 = 30;
+		double sigma0 = 4;
 
 		// Levenberg-Marquardt parameters
 		int maxIteration = 300;
