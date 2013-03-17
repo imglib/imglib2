@@ -38,7 +38,7 @@ import net.imglib2.type.numeric.RealType;
  */
 public class LocalizationUtils {
 
-	private static final GaussianMultiDLM g = new GaussianMultiDLM();
+	private static final EllipticGaussianOrtho g = new EllipticGaussianOrtho();
 	private static final Random ran = new Random();
 	
 	public static final <T extends RealType<T>> void addGaussianSpotToImage(Img<T> img, double[] params) {

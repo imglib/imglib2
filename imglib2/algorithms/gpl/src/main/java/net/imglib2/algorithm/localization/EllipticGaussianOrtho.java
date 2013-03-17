@@ -43,7 +43,7 @@ package net.imglib2.algorithm.localization;
  *
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> 2012
  */
-public class GaussianMultiDLM implements FitFunction {
+public class EllipticGaussianOrtho implements FitFunction {
 
 	/*
 	 * METHODS
