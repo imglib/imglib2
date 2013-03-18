@@ -80,10 +80,7 @@ public class EllipticGaussianOrtho implements FitFunction {
 		}
 	}
 
-	/**
-	 * Not used but hey.
-	 * @return the hessian value for row r and column c
-	 */
+	@Override
 	public final double hessian(final double[] x, final double[] a, int r, int c) {
 		if (c < r) {
 			int tmp = c;
