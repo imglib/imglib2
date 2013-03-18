@@ -38,8 +38,38 @@ import Jama.Matrix;
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> 2011
  * @author 2012
  */
-public class LevenbergMarquardtSolver {
-
+public class LevenbergMarquardtSolver implements FunctionFitter {
+	
+	private final int maxIteration;
+	private final double lambda;
+	private final double termEpsilon;
+	
+	public LevenbergMarquardtSolver(int maxIteration, double lambda, double termEpsilon) {
+		this.maxIteration = maxIteration;
+		this.lambda = lambda;
+		this.termEpsilon = termEpsilon;
+	}
+	
+	public LevenbergMarquardtSolver() {
+		this(300, 1e-3d, 1e-1d);
+	}
+	
+	/*
+	 * MEETHODS
+	 */
+	
+	
+	@Override
+	public void fit(double[][] x, double[] y, double[] a, FitFunction f) throws Exception {
+		solve(x, a, y, f, lambda, termEpsilon, maxIteration);
+	}
+	
+	
+	
+	/*
+	 * STATIC METHODS
+	 */
+	
 	/**
 	 * Calculate the current sum-squared-error
 	 */
@@ -155,5 +185,6 @@ public class LevenbergMarquardtSolver {
 
 		return iter;
 	} //solve
+
 	
 }
