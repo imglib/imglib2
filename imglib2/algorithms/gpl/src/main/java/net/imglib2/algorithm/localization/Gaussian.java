@@ -104,12 +104,12 @@ public class Gaussian implements FitFunction {
 			} else if (c <= ndims ) {
 				// d²G / (dA dxi)
 				final int dim = c - 1;
-				return 2 * a[dim+ndims] * (x[dim] - a[dim+1])  * E(x, a);
+				return 2 * a[a.length-1] * (x[dim] - a[dim+1])  * E(x, a);
 
 			} else {
 				// d²G / (dA db)
 				// With respect to b
-				return - S(x, a) * E(x, a);
+				return - S(x, a) * E(x, a) / a[a.length-1];
 			}
 
 		} else if (c == r) {
@@ -119,11 +119,12 @@ public class Gaussian implements FitFunction {
 				// d²G / dxi²
 				final int dim = c - 1;
 				final double di = x[dim] - a[dim+1];
-				return 2 * a[0] * E(x, a) * a[dim+ndims] * ( 2 * a[dim+ndims] * di * di - 1 );
+				//         2 A b (2 b (C-x)^2-1) e^(-b ((C-x)^2+(D-y)^2))
+				return 2 * a[0] * a[a.length-1] * ( 2 * a[a.length-1] * di * di - 1 ) * E(x, a);
 
 			} else {
-				// With respect to b
-				return - a[0] * E(x, a) * S(x, a);
+				// d²G / db²
+				return a[0] * E(x, a) * S(x, a) * S(x, a) / a[a.length-1] / a[a.length-1];
 			}
 
 		} else if ( c <= ndims && r <= ndims ) {
@@ -133,13 +134,13 @@ public class Gaussian implements FitFunction {
 			final int j = r - 1;
 			final double di = x[i] - a[i+1];
 			final double dj = x[j] - a[j+1];
-			return 4 * a[0] * E(x, a) * a[i+ndims] * a[j+ndims] * di * dj;
+			return 4 * a[0] * a[a.length-1] * a[a.length-1] * di * dj * E(x, a);
 
 		} else  {
 			// H3
 			// d²G / (dxi db)
 			final int i = r - 1; // xi
-			return 2 * a[0] * E(x, a) * (x[i]-a[r]) * ( 1 - a[a.length-1]  * S(x, a));
+			return 2 * a[0] * (x[i]-a[r]) * E(x, a) * ( 1 - S(x, a) );
 
 		}
 
@@ -150,14 +151,13 @@ public class Gaussian implements FitFunction {
 	 */
 	
 	private static final double S(final double[] x, final double[] a) {
-		final int ndims = x.length;
 		double sum = 0;
 		double di;
 		for (int i = 0; i < x.length; i++) {
 			di = x[i] - a[i+1];
-			sum += a[ndims+1] * di * di;
+			sum += di * di;
 		}
-		return sum;
+		return a[a.length-1] * sum;
 	}
 
 	private static final double E(final double[] x, final double[] a) {
