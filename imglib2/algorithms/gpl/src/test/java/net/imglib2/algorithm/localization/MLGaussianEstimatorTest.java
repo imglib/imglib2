@@ -40,7 +40,7 @@ public class MLGaussianEstimatorTest {
 		expectedSpan = new long[] { 5, 5, 5 };
 		groundTruth = new double[] { A, x0, y0, z0, 1/sigma/sigma };
 		LocalizationUtils.addGaussianSpotToImage(img, groundTruth);
-		peakCoarseLocation = new Point( (int) x0, (int) y0, (int) z0);
+		peakCoarseLocation = new Point( (long) x0, (long) y0, (long) z0);
 		data = LocalizationUtils.gatherObservationData(img, peakCoarseLocation, expectedSpan);
 	}
 
