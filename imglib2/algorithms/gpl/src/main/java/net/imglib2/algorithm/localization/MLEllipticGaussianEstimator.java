@@ -4,28 +4,34 @@ import net.imglib2.Localizable;
 
 
 /**
- * An fit initializer suitable for the fitting of elliptic orthogonal gaussians 
- * ({@link EllipticGaussianOrtho}, ellipse axes must be parallel to image axes) functions
- * on n-dimensional image data. 
+ * An fit initializer suitable for the fitting of elliptic orthogonal gaussians
+ * ({@link EllipticGaussianOrtho}, ellipse axes must be parallel to image axes)
+ * functions on n-dimensional image data. It uses plain maximum-likelihood
+ * estimator for a normal distribution.
  * <p>
  * The problem dimensionality is specified at construction by the length of the
  * typical sigma array.
  * <p>
- * The domain span size is simply set to be <code>2 x ceil(typical_sigma)</code>
- * in each dimension.
+ * The domain span size is simply set to be
+ * <code>1 + 2 x ceil(typical_sigma)</code> in each dimension.
  * <p>
- * Parameters estimation returned by {@link #initializeFit(Localizable, Observation)}
- * is based on covariance calculation, which requires the background of the image 
- * (out of peaks) to be close to 0. Returned parameters are ordered as follow:
- * <pre> 0.			A
+ * Parameters estimation returned by
+ * {@link #initializeFit(Localizable, Observation)} is based on
+ * maximum-likelihood estimator for a normal distribution, which requires the
+ * background of the image (out of peaks) to be close to 0. Returned parameters
+ * are ordered as follow:
+ * 
+ * <pre>
+ * 0.			A
  * 1 → ndims		x₀ᵢ
- * ndims+1 → 2 × ndims	bᵢ = 1 / σᵢ² </pre>
+ * ndims+1 → 2 × ndims	bᵢ = 1 / σᵢ²
+ * </pre>
  * 
  * @see EllipticGaussianOrtho
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> - 2013
- *
+ * 
  */
-public class CovarianceEllipticEstimator implements StartPointEstimator {
+public class MLEllipticGaussianEstimator implements StartPointEstimator {
 	
 	private final double[] sigmas;
 	private final int nDims;
@@ -36,12 +42,12 @@ public class CovarianceEllipticEstimator implements StartPointEstimator {
 	 * @param typicalSigmas  the typical sigmas of the peak to estimate 
 	 * (one element per dimension).
 	 */
-	public CovarianceEllipticEstimator(double[] typicalSigmas) {
+	public MLEllipticGaussianEstimator(double[] typicalSigmas) {
 		this.sigmas = typicalSigmas;
 		this.nDims = sigmas.length;
 		this.span = new long[nDims];
 		for (int i = 0; i < nDims; i++) {
-			span[i] = (long) Math.ceil( 2 * sigmas[i]);
+			span[i] = (long) Math.ceil(2 * sigmas[i]) + 1;
 		}	
 	}
 	
@@ -92,7 +98,7 @@ public class CovarianceEllipticEstimator implements StartPointEstimator {
 				C += I[i] * dx * dx;
 			}
 			C /= I_sum;
-			start_param[nDims + j + 1] = 1 / C;
+			start_param[nDims + j + 1] = 1 / C / 2;
 		}
 		
 		return start_param;		
