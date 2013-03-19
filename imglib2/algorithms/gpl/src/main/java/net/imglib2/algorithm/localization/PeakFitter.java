@@ -36,8 +36,6 @@ import java.util.concurrent.TimeUnit;
 import net.imglib2.Localizable;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.OutputAlgorithm;
-import net.imglib2.algorithm.region.localneighborhood.RectangleCursor;
-import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodGPL;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
@@ -50,12 +48,13 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 
 	private final Img<T> image;
 	private final Collection<Localizable> peaks;
-	private final int ndims;
 	private final FunctionFitter fitter;
 	private final FitFunction peakFunction;
-	private final ConcurrentHashMap<Localizable, double[]> results;
+	private final StartPointEstimator estimator;
+	private ConcurrentHashMap<Localizable, double[]> results;
 	private int numThreads;
 	private final StringBuffer errorHolder = new StringBuffer();
+
 
 
 
@@ -66,13 +65,13 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 	/**
 	 * @param image the image to operate on.
 	 */
-	public PeakFitter(final Img<T> image, Collection<Localizable> peaks, FunctionFitter fitter, FitFunction peakFunction) {
+	public PeakFitter(final Img<T> image, Collection<Localizable> peaks, FunctionFitter fitter, FitFunction peakFunction, StartPointEstimator estimator) {
 		this.image = image;
-		this.ndims = image.numDimensions();
 		this.fitter = fitter;
 		this.peakFunction = peakFunction;
+		this.estimator = estimator;
 		this.peaks = peaks;
-		this.results = new ConcurrentHashMap<Localizable, double[]>(peaks.size());
+		setNumThreads();
 	}
 
 	/*
@@ -80,14 +79,7 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 	 */
 
 
-	public void process(final Localizable point, final long[] pad_size, final double[] params) throws Exception {
 
-		// Gather data around peak
-		final Observation data = gatherObservationData(point, pad_size); 
-		final double[][] X = data.X;
-		final double[] I = data.I;
-		fitter.fit(X, I, params, peakFunction);
-	}
 
 
 	@Override
@@ -107,16 +99,21 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 	@Override
 	public boolean process() {
 
+		results = new ConcurrentHashMap<Localizable, double[]>(peaks.size());
+		final long[] padSize = estimator.getDomainSpan();
+
 		ExecutorService workers = Executors.newFixedThreadPool(numThreads);
 		for (final Localizable peak : peaks) {
 			Runnable task = new Runnable() {
 
 				@Override
 				public void run() {
-					long[] pad_size = null; // TODO how to do that?;
-					double[] params = null; // TODO fit here first guess
+					Observation data = LocalizationUtils.gatherObservationData(image, peak, padSize);
+					double[] params = estimator.initializeFit(peak, data);
 					try {
-						process(peak, pad_size, params);
+						double[][] X = data.X;
+						double[] I = data.I;
+						fitter.fit(X, I, params, peakFunction);
 					} catch (Exception e) {
 						errorHolder.append(BASE_ERROR_MESSAGE + 
 								"Problem fitting around " + peak +
@@ -161,80 +158,4 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 	public int getNumThreads() {
 		return numThreads;
 	} 
-
-	/*
-	 * PRIVATE METHODS
-	 */
-
-	/**
-	 * Collect the points to build the observation array, by iterating in a hypercube
-	 * around the given location. The size of the cube is calculated by  
-	 * <code>2 * 2 * ceil(typical_sigma) + 1)</code>. Points found out of the image are
-	 * not included.
-	 */
-	private final Observation gatherObservationData(final Localizable point, final long[] pad_size) {
-
-		RectangleNeighborhoodGPL<T, Img<T>> neighborhood = new RectangleNeighborhoodGPL<T, Img<T>>(image);
-		neighborhood.setSpan(pad_size);
-		neighborhood.setPosition(point);
-
-		int n_pixels = (int) neighborhood.size();
-		double[] tmp_I 		= new double[n_pixels];
-		double[][] tmp_X 	= new double[n_pixels][ndims];
-
-
-		RectangleCursor<T> cursor = neighborhood.localizingCursor();
-		long[] pos = new long[image.numDimensions()];
-
-		int index = 0;
-		while (cursor.hasNext()) {
-
-			cursor.fwd();
-			cursor.localize(pos); // This is the absolute roi position
-			if (cursor.isOutOfBounds()) {
-				continue;
-			}
-
-			for (int i = 0; i < ndims; i++) {
-				tmp_X[index][i] = pos[i];
-			}
-
-			tmp_I[index] = cursor.get().getRealDouble();
-			index++;
-		} 
-
-		// Now we possibly resize the arrays, in case we have been too close to the 
-		// image border.
-		double[][] X = null;
-		double[] I = null;
-		if (index == n_pixels) {
-			// Ok, we have gone through the whole square
-			X 	= tmp_X;
-			I 	= tmp_I;
-		} else {
-			// Re-dimension the arrays
-			X 	= new double[index][ndims];
-			I 	= new double[index];
-			System.arraycopy(tmp_X, 0, X, 0, index);
-			System.arraycopy(tmp_I, 0, I, 0, index);
-		}
-
-		Observation obs = new Observation();
-		obs.I = I;
-		obs.X = X;
-		return obs;
-	}
-
-	/*
-	 * INNER CLASSES
-	 */
-
-	/**
-	 * A general-use class that can store the observations as a double array, and their 
-	 * coordinates as a 2D double array. 
-	 */
-	private static class Observation {
-		private double[] I;
-		private double[][] X;
-	}
 }
