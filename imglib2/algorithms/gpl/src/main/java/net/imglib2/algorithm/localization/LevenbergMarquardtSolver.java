@@ -29,14 +29,16 @@ package net.imglib2.algorithm.localization;
 import Jama.Matrix;
 
 /**
- * A collection of static utils implementing a plain Levenberg-Marquardt least-square curve fitting algorithm.
+ * A plain implementation of Levenberg-Marquardt least-square curve fitting algorithm.
+ * This solver makes use of only the function value and its gradient. That is:
+ * candidate functions need only to implement the {@link FitFunction#val(double[], double[])}
+ * and {@link FitFunction#grad(double[], double[], int)} methods to operate with this
+ * solver.
  * <p>
  * It was adapted and stripped from jplewis (www.idiom.com/~zilla) and released under 
- * the GPL. There are various small tweaks for robustness and speed, mainly a first step to derive 
- * a crude estimate, based on maximum-likelihood analytic formulae.
+ * the GPL. There are various small tweaks for robustness and speed.
  *
- * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> 2011
- * @author 2012
+ * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> 2011 - 2013
  */
 public class LevenbergMarquardtSolver implements FunctionFitter {
 	
@@ -44,12 +46,28 @@ public class LevenbergMarquardtSolver implements FunctionFitter {
 	private final double lambda;
 	private final double termEpsilon;
 	
+	/**
+	 * Creates a new Levenberg-Marquardt solver for least-square curve fitting problems. 
+	 * @param lambda blend between steepest descent (lambda high) and
+	 *	jump to bottom of quadratic (lambda zero). Start with 0.001.
+	 * @param termepsilon termination accuracy (0.01)
+	 * @param maxiter	stop and return after this many iterations if not done
+	 */
 	public LevenbergMarquardtSolver(int maxIteration, double lambda, double termEpsilon) {
 		this.maxIteration = maxIteration;
 		this.lambda = lambda;
 		this.termEpsilon = termEpsilon;
 	}
 	
+	/**
+	 * Creates a new Levenberg-Marquardt solver for least-square curve fitting problems,
+	 * with default parameters set to:
+	 * <ul>
+	 * 	<li> <code>lambda  = 1e-3</code>
+	 * 	<li> <code>epsilon = 1e-1</code>
+	 * 	<li> <code>maxIter = 300</code>
+	 * </ul>
+	 */
 	public LevenbergMarquardtSolver() {
 		this(300, 1e-3d, 1e-1d);
 	}

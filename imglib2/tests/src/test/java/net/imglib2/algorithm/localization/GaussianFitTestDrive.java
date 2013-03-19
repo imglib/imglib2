@@ -70,7 +70,7 @@ public class GaussianFitTestDrive {
 			sigma_y[i] = 2 + 0.5 * rangen.nextGaussian();
 
 			double[] params = new double[] { A[i], x0[i], y0[i], 1/sigma_x[i]/sigma_x[i], 1/sigma_y[i]/sigma_y[i] };
-			LocalizationUtils.addGaussianSpotToImage(img, params);
+			LocalizationUtils.addEllipticGaussianSpotToImage(img, params);
 		}
 		LocalizationUtils.addGaussianNoiseToImage(img, sigma_noise);
 

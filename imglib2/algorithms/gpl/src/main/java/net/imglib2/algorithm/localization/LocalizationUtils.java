@@ -41,10 +41,11 @@ import net.imglib2.type.numeric.RealType;
  */
 public class LocalizationUtils {
 
-	private static final EllipticGaussianOrtho g = new EllipticGaussianOrtho();
+	private static final EllipticGaussianOrtho ellipticGaussian = new EllipticGaussianOrtho();
+	private static final Gaussian gaussian = new Gaussian();
 	private static final Random ran = new Random();
 	
-	public static final <T extends RealType<T>> void addGaussianSpotToImage(Img<T> img, double[] params) {
+	public static final <T extends RealType<T>> void addEllipticGaussianSpotToImage(Img<T> img, double[] params) {
 		Cursor<T> lc = img.localizingCursor();
 		double[] position = new double[img.numDimensions()];
 		double val;
@@ -53,7 +54,22 @@ public class LocalizationUtils {
 			lc.fwd();
 			position[0] = lc.getDoublePosition(0);
 			position[1] = lc.getDoublePosition(1);
-			val = g.val(position, params);
+			val = ellipticGaussian.val(position, params);
+			var.setReal(val);
+			lc.get().add(var);
+		}
+	}
+	
+	public static final <T extends RealType<T>> void addGaussianSpotToImage(Img<T> img, double[] params) {
+		Cursor<T> lc = img.localizingCursor();
+		int nDims = img.numDimensions();
+		double[] position = new double[nDims];
+		double val;
+		T var = img.firstElement().createVariable();
+		while (lc.hasNext()) {
+			lc.fwd();
+			lc.localize(position);
+			val = gaussian.val(position, params);
 			var.setReal(val);
 			lc.get().add(var);
 		}
