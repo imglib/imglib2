@@ -66,6 +66,7 @@ import ome.scifio.common.DataTools;
 import ome.scifio.common.StatusEvent;
 import ome.scifio.common.StatusListener;
 import ome.scifio.common.StatusReporter;
+import ome.xml.model.primitives.PositiveFloat;
 
 /**
  * Writes out an {@link ImgPlus} using SCIFIO.
@@ -641,6 +642,25 @@ public class ImgSaver implements StatusReporter {
 			final long[] oldLengths = new long[img.numDimensions()];
 			img.dimensions(oldLengths);
 			dimOrder = guessDimOrder(axes, oldLengths, axisLengths);
+			
+			// Populate physical pixel sizes
+			for (int i=0; i<axes.length; i++) {
+				AxisType axis = axes[i];
+				PositiveFloat physicalSize = null;
+				
+				if (Axes.X.equals(axis)) {
+					physicalSize = new PositiveFloat(img.calibration(i));
+					meta.setPixelsPhysicalSizeX(physicalSize, w.getSeries());
+				}
+				else if (Axes.Y.equals(axis)) {
+					physicalSize = new PositiveFloat(img.calibration(i));
+					meta.setPixelsPhysicalSizeY(physicalSize, w.getSeries());
+				}
+				else if (Axes.Z.equals(axis)) {
+					physicalSize = new PositiveFloat(img.calibration(i));
+					meta.setPixelsPhysicalSizeZ(physicalSize, w.getSeries());
+				}
+			}
 
 			if (dimOrder == null) throw new ImgIOException(
 				"Image has more than 5 dimensions in an order that could not be compressed.");
