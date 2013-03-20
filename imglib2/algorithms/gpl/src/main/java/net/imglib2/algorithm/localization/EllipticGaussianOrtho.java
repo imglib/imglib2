@@ -48,6 +48,11 @@ public class EllipticGaussianOrtho implements FitFunction {
 	/*
 	 * METHODS
 	 */
+	
+	@Override
+	public String toString() {
+		return "Orthogonal elliptic gaussian function A × exp( - ∑ bᵢ × (xᵢ - x₀ᵢ)² )";
+	}
 
 	@Override
 	public final double val(final double[] x, final double[] a) {

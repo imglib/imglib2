@@ -59,6 +59,15 @@ public class LevenbergMarquardtSolver implements FunctionFitter {
 		this.termEpsilon = termEpsilon;
 	}
 	
+	/*
+	 * METHODS
+	 */
+	
+	@Override
+	public String toString() {
+		return "Levenberg-Marquardt least-square curve fitting algorithm";
+	}
+	
 	/**
 	 * Creates a new Levenberg-Marquardt solver for least-square curve fitting problems,
 	 * with default parameters set to:

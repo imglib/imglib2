@@ -34,6 +34,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import net.imglib2.Localizable;
+import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.img.Img;
@@ -42,7 +43,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * @author Jean-Yves Tinevez (tinevez@pasteur.fr) - 2013
  */
-public class PeakFitter <T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<Map<Localizable, double[]>> {
+public class PeakFitter <T extends RealType<T>> implements MultiThreaded, OutputAlgorithm<Map<Localizable, double[]>>, Benchmark {
 
 	private static final String BASE_ERROR_MESSAGE = "PeakFitter: ";
 
@@ -54,6 +55,8 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 	private ConcurrentHashMap<Localizable, double[]> results;
 	private int numThreads;
 	private final StringBuffer errorHolder = new StringBuffer();
+
+	private long processingTime;
 
 
 
@@ -78,7 +81,16 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 	 * METHODS
 	 */
 
-
+	@Override
+	public String toString() {
+		return "PeakFitter configured to:\n" +
+				" - fit a " + peakFunction.toString() + "\n" +
+				" - on " + peaks.size() + " peaks\n" +
+				" - in image " + image +"\n" +
+				" - using " + estimator.toString() + "\n" +
+				" - and " + fitter.toString() + "\n" +
+				" - allocating " + numThreads + " threads.";
+	}
 
 
 
@@ -98,6 +110,8 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 
 	@Override
 	public boolean process() {
+		
+		long start = System.currentTimeMillis();
 
 		results = new ConcurrentHashMap<Localizable, double[]>(peaks.size());
 		final long[] padSize = estimator.getDomainSpan();
@@ -136,6 +150,10 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}		
+		
+		long end = System.currentTimeMillis();
+		processingTime = end - start;
+		
 		return ok;
 	}
 
@@ -157,5 +175,10 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 	@Override
 	public int getNumThreads() {
 		return numThreads;
+	}
+
+	@Override
+	public long getProcessingTime() {
+		return processingTime;
 	} 
 }

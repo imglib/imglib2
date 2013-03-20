@@ -54,6 +54,11 @@ public class MLEllipticGaussianEstimator implements StartPointEstimator {
 	/*
 	 * METHODS
 	 */
+	
+	@Override
+	public String toString() {
+		return "Maximum-likelihood estimator for orthogonal elliptic gaussian peaks";
+	}
 
 	@Override
 	public long[] getDomainSpan() {

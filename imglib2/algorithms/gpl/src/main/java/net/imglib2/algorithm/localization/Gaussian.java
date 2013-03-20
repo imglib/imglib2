@@ -47,6 +47,11 @@ public class Gaussian implements FitFunction {
 	/*
 	 * METHODS
 	 */
+	
+	@Override
+	public String toString() {
+		return "Gaussian function A × exp( -b × ∑ (xᵢ - x₀ᵢ)² )";
+	}
 
 	@Override
 	public final double val(final double[] x, final double[] a) {

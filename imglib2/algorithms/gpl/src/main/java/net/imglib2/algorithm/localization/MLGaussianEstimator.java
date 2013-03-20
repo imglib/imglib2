@@ -48,6 +48,12 @@ public class MLGaussianEstimator implements StartPointEstimator {
 	/*
 	 * METHODS
 	 */
+	
+	@Override
+	public String toString() {
+		return "Maximum-likelihood estimator for symetric gaussian peaks";
+	}
+
 
 	@Override
 	public long[] getDomainSpan() {
