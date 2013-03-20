@@ -43,7 +43,7 @@ import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
-public class GaussianFitTestDrive0 {
+public class GaussianFitTestDrive1 {
 
 	public static void main(String[] args) {
 
@@ -64,17 +64,17 @@ public class GaussianFitTestDrive0 {
 			
 			for (int j = 0; j < nspots; j++) {
 				
-
 				double A = 100 + 10 * rangen.nextGaussian();
 				double x0 =  width / (double) nspots * i * 1.02d; 
 				double y0 =  width / (double) nspots * j * 1.02d;
-				double sigma = 2 + 0.5 * rangen.nextGaussian();
+				double sigma_x = 2 + 0.6 * rangen.nextGaussian();
+				double sigma_y = 2 + 0.6 * rangen.nextGaussian();
 
 				Localizable peak = new Point((long) x0, (long) y0);
 				peaks.add(peak);
 
-				double[] params = new double[] { A, x0, y0, 1/sigma/sigma };
-				LocalizationUtils.addGaussianSpotToImage(img, params);
+				double[] params = new double[] { A, x0, y0, 1/sigma_x/sigma_x, 1/sigma_y/sigma_y };
+				LocalizationUtils.addEllipticGaussianSpotToImage(img, params);
 				groundTruth.put(peak, params);
 				
 			}
@@ -92,16 +92,15 @@ public class GaussianFitTestDrive0 {
 		imp.setOverlay(overlay);
 
 		// Instantiate fitter once
-//		PeakFitter<UnsignedByteType> fitter = new PeakFitter<UnsignedByteType>(img, peaks, 
-//				new DummySolver(), new Gaussian(), new MLGaussianEstimator(2d, 2));
 		PeakFitter<UnsignedByteType> fitter = new PeakFitter<UnsignedByteType>(img, peaks, 
-				new LevenbergMarquardtSolver(), new Gaussian(), new MLGaussianEstimator(2d, 2));
+				new LevenbergMarquardtSolver(), new EllipticGaussianOrtho(), new MLEllipticGaussianEstimator(new double[] { 2d, 2d}));
 		
 		System.out.println(fitter);
 		if ( !fitter.checkInput() || !fitter.process()) {
 			System.err.println("Problem with peak fitting: " + fitter.getErrorMessage());
 			return;
 		}
+		
 		System.out.println("Peak fitting of " + (nspots*nspots) + " peaks, using " +
 				fitter.getNumThreads() + " threads, done in " + fitter.getProcessingTime() + " ms.");
 		
@@ -113,23 +112,32 @@ public class GaussianFitTestDrive0 {
 			double Ar = params[0];
 			double x = params[1];
 			double y = params[2];
-			double s = 1/Math.sqrt(params[3]);
+			double sx = 1/Math.sqrt(params[3]);
+			double sy = 1/Math.sqrt(params[4]);
 
 			System.out.println(String.format("- For " + peak + "\n - Found      : " +
-					"A = %6.2f, x0 = %6.2f, y0 = %6.2f, s = %5.2f", 
-					Ar, x, y, s));
+					"A = %6.2f, x0 = %6.2f, y0 = %6.2f, sx = %5.2f, sy = %5.2f", 
+					Ar, x, y, sx, sy));
 			double[] truth = groundTruth.get(peak);
 			System.out.println(String.format(" - Real values: " +
-					"A = %6.2f, x0 = %6.2f, y0 = %6.2f, s = %5.2f",
-					truth[0], truth[1], truth[2], 1 / Math.sqrt(truth[3])) );
+					"A = %6.2f, x0 = %6.2f, y0 = %6.2f, sx = %5.2f, sy = %5.2f",
+					truth[0], truth[1], truth[2], 1 / Math.sqrt(truth[3]), 1 / Math.sqrt(truth[4]) ));
 
 			// Draw ellipse on the target image
 			double x1, x2, y1, y2, ar;
-			x1 = x - 2.3548 * s / 2 + 0.5;
-			x2 = x + 2.3548 * s / 2 + 0.5;
-			y1 = y + 0.5;
-			y2 = y + 0.5;
-			ar = 1; 
+			if (sy < sx) {
+				x1 = x - 2.3548 * sx / 2 + 0.5;
+				x2 = x + 2.3548 * sx / 2 + 0.5;
+				y1 = y + 0.5;
+				y2 = y + 0.5;
+				ar = sy / sx; 
+			} else {
+				x1 = x + 0.5;
+				x2 = x + 0.5;
+				y1 = y - 2.3548 * sy / 2 + 0.5;
+				y2 = y + 2.3548 * sy / 2 + 0.5; 
+				ar = sx / sy; 
+			}
 			overlay.add(new EllipseRoi(x1, y1, x2, y2, ar));
 			imp.updateAndDraw();
 
