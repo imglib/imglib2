@@ -43,8 +43,6 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * 
- *
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealARGBConverter< R extends RealType< ? > > extends AbstractLinearRange implements Converter< R, ARGBType >
