@@ -42,7 +42,6 @@ import java.awt.Image;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 
-
 /**
  * Create appropriate strategies that virtually mirror an {@link Image} at its
  * boundaries.  Boundary pixels are either duplicated or not.

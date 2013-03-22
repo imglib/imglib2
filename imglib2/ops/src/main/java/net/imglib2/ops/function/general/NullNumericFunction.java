@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.ComplexType;
-
 
 /**
  * A {@link Function} that always returns NaN values.

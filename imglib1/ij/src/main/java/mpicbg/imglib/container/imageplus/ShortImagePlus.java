@@ -128,7 +128,6 @@ public class ShortImagePlus<T extends Type<T>> extends ImagePlusContainer<T, Sho
 		System.arraycopy( plane.getCurrentStorageArray(), 0, mirror.get( no ).getCurrentStorageArray(), 0, plane.getCurrentStorageArray().length );
 	}
 
-
 	@Override
 	public void close() 
 	{

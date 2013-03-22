@@ -83,7 +83,6 @@ public class SortedGrayLevelIteratorArrayContainerOnly< T extends IntegerType< T
 		arrayType.updateIndex( sortedLinIdx[curIdx] );
 	}
 
-
 	@Override
 	public void fwd( final long steps )
 	{

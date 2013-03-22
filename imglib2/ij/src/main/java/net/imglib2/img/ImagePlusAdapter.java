@@ -171,7 +171,6 @@ public class ImagePlusAdapter
 
 	}
 
-
 	protected static < T extends NumericType< T > & NativeType< T > > void setCalibrationFromImagePlus1( final ImgPlus<T> image, final ImagePlus imp ) 
 	{
 		final int d = image.numDimensions();

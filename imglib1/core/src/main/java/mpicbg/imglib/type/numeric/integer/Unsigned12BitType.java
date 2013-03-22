@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package mpicbg.imglib.type.numeric.integer;
 
 import mpicbg.imglib.container.DirectAccessContainer;

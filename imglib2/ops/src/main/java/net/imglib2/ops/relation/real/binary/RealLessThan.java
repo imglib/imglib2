@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.relation.real.binary;
 
 import net.imglib2.ops.relation.BinaryRelation;
 import net.imglib2.type.numeric.RealType;
-
 
 /**
  * Given two real values returns true of the first is less than the second.

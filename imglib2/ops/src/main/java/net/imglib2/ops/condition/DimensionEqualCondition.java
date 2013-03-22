@@ -35,9 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.condition;
-
 
 /**
 * A {@link Condition} that returns true when the value of a coordinate axis

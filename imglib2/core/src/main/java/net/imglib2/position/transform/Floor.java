@@ -96,7 +96,6 @@ public class Floor< LocalizablePositionable extends Localizable & Positionable >
 			f[ d ] = floor( r.getDoublePosition( d ) );
 	}
 
-
 	/* RealPositionable */
 
 	@Override

@@ -41,7 +41,6 @@ import mpicbg.imglib.image.ImageFactory;
 import mpicbg.imglib.type.logic.BitType;
 import mpicbg.imglib.type.numeric.integer.IntType;
 
-
 /** Given two binary images of the same dimensions,
  * generate an interpolated image that sits somewhere
  * in between, as specified by the weight.

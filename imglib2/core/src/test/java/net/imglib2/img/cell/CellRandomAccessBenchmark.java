@@ -83,7 +83,6 @@ public class CellRandomAccessBenchmark
 		intImg = new CellImgFactory< IntType >( 40 ).create( dimensions, new IntType() );
 	}
 
-
 	/**
 	 * Fill intImg (a CellContainer with 40x40x40 cells) with data using flat array iteration order.
 	 */
@@ -103,7 +102,6 @@ public class CellRandomAccessBenchmark
 			a.get().set( intData[ i ] );
 		}
 	}
-
 
 	public void copyWithSourceIteration(final Img< IntType > srcImg, final Img< IntType > dstImg)
 	{

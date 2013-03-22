@@ -167,7 +167,7 @@ public class GaussianPeakFitterND <T extends RealType<T>> {
 		// Prepare optimizer
 		final double[] a = start_param.clone();
 		try {
-			LevenbergMarquardtSolver.solve(X, a, I, new GaussianMultiDLM(), lambda , termEpsilon, maxIteration);
+			LevenbergMarquardtSolver.solve(X, a, I, new EllipticGaussianOrtho(), lambda , termEpsilon, maxIteration);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.relation.complex.binary;
 
 import net.imglib2.ops.relation.BinaryRelation;
 import net.imglib2.type.numeric.ComplexType;
-
 
 /**
  * Returns true if two complex numbers are equal and false otherwise.

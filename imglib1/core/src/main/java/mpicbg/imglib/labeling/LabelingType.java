@@ -182,7 +182,6 @@ public class LabelingType<T extends Comparable<T>> extends TypeImpl<LabelingType
 		return container;
 	}
 
-
 	@Override
 	public void updateContainer(Cursor<?> c) {
 		access = storage.update(c);

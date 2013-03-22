@@ -123,8 +123,6 @@ public final class SphereCursor<T extends Type<T>> extends DomainCursor<T> {
 		INCREMENT_Z						;
 	}
 
-
-
 	/*
 	 * CONSTRUCTORS
 	 */

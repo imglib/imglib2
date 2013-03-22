@@ -57,7 +57,7 @@ import net.imglib2.transform.integer.MixedTransform;
 /**
  * This class offers access to a <code>n-1</code>-dimensional view of a source {@link ImgPlus},
  * obtained by fixing a target dimension to a target position. The source image is wrapped
- * so there is data duplication.
+ * so there is no data duplication.
  * <p>
  * Its result is exactly similar to the {@link Views#hyperSlice(RandomAccessible, int, long)}
  * static method, except that the returned class preserves the {@link ImgPlus} capabilities, 
@@ -192,7 +192,6 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 	public RandomAccess< T > randomAccess() {
 		return fullViewRandomAccessible.randomAccess();
 	}
-
 
 	@Override
 	public int numDimensions() {

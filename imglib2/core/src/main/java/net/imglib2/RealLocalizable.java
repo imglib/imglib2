@@ -37,7 +37,6 @@
 
 package net.imglib2;
 
-
 /**
  * The {@link RealLocalizable} interface can localize itself in an n-dimensional
  * real space.

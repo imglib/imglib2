@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.bool;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.type.logic.BitType;
-
 
 /**
  * Returns a boolean constant value whenever queried (regardless of input data).

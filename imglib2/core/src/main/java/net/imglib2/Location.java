@@ -37,7 +37,6 @@
 
 package net.imglib2;
 
-
 /**
  * Provides an instance of {@link Localizable} that can store positions
  *

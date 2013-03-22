@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.relation.real.binary;
 
 import net.imglib2.ops.relation.BinaryRelation;
 import net.imglib2.type.numeric.RealType;
-
 
 /**
  * Returns true if two real values are equal and false otherwise.

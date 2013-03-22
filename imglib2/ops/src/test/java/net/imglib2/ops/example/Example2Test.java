@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.example;
 
 import static org.junit.Assert.assertTrue;
@@ -51,7 +50,6 @@ import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.real.DoubleType;
 
 import org.junit.Test;
-
 
 // take an average of the z values of a 3d image
 

@@ -50,7 +50,6 @@ import net.imglib2.img.basictypeaccess.array.ShortArray;
 
 import org.junit.Test;
 
-
 /**
  * TODO
  *

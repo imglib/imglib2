@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.real.DoubleType;
-
 
 /**
 * RealIndexFunction is a {@link Function} that returns one of the coordinates
@@ -91,5 +89,4 @@ public class RealIndexFunction implements Function<long[],DoubleType> {
 	}
 	
 }
-
 

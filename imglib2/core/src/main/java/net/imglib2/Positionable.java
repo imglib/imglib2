@@ -37,7 +37,6 @@
 
 package net.imglib2;
 
-
 /**
  * An element that can be positioned in n-dimensional discrete space.
  *

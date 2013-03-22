@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.pde;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -25,12 +24,13 @@ package net.imglib2.algorithm.pde;
  * #L%
  */
 
+package net.imglib2.algorithm.pde;
+
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
 public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDiffusionScheme3D<T> {
-
 
 	private static final float DEFAULT_DT = 0.15f;
 
@@ -107,7 +107,6 @@ public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDi
 		final float Fcpc = D[5][5];
 		final float Fccp = D[5][8];
 
-
 		final float Icpm = 0.5f * ( - Fccm - Fcpc ) * ( Ucpm - Uccc );
 		final float Imcm = 0.5f * (   Eccm + Emcc ) * ( Umcm - Uccc );
 		final float Iccm = ( Cccm + Cccc ) * ( Uccm - Uccc );
@@ -130,7 +129,6 @@ public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDi
 		final float Ipcp = 0.5f * (   Eccp + Epcc ) * ( Upcp - Uccc );
 		final float Icmp = 0.5f * ( - Fccp - Fcmc ) * ( Ucmp - Uccc );
 
-
 		return 0.5f * dt * ( 
 				Icpm + Imcm + Iccm + Ipcm + Icmm
 				+ Impc + Icpc + Ippc + Imcc
@@ -139,7 +137,5 @@ public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDi
 				);
 	}
 
-
 }
-
 

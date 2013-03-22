@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
@@ -45,7 +44,6 @@ import net.imglib2.type.numeric.RealType;
 // correctly build the weights without maybe knowing the order of points in
 // the PointSet. We will need helper methods that build a PointSet
 // compatible set of weights from a PointSet and some other hints.
-
 
 /**
  * Computes a weighted sum of the values of another function over a region.

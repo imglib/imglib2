@@ -138,7 +138,6 @@ public class Gauss3Benchmark
 			}
 	    } );
 
-
 	    System.out.println( "SeparableSymmetricConvolution with FloatConvolverRealType" );
 	    BenchmarkHelper.benchmarkAndPrint( numRuns, printIndividualTimes, new Runnable() {
 			@Override

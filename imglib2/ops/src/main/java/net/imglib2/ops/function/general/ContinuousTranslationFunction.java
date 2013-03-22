@@ -35,11 +35,9 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.function.Function;
-
 
 /**
  * Translates the coordinate values of one Function into the

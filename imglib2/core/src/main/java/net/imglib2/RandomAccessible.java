@@ -37,7 +37,6 @@
 
 package net.imglib2;
 
-
 /**
  * <p><em>f:Z<sup>n</sup>&rarr;T</em></p>
  * 

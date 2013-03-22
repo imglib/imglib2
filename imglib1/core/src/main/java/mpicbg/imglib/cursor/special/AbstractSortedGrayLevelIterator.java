@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package mpicbg.imglib.cursor.special;
 
 import java.util.Iterator;
@@ -225,8 +224,6 @@ public abstract class AbstractSortedGrayLevelIterator< T extends IntegerType< T 
                    return i;
 
     }
-
-
 
     final static public void indexToPosition( int index, final int[] dimensions, final int[] position )
 

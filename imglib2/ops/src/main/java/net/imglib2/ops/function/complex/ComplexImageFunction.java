@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.complex;
 
 import net.imglib2.ExtendedRandomAccessibleInterval;

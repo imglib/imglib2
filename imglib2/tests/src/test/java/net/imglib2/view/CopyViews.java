@@ -115,7 +115,6 @@ public class CopyViews
 //				Views.interval( inputImg, new long[] {50,0}, new long[] {100, 100} ), 
 //			1, 0 ), Views.offsetInterval( outputImg, new long[] {2 * w, 2 * h}, new long[] {1, 1} ) );
 
-
 //		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )outputImg.dimension( 0 ), ( int )outputImg.dimension( 1 ) );
 //		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( outputImg, screenImage, new RealARGBConverter< FloatType >( 0, 255 ) );
 //		projector.map();

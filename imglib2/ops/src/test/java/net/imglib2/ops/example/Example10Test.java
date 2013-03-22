@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.example;
 
 import static org.junit.Assert.assertTrue;
@@ -54,7 +53,6 @@ import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 import org.junit.Test;
-
 
 /**
  * 

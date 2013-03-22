@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.fft2;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -24,6 +23,8 @@ package net.imglib2.algorithm.fft2;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+package net.imglib2.algorithm.fft2;
 
 import net.imglib2.FinalDimensions;
 import net.imglib2.Interval;

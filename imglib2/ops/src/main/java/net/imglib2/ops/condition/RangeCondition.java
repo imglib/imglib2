@@ -35,9 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.condition;
-
 
 /**
 * RangeCondition supports the testing of a specific axis of a dimensional

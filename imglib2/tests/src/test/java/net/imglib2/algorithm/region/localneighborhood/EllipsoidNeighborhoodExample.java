@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.region.localneighborhood;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -24,6 +23,8 @@ package net.imglib2.algorithm.region.localneighborhood;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+package net.imglib2.algorithm.region.localneighborhood;
 
 import ij.ImageJ;
 import net.imglib2.img.Img;
@@ -116,7 +117,6 @@ public class EllipsoidNeighborhoodExample
 
 		};
 		long[][] spans = new long[][] { { 20, 10, 15 }, { 20, 15, 1 }, { 1, 20, 15 }, { 20, 1, 15 }, { 20, 1, 1 } };
-
 
 		for ( int i = 0; i < spans.length; i++ )
 		{

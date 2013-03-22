@@ -312,7 +312,6 @@ public class ImageJFunctions
 		return new ImagePlus( title, stack );
 	}
 
-
 	/**
 	 * Show a {@link RandomAccessibleInterval} as 24bit RGB  {@link ImagePlus}
 	 * using a custom {@link Converter}.
@@ -349,7 +348,6 @@ public class ImageJFunctions
 		return new ImagePlus( title, stack );
 	}
 
-
 	/**
 	 * Show a {@link RandomAccessibleInterval} as single channel 8-bit unsigned
 	 * integer {@link ImagePlus} using a custom {@link Converter}.
@@ -364,7 +362,6 @@ public class ImageJFunctions
 
 		return imp;
 	}
-
 
 	/**
 	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as
@@ -413,7 +410,6 @@ public class ImageJFunctions
 		return new ImagePlus( title, stack );
 	}
 
-
 	/**
 	 * Show a {@link RandomAccessibleInterval} as single channel 16-bit
 	 * unsigned integer {@link ImagePlus} using a custom {@link Converter}.
@@ -428,7 +424,6 @@ public class ImageJFunctions
 
 		return imp;
 	}
-
 
 	/**
 	 * Show a {@link RandomAccessibleInterval} of {@link RealType} pixels as

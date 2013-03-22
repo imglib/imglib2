@@ -184,7 +184,6 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		}
 	}
 
-
 	@Override
 	public void move( final int distance, final int d )
 	{
@@ -329,7 +328,6 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		}
 		s.setPosition( tmpPosition );
 	}
-
 
 	@Override
 	public void setPosition( final int position, final int d )

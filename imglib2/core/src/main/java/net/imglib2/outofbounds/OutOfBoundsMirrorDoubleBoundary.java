@@ -74,7 +74,6 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 			p[ i ] = 2 * dimension[ i ];
 	}
 
-
 	/* Sampler */
 
 	@Override
@@ -90,7 +89,6 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 	{
 		return copy();
 	}
-
 
 	/* Positionable */
 	

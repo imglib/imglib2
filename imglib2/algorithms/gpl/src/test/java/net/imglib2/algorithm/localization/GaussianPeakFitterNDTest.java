@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.localization;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -25,6 +24,8 @@ package net.imglib2.algorithm.localization;
  * #L%
  */
 
+package net.imglib2.algorithm.localization;
+
 import static org.junit.Assert.assertEquals;
 
 import java.util.Random;
@@ -42,7 +43,6 @@ public class GaussianPeakFitterNDTest {
 
 	private static final double LOCALIZATION_TOLERANCE_NO_NOISE = 1;
 	private static final double SIGMA_TOLERANCE_NO_NOISE = 1;
-
 
 	@Test
 	public void testProcessNoNoise() {
@@ -70,7 +70,7 @@ public class GaussianPeakFitterNDTest {
 			sigma_y[i] = 2 + 0.5 * rangen.nextGaussian();
 
 			double[] params = new double[] { A0[i], x0[i], y0[i], 1/sigma_x[i]/sigma_x[i], 1/sigma_y[i]/sigma_y[i] };
-			LocalizationUtils.addGaussianSpotToImage(img, params);
+			LocalizationUtils.addEllipticGaussianSpotToImage(img, params);
 		}
 
 		// Instantiate fitter once

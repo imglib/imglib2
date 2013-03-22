@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.pde;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -25,13 +24,14 @@ package net.imglib2.algorithm.pde;
  * #L%
  */
 
+package net.imglib2.algorithm.pde;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
 public abstract class ExplicitDiffusionScheme3D<T extends RealType<T>> extends ExplicitDiffusionScheme<T> {
-
 
 	public ExplicitDiffusionScheme3D(Img<T> input, Img<FloatType> D) {
 		super(input, D);
@@ -158,7 +158,6 @@ public abstract class ExplicitDiffusionScheme3D<T extends RealType<T>> extends E
 
 		
 	}
-
 
 	/**
 	 * Real, symmetric diffusion tensor for 3D structures. The following notations are used, 

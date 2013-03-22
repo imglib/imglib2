@@ -26,7 +26,6 @@
 
 package mpicbg.imglib.algorithm.roi;
 
-
 import mpicbg.imglib.algorithm.ROIAlgorithm;
 import mpicbg.imglib.container.array.ArrayContainerFactory;
 import mpicbg.imglib.cursor.LocalizableByDimCursor;

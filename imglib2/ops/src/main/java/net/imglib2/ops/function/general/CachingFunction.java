@@ -35,14 +35,12 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.general;
 
 import java.util.Arrays;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.util.DataCopier;
-
 
 /**
  * A CachingFunction returns a cached value when the same input data is passed

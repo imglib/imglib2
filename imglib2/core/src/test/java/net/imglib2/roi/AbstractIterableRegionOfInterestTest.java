@@ -49,7 +49,6 @@ import net.imglib2.type.numeric.integer.IntType;
 
 import org.junit.Test;
 
-
 /**
  * @author Lee Kamentsky
  * 

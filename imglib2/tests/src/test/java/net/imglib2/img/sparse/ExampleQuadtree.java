@@ -1,4 +1,3 @@
-package net.imglib2.img.sparse;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -24,6 +23,8 @@ package net.imglib2.img.sparse;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+package net.imglib2.img.sparse;
 
 import ij.ImageJ;
 import net.imglib2.Cursor;
@@ -55,7 +56,6 @@ public class ExampleQuadtree
 		}
 
 		ImageJFunctions.show( array, "array" );
-
 
 		final NtreeImgFactory< IntType > ntreeFactory = new NtreeImgFactory< IntType >();
 		final Img< IntType > quadtree = ntreeFactory.create( array, new IntType() );

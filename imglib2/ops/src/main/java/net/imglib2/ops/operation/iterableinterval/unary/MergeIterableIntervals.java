@@ -175,7 +175,6 @@ public final class MergeIterableIntervals< T extends RealType< T >> implements U
 			}
 		});
 
-
 		long[] offset = new long[ intervals[ 0 ].numDimensions() ];
 		long[] intervalWidth = new long[ intervals[ 0 ].numDimensions() ];
 

@@ -109,7 +109,6 @@ public final class DiscCursor <T extends RealType<T>>  extends DomainCursor<T> {
 		this(img, center, radius, calibration, new OutOfBoundsStrategyValueFactory<T>());
 	}
 
-
 	/**
 	 * Construct a {@link DiscCursor} on an image, using the spatial calibration
 	 * stored in the image and a default {@link OutOfBoundsStrategyValueFactory}

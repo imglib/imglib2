@@ -43,7 +43,6 @@ import net.imglib2.RealPositionable;
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.concatenate.PreConcatenable;
 
-
 /**
  * 3d-affine transformation models to be applied to points in 3d-space.
  * 
@@ -411,7 +410,6 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		return AffineGet.class;
 	}
-
 
 	@Override
 	public Class< AffineGet > getPreConcatenableClass()

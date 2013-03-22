@@ -1,4 +1,3 @@
-package net.imglib2.util;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -35,6 +34,8 @@ package net.imglib2.util;
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+package net.imglib2.util;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

@@ -85,8 +85,6 @@ public class KDTree<T extends Leaf<T>>
 		root = makeNode(leaves, 0);
 	}
 
-
-
 	protected Node<T> makeNode(final List<T> leaves, final int depth) {
 		final int length = leaves.size();
 

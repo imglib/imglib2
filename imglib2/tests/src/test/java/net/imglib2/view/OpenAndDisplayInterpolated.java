@@ -43,7 +43,6 @@ import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.real.FloatType;
 
-
 /**
  * TODO
  *

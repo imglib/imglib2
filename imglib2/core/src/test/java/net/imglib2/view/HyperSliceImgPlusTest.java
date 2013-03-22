@@ -1,7 +1,3 @@
-/**
- * 
- */
-package net.imglib2.view;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -38,6 +34,8 @@ package net.imglib2.view;
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+package net.imglib2.view;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -78,8 +76,6 @@ public class HyperSliceImgPlusTest {
 	/** We fix one Z AND one T. */
 	private HyperSliceImgPlus<UnsignedByteType> imgplusZT;
 
-
-
 	/**
 	 * Create a 5D image and store it in {@link #source}
 	 */
@@ -95,22 +91,19 @@ public class HyperSliceImgPlusTest {
 		}
 		source.setName(name);
 
-		// Set up first hyerpslice
+		// Set up first hyperslice
 		imgplusZ = new HyperSliceImgPlus<UnsignedByteType>(source, REMOVED_DIM_1, dim[REMOVED_DIM_1]/2);
 
 		// Set up second hyperslice
 		imgplusZT = new HyperSliceImgPlus<UnsignedByteType>(imgplusZ, REMOVED_DIM_2, dim[REMOVED_DIM_2+1]/2); // Time is now dim 3
 	}
 
-
-
 	private void reset() {
 		for (UnsignedByteType type : source) {
 			type.setZero();
 		}
 	}
-
-
+	
 	@Test
 	public void testMetadata() {
 		int index1 = 0;
@@ -153,7 +146,6 @@ public class HyperSliceImgPlusTest {
 		ra.get().set(val);
 
 		int index1, index2;
-
 
 		// check value in target images
 		RandomAccess<UnsignedByteType> ra1 = imgplusZ.randomAccess();

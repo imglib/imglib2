@@ -42,7 +42,6 @@ import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 
-
 /**
  *
  * @author Stephan Preibisch

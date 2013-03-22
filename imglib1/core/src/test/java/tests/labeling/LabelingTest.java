@@ -60,7 +60,6 @@ import mpicbg.imglib.type.label.FakeType;
 
 import org.junit.Test;
 
-
 /**
  * TODO
  *

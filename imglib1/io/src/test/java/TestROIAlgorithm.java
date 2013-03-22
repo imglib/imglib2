@@ -48,8 +48,6 @@ import mpicbg.imglib.image.display.imagej.ImageJFunctions;
 import mpicbg.imglib.io.LOCI;
 import mpicbg.imglib.type.numeric.RealType;
 
-
-
 /**
  * TODO
  *

@@ -35,11 +35,9 @@
  * #L%
  */
 
-
 package net.imglib2.ops.pointset;
 
 import net.imglib2.AbstractCursor;
-
 
 /**
  * EmptyPointSet is a {@link PointSet} that has no members. It is meant for

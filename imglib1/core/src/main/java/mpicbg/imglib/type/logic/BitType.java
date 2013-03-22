@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package mpicbg.imglib.type.logic;
 
 import mpicbg.imglib.container.DirectAccessContainer;

@@ -244,7 +244,6 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 		return IntervalIndexer.indexToPositionWithOffset( index, dimensions, steps, min, dim );
 	}
 
-
 	/* RealLocalizable */
 
 	@Override
@@ -265,7 +264,6 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 		IntervalIndexer.indexToPositionWithOffset( index, dimensions, min, position );
 	}
 
-
 	/* Object */
 
 	@Override
@@ -275,7 +273,6 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 		localize( l );
 		return Util.printCoordinates( l );
 	}
-
 
 	/* Interval */
 

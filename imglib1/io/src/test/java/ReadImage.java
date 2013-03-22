@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 import java.io.IOException;
 
 import loci.formats.FormatException;

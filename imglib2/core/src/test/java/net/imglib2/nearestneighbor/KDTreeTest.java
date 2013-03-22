@@ -273,7 +273,6 @@ public class KDTreeTest
 		return nearest;
 	}
 
-
 	protected static boolean testRadiusNeighbor( final int numDimensions, final int numPoints, final int numTests, final float min, final float max ) 
 	{
 		final ArrayList< RealPoint > points = new ArrayList< RealPoint >();

@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.condition;
 
 import net.imglib2.ops.function.Function;
@@ -53,16 +52,41 @@ public class WithinRangeCondition<T extends RealType<T>> implements Condition<lo
 	// -- instance variables --
 	
 	private Function<long[],T> valueFunc;
-	private double min,max;
-	private T tmp;
+	private double min;
+	private double max;
+	private final T tmp;
 	
-	// -- constructor --
+	// -- WithinRangeCondition methods --
 	
 	public WithinRangeCondition(Function<long[],T> func, double min, double max) {
 		this.valueFunc = func;
 		this.min = min;
 		this.max = max;
 		tmp = func.createOutput();
+	}
+	
+	public double getMin() {
+		return min;
+	}
+
+	public void setMin(double min) {
+		this.min = min;
+	}
+
+	public double getMax() {
+		return max;
+	}
+
+	public void setMax(double max) {
+		this.max = max;
+	}
+
+	public Function<long[], T> getFunction() {
+		return valueFunc;
+	}
+	
+	public void setFunction(Function<long[], T> func) {
+		valueFunc = func;
 	}
 	
 	// -- Condition methods --

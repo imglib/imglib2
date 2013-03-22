@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.operation.real.complex.unary;
 
 import net.imglib2.ops.operation.UnaryOperation;

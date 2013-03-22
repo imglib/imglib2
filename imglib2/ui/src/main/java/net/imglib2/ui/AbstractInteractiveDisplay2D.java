@@ -1,4 +1,3 @@
-package net.imglib2.ui;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -36,8 +35,9 @@ package net.imglib2.ui;
  * #L%
  */
 
-import net.imglib2.realtransform.AffineTransform2D;
+package net.imglib2.ui;
 
+import net.imglib2.realtransform.AffineTransform2D;
 
 public abstract class AbstractInteractiveDisplay2D extends AbstractInteractiveDisplay
 {

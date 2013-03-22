@@ -35,10 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.condition;
-
-
 
 /**
  * A {@link Condition} that combines two other Conditions in an XOR fashion.

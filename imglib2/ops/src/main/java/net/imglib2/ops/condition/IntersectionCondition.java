@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.condition;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
 * A {@link Condition} that aggregates a list of other Conditions as a group.

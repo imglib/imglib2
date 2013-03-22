@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.type.logic;
 
 import net.imglib2.img.NativeImg;

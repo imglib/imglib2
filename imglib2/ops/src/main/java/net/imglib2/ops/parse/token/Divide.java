@@ -35,17 +35,17 @@
  * #L%
  */
 
-
-/**
-* 
-* @author Barry DeZonia
-*
-*/
 package net.imglib2.ops.parse.token;
 
+/**
+ * TODO 
+ *
+ * @author Barry DeZonia
+ */
 public class Divide extends Token {
 
 	public Divide(int start, String text) {
 		super(start, text);
 	}
+
 }

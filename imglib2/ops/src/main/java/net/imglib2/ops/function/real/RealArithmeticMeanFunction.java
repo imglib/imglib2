@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.RealType;
-
 
 /**
  * Computes the arithmetic mean (average) of a function over a region.

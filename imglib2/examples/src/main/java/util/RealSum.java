@@ -1,6 +1,3 @@
-/* BSD-licensed reimplementation */
-
-package util;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -37,6 +34,10 @@ package util;
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+/* BSD-licensed reimplementation */
+
+package util;
 
 /**
  * A simple accumulator of double values.

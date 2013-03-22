@@ -201,7 +201,6 @@ public abstract class ComplexTypeImpl<T extends ComplexTypeImpl<T>> extends Type
 	@Override
 	public PrecisionReal getPreferredRealPrecision() { return PrecisionReal.Double; }
 
-
 	@Override
 	public void updateIndex( final int i )
 	{

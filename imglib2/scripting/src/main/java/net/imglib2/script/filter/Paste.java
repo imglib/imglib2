@@ -54,7 +54,6 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 	private final ImageFunction<T> a;
 	private final IFunction b;
 
-
 	public <R extends RealType<R>> Paste(
 			final RandomAccessibleInterval<T> source,
 			final IterableRealInterval<R> target,
@@ -66,7 +65,6 @@ public class Paste<T extends RealType<T>> extends FloatImageOperation
 						new FinalInterval(Util.intervalDimensions(target)))));
 		this.b = new ImageFunction<R>(target);
 	}
-
 
 	/**
 	 * @param <T> The {@link Type} of the source image.

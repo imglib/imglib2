@@ -35,11 +35,9 @@
  * #L%
  */
 
-
 package net.imglib2.ops.operation.real.unary;
 
 import net.imglib2.type.numeric.RealType;
-
 
 /**
  * Sets the real component of an output real number to the raising of

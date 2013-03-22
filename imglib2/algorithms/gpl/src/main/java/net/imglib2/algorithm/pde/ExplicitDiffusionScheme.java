@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.pde;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -25,6 +24,8 @@ package net.imglib2.algorithm.pde;
  * #L%
  */
 
+package net.imglib2.algorithm.pde;
+
 import java.util.Vector;
 
 import net.imglib2.Cursor;
@@ -42,7 +43,6 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
 public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends MultiThreadedBenchmarkAlgorithm {
-
 
 	/*
 	 * FIELDS
@@ -207,7 +207,6 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 		return true;
 	}
 
-
 	/**
 	 * @return the increment to add to the input image 
 	 * at each iteration. More specifically, that is <code>dt</code> times the right-hand-size
@@ -227,7 +226,6 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 	 * @see #yieldDiffusionTensor(RandomAccess, float[][]) 
 	 */
 	protected abstract float diffusionScheme(float[] U, float[][]D);
-
 
 	@Override
 	public boolean checkInput() {
@@ -282,7 +280,6 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 	public RandomAccessibleInterval<FloatType> getDiffusionTensor() {
 		return D;
 	}
-
 
 	/**
 	 * Iterate over a nD equivalent of 3x3 neighborhood, and collect the input values 

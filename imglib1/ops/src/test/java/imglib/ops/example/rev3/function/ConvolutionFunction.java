@@ -37,7 +37,6 @@
 
 package imglib.ops.example.rev3.function;
 
-
 // TODO - could be derived from a plain ScalarFunction taking real coords. probably want to do this eventually. a discrete one and a continuous one.
 
 /**

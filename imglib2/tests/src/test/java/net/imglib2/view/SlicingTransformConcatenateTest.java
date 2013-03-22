@@ -125,7 +125,6 @@ public class SlicingTransformConcatenateTest
 		sl1.setComponentZero( new boolean[] { false, false, true } );
 		sl1.setTranslation( new long[] { 0, 0, 100 } );
 
-
 		sl2 = new SlicingTransform( 3, 4 );
 		sl2.setComponentMapping( new int[] { -9, 0, 1, 2} );
 		sl2.setComponentZero( new boolean[] { true, false, false, false } );

@@ -78,7 +78,6 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclidea
 		this.outOfBounds = outOfBounds;
 	}
 
-
 	/* Bounded */
 
 	@Override
@@ -86,7 +85,6 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclidea
 	{
 		return outOfBounds.isOutOfBounds();
 	}
-
 
 	/* Sampler */
 
@@ -102,7 +100,6 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclidea
 		return new RealOutOfBoundsRealRandomAccess< T >( this );
 	}
 
-
 	/* RealRandomAccess */
 
 	@Override
@@ -110,7 +107,6 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclidea
 	{
 		return copy();
 	}
-
 
 	/* RealLocalizable */
 
@@ -125,7 +121,6 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclidea
 
 	@Override
 	final public float  getFloatPosition( final int dim ){ return outOfBounds.getFloatPosition( dim ); }
-
 
 	/* RealPositionable */
 
@@ -158,7 +153,6 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclidea
 
 	@Override
 	public void setPosition( final double position, final int d ) { outOfBounds.setPosition( position, d ); }
-
 
 	/* Positionable */
 

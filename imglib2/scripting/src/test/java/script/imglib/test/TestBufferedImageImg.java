@@ -1,4 +1,3 @@
-package script.imglib.test;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -24,6 +23,8 @@ package script.imglib.test;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+package script.imglib.test;
 
 import ij.IJ;
 import ij.ImageJ;

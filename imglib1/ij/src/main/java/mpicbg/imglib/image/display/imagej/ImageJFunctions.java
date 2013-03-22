@@ -338,7 +338,6 @@ public class ImageJFunctions
 		return everythingOK;
 	}
 
-
 	protected static <T extends Type<T>> ImageProcessor extract2DSlice( final Image<T> img, final Display<T> display, final int type, final int dimX, final int dimY, final int[] dimensionPositions )
 	{
 		final ImageProcessor ip;
@@ -357,7 +356,6 @@ public class ImageJFunctions
 
         return ip;
 	}
-
 
 	protected static <T extends Type<T>>ImagePlus createImagePlus( final Image<T> img, final String name, final int type, final int[] dim, final int[] dimensionPositions )
 	{

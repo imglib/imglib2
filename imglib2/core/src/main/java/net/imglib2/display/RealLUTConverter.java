@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.display;
 
 import net.imglib2.converter.Converter;

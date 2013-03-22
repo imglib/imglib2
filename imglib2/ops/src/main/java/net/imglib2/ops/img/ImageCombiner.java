@@ -40,6 +40,7 @@ package net.imglib2.ops.img;
 import java.util.Random;
 
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -62,7 +63,9 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 
-// TODO - move example code out to its own test class elsewhere
+// TODO
+// 1) move example code out to its own test class elsewhere
+// 2) since no longer Img specific move to different subpackage
 
 /**
  * A class used to create images from input images in conjunction with unary or
@@ -76,27 +79,22 @@ public class ImageCombiner
 	// -- public API --
 
 	/**
-	 * Creates an output image by applying a BinaryOperation to two input
-	 * images. The size of the output image is determined as the region of
-	 * overlap of the input images.
+	 * Creates an output {@link Img} by applying a {@link BinaryOperation} to two
+	 * input {@link RandomAccessibleInterval}s. The size of the output image is
+	 * determined as the region of overlap of the input intervals.
 	 * 
-	 * @param op
-	 *            The BinaryOperation used to generate the output image from the
-	 *            input images.
-	 * @param input1
-	 *            The first input Img.
-	 * @param input2
-	 *            The second input Img.
-	 * @param imgFactory
-	 *            The factory used to create the output image.
-	 * @param type
-	 *            The type of the output image.
+	 * @param op The BinaryOperation used to generate the output image from the
+	 *          input intervals.
+	 * @param input1 The first input RandomAccessibleInterval
+	 * @param input2 The second input RandomAccessibleInterval
+	 * @param imgFactory The factory used to create the output image.
+	 * @param type The type of the output image.
 	 * @return The combined pixel output image of specified type.
 	 */
 	public static < I1 extends RealType< I1 >, I2 extends RealType< I2 >,
 									O extends RealType< O >>
-	Img< O > applyOp(
-			BinaryOperation< I1, I2, O > op, Img< I1 > input1, Img< I2 > input2,
+		Img<O> applyOp(BinaryOperation<I1, I2, O> op,
+			RandomAccessibleInterval<I1> input1, RandomAccessibleInterval<I2> input2,
 			ImgFactory< O > imgFactory, O type )
 	{
 		long[] span = determineSharedExtents( input1, input2 );
@@ -106,49 +104,43 @@ public class ImageCombiner
 	}
 
 	/**
-	 * Fills an output image by applying a BinaryOperation to two input images.
-	 * The region to fill in the output image is determined as the region of
-	 * overlap of all three images.
+	 * Fills an output {@link RandomAccessibleInterval} by applying a
+	 * {@link BinaryOperation} to two input {@link RandomAccessibleInterval}s. The
+	 * region to fill in the output interval is determined as the region of
+	 * overlap of all three intervals.
 	 * 
-	 * @param op
-	 *            The BinaryOperation used to generate the output image from the
-	 *            input images.
-	 * @param input1
-	 *            The first input Img.
-	 * @param input2
-	 *            The second input Img.
-	 * @param output
-	 *            The output Img to fill.
+	 * @param op The BinaryOperation used to fill the output interval from the
+	 *          input intervals.
+	 * @param input1 The first input RandomAccessibleInterval
+	 * @param input2 The second input RandomAccessibleInterval
+	 * @param output The output interval to be filled
 	 */
 	public static < I1 extends RealType< I1 >, I2 extends RealType< I2 >, 
 									O extends RealType< O >>
-	void applyOp( 
-		BinaryOperation< I1, I2, O > op, Img< I1 > input1, Img< I2 > input2,
-		Img< O > output )
+		void applyOp(BinaryOperation<I1, I2, O> op,
+			RandomAccessibleInterval<I1> input1, RandomAccessibleInterval<I2> input2,
+			RandomAccessibleInterval<O> output)
 	{
 		long[] span = determineSharedExtents( input1, input2, output );
 		binaryAssign( op, input1, input2, output, span );
 	}
 
 	/**
-	 * Creates an output image by applying a UnaryOperation to an input image.
-	 * The size of the output image matches the size of the input image.
+	 * Creates an output {@link Img} by applying a {@link UnaryOperation} to an
+	 * input {@link RandomAccessibleInterval}. The size of the output image
+	 * matches the size of the input.
 	 * 
-	 * @param op
-	 *            The UnaryOperation used to generate the output image from the
-	 *            input image.
-	 * @param input
-	 *            The input Img.
-	 * @param imgFactory
-	 *            The factory used to create the output image.
-	 * @param type
-	 *            The type of the output image.
-	 * @return The computed pixel output image of specified type.
+	 * @param op The UnaryOperation used to generate the output image from the
+	 *          input data.
+	 * @param input The input RandomAccessibleInterval
+	 * @param imgFactory The factory used to create the output image.
+	 * @param type The type of the output image.
+	 * @return The transformed pixel output image of specified type.
 	 */
 	public static < I extends RealType< I >, O extends RealType< O >>
-	Img< O > applyOp(
-		UnaryOperation< I, O > op, Img< I > input, ImgFactory< O > imgFactory,
-		O type )
+ Img<O> applyOp(
+		UnaryOperation<I, O> op, RandomAccessibleInterval<I> input,
+		ImgFactory<O> imgFactory, O type)
 	{
 		long[] span = new long[ input.numDimensions() ];
 		input.dimensions( span );
@@ -158,21 +150,20 @@ public class ImageCombiner
 	}
 
 	/**
-	 * Fills an output image by applying a UnaryOperation to an input image. The
-	 * region to fill in the output image is determined as the region of overlap
-	 * of both images.
+	 * Fills an output {@link RandomAccessibleInterval} by applying a
+	 * {@link UnaryOperation} to an input {@link RandomAccessibleInterval}. The
+	 * region to fill in the output interval is determined as the region of
+	 * overlap of both intervals.
 	 * 
-	 * @param op
-	 *            The UnaryOperation used to generate the output image from the
-	 *            input image.
-	 * @param input
-	 *            The input Img.
-	 * @param output
-	 *            The output Img to fill.
+	 * @param op The UnaryOperation used to fill the output interval from the
+	 *          input interval.
+	 * @param input The input RandomAccessibleInterval
+	 * @param output The output interval to be filled
 	 */
 	public static < I extends RealType< I >, O extends RealType< O >>
 	void applyOp(
-		UnaryOperation< I, O > op, Img< I > input, Img< O > output )
+		UnaryOperation<I, O> op, RandomAccessibleInterval<I> input,
+		RandomAccessibleInterval<O> output)
 	{
 		long[] span = determineSharedExtents( input, output );
 		unaryAssign( op, input, output, span );
@@ -180,7 +171,8 @@ public class ImageCombiner
 
 	// -- helpers --
 
-	private static long[] determineSharedExtents( Img< ? >... imgs )
+	private static long[] determineSharedExtents(
+		RandomAccessibleInterval<?>... imgs)
 	{
 		if ( imgs.length == 0 )
 			throw new IllegalArgumentException(
@@ -203,15 +195,16 @@ public class ImageCombiner
 
 	private static < I1 extends RealType< I1 >, I2 extends RealType< I2 >,
 										O extends RealType< O >>
-	void binaryAssign( BinaryOperation< I1, I2, O > op, Img< I1 > input1,
-											Img< I2 > input2, Img< O > output, long[] span )
+		void binaryAssign(BinaryOperation<I1, I2, O> op,
+			RandomAccessibleInterval<I1> input1, RandomAccessibleInterval<I2> input2,
+			RandomAccessibleInterval<O> output, long[] span)
 	{
 		long[] origin = new long[ span.length ];
-		O type = output.firstElement();
+		O type = output.randomAccess().get();
 		final Function< long[], I1 > f1 =
-				new RealImageFunction< I1, I1 >( input1, input1.firstElement() );
+			new RealImageFunction<I1, I1>(input1, input1.randomAccess().get());
 		final Function< long[], I2 > f2 =
-				new RealImageFunction< I2, I2 >( input2, input2.firstElement() );
+			new RealImageFunction<I2, I2>(input2, input2.randomAccess().get());
 		final Function< long[], O > binFunc =
 				new GeneralBinaryFunction< long[], I1, I2, O >(f1, f2, op, type.copy());
 		final InputIteratorFactory< long[] > inputFactory =
@@ -223,12 +216,13 @@ public class ImageCombiner
 	}
 
 	private static < I extends RealType< I >, O extends RealType< O >>
-	void unaryAssign(
-		UnaryOperation< I, O > op, Img< I > input, Img< O > output, long[] span )
+ void
+		unaryAssign(UnaryOperation<I, O> op, RandomAccessibleInterval<I> input,
+			RandomAccessibleInterval<O> output, long[] span)
 	{
-		final O type = output.firstElement();
+		final O type = output.randomAccess().get();
 		final Function< long[], I > f1 =
-				new RealImageFunction< I, I >( input, input.firstElement() );
+			new RealImageFunction<I, I>(input, input.randomAccess().get());
 		final Function< long[], O > unaryFunc =
 				new GeneralUnaryFunction< long[], I, O >( f1, op, type.copy() );
 		final InputIteratorFactory< long[] > inputFactory =

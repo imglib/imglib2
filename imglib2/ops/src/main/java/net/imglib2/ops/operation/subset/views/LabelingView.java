@@ -77,7 +77,7 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 		super( in );
 		m_fac = fac;
 		m_strategy = new DefaultROIStrategy< L, Labeling< L >>( this );
-		m_ii = Views.iterable( in );
+		m_ii = Views.flatIterable( in );
 	}
 
 	@Override

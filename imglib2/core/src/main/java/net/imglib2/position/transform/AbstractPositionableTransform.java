@@ -70,7 +70,6 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 		discrete = new long[ n ];
 	}
 
-
 	/* RealLocalizable */
 
 	@Override
@@ -98,7 +97,6 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 		for ( int d = 0; d < pos.length; ++d )
 			pos[ d ] = this.position[ d ];
 	}
-
 
 	/* Positionable */
 
@@ -195,7 +193,6 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 		this.position[ d ] = position;
 		target.setPosition( position, d );
 	}
-
 
 	/* Object */
 

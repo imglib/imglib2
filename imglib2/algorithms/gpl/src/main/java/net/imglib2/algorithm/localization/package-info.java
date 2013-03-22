@@ -1,8 +1,3 @@
-/**
- * An imglib2 package dedicated to various techniques enabling the precise
- * localization of objects in image, possible with sub-pixel accuracy.
- */
-package net.imglib2.algorithm.localization;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -28,3 +23,9 @@ package net.imglib2.algorithm.localization;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+/**
+ * An imglib2 package dedicated to various techniques enabling the precise
+ * localization of objects in image, possible with sub-pixel accuracy.
+ */
+package net.imglib2.algorithm.localization;

@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.input;
 
 import net.imglib2.ops.pointset.PointSet;

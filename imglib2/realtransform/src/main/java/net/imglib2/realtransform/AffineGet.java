@@ -39,7 +39,6 @@ package net.imglib2.realtransform;
 
 import net.imglib2.RealLocalizable;
 
-
 /**
  * An <em>n</em>-dimensional affine transformation whose
  * <em>n</em>&times;(<em>n</em>+1) affine transformation matrix can be accessed

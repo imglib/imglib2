@@ -146,7 +146,6 @@ public class OutOfBoundsPeriodic< T > extends AbstractLocalizable implements Out
 		isOutOfBounds = false;
 	}
 
-
 	/* OutOfBounds */
 
 	@Override
@@ -154,7 +153,6 @@ public class OutOfBoundsPeriodic< T > extends AbstractLocalizable implements Out
 	{
 		return isOutOfBounds;
 	}
-
 
 	/* Sampler */
 
@@ -170,7 +168,6 @@ public class OutOfBoundsPeriodic< T > extends AbstractLocalizable implements Out
 		return new OutOfBoundsPeriodic< T >( this );
 	}
 
-
 	/* RandomAccess */
 
 	@Override
@@ -178,7 +175,6 @@ public class OutOfBoundsPeriodic< T > extends AbstractLocalizable implements Out
 	{
 		return copy();
 	}
-
 
 	/* Positionable */
 
@@ -306,7 +302,6 @@ public class OutOfBoundsPeriodic< T > extends AbstractLocalizable implements Out
 		for ( int d = 0; d < position.length; ++d )
 			setPosition( position[ d ], d );
 	}
-
 
 	/* Object */
 

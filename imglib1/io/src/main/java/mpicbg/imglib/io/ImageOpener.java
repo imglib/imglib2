@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package mpicbg.imglib.io;
 
 import java.io.File;

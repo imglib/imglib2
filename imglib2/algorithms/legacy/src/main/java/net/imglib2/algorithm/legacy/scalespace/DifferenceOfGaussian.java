@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.legacy.scalespace;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -24,6 +23,8 @@ package net.imglib2.algorithm.legacy.scalespace;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+package net.imglib2.algorithm.legacy.scalespace;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -70,7 +71,6 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 	long processingTime;
 	int numThreads;
 	String errorMessage = "";
-
 
 	static private final double[] asArray( final int nDim, final double sigma )
 	{
@@ -277,7 +277,6 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 		}
 		return SpecialPoint.MIN; // all neighboring pixels have the same value. count it as MIN.
 	}
-
 
 	public ArrayList<DifferenceOfGaussianPeak<FloatType>> findPeaks( final Img<FloatType> laPlace )
 	{

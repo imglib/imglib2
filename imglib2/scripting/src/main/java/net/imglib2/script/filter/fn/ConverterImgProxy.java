@@ -95,7 +95,6 @@ public class ConverterImgProxy<R extends RealType<R>, T extends RealType<T>> ext
 		return t;
 	}
 
-
 	/** Returns a read-only {@link Iterator} that transforms the type on the fly from the source image. */
 	@Override
 	public Iterator<T> iterator() {

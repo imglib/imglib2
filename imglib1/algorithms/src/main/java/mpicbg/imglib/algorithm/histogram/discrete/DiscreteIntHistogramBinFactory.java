@@ -24,7 +24,6 @@
  * #L%
  */
 
-
 package mpicbg.imglib.algorithm.histogram.discrete;
 
 import mpicbg.imglib.algorithm.histogram.HistogramBin;

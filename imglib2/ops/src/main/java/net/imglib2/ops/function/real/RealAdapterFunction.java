@@ -35,13 +35,11 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
-
 
 /**
  * Wraps the real values of a complex {@link Function} as a real Function.

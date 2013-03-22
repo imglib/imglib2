@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.parse.token;
 
 import java.util.Map;

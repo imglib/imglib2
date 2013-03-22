@@ -34,7 +34,6 @@ import net.imglib2.script.ImgLib;
 import net.imglib2.script.algorithm.IntegralImage;
 import net.imglib2.script.img.FloatImage;
 
-
 /** Compare performance with Saalfeld's 2d {@link DoubleIntegralImage}.
  * 
  * Beating Saalfeld's by a factor of 5!

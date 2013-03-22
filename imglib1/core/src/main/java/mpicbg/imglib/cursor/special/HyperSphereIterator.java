@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package mpicbg.imglib.cursor.special;
 
 import java.util.Iterator;

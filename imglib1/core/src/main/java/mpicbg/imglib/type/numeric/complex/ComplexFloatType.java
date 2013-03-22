@@ -177,7 +177,6 @@ public class ComplexFloatType extends ComplexTypeImpl<ComplexFloatType> implemen
 		setComplex( a );
 	}
 
-
 	@Override
 	public void set( final ComplexFloatType c ) 
 	{ 

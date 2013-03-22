@@ -24,7 +24,6 @@
  * #L%
  */
 
-
 package mpicbg.imglib.algorithm.projection;
 
 import java.util.Vector;

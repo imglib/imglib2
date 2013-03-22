@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.pde;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -24,6 +23,8 @@ package net.imglib2.algorithm.pde;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+package net.imglib2.algorithm.pde;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
@@ -114,7 +115,6 @@ public class Gradient<T extends RealType<T>> extends MultiThreadedBenchmarkAlgor
 		processingTime = System.currentTimeMillis() - start;
 		return true;
 	}
-
 
 	@Override
 	public Img<FloatType> getResult() {

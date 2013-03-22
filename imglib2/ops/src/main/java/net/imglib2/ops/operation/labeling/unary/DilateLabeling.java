@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.operation.labeling.unary;
 
 import java.util.ArrayList;

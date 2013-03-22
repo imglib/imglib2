@@ -24,7 +24,6 @@
  * #L%
  */
 
-
 import ij.ImageJ;
 
 import java.util.Random;

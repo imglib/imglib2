@@ -55,7 +55,6 @@ public class LevenbergMarquardtSolver {
 		return sum;
 	} //chiSquared
 
-
 	/**
 	 * Minimize E = sum {(y[k] - f(x[k],a)) }^2
 	 * Note that function implements the value and gradient of f(x,a),

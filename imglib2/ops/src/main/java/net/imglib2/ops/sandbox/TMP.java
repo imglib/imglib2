@@ -37,7 +37,6 @@
 
 package net.imglib2.ops.sandbox;
 
-
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;

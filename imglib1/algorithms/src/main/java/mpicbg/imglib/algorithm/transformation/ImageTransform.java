@@ -169,7 +169,6 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<T>
 	@Override
 	public Image<T> getResult() { return transformed; }
 
-
 	@Override
 	public boolean process()
 	{

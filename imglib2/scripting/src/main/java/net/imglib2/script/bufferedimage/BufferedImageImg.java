@@ -1,4 +1,3 @@
-package net.imglib2.script.bufferedimage;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -24,6 +23,8 @@ package net.imglib2.script.bufferedimage;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+package net.imglib2.script.bufferedimage;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;

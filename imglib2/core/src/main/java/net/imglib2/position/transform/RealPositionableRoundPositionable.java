@@ -70,7 +70,6 @@ public class RealPositionableRoundPositionable< P extends RealLocalizable & Real
 		round = new long[ n ];
 	}
 
-
 	/* RealPositionable */
 
 	@Override
@@ -148,7 +147,6 @@ public class RealPositionableRoundPositionable< P extends RealLocalizable & Real
 		source.setPosition( position, dim );
 		target.setPosition( Round.round( position ), dim );
 	}
-
 
 	/* Positionable */
 
@@ -235,7 +233,6 @@ public class RealPositionableRoundPositionable< P extends RealLocalizable & Real
 		source.setPosition( position, d );
 		target.setPosition( position, d );
 	}
-
 
 	/* RealLocalizable */
 

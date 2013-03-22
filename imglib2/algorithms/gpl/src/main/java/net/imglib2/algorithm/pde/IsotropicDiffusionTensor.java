@@ -1,4 +1,3 @@
-package net.imglib2.algorithm.pde;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -24,6 +23,8 @@ package net.imglib2.algorithm.pde;
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
  */
+
+package net.imglib2.algorithm.pde;
 
 import java.util.Vector;
 
@@ -70,7 +71,6 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 		this.D = factory.create(tensorDims, new FloatType());
 	}
-
 
 	@Override
 	public boolean checkInput() {

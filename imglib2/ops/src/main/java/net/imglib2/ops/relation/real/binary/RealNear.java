@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.relation.real.binary;
 
 import net.imglib2.ops.relation.BinaryRelation;

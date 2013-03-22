@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.condition;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.relation.UnaryRelation;
-
 
 /**
  * A {@link Condition} on a {@link Function}. The Condition is true when

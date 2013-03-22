@@ -37,7 +37,6 @@
 
 package imglib.ops.example.rev3.function;
 
-
 /**
  * TODO
  *

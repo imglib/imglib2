@@ -97,7 +97,6 @@ public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractO
 		return new OutOfBoundsRandomValue< T >( this );
 	}
 
-
 	/* RandomAccess */
 
 	@Override

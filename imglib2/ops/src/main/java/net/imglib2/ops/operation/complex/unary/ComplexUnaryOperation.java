@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.operation.complex.unary;
 
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.ComplexType;
-
 
 /**
  *

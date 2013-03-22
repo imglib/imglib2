@@ -35,10 +35,6 @@
  * #L%
  */
 
-
-/**
- * 
- */
 package net.imglib2.ops.operation.real.unary;
 
 import net.imglib2.type.numeric.RealType;
@@ -47,7 +43,6 @@ import net.imglib2.type.numeric.RealType;
  * Sets the real component of an output real number to the multiplication of
  * the real component of an input real number with a constant value. The
  * constant value is specified in the constructor.
- * 
  *
  * @author Barry DeZonia
  */

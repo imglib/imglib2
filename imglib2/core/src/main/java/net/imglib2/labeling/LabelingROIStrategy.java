@@ -1,4 +1,3 @@
-package net.imglib2.labeling;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -36,7 +35,7 @@ package net.imglib2.labeling;
  * #L%
  */
 
-
+package net.imglib2.labeling;
 
 import java.util.Collection;
 

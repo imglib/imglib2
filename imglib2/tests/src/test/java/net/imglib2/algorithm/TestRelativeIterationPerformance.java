@@ -65,7 +65,6 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 		TRANSLATE_VIEW_SPLIT
 	}
 
-
 	/*
 	 * CONSTRUCTOR
 	 */
@@ -83,7 +82,6 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 	/*
 	 * METHODS
 	 */
-
 
 	@Override
 	public boolean checkInput() {
@@ -120,7 +118,6 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 
 		return true;
 	}
-
 
 	private void iterateWithRandoAccessibleNoOutOfBounds() {
 		final int n = input.numDimensions();
@@ -166,8 +163,6 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 
 	}
 
-
-
 	private void iterateWithViews() {
 
 		final ExtendedRandomAccessibleInterval<T, Img<T>> extended = Views.extendMirrorSingle(input);
@@ -202,7 +197,6 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 		}
 
 	}
-
 
 	private void iterateWithViewsCursor() {
 
@@ -405,7 +399,6 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 
 	private void iterateWithRandoAccessible() {
 
-
 		final OutOfBounds<T> ra = Views.extendMirrorSingle(input).randomAccess();
 		final Cursor<T> cursor = input.localizingCursor();
 		final RandomAccess<FloatType> oc = output.randomAccess();
@@ -442,8 +435,6 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 
 	}
 
-
-
 	@Override
 	public String getErrorMessage() {
 		return null;
@@ -458,7 +449,6 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 	public long getProcessingTime() {
 		return processingTime;
 	}
-
 
 	public static <T extends RealType<T> & NativeType< T >> void benchmark( final IterationMethod method, final String msg, final int niter, final Img< T > image )
 	{
@@ -498,7 +488,6 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 		// Display it via ImgLib using ImageJ
 		new ImageJ();
 		ImageJFunctions.show( image );
-
 
 		benchmark( IterationMethod.TRANSLATE_VIEW, "With translated views:", niter, image );
 		benchmark( IterationMethod.TRANSLATE_VIEW_CURSOR, "With translated views (Cursors only):", niter, image );

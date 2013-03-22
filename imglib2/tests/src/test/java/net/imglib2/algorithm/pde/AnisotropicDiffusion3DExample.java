@@ -46,7 +46,6 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
-
 public class AnisotropicDiffusion3DExample {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

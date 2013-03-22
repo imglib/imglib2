@@ -35,11 +35,9 @@
  * #L%
  */
 
-
 package net.imglib2.ops.pointset;
 
 import net.imglib2.AbstractCursor;
-
 
 /**
  * PointSetDifference is a {@link PointSet} that includes all the points in

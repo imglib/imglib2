@@ -1,4 +1,3 @@
-package net.imglib2.ops.pointset;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -35,6 +34,8 @@ package net.imglib2.ops.pointset;
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+package net.imglib2.ops.pointset;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

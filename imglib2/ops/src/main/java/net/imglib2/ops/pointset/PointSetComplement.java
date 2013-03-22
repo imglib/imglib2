@@ -35,9 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.pointset;
-
 
 /*
 * This is not a textbook definition of complement. Complement usually

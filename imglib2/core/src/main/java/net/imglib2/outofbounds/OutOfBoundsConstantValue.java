@@ -81,7 +81,6 @@ public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOut
 		return new OutOfBoundsConstantValue< T >( this );
 	}
 
-
 	/* RandomAccess */
 
 	@Override

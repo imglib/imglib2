@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.example;
 
 // a composed function example
@@ -52,7 +51,6 @@ package net.imglib2.ops.example;
 public class ExampleNotes {
 	// nothing to do
 }
-
 
 // Things worth noting
 // - discrete and continuous
@@ -73,7 +71,6 @@ public class ExampleNotes {
 //Make a function that uses a condition to decide whether to evaluate
 //the function or not (i.e. condition could be a mask)
 //Make lots of classes final.
-
 
 // note that regions always define a point. so there is no such empty
 //   region. this might cause minor problems with assign ops passed

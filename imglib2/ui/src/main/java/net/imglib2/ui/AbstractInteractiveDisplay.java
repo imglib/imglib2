@@ -37,7 +37,6 @@
 
 package net.imglib2.ui;
 
-
 /**
  * Base class for interactive ImgLib2 examples.
  *

@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2;
 
 import java.util.Iterator;
@@ -226,7 +225,6 @@ final public class IterableIntervalSubset< T > extends AbstractWrappedInterval< 
 				o.interval().iterationOrder().equals( interval().iterationOrder() );
 		}
 	}
-
 
 	final protected long firstIndex;
 	final private long size;

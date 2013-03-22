@@ -570,7 +570,6 @@ public class Util
             two.setOne();
             two.add( one );
 
-
             minusOne.setZero();
             minusOne.sub( one );
 
@@ -613,7 +612,6 @@ public class Util
                     for ( int x = 1; x <= kernelSize / 2; ++x )
                     	xPos.add( one );
 
-
                     for ( int x = kernelSize / 2; x >= 0; --x )
                     {
                         //final double val = Math.exp( -(x * x) / two_sq_sigma );
@@ -646,7 +644,6 @@ public class Util
 
             return gaussianKernel;
     }
-
 
     public static int getSuggestedKernelDiameter( final double sigma )
     {

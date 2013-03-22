@@ -35,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.meta;
 
 import java.util.Hashtable;

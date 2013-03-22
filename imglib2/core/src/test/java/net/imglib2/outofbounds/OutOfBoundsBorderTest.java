@@ -321,7 +321,6 @@ public class OutOfBoundsBorderTest
 		}
 	}
 
-
 	@Test
 	public void setPosition()
 	{

@@ -35,14 +35,12 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.complex;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.util.ComplexHelper;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
-
 
 /**
  * This {@link Function} class weds two input Functions of {@link RealType}

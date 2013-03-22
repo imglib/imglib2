@@ -35,12 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.general;
 
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.function.Function;
-
 
 /**
  * A {@link Function} that takes on one of two Function values depending upon

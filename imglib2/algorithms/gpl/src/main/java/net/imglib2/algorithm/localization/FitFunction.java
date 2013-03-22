@@ -38,7 +38,7 @@ package net.imglib2.algorithm.localization;
 public interface FitFunction {
 
 	/**
-	 * Evaluate this function at point <code>x</code>. The function is
+	 * Evaluates this function at point <code>x</code>. The function is
 	 * otherwise defined over an array of parameters <code>a</code>, that
 	 * is the target of the fitting procedure.
 	 * @param x  the multidimensional to evaluate the function at
@@ -49,7 +49,7 @@ public interface FitFunction {
 	public double val(double[] x, double[] a);
 
 	/**
-	 * Evaluate the gradient value of the function, taken with respect to the 
+	 * Evaluates the gradient value of the function, taken with respect to the 
 	 * <code>ak</code><sup>th</sup> parameter, evaluated at point <code>x</code>.
 	 * @param x  the point to evaluate the gradient at
 	 * @param a  the set of parameters that defines the function
@@ -58,5 +58,18 @@ public interface FitFunction {
 	 * @see #val(double[], double[])
 	 */
 	public double grad(double[] x, double[] a, int ak);
+
+	/**
+	 * Evaluates the hessian value of the function, taken with respect to the 
+	 * <code>r</code><sup>th</sup> and <code>c</code><sup>th</sup> parameters, 
+	 * evaluated at point <code>x</code>.
+	 * @param x  the point to evaluate the gradient at
+	 * @param a  the set of parameters that defines the function
+	 * @param r the index of the first parameter to compute the gradient 
+	 * @param c the index of the second parameter to compute the gradient 
+	 * @return the <code>(r, c)</code> element of the hessian matrix <code>d²f(x,a)/(da_r da_c)</code>
+	 * @see #val(double[], double[])
+	 */
+	public double hessian(double[] x, double[] a, int r, int c);
 
 }
