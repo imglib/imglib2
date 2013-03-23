@@ -37,7 +37,7 @@ public class MLEllipticGaussianEstimatorTest {
 		double sigma_y = 3;
 		sigmas = new double[] { sigma_x, sigma_y };
 		expectedSpan = new long[] { 5, 7 };
-		groundTruth = new double[] { A, x0, y0, 1/sigma_x/sigma_x, 1/sigma_y/sigma_y };
+		groundTruth = new double[] { x0, y0, A, 1/sigma_x/sigma_x, 1/sigma_y/sigma_y };
 		LocalizationUtils.addEllipticGaussianSpotToImage(img, groundTruth);
 		peakCoarseLocation = new Point( (long) x0, (long) y0);
 		data = LocalizationUtils.gatherObservationData(img, peakCoarseLocation, expectedSpan);

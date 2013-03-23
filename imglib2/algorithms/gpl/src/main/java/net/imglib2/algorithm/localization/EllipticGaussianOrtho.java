@@ -32,8 +32,8 @@ package net.imglib2.algorithm.localization;
  * <p>
  * This fitting target function is defined over dimension <code>n</code>, by the following 
  * <code>2n+1</code> parameters:
- * <pre>k = 0       - A
- *k = 1..n    - x₀ᵢ (with i = k-1)
+ * <pre>k = 0..n-1  - x₀ᵢ (with i = k)
+ *k = n       - A
  *k = n+1..2n - bᵢ (with i = k-n-1)</pre>
  * with
  * <pre>f(x) = A × exp( - S )</pre>
@@ -48,7 +48,7 @@ public class EllipticGaussianOrtho implements FitFunction {
 	/*
 	 * METHODS
 	 */
-	
+
 	@Override
 	public String toString() {
 		return "Orthogonal elliptic gaussian function A × exp( - ∑ bᵢ × (xᵢ - x₀ᵢ)² )";
@@ -56,35 +56,58 @@ public class EllipticGaussianOrtho implements FitFunction {
 
 	@Override
 	public final double val(final double[] x, final double[] a) {
-		return a[0] * E(x, a);
+		return a[x.length] * E(x, a);
 	}
 
 	/**
-	 * Partial derivatives indices are ordered as follow:
-	 * <pre>k = 0       - A
-	 *k = 1..n    - x_i (with i = k-1)
-	 *k = n+1..2n - b_i (with i = k-n-1)</pre> 
+	 * Returns the gradient value of this function, with respect to the variable
+	 * specified by its index: Partial derivatives indices are ordered as follow:
+	 * <pre>k = 0..n-1  - x_i (with i = k-1)
+	 *k = n       - A
+	 *k = n+1..2n - b_i (with i = k-n-1)</pre>
+	 *@param x  the position array to compute the gradient at. 
+	 *@param a  the parameters array that specified the gaussian shape.
+	 *@param k  the parameter index for derivation. 
+	 *@return  the value of the gradient computed with respect to parameter 
+	 *<code>k</code> for the gaussian with parameters <code>a</code>, calculated
+	 *at position <code>x</code>.
 	 */
 	@Override
 	public final double grad(final double[] x, final double[] a, final int k) {
 		final int ndims = x.length;
-		if (k == 0) {
+
+		if (k < ndims) {
+			// With respect to xi
+			int dim = k;
+			return - 2 * a[ndims] * a[dim+ndims+1] * (x[dim] - a[dim]) * E(x, a);
+
+		} else if (k == ndims) {
 			// With respect to A
 			return E(x, a);
 
-		} else if (k <= ndims) {
-			// With respect to xi
-			int dim = k - 1;
-			return 2 * a[dim+ndims] * (x[dim] - a[dim+1]) * a[0] * E(x, a);
 
 		} else {
-			// With respect to ai
+			// With respect to bi
 			int dim = k - ndims - 1;
-			double di = x[dim] - a[dim+1];
-			return - di * di * a[0] * E(x, a);
+			double di = x[dim] - a[dim];
+			return - di * di * a[ndims] * E(x, a);
 		}
 	}
 
+	/**
+	 * Returns the hessian value of this function, with respect to the variable
+	 * specified by its index: Partial derivatives indices are ordered as follow:
+	 * <pre>k = 0..n-1  - x_i (with i = k-1)
+	 *k = n       - A
+	 *k = n+1..2n - b_i (with i = k-n-1)</pre>
+	 *@param x  the position array to compute the gradient at. 
+	 *@param a  the parameters array that specified the gaussian shape.
+	 *@param r  the parameter index for the first derivation. 
+	 *@param c  the parameter index for the second derivation. 
+	 *@return  the value of the gradient computed with respect to parameters 
+	 *<code>r, c</code> for the elliptic gaussian with parameters <code>a</code>, calculated
+	 *at position <code>x</code>.
+	 */
 	@Override
 	public final double hessian(final double[] x, final double[] a, int r, int c) {
 		if (c < r) {
@@ -95,67 +118,77 @@ public class EllipticGaussianOrtho implements FitFunction {
 
 		final int ndims = x.length;
 
-		if (r == 0) {
-			// 1st line
-
-			if (c ==0) {
-				return 0;
-
-			} else if (c <= ndims ) {
-				// d²G / (dA dxi)
-				final int dim = c - 1;
-				return 2 * a[dim+ndims] * (x[dim] - a[dim+1])  * E(x, a);
-
-			} else {
-				// d²G / (dA dsi)
-				final int dim = c - ndims - 1;
-				final double di = x[dim] - a[dim+1];
-				return - di * di * E(x, a);
-			}
-
-		} else if (c == r) {
+		if (c == r) {
 			// diagonal
 
-			if (c <= ndims ) {
+			if (c < ndims ) {
 				// d²G / dxi²
-				final int dim = c - 1;
-				final double di = x[dim] - a[dim+1];
-				return 2 * a[0] * E(x, a) * a[dim+ndims] * ( 2 * a[dim+ndims] * di * di - 1 );
+				final int dim = c;
+				// 2 A B (2 B (C-x)^2-1) e^(-B (C-x)^2-D (E-y)^2)
+				final double di = a[dim] - x[dim]; 
+				return 2 * a[ndims] * a[ndims+1+dim] * ( 2 * a[ndims+1+dim] * di * di - 1 ) * E(x, a);
+
+			} else if (c == ndims) {
+				// d²G / dA²
+				return 0;
 
 			} else {
 				// d²G / dsi²
 				final int dim = c - ndims - 1;
-				final double di = x[dim] - a[dim+1];
-				return a[0] * E(x, a) * di * di * di * di;
+				final double di = x[dim] - a[dim];
+				return a[ndims] * E(x, a) * di * di * di * di;
 			}
 
-		} else if ( c <= ndims && r <= ndims ) {
+		} else if ( c < ndims && r < ndims ) {
 			// H1
 			// d²G / (dxj dxi)
-			final int i = c - 1;
-			final int j = r - 1;
-			final double di = x[i] - a[i+1];
-			final double dj = x[j] - a[j+1];
-			return 4 * a[0] * E(x, a) * a[i+ndims] * a[j+ndims] * di * dj;
+			final int i = c;
+			final int j = r;
+			final double di = x[i] - a[i];
+			final double dj = x[j] - a[j];
+			return 4 * a[ndims] * a[i+ndims+1] * a[j+ndims+1] * di * dj * E(x, a)  ;
 
-		} else if ( r <= ndims && c > ndims) {
+		} else if ( r < ndims && c == ndims) {
+			// d²G / (dA dxi)  
+			final int dim = r;
+			return - 2 * a[dim+ndims+1] * (x[dim] - a[dim])  * E(x, a);
+
+		} else if ( r < ndims && c > ndims) {
 			// H3
 			// d²G / (dxi dsj)
-			final int i = r - 1; // xi
-			final int j = c - ndims - 1; // sj
-			final double di = x[i] - a[i+1];
-			final double dj = x[j] - a[j+1];
-			return - 2 * a[0] * E(x, a) * a[i+ndims] * di * ( 1 - a[j+ndims] * dj * dj);
+			if (c == r + ndims+1) {
+				// same variable
+				// d²G / (dxi dsi)
+				final int i = r; // xi
+				final double di = x[i] - a[i];
+				return - 2 * a[ndims] * di * (a[r+ndims+1] * di * di - 1) * E(x, a);
+				
+			} else {
+				// cross derivative
+				// d²G / (dxi dsj)
+				final int i = r; // xi
+				final int j = c - ndims - 1; // bj
+				final double di = x[i] - a[i];
+				final double dj = x[j] - a[j]; 
+				return - 2 * a[ndims] * a[i+ndims+1] * di * dj * dj * E(x, a);
+			}
 
-		} else {
+		} else if ( c > ndims && r > ndims ) {
 			// H2
 			// d²G / (dsj dsi)
 			final int i = r - ndims - 1; // si
 			final int j = c - ndims - 1; // sj
-			final double di = x[i] - a[i+1];
-			final double dj = x[j] - a[j+1];
-			return a[0] * E(x, a) * di * di * dj * dj;
+			final double di = x[i] - a[i];
+			final double dj = x[j] - a[j];
+			return a[ndims] * E(x, a) * di * di * dj * dj;
+
+		} else {
+			// d²G / (dA dsi)
+			final int dim = c - ndims - 1;
+			final double di = x[dim] - a[dim];
+			return di * di * E(x, a);
 		}
+
 
 	}
 
@@ -168,11 +201,11 @@ public class EllipticGaussianOrtho implements FitFunction {
 		double sum = 0;
 		double di;
 		for (int i = 0; i < x.length; i++) {
-			di = x[i] - a[i+1];
+			di = x[i] - a[i];
 			sum += a[i+ndims+1] * di * di;
 		}
 		return Math.exp(-sum);
 	}
-	
+
 
 }
