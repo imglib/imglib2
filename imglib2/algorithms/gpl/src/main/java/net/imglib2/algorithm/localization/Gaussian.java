@@ -31,8 +31,8 @@ package net.imglib2.algorithm.localization;
  * <p>
  * This fitting target function is defined over dimension <code>n</code>, by the following 
  * <code>n+2</code> parameters:
- * <pre>k = 0       - A
- *k = 1..n    - x₀ᵢ (with i = k-1)
+ * <pre>k = 0..n-1  - x₀ᵢ (with i = k)
+ *k = n       - A
  *k = n+1 	   - b</pre>
  * with
  * <pre>f(x) = A × exp( - S )</pre>
@@ -47,7 +47,7 @@ public class Gaussian implements FitFunction {
 	/*
 	 * METHODS
 	 */
-	
+
 	@Override
 	public String toString() {
 		return "Gaussian function A × exp( -b × ∑ (xᵢ - x₀ᵢ)² )";
@@ -55,35 +55,35 @@ public class Gaussian implements FitFunction {
 
 	@Override
 	public final double val(final double[] x, final double[] a) {
-		return a[0] * E(x, a);
+		return a[a.length-2] * E(x, a);
 	}
 
 	/**
 	 * Partial derivatives indices are ordered as follow:
-	 * <pre>k = 0       - A
-	 *k = 1..n    - x_i (with i = k-1)
+	 * <pre>k = 0..n-1  - x_i (with i = k)
+	 *k = n       - A
 	 *k = n+1     - b</pre> 
 	 */
 	@Override
 	public final double grad(final double[] x, final double[] a, final int k) {
 		final int ndims = x.length;
-		if (k == 0) {
+		if (k == a.length-2) {
 			// With respect to A
 			return E(x, a);
 
-		} else if (k <= ndims) {
+		} else if (k < ndims) {
 			// With respect to xi
-			int dim = k - 1;
-			return 2 * a[1+ndims] * (x[dim] - a[dim+1]) * a[0] * E(x, a);
+			int dim = k;
+			return 2 * a[a.length-1] * (x[dim] - a[dim]) * a[a.length-2] * E(x, a);
 
 		} else {
 			// With respect to b
 			double d = 0, si;
 			for (int i = 0; i < ndims; i++) {
-				si = x[i] - a[i+1]; // (xᵢ - x₀ᵢ)
+				si = x[i] - a[i]; // (xᵢ - x₀ᵢ)
 				d += si * si; 
 			}
-			return - d * a[0] * E(x, a);
+			return - d * a[a.length-2] * E(x, a);
 		}
 	}
 
@@ -97,52 +97,54 @@ public class Gaussian implements FitFunction {
 
 		final int ndims = x.length;
 
-		if (r == 0) {
-			// 1st line
-
-			if (c == 0) {
-				return 0;
-
-			} else if (c <= ndims ) {
-				// d²G / (dA dxi)
-				final int dim = c - 1;
-				return 2 * a[a.length-1] * (x[dim] - a[dim+1])  * E(x, a);
-
-			} else {
-				// d²G / (dA db)
-				// With respect to b
-				return - S(x, a) * E(x, a) / a[a.length-1];
-			}
-
-		} else if (c == r) {
+		if (c == r) {
 			// diagonal
 
-			if (c <= ndims ) {
+			if (c < ndims ) {
 				// d²G / dxi²
-				final int dim = c - 1;
-				final double di = x[dim] - a[dim+1];
+				final int dim = c;
+				final double di = x[dim] - a[dim];
 				//         2 A b (2 b (C-x)^2-1) e^(-b ((C-x)^2+(D-y)^2))
-				return 2 * a[0] * a[a.length-1] * ( 2 * a[a.length-1] * di * di - 1 ) * E(x, a);
+				return 2 * a[a.length-2] * a[a.length-1] * ( 2 * a[a.length-1] * di * di - 1 ) * E(x, a);
+
+			} else if (c == a.length-2) {
+				// d²A / dxi²
+				return 0;
 
 			} else {
 				// d²G / db²
-				return a[0] * E(x, a) * S(x, a) * S(x, a) / a[a.length-1] / a[a.length-1];
+				return a[a.length-2] * E(x, a) * S(x, a) * S(x, a) / a[a.length-1] / a[a.length-1];
 			}
 
-		} else if ( c <= ndims && r <= ndims ) {
+		} else if ( c < ndims && r < ndims ) {
 			// H1
 			// d²G / (dxj dxi)
-			final int i = c - 1;
-			final int j = r - 1;
-			final double di = x[i] - a[i+1];
-			final double dj = x[j] - a[j+1];
-			return 4 * a[0] * a[a.length-1] * a[a.length-1] * di * dj * E(x, a);
+			final int i = c;
+			final int j = r;
+			final double di = x[i] - a[i];
+			final double dj = x[j] - a[j];
+			return 4 * a[a.length-2] * a[a.length-1] * a[a.length-1] * di * dj * E(x, a);
 
-		} else  {
-			// H3
-			// d²G / (dxi db)
-			final int i = r - 1; // xi
-			return 2 * a[0] * (x[i]-a[r]) * E(x, a) * ( 1 - S(x, a) );
+		} else if (c == a.length-2) {
+
+			// d²G / (dA dxi)
+			final int dim = r;
+			return 2 * a[a.length-1] * (x[dim] - a[dim])  * E(x, a);
+
+		} else  { // c == a.length - 1 -> b
+
+			if (r == a.length-2) {
+				// d²G / (dA db)
+				// With respect to b
+				return - S(x, a) * E(x, a) / a[a.length-1];
+
+			} else {
+
+				// H3
+				// d²G / (dxi db)
+				final int i = r; // xi
+				return 2 * a[a.length-2] * (x[i]-a[i]) * E(x, a) * ( 1 - S(x, a) );
+			}
 
 		}
 
@@ -151,12 +153,12 @@ public class Gaussian implements FitFunction {
 	/*
 	 * PRIVATE METHODS
 	 */
-	
+
 	private static final double S(final double[] x, final double[] a) {
 		double sum = 0;
 		double di;
 		for (int i = 0; i < x.length; i++) {
-			di = x[i] - a[i+1];
+			di = x[i] - a[i];
 			sum += di * di;
 		}
 		return a[a.length-1] * sum;
@@ -165,6 +167,6 @@ public class Gaussian implements FitFunction {
 	private static final double E(final double[] x, final double[] a) {
 		return Math.exp(- S(x,a));
 	}
-	
+
 
 }

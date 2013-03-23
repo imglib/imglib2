@@ -54,7 +54,7 @@ public class PeakFitterTest {
 				Localizable peak = new Point((long) x0, (long) y0);
 				peaks.add(peak);
 
-				double[] params = new double[] { A, x0, y0, 1/sigma/sigma };
+				double[] params = new double[] { x0, y0, A, 1/sigma/sigma };
 				LocalizationUtils.addGaussianSpotToImage(img, params);
 				groundTruth.put(peak, params);
 				
@@ -77,9 +77,9 @@ public class PeakFitterTest {
 			double[] truth = groundTruth.get(peak);
 			
 			// Pedestrian assertion
-			assertEquals("Bad accuracy on amplitude parameter A: ", truth[0], params[0], TOLERANCE * truth[0]);
-			assertEquals("Bad accuracy on peak location x0: ", truth[1], params[1], LOCALIZATION_TOLERANCE);
-			assertEquals("Bad accuracy on peak location y0: ", truth[2], params[2], LOCALIZATION_TOLERANCE);
+			assertEquals("Bad accuracy on amplitude parameter A: ", truth[2], params[2], TOLERANCE * truth[2]);
+			assertEquals("Bad accuracy on peak location x0: ", truth[0], params[0], LOCALIZATION_TOLERANCE);
+			assertEquals("Bad accuracy on peak location y0: ", truth[1], params[1], LOCALIZATION_TOLERANCE);
 			assertEquals("Bad accuracy on peak paramter b: ", truth[3], params[3], TOLERANCE * truth[3]);
 		}
 	}
