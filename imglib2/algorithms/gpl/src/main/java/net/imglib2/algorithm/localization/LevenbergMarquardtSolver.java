@@ -26,21 +26,77 @@
 
 package net.imglib2.algorithm.localization;
 
-import edu.mines.jtk.la.DMatrix;
-import edu.mines.jtk.la.DMatrixLud;
+import Jama.Matrix;
 
 /**
- * A collection of static utils implementing a plain Levenberg-Marquardt least-square curve fitting algorithm.
+ * A plain implementation of Levenberg-Marquardt least-square curve fitting algorithm.
+ * This solver makes use of only the function value and its gradient. That is:
+ * candidate functions need only to implement the {@link FitFunction#val(double[], double[])}
+ * and {@link FitFunction#grad(double[], double[], int)} methods to operate with this
+ * solver.
  * <p>
  * It was adapted and stripped from jplewis (www.idiom.com/~zilla) and released under 
- * the GPL. There are various small tweaks for robustness and speed, mainly a first step to derive 
- * a crude estimate, based on maximum-likelihood analytic formulae.
+ * the GPL. There are various small tweaks for robustness and speed.
  *
- * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> 2011
- * @author 2012
+ * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> 2011 - 2013
  */
-public class LevenbergMarquardtSolver {
-
+public class LevenbergMarquardtSolver implements FunctionFitter {
+	
+	private final int maxIteration;
+	private final double lambda;
+	private final double termEpsilon;
+	
+	/**
+	 * Creates a new Levenberg-Marquardt solver for least-square curve fitting problems. 
+	 * @param lambda blend between steepest descent (lambda high) and
+	 *	jump to bottom of quadratic (lambda zero). Start with 0.001.
+	 * @param termepsilon termination accuracy (0.01)
+	 * @param maxiter	stop and return after this many iterations if not done
+	 */
+	public LevenbergMarquardtSolver(int maxIteration, double lambda, double termEpsilon) {
+		this.maxIteration = maxIteration;
+		this.lambda = lambda;
+		this.termEpsilon = termEpsilon;
+	}
+	
+	/*
+	 * METHODS
+	 */
+	
+	@Override
+	public String toString() {
+		return "Levenberg-Marquardt least-square curve fitting algorithm";
+	}
+	
+	/**
+	 * Creates a new Levenberg-Marquardt solver for least-square curve fitting problems,
+	 * with default parameters set to:
+	 * <ul>
+	 * 	<li> <code>lambda  = 1e-3</code>
+	 * 	<li> <code>epsilon = 1e-1</code>
+	 * 	<li> <code>maxIter = 300</code>
+	 * </ul>
+	 */
+	public LevenbergMarquardtSolver() {
+		this(300, 1e-3d, 1e-1d);
+	}
+	
+	/*
+	 * MEETHODS
+	 */
+	
+	
+	@Override
+	public void fit(double[][] x, double[] y, double[] a, FitFunction f) throws Exception {
+		solve(x, a, y, f, lambda, termEpsilon, maxIteration);
+	}
+	
+	
+	
+	/*
+	 * STATIC METHODS
+	 */
+	
 	/**
 	 * Calculate the current sum-squared-error
 	 */
@@ -113,33 +169,18 @@ public class LevenbergMarquardtSolver {
 					g[r] += (y[i]-f.val(xi,a)) * f.grad(xi, a, r);
 				}
 			} //npts
-
-			// solve H d = -g, evaluate error at new location
-			//double[] d = DoubleMatrix.solve(H, g);
+			
 			double[] d = null;
-			try {
-				DMatrix mat1 = new DMatrix(H);
-				DMatrixLud lu = new DMatrixLud(mat1);
-				DMatrix mat2 = new DMatrix(nparm, nparm, 0d);
-				for (int i = 0; i < nparm; i++) {
-					mat2.set(i, i, g[i]);
-				}
-				DMatrix res = lu.solve(mat2);
-				d = res.getPackedRows();
-			} catch (RuntimeException re) {
-				// Matrix is singular
-				lambda *= 10.;
-				continue;
-			}
-			DMatrix amat = new DMatrix(nparm, nparm, 0d);
-			DMatrix dmat = new DMatrix(nparm, nparm, 0d);
-			for (int i = 0; i < nparm; i++) {
-				amat.set(i, i, a[i]);
-				dmat.set(i, i, d[i]);
-			}
-			double[] na = amat.plus(dmat).getPackedRows();
-			double e1 = chiSquared(x, na, y, f);
-
+            try {
+                    d = (new Matrix(H)).lu().solve(new Matrix(g, nparm)).getRowPackedCopy();
+            } catch (RuntimeException re) {
+                    // Matrix is singular
+                    lambda *= 10.;
+                    continue;
+            }
+            double[] na = (new Matrix(a, nparm)).plus(new Matrix(d,nparm)).getRowPackedCopy();
+            double e1 = chiSquared(x, na, y, f);
+			
 			// termination test (slightly different than NR)
 			if (Math.abs(e1-e0) > termepsilon) {
 				term = 0;
@@ -171,5 +212,6 @@ public class LevenbergMarquardtSolver {
 
 		return iter;
 	} //solve
+
 	
 }

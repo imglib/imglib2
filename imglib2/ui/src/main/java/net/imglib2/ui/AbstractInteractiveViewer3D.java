@@ -100,9 +100,9 @@ public abstract class AbstractInteractiveViewer3D< T extends NumericType< T > > 
 	}
 
 	@Override
-	public void screenImageChanged( final ARGBScreenImage screenImage )
+	public void screenImageChanged( final ARGBScreenImage img )
 	{
-		this.screenImage = screenImage;
+		screenImage = img;
 		projector = createProjector();
 	}
 

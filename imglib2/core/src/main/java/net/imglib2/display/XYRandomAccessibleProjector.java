@@ -54,7 +54,7 @@ public class XYRandomAccessibleProjector< A, B > extends AbstractXYProjector< A,
 {
 	final protected RandomAccessibleInterval< B > target;
 
-	public XYRandomAccessibleProjector( final RandomAccessible< A > source, final RandomAccessibleInterval< B > target, final Converter< A, B > converter )
+	public XYRandomAccessibleProjector( final RandomAccessible< A > source, final RandomAccessibleInterval< B > target, final Converter< ? super A, B > converter )
 	{
 		super( source, converter );
 		this.target = target;

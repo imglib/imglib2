@@ -71,31 +71,28 @@ public class MandelbrotRealRandomAccessible implements RealRandomAccessible< Lon
 		this.maxIterations = maxIterations;
 	}
 	
+	final static private long mandelbrot( final double re0, final double im0, final long maxIterations )
+	{
+		double re = re0;
+		double im = im0;
+		long i = 0;
+		for ( ; i < maxIterations; ++i )
+		{
+			final double squre = re * re;
+			final double squim = im * im;
+			if ( squre + squim > 4 )
+				break;
+			im = 2 * re * im + im0;
+			re = squre - squim + re0;
+		}
+		return i;
+	}
+	
 	public class MandelbrotRealRandomAccess extends RealPoint implements RealRandomAccess< LongType >
 	{
-		final LongType t;
-
 		public MandelbrotRealRandomAccess()
 		{
 			super( 2 ); // number of dimensions is 2
-			t = new LongType();
-		}
-
-		final private long mandelbrot( final double re0, final double im0, final long maxIterations )
-		{
-			double re = re0;
-			double im = im0;
-			long i = 0;
-			for ( ; i < maxIterations; ++i )
-			{
-				final double squre = re * re;
-				final double squim = im * im;
-				if ( squre + squim > 4 )
-					break;
-				im = 2 * re * im + im0;
-				re = squre - squim + re0;
-			}
-			return i;
 		}
 
 		@Override

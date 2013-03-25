@@ -35,26 +35,64 @@
  * #L%
  */
 
-/* BSD-licensed reimplementation */
+package net.imglib2.ops.function.real;
 
-package util;
+import net.imglib2.ops.function.Function;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.type.numeric.RealType;
+
+// TODO
+//   A correlation is really a GeneralBinaryOperation between an input function
+//   and a kernel function. For efficiency this class exists. For generality a
+//   kernel function could calculate in evaluate(neigh,point,output) the relation
+//   of neigh and point and choose the correct index into the kernel. By doing
+//   this we could have more flexibility in the definitions of kernels (rather
+//   than just an array of user supplied reals).
 
 /**
- * A simple accumulator of double values.
- *
- * The original, GPL-licensed version took great pains of trying to maintain
- * numerical stability. Since this reimplementation is simply supporting the
- * ImgLib2 examples, we do not do that here.
- *
- * @author Johannes Schindelin
+ * Computes the correlation of the values of another function over a region with
+ * a set of weights. The weights are specified in the constructor. The order of
+ * the kernel is defined spatially from upper left to lower right. Being
+ * correlation the kernel is applied in precisely that order. API users should
+ * choose carefully between convolution and correlation (see
+ * {@link RealConvolutionFunction}).
+ * 
+ * @author Barry DeZonia
  */
-public class RealSum { protected double sum;
+public class RealCorrelationFunction<T extends RealType<T>> implements
+	Function<PointSet, T>
+{
 
-	public void add(double value) {
-		sum += value;
+	// -- instance variables --
+
+	private final Function<long[], T> otherFunc;
+	private final double[] kernel;
+	private final RealWeightedSumFunction<T> weightedSum;
+
+	// -- constructor --
+
+	public RealCorrelationFunction(Function<long[], T> otherFunc, double[] kernel)
+	{
+		this.otherFunc = otherFunc;
+		this.kernel = kernel;
+		this.weightedSum = new RealWeightedSumFunction<T>(otherFunc, kernel);
 	}
 
-	public double getSum() {
-		return sum;
+	// -- Function methods --
+
+	@Override
+	public void compute(PointSet input, T output) {
+		weightedSum.compute(input, output);
 	}
+
+	@Override
+	public T createOutput() {
+		return otherFunc.createOutput();
+	}
+
+	@Override
+	public RealCorrelationFunction<T> copy() {
+		return new RealCorrelationFunction<T>(otherFunc.copy(), kernel.clone());
+	}
+
 }

@@ -39,12 +39,8 @@ package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.ops.pointset.PointSetIterator;
 import net.imglib2.type.numeric.RealType;
-
-// NOTE : convolution and correlation are similar operations whose output is
-//   rotated by 180 degrees for the same kernel. You can get one or the other
-//   from the same function by rotating the input kernel by 180 degrees. As
-//   implemented below this function is really a Correlation.
 
 // TODO
 //   A convolution is really a GeneralBinaryOperation between an input function
@@ -56,7 +52,11 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * Computes the convolution of the values of another function over a region with
- * a set of weights. The weights are specified in the constructor.
+ * a set of weights. The weights are specified in the constructor. The order of
+ * the kernel is defined spatially from upper left to lower right. Being
+ * convolution the kernel is applied in reverse order. API users should choose
+ * carefully between convolution and correlation (see
+ * {@link RealCorrelationFunction}).
  * 
  * @author Barry DeZonia
  */
@@ -67,7 +67,10 @@ public class RealConvolutionFunction<T extends RealType<T>>
 	
 	private final Function<long[],T> otherFunc;
 	private final double[] kernel;
-	private final RealWeightedSumFunction<T> weightedSum;
+	private PointSet ps;
+	private PointSetIterator iter;
+	private T tmp;
+	private double sum;
 	
 	// -- constructor --
 	
@@ -75,14 +78,29 @@ public class RealConvolutionFunction<T extends RealType<T>>
 	{
 		this.otherFunc = otherFunc;
 		this.kernel = kernel;
-		this.weightedSum = new RealWeightedSumFunction<T>(otherFunc, kernel);
+		this.ps = null;
+		this.iter = null;
+		this.tmp = createOutput();
 	}
 	
 	// -- Function methods --
 	
 	@Override
 	public void compute(PointSet input, T output) {
-		weightedSum.compute(input, output);
+		if (ps != input) {
+			ps = input;
+			iter = ps.iterator();
+		}
+		long[] pos;
+		int i = kernel.length - 1;
+		sum = 0;
+		iter.reset();
+		while (iter.hasNext()) {
+			pos = iter.next();
+			otherFunc.compute(pos, tmp);
+			sum += tmp.getRealDouble() * kernel[i--];
+		}
+		output.setReal(sum);
 	}
 
 	@Override

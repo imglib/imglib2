@@ -50,11 +50,11 @@ import net.imglib2.converter.Converter;
 abstract public class AbstractXYProjector< A, B > extends Point implements Projector< A, B >
 {
 	final protected RandomAccessible< A > source;
-	final protected Converter< A, B > converter;
+	final protected Converter< ? super A, B > converter;
 	final long[] min;
 	final long[] max;
 
-	public AbstractXYProjector( final RandomAccessible< A > source, final Converter< A, B > converter )
+	public AbstractXYProjector( final RandomAccessible< A > source, final Converter< ? super A, B > converter )
 	{
 		super( Math.max( 2, source.numDimensions() ) );
 
