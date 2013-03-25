@@ -1,6 +1,7 @@
 package net.imglib2.ops.sandbox;
 
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 
@@ -12,13 +13,6 @@ public class Types2 {
 	// **************************************************************
 	// TYPES
 	// **************************************************************
-
-	private interface Factory<T> {
-
-		T create();
-
-		T copy();
-	}
 
 	/**
 	 * Things that can be tested for equality: isEqual, isNotEqual
@@ -87,46 +81,93 @@ public class Types2 {
 	// DATA IMPLEMENTATIONS
 	// **************************************************************
 	
+	private interface Factory<T> {
+
+		T create();
+
+		T copy();
+	}
+
+	private interface Access<T> {
+
+		void setValue(T input);
+
+		void getValue(T result);
+	}
+
 	// primitive boolean type
 	// TODO - make it a class
 
-	private interface Bool extends Factory<Bool> {
+	private interface Bool extends Factory<Bool>, Access<Bool> {
+
+		// T-based accessors supported by Access
+		// primitive based accessors provided here too
 
 		boolean getValue();
 
-		void getValue(Bool result);
-
 		void setValue(boolean b);
-
-		void setValue(Bool b);
 	}
 
 	// primitive integer type
 	// TODO - make it a class
 
-	private interface Int extends Bounded<Int>, Integral<Int>, Factory<Int> {
+	private interface Int extends Integral<Int>, Factory<Int>, Access<Int>,
+		Bounded<Int>
+	{
+
+		// T-based accessors supported by Access
+		// primitive based accessors provided here too
 
 		int getValue();
 
-		void getValue(Int result);
-
 		void setValue(int i);
-
-		void setValue(Int i);
 	}
 
 	// unbounded integer type
 	// TODO - make it a class
 
-	private interface Integer extends Integral<Integer>, Factory<Integer> {
+	private interface Integer extends Integral<Integer>, Factory<Integer>,
+		Access<Integer>
+	{
+
+		// T-based accessors supported by Access
+		// primitive based accessors provided here too
 
 		BigInteger getValue();
 
-		void getValue(Integer result);
-
 		void setValue(BigInteger i);
+	}
 
-		void setValue(Integer i);
+	// primitive float type (which is bounded)
+	// TODO - make it a class
+	// TODO - this is an attempt without reference to original api : wrong?
+
+	private interface Float extends RealFloat<Float>, Factory<Float>,
+		Access<Float>, Bounded<Float>
+	{
+
+		// T-based accessors supported by Access
+		// primitive based accessors provided here too
+
+		float getValue();
+
+		void setValue(float value);
+	}
+
+	// unbounded floating type
+	// TODO - make it a class
+	// TODO - this is an attempt without reference to original api : wrong?
+
+	private interface MongoFloat extends RealFloat<MongoFloat>,
+		Factory<MongoFloat>, Access<MongoFloat>
+	{
+
+		// T-based accessors supported by Access
+		// primitive based accessors provided here too
+
+		BigDecimal getValue();
+
+		void setValue(BigDecimal value);
 	}
 
 	// TODO - some subtyping not enforced here. See definition at:
@@ -135,9 +176,11 @@ public class Types2 {
 	/**
 	 * A complex number type
 	 */
-	private interface Complex<T> extends Equable<Complex<T>>,
-		Floating<Complex<T>>, Factory<Complex<T>>
+	private interface Complex<T> extends Floating<Complex<T>>,
+		Factory<Complex<T>>, Access<Complex<T>>, Equable<Complex<T>>
 	{
+		// queries:
+
 		void real(T result);
 
 		void imag(T result);
@@ -151,11 +194,14 @@ public class Types2 {
 		void polar(T magResult, T phaseResult);
 	}
 
+	// TODO - one can add more data types like UnsignedByte, etc.
+	// TODO - how could Quaternions fit in here?
+
 	// **************************************************************
 	// OPS
 	// **************************************************************
 
-	// Equable OPS
+	// Equable OPS --------------------------------------------------
 
 	private interface IsEqualOp<T extends Equable<T>> {
 
@@ -167,7 +213,7 @@ public class Types2 {
 		void compute(T a, T b, Bool result);
 	}
 
-	// Ordered OPS
+	// Ordered OPS --------------------------------------------------
 
 	private interface CompareOp<T extends Ordered<T>> {
 
@@ -204,7 +250,7 @@ public class Types2 {
 		void compute(T a, T b, Bool result);
 	}
 
-	// Enumerable OPS
+	// Enumerable OPS --------------------------------------------------
 
 	private interface SuccOp<T extends Enumerable<T>> {
 
@@ -216,7 +262,7 @@ public class Types2 {
 		void compute(T a, T result);
 	}
 
-	// Bounded OPS
+	// Bounded OPS --------------------------------------------------
 
 	private interface MinBoundOp<T extends Bounded<T>> {
 
@@ -228,7 +274,7 @@ public class Types2 {
 		void compute(T a, T result);
 	}
 	
-	// Number OPS
+	// Number OPS --------------------------------------------------
 
 	private interface AddOp<T extends Number<T>> {
 
@@ -276,7 +322,7 @@ public class Types2 {
 		void compute(Integer a, T result);
 	}
 	
-	// Integral OPS
+	// Integral OPS --------------------------------------------------
 
 	private interface QuotientOp<T extends Integral<T>> {
 
@@ -338,7 +384,7 @@ public class Types2 {
 		<Z> void compute(T a, Number<Z> result);
 	}
 
-	// Real OPS
+	// Real OPS --------------------------------------------------
 	
 	private interface ToRationalOp<T extends Real<T>> {
 
@@ -350,7 +396,7 @@ public class Types2 {
 		<Z> void compute(T a, Fractional<Z> result);
 	}
 
-	// Ratio OPS
+	// Ratio OPS --------------------------------------------------
 
 	private interface Ratio<T> {
 
@@ -372,9 +418,9 @@ public class Types2 {
 		void compute(RealFrac<T> a, RealFrac<T> b, Rational result);
 	}
 
-	// Rational OPS
+	// Rational OPS --------------------------------------------------
 
-	// Fractional OPS
+	// Fractional OPS --------------------------------------------------
 
 	private interface DivideOp2<T extends Fractional<T>> {
 
@@ -396,198 +442,202 @@ public class Types2 {
 		<Z> void compute(T a, Integral<Z> b, T result);
 	}
 
-	// Floating OPS
+	// Floating OPS --------------------------------------------------
 
-	private interface PiOp<T> extends Fractional<T> {
+	// the constant PI
+
+	private interface PiOp<T extends Fractional<T>> {
 
 		void compute(T result);
 	}
 
-	private interface EOp<T> extends Fractional<T> {
+	// the constant E
+
+	private interface EOp<T extends Fractional<T>> {
 
 		void compute(T result);
 	}
 	
-	private interface ExpOp<T> extends Fractional<T> {
+	private interface ExpOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 
-	private interface SqrtOp<T> extends Fractional<T> {
+	private interface SqrtOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 
-	private interface LogOp<T> extends Fractional<T> {
+	private interface LogOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 
-	private interface PowOp<T> extends Fractional<T> {
+	private interface PowOp<T extends Fractional<T>> {
 
 		void compute(T a, T b, T result);
 	}
 	
-	private interface SinOp<T> extends Fractional<T> {
+	private interface SinOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 
-	private interface CosOp<T> extends Fractional<T> {
-
-		void compute(T a, T result);
-	}
-	
-	private interface TanOp<T> extends Fractional<T> {
+	private interface CosOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 	
-	private interface ArcSinOp<T> extends Fractional<T> {
+	private interface TanOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 	
-	private interface ArcCosOp<T> extends Fractional<T> {
+	private interface ArcSinOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 	
-	private interface ArcTanOp<T> extends Fractional<T> {
+	private interface ArcCosOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 	
-	private interface SinhOp<T> extends Fractional<T> {
+	private interface ArcTanOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 	
-	private interface CoshOp<T> extends Fractional<T> {
+	private interface SinhOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 	
-	private interface TanhOp<T> extends Fractional<T> {
+	private interface CoshOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 	
-	private interface ArcSinhOp<T> extends Fractional<T> {
+	private interface TanhOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 	
-	private interface ArcCoshOp<T> extends Fractional<T> {
+	private interface ArcSinhOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 	
-	private interface ArcTanhOp<T> extends Fractional<T> {
+	private interface ArcCoshOp<T extends Fractional<T>> {
+
+		void compute(T a, T result);
+	}
+	
+	private interface ArcTanhOp<T extends Fractional<T>> {
 
 		void compute(T a, T result);
 	}
 
-	// RealFrac OPS
+	// RealFrac OPS --------------------------------------------------
 
-	private interface ProperFractionOp<T> extends RealFrac<T> {
+	private interface ProperFractionOp<T extends RealFrac<T>> {
 
 		<Z> void compute(T a, Integral<Z> intResult, T fracResult);
 	}
 
-	private interface TruncateOp<T> extends RealFrac<T> {
+	private interface TruncateOp<T extends RealFrac<T>> {
 
 		<Z> void compute(T a, Integral<Z> result);
 	}
 
-	private interface RoundOp<T> extends RealFrac<T> {
+	private interface RoundOp<T extends RealFrac<T>> {
 
 		<Z> void compute(T a, Integral<Z> result);
 	}
 
-	private interface CeilingOp<T> extends RealFrac<T> {
+	private interface CeilingOp<T extends RealFrac<T>> {
 
 		<Z> void compute(T a, Integral<Z> result);
 	}
 
-	private interface FloorOp<T> extends RealFrac<T> {
+	private interface FloorOp<T extends RealFrac<T>> {
 
 		<Z> void floor(T a, Integral<Z> result);
 	}
 
-	// RealFloat OPS
+	// RealFloat OPS --------------------------------------------------
 
-	private interface FloatRadixOp<T> extends RealFloat<T> {
+	private interface FloatRadixOp<T extends RealFloat<T>> {
 
 		void compute(T a, Integer result);
 	}
 
-	private interface FloatDigitsOp<T> extends RealFloat<T> {
+	private interface FloatDigitsOp<T extends RealFloat<T>> {
 
 		void compute(T a, Int result);
 	}
 
-	private interface FloatRangeOp<T> extends RealFloat<T> {
+	private interface FloatRangeOp<T extends RealFloat<T>> {
 
 		void compute(T a, Int minResult, Int maxResult);
 	}
 
-	private interface DecodeFloatOp<T> extends RealFloat<T> {
+	private interface DecodeFloatOp<T extends RealFloat<T>> {
 
 		void compute(T a, Integer significandResult, Int exponentResult);
 	}
 
-	private interface EncodeFloatOp<T> extends RealFloat<T> {
+	private interface EncodeFloatOp<T extends RealFloat<T>> {
 
 		void compute(Integer significand, Int exponent, T result);
 	}
 
-	private interface ExponentOp<T> extends RealFloat<T> {
+	private interface ExponentOp<T extends RealFloat<T>> {
 
 		void compute(T a, Int result);
 	}
 
-	private interface SignificandOp<T> extends RealFloat<T> {
+	private interface SignificandOp<T extends RealFloat<T>> {
 
 		void compute(T a, T result);
 	}
 
-	private interface ScaleFloatOp<T> extends RealFloat<T> {
+	private interface ScaleFloatOp<T extends RealFloat<T>> {
 
 		void compute(T a, Int power, T result);
 	}
 
-	private interface isNanOp<T> extends RealFloat<T> {
+	private interface isNanOp<T extends RealFloat<T>> {
 
 		boolean compute(T a, Bool result);
 	}
 
-	private interface isInfiniteOp<T> extends RealFloat<T> {
+	private interface isInfiniteOp<T extends RealFloat<T>> {
 
 		boolean compute(T a, Bool result);
 	}
 
-	private interface isDenormalizedOp<T> extends RealFloat<T> {
+	private interface isDenormalizedOp<T extends RealFloat<T>> {
 
 		boolean compute(T a, Bool result);
 	}
 
-	private interface isNegativeZeroOp<T> extends RealFloat<T> {
+	private interface isNegativeZeroOp<T extends RealFloat<T>> {
 
 		boolean compute(T a, Bool result);
 	}
 
-	private interface isIEEEOp<T> extends RealFloat<T> {
+	private interface isIEEEOp<T extends RealFloat<T>> {
 
 		boolean compute(T a, Bool result);
 	}
 
-	private interface Atan2Op<T> extends RealFloat<T> {
+	private interface Atan2Op<T extends RealFloat<T>> {
 
 		void compute(T x, T y, T result);
 	}
 
-	// Complex OPS
+	// Complex OPS --------------------------------------------------
 
 	private interface MakePolarOp<T> {
 
@@ -599,11 +649,12 @@ public class Types2 {
 		Complex<T> compute(RealFloat<T> mag, RealFloat<T> phase);
 	}
 	
-	// TODO - I might have done this one wrong: maybe no 1st param and maybe a
-	// constructor
-	private interface CisOp<T> {
+	// Passing a CisOp a t in range 0..2*pi it returns a complex value with
+	// magnitude 1 and phase t.
+	// TODO - maybe a constructor
+	private interface CisOp<T extends RealFloat<T>> {
 
-		void compute(Complex<T> a, RealFloat<T> b, Complex<T> result);
+		void compute(T t, Complex<T> result);
 	}
 	
 	private interface ConjugateOp<T> {
