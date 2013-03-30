@@ -29,6 +29,7 @@ package net.imglib2.algorithm.scalespace;
 import net.imglib2.Localizable;
 import net.imglib2.algorithm.scalespace.DifferenceOfGaussian.SpecialPoint;
 import net.imglib2.type.numeric.NumericType;
+import net.imglib2.util.Util;
 
 /**
  * TODO
@@ -173,22 +174,6 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 	@Override
 	public int getIntPosition( final int dim ) { return (int)pixelLocation[ dim ]; }
 
-//	@Override
-//	public float get( final int k ) { return getSubPixelPosition( k ); }
-
-//	@Override
-//	public float distanceTo( final DifferenceOfGaussianPeak<T> other )
-//	{
-//		double sum = 0;
-//
-//		for ( int d = 0; d < numDimensions; ++d )
-//		{
-//			final double tmp = other.get( d ) - get( d );
-//			sum += tmp * tmp;
-//		}
-//
-//		return (float)Math.sqrt( sum );
-//	}
 
 	@Override
 	public int numDimensions() { return numDimensions; }
@@ -208,4 +193,15 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 
 	@Override
 	public double getDoublePosition( final int d ) { return getSubPixelPosition( d ); }
+	
+	@Override
+	public String toString() {
+		String str = "[DifferenceOgGaussianPeak] " + specialPoint
+				+ ", value = " + getValue()
+				+ ", fit value = " + getFitValue()
+				+ ", img value = " + getImgValue()
+				+ ", pixel pos. =  " + Util.printCoordinates(pixelLocation)
+				+ ", subpixel pos. =  " + Util.printCoordinates( getSubPixelPosition() );
+		return str;
+	}
 }

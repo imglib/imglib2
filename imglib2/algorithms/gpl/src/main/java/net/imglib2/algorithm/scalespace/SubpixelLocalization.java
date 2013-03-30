@@ -26,9 +26,8 @@
 
 package net.imglib2.algorithm.scalespace;
 
-import Jama.Matrix;
-import Jama.SingularValueDecomposition;
-
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -45,6 +44,8 @@ import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.view.Views;
+import Jama.Matrix;
+import Jama.SingularValueDecomposition;
 
 /**
  * TODO
@@ -54,7 +55,7 @@ import net.imglib2.view.Views;
 public class SubpixelLocalization< T extends RealType<T> > implements Algorithm, Benchmark, MultiThreaded
 {
 	Img<T> laPlacian;
-	List<DifferenceOfGaussianPeak<T>> peaks;
+	Collection<DifferenceOfGaussianPeak<T>> peaks;
 	
 	int maxNumMoves = 4;
 	boolean allowMaximaTolerance = false;
@@ -68,7 +69,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	int numThreads = 1;
 	String errorMessage = "";
 	
-	public SubpixelLocalization( final Img<T> laPlacian, final List<DifferenceOfGaussianPeak<T>> peaks )
+	public SubpixelLocalization( final Img<T> laPlacian, final Collection<DifferenceOfGaussianPeak<T>> peaks )
 	{
 		setNumThreads();
 		this.laPlacian = laPlacian;
@@ -94,7 +95,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	public boolean getCanMoveOutside() { return canMoveOutside; }
 	public float getMaximaTolerance() { return maximaTolerance; }
 	public Img<T> getLaPlaceImg() { return laPlacian; }
-	public List<DifferenceOfGaussianPeak<T>> getDoGPeaks() { return peaks; }
+	public Collection<DifferenceOfGaussianPeak<T>> getDoGPeaks() { return peaks; }
 	public int getMaxNumMoves() { return maxNumMoves; }
 	public boolean[] getAllowedToMoveInDim() { return allowedToMoveInDim.clone(); }
 
@@ -107,29 +108,23 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	}
 	
 	@Override 
-	public boolean process()
-	{
+	public boolean process() {
 		final long startTime = System.currentTimeMillis();
 		
 	    final AtomicInteger ai = new AtomicInteger( 0 );					
 	    final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
 	    final int numThreads = threads.length;
-	    
+	    final Iterator<DifferenceOfGaussianPeak<T>> it = peaks.iterator();
 		for (int ithread = 0; ithread < threads.length; ++ithread)
-	        threads[ithread] = new Thread(new Runnable()
-	        {
+	        threads[ithread] = new Thread(new Runnable() {
 	            @Override
-							public void run()
-	            {
+	            public void run() {
 	            	final int myNumber = ai.getAndIncrement();
 	            	
-	            	for ( int i = 0; i < peaks.size(); ++i )
-	            	{
-	            		if ( i % numThreads == myNumber )
-	            		{
+	            	for ( int i = 0; i < peaks.size(); ++i ) {
+	            		if ( i % numThreads == myNumber ) {
 	            			final DifferenceOfGaussianPeak<T> peak;	            			
-	            			synchronized ( peaks ) { peak = peaks.get( i ); }
-	            			
+	            			synchronized ( it ) { peak = it.next(); }
 	            			analyzePeak( peak );
 	            		}
 	            	}
@@ -137,14 +132,11 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	        });
 		
 		SimpleMultiThreading.startAndJoin( threads );
-		
 		processingTime = System.currentTimeMillis() - startTime;
-		
 		return true;
 	}
 	
-	public boolean analyzePeak( final DifferenceOfGaussianPeak<T> peak )
-	{
+	public boolean analyzePeak( final DifferenceOfGaussianPeak<T> peak ) {
 		final int numDimensions = laPlacian.numDimensions(); 
 
 		// the subpixel values
@@ -156,11 +148,11 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 		
 		// the cursor for the computation (one that cannot move out of Img)
 		final RandomAccess<T> cursor;
-		
-		if ( canMoveOutside )
+		if ( canMoveOutside ) {
 			cursor = Views.extendPeriodic( laPlacian ).randomAccess();
-		else
+		} else {
 			cursor = laPlacian.randomAccess();
+		}
 		
 		// the current hessian matrix and derivative vector
 		Img<DoubleType> hessianMatrix = doubleArrayFactory.create( new int[] { cursor.numDimensions(), cursor.numDimensions() }, new DoubleType() );
@@ -177,7 +169,7 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 		
 		// fit n-dimensional quadratic function to the extremum and 
 		// if the extremum is shifted more than 0.5 in one or more 
-		// directions we test wheather it is better there
+		// directions we test whether it is better there
 		// until we 
 		//   - converge (find a stable extremum)
 		//   - move out of the Img
@@ -204,21 +196,24 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 			// compute the inverse of the hessian matrix
 			A = invertMatrix( hessianMatrix );
 			
-			if ( A == null )
+			if ( A == null ) {
 				return handleFailure( peak, "Cannot invert hessian matrix" );
+			}
 			
 			// compute the n-dimensional derivative vector
 			derivativeVector = getDerivativeVector( cursor, derivativeVector );
 			B = getMatrix( derivativeVector );
 			
-			if ( B == null )
+			if ( B == null ) {
 				return handleFailure( peak, "Cannot compute derivative vector" );
+			}
 			
-			// compute the extremum of the n-dimensinal quadratic fit
+			// compute the extremum of the n-dimensional quadratic fit
 			X = ( A.uminus() ).times( B );
 			
-			for ( int d = 0; d < numDimensions; ++d )
+			for ( int d = 0; d < numDimensions; ++d ) {
 				subpixelLocation[ d ] = X.get( d, 0 );
+			}
 			
 			// test all dimensions for their change
 			// if the absolute value of the subpixel location
@@ -604,29 +599,17 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 	}
 		
 	@Override
-	public boolean checkInput()
-	{
-		if ( errorMessage.length() > 0 )
-		{
+	public boolean checkInput() {
+		if ( errorMessage.length() > 0 ) {
 			return false;
-		}
-		else if ( laPlacian == null )
-		{
+		} else if ( laPlacian == null ) {
 			errorMessage = "SubpixelLocalization: [Img<T> img] is null.";
 			return false;
-		}
-		else if ( peaks == null )
-		{
+		} else if ( peaks == null ) {
 			errorMessage = "SubpixelLocalization: [List<DifferenceOfGaussianPeak<T>> peaks] is null.";
 			return false;
 		}
-		else if ( peaks.size() == 0 )
-		{
-			errorMessage = "SubpixelLocalization: [List<DifferenceOfGaussianPeak<T>> peaks] is empty.";
-			return false;
-		}
-		else
-			return true;
+		return true;
 	}	
 
 	@Override
@@ -643,4 +626,5 @@ public class SubpixelLocalization< T extends RealType<T> > implements Algorithm,
 
 	@Override
 	public long getProcessingTime() { return processingTime; }
+	
 }
