@@ -59,6 +59,7 @@ import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.outofbounds.OutOfBoundsRandomValueFactory;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 
@@ -158,6 +159,23 @@ public class Views
 	public static < T extends Type< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F randomAccessible, final T value )
 	{
 		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsConstantValueFactory< T, F >( value ) );
+	}
+
+	/**
+	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
+	 * strategy where the constant value is the zero-element of the data type.
+	 *
+	 * @param randomAccessible
+	 *            the interval to extend.
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity with a constant value of zero.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
+	 */
+	public static < T extends NumericType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendZero( final F randomAccessible )
+	{
+		final T zero = Util.getTypeFromInterval( randomAccessible ).createVariable();
+		zero.setZero();
+		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsConstantValueFactory< T, F >( zero ) );
 	}
 
 	/**
