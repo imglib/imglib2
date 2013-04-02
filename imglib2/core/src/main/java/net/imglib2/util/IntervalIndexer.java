@@ -37,6 +37,10 @@
 
 package net.imglib2.util;
 
+import net.imglib2.Dimensions;
+import net.imglib2.Localizable;
+import net.imglib2.Positionable;
+
 /**
  * N-dimensional data is often stored in a flat 1-dimensional array.
  * This class provides convenience methods to translate between N-dimensional
@@ -71,6 +75,15 @@ public class IntervalIndexer
 		long i = position[ maxDim ];
 		for ( int d = maxDim - 1; d >= 0; --d )
 			i = i * dimensions[ d ] + position[ d ];
+		return i;
+	}
+
+	final static public long positionToIndex( final Localizable position, final Dimensions dimensions )
+	{
+		final int maxDim = dimensions.numDimensions() - 1;
+		long i = position.getLongPosition( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * dimensions.dimension( d ) + position.getLongPosition( d );
 		return i;
 	}
 
@@ -138,6 +151,18 @@ public class IntervalIndexer
 			index = j;
 		}
 		position[ maxDim ] = index;
+	}
+
+	final static public void indexToPosition( long index, final Dimensions dimensions, final Positionable position )
+	{
+		final int maxDim = dimensions.numDimensions() - 1;
+		for ( int d = 0; d < maxDim; ++d )
+		{
+			final long j = index / dimensions.dimension( d );
+			position.setPosition( index - j * dimensions.dimension( d ), d );
+			index = j;
+		}
+		position.setPosition( index, maxDim );
 	}
 
 	final static public void indexToPosition( int index, final int[] dimensions, final float[] position )
