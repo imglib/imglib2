@@ -285,7 +285,7 @@ A:						while( cursorDim.hasNext() )
 									tempIn[ i * 2 + 1 ] = cursor.get().getImaginaryFloat();
 									cursor.fwd( 0 );
 								}
-								tempIn[ (complexSize-1) * 2 ] = cursor.get().getImaginaryFloat();
+								tempIn[ (complexSize-1) * 2 ] = cursor.get().getRealFloat();
 								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.get().getImaginaryFloat();
 																								
 								// compute the fft in dimension 0 ( complex -> real )
