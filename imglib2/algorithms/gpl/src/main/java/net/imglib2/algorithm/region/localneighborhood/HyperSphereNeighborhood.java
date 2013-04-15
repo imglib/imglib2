@@ -42,6 +42,7 @@ public class HyperSphereNeighborhood<T, IN extends RandomAccessibleInterval<T>>
 			final OutOfBoundsFactory<T, IN> outOfBounds, final long radius) {
 		super(source.numDimensions(), outOfBounds);
 		this.radius = radius;
+		updateSource(source);
 	}
 
 	/*
