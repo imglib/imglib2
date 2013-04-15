@@ -144,12 +144,12 @@ public class ScaleSpace< A extends Type<A>> implements OutputAlgorithm<Img<Float
 		 * Find and suppress extrema.
 		 */
 		peaks = DifferenceOfGaussian.findPeaks(scaleSpace, threshold, numThreads);
-		double radius = sigma[0] * 3; // FIXME what should be a good value?
-		AdaptiveNonMaximalSuppression<FloatType> peakFinder = new AdaptiveNonMaximalSuppression<FloatType>(peaks, radius );
-		if (!peakFinder.checkInput() || !peakFinder.process()) {
-			errorMessage = "Cannot suppress peaks: " + peakFinder.getErrorMessage();
-			return false;
-		}
+//		double radius = sigma[0] * 3; // FIXME what should be a good value?
+//		AdaptiveNonMaximalSuppression<FloatType> peakFinder = new AdaptiveNonMaximalSuppression<FloatType>(peaks, radius );
+//		if (!peakFinder.checkInput() || !peakFinder.process()) {
+//			errorMessage = "Cannot suppress peaks: " + peakFinder.getErrorMessage();
+//			return false;
+//		}
 		
 		/*
 		 * Subpixel localize them.
@@ -168,16 +168,16 @@ public class ScaleSpace< A extends Type<A>> implements OutputAlgorithm<Img<Float
 		for ( final DifferenceOfGaussianPeak<FloatType> peak : peaks ) {
 			/*  +0.5 to get it relative to the sigmas and not the difference of the sigmas 
 			 *  e.g. dog 1 corresponds to between sigmas 1 and 2		 */
-			double size = peak.getSubPixelPosition( scaleSpace.numDimensions() - 1 ) + 0.5f; 			
-			size = initialSigma * Math.pow( 2.0f, size / ( double )stepsPerOctave );
+			double optimalSigma = peak.getSubPixelPosition( scaleSpace.numDimensions() - 1 ) + 0.5d; 			
+			optimalSigma = initialSigma * Math.pow( 2.0d, optimalSigma / ( double )stepsPerOctave );
 			
-			peak.setPixelLocation( (int)Math.round(size), scaleSpace.numDimensions() - 1 );
-			peak.setSubPixelLocationOffset( (float)size - (int)Math.round(size), scaleSpace.numDimensions() - 1 );
+			peak.setPixelLocation( Math.round(optimalSigma), scaleSpace.numDimensions() - 1 );
+			peak.setSubPixelLocationOffset( optimalSigma - Math.round(optimalSigma), scaleSpace.numDimensions() - 1 );
 			
 			if ( scale != 1.0 ) {
 				for ( int d = 0; d < scaleSpace.numDimensions(); ++d ) {
-					final float sizeHalf = peak.getSubPixelPosition( d ) / 2.0f;
-					final int pixelLocation = Util.round( sizeHalf );
+					final double sizeHalf = peak.getSubPixelPosition( d ) / 2.0f;
+					final long pixelLocation = Util.round( sizeHalf );
 					
 					peak.setPixelLocation( pixelLocation, d );
 					peak.setSubPixelLocationOffset( sizeHalf - pixelLocation, d );					

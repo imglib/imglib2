@@ -136,7 +136,6 @@ public class DifferenceOfGaussian {
 			e.printStackTrace();
 		}
 
-		System.out.println("Total peak found: " + dogPeaks.size());// DEBUG
 		return dogPeaks;
 	}
 

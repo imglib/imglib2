@@ -42,7 +42,7 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 	String errorMessage;
 
 	final protected long[] pixelLocation;
-	final protected float[] subPixelLocationOffset;
+	final protected double[] subPixelLocationOffset;
 	final protected T value, fitValue, sumValue;
 	final int numDimensions;
 
@@ -50,7 +50,7 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 	{
 		this.specialPoint = specialPoint;
 		this.pixelLocation = pixelLocation.clone();
-		this.subPixelLocationOffset = new float[ pixelLocation.length ];
+		this.subPixelLocationOffset = new double[ pixelLocation.length ];
 
 		this.numDimensions = pixelLocation.length;
 
@@ -68,7 +68,7 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 		this.specialPoint = specialPoint;
 		this.pixelLocation = new long[ numDimensions ];
 		pixelLocation.localize( this.pixelLocation );
-		this.subPixelLocationOffset = new float[ numDimensions ];
+		this.subPixelLocationOffset = new double[ numDimensions ];
 
 		this.value = value.copy();
 		this.sumValue = value.copy();
@@ -95,37 +95,37 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 	public boolean isMax() { return specialPoint == SpecialPoint.MAX; }
 	public boolean isValid() { return specialPoint != SpecialPoint.INVALID; }
 	public SpecialPoint getPeakType() { return specialPoint; }
-	public float[] getSubPixelPositionOffset() { return subPixelLocationOffset.clone(); }
-	public float getSubPixelPositionOffset( final int dim ) { return subPixelLocationOffset[ dim ]; }
-	public float[] getSubPixelPosition()
+	public double[] getSubPixelPositionOffset() { return subPixelLocationOffset.clone(); }
+	public double getSubPixelPositionOffset( final int dim ) { return subPixelLocationOffset[ dim ]; }
+	public double[] getSubPixelPosition()
 	{
-		final float[] loc = subPixelLocationOffset.clone();
+		final double[] loc = subPixelLocationOffset.clone();
 
 		for ( int d = 0; d < loc.length; ++d )
 			loc[ d ] += pixelLocation[ d ];
 
 		return loc;
 	}
-	public void getSubPixelPosition( final float[] loc )
+	public void getSubPixelPosition( final double[] loc )
 	{
 		for ( int d = 0; d < loc.length; ++d )
 			loc[ d ] = subPixelLocationOffset[ d ] + pixelLocation[ d ];
 	}
 
-	public float getSubPixelPosition( final int dim ) { return subPixelLocationOffset[ dim ] + pixelLocation[ dim ]; }
+	public double getSubPixelPosition( final int dim ) { return subPixelLocationOffset[ dim ] + pixelLocation[ dim ]; }
 	public T getValue() { return sumValue; }
 	public T getImgValue() { return value; }
 	public T getFitValue() { return fitValue; }
 	public String getErrorMessage() { return errorMessage; }
 
 	public void setPeakType( final SpecialPoint specialPoint ) { this.specialPoint = specialPoint; }
-	public void setSubPixelLocationOffset( final float subPixelLocationOffset, final int dim ) { this.subPixelLocationOffset[ dim ] = subPixelLocationOffset; }
-	public void setSubPixelLocationOffset( final float[] subPixelLocationOffset )
+	public void setSubPixelLocationOffset( final double subPixelLocationOffset, final int dim ) { this.subPixelLocationOffset[ dim ] = subPixelLocationOffset; }
+	public void setSubPixelLocationOffset( final double[] subPixelLocationOffset )
 	{
 		for ( int d = 0; d < pixelLocation.length; ++d )
 			this.subPixelLocationOffset[ d ] = subPixelLocationOffset[ d ];
 	}
-	public void setPixelLocation( final int location, final int dim ) { pixelLocation[ dim ] = location; }
+	public void setPixelLocation( final long location, final int dim ) { pixelLocation[ dim ] = location; }
 	public void setPixelLocation( final int[] pixelLocation )
 	{
 		for ( int d = 0; d < pixelLocation.length; ++d )
@@ -179,9 +179,6 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 	public int numDimensions() { return numDimensions; }
 
 	@Override
-	public void localize( final float[] position ) { getSubPixelPosition( position ); }
-
-	@Override
 	public void localize( final double[] position)
 	{
 		for ( int d = 0; d < position.length; ++d )
@@ -189,14 +186,22 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 	}
 
 	@Override
-	public float getFloatPosition( final int d ) { return getSubPixelPosition( d ); }
+	public float getFloatPosition( final int d ) { return (float) getSubPixelPosition( d ); }
 
 	@Override
 	public double getDoublePosition( final int d ) { return getSubPixelPosition( d ); }
 	
+
+	@Override
+	public void localize(float[] position) {
+		for (int d = 0; d < position.length; d++) {
+			position[d] = (float) (subPixelLocationOffset[ d ] + pixelLocation[ d ]);
+		}
+	}
+	
 	@Override
 	public String toString() {
-		String str = "[DifferenceOgGaussianPeak] " + specialPoint
+		String str = "[DifferenceOfGaussianPeak] " + specialPoint
 				+ ", value = " + getValue()
 				+ ", fit value = " + getFitValue()
 				+ ", img value = " + getImgValue()
@@ -204,4 +209,5 @@ public class DifferenceOfGaussianPeak< T extends NumericType<T> > implements Loc
 				+ ", subpixel pos. =  " + Util.printCoordinates( getSubPixelPosition() );
 		return str;
 	}
+
 }

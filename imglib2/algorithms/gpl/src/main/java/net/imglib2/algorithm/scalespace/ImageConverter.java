@@ -164,9 +164,7 @@ public class ImageConverter< S extends Type<S>, T extends Type<T> > implements A
 		final Cursor<T> cursorOut = output.localizingCursor();
 		
 		// move to the starting position of the current thread
-		for (long i = 0; i < startPos; i++) {
-			cursorOut.fwd();
-		}
+		cursorOut.jumpFwd(startPos);
     	
         // do as many pixels as wanted by this thread
         for ( long j = 0; j < loopSize; ++j )
