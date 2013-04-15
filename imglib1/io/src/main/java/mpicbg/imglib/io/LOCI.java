@@ -762,7 +762,7 @@ public class LOCI
 						while(it.hasNext())
 						{
 							it.fwd();
-							it.getType().set( getShortValue( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
+							it.getType().set( getShortValueInt( b[ 0 ], ( it.getPosition( planeX )+it.getPosition( planeY )*width ) * 2, isLittleEndian ) );
 						}
 					}						
 					else if (pixelType == FormatTools.UINT32)
