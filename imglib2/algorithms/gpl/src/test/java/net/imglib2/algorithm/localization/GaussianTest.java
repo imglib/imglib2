@@ -13,7 +13,7 @@ public class GaussianTest {
 
 	private final Gaussian g = new Gaussian();
 
-	private static final double params[] = new double[] {  10, 3, -5, 0.1 };
+	private static final double params[] = new double[] {  3, -5, 10, 0.1 };
 	private static final double TOLERANCE = 1e-14; // set by MATLAB display of floats
 
 	private static final double[] X = new double[] { 
@@ -364,19 +364,19 @@ public class GaussianTest {
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
-			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in dG/dA value.", val[i] / params[0], g.grad(pos, params, 0), TOLERANCE);
+			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in dG/dA value.", val[i] / params[2], g.grad(pos, params, 2), TOLERANCE);
 		}
 		// dG/dx0
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
-			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in dG/dx0 value.", dgdx0_val[i], g.grad(pos, params, 1), TOLERANCE);
+			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in dG/dx0 value.", dgdx0_val[i], g.grad(pos, params, 0), TOLERANCE);
 		}
 		// dG/dy0
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
-			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in dG/dy0 value.", dgdy0_val[i], g.grad(pos, params, 2), TOLERANCE);
+			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in dG/dy0 value.", dgdy0_val[i], g.grad(pos, params, 1), TOLERANCE);
 		}
 		// dG/db
 		for (int i = 0; i < X.length; i++) {
@@ -395,91 +395,91 @@ public class GaussianTest {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dA² value.", 
-					0, g.hessian(pos, params, 0, 0), TOLERANCE);
+					0, g.hessian(pos, params, 2, 2), TOLERANCE);
 		}
 		// d2G / dAdx0
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dAdx0 value, ", 
-					d2gdAdx0_val[i], g.hessian(pos, params, 0, 1), TOLERANCE);
+					d2gdAdx0_val[i], g.hessian(pos, params, 2, 0), TOLERANCE);
 		}
 		// d2G / dx0dA paranoid I tell you
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dx0dA value, ", 
-					d2gdAdx0_val[i], g.hessian(pos, params, 1, 0), TOLERANCE);
+					d2gdAdx0_val[i], g.hessian(pos, params, 0, 2), TOLERANCE);
 		}
 		// d2G / dAdy0
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dAdy0 value, ", 
-					d2gdAdy0_val[i], g.hessian(pos, params, 0, 2), TOLERANCE);
+					d2gdAdy0_val[i], g.hessian(pos, params, 2, 1), TOLERANCE);
 		}
 		// d2G / dy0dA paranoid I tell you
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dy0dA value, ", 
-					d2gdAdy0_val[i], g.hessian(pos, params, 2, 0), TOLERANCE);
+					d2gdAdy0_val[i], g.hessian(pos, params, 1, 2), TOLERANCE);
 		}
 		// d2G / dAdb
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dAdb value, ", 
-					d2gdAdb_val[i], g.hessian(pos, params, 0, 3), TOLERANCE);
+					d2gdAdb_val[i], g.hessian(pos, params, 2, 3), TOLERANCE);
 		}
 		// d2G / dbdA paranoid I tell you
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dbdA value, ", 
-					d2gdAdb_val[i], g.hessian(pos, params, 3, 0), TOLERANCE);
+					d2gdAdb_val[i], g.hessian(pos, params, 3, 2), TOLERANCE);
 		}
 		// d2G / dx0dy0
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dx0dy0 value, ", 
-					d2gdx0dy0_val[i], g.hessian(pos, params, 1, 2), TOLERANCE);
+					d2gdx0dy0_val[i], g.hessian(pos, params, 0, 1), TOLERANCE);
 		}
 		// d2G / dy0dx0 paranoid I tell you
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dy0dx0 value, ", 
-					d2gdx0dy0_val[i], g.hessian(pos, params, 2, 1), TOLERANCE);
+					d2gdx0dy0_val[i], g.hessian(pos, params, 1, 0), TOLERANCE);
 		}
 		// d2G / dx0db
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dx0db value, ", 
-					d2gdx0db_val[i], g.hessian(pos, params, 1, 3), 10 * TOLERANCE);
+					d2gdx0db_val[i], g.hessian(pos, params, 0, 3), 10 * TOLERANCE);
 		}
 		// d2G / dbdx0 paranoid I tell you
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dbdx0 value, ", 
-					d2gdx0db_val[i], g.hessian(pos, params, 3, 1), 10 * TOLERANCE);
+					d2gdx0db_val[i], g.hessian(pos, params, 3, 0), 10 * TOLERANCE);
 		}
 		// d2G / dy0db
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dy0db value, ", 
-					d2gdy0db_val[i], g.hessian(pos, params, 2, 3), 10 * TOLERANCE);
+					d2gdy0db_val[i], g.hessian(pos, params, 1, 3), 10 * TOLERANCE);
 		}
 		// d2G / dbdy0 paranoid I tell you
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dbdy0 value, ", 
-					d2gdy0db_val[i], g.hessian(pos, params, 3, 2), 10 * TOLERANCE);
+					d2gdy0db_val[i], g.hessian(pos, params, 3, 1), 10 * TOLERANCE);
 		}
 		// d2G / db2
 		for (int i = 0; i < X.length; i++) {
@@ -493,14 +493,14 @@ public class GaussianTest {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dx0² value, ", 
-					d2gdx02_val[i], g.hessian(pos, params, 1, 1), TOLERANCE);
+					d2gdx02_val[i], g.hessian(pos, params, 0, 0), TOLERANCE);
 		}
 		// d2G / dy02
 		for (int i = 0; i < X.length; i++) {
 			pos[0] = X[i];
 			pos[1] = Y[i];
 			assertEquals("Bad accuracy for x=" + pos[0]+", y="+pos[1]+" in d²G/dy0² value, ", 
-					d2gdy02_val[i], g.hessian(pos, params, 2, 2), TOLERANCE);
+					d2gdy02_val[i], g.hessian(pos, params, 1, 1), TOLERANCE);
 		}
 	}
 

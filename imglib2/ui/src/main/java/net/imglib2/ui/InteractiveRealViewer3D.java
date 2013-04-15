@@ -48,6 +48,13 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 
+/**
+ * 
+ * @param <T>
+ *
+ * @author TobiasPietzsch <tobias.pietzsch@gmail.com>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
 public class InteractiveRealViewer3D< T extends NumericType< T > > extends AbstractInteractiveViewer3D< T >
 {
 	/**
@@ -58,24 +65,24 @@ public class InteractiveRealViewer3D< T extends NumericType< T > > extends Abstr
 	/**
 	 * Converts {@link #source} type T to ARGBType for display
 	 */
-	final protected Converter< T, ARGBType > converter;
+	final protected Converter< ? super T, ARGBType > converter;
 
-	public InteractiveRealViewer3D( final int width, final int height, final RealRandomAccessible< T > source, final Interval sourceInterval, final Converter< T, ARGBType > converter )
+	public InteractiveRealViewer3D( final int width, final int height, final RealRandomAccessible< T > source, final Interval sourceInterval, final Converter< ? super T, ARGBType > converter )
 	{
 		this( width, height, source, sourceInterval, new AffineTransform3D(), converter );
 	}
 
-	public InteractiveRealViewer3D( final int width, final int height, final RealRandomAccessible< T > source, final Interval sourceInterval, final Converter< T, ARGBType > converter, final DisplayTypes displayType )
+	public InteractiveRealViewer3D( final int width, final int height, final RealRandomAccessible< T > source, final Interval sourceInterval, final Converter< ? super T, ARGBType > converter, final DisplayTypes displayType )
 	{
 		this( width, height, source, sourceInterval, new AffineTransform3D(), converter, displayType );
 	}
 
-	public InteractiveRealViewer3D( final int width, final int height, final RealRandomAccessible< T > source, final Interval sourceInterval, final AffineTransform3D sourceTransform, final Converter< T, ARGBType > converter )
+	public InteractiveRealViewer3D( final int width, final int height, final RealRandomAccessible< T > source, final Interval sourceInterval, final AffineTransform3D sourceTransform, final Converter< ? super T, ARGBType > converter )
 	{
 		this( width, height, source, sourceInterval, sourceTransform, converter, DisplayTypes.DISPLAY_SWING );
 	}
 
-	public InteractiveRealViewer3D( final int width, final int height, final RealRandomAccessible< T > source, final Interval sourceInterval, final AffineTransform3D sourceTransform, final Converter< T, ARGBType > converter, final DisplayTypes displayType )
+	public InteractiveRealViewer3D( final int width, final int height, final RealRandomAccessible< T > source, final Interval sourceInterval, final AffineTransform3D sourceTransform, final Converter< ? super T, ARGBType > converter, final DisplayTypes displayType )
 	{
 		super( width, height, sourceInterval, sourceTransform, displayType );
 		this.source = source;

@@ -84,10 +84,10 @@ public class MLGaussianEstimator implements StartPointEstimator {
 			}
 		}
 
-		start_param[0] = max_I;
+		start_param[nDims] = max_I;
 
 		for (int j = 0; j < nDims; j++) {
-			start_param[j+1] = X_sum[j] / I_sum;
+			start_param[j] = X_sum[j] / I_sum;
 		}
 
 		// Estimate b in all dimension
@@ -96,7 +96,7 @@ public class MLGaussianEstimator implements StartPointEstimator {
 			double C = 0;
 			double dx;
 			for (int i = 0; i < X.length; i++) {
-				dx = X[i][j] - start_param[j+1];
+				dx = X[i][j] - start_param[j];
 				C += I[i] * dx * dx;
 			}
 			C /= I_sum;

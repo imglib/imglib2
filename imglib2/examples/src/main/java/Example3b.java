@@ -41,7 +41,7 @@ import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import util.RealSum;
+import net.imglib2.util.RealSum;
 
 /**
  * Perform a generic computation of average intensity
@@ -55,10 +55,10 @@ public class Example3b
 		ImgIOException, IncompatibleTypeException
 	{
 		// open with ImgOpener using an ArrayImgFactory
-		Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif" );
+		final Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif" );
 
 		// compute average of the image
-		double avg = computeAverage( img );
+		final double avg = computeAverage( img );
 		System.out.println( "average Value: " + avg );
 	}
 
@@ -72,7 +72,7 @@ public class Example3b
 	{
 		// Count all values using the RealSum class.
 		// It prevents numerical instabilities when adding up millions of pixels
-		RealSum realSum = new RealSum();
+		final RealSum realSum = new RealSum();
 		long count = 0;
 
 		for ( final T type : input )
@@ -84,7 +84,7 @@ public class Example3b
 		return realSum.getSum() / count;
 	}
 
-	public static void main( String[] args ) throws ImgIOException, IncompatibleTypeException
+	public static void main( final String[] args ) throws ImgIOException, IncompatibleTypeException
 	{
 		// open an ImageJ window
 		new ImageJ();

@@ -111,6 +111,19 @@ public abstract class AbstractGauss< T extends NumericType< T > >
 			tmp2 = null;		
 	}
 	
+	public double[] getSigma() { return sigma; }
+	public double[][] getKernel() { return kernel; }
+	public int numDimensions() { return numDimensions; }
+	public RandomAccessible<T> getInput() { return input; }
+	public RandomAccessible<T> getOutput() { return output; }
+	public ImgFactory<T> getFactory() { return factory; }
+	public Interval getInputInterval() { return inputInterval; }
+	public Localizable getOutputOffset() { return outputOffset; }
+	public T type() { return type; }
+	public Img< T > getTmp1() { return tmp1; }
+	public Img< T > getTmp2() { return tmp2; }
+	
+	
 	protected T getProcessingType() { return type.createVariable(); }
 	protected abstract Img<T> getProcessingLine( final long size );
 	

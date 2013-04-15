@@ -73,7 +73,7 @@ public class GaussianFitTestDrive1 {
 				Localizable peak = new Point((long) x0, (long) y0);
 				peaks.add(peak);
 
-				double[] params = new double[] { A, x0, y0, 1/sigma_x/sigma_x, 1/sigma_y/sigma_y };
+				double[] params = new double[] { x0, y0, A, 1/sigma_x/sigma_x, 1/sigma_y/sigma_y };
 				LocalizationUtils.addEllipticGaussianSpotToImage(img, params);
 				groundTruth.put(peak, params);
 				
@@ -109,9 +109,9 @@ public class GaussianFitTestDrive1 {
 		for (Localizable peak : peaks) {
 			double[] params = results.get(peak);
 
-			double Ar = params[0];
-			double x = params[1];
-			double y = params[2];
+			double Ar = params[2];
+			double x = params[0];
+			double y = params[1];
 			double sx = 1/Math.sqrt(params[3]);
 			double sy = 1/Math.sqrt(params[4]);
 
@@ -121,7 +121,7 @@ public class GaussianFitTestDrive1 {
 			double[] truth = groundTruth.get(peak);
 			System.out.println(String.format(" - Real values: " +
 					"A = %6.2f, x0 = %6.2f, y0 = %6.2f, sx = %5.2f, sy = %5.2f",
-					truth[0], truth[1], truth[2], 1 / Math.sqrt(truth[3]), 1 / Math.sqrt(truth[4]) ));
+					truth[2], truth[0], truth[1], 1 / Math.sqrt(truth[3]), 1 / Math.sqrt(truth[4]) ));
 
 			// Draw ellipse on the target image
 			double x1, x2, y1, y2, ar;

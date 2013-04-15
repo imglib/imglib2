@@ -47,6 +47,13 @@ import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 
+/**
+ * 
+ * @param <T>
+ *
+ * @author TobiasPietzsch <tobias.pietzsch@gmail.com>
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ */
 public class InteractiveRealViewer2D< T extends NumericType< T > > extends AbstractInteractiveViewer2D< T >
 {
 	/**
@@ -57,24 +64,24 @@ public class InteractiveRealViewer2D< T extends NumericType< T > > extends Abstr
 	/**
 	 * Converts {@link #source} type T to ARGBType for display
 	 */
-	final protected Converter< T, ARGBType > converter;
+	final protected Converter< ? super T, ARGBType > converter;
 
-	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final Converter< T, ARGBType > converter )
+	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final Converter< ? super T, ARGBType > converter )
 	{
 		this( width, height, source, new AffineTransform2D(), converter );
 	}
 
-	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final Converter< T, ARGBType > converter, final DisplayTypes displayType )
+	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final Converter< ? super T, ARGBType > converter, final DisplayTypes displayType )
 	{
 		this( width, height, source, new AffineTransform2D(), converter, displayType );
 	}
 
-	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter< T, ARGBType > converter )
+	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter< ? super T, ARGBType > converter )
 	{
 		this( width, height, source, sourceTransform, converter, DisplayTypes.DISPLAY_SWING );
 	}
 
-	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter< T, ARGBType > converter, final DisplayTypes displayType )
+	public InteractiveRealViewer2D( final int width, final int height, final RealRandomAccessible< T > source, final AffineTransform2D sourceTransform, final Converter< ? super T, ARGBType > converter, final DisplayTypes displayType )
 	{
 		super( width, height, sourceTransform, displayType );
 		this.source = source;
