@@ -8,7 +8,7 @@ import java.math.BigInteger;
 
 public class Types {
 
-	private interface Hatchable<T> {
+	private interface Factory<T> {
 
 		T create();
 
@@ -18,7 +18,7 @@ public class Types {
 	// primitive boolean type
 	// TODO - make it a class
 
-	private interface Bool extends Hatchable<Bool> {
+	private interface Bool extends Factory<Bool> {
 
 		boolean getValue();
 
@@ -32,7 +32,7 @@ public class Types {
 	// primitive integer type
 	// TODO - make it a class
 
-	private interface Int extends Bounded<Int>, Integral<Int>, Hatchable<Int> {
+	private interface Int extends Bounded<Int>, Integral<Int>, Factory<Int> {
 
 		int getValue();
 
@@ -46,7 +46,7 @@ public class Types {
 	// unbounded integer type
 	// TODO - make it a class
 
-	private interface Integer extends Integral<Integer>, Hatchable<Integer> {
+	private interface Integer extends Integral<Integer>, Factory<Integer> {
 
 		BigInteger getValue();
 
@@ -262,7 +262,7 @@ public class Types {
 	// http://www.haskell.org/ghc/docs/latest/html/libraries/base/Data-Complex.html
 
 	private interface Complex<T> extends Equable<Complex<T>>,
-		Floating<Complex<T>>, Hatchable<Complex<T>>
+		Floating<Complex<T>>, Factory<Complex<T>>
 	{
 
 		void realPart(T result);
@@ -281,4 +281,36 @@ public class Types {
 
 		void conjugate(Complex<T> result);
 	}
+
+	/*
+	 
+	A criticism of the Haskell Type system I found online:
+
+	The Prelude for Haskell 98 offers a well-considered set of numeric classes
+	which covers the standard numeric types
+	('Integer', 'Int', 'Rational', 'Float', 'Double', 'Complex') quite well.
+	But they offer limited extensibility and have a few other flaws.
+	In this proposal we will revisit these classes, addressing the following concerns:
+	.
+	[1] The current Prelude defines no semantics for the fundamental operations.
+	    For instance, presumably addition should be associative
+	    (or come as close as feasible),
+	    but this is not mentioned anywhere.
+	.
+	[2] There are some superfluous superclasses.
+	    For instance, 'Eq' and 'Show' are superclasses of 'Num'.
+	    Consider the data type
+	    @   data IntegerFunction a = IF (a -> Integer) @
+	    One can reasonably define all the methods of 'Algebra.Ring.C' for
+	    @IntegerFunction a@ (satisfying good semantics),
+	    but it is impossible to define non-bottom instances of 'Eq' and 'Show'.
+	    In general, superclass relationship should indicate
+	    some semantic connection between the two classes.
+	.
+	[3] In a few cases, there is a mix of semantic operations and
+	    representation-specific operations.
+	    'toInteger', 'toRational',
+	    and the various operations in 'RealFloating' ('decodeFloat', ...)
+	    are the main examples.
+	*/
 }
