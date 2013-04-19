@@ -564,10 +564,10 @@ abstract public class AbstractOpenConnectomeRandomAccessibleInterval< T extends 
 	
 	final protected String baseUrl;
 	final protected long height, width, depth, minZ;
-	final protected int cellWidth, cellHeight, cellDepth;
+	final protected int cellWidth, cellHeight, cellDepth, level;
 	protected long i;
 	
-	public AbstractOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth, final int cellWidth, final int cellHeight, final int cellDepth, final long minZ )
+	public AbstractOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth, final int cellWidth, final int cellHeight, final int cellDepth, final long minZ, final int level )
 	{
 		super( new long[]{ width, height, depth } );
 		this.baseUrl = url + "/zip/";
@@ -578,16 +578,17 @@ abstract public class AbstractOpenConnectomeRandomAccessibleInterval< T extends 
 		this.height = ( long )Math.ceil( ( double )height / cellHeight );
 		this.depth = ( long )Math.ceil( ( double )depth / cellDepth );
 		this.minZ = minZ;
+		this.level = level;
 	}
 	
-	public AbstractOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth, final long minZ )
+	public AbstractOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth, final long minZ, final int level )
 	{
-		this( url, width, height, depth, 64, 64, 64, minZ );
+		this( url, width, height, depth, 64, 64, 64, minZ, level );
 	}
 	
-	public AbstractOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth )
+	public AbstractOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth, final int level )
 	{
-		this( url, width, height, depth, 0 );
+		this( url, width, height, depth, 0, level );
 	}
 	
 	@Override
@@ -603,7 +604,8 @@ abstract public class AbstractOpenConnectomeRandomAccessibleInterval< T extends 
 		final long z0 = cellDepth * z + minZ;
 			
 		final StringBuffer url = new StringBuffer( baseUrl );
-		url.append( "0/" );
+		url.append( level );
+		url.append( "/" );
 		url.append( x0 );
 		url.append( "," );
 		url.append( x0 + cellWidth );

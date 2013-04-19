@@ -112,7 +112,8 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 						final long z0 = cellDepth * entry.key.z + minZ;
 						
 						final StringBuffer url = new StringBuffer( baseUrl );
-						url.append( "0/" );
+						url.append( level );
+						url.append( "/" );
 						url.append( x0 );
 						url.append( "," );
 						url.append( x0 + cellWidth );
@@ -205,22 +206,22 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 	final protected Fetcher fetcher;
 	final protected LinkedList< Reference< Entry > > queue = new LinkedList< Reference< Entry > >();
 	
-	public VolatileOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth, final int cellWidth, final int cellHeight, final int cellDepth, final long minZ )
+	public VolatileOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth, final int cellWidth, final int cellHeight, final int cellDepth, final long minZ, final int level )
 	{
-		super( url, width, height, depth, cellWidth, cellHeight, cellDepth, minZ );
+		super( url, width, height, depth, cellWidth, cellHeight, cellDepth, minZ, level );
 		
 		fetcher = new Fetcher();
 		fetcher.start();
 	}
 	
-	public VolatileOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth, final long minZ )
+	public VolatileOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth, final long minZ, final int level )
 	{
-		this( url, width, height, depth, 64, 64, 64, minZ );
+		this( url, width, height, depth, 64, 64, 64, minZ, level );
 	}
 	
-	public VolatileOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth )
+	public VolatileOpenConnectomeRandomAccessibleInterval( final String url, final long width, final long height, final long depth, final int level )
 	{
-		this( url, width, height, depth, 0 );
+		this( url, width, height, depth, 0, level );
 	}
 	
 	@Override
