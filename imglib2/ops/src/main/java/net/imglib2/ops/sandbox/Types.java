@@ -2,7 +2,7 @@ package net.imglib2.ops.sandbox;
 
 import java.math.BigInteger;
 
-
+// A port of the Haskell numeric types to Java. Just signatures below. 
 // Mostly from:
 // http://www.haskell.org/ghc/docs/latest/html/libraries/base/Prelude.html
 

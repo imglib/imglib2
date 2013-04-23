@@ -5,6 +5,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 
+// A port of the Haskell numeric types to Java. Mostly just signatures right now.
+// This example pulls apart the association of types with fixed ops. Instead ops
+// can be defined for types as separate classes. This is more flexible and
+// extensible. However package structure might end up a bit messy. 
 // Mostly from:
 // http://www.haskell.org/ghc/docs/latest/html/libraries/base/Prelude.html
 
@@ -884,7 +888,7 @@ public class Types2 {
 
 		@Override
 		public void compute(Int a, Bool result) {
-			result.setValue(a.v % 2 == 0);
+			result.setValue((a.v & 1) == 0);
 		}
 
 	}
