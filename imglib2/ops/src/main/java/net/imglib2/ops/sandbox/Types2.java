@@ -109,33 +109,87 @@ public class Types2 {
 	}
 
 	// primitive integer type
-	// TODO - make it a class
+	// TODO - here is an example of implementing one of the numeric interfaces
 
-	private interface Int extends Integral<Int>, Factory<Int>, Access<Int>,
+	private class Int implements Integral<Int>, Factory<Int>, Access<Int>,
 		Bounded<Int>
 	{
 
-		// T-based accessors supported by Access
-		// primitive based accessors provided here too
+		int v;
 
-		int getValue();
+		public Int() {
+			v = 0;
+		}
 
-		void setValue(int i);
+		public Int(Int other) {
+			v = other.v;
+		}
+
+		public Int(int i) {
+			v = i;
+		}
+
+		@Override
+		public void setValue(Int input) {
+			v = input.v;
+		}
+
+		@Override
+		public void getValue(Int result) {
+			result.setValue(this);
+		}
+
+		@Override
+		public Int create() {
+			return new Int(0);
+		}
+
+		@Override
+		public Int copy() {
+			return new Int(v);
+		}
 	}
 
 	// unbounded integer type
-	// TODO - make it a class
+	// TODO - here is an example of implementing one of the numeric interfaces
 
-	private interface Integer extends Integral<Integer>, Factory<Integer>,
+	private class Integer implements Integral<Integer>, Factory<Integer>,
 		Access<Integer>
 	{
 
-		// T-based accessors supported by Access
-		// primitive based accessors provided here too
+		BigInteger v;
 
-		BigInteger getValue();
+		public Integer() {
+			v = BigInteger.ZERO;
+		}
 
-		void setValue(BigInteger i);
+		public Integer(Integer other) {
+			setValue(other);
+		}
+
+		public Integer(BigInteger i) {
+			v = i;
+		}
+
+		@Override
+		public void setValue(Integer input) {
+			v = input.v;
+		}
+
+		@Override
+		public void getValue(Integer result) {
+			result.setValue(this);
+		}
+
+		@Override
+		public Integer create() {
+			return new Integer();
+		}
+
+		@Override
+		public Integer copy() {
+			return new Integer(this);
+		}
 	}
 
 	// primitive float type (which is bounded)
@@ -266,12 +320,12 @@ public class Types2 {
 
 	private interface MinBoundOp<T extends Bounded<T>> {
 
-		void compute(T a, T result);
+		void compute(T result);
 	}
 	
 	private interface MaxBoundOp<T extends Bounded<T>> {
 
-		void compute(T a, T result);
+		void compute(T result);
 	}
 	
 	// Number OPS --------------------------------------------------
@@ -662,4 +716,279 @@ public class Types2 {
 		void compute(Complex<T> a, Complex<T> result);
 	}
 
+	/**************
+	 * Experiments
+	 **************/
+
+	// try fleshing out some Ops for bounded primitive Ints
+
+	private class IntEqualOp implements IsEqualOp<Int> {
+
+		@Override
+		public void compute(Int a, Int b, Bool result) {
+			result.setValue(a.v == b.v);
+		}
+
+	}
+
+	private class IntNotEqualOp implements IsNotEqualOp<Int> {
+
+		@Override
+		public void compute(Int a, Int b, Bool result) {
+			result.setValue(a.v != b.v);
+		}
+
+	}
+
+	private class IntCompareOp implements CompareOp<Int> {
+
+		@Override
+		public int compute(Int a, Int b) {
+			if (a.v < b.v) return -1;
+			if (a.v > b.v) return 1;
+			return 0;
+		}
+
+	}
+
+	private class IntLessOp implements IsLessOp<Int> {
+
+		@Override
+		public void compute(Int a, Int b, Bool result) {
+			result.setValue(a.v < b.v);
+		}
+
+	}
+
+	private class IntGreaterEqualOp implements IsGreaterEqualOp<Int> {
+
+		@Override
+		public void compute(Int a, Int b, Bool result) {
+			result.setValue(a.v >= b.v);
+		}
+
+	}
+
+	private class IntSuccOp implements SuccOp<Int> {
+
+		@Override
+		public void compute(Int a, Int result) {
+			result.v = a.v + 1;
+		}
+
+	}
+
+	private class IntPredOp implements PredOp<Int> {
+
+		@Override
+		public void compute(Int a, Int result) {
+			result.v = a.v - 1;
+		}
+
+	}
+
+	private class IntMaxBoundOp implements MaxBoundOp<Int> {
+
+		// TODO: make static
+		private Int max = new Int(java.lang.Integer.MAX_VALUE);
+
+		@Override
+		public void compute(Int result) {
+			result.setValue(max);
+		}
+	}
+
+	private class IntMinBoundOp implements MinBoundOp<Int> {
+
+		// TODO: make static
+		private Int min = new Int(java.lang.Integer.MIN_VALUE);
+
+		@Override
+		public void compute(Int result) {
+			result.setValue(min);
+		}
+	}
+
+	private class IntAddOp implements AddOp<Int> {
+
+		@Override
+		public void compute(Int a, Int b, Int result) {
+			result.v = a.v + b.v;
+		}
+
+	}
+
+	private class IntMultiplyOp implements MultiplyOp<Int> {
+
+		@Override
+		public void compute(Int a, Int b, Int result) {
+			result.v = a.v * b.v;
+		}
+
+	}
+
+	private class IntNegateOp implements NegateOp<Int> {
+
+		@Override
+		public void compute(Int a, Int result) {
+			result.v = -a.v;
+		}
+
+	}
+
+	private class IntQuotientOp implements QuotientOp<Int> {
+
+		@Override
+		public void compute(Int a, Int b, Int result) {
+			result.v = a.v / b.v;
+		}
+
+	}
+
+	private class IntIsEvenOp implements IsEvenOp<Int> {
+
+		@Override
+		public void compute(Int a, Bool result) {
+			result.setValue(a.v % 2 == 0);
+		}
+
+	}
+
+	// try fleshing out some Ops for unbounded Integers
+
+	private class IntegerEqualOp implements IsEqualOp<Integer> {
+
+		@Override
+		public void compute(Integer a, Integer b, Bool result) {
+			result.setValue(a.v.equals(b.v));
+		}
+
+	}
+
+	private class IntegerNotEqualOp implements IsNotEqualOp<Integer> {
+
+		@Override
+		public void compute(Integer a, Integer b, Bool result) {
+			result.setValue(!a.v.equals(b.v));
+		}
+
+	}
+
+	private class IntegerCompareOp implements CompareOp<Integer> {
+
+		@Override
+		public int compute(Integer a, Integer b) {
+			return a.v.compareTo(b.v);
+		}
+
+	}
+
+	private class IntegerLessOp implements IsLessOp<Integer> {
+
+		@Override
+		public void compute(Integer a, Integer b, Bool result) {
+			result.setValue(a.v.compareTo(b.v) < 0);
+		}
+
+	}
+
+	private class IntegerGreaterEqualOp implements IsGreaterEqualOp<Integer> {
+
+		@Override
+		public void compute(Integer a, Integer b, Bool result) {
+			result.setValue(a.v.compareTo(b.v) >= 0);
+		}
+
+	}
+
+	private class IntegerSuccOp implements SuccOp<Integer> {
+
+		@Override
+		public void compute(Integer a, Integer result) {
+			result.v = a.v.add(BigInteger.ONE);
+		}
+
+	}
+
+	private class IntegerPredOp implements PredOp<Integer> {
+
+		@Override
+		public void compute(Integer a, Integer result) {
+			result.v = a.v.subtract(BigInteger.ONE);
+		}
+
+	}
+
+	private class IntegerAddOp implements AddOp<Integer> {
+
+		@Override
+		public void compute(Integer a, Integer b, Integer result) {
+			result.v = a.v.add(b.v);
+		}
+
+	}
+
+	private class IntegerMultiplyOp implements MultiplyOp<Integer> {
+
+		@Override
+		public void compute(Integer a, Integer b, Integer result) {
+			result.v = a.v.multiply(b.v);
+		}
+
+	}
+
+	private class IntegerNegateOp implements NegateOp<Integer> {
+
+		private BigInteger MINUS_ONE = new BigInteger("-1");
+
+		@Override
+		public void compute(Integer a, Integer result) {
+			result.v = a.v.multiply(MINUS_ONE);
+		}
+
+	}
+
+	private class IntegerQuotientOp implements QuotientOp<Integer> {
+
+		@Override
+		public void compute(Integer a, Integer b, Integer result) {
+			result.v = a.v.divide(b.v);
+		}
+
+	}
+
+	private class IntegerIsEvenOp implements IsEvenOp<Integer> {
+
+		@Override
+		public void compute(Integer a, Bool result) {
+			BigInteger x = a.v.and(BigInteger.ONE);
+			result.setValue(x.compareTo(BigInteger.ZERO) == 0);
+		}
+
+	}
+
+	// now define some casting OPs
+
+	private interface CastOp<A, B> {
+
+		void compute(A input, B result);
+	}
+
+	private class FromIntToIntegerCastOp implements CastOp<Int, Integer> {
+
+		@Override
+		public void compute(Int input, Integer result) {
+			result.v = BigInteger.valueOf(input.v);
+		}
+
+	}
+
+	private class FromIntegerToIntCastOp implements CastOp<Integer, Int> {
+
+		@Override
+		public void compute(Integer input, Int result) {
+			result.v = input.v.intValue();
+		}
+
+	}
 }
