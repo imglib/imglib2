@@ -141,12 +141,12 @@ public class Types2 {
 
 		@Override
 		public Int create() {
-			return new Int(0);
+			return new Int();
 		}
 
 		@Override
 		public Int copy() {
-			return new Int(v);
+			return new Int(this);
 		}
 	}
 
@@ -974,20 +974,26 @@ public class Types2 {
 		void compute(A input, B result);
 	}
 
+	// TODO - in future must decide how to package classes such that this
+	// operation can be defined. It uses package access from two classes.
+
 	private class FromIntToIntegerCastOp implements CastOp<Int, Integer> {
 
 		@Override
 		public void compute(Int input, Integer result) {
-			result.v = BigInteger.valueOf(input.v);
+			result.v = BigInteger.valueOf(input.v); // widening
 		}
 
 	}
+
+	// TODO - in future must decide how to package classes such that this
+	// operation can be defined. It uses package access from two classes.
 
 	private class FromIntegerToIntCastOp implements CastOp<Integer, Int> {
 
 		@Override
 		public void compute(Integer input, Int result) {
-			result.v = input.v.intValue();
+			result.v = input.v.intValue(); // narrowing
 		}
 
 	}
