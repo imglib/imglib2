@@ -6,6 +6,38 @@ import java.math.BigInteger;
 // Mostly from:
 // http://www.haskell.org/ghc/docs/latest/html/libraries/base/Prelude.html
 
+/*
+ 
+A criticism of the Haskell Type system I found online:
+
+The Prelude for Haskell 98 offers a well-considered set of numeric classes
+which covers the standard numeric types
+('Integer', 'Int', 'Rational', 'Float', 'Double', 'Complex') quite well.
+But they offer limited extensibility and have a few other flaws.
+In this proposal we will revisit these classes, addressing the following concerns:
+.
+[1] The current Prelude defines no semantics for the fundamental operations.
+    For instance, presumably addition should be associative
+    (or come as close as feasible),
+    but this is not mentioned anywhere.
+.
+[2] There are some superfluous superclasses.
+    For instance, 'Eq' and 'Show' are superclasses of 'Num'.
+    Consider the data type
+    @   data IntegerFunction a = IF (a -> Integer) @
+    One can reasonably define all the methods of 'Algebra.Ring.C' for
+    @IntegerFunction a@ (satisfying good semantics),
+    but it is impossible to define non-bottom instances of 'Eq' and 'Show'.
+    In general, superclass relationship should indicate
+    some semantic connection between the two classes.
+.
+[3] In a few cases, there is a mix of semantic operations and
+    representation-specific operations.
+    'toInteger', 'toRational',
+    and the various operations in 'RealFloating' ('decodeFloat', ...)
+    are the main examples.
+*/
+
 public class Types {
 
 	private interface Factory<T> {
@@ -281,36 +313,4 @@ public class Types {
 
 		void conjugate(Complex<T> result);
 	}
-
-	/*
-	 
-	A criticism of the Haskell Type system I found online:
-
-	The Prelude for Haskell 98 offers a well-considered set of numeric classes
-	which covers the standard numeric types
-	('Integer', 'Int', 'Rational', 'Float', 'Double', 'Complex') quite well.
-	But they offer limited extensibility and have a few other flaws.
-	In this proposal we will revisit these classes, addressing the following concerns:
-	.
-	[1] The current Prelude defines no semantics for the fundamental operations.
-	    For instance, presumably addition should be associative
-	    (or come as close as feasible),
-	    but this is not mentioned anywhere.
-	.
-	[2] There are some superfluous superclasses.
-	    For instance, 'Eq' and 'Show' are superclasses of 'Num'.
-	    Consider the data type
-	    @   data IntegerFunction a = IF (a -> Integer) @
-	    One can reasonably define all the methods of 'Algebra.Ring.C' for
-	    @IntegerFunction a@ (satisfying good semantics),
-	    but it is impossible to define non-bottom instances of 'Eq' and 'Show'.
-	    In general, superclass relationship should indicate
-	    some semantic connection between the two classes.
-	.
-	[3] In a few cases, there is a mix of semantic operations and
-	    representation-specific operations.
-	    'toInteger', 'toRational',
-	    and the various operations in 'RealFloating' ('decodeFloat', ...)
-	    are the main examples.
-	*/
 }
