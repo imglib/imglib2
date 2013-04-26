@@ -270,24 +270,51 @@ public class Types2 {
 		}
 	}
 
-	// unbounded floating type
-	// TODO - make it a class
-	// TODO - this is an attempt without reference to original api : wrong?
+	// arbitrarily precise float (unbounded)
+	// TODO - here is an example of implementing one of the numeric interfaces
 
-	private interface MongoFloat extends RealFloat<MongoFloat>,
-		Factory<MongoFloat>, Access<MongoFloat>
+	private class PreciseFloat implements RealFloat<PreciseFloat>,
+		Factory<PreciseFloat>, Access<PreciseFloat>
 	{
 
-		// T-based accessors supported by Access
-		// primitive based accessors provided here too
+		BigDecimal v;
 
-		BigDecimal getValue();
+		public PreciseFloat() {
+			v = BigDecimal.ZERO;
+		}
 
-		void setValue(BigDecimal value);
+		public PreciseFloat(PreciseFloat other) {
+			setValue(other);
+		}
+
+		public PreciseFloat(BigDecimal i) {
+			v = i;
+		}
+
+		@Override
+		public void setValue(PreciseFloat input) {
+			v = input.v;
+		}
+
+		@Override
+		public void getValue(PreciseFloat result) {
+			result.setValue(this);
+		}
+
+		@Override
+		public PreciseFloat create() {
+			return new PreciseFloat();
+		}
+
+		@Override
+		public PreciseFloat copy() {
+			return new PreciseFloat(this);
+		}
 	}
 
 	// TODO - some subtyping not enforced here. See definition at:
 	// http://www.haskell.org/ghc/docs/latest/html/libraries/base/Data-Complex.html
+	// TODO - that might also be why as declared one could have Complex<String>
 
 	/**
 	 * A complex number type
@@ -644,7 +671,9 @@ public class Types2 {
 
 	// the constant PI
 
-	private interface PiOp<T extends Fractional<T>> {
+	// ? in type required for compilation of ComplexFloat examples below : HACK?
+
+	private interface PiOp<T extends Fractional<?>> {
 
 		void compute(T result);
 	}
@@ -1224,8 +1253,57 @@ public class Types2 {
 
 	}
 
+	private class ComplexFloatPiOp implements PiOp<ComplexFloat> {
+
+		@Override
+		public void compute(ComplexFloat result) {
+			result.r.v = (float) Math.PI;
+			result.i.v = 0;
+		}
+
+	}
+
 	// TODO - there are some lines marked HACK? above. See what ramifications are
 	// of making all OPS into T extends SomeType<?>. Or is there an issue with my
-	// ComplexFloat definition?
+	// ComplexFloat definition? (Note, I tried making ConjugateOp enforce T
+	// extends Number<?> and ran into trouble trying to define one).
 
+	//
+	// try fleshing out some Ops for PreciseFloats
+	//
+
+	private class PreciseFloatPiOp implements PiOp<PreciseFloat> {
+
+		// TODO - make static
+		private final String PI_40 = "3.1415926535897932384626433832795028841971";
+		private final BigDecimal SUPER_PI = new BigDecimal(PI_40);
+
+		@Override
+		public void compute(PreciseFloat result) {
+			result.v = SUPER_PI;
+		}
+
+	}
+
+	private class PreciseFloatSubtractOp implements SubtractOp<PreciseFloat> {
+
+		@Override
+		public void compute(PreciseFloat a, PreciseFloat b, PreciseFloat result) {
+			result.v = a.v.subtract(b.v);
+		}
+
+	}
+
+	private class PreciseFloatSqrtOp implements SqrtOp<PreciseFloat> {
+
+		@Override
+		public void compute(PreciseFloat a, PreciseFloat result) {
+
+			// TODO - implement. Might not be easy. And would need a precision limit
+			// for things like the sqrt(2).
+
+			result.v = BigDecimal.ZERO;
+		}
+
+	}
 }
