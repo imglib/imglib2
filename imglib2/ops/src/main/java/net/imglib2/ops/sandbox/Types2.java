@@ -229,19 +229,45 @@ public class Types2 {
 	}
 
 	// primitive float type (which is bounded)
-	// TODO - make it a class
-	// TODO - this is an attempt without reference to original api : wrong?
+	// TODO - here is an example of implementing one of the numeric interfaces
 
-	private interface Float extends RealFloat<Float>, Factory<Float>,
+	private class Float implements RealFloat<Float>, Factory<Float>,
 		Access<Float>, Bounded<Float>
 	{
 
-		// T-based accessors supported by Access
-		// primitive based accessors provided here too
+		float v;
 
-		float getValue();
+		public Float() {
+			v = 0;
+		}
 
-		void setValue(float value);
+		public Float(Float other) {
+			setValue(other);
+		}
+
+		public Float(float i) {
+			v = i;
+		}
+
+		@Override
+		public void setValue(Float input) {
+			v = input.v;
+		}
+
+		@Override
+		public void getValue(Float result) {
+			result.setValue(this);
+		}
+
+		@Override
+		public Float create() {
+			return new Float();
+		}
+
+		@Override
+		public Float copy() {
+			return new Float(this);
+		}
 	}
 
 	// unbounded floating type
@@ -282,6 +308,83 @@ public class Types2 {
 		void phase(T result);
 
 		void polar(T magResult, T phaseResult);
+	}
+
+	private class ComplexFloat implements Complex<Float> {
+
+		Float r;
+		Float i;
+
+		public ComplexFloat() {
+			r = new Float();
+			i = new Float();
+		}
+
+		public ComplexFloat(ComplexFloat other) {
+			this();
+			setValue(other);
+		}
+
+		public ComplexFloat(float r, float i) {
+			this.r = new Float(r);
+			this.i = new Float(i);
+		}
+
+		@Override
+		public void setValue(Complex<Float> input) {
+			input.real(r);
+			input.imag(i);
+		}
+
+		@Override
+		public void getValue(Complex<Float> result) {
+			result.setValue(this);
+		}
+
+		@Override
+		public ComplexFloat create() {
+			return new ComplexFloat();
+		}
+
+		@Override
+		public ComplexFloat copy() {
+			return new ComplexFloat(this);
+		}
+
+		@Override
+		public void real(Float result) {
+			result.setValue(r);
+		}
+
+		@Override
+		public void imag(Float result) {
+			result.setValue(i);
+		}
+
+		@Override
+		public void cartesian(Float realResult, Float imagResult) {
+			real(realResult);
+			imag(imagResult);
+		}
+
+		@Override
+		public void magnitude(Float result) {
+			result.v = (float) Math.sqrt(r.v * r.v + i.v * i.v);
+		}
+
+		@Override
+		public void phase(Float result) {
+			result.v = (float) Math.atan2(i.v, r.v);
+			// TODO - its more complicated than this. Can grab code from OPS'
+			// ComplexHelper class.
+		}
+
+		@Override
+		public void polar(Float magResult, Float phaseResult) {
+			magnitude(magResult);
+			phase(phaseResult);
+		}
+
 	}
 
 	// TODO - one can add more data types like UnsignedByte, etc.
@@ -379,7 +482,9 @@ public class Types2 {
 		void compute(T a, T b, T result);
 	}
 	
-	private interface MultiplyOp<T extends Number<T>> {
+	// ? in type required for compilation of ComplexFloat examples below : HACK?
+
+	private interface MultiplyOp<T extends Number<?>> {
 
 		void compute(T a, T b, T result);
 	}
@@ -551,7 +656,9 @@ public class Types2 {
 		void compute(T result);
 	}
 	
-	private interface ExpOp<T extends Fractional<T>> {
+	// ? in type required for compilation of ComplexFloat examples below : HACK?
+
+	private interface ExpOp<T extends Fractional<?>> {
 
 		void compute(T a, T result);
 	}
@@ -561,12 +668,16 @@ public class Types2 {
 		void compute(T a, T result);
 	}
 
-	private interface LogOp<T extends Fractional<T>> {
+	// ? in type required for compilation of ComplexFloat examples below : HACK?
+
+	private interface LogOp<T extends Fractional<?>> {
 
 		void compute(T a, T result);
 	}
 
-	private interface PowOp<T extends Fractional<T>> {
+	// ? in type required for compilation of ComplexFloat examples below : HACK?
+
+	private interface PowOp<T extends Fractional<?>> {
 
 		void compute(T a, T b, T result);
 	}
@@ -759,7 +870,9 @@ public class Types2 {
 	 * Experiments
 	 **************/
 
+	//
 	// try fleshing out some Ops for bounded primitive Ints
+	//
 
 	private class IntEqualOp implements IsEqualOp<Int> {
 
@@ -893,7 +1006,9 @@ public class Types2 {
 
 	}
 
+	//
 	// try fleshing out some Ops for unbounded Integers
+	//
 
 	private class IntegerEqualOp implements IsEqualOp<Integer> {
 
@@ -1004,7 +1119,9 @@ public class Types2 {
 
 	}
 
+	//
 	// now define some casting OPs
+	//
 
 	private interface CastOp<A, B> {
 
@@ -1034,4 +1151,81 @@ public class Types2 {
 		}
 
 	}
+
+	//
+	// try fleshing out some Ops for ComplexFloat types that show we can use the
+	// Floating interface with them
+	//
+
+	private class ComplexFloatLogOp implements LogOp<ComplexFloat> {
+		
+		private Float modulus = new Float();
+		private Float argument = new Float();
+		
+		@Override
+		public void compute(ComplexFloat a, ComplexFloat result) {
+			a.polar(modulus, argument);
+			result.r.v = (float) Math.log(modulus.v);
+			result.i.v = getPrincipleArgument(argument.v);
+		}
+
+		private float getPrincipleArgument(float v) {
+			final double TWO_PI = 2 * Math.PI;
+			while (v <= -Math.PI) {
+				v += TWO_PI;
+			}
+			while (v > Math.PI) {
+				v -= TWO_PI;
+			}
+			return v;
+		}
+	}
+
+	private class ComplexFloatExpOp implements ExpOp<ComplexFloat> {
+
+		@Override
+		public void compute(ComplexFloat a, ComplexFloat result) {
+			double constant = Math.exp(a.r.v);
+			result.r.v = (float) (constant * Math.cos(a.i.v));
+			result.i.v = (float) (constant * Math.sin(a.i.v));
+		}
+
+	}
+
+	private class ComplexFloatMultiplyOp implements MultiplyOp<ComplexFloat> {
+
+		@Override
+		public void compute(ComplexFloat a, ComplexFloat b, ComplexFloat result) {
+			result.r.v = a.r.v * b.r.v - a.i.v * b.i.v;
+			result.i.v = a.i.v * b.r.v + a.r.v * b.i.v;
+		}
+
+	}
+
+	private class ComplexFloatPowOp implements PowOp<ComplexFloat> {
+
+		// -- ops used for computations - TODO - make ops static
+
+		private ComplexFloatLogOp logOp = new ComplexFloatLogOp();;
+		private ComplexFloatMultiplyOp mulOp = new ComplexFloatMultiplyOp();
+		private ComplexFloatExpOp expOp = new ComplexFloatExpOp();
+
+		// -- working vars --
+
+		private ComplexFloat logA = new ComplexFloat();
+		private ComplexFloat bLogA = new ComplexFloat();
+
+		@Override
+		public void compute(ComplexFloat a, ComplexFloat b, ComplexFloat result) {
+			logOp.compute(a, logA);
+			mulOp.compute(b, logA, bLogA);
+			expOp.compute(bLogA, result);
+		}
+
+	}
+
+	// TODO - there are some lines marked HACK? above. See what ramifications are
+	// of making all OPS into T extends SomeType<?>. Or is there an issue with my
+	// ComplexFloat definition?
+
 }
