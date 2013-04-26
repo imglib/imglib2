@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.imglib2.Cursor;
 import net.imglib2.Dimensions;
 
 // TODO - calculate lazily but should be able to count upper/lower/middle in
@@ -139,9 +140,11 @@ public class HistogramNd<T> implements Dimensions {
 	public long lowerTailCount(int dim) {
 		if (!hasTails(dim)) return 0;
 		long sum = 0;
-		Points points = new Points();
-		while (points.hasNext()) {
-			long[] binPos = points.next();
+		Cursor<?> cursor = distrib.getLocalizingCursor();
+		long[] binPos = new long[distrib.numDimensions()];
+		while (cursor.hasNext()) {
+			cursor.next();
+			cursor.localize(binPos);
 			if (binPos[dim] == 0) sum += distrib.frequency(binPos);
 		}
 		return sum;
@@ -153,9 +156,11 @@ public class HistogramNd<T> implements Dimensions {
 	public long lowerTailCount() {
 		if (!hasTails()) return 0;
 		long sum = 0;
-		Points points = new Points();
-		while (points.hasNext()) {
-			long[] binPos = points.next();
+		Cursor<?> cursor = distrib.getLocalizingCursor();
+		long[] binPos = new long[distrib.numDimensions()];
+		while (cursor.hasNext()) {
+			cursor.next();
+			cursor.localize(binPos);
 			for (int i = 0; i < mappers.size(); i++) {
 				if (binPos[i] == 0) {
 					sum += distrib.frequency(binPos);
@@ -174,9 +179,11 @@ public class HistogramNd<T> implements Dimensions {
 		if (!hasTails(dim)) return 0;
 		long dimSize = mappers.get(dim).getBinCount();
 		long sum = 0;
-		Points points = new Points();
-		while (points.hasNext()) {
-			long[] binPos = points.next();
+		Cursor<?> cursor = distrib.getLocalizingCursor();
+		long[] binPos = new long[distrib.numDimensions()];
+		while (cursor.hasNext()) {
+			cursor.next();
+			cursor.localize(binPos);
 			if (binPos[dim] == dimSize - 1) sum += distrib.frequency(binPos);
 		}
 		return sum;
@@ -188,9 +195,11 @@ public class HistogramNd<T> implements Dimensions {
 	public long upperTailCount() {
 		if (!hasTails()) return 0;
 		long sum = 0;
-		Points points = new Points();
-		while (points.hasNext()) {
-			long[] binPos = points.next();
+		Cursor<?> cursor = distrib.getLocalizingCursor();
+		long[] binPos = new long[distrib.numDimensions()];
+		while (cursor.hasNext()) {
+			cursor.next();
+			cursor.localize(binPos);
 			for (int i = 0; i < mappers.size(); i++) {
 				if (binPos[i] == mappers.get(i).getBinCount() - 1) {
 					sum += distrib.frequency(binPos);
@@ -209,9 +218,11 @@ public class HistogramNd<T> implements Dimensions {
 		boolean hasTails = hasTails(dim);
 		long dimSize = mappers.get(dim).getBinCount();
 		long sum = 0;
-		Points points = new Points();
-		while (points.hasNext()) {
-			long[] binPos = points.next();
+		Cursor<?> cursor = distrib.getLocalizingCursor();
+		long[] binPos = new long[distrib.numDimensions()];
+		while (cursor.hasNext()) {
+			cursor.next();
+			cursor.localize(binPos);
 			boolean inTail = false;
 			if (hasTails && (binPos[dim] == 0) || (binPos[dim] == dimSize - 1)) {
 				inTail = true;
@@ -231,9 +242,11 @@ public class HistogramNd<T> implements Dimensions {
 		//   But this double counts some tail bins.
 		if (!hasTails()) return distributionCount();
 		long sum = 0;
-		Points points = new Points();
-		while (points.hasNext()) {
-			long[] binPos = points.next();
+		Cursor<?> cursor = distrib.getLocalizingCursor();
+		long[] binPos = new long[distrib.numDimensions()];
+		while (cursor.hasNext()) {
+			cursor.next();
+			cursor.localize(binPos);
 			boolean inTail = false;
 			for (int i = 0; i < binPos.length; i++) {
 				if ((binPos[i] == 0) || (binPos[i] == mappers.get(i).getBinCount() - 1))
@@ -254,9 +267,11 @@ public class HistogramNd<T> implements Dimensions {
 	 */
 	public long distributionCount(int dim, long dimVal) {
 		long sum = 0;
-		Points points = new Points();
-		while (points.hasNext()) {
-			long[] binPos = points.next();
+		Cursor<?> cursor = distrib.getLocalizingCursor();
+		long[] binPos = new long[distrib.numDimensions()];
+		while (cursor.hasNext()) {
+			cursor.next();
+			cursor.localize(binPos);
 			if (binPos[dim] != dimVal) continue;
 			sum += distrib.frequency(binPos);
 		}
@@ -290,8 +305,8 @@ public class HistogramNd<T> implements Dimensions {
 
 	/**
 	 * Returns the frequency count of values within a bin using a set of
-	 * representative values. Not that multiple values can be mapped to one bin so
-	 * this is NOT the frequency count of this exact set of values in the
+	 * representative values. Note that multiple values can be mapped to one bin
+	 * so this is NOT the frequency count of this exact set of values in the
 	 * distribution.
 	 * 
 	 * @param values A set of representative values of interest
@@ -619,40 +634,6 @@ public class HistogramNd<T> implements Dimensions {
 			}
 		}
 		while (hasNext);
-	}
-
-	// TODO - this code should be replaced with PointSet code but that requires
-	// stuff to be moved into imglib core from OPS.
-
-	@SuppressWarnings("synthetic-access")
-	private class Points {
-
-		private long[] point;
-
-		Points() {
-		}
-
-		boolean hasNext() {
-			if (point == null) return true;
-			for (int i = 0; i < point.length; i++) {
-				if (point[i] < mappers.get(i).getBinCount() - 1) return true;
-			}
-			return false;
-		}
-
-		long[] next() {
-			if (point == null) {
-				point = new long[mappers.size()];
-				return point;
-			}
-			for (int i = 0; i < point.length; i++) {
-				point[i]++;
-				if (point[i] <= mappers.get(i).getBinCount() - 1) return point;
-				point[i] = 0;
-			}
-			throw new IllegalStateException("incrementing beyond end");
-		}
-
 	}
 
 }

@@ -141,8 +141,8 @@ public class Histogram1d<T> implements Dimensions {
 
 	/**
 	 * Returns the frequency count of values within a bin using a representative
-	 * value. Not that multiple values can be mapped to one bin so this is NOT the
-	 * frequency count of this exact value in the distribution.
+	 * value. Note that multiple values can be mapped to one bin so this is NOT
+	 * the frequency count of this exact value in the distribution.
 	 * 
 	 * @param value A representative value of interest
 	 */

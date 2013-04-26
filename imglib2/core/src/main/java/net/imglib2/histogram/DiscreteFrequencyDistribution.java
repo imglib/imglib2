@@ -148,4 +148,12 @@ public class DiscreteFrequencyDistribution implements Dimensions {
 	public long totalValues() {
 		return totalValues;
 	}
+
+	/**
+	 * Returns a localizing cursor that can be used to iterate the bins and return
+	 * their position.
+	 */
+	public Cursor<?> getLocalizingCursor() {
+		return counts.localizingCursor();
+	}
 }
