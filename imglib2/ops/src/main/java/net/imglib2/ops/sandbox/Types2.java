@@ -165,6 +165,10 @@ public class Types2 {
 			v = i;
 		}
 
+		public void setZero() {
+			v = 0;
+		}
+
 		@Override
 		public void setValue(Int input) {
 			v = input.v;
@@ -205,6 +209,14 @@ public class Types2 {
 
 		public Integer(BigInteger i) {
 			v = i;
+		}
+
+		public Integer(long i) {
+			v = BigInteger.valueOf(i);
+		}
+
+		public void setZero() {
+			v = BigInteger.ZERO;
 		}
 
 		@Override
@@ -249,6 +261,10 @@ public class Types2 {
 			v = i;
 		}
 
+		public void setZero() {
+			v = 0;
+		}
+
 		@Override
 		public void setValue(Float input) {
 			v = input.v;
@@ -289,6 +305,14 @@ public class Types2 {
 
 		public PreciseFloat(BigDecimal i) {
 			v = i;
+		}
+
+		public PreciseFloat(double i) {
+			v = BigDecimal.valueOf(i);
+		}
+
+		public void setZero() {
+			v = BigDecimal.ZERO;
 		}
 
 		@Override
@@ -355,6 +379,11 @@ public class Types2 {
 		public ComplexFloat(float r, float i) {
 			this.r = new Float(r);
 			this.i = new Float(i);
+		}
+
+		public void setZero() {
+			r.setZero();
+			i.setZero();
 		}
 
 		@Override
@@ -1366,8 +1395,8 @@ public class Types2 {
 		@Override
 		public void compute(PreciseFloat a, PreciseFloat result) {
 			Bool isLess = null; // TODO
-			PreciseFloat n = new PreciseFloat(new BigDecimal(2));
-			PreciseFloat accum = new PreciseFloat(BigDecimal.ONE);
+			PreciseFloat n = new PreciseFloat(2);
+			PreciseFloat accum = new PreciseFloat(1);
 			Int max = new Int(a.v.intValue());
 			for (Int i = new Int(2); lessOp.compute(i, max, isLess); succOp.compute(
 				i, i))
