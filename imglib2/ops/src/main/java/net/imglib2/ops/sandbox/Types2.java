@@ -445,32 +445,32 @@ public class Types2 {
 
 	private interface IsLessOp<T extends Ordered<T>> {
 
-		void compute(T a, T b, Bool result);
+		boolean compute(T a, T b, Bool result);
 	}
 
 	private interface IsLessEqualOp<T extends Ordered<T>> {
 
-		void compute(T a, T b, Bool result);
+		boolean compute(T a, T b, Bool result);
 	}
 
 	private interface IsGreaterOp<T extends Ordered<T>> {
 
-		void compute(T a, T b, Bool result);
+		boolean compute(T a, T b, Bool result);
 	}
 
 	private interface IsGreaterEqualOp<T extends Ordered<T>> {
 
-		void compute(T a, T b, Bool result);
+		boolean compute(T a, T b, Bool result);
 	}
 
 	private interface MaxOp<T extends Ordered<T>> {
 
-		void compute(T a, T b, Bool result);
+		boolean compute(T a, T b, Bool result);
 	}
 
 	private interface MinOp<T extends Ordered<T>> {
 
-		void compute(T a, T b, Bool result);
+		boolean compute(T a, T b, Bool result);
 	}
 
 	// Enumerable OPS --------------------------------------------------
@@ -935,8 +935,9 @@ public class Types2 {
 	private class IntLessOp implements IsLessOp<Int> {
 
 		@Override
-		public void compute(Int a, Int b, Bool result) {
+		public boolean compute(Int a, Int b, Bool result) {
 			result.setValue(a.v < b.v);
+			return result.getValue();
 		}
 
 	}
@@ -944,8 +945,9 @@ public class Types2 {
 	private class IntGreaterEqualOp implements IsGreaterEqualOp<Int> {
 
 		@Override
-		public void compute(Int a, Int b, Bool result) {
+		public boolean compute(Int a, Int b, Bool result) {
 			result.setValue(a.v >= b.v);
+			return result.getValue();
 		}
 
 	}
@@ -1069,8 +1071,9 @@ public class Types2 {
 	private class IntegerLessOp implements IsLessOp<Integer> {
 
 		@Override
-		public void compute(Integer a, Integer b, Bool result) {
+		public boolean compute(Integer a, Integer b, Bool result) {
 			result.setValue(a.v.compareTo(b.v) < 0);
+			return result.getValue();
 		}
 
 	}
@@ -1078,8 +1081,9 @@ public class Types2 {
 	private class IntegerGreaterEqualOp implements IsGreaterEqualOp<Integer> {
 
 		@Override
-		public void compute(Integer a, Integer b, Bool result) {
+		public boolean compute(Integer a, Integer b, Bool result) {
 			result.setValue(a.v.compareTo(b.v) >= 0);
+			return result.getValue();
 		}
 
 	}
@@ -1235,7 +1239,7 @@ public class Types2 {
 
 		// -- ops used for computations - TODO - make ops static
 
-		private ComplexFloatLogOp logOp = new ComplexFloatLogOp();;
+		private ComplexFloatLogOp logOp = new ComplexFloatLogOp();
 		private ComplexFloatMultiplyOp mulOp = new ComplexFloatMultiplyOp();
 		private ComplexFloatExpOp expOp = new ComplexFloatExpOp();
 
@@ -1285,6 +1289,28 @@ public class Types2 {
 
 	}
 
+	private class PreciseFloatEOp implements EOp<PreciseFloat> {
+
+		// TODO - make static
+		private final String E_40 = "2.7182818284590452353602874713526624977572";
+		private final BigDecimal SUPER_E = new BigDecimal(E_40);
+
+		@Override
+		public void compute(PreciseFloat result) {
+			result.v = SUPER_E;
+		}
+
+	}
+
+	private class PreciseFloatAddOp implements AddOp<PreciseFloat> {
+
+		@Override
+		public void compute(PreciseFloat a, PreciseFloat b, PreciseFloat result) {
+			result.v = a.v.add(b.v);
+		}
+
+	}
+
 	private class PreciseFloatSubtractOp implements SubtractOp<PreciseFloat> {
 
 		@Override
@@ -1294,15 +1320,124 @@ public class Types2 {
 
 	}
 
-	private class PreciseFloatSqrtOp implements SqrtOp<PreciseFloat> {
+	private class PreciseFloatMultiplyOp implements MultiplyOp<PreciseFloat> {
+
+		@Override
+		public void compute(PreciseFloat a, PreciseFloat b, PreciseFloat result) {
+			result.v = a.v.multiply(b.v);
+		}
+
+	}
+
+	private class PreciseFloatDivideOp implements DivideOp1<PreciseFloat> {
+
+		@Override
+		public void compute(PreciseFloat a, PreciseFloat b, PreciseFloat result) {
+			result.v = a.v.divide(b.v);
+		}
+
+	}
+
+	private class PreciseFloatPowerOp implements PowerOp1<PreciseFloat> {
+
+		@Override
+		public void compute(PreciseFloat a, PreciseFloat b, PreciseFloat result) {
+			throw new UnsupportedOperationException("TODO");
+		}
+
+	}
+
+	// more general signature than usual: rather than Integral<?> a
+
+	private interface FactorialOp<T> {
+
+		void compute(T a, T result);
+	}
+
+	private class PreciseFloatFactorialOp implements FactorialOp<PreciseFloat> {
+
+		// TODO - make static
+		private final PreciseFloat ONE = new PreciseFloat(BigDecimal.ONE);
+		private IntSuccOp succOp = null;
+		private PreciseFloatMultiplyOp multiplyOp = null;
+		private IsLessOp<Int> lessOp = null; // TODO
+		private AddOp<PreciseFloat> addOp = null;
 
 		@Override
 		public void compute(PreciseFloat a, PreciseFloat result) {
+			Bool isLess = null; // TODO
+			PreciseFloat n = new PreciseFloat(new BigDecimal(2));
+			PreciseFloat accum = new PreciseFloat(BigDecimal.ONE);
+			Int max = new Int(a.v.intValue());
+			for (Int i = new Int(2); lessOp.compute(i, max, isLess); succOp.compute(
+				i, i))
+			{
+				multiplyOp.compute(accum, n, accum);
+				addOp.compute(n, ONE, n);
+			}
+			result.setValue(accum);
+		}
 
-			// TODO - implement. Might not be easy. And would need a precision limit
-			// for things like the sqrt(2).
+	}
 
-			result.v = BigDecimal.ZERO;
+	private class PreciseFloatLogOp implements LogOp<PreciseFloat> {
+
+		@Override
+		public void compute(PreciseFloat a, PreciseFloat result) {
+			throw new UnsupportedOperationException("TODO");
+		}
+
+	}
+
+	private class PreciseFloatExpOp implements ExpOp<PreciseFloat> {
+
+		// TODO - make static
+		private PreciseFloatAddOp addOp = new PreciseFloatAddOp();
+		private PreciseFloatDivideOp divideOp = new PreciseFloatDivideOp();
+		private PreciseFloatPowerOp powerOp = new PreciseFloatPowerOp();
+		private PreciseFloatFactorialOp factOp = new PreciseFloatFactorialOp();
+
+		PreciseFloat sum = new PreciseFloat(BigDecimal.ONE);
+		PreciseFloat term = new PreciseFloat();
+		PreciseFloat powTerm = new PreciseFloat();
+		PreciseFloat factTerm = new PreciseFloat();
+		PreciseFloat n = new PreciseFloat();
+
+		// exp(a) = sum(a^n/n!) for n = 0 to infinity
+		// Naive approach: sum for a small num of terms
+		// TODO - search lit for better approximations
+
+		@Override
+		public void compute(PreciseFloat a, PreciseFloat result) {
+			for (int i = 1; i < 8; i++) {
+				n.v = new BigDecimal(i);
+				powerOp.compute(a, n, powTerm);
+				factOp.compute(n, factTerm);
+				divideOp.compute(powTerm, factTerm, term);
+				addOp.compute(sum, term, sum);
+			}
+			result.setValue(sum);
+		}
+
+	}
+
+	private class PreciseFloatSqrtOp implements SqrtOp<PreciseFloat> {
+
+		// TODO - make static
+		private PreciseFloatMultiplyOp multiplyOp = new PreciseFloatMultiplyOp();
+		private PreciseFloatLogOp logOp = null;
+		private PreciseFloatExpOp expOp = null;
+
+		private PreciseFloat log = new PreciseFloat();
+		private PreciseFloat prod = new PreciseFloat();
+		private PreciseFloat half = new PreciseFloat(new BigDecimal("0.5"));
+
+		@Override
+		public void compute(PreciseFloat a, PreciseFloat result) {
+			// From wikipedia: sqrt(a) = e ^ (0.5 * ln(a))
+			logOp.compute(a, log);
+			multiplyOp.compute(half, log, prod);
+			expOp.compute(prod, result);
 		}
 
 	}
