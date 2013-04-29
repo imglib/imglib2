@@ -1,10 +1,13 @@
 package net.imglib2.ops.sandbox;
 
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.ops.operation.BinaryOperation;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
+import net.imglib2.ops.pointset.PointSetIterator;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.BenchmarkHelper;
@@ -192,29 +195,108 @@ public class Expressions
 		for ( final FloatType t : imgB )
 			t.set( i++ );
 
+//		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				final Cursor< FloatType > ca = imgA.cursor();
+//				final Cursor< FloatType > cb = imgB.cursor();
+//				final Cursor< FloatType > cc = imgC.cursor();
+//
+//				final SumExpression< FloatType > e = new SumExpression< FloatType >();
+//				e.setA( ca );
+//				e.setB( cb );
+//				e.setC( cc );
+//
+//				while ( cc.hasNext() )
+//				{
+//					ca.fwd();
+//					cb.fwd();
+//					cc.fwd();
+//					e.get();
+//				}
+//			}
+//		} );
+
 		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				final Cursor< FloatType > ca = imgA.cursor();
-				final Cursor< FloatType > cb = imgB.cursor();
-				final Cursor< FloatType > cc = imgC.cursor();
+				final RandomAccess< FloatType > ra = imgA.randomAccess();
+				final RandomAccess< FloatType > rb = imgB.randomAccess();
+				final RandomAccess< FloatType > rc = imgC.randomAccess();
 
 				final SumExpression< FloatType > e = new SumExpression< FloatType >();
-				e.setA( ca );
-				e.setB( cb );
-				e.setC( cc );
+				e.setA( ra );
+				e.setB( rb );
+				e.setC( rc );
 
-				while ( cc.hasNext() )
-				{
-					ca.fwd();
-					cb.fwd();
-					cc.fwd();
+				final HyperVolumePointSet ps = new HyperVolumePointSet(new long[]{5000,5000});
+				final PointSetIterator iter = ps.iterator();
+				long[] pos;
+				while (iter.hasNext()) {
+					pos = iter.next();
+					ra.setPosition( pos );
+					rb.setPosition( pos );
+					rc.setPosition( pos );
 					e.get();
 				}
 			}
-		} );
+		});
+
+//		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				final RandomAccess< FloatType > ra = imgA.randomAccess();
+//				final RandomAccess< FloatType > rb = imgB.randomAccess();
+//				final RandomAccess< FloatType > rc = imgC.randomAccess();
+//
+//				final HyperVolumePointSet ps = new HyperVolumePointSet(new long[]{5000,5000});
+//
+//				final Cursor< FloatType > ca = ps.bind( ra );
+//				final Cursor< FloatType > cb = ps.bind( rb );
+//				final Cursor< FloatType > cc = ps.bind( rc );
+//
+//				final SumExpression< FloatType > e = new SumExpression< FloatType >();
+//				e.setA( ra );
+//				e.setB( rb );
+//				e.setC( rc );
+//
+//				while ( cc.hasNext() )
+//				{
+//					ca.fwd();
+//					cb.fwd();
+//					cc.fwd();
+//					e.get();
+//				}
+//			}
+//		});
+
+//		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				final RealImageFunction<FloatType,FloatType> imgAFunc = new RealImageFunction<FloatType, FloatType>(imgA, new FloatType());
+//				final RealImageFunction<FloatType,FloatType> imgBFunc = new RealImageFunction<FloatType, FloatType>(imgB, new FloatType());
+//				final GeneralBinaryFunction<long[], FloatType, FloatType, FloatType> binFunc = new GeneralBinaryFunction<long[], FloatType, FloatType, FloatType>(imgAFunc, imgBFunc, new RealAdd<FloatType, FloatType, FloatType>(), new FloatType());
+//				final HyperVolumePointSet ps = new HyperVolumePointSet(new long[]{5000,5000});
+//				final RandomAccess<FloatType> access = imgC.randomAccess();
+//				final PointSetIterator iter = ps.iterator();
+//				final FloatType output = new FloatType();
+//				long[] pos;
+//				while (iter.hasNext()) {
+//					pos = iter.next();
+//					binFunc.compute(pos, output);
+//					access.setPosition( pos );
+//					access.get().set(output);
+//				}
+//			}
+//		});
 
 //		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
 //		{

@@ -38,7 +38,13 @@
 package net.imglib2.ops.pointset;
 
 import net.imglib2.AbstractCursor;
+import net.imglib2.AbstractInterval;
+import net.imglib2.Cursor;
+import net.imglib2.FinalInterval;
 import net.imglib2.FlatIterationOrder;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccess;
+import net.imglib2.util.IntervalIndexer;
 
 /**
  * HyperVolumePointSet is a {@link PointSet} that spans a contiguous region of
@@ -137,6 +143,12 @@ public class HyperVolumePointSet extends AbstractPointSet {
 		invalidateBounds();
 		//for (PointSetIterator iter : iters) iter.reset();
 	}
+
+	public < T > Cursor< T > bind( final RandomAccess< T > randomAccess )
+	{
+		return new HyperVolumeBoundCursor< T >( new FinalInterval( boundMin, boundMax ), randomAccess );
+	}
+
 	
 	@Override
 	public PointSetIterator iterator() {
@@ -267,5 +279,172 @@ public class HyperVolumePointSet extends AbstractPointSet {
 		}
 
 	}
+
+
+		/**
+		 * TODO: This is almost a 100% copy of RandomAccessibleIntervalCursor, so there should be some code reuse...
+		 */
+		public static final class HyperVolumeBoundCursor< T > extends AbstractInterval implements Cursor< T >
+		{
+			private final RandomAccess< T > randomAccess;
+
+			private final long[] dimensions;
+
+			private final long[] tmp;
+
+			private long index;
+
+			private final long maxIndex;
+
+			private long maxIndexOnLine;
+
+			public HyperVolumeBoundCursor( final Interval interval, final RandomAccess< T > randomAccess )
+			{
+				super( interval );
+				this.randomAccess = randomAccess;
+				dimensions = new long[ n ];
+				dimensions( dimensions );
+				tmp = new long[ n ];
+				long size = dimensions[ 0 ];
+				for ( int d = 1; d < n; ++d )
+					size *= dimensions[ d ];
+				maxIndex = size - 1;
+				reset();
+			}
+
+			protected HyperVolumeBoundCursor( final HyperVolumeBoundCursor< T > cursor )
+			{
+				super( cursor );
+				this.randomAccess = cursor.randomAccess.copyRandomAccess();
+				dimensions = cursor.dimensions.clone();
+				tmp = new long[ n ];
+				index = cursor.index;
+				maxIndex = cursor.maxIndex;
+				maxIndexOnLine = cursor.maxIndexOnLine;
+			}
+
+			@Override
+			public T get()
+			{
+				return randomAccess.get();
+			}
+
+			@Override
+			public void jumpFwd( final long steps )
+			{
+				index += steps;
+				maxIndexOnLine = ( index < 0 ) ? ( dimensions[ 0 ] - 1 ) : ( ( 1 + index / dimensions[ 0 ] ) * dimensions[ 0 ] - 1 );
+				IntervalIndexer.indexToPositionWithOffset( index, dimensions, min, tmp );
+				randomAccess.setPosition( tmp );
+			}
+
+			@Override
+			public void fwd()
+			{
+				randomAccess.fwd( 0 );
+				if ( ++index > maxIndexOnLine )
+					nextLine();
+			}
+
+			private void nextLine()
+			{
+				randomAccess.setPosition( min[ 0 ], 0 );
+				maxIndexOnLine += dimensions[ 0 ];
+				for ( int d = 1; d < n; ++d )
+				{
+					randomAccess.fwd( d );
+					if ( randomAccess.getLongPosition( d ) > max[ d ] )
+						randomAccess.setPosition( min[ d ], d );
+					else
+						break;
+				}
+			}
+
+			@Override
+			public void reset()
+			{
+				index = -1;
+				maxIndexOnLine = dimensions[ 0 ] - 1;
+				randomAccess.setPosition( min );
+				randomAccess.bck( 0 );
+			}
+
+			@Override
+			public boolean hasNext()
+			{
+				return index < maxIndex;
+			}
+
+			@Override
+			public T next()
+			{
+				fwd();
+				return get();
+			}
+
+			@Override
+			public void remove()
+			{}
+
+			@Override
+			public HyperVolumeBoundCursor< T > copy()
+			{
+				return new HyperVolumeBoundCursor< T >( this );
+			}
+
+			@Override
+			public HyperVolumeBoundCursor< T > copyCursor()
+			{
+				return copy();
+			}
+
+			@Override
+			public void localize( final float[] position )
+			{
+				randomAccess.localize( position );
+			}
+
+			@Override
+			public void localize( final double[] position )
+			{
+				randomAccess.localize( position );
+			}
+
+			@Override
+			public float getFloatPosition( final int d )
+			{
+				return randomAccess.getFloatPosition( d );
+			}
+
+			@Override
+			public double getDoublePosition( final int d )
+			{
+				return randomAccess.getDoublePosition( d );
+			}
+
+			@Override
+			public void localize( final int[] position )
+			{
+				randomAccess.localize( position );
+			}
+
+			@Override
+			public void localize( final long[] position )
+			{
+				randomAccess.localize( position );
+			}
+
+			@Override
+			public int getIntPosition( final int d )
+			{
+				return randomAccess.getIntPosition( d );
+			}
+
+			@Override
+			public long getLongPosition( final int d )
+			{
+				return randomAccess.getLongPosition( d );
+			}
+		}
 
 }
