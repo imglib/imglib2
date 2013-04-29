@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -104,47 +105,43 @@ public class ImgRotate2D< T extends Type< T > & Comparable< T >> implements Unar
 		{
 			return op.factory().create( op, op.randomAccess().get().createVariable() );
 		}
-		else
+		// rotate all for egde points and take the maximum
+		// coordinate to
+		// determine the new image size
+		long[] min = new long[ op.numDimensions() ];
+		long[] max = new long[ op.numDimensions() ];
+
+		op.min( min );
+		op.max( max );
+		min[ m_dimIdx1 ] = min[ m_dimIdx2 ] = Long.MAX_VALUE;
+		max[ m_dimIdx1 ] = max[ m_dimIdx2 ] = Long.MIN_VALUE;
+
+		double[] center = calcCenter( op );
+
+		double x;
+		double y;
+
+		for ( Long orgX : new long[] { 0, op.max( m_dimIdx1 ) } )
 		{
-			// rotate all for egde points and take the maximum
-			// coordinate to
-			// determine the new image size
-			long[] min = new long[ op.numDimensions() ];
-			long[] max = new long[ op.numDimensions() ];
-
-			op.min( min );
-			op.max( max );
-			min[ m_dimIdx1 ] = min[ m_dimIdx2 ] = Long.MAX_VALUE;
-			max[ m_dimIdx1 ] = max[ m_dimIdx2 ] = Long.MIN_VALUE;
-
-			double[] center = calcCenter( op );
-
-			double x;
-			double y;
-
-			for ( Long orgX : new long[] { 0, op.max( m_dimIdx1 ) } )
+			for ( Long orgY : new long[] { 0, op.max( m_dimIdx2 ) } )
 			{
-				for ( Long orgY : new long[] { 0, op.max( m_dimIdx2 ) } )
-				{
-					x = ( orgX - center[ m_dimIdx1 ] ) * Math.cos( m_angle ) - ( orgY - center[ m_dimIdx2 ] ) * Math.sin( m_angle );
+				x = ( orgX - center[ m_dimIdx1 ] ) * Math.cos( m_angle ) - ( orgY - center[ m_dimIdx2 ] ) * Math.sin( m_angle );
 
-					y = ( orgX - center[ m_dimIdx1 ] ) * Math.sin( m_angle ) + ( orgY - center[ m_dimIdx2 ] ) * Math.cos( m_angle );
-					min[ m_dimIdx1 ] = ( int ) Math.round( Math.min( x, min[ m_dimIdx1 ] ) );
-					min[ m_dimIdx2 ] = ( int ) Math.round( Math.min( y, min[ m_dimIdx2 ] ) );
-					max[ m_dimIdx1 ] = ( int ) Math.round( Math.max( x, max[ m_dimIdx1 ] ) );
-					max[ m_dimIdx2 ] = ( int ) Math.round( Math.max( y, max[ m_dimIdx2 ] ) );
-				}
+				y = ( orgX - center[ m_dimIdx1 ] ) * Math.sin( m_angle ) + ( orgY - center[ m_dimIdx2 ] ) * Math.cos( m_angle );
+				min[ m_dimIdx1 ] = ( int ) Math.round( Math.min( x, min[ m_dimIdx1 ] ) );
+				min[ m_dimIdx2 ] = ( int ) Math.round( Math.min( y, min[ m_dimIdx2 ] ) );
+				max[ m_dimIdx1 ] = ( int ) Math.round( Math.max( x, max[ m_dimIdx1 ] ) );
+				max[ m_dimIdx2 ] = ( int ) Math.round( Math.max( y, max[ m_dimIdx2 ] ) );
 			}
-
-			long[] dims = new long[ min.length ];
-			for ( int i = 0; i < dims.length; i++ )
-			{
-				dims[ i ] = max[ i ] - min[ i ];
-			}
-
-			return op.factory().create( new FinalInterval( dims ), op.randomAccess().get().createVariable() );
-
 		}
+
+		long[] dims = new long[ min.length ];
+		for ( int i = 0; i < dims.length; i++ )
+		{
+			dims[ i ] = max[ i ] - min[ i ];
+		}
+
+		return op.factory().create( new FinalInterval( dims ), op.randomAccess().get().createVariable() );
 	}
 
 	/**

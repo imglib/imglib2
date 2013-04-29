@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,9 +53,6 @@ import net.imglib2.ops.operation.randomaccessibleinterval.unary.IterateUnaryOper
 public class IntervalsFromDimSelection implements BinaryOutputOperation< int[], Interval[], Interval[] >
 {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Interval[] createEmptyOutput( int[] op0, Interval[] op1 )
 	{
@@ -67,11 +65,6 @@ public class IntervalsFromDimSelection implements BinaryOutputOperation< int[], 
 		return new Interval[ totalSteps ];
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public Interval[] compute( int[] selectedDims, Interval[] incomingIntervals, Interval[] resIntervals )
 	{
@@ -133,19 +126,12 @@ public class IntervalsFromDimSelection implements BinaryOutputOperation< int[], 
 		return resIntervals;
 	}
 
-	/**
-	 * 
-	 */
-
+	@Override
 	public Interval[] compute( int[] in1, Interval[] in2 )
 	{
 		return compute( in1, in2, createEmptyOutput( in1, in2 ) );
 	}
 
-	/**
-	 * @param dims
-	 * @return
-	 */
 	private final static synchronized int getNumIterationSteps( int[] selectedDims, Interval interval )
 	{
 
@@ -162,9 +148,6 @@ public class IntervalsFromDimSelection implements BinaryOutputOperation< int[], 
 		return steps;
 	}
 
-	/**
-	 * @return
-	 */
 	private final static synchronized int[] getUnselectedDimIndices( int[] selectedDims, int numDims )
 	{
 		final boolean[] tmp = new boolean[ numDims ];

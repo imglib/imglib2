@@ -1,3 +1,29 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
+ */
+
 package net.imglib2.algorithm.pde;
 
 import java.util.Vector;
@@ -32,19 +58,18 @@ implements OutputAlgorithm<Img<FloatType>> {
 	 */
 	private Img<FloatType> D;
 
-	private double sigma = 2;
-	private double rho = 4;
+	private final double sigma = 2;
+	private final double rho = 4;
 	/** Anisotropic diffusion ratio in Weickert equation. */
-	private double alpha = 1e-3;
-	private double C = 1;
-	private int m = 1;
-
+	private final double alpha = 1e-3;
+	private final double C = 1;
+	private final int m = 1;
 
 	/*
 	 * CONSTRUCTOR
 	 */
 
-	public CoherenceEnhancingDiffusionTensor2D(Img<T> input) {
+	public CoherenceEnhancingDiffusionTensor2D(final Img<T> input) {
 		this.input = input;
 	}
 
@@ -57,31 +82,30 @@ implements OutputAlgorithm<Img<FloatType>> {
 		return D;
 	}
 
-
 	@Override
 	public boolean process() {
 
 		/* 0. Instantiate tensor holder, and initialize cursors. */
-		long[] tensorDims = new long[input.numDimensions() + 1];
+		final long[] tensorDims = new long[input.numDimensions() + 1];
 		for (int i = 0; i < input.numDimensions(); i++) {
 			tensorDims[i] = input.dimension(i);
 		}
 		tensorDims[input.numDimensions()] = 3;
 		try {
 			D = input.factory().imgFactory(new FloatType()).create(tensorDims, new FloatType());
-		} catch (IncompatibleTypeException e) {
+		} catch (final IncompatibleTypeException e) {
 			errorMessage = BASE_ERROR_MESSAGE + "Failed to create tensor holder:\n"+e.getMessage();
 			return false;
 		}
 
 		/* 1. Create a smoothed version of the input. */
-		Img<FloatType> smoothed = Gauss.toFloat(new double[] { sigma, sigma }, input);
+		final Img<FloatType> smoothed = Gauss.toFloat(new double[] { sigma, sigma }, input);
 
 		/* 2. Compute the gradient of the smoothed input, but only algon X & Y */
-		boolean[] doDimension = new boolean[input.numDimensions()];
+		final boolean[] doDimension = new boolean[input.numDimensions()];
 		doDimension[0] = true;
 		doDimension[1] = true;
-		Gradient<FloatType> gradientCalculator = new Gradient<FloatType>(smoothed, doDimension);
+		final Gradient<FloatType> gradientCalculator = new Gradient<FloatType>(smoothed, doDimension);
 		gradientCalculator.process();
 		final Img<FloatType> gradient = gradientCalculator.getResult();
 
@@ -91,7 +115,7 @@ implements OutputAlgorithm<Img<FloatType>> {
 		final int newDim = input.numDimensions(); 
 
 		final Vector<Chunk> chunks = SimpleMultiThreading.divideIntoChunks(input.size(), numThreads);
-		Thread[] threads = SimpleMultiThreading.newThreads(numThreads);
+		final Thread[] threads = SimpleMultiThreading.newThreads(numThreads);
 
 		for (int i = 0; i < threads.length; i++) {
 
@@ -102,9 +126,9 @@ implements OutputAlgorithm<Img<FloatType>> {
 				public void run() {
 
 					float ux, uy;
-					Cursor<T> cursor = input.localizingCursor();
-					RandomAccess<FloatType> grad_ra = gradient.randomAccess();
-					RandomAccess<FloatType> J_ra = J.randomAccess();
+					final Cursor<T> cursor = input.localizingCursor();
+					final RandomAccess<FloatType> grad_ra = gradient.randomAccess();
+					final RandomAccess<FloatType> J_ra = J.randomAccess();
 
 					cursor.jumpFwd(chunk.getStartPosition());
 					for (long k = 0; k < chunk.getLoopSize(); k++) {
@@ -133,11 +157,9 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 		SimpleMultiThreading.startAndJoin(threads);
 
-
 		/* 3.5 Smoooth the structure tensor. */
 
 		Gauss.inFloat(new double[] { rho, rho, 0 }, J);
-
 
 		/* 4. Construct Diffusion tensor. */
 
@@ -149,9 +171,9 @@ implements OutputAlgorithm<Img<FloatType>> {
 				@Override
 				public void run() {
 
-					Cursor<T> cursor = input.localizingCursor();
-					RandomAccess<FloatType> J_ra = J.randomAccess();
-					RandomAccess<FloatType> D_ra = D.randomAccess();
+					final Cursor<T> cursor = input.localizingCursor();
+					final RandomAccess<FloatType> J_ra = J.randomAccess();
+					final RandomAccess<FloatType> D_ra = D.randomAccess();
 
 					float Jxx, Jxy, Jyy;
 					double tmp, v1x, v1y, v2x, v2y, mag, mu1, mu2, lambda1, lambda2, di;
@@ -231,13 +253,9 @@ implements OutputAlgorithm<Img<FloatType>> {
 
 	}
 
-
-
 	@Override
 	public boolean checkInput() {
 		return true;
 	}
-
-
 
 }

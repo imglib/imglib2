@@ -1,22 +1,26 @@
-/**
- * Copyright (c) 2009--2012, ImgLib2 developers
- * All rights reserved.
- * 
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and
- * the following disclaimer in the documentation and/or other materials
- * provided with the distribution.  Neither the name of the imglib project nor
- * the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -24,7 +28,13 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package net.imglib2.img.planar;
 
 import net.imglib2.img.basictypeaccess.array.BitArray;
@@ -70,9 +80,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link UnsignedByteType}, {@link ByteArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedByteType, ByteArray > unsignedBytes( final long... dim )
@@ -82,9 +89,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link ByteType}, {@link ByteArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ByteType, ByteArray > bytes( final long... dim )
@@ -94,9 +98,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link UnsignedShortType}, {@link ShortArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedShortType, ShortArray > unsignedShorts( final long... dim )
@@ -106,9 +107,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link ShortType}, {@link ShortArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ShortType, ShortArray > shorts( final long... dim )
@@ -118,9 +116,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link UnsignedIntType}, {@link IntArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedIntType, IntArray > unsignedInts( final long... dim )
@@ -130,9 +125,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link IntType}, {@link IntArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< IntType, IntArray > ints( final long... dim )
@@ -142,9 +134,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link LongType}, {@link LongArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< LongType, LongArray > longs( final long... dim )
@@ -154,9 +143,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link BitType}, {@link BitArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< BitType, BitArray > bits( final long... dim )
@@ -166,9 +152,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link FloatType}, {@link FloatArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< FloatType, FloatArray > floats( final long... dim )
@@ -178,9 +161,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link DoubleType}, {@link DoubleArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< DoubleType, DoubleArray > doubles( final long... dim )
@@ -190,9 +170,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link ARGBType}, {@link IntArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ARGBType, IntArray > argbs( final long... dim )
@@ -202,9 +179,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link ComplexFloatType}, {@link FloatArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ComplexFloatType, FloatArray > complexFloats( final long... dim )
@@ -214,9 +188,6 @@ final public class PlanarImgs
 	
 	/**
 	 * Create an {@link PlanarImg}<{@link ComplexDoubleType}, {@link DoubleArray}>.
-	 * 
-	 * @param dim
-	 * @return
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ComplexDoubleType, DoubleArray > complexDoubles( final long... dim )

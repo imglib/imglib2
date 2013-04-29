@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,13 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
-
 
 /**
  * Computes the skew of a sample of values of another function.
@@ -48,19 +46,21 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  */
 public class RealSampleSkewFunction<T extends RealType<T>>
-	implements Function<PointSet,T>
+ extends
+	AbstractRealStatFunction<T>
 {
-	// -- instance variables --
-	
-	private final Function<long[],T> otherFunc;
-	private StatCalculator<T> calculator;
-	
 	// -- constructor --
 	
 	public RealSampleSkewFunction(Function<long[],T> otherFunc)
 	{
-		this.otherFunc = otherFunc;
-		this.calculator = null;
+		super(otherFunc);
+	}
+
+	// -- abstract method overrides --
+
+	@Override
+	protected double value(StatCalculator<T> calc) {
+		return calc.sampleSkew();
 	}
 	
 	// -- Function methods --
@@ -68,19 +68,6 @@ public class RealSampleSkewFunction<T extends RealType<T>>
 	@Override
 	public RealSampleSkewFunction<T> copy() {
 		return new RealSampleSkewFunction<T>(otherFunc.copy());
-	}
-
-	@Override
-	public void compute(PointSet input, T output) {
-		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
-		else calculator.reset(otherFunc, input);
-		double value = calculator.sampleSkew();
-		output.setReal(value);
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
 	}
 
 }

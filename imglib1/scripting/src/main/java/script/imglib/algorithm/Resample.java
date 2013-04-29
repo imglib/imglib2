@@ -2,10 +2,11 @@
  * #%L
  * ImgLib: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -25,13 +26,6 @@
 
 package script.imglib.algorithm;
 
-import script.imglib.algorithm.fn.AbstractAffine3D.Mode;
-import script.imglib.color.Alpha;
-import script.imglib.color.Blue;
-import script.imglib.color.Green;
-import script.imglib.color.RGBA;
-import script.imglib.color.Red;
-import script.imglib.math.Compute;
 import mpicbg.imglib.cursor.LocalizableCursor;
 import mpicbg.imglib.image.Image;
 import mpicbg.imglib.interpolation.Interpolator;
@@ -43,6 +37,13 @@ import mpicbg.imglib.type.Type;
 import mpicbg.imglib.type.numeric.NumericType;
 import mpicbg.imglib.type.numeric.RGBALegacyType;
 import mpicbg.imglib.type.numeric.RealType;
+import script.imglib.algorithm.fn.AbstractAffine3D.Mode;
+import script.imglib.color.Alpha;
+import script.imglib.color.Blue;
+import script.imglib.color.Green;
+import script.imglib.color.RGBA;
+import script.imglib.color.Red;
+import script.imglib.math.Compute;
 
 /** Resample an image in all its dimensions by a given scaling factor and interpolation mode.
  *  

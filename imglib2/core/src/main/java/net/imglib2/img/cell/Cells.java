@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,7 +40,6 @@ package net.imglib2.img.cell;
 import net.imglib2.Cursor;
 import net.imglib2.EuclideanSpace;
 import net.imglib2.RandomAccess;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 
 /**
  * An array of {@link AbstractCell}s to store the data of a {@link CellImg}.
@@ -47,40 +47,39 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
  *
  *
  * @author ImgLib2 developers
- * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public interface Cells< A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends EuclideanSpace
+public interface Cells< A, C extends AbstractCell< A > > extends EuclideanSpace
 {
 	/**
-	 * Write the number of pixels in each dimension into long[].
-	 * Note, that this is the number of pixels in all cells combined, not
-	 * the number of cells!
+	 * Write the number of pixels in each dimension into long[]. Note, that this
+	 * is the number of pixels in all cells combined, not the number of cells!
 	 *
 	 * @param dimensions
 	 */
 	public void dimensions( long[] dimensions );
 
 	/**
-	 * Get the number of pixels in a given dimension <em>d</em>.
-	 * Note, that this is the number of pixels in all cells combined, not
-	 * the number of cells!
+	 * Get the number of pixels in a given dimension <em>d</em>. Note, that this
+	 * is the number of pixels in all cells combined, not the number of cells!
 	 *
 	 * @param d
 	 */
 	public long dimension( int d );
 
 	/**
-	 * Write the number of pixels in a standard cell in each dimension into long[].
-	 * Cells on the max border of the image may be cut off and have different dimensions.
+	 * Write the number of pixels in a standard cell in each dimension into
+	 * long[]. Cells on the max border of the image may be cut off and have
+	 * different dimensions.
 	 *
 	 * @param dimensions
 	 */
 	public void cellDimensions( int[] dimensions );
 
 	/**
-	 * Get the number of pixels in a standard cell in a given dimension <em>d</em>.
-	 * Cells on the max border of the image may be cut off and have different dimensions.
+	 * Get the number of pixels in a standard cell in a given dimension
+	 * <em>d</em>. Cells on the max border of the image may be cut off and have
+	 * different dimensions.
 	 *
 	 * @param d
 	 */

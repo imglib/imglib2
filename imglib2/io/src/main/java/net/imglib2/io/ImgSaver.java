@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,10 +42,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import loci.common.DataTools;
-import loci.common.StatusEvent;
-import loci.common.StatusListener;
-import loci.common.StatusReporter;
 import loci.common.services.DependencyException;
 import loci.common.services.ServiceFactory;
 import loci.formats.FormatException;
@@ -65,6 +62,11 @@ import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import ome.scifio.common.DataTools;
+import ome.scifio.common.StatusEvent;
+import ome.scifio.common.StatusListener;
+import ome.scifio.common.StatusReporter;
+import ome.xml.model.primitives.PositiveFloat;
 
 /**
  * Writes out an {@link ImgPlus} using SCIFIO.
@@ -640,6 +642,25 @@ public class ImgSaver implements StatusReporter {
 			final long[] oldLengths = new long[img.numDimensions()];
 			img.dimensions(oldLengths);
 			dimOrder = guessDimOrder(axes, oldLengths, axisLengths);
+			
+			// Populate physical pixel sizes
+			for (int i=0; i<axes.length; i++) {
+				AxisType axis = axes[i];
+				PositiveFloat physicalSize = null;
+				
+				if (Axes.X.equals(axis)) {
+					physicalSize = new PositiveFloat(img.calibration(i));
+					meta.setPixelsPhysicalSizeX(physicalSize, w.getSeries());
+				}
+				else if (Axes.Y.equals(axis)) {
+					physicalSize = new PositiveFloat(img.calibration(i));
+					meta.setPixelsPhysicalSizeY(physicalSize, w.getSeries());
+				}
+				else if (Axes.Z.equals(axis)) {
+					physicalSize = new PositiveFloat(img.calibration(i));
+					meta.setPixelsPhysicalSizeZ(physicalSize, w.getSeries());
+				}
+			}
 
 			if (dimOrder == null) throw new ImgIOException(
 				"Image has more than 5 dimensions in an order that could not be compressed.");

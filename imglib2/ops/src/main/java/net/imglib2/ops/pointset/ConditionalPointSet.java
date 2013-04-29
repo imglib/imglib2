@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,9 +35,7 @@
  * #L%
  */
 
-
 package net.imglib2.ops.pointset;
-
 
 import net.imglib2.AbstractCursor;
 import net.imglib2.ops.condition.Condition;
@@ -57,12 +56,12 @@ public class ConditionalPointSet extends AbstractPointSet {
 
 	// -- instance variables --
 	
-	private final PointSet pointSet;
-	private final Condition<long[]> condition;
+	private PointSet pointSet;
+	private Condition<long[]> condition;
 	private final BoundsCalculator calculator;
 	private boolean needsCalc;
 	
-	// -- constructor --
+	// -- ConditionalPointSet methods --
 	
 	public ConditionalPointSet(PointSet pointSet, Condition<long[]> condition) {
 		this.pointSet = pointSet;
@@ -71,6 +70,24 @@ public class ConditionalPointSet extends AbstractPointSet {
 		this.needsCalc = true;
 	}
 	
+	public Condition<long[]> getCondition() { return condition; }
+	
+	public void setCondition(Condition<long[]> condition) {
+		this.condition = condition;
+		invalidateBounds();
+		needsCalc = true;
+	}
+	
+	public PointSet getPointSet() {
+		return pointSet;
+	}
+
+	public void setPointSet(PointSet ps) {
+		pointSet = ps;
+		invalidateBounds();
+		needsCalc = true;
+	}
+
 	// -- PointSet methods --
 	
 	@Override
@@ -133,7 +150,6 @@ public class ConditionalPointSet extends AbstractPointSet {
 	public ConditionalPointSet copy() {
 		return new ConditionalPointSet(pointSet.copy(), condition.copy());
 	}
-
 
 	// -- private helpers --
 	

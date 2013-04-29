@@ -1,3 +1,29 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
+ */
+
 package net.imglib2.algorithm.pde;
 
 import java.util.Vector;
@@ -17,7 +43,6 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
 public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends MultiThreadedBenchmarkAlgorithm {
-
 
 	/*
 	 * FIELDS
@@ -145,6 +170,7 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 			final Chunk chunk = chunks.get( ithread );
 			threads[ithread] = new Thread(""+BASE_ERROR_MESSAGE+"thread "+ithread) {
 
+				@Override
 				public void run() {
 
 					Cursor<FloatType> incrementCursor = increment.localizingCursor();
@@ -181,7 +207,6 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 		return true;
 	}
 
-
 	/**
 	 * @return the increment to add to the input image 
 	 * at each iteration. More specifically, that is <code>dt</code> times the right-hand-size
@@ -201,7 +226,6 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 	 * @see #yieldDiffusionTensor(RandomAccess, float[][]) 
 	 */
 	protected abstract float diffusionScheme(float[] U, float[][]D);
-
 
 	@Override
 	public boolean checkInput() {
@@ -257,7 +281,6 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 		return D;
 	}
 
-
 	/**
 	 * Iterate over a nD equivalent of 3x3 neighborhood, and collect the input values 
 	 * needed in that neighborhood to compute the concrete diffusion scheme. 
@@ -271,7 +294,7 @@ public abstract class ExplicitDiffusionScheme<T extends RealType<T>> extends Mul
 	 * Iterate over a nD equivalent of 3x3 neighborhood, and collect the diffusion tensor values 
 	 * needed in that neighborhood to compute the concrete diffusion scheme. 
 
-	 * @param ura  the {@link RandomAccess} 
+	 * @param dra  the {@link RandomAccess} 
 	 * @param target  the float array in which the value will be stored
 	 */
 	protected abstract void yieldDiffusionTensor(final RandomAccess<FloatType> dra, final float[][] target);

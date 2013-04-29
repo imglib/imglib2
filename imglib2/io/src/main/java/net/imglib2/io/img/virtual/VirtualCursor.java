@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -67,27 +68,33 @@ public class VirtualCursor<T extends NativeType<T> & RealType<T>> extends
 		this.accessor = new VirtualAccessor<T>(virtImage);
 	}
 
+	@Override
 	public T get() {
 		iter.localize(position);
 		return accessor.get(position);
 	}
 
+	@Override
 	public void fwd() {
 		iter.fwd();
 	}
 
+	@Override
 	public void reset() {
 		iter.reset();
 	}
 
+	@Override
 	public boolean hasNext() {
 		return iter.hasNext();
 	}
 
+	@Override
 	public void localize(final long[] pos) {
 		iter.localize(pos);
 	}
 
+	@Override
 	public long getLongPosition(final int d) {
 		return iter.getLongPosition(d);
 	}

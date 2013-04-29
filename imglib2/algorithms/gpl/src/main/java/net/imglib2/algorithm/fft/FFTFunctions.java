@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -25,6 +26,9 @@
 
 package net.imglib2.algorithm.fft;
 
+import edu.mines.jtk.dsp.FftComplex;
+import edu.mines.jtk.dsp.FftReal;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.RandomAccess;
@@ -40,8 +44,6 @@ import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
-import edu.mines.jtk.dsp.FftComplex;
-import edu.mines.jtk.dsp.FftReal;
 
 /**
  * Provides all Fourier-based methods required by {@link FourierTransform}, {@link InverseFourierTransform}, {@link FourierConvolution} and {@link PhaseCorrelation}
@@ -105,6 +107,7 @@ final public class FFTFunctions
 			for (int ithread = 0; ithread < threads.length; ++ithread)
 				threads[ithread] = new Thread(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						final int myNumber = ai.getAndIncrement();
@@ -203,6 +206,7 @@ final public class FFTFunctions
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					final int myNumber = ai.getAndIncrement();
@@ -281,7 +285,7 @@ A:						while( cursorDim.hasNext() )
 									tempIn[ i * 2 + 1 ] = cursor.get().getImaginaryFloat();
 									cursor.fwd( 0 );
 								}
-								tempIn[ (complexSize-1) * 2 ] = cursor.get().getImaginaryFloat();
+								tempIn[ (complexSize-1) * 2 ] = cursor.get().getRealFloat();
 								tempIn[ (complexSize-1) * 2 + 1 ] = cursor.get().getImaginaryFloat();
 																								
 								// compute the fft in dimension 0 ( complex -> real )
@@ -405,6 +409,7 @@ A:						while( cursorDim.hasNext() )
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					final int myNumber = ai.getAndIncrement();
@@ -554,6 +559,7 @@ A:						while( cursorDim.hasNext() )
 			for (int ithread = 0; ithread < threads.length; ++ithread)
 				threads[ithread] = new Thread(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						final int myNumber = ai.getAndIncrement();
@@ -707,6 +713,7 @@ A:						while( cursorDim.hasNext() )
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					final int myNumber = ai.getAndIncrement();
@@ -802,6 +809,7 @@ A:						while( cursorDim.hasNext() )
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					final int myNumber = ai.getAndIncrement();
@@ -895,6 +903,7 @@ A:						while( cursorDim.hasNext() )
 		for (int ithread = 0; ithread < threads.length; ++ithread)
 			threads[ithread] = new Thread(new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					final int myNumber = ai.getAndIncrement();

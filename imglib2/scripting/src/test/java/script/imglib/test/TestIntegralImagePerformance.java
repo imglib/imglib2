@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -25,18 +26,13 @@
 
 package script.imglib.test;
 
-import java.lang.reflect.Field;
-
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.FloatProcessor;
 import mpicbg.ij.integral.DoubleIntegralImage;
-import net.imglib2.exception.ImgLibException;
 import net.imglib2.script.ImgLib;
 import net.imglib2.script.algorithm.IntegralImage;
-import net.imglib2.script.img.DoubleImage;
 import net.imglib2.script.img.FloatImage;
-
 
 /** Compare performance with Saalfeld's 2d {@link DoubleIntegralImage}.
  * 

@@ -1,3 +1,40 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
+
 package net.imglib2.algorithm.region.localneighborhood;
 
 import java.util.Iterator;
@@ -14,7 +51,7 @@ import net.imglib2.RealPositionable;
 
 /**
  * TODO
- * 
+ *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Preibisch <preibisch@mpi-cbg.de>
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -51,8 +88,8 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		maxDim = n - 1;
 		size = computeSize();
 
-		long[] min = new long[ n ];
-		long[] max = new long[ n ];
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
 
 		for ( int d = 0; d < n; d++ )
 		{
@@ -86,7 +123,10 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		private final RandomAccess< T > source;
 
 		// the current radius in each dimension we are at
-		private final long[] r;
+		private final double[] r;
+
+		// the current radius in each dimension truncated to long
+		private final long[] ri;
 
 		// the remaining number of steps in each dimension we still have to go
 		private final long[] s;
@@ -95,7 +135,8 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		{
 			super( source.numDimensions() );
 			this.source = source;
-			r = new long[ n ];
+			r = new double[ n ];
+			ri = new long[ n ];
 			s = new long[ n ];
 			reset();
 		}
@@ -105,6 +146,7 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 			super( c.numDimensions() );
 			source = c.source.copyRandomAccess();
 			r = c.r.clone();
+			ri = c.ri.clone();
 			s = c.s.clone();
 		}
 
@@ -117,34 +159,36 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		@Override
 		public void fwd()
 		{
-			int d;
-			for ( d = 0; d < n; ++d )
+
+			if ( --s[ 0 ] >= 0 )
+				source.fwd( 0 );
+			else
 			{
-				if ( --s[ d ] >= 0 )
+				int d = 1;
+				for ( ; d < n; ++d )
 				{
-					source.fwd( d );
-					break;
+					if ( --s[ d ] >= 0 )
+					{
+						source.fwd( d );
+						break;
+					}
 				}
-				else
+
+				for ( ; d > 0; --d )
 				{
-					s[ d ] = r[ d ] = 0;
-					source.setPosition( position[ d ], d );
+					final int e = d - 1;
+					final double rd = r[ d ];
+					final long pd = s[ d ] - ri[ d ];
+
+					final double rad = Math.sqrt( rd * rd - pd * pd );
+					final long radi = ( long ) rad;
+					r[ e ] = rad;
+					ri[ e ] = radi;
+					s[ e ] = 2 * radi;
+
+					source.setPosition( position[ e ] - radi, e );
 				}
 			}
-
-			if ( d > 0 )
-			{
-				final int e = d - 1;
-				final long rd = r[ d ];
-				final long pd = rd - s[ d ];
-
-				final long rad = ( long ) ( Math.sqrt( rd * rd - pd * pd ) );
-				s[ e ] = 2 * rad;
-				r[ e ] = rad;
-
-				source.setPosition( position[ e ] - rad, e );
-			}
-
 		}
 
 		@Override
@@ -172,15 +216,15 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 		{
 			for ( int d = 0; d < maxDim; ++d )
 			{
-				r[ d ] = s[ d ] = 0;
+				r[ d ] = ri[ d ] = s[ d ] = 0;
 				source.setPosition( position[ d ], d );
 			}
 
-			source.setPosition( position[ maxDim ] - radius - 1, maxDim );
+			source.setPosition( position[ maxDim ] - radius - 1, maxDim  );
 
 			r[ maxDim ] = radius;
+			ri[ maxDim ] = radius;
 			s[ maxDim ] = 1 + 2 * radius;
-
 		}
 
 		@Override

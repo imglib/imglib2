@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,35 +37,37 @@
 
 package net.imglib2.img.list;
 
-import java.util.ArrayList;
-
 import net.imglib2.AbstractLocalizingCursorInt;
+import net.imglib2.util.IntervalIndexer;
 
 /**
  * Localizing {@link Cursor} on a {@link ListImg}.
  *
  * @param <T>
+ *            the pixel type
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 final public class ListLocalizingCursor< T > extends AbstractLocalizingCursorInt< T >
 {
 	private int i;
+
 	final private int maxNumPixels;
 
 	final private long[] max;
 
-	final private ArrayList< T > pixels;
+	final private AbstractListImg< T > img;
 
 	public ListLocalizingCursor( final ListLocalizingCursor< T > cursor )
 	{
 		super( cursor.numDimensions() );
 
-		this.pixels = cursor.pixels;
-		this.maxNumPixels = cursor.maxNumPixels;
+		img = cursor.img;
+		maxNumPixels = cursor.maxNumPixels;
 
-		this.max = new long[ n ];
+		max = new long[ n ];
 		for ( int d = 0; d < n; ++d )
 		{
 			max[ d ] = cursor.max[ d ];
@@ -74,18 +77,15 @@ final public class ListLocalizingCursor< T > extends AbstractLocalizingCursorInt
 		i = cursor.i;
 	}
 
-	public ListLocalizingCursor( final ListImg< T > img )
+	public ListLocalizingCursor( final AbstractListImg< T > img )
 	{
 		super( img.numDimensions() );
 
-		this.pixels = img.pixels;
-		this.maxNumPixels = ( int )img.size() - 1;
+		this.img = img;
+		maxNumPixels = ( int ) img.size() - 1;
 
-		this.max = new long[ n ];
-		for ( int d = 0; d < n; ++d )
-		{
-			max[ d ] = img.max( d );
-		}
+		max = new long[ n ];
+		img.max( max );
 
 		reset();
 	}
@@ -94,23 +94,25 @@ final public class ListLocalizingCursor< T > extends AbstractLocalizingCursorInt
 	public void fwd()
 	{
 		++i;
-
 		for ( int d = 0; d < n; d++ )
-		{
-			if ( position[ d ] < max[ d ] )
-			{
-				position[ d ]++;
-
-				for ( int e = 0; e < d; e++ )
-					position[ e ] = 0;
-
+			if ( ++position[ d ] > max[ d ] )
+				position[ d ] = 0;
+			else
 				break;
-			}
-		}
 	}
 
 	@Override
-	public boolean hasNext() { return i < maxNumPixels; }
+	public void jumpFwd( final long steps )
+	{
+		i += steps;
+		IntervalIndexer.indexToPosition( i, img.dim, position );
+	}
+
+	@Override
+	public boolean hasNext()
+	{
+		return i < maxNumPixels;
+	}
 
 	@Override
 	public void reset()
@@ -124,11 +126,14 @@ final public class ListLocalizingCursor< T > extends AbstractLocalizingCursorInt
 	}
 
 	@Override
-	public T get() { return pixels.get( i ); }
+	public T get()
+	{
+		return img.get( i );
+	}
 
 	public void set( final T t )
 	{
-		pixels.set( i, t );
+		img.set( i, t );
 	}
 
 	@Override

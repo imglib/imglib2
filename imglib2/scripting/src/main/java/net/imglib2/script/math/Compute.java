@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -25,6 +26,7 @@
 
 package net.imglib2.script.math;
 
+import java.awt.Container;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,17 +34,16 @@ import java.util.Set;
 import net.imglib2.Cursor;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RealCursor;
-import net.imglib2.script.math.fn.IFunction;
-import net.imglib2.script.math.fn.ImageFunction;
-import net.imglib2.script.math.fn.Util;
-
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.outofbounds.OutOfBounds;
+import net.imglib2.script.math.fn.IFunction;
+import net.imglib2.script.math.fn.ImageFunction;
+import net.imglib2.script.math.fn.Util;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -194,6 +195,7 @@ public class Compute {
 					final int ID = ithread;
 					threads[ithread] = new Thread(new Runnable()
 					{
+						@Override
 						public void run()
 						{
 							final Cursor<R> resultCursor = result.cursor();
@@ -216,14 +218,13 @@ public class Compute {
 				SimpleMultiThreading.startAndJoin( threads );
 
 				return result;
-			} else {
-				// Operations that only involve numbers (for consistency)
-				final Img<R> result = new ArrayImgFactory<R>().create(new long[1], outputType);
-
-				loop(result.cursor(), result.size(), op);
-
-				return result;
 			}
+			// Operations that only involve numbers (for consistency)
+			final Img<R> result = new ArrayImgFactory<R>().create(new long[1], outputType);
+
+			loop(result.cursor(), result.size(), op);
+
+			return result;
 		}
 	}
 
@@ -237,6 +238,7 @@ public class Compute {
 	static public final <R extends RealType<R> & NativeType<R>> Img<R> apply(IFunction op, R output, int numThreads) throws Exception
 	{
 		final Loop<R> loop = new Loop<R>(op, output, numThreads) {
+			@Override
 			public final void loop(final Cursor<R> resultCursor, final long loopSize, final IFunction fn) {
 				for ( long j = loopSize; j > 0 ; --j )
 				{
@@ -248,7 +250,7 @@ public class Compute {
 		return loop.run();
 	}
 
-	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	/** Execute the given {@code op} {@link IFunction}, which runs for each pixel,
 	 * and store the results in an {@link Image} of type {@link ARGBType}.
 	 * 
 	 * @param op The {@link IFunction} to execute.
@@ -257,6 +259,7 @@ public class Compute {
 	static public final Img<ARGBType> apply(IFunction op, ARGBType output, int numThreads ) throws Exception
 	{
 		final Loop<ARGBType> loop = new Loop<ARGBType>(op, output, numThreads) {
+			@Override
 			public final void loop(final Cursor<ARGBType> resultCursor, final long loopSize, final IFunction fn) {
 				for ( long j = loopSize; j > 0 ; --j )
 				{
@@ -268,7 +271,7 @@ public class Compute {
 		return loop.run();
 	}
 
-	/** Execute the given {@param} op {@link IFunction}, which runs for each pixel,
+	/** Execute the given {@code op} {@link IFunction}, which runs for each pixel,
 	 * and store the results in an {@link Img} of type {@link FloatType}.
 	 * Uses as many concurrent threads as CPUs, defined by {@link Runtime#availableProcessors()}.
 	 * 
@@ -278,7 +281,7 @@ public class Compute {
 		return inFloats( Runtime.getRuntime().availableProcessors(), op );
 	}
 
-	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	/** Execute the given {@code op} {@link IFunction}, which runs for each pixel,
 	 * and store the results in an {@link Img} of type {@link FloatType} with
 	 * as many threads as desired.
 	 * 
@@ -289,7 +292,7 @@ public class Compute {
 		return apply(op, new FloatType(), numThreads);
 	}
 
-	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	/** Execute the given {@code op} {@link IFunction}, which runs for each pixel,
 	 * and store the results in an {@link Image} of type {@link DoubleType} with
 	 * as many threads as desired.
 	 * 
@@ -300,7 +303,7 @@ public class Compute {
 		return apply(op, new DoubleType(), numThreads );
 	}
 
-	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	/** Execute the given {@code op} {@link IFunction}, which runs for each pixel,
 	 * and store the results in an {@link Image} of type {@link DoubleType}.
 	 * Uses as many concurrent threads as CPUs, defined by {@link Runtime#availableProcessors()}.
 	 * 
@@ -310,7 +313,7 @@ public class Compute {
 		return inDoubles(Runtime.getRuntime().availableProcessors(), op);
 	}
 	
-	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	/** Execute the given {@code op} {@link IFunction}, which runs for each pixel,
 	 * and store the results in an {@link Image} of type {@link ARGBType} with
 	 * as many threads as desired.
 	 * 
@@ -321,7 +324,7 @@ public class Compute {
 		return apply(op, new ARGBType(), numThreads);
 	}
 
-	/** Execute the given {@param op} {@link IFunction}, which runs for each pixel,
+	/** Execute the given {@code op} {@link IFunction}, which runs for each pixel,
 	 * and store the results in an {@link Image} of type {@link ARGBType} with
 	 * as many threads as desired.
 	 * Uses as many concurrent threads as CPUs, defined by {@link Runtime#availableProcessors()}.

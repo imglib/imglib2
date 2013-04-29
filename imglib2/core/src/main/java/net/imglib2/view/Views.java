@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -58,6 +59,7 @@ import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.outofbounds.OutOfBoundsRandomValueFactory;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 
@@ -77,16 +79,11 @@ public class Views
 {
 	/**
 	 * Returns a {@link RealRandomAccessible} using interpolation
-	 *
-	 * @param source
-	 * @param factory
-	 * @return
 	 */
 	public static < T, F extends EuclideanSpace > RealRandomAccessible< T > interpolate( final F source, final InterpolatorFactory< T, F > factory )
 	{
 		return new Interpolant< T, F >( source, factory );
 	}
-
 
 	/**
 	 * Turns a {@link RealRandomAccessible} into a {@link RandomAccessible},
@@ -121,13 +118,13 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with a mirroring out-of-bounds
-	 * strategy. Boundary pixels are not repeated. {@see
-	 * OutOfBoundsMirrorSingleBoundary}.
-	 *
+	 * strategy. Boundary pixels are not repeated.
+	 * 
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsMirrorSingleBoundary
 	 */
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendMirrorSingle( final F randomAccessible )
 	{
@@ -136,13 +133,13 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with a mirroring out-of-bounds
-	 * strategy. Boundary pixels are repeated. {@see
-	 * OutOfBoundsMirrorDoubleBoundary}.
+	 * strategy. Boundary pixels are repeated.
 	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsMirrorDoubleBoundary
 	 */
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendMirrorDouble( final F randomAccessible )
 	{
@@ -151,12 +148,13 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
-	 * strategy. {@see OutOfBoundsConstantValue}.
+	 * strategy.
 	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
 	 */
 	public static < T extends Type< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F randomAccessible, final T value )
 	{
@@ -164,8 +162,25 @@ public class Views
 	}
 
 	/**
+	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
+	 * strategy where the constant value is the zero-element of the data type.
+	 *
+	 * @param randomAccessible
+	 *            the interval to extend.
+	 * @return (unbounded) RandomAccessible which extends the input interval to
+	 *         infinity with a constant value of zero.
+	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
+	 */
+	public static < T extends NumericType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendZero( final F randomAccessible )
+	{
+		final T zero = Util.getTypeFromInterval( randomAccessible ).createVariable();
+		zero.setZero();
+		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsConstantValueFactory< T, F >( zero ) );
+	}
+
+	/**
 	 * Extend a RandomAccessibleInterval with a random-value out-of-bounds
-	 * strategy. {@see OutOfBoundsRandomValue}.
+	 * strategy.
 	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
@@ -175,6 +190,7 @@ public class Views
 	 *            the maximal random value
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsRandomValue
 	 */
 	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendRandom( final F randomAccessible, final double min, final double max )
 	{
@@ -183,12 +199,13 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with a periodic out-of-bounds
-	 * strategy. {@see OutOfBoundsPeriodic}.
+	 * strategy.
 	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsPeriodic
 	 */
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendPeriodic( final F randomAccessible )
 	{
@@ -197,12 +214,13 @@ public class Views
 
 	/**
 	 * Extend a RandomAccessibleInterval with an out-of-bounds
-	 * strategy to repeat border pixels. {@see OutOfBoundsBorder}.
+	 * strategy to repeat border pixels.
 	 *
 	 * @param randomAccessible
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
+	 * @see net.imglib2.outofbounds.OutOfBoundsBorder
 	 */
 	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendBorder( final F randomAccessible )
 	{
@@ -359,8 +377,9 @@ public class Views
 	 * @param randomAccessible
 	 *            the source
 	 * @param translation
-	 *            offset of the source view. The pixel at offset becomes the
-	 *            origin of resulting view.
+	 *            translation vector of the source view. The pixel at <em>x</em>
+	 *            in the source view becomes <em>(x + translation)</em> in the
+	 *            resulting view.
 	 */
 	public static < T > MixedTransformView< T > translate( final RandomAccessible< T > randomAccessible, final long... translation )
 	{
@@ -375,11 +394,12 @@ public class Views
 	 * <em>x</em> in the source view has coordinates <em>(x + translation)</em>
 	 * in the resulting view.
 	 *
-	 * @param randomAccessible
+	 * @param interval
 	 *            the source
 	 * @param translation
-	 *            offset of the source view. The pixel at offset becomes the
-	 *            origin of resulting view.
+	 *            translation vector of the source view. The pixel at <em>x</em>
+	 *            in the source view becomes <em>(x + translation)</em> in the
+	 *            resulting view.
 	 */
 	public static < T > IntervalView< T > translate( final RandomAccessibleInterval< T > interval, final long... translation )
 	{
@@ -418,7 +438,7 @@ public class Views
 	 * Translate such that pixel at offset in interval is at the origin in the
 	 * resulting view. This is equivalent to translating by -offset.
 	 *
-	 * @param randomAccessible
+	 * @param interval
 	 *            the source
 	 * @param offset
 	 *            offset of the source view. The pixel at offset becomes the
@@ -612,9 +632,6 @@ public class Views
 		return interval( invertAxis( ( RandomAccessible< T > ) interval, d ), min, max );
 	}
 
-
-
-
 	/**
 	 * Define an interval on a RandomAccessible and translate it such that the
 	 * min corner is at the origin. It is the callers responsibility to ensure
@@ -676,7 +693,6 @@ public class Views
 
 		return true;
 	}
-
 
 	/**
 	 * Invert the d-axis and shift the resulting view to the origin.
@@ -752,8 +768,7 @@ public class Views
 	{
 		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) )
 			return ( IterableInterval< T > )randomAccessibleInterval;
-		else
-			return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
+		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
 	}
 
 	/**
@@ -772,7 +787,6 @@ public class Views
 	{
 		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) && FlatIterationOrder.class.isInstance( ( ( IterableInterval< T > ) randomAccessibleInterval ).iterationOrder() ) )
 			return ( IterableInterval< T > ) randomAccessibleInterval;
-		else
-			return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
+		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
 	}
 }

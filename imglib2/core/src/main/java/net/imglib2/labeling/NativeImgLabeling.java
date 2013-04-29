@@ -1,23 +1,22 @@
-package net.imglib2.labeling;
-
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,12 +28,14 @@ package net.imglib2.labeling;
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
+package net.imglib2.labeling;
 
 import java.util.Iterator;
 
@@ -51,36 +52,37 @@ import net.imglib2.type.numeric.IntegerType;
 /**
  * A labeling backed by a native image that takes a labeling type backed by an
  * int array.
- * 
+ *
  * @param <T>
  *            the type of labels assigned to pixels
- * 
+ *
  * @author Lee Kamentsky, Christian Dietz, Martin Horn
  */
-public class NativeImgLabeling<T extends Comparable<T>, I extends IntegerType<I>>
-		extends AbstractNativeLabeling<T> {
+public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType< I >> extends AbstractNativeLabeling< T >
+{
 
 	protected final long[] generation;
 
-	protected final Img<I> img;
+	protected final Img< I > img;
 
-	public NativeImgLabeling(final Img<I> img) {
-		super(dimensions(img), new DefaultROIStrategyFactory<T>(),
-				new LabelingMapping<T>(img.firstElement().createVariable()));
+	public NativeImgLabeling( final Img< I > img )
+	{
+		super( dimensions( img ), new DefaultROIStrategyFactory< T >(), new LabelingMapping< T >( img.firstElement().createVariable() ) );
 		this.img = img;
-		this.generation = new long[1];
+		this.generation = new long[ 1 ];
 	}
 
-	private static long[] dimensions(final Interval i) {
-		final long[] dims = new long[i.numDimensions()];
-		i.dimensions(dims);
+	private static long[] dimensions( final Interval i )
+	{
+		final long[] dims = new long[ i.numDimensions() ];
+		i.dimensions( dims );
 		return dims;
 	}
 
 	/**
 	 * Create a labeling backed by a native image with custom strategy and image
 	 * factory
-	 * 
+	 *
 	 * @param dim
 	 *            - dimensions of the labeling
 	 * @param strategyFactory
@@ -88,63 +90,60 @@ public class NativeImgLabeling<T extends Comparable<T>, I extends IntegerType<I>
 	 * @param imgFactory
 	 *            - the image factory to generate the native image
 	 */
-	public NativeImgLabeling(
-			final LabelingROIStrategyFactory<T> strategyFactory,
-			final Img<I> img) {
-		super(dimensions(img), strategyFactory, new LabelingMapping<T>(img
-				.firstElement().createVariable()));
+	public NativeImgLabeling( final LabelingROIStrategyFactory< T > strategyFactory, final Img< I > img )
+	{
+		super( dimensions( img ), strategyFactory, new LabelingMapping< T >( img.firstElement().createVariable() ) );
 		this.img = img;
-		this.generation = new long[1];
+		this.generation = new long[ 1 ];
 	}
 
 	@Override
-	public RandomAccess<LabelingType<T>> randomAccess() {
-		final RandomAccess<I> rndAccess = img.randomAccess();
+	public RandomAccess< LabelingType< T >> randomAccess()
+	{
+		final RandomAccess< I > rndAccess = img.randomAccess();
 
-		return new ConvertedRandomAccess<I, LabelingType<T>>(rndAccess,
-				new LabelingTypeConverter(), new LabelingType<T>(
-						rndAccess.get(), mapping, generation));
+		return new ConvertedRandomAccess< I, LabelingType< T >>( rndAccess, new LabelingTypeConverter(), new LabelingType< T >( rndAccess.get(), mapping, generation ) );
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * net.imglib2.labeling.AbstractNativeLabeling#setLinkedType(net.imglib2
 	 * .labeling.LabelingType)
 	 */
 	@Override
-	public Cursor<LabelingType<T>> cursor() {
-		Cursor<I> c = img.cursor();
-		return new ConvertedCursor<I, LabelingType<T>>(c,
-				new LabelingTypeConverter(), new LabelingType<T>(c.get(),
-						mapping, generation));
+	public Cursor< LabelingType< T >> cursor()
+	{
+		final Cursor< I > c = img.cursor();
+		return new ConvertedCursor< I, LabelingType< T >>( c, new LabelingTypeConverter(), new LabelingType< T >( c.get(), mapping, generation ) );
 	}
 
 	@Override
-	public Cursor<LabelingType<T>> localizingCursor() {
-		Cursor<I> c = img.localizingCursor();
-		return new ConvertedCursor<I, LabelingType<T>>(c,
-				new LabelingTypeConverter(), new LabelingType<T>(c.get(),
-						mapping, generation));
+	public Cursor< LabelingType< T >> localizingCursor()
+	{
+		final Cursor< I > c = img.localizingCursor();
+		return new ConvertedCursor< I, LabelingType< T >>( c, new LabelingTypeConverter(), new LabelingType< T >( c.get(), mapping, generation ) );
 	}
 
-	public Img<I> getStorageImg() {
+	public Img< I > getStorageImg()
+	{
 		return img;
 	}
 
 	@Override
-	public Labeling<T> copy() {
-		final NativeImgLabeling<T, I> result = new NativeImgLabeling<T, I>(img
-				.factory().create(img, img.firstElement().createVariable()));
-		final Cursor<LabelingType<T>> srcCursor = cursor();
-		final Cursor<LabelingType<T>> resCursor = result.cursor();
+	public Labeling< T > copy()
+	{
+		final NativeImgLabeling< T, I > result = new NativeImgLabeling< T, I >( img.factory().create( img, img.firstElement().createVariable() ) );
+		final Cursor< LabelingType< T >> srcCursor = cursor();
+		final Cursor< LabelingType< T >> resCursor = result.cursor();
 
-		while (srcCursor.hasNext()) {
+		while ( srcCursor.hasNext() )
+		{
 			srcCursor.fwd();
 			resCursor.fwd();
 
-			resCursor.get().set(srcCursor.get());
+			resCursor.get().set( srcCursor.get() );
 		}
 
 		return result;
@@ -152,49 +151,57 @@ public class NativeImgLabeling<T extends Comparable<T>, I extends IntegerType<I>
 	}
 
 	@Override
-	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
 		return false;
 	}
 
 	@Override
-	public LabelingType<T> firstElement() {
+	public LabelingType< T > firstElement()
+	{
 		return cursor().next();
 	}
 
 	@Override
-	public Iterator<LabelingType<T>> iterator() {
+	public Iterator< LabelingType< T >> iterator()
+	{
 		return cursor();
 	}
 
 	@Override
-	public RandomAccess<LabelingType<T>> randomAccess(final Interval interval) {
+	public RandomAccess< LabelingType< T >> randomAccess( final Interval interval )
+	{
 		return randomAccess();
 	}
 
 	@Override
-	public Object iterationOrder() {
+	public Object iterationOrder()
+	{
 		return img.iterationOrder();
 	}
 
 	@Override
-	public <LL extends Comparable<LL>> LabelingFactory<LL> factory() {
-		return new LabelingFactory<LL>() {
+	public < LL extends Comparable< LL >> LabelingFactory< LL > factory()
+	{
+		return new LabelingFactory< LL >()
+		{
 
 			@Override
-			public Labeling<LL> create(final long[] dim) {
-				return new NativeImgLabeling<LL, I>(img.factory().create(dim,
-						img.firstElement().createVariable()));
+			public Labeling< LL > create( final long[] dim )
+			{
+				return new NativeImgLabeling< LL, I >( img.factory().create( dim, img.firstElement().createVariable() ) );
 			}
 
 		};
 	}
 
 	// Empty converter
-	private class LabelingTypeConverter implements
-			Converter<I, LabelingType<T>> {
+	private class LabelingTypeConverter implements Converter< I, LabelingType< T >>
+	{
 
 		@Override
-		public void convert(I input, LabelingType<T> output) {
+		public void convert( final I input, final LabelingType< T > output )
+		{
 			// Nothing to do here
 		}
 

@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,21 +40,18 @@ package net.imglib2.img.cell;
 import net.imglib2.AbstractLocalizable;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 
 /**
  * {@link RandomAccess} on a {@link CellImg}.
  *
- * The boundaries of the current cell are cached, so that
- * position changes within the same cell have minimal overhead.
- *
+ * The boundaries of the current cell are cached, so that position changes
+ * within the same cell have minimal overhead.
  *
  * @author ImgLib2 developers
- * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends AbstractLocalizable implements RandomAccess< T >, CellImg.CellContainerSampler< T, A, C >
+public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractLocalizable implements RandomAccess< T >, CellImg.CellContainerSampler< T, A, C >
 {
 	protected final CellImg< T, A, C > img;
 
@@ -64,16 +62,20 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	protected final long[] tmp;
 
 	protected int[] currentCellSteps;
+
 	protected long[] currentCellMin;
+
 	protected long[] currentCellMax;
 
 	protected boolean isOutOfBounds;
+
 	protected final long[] oobCellMin;
+
 	protected final long[] oobCellMax;
 
 	/**
-	 * The current index of the type.
-	 * It is faster to duplicate this here than to access it through type.getIndex().
+	 * The current index of the type. It is faster to duplicate this here than
+	 * to access it through type.getIndex().
 	 */
 	protected int index;
 
@@ -86,8 +88,7 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		randomAccessOnCells = randomAccess.randomAccessOnCells.copyRandomAccess();
 		tmp = new long[ n ];
 
-		for ( int d = 0; d < n; ++d )
-			position[ d ] = randomAccess.position[ d ];
+		randomAccess.localize( position );
 
 		currentCellSteps = randomAccess.currentCellSteps;
 		currentCellMin = randomAccess.currentCellMin;
@@ -330,7 +331,6 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 		type.updateIndex( index );
 	}
 
-
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
@@ -436,11 +436,13 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 	}
 
 	/**
-	 * Update type to currentCellSteps, currentCellMin, and type after
-	 * switching cells. This is called after randomAccessOnCells and position
-	 * fields have been set.
+	 * Update type to currentCellSteps, currentCellMin, and type after switching
+	 * cells. This is called after randomAccessOnCells and position fields have
+	 * been set.
 	 *
-	 * @param updateD the (first) dimension that triggered the call by moving out of current cell range.
+	 * @param updateD
+	 *            the (first) dimension that triggered the call by moving out of
+	 *            current cell range.
 	 */
 	private void updatePosition( final boolean movedOutOfBounds )
 	{
@@ -464,10 +466,11 @@ public class CellRandomAccess< T extends NativeType< T >, A extends ArrayDataAcc
 						break;
 					}
 
-				if ( ! isOutOfBounds )
+				if ( !isOutOfBounds )
 				{
 					// yes. we came back into the image.
-					// re-initialize randomAccessOnCells to the correct position.
+					// re-initialize randomAccessOnCells to the correct
+					// position.
 					img.getCellPosition( position, tmp );
 					randomAccessOnCells.setPosition( tmp );
 				}

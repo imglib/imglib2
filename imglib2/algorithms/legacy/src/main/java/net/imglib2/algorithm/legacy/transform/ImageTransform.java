@@ -1,11 +1,12 @@
 /*
  * #%L
- * ImgLib: a general-purpose, multidimensional image processing library.
+ * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -25,6 +26,14 @@
 
 package net.imglib2.algorithm.legacy.transform;
 
+import mpicbg.models.AffineModel2D;
+import mpicbg.models.AffineModel3D;
+import mpicbg.models.Boundable;
+import mpicbg.models.InvertibleCoordinateTransform;
+import mpicbg.models.NoninvertibleModelException;
+import mpicbg.models.RigidModel2D;
+import mpicbg.models.TranslationModel2D;
+import mpicbg.models.TranslationModel3D;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -37,14 +46,6 @@ import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.Type;
 import net.imglib2.view.Views;
-import mpicbg.models.AffineModel2D;
-import mpicbg.models.AffineModel3D;
-import mpicbg.models.Boundable;
-import mpicbg.models.InvertibleCoordinateTransform;
-import mpicbg.models.NoninvertibleModelException;
-import mpicbg.models.RigidModel2D;
-import mpicbg.models.TranslationModel2D;
-import mpicbg.models.TranslationModel3D;
 
 /**
  * TODO

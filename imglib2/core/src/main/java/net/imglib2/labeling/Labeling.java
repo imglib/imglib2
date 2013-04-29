@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,9 +51,8 @@ import net.imglib2.roi.RegionOfInterest;
  * 
  * @author Lee Kamentsky
  */
-public interface Labeling<T extends Comparable<T>> extends
-		RandomAccessibleInterval<LabelingType<T>>,
-		IterableInterval<LabelingType<T>> {
+public interface Labeling< T extends Comparable< T >> extends RandomAccessibleInterval< LabelingType< T >>, IterableInterval< LabelingType< T >>
+{
 	/**
 	 * find the coordinates of the bounding box around the given label. The the
 	 * minimum extents are inclusive (there will be pixels at the coordinates of
@@ -63,7 +63,7 @@ public interface Labeling<T extends Comparable<T>> extends
 	 *            - find pixels with this label
 	 * @return true if some pixels are labeled, false if none have the label
 	 */
-	public boolean getExtents(T label, long[] minExtents, long[] maxExtents);
+	public boolean getExtents( T label, long[] minExtents, long[] maxExtents );
 
 	/**
 	 * Find the first pixel in a raster scan of the object with the given label.
@@ -72,7 +72,7 @@ public interface Labeling<T extends Comparable<T>> extends
 	 * @param start
 	 * @return
 	 */
-	public boolean getRasterStart(T label, long[] start);
+	public boolean getRasterStart( T label, long[] start );
 
 	/**
 	 * Return the area or suitable N-d analog of the labeled object
@@ -81,14 +81,14 @@ public interface Labeling<T extends Comparable<T>> extends
 	 *            - label for object in question
 	 * @return area in units of pixel / voxel / etc.
 	 */
-	public long getArea(T label);
+	public long getArea( T label );
 
 	/**
 	 * Find all labels in the space
 	 * 
 	 * @return a collection of the labels.
 	 */
-	public Collection<T> getLabels();
+	public Collection< T > getLabels();
 
 	/**
 	 * Get a region of interest optimized to determine point membership
@@ -97,7 +97,7 @@ public interface Labeling<T extends Comparable<T>> extends
 	 *            The ROI will represent the area labeled with this label
 	 * @return a region of interest
 	 */
-	public RegionOfInterest getRegionOfInterest(T label);
+	public RegionOfInterest getRegionOfInterest( T label );
 
 	/**
 	 * Get a ROI that represents the pixels with the given label
@@ -105,20 +105,20 @@ public interface Labeling<T extends Comparable<T>> extends
 	 * @param label
 	 * @return
 	 */
-	public IterableRegionOfInterest getIterableRegionOfInterest(T label);
+	public IterableRegionOfInterest getIterableRegionOfInterest( T label );
 
 	/**
 	 * Copy method
 	 * 
 	 * @return copy of the labeling
 	 */
-	public Labeling<T> copy();
+	public Labeling< T > copy();
 
 	/**
 	 * Factory
 	 * 
 	 * @return create new labeling
 	 */
-	public <LL extends Comparable<LL>> LabelingFactory<LL> factory();
+	public < LL extends Comparable< LL >> LabelingFactory< LL > factory();
 
 }

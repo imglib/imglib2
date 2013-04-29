@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -156,9 +157,6 @@ public class LabelingType< T extends Comparable< T >> implements Type< LabelingT
 	 * This method returns the canonical object for the given labeling.
 	 * SetLabeling will work faster if you pass it the interned object instead
 	 * of one created by you.
-	 * 
-	 * @param labeling
-	 * @return
 	 */
 	public List< T > intern( final List< T > labeling )
 	{
@@ -194,7 +192,7 @@ public class LabelingType< T extends Comparable< T >> implements Type< LabelingT
 	@Override
 	public LabelingType< T > copy()
 	{
-		return new LabelingType< T >( this.type, mapping, generation );
+		return new LabelingType< T >( getLabeling() );
 	}
 
 	@Override

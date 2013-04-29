@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,27 +37,27 @@
 
 package net.imglib2.img.cell;
 
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.util.IntervalIndexer;
 
 /**
  * A cell of an {@link CellImg}.
  *
- * @param <A>
  * @author ImgLib2 developers
- * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractCell< A extends ArrayDataAccess< A > >
+public abstract class AbstractCell< A >
 {
 	final protected int n;
 
 	final int[] dimensions;
+
 	final int[] steps;
+
 	final long[] min;
+
 	final long[] max;
 
-	protected int numPixels;
+	final protected int numPixels;
 
 	public AbstractCell( final int[] dimensions, final long[] min )
 	{
@@ -67,14 +68,12 @@ public abstract class AbstractCell< A extends ArrayDataAccess< A > >
 		this.min = min.clone();
 
 		max = new long[ n ];
-		for ( int d = 0; d < n; ++d ) {
+		for ( int d = 0; d < n; ++d )
 			max[ d ] = min[ d ] + dimensions[ d ] - 1;
-		}
 
 		int nPixels = dimensions[ 0 ];
-		for ( int d = 1; d < n; ++d ) {
+		for ( int d = 1; d < n; ++d )
 			nPixels *= dimensions[ d ];
-		}
 		numPixels = nPixels;
 	}
 
@@ -103,11 +102,12 @@ public abstract class AbstractCell< A extends ArrayDataAccess< A > >
 	}
 
 	/**
-	 * compute the index in the underlying flat array of this cell
-	 * which corresponds to a local position (i.e., relative to the
-	 * origin of this cell).
+	 * compute the index in the underlying flat array of this cell which
+	 * corresponds to a local position (i.e., relative to the origin of this
+	 * cell).
 	 *
-	 * @param position   a local position
+	 * @param position
+	 *            a local position
 	 * @return corresponding index
 	 */
 	public int localPositionToIndex( final long[] position )
@@ -117,7 +117,8 @@ public abstract class AbstractCell< A extends ArrayDataAccess< A > >
 
 	/**
 	 *
-	 * @param d dimension
+	 * @param d
+	 *            dimension
 	 * @return minimum
 	 */
 	public long min( final int d )

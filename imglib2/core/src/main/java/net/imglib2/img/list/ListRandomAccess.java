@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,8 +37,6 @@
 
 package net.imglib2.img.list;
 
-import java.util.ArrayList;
-
 import net.imglib2.AbstractLocalizableInt;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
@@ -46,8 +45,8 @@ import net.imglib2.RandomAccess;
  * {@link RandomAccess} on a {@link ListImg}.
  *
  * @param <T>
+ *            the pixel type
  *
- * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -56,15 +55,13 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 {
 	private int i;
 
-	private final ArrayList< T > pixels;
-	private final ListImg< T > container;
+	private final AbstractListImg< T > img;
 
 	public ListRandomAccess( final ListRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
 
-		container = randomAccess.container;
-		this.pixels = randomAccess.pixels;
+		img = randomAccess.img;
 
 		for ( int d = 0; d < n; ++d )
 			position[ d ] = randomAccess.position[ d ];
@@ -72,12 +69,11 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 		i = randomAccess.i;
 	}
 
-	public ListRandomAccess( final ListImg< T > container )
+	public ListRandomAccess( final AbstractListImg< T > img )
 	{
-		super( container.numDimensions() );
+		super( img.numDimensions() );
 
-		this.container = container;
-		this.pixels = container.pixels;
+		this.img = img;
 
 		i = 0;
 	}
@@ -85,32 +81,32 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 	@Override
 	public T get()
 	{
-		return pixels.get( i );
+		return img.get( i );
 	}
 
 	public void set( final T t )
 	{
-		pixels.set( i, t );
+		img.set( i, t );
 	}
 
 	@Override
 	public void fwd( final int d )
 	{
-		i += container.step[ d ];
+		i += img.step[ d ];
 		++position[ d ];
 	}
 
 	@Override
 	public void bck( final int d )
 	{
-		i -= container.step[ d ];
+		i -= img.step[ d ];
 		--position[ d ];
 	}
 
 	@Override
 	public void move( final int distance, final int d )
 	{
-		i += container.step[ d ] * distance;
+		i += img.step[ d ] * distance;
 		position[ d ] += distance;
 	}
 
@@ -147,7 +143,7 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 		localizable.localize( position );
 		i = position[ 0 ];
 		for ( int d = 1; d < n; ++d )
-			i += position[ d ] * container.step[ d ];
+			i += position[ d ] * img.step[ d ];
 	}
 
 	@Override
@@ -158,7 +154,7 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 		for ( int d = 1; d < n; ++d )
 		{
 			final int p = position[ d ];
-			i += p * container.step[ d ];
+			i += p * img.step[ d ];
 			this.position[ d ] = p;
 		}
 	}
@@ -171,7 +167,7 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 		for ( int d = 1; d < n; ++d )
 		{
 			final int p = ( int ) position[ d ];
-			i += p * container.step[ d ];
+			i += p * img.step[ d ];
 			this.position[ d ] = p;
 		}
 	}
@@ -179,14 +175,14 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 	@Override
 	public void setPosition( final int position, final int d )
 	{
-		i += container.step[ d ] * (position - this.position[ d ]);
+		i += img.step[ d ] * (position - this.position[ d ]);
 		this.position[ d ] = position;
 	}
 
 	@Override
 	public void setPosition( final long position, final int d )
 	{
-		i += container.step[ d ] * (position - this.position[ d ]);
+		i += img.step[ d ] * (position - this.position[ d ]);
 		this.position[ d ] = ( int ) position;
 	}
 

@@ -24,7 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${scifio.groupId}</groupId>
-			<artifactId>loci-common</artifactId>
+			<artifactId>loci-legacy</artifactId>
 			<version>${scifio.version}</version>
 		</dependency>
 		<dependency>
@@ -37,6 +37,11 @@
 			<artifactId>scifio</artifactId>
 			<version>${scifio.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${scifio.groupId}</groupId>
+			<artifactId>scifio-devel</artifactId>
+			<version>${scifio.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -45,6 +50,10 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<properties>
+		<project.rootdir>${basedir}/../..</project.rootdir>
+	</properties>
 
 	<build>
 		<plugins>

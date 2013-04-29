@@ -1,16 +1,50 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
+
 package net.imglib2.ui;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 
 import net.imglib2.realtransform.AffineTransform3D;
 
-
-public class TransformEventHandler3D implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener
+public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 {
 	/**
 	 * Current source to screen transform.
@@ -114,9 +148,9 @@ public class TransformEventHandler3D implements MouseListener, MouseMotionListen
 	final private static String helpString =
 			"Mouse control:" + NL + " " + NL +
 			"Pan and tilt the volume by left-click and dragging the image in the canvas, " + NL +
-			"move the volume by middle-click and dragging the image in the canvas, " + NL +
+			"move the volume by middle-or-right-click and dragging the image in the canvas, " + NL +
 			"browse alongside the z-axis using the mouse-wheel, and" + NL +
-			"zoom in and out using the mouse-wheel holding CTRL+SHIFT." + NL + " " + NL +
+			"zoom in and out using the mouse-wheel holding CTRL+SHIFT or META." + NL + " " + NL +
 			"Key control:" + NL + " " + NL +
 			"X - Select x-axis as rotation axis." + NL +
 			"Y - Select y-axis as rotation axis." + NL +
@@ -186,15 +220,16 @@ public class TransformEventHandler3D implements MouseListener, MouseMotionListen
 				// center un-shift
 				affine.set( affine.get( 0, 3 ) + oX, 0, 3 );
 				affine.set( affine.get( 1, 3 ) + oY, 1, 3 );
+				update();
 			}
-			else if ( ( modifiers & MouseEvent.BUTTON2_DOWN_MASK ) != 0 ) // translate
+			else if ( ( modifiers & ( MouseEvent.BUTTON2_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK ) ) != 0 ) // translate
 			{
 				affine.set( affineDragStart );
 
 				affine.set( affine.get( 0, 3 ) - dX, 0, 3 );
 				affine.set( affine.get( 1, 3 ) - dY, 1, 3 );
+				update();
 			}
-			update();
 		}
 	}
 
@@ -239,8 +274,9 @@ public class TransformEventHandler3D implements MouseListener, MouseMotionListen
 			final int modifiers = e.getModifiersEx();
 			final double v = keyModfiedSpeed( modifiers );
 			final int s = e.getWheelRotation();
-			if ( ( modifiers & KeyEvent.CTRL_DOWN_MASK ) != 0 &&
-			     ( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 )
+			if ( ( ( modifiers & KeyEvent.CTRL_DOWN_MASK ) != 0 &&
+			       ( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 )
+			     || ( modifiers & KeyEvent.META_DOWN_MASK ) != 0 )
 			{
 				final double f = getMouseScaleFactor();
 				final double dScale = 1.0 + 0.05;
@@ -253,6 +289,7 @@ public class TransformEventHandler3D implements MouseListener, MouseMotionListen
 			// translate in Z
 			{
 				final double dZ = v * -s;
+				// TODO (optionally) correct for zoom
 				affine.set( affine.get( 2, 3 ) - dZ, 2, 3 );
 			}
 
@@ -265,71 +302,55 @@ public class TransformEventHandler3D implements MouseListener, MouseMotionListen
 	{
 		synchronized ( affine )
 		{
-			if ( e.getKeyCode() == KeyEvent.VK_X )
+			final int keyCode = e.getKeyCode();
+			final int keyModifiers = e.getModifiersEx() & ( KeyEvent.SHIFT_DOWN_MASK | KeyEvent.ALT_DOWN_MASK | KeyEvent.ALT_GRAPH_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK | KeyEvent.META_DOWN_MASK );
+			final double v = keyModfiedSpeed( e.getModifiersEx() );
+			if ( keyCode == KeyEvent.VK_X && keyModifiers == 0 )
 			{
 				axis = 0;
 			}
-			else if ( e.getKeyCode() == KeyEvent.VK_Y )
+			else if (keyCode == KeyEvent.VK_Y && keyModifiers == 0 )
 			{
 				axis = 1;
 			}
-			else if ( e.getKeyCode() == KeyEvent.VK_Z )
+			else if ( keyCode == KeyEvent.VK_Z && keyModifiers == 0 )
 			{
 				axis = 2;
 			}
-			else
+			else if ( keyCode == KeyEvent.VK_LEFT )
 			{
-				final double v = keyModfiedSpeed( e.getModifiersEx() );
-				if ( e.getKeyCode() == KeyEvent.VK_LEFT )
-				{
-					rotate( axis, step * v );
-					update();
-				}
-				else if ( e.getKeyCode() == KeyEvent.VK_RIGHT )
-				{
-					rotate( axis, step * -v );
-					update();
-				}
-				if ( e.getKeyCode() == KeyEvent.VK_UP )
-				{
-					final double dScale = 1.0 + 0.1 * v;
-					scale( dScale, centerX, centerY );
-					update();
-				}
-				else if ( e.getKeyCode() == KeyEvent.VK_DOWN )
-				{
-					final double dScale = 1.0 + 0.1 * v;
-					scale( 1.0 / dScale, centerX, centerY );
-					update();
-				}
-				else if ( e.getKeyCode() == KeyEvent.VK_COMMA )
-				{
-					affine.set( affine.get( 2, 3 ) + v, 2, 3 );
-					update();
-				}
-				else if ( e.getKeyCode() == KeyEvent.VK_PERIOD )
-				{
-					affine.set( affine.get( 2, 3 ) - v, 2, 3 );
-					update();
-				}
+				rotate( axis, step * v );
+				update();
+			}
+			else if ( keyCode == KeyEvent.VK_RIGHT )
+			{
+				rotate( axis, step * -v );
+				update();
+			}
+			if ( keyCode == KeyEvent.VK_UP )
+			{
+				final double dScale = 1.0 + 0.1 * v;
+				scale( dScale, centerX, centerY );
+				update();
+			}
+			else if ( keyCode == KeyEvent.VK_DOWN )
+			{
+				final double dScale = 1.0 + 0.1 * v;
+				scale( 1.0 / dScale, centerX, centerY );
+				update();
+			}
+			else if ( keyCode == KeyEvent.VK_COMMA )
+			{
+				affine.set( affine.get( 2, 3 ) + v, 2, 3 );
+				update();
+			}
+			else if ( keyCode == KeyEvent.VK_PERIOD )
+			{
+				affine.set( affine.get( 2, 3 ) - v, 2, 3 );
+				update();
 			}
 		}
 	}
-
-	@Override
-	public void mouseMoved( final MouseEvent e ) {}
-
-	@Override
-	public void mouseClicked( final MouseEvent e ) {}
-
-	@Override
-	public void mouseReleased( final MouseEvent e ) {}
-
-	@Override
-	public void mouseEntered( final MouseEvent e ) {}
-
-	@Override
-	public void mouseExited( final MouseEvent e ) {}
 
 	@Override
 	public void keyTyped( final KeyEvent e ) {}

@@ -1,3 +1,29 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public 
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * #L%
+ */
+
 package net.imglib2.algorithm.pde;
 
 import net.imglib2.img.Img;
@@ -5,7 +31,6 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
 public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDiffusionScheme3D<T> {
-
 
 	private static final float DEFAULT_DT = 0.15f;
 
@@ -29,6 +54,7 @@ public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDi
 	 * METHOD
 	 */
 
+	@Override
 	protected final float diffusionScheme(float[] U, float[][] D) {
 
 		final float Uccc = U[0];
@@ -81,7 +107,6 @@ public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDi
 		final float Fcpc = D[5][5];
 		final float Fccp = D[5][8];
 
-
 		final float Icpm = 0.5f * ( - Fccm - Fcpc ) * ( Ucpm - Uccc );
 		final float Imcm = 0.5f * (   Eccm + Emcc ) * ( Umcm - Uccc );
 		final float Iccm = ( Cccm + Cccc ) * ( Uccm - Uccc );
@@ -104,7 +129,6 @@ public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDi
 		final float Ipcp = 0.5f * (   Eccp + Epcc ) * ( Upcp - Uccc );
 		final float Icmp = 0.5f * ( - Fccp - Fcmc ) * ( Ucmp - Uccc );
 
-
 		return 0.5f * dt * ( 
 				Icpm + Imcm + Iccm + Ipcm + Icmm
 				+ Impc + Icpc + Ippc + Imcc
@@ -113,7 +137,5 @@ public class StandardDiffusionScheme3D<T extends RealType<T>> extends ExplicitDi
 				);
 	}
 
-
 }
-
 

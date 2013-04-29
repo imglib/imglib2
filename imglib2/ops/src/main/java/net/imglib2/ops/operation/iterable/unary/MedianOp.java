@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -92,60 +93,56 @@ public class MedianOp< T extends RealType< T >, V extends RealType< V >> impleme
 				return array.get( k );
 
 			}
-			else
+			int middle = ( left + right ) >>> 1;
+			swap( array, middle, left + 1 );
+
+			if ( array.get( left ) > array.get( right ) )
 			{
+				swap( array, left, right );
+			}
 
-				int middle = ( left + right ) >>> 1;
-				swap( array, middle, left + 1 );
+			if ( array.get( left + 1 ) > array.get( right ) )
+			{
+				swap( array, left + 1, right );
+			}
 
-				if ( array.get( left ) > array.get( right ) )
+			if ( array.get( left ) > array.get( left + 1 ) )
+			{
+				swap( array, left, left + 1 );
+			}
+
+			int i = left + 1;
+			int j = right;
+			double pivot = array.get( left + 1 );
+
+			while ( true )
+			{
+				do
+					i++;
+				while ( array.get( i ) < pivot );
+				do
+					j--;
+				while ( array.get( j ) > pivot );
+
+				if ( j < i )
 				{
-					swap( array, left, right );
+					break;
 				}
 
-				if ( array.get( left + 1 ) > array.get( right ) )
-				{
-					swap( array, left + 1, right );
-				}
+				swap( array, i, j );
+			}
 
-				if ( array.get( left ) > array.get( left + 1 ) )
-				{
-					swap( array, left, left + 1 );
-				}
+			array.set( left + 1, array.get( j ) );
+			array.set( j, pivot );
 
-				int i = left + 1;
-				int j = right;
-				double pivot = array.get( left + 1 );
+			if ( j >= k )
+			{
+				right = j - 1;
+			}
 
-				while ( true )
-				{
-					do
-						i++;
-					while ( array.get( i ) < pivot );
-					do
-						j--;
-					while ( array.get( j ) > pivot );
-
-					if ( j < i )
-					{
-						break;
-					}
-
-					swap( array, i, j );
-				}
-
-				array.set( left + 1, array.get( j ) );
-				array.set( j, pivot );
-
-				if ( j >= k )
-				{
-					right = j - 1;
-				}
-
-				if ( j <= k )
-				{
-					left = i;
-				}
+			if ( j <= k )
+			{
+				left = i;
 			}
 		}
 	}

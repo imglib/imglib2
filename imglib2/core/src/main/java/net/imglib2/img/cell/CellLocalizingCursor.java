@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,30 +39,29 @@ package net.imglib2.img.cell;
 
 import net.imglib2.AbstractLocalizingCursor;
 import net.imglib2.Cursor;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 
 /**
  * Localizing {@link Cursor} on a {@link CellImg}.
  *
- *
  * @author ImgLib2 developers
- * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDataAccess< A >, C extends AbstractCell< A > > extends AbstractLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A, C >
+public class CellLocalizingCursor< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A, C >
 {
 	protected final T type;
 
 	protected final Cursor< C > cursorOnCells;
 
 	protected int lastIndexInCell;
+
 	protected long[] currentCellMin;
+
 	protected long[] currentCellMax;
 
 	/**
-	 * The current index of the type.
-	 * It is faster to duplicate this here than to access it through type.getIndex().
+	 * The current index of the type. It is faster to duplicate this here than
+	 * to access it through type.getIndex().
 	 */
 	protected int index;
 
@@ -107,7 +107,6 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 		return cursorOnCells.get();
 	}
 
-
 	@Override
 	public T get()
 	{
@@ -141,7 +140,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 			newIndex -= lastIndexInCell + 1;
 			cursorOnCells.fwd();
 			isNotLastCell = cursorOnCells.hasNext();
-			lastIndexInCell = ( int )( getCell().size() - 1);
+			lastIndexInCell = ( int ) ( getCell().size() - 1 );
 		}
 
 		final C cell = getCell();
@@ -184,8 +183,8 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 	}
 
 	/**
-	 * Move cursor right before the first element of the next cell.
-	 * Update type, position, and index variables.
+	 * Move cursor right before the first element of the next cell. Update type,
+	 * position, and index variables.
 	 */
 	private void moveToNextCell()
 	{
@@ -193,7 +192,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A extends ArrayDat
 		isNotLastCell = cursorOnCells.hasNext();
 		final C cell = getCell();
 
-		lastIndexInCell = ( int )( cell.size() - 1);
+		lastIndexInCell = ( int ) ( cell.size() - 1 );
 		currentCellMin = cell.min;
 		currentCellMax = cell.max;
 

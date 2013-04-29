@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,7 +34,6 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-
 
 package net.imglib2.ops.parse;
 
@@ -241,7 +241,7 @@ public class EquationParser<T extends RealType<T>> {
 			ParseStatus status = atom(tokens, pos+1);
 			if (status.errMsg != null) return status;
 			RealConstantFunction<long[], DoubleType> constant =
-				new RealConstantFunction<long[],DoubleType>(new DoubleType(),-1);
+				new RealConstantFunction<long[], DoubleType>(new DoubleType(-1));
 			status.function = new
 				GeneralBinaryFunction<long[],DoubleType,DoubleType,DoubleType>(
 					constant, status.function,
@@ -310,7 +310,8 @@ public class EquationParser<T extends RealType<T>> {
 			double constant = (bound.isMin() ? type.getMinValue() : type.getMaxValue());
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+1;
-			status.function =	new RealConstantFunction<long[],DoubleType>(new DoubleType(), constant);
+			status.function =
+				new RealConstantFunction<long[], DoubleType>(new DoubleType(constant));
 			return status;
 		}
 		else if (ParseUtils.match(DimensionReference.class, tokens, pos)) {
@@ -334,7 +335,8 @@ public class EquationParser<T extends RealType<T>> {
 			double constant = img.dimension(reference);
 			ParseStatus status = new ParseStatus();
 			status.tokenNumber = pos+4;
-			status.function =	new RealConstantFunction<long[],DoubleType>(new DoubleType(), constant);
+			status.function =
+				new RealConstantFunction<long[], DoubleType>(new DoubleType(constant));
 			return status;
 		}
 		else if (ParseUtils.match(DistanceFromCenterReference.class, tokens, pos)) {
@@ -428,7 +430,8 @@ public class EquationParser<T extends RealType<T>> {
 			ParseStatus status = new ParseStatus();
 			status.function =
 				new RealConstantFunction<long[],DoubleType>(
-						new DoubleType(),r.getValue());
+new DoubleType(r
+					.getValue()));
 			status.tokenNumber = pos + 1;
 			return status;
 		}
@@ -437,7 +440,8 @@ public class EquationParser<T extends RealType<T>> {
 			ParseStatus status = new ParseStatus();
 			status.function =
 				new RealConstantFunction<long[],DoubleType>(
-						new DoubleType(),i.getValue());
+new DoubleType(i
+					.getValue()));
 			status.tokenNumber = pos + 1;
 			return status;
 		}

@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,15 +57,15 @@ public class SamplingLineIterator<T> extends AbstractLineIterator implements Sam
 	final T copy, tmp;
 	
 	/**
-	 * Make a new AbstractSamplingLineIterator which iterates a 1d line of a certain length
+	 * Make a new SamplingLineIterator which iterates a 1d line of a certain length
 	 * and is used as the input for the convolution operation
 	 * 
 	 * @param dim - which dimension to iterate (dimension id)
 	 * @param size - number of pixels to iterate
 	 * @param randomAccess - the {@link RandomAccess} which is moved along the line and is 
 	 * placed at the right location (one pixel left of the starting pixel)
-	 * @param processLine - the line that will be used for processing and is associated with this {@link AbstractSamplingLineIterator},
-	 * this is important for multithreading so that each AbstractSamplingLineIterator has its own temporary space for computing the
+	 * @param processLine - the line that will be used for processing and is associated with this {@link SamplingLineIterator},
+	 * this is important for multithreading so that each SamplingLineIterator has its own temporary space for computing the
 	 * gaussian convolution 
 	 */
 	public SamplingLineIterator( final int dim, final long size, final RandomAccess<T> randomAccess, final Img<T> processLine, final T copy, final T tmp )
@@ -83,7 +84,7 @@ public class SamplingLineIterator<T> extends AbstractLineIterator implements Sam
 	}
 	
 	/**
-	 * @return - the line that is used for processing and is associated with this {@link AbstractSamplingLineIterator}  
+	 * @return - the line that is used for processing and is associated with this {@link SamplingLineIterator}  
 	 */
 	public Img<T> getProcessLine() { return processLine; }
 	

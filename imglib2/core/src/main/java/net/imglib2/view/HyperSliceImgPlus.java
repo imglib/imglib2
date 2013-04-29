@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,14 +53,11 @@ import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.transform.integer.MixedTransform;
-import net.imglib2.view.MixedTransformView;
-import net.imglib2.view.TransformBuilder;
-import net.imglib2.view.Views;
 
 /**
  * This class offers access to a <code>n-1</code>-dimensional view of a source {@link ImgPlus},
  * obtained by fixing a target dimension to a target position. The source image is wrapped
- * so there is data duplication.
+ * so there is no data duplication.
  * <p>
  * Its result is exactly similar to the {@link Views#hyperSlice(RandomAccessible, int, long)}
  * static method, except that the returned class preserves the {@link ImgPlus} capabilities, 
@@ -195,7 +193,6 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 		return fullViewRandomAccessible.randomAccess();
 	}
 
-
 	@Override
 	public int numDimensions() {
 		return nDimensions;
@@ -205,8 +202,7 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 	public long min(final int d) {
 		if (d < targetDimension)
 			return source.min( d );
-		else 
-			return source.min( d + 1 );
+		return source.min( d + 1 );
 	}
 
 	@Override
@@ -233,8 +229,7 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 	public long max(final int d) {
 		if (d < targetDimension)
 			return source.max( d );
-		else 
-			return source.max( d + 1 );
+		return source.max( d + 1 );
 	}
 
 	@Override
@@ -271,16 +266,14 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 	public long dimension(final int d) {
 		if (d < targetDimension)
 			return source.dimension( d );
-		else 
-			return source.dimension(d + 1);
+		return source.dimension(d + 1);
 	}
 
 	@Override
 	public double realMin(final int d) {
 		if (d < targetDimension)
 			return source.realMin( d );
-		else 
-			return source.realMin( d + 1 );
+		return source.realMin( d + 1 );
 	}
 
 	@Override
@@ -307,8 +300,7 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 	public double realMax(final int d) {
 		if (d < targetDimension)
 			return source.realMax( d );
-		else 
-			return source.realMax( d + 1 );
+		return source.realMax( d + 1 );
 	}
 
 	@Override
@@ -403,9 +395,8 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 		if (targetDim < 0) {
 			// not found
 			return source;
-		} else {
-			return new HyperSliceImgPlus<T>(source, targetDim, pos);
 		}
+		return new HyperSliceImgPlus<T>(source, targetDim, pos);
 	}
 	
 	/**

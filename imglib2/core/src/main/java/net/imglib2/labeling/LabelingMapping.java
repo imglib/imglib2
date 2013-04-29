@@ -1,12 +1,12 @@
-package net.imglib2.labeling;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,7 +35,7 @@ package net.imglib2.labeling;
  * #L%
  */
 
-
+package net.imglib2.labeling;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,8 +63,7 @@ import net.imglib2.type.numeric.IntegerType;
  * caller first interns { "Foo", "Bar" } and then requests the mapping of the
  * returned object.
  * 
- * @param <T>
- * @param <N>
+ * @param <T> TODO
  * 
  * @author Lee Kamentsky
  */
@@ -277,9 +276,6 @@ public class LabelingMapping< T extends Comparable< T >>
 
 	/**
 	 * Return the canonical list for the given list
-	 * 
-	 * @param src
-	 * @return
 	 */
 	public synchronized List< T > intern( final List< T > src )
 	{
@@ -344,8 +340,6 @@ public class LabelingMapping< T extends Comparable< T >>
 
 	/**
 	 * Returns the number of indexed labeling lists
-	 * 
-	 * @return
 	 */
 	public int numLists()
 	{
@@ -353,6 +347,8 @@ public class LabelingMapping< T extends Comparable< T >>
 	}
 
 	/**
+	 * TODO
+	 * 
 	 * @return the labels defined in the mapping.
 	 */
 	public List< T > getLabels()

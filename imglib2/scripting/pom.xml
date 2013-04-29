@@ -62,11 +62,15 @@
 			<version>${mpicbg.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>jfree</groupId>
+			<groupId>org.jfree</groupId>
 			<artifactId>jfreechart</artifactId>
-			<version>1.0.13</version>
+			<version>1.0.14</version>
 		</dependency>
 	</dependencies>
+
+	<properties>
+		<project.rootdir>${basedir}/../..</project.rootdir>
+	</properties>
 
 	<build>
 		<plugins>

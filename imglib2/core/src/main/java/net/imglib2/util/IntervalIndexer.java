@@ -2,20 +2,21 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -36,6 +37,9 @@
 
 package net.imglib2.util;
 
+import net.imglib2.Dimensions;
+import net.imglib2.Localizable;
+import net.imglib2.Positionable;
 
 /**
  * N-dimensional data is often stored in a flat 1-dimensional array.
@@ -71,6 +75,15 @@ public class IntervalIndexer
 		long i = position[ maxDim ];
 		for ( int d = maxDim - 1; d >= 0; --d )
 			i = i * dimensions[ d ] + position[ d ];
+		return i;
+	}
+
+	final static public long positionToIndex( final Localizable position, final Dimensions dimensions )
+	{
+		final int maxDim = dimensions.numDimensions() - 1;
+		long i = position.getLongPosition( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * dimensions.dimension( d ) + position.getLongPosition( d );
 		return i;
 	}
 
@@ -138,6 +151,18 @@ public class IntervalIndexer
 			index = j;
 		}
 		position[ maxDim ] = index;
+	}
+
+	final static public void indexToPosition( long index, final Dimensions dimensions, final Positionable position )
+	{
+		final int maxDim = dimensions.numDimensions() - 1;
+		for ( int d = 0; d < maxDim; ++d )
+		{
+			final long j = index / dimensions.dimension( d );
+			position.setPosition( index - j * dimensions.dimension( d ), d );
+			index = j;
+		}
+		position.setPosition( index, maxDim );
 	}
 
 	final static public void indexToPosition( int index, final int[] dimensions, final float[] position )
@@ -289,9 +314,6 @@ public class IntervalIndexer
 		return indexToPosition( index, dimensions, steps, dimension ) + offsets[ dimension ];
 	}
 
-
-
-
 	/**
 	 * Create allocation step array from the dimensions of an N-dimensional array.
 	 *
@@ -317,7 +339,5 @@ public class IntervalIndexer
 		for ( int d = 1; d < dimensions.length; ++d )
 			steps[ d ] = steps[ d - 1 ] * dimensions[ d - 1 ];
 	}
-
-
 
 }

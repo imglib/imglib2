@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,59 +43,58 @@ import net.imglib2.type.numeric.RealType;
 /**
  * @author Christian Dietz (University of Konstanz)
  * @author Martin Horn (University of Konstanz)
- *
+ * 
  * @param <I>
  * @param <O>
  */
-public class Normalize<T extends RealType<T>> implements UnaryOperation<T, T>,
-                Converter<T, T> {
+public class Normalize< T extends RealType< T >> implements UnaryOperation< T, T >, Converter< T, T >
+{
 
-        private final double m_minNormVal;
-        private final double m_factor;
+	private final double m_newMin;
 
-        private final T m_inMin;
-        private final T m_inMax;
-        private final T m_maxResVal;
-        private final T m_minResVal;
+	private final double m_factor;
 
-        public Normalize(T min, T max) {
+	private final double m_oldMin;
 
-                m_inMin = min;
-                m_inMax = max;
-                T type = min.createVariable();
-                m_minResVal = type.createVariable();
-                m_maxResVal = type.createVariable();
-                m_minResVal.setReal(m_minResVal.getMinValue());
-                m_maxResVal.setReal(m_maxResVal.getMaxValue());
+	public Normalize( T oldMin, T oldMax, T newMin, T newMax )
+	{
+		this( oldMin.getRealDouble(), oldMax.getRealDouble(), newMin.getRealDouble(), newMax.getRealDouble() );
+	}
 
-                m_factor = 1 / (max.getRealDouble() - min.getRealDouble())
-                                * ((type.getMaxValue() - type.getMinValue()));
-                m_minNormVal = type.getMinValue();
-        }
+	protected Normalize( double factor, double oldMin, double newMin )
+	{
+		m_oldMin = oldMin;
+		m_newMin = newMin;
+		m_factor = factor;
+	}
 
-        @Override
-        public T compute(T input, T output) {
-                if (input.compareTo(m_inMin) < 0) {
-                        output.set(m_minResVal.copy());
-                } else if (input.compareTo(m_inMax) > 0) {
-                        output.set(m_maxResVal.copy());
-                } else {
-                        output.setReal((input.getRealDouble() - m_inMin
-                                        .getRealDouble())
-                                        * m_factor
-                                        + m_minNormVal);
-                }
-                return output;
-        }
+	public Normalize( double oldMin, double oldMax, double newMin, double newMax )
+	{
+		this( normalizationFactor( oldMin, oldMax, newMin, newMax ), oldMin, newMin );
+	}
 
-        @Override
-        public UnaryOperation<T, T> copy() {
-                return new Normalize<T>(m_inMin, m_inMax);
-        }
+	@Override
+	public T compute( T input, T output )
+	{
+		output.setReal( ( input.getRealDouble() - m_oldMin ) * m_factor + m_newMin );
+		return output;
+	}
 
-        @Override
-        public void convert(T input, T output) {
-                compute(input, output);
-        }
+	@Override
+	public UnaryOperation< T, T > copy()
+	{
+		return new Normalize< T >( m_factor, m_oldMin, m_newMin );
+	}
+
+	@Override
+	public void convert( T input, T output )
+	{
+		compute( input, output );
+	}
+
+	public synchronized static double normalizationFactor( double oldMin, double oldMax, double newMin, double newMax )
+	{
+		return 1.0d / ( oldMax - oldMin ) * ( ( newMax - newMin ) );
+	}
 
 }

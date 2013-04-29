@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,7 +35,6 @@
  * #L%
  */
 
-
 package net.imglib2.ops.example;
 
 // a composed function example
@@ -51,7 +51,6 @@ package net.imglib2.ops.example;
 public class ExampleNotes {
 	// nothing to do
 }
-
 
 // Things worth noting
 // - discrete and continuous
@@ -72,7 +71,6 @@ public class ExampleNotes {
 //Make a function that uses a condition to decide whether to evaluate
 //the function or not (i.e. condition could be a mask)
 //Make lots of classes final.
-
 
 // note that regions always define a point. so there is no such empty
 //   region. this might cause minor problems with assign ops passed

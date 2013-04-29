@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,7 +34,6 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-
 
 package net.imglib2.neighborsearch;
 
@@ -87,9 +87,6 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * Euclidean distance to the reference. Data is accessed through a
 	 * {@link Sampler} that guarantees write access if the underlying data set
 	 * is writable.
-	 * 
-	 * @param i
-	 * @return
 	 */
 	public Sampler< T > getSampler( final int i );
 
@@ -97,9 +94,6 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * Access the position of the <em>i</em><sup>th</sup> neighbor within
 	 * radius. If {@code sortResults} was set to true, neighbors are ordered by
 	 * square Euclidean distance to the reference.
-	 * 
-	 * @param i
-	 * @return
 	 */
 	public RealLocalizable getPosition( final int i );
 
@@ -108,18 +102,12 @@ public interface RadiusNeighborSearch< T > extends EuclideanSpace
 	 * used for the last search and the <em>i</em><sup>th</sup> neighbor. If
 	 * {@code sortResults} was set to true, neighbors are ordered by square
 	 * Euclidean distance to the reference.
-	 * 
-	 * @param i
-	 * @return
 	 */
 	public double getSquareDistance( final int i );
 
 	/**
 	 * Access the Euclidean distance between the reference location as used for
 	 * the last search and the <em>i</em><sup>th</sup> neighbor.
-	 * 
-	 * @param i
-	 * @return
 	 */
 	public double getDistance( final int i );
 }

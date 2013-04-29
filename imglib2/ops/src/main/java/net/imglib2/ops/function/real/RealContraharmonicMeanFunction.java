@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,13 +35,10 @@
  * #L%
  */
 
-
 package net.imglib2.ops.function.real;
 
 import net.imglib2.ops.function.Function;
-import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
-
 
 /**
  * Computes the contraharmonic mean of the values of another function over a
@@ -50,21 +48,26 @@ import net.imglib2.type.numeric.RealType;
  * @author Barry DeZonia
  */
 public class RealContraharmonicMeanFunction<T extends RealType<T>>
-	implements Function<PointSet,T>
+ extends
+	AbstractRealStatFunction<T>
 {
 	// -- instance variables --
 	
-	private final Function<long[],T> otherFunc;
 	private final double order;
-	private StatCalculator<T> calculator;
 	
 	// -- constructor --
 	
 	public RealContraharmonicMeanFunction(Function<long[],T> otherFunc, double order)
 	{
-		this.otherFunc = otherFunc;
+		super(otherFunc);
 		this.order = order;
-		this.calculator = null;
+	}
+
+	// -- abstract method overrides --
+
+	@Override
+	protected double value(StatCalculator<T> calc) {
+		return calc.contraharmonicMean(order);
 	}
 	
 	// -- Function methods --
@@ -72,19 +75,6 @@ public class RealContraharmonicMeanFunction<T extends RealType<T>>
 	@Override
 	public RealContraharmonicMeanFunction<T> copy() {
 		return new RealContraharmonicMeanFunction<T>(otherFunc.copy(), order);
-	}
-
-	@Override
-	public void compute(PointSet input, T output) {
-		if (calculator == null) calculator = new StatCalculator<T>(otherFunc, input);
-		else calculator.reset(otherFunc, input);
-		double value = calculator.contraharmonicMean(order);
-		output.setReal(value);
-	}
-
-	@Override
-	public T createOutput() {
-		return otherFunc.createOutput();
 	}
 
 }

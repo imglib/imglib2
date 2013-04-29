@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -74,11 +75,6 @@ public class ConvexHull2D< K extends RandomAccessibleInterval< BitType > & Itera
 		m_fill = fill;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return
-	 */
 	@Override
 	public K compute( final K in, final K r )
 	{
@@ -131,11 +127,11 @@ public class ConvexHull2D< K extends RandomAccessibleInterval< BitType > & Itera
 		return r;
 	}
 
-	private static int[] p1 = new int[ 2 ];
+	private int[] p1 = new int[ 2 ];
 
-	private static int[] p2 = new int[ 2 ];
+	private int[] p2 = new int[ 2 ];
 
-	private static void drawLine( final RandomAccess< BitType > ra, final Polygon poly, final int idx1, final int idx2, final int dimX, final int dimY )
+	private void drawLine( final RandomAccess< BitType > ra, final Polygon poly, final int idx1, final int idx2, final int dimX, final int dimY )
 	{
 		p1[ 0 ] = poly.xpoints[ idx1 ];
 		p1[ 1 ] = poly.ypoints[ idx1 ];
@@ -204,7 +200,7 @@ public class ConvexHull2D< K extends RandomAccessibleInterval< BitType > & Itera
 	 * Computes the square of the distance of point C to the segment defined by
 	 * points AB
 	 */
-	private static synchronized int distance( final Point A, final Point B, final Point C )
+	private int distance( final Point A, final Point B, final Point C )
 	{
 		final int ABx = B.x - A.x;
 		final int ABy = B.y - A.y;
@@ -269,7 +265,7 @@ public class ConvexHull2D< K extends RandomAccessibleInterval< BitType > & Itera
 
 	}
 
-	public static synchronized int pointLocation( final Point A, final Point B, final Point P )
+	public int pointLocation( final Point A, final Point B, final Point P )
 	{
 		final int cp1 = ( B.x - A.x ) * ( P.y - A.y ) - ( B.y - A.y ) * ( P.x - A.x );
 		return ( cp1 > 0 ) ? 1 : -1;
@@ -281,7 +277,7 @@ public class ConvexHull2D< K extends RandomAccessibleInterval< BitType > & Itera
 		return new ConvexHull2D< K >( m_dimX, m_dimY, m_fill );
 	}
 
-	public static int[][] rasterizeLine( final int[] point1, final int[] point2 )
+	public int[][] rasterizeLine( final int[] point1, final int[] point2 )
 	{
 
 		int l = Math.max( Math.abs( point1[ 0 ] - point2[ 0 ] ), Math.abs( point1[ 1 ] - point2[ 1 ] ) );

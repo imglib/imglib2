@@ -2,10 +2,11 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
- * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
- * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
- * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,27 +37,24 @@
 
 package net.imglib2.display;
 
-import net.imglib2.Localizable;
 import net.imglib2.Point;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
 
 /**
+ * TODO
  *
- *
- * @author ImgLib2 developers
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
-abstract public class AbstractXYProjector< A, B > extends Point implements Projector< A, B >, Positionable, Localizable
+abstract public class AbstractXYProjector< A, B > extends Point implements Projector< A, B >
 {
 	final protected RandomAccessible< A > source;
-	final protected Converter< A, B > converter;
+	final protected Converter< ? super A, B > converter;
 	final long[] min;
 	final long[] max;
 
-	public AbstractXYProjector( final RandomAccessible< A > source, final Converter< A, B > converter )
+	public AbstractXYProjector( final RandomAccessible< A > source, final Converter< ? super A, B > converter )
 	{
 		super( Math.max( 2, source.numDimensions() ) );
 
