@@ -38,18 +38,10 @@ public class Expressions
 		@Override
 		public T get()
 		{
-//			final T t = c.get();
-//			t.set( a.get() );
-//			t.add( b.get() );
-//			return t;
-			return compute( a.get(), b.get(), c.get() );
-		}
-
-		public T compute( final T input1, final T input2, final T output )
-		{
-			output.set( input1 );
-			output.add( input2 );
-			return output;
+			final T t = c.get();
+			t.set( a.get() );
+			t.add( b.get() );
+			return t;
 		}
 
 		@Override
@@ -100,6 +92,10 @@ public class Expressions
 				final Cursor< FloatType > cb = imgB.cursor();
 				final Cursor< FloatType > cc = imgC.cursor();
 
+				ca.reset();
+				cb.reset();
+				cc.reset();
+
 				final SumExpression< FloatType > e = new SumExpression< FloatType >();
 				e.setA( ca );
 				e.setB( cb );
@@ -115,18 +111,18 @@ public class Expressions
 			}
 		} );
 
-//		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
-//		{
-//			@Override
-//			public void run()
-//			{
-//				final Cursor< FloatType > ca = imgA.cursor();
-//				final Cursor< FloatType > cb = imgB.cursor();
-//				final AddOp< FloatType > op = new AddOp< FloatType >();
-//				for ( final FloatType t : imgC )
-//					op.compute( ca.next(), cb.next(), t );
-//			}
-//		} );
+		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				final Cursor< FloatType > ca = imgA.cursor();
+				final Cursor< FloatType > cb = imgB.cursor();
+				final AddOp< FloatType > op = new AddOp< FloatType >();
+				for ( final FloatType t : imgC )
+					op.compute( ca.next(), cb.next(), t );
+			}
+		} );
 
 		final Cursor< FloatType > cc = imgC.cursor();
 		for ( i = 0; i < 10; ++i )
@@ -159,16 +155,9 @@ public class Expressions
 		@Override
 		public T get()
 		{
-//			final T t = b.get();
-//			t.set( a.get() );
-//			return t;
-			return compute( a.get(), b.get() );
-		}
-
-		public T compute( final T input1, final T output )
-		{
-			output.set( input1 );
-			return output;
+			final T t = b.get();
+			t.set( a.get() );
+			return t;
 		}
 
 		@Override
@@ -213,6 +202,9 @@ public class Expressions
 				final Cursor< FloatType > ca = imgA.cursor();
 				final Cursor< FloatType > cb = imgB.cursor();
 
+				ca.reset();
+				cb.reset();
+
 				final CopyExpression< FloatType > e = new CopyExpression< FloatType >();
 				e.setA( ca );
 				e.setB( cb );
@@ -226,17 +218,17 @@ public class Expressions
 			}
 		} );
 
-//		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
-//		{
-//			@Override
-//			public void run()
-//			{
-//				final Cursor< FloatType > ca = imgA.cursor();
-//				final CopyOp< FloatType > op = new CopyOp< FloatType >();
-//				for ( final FloatType t : imgB )
-//					op.compute( ca.next(), t );
-//			}
-//		} );
+		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				final Cursor< FloatType > ca = imgA.cursor();
+				final CopyOp< FloatType > op = new CopyOp< FloatType >();
+				for ( final FloatType t : imgB )
+					op.compute( ca.next(), t );
+			}
+		} );
 
 		final Cursor< FloatType > cb = imgB.cursor();
 		for ( i = 0; i < 10; ++i )
@@ -246,7 +238,7 @@ public class Expressions
 
 	public static void main( final String args[] )
 	{
-//		mainBinary( args );
+		mainBinary( args );
 		mainUnary( args );
 	}
 
