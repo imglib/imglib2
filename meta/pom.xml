@@ -11,41 +11,18 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>imglib2-ij</artifactId>
+	<artifactId>imglib2-meta</artifactId>
 
-	<name>ImgLib2 ImageJ</name>
-	<description>ImgLib2 display logic using ImageJ.</description>
+	<name>ImgLib2 Metadata Extensions</name>
+	<description>ImgLib2 classes which provide additional metadata associated with N-dimensional image data structures.</description>
 
 	<dependencies>
-		<dependency>
-			<groupId>${imagej.groupId}</groupId>
-			<artifactId>ij</artifactId>
-			<version>${imagej1.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>imglib2-meta</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
-		<dependency>
-			<!-- TODO: define a real POM for mpicbg project -->
-			<groupId>${mpicbg.groupId}</groupId>
-			<artifactId>mpicbg</artifactId>
-			<version>${mpicbg.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>ijaux</groupId>
-			<artifactId>pixlib</artifactId>
-			<version>0.8.0</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -65,7 +42,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<packageName>net.imglib2.ij</packageName>
+							<packageName>net.imglib2.meta</packageName>
 						</manifest>
 					</archive>
 				</configuration>

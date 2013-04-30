@@ -39,15 +39,11 @@ package net.imglib2.meta;
 
 import java.util.Hashtable;
 
-import net.imglib2.img.ImgPlus;
+import net.imglib2.AnnotatedSpace;
 
 /**
- * An enumeration of common dimensional axis types, for describing the
- * dimensions of a {@link CalibratedSpace} object (such as an {@link ImgPlus}).
+ * An extensible enumeration of common dimensional {@link AxisType}s.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
 public enum Axes implements AxisType {
@@ -171,7 +167,7 @@ public enum Axes implements AxisType {
 
 	/**
 	 * A custom dimensional axis type, for describing the dimensional axes of a
-	 * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
+	 * {@link AnnotatedSpace} object (such as an {@link ImgPlus}).
 	 */
 	public static class CustomAxisType implements AxisType {
 

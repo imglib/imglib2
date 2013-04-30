@@ -42,6 +42,7 @@ import ij.ImagePlus;
 import ij.gui.NewImage;
 import ij.measure.Calibration;
 import net.imglib2.meta.Axes;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 

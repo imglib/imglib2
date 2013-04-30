@@ -35,25 +35,25 @@
  * #L%
  */
 
-package net.imglib2.ops.util.metadata;
-
-import net.imglib2.meta.Sourced;
+package net.imglib2.meta;
 
 /**
+ * A simple, default implementation of {@link Sourced}.
+ * 
  * @author Christian Dietz (University of Konstanz)
  */
-public class SourcedImpl implements Sourced {
+public class DefaultSourced implements Sourced {
 
 	private String m_source = "";
 
-	public SourcedImpl() {
+	public DefaultSourced() {
 	}
 
-	public SourcedImpl(String source) {
+	public DefaultSourced(String source) {
 		m_source = source;
 	}
 
-	public SourcedImpl(Sourced sourced) {
+	public DefaultSourced(Sourced sourced) {
 		m_source = sourced.getSource();
 	}
 

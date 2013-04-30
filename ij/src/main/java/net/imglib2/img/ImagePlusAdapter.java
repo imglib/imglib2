@@ -48,6 +48,7 @@ import net.imglib2.img.imageplus.ImagePlusImgFactory;
 import net.imglib2.img.imageplus.IntImagePlus;
 import net.imglib2.img.imageplus.ShortImagePlus;
 import net.imglib2.meta.Axes;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;

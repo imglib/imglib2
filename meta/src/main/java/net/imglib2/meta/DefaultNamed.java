@@ -37,23 +37,46 @@
 
 package net.imglib2.meta;
 
-import net.imglib2.img.ImgPlus;
-
 /**
- * A dimensional axis type, for describing the dimensions of a
- * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
+ * A simple, default implementation of {@link Named}.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Martin Horn (University of Konstanz)
  */
-public interface AxisType {
+public class DefaultNamed implements Named {
 
-	String getLabel();
+	private String m_name = "";
 
-	boolean isXY();
+	public DefaultNamed() {
 
-	boolean isSpatial();
+	}
+
+	public DefaultNamed(String name) {
+		m_name = name;
+	}
+
+	/**
+	 * Copy constructor.
+	 * 
+	 * @param name
+	 */
+	public DefaultNamed(Named name) {
+		m_name = name.getName();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getName() {
+		return m_name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setName(String name) {
+		m_name = name;
+	}
 
 }

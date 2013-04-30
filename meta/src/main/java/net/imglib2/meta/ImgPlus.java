@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.img;
+package net.imglib2.meta;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,9 +47,8 @@ import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealPositionable;
 import net.imglib2.display.ColorTable;
-import net.imglib2.meta.Axes;
-import net.imglib2.meta.AxisType;
-import net.imglib2.meta.Metadata;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 
 /**
  * A simple container for storing an {@link Img} together with its metadata.

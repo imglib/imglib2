@@ -38,7 +38,6 @@
 package net.imglib2.meta;
 
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
 
 /**
  * An interface for defining metadata that goes along with an {@link Img},

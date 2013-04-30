@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.view;
+package net.imglib2.meta.view;
 
 import java.util.Iterator;
 
@@ -49,10 +49,13 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.ImgPlus;
-import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
+import net.imglib2.meta.Axes;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.view.MixedTransformView;
+import net.imglib2.view.TransformBuilder;
+import net.imglib2.view.Views;
 
 /**
  * This class offers access to a <code>n-1</code>-dimensional view of a source {@link ImgPlus},

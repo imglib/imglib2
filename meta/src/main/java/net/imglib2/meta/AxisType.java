@@ -35,49 +35,23 @@
  * #L%
  */
 
-package net.imglib2.ops.util.metadata;
-
-import net.imglib2.meta.Named;
+package net.imglib2.meta;
 
 /**
+ * A dimensional axis type, for describing the dimensions of a
+ * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
  * 
- * @author Martin Horn (University of Konstanz)
+ *
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
+ * @author Curtis Rueden ctrueden at wisc.edu
  */
-public class NamedImpl implements Named {
+public interface AxisType {
 
-	private String m_name = "";
+	String getLabel();
 
-	public NamedImpl() {
+	boolean isXY();
 
-	}
-
-	public NamedImpl(String name) {
-		m_name = name;
-	}
-
-	/**
-	 * Copy constructor.
-	 * 
-	 * @param name
-	 */
-	public NamedImpl(Named name) {
-		m_name = name.getName();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getName() {
-		return m_name;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setName(String name) {
-		m_name = name;
-	}
+	boolean isSpatial();
 
 }

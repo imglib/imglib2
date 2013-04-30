@@ -35,30 +35,28 @@
  * #L%
  */
 
-package net.imglib2.ops.util.metadata;
+package net.imglib2.meta;
 
 import java.util.Arrays;
 
-import net.imglib2.meta.Axes;
-import net.imglib2.meta.AxisType;
-import net.imglib2.meta.CalibratedSpace;
-
 /**
+ * A simple, default implementation of {@link CalibratedSpace}.
+ * 
  * @author Martin Horn (University of Konstanz)
  */
-public class CalibratedSpaceImpl implements CalibratedSpace {
+public class DefaultCalibratedSpace implements CalibratedSpace {
 
 	private final AxisType[] m_axes;
 
 	private final double[] m_cal;
 
-	public CalibratedSpaceImpl(int numDims) {
+	public DefaultCalibratedSpace(int numDims) {
 		m_axes = new AxisType[numDims];
 		Arrays.fill(m_axes, Axes.UNKNOWN);
 		m_cal = new double[numDims];
 	}
 
-	public CalibratedSpaceImpl(String... axisLabels) {
+	public DefaultCalibratedSpace(String... axisLabels) {
 		m_axes = new AxisType[axisLabels.length];
 		for (int i = 0; i < m_axes.length; i++) {
 			m_axes[i] = Axes.get(axisLabels[i]);
@@ -66,12 +64,12 @@ public class CalibratedSpaceImpl implements CalibratedSpace {
 		m_cal = new double[axisLabels.length];
 	}
 
-	public CalibratedSpaceImpl(AxisType[] axes, double[] calibration) {
+	public DefaultCalibratedSpace(AxisType[] axes, double[] calibration) {
 		m_axes = axes;
 		m_cal = calibration;
 	}
 
-	public CalibratedSpaceImpl(CalibratedSpace axes) {
+	public DefaultCalibratedSpace(CalibratedSpace axes) {
 		m_axes = new AxisType[axes.numDimensions()];
 		m_cal = new double[axes.numDimensions()];
 		axes.axes(m_axes);
@@ -79,7 +77,7 @@ public class CalibratedSpaceImpl implements CalibratedSpace {
 
 	}
 
-	public CalibratedSpaceImpl(String[] axisLabels, double[] calibration) {
+	public DefaultCalibratedSpace(String[] axisLabels, double[] calibration) {
 		m_axes = new AxisType[axisLabels.length];
 		m_cal = calibration.clone();
 
