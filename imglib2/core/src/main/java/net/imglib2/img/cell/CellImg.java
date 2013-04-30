@@ -160,4 +160,11 @@ final public class CellImg< T extends NativeType< T >, A, C extends AbstractCell
 
 		return copy;
 	}
+	
+	/**
+	 * @return - a reference to the {@link Cells} interface which itself gives access to the individual
+	 * {@link AbstractCell}s through Cursors and RandomAcess that can return the actual underlying data
+	 * object  
+	 */
+	public Cells< A, C > getCells() { return cells; }
 }
