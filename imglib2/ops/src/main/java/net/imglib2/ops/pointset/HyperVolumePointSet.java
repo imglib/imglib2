@@ -62,10 +62,13 @@ public class HyperVolumePointSet extends AbstractPointSet {
 	 * point. These parameters define a hypervolume.
 	 * 
 	 * @param origin The key point around which the hypervolume is defined.
-	 * @param negOffsets Span in the negative direction beyond the anchor point (note: must be positive values).
-	 * @param posOffsets - Span in the positive direction beyond the anchor point (note: must be positive values).
+	 * @param negOffsets Span in the negative direction beyond the anchor point
+	 *          (note: must be positive values).
+	 * @param posOffsets - Span in the positive direction beyond the anchor point
+	 *          (note: must be positive values).
 	 */
-	public HyperVolumePointSet(long[] origin, long[] negOffsets, long[] posOffsets) {
+	public HyperVolumePointSet(long[] origin, long[] negOffsets, long[] posOffsets)
+	{
 		if (origin.length != negOffsets.length)
 			throw new IllegalArgumentException();
 		if (origin.length != posOffsets.length)
@@ -111,7 +114,8 @@ public class HyperVolumePointSet extends AbstractPointSet {
 	 * origin extending for the given span. This means that if a span component
 	 * equals X then the hypervolume goes from 0 to X-1.
 	 * 
-	 * @param span The values specifying width, height, depth, etc. of the hypervolume.
+	 * @param span The values specifying width, height, depth, etc. of the
+	 *          hypervolume.
 	 */
 	public HyperVolumePointSet(long[] span) {
 		this(new long[span.length], lastPoint(span));
@@ -198,25 +202,25 @@ public class HyperVolumePointSet extends AbstractPointSet {
 		implements PointSetIterator
 	{
 		final long[] pos;
-		boolean outOfBounds;
-		final boolean emptySpace;
 		
 		public HyperVolumePointSetIterator() {
 			super(origin.length);
-			emptySpace = n == 0;
-			outOfBounds = true;
 			pos = new long[n];
+			reset();
 		}
 		
 		@Override
 		public void reset() {
-			outOfBounds = true;
+			for (int i = 0; i < n; i++) {
+				pos[i] = boundMin[i];
+			}
+			pos[0]--; // NB - will fail if boundMin[0] == Long.MIN_VALUE
+			// Note however that this weakness allows us to run much more quickly for
+			// all other points.
 		}
 		
 		@Override
 		public boolean hasNext() {
-			if (emptySpace) return false;
-			if (outOfBounds) return true;
 			for (int i = 0; i < n; i++) {
 				if (pos[i] < boundMax[i]) return true;
 			}
@@ -230,15 +234,6 @@ public class HyperVolumePointSet extends AbstractPointSet {
 
 		@Override
 		public void fwd() {
-			if (outOfBounds) {
-				outOfBounds = false;
-				for (int i = 0; i < n; i++) {
-					pos[i] = boundMin[i];
-				}
-				return;
-			}
-			
-			// else outOfBounds == false
 			for (int i = 0; i < n; i++) {
 				pos[i]++;
 				if (pos[i] <= boundMax[i]) return;
@@ -272,4 +267,5 @@ public class HyperVolumePointSet extends AbstractPointSet {
 		}
 
 	}
+
 }
