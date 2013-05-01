@@ -1,3 +1,40 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
+ */
+
 package net.imglib2.ops.sandbox;
 
 import java.util.ArrayList;
@@ -20,14 +57,19 @@ import net.imglib2.type.logic.BitType;
 /**
  * Make the most general case of a point set as a list of points. Implements new interfaces.
  * One uses bind() to obtain a cursor back into the original interval.
- * @author bdezonia
+ * 
+ * @author Barry DeZonia
  *
  */
 public class BoundGeneralPointSet<T> extends AbstractInterval
 	implements Localizable, Positionable, IterableInterval<T>
 {
+	// -- instance fields --
+	
 	private final List<long[]> points;
 	private final long[] origin;
+	
+	// -- constructors --
 	
 	public BoundGeneralPointSet(List<long[]> points) {
 		super(minPt(points), maxPt(points));
@@ -51,6 +93,8 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 		origin = points.get(0);
 	}
 
+	// -- public methods --
+	
 	public Cursor< T > bind( final RandomAccess< T > randomAccess )
 	{
 		// TODO : OLD AND MAYBE CORRECT
@@ -109,7 +153,9 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 
 	@Override
 	public Cursor<T> cursor() {
-		throw new IllegalArgumentException("pointsets do not have cursors. you must call bind() to obtain a cursor.");
+		throw new IllegalArgumentException(
+				"BoundGeneralPointSet does not have cursors."+
+				" You must call bind() to obtain a cursor.");
 		//return new MyCursor(this, randomAccess.copy());
 	}
 
@@ -214,6 +260,8 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 		return origin[d];
 	}
 
+	// -- static public helper methods --
+	
 	// TODO - currently uses double memory. Make constructor use points instead of duplicating
 	// points. API would need to explicitly warn user to not touch passed in points and the
 	// ctor would modify them as needed.
@@ -231,6 +279,8 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 		}
 		return new BoundGeneralPointSet<K>(points);
 	}
+	
+	// -- test methods --
 	
 	public static void main(String[] args) {
 		ArrayImgFactory<BitType> factory = new ArrayImgFactory<BitType>();
@@ -279,6 +329,8 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 		System.out.println("    result of get(): " + cursor.get());
 	}
 	
+	// -- private static helpers --
+	
 	private static long[] minPt(List<long[]> points) {
 		if (points.size() == 0) throw new IllegalArgumentException("list of points cannot be empty!");
 		int n = points.get(0).length;
@@ -323,6 +375,8 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 		return mx;
 	}
 
+	// -- other private helpers --
+	
 	/**
 	 * TODO: This was modified from RandomAccessibleIntervalCursor. There might be code reuse possible ...
 	 */
