@@ -90,8 +90,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	}
 
 	public ImgPlus(final Img<T> img, final Metadata metadata) {
-		this(img, metadata.getName(), getAxes(img, metadata), getCalibration(img,
-			metadata));
+		this(img, metadata.getName(), getAxisTypes(img, metadata),
+			getCalibration(img, metadata));
 		validBits = metadata.getValidBits();
 		compositeChannelCount = metadata.getCompositeChannelCount();
 		final int count = metadata.getColorTableCount();
@@ -100,12 +100,12 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		}
 	}
 
-	public ImgPlus(final Img<T> img, final String name, final AxisType[] axes,
-		final double[] cal)
+	public ImgPlus(final Img<T> img, final String name,
+		final AxisType[] axisTypes, final double[] cal)
 	{
 		this.img = img;
 		this.name = validateName(name);
-		this.axes = validateAxes(img.numDimensions(), axes);
+		this.axes = validateAxisTypes(img.numDimensions(), axisTypes);
 		this.cal = validateCalibration(img.numDimensions(), cal);
 		channelMin = new ArrayList<Double>();
 		channelMax = new ArrayList<Double>();
@@ -460,26 +460,28 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		return name;
 	}
 
-	/** Ensures the given axis labels are valid. */
-	private static AxisType[] validateAxes(final int numDims, final AxisType[] axes) {
-		if (axes != null && numDims == axes.length) return axes;
-		final AxisType[] validAxes = new AxisType[numDims];
-		for (int i = 0; i < validAxes.length; i++) {
-			if (axes != null && axes.length > i) validAxes[i] = axes[i];
+	/** Ensures the given axis types are valid. */
+	private static AxisType[] validateAxisTypes(final int numDims,
+		final AxisType[] types)
+	{
+		if (types != null && numDims == types.length) return types;
+		final AxisType[] valid = new AxisType[numDims];
+		for (int i = 0; i < valid.length; i++) {
+			if (types != null && types.length > i) valid[i] = types[i];
 			else {
 				switch (i) {
 					case 0:
-						validAxes[i] = Axes.X;
+						valid[i] = Axes.X;
 						break;
 					case 1:
-						validAxes[i] = Axes.Y;
+						valid[i] = Axes.Y;
 						break;
 					default:
-						validAxes[i] = Axes.unknown();
+						valid[i] = Axes.unknown();
 				}
 			}
 		}
-		return validAxes;
+		return valid;
 	}
 
 	/** Ensures the given calibration values are valid. */
@@ -487,20 +489,22 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		final double[] cal)
 	{
 		if (cal != null && numDims == cal.length) return cal;
-		final double[] validCal = new double[numDims];
-		for (int i = 0; i < validCal.length; i++) {
-			if (cal != null && cal.length > i) validCal[i] = cal[i];
-			else validCal[i] = 1;
+		final double[] valid = new double[numDims];
+		for (int i = 0; i < valid.length; i++) {
+			if (cal != null && cal.length > i) valid[i] = cal[i];
+			else valid[i] = 1;
 		}
-		return validCal;
+		return valid;
 	}
 
-	private static AxisType[] getAxes(final Img<?> img, final Metadata metadata) {
-		final AxisType[] axes = new AxisType[img.numDimensions()];
-		for (int i = 0; i < axes.length; i++) {
-			axes[i] = metadata.axis(i);
+	private static AxisType[] getAxisTypes(final Img<?> img,
+		final Metadata metadata)
+	{
+		final AxisType[] types = new AxisType[img.numDimensions()];
+		for (int i = 0; i < types.length; i++) {
+			types[i] = metadata.axis(i);
 		}
-		return axes;
+		return types;
 	}
 
 	private static double[] getCalibration(final Img<?> img,
