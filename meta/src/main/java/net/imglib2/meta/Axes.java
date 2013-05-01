@@ -129,10 +129,6 @@ public enum Axes implements AxisType {
 		return axis;
 	}
 
-	public static boolean isXY(final AxisType dimLabel) {
-		return dimLabel == Axes.X || dimLabel == Axes.Y;
-	}
-
 	private String label;
 
 	private Axes(final String label) {
