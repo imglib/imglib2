@@ -115,6 +115,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 
 	// -- ImgPlus methods --
 
+	@Deprecated
 	public Img<T> getImg() {
 		return img;
 	}
