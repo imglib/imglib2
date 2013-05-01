@@ -8,276 +8,36 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>1.28</version>
+		<version>1.38</version>
 	</parent>
 
 	<groupId>net.imglib2</groupId>
-	<artifactId>pom-imglib</artifactId>
+	<artifactId>pom-imglib2</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>ImgLib Projects</name>
-	<description>Umbrella project for ImgLib projects.</description>
-	<url>http://imglib2.net/</url>
-	<inceptionYear>2009</inceptionYear>
+	<name>ImgLib2 Projects</name>
+	<description>Umbrella project for ImgLib2 projects.</description>
 
 	<modules>
-		<module>imglib1</module>
-		<module>imglib2</module>
+		<module>algorithms</module>
+		<module>core</module>
+		<module>examples</module>
+		<module>ij</module>
+		<module>io</module>
+		<module>ops</module>
+		<module>realtransform</module>
+		<module>roi</module>
+		<module>scripting</module>
+		<module>tests</module>
+		<module>ui</module>
 	</modules>
 
 	<properties>
-		<project.rootdir>${basedir}</project.rootdir>
-		<mpicbg.version>0.6.0-SNAPSHOT</mpicbg.version>
+		<project.rootdir>${basedir}/..</project.rootdir>
 	</properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>buildnumber-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<configuration>
-					<licenseName>imglib2</licenseName>
-					<licenseResolver>file://${project.rootdir}/license</licenseResolver>
-					<inceptionYear>2009</inceptionYear>
-					<organizationName>Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
-Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
-Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
-Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
-Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationName>
-					<projectName>ImgLib2: a general-purpose, multidimensional image processing library.</projectName>
-					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-					<canUpdateDescription>true</canUpdateDescription>
-					<canUpdateCopyright>true</canUpdateCopyright>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.fusesource.mvnplugins</groupId>
-				<artifactId>maven-graph-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
-	<licenses>
-		<license>
-			<name>Simplified BSD License</name>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
-	<organization>
-		<name>Fiji Is Just ImageJ</name>
-		<url>http://fiji.sc/</url>
-	</organization>
-
-	<developers>
-		<developer>
-			<id>StephanPreibisch</id>
-			<name>Stephan Preibisch</name>
-			<email>stephan.preibisch@gmx.de</email>
-			<url>http://fly.mpi-cbg.de/~preibisch/</url>
-			<organization>MPI-CBG at Dresden</organization>
-			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>tpietzsch</id>
-			<name>Tobias Pietzsch</name>
-			<email>tobias.pietzsch@gmail.com</email>
-			<organization>MPI-CBG at Dresden</organization>
-			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>bdezonia</id>
-			<name>Barry DeZonia</name>
-			<email>bdezonia@wisc.edu</email>
-			<url>http://loci.wisc.edu/people/barry-dezonia</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-		<developer>
-			<id>axtimwalde</id>
-			<name>Stephan Saalfeld</name>
-			<email>saalfeld@mpi-cbg.de</email>
-			<url>http://fly.mpi-cbg.de/~saalfeld/</url>
-			<organization>MPI-CBG at Dresden</organization>
-			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>acardona</id>
-			<name>Albert Cardona</name>
-			<email>sapristi@gmail.com</email>
-			<url>http://albert.rierol.net/</url>
-			<organization>Institute of Neuroinformatics, Uni/ETH Zürich</organization>
-			<organizationUrl>http://www.ini.uzh.ch/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>ctrueden</id>
-			<name>Curtis Rueden</name>
-			<email>ctrueden@wisc.edu</email>
-			<url>http://loci.wisc.edu/people/curtis-rueden</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-		<developer>
-			<id>dietzc</id>
-			<name>Christian Dietz</name>
-			<email>christian.dietz@uni-konstanz.de</email>
-			<url>http://www.informatik.uni-konstanz.de/berthold/mitglieder/christian-dietz/</url>
-			<organization>University of Konstanz</organization>
-			<organizationUrl>http://www.informatik.uni-konstanz.de/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<name>Jean-Yves Tinevez</name>
-			<email>jean-yves.tinevez@pasteur.fr</email>
-			<url>http://www.pasteur.fr/ip/easysite/pasteur/fr/recherche/plates-formes-technologiques/imagopole/plates-formes-imagopole/la-plate-forme-d-imagerie-dynamique/equipe-pfid/equipe-pfid-jyt</url>
-			<organization>Institut Pasteur</organization>
-			<organizationUrl>http://www.pasteur.fr/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>dscho</id>
-			<name>Johannes Schindelin</name>
-			<email>johannes.schindelin@gmx.de</email>
-			<url>http://loci.wisc.edu/people/johannes-schindelin</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-		<developer>
-			<id>LeeKamentsky</id>
-			<name>Lee Kamentsky</name>
-			<email>leek@broadinstitute.org</email>
-			<url>http://www.broadinstitute.org/~leek/</url>
-			<organization>Broad Institute of MIT and Harvard</organization>
-			<organizationUrl>http://www.broadinstitute.org/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-5</timezone>
-		</developer>
-		<developer>
-			<id>larrylindsey</id>
-			<name>Larry Lindsey</name>
-			<email>llindsey@clm.utexas.edu</email>
-			<url>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.htm</url>
-			<organization>University of Texas at Austin</organization>
-			<organizationUrl>http://www.utexas.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-	</developers>
-
-	<contributors>
-		<contributor>
-			<name>Grant Harris</name>
-			<email>gharris@mbl.edu</email>
-			<url>http://loci.wisc.edu/people/grant-harris</url>
-			<organization>MBL at Woods Hole</organization>
-			<organizationUrl>http://www.mbl.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-5</timezone>
-		</contributor>
-		<contributor><name>Mark Hiner</name></contributor>
-		<contributor><name>Aivar Grislis</name></contributor>
-		<contributor><name>Martin Horn</name></contributor>
-		<contributor><name>Nick Perry</name></contributor>
-		<contributor><name>Michael Zinsmaier</name></contributor>
-		<contributor><name>Steffen Jaensch</name></contributor>
-		<contributor><name>Jan Funke</name></contributor>
-		<contributor><name>Mark Longair</name></contributor>
-		<contributor><name>Dimiter Prodanov</name></contributor>
-	</contributors>
-
-	<issueManagement>
-		<system>GitHub</system>
-		<url>https://github.com/imagej/imglib/issues</url>
-	</issueManagement>
-
-	<ciManagement>
-		<system>Jenkins</system>
-		<url>http://jenkins.imagej.net/</url>
-	</ciManagement>
-
-	<mailingLists>
-		<mailingList>
-			<name>ImageJ-devel</name>
-			<subscribe>http://imagej.net/mailman/listinfo/imagej-devel</subscribe>
-			<unsubscribe>http://imagej.net/mailman/listinfo/imagej-devel</unsubscribe>
-			<post>imagej-devel@imagej.net</post>
-			<archive>http://imagej.net/pipermail/imagej-devel/</archive>
-		</mailingList>
-		<mailingList>
-			<name>Fiji-users</name>
-			<subscribe>http://groups.google.com/group/fiji-users</subscribe>
-			<unsubscribe>http://groups.google.com/group/fiji-users</unsubscribe>
-			<post>fiji-users@googlegroups.com</post>
-			<archive>http://groups.google.com/group/fiji-users</archive>
-		</mailingList>
-		<mailingList>
-			<name>Fiji-devel</name>
-			<subscribe>http://groups.google.com/group/fiji-devel</subscribe>
-			<unsubscribe>http://groups.google.com/group/fiji-devel</unsubscribe>
-			<post>fiji-devel@googlegroups.com</post>
-			<archive>http://groups.google.com/group/fiji-devel</archive>
-		</mailingList>
-	</mailingLists>
-
-	<scm>
-		<connection>scm:git:git://github.com/imagej/imglib.git</connection>
-		<developerConnection>scm:git:git@github.com:imagej/imglib.git</developerConnection>
-		<tag>HEAD</tag>
-		<url>https://github.com/imagej/imglib</url>
-	</scm>
-
-	<!-- NB: for project parent -->
+	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
 		<repository>
 			<id>imagej.releases</id>
@@ -288,5 +48,14 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			<url>http://maven.imagej.net/content/repositories/snapshots</url>
 		</repository>
 	</repositories>
+
+	<profiles>
+		<profile>
+			<id>broken</id>
+			<modules>
+				<module>broken</module>
+			</modules>
+		</profile>
+	</profiles>
 
 </project>
