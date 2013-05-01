@@ -106,10 +106,7 @@ public enum Axes implements AxisType {
 	 * Identifies the <i>Frequency</i> dimensional type, representing a dimension
 	 * consisting of frequencies.
 	 */
-	FREQUENCY("Frequency"),
-
-	/** Represents an unknown dimensional type. */
-	UNKNOWN("Unknown");
+	FREQUENCY("Frequency");
 
 	private static Hashtable<String, AxisType> axes =
 		new Hashtable<String, AxisType>();
@@ -127,6 +124,17 @@ public enum Axes implements AxisType {
 			axes.put(label, axis);
 		}
 		return axis;
+	}
+
+	/**
+	 * Gets an "unknown" axis type.
+	 * <p>
+	 * Always returns a new object, which is not part of the extended enumeration.
+	 * In this way, two unknown axis types are never equal.
+	 * </p>
+	 */
+	public static AxisType unknown() {
+		return new CustomAxisType("Unknown");
 	}
 
 	private String label;

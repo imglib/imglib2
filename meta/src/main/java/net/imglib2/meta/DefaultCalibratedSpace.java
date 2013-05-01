@@ -52,7 +52,7 @@ public class DefaultCalibratedSpace implements CalibratedSpace {
 
 	public DefaultCalibratedSpace(int numDims) {
 		m_axes = new AxisType[numDims];
-		Arrays.fill(m_axes, Axes.UNKNOWN);
+		Arrays.fill(m_axes, Axes.unknown());
 		m_cal = new double[numDims];
 	}
 

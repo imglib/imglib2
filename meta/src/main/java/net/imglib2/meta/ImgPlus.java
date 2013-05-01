@@ -450,7 +450,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 						validAxes[i] = Axes.Y;
 						break;
 					default:
-						validAxes[i] = Axes.UNKNOWN;
+						validAxes[i] = Axes.unknown();
 				}
 			}
 		}
