@@ -35,7 +35,6 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.XYRandomAccessibleProjector;
-import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
@@ -63,11 +62,10 @@ public class OpenAndDisplayAffineTransformedScreenImage
 		final ImgOpener io = new ImgOpener();
 		//final RandomAccessibleInterval< UnsignedShortType > img = io.openImg( "/home/saalfeld/phd/light-microscopy/presentation/saalfeld-05-05-4-DPX-05_L1_Sum.lsm", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType());
 		final ImgPlus< UnsignedShortType > imgPlus = io.openImg( "/home/saalfeld/phd/light-microscopy/presentation/saalfeld-05-05-4-DPX-05_L1_Sum.0.tif", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType());
-		final Img< UnsignedShortType > img = imgPlus.getImg();
 		
 		final double[][] matrix = new double[][]{
-				{ 0.5, 0, 0, img.dimension( 0 ) * 0.25 },
-				{ 0, 0.5 * imgPlus.calibration( 1 ) / imgPlus.calibration( 0 ), 0, img.dimension( 1 ) * 0.25 },
+				{ 0.5, 0, 0, imgPlus.dimension( 0 ) * 0.25 },
+				{ 0, 0.5 * imgPlus.calibration( 1 ) / imgPlus.calibration( 0 ), 0, imgPlus.dimension( 1 ) * 0.25 },
 				{ 0, 0, 0.5 * imgPlus.calibration( 0 ) / imgPlus.calibration( 0 ), 0 }
 		};
 //		final AffineTransform affine = new AffineTransform( new Matrix( matrix ) );
@@ -77,7 +75,7 @@ public class OpenAndDisplayAffineTransformedScreenImage
 		final NearestNeighborInterpolatorFactory< UnsignedShortType > interpolatorFactory = new NearestNeighborInterpolatorFactory< UnsignedShortType >();
 //		final InterpolatorFactory< UnsignedShortType, RandomAccessible< UnsignedShortType> > interpolatorFactory = new NLinearInterpolatorFactory< UnsignedShortType >();
 		
-		final RandomAccessible< UnsignedShortType > extendedImg = Views.extendValue( img, new UnsignedShortType() );
+		final RandomAccessible< UnsignedShortType > extendedImg = Views.extendValue( imgPlus, new UnsignedShortType() );
 		//final RandomAccessible< UnsignedShortType > channel = Views.hyperSlice( img, 2, 0 );
 		//final Interpolant< UnsignedShortType, RandomAccessible< UnsignedShortType > > interpolant = new Interpolant< UnsignedShortType, RandomAccessible< UnsignedShortType > >( channel, interpolatorFactory );
 		final Interpolant< UnsignedShortType, RandomAccessible< UnsignedShortType > > interpolant = new Interpolant< UnsignedShortType, RandomAccessible< UnsignedShortType > >( extendedImg, interpolatorFactory );
@@ -87,7 +85,7 @@ public class OpenAndDisplayAffineTransformedScreenImage
 //		final ConstantAffineRandomAccessible< UnsignedShortType, AffineTransform3D > mapping = new ConstantAffineRandomAccessible< UnsignedShortType, AffineTransform3D >( interpolant, affine );
 //		final RandomAccessibleOnRealRandomAccessible< UnsignedShortType > transformedPixels = new RandomAccessibleOnRealRandomAccessible< UnsignedShortType >( mapping );
 		
-		final ColorProcessor cp = new ColorProcessor( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
+		final ColorProcessor cp = new ColorProcessor( ( int )imgPlus.dimension( 0 ), ( int )imgPlus.dimension( 1 ) );
 		final ARGBScreenImage screenImage = new ARGBScreenImage( cp.getWidth(), cp.getHeight(), ( int[] )cp.getPixels() );
 //		final XYProjector< UnsignedShortType, ARGBType > projector = new XYProjector< UnsignedShortType, ARGBType >( mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 //		final XYProjector< UnsignedShortType, ARGBType > projector = new XYProjector< UnsignedShortType, ARGBType >( transformedPixels, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
@@ -103,7 +101,7 @@ public class OpenAndDisplayAffineTransformedScreenImage
 		{
 			timer.start();
 //			final long last = img.dimension( 3 ) * 2 - 2;
-			final long last = img.dimension( 2 ) * 2 - 2;
+			final long last = imgPlus.dimension( 2 ) * 2 - 2;
 			for ( int i = 0; i < last; ++i )
 			{
 				projector.setPosition( i, 2 );
@@ -113,7 +111,7 @@ public class OpenAndDisplayAffineTransformedScreenImage
 			IJ.log( "loop " + ( k + 1 ) + ": " + timer.stop() );
 		}
 		
-		projector.setPosition( img.dimension( 2 ) / 2, 2 );
+		projector.setPosition( imgPlus.dimension( 2 ) / 2, 2 );
 		
 		final AffineTransform3D forward = new AffineTransform3D();
 		final AffineTransform3D rotation = new AffineTransform3D();
@@ -130,15 +128,15 @@ public class OpenAndDisplayAffineTransformedScreenImage
 			{
 				rotation.rotate( 1, Math.PI / 360 );
 				forward.set(
-						1.0, 0, 0, -img.dimension( 0 ) / 2.0,
-						0, 1.0, 0, -img.dimension( 1 ) / 2.0,
-						0, 0, 1.0, -img.dimension( 2 ) / 2.0 );
+						1.0, 0, 0, -imgPlus.dimension( 0 ) / 2.0,
+						0, 1.0, 0, -imgPlus.dimension( 1 ) / 2.0,
+						0, 0, 1.0, -imgPlus.dimension( 2 ) / 2.0 );
 				forward.preConcatenate( scale );
 				forward.preConcatenate( rotation );
 				forward.set(
-						forward.get( 0, 0 ), forward.get( 0, 1 ), forward.get( 0, 2 ), forward.get( 0, 3 ) + img.dimension( 0 ) / 2.0,
-						forward.get( 1, 0 ), forward.get( 1, 1 ), forward.get( 1, 2 ), forward.get( 1, 3 ) + img.dimension( 1 ) / 2.0,
-						forward.get( 2, 0 ), forward.get( 2, 1 ), forward.get( 2, 2 ), forward.get( 2, 3 ) + img.dimension( 2 ) / 2.0 );
+						forward.get( 0, 0 ), forward.get( 0, 1 ), forward.get( 0, 2 ), forward.get( 0, 3 ) + imgPlus.dimension( 0 ) / 2.0,
+						forward.get( 1, 0 ), forward.get( 1, 1 ), forward.get( 1, 2 ), forward.get( 1, 3 ) + imgPlus.dimension( 1 ) / 2.0,
+						forward.get( 2, 0 ), forward.get( 2, 1 ), forward.get( 2, 2 ), forward.get( 2, 3 ) + imgPlus.dimension( 2 ) / 2.0 );
 				
 				affine.set( forward.inverse() );
 				
