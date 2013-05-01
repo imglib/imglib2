@@ -173,24 +173,24 @@ public class ImageJFunctions
 			ImgPlus<T> imgplus = (ImgPlus<T>) img;
 			Calibration impcal = target.getCalibration();
 			
-			int xaxis = imgplus.getAxisIndex(Axes.X);
+			int xaxis = imgplus.dimensionIndex(Axes.X);
 			if (xaxis >= 0) {
-				impcal.pixelWidth = imgplus.calibration(xaxis);
+				impcal.pixelWidth = imgplus.axis(xaxis).calibration();
 			}
 
-			int yaxis = imgplus.getAxisIndex(Axes.Y);
+			int yaxis = imgplus.dimensionIndex(Axes.Y);
 			if (yaxis >= 0) {
-				impcal.pixelHeight = imgplus.calibration(yaxis);
+				impcal.pixelHeight = imgplus.axis(yaxis).calibration();
 			}
 			
-			int zaxis = imgplus.getAxisIndex(Axes.Z);
+			int zaxis = imgplus.dimensionIndex(Axes.Z);
 			if (zaxis >= 0) {
-				impcal.pixelDepth = imgplus.calibration(zaxis);
+				impcal.pixelDepth = imgplus.axis(zaxis).calibration();
 			}
 			
-			int taxis = imgplus.getAxisIndex(Axes.TIME);
+			int taxis = imgplus.dimensionIndex(Axes.TIME);
 			if (taxis >= 0) {
-				impcal.frameInterval = imgplus.calibration(taxis);
+				impcal.frameInterval = imgplus.axis(taxis).calibration();
 			}
 			target.setTitle( imgplus.getName() );
 		}

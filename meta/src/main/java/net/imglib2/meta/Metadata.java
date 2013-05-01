@@ -37,17 +37,14 @@
 
 package net.imglib2.meta;
 
-import net.imglib2.img.Img;
-
 /**
- * An interface for defining metadata that goes along with an {@link Img},
- * including name, dimensional axes and calibration information.
+ * An interface which collects all metadata associated with an {@link ImgPlus}.
  * 
- * @see ImgPlus
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Curtis Rueden
+ * @see ImgPlus
  */
-public interface Metadata extends Named, Sourced, OldCalibratedSpace, ImageMetadata {
-	// marker interface - no implementation needed
+public interface Metadata extends Named, Sourced,
+	CalibratedSpace<CalibratedAxis>, ImageMetadata
+{
+	// NB: Marker interface.
 }

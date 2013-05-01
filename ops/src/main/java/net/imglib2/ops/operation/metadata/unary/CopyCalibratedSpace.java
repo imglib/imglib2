@@ -35,39 +35,58 @@
  * #L%
  */
 
-package net.imglib2.ops.operation.imgplus.unary;
+package net.imglib2.ops.operation.metadata.unary;
 
-import net.imglib2.meta.ImgPlus;
+import net.imglib2.Interval;
+import net.imglib2.meta.CalibratedAxis;
+import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.ops.operation.UnaryOperation;
-import net.imglib2.ops.operation.img.unary.ImgCopyOperation;
-import net.imglib2.type.Type;
 
 /**
- * 
- * @author hornm, dietzc University of Konstanz
+ * @author Curtis Rueden
+ *
+ * @param <S> The type of the space to copy
  */
-public class ImgPlusCopy< T extends Type< T >> implements UnaryOperation< ImgPlus< T >, ImgPlus< T >>
+public class CopyCalibratedSpace< S extends CalibratedSpace<CalibratedAxis> > implements UnaryOperation< S, S >
 {
+	private Interval interval;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ImgPlus< T > compute( ImgPlus< T > op, ImgPlus< T > r )
+	public CopyCalibratedSpace()
 	{
-		r.setName( op.getName() );
-		r.setSource( op.getSource() );
-		for ( int d = 0; d < op.numDimensions(); d++ )
+		interval = null;
+	}
+
+	public CopyCalibratedSpace( Interval interval )
+	{
+		this.interval = interval;
+	}
+
+	@Override
+	public S compute( S input, S output )
+	{
+
+		int offset = 0;
+		for ( int d = 0; d < input.numDimensions(); d++ )
 		{
-			r.setAxis( op.axis( d ), d );
+			if ( interval != null && interval.dimension( d ) == 1 )
+			{
+				offset++;
+			}
+			else
+			{
+				// NB: Axes are copied by reference here. If an axis is later
+				// mutated, this could cause unintuitive side effects...
+				output.setAxis( input.axis( d ), d - offset );
+			}
 		}
-		new ImgCopyOperation< T >().compute( op, r );
-		return r;
+
+		return output;
 	}
 
 	@Override
-	public UnaryOperation< ImgPlus< T >, ImgPlus< T >> copy()
+	public UnaryOperation< S, S > copy()
 	{
-		return new ImgPlusCopy< T >();
+		return new CopyCalibratedSpace< S >();
 	}
+
 }

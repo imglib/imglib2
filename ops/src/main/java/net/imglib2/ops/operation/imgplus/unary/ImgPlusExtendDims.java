@@ -81,7 +81,10 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 	{
 
 		AxisType[] axes = new AxisType[ op.numDimensions() ];
-		op.axes( axes );
+		for ( int d = 0; d < axes.length; d++ )
+		{
+			axes[ d ] = op.axis( d ).type();
+		}
 		m_isNewDim.clear();
 		for ( int d = 0; d < m_newDimensions.length; d++ )
 		{
@@ -116,7 +119,7 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 
 		for ( int d = 0; d < op.numDimensions(); d++ )
 		{
-			r.setAxis( Axes.get( op.axis( d ).getLabel() ), d );
+			r.axis( d ).setType( Axes.get( op.axis( d ).type().getLabel() ) );
 		}
 
 		int d = op.numDimensions();
@@ -124,7 +127,7 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 		{
 			if ( m_isNewDim.get( i ) )
 			{
-				r.setAxis( Axes.get( m_newDimensions[ i ] ), d );
+				r.axis( d ).setType( Axes.get( m_newDimensions[ i ] ) );
 				d++;
 			}
 		}

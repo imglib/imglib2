@@ -114,8 +114,7 @@ public class ImgSaver implements StatusReporter {
 		final ImgPlus<T> img)
 	{
 
-		final AxisType[] axes = new AxisType[img.numDimensions()];
-		img.axes(axes);
+		final AxisType[] axes = getAxes(img);
 
 		final long[] axisLengths = new long[5];
 		final long[] oldLengths = new long[img.numDimensions()];
@@ -633,8 +632,7 @@ public class ImgSaver implements StatusReporter {
 
 			// TODO is there some way to consolidate this with the isCompressible
 			// method?
-			final AxisType[] axes = new AxisType[img.numDimensions()];
-			img.axes(axes);
+			final AxisType[] axes = getAxes(img);
 
 			String dimOrder = "";
 
@@ -649,15 +647,15 @@ public class ImgSaver implements StatusReporter {
 				PositiveFloat physicalSize = null;
 				
 				if (Axes.X.equals(axis)) {
-					physicalSize = new PositiveFloat(img.calibration(i));
+					physicalSize = new PositiveFloat(img.axis(i).calibration());
 					meta.setPixelsPhysicalSizeX(physicalSize, w.getSeries());
 				}
 				else if (Axes.Y.equals(axis)) {
-					physicalSize = new PositiveFloat(img.calibration(i));
+					physicalSize = new PositiveFloat(img.axis(i).calibration());
 					meta.setPixelsPhysicalSizeY(physicalSize, w.getSeries());
 				}
 				else if (Axes.Z.equals(axis)) {
-					physicalSize = new PositiveFloat(img.calibration(i));
+					physicalSize = new PositiveFloat(img.axis(i).calibration());
 					meta.setPixelsPhysicalSizeZ(physicalSize, w.getSeries());
 				}
 			}
@@ -700,6 +698,16 @@ public class ImgSaver implements StatusReporter {
 				FormatTools.getPixelTypeString(pixelType), sizeX, sizeY, sizeZ, sizeC,
 				sizeT, 1);
 		}
+	}
+
+	private <T extends RealType<T> & NativeType<T>> AxisType[] getAxes(
+		final ImgPlus<T> img)
+	{
+		final AxisType[] axes = new AxisType[img.numDimensions()];
+		for (int d = 0; d < axes.length; d++) {
+			axes[d] = img.axis(d).type();
+		}
+		return axes;
 	}
 
 	private OMEXMLService createOMEXMLService() {

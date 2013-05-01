@@ -96,7 +96,7 @@ public class DoGBenchmark
 	        // sigmaZ is at least twice the image sigma
 			if ( image.numDimensions() == 3 )
 			{
-				final float sigma1Z = Math.max( imageSigma * 2, sigma1 / (float)image.calibration( 2 ) );
+				final float sigma1Z = Math.max( imageSigma * 2, sigma1 / (float)image.axis( 2 ).calibration() );
 				final float sigma2Z = sigma1Z * k;
 				final float[] sigmaZ = new float[]{ sigma1Z, sigma2Z };
 				final float[] sigmaDiffZ = computeSigmaDiff( sigmaZ, imageSigma );

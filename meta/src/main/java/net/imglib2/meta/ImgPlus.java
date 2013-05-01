@@ -56,7 +56,9 @@ import net.imglib2.img.ImgFactory;
  * 
  * @author Curtis Rueden
  */
-public class ImgPlus<T> implements Img<T>, Metadata {
+public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
+	Metadata
+{
 
 	/** The name assigned to the ImgPlus if none is provided. */
 	private static final String DEFAULT_NAME = "Untitled";
@@ -65,8 +67,6 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 
 	private String name;
 	private String source = "";
-	private final AxisType[] axes;
-	private final double[] cal;
 	private int validBits;
 
 	private ArrayList<Double> channelMin;
@@ -103,10 +103,34 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	public ImgPlus(final Img<T> img, final String name,
 		final AxisType[] axisTypes, final double[] cal)
 	{
+		super(img.numDimensions());
+
+		// NB: Do not call numDimensions() here! Calling an instance method from a
+		// constructor can have bizarre and unintuitive results in complex class
+		// hierarchies. For example, suppose a subclass overrides the behavior of
+		// numDimensions() in such a way that it only functions correctly after its
+		// own constructor finishes executing. Then calling numDimensions() here in
+		// the superclass (before the subclass's constructor has finished executing)
+		// will behave improperly.
+		final int numDims = img.numDimensions();
+
 		this.img = img;
 		this.name = validateName(name);
-		this.axes = validateAxisTypes(img.numDimensions(), axisTypes);
-		this.cal = validateCalibration(img.numDimensions(), cal);
+		final AxisType[] validTypes =
+			validateAxisTypes(numDims, axisTypes);
+		if (numDims != validTypes.length) {
+			throw new IllegalArgumentException("Axis type count does not match " +
+				"dimensionality: " + validTypes.length + " != " + numDims);
+		}
+		final double[] validCal = validateCalibration(numDims, cal);
+		if (numDims != validCal.length) {
+			throw new IllegalArgumentException("Calibration count does not match " +
+				"dimensionality: " + validCal.length + " != " + numDims);
+		}
+		for (int d = 0; d < numDims; d++) {
+			axis(d).setType(validTypes[d]);
+			axis(d).setCalibration(validCal[d]);
+		}
 		channelMin = new ArrayList<Double>();
 		channelMax = new ArrayList<Double>();
 		colorTable = new ArrayList<ColorTable>();
@@ -130,13 +154,6 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	@Override
 	public RandomAccess<T> randomAccess(final Interval interval) {
 		return img.randomAccess(interval);
-	}
-
-	// -- EuclideanSpace methods --
-
-	@Override
-	public int numDimensions() {
-		return img.numDimensions();
 	}
 
 	// -- Interval methods --
@@ -280,66 +297,6 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	@Override
 	public void setName(final String name) {
 		this.name = name;
-	}
-
-	// -- CalibratedSpace methods --
-
-	@Override
-	public int getAxisIndex(final AxisType axis) {
-		for (int i = 0; i < axes.length; i++) {
-			if (axes[i] == axis) return i;
-		}
-		return -1;
-	}
-
-	@Override
-	public AxisType axis(final int d) {
-		return axes[d];
-	}
-
-	@Override
-	public void axes(final AxisType[] target) {
-		for (int i = 0; i < target.length; i++)
-			target[i] = axes[i];
-	}
-
-	@Override
-	public void setAxis(final AxisType axis, final int d) {
-		axes[d] = axis;
-	}
-
-	@Override
-	public double calibration(final int d) {
-		return cal[d];
-	}
-
-	@Override
-	public void calibration(final double[] target) {
-		for (int i = 0; i < target.length; i++)
-			target[i] = cal[i];
-	}
-
-	@Override
-	public void calibration(final float[] target) {
-		for (int i = 0; i < target.length; i++)
-			target[i] = (float)cal[i];
-	}
-
-	@Override
-	public void setCalibration(final double value, final int d) {
-		cal[d] = value;
-	}
-
-	@Override
-	public void setCalibration(final double[] cal) {
-		for ( int d = 0; d < cal.length; ++d )
-			this.cal[d] = cal[ d ];
-	}
-
-	@Override
-	public void setCalibration(final float[] cal) {
-		for ( int d = 0; d < cal.length; ++d )
-			this.cal[d] = cal[ d ];
 	}
 
 	// -- ImageMetadata methods --
@@ -502,7 +459,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	{
 		final AxisType[] types = new AxisType[img.numDimensions()];
 		for (int i = 0; i < types.length; i++) {
-			types[i] = metadata.axis(i);
+			types[i] = metadata.axis(i).type();
 		}
 		return types;
 	}
@@ -512,7 +469,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	{
 		final double[] cal = new double[img.numDimensions()];
 		for (int i = 0; i < cal.length; i++) {
-			cal[i] = metadata.calibration(i);
+			cal[i] = metadata.axis(i).calibration();
 		}
 		return cal;
 	}

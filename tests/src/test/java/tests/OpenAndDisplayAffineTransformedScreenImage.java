@@ -65,8 +65,8 @@ public class OpenAndDisplayAffineTransformedScreenImage
 		
 		final double[][] matrix = new double[][]{
 				{ 0.5, 0, 0, imgPlus.dimension( 0 ) * 0.25 },
-				{ 0, 0.5 * imgPlus.calibration( 1 ) / imgPlus.calibration( 0 ), 0, imgPlus.dimension( 1 ) * 0.25 },
-				{ 0, 0, 0.5 * imgPlus.calibration( 0 ) / imgPlus.calibration( 0 ), 0 }
+				{ 0, 0.5 * imgPlus.axis( 1 ).calibration() / imgPlus.axis( 0 ).calibration(), 0, imgPlus.dimension( 1 ) * 0.25 },
+				{ 0, 0, 0.5 * imgPlus.axis( 0 ).calibration() / imgPlus.axis( 0 ).calibration(), 0 }
 		};
 //		final AffineTransform affine = new AffineTransform( new Matrix( matrix ) );
 		final AffineTransform3D affine = new AffineTransform3D();

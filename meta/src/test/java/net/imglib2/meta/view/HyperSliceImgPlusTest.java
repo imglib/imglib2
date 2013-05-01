@@ -61,7 +61,7 @@ import org.junit.Test;
 public class HyperSliceImgPlusTest {
 
 	private static final long[] dim = new long[] { 16, 16, 64, 8, 32 };
-	private static final AxisType[] axes = new AxisType[] {
+	private static final AxisType[] axisTypes = new AxisType[] {
 		Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME };
 	private static final float[] calibration = new float[] { 0.5f, 0.5f, 0.8f, 1, 5 };
 	private static final String name = "Source";
@@ -87,8 +87,8 @@ public class HyperSliceImgPlusTest {
 		ArrayImg<UnsignedByteType, ?> img = factory.create(dim , new UnsignedByteType());
 		source = new ImgPlus<UnsignedByteType>(img);
 		for (int d = 0; d < dim.length; d++) {
-			source.setAxis(axes[d], d);
-			source.setCalibration(calibration[d], d);
+			source.axis(d).setType(axisTypes[d]);
+			source.axis(d).setCalibration(calibration[d]);
 		}
 		source.setName(name);
 
@@ -110,7 +110,7 @@ public class HyperSliceImgPlusTest {
 		int index1 = 0;
 		for (int d = 0; d < dim.length; d++) {
 			if (d != REMOVED_DIM_1) {
-				assertEquals(source.calibration(d), imgplusZ.calibration(index1), Float.MIN_VALUE);
+				assertEquals(source.axis(d).calibration(), imgplusZ.axis(index1).calibration(), Float.MIN_VALUE);
 				assertEquals(source.axis(d), imgplusZ.axis(index1));
 				index1++;
 			}
@@ -119,7 +119,7 @@ public class HyperSliceImgPlusTest {
 		int index2 = 0;
 		for (int d = 0; d < dim.length; d++) {
 			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2+1)) {
-				assertEquals(source.calibration(d), imgplusZT.calibration(index2), Float.MIN_VALUE);
+				assertEquals(source.axis(d).calibration(), imgplusZT.axis(index2).calibration(), Float.MIN_VALUE);
 				assertEquals(source.axis(d), imgplusZT.axis(index2));
 				index2++;
 			}
