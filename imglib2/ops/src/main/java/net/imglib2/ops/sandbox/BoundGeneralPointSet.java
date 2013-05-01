@@ -61,13 +61,14 @@ import net.imglib2.type.logic.BitType;
  * @author Barry DeZonia
  *
  */
-public class BoundGeneralPointSet<T> extends AbstractInterval
-	implements Localizable, Positionable, IterableInterval<T>
+public class BoundGeneralPointSet extends AbstractInterval
+	implements Localizable, Positionable, IterableInterval<BitType>
 {
 	// -- instance fields --
 	
 	private final List<long[]> points;
 	private final long[] origin;
+	private Img<BitType> bools;
 	
 	// -- constructors --
 	
@@ -91,14 +92,18 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 			prev = curr;
 		}
 		origin = points.get(0);
+		ArrayImgFactory<BitType> factory = new ArrayImgFactory<BitType>();
+		bools = factory.create(new long[]{points.size()}, new BitType());
+		for (BitType b : bools) b.set(true);
+		// TODO: make the bools unmodifiable
 	}
 
 	// -- public methods --
 	
-	public Cursor< T > bind( final RandomAccess< T > randomAccess )
+	public <T> Cursor< T > bind( final RandomAccess< T > randomAccess )
 	{
 		// TODO : OLD AND MAYBE CORRECT
-		return new MyCursor( this, randomAccess );
+		return new MyCursor<T>( this, randomAccess );
 		//return new MyCursor( interval, randomAccess );
 	}
 	
@@ -132,7 +137,7 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 	}
 
 	@Override
-	public T firstElement() {
+	public BitType firstElement() {
 		return cursor().next();
 	}
 
@@ -147,20 +152,22 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 	}
 
 	@Override
-	public Iterator<T> iterator() {
+	public Iterator<BitType> iterator() {
 		return cursor();
 	}
 
 	@Override
-	public Cursor<T> cursor() {
+	public Cursor<BitType> cursor() {
+		return bools.cursor();
+		/*
 		throw new IllegalArgumentException(
 				"BoundGeneralPointSet does not have cursors."+
 				" You must call bind() to obtain a cursor.");
-		//return new MyCursor(this, randomAccess.copy());
+		*/
 	}
 
 	@Override
-	public Cursor<T> localizingCursor() {
+	public Cursor<BitType> localizingCursor() {
 		return cursor();
 	}
 
@@ -266,10 +273,10 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 	// points. API would need to explicitly warn user to not touch passed in points and the
 	// ctor would modify them as needed.
 	
-	public static <K> BoundGeneralPointSet<K> explode(IterableInterval<K> interval) {
+	public static BoundGeneralPointSet explode(IterableInterval<?> interval) {
 		long[] point = new long[interval.numDimensions()];
 		List<long[]> points = new ArrayList<long[]>();
-		Cursor<K> cursor = interval.cursor();
+		Cursor<?> cursor = interval.cursor();
 		while (cursor.hasNext()) {
 			cursor.fwd();
 			for (int i = 0; i < point.length; i++) {
@@ -277,7 +284,7 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 			}
 			points.add(point.clone());
 		}
-		return new BoundGeneralPointSet<K>(points);
+		return new BoundGeneralPointSet(points);
 	}
 	
 	// -- test methods --
@@ -293,7 +300,7 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 		}
 		
 		List<long[]> pts = Arrays.asList(new long[]{0}, new long[]{1});
-		BoundGeneralPointSet<BitType> ps = new BoundGeneralPointSet<BitType>(pts);
+		BoundGeneralPointSet ps = new BoundGeneralPointSet(pts);
 		Cursor<BitType> cursor = ps.bind(img.randomAccess());
 
 		System.out.println("Expecting (false, true)");
@@ -380,7 +387,7 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 	/**
 	 * TODO: This was modified from RandomAccessibleIntervalCursor. There might be code reuse possible ...
 	 */
-	private final class MyCursor extends AbstractInterval implements Cursor< T >
+	private final class MyCursor<T> extends AbstractInterval implements Cursor< T >
 	{
 		private final RandomAccess< T > randomAccess;
 
@@ -395,7 +402,7 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 			reset();
 		}
 
-		protected MyCursor( final MyCursor cursor )
+		protected MyCursor( final MyCursor<T> cursor )
 		{
 			super( cursor );
 			this.randomAccess = cursor.randomAccess.copyRandomAccess();
@@ -465,13 +472,13 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 		public void remove() {}
 
 		@Override
-		public MyCursor copy()
+		public MyCursor<T> copy()
 		{
-			return new MyCursor( this );
+			return new MyCursor<T>( this );
 		}
 
 		@Override
-		public MyCursor copyCursor()
+		public MyCursor<T> copyCursor()
 		{
 			return copy();
 		}
