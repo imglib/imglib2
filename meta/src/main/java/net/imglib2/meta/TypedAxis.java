@@ -37,21 +37,20 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.Axis;
+
 /**
- * A dimensional axis type, for describing the dimensions of a
- * {@link TypedSpace}.
+ * An axis with an associated {@link AxisType}.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
+ * @see TypedSpace
  */
-public interface AxisType {
+public interface TypedAxis extends Axis {
 
-	String getLabel();
+	/** Gets the type of the axis. */
+	AxisType type();
 
-	boolean isXY();
-
-	boolean isSpatial();
+	/** Sets the type of the axis. */
+	void setType(AxisType type);
 
 }

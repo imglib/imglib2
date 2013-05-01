@@ -37,21 +37,28 @@
 
 package net.imglib2.meta;
 
+import java.util.List;
+
 /**
- * A dimensional axis type, for describing the dimensions of a
- * {@link TypedSpace}.
+ * Simple, default {@link TypedSpace} implementation.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
  */
-public interface AxisType {
+public class DefaultTypedSpace extends AbstractTypedSpace<TypedAxis> {
 
-	String getLabel();
+	public DefaultTypedSpace(final int numDims) {
+		super(numDims);
+		for (int d = 0; d < numDims; d++) {
+			setAxis(new DefaultTypedAxis(), d);
+		}
+	}
 
-	boolean isXY();
+	public DefaultTypedSpace(final TypedAxis... axes) {
+		super(axes);
+	}
 
-	boolean isSpatial();
+	public DefaultTypedSpace(final List<TypedAxis> axes) {
+		super(axes);
+	}
 
 }

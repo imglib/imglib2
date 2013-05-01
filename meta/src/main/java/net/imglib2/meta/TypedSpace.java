@@ -37,21 +37,17 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.AnnotatedSpace;
+
 /**
- * A dimensional axis type, for describing the dimensions of a
- * {@link TypedSpace}.
+ * A Euclidean space with typed dimensional axes.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
+ * @see TypedAxis
  */
-public interface AxisType {
+public interface TypedSpace<A extends TypedAxis> extends AnnotatedSpace<A> {
 
-	String getLabel();
-
-	boolean isXY();
-
-	boolean isSpatial();
+	/** Gets the dimensional index of the first axis with the given type. */
+	int dimensionIndex(final AxisType axisType);
 
 }

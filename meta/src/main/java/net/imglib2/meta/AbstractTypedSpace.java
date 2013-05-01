@@ -37,21 +37,39 @@
 
 package net.imglib2.meta;
 
+import java.util.List;
+
+import net.imglib2.AbstractAnnotatedSpace;
+
 /**
- * A dimensional axis type, for describing the dimensions of a
- * {@link TypedSpace}.
+ * Abstract base class for {@link TypedSpace}.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
  */
-public interface AxisType {
+public abstract class AbstractTypedSpace<A extends TypedAxis> extends
+	AbstractAnnotatedSpace<A> implements TypedSpace<A>
+{
 
-	String getLabel();
+	public AbstractTypedSpace(final int numDims) {
+		super(numDims);
+	}
 
-	boolean isXY();
+	public AbstractTypedSpace(final A... axes) {
+		super(axes);
+	}
 
-	boolean isSpatial();
+	public AbstractTypedSpace(final List<A> axes) {
+		super(axes);
+	}
+
+	// -- TypedSpace methods --
+
+	@Override
+	public int dimensionIndex(final AxisType axisType) {
+		for (int d=0; d<numDimensions(); d++) {
+			if (axis(d).type() == axisType) return d;
+		}
+		return -1;
+	}
 
 }
