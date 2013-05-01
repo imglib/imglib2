@@ -72,7 +72,7 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 	// -- constructors --
 	
 	public BoundGeneralPointSet(List<long[]> points) {
-		super(minPt(points), maxPt(points));
+		super(minExtent(points), maxExtent(points));
 		this.points = new ArrayList<long[]>();
 		Iterator<long[]> iter = points.iterator();
 		long[] prev = null;
@@ -331,7 +331,7 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 	
 	// -- private static helpers --
 	
-	private static long[] minPt(List<long[]> points) {
+	private static long[] minExtent(List<long[]> points) {
 		if (points.size() == 0) throw new IllegalArgumentException("list of points cannot be empty!");
 		int n = points.get(0).length;
 		long[] mn = new long[n];
@@ -353,7 +353,7 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 		return mn;
 	}
 
-	private static long[] maxPt(List<long[]> points) {
+	private static long[] maxExtent(List<long[]> points) {
 		if (points.size() == 0) throw new IllegalArgumentException("list of points cannot be empty!");
 		int n = points.get(0).length;
 		long[] mx = new long[n];
