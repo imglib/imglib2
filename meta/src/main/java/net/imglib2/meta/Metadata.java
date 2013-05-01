@@ -48,6 +48,6 @@ import net.imglib2.img.Img;
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
-public interface Metadata extends Named, Sourced, CalibratedSpace, ImageMetadata {
+public interface Metadata extends Named, Sourced, OldCalibratedSpace, ImageMetadata {
 	// marker interface - no implementation needed
 }

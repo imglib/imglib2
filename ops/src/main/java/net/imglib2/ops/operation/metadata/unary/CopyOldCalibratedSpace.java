@@ -38,24 +38,25 @@
 package net.imglib2.ops.operation.metadata.unary;
 
 import net.imglib2.Interval;
-import net.imglib2.meta.CalibratedSpace;
+import net.imglib2.meta.OldCalibratedSpace;
 import net.imglib2.ops.operation.UnaryOperation;
 
 /**
  * @author Christian Dietz (University of Konstanz)
- *
+ * @deprecated Use {@link CopyCalibratedSpace}.
  * @param <CS>
  */
-public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryOperation< CS, CS >
+@Deprecated
+public class CopyOldCalibratedSpace< CS extends OldCalibratedSpace > implements UnaryOperation< CS, CS >
 {
 	private Interval interval;
 
-	public CopyCalibratedSpace()
+	public CopyOldCalibratedSpace()
 	{
 		interval = null;
 	}
 
-	public CopyCalibratedSpace( Interval interval )
+	public CopyOldCalibratedSpace( Interval interval )
 	{
 		this.interval = interval;
 	}
@@ -84,7 +85,7 @@ public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryO
 	@Override
 	public UnaryOperation< CS, CS > copy()
 	{
-		return new CopyCalibratedSpace< CS >();
+		return new CopyOldCalibratedSpace< CS >();
 	}
 
 }

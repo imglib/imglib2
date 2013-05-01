@@ -47,8 +47,10 @@ import net.imglib2.img.Img;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Lee Kamentsky
+ * @deprecated Use {@link CalibratedSpace}.
  */
-public interface CalibratedSpace extends EuclideanSpace {
+@Deprecated
+public interface OldCalibratedSpace extends EuclideanSpace {
 
 	/** Gets the dimensional index of the axis with the given type. */
 	int getAxisIndex(final AxisType axis);

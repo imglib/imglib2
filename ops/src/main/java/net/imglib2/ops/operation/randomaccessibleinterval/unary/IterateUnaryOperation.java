@@ -47,7 +47,7 @@ import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.NativeImgLabeling;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.ops.operation.UnaryOperation;
-import net.imglib2.ops.operation.metadata.unary.CopyCalibratedSpace;
+import net.imglib2.ops.operation.metadata.unary.CopyOldCalibratedSpace;
 import net.imglib2.ops.operation.metadata.unary.CopyImageMetadata;
 import net.imglib2.ops.operation.metadata.unary.CopyMetadata;
 import net.imglib2.ops.operation.metadata.unary.CopyNamed;
@@ -163,7 +163,7 @@ public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V
 		if ( in instanceof ImgPlus )
 		{
 			ImgPlusView< TT > imgPlusView = new ImgPlusView< TT >( SubsetViews.iterableSubsetView( in, i ), ( ( ImgPlus ) in ).factory() );
-			new CopyMetadata( new CopyNamed(), new CopySourced(), new CopyImageMetadata(), new CopyCalibratedSpace( i ) ).compute( ( ImgPlus ) in, imgPlusView );
+			new CopyMetadata( new CopyNamed(), new CopySourced(), new CopyImageMetadata(), new CopyOldCalibratedSpace( i ) ).compute( ( ImgPlus ) in, imgPlusView );
 			return ( II ) imgPlusView;
 		}
 
