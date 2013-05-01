@@ -214,6 +214,24 @@ public class BoundGeneralPointSet<T> extends AbstractInterval
 		return origin[d];
 	}
 
+	// TODO - currently uses double memory. Make constructor use points instead of duplicating
+	// points. API would need to explicitly warn user to not touch passed in points and the
+	// ctor would modify them as needed.
+	
+	public static <K> BoundGeneralPointSet<K> explode(IterableInterval<K> interval) {
+		long[] point = new long[interval.numDimensions()];
+		List<long[]> points = new ArrayList<long[]>();
+		Cursor<K> cursor = interval.cursor();
+		while (cursor.hasNext()) {
+			cursor.fwd();
+			for (int i = 0; i < point.length; i++) {
+				point[i] = cursor.getLongPosition(i);
+			}
+			points.add(point.clone());
+		}
+		return new BoundGeneralPointSet<K>(points);
+	}
+	
 	public static void main(String[] args) {
 		ArrayImgFactory<BitType> factory = new ArrayImgFactory<BitType>();
 		Img<BitType> img = factory.create(new long[]{100}, new BitType());
