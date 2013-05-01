@@ -54,10 +54,7 @@ import net.imglib2.img.ImgFactory;
  * A simple container for storing an {@link Img} together with its metadata.
  * Metadata includes name, dimensional axes and calibration information.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
  */
 public class ImgPlus<T> implements Img<T>, Metadata {
 
@@ -122,7 +119,7 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		return img;
 	}
 
-	// -- Img methods --
+	// -- RandomAccessible methods --
 
 	@Override
 	public RandomAccess<T> randomAccess() {
@@ -134,10 +131,14 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		return img.randomAccess(interval);
 	}
 
+	// -- EuclideanSpace methods --
+
 	@Override
 	public int numDimensions() {
 		return img.numDimensions();
 	}
+
+	// -- Interval methods --
 
 	@Override
 	public long min(final int d) {
@@ -169,6 +170,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		img.max(max);
 	}
 
+	// -- Dimensions methods --
+
 	@Override
 	public void dimensions(final long[] dimensions) {
 		img.dimensions(dimensions);
@@ -178,6 +181,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	public long dimension(final int d) {
 		return img.dimension(d);
 	}
+
+	// -- RealInterval methods --
 
 	@Override
 	public double realMin(final int d) {
@@ -209,6 +214,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		img.realMax(max);
 	}
 
+	// -- IterableInterval methods --
+
 	@Override
 	public Cursor<T> cursor() {
 		return img.cursor();
@@ -218,6 +225,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	public Cursor<T> localizingCursor() {
 		return img.localizingCursor();
 	}
+
+	// -- IterableRealInterval methods --
 
 	@Override
 	public long size() {
@@ -241,17 +250,26 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		return iterationOrder().equals( f.iterationOrder() );
 	}
 
+	// -- Iterable methods --
+
 	@Override
 	public Iterator<T> iterator() {
 		return img.iterator();
 	}
+
+	// -- Img methods --
 
 	@Override
 	public ImgFactory<T> factory() {
 		return img.factory();
 	}
 
-	// -- Metadata methods --
+	@Override
+	public ImgPlus<T> copy() {
+		return new ImgPlus<T>(img.copy(), this);
+	}
+
+	// -- Named methods --
 
 	@Override
 	public String getName() {
@@ -262,6 +280,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 	public void setName(final String name) {
 		this.name = name;
 	}
+
+	// -- CalibratedSpace methods --
 
 	@Override
 	public int getAxisIndex(final AxisType axis) {
@@ -320,6 +340,8 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		for ( int d = 0; d < cal.length; ++d )
 			this.cal[d] = cal[ d ];
 	}
+
+	// -- ImageMetadata methods --
 
 	@Override
 	public int getValidBits() {
@@ -402,16 +424,18 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 		return colorTable.size();
 	}
 
+	// -- Sourced methods --
+
 	@Override
 	public String getSource() {
 		return source;
 	}
-	
+
 	@Override
 	public void setSource(String source) {
 		this.source = source;
 	}
-	
+
 	// -- Utility methods --
 
 	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */
@@ -486,11 +510,6 @@ public class ImgPlus<T> implements Img<T>, Metadata {
 			cal[i] = metadata.calibration(i);
 		}
 		return cal;
-	}
-
-	@Override
-	public ImgPlus<T> copy() {
-		return new ImgPlus<T>(img.copy(), this);
 	}
 
 }
