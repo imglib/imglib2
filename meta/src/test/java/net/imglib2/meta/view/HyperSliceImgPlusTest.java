@@ -54,8 +54,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Unit tests for {@link HyperSliceImgPlus}.
+ * 
  * @author Jean-Yves Tinevez
- *
  */
 public class HyperSliceImgPlusTest {
 
@@ -126,7 +127,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#randomAccess()}.
+	 * Test method for {@link HyperSliceImgPlus#randomAccess()}.
 	 */
 	@Test
 	public void testRandomAccess() {
@@ -176,7 +177,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#numDimensions()}.
+	 * Test method for {@link HyperSliceImgPlus#numDimensions()}.
 	 */
 	@Test
 	public void testNumDimensions() {
@@ -185,7 +186,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#min(int)}.
+	 * Test method for {@link HyperSliceImgPlus#min(int)}.
 	 */
 	@Test
 	public void testMinInt() {
@@ -198,7 +199,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#min(long[])}.
+	 * Test method for {@link HyperSliceImgPlus#min(long[])}.
 	 */
 	@Test
 	public void testMinLongArray() {
@@ -213,7 +214,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#max(int)}.
+	 * Test method for {@link HyperSliceImgPlus#max(int)}.
 	 */
 	@Test
 	public void testMaxInt() {
@@ -234,7 +235,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#max(long[])}.
+	 * Test method for {@link HyperSliceImgPlus#max(long[])}.
 	 */
 	@Test
 	public void testMaxLongArray() {
@@ -267,7 +268,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#dimensions(long[])}.
+	 * Test method for {@link HyperSliceImgPlus#dimensions(long[])}.
 	 */
 	@Test
 	public void testDimensions() {
@@ -288,7 +289,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#cursor()}.
+	 * Test method for {@link HyperSliceImgPlus#cursor()}.
 	 */
 	@Test
 	public void testCursor() {
@@ -344,7 +345,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#size()}.
+	 * Test method for {@link HyperSliceImgPlus#size()}.
 	 */
 	@Test
 	public void testSize() {
