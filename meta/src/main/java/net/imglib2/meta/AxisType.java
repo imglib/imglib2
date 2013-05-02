@@ -41,10 +41,7 @@ package net.imglib2.meta;
  * A dimensional axis type, for describing the dimensions of a
  * {@link TypedSpace}.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
  */
 public interface AxisType {
 
