@@ -47,7 +47,13 @@ import net.imglib2.AnnotatedSpace;
  */
 public interface TypedSpace<A extends TypedAxis> extends AnnotatedSpace<A> {
 
-	/** Gets the dimensional index of the first axis with the given type. */
+	/**
+	 * Gets the dimensional index of the axis with the given type.
+	 * <p>
+	 * Note that by convention, each {@link AxisType} may only be used in a
+	 * single dimension of the space.
+	 * </p>
+	 */
 	int dimensionIndex(final AxisType axisType);
 
 }
