@@ -47,7 +47,7 @@ package net.imglib2;
 public final class FinalInterval extends AbstractInterval
 {
 	/**
-	 * Creates a {@link AbstractInterval} from another {@link Interval}
+	 * Creates an Interval from another {@link Interval}
 	 *
 	 * @param interval - another {@link Interval}
 	 */
