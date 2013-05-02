@@ -1,9 +1,16 @@
 package net.imglib2.ops.sandbox;
 
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtField;
+import javassist.CtNewMethod;
+import javassist.Modifier;
 import net.imglib2.Cursor;
 import net.imglib2.Sampler;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -179,6 +186,50 @@ public class Expressions
 		// median: 617 ms
 	}
 
+	private static Class<Runnable> runnableJavassistClass = null;
+
+	@SuppressWarnings("unchecked")
+	private static Runnable addWithJavassist(final Img<?> result, final Img<?>... imgs)
+	{
+		try {
+			if (runnableJavassistClass == null) {
+				final ClassPool pool = ClassPool.getDefault();
+				final CtClass clazz = pool.makeClass("DummyWithJavassist");
+				clazz.addInterface(pool.get("java.lang.Runnable"));
+				final CtClass floatArrayClass = pool.get("float[]");
+				final CtField resultField = new CtField(floatArrayClass, "result", clazz);
+				resultField.setModifiers(Modifier.PUBLIC);
+				clazz.addField(resultField);
+				for (int i = 0; i < imgs.length; i++) {
+					final CtField imgField = new CtField(floatArrayClass, "img" + i, clazz);
+					imgField.setModifiers(Modifier.PUBLIC);
+					clazz.addField(imgField);
+				}
+				final StringBuilder body = new StringBuilder();
+				body.append("public void run() {\n");
+				body.append("  for (int i = 0; i < result.length; i++) {\n");
+				body.append("    result[i] = img0[i]");
+				for (int i = 1; i < imgs.length; i++) {
+					body.append("+ img").append(i).append("[i]");
+				}
+				body.append(";\n");
+				body.append("  }\n");
+				body.append("}\n");
+				clazz.addMethod(CtNewMethod.make(body.toString(), clazz));
+				runnableJavassistClass = clazz.toClass();
+			}
+			final Runnable runnable = runnableJavassistClass.newInstance();
+			runnableJavassistClass.getField("result").set(runnable, ((FloatArray) ((ArrayImg<?, ?>) result).update(null)).getCurrentStorageArray());
+			for (int i = 0; i < imgs.length; i++) {
+				runnableJavassistClass.getField("img" + i).set(runnable, ((FloatArray) ((ArrayImg<?, ?>) imgs[i]).update(null)).getCurrentStorageArray());
+			}
+			return runnable;
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return null;
+	}
+
 	public static void main( final String args[] )
 	{
 		final Img< FloatType > imgA = ArrayImgs.floats( 5000, 5000 );
@@ -191,6 +242,8 @@ public class Expressions
 		i = 0;
 		for ( final FloatType t : imgB )
 			t.set( i++ );
+
+		BenchmarkHelper.benchmarkAndPrint( 10, true, addWithJavassist(imgC, imgA, imgB));
 
 		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
 		{
