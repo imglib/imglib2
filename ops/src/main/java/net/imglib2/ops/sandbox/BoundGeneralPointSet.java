@@ -50,13 +50,18 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
+import net.imglib2.Sampler;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.logic.BitType;
 
+// TODO Earlier implementations tried to speed the move() code. But it made some subcases
+// tricky and slow. Now this code is a straightforward implementation of a list of points
+// but it is slow in some cases.
+
 /**
  * Make the most general case of a point set as a list of points. Implements new interfaces.
- * One uses bind() to obtain a cursor back into the original interval.
+ * One uses bind() to obtain a cursor back- into the original interval.
  * 
  * @author Barry DeZonia
  *
@@ -71,124 +76,63 @@ public class BoundGeneralPointSet extends AbstractInterval
 	private Img<BitType> bools;
 	
 	// -- constructors --
-	
+
+	/**
+	 * Very important: API user provides a points that it will no longer access. This
+	 * allows us to minimize memory overhead.
+	 * 
+	 * @param points
+	 */
 	public BoundGeneralPointSet(List<long[]> points) {
 		super(minExtent(points), maxExtent(points));
-		this.points = new ArrayList<long[]>();
-		Iterator<long[]> iter = points.iterator();
-		long[] prev = null;
-		while (iter.hasNext()) {
-			long[] curr = iter.next();
-			if (prev == null) {
-				this.points.add(curr.clone());
-			}
-			else {
-				long[] deltaPoint = new long[n];
-				for (int i = 0; i < n; i++) {
-					deltaPoint[i] = curr[i] - prev[i];
-				}
-				this.points.add(deltaPoint);
-			}
-			prev = curr;
-		}
+		this.points = points;
 		origin = points.get(0);
 		ArrayImgFactory<BitType> factory = new ArrayImgFactory<BitType>();
 		bools = factory.create(new long[]{points.size()}, new BitType());
 		for (BitType b : bools) b.set(true);
-		// TODO: make the bools unmodifiable
 	}
 
 	// -- public methods --
 	
 	public <T> Cursor< T > bind( final RandomAccess< T > randomAccess )
 	{
-		// TODO : OLD AND MAYBE CORRECT
-		return new MyCursor<T>( this, randomAccess );
-		//return new MyCursor( interval, randomAccess );
+		return new BoundCursor<T>( this, randomAccess );
 	}
 	
 	@Override
-	public void localize(float[] position) {
-		for (int i = 0; i < n; i++) {
-			position[i] = origin[i];
-		}
-	}
-
-	@Override
-	public void localize(double[] position) {
-		for (int i = 0; i < n; i++) {
-			position[i] = origin[i];
-		}
-	}
-
-	@Override
-	public float getFloatPosition(int d) {
-		return origin[d];
-	}
-
-	@Override
-	public double getDoublePosition(int d) {
-		return origin[d];
-	}
-
-	@Override
-	public long size() {
-		return points.size();
-	}
-
-	@Override
-	public BitType firstElement() {
-		return cursor().next();
-	}
-
-	@Override
-	public Object iterationOrder() {
-		return new Object(); // nobody is likely ever the same order as me
-	}
-
-	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return (f == this); // nobody is likely ever the same order as me
-	}
-
-	@Override
-	public Iterator<BitType> iterator() {
-		return cursor();
-	}
-
-	@Override
-	public Cursor<BitType> cursor() {
-		return bools.cursor();
-		/*
-		throw new IllegalArgumentException(
-				"BoundGeneralPointSet does not have cursors."+
-				" You must call bind() to obtain a cursor.");
-		*/
-	}
-
-	@Override
-	public Cursor<BitType> localizingCursor() {
-		return cursor();
-	}
-
-	@Override
 	public void fwd(int d) {
-		origin[d]++;
+		for (long[] pt : points) {
+			pt[d]++;
+		}
+		min[d]++;
+		max[d]++;
 	}
 
 	@Override
 	public void bck(int d) {
-		origin[d]--;
+		for (long[] pt : points) {
+			pt[d]--;
+		}
+		min[d]--;
+		max[d]--;
 	}
 
 	@Override
 	public void move(int distance, int d) {
-		origin[d] += distance;
+		for (long[] pt : points) {
+			pt[d] += distance;
+		}
+		min[d] += distance;
+		max[d] += distance;
 	}
 
 	@Override
 	public void move(long distance, int d) {
-		origin[d] += distance;
+		for (long[] pt : points) {
+			pt[d] += distance;
+		}
+		min[d] += distance;
+		max[d] += distance;
 	}
 
 	@Override
@@ -235,12 +179,37 @@ public class BoundGeneralPointSet extends AbstractInterval
 
 	@Override
 	public void setPosition(int position, int d) {
-		origin[d] = position;
+		long change = position - origin[d];
+		for (long[] pt : points) {
+			pt[d] += change;
+		}
+		min[d] += change;
+		max[d] += change;
 	}
 
 	@Override
 	public void setPosition(long position, int d) {
-		origin[d] = position;
+		long change = position - origin[d];
+		for (long[] pt : points) {
+			pt[d] += change;
+		}
+		min[d] += change;
+		max[d] += change;
+	}
+
+	@Override
+	public void localize(double[] position) {
+		for (int i = 0; i < n; i++) {
+			position[i] = origin[i];
+		}
+	}
+
+
+	@Override
+	public void localize(float[] position) {
+		for (int i = 0; i < n; i++) {
+			position[i] = origin[i];
+		}
 	}
 
 	@Override
@@ -258,6 +227,16 @@ public class BoundGeneralPointSet extends AbstractInterval
 	}
 
 	@Override
+	public double getDoublePosition(int d) {
+		return origin[d];
+	}
+
+	@Override
+	public float getFloatPosition(int d) {
+		return origin[d];
+	}
+
+	@Override
 	public int getIntPosition(int d) {
 		return (int) origin[d];
 	}
@@ -267,11 +246,42 @@ public class BoundGeneralPointSet extends AbstractInterval
 		return origin[d];
 	}
 
+	@Override
+	public long size() {
+		return points.size();
+	}
+
+	@Override
+	public BitType firstElement() {
+		return cursor().next();
+	}
+
+	@Override
+	public Object iterationOrder() {
+		return new Object(); // nobody is likely ever the same order as me
+	}
+
+	@Override
+	public boolean equalIterationOrder(IterableRealInterval<?> f) {
+		return (f == this); // nobody is likely ever the same order as me
+	}
+
+	@Override
+	public Iterator<BitType> iterator() {
+		return cursor();
+	}
+
+	@Override
+	public Cursor<BitType> cursor() {
+		return new PositionCursor();
+	}
+
+	@Override
+	public Cursor<BitType> localizingCursor() {
+		return cursor();
+	}
+
 	// -- static public helper methods --
-	
-	// TODO - currently uses double memory. Make constructor use points instead of duplicating
-	// points. API would need to explicitly warn user to not touch passed in points and the
-	// ctor would modify them as needed.
 	
 	public static BoundGeneralPointSet explode(IterableInterval<?> interval) {
 		long[] point = new long[interval.numDimensions()];
@@ -285,55 +295,6 @@ public class BoundGeneralPointSet extends AbstractInterval
 			points.add(point.clone());
 		}
 		return new BoundGeneralPointSet(points);
-	}
-	
-	// -- test methods --
-	
-	public static void main(String[] args) {
-		ArrayImgFactory<BitType> factory = new ArrayImgFactory<BitType>();
-		Img<BitType> img = factory.create(new long[]{100}, new BitType());
-		
-		boolean b = false;
-		for ( final BitType t : img ) {
-			t.set( b );
-			b = !b;
-		}
-		
-		List<long[]> pts = Arrays.asList(new long[]{0}, new long[]{1});
-		BoundGeneralPointSet ps = new BoundGeneralPointSet(pts);
-		Cursor<BitType> cursor = ps.bind(img.randomAccess());
-
-		System.out.println("Expecting (false, true)");
-		System.out.println("  point set loc: " + ps.getLongPosition(0));
-		cursor.reset();
-		cursor.next();
-		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
-		System.out.println("    result of get(): " + cursor.get());
-		cursor.next();
-		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
-		System.out.println("    result of get(): " + cursor.get());
-		
-		System.out.println("Expecting (true, false)");
-		ps.move(1,0);
-		System.out.println("  point set loc: " + ps.getLongPosition(0));
-		cursor.reset();
-		cursor.next();
-		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
-		System.out.println("    result of get(): " + cursor.get());
-		cursor.next();
-		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
-		System.out.println("    result of get(): " + cursor.get());
-		
-		System.out.println("Expecting (false, true)");
-		ps.move(1,0);
-		System.out.println("  point set loc: " + ps.getLongPosition(0));
-		cursor.reset();
-		cursor.next();
-		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
-		System.out.println("    result of get(): " + cursor.get());
-		cursor.next();
-		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
-		System.out.println("    result of get(): " + cursor.get());
 	}
 	
 	// -- private static helpers --
@@ -383,30 +344,151 @@ public class BoundGeneralPointSet extends AbstractInterval
 	}
 
 	// -- other private helpers --
+
+	private class PositionCursor extends AbstractInterval implements Cursor<BitType> {
+
+		private Cursor<BitType> cursor;
+		
+		public PositionCursor() {
+			super(BoundGeneralPointSet.this);
+			cursor = bools.cursor();
+		}
+
+		public PositionCursor(PositionCursor other) {
+			this();
+			long pos = other.cursor.getLongPosition(0);
+			cursor.jumpFwd(pos+1);
+		}
+		
+		@Override
+		public void localize(float[] position) {
+			int pos = cursor.getIntPosition(0);
+			long[] pt = points.get(pos);
+			for (int i = 0; i < n; i++) {
+				position[i] = pt[i];
+			}
+		}
+
+		@Override
+		public void localize(double[] position) {
+			int pos = cursor.getIntPosition(0);
+			long[] pt = points.get(pos);
+			for (int i = 0; i < n; i++) {
+				position[i] = pt[i];
+			}
+		}
+
+		@Override
+		public float getFloatPosition(int d) {
+			int pos = cursor.getIntPosition(0);
+			long[] pt = points.get(pos);
+			return pt[d];
+		}
+
+		@Override
+		public double getDoublePosition(int d) {
+			int pos = cursor.getIntPosition(0);
+			long[] pt = points.get(pos);
+			return pt[d];
+		}
+
+		@Override
+		public BitType get() {
+			return cursor.get();
+		}
+
+		@Override
+		public Sampler<BitType> copy() {
+			return cursor();
+		}
+
+		@Override
+		public void jumpFwd(long steps) {
+			cursor.jumpFwd(steps);
+		}
+
+		@Override
+		public void fwd() {
+			cursor.fwd();
+		}
+
+		@Override
+		public void reset() {
+			cursor.reset();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return cursor.hasNext();
+		}
+
+		@Override
+		public BitType next() {
+			return cursor.next();
+		}
+
+		@Override
+		public void remove() { }
+
+		@Override
+		public void localize(int[] position) {
+			int pos = cursor.getIntPosition(0);
+			long[] pt = points.get(pos);
+			for (int i = 0; i < n; i++) {
+				position[i] = (int) pt[i];
+			}
+		}
+
+		@Override
+		public void localize(long[] position) {
+			int pos = cursor.getIntPosition(0);
+			long[] pt = points.get(pos);
+			for (int i = 0; i < n; i++) {
+				position[i] = pt[i];
+			}
+		}
+
+		@Override
+		public int getIntPosition(int d) {
+			int pos = cursor.getIntPosition(0);
+			long[] pt = points.get(pos);
+			return (int) pt[d];
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			int pos = cursor.getIntPosition(0);
+			long[] pt = points.get(pos);
+			return pt[d];
+		}
+
+		@Override
+		public Cursor<BitType> copyCursor() {
+			return new PositionCursor(this);
+		}
+		
+	}
 	
 	/**
 	 * TODO: This was modified from RandomAccessibleIntervalCursor. There might be code reuse possible ...
 	 */
-	private final class MyCursor<T> extends AbstractInterval implements Cursor< T >
+	private final class BoundCursor<T> extends AbstractInterval implements Cursor< T >
 	{
 		private final RandomAccess< T > randomAccess;
 
 		private int index;
-		private long[] tmp;
 		
-		public MyCursor( final Interval interval, final RandomAccess< T > randomAccess )
+		public BoundCursor( final Interval interval, final RandomAccess< T > randomAccess )
 		{
 			super( interval );
 			this.randomAccess = randomAccess;
-			tmp = new long[n];
-			reset();
+			rst();
 		}
 
-		protected MyCursor( final MyCursor<T> cursor )
+		protected BoundCursor( final BoundCursor<T> cursor )
 		{
 			super( cursor );
 			this.randomAccess = cursor.randomAccess.copyRandomAccess();
-			tmp = new long[n];
 			index = cursor.index;
 		}
 
@@ -420,39 +502,20 @@ public class BoundGeneralPointSet extends AbstractInterval
 		public void jumpFwd( final long steps )
 		{
 			index += steps;
-			for (int i = 0; i < n; i++) tmp[i] = 0;
-			for (long j = 0; j < steps; j++) {
-				long[] p = points.get((int)(index+j));
-				for (int k = 0; k < n; k++) {
-					tmp[k] += p[k];
-				}
-			}
-			for (int i = 0; i < n; i++) {
-				long pos = randomAccess.getLongPosition(i);
-				randomAccess.setPosition(pos+tmp[i], i);
-			}
+			randomAccess.setPosition(points.get(index));
 		}
 
 		@Override
 		public void fwd()
 		{
 			index++;
-			if (index == 0) randomAccess.setPosition(origin);
-			else {
-				long[] pt = points.get(index);
-				for (int i = 0; i < n; i++) {
-					long pos = randomAccess.getLongPosition(i);
-					randomAccess.setPosition(pos+pt[i], i);
-				}
-			}
+			randomAccess.setPosition(points.get(index));
 		}
 
 		@Override
 		public void reset()
 		{
-			index = -1;
-			randomAccess.setPosition( origin );
-			randomAccess.bck( 0 );
+			rst();
 		}
 
 		@Override
@@ -472,13 +535,13 @@ public class BoundGeneralPointSet extends AbstractInterval
 		public void remove() {}
 
 		@Override
-		public MyCursor<T> copy()
+		public BoundCursor<T> copy()
 		{
-			return new MyCursor<T>( this );
+			return new BoundCursor<T>( this );
 		}
 
 		@Override
-		public MyCursor<T> copyCursor()
+		public BoundCursor<T> copyCursor()
 		{
 			return copy();
 		}
@@ -530,5 +593,61 @@ public class BoundGeneralPointSet extends AbstractInterval
 		{
 			return randomAccess.getLongPosition( d );
 		}
+		
+		private void rst() {
+			index = -1;
+			randomAccess.setPosition( origin );
+			randomAccess.bck( 0 );
+		}
 	}
+
+	// -- test methods --
+	
+	public static void main(String[] args) {
+		ArrayImgFactory<BitType> factory = new ArrayImgFactory<BitType>();
+		Img<BitType> img = factory.create(new long[]{100}, new BitType());
+		
+		boolean b = false;
+		for ( final BitType t : img ) {
+			t.set( b );
+			b = !b;
+		}
+		
+		List<long[]> pts = Arrays.asList(new long[]{0}, new long[]{1});
+		BoundGeneralPointSet ps = new BoundGeneralPointSet(pts);
+		Cursor<BitType> cursor = ps.bind(img.randomAccess());
+
+		System.out.println("Expecting (false, true)");
+		System.out.println("  point set loc: " + ps.getLongPosition(0));
+		cursor.reset();
+		cursor.next();
+		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
+		System.out.println("    result of get(): " + cursor.get());
+		cursor.next();
+		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
+		System.out.println("    result of get(): " + cursor.get());
+		
+		System.out.println("Expecting (true, false)");
+		ps.move(1,0);
+		System.out.println("  point set loc: " + ps.getLongPosition(0));
+		cursor.reset();
+		cursor.next();
+		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
+		System.out.println("    result of get(): " + cursor.get());
+		cursor.next();
+		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
+		System.out.println("    result of get(): " + cursor.get());
+		
+		System.out.println("Expecting (false, true)");
+		ps.move(1,0);
+		System.out.println("  point set loc: " + ps.getLongPosition(0));
+		cursor.reset();
+		cursor.next();
+		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
+		System.out.println("    result of get(): " + cursor.get());
+		cursor.next();
+		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
+		System.out.println("    result of get(): " + cursor.get());
+	}
+	
 }
