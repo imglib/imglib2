@@ -39,8 +39,6 @@ package net.imglib2.meta;
 
 import java.util.Hashtable;
 
-import net.imglib2.AnnotatedSpace;
-
 /**
  * An extensible enumeration of common dimensional {@link AxisType}s.
  * 
@@ -120,7 +118,7 @@ public enum Axes implements AxisType {
 	public synchronized static AxisType get(final String label) {
 		AxisType axis = axes.get(label);
 		if (axis == null) {
-			axis = new CustomAxisType(label);
+			axis = new CustomType(label);
 			axes.put(label, axis);
 		}
 		return axis;
@@ -134,7 +132,7 @@ public enum Axes implements AxisType {
 	 * </p>
 	 */
 	public static AxisType unknown() {
-		return new CustomAxisType("Unknown");
+		return new CustomType("Unknown");
 	}
 
 	private String label;
@@ -143,7 +141,7 @@ public enum Axes implements AxisType {
 		this.label = label;
 	}
 
-	// -- Axis methods --
+	// -- AxisType methods --
 
 	@Override
 	public String getLabel() {
@@ -171,14 +169,20 @@ public enum Axes implements AxisType {
 
 	/**
 	 * A custom dimensional axis type, for describing the dimensional axes of a
-	 * {@link AnnotatedSpace} object (such as an {@link ImgPlus}).
+	 * {@link TypedSpace} object.
 	 */
-	public static class CustomAxisType implements AxisType {
+	public static class CustomType implements AxisType {
 
 		private final String label;
+		private final boolean spatial;
 
-		public CustomAxisType(final String label) {
+		public CustomType(final String label) {
+			this(label, false);
+		}
+
+		public CustomType(final String label, final boolean spatial) {
 			this.label = label;
+			this.spatial = spatial;
 		}
 
 		// -- Axis methods --
@@ -195,7 +199,7 @@ public enum Axes implements AxisType {
 
 		@Override
 		public boolean isSpatial() {
-			return false;
+			return spatial;
 		}
 
 		// -- Object methods --
