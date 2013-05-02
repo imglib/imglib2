@@ -232,9 +232,9 @@ public class Expressions
 
 	public static void main( final String args[] )
 	{
-		final Img< FloatType > imgA = ArrayImgs.floats( 5000, 5000 );
-		final Img< FloatType > imgB = ArrayImgs.floats( 5000, 5000 );
-		final Img< FloatType > imgC = ArrayImgs.floats( 5000, 5000 );
+		final Img< FloatType > imgA = ArrayImgs.floats( 30000, 5000 );
+		final Img< FloatType > imgB = ArrayImgs.floats( 30000, 5000 );
+		final Img< FloatType > imgC = ArrayImgs.floats( 30000, 5000 );
 
 		int i = 0;
 		for ( final FloatType t : imgA )
@@ -243,7 +243,14 @@ public class Expressions
 		for ( final FloatType t : imgB )
 			t.set( i++ );
 
-		BenchmarkHelper.benchmarkAndPrint( 10, true, addWithJavassist(imgC, imgA, imgB));
+		BenchmarkHelper.benchmarkAndPrint( 10, true,  new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				addWithJavassist(imgC, imgA, imgB).run();
+			}
+		});
 
 		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
 		{
