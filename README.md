@@ -7,12 +7,9 @@ sample organizations, including one single primitive array, one array
 per plane, N-dimensional array "cells" cached to and from disk on
 demand, and planes read on demand from disk.
 
-ImgLib1 is the previous incarnation of the library. We encourage
-developers to use ImgLib2 instead, and migrate existing ImgLib1 programs
-to ImgLib2 whenever possible.
 
-
-== BENEFITS ==
+Benefits
+--------
 
 1. By avoiding unnecessarily complex syntax (such as nested loops) ImgLib2
    allows developers to concentrate on the essence of the algorithm.
@@ -40,43 +37,39 @@ to ImgLib2 whenever possible.
    handling library for every Java-based project.
 
 
-== APPLICATIONS ==
+Applications
+------------
 
-ImgLib2 is the core data model for ImageJ2; see:
-    http://developer.imagej.net/imglib
-
-Both ImgLib1 and ImgLib2 are bundled with the Fiji image processing
-package:
-    http://fiji.sc/
-
-ImgLib2 is a key component of the SciJava software initiative:
-    http://scijava.github.com/
-
-
-== RESOURCES ==
-
-The source code for both ImgLib1 and ImgLib2 can be found on GitHub:
-    https://github.com/imagej/imglib
-
-For documentation on how to use ImgLib2, see:
-    http://fiji.sc/wiki/index.php/ImgLib2
-
-Online Javadoc for both ImgLib1 and ImgLib2 can be found at:
-    http://jenkins.imagej.net/job/ImgLib-daily/javadoc/
-
-There are some benchmarks comparing the performance of ImgLib2 with
-raw arrays, ImageJ 1.x and Dimiter Prodanov's PixLib library:
-    http://developer.imagej.net/imglib-benchmarks
+* ImgLib2 provides the
+  [core data model for ImageJ2](http://developer.imagej.net/imglib).
+* ImgLib2 is bundled with the [Fiji](http://fiji.sc/) distribution of ImageJ.
+* The [SCIFIO](http://loci.wisc.edu/software/scifio) library utilizes
+  ImgLib2's N-dimensional image API.
+* ImgLib2 is a key component of the
+  [SciJava software initiative](http://scijava.org/).
 
 
-== BUILDING THE SOURCE CODE ==
+Resources
+---------
+
+* [ImgLib2 source code on GitHub](https://github.com/imagej/imglib).
+* [Documentation on how to use ImgLib2](http://imglib2.net/).
+* [ImgLib2 Examples](http://fiji.sc/ImgLib2_Examples)
+* [Online Javadoc](http://jenkins.imagej.net/job/ImgLib-daily/javadoc/).
+* [Performance benchmarks](http://developer.imagej.net/imglib-benchmarks).
+
+
+Building the source code
+------------------------
 
 You can build the source from the command line using Maven:
+
     mvn
 
 You can also import the source into Eclipse using the m2e plugin.
 Download Eclipse IDE for Java Developers (3.7 Indigo or later), which
 comes with m2e preinstalled. Then run:
+
     File > Import > Existing Maven Projects
 
 Select the toplevel folder of your ImgLib working copy, and Eclipse will
@@ -84,3 +77,14 @@ find all the ImgLib projects.
 
 Both NetBeans and IntelliJ IDEA also have built-in support for Maven
 projects.
+
+
+ImgLib1
+-------
+
+The previous incarnation of the library, known as ImgLib1, is still available
+as [part of
+Fiji](https://github.com/fiji/fiji/tree/master/src-plugins/legacy-imglib1).
+However, we strongly encourage developers to use ImgLib2 instead, and migrate
+existing ImgLib1 programs to ImgLib2 whenever possible.
+
