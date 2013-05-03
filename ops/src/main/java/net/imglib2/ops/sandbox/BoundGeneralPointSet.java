@@ -71,7 +71,7 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	
 	private final List<long[]> points;
 	private final long[] origin;
-	private Img<BitType> bools;
+	private final Img<BitType> bools;
 	
 	// -- constructors --
 
@@ -527,7 +527,7 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 		@Override
 		public boolean hasNext()
 		{
-			return index < points.size();
+			return index < points.size()-1;
 		}
 
 		@Override
