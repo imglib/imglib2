@@ -186,6 +186,10 @@ public class BoundAndPointSet extends AbstractPointSet implements NewPointSet
 	// -- private helpers --
 	
 	private void calcStuff() {
+		for (int i = 0; i < n; i++) {
+			min[i] = Long.MAX_VALUE;
+			max[i] = Long.MIN_VALUE;
+		}
 		size = 0;
 		long[] position = new long[n];
 		Cursor<BitType> cursor = localizingCursor();
@@ -214,24 +218,18 @@ public class BoundAndPointSet extends AbstractPointSet implements NewPointSet
 
 		public PositionCursor(PositionCursor other) {
 			this();
-			long pos = other.cursor.getLongPosition(0);
+			long pos = other.cursor.getLongPosition(0); // TODO - broken? only dim 0?
 			cursor.jumpFwd(pos+1);
 		}
 		
 		@Override
 		public void localize(float[] position) {
-			cursor.localize(tmpPos);
-			for (int i = 0; i < n; i++) {
-				position[i] = tmpPos[i];
-			}
+			cursor.localize(position);
 		}
 
 		@Override
 		public void localize(double[] position) {
-			cursor.localize(tmpPos);
-			for (int i = 0; i < n; i++) {
-				position[i] = tmpPos[i];
-			}
+			cursor.localize(position);
 		}
 
 		@Override
@@ -257,13 +255,12 @@ public class BoundAndPointSet extends AbstractPointSet implements NewPointSet
 		@Override
 		public void jumpFwd(long steps) {
 			for (long l = 0; l < steps; l++)
-				cursor.fwd();
+				position();
 		}
 
 		@Override
 		public void fwd() {
-			cursor.fwd();
-			cursor.localize(tmpPos);
+			// positioning already done by hasNext()
 		}
 
 		@Override
@@ -276,16 +273,12 @@ public class BoundAndPointSet extends AbstractPointSet implements NewPointSet
 		
 		@Override
 		public boolean hasNext() {
-			while (cursor.hasNext()) {
-				cursor.next();
-				cursor.localize(tmpPos);
-				if (p2.contains(tmpPos)) return true;
-			}
-			return false;
+			return position();
 		}
 
 		@Override
 		public BitType next() {
+			// positioning already done
 			return cursor.get();
 		}
 
@@ -294,18 +287,12 @@ public class BoundAndPointSet extends AbstractPointSet implements NewPointSet
 
 		@Override
 		public void localize(int[] position) {
-			cursor.localize(tmpPos);
-			for (int i = 0; i < n; i++) {
-				position[i] = (int) tmpPos[i];
-			}
+			cursor.localize(position);
 		}
 
 		@Override
 		public void localize(long[] position) {
-			cursor.localize(tmpPos);
-			for (int i = 0; i < n; i++) {
-				position[i] = tmpPos[i];
-			}
+			cursor.localize(position);
 		}
 
 		@Override
@@ -322,7 +309,15 @@ public class BoundAndPointSet extends AbstractPointSet implements NewPointSet
 		public Cursor<BitType> copyCursor() {
 			return new PositionCursor(this);
 		}
-		
+
+		private boolean position() {
+			while (cursor.hasNext()) {
+				cursor.next();
+				cursor.localize(tmpPos);
+				if (p2.contains(tmpPos)) return true;
+			}
+			return false;
+		}
 	}
 	
 	/**
@@ -390,11 +385,8 @@ public class BoundAndPointSet extends AbstractPointSet implements NewPointSet
 
 		private void rst() {
 			cursor.reset();
-			cursor.next();
 			cursor.localize(tmpPos);
-			cursor.reset();
 			randomAccess.setPosition(tmpPos);
-			randomAccess.bck( 0 );
 		}
 	}
 }
