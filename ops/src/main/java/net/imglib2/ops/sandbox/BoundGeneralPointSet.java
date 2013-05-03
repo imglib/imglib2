@@ -488,30 +488,20 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	/**
 	 * TODO: This was modified from RandomAccessibleIntervalCursor. There might be code reuse possible ...
 	 */
-	private final class BoundCursor<T> extends AbstractInterval implements Cursor< T >
+	private final class BoundCursor<T> extends AbstractBoundCursor< T >
 	{
-		private final RandomAccess< T > randomAccess;
-
 		private int index;
 		
 		public BoundCursor( final Interval interval, final RandomAccess< T > randomAccess )
 		{
-			super( interval );
-			this.randomAccess = randomAccess;
+			super( interval, randomAccess );
 			rst();
 		}
 
 		protected BoundCursor( final BoundCursor<T> cursor )
 		{
-			super( cursor );
-			this.randomAccess = cursor.randomAccess.copyRandomAccess();
+			super( cursor, cursor.randomAccess.copyRandomAccess() );
 			index = cursor.index;
-		}
-
-		@Override
-		public T get()
-		{
-			return randomAccess.get();
 		}
 
 		@Override
@@ -541,16 +531,6 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 		}
 
 		@Override
-		public T next()
-		{
-			fwd();
-			return get();
-		}
-
-		@Override
-		public void remove() {}
-
-		@Override
 		public BoundCursor<T> copy()
 		{
 			return new BoundCursor<T>( this );
@@ -562,54 +542,6 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 			return copy();
 		}
 
-		@Override
-		public void localize( final float[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public void localize( final double[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public float getFloatPosition( final int d )
-		{
-			return randomAccess.getFloatPosition( d );
-		}
-
-		@Override
-		public double getDoublePosition( final int d )
-		{
-			return randomAccess.getDoublePosition( d );
-		}
-
-		@Override
-		public void localize( final int[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public void localize( final long[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public int getIntPosition( final int d )
-		{
-			return randomAccess.getIntPosition( d );
-		}
-
-		@Override
-		public long getLongPosition( final int d )
-		{
-			return randomAccess.getLongPosition( d );
-		}
-		
 		private void rst() {
 			index = -1;
 			randomAccess.setPosition( origin );

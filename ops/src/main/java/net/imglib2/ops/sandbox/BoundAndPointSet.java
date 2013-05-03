@@ -37,16 +37,10 @@
 
 package net.imglib2.ops.sandbox;
 
-import java.util.Iterator;
-
 import net.imglib2.AbstractInterval;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
-import net.imglib2.IterableRealInterval;
-import net.imglib2.Localizable;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
-import net.imglib2.RealPositionable;
 import net.imglib2.Sampler;
 import net.imglib2.type.logic.BitType;
 
@@ -58,7 +52,7 @@ import net.imglib2.type.logic.BitType;
  * 
  * @author Barry DeZonia
  */
-public class BoundAndPointSet implements NewPointSet
+public class BoundAndPointSet extends AbstractPointSet implements NewPointSet
 {
 	// -- instance fields --
 	
@@ -112,62 +106,10 @@ public class BoundAndPointSet implements NewPointSet
 	}
 
 	@Override
-	public void move(int distance, int d) {
-		move((long) distance, d);
-	}
-
-	@Override
 	public void move(long distance, int d) {
 		p1.move(distance,d);
 		p2.move(distance,d);
 		needsCalc = true;
-	}
-
-	@Override
-	public void move(Localizable localizable) {
-		for (int i = 0; i < n; i++) {
-			move(localizable.getLongPosition(i), i);
-		}
-	}
-
-	@Override
-	public void move(int[] distance) {
-		for (int i = 0; i < n; i++) {
-			move(distance[i], i);
-		}
-	}
-
-	@Override
-	public void move(long[] distance) {
-		for (int i = 0; i < n; i++) {
-			move(distance[i], i);
-		}
-	}
-
-	@Override
-	public void setPosition(Localizable localizable) {
-		for (int i = 0; i < n; i++) {
-			setPosition(localizable.getLongPosition(i), i);
-		}
-	}
-
-	@Override
-	public void setPosition(int[] position) {
-		for (int i = 0; i < n; i++) {
-			setPosition(position[i], i);
-		}
-	}
-
-	@Override
-	public void setPosition(long[] position) {
-		for (int i = 0; i < n; i++) {
-			setPosition(position[i], i);
-		}
-	}
-
-	@Override
-	public void setPosition(int position, int d) {
-		setPosition((long)position, d);
 	}
 
 	@Override
@@ -202,25 +144,9 @@ public class BoundAndPointSet implements NewPointSet
 	public void localize(double[] position) {
 		p1.localize(position);
 	}
-
-	@Override
-	public int getIntPosition(int d) {
-		return p1.getIntPosition(d);
-	}
-
 	@Override
 	public long getLongPosition(int d) {
 		return p1.getLongPosition(d);
-	}
-
-	@Override
-	public float getFloatPosition(int d) {
-		return p1.getFloatPosition(d);
-	}
-
-	@Override
-	public double getDoublePosition(int d) {
-		return p1.getDoublePosition(d);
 	}
 
 	@Override
@@ -239,63 +165,6 @@ public class BoundAndPointSet implements NewPointSet
 		return size;
 	}
 
-	@Override
-	public BitType firstElement() {
-		return cursor().next();
-	}
-
-	@Override
-	public Object iterationOrder() {
-		return this;
-	}
-
-	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return (f == this);
-	}
-
-	@Override
-	public double realMin(int d) {
-		return min(d);
-	}
-
-	@Override
-	public void realMin(double[] min) {
-		for (int i = 0; i < n; i++) {
-			min[i] = realMin(i);
-		}
-	}
-
-	@Override
-	public void realMin(RealPositionable min) {
-		for (int i = 0; i < n; i++) {
-			min.setPosition(realMin(i), i);
-		}
-	}
-
-	@Override
-	public double realMax(int d) {
-		return max(d);
-	}
-
-	@Override
-	public void realMax(double[] max) {
-		for (int i = 0; i < n; i++) {
-			max[i] = realMax(i);
-		}
-	}
-
-	@Override
-	public void realMax(RealPositionable max) {
-		for (int i = 0; i < n; i++) {
-			max.setPosition(realMax(i), i);
-		}
-	}
-
-	@Override
-	public Iterator<BitType> iterator() {
-		return cursor();
-	}
 
 	@Override
 	public long min(int d) {
@@ -304,44 +173,9 @@ public class BoundAndPointSet implements NewPointSet
 	}
 
 	@Override
-	public void min(long[] min) {
-		for (int i = 0; i < n; i++) {
-			min[i] = min(i);
-		}
-	}
-
-	@Override
-	public void min(Positionable min) {
-		for (int i = 0; i < n; i++) {
-			min.setPosition(min(i), i);
-		}
-	}
-
-	@Override
 	public long max(int d) {
 		if (needsCalc) calcStuff();
 		return max[d];
-	}
-
-	@Override
-	public void max(long[] max) {
-		for (int i = 0; i < n; i++) {
-			max[i] = max(i);
-		}
-	}
-
-	@Override
-	public void max(Positionable max) {
-		for (int i = 0; i < n; i++) {
-			max.setPosition(max(i), i);
-		}
-	}
-
-	@Override
-	public void dimensions(long[] dimensions) {
-		for (int i = 0; i < n; i++) {
-			dimensions[i] = dimension(i);
-		}
 	}
 
 	@Override
@@ -494,18 +328,15 @@ public class BoundAndPointSet implements NewPointSet
 	/**
 	 * TODO: This was modified from BoundGeneralPointSet. There might be code reuse possible ...
 	 */
-	private final class BoundCursor<T> extends AbstractInterval implements Cursor< T >
+	private final class BoundCursor<T> extends AbstractBoundCursor< T >
 	{
-		private final RandomAccess< T > randomAccess;
-
 		private Cursor<BitType> cursor;
 		
 		private long[] tmpPos;
 		
 		public BoundCursor( final Interval interval, final RandomAccess< T > randomAccess )
 		{
-			super( interval );
-			this.randomAccess = randomAccess;
+			super( interval, randomAccess );
 			cursor = cursor();
 			tmpPos = new long[n];
 			rst();
@@ -513,15 +344,8 @@ public class BoundAndPointSet implements NewPointSet
 
 		protected BoundCursor( final BoundCursor<T> cursor )
 		{
-			super( cursor );
-			this.randomAccess = cursor.randomAccess.copyRandomAccess();
+			super( cursor, cursor.randomAccess.copyRandomAccess() );
 			this.cursor = cursor.cursor.copyCursor();
-		}
-
-		@Override
-		public T get()
-		{
-			return randomAccess.get();
 		}
 
 		@Override
@@ -553,16 +377,6 @@ public class BoundAndPointSet implements NewPointSet
 		}
 
 		@Override
-		public T next()
-		{
-			fwd();
-			return get();
-		}
-
-		@Override
-		public void remove() {}
-
-		@Override
 		public BoundCursor<T> copy()
 		{
 			return new BoundCursor<T>( this );
@@ -574,54 +388,6 @@ public class BoundAndPointSet implements NewPointSet
 			return copy();
 		}
 
-		@Override
-		public void localize( final float[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public void localize( final double[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public float getFloatPosition( final int d )
-		{
-			return randomAccess.getFloatPosition( d );
-		}
-
-		@Override
-		public double getDoublePosition( final int d )
-		{
-			return randomAccess.getDoublePosition( d );
-		}
-
-		@Override
-		public void localize( final int[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public void localize( final long[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public int getIntPosition( final int d )
-		{
-			return randomAccess.getIntPosition( d );
-		}
-
-		@Override
-		public long getLongPosition( final int d )
-		{
-			return randomAccess.getLongPosition( d );
-		}
-		
 		private void rst() {
 			cursor.reset();
 			cursor.next();
