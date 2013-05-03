@@ -48,7 +48,6 @@ import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Localizable;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.img.Img;
@@ -66,8 +65,7 @@ import net.imglib2.type.logic.BitType;
  * @author Barry DeZonia
  *
  */
-public class BoundGeneralPointSet extends AbstractInterval
-	implements Localizable, Positionable, IterableInterval<BitType>
+public class BoundGeneralPointSet extends AbstractInterval implements NewPointSet
 {
 	// -- instance fields --
 	
@@ -94,11 +92,29 @@ public class BoundGeneralPointSet extends AbstractInterval
 
 	// -- public methods --
 	
+	@Override
 	public <T> Cursor< T > bind( final RandomAccess< T > randomAccess )
 	{
 		return new BoundCursor<T>( this, randomAccess );
 	}
-	
+
+
+	@Override
+	public boolean contains(long[] point) {
+		if (point.length != n) return false;
+		for (long[] pt : points) {
+			boolean equal = true;
+			for (int i = 0; i < n; i++) {
+				if (pt[i] != point[i]) {
+					equal = false;
+					break;
+				}
+			}
+			if (equal) return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void fwd(int d) {
 		for (long[] pt : points) {
