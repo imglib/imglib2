@@ -17,6 +17,8 @@ public class OptimizeThis
 		public void set( Sampler< T > sampler );
 
 		public void setConst( T t );
+
+		public Sampler<T> getSampler();
 	}
 
 	public static interface Op< T > extends Sampler< T >
@@ -41,6 +43,11 @@ public class OptimizeThis
 			{
 				input1 = new Const< I1 >( t );
 			}
+
+			@Override
+			public Sampler<I1> getSampler() {
+				return input1;
+			}
 		};
 
 		protected Sampler< I2 > input2;
@@ -58,6 +65,11 @@ public class OptimizeThis
 			{
 				input2 = new Const< I2 >( t );
 			}
+
+			@Override
+			public Sampler<I2> getSampler() {
+				return input2;
+			}
 		};
 
 		protected Sampler< O > output;
@@ -74,6 +86,11 @@ public class OptimizeThis
 			public void setConst( final O t )
 			{
 				output = new Const< O >( t );
+			}
+
+			@Override
+			public Sampler<O> getSampler() {
+				return output;
 			}
 		};
 
@@ -201,6 +218,11 @@ public class OptimizeThis
 		public void setConst( final T t )
 		{
 			this.sampler = new Const< T >( t );
+		}
+
+		@Override
+		public Sampler<T> getSampler() {
+			return sampler;
 		}
 	}
 
