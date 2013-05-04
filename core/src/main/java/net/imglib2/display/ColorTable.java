@@ -72,7 +72,7 @@ public interface ColorTable {
 	/**
 	 * Gets an individual value from a color table with given number of bins.
 	 *
-	 * @param c The color component to query.
+	 * @param comp The color component to query.
 	 * @param bins The total number of bins.
 	 * @param bin The index into the color table.
 	 * @return The value of the table at the specified position.
