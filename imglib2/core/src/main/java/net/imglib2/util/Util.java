@@ -1203,9 +1203,9 @@ public class Util
 	/**
 	 * Checks whether n {@link IterableInterval} have the same iteration order.
 	 */
-	public static boolean equalIterationOrder( IterableInterval< ? >... intervals )
+	public static boolean equalIterationOrder( final IterableInterval< ? >... intervals )
 	{
-		Object order = intervals[ 0 ].iterationOrder();
+		final Object order = intervals[ 0 ].iterationOrder();
 		for ( int i = 1; i < intervals.length; i++ )
 		{
 			if ( !order.equals( intervals[ i ].iterationOrder() ) )
@@ -1213,5 +1213,29 @@ public class Util
 		}
 
 		return true;
+	}
+	
+	/**
+	 * Writes min(a,b) into a
+	 * 
+	 * @param a
+	 * @param b
+	 */
+	final static public void min( final double[] a, final double[] b )
+	{
+		for ( int i = 0; i < a.length; ++i )
+			if ( b[ i ] < a[ i ] ) a[ i ] = b[ i ];
+	}
+	
+	/**
+	 * Writes max(a,b) into a
+	 * 
+	 * @param a
+	 * @param b
+	 */
+	final static public void max( final double[] a, final double[] b )
+	{
+		for ( int i = 0; i < a.length; ++i )
+			if ( b[ i ] > a[ i ] ) a[ i ] = b[ i ];
 	}
 }
