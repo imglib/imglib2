@@ -66,6 +66,7 @@ public class AffineRandomAccessible< T, R extends AffineGet > extends RealTransf
 		protected AffineRandomAccess()
 		{
 			super();
+			apply();
 		}
 
 		protected AffineRandomAccess( final AffineRandomAccess a )
