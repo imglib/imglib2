@@ -60,14 +60,14 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 
 	// -- instance variables --
 
-	private Img<LongType> counts;
-	private RandomAccess<LongType> accessor;
-	private long totalValues = 0;
+	private final Img<LongType> counts;
+	private final RandomAccess<LongType> accessor;
+	private long totalValues;
 
 	// -- public api --
 
 	/**
-	 * Construct an n-dimensional counter
+	 * Construct an n-dimensional counter with the given number of bins
 	 */
 	public DiscreteFrequencyDistribution(long[] binCounts) {
 		// check inputs for issues
@@ -83,6 +83,18 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 		counts = new ArrayImgFactory<LongType>().create(binCounts, new LongType());
 
 		accessor = counts.randomAccess();
+
+		totalValues = 0;
+	}
+
+	/**
+	 * Construct an n-dimensional counter using a provided Img<LongType> to store
+	 * counts.
+	 */
+	public DiscreteFrequencyDistribution(Img<LongType> img) {
+		counts = img;
+		accessor = counts.randomAccess();
+		resetCounters();
 	}
 
 	/**
@@ -270,9 +282,7 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 
 	@Override
 	public DiscreteFrequencyDistribution copy() {
-		long[] binCounts = new long[numDimensions()];
-		dimensions(binCounts);
-		return new DiscreteFrequencyDistribution(binCounts);
+		return new DiscreteFrequencyDistribution(counts.copy());
 	}
 
 }
