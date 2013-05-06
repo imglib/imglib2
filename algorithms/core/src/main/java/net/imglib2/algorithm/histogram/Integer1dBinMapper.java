@@ -37,6 +37,9 @@
 
 package net.imglib2.algorithm.histogram;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.imglib2.type.numeric.IntegerType;
 
 /**
@@ -163,5 +166,23 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	@Override
 	public boolean hasTails() {
 		return tailBins;
+	}
+
+	public static <K extends IntegerType<K>> List<BinMapper1d<K>>
+		multiDimMappers(long[] minVals, long[] numBins, boolean[] tailBins)
+	{
+		if ((minVals.length != numBins.length) ||
+			(minVals.length != tailBins.length))
+		{
+			throw new IllegalArgumentException(
+				"multiDimMapper: differing input array sizes");
+		}
+		List<BinMapper1d<K>> binMappers = new ArrayList<BinMapper1d<K>>();
+		for (int i = 0; i < minVals.length; i++) {
+			Integer1dBinMapper<K> mapper =
+				new Integer1dBinMapper<K>(minVals[i], numBins[i], tailBins[i]);
+			binMappers.add(mapper);
+		}
+		return binMappers;
 	}
 }

@@ -73,11 +73,11 @@ public class HistogramNdTest {
 		long[] numBins = new long[] { 256, 256 };
 		boolean[] tailBins = new boolean[] { false, false };
 
-		IntegerNdBinMapperDefinition<UnsignedByteType> binMapper =
-			new IntegerNdBinMapperDefinition<UnsignedByteType>(minVals, numBins, tailBins);
+		List<BinMapper1d<UnsignedByteType>> binMappers =
+			Integer1dBinMapper.multiDimMappers(minVals, numBins, tailBins);
 
 		HistogramNd<UnsignedByteType> hist =
-			new HistogramNd<UnsignedByteType>(data, binMapper.definitions());
+			new HistogramNd<UnsignedByteType>(data, binMappers);
 
 		assertEquals(256 * 256, hist.getBinCount());
 		assertEquals(11, hist.totalCount());
@@ -147,11 +147,11 @@ public class HistogramNdTest {
 		long[] numBins = new long[] { 8, 8 };
 		boolean[] tailBins = new boolean[] { true, true };
 
-		IntegerNdBinMapperDefinition<UnsignedByteType> binMapper =
-			new IntegerNdBinMapperDefinition<UnsignedByteType>(minVals, numBins, tailBins);
+		List<BinMapper1d<UnsignedByteType>> binMappers =
+			Integer1dBinMapper.multiDimMappers(minVals, numBins, tailBins);
 
 		HistogramNd<UnsignedByteType> hist =
-			new HistogramNd<UnsignedByteType>(data, binMapper.definitions());
+			new HistogramNd<UnsignedByteType>(data, binMappers);
 
 		assertEquals(8 * 8, hist.getBinCount());
 		assertEquals(11, hist.distributionCount());
@@ -218,11 +218,11 @@ public class HistogramNdTest {
 		long[] numBins = new long[] { 5, 5 };
 		boolean[] tailBins = new boolean[] { false, false };
 
-		IntegerNdBinMapperDefinition<UnsignedByteType> binMapper =
-			new IntegerNdBinMapperDefinition<UnsignedByteType>(minVals, numBins, tailBins);
+		List<BinMapper1d<UnsignedByteType>> binMappers =
+			Integer1dBinMapper.multiDimMappers(minVals, numBins, tailBins);
 
 		HistogramNd<UnsignedByteType> hist =
-			new HistogramNd<UnsignedByteType>(data, binMapper.definitions());
+			new HistogramNd<UnsignedByteType>(data, binMappers);
 
 		assertEquals(5 * 5, hist.getBinCount());
 		assertEquals(2, hist.distributionCount());
@@ -283,10 +283,9 @@ public class HistogramNdTest {
 		double[] maxVals = new double[] { 255, 255, 255 };
 		long[] numBins = new long[] { 16, 16, 16 }; // 16^3 uses less mem than 256^3
 		boolean[] tailBins = new boolean[] { false, false, false };
-		RealNdBinMapperDefinition<IntType> mapper =
-			new RealNdBinMapperDefinition<IntType>(minVals, maxVals, numBins, tailBins);
-		HistogramNd<IntType> hist =
-			new HistogramNd<IntType>(data, mapper.definitions());
+		List<BinMapper1d<IntType>> binMappers =
+			Real1dBinMapper.multiDimMappers(minVals, maxVals, numBins, tailBins);
+		HistogramNd<IntType> hist = new HistogramNd<IntType>(data, binMappers);
 		assertNotNull(hist);
 	}
 

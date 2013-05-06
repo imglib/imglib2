@@ -37,6 +37,9 @@
 
 package net.imglib2.algorithm.histogram;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -156,6 +159,24 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 	@Override
 	public boolean hasTails() {
 		return tailBins;
+	}
+
+	public static <K extends RealType<K>> List<BinMapper1d<K>> multiDimMappers(
+		double[] minVals, double[] maxVals, long[] numBins, boolean[] tailBins)
+	{
+		if ((minVals.length != numBins.length) ||
+			(minVals.length != tailBins.length))
+		{
+			throw new IllegalArgumentException(
+				"multiDimMappers: differing input array sizes");
+		}
+		List<BinMapper1d<K>> binMappers = new ArrayList<BinMapper1d<K>>();
+		for (int i = 0; i < minVals.length; i++) {
+			Real1dBinMapper<K> mapper =
+				new Real1dBinMapper<K>(minVals[i], maxVals[i], numBins[i], tailBins[i]);
+			binMappers.add(mapper);
+		}
+		return binMappers;
 	}
 
 	// -- helpers --
