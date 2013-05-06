@@ -140,7 +140,7 @@ public class HistogramNd<T> implements Dimensions {
 	public long lowerTailCount(int dim) {
 		if (!hasTails(dim)) return 0;
 		long sum = 0;
-		Cursor<?> cursor = distrib.getLocalizingCursor();
+		Cursor<?> cursor = distrib.localizingCursor();
 		long[] binPos = new long[distrib.numDimensions()];
 		while (cursor.hasNext()) {
 			cursor.next();
@@ -156,7 +156,7 @@ public class HistogramNd<T> implements Dimensions {
 	public long lowerTailCount() {
 		if (!hasTails()) return 0;
 		long sum = 0;
-		Cursor<?> cursor = distrib.getLocalizingCursor();
+		Cursor<?> cursor = distrib.localizingCursor();
 		long[] binPos = new long[distrib.numDimensions()];
 		while (cursor.hasNext()) {
 			cursor.next();
@@ -179,7 +179,7 @@ public class HistogramNd<T> implements Dimensions {
 		if (!hasTails(dim)) return 0;
 		long dimSize = mappers.get(dim).getBinCount();
 		long sum = 0;
-		Cursor<?> cursor = distrib.getLocalizingCursor();
+		Cursor<?> cursor = distrib.localizingCursor();
 		long[] binPos = new long[distrib.numDimensions()];
 		while (cursor.hasNext()) {
 			cursor.next();
@@ -195,7 +195,7 @@ public class HistogramNd<T> implements Dimensions {
 	public long upperTailCount() {
 		if (!hasTails()) return 0;
 		long sum = 0;
-		Cursor<?> cursor = distrib.getLocalizingCursor();
+		Cursor<?> cursor = distrib.localizingCursor();
 		long[] binPos = new long[distrib.numDimensions()];
 		while (cursor.hasNext()) {
 			cursor.next();
@@ -218,7 +218,7 @@ public class HistogramNd<T> implements Dimensions {
 		boolean hasTails = hasTails(dim);
 		long dimSize = mappers.get(dim).getBinCount();
 		long sum = 0;
-		Cursor<?> cursor = distrib.getLocalizingCursor();
+		Cursor<?> cursor = distrib.localizingCursor();
 		long[] binPos = new long[distrib.numDimensions()];
 		while (cursor.hasNext()) {
 			cursor.next();
@@ -242,7 +242,7 @@ public class HistogramNd<T> implements Dimensions {
 		//   But this double counts some tail bins.
 		if (!hasTails()) return distributionCount();
 		long sum = 0;
-		Cursor<?> cursor = distrib.getLocalizingCursor();
+		Cursor<?> cursor = distrib.localizingCursor();
 		long[] binPos = new long[distrib.numDimensions()];
 		while (cursor.hasNext()) {
 			cursor.next();
@@ -267,7 +267,7 @@ public class HistogramNd<T> implements Dimensions {
 	 */
 	public long distributionCount(int dim, long dimVal) {
 		long sum = 0;
-		Cursor<?> cursor = distrib.getLocalizingCursor();
+		Cursor<?> cursor = distrib.localizingCursor();
 		long[] binPos = new long[distrib.numDimensions()];
 		while (cursor.hasNext()) {
 			cursor.next();

@@ -37,10 +37,16 @@
 
 package net.imglib2.algorithm.histogram;
 
+import java.util.Iterator;
+
 import net.imglib2.Cursor;
-import net.imglib2.Dimensions;
+import net.imglib2.Interval;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
+import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.integer.LongType;
 
@@ -50,7 +56,7 @@ import net.imglib2.type.numeric.integer.LongType;
  * 
  * @author Barry DeZonia
  */
-public class DiscreteFrequencyDistribution implements Dimensions {
+public class DiscreteFrequencyDistribution implements Img<LongType> {
 
 	// -- instance variables --
 
@@ -77,30 +83,6 @@ public class DiscreteFrequencyDistribution implements Dimensions {
 		counts = new ArrayImgFactory<LongType>().create(binCounts, new LongType());
 
 		accessor = counts.randomAccess();
-	}
-
-	/**
-	 * Returns the number of dimensions of the distribution.
-	 */
-	@Override
-	public int numDimensions() {
-		return counts.numDimensions();
-	}
-
-	/**
-	 * Returns the dimensional size of the specified axis of the distribution.
-	 */
-	@Override
-	public long dimension(int d) {
-		return counts.dimension(d);
-	}
-
-	/**
-	 * Gets the dimensional sizes of all the axes of the distribution.
-	 */
-	@Override
-	public void dimensions(long[] dims) {
-		counts.dimensions(dims);
 	}
 
 	/**
@@ -149,11 +131,139 @@ public class DiscreteFrequencyDistribution implements Dimensions {
 		return totalValues;
 	}
 
-	/**
-	 * Returns a localizing cursor that can be used to iterate the bins and return
-	 * their position.
-	 */
-	public Cursor<?> getLocalizingCursor() {
+	// -- Img methods --
+
+	@Override
+	public RandomAccess<LongType> randomAccess() {
+		return counts.randomAccess();
+	}
+
+	@Override
+	public RandomAccess<LongType> randomAccess(Interval interval) {
+		return counts.randomAccess(interval);
+	}
+
+	@Override
+	public int numDimensions() {
+		return counts.numDimensions();
+	}
+
+	@Override
+	public long min(int d) {
+		return counts.min(d);
+	}
+
+	@Override
+	public void min(long[] min) {
+		counts.min(min);
+	}
+
+	@Override
+	public void min(Positionable min) {
+		counts.min(min);
+	}
+
+	@Override
+	public long max(int d) {
+		return counts.max(d);
+	}
+
+	@Override
+	public void max(long[] max) {
+		counts.max(max);
+	}
+
+	@Override
+	public void max(Positionable max) {
+		counts.max(max);
+	}
+
+	@Override
+	public double realMin(int d) {
+		return counts.realMin(d);
+	}
+
+	@Override
+	public void realMin(double[] min) {
+		counts.realMin(min);
+	}
+
+	@Override
+	public void realMin(RealPositionable min) {
+		counts.realMin(min);
+	}
+
+	@Override
+	public double realMax(int d) {
+		return counts.realMax(d);
+	}
+
+	@Override
+	public void realMax(double[] max) {
+		counts.realMax(max);
+	}
+
+	@Override
+	public void realMax(RealPositionable max) {
+		counts.realMax(max);
+	}
+
+	@Override
+	public void dimensions(long[] dimensions) {
+		counts.dimensions(dimensions);
+	}
+
+	@Override
+	public long dimension(int d) {
+		return counts.dimension(d);
+	}
+
+	@Override
+	public Cursor<LongType> cursor() {
+		return counts.cursor();
+	}
+
+	@Override
+	public Cursor<LongType> localizingCursor() {
 		return counts.localizingCursor();
 	}
+
+	@Override
+	public long size() {
+		return counts.size();
+	}
+
+	@Override
+	public LongType firstElement() {
+		return counts.firstElement();
+	}
+
+	@Override
+	public Object iterationOrder() {
+		return counts.iterationOrder();
+	}
+
+	@Override
+	@Deprecated
+	public boolean equalIterationOrder(IterableRealInterval<?> f) {
+		return counts.equalIterationOrder(f);
+	}
+
+	@Override
+	public Iterator<LongType> iterator() {
+		return counts.iterator();
+	}
+
+	@Override
+	public ImgFactory<LongType> factory() {
+		return counts.factory();
+	}
+
+	@Override
+	public Img<LongType> copy() {
+		long[] binCounts = new long[numDimensions()];
+		dimensions(binCounts);
+		return new DiscreteFrequencyDistribution(binCounts);
+	}
+
 }
