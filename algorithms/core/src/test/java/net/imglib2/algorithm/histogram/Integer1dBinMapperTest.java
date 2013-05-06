@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.histogram;
+package net.imglib2.algorithm.histogram;
 
 import static org.junit.Assert.assertEquals;
 import net.imglib2.type.numeric.integer.IntType;

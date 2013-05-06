@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.histogram;
+package net.imglib2.algorithm.histogram;
 
 import net.imglib2.Dimensions;
 
