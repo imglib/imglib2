@@ -94,11 +94,6 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 	// -- BinMapper methods --
 
 	@Override
-	public int numDimensions() {
-		return 1;
-	}
-
-	@Override
 	public long getBinCount() {
 		return bins;
 	}

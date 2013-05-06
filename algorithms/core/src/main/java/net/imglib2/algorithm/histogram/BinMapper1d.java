@@ -37,12 +37,11 @@
 
 package net.imglib2.algorithm.histogram;
 
-import net.imglib2.EuclideanSpace;
 
 /**
  * @author Barry DeZonia
  */
-public interface BinMapper1d<T> extends EuclideanSpace {
+public interface BinMapper1d<T> {
 
 	/**
 	 * Returns true if this bin mapping has bins on the ends of the distribution
@@ -101,4 +100,5 @@ public interface BinMapper1d<T> extends EuclideanSpace {
 	 * @param binPos Bin number of interest
 	 */
 	boolean includesLowerBound(long binPos);
+
 }

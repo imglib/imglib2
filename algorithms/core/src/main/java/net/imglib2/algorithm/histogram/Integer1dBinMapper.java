@@ -89,11 +89,6 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	// -- BinMapper methods --
 
 	@Override
-	public int numDimensions() {
-		return 1;
-	}
-
-	@Override
 	public long getBinCount() {
 		return bins;
 	}
