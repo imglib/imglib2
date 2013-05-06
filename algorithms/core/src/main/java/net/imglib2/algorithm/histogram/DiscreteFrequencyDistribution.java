@@ -125,6 +125,15 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	}
 
 	/**
+	 * Decrements the frequency count of a specified bin.
+	 */
+	public void decrement(long[] binPos) {
+		accessor.setPosition(binPos);
+		accessor.get().dec();
+		totalValues--;
+	}
+
+	/**
 	 * Returns the total number of values counted by this distribution.
 	 */
 	public long totalValues() {
@@ -260,7 +269,7 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	}
 
 	@Override
-	public Img<LongType> copy() {
+	public DiscreteFrequencyDistribution copy() {
 		long[] binCounts = new long[numDimensions()];
 		dimensions(binCounts);
 		return new DiscreteFrequencyDistribution(binCounts);
