@@ -55,12 +55,24 @@ public class Histogram1d<T> implements Dimensions {
 	// -- instance variables --
 
 	private BinMapper1d<T> mapper;
-	private Iterable<T> data;
 	private DiscreteFrequencyDistribution distrib;
 	private long[] pos;
 	private long ignoredCount;
 
 	// -- constructor --
+
+	/**
+	 * Construct a histogram from a bin mapping algorithm. Use countData() to
+	 * populate it.
+	 * 
+	 * @param mapper The algorithm used to map values to bins
+	 */
+	public Histogram1d(BinMapper1d<T> mapper) {
+		this.mapper = mapper;
+		this.distrib =
+			new DiscreteFrequencyDistribution(new long[] { mapper.getBinCount() });
+		this.pos = new long[1];
+	}
 
 	/**
 	 * Construct a histogram from an iterable set of data and a bin mapping
@@ -70,12 +82,8 @@ public class Histogram1d<T> implements Dimensions {
 	 * @param mapper The algorithm used to map values to bins
 	 */
 	public Histogram1d(Iterable<T> data, BinMapper1d<T> mapper) {
-		this.data = data;
-		this.mapper = mapper;
-		this.distrib =
-			new DiscreteFrequencyDistribution(new long[] { mapper.getBinCount() });
-		this.pos = new long[1];
-		populateBins();
+		this(mapper);
+		init(data);
 	}
 
 	// -- public api --
@@ -218,14 +226,6 @@ public class Histogram1d<T> implements Dimensions {
 	}
 
 	/**
-	 * Recalculates the underlying bin distribution. Use this if the iterable data
-	 * source has changed after this histogram was built.
-	 */
-	public void recalc() {
-		populateBins();
-	}
-
-	/**
 	 * Gets the value associated with the center of a bin.
 	 * 
 	 * @param binPos The bin number of interest
@@ -345,11 +345,52 @@ public class Histogram1d<T> implements Dimensions {
 		distrib.dimensions(dims);
 	}
 
+	/**
+	 * Get the discrete frequency distribution associated with this histogram.
+	 */
+	public DiscreteFrequencyDistribution dfd() {
+		return distrib;
+	}
+
+	/**
+	 * Counts the data contained in the given data source using the underlying bin
+	 * distribution.
+	 * 
+	 * @param data The total data to count
+	 */
+	public void countData(Iterable<T> data) {
+		init(data);
+	}
+
+	/**
+	 * Counts additional data contained in a given iterable collection. One can
+	 * use this to update an existing histogram with a subset of values.
+	 * 
+	 * @param data The new data to count
+	 */
+	public void addData(Iterable<T> data) {
+		add(data);
+	}
+
+	/**
+	 * Uncounts some original data contained in a given iterable collection. One
+	 * can use this to update an existing histogram with a subset of values.
+	 * 
+	 * @param data The old data to uncount
+	 */
+	public void subtractData(Iterable<T> data) {
+		subtract(data);
+	}
+
 	// -- helpers --
 
-	private void populateBins() {
+	private void init(Iterable<T> data) {
 		distrib.resetCounters();
 		ignoredCount = 0;
+		add(data);
+	}
+
+	private void add(Iterable<T> data) {
 		for (T value : data) {
 			long bin = mapper.map(value);
 			if (bin == Long.MIN_VALUE || bin == Long.MAX_VALUE) {
@@ -361,4 +402,18 @@ public class Histogram1d<T> implements Dimensions {
 			}
 		}
 	}
+
+	private void subtract(Iterable<T> data) {
+		for (T value : data) {
+			long bin = mapper.map(value);
+			if (bin == Long.MIN_VALUE || bin == Long.MAX_VALUE) {
+				ignoredCount--;
+			}
+			else {
+				pos[0] = bin;
+				distrib.decrement(pos);
+			}
+		}
+	}
+
 }

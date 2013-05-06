@@ -64,12 +64,21 @@ public class HistogramNd<T> implements Dimensions {
 
 	private List<BinMapper1d<T>> mappers;
 	private DiscreteFrequencyDistribution distrib;
-	private Iterable<List<T>> iterable;
-	private List<Iterable<T>> iterables;
 	private long[] pos;
 	private long ignoredCount;
 
 	// -- constructors --
+
+	/**
+	 * Construct a histogram from a list of bin mapping algorithms. Use
+	 * countData() to populate it.
+	 * 
+	 * @param mappers The algorithms used to map values to bins
+	 */
+	public HistogramNd(List<BinMapper1d<T>> mappers) {
+		this.mappers = mappers;
+		allocate();
+	}
 
 	/**
 	 * Construct a histogram from an iterable set of data and a list of bin
@@ -80,10 +89,8 @@ public class HistogramNd<T> implements Dimensions {
 	 * @param mappers The algorithms used to map values to bins
 	 */
 	public HistogramNd(Iterable<List<T>> data, List<BinMapper1d<T>> mappers) {
-		this.iterable = data;
-		this.iterables = null;
-		this.mappers = mappers;
-		init();
+		this(mappers);
+		init(data);
 	}
 	
 	/**
@@ -95,23 +102,10 @@ public class HistogramNd<T> implements Dimensions {
 	 * @param mappers The algorithms used to map values to bins
 	 */
 	public HistogramNd(List<Iterable<T>> data, List<BinMapper1d<T>> mappers) {
-		this.iterable = null;
-		this.iterables = data;
-		this.mappers = mappers;
-		init();
+		this(mappers);
+		init(data);
 	}
 
-	/** constructor helper */
-	private void init() {
-		long[] dims = new long[mappers.size()];
-		for (int i = 0; i < mappers.size(); i++) {
-			dims[i] = mappers.get(i).getBinCount();
-		}
-		distrib = new DiscreteFrequencyDistribution(dims);
-		pos = new long[mappers.size()];
-		populateBins();
-	}
-	
 	// -- public api --
 
 	/**
@@ -389,14 +383,6 @@ public class HistogramNd<T> implements Dimensions {
 	}
 
 	/**
-	 * Recalculates the underlying bin distribution. Use this if the iterable data
-	 * sources have changed after this histogram was built.
-	 */
-	public void recalc() {
-		populateBins();
-	}
-
-	/**
 	 * Gets the values associated with the center of a bin.
 	 * 
 	 * @param binPos The bin index of interest
@@ -577,17 +563,89 @@ public class HistogramNd<T> implements Dimensions {
 		distrib.dimensions(dims);
 	}
 
-	// -- helpers --
-
-	private void populateBins() {
-		if (iterable != null) populateBinsFromSingleIterable();
-		else populateBinsFromListOfIterables();
+	/**
+	 * Get the discrete frequency distribution associated with this histogram.
+	 */
+	public DiscreteFrequencyDistribution dfd() {
+		return distrib;
 	}
 
-	private void populateBinsFromSingleIterable() {
+	/**
+	 * Counts the data contained in the given data source using the underlying bin
+	 * distribution.
+	 * 
+	 * @param data The total data to count
+	 */
+	public void countData(Iterable<List<T>> data) {
+		init(data);
+	}
+
+	/**
+	 * Counts the data contained in the given data source using the underlying bin
+	 * distribution.
+	 * 
+	 * @param data The total data to count
+	 */
+	public void countData(List<Iterable<T>> data) {
+		init(data);
+	}
+
+	/**
+	 * Counts additional data contained in a given iterable collection. One can
+	 * use this to update an existing histogram with a subset of values.
+	 * 
+	 * @param data The new data to count
+	 */
+	public void addData(Iterable<List<T>> data) {
+		add(data);
+	}
+
+	/**
+	 * Counts additional data contained in a given iterable collection. One can
+	 * use this to update an existing histogram with a subset of values.
+	 * 
+	 * @param data The new data to count
+	 */
+	public void addData(List<Iterable<T>> data) {
+		add(data);
+	}
+
+	/**
+	 * Uncounts some original data contained in a given iterable collection. One
+	 * can use this to update an existing histogram with a subset of values.
+	 * 
+	 * @param data The old data to uncount
+	 */
+	public void subtractData(Iterable<List<T>> data) {
+		subtract(data);
+	}
+
+	/**
+	 * Uncounts some original data contained in a given iterable collection. One
+	 * can use this to update an existing histogram with a subset of values.
+	 * 
+	 * @param data The old data to uncount
+	 */
+	public void subtractData(List<Iterable<T>> data) {
+		subtract(data);
+	}
+
+	// -- helpers --
+
+	private void init(Iterable<List<T>> data) {
 		distrib.resetCounters();
 		ignoredCount = 0;
-		Iterator<List<T>> iter = iterable.iterator();
+		add(data);
+	}
+
+	private void init(List<Iterable<T>> data) {
+		distrib.resetCounters();
+		ignoredCount = 0;
+		add(data);
+	}
+
+	private void add(Iterable<List<T>> data) {
+		Iterator<List<T>> iter = data.iterator();
 		while (iter.hasNext()) {
 			List<T> values = iter.next();
 			map(values, pos);
@@ -603,13 +661,11 @@ public class HistogramNd<T> implements Dimensions {
 		}
 	}
 
-	private void populateBinsFromListOfIterables() {
-		distrib.resetCounters();
-		ignoredCount = 0;
+	private void add(List<Iterable<T>> data) {
 		List<T> vals = new ArrayList<T>(mappers.size());
 		List<Iterator<T>> iters = new ArrayList<Iterator<T>>();
-		for (int i = 0; i < iterables.size(); i++) {
-			iters.add(iterables.get(i).iterator());
+		for (int i = 0; i < data.size(); i++) {
+			iters.add(data.get(i).iterator());
 			vals.add(null);
 		}
 		boolean hasNext = true;
@@ -634,6 +690,64 @@ public class HistogramNd<T> implements Dimensions {
 			}
 		}
 		while (hasNext);
+	}
+
+	private void subtract(Iterable<List<T>> data) {
+		Iterator<List<T>> iter = data.iterator();
+		while (iter.hasNext()) {
+			List<T> values = iter.next();
+			map(values, pos);
+			boolean ignored = false;
+			for (int i = 0; i < pos.length; i++) {
+				if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
+					ignored = true;
+					break;
+				}
+			}
+			if (ignored) ignoredCount--;
+			else distrib.decrement(pos);
+		}
+	}
+
+	private void subtract(List<Iterable<T>> data) {
+		List<T> vals = new ArrayList<T>(mappers.size());
+		List<Iterator<T>> iters = new ArrayList<Iterator<T>>();
+		for (int i = 0; i < data.size(); i++) {
+			iters.add(data.get(i).iterator());
+			vals.add(null);
+		}
+		boolean hasNext = true;
+		do {
+			for (int i = 0; i < iters.size(); i++) {
+				if (!iters.get(i).hasNext()) hasNext = false;
+			}
+			if (hasNext) {
+				for (int i = 0; i < iters.size(); i++) {
+					vals.set(i, iters.get(i).next());
+				}
+				map(vals, pos);
+				boolean ignored = false;
+				for (int i = 0; i < pos.length; i++) {
+					if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
+						ignored = true;
+						break;
+					}
+				}
+				if (ignored) ignoredCount--;
+				else distrib.decrement(pos);
+			}
+		}
+		while (hasNext);
+	}
+
+	/** constructor helper */
+	private void allocate() {
+		long[] dims = new long[mappers.size()];
+		for (int i = 0; i < mappers.size(); i++) {
+			dims[i] = mappers.get(i).getBinCount();
+		}
+		distrib = new DiscreteFrequencyDistribution(dims);
+		pos = new long[mappers.size()];
 	}
 
 }
