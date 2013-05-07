@@ -77,7 +77,12 @@ public class HistogramNd<T> implements Dimensions {
 	 */
 	public HistogramNd(List<BinMapper1d<T>> mappers) {
 		this.mappers = mappers;
-		allocate();
+		long[] dims = new long[mappers.size()];
+		for (int i = 0; i < mappers.size(); i++) {
+			dims[i] = mappers.get(i).getBinCount();
+		}
+		distrib = new DiscreteFrequencyDistribution(dims);
+		pos = new long[mappers.size()];
 	}
 
 	/**
@@ -645,6 +650,22 @@ public class HistogramNd<T> implements Dimensions {
 	}
 
 	private void add(Iterable<List<T>> data) {
+		modifyCounts(data, new Incrementer());
+	}
+
+	private void add(List<Iterable<T>> data) {
+		modifyCounts(data, new Incrementer());
+	}
+
+	private void subtract(Iterable<List<T>> data) {
+		modifyCounts(data, new Decrementer());
+	}
+
+	private void subtract(List<Iterable<T>> data) {
+		modifyCounts(data, new Decrementer());
+	}
+
+	private void modifyCounts(Iterable<List<T>> data, Counter counter) {
 		Iterator<List<T>> iter = data.iterator();
 		while (iter.hasNext()) {
 			List<T> values = iter.next();
@@ -656,12 +677,11 @@ public class HistogramNd<T> implements Dimensions {
 					break;
 				}
 			}
-			if (ignored) ignoredCount++;
-			else distrib.increment(pos);
+			counter.count(pos, ignored);
 		}
 	}
 
-	private void add(List<Iterable<T>> data) {
+	private void modifyCounts(List<Iterable<T>> data, Counter counter) {
 		List<T> vals = new ArrayList<T>(mappers.size());
 		List<Iterator<T>> iters = new ArrayList<Iterator<T>>();
 		for (int i = 0; i < data.size(); i++) {
@@ -685,69 +705,33 @@ public class HistogramNd<T> implements Dimensions {
 						break;
 					}
 				}
-				if (ignored) ignoredCount++;
-				else distrib.increment(pos);
+				counter.count(pos, ignored);
 			}
 		}
 		while (hasNext);
 	}
 
-	private void subtract(Iterable<List<T>> data) {
-		Iterator<List<T>> iter = data.iterator();
-		while (iter.hasNext()) {
-			List<T> values = iter.next();
-			map(values, pos);
-			boolean ignored = false;
-			for (int i = 0; i < pos.length; i++) {
-				if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
-					ignored = true;
-					break;
-				}
-			}
+	private interface Counter {
+
+		void count(long[] pos, boolean ignored);
+	}
+
+	private class Decrementer implements Counter {
+
+		@Override
+		public void count(long[] pos, boolean ignored) {
 			if (ignored) ignoredCount--;
 			else distrib.decrement(pos);
 		}
 	}
 
-	private void subtract(List<Iterable<T>> data) {
-		List<T> vals = new ArrayList<T>(mappers.size());
-		List<Iterator<T>> iters = new ArrayList<Iterator<T>>();
-		for (int i = 0; i < data.size(); i++) {
-			iters.add(data.get(i).iterator());
-			vals.add(null);
-		}
-		boolean hasNext = true;
-		do {
-			for (int i = 0; i < iters.size(); i++) {
-				if (!iters.get(i).hasNext()) hasNext = false;
-			}
-			if (hasNext) {
-				for (int i = 0; i < iters.size(); i++) {
-					vals.set(i, iters.get(i).next());
-				}
-				map(vals, pos);
-				boolean ignored = false;
-				for (int i = 0; i < pos.length; i++) {
-					if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
-						ignored = true;
-						break;
-					}
-				}
-				if (ignored) ignoredCount--;
-				else distrib.decrement(pos);
-			}
-		}
-		while (hasNext);
-	}
+	private class Incrementer implements Counter {
 
-	/** constructor helper */
-	private void allocate() {
-		long[] dims = new long[mappers.size()];
-		for (int i = 0; i < mappers.size(); i++) {
-			dims[i] = mappers.get(i).getBinCount();
+		@Override
+		public void count(long[] pos, boolean ignored) {
+			if (ignored) ignoredCount++;
+			else distrib.increment(pos);
 		}
-		distrib = new DiscreteFrequencyDistribution(dims);
-		pos = new long[mappers.size()];
 	}
 
 }
