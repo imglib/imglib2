@@ -649,18 +649,22 @@ public class HistogramNd<T> implements Dimensions {
 		add(data);
 	}
 
+	@SuppressWarnings("synthetic-access")
 	private void add(Iterable<List<T>> data) {
 		modifyCounts(data, new Incrementer());
 	}
 
+	@SuppressWarnings("synthetic-access")
 	private void add(List<Iterable<T>> data) {
 		modifyCounts(data, new Incrementer());
 	}
 
+	@SuppressWarnings("synthetic-access")
 	private void subtract(Iterable<List<T>> data) {
 		modifyCounts(data, new Decrementer());
 	}
 
+	@SuppressWarnings("synthetic-access")
 	private void subtract(List<Iterable<T>> data) {
 		modifyCounts(data, new Decrementer());
 	}
@@ -718,19 +722,21 @@ public class HistogramNd<T> implements Dimensions {
 
 	private class Decrementer implements Counter {
 
+		@SuppressWarnings("synthetic-access")
 		@Override
-		public void count(long[] pos, boolean ignored) {
+		public void count(long[] position, boolean ignored) {
 			if (ignored) ignoredCount--;
-			else distrib.decrement(pos);
+			else distrib.decrement(position);
 		}
 	}
 
 	private class Incrementer implements Counter {
 
+		@SuppressWarnings("synthetic-access")
 		@Override
-		public void count(long[] pos, boolean ignored) {
+		public void count(long[] position, boolean ignored) {
 			if (ignored) ignoredCount++;
-			else distrib.increment(pos);
+			else distrib.increment(position);
 		}
 	}
 
