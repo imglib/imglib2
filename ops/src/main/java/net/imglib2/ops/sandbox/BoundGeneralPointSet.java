@@ -48,7 +48,6 @@ import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Localizable;
-import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.img.Img;
@@ -66,14 +65,13 @@ import net.imglib2.type.logic.BitType;
  * @author Barry DeZonia
  *
  */
-public class BoundGeneralPointSet extends AbstractInterval
-	implements Localizable, Positionable, IterableInterval<BitType>
+public class BoundGeneralPointSet extends AbstractInterval implements NewPointSet
 {
 	// -- instance fields --
 	
 	private final List<long[]> points;
 	private final long[] origin;
-	private Img<BitType> bools;
+	private final Img<BitType> bools;
 	
 	// -- constructors --
 
@@ -94,11 +92,29 @@ public class BoundGeneralPointSet extends AbstractInterval
 
 	// -- public methods --
 	
+	@Override
 	public <T> Cursor< T > bind( final RandomAccess< T > randomAccess )
 	{
 		return new BoundCursor<T>( this, randomAccess );
 	}
-	
+
+
+	@Override
+	public boolean contains(long[] point) {
+		if (point.length != n) return false;
+		for (long[] pt : points) {
+			boolean equal = true;
+			for (int i = 0; i < n; i++) {
+				if (pt[i] != point[i]) {
+					equal = false;
+					break;
+				}
+			}
+			if (equal) return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void fwd(int d) {
 		for (long[] pt : points) {
@@ -472,30 +488,20 @@ public class BoundGeneralPointSet extends AbstractInterval
 	/**
 	 * TODO: This was modified from RandomAccessibleIntervalCursor. There might be code reuse possible ...
 	 */
-	private final class BoundCursor<T> extends AbstractInterval implements Cursor< T >
+	private final class BoundCursor<T> extends AbstractBoundCursor< T >
 	{
-		private final RandomAccess< T > randomAccess;
-
 		private int index;
 		
 		public BoundCursor( final Interval interval, final RandomAccess< T > randomAccess )
 		{
-			super( interval );
-			this.randomAccess = randomAccess;
+			super( interval, randomAccess );
 			rst();
 		}
 
 		protected BoundCursor( final BoundCursor<T> cursor )
 		{
-			super( cursor );
-			this.randomAccess = cursor.randomAccess.copyRandomAccess();
+			super( cursor, cursor.randomAccess.copyRandomAccess() );
 			index = cursor.index;
-		}
-
-		@Override
-		public T get()
-		{
-			return randomAccess.get();
 		}
 
 		@Override
@@ -521,18 +527,8 @@ public class BoundGeneralPointSet extends AbstractInterval
 		@Override
 		public boolean hasNext()
 		{
-			return index < points.size();
+			return index < points.size()-1;
 		}
-
-		@Override
-		public T next()
-		{
-			fwd();
-			return get();
-		}
-
-		@Override
-		public void remove() {}
 
 		@Override
 		public BoundCursor<T> copy()
@@ -546,54 +542,6 @@ public class BoundGeneralPointSet extends AbstractInterval
 			return copy();
 		}
 
-		@Override
-		public void localize( final float[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public void localize( final double[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public float getFloatPosition( final int d )
-		{
-			return randomAccess.getFloatPosition( d );
-		}
-
-		@Override
-		public double getDoublePosition( final int d )
-		{
-			return randomAccess.getDoublePosition( d );
-		}
-
-		@Override
-		public void localize( final int[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public void localize( final long[] position )
-		{
-			randomAccess.localize( position );
-		}
-
-		@Override
-		public int getIntPosition( final int d )
-		{
-			return randomAccess.getIntPosition( d );
-		}
-
-		@Override
-		public long getLongPosition( final int d )
-		{
-			return randomAccess.getLongPosition( d );
-		}
-		
 		private void rst() {
 			index = -1;
 			randomAccess.setPosition( origin );
