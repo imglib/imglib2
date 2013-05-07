@@ -73,11 +73,10 @@ public class HistogramNdTest {
 		long[] numBins = new long[] { 256, 256 };
 		boolean[] tailBins = new boolean[] { false, false };
 
-		List<BinMapper1d<UnsignedByteType>> binMappers =
-			Integer1dBinMapper.multiDimMappers(minVals, numBins, tailBins);
-
 		HistogramNd<UnsignedByteType> hist =
-			new HistogramNd<UnsignedByteType>(data, binMappers);
+			Integer1dBinMapper.histogramNd(minVals, numBins, tailBins);
+
+		hist.countData(data);
 
 		assertEquals(256 * 256, hist.getBinCount());
 		assertEquals(11, hist.totalCount());
@@ -147,11 +146,10 @@ public class HistogramNdTest {
 		long[] numBins = new long[] { 8, 8 };
 		boolean[] tailBins = new boolean[] { true, true };
 
-		List<BinMapper1d<UnsignedByteType>> binMappers =
-			Integer1dBinMapper.multiDimMappers(minVals, numBins, tailBins);
-
 		HistogramNd<UnsignedByteType> hist =
-			new HistogramNd<UnsignedByteType>(data, binMappers);
+			Integer1dBinMapper.histogramNd(minVals, numBins, tailBins);
+
+		hist.countData(data);
 
 		assertEquals(8 * 8, hist.getBinCount());
 		assertEquals(11, hist.distributionCount());
@@ -218,11 +216,10 @@ public class HistogramNdTest {
 		long[] numBins = new long[] { 5, 5 };
 		boolean[] tailBins = new boolean[] { false, false };
 
-		List<BinMapper1d<UnsignedByteType>> binMappers =
-			Integer1dBinMapper.multiDimMappers(minVals, numBins, tailBins);
-
 		HistogramNd<UnsignedByteType> hist =
-			new HistogramNd<UnsignedByteType>(data, binMappers);
+			Integer1dBinMapper.histogramNd(minVals, numBins, tailBins);
+
+		hist.countData(data);
 
 		assertEquals(5 * 5, hist.getBinCount());
 		assertEquals(2, hist.distributionCount());
@@ -283,9 +280,9 @@ public class HistogramNdTest {
 		double[] maxVals = new double[] { 255, 255, 255 };
 		long[] numBins = new long[] { 16, 16, 16 }; // 16^3 uses less mem than 256^3
 		boolean[] tailBins = new boolean[] { false, false, false };
-		List<BinMapper1d<IntType>> binMappers =
-			Real1dBinMapper.multiDimMappers(minVals, maxVals, numBins, tailBins);
-		HistogramNd<IntType> hist = new HistogramNd<IntType>(data, binMappers);
+		HistogramNd<IntType> hist =
+			Real1dBinMapper.histogramNd(minVals, maxVals, numBins, tailBins);
+		hist.countData(data);
 		assertNotNull(hist);
 	}
 

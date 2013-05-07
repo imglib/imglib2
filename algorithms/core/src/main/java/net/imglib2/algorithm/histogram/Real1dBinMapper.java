@@ -157,17 +157,17 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 	}
 
 	/**
-	 * This is a convenience method for creating a set of real 1-d based bin
-	 * mappers. {@link HistogramNd}s can be constructed from such sets. The inputs
-	 * should all have n entries for an n-d set of mappers.
+	 * This is a convenience method for creating a {@link HistogramNd} from inputs
+	 * that describe a set of real 1-d based bin mappers. The inputs should all
+	 * have n entries for an n-d set of mappers.
 	 * 
 	 * @param minVals The minimum bin values for each dimension
 	 * @param maxVals The maximum bin values for each dimension
 	 * @param numBins The total bin count for each dimension
 	 * @param tailBins Flags per dimension for whether to include tail bins
-	 * @return The set of 1-d bin mappers
+	 * @return An unpopulated HistogramNd
 	 */
-	public static <K extends RealType<K>> List<BinMapper1d<K>> multiDimMappers(
+	public static <K extends RealType<K>> HistogramNd<K> histogramNd(
 		double[] minVals, double[] maxVals, long[] numBins, boolean[] tailBins)
 	{
 		if ((minVals.length != numBins.length) ||
@@ -182,7 +182,7 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 				new Real1dBinMapper<K>(minVals[i], maxVals[i], numBins[i], tailBins[i]);
 			binMappers.add(mapper);
 		}
-		return binMappers;
+		return new HistogramNd<K>(binMappers);
 	}
 
 	// -- helpers --
