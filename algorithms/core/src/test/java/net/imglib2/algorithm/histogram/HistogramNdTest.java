@@ -284,6 +284,7 @@ public class HistogramNdTest {
 			Real1dBinMapper.histogramNd(minVals, maxVals, numBins, tailBins);
 		hist.countData(data);
 		assertNotNull(hist);
+		assertEquals(20000, hist.distributionCount());
 	}
 
 	private List<UnsignedByteType> getData1() {
