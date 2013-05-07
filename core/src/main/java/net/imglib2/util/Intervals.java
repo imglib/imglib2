@@ -97,7 +97,7 @@ public class Intervals
 	 *            specify the dimensions of the interval.
 	 * @return interval with the specified boundaries
 	 */
-	public static FinalRealInterval createMinSize( final double... minsize )
+	public static FinalRealInterval createMinSizeReal( final double... minsize )
 	{
 		return FinalRealInterval.createMinSize( minsize );
 	}
@@ -114,7 +114,7 @@ public class Intervals
 	 *            specify the maximum of the interval.
 	 * @return interval with the specified boundaries
 	 */
-	public static FinalRealInterval createMinMax( final double... minmax )
+	public static FinalRealInterval createMinMaxReal( final double... minmax )
 	{
 		return FinalRealInterval.createMinMax( minmax );
 	}
