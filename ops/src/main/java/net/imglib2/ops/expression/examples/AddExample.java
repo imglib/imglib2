@@ -91,7 +91,7 @@ public class AddExample
 	}
 
 	/**
-	 * Create a pixelwise binary operation on inputs i1 and i2 that computes ( ( 100 + i1 ) + i1 ).
+	 * Create a pixelwise binary operation on inputs i1 and i2 that computes ( ( 100 + i1 ) + i2 ).
 	 * Lift it to a binary operation on images using a {@link BinaryIterate} operation and run it on the input and output images.
 	 */
 	public static void addExample3( final Img< FloatType > inputA, final Img< FloatType > inputB, final Img< FloatType > output )
@@ -105,7 +105,7 @@ public class AddExample
 	}
 
 	/**
-	 * Create a pixelwise binary operation on inputs i1 and i2 that computes ( ( 100 + i1 ) + i1 ).
+	 * Create a pixelwise binary operation on inputs i1 and i2 that computes ( ( 100 + i1 ) + i2 ).
 	 * Lift it to a binary operation on images using a {@link BinaryIterate} operation and run it on the input and output images.
 	 *
 	 * Here, the lifted operation is constructed in one line, using {@link PortRef} objects as references to ports of the inner operations.
