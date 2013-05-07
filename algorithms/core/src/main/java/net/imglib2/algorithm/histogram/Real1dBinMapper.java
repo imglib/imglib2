@@ -156,6 +156,17 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 		return tailBins;
 	}
 
+	/**
+	 * This is a convenience method for creating a set of real 1-d based bin
+	 * mappers. {@link HistogramNd}s can be constructed from such sets. The inputs
+	 * should all have n entries for an n-d set of mappers.
+	 * 
+	 * @param minVals The minimum bin values for each dimension
+	 * @param maxVals The maximum bin values for each dimension
+	 * @param numBins The total bin count for each dimension
+	 * @param tailBins Flags per dimension for whether to include tail bins
+	 * @return The set of 1-d bin mappers
+	 */
 	public static <K extends RealType<K>> List<BinMapper1d<K>> multiDimMappers(
 		double[] minVals, double[] maxVals, long[] numBins, boolean[] tailBins)
 	{
