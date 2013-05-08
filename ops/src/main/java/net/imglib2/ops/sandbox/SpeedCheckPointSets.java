@@ -56,7 +56,7 @@ import net.imglib2.util.BenchmarkHelper;
  */
 public class SpeedCheckPointSets {
 
-	private static final long SIZE = 700;
+	private static final long SIZE = 800;
 	
 	// Test how quickly you can iterate and grab pixels from images using the
 	// old and new point set implementations
@@ -95,10 +95,11 @@ public class SpeedCheckPointSets {
 		System.out.println("Iterate old general point set");
 		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
 		{
+
+			GeneralPointSet ps = new GeneralPointSet(pts1.get(0), pts1);
 			@Override
 			public void run()
 			{
-				GeneralPointSet ps = new GeneralPointSet(pts1.get(0), pts1);
 				PointSetIterator iter = ps.iterator();
 				while (iter.hasNext()) {
 					iter.next();
@@ -109,10 +110,11 @@ public class SpeedCheckPointSets {
 		System.out.println("Iterate new general point set");
 		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
 		{
+
+			BoundGeneralPointSet ps = new BoundGeneralPointSet(pts2);
 			@Override
 			public void run()
 			{
-				BoundGeneralPointSet ps = new BoundGeneralPointSet(pts2);
 				Cursor<?> cursor = ps.cursor();
 				while (cursor.hasNext()) {
 					cursor.fwd();
@@ -123,12 +125,13 @@ public class SpeedCheckPointSets {
 		System.out.println("Access old general point set");
 		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
 		{
+
+			GeneralPointSet ps = new GeneralPointSet(pts3.get(0), pts3);
 			@Override
 			public void run()
 			{
 				RandomAccess<FloatType> access = img1.randomAccess();
 				long sum = 0;
-				GeneralPointSet ps = new GeneralPointSet(pts3.get(0), pts3);
 				PointSetIterator iter = ps.iterator();
 				while (iter.hasNext()) {
 					long[] pos = iter.next();
@@ -142,11 +145,12 @@ public class SpeedCheckPointSets {
 		System.out.println("Access new general point set");
 		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
 		{
+
+			BoundGeneralPointSet ps = new BoundGeneralPointSet(pts4);
 			@Override
 			public void run()
 			{
 				long sum = 0;
-				BoundGeneralPointSet ps = new BoundGeneralPointSet(pts4);
 				Cursor<FloatType> cursor = ps.bind(img2.randomAccess());
 				while (cursor.hasNext()) {
 					FloatType type = cursor.next();
