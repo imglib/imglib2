@@ -55,16 +55,17 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.logic.BoolType;
 import net.imglib2.type.numeric.real.FloatType;
 
-// TODO Earlier implementations tried to speed the move() code. But it made some subcases
-// tricky and slow. Now this code is a straightforward implementation of a list of points
-// but it is slow in some cases.
+// TODO Earlier implementations tried to speed the move() code. But it made some
+// subcases tricky and slow. Now this code is a straightforward implementation
+// of a list of points but it is slow in some cases. We should decide best
+// approach.
 
 /**
- * Make the most general case of a point set as a list of points. Implements new interfaces.
- * One uses bind() to obtain a cursor back- into the original interval.
+ * Make the most general case of a point set as a list of points. Implements new
+ * interfaces. One uses bind() to obtain a cursor back into the original
+ * interval.
  * 
  * @author Barry DeZonia
- *
  */
 public class BoundGeneralPointSet extends AbstractInterval implements NewPointSet
 {
@@ -100,7 +101,6 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	{
 		return new BoundCursor<T>( this, randomAccess );
 	}
-
 
 	@Override
 	public boolean contains(long[] point) {
@@ -223,7 +223,6 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 		}
 	}
 
-
 	@Override
 	public void localize(float[] position) {
 		for (int i = 0; i < n; i++) {
@@ -277,7 +276,7 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 
 	@Override
 	public Object iterationOrder() {
-		return new Object(); // nobody is likely ever the same order as me
+		return this; // nobody is likely ever the same order as me
 	}
 
 	@Override
@@ -301,16 +300,17 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	}
 
 	// -- static public helper methods --
-	
+
+	/**
+	 * Creates a BoundGeneralPointSet from any IterableInterval.
+	 */
 	public static BoundGeneralPointSet explode(IterableInterval<?> interval) {
 		long[] point = new long[interval.numDimensions()];
 		List<long[]> points = new ArrayList<long[]>();
-		Cursor<?> cursor = interval.cursor();
+		Cursor<?> cursor = interval.localizingCursor();
 		while (cursor.hasNext()) {
 			cursor.fwd();
-			for (int i = 0; i < point.length; i++) {
-				point[i] = cursor.getLongPosition(i);
-			}
+			cursor.localize(point);
 			points.add(point.clone());
 		}
 		return new BoundGeneralPointSet(points);
@@ -319,14 +319,19 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	// -- private static helpers --
 	
 	private static long[] minExtent(List<long[]> points) {
-		if (points.size() == 0) throw new IllegalArgumentException("list of points cannot be empty!");
+		if (points.size() == 0) {
+			throw new IllegalArgumentException("list of points cannot be empty!");
+		}
 		int n = points.get(0).length;
 		long[] mn = new long[n];
 		Iterator<long[]> iter = points.iterator();
 		long[] prev = null;
 		while (iter.hasNext()) {
 			long[] curr = iter.next();
-			if (curr.length != n) throw new IllegalArgumentException("list of points are not all the same dimension");
+			if (curr.length != n) {
+				throw new IllegalArgumentException(
+					"list of points are not all the same dimension");
+			}
 			for (int i = 0; i < curr.length; i++) {
 				if (prev == null) {
 					mn[i] = curr[i];
@@ -341,14 +346,19 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	}
 
 	private static long[] maxExtent(List<long[]> points) {
-		if (points.size() == 0) throw new IllegalArgumentException("list of points cannot be empty!");
+		if (points.size() == 0) {
+			throw new IllegalArgumentException("list of points cannot be empty!");
+		}
 		int n = points.get(0).length;
 		long[] mx = new long[n];
 		Iterator<long[]> iter = points.iterator();
 		long[] prev = null;
 		while (iter.hasNext()) {
 			long[] curr = iter.next();
-			if (curr.length != n) throw new IllegalArgumentException("list of points are not all the same dimension");
+			if (curr.length != n) {
+				throw new IllegalArgumentException(
+					"list of points are not all the same dimension");
+			}
 			for (int i = 0; i < curr.length; i++) {
 				if (prev == null) {
 					mx[i] = curr[i];
@@ -367,7 +377,6 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	private class PositionCursor extends AbstractInterval implements
 		Cursor<BoolType>
 	{
-
 		private int pos;
 		
 		public PositionCursor() {
