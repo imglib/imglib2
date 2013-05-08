@@ -43,7 +43,7 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.ops.condition.Condition;
-import net.imglib2.type.logic.BitType;
+import net.imglib2.type.logic.BoolType;
 
 /**
  * 
@@ -130,12 +130,12 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 	}
 
 	@Override
-	public Cursor<BitType> cursor() {
+	public Cursor<BoolType> cursor() {
 		return new PositionCursor();
 	}
 
 	@Override
-	public Cursor<BitType> localizingCursor() {
+	public Cursor<BoolType> localizingCursor() {
 		return cursor();
 	}
 
@@ -165,7 +165,7 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 	private void calcStuff() {
 		size = 0;
 		long[] position = new long[numDimensions()];
-		Cursor<BitType> cursor = localizingCursor();
+		Cursor<BoolType> cursor = localizingCursor();
 		while (cursor.hasNext()) {
 			cursor.next();
 			cursor.localize(position);
@@ -178,11 +178,14 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		needsCalc = false;
 	}
 	
-	private class PositionCursor extends AbstractInterval implements Cursor<BitType> {
+	private class PositionCursor extends AbstractInterval implements
+		Cursor<BoolType>
+	{
 
-		private Cursor<BitType> cursor;
+		private Cursor<BoolType> cursor;
 		private long[] tmpPos;
 		
+		@SuppressWarnings("synthetic-access")
 		public PositionCursor() {
 			super(BoundConditionalPointSet.this);
 			cursor = ps.cursor();
@@ -216,12 +219,12 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public BitType get() {
+		public BoolType get() {
 			return cursor.get();
 		}
 
 		@Override
-		public Sampler<BitType> copy() {
+		public Sampler<BoolType> copy() {
 			return cursor();
 		}
 
@@ -250,13 +253,13 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public BitType next() {
+		public BoolType next() {
 			// positioning already done by hasNext()
 			return cursor.get();
 		}
 
 		@Override
-		public void remove() { }
+		public void remove() { /* unsupported */}
 
 		@Override
 		public void localize(int[] position) {
@@ -279,10 +282,11 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public Cursor<BitType> copyCursor() {
+		public Cursor<BoolType> copyCursor() {
 			return new PositionCursor(this);
 		}
 		
+		@SuppressWarnings("synthetic-access")
 		private boolean position() {
 			while (cursor.hasNext()) {
 				cursor.next();
@@ -295,7 +299,7 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 	
 	private class BoundCursor<T> extends AbstractBoundCursor<T> {
 
-		private Cursor<BitType> cursor;
+		private Cursor<BoolType> cursor;
 		private long[] tmpPos;
 		
 		public BoundCursor( final Interval interval, final RandomAccess< T > randomAccess )

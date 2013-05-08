@@ -52,7 +52,8 @@ import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.type.logic.BitType;
+import net.imglib2.type.logic.BoolType;
+import net.imglib2.type.numeric.real.FloatType;
 
 // TODO Earlier implementations tried to speed the move() code. But it made some subcases
 // tricky and slow. Now this code is a straightforward implementation of a list of points
@@ -71,7 +72,7 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	
 	private final List<long[]> points;
 	private final long[] origin;
-	private final Img<BitType> bools;
+	private final List<BoolType> bools;
 	
 	// -- constructors --
 
@@ -85,9 +86,11 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 		super(minExtent(points), maxExtent(points));
 		this.points = points;
 		origin = points.get(0);
-		ArrayImgFactory<BitType> factory = new ArrayImgFactory<BitType>();
-		bools = factory.create(new long[]{points.size()}, new BitType());
-		for (BitType b : bools) b.set(true);
+		bools = new ArrayList<BoolType>();
+		for (int i = 0; i < points.size(); i++) {
+			BoolType b = new BoolType(true);
+			bools.add(b);
+		}
 	}
 
 	// -- public methods --
@@ -268,7 +271,7 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	}
 
 	@Override
-	public BitType firstElement() {
+	public BoolType firstElement() {
 		return cursor().next();
 	}
 
@@ -283,17 +286,17 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	}
 
 	@Override
-	public Iterator<BitType> iterator() {
+	public Iterator<BoolType> iterator() {
 		return cursor();
 	}
 
 	@Override
-	public Cursor<BitType> cursor() {
+	public Cursor<BoolType> cursor() {
 		return new PositionCursor();
 	}
 
 	@Override
-	public Cursor<BitType> localizingCursor() {
+	public Cursor<BoolType> localizingCursor() {
 		return cursor();
 	}
 
@@ -361,24 +364,24 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 
 	// -- other private helpers --
 
-	private class PositionCursor extends AbstractInterval implements Cursor<BitType> {
+	private class PositionCursor extends AbstractInterval implements
+		Cursor<BoolType>
+	{
 
-		private Cursor<BitType> cursor;
+		private int pos;
 		
 		public PositionCursor() {
 			super(BoundGeneralPointSet.this);
-			cursor = bools.cursor();
+			pos = -1;
 		}
 
 		public PositionCursor(PositionCursor other) {
 			this();
-			long pos = other.cursor.getLongPosition(0);
-			cursor.jumpFwd(pos+1);
+			pos = other.pos;
 		}
 		
 		@Override
 		public void localize(float[] position) {
-			int pos = cursor.getIntPosition(0);
 			long[] pt = points.get(pos);
 			for (int i = 0; i < n; i++) {
 				position[i] = pt[i];
@@ -387,7 +390,6 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 
 		@Override
 		public void localize(double[] position) {
-			int pos = cursor.getIntPosition(0);
 			long[] pt = points.get(pos);
 			for (int i = 0; i < n; i++) {
 				position[i] = pt[i];
@@ -396,59 +398,57 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 
 		@Override
 		public float getFloatPosition(int d) {
-			int pos = cursor.getIntPosition(0);
 			long[] pt = points.get(pos);
 			return pt[d];
 		}
 
 		@Override
 		public double getDoublePosition(int d) {
-			int pos = cursor.getIntPosition(0);
 			long[] pt = points.get(pos);
 			return pt[d];
 		}
 
 		@Override
-		public BitType get() {
-			return cursor.get();
+		public BoolType get() {
+			return bools.get(pos);
 		}
 
 		@Override
-		public Sampler<BitType> copy() {
+		public Sampler<BoolType> copy() {
 			return cursor();
 		}
 
 		@Override
 		public void jumpFwd(long steps) {
-			cursor.jumpFwd(steps);
+			pos += steps;
 		}
 
 		@Override
 		public void fwd() {
-			cursor.fwd();
+			pos++;
 		}
 
 		@Override
 		public void reset() {
-			cursor.reset();
+			pos = -1;
 		}
 
 		@Override
 		public boolean hasNext() {
-			return cursor.hasNext();
+			return pos < points.size() - 1;
 		}
 
 		@Override
-		public BitType next() {
-			return cursor.next();
+		public BoolType next() {
+			fwd();
+			return get();
 		}
 
 		@Override
-		public void remove() { }
+		public void remove() { /* unsupported */}
 
 		@Override
 		public void localize(int[] position) {
-			int pos = cursor.getIntPosition(0);
 			long[] pt = points.get(pos);
 			for (int i = 0; i < n; i++) {
 				position[i] = (int) pt[i];
@@ -457,7 +457,6 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 
 		@Override
 		public void localize(long[] position) {
-			int pos = cursor.getIntPosition(0);
 			long[] pt = points.get(pos);
 			for (int i = 0; i < n; i++) {
 				position[i] = pt[i];
@@ -466,20 +465,18 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 
 		@Override
 		public int getIntPosition(int d) {
-			int pos = cursor.getIntPosition(0);
 			long[] pt = points.get(pos);
 			return (int) pt[d];
 		}
 
 		@Override
 		public long getLongPosition(int d) {
-			int pos = cursor.getIntPosition(0);
 			long[] pt = points.get(pos);
 			return pt[d];
 		}
 
 		@Override
-		public Cursor<BitType> copyCursor() {
+		public Cursor<BoolType> copyCursor() {
 			return new PositionCursor(this);
 		}
 		
@@ -552,20 +549,19 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	// -- test methods --
 	
 	public static void main(String[] args) {
-		ArrayImgFactory<BitType> factory = new ArrayImgFactory<BitType>();
-		Img<BitType> img = factory.create(new long[]{100}, new BitType());
+		ArrayImgFactory<FloatType> factory = new ArrayImgFactory<FloatType>();
+		Img<FloatType> img = factory.create(new long[] { 100 }, new FloatType());
 		
-		boolean b = false;
-		for ( final BitType t : img ) {
-			t.set( b );
-			b = !b;
+		int i = 0;
+		for (final FloatType t : img) {
+			t.set(i++);
 		}
 		
 		List<long[]> pts = Arrays.asList(new long[]{0}, new long[]{1});
 		BoundGeneralPointSet ps = new BoundGeneralPointSet(pts);
-		Cursor<BitType> cursor = ps.bind(img.randomAccess());
+		Cursor<FloatType> cursor = ps.bind(img.randomAccess());
 
-		System.out.println("Expecting (false, true)");
+		System.out.println("Expecting (0, 1)");
 		System.out.println("  point set loc: " + ps.getLongPosition(0));
 		cursor.reset();
 		cursor.next();
@@ -575,7 +571,7 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
 		System.out.println("    result of get(): " + cursor.get());
 		
-		System.out.println("Expecting (true, false)");
+		System.out.println("Expecting (1, 2)");
 		ps.move(1,0);
 		System.out.println("  point set loc: " + ps.getLongPosition(0));
 		cursor.reset();
@@ -586,7 +582,7 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 		System.out.println("  cursor pos : " + cursor.getLongPosition(0));
 		System.out.println("    result of get(): " + cursor.get());
 		
-		System.out.println("Expecting (false, true)");
+		System.out.println("Expecting (2, 3)");
 		ps.move(1,0);
 		System.out.println("  point set loc: " + ps.getLongPosition(0));
 		cursor.reset();

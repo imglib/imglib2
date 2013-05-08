@@ -71,7 +71,7 @@ public abstract class AbstractBoundCursor<T> extends AbstractInterval implements
 	}
 
 	@Override
-	public void remove() {}
+	public void remove() { /* unsupported */}
 
 	@Override
 	public void localize( final float[] position )
