@@ -496,32 +496,34 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 	 */
 	private final class BoundCursor<T> extends AbstractBoundCursor< T >
 	{
-		private int index;
+
+		private PositionCursor cursor;
 		
 		public BoundCursor( final Interval interval, final RandomAccess< T > randomAccess )
 		{
 			super( interval, randomAccess );
+			cursor = new PositionCursor();
 			rst();
 		}
 
 		protected BoundCursor( final BoundCursor<T> cursor )
 		{
 			super( cursor, cursor.randomAccess.copyRandomAccess() );
-			index = cursor.index;
+			this.cursor.pos = cursor.cursor.pos;
 		}
 
 		@Override
 		public void jumpFwd( final long steps )
 		{
-			index += steps;
-			randomAccess.setPosition(points.get(index));
+			cursor.jumpFwd(steps);
+			randomAccess.setPosition(points.get(cursor.pos));
 		}
 
 		@Override
 		public void fwd()
 		{
-			index++;
-			randomAccess.setPosition(points.get(index));
+			cursor.fwd();
+			randomAccess.setPosition(points.get(cursor.pos));
 		}
 
 		@Override
@@ -533,7 +535,7 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 		@Override
 		public boolean hasNext()
 		{
-			return index < points.size()-1;
+			return cursor.pos < points.size() - 1;
 		}
 
 		@Override
@@ -549,7 +551,7 @@ public class BoundGeneralPointSet extends AbstractInterval implements NewPointSe
 		}
 
 		private void rst() {
-			index = -1;
+			cursor.reset();
 			randomAccess.setPosition( origin );
 			randomAccess.bck( 0 );
 		}
