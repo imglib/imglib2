@@ -45,6 +45,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.ops.pointset.GeneralPointSet;
+import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.ops.pointset.PointSetIterator;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.BenchmarkHelper;
@@ -56,20 +57,23 @@ import net.imglib2.util.BenchmarkHelper;
  */
 public class SpeedCheckPointSets {
 
-	private static final long SIZE = 800;
-	
 	// Test how quickly you can iterate and grab pixels from images using the
 	// old and new point set implementations
 	
+	// NB - try to make sure loops aren't completely optimized away because they
+	// did no real work.
+
+	private static long unimportantSum = 0;
+
 	private static void init(Img<FloatType> img) {
 		float i = 0;
 		for (FloatType pix : img) pix.set(i++);
 	}
 	
-	private static List<long[]> points() {
+	private static List<long[]> points(long size) {
 		List<long[]> points = new ArrayList<long[]>();
-		for (int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
 				points.add(new long[]{i,j});
 			}
 		}
@@ -77,6 +81,7 @@ public class SpeedCheckPointSets {
 	}
 	
 	private static void testGeneral() {
+		final long SIZE = 700;
 		final Img<FloatType> img1 = ArrayImgs.floats(SIZE, SIZE);
 		final Img<FloatType> img2 = ArrayImgs.floats(SIZE, SIZE);
 		final Img<FloatType> img3 = ArrayImgs.floats(SIZE, SIZE);
@@ -87,10 +92,10 @@ public class SpeedCheckPointSets {
 		init(img3);
 		init(img4);
 	
-		final List<long[]> pts1 = points();
-		final List<long[]> pts2 = points();
-		final List<long[]> pts3 = points();
-		final List<long[]> pts4 = points();
+		final List<long[]> pts1 = points(SIZE);
+		final List<long[]> pts2 = points(SIZE);
+		final List<long[]> pts3 = points(SIZE);
+		final List<long[]> pts4 = points(SIZE);
 		
 		System.out.println("Iterate old general point set");
 		BenchmarkHelper.benchmarkAndPrint( 10, true, new Runnable()
@@ -103,6 +108,7 @@ public class SpeedCheckPointSets {
 				PointSetIterator iter = ps.iterator();
 				while (iter.hasNext()) {
 					iter.next();
+					unimportantSum++;
 				}
 			}
 		});
@@ -118,6 +124,7 @@ public class SpeedCheckPointSets {
 				Cursor<?> cursor = ps.cursor();
 				while (cursor.hasNext()) {
 					cursor.fwd();
+					unimportantSum++;
 				}
 			}
 		});
@@ -137,6 +144,7 @@ public class SpeedCheckPointSets {
 					long[] pos = iter.next();
 					access.setPosition(pos);
 					sum += access.get().get();
+					unimportantSum++;
 				}
 				//System.out.println("Final sum == "+sum);
 			}
@@ -153,15 +161,94 @@ public class SpeedCheckPointSets {
 				long sum = 0;
 				Cursor<FloatType> cursor = ps.bind(img2.randomAccess());
 				while (cursor.hasNext()) {
-					FloatType type = cursor.next();
-					sum += type.getRealFloat();
+					sum += cursor.next().getRealFloat();
+					unimportantSum++;
 				}
 				//System.out.println("Final sum == "+sum);
 			}
 		});
 	}
 	
+	private static void testHyperVolume() {
+		final long SIZE = 600;
+		final long[] BOX_MIN = new long[] { 0, 0 };
+		final long[] BOX_MAX = new long[] { SIZE - 1, SIZE - 1 };
+		final Img<FloatType> img1 = ArrayImgs.floats(SIZE, SIZE);
+		final Img<FloatType> img2 = ArrayImgs.floats(SIZE, SIZE);
+
+		System.out.println("Iterate old hypervolume point set");
+		BenchmarkHelper.benchmarkAndPrint(10, true, new Runnable() {
+
+			HyperVolumePointSet ps = new HyperVolumePointSet(BOX_MIN, BOX_MAX);
+
+			@Override
+			public void run() {
+				PointSetIterator iter = ps.iterator();
+				while (iter.hasNext()) {
+					iter.next();
+					unimportantSum++;
+				}
+			}
+		});
+
+		System.out.println("Iterate new hypervolume point set");
+		BenchmarkHelper.benchmarkAndPrint(10, true, new Runnable() {
+
+			BoundHyperVolumePointSet ps = new BoundHyperVolumePointSet(BOX_MIN,
+				BOX_MAX);
+
+			@Override
+			public void run() {
+				Cursor<?> cursor = ps.cursor();
+				while (cursor.hasNext()) {
+					cursor.fwd();
+					unimportantSum++;
+				}
+			}
+		});
+
+		System.out.println("Access old hypervolume point set");
+		BenchmarkHelper.benchmarkAndPrint(10, true, new Runnable() {
+
+			HyperVolumePointSet ps = new HyperVolumePointSet(BOX_MIN, BOX_MAX);
+
+			@Override
+			public void run() {
+				RandomAccess<FloatType> access = img1.randomAccess();
+				long sum = 0;
+				PointSetIterator iter = ps.iterator();
+				while (iter.hasNext()) {
+					long[] pos = iter.next();
+					access.setPosition(pos);
+					sum += access.get().get();
+					unimportantSum++;
+				}
+				// System.out.println("Final sum == "+sum);
+			}
+		});
+
+		System.out.println("Access new hypervolume point set");
+		BenchmarkHelper.benchmarkAndPrint(10, true, new Runnable() {
+
+			BoundHyperVolumePointSet ps = new BoundHyperVolumePointSet(BOX_MIN,
+				BOX_MAX);
+
+			@Override
+			public void run() {
+				long sum = 0;
+				Cursor<FloatType> cursor = ps.bind(img2.randomAccess());
+				while (cursor.hasNext()) {
+					sum += cursor.next().getRealFloat();
+					unimportantSum++;
+				}
+				// System.out.println("Final sum == "+sum);
+			}
+		});
+	}
+
 	public static void main(String[] args) {
 		testGeneral();
+		testHyperVolume();
+		System.out.println("Total iteration steps = " + unimportantSum);
 	}
 }

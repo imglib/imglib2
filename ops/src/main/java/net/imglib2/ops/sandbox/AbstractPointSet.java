@@ -43,7 +43,7 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.RealPositionable;
-import net.imglib2.type.logic.BoolType;
+import net.imglib2.type.logic.BitType;
 
 /**
  * 
@@ -120,7 +120,7 @@ public abstract class AbstractPointSet implements NewPointSet {
 	}
 
 	@Override
-	public BoolType firstElement() {
+	public BitType firstElement() {
 		return cursor().next();
 	}
 
@@ -173,7 +173,7 @@ public abstract class AbstractPointSet implements NewPointSet {
 	}
 
 	@Override
-	public Iterator<BoolType> iterator() {
+	public Iterator<BitType> iterator() {
 		return cursor();
 	}
 

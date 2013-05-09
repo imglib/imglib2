@@ -38,11 +38,11 @@ package net.imglib2.ops.sandbox;
  */
 
 import net.imglib2.Cursor;
-import net.imglib2.FlatIterationOrder;
 import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.img.Img;
-import net.imglib2.type.logic.BoolType;
+import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.type.logic.BitType;
 
 /**
  * @author Barry DeZonia
@@ -52,7 +52,7 @@ public class BoundHyperVolumePointSet extends AbstractPointSet {
 	private final int n;
 	private final long[] min;
 	private final long[] max;
-	private final Img<BoolType> img;
+	private final Img<BitType> img;
 
 	public BoundHyperVolumePointSet(long[] min, long[] max) {
 		if (min.length != max.length) {
@@ -66,8 +66,9 @@ public class BoundHyperVolumePointSet extends AbstractPointSet {
 		this.min = min.clone();
 		this.max = max.clone();
 		n = min.length;
-		img = null; // TODO - try to make an ArrayImg<BoolType> - unsupported
-		throw new UnsupportedOperationException("Must make an Img<BoolType>");
+		long[] dims = new long[n];
+		dimensions(dims);
+		img = ArrayImgs.bits(dims);
 	}
 
 	@Override
@@ -144,15 +145,15 @@ public class BoundHyperVolumePointSet extends AbstractPointSet {
 
 	// ACK CHOKE PUKE FIXME TODO: The problem: calling localize on a bare cursor
 	// will not report correct coords after move()'ing this NewPointSet. So we
-	// need to share out a PositionCursor instead.
+	// need to share out a PositionCursor instead of a img.cursor().
 
 	@Override
-	public Cursor<BoolType> cursor() {
+	public Cursor<BitType> cursor() {
 		return new PositionCursor();
 	}
 
 	@Override
-	public Cursor<BoolType> localizingCursor() {
+	public Cursor<BitType> localizingCursor() {
 		return cursor();
 	}
 
@@ -177,12 +178,12 @@ public class BoundHyperVolumePointSet extends AbstractPointSet {
 
 	@Override
 	public Object iterationOrder() {
-		return new FlatIterationOrder(this);
+		return img.iterationOrder();
 	}
 
 	private class PositionCursor extends AbstractPositionCursor {
 
-		private Cursor<BoolType> cursor;
+		private Cursor<BitType> cursor;
 		private long[] tmpPos;
 
 		@SuppressWarnings("synthetic-access")
@@ -220,12 +221,12 @@ public class BoundHyperVolumePointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public BoolType get() {
+		public BitType get() {
 			return cursor.get();
 		}
 
 		@Override
-		public Sampler<BoolType> copy() {
+		public Sampler<BitType> copy() {
 			return new PositionCursor(this);
 		}
 
@@ -250,7 +251,7 @@ public class BoundHyperVolumePointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public BoolType next() {
+		public BitType next() {
 			return cursor.next();
 		}
 
@@ -278,14 +279,14 @@ public class BoundHyperVolumePointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public Cursor<BoolType> copyCursor() {
+		public Cursor<BitType> copyCursor() {
 			return new PositionCursor(this);
 		}
 	}
 
 	private class BoundCursor<T> extends AbstractBoundCursor<T> {
 
-		private Cursor<BoolType> cursor;
+		private Cursor<BitType> cursor;
 		private long[] tmpPos;
 
 		public BoundCursor(final RandomAccess<T> randomAccess)

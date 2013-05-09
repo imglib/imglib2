@@ -42,14 +42,14 @@ import net.imglib2.IterableInterval;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
-import net.imglib2.type.logic.BoolType;
+import net.imglib2.type.logic.BitType;
 
 /**
  * @author Tobias Pietsch
  * @author Barry DeZonia
  */
 public interface NewPointSet extends Positionable, Localizable,
-	IterableInterval<BoolType>
+	IterableInterval<BitType>
 {
 	boolean contains(long[] point);
 	<T> Cursor< T > bind( final RandomAccess< T > randomAccess );

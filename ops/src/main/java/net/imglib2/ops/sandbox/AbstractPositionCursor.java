@@ -38,12 +38,12 @@
 package net.imglib2.ops.sandbox;
 
 import net.imglib2.Cursor;
-import net.imglib2.type.logic.BoolType;
+import net.imglib2.type.logic.BitType;
 
 /**
  * @author Barry DeZonia
  */
-public abstract class AbstractPositionCursor implements Cursor<BoolType> {
+public abstract class AbstractPositionCursor implements Cursor<BitType> {
 
 	@Override
 	public int getIntPosition(int d) {
@@ -61,7 +61,7 @@ public abstract class AbstractPositionCursor implements Cursor<BoolType> {
 	}
 
 	@Override
-	public BoolType next() {
+	public BitType next() {
 		fwd();
 		return get();
 	}

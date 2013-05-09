@@ -41,7 +41,7 @@ import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.ops.condition.Condition;
-import net.imglib2.type.logic.BoolType;
+import net.imglib2.type.logic.BitType;
 
 /**
  * 
@@ -127,12 +127,12 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 	}
 
 	@Override
-	public Cursor<BoolType> cursor() {
+	public Cursor<BitType> cursor() {
 		return new PositionCursor();
 	}
 
 	@Override
-	public Cursor<BoolType> localizingCursor() {
+	public Cursor<BitType> localizingCursor() {
 		return cursor();
 	}
 
@@ -157,7 +157,7 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 	private void calcStuff() {
 		size = 0;
 		long[] position = new long[numDimensions()];
-		Cursor<BoolType> cursor = localizingCursor();
+		Cursor<BitType> cursor = localizingCursor();
 		while (cursor.hasNext()) {
 			cursor.next();
 			cursor.localize(position);
@@ -172,7 +172,8 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 	
 	private class PositionCursor extends AbstractPositionCursor
 	{
-		private Cursor<BoolType> cursor;
+
+		private Cursor<BitType> cursor;
 		private long[] tmpPos;
 		
 		@SuppressWarnings("synthetic-access")
@@ -202,12 +203,12 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public BoolType get() {
+		public BitType get() {
 			return cursor.get();
 		}
 
 		@Override
-		public Sampler<BoolType> copy() {
+		public Sampler<BitType> copy() {
 			return new PositionCursor(this);
 		}
 
@@ -236,7 +237,7 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public BoolType next() {
+		public BitType next() {
 			// positioning already done by hasNext()
 			return cursor.get();
 		}
@@ -257,7 +258,7 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public Cursor<BoolType> copyCursor() {
+		public Cursor<BitType> copyCursor() {
 			return new PositionCursor(this);
 		}
 		
@@ -274,7 +275,7 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 	
 	private class BoundCursor<T> extends AbstractBoundCursor<T> {
 
-		private Cursor<BoolType> cursor;
+		private Cursor<BitType> cursor;
 		private long[] tmpPos;
 		
 		public BoundCursor(final RandomAccess<T> randomAccess)

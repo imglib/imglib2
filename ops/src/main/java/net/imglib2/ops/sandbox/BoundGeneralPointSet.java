@@ -48,7 +48,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.type.logic.BoolType;
+import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.real.FloatType;
 
 // TODO Earlier implementations tried to speed the move() code. But it made some
@@ -70,7 +70,8 @@ public class BoundGeneralPointSet extends AbstractPointSet
 	private final int n;
 	private final List<long[]> points;
 	private final long[] origin;
-	private final List<BoolType> bools; // TMP - until ArrayImgs supports BoolType
+	// TMP - use BitType until ArrayImgs supports BoolType
+	private final List<BitType> bools;
 	private final long[] min;
 	private final long[] max;
 	
@@ -88,10 +89,10 @@ public class BoundGeneralPointSet extends AbstractPointSet
 		n = min.length;
 		points = pts;
 		origin = points.get(0);
-		// TMP - until ArrayImgs support BoolType
-		bools = new ArrayList<BoolType>();
+		// TMP - use BitType until ArrayImgs support BoolType
+		bools = new ArrayList<BitType>();
 		for (int i = 0; i < points.size(); i++) {
-			BoolType b = new BoolType(true);
+			BitType b = new BitType(true);
 			bools.add(b);
 		}
 	}
@@ -216,12 +217,12 @@ public class BoundGeneralPointSet extends AbstractPointSet
 	}
 
 	@Override
-	public Cursor<BoolType> cursor() {
+	public Cursor<BitType> cursor() {
 		return new PositionCursor();
 	}
 
 	@Override
-	public Cursor<BoolType> localizingCursor() {
+	public Cursor<BitType> localizingCursor() {
 		return cursor();
 	}
 
@@ -339,12 +340,12 @@ public class BoundGeneralPointSet extends AbstractPointSet
 
 		@SuppressWarnings("synthetic-access")
 		@Override
-		public BoolType get() {
+		public BitType get() {
 			return bools.get(pos);
 		}
 
 		@Override
-		public Sampler<BoolType> copy() {
+		public Sampler<BitType> copy() {
 			return new PositionCursor(this);
 		}
 
@@ -396,7 +397,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 		}
 
 		@Override
-		public Cursor<BoolType> copyCursor() {
+		public Cursor<BitType> copyCursor() {
 			return new PositionCursor(this);
 		}
 		
