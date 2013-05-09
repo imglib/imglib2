@@ -328,7 +328,7 @@ public class BoundAndPointSet extends AbstractPointSet
 
 		public BoundCursor(final BoundCursor<T> other)
 		{
-			super(other.randomAccess.copyRandomAccess());
+			this(other.randomAccess.copyRandomAccess());
 			this.cursor = other.cursor.copyCursor();
 		}
 

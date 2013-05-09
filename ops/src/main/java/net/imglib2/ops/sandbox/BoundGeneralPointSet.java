@@ -43,7 +43,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.imglib2.Cursor;
-import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
@@ -102,7 +101,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 	@Override
 	public <T> Cursor< T > bind( final RandomAccess< T > randomAccess )
 	{
-		return new BoundCursor<T>( this, randomAccess );
+		return new BoundCursor<T>(randomAccess);
 	}
 
 	@Override
@@ -403,8 +402,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 	{
 		private PositionCursor cursor;
 		
-		public BoundCursor(final Interval interval,
-			final RandomAccess<T> randomAccess)
+		public BoundCursor(final RandomAccess<T> randomAccess)
 		{
 			super(randomAccess);
 			cursor = new PositionCursor();
@@ -413,7 +411,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 
 		public BoundCursor(final BoundCursor<T> other)
 		{
-			super(other.randomAccess.copyRandomAccess());
+			this(other.randomAccess.copyRandomAccess());
 			this.cursor.pos = other.cursor.pos;
 		}
 

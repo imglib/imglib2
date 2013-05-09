@@ -38,7 +38,6 @@
 package net.imglib2.ops.sandbox;
 
 import net.imglib2.Cursor;
-import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.ops.condition.Condition;
@@ -70,7 +69,7 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 
 	@Override
 	public <T> Cursor<T> bind(RandomAccess<T> randomAccess) {
-		return new BoundCursor<T>(this, randomAccess);
+		return new BoundCursor<T>(randomAccess);
 	}
 
 	@Override
@@ -278,18 +277,17 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		private Cursor<BoolType> cursor;
 		private long[] tmpPos;
 		
-		public BoundCursor(final Interval interval,
-			final RandomAccess<T> randomAccess)
+		public BoundCursor(final RandomAccess<T> randomAccess)
 		{
 			super(randomAccess);
 			cursor = cursor();
-			tmpPos = new long[interval.numDimensions()];
+			tmpPos = new long[cursor.numDimensions()];
 			rst();
 		}
 		
 		public BoundCursor(final BoundCursor<T> other)
 		{
-			super(other.randomAccess.copyRandomAccess());
+			this(other.randomAccess.copyRandomAccess());
 			this.cursor = other.cursor.copyCursor();
 		}
 
