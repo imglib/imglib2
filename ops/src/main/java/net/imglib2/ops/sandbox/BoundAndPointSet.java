@@ -37,9 +37,7 @@
 
 package net.imglib2.ops.sandbox;
 
-import net.imglib2.AbstractInterval;
 import net.imglib2.Cursor;
-import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.type.logic.BoolType;
@@ -68,7 +66,8 @@ public class BoundAndPointSet extends AbstractPointSet
 	
 	public BoundAndPointSet(NewPointSet p1, NewPointSet p2) {
 		if (p1.numDimensions() != p2.numDimensions()) {
-			throw new IllegalArgumentException("point sets must have same num dimensions");
+			throw new IllegalArgumentException(
+				"point sets must have same num dimensions");
 		}
 		this.p1 = p1;
 		this.p2 = p2;
@@ -83,7 +82,7 @@ public class BoundAndPointSet extends AbstractPointSet
 	
 	@Override
 	public <T> Cursor<T> bind( RandomAccess<T> randomAccess ) {
-		return new BoundCursor<T>(this, randomAccess);
+		return new BoundCursor<T>(randomAccess);
 	}
 	
 	@Override
@@ -205,8 +204,7 @@ public class BoundAndPointSet extends AbstractPointSet
 		needsCalc = false;
 	}
 
-	private class PositionCursor extends AbstractInterval implements
-		Cursor<BoolType>
+	private class PositionCursor extends AbstractPositionCursor
 	{
 
 		private Cursor<BoolType> cursor;
@@ -214,17 +212,20 @@ public class BoundAndPointSet extends AbstractPointSet
 		
 		@SuppressWarnings("synthetic-access")
 		public PositionCursor() {
-			super(BoundAndPointSet.this);
 			cursor = p1.cursor();
 			tmpPos = new long[n];
 		}
 
 		public PositionCursor(PositionCursor other) {
 			this();
-			long pos = other.cursor.getLongPosition(0); // TODO - broken? only dim 0?
-			cursor.jumpFwd(pos+1);
+			cursor = other.cursor.copyCursor();
 		}
 		
+		@Override
+		public int numDimensions() {
+			return n;
+		}
+
 		@Override
 		public void localize(float[] position) {
 			cursor.localize(position);
@@ -233,16 +234,6 @@ public class BoundAndPointSet extends AbstractPointSet
 		@Override
 		public void localize(double[] position) {
 			cursor.localize(position);
-		}
-
-		@Override
-		public float getFloatPosition(int d) {
-			return cursor.getFloatPosition(d);
-		}
-
-		@Override
-		public double getDoublePosition(int d) {
-			return cursor.getDoublePosition(d);
 		}
 
 		@Override
@@ -286,9 +277,6 @@ public class BoundAndPointSet extends AbstractPointSet
 		}
 
 		@Override
-		public void remove() { /* unsupported */}
-
-		@Override
 		public void localize(int[] position) {
 			cursor.localize(position);
 		}
@@ -296,11 +284,6 @@ public class BoundAndPointSet extends AbstractPointSet
 		@Override
 		public void localize(long[] position) {
 			cursor.localize(position);
-		}
-
-		@Override
-		public int getIntPosition(int d) {
-			return cursor.getIntPosition(d);
 		}
 
 		@Override
@@ -325,7 +308,8 @@ public class BoundAndPointSet extends AbstractPointSet
 	}
 	
 	/**
-	 * TODO: This was modified from BoundGeneralPointSet. There might be code reuse possible ...
+	 * TODO: This was modified from BoundGeneralPointSet. There might be code
+	 * reuse possible ...
 	 */
 	private final class BoundCursor<T> extends AbstractBoundCursor< T >
 	{
@@ -334,18 +318,23 @@ public class BoundAndPointSet extends AbstractPointSet
 		
 		private long[] tmpPos;
 		
-		public BoundCursor( final Interval interval, final RandomAccess< T > randomAccess )
+		public BoundCursor(final RandomAccess<T> randomAccess)
 		{
-			super( interval, randomAccess );
+			super(randomAccess);
 			cursor = cursor();
 			tmpPos = new long[n];
 			rst();
 		}
 
-		protected BoundCursor( final BoundCursor<T> cursor )
+		public BoundCursor(final BoundCursor<T> other)
 		{
-			super( cursor, cursor.randomAccess.copyRandomAccess() );
-			this.cursor = cursor.cursor.copyCursor();
+			super(other.randomAccess.copyRandomAccess());
+			this.cursor = other.cursor.copyCursor();
+		}
+
+		@Override
+		public int numDimensions() {
+			return n;
 		}
 
 		@Override

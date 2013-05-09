@@ -38,33 +38,30 @@
 package net.imglib2.ops.sandbox;
 
 import net.imglib2.Cursor;
-import net.imglib2.RandomAccess;
+import net.imglib2.type.logic.BoolType;
 
 /**
- * 
  * @author Barry DeZonia
- *
- * @param <T>
  */
-public abstract class AbstractBoundCursor<T> implements Cursor<T>
-{
+public abstract class AbstractPositionCursor implements Cursor<BoolType> {
 
-	protected final RandomAccess< T > randomAccess;
-
-	protected AbstractBoundCursor(final RandomAccess<T> randomAccess)
-	{
-		this.randomAccess = randomAccess;
+	@Override
+	public int getIntPosition(int d) {
+		return (int) getLongPosition(d);
 	}
 
 	@Override
-	public T get()
-	{
-		return randomAccess.get();
+	public float getFloatPosition(int d) {
+		return getLongPosition(d);
 	}
 
 	@Override
-	public T next()
-	{
+	public double getDoublePosition(int d) {
+		return getLongPosition(d);
+	}
+
+	@Override
+	public BoolType next() {
 		fwd();
 		return get();
 	}
@@ -72,51 +69,4 @@ public abstract class AbstractBoundCursor<T> implements Cursor<T>
 	@Override
 	public void remove() { /* unsupported */}
 
-	@Override
-	public void localize( final float[] position )
-	{
-		randomAccess.localize( position );
-	}
-
-	@Override
-	public void localize( final double[] position )
-	{
-		randomAccess.localize( position );
-	}
-
-	@Override
-	public float getFloatPosition( final int d )
-	{
-		return randomAccess.getFloatPosition( d );
-	}
-
-	@Override
-	public double getDoublePosition( final int d )
-	{
-		return randomAccess.getDoublePosition( d );
-	}
-
-	@Override
-	public void localize( final int[] position )
-	{
-		randomAccess.localize( position );
-	}
-
-	@Override
-	public void localize( final long[] position )
-	{
-		randomAccess.localize( position );
-	}
-
-	@Override
-	public int getIntPosition( final int d )
-	{
-		return randomAccess.getIntPosition( d );
-	}
-
-	@Override
-	public long getLongPosition( final int d )
-	{
-		return randomAccess.getLongPosition( d );
-	}
 }

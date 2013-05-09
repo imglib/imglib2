@@ -211,4 +211,10 @@ public abstract class AbstractPointSet implements NewPointSet {
 			dimensions[i] = dimension(i);
 		}
 	}
+
+	@Override
+	public long dimension(int d) {
+		return max(d) - min(d) + 1;
+	}
+
 }

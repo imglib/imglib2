@@ -37,7 +37,6 @@
 
 package net.imglib2.ops.sandbox;
 
-import net.imglib2.AbstractInterval;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
@@ -51,7 +50,6 @@ import net.imglib2.type.logic.BoolType;
  *
  */
 public class BoundConditionalPointSet extends AbstractPointSet {
-
 	private NewPointSet ps;
 	private Condition<long[]> condition;
 	private boolean needsCalc;
@@ -157,11 +155,6 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		return max[d];
 	}
 
-	@Override
-	public long dimension(int d) {
-		return max(d) - min(d) + 1;
-	}
-
 	private void calcStuff() {
 		size = 0;
 		long[] position = new long[numDimensions()];
@@ -178,26 +171,27 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		needsCalc = false;
 	}
 	
-	private class PositionCursor extends AbstractInterval implements
-		Cursor<BoolType>
+	private class PositionCursor extends AbstractPositionCursor
 	{
-
 		private Cursor<BoolType> cursor;
 		private long[] tmpPos;
 		
 		@SuppressWarnings("synthetic-access")
 		public PositionCursor() {
-			super(BoundConditionalPointSet.this);
 			cursor = ps.cursor();
-			tmpPos = new long[n];
+			tmpPos = new long[cursor.numDimensions()];
 		}
 
 		public PositionCursor(PositionCursor other) {
 			this();
-			long pos = other.cursor.getLongPosition(0); // TODO - looks broken. dim 0 only?
-			cursor.jumpFwd(pos+1);
+			cursor = other.cursor.copyCursor();
 		}
 		
+		@Override
+		public int numDimensions() {
+			return cursor.numDimensions();
+		}
+
 		@Override
 		public void localize(float[] position) {
 			cursor.localize(position);
@@ -209,23 +203,13 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public float getFloatPosition(int d) {
-			return cursor.getFloatPosition(d);
-		}
-
-		@Override
-		public double getDoublePosition(int d) {
-			return cursor.getDoublePosition(d);
-		}
-
-		@Override
 		public BoolType get() {
 			return cursor.get();
 		}
 
 		@Override
 		public Sampler<BoolType> copy() {
-			return cursor();
+			return new PositionCursor(this);
 		}
 
 		@Override
@@ -259,9 +243,6 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		}
 
 		@Override
-		public void remove() { /* unsupported */}
-
-		@Override
 		public void localize(int[] position) {
 			cursor.localize(position);
 		}
@@ -269,11 +250,6 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		@Override
 		public void localize(long[] position) {
 			cursor.localize(position);
-		}
-
-		@Override
-		public int getIntPosition(int d) {
-			return cursor.getIntPosition(d);
 		}
 
 		@Override
@@ -302,20 +278,24 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		private Cursor<BoolType> cursor;
 		private long[] tmpPos;
 		
-		public BoundCursor( final Interval interval, final RandomAccess< T > randomAccess )
+		public BoundCursor(final Interval interval,
+			final RandomAccess<T> randomAccess)
 		{
-			super( interval, randomAccess );
+			super(randomAccess);
 			cursor = cursor();
 			tmpPos = new long[interval.numDimensions()];
 			rst();
 		}
 		
-		protected BoundCursor( final BoundCursor<T> cursor )
+		public BoundCursor(final BoundCursor<T> other)
 		{
-			super( cursor, cursor.randomAccess.copyRandomAccess() );
-			//long pos = cursor.getLongPosition(d);
-			//this.cursor.jumpFwd(pos+1);
-			throw new UnsupportedOperationException("TODO");
+			super(other.randomAccess.copyRandomAccess());
+			this.cursor = other.cursor.copyCursor();
+		}
+
+		@Override
+		public int numDimensions() {
+			return cursor.numDimensions();
 		}
 
 		@Override
