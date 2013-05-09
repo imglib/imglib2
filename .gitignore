@@ -9,5 +9,6 @@
 target
 *.class
 *~
+*.orig
 # For Fiji #
 *.jar
