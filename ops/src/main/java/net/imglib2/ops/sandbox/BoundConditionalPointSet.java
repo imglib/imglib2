@@ -309,11 +309,15 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		@Override
 		public void jumpFwd(long steps) {
 			cursor.jumpFwd(steps);
+			cursor.localize(tmpPos);
+			randomAccess.setPosition(tmpPos);
 		}
 
 		@Override
 		public void fwd() {
 			cursor.fwd();
+			cursor.localize(tmpPos);
+			randomAccess.setPosition(tmpPos);
 		}
 
 		@Override
