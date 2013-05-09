@@ -28,10 +28,11 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.realtransform.Perspective3D;
 import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -45,6 +46,8 @@ import net.imglib2.view.Views;
 public class VolumeRenderer
 {
 	final static double bg = 0;
+	
+	
 	
 	static protected < T extends RealType< T > > double accumulate( final RandomAccess< T > poxel, final long min )
 	{
@@ -64,14 +67,15 @@ public class VolumeRenderer
 			final RandomAccessible< T > volume,
 			final RandomAccessibleInterval< T > canvas,
 			final long minZ,
-			final long maxZ )
+			final long maxZ,
+			final RowAccumulator< T > accumulator )
 	{
 		final RandomAccess< T > pixel = canvas.randomAccess( canvas );
 		final RandomAccess< T > poxel = volume.randomAccess();
 		
 		pixel.setPosition( canvas.min( 0 ), 0 );
 		pixel.setPosition( canvas.min( 1 ), 0 );
-		
+
 		poxel.setPosition( pixel.getLongPosition( 0 ), 0 );
 		poxel.setPosition( pixel.getLongPosition( 1 ), 1 );
 		poxel.setPosition( maxZ, 2 );
@@ -83,7 +87,7 @@ public class VolumeRenderer
 			while ( pixel.getLongPosition( 0 ) <= canvas.max( 0 ) )
 			{
 				poxel.setPosition( maxZ, 2 );
-				pixel.get().setReal( accumulate( poxel , minZ ) );
+				accumulator.accumulateRow( pixel.get(), poxel, minZ, maxZ, 1, 2 );
 				
 				pixel.fwd( 0 );
 				poxel.fwd( 0 );
@@ -117,7 +121,11 @@ public class VolumeRenderer
 				0, 1, 0, -img.dimension( 1 ) / 2.0 - img.min( 1 ),
 				0, 0, 1, -img.dimension( 2 ) / 2.0 - img.min( 2 ) );
 		
-		System.out.println( centerShift.inverse() );
+		final AffineTransform3D zShift = new AffineTransform3D();
+		zShift.set(
+				1, 0, 0, 0,
+				0, 1, 0, 0,
+				0, 0, 1, 100 );
 		
 		final AffineTransform3D affine = new AffineTransform3D();
 		
@@ -129,6 +137,9 @@ public class VolumeRenderer
 		
 //		final Scale rotation = new Scale( 1.5, 1.5, 1.5 );
 		
+		final Perspective3D perspective = new Perspective3D();
+		
+		affine.concatenate( zShift );
 		affine.concatenate( centerShift.inverse() );
 		affine.concatenate( rotation );
 		affine.concatenate( centerShift );
@@ -140,12 +151,19 @@ public class VolumeRenderer
 		System.out.println( "minZ = " + minZ + "; maxZ = " + maxZ );
 		
 		final ExtendedRandomAccessibleInterval< FloatType, ImgPlus< FloatType > > extendedImg = Views.extendValue( img, img.firstElement().createVariable() );
-		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NLinearInterpolatorFactory< FloatType >() );
-		final RandomAccessible< FloatType > rotated = RealViews.constantAffine( interpolant, affine );
+//		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NLinearInterpolatorFactory< FloatType >() );
+		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NearestNeighborInterpolatorFactory< FloatType >() );
+//		final RandomAccessible< FloatType > rotated = RealViews.constantAffine( interpolant, affine );
 //		final RandomAccessible< FloatType > rotated = RealViews.transform( interpolant, affine );
+		final RandomAccessible< FloatType > rotated = RealViews.transform( interpolant, perspective );
+		final RandomAccessible< FloatType > centered = Views.offset( rotated, -img.dimension( 0 ) / 2, -img.dimension( 1 ) / 2, 0 );
 		final ArrayImg< FloatType, ? > canvas = ArrayImgs.floats( img.dimension( 0 ), img.dimension( 1 ) );
 		
-		render( rotated, canvas, minZ, maxZ );
+		final AlphaIntensityLayers< FloatType > accumulator = new AlphaIntensityLayers< FloatType >();
+		
+		//render( centered, canvas, minZ, maxZ, accumulator );
+		render( rotated, canvas, img.min( 2 ), img.max( 2 ), accumulator );
+		//render( Views.raster( interpolant ), canvas, img.min( 2 ), img.max( 2 ) );
 		
 		ImageJFunctions.show( canvas );
 	}
