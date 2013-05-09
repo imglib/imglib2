@@ -40,9 +40,6 @@ package net.imglib2.img.transform;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Random;
-
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.Point;
@@ -61,7 +58,6 @@ import org.junit.Test;
  * @author leek
  */
 public class ImgTranslationAdapterTest {
-	private final Random r = new Random(12345);
 
 	private Img<IntType> makeImage(final int [][] imgArray) {
 		final NativeImg<IntType, IntArray> img = new ArrayImgFactory<IntType>().createIntInstance(

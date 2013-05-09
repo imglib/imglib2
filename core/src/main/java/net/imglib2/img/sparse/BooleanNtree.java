@@ -84,8 +84,8 @@ public final class BooleanNtree implements BitAccess, NtreeAccess< Boolean, Bool
 	}
 
 	@Override
-	public BooleanNtree createInstance( final long[] position )
+	public BooleanNtree createInstance( final long[] pos )
 	{
-		return new BooleanNtree( data, position );
+		return new BooleanNtree( data, pos );
 	}
 }

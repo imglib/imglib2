@@ -59,7 +59,7 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testCompositeRegionOfInterestInt() {
-		CompositeRegionOfInterest c = new CompositeRegionOfInterest(2);
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(2);
 		assertEquals(2, c.numDimensions());
 	}
 
@@ -68,7 +68,7 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testCompositeRegionOfInterestRegionOfInterest() {
-		CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
 		assertEquals(2, c.numDimensions());
 	}
 
@@ -77,28 +77,28 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testCompositeRegionOfInterestCollectionOfRegionOfInterest() {
-		ArrayList<RegionOfInterest> list = new ArrayList<RegionOfInterest>();
+		final ArrayList<RegionOfInterest> list = new ArrayList<RegionOfInterest>();
 		list.add(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
 		list.add(new RectangleRegionOfInterest(new double[] {5,6}, new double[] { 3,4}));
-		CompositeRegionOfInterest c = new CompositeRegionOfInterest(list);
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(list);
 		assertEquals(2, c.numDimensions());
 	}
 
-	private void assertInside(CompositeRegionOfInterest c, double [] position) {
-		RealRandomAccess<BitType> ra = c.realRandomAccess();
+	private void assertInside(final CompositeRegionOfInterest c, final double [] position) {
+		final RealRandomAccess<BitType> ra = c.realRandomAccess();
 		ra.setPosition(position);
 		assertTrue(ra.get().get());
 	}
-	private void assertInside(CompositeRegionOfInterest c, double x, double y) {
+	private void assertInside(final CompositeRegionOfInterest c, final double x, final double y) {
 		assertInside(c,new double[] { x,y});
 	}
 
-	private void assertOutside(CompositeRegionOfInterest c, double [] position) {
-		RealRandomAccess<BitType> ra = c.realRandomAccess();
+	private void assertOutside(final CompositeRegionOfInterest c, final double [] position) {
+		final RealRandomAccess<BitType> ra = c.realRandomAccess();
 		ra.setPosition(position);
 		assertFalse(ra.get().get());
 	}
-	private void assertOutside(CompositeRegionOfInterest c, double x, double y) {
+	private void assertOutside(final CompositeRegionOfInterest c, final double x, final double y) {
 		assertOutside(c,new double[] { x,y});
 	}
 	/**
@@ -106,7 +106,7 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testOr() {
-		CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
 		c.or(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
 		assertInside(c, 2,3);
 		assertInside(c, 5, 8);
@@ -119,13 +119,13 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testRemove() {
-		RectangleRegionOfInterest [] rois = new RectangleRegionOfInterest[] {
+		final RectangleRegionOfInterest [] rois = new RectangleRegionOfInterest[] {
 			new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}),
 			new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4})
 		};
-		double [][] inside = { {2,4},{5,8}};
+		final double [][] inside = { {2,4},{5,8}};
 		for (int i=0; i<2; i++) {
-			CompositeRegionOfInterest c = new CompositeRegionOfInterest(rois[0]);
+			final CompositeRegionOfInterest c = new CompositeRegionOfInterest(rois[0]);
 			c.or(rois[1]);
 			c.remove(rois[i]);
 			for (int j=0; j<2; j++) {
@@ -143,7 +143,7 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testAnd() {
-		CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
 		c.and(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
 		assertOutside(c, 2,3);
 		assertOutside(c, 5, 8);
@@ -156,7 +156,7 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testXor() {
-		CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
 		c.xor(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
 		assertInside(c, 2,3);
 		assertInside(c, 5, 8);
@@ -169,7 +169,7 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testNot() {
-		CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
 		c.not(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
 		assertInside(c, 2,3);
 		assertOutside(c, 5, 8);
@@ -182,7 +182,7 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testRealMin() {
-		CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
 		c.or(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
 		assertEquals(1, c.realMin(0), 0);
 		assertEquals(2, c.realMin(1), 0);
@@ -193,7 +193,7 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testRealMax() {
-		CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
 		c.or(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
 		assertEquals(6, c.realMax(0), 0);
 		assertEquals(9, c.realMax(1), 0);

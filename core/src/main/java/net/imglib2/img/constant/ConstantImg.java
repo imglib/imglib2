@@ -93,10 +93,10 @@ public class ConstantImg < T extends Type< T > > extends AbstractImg< T >
 	@Override
 	public Cursor< T > localizingCursor() 
 	{
-		final long[] max = new long[ this.numDimensions() ];		
-		this.max( max );
+		final long[] m = new long[ this.numDimensions() ];		
+		this.max( m );
 		
-		return new ConstantLocalizingCursor< T >( type, this.numDimensions(), max, this.numPixels );
+		return new ConstantLocalizingCursor< T >( type, this.numDimensions(), m, this.numPixels );
 	}
 
 	@Override

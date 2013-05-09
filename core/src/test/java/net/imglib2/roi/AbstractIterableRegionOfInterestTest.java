@@ -65,11 +65,11 @@ public class AbstractIterableRegionOfInterestTest
 	 */
 	@Test
 	public void testIntervalOfIteratorOverRandomAccessibleInterval() {
-		int width = 27;
-		int height = 16;
-		int depth = 17;
-		Img<IntType> img = new ArrayImgFactory<IntType>().create(new long [] {width, height, depth} , new IntType());
-		double dimensions [][][] = {
+		final int width = 27;
+		final int height = 16;
+		final int depth = 17;
+		final Img<IntType> img = new ArrayImgFactory<IntType>().create(new long [] {width, height, depth} , new IntType());
+		final double dimensions [][][] = {
 				{ { 1.0, 2.0, 3.0 }, {28.5, 6.0, 7.0 } },
 				{ { 1.0, 2.0, 3.0 }, {5.0, 17.5, 7.0 } },
 				{ { 1.0, 2.0, 3.0 }, {5.0,  6.0, 18.5 } },
@@ -77,9 +77,9 @@ public class AbstractIterableRegionOfInterestTest
 				{ { 1.0, -2.0, 3.0 }, {5.0, 6.0, 7.0 } },
 				{ { 1.0, 2.0, -3.0 }, {5.0, 6.0, 7.0 } }};
 
-		for (double [][] dd: dimensions) {
-			RectangleRegionOfInterest r = new RectangleRegionOfInterest(dd[0], dd[1]);
-			IterableInterval<IntType> ii = r.getIterableIntervalOverROI(img);
+		for (final double [][] dd: dimensions) {
+			final RectangleRegionOfInterest r = new RectangleRegionOfInterest(dd[0], dd[1]);
+			final IterableInterval<IntType> ii = r.getIterableIntervalOverROI(img);
 			for ( int i = 0; i < ii.numDimensions(); i++ ) {
 				assertEquals(Math.max( r.min( i ), img.min(i) ), ii.min( i ));
 				assertEquals(Math.min( r.max( i ), img.max(i) ), ii.max( i ));
@@ -97,11 +97,11 @@ public class AbstractIterableRegionOfInterestTest
 	 */
 	@Test
 	public void testCursorOverRandomAccessibleInterval() {
-		int width = 27;
-		int height = 16;
-		int depth = 17;
-		Img<IntType> img = new ArrayImgFactory<IntType>().create(new long [] {width, height, depth} , new IntType());
-		double dimensions [][][] = {
+		final int width = 27;
+		final int height = 16;
+		final int depth = 17;
+		final Img<IntType> img = new ArrayImgFactory<IntType>().create(new long [] {width, height, depth} , new IntType());
+		final double dimensions [][][] = {
 				{ { 1.0, 2.0, 3.0 }, {28.5, 6.0, 7.0 } },
 				{ { 1.0, 2.0, 3.0 }, {5.0, 17.5, 7.0 } },
 				{ { 1.0, 2.0, 3.0 }, {5.0,  6.0, 18.5 } },
@@ -109,12 +109,12 @@ public class AbstractIterableRegionOfInterestTest
 				{ { 1.0, -2.0, 3.0 }, {5.0, 6.0, 7.0 } },
 				{ { 1.0, 2.0, -3.0 }, {5.0, 6.0, 7.0 } }};
 
-		int [] position = new int[img.numDimensions()];
-		for (double [][] dd: dimensions) {
-			RectangleRegionOfInterest r = new RectangleRegionOfInterest(dd[0], dd[1]);
-			IterableInterval<IntType> ii = r.getIterableIntervalOverROI(img);
-			boolean mask [][][] = new boolean[width][height][depth];
-			RealRandomAccess<BitType> ra = r.realRandomAccess();
+		final int [] position = new int[img.numDimensions()];
+		for (final double [][] dd: dimensions) {
+			final RectangleRegionOfInterest r = new RectangleRegionOfInterest(dd[0], dd[1]);
+//			IterableInterval<IntType> ii = r.getIterableIntervalOverROI(img);
+			final boolean mask [][][] = new boolean[width][height][depth];
+			final RealRandomAccess<BitType> ra = r.realRandomAccess();
 			for (int i=0; i<width; i++) {
 				ra.setPosition( i, 0);
 				for (int j=0; j<height; j++) {
@@ -126,7 +126,7 @@ public class AbstractIterableRegionOfInterestTest
 				}
 			}
 			
-			Cursor<IntType> c = r.getIterableIntervalOverROI(img).localizingCursor();
+			final Cursor<IntType> c = r.getIterableIntervalOverROI(img).localizingCursor();
 			while(c.hasNext()) {
 				c.next();
 				c.localize( position );

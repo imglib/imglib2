@@ -199,18 +199,18 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	/**
 	 * Get the coordinates of the origin
 	 * 
-	 * @param origin
+	 * @param orig
 	 *            set the position of this RealPositionable to that of the
 	 *            origin.
 	 */
-	public void getOrigin( RealPositionable origin )
+	public void getOrigin( RealPositionable orig )
 	{
-		origin.setPosition( this.origin );
+		orig.setPosition( this.origin );
 	}
 
-	public void getOrigin( double[] origin )
+	public void getOrigin( double[] orig )
 	{
-		this.origin.localize( origin );
+		this.origin.localize( orig );
 	}
 
 	/**
@@ -227,12 +227,12 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	/**
 	 * Get the radius along all of the dimensions
 	 * 
-	 * @param radii
+	 * @param r
 	 *            an array of doubles to be filled with the radii
 	 */
-	public void getRadii( double[] radii )
+	public void getRadii( double[] r )
 	{
-		System.arraycopy( this.radii, 0, radii, 0, numDimensions() );
+		System.arraycopy( this.radii, 0, r, 0, numDimensions() );
 	}
 
 	/**

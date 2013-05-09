@@ -60,13 +60,13 @@ import org.junit.Test;
 
 public class ARGBScreenImageExpectationChecking
 {
-	static public final void main(String[] args)
+	static public final void main(final String[] args)
 	{
 		System.out.println("Painting on java.awt.Graphics alters original array: " + new ARGBScreenImageExpectationChecking().testFill2());
 		System.out.println("After painting, the image shows a yellow pixel at 0,0: " + new ARGBScreenImageExpectationChecking().testFillAndGrabPixel2());
 		try {
 			System.out.println("After painting onto JPanel and capturing, the imageshows a red pixel at 100,100: " + new ARGBScreenImageExpectationChecking().testFillAndPaintPanelAndGrab2());
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -78,14 +78,14 @@ public class ARGBScreenImageExpectationChecking
 	
 	private boolean testFill2() {
 		// Define an image
-		int width = 256;
-		int height = 256;
-		int[] pixels = new int[width * height];
+		final int width = 256;
+		final int height = 256;
+		final int[] pixels = new int[width * height];
 		
-		ARGBScreenImage simg = new ARGBScreenImage(width, height, pixels);
+		final ARGBScreenImage simg = new ARGBScreenImage(width, height, pixels);
 		
 		// Paint a yellow rectangle
-		Graphics g = simg.image().getGraphics();
+		final Graphics g = simg.image().getGraphics();
 		g.setColor(Color.yellow);
 		g.fillRect(0, 0, 100, 100);
 		g.dispose();
@@ -94,12 +94,12 @@ public class ARGBScreenImageExpectationChecking
 		return  0 != pixels[0];
 	}
 	
-	private int getPixel(Image img, int x, int y) {
-		int[] pix = new int[1];
-		PixelGrabber pg = new PixelGrabber(img, x, y, 1, 1, pix, 0, 1);
+	private int getPixel(final Image img, final int x, final int y) {
+		final int[] pix = new int[1];
+		final PixelGrabber pg = new PixelGrabber(img, x, y, 1, 1, pix, 0, 1);
 		try {
 			pg.grabPixels();
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 		return pix[0];
@@ -112,21 +112,21 @@ public class ARGBScreenImageExpectationChecking
 	
 	public boolean testFillAndGrabPixel2() {
 		// Define an image
-		int width = 256;
-		int height = 256;
-		int[] pixels = new int[width * height];
+		final int width = 256;
+		final int height = 256;
+		final int[] pixels = new int[width * height];
 		
-		ARGBScreenImage simg = new ARGBScreenImage(width, height, pixels);
+		final ARGBScreenImage simg = new ARGBScreenImage(width, height, pixels);
 		
 		// Paint a yellow rectangle
-		Graphics g = simg.image().getGraphics();
+		final Graphics g = simg.image().getGraphics();
 		g.setColor(Color.yellow);
 		g.fillRect(0, 0, 100, 100);
 		g.dispose();
 		
 		// Paint the image, now that it has been altered, onto another image
-		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = bi.createGraphics();
+		final BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		final Graphics2D g2 = bi.createGraphics();
 		g2.drawImage(simg.image(), 0, 0, null);
 		g2.dispose();
 		
@@ -143,12 +143,12 @@ public class ARGBScreenImageExpectationChecking
 		// Define an image
 		final int width = 256;
 		final int height = 256;
-		int[] pixels = new int[width * height];
+		final int[] pixels = new int[width * height];
 
 		final ARGBScreenImage simg = new ARGBScreenImage(width, height, pixels);
 
 		// Paint a yellow rectangle
-		Graphics g = simg.image().getGraphics();
+		final Graphics g = simg.image().getGraphics();
 		g.setColor(Color.yellow);
 		g.fillRect(0, 0, 100, 100);
 		g.dispose();
@@ -172,11 +172,11 @@ public class ARGBScreenImageExpectationChecking
 			@Override
 			public void run() {
 				// Paint into the image again
-				Graphics g2 = simg.image().getGraphics();
+				final Graphics g2 = simg.image().getGraphics();
 				g2.setColor(Color.red);
 				g2.fillRect(100, 100, 100, 100);
 				g2.dispose();
-				JPanel panel = (JPanel) frame[0].getContentPane().getComponent(0);
+				final JPanel panel = (JPanel) frame[0].getContentPane().getComponent(0);
 				panel.invalidate();
 				panel.validate();
 				panel.repaint();
@@ -190,15 +190,15 @@ public class ARGBScreenImageExpectationChecking
 		SwingUtilities.invokeAndWait(new Runnable() {
 			@Override
 			public void run() {
-				Point panelLocation = frame[0].getContentPane().getComponent(0).getLocationOnScreen();
-				Rectangle panelBounds = new Rectangle(panelLocation.x, panelLocation.y, width, height);				
+				final Point panelLocation = frame[0].getContentPane().getComponent(0).getLocationOnScreen();
+				final Rectangle panelBounds = new Rectangle(panelLocation.x, panelLocation.y, width, height);				
 				Robot robot;
 				try {
 					robot = new Robot();
 					capture[0] = robot.createScreenCapture(panelBounds);
 					frame[1] = frame(capture[0], "Robot capture");
 					frame[1].setVisible(true);
-				} catch (AWTException e) {
+				} catch (final AWTException e) {
 					e.printStackTrace();
 				}
 				
@@ -212,19 +212,23 @@ public class ARGBScreenImageExpectationChecking
 		return 0x00ff0000 == (getPixel(capture[0], 100, 100) & 0x00ffffff);
 	}
 	
-	private JFrame frame(final Image img, String title) {
-		JPanel panel = new JPanel() {
+	private JFrame frame(final Image img, final String title) {
+		final JPanel panel = new JPanel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1605551958207115402L;
 			@Override
-			public void update(Graphics g) {
+			public void update(final Graphics g) {
 				this.paint(g);
 			}
 			@Override
-			public void paint(Graphics g) {
+			public void paint(final Graphics g) {
 				g.drawImage(img, 0, 0, null);
 			}
 		};
 		panel.setPreferredSize(new Dimension(img.getWidth(null), img.getHeight(null)));
-		JFrame frame = new JFrame(title);
+		final JFrame frame = new JFrame(title);
 		frame.getContentPane().add(panel);
 		frame.pack();
 		return frame;

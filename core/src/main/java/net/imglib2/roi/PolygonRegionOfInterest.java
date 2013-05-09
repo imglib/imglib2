@@ -79,7 +79,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 
 		final public ArrayList< Double > xBottom = new ArrayList< Double >();
 
-		public Stripe( double yMin, double yMax )
+		public Stripe( final double yMin, final double yMax )
 		{
 			this.yMin = yMin;
 			this.yMax = yMax;
@@ -88,7 +88,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 		@Override
 		public String toString()
 		{
-			StringBuffer sb = new StringBuffer( String.format( "\ny: %.2f<->%.2f", yMin, yMax ) );
+			final StringBuffer sb = new StringBuffer( String.format( "\ny: %.2f<->%.2f", yMin, yMax ) );
 			for ( int i = 0; i < xTop.size(); i++ )
 			{
 				sb.append( String.format( "\n\t%d: %.2f<->%.2f", i, xTop.get( i ), xBottom.get( i ) ) );
@@ -120,7 +120,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            index of the vertex to get
 	 * @return the vertex
 	 */
-	public RealLocalizable getVertex( int index )
+	public RealLocalizable getVertex( final int index )
 	{
 		return points.get( index );
 	}
@@ -133,7 +133,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param index
 	 *            index of point.
 	 */
-	public void addVertex( int index, RealLocalizable p )
+	public void addVertex( final int index, final RealLocalizable p )
 	{
 		points.add( index, new RealPoint( p ) );
 		invalidateCachedState();
@@ -146,7 +146,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param index
 	 *            index of the vertex to remove
 	 */
-	public void removeVertex( int index )
+	public void removeVertex( final int index )
 	{
 		points.remove( index );
 		invalidateCachedState();
@@ -160,7 +160,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            index of the vertex in question
 	 * @param position
 	 */
-	public void setVertexPosition( int index, double[] position )
+	public void setVertexPosition( final int index, final double[] position )
 	{
 		points.get( index ).setPosition( position );
 		invalidateCachedState();
@@ -174,7 +174,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            index of the vertex in question
 	 * @param position
 	 */
-	public void setVertexPosition( int index, float[] position )
+	public void setVertexPosition( final int index, final float[] position )
 	{
 		points.get( index ).setPosition( position );
 		invalidateCachedState();
@@ -189,7 +189,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param localizable
 	 *            containing the new position
 	 */
-	public void setVertexPosition( int index, RealLocalizable localizable )
+	public void setVertexPosition( final int index, final RealLocalizable localizable )
 	{
 		points.get( index ).setPosition( localizable );
 		invalidateCachedState();
@@ -203,7 +203,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param b
 	 * @return true if less than.
 	 */
-	private boolean lt( double a, double b )
+	private boolean lt( final double a, final double b )
 	{
 		return ( float ) a < ( float ) b;
 	}
@@ -215,7 +215,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param b
 	 * @return true if greater than.
 	 */
-	private boolean gt( double a, double b )
+	private boolean gt( final double a, final double b )
 	{
 		return ( float ) a > ( float ) b;
 	}
@@ -227,7 +227,8 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param b
 	 * @return true if less than.
 	 */
-	private boolean le( double a, double b )
+	@SuppressWarnings( "unused" )
+	private boolean le( final double a, final double b )
 	{
 		return ( float ) a <= ( float ) b;
 	}
@@ -239,7 +240,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param b
 	 * @return true if greater than.
 	 */
-	private boolean ge( double a, double b )
+	private boolean ge( final double a, final double b )
 	{
 		return ( float ) a >= ( float ) b;
 	}
@@ -251,7 +252,8 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param b
 	 * @return true if approximately equal
 	 */
-	private boolean eq( double a, double b )
+	@SuppressWarnings( "unused" )
+	private boolean eq( final double a, final double b )
 	{
 		return ( float ) a == ( float ) b;
 	}
@@ -263,12 +265,12 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	{
 		if ( stripes == null )
 		{
-			SortedSet< Double > y = new TreeSet< Double >();
-			for ( RealPoint p : points )
+			final SortedSet< Double > y = new TreeSet< Double >();
+			for ( final RealPoint p : points )
 			{
 				y.add( p.getDoublePosition( 1 ) );
 			}
-			Double[] dy = new Double[ y.size() ];
+			final Double[] dy = new Double[ y.size() ];
 			y.toArray( dy );
 			stripes = new ArrayList< Stripe >();
 			for ( int i = 0; i < dy.length - 1; i++ )
@@ -277,8 +279,8 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 			}
 			for ( int i = 0; i < points.size(); i++ )
 			{
-				RealLocalizable p0 = getEdgeStart( i );
-				RealLocalizable p1 = getEdgeEnd( i );
+				final RealLocalizable p0 = getEdgeStart( i );
+				final RealLocalizable p1 = getEdgeEnd( i );
 				double x0 = p0.getDoublePosition( 0 );
 				double y0 = p0.getDoublePosition( 1 );
 				double x1 = p1.getDoublePosition( 0 );
@@ -300,7 +302,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 				}
 				do
 				{
-					Stripe stripe = stripes.get( index );
+					final Stripe stripe = stripes.get( index );
 					double xBottom = x1;
 					if ( y1 != stripe.yMax )
 						xBottom = x0 + ( stripe.yMax - y0 ) * ( x1 - x0 ) / ( y1 - y0 );
@@ -419,15 +421,15 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            xBottom of the incoming edge
 	 * @return x midpoint of the split.
 	 */
-	private double splitStripe( int stripeIndex, int xIndex, double xTop, double xBottom )
+	private double splitStripe( final int stripeIndex, int xIndex, final double xTop, double xBottom )
 	{
-		Stripe stripe = stripes.get( stripeIndex );
-		double stripe_xTop = stripe.xTop.get( xIndex );
-		double stripe_xBottom = stripe.xBottom.get( xIndex );
-		double yTop = stripe.yMin;
-		double yBottom = stripe.yMax;
-		double dTop = Math.abs( xTop - stripe_xTop );
-		double dBottom = Math.abs( xBottom - stripe_xBottom );
+		final Stripe stripe = stripes.get( stripeIndex );
+		final double stripe_xTop = stripe.xTop.get( xIndex );
+		final double stripe_xBottom = stripe.xBottom.get( xIndex );
+		final double yTop = stripe.yMin;
+		final double yBottom = stripe.yMax;
+		final double dTop = Math.abs( xTop - stripe_xTop );
+		final double dBottom = Math.abs( xBottom - stripe_xBottom );
 		/*
 		 * yCross = crossing point. dTop = abs(xTop - stripe_xTop), dBottom is
 		 * similar
@@ -440,15 +442,15 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 		 * = yBottom * (dTop / dBottom) + yTop ---------------------------------
 		 * (1 + dTop / dBottom)
 		 */
-		double yCross = ( ( yBottom * dTop / dBottom ) + yTop ) / ( 1 + dTop / dBottom );
+		final double yCross = ( ( yBottom * dTop / dBottom ) + yTop ) / ( 1 + dTop / dBottom );
 		stripe.yMax = yCross;
-		Stripe newStripe = new Stripe( yCross, yBottom );
+		final Stripe newStripe = new Stripe( yCross, yBottom );
 		stripes.add( stripeIndex + 1, newStripe );
 		for ( int i = 0; i < stripe.xTop.size(); i++ )
 		{
-			double xT = stripe.xTop.get( i );
-			double xB = stripe.xBottom.get( i );
-			double xM = xT + ( yCross - yTop ) * ( xB - xT ) / ( yBottom - yTop );
+			final double xT = stripe.xTop.get( i );
+			final double xB = stripe.xBottom.get( i );
+			final double xM = xT + ( yCross - yTop ) * ( xB - xT ) / ( yBottom - yTop );
 			stripe.xBottom.set( i, xM );
 			newStripe.xTop.add( xM );
 			newStripe.xBottom.add( xB );
@@ -473,7 +475,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *         Pseudocode borrowed from
 	 *         http://en.wikipedia.org/wiki/Binary_search_algorithm
 	 */
-	protected int findStripeIndex( double y )
+	protected int findStripeIndex( final double y )
 	{
 		if ( ( stripes.size() == 0 ) || ( stripes.get( 0 ).yMin > y ) )
 			return -1;
@@ -481,8 +483,8 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 		int maximum = stripes.size() - 1;
 		while ( minimum < maximum )
 		{
-			int test_index = ( minimum + maximum ) / 2;
-			double yMin = stripes.get( test_index ).yMin;
+			final int test_index = ( minimum + maximum ) / 2;
+			final double yMin = stripes.get( test_index ).yMin;
 			if ( y == yMin ) { return test_index; }
 			if ( y > yMin )
 			{
@@ -499,16 +501,16 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	protected void getRealExtrema( double[] minima, double[] maxima )
+	protected void getRealExtrema( final double[] minima, final double[] maxima )
 	{
 		Arrays.fill( minima, Double.MAX_VALUE );
 		Arrays.fill( maxima, Double.MIN_VALUE );
 		for ( int i = 0; i < points.size(); i++ )
 		{
-			RealPoint p = points.get( i );
+			final RealPoint p = points.get( i );
 			for ( int j = 0; j < 2; j++ )
 			{
-				double v = p.getDoublePosition( j );
+				final double v = p.getDoublePosition( j );
 				if ( v < minima[ j ] )
 					minima[ j ] = v;
 				if ( v > maxima[ j ] )
@@ -518,7 +520,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	protected void getExtrema( long[] minima, long[] maxima )
+	protected void getExtrema( final long[] minima, final long[] maxima )
 	{
 		for ( int i = 0; i < 2; i++ )
 		{
@@ -531,7 +533,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * Given an interpolated value, assign a ceiling accounting for roundoff
 	 * error.
 	 */
-	private static long ceil( double x )
+	private static long ceil( final double x )
 	{
 		return ( long ) Math.ceil( ( float ) x );
 	}
@@ -540,13 +542,13 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * Given an interpolated value, assign a floor accounting for roundoff
 	 * error.
 	 */
-	private static long floor( double x )
+	private static long floor( final double x )
 	{
 		return ( long ) Math.floor( ( float ) x );
 	}
 
 	@Override
-	protected boolean nextRaster( long[] position, long[] end )
+	protected boolean nextRaster( final long[] position, final long[] end )
 	{
 		validate();
 		if ( stripes.size() == 0 )
@@ -593,8 +595,8 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 						for ( i = 0; i < stripe.xBottom.size() && x > stripe.xBottom.get( i + 1 ); i += 2 );
 						for ( ; i < stripe.xBottom.size(); i += 2 )
 						{
-							long xLeft = ceil( stripe.xBottom.get( i ) );
-							long xRight = floor( stripe.xBottom.get( i + 1 ) ) + 1;
+							final long xLeft = ceil( stripe.xBottom.get( i ) );
+							final long xRight = floor( stripe.xBottom.get( i + 1 ) ) + 1;
 							if ( xLeft < xRight )
 							{
 								position[ 0 ] = xLeft;
@@ -619,8 +621,8 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 			 */
 			if ( ( stripe.yMin == y ) && ( index > 0 ) && ( stripes.get( index - 1 ).yMax == y ) )
 			{
-				ArrayList< Double > prevX = stripes.get( index - 1 ).xBottom;
-				ArrayList< Double > nextX = stripe.xTop;
+				final ArrayList< Double > prevX = stripes.get( index - 1 ).xBottom;
+				final ArrayList< Double > nextX = stripe.xTop;
 				/*
 				 * Find the two best next candidates from the bottom of the
 				 * previous stripe and the top of the next stripe.
@@ -649,10 +651,10 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 				}
 				else
 				{
-					long xLeftPrev = ceil( prevX.get( iPrev ) );
-					long xRightPrev = floor( prevX.get( iPrev + 1 ) ) + 1;
-					long xLeftNext = ceil( nextX.get( iNext ) );
-					long xRightNext = floor( nextX.get( iNext + 1 ) ) + 1;
+					final long xLeftPrev = ceil( prevX.get( iPrev ) );
+					final long xRightPrev = floor( prevX.get( iPrev + 1 ) ) + 1;
+					final long xLeftNext = ceil( nextX.get( iNext ) );
+					final long xRightNext = floor( nextX.get( iNext + 1 ) ) + 1;
 					ArrayList< Double > leading, trailing;
 					int iLeading, iTrailing;
 					if ( xLeftNext < xLeftPrev )
@@ -684,17 +686,17 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 					 */
 					while ( iTrailing < trailing.size() )
 					{
-						long xTrailingLeft = ceil( trailing.get( iTrailing ) );
+						final long xTrailingLeft = ceil( trailing.get( iTrailing ) );
 						if ( xTrailingLeft > xRight )
 							break;
 						xRight = Math.max( xRight, floor( trailing.get( iTrailing + 1 ) ) + 1 );
 						{
-							int temp = iLeading;
+							final int temp = iLeading;
 							iLeading = iTrailing;
 							iTrailing = temp + 2;
 						}
 						{
-							ArrayList< Double > temp = leading;
+							final ArrayList< Double > temp = leading;
 							leading = trailing;
 							trailing = temp;
 						}
@@ -710,8 +712,8 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 			long xInterpolatedLast = Long.MIN_VALUE;
 			for ( xIndex = 0; xIndex < stripe.xTop.size(); xIndex++ )
 			{
-				double xTop = stripe.xTop.get( xIndex );
-				double xBottom = stripe.xBottom.get( xIndex );
+				final double xTop = stripe.xTop.get( xIndex );
+				final double xBottom = stripe.xBottom.get( xIndex );
 				double xInterpolated = xTop + ( xBottom - xTop ) * ( y - stripe.yMin ) / ( stripe.yMax - stripe.yMin );
 				if ( !inside )
 				{
@@ -741,24 +743,24 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	public boolean contains( double[] position )
+	public boolean contains( final double[] position )
 	{
 		validate();
 
-		int index = findStripeIndex( position[ 1 ] );
+		final int index = findStripeIndex( position[ 1 ] );
 		if ( index == -1 )
 			return false;
-		Stripe stripe = stripes.get( index );
-		double y0 = stripe.yMin;
-		double y1 = stripe.yMax;
+		final Stripe stripe = stripes.get( index );
+		final double y0 = stripe.yMin;
+		final double y1 = stripe.yMax;
 		if ( y1 < position[ 1 ] )
 			return false;
 		boolean is_inside = false;
 		for ( int i = 0; i < stripe.xTop.size(); i++ )
 		{
-			double x0 = stripe.xTop.get( i );
-			double x1 = stripe.xBottom.get( i );
-			double x = x0 + ( position[ 1 ] - y0 ) * ( x1 - x0 ) / ( y1 - y0 );
+			final double x0 = stripe.xTop.get( i );
+			final double x1 = stripe.xBottom.get( i );
+			final double x = x0 + ( position[ 1 ] - y0 ) * ( x1 - x0 ) / ( y1 - y0 );
 			if ( x == position[ 0 ] )
 				return true;
 			if ( x > position[ 0 ] )
@@ -795,7 +797,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            the index of the edge
 	 * @return the second vertex, going clockwise
 	 */
-	public RealLocalizable getEdgeEnd( int start )
+	public RealLocalizable getEdgeEnd( final int start )
 	{
 		return getEdgeStart( start + 1 );
 	}
@@ -808,7 +810,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            index of edge to examine
 	 * @return true if horizontal (Y coordinates of start and end are identical)
 	 */
-	public boolean isHorizontal( int index )
+	public boolean isHorizontal( final int index )
 	{
 		return getEdgeStart( index ).getDoublePosition( 1 ) == getEdgeEnd( index ).getDoublePosition( 1 );
 	}
@@ -824,14 +826,14 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            index of the edge
 	 * @return the X coordinate
 	 */
-	public double interpolateEdgeXAtY( int start, double y )
+	public double interpolateEdgeXAtY( final int start, final double y )
 	{
-		RealLocalizable p_start = getEdgeStart( start );
-		RealLocalizable p_end = getEdgeEnd( start );
-		double x_start = p_start.getDoublePosition( 0 );
-		double y_start = p_start.getDoublePosition( 1 );
-		double x_end = p_end.getDoublePosition( 0 );
-		double y_end = p_end.getDoublePosition( 1 );
+		final RealLocalizable p_start = getEdgeStart( start );
+		final RealLocalizable p_end = getEdgeEnd( start );
+		final double x_start = p_start.getDoublePosition( 0 );
+		final double y_start = p_start.getDoublePosition( 1 );
+		final double x_end = p_end.getDoublePosition( 0 );
+		final double y_end = p_end.getDoublePosition( 1 );
 		return x_start + ( y - y_start ) * ( x_end - x_start ) / ( y_end - y_start );
 	}
 
@@ -844,7 +846,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            x-intercepts of the edges at the Y position passed in
 	 * @return true if point is within polygon.
 	 */
-	protected boolean getEdges( double[] position, double[] x_intercepts )
+	protected boolean getEdges( final double[] position, double[] x_intercepts )
 	{
 		if ( x_intercepts == null )
 		{
@@ -855,10 +857,10 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 		int count_to_left = 0;
 		for ( int i = 0; i < getVertexCount(); i++ )
 		{
-			double y_start = getEdgeStart( i ).getDoublePosition( 1 );
-			double y_end = getEdgeEnd( i ).getDoublePosition( 1 );
-			double x_start = getEdgeStart( i ).getDoublePosition( 0 );
-			double x_end = getEdgeEnd( i ).getDoublePosition( 0 );
+			final double y_start = getEdgeStart( i ).getDoublePosition( 1 );
+			final double y_end = getEdgeEnd( i ).getDoublePosition( 1 );
+			final double x_start = getEdgeStart( i ).getDoublePosition( 0 );
+			final double x_end = getEdgeEnd( i ).getDoublePosition( 0 );
 			if ( y_start == y_end )
 			{
 				if ( y_start == position[ 1 ] )
@@ -880,7 +882,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 				 */
 				continue;
 			}
-			double x_intercept = interpolateEdgeXAtY( i, position[ 1 ] );
+			final double x_intercept = interpolateEdgeXAtY( i, position[ 1 ] );
 			// Check to see if it's an edge to the left
 			if ( x_intercept <= position[ 0 ] )
 			{
@@ -901,9 +903,9 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	@Override
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		char c = '(';
-		for ( RealPoint p : points )
+		for ( final RealPoint p : points )
 		{
 			sb.append( c );
 			sb.append( p.toString() );
@@ -914,9 +916,9 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	public void move(double displacement, int d) {
-		for (RealPoint p : points) {
-			double currPos = p.getDoublePosition(d);
+	public void move(final double displacement, final int d) {
+		for (final RealPoint p : points) {
+			final double currPos = p.getDoublePosition(d);
 			p.setPosition(currPos + displacement, d);
 		}
 		invalidateCachedState();

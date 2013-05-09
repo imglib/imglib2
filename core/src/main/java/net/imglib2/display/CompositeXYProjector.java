@@ -135,7 +135,7 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 
 	// -- Projector methods --
 
-	private static long calls = 0;
+	// private static long calls = 0;
 	
 	@Override
 	public void map()
@@ -259,7 +259,7 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 		return currentSize;
 	}
 
-	protected void mapSingle( final RandomAccess< A > sourceRandomAccess, final Converter< A, ARGBType > converter )
+	protected void mapSingle( final RandomAccess< A > sourceRandomAccess, final Converter< A, ARGBType > conv )
 	{
 		final Cursor< ARGBType > targetCursor = target.localizingCursor();
 		while ( targetCursor.hasNext() )
@@ -267,7 +267,7 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 			targetCursor.fwd();
 			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
 			sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
-			converter.convert( sourceRandomAccess.get(), targetCursor.get() );
+			conv.convert( sourceRandomAccess.get(), targetCursor.get() );
 		}
 	}
 }

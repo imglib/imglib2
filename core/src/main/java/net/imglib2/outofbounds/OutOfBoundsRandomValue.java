@@ -55,16 +55,16 @@ public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractO
 {
 	final T value;
 	
-	final double min, max, range;
-	final Random rnd;
+	final protected double minValue, maxValue, range;
+	final protected Random rnd;
 
 	protected OutOfBoundsRandomValue( final OutOfBoundsRandomValue< T > outOfBounds )
 	{
 		super( outOfBounds );
 		
 		this.value = outOfBounds.value.copy();
-		this.min = outOfBounds.min;
-		this.max = outOfBounds.max;
+		this.minValue = outOfBounds.minValue;
+		this.maxValue = outOfBounds.maxValue;
 		this.range = outOfBounds.range;
 		this.rnd = new Random();
 	}
@@ -75,8 +75,8 @@ public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractO
 
 		this.value = value;
 		this.rnd = rnd;
-		this.min = min;
-		this.max = max;
+		this.minValue = min;
+		this.maxValue = max;
 		this.range = max - min;
 	}
 	
@@ -85,7 +85,7 @@ public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractO
 	{
 		if ( isOutOfBounds )
 		{
-			value.setReal( rnd.nextDouble() * range + min );
+			value.setReal( rnd.nextDouble() * range + minValue );
 			return value;
 		}
 		return sampler.get();

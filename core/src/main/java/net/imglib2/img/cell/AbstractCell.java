@@ -129,7 +129,7 @@ public abstract class AbstractCell< A >
 	/**
 	 * Write the minimum of each dimension into long[].
 	 *
-	 * @param min
+	 * @param minValue
 	 */
 	public void min( final long[] minimum )
 	{

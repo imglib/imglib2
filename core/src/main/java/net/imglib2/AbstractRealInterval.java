@@ -98,33 +98,33 @@ public class AbstractRealInterval extends AbstractEuclideanSpace  implements Rea
 	public double realMin( final int d) { return min[ d ]; }
 
 	@Override
-	public void realMin( final double[] min )
+	public void realMin( final double[] realMin )
 	{
 		for ( int d = 0; d < n; ++d )
-			min[ d ] = this.min[ d ];
+			realMin[ d ] = this.min[ d ];
 	}
 
 	@Override
-	public void realMin( final RealPositionable min )
+	public void realMin( final RealPositionable realMin )
 	{
 		for ( int d = 0; d < n; ++d )
-			min.setPosition( this.min[ d ], d );
+			realMin.setPosition( this.min[ d ], d );
 	}
 
 	@Override
 	public double realMax( final int d ) { return max[ d ]; }
 
 	@Override
-	public void realMax( final double[] max )
+	public void realMax( final double[] realMax )
 	{
 		for ( int d = 0; d < n; ++d )
-			max[ d ] = this.max[ d ];
+			realMax[ d ] = this.max[ d ];
 	}
 
 	@Override
-	public void realMax( final RealPositionable max )
+	public void realMax( final RealPositionable realMax )
 	{
 		for ( int d = 0; d < n; ++d )
-			max.setPosition( this.max[ d ], d );
+			realMax.setPosition( this.max[ d ], d );
 	}
 }

@@ -84,8 +84,8 @@ public final class ByteNtree implements ByteAccess, NtreeAccess< Byte, ByteNtree
 	}
 
 	@Override
-	public ByteNtree createInstance( final long[] position )
+	public ByteNtree createInstance( final long[] pos )
 	{
-		return new ByteNtree( data, position );
+		return new ByteNtree( data, pos );
 	}
 }

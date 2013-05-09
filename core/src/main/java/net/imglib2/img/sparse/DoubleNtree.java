@@ -84,8 +84,8 @@ public final class DoubleNtree implements DoubleAccess, NtreeAccess< Double, Dou
 	}
 
 	@Override
-	public DoubleNtree createInstance( final long[] position )
+	public DoubleNtree createInstance( final long[] pos )
 	{
-		return new DoubleNtree( data, position );
+		return new DoubleNtree( data, pos );
 	}
 }

@@ -93,8 +93,8 @@ public final class LongNtree implements LongAccess, NtreeAccess< Long, LongNtree
 	}
 
 	@Override
-	public LongNtree createInstance( final long[] position )
+	public LongNtree createInstance( final long[] pos )
 	{
-		return new LongNtree( data, position );
+		return new LongNtree( data, pos );
 	}
 }

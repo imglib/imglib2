@@ -64,18 +64,19 @@ public class CellContainerTest
 		img = new CellImgFactory< FloatType >( cellDimensions ).create( dimensions, new FloatType() );
 	}
 
+	@SuppressWarnings( "deprecation" )
 	@Test
 	public void equalIterationOrder()
 	{
-		Img< FloatType > img2 = new CellImgFactory< FloatType >( cellDimensions ).create( dimensions, new FloatType() );
+		final Img< FloatType > img2 = new CellImgFactory< FloatType >( cellDimensions ).create( dimensions, new FloatType() );
 		assertTrue( img2.equalIterationOrder( img ) );		
 		assertTrue( img.equalIterationOrder( img2 ) );		
 
-		Img< FloatType > img3 = new CellImgFactory< FloatType >( 9 ).create( dimensions, new FloatType() );
+		final Img< FloatType > img3 = new CellImgFactory< FloatType >( 9 ).create( dimensions, new FloatType() );
 		assertFalse( img3.equalIterationOrder( img ) );		
 		assertFalse( img.equalIterationOrder( img3 ) );		
 
-		Img< FloatType > img4 = new ArrayImgFactory< FloatType >().create( dimensions, new FloatType() );
+		final Img< FloatType > img4 = new ArrayImgFactory< FloatType >().create( dimensions, new FloatType() );
 		assertFalse( img4.equalIterationOrder( img ) );		
 		assertFalse( img.equalIterationOrder( img4 ) );		
 	}

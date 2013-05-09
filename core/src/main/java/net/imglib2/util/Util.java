@@ -589,6 +589,7 @@ public class Util
 	 * @return T[] The gaussian kernel
 	 * 
 	 */
+	@SuppressWarnings( "unchecked" )
 	public static < T extends ExponentialMathType< T > > T[] createGaussianKernel1D( final T sigma, final boolean normalize )
 	{
 		final T[] gaussianKernel;

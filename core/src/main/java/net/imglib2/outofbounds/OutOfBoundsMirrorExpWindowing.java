@@ -133,13 +133,13 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 		return outOfBoundsRandomAccess.get();
 	}
 	
-	final protected float getWeight( final long[] zeroMinPos )
+	final protected float getWeight( final long[] zeroMinPosition )
 	{
 		float weight = 1;
 
 		for ( int d = 0; d < n; ++d )
 		{
-			final int pos = ( int ) zeroMinPos[ d ];
+			final int pos = ( int ) zeroMinPosition[ d ];
 			final int distance;
 
 			if ( pos < 0 )

@@ -84,8 +84,8 @@ public final class CharNtree implements CharAccess, NtreeAccess< Character, Char
 	}
 
 	@Override
-	public CharNtree createInstance( final long[] position )
+	public CharNtree createInstance( final long[] pos )
 	{
-		return new CharNtree( data, position );
+		return new CharNtree( data, pos );
 	}
 }

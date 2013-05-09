@@ -153,9 +153,9 @@ public class LabelingMapping< T extends Comparable< T >>
 		}
 
 		@Override
-		public boolean addAll( final int index, final Collection< ? extends T1 > c )
+		public boolean addAll( final int i, final Collection< ? extends T1 > c )
 		{
-			return value.addAll( index, c );
+			return value.addAll( i, c );
 		}
 
 		@Override
@@ -177,9 +177,9 @@ public class LabelingMapping< T extends Comparable< T >>
 		}
 
 		@Override
-		public T1 get( final int index )
+		public T1 get( final int i )
 		{
-			return value.get( index );
+			return value.get( i );
 		}
 
 		@Override
@@ -189,15 +189,15 @@ public class LabelingMapping< T extends Comparable< T >>
 		}
 
 		@Override
-		public void add( final int index, final T1 element )
+		public void add( final int i, final T1 element )
 		{
-			value.add( index, element );
+			value.add( i, element );
 		}
 
 		@Override
-		public T1 remove( final int index )
+		public T1 remove( final int i )
 		{
-			return value.remove( index );
+			return value.remove( i );
 		}
 
 		@Override
@@ -219,9 +219,9 @@ public class LabelingMapping< T extends Comparable< T >>
 		}
 
 		@Override
-		public ListIterator< T1 > listIterator( final int index )
+		public ListIterator< T1 > listIterator( final int i )
 		{
-			return value.listIterator( index );
+			return value.listIterator( i );
 		}
 
 		@Override

@@ -92,10 +92,10 @@ public class FinalDimensions implements Dimensions
 	public int numDimensions() { return dimensions.length; }
 
 	@Override
-	public void dimensions( final long[] dimensions )
+	public void dimensions( final long[] dims )
 	{
-		for ( int d = 0; d < dimensions.length; ++d )
-			this.dimensions[ d ] = dimensions[ d ];
+		for ( int d = 0; d < dims.length; ++d )
+			this.dimensions[ d ] = dims[ d ];
 	}
 
 	@Override

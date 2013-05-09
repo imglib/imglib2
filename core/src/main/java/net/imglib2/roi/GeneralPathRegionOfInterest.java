@@ -182,8 +182,8 @@ public class GeneralPathRegionOfInterest extends
 		g2d.setStroke(new BasicStroke(0));
 		g2d.fill(transformed);
 
-		long[] stripes = new long[3 * width * height / 2]; // avoid re-allocation
-		int index = 0;
+		long[] strps = new long[3 * width * height / 2]; // avoid re-allocation
+		int i = 0;
 		for (int y = 0; y < height; y++) {
 			long start = -1;
 			for (int x = 0; x < width; x++) {
@@ -191,24 +191,24 @@ public class GeneralPathRegionOfInterest extends
 				if (start < 0) {
 					if (inside) {
 						start = x;
-						stripes[index] = x + left;
-						stripes[index + 2] = y + top;
+						strps[i] = x + left;
+						strps[i + 2] = y + top;
 					}
 				} else if (!inside) {
 					start = -1;
-					stripes[index + 1] = x + left;
-					index += 3;
+					strps[i + 1] = x + left;
+					i += 3;
 				}
 			}
 			if (start >= 0) {
 				start = -1;
-				stripes[index + 1] = width + left;
-				index += 3;
+				strps[i + 1] = width + left;
+				i += 3;
 			}
 		}
 
-		this.stripes = new long[index];
-		System.arraycopy(stripes, 0, this.stripes, 0, index);
+		this.stripes = new long[i];
+		System.arraycopy(strps, 0, this.stripes, 0, i);
 		this.index = 0;
 	}
 

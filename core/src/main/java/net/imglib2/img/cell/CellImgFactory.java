@@ -139,6 +139,7 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		return cellDimensions;
 	}
 
+	@SuppressWarnings( "unchecked" )
 	@Override
 	public CellImg< T, ?, ? > create( final long[] dim, final T type )
 	{

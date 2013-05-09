@@ -80,6 +80,7 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProject
 
 	protected final Converter< A, ARGBType >[] currentConverters;
 
+	@SuppressWarnings( "unchecked" )
 	public CompositeXYRandomAccessibleProjector( final RandomAccessibleInterval< A > source, final RandomAccessibleInterval< ARGBType > target, final ArrayList< Converter< A, ARGBType >> converters, final int dimIndex )
 	{
 		super( source, null );
@@ -264,7 +265,7 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProject
 		return currentSize;
 	}
 
-	protected void mapSingle( final RandomAccess< A > sourceRandomAccess, final Converter< A, ARGBType > converter )
+	protected void mapSingle( final RandomAccess< A > sourceRandomAccess, final Converter< A, ARGBType > conv )
 	{
 		final RandomAccess< ARGBType > targetRandomAccess = target.randomAccess();
 		targetRandomAccess.setPosition( min[ 1 ], 1 );
@@ -274,7 +275,7 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProject
 			targetRandomAccess.setPosition( min[ 0 ], 0 );
 			while (	targetRandomAccess.getLongPosition( 0 ) <= max[ 0 ] )
 			{
-				converter.convert( sourceRandomAccess.get(), targetRandomAccess.get() );
+				conv.convert( sourceRandomAccess.get(), targetRandomAccess.get() );
 				sourceRandomAccess.fwd( 0 );
 				targetRandomAccess.fwd( 0 );
 			}

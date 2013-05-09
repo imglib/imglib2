@@ -83,8 +83,8 @@ public final class ShortNtree implements ShortAccess, NtreeAccess< Short, ShortN
 	}
 
 	@Override
-	public ShortNtree createInstance( final long[] position )
+	public ShortNtree createInstance( final long[] pos )
 	{
-		return new ShortNtree( data, position );
+		return new ShortNtree( data, pos );
 	}
 }
