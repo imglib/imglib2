@@ -177,7 +177,7 @@ public class BoundConditionalPointSet extends AbstractPointSet {
 		
 		@SuppressWarnings("synthetic-access")
 		public PositionCursor() {
-			cursor = ps.cursor();
+			cursor = ps.localizingCursor();
 			tmpPos = new long[cursor.numDimensions()];
 		}
 

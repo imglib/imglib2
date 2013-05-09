@@ -221,6 +221,7 @@ public class BoundAndPointSet extends AbstractPointSet
 			cursor = other.cursor.copyCursor();
 		}
 		
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public int numDimensions() {
 			return n;
@@ -318,10 +319,11 @@ public class BoundAndPointSet extends AbstractPointSet
 		
 		private long[] tmpPos;
 		
+		@SuppressWarnings("synthetic-access")
 		public BoundCursor(final RandomAccess<T> randomAccess)
 		{
 			super(randomAccess);
-			cursor = cursor();
+			cursor = localizingCursor();
 			tmpPos = new long[n];
 			rst();
 		}
@@ -332,6 +334,7 @@ public class BoundAndPointSet extends AbstractPointSet
 			this.cursor = other.cursor.copyCursor();
 		}
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public int numDimensions() {
 			return n;

@@ -313,11 +313,13 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			pos = other.pos;
 		}
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public int numDimensions() {
 			return n;
 		}
 		
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public void localize(float[] position) {
 			long[] pt = points.get(pos);
@@ -326,6 +328,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			}
 		}
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public void localize(double[] position) {
 			long[] pt = points.get(pos);
@@ -334,6 +337,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			}
 		}
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public BoolType get() {
 			return bools.get(pos);
@@ -359,12 +363,14 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			pos = -1;
 		}
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public boolean hasNext() {
 			return pos < points.size() - 1;
 		}
 
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public void localize(int[] position) {
 			long[] pt = points.get(pos);
@@ -373,6 +379,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			}
 		}
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public void localize(long[] position) {
 			long[] pt = points.get(pos);
@@ -381,6 +388,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			}
 		}
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public long getLongPosition(int d) {
 			long[] pt = points.get(pos);
@@ -409,6 +417,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			rst();
 		}
 
+		@SuppressWarnings("synthetic-access")
 		public BoundCursor(final BoundCursor<T> other)
 		{
 			this(other.randomAccess.copyRandomAccess());
@@ -420,6 +429,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			return cursor.numDimensions();
 		}
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public void jumpFwd( final long steps )
 		{
@@ -427,6 +437,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			randomAccess.setPosition(points.get(cursor.pos));
 		}
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public void fwd()
 		{
@@ -440,6 +451,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			rst();
 		}
 
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public boolean hasNext()
 		{
@@ -457,6 +469,7 @@ public class BoundGeneralPointSet extends AbstractPointSet
 			return copy();
 		}
 
+		@SuppressWarnings("synthetic-access")
 		private void rst() {
 			cursor.reset();
 			randomAccess.setPosition( origin );
