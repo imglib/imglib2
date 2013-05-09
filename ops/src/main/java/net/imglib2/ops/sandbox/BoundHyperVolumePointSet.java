@@ -38,6 +38,7 @@ package net.imglib2.ops.sandbox;
  */
 
 import net.imglib2.Cursor;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.RandomAccess;
 import net.imglib2.Sampler;
 import net.imglib2.img.Img;
@@ -141,9 +142,13 @@ public class BoundHyperVolumePointSet extends AbstractPointSet {
 			position[i] = min[i];
 	}
 
+	// ACK CHOKE PUKE FIXME TODO: The problem: calling localize on a bare cursor
+	// will not report correct coords after move()'ing this NewPointSet. So we
+	// need to share out a PositionCursor instead.
+
 	@Override
 	public Cursor<BoolType> cursor() {
-		return img.cursor();
+		return new PositionCursor();
 	}
 
 	@Override
@@ -168,6 +173,114 @@ public class BoundHyperVolumePointSet extends AbstractPointSet {
 	@Override
 	public long max(int d) {
 		return max[d];
+	}
+
+	@Override
+	public Object iterationOrder() {
+		return new FlatIterationOrder(this);
+	}
+
+	private class PositionCursor extends AbstractPositionCursor {
+
+		private Cursor<BoolType> cursor;
+		private long[] tmpPos;
+
+		@SuppressWarnings("synthetic-access")
+		public PositionCursor() {
+			cursor = img.localizingCursor();
+			tmpPos = new long[cursor.numDimensions()];
+		}
+
+		public PositionCursor(PositionCursor other) {
+			this();
+			cursor = other.cursor.copyCursor();
+		}
+
+		@Override
+		public int numDimensions() {
+			return cursor.numDimensions();
+		}
+
+		@SuppressWarnings("synthetic-access")
+		@Override
+		public void localize(float[] position) {
+			cursor.localize(tmpPos);
+			for (int i = 0; i < n; i++) {
+				position[i] = tmpPos[i] + min[i];
+			}
+		}
+
+		@SuppressWarnings("synthetic-access")
+		@Override
+		public void localize(double[] position) {
+			cursor.localize(tmpPos);
+			for (int i = 0; i < n; i++) {
+				position[i] = tmpPos[i] + min[i];
+			}
+		}
+
+		@Override
+		public BoolType get() {
+			return cursor.get();
+		}
+
+		@Override
+		public Sampler<BoolType> copy() {
+			return new PositionCursor(this);
+		}
+
+		@Override
+		public void jumpFwd(long steps) {
+			cursor.jumpFwd(steps);
+		}
+
+		@Override
+		public void fwd() {
+			cursor.fwd();
+		}
+
+		@Override
+		public void reset() {
+			cursor.reset();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return cursor.hasNext();
+		}
+
+		@Override
+		public BoolType next() {
+			return cursor.next();
+		}
+
+		@SuppressWarnings("synthetic-access")
+		@Override
+		public void localize(int[] position) {
+			cursor.localize(tmpPos);
+			for (int i = 0; i < n; i++) {
+				position[i] = (int) (tmpPos[i] + min[i]);
+			}
+		}
+
+		@SuppressWarnings("synthetic-access")
+		@Override
+		public void localize(long[] position) {
+			cursor.localize(tmpPos);
+			for (int i = 0; i < n; i++) {
+				position[i] = tmpPos[i] + min[i];
+			}
+		}
+
+		@Override
+		public long getLongPosition(int d) {
+			return cursor.getLongPosition(d);
+		}
+
+		@Override
+		public Cursor<BoolType> copyCursor() {
+			return new PositionCursor(this);
+		}
 	}
 
 	private class BoundCursor<T> extends AbstractBoundCursor<T> {
