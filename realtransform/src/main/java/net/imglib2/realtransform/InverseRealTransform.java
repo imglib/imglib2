@@ -45,7 +45,6 @@ import net.imglib2.RealPositionable;
  * that simply replaces apply by applyInverse and conversely.  The original
  * {@link InvertibleRealTransform} is returned on {@link #inverse()}.
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

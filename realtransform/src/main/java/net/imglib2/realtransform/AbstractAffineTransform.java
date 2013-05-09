@@ -37,16 +37,15 @@
 
 package net.imglib2.realtransform;
 
-import Jama.Matrix;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
+import Jama.Matrix;
 
 /**
  * An abstract implementation of an affine transformation that returns
  * default values referring tot the identity transformation for all fields.
  *
- * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public abstract class AbstractAffineTransform implements AffineGet, AffineSet
@@ -134,7 +133,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	@Override
 	public void apply( final double[] source, final double[] target )
 	{
-		assert source.length == n && target.length == n : "Source or target vector dimensions do not match with the transformation.";
+		assert source.length >= n && target.length >= n : "Source or target vector dimensions do not match with the transformation.";
 		
 		for ( int r = 0; r < n; ++r )
 		{
@@ -149,7 +148,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	@Override
 	public void apply( final RealLocalizable source, final RealPositionable target )
 	{
-		assert source.numDimensions() == n && target.numDimensions() == n : "Source or target vector dimensions do not match with the transformation.";
+		assert source.numDimensions() >= n && target.numDimensions() >= n : "Source or target vector dimensions do not match with the transformation.";
 		
 		for ( int r = 0; r < n; ++r )
 		{
@@ -164,6 +163,8 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	@Override
 	public double get( final int row, final int column )
 	{
+		assert row >= 0 && row < n && column >= 0 && column <= n : "Row or column out of bounds.";
+	
 		if ( column == n )
 			return t[ row ];
 		return a.get( row, column );
@@ -185,6 +186,8 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	@Override
 	public RealLocalizable d( final int d )
 	{
+		assert d >= 0 && d < n : "Dimension out of bounds.";
+		
 		return ds[ d ];
 	}
 }

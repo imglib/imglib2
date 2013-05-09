@@ -32,7 +32,7 @@ import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
 
 /**
- * 
+ * <em>n</em>-d arbitrary scaling.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

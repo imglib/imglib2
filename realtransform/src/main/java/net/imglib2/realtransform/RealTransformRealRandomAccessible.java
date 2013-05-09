@@ -43,9 +43,14 @@ import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 
 /**
+ * A {@link RealRandomAccessible} whose samples are generated from a
+ * {@link RealRandomAccessible} transformed by an {@link RealTransform}.
+ * Changing the {@link RealTransform} will affect the
+ * {@link AffineRealRandomAccessible} and any {@link RealRandomAccess} on it.
+ * Make sure that you either request a new {@link RealRandomAccess} after
+ * modifying the transformation or perform a full initialization (e.g.
+ * setPosition(double[])) of any existing one before making any relative move.
  *
- *
- * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealTransformRealRandomAccessible< T, R extends RealTransform > implements RealRandomAccessible< T >

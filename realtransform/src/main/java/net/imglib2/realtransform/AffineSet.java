@@ -42,7 +42,6 @@ package net.imglib2.realtransform;
  * <em>n</em>&times;(<em>n</em>+1) affine transformation matrix can be set
  * via row and column index and from double  arrays.
  *
- * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface AffineSet

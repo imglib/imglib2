@@ -57,10 +57,13 @@ import net.imglib2.RealPositionable;
  * <em>target</em> vector to get the <em>n</em>-dimensional
  * <em>source</em> vector.
  * </p>
- * 
- * @author ImgLib2 developers
+ * <p>Source and target vectors are required to be at least <em>n</em>- or
+ * <em>m</em>-dimensional respectively.  The {@link InvertibleRealTransform} is
+ * expected to leave all dimensions beyond <em>n</em>-1 in the source vector
+ * and <em>m</em>-1 in the target vector unchanged.</p>
+ *  
  * @author Tobias Pietzsch
- * @author Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface InvertibleRealTransform extends RealTransform
 {

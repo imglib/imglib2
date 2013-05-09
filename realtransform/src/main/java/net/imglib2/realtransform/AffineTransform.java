@@ -37,16 +37,15 @@
 
 package net.imglib2.realtransform;
 
-import Jama.Matrix;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.concatenate.PreConcatenable;
+import Jama.Matrix;
 
 /**
  * An <em>n</em>-dimensional affine transformation.
  *
- * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class AffineTransform extends AbstractAffineTransform implements Concatenable< AffineGet >, PreConcatenable< AffineGet >
@@ -108,7 +107,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public void apply( final float[] source, final float[] target )
 	{
-		assert source.length == n && target.length == n : "Source or target vector dimensions do not match with the transformation.";
+		assert source.length >= n && target.length >= n : "Source or target vector dimensions do not match with the transformation.";
 
 		for ( int r = 0; r < n; ++r )
 		{
@@ -124,18 +123,24 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public void applyInverse( final double[] source, final double[] target )
 	{
+		assert source.length >= n && target.length >= n : "Source or target vector dimensions do not match with the transformation.";
+
 		inverse.apply( target, source );
 	}
 
 	@Override
 	public void applyInverse( final float[] source, final float[] target )
 	{
+		assert source.length >= n && target.length >= n : "Source or target vector dimensions do not match with the transformation.";
+
 		inverse.apply( target, source );
 	}
 
 	@Override
 	public void applyInverse( final RealPositionable source, final RealLocalizable target )
 	{
+		assert source.numDimensions() >= n && target.numDimensions() >= n : "Source or target vector dimensions do not match with the transformation.";
+
 		inverse.apply( target, source );
 	}
 	
@@ -189,7 +194,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public AffineTransform concatenate( final AffineGet affine )
 	{
-		assert affine.numSourceDimensions() == numSourceDimensions() : "Dimensions do not match.";
+		assert affine.numSourceDimensions() == n : "Dimensions do not match.";
 
 		final Matrix matrix = new Matrix( n, n );
 		final double[] translation = new double[ n ];
@@ -226,7 +231,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public AffineTransform preConcatenate( final AffineGet affine )
 	{
-		assert affine.numSourceDimensions() == numSourceDimensions() : "Dimensions do not match.";
+		assert affine.numSourceDimensions() == n : "Dimensions do not match.";
 
 		final Matrix matrix = new Matrix( n, n );
 		final double[] translation = new double[ n ];

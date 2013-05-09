@@ -47,8 +47,7 @@ import net.imglib2.concatenate.PreConcatenable;
 import net.imglib2.util.Util;
 
 /**
- * 3d-affine transformation models to be applied to points in 3d-space.
- * 
+ * 3d-affine transformation.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -447,7 +446,7 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	final public AffineTransform3D preConcatenate( final AffineGet affine )
 	{
-		assert affine.numSourceDimensions() >= 3 : "Only >=3d affine transformations can be preconcatenated to a 3d affine transformation.";
+		assert affine.numSourceDimensions() == 3 : "Only 3d affine transformations can be preconcatenated to a 3d affine transformation.";
 
 		a.preConcatenate( new AffineMatrix3D( affine.getRowPackedCopy() ) );
 		invert();
@@ -510,17 +509,17 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	/**
 	 * Scale
 	 * 
-	 * @param d scale factor
+	 * @param s scale factor
 	 * 
 	 * TODO Don't be lazy and do it directly on the values instead of creating another transform
 	 */
-	public void scale( final double d )
+	public void scale( final double s )
 	{
 		final AffineTransform3D dR = new AffineTransform3D();
 		dR.set(
-				d, 0.0, 0.0, 0.0,
-				0.0, d, 0.0, 0.0,
-				0.0, 0.0, d, 0.0 );
+				s, 0.0, 0.0, 0.0,
+				0.0, s, 0.0, 0.0,
+				0.0, 0.0, s, 0.0 );
 		
 		preConcatenate( dR );
 	}
@@ -723,7 +722,7 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	public void set( final double... values )
 	{
-		assert values.length == 12 : "Input dimensions do not match.  A 3d affine matrix is a 3x4 matrix.";
+		assert values.length >= 12 : "Input dimensions do not match.  A 3d affine matrix is a 3x4 matrix.";
 		
 		a.m00 = values[ 0 ];
 		a.m01 = values[ 1 ];
@@ -748,7 +747,7 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	public void set( final double[][] values )
 	{
-		assert values.length == 3 && values[ 0 ].length == 4 && values[ 1 ].length == 4 && values[ 2 ].length == 4: "Input dimensions do not match.  A 3d affine matrix is a 3x4 matrix.";
+		assert values.length >= 3 && values[ 0 ].length >= 4 && values[ 1 ].length >= 4 && values[ 2 ].length >= 4: "Input dimensions do not match.  A 3d affine matrix is a 3x4 matrix.";
 		
 		a.m00 = values[ 0 ][ 0 ];
 		a.m01 = values[ 0 ][ 1 ];

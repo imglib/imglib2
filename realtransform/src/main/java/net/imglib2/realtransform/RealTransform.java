@@ -44,28 +44,29 @@ import net.imglib2.RealPositionable;
  * Transformation from R<sup><em>n</em></sup> to R<sup><em>m</em></sup>.
  * 
  * <p>
- * Applying the transformation to a <em>n</em>-dimensional
- * <em>source</em> vector yields a <em>m</em>-dimensional
+ * Applying the transformation to an <em>n</em>-dimensional
+ * <em>source</em> vector yields an <em>m</em>-dimensional
  * <em>target</em> vector.
  * </p>
+ * <p>Source and target vectors are required to be at least <em>n</em>- or
+ * <em>m</em>-dimensional respectively.  The {@link RealTransform} is expected
+ * to leave all dimensions beyond <em>n</em>-1 in the source vector and
+ * <em>m</em>-1 in the target vector unchanged.</p>
  * 
- * @author Pietzsch
- * @author Preibisch
- * @author Saalfeld
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface RealTransform
 {
 	/**
-	 * Returns <em>n</em>, the dimension of the source vector.
+	 * Returns <em>n</em>, the minimal number of dimension of the source vector.
 	 * 
 	 * @return the dimension of the source vector.
 	 */
 	public int numSourceDimensions();
 
 	/**
-	 * Returns <em>m</em>, the dimension of the target vector.
+	 * Returns <em>m</em>, the minimal dimension of the target vector.
 	 * 
 	 * @return the dimension of the target vector.
 	 */

@@ -44,9 +44,8 @@ import net.imglib2.concatenate.Concatenable;
 import net.imglib2.concatenate.PreConcatenable;
 
 /**
- * 2d-affine transformation models to be applied to points in 3d-space.
+ * 2d-affine transformation.
  * 
- *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< AffineGet >, PreConcatenable< AffineGet >
@@ -569,7 +568,7 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	public void set( final double... values )
 	{
-		assert values.length == 6 : "Input dimensions do not match.  A 2d affine matrix is a 2x3 matrix.";
+		assert values.length >= 6 : "Input dimensions do not match.  A 2d affine matrix is a 2x3 matrix.";
 		
 		a.m00 = values[ 0 ];
 		a.m01 = values[ 1 ];
@@ -587,7 +586,7 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	public void set( final double[][] values )
 	{
-		assert values.length == 2 && values[ 0 ].length == 3 && values[ 1 ].length == 3 : "Input dimensions do not match.  A 2d affine matrix is a 2x3 matrix.";
+		assert values.length >= 2 && values[ 0 ].length >= 3 && values[ 1 ].length == 3 : "Input dimensions do not match.  A 2d affine matrix is a 2x3 matrix.";
 		
 		a.m00 = values[ 0 ][ 0 ];
 		a.m01 = values[ 0 ][ 1 ];

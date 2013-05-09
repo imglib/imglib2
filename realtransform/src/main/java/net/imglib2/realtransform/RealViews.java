@@ -34,17 +34,17 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-
 package net.imglib2.realtransform;
 
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccessible;
 
 /**
- * Convenience factory methods for {@link RealRandomAccessible} transformed in
- * real coordinate space by {@link RealTransform RealTransforms}.
+ * Convenience factory methods for
+ * {@link RealRandomAccessible RealRandomAccessibles} transformed in real
+ * coordinate space by
+ * {@link InvertibleRealTransform InvertibleRealTransforms}.
  *
- * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealViews
