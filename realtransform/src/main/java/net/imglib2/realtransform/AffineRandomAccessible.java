@@ -50,10 +50,9 @@ import net.imglib2.RealRandomAccessible;
  * {@link RealRandomAccessible} transformed by an
  * {@link AffineGet affine transformation}.  Changing the
  * {@link AffineGet affine transformation} will affect the
- * {@link AffineRandomAccessible} and any {@link RandomAccess} on it.  Make
- * sure that you either request a new {@link RandomAccess} after modifying the
- * transformation or perform a full initialization (e.g. setPosition(long[]))
- * of any existing one before making any relative move.
+ * {@link AffineRandomAccessible} but not any existing {@link RandomAccess}
+ * on it.  Make sure that you request a new {@link RandomAccess} after
+ * modifying the transformation.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -83,7 +82,7 @@ public class AffineRandomAccessible< T, R extends AffineGet > extends RealTransf
 
 		protected void scaleMove( final double distance, final int d )
 		{
-			final RealLocalizable dd = transform.d( d );
+			final RealLocalizable dd = transformCopy.d( d );
 			for ( int ddd = 0; ddd < n; ++ddd )
 				move[ ddd ] = distance * dd.getDoublePosition( ddd );
 		}
@@ -92,7 +91,7 @@ public class AffineRandomAccessible< T, R extends AffineGet > extends RealTransf
 		public void fwd( final int d )
 		{
 			super.fwd( d );
-			targetAccess.move( transform.d( d ) );
+			targetAccess.move( transformCopy.d( d ) );
 		}
 
 		@Override

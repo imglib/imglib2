@@ -295,4 +295,12 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 		invert();
 		inverse.updateDs();
 	}
+
+	@Override
+	public AffineTransform copy()
+	{
+		final AffineTransform copy = new AffineTransform( n );
+		copy.set( this );
+		return copy;
+	}
 }

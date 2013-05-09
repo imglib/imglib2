@@ -104,4 +104,7 @@ public interface InvertibleRealTransform extends RealTransform
 	 * @return the inverse transform
 	 */
 	public InvertibleRealTransform inverse();
+	
+	@Override
+	public InvertibleRealTransform copy();
 }

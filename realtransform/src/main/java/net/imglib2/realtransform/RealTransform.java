@@ -105,4 +105,15 @@ public interface RealTransform
 	 *            set this to the target coordinates. 
 	 */
 	public void apply( final RealLocalizable source, final RealPositionable target );
+	
+	/**
+	 * Create a deep copy of this {@link RealTransform}.
+	 * 
+	 * <p>Deep copying is required to make sure that stateful
+	 * {@link RealTransform RealTransform} can be duplicated for concurrent
+	 * code.</p>
+	 *  
+	 * @return deep copy
+	 */
+	public RealTransform copy();
 }

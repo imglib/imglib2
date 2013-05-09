@@ -75,7 +75,7 @@ public class AffineRealRandomAccessible< T, R extends AffineGet > extends RealTr
 		
 		final private void scaleMove( final double distance, final int d )
 		{
-			final RealLocalizable dd = transform.d( d );
+			final RealLocalizable dd = transformCopy.d( d );
 			for ( int ddd = 0; ddd < n; ++ddd )
 				move[ ddd ] = distance * dd.getDoublePosition( ddd );
 		}
@@ -155,7 +155,7 @@ public class AffineRealRandomAccessible< T, R extends AffineGet > extends RealTr
 		public void fwd( final int d )
 		{
 			super.fwd( d );
-			targetAccess.move( transform.d( d ) );
+			targetAccess.move( transformCopy.d( d ) );
 		}
 
 		@Override

@@ -48,6 +48,7 @@ import net.imglib2.RealPositionable;
  * For the inverse transform (cartesian to polar), the range of the computed
  * <em>&theta;</em> is <em>-pi</em> to <em>pi</em>.
  *
+ * TODO This can be a singleton
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -150,5 +151,11 @@ public class PolarToCartesianTransform2D implements InvertibleRealTransform
 	public InvertibleRealTransform inverse()
 	{
 		return inverse;
+	}
+	
+	@Override
+	public PolarToCartesianTransform2D copy()
+	{
+		return this;
 	}
 }

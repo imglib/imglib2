@@ -173,4 +173,10 @@ public class ScaledPolarToTranslatedCartesianTransform2D implements InvertibleRe
 	{
 		return inverse;
 	}
+	
+	@Override
+	public ScaledPolarToTranslatedCartesianTransform2D copy()
+	{
+		return new ScaledPolarToTranslatedCartesianTransform2D( tx, ty, sr, st );
+	}
 }

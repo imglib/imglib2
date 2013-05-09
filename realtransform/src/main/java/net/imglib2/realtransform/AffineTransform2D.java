@@ -260,6 +260,7 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 		return this;
 	}
 	
+	@Override
 	public AffineTransform2D copy()
 	{
 		final AffineMatrix2D ma = new AffineMatrix2D();

@@ -325,6 +325,7 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 		return this;
 	}
 
+	@Override
 	public AffineTransform3D copy()
 	{
 		final AffineMatrix3D ma = new AffineMatrix3D();

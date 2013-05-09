@@ -110,5 +110,11 @@ public final class InverseRealTransform implements InvertibleRealTransform
 	{
 		return inverse;
 	}
+	
+	@Override
+	public InverseRealTransform copy()
+	{
+		return new InverseRealTransform( inverse.copy() );
+	}
 
 }
