@@ -163,6 +163,11 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 		return tailBins;
 	}
 
+	@Override
+	public Integer1dBinMapper<T> copy() {
+		return new Integer1dBinMapper<T>(minVal, bins, tailBins);
+	}
+
 	/**
 	 * This is a convenience method for creating a {@link HistogramNd} from inputs
 	 * that describe a set of integer 1-d based bin mappers. The inputs should all

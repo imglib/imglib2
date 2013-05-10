@@ -156,6 +156,11 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 		return tailBins;
 	}
 
+	@Override
+	public Real1dBinMapper<T> copy() {
+		return new Real1dBinMapper<T>(minVal, maxVal, bins, tailBins);
+	}
+
 	/**
 	 * This is a convenience method for creating a {@link HistogramNd} from inputs
 	 * that describe a set of real 1-d based bin mappers. The inputs should all
