@@ -63,7 +63,9 @@ public class SpeedCheckPointSets {
 	// NB - try to make sure loops aren't completely optimized away because they
 	// did no real work.
 
-	private static long unimportantSum = 0;
+	private static double unimportantSum = 0;
+
+	static final int ITERS = 7;
 
 	private static void init(Img<FloatType> img) {
 		float i = 0;
@@ -105,10 +107,12 @@ public class SpeedCheckPointSets {
 			@Override
 			public void run()
 			{
-				PointSetIterator iter = ps.iterator();
-				while (iter.hasNext()) {
-					iter.next();
-					unimportantSum++;
+				for (int i = 0; i < ITERS; i++) {
+					PointSetIterator iter = ps.iterator();
+					while (iter.hasNext()) {
+						iter.next();
+						unimportantSum++;
+					}
 				}
 			}
 		});
@@ -121,10 +125,12 @@ public class SpeedCheckPointSets {
 			@Override
 			public void run()
 			{
-				Cursor<?> cursor = ps.cursor();
-				while (cursor.hasNext()) {
-					cursor.fwd();
-					unimportantSum++;
+				for (int i = 0; i < ITERS; i++) {
+					Cursor<?> cursor = ps.cursor();
+					while (cursor.hasNext()) {
+						cursor.fwd();
+						unimportantSum++;
+					}
 				}
 			}
 		});
@@ -137,16 +143,16 @@ public class SpeedCheckPointSets {
 			@Override
 			public void run()
 			{
-				RandomAccess<FloatType> access = img1.randomAccess();
-				long sum = 0;
-				PointSetIterator iter = ps.iterator();
-				while (iter.hasNext()) {
-					long[] pos = iter.next();
-					access.setPosition(pos);
-					sum += access.get().get();
-					unimportantSum++;
+				for (int i = 0; i < ITERS; i++) {
+					RandomAccess<FloatType> access = img1.randomAccess();
+					PointSetIterator iter = ps.iterator();
+					while (iter.hasNext()) {
+						long[] pos = iter.next();
+						access.setPosition(pos);
+						unimportantSum += access.get().get();
+					}
+					// System.out.println("Final sum == "+sum);
 				}
-				//System.out.println("Final sum == "+sum);
 			}
 		});
 		
@@ -158,11 +164,11 @@ public class SpeedCheckPointSets {
 			@Override
 			public void run()
 			{
-				long sum = 0;
-				Cursor<FloatType> cursor = ps.bind(img2.randomAccess());
-				while (cursor.hasNext()) {
-					sum += cursor.next().getRealFloat();
-					unimportantSum++;
+				for (int i = 0; i < ITERS; i++) {
+					Cursor<FloatType> cursor = ps.bind(img2.randomAccess());
+					while (cursor.hasNext()) {
+						unimportantSum += cursor.next().getRealFloat();
+					}
 				}
 				//System.out.println("Final sum == "+sum);
 			}
@@ -183,10 +189,12 @@ public class SpeedCheckPointSets {
 
 			@Override
 			public void run() {
-				PointSetIterator iter = ps.iterator();
-				while (iter.hasNext()) {
-					iter.next();
-					unimportantSum++;
+				for (int i = 0; i < ITERS; i++) {
+					PointSetIterator iter = ps.iterator();
+					while (iter.hasNext()) {
+						iter.next();
+						unimportantSum++;
+					}
 				}
 			}
 		});
@@ -199,10 +207,12 @@ public class SpeedCheckPointSets {
 
 			@Override
 			public void run() {
-				Cursor<?> cursor = ps.cursor();
-				while (cursor.hasNext()) {
-					cursor.fwd();
-					unimportantSum++;
+				for (int i = 0; i < ITERS; i++) {
+					Cursor<?> cursor = ps.cursor();
+					while (cursor.hasNext()) {
+						cursor.fwd();
+						unimportantSum++;
+					}
 				}
 			}
 		});
@@ -214,16 +224,16 @@ public class SpeedCheckPointSets {
 
 			@Override
 			public void run() {
-				RandomAccess<FloatType> access = img1.randomAccess();
-				long sum = 0;
-				PointSetIterator iter = ps.iterator();
-				while (iter.hasNext()) {
-					long[] pos = iter.next();
-					access.setPosition(pos);
-					sum += access.get().get();
-					unimportantSum++;
+				for (int i = 0; i < ITERS; i++) {
+					RandomAccess<FloatType> access = img1.randomAccess();
+					PointSetIterator iter = ps.iterator();
+					while (iter.hasNext()) {
+						long[] pos = iter.next();
+						access.setPosition(pos);
+						unimportantSum += access.get().get();
+					}
+					// System.out.println("Final sum == "+sum);
 				}
-				// System.out.println("Final sum == "+sum);
 			}
 		});
 
@@ -235,13 +245,13 @@ public class SpeedCheckPointSets {
 
 			@Override
 			public void run() {
-				long sum = 0;
-				Cursor<FloatType> cursor = ps.bind(img2.randomAccess());
-				while (cursor.hasNext()) {
-					sum += cursor.next().getRealFloat();
-					unimportantSum++;
+				for (int i = 0; i < ITERS; i++) {
+					Cursor<FloatType> cursor = ps.bind(img2.randomAccess());
+					while (cursor.hasNext()) {
+						unimportantSum += cursor.next().getRealFloat();
+					}
+					// System.out.println("Final sum == "+sum);
 				}
-				// System.out.println("Final sum == "+sum);
 			}
 		});
 	}
@@ -249,6 +259,7 @@ public class SpeedCheckPointSets {
 	public static void main(String[] args) {
 		testGeneral();
 		testHyperVolume();
-		System.out.println("Total iteration steps = " + unimportantSum);
+		System.out.println("Unimportant sum = " +
+			String.format("%20.0f", unimportantSum));
 	}
 }
