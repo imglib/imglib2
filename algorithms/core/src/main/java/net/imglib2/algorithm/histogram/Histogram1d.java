@@ -380,7 +380,7 @@ public class Histogram1d<T> implements Img<LongType> {
 	}
 
 	/**
-	 * Directly increment a bin.
+	 * Directly increment a bin by position.
 	 * 
 	 * @param binPos The 1-d index of the bin
 	 */
@@ -390,13 +390,45 @@ public class Histogram1d<T> implements Img<LongType> {
 	}
 
 	/**
-	 * Directly decrement a bin.
+	 * Directly decrement a bin by position.
 	 * 
 	 * @param binPos The 1-d index of the bin
 	 */
 	public void decrement(long binPos) {
 		pos[0] = binPos;
 		distrib.decrement(pos);
+	}
+
+	/**
+	 * Directly increment a bin by value.
+	 * 
+	 * @param value The value to map to a bin position
+	 */
+	public void increment(T value) {
+		long bin = mapper.map(value);
+		if (bin == Long.MIN_VALUE || bin == Long.MAX_VALUE) {
+			ignoredCount++;
+		}
+		else {
+			pos[0] = bin;
+			distrib.increment(pos);
+		}
+	}
+
+	/**
+	 * Directly decrement a bin by value,
+	 * 
+	 * @param value The value to map to a bin position
+	 */
+	public void decrement(T value) {
+		long bin = mapper.map(value);
+		if (bin == Long.MIN_VALUE || bin == Long.MAX_VALUE) {
+			ignoredCount--;
+		}
+		else {
+			pos[0] = bin;
+			distrib.decrement(pos);
+		}
 	}
 
 	// -- delegated Img methods --
@@ -554,27 +586,13 @@ public class Histogram1d<T> implements Img<LongType> {
 
 	private void add(Iterable<T> data) {
 		for (T value : data) {
-			long bin = mapper.map(value);
-			if (bin == Long.MIN_VALUE || bin == Long.MAX_VALUE) {
-				ignoredCount++;
-			}
-			else {
-				pos[0] = bin;
-				distrib.increment(pos);
-			}
+			increment(value);
 		}
 	}
 
 	private void subtract(Iterable<T> data) {
 		for (T value : data) {
-			long bin = mapper.map(value);
-			if (bin == Long.MIN_VALUE || bin == Long.MAX_VALUE) {
-				ignoredCount--;
-			}
-			else {
-				pos[0] = bin;
-				distrib.decrement(pos);
-			}
+			decrement(value);
 		}
 	}
 

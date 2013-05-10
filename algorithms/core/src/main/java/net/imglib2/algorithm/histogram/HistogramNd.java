@@ -73,6 +73,10 @@ public class HistogramNd<T> implements Img<LongType> {
 	private DiscreteFrequencyDistribution distrib;
 	private long[] pos;
 	private long ignoredCount;
+	@SuppressWarnings("synthetic-access")
+	private Incrementer incrementer = new Incrementer();
+	@SuppressWarnings("synthetic-access")
+	private Decrementer decrementer = new Decrementer();
 
 	// -- constructors --
 
@@ -634,22 +638,41 @@ public class HistogramNd<T> implements Img<LongType> {
 	}
 
 	/**
-	 * Directly increment a bin.
+	 * Directly increment a bin by position.
 	 * 
-	 * @param binPos The n-d index of the bin
+	 * @param binPos The 1-d index of the bin
 	 */
 	public void increment(long[] binPos) {
 		distrib.increment(binPos);
 	}
 
 	/**
-	 * Directly decrement a bin.
+	 * Directly decrement a bin by position.
 	 * 
-	 * @param binPos The n-d index of the bin
+	 * @param binPos The 1-d index of the bin
 	 */
 	public void decrement(long[] binPos) {
-		distrib.increment(binPos);
+		distrib.decrement(binPos);
 	}
+
+	/**
+	 * Directly increment a bin by value.
+	 * 
+	 * @param values The values to map to a bin position
+	 */
+	public void increment(List<T> values) {
+		count(values, incrementer);
+	}
+
+	/**
+	 * Directly decrement a bin by value,
+	 * 
+	 * @param values The values to map to a bin position
+	 */
+	public void decrement(List<T> values) {
+		count(values, decrementer);
+	}
+
 
 	// -- delegated Img methods --
 
@@ -810,39 +833,26 @@ public class HistogramNd<T> implements Img<LongType> {
 		add(data);
 	}
 
-	@SuppressWarnings("synthetic-access")
 	private void add(Iterable<List<T>> data) {
-		modifyCounts(data, new Incrementer());
+		modifyCounts(data, incrementer);
 	}
 
-	@SuppressWarnings("synthetic-access")
 	private void add(List<Iterable<T>> data) {
-		modifyCounts(data, new Incrementer());
+		modifyCounts(data, incrementer);
 	}
 
-	@SuppressWarnings("synthetic-access")
 	private void subtract(Iterable<List<T>> data) {
-		modifyCounts(data, new Decrementer());
+		modifyCounts(data, decrementer);
 	}
 
-	@SuppressWarnings("synthetic-access")
 	private void subtract(List<Iterable<T>> data) {
-		modifyCounts(data, new Decrementer());
+		modifyCounts(data, decrementer);
 	}
 
 	private void modifyCounts(Iterable<List<T>> data, Counter counter) {
 		Iterator<List<T>> iter = data.iterator();
 		while (iter.hasNext()) {
-			List<T> values = iter.next();
-			map(values, pos);
-			boolean ignored = false;
-			for (int i = 0; i < pos.length; i++) {
-				if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
-					ignored = true;
-					break;
-				}
-			}
-			counter.count(pos, ignored);
+			count(iter.next(), counter);
 		}
 	}
 
@@ -862,18 +872,22 @@ public class HistogramNd<T> implements Img<LongType> {
 				for (int i = 0; i < iters.size(); i++) {
 					vals.set(i, iters.get(i).next());
 				}
-				map(vals, pos);
-				boolean ignored = false;
-				for (int i = 0; i < pos.length; i++) {
-					if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
-						ignored = true;
-						break;
-					}
-				}
-				counter.count(pos, ignored);
+				count(vals, counter);
 			}
 		}
 		while (hasNext);
+	}
+
+	private void count(List<T> values, Counter counter) {
+		map(values, pos);
+		boolean ignored = false;
+		for (int i = 0; i < pos.length; i++) {
+			if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
+				ignored = true;
+				break;
+			}
+		}
+		counter.count(pos, ignored);
 	}
 
 	private interface Counter {
