@@ -45,9 +45,9 @@ package net.imglib2.img.cell;
  */
 public class CellIterationOrder
 {
-	private final CellImg< ?, ?, ? > img;
+	private final AbstractCellImg< ?, ?, ?, ? > img;
 
-	public CellIterationOrder( final CellImg< ?, ?, ? > img )
+	public CellIterationOrder( final AbstractCellImg< ?, ?, ?, ? > img )
 	{
 		this.img = img;
 	}
@@ -64,7 +64,7 @@ public class CellIterationOrder
 		if ( !( obj instanceof CellIterationOrder ) )
 			return false;
 
-		final CellImg< ?, ?, ? > i = ( ( CellIterationOrder ) obj ).img;
+		final AbstractCellImg< ?, ?, ?, ? > i = ( ( CellIterationOrder ) obj ).img;
 		if ( i.numDimensions() != img.numDimensions() )
 			return false;
 

@@ -89,7 +89,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A, C extends Abstr
 		type.updateIndex( index );
 	}
 
-	public CellLocalizingCursor( final CellImg< T, A, C > container )
+	public CellLocalizingCursor( final AbstractCellImg< T, A, C, ? > container )
 	{
 		super( container.numDimensions() );
 

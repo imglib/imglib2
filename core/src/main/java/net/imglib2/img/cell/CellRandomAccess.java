@@ -53,7 +53,7 @@ import net.imglib2.type.NativeType;
  */
 public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractLocalizable implements RandomAccess< T >, CellImg.CellContainerSampler< T, A, C >
 {
-	protected final CellImg< T, A, C > img;
+	protected final AbstractCellImg< T, A, C, ? > img;
 
 	protected final T type;
 
@@ -103,7 +103,7 @@ public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractC
 		type.updateIndex( index );
 	}
 
-	public CellRandomAccess( final CellImg< T, A, C > img )
+	public CellRandomAccess( final AbstractCellImg< T, A, C, ? > img )
 	{
 		super( img.numDimensions() );
 

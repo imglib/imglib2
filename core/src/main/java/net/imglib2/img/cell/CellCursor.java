@@ -47,7 +47,7 @@ import net.imglib2.type.NativeType;
  * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class CellCursor< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractCursor< T > implements CellImg.CellContainerSampler< T, A, C >
+public class CellCursor< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractCursor< T > implements AbstractCellImg.CellContainerSampler< T, A, C >
 {
 	protected final T type;
 
@@ -80,7 +80,7 @@ public class CellCursor< T extends NativeType< T >, A, C extends AbstractCell< A
 		type.updateIndex( index );
 	}
 
-	public CellCursor( final CellImg< T, A, C > container )
+	public CellCursor( final AbstractCellImg< T, A, C, ? > container )
 	{
 		super( container.numDimensions() );
 
