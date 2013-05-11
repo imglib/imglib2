@@ -76,7 +76,7 @@ public class Perspective3D implements InvertibleRealTransform
 		
 		target[ 0 ] = source[ 0 ] / source[ 2 ];
 		target[ 1 ] = source[ 1 ] / source[ 2 ];
-		target[ 2 ] = source[ 2 ] / source[ 2 ];
+//		target[ 2 ] = source[ 2 ] / source[ 2 ];
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class Perspective3D implements InvertibleRealTransform
 		
 		target[ 0 ] = source[ 0 ] / source[ 2 ];
 		target[ 1 ] = source[ 1 ] / source[ 2 ];
-		target[ 2 ] = source[ 2 ] / source[ 2 ];
+//		target[ 2 ] = source[ 2 ] / source[ 2 ];
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class Perspective3D implements InvertibleRealTransform
 		final double z = source.getDoublePosition( 2 );
 		target.setPosition( source.getDoublePosition( 0 ) / z, 0 );
 		target.setPosition( source.getDoublePosition( 1 ) / z, 1 );
-		target.setPosition( source.getDoublePosition( 2 ) / z, 2 );
+//		target.setPosition( source.getDoublePosition( 2 ) / z, 2 );
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class Perspective3D implements InvertibleRealTransform
 		
 		source[ 0 ] = target[ 0 ] * target[ 2 ];
 		source[ 1 ] = target[ 1 ] * target[ 2 ];
-		source[ 2 ] = target[ 2 ] * target[ 2 ];
+//		source[ 2 ] = target[ 2 ] * target[ 2 ];
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class Perspective3D implements InvertibleRealTransform
 		
 		source[ 0 ] = target[ 0 ] * target[ 2 ];
 		source[ 1 ] = target[ 1 ] * target[ 2 ];
-		source[ 2 ] = target[ 2 ] * target[ 2 ];
+//		source[ 2 ] = target[ 2 ] * target[ 2 ];
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class Perspective3D implements InvertibleRealTransform
 		final double z = target.getDoublePosition( 2 );
 		source.setPosition( target.getDoublePosition( 0 ) * z, 0 );
 		source.setPosition( target.getDoublePosition( 1 ) * z, 1 );
-		source.setPosition( target.getDoublePosition( 2 ) * z, 2 );
+//		source.setPosition( target.getDoublePosition( 2 ) * z, 2 );
 	}
 
 	@Override
