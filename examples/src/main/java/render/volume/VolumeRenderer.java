@@ -24,16 +24,18 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.img.ImgPlus;
-import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
+import net.imglib2.img.imageplus.ImagePlusImg;
+import net.imglib2.img.imageplus.ImagePlusImgs;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.realtransform.InvertibleRealTransformSequence;
 import net.imglib2.realtransform.Perspective3D;
 import net.imglib2.realtransform.RealViews;
+import net.imglib2.realtransform.Scale;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
@@ -47,7 +49,9 @@ public class VolumeRenderer
 {
 	final static double bg = 0;
 	
+	final static int numFrames = 360;
 	
+	final static int stepSize = 1;
 	
 	static protected < T extends RealType< T > > double accumulate( final RandomAccess< T > poxel, final long min )
 	{
@@ -87,7 +91,7 @@ public class VolumeRenderer
 			while ( pixel.getLongPosition( 0 ) <= canvas.max( 0 ) )
 			{
 				poxel.setPosition( maxZ, 2 );
-				accumulator.accumulateRow( pixel.get(), poxel, minZ, maxZ, 1, 2 );
+				accumulator.accumulateRow( pixel.get(), poxel, minZ, maxZ, stepSize, 2 );
 				
 				pixel.fwd( 0 );
 				poxel.fwd( 0 );
@@ -104,16 +108,25 @@ public class VolumeRenderer
 		return intensity / 4095.0;
 	}
 	
+	final static double accelerate( final double x )
+	{
+		return 0.5 - 0.5 * Math.cos( Math.PI * x );
+	}
+	
 	public static void main( final String[] args ) throws ImgIOException
 	{
-		final double theta = -Math.PI / 4.0;
+		new ImageJ();
+		final String filename = "src/main/resources/l1-cns.tif";
+		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< FloatType >(), new FloatType() );
+		ImageJFunctions.show( img );
+		final ImagePlusImg< FloatType, ? > movie = ImagePlusImgs.floats( img.dimension( 0 ), img.dimension( 1 ), numFrames );
+		ImageJFunctions.show( movie );
+				
+		final double theta = -Math.PI / 2.0;
 		final double cos = Math.cos( theta );
 		final double sin = Math.sin( theta );
 		
-		final String filename = "src/main/resources/l1-cns.tif";
-		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< FloatType >(), new FloatType() );
-		new ImageJ();
-		ImageJFunctions.show( img );
+		final double deltaTheta = 2.0 * Math.PI / numFrames;
 		
 		final AffineTransform3D centerShift = new AffineTransform3D();
 		centerShift.set(
@@ -121,51 +134,76 @@ public class VolumeRenderer
 				0, 1, 0, -img.dimension( 1 ) / 2.0 - img.min( 1 ),
 				0, 0, 1, -img.dimension( 2 ) / 2.0 - img.min( 2 ) );
 		
+		final AffineTransform3D centerUnshiftXY = centerShift.inverse();
+		centerUnshiftXY.set( 0, 2, 3 );
+		
+		final double f = img.dimension( 1 );
+		
 		final AffineTransform3D zShift = new AffineTransform3D();
 		zShift.set(
 				1, 0, 0, 0,
 				0, 1, 0, 0,
-				0, 0, 1, 100 );
+				0, 0, 1, img.dimension( 2 ) / 2.0 + f );
+		
+		final AffineTransform3D rotation = new AffineTransform3D();
+//		rotation.set(
+//				1, 0, 0, 0,
+//				0, cos, -sin, 0,
+//				0, sin, cos, 0 );
 		
 		final AffineTransform3D affine = new AffineTransform3D();
 		
-		final AffineTransform3D rotation = new AffineTransform3D();
-		rotation.set(
-				1, 0, 0, 0,
-				0, cos, -sin, 0,
-				0, sin, cos, 0 );
+		final Perspective3D perspective = Perspective3D.getInstance();
+		final Scale scale = new Scale( f, f, 1 );
 		
-//		final Scale rotation = new Scale( 1.5, 1.5, 1.5 );
+		final InvertibleRealTransformSequence transformSequence = new InvertibleRealTransformSequence();
 		
-		final Perspective3D perspective = new Perspective3D();
+		/* rotation */
+		transformSequence.add( affine );
 		
-		affine.concatenate( zShift );
-		affine.concatenate( centerShift.inverse() );
-		affine.concatenate( rotation );
-		affine.concatenate( centerShift );
-		
-		final FinalRealInterval bounds = affine.estimateBounds( img );
-		final long minZ	= ( long )Math.floor( bounds.realMin( 2 ) );
-		final long maxZ	= ( long )Math.ceil( bounds.realMax( 2 ) );
-		
-		System.out.println( "minZ = " + minZ + "; maxZ = " + maxZ );
+		/* camera */
+		transformSequence.add( perspective );
+		transformSequence.add( scale );
+		transformSequence.add( centerUnshiftXY );
 		
 		final ExtendedRandomAccessibleInterval< FloatType, ImgPlus< FloatType > > extendedImg = Views.extendValue( img, img.firstElement().createVariable() );
-//		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NLinearInterpolatorFactory< FloatType >() );
-		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NearestNeighborInterpolatorFactory< FloatType >() );
-//		final RandomAccessible< FloatType > rotated = RealViews.constantAffine( interpolant, affine );
-//		final RandomAccessible< FloatType > rotated = RealViews.transform( interpolant, affine );
-		final RandomAccessible< FloatType > rotated = RealViews.transform( interpolant, perspective );
-		final RandomAccessible< FloatType > centered = Views.offset( rotated, -img.dimension( 0 ) / 2, -img.dimension( 1 ) / 2, 0 );
-		final ArrayImg< FloatType, ? > canvas = ArrayImgs.floats( img.dimension( 0 ), img.dimension( 1 ) );
+		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NLinearInterpolatorFactory< FloatType >() );
+//		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NearestNeighborInterpolatorFactory< FloatType >() );
+		final RandomAccessible< FloatType > rotated = RealViews.transform( interpolant, transformSequence );
 		
 		final AlphaIntensityLayers< FloatType > accumulator = new AlphaIntensityLayers< FloatType >();
 		
-		//render( centered, canvas, minZ, maxZ, accumulator );
-		render( rotated, canvas, img.min( 2 ), img.max( 2 ), accumulator );
-		//render( Views.raster( interpolant ), canvas, img.min( 2 ), img.max( 2 ) );
+		for ( int i = 0; i < numFrames; ++i )
+		{
+			final double j = ( double )i / numFrames;
+			//final double k = Math.max( 0, Math.min( 1, j * 1.5 - 0.25 ) );
+			final double l = accelerate( j );
+			
+			
+			affine.set(
+					1, 0, 0, 0,
+					0, 1, 0, 0,
+					0, 0, 1, 0 );
+			
+			rotation.set( affine );
+			
+			rotation.rotate( 0, -l * Math.PI * 2 * 2 );
+			rotation.rotate( 1, j * Math.PI * 2 );
+			
+			affine.preConcatenate( centerShift );
+			affine.preConcatenate( rotation );
+			affine.preConcatenate( zShift );
 		
-		ImageJFunctions.show( canvas );
+			final FinalRealInterval bounds = affine.estimateBounds( img );
+			final long minZ	= ( long )Math.floor( bounds.realMin( 2 ) );
+			final long maxZ	= ( long )Math.ceil( bounds.realMax( 2 ) );
+			
+			System.out.println( "minZ = " + minZ + "; maxZ = " + maxZ );
+			
+			//final ArrayImg< FloatType, ? > canvas = ArrayImgs.floats( img.dimension( 0 ), img.dimension( 1 ) );
+			final RandomAccessibleInterval< FloatType > canvas = Views.hyperSlice( movie, 2, i );
+		
+			render( rotated, canvas, minZ, maxZ, accumulator );
+		}
 	}
-
 }
