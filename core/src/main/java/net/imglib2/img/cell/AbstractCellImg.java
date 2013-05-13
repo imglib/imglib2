@@ -151,14 +151,12 @@ public abstract class AbstractCellImg< T extends NativeType< T >, A, C extends A
 		return cells;
 	}
 
-	protected < I extends AbstractCellImg< T, ?, ?, ? > > I copy( final I copy )
+	protected void copyDataTo( final AbstractCellImg< T, ?, ?, ? > copy )
 	{
 		final CellCursor< T, A, C > source = this.cursor();
 		final CellCursor< T, ?, ? > target = copy.cursor();
 
 		while ( source.hasNext() )
 			target.next().set( source.next() );
-
-		return copy;
 	}
 }
