@@ -72,7 +72,7 @@ public final class FinalInterval extends AbstractInterval
 	 *
 	 * @param dimensions - the size of the interval
 	 */
-	public FinalInterval ( final long[] dimensions )
+	public FinalInterval ( final long... dimensions )
 	{
 		super( dimensions );
 	}

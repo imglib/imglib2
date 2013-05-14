@@ -93,8 +93,8 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 		
 		weights = interpolator.weights.clone();		
 		code = interpolator.code;
-		accumulator = interpolator.accumulator.copy();
-		tmp = interpolator.tmp.copy();
+		accumulator = interpolator.accumulator.createVariable();
+		tmp = interpolator.tmp.createVariable();
 		
 		for ( int d = 0; d < n; ++d )
 		{
