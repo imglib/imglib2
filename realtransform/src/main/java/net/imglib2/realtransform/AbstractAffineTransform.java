@@ -117,6 +117,12 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 				d.setPosition( a.get( r, c ), r );
 		}
 	}
+	
+	@Override
+	public int numDimensions()
+	{
+		return n;
+	}
 
 	@Override
 	public int numSourceDimensions()

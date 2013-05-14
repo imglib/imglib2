@@ -347,6 +347,12 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	}
 
 	@Override
+	public int numDimensions()
+	{
+		return 2;
+	}
+	
+	@Override
 	public int numSourceDimensions()
 	{
 		return 2;

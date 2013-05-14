@@ -431,6 +431,12 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		return inverse();
 	}
+	
+	@Override
+	public int numDimensions()
+	{
+		return 3;
+	}
 
 	@Override
 	public int numSourceDimensions()

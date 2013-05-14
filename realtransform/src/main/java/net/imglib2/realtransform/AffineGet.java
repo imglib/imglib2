@@ -37,6 +37,7 @@
 
 package net.imglib2.realtransform;
 
+import net.imglib2.EuclideanSpace;
 import net.imglib2.RealLocalizable;
 
 /**
@@ -47,7 +48,7 @@ import net.imglib2.RealLocalizable;
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface AffineGet extends InvertibleRealTransform
+public interface AffineGet extends InvertibleRealTransform, EuclideanSpace
 {
 	/**
 	 * Get a field of the <em>n</em>&times;(<em>n</em>+1) affine transformation

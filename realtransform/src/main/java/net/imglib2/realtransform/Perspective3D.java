@@ -36,6 +36,7 @@
  */
 package net.imglib2.realtransform;
 
+import net.imglib2.EuclideanSpace;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 
@@ -45,7 +46,7 @@ import net.imglib2.RealPositionable;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class Perspective3D implements InvertibleRealTransform
+public class Perspective3D implements InvertibleRealTransform, EuclideanSpace
 {
 	final static protected Perspective3D instance = new Perspective3D();
 	final static protected InverseRealTransform inverse = new InverseRealTransform( instance );
@@ -55,6 +56,12 @@ public class Perspective3D implements InvertibleRealTransform
 	static public Perspective3D getInstance()
 	{
 		return instance;
+	}
+	
+	@Override
+	public int numDimensions()
+	{
+		return 3;
 	}
 	
 	@Override

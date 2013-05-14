@@ -96,6 +96,12 @@ public class Scale implements AffineGet
 	{
 		return inverse;
 	}
+	
+	@Override
+	public int numDimensions()
+	{
+		return s.length;
+	}
 
 	@Override
 	public int numSourceDimensions()
