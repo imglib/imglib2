@@ -34,7 +34,6 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-
 package net.imglib2.interpolation.randomaccess;
 
 import net.imglib2.RandomAccessible;
@@ -46,9 +45,6 @@ import net.imglib2.type.numeric.NumericType;
  * 
  * @param <T>
  *
- * @author Pietzsch
- * @author Preibisch
- * @author 
  * @author Saalfeld
  * @author Tobias Pietzsch
  * @author Stephan Preibisch

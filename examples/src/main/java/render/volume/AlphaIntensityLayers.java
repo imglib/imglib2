@@ -34,7 +34,13 @@ public class AlphaIntensityLayers< T extends RealType< T > > implements RowAccum
 	}
 	
 	@Override
-	public void accumulateRow( final T accumulator, final RandomAccess< T > access, final long min, final long max, final long step, final int d )
+	public void accumulateRow(
+			final T accumulator,
+			final RandomAccess< T > access,
+			final long min,
+			final long max,
+			final long step,
+			final int d )
 	{
 		access.setPosition( max, d );
 		double a = accumulator.getRealDouble();
