@@ -24,7 +24,7 @@ import net.imglib2.type.numeric.NumericType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface RowAccumulator< T extends NumericType< T > >
+public interface RowAccumulator< T extends NumericType< ? > >
 {
 	public void accumulateRow( final T accumulator, final RandomAccess< T > access, final long min, final long max, final long step, final int d );
 }
