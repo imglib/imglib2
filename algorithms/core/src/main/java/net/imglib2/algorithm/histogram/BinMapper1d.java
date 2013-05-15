@@ -101,4 +101,8 @@ public interface BinMapper1d<T> {
 	 */
 	boolean includesLowerBound(long binPos);
 
+	/**
+	 * Returns a copy of this BinMapper1d<T>.
+	 */
+	BinMapper1d<T> copy();
 }

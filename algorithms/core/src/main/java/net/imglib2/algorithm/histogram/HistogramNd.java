@@ -42,7 +42,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.imglib2.Cursor;
-import net.imglib2.Dimensions;
+import net.imglib2.Interval;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.Positionable;
+import net.imglib2.RandomAccess;
+import net.imglib2.RealPositionable;
+import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.type.numeric.integer.LongType;
 
 // TODO - calculate lazily but should be able to count upper/lower/middle in
 // one pass rather than the multiple passes that are now in place.
@@ -58,7 +65,7 @@ import net.imglib2.Dimensions;
  * 
  * @author Barry DeZonia
  */
-public class HistogramNd<T> implements Dimensions {
+public class HistogramNd<T> implements Img<LongType> {
 
 	// -- instance variables --
 
@@ -66,6 +73,10 @@ public class HistogramNd<T> implements Dimensions {
 	private DiscreteFrequencyDistribution distrib;
 	private long[] pos;
 	private long ignoredCount;
+	@SuppressWarnings("synthetic-access")
+	private Incrementer incrementer = new Incrementer();
+	@SuppressWarnings("synthetic-access")
+	private Decrementer decrementer = new Decrementer();
 
 	// -- constructors --
 
@@ -83,6 +94,24 @@ public class HistogramNd<T> implements Dimensions {
 		}
 		distrib = new DiscreteFrequencyDistribution(dims);
 		pos = new long[mappers.size()];
+	}
+
+	/**
+	 * Construct a histogram whose bin mappings match another histogram. After
+	 * this construction the histogram bins are unpopulated.
+	 * 
+	 * @param other The histogram to copy.
+	 */
+	public HistogramNd(HistogramNd<T> other) {
+		List<BinMapper1d<T>> mappersCopy = new ArrayList<BinMapper1d<T>>();
+		for (BinMapper1d<T> m : mappers) {
+			mappersCopy.add(m.copy());
+		}
+		mappers = mappersCopy;
+		distrib = other.distrib.copy();
+		pos = other.pos.clone();
+		distrib.resetCounters();
+		ignoredCount = 0;
 	}
 
 	/**
@@ -542,33 +571,6 @@ public class HistogramNd<T> implements Dimensions {
 	}
 
 	/**
-	 * Return the number of dimensions of the frequency distribution of this
-	 * histogram.
-	 */
-	@Override
-	public int numDimensions() {
-		return distrib.numDimensions();
-	}
-
-	/**
-	 * Return the size of the given dimension of the frequency distribution of
-	 * this histogram.
-	 */
-	@Override
-	public long dimension(int d) {
-		return distrib.dimension(d);
-	}
-
-	/**
-	 * Fill the provided long[] with the sizes of all dimensions of the frequency
-	 * distribution of this histogram.
-	 */
-	@Override
-	public void dimensions(long[] dims) {
-		distrib.dimensions(dims);
-	}
-
-	/**
 	 * Get the discrete frequency distribution associated with this histogram.
 	 */
 	public DiscreteFrequencyDistribution dfd() {
@@ -635,6 +637,188 @@ public class HistogramNd<T> implements Dimensions {
 		subtract(data);
 	}
 
+	/**
+	 * Directly increment a bin by position.
+	 * 
+	 * @param binPos The 1-d index of the bin
+	 */
+	public void increment(long[] binPos) {
+		distrib.increment(binPos);
+	}
+
+	/**
+	 * Directly decrement a bin by position.
+	 * 
+	 * @param binPos The 1-d index of the bin
+	 */
+	public void decrement(long[] binPos) {
+		distrib.decrement(binPos);
+	}
+
+	/**
+	 * Directly increment a bin by value.
+	 * 
+	 * @param values The values to map to a bin position
+	 */
+	public void increment(List<T> values) {
+		count(values, incrementer);
+	}
+
+	/**
+	 * Directly decrement a bin by value,
+	 * 
+	 * @param values The values to map to a bin position
+	 */
+	public void decrement(List<T> values) {
+		count(values, decrementer);
+	}
+
+
+	// -- delegated Img methods --
+
+	/**
+	 * Return the number of dimensions of the frequency distribution of this
+	 * histogram.
+	 */
+	@Override
+	public int numDimensions() {
+		return distrib.numDimensions();
+	}
+
+	/**
+	 * Return the size of the given dimension of the frequency distribution of
+	 * this histogram.
+	 */
+	@Override
+	public long dimension(int d) {
+		return distrib.dimension(d);
+	}
+
+	/**
+	 * Fill the provided long[] with the sizes of all dimensions of the frequency
+	 * distribution of this histogram.
+	 */
+	@Override
+	public void dimensions(long[] dims) {
+		distrib.dimensions(dims);
+	}
+
+	@Override
+	public RandomAccess<LongType> randomAccess() {
+		return distrib.randomAccess();
+	}
+
+	@Override
+	public RandomAccess<LongType> randomAccess(Interval interval) {
+		return distrib.randomAccess(interval);
+	}
+
+	@Override
+	public long min(int d) {
+		return distrib.min(d);
+	}
+
+	@Override
+	public void min(long[] min) {
+		distrib.min(min);
+	}
+
+	@Override
+	public void min(Positionable min) {
+		distrib.min(min);
+	}
+
+	@Override
+	public long max(int d) {
+		return distrib.max(d);
+	}
+
+	@Override
+	public void max(long[] max) {
+		distrib.max(max);
+	}
+
+	@Override
+	public void max(Positionable max) {
+		distrib.max(max);
+	}
+
+	@Override
+	public double realMin(int d) {
+		return distrib.realMin(d);
+	}
+
+	@Override
+	public void realMin(double[] min) {
+		distrib.realMin(min);
+	}
+
+	@Override
+	public void realMin(RealPositionable min) {
+		distrib.realMin(min);
+	}
+
+	@Override
+	public double realMax(int d) {
+		return distrib.realMax(d);
+	}
+
+	@Override
+	public void realMax(double[] max) {
+		distrib.realMax(max);
+	}
+
+	@Override
+	public void realMax(RealPositionable max) {
+		distrib.realMax(max);
+	}
+
+	@Override
+	public Cursor<LongType> cursor() {
+		return distrib.cursor();
+	}
+
+	@Override
+	public Cursor<LongType> localizingCursor() {
+		return distrib.localizingCursor();
+	}
+
+	@Override
+	public long size() {
+		return distrib.size();
+	}
+
+	@Override
+	public LongType firstElement() {
+		return distrib.firstElement();
+	}
+
+	@Override
+	public Object iterationOrder() {
+		return distrib.iterationOrder();
+	}
+
+	@Override
+	@Deprecated
+	public boolean equalIterationOrder(IterableRealInterval<?> f) {
+		return distrib.equalIterationOrder(f);
+	}
+
+	@Override
+	public Iterator<LongType> iterator() {
+		return distrib.iterator();
+	}
+
+	@Override
+	public ImgFactory<LongType> factory() {
+		return distrib.factory();
+	}
+
+	@Override
+	public Img<LongType> copy() {
+		return new HistogramNd<T>(this);
+	}
+
 	// -- helpers --
 
 	private void init(Iterable<List<T>> data) {
@@ -649,39 +833,26 @@ public class HistogramNd<T> implements Dimensions {
 		add(data);
 	}
 
-	@SuppressWarnings("synthetic-access")
 	private void add(Iterable<List<T>> data) {
-		modifyCounts(data, new Incrementer());
+		modifyCounts(data, incrementer);
 	}
 
-	@SuppressWarnings("synthetic-access")
 	private void add(List<Iterable<T>> data) {
-		modifyCounts(data, new Incrementer());
+		modifyCounts(data, incrementer);
 	}
 
-	@SuppressWarnings("synthetic-access")
 	private void subtract(Iterable<List<T>> data) {
-		modifyCounts(data, new Decrementer());
+		modifyCounts(data, decrementer);
 	}
 
-	@SuppressWarnings("synthetic-access")
 	private void subtract(List<Iterable<T>> data) {
-		modifyCounts(data, new Decrementer());
+		modifyCounts(data, decrementer);
 	}
 
 	private void modifyCounts(Iterable<List<T>> data, Counter counter) {
 		Iterator<List<T>> iter = data.iterator();
 		while (iter.hasNext()) {
-			List<T> values = iter.next();
-			map(values, pos);
-			boolean ignored = false;
-			for (int i = 0; i < pos.length; i++) {
-				if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
-					ignored = true;
-					break;
-				}
-			}
-			counter.count(pos, ignored);
+			count(iter.next(), counter);
 		}
 	}
 
@@ -701,18 +872,22 @@ public class HistogramNd<T> implements Dimensions {
 				for (int i = 0; i < iters.size(); i++) {
 					vals.set(i, iters.get(i).next());
 				}
-				map(vals, pos);
-				boolean ignored = false;
-				for (int i = 0; i < pos.length; i++) {
-					if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
-						ignored = true;
-						break;
-					}
-				}
-				counter.count(pos, ignored);
+				count(vals, counter);
 			}
 		}
 		while (hasNext);
+	}
+
+	private void count(List<T> values, Counter counter) {
+		map(values, pos);
+		boolean ignored = false;
+		for (int i = 0; i < pos.length; i++) {
+			if (pos[i] == Long.MIN_VALUE || pos[i] == Long.MAX_VALUE) {
+				ignored = true;
+				break;
+			}
+		}
+		counter.count(pos, ignored);
 	}
 
 	private interface Counter {
