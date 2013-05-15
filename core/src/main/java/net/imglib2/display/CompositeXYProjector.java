@@ -65,13 +65,13 @@ import net.imglib2.type.numeric.ARGBType;
 public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 {
 
-	private final ArrayList< Converter< A, ARGBType >> converters;
+	protected final ArrayList< Converter< A, ARGBType >> converters;
 
-	private final int dimIndex;
+	protected final int dimIndex;
 
-	private final long positionCount;
+	protected final long positionCount;
 
-	private final long positionMin;
+	protected final long positionMin;
 
 	private final boolean[] composite;
 
