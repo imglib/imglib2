@@ -186,15 +186,15 @@ public class ArenaMovie
 	 * 
 	 * @param arena - the simulation
 	 * @param chance - the chance of having an epidemic
-	 * @param numRaces - the number of races
+	 * @param nRaces - the number of races
 	 */
-	protected void epidemic( final Img< LifeForm > arena, final float chance, final int numRaces )
+	protected void epidemic( final Img< LifeForm > arena, final float chance, final int nRaces )
 	{
 		// is there an epedemic?
 		// if ( rnd.nextFloat() * 100 < chance )
 		{
 			// which race does it hit?
-			final int race = dominantLifeForm( arena, numRaces );
+			final int race = dominantLifeForm( arena, nRaces );
 			
 			for ( final LifeForm l : arena )
 				if ( l.getName() == race )
@@ -208,9 +208,9 @@ public class ArenaMovie
 	 * @param arena - the simulation
 	 * @return - index of the dominant LifeForm 
 	 */
-	protected int dominantLifeForm( final Img< LifeForm > arena, final int numRaces )
+	protected int dominantLifeForm( final Img< LifeForm > arena, final int nRaces )
 	{
-		final double[] countRaces = new double[ numRaces ];
+		final double[] countRaces = new double[ nRaces ];
 		
 		for ( final LifeForm l : arena )
 			countRaces[ l.getName() ] += l.getWeight();
@@ -218,7 +218,7 @@ public class ArenaMovie
 		double last = countRaces[ 0 ];
 		int race = 0;
 		
-		for ( int i = 1; i < numRaces; ++i )
+		for ( int i = 1; i < nRaces; ++i )
 			if ( countRaces[ i ] > last )
 			{
 				last = countRaces[ i ];
@@ -232,20 +232,20 @@ public class ArenaMovie
 	 * Seed the arena with a number of random life forms
 	 * 
 	 * @param arena - the Img containing the Life forms
-	 * @param numSeeds - the number of seeds
-	 * @param numRaces - the number of races to use
+	 * @param nSeeds - the number of seeds
+	 * @param nRaces - the number of races to use
 	 */
-	protected void seedArena( final Img<LifeForm> arena, final int numSeeds, final int numRaces )
+	protected void seedArena( final Img<LifeForm> arena, final int nSeeds, final int nRaces )
 	{
 		final int numDimensions = arena.numDimensions();
 		final RandomAccess<LifeForm> randomAccess = arena.randomAccess();
 		
-		for ( int i = 0; i < numSeeds; ++i )
+		for ( int i = 0; i < nSeeds; ++i )
 		{
 			for ( int d = 0; d < numDimensions; ++d )
 				randomAccess.setPosition( Math.round( rnd.nextFloat() * ( arena.dimension( d ) - 1 ) ), d );
 			
-			randomAccess.get().set( i % numRaces, 1 );
+			randomAccess.get().set( i % nRaces, 1 );
 		}		
 	}
 	

@@ -93,7 +93,7 @@ public class LifeForm implements NumericType<LifeForm>, NativeType<LifeForm>
 	IntAccess b;
 	
 	// this is the constructor for initializing with an array
-	public LifeForm( NativeImg<LifeForm, ? extends IntAccess> lifeFormStorage )
+	public LifeForm( final NativeImg<LifeForm, ? extends IntAccess> lifeFormStorage )
 	{
 		storage = lifeFormStorage;
 	}
@@ -176,19 +176,19 @@ public class LifeForm implements NumericType<LifeForm>, NativeType<LifeForm>
 	public void add( final LifeForm c )
 	{
 		final float a = getWeight();
-		final float b = c.getWeight();
+		final float ca = c.getWeight();
 		
 		final int na = getName();
 		final int nb = c.getName();
 		
 		if ( na == nb )
-			setWeight( a + b );
+			setWeight( a + ca );
 		else
 		{
-			if ( a < b )
-				set( nb, b - a );
+			if ( a < ca )
+				set( nb, ca - a );
 			else
-				setWeight( a - b );
+				setWeight( a - ca );
 		}
 	}
 
@@ -269,14 +269,14 @@ public class LifeForm implements NumericType<LifeForm>, NativeType<LifeForm>
 	public void set( final LifeForm c ) { set( c.getName(), c.getWeight() ); }
 	
 	/**
-	 * @param i - set the index in the IntAccess (called by cursor/randomAccess)
+	 * @param index - set the index in the IntAccess (called by cursor/randomAccess)
 	 */
 	@Override
-	public void updateIndex( final int i ) 
+	public void updateIndex( final int index ) 
 	{ 
-		this.i = i;
-		nameI = i * 2;
-		weightI = i * 2 + 1;
+		i = index;
+		nameI = index * 2;
+		weightI = index * 2 + 1;
 	}
 	
 	/**
