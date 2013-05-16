@@ -26,11 +26,22 @@ import net.imglib2.type.numeric.RealType;
  */
 public class AlphaIntensityLayers< T extends RealType< T > > implements RowAccumulator< T >
 {
-	final protected double scale = 1.0 / 4095.0;
+	final protected double scale, offset;
+	
+	public AlphaIntensityLayers( final double scale, final double offset )
+	{
+		this.scale = scale;
+		this.offset = offset;
+	}
+	
+	public AlphaIntensityLayers( final double scale )
+	{
+		this( scale, 0 );
+	}
 	
 	final double alpha( final double intensity )
 	{
-		return intensity * scale;
+		return Math.max( 0, Math.min( 1, ( intensity + offset ) * scale ) );
 	}
 	
 	@Override
@@ -47,9 +58,12 @@ public class AlphaIntensityLayers< T extends RealType< T > > implements RowAccum
 		while ( access.getLongPosition( d ) >= min )
 		{
 			final double b = access.get().getRealDouble();
-			final double alpha = alpha( b );
-			a *= 1.0 - alpha;
-			a += b * alpha;
+//			if ( b < 0.1 )
+//			{
+				final double alpha = alpha( b );
+				a *= 1.0 - alpha;
+				a += b * alpha;
+//			}
 			access.move( -step, d );
 		}
 		accumulator.setReal( a );
