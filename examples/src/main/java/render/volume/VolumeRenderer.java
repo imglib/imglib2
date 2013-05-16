@@ -147,7 +147,7 @@ public class VolumeRenderer
 	public static void test1() throws ImgIOException
 	{
 		new ImageJ();
-		final String filename = "l1-cns.tif";
+		final String filename = "./l1-cns.tif";
 		//final String filename = "/home/saalfeld/tmp/valia/tassos/7.tif";
 		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< FloatType >(), new FloatType() );
 		ImageJFunctions.show( img );
@@ -160,9 +160,6 @@ public class VolumeRenderer
 				0, 1, 0, -img.dimension( 1 ) / 2.0 - img.min( 1 ),
 				0, 0, 1, -img.dimension( 2 ) / 2.0 - img.min( 2 ) );
 		
-//		final AffineTransform3D orientation = new AffineTransform3D();
-//		orientation.set(
-//				1.0, 0.0, 0.0, 0.0, 0.0, -0.9999996, 5.9604645E-8, 0.0, 0.0, -5.9604645E-8, -0.9999996, 0.0 );
 		
 		final AffineTransform3D centerUnshiftXY = centerShift.inverse();
 		centerUnshiftXY.set( 0, 2, 3 );
@@ -196,7 +193,8 @@ public class VolumeRenderer
 //		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NearestNeighborInterpolatorFactory< FloatType >() );
 		final RandomAccessible< FloatType > rotated = RealViews.transform( interpolant, transformSequence );
 		
-		final AlphaIntensityLayers< FloatType > accumulator = new AlphaIntensityLayers< FloatType >( 1.0 / 5000.0, -500 );
+		final AlphaIntensityLayers< FloatType > accumulator = new AlphaIntensityLayers< FloatType >( 1.0 / 4095.0, 0 );
+//		final AlphaIntensityLayers< FloatType > accumulator = new AlphaIntensityLayers< FloatType >( 1.0 / 5000.0, -500 );
 //		final AlphaIntensityLayers< FloatType > accumulator = new AlphaIntensityLayers< FloatType >( 1.0 / 0.2, -0.01 );
 		
 		for ( int i = 0; i < numFrames; ++i )
@@ -494,6 +492,6 @@ public class VolumeRenderer
 	
 	final static public void main( final String[] args ) throws ImgIOException
 	{
-		test2();
+		test1();
 	}
 }
