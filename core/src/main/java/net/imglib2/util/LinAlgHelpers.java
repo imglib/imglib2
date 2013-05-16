@@ -442,27 +442,30 @@ public class LinAlgHelpers
 			// major diagonal is largest
 			if ( ( d0 > d1 ) && ( d0 > d2 ) )
 			{
-				final double s = 0.5 / Math.sqrt( 1 + d0 - d1 - d2 );
-				q[ 1 ] = 0.5 * s;
+				final double s2 = Math.sqrt( 1 + d0 - d1 - d2 );
+				final double s = 0.5 / s2;
+				q[ 1 ] = 0.5 * s2;
 				q[ 2 ] = ( R[ 0 ][ 1 ] + R[ 1 ][ 0 ] ) * s;
-				q[ 3 ] = ( R[ 0 ][ 2 ] + R[ 2 ][ 0 ] ) * s;
-				q[ 0 ] = ( R[ 1 ][ 2 ] + R[ 2 ][ 1 ] ) * s;
+				q[ 3 ] = ( R[ 2 ][ 0 ] + R[ 0 ][ 2 ] ) * s;
+				q[ 0 ] = ( R[ 2 ][ 1 ] - R[ 1 ][ 2 ] ) * s;
 			}
 			else if ( d1 > d2 )
 			{
-				final double s = 0.5 / Math.sqrt( 1 + d0 - d1 - d2 );
+				final double s2 = Math.sqrt( 1 - d0 + d1 - d2 );
+				final double s = 0.5 / s2;
 				q[ 1 ] = ( R[ 0 ][ 1 ] + R[ 1 ][ 0 ] ) * s;
-				q[ 2 ] = 0.5 * s;
+				q[ 2 ] = 0.5 * s2;
 				q[ 3 ] = ( R[ 1 ][ 2 ] + R[ 2 ][ 1 ] ) * s;
-				q[ 0 ] = ( R[ 0 ][ 2 ] + R[ 2 ][ 0 ] ) * s;
+				q[ 0 ] = ( R[ 0 ][ 2 ] - R[ 2 ][ 0 ] ) * s;
 			}
 			else
 			{
-				final double s = 0.5 / Math.sqrt( 1 + d0 - d1 - d2 );
-				q[ 1 ] = ( R[ 0 ][ 2 ] + R[ 2 ][ 0 ] ) * s;
+				final double s2 = Math.sqrt( 1 - d0 - d1 + d2 );
+				final double s = 0.5 / s2;
+				q[ 1 ] = ( R[ 2 ][ 0 ] + R[ 0 ][ 2 ] ) * s;
 				q[ 2 ] = ( R[ 1 ][ 2 ] + R[ 2 ][ 1 ] ) * s;
-				q[ 3 ] = 0.5 * s;
-				q[ 0 ] = ( R[ 0 ][ 1 ] + R[ 1 ][ 0 ] ) * s;
+				q[ 3 ] = 0.5 * s2;
+				q[ 0 ] = ( R[ 1 ][ 0 ] - R[ 0 ][ 1 ] ) * s;
 			}
 		}
 	}
