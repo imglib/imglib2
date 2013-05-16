@@ -18,7 +18,6 @@ package render.volume;
 
 import ij.IJ;
 import ij.ImageJ;
-import ij.ImagePlus;
 import net.imglib2.Cursor;
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.FinalInterval;
@@ -154,35 +153,14 @@ public class VolumeRenderer
 		
 		long t;
 		
-		IJ.log( "Opening TIF with ImageJ ..." );
-		t = System.currentTimeMillis();
-		final ImagePlus imp = new ImagePlus( filename );
-		t = System.currentTimeMillis() - t;
-		IJ.log( "  took " +  t + "ms" );
-		
-		IJ.log( "Opening ZIP with ImageJ ..." );
-		t = System.currentTimeMillis();
-		final ImagePlus impZip = new ImagePlus( filename + ".zip" );
-		t = System.currentTimeMillis() - t;
-		IJ.log( "  took " +  t + "ms" );
-		
-		IJ.log( "Opening TIF with ImgOpener ..." );
-		t = System.currentTimeMillis();
-		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< FloatType >(), new FloatType() );
-		t = System.currentTimeMillis() - t;
-		IJ.log( "  took " +  t + "ms" );
-		
 		IJ.log( "Opening ZIP with ImgOpener ..." );
 		t = System.currentTimeMillis();
-		final ImgPlus< FloatType > imgZip = new ImgOpener().openImg( filename + ".zip", new ArrayImgFactory< FloatType >(), new FloatType() );
+		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename + ".zip", new ArrayImgFactory< FloatType >(), new FloatType() );
 		t = System.currentTimeMillis() - t;
 		IJ.log( "  took " +  t + "ms" );
 		
-		imp.show();
-		impZip.show();
 		
 		ImageJFunctions.show( img );
-		ImageJFunctions.show( imgZip );
 		
 		final ImagePlusImg< FloatType, ? > movie = ImagePlusImgs.floats( img.dimension( 0 ), img.dimension( 1 ), numFrames );
 		ImageJFunctions.show( movie );
