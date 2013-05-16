@@ -163,12 +163,12 @@ public class LinAlgHelpers
 	/**
 	 * set c = A * b.
 	 *
-	 * Dimensions of a, B, and c must match. That is, cols(A) == rows(b), and
+	 * Dimensions of A, b, and c must match. That is, cols(A) == rows(b), and
 	 * rows(c) == rows(A).
 	 *
 	 * @param A
-	 * @param B
-	 * @param C
+	 * @param b
+	 * @param c
 	 */
 	public static void mult( final double[][] A, final double[] b, final double[] c )
 	{
@@ -301,6 +301,86 @@ public class LinAlgHelpers
 		for ( int i = 0; i < rows; ++i )
 			for ( int j = 0; j < cols; ++j )
 				C[ i ][ j ] = A[ i ][ j ] + B[ i ][ j ];
+	}
+
+	/**
+	 * extract column c of A into vector b.
+	 *
+	 * Dimensions of A and b must match. That is, rows(A) == rows(b).
+	 *
+	 * @param c
+	 * @param A
+	 * @param b
+	 */
+	public static void getCol( final int c, final double[][] A, final double[] b )
+	{
+		assert rows( A ) == rows( b );
+		assert cols( A ) > c && c >= 0;
+
+		final int rows = rows( A );
+
+		for ( int i = 0; i < rows; ++i )
+			b[ i ] = A[ i ][ c ];
+	}
+
+	/**
+	 * set column c of B to vector a.
+	 *
+	 * Dimensions of a and B must match. That is, rows(a) == rows(B).
+	 *
+	 * @param c
+	 * @param a
+	 * @param B
+	 */
+	public static void setCol( final int c, final double[] a, final double[][] B )
+	{
+		assert rows( B ) == rows( a );
+		assert cols( B ) > c && c >= 0;
+
+		final int rows = rows( B );
+
+		for ( int i = 0; i < rows; ++i )
+			B[ i ][ c ] = a[ i ];
+	}
+
+	/**
+	 * extract row r of A into vector b.
+	 *
+	 * Dimensions of A and b must match. That is, cols(A) == rows(b).
+	 *
+	 * @param r
+	 * @param A
+	 * @param b
+	 */
+	public static void getRow( final int r, final double[][] A, final double[] b )
+	{
+		assert cols( A ) == rows( b );
+		assert rows( A ) > r && r >= 0;
+
+		final int cols = cols( A );
+
+		for ( int i = 0; i < cols; ++i )
+			b[ i ] = A[ r ][ i ];
+	}
+
+	/**
+	 * set row r of B to vector a.
+	 *
+	 * Dimensions of a and B must match. That is, rows(a) == cols(B).
+	 *
+	 * @param r
+	 * @param a
+	 * @param B
+	 */
+	public static void setRow( final int r, final double[] a, final double[][] B )
+	{
+		assert cols( B ) == rows( a );
+		assert rows( B ) > r && r >= 0;
+
+		final int cols = cols( B );
+
+		for ( int i = 0; i < cols; ++i )
+			B[ r ][ i ] = a[ i ];
 	}
 
 	/**
