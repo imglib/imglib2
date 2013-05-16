@@ -53,7 +53,7 @@ import net.imglib2.converter.Converter;
 public class XYProjector< A, B > extends AbstractXYProjector< A, B >
 {
 	final protected IterableInterval< B > target;
-	final int numDimensions;
+	final protected int numDimensions;
 	
 	public XYProjector( final RandomAccessible< A > source, final IterableInterval< B > target, final Converter< A, B > converter )
 	{

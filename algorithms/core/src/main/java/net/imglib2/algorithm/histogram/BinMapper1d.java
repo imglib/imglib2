@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,53 +28,81 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
  * #L%
  */
 
-package net.imglib2.img.cell;
+package net.imglib2.algorithm.histogram;
 
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.list.ListImg;
-import net.imglib2.img.list.ListImgFactory;
-import net.imglib2.img.list.ListLocalizingCursor;
 
 /**
- * Implementation of {@link Cells} that uses {@link DefaultCell}s and keeps them
- * all in memory all the time in a {@link ListImg}.
- *
- *
- * @author ImgLib2 developers
- * @author Tobias Pietzsch Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Barry DeZonia
  */
-public class ListImgCells< A extends ArrayDataAccess< A > > extends AbstractCells< A, DefaultCell< A >, ListImg< DefaultCell< A > > >
-{
-	private final ListImg< DefaultCell< A > > cells;
+public interface BinMapper1d<T> {
 
-	public ListImgCells( final A creator, final int entitiesPerPixel, final long[] dimensions, final int[] cellDimensions )
-	{
-		super( entitiesPerPixel, dimensions, cellDimensions );
-		cells = new ListImgFactory< DefaultCell< A > >().create( numCells, new DefaultCell< A >( creator, new int[ 1 ], new long[ 1 ], entitiesPerPixel ) );
+	/**
+	 * Returns true if this bin mapping has bins on the ends of the distribution
+	 * that count out of bounds values.
+	 */
+	boolean hasTails();
 
-		final long[] cellGridPosition = new long[ n ];
-		final long[] cellMin = new long[ n ];
-		final int[] cellDims = new int[ n ];
-		final ListLocalizingCursor< DefaultCell< A > > cellCursor = cells.localizingCursor();
-		while ( cellCursor.hasNext() )
-		{
-			cellCursor.fwd();
-			cellCursor.localize( cellGridPosition );
-			getCellDimensions( cellGridPosition, cellMin, cellDims );
-			cellCursor.set( new DefaultCell< A >( creator, cellDims, cellMin, entitiesPerPixel ) );
-		}
-	}
+	/**
+	 * Returns the number of bins within this bin mapping distribution.
+	 */
+	long getBinCount();
 
-	@Override
-	protected ListImg< DefaultCell< A >> cells()
-	{
-		return cells;
-	}
+	/**
+	 * Converts a data value to a long index within the bin distribution.
+	 */
+	long map(T value);
+
+	/**
+	 * Gets the data value associated with the center of a bin.
+	 * 
+	 * @param binPos
+	 * @param value Output to contain center data value
+	 */
+	void getCenterValue(long binPos, T value);
+
+	/**
+	 * Gets the data value associated with the left edge of a bin.
+	 * 
+	 * @param binPos Bin number of interest
+	 * @param value Output to contain left edge data value
+	 */
+	void getLowerBound(long binPos, T value);
+
+	/**
+	 * Gets the data value associated with the right edge of a bin.
+	 * 
+	 * @param binPos Bin number of interest
+	 * @param value Output to contain right edge data value
+	 */
+	void getUpperBound(long binPos, T value);
+
+	/**
+	 * Returns true if values matching the right edge data value for a given bin
+	 * are counted in the distribution. Basically is this bin interval closed on
+	 * the right or not.
+	 * 
+	 * @param binPos Bin number of interest
+	 */
+	boolean includesUpperBound(long binPos);
+
+	/**
+	 * Returns true if values matching the left edge data value for a given bin
+	 * are counted in the distribution. Basically is this bin interval closed on
+	 * the left or not.
+	 * 
+	 * @param binPos Bin number of interest
+	 */
+	boolean includesLowerBound(long binPos);
+
+	/**
+	 * Returns a copy of this BinMapper1d<T>.
+	 */
+	BinMapper1d<T> copy();
 }
