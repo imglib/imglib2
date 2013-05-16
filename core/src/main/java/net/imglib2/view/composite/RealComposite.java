@@ -56,14 +56,14 @@ public class RealComposite< T extends RealType< T > > extends NumericComposite< 
 		}
 		
 		@Override
-		public RealComposite< T > create( final RandomAccess< T > sourceAccess, final int d )
+		public RealComposite< T > create( final RandomAccess< T > sourceAccess )
 		{
-			return new RealComposite< T >( sourceAccess, d, numChannels );
+			return new RealComposite< T >( sourceAccess, numChannels );
 		}
 	}
 	
-	public RealComposite( final RandomAccess< T > sourceAccess, final int d, final int length )
+	public RealComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
-		super( sourceAccess, d, length );
+		super( sourceAccess, length );
 	}
 }

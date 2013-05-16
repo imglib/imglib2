@@ -48,10 +48,10 @@ public class AbstractComposite< T > implements Composite< T >
 	final protected RandomAccess< T > sourceAccess;
 	final protected int d;
 	
-	public AbstractComposite( final RandomAccess< T > sourceAccess, final int d )
+	public AbstractComposite( final RandomAccess< T > sourceAccess )
 	{
 		this.sourceAccess = sourceAccess;
-		this.d = d;
+		this.d = sourceAccess.numDimensions() - 1;
 	}
 	
 	@Override

@@ -63,15 +63,15 @@ public class NumericComposite< T extends NumericType< T > > extends AbstractComp
 		}
 		
 		@Override
-		public NumericComposite< T > create( final RandomAccess< T > sourceAccess, final int d )
+		public NumericComposite< T > create( final RandomAccess< T > sourceAccess )
 		{
-			return new NumericComposite< T >( sourceAccess, d, numChannels );
+			return new NumericComposite< T >( sourceAccess, numChannels );
 		}
 	}
 	
-	public NumericComposite( final RandomAccess< T > sourceAccess, final int d, final int length )
+	public NumericComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
-		super( sourceAccess, d );
+		super( sourceAccess );
 		this.length = length;
 	}
 
@@ -88,13 +88,13 @@ public class NumericComposite< T extends NumericType< T > > extends AbstractComp
 			img = ( ( NativeType )t ).createSuitableNativeImg( new ArrayImgFactory(), new long[]{ length } );
 		else
 			img = new ListImgFactory< T >().create( new long[]{ length }, t );
-		return new NumericComposite< T >( img.randomAccess(), 0, length );
+		return new NumericComposite< T >( img.randomAccess(), length );
 	}
 
 	@Override
 	public NumericComposite< T > copy()
 	{
-		return new NumericComposite< T >( sourceAccess.copyRandomAccess(), d, length );
+		return new NumericComposite< T >( sourceAccess.copyRandomAccess(), length );
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 		public CompositeRandomAccess()
 		{
 			sourceAccess = source.randomAccess();
-			composite = compositeFactory.create( sourceAccess, n );
+			composite = compositeFactory.create( sourceAccess );
 		}
 		
 		@Override

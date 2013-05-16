@@ -45,18 +45,18 @@ import net.imglib2.RandomAccess;
  */
 public class GenericComposite< T > extends AbstractComposite< T >
 {
-	static class Factory< T > implements CompositeFactory< T, GenericComposite< T > > 
+	static public class Factory< T > implements CompositeFactory< T, GenericComposite< T > > 
 	{
 		@Override
-		public GenericComposite< T > create( final RandomAccess< T > sourceAccess, final int d )
+		public GenericComposite< T > create( final RandomAccess< T > sourceAccess )
 		{
-			return new GenericComposite< T >( sourceAccess, d );
+			return new GenericComposite< T >( sourceAccess );
 		}
 		
 	}
 	
-	public GenericComposite( final RandomAccess< T > sourceAccess, final int d )
+	public GenericComposite( final RandomAccess< T > sourceAccess )
 	{
-		super( sourceAccess, d );
+		super( sourceAccess );
 	}
 }
