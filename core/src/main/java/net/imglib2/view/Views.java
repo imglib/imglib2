@@ -62,6 +62,10 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
+import net.imglib2.view.composite.CompositeView;
+import net.imglib2.view.composite.GenericComposite;
+import net.imglib2.view.composite.NumericComposite;
+import net.imglib2.view.composite.RealComposite;
 
 /**
  * Create light-weight views into {@link RandomAccessible RandomAccessibles}.
@@ -74,11 +78,19 @@ import net.imglib2.util.Util;
  * read/write. Changing pixels in a view changes the underlying image data.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Stephan Saalfeld
  */
 public class Views
 {
 	/**
 	 * Returns a {@link RealRandomAccessible} using interpolation
+	 * 
+	 * @param source
+	 * 			the {@link EuclidenSpace} to be interpolated
+	 * @param factory
+	 * 			the {@link InterpolatorFactor} to provide interpolators for
+	 * 			source
+	 * @return
 	 */
 	public static < T, F extends EuclideanSpace > RealRandomAccessible< T > interpolate( final F source, final InterpolatorFactory< T, F > factory )
 	{
@@ -788,5 +800,61 @@ public class Views
 		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) && FlatIterationOrder.class.isInstance( ( ( IterableInterval< T > ) randomAccessibleInterval ).iterationOrder() ) )
 			return ( IterableInterval< T > ) randomAccessibleInterval;
 		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
+	}
+	
+	/**
+	 * Collapse the <em>n</em><sup>th</sup> dimension of an
+	 * <em>n</em>-dimensional {@link RandomAccessible}&lt;T&gt; into an
+	 * (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessible}&lt;{@link GenericComposite}&lt;T&gt;&gt;
+	 * 
+	 * @param source
+	 * 				the source
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeView} of
+	 * 				 {@link GenericComposite GenericComposites}
+	 */
+	public static < T > CompositeView< T, ? extends GenericComposite< T > > collapse( final RandomAccessible< T > source )
+	{
+		return new CompositeView< T, GenericComposite< T > >( source, new GenericComposite.Factory< T >() );
+	}
+	
+	/**
+	 * Collapse the <em>n</em><sup>th</sup> dimension of an
+	 * <em>n</em>-dimensional
+	 * {@link RandomAccessible}&lt;T extends {@link RealType}&lt;T&gt;&gt; into
+	 * an (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessible}&lt;{@link RealComposite}&lt;T&gt;&gt;
+	 * 
+	 * @param source
+	 * 				the source
+	 * @param numChannels
+	 * 				the number of channels that the {@link RealComposite} will
+	 * 				consider when performing calculations
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeView} of
+	 * 				 {@link RealComposite RealComposites}
+	 */
+	public static < T extends RealType< T > > CompositeView< T, RealComposite< T > > collapseReal( final RandomAccessible< T > source, final int numChannels )
+	{
+		return new CompositeView< T, RealComposite< T > >( source, new RealComposite.Factory< T >( numChannels ) );
+	}
+	
+	/**
+	 * Collapse the <em>n</em><sup>th</sup> dimension of an
+	 * <em>n</em>-dimensional
+	 * {@link RandomAccessible}&lt;T extends {@link NumericType}&lt;T&gt;&gt; into
+	 * an (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessible}&lt;{@link NumericComposite}&lt;T&gt;&gt;
+	 * 
+	 * @param source
+	 * 				the source
+	 * @param numChannels
+	 * 				the number of channels that the {@link NumericComposite} will
+	 * 				consider when performing calculations
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeView} of
+	 * 				 {@link NumericComposite NumericComposites}
+	 */
+	public static < T extends NumericType< T > > CompositeView< T, NumericComposite< T > > collapseNumeric( final RandomAccessible< T > source, final int numChannels )
+	{
+		return new CompositeView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( numChannels ) );
 	}
 }

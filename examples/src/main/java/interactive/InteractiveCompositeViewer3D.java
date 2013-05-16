@@ -60,9 +60,7 @@ public class InteractiveCompositeViewer3D
 		final RandomAccessibleInterval< UnsignedShortType > xyzc = Views.permute( xycz, 2, 3 );
 		
 		final CompositeView< UnsignedShortType, NumericComposite< UnsignedShortType > > compositeView =
-				new CompositeView< UnsignedShortType, NumericComposite< UnsignedShortType > >(
-						Views.extendZero( xyzc ),
-						new NumericComposite.Factory< UnsignedShortType >( ( int )xyzc.dimension( 3 ) ) );
+				Views.collapseNumeric( Views.extendZero( xyzc ), ( int )xyzc.dimension( 3 ) );
 		
 		final Converter< NumericComposite< UnsignedShortType >, ARGBType > converter =
 				new Converter< NumericComposite< UnsignedShortType >, ARGBType >()

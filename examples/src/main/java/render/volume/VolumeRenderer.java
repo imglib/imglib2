@@ -159,7 +159,6 @@ public class VolumeRenderer
 		t = System.currentTimeMillis() - t;
 		IJ.log( "  took " +  t + "ms" );
 		
-		
 		ImageJFunctions.show( img );
 		
 		final ImagePlusImg< FloatType, ? > movie = ImagePlusImgs.floats( img.dimension( 0 ), img.dimension( 1 ), numFrames );
@@ -252,9 +251,7 @@ public class VolumeRenderer
 		final ImgPlus< UnsignedShortType > xycz = new ImgOpener().openImg( filename, new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType() );
 		final RandomAccessibleInterval< UnsignedShortType > xyzc = Views.permute( xycz, 2, 3 );
 		final CompositeView< UnsignedShortType, RealComposite< UnsignedShortType > > img =
-				new CompositeView< UnsignedShortType, RealComposite< UnsignedShortType > >(
-						Views.extendZero( xyzc ),
-						new RealComposite.Factory< UnsignedShortType >( ( int )xyzc.dimension( 3 ) ) );
+				Views.collapseReal( Views.extendZero( xyzc ), ( int )xyzc.dimension( 3 ) );
 		
 		final FinalInterval box = new FinalInterval( xyzc.dimension( 0 ), xyzc.dimension( 1 ), xyzc.dimension( 2 ) );
 		
@@ -374,9 +371,7 @@ public class VolumeRenderer
 		final ImgPlus< UnsignedShortType > xycz = new ImgOpener().openImg( filename, new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType() );
 		final RandomAccessibleInterval< UnsignedShortType > xyzc = Views.permute( xycz, 2, 3 );
 		final CompositeView< UnsignedShortType, RealComposite< UnsignedShortType > > img =
-				new CompositeView< UnsignedShortType, RealComposite< UnsignedShortType > >(
-						Views.extendZero( xyzc ),
-						new RealComposite.Factory< UnsignedShortType >( ( int )xyzc.dimension( 3 ) ) );
+				Views.collapseReal( Views.extendZero( xyzc ), ( int )xyzc.dimension( 3 ) );
 		
 		final FinalInterval box = new FinalInterval( xyzc.dimension( 0 ), xyzc.dimension( 1 ), xyzc.dimension( 2 ) );
 		
@@ -502,6 +497,6 @@ public class VolumeRenderer
 	
 	final static public void main( final String[] args ) throws ImgIOException
 	{
-		test1();
+		test3();
 	}
 }

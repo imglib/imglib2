@@ -53,13 +53,11 @@ public class InteractiveCompositeViewer
 {
 	final static public void main( final String[] args ) throws ImgIOException
 	{
-		final String filename = "src/main/resources/bike2-composite.tif";
+		final String filename = "bike2-composite.tif";
 		final ImgPlus< UnsignedByteType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< UnsignedByteType >(), new UnsignedByteType() );
 		
 		final CompositeView< UnsignedByteType, NumericComposite< UnsignedByteType > > compositeView =
-				new CompositeView< UnsignedByteType, NumericComposite< UnsignedByteType > >(
-						Views.extendZero( img ),
-						new NumericComposite.Factory< UnsignedByteType >( ( int )img.dimension( 2 ) ) );
+				Views.collapseNumeric( Views.extendZero( img ), ( int )img.dimension( 2 ) );
 		
 		final Converter< NumericComposite< UnsignedByteType >, ARGBType > converter =
 				new Converter< NumericComposite< UnsignedByteType >, ARGBType >()
