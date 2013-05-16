@@ -35,7 +35,6 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgs;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.realtransform.AffineTransform3D;
@@ -145,26 +144,25 @@ public class VolumeRenderer
 		return 0.5 - 0.5 * Math.cos( Math.PI * x );
 	}
 	
-	public static void test() throws ImgIOException
+	public static void test1() throws ImgIOException
 	{
 		new ImageJ();
-		final String filename = "src/main/resources/l1-cns.tif";
+		final String filename = "l1-cns.tif";
+		//final String filename = "/home/saalfeld/tmp/valia/tassos/7.tif";
 		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< FloatType >(), new FloatType() );
 		ImageJFunctions.show( img );
 		final ImagePlusImg< FloatType, ? > movie = ImagePlusImgs.floats( img.dimension( 0 ), img.dimension( 1 ), numFrames );
 		ImageJFunctions.show( movie );
-				
-		final double theta = -Math.PI / 2.0;
-		final double cos = Math.cos( theta );
-		final double sin = Math.sin( theta );
-		
-		final double deltaTheta = 2.0 * Math.PI / numFrames;
 		
 		final AffineTransform3D centerShift = new AffineTransform3D();
 		centerShift.set(
 				1, 0, 0, -img.dimension( 0 ) / 2.0 - img.min( 0 ),
 				0, 1, 0, -img.dimension( 1 ) / 2.0 - img.min( 1 ),
 				0, 0, 1, -img.dimension( 2 ) / 2.0 - img.min( 2 ) );
+		
+//		final AffineTransform3D orientation = new AffineTransform3D();
+//		orientation.set(
+//				1.0, 0.0, 0.0, 0.0, 0.0, -0.9999996, 5.9604645E-8, 0.0, 0.0, -5.9604645E-8, -0.9999996, 0.0 );
 		
 		final AffineTransform3D centerUnshiftXY = centerShift.inverse();
 		centerUnshiftXY.set( 0, 2, 3 );
@@ -178,11 +176,6 @@ public class VolumeRenderer
 				0, 0, 1, img.dimension( 2 ) / 2.0 + f );
 		
 		final AffineTransform3D rotation = new AffineTransform3D();
-//		rotation.set(
-//				1, 0, 0, 0,
-//				0, cos, -sin, 0,
-//				0, sin, cos, 0 );
-		
 		final AffineTransform3D affine = new AffineTransform3D();
 		
 		final Perspective3D perspective = Perspective3D.getInstance();
@@ -199,11 +192,12 @@ public class VolumeRenderer
 		transformSequence.add( centerUnshiftXY );
 		
 		final ExtendedRandomAccessibleInterval< FloatType, ImgPlus< FloatType > > extendedImg = Views.extendValue( img, img.firstElement().createVariable() );
-//		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NLinearInterpolatorFactory< FloatType >() );
-		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NearestNeighborInterpolatorFactory< FloatType >() );
+		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NLinearInterpolatorFactory< FloatType >() );
+//		final RealRandomAccessible< FloatType > interpolant = Views.interpolate( extendedImg, new NearestNeighborInterpolatorFactory< FloatType >() );
 		final RandomAccessible< FloatType > rotated = RealViews.transform( interpolant, transformSequence );
 		
-		final AlphaIntensityLayers< FloatType > accumulator = new AlphaIntensityLayers< FloatType >();
+		final AlphaIntensityLayers< FloatType > accumulator = new AlphaIntensityLayers< FloatType >( 1.0 / 5000.0, -500 );
+//		final AlphaIntensityLayers< FloatType > accumulator = new AlphaIntensityLayers< FloatType >( 1.0 / 0.2, -0.01 );
 		
 		for ( int i = 0; i < numFrames; ++i )
 		{
@@ -245,8 +239,130 @@ public class VolumeRenderer
 		
 		final double s = 1.0 / 4095.0;
 		
-		//final String filename = "src/main/resources/l1-cns-05-05-5-DPX-9.tif";
-		final String filename = "src/main/resources/l1-cns-05-05-5-DPX-9-10.tif";
+		//final String filename = "/home/saalfeld/examples/l1-cns-05-05-5-DPX-9.tif";
+		final String filename = "/home/saalfeld/examples/l1-cns-05-05-5-DPX-9-10.tif";
+		final ImgPlus< UnsignedShortType > xycz = new ImgOpener().openImg( filename, new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType() );
+		final RandomAccessibleInterval< UnsignedShortType > xyzc = Views.permute( xycz, 2, 3 );
+		final CompositeView< UnsignedShortType, RealComposite< UnsignedShortType > > img =
+				new CompositeView< UnsignedShortType, RealComposite< UnsignedShortType > >(
+						Views.extendZero( xyzc ),
+						new RealComposite.Factory< UnsignedShortType >( ( int )xyzc.dimension( 3 ) ) );
+		
+		final FinalInterval box = new FinalInterval( xyzc.dimension( 0 ), xyzc.dimension( 1 ), xyzc.dimension( 2 ) );
+		
+		/* composing converter */
+		final RealCompositeARGBDoubleConverter< UnsignedShortType > composite2ARGBDouble =
+				new RealCompositeARGBDoubleConverter< UnsignedShortType >( ( int )xyzc.dimension( 3 ) );
+		
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, s, 0, 0 ), 0 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( 0.35, s, s, s ), 1 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( 0, s, s, s ), 2 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, 0, s, 0 ), 3 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, 0, 0, s ), 4 );
+		
+		final RandomAccessible< ARGBDoubleType > argbComposite = Converters.convert( img, composite2ARGBDouble, new ARGBDoubleType() );
+		
+		/* copy it as on-the-fly conversion isn't the quickest thing in the world */
+		
+		final RandomAccessible< ARGBType > argb = Converters.convert(
+				argbComposite,
+				new ARGBDoubleARGBConverter< ARGBDoubleType >(),
+				new ARGBType() );
+		ImageJFunctions.show( Views.interval( argb, box ) );
+		
+		
+		final ImagePlusImg< ARGBType, ? > movie = ImagePlusImgs.argbs( xycz.dimension( 0 ), xycz.dimension( 1 ), numFrames );
+		ImageJFunctions.show( movie );
+				
+		final AffineTransform3D centerShift = new AffineTransform3D();
+		centerShift.set(
+				1, 0, 0, -xyzc.dimension( 0 ) / 2.0 - xyzc.min( 0 ),
+				0, 1, 0, -xyzc.dimension( 1 ) / 2.0 - xyzc.min( 1 ),
+				0, 0, 1, -xyzc.dimension( 2 ) / 2.0 - xyzc.min( 2 ) );
+		
+		final AffineTransform3D centerUnshiftXY = centerShift.inverse();
+		centerUnshiftXY.set( 0, 2, 3 );
+		
+		final double f = xyzc.dimension( 1 );
+		
+		final AffineTransform3D zShift = new AffineTransform3D();
+		zShift.set(
+				1, 0, 0, 0,
+				0, 1, 0, 0,
+				0, 0, 1, xyzc.dimension( 2 ) / 2.0 + f );
+		
+		final AffineTransform3D rotation = new AffineTransform3D();
+		final AffineTransform3D affine = new AffineTransform3D();
+		
+		final Perspective3D perspective = Perspective3D.getInstance();
+		final Scale scale = new Scale( f, f, 1 );
+		
+		final InvertibleRealTransformSequence transformSequence = new InvertibleRealTransformSequence();
+		
+		/* rotation */
+		transformSequence.add( affine );
+		
+		/* camera */
+		transformSequence.add( perspective );
+		transformSequence.add( scale );
+		transformSequence.add( centerUnshiftXY );
+		
+		final RealRandomAccessible< ARGBDoubleType > interpolant = Views.interpolate( argbComposite, new NLinearInterpolatorFactory< ARGBDoubleType >() );
+//		final RealRandomAccessible< ARGBDoubleType > interpolant = Views.interpolate( argbComposite, new NearestNeighborInterpolatorFactory< ARGBDoubleType >() );
+		final RandomAccessible< ARGBDoubleType > rotated = RealViews.transform( interpolant, transformSequence );
+
+//		final RealRandomAccessible< NativeARGBDoubleType > interpolant = Views.interpolate( Views.extendZero( argbCopy ), new NLinearInterpolatorFactory< NativeARGBDoubleType >() );
+//		final RealRandomAccessible< NativeARGBDoubleType > interpolant = Views.interpolate( Views.extendZero( argbCopy ), new NearestNeighborInterpolatorFactory< NativeARGBDoubleType >() );
+//		final RandomAccessible< NativeARGBDoubleType > rotated = RealViews.transform( interpolant, transformSequence );
+		
+//		final ARGBDoubleLayers< NativeARGBDoubleType > accumulator = new ARGBDoubleLayers();
+		final ARGBDoubleLayers< ARGBDoubleType > accumulator = new ARGBDoubleLayers< ARGBDoubleType >();
+		
+		for ( int i = 39; i < numFrames; ++i )
+		{
+			final double j = ( double )i / numFrames;
+			//final double k = Math.max( 0, Math.min( 1, j * 1.5 - 0.25 ) );
+			final double l = accelerate( j );
+			
+			
+			affine.set(
+					1, 0, 0, 0,
+					0, 1, 0, 0,
+					0, 0, 1, 0 );
+			
+			rotation.set( affine );
+			
+			rotation.rotate( 0, -l * Math.PI * 2 * 2 );
+			rotation.rotate( 1, j * Math.PI * 2 );
+			
+			affine.preConcatenate( centerShift );
+			affine.preConcatenate( rotation );
+			affine.preConcatenate( zShift );
+		
+			final FinalRealInterval bounds = affine.estimateBounds(
+					new FinalInterval( new long[]{
+							xyzc.dimension( 0 ),
+							xyzc.dimension( 1 ),
+							xyzc.dimension( 2 ) } ) );
+			final long minZ	= ( long )Math.floor( bounds.realMin( 2 ) );
+			final long maxZ	= ( long )Math.ceil( bounds.realMax( 2 ) );
+			
+			System.out.println( "minZ = " + minZ + "; maxZ = " + maxZ );
+			
+			final RandomAccessibleInterval< ARGBType > canvas = Views.hyperSlice( movie, 2, i );
+		
+			renderARGBDouble( rotated, canvas, minZ, maxZ, accumulator );
+		}
+	}
+	
+	public static void test3() throws ImgIOException
+	{
+		new ImageJ();
+		
+		final double s = 1.0 / 4095.0;
+		
+		final String filename = "/home/saalfeld/examples/l1-cns-05-05-5-DPX-9.tif";
+		//final String filename = "/home/saalfeld/examples/l1-cns-05-05-5-DPX-9-10.tif";
 		final ImgPlus< UnsignedShortType > xycz = new ImgOpener().openImg( filename, new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType() );
 		final RandomAccessibleInterval< UnsignedShortType > xyzc = Views.permute( xycz, 2, 3 );
 		final CompositeView< UnsignedShortType, RealComposite< UnsignedShortType > > img =
@@ -294,12 +410,6 @@ public class VolumeRenderer
 		final ImagePlusImg< ARGBType, ? > movie = ImagePlusImgs.argbs( xycz.dimension( 0 ), xycz.dimension( 1 ), numFrames );
 		ImageJFunctions.show( movie );
 				
-		final double theta = -Math.PI / 2.0;
-		final double cos = Math.cos( theta );
-		final double sin = Math.sin( theta );
-		
-		final double deltaTheta = 2.0 * Math.PI / numFrames;
-		
 		final AffineTransform3D centerShift = new AffineTransform3D();
 		centerShift.set(
 				1, 0, 0, -xyzc.dimension( 0 ) / 2.0 - xyzc.min( 0 ),
@@ -318,11 +428,6 @@ public class VolumeRenderer
 				0, 0, 1, xyzc.dimension( 2 ) / 2.0 + f );
 		
 		final AffineTransform3D rotation = new AffineTransform3D();
-////		rotation.set(
-////				1, 0, 0, 0,
-////				0, cos, -sin, 0,
-////				0, sin, cos, 0 );
-		
 		final AffineTransform3D affine = new AffineTransform3D();
 		
 		final Perspective3D perspective = Perspective3D.getInstance();
@@ -346,7 +451,7 @@ public class VolumeRenderer
 //		final RealRandomAccessible< NativeARGBDoubleType > interpolant = Views.interpolate( Views.extendZero( argbCopy ), new NearestNeighborInterpolatorFactory< NativeARGBDoubleType >() );
 		final RandomAccessible< NativeARGBDoubleType > rotated = RealViews.transform( interpolant, transformSequence );
 		
-		final ARGBDoubleLayers< NativeARGBDoubleType > accumulator = new ARGBDoubleLayers();
+		final ARGBDoubleLayers< NativeARGBDoubleType > accumulator = new ARGBDoubleLayers< NativeARGBDoubleType >();
 		
 		for ( int i = 0; i < numFrames; ++i )
 		{
@@ -379,7 +484,7 @@ public class VolumeRenderer
 			
 			System.out.println( "minZ = " + minZ + "; maxZ = " + maxZ );
 			
-			//final ArrayImg< FloatType, ? > canvas = ArrayImgs.floats( img.dimension( 0 ), img.dimension( 1 ) );
+//			final ArrayImg< FloatType, ? > canvas = ArrayImgs.floats( img.dimension( 0 ), img.dimension( 1 ) );
 			final RandomAccessibleInterval< ARGBType > canvas = Views.hyperSlice( movie, 2, i );
 		
 //			renderARGBDouble( rotated, canvas, minZ, maxZ, accumulator );
