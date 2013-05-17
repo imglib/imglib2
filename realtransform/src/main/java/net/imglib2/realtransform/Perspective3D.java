@@ -50,7 +50,7 @@ public class Perspective3D implements InvertibleRealTransform, EuclideanSpace
 {
 	final static protected Perspective3D instance = new Perspective3D();
 	
-	private Perspective3D(){}
+	protected Perspective3D(){}
 	
 	static public Perspective3D getInstance()
 	{
@@ -82,7 +82,7 @@ public class Perspective3D implements InvertibleRealTransform, EuclideanSpace
 		
 		target[ 0 ] = source[ 0 ] / source[ 2 ];
 		target[ 1 ] = source[ 1 ] / source[ 2 ];
-//		target[ 2 ] = source[ 2 ] / source[ 2 ];
+		target[ 2 ] = source[ 2 ];
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class Perspective3D implements InvertibleRealTransform, EuclideanSpace
 		
 		target[ 0 ] = source[ 0 ] / source[ 2 ];
 		target[ 1 ] = source[ 1 ] / source[ 2 ];
-//		target[ 2 ] = source[ 2 ] / source[ 2 ];
+		target[ 2 ] = source[ 2 ];
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class Perspective3D implements InvertibleRealTransform, EuclideanSpace
 		final double z = source.getDoublePosition( 2 );
 		target.setPosition( source.getDoublePosition( 0 ) / z, 0 );
 		target.setPosition( source.getDoublePosition( 1 ) / z, 1 );
-//		target.setPosition( source.getDoublePosition( 2 ) / z, 2 );
+		target.setPosition( source.getDoublePosition( 2 ), 2 );
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class Perspective3D implements InvertibleRealTransform, EuclideanSpace
 		
 		source[ 0 ] = target[ 0 ] * target[ 2 ];
 		source[ 1 ] = target[ 1 ] * target[ 2 ];
-//		source[ 2 ] = target[ 2 ] * target[ 2 ];
+		source[ 2 ] = target[ 2 ];
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class Perspective3D implements InvertibleRealTransform, EuclideanSpace
 		
 		source[ 0 ] = target[ 0 ] * target[ 2 ];
 		source[ 1 ] = target[ 1 ] * target[ 2 ];
-//		source[ 2 ] = target[ 2 ] * target[ 2 ];
+		source[ 2 ] = target[ 2 ];
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class Perspective3D implements InvertibleRealTransform, EuclideanSpace
 		final double z = target.getDoublePosition( 2 );
 		source.setPosition( target.getDoublePosition( 0 ) * z, 0 );
 		source.setPosition( target.getDoublePosition( 1 ) * z, 1 );
-//		source.setPosition( target.getDoublePosition( 2 ) * z, 2 );
+		source.setPosition( target.getDoublePosition( 2 ), 2 );
 	}
 
 	@Override
@@ -148,5 +148,4 @@ public class Perspective3D implements InvertibleRealTransform, EuclideanSpace
 	{
 		return this;
 	}
-	
 }
