@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import loci.common.services.DependencyException;
+import loci.common.services.ServiceException;
 import loci.common.services.ServiceFactory;
 import loci.formats.FormatException;
 import loci.formats.FormatTools;
@@ -590,9 +591,19 @@ public class ImgSaver implements StatusReporter {
 			throws ImgIOException
 	{
 		final IFormatWriter writer = new ImageWriter();
-		final IMetadata store = MetadataTools.createOMEXMLMetadata();
-		store.createRoot();
-		writer.setMetadataRetrieve(store);
+		try {
+			final ServiceFactory factory = new ServiceFactory();
+			final OMEXMLService service = factory.getInstance(OMEXMLService.class);
+			final IMetadata store = service.createOMEXMLMetadata();
+			store.createRoot();
+			writer.setMetadataRetrieve(store);
+		}
+		catch (final ServiceException e) {
+			throw new ImgIOException(e);
+		}
+		catch (final DependencyException e) {
+			throw new ImgIOException(e);
+		}
 
 		populateMeta(writer, img);
 
