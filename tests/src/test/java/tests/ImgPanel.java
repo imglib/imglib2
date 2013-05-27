@@ -177,12 +177,6 @@ public class ImgPanel extends JPanel {
 			final String id = ImgIOUtils.cacheId(url);
 			System.out.println("Opening " + id);
 			final ImgOpener imgOpener = new ImgOpener();
-			imgOpener.addStatusListener(new StatusListener() {
-				@Override
-				public void statusUpdated(StatusEvent e) {
-					System.out.println(e.getStatusMessage());
-				}
-			});
 			return imgOpener.openImg(id);
 		}
 		catch (final IncompatibleTypeException e) {
