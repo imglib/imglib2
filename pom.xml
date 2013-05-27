@@ -8,23 +8,35 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>1.13</version>
+		<version>1.40</version>
 	</parent>
 
 	<groupId>net.imglib2</groupId>
-	<artifactId>pom-imglib</artifactId>
+	<artifactId>pom-imglib2</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>ImgLib Projects</name>
-	<description>Umbrella project for ImgLib projects.</description>
-	<url>http://imglib2.net/</url>
+	<name>ImgLib2 Projects</name>
+	<description>Umbrella project for ImgLib2 projects.</description>
 	<inceptionYear>2009</inceptionYear>
+	<url>http://imglib2.net/</url>
 
 	<modules>
-		<module>imglib1</module>
-		<module>imglib2</module>
+		<module>algorithms</module>
+		<module>core</module>
+		<module>examples</module>
+		<module>ij</module>
+		<module>io</module>
+		<module>ops</module>
+		<module>realtransform</module>
+		<module>scripting</module>
+		<module>tests</module>
+		<module>ui</module>
 	</modules>
+
+	<properties>
+		<project.rootdir>${basedir}/..</project.rootdir>
+	</properties>
 
 	<build>
 		<plugins>
@@ -40,13 +52,17 @@
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
 					<licenseName>imglib2</licenseName>
-					<licenseResolver>http://code.imagej.net/licenses</licenseResolver>
+					<licenseResolver>file://${project.rootdir}/license</licenseResolver>
 					<inceptionYear>2009</inceptionYear>
-					<organizationName>Stephan Preibisch, Stephan Saalfeld, Tobias
-Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
-Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
-Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organizationName>
+					<organizationName>Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationName>
 					<projectName>ImgLib2: a general-purpose, multidimensional image processing library.</projectName>
+					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+					<canUpdateDescription>true</canUpdateDescription>
+					<canUpdateCopyright>true</canUpdateCopyright>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -59,7 +75,6 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 	<licenses>
 		<license>
 			<name>Simplified BSD License</name>
-			<url>http://code.imagej.net/licenses/imagej/license.txt</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -73,21 +88,8 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 		<developer>
 			<id>StephanPreibisch</id>
 			<name>Stephan Preibisch</name>
-			<email>preibisch@mpi-cbg.de</email>
+			<email>stephan.preibisch@gmx.de</email>
 			<url>http://fly.mpi-cbg.de/~preibisch/</url>
-			<organization>MPI-CBG at Dresden</organization>
-			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>axtimwalde</id>
-			<name>Stephan Saalfeld</name>
-			<email>saalfeld@mpi-cbg.de</email>
-			<url>http://fly.mpi-cbg.de/~saalfeld/</url>
 			<organization>MPI-CBG at Dresden</organization>
 			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
 			<roles>
@@ -99,21 +101,9 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 		<developer>
 			<id>tpietzsch</id>
 			<name>Tobias Pietzsch</name>
-			<email>pietzsch@mpi-cbg.de</email>
+			<email>tobias.pietzsch@gmail.com</email>
 			<organization>MPI-CBG at Dresden</organization>
 			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>acardona</id>
-			<name>Albert Cardona</name>
-			<email>acardona@ini.phys.ethz.ch</email>
-			<url>http://albert.rierol.net/</url>
-			<organization>Institute of Neuroinformatics, Uni/ETH Zürich</organization>
-			<organizationUrl>http://www.ini.uzh.ch/</organizationUrl>
 			<roles>
 				<role>developer</role>
 			</roles>
@@ -132,6 +122,31 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			<timezone>-6</timezone>
 		</developer>
 		<developer>
+			<id>axtimwalde</id>
+			<name>Stephan Saalfeld</name>
+			<email>saalfeld@mpi-cbg.de</email>
+			<url>http://fly.mpi-cbg.de/~saalfeld/</url>
+			<organization>MPI-CBG at Dresden</organization>
+			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>acardona</id>
+			<name>Albert Cardona</name>
+			<email>sapristi@gmail.com</email>
+			<url>http://albert.rierol.net/</url>
+			<organization>Institute of Neuroinformatics, Uni/ETH Zürich</organization>
+			<organizationUrl>http://www.ini.uzh.ch/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
 			<id>ctrueden</id>
 			<name>Curtis Rueden</name>
 			<email>ctrueden@wisc.edu</email>
@@ -140,6 +155,41 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
 			<roles>
 				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+		<developer>
+			<id>dietzc</id>
+			<name>Christian Dietz</name>
+			<email>christian.dietz@uni-konstanz.de</email>
+			<url>http://www.informatik.uni-konstanz.de/berthold/mitglieder/christian-dietz/</url>
+			<organization>University of Konstanz</organization>
+			<organizationUrl>http://www.informatik.uni-konstanz.de/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<name>Jean-Yves Tinevez</name>
+			<email>jean-yves.tinevez@pasteur.fr</email>
+			<url>http://www.pasteur.fr/ip/easysite/pasteur/fr/recherche/plates-formes-technologiques/imagopole/plates-formes-imagopole/la-plate-forme-d-imagerie-dynamique/equipe-pfid/equipe-pfid-jyt</url>
+			<organization>Institut Pasteur</organization>
+			<organizationUrl>http://www.pasteur.fr/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>dscho</id>
+			<name>Johannes Schindelin</name>
+			<email>johannes.schindelin@gmx.de</email>
+			<url>http://loci.wisc.edu/people/johannes-schindelin</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
 				<role>developer</role>
 			</roles>
 			<timezone>-6</timezone>
@@ -157,6 +207,7 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			<timezone>-5</timezone>
 		</developer>
 		<developer>
+			<id>larrylindsey</id>
 			<name>Larry Lindsey</name>
 			<email>llindsey@clm.utexas.edu</email>
 			<url>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.htm</url>
@@ -167,22 +218,9 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			</roles>
 			<timezone>-6</timezone>
 		</developer>
-		<developer>
-			<id>dscho</id>
-			<name>Johannes Schindelin</name>
-			<email>schindelin@wisc.edu</email>
-			<url>http://loci.wisc.edu/people/johannes-schindelin</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
 	</developers>
 
 	<contributors>
-		<contributor><name>Christian Dietz</name></contributor>
 		<contributor>
 			<name>Grant Harris</name>
 			<email>gharris@mbl.edu</email>
@@ -194,11 +232,15 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			</roles>
 			<timezone>-5</timezone>
 		</contributor>
-		<contributor><name>Jan Funke</name></contributor>
-		<contributor><name>Jean-Yves Tinevez</name></contributor>
-		<contributor><name>Mark Longair</name></contributor>
+		<contributor><name>Mark Hiner</name></contributor>
+		<contributor><name>Aivar Grislis</name></contributor>
+		<contributor><name>Martin Horn</name></contributor>
 		<contributor><name>Nick Perry</name></contributor>
+		<contributor><name>Michael Zinsmaier</name></contributor>
 		<contributor><name>Steffen Jaensch</name></contributor>
+		<contributor><name>Jan Funke</name></contributor>
+		<contributor><name>Mark Longair</name></contributor>
+		<contributor><name>Dimiter Prodanov</name></contributor>
 	</contributors>
 
 	<issueManagement>
@@ -242,7 +284,7 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 		<url>https://github.com/imagej/imglib</url>
 	</scm>
 
-	<!-- NB: for project parent -->
+	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
 		<repository>
 			<id>imagej.releases</id>
@@ -253,5 +295,14 @@ Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.</organization
 			<url>http://maven.imagej.net/content/repositories/snapshots</url>
 		</repository>
 	</repositories>
+
+	<profiles>
+		<profile>
+			<id>broken</id>
+			<modules>
+				<module>broken</module>
+			</modules>
+		</profile>
+	</profiles>
 
 </project>
