@@ -60,14 +60,15 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * 
  * @author Christian Dietz (University of Konstanz)
  */
-public class LabelingView< L extends Comparable< L >> extends IterableRandomAccessibleInterval< LabelingType< L >> implements Labeling< L >, SubIntervalIterable< LabelingType< L > >
-{
+public class LabelingView<L extends Comparable<L>> extends
+		IterableRandomAccessibleInterval<LabelingType<L>> implements
+		Labeling<L>, SubIntervalIterable<LabelingType<L>> {
 
-	protected LabelingROIStrategy< L, ? extends Labeling< L >> m_strategy;
+	protected LabelingROIStrategy<L, ? extends Labeling<L>> m_strategy;
 
-	private final LabelingFactory< L > m_fac;
+	private final LabelingFactory<L> m_fac;
 
-	private final IterableInterval< LabelingType< L >> m_ii;
+	private final IterableInterval<LabelingType<L>> m_ii;
 
 	/**
 	 * TODO: No metadata is saved here..
@@ -75,80 +76,71 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 	 * @see SubImg
 	 * 
 	 */
-	public LabelingView( RandomAccessibleInterval< LabelingType< L >> in, LabelingFactory< L > fac )
-	{
-		super( in );
+	public LabelingView(RandomAccessibleInterval<LabelingType<L>> in,
+			LabelingFactory<L> fac) {
+		super(in);
 		m_fac = fac;
-		m_strategy = new DefaultROIStrategy< L, Labeling< L >>( this );
-		m_ii = Views.flatIterable( in );
+		m_strategy = new DefaultROIStrategy<L, Labeling<L>>(this);
+		m_ii = Views.flatIterable(in);
 	}
 
 	@Override
-	public boolean getExtents( L label, long[] minExtents, long[] maxExtents )
-	{
-		return m_strategy.getExtents( label, minExtents, maxExtents );
+	public boolean getExtents(L label, long[] minExtents, long[] maxExtents) {
+		return m_strategy.getExtents(label, minExtents, maxExtents);
 	}
 
 	@Override
-	public boolean getRasterStart( L label, long[] start )
-	{
-		return m_strategy.getRasterStart( label, start );
+	public boolean getRasterStart(L label, long[] start) {
+		return m_strategy.getRasterStart(label, start);
 	}
 
 	@Override
-	public long getArea( L label )
-	{
-		return m_strategy.getArea( label );
+	public long getArea(L label) {
+		return m_strategy.getArea(label);
 	}
 
 	@Override
-	public Collection< L > getLabels()
-	{
+	public Collection<L> getLabels() {
 		return m_strategy.getLabels();
 	}
 
 	@Override
-	public Cursor< LabelingType< L >> cursor()
-	{
+	public Cursor<LabelingType<L>> cursor() {
 		return m_ii.cursor();
 	}
 
 	@Override
-	public Cursor< LabelingType< L >> localizingCursor()
-	{
+	public Cursor<LabelingType<L>> localizingCursor() {
 		return m_ii.localizingCursor();
 	}
 
 	@Override
-	public RegionOfInterest getRegionOfInterest( L label )
-	{
-		return m_strategy.createRegionOfInterest( label );
+	public RegionOfInterest getRegionOfInterest(L label) {
+		return m_strategy.createRegionOfInterest(label);
 	}
 
 	@Override
-	public IterableRegionOfInterest getIterableRegionOfInterest( L label )
-	{
-		return m_strategy.createIterableRegionOfInterest( label );
+	public IterableRegionOfInterest getIterableRegionOfInterest(L label) {
+		return m_strategy.createIterableRegionOfInterest(label);
 	}
 
 	@Override
-	public Labeling< L > copy()
-	{
-		throw new UnsupportedOperationException( "TODO" );
+	public Labeling<L> copy() {
+		throw new UnsupportedOperationException("TODO");
 	}
 
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings("unchecked")
 	@Override
-	public < LL extends Comparable< LL >> LabelingFactory< LL > factory()
-	{
-		return ( LabelingFactory< LL > ) m_fac;
+	public <LL extends Comparable<LL>> LabelingFactory<LL> factory() {
+		return (LabelingFactory<LL>) m_fac;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean supportsOptimizedCursor(Interval interval) {
-		if(this.sourceInterval instanceof SubIntervalIterable)
-			return ((SubIntervalIterable< LabelingType< L > >) this.sourceInterval ).supportsOptimizedCursor( interval ) ;
+		if (this.sourceInterval instanceof SubIntervalIterable)
+			return ((SubIntervalIterable<LabelingType<L>>) this.sourceInterval)
+					.supportsOptimizedCursor(interval);
 		else
 			return false;
 	}
@@ -156,17 +148,19 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object subIntervalIterationOrder(Interval interval) {
-		if(this.sourceInterval instanceof SubIntervalIterable)
-			return ((SubIntervalIterable< LabelingType< L > >) this.sourceInterval ).subIntervalIterationOrder( interval ) ;
+		if (this.sourceInterval instanceof SubIntervalIterable)
+			return ((SubIntervalIterable<LabelingType<L>>) this.sourceInterval)
+					.subIntervalIterationOrder(interval);
 		else
-			return new FlatIterationOrder( interval );
+			return new FlatIterationOrder(interval);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Cursor<LabelingType<L>> cursor(Interval interval) {
-		if(this.sourceInterval instanceof SubIntervalIterable)
-			return ((SubIntervalIterable< LabelingType< L > >) this.sourceInterval ).cursor( interval ) ;
+		if (this.sourceInterval instanceof SubIntervalIterable)
+			return ((SubIntervalIterable<LabelingType<L>>) this.sourceInterval)
+					.cursor(interval);
 		else
 			return Views.interval(this.sourceInterval, interval).cursor();
 	}
@@ -174,9 +168,11 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 	@SuppressWarnings("unchecked")
 	@Override
 	public Cursor<LabelingType<L>> localizingCursor(Interval interval) {
-		if(this.sourceInterval instanceof SubIntervalIterable)
-			return ((SubIntervalIterable< LabelingType< L > >) this.sourceInterval ).localizingCursor( interval ) ;
+		if (this.sourceInterval instanceof SubIntervalIterable)
+			return ((SubIntervalIterable<LabelingType<L>>) this.sourceInterval)
+					.localizingCursor(interval);
 		else
-			return Views.interval(this.sourceInterval, interval).localizingCursor();
+			return Views.interval(this.sourceInterval, interval)
+					.localizingCursor();
 	}
 }
