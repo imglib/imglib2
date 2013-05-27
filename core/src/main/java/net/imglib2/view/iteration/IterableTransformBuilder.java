@@ -54,19 +54,19 @@ import net.imglib2.view.Views;
 
 /**
  * TODO
- *
+ * 
  * TODO: {@link TransformBuilder} propagates a BoundingBox through
  * {@link BoundingBoxTransform} transforms. Additionally, for iteration, we need
  * to guarantee that the transforms are bijections (at least within the bounding
  * box).
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class IterableTransformBuilder< T > extends TransformBuilder< T >
 {
 	/**
 	 * TODO
-	 *
+	 * 
 	 * @param interval
 	 * @param randomAccessible
 	 * @return
@@ -82,7 +82,7 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 	 */
 	protected Interval interval;
 
-	public IterableTransformBuilder( final Interval interval, final RandomAccessible<T> randomAccessible )
+	public IterableTransformBuilder( final Interval interval, final RandomAccessible< T > randomAccessible )
 	{
 		super( interval, randomAccessible );
 		this.interval = interval;
@@ -199,13 +199,13 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 		@Override
 		public Cursor< T > cursor()
 		{
-			return new SlicingCursor<T>( iterableSource.cursor( sourceInterval ), transformToSource );
+			return new SlicingCursor< T >( iterableSource.cursor( sourceInterval ), transformToSource );
 		}
 
 		@Override
 		public Cursor< T > localizingCursor()
 		{
-			return new SlicingCursor<T>( iterableSource.localizingCursor( sourceInterval ), transformToSource );
+			return new SlicingCursor< T >( iterableSource.localizingCursor( sourceInterval ), transformToSource );
 		}
 	}
 
@@ -226,8 +226,7 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 				final int m = t.numTargetDimensions();
 				boolean optimizable = true;
 				int firstZeroDim = 0;
-				for ( ; firstZeroDim < m && !t.getComponentZero( firstZeroDim ); ++firstZeroDim )
-					;
+				for ( ; firstZeroDim < m && !t.getComponentZero( firstZeroDim ); ++firstZeroDim );
 				for ( int d = firstZeroDim + 1; d < m; ++d )
 					if ( t.getComponentZero( d ) )
 					{
@@ -236,9 +235,11 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 					}
 				if ( optimizable )
 				{
-//					System.out.println( "interval = " + Util.printInterval( interval ) );
+					// System.out.println( "interval = " + Util.printInterval(
+					// interval ) );
 					final Interval sliceInterval = t.transform( new BoundingBox( interval ) ).getInterval();
-//					System.out.println( "transformed interval = " + Util.printInterval( sliceInterval ) );
+					// System.out.println( "transformed interval = " +
+					// Util.printInterval( sliceInterval ) );
 					if ( iterableSource.supportsOptimizedCursor( sliceInterval ) )
 					{
 						// check for FlatIterationOrder
