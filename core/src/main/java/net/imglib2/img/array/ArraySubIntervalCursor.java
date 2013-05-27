@@ -2,21 +2,20 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
- * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
- * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
- * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
- * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * Copyright (C) 2009 - 2012 Stephan Preibisch, Stephan Saalfeld, Tobias
+ * Pietzsch, Albert Cardona, Barry DeZonia, Curtis Rueden, Lee Kamentsky, Larry
+ * Lindsey, Johannes Schindelin, Christian Dietz, Grant Harris, Jean-Yves
+ * Tinevez, Steffen Jaensch, Mark Longair, Nick Perry, and Jan Funke.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +27,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -45,26 +44,26 @@ import net.imglib2.type.NativeType;
  * 
  * @param <T>
  * 
- * @author Tobias Pietzsch
- * @author Christian Dietz
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  */
-public final class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractArrayLocalizingCursor< T >
+public final class ArraySubIntervalCursor< T extends NativeType< T > > extends AbstractArrayCursor< T >
 {
 
-	protected ArrayLocalizingCursor( final ArrayLocalizingCursor< T > cursor )
+	protected ArraySubIntervalCursor( final ArraySubIntervalCursor< T > cursor )
 	{
 		super( cursor );
 	}
 
-	public ArrayLocalizingCursor( final ArrayImg< T, ? > img )
+	public ArraySubIntervalCursor( final ArrayImg< T, ? > img, int offset, int size )
 	{
-		super( img, 0, ( int ) img.size() );
+		super( img, offset, size );
 	}
 
 	@Override
-	public ArrayLocalizingCursor< T > copy()
+	public ArraySubIntervalCursor< T > copy()
 	{
-		return new ArrayLocalizingCursor< T >( this );
+		return new ArraySubIntervalCursor< T >( this );
 	}
 
 }
