@@ -150,8 +150,6 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	@Override
 	public Cursor< T > cursor( final Interval interval )
 	{
-		// System.out.println( "optimized cursor( " + Util.printInterval(
-		// interval ) + " )" );
 		final int dimLength = fastCursorAvailable( interval );
 
 		assert dimLength > 0;
@@ -210,10 +208,8 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	@Override
 	public Cursor< T > localizingCursor( final Interval interval )
 	{
-		// System.out.println( "optimized localizingCursor( " +
-		// Util.printInterval( interval ) + " )" );
 		final int dimLength = fastCursorAvailable( interval );
-		
+
 		assert dimLength > 0;
 
 		return new ArrayLocalizingSubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
