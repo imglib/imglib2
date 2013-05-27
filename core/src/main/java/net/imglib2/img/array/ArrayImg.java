@@ -57,8 +57,8 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * @param <A>
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Christian Dietz
  */
 public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg< T, A > implements SubIntervalIterable< T >
 {
@@ -97,13 +97,13 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	@Override
 	public ArrayCursor< T > cursor()
 	{
-		return new ArrayCursor< T >( this );
+		return new ArrayCursor< T >( this, this );
 	}
 
 	@Override
 	public ArrayLocalizingCursor< T > localizingCursor()
 	{
-		return new ArrayLocalizingCursor< T >( this );
+		return new ArrayLocalizingCursor< T >( this, this );
 	}
 
 	@Override
@@ -150,79 +150,33 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	@Override
 	public Cursor< T > cursor( final Interval interval )
 	{
-		// System.out.println( "optimized cursor( " + Util.printInterval(
-		// interval ) + " )" );
-		final int dimLength = fastCursorAvailable( interval );
-
-		assert dimLength > 0;
-
-		return new ArraySubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
-	}
-
-	private long size( final Interval interval, final int length )
-	{
-		long size = interval.dimension( 0 );
-		for ( int d = 1; d < length; d++ )
-		{
-			size *= interval.dimension( d );
-		}
-
-		return size;
-	}
-
-	private long offset( final Interval interval, final int length )
-	{
-		final int maxDim = numDimensions() - 1;
-		long i = interval.min( maxDim );
-		for ( int d = maxDim - 1; d >= 0; --d )
-			i = i * dimension( d ) + interval.min( d );
-
-		return i;
-	}
-
-	/*
-	 * If method returns -1 no fast cursor is available, else the amount of dims
-	 * (starting from zero) which can be iterated fast are returned
-	 */
-	private int fastCursorAvailable( final Interval interval )
-	{
-		int dimIdx = 0;
-
-		// Find equal dims
-		for ( int d = 0; d < interval.numDimensions(); d++, dimIdx++ )
-		{
-			if ( interval.dimension( d ) != dimension( d ) )
-			{
-				dimIdx++;
-				break;
-			}
-		}
-
-		for ( int d = dimIdx; d < interval.numDimensions(); d++ )
-		{
-			if ( interval.dimension( d ) != 1 )
-				return -1;
-		}
-
-		return dimIdx;
+		return new ArrayCursor< T >( this, interval );
 	}
 
 	@Override
 	public Cursor< T > localizingCursor( final Interval interval )
 	{
-		// System.out.println( "optimized localizingCursor( " +
-		// Util.printInterval( interval ) + " )" );
-		final int dimLength = fastCursorAvailable( interval );
-		
-		assert dimLength > 0;
-
-		return new ArrayLocalizingSubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
+		return new ArrayLocalizingCursor< T >( this, interval );
 	}
 
 	@Override
 	public boolean supportsOptimizedCursor( final Interval interval )
 	{
-		return fastCursorAvailable( interval ) > 0;
+		int dimIdx = 0;
+
+		// Find equal dims
+		for ( int d = 0; d < interval.numDimensions(); d++, dimIdx++ )
+			if ( interval.dimension( d ) != dimension( d ) )
+			{
+				dimIdx++;
+				break;
+			}
+
+		for ( int d = dimIdx; d < interval.numDimensions(); d++ )
+			if ( interval.dimension( d ) != 1 )
+				return false;
+
+		return true;
 	}
 
 	@Override
