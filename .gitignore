@@ -2,11 +2,13 @@
 **/.project
 **/.settings
 **/target
+.DS_Store
 .classpath
 .project
 .settings
 target
 *.class
 *~
+*.orig
 # For Fiji #
 *.jar
