@@ -43,7 +43,7 @@ import net.imglib2.ops.operation.UnaryOperation;
 
 /**
  * @author Christian Dietz (University of Konstanz)
- *
+ * 
  * @param <CS>
  */
 public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryOperation< CS, CS >
