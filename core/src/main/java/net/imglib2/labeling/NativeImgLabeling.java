@@ -40,11 +40,14 @@ package net.imglib2.labeling;
 import java.util.Iterator;
 
 import net.imglib2.Cursor;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.view.Views;
+import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
  * A labeling backed by a native image that takes a labeling type backed by an
@@ -55,7 +58,7 @@ import net.imglib2.type.numeric.IntegerType;
  * 
  * @author Lee Kamentsky, Christian Dietz, Martin Horn
  */
-public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType< I >> extends AbstractNativeLabeling< T >
+public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType< I >> extends AbstractNativeLabeling< T > implements SubIntervalIterable< I >
 {
 
 	protected final long[] generation;
@@ -190,5 +193,45 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 			}
 
 		};
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public boolean supportsOptimizedCursor( Interval interval )
+	{
+		if ( this.img instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< I > ) this.img ).supportsOptimizedCursor( interval );
+		else
+			return false;
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Object subIntervalIterationOrder( Interval interval )
+	{
+		if ( this.img instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< I > ) this.img ).subIntervalIterationOrder( interval );
+		else
+			return new FlatIterationOrder( interval );
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Cursor< I > cursor( Interval interval )
+	{
+		if ( this.img instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< I > ) this.img ).cursor( interval );
+		else
+			return Views.interval( this.img, interval ).cursor();
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Cursor< I > localizingCursor( Interval interval )
+	{
+		if ( this.img instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< I > ) this.img ).localizingCursor( interval );
+		else
+			return Views.interval( this.img, interval ).localizingCursor();
 	}
 }
