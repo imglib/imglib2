@@ -40,7 +40,6 @@ package net.imglib2.img.cell;
 import net.imglib2.Cursor;
 import net.imglib2.EuclideanSpace;
 import net.imglib2.RandomAccess;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.util.Fraction;
 
 /**
