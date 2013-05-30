@@ -27,60 +27,31 @@
  */
 package net.imglib2.realtransform;
 
-import net.imglib2.RealPoint;
+
 
 /**
- * <em>n</em>-d arbitrary scaling.
+ * An <em>n</em>-dimensional scale whose fields can be accessed
+ * through their dimension index or as a double array.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class Scale extends AbstractScale
+public interface ScaleGet extends AffineGet
 {
-	final protected Scale inverse;
+	/**
+	 * Get a field of the <em>n</em>-dimensional scale vector.
+	 * 
+	 * @param d
+	 * @return
+	 */
+	public double getScale( final int d );
 	
-	protected Scale( final double[] s, final Scale inverse, final RealPoint[] ds )
-	{
-		super( s, ds );
-		this.inverse = inverse;
-	}
-	
-	public Scale( final double... s )
-	{
-		super( s.clone(), new RealPoint[ s.length ] );
-		final double[] si = new double[ s.length ];
-		final RealPoint[] dis = new RealPoint[ s.length ]; 
-		for ( int d =0; d < s.length; ++d )
-		{
-			si[ d ] = 1.0 / s[ d ];
-			final RealPoint dd = new RealPoint( s.length );
-			dd.setPosition( s[ d ], d );
-			final RealPoint ddi = new RealPoint( s.length );
-			ddi.setPosition( si[ d ], d );
-		}
-		inverse = new Scale( si, this, dis );
-	}
+	/**
+	 * Get a copy of the <em>n</em>-dimensionsional scale vector.
+	 *  
+	 * @return
+	 */
+	public double[] getScaleCopy();
 	
 	@Override
-	public void set( final double... s )
-	{
-		for ( int d =0; d < s.length; ++d )
-		{
-			this.s[ d ] = s[ d ];
-			inverse.s[ d ] = 1.0 / s[ d ];
-			ds[ d ].setPosition( s[ d ], d );
-			inverse.ds[ d ].setPosition( inverse.s[ d ], d );
-		}
-	}
-	
-	@Override
-	public Scale inverse()
-	{
-		return inverse;
-	}
-	
-	@Override
-	public Scale copy()
-	{
-		return new Scale( s );
-	}
+	ScaleGet inverse();
 }
