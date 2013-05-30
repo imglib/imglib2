@@ -114,7 +114,7 @@ public class RealViews
 	 */
 	public static < T > AffineRealRandomAccessible< T, AffineGet > affineReal( final RealRandomAccessible< T > source, final AffineGet affine )
 	{
-		return new AffineRealRandomAccessible< T, AffineGet >( source, affine.inverseAffine() );
+		return new AffineRealRandomAccessible< T, AffineGet >( source, affine.inverse() );
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public class RealViews
 	 */
 	public static < T > AffineRandomAccessible< T, AffineGet > affine( final RealRandomAccessible< T > source, final AffineGet affine )
 	{
-		return new AffineRandomAccessible< T, AffineGet >( source, affine.inverseAffine() );
+		return new AffineRandomAccessible< T, AffineGet >( source, affine.inverse() );
 	}
 	
 	/**
@@ -167,7 +167,7 @@ public class RealViews
 		 * being the identity, return a
 		 * {@link RandomAccessibleOnRealRandomAccessible} instead.
 		 */
-		return new ConstantAffineRandomAccessible< T, AffineGet >( source, affine.inverseAffine() );
+		return new ConstantAffineRandomAccessible< T, AffineGet >( source, affine.inverse() );
 	}
 	
 }

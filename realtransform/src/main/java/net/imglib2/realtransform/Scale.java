@@ -165,12 +165,6 @@ public class Scale implements AffineGet
 	}
 
 	@Override
-	public AffineGet inverseAffine()
-	{
-		return inverse();
-	}
-	
-	@Override
 	public Scale copy()
 	{
 		return new Scale( s );
