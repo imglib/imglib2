@@ -39,39 +39,79 @@ package net.imglib2.type.numeric.integer;
 
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.type.NativeType;
-import net.imglib2.util.Fraction;
+import net.imglib2.type.AbstractBitType;
+import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.util.Util;
 
 /**
  * The performance of this type is traded off for the gain in memory storage.
  * 
  * @author Albert Cardona
  */
-public abstract class AbstractBitType<T extends AbstractBitType<T>> extends AbstractIntegerType<T> implements NativeType<T>
+public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>> extends AbstractBitType<T> implements IntegerType<T> 
 {
 	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
-	protected long i = 0;
+	//protected long i = 0;
 
-	final protected NativeImg<T, ? extends LongAccess> img;
+	//final protected NativeImg<T, ? extends LongAccess> img;
 
 	// the DataAccess that holds the information
-	protected LongAccess dataAccess;
+	//protected LongAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public AbstractBitType(
-			final NativeImg<T,
-			? extends LongAccess> bitStorage)
+	public AbstractIntegerBitType(
+			final NativeImg<T,? extends LongAccess> bitStorage, 
+			final int nBits )
 	{
-		img = bitStorage;
+		super( bitStorage, nBits );
 	}
 
-	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
-
 	public abstract long get();
-
 	public abstract void set( final long value );
 
+	@Override
+	public int getBitsPerPixel() { return nBits; }
+
+	@Override
+	public double getMinIncrement() { return 1; }
+
+	@Override
+	public void mul( final float c ) { setReal( getRealDouble() * c ); }
+
+	@Override
+	public void mul( final double c ) { setReal( getRealDouble() * c ); }
+
+	@Override
+	public float getRealFloat() { return getIntegerLong(); }
+	@Override
+	public double getRealDouble() { return getIntegerLong(); }
+	
+	@Override
+	public void setReal( final float real ){ setInteger( Util.round( real ) ); }
+	@Override
+	public void setReal( final double real ){ setInteger( Util.round( real ) ); }	
+
+	@Override
+	public void setZero() { setInteger( 0 ); }
+	@Override
+	public void setOne() { setInteger( 1 ); }	
+
+	@Override
+	public int compareTo( final T c ) 
+	{ 
+		final long a = getIntegerLong();
+		final long b = c.getIntegerLong();
+		if ( a > b )
+			return 1;
+		else if ( a < b )
+			return -1;
+		else 
+			return 0;
+	}
+	
+	@Override
+	public String toString() { return "" + getIntegerLong(); }	
+	
 	@Override
 	public int getInteger() { return (int)get(); }
 
@@ -91,65 +131,51 @@ public abstract class AbstractBitType<T extends AbstractBitType<T>> extends Abst
 	public double getMinValue()  { return 0; }
 
 	@Override
-	public int getIndex() { return (int)i; }
+	public void inc() {	set(get() + 1); }
 
 	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-	}
+	public void dec() {	set(get() - 1); }
 
 	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
-	}
+	public void add(final T t) { set(get() + t.get()); }
 
 	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction( getBitsPerPixel(), 64 ); }
+	public void sub(final T t) { set(get() - t.get()); }
 
 	@Override
-	public void inc() {
-		set(get() + 1);
-	}
+	public void mul(final T t) { set(get() * t.get()); }
 
 	@Override
-	public void dec() {
-		set(get() - 1);
-	}
+	public void div(final T t) { set(get() / t.get()); }
+	
+	@Override
+	public void set( final T c ) { set( c.get() ); }
 
 	@Override
-	public void add(final T t) {
-		set(get() + t.get());
-	}
+	public float getImaginaryFloat() { return 0; }
+	@Override
+	public double getImaginaryDouble() { return 0; }
+	
+	@Override
+	public void setImaginary( final float complex ){}
+	@Override
+	public void setImaginary( final double complex ){}
 
 	@Override
-	public void sub(final T t) {
-		set(get() - t.get());
-	}
+	public float getPhaseFloat() { return 0; }
+	@Override
+	public double getPhaseDouble() { return 0; }
 
 	@Override
-	public void mul(final T t) {
-		set(get() * t.get());
-	}
+	public float getPowerFloat() { return getRealFloat(); }
+	@Override
+	public double getPowerDouble() { return getRealDouble(); }
+	
+	@Override
+	public void setComplexNumber( final float r, final float i ) { setReal( r ); }
+	@Override
+	public void setComplexNumber( final double r, final double i ) { setReal( r ); }
 
 	@Override
-	public void div(final T t) {
-		set(get() / t.get());
-	}
+	public void complexConjugate(){}
 }

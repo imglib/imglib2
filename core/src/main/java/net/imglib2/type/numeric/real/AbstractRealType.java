@@ -57,6 +57,9 @@ public abstract class AbstractRealType<T extends AbstractRealType<T>> extends Ab
 	public void setImaginary( final double complex ){}
 	
 	@Override
+	public void complexConjugate(){}
+
+	@Override
 	public void inc() { setReal( getRealDouble() + 1 ); }
 	@Override
 	public void dec() { setReal( getRealDouble() - 1 ); }

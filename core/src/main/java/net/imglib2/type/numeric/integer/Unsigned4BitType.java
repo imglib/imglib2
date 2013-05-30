@@ -51,7 +51,7 @@ import net.imglib2.util.Fraction;
  * 
  * @author Albert Cardona
  */
-public class Unsigned4BitType extends AbstractBitType<Unsigned4BitType>
+public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 {
 	// A mask for bit and, containing nBits of 1
 	private final static long mask = 15; // 1111 in binary
@@ -61,7 +61,7 @@ public class Unsigned4BitType extends AbstractBitType<Unsigned4BitType>
 			final NativeImg<Unsigned4BitType,
 			? extends LongAccess> bitStorage)
 	{
-		super( bitStorage );
+		super( bitStorage, 4 );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -125,7 +125,4 @@ public class Unsigned4BitType extends AbstractBitType<Unsigned4BitType>
 
 	@Override
 	public Unsigned4BitType copy(){ return new Unsigned4BitType( get() ); }
-
-	@Override
-	public int getBitsPerPixel() { return 4; }
 }

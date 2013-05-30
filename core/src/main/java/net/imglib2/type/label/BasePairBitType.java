@@ -39,16 +39,9 @@ package net.imglib2.type.label;
 
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.BitAccess;
 import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.img.basictypeaccess.array.BitArray;
+import net.imglib2.type.AbstractBit64Type;
 import net.imglib2.type.BasePairType;
-import net.imglib2.type.NativeType;
-import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.BasePairType;
-import net.imglib2.type.logic.BitType;
-import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -56,41 +49,20 @@ import net.imglib2.util.Fraction;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class BasePairBitType implements BasePairType<BasePairBitType>, NativeType<BasePairBitType>
+public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implements BasePairType<BasePairBitType>
 {
-	// A mask for bit and, containing nBits of 1
-	private final static long mask = 7; // 111 in binary
-		
-	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
-	protected int i = 0;
-
-	final protected NativeImg<BasePairBitType, ? extends LongAccess> img;
-
-	// the DataAccess that holds the information
-	protected LongAccess dataAccess;
-	
 	public static enum Base { gap, N, A, T, G, C, U; }
-
-	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction( 3, 1 ); }
-	
-	// the adresses of the bits that we store
-	int j1, j2, j3;
 	
 	// this is the constructor if you want it to read from an array
 	public BasePairBitType( NativeImg<BasePairBitType, ? extends LongAccess> bitStorage )
 	{
-		img = bitStorage;
-		updateIndex( 0 );
+		super( bitStorage, 3 );
 	}
 	
 	// this is the constructor if you want it to be a variable
 	public BasePairBitType( final Base value )
 	{
-		img = null;
-		updateIndex( 0 );
-		dataAccess = new LongArray( 1 );
-		set( value );
+		super( value.ordinal() );
 	}	
 
 	// this is the constructor if you want it to be a variable
@@ -100,7 +72,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	public NativeImg<BasePairBitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<BasePairBitType> storageFactory, final long dim[] )	
 	{
 		// create the container
-		final NativeImg<BasePairBitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( 3, 64 ) );
+		final NativeImg<BasePairBitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, getEntitiesPerPixel() );
 		
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );
@@ -110,72 +82,21 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 		
 		return container;
 	}
-	
-	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 
 	@Override
 	public BasePairBitType duplicateTypeOnSameNativeImg() { return new BasePairBitType( img ); }
 	
-	@Override
-	public int getIndex() { return i; }
-	
-	@Override
-	public void updateIndex( final int index ) 
-	{ 
-		this.i = index;
-		j1 = index * 3;
-		j2 = j1 + 1;
-		j3 = j1 + 2;
-	}
-	
-	@Override
-	public void incIndex() 
-	{ 
-		++i;
-		j1 += 3;
-		j2 += 3;
-		j3 += 3;
-	}
-	@Override
-	public void incIndex( final int increment ) 
-	{ 
-		i += increment; 
-		
-		final int inc3 = 3 * increment;		
-		j1 += inc3;
-		j2 += inc3;
-		j3 += inc3;
-	}
-	@Override
-	public void decIndex() 
-	{ 
-		--i;
-		j1 -= 3;
-		j2 -= 3;
-		j3 -= 3;
-	}
-	@Override
-	public void decIndex( final int decrement ) 
-	{ 
-		i -= decrement; 
-
-		final int dec3 = 3 * decrement;		
-		j1 -= dec3;
-		j2 -= dec3;
-		j3 -= dec3;
-	}
 
 	@Override
 	public void set( final Base base ) 
 	{
-		// can go over longs
+		setBits( base.ordinal() );
 	}
 	
 	@Override
 	public Base get() 
-	{		
-		// can go over longs
+	{
+		return Base.values()[ (int)getBits() ];
 	}
 	
 	@Override

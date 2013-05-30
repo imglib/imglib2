@@ -35,30 +35,27 @@
  */
 
 
-package net.imglib2.type.numeric.integer;
+package net.imglib2.type;
 
 import net.imglib2.img.NativeImg;
-import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.type.Type;
-import net.imglib2.util.Fraction;
 
 /**
  * A {@link Type} with arbitrary bit depth up to maximum 64 bits.
  * The behavior beyond 64 bits is undefined.
  * 
+ * To set and get bits, we use longs. Therefore not more than 64 bits are supported. The long is not
+ * supposed to have anything to do with math, it is simply an efficient way to hold an array of bits
+ * 
  * The performance of this type is traded off for the gain in memory storage.
- * The {@link #set(long)} operation takes have the time as the {@link #get} operation.
+ * The {@link #setBits(long)} operation takes have the time as the {@link #getBits} operation.
  * The performance may degrade very slightly with increasing bit depth, but the decrease is barely noticeable.
  *
- * @author Albert Cardona
+ * @author Albert Cardona and Stephan Preibisch
  */
-public class UnsignedBit64Type extends AbstractBitType<UnsignedBit64Type>
+public abstract class AbstractBit64Type<T extends AbstractBit64Type<T>> extends AbstractBitType< T >
 {	
-	// the number of bits per pixel
-	private final int nBits;
-
 	// A mask for bit and, containing nBits of 1
 	private final long mask;
 	
@@ -66,61 +63,48 @@ public class UnsignedBit64Type extends AbstractBitType<UnsignedBit64Type>
 	private final long invMask;
 
 	// this is the constructor if you want it to read from an array
-	public UnsignedBit64Type(
-			final NativeImg<UnsignedBit64Type,
-			? extends LongAccess> bitStorage,
+	public AbstractBit64Type(
+			final NativeImg< T, ? extends LongAccess> bitStorage,
 			final int nBits)
 	{
-		super( bitStorage );
-		if (nBits < 1 || nBits > 64)
-			throw new IllegalArgumentException("Supports only bit depths between 1 and 64, can't take " + nBits);
-		this.nBits = nBits;
+		super( bitStorage, nBits );
+		
+		if ( nBits < 1 || nBits > 64 )
+			throw new IllegalArgumentException( "Supports only bit depths between 1 and 64, can't take " + nBits );
+
 		this.mask = ((long)(Math.pow(2, nBits) -1));
 		this.invMask = ~mask;
 	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedBit64Type( final long value, final int nBits )
+	public AbstractBit64Type( final long value, final int nBits )
 	{
-		this( (NativeImg<UnsignedBit64Type, ? extends LongAccess>)null, nBits );
+		this( ( NativeImg< T, ? extends LongAccess > )null, nBits );
 		updateIndex( 0 );
 		dataAccess = new LongArray( 1 );
-		set( value );
+		setBits( value );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
-	public UnsignedBit64Type( final LongAccess access, final int nBits )
+	public AbstractBit64Type( final LongAccess access, final int nBits )
 	{
-		this( (NativeImg<UnsignedBit64Type, ? extends LongAccess>)null, nBits );
+		this( (NativeImg< T, ? extends LongAccess > )null, nBits );
 		updateIndex( 0 );
 		dataAccess = access;
 	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedBit64Type( final int nBits ) { this( 0, nBits ); }
+	public AbstractBit64Type( final int nBits ) { this( 0, nBits ); }
 
-	@Override
-	public NativeImg<UnsignedBit64Type, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedBit64Type> storageFactory, final long dim[] )
-	{
-		// create the container
-		final NativeImg<UnsignedBit64Type, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( nBits, 64 ) );
-
-		// create a Type that is linked to the container
-		final UnsignedBit64Type linkedType = new UnsignedBit64Type( container, nBits );
-
-		// pass it to the NativeContainer
-		container.setLinkedType( linkedType );
-
-		return container;
-	}
-
-	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
-
-	@Override
-	public UnsignedBit64Type duplicateTypeOnSameNativeImg() { return new UnsignedBit64Type( img, nBits ); }
-
-	public long get() {
+	/**
+	 * Writes the current "subLong" location of the LongAccess into the lower nBits bits of the long value 
+	 * 
+	 * Note that "long value" does not refer to math, it is just a way to help to return arbitrary values. It
+	 * is basically an array of bits.
+	 * 
+	 * @return
+	 */
+	protected long getBits() {
 		final long k = i * nBits;
 		final int i1 = (int)(k >>> 6); // k / 64;
 		final long shift = k & 63; // Same as k % 64;
@@ -142,8 +126,15 @@ public class UnsignedBit64Type extends AbstractBitType<UnsignedBit64Type>
 		}
 	}
 
-	// Crops value to within mask
-	public void set( final long value ) {
+	/**
+	 * Sets the lower nBits bits of the long value into the current "subLong" location of the LongAccess
+	 * 
+	 * Note that "long value" does not refer to math, it is just a way to help to set arbitrary values. It
+	 * is basically an array of bits.
+	 * 
+	 * @param value
+	 */
+	protected void setBits( final long value ) {
 		final long k = i * nBits;
 		final int i1 = (int)(k >>> 6); // k / 64;
 		final long shift = k & 63; // Same as k % 64;
@@ -175,26 +166,5 @@ public class UnsignedBit64Type extends AbstractBitType<UnsignedBit64Type>
 				}
 			}
 		}
-	}
-
-	@Override
-	public UnsignedBit64Type createVariable(){ return new UnsignedBit64Type( nBits ); }
-
-	@Override
-	public UnsignedBit64Type copy(){ return new UnsignedBit64Type( get(), nBits ); }
-
-	@Override
-	public int getBitsPerPixel() { return nBits; }
-
-	/** @see UnsignedLongType#divide(long, long) */
-	@Override
-	public void div(final UnsignedBit64Type t) {
-		set( UnsignedLongType.divide( get(), t.get() ) );
-	}
-	
-	/** @see UnsignedLongType#compare(long, long) */
-	@Override
-	public int compareTo( final UnsignedBit64Type t ) {
-		return UnsignedLongType.compare( get(), t.get() );
 	}
 }

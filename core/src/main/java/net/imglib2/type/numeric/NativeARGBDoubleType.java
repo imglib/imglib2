@@ -42,6 +42,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  *
@@ -85,7 +86,7 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 			final NativeImgFactory< NativeARGBDoubleType > storageFactory,
 			final long dim[] )
 	{
-		final NativeImg< NativeARGBDoubleType, ? extends DoubleAccess > container = storageFactory.createDoubleInstance( dim, 4 );
+		final NativeImg< NativeARGBDoubleType, ? extends DoubleAccess > container = storageFactory.createDoubleInstance( dim, new Fraction( 4, 1 ) );
 		final NativeARGBDoubleType linkedType = new NativeARGBDoubleType( container );
 		container.setLinkedType( linkedType );
 		return container;
@@ -178,9 +179,9 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	}
 
 	@Override
-	public int getEntitiesPerPixel()
+	public Fraction getEntitiesPerPixel()
 	{
-		return 4;
+		return new Fraction( 4, 1 );
 	}
 
 	@Override
