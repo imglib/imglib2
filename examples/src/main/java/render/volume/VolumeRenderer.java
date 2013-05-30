@@ -43,6 +43,8 @@ import net.imglib2.realtransform.InvertibleRealTransformSequence;
 import net.imglib2.realtransform.Perspective3D;
 import net.imglib2.realtransform.RealViews;
 import net.imglib2.realtransform.Scale;
+import net.imglib2.realtransform.Scale3D;
+import net.imglib2.realtransform.Translation3D;
 import net.imglib2.type.numeric.ARGBDoubleType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.AbstractARGBDoubleType;
@@ -323,7 +325,7 @@ public class VolumeRenderer
 //		final ARGBDoubleLayers< NativeARGBDoubleType > accumulator = new ARGBDoubleLayers();
 		final ARGBDoubleLayers< ARGBDoubleType > accumulator = new ARGBDoubleLayers< ARGBDoubleType >();
 		
-		for ( int i = 39; i < numFrames; ++i )
+		for ( int i = 44; i < numFrames; ++i )
 		{
 			final double j = ( double )i / numFrames;
 			//final double k = Math.max( 0, Math.min( 1, j * 1.5 - 0.25 ) );
@@ -364,7 +366,8 @@ public class VolumeRenderer
 	{
 		new ImageJ();
 		
-		final double s = 1.0 / 4095.0;
+		final double s = 10.0 / 4095.0;
+		final double a = 0.5;
 		
 		final String filename = "/home/saalfeld/examples/l1-cns-05-05-5-DPX-9.tif";
 		//final String filename = "/home/saalfeld/examples/l1-cns-05-05-5-DPX-9-10.tif";
@@ -379,11 +382,12 @@ public class VolumeRenderer
 		final RealCompositeARGBDoubleConverter< UnsignedShortType > composite2ARGBDouble =
 				new RealCompositeARGBDoubleConverter< UnsignedShortType >( ( int )xyzc.dimension( 3 ) );
 		
-		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, s, 0, 0 ), 0 );
-		composite2ARGBDouble.setARGB( new ARGBDoubleType( 0.35, s, s, s ), 1 );
+		
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( a, s, 0, 0 ), 0 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( 0.35 * a, s, s, s ), 1 );
 		composite2ARGBDouble.setARGB( new ARGBDoubleType( 0, s, s, s ), 2 );
-		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, 0, s, 0 ), 3 );
-		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, 0, 0, s ), 4 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( a, 0, s, 0 ), 3 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( a, 0, 0, s ), 4 );
 		
 		final RandomAccessible< ARGBDoubleType > argbComposite = Converters.convert( img, composite2ARGBDouble, new ARGBDoubleType() );
 		
@@ -413,28 +417,25 @@ public class VolumeRenderer
 		final ImagePlusImg< ARGBType, ? > movie = ImagePlusImgs.argbs( xycz.dimension( 0 ), xycz.dimension( 1 ), numFrames );
 		ImageJFunctions.show( movie );
 				
-		final AffineTransform3D centerShift = new AffineTransform3D();
-		centerShift.set(
-				1, 0, 0, -xyzc.dimension( 0 ) / 2.0 - xyzc.min( 0 ),
-				0, 1, 0, -xyzc.dimension( 1 ) / 2.0 - xyzc.min( 1 ),
-				0, 0, 1, -xyzc.dimension( 2 ) / 2.0 - xyzc.min( 2 ) );
+		final Translation3D centerShift = new Translation3D(
+				-xyzc.dimension( 0 ) / 2.0 - xyzc.min( 0 ),
+				-xyzc.dimension( 1 ) / 2.0 - xyzc.min( 1 ),
+				-xyzc.dimension( 2 ) / 2.0 - xyzc.min( 2 ) );
 		
-		final AffineTransform3D centerUnshiftXY = centerShift.inverse();
-		centerUnshiftXY.set( 0, 2, 3 );
+		final Translation3D centerUnshiftXY = new Translation3D(
+				xyzc.dimension( 0 ) / 2.0 + xyzc.min( 0 ),
+				xyzc.dimension( 1 ) / 2.0 + xyzc.min( 1 ),
+				0 );
 		
 		final double f = xyzc.dimension( 1 );
 		
-		final AffineTransform3D zShift = new AffineTransform3D();
-		zShift.set(
-				1, 0, 0, 0,
-				0, 1, 0, 0,
-				0, 0, 1, xyzc.dimension( 2 ) / 2.0 + f );
+		final Translation3D zShift = new Translation3D( 0, 0, xyzc.dimension( 2 ) / 2.0 + f );
 		
 		final AffineTransform3D rotation = new AffineTransform3D();
 		final AffineTransform3D affine = new AffineTransform3D();
 		
 		final Perspective3D perspective = Perspective3D.getInstance();
-		final Scale scale = new Scale( f, f, 1 );
+		final Scale3D scale = new Scale3D( f, f, 1 );
 		
 		final InvertibleRealTransformSequence transformSequence = new InvertibleRealTransformSequence();
 		
