@@ -37,14 +37,20 @@
 package net.imglib2.util;
 
 /**
+ * Implements the concept of fractions
  * 
  * @author Stephan Preibisch
- *
  */
 public class Fraction 
 {
 	long numerator, denominator;
 	
+	/**
+	 * Creates a new fraction with the respective values
+	 * 
+	 * @param numerator (above fraction bar)
+	 * @param denominator (below fraction bar)
+	 */
 	public Fraction( final long numerator, final long denominator )
 	{
 		this.numerator = numerator;
@@ -56,9 +62,21 @@ public class Fraction
 	 */
 	public Fraction() { this( 1, 1 ); }
 	
+	/**
+	 * @return - the numerator (above the fraction bar)
+	 */
 	public long getNumerator() { return numerator; }
+	
+	/**
+	 * @return - the denominator (below the fraction bar)
+	 */
 	public long getDenominator() { return denominator; }
 	
+	/**
+	 * @return - an estimate of the ratio in double, i.e. numerator/denominator
+	 */
+	public double getRatio() { return (double)numerator / (double)denominator; }
+
 	/**
 	 * Inverts this fraction by exchanging numerator and denominator
 	 */
