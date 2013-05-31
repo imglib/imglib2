@@ -156,7 +156,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 		for ( int d = 0; d < numDimensions; ++d )
 			size *= input.dimension( d );
 		if( size > Integer.MAX_VALUE ) {
-			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
+			int cellSize = ( int ) Math.pow( Math.round( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel().getRatio() ), 1.0 / numDimensions );
 			return buildMserTree( input, delta, minSize, maxSize, maxVar, minDiversity, new CellImgFactory< LongType >( cellSize ), darkToBright );
 		}
 		return buildMserTree( input, delta, minSize, maxSize, maxVar, minDiversity, new ArrayImgFactory< LongType >(), darkToBright );
@@ -230,7 +230,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 		for ( int d = 0; d < numDimensions; ++d )
 			size *= input.dimension( d );
 		if( size > Integer.MAX_VALUE ) {
-			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
+			int cellSize = ( int ) Math.pow( Math.round( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel().getRatio() ), 1.0 / numDimensions );
 			return buildMserTree( input, computeDelta, minSize, maxSize, maxVar, minDiversity, new CellImgFactory< LongType >( cellSize ), maxValue, comparator );
 		}
 		return buildMserTree( input, computeDelta, minSize, maxSize, maxVar, minDiversity, new ArrayImgFactory< LongType >(), maxValue, comparator );

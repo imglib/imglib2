@@ -91,7 +91,7 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 		for ( int d = 0; d < numDimensions; ++d )
 			size *= input.dimension( d );
 		if( size > Integer.MAX_VALUE ) {
-			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
+			int cellSize = ( int ) Math.pow( Math.round( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel().getRatio() ), 1.0 / numDimensions );
 			return buildComponentTree( input, type, new CellImgFactory< LongType >( cellSize ), darkToBright );
 		}
 		return buildComponentTree( input, type, new ArrayImgFactory< LongType >(), darkToBright );
@@ -144,7 +144,7 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 		for ( int d = 0; d < numDimensions; ++d )
 			size *= input.dimension( d );
 		if( size > Integer.MAX_VALUE ) {
-			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
+			int cellSize = ( int ) Math.pow( Math.round( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel().getRatio() ), 1.0 / numDimensions );
 			return buildComponentTree( input, maxValue, comparator, new CellImgFactory< LongType >( cellSize ) );
 		}
 		return buildComponentTree( input, maxValue, comparator, new ArrayImgFactory< LongType >() );
