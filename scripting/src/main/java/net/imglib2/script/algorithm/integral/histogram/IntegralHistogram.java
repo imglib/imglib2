@@ -42,7 +42,7 @@ public class IntegralHistogram
 			final R type)
 	{
 		// Sanity check
-		if (Math.pow(2, type.getBitsPerPixel() / type.getEntitiesPerPixel()) < img.size()) {
+		if (Math.pow(2, type.getBitsPerPixel() / type.getEntitiesPerPixel().getRatio()) < img.size()) {
 			throw new RuntimeException("Cannot write histogram with type " + type.getClass());
 		}
 		// Dimensions of integral image: one more than the input img, and +1 element in the image dimensions
