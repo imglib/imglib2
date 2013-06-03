@@ -22,25 +22,28 @@
 			<artifactId>imglib2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
 		<dependency>
-			<groupId>${scifio.groupId}</groupId>
-			<artifactId>loci-legacy</artifactId>
-			<version>${scifio.version}</version>
+			<groupId>${bio-formats.groupId}</groupId>
+			<artifactId>loci-common</artifactId>
+			<version>${bio-formats.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${scifio.groupId}</groupId>
+			<groupId>${bio-formats.groupId}</groupId>
 			<artifactId>ome-xml</artifactId>
-			<version>${scifio.version}</version>
+			<version>${bio-formats.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${scifio.groupId}</groupId>
+			<groupId>${bio-formats.groupId}</groupId>
 			<artifactId>scifio</artifactId>
-			<version>${scifio.version}</version>
+			<version>${bio-formats.version}</version>
 		</dependency>
+
 		<dependency>
-			<groupId>${scifio.groupId}</groupId>
-			<artifactId>scifio-devel</artifactId>
-			<version>${scifio.version}</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.5.10</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>

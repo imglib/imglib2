@@ -67,18 +67,20 @@
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>${bio-formats.groupId}</groupId>
+			<artifactId>loci-common</artifactId>
+			<version>${bio-formats.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>${imagej.groupId}</groupId>
 			<artifactId>ij</artifactId>
 			<version>${imagej1.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>${scifio.groupId}</groupId>
-			<artifactId>scifio-devel</artifactId>
-			<version>${scifio.version}</version>
-			<scope>test</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>jama</groupId>
 			<artifactId>jama</artifactId>
