@@ -103,7 +103,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 		this.size = size;
 
 		this.type = img.createLinkedType();
-		this.lastIndex = ( int ) img.size() - 1;
+		this.lastIndex = offset + size - 1;
 
 		max = new int[ n ];
 		for ( int d = 0; d < n; ++d )
