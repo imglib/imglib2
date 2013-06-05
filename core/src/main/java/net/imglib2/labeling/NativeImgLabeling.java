@@ -58,7 +58,7 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * 
  * @author Lee Kamentsky, Christian Dietz, Martin Horn
  */
-public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType< I >> extends AbstractNativeLabeling< T > implements SubIntervalIterable< I >
+public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType< I >> extends AbstractNativeLabeling< T > implements SubIntervalIterable< LabelingType< T > >
 {
 
 	protected final long[] generation;
@@ -217,21 +217,27 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Cursor< I > cursor( Interval interval )
+	public Cursor< LabelingType< T > > cursor( Interval interval )
 	{
+		Cursor< I > c = null;
 		if ( this.img instanceof SubIntervalIterable )
-			return ( ( SubIntervalIterable< I > ) this.img ).cursor( interval );
+			c = ( ( SubIntervalIterable< I > ) this.img ).cursor( interval );
 		else
-			return Views.interval( this.img, interval ).cursor();
+			c = Views.interval( this.img, interval ).cursor();
+
+		return new LabelingConvertedCursor< I, T >( c, generation, mapping );
 	}
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Cursor< I > localizingCursor( Interval interval )
+	public Cursor< LabelingType< T > > localizingCursor( Interval interval )
 	{
+		Cursor< I > c = null;
 		if ( this.img instanceof SubIntervalIterable )
-			return ( ( SubIntervalIterable< I > ) this.img ).localizingCursor( interval );
+			c = ( ( SubIntervalIterable< I > ) this.img ).localizingCursor( interval );
 		else
-			return Views.interval( this.img, interval ).localizingCursor();
+			c = Views.interval( this.img, interval ).localizingCursor();
+
+		return new LabelingConvertedCursor< I, T >( c, generation, mapping );
 	}
 }
