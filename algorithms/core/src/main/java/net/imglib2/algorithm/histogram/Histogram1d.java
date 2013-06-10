@@ -82,6 +82,7 @@ public class Histogram1d<T> implements Img<LongType> {
 		this.distrib =
 			new DiscreteFrequencyDistribution(new long[] { mapper.getBinCount() });
 		this.pos = new long[1];
+		this.ignoredCount = 0;
 	}
 
 	/**
@@ -95,8 +96,7 @@ public class Histogram1d<T> implements Img<LongType> {
 		distrib = other.distrib.copy();
 		pos = other.pos.clone();
 		// TODO - is reset what we really want? or copy the exact counts too?
-		distrib.resetCounters();
-		ignoredCount = 0;
+		reset();
 	}
 
 	/**
@@ -433,6 +433,13 @@ public class Histogram1d<T> implements Img<LongType> {
 	}
 
 	/**
+	 * Resets all data counts to 0.
+	 */
+	public void resetCounters() {
+		reset();
+	}
+
+	/**
 	 * Returns a bare long[] histogram with the same bin counts as this histogram.
 	 */
 	public long[] toLongArray() {
@@ -608,9 +615,13 @@ public class Histogram1d<T> implements Img<LongType> {
 
 	// -- helpers --
 
-	private void init(Iterable<T> data) {
+	private void reset() {
 		distrib.resetCounters();
 		ignoredCount = 0;
+	}
+
+	private void init(Iterable<T> data) {
+		reset();
 		add(data);
 	}
 
