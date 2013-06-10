@@ -94,6 +94,7 @@ public class Histogram1d<T> implements Img<LongType> {
 		mapper = other.mapper.copy();
 		distrib = other.distrib.copy();
 		pos = other.pos.clone();
+		// TODO - is reset what we really want? or copy the exact counts too?
 		distrib.resetCounters();
 		ignoredCount = 0;
 	}
@@ -431,6 +432,19 @@ public class Histogram1d<T> implements Img<LongType> {
 		}
 	}
 
+	/**
+	 * Returns a bare long[] histogram with the same bin counts as this histogram.
+	 */
+	public long[] toLongArray() {
+		long[] result = new long[(int) getBinCount()];
+		Cursor<LongType> cursor = cursor();
+		int i = 0;
+		while (cursor.hasNext()) {
+			result[i++] = cursor.next().get();
+		}
+		return result;
+	}
+
 	// -- delegated Img methods --
 
 	/**
@@ -470,6 +484,10 @@ public class Histogram1d<T> implements Img<LongType> {
 		return distrib.randomAccess(interval);
 	}
 
+	public long min() {
+		return min(0);
+	}
+
 	@Override
 	public long min(int d) {
 		return distrib.min(d);
@@ -483,6 +501,10 @@ public class Histogram1d<T> implements Img<LongType> {
 	@Override
 	public void min(Positionable min) {
 		distrib.min(min);
+	}
+
+	public long max() {
+		return max(0);
 	}
 
 	@Override
@@ -500,6 +522,10 @@ public class Histogram1d<T> implements Img<LongType> {
 		distrib.max(max);
 	}
 
+	public double realMin() {
+		return realMin(0);
+	}
+
 	@Override
 	public double realMin(int d) {
 		return distrib.realMin(d);
@@ -513,6 +539,10 @@ public class Histogram1d<T> implements Img<LongType> {
 	@Override
 	public void realMin(RealPositionable min) {
 		distrib.realMin(min);
+	}
+
+	public double realMax() {
+		return realMax(0);
 	}
 
 	@Override
