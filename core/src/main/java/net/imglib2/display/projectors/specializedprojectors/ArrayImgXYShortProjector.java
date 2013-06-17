@@ -42,8 +42,6 @@ public class ArrayImgXYShortProjector< A extends GenericShortType< A >, B extend
 		source.dimensions( dims );
 
 		sourceArray = source.update( null ).getCurrentStorageArray();
-
-		assert ( sourceArray.length != this.targetArray.length );
 	}
 
 	@Override
