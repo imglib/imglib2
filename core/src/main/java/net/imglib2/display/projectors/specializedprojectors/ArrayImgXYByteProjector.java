@@ -42,8 +42,6 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >, B extends 
 		source.dimensions( dims );
 
 		sourceArray = source.update( null ).getCurrentStorageArray();
-
-		assert ( sourceArray.length != this.targetArray.length );
 	}
 
 	@Override
