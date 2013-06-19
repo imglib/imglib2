@@ -42,6 +42,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import loci.common.DataTools;
+import loci.common.StatusEvent;
+import loci.common.StatusListener;
+import loci.common.StatusReporter;
 import loci.common.services.DependencyException;
 import loci.common.services.ServiceException;
 import loci.common.services.ServiceFactory;
@@ -63,10 +67,6 @@ import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import ome.scifio.common.DataTools;
-import ome.scifio.common.StatusEvent;
-import ome.scifio.common.StatusListener;
-import ome.scifio.common.StatusReporter;
 import ome.xml.model.primitives.PositiveFloat;
 
 /**

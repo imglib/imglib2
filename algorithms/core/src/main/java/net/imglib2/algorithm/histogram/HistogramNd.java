@@ -94,6 +94,7 @@ public class HistogramNd<T> implements Img<LongType> {
 		}
 		distrib = new DiscreteFrequencyDistribution(dims);
 		pos = new long[mappers.size()];
+		ignoredCount = 0;
 	}
 
 	/**
@@ -110,7 +111,6 @@ public class HistogramNd<T> implements Img<LongType> {
 		mappers = mappersCopy;
 		distrib = other.distrib.copy();
 		pos = other.pos.clone();
-		distrib.resetCounters();
 		ignoredCount = 0;
 	}
 
@@ -673,6 +673,12 @@ public class HistogramNd<T> implements Img<LongType> {
 		count(values, decrementer);
 	}
 
+	/**
+	 * Resets all data counts to 0.
+	 */
+	public void resetCounters() {
+		reset();
+	}
 
 	// -- delegated Img methods --
 
@@ -821,15 +827,18 @@ public class HistogramNd<T> implements Img<LongType> {
 
 	// -- helpers --
 
-	private void init(Iterable<List<T>> data) {
+	private void reset() {
 		distrib.resetCounters();
 		ignoredCount = 0;
+	}
+
+	private void init(Iterable<List<T>> data) {
+		reset();
 		add(data);
 	}
 
 	private void init(List<Iterable<T>> data) {
-		distrib.resetCounters();
-		ignoredCount = 0;
+		reset();
 		add(data);
 	}
 

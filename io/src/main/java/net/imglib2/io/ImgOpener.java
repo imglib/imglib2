@@ -76,8 +76,6 @@ import net.imglib2.img.cell.CellImg;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgIOUtils;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.type.NativeType;
