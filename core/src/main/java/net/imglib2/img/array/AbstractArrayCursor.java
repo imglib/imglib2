@@ -79,7 +79,7 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 		reset();
 	}
 
-	public AbstractArrayCursor( final ArrayImg< T, ? > img, int offset, int size )
+	public AbstractArrayCursor( final ArrayImg< T, ? > img, final int offset, final int size )
 	{
 		super( img.numDimensions() );
 
@@ -142,9 +142,12 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 	}
 
 	@Override
+	abstract public AbstractArrayCursor< T > copy();
+
+	@Override
 	public AbstractArrayCursor< T > copyCursor()
 	{
-		return ( AbstractArrayCursor< T > ) copy();
+		return copy();
 	}
 
 }

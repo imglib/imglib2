@@ -36,32 +36,31 @@
 
 package net.imglib2.img.array;
 
-import net.imglib2.AbstractLocalizingCursorInt;
 import net.imglib2.type.NativeType;
 
 /**
  * Localizing {@link AbstractArrayLocalizingCursor} on an {@link ArrayImg}.
- * 
+ *
  * @param <T>
- * 
+ *
  * @author Christian Dietz
  * @author Tobias Pietzsch
  */
 public final class ArrayLocalizingSubIntervalCursor< T extends NativeType< T > > extends AbstractArrayLocalizingCursor< T >
 {
 
-	protected ArrayLocalizingSubIntervalCursor( final ArrayImg< T, ? > img, int offset, int size )
+	protected ArrayLocalizingSubIntervalCursor( final ArrayImg< T, ? > img, final int offset, final int size )
 	{
 		super( img, offset, size );
 	}
 
-	protected ArrayLocalizingSubIntervalCursor( AbstractArrayLocalizingCursor< T > cursor )
+	protected ArrayLocalizingSubIntervalCursor( final ArrayLocalizingSubIntervalCursor< T > cursor )
 	{
 		super( cursor );
 	}
 
 	@Override
-	public AbstractLocalizingCursorInt< T > copy()
+	public ArrayLocalizingSubIntervalCursor< T > copy()
 	{
 		return new ArrayLocalizingSubIntervalCursor< T >( this );
 	}
