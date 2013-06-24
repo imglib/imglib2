@@ -42,27 +42,49 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * 
+ *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealARGBConverter< R extends RealType< ? > > extends AbstractLinearRange implements Converter< R, ARGBType >
 {
+	protected double factor;
+
 	public RealARGBConverter()
 	{
 		super();
+		factor = 255.0 * scale;
 	}
-	
+
 	public RealARGBConverter( final double min, final double max )
 	{
 		super( min, max );
+		factor = 255.0 * scale;
 	}
-	
+
 	@Override
 	public void convert( final R input, final ARGBType output )
 	{
 		final double a = input.getRealDouble();
-		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) );
+//		final int b = Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) * factor ) ) ) );
+		final double b1 = ( a - min ) * factor;
+		final int b2 = ( b1 < 0 ) ? 0 : roundPositive( b1 );
+		final int b = b2 > 255 ? 255 : b2;
 		final int argb = 0xff000000 | ( ( ( b << 8 ) | b ) << 8 ) | b;
 		output.set( argb );
+	}
+
+
+	@Override
+	public void setMax( final double max )
+	{
+		super.setMax( max );
+		factor = 255.0 * scale;
+	}
+
+	@Override
+	public void setMin( final double min )
+	{
+		super.setMin( min );
+		factor = 255.0 * scale;
 	}
 }
