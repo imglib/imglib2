@@ -35,60 +35,55 @@
  * #L%
  */
 
-package net.imglib2.algorithm.histogram;
+package net.imglib2.histogram;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.IntegerType;
 
 /**
- * Maps real values into a 1-d set of bins. Though this class will work with
- * integral data types it is really more appropriate to do so using a
- * {@link Integer1dBinMapper}.
+ * Maps integer values into a 1-d set of bins.
  * 
  * @author Barry DeZonia
  */
-public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
+public class Integer1dBinMapper<T extends IntegerType<T>> implements
+	BinMapper1d<T>
+{
 
 	// -- instance variables --
 
 	private final long bins;
-	private final double minVal, maxVal;
+	private final long minVal, maxVal;
 	private final boolean tailBins;
-	private final double binWidth;
 
 	// -- constructor --
 
 	/**
-	 * Specify a mapping of real data from a user defined range into a specified
-	 * number of bins. If tailBins is true then there will be two bins that count
-	 * values outside the user specified ranges. If false then values outside the
-	 * range fail to map to any bin.
+	 * Specify a mapping of integral data from a user defined range into a
+	 * specified number of bins. If tailBins is true then there will be two bins
+	 * that count values outside the user specified ranges. If false then values
+	 * outside the range fail to map to any bin.
 	 * 
 	 * @param minVal The first data value of interest.
-	 * @param maxVal The last data value of interest.
 	 * @param numBins The total number of bins to create.
 	 * @param tailBins A boolean specifying whether to have a bin in each tail to
 	 *          count values outside the user defined range.
 	 */
-	public Real1dBinMapper(double minVal, double maxVal, long numBins,
-		boolean tailBins)
-	{
+	public Integer1dBinMapper(long minVal, long numBins, boolean tailBins) {
 		this.bins = numBins;
-		this.minVal = minVal;
-		this.maxVal = maxVal;
 		this.tailBins = tailBins;
-		if (numBins <= 0 || (tailBins && numBins <= 2)) {
-			throw new IllegalArgumentException(
-				"invalid Real1dBinMapper: no data bins specified");
+		this.minVal = minVal;
+		if (tailBins) {
+			this.maxVal = minVal + numBins - 1 - 2;
 		}
-		if (minVal >= maxVal) {
-			throw new IllegalArgumentException(
-				"invalid Real1dBinMapper: nonpositive data range specified");
+		else {
+			this.maxVal = minVal + numBins - 1;
 		}
-		if (tailBins) binWidth = (maxVal - minVal) / (bins - 2);
-		else binWidth = (maxVal - minVal) / (bins);
+		if ((bins <= 0) || (tailBins && bins <= 2)) {
+			throw new IllegalArgumentException(
+				"invalid Integer1dBinMapper: no data bins specified");
+		}
 	}
 
 	// -- BinMapper methods --
@@ -100,12 +95,10 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 
 	@Override
 	public long map(T value) {
-		double val = value.getRealDouble();
+		long val = value.getIntegerLong();
 		long pos;
 		if (val >= minVal && val <= maxVal) {
-			double bin = (val - minVal) / binWidth;
-			pos = (long) Math.floor(bin);
-			if (val == maxVal) pos--;
+			pos = val - minVal;
 			if (tailBins) pos++;
 		}
 		else if (tailBins) {
@@ -121,34 +114,48 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 
 	@Override
 	public void getCenterValue(long binPos, T value) {
-		value.setReal(center(binPos));
+		long val;
+		if (tailBins) {
+			if (binPos == 0) val = minVal - 1; // TODO HACK - what is best to return?
+			else if (binPos == bins - 1) val = maxVal + 1; // TODO same HACK
+			else val = minVal + binPos - 1;
+		}
+		else { // no tail bins
+			val = minVal + binPos;
+		}
+		value.setInteger(val);
 	}
 
 	@Override
 	public void getLowerBound(long binPos, T value) {
-		value.setReal(min(binPos));
+		if (tailBins && (binPos == 0 || binPos == bins - 1)) {
+			if (binPos == 0) value.setInteger(Long.MIN_VALUE + 1);
+			else value.setInteger(maxVal + 1);
+		}
+		else {
+			getCenterValue(binPos, value);
+		}
 	}
 
 	@Override
 	public void getUpperBound(long binPos, T value) {
-		value.setReal(max(binPos));
+		if (tailBins && (binPos == 0 || binPos == bins - 1)) {
+			if (binPos == 0) value.setInteger(minVal - 1);
+			else value.setInteger(Long.MAX_VALUE - 1);
+		}
+		else {
+			getCenterValue(binPos, value);
+		}
 	}
 
 	@Override
 	public boolean includesLowerBound(long binPos) {
-		if (tailBins && binPos == bins - 1) return false;
 		return true;
 	}
 
 	@Override
 	public boolean includesUpperBound(long binPos) {
-		if (tailBins) {
-			if (binPos >= bins - 2) return true;
-		}
-		else { // no tail bins
-			if (binPos == bins - 1) return true;
-		}
-		return false;
+		return true;
 	}
 
 	@Override
@@ -157,67 +164,35 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 	}
 
 	@Override
-	public Real1dBinMapper<T> copy() {
-		return new Real1dBinMapper<T>(minVal, maxVal, bins, tailBins);
+	public Integer1dBinMapper<T> copy() {
+		return new Integer1dBinMapper<T>(minVal, bins, tailBins);
 	}
 
 	/**
 	 * This is a convenience method for creating a {@link HistogramNd} from inputs
-	 * that describe a set of real 1-d based bin mappers. The inputs should all
+	 * that describe a set of integer 1-d based bin mappers. The inputs should all
 	 * have n entries for an n-d set of mappers.
 	 * 
 	 * @param minVals The minimum bin values for each dimension
-	 * @param maxVals The maximum bin values for each dimension
 	 * @param numBins The total bin count for each dimension
 	 * @param tailBins Flags per dimension for whether to include tail bins
 	 * @return An unpopulated HistogramNd
 	 */
-	public static <K extends RealType<K>> HistogramNd<K> histogramNd(
-		double[] minVals, double[] maxVals, long[] numBins, boolean[] tailBins)
+	public static <K extends IntegerType<K>> HistogramNd<K> histogramNd(
+		long[] minVals, long[] numBins, boolean[] tailBins)
 	{
 		if ((minVals.length != numBins.length) ||
 			(minVals.length != tailBins.length))
 		{
 			throw new IllegalArgumentException(
-				"multiDimMappers: differing input array sizes");
+				"multiDimMapper: differing input array sizes");
 		}
 		List<BinMapper1d<K>> binMappers = new ArrayList<BinMapper1d<K>>();
 		for (int i = 0; i < minVals.length; i++) {
-			Real1dBinMapper<K> mapper =
-				new Real1dBinMapper<K>(minVals[i], maxVals[i], numBins[i], tailBins[i]);
+			Integer1dBinMapper<K> mapper =
+				new Integer1dBinMapper<K>(minVals[i], numBins[i], tailBins[i]);
 			binMappers.add(mapper);
 		}
 		return new HistogramNd<K>(binMappers);
 	}
-
-	// -- helpers --
-
-	private double min(long pos) {
-		if (pos < 0 || pos > bins - 1) {
-			throw new IllegalArgumentException("invalid bin position specified");
-		}
-		if (tailBins) {
-			if (pos == 0) return Double.NEGATIVE_INFINITY;
-			if (pos == bins - 1) return maxVal;
-			return minVal + (1.0 * (pos - 1) / (bins - 2)) * (maxVal - minVal);
-		}
-		return minVal + (1.0 * pos / (bins)) * (maxVal - minVal);
-	}
-
-	private double max(long pos) {
-		if (pos < 0 || pos > bins - 1) {
-			throw new IllegalArgumentException("invalid bin position specified");
-		}
-		if (tailBins) {
-			if (pos == 0) return minVal;
-			if (pos == bins - 1) return Double.POSITIVE_INFINITY;
-			return minVal + (1.0 * pos / (bins - 2)) * (maxVal - minVal);
-		}
-		return minVal + (1.0 * (pos + 1) / (bins)) * (maxVal - minVal);
-	}
-
-	private double center(long pos) {
-		return (min(pos) + max(pos)) / 2;
-	}
-
 }

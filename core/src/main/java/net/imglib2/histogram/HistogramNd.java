@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.algorithm.histogram;
+package net.imglib2.histogram;
 
 import java.util.ArrayList;
 import java.util.Iterator;

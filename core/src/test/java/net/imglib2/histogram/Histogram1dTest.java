@@ -35,13 +35,16 @@
  * #L%
  */
 
-package net.imglib2.algorithm.histogram;
+package net.imglib2.histogram;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.imglib2.histogram.BinMapper1d;
+import net.imglib2.histogram.Histogram1d;
+import net.imglib2.histogram.Integer1dBinMapper;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 import org.junit.Test;
