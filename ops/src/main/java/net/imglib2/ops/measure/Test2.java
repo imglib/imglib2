@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.imglib2.IterableInterval;
+
 // an attempt to follow through on the measurement ideas but not based on
 // functional programming as much? and more latitude in types of things it can
 // calc.
@@ -20,7 +22,7 @@ import java.util.Set;
 //        measurement approach
 
 // NOTE - side issue note: there are cases where objects are composed of other
-// objects (i.e a Dataset owns an ImgPlus which owns an Img. Datasets should
+// objects (i.e a Dataset owns an ImgPlus which owns an Img). Datasets should
 // listen for ImgPlus object changed events and rethrow an object changed event
 // passing self. Similarly ImgPluses should do same with Imgs. And
 // ImageFunctions should do similar things. We have a need for an object
@@ -427,6 +429,7 @@ public class Test2 {
 					max[1] = Math.max(max[1], pos[1]);
 				}
 				bounds = new Bounds(min, max);
+				validate();
 			}
 			return bounds;
 		}
@@ -527,6 +530,7 @@ public class Test2 {
 				namedMeasures.remove(name);
 			}
 			// TODO - does this have some cascading effect on related measures?????
+			// and remember to unhook from parent/child dependency graphs
 		}
 
 		@Override
@@ -570,6 +574,7 @@ public class Test2 {
 				delete(m);
 			}
 			// TODO - does this have some cascading effect on related measures?????
+			// and remember to unhook from parent/child dependency graphs
 		}
 
 	}
@@ -792,12 +797,7 @@ public class Test2 {
 		private final Double angleDelta;
 		private double value;
 
-		public MaxFeretDiameter(MeasureList measures, DiscretePointSet region) {
-			this(measures, region, Math.PI / 360.0);
-		}
-
-		public MaxFeretDiameter(MeasureList measures, DiscretePointSet region,
-			Double angleDelta)
+		public MaxFeretDiameter(DiscretePointSet region, Double angleDelta)
 		{
 			this.region = region;
 			this.angleDelta = angleDelta;
@@ -806,6 +806,21 @@ public class Test2 {
 			}
 			isInput(region);
 			isInput(angleDelta);
+		}
+
+		public MaxFeretDiameter(DiscretePointSet region) {
+			this(region, Math.PI / 360.0);
+		}
+
+		public MaxFeretDiameter(MeasureList measures, DiscretePointSet region,
+			Double angleDelta)
+		{
+			this(region, angleDelta);
+			measures.add(this);
+		}
+
+		public MaxFeretDiameter(MeasureList measures, DiscretePointSet region) {
+			this(region, Math.PI / 360.0);
 			measures.add(this);
 		}
 
@@ -840,12 +855,7 @@ public class Test2 {
 		private final Double angleDelta;
 		private double value;
 
-		public MinFeretDiameter(MeasureList measures, DiscretePointSet region) {
-			this(measures, region, Math.PI / 360.0);
-		}
-
-		public MinFeretDiameter(MeasureList measures, DiscretePointSet region,
-			Double angleDelta)
+		public MinFeretDiameter(DiscretePointSet region, Double angleDelta)
 		{
 			this.region = region;
 			this.angleDelta = angleDelta;
@@ -854,6 +864,21 @@ public class Test2 {
 			}
 			isInput(region);
 			isInput(angleDelta);
+		}
+
+		public MinFeretDiameter(DiscretePointSet region) {
+			this(region, Math.PI / 360.0);
+		}
+
+		public MinFeretDiameter(MeasureList measures, DiscretePointSet region,
+			Double angleDelta)
+		{
+			this(region, angleDelta);
+			measures.add(this);
+		}
+
+		public MinFeretDiameter(MeasureList measures, DiscretePointSet region) {
+			this(region);
 			measures.add(this);
 		}
 
@@ -876,6 +901,49 @@ public class Test2 {
 		@Override
 		public double getDouble() {
 			get();
+			return value;
+		}
+	}
+
+	private static class Area extends AbstractMeasure implements
+		Measure<PrimitiveLong>, PrimitiveLong
+	{
+
+		private long value;
+		private IterableInterval<?> interval;
+
+		public Area(IterableInterval<?> interval) {
+			this.interval = interval;
+			isInput(interval);
+		}
+
+		@Override
+		public PrimitiveLong get() {
+			if (isInvalid()) {
+				value = interval.size();
+				validate();
+			}
+			return this;
+		}
+
+		@Override
+		public long getLong() {
+			get();
+			return value;
+		}
+	}
+
+	// An example of how simple they can be if you avoid Primitive*
+
+	private static class SomeMeasure extends AbstractMeasure implements
+		Measure<Integer>
+	{
+
+		private Integer value = 42;
+
+		@Override
+		public Integer get() {
+			validate(); // optional step I think
 			return value;
 		}
 	}
