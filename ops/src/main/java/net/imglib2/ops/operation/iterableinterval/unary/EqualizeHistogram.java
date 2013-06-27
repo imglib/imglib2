@@ -116,7 +116,7 @@ public class EqualizeHistogram< T extends RealType< T >> implements UnaryOperati
 			//TODO fix algorithm
 			//code accesses for n bins the n+1 th bin
 			//that should be properly fixed by adapting the algorithm
-			if (p > histo.getBinCount()) {
+			if (p >= histo.getBinCount()) {
 				p = histo.getBinCount() -1;
 			}
 			if (p < 0) {
