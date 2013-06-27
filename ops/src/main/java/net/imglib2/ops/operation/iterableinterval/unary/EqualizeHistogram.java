@@ -75,7 +75,11 @@ public class EqualizeHistogram< T extends RealType< T >> implements UnaryOperati
 
 		T val = r.firstElement().createVariable();
 
-		int min = ( int ) val.getMaxValue();
+		long min = (long)val.getMaxValue();
+		if (Long.MAX_VALUE < val.getMaxValue()) {
+			min = Long.MAX_VALUE;
+		}
+
 		long[] histoArray = histo.toLongArray();
 		
 		// calc cumulated histogram
@@ -85,7 +89,7 @@ public class EqualizeHistogram< T extends RealType< T >> implements UnaryOperati
 
 			if ( histoArray[i] != 0 )
 			{
-				min = Math.min( min, (int)histo.frequency( i ) );
+				min = Math.min( min, histoArray[i] );
 			}
 		}
 
@@ -107,8 +111,10 @@ public class EqualizeHistogram< T extends RealType< T >> implements UnaryOperati
 			t /= numPix - min;
 			t *= gmax;
 			p = ( int ) Math.round( t );
-			//set center value of bin p at cout.get()
-			if (p >= histo.getBinCount()) {
+			//TODO fix algorithm
+			//code accesses for n bins the n+1 th bin
+			//that should be properly fixed by adapting the algorithm
+			if (p == histo.getBinCount()) {
 				p = histo.getBinCount() -1;
 			}
 			
