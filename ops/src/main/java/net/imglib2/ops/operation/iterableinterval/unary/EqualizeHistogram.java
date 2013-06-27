@@ -49,6 +49,8 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
+
+//TODO Fix the algorithm their should't be values < 0 or > binCount
 /**
  * TODO
  * 
@@ -114,8 +116,11 @@ public class EqualizeHistogram< T extends RealType< T >> implements UnaryOperati
 			//TODO fix algorithm
 			//code accesses for n bins the n+1 th bin
 			//that should be properly fixed by adapting the algorithm
-			if (p == histo.getBinCount()) {
+			if (p > histo.getBinCount()) {
 				p = histo.getBinCount() -1;
+			}
+			if (p < 0) {
+				p = 0;
 			}
 			
 			histo.getCenterValue(p, cout.get());
