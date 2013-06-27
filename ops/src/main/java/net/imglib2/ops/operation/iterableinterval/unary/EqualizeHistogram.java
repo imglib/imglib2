@@ -108,6 +108,10 @@ public class EqualizeHistogram< T extends RealType< T >> implements UnaryOperati
 			t *= gmax;
 			p = ( int ) Math.round( t );
 			//set center value of bin p at cout.get()
+			if (p >= histo.getBinCount()) {
+				p = histo.getBinCount() -1;
+			}
+			
 			histo.getCenterValue(p, cout.get());
 		}
 		return r;
@@ -128,6 +132,6 @@ public class EqualizeHistogram< T extends RealType< T >> implements UnaryOperati
 		{
 			t.setReal( rand.nextDouble() * Float.MAX_VALUE );
 		}
-		new EqualizeHistogram< FloatType >( 256 ).compute( test, test );
+		IterableInterval<FloatType> res = new EqualizeHistogram< FloatType >( 256 ).compute( test, test );
 	}
 }
