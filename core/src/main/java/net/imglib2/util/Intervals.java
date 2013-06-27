@@ -226,6 +226,24 @@ public class Intervals
 	}
 
 	/**
+	 * Check whether the given interval is empty, that is, the maximum is
+	 * smaller than the minimum in some dimension.
+	 *
+	 * @param interval
+	 *            interval to check
+	 * @return true when the interval is empty, that is, the maximum is smaller
+	 *         than the minimum in some dimension.
+	 */
+	public static boolean isEmpty( final Interval interval )
+	{
+		final int n = interval.numDimensions();
+		for ( int d = 0; d < n; ++d )
+			if (interval.min( d ) > interval.max( d ))
+				return true;
+		return false;
+	}
+
+	/**
 	 * Test whether the {@code containing} interval contains the
 	 * {@code contained} point. The interval is closed, that is, boundary points
 	 * are contained.
