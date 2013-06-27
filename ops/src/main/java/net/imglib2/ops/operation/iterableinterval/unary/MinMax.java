@@ -40,6 +40,7 @@ package net.imglib2.ops.operation.iterableinterval.unary;
 import java.util.Iterator;
 
 import net.imglib2.IterableInterval;
+import net.imglib2.histogram.Histogram1d;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.ValuePair;
@@ -117,16 +118,16 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 		return r;
 	}
 
-	private void calcMinMaxWithSaturation( IterableInterval< T > interval, ValuePair< T, T > r, OpsHistogram hist )
+	private void calcMinMaxWithSaturation( IterableInterval< T > interval, ValuePair< T, T > r, Histogram1d<T> hist )
 	{
-		int histMin = 0, histMax;
+		long histMin = 0, histMax;
 		int threshold = ( int ) ( interval.size() * m_saturation / 200.0 );
 
 		// find min
 		int pCount = 0;
-		for ( int i = 0; i < hist.numBins(); i++ )
+		for ( int i = 0; i < hist.getBinCount(); i++ )
 		{
-			pCount += hist.get( i );
+			pCount += hist.frequency( i );
 			if ( pCount > threshold )
 			{
 				histMin = i;
@@ -136,18 +137,18 @@ public final class MinMax< T extends RealType< T >> implements UnaryOutputOperat
 
 		// find max
 		pCount = 0;
-		histMax = hist.numBins() - 1;
-		for ( int i = hist.numBins() - 1; i >= 0; i-- )
+		histMax = hist.getBinCount() - 1;
+		for ( long i = hist.getBinCount() - 1; i >= 0; i-- )
 		{
-			pCount += hist.get( i );
+			pCount += hist.frequency( i );
 			if ( pCount > threshold )
 			{
 				histMax = i;
 				break;
 			}
 		}
-		r.a.setReal( ( histMin * ( ( r.a.getMaxValue() - r.a.getMinValue() ) / hist.numBins() ) ) + r.a.getMinValue() );
-		r.b.setReal( ( histMax * ( ( r.a.getMaxValue() - r.a.getMinValue() ) / hist.numBins() ) ) + r.a.getMinValue() );
+		r.a.setReal( ( histMin * ( ( r.a.getMaxValue() - r.a.getMinValue() ) / hist.getBinCount() ) ) + r.a.getMinValue() );
+		r.b.setReal( ( histMax * ( ( r.a.getMaxValue() - r.a.getMinValue() ) / hist.getBinCount() ) ) + r.a.getMinValue() );
 	}
 
 	@Override
