@@ -36,8 +36,8 @@
 
 package net.imglib2.ops.operation.iterableinterval.unary;
 
-import java.util.Iterator;
-
+import net.imglib2.histogram.Histogram1d;
+import net.imglib2.histogram.Real1dBinMapper;
 import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.numeric.RealType;
@@ -48,7 +48,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @param <T>
  */
-public final class MakeHistogram< T extends RealType< T >> implements UnaryOutputOperation< Iterable< T >, OpsHistogram >
+public final class MakeHistogram< T extends RealType< T >> implements UnaryOutputOperation< Iterable< T >, Histogram1d<T> >
 {
 
 	int m_numBins = 0;
@@ -64,33 +64,35 @@ public final class MakeHistogram< T extends RealType< T >> implements UnaryOutpu
 	}
 
 	@Override
-	public final UnaryObjectFactory< Iterable< T >, OpsHistogram > bufferFactory()
+	public final UnaryObjectFactory< Iterable< T >, Histogram1d<T> > bufferFactory()
 	{
-		return new UnaryObjectFactory< Iterable< T >, OpsHistogram >()
+		return new UnaryObjectFactory< Iterable< T >, Histogram1d<T> >()
 		{
 			@Override
-			public OpsHistogram instantiate( Iterable< T > a )
+			public Histogram1d<T> instantiate( Iterable< T > op )
 			{
-				return m_numBins <= 0 ? new OpsHistogram( a.iterator().next().createVariable() ) : new OpsHistogram( m_numBins, a.iterator().next().createVariable() );
+				T type =  op.iterator().next().createVariable();
+				
+				if (m_numBins <= 0) {
+					return new Histogram1d<T>(new Real1dBinMapper<T>(type.getMinValue(), type.getMaxValue(), 256, false));
+				} else {
+					return new Histogram1d<T>(new Real1dBinMapper<T>(type.getMinValue(), type.getMaxValue(), m_numBins, false));
+				}
 			}
 		};
 	}
 
 	@Override
-	public final OpsHistogram compute( Iterable< T > op, OpsHistogram r )
+	public final Histogram1d<T> compute( Iterable< T > op, Histogram1d<T> r )
 	{
-		final Iterator< T > it = op.iterator();
-		r.clear();
-		while ( it.hasNext() )
-		{
-			r.incByValue( it.next().getRealDouble() );
-		}
+		r.resetCounters();
+		r.addData(op);
 
 		return r;
 	}
 
 	@Override
-	public UnaryOutputOperation< Iterable< T >, OpsHistogram > copy()
+	public UnaryOutputOperation< Iterable< T >, Histogram1d<T> > copy()
 	{
 		return new MakeHistogram< T >( m_numBins );
 	}

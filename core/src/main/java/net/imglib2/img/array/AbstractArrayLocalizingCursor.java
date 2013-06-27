@@ -177,8 +177,11 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 	}
 
 	@Override
+	abstract public AbstractArrayLocalizingCursor< T > copy();
+
+	@Override
 	public AbstractArrayLocalizingCursor< T > copyCursor()
 	{
-		return ( AbstractArrayLocalizingCursor< T > ) copy();
+		return copy();
 	}
 }

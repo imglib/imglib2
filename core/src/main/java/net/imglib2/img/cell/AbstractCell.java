@@ -37,6 +37,8 @@
 
 package net.imglib2.img.cell;
 
+import java.io.Serializable;
+
 import net.imglib2.util.IntervalIndexer;
 
 /**
@@ -45,19 +47,24 @@ import net.imglib2.util.IntervalIndexer;
  * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractCell< A >
+public abstract class AbstractCell< A > implements Serializable
 {
-	final protected int n;
+	private static final long serialVersionUID = 1L;
 
-	final int[] dimensions;
+	protected int n;
 
-	final int[] steps;
+	int[] dimensions;
 
-	final long[] min;
+	int[] steps;
 
-	final long[] max;
+	long[] min;
 
-	final protected int numPixels;
+	long[] max;
+
+	protected int numPixels;
+	
+	public AbstractCell() { 
+	}
 
 	public AbstractCell( final int[] dimensions, final long[] min )
 	{

@@ -57,20 +57,20 @@ import net.imglib2.type.numeric.real.FloatType;
 public class ReadImage {
 
 	public static <T extends RealType<T> & NativeType<T>> void main(
-		final String[] args) throws ImgIOException
-	{
+			final String[] args) throws ImgIOException {
 		final ImgOpener imageOpener = new ImgOpener();
 
 		final String[] ids;
 		if (args.length == 0) {
 			final String userHome = System.getProperty("user.home");
 			ids = new String[] {
-//				userHome + "/data/Spindle_Green_d3d.dv",
-				userHome + "/data/mitosis-test.ipw",
-//				userHome + "/data/test_greys.lif",
-				userHome + "/data/slice1_810nm_40x_z1_pcc100_scanin_20s_01.sdt" };
-		}
-		else ids = args;
+					// userHome + "/data/Spindle_Green_d3d.dv",
+					userHome + "/data/mitosis-test.ipw",
+					// userHome + "/data/test_greys.lif",
+					userHome
+							+ "/data/slice1_810nm_40x_z1_pcc100_scanin_20s_01.sdt" };
+		} else
+			ids = args;
 
 		// read all arguments using auto-detected type with default container
 		System.out.println("== AUTO-DETECTED TYPE, DEFAULT CONTAINER ==");
@@ -78,8 +78,7 @@ public class ReadImage {
 			try {
 				final ImgPlus<T> img = imageOpener.openImg(id);
 				reportInformation(img);
-			}
-			catch (final IncompatibleTypeException e) {
+			} catch (final IncompatibleTypeException e) {
 				e.printStackTrace();
 			}
 		}
@@ -90,10 +89,9 @@ public class ReadImage {
 		final ImgFactory<FloatType> acf = new ArrayImgFactory<FloatType>();
 		for (final String arg : args) {
 			try {
-				final ImgPlus<FloatType> img = imageOpener.openImg(arg, acf);
+				final ImgPlus<T> img = imageOpener.openImg(arg, acf);
 				reportInformation(img);
-			}
-			catch (final IncompatibleTypeException e) {
+			} catch (final IncompatibleTypeException e) {
 				e.printStackTrace();
 			}
 		}
@@ -104,19 +102,17 @@ public class ReadImage {
 		final ImgFactory<FloatType> pcf = new PlanarImgFactory<FloatType>();
 		for (final String arg : args) {
 			try {
-				final ImgPlus<FloatType> img = imageOpener.openImg(arg, pcf);
+				final ImgPlus<T> img = imageOpener.openImg(arg, pcf);
 				reportInformation(img);
-			}
-			catch (final IncompatibleTypeException e) {
+			} catch (final IncompatibleTypeException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
 	/** Prints out some useful information about the {@link Img}. */
-	public static <T extends RealType<T>> void
-		reportInformation(final Img<T> img)
-	{
+	public static <T extends RealType<T>> void reportInformation(
+			final Img<T> img) {
 		System.out.println(img);
 		final Cursor<T> cursor = img.cursor();
 		cursor.fwd();

@@ -35,74 +35,74 @@
  * #L%
  */
 
-package net.imglib2.algorithm.histogram;
+package net.imglib2.histogram;
 
+import static org.junit.Assert.assertEquals;
+import net.imglib2.histogram.Integer1dBinMapper;
+import net.imglib2.type.numeric.integer.IntType;
+
+import org.junit.Test;
 
 /**
+ * Tests the Integer1dBinMapper class.
+ * 
  * @author Barry DeZonia
  */
-public interface BinMapper1d<T> {
+public class Integer1dBinMapperTest {
 
-	/**
-	 * Returns true if this bin mapping has bins on the ends of the distribution
-	 * that count out of bounds values.
-	 */
-	boolean hasTails();
+	@Test
+	public void testNoTail() {
+		long binPos;
+		IntType tmp = new IntType();
+		Integer1dBinMapper<IntType> binMapper =
+			new Integer1dBinMapper<IntType>(0, 100, false);
+		assertEquals(100, binMapper.getBinCount());
+		for (int i = 0; i <= 99; i++) {
+			tmp.setInteger(i);
+			binPos = binMapper.map(tmp);
+			assertEquals(i, binPos);
+			binMapper.getLowerBound(binPos, tmp);
+			assertEquals(i, tmp.getIntegerLong());
+			binMapper.getUpperBound(binPos, tmp);
+			assertEquals(i, tmp.getIntegerLong());
+			binMapper.getCenterValue(binPos, tmp);
+			assertEquals(i, tmp.getIntegerLong());
+		}
+		tmp.setReal(-1);
+		assertEquals(Long.MIN_VALUE, binMapper.map(tmp));
+		tmp.setReal(100);
+		assertEquals(Long.MAX_VALUE, binMapper.map(tmp));
+	}
 
-	/**
-	 * Returns the number of bins within this bin mapping distribution.
-	 */
-	long getBinCount();
+	@Test
+	public void testTail() {
+		long binPos;
+		IntType tmp = new IntType();
+		Integer1dBinMapper<IntType> binMapper =
+			new Integer1dBinMapper<IntType>(0, 100, true);
+		assertEquals(100, binMapper.getBinCount());
+		// test the interior areas
+		for (int i = 0; i < 98; i++) {
+			tmp.setInteger(i);
+			binPos = binMapper.map(tmp);
+			assertEquals(i + 1, binPos);
+			binMapper.getLowerBound(binPos, tmp);
+			assertEquals(i, tmp.getIntegerLong());
+			binMapper.getUpperBound(binPos, tmp);
+			assertEquals(i, tmp.getIntegerLong());
+			binMapper.getCenterValue(binPos, tmp);
+			assertEquals(i, tmp.getIntegerLong());
+		}
 
-	/**
-	 * Converts a data value to a long index within the bin distribution.
-	 */
-	long map(T value);
+		// test the lower tail
+		tmp.setInteger(-1);
+		binPos = binMapper.map(tmp);
+		assertEquals(0, binPos);
 
-	/**
-	 * Gets the data value associated with the center of a bin.
-	 * 
-	 * @param binPos
-	 * @param value Output to contain center data value
-	 */
-	void getCenterValue(long binPos, T value);
+		// test the upper tail
+		tmp.setInteger(100);
+		binPos = binMapper.map(tmp);
+		assertEquals(99, binPos);
+	}
 
-	/**
-	 * Gets the data value associated with the left edge of a bin.
-	 * 
-	 * @param binPos Bin number of interest
-	 * @param value Output to contain left edge data value
-	 */
-	void getLowerBound(long binPos, T value);
-
-	/**
-	 * Gets the data value associated with the right edge of a bin.
-	 * 
-	 * @param binPos Bin number of interest
-	 * @param value Output to contain right edge data value
-	 */
-	void getUpperBound(long binPos, T value);
-
-	/**
-	 * Returns true if values matching the right edge data value for a given bin
-	 * are counted in the distribution. Basically is this bin interval closed on
-	 * the right or not.
-	 * 
-	 * @param binPos Bin number of interest
-	 */
-	boolean includesUpperBound(long binPos);
-
-	/**
-	 * Returns true if values matching the left edge data value for a given bin
-	 * are counted in the distribution. Basically is this bin interval closed on
-	 * the left or not.
-	 * 
-	 * @param binPos Bin number of interest
-	 */
-	boolean includesLowerBound(long binPos);
-
-	/**
-	 * Returns a copy of this BinMapper1d<T>.
-	 */
-	BinMapper1d<T> copy();
 }

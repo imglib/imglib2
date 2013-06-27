@@ -1,4 +1,4 @@
-package net.imglib2;
+package net.imglib2.img.array;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -6,10 +6,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Random;
 
-import net.imglib2.img.array.AbstractArrayLocalizingCursor;
-import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.array.ArraySubIntervalCursor;
+import net.imglib2.Cursor;
+import net.imglib2.FinalInterval;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.view.Views;
@@ -17,9 +17,9 @@ import net.imglib2.view.Views;
 import org.junit.Before;
 import org.junit.Test;
 
-public class IterableSubIntervalCursorTest
+public class ArrayIterableSubIntervalCursorTest
 {
-	long[] dimensions;
+	long[] dimensions = new long[] { 23, 31, 11, 7, 3 };
 
 	Interval intervalA, intervalB, intervalC;
 
@@ -34,8 +34,6 @@ public class IterableSubIntervalCursorTest
 	@Before
 	public void createSourceData()
 	{
-		dimensions = new long[] { 23, 31, 11, 7, 3 };
-
 		intervalA = new FinalInterval( new long[] { 23, 31, 5, 1, 1 } );
 
 		intervalB = new FinalInterval( new long[] { 23, 2, 3, 1, 1 } );
@@ -105,11 +103,13 @@ public class IterableSubIntervalCursorTest
 		long[] max = new long[ cursor.numDimensions() ];
 
 		int ctr = 0;
-
+		long sum = 0;
+		
 		while ( cursor.hasNext() )
 		{
 			cursor.next();
 			cursor.localize( position );
+			sum += cursor.get().get();
 			ctr++;
 		}
 
@@ -117,6 +117,7 @@ public class IterableSubIntervalCursorTest
 
 		assertTrue( Arrays.equals( max, position ) );
 		assertTrue( ctr == fastintervalsize );
+		assertTrue( sum == getSum(intervalA));
 
 	}
 
@@ -136,10 +137,13 @@ public class IterableSubIntervalCursorTest
 
 		cursor.reset();
 		int ctr = 0;
+		long sum = 0;
+		
 		while ( cursor.hasNext() )
 		{
 			cursor.next();
 			cursor.localize( position );
+			sum += cursor.get().get();
 			ctr++;
 		}
 
@@ -147,6 +151,7 @@ public class IterableSubIntervalCursorTest
 
 		assertTrue( Arrays.equals( tmp, position ) );
 		assertTrue( ctr == shiftedintervalsize );
+		assertTrue( sum == getSum(intervalC));
 	}
 
 	@Test
@@ -181,5 +186,32 @@ public class IterableSubIntervalCursorTest
 		cursor.localize( position );
 
 		assertTrue( Arrays.equals( ref, position ) );
+	}
+	
+	//HELPER
+	
+	private long getSum(Interval inter) {
+		long[] pos = new long[dimensions.length];
+		long sum = 0;
+		
+		
+		for ( int i = 0; i < intData.length; ++i )
+		{
+			IntervalIndexer.indexToPosition( i, dimensions, pos );
+
+			boolean in = true;
+			for (int j = 0; j < pos.length; j++) {
+				if (pos[j] < inter.min(j) || pos[j] > inter.max(j)) {
+					in = false;
+					break;
+				}
+			}
+			
+			if (in) {
+				sum += intData[i];
+			}
+		}
+		
+		return sum;
 	}
 }
