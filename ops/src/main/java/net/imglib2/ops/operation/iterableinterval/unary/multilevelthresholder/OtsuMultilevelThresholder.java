@@ -38,11 +38,11 @@ package net.imglib2.ops.operation.iterableinterval.unary.multilevelthresholder;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.histogram.Histogram1d;
 import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.Operations;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.ops.operation.iterableinterval.unary.MakeHistogram;
-import net.imglib2.ops.operation.iterableinterval.unary.OpsHistogram;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -83,7 +83,7 @@ public class OtsuMultilevelThresholder< T extends RealType< T >, IN extends Iter
 		// Thresholds must be scaled
 		T inVar = input.firstElement().createVariable();
 
-		OpsHistogram histogram = Operations.compute( new MakeHistogram< T >( ( int ) Math.min( m_numBins, inVar.getMinValue() - inVar.getMaxValue() ) ), input );
+		Histogram1d<T> histogram = Operations.compute( new MakeHistogram< T >( ( int ) Math.min( m_numBins, inVar.getMinValue() - inVar.getMaxValue() ) ), input );
 
 		m_maxValue = 0.0;
 
@@ -133,12 +133,12 @@ public class OtsuMultilevelThresholder< T extends RealType< T >, IN extends Iter
 		}
 	}
 
-	private void calculatePLookup( OpsHistogram histogram )
+	private void calculatePLookup( Histogram1d<T> histogram )
 	{
 		m_p[ 1 ][ 0 ] = 0;
 		for ( int v = 1; v <= m_numBins; v++ )
 		{
-			m_p[ 1 ][ v ] = m_p[ 1 ][ v - 1 ] + histogram.get( v - 1 );
+			m_p[ 1 ][ v ] = m_p[ 1 ][ v - 1 ] + histogram.frequency( v - 1 );
 		}
 		for ( int u = 2; u <= m_numBins; u++ )
 		{
@@ -149,12 +149,12 @@ public class OtsuMultilevelThresholder< T extends RealType< T >, IN extends Iter
 		}
 	}
 
-	private void calculateSLookup( OpsHistogram histogram )
+	private void calculateSLookup( Histogram1d<T> histogram )
 	{
 		m_s[ 1 ][ 0 ] = 0;
 		for ( int v = 1; v <= m_numBins; v++ )
 		{
-			m_s[ 1 ][ v ] = m_s[ 1 ][ v - 1 ] + v * histogram.get( v - 1 );
+			m_s[ 1 ][ v ] = m_s[ 1 ][ v - 1 ] + v * histogram.frequency( v - 1 );
 		}
 		for ( int u = 2; u <= m_numBins; u++ )
 		{
