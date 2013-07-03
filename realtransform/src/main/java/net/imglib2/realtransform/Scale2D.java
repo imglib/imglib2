@@ -173,8 +173,8 @@ public class Scale2D extends AbstractScale
 	{
 		assert source.numDimensions() >= numDimensions() && target.numDimensions() >= numDimensions() : "Input dimensions too small.";
 		
-		target.setPosition( source.getDoublePosition( 0 ) / s[ 0 ], 0 );
-		target.setPosition( source.getDoublePosition( 1 ) / s[ 1 ], 1 );
+		target.setPosition( source.getDoublePosition( 0 ) * s[ 0 ], 0 );
+		target.setPosition( source.getDoublePosition( 1 ) * s[ 1 ], 1 );
 	}
 
 	@Override

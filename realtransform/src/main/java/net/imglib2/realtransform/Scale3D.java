@@ -195,9 +195,9 @@ public class Scale3D extends AbstractScale implements Concatenable< ScaleGet >, 
 	{
 		assert source.numDimensions() >= numDimensions() && target.numDimensions() >= numDimensions() : "Input dimensions too small.";
 		
-		target.setPosition( source.getDoublePosition( 0 ) / s[ 0 ], 0 );
-		target.setPosition( source.getDoublePosition( 1 ) / s[ 1 ], 1 );
-		target.setPosition( source.getDoublePosition( 2 ) / s[ 2 ], 2 );
+		target.setPosition( source.getDoublePosition( 0 ) * s[ 0 ], 0 );
+		target.setPosition( source.getDoublePosition( 1 ) * s[ 1 ], 1 );
+		target.setPosition( source.getDoublePosition( 2 ) * s[ 2 ], 2 );
 	}
 
 	@Override
