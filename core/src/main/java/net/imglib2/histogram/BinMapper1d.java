@@ -35,110 +35,74 @@
  * #L%
  */
 
-package net.imglib2.ops.operation.iterableinterval.unary;
+package net.imglib2.histogram;
 
-import net.imglib2.type.numeric.RealType;
 
 /**
- * Histogramm class
- * 
- * @author Felix Schoenenberger (University of Konstanz)
- * @author Christian Dietz (University of Konstanz)
- * @author Martin Horn (University of Konstanz)
+ * @author Barry DeZonia
  */
-public final class OpsHistogram
-{
+public interface BinMapper1d<T> {
 
-	private final int[] m_hist;
+	/**
+	 * Returns true if this bin mapping has bins on the ends of the distribution
+	 * that count out of bounds values.
+	 */
+	boolean hasTails();
 
-	private final int m_bins;
+	/**
+	 * Returns the number of bins within this bin mapping distribution.
+	 */
+	long getBinCount();
 
-	private final double m_min;
+	/**
+	 * Converts a data value to a long index within the bin distribution.
+	 */
+	long map(T value);
 
-	private final double m_max;
+	/**
+	 * Gets the data value associated with the center of a bin.
+	 * 
+	 * @param binPos
+	 * @param value Output to contain center data value
+	 */
+	void getCenterValue(long binPos, T value);
 
-	private final double m_scale;
+	/**
+	 * Gets the data value associated with the left edge of a bin.
+	 * 
+	 * @param binPos Bin number of interest
+	 * @param value Output to contain left edge data value
+	 */
+	void getLowerBound(long binPos, T value);
 
-	public OpsHistogram( final int[] hist, final double min, final double max )
-	{
-		m_bins = hist.length;
-		m_hist = hist;
-		m_min = min;
-		m_max = max;
-		m_scale = ( m_bins - 1 ) / ( m_max - m_min );
-	}
+	/**
+	 * Gets the data value associated with the right edge of a bin.
+	 * 
+	 * @param binPos Bin number of interest
+	 * @param value Output to contain right edge data value
+	 */
+	void getUpperBound(long binPos, T value);
 
-	public OpsHistogram( final int bins, final double min, final double max )
-	{
-		this( new int[ bins ], min, max );
-	}
+	/**
+	 * Returns true if values matching the right edge data value for a given bin
+	 * are counted in the distribution. Basically is this bin interval closed on
+	 * the right or not.
+	 * 
+	 * @param binPos Bin number of interest
+	 */
+	boolean includesUpperBound(long binPos);
 
-	public < T extends RealType< T >> OpsHistogram( final int bins, final T type )
-	{
-		this( new int[ bins ], type.getMinValue(), type.getMaxValue() );
-	}
+	/**
+	 * Returns true if values matching the left edge data value for a given bin
+	 * are counted in the distribution. Basically is this bin interval closed on
+	 * the left or not.
+	 * 
+	 * @param binPos Bin number of interest
+	 */
+	boolean includesLowerBound(long binPos);
 
-	public < T extends RealType< T >> OpsHistogram( final T type )
-	{
-		this( 256, type );
-	}
-
-	public final void clear()
-	{
-		for ( int i = 0; i < m_hist.length; i++ )
-		{
-			m_hist[ i ] = 0;
-		}
-	}
-
-	public final int[] hist()
-	{
-		return m_hist;
-	}
-
-	public final int numBins()
-	{
-		return m_bins;
-	}
-
-	public final double min()
-	{
-		return m_min;
-	}
-
-	public final double max()
-	{
-		return m_max;
-	}
-
-	public final int get( final int i )
-	{
-		return m_hist[ i ];
-	}
-
-	public final void inc( final int i )
-	{
-		++m_hist[ i ];
-	}
-
-	public final int getByValue( final double v )
-	{
-		return get( valueToBin( v ) );
-	}
-
-	public final void incByValue( final double v )
-	{
-		inc( valueToBin( v ) );
-	}
-
-	public final int valueToBin( final double v )
-	{
-		return ( int ) ( ( v - m_min ) * m_scale );
-	}
-
-	public final double binToValue( final int i )
-	{
-		return ( i / m_scale ) + m_min;
-	}
-
+	/**
+	 * Returns a copy of this BinMapper1d<T>.
+	 */
+	BinMapper1d<T> copy();
 }

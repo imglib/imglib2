@@ -35,8 +35,10 @@
  * #L%
  */
 
-package net.imglib2.algorithm.histogram;
+package net.imglib2.histogram;
 
+import net.imglib2.histogram.Histogram1d;
+import net.imglib2.histogram.Integer1dBinMapper;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
