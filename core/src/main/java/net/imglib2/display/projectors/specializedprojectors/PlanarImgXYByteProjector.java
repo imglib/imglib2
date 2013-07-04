@@ -4,7 +4,9 @@ import net.imglib2.display.projectors.Abstract2DProjector;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.planar.PlanarImg;
+import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.GenericByteType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
@@ -15,9 +17,8 @@ import net.imglib2.util.IntervalIndexer;
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
  * @param <A>
- * @param <B>
  */
-public class PlanarImgXYByteProjector< A extends GenericByteType< A >, B extends GenericByteType< B >> extends Abstract2DProjector< A, B >
+public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends Abstract2DProjector< A, UnsignedByteType >
 {
 
 	private final PlanarImg< A, ByteArray > source;
@@ -32,11 +33,11 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >, B extends
 
 	private final long[] dims;
 
-	public PlanarImgXYByteProjector( PlanarImg< A, ByteArray > source, ArrayImg< B, ByteArray > target, double normalizationFactor, double min, boolean isSigned )
+	public PlanarImgXYByteProjector( PlanarImg< A, ByteArray > source, ArrayImg< UnsignedByteType, ByteArray > target, double normalizationFactor, double min)
 	{
 		super( source.numDimensions() );
 
-		this.isSigned = isSigned;
+		this.isSigned = (source.firstElement() instanceof ByteType);
 		this.targetArray = target.update( null ).getCurrentStorageArray();
 		this.normalizationFactor = normalizationFactor;
 		this.min = min;
@@ -90,7 +91,6 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >, B extends
 			for ( int i = 0; i < targetArray.length; i++ )
 			{
 				targetArray[ i ] = ( byte ) Math.min( max, Math.max( 0, ( Math.round( ( ( ( byte ) ( targetArray[ i ] + 0x80 ) ) + 0x80 - minCopy ) * normalizationFactor ) ) ) );
-
 			}
 		}
 	}

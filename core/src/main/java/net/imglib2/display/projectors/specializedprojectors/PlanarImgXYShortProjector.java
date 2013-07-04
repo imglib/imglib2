@@ -5,6 +5,8 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.numeric.integer.GenericShortType;
+import net.imglib2.type.numeric.integer.ShortType;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
@@ -15,9 +17,8 @@ import net.imglib2.util.IntervalIndexer;
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
  * @param <A>
- * @param <B>
  */
-public class PlanarImgXYShortProjector< A extends GenericShortType< A >, B extends GenericShortType< B >> extends Abstract2DProjector< A, B >
+public class PlanarImgXYShortProjector< A extends GenericShortType< A >> extends Abstract2DProjector< A, UnsignedShortType >
 {
 
 	private final PlanarImg< A, ShortArray > source;
@@ -32,11 +33,11 @@ public class PlanarImgXYShortProjector< A extends GenericShortType< A >, B exten
 
 	private final long[] dims;
 
-	public PlanarImgXYShortProjector( PlanarImg< A, ShortArray > source, ArrayImg< B, ShortArray > target, double normalizationFactor, double min, boolean isSigned )
+	public PlanarImgXYShortProjector( PlanarImg< A, ShortArray > source, ArrayImg< UnsignedShortType, ShortArray > target, double normalizationFactor, double min)
 	{
 		super( source.numDimensions() );
 
-		this.isSigned = isSigned;
+		this.isSigned = (source.firstElement() instanceof ShortType);
 		this.targetArray = target.update( null ).getCurrentStorageArray();
 		this.normalizationFactor = normalizationFactor;
 		this.min = min;

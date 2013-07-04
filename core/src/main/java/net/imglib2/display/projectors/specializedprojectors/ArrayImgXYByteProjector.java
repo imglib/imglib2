@@ -3,7 +3,9 @@ package net.imglib2.display.projectors.specializedprojectors;
 import net.imglib2.display.projectors.Abstract2DProjector;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
+import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.GenericByteType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
@@ -13,10 +15,10 @@ import net.imglib2.util.IntervalIndexer;
  * 
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
- * @param <A> source
- * @param <B> target
+ * @param <A>
+ *            source
  */
-public class ArrayImgXYByteProjector< A extends GenericByteType< A >, B extends GenericByteType< B >> extends Abstract2DProjector< A, B >
+public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends Abstract2DProjector< A, UnsignedByteType >
 {
 
 	private final byte[] sourceArray;
@@ -31,11 +33,11 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >, B extends 
 
 	private final long[] dims;
 
-	public ArrayImgXYByteProjector( ArrayImg< A, ByteArray > source, ArrayImg< B, ByteArray > target, double normalizationFactor, double min, boolean isSigned )
+	public ArrayImgXYByteProjector( ArrayImg< A, ByteArray > source, ArrayImg< UnsignedByteType, ByteArray > target, double normalizationFactor, double min )
 	{
 		super( source.numDimensions() );
 
-		this.isSigned = isSigned;
+		this.isSigned = (source.firstElement() instanceof ByteType);
 		this.targetArray = target.update( null ).getCurrentStorageArray();
 		this.normalizationFactor = normalizationFactor;
 		this.min = min;
@@ -56,7 +58,8 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >, B extends 
 
 		offset = ( int ) IntervalIndexer.positionToIndex( tmpPos, dims );
 
-		//copy the selected part of the source array (e.g. a xy plane at time t in a video) into the target array.
+		// copy the selected part of the source array (e.g. a xy plane at time t
+		// in a video) into the target array.
 		System.arraycopy( sourceArray, offset, targetArray, 0, targetArray.length );
 
 		if ( isSigned )
