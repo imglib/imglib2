@@ -1,97 +1,120 @@
 package net.imglib2.display.projectors.specializedprojectors;
 
 import net.imglib2.display.projectors.Abstract2DProjector;
+import net.imglib2.display.projectors.screenimages.ByteScreenImage;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.numeric.integer.GenericShortType;
+import net.imglib2.type.numeric.integer.ShortType;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * Fast implementation of a {@link Abstract2DProjector} that selects a 2D data plain from an ShortType PlanarImg. The map method implements
- * a normalization function. The resulting image is a ShortType ArrayImg. * 
- *  
- * @author zinsmaie
- *
+ * Fast implementation of a {@link Abstract2DProjector} that selects a 2D data
+ * plain from an ShortType PlanarImg. The map method implements a normalization
+ * function. The resulting image is a ShortType ArrayImg. *
+ * 
+ * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * 
  * @param <A>
- * @param <B>
  */
-public class PlanarImgXYShortProjector<A extends GenericShortType<A>, B extends GenericShortType<B>>
-                extends Abstract2DProjector<A, B> {
+public class PlanarImgXYShortProjector< A extends GenericShortType< A >> extends Abstract2DProjector< A, UnsignedShortType >
+{
 
-        private final PlanarImg<A, ShortArray> source;
+	private final PlanarImg< A, ShortArray > source;
 
-        private final short[] targetArray;
+	private final short[] targetArray;
 
-        private final double min;
+	private final double min;
 
-        private final double normalizationFactor;
+	private final double normalizationFactor;
 
-        private final boolean isSigned;
+	private final boolean isSigned;
 
-        private final long[] dims;
+	private final long[] dims;
 
-        public PlanarImgXYShortProjector(PlanarImg<A, ShortArray> source,
-                        ArrayImg<B, ShortArray> target,
-                        double normalizationFactor, double min, boolean isSigned) {
-                super(source.numDimensions());
+	/**
+	 * Normalizes a PlanarImg and writes the result into target. This can be used in conjunction with {@link ByteScreenImage} for direct displaying.
+	 * The normalization is based on a normalization factor and a minimum value with the following dependency:<br>
+	 * <br>
+	 * normalizationFactor = (typeMax - typeMin) / (newMax - newMin) <br>
+	 * min = newMin <br>
+	 * <br>
+	 * A value is normalized by: normalizedValue = (value - min) * normalizationFactor.<br>
+	 * Additionally the result gets clamped to the type range of target (that allows playing with saturation...).
+	 *  
+	 * @param source Signed/Unsigned input data
+	 * @param target Unsigned output
+	 * @param normalizationFactor
+	 * @param min
+	 */
+	public PlanarImgXYShortProjector( PlanarImg< A, ShortArray > source, ArrayImg< UnsignedShortType, ShortArray > target, double normalizationFactor, double min)
+	{
+		super( source.numDimensions() );
 
-                this.isSigned = isSigned;
-                this.targetArray = target.update(null).getCurrentStorageArray();
-                this.normalizationFactor = normalizationFactor;
-                this.min = min;
-                this.dims = new long[numDimensions];
-                source.dimensions(dims);
+		this.isSigned = (source.firstElement() instanceof ShortType);
+		this.targetArray = target.update( null ).getCurrentStorageArray();
+		this.normalizationFactor = normalizationFactor;
+		this.min = min;
+		this.dims = new long[ n ];
+		source.dimensions( dims );
 
-                this.source = source;
-        }
+		this.source = source;
+	}
 
-        @Override
-        public void map() {
+	@Override
+	public void map()
+	{
+		//more detailed documentation of the binary arithmetic can be found in ArrayImgXYByteProjector
+		
+		double minCopy = min;
+		int offset = 0;
 
-                double minCopy = min;
-                int offset = 0;
+		// positioning for every call to map because the plane index is
+		// position dependent
+		int planeIndex;
+		if ( position.length > 2 )
+		{
+			long[] tmpPos = new long[ position.length - 2 ];
+			long[] tmpDim = new long[ position.length - 2 ];
+			for ( int i = 0; i < tmpDim.length; i++ )
+			{
+				tmpPos[ i ] = position[ i + 2 ];
+				tmpDim[ i ] = source.dimension( i + 2 );
+			}
+			planeIndex = ( int ) IntervalIndexer.positionToIndex( tmpPos, tmpDim );
+		}
+		else
+		{
+			planeIndex = 0;
+		}
 
-                // positioning for every call to map because the plane index is
-                // position dependent
-                int planeIndex;
-                if (position.length > 2) {
-                        long[] tmpPos = new long[position.length - 2];
-                        long[] tmpDim = new long[position.length - 2];
-                        for (int i = 0; i < tmpDim.length; i++) {
-                                tmpPos[i] = position[i + 2];
-                                tmpDim[i] = source.dimension(i + 2);
-                        }
-                        planeIndex = (int) IntervalIndexer.positionToIndex(
-                                        tmpPos, tmpDim);
-                } else {
-                        planeIndex = 0;
-                }
+		short[] sourceArray = source.update( new PlanarImgContainerSamplerImpl( planeIndex ) ).getCurrentStorageArray();
 
-                short[] sourceArray = source.update(
-                                new PlanarImgContainerSamplerImpl(planeIndex))
-                                .getCurrentStorageArray();
+		// copy the selected part of the source array (e.g. a xy plane at time t
+		// in a video) into the target array.
+		System.arraycopy( sourceArray, offset, targetArray, 0, targetArray.length );
 
-                System.arraycopy(sourceArray, offset, targetArray, 0,
-                                targetArray.length);
-
-                if (isSigned) {
-                        for (int i = 0; i < targetArray.length; i++) {
-                                targetArray[i] = (short) (targetArray[i] - 0x8000);
-                        }
-                        minCopy += 0x8000;
-                }
-                if (normalizationFactor != 1) {
-                        int max = 2 * Short.MAX_VALUE + 1;
-                        for (int i = 0; i < targetArray.length; i++) {
-                                targetArray[i] = (short) Math
-                                                .min(max,
-                                                                Math.max(0,
-                                                                                (Math.round((((short) (targetArray[i] + 0x8000)) + 0x8000 - minCopy)
-                                                                                                * normalizationFactor))));
-
-                        }
-                }
-        }
+		if ( isSigned )
+		{
+			for ( int i = 0; i < targetArray.length; i++ )
+			{
+				// Short.MIN => 0 && Short.MAX => 65535 (2^16 - 1)  => unsigned short
+				targetArray[ i ] = ( short ) ( targetArray[ i ] - 0x8000 );
+			}
+			// old => unsigned short minimum
+			minCopy += 0x8000;
+		}
+		if ( normalizationFactor != 1 )
+		{
+			for ( int i = 0; i < targetArray.length; i++ )
+			{
+				// normalizedValue = (oldValue - min) * normalizationFactor
+				// clamped to 0 .. 65535
+				targetArray[ i ] = ( short ) Math.min( 65535, Math.max( 0, ( Math.round( ( (targetArray[ i ] & 0xFFFF) - minCopy) * normalizationFactor ) ) ) );
+			}
+		}
+	}
 
 }

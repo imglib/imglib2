@@ -20,51 +20,44 @@ import net.imglib2.type.numeric.integer.ShortType;
 
 /**
  * Creates an {@link Image} from a ShortType ArrayImg
- * @author zinsmaie
- *
+ * 
+ * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * 
  */
-public class ShortScreenImage extends ArrayImg<ShortType, ShortArray> implements
-                ScreenImage {
+public class ShortScreenImage extends ArrayImg< ShortType, ShortArray > implements ScreenImage
+{
 
-        private static final ColorSpace CS = ColorSpace
-                        .getInstance(ColorSpace.CS_GRAY);
+	private static final ColorSpace CS = ColorSpace.getInstance( ColorSpace.CS_GRAY );
 
-        private static final int[] BITS = new int[] { 16 };
-        private static final ColorModel GRAY16_COLOR_MODEL = new ComponentColorModel(
-                        CS, BITS, false, false, Transparency.OPAQUE,
-                        DataBuffer.TYPE_USHORT);
+	private static final int[] BITS = new int[] { 16 };
 
-        private final BufferedImage m_image;
+	private static final ColorModel GRAY16_COLOR_MODEL = new ComponentColorModel( CS, BITS, false, false, Transparency.OPAQUE, DataBuffer.TYPE_USHORT );
 
-        public ShortScreenImage(ShortArray data, long[] dim) {
-                super(data, dim, 1);
-                short[] sourceArray = data.getCurrentStorageArray();
-                m_image = createBufferedImage(sourceArray, (int) dim[0],
-                                (int) dim[1]);
-        }
+	private final BufferedImage m_image;
 
-        public static BufferedImage createBufferedImage(short[] sourceArray,
-                        int width, int height) {
+	public ShortScreenImage( ShortArray data, long[] dim )
+	{
+		super( data, dim, 1 );
+		short[] sourceArray = data.getCurrentStorageArray();
+		m_image = createBufferedImage( sourceArray, ( int ) dim[ 0 ], ( int ) dim[ 1 ] );
+	}
 
-                DataBuffer buffer = new DataBufferUShort(sourceArray,
-                                sourceArray.length);
+	public static BufferedImage createBufferedImage( short[] sourceArray, int width, int height )
+	{
 
+		DataBuffer buffer = new DataBufferUShort( sourceArray, sourceArray.length );
 
-                SampleModel model = new PixelInterleavedSampleModel(
-                                DataBuffer.TYPE_USHORT, width, height, 1,
-                                width, new int[] { 0 });
+		SampleModel model = new PixelInterleavedSampleModel( DataBuffer.TYPE_USHORT, width, height, 1, width, new int[] { 0 } );
 
-                WritableRaster raster = Raster.createWritableRaster(model,
-                                buffer,
-                                        null);
+		WritableRaster raster = Raster.createWritableRaster( model, buffer, null );
 
-                return new BufferedImage(GRAY16_COLOR_MODEL, raster, false,
-                                null);
-        }
+		return new BufferedImage( GRAY16_COLOR_MODEL, raster, false, null );
+	}
 
-        @Override
-        public Image image() {
-                return m_image;
-        }
+	@Override
+	public Image image()
+	{
+		return m_image;
+	}
 
 }

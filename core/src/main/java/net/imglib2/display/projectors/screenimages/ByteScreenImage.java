@@ -20,50 +20,43 @@ import net.imglib2.type.numeric.integer.ByteType;
 
 /**
  * Creates an {@link Image} from a ByteType ArrayImg
- * @author zinsmaie
- *
+ * 
+ * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * 
  */
-public class ByteScreenImage extends ArrayImg<ByteType, ByteArray> implements
-                ScreenImage {
+public class ByteScreenImage extends ArrayImg< ByteType, ByteArray > implements ScreenImage
+{
 
+	private static final ColorSpace CS = ColorSpace.getInstance( ColorSpace.CS_GRAY );
 
-        private static final ColorSpace CS = ColorSpace
-                        .getInstance(ColorSpace.CS_GRAY);
+	private static final int[] BITS = new int[] { 8 };
 
-        private static final int[] BITS = new int[] { 8 };
+	private static final ColorModel GREY8_COLOR_MODEL = new ComponentColorModel( CS, BITS, false, false, Transparency.OPAQUE, DataBuffer.TYPE_BYTE );
 
-        private static final ColorModel GREY8_COLOR_MODEL = new ComponentColorModel(
-                        CS, BITS, false, false, Transparency.OPAQUE,
-                        DataBuffer.TYPE_BYTE);
+	private final BufferedImage m_image;
 
+	public ByteScreenImage( ByteArray data, long[] dim )
+	{
+		super( data, dim, 1 );
+		byte[] sourceArray = data.getCurrentStorageArray();
+		m_image = createBufferedImage( sourceArray, ( int ) dim[ 0 ], ( int ) dim[ 1 ] );
+	}
 
-        private final BufferedImage m_image;
+	public static BufferedImage createBufferedImage( byte[] sourceArray, int width, int height )
+	{
 
-        public ByteScreenImage(ByteArray data, long[] dim) {
-                super(data, dim, 1);
-                byte[] sourceArray = data.getCurrentStorageArray();
-                m_image = createBufferedImage(sourceArray, (int) dim[0],
-                                (int) dim[1]);
-        }
+		DataBuffer buffer = new DataBufferByte( sourceArray, sourceArray.length );
 
-        public static BufferedImage createBufferedImage(byte[] sourceArray,
-                        int width, int height) {
+		SampleModel model = new PixelInterleavedSampleModel( DataBuffer.TYPE_BYTE, width, height, 1, width, new int[] { 0 } );
+		WritableRaster raster = Raster.createWritableRaster( model, buffer, null );
 
-                DataBuffer buffer = new DataBufferByte(sourceArray,
-                                sourceArray.length);
+		return new BufferedImage( GREY8_COLOR_MODEL, raster, false, null );
+	}
 
-                SampleModel model = new PixelInterleavedSampleModel(
-                                DataBuffer.TYPE_BYTE, width, height, 1, width,
-                                new int[] { 0 });
-                WritableRaster raster = Raster.createWritableRaster(model,
-                                buffer, null);
-
-                return new BufferedImage(GREY8_COLOR_MODEL, raster, false, null);
-        }
-
-        @Override
-        public Image image() {
-                return m_image;
-        }
+	@Override
+	public Image image()
+	{
+		return m_image;
+	}
 
 }

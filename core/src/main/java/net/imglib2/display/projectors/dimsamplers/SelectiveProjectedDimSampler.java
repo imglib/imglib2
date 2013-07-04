@@ -5,61 +5,69 @@ import net.imglib2.Sampler;
 
 /**
  * Provides access to a set of predefined positions of a projected dimension
- *  
- * @author zinsmaie
- *
+ * 
+ * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * 
  * @param <T>
  */
-public class SelectiveProjectedDimSampler<T> implements
-                ProjectedDimSamplerImpl<T> {
+public class SelectiveProjectedDimSampler< T > implements ProjectedDimSamplerRandomAccess< T >
+{
 
-        private final long[] m_projectedPositions;
-        private final int m_projectionDimension;
+	private final long[] m_projectedPositions;
 
-        private RandomAccess<T> m_source;
+	private final int m_projectionDimension;
 
-        private int m_selectedIndex = 0;
+	private RandomAccess< T > m_source;
 
-        public SelectiveProjectedDimSampler(int projectionDimension,
-                        long[] projectedPositions) {
-                m_projectedPositions = projectedPositions;
-                m_projectionDimension = projectionDimension;
-        }
+	private int m_selectedIndex = 0;
 
-        @Override
-        public void jumpFwd(long steps) {
-                m_selectedIndex += steps;
-        }
+	public SelectiveProjectedDimSampler( int projectionDimension, long[] projectedPositions )
+	{
+		m_projectedPositions = projectedPositions;
+		m_projectionDimension = projectionDimension;
+	}
 
-        @Override
-        public void fwd() {
-                m_selectedIndex++;
-        }
+	@Override
+	public void jumpFwd( long steps )
+	{
+		m_selectedIndex += steps;
+	}
 
-        @Override
-        public void reset() {
-                m_selectedIndex = 0;
-        }
+	@Override
+	public void fwd()
+	{
+		m_selectedIndex++;
+	}
 
-        @Override
-        public boolean hasNext() {
-                return (m_selectedIndex < m_projectedPositions.length);
-        }
+	@Override
+	public void reset()
+	{
+		m_selectedIndex = 0;
+	}
 
-        @Override
-        public T get() {
-                m_source.setPosition(m_selectedIndex, m_projectionDimension);
-                return m_source.get();
-        }
+	@Override
+	public boolean hasNext()
+	{
+		return ( m_selectedIndex < m_projectedPositions.length );
+	}
 
-        @Override
-        public Sampler<T> copy() {
-                m_source.setPosition(m_selectedIndex, m_projectionDimension);
-                return m_source.copy();
-        }
+	@Override
+	public T get()
+	{
+		m_source.setPosition( m_selectedIndex, m_projectionDimension );
+		return m_source.get();
+	}
 
-        @Override
-        public void setRandomAccess(RandomAccess<T> srcAccess) {
-                m_source = srcAccess;
-        }
+	@Override
+	public Sampler< T > copy()
+	{
+		m_source.setPosition( m_selectedIndex, m_projectionDimension );
+		return m_source.copy();
+	}
+
+	@Override
+	public void setRandomAccess( RandomAccess< T > srcAccess )
+	{
+		m_source = srcAccess;
+	}
 }
