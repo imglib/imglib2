@@ -37,7 +37,7 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends Ab
 	{
 		super( source.numDimensions() );
 
-		this.isSigned = (source.firstElement() instanceof ByteType);
+		this.isSigned = ( source.firstElement() instanceof ByteType );
 		this.targetArray = target.update( null ).getCurrentStorageArray();
 		this.normalizationFactor = normalizationFactor;
 		this.min = min;
@@ -81,4 +81,11 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends Ab
 		}
 	}
 
+	public static void main( String[] args )
+	{
+		byte[] target = new byte[] { 127 };
+		target[ 0 ] = ( byte ) ( target[ 0 ] - 0x80 );
+
+		System.out.println( target[ 0 ] );
+	}
 }
