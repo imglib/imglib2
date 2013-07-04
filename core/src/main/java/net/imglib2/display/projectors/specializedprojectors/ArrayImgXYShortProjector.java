@@ -7,11 +7,12 @@ import net.imglib2.type.numeric.integer.GenericShortType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * Fast implementation of a {@link Abstract2DProjector} that selects a 2D data plain from an ShortType ArrayImg. The map method implements
- * a normalization function. The resulting image is a ShortType ArrayImg. * 
- *  
- * @author zinsmaie
- *
+ * Fast implementation of a {@link Abstract2DProjector} that selects a 2D data
+ * plain from an ShortType ArrayImg. The map method implements a normalization
+ * function. The resulting image is a ShortType ArrayImg. *
+ * 
+ * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * 
  * @param <A>
  * @param <B>
  */
@@ -61,7 +62,7 @@ public class ArrayImgXYShortProjector< A extends GenericShortType< A >, B extend
 		{
 			for ( int i = 0; i < targetArray.length; i++ )
 			{
-                                targetArray[i] = (short) (targetArray[i] - 0x8000);
+				targetArray[ i ] = ( short ) ( targetArray[ i ] - 0x8000 );
 			}
 			minCopy += 0x8000;
 		}
@@ -70,11 +71,7 @@ public class ArrayImgXYShortProjector< A extends GenericShortType< A >, B extend
 			int max = 2 * Short.MAX_VALUE + 1;
 			for ( int i = 0; i < targetArray.length; i++ )
 			{
-                                targetArray[i] = (short) Math
-                                                .min(max,
-                                                                Math.max(0,
-                                                                                (Math.round((((short) (targetArray[i] + 0x8000)) + 0x8000 - minCopy)
-                                                                                                * normalizationFactor))));
+				targetArray[ i ] = ( short ) Math.min( max, Math.max( 0, ( Math.round( ( ( ( short ) ( targetArray[ i ] + 0x8000 ) ) + 0x8000 - minCopy ) * normalizationFactor ) ) ) );
 
 			}
 		}

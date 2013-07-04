@@ -12,161 +12,159 @@ import net.imglib2.display.projectors.dimsamplers.ProjectedDimSamplerImpl;
 import net.imglib2.display.projectors.dimsamplers.SelectiveProjectedDimSampler;
 
 /**
- * A general 2D Projector that uses three dimensions as input to create the 2D result. Starting from the
- * reference point (see {@link Abstract2DProjector}) two dimensions are sampled such that a plain gets cut out of a higher dimensional data
- * volumn. The third dimension is projected (in a mathematical sense) onto this plain.
- * <br>
- * The mapping function is specified by a {@link Converter}.
- * It is not necessary to process the complete interval of the third dimension, instead {@link ProjectedDimSampler}
- * can be used to control the sampling.
- * <br>
- * A basic example is cutting out the x,y plain and projecting the color dimension onto the plain. Alternatively mapping
- * up to three measures (from a measurement dimension) to the three color channels would also be possible... 
+ * A general 2D Projector that uses three dimensions as input to create the 2D
+ * result. Starting from the reference point (see {@link Abstract2DProjector})
+ * two dimensions are sampled such that a plain gets cut out of a higher
+ * dimensional data volumn. The third dimension is projected (in a mathematical
+ * sense) onto this plain. <br>
+ * The mapping function is specified by a {@link Converter}. It is not necessary
+ * to process the complete interval of the third dimension, instead
+ * {@link ProjectedDimSampler} can be used to control the sampling. <br>
+ * A basic example is cutting out the x,y plain and projecting the color
+ * dimension onto the plain. Alternatively mapping up to three measures (from a
+ * measurement dimension) to the three color channels would also be possible...
  * 
- * @author zinsmaie
- *
+ * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * 
  * @param <A>
  * @param <B>
  */
-public class DimProjector2D<A, B> extends Abstract2DProjector<A, B> {
+public class DimProjector2D< A, B > extends Abstract2DProjector< A, B >
+{
 
-        protected final Converter<ProjectedDimSampler<A>, B> converter;
-        protected final IterableInterval<B> target;
-        protected final RandomAccessible<A> source;
-        
-        protected final int dimX;
-        protected final int dimY;
+	protected final Converter< ProjectedDimSampler< A >, B > converter;
 
-        private final int X = 0;
-        private final int Y = 1;
-        private final int projectedDimension;
+	protected final IterableInterval< B > target;
 
-        private final ProjectedDimSamplerImpl<A> projectionSampler;
+	protected final RandomAccessible< A > source;
 
-        // min and max USED position
-        private long projectedDimMinPos;
-        private long projectedDimMaxPos;
+	protected final int dimX;
 
-        /**
-         * 
-         * @param dimX the x dimension of the created plain
-         * @param dimY the y dimension of the created plain
-         * @param source
-         * @param target
-         * @param converter a special converter that uses {@link ProjectedDimSampler} to process values from the third dimension
-         * (multiple values selected by the ProjectedDimSampler get converted to a new value in the resulting 2D dataset e.g. color chanel => int color)
-         * @param projectedDimension selection of the third dimension
-         * @param projectedPositions
-         */
-        public DimProjector2D(final int dimX,
-                        final int dimY, final RandomAccessible<A> source,
-                        final IterableInterval<B> target,
-                        final Converter<ProjectedDimSampler<A>, B> converter,
-                        final int projectedDimension,
-                        final long[] projectedPositions) {
+	protected final int dimY;
 
-                super(source.numDimensions());
+	private final int X = 0;
 
-                
-                this.dimX = dimX;
-                this.dimY = dimY;
-                this.target = target;
-                this.source = source;
-                this.converter = converter;
-                this.projectedDimension = projectedDimension;
+	private final int Y = 1;
 
-                // get min and max of the USED part of the projection dim
-                projectedDimMinPos = Long.MAX_VALUE;
-                projectedDimMaxPos = Long.MIN_VALUE;
-                for (long pos : projectedPositions) {
-                        if (pos < projectedDimMinPos) {
-                                projectedDimMinPos = pos;
-                        }
-                        if (pos > projectedDimMaxPos) {
-                                projectedDimMaxPos = pos;
-                        }
-                }
+	private final int projectedDimension;
 
-                projectionSampler = new SelectiveProjectedDimSampler<A>(
-                                projectedDimension, projectedPositions);
-        }
+	private final ProjectedDimSamplerImpl< A > projectionSampler;
 
-        public DimProjector2D(final int dimX,
-                        final int dimY,
-                        final RandomAccessibleInterval<A> source,
-                        final IterableInterval<B> target,
-                        final Converter<ProjectedDimSampler<A>, B> converter,
-                        final int projectedDimension) {
-        	
-        		super(source.numDimensions());
+	// min and max USED position
+	private long projectedDimMinPos;
 
-                this.dimX = dimX;
-                this.dimY = dimY;
-                this.target = target;
-                this.source = source;
-                this.converter = converter;
-                this.projectedDimension = projectedDimension;
+	private long projectedDimMaxPos;
 
-                // set min and max of the projection dim
-                projectedDimMinPos = source.min(projectedDimension);
-                projectedDimMaxPos = source.max(projectedDimension);
+	/**
+	 * 
+	 * @param dimX
+	 *            the x dimension of the created plain
+	 * @param dimY
+	 *            the y dimension of the created plain
+	 * @param source
+	 * @param target
+	 * @param converter
+	 *            a special converter that uses {@link ProjectedDimSampler} to
+	 *            process values from the third dimension (multiple values
+	 *            selected by the ProjectedDimSampler get converted to a new
+	 *            value in the resulting 2D dataset e.g. color chanel => int
+	 *            color)
+	 * @param projectedDimension
+	 *            selection of the third dimension
+	 * @param projectedPositions
+	 */
+	public DimProjector2D( final int dimX, final int dimY, final RandomAccessible< A > source, final IterableInterval< B > target, final Converter< ProjectedDimSampler< A >, B > converter, final int projectedDimension, final long[] projectedPositions )
+	{
 
-                projectionSampler = new IntervalProjectedDimSampler<A>(
-                                projectedDimension, projectedDimMinPos,
-                                projectedDimMaxPos);
-        }
+		super( source.numDimensions() );
 
-        @Override
-        public void map() {
-                // fix interval for all dimensions
-                for (int d = 0; d < position.length; ++d)
-                        min[d] = max[d] = position[d];
+		this.dimX = dimX;
+		this.dimY = dimY;
+		this.target = target;
+		this.source = source;
+		this.converter = converter;
+		this.projectedDimension = projectedDimension;
 
-                min[dimX] = target.min(X);
-                min[dimY] = target.min(Y);
-                max[dimX] = target.max(X);
-                max[dimY] = target.max(Y);
-                min[projectedDimension] = projectedDimMinPos;
-                max[projectedDimension] = projectedDimMaxPos;
+		// get min and max of the USED part of the projection dim
+		projectedDimMinPos = Long.MAX_VALUE;
+		projectedDimMaxPos = Long.MIN_VALUE;
+		for ( long pos : projectedPositions )
+		{
+			if ( pos < projectedDimMinPos )
+			{
+				projectedDimMinPos = pos;
+			}
+			if ( pos > projectedDimMaxPos )
+			{
+				projectedDimMaxPos = pos;
+			}
+		}
 
-                // get tailored random access
-                final FinalInterval sourceInterval = new FinalInterval(min, max);
-                final Cursor<B> targetCursor = target.localizingCursor();
-                final RandomAccess<A> sourceRandomAccess = source
-                                .randomAccess(sourceInterval);
-                sourceRandomAccess.setPosition(position);
+		projectionSampler = new SelectiveProjectedDimSampler< A >( projectedDimension, projectedPositions );
+	}
 
+	public DimProjector2D( final int dimX, final int dimY, final RandomAccessibleInterval< A > source, final IterableInterval< B > target, final Converter< ProjectedDimSampler< A >, B > converter, final int projectedDimension )
+	{
 
-                projectionSampler.setRandomAccess(sourceRandomAccess);
+		super( source.numDimensions() );
 
-                if (numDimensions > 1)
-                        while (targetCursor.hasNext()) {
-                                projectionSampler.reset();
+		this.dimX = dimX;
+		this.dimY = dimY;
+		this.target = target;
+		this.source = source;
+		this.converter = converter;
+		this.projectedDimension = projectedDimension;
 
-                                final B b = targetCursor.next();
-                                sourceRandomAccess
-                                                .setPosition(targetCursor
-                                                                .getLongPosition(X),
-                                                                dimX);
-                                sourceRandomAccess
-                                                .setPosition(targetCursor
-                                                                .getLongPosition(Y),
-                                                                dimY);
+		// set min and max of the projection dim
+		projectedDimMinPos = source.min( projectedDimension );
+		projectedDimMaxPos = source.max( projectedDimension );
 
-                                converter.convert(projectionSampler, b);
-                        }
-                else
-                        while (targetCursor.hasNext()) {
-                                projectionSampler.reset();
+		projectionSampler = new IntervalProjectedDimSampler< A >( projectedDimension, projectedDimMinPos, projectedDimMaxPos );
+	}
 
-                                final B b = targetCursor.next();
-                                sourceRandomAccess
-                                                .setPosition(targetCursor
-                                                                .getLongPosition(X),
-                                                                dimX);
+	@Override
+	public void map()
+	{
+		// fix interval for all dimensions
+		for ( int d = 0; d < position.length; ++d )
+			min[ d ] = max[ d ] = position[ d ];
 
-                                converter.convert(projectionSampler, b);
-                        }
-        }
+		min[ dimX ] = target.min( X );
+		min[ dimY ] = target.min( Y );
+		max[ dimX ] = target.max( X );
+		max[ dimY ] = target.max( Y );
+		min[ projectedDimension ] = projectedDimMinPos;
+		max[ projectedDimension ] = projectedDimMaxPos;
+
+		// get tailored random access
+		final FinalInterval sourceInterval = new FinalInterval( min, max );
+		final Cursor< B > targetCursor = target.localizingCursor();
+		final RandomAccess< A > sourceRandomAccess = source.randomAccess( sourceInterval );
+		sourceRandomAccess.setPosition( position );
+
+		projectionSampler.setRandomAccess( sourceRandomAccess );
+
+		if ( numDimensions > 1 )
+			while ( targetCursor.hasNext() )
+			{
+				projectionSampler.reset();
+
+				final B b = targetCursor.next();
+				sourceRandomAccess.setPosition( targetCursor.getLongPosition( X ), dimX );
+				sourceRandomAccess.setPosition( targetCursor.getLongPosition( Y ), dimY );
+
+				converter.convert( projectionSampler, b );
+			}
+		else
+			while ( targetCursor.hasNext() )
+			{
+				projectionSampler.reset();
+
+				final B b = targetCursor.next();
+				sourceRandomAccess.setPosition( targetCursor.getLongPosition( X ), dimX );
+
+				converter.convert( projectionSampler, b );
+			}
+	}
 
 }

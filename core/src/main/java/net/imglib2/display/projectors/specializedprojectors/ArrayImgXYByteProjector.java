@@ -7,11 +7,12 @@ import net.imglib2.type.numeric.integer.GenericByteType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * Fast implementation of a {@link Abstract2DProjector} that selects a 2D data plain from an ByteType ArrayImg. The map method implements
- * a normalization function. The resulting image is a ByteType ArrayImg.* 
- *  
- * @author zinsmaie
- *
+ * Fast implementation of a {@link Abstract2DProjector} that selects a 2D data
+ * plain from an ByteType ArrayImg. The map method implements a normalization
+ * function. The resulting image is a ByteType ArrayImg.*
+ * 
+ * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * 
  * @param <A>
  * @param <B>
  */

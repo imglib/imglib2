@@ -8,90 +8,91 @@ import net.imglib2.type.numeric.integer.GenericByteType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * Fast implementation of a {@link Abstract2DProjector} that selects a 2D data plain from a ByteType PlanarImg. The map method implements
- * a normalization function. The resulting image is a ByteType ArrayImg. * 
- *  
- * @author zinsmaie
- *
+ * Fast implementation of a {@link Abstract2DProjector} that selects a 2D data
+ * plain from a ByteType PlanarImg. The map method implements a normalization
+ * function. The resulting image is a ByteType ArrayImg. *
+ * 
+ * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * 
  * @param <A>
  * @param <B>
  */
-public class PlanarImgXYByteProjector<A extends GenericByteType<A>, B extends GenericByteType<B>>
-                extends Abstract2DProjector<A, B> {
+public class PlanarImgXYByteProjector< A extends GenericByteType< A >, B extends GenericByteType< B >> extends Abstract2DProjector< A, B >
+{
 
-        private final PlanarImg<A, ByteArray> source;
+	private final PlanarImg< A, ByteArray > source;
 
-        private final byte[] targetArray;
+	private final byte[] targetArray;
 
-        private final double min;
+	private final double min;
 
-        private final double normalizationFactor;
+	private final double normalizationFactor;
 
-        private final boolean isSigned;
+	private final boolean isSigned;
 
-        private final long[] dims;
+	private final long[] dims;
 
-        public PlanarImgXYByteProjector(PlanarImg<A, ByteArray> source,
-                        ArrayImg<B, ByteArray> target,
-                        double normalizationFactor, double min, boolean isSigned) {
-                super(source.numDimensions());
+	public PlanarImgXYByteProjector( PlanarImg< A, ByteArray > source, ArrayImg< B, ByteArray > target, double normalizationFactor, double min, boolean isSigned )
+	{
+		super( source.numDimensions() );
 
-                this.isSigned = isSigned;
-                this.targetArray = target.update(null).getCurrentStorageArray();
-                this.normalizationFactor = normalizationFactor;
-                this.min = min;
-                this.dims = new long[numDimensions];
-                source.dimensions(dims);
+		this.isSigned = isSigned;
+		this.targetArray = target.update( null ).getCurrentStorageArray();
+		this.normalizationFactor = normalizationFactor;
+		this.min = min;
+		this.dims = new long[ numDimensions ];
+		source.dimensions( dims );
 
-                this.source = source;
-        }
+		this.source = source;
+	}
 
-        @Override
-        public void map() {
+	@Override
+	public void map()
+	{
 
-                double minCopy = min;
-                int offset = 0;
+		double minCopy = min;
+		int offset = 0;
 
-                // positioning for every call to map because the plane index is
-                // position dependent
-                int planeIndex;
-                if (position.length > 2) {
-                        long[] tmpPos = new long[position.length - 2];
-                        long[] tmpDim = new long[position.length - 2];
-                        for (int i = 0; i < tmpDim.length; i++) {
-                                tmpPos[i] = position[i + 2];
-                                tmpDim[i] = source.dimension(i + 2);
-                        }
-                        planeIndex = (int) IntervalIndexer.positionToIndex(
-                                        tmpPos, tmpDim);
-                } else {
-                        planeIndex = 0;
-                }
+		// positioning for every call to map because the plane index is
+		// position dependent
+		int planeIndex;
+		if ( position.length > 2 )
+		{
+			long[] tmpPos = new long[ position.length - 2 ];
+			long[] tmpDim = new long[ position.length - 2 ];
+			for ( int i = 0; i < tmpDim.length; i++ )
+			{
+				tmpPos[ i ] = position[ i + 2 ];
+				tmpDim[ i ] = source.dimension( i + 2 );
+			}
+			planeIndex = ( int ) IntervalIndexer.positionToIndex( tmpPos, tmpDim );
+		}
+		else
+		{
+			planeIndex = 0;
+		}
 
-                byte[] sourceArray = source.update(
-                                new PlanarImgContainerSamplerImpl(planeIndex))
-                                .getCurrentStorageArray();
+		byte[] sourceArray = source.update( new PlanarImgContainerSamplerImpl( planeIndex ) ).getCurrentStorageArray();
 
-                System.arraycopy(sourceArray, offset, targetArray, 0,
-                                targetArray.length);
+		System.arraycopy( sourceArray, offset, targetArray, 0, targetArray.length );
 
-                if (isSigned) {
-                        for (int i = 0; i < targetArray.length; i++) {
-                                targetArray[i] = (byte) (targetArray[i] - 0x80);
-                        }
-                        minCopy += 0x80;
-                }
-                if (normalizationFactor != 1) {
-                        int max = 2 * Byte.MAX_VALUE + 1;
-                        for (int i = 0; i < targetArray.length; i++) {
-                                targetArray[i] = (byte) Math
-                                                .min(max,
-                                                                Math.max(0,
-                                                                                (Math.round((((byte) (targetArray[i] + 0x80)) + 0x80 - minCopy)
-                                                                                                * normalizationFactor))));
+		if ( isSigned )
+		{
+			for ( int i = 0; i < targetArray.length; i++ )
+			{
+				targetArray[ i ] = ( byte ) ( targetArray[ i ] - 0x80 );
+			}
+			minCopy += 0x80;
+		}
+		if ( normalizationFactor != 1 )
+		{
+			int max = 2 * Byte.MAX_VALUE + 1;
+			for ( int i = 0; i < targetArray.length; i++ )
+			{
+				targetArray[ i ] = ( byte ) Math.min( max, Math.max( 0, ( Math.round( ( ( ( byte ) ( targetArray[ i ] + 0x80 ) ) + 0x80 - minCopy ) * normalizationFactor ) ) ) );
 
-                        }
-                }
-        }
+			}
+		}
+	}
 
 }
