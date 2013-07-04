@@ -2,15 +2,15 @@ package net.imglib2.display.projectors.specializedprojectors;
 
 import net.imglib2.img.planar.PlanarImg.PlanarContainerSampler;
 
+/**
+ * Helps to sample a planar image by keeping track of the current slice.
+ * 
+ * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ */
 public class PlanarImgContainerSamplerImpl implements PlanarContainerSampler
 {
 
 	private int m_currentSliceIndex = -1;
-
-	public PlanarImgContainerSamplerImpl()
-	{
-
-	}
 
 	public PlanarImgContainerSamplerImpl( int startIndex )
 	{

@@ -40,7 +40,7 @@ public class PlanarImgXYShortProjector< A extends GenericShortType< A >, B exten
 		this.targetArray = target.update( null ).getCurrentStorageArray();
 		this.normalizationFactor = normalizationFactor;
 		this.min = min;
-		this.dims = new long[ numDimensions ];
+		this.dims = new long[ n ];
 		source.dimensions( dims );
 
 		this.source = source;

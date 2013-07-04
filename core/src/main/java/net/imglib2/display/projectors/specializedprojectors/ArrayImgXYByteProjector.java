@@ -9,12 +9,12 @@ import net.imglib2.util.IntervalIndexer;
 /**
  * Fast implementation of a {@link Abstract2DProjector} that selects a 2D data
  * plain from an ByteType ArrayImg. The map method implements a normalization
- * function. The resulting image is a ByteType ArrayImg.*
+ * function. The resulting image is a ByteType ArrayImg.
  * 
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
- * @param <A>
- * @param <B>
+ * @param <A> source
+ * @param <B> target
  */
 public class ArrayImgXYByteProjector< A extends GenericByteType< A >, B extends GenericByteType< B >> extends Abstract2DProjector< A, B >
 {
@@ -39,7 +39,7 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >, B extends 
 		this.targetArray = target.update( null ).getCurrentStorageArray();
 		this.normalizationFactor = normalizationFactor;
 		this.min = min;
-		this.dims = new long[ numDimensions ];
+		this.dims = new long[ n ];
 		source.dimensions( dims );
 
 		sourceArray = source.update( null ).getCurrentStorageArray();
@@ -56,6 +56,7 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >, B extends 
 
 		offset = ( int ) IntervalIndexer.positionToIndex( tmpPos, dims );
 
+		//copy the selected part of the source array (e.g. a xy plane at time t in a video) into the target array.
 		System.arraycopy( sourceArray, offset, targetArray, 0, targetArray.length );
 
 		if ( isSigned )

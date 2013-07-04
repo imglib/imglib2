@@ -10,7 +10,7 @@ import net.imglib2.Sampler;
  * 
  * @param <T>
  */
-public class SelectiveProjectedDimSampler< T > implements ProjectedDimSamplerImpl< T >
+public class SelectiveProjectedDimSampler< T > implements ProjectedDimSamplerRandomAccess< T >
 {
 
 	private final long[] m_projectedPositions;

@@ -8,14 +8,14 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.projectors.dimsamplers.IntervalProjectedDimSampler;
-import net.imglib2.display.projectors.dimsamplers.ProjectedDimSamplerImpl;
+import net.imglib2.display.projectors.dimsamplers.ProjectedDimSamplerRandomAccess;
 import net.imglib2.display.projectors.dimsamplers.SelectiveProjectedDimSampler;
 
 /**
  * A general 2D Projector that uses three dimensions as input to create the 2D
  * result. Starting from the reference point (see {@link Abstract2DProjector})
  * two dimensions are sampled such that a plain gets cut out of a higher
- * dimensional data volumn. The third dimension is projected (in a mathematical
+ * dimensional data volume. The third dimension is projected (in a mathematical
  * sense) onto this plain. <br>
  * The mapping function is specified by a {@link Converter}. It is not necessary
  * to process the complete interval of the third dimension, instead
@@ -27,10 +27,16 @@ import net.imglib2.display.projectors.dimsamplers.SelectiveProjectedDimSampler;
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
  * @param <A>
+ *            source type
  * @param <B>
+ *            target type
  */
 public class DimProjector2D< A, B > extends Abstract2DProjector< A, B >
 {
+
+	private final static int X = 0;
+
+	private final static int Y = 1;
 
 	protected final Converter< ProjectedDimSampler< A >, B > converter;
 
@@ -42,15 +48,11 @@ public class DimProjector2D< A, B > extends Abstract2DProjector< A, B >
 
 	protected final int dimY;
 
-	private final int X = 0;
-
-	private final int Y = 1;
-
 	private final int projectedDimension;
 
-	private final ProjectedDimSamplerImpl< A > projectionSampler;
+	private final ProjectedDimSamplerRandomAccess< A > projectionSampler;
 
-	// min and max USED position
+	// min and max of the USED part of the projected dimension
 	private long projectedDimMinPos;
 
 	private long projectedDimMaxPos;
@@ -67,7 +69,7 @@ public class DimProjector2D< A, B > extends Abstract2DProjector< A, B >
 	 *            a special converter that uses {@link ProjectedDimSampler} to
 	 *            process values from the third dimension (multiple values
 	 *            selected by the ProjectedDimSampler get converted to a new
-	 *            value in the resulting 2D dataset e.g. color chanel => int
+	 *            value in the resulting 2D dataset e.g. color channel => int
 	 *            color)
 	 * @param projectedDimension
 	 *            selection of the third dimension
@@ -144,7 +146,7 @@ public class DimProjector2D< A, B > extends Abstract2DProjector< A, B >
 
 		projectionSampler.setRandomAccess( sourceRandomAccess );
 
-		if ( numDimensions > 1 )
+		if ( n > 1 )
 			while ( targetCursor.hasNext() )
 			{
 				projectionSampler.reset();

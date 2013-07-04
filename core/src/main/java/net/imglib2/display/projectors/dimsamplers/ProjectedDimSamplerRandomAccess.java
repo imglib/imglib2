@@ -5,13 +5,13 @@ import net.imglib2.display.projectors.ProjectedDimSampler;
 
 /**
  * the current implementations of {@link ProjectedDimSampler} work with an
- * underlying random accessible.
+ * underlying random access.
  * 
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
  * @param <T>
  */
-public interface ProjectedDimSamplerImpl< T > extends ProjectedDimSampler< T >
+public interface ProjectedDimSamplerRandomAccess< T > extends ProjectedDimSampler< T >
 {
 
 	/**

@@ -13,7 +13,7 @@ import net.imglib2.Sampler;
  * 
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
- * @param <A>
+ * @param <T>
  */
 public interface ProjectedDimSampler< T > extends Iterator, Sampler< T >
 {

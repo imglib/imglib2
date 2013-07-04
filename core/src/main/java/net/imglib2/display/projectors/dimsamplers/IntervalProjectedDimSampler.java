@@ -10,7 +10,7 @@ import net.imglib2.Sampler;
  * 
  * @param <T>
  */
-public class IntervalProjectedDimSampler< T > implements ProjectedDimSamplerImpl< T >
+public class IntervalProjectedDimSampler< T > implements ProjectedDimSamplerRandomAccess< T >
 {
 
 	private final int m_projectionDimension;
