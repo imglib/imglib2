@@ -66,26 +66,33 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends Ab
 		{
 			for ( int i = 0; i < targetArray.length; i++ )
 			{
+				// -128 => 0 && 127 => 255 => unsigned byte
+				//
+				// -128_byte = 11111111_byte => convert => -128_int
+				// (-128_int - 128_int) => calculate => -256_int (11..100000000)
+				// => convert (11..1|00000000) => 0_unsignedByte
+				//
+				// 127_byte => convert => 127_int
+				// (127_int - 128_int) => calculate => -1_int (11..111111111) =>
+				// convert (11..1|11111111) => 255_unsignedByte
 				targetArray[ i ] = ( byte ) ( targetArray[ i ] - 0x80 );
 			}
+			// old min + 128 => unsigned byte minimum
 			minCopy += 0x80;
 		}
+
+		//
+		// target[] contains now unsigned values
+		//
+
 		if ( normalizationFactor != 1 )
 		{
-			int max = 2 * Byte.MAX_VALUE + 1;
+			// 2 * Byte.MAX_VALUE + 1
+			int max = 255;
 			for ( int i = 0; i < targetArray.length; i++ )
 			{
 				targetArray[ i ] = ( byte ) Math.min( max, Math.max( 0, ( Math.round( ( ( ( byte ) ( targetArray[ i ] + 0x80 ) ) + 0x80 - minCopy ) * normalizationFactor ) ) ) );
-
 			}
 		}
-	}
-
-	public static void main( String[] args )
-	{
-		byte[] target = new byte[] { 127 };
-		target[ 0 ] = ( byte ) ( target[ 0 ] - 0x80 );
-
-		System.out.println( target[ 0 ] );
 	}
 }
