@@ -42,8 +42,8 @@ public class Translation2D extends AbstractTranslation implements Concatenable< 
 {
 	final static protected RealPoint[] constDs = new RealPoint[ 2 ];
 	{
-		constDs[ 0 ] = new RealPoint( 1, 0 );
-		constDs[ 1 ] = new RealPoint( 0, 1 );
+		constDs[ 0 ] = new RealPoint( 1.0, 0.0 );
+		constDs[ 1 ] = new RealPoint( 0.0, 1.0 );
 	}
 	
 	final protected Translation2D inverse;
