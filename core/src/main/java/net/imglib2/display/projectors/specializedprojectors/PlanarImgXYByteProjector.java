@@ -1,6 +1,7 @@
 package net.imglib2.display.projectors.specializedprojectors;
 
 import net.imglib2.display.projectors.Abstract2DProjector;
+import net.imglib2.display.projectors.screenimages.ByteScreenImage;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.planar.PlanarImg;
@@ -33,6 +34,21 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends A
 
 	private final long[] dims;
 
+	/**
+	 * Normalizes a PlanarImg and writes the result into target. This can be used in conjunction with {@link ByteScreenImage} for direct displaying.
+	 * The normalization is based on a normalization factor and a minimum value with the following dependency:<br>
+	 * <br>
+	 * normalizationFactor = (typeMax - typeMin) / (newMax - newMin) <br>
+	 * min = newMin <br>
+	 * <br>
+	 * A value is normalized by: normalizedValue = (value - min) * normalizationFactor.<br>
+	 * Additionally the result gets clamped to the type range of target (that allows playing with saturation...).
+	 *  
+	 * @param source Signed/Unsigned input data
+	 * @param target Unsigned output
+	 * @param normalizationFactor
+	 * @param min
+	 */
 	public PlanarImgXYByteProjector( PlanarImg< A, ByteArray > source, ArrayImg< UnsignedByteType, ByteArray > target, double normalizationFactor, double min)
 	{
 		super( source.numDimensions() );
@@ -50,7 +66,8 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends A
 	@Override
 	public void map()
 	{
-
+		//more detailed documentation of the binary arithmetic can be found in ArrayImgXYByteProjector
+		
 		double minCopy = min;
 		int offset = 0;
 
@@ -75,22 +92,27 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends A
 
 		byte[] sourceArray = source.update( new PlanarImgContainerSamplerImpl( planeIndex ) ).getCurrentStorageArray();
 
+		// copy the selected part of the source array (e.g. a xy plane at time t
+		// in a video) into the target array.
 		System.arraycopy( sourceArray, offset, targetArray, 0, targetArray.length );
 
 		if ( isSigned )
 		{
 			for ( int i = 0; i < targetArray.length; i++ )
 			{
+				// -128 => 0 && 127 => 255 => unsigned byte
 				targetArray[ i ] = ( byte ) ( targetArray[ i ] - 0x80 );
 			}
+			// old min + 128 => unsigned byte minimum
 			minCopy += 0x80;
 		}
 		if ( normalizationFactor != 1 )
 		{
-			int max = 2 * Byte.MAX_VALUE + 1;
 			for ( int i = 0; i < targetArray.length; i++ )
 			{
-				targetArray[ i ] = ( byte ) Math.min( max, Math.max( 0, ( Math.round( ( ( ( byte ) ( targetArray[ i ] + 0x80 ) ) + 0x80 - minCopy ) * normalizationFactor ) ) ) );
+				// normalizedValue = (oldValue - min) * normalizationFactor
+				// clamped to 0 .. 255
+				targetArray[ i ] = ( byte ) Math.min( 255, Math.max( 0, ( Math.round( ( (targetArray[i] & 0xFF) - minCopy ) * normalizationFactor ) ) ) );
 			}
 		}
 	}

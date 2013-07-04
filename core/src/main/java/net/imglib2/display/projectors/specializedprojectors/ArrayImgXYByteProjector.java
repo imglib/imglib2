@@ -1,6 +1,7 @@
 package net.imglib2.display.projectors.specializedprojectors;
 
 import net.imglib2.display.projectors.Abstract2DProjector;
+import net.imglib2.display.projectors.screenimages.ByteScreenImage;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.type.numeric.integer.ByteType;
@@ -33,6 +34,21 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends Ab
 
 	private final long[] dims;
 
+	/**
+	 * Normalizes an ArrayImg and writes the result into target. This can be used in conjunction with {@link ByteScreenImage} for direct displaying.
+	 * The normalization is based on a normalization factor and a minimum value with the following dependency:<br>
+	 * <br>
+	 * normalizationFactor = (typeMax - typeMin) / (newMax - newMin) <br>
+	 * min = newMin <br>
+	 * <br>
+	 * A value is normalized by: normalizedValue = (value - min) * normalizationFactor.<br>
+	 * Additionally the result gets clamped to the type range of target (that allows playing with saturation...).
+	 *  
+	 * @param source Signed/Unsigned input data
+	 * @param target Unsigned output
+	 * @param normalizationFactor
+	 * @param min
+	 */
 	public ArrayImgXYByteProjector( ArrayImg< A, ByteArray > source, ArrayImg< UnsignedByteType, ByteArray > target, double normalizationFactor, double min )
 	{
 		super( source.numDimensions() );
@@ -87,12 +103,15 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends Ab
 
 		if ( normalizationFactor != 1 )
 		{
-			// 2 * Byte.MAX_VALUE + 1
-			int max = 255;
 			for ( int i = 0; i < targetArray.length; i++ )
 			{
-				targetArray[ i ] = ( byte ) Math.min( max, Math.max( 0, ( Math.round( ( ( ( byte ) ( targetArray[ i ] + 0x80 ) ) + 0x80 - minCopy ) * normalizationFactor ) ) ) );
+				//                          |  ensure   0 <= x <= 255 | 
+				//                          |                         | calculate newValue: x
+				//                          |                         |                   unsigned_byte => int
+				//							|						  |                            value        - min       * normalizationFactor
+				targetArray[ i ] = ( byte ) Math.min( 255, Math.max( 0, ( Math.round( ( (targetArray[i] & 0xFF) - minCopy ) * normalizationFactor ) ) ) );
 			}
 		}
 	}
+	
 }
