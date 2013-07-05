@@ -342,8 +342,24 @@ public class Intervals
 		if ( a.numDimensions() != b.numDimensions() )
 			return false;
 
-		for ( int d = 0; d < a.numDimensions(); d++ )
+		for ( int d = 0; d < a.numDimensions(); ++d )
 			if ( a.min( d ) != b.min( d ) || a.max( d ) != b.max( d ) )
+				return false;
+
+		return true;
+	}
+	
+	/**
+	 * Tests weather two intervals have equal dimensions (same size)
+	 */
+	public static boolean equalDimensions( final Interval a, final Interval b )
+	{
+
+		if ( a.numDimensions() != b.numDimensions() )
+			return false;
+
+		for ( int d = 0; d < a.numDimensions(); ++d )
+			if ( a.dimension( d ) != b.dimension( d ) )
 				return false;
 
 		return true;
