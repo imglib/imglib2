@@ -1,33 +1,53 @@
-/**
- * License: GPL
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
+ * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
+ * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
+ * #L%
  */
+
 package interactive.remote.catmaid;
 
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
 
-import java.awt.image.BufferedImage;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.PixelGrabber;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
 
 import net.imglib2.AbstractInterval;
 import net.imglib2.AbstractLocalizable;
@@ -41,11 +61,15 @@ import net.imglib2.display.XYProjector;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
- *
+ * A read-only {@link RandomAccessibleInterval} of ARGBTypes that generates its
+ * pixel values from a CATMAID remote data set.
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements RandomAccessibleInterval< ARGBType >
 {
+	final static protected Toolkit toolkit = Toolkit.getDefaultToolkit();
+	
 	public class Key
 	{
 		final protected long r, c, z;
@@ -75,8 +99,6 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 		 * Return a hash code for the long tile index according to
 		 * {@link Long#hashCode()}.  The hash has no collisions if the tile
 		 * index is smaller than 2<sup>32</sup>.
-		 *   
-		 * @return
 		 */
 		@Override
 		public int hashCode() {
@@ -101,9 +123,9 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 		{
 			synchronized ( cache )
 			{
-				System.out.println( "finalizing..." );
+//				System.out.println( "finalizing..." );
 				cache.remove( key );
-				System.out.println( cache.size() + " tiles chached." );
+//				System.out.println( cache.size() + " tiles chached." );
 			}
 		}
 	}
@@ -151,7 +173,7 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			{
 			case 0:
 				++xMod;
-				if ( xMod == 256 )
+				if ( xMod == tileWidth )
 				{
 					++c;
 					xMod = 0;
@@ -160,7 +182,7 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 				break;
 			case 1:
 				++yMod;
-				if ( yMod == 256 )
+				if ( yMod == tileHeight )
 				{
 					++r;
 					yMod = 0;
@@ -183,7 +205,7 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 				if ( xMod == -1 )
 				{
 					--c;
-					xMod = 255;
+					xMod = tileWidth - 1;
 					fetchPixels();
 				}
 				break;
@@ -192,7 +214,7 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 				if ( yMod == -1 )
 				{
 					--r;
-					yMod = 255;
+					yMod = tileHeight - 1;
 					fetchPixels();
 				}
 				break;
@@ -214,24 +236,24 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			switch ( d )
 			{
 			case 0:
-				final long c1 = position[ 0 ] / 256;
+				final long c1 = position[ 0 ] / tileWidth;
 				if ( c1 == c )
 					xMod -= distance;
 				else
 				{
 					c = c1;
-					xMod = ( int )( position[ 0 ] - c1 * 256 );
+					xMod = ( int )( position[ 0 ] - c1 * tileWidth );
 					fetchPixels();
 				}
 				break;
 			case 1:
-				final long r1 = position[ 1 ] / 256;
+				final long r1 = position[ 1 ] / tileHeight;
 				if ( r1 == r )
 					yMod -= distance;
 				else
 				{
 					r = r1;
-					yMod = ( int )( position[ 1 ] - r1 * 256 );
+					yMod = ( int )( position[ 1 ] - r1 * tileHeight );
 					fetchPixels();
 				}
 				break;
@@ -251,23 +273,23 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			position[ 0 ] += dx;
 			position[ 1 ] += dy;
 			
-			final long c1 = position[ 0 ] / 256;
+			final long c1 = position[ 0 ] / tileWidth;
 			if ( c1 == c )
 				xMod += dx;
 			else
 			{
 				c = c1;
-				xMod = ( int )( position[ 0 ] - c1 * 256 );
+				xMod = ( int )( position[ 0 ] - c1 * tileWidth );
 				updatePixels = true;
 			}
 			
-			final long r1 = position[ 1 ] / 256;
+			final long r1 = position[ 1 ] / tileHeight;
 			if ( r1 == r )
 				yMod += dy;
 			else
 			{
 				r = r1;
-				yMod = ( int )( position[ 1 ] - r1 * 256 );
+				yMod = ( int )( position[ 1 ] - r1 * tileHeight );
 				updatePixels = true;
 			}
 			
@@ -290,23 +312,23 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			position[ 0 ] += distance[ 0 ];
 			position[ 1 ] += distance[ 1 ];
 			
-			final long c1 = position[ 0 ] / 256;
+			final long c1 = position[ 0 ] / tileWidth;
 			if ( c1 == c )
 				xMod += distance[ 0 ];
 			else
 			{
 				c = c1;
-				xMod = ( int )( position[ 0 ] - c1 * 256 );
+				xMod = ( int )( position[ 0 ] - c1 * tileWidth );
 				updatePixels = true;
 			}
 			
-			final long r1 = position[ 1 ] / 256;
+			final long r1 = position[ 1 ] / tileHeight;
 			if ( r1 == r )
 				yMod += distance[ 1 ];
 			else
 			{
 				r = r1;
-				yMod = ( int )( position[ 1 ] - r1 * 256 );
+				yMod = ( int )( position[ 1 ] - r1 * tileHeight );
 				updatePixels = true;
 			}
 			
@@ -328,23 +350,23 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			position[ 0 ] += distance[ 0 ];
 			position[ 1 ] += distance[ 1 ];
 			
-			final long c1 = position[ 0 ] / 256;
+			final long c1 = position[ 0 ] / tileWidth;
 			if ( c1 == c )
 				xMod += distance[ 0 ];
 			else
 			{
 				c = c1;
-				xMod = ( int )( position[ 0 ] - c1 * 256 );
+				xMod = ( int )( position[ 0 ] - c1 * tileWidth );
 				updatePixels = true;
 			}
 			
-			final long r1 = position[ 1 ] / 256;
+			final long r1 = position[ 1 ] / tileHeight;
 			if ( r1 == r )
 				yMod += distance[ 1 ];
 			else
 			{
 				r = r1;
-				yMod = ( int )( position[ 1 ] - r1 * 256 );
+				yMod = ( int )( position[ 1 ] - r1 * tileHeight );
 				updatePixels = true;
 			}
 			
@@ -366,16 +388,16 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			position[ 0 ] = localizable.getLongPosition( 0 );
 			position[ 1 ] = localizable.getLongPosition( 1 );
 			
-			final long c1 = position[ 0 ] / 256;
-			xMod = ( int )( position[ 0 ] - c1 * 256 );
+			final long c1 = position[ 0 ] / tileWidth;
+			xMod = ( int )( position[ 0 ] - c1 * tileWidth );
 			if ( c1 != c )
 			{
 				c = c1;
 				updatePixels = true;
 			}
 			
-			final long r1 = position[ 1 ] / 256;
-			yMod = ( int )( position[ 1 ] - r1 * 256 );
+			final long r1 = position[ 1 ] / tileHeight;
+			yMod = ( int )( position[ 1 ] - r1 * tileHeight );
 			if ( r1 != r )
 			{
 				r = r1;
@@ -401,16 +423,16 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			position[ 0 ] = pos[ 0 ];
 			position[ 1 ] = pos[ 1 ];
 			
-			final long c1 = position[ 0 ] / 256;
-			xMod = ( int )( position[ 0 ] - c1 * 256 );
+			final long c1 = position[ 0 ] / tileWidth;
+			xMod = ( int )( position[ 0 ] - c1 * tileWidth );
 			if ( c1 != c )
 			{
 				c = c1;
 				updatePixels = true;
 			}
 			
-			final long r1 = position[ 1 ] / 256;
-			yMod = ( int )( position[ 1 ] - r1 * 256 );
+			final long r1 = position[ 1 ] / tileHeight;
+			yMod = ( int )( position[ 1 ] - r1 * tileHeight );
 			if ( r1 != r )
 			{
 				r = r1;
@@ -435,16 +457,16 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			position[ 0 ] = pos[ 0 ];
 			position[ 1 ] = pos[ 1 ];
 			
-			final long c1 = position[ 0 ] / 256;
-			xMod = ( int )( position[ 0 ] - c1 * 256 );
+			final long c1 = position[ 0 ] / tileWidth;
+			xMod = ( int )( position[ 0 ] - c1 * tileWidth );
 			if ( c1 != c )
 			{
 				c = c1;
 				updatePixels = true;
 			}
 			
-			final long r1 = position[ 1 ] / 256;
-			yMod = ( int )( position[ 1 ] - r1 * 256 );
+			final long r1 = position[ 1 ] / tileHeight;
+			yMod = ( int )( position[ 1 ] - r1 * tileHeight );
 			if ( r1 != r )
 			{
 				r = r1;
@@ -469,8 +491,8 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			switch ( d )
 			{
 			case 0:
-				final long c1 = position[ 0 ] / 256;
-				xMod = ( int )( position[ 0 ] - c1 * 256 );
+				final long c1 = position[ 0 ] / tileWidth;
+				xMod = ( int )( position[ 0 ] - c1 * tileWidth );
 				if ( c1 != c )
 				{
 					c = c1;
@@ -478,8 +500,8 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 				}
 				break;
 			case 1:
-				final long r1 = position[ 1 ] / 256;
-				yMod = ( int )( position[ 1 ] - r1 * 256 );
+				final long r1 = position[ 1 ] / tileHeight;
+				yMod = ( int )( position[ 1 ] - r1 * tileHeight );
 				if ( r1 != r )
 				{
 					r = r1;
@@ -500,8 +522,8 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			switch ( d )
 			{
 			case 0:
-				final long c1 = position[ 0 ] / 256;
-				xMod = ( int )( position[ 0 ] - c1 * 256 );
+				final long c1 = position[ 0 ] / tileWidth;
+				xMod = ( int )( position[ 0 ] - c1 * tileWidth );
 				if ( c1 != c )
 				{
 					c = c1;
@@ -509,8 +531,8 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 				}
 				break;
 			case 1:
-				final long r1 = position[ 1 ] / 256;
-				yMod = ( int )( position[ 1 ] - r1 * 256 );
+				final long r1 = position[ 1 ] / tileHeight;
+				yMod = ( int )( position[ 1 ] - r1 * tileHeight );
 				if ( r1 != r )
 				{
 					r = r1;
@@ -526,7 +548,7 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 		@Override
 		public ARGBType get()
 		{
-			t.set( pixels[ 256 * yMod + xMod ] );
+			t.set( pixels[ tileWidth * yMod + xMod ] );
 			return t;
 		}
 
@@ -545,15 +567,26 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 	
 	final protected HashMap< Key, SoftReference< Entry > > cache = new HashMap< CATMAIDRandomAccessibleInterval.Key, SoftReference< Entry > >();
 	final protected String baseUrl;
-	final protected long rows, cols;
-	protected long i;
+	final protected long rows, cols, s;
+	final protected int tileWidth, tileHeight;
 	
-	public CATMAIDRandomAccessibleInterval( final long width, final long height, final long depth, final String url )
+	public CATMAIDRandomAccessibleInterval(
+			final String url,
+			final long width,
+			final long height,
+			final long depth,
+			final long s,
+			final int tileWidth,
+			final int tileHeight )
 	{
 		super( new long[]{ width, height, depth } );
 		this.baseUrl = url;
-		cols = ( long )Math.ceil( width / 256.0 );
-		rows = ( long )Math.ceil( height / 256.0 );
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight;
+		this.s = s;
+		final double scale = 1.0 / Math.pow( 2, s );
+		cols = ( long )Math.ceil( scale * width / tileWidth );
+		rows = ( long )Math.ceil( scale * height / tileHeight );
 	}
 	
 	@Override
@@ -600,15 +633,19 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 					return cachedEntry.data;
 			}
 
-			final String urlString = new StringBuffer( baseUrl ).append( z ).append( "/" ).append( r ).append( "_" ).append( c ).append( "_0.jpg" ).toString();
-			final int[] pixels = new int[ 256 * 256 ];
+			final String urlString =
+					new StringBuffer( baseUrl ).append( z ).append( "/" ).append( r ).append( "_" ).append( c ).append( "_" ).append( s ).append( ".jpg" ).toString();
+			final int[] pixels = new int[ tileWidth * tileHeight ];
 			try
 			{
 				final URL url = new URL( urlString );
-			    final BufferedImage image = ImageIO.read( url );
-			    final PixelGrabber pg = new PixelGrabber( image, 0, 0, 256, 256, pixels, 0, 256 );
+			    //final BufferedImage image = ImageIO.read( url );
+				final Image image = toolkit.createImage( url );
+			    final PixelGrabber pg = new PixelGrabber( image, 0, 0, tileWidth, tileHeight, pixels, 0, tileWidth );
 				pg.grabPixels();
 				cache.put( key, new SoftReference< Entry >( new Entry( key, pixels ) ) );
+//				System.out.println( "success loading r=" + r + " c=" + c + " url(" + urlString + ")" );
+				
 			}
 			catch (final IOException e)
 			{
@@ -627,7 +664,14 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 	{
 		new ImageJ();
 		
-		final CATMAIDRandomAccessibleInterval map = new CATMAIDRandomAccessibleInterval( 6016, 4464, 803, "http://catmaid.mpi-cbg.de/map/c-elegans/" );
+		final CATMAIDRandomAccessibleInterval map = new CATMAIDRandomAccessibleInterval(
+				"http://catmaid.mpi-cbg.de/map/c-elegans/",
+				6016,
+				4464,
+				803,
+				0,
+				256,
+				256 );
 		final ARGBScreenImage screenImage = new ARGBScreenImage( 1024, 1024 );
 		final XYProjector< ARGBType, ARGBType > projector = new XYProjector< ARGBType, ARGBType >( map, screenImage, new TypeIdentity< ARGBType >() );
 		projector.map();
