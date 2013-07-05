@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -38,10 +38,12 @@
 package net.imglib2.img.display.imagej;
 
 import ij.ImagePlus;
+import ij.VirtualStack;
 import ij.measure.Calibration;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.imglib2.Dimensions;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
 import net.imglib2.converter.TypeIdentity;
@@ -115,7 +117,7 @@ public class ImageJFunctions
 	}
 
 	/**
-	 * Displays a complex type as power spectrum, phase spectrum, real values or imaginary values depending on the converter 
+	 * Displays a complex type as power spectrum, phase spectrum, real values or imaginary values depending on the converter
 	 */
 	public static <T extends ComplexType<T>> ImagePlus show( final RandomAccessibleInterval<T> img, final Converter< T, FloatType > converter )
 	{
@@ -123,14 +125,14 @@ public class ImageJFunctions
 	}
 
 	/**
-	 * Displays a complex type as power spectrum, phase spectrum, real values or imaginary values depending on the converter 
+	 * Displays a complex type as power spectrum, phase spectrum, real values or imaginary values depending on the converter
 	 */
 	public static <T extends ComplexType<T>> ImagePlus show( final RandomAccessibleInterval<T> img, final Converter< T, FloatType > converter, final String title )
 	{
 		final ImageJVirtualStackFloat< T > stack = new ImageJVirtualStackFloat< T >( img, converter );
 		final ImagePlus imp = new ImagePlus( title, stack );
 		imp.show();
-		
+
 		return imp;
 	}
 
@@ -166,39 +168,39 @@ public class ImageJFunctions
 			System.out.println( "Do not know how to display Type " + t.getClass().getSimpleName() );
 			target = null;
 		}
-		
+
 		// Retrieve and set calibration if we can. ImgPlus has calibration and axis types
 		if (null != target && img instanceof ImgPlus) {
-			
-			ImgPlus<T> imgplus = (ImgPlus<T>) img;
-			Calibration impcal = target.getCalibration();
-			
-			int xaxis = imgplus.getAxisIndex(Axes.X);
+
+			final ImgPlus<T> imgplus = (ImgPlus<T>) img;
+			final Calibration impcal = target.getCalibration();
+
+			final int xaxis = imgplus.getAxisIndex(Axes.X);
 			if (xaxis >= 0) {
 				impcal.pixelWidth = imgplus.calibration(xaxis);
 			}
 
-			int yaxis = imgplus.getAxisIndex(Axes.Y);
+			final int yaxis = imgplus.getAxisIndex(Axes.Y);
 			if (yaxis >= 0) {
 				impcal.pixelHeight = imgplus.calibration(yaxis);
 			}
-			
-			int zaxis = imgplus.getAxisIndex(Axes.Z);
+
+			final int zaxis = imgplus.getAxisIndex(Axes.Z);
 			if (zaxis >= 0) {
 				impcal.pixelDepth = imgplus.calibration(zaxis);
 			}
-			
-			int taxis = imgplus.getAxisIndex(Axes.TIME);
+
+			final int taxis = imgplus.getAxisIndex(Axes.TIME);
 			if (taxis >= 0) {
 				impcal.frameInterval = imgplus.calibration(taxis);
 			}
 			target.setTitle( imgplus.getName() );
 		}
-		
+
 		return target;
 	}
-	
-	
+
+
 
 	public static < T extends NumericType< T > > ImagePlus show( final RandomAccessibleInterval< T > img, final String title )
 	{
@@ -222,17 +224,22 @@ public class ImageJFunctions
 			final String title )
 	{
 		final ImageJVirtualStackFloat< T > stack = new ImageJVirtualStackFloat< T >( img, new RealFloatConverter< T >() );
+		return makeImagePlus( img, stack, title );
+	}
+
+	private static ImagePlus makeImagePlus( final Dimensions dims, final VirtualStack stack, final String title )
+	{
 		final ImagePlus imp = new ImagePlus( title, stack );
-		final int n = img.numDimensions();
+		final int n = dims.numDimensions();
 		if ( n > 2 )
 		{
 			imp.setOpenAsHyperStack( true );
-			final int c = ( int )img.dimension( 2 ), s, f;
+			final int c = ( int )dims.dimension( 2 ), s, f;
 			if ( n > 3 )
 			{
-				s = ( int )img.dimension( 3 );
+				s = ( int )dims.dimension( 3 );
 				if ( n > 4 )
-					f = ( int )img.dimension( 4 );
+					f = ( int )dims.dimension( 4 );
 				else
 					f = 1;
 			}
@@ -256,7 +263,7 @@ public class ImageJFunctions
 			final String title )
 	{
 		final ImageJVirtualStackFloat< T > stack = new ImageJVirtualStackFloat< T >( img, converter );
-		return new ImagePlus( title, stack );
+		return makeImagePlus( img, stack, title );
 	}
 
 	/**
@@ -309,7 +316,7 @@ public class ImageJFunctions
 	public static < T > ImagePlus wrapRGB( final RandomAccessibleInterval< T > img, final Converter< T, ARGBType > converter, final String title )
 	{
 		final ImageJVirtualStackARGB< T > stack = new ImageJVirtualStackARGB< T >( img, converter );
-		return new ImagePlus( title, stack );
+		return makeImagePlus( img, stack, title );
 	}
 
 	/**
@@ -345,7 +352,7 @@ public class ImageJFunctions
 			final String title )
 	{
 		final ImageJVirtualStackUnsignedByte< T > stack = new ImageJVirtualStackUnsignedByte< T >( img, converter );
-		return new ImagePlus( title, stack );
+		return makeImagePlus( img, stack, title );
 	}
 
 	/**
@@ -407,7 +414,7 @@ public class ImageJFunctions
 			final String title )
 	{
 		final ImageJVirtualStackUnsignedShort< T > stack = new ImageJVirtualStackUnsignedShort< T >( img, converter );
-		return new ImagePlus( title, stack );
+		return makeImagePlus( img, stack, title );
 	}
 
 	/**
@@ -454,5 +461,5 @@ public class ImageJFunctions
 	}
 	*/
 
-	
+
 }
