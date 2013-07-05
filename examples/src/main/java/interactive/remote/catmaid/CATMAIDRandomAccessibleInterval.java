@@ -486,13 +486,12 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 		@Override
 		public void setPosition( final int pos, final int d )
 		{
-			position[ d ] = pos;
-			
 			switch ( d )
 			{
 			case 0:
 				final long c1 = position[ 0 ] / tileWidth;
 				xMod = ( int )( position[ 0 ] - c1 * tileWidth );
+				position[ d ] = pos;
 				if ( c1 != c )
 				{
 					c = c1;
@@ -502,6 +501,7 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			case 1:
 				final long r1 = position[ 1 ] / tileHeight;
 				yMod = ( int )( position[ 1 ] - r1 * tileHeight );
+				position[ d ] = pos;
 				if ( r1 != r )
 				{
 					r = r1;
@@ -510,20 +510,24 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 				break;
 			default:
 				if ( position[ d ] != pos )
-					fetchPixels();	
+				{
+					position[ d ] = pos;
+					fetchPixels();
+				}
+				else
+					position[ d ] = pos;
 			}
 		}
 
 		@Override
 		public void setPosition( final long pos, final int d )
 		{
-			position[ d ] = pos;
-			
 			switch ( d )
 			{
 			case 0:
-				final long c1 = position[ 0 ] / tileWidth;
-				xMod = ( int )( position[ 0 ] - c1 * tileWidth );
+				final long c1 = pos / tileWidth;
+				xMod = ( int )( pos - c1 * tileWidth );
+				position[ d ] = pos;
 				if ( c1 != c )
 				{
 					c = c1;
@@ -531,8 +535,9 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 				}
 				break;
 			case 1:
-				final long r1 = position[ 1 ] / tileHeight;
-				yMod = ( int )( position[ 1 ] - r1 * tileHeight );
+				final long r1 = pos / tileHeight;
+				yMod = ( int )( pos - r1 * tileHeight );
+				position[ d ] = pos;
 				if ( r1 != r )
 				{
 					r = r1;
@@ -541,7 +546,12 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 				break;
 			default:
 				if ( position[ d ] != pos )
-					fetchPixels();	
+				{
+					position[ d ] = pos;
+					fetchPixels();
+				}
+				else
+					position[ d ] = pos;
 			}
 		}
 
