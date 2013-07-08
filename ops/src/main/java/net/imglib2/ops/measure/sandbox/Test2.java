@@ -905,6 +905,65 @@ public class Test2 {
 		}
 	}
 
+	private class AvgFeretDiameter extends AbstractMeasure implements
+		Measure<PrimitiveDouble>, PrimitiveDouble
+	{
+
+		private final DiscretePointSet region;
+		private final Double angleDelta;
+		private double value;
+
+		public AvgFeretDiameter(DiscretePointSet region, Double angleDelta) {
+			this.region = region;
+			this.angleDelta = angleDelta;
+			if ((angleDelta <= 0) || (angleDelta >= Math.PI)) {
+				throw new IllegalArgumentException("angle delta out of bounds");
+			}
+			isInput(region);
+			isInput(angleDelta);
+		}
+
+		public AvgFeretDiameter(DiscretePointSet region) {
+			this(region, Math.PI / 360.0);
+		}
+
+		public AvgFeretDiameter(MeasureList measures, DiscretePointSet region,
+			Double angleDelta)
+		{
+			this(region, angleDelta);
+			measures.add(this);
+		}
+
+		public AvgFeretDiameter(MeasureList measures, DiscretePointSet region) {
+			this(region);
+			measures.add(this);
+		}
+
+		@Override
+		public PrimitiveDouble get() {
+			if (isInvalid()) {
+				double delta = angleDelta;
+				double sum = 0;
+				long count = 0;
+				for (double ang = 0; ang < Math.PI; ang += delta) {
+					FeretDiameter fd = new FeretDiameter(region, ang); // note: not
+																															// recording
+					sum += fd.getDouble();
+					count++;
+				}
+				value = sum / count;
+				validate();
+			}
+			return this;
+		}
+
+		@Override
+		public double getDouble() {
+			get();
+			return value;
+		}
+	}
+
 	private static class Area extends AbstractMeasure implements
 		Measure<PrimitiveLong>, PrimitiveLong
 	{
@@ -945,6 +1004,39 @@ public class Test2 {
 		public Integer get() {
 			validate(); // optional step I think
 			return value;
+		}
+	}
+
+	private static class Image {}
+
+	private static class PolygonPerimeters extends AbstractMeasure implements
+		Measure<double[]>
+	{
+
+		private double[] values;
+		private final Image img;
+		private final double bg;
+
+		public PolygonPerimeters(Image img, double background) {
+			this.img = img;
+			this.bg = background;
+			isInput(img);
+			isInput(background);
+		}
+
+		@Override
+		public double[] get() {
+			if (isInvalid()) {
+				values = findPerims();
+				validate();
+			}
+			return values;
+		}
+
+		private double[] findPerims() {
+			// TODO - scan image and build polygons and/or perim counts
+			double[] perims = new double[] { 1, 4, 7, 11 };
+			return perims;
 		}
 	}
 
