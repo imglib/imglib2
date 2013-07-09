@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>1.28</version>
+		<version>1.51</version>
 	</parent>
 
 	<groupId>net.imglib2</groupId>
-	<artifactId>pom-imglib</artifactId>
+	<artifactId>pom-imglib2</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>ImgLib Projects</name>
-	<description>Umbrella project for ImgLib projects.</description>
-	<url>http://imglib2.net/</url>
+	<name>ImgLib2 Projects</name>
+	<description>Umbrella project for ImgLib2 projects.</description>
 	<inceptionYear>2009</inceptionYear>
+	<url>http://imglib2.net/</url>
 
 	<modules>
-		<module>imglib1</module>
-		<module>imglib2</module>
+		<module>algorithms</module>
+		<module>core</module>
+		<module>examples</module>
+		<module>ij</module>
+		<module>io</module>
+		<module>ops</module>
+		<module>realtransform</module>
+		<module>scripting</module>
+		<module>tests</module>
+		<module>ui</module>
 	</modules>
 
 	<properties>
-		<project.rootdir>${basedir}</project.rootdir>
-		<mpicbg.version>0.6.0-SNAPSHOT</mpicbg.version>
+		<project.rootdir>${basedir}/..</project.rootdir>
 	</properties>
 
 	<build>
@@ -277,7 +281,7 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 		<url>https://github.com/imagej/imglib</url>
 	</scm>
 
-	<!-- NB: for project parent -->
+	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
 		<repository>
 			<id>imagej.releases</id>
@@ -288,5 +292,14 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			<url>http://maven.imagej.net/content/repositories/snapshots</url>
 		</repository>
 	</repositories>
+
+	<profiles>
+		<profile>
+			<id>broken</id>
+			<modules>
+				<module>broken</module>
+			</modules>
+		</profile>
+	</profiles>
 
 </project>
