@@ -857,4 +857,76 @@ public class Views
 	{
 		return new CompositeView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( numChannels ) );
 	}
+	
+	/**
+	 * Sample only every <em>step</em><sup>th</sup> value of a source
+	 * {@link RandomAccessibleInterval}.  This is effectively an integer
+	 * scaling and zero offset transformation.
+	 * 
+	 * @param source
+	 * 				the source
+	 * @param step
+	 * 				the subsampling step size
+	 * @return a subsampled {@link RandomAccessibleInterval} with its origin
+	 * 				coordinates at zero
+	 */
+	public static < T > SubsampleIntervalView< T > subsample( final RandomAccessibleInterval< T > source, final long step )
+	{
+		return new SubsampleIntervalView< T >( source, step );
+	}
+	
+	/**
+	 * Sample only every <em>step<sub>d</sub></em><sup>th</sup> value of a source
+	 * {@link RandomAccessibleInterval}.  This is effectively an integer
+	 * scaling and zero offset transformation.
+	 * 
+	 * @param source
+	 * 				the source
+	 * @param steps
+	 * 				the subsampling step sizes
+	 * @return a subsampled {@link RandomAccessibleInterval} with its origin
+	 * 				coordinates at zero
+	 */
+	public static < T > SubsampleView< T > subsample( final RandomAccessibleInterval< T > source, final long... steps )
+	{
+		assert steps.length >= source.numDimensions() : "Dimensions do not match.";
+		
+		return new SubsampleIntervalView< T >( source, steps );
+	}
+	
+	/**
+	 * Sample only every <em>step</em><sup>th</sup> value of a source
+	 * {@link RandomAccessible}.  This is effectively an integer scaling
+	 * transformation.
+	 * 
+	 * @param source
+	 * 				the source
+	 * @param step
+	 * 				the subsampling step size
+	 * @return a subsampled {@link RandomAccessible}
+	 * 				
+	 */
+	public static < T > SubsampleView< T > subsample( final RandomAccessible< T > source, final long step )
+	{
+		return new SubsampleView< T >( source, step );
+	}
+	
+	/**
+	 * Sample only every <em>step<sub>d</sub></em><sup>th</sup> value of a source
+	 * {@link RandomAccessible}.  This is effectively an integer scaling
+	 * transformation.
+	 * 
+	 * @param source
+	 * 				the source
+	 * @param steps
+	 * 				the subsampling step sizes
+	 * @return a subsampled {@link RandomAccessible}
+	 * 				
+	 */
+	public static < T > SubsampleView< T > subsample( final RandomAccessible< T > source, final long... steps )
+	{
+		assert steps.length >= source.numDimensions() : "Dimensions do not match.";
+		
+		return new SubsampleView< T >( source, steps );
+	}
 }
