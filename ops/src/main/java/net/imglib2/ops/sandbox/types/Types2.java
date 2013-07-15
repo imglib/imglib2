@@ -1,4 +1,4 @@
-package net.imglib2.ops.sandbox;
+package net.imglib2.ops.sandbox.types;
 
 
 import java.math.BigDecimal;
