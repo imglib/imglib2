@@ -42,6 +42,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.FloatingType;
 
 /**
  * TODO
@@ -49,8 +50,12 @@ import net.imglib2.type.NativeType;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> implements NativeType<ComplexFloatType>
+public class ComplexFloatType extends AbstractComplexType<ComplexFloatType>
+	implements NativeType<ComplexFloatType>, FloatingType<ComplexFloatType>
 {
+
+	// Note - FloatingType declarations added by Barry DeZonia
+
 	private int i = 0;
 
 	// the indices for real and imaginary number
@@ -62,7 +67,8 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	protected FloatAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public ComplexFloatType( final NativeImg<ComplexFloatType, ? extends FloatAccess> complexfloatStorage )
+	public ComplexFloatType(
+		final NativeImg<ComplexFloatType, ? extends FloatAccess> complexfloatStorage)
 	{
 		img = complexfloatStorage;
 	}
@@ -86,10 +92,14 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	public ComplexFloatType() { this( 0, 0 ); }
 
 	@Override
-	public NativeImg<ComplexFloatType, ? extends FloatAccess> createSuitableNativeImg( final NativeImgFactory<ComplexFloatType> storageFactory, final long dim[] )
+	public
+		NativeImg<ComplexFloatType, ? extends FloatAccess>
+		createSuitableNativeImg(
+			final NativeImgFactory<ComplexFloatType> storageFactory, final long dim[])
 	{
 		// create the container
-		final NativeImg<ComplexFloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 2 );
+		final NativeImg<ComplexFloatType, ? extends FloatAccess> container =
+			storageFactory.createFloatInstance(dim, 2);
 
 		// create a Type that is linked to the container
 		final ComplexFloatType linkedType = new ComplexFloatType( container );
@@ -101,28 +111,48 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	}
 
 	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
+	public void updateContainer(final Object c) {
+		dataAccess = img.update(c);
+	}
 
 	@Override
-	public ComplexFloatType duplicateTypeOnSameNativeImg() { return new ComplexFloatType( img ); }
+	public ComplexFloatType duplicateTypeOnSameNativeImg() {
+		return new ComplexFloatType(img);
+	}
 
 	@Override
-	public float getRealFloat() { return dataAccess.getValue( realI ); }
+	public float getRealFloat() {
+		return dataAccess.getValue(realI);
+	}
 	@Override
-	public double getRealDouble() { return dataAccess.getValue( realI ); }
+	public double getRealDouble() {
+		return dataAccess.getValue(realI);
+	}
 	@Override
-	public float getImaginaryFloat() { return dataAccess.getValue( imaginaryI ); }
+	public float getImaginaryFloat() {
+		return dataAccess.getValue(imaginaryI);
+	}
 	@Override
-	public double getImaginaryDouble() { return dataAccess.getValue( imaginaryI ); }
+	public double getImaginaryDouble() {
+		return dataAccess.getValue(imaginaryI);
+	}
 
 	@Override
-	public void setReal( final float r ){ dataAccess.setValue( realI, r ); }
+	public void setReal(final float r) {
+		dataAccess.setValue(realI, r);
+	}
 	@Override
-	public void setReal( final double r ){ dataAccess.setValue( realI, (float)r ); }
+	public void setReal(final double r) {
+		dataAccess.setValue(realI, (float) r);
+	}
 	@Override
-	public void setImaginary( final float i ){ dataAccess.setValue( imaginaryI, i ); }
+	public void setImaginary(final float i) {
+		dataAccess.setValue(imaginaryI, i);
+	}
 	@Override
-	public void setImaginary( final double i ){ dataAccess.setValue( imaginaryI, (float)i ); }
+	public void setImaginary(final double i) {
+		dataAccess.setValue(imaginaryI, (float) i);
+	}
 
 	public void set( final float r, final float i )
 	{
@@ -189,10 +219,14 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 	}
 
 	@Override
-	public ComplexFloatType createVariable(){ return new ComplexFloatType( 0, 0 ); }
+	public ComplexFloatType createVariable() {
+		return new ComplexFloatType(0, 0);
+	}
 
 	@Override
-	public ComplexFloatType copy(){ return new ComplexFloatType( getRealFloat(), getImaginaryFloat() ); }
+	public ComplexFloatType copy() {
+		return new ComplexFloatType(getRealFloat(), getImaginaryFloat());
+	}
 
 	@Override
 	public int getEntitiesPerPixel() { return 2; }
@@ -239,4 +273,100 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType> impl
 
 	@Override
 	public int getIndex() { return i; }
+
+	@Override
+	public void PI(ComplexFloatType result) {
+		result.setComplexNumber(Math.PI, 0);
+	}
+
+	@Override
+	public void E(ComplexFloatType result) {
+		result.setComplexNumber(Math.E, 0);
+	}
+
+	@Override
+	public void exp(ComplexFloatType result) {
+		ComplexMath.exp(this, result);
+	}
+
+	@Override
+	public void sqrt(ComplexFloatType result) {
+		ComplexMath.sqrt(this, result);
+	}
+
+	@Override
+	public void log(ComplexFloatType result) {
+		ComplexMath.log(this, result);
+	}
+
+	@Override
+	public void pow(ComplexFloatType p, ComplexFloatType result) {
+		ComplexMath.pow(this, p, result);
+	}
+
+	@Override
+	public void logBase(ComplexFloatType b, ComplexFloatType result) {
+		ComplexMath.logBase(this, b, result);
+	}
+
+	@Override
+	public void sin(ComplexFloatType result) {
+		ComplexMath.sin(this, result);
+	}
+
+	@Override
+	public void cos(ComplexFloatType result) {
+		ComplexMath.cos(this, result);
+	}
+
+	@Override
+	public void tan(ComplexFloatType result) {
+		ComplexMath.tan(this, result);
+	}
+
+	@Override
+	public void asin(ComplexFloatType result) {
+		ComplexMath.asin(this, result);
+	}
+
+	@Override
+	public void acos(ComplexFloatType result) {
+		ComplexMath.acos(this, result);
+	}
+
+	@Override
+	public void atan(ComplexFloatType result) {
+		ComplexMath.atan(this, result);
+	}
+
+	@Override
+	public void sinh(ComplexFloatType result) {
+		ComplexMath.sinh(this, result);
+	}
+
+	@Override
+	public void cosh(ComplexFloatType result) {
+		ComplexMath.cosh(this, result);
+	}
+
+	@Override
+	public void tanh(ComplexFloatType result) {
+		ComplexMath.tanh(this, result);
+	}
+
+	@Override
+	public void asinh(ComplexFloatType result) {
+		ComplexMath.asinh(this, result);
+	}
+
+	@Override
+	public void acosh(ComplexFloatType result) {
+		ComplexMath.acosh(this, result);
+	}
+
+	@Override
+	public void atanh(ComplexFloatType result) {
+		ComplexMath.atanh(this, result);
+	}
+
 }

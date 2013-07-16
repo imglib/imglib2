@@ -43,7 +43,8 @@ import net.imglib2.type.numeric.ComplexType;
  * TODO
  *
  */
-public abstract class AbstractComplexType<T extends AbstractComplexType<T>> implements ComplexType<T>
+public abstract class AbstractComplexType<T extends AbstractComplexType<T>>
+	implements ComplexType<T>
 {
 	@Override
 	public void set( final T c )

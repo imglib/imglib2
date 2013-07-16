@@ -140,12 +140,4 @@ public interface FloatingType<T extends FloatingType<T>> extends ComplexType<T>
 	 */
 	void atanh(T result);
 
-	// TODO - added by BDZ - does it make sense for complex data?
-
-	/**
-	 * Fills result by taking the atan2 of the current variable (treated as y) and
-	 * the given x value.
-	 */
-	void atan2(T x, T result);
-
 }

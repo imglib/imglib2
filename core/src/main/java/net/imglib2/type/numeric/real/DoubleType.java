@@ -43,6 +43,7 @@ import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ExponentialMathType;
+import net.imglib2.type.numeric.FloatingType;
 import net.imglib2.util.Util;
 
 /**
@@ -51,8 +52,13 @@ import net.imglib2.util.Util;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class DoubleType extends AbstractRealType<DoubleType> implements ExponentialMathType<DoubleType>, NativeType<DoubleType>
+public class DoubleType extends AbstractRealType<DoubleType> implements
+	ExponentialMathType<DoubleType>, NativeType<DoubleType>,
+	FloatingType<DoubleType>
 {
+
+	// Note - FloatingType declarations added by Barry DeZonia
+
 	private int i = 0;
 
 	final protected NativeImg<DoubleType, ? extends DoubleAccess> img;
@@ -61,7 +67,7 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 	protected DoubleAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
-	public DoubleType( NativeImg<DoubleType, ? extends DoubleAccess> doubleStorage )
+	public DoubleType(NativeImg<DoubleType, ? extends DoubleAccess> doubleStorage)
 	{
 		img = doubleStorage;
 	}
@@ -85,10 +91,12 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 	public DoubleType() { this( 0 ); }
 
 	@Override
-	public NativeImg<DoubleType, ? extends DoubleAccess> createSuitableNativeImg( final NativeImgFactory<DoubleType> storageFactory, final long dim[] )
+	public NativeImg<DoubleType, ? extends DoubleAccess> createSuitableNativeImg(
+		final NativeImgFactory<DoubleType> storageFactory, final long dim[])
 	{
 		// create the container
-		final NativeImg<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );
+		final NativeImg<DoubleType, ? extends DoubleAccess> container =
+			storageFactory.createDoubleInstance(dim, 1);
 		
 		// create a Type that is linked to the container
 		final DoubleType linkedType = new DoubleType( container );
@@ -100,10 +108,14 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 	}
 	
 	@Override
-	public void updateContainer( final Object c )  { dataAccess = img.update( c ); }
+	public void updateContainer(final Object c) {
+		dataAccess = img.update(c);
+	}
 
 	@Override
-	public DoubleType duplicateTypeOnSameNativeImg() { return new DoubleType( img ); }
+	public DoubleType duplicateTypeOnSameNativeImg() {
+		return new DoubleType(img);
+	}
 	
 	public double get(){ return dataAccess.getValue( i ); }
 	public void set( final double f ){ dataAccess.setValue( i, f ); }
@@ -156,4 +168,122 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 
 	@Override
 	public int getBitsPerPixel() { return 64; }
+
+	@Override
+	public void PI(DoubleType result) {
+		result.set(Math.PI);
+	}
+
+	@Override
+	public void E(DoubleType result) {
+		result.set(Math.E);
+	}
+
+	@Override
+	public void exp(DoubleType result) {
+		result.set(Math.exp(get()));
+	}
+
+	@Override
+	public void sqrt(DoubleType result) {
+		result.set(Math.sqrt(get()));
+	}
+
+	@Override
+	public void log(DoubleType result) {
+		result.set(Math.log(get()));
+	}
+
+	@Override
+	public void pow(DoubleType b, DoubleType result) {
+		result.set(Math.pow(get(), b.get()));
+	}
+
+	@Override
+	public void logBase(DoubleType b, DoubleType result) {
+		result.set(Math.log(get()) / Math.log(b.get()));
+	}
+
+	@Override
+	public void sin(DoubleType result) {
+		result.set(Math.sin(get()));
+	}
+
+	@Override
+	public void cos(DoubleType result) {
+		result.set(Math.cos(get()));
+	}
+
+	@Override
+	public void tan(DoubleType result) {
+		result.set(Math.tan(get()));
+	}
+
+	@Override
+	public void asin(DoubleType result) {
+		result.set(Math.asin(get()));
+	}
+
+	@Override
+	public void acos(DoubleType result) {
+		result.set(Math.acos(get()));
+	}
+
+	@Override
+	public void atan(DoubleType result) {
+		result.set(Math.atan(get()));
+	}
+
+	@Override
+	public void sinh(DoubleType result) {
+		result.set(Math.sinh(get()));
+	}
+
+	@Override
+	public void cosh(DoubleType result) {
+		result.set(Math.cosh(get()));
+	}
+
+	@Override
+	public void tanh(DoubleType result) {
+		result.set(Math.tanh(get()));
+	}
+
+	// Handbook of Mathematics and Computational Science, Harris & Stocker,
+	// Springer, 2006
+	@Override
+	public void asinh(DoubleType result) {
+		double xt = get();
+		double delta = Math.sqrt(xt * xt + 1);
+		double value = Math.log(xt + delta);
+		result.set(value);
+	}
+
+	// Handbook of Mathematics and Computational Science, Harris & Stocker,
+	// Springer, 2006
+	@Override
+	public void acosh(DoubleType result) {
+		double xt = get();
+		double delta = Math.sqrt(xt * xt - 1);
+		if (xt <= -1) delta = -delta;
+		double value = Math.log(xt + delta);
+		result.set(value);
+	}
+
+	// Handbook of Mathematics and Computational Science, Harris & Stocker,
+	// Springer, 2006
+	@Override
+	public void atanh(DoubleType result) {
+		double xt = get();
+		double value = 0.5 * Math.log((1 + xt) / (1 - xt));
+		result.set(value);
+	}
+
+	/**
+	 * Fills result by taking the atan2 of the current variable (treated as y) and
+	 * the given x value.
+	 */
+	public void atan2(DoubleType x, DoubleType result) {
+		result.set(Math.atan2(get(), x.get()));
+	}
 }

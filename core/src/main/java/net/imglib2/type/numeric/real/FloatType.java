@@ -42,6 +42,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.FloatingType;
 
 /**
  * TODO
@@ -49,8 +50,12 @@ import net.imglib2.type.NativeType;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class FloatType extends AbstractRealType<FloatType> implements NativeType<FloatType>
+public class FloatType extends AbstractRealType<FloatType> implements
+	NativeType<FloatType>, FloatingType<FloatType>
 {
+
+	// Note - FloatingType declarations added by Barry DeZonia
+
 	private int i = 0;
 
 	final protected NativeImg<FloatType, ? extends FloatAccess> img;
@@ -83,10 +88,12 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	public FloatType() { this( 0 ); }
 
 	@Override
-	public NativeImg<FloatType, ? extends FloatAccess> createSuitableNativeImg( final NativeImgFactory<FloatType> storageFactory, final long dim[] )
+	public NativeImg<FloatType, ? extends FloatAccess> createSuitableNativeImg(
+		final NativeImgFactory<FloatType> storageFactory, final long dim[])
 	{
 		// create the container
-		final NativeImg<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 1 );
+		final NativeImg<FloatType, ? extends FloatAccess> container =
+			storageFactory.createFloatInstance(dim, 1);
 		
 		// create a Type that is linked to the container
 		final FloatType linkedType = new FloatType( container );
@@ -104,7 +111,9 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	}
 	
 	@Override
-	public FloatType duplicateTypeOnSameNativeImg() { return new FloatType( img ); }
+	public FloatType duplicateTypeOnSameNativeImg() {
+		return new FloatType(img);
+	}
 
 	public float get(){ return dataAccess.getValue( i ); }
 	public void set( final float f ){ dataAccess.setValue( i, f ); }
@@ -223,4 +232,122 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 
 	@Override
 	public int getBitsPerPixel() { return 32; }
+
+	@Override
+	public void PI(FloatType result) {
+		result.set((float) Math.PI);
+	}
+
+	@Override
+	public void E(FloatType result) {
+		result.set((float) Math.E);
+	}
+
+	@Override
+	public void exp(FloatType result) {
+		result.set((float) Math.exp(get()));
+	}
+
+	@Override
+	public void sqrt(FloatType result) {
+		result.set((float) Math.sqrt(get()));
+	}
+
+	@Override
+	public void log(FloatType result) {
+		result.set((float) Math.log(get()));
+	}
+
+	@Override
+	public void pow(FloatType b, FloatType result) {
+		result.set((float) Math.pow(get(), b.get()));
+	}
+
+	@Override
+	public void logBase(FloatType b, FloatType result) {
+		result.set((float) (Math.log(get()) / Math.log(b.get())));
+	}
+
+	@Override
+	public void sin(FloatType result) {
+		result.set((float) Math.sin(get()));
+	}
+
+	@Override
+	public void cos(FloatType result) {
+		result.set((float) Math.cos(get()));
+	}
+
+	@Override
+	public void tan(FloatType result) {
+		result.set((float) Math.tan(get()));
+	}
+
+	@Override
+	public void asin(FloatType result) {
+		result.set((float) Math.asin(get()));
+	}
+
+	@Override
+	public void acos(FloatType result) {
+		result.set((float) Math.acos(get()));
+	}
+
+	@Override
+	public void atan(FloatType result) {
+		result.set((float) Math.atan(get()));
+	}
+
+	@Override
+	public void sinh(FloatType result) {
+		result.set((float) Math.sinh(get()));
+	}
+
+	@Override
+	public void cosh(FloatType result) {
+		result.set((float) Math.cosh(get()));
+	}
+
+	@Override
+	public void tanh(FloatType result) {
+		result.set((float) Math.tanh(get()));
+	}
+
+	// Handbook of Mathematics and Computational Science, Harris & Stocker,
+	// Springer, 2006
+	@Override
+	public void asinh(FloatType result) {
+		double xt = get();
+		double delta = Math.sqrt(xt * xt + 1);
+		double value = Math.log(xt + delta);
+		result.set((float) value);
+	}
+
+	// Handbook of Mathematics and Computational Science, Harris & Stocker,
+	// Springer, 2006
+	@Override
+	public void acosh(FloatType result) {
+		double xt = get();
+		double delta = Math.sqrt(xt * xt - 1);
+		if (xt <= -1) delta = -delta;
+		double value = Math.log(xt + delta);
+		result.set((float) value);
+	}
+
+	// Handbook of Mathematics and Computational Science, Harris & Stocker,
+	// Springer, 2006
+	@Override
+	public void atanh(FloatType result) {
+		double xt = get();
+		double value = 0.5 * Math.log((1 + xt) / (1 - xt));
+		result.set((float) value);
+	}
+
+	/**
+	 * Fills result by taking the atan2 of the current variable (treated as y) and
+	 * the given x value.
+	 */
+	public void atan2(FloatType x, FloatType result) {
+		result.set((float) Math.atan2(get(), x.get()));
+	}
 }

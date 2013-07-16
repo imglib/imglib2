@@ -42,6 +42,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.FloatingType;
 
 /**
  * TODO
@@ -49,8 +50,12 @@ import net.imglib2.type.NativeType;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> implements NativeType<ComplexDoubleType>
+public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType>
+	implements NativeType<ComplexDoubleType>, FloatingType<ComplexDoubleType>
 {
+
+	// Note - FloatingType declarations added by Barry DeZonia
+
 	private int i = 0;
 
 	// the indices for real and imaginary value
@@ -62,7 +67,8 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	protected DoubleAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public ComplexDoubleType( final NativeImg<ComplexDoubleType, ? extends DoubleAccess> complexfloatStorage )
+	public ComplexDoubleType(
+		final NativeImg<ComplexDoubleType, ? extends DoubleAccess> complexfloatStorage)
 	{
 		img = complexfloatStorage;
 	}
@@ -86,10 +92,14 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	public ComplexDoubleType() { this( 0, 0 ); }
 
 	@Override
-	public NativeImg<ComplexDoubleType, ? extends DoubleAccess> createSuitableNativeImg( final NativeImgFactory<ComplexDoubleType> storageFactory, final long dim[] )
+	public NativeImg<ComplexDoubleType, ? extends DoubleAccess>
+		createSuitableNativeImg(
+			final NativeImgFactory<ComplexDoubleType> storageFactory,
+			final long dim[])
 	{
 		// create the container
-		final NativeImg<ComplexDoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 2 );
+		final NativeImg<ComplexDoubleType, ? extends DoubleAccess> container =
+			storageFactory.createDoubleInstance(dim, 2);
 
 		// create a Type that is linked to the container
 		final ComplexDoubleType linkedType = new ComplexDoubleType( container );
@@ -101,28 +111,40 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	}
 
 	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
+	public void updateContainer(final Object c) {
+		dataAccess = img.update(c);
+	}
 
 	@Override
-	public ComplexDoubleType duplicateTypeOnSameNativeImg() { return new ComplexDoubleType( img ); }
+	public ComplexDoubleType duplicateTypeOnSameNativeImg() {
+		return new ComplexDoubleType(img);
+	}
 
 	@Override
 	public float getRealFloat() { return (float)dataAccess.getValue( realI ); }
 	@Override
 	public double getRealDouble() { return dataAccess.getValue( realI ); }
 	@Override
-	public float getImaginaryFloat() { return (float)dataAccess.getValue( imaginaryI ); }
+	public float getImaginaryFloat() {
+		return (float) dataAccess.getValue(imaginaryI);
+	}
 	@Override
-	public double getImaginaryDouble() { return dataAccess.getValue( imaginaryI ); }
+	public double getImaginaryDouble() {
+		return dataAccess.getValue(imaginaryI);
+	}
 
 	@Override
 	public void setReal( final float r ){ dataAccess.setValue( realI, r ); }
 	@Override
 	public void setReal( final double r ){ dataAccess.setValue( realI, r ); }
 	@Override
-	public void setImaginary( final float i ){ dataAccess.setValue( imaginaryI, i ); }
+	public void setImaginary(final float i) {
+		dataAccess.setValue(imaginaryI, i);
+	}
 	@Override
-	public void setImaginary( final double i ){ dataAccess.setValue( imaginaryI, i ); }
+	public void setImaginary(final double i) {
+		dataAccess.setValue(imaginaryI, i);
+	}
 	
 	public void set( final double r, final double i ) 
 	{ 
@@ -138,10 +160,14 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 	}
 
 	@Override
-	public ComplexDoubleType createVariable(){ return new ComplexDoubleType( 0, 0 ); }
+	public ComplexDoubleType createVariable() {
+		return new ComplexDoubleType(0, 0);
+	}
 
 	@Override
-	public ComplexDoubleType copy(){ return new ComplexDoubleType( getRealFloat(), getImaginaryFloat() ); }
+	public ComplexDoubleType copy() {
+		return new ComplexDoubleType(getRealFloat(), getImaginaryFloat());
+	}
 
 	@Override
 	public int getEntitiesPerPixel() { return 2; }
@@ -188,4 +214,100 @@ public class ComplexDoubleType extends AbstractComplexType<ComplexDoubleType> im
 
 	@Override
 	public int getIndex() { return i; }
+
+	@Override
+	public void PI(ComplexDoubleType result) {
+		result.setComplexNumber(Math.PI, 0);
+	}
+
+	@Override
+	public void E(ComplexDoubleType result) {
+		result.setComplexNumber(Math.E, 0);
+	}
+
+	@Override
+	public void exp(ComplexDoubleType result) {
+		ComplexMath.exp(this, result);
+	}
+
+	@Override
+	public void sqrt(ComplexDoubleType result) {
+		ComplexMath.sqrt(this, result);
+	}
+
+	@Override
+	public void log(ComplexDoubleType result) {
+		ComplexMath.log(this, result);
+	}
+
+	@Override
+	public void pow(ComplexDoubleType p, ComplexDoubleType result) {
+		ComplexMath.pow(this, p, result);
+	}
+
+	@Override
+	public void logBase(ComplexDoubleType b, ComplexDoubleType result) {
+		ComplexMath.logBase(this, b, result);
+	}
+
+	@Override
+	public void sin(ComplexDoubleType result) {
+		ComplexMath.sin(this, result);
+	}
+
+	@Override
+	public void cos(ComplexDoubleType result) {
+		ComplexMath.cos(this, result);
+	}
+
+	@Override
+	public void tan(ComplexDoubleType result) {
+		ComplexMath.tan(this, result);
+	}
+
+	@Override
+	public void asin(ComplexDoubleType result) {
+		ComplexMath.asin(this, result);
+	}
+
+	@Override
+	public void acos(ComplexDoubleType result) {
+		ComplexMath.acos(this, result);
+	}
+
+	@Override
+	public void atan(ComplexDoubleType result) {
+		ComplexMath.atan(this, result);
+	}
+
+	@Override
+	public void sinh(ComplexDoubleType result) {
+		ComplexMath.sinh(this, result);
+	}
+
+	@Override
+	public void cosh(ComplexDoubleType result) {
+		ComplexMath.cosh(this, result);
+	}
+
+	@Override
+	public void tanh(ComplexDoubleType result) {
+		ComplexMath.tanh(this, result);
+	}
+
+	@Override
+	public void asinh(ComplexDoubleType result) {
+		ComplexMath.asinh(this, result);
+	}
+
+	@Override
+	public void acosh(ComplexDoubleType result) {
+		ComplexMath.acosh(this, result);
+	}
+
+	@Override
+	public void atanh(ComplexDoubleType result) {
+		ComplexMath.atanh(this, result);
+	}
+
 }
