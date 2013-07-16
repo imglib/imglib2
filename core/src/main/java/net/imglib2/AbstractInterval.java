@@ -48,6 +48,19 @@ public abstract class AbstractInterval extends AbstractEuclideanSpace implements
 {
 	final protected long[] min;
 	final protected long[] max;
+	
+	/**
+	 * Creates an <em>n</em>-dimensional {@link AbstractInterval} with min and
+	 * max = 0<sup>n</sup>.
+	 * 
+	 * @param n number of dimensions
+	 */
+	public AbstractInterval( final int n )
+	{
+		super( n );
+		this.min = new long[ n ];
+		this.max = new long[ n ];
+	}
 
 	/**
 	 * Creates a {@link AbstractInterval} from another {@link Interval}
@@ -56,9 +69,7 @@ public abstract class AbstractInterval extends AbstractEuclideanSpace implements
 	 */
 	public AbstractInterval ( final Interval interval )
 	{
-		super( interval.numDimensions() );
-		this.min = new long[ n ];
-		this.max = new long[ n ];
+		this( interval.numDimensions() );
 
 		interval.min( min );
 		interval.max( max );
@@ -72,11 +83,14 @@ public abstract class AbstractInterval extends AbstractEuclideanSpace implements
 	 */
 	public AbstractInterval ( final long[] min, final long[] max )
 	{
-		super( min.length );
+		this( min.length );
 		assert min.length == max.length;
-
-		this.min = min.clone();
-		this.max = max.clone();
+		
+		for ( int d = 0; d < n; ++d )
+		{
+			this.min[ d ] = min[ d ];
+			this.max[ d ] = max[ d ];
+		}
 	}
 
 	/**
