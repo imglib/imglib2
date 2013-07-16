@@ -62,6 +62,7 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
+import net.imglib2.view.composite.CompositeIntervalView;
 import net.imglib2.view.composite.CompositeView;
 import net.imglib2.view.composite.GenericComposite;
 import net.imglib2.view.composite.NumericComposite;
@@ -800,6 +801,56 @@ public class Views
 		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) && FlatIterationOrder.class.isInstance( ( ( IterableInterval< T > ) randomAccessibleInterval ).iterationOrder() ) )
 			return ( IterableInterval< T > ) randomAccessibleInterval;
 		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
+	}
+	
+	/**
+	 * Collapse the <em>n</em><sup>th</sup> dimension of an
+	 * <em>n</em>-dimensional {@link RandomAccessibleInterval}&lt;T&gt; into an
+	 * (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessibleInterval}&lt;{@link GenericComposite}&lt;T&gt;&gt;
+	 * 
+	 * @param source
+	 * 				the source
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeIntervalView} of
+	 * 				 {@link GenericComposite GenericComposites}
+	 */
+	public static < T > CompositeIntervalView< T, ? extends GenericComposite< T > > collapse( final RandomAccessibleInterval< T > source )
+	{
+		return new CompositeIntervalView< T, GenericComposite< T > >( source, new GenericComposite.Factory< T >() );
+	}
+	
+	/**
+	 * Collapse the <em>n</em><sup>th</sup> dimension of an
+	 * <em>n</em>-dimensional
+	 * {@link RandomAccessibleInterval}&lt;T extends {@link RealType}&lt;T&gt;&gt; into
+	 * an (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessibleInterval}&lt;{@link RealComposite}&lt;T&gt;&gt;
+	 * 
+	 * @param source
+	 * 				the source
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeIntervalView} of
+	 * 				 {@link RealComposite RealComposites}
+	 */
+	public static < T extends RealType< T > > CompositeIntervalView< T, RealComposite< T > > collapseReal( final RandomAccessibleInterval< T > source )
+	{
+		return new CompositeIntervalView< T, RealComposite< T > >( source, new RealComposite.Factory< T >( ( int )source.dimension( source.numDimensions() - 1 ) ) );
+	}
+	
+	/**
+	 * Collapse the <em>n</em><sup>th</sup> dimension of an
+	 * <em>n</em>-dimensional
+	 * {@link RandomAccessibleInterval}&lt;T extends {@link NumericType}&lt;T&gt;&gt; into
+	 * an (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessibleInterval}&lt;{@link NumericComposite}&lt;T&gt;&gt;
+	 * 
+	 * @param source
+	 * 				the source
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeIntervalView} of
+	 * 				 {@link NumericComposite NumericComposites}
+	 */
+	public static < T extends NumericType< T > > CompositeIntervalView< T, NumericComposite< T > > collapseNumeric( final RandomAccessibleInterval< T > source )
+	{
+		return new CompositeIntervalView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( ( int )source.dimension( source.numDimensions() - 1 ) ) );
 	}
 	
 	/**
