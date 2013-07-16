@@ -45,7 +45,9 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 
 /**
- * 
+ * A vector of {@link NumericType} scalars.  It is a {@link NumericType}
+ * itself, implementing the {@link NumericType} algebra as element-wise
+ * operations.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

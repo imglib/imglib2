@@ -42,7 +42,10 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 
 /**
- * 
+ * {@link CompositeView} collapses the trailing dimension of a
+ * {@link RandomAccessible} of T into a {@link Composite} of T.  The results is
+ * an (<em>n</em>-1)-dimensional {@link RandomAccessible} of {@link Composite}
+ * of T.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

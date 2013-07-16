@@ -39,7 +39,8 @@ package net.imglib2.view.composite;
 import net.imglib2.RandomAccess;
 
 /**
- * 
+ * A factory to create a {@link Composite} vector of scalars T given a
+ * {@link RandomAccess}.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
