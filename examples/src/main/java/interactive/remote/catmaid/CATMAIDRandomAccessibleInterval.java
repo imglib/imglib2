@@ -580,6 +580,7 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 	final protected long rows, cols, s;
 	final protected int tileWidth, tileHeight;
 	
+	
 	public CATMAIDRandomAccessibleInterval(
 			final String url,
 			final long width,
@@ -589,7 +590,7 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			final int tileWidth,
 			final int tileHeight )
 	{
-		super( new long[]{ width, height, depth } );
+		super( 3 );
 		this.baseUrl = url;
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -597,6 +598,9 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 		final double scale = 1.0 / Math.pow( 2, s );
 		cols = ( long )Math.ceil( scale * width / tileWidth );
 		rows = ( long )Math.ceil( scale * height / tileHeight );
+		max[ 0 ] = ( long )( width * scale ) - 1;
+		max[ 1 ] = ( long )( height * scale ) - 1;
+		max[ 2 ] = depth - 1;
 	}
 	
 	@Override
