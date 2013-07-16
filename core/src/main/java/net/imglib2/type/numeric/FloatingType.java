@@ -42,7 +42,7 @@ package net.imglib2.type.numeric;
  * 
  * @author Barry DeZonia
  */
-public interface FloatingType<T extends FloatingType<T>> extends ComplexType<T>
+public interface FloatingType<T extends FloatingType<T>>
 {
 
 	/**
