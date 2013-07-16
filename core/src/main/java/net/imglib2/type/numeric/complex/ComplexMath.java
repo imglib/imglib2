@@ -56,8 +56,10 @@ public class ComplexMath {
 
 	private static final ComplexDoubleType I = new ComplexDoubleType(0,1);
 	private static final ComplexDoubleType MINUS_I = new ComplexDoubleType(0,-1);
-	private static final ComplexDoubleType MINUS_I_OVER_TWO = new ComplexDoubleType(0,-0.5);
-	private static final ComplexDoubleType MINUS_ONE = new ComplexDoubleType(-1,0);
+	private static final ComplexDoubleType MINUS_I_OVER_TWO =
+		new ComplexDoubleType(0, -0.5);
+	private static final ComplexDoubleType MINUS_ONE = new ComplexDoubleType(-1,
+		0);
 	private static final ComplexDoubleType ONE = new ComplexDoubleType(1, 0);
 	private static final ComplexDoubleType ONE_HALF = new ComplexDoubleType(0.5,
 		0);
@@ -75,9 +77,20 @@ public class ComplexMath {
 
 	// TODO - deprecate OPS' ComplexHelper class
 
+	/**
+	 * Computes the log of a given complex number and places it in a result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		log(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
+		// Note - this uses the formula for the log of the principal branch.
+
 		double modulus = getModulus(z);
 		double argument = getArgument(z);
 		double x = Math.log(modulus);
@@ -85,9 +98,19 @@ public class ComplexMath {
 		result.setComplexNumber(x, y);
 	}
 
+	/**
+	 * Computes the log base b of a given complex number and places it in a
+	 * result.
+	 * 
+	 * @param z The input number
+	 * @param b The log base
+	 * @param result The result
+	 */
 	public static void logBase(ComplexType<?> z, ComplexType<?> b,
 		ComplexType<?> result)
 	{
+		// No reference
+
 		ComplexDoubleType numer;
 		ComplexDoubleType denom;
 
@@ -106,18 +129,36 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the exp of a given complex number and places it in a result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		exp(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Complex Variables and Applications, Brown and Churchill, 7th edition
+
 		double constant = Math.exp(z.getRealDouble());
 		double x = constant * Math.cos(z.getImaginaryDouble());
 		double y = constant * Math.sin(z.getImaginaryDouble());
 		result.setComplexNumber(x, y);
 	}
 
+	/**
+	 * Computes the square root of a given complex number and places it in a
+	 * result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		sqrt(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		double power = 2.0;
 		double modulus = getModulus(z);
 		double argument = getArgument(z);
@@ -128,9 +169,20 @@ public class ComplexMath {
 	}
 
 	// TODO - test I didn't reverse inputs. Try pow(2,3) ?= 8
+	/**
+	 * Computes raising a given complex number to a given power and places it in a
+	 * result.
+	 * 
+	 * @param a The input number
+	 * @param z The power
+	 * @param result The result
+	 */
 	public static void pow(ComplexType<?> a, ComplexType<?> z,
 		ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType logA;
 		ComplexDoubleType zLogA;
 
@@ -149,9 +201,18 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the sine of a given complex number and places it in a result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		sin(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType IZ;
 		ComplexDoubleType minusIZ;
 		ComplexDoubleType expIZ;
@@ -182,9 +243,18 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the cosine of a given complex number and places it in a result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		cos(ComplexType<?> z, ComplexType<?> result)
  {
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType IZ;
 		ComplexDoubleType minusIZ;
 		ComplexDoubleType expIZ;
@@ -215,9 +285,18 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the tangent of a given complex number and places it in a result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		tan(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType sin;
 		ComplexDoubleType cos;
 
@@ -236,9 +315,19 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the inverse sine of a given complex number and places it in a
+	 * result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		asin(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType iz;
 		ComplexDoubleType zSquared;
 		ComplexDoubleType miniSum;
@@ -273,9 +362,19 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the inverse cosine of a given complex number and places it in a
+	 * result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		acos(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType zSquared;
 		ComplexDoubleType miniSum;
 		ComplexDoubleType root;
@@ -306,9 +405,19 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the inverse tangent of a given complex number and places it in a
+	 * result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		atan(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType iz;
 		ComplexDoubleType sum;
 		ComplexDoubleType diff;
@@ -339,9 +448,19 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the hyperbolic sine of a given complex number and places it in a
+	 * result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		sinh(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType minusZ;
 		ComplexDoubleType expZ;
 		ComplexDoubleType expMinusZ;
@@ -368,9 +487,19 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the hyperbolic cosine of a given complex number and places it in a
+	 * result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		cosh(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType minusZ;
 		ComplexDoubleType expZ;
 		ComplexDoubleType expMinusZ;
@@ -397,9 +526,19 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the hyperbolic tangent of a given complex number and places it in
+	 * a result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void
 		tanh(ComplexType<?> z, ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType sinh;
 		ComplexDoubleType cosh;
 
@@ -418,9 +557,19 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the inverse hyperbolic sine of a given complex number and places
+	 * it in a result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void asinh(ComplexType<?> z,
 		ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType zSquared;
 		ComplexDoubleType miniSum;
 		ComplexDoubleType root;
@@ -447,9 +596,19 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the inverse hyperbolic cosine of a given complex number and places
+	 * it in a result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void acosh(ComplexType<?> z,
 		ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType zSquared;
 		ComplexDoubleType miniSum;
 		ComplexDoubleType root;
@@ -476,9 +635,19 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the inverse hyperbolic tangent of a given complex number and
+	 * places it in a result.
+	 * 
+	 * @param z The input number
+	 * @param result The result
+	 */
 	public static void atanh(ComplexType<?> z,
 		ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		ComplexDoubleType sum;
 		ComplexDoubleType diff;
 		ComplexDoubleType quotient;
@@ -505,24 +674,54 @@ public class ComplexMath {
 		}
 	}
 
+	/**
+	 * Computes the addition of two complex numbers and places it in a result
+	 * 
+	 * @param z1 The first number
+	 * @param z2 The second number
+	 * @param result The result
+	 */
 	public static void add(ComplexType<?> z1, ComplexType<?> z2,
 		ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
 		result.setReal(z1.getRealDouble() + z2.getRealDouble());
+
 		result.setImaginary(z1.getImaginaryDouble() + z2.getImaginaryDouble());
 	}
 
+	/**
+	 * Computes the subtraction of two complex numbers and places it in a result
+	 * 
+	 * @param z1 The first number
+	 * @param z2 The second number
+	 * @param result The result
+	 */
 	public static void sub(ComplexType<?> z1, ComplexType<?> z2,
 		ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		result.setReal(z1.getRealDouble() - z2.getRealDouble());
 		result.setImaginary(z1.getImaginaryDouble() - z2.getImaginaryDouble());
 	}
 
+	/**
+	 * Computes the multiplication of two complex numbers and places it in a
+	 * result
+	 * 
+	 * @param z1 The first number
+	 * @param z2 The second number
+	 * @param result The result
+	 */
 	public static void mul(ComplexType<?> z1, ComplexType<?> z2,
 		ComplexType<?> result)
 	{
-		// textbook version : works
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		double x =
 			z1.getRealDouble() * z2.getRealDouble() - z1.getImaginaryDouble() *
 				z2.getImaginaryDouble();
@@ -533,9 +732,19 @@ public class ComplexMath {
 		result.setComplexNumber(x, y);
 	}
 
+	/**
+	 * Computes the division of two complex numbers and places it in a result
+	 * 
+	 * @param z1 The first number
+	 * @param z2 The second number
+	 * @param result The result
+	 */
 	public static void div(ComplexType<?> z1, ComplexType<?> z2,
 		ComplexType<?> result)
 	{
+		// Handbook of Mathematics and Computational Science, Harris & Stocker,
+		// Springer, 2006
+
 		double denom =
 			z2.getRealDouble() * z2.getRealDouble() + z2.getImaginaryDouble() *
 				z2.getImaginaryDouble();
