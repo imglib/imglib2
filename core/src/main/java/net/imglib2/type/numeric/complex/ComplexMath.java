@@ -83,8 +83,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		log(ComplexType<?> z, ComplexType<?> result)
+	public static void log(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -135,8 +134,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		exp(ComplexType<?> z, ComplexType<?> result)
+	public static void exp(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Complex Variables and Applications, Brown and Churchill, 7th edition
 
@@ -153,8 +151,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		sqrt(ComplexType<?> z, ComplexType<?> result)
+	public static void sqrt(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -168,36 +165,35 @@ public class ComplexMath {
 		setPolar(result, r, theta);
 	}
 
-	// TODO - test I didn't reverse inputs. Try pow(2,3) ?= 8
 	/**
 	 * Computes raising a given complex number to a given power and places it in a
 	 * result.
 	 * 
 	 * @param a The input number
-	 * @param z The power
+	 * @param b The power
 	 * @param result The result
 	 */
-	public static void pow(ComplexType<?> a, ComplexType<?> z,
+	public static void pow(ComplexType<?> a, ComplexType<?> b,
 		ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
 
 		ComplexDoubleType logA;
-		ComplexDoubleType zLogA;
+		ComplexDoubleType bLogA;
 
 		synchronized (lock) {
 			logA = temps.get();
-			zLogA = temps.get();
+			bLogA = temps.get();
 		}
 
 		log(a, logA);
-		mul(z, logA, zLogA);
-		exp(zLogA, result);
+		mul(b, logA, bLogA);
+		exp(bLogA, result);
 
 		synchronized (lock) {
 			temps.free(logA);
-			temps.free(zLogA);
+			temps.free(bLogA);
 		}
 	}
 
@@ -207,8 +203,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		sin(ComplexType<?> z, ComplexType<?> result)
+	public static void sin(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -249,8 +244,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		cos(ComplexType<?> z, ComplexType<?> result)
+	public static void cos(ComplexType<?> z, ComplexType<?> result)
  {
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -291,8 +285,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		tan(ComplexType<?> z, ComplexType<?> result)
+	public static void tan(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -322,8 +315,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		asin(ComplexType<?> z, ComplexType<?> result)
+	public static void asin(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -369,8 +361,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		acos(ComplexType<?> z, ComplexType<?> result)
+	public static void acos(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -412,8 +403,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		atan(ComplexType<?> z, ComplexType<?> result)
+	public static void atan(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -455,8 +445,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		sinh(ComplexType<?> z, ComplexType<?> result)
+	public static void sinh(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -494,8 +483,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		cosh(ComplexType<?> z, ComplexType<?> result)
+	public static void cosh(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -533,8 +521,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void
-		tanh(ComplexType<?> z, ComplexType<?> result)
+	public static void tanh(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -564,8 +551,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void asinh(ComplexType<?> z,
-		ComplexType<?> result)
+	public static void asinh(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -603,8 +589,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void acosh(ComplexType<?> z,
-		ComplexType<?> result)
+	public static void acosh(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -642,8 +627,7 @@ public class ComplexMath {
 	 * @param z The input number
 	 * @param result The result
 	 */
-	public static void atanh(ComplexType<?> z,
-		ComplexType<?> result)
+	public static void atanh(ComplexType<?> z, ComplexType<?> result)
 	{
 		// Handbook of Mathematics and Computational Science, Harris & Stocker,
 		// Springer, 2006
@@ -843,4 +827,16 @@ public class ComplexMath {
 			freeList.add(tmp);
 		}
 	}
+
+	/*
+	public static void main(String[] args) {
+		ComplexDoubleType a = new ComplexDoubleType(2, 0);
+		ComplexDoubleType b = new ComplexDoubleType(3, 0);
+		ComplexDoubleType result = new ComplexDoubleType();
+		pow(a, b, result);
+		System.out.println("Should be 8,0 and is:");
+		System.out.println(result.getRealDouble() + "," +
+			result.getImaginaryDouble());
+	}
+	*/
 }
