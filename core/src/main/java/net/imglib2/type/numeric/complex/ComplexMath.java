@@ -49,8 +49,10 @@ import net.imglib2.type.numeric.ComplexType;
 public class ComplexMath {
 
 	// TODO
-	// to be future proof this class should calculate in a BigDecimal based
+	// To be future proof this class should calculate in a BigDecimal based
 	// complex type.
+	// This code was pulled from OPS. If this approach is deemed valid we need to
+	// update those complex operations in OPS to call this helper class.
 	  
 	// -- constants --
 
