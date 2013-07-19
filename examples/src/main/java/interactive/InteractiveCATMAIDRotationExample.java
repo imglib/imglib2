@@ -49,12 +49,30 @@ public class InteractiveCATMAIDRotationExample
 {
 	final static public void main( final String[] args ) throws ImgIOException
 	{
-		final CATMAIDRandomAccessibleInterval map = new CATMAIDRandomAccessibleInterval( 6016, 4464, 803, "http://catmaid.mpi-cbg.de/map/c-elegans/" );
+//		final CATMAIDRandomAccessibleInterval map =
+//				new CATMAIDRandomAccessibleInterval(
+//					"file:/home/saalfeld/tmp/catmaid/export-test/fib/aligned/xy/",
+//					1987,
+//					1441,
+//					460,
+//					0,
+//					256,
+//					256 );
+		final CATMAIDRandomAccessibleInterval map =
+				new CATMAIDRandomAccessibleInterval(
+						"http://catmaid.mpi-cbg.de/map/c-elegans/",
+						6016,
+						4464,
+						803,
+						0,
+						256,
+						256 );
 //		final CATMAIDRandomAccessibleInterval map = new CATMAIDRandomAccessibleInterval( 6016, 4464, 803, "http://localhost/catmaid/" );
 
 		final int w = 400, h = 300;
 
 		final double yScale = 1.0, zScale = 12.0;
+//		final double yScale = 1.0, zScale = 2.0;
 		final AffineTransform3D initial = new AffineTransform3D();
 		initial.set(
 			1.0, 0.0, 0.0, ( w - map.dimension( 0 ) ) / 2.0,

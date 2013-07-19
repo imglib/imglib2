@@ -34,7 +34,7 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-package net.imglib2.view.composite;
+package net.imglib2.view;
 
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
@@ -42,208 +42,233 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 
 /**
- * {@link CompositeView} collapses the trailing dimension of a
- * {@link RandomAccessible} of T into a {@link Composite} of T.  The results is
- * an (<em>n</em>-1)-dimensional {@link RandomAccessible} of {@link Composite}
- * of T.
+ * {@link SubsampleView} is a view that provides access to only every
+ * <em>s<sub>d</sub></em><sup>th</sup> value of a source
+ * {@link RandomAccessible}.  This is effectively an integer scaling
+ * transformation.  Localization calls to the {@link RandomAccess} return
+ * scaled coordinates that are generated on-the-fly.  Localization is thus
+ * moderately inefficient to the benefit of faster positioning.  Don't ask for
+ * what you already know ;).
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class CompositeView< T, C extends Composite< T > > implements RandomAccessible< C >
+public class SubsampleView< T > implements RandomAccessible< T >
 {
-	final protected CompositeFactory< T, C > compositeFactory;
 	final protected RandomAccessible< T > source;
-	final protected int n;
+	final protected long[] steps;
 	
-	public class CompositeRandomAccess implements RandomAccess< C >
+	public class SubsampleRandomAccess implements RandomAccess< T >
 	{
-		final protected RandomAccess< T > sourceAccess;
-		final protected C composite;
+		final protected RandomAccess< T > sourceRandomAccess;
+		final protected long[] tmp = new long[ source.numDimensions() ];
 		
-		public CompositeRandomAccess()
+		protected SubsampleRandomAccess( final RandomAccess< T > sourceRandomAccess )
 		{
-			sourceAccess = source.randomAccess();
-			composite = compositeFactory.create( sourceAccess );
+			this.sourceRandomAccess = sourceRandomAccess;
+		}
+		
+		public SubsampleRandomAccess()
+		{
+			this( source.randomAccess() );
+		}
+		
+		public SubsampleRandomAccess( final Interval interval )
+		{
+			this( source.randomAccess( interval ) );
 		}
 		
 		@Override
 		public void localize( final int[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getIntPosition( d );
+			for ( int d = 0; d < steps.length; ++ d )
+				position[ d ] = sourceRandomAccess.getIntPosition( d ) / ( int )steps[ d ];
 		}
 
 		@Override
 		public void localize( final long[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getLongPosition( d );
+			for ( int d = 0; d < steps.length; ++ d )
+				position[ d ] = sourceRandomAccess.getLongPosition( d ) / steps[ d ];
 		}
 
 		@Override
 		public int getIntPosition( final int d )
 		{
-			return sourceAccess.getIntPosition( d );
+			return sourceRandomAccess.getIntPosition( d ) / ( int )steps[ d ];
 		}
 
 		@Override
 		public long getLongPosition( final int d )
 		{
-			return sourceAccess.getLongPosition( d );
+			return sourceRandomAccess.getLongPosition( d ) / steps[ d ];
 		}
 
 		@Override
 		public void localize( final float[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getFloatPosition( d );
+			for ( int d = 0; d < steps.length; ++ d )
+				position[ d ] = sourceRandomAccess.getFloatPosition( d ) / ( float )steps[ d ];
 		}
 
 		@Override
 		public void localize( final double[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getDoublePosition( d );
+			for ( int d = 0; d < steps.length; ++ d )
+				position[ d ] = sourceRandomAccess.getDoublePosition( d ) / ( double )steps[ d ];
 		}
 
 		@Override
 		public float getFloatPosition( final int d )
 		{
-			return sourceAccess.getFloatPosition( d );
+			return sourceRandomAccess.getFloatPosition( d ) / ( float )steps[ d ];
 		}
 
 		@Override
 		public double getDoublePosition( final int d )
 		{
-			return sourceAccess.getFloatPosition( d );
+			return sourceRandomAccess.getDoublePosition( d ) / ( double )steps[ d ];
 		}
 
 		@Override
 		public int numDimensions()
 		{
-			return n;
+			return source.numDimensions();
 		}
 
 		@Override
 		public void fwd( final int d )
 		{
-			sourceAccess.fwd( d );
+			sourceRandomAccess.move( steps[ d ], d );
 		}
 
 		@Override
 		public void bck( final int d )
 		{
-			sourceAccess.bck( d );
+			sourceRandomAccess.move( -steps[ d ], d );
 		}
 
 		@Override
 		public void move( final int distance, final int d )
 		{
-			sourceAccess.move( distance, d );
+			sourceRandomAccess.move( distance * steps[ d ], d );
 		}
 
 		@Override
 		public void move( final long distance, final int d )
 		{
-			sourceAccess.move( distance, d );
+			sourceRandomAccess.move( distance * steps[ d ], d );
 		}
 
 		@Override
 		public void move( final Localizable localizable )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.move( localizable.getLongPosition( d ), d );
+			for ( int d = 0; d < steps.length; ++d )
+				tmp[ d ] = localizable.getLongPosition( d ) * steps[ d ];
+			sourceRandomAccess.move( tmp );
 		}
 
 		@Override
 		public void move( final int[] distance )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.move( distance[ d ], d );
+			for ( int d = 0; d < steps.length; ++d )
+				tmp[ d ] = distance[ d ] * steps[ d ];
+			sourceRandomAccess.move( tmp );
 		}
 
 		@Override
 		public void move( final long[] distance )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.move( distance[ d ], d );
+			for ( int d = 0; d < steps.length; ++d )
+				tmp[ d ] = distance[ d ] * steps[ d ];
+			sourceRandomAccess.move( tmp );
 		}
 
 		@Override
 		public void setPosition( final Localizable localizable )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.setPosition( localizable.getLongPosition( d ), d );
+			for ( int d = 0; d < steps.length; ++d )
+				tmp[ d ] = localizable.getLongPosition( d ) * steps[ d ];
+			sourceRandomAccess.setPosition( tmp );
 		}
 
 		@Override
 		public void setPosition( final int[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.setPosition( position[ d ], d );
+			for ( int d = 0; d < steps.length; ++d )
+				tmp[ d ] = position[ d ] * steps[ d ];
+			sourceRandomAccess.setPosition( tmp );
 		}
 
 		@Override
 		public void setPosition( final long[] position )
 		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.setPosition( position[ d ], d );
+			for ( int d = 0; d < steps.length; ++d )
+				tmp[ d ] = position[ d ] * steps[ d ];
+			sourceRandomAccess.setPosition( tmp );
 		}
 
 		@Override
 		public void setPosition( final int position, final int d )
 		{
-			sourceAccess.setPosition( position, d );
+			sourceRandomAccess.setPosition( position * steps[ d ], d );
 		}
 
 		@Override
 		public void setPosition( final long position, final int d )
 		{
-			sourceAccess.setPosition( position, d );
+			sourceRandomAccess.setPosition( position * steps[ d ], d );
 		}
 
 		@Override
-		public C get()
+		public T get()
 		{
-			return composite;
+			return sourceRandomAccess.get();
 		}
 
 		@Override
-		public CompositeRandomAccess copy()
+		public SubsampleRandomAccess copy()
 		{
-			return new CompositeRandomAccess();
+			return new SubsampleRandomAccess( sourceRandomAccess.copyRandomAccess() );
 		}
 
 		@Override
-		public CompositeRandomAccess copyRandomAccess()
+		public SubsampleRandomAccess copyRandomAccess()
 		{
 			return copy();
 		}
 	}
 	
-	public CompositeView( final RandomAccessible< T > source, final CompositeFactory< T, C > compositeFactory )
+	public SubsampleView( final RandomAccessible< T > source, final long step )
 	{
 		this.source = source;
-		this.compositeFactory = compositeFactory;
-		n = source.numDimensions() - 1;
+		this.steps = new long[ source.numDimensions() ];
+		for ( int d = 0; d < steps.length; ++d )
+			steps[ d ] = step;
+	}
+	
+	public SubsampleView( final RandomAccessible< T > source, final long... steps )
+	{
+		assert steps.length >= source.numDimensions() : "Dimensions do not match.";
+		
+		this.source = source;
+		this.steps = steps.clone();
 	}
 	
 	@Override
 	public int numDimensions()
 	{
-		return n;
+		return source.numDimensions();
 	}
 
 	@Override
-	public CompositeRandomAccess randomAccess()
+	public RandomAccess< T > randomAccess()
 	{
-		return new CompositeRandomAccess();
+		return new SubsampleRandomAccess();
 	}
 
 	@Override
-	public CompositeRandomAccess randomAccess( final Interval interval )
+	public RandomAccess< T > randomAccess( final Interval interval )
 	{
-		return randomAccess();
+		return new SubsampleRandomAccess( interval );
 	}
-
 }
