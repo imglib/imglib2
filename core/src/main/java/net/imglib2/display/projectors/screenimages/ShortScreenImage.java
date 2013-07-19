@@ -16,7 +16,7 @@ import java.awt.image.WritableRaster;
 import net.imglib2.display.ScreenImage;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
-import net.imglib2.type.numeric.integer.ShortType;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 /**
  * Creates an {@link Image} from a ShortType ArrayImg
@@ -24,7 +24,7 @@ import net.imglib2.type.numeric.integer.ShortType;
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
  */
-public class ShortScreenImage extends ArrayImg< ShortType, ShortArray > implements ScreenImage
+public class ShortScreenImage extends ArrayImg< UnsignedShortType, ShortArray > implements ScreenImage
 {
 
 	private static final ColorSpace CS = ColorSpace.getInstance( ColorSpace.CS_GRAY );

@@ -16,7 +16,7 @@ import java.awt.image.WritableRaster;
 import net.imglib2.display.ScreenImage;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
-import net.imglib2.type.numeric.integer.ByteType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 /**
  * Creates an {@link Image} from a ByteType ArrayImg
@@ -24,7 +24,7 @@ import net.imglib2.type.numeric.integer.ByteType;
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
  */
-public class ByteScreenImage extends ArrayImg< ByteType, ByteArray > implements ScreenImage
+public class ByteScreenImage extends ArrayImg< UnsignedByteType, ByteArray > implements ScreenImage
 {
 
 	private static final ColorSpace CS = ColorSpace.getInstance( ColorSpace.CS_GRAY );
