@@ -37,6 +37,7 @@
 
 package net.imglib2.util;
 
+import net.imglib2.Dimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
@@ -324,7 +325,7 @@ public class Intervals
 	 *
 	 * @return number of elements in {@code interval}.
 	 */
-	public static long numElements( final Interval interval )
+	public static long numElements( final Dimensions interval )
 	{
 		long numPixels = interval.dimension( 0 );
 		final int n = interval.numDimensions();
@@ -348,7 +349,7 @@ public class Intervals
 
 		return true;
 	}
-	
+
 	/**
 	 * Tests weather two intervals have equal dimensions (same size)
 	 */
