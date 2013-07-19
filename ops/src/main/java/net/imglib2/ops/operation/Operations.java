@@ -61,11 +61,17 @@ public class Operations
 	 */
 	public static < A, B > B compute( B input, B output, UnaryOutputOperation< B, B >[] ops )
 	{
-		@SuppressWarnings( "unchecked" )
-		UnaryOutputOperation< B, B >[] follower = new UnaryOutputOperation[ ops.length - 1 ];
-		System.arraycopy( ops, 1, follower, 0, follower.length );
 
-		return compute( input, output, ops[ 0 ], concat( follower ) );
+		if(ops.length==1) {
+			return ops[0].compute( input , output );
+		} else {
+			
+			@SuppressWarnings( "unchecked" )
+			UnaryOutputOperation< B, B >[] follower = new UnaryOutputOperation[ ops.length - 1 ];
+			System.arraycopy( ops, 1, follower, 0, follower.length );
+			
+			return compute( input, output, ops[ 0 ], concat( follower ) );
+		}
 	}
 
 	public static < B > B compute( B input, B output, PipedUnaryOperation< B > op1, PipedUnaryOperation< B > op2 )
