@@ -89,6 +89,7 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 			break;
 		case LANCZOS:
 			ifac = new LanczosInterpolatorFactory< T >();
+			break;
 		default:
 
 			RandomAccess< T > srcRA = Views.extendPeriodic( op ).randomAccess();
