@@ -32,6 +32,7 @@
 	</modules>
 
 	<properties>
+		<argLine>-Dapple.awt.UIElement="true" -Xmx512m</argLine>
 		<project.rootdir>${basedir}</project.rootdir>
 		<jama.version>1.0.3</jama.version>
 	</properties>
