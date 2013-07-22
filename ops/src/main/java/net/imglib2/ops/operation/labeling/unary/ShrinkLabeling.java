@@ -206,7 +206,7 @@ public class ShrinkLabeling< L extends Comparable< L >> implements UnaryOperatio
 									// upper
 									// middle
 									opRa.setPosition( currentPos[ 0 ], 0 );
-									if ( !opRa.get().getLabeling().isEmpty() )
+									if ( opRa.get().getLabeling().equals( currentLabeling ) )
 									{
 										resRa.get().setLabeling( currentLabeling );
 										set = true;
