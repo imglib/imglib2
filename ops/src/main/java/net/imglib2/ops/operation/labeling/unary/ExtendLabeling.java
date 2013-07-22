@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
@@ -78,8 +77,6 @@ public class ExtendLabeling< L extends Comparable< L >> implements UnaryOperatio
 
 		labels = op.getLabels();
 
-		Set< int[] > newSeeds = new HashSet< int[] >();
-
 		OutOfBounds< LabelingType< L >> opRa = Views.extendValue( op, new LabelingType< L >( op.firstElement().getMapping().emptyList() ) ).randomAccess();
 		OutOfBounds< LabelingType< L >> resRa = Views.extendValue( r, new LabelingType< L >( op.firstElement().getMapping().emptyList() ) ).randomAccess();
 
@@ -87,7 +84,6 @@ public class ExtendLabeling< L extends Comparable< L >> implements UnaryOperatio
 		Cursor< LabelingType< L >> iiCursor = null;
 		int[] pos = new int[ op.numDimensions() ];
 
-		newSeeds.clear();
 		for ( L label : labels )
 		{
 
@@ -107,11 +103,11 @@ public class ExtendLabeling< L extends Comparable< L >> implements UnaryOperatio
 
 				if ( ct == ConnectedType.EIGHT_CONNECTED )
 				{
-					newSeeds.addAll( operate8Connected( pos, iiCursor.get().getLabeling(), opRa, resRa, labelingBased ) );
+					operate8Connected( pos, iiCursor.get().getLabeling(), opRa, resRa, labelingBased );
 				}
 				else if ( ct == ConnectedType.FOUR_CONNECTED )
 				{
-					newSeeds.addAll( operate4Connected( pos, iiCursor.get().getLabeling(), opRa, resRa, labelingBased ) );
+					operate4Connected( pos, iiCursor.get().getLabeling(), opRa, resRa, labelingBased );
 				}
 
 			}
@@ -119,50 +115,46 @@ public class ExtendLabeling< L extends Comparable< L >> implements UnaryOperatio
 		return r;
 	}
 
-	private static synchronized < L extends Comparable< L >> Set< int[] > operate8Connected( final int[] currentPos, final List< L > currentLabeling, final OutOfBounds< LabelingType< L >> opRa, final OutOfBounds< LabelingType< L >> resRa, boolean labelingBased )
+	private static synchronized < L extends Comparable< L >> void operate8Connected( final int[] currentPos, final List< L > currentLabeling, final OutOfBounds< LabelingType< L >> opRa, final OutOfBounds< LabelingType< L >> resRa, boolean labelingBased )
 	{
-
-		Set< int[] > nextSeeds = new HashSet< int[] >();
 
 		// middle left
 		opRa.setPosition( currentPos[ 0 ] - 1, 0 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
 		// middle right
 		opRa.setPosition( currentPos[ 0 ] + 1, 0 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
 		// upper right
 		opRa.setPosition( currentPos[ 1 ] - 1, 1 );
 		opRa.setPosition( currentPos[ 0 ] + 1, 0 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
 		// lower right
 		opRa.setPosition( currentPos[ 1 ] + 1, 1 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
 		// lower middle
 		opRa.setPosition( currentPos[ 0 ], 0 );
 		opRa.setPosition( currentPos[ 1 ] + 1, 1 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
 		// lower left
 		opRa.setPosition( currentPos[ 0 ] - 1, 0 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
 		// upper left
 		opRa.setPosition( currentPos[ 1 ] - 1, 1 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
 		// upper middle
 		opRa.setPosition( currentPos[ 0 ], 0 );
 		opRa.setPosition( currentPos[ 1 ] - 1, 1 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
-
-		return nextSeeds;
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 	}
 
-	private static synchronized < L extends Comparable< L >> void checkAndSet( final List< L > currentLabeling, int[] currentPos, final OutOfBounds< LabelingType< L >> opRa, final OutOfBounds< LabelingType< L >> resRa, final Set< int[] > nextSeeds, boolean labelingBased )
+	private static synchronized < L extends Comparable< L >> void checkAndSet( final List< L > currentLabeling, int[] currentPos, final OutOfBounds< LabelingType< L >> opRa, final OutOfBounds< LabelingType< L >> resRa, boolean labelingBased )
 	{
 
 		if ( !opRa.get().getLabeling().containsAll( currentLabeling ) && !opRa.isOutOfBounds() )
@@ -176,33 +168,26 @@ public class ExtendLabeling< L extends Comparable< L >> implements UnaryOperatio
 
 			// Labeling is set
 			setLabeling( currentLabeling, resRa, labelingBased );
-
-			// pos is added to the list of new seeds
-			nextSeeds.add( tmpPos.clone() );
 		}
 
 	}
 
-	private static synchronized < L extends Comparable< L >> Collection< int[] > operate4Connected( final int[] currentPos, final List< L > currentLabeling, final OutOfBounds< LabelingType< L >> opRa, final OutOfBounds< LabelingType< L >> resRa, boolean labelingBased )
+	private static synchronized < L extends Comparable< L >> void operate4Connected( final int[] currentPos, final List< L > currentLabeling, final OutOfBounds< LabelingType< L >> opRa, final OutOfBounds< LabelingType< L >> resRa, boolean labelingBased )
 	{
 
-		// 4 Connected
-		Set< int[] > nextSeeds = new HashSet< int[] >();
-
 		opRa.setPosition( currentPos[ 0 ] - 1, 0 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
 		opRa.setPosition( currentPos[ 0 ] + 1, 0 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
 		opRa.setPosition( currentPos[ 0 ], 0 );
 		opRa.setPosition( currentPos[ 1 ] - 1, 1 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
 		opRa.setPosition( currentPos[ 1 ] + 1, 1 );
-		checkAndSet( currentLabeling, currentPos, opRa, resRa, nextSeeds, labelingBased );
+		checkAndSet( currentLabeling, currentPos, opRa, resRa, labelingBased );
 
-		return nextSeeds;
 	}
 
 	private static synchronized < L extends Comparable< L >> void setLabeling( final List< L > currentLabels, final RandomAccess< LabelingType< L >> resRa, boolean labelingBased )
