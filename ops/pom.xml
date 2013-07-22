@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>org.scijava</groupId>
 			<artifactId>scijava-common</artifactId>
-			<version>1.5.0</version>
+			<version>${scijava-common.version}</version>
 		</dependency>
 	</dependencies>
 
