@@ -160,6 +160,7 @@ public class DilateLabeling< L extends Comparable< L >> implements UnaryOperatio
 			final List< L > center = inStructure.get().getLabeling();
 			if ( !center.isEmpty() )
 			{
+				out.get().setLabeling( center );
 				continue next;
 			}
 			while ( inStructure.hasNext() )
