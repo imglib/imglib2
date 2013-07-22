@@ -89,10 +89,8 @@ public class ErodeLabeling< L extends Comparable< L >> implements UnaryOperation
 	@Override
 	public Labeling< L > compute( final Labeling< L > input, final Labeling< L > output )
 	{
-		if ( m_labelBased )
-		{
-			return computeLabelBased( input, output );
-		}
+
+		if ( m_labelBased ) { return computeLabelBased( input, output ); }
 		return computeBinaryBased( input, output );
 	}
 
@@ -111,7 +109,8 @@ public class ErodeLabeling< L extends Comparable< L >> implements UnaryOperation
 					inStructure.next();
 					if ( !inStructure.get().getLabeling().contains( label ) )
 					{
-						removeLabel( out.get(), label );
+						// Clear
+						// removeLabel( out.get(), label );
 						continue next;
 					}
 				}
