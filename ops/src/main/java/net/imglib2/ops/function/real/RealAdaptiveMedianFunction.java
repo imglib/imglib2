@@ -38,11 +38,14 @@
 package net.imglib2.ops.function.real;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
+
+import org.scijava.util.DoubleArray;
 
 // Reference: Gonzalez and Woods, Digital Image Processing, 2008
 
@@ -62,7 +65,7 @@ public class RealAdaptiveMedianFunction< T extends RealType< T >> implements Fun
 
 	private final List< PointSet > pointSets;
 
-	private final PrimitiveDoubleArray values;
+	private final DoubleArray values;
 
 	private final RealSampleCollector< T > collector;
 
@@ -83,7 +86,7 @@ public class RealAdaptiveMedianFunction< T extends RealType< T >> implements Fun
 	{
 		this.otherFunc = otherFunc;
 		this.pointSets = pointSets;
-		this.values = new PrimitiveDoubleArray();
+		this.values = new DoubleArray( 9 );
 		this.collector = new RealSampleCollector< T >();
 		this.currValue = createOutput();
 		if ( pointSets.size() < 1 )
@@ -105,7 +108,7 @@ public class RealAdaptiveMedianFunction< T extends RealType< T >> implements Fun
 			PointSet pointSet = pointSets.get( p );
 			move( pointSet, points.getOrigin() );
 			collector.collect( pointSet, otherFunc, values );
-			values.sortValues();
+			Arrays.sort( values.getArray(), 0, values.size() );
 			zMed = medianValue();
 			double zMin = minValue();
 			double zMax = maxValue();
@@ -149,22 +152,22 @@ public class RealAdaptiveMedianFunction< T extends RealType< T >> implements Fun
 			throw new IllegalArgumentException( "cannot find median: no samples provided" );
 
 		if ( ( numElements % 2 ) == 1 )
-			return values.get( numElements / 2 );
+			return values.getValue( numElements / 2 );
 
 		// else an even number of elements
-		double value1 = values.get( ( numElements / 2 ) - 1 );
-		double value2 = values.get( ( numElements / 2 ) );
+		double value1 = values.getValue( ( numElements / 2 ) - 1 );
+		double value2 = values.getValue( ( numElements / 2 ) );
 		return ( value1 + value2 ) / 2;
 	}
 
 	private double minValue()
 	{
-		return values.get( 0 );
+		return values.getValue( 0 );
 	}
 
 	private double maxValue()
 	{
-		return values.get( values.size() - 1 );
+		return values.getValue( values.size() - 1 );
 	}
 
 	// unfortunately the removal from PointSet of getAnchor() and setAnchor()

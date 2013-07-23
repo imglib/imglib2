@@ -42,6 +42,8 @@ import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.ops.pointset.PointSetIterator;
 import net.imglib2.type.numeric.RealType;
 
+import org.scijava.util.DoubleArray;
+
 /**
  * A RealSampleCollector collects the set of values a function takes over the
  * range of a point set.
@@ -78,7 +80,7 @@ public class RealSampleCollector< T extends RealType< T >>
 	 * @param values
 	 *            - the output array to store the values in
 	 */
-	public void collect( PointSet ps, Function< long[], T > function, PrimitiveDoubleArray values )
+	public void collect( PointSet ps, Function< long[], T > function, DoubleArray values )
 	{
 		if ( ps != lastPointSet )
 		{
