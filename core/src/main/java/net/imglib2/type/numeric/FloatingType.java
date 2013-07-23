@@ -46,98 +46,99 @@ public interface FloatingType<T extends FloatingType<T>>
 {
 
 	/**
-	 * Fills result with the representation of pi for the given type.
+	 * Fills self with the representation of pi for the given type.
 	 */
-	void PI(T result);
+	void PI();
 
 	/**
-	 * Fills result with the representation of e for the given type.
+	 * Fills self with the representation of e for the given type.
 	 */
-	void E(T result);
+	void E();
 
 	/**
-	 * Fills result by raising e to the power represented by the current variable.
+	 * Fills self with result of raising e to the power of the passed as an input.
 	 */
-	void exp(T result);
+	void exp(T input);
 
 	/**
-	 * Fills result by taking the sqrt of the current variable.
+	 * Fills self with result of taking the sqrt of the passed in input.
 	 */
-	void sqrt(T result);
+	void sqrt(T input);
 
 	/**
-	 * Fills result by taking the log of the current variable.
+	 * Fills self with result of taking the log of the passed in input.
 	 */
-	void log(T result);
+	void log(T input);
 
 	/**
-	 * Fills result by raising the current variable to the b power.
+	 * Fills self with result of raising the passed in input to the given power.
 	 */
-	void pow(T b, T result);
+	void pow(T input, T power);
 
 	/**
-	 * Fills result by taking the b-based log of the current variable.
+	 * Fills self with result of taking the log (of provided base) of the passed
+	 * in input.
 	 */
-	void logBase(T b, T result);
+	void logBase(T input, T base);
 
 	/**
-	 * Fills result by taking the sin of the current variable.
+	 * Fills self with result of taking the sin of the passed in input.
 	 */
-	void sin(T result);
+	void sin(T input);
 
 	/**
-	 * Fills result by taking the cos of the current variable.
+	 * Fills self with result of taking the cos of the passed in input.
 	 */
-	void cos(T result);
+	void cos(T input);
 
 	/**
-	 * Fills result by taking the tan of the current variable.
+	 * Fills self with result of taking the tan of the passed in input.
 	 */
-	void tan(T result);
+	void tan(T input);
 
 	/**
-	 * Fills result by taking the asin of the current variable.
+	 * Fills self with result of taking the asin of the passed in input.
 	 */
-	void asin(T result);
+	void asin(T input);
 
 	/**
-	 * Fills result by taking the acos of the current variable.
+	 * Fills self with result of taking the acos of the passed in input.
 	 */
-	void acos(T result);
+	void acos(T input);
 
 	/**
-	 * Fills result by taking the atan of the current variable.
+	 * Fills self with result of taking the atan of the passed in input.
 	 */
-	void atan(T result);
+	void atan(T input);
 
 	/**
-	 * Fills result by taking the sinh of the current variable.
+	 * Fills self with result of taking the sinh of the passed in input.
 	 */
-	void sinh(T result);
+	void sinh(T input);
 
 	/**
-	 * Fills result by taking the cosh of the current variable.
+	 * Fills self with result of taking the cosh of the passed in input.
 	 */
-	void cosh(T result);
+	void cosh(T input);
 
 	/**
-	 * Fills result by taking the tanh of the current variable.
+	 * Fills self with result of taking the tanh of the passed in input.
 	 */
-	void tanh(T result);
+	void tanh(T input);
 
 	/**
-	 * Fills result by taking the asinh of the current variable.
+	 * Fills self with result of taking the asinh of the passed in input.
 	 */
-	void asinh(T result);
+	void asinh(T input);
 
 	/**
-	 * Fills result by taking the acosh of the current variable.
+	 * Fills self with result of taking the acosh of the passed in input.
 	 */
-	void acosh(T result);
+	void acosh(T input);
 
 	/**
-	 * Fills result by taking the atanh of the current variable.
+	 * Fills self with result of taking the atanh of the passed in input.
 	 */
-	void atanh(T result);
+	void atanh(T input);
 
 }

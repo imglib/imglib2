@@ -275,98 +275,98 @@ public class ComplexFloatType extends AbstractComplexType<ComplexFloatType>
 	public int getIndex() { return i; }
 
 	@Override
-	public void PI(ComplexFloatType result) {
-		result.setComplexNumber(Math.PI, 0);
+	public void PI() {
+		setComplexNumber(Math.PI, 0);
 	}
 
 	@Override
-	public void E(ComplexFloatType result) {
-		result.setComplexNumber(Math.E, 0);
+	public void E() {
+		setComplexNumber(Math.E, 0);
 	}
 
 	@Override
-	public void exp(ComplexFloatType result) {
-		ComplexMath.exp(this, result);
+	public void exp(ComplexFloatType input) {
+		ComplexMath.exp(input, this);
 	}
 
 	@Override
-	public void sqrt(ComplexFloatType result) {
-		ComplexMath.sqrt(this, result);
+	public void sqrt(ComplexFloatType input) {
+		ComplexMath.sqrt(input, this);
 	}
 
 	@Override
-	public void log(ComplexFloatType result) {
-		ComplexMath.log(this, result);
+	public void log(ComplexFloatType input) {
+		ComplexMath.log(input, this);
 	}
 
 	@Override
-	public void pow(ComplexFloatType p, ComplexFloatType result) {
-		ComplexMath.pow(this, p, result);
+	public void pow(ComplexFloatType input, ComplexFloatType power) {
+		ComplexMath.pow(input, power, this);
 	}
 
 	@Override
-	public void logBase(ComplexFloatType b, ComplexFloatType result) {
-		ComplexMath.logBase(this, b, result);
+	public void logBase(ComplexFloatType input, ComplexFloatType base) {
+		ComplexMath.logBase(input, base, this);
 	}
 
 	@Override
-	public void sin(ComplexFloatType result) {
-		ComplexMath.sin(this, result);
+	public void sin(ComplexFloatType input) {
+		ComplexMath.sin(input, this);
 	}
 
 	@Override
-	public void cos(ComplexFloatType result) {
-		ComplexMath.cos(this, result);
+	public void cos(ComplexFloatType input) {
+		ComplexMath.cos(input, this);
 	}
 
 	@Override
-	public void tan(ComplexFloatType result) {
-		ComplexMath.tan(this, result);
+	public void tan(ComplexFloatType input) {
+		ComplexMath.tan(input, this);
 	}
 
 	@Override
-	public void asin(ComplexFloatType result) {
-		ComplexMath.asin(this, result);
+	public void asin(ComplexFloatType input) {
+		ComplexMath.asin(input, this);
 	}
 
 	@Override
-	public void acos(ComplexFloatType result) {
-		ComplexMath.acos(this, result);
+	public void acos(ComplexFloatType input) {
+		ComplexMath.acos(input, this);
 	}
 
 	@Override
-	public void atan(ComplexFloatType result) {
-		ComplexMath.atan(this, result);
+	public void atan(ComplexFloatType input) {
+		ComplexMath.atan(input, this);
 	}
 
 	@Override
-	public void sinh(ComplexFloatType result) {
-		ComplexMath.sinh(this, result);
+	public void sinh(ComplexFloatType input) {
+		ComplexMath.sinh(input, this);
 	}
 
 	@Override
-	public void cosh(ComplexFloatType result) {
-		ComplexMath.cosh(this, result);
+	public void cosh(ComplexFloatType input) {
+		ComplexMath.cosh(input, this);
 	}
 
 	@Override
-	public void tanh(ComplexFloatType result) {
-		ComplexMath.tanh(this, result);
+	public void tanh(ComplexFloatType input) {
+		ComplexMath.tanh(input, this);
 	}
 
 	@Override
-	public void asinh(ComplexFloatType result) {
-		ComplexMath.asinh(this, result);
+	public void asinh(ComplexFloatType input) {
+		ComplexMath.asinh(input, this);
 	}
 
 	@Override
-	public void acosh(ComplexFloatType result) {
-		ComplexMath.acosh(this, result);
+	public void acosh(ComplexFloatType input) {
+		ComplexMath.acosh(input, this);
 	}
 
 	@Override
-	public void atanh(ComplexFloatType result) {
-		ComplexMath.atanh(this, result);
+	public void atanh(ComplexFloatType input) {
+		ComplexMath.atanh(input, this);
 	}
 
 }

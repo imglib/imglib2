@@ -234,120 +234,119 @@ public class FloatType extends AbstractRealType<FloatType> implements
 	public int getBitsPerPixel() { return 32; }
 
 	@Override
-	public void PI(FloatType result) {
-		result.set((float) Math.PI);
+	public void PI() {
+		set((float) Math.PI);
 	}
 
 	@Override
-	public void E(FloatType result) {
-		result.set((float) Math.E);
+	public void E() {
+		set((float) Math.E);
 	}
 
 	@Override
-	public void exp(FloatType result) {
-		result.set((float) Math.exp(get()));
+	public void exp(FloatType input) {
+		set((float) (Math.exp(input.get())));
 	}
 
 	@Override
-	public void sqrt(FloatType result) {
-		result.set((float) Math.sqrt(get()));
+	public void sqrt(FloatType input) {
+		set((float) Math.sqrt(input.get()));
 	}
 
 	@Override
-	public void log(FloatType result) {
-		result.set((float) Math.log(get()));
+	public void log(FloatType input) {
+		set((float) Math.log(input.get()));
 	}
 
 	@Override
-	public void pow(FloatType b, FloatType result) {
-		result.set((float) Math.pow(get(), b.get()));
+	public void pow(FloatType input, FloatType power) {
+		set((float) Math.pow(input.get(), power.get()));
 	}
 
 	@Override
-	public void logBase(FloatType b, FloatType result) {
-		result.set((float) (Math.log(get()) / Math.log(b.get())));
+	public void logBase(FloatType input, FloatType base) {
+		set((float) (Math.log(input.get()) / Math.log(base.get())));
 	}
 
 	@Override
-	public void sin(FloatType result) {
-		result.set((float) Math.sin(get()));
+	public void sin(FloatType input) {
+		set((float) Math.sin(input.get()));
 	}
 
 	@Override
-	public void cos(FloatType result) {
-		result.set((float) Math.cos(get()));
+	public void cos(FloatType input) {
+		set((float) Math.cos(input.get()));
 	}
 
 	@Override
-	public void tan(FloatType result) {
-		result.set((float) Math.tan(get()));
+	public void tan(FloatType input) {
+		set((float) Math.tan(input.get()));
 	}
 
 	@Override
-	public void asin(FloatType result) {
-		result.set((float) Math.asin(get()));
+	public void asin(FloatType input) {
+		set((float) Math.asin(input.get()));
 	}
 
 	@Override
-	public void acos(FloatType result) {
-		result.set((float) Math.acos(get()));
+	public void acos(FloatType input) {
+		set((float) Math.acos(input.get()));
 	}
 
 	@Override
-	public void atan(FloatType result) {
-		result.set((float) Math.atan(get()));
+	public void atan(FloatType input) {
+		set((float) Math.atan(input.get()));
 	}
 
 	@Override
-	public void sinh(FloatType result) {
-		result.set((float) Math.sinh(get()));
+	public void sinh(FloatType input) {
+		set((float) Math.sinh(input.get()));
 	}
 
 	@Override
-	public void cosh(FloatType result) {
-		result.set((float) Math.cosh(get()));
+	public void cosh(FloatType input) {
+		set((float) Math.cosh(input.get()));
 	}
 
 	@Override
-	public void tanh(FloatType result) {
-		result.set((float) Math.tanh(get()));
+	public void tanh(FloatType input) {
+		set((float) Math.tanh(input.get()));
 	}
 
 	// Handbook of Mathematics and Computational Science, Harris & Stocker,
 	// Springer, 2006
 	@Override
-	public void asinh(FloatType result) {
-		double xt = get();
+	public void asinh(FloatType input) {
+		double xt = input.get();
 		double delta = Math.sqrt(xt * xt + 1);
 		double value = Math.log(xt + delta);
-		result.set((float) value);
+		set((float) value);
 	}
 
 	// Handbook of Mathematics and Computational Science, Harris & Stocker,
 	// Springer, 2006
 	@Override
-	public void acosh(FloatType result) {
-		double xt = get();
+	public void acosh(FloatType input) {
+		double xt = input.get();
 		double delta = Math.sqrt(xt * xt - 1);
 		if (xt <= -1) delta = -delta;
 		double value = Math.log(xt + delta);
-		result.set((float) value);
+		set((float) value);
 	}
 
 	// Handbook of Mathematics and Computational Science, Harris & Stocker,
 	// Springer, 2006
 	@Override
-	public void atanh(FloatType result) {
-		double xt = get();
+	public void atanh(FloatType input) {
+		double xt = input.get();
 		double value = 0.5 * Math.log((1 + xt) / (1 - xt));
-		result.set((float) value);
+		set((float) value);
 	}
 
 	/**
-	 * Fills result by taking the atan2 of the current variable (treated as y) and
-	 * the given x value.
+	 * Fills result by taking the atan2 of the given y and x values.
 	 */
-	public void atan2(FloatType x, FloatType result) {
-		result.set((float) Math.atan2(get(), x.get()));
+	public void atan2(FloatType y, FloatType x) {
+		set((float) Math.atan2(y.get(), x.get()));
 	}
 }

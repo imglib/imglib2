@@ -170,120 +170,119 @@ public class DoubleType extends AbstractRealType<DoubleType> implements
 	public int getBitsPerPixel() { return 64; }
 
 	@Override
-	public void PI(DoubleType result) {
-		result.set(Math.PI);
+	public void PI() {
+		set(Math.PI);
 	}
 
 	@Override
-	public void E(DoubleType result) {
-		result.set(Math.E);
+	public void E() {
+		set(Math.E);
 	}
 
 	@Override
-	public void exp(DoubleType result) {
-		result.set(Math.exp(get()));
+	public void exp(DoubleType input) {
+		set(Math.exp(input.get()));
 	}
 
 	@Override
-	public void sqrt(DoubleType result) {
-		result.set(Math.sqrt(get()));
+	public void sqrt(DoubleType input) {
+		set(Math.sqrt(input.get()));
 	}
 
 	@Override
-	public void log(DoubleType result) {
-		result.set(Math.log(get()));
+	public void log(DoubleType input) {
+		set(Math.log(input.get()));
 	}
 
 	@Override
-	public void pow(DoubleType b, DoubleType result) {
-		result.set(Math.pow(get(), b.get()));
+	public void pow(DoubleType input, DoubleType power) {
+		set(Math.pow(input.get(), power.get()));
 	}
 
 	@Override
-	public void logBase(DoubleType b, DoubleType result) {
-		result.set(Math.log(get()) / Math.log(b.get()));
+	public void logBase(DoubleType input, DoubleType base) {
+		set(Math.log(input.get()) / Math.log(base.get()));
 	}
 
 	@Override
-	public void sin(DoubleType result) {
-		result.set(Math.sin(get()));
+	public void sin(DoubleType input) {
+		set(Math.sin(input.get()));
 	}
 
 	@Override
-	public void cos(DoubleType result) {
-		result.set(Math.cos(get()));
+	public void cos(DoubleType input) {
+		set(Math.cos(input.get()));
 	}
 
 	@Override
-	public void tan(DoubleType result) {
-		result.set(Math.tan(get()));
+	public void tan(DoubleType input) {
+		set(Math.tan(input.get()));
 	}
 
 	@Override
-	public void asin(DoubleType result) {
-		result.set(Math.asin(get()));
+	public void asin(DoubleType input) {
+		set(Math.asin(input.get()));
 	}
 
 	@Override
-	public void acos(DoubleType result) {
-		result.set(Math.acos(get()));
+	public void acos(DoubleType input) {
+		set(Math.acos(input.get()));
 	}
 
 	@Override
-	public void atan(DoubleType result) {
-		result.set(Math.atan(get()));
+	public void atan(DoubleType input) {
+		set(Math.atan(input.get()));
 	}
 
 	@Override
-	public void sinh(DoubleType result) {
-		result.set(Math.sinh(get()));
+	public void sinh(DoubleType input) {
+		set(Math.sinh(input.get()));
 	}
 
 	@Override
-	public void cosh(DoubleType result) {
-		result.set(Math.cosh(get()));
+	public void cosh(DoubleType input) {
+		set(Math.cosh(input.get()));
 	}
 
 	@Override
-	public void tanh(DoubleType result) {
-		result.set(Math.tanh(get()));
+	public void tanh(DoubleType input) {
+		set(Math.tanh(input.get()));
 	}
 
 	// Handbook of Mathematics and Computational Science, Harris & Stocker,
 	// Springer, 2006
 	@Override
-	public void asinh(DoubleType result) {
-		double xt = get();
+	public void asinh(DoubleType input) {
+		double xt = input.get();
 		double delta = Math.sqrt(xt * xt + 1);
 		double value = Math.log(xt + delta);
-		result.set(value);
+		set(value);
 	}
 
 	// Handbook of Mathematics and Computational Science, Harris & Stocker,
 	// Springer, 2006
 	@Override
-	public void acosh(DoubleType result) {
-		double xt = get();
+	public void acosh(DoubleType input) {
+		double xt = input.get();
 		double delta = Math.sqrt(xt * xt - 1);
 		if (xt <= -1) delta = -delta;
 		double value = Math.log(xt + delta);
-		result.set(value);
+		set(value);
 	}
 
 	// Handbook of Mathematics and Computational Science, Harris & Stocker,
 	// Springer, 2006
 	@Override
-	public void atanh(DoubleType result) {
-		double xt = get();
+	public void atanh(DoubleType input) {
+		double xt = input.get();
 		double value = 0.5 * Math.log((1 + xt) / (1 - xt));
-		result.set(value);
+		set(value);
 	}
 
 	/**
-	 * Fills result by taking the atan2 of the current variable (treated as y) and
-	 * the given x value.
+	 * Fills result by taking the atan2 of the given y and x values.
 	 */
-	public void atan2(DoubleType x, DoubleType result) {
-		result.set(Math.atan2(get(), x.get()));
+	public void atan2(DoubleType y, DoubleType x) {
+		set(Math.atan2(y.get(), x.get()));
 	}
 }
