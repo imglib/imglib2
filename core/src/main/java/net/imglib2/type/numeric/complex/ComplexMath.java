@@ -73,8 +73,6 @@ public class ComplexMath {
 	@SuppressWarnings("synthetic-access")
 	private static final TempManager temps = new TempManager();
 
-	private static final Object lock = new Object();
-
 	// -- public methods --
 
 	// TODO - deprecate OPS' ComplexHelper class
@@ -115,7 +113,7 @@ public class ComplexMath {
 		ComplexDoubleType numer;
 		ComplexDoubleType denom;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			numer = temps.get();
 			denom = temps.get();
 		}
@@ -124,7 +122,7 @@ public class ComplexMath {
 		log(b, denom);
 		div(numer, denom, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(numer);
 			temps.free(denom);
 		}
@@ -184,7 +182,7 @@ public class ComplexMath {
 		ComplexDoubleType logA;
 		ComplexDoubleType bLogA;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			logA = temps.get();
 			bLogA = temps.get();
 		}
@@ -193,7 +191,7 @@ public class ComplexMath {
 		mul(b, logA, bLogA);
 		exp(bLogA, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(logA);
 			temps.free(bLogA);
 		}
@@ -216,7 +214,7 @@ public class ComplexMath {
 		ComplexDoubleType expMinusIZ;
 		ComplexDoubleType diff;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			IZ = temps.get();
 			minusIZ = temps.get();
 			expIZ = temps.get();
@@ -231,7 +229,7 @@ public class ComplexMath {
 		sub(expIZ, expMinusIZ, diff);
 		div(diff, TWO_I, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(IZ);
 			temps.free(minusIZ);
 			temps.free(expIZ);
@@ -257,7 +255,7 @@ public class ComplexMath {
 		ComplexDoubleType expMinusIZ;
 		ComplexDoubleType sum;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			IZ = temps.get();
 			minusIZ = temps.get();
 			expIZ = temps.get();
@@ -272,7 +270,7 @@ public class ComplexMath {
 		add(expIZ, expMinusIZ, sum);
 		div(sum, TWO, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(IZ);
 			temps.free(minusIZ);
 			temps.free(expIZ);
@@ -295,7 +293,7 @@ public class ComplexMath {
 		ComplexDoubleType sin;
 		ComplexDoubleType cos;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			sin = temps.get();
 			cos = temps.get();
 		}
@@ -304,7 +302,7 @@ public class ComplexMath {
 		cos(z, cos);
 		div(sin, cos, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(sin);
 			temps.free(cos);
 		}
@@ -329,7 +327,7 @@ public class ComplexMath {
 		ComplexDoubleType sum;
 		ComplexDoubleType logSum;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			iz = temps.get();
 			zSquared = temps.get();
 			miniSum = temps.get();
@@ -346,7 +344,7 @@ public class ComplexMath {
 		log(sum, logSum);
 		mul(MINUS_I, logSum, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(iz);
 			temps.free(zSquared);
 			temps.free(miniSum);
@@ -374,7 +372,7 @@ public class ComplexMath {
 		ComplexDoubleType sum;
 		ComplexDoubleType logSum;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			zSquared = temps.get();
 			miniSum = temps.get();
 			root = temps.get();
@@ -389,7 +387,7 @@ public class ComplexMath {
 		log(sum, logSum);
 		mul(MINUS_I, logSum, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(zSquared);
 			temps.free(miniSum);
 			temps.free(root);
@@ -416,7 +414,7 @@ public class ComplexMath {
 		ComplexDoubleType quotient;
 		ComplexDoubleType log;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			iz = temps.get();
 			sum = temps.get();
 			diff = temps.get();
@@ -431,7 +429,7 @@ public class ComplexMath {
 		log(quotient, log);
 		mul(MINUS_I_OVER_TWO, log, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(iz);
 			temps.free(sum);
 			temps.free(diff);
@@ -457,7 +455,7 @@ public class ComplexMath {
 		ComplexDoubleType expMinusZ;
 		ComplexDoubleType diff;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			minusZ = temps.get();
 			expZ = temps.get();
 			expMinusZ = temps.get();
@@ -470,7 +468,7 @@ public class ComplexMath {
 		sub(expZ, expMinusZ, diff);
 		div(diff, TWO, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(minusZ);
 			temps.free(expZ);
 			temps.free(expMinusZ);
@@ -495,7 +493,7 @@ public class ComplexMath {
 		ComplexDoubleType expMinusZ;
 		ComplexDoubleType sum;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			minusZ = temps.get();
 			expZ = temps.get();
 			expMinusZ = temps.get();
@@ -508,7 +506,7 @@ public class ComplexMath {
 		add(expZ, expMinusZ, sum);
 		div(sum, TWO, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(minusZ);
 			temps.free(expZ);
 			temps.free(expMinusZ);
@@ -531,7 +529,7 @@ public class ComplexMath {
 		ComplexDoubleType sinh;
 		ComplexDoubleType cosh;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			sinh = temps.get();
 			cosh = temps.get();
 		}
@@ -540,7 +538,7 @@ public class ComplexMath {
 		cosh(z, cosh);
 		div(sinh, cosh, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(sinh);
 			temps.free(cosh);
 		}
@@ -563,7 +561,7 @@ public class ComplexMath {
 		ComplexDoubleType root;
 		ComplexDoubleType sum;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			zSquared = temps.get();
 			miniSum = temps.get();
 			root = temps.get();
@@ -576,7 +574,7 @@ public class ComplexMath {
 		add(z, root, sum);
 		log(sum, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(zSquared);
 			temps.free(miniSum);
 			temps.free(root);
@@ -601,7 +599,7 @@ public class ComplexMath {
 		ComplexDoubleType root;
 		ComplexDoubleType sum;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			zSquared = temps.get();
 			miniSum = temps.get();
 			root = temps.get();
@@ -614,7 +612,7 @@ public class ComplexMath {
 		add(z, root, sum);
 		log(sum, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(zSquared);
 			temps.free(miniSum);
 			temps.free(root);
@@ -639,7 +637,7 @@ public class ComplexMath {
 		ComplexDoubleType quotient;
 		ComplexDoubleType log;
 
-		synchronized (lock) {
+		synchronized (temps) {
 			sum = temps.get();
 			diff = temps.get();
 			quotient = temps.get();
@@ -652,7 +650,7 @@ public class ComplexMath {
 		log(quotient, log);
 		mul(ONE_HALF, log, result);
 
-		synchronized (lock) {
+		synchronized (temps) {
 			temps.free(sum);
 			temps.free(diff);
 			temps.free(quotient);
