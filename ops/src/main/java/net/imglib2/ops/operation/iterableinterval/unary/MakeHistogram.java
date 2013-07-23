@@ -110,7 +110,7 @@ public final class MakeHistogram< T extends RealType< T >> implements UnaryOutpu
 		}
 		else
 		{
-			return new Histogram1d< T >( new Real1dBinMapper< T >( type.getMinValue(), type.getMaxValue(), m_numBins, false ) );
+			return new Histogram1d< T >( new Real1dBinMapper< T >( min, max, m_numBins, false ) );
 		}
 	}
 
