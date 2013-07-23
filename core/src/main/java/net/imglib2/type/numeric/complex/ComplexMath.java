@@ -53,6 +53,11 @@ public class ComplexMath {
 	// complex type.
 	// This code was pulled from OPS. If this approach is deemed valid we need to
 	// update those complex operations in OPS to call this helper class.
+
+	// TODO: one way to removed synchronized code:
+	// Unwind all function calls with inlined replacements using separate x and y
+	// doubles on the stack for each temp. It is not elegant and would require
+	// careful implementation but it would work.
 	  
 	// -- constants --
 
