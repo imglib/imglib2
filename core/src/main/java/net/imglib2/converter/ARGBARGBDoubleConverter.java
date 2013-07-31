@@ -14,9 +14,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package net.imglib2.converter.read;
+package net.imglib2.converter;
 
-import net.imglib2.converter.Converter;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.AbstractARGBDoubleType;
 
@@ -25,11 +24,18 @@ import net.imglib2.type.numeric.AbstractARGBDoubleType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ARGBDoubleARGBConverter< T extends AbstractARGBDoubleType< ? > > implements Converter< T, ARGBType >
+public class ARGBARGBDoubleConverter< T extends AbstractARGBDoubleType< ? > > implements Converter< ARGBType, T >
 {
+	final static protected double scale = 1.0 / 255.0;
+	
 	@Override
-	public void convert( final T input, final ARGBType output )
+	public void convert( final ARGBType input, final T output )
 	{
-		output.set( input.toARGBInt() );
+		final int argb = input.get();
+		output.set(
+				( ( argb >> 24 ) & 0xff ) * scale,
+				( ( argb >> 16 ) & 0xff ) * scale,
+				( ( argb >> 8 ) & 0xff ) * scale,
+				( argb & 0xff ) * scale );
 	}
 }
