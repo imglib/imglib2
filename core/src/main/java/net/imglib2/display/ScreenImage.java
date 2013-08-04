@@ -42,7 +42,6 @@ import java.awt.Image;
 /**
  * 
  *
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface ScreenImage
