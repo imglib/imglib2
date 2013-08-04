@@ -16,9 +16,7 @@
  */
 package interactive.remote.openconnectome;
 
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
-
+import interactive.remote.Cache;
 import net.imglib2.Interval;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
@@ -40,13 +38,15 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 public class OpenConnectomeRandomAccessibleInterval extends
 	AbstractOpenConnectomeRandomAccessibleInterval< UnsignedByteType, OpenConnectomeRandomAccessibleInterval.Entry >
 {
-	public class Entry extends AbstractOpenConnectomeRandomAccessibleInterval< UnsignedByteType, Entry >.Entry
+	public class Entry extends Cache.Entry<
+		AbstractOpenConnectomeRandomAccessibleInterval< UnsignedByteType, Entry >.Key,
+		Entry >
 	{
 		final public byte[] data;
 		
 		public Entry( final Key key, final byte[] data )
 		{
-			super( key );
+			super( key, cache );
 			this.data = data;
 		}
 	}
@@ -123,24 +123,18 @@ public class OpenConnectomeRandomAccessibleInterval extends
 	@Override
 	protected Entry fetchPixels2( final long x, final long y, final long z )
 	{
-		final SoftReference< Entry > ref;
 		final Entry entry;
 		final byte[] bytes;
 		synchronized ( cache )
 		{
 			final Key key = new Key( x, y, z );
-			final Reference< Entry > cachedReference = cache.get( key );
-			if ( cachedReference != null )
-			{
-				final Entry cachedEntry = cachedReference.get();
-				if ( cachedEntry != null )
-					return cachedEntry;
-			}
+			final Entry cachedEntry = cache.get( key );
+			if ( cachedEntry != null )
+				return cachedEntry;
 			
 			bytes = new byte[ cellWidth * cellHeight * cellDepth ];
 			entry = new Entry( key, bytes );
-			ref = new SoftReference< Entry >( entry );
-			cache.put( key, ref );
+			cache.putSoft( key, entry );
 		}
 		fetchPixels3( bytes, x, y, z );
 		return entry;

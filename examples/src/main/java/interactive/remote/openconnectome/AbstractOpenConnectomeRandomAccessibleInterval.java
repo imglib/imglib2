@@ -17,6 +17,7 @@
 package interactive.remote.openconnectome;
 
 import interactive.remote.AbstractRemoteRandomAccessibleInterval;
+import interactive.remote.Cache;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -45,7 +46,10 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-abstract public class AbstractOpenConnectomeRandomAccessibleInterval< T extends RealType< T >, E extends AbstractRemoteRandomAccessibleInterval< T, AbstractOpenConnectomeRandomAccessibleInterval< T, E >.Key, E >.Entry > extends AbstractRemoteRandomAccessibleInterval< T, AbstractOpenConnectomeRandomAccessibleInterval< T, E >.Key, E >
+abstract public class AbstractOpenConnectomeRandomAccessibleInterval<
+		T extends RealType< T >,
+		E extends Cache.Entry< AbstractOpenConnectomeRandomAccessibleInterval< T, E >.Key, E > >
+	extends AbstractRemoteRandomAccessibleInterval< T, AbstractOpenConnectomeRandomAccessibleInterval< T, E >.Key, E >
 {
 	public class Key
 	{

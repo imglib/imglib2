@@ -16,9 +16,6 @@
  */
 package interactive.remote;
 
-import java.lang.ref.Reference;
-import java.util.HashMap;
-
 import net.imglib2.AbstractInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -30,41 +27,45 @@ import net.imglib2.RandomAccessibleInterval;
  */
 abstract public class AbstractRemoteRandomAccessibleInterval< T, K, E > extends AbstractInterval implements RandomAccessibleInterval< T >
 {
-	public AbstractRemoteRandomAccessibleInterval( final Interval interval)
+	public AbstractRemoteRandomAccessibleInterval(
+			final Cache< K, E > cache,
+			final Interval interval )
 	{
 		super( interval );
+		this.cache = cache;
+	}
+	
+	public AbstractRemoteRandomAccessibleInterval(
+			final Cache< K, E > cache,
+			final long[] min,
+			final long[] max )
+	{
+		super( min, max );
+		this.cache = cache;
+	}
+	
+	public AbstractRemoteRandomAccessibleInterval(
+			final Cache< K, E > cache,
+			final long[] dimensions )
+	{
+		super( dimensions );
+		this.cache = cache;
+	}
+	
+	public AbstractRemoteRandomAccessibleInterval( final Interval interval )
+	{
+		this( new Cache< K, E >(), interval );
 	}
 
 	public AbstractRemoteRandomAccessibleInterval( final long[] min, final long[] max )
 	{
-		super( min, max );
+		this( new Cache< K, E >(), min, max );
 	}
 	
 	public AbstractRemoteRandomAccessibleInterval( final long[] dimensions )
 	{
-		super( dimensions );
+		this( new Cache< K, E >(), dimensions );
 	}
 
-	public class Entry
-	{
-		final public K key;
-		
-		public Entry( final K key )
-		{
-			this.key = key;
-		}
-		
-		@Override
-		public void finalize()
-		{
-			synchronized ( cache )
-			{
-//				System.out.println( "finalizing..." );
-				cache.remove( key );
-//				System.out.println( cache.size() + " tiles chached." );
-			}
-		}
-	}
-	
-	final protected HashMap< K, Reference< E > > cache = new HashMap< K, Reference< E > >();
+	final protected Cache< K, E > cache;
 }

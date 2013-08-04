@@ -17,11 +17,12 @@
 package interactive.remote.openconnectome;
 
 
+import interactive.remote.Cache;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.LinkedList;
@@ -51,14 +52,16 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 public class VolatileOpenConnectomeRandomAccessibleInterval extends
 		AbstractOpenConnectomeRandomAccessibleInterval< VolatileRealType< UnsignedByteType >, VolatileOpenConnectomeRandomAccessibleInterval.Entry >
 {
-	public class Entry extends AbstractOpenConnectomeRandomAccessibleInterval< VolatileRealType< UnsignedByteType >, Entry >.Entry
+	public class Entry extends Cache.Entry<
+			AbstractOpenConnectomeRandomAccessibleInterval< VolatileRealType< UnsignedByteType >, Entry >.Key,
+			Entry >
 	{
 		public boolean valid;
 		final public byte[] data;
 		
 		public Entry( final Key key, final byte[] data, final boolean valid )
 		{
-			super( key );
+			super( key, cache );
 			this.data = data;
 			this.valid = valid;
 		}
@@ -100,7 +103,7 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 							synchronized ( cache )
 							{
 								cache.remove( entry.key );
-								cache.put( entry.key, new SoftReference< Entry >( entry ) );
+								cache.putSoft( entry.key, entry );
 							}
 						}
 					}
@@ -159,6 +162,7 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 					}
 				}
 			}
+			queue.clear();
 		}
 	}
 	
@@ -251,18 +255,14 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 		synchronized ( cache )
 		{
 			key = new Key( x, y, z );
-			final Reference< Entry > cachedReference = cache.get( key );
-			if ( cachedReference != null )
-			{
-				final Entry cachedEntry = cachedReference.get();
-				if ( cachedEntry != null )
-					return cachedEntry;
-			}
+			final Entry cachedEntry = cache.get( key );
+			if ( cachedEntry != null )
+				return cachedEntry;
 			
 			final byte[] bytes = new byte[ cellWidth * cellHeight * cellDepth ];
 			ref = new WeakReference< Entry >( new Entry( key, bytes, false ) );
 			//ref = new SoftReference< Entry >( new Entry( key, bytes, false ) );
-			cache.put( key, ref );
+			cache.putReference( key, ref );
 			queue.add( ref );
 		}
 		synchronized ( fetcher )
