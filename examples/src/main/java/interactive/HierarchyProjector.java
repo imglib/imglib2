@@ -67,6 +67,7 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 	final protected ARGBScreenImage target;
 	final protected ArrayImg< IntType, IntArray > mask;
 	protected boolean valid = false;
+	int s = 0;
 	
 	public HierarchyProjector(
 			final List< RandomAccessible< A > > sources,
@@ -76,6 +77,7 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 		super( Math.max( 2, sources.get( 0 ).numDimensions() ) );
 
 		this.sources.addAll( sources );
+		s = sources.size();
 		this.converter = converter;
 	
 		// as this is an XY projector, we need at least two dimensions,
@@ -85,6 +87,15 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 		this.target = target;
 		
 		mask = ArrayImgs.ints( target.dimension( 0 ), target.dimension( 1 ) );
+	}
+	
+	public void setSources( final List< RandomAccessible< A > > sources )
+	{
+		synchronized ( this.sources )
+		{
+			this.sources.addAll( sources );
+			s = sources.size();
+		}
 	}
 	
 	/**
@@ -116,8 +127,9 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 			targetCursor.next().set( 0x00000000 );
 		while ( maskCursor.hasNext() )
 			maskCursor.next().set( Integer.MAX_VALUE );
+		
+		s = sources.size();
 	}
-	
 	
 	@Override
 	public void map()
@@ -129,7 +141,6 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 		max[ 1 ] = target.max( 1 );
 		final FinalInterval sourceInterval = new FinalInterval( min, max );
 
-		int s = sources.size();
 		final long width = target.dimension( 0 );
 		final long height = target.dimension( 1 );
 		final long cr = -width;
@@ -137,19 +148,12 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 		final ArrayRandomAccess< ARGBType > targetRandomAccess = target.randomAccess( target );
 		final ArrayRandomAccess< IntType > maskRandomAccess = mask.randomAccess( target );
 		
-		int i, nTrials = 0;
+		int i;
 		
-		final ImagePlus imp = new ImagePlus( "test", new ColorProcessor( ( int )target.dimension( 0 ), ( int )target.dimension( 1 ) ) );
-		imp.show();
+		valid = false;
 		
-		long t;
-		
-		while ( s > 1 )
+		synchronized ( this.sources )
 		{
-			t = System.currentTimeMillis();
-			
-			valid = false;
-			
 			for ( i = 0; i < s && !valid; ++i )
 			{
 				valid = true;
@@ -188,11 +192,25 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 					targetRandomAccess.fwd( 1 );
 					maskRandomAccess.fwd( 1 );
 				}
-				imp.setImage( target.image() );
 			}
-			s = i;
+			if ( valid )
+				s = i - 1;
+		}
+	}
+	
+	final public void draw()
+	{
+		final ImagePlus imp = new ImagePlus( "test", new ColorProcessor( ( int )target.dimension( 0 ), ( int )target.dimension( 1 ) ) );
+		imp.show();
+		
+		long t, nTrials = 0;
+		while ( s > 0 )
+		{
+			t = System.currentTimeMillis();
+			map();
+			System.out.println( "trial " + ( ++nTrials ) + ": s = " + s + " took " + ( System.currentTimeMillis() - t ) + "ms" );
 			
-			System.out.println( "trial " + ( nTrials++ ) + ": s = " + s + " took " + ( System.currentTimeMillis() - t ) + "ms" );
+			imp.setImage( target.image() );
 		}
 	}
 	
@@ -302,8 +320,8 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 			
 			transform.concatenate( levelTransform );
 			
-			final int interpolation = 0;
-//			final int interpolation = 1;
+//			final int interpolation = 0;
+			final int interpolation = 1;
 			
 			final InterpolatorFactory< VolatileRealType< UnsignedByteType >, RandomAccessible< VolatileRealType< UnsignedByteType > > > interpolatorFactory;
 			switch ( interpolation )
@@ -327,6 +345,6 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 				new HierarchyProjector< UnsignedByteType, VolatileRealType< UnsignedByteType > >( transformedSources, new ARGBScreenImage( 800, 600 ), new VolatileRealTypeARGBConverter( 0, 255 ) );
 		
 		projector.clear();
-		projector.map();
+		projector.draw();
 	}
 }
