@@ -458,5 +458,4 @@ public class QuantileFilter< T extends RealType< T >> implements UnaryOperation<
 			return m_histogram;
 		}
 	}
-
 }
