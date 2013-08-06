@@ -41,13 +41,14 @@ import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
 
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
 
 import net.imglib2.AbstractInterval;
 import net.imglib2.AbstractLocalizable;
@@ -68,7 +69,7 @@ import net.imglib2.type.numeric.ARGBType;
  */
 public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements RandomAccessibleInterval< ARGBType >
 {
-	final static protected Toolkit toolkit = Toolkit.getDefaultToolkit();
+//	final static protected Toolkit toolkit = Toolkit.getDefaultToolkit();
 	
 	public class Key
 	{
@@ -653,10 +654,19 @@ public class CATMAIDRandomAccessibleInterval extends AbstractInterval implements
 			try
 			{
 				final URL url = new URL( urlString );
-			    //final BufferedImage image = ImageIO.read( url );
-				final Image image = toolkit.createImage( url );
-			    final PixelGrabber pg = new PixelGrabber( image, 0, 0, tileWidth, tileHeight, pixels, 0, tileWidth );
+//				final Image image = toolkit.createImage( url );
+			    final BufferedImage jpg = ImageIO.read( url );
+			    
+				/* This gymnastic is necessary to get reproducible gray
+				 * values, just opening a JPG or PNG, even when saved by
+				 * ImageIO, and grabbing its pixels results in gray values
+				 * with a non-matching gamma transfer function, I cannot tell
+				 * why... */
+			    final BufferedImage image = new BufferedImage( tileWidth, tileHeight, BufferedImage.TYPE_INT_RGB );
+				image.createGraphics().drawImage( jpg, 0, 0, null );
+				final PixelGrabber pg = new PixelGrabber( image, 0, 0, tileWidth, tileHeight, pixels, 0, tileWidth );
 				pg.grabPixels();
+				
 				cache.put( key, new SoftReference< Entry >( new Entry( key, pixels ) ) );
 //				System.out.println( "success loading r=" + r + " c=" + c + " url(" + urlString + ")" );
 				
