@@ -67,15 +67,6 @@ public interface AffineGet extends InvertibleRealTransform, EuclideanSpace
 	 */
 	public RealLocalizable d( int d );
 	
-	// NB: Ideally, we would utilize covariant inheritance to narrow the return
-	// type of a single inverse() method here, rather than needing separate
-	// methods inverse(), inverseAffine().  Unfortunately, due to a Javac bug
-	// with multiple interface inheritance, we must avoid doing so for now. For
-	// details, see:
-	//     http://bugs.sun.com/view_bug.do?bug_id=6656332
-	// The bug is fixed in JDK7.
-	
-	public AffineGet inverseAffine();
-//	@Override
-//	AffineGet inverse();
+	@Override
+	AffineGet inverse();
 }

@@ -65,6 +65,7 @@ final public class CellImg< T extends NativeType< T >, A, C extends AbstractCell
 	@Override
 	public CellImg< T, A, C > copy()
 	{
+		@SuppressWarnings( "unchecked" )
 		final CellImg< T, A, C > copy = ( CellImg< T, A, C > ) factory().create( dimension, firstElement().createVariable() );
 		copyDataTo( copy );
 		return copy;

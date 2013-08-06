@@ -83,7 +83,7 @@ public class OtsuMultilevelThresholder< T extends RealType< T >, IN extends Iter
 		// Thresholds must be scaled
 		T inVar = input.firstElement().createVariable();
 
-		Histogram1d<T> histogram = Operations.compute( new MakeHistogram< T >( ( int ) Math.min( m_numBins, inVar.getMinValue() - inVar.getMaxValue() ) ), input );
+		Histogram1d< T > histogram = Operations.compute( new MakeHistogram< T >( ( int ) Math.min( m_numBins, inVar.getMinValue() - inVar.getMaxValue() ) ), input );
 
 		m_maxValue = 0.0;
 
@@ -133,7 +133,7 @@ public class OtsuMultilevelThresholder< T extends RealType< T >, IN extends Iter
 		}
 	}
 
-	private void calculatePLookup( Histogram1d<T> histogram )
+	private void calculatePLookup( Histogram1d< T > histogram )
 	{
 		m_p[ 1 ][ 0 ] = 0;
 		for ( int v = 1; v <= m_numBins; v++ )
@@ -149,7 +149,7 @@ public class OtsuMultilevelThresholder< T extends RealType< T >, IN extends Iter
 		}
 	}
 
-	private void calculateSLookup( Histogram1d<T> histogram )
+	private void calculateSLookup( Histogram1d< T > histogram )
 	{
 		m_s[ 1 ][ 0 ] = 0;
 		for ( int v = 1; v <= m_numBins; v++ )

@@ -62,6 +62,7 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
+import net.imglib2.view.composite.CompositeIntervalView;
 import net.imglib2.view.composite.CompositeView;
 import net.imglib2.view.composite.GenericComposite;
 import net.imglib2.view.composite.NumericComposite;
@@ -804,6 +805,56 @@ public class Views
 	
 	/**
 	 * Collapse the <em>n</em><sup>th</sup> dimension of an
+	 * <em>n</em>-dimensional {@link RandomAccessibleInterval}&lt;T&gt; into an
+	 * (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessibleInterval}&lt;{@link GenericComposite}&lt;T&gt;&gt;
+	 * 
+	 * @param source
+	 * 				the source
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeIntervalView} of
+	 * 				 {@link GenericComposite GenericComposites}
+	 */
+	public static < T > CompositeIntervalView< T, ? extends GenericComposite< T > > collapse( final RandomAccessibleInterval< T > source )
+	{
+		return new CompositeIntervalView< T, GenericComposite< T > >( source, new GenericComposite.Factory< T >() );
+	}
+	
+	/**
+	 * Collapse the <em>n</em><sup>th</sup> dimension of an
+	 * <em>n</em>-dimensional
+	 * {@link RandomAccessibleInterval}&lt;T extends {@link RealType}&lt;T&gt;&gt; into
+	 * an (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessibleInterval}&lt;{@link RealComposite}&lt;T&gt;&gt;
+	 * 
+	 * @param source
+	 * 				the source
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeIntervalView} of
+	 * 				 {@link RealComposite RealComposites}
+	 */
+	public static < T extends RealType< T > > CompositeIntervalView< T, RealComposite< T > > collapseReal( final RandomAccessibleInterval< T > source )
+	{
+		return new CompositeIntervalView< T, RealComposite< T > >( source, new RealComposite.Factory< T >( ( int )source.dimension( source.numDimensions() - 1 ) ) );
+	}
+	
+	/**
+	 * Collapse the <em>n</em><sup>th</sup> dimension of an
+	 * <em>n</em>-dimensional
+	 * {@link RandomAccessibleInterval}&lt;T extends {@link NumericType}&lt;T&gt;&gt; into
+	 * an (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessibleInterval}&lt;{@link NumericComposite}&lt;T&gt;&gt;
+	 * 
+	 * @param source
+	 * 				the source
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeIntervalView} of
+	 * 				 {@link NumericComposite NumericComposites}
+	 */
+	public static < T extends NumericType< T > > CompositeIntervalView< T, NumericComposite< T > > collapseNumeric( final RandomAccessibleInterval< T > source )
+	{
+		return new CompositeIntervalView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( ( int )source.dimension( source.numDimensions() - 1 ) ) );
+	}
+	
+	/**
+	 * Collapse the <em>n</em><sup>th</sup> dimension of an
 	 * <em>n</em>-dimensional {@link RandomAccessible}&lt;T&gt; into an
 	 * (<em>n</em>-1)-dimensional
 	 * {@link RandomAccessible}&lt;{@link GenericComposite}&lt;T&gt;&gt;
@@ -856,5 +907,77 @@ public class Views
 	public static < T extends NumericType< T > > CompositeView< T, NumericComposite< T > > collapseNumeric( final RandomAccessible< T > source, final int numChannels )
 	{
 		return new CompositeView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( numChannels ) );
+	}
+	
+	/**
+	 * Sample only every <em>step</em><sup>th</sup> value of a source
+	 * {@link RandomAccessibleInterval}.  This is effectively an integer
+	 * scaling and zero offset transformation.
+	 * 
+	 * @param source
+	 * 				the source
+	 * @param step
+	 * 				the subsampling step size
+	 * @return a subsampled {@link RandomAccessibleInterval} with its origin
+	 * 				coordinates at zero
+	 */
+	public static < T > SubsampleIntervalView< T > subsample( final RandomAccessibleInterval< T > source, final long step )
+	{
+		return new SubsampleIntervalView< T >( source, step );
+	}
+	
+	/**
+	 * Sample only every <em>step<sub>d</sub></em><sup>th</sup> value of a source
+	 * {@link RandomAccessibleInterval}.  This is effectively an integer
+	 * scaling and zero offset transformation.
+	 * 
+	 * @param source
+	 * 				the source
+	 * @param steps
+	 * 				the subsampling step sizes
+	 * @return a subsampled {@link RandomAccessibleInterval} with its origin
+	 * 				coordinates at zero
+	 */
+	public static < T > SubsampleView< T > subsample( final RandomAccessibleInterval< T > source, final long... steps )
+	{
+		assert steps.length >= source.numDimensions() : "Dimensions do not match.";
+		
+		return new SubsampleIntervalView< T >( source, steps );
+	}
+	
+	/**
+	 * Sample only every <em>step</em><sup>th</sup> value of a source
+	 * {@link RandomAccessible}.  This is effectively an integer scaling
+	 * transformation.
+	 * 
+	 * @param source
+	 * 				the source
+	 * @param step
+	 * 				the subsampling step size
+	 * @return a subsampled {@link RandomAccessible}
+	 * 				
+	 */
+	public static < T > SubsampleView< T > subsample( final RandomAccessible< T > source, final long step )
+	{
+		return new SubsampleView< T >( source, step );
+	}
+	
+	/**
+	 * Sample only every <em>step<sub>d</sub></em><sup>th</sup> value of a source
+	 * {@link RandomAccessible}.  This is effectively an integer scaling
+	 * transformation.
+	 * 
+	 * @param source
+	 * 				the source
+	 * @param steps
+	 * 				the subsampling step sizes
+	 * @return a subsampled {@link RandomAccessible}
+	 * 				
+	 */
+	public static < T > SubsampleView< T > subsample( final RandomAccessible< T > source, final long... steps )
+	{
+		assert steps.length >= source.numDimensions() : "Dimensions do not match.";
+		
+		return new SubsampleView< T >( source, steps );
 	}
 }

@@ -108,7 +108,8 @@ public class ErodeLabeling< L extends Comparable< L >> implements UnaryOperation
 					inStructure.next();
 					if ( !inStructure.get().getLabeling().contains( label ) )
 					{
-						removeLabel( out.get(), label );
+						// Clear
+						// removeLabel( out.get(), label );
 						continue next;
 					}
 				}

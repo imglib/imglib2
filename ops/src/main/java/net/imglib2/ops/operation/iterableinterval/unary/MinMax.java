@@ -1,3 +1,5 @@
+package net.imglib2.ops.operation.iterableinterval.unary;
+
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -35,12 +37,8 @@
  * #L%
  */
 
-package net.imglib2.ops.operation.iterableinterval.unary;
-
 import java.util.Iterator;
 
-import net.imglib2.IterableInterval;
-import net.imglib2.histogram.Histogram1d;
 import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.numeric.RealType;
@@ -54,115 +52,42 @@ import net.imglib2.util.ValuePair;
  * @param <T>
  *            TODO
  */
-public final class MinMax< T extends RealType< T >> implements UnaryOutputOperation< IterableInterval< T >, ValuePair< T, T >>
+public final class MinMax< T extends RealType< T >> implements UnaryOutputOperation< Iterable< T >, ValuePair< T, T >>
 {
 
-	private double saturation;
-
-	private MakeHistogram< T > histOp;
-
-	private UnaryObjectFactory< Iterable< T >, Histogram1d<T> > bufferFactory;
-
-	public MinMax( double saturation, T type )
-	{
-		this.saturation = saturation;
-
-		if ( saturation != 0 )
-		{
-
-			int bins;
-			if ( !( type.getMaxValue() < Integer.MAX_VALUE ) )
-			{
-				bins = Short.MAX_VALUE * 2;
-			}
-			else
-			{
-				bins = ( int ) ( type.getMaxValue() - type.getMinValue() + 1 );
-			}
-
-			histOp = new MakeHistogram< T >( bins );
-			bufferFactory = histOp.bufferFactory();
-		}
-	}
-
-	public MinMax()
-	{
-		this( 0, null );
-	}
-
 	@Override
-	public ValuePair< T, T > compute( IterableInterval< T > op, ValuePair< T, T > r )
+	public ValuePair< T, T > compute( Iterable< T > op, ValuePair< T, T > r )
 	{
 
-		if ( saturation == 0 )
+		final Iterator< T > it = op.iterator();
+		r.a.setReal( r.a.getMaxValue() );
+		r.b.setReal( r.b.getMinValue() );
+		while ( it.hasNext() )
 		{
-			final Iterator< T > it = op.iterator();
-			r.a.setReal( r.a.getMaxValue() );
-			r.b.setReal( r.b.getMinValue() );
-			while ( it.hasNext() )
-			{
-				T i = it.next();
-				if ( r.a.compareTo( i ) > 0 )
-					r.a.set( i );
-				if ( r.b.compareTo( i ) < 0 )
-					r.b.set( i );
-			}
-		}
-		else
-		{
-			calcMinMaxWithSaturation( op, r, histOp.compute( op, bufferFactory.instantiate( op ) ) );
+			T i = it.next();
+			if ( r.a.compareTo( i ) > 0 )
+				r.a.set( i );
+			if ( r.b.compareTo( i ) < 0 )
+				r.b.set( i );
 		}
 
 		return r;
 	}
 
-	private void calcMinMaxWithSaturation( IterableInterval< T > interval, ValuePair< T, T > r, Histogram1d<T> hist )
-	{
-		long histMin = 0, histMax;
-		int threshold = ( int ) ( interval.size() * saturation / 200.0 );
-
-		// find min
-		int pCount = 0;
-		for ( int i = 0; i < hist.getBinCount(); i++ )
-		{
-			pCount += hist.frequency( i );
-			if ( pCount > threshold )
-			{
-				histMin = i;
-				break;
-			}
-		}
-
-		// find max
-		pCount = 0;
-		histMax = hist.getBinCount() - 1;
-		for ( long i = hist.getBinCount() - 1; i >= 0; i-- )
-		{
-			pCount += hist.frequency( i );
-			if ( pCount > threshold )
-			{
-				histMax = i;
-				break;
-			}
-		}
-		r.a.setReal( ( histMin * ( ( r.a.getMaxValue() - r.a.getMinValue() ) / hist.getBinCount() ) ) + r.a.getMinValue() );
-		r.b.setReal( ( histMax * ( ( r.a.getMaxValue() - r.a.getMinValue() ) / hist.getBinCount() ) ) + r.a.getMinValue() );
-	}
-
 	@Override
-	public UnaryOutputOperation< IterableInterval< T >, ValuePair< T, T >> copy()
+	public UnaryOutputOperation< Iterable< T >, ValuePair< T, T >> copy()
 	{
 		return new MinMax< T >();
 	}
 
 	@Override
-	public UnaryObjectFactory< IterableInterval< T >, ValuePair< T, T >> bufferFactory()
+	public UnaryObjectFactory< Iterable< T >, ValuePair< T, T >> bufferFactory()
 	{
-		return new UnaryObjectFactory< IterableInterval< T >, ValuePair< T, T > >()
+		return new UnaryObjectFactory< Iterable< T >, ValuePair< T, T > >()
 		{
 
 			@Override
-			public ValuePair< T, T > instantiate( IterableInterval< T > a )
+			public ValuePair< T, T > instantiate( Iterable< T > a )
 			{
 				final T t = a.iterator().next();
 				return new ValuePair< T, T >( t.createVariable(), t.createVariable() );

@@ -54,9 +54,8 @@ public class DoubleUtil {
     /**
      * Given a double value returns the next representable double.
      */
-    public static double nextDouble(double value, boolean inc) {
+    public static double nextDouble(final double value, final boolean inc) {
         double nextValue;
-        double sign;
 
         // hardcode values around zero
         if (ZERO == value) {
@@ -76,14 +75,14 @@ public class DoubleUtil {
         else {
             // increment/decrement hex string value
             String hexString;
-            boolean actualInc = ((value > 0 && inc) || (value < 0 && !inc));
+            final boolean actualInc = ((value > 0 && inc) || (value < 0 && !inc));
             hexString = nextDoubleHexString(Double.toHexString(value), actualInc);
 
             // convert hex string value to double
             try {
                 nextValue = Double.parseDouble(hexString);
             }
-            catch (Exception e) {
+            catch (final Exception e) {
                 System.out.println("Error parsing " + hexString);
                 nextValue = 0.0;
             }
@@ -94,8 +93,7 @@ public class DoubleUtil {
     /**
      * Parses double as hex string and generates next double hex string.
      */
-    private static String nextDoubleHexString(String hex, boolean inc) {
-        String returnValue = null;
+    private static String nextDoubleHexString(String hex, final boolean inc) {
 
         // save & restore negative sign
         boolean negative = false;
@@ -109,12 +107,12 @@ public class DoubleUtil {
         try {
             leadingDigit = Integer.parseInt(hex.substring(2, 3));
         }
-        catch (Exception e) {
+        catch (final Exception e) {
             System.out.println("Error parsing " + hex.substring(2, 3) + " " + e);
         }
  
         // get fractional value in hexadecimal
-        int pIndex = hex.indexOf('p');
+        final int pIndex = hex.indexOf('p');
         String hexDigits = hex.substring(4, pIndex);
         hexDigits = padWithZeros(hexDigits);
  
@@ -123,7 +121,7 @@ public class DoubleUtil {
         try {
             power = Integer.parseInt(hex.substring(pIndex + 1));
         }
-        catch (Exception e) {
+        catch (final Exception e) {
             System.out.println("Error parsing " + hex.substring(pIndex + 1) + " " + e);
         }
         
@@ -141,7 +139,7 @@ public class DoubleUtil {
                 hexDigits = MIN_DIGITS;
             }
             else {
-                char[] hexChars = hexDigits.toCharArray();
+                final char[] hexChars = hexDigits.toCharArray();
 
                 int i = LAST_HEX_DIGIT_INDEX;
                 boolean carry;
@@ -180,7 +178,7 @@ public class DoubleUtil {
                 hexDigits = MAX_DIGITS;
             }
             else {
-                char[] hexChars = hexDigits.toCharArray();
+                final char[] hexChars = hexDigits.toCharArray();
                 
                 int i = LAST_HEX_DIGIT_INDEX;
                 boolean borrow;

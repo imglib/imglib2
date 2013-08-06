@@ -30,28 +30,28 @@ package net.imglib2.realtransform;
 
 
 /**
- * An <em>n</em>-dimensional translation vector whose fields can be accessed
+ * An <em>n</em>-dimensional scale whose fields can be accessed
  * through their dimension index or as a double array.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface TranslationGet extends AffineGet
+public interface ScaleGet extends AffineGet
 {
 	/**
-	 * Get a field of the <em>n</em>-dimensionsional translation vector.
+	 * Get a field of the <em>n</em>-dimensional scale vector.
 	 * 
 	 * @param d
 	 * @return
 	 */
-	public double getTranslation( final int d );
+	public double getScale( final int d );
 	
 	/**
-	 * Get a copy of the <em>n</em>-dimensionsional translation vector.
+	 * Get a copy of the <em>n</em>-dimensionsional scale vector.
 	 *  
 	 * @return
 	 */
-	public double[] getTranslationCopy();
+	public double[] getScaleCopy();
 	
 	@Override
-	TranslationGet inverse();
+	ScaleGet inverse();
 }
