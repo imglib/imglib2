@@ -43,6 +43,7 @@ import java.awt.event.KeyListener;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
+import net.imglib2.display.Projector;
 import net.imglib2.display.XYRandomAccessibleProjector;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
@@ -126,7 +127,7 @@ public class InteractiveViewer3D< T extends NumericType< T > > extends AbstractI
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
-	protected XYRandomAccessibleProjector< T, ARGBType > createProjector()
+	protected Projector< T, ARGBType > createProjector()
 	{
 		final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory;
 		switch ( interpolation )

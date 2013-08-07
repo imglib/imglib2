@@ -41,8 +41,8 @@ import java.awt.Graphics;
 
 import net.imglib2.Interval;
 import net.imglib2.display.ARGBScreenImage;
+import net.imglib2.display.Projector;
 import net.imglib2.display.VolatileXYRandomAccessibleProjector;
-import net.imglib2.display.XYRandomAccessibleProjector;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
@@ -78,7 +78,7 @@ public abstract class AbstractInteractiveViewer3D< T extends NumericType< T > > 
 	 * Currently active projector, used to re-paint the display. It maps the
 	 * {@link #source} data to {@link #screenImage}.
 	 */
-	protected XYRandomAccessibleProjector< T, ARGBType > projector;
+	protected Projector< T, ARGBType > projector;
 
 	/**
 	 * Window used for displaying the rendered {@link #screenImage}.
@@ -107,7 +107,7 @@ public abstract class AbstractInteractiveViewer3D< T extends NumericType< T > > 
 		projector = createProjector();
 	}
 
-	protected abstract XYRandomAccessibleProjector< T, ARGBType > createProjector();
+	protected abstract Projector< T, ARGBType > createProjector();
 
 	@Override
 	public boolean drawScreenImage()
