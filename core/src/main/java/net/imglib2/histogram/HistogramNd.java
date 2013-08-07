@@ -509,11 +509,25 @@ public class HistogramNd<T> implements Img<LongType> {
 	 */
 	public boolean isInLowerTail(List<T> values) {
 		for (int i = 0; i < mappers.size(); i++) {
-			if (hasTails(i)) {
-				long binPos = mappers.get(i).map(values.get(i));
-				if (binPos == 0) {
-					return true;
-				}
+			if (isInLowerTail(i, values.get(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if a given value for a given dimension is mapped to the lower
+	 * tail of the distribution.
+	 * 
+	 * @param dim The dimension number of the axis of interest
+	 * @param value The value to determine the location of
+	 */
+	public boolean isInLowerTail(int dim, T value) {
+		if (hasTails(dim)) {
+			long binPos = mappers.get(dim).map(value);
+			if (binPos == 0) {
+				return true;
 			}
 		}
 		return false;
@@ -527,11 +541,25 @@ public class HistogramNd<T> implements Img<LongType> {
 	 */
 	public boolean isInUpperTail(List<T> values) {
 		for (int i = 0; i < mappers.size(); i++) {
-			if (hasTails(i)) {
-				long binPos = mappers.get(i).map(values.get(i));
-				if (binPos == mappers.get(i).getBinCount() - 1) {
-					return true;
-				}
+			if (isInUpperTail(i, values.get(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if a given value for a given dimension is mapped to the upper
+	 * tail of the distribution.
+	 * 
+	 * @param dim The dimension number of the axis of interest
+	 * @param value The value to determine the location of
+	 */
+	public boolean isInUpperTail(int dim, T value) {
+		if (hasTails(dim)) {
+			long binPos = mappers.get(dim).map(value);
+			if (binPos == mappers.get(dim).getBinCount() - 1) {
+				return true;
 			}
 		}
 		return false;
@@ -545,11 +573,25 @@ public class HistogramNd<T> implements Img<LongType> {
 	 */
 	public boolean isInMiddle(List<T> values) {
 		for (int i = 0; i < mappers.size(); i++) {
-			if (hasTails(i)) {
-				long binPos = mappers.get(i).map(values.get(i));
-				if ((binPos == 0) || (binPos == mappers.get(i).getBinCount() - 1)) {
-					return false;
-				}
+			if (!isInMiddle(i, values.get(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Returns true if a given value for a given dimension is mapped to the middle
+	 * of the distribution.
+	 * 
+	 * @param dim The dimension number of the axis of interest
+	 * @param value The value to determine the location of
+	 */
+	public boolean isInMiddle(int dim, T value) {
+		if (hasTails(dim)) {
+			long binPos = mappers.get(dim).map(value);
+			if ((binPos == 0) || (binPos == mappers.get(dim).getBinCount() - 1)) {
+				return false;
 			}
 		}
 		return true;
@@ -562,10 +604,23 @@ public class HistogramNd<T> implements Img<LongType> {
 	 */
 	public boolean isOutside(List<T> values) {
 		for (int i = 0; i < mappers.size(); i++) {
-			long binPos = mappers.get(i).map(values.get(i));
-			if ((binPos == Long.MIN_VALUE) || (binPos == Long.MAX_VALUE)) {
+			if (isOutside(i, values.get(i))) {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if a given value for a given dimension is outside the
+	 * distribution.
+	 * 
+	 * @param value The value to determine the location of
+	 */
+	public boolean isOutside(int dim, T value) {
+		long binPos = mappers.get(dim).map(value);
+		if ((binPos == Long.MIN_VALUE) || (binPos == Long.MAX_VALUE)) {
+			return true;
 		}
 		return false;
 	}
