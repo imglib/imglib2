@@ -11,13 +11,13 @@ package interactive;
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,7 +29,7 @@ package interactive;
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -44,7 +44,7 @@ import net.imglib2.img.imageplus.ImagePlusImgs;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.ui.InteractiveViewer3D;
+import net.imglib2.ui.viewer.InteractiveViewer3D;
 import net.imglib2.view.Views;
 
 public class InteractiveRGBViewer
@@ -53,7 +53,7 @@ public class InteractiveRGBViewer
 	{
 		final String filename = "/home/saalfeld/application/material/confocal/[XYZCT] overlay saalfeld-05-05-5-DPX_L9_Sum.lsm ... saalfeld-05-05-5-DPX_L10_Sum.tif (RGB).tif";
 		final ImagePlus imp = new ImagePlus( filename );
-		
+
 		final ImagePlusImg< ARGBType, ? > map = ImagePlusImgs.from( imp );
 
 		final int w = 720, h = 405;
@@ -65,18 +65,11 @@ public class InteractiveRGBViewer
 			0.0, yScale, 0.0, ( h - map.dimension( 1 ) * yScale ) / 2.0,
 			0.0, 0.0, zScale, -( map.dimension( 2 ) / 2.0 - 0.5 ) * zScale );
 
-		final LogoPainter logo = new LogoPainter();
 		final RandomAccessible< ARGBType > extended = Views.extendValue( map, new ARGBType( 0xff000000 ) );
-		new InteractiveViewer3D< ARGBType >( w, h, extended, map, initial, new TypeIdentity< ARGBType >() )
-		{
-			@Override
-			public boolean drawScreenImage()
-			{
-				final boolean valid = super.drawScreenImage();
-				logo.paint( screenImage );
-				return valid;
-			}
-		};
+
+		final InteractiveViewer3D< ARGBType > viewer = new InteractiveViewer3D< ARGBType >( w, h, extended, map, initial, new TypeIdentity< ARGBType >() );
+		viewer.getDisplayCanvas().addOverlayRenderer( new LogoPainter() );
+		viewer.requestRepaint();
 	}
 
 }
