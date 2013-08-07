@@ -70,7 +70,7 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 	int s = 0;
 	
 	public HierarchyProjector(
-			final List< RandomAccessible< A > > sources,
+			final List< ? extends RandomAccessible< A > > sources,
 			final ARGBScreenImage target,
 			final Converter< ? super A, ARGBType > converter )
 	{
@@ -131,9 +131,24 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 		s = sources.size();
 	}
 	
+	/**
+	 * Set all pixels in target to 100% transparent zero, and mask to all
+	 * Integer.MAX_VALUE.
+	 */
+	public void clearMask()
+	{
+		final ArrayCursor< IntType > maskCursor = mask.cursor();
+		
+		while ( maskCursor.hasNext() )
+			maskCursor.next().set( Integer.MAX_VALUE );
+		
+		s = sources.size();
+	}
+	
 	@Override
 	public void map()
 	{
+		System.out.println( "Mapping " + s + " levels." );
 		for ( int d = 2; d < position.length; ++d )
 			min[ d ] = max[ d ] = position[ d ];
 
@@ -195,6 +210,7 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 			}
 			if ( valid )
 				s = i - 1;
+			valid = s == 1;
 		}
 	}
 	
