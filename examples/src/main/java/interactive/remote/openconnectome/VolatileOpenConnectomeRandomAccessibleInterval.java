@@ -78,7 +78,7 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 			while ( !isInterrupted() )
 			{
 				Reference< Entry > ref;
-				synchronized ( queue )
+				synchronized ( cache )
 				{
 					try { ref = queue.pop(); }
 					catch ( final NoSuchElementException e ) { ref = null; }
@@ -88,7 +88,10 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 					synchronized ( this )
 					{
 						try { wait(); }
-						catch ( final InterruptedException e ) {}
+						catch ( final InterruptedException e )
+						{
+							break;
+						}
 					}
 				}
 				else
@@ -162,7 +165,10 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 					}
 				}
 			}
-			queue.clear();
+			synchronized ( cache )
+			{
+				queue.clear();
+			}
 		}
 	}
 	
@@ -263,7 +269,7 @@ public class VolatileOpenConnectomeRandomAccessibleInterval extends
 			ref = new WeakReference< Entry >( new Entry( key, bytes, false ) );
 			//ref = new SoftReference< Entry >( new Entry( key, bytes, false ) );
 			cache.putReference( key, ref );
-			queue.add( ref );
+			queue.push( ref );
 		}
 		synchronized ( fetcher )
 		{
