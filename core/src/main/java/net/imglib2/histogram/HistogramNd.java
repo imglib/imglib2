@@ -821,7 +821,7 @@ public class HistogramNd<T> implements Img<LongType> {
 	}
 
 	@Override
-	public Img<LongType> copy() {
+	public HistogramNd<T> copy() {
 		return new HistogramNd<T>(this);
 	}
 
