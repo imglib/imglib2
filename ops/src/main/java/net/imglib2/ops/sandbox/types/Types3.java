@@ -199,4 +199,18 @@ public class Types3 {
 			return negateOp;
 		}
 	}
+
+	// useful idea?
+
+	public interface IntegerGroup<T> {
+
+		BinaryOp<T> getAddOp();
+
+		BinaryOp<T> getSubOp();
+
+		BinaryOp<T> getMulOp();
+
+		UnaryOp<T> getNegateOp();
+	}
+
 }
