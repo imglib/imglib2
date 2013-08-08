@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -37,62 +37,72 @@
 package net.imglib2.ui;
 
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import net.imglib2.realtransform.AffineTransform3D;
 
-public class TransformEventHandler3D extends MouseAdapter implements KeyListener
+public class TransformEventHandler3D extends MouseAdapter implements TransformEventHandler< AffineTransform3D >
 {
+	final static private TransformEventHandlerFactory< AffineTransform3D > factory = new TransformEventHandlerFactory< AffineTransform3D >()
+	{
+		@Override
+		public TransformEventHandler< AffineTransform3D > create( final TransformListener< AffineTransform3D > transformListener )
+		{
+			return new TransformEventHandler3D( transformListener );
+		}
+	};
+
+	public static TransformEventHandlerFactory< AffineTransform3D > factory()
+	{
+		return factory;
+	}
+
 	/**
 	 * Current source to screen transform.
 	 */
-	final private AffineTransform3D affine = new AffineTransform3D();
+	final protected AffineTransform3D affine = new AffineTransform3D();
 
 	/**
 	 * Whom to notify when the {@link #affine current transform} is changed.
 	 */
-	final private TransformListener3D listener;
+	final protected TransformListener< AffineTransform3D > listener;
 
 	/**
 	 * Copy of {@link #affine current transform} when mouse dragging started.
 	 */
-	final private AffineTransform3D affineDragStart = new AffineTransform3D();
+	final protected AffineTransform3D affineDragStart = new AffineTransform3D();
 
 	/**
 	 * Coordinates where mouse dragging started.
 	 */
-	private double oX, oY;
+	protected double oX, oY;
 
 	/**
-	 * Current rotation axis for rotating with keyboard, indexed x->0, y->1, z->2.
+	 * Current rotation axis for rotating with keyboard, indexed x->0, y->1,
+	 * z->2.
 	 */
-	private int axis = 0;
+	protected int axis = 0;
 
 	/**
-	 * Screen coordinates to keep centered while zooming or rotating with the keyboard.
-	 * For example set these to <em>(screen-width/2, screen-height/2)</em>
+	 * The screen size of the canvas (the component displaying the image and
+	 * generating mouse events).
 	 */
-	private int centerX = 0, centerY = 0;
+	protected int canvasW = 1, canvasH = 1;
 
-	public TransformEventHandler3D( final TransformListener3D listener )
+	/**
+	 * Screen coordinates to keep centered while zooming or rotating with the
+	 * keyboard. These are set to <em>(canvasW/2, canvasH/2)</em>
+	 */
+	protected int centerX = 0, centerY = 0;
+
+	public TransformEventHandler3D( final TransformListener< AffineTransform3D > listener )
 	{
 		this.listener = listener;
 	}
 
-	public TransformEventHandler3D( final AffineTransform3D t, final TransformListener3D listener )
-	{
-		this.listener = listener;
-		affine.set( t );
-	}
-
-	/**
-	 * Get (a copy of) the current source to screen transform.
-	 *
-	 * @return current transform.
-	 */
+	@Override
 	public AffineTransform3D getTransform()
 	{
 		synchronized ( affine )
@@ -101,9 +111,7 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 		}
 	}
 
-	/**
-	 * Set the current source to screen transform.
-	 */
+	@Override
 	public void setTransform( final AffineTransform3D transform )
 	{
 		synchronized ( affine )
@@ -112,22 +120,31 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 		}
 	}
 
-	/**
-	 * Get description of how mouse and keyboard actions map to transformations.
-	 */
+	@Override
+	public void setCanvasSize( final int width, final int height, final boolean updateTransform )
+	{
+		if ( updateTransform )
+		{
+			synchronized ( affine )
+			{
+				affine.set( affine.get( 0, 3 ) - canvasW / 2, 0, 3 );
+				affine.set( affine.get( 1, 3 ) - canvasH / 2, 1, 3 );
+				affine.scale( ( double ) width / canvasW );
+				affine.set( affine.get( 0, 3 ) + width / 2, 0, 3 );
+				affine.set( affine.get( 1, 3 ) + height / 2, 1, 3 );
+				update();
+			}
+		}
+		canvasW = width;
+		canvasH = height;
+		centerX = width / 2;
+		centerY = height / 2;
+	}
+
+	@Override
 	public String getHelpString()
 	{
 		return helpString;
-	}
-
-	/**
-	 * Set screen coordinates to keep fixed while zooming or rotating with the keyboard.
-	 * For example set these to <em>(screen-width/2, screen-height/2)</em>
-	 */
-	public void setWindowCenter( final int x, final int y )
-	{
-		centerX = x;
-		centerY = y;
 	}
 
 	/**
@@ -187,9 +204,8 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 	{
 		synchronized ( affine )
 		{
-			final double f = getMouseScaleFactor();
-			oX = e.getX() * f;
-			oY = e.getY() * f;
+			oX = e.getX();
+			oY = e.getY();
 			affineDragStart.set( affine );
 		}
 	}
@@ -200,9 +216,8 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 		synchronized ( affine )
 		{
 			final int modifiers = e.getModifiersEx();
-			final double f = getMouseScaleFactor();
-			final double dX = oX - e.getX() * f;
-			final double dY = oY - e.getY() * f;
+			final double dX = oX - e.getX();
+			final double dY = oY - e.getY();
 
 			if ( ( modifiers & MouseEvent.BUTTON1_DOWN_MASK ) != 0 ) // rotate
 			{
@@ -212,7 +227,6 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 				affine.set( affine.get( 0, 3 ) - oX, 0, 3 );
 				affine.set( affine.get( 1, 3 ) - oY, 1, 3 );
 
-				// rotate
 				final double v = step * keyModfiedSpeed( modifiers );
 				affine.rotate( 0, -dY * v );
 				affine.rotate( 1, dX * v );
@@ -248,8 +262,8 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 	}
 
 	/**
-	 * Rotate by d radians around axis. Keep screen coordinates
-	 * ({@link #centerX}, {@link #centerY}) fixed.
+	 * Rotate by d radians around axis. Keep screen coordinates (
+	 * {@link #centerX}, {@link #centerY}) fixed.
 	 */
 	private void rotate( final int axis, final double d )
 	{
@@ -274,16 +288,13 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 			final int modifiers = e.getModifiersEx();
 			final double v = keyModfiedSpeed( modifiers );
 			final int s = e.getWheelRotation();
-			if ( ( ( modifiers & KeyEvent.CTRL_DOWN_MASK ) != 0 &&
-			       ( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 )
-			     || ( modifiers & KeyEvent.META_DOWN_MASK ) != 0 )
+			if ( ( ( modifiers & KeyEvent.CTRL_DOWN_MASK ) != 0 && ( modifiers & KeyEvent.SHIFT_DOWN_MASK ) != 0 ) || ( modifiers & KeyEvent.META_DOWN_MASK ) != 0 )
 			{
-				final double f = getMouseScaleFactor();
 				final double dScale = 1.0 + 0.05;
 				if ( s > 0 )
-					scale( 1.0 / dScale, e.getX() * f, e.getY() * f );
+					scale( 1.0 / dScale, e.getX(), e.getY() );
 				else
-					scale( dScale, e.getX() * f, e.getY() * f );
+					scale( dScale, e.getX(), e.getY() );
 			}
 			else
 			// translate in Z
@@ -309,7 +320,7 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 			{
 				axis = 0;
 			}
-			else if (keyCode == KeyEvent.VK_Y && keyModifiers == 0 )
+			else if ( keyCode == KeyEvent.VK_Y && keyModifiers == 0 )
 			{
 				axis = 1;
 			}
@@ -353,13 +364,10 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 	}
 
 	@Override
-	public void keyTyped( final KeyEvent e ) {}
+	public void keyTyped( final KeyEvent e )
+	{}
 
 	@Override
-	public void keyReleased( final KeyEvent e ) {}
-
-	protected double getMouseScaleFactor()
-	{
-		return 1.0;
-	}
+	public void keyReleased( final KeyEvent e )
+	{}
 }
