@@ -37,7 +37,9 @@
 
 package net.imglib2.histogram;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
@@ -120,6 +122,19 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	}
 
 	/**
+	 * Sets the frequency count associated with a given bin.
+	 */
+	public void setFrequency(long[] binPos, long value) {
+		if (value < 0) {
+			throw new IllegalArgumentException("frequency count must be >= 0");
+		}
+		accessor.setPosition(binPos);
+		long currentValue = accessor.get().get();
+		totalValues += (value - currentValue);
+		accessor.get().set(value);
+	}
+
+	/**
 	 * Returns the relative frequency (0 <= f <= 1) associated with a given bin.
 	 */
 	public double relativeFrequency(long[] binPos) {
@@ -150,6 +165,39 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	 */
 	public long totalValues() {
 		return totalValues;
+	}
+
+	/**
+	 * Returns the highest frequency count found within the bins.
+	 */
+	public long modeCount() {
+		List<long[]> modes = modePositions();
+		return frequency(modes.get(0));
+	}
+
+	/**
+	 * Returns a list of bin positions of the highest frequency bins.
+	 */
+	public List<long[]> modePositions() {
+		long commonValue = 0;
+		List<long[]> modePositions = new ArrayList<long[]>();
+		Cursor<LongType> cursor = localizingCursor();
+		while (cursor.hasNext()) {
+			long val = cursor.next().get();
+			if (val > commonValue) {
+				commonValue = val;
+				modePositions.clear();
+				long[] pos = new long[numDimensions()];
+				cursor.localize(pos);
+				modePositions.add(pos);
+			}
+			else if (val == commonValue) {
+				long[] pos = new long[numDimensions()];
+				cursor.localize(pos);
+				modePositions.add(pos);
+			}
+		}
+		return modePositions;
 	}
 
 	// -- Img methods --
