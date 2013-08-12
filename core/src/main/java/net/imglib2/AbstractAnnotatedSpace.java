@@ -35,48 +35,64 @@
  * #L%
  */
 
-package net.imglib2.meta;
+package net.imglib2;
 
-import net.imglib2.EuclideanSpace;
-import net.imglib2.img.Img;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * A Euclidean space whose dimensions have names and calibrations.
+ * Abstract base class for {@link AnnotatedSpace} implementations.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Lee Kamentsky
+ * @author Curtis Rueden
  */
-public interface CalibratedSpace extends EuclideanSpace {
+public abstract class AbstractAnnotatedSpace<A extends Axis> implements
+	AnnotatedSpace<A>
+{
 
-	/** Gets the dimensional index of the axis with the given type. */
-	int getAxisIndex(final AxisType axis);
+	private final List<A> axisList;
 
-	/** Gets the associated {@link Img}'s axis at the given dimension. */
-	AxisType axis(int d);
+	public AbstractAnnotatedSpace(final int numDims) {
+		axisList = new ArrayList<A>(numDims);
+		// We have no way of knowing the axes to populate, so we fill with nulls.
+		for (int d = 0; d < numDims; d++) {
+			axisList.add(null);
+		}
+	}
 
-	/** Copies the {@link Img}'s axes into the given array. */
-	void axes(AxisType[] axes);
+	public AbstractAnnotatedSpace(final A... axes) {
+		axisList = Arrays.asList(axes);
+	}
 
-	/** Sets the dimensional axis for the given dimension. */
-	void setAxis(AxisType axis, int d);
+	public AbstractAnnotatedSpace(final List<A> axes) {
+		axisList = new ArrayList<A>(axes.size());
+		axisList.addAll(axes);
+	}
 
-	/** Gets the associated {@link Img}'s calibration at the given dimension. */
-	double calibration(int d);
+	// -- AnnotatedSpace methods --
 
-	/** Copies the {@link Img}'s calibration into the given array. */
-	void calibration(double[] cal);
+	@Override
+	public A axis(final int d) {
+		return axisList.get(d);
+	}
 
-	/** Copies the {@link Img}'s calibration into the given array. */
-	void calibration(float[] cal);
+	@Override
+	public void axes(final A[] axes) {
+		for (int d = 0; d < axes.length; d++) {
+			axes[d] = axis(d);
+		}
+	}
 
-	/** Sets the image calibration for the given dimension. */
-	void setCalibration(double cal, int d);
+	@Override
+	public void setAxis(final A axis, final int d) {
+		axisList.set(d, axis);
+	}
 
-	/** Sets the image calibration for all dimensions. */
-	void setCalibration(double[] cal);
+	// -- EuclideanSpace methods --
 
-	/** Sets the image calibration for all dimensions. */
-	void setCalibration(float[] cal);
+	@Override
+	public int numDimensions() {
+		return axisList.size();
+	}
+
 }

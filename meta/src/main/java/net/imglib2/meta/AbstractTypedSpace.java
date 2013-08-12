@@ -35,36 +35,41 @@
  * #L%
  */
 
-package net.imglib2.ops.util.metadata;
+package net.imglib2.meta;
 
-import net.imglib2.meta.Sourced;
+import java.util.List;
+
+import net.imglib2.AbstractAnnotatedSpace;
 
 /**
- * @author Christian Dietz (University of Konstanz)
+ * Abstract base class for {@link TypedSpace}.
+ * 
+ * @author Curtis Rueden
  */
-public class SourcedImpl implements Sourced {
+public abstract class AbstractTypedSpace<A extends TypedAxis> extends
+	AbstractAnnotatedSpace<A> implements TypedSpace<A>
+{
 
-	private String m_source = "";
-
-	public SourcedImpl() {
+	public AbstractTypedSpace(final int numDims) {
+		super(numDims);
 	}
 
-	public SourcedImpl(String source) {
-		m_source = source;
+	public AbstractTypedSpace(final A... axes) {
+		super(axes);
 	}
 
-	public SourcedImpl(Sourced sourced) {
-		m_source = sourced.getSource();
+	public AbstractTypedSpace(final List<A> axes) {
+		super(axes);
 	}
+
+	// -- TypedSpace methods --
 
 	@Override
-	public void setSource(String source) {
-		m_source = source;
-	}
-
-	@Override
-	public String getSource() {
-		return m_source;
+	public int dimensionIndex(final AxisType axisType) {
+		for (int d=0; d<numDimensions(); d++) {
+			if (axis(d).type() == axisType) return d;
+		}
+		return -1;
 	}
 
 }

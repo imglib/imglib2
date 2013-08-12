@@ -35,18 +35,18 @@
  * #L%
  */
 
-package net.imglib2.view;
+package net.imglib2.meta.view;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import net.imglib2.Cursor;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
 
@@ -54,13 +54,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Unit tests for {@link HyperSliceImgPlus}.
+ * 
  * @author Jean-Yves Tinevez
- *
  */
 public class HyperSliceImgPlusTest {
 
 	private static final long[] dim = new long[] { 16, 16, 64, 8, 32 };
-	private static final AxisType[] axes = new AxisType[] {
+	private static final AxisType[] axisTypes = new AxisType[] {
 		Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME };
 	private static final float[] calibration = new float[] { 0.5f, 0.5f, 0.8f, 1, 5 };
 	private static final String name = "Source";
@@ -86,8 +87,8 @@ public class HyperSliceImgPlusTest {
 		ArrayImg<UnsignedByteType, ?> img = factory.create(dim , new UnsignedByteType());
 		source = new ImgPlus<UnsignedByteType>(img);
 		for (int d = 0; d < dim.length; d++) {
-			source.setAxis(axes[d], d);
-			source.setCalibration(calibration[d], d);
+			source.axis(d).setType(axisTypes[d]);
+			source.axis(d).setCalibration(calibration[d]);
 		}
 		source.setName(name);
 
@@ -109,7 +110,7 @@ public class HyperSliceImgPlusTest {
 		int index1 = 0;
 		for (int d = 0; d < dim.length; d++) {
 			if (d != REMOVED_DIM_1) {
-				assertEquals(source.calibration(d), imgplusZ.calibration(index1), Float.MIN_VALUE);
+				assertEquals(source.axis(d).calibration(), imgplusZ.axis(index1).calibration(), Float.MIN_VALUE);
 				assertEquals(source.axis(d), imgplusZ.axis(index1));
 				index1++;
 			}
@@ -118,7 +119,7 @@ public class HyperSliceImgPlusTest {
 		int index2 = 0;
 		for (int d = 0; d < dim.length; d++) {
 			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2+1)) {
-				assertEquals(source.calibration(d), imgplusZT.calibration(index2), Float.MIN_VALUE);
+				assertEquals(source.axis(d).calibration(), imgplusZT.axis(index2).calibration(), Float.MIN_VALUE);
 				assertEquals(source.axis(d), imgplusZT.axis(index2));
 				index2++;
 			}
@@ -126,7 +127,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#randomAccess()}.
+	 * Test method for {@link HyperSliceImgPlus#randomAccess()}.
 	 */
 	@Test
 	public void testRandomAccess() {
@@ -176,7 +177,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#numDimensions()}.
+	 * Test method for {@link HyperSliceImgPlus#numDimensions()}.
 	 */
 	@Test
 	public void testNumDimensions() {
@@ -185,7 +186,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#min(int)}.
+	 * Test method for {@link HyperSliceImgPlus#min(int)}.
 	 */
 	@Test
 	public void testMinInt() {
@@ -198,7 +199,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#min(long[])}.
+	 * Test method for {@link HyperSliceImgPlus#min(long[])}.
 	 */
 	@Test
 	public void testMinLongArray() {
@@ -213,7 +214,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#max(int)}.
+	 * Test method for {@link HyperSliceImgPlus#max(int)}.
 	 */
 	@Test
 	public void testMaxInt() {
@@ -234,7 +235,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#max(long[])}.
+	 * Test method for {@link HyperSliceImgPlus#max(long[])}.
 	 */
 	@Test
 	public void testMaxLongArray() {
@@ -267,7 +268,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#dimensions(long[])}.
+	 * Test method for {@link HyperSliceImgPlus#dimensions(long[])}.
 	 */
 	@Test
 	public void testDimensions() {
@@ -288,7 +289,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#cursor()}.
+	 * Test method for {@link HyperSliceImgPlus#cursor()}.
 	 */
 	@Test
 	public void testCursor() {
@@ -344,7 +345,7 @@ public class HyperSliceImgPlusTest {
 	}
 
 	/**
-	 * Test method for {@link fiji.plugin.trackmate.util.HyperSliceImgPlus#size()}.
+	 * Test method for {@link HyperSliceImgPlus#size()}.
 	 */
 	@Test
 	public void testSize() {

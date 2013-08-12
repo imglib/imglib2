@@ -39,15 +39,9 @@ package net.imglib2.meta;
 
 import java.util.Hashtable;
 
-import net.imglib2.img.ImgPlus;
-
 /**
- * An enumeration of common dimensional axis types, for describing the
- * dimensions of a {@link CalibratedSpace} object (such as an {@link ImgPlus}).
+ * An extensible enumeration of common dimensional {@link AxisType}s.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
 public enum Axes implements AxisType {
@@ -110,10 +104,7 @@ public enum Axes implements AxisType {
 	 * Identifies the <i>Frequency</i> dimensional type, representing a dimension
 	 * consisting of frequencies.
 	 */
-	FREQUENCY("Frequency"),
-
-	/** Represents an unknown dimensional type. */
-	UNKNOWN("Unknown");
+	FREQUENCY("Frequency");
 
 	private static Hashtable<String, AxisType> axes =
 		new Hashtable<String, AxisType>();
@@ -127,14 +118,21 @@ public enum Axes implements AxisType {
 	public synchronized static AxisType get(final String label) {
 		AxisType axis = axes.get(label);
 		if (axis == null) {
-			axis = new CustomAxisType(label);
+			axis = new CustomType(label);
 			axes.put(label, axis);
 		}
 		return axis;
 	}
 
-	public static boolean isXY(final AxisType dimLabel) {
-		return dimLabel == Axes.X || dimLabel == Axes.Y;
+	/**
+	 * Gets an "unknown" axis type.
+	 * <p>
+	 * Always returns a new object, which is not part of the extended enumeration.
+	 * In this way, two unknown axis types are never equal.
+	 * </p>
+	 */
+	public static AxisType unknown() {
+		return new CustomType("Unknown");
 	}
 
 	private String label;
@@ -143,7 +141,7 @@ public enum Axes implements AxisType {
 		this.label = label;
 	}
 
-	// -- Axis methods --
+	// -- AxisType methods --
 
 	@Override
 	public String getLabel() {
@@ -171,14 +169,20 @@ public enum Axes implements AxisType {
 
 	/**
 	 * A custom dimensional axis type, for describing the dimensional axes of a
-	 * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
+	 * {@link TypedSpace} object.
 	 */
-	public static class CustomAxisType implements AxisType {
+	public static class CustomType implements AxisType {
 
 		private final String label;
+		private final boolean spatial;
 
-		public CustomAxisType(final String label) {
+		public CustomType(final String label) {
+			this(label, false);
+		}
+
+		public CustomType(final String label, final boolean spatial) {
 			this.label = label;
+			this.spatial = spatial;
 		}
 
 		// -- Axis methods --
@@ -195,7 +199,7 @@ public enum Axes implements AxisType {
 
 		@Override
 		public boolean isSpatial() {
-			return false;
+			return spatial;
 		}
 
 		// -- Object methods --

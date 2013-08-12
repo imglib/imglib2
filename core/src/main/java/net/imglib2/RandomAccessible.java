@@ -50,7 +50,6 @@ package net.imglib2;
  * 
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface RandomAccessible< T > extends EuclideanSpace
 {

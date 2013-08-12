@@ -37,18 +37,48 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.EuclideanSpace;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
 
 /**
- * An interface for defining metadata that goes along with an {@link Img},
- * including name, dimensional axes and calibration information.
+ * A Euclidean space whose dimensions have names and calibrations.
  * 
- * @see ImgPlus
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Curtis Rueden
+ * @author Lee Kamentsky
+ * @deprecated Use {@link CalibratedSpace}.
  */
-public interface Metadata extends Named, Sourced, CalibratedSpace, ImageMetadata {
-	// marker interface - no implementation needed
+@Deprecated
+public interface OldCalibratedSpace extends EuclideanSpace {
+
+	/** Gets the dimensional index of the axis with the given type. */
+	int getAxisIndex(final AxisType axis);
+
+	/** Gets the associated {@link Img}'s axis at the given dimension. */
+	AxisType axis(int d);
+
+	/** Copies the {@link Img}'s axes into the given array. */
+	void axes(AxisType[] axes);
+
+	/** Sets the dimensional axis for the given dimension. */
+	void setAxis(AxisType axis, int d);
+
+	/** Gets the associated {@link Img}'s calibration at the given dimension. */
+	double calibration(int d);
+
+	/** Copies the {@link Img}'s calibration into the given array. */
+	void calibration(double[] cal);
+
+	/** Copies the {@link Img}'s calibration into the given array. */
+	void calibration(float[] cal);
+
+	/** Sets the image calibration for the given dimension. */
+	void setCalibration(double cal, int d);
+
+	/** Sets the image calibration for all dimensions. */
+	void setCalibration(double[] cal);
+
+	/** Sets the image calibration for all dimensions. */
+	void setCalibration(float[] cal);
 }

@@ -45,8 +45,8 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.meta.AxisType;
-import net.imglib2.meta.CalibratedSpace;
-import net.imglib2.ops.util.metadata.CalibratedSpaceImpl;
+import net.imglib2.meta.OldCalibratedSpace;
+import net.imglib2.meta.DefaultOldCalibratedSpace;
 import net.imglib2.type.Type;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
@@ -121,8 +121,8 @@ public class SubsetViews {
 	 * @return Adjusted {@link RandomAccessibleInterval}
 	 */
 	public static <T> RandomAccessibleInterval<T> synchronizeDimensionality(
-			final RandomAccessibleInterval<T> src, CalibratedSpace srcSpace,
-			final Interval target, CalibratedSpace targetSpace) {
+			final RandomAccessibleInterval<T> src, OldCalibratedSpace srcSpace,
+			final Interval target, OldCalibratedSpace targetSpace) {
 
 		// must hold, if not: most likely an implementation error
 		assert (srcSpace.numDimensions() == src.numDimensions() && target
@@ -134,11 +134,11 @@ public class SubsetViews {
 
 		// Init result vars
 		RandomAccessibleInterval<T> res = src;
-		CalibratedSpace resSpace = new CalibratedSpaceImpl(
+		OldCalibratedSpace resSpace = new DefaultOldCalibratedSpace(
 				target.numDimensions());
 
 		// 1. Step remove axis from source which can't be found in target
-		AxisType[] dispensable = getDeltaAxisTypes(targetSpace, srcSpace);
+		AxisType[] dispensable = getDeltaAxes(targetSpace, srcSpace);
 		for (int d = dispensable.length - 1; d >= 0; --d) {
 			int idx = srcSpace.getAxisIndex(dispensable[d]);
 			res = Views.hyperSlice(res, idx, 0);
@@ -156,7 +156,7 @@ public class SubsetViews {
 		}
 
 		// 2. Add Axis which are available in target but not in source
-		AxisType[] missing = getDeltaAxisTypes(srcSpace, targetSpace);
+		AxisType[] missing = getDeltaAxes(srcSpace, targetSpace);
 
 		// Dimensions are added and resSpace is synchronized with res
 		i = srcSpace.numDimensions() - dispensable.length;
@@ -223,8 +223,8 @@ public class SubsetViews {
 
 	}
 
-	private static boolean spaceEquals(CalibratedSpace srcSpace,
-			CalibratedSpace targetSpace) {
+	private static boolean spaceEquals(OldCalibratedSpace srcSpace,
+			OldCalibratedSpace targetSpace) {
 
 		if (srcSpace.numDimensions() != targetSpace.numDimensions())
 			return false;
@@ -240,8 +240,8 @@ public class SubsetViews {
 	 * Calculate the delta axis which are missing in the smaller space. From the
 	 * smallest index of axistype to the biggest
 	 */
-	private synchronized static AxisType[] getDeltaAxisTypes(
-			CalibratedSpace sourceSpace, CalibratedSpace targetSpace) {
+	private synchronized static AxisType[] getDeltaAxes(
+			OldCalibratedSpace sourceSpace, OldCalibratedSpace targetSpace) {
 
 		List<AxisType> delta = new ArrayList<AxisType>();
 		for (int d = 0; d < targetSpace.numDimensions(); d++) {

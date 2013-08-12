@@ -37,23 +37,33 @@
 
 package net.imglib2.meta;
 
-import net.imglib2.img.ImgPlus;
-
 /**
- * A dimensional axis type, for describing the dimensions of a
- * {@link CalibratedSpace} object (such as an {@link ImgPlus}).
+ * Simple, default {@link TypedAxis} implementation.
  * 
- *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
  */
-public interface AxisType {
+public class DefaultTypedAxis implements TypedAxis {
 
-	String getLabel();
+	private AxisType type;
 
-	boolean isXY();
+	public DefaultTypedAxis() {
+		this(Axes.unknown());
+	}
 
-	boolean isSpatial();
+	public DefaultTypedAxis(final AxisType type) {
+		setType(type);
+	}
+
+	// -- TypedAxis methods --
+
+	@Override
+	public AxisType type() {
+		return type;
+	}
+
+	@Override
+	public void setType(AxisType type) {
+		this.type = type;
+	}
 
 }
