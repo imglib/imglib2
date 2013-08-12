@@ -83,7 +83,7 @@ public class  ImagePlusAdapterTest <T extends NumericType<T> & NativeType<T>> {
 
 		for (int i = 0; i < dim.length; i++) {
 
-			// Create ImatePlus
+			// Create ImagePlus
 			int slices = dim[i][2] * dim[i][3] * dim[i][4];
 			ImagePlus imp = NewImage.createByteImage("Test "+i, dim[i][0], dim[i][1], slices , NewImage.FILL_BLACK);
 			imp.setDimensions(dim[i][2], dim[i][3], dim[i][4]);
