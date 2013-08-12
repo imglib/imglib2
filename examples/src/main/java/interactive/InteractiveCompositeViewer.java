@@ -37,10 +37,10 @@ package interactive;
  */
 
 import net.imglib2.converter.Converter;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
