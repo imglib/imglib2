@@ -38,15 +38,17 @@
 package net.imglib2.ops.operation.metadata.unary;
 
 import net.imglib2.Interval;
+import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.ops.operation.UnaryOperation;
 
 /**
  * @author Christian Dietz (University of Konstanz)
- * 
- * @param <CS>
+ * @author Curtis Rueden
+ *
+ * @param <S> The type of the space to copy
  */
-public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryOperation< CS, CS >
+public class CopyCalibratedSpace< S extends CalibratedSpace<CalibratedAxis> > implements UnaryOperation< S, S >
 {
 	private Interval interval;
 
@@ -61,7 +63,7 @@ public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryO
 	}
 
 	@Override
-	public CS compute( CS input, CS output )
+	public S compute( S input, S output )
 	{
 
 		int offset = 0;
@@ -73,8 +75,9 @@ public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryO
 			}
 			else
 			{
+				// NB: Axes are copied by reference here. If an axis is later
+				// mutated, this could cause unintuitive side effects...
 				output.setAxis( input.axis( d ), d - offset );
-				output.setCalibration( input.calibration( d ), d - offset );
 			}
 		}
 
@@ -82,9 +85,9 @@ public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryO
 	}
 
 	@Override
-	public UnaryOperation< CS, CS > copy()
+	public UnaryOperation< S, S > copy()
 	{
-		return new CopyCalibratedSpace< CS >();
+		return new CopyCalibratedSpace< S >();
 	}
 
 }

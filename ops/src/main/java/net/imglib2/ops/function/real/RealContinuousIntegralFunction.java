@@ -69,6 +69,19 @@ public class RealContinuousIntegralFunction< T extends RealType< T >> implements
 
 	// -- constructor --
 
+	/**
+	 * Creates a Function that can compute the integral of another function. One
+	 * computes the integral at a point over the limits of integration by the
+	 * given per dimension step sizes.
+	 * 
+	 * @param otherFunc
+	 *            The function to integrate.
+	 * @param ranges
+	 *            The per dimension min and max limits of integration.
+	 * @param deltas
+	 *            The per dimension step sizes that divide the space between the
+	 *            limits of integration.
+	 */
 	public RealContinuousIntegralFunction( Function< double[], T > otherFunc, double[] ranges, double[] deltas )
 	{
 		this.otherFunc = otherFunc;
@@ -81,6 +94,11 @@ public class RealContinuousIntegralFunction< T extends RealType< T >> implements
 
 	// -- Function methods --
 
+	/**
+	 * Compute the integral of a prespecified neighborhood anchored at the given
+	 * point. The neighborhood is specified at construction time as the limits
+	 * of integration.
+	 */
 	@Override
 	public void compute( double[] point, T output )
 	{

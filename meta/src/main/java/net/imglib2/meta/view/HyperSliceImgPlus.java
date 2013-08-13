@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.view;
+package net.imglib2.meta.view;
 
 import java.util.Iterator;
 
@@ -49,10 +49,13 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.ImgPlus;
-import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
+import net.imglib2.meta.Axes;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.view.MixedTransformView;
+import net.imglib2.view.TransformBuilder;
+import net.imglib2.view.Views;
 
 /**
  * This class offers access to a <code>n-1</code>-dimensional view of a source {@link ImgPlus},
@@ -126,7 +129,6 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 				component[ e ] = e;
 				min[ e ] = source.min( e );
 				max[ e ] = source.max( e );
-				setCalibration( source.calibration(e), e);
 				setAxis( source.axis(e), e);
 
 			} else if ( e > d ) {
@@ -135,7 +137,6 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 				component[ e ] = e - 1;
 				min[ e - 1] = source.min( e );
 				max[ e - 1] = source.max( e );
-				setCalibration( source.calibration(e), e-1);
 				setAxis( source.axis(e), e-1);
 
 			} else {
@@ -159,7 +160,6 @@ public class HyperSliceImgPlus <T> extends ImgPlus<T> {
 		int index = 0;
 		for (int i = 0; i < m; i++) {
 			if (i != d) {
-				setCalibration( source.calibration(i) , index );
 				setAxis( source.axis(i), index);
 				index++;
 			}

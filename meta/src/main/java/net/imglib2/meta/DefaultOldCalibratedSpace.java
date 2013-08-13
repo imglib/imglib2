@@ -35,143 +35,123 @@
  * #L%
  */
 
-package net.imglib2.ops.util.metadata;
+package net.imglib2.meta;
 
 import java.util.Arrays;
 
-import net.imglib2.meta.Axes;
-import net.imglib2.meta.AxisType;
-import net.imglib2.meta.CalibratedSpace;
-
 /**
+ * A simple, default implementation of {@link OldCalibratedSpace}.
+ * 
  * @author Martin Horn (University of Konstanz)
+ * @deprecated Use {@link DefaultCalibratedSpace}.
  */
-public class CalibratedSpaceImpl implements CalibratedSpace
-{
+@Deprecated
+public class DefaultOldCalibratedSpace implements OldCalibratedSpace {
 
 	private final AxisType[] m_axes;
 
 	private final double[] m_cal;
 
-	public CalibratedSpaceImpl( int numDims )
-	{
-		m_axes = new AxisType[ numDims ];
-		Arrays.fill( m_axes, Axes.UNKNOWN );
-		m_cal = new double[ numDims ];
+	public DefaultOldCalibratedSpace(int numDims) {
+		m_axes = new AxisType[numDims];
+		Arrays.fill(m_axes, Axes.unknown());
+		m_cal = new double[numDims];
 	}
 
-	public CalibratedSpaceImpl( String... axisLabels )
-	{
-		m_axes = new AxisType[ axisLabels.length ];
-		for ( int i = 0; i < m_axes.length; i++ )
-		{
-			m_axes[ i ] = Axes.get( axisLabels[ i ] );
+	public DefaultOldCalibratedSpace(String... axisLabels) {
+		m_axes = new AxisType[axisLabels.length];
+		for (int i = 0; i < m_axes.length; i++) {
+			m_axes[i] = Axes.get(axisLabels[i]);
 		}
-		m_cal = new double[ axisLabels.length ];
+		m_cal = new double[axisLabels.length];
 	}
 
-	public CalibratedSpaceImpl( AxisType[] axes, double[] calibration )
-	{
+	public DefaultOldCalibratedSpace(AxisType[] axes, double[] calibration) {
 		m_axes = axes;
 		m_cal = calibration;
 	}
 
-	public CalibratedSpaceImpl( CalibratedSpace axes )
-	{
-		m_axes = new AxisType[ axes.numDimensions() ];
-		m_cal = new double[ axes.numDimensions() ];
-		axes.axes( m_axes );
-		axes.calibration( m_cal );
+	public DefaultOldCalibratedSpace(OldCalibratedSpace axes) {
+		m_axes = new AxisType[axes.numDimensions()];
+		m_cal = new double[axes.numDimensions()];
+		axes.axes(m_axes);
+		axes.calibration(m_cal);
 
 	}
 
-	public CalibratedSpaceImpl( String[] axisLabels, double[] calibration )
-	{
-		m_axes = new AxisType[ axisLabels.length ];
+	public DefaultOldCalibratedSpace(String[] axisLabels, double[] calibration) {
+		m_axes = new AxisType[axisLabels.length];
 		m_cal = calibration.clone();
 
-		for ( int d = 0; d < axisLabels.length; d++ )
-		{
-			m_axes[ d ] = Axes.get( axisLabels[ d ] );
+		for (int d = 0; d < axisLabels.length; d++) {
+			m_axes[d] = Axes.get(axisLabels[d]);
 		}
 	}
 
 	@Override
-	public int getAxisIndex( final AxisType axis )
-	{
-		for ( int i = 0; i < m_axes.length; i++ )
-		{
-			if ( m_axes[ i ].getLabel().equals( axis.getLabel() ) )
+	public int getAxisIndex(final AxisType axis) {
+		for (int i = 0; i < m_axes.length; i++) {
+			if (m_axes[i].getLabel().equals(axis.getLabel()))
 				return i;
 		}
 		return -1;
 	}
 
 	@Override
-	public AxisType axis( final int d )
-	{
-		return m_axes[ d ];
+	public AxisType axis(final int d) {
+		return m_axes[d];
 	}
 
 	@Override
-	public void axes( final AxisType[] target )
-	{
-		for ( int i = 0; i < m_axes.length; i++ )
-			target[ i ] = m_axes[ i ];
+	public void axes(final AxisType[] target) {
+		for (int i = 0; i < m_axes.length; i++)
+			target[i] = m_axes[i];
 	}
 
 	@Override
-	public void setAxis( final AxisType axis, final int d )
-	{
-		m_axes[ d ] = axis;
+	public void setAxis(final AxisType axis, final int d) {
+		m_axes[d] = axis;
 	}
 
 	@Override
-	public double calibration( final int d )
-	{
-		return m_cal[ d ];
+	public double calibration(final int d) {
+		return m_cal[d];
 	}
 
 	@Override
-	public void calibration( final double[] target )
-	{
-		for ( int i = 0; i < target.length; i++ )
-			target[ i ] = m_cal[ i ];
+	public void calibration(final double[] target) {
+		for (int i = 0; i < target.length; i++)
+			target[i] = m_cal[i];
 	}
 
 	@Override
-	public void setCalibration( final double value, final int d )
-	{
-		m_cal[ d ] = value;
+	public void setCalibration(final double value, final int d) {
+		m_cal[d] = value;
 	}
 
 	@Override
-	public int numDimensions()
-	{
+	public int numDimensions() {
 		return m_axes.length;
 	}
 
 	@Override
-	public void calibration( float[] cal )
-	{
-		for ( int d = 0; d < cal.length; d++ )
-			cal[ d ] = ( float ) m_cal[ d ];
+	public void calibration(float[] cal) {
+		for (int d = 0; d < cal.length; d++)
+			cal[d] = (float) m_cal[d];
 
 	}
 
 	@Override
-	public void setCalibration( double[] cal )
-	{
-		for ( int d = 0; d < cal.length; d++ )
-			m_cal[ d ] = cal[ d ];
+	public void setCalibration(double[] cal) {
+		for (int d = 0; d < cal.length; d++)
+			m_cal[d] = cal[d];
 
 	}
 
 	@Override
-	public void setCalibration( float[] cal )
-	{
-		for ( int d = 0; d < cal.length; d++ )
-			m_cal[ d ] = cal[ d ];
+	public void setCalibration(float[] cal) {
+		for (int d = 0; d < cal.length; d++)
+			m_cal[d] = cal[d];
 	}
 
 }

@@ -53,8 +53,8 @@ import net.imglib2.display.RealUnsignedByteConverter;
 import net.imglib2.display.RealUnsignedShortConverter;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.ComplexType;
@@ -175,24 +175,24 @@ public class ImageJFunctions
 			final ImgPlus<T> imgplus = (ImgPlus<T>) img;
 			final Calibration impcal = target.getCalibration();
 
-			final int xaxis = imgplus.getAxisIndex(Axes.X);
+			final int xaxis = imgplus.dimensionIndex(Axes.X);
 			if (xaxis >= 0) {
-				impcal.pixelWidth = imgplus.calibration(xaxis);
+				impcal.pixelWidth = imgplus.axis(xaxis).calibration();
 			}
 
-			final int yaxis = imgplus.getAxisIndex(Axes.Y);
+			final int yaxis = imgplus.dimensionIndex(Axes.Y);
 			if (yaxis >= 0) {
-				impcal.pixelHeight = imgplus.calibration(yaxis);
+				impcal.pixelHeight = imgplus.axis(yaxis).calibration();
 			}
 
-			final int zaxis = imgplus.getAxisIndex(Axes.Z);
+			final int zaxis = imgplus.dimensionIndex(Axes.Z);
 			if (zaxis >= 0) {
-				impcal.pixelDepth = imgplus.calibration(zaxis);
+				impcal.pixelDepth = imgplus.axis(zaxis).calibration();
 			}
 
-			final int taxis = imgplus.getAxisIndex(Axes.TIME);
+			final int taxis = imgplus.dimensionIndex(Axes.TIME);
 			if (taxis >= 0) {
-				impcal.frameInterval = imgplus.calibration(taxis);
+				impcal.frameInterval = imgplus.axis(taxis).calibration();
 			}
 			target.setTitle( imgplus.getName() );
 		}

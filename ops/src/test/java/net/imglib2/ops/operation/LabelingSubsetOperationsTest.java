@@ -11,8 +11,6 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.labeling.NativeImgLabeling;
-import net.imglib2.ops.operation.SubsetOperations;
-import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.view.Views;
 import net.imglib2.view.iteration.SlicingCursor;

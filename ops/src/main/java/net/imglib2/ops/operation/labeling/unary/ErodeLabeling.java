@@ -157,16 +157,6 @@ public class ErodeLabeling< L extends Comparable< L >> implements UnaryOperation
 		type.setLabeling( tmp );
 	}
 
-	private void removeLabel( final LabelingType< L > type, final L elmnt )
-	{
-		if ( !type.getLabeling().contains( elmnt ) ) { return; }
-		final List< L > current = type.getLabeling();
-		final ArrayList< L > tmp = new ArrayList< L >();
-		tmp.addAll( current );
-		tmp.remove( elmnt );
-		type.setLabeling( tmp );
-	}
-
 	@Override
 	public UnaryOperation< Labeling< L >, Labeling< L >> copy()
 	{
