@@ -48,6 +48,7 @@ import net.imglib2.img.imageplus.ImagePlusImgFactory;
 import net.imglib2.img.imageplus.IntImagePlus;
 import net.imglib2.img.imageplus.ShortImagePlus;
 import net.imglib2.meta.Axes;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
@@ -156,17 +157,17 @@ public class ImagePlusAdapter
 		int currentDim = 2;
 
 		if (imp.getNChannels() > 1) {
-			image.setAxis(Axes.CHANNEL, currentDim);
+			image.axis(currentDim).setType(Axes.CHANNEL);
 			currentDim++;
 		}
 
 		if (imp.getNSlices() > 1) {
-			image.setAxis(Axes.Z, currentDim);
+			image.axis(currentDim).setType(Axes.Z);
 			currentDim++;
 		}
 
 		if (imp.getNFrames() > 1) {
-			image.setAxis(Axes.TIME, currentDim);
+			image.axis(currentDim).setType(Axes.TIME);
 		}
 
 	}
@@ -211,7 +212,9 @@ public class ImagePlusAdapter
 
 		}
 
-		image.setCalibration( spacing );
+		for (int i = 0; i < spacing.length; i++) {
+			image.axis(i).setCalibration(spacing[i]);
+		}
 	}
 
 	public static ByteImagePlus<UnsignedByteType> wrapByte( final ImagePlus imp )

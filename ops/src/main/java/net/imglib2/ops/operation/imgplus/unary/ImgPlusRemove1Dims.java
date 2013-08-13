@@ -43,14 +43,14 @@ import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.meta.Metadata;
 import net.imglib2.ops.operation.UnaryOutputOperation;
-import net.imglib2.ops.operation.metadata.unary.CopyCalibratedSpace;
 import net.imglib2.ops.operation.metadata.unary.CopyImageMetadata;
 import net.imglib2.ops.operation.metadata.unary.CopyMetadata;
 import net.imglib2.ops.operation.metadata.unary.CopyNamed;
 import net.imglib2.ops.operation.metadata.unary.CopySourced;
+import net.imglib2.ops.operation.metadata.unary.CopyCalibratedSpace;
 import net.imglib2.type.Type;
 
 /**

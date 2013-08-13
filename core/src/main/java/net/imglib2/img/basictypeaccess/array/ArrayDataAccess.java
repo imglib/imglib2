@@ -37,6 +37,8 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
+import java.io.Serializable;
+
 /**
 *
 */
@@ -47,7 +49,7 @@ package net.imglib2.img.basictypeaccess.array;
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public interface ArrayDataAccess< A >
+public interface ArrayDataAccess< A > extends Serializable
 {
 	A createArray( int numEntities );
 	Object getCurrentStorageArray();

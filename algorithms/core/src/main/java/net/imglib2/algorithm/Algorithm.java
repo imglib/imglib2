@@ -38,7 +38,7 @@
 package net.imglib2.algorithm;
 
 /**
- * TODO
+ * TODO This interface should extend Runnable
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld

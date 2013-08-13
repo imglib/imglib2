@@ -44,6 +44,7 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.LanczosInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.ops.operation.UnaryOperation;
@@ -63,7 +64,7 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 
 	public enum Mode
 	{
-		LINEAR, NEAREST_NEIGHBOR, PERIODICAL;
+		LINEAR, NEAREST_NEIGHBOR, PERIODICAL, LANCZOS;
 	}
 
 	private final Mode m_mode;
@@ -85,6 +86,9 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 			break;
 		case NEAREST_NEIGHBOR:
 			ifac = new NearestNeighborInterpolatorFactory< T >();
+			break;
+		case LANCZOS:
+			ifac = new LanczosInterpolatorFactory< T >();
 			break;
 		default:
 

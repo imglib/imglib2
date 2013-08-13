@@ -42,11 +42,11 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.display.RealARGBConverter;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.meta.CalibratedSpace;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
@@ -101,8 +101,8 @@ public class InteractiveImageViewerExample
 			double yScale = 1;
 			if ( interval instanceof CalibratedSpace )
 			{
-				final CalibratedSpace cs = ( CalibratedSpace ) interval;
-				yScale = cs.calibration( 1 ) / cs.calibration( 0 );
+				final CalibratedSpace<?> cs = ( CalibratedSpace<?> ) interval;
+				yScale = cs.axis( 1 ).calibration() / cs.axis( 0 ).calibration();
 				if ( Double.isNaN( yScale ) || Double.isInfinite( yScale ) )
 					yScale = 1;
 			}
@@ -130,9 +130,9 @@ public class InteractiveImageViewerExample
 			double zScale = 1;
 			if ( interval instanceof CalibratedSpace )
 			{
-				final CalibratedSpace cs = ( CalibratedSpace ) interval;
-				yScale = cs.calibration( 1 ) / cs.calibration( 0 );
-				zScale = cs.calibration( 2 ) / cs.calibration( 0 );
+				final CalibratedSpace<?> cs = ( CalibratedSpace<?> ) interval;
+				yScale = cs.axis( 1 ).calibration() / cs.axis( 0 ).calibration();
+				zScale = cs.axis( 2 ).calibration() / cs.axis( 0 ).calibration();
 				if ( Double.isNaN( yScale ) || Double.isInfinite( yScale ) )
 					yScale = 1;
 				if ( Double.isNaN( zScale ) || Double.isInfinite( zScale ) )
