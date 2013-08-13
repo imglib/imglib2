@@ -35,55 +35,25 @@
  * #L%
  */
 
-package net.imglib2.ops.util.metadata;
+package net.imglib2.meta;
 
-import net.imglib2.meta.Named;
+import net.imglib2.AnnotatedSpace;
 
 /**
+ * A Euclidean space with typed dimensional axes.
  * 
- * @author Martin Horn (University of Konstanz)
+ * @author Curtis Rueden
+ * @see TypedAxis
  */
-public class NamedImpl implements Named
-{
-
-	private String m_name = "";
-
-	public NamedImpl()
-	{
-
-	}
-
-	public NamedImpl( String name )
-	{
-		m_name = name;
-	}
+public interface TypedSpace<A extends TypedAxis> extends AnnotatedSpace<A> {
 
 	/**
-	 * Copy constructor.
-	 * 
-	 * @param name
+	 * Gets the dimensional index of the axis with the given type.
+	 * <p>
+	 * Note that by convention, each {@link AxisType} may only be used in a
+	 * single dimension of the space.
+	 * </p>
 	 */
-	public NamedImpl( Named name )
-	{
-		m_name = name.getName();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getName()
-	{
-		return m_name;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setName( String name )
-	{
-		m_name = name;
-	}
+	int dimensionIndex(final AxisType axisType);
 
 }

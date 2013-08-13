@@ -35,41 +35,35 @@
  * #L%
  */
 
-package net.imglib2.ops.util.metadata;
-
-import net.imglib2.meta.Sourced;
+package net.imglib2.meta;
 
 /**
- * @author Christian Dietz (University of Konstanz)
+ * Simple, default {@link TypedAxis} implementation.
+ * 
+ * @author Curtis Rueden
  */
-public class SourcedImpl implements Sourced
-{
+public class DefaultTypedAxis implements TypedAxis {
 
-	private String m_source = "";
+	private AxisType type;
 
-	public SourcedImpl()
-	{}
-
-	public SourcedImpl( String source )
-	{
-		m_source = source;
+	public DefaultTypedAxis() {
+		this(Axes.unknown());
 	}
 
-	public SourcedImpl( Sourced sourced )
-	{
-		m_source = sourced.getSource();
+	public DefaultTypedAxis(final AxisType type) {
+		setType(type);
+	}
+
+	// -- TypedAxis methods --
+
+	@Override
+	public AxisType type() {
+		return type;
 	}
 
 	@Override
-	public void setSource( String source )
-	{
-		m_source = source;
-	}
-
-	@Override
-	public String getSource()
-	{
-		return m_source;
+	public void setType(AxisType type) {
+		this.type = type;
 	}
 
 }
