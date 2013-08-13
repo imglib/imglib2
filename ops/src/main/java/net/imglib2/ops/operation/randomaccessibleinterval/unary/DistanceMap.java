@@ -38,7 +38,8 @@ package net.imglib2.ops.operation.randomaccessibleinterval.unary;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.meta.OldCalibratedSpace;
+import net.imglib2.meta.CalibratedAxis;
+import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -55,6 +56,7 @@ public class DistanceMap< T extends RealType< T >, K extends RandomAccessibleInt
 
 	public final static int MIN_DIMS = 2;
 
+	@SuppressWarnings( "unchecked" )
 	@Override
 	public M compute( final K src, final M res )
 	{
@@ -75,8 +77,8 @@ public class DistanceMap< T extends RealType< T >, K extends RandomAccessibleInt
 				// if (src.dimension(i) > 1) {
 				if ( a < MAX_DIMS )
 				{
-					if ( src instanceof OldCalibratedSpace )
-						dim_unit[ a ] = ( ( OldCalibratedSpace ) src ).calibration( i );
+					if ( src instanceof CalibratedSpace )
+						dim_unit[ a ] = ( ( CalibratedSpace<CalibratedAxis> ) src ).calibration( i );
 					else
 						dim_unit[ a ] = 1;
 
