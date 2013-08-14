@@ -54,7 +54,7 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 	}
 
 	public DefaultCalibratedAxis(final AxisType type) {
-		this(type, "pixel", 1);
+		this(type, null, Double.NaN);
 	}
 
 	public DefaultCalibratedAxis(final AxisType type, final String unit,
