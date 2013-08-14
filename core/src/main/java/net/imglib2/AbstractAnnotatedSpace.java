@@ -61,7 +61,7 @@ public abstract class AbstractAnnotatedSpace<A extends Axis> implements
 	}
 
 	public AbstractAnnotatedSpace(final A... axes) {
-		axisList = Arrays.asList(axes);
+		this(Arrays.asList(axes));
 	}
 
 	public AbstractAnnotatedSpace(final List<A> axes) {
@@ -85,6 +85,11 @@ public abstract class AbstractAnnotatedSpace<A extends Axis> implements
 
 	@Override
 	public void setAxis(final A axis, final int d) {
+		/* MAY NEED SOMEDAY
+		while (axisList.size() <= d) {
+			axisList.add(null);
+		}
+		*/
 		axisList.set(d, axis);
 	}
 
