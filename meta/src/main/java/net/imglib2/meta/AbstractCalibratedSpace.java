@@ -49,32 +49,21 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
 	AbstractTypedSpace<A> implements CalibratedSpace<A>
 {
 
-	private final double[] calibration;
-
 	public AbstractCalibratedSpace(final int numDims) {
 		super(numDims);
-		calibration = new double[numDims];
-		for (int i = 0; i < calibration.length; i++)
-			calibration[i] = Double.NaN;
 	}
 
 	public AbstractCalibratedSpace(final A... axes) {
 		super(axes);
-		calibration = new double[axes.length];
-		for (int i = 0; i < calibration.length; i++)
-			calibration[i] = Double.NaN;
 	}
 
 	public AbstractCalibratedSpace(final List<A> axes) {
 		super(axes);
-		calibration = new double[axes.size()];
-		for (int i = 0; i < calibration.length; i++)
-			calibration[i] = Double.NaN;
 	}
 
 	@Override
 	public double calibration(int d) {
-		return calibration[d];
+		return axis(d).calibration();
 	}
 
 	@Override
@@ -91,7 +80,7 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
 
 	@Override
 	public void setCalibration(double cal, int d) {
-		calibration[d] = cal;
+		axis(d).setCalibration(cal);
 	}
 
 	@Override
