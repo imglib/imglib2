@@ -139,7 +139,16 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 
 	// -- ImgPlus methods --
 
-	@Deprecated
+	/**
+	 * Gets the backing {@link Img} of this {@code ImgPlus}.
+	 * <p>
+	 * Note that most of the time, you do <em>not</em> need to call this method.
+	 * Rather, you can use the {@code ImgPlus} directly because it implements all
+	 * of the same interfaces. However, there are legitimate cases where you may
+	 * need access to the backing container (e.g., for performance, to cast to
+	 * the appropriate {@link Img} implementation such as {@link ArrayImg}).
+	 * </p>
+	 */
 	public Img<T> getImg() {
 		return img;
 	}
