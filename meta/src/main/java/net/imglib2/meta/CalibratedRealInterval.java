@@ -1,6 +1,5 @@
 package net.imglib2.meta;
 
-import net.imglib2.Positionable;
 
 
 // TODO - what other interface should this mix in besides TypedRealInterval
@@ -8,6 +7,8 @@ import net.imglib2.Positionable;
 public interface CalibratedRealInterval<A extends CalibratedAxis> extends
 	TypedRealInterval<A>
 {
+
+	// These babies are necessary
 
 	String unit(int d);
 
@@ -19,25 +20,10 @@ public interface CalibratedRealInterval<A extends CalibratedAxis> extends
 
 	// The following are TEMP for compile fixing
 
-	long dimension(int d);
-
-	void dimensions(long[] dest);
-
 	AxisType[] getAxes();
 
 	long[] getDims();
 
 	boolean isDiscrete();
 
-	long min(int d);
-
-	void min(long[] dest);
-
-	void min(Positionable dest);
-
-	long max(int d);
-
-	void max(long[] dest);
-
-	void max(Positionable dest);
 }
