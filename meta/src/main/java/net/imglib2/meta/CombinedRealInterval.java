@@ -125,6 +125,16 @@ public class CombinedRealInterval<A extends TypedAxis, S extends TypedRealInterv
 			max.setPosition(realMax(i), i);
 	}
 
+	// -- methods to be categorized --
+
+	public boolean isDiscrete() {
+		// TODO - could check if realMins and realMaxes all end on integer
+		// boundaries
+		// TODO TEMP ack choke puke. false? true? the idea was to remove this method
+		// altogether.
+		return true;
+	}
+
 	// -- Helper classes --
 
 	protected class MinMax {
