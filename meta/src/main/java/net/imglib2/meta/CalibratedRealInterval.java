@@ -56,12 +56,4 @@ public interface CalibratedRealInterval<A extends CalibratedAxis> extends
 
 	void setCalibration(double v, int d);
 
-	// The following are TEMP for compile fixing
-
-	AxisType[] getAxes();
-
-	long[] getDims();
-
-	boolean isDiscrete();
-
 }
