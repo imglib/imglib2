@@ -61,7 +61,7 @@ public abstract class AbstractAnnotatedSpace<A extends Axis> implements
 	}
 
 	public AbstractAnnotatedSpace(final A... axes) {
-		axisList = Arrays.asList(axes);
+		this(Arrays.asList(axes));
 	}
 
 	public AbstractAnnotatedSpace(final List<A> axes) {
@@ -85,6 +85,13 @@ public abstract class AbstractAnnotatedSpace<A extends Axis> implements
 
 	@Override
 	public void setAxis(final A axis, final int d) {
+		// NB - in some cases AnnotatedSpaces have a fixed number of dimensions. But
+		// some users (like ImageJ2 overlays) may not know their dimensions until
+		// after initial construction. To be safe we need to allow the axisList to
+		// grow as needed. BDZ Aug 14 2013
+		while (axisList.size() <= d) {
+			axisList.add(null);
+		}
 		axisList.set(d, axis);
 	}
 
