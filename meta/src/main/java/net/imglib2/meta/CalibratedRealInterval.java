@@ -27,10 +27,6 @@ public interface CalibratedRealInterval<A extends CalibratedAxis> extends
 
 	long[] getDims();
 
-	String getName();
-
-	void setName(String name);
-
 	boolean isDiscrete();
 
 	long min(int d);
