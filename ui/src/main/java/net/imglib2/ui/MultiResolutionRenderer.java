@@ -21,15 +21,32 @@ import net.imglib2.ui.util.GuiUtil;
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concatenable< AffineGet > >
+public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concatenable< AffineGet > > extends Renderer< A >
 {
-	final protected InteractiveDisplayCanvas< ? > display;
+	public static class Factory implements RendererFactory
+	{
+		final protected double[] screenScales;
 
-	/**
-	 * Thread that triggers repainting of the display.
-	 * Requests for repainting are send there.
-	 */
-	final protected PainterThread painterThread;
+		final protected long targetRenderNanos;
+
+		final protected boolean doubleBuffered;
+
+		final protected int numRenderingThreads;
+
+		public Factory( final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
+		{
+			this.screenScales = screenScales;
+			this.targetRenderNanos = targetRenderNanos;
+			this.doubleBuffered = doubleBuffered;
+			this.numRenderingThreads = numRenderingThreads;
+		}
+
+		@Override
+		public < A extends AffineSet & AffineGet & Concatenable< AffineGet > > MultiResolutionRenderer< A > create( final AffineTransformType< A > transformType, final RenderTarget display, final PainterThread painterThread )
+		{
+			return new MultiResolutionRenderer< A >( transformType, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
+		}
+	}
 
 	/**
 	 * Currently active projector, used to re-paint the display. It maps the
@@ -112,8 +129,6 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	 */
 	final protected int numRenderingThreads;
 
-	final protected AffineTransformType< A > transformType;
-
 	/**
 	 * @param transformType
 	 * @param display
@@ -135,14 +150,12 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	 * @param numRenderingThreads
 	 *            How many threads to use for rendering.
 	 */
-	public MultiResolutionRenderer( final AffineTransformType< A > transformType, final InteractiveDisplayCanvas< ? > display, final PainterThread painterThread, final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
+	public MultiResolutionRenderer( final AffineTransformType< A > transformType, final RenderTarget display, final PainterThread painterThread, final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
 	{
-		this.display = display;
-		this.painterThread = painterThread;
+		super( transformType, display, painterThread );
 		this.screenScales = screenScales.clone();
 		this.doubleBuffered = doubleBuffered;
 		this.numRenderingThreads = numRenderingThreads;
-		this.transformType = transformType;
 		screenImages = new ARGBScreenImage[ screenScales.length ][ 2 ];
 		bufferedImages = new BufferedImage[ screenScales.length ][ 2 ];
 		screenScaleTransforms = new ArrayList< A >();
@@ -159,6 +172,7 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	/**
 	 * Request a repaint of the display at the coarsest screen scale.
 	 */
+	@Override
 	public synchronized void requestRepaint()
 	{
 		requestRepaint( maxScreenScaleIndex );
@@ -209,6 +223,7 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 		}
 	}
 
+	@Override
 	public boolean paint( final RenderSource< ?, A > source, final A viewerTransform )
 	{
 		checkResize();

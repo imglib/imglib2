@@ -46,7 +46,9 @@ import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.ui.AffineTransformType2D;
-import net.imglib2.ui.util.GuiUtil;
+import net.imglib2.ui.InteractiveDisplayCanvasComponent;
+import net.imglib2.ui.TransformEventHandler2D;
+import net.imglib2.ui.util.Defaults;
 import net.imglib2.ui.util.InterpolatingSource;
 
 /**
@@ -54,7 +56,7 @@ import net.imglib2.ui.util.InterpolatingSource;
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class InteractiveViewer2D< T extends NumericType< T > > extends InteractiveRealViewer< T, AffineTransform2D >
+public class InteractiveViewer2D< T extends NumericType< T > > extends InteractiveRealViewer< T, AffineTransform2D, InteractiveDisplayCanvasComponent< AffineTransform2D > >
 {
 	/**
 	 * Create an interactive viewer for a 2D {@link RandomAccessible}.
@@ -86,7 +88,9 @@ public class InteractiveViewer2D< T extends NumericType< T > > extends Interacti
 
 	public InteractiveViewer2D( final int width, final int height, final InterpolatingSource< T, AffineTransform2D > interpolatingSource )
 	{
-		super( AffineTransformType2D.instance, width, height, interpolatingSource, GuiUtil.defaultDoubleBuffered, GuiUtil.defaultNumRenderingThreads );
+		super( AffineTransformType2D.instance,
+				new InteractiveDisplayCanvasComponent< AffineTransform2D >( width, height, TransformEventHandler2D.factory() ),
+				interpolatingSource, Defaults.rendererFactory );
 
 		// add KeyHandler for toggling interpolation
 		display.addHandler( new KeyAdapter() {

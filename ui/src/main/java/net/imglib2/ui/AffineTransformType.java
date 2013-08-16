@@ -5,7 +5,6 @@ import net.imglib2.realtransform.AffineTransform3D;
 
 /**
  * Provide create and set operations on (affine) transforms of type
- * <code>A</code> and a factory for {@link TransformEventHandler} of type
  * <code>A</code>. This is to be able to avoid having duplicate implementations
  * for {@link AffineTransform2D} and {@link AffineTransform3D} in imglib-ui.
  * (Also higher-dimensional affine transforms can be added easily later).
@@ -20,8 +19,6 @@ import net.imglib2.realtransform.AffineTransform3D;
  */
 public interface AffineTransformType< A >
 {
-	public TransformEventHandlerFactory< A > transformEvenHandlerFactory();
-
 	public A createTransform();
 
 	/**

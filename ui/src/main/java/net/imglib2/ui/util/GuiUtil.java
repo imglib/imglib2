@@ -1,6 +1,5 @@
 package net.imglib2.ui.util;
 
-import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -41,22 +40,6 @@ public class GuiUtil
 		return defaultGc;
 	}
 
-	/**
-	 * TODO
-	 */
-	public static final boolean defaultDoubleBuffered = true;
-
-	/**
-	 * TODO
-	 */
-	public static final int defaultNumRenderingThreads = 3;
-
-	/**
-	 * Whether to discard the alpha components when drawing
-	 * {@link BufferedImage} to {@link Graphics}.
-	 */
-	public static final boolean defaultDiscardAlpha = true;
-
 	public static final ColorModel ARGB_COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
 
 	public static final ColorModel RGB_COLOR_MODEL = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
@@ -86,7 +69,7 @@ public class GuiUtil
 
 	/**
 	 * Get a {@link BufferedImage} for the given {@link ARGBScreenImage}.
-	 * {@link #defaultDiscardAlpha} determines whether to discard the
+	 * {@link #discardAlpha} determines whether to discard the
 	 * <code>screenImage</code> alpha components when drawing.
 	 *
 	 * @param screenImage
@@ -94,6 +77,6 @@ public class GuiUtil
 	 */
 	public static final BufferedImage getBufferedImage( final ARGBScreenImage screenImage )
 	{
-		return getBufferedImage( screenImage, defaultDiscardAlpha );
+		return getBufferedImage( screenImage, Defaults.discardAlpha );
 	}
 }

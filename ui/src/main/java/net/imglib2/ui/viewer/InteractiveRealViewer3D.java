@@ -6,16 +6,18 @@ import net.imglib2.converter.Converter;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.AffineTransformType3D;
+import net.imglib2.ui.InteractiveDisplayCanvasComponent;
+import net.imglib2.ui.TransformEventHandler3D;
 import net.imglib2.ui.overlay.BoxOverlayRenderer;
+import net.imglib2.ui.util.Defaults;
 import net.imglib2.ui.util.FinalSource;
-import net.imglib2.ui.util.GuiUtil;
 
 /**
  * Interactive viewer for a 3D {@link RealRandomAccessible}.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class InteractiveRealViewer3D< T > extends InteractiveRealViewer< T, AffineTransform3D >
+public class InteractiveRealViewer3D< T > extends InteractiveRealViewer< T, AffineTransform3D, InteractiveDisplayCanvasComponent< AffineTransform3D > >
 {
 	/**
 	 * Create an interactive viewer for a 3D {@link RealRandomAccessible}.
@@ -40,7 +42,10 @@ public class InteractiveRealViewer3D< T > extends InteractiveRealViewer< T, Affi
 	 */
 	public InteractiveRealViewer3D( final int width, final int height, final RealRandomAccessible< T > source, final Interval sourceInterval, final AffineTransform3D sourceTransform, final Converter< ? super T, ARGBType > converter )
 	{
-		super( AffineTransformType3D.instance, width, height, new FinalSource< T, AffineTransform3D >( source, sourceTransform, converter ), GuiUtil.defaultDoubleBuffered, GuiUtil.defaultNumRenderingThreads );
+		super( AffineTransformType3D.instance,
+				new InteractiveDisplayCanvasComponent< AffineTransform3D >( width, height, TransformEventHandler3D.factory() ),
+				new FinalSource< T, AffineTransform3D >( source, sourceTransform, converter ),
+				Defaults.rendererFactory );
 
 		final BoxOverlayRenderer box = new BoxOverlayRenderer( width, height );
 		box.setSource( sourceInterval, sourceTransform );

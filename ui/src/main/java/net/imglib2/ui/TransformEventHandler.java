@@ -1,9 +1,5 @@
 package net.imglib2.ui;
 
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelListener;
 
 /**
  * TODO
@@ -13,7 +9,7 @@ import java.awt.event.MouseWheelListener;
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public interface TransformEventHandler< T > extends MouseListener, MouseMotionListener, MouseWheelListener, KeyListener
+public interface TransformEventHandler< T >
 {
 	/**
 	 * Get (a copy of) the current source-to-screen transform.
@@ -51,9 +47,13 @@ public interface TransformEventHandler< T > extends MouseListener, MouseMotionLi
 	public void setCanvasSize( final int width, final int height, final boolean updateTransform );
 
 	/**
+	 * TODO
+	 * @param transformListener
+	 */
+	public void setTransformListener( TransformListener< T > transformListener );
+
+	/**
 	 * Get description of how mouse and keyboard actions map to transformations.
 	 */
 	public String getHelpString();
-	// TODO: ???
-
 }

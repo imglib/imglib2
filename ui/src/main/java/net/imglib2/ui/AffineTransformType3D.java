@@ -12,12 +12,6 @@ public class AffineTransformType3D implements AffineTransformType< AffineTransfo
 	public static final AffineTransformType3D instance = new AffineTransformType3D();
 
 	@Override
-	public TransformEventHandlerFactory< AffineTransform3D > transformEvenHandlerFactory()
-	{
-		return TransformEventHandler3D.factory();
-	}
-
-	@Override
 	public AffineTransform3D createTransform()
 	{
 		return new AffineTransform3D();

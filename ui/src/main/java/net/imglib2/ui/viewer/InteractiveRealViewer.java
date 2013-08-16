@@ -6,6 +6,7 @@ import java.awt.GraphicsConfiguration;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import net.imglib2.concatenate.Concatenable;
@@ -15,12 +16,13 @@ import net.imglib2.ui.AffineTransformType;
 import net.imglib2.ui.InteractiveDisplayCanvas;
 import net.imglib2.ui.PainterThread;
 import net.imglib2.ui.RenderSource;
-import net.imglib2.ui.MultiResolutionRenderer;
+import net.imglib2.ui.Renderer;
+import net.imglib2.ui.RendererFactory;
 import net.imglib2.ui.TransformListener;
-import net.imglib2.ui.PainterThread.Paintable;
+import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
 import net.imglib2.ui.util.GuiUtil;
 
-public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concatenable< AffineGet > > implements TransformListener< A >, PainterThread.Paintable
+public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concatenable< AffineGet >, C extends JComponent & InteractiveDisplayCanvas< A > > implements TransformListener< A >, PainterThread.Paintable
 {
 	final protected AffineTransformType< A > transformType;
 
@@ -32,32 +34,32 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 	/**
 	 * Canvas used for displaying the rendered {@link #screenImages screen image}.
 	 */
-	final protected InteractiveDisplayCanvas< A > display;
+	final protected C display;
 
 	/**
 	 * Thread that triggers repainting of the display.
 	 */
 	final protected PainterThread painterThread;
 
-	final protected MultiResolutionRenderer< A > imageRenderer;
+	final protected Renderer< A > imageRenderer;
 
 	final protected JFrame frame;
 
 	final protected RenderSource< T, A > source;
 
-	public InteractiveRealViewer( final AffineTransformType< A > transformType, final int width, final int height, final RenderSource< T, A > source, final boolean doubleBuffered, final int numRenderingThreads )
+	public InteractiveRealViewer( final AffineTransformType< A > transformType, final C interactiveDisplayCanvas, final RenderSource< T, A > source, final RendererFactory rendererFactory )
 	{
 		this.transformType = transformType;
 		painterThread = new PainterThread( this );
 		viewerTransform = transformType.createTransform();
-		display = new InteractiveDisplayCanvas< A >( width, height, transformType.transformEvenHandlerFactory() );
+		display = interactiveDisplayCanvas;
 		display.addTransformListener( this );
 
-		final double[] screenScales = new double[] { 1, 0.5, 0.25, 0.125 };
-		final long targetRenderNanos = 15 * 1000000;
-		imageRenderer = new MultiResolutionRenderer< A >( transformType, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
+		final BufferedImageOverlayRenderer target = new BufferedImageOverlayRenderer();
+		imageRenderer = rendererFactory.create( transformType, target, painterThread );
+		display.addOverlayRenderer( target );
 
-//		final GraphicsConfiguration gc = GuiHelpers.getSuitableGraphicsConfiguration( GuiHelpers.ARGB_COLOR_MODEL );
+//		final GraphicsConfiguration gc = GuiUtil.getSuitableGraphicsConfiguration( GuiUtil.ARGB_COLOR_MODEL );
 		final GraphicsConfiguration gc = GuiUtil.getSuitableGraphicsConfiguration( GuiUtil.RGB_COLOR_MODEL );
 		frame = new JFrame( "ImgLib2", gc );
 		frame.getRootPane().setDoubleBuffered( true );
@@ -96,7 +98,7 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 		requestRepaint();
 	}
 
-	public InteractiveDisplayCanvas< A > getDisplayCanvas()
+	public C getDisplayCanvas()
 	{
 		return display;
 	}

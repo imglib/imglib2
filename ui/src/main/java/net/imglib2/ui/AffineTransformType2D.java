@@ -11,12 +11,6 @@ public class AffineTransformType2D implements AffineTransformType< AffineTransfo
 	public static final AffineTransformType2D instance = new AffineTransformType2D();
 
 	@Override
-	public TransformEventHandlerFactory< AffineTransform2D > transformEvenHandlerFactory()
-	{
-		return TransformEventHandler2D.factory();
-	}
-
-	@Override
 	public AffineTransform2D createTransform()
 	{
 		return new AffineTransform2D();

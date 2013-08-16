@@ -7,6 +7,7 @@ import net.imglib2.RealRandomAccessible;
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.realtransform.AffineGet;
+import net.imglib2.realtransform.AffineSet;
 import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.util.GuiUtil;
@@ -19,15 +20,26 @@ import net.imglib2.ui.util.GuiUtil;
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > >
+public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > extends Renderer< A >
 {
-	final protected InteractiveDisplayCanvas< ? > display;
+	public static class Factory implements RendererFactory
+	{
+		final protected boolean doubleBuffered;
 
-	/**
-	 * Thread that triggers repainting of the display.
-	 * Requests for repainting are send there.
-	 */
-	final protected PainterThread painterThread;
+		final protected int numRenderingThreads;
+
+		public Factory( final boolean doubleBuffered, final int numRenderingThreads )
+		{
+			this.doubleBuffered = doubleBuffered;
+			this.numRenderingThreads = numRenderingThreads;
+		}
+
+		@Override
+		public < A extends AffineSet & AffineGet & Concatenable< AffineGet > > SimpleRenderer< A > create( final AffineTransformType< A > transformType, final RenderTarget display, final PainterThread painterThread )
+		{
+			return new SimpleRenderer< A >( transformType, display, painterThread, doubleBuffered, numRenderingThreads );
+		}
+	}
 
 	/**
 	 * Currently active projector, used to re-paint the display. It maps the
@@ -57,8 +69,6 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > >
 	 */
 	final protected int numRenderingThreads;
 
-	final protected AffineTransformType< A > transformType;
-
 	/**
 	 * @param transformType
 	 * @param display
@@ -71,13 +81,11 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > >
 	 * @param numRenderingThreads
 	 *            How many threads to use for rendering.
 	 */
-	public SimpleRenderer( final AffineTransformType< A > transformType, final InteractiveDisplayCanvas< ? > display, final PainterThread painterThread, final boolean doubleBuffered, final int numRenderingThreads )
+	public SimpleRenderer( final AffineTransformType< A > transformType, final RenderTarget display, final PainterThread painterThread, final boolean doubleBuffered, final int numRenderingThreads )
 	{
-		this.display = display;
-		this.painterThread = painterThread;
+		super( transformType, display, painterThread );
 		this.doubleBuffered = doubleBuffered;
 		this.numRenderingThreads = numRenderingThreads;
-		this.transformType = transformType;
 		screenImages = new ARGBScreenImage[ 2 ];
 		bufferedImages = new BufferedImage[ 2 ];
 		projector = null;
@@ -89,6 +97,7 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > >
 	 * immediately or after the currently running {@link #paint()} has
 	 * completed).
 	 */
+	@Override
 	public synchronized void requestRepaint()
 	{
 		painterThread.requestRepaint();
@@ -112,6 +121,7 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > >
 		}
 	}
 
+	@Override
 	public boolean paint( final RenderSource< ?, A > source, final A viewerTransform )
 	{
 		checkResize();
