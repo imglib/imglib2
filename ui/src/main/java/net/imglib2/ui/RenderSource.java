@@ -12,9 +12,9 @@ import net.imglib2.ui.util.InterpolatingSource;
  * transform, and an converter that converts type <code>T</code> to
  * {@link ARGBType} for display.
  *
- * The {@link #getInterpolatedSource() source accessible} is assumed to be extended to infinity.
- * If the underlying data is a pixel image, it is also assumed to be interpolated already
- * (see {@link InterpolatingSource}).
+ * The {@link #getInterpolatedSource() source accessible} is assumed to be
+ * extended to infinity. If the underlying data is a pixel image, it is also
+ * assumed to be interpolated already (see {@link InterpolatingSource}).
  *
  * @param <T>
  *            pixel type

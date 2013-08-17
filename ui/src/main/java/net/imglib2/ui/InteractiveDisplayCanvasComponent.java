@@ -15,19 +15,27 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JComponent;
 
-public class InteractiveDisplayCanvasComponent< T > extends JComponent implements InteractiveDisplayCanvas< T >, TransformListener< T >
+/**
+ * A {@link JComponent} that is a {@link InteractiveDisplayCanvas}.
+ *
+ * @param <A>
+ *            transform type
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
+public class InteractiveDisplayCanvasComponent< A > extends JComponent implements InteractiveDisplayCanvas< A >
 {
 	private static final long serialVersionUID = -5546719724928785878L;
 
 	/**
 	 * Mouse/Keyboard handler that manipulates the view transformation.
 	 */
-	protected TransformEventHandler< T > handler;
+	protected TransformEventHandler< A > handler;
 
 	/**
 	 * Listeners that we have to notify about view transformation changes.
 	 */
-	final protected CopyOnWriteArrayList< TransformListener< T > > transformListeners;
+	final protected CopyOnWriteArrayList< TransformListener< A > > transformListeners;
 
 	/**
 	 * The {@link OverlayRenderer} that draws on top of the current
@@ -35,14 +43,29 @@ public class InteractiveDisplayCanvasComponent< T > extends JComponent implement
 	 */
 	final protected CopyOnWriteArrayList< OverlayRenderer > overlayRenderers;
 
-	public InteractiveDisplayCanvasComponent( final int width, final int height, final TransformEventHandlerFactory< T > transformEventHandlerFactory )
+	/**
+	 * Create a new {@link InteractiveDisplayCanvas} with initially no
+	 * {@link OverlayRenderer OverlayRenderers} and no {@link TransformListener
+	 * TransformListeners}. A {@link TransformEventHandler} is instantiated
+	 * using the given factory, and registered for mouse and key events if it
+	 * implements the appropriate interfaces ({@link MouseListener} etc.)
+	 *
+	 * @param width
+	 *            preferred component width.
+	 * @param height
+	 *            preferred component height.
+	 * @param transformEventHandlerFactory
+	 *            factory to create a {@link TransformEventHandler} appropriate
+	 *            for our transform type A.
+	 */
+	public InteractiveDisplayCanvasComponent( final int width, final int height, final TransformEventHandlerFactory< A > transformEventHandlerFactory )
 	{
 		super();
 		setPreferredSize( new Dimension( width, height ) );
 		setFocusable( true );
 
 		this.overlayRenderers = new CopyOnWriteArrayList< OverlayRenderer >();
-		this.transformListeners = new CopyOnWriteArrayList< TransformListener< T > >();
+		this.transformListeners = new CopyOnWriteArrayList< TransformListener< A > >();
 
 		addComponentListener( new ComponentAdapter()
 		{
@@ -107,7 +130,7 @@ public class InteractiveDisplayCanvasComponent< T > extends JComponent implement
 	 *            the transform listener to add.
 	 */
 	@Override
-	public void addTransformListener( final TransformListener< T > listener )
+	public void addTransformListener( final TransformListener< A > listener )
 	{
 		transformListeners.add( listener );
 	}
@@ -119,7 +142,7 @@ public class InteractiveDisplayCanvasComponent< T > extends JComponent implement
 	 *            the transform listener to remove.
 	 */
 	@Override
-	public void removeTransformListener( final TransformListener< T > listener )
+	public void removeTransformListener( final TransformListener< A > listener )
 	{
 		transformListeners.remove( listener );
 	}
@@ -178,7 +201,7 @@ public class InteractiveDisplayCanvasComponent< T > extends JComponent implement
 	 * @return handles mouse and key events to update the view transform.
 	 */
 	@Override
-	public TransformEventHandler< T > getTransformEventHandler()
+	public TransformEventHandler< A > getTransformEventHandler()
 	{
 		return handler;
 	}
@@ -191,7 +214,7 @@ public class InteractiveDisplayCanvasComponent< T > extends JComponent implement
 	 *            mouse and key events to update the view transform
 	 */
 	@Override
-	public synchronized void setTransformEventHandler( final TransformEventHandler< T > transformEventHandler )
+	public synchronized void setTransformEventHandler( final TransformEventHandler< A > transformEventHandler )
 	{
 		removeHandler( handler );
 		handler = transformEventHandler;
@@ -213,9 +236,9 @@ public class InteractiveDisplayCanvasComponent< T > extends JComponent implement
 	 * changed.
 	 */
 	@Override
-	public void transformChanged( final T transform )
+	public void transformChanged( final A transform )
 	{
-		for ( final TransformListener< T > l : transformListeners )
+		for ( final TransformListener< A > l : transformListeners )
 			l.transformChanged( transform );
 	}
 }

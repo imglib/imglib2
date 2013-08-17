@@ -6,7 +6,27 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 
-public interface InteractiveDisplayCanvas< T > extends TransformListener< T >
+import javax.swing.JComponent;
+
+/**
+ * A component that uses one or several {@link OverlayRenderer OverlayRenderers}
+ * to render a canvas displayed on screen. Current implementations derive from
+ * {@link JComponent}.
+ * <p>
+ * {@link InteractiveDisplayCanvas} also owns a {@link TransformEventHandler},
+ * which is registered to listen to mouse and keyboard events if it implements
+ * {@link MouseListener}, etc.
+ * <p>
+ * Moreover, {@link InteractiveDisplayCanvas} is a transform event multi-caster.
+ * It receives {@link TransformListener#transformChanged(Object) transformChanged} events (usually from its {@link TransformEventHandler})
+ * and propagates them to all registered listeners.
+ *
+ * @param <A>
+ *            transform type
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
+public interface InteractiveDisplayCanvas< A > extends TransformListener< A >
 {
 	/**
 	 * Add an {@link OverlayRenderer} that draws on top of the current {@link #bufferedImage}.
@@ -27,14 +47,14 @@ public interface InteractiveDisplayCanvas< T > extends TransformListener< T >
 	 *
 	 * @param listener the transform listener to add.
 	 */
-	public void addTransformListener( final TransformListener< T > listener );
+	public void addTransformListener( final TransformListener< A > listener );
 
 	/**
 	 * Remove a {@link TransformListener}.
 	 *
 	 * @param listener the transform listener to remove.
 	 */
-	public void removeTransformListener( final TransformListener< T > listener );
+	public void removeTransformListener( final TransformListener< A > listener );
 
 	/**
 	 * Add new event handler. Depending on the interfaces implemented by
@@ -61,7 +81,7 @@ public interface InteractiveDisplayCanvas< T > extends TransformListener< T >
 	 *
 	 * @return handles mouse and key events to update the view transform.
 	 */
-	public TransformEventHandler< T > getTransformEventHandler();
+	public TransformEventHandler< A > getTransformEventHandler();
 
 	/**
 	 * Set the {@link TransformEventHandler} that handles mouse and key events
@@ -69,5 +89,5 @@ public interface InteractiveDisplayCanvas< T > extends TransformListener< T >
 	 *
 	 * @param handles mouse and key events to update the view transform
 	 */
-	public void setTransformEventHandler( final TransformEventHandler< T > transformEventHandler );
+	public void setTransformEventHandler( final TransformEventHandler< A > transformEventHandler );
 }

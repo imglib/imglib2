@@ -22,6 +22,15 @@ import net.imglib2.ui.TransformListener;
 import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
 import net.imglib2.ui.util.GuiUtil;
 
+/**
+ * TODO
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ *
+ * @param <T>
+ * @param <A>
+ * @param <C>
+ */
 public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concatenable< AffineGet >, C extends JComponent & InteractiveDisplayCanvas< A > > implements TransformListener< A >, PainterThread.Paintable
 {
 	final protected AffineTransformType< A > transformType;

@@ -11,8 +11,8 @@ import net.imglib2.ui.TransformListener;
 import net.imglib2.util.Intervals;
 
 /**
- * Overlay showing a transformed box (interval + transform) that represents the
- * source that is shown in the viewer.
+ * {@link OverlayRenderer} showing a transformed box (interval + transform) that
+ * represents the source that is shown in the viewer.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -59,6 +59,14 @@ public class BoxOverlayRenderer implements OverlayRenderer, TransformListener< A
 		this( 800, 600 );
 	}
 
+	/**
+	 * Create a {@link BoxOverlayRenderer} with the given initial canvas size.
+	 *
+	 * @param screenWidth
+	 *            initial canvas width.
+	 * @param screenHeight
+	 *            initial canvas height.
+	 */
 	public BoxOverlayRenderer( final int screenWidth, final int screenHeight )
 	{
 		box = new BoxOverlay();

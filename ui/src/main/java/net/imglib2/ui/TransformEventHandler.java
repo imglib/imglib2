@@ -4,24 +4,24 @@ package net.imglib2.ui;
 /**
  * TODO
  *
- * @param <T>
+ * @param <A>
  *            type of transformation.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public interface TransformEventHandler< T >
+public interface TransformEventHandler< A >
 {
 	/**
 	 * Get (a copy of) the current source-to-screen transform.
 	 *
 	 * @return current transform.
 	 */
-	public T getTransform();
+	public A getTransform();
 
 	/**
 	 * Set the current source-to-screen transform.
 	 */
-	public void setTransform( final T transform );
+	public void setTransform( final A transform );
 
 	/**
 	 * This is called, when the screen size of the canvas (the component
@@ -50,7 +50,7 @@ public interface TransformEventHandler< T >
 	 * TODO
 	 * @param transformListener
 	 */
-	public void setTransformListener( TransformListener< T > transformListener );
+	public void setTransformListener( TransformListener< A > transformListener );
 
 	/**
 	 * Get description of how mouse and keyboard actions map to transformations.

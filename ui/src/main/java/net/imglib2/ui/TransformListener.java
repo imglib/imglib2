@@ -1,6 +1,6 @@
 package net.imglib2.ui;
 
-public interface TransformListener< T >
+public interface TransformListener< A >
 {
-	public void transformChanged( T transform );
+	public void transformChanged( A transform );
 }

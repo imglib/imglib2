@@ -11,8 +11,8 @@ import net.imglib2.Interval;
 import net.imglib2.realtransform.AffineTransform3D;
 
 /**
- * Paint an overlay showing a transformed box (interval + transform). The box
- * represents the source that is shown in the viewer.
+ * Paint a transformed box (interval + transform) that represents the source
+ * that is shown in the viewer.
  *
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>

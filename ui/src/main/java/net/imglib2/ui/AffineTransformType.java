@@ -19,6 +19,11 @@ import net.imglib2.realtransform.AffineTransform3D;
  */
 public interface AffineTransformType< A >
 {
+	/**
+	 * Create a new transform of type A.
+	 *
+	 * @return a new A.
+	 */
 	public A createTransform();
 
 	/**

@@ -1,11 +1,9 @@
 package net.imglib2.ui;
 
-import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.realtransform.AffineTransform3D;
 
 /**
- * Default {@link AffineTransformType} implementation for
- * {@link AffineTransform2D}.
+ * {@link AffineTransformType} implementation for {@link AffineTransform3D}.
  */
 public class AffineTransformType3D implements AffineTransformType< AffineTransform3D >
 {

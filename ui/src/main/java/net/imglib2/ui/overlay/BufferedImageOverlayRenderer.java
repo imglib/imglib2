@@ -5,7 +5,15 @@ import java.awt.image.BufferedImage;
 
 import net.imglib2.ui.OverlayRenderer;
 import net.imglib2.ui.RenderTarget;
+import net.imglib2.ui.Renderer;
 
+/**
+ * {@link OverlayRenderer} drawing a {@link BufferedImage}, scaled to fill the
+ * canvas. It can be used as a {@link RenderTarget}, such that the
+ * {@link BufferedImage} to draw is set by a {@link Renderer}.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
 public class BufferedImageOverlayRenderer implements OverlayRenderer, RenderTarget
 {
 	/**
@@ -16,8 +24,14 @@ public class BufferedImageOverlayRenderer implements OverlayRenderer, RenderTarg
 	 */
 	protected BufferedImage bufferedImage;
 
+	/**
+	 * The current canvas width.
+	 */
 	protected volatile int width;
 
+	/**
+	 * The current canvas height.
+	 */
 	protected volatile int height;
 
 	public BufferedImageOverlayRenderer()

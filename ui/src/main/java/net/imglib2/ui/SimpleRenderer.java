@@ -92,18 +92,6 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 	}
 
 	/**
-	 * Request a repaint of the display from the painter thread. The painter
-	 * thread will trigger a {@link #paint()} as soon as possible (that is,
-	 * immediately or after the currently running {@link #paint()} has
-	 * completed).
-	 */
-	@Override
-	public synchronized void requestRepaint()
-	{
-		painterThread.requestRepaint();
-	}
-
-	/**
 	 * Check whether the size of the display component was changed and
 	 * recreate {@link #screenImages} and {@link #screenScaleTransforms} accordingly.
 	 */

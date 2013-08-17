@@ -14,6 +14,12 @@ import java.awt.image.WritableRaster;
 
 import net.imglib2.display.ARGBScreenImage;
 
+/**
+ * Static helper methods for setting up {@link GraphicsConfiguration} and
+ * {@link BufferedImage BufferedImages}.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
 public class GuiUtil
 {
 	/**
