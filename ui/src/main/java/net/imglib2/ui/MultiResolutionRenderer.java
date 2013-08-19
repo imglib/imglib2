@@ -165,7 +165,7 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	 * Currently active projector, used to re-paint the display. It maps the
 	 * {@link #source} data to {@link #screenImage}.
 	 */
-	protected InterruptibleProjector< ?, ARGBType > projector;
+	protected InterruptibleProjector projector;
 
 	/**
 	 * Whether double buffering is used.
@@ -362,7 +362,7 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 		final BufferedImage bufferedImage;
 
 		// the projector that paints to the screenImage.
-		final InterruptibleProjector< ?, ARGBType > p;
+		final InterruptibleProjector p;
 
 		synchronized( this )
 		{
@@ -370,14 +370,14 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 			currentScreenScaleIndex = requestedScreenScaleIndex;
 			currentScreenScaleTransform = screenScaleTransforms.get( currentScreenScaleIndex );
 
-			p = createProjector( transformType, source, viewerTransform, currentScreenScaleTransform );
 			screenImage = screenImages[ currentScreenScaleIndex ][ 0 ];
 			bufferedImage = bufferedImages[ currentScreenScaleIndex ][ 0 ];
+			p = createProjector( transformType, source, viewerTransform, currentScreenScaleTransform, screenImage, numRenderingThreads );
 			projector = p;
 		}
 
 		// try rendering
-		final boolean success = p.map( screenImage, numRenderingThreads );
+		final boolean success = p.map();
 
 		synchronized ( this )
 		{
@@ -417,9 +417,19 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 		return success;
 	}
 
-	protected static < T, A extends AffineGet & Concatenable< AffineGet > > InterruptibleProjector< T, ARGBType > createProjector( final AffineTransformType< A > transformType, final RenderSource< T, A > source, final A viewerTransform, final A screenScaleTransform )
+	protected static < T, A extends AffineGet & Concatenable< AffineGet > > SimpleInterruptibleProjector< T, ARGBType > createProjector(
+			final AffineTransformType< A > transformType,
+			final RenderSource< T, A > source,
+			final A viewerTransform,
+			final A screenScaleTransform,
+			final ARGBScreenImage target,
+			final int numRenderingThreads )
 	{
-		return new InterruptibleProjector< T, ARGBType >( getTransformedSource( transformType, source, viewerTransform, screenScaleTransform ), source.getConverter() );
+		return new SimpleInterruptibleProjector< T, ARGBType >(
+				getTransformedSource( transformType, source, viewerTransform, screenScaleTransform ),
+				source.getConverter(),
+				target,
+				numRenderingThreads );
 	}
 
 	protected static < T, A extends AffineGet & Concatenable< AffineGet > > RandomAccessible< T > getTransformedSource( final AffineTransformType< A > transformType, final RenderSource< T, A > source, final A viewerTransform, final A screenScaleTransform )
