@@ -18,7 +18,7 @@ import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.ui.InteractiveViewer3D;
+import net.imglib2.ui.viewer.InteractiveViewer3D;
 import net.imglib2.view.Views;
 
 public class InteractiveHierarchyOpenConnectomeRotationExample
