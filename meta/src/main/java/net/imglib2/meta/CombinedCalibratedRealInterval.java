@@ -49,7 +49,7 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 	// data from underlying CalibratedAxes that already had their own different
 	// units. This may have been the wrong approach but if it isn't you can dig
 	// it out of git. That code was committed to the calibration-changes branch
-	// of imglib on Aug 16 2013. Note by maintaining a list of units I also had
+	// of imglib on Aug 15 2013. Note by maintaining a list of units I also had
 	// to override the add()'s, remove()'s methods to maintain the unit list also.
 
 	public void setUnit(String unit, int d) {
