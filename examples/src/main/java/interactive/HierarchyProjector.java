@@ -24,14 +24,15 @@ import interactive.remote.openconnectome.VolatileOpenConnectomeRandomAccessibleI
 import java.util.ArrayList;
 import java.util.List;
 
+import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
-import net.imglib2.Point;
+import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.Projector;
-import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.Volatile;
 import net.imglib2.display.VolatileRealType;
 import net.imglib2.display.VolatileRealTypeARGBConverter;
@@ -48,8 +49,11 @@ import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.ui.AbstractInterruptibleProjector;
+import net.imglib2.view.Views;
 
 /**
  * {@link Projector} for a hierarchy of {@link Volatile} inputs.  After each
@@ -58,35 +62,47 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class HierarchyProjector< T, A extends Volatile< T > > extends Point implements Projector< A, ARGBType >
+public class HierarchyProjector< T, A extends Volatile< T >, B extends NumericType< B > > extends AbstractInterruptibleProjector< A, B >
 {
 	final protected ArrayList< RandomAccessible< A > > sources = new ArrayList< RandomAccessible< A > >();
-	final protected Converter< ? super A, ARGBType > converter;
-	final protected long[] min;
-	final protected long[] max;
-	final protected ARGBScreenImage target;
 	final protected ArrayImg< IntType, IntArray > mask;
 	protected boolean valid = false;
 	int s = 0;
 	
+	final protected FinalInterval sourceInterval;
+
+	final long width;
+	final long height;
+	final long cr;
+	
+	
+	
+	final IterableInterval< B > iterableTarget;
+	
 	public HierarchyProjector(
 			final List< ? extends RandomAccessible< A > > sources,
-			final ARGBScreenImage target,
-			final Converter< ? super A, ARGBType > converter )
+			final Converter< ? super A, B > converter,
+			final RandomAccessibleInterval< B > target,
+			final int numThreads )
 	{
-		super( Math.max( 2, sources.get( 0 ).numDimensions() ) );
+		super( Math.max( 2, sources.get( 0 ).numDimensions() ), converter, target, numThreads );
 
 		this.sources.addAll( sources );
 		s = sources.size();
-		this.converter = converter;
 	
-		// as this is an XY projector, we need at least two dimensions,
-		// even if the source is one-dimensional
-		min = new long[ n ];
-		max = new long[ n ];
-		this.target = target;
-		
 		mask = ArrayImgs.ints( target.dimension( 0 ), target.dimension( 1 ) );
+		iterableTarget = Views.iterable( target );
+		
+		for ( int d = 2; d < min.length; ++d )
+			min[ d ] = max[ d ] = 0;
+
+		max[ 0 ] = target.max( 0 );
+		max[ 1 ] = target.max( 1 );
+		sourceInterval = new FinalInterval( min, max );
+
+		width = target.dimension( 0 );
+		height = target.dimension( 1 );
+		cr = -width;
 	}
 	
 	public void setSources( final List< RandomAccessible< A > > sources )
@@ -112,7 +128,7 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 	 */
 	public void clear()
 	{
-		final ArrayCursor< ARGBType > targetCursor = target.cursor();
+		final Cursor< B > targetCursor = iterableTarget.cursor();
 		final ArrayCursor< IntType > maskCursor = mask.cursor();
 		
 		/* Despite the extra cmparison, is consistently 60% faster than
@@ -124,7 +140,7 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 		 * because it exploits CPU caching better.
 		 */
 		while ( targetCursor.hasNext() )
-			targetCursor.next().set( 0x00000000 );
+			targetCursor.next().setZero();
 		while ( maskCursor.hasNext() )
 			maskCursor.next().set( Integer.MAX_VALUE );
 		
@@ -146,21 +162,11 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 	}
 	
 	@Override
-	public void map()
+	public boolean map()
 	{
 		System.out.println( "Mapping " + s + " levels." );
-		for ( int d = 2; d < position.length; ++d )
-			min[ d ] = max[ d ] = position[ d ];
-
-		max[ 0 ] = target.max( 0 );
-		max[ 1 ] = target.max( 1 );
-		final FinalInterval sourceInterval = new FinalInterval( min, max );
-
-		final long width = target.dimension( 0 );
-		final long height = target.dimension( 1 );
-		final long cr = -width;
 		
-		final ArrayRandomAccess< ARGBType > targetRandomAccess = target.randomAccess( target );
+		final RandomAccess< B > targetRandomAccess = target.randomAccess( target );
 		final ArrayRandomAccess< IntType > maskRandomAccess = mask.randomAccess( target );
 		
 		int i;
@@ -212,7 +218,9 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 				s = i - 1;
 			valid = s == 1;
 		}
+		return true;
 	}
+	
 	
 	final public void draw()
 	{
@@ -226,28 +234,10 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 			map();
 			System.out.println( "trial " + ( ++nTrials ) + ": s = " + s + " took " + ( System.currentTimeMillis() - t ) + "ms" );
 			
-			imp.setImage( target.image() );
+			imp.setImage( ( ( ARGBScreenImage )target ).image() );
 		}
 	}
 	
-	final static public void benchmark()
-	{
-		final HierarchyProjector< UnsignedByteType, VolatileRealType< UnsignedByteType > > projector =
-				new HierarchyProjector< UnsignedByteType, VolatileRealType< UnsignedByteType > >(
-						new ArrayList< RandomAccessible< VolatileRealType< UnsignedByteType > > >(), new ARGBScreenImage( 1024, 768 ), new RealARGBConverter< VolatileRealType< UnsignedByteType> >() );
-		
-		long t;
-		
-		for ( int i = 0; i < 10; ++i )
-		{
-			t = System.currentTimeMillis();
-			for ( int d = 0; d < 1000; ++d )
-				projector.clear();
-			t = System.currentTimeMillis() - t;
-			System.out.println( "clearTarget: " + t + "ms" );
-			
-		}
-	}
 	
 	final static public void main( final String... args )
 	{
@@ -357,8 +347,12 @@ public class HierarchyProjector< T, A extends Volatile< T > > extends Point impl
 			transformedSources.add( mapping );
 		}
 		
-		final HierarchyProjector< UnsignedByteType, VolatileRealType< UnsignedByteType > > projector =
-				new HierarchyProjector< UnsignedByteType, VolatileRealType< UnsignedByteType > >( transformedSources, new ARGBScreenImage( 800, 600 ), new VolatileRealTypeARGBConverter( 0, 255 ) );
+		final HierarchyProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType > projector =
+				new HierarchyProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType >( 
+						transformedSources,
+						new VolatileRealTypeARGBConverter( 0, 255 ),
+						new ARGBScreenImage( 800, 600 ),
+						Runtime.getRuntime().availableProcessors() );
 		
 		projector.clear();
 		projector.draw();
