@@ -43,16 +43,18 @@ import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
 
 /**
- * Factory to create {@link Renderer Renderers}
+ * TODO
  *
+ * Factory to create a {@link Renderer}.
+ *
+ * @param <A>
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public interface RendererFactory
+public interface RendererFactory< A extends AffineSet & AffineGet & Concatenable< AffineGet > >
 {
 	/**
 	 * Create a new {@link Renderer}.
 	 *
-	 * @param transformType
 	 * @param display
 	 *            Receiver for the rendered {@link BufferedImage BufferedImages}.
 	 * @param painterThread
@@ -60,6 +62,5 @@ public interface RendererFactory
 	 *            repainting are send there.
 	 * @return a {@link Renderer}
 	 */
-	public < A extends AffineSet & AffineGet & Concatenable< AffineGet > >
-		Renderer< A > create( final AffineTransformType< A > transformType, final RenderTarget display, final PainterThread painterThread );
+	public Renderer< A > create( final RenderTarget display, final PainterThread painterThread );
 }
