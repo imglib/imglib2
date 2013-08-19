@@ -38,13 +38,14 @@
 package net.imglib2.ui;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import net.imglib2.realtransform.AffineTransform2D;
 
-public class TransformEventHandler2D extends MouseAdapter implements TransformEventHandler< AffineTransform2D >
+public class TransformEventHandler2D extends MouseAdapter implements KeyListener, TransformEventHandler< AffineTransform2D >
 {
 	final static private TransformEventHandlerFactory< AffineTransform2D > factory = new TransformEventHandlerFactory< AffineTransform2D >()
 	{
@@ -68,7 +69,7 @@ public class TransformEventHandler2D extends MouseAdapter implements TransformEv
 	/**
 	 * Whom to notify when the {@link #affine current transform} is changed.
 	 */
-	final protected TransformListener< AffineTransform2D > listener;
+	protected TransformListener< AffineTransform2D > listener;
 
 	/**
 	 * Copy of {@link #affine current transform} when mouse dragging started.
@@ -137,6 +138,12 @@ public class TransformEventHandler2D extends MouseAdapter implements TransformEv
 	}
 
 	@Override
+	public void setTransformListener( final TransformListener< AffineTransform2D > transformListener )
+	{
+		listener = transformListener;
+	}
+
+	@Override
 	public String getHelpString()
 	{
 		return helpString;
@@ -147,7 +154,8 @@ public class TransformEventHandler2D extends MouseAdapter implements TransformEv
 	 */
 	protected void update()
 	{
-		listener.transformChanged( affine );
+		if ( listener != null )
+			listener.transformChanged( affine );
 	}
 
 	/**

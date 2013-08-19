@@ -21,5 +21,4 @@ public interface OverlayRenderer
 	 *            the new canvas height.
 	 */
 	public void setCanvasSize( final int width, final int height );
-
 }

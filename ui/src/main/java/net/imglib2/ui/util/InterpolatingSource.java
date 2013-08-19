@@ -12,6 +12,21 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.ui.RenderSource;
 import net.imglib2.view.Views;
 
+/**
+ * A {@link RenderSource}, that provides an interpolated source
+ * {@link RandomAccessible} and is able to switch between nearest-neighbor and
+ * n-linear interpolation.
+ *
+ * The (discrete) source {@link RandomAccessible}, transform, and
+ * {@link Converter} provided in the constructor.
+ *
+ * @param <T>
+ *            pixel type
+ * @param <A>
+ *            transform type
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
 public class InterpolatingSource< T extends NumericType< T >, A > implements RenderSource< T, A >
 {
 	protected final A sourceTransform;
@@ -30,7 +45,7 @@ public class InterpolatingSource< T extends NumericType< T >, A > implements Ren
 			nLinearInterpolatorFactory = ( InterpolatorFactory )new NLinearInterpolatorARGBFactory();
 		else
 			nLinearInterpolatorFactory = new NLinearInterpolatorFactory< T >();
-		
+
 		this.sourceTransform = sourceTransform;
 		this.converter = converter;
 		sourceInterpolants = new RealRandomAccessible[] {
@@ -57,16 +72,30 @@ public class InterpolatingSource< T extends NumericType< T >, A > implements Ren
 		return converter;
 	}
 
+	/**
+	 * Switch to the other interpolation method (nearest-neighbor or n-linear)
+	 */
 	public void switchInterpolation()
 	{
 		interpolation = ( interpolation + 1 ) % sourceInterpolants.length;
 	}
 
+	/**
+	 * Get current interpolation method.
+	 *
+	 * @return interpolation method: 0 is nearest-neighbor, 1 is n-linear
+	 */
 	public int getInterpolation()
 	{
 		return interpolation;
 	}
 
+	/**
+	 * Set current interpolation method.
+	 *
+	 * @param interpolation
+	 *            0 is nearest-neighbor, 1 is n-linear
+	 */
 	public void setInterpolation( final int interpolation )
 	{
 		this.interpolation = interpolation % sourceInterpolants.length;

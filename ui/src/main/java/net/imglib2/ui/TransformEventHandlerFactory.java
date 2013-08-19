@@ -3,12 +3,12 @@ package net.imglib2.ui;
 /**
  * TODO
  *
- * @param <T>
+ * @param <A>
  *            type of transformation.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public interface TransformEventHandlerFactory< T >
+public interface TransformEventHandlerFactory< A >
 {
 	/**
 	 * TODO
@@ -16,5 +16,5 @@ public interface TransformEventHandlerFactory< T >
 	 * @param transformListener
 	 * @return
 	 */
-	public TransformEventHandler< T > create( TransformListener< T > transformListener );
+	public TransformEventHandler< A > create( TransformListener< A > transformListener );
 }

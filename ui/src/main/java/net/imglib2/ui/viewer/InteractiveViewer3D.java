@@ -10,8 +10,10 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.ui.AffineTransformType3D;
+import net.imglib2.ui.InteractiveDisplayCanvasComponent;
+import net.imglib2.ui.TransformEventHandler3D;
 import net.imglib2.ui.overlay.BoxOverlayRenderer;
-import net.imglib2.ui.util.GuiUtil;
+import net.imglib2.ui.util.Defaults;
 import net.imglib2.ui.util.InterpolatingSource;
 
 /**
@@ -19,7 +21,7 @@ import net.imglib2.ui.util.InterpolatingSource;
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class InteractiveViewer3D< T extends NumericType< T > > extends InteractiveRealViewer< T, AffineTransform3D >
+public class InteractiveViewer3D< T extends NumericType< T > > extends InteractiveRealViewer< T, AffineTransform3D, InteractiveDisplayCanvasComponent< AffineTransform3D > >
 {
 	/**
 	 * Create an interactive viewer for a 2D {@link RandomAccessible}.
@@ -54,7 +56,9 @@ public class InteractiveViewer3D< T extends NumericType< T > > extends Interacti
 
 	public InteractiveViewer3D( final int width, final int height, final InterpolatingSource< T, AffineTransform3D > interpolatingSource, final Interval sourceInterval )
 	{
-		super( AffineTransformType3D.instance, width, height, interpolatingSource, GuiUtil.defaultDoubleBuffered, GuiUtil.defaultNumRenderingThreads );
+		super( AffineTransformType3D.instance,
+				new InteractiveDisplayCanvasComponent< AffineTransform3D >( width, height, TransformEventHandler3D.factory() ),
+				interpolatingSource, Defaults.rendererFactory );
 
 		final BoxOverlayRenderer box = new BoxOverlayRenderer( width, height );
 		box.setSource( sourceInterval, interpolatingSource.getSourceTransform() );
