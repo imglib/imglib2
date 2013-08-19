@@ -94,7 +94,7 @@ public class InteractiveViewer3D< T extends NumericType< T > > extends Interacti
 	{
 		super( AffineTransformType3D.instance,
 				new InteractiveDisplayCanvasComponent< AffineTransform3D >( width, height, TransformEventHandler3D.factory() ),
-				interpolatingSource, Defaults.rendererFactory );
+				Defaults.rendererFactory( AffineTransformType3D.instance, interpolatingSource ) );
 
 		final BoxOverlayRenderer box = new BoxOverlayRenderer( width, height );
 		box.setSource( sourceInterval, interpolatingSource.getSourceTransform() );

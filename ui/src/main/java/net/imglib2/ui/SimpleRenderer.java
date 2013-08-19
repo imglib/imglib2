@@ -63,36 +63,47 @@ import net.imglib2.ui.util.GuiUtil;
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > extends Renderer< A >
+public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > extends AbstractRenderer< A >
 {
 	/**
 	 * Factory for creating {@link SimpleRenderer}.
 	 */
-	public static class Factory implements RendererFactory
+	public static class Factory< A extends AffineSet & AffineGet & Concatenable< AffineGet > > implements RendererFactory< A >
 	{
+		final AffineTransformType< A > transformType;
+
+		final RenderSource< ?, A > source;
+
 		final protected boolean doubleBuffered;
 
 		final protected int numRenderingThreads;
 
 		/**
+		 * TODO
 		 * Create a factory for {@link SimpleRenderer SimpleRenderers} with the
 		 * given multi-threading and double-buffering properties.
 		 *
+		 * @param transformType
+		 *            TODO
+		 * @param source
+		 *            TODO
 		 * @param doubleBuffered
 		 *            Whether to use double buffered rendering.
 		 * @param numRenderingThreads
 		 *            How many threads to use for rendering.
 		 */
-		public Factory( final boolean doubleBuffered, final int numRenderingThreads )
+		public Factory( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final boolean doubleBuffered, final int numRenderingThreads )
 		{
+			this.transformType = transformType;
+			this.source = source;
 			this.doubleBuffered = doubleBuffered;
 			this.numRenderingThreads = numRenderingThreads;
 		}
 
 		@Override
-		public < A extends AffineSet & AffineGet & Concatenable< AffineGet > > SimpleRenderer< A > create( final AffineTransformType< A > transformType, final RenderTarget display, final PainterThread painterThread )
+		public SimpleRenderer< A > create( final RenderTarget display, final PainterThread painterThread )
 		{
-			return new SimpleRenderer< A >( transformType, display, painterThread, doubleBuffered, numRenderingThreads );
+			return new SimpleRenderer< A >( transformType, source, display, painterThread, doubleBuffered, numRenderingThreads );
 		}
 	}
 
@@ -126,6 +137,8 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 
 	/**
 	 * @param transformType
+	 * @param source
+	 *            TODO
 	 * @param display
 	 *            The canvas that will display the images we render.
 	 * @param painterThread
@@ -136,9 +149,9 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 	 * @param numRenderingThreads
 	 *            How many threads to use for rendering.
 	 */
-	public SimpleRenderer( final AffineTransformType< A > transformType, final RenderTarget display, final PainterThread painterThread, final boolean doubleBuffered, final int numRenderingThreads )
+	public SimpleRenderer( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final RenderTarget display, final PainterThread painterThread, final boolean doubleBuffered, final int numRenderingThreads )
 	{
-		super( transformType, display, painterThread );
+		super( transformType, source, display, painterThread );
 		this.doubleBuffered = doubleBuffered;
 		this.numRenderingThreads = numRenderingThreads;
 		screenImages = new ARGBScreenImage[ 2 ];
@@ -165,7 +178,7 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 	}
 
 	@Override
-	public boolean paint( final RenderSource< ?, A > source, final A viewerTransform )
+	public boolean paint( final A viewerTransform )
 	{
 		checkResize();
 

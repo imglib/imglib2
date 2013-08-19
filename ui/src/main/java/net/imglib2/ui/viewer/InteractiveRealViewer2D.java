@@ -75,7 +75,6 @@ public class InteractiveRealViewer2D< T > extends InteractiveRealViewer< T, Affi
 	{
 		super( AffineTransformType2D.instance,
 				new InteractiveDisplayCanvasComponent< AffineTransform2D >( width, height, TransformEventHandler2D.factory() ),
-				new FinalSource< T, AffineTransform2D >( source, sourceTransform, converter ),
-				Defaults.rendererFactory );
+				Defaults.rendererFactory( AffineTransformType2D.instance, new FinalSource< T, AffineTransform2D >( source, sourceTransform, converter ) ) );
 	}
 }

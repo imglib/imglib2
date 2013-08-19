@@ -60,6 +60,8 @@ import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
 import net.imglib2.ui.util.GuiUtil;
 
 /**
+ * TODO
+ *
  * Simple interactive viewer window. It creates a JFrame with the given
  * {@link InteractiveDisplayCanvas canvas}, and sets up transformation handling
  * and painting of a given {@link RenderSource source}.
@@ -101,9 +103,9 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 
 	final protected JFrame frame;
 
-	final protected RenderSource< T, A > source;
-
 	/**
+	 * TODO
+	 *
 	 * Create an interactive viewer window displaying a given
 	 * {@link RenderSource <code>source</code>} in the given
 	 * <code>interactiveDisplayCanvas</code>.
@@ -118,12 +120,10 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 	 * @param transformType
 	 * @param interactiveDisplayCanvas
 	 *            the canvas {@link JComponent} which will show the rendered images.
-	 * @param source
-	 *            the source data to render.
 	 * @param rendererFactory
 	 *            is used to create a {@link Renderer} for the source.
 	 */
-	public InteractiveRealViewer( final AffineTransformType< A > transformType, final C interactiveDisplayCanvas, final RenderSource< T, A > source, final RendererFactory rendererFactory )
+	public InteractiveRealViewer( final AffineTransformType< A > transformType, final C interactiveDisplayCanvas, final RendererFactory< A > rendererFactory )
 	{
 		this.transformType = transformType;
 		painterThread = new PainterThread( this );
@@ -132,7 +132,7 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 		display.addTransformListener( this );
 
 		final BufferedImageOverlayRenderer target = new BufferedImageOverlayRenderer();
-		imageRenderer = rendererFactory.create( transformType, target, painterThread );
+		imageRenderer = rendererFactory.create( target, painterThread );
 		display.addOverlayRenderer( target );
 
 //		final GraphicsConfiguration gc = GuiUtil.getSuitableGraphicsConfiguration( GuiUtil.ARGB_COLOR_MODEL );
@@ -153,8 +153,6 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 		} );
 		frame.setVisible( true );
 
-		this.source = source;
-
 		painterThread.start();
 
 	}
@@ -165,7 +163,7 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 	@Override
 	public void paint()
 	{
-		imageRenderer.paint( source, viewerTransform );
+		imageRenderer.paint( viewerTransform );
 		display.repaint();
 	}
 

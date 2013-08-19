@@ -39,8 +39,13 @@ package net.imglib2.ui.util;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import net.imglib2.concatenate.Concatenable;
+import net.imglib2.realtransform.AffineGet;
+import net.imglib2.realtransform.AffineSet;
+import net.imglib2.ui.AbstractRenderer;
+import net.imglib2.ui.AffineTransformType;
 import net.imglib2.ui.MultiResolutionRenderer;
-import net.imglib2.ui.Renderer;
+import net.imglib2.ui.RenderSource;
 import net.imglib2.ui.RendererFactory;
 import net.imglib2.ui.viewer.InteractiveRealViewer2D;
 import net.imglib2.ui.viewer.InteractiveRealViewer3D;
@@ -89,7 +94,11 @@ public class Defaults
 	public static final long targetRenderNanos = 15 * 1000000;
 
 	/**
-	 * Factory to construct the default {@link Renderer} type with default settings.
+	 * TODO
+	 * Factory to construct the default {@link AbstractRenderer} type with default settings.
 	 */
-	public static RendererFactory rendererFactory = new MultiResolutionRenderer.Factory( screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
+	public static < A extends AffineSet & AffineGet & Concatenable< AffineGet > > RendererFactory< A > rendererFactory( final AffineTransformType< A > transformType, final RenderSource< ?, A > source )
+	{
+		return new MultiResolutionRenderer.Factory< A >( transformType, source, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
+	}
 }

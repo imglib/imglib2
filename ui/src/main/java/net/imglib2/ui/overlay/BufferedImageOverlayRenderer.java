@@ -41,7 +41,6 @@ import java.awt.image.BufferedImage;
 
 import net.imglib2.ui.OverlayRenderer;
 import net.imglib2.ui.RenderTarget;
-import net.imglib2.ui.Renderer;
 
 /**
  * {@link OverlayRenderer} drawing a {@link BufferedImage}, scaled to fill the

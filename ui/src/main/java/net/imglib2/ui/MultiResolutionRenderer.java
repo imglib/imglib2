@@ -98,13 +98,17 @@ import net.imglib2.ui.util.GuiUtil;
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concatenable< AffineGet > > extends Renderer< A >
+public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concatenable< AffineGet > > extends AbstractRenderer< A >
 {
 	/**
 	 * Factory for creating {@link MultiResolutionRenderer}.
 	 */
-	public static class Factory implements RendererFactory
+	public static class Factory< A extends AffineSet & AffineGet & Concatenable< AffineGet > > implements RendererFactory< A >
 	{
+		final AffineTransformType< A > transformType;
+
+		final RenderSource< ?, A > source;
+
 		final protected double[] screenScales;
 
 		final protected long targetRenderNanos;
@@ -114,10 +118,15 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 		final protected int numRenderingThreads;
 
 		/**
+		 * TODO
 		 * Create a factory for {@link MultiResolutionRenderer
 		 * MultiResolutionRenderers} with the given multi-resolution,
 		 * multi-threading, and double-buffering properties.
 		 *
+		 * @param transformType
+		 *            TODO
+		 * @param source
+		 *            TODO
 		 * @param screenScales
 		 *            Scale factors from the viewer canvas to screen images of
 		 *            different resolutions. A scale factor of 1 means 1 pixel
@@ -135,8 +144,10 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 		 * @param numRenderingThreads
 		 *            How many threads to use for rendering.
 		 */
-		public Factory( final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
+		public Factory( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
 		{
+			this.transformType = transformType;
+			this.source = source;
 			this.screenScales = screenScales;
 			this.targetRenderNanos = targetRenderNanos;
 			this.doubleBuffered = doubleBuffered;
@@ -144,9 +155,9 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 		}
 
 		@Override
-		public < A extends AffineSet & AffineGet & Concatenable< AffineGet > > MultiResolutionRenderer< A > create( final AffineTransformType< A > transformType, final RenderTarget display, final PainterThread painterThread )
+		public AbstractRenderer< A > create( final RenderTarget display, final PainterThread painterThread )
 		{
-			return new MultiResolutionRenderer< A >( transformType, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
+			return new MultiResolutionRenderer< A >( transformType, source, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
 		}
 	}
 
@@ -233,6 +244,8 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 
 	/**
 	 * @param transformType
+	 * @param source
+	 *            TODO
 	 * @param display
 	 *            The canvas that will display the images we render.
 	 * @param painterThread
@@ -254,9 +267,9 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	 * @param numRenderingThreads
 	 *            How many threads to use for rendering.
 	 */
-	public MultiResolutionRenderer( final AffineTransformType< A > transformType, final RenderTarget display, final PainterThread painterThread, final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
+	public MultiResolutionRenderer( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final RenderTarget display, final PainterThread painterThread, final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
 	{
-		super( transformType, display, painterThread );
+		super( transformType, source, display, painterThread );
 		this.screenScales = screenScales.clone();
 		this.doubleBuffered = doubleBuffered;
 		this.numRenderingThreads = numRenderingThreads;
@@ -328,7 +341,7 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	}
 
 	@Override
-	public boolean paint( final RenderSource< ?, A > source, final A viewerTransform )
+	public boolean paint( final A viewerTransform )
 	{
 		checkResize();
 

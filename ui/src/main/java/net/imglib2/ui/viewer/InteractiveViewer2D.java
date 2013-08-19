@@ -90,7 +90,7 @@ public class InteractiveViewer2D< T extends NumericType< T > > extends Interacti
 	{
 		super( AffineTransformType2D.instance,
 				new InteractiveDisplayCanvasComponent< AffineTransform2D >( width, height, TransformEventHandler2D.factory() ),
-				interpolatingSource, Defaults.rendererFactory );
+				Defaults.rendererFactory( AffineTransformType2D.instance, interpolatingSource ) );
 
 		// add KeyHandler for toggling interpolation
 		display.addHandler( new KeyAdapter() {
