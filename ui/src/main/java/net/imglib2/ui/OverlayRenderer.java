@@ -2,6 +2,12 @@ package net.imglib2.ui;
 
 import java.awt.Graphics;
 
+/**
+ * Draw something to a {@link Graphics} canvas and receive notifications about
+ * changes of the canvas size.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
 public interface OverlayRenderer
 {
 	/**

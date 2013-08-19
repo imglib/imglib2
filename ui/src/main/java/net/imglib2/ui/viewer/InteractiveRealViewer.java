@@ -14,6 +14,7 @@ import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
 import net.imglib2.ui.AffineTransformType;
 import net.imglib2.ui.InteractiveDisplayCanvas;
+import net.imglib2.ui.OverlayRenderer;
 import net.imglib2.ui.PainterThread;
 import net.imglib2.ui.RenderSource;
 import net.imglib2.ui.Renderer;
@@ -23,13 +24,23 @@ import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
 import net.imglib2.ui.util.GuiUtil;
 
 /**
- * TODO
+ * Simple interactive viewer window. It creates a JFrame with the given
+ * {@link InteractiveDisplayCanvas canvas}, and sets up transformation handling
+ * and painting of a given {@link RenderSource source}.
+ * <p>
+ * It implements {@link PainterThread.Paintable} to handle {@link #paint()
+ * repainting} through a {@link PainterThread}. It implements
+ * {@link TransformListener} to be notified about viewer transformation changes
+ * made by the user.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  *
  * @param <T>
+ *            pixel type
  * @param <A>
+ *            transform type
  * @param <C>
+ *            canvas component type
  */
 public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concatenable< AffineGet >, C extends JComponent & InteractiveDisplayCanvas< A > > implements TransformListener< A >, PainterThread.Paintable
 {
@@ -56,6 +67,26 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 
 	final protected RenderSource< T, A > source;
 
+	/**
+	 * Create an interactive viewer window displaying a given
+	 * {@link RenderSource <code>source</code>} in the given
+	 * <code>interactiveDisplayCanvas</code>.
+	 * <p>
+	 * A {@link Renderer} is created that paints to a
+	 * {@link BufferedImageOverlayRenderer} render target which is displayed on
+	 * the canvas as an {@link OverlayRenderer}. A {@link PainterThread} is
+	 * created which queues repainting requests from the renderer and
+	 * interactive canvas, and triggers {@link #paint() repainting} of the
+	 * viewer.
+	 *
+	 * @param transformType
+	 * @param interactiveDisplayCanvas
+	 *            the canvas {@link JComponent} which will show the rendered images.
+	 * @param source
+	 *            the source data to render.
+	 * @param rendererFactory
+	 *            is used to create a {@link Renderer} for the source.
+	 */
 	public InteractiveRealViewer( final AffineTransformType< A > transformType, final C interactiveDisplayCanvas, final RenderSource< T, A > source, final RendererFactory rendererFactory )
 	{
 		this.transformType = transformType;
@@ -92,6 +123,9 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 
 	}
 
+	/**
+	 * Render the source using the current viewer transformation and
+	 */
 	@Override
 	public void paint()
 	{
@@ -107,11 +141,20 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 		requestRepaint();
 	}
 
+	/**
+	 * Get the canvas component used for painting
+	 *
+	 * @return the canvas component used for painting.
+	 */
 	public C getDisplayCanvas()
 	{
 		return display;
 	}
 
+	/**
+	 * Request a repaint of the display.
+	 * Calls {@link Renderer#requestRepaint()}.
+	 */
 	public void requestRepaint()
 	{
 		imageRenderer.requestRepaint();

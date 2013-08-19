@@ -45,6 +45,13 @@ import java.awt.event.MouseWheelEvent;
 
 import net.imglib2.realtransform.AffineTransform2D;
 
+/**
+ * A {@link TransformEventHandler} that changes an {@link AffineTransform2D} in
+ * response to mouse and keyboard events.
+ *
+ * @author Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
 public class TransformEventHandler2D extends MouseAdapter implements KeyListener, TransformEventHandler< AffineTransform2D >
 {
 	final static private TransformEventHandlerFactory< AffineTransform2D > factory = new TransformEventHandlerFactory< AffineTransform2D >()

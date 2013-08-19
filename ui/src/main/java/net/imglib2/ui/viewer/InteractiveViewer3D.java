@@ -24,7 +24,7 @@ import net.imglib2.ui.util.InterpolatingSource;
 public class InteractiveViewer3D< T extends NumericType< T > > extends InteractiveRealViewer< T, AffineTransform3D, InteractiveDisplayCanvasComponent< AffineTransform3D > >
 {
 	/**
-	 * Create an interactive viewer for a 2D {@link RandomAccessible}.
+	 * Create an interactive viewer for a 3D {@link RandomAccessible}.
 	 *
 	 * @param width
 	 *            window width.

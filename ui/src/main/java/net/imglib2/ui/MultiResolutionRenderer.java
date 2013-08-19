@@ -14,7 +14,48 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.util.GuiUtil;
 
 /**
- * TODO
+ * A {@link Renderer} that uses a coarse-to-fine rendering scheme. First, a
+ * small {@link BufferedImage} at a fraction of the canvas resolution is
+ * rendered. Then, increasingly larger images are rendered, until the full
+ * canvas resolution is reached.
+ * <p>
+ * When drawing the low-resolution {@link BufferedImage} to the screen, they
+ * will be scaled up by Java2D to the full canvas size, which is relatively
+ * fast. Rendering the small, low-resolution images is usually very fast, such
+ * that the display is very interactive while the user changes the viewing
+ * transformation for example. When the transformation remains fixed for a
+ * longer period, higher-resolution details are filled in successively.
+ * <p>
+ * The renderer allocates a {@link BufferedImage} for each of a predefined set
+ * of <em>screen scales</em> (a screen scale of 1 means that 1 pixel in the
+ * screen image is displayed as 1 pixel on the canvas, a screen scale of 0.5
+ * means 1 pixel in the screen image is displayed as 2 pixel on the canvas,
+ * etc.)
+ * <p>
+ * At any time, one of these screen scales is selected as the
+ * <em>highest screen scale</em>. Rendering starts with this highest screen
+ * scale and then proceeds to lower screen scales (higher resolution images).
+ * Unless the highest screen scale is currently rendering,
+ * {@link #requestRepaint() repaint request} will cancel rendering, such that
+ * display remains interactive.
+ * <p>
+ * The renderer tries to maintain a per-frame rendering time close to a desired
+ * number of <code>targetRenderNanos</code> nanoseconds. If the rendering time
+ * (in nanoseconds) for the (currently) highest scaled screen image is above
+ * this threshold, a coarser screen scale is chosen as the highest screen scale
+ * to use. Similarly, if the rendering time for the (currently) second-highest
+ * scaled screen image is below this threshold, this finer screen scale chosen
+ * as the highest screen scale to use.
+ * <p>
+ * The renderer uses multiple threads (if desired) and double-buffering (if
+ * desired).
+ * <p>
+ * Double buffering means that two {@link BufferedImage BufferedImages} are
+ * created for every screen scale. After rendering the first one of them and
+ * setting it to the {@link RenderTarget}, next time, rendering goes to the
+ * second one. Thus, the {@link RenderTarget} will always have a complete image.
+ * Rendering will not interfere with painting the {@link BufferedImage} to the
+ * canvas.
  *
  * @param <A>
  *            transform type
@@ -23,6 +64,9 @@ import net.imglib2.ui.util.GuiUtil;
  */
 public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concatenable< AffineGet > > extends Renderer< A >
 {
+	/**
+	 * Factory for creating {@link MultiResolutionRenderer}.
+	 */
 	public static class Factory implements RendererFactory
 	{
 		final protected double[] screenScales;
@@ -33,6 +77,28 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 
 		final protected int numRenderingThreads;
 
+		/**
+		 * Create a factory for {@link MultiResolutionRenderer
+		 * MultiResolutionRenderers} with the given multi-resolution,
+		 * multi-threading, and double-buffering properties.
+		 *
+		 * @param screenScales
+		 *            Scale factors from the viewer canvas to screen images of
+		 *            different resolutions. A scale factor of 1 means 1 pixel
+		 *            in the screen image is displayed as 1 pixel on the canvas,
+		 *            a scale factor of 0.5 means 1 pixel in the screen image is
+		 *            displayed as 2 pixel on the canvas, etc. The screen scales
+		 *            are assumed to be ordered finer-to-coarse, with index 0
+		 *            corresponding to the full resolution usually.
+		 * @param targetRenderNanos
+		 *            Target rendering time in nanoseconds. The rendering time
+		 *            for the coarsest rendered scale should be below this
+		 *            threshold.
+		 * @param doubleBuffered
+		 *            Whether to use double buffered rendering.
+		 * @param numRenderingThreads
+		 *            How many threads to use for rendering.
+		 */
 		public Factory( final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
 		{
 			this.screenScales = screenScales;
@@ -141,7 +207,9 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	 *            different resolutions. A scale factor of 1 means 1 pixel in
 	 *            the screen image is displayed as 1 pixel on the canvas, a
 	 *            scale factor of 0.5 means 1 pixel in the screen image is
-	 *            displayed as 2 pixel on the canvas, etc.
+	 *            displayed as 2 pixel on the canvas, etc. The screen scales are
+	 *            assumed to be ordered finer-to-coarse, with index 0
+	 *            corresponding to the full resolution usually.
 	 * @param targetRenderNanos
 	 *            Target rendering time in nanoseconds. The rendering time for
 	 *            the coarsest rendered scale should be below this threshold.

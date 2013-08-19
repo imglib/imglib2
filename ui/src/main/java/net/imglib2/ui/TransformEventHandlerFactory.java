@@ -1,7 +1,7 @@
 package net.imglib2.ui;
 
 /**
- * TODO
+ * Factory for {@link TransformEventHandler}.
  *
  * @param <A>
  *            type of transformation.
@@ -11,10 +11,11 @@ package net.imglib2.ui;
 public interface TransformEventHandlerFactory< A >
 {
 	/**
-	 * TODO
+	 * Create a new {@link TransformEventHandler} which reports to the given
+	 * {@link TransformListener}.
 	 *
 	 * @param transformListener
-	 * @return
+	 *            will receive transformation updates.
 	 */
 	public TransformEventHandler< A > create( TransformListener< A > transformListener );
 }

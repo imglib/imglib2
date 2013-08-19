@@ -6,7 +6,9 @@ import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
 
 /**
  * Receiver for a {@link BufferedImage} (to be drawn onto a canvas later).
- * A {@link Renderer} will render source data into a {@link BufferedImage} and provide this to a {@link RenderTarget}.
+ * <p>
+ * A {@link Renderer} will render source data into a {@link BufferedImage} and
+ * provide this to a {@link RenderTarget}.
  * <p>
  * See {@link BufferedImageOverlayRenderer}, which is a {@link RenderTarget} and
  * also an {@link OverlayRenderer} that draws the {@link BufferedImage}.

@@ -13,7 +13,14 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.util.GuiUtil;
 
 /**
- * TODO
+ * A {@link Renderer} that uses multiple threads (if desired) and
+ * double-buffering (if desired).
+ * <p>
+ * Double buffering means that two {@link BufferedImage BufferedImages} are
+ * created. After rendering the first one of them and setting it to the
+ * {@link RenderTarget}, next time, rendering goes to the second one. Thus, the
+ * {@link RenderTarget} will always have a complete image. Rendering will not
+ * interfere with painting the {@link BufferedImage} to the canvas.
  *
  * @param <A>
  *            transform type
@@ -22,12 +29,24 @@ import net.imglib2.ui.util.GuiUtil;
  */
 public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > extends Renderer< A >
 {
+	/**
+	 * Factory for creating {@link SimpleRenderer}.
+	 */
 	public static class Factory implements RendererFactory
 	{
 		final protected boolean doubleBuffered;
 
 		final protected int numRenderingThreads;
 
+		/**
+		 * Create a factory for {@link SimpleRenderer SimpleRenderers} with the
+		 * given multi-threading and double-buffering properties.
+		 *
+		 * @param doubleBuffered
+		 *            Whether to use double buffered rendering.
+		 * @param numRenderingThreads
+		 *            How many threads to use for rendering.
+		 */
 		public Factory( final boolean doubleBuffered, final int numRenderingThreads )
 		{
 			this.doubleBuffered = doubleBuffered;
