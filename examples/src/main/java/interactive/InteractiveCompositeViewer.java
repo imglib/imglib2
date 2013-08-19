@@ -43,7 +43,7 @@ import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.ui.viewer.InteractiveViewer2D;
 import net.imglib2.view.Views;
 import net.imglib2.view.composite.CompositeView;
@@ -54,20 +54,23 @@ public class InteractiveCompositeViewer
 	final static public void main( final String[] args ) throws ImgIOException
 	{
 		final String filename = "bike2-composite.tif";
-		final ImgPlus< UnsignedByteType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< UnsignedByteType >(), new UnsignedByteType() );
+		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< FloatType >(), new FloatType() );
 
-		final CompositeView< UnsignedByteType, NumericComposite< UnsignedByteType > > compositeView =
+		final CompositeView< FloatType, NumericComposite< FloatType > > compositeView =
 				Views.collapseNumeric( Views.extendZero( img ), ( int )img.dimension( 2 ) );
 
-		final Converter< NumericComposite< UnsignedByteType >, ARGBType > converter =
-				new Converter< NumericComposite< UnsignedByteType >, ARGBType >()
+		final Converter< NumericComposite< FloatType >, ARGBType > converter =
+				new Converter< NumericComposite< FloatType >, ARGBType >()
 		{
 			@Override
-			public void convert( final NumericComposite< UnsignedByteType > input, final ARGBType output )
+			public void convert( final NumericComposite< FloatType > input, final ARGBType output )
 			{
-				final int r = input.get( 0 ).getInteger();
-				final int g = input.get( 1 ).getInteger();
-				final int b = input.get( 2 ).getInteger();
+				int r = (int) input.get( 0 ).getRealDouble();
+				r = r > 255 ? 255 : r;
+				int g = (int) input.get( 1 ).getRealDouble();
+				g = g > 255 ? 255 : g;
+				int b = (int) input.get( 2 ).getRealDouble();
+				b = b > 255 ? 255 : b;
 
 				output.set( ( ( ( ( r << 8 ) | g ) << 8 ) | b ) | 0xff000000 );
 			}
@@ -80,7 +83,7 @@ public class InteractiveCompositeViewer
 
 		System.out.println( compositeView.numDimensions() );
 
-		final InteractiveViewer2D< NumericComposite< UnsignedByteType > > viewer = new InteractiveViewer2D< NumericComposite< UnsignedByteType > >( w, h, compositeView, initial, converter );
+		final InteractiveViewer2D< NumericComposite< FloatType > > viewer = new InteractiveViewer2D< NumericComposite< FloatType > >( w, h, compositeView, initial, converter );
 		viewer.getDisplayCanvas().addOverlayRenderer( new LogoPainter() );
 		viewer.requestRepaint();
 	}
