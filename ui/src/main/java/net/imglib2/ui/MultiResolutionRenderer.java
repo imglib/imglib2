@@ -313,10 +313,12 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	 * Check whether the size of the display component was changed and
 	 * recreate {@link #screenImages} and {@link #screenScaleTransforms} accordingly.
 	 */
-	protected synchronized void checkResize()
+	protected synchronized boolean checkResize()
 	{
 		final int componentW = display.getWidth();
 		final int componentH = display.getHeight();
+		if ( componentW <= 0 || componentH <= 0 )
+			return false;
 		if ( screenImages[ 0 ][ 0 ] == null || screenImages[ 0 ][ 0 ].dimension( 0 ) * screenScales[ 0 ] != componentW || screenImages[ 0 ][ 0 ].dimension( 1 )  * screenScales[ 0 ] != componentH )
 		{
 			for ( int i = 0; i < screenScales.length; ++i )
@@ -338,12 +340,14 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 				scale.set( 0.5 * yScale - 0.5, 1, scale.numDimensions() );
 			}
 		}
+		return true;
 	}
 
 	@Override
 	public boolean paint( final A viewerTransform )
 	{
-		checkResize();
+		if ( !checkResize() )
+			return false;
 
 		// the screen scale at which we will be rendering
 		final int currentScreenScaleIndex;

@@ -152,6 +152,7 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 			}
 		} );
 		frame.setVisible( true );
+		target.setCanvasSize( display.getWidth(), display.getHeight() );
 
 		painterThread.start();
 

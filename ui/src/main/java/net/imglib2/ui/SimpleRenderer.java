@@ -163,10 +163,12 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 	 * Check whether the size of the display component was changed and
 	 * recreate {@link #screenImages} and {@link #screenScaleTransforms} accordingly.
 	 */
-	protected synchronized void checkResize()
+	protected synchronized boolean checkResize()
 	{
 		final int componentW = display.getWidth();
 		final int componentH = display.getHeight();
+		if ( componentW <= 0 || componentH <= 0 )
+			return false;
 		if ( screenImages[ 0 ] == null || screenImages[ 0 ].dimension( 0 ) != componentW || screenImages[ 0 ].dimension( 1 ) != componentH )
 		{
 			for ( int b = 0; b < ( doubleBuffered ? 2 : 1 ); ++b )
@@ -175,12 +177,14 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 				bufferedImages[ b ] = GuiUtil.getBufferedImage( screenImages[ b ] );
 			}
 		}
+		return true;
 	}
 
 	@Override
 	public boolean paint( final A viewerTransform )
 	{
-		checkResize();
+		if ( !checkResize() )
+			return false;
 
 		// the corresponding ARGBScreenImage (to render to)
 		final ARGBScreenImage screenImage;
