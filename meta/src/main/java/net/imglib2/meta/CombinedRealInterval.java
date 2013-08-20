@@ -54,9 +54,10 @@ import net.imglib2.RealPositionable;
  * constituent interval {@link #realMax}s.
  * </p>
  * <p>
- * In the case of {@link TypedUnitRealInterval}s, no reconciliation is done to
- * ensure that overlapping axes have equal units or calibrations; it is assumed
- * that each axis has already been standardized to a common calibration via the
+ * In the case of {@link RealInterval}s which also implement
+ * {@link CalibratedSpace}, no reconciliation is done to ensure that overlapping
+ * axes have equal units or calibrations; it is assumed that each axis has
+ * already been standardized to a common calibration via the
  * {@link CalibratedViews#recalibrate} method.
  * </p>
  * 
