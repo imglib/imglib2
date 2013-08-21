@@ -41,30 +41,59 @@ package net.imglib2.meta;
  * @author Barry DeZonia
  */
 public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends CalibratedRealInterval<A>>
-	extends CombinedRealInterval<A, S>
+	extends CombinedRealInterval<A, S> implements CalibratedRealInterval<A>
 {
 
-	// NOTE: an older version of this class maintained a list of units (and not
-	// the scales). And one could change units and these could be used to scale
-	// data from underlying CalibratedAxes that already had their own different
-	// units. This may have been the wrong approach but if it isn't you can dig
-	// it out of git. That code was committed to the calibration-changes branch
-	// of imglib on Aug 15 2013. Note by maintaining a list of units I also had
-	// to override the add()'s, remove()'s methods to maintain the unit list also.
+	// TODO - these methods will need some TLC. Maybe this class will store its
+	// own copy of calibration values and units. And then setUnit() and
+	// setCalibration() on an axis does a unit converted scaling of existing axes
+	// cal values. Pulling values out of this interval will use views and sampling
+	// as needed to get values along unit/calibration converted points of the
+	// underlying axes.
 
+	@Override
 	public void setUnit(String unit, int d) {
 		axis(d).setUnit(unit);
 	}
 
+	@Override
 	public String unit(int d) {
 		return axis(d).unit();
 	}
 
+	@Override
+	public double calibration(int d) {
+		return axis(d).calibration();
+	}
+
+	@Override
+	public void calibration(double[] cal) {
+		for (int i = 0; i < cal.length; i++)
+			cal[i] = calibration(i);
+	}
+
+	@Override
+	public void calibration(float[] cal) {
+		for (int i = 0; i < cal.length; i++)
+			cal[i] = (float) calibration(i);
+	}
+
+	@Override
 	public void setCalibration(double cal, int d) {
+		// FIXME: do this soon
+		// throw new UnsupportedOperationException("Unimplemented feature");
 		axis(d).setCalibration(cal);
 	}
 
-	public double calibration(int d) {
-		return axis(d).calibration();
+	@Override
+	public void setCalibration(double[] cal) {
+		for (int i = 0; i < cal.length; i++)
+			setCalibration(cal[i], i);
+	}
+
+	@Override
+	public void setCalibration(float[] cal) {
+		for (int i = 0; i < cal.length; i++)
+			setCalibration(cal[i], i);
 	}
 }
