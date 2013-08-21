@@ -37,23 +37,11 @@
 
 package net.imglib2.meta;
 
-// TODO - what other interface should this mix in besides TypedRealInterval
-
 /**
  * @author Barry DeZonia
  */
 public interface CalibratedRealInterval<A extends CalibratedAxis> extends
-	TypedRealInterval<A>
+	TypedRealInterval<A>, CalibratedSpace<A>
 {
-
-	// These babies are necessary
-
-	String unit(int d);
-
-	void setUnit(String unit, int d);
-
-	double calibration(int d);
-
-	void setCalibration(double v, int d);
-
+	// has no additional methods
 }
