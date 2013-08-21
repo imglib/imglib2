@@ -44,6 +44,7 @@ import net.imglib2.img.imageplus.ImagePlusImgs;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.ui.overlay.LogoPainter;
 import net.imglib2.ui.viewer.InteractiveViewer3D;
 import net.imglib2.view.Views;
 

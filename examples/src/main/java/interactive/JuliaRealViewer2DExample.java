@@ -51,6 +51,7 @@ import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.ui.InteractiveDisplayCanvas;
 import net.imglib2.ui.TransformEventHandler2D;
 import net.imglib2.ui.TransformListener;
+import net.imglib2.ui.overlay.LogoPainter;
 import net.imglib2.ui.viewer.InteractiveRealViewer2D;
 
 public class JuliaRealViewer2DExample

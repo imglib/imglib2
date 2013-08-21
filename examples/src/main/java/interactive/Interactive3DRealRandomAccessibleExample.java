@@ -46,6 +46,7 @@ import net.imglib2.display.RealARGBConverter;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.ui.overlay.LogoPainter;
 import net.imglib2.ui.viewer.InteractiveRealViewer3D;
 import net.imglib2.util.Intervals;
 

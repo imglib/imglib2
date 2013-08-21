@@ -53,6 +53,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.ui.overlay.LogoPainter;
 import net.imglib2.ui.viewer.InteractiveViewer2D;
 import net.imglib2.ui.viewer.InteractiveViewer3D;
 import net.imglib2.view.Views;

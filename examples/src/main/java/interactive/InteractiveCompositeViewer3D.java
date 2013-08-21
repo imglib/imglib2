@@ -46,6 +46,7 @@ import net.imglib2.io.ImgOpener;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.ui.overlay.LogoPainter;
 import net.imglib2.ui.viewer.InteractiveViewer3D;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
@@ -91,7 +92,8 @@ public class InteractiveCompositeViewer3D
 
 		System.out.println( compositeView.numDimensions() );
 
-		final InteractiveViewer3D< NumericComposite< UnsignedShortType >> viewer = new InteractiveViewer3D< NumericComposite< UnsignedShortType > >( w, h, compositeView, xyzc, initial, converter );
+		final InteractiveViewer3D< NumericComposite< UnsignedShortType >> viewer =
+				new InteractiveViewer3D< NumericComposite< UnsignedShortType > >( w, h, compositeView, xyzc, initial, converter );
 		viewer.getDisplayCanvas().addOverlayRenderer( new LogoPainter() );
 		viewer.requestRepaint();
 	}
