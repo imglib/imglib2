@@ -44,6 +44,7 @@ import net.imglib2.io.ImgOpener;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.ui.overlay.LogoPainter;
 import net.imglib2.ui.viewer.InteractiveViewer2D;
 import net.imglib2.view.Views;
 import net.imglib2.view.composite.CompositeView;

@@ -49,6 +49,7 @@ import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.ui.overlay.LogoPainter;
 import net.imglib2.ui.viewer.InteractiveRealViewer2D;
 
 public class NearestNeighborSearchRealViewer2DExample< T extends NumericType< T > & NativeType< T > >
@@ -93,5 +94,4 @@ public class NearestNeighborSearchRealViewer2DExample< T extends NumericType< T 
 		viewer.getDisplayCanvas().addOverlayRenderer( logo );
 		viewer.requestRepaint();
 	}
-
 }

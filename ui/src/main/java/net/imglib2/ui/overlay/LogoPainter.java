@@ -35,18 +35,16 @@
  * #L%
  */
 
-package interactive;
+package net.imglib2.ui.overlay;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.ChannelARGBConverter;
-import net.imglib2.display.CompositeXYProjector;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
+import javax.imageio.ImageIO;
+
 import net.imglib2.ui.OverlayRenderer;
 
 /**
@@ -58,7 +56,7 @@ public class LogoPainter implements OverlayRenderer
 	 * Image (the ImgLib2 logo) to overlay on the top-right corner of the
 	 * {@link #img}.
 	 */
-	final private ARGBScreenImage imgLib2Overlay;
+	final private BufferedImage imgLib2Overlay;
 
 	private final int border = 5;
 
@@ -72,8 +70,7 @@ public class LogoPainter implements OverlayRenderer
 
 	public LogoPainter()
 	{
-//		this( "imglib2-logo-35x40.png" );
-		this( "/Users/pietzsch/workspace/imglib/examples/imglib2-logo-35x40.png" );
+		this( LogoPainter.class.getResource( "/imglib2-logo-35x40.png" ) );
 	}
 
 	public LogoPainter( final String overlayFilename )
@@ -82,8 +79,19 @@ public class LogoPainter implements OverlayRenderer
 
 		if ( imgLib2Overlay != null )
 		{
-			overlaySize[ 0 ] = ( int ) imgLib2Overlay.dimension( 0 );
-			overlaySize[ 1 ] = ( int ) imgLib2Overlay.dimension( 1 );
+			overlaySize[ 0 ] = imgLib2Overlay.getWidth();
+			overlaySize[ 1 ] = imgLib2Overlay.getHeight();
+		}
+	}
+	
+	public LogoPainter( final URL overlayUrl )
+	{
+		imgLib2Overlay = loadImgLib2Overlay( overlayUrl );
+
+		if ( imgLib2Overlay != null )
+		{
+			overlaySize[ 0 ] = imgLib2Overlay.getWidth();
+			overlaySize[ 1 ] = imgLib2Overlay.getHeight();
 		}
 	}
 
@@ -99,7 +107,7 @@ public class LogoPainter implements OverlayRenderer
 		{
 			final int x = canvasW - overlaySize[ 0 ] - border;
 			final int y = border;
-			g.drawImage( imgLib2Overlay.image(), x, y, overlaySize[ 0 ], overlaySize[ 1 ], null );
+			g.drawImage( imgLib2Overlay, x, y, overlaySize[ 0 ], overlaySize[ 1 ], null );
 		}
 	}
 
@@ -118,21 +126,35 @@ public class LogoPainter implements OverlayRenderer
 	 *            name of the image file
 	 * @return the loaded image or null if something went wrong.
 	 */
-	private ARGBScreenImage loadImgLib2Overlay( final String overlayFilename )
+	private BufferedImage loadImgLib2Overlay( final String overlayFilename )
 	{
-		Img< UnsignedByteType > overlay;
 		try
 		{
-			overlay = new ImgOpener().openImg( overlayFilename, new ArrayImgFactory< UnsignedByteType >(), new UnsignedByteType() );
+			return ImageIO.read( new File( overlayFilename ) );
 		}
-		catch ( final ImgIOException e )
+		catch ( final IOException e )
 		{
 			return null;
 		}
-		final ARGBScreenImage argb = new ARGBScreenImage( ( int ) overlay.dimension( 0 ), ( int ) overlay.dimension( 1 ) );
-		final CompositeXYProjector< UnsignedByteType > projector = new CompositeXYProjector< UnsignedByteType >( overlay, argb, ChannelARGBConverter.converterListRGBA, 2 );
-		projector.setComposite( true );
-		projector.map();
-		return argb;
+	}
+	
+	/**
+	 * Load the {@link #imgLib2Overlay} (the ImgLib2 logo). This assumes that
+	 * the image is RGBA.
+	 *
+	 * @param overlayFilename
+	 *            name of the image file
+	 * @return the loaded image or null if something went wrong.
+	 */
+	private BufferedImage loadImgLib2Overlay( final URL overlayUrl )
+	{
+		try
+		{
+			return ImageIO.read( overlayUrl );
+		}
+		catch ( final IOException e )
+		{
+			return null;
+		}
 	}
 }
