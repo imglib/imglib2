@@ -55,11 +55,6 @@ public abstract class AbstractRenderer< A > implements Renderer< A >
 	final protected AffineTransformType< A > transformType;
 
 	/**
-	 * TODO
-	 */
-	final protected RenderSource< ?, A > source;
-
-	/**
 	 * Receiver for the {@link BufferedImage BufferedImages} that we render.
 	 */
 	final protected RenderTarget display;
@@ -82,9 +77,8 @@ public abstract class AbstractRenderer< A > implements Renderer< A >
 	 *            Thread that triggers repainting of the display. Requests for
 	 *            repainting are send there.
 	 */
-	public AbstractRenderer( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final RenderTarget display, final PainterThread painterThread )
+	public AbstractRenderer( final AffineTransformType< A > transformType, final RenderTarget display, final PainterThread painterThread )
 	{
-		this.source = source;
 		this.display = display;
 		this.painterThread = painterThread;
 		this.transformType = transformType;
