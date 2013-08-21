@@ -160,6 +160,11 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 			return new MultiResolutionRenderer< A >( transformType, source, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
 		}
 	}
+	
+	/**
+	 * TODO
+	 */
+	final protected RenderSource< ?, A > source;
 
 	/**
 	 * Currently active projector, used to re-paint the display. It maps the
@@ -269,7 +274,8 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	 */
 	public MultiResolutionRenderer( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final RenderTarget display, final PainterThread painterThread, final double[] screenScales, final long targetRenderNanos, final boolean doubleBuffered, final int numRenderingThreads )
 	{
-		super( transformType, source, display, painterThread );
+		super( transformType, display, painterThread );
+		this.source = source;
 		this.screenScales = screenScales.clone();
 		this.doubleBuffered = doubleBuffered;
 		this.numRenderingThreads = numRenderingThreads;

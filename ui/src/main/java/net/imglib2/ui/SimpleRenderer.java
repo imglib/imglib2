@@ -106,6 +106,11 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 			return new SimpleRenderer< A >( transformType, source, display, painterThread, doubleBuffered, numRenderingThreads );
 		}
 	}
+	
+	/**
+	 * TODO
+	 */
+	final protected RenderSource< ?, A > source;
 
 	/**
 	 * Currently active projector, used to re-paint the display. It maps the
@@ -151,7 +156,8 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 	 */
 	public SimpleRenderer( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final RenderTarget display, final PainterThread painterThread, final boolean doubleBuffered, final int numRenderingThreads )
 	{
-		super( transformType, source, display, painterThread );
+		super( transformType, display, painterThread );
+		this.source = source;
 		this.doubleBuffered = doubleBuffered;
 		this.numRenderingThreads = numRenderingThreads;
 		screenImages = new ARGBScreenImage[ 2 ];
