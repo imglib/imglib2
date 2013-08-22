@@ -80,8 +80,8 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 
 	@Override
 	public void setCalibration(double cal, int d) {
-		// FIXME: do this soon
-		// throw new UnsupportedOperationException("Unimplemented feature");
+		// TODO: we could throw an UnsupportedOperationException. But this class
+		// is already broken. Update this method later.
 		axis(d).setCalibration(cal);
 	}
 
