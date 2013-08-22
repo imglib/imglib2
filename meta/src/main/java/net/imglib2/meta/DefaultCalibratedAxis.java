@@ -86,5 +86,11 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 	public void setUnit(final String unit) {
 		this.unit = unit;
 	}
+	
+	@Override
+	public DefaultCalibratedAxis copy()
+	{
+		return new DefaultCalibratedAxis(Axes.get( type().getLabel()), unit, cal );
+	}
 
 }
