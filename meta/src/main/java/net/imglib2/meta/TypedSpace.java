@@ -56,6 +56,4 @@ public interface TypedSpace<A extends TypedAxis> extends AnnotatedSpace<A> {
 	 */
 	int dimensionIndex(final AxisType axisType);
 
-	AxisType[] getAxes();
-
 }

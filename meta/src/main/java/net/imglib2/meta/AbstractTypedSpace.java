@@ -72,13 +72,4 @@ public abstract class AbstractTypedSpace<A extends TypedAxis> extends
 		return -1;
 	}
 
-	@Override
-	public AxisType[] getAxes() {
-		AxisType[] axes = new AxisType[numDimensions()];
-		for (int i = 0; i < axes.length; i++) {
-			axes[i] = axis(i).type();
-		}
-		return axes;
-	}
-
 }
