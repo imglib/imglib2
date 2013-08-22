@@ -43,12 +43,8 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.meta.ImgPlus;
+import net.imglib2.meta.MetadataUtil;
 import net.imglib2.ops.operation.interval.binary.IntervalsFromDimSelection;
-import net.imglib2.ops.operation.metadata.unary.CopyCalibratedSpace;
-import net.imglib2.ops.operation.metadata.unary.CopyImageMetadata;
-import net.imglib2.ops.operation.metadata.unary.CopyMetadata;
-import net.imglib2.ops.operation.metadata.unary.CopyNamed;
-import net.imglib2.ops.operation.metadata.unary.CopySourced;
 import net.imglib2.ops.operation.subset.views.ImgPlusView;
 import net.imglib2.ops.operation.subset.views.ImgView;
 import net.imglib2.ops.operation.subset.views.LabelingView;
@@ -132,7 +128,7 @@ public final class SubsetOperations
 		else if ( in instanceof ImgPlus )
 		{
 			ImgPlusView< T > imgPlusView = new ImgPlusView< T >( subsetview, ( ( ImgPlus ) in ).factory() );
-			new CopyMetadata( new CopyNamed(), new CopySourced(), new CopyImageMetadata(), new CopyCalibratedSpace( i ) ).compute( ( ImgPlus ) in, imgPlusView );
+			MetadataUtil.copyAndCleanImgPlusMetadata(i, (ImgPlus)in, imgPlusView);
 			return ( I ) imgPlusView;
 		}
 		else if ( in instanceof Img ) { return ( I ) new ImgView< T >( subsetview, ( ( Img ) in ).factory() ); }
