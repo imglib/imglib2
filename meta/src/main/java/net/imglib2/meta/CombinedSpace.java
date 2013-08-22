@@ -84,6 +84,15 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 		return axisTypes.indexOf(axis);
 	}
 
+	@Override
+	public AxisType[] getAxes() {
+		AxisType[] axes = new AxisType[numDimensions()];
+		for (int i = 0; i < axes.length; i++) {
+			axes[i] = axis(i).type();
+		}
+		return axes;
+	}
+
 	// -- AnnotatedSpace methods --
 
 	@Override
