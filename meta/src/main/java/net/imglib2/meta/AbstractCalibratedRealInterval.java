@@ -52,18 +52,6 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 	private final double[] min;
 	private final double[] max;
 
-	/*
-	// TODO FIXME - this seems like a broken ctor. But AbstractData needs a
-	// default ctor.
-
-	public AbstractCalibratedRealInterval() {
-		super(new ArrayList<A>());
-		this.min = new double[0];
-		this.max = new double[0];
-	}
-
-	 */
-
 	public AbstractCalibratedRealInterval(RealInterval interval) {
 		super(interval.numDimensions());
 		this.min = new double[interval.numDimensions()];
@@ -74,6 +62,9 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 
 	public AbstractCalibratedRealInterval(RealInterval interval, A... axes) {
 		super(axes);
+		if (interval.numDimensions() != axes.length) {
+			throw new IllegalArgumentException("dimensions do not match");
+		}
 		this.min = new double[interval.numDimensions()];
 		this.max = min.clone();
 		interval.realMin(min);
@@ -82,10 +73,77 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 
 	public AbstractCalibratedRealInterval(RealInterval interval, List<A> axes) {
 		super(axes);
+		if (interval.numDimensions() != axes.size()) {
+			throw new IllegalArgumentException("dimensions do not match");
+		}
 		this.min = new double[interval.numDimensions()];
 		this.max = min.clone();
 		interval.realMin(min);
 		interval.realMax(max);
+	}
+
+	public AbstractCalibratedRealInterval(double[] extents) {
+		super(extents.length);
+		this.min = new double[extents.length];
+		this.max = new double[extents.length];
+		for (int i = 0; i < extents.length; i++) {
+			// NB : -1 behavior matches AbstractRealInterval
+			max[i] = extents[i] - 1;
+		}
+	}
+
+	public AbstractCalibratedRealInterval(double[] extents, A... axes) {
+		super(axes);
+		if (extents.length != axes.length) {
+			throw new IllegalArgumentException("dimensions do not match");
+		}
+		this.min = new double[extents.length];
+		this.max = new double[extents.length];
+		for (int i = 0; i < extents.length; i++) {
+			// NB : -1 behavior matches AbstractRealInterval
+			max[i] = extents[i] - 1;
+		}
+	}
+
+	public AbstractCalibratedRealInterval(double[] extents, List<A> axes) {
+		super(axes);
+		if (extents.length != axes.size()) {
+			throw new IllegalArgumentException("dimensions do not match");
+		}
+		this.min = new double[extents.length];
+		this.max = new double[extents.length];
+		for (int i = 0; i < extents.length; i++) {
+			// NB : -1 behavior matches AbstractRealInterval
+			max[i] = extents[i] - 1;
+		}
+	}
+
+	public AbstractCalibratedRealInterval(double[] min, double[] max) {
+		super(min.length);
+		if (min.length != max.length) {
+			throw new IllegalArgumentException("dimensions do not match");
+		}
+		this.min = min.clone();
+		this.max = max.clone();
+	}
+
+	public AbstractCalibratedRealInterval(double[] min, double[] max, A... axes) {
+		super(axes);
+		if ((min.length != max.length) || (min.length != axes.length)) {
+			throw new IllegalArgumentException("dimensions do not match");
+		}
+		this.min = min.clone();
+		this.max = max.clone();
+	}
+
+	public AbstractCalibratedRealInterval(double[] min, double[] max, List<A> axes)
+	{
+		super(axes);
+		if ((min.length != max.length) || (min.length != axes.size())) {
+			throw new IllegalArgumentException("dimensions do not match");
+		}
+		this.min = min.clone();
+		this.max = max.clone();
 	}
 
 	@Override

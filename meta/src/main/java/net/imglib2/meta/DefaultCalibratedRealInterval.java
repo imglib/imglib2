@@ -48,10 +48,6 @@ public class DefaultCalibratedRealInterval extends
 	AbstractCalibratedRealInterval<CalibratedAxis>
 {
 
-	// public DefaultCalibratedRealInterval() {
-	// super();
-	// }
-
 	public DefaultCalibratedRealInterval(RealInterval interval) {
 		super(interval);
 	}
@@ -66,5 +62,36 @@ public class DefaultCalibratedRealInterval extends
 		List<CalibratedAxis> axes)
 	{
 		super(interval, axes);
+	}
+
+	public DefaultCalibratedRealInterval(double[] extents) {
+		super(extents);
+	}
+
+	public DefaultCalibratedRealInterval(double[] extents, CalibratedAxis... axes)
+	{
+		super(extents, axes);
+	}
+
+	public DefaultCalibratedRealInterval(double[] extents,
+		List<CalibratedAxis> axes)
+	{
+		super(extents, axes);
+	}
+
+	public DefaultCalibratedRealInterval(double[] min, double[] max) {
+		super(min, max);
+	}
+
+	public DefaultCalibratedRealInterval(double[] min, double[] max,
+		CalibratedAxis... axes)
+	{
+		super(min, max, axes);
+	}
+
+	public DefaultCalibratedRealInterval(double[] min, double[] max,
+		List<CalibratedAxis> axes)
+	{
+		super(min, max, axes);
 	}
 }
