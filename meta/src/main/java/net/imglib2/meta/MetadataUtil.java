@@ -94,7 +94,7 @@ public class MetadataUtil
 	 */
 	public static < C extends CalibratedAxis > CalibratedSpace< C > copyTypedSpace( CalibratedSpace< C > in, CalibratedSpace< C > out )
 	{
-		copyCalibratedAxis( null, in, out );
+		copyTypedSpace( null, in, out );
 		return out;
 	}
 
@@ -147,7 +147,7 @@ public class MetadataUtil
 	 */
 	public static < C extends CalibratedAxis > CalibratedSpace< C > copyAndCleanTypedSpace( Interval inInterval, CalibratedSpace< C > in, CalibratedSpace< C > out )
 	{
-		copyCalibratedAxis( inInterval, in, out );
+		copyTypedSpace( inInterval, in, out );
 		return out;
 	}
 
@@ -191,7 +191,7 @@ public class MetadataUtil
 		}
 	}
 
-	private static < C extends CalibratedAxis > void copyCalibratedAxis( Interval inInterval, CalibratedSpace< C > in, CalibratedSpace< C > out )
+	private static < C extends CalibratedAxis > void copyTypedSpace( Interval inInterval, CalibratedSpace< C > in, CalibratedSpace< C > out )
 	{
 
 		int offset = 0;
@@ -203,12 +203,11 @@ public class MetadataUtil
 			}
 			else
 			{
+				out.setAxis( (C) in.axis( d ).copy(), d- offset );
 				out.setCalibration( in.calibration( d ), d - offset );
 				out.setUnit( in.unit( d ), d - offset );
 			}
 		}
-
-		copyTypedSpace( inInterval, in, out );
 	}
 
 }
