@@ -35,29 +35,63 @@
  * #L%
  */
 
-package net.imglib2;
+package net.imglib2.meta;
+
+import java.util.List;
+
+import net.imglib2.RealInterval;
 
 /**
- * A Euclidean space with associated metadata about each dimension of the space.
- * The nature of the metadata is left intentionally open-ended; at the topmost
- * level, the {@link Axis} interface provides no additional information about a
- * dimensional axis, but it can be extended to do so.
- * <p>
- * One potential use of the {@link Axis} objects is to store calibration and
- * unit information (see the {@code imglib2-meta} project), but any desired
- * information about the space's dimensions could conceivably be attached.
- * </p>
- * 
- * @author Curtis Rueden
+ * @author Barry DeZonia
  */
-public interface AnnotatedSpace<A extends Axis> extends EuclideanSpace {
+public class DefaultCalibratedRealInterval extends
+	AbstractCalibratedRealInterval<CalibratedAxis>
+{
 
-	/** Gets the axis associated with the given dimension of the space. */
-	A axis(int d);
+	public DefaultCalibratedRealInterval(RealInterval interval) {
+		super(interval);
+	}
 
-	/** Copies the space's axes into the given array. */
-	void axes(A[] axes);
+	public DefaultCalibratedRealInterval(RealInterval interval,
+		CalibratedAxis... axes)
+	{
+		super(interval, axes);
+	}
 
-	/** Sets the dimensional axis associated with the given dimension. */
-	void setAxis(A axis, int d);
+	public DefaultCalibratedRealInterval(RealInterval interval,
+		List<CalibratedAxis> axes)
+	{
+		super(interval, axes);
+	}
+
+	public DefaultCalibratedRealInterval(double[] extents) {
+		super(extents);
+	}
+
+	public DefaultCalibratedRealInterval(double[] extents, CalibratedAxis... axes)
+	{
+		super(extents, axes);
+	}
+
+	public DefaultCalibratedRealInterval(double[] extents,
+		List<CalibratedAxis> axes)
+	{
+		super(extents, axes);
+	}
+
+	public DefaultCalibratedRealInterval(double[] min, double[] max) {
+		super(min, max);
+	}
+
+	public DefaultCalibratedRealInterval(double[] min, double[] max,
+		CalibratedAxis... axes)
+	{
+		super(min, max, axes);
+	}
+
+	public DefaultCalibratedRealInterval(double[] min, double[] max,
+		List<CalibratedAxis> axes)
+	{
+		super(min, max, axes);
+	}
 }

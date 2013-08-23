@@ -35,29 +35,48 @@
  * #L%
  */
 
-package net.imglib2;
+package net.imglib2.meta;
+
+import net.imglib2.Interval;
+import net.imglib2.RealInterval;
 
 /**
- * A Euclidean space with associated metadata about each dimension of the space.
- * The nature of the metadata is left intentionally open-ended; at the topmost
- * level, the {@link Axis} interface provides no additional information about a
- * dimensional axis, but it can be extended to do so.
- * <p>
- * One potential use of the {@link Axis} objects is to store calibration and
- * unit information (see the {@code imglib2-meta} project), but any desired
- * information about the space's dimensions could conceivably be attached.
- * </p>
- * 
- * @author Curtis Rueden
+ * @author Barry DeZonia
  */
-public interface AnnotatedSpace<A extends Axis> extends EuclideanSpace {
+public class IntervalUtils {
 
-	/** Gets the axis associated with the given dimension of the space. */
-	A axis(int d);
+	/**
+	 * Gets the dimensions of an {@link Interval}.
+	 */
+	public long[] getDims(Interval interval) {
+		long[] dims = new long[interval.numDimensions()];
+		interval.dimensions(dims);
+		return dims;
+	}
 
-	/** Copies the space's axes into the given array. */
-	void axes(A[] axes);
+	/**
+	 * Gets the extents of a {@link RealInterval}. These extents are uncalibrated.
+	 */
+	public <A extends CalibratedAxis> double[] getExtents(RealInterval interval) {
+		double[] extents = new double[interval.numDimensions()];
+		for (int i = 0; i < extents.length; i++) {
+			extents[i] = interval.realMax(i) - interval.realMin(i);
+		}
+		return extents;
+	}
 
-	/** Sets the dimensional axis associated with the given dimension. */
-	void setAxis(A axis, int d);
+	/**
+	 * Gets the extents of a {@link CalibratedRealInterval}. These extents are
+	 * calibrated.
+	 */
+	public <A extends CalibratedAxis> double[] getCalibratedExtents(
+		CalibratedRealInterval<A> interval)
+	{
+		double[] extents = getExtents(interval);
+		for (int i = 0; i < extents.length; i++) {
+			extents[i] *= interval.axis(i).calibration();
+		}
+		return extents;
+	}
+
 }
