@@ -54,11 +54,10 @@ import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 
 /**
- * A region of interest that is defined as a list of closed Beziér curves, combined via the
- * even/odd winding rule.
- *
- * TODO: re-implement it without using AWT, to allow use of ImgLib, say, on Android
- *
+ * A region of interest that is defined as a list of closed Beziér curves,
+ * combined via the even/odd winding rule. TODO: re-implement it without using
+ * AWT, to allow use of ImgLib, say, on Android
+ * 
  * @author Johannes Schindelin
  */
 public class GeneralPathRegionOfInterest extends
@@ -162,6 +161,12 @@ public class GeneralPathRegionOfInterest extends
 
 	private void ensureStripes() {
 		if (stripes != null) return;
+
+		// handle degenerate case gracefully
+		if (path.getPathIterator(null).isDone()) {
+			stripes = new long[0];
+			return;
+		}
 
 		Rectangle2D bounds = path.getBounds2D();
 		int left = (int)Math.floor(bounds.getMinX());
