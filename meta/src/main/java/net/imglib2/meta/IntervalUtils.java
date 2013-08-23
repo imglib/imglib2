@@ -42,7 +42,7 @@ import net.imglib2.RealInterval;
 /**
  * @author Barry DeZonia
  */
-public class RealIntervalUtils {
+public class IntervalUtils {
 
 	/**
 	 * Gets the extents of a {@link RealInterval}. These extents are uncalibrated.
