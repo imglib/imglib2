@@ -37,12 +37,22 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.Interval;
 import net.imglib2.RealInterval;
 
 /**
  * @author Barry DeZonia
  */
 public class IntervalUtils {
+
+	/**
+	 * Gets the dimensions of an {@link Interval}.
+	 */
+	public long[] getDims(Interval interval) {
+		long[] dims = new long[interval.numDimensions()];
+		interval.dimensions(dims);
+		return dims;
+	}
 
 	/**
 	 * Gets the extents of a {@link RealInterval}. These extents are uncalibrated.
