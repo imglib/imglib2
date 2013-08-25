@@ -54,7 +54,7 @@ public final class IntervalUtils {
 	/**
 	 * Gets the dimensions of an {@link Interval}.
 	 */
-	public long[] getDims(final Interval interval) {
+	public static long[] getDims(final Interval interval) {
 		final long[] dims = new long[interval.numDimensions()];
 		interval.dimensions(dims);
 		return dims;
@@ -63,7 +63,7 @@ public final class IntervalUtils {
 	/**
 	 * Gets the extents of a {@link RealInterval}. These extents are uncalibrated.
 	 */
-	public <A extends CalibratedAxis> double[] getExtents(
+	public static <A extends CalibratedAxis> double[] getExtents(
 		final RealInterval interval)
 	{
 		final double[] extents = new double[interval.numDimensions()];
@@ -77,7 +77,7 @@ public final class IntervalUtils {
 	 * Gets the extents of a {@link CalibratedRealInterval}. These extents are
 	 * calibrated.
 	 */
-	public <A extends CalibratedAxis> double[] getCalibratedExtents(
+	public static <A extends CalibratedAxis> double[] getCalibratedExtents(
 		final CalibratedRealInterval<A> interval)
 	{
 		final double[] extents = getExtents(interval);
