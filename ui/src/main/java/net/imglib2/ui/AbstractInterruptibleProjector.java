@@ -21,7 +21,7 @@ abstract public class AbstractInterruptibleProjector< A, B > extends AbstractInt
 {
 	final protected Converter< ? super A, B > converter;
 	final protected RandomAccessibleInterval< B > target;
-	final int numThreads;
+	final protected int numThreads;
 	
 	protected long lastFrameRenderNanoTime;
 
