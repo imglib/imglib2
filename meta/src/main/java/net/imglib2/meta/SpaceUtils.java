@@ -37,8 +37,12 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.EuclideanSpace;
 
 /**
+ * Utility methods for working with {@link EuclideanSpace}, particularly
+ * {@link TypedSpace}.
+ * 
  * @author Barry DeZonia
  */
 public final class SpaceUtils {

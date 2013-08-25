@@ -41,6 +41,8 @@ import net.imglib2.Interval;
 import net.imglib2.RealInterval;
 
 /**
+ * Utility methods for working with {@link Interval} and {@link RealInterval}.
+ * 
  * @author Barry DeZonia
  */
 public final class IntervalUtils {
