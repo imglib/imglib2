@@ -56,9 +56,9 @@ public final class SpaceUtils {
 	 * {@link TypedSpace}.
 	 */
 	public static <A extends TypedAxis> AxisType[] getAxisTypes(
-		TypedSpace<A> space)
+		final TypedSpace<A> space)
 	{
-		AxisType[] typeList = new AxisType[space.numDimensions()];
+		final AxisType[] typeList = new AxisType[space.numDimensions()];
 		for (int i = 0; i < typeList.length; i++) {
 			typeList[i] = space.axis(i).type();
 		}
