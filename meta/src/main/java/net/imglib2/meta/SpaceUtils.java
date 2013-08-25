@@ -41,7 +41,11 @@ package net.imglib2.meta;
 /**
  * @author Barry DeZonia
  */
-public class SpaceUtils {
+public final class SpaceUtils {
+
+	private SpaceUtils() {
+		// NB: Prevent instantiation of utility class.
+	}
 
 	/**
 	 * Gets an array of {@link AxisType}'s delineating the types of the axes of a

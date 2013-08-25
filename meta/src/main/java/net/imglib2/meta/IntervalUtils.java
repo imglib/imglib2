@@ -43,7 +43,11 @@ import net.imglib2.RealInterval;
 /**
  * @author Barry DeZonia
  */
-public class IntervalUtils {
+public final class IntervalUtils {
+
+	private IntervalUtils() {
+		// NB: Prevent instantiation of utility class.
+	}
 
 	/**
 	 * Gets the dimensions of an {@link Interval}.
