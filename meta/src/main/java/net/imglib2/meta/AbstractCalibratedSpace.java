@@ -82,7 +82,11 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
 
 	@Override
 	public void setCalibration(double cal, int d) {
-		axis(d).setCalibration(cal);
+		A axis = axis(d);
+		if (axis == null) {
+			throw new IllegalArgumentException("cannot setCalibration() on null axis");
+		}
+		axis.setCalibration(cal);
 	}
 
 	@Override
