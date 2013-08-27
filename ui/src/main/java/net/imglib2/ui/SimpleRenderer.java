@@ -36,8 +36,6 @@
  */
 package net.imglib2.ui;
 
-import java.awt.image.BufferedImage;
-
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.concatenate.Concatenable;
@@ -46,24 +44,16 @@ import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
 import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.ui.util.GuiUtil;
 
 /**
- * A {@link Renderer} for a single {@link RenderSource} that uses multiple
- * threads (if desired) and double-buffering (if desired).
- * <p>
- * Double buffering means that two {@link BufferedImage BufferedImages} are
- * created. After rendering the first one of them and setting it to the
- * {@link RenderTarget}, next time, rendering goes to the second one. Thus, the
- * {@link RenderTarget} will always have a complete image. Rendering will not
- * interfere with painting the {@link BufferedImage} to the canvas.
+ * A {@link AbstractSimpleRenderer} for a single {@link RenderSource}.
  *
  * @param <A>
  *            transform type
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > extends AbstractRenderer< A >
+public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > extends AbstractSimpleRenderer< A >
 {
 	/**
 	 * Factory for creating {@link SimpleRenderer}.
@@ -115,34 +105,6 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 	final protected RenderSource< ?, A > source;
 
 	/**
-	 * Currently active projector, used to re-paint the display. It maps the
-	 * {@link #source} data to {@link #screenImage}.
-	 */
-	protected InterruptibleProjector projector;
-
-	/**
-	 * Whether double buffering is used.
-	 */
-	final protected boolean doubleBuffered;
-
-	/**
-	 * Used to render the image for display. Two images per screen resolution if
-	 * double buffering is enabled. (Index is double-buffer.)
-	 */
-	protected ARGBScreenImage[] screenImages;
-
-	/**
-	 * {@link BufferedImage}s wrapping the data in the {@link #screenImages}.
-	 * (Index is double-buffer.)
-	 */
-	protected BufferedImage[] bufferedImages;
-
-	/**
-	 * How many threads to use for rendering.
-	 */
-	final protected int numRenderingThreads;
-
-	/**
 	 * @param transformType
 	 *            which transformation type (e.g. {@link AffineTransformType2D
 	 *            affine 2d} or {@link AffineTransformType3D affine 3d}) is used
@@ -159,82 +121,22 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 	 * @param numRenderingThreads
 	 *            How many threads to use for rendering.
 	 */
-	public SimpleRenderer( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final RenderTarget display, final PainterThread painterThread, final boolean doubleBuffered, final int numRenderingThreads )
+	public SimpleRenderer(
+			final AffineTransformType< A > transformType,
+			final RenderSource< ?, A > source,
+			final RenderTarget display,
+			final PainterThread painterThread,
+			final boolean doubleBuffered,
+			final int numRenderingThreads )
 	{
-		super( transformType, display, painterThread );
+		super( transformType, display, painterThread, doubleBuffered, numRenderingThreads );
 		this.source = source;
-		this.doubleBuffered = doubleBuffered;
-		this.numRenderingThreads = numRenderingThreads;
-		screenImages = new ARGBScreenImage[ 2 ];
-		bufferedImages = new BufferedImage[ 2 ];
-		projector = null;
-	}
-
-	/**
-	 * Check whether the size of the display component was changed and
-	 * recreate {@link #screenImages} and {@link #screenScaleTransforms} accordingly.
-	 */
-	protected synchronized boolean checkResize()
-	{
-		final int componentW = display.getWidth();
-		final int componentH = display.getHeight();
-		if ( componentW <= 0 || componentH <= 0 )
-			return false;
-		if ( screenImages[ 0 ] == null || screenImages[ 0 ].dimension( 0 ) != componentW || screenImages[ 0 ].dimension( 1 ) != componentH )
-		{
-			for ( int b = 0; b < ( doubleBuffered ? 2 : 1 ); ++b )
-			{
-				screenImages[ b ] = new ARGBScreenImage( componentW, componentH );
-				bufferedImages[ b ] = GuiUtil.getBufferedImage( screenImages[ b ] );
-			}
-		}
-		return true;
 	}
 
 	@Override
-	public boolean paint( final A viewerTransform )
+	protected SimpleInterruptibleProjector< ?, ARGBType > createProjector( final A viewerTransform, final ARGBScreenImage target )
 	{
-		if ( !checkResize() )
-			return false;
-
-		// the corresponding ARGBScreenImage (to render to)
-		final ARGBScreenImage screenImage;
-
-		// the corresponding BufferedImage (to paint to the canvas)
-		final BufferedImage bufferedImage;
-
-		// the projector that paints to the screenImage.
-		final InterruptibleProjector p;
-
-		synchronized( this )
-		{
-			screenImage = screenImages[ 0 ];
-			bufferedImage = bufferedImages[ 0 ];
-			p = createProjector( transformType, source, viewerTransform, screenImage, numRenderingThreads );
-			projector = p;
-		}
-
-		// try rendering
-		final boolean success = p.map();
-
-		synchronized ( this )
-		{
-			// if rendering was not cancelled...
-			if ( success )
-			{
-				display.setBufferedImage( bufferedImage );
-
-				if ( doubleBuffered )
-				{
-					screenImages[ 0 ] = screenImages[ 1 ];
-					screenImages[ 1 ] = screenImage;
-					bufferedImages[ 0 ] = bufferedImages[ 1 ];
-					bufferedImages[ 1 ] = bufferedImage;
-				}
-			}
-		}
-
-		return success;
+		return createProjector( transformType, source, viewerTransform, target, numRenderingThreads );
 	}
 
 	protected static < T, A extends AffineGet & Concatenable< AffineGet > > SimpleInterruptibleProjector< T, ARGBType > createProjector(
@@ -244,14 +146,13 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 			final ARGBScreenImage screenImage,
 			final int numRenderingThreads )
 	{
-		return new SimpleInterruptibleProjector< T, ARGBType >(
-				getTransformedSource( transformType, source, viewerTransform ),
-				source.getConverter(),
-				screenImage,
-				numRenderingThreads );
+		return new SimpleInterruptibleProjector< T, ARGBType >( getTransformedSource( transformType, source, viewerTransform ), source.getConverter(), screenImage, numRenderingThreads );
 	}
 
-	protected static < T, A extends AffineGet & Concatenable< AffineGet > > RandomAccessible< T > getTransformedSource( final AffineTransformType< A > transformType, final RenderSource< T, A > source, final A viewerTransform )
+	protected static < T, A extends AffineGet & Concatenable< AffineGet > > RandomAccessible< T > getTransformedSource(
+			final AffineTransformType< A > transformType,
+			final RenderSource< T, A > source,
+			final A viewerTransform )
 	{
 		final RealRandomAccessible< T > img = source.getInterpolatedSource();
 
