@@ -36,7 +36,6 @@
  */
 package net.imglib2.ui;
 
-import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.display.Projector;
 
@@ -49,7 +48,7 @@ import net.imglib2.display.Projector;
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld
  */
-public interface InterruptibleProjector extends Interval
+public interface InterruptibleProjector
 {
 	/**
 	 * Render the target image.
