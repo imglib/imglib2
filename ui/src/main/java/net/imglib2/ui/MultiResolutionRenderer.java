@@ -172,16 +172,30 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 		this.source = source;
 	}
 
-	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
 	protected SimpleInterruptibleProjector< ?, ARGBType > createProjector( final A viewerTransform, final A screenScaleTransform, final ARGBScreenImage target )
 	{
-		return new SimpleInterruptibleProjector( getTransformedSource( transformType, source, viewerTransform, screenScaleTransform ), source.getConverter(), target, numRenderingThreads );
+		return createProjector( transformType, source, viewerTransform, screenScaleTransform, target, numRenderingThreads );
 	}
 
-	protected static < A extends AffineGet & Concatenable< AffineGet > > RandomAccessible< ? > getTransformedSource( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final A viewerTransform, final A screenScaleTransform )
+	protected static < T, A extends AffineGet & Concatenable< AffineGet > > SimpleInterruptibleProjector< T, ARGBType > createProjector(
+			final AffineTransformType< A > transformType,
+			final RenderSource< T, A > source,
+			final A viewerTransform,
+			final A screenScaleTransform,
+			final ARGBScreenImage screenImage,
+			final int numRenderingThreads )
 	{
-		final RealRandomAccessible< ? > img = source.getInterpolatedSource();
+		return new SimpleInterruptibleProjector< T, ARGBType >( getTransformedSource( transformType, source, viewerTransform, screenScaleTransform ), source.getConverter(), screenImage, numRenderingThreads );
+	}
+
+	protected static < T, A extends AffineGet & Concatenable< AffineGet > > RandomAccessible< T > getTransformedSource(
+			final AffineTransformType< A > transformType,
+			final RenderSource< T, A > source,
+			final A viewerTransform,
+			final A screenScaleTransform )
+	{
+		final RealRandomAccessible< T > img = source.getInterpolatedSource();
 
 		final A sourceToScreen = transformType.createTransform();
 		transformType.set( sourceToScreen, screenScaleTransform );
