@@ -49,8 +49,8 @@ import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.util.GuiUtil;
 
 /**
- * A {@link Renderer} that uses multiple threads (if desired) and
- * double-buffering (if desired).
+ * A {@link Renderer} for a single {@link RenderSource} that uses multiple
+ * threads (if desired) and double-buffering (if desired).
  * <p>
  * Double buffering means that two {@link BufferedImage BufferedImages} are
  * created. After rendering the first one of them and setting it to the
@@ -79,14 +79,16 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 		final protected int numRenderingThreads;
 
 		/**
-		 * TODO
-		 * Create a factory for {@link SimpleRenderer SimpleRenderers} with the
-		 * given multi-threading and double-buffering properties.
+		 * Create a factory for {@link SimpleRenderer SimpleRenderer} of the given source, with the
+		 * specified multi-threading and double-buffering properties.
 		 *
 		 * @param transformType
-		 *            TODO
+		 *            which transformation type (e.g.
+		 *            {@link AffineTransformType2D affine 2d} or
+		 *            {@link AffineTransformType3D affine 3d}) is used for the
+		 *            source and viewer transforms.
 		 * @param source
-		 *            TODO
+		 *            source data to be rendered.
 		 * @param doubleBuffered
 		 *            Whether to use double buffered rendering.
 		 * @param numRenderingThreads
@@ -106,9 +108,9 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 			return new SimpleRenderer< A >( transformType, source, display, painterThread, doubleBuffered, numRenderingThreads );
 		}
 	}
-	
+
 	/**
-	 * TODO
+	 * source data to be rendered.
 	 */
 	final protected RenderSource< ?, A > source;
 
@@ -142,8 +144,11 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 
 	/**
 	 * @param transformType
+	 *            which transformation type (e.g. {@link AffineTransformType2D
+	 *            affine 2d} or {@link AffineTransformType3D affine 3d}) is used
+	 *            for the source and viewer transforms.
 	 * @param source
-	 *            TODO
+	 *            source data to be rendered.
 	 * @param display
 	 *            The canvas that will display the images we render.
 	 * @param painterThread

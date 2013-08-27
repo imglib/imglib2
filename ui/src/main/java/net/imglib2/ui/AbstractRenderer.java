@@ -39,14 +39,19 @@ package net.imglib2.ui;
 import java.awt.image.BufferedImage;
 
 /**
- * TODO
- *
  * Render source data into a {@link BufferedImage} and provide this to a
  * {@link RenderTarget}. Handle repaint requests by sending them to a
  * {@link PainterThread}.
+ * <p>
+ * The source data is rendered given a viewer transform (mapping global to
+ * screen coordinates). Often there is an additional
+ * {@link RenderSource#getSourceTransform() source transform}, mapping source to
+ * global coordinates. The transformation to apply to the source data then is a
+ * composition of this source transform (source to global) and the viewer
+ * transform (global to screen).
  *
  * @param <A>
- *            transform type
+ *            viewer transform type
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -66,10 +71,7 @@ public abstract class AbstractRenderer< A > implements Renderer< A >
 	final protected PainterThread painterThread;
 
 	/**
-	 *
 	 * @param transformType
-	 * @param source
-	 *            TODO
 	 * @param display
 	 *            Receiver for the {@link BufferedImage BufferedImages} that we
 	 *            render.
@@ -101,27 +103,4 @@ public abstract class AbstractRenderer< A > implements Renderer< A >
 	{
 		painterThread.requestRepaint();
 	}
-
-	/**
-	 * TODO
-	 *
-	 * Render the given source to our {@link RenderTarget}.
-	 * <p>
-	 * To do this, transform the source according to the given viewer transform,
-	 * render it to a {@link BufferedImage}, and
-	 * {@link RenderTarget#setBufferedImage(BufferedImage) hand} that
-	 * {@link BufferedImage} to the {@link RenderTarget}.
-	 * <p>
-	 * Note that the total transformation to apply to the source is a
-	 * composition of the {@link RenderSource#getSourceTransform() source
-	 * transform} (source to global coordinates) and the viewer transform
-	 * (global to screen).
-	 *
-	 * @param source
-	 *            the source data to render.
-	 * @param viewerTransform
-	 *            transforms global to screen coordinates.
-	 * @return whether rendering was successful.
-	 */
-//	public abstract boolean paint( final A viewerTransform );
 }

@@ -39,11 +39,17 @@ package net.imglib2.ui;
 import java.awt.image.BufferedImage;
 
 /**
- * TODO
- *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * Renders some source data applying a viewer
+ * transform (mapping global to screen coordinates). Often there is an
+ * additional {@link RenderSource#getSourceTransform() source transform},
+ * mapping source to global coordinates. The transformation to apply to the
+ * source data then is a composition of this source transform (source to global)
+ * and the viewer transform (global to screen).
  *
  * @param <A>
+ *            viewer transform type
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface Renderer< A >
 {
@@ -62,7 +68,6 @@ public interface Renderer< A >
 	public void requestRepaint();
 
 	/**
-	 * TODO
 	 * Render to our {@link RenderTarget}.
 	 * <p>
 	 * To do this, transform the source according to the given viewer transform,

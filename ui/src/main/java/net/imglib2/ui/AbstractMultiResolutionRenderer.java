@@ -283,16 +283,35 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 		}
 		return true;
 	}
-	
-	abstract protected InterruptibleProjector createProjector(
-			final A viewerTransform,
-			final A screenScaleTransform,
-			final ARGBScreenImage target );
 
 	/**
-	 * TODO
+	 * Create a {@link InterruptibleProjector} that renders to the specified
+	 * target image, applying the specified transformations to some source (that
+	 * is specific to the derived class).
 	 *
-	 * @return
+	 * @param viewerTransform
+	 *            transforms global to screen coordinates
+	 * @param screenScaleTransform
+	 *            transforms screen coordinates to coordinates in specified
+	 *            target image For example, if the target image has half the
+	 *            screen resolution, then this will be a scaling by 0.5 in X, Y.
+	 * @param target
+	 *            target image
+	 * @return projector that renders to the specified target image.
+	 */
+	abstract protected InterruptibleProjector createProjector( final A viewerTransform, final A screenScaleTransform, final ARGBScreenImage target );
+
+	/**
+	 * This is called by {@link #paint(AffineSet)} to determine whether another
+	 * repaint is required after the current {@link #requestedScreenScaleIndex}
+	 * has been successfully rendered. If {@link #isComplete()} returns false,
+	 * painting proceeds with the next finer screen scale.
+	 * <p>
+	 * The default implementation checks whether the full canvas resolution has
+	 * been reached. Derived classes may override this to implement different
+	 * checks.
+	 *
+	 * @return true, if another repaint is required.
 	 */
 	protected boolean isComplete()
 	{

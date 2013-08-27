@@ -42,7 +42,6 @@ import java.awt.image.BufferedImage;
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
-import net.imglib2.ui.AbstractRenderer;
 import net.imglib2.ui.AffineTransformType;
 import net.imglib2.ui.MultiResolutionRenderer;
 import net.imglib2.ui.RenderSource;
@@ -94,8 +93,15 @@ public class Defaults
 	public static final long targetRenderNanos = 15 * 1000000;
 
 	/**
-	 * TODO
-	 * Factory to construct the default {@link AbstractRenderer} type with default settings.
+	 * Create a factory to construct the default {@link Renderer} type with
+	 * default settings for a single {@link RenderSource}.
+	 *
+	 * @param transformType
+	 * @param source
+	 *            the source data that will be rendered by the {@link Renderer}
+	 *            that is created by the returned factory.
+	 * @return a factory to construct the default {@link Renderer} for the given
+	 *         {@link RenderSource source data}.
 	 */
 	public static < A extends AffineSet & AffineGet & Concatenable< AffineGet > > RendererFactory< A > rendererFactory( final AffineTransformType< A > transformType, final RenderSource< ?, A > source )
 	{

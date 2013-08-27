@@ -43,11 +43,11 @@ import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
 
 /**
- * TODO
- *
  * Factory to create a {@link Renderer}.
  *
  * @param <A>
+ *            transform type
+ *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface RendererFactory< A extends AffineSet & AffineGet & Concatenable< AffineGet > >

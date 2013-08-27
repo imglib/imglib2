@@ -46,8 +46,7 @@ import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
- * An {@link AbstractMultiResolutionRenderer} for a single
- * {@link RenderSource}.
+ * An {@link AbstractMultiResolutionRenderer} for a single {@link RenderSource}.
  *
  * @param <A>
  *            transform type
@@ -75,15 +74,17 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 		final protected int numRenderingThreads;
 
 		/**
-		 * TODO
 		 * Create a factory for {@link MultiResolutionRenderer
-		 * MultiResolutionRenderers} with the given multi-resolution,
-		 * multi-threading, and double-buffering properties.
+		 * MultiResolutionRenderer} of the given source, with the specified
+		 * multi-resolution, multi-threading, and double-buffering properties.
 		 *
 		 * @param transformType
-		 *            TODO
+		 *            which transformation type (e.g.
+		 *            {@link AffineTransformType2D affine 2d} or
+		 *            {@link AffineTransformType3D affine 3d}) is used for the
+		 *            source and viewer transforms.
 		 * @param source
-		 *            TODO
+		 *            source data to be rendered.
 		 * @param screenScales
 		 *            Scale factors from the viewer canvas to screen images of
 		 *            different resolutions. A scale factor of 1 means 1 pixel
@@ -123,16 +124,19 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 			return new MultiResolutionRenderer< A >( transformType, source, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
 		}
 	}
-	
+
 	/**
-	 * TODO
+	 * source data to be rendered.
 	 */
 	final protected RenderSource< ?, A > source;
 
 	/**
 	 * @param transformType
+	 *            which transformation type (e.g. {@link AffineTransformType2D
+	 *            affine 2d} or {@link AffineTransformType3D affine 3d}) is used
+	 *            for the source and viewer transforms.
 	 * @param source
-	 *            TODO
+	 *            source data to be rendered.
 	 * @param display
 	 *            The canvas that will display the images we render.
 	 * @param painterThread
@@ -158,7 +162,7 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 			final AffineTransformType< A > transformType,
 			final RenderSource< ?, A > source,
 			final RenderTarget display,
-			final PainterThread painterThread, 
+			final PainterThread painterThread,
 			final double[] screenScales,
 			final long targetRenderNanos,
 			final boolean doubleBuffered,
@@ -170,16 +174,9 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
-	protected SimpleInterruptibleProjector< ?, ARGBType > createProjector(
-			final A viewerTransform,
-			final A screenScaleTransform,
-			final ARGBScreenImage target )
+	protected SimpleInterruptibleProjector< ?, ARGBType > createProjector( final A viewerTransform, final A screenScaleTransform, final ARGBScreenImage target )
 	{
-		return new SimpleInterruptibleProjector(
-				getTransformedSource( transformType, source, viewerTransform, screenScaleTransform ),
-				source.getConverter(),
-				target,
-				numRenderingThreads );
+		return new SimpleInterruptibleProjector( getTransformedSource( transformType, source, viewerTransform, screenScaleTransform ), source.getConverter(), target, numRenderingThreads );
 	}
 
 	protected static < A extends AffineGet & Concatenable< AffineGet > > RandomAccessible< ? > getTransformedSource( final AffineTransformType< A > transformType, final RenderSource< ?, A > source, final A viewerTransform, final A screenScaleTransform )

@@ -9,16 +9,16 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.display.Projector;
 import net.imglib2.ui.util.StopWatch;
 
 /**
- * Similar to a {@link Projector}, this renders a target
- * 2D {@link RandomAccessibleInterval} by copying values from a source
- * {@link RandomAccessible}. In contrast to a {@link Projector} rendering can be
- * interrupted, in which case {@link #map(RandomAccessibleInterval, int)} will
- * return false. Also, rendering is multi-threaded and rendering time for the
- * last {@link #map(RandomAccessibleInterval, int)} can be queried.
+ * An {@link InterruptibleProjector}, that renders a target 2D
+ * {@link RandomAccessibleInterval} by copying values from a source
+ * {@link RandomAccessible}. The source can have more dimensions than the
+ * target. Target coordinate <em>(x,y)</em> is copied from source coordinate
+ * <em>(x,y,0,...,0)</em>.
+ * <p>
+ * A specified number of threads is used for rendering.
  *
  * @param <A>
  *            pixel type of the source {@link RandomAccessible}.
@@ -43,13 +43,17 @@ public class SimpleInterruptibleProjector< A, B > extends AbstractInterruptibleP
 	protected long lastFrameRenderNanoTime;
 
 	/**
-	 * Create new projector with the given source and a converter from source to target pixel type.
-	 * TODO
+	 * Create new projector with the given source and a converter from source to
+	 * target pixel type.
 	 *
 	 * @param source
+	 *            source pixels.
 	 * @param converter
+	 *            converts from the source pixel type to the target pixel type.
 	 * @param target
+	 *            the target interval that this projector maps to
 	 * @param numThreads
+	 *            how many threads to use for rendering.
 	 */
 	public SimpleInterruptibleProjector(
 			final RandomAccessible< A > source,
@@ -66,7 +70,7 @@ public class SimpleInterruptibleProjector< A, B > extends AbstractInterruptibleP
 	/**
 	 * Render the 2D target image by copying values from the source. Source can
 	 * have more dimensions than the target. Target coordinate <em>(x,y)</em> is
-	 * copied from source coordinate <em>(x,y,0,...,0)</em>
+	 * copied from source coordinate <em>(x,y,0,...,0)</em>.
 	 *
 	 * @param target
 	 * @param numThreads

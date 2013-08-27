@@ -52,7 +52,7 @@ import net.imglib2.ui.AffineTransformType;
 import net.imglib2.ui.InteractiveDisplayCanvas;
 import net.imglib2.ui.OverlayRenderer;
 import net.imglib2.ui.PainterThread;
-import net.imglib2.ui.RenderSource;
+import net.imglib2.ui.RenderTarget;
 import net.imglib2.ui.Renderer;
 import net.imglib2.ui.RendererFactory;
 import net.imglib2.ui.TransformListener;
@@ -60,11 +60,9 @@ import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
 import net.imglib2.ui.util.GuiUtil;
 
 /**
- * TODO
- *
  * Simple interactive viewer window. It creates a JFrame with the given
  * {@link InteractiveDisplayCanvas canvas}, and sets up transformation handling
- * and painting of a given {@link RenderSource source}.
+ * and rendering.
  * <p>
  * It implements {@link PainterThread.Paintable} to handle {@link #paint()
  * repainting} through a {@link PainterThread}. It implements
@@ -99,16 +97,18 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 	 */
 	final protected PainterThread painterThread;
 
+	/**
+	 * Paints to a {@link RenderTarget} that is shown in the {@link #display
+	 * canvas}.
+	 */
 	final protected Renderer< A > imageRenderer;
 
 	final protected JFrame frame;
 
 	/**
-	 * TODO
-	 *
-	 * Create an interactive viewer window displaying a given
-	 * {@link RenderSource <code>source</code>} in the given
-	 * <code>interactiveDisplayCanvas</code>.
+	 * Create an interactive viewer window displaying the specified
+	 * <code>interactiveDisplayCanvas</code>, and create a {@link Renderer}
+	 * which draws to that canvas.
 	 * <p>
 	 * A {@link Renderer} is created that paints to a
 	 * {@link BufferedImageOverlayRenderer} render target which is displayed on
@@ -119,9 +119,10 @@ public class InteractiveRealViewer< T, A extends AffineSet & AffineGet & Concate
 	 *
 	 * @param transformType
 	 * @param interactiveDisplayCanvas
-	 *            the canvas {@link JComponent} which will show the rendered images.
+	 *            the canvas {@link JComponent} which will show the rendered
+	 *            images.
 	 * @param rendererFactory
-	 *            is used to create a {@link Renderer} for the source.
+	 *            is used to create the {@link Renderer}.
 	 */
 	public InteractiveRealViewer( final AffineTransformType< A > transformType, final C interactiveDisplayCanvas, final RendererFactory< A > rendererFactory )
 	{
