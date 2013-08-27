@@ -48,17 +48,23 @@ import javax.imageio.ImageIO;
 import net.imglib2.ui.OverlayRenderer;
 
 /**
- * Overlay the ImgLib2 logo on the top-right corner of the output window.
+ * Overlay a logo (by default the ImgLib2 logo) on the top-right corner of the
+ * output window.
+ *
+ * @author Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class LogoPainter implements OverlayRenderer
 {
 	/**
-	 * Image (the ImgLib2 logo) to overlay on the top-right corner of the
-	 * {@link #img}.
+	 * Image to overlay on the top-right corner of the output window.
 	 */
 	final private BufferedImage imgLib2Overlay;
 
-	private final int border = 5;
+	/**
+	 * Horizontal and vertical distance in pixels from logo to top-right corner.
+	 */
+	private final int border;
 
 	private final int[] overlaySize = new int[ 2 ];
 
@@ -70,12 +76,13 @@ public class LogoPainter implements OverlayRenderer
 
 	public LogoPainter()
 	{
-		this( LogoPainter.class.getResource( "/imglib2-logo-35x40.png" ) );
+		this( LogoPainter.class.getResource( "/imglib2-logo-35x40.png" ), 5 );
 	}
 
-	public LogoPainter( final String overlayFilename )
+	public LogoPainter( final String overlayFilename, final int border )
 	{
 		imgLib2Overlay = loadImgLib2Overlay( overlayFilename );
+		this.border = border;
 
 		if ( imgLib2Overlay != null )
 		{
@@ -83,10 +90,11 @@ public class LogoPainter implements OverlayRenderer
 			overlaySize[ 1 ] = imgLib2Overlay.getHeight();
 		}
 	}
-	
-	public LogoPainter( final URL overlayUrl )
+
+	public LogoPainter( final URL overlayUrl, final int border )
 	{
 		imgLib2Overlay = loadImgLib2Overlay( overlayUrl );
+		this.border = border;
 
 		if ( imgLib2Overlay != null )
 		{
@@ -137,7 +145,7 @@ public class LogoPainter implements OverlayRenderer
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Load the {@link #imgLib2Overlay} (the ImgLib2 logo). This assumes that
 	 * the image is RGBA.
