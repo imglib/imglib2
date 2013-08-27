@@ -288,8 +288,16 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 			final A viewerTransform,
 			final A screenScaleTransform,
 			final ARGBScreenImage target );
-	
-	abstract protected boolean isComplete();
+
+	/**
+	 * TODO
+	 *
+	 * @return
+	 */
+	protected boolean isComplete()
+	{
+		return requestedScreenScaleIndex == 0;
+	}
 
 	@Override
 	public boolean paint( final A viewerTransform )
@@ -312,10 +320,9 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 		// the projector that paints to the screenImage.
 		final InterruptibleProjector p;
 
-		synchronized( this )
+		synchronized ( this )
 		{
 			renderingMayBeCancelled = ( requestedScreenScaleIndex < maxScreenScaleIndex );
-//			renderingMayBeCancelled = true;
 			currentScreenScaleIndex = requestedScreenScaleIndex;
 			currentScreenScaleTransform = screenScaleTransforms.get( currentScreenScaleIndex );
 
@@ -364,5 +371,5 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 		}
 
 		return success;
-	}	
+	}
 }

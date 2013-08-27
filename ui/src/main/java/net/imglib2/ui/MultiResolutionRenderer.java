@@ -167,12 +167,6 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 		super( transformType, display, painterThread, screenScales, targetRenderNanos, doubleBuffered, numRenderingThreads );
 		this.source = source;
 	}
-	
-	@Override
-	protected boolean isComplete()
-	{
-		return requestedScreenScaleIndex == 0;
-	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
