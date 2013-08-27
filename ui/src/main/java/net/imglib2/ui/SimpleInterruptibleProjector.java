@@ -3,6 +3,7 @@ package net.imglib2.ui;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -32,7 +33,23 @@ public class SimpleInterruptibleProjector< A, B > extends AbstractInterruptibleP
 	final protected RandomAccessible< A > source;
 
 	/**
+	 * Number of threads to use for rendering
+	 */
+	final protected int numThreads;
+
+	/**
+	 * Time needed for rendering the last frame, in nano-seconds.
+	 */
+	protected long lastFrameRenderNanoTime;
+
+	/**
 	 * Create new projector with the given source and a converter from source to target pixel type.
+	 * TODO
+	 *
+	 * @param source
+	 * @param converter
+	 * @param target
+	 * @param numThreads
 	 */
 	public SimpleInterruptibleProjector(
 			final RandomAccessible< A > source,
@@ -40,13 +57,15 @@ public class SimpleInterruptibleProjector< A, B > extends AbstractInterruptibleP
 			final RandomAccessibleInterval< B > target,
 			final int numThreads )
 	{
-		super( source.numDimensions(), converter, target, numThreads );
+		super( source.numDimensions(), converter, target );
 		this.source = source;
+		this.numThreads = numThreads;
+		lastFrameRenderNanoTime = -1;
 	}
 
 	/**
 	 * Render the 2D target image by copying values from the source. Source can
-	 * have more dimensions than the target Target coordinate <em>(x,y)</em> is
+	 * have more dimensions than the target. Target coordinate <em>(x,y)</em> is
 	 * copied from source coordinate <em>(x,y,0,...,0)</em>
 	 *
 	 * @param target
@@ -134,5 +153,19 @@ public class SimpleInterruptibleProjector< A, B > extends AbstractInterruptibleP
 		lastFrameRenderNanoTime = stopWatch.nanoTime();
 
 		return ! interrupted.get();
+	}
+
+	protected AtomicBoolean interrupted = new AtomicBoolean();
+
+	@Override
+	public void cancel()
+	{
+		interrupted.set( true );
+	}
+
+	@Override
+	public long getLastFrameRenderNanoTime()
+	{
+		return lastFrameRenderNanoTime;
 	}
 }
