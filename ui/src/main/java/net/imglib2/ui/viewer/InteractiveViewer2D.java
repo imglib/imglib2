@@ -56,7 +56,7 @@ import net.imglib2.ui.util.InterpolatingSource;
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class InteractiveViewer2D< T extends NumericType< T > > extends InteractiveRealViewer< T, AffineTransform2D, InteractiveDisplayCanvasComponent< AffineTransform2D > >
+public class InteractiveViewer2D< T extends NumericType< T > > extends InteractiveRealViewer< AffineTransform2D, InteractiveDisplayCanvasComponent< AffineTransform2D > >
 {
 	/**
 	 * Create an interactive viewer for a 2D {@link RandomAccessible}.
