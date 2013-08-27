@@ -43,7 +43,7 @@ package net.imglib2.meta;
  * @author Curtis Rueden
  * @see ImgPlus
  */
-public interface Metadata extends Named, Sourced,
+public interface ImgPlusMetadata extends Named, Sourced,
 	CalibratedSpace<CalibratedAxis>, ImageMetadata
 {
 	// NB: Marker interface.
