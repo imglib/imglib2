@@ -37,6 +37,7 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.Dimensions;
 import net.imglib2.Interval;
 import net.imglib2.RealInterval;
 
@@ -52,11 +53,11 @@ public final class IntervalUtils {
 	}
 
 	/**
-	 * Gets the dimensions of an {@link Interval}.
+	 * Gets the dimensions of a {@link Dimensions}.
 	 */
-	public static long[] getDims(final Interval interval) {
-		final long[] dims = new long[interval.numDimensions()];
-		interval.dimensions(dims);
+	public static long[] getDims(final Dimensions dimensions) {
+		final long[] dims = new long[dimensions.numDimensions()];
+		dimensions.dimensions(dims);
 		return dims;
 	}
 
