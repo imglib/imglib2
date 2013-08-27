@@ -171,7 +171,7 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	@Override
 	protected boolean isComplete()
 	{
-		return requestedScreenScaleIndex > 0;
+		return requestedScreenScaleIndex == 0;
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
