@@ -52,31 +52,31 @@ public class IntervalUtilsTest {
 
 	@Test
 	public void test1() {
-		Interval interval = new FinalInterval(new long[] { 10, 20 });
-		long[] dims = IntervalUtils.getDims(interval);
+		final Interval interval = new FinalInterval(new long[] { 10, 20 });
+		final long[] dims = IntervalUtils.getDims(interval);
 		assertEquals(10, dims[0]);
 		assertEquals(20, dims[1]);
 	}
 
 	@Test
 	public void test2() {
-		RealInterval interval = new FinalRealInterval(new double[] { 7, 13 });
-		double[] extents = IntervalUtils.getExtents(interval);
+		final RealInterval interval = new FinalRealInterval( new double[] { 0, 0 }, new double[] { 7, 13 });
+		final double[] extents = IntervalUtils.getExtents(interval);
 		// TODO this is a little surprising
 		// Imglib subtracts 1 from extents upon construction. This is a convention.
-		assertEquals(6, extents[0], 0);
-		assertEquals(12, extents[1], 0);
+		assertEquals(7, extents[0], 0);
+		assertEquals(13, extents[1], 0);
 	}
 
 	@Test
 	public void test3() {
-		DefaultCalibratedRealInterval interval =
+		final DefaultCalibratedRealInterval interval =
 			new DefaultCalibratedRealInterval(new double[] { 10, 20 });
-		DefaultCalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.X, null, 7);
-		DefaultCalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.Y, null, 9);
+		final DefaultCalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.X, null, 7);
+		final DefaultCalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.Y, null, 9);
 		interval.setAxis(axis0, 0);
 		interval.setAxis(axis1, 1);
-		double[] extents = IntervalUtils.getCalibratedExtents(interval);
+		final double[] extents = IntervalUtils.getCalibratedExtents(interval);
 		// TODO this is a little surprising
 		// Imglib subtracts 1 from extents upon construction. This is a convention.
 		assertEquals(9 * axis0.calibration(), extents[0], 0);
