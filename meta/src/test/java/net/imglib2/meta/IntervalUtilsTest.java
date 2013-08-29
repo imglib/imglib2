@@ -62,8 +62,6 @@ public class IntervalUtilsTest {
 	public void test2() {
 		final RealInterval interval = new FinalRealInterval( new double[] { 0, 0 }, new double[] { 7, 13 });
 		final double[] extents = IntervalUtils.getExtents(interval);
-		// TODO this is a little surprising
-		// Imglib subtracts 1 from extents upon construction. This is a convention.
 		assertEquals(7, extents[0], 0);
 		assertEquals(13, extents[1], 0);
 	}
@@ -77,10 +75,8 @@ public class IntervalUtilsTest {
 		interval.setAxis(axis0, 0);
 		interval.setAxis(axis1, 1);
 		final double[] extents = IntervalUtils.getCalibratedExtents(interval);
-		// TODO this is a little surprising
-		// Imglib subtracts 1 from extents upon construction. This is a convention.
-		assertEquals(9 * axis0.calibration(), extents[0], 0);
-		assertEquals(19 * axis1.calibration(), extents[1], 0);
+		assertEquals(10 * axis0.calibration(), extents[0], 0);
+		assertEquals(20 * axis1.calibration(), extents[1], 0);
 	}
 
 }

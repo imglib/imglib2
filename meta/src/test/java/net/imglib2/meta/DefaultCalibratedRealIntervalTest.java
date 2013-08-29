@@ -61,7 +61,7 @@ public class DefaultCalibratedRealIntervalTest {
 		interval.realMin(temp);
 		assertArrayEquals(new double[3], temp, 0);
 		interval.realMax(temp);
-		assertArrayEquals(new double[] { 4, 9, 19 }, temp, 0);
+		assertArrayEquals(new double[] { 5, 10, 20 }, temp, 0);
 		interval.axes(axes);
 		// TODO - this is a little surprising
 		for (CalibratedAxis axis : axes) {
@@ -91,7 +91,7 @@ public class DefaultCalibratedRealIntervalTest {
 		interval.realMin(temp);
 		assertArrayEquals(new double[3], temp, 0);
 		interval.realMax(temp);
-		assertArrayEquals(new double[] { 4, 9, 19 }, temp, 0);
+		assertArrayEquals(new double[] { 5, 10, 20 }, temp, 0);
 		CalibratedAxis[] axes = new CalibratedAxis[extents.length];
 		interval.axes(axes);
 		for (CalibratedAxis axis : axes) {
