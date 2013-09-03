@@ -49,21 +49,29 @@ public class AbstractRealInterval extends AbstractEuclideanSpace  implements Rea
 	final protected double[] max;
 
 	/**
+	 * Creates an <em>n</em>-dimensional {@link AbstractInterval} with min and
+	 * max = 0<sup>n</sup>.
+	 *
+	 * @param n number of dimensions
+	 */
+	public AbstractRealInterval( final int n )
+	{
+		super( n );
+		this.min = new double[ n ];
+		this.max = new double[ n ];
+	}
+
+
+	/**
 	 * Creates a new {@link AbstractRealInterval} using an existing {@link RealInterval}
 	 *
 	 * @param interval
 	 */
 	public AbstractRealInterval( final RealInterval interval )
 	{
-		super( interval.numDimensions() );
-		this.min = new double[ n ];
-		this.max = new double[ n ];
-
-		for ( int d = 0; d < n; ++d )
-		{
-			this.min[ d ] = min[ d ];
-			this.max[ d ] = max[ d ];
-		}
+		this( interval.numDimensions() );
+		interval.realMin( min );
+		interval.realMax( max );
 	}
 
 	/**
@@ -77,21 +85,6 @@ public class AbstractRealInterval extends AbstractEuclideanSpace  implements Rea
 		super( min.length );
 		this.min = min.clone();
 		this.max = max.clone();
-	}
-
-	/**
-	 * Creates a new zero-bounded {@link AbstractRealInterval} with a certain size
-	 *
-	 * @param dimensions
-	 */
-	public AbstractRealInterval( final double[] dimensions )
-	{
-		super( dimensions.length );
-		this.min = new double[ n ];
-		this.max = new double[ n ];
-
-		for ( int d = 0; d < n; ++d )
-			this.max[ d ] = dimensions[ d ] - 1;
 	}
 
 	@Override
