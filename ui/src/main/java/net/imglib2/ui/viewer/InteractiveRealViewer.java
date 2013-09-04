@@ -193,4 +193,14 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 	{
 		imageRenderer.requestRepaint();
 	}
+	
+	/**
+	 * Get the {@link JFrame frame}.
+	 * 
+	 * @return the {@link JFrame frame}
+	 */
+	public JFrame getFrame()
+	{
+		return frame;
+	}
 }
