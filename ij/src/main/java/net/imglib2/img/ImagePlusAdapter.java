@@ -178,6 +178,7 @@ public class ImagePlusAdapter
 	{
 		final int d = image.numDimensions();
 		final float [] spacing = new float[d];
+		final float[] origin = new float[d];
 
 		for( int i = 0; i < d; ++i )
 			spacing[i] = 1f;
@@ -188,11 +189,15 @@ public class ImagePlusAdapter
 		 * matches the dimension; the resulting ImgPlus skips singleton dimensions. */
 		if( c != null ) 
 		{
-			if( d >= 1 )
+			if (d >= 1) {
 				spacing[0] = (float)c.pixelWidth;
+				origin[0] = (float) c.xOrigin;
+			}
 
-			if( d >= 2 )
+			if (d >= 2) {
 				spacing[1] = (float)c.pixelHeight;
+				origin[1] = (float) c.yOrigin;
+			}
 
 			/* Extra dimensions. We must take  care of the dimensions order and
 			 * of singleton dimensions. */
@@ -200,16 +205,19 @@ public class ImagePlusAdapter
 
 			if (imp.getNChannels() > 1) {
 				spacing[currentDim] = 1;
+				origin[currentDim] = 0;
 				currentDim++;
 			}
 
 			if (imp.getNSlices() > 1) {
 				spacing[currentDim] = (float) c.pixelDepth;
+				origin[currentDim] = (float) c.zOrigin;
 				currentDim++;
 			}
 
 			if (imp.getNFrames() > 1) {
 				spacing[currentDim] = (float) c.frameInterval;
+				origin[currentDim] = 0;
 			}
 
 		}
@@ -218,6 +226,7 @@ public class ImagePlusAdapter
 			CalibratedAxis axis = image.axis(i);
 			if (axis instanceof LinearAxis) {
 				((LinearAxis) axis).setScale(spacing[i]);
+				((LinearAxis) axis).setOrigin(origin[i]);
 			}
 		}
 	}
