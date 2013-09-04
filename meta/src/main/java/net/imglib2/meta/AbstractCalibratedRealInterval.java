@@ -63,7 +63,8 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 	public AbstractCalibratedRealInterval(RealInterval interval, A... axes) {
 		super(axes);
 		if (interval.numDimensions() != axes.length) {
-			throw new IllegalArgumentException("dimensions do not match");
+			throw new IllegalArgumentException(
+				"number of provided axes != number of dimensions");
 		}
 		this.min = new double[interval.numDimensions()];
 		this.max = min.clone();
@@ -74,7 +75,8 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 	public AbstractCalibratedRealInterval(RealInterval interval, List<A> axes) {
 		super(axes);
 		if (interval.numDimensions() != axes.size()) {
-			throw new IllegalArgumentException("dimensions do not match");
+			throw new IllegalArgumentException(
+				"number of provided axes != number of dimensions");
 		}
 		this.min = new double[interval.numDimensions()];
 		this.max = min.clone();
@@ -91,7 +93,8 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 	public AbstractCalibratedRealInterval(double[] extents, A... axes) {
 		super(axes);
 		if (extents.length != axes.length) {
-			throw new IllegalArgumentException("dimensions do not match");
+			throw new IllegalArgumentException(
+				"number of provided axes != number of dimensions");
 		}
 		this.min = new double[extents.length];
 		this.max = extents.clone();
@@ -100,7 +103,8 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 	public AbstractCalibratedRealInterval(double[] extents, List<A> axes) {
 		super(axes);
 		if (extents.length != axes.size()) {
-			throw new IllegalArgumentException("dimensions do not match");
+			throw new IllegalArgumentException(
+				"number of provided axes != number of dimensions");
 		}
 		this.min = new double[extents.length];
 		this.max = extents.clone();
@@ -109,7 +113,8 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 	public AbstractCalibratedRealInterval(double[] min, double[] max) {
 		super(min.length);
 		if (min.length != max.length) {
-			throw new IllegalArgumentException("dimensions do not match");
+			throw new IllegalArgumentException(
+				"number of provided axes != number of dimensions");
 		}
 		this.min = min.clone();
 		this.max = max.clone();
@@ -118,7 +123,8 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 	public AbstractCalibratedRealInterval(double[] min, double[] max, A... axes) {
 		super(axes);
 		if ((min.length != max.length) || (min.length != axes.length)) {
-			throw new IllegalArgumentException("dimensions do not match");
+			throw new IllegalArgumentException(
+				"number of provided axes != number of dimensions");
 		}
 		this.min = min.clone();
 		this.max = max.clone();
@@ -128,7 +134,8 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 	{
 		super(axes);
 		if ((min.length != max.length) || (min.length != axes.size())) {
-			throw new IllegalArgumentException("dimensions do not match");
+			throw new IllegalArgumentException(
+				"number of provided axes != number of dimensions");
 		}
 		this.min = min.clone();
 		this.max = max.clone();
