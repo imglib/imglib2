@@ -68,7 +68,8 @@ public class DefaultCalibratedRealIntervalTest {
 			assertNull(axis);
 		}
 		for (int i = 0; i < extents.length; i++) {
-			assertEquals(Double.NaN, interval.axis(i).averageScale(0, 1), 0);
+			// TODO can't run this as default interval ctor has null axes
+			// assertEquals(Double.NaN, interval.axis(i).averageScale(0, 1), 0);
 			assertNull(interval.unit(i));
 		}
 		LinearAxis axis = new LinearAxis(Axes.X, "plorps", 4);
