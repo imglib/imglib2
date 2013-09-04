@@ -37,30 +37,99 @@
 
 package net.imglib2.meta;
 
-import java.util.List;
-
 /**
- * Simple, default {@link CalibratedSpace} implementation.
- * 
- * @author Curtis Rueden
+ * @author Barry DeZonia
  */
-public class DefaultCalibratedSpace extends
-	AbstractCalibratedSpace<CalibratedAxis>
-{
+public class LinearAxis extends AbstractCalibratedAxis {
 
-	public DefaultCalibratedSpace(final int numDims) {
-		super(numDims);
-		for (int d = 0; d < numDims; d++) {
-			setAxis(new LinearAxis(), d);
+	private double scale, origin;
+
+	public LinearAxis() {
+		this(Axes.unknown());
+	}
+
+	public LinearAxis(double scale) {
+		this(Axes.unknown(), scale);
+	}
+
+	public LinearAxis(double scale, double origin) {
+		this(Axes.unknown(), scale, origin);
+	}
+
+	public LinearAxis(AxisType type) {
+		this(type, 1, 0);
+	}
+
+	public LinearAxis(AxisType type, double scale) {
+		this(type, scale, 0);
+	}
+
+	public LinearAxis(AxisType type, double scale, double origin) {
+		super(type);
+		this.scale = scale;
+		this.origin = origin;
+	}
+
+	public LinearAxis(AxisType type, String unit) {
+		this(type, unit, 1, 0);
+	}
+
+	public LinearAxis(AxisType type, String unit, double scale) {
+		this(type, unit, scale, 0);
+	}
+
+	public LinearAxis(AxisType type, String unit, double scale, double origin) {
+		super(type);
+		setUnit(unit);
+		this.scale = scale;
+		this.origin = origin;
+	}
+
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+
+	public double scale() {
+		return scale;
+	}
+
+	public void setOrigin(double origin) {
+		this.origin = origin;
+	}
+
+	public double origin() {
+		return origin;
+	}
+
+	@Override
+	public double calibratedValue(double rawValue) {
+		return scale * rawValue + origin;
+	}
+
+	@Override
+	public double rawValue(double calibratedValue) {
+		return (calibratedValue - origin) / scale;
+	}
+
+	@Override
+	public String equation() {
+		return "y = a + b*x";
+	}
+
+	@Override
+	public String calibratedEquation() {
+		return "y = (" + origin + ") + (" + scale + ") * x";
+	}
+
+	@Override
+	public boolean update(CalibratedAxis other) {
+		if (other instanceof LinearAxis) {
+			setOrigin(((LinearAxis) other).origin());
+			setScale(((LinearAxis) other).scale());
+			setType(other.type());
+			setUnit(other.unit());
+			return true;
 		}
+		return false;
 	}
-
-	public DefaultCalibratedSpace(final CalibratedAxis... axes) {
-		super(axes);
-	}
-
-	public DefaultCalibratedSpace(final List<CalibratedAxis> axes) {
-		super(axes);
-	}
-
 }

@@ -49,6 +49,7 @@ import net.imglib2.RealPositionable;
 import net.imglib2.display.ColorTable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImg;
 
 /**
  * A simple container for storing an {@link Img} together with its metadata.
@@ -90,8 +91,8 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	}
 
 	public ImgPlus(final Img<T> img, final ImgPlusMetadata metadata) {
-		this(img, metadata.getName(), getAxisTypes(img, metadata),
-			getCalibration(img, metadata));
+		this(img, metadata.getName(), getAxisTypes(img, metadata), getCalibration(
+			img, metadata), getUnits(img, metadata));
 		validBits = metadata.getValidBits();
 		compositeChannelCount = metadata.getCompositeChannelCount();
 		final int count = metadata.getColorTableCount();
@@ -102,6 +103,12 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 
 	public ImgPlus(final Img<T> img, final String name,
 		final AxisType[] axisTypes, final double[] cal)
+	{
+		this(img, name, axisTypes, cal, null);
+	}
+
+	public ImgPlus(final Img<T> img, final String name,
+		final AxisType[] axisTypes, final double[] cal, String[] units)
 	{
 		super(img.numDimensions());
 
@@ -128,8 +135,12 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 				"dimensionality: " + validCal.length + " != " + numDims);
 		}
 		for (int d = 0; d < numDims; d++) {
-			axis(d).setType(validTypes[d]);
-			axis(d).setCalibration(validCal[d]);
+			CalibratedAxis axis = axis(d);
+			axis.setType(validTypes[d]);
+			if (axis instanceof LinearAxis) {
+				((LinearAxis) axis).setScale(validCal[d]);
+			}
+			if (units != null) axis.setUnit(units[d]);
 		}
 		channelMin = new ArrayList<Double>();
 		channelMax = new ArrayList<Double>();
@@ -478,9 +489,19 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	{
 		final double[] cal = new double[img.numDimensions()];
 		for (int i = 0; i < cal.length; i++) {
-			cal[i] = metadata.axis(i).calibration();
+			// TODO - using averageScale() introduces error for nonlinear axes
+			cal[i] = metadata.axis(i).averageScale(0, 1);
 		}
 		return cal;
 	}
 
+	private static String[] getUnits(final Img<?> img,
+		final ImgPlusMetadata metadata)
+	{
+		String[] units = new String[img.numDimensions()];
+		for (int i = 0; i < units.length; i++) {
+			units[i] = metadata.axis(i).unit();
+		}
+		return units;
+	}
 }

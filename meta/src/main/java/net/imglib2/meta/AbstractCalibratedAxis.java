@@ -38,38 +38,15 @@
 package net.imglib2.meta;
 
 /**
- * Simple, default {@link CalibratedAxis} implementation.
- * 
- * @author Curtis Rueden
+ * @author Barry DeZonia
  */
-public class DefaultCalibratedAxis extends DefaultTypedAxis implements
+public abstract class AbstractCalibratedAxis extends DefaultTypedAxis implements
 	CalibratedAxis
 {
-
 	private String unit;
-	private double cal;
 
-	public DefaultCalibratedAxis() {
-		this(Axes.unknown());
-	}
-
-	public DefaultCalibratedAxis(final AxisType type) {
-		this(type, null, Double.NaN);
-	}
-
-	public DefaultCalibratedAxis(final AxisType type, final String unit,
-		final double cal)
-	{
+	public AbstractCalibratedAxis(AxisType type) {
 		super(type);
-		setUnit(unit);
-		setCalibration(cal);
-	}
-
-	// -- UnitAxis methods --
-
-	@Override
-	public double calibration() {
-		return cal;
 	}
 
 	@Override
@@ -78,13 +55,13 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 	}
 
 	@Override
-	public void setCalibration(final double cal) {
-		this.cal = cal;
-	}
-
-	@Override
-	public void setUnit(final String unit) {
+	public void setUnit(String unit) {
 		this.unit = unit;
 	}
 
+	@Override
+	public double averageScale(double rawValue1, double rawValue2) {
+		return (calibratedValue(rawValue2) - calibratedValue(rawValue1)) /
+			(rawValue2 - rawValue1);
+	}
 }

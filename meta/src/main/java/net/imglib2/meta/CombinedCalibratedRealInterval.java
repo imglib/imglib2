@@ -61,6 +61,7 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 		return axis(d).unit();
 	}
 
+	/*
 	@Override
 	public double calibration(int d) {
 		return axis(d).calibration();
@@ -96,4 +97,5 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 		for (int i = 0; i < cal.length; i++)
 			setCalibration(cal[i], i);
 	}
+	*/
 }

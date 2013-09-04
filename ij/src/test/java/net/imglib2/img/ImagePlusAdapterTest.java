@@ -142,12 +142,14 @@ public class  ImagePlusAdapterTest <T extends NumericType<T> & NativeType<T>> {
 					if (d < expectedNumDimensions && img.axis(d).type() == Axes.CHANNEL) {
 						
 						// Then the calibration should be 1,
-						assertEquals( 1f, img.axis(skipDim).calibration(), Float.MIN_VALUE);
+						assertEquals(1f, img.axis(skipDim).averageScale(0, 1),
+							Float.MIN_VALUE);
 						
 					} else {
 						
 						// otherwise it should be what we set.
-						assertEquals( calibration[i][d], img.axis(skipDim).calibration(), Float.MIN_VALUE);
+						assertEquals(calibration[i][d], img.axis(skipDim)
+							.averageScale(0, 1), Float.MIN_VALUE);
 					}
 					skipDim++;
 					

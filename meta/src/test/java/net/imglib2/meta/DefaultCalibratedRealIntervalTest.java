@@ -68,24 +68,23 @@ public class DefaultCalibratedRealIntervalTest {
 			assertNull(axis);
 		}
 		for (int i = 0; i < extents.length; i++) {
-			assertEquals(Double.NaN, interval.calibration(i), 0);
+			assertEquals(Double.NaN, interval.axis(i).averageScale(0, 1), 0);
 			assertNull(interval.unit(i));
 		}
-		DefaultCalibratedAxis axis = new DefaultCalibratedAxis(Axes.X, "plorps", 4);
+		LinearAxis axis = new LinearAxis(Axes.X, "plorps", 4);
 		interval.setAxis(axis, 0);
 		assertEquals(Axes.X, interval.axis(0).type());
 		assertEquals("plorps", interval.axis(0).unit());
-		assertEquals(4, interval.axis(0).calibration(), 0);
+		assertEquals(4, interval.axis(0).averageScale(0, 1), 0);
 	}
 
 	@Test
 	public void test2() {
 		double[] extents = new double[] { 5, 10, 20 };
 		double[] temp = new double[extents.length];
-		CalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.LIFETIME, "froop", 1);
-		CalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.PHASE, "orp", 3);
-		CalibratedAxis axis2 =
-			new DefaultCalibratedAxis(Axes.POLARIZATION, "smump", 5);
+		CalibratedAxis axis0 = new LinearAxis(Axes.LIFETIME, "froop", 1);
+		CalibratedAxis axis1 = new LinearAxis(Axes.PHASE, "orp", 3);
+		CalibratedAxis axis2 = new LinearAxis(Axes.POLARIZATION, "smump", 5);
 		interval = new DefaultCalibratedRealInterval(extents, axis0, axis1, axis2);
 		assertEquals(extents.length, interval.numDimensions());
 		interval.realMin(temp);
@@ -103,9 +102,9 @@ public class DefaultCalibratedRealIntervalTest {
 		assertEquals("froop", interval.unit(0));
 		assertEquals("orp", interval.unit(1));
 		assertEquals("smump", interval.unit(2));
-		assertEquals(1, interval.calibration(0), 0);
-		assertEquals(3, interval.calibration(1), 0);
-		assertEquals(5, interval.calibration(2), 0);
+		assertEquals(1, interval.axis(0).averageScale(0, 1), 0);
+		assertEquals(3, interval.axis(1).averageScale(0, 1), 0);
+		assertEquals(5, interval.axis(2).averageScale(0, 1), 0);
 	}
 
 }

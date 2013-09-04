@@ -175,24 +175,29 @@ public class ImageJFunctions
 			final ImgPlus<T> imgplus = (ImgPlus<T>) img;
 			final Calibration impcal = target.getCalibration();
 
+			// TODO - using averageScale() introduces error for nonlinear axes
+
 			final int xaxis = imgplus.dimensionIndex(Axes.X);
 			if (xaxis >= 0) {
-				impcal.pixelWidth = imgplus.axis(xaxis).calibration();
+				impcal.pixelWidth = imgplus.axis(xaxis).averageScale(0, 1);
+				impcal.xOrigin = imgplus.axis(xaxis).calibratedValue(0);
 			}
 
 			final int yaxis = imgplus.dimensionIndex(Axes.Y);
 			if (yaxis >= 0) {
-				impcal.pixelHeight = imgplus.axis(yaxis).calibration();
+				impcal.pixelHeight = imgplus.axis(yaxis).averageScale(0, 1);
+				impcal.yOrigin = imgplus.axis(yaxis).calibratedValue(0);
 			}
 
 			final int zaxis = imgplus.dimensionIndex(Axes.Z);
 			if (zaxis >= 0) {
-				impcal.pixelDepth = imgplus.axis(zaxis).calibration();
+				impcal.pixelDepth = imgplus.axis(zaxis).averageScale(0, 1);
+				impcal.zOrigin = imgplus.axis(zaxis).calibratedValue(0);
 			}
 
 			final int taxis = imgplus.dimensionIndex(Axes.TIME);
 			if (taxis >= 0) {
-				impcal.frameInterval = imgplus.axis(taxis).calibration();
+				impcal.frameInterval = imgplus.axis(taxis).averageScale(0, 1);
 			}
 			target.setTitle( imgplus.getName() );
 		}

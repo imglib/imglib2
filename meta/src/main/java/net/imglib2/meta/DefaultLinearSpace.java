@@ -37,39 +37,22 @@
 
 package net.imglib2.meta;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import java.util.List;
 
 /**
  * @author Barry DeZonia
  */
-public class DefaultCalibratedAxisTest {
+public class DefaultLinearSpace extends AbstractLinearSpace<LinearAxis> {
 
-	private DefaultCalibratedAxis axis;
-
-	@Test
-	public void testDefaultConstruction() {
-		axis = new DefaultCalibratedAxis();
-		assertTrue(axis.type() instanceof Axes.CustomType);
-		assertEquals(null, axis.unit());
-		assertEquals(Double.NaN, axis.calibration(), 0);
+	public DefaultLinearSpace(final int numDims) {
+		super(numDims);
 	}
 
-	@Test
-	public void testAxisTypeConstruction() {
-		axis = new DefaultCalibratedAxis(Axes.FREQUENCY);
-		assertEquals(Axes.FREQUENCY, axis.type());
-		assertEquals(null, axis.unit());
-		assertEquals(Double.NaN, axis.calibration(), 0);
+	public DefaultLinearSpace(final LinearAxis... axes) {
+		super(axes);
 	}
 
-	@Test
-	public void testFullConstruction() {
-		axis = new DefaultCalibratedAxis(Axes.Z, "mm", 14.3);
-		assertEquals(Axes.Z, axis.type());
-		assertEquals("mm", axis.unit());
-		assertEquals(14.3, axis.calibration(), 0);
+	public DefaultLinearSpace(final List<LinearAxis> axes) {
+		super(axes);
 	}
 }

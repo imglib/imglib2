@@ -41,6 +41,7 @@ package net.imglib2.meta;
  * An axis with an associated {@link AxisType}, unit and calibration.
  * 
  * @author Curtis Rueden
+ * @author Barry DeZonia
  * @see TypedAxis
  */
 public interface CalibratedAxis extends TypedAxis {
@@ -48,13 +49,45 @@ public interface CalibratedAxis extends TypedAxis {
 	/** Gets the dimension's unit. */
 	String unit();
 
-	/** Gets the dimension's calibration value. */
-	double calibration();
-
 	/** Sets the dimension's unit. */
 	void setUnit(String unit);
 
-	/** Sets the dimension's image calibration. */
-	void setCalibration(double cal);
+	/** Returns a calibrated value given a raw position along the axis. */
+	double calibratedValue(double rawValue);
 
+	/** Returns a raw value given a calibrated position along the axis. */
+	double rawValue(double calibratedValue);
+
+	/**
+	 * Returns a string containing the equation that represents values along this
+	 * axis. For instance "y = mx + b".
+	 */
+	String equation();
+
+	/**
+	 * Returns a string containing the calibrated equation that represents values
+	 * along this axis. For instance "y = (14)*x + (4)".
+	 */
+	String calibratedEquation();
+
+	// NB - in the limit this is actually the derivative at a point. This works
+	// with error for nonlinear axes. For linear axes there is no error.
+
+	/**
+	 * Returns the average scale between two raw value coordinates along an axis.
+	 * For linear axes this value never varies. For nonlinear axes this returns
+	 * the linear scale between the points and thus is somewhat inaccurate. All
+	 * code that relies on averageScale() points out areas of code that should be
+	 * changed to work with nonlinear axes.
+	 */
+	double averageScale(double rawValue1, double rawValue2);
+
+	/**
+	 * Update this axis' calibration variables to match another calibrated axis'
+	 * values. Returns false if this axis could not determine an update to its
+	 * state that was compatible with the other axis. Returns true if the values
+	 * were successfully updated. Note: it also updates axis type and unit - we
+	 * may need to rethink that.
+	 */
+	boolean update(CalibratedAxis other);
 }

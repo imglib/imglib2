@@ -77,8 +77,11 @@ public class DistanceMap< T extends RealType< T >, K extends RandomAccessibleInt
 				// if (src.dimension(i) > 1) {
 				if ( a < MAX_DIMS )
 				{
-					if ( src instanceof CalibratedSpace )
-						dim_unit[ a ] = ( ( CalibratedSpace<CalibratedAxis> ) src ).calibration( i );
+					if ( src instanceof CalibratedSpace ) {
+						CalibratedAxis axis = ( ( CalibratedSpace<CalibratedAxis> ) src ).axis( i );  
+						// TODO - using averageScale() introduces error for nonlinear axes
+						dim_unit[a] = axis.averageScale(0, 1);
+					}
 					else
 						dim_unit[ a ] = 1;
 

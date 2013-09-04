@@ -70,13 +70,13 @@ public class IntervalUtilsTest {
 	public void test3() {
 		final DefaultCalibratedRealInterval interval =
 			new DefaultCalibratedRealInterval(new double[] { 10, 20 });
-		final DefaultCalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.X, null, 7);
-		final DefaultCalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.Y, null, 9);
+		final LinearAxis axis0 = new LinearAxis(Axes.X, null, 7);
+		final LinearAxis axis1 = new LinearAxis(Axes.Y, null, 9);
 		interval.setAxis(axis0, 0);
 		interval.setAxis(axis1, 1);
 		final double[] extents = IntervalUtils.getCalibratedExtents(interval);
-		assertEquals(10 * axis0.calibration(), extents[0], 0);
-		assertEquals(20 * axis1.calibration(), extents[1], 0);
+		assertEquals(10 * axis0.scale(), extents[0], 0);
+		assertEquals(20 * axis1.scale(), extents[1], 0);
 	}
 
 }

@@ -81,9 +81,12 @@ public final class IntervalUtils {
 	public static <A extends CalibratedAxis> double[] getCalibratedExtents(
 		final CalibratedRealInterval<A> interval)
 	{
-		final double[] extents = getExtents(interval);
+		final double[] extents = new double[interval.numDimensions()];
 		for (int i = 0; i < extents.length; i++) {
-			extents[i] *= interval.axis(i).calibration();
+			CalibratedAxis axis = interval.axis(i);
+			double max = axis.calibratedValue(interval.realMax(i));
+			double min = axis.calibratedValue(interval.realMin(i));
+			extents[i] = max - min;
 		}
 		return extents;
 	}

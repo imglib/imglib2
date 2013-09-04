@@ -40,26 +40,21 @@ package net.imglib2.meta;
 import java.util.List;
 
 /**
- * Simple, default {@link CalibratedSpace} implementation.
- * 
- * @author Curtis Rueden
+ * @author Barry DeZonia
  */
-public class DefaultCalibratedSpace extends
-	AbstractCalibratedSpace<CalibratedAxis>
+public abstract class AbstractLinearSpace<A extends LinearAxis> extends
+	AbstractCalibratedSpace<A>
 {
 
-	public DefaultCalibratedSpace(final int numDims) {
+	public AbstractLinearSpace(final int numDims) {
 		super(numDims);
-		for (int d = 0; d < numDims; d++) {
-			setAxis(new LinearAxis(), d);
-		}
 	}
 
-	public DefaultCalibratedSpace(final CalibratedAxis... axes) {
+	public AbstractLinearSpace(final A... axes) {
 		super(axes);
 	}
 
-	public DefaultCalibratedSpace(final List<CalibratedAxis> axes) {
+	public AbstractLinearSpace(final List<A> axes) {
 		super(axes);
 	}
 

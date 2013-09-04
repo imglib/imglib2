@@ -48,7 +48,9 @@ import net.imglib2.img.imageplus.ImagePlusImgFactory;
 import net.imglib2.img.imageplus.IntImagePlus;
 import net.imglib2.img.imageplus.ShortImagePlus;
 import net.imglib2.meta.Axes;
+import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.ImgPlus;
+import net.imglib2.meta.LinearAxis;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
@@ -213,7 +215,10 @@ public class ImagePlusAdapter
 		}
 
 		for (int i = 0; i < spacing.length; i++) {
-			image.axis(i).setCalibration(spacing[i]);
+			CalibratedAxis axis = image.axis(i);
+			if (axis instanceof LinearAxis) {
+				((LinearAxis) axis).setScale(spacing[i]);
+			}
 		}
 	}
 

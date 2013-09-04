@@ -54,9 +54,9 @@ public class DefaultCalibratedSpaceTest {
 
 	@Test
 	public void test1() {
-		DefaultCalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.X, "nm", 2);
-		DefaultCalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.Y, "nm", 3);
-		DefaultCalibratedAxis axis2 = new DefaultCalibratedAxis(Axes.Z, "cm", 4);
+		LinearAxis axis0 = new LinearAxis(Axes.X, "nm", 2);
+		LinearAxis axis1 = new LinearAxis(Axes.Y, "nm", 3);
+		LinearAxis axis2 = new LinearAxis(Axes.Z, "cm", 4);
 		space = new DefaultCalibratedSpace(axis0, axis1, axis2);
 		assertEquals(Axes.X, space.axis(0).type());
 		assertEquals(Axes.Y, space.axis(1).type());
@@ -64,16 +64,16 @@ public class DefaultCalibratedSpaceTest {
 		assertEquals("nm", space.unit(0));
 		assertEquals("nm", space.unit(1));
 		assertEquals("cm", space.unit(2));
-		assertEquals(2, space.calibration(0), 0);
-		assertEquals(3, space.calibration(1), 0);
-		assertEquals(4, space.calibration(2), 0);
+		assertEquals(2, space.axis(0).calibratedValue(1), 0);
+		assertEquals(3, space.axis(1).calibratedValue(1), 0);
+		assertEquals(4, space.axis(2).calibratedValue(1), 0);
 	}
 
 	@Test
 	public void test2() {
-		DefaultCalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.X, "nm", 2);
-		DefaultCalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.Y, "nm", 3);
-		DefaultCalibratedAxis axis2 = new DefaultCalibratedAxis(Axes.Z, "cm", 4);
+		LinearAxis axis0 = new LinearAxis(Axes.X, "nm", 2);
+		LinearAxis axis1 = new LinearAxis(Axes.Y, "nm", 3);
+		LinearAxis axis2 = new LinearAxis(Axes.Z, "cm", 4);
 		space =
 			new DefaultCalibratedSpace(Arrays.asList(new CalibratedAxis[] { axis0,
 				axis1, axis2 }));
@@ -83,9 +83,9 @@ public class DefaultCalibratedSpaceTest {
 		assertEquals("nm", space.unit(0));
 		assertEquals("nm", space.unit(1));
 		assertEquals("cm", space.unit(2));
-		assertEquals(2, space.calibration(0), 0);
-		assertEquals(3, space.calibration(1), 0);
-		assertEquals(4, space.calibration(2), 0);
+		assertEquals(2, space.axis(0).calibratedValue(1), 0);
+		assertEquals(3, space.axis(1).calibratedValue(1), 0);
+		assertEquals(4, space.axis(2).calibratedValue(1), 0);
 	}
 
 	@Test
@@ -97,12 +97,15 @@ public class DefaultCalibratedSpaceTest {
 		assertNull(space.unit(0));
 		assertNull(space.unit(1));
 		assertNull(space.unit(2));
-		assertEquals(Double.NaN, space.calibration(0), 0);
-		assertEquals(Double.NaN, space.calibration(1), 0);
-		assertEquals(Double.NaN, space.calibration(2), 0);
-		DefaultCalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.X, "nm", 2);
-		DefaultCalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.Y, "nm", 3);
-		DefaultCalibratedAxis axis2 = new DefaultCalibratedAxis(Axes.Z, "cm", 4);
+		assertEquals(0, space.axis(0).calibratedValue(0), 0);
+		assertEquals(0, space.axis(1).calibratedValue(0), 0);
+		assertEquals(0, space.axis(2).calibratedValue(0), 0);
+		assertEquals(1, space.axis(0).calibratedValue(1), 0);
+		assertEquals(1, space.axis(1).calibratedValue(1), 0);
+		assertEquals(1, space.axis(2).calibratedValue(1), 0);
+		LinearAxis axis0 = new LinearAxis(Axes.X, "nm", 2);
+		LinearAxis axis1 = new LinearAxis(Axes.Y, "nm", 3);
+		LinearAxis axis2 = new LinearAxis(Axes.Z, "cm", 4);
 		space.setAxis(axis0, 0);
 		space.setAxis(axis1, 1);
 		space.setAxis(axis2, 2);
@@ -112,8 +115,8 @@ public class DefaultCalibratedSpaceTest {
 		assertEquals("nm", space.unit(0));
 		assertEquals("nm", space.unit(1));
 		assertEquals("cm", space.unit(2));
-		assertEquals(2, space.calibration(0), 0);
-		assertEquals(3, space.calibration(1), 0);
-		assertEquals(4, space.calibration(2), 0);
+		assertEquals(2, space.axis(0).calibratedValue(1), 0);
+		assertEquals(3, space.axis(1).calibratedValue(1), 0);
+		assertEquals(4, space.axis(2).calibratedValue(1), 0);
 	}
 }

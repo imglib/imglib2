@@ -49,12 +49,14 @@ public class Utils {
 		final double[] calibration = Util.getArrayFromValue(1d, 3);
 		for (int d = 0; d < space.numDimensions(); d++) {
 			final CalibratedAxis axis = space.axis(d);
+			// TODO - using averageScale() introduces error for nonlinear axes
+			final double scale = axis.averageScale(0, 1);
 			if (axis.type() == Axes.X) {
-				calibration[0] = axis.calibration();
+				calibration[0] = scale;
 			} else if (axis.type() == Axes.Y) {
-				calibration[1] = axis.calibration();
+				calibration[1] = scale;
 			} else if (axis.type() == Axes.Z) {
-				calibration[2] = axis.calibration();
+				calibration[2] = scale;
 			}
 		}
 		return calibration;

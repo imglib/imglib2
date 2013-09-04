@@ -46,7 +46,9 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
+import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.ImgPlus;
+import net.imglib2.meta.LinearAxis;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
 
@@ -87,8 +89,11 @@ public class HyperSliceImgPlusTest {
 		ArrayImg<UnsignedByteType, ?> img = factory.create(dim , new UnsignedByteType());
 		source = new ImgPlus<UnsignedByteType>(img);
 		for (int d = 0; d < dim.length; d++) {
-			source.axis(d).setType(axisTypes[d]);
-			source.axis(d).setCalibration(calibration[d]);
+			CalibratedAxis axis = source.axis(d);
+			axis.setType(axisTypes[d]);
+			if (axis instanceof LinearAxis) {
+				((LinearAxis) axis).setScale(calibration[d]);
+			}
 		}
 		source.setName(name);
 
@@ -110,7 +115,8 @@ public class HyperSliceImgPlusTest {
 		int index1 = 0;
 		for (int d = 0; d < dim.length; d++) {
 			if (d != REMOVED_DIM_1) {
-				assertEquals(source.axis(d).calibration(), imgplusZ.axis(index1).calibration(), Float.MIN_VALUE);
+				assertEquals(source.axis(d).averageScale(0, 1), imgplusZ.axis(index1)
+					.averageScale(0, 1), Float.MIN_VALUE);
 				assertEquals(source.axis(d), imgplusZ.axis(index1));
 				index1++;
 			}
@@ -119,7 +125,8 @@ public class HyperSliceImgPlusTest {
 		int index2 = 0;
 		for (int d = 0; d < dim.length; d++) {
 			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2+1)) {
-				assertEquals(source.axis(d).calibration(), imgplusZT.axis(index2).calibration(), Float.MIN_VALUE);
+				assertEquals(source.axis(d).averageScale(0, 1), imgplusZT.axis(index2)
+					.averageScale(0, 1), Float.MIN_VALUE);
 				assertEquals(source.axis(d), imgplusZT.axis(index2));
 				index2++;
 			}

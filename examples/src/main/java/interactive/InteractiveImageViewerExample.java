@@ -102,7 +102,8 @@ public class InteractiveImageViewerExample
 			if ( interval instanceof CalibratedSpace )
 			{
 				final CalibratedSpace<?> cs = ( CalibratedSpace<?> ) interval;
-				yScale = cs.axis( 1 ).calibration() / cs.axis( 0 ).calibration();
+				// TODO - using averageScale() introduces error for nonlinear axes
+				yScale = cs.axis(1).averageScale(0, 1) / cs.axis(0).averageScale(0, 1);
 				if ( Double.isNaN( yScale ) || Double.isInfinite( yScale ) )
 					yScale = 1;
 			}
@@ -131,8 +132,8 @@ public class InteractiveImageViewerExample
 			if ( interval instanceof CalibratedSpace )
 			{
 				final CalibratedSpace<?> cs = ( CalibratedSpace<?> ) interval;
-				yScale = cs.axis( 1 ).calibration() / cs.axis( 0 ).calibration();
-				zScale = cs.axis( 2 ).calibration() / cs.axis( 0 ).calibration();
+				yScale = cs.axis(1).averageScale(0, 1) / cs.axis(0).averageScale(0, 1);
+				zScale = cs.axis(2).averageScale(0, 1) / cs.axis(0).averageScale(0, 1);
 				if ( Double.isNaN( yScale ) || Double.isInfinite( yScale ) )
 					yScale = 1;
 				if ( Double.isNaN( zScale ) || Double.isInfinite( zScale ) )

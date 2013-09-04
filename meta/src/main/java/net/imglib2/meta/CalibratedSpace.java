@@ -46,23 +46,24 @@ package net.imglib2.meta;
 public interface CalibratedSpace<A extends CalibratedAxis> extends
 	TypedSpace<A>
 {
-	/** Gets the space's physical calibration at the given dimension. */
-	double calibration(int d);
 
-	/** Copies the space's physical calibration into the given array. */
-	void calibration(double[] cal);
-
-	/** Copies the space's physical calibration into the given array. */
-	void calibration(float[] cal);
-
-	/** Sets the physical calibration for the given dimension. */
-	void setCalibration(double cal, int d);
-
-	/** Sets the physical calibration for all dimensions. */
-	void setCalibration(double[] cal);
-
-	/** Sets the physical calibration for all dimensions. */
-	void setCalibration(float[] cal);
+//	/** Gets the space's physical calibration at the given dimension. */
+//	double calibration(int d);
+//
+//	/** Copies the space's physical calibration into the given array. */
+//	void calibration(double[] cal);
+//
+//	/** Copies the space's physical calibration into the given array. */
+//	void calibration(float[] cal);
+//
+//	/** Sets the physical calibration for the given dimension. */
+//	void setCalibration(double cal, int d);
+//
+//	/** Sets the physical calibration for all dimensions. */
+//	void setCalibration(double[] cal);
+//
+//	/** Sets the physical calibration for all dimensions. */
+//	void setCalibration(float[] cal);
 
 	/** Gets the physical unit for the given dimension. */
 	String unit(int d);
