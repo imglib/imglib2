@@ -3,19 +3,20 @@ package net.imglib2.algorithm.morphology;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.imglib2.IterableInterval;
-import net.imglib2.Localizable;
-import net.imglib2.Point;
+import net.imglib2.EuclideanSpace;
+import net.imglib2.RandomAccess;
 import net.imglib2.algorithm.region.localneighborhood.CenteredRectangleShape;
+import net.imglib2.algorithm.region.localneighborhood.HyperSphereShape;
 import net.imglib2.algorithm.region.localneighborhood.LineShape;
-import net.imglib2.algorithm.region.localneighborhood.Neighborhood;
 import net.imglib2.algorithm.region.localneighborhood.RectangleShape;
 import net.imglib2.algorithm.region.localneighborhood.Shape;
+import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
-import net.imglib2.img.basictypeaccess.array.ByteArray;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.util.Intervals;
+import net.imglib2.img.array.ArrayRandomAccess;
+import net.imglib2.img.basictypeaccess.array.BitArray;
+import net.imglib2.type.logic.BitType;
+import net.imglib2.util.Util;
 
 /**
  * A collection of static utilities to facilitate the creation and visualization
@@ -79,115 +80,176 @@ public class StructuringElements
 		}
 	}
 
-	public static final String printNeighborhood( final Shape shape )
+	public static final String printNeighborhood( final Shape shape, final EuclideanSpace space )
 	{
-		final StringBuilder str = new StringBuilder();
-
-		final Neighborhood< UnsignedByteType > neighborhood = getNeighborhoodFrom( shape );
-		long[] dimensions = new long[ neighborhood.numDimensions() ];
-		neighborhood.dimensions( dimensions );
-
-		for ( int i = 3; i < dimensions.length; i++ )
+		final Img< BitType > neighborhood;
 		{
-			if ( dimensions[ i ] > 1 )
+			final long[] dimensions = Util.getArrayFromValue( 1l, space.numDimensions() );
+
+			final ArrayImg< BitType, BitArray > img = ArrayImgs.bits( dimensions );
+			final ArrayRandomAccess< BitType > randomAccess = img.randomAccess();
+			randomAccess.setPosition( Util.getArrayFromValue( 0, dimensions.length ) );
+			randomAccess.get().set( true );
+			neighborhood = MorphologicalOperations.dilateFull( img, shape, 1 );
+		}
+
+		final StringBuilder str = new StringBuilder();
+		for ( int d = 3; d < neighborhood.numDimensions(); d++ )
+		{
+			if ( neighborhood.dimension( d ) > 1 )
 			{
 				str.append( "Cannot print structuring elements with n dimensions > 3.\n" + "Skipping dimensions beyond 3.\n\n" );
 				break;
 			}
 		}
 
-		long[] min = new long[ neighborhood.numDimensions() ];
-		long[] max = new long[ neighborhood.numDimensions() ];
-		neighborhood.min( min );
-		neighborhood.max( max );
-
-		if ( dimensions.length < 3 )
-		{ // Make it at least 3D
-			final long[] ndims = new long[ 3 ];
-			final long[] nmin = new long[ 3 ];
-			final long[] nmax = new long[ 3 ];
-			ndims[ 2 ] = 1;
-			nmin[ 2 ] = 0;
-			nmax[ 2 ] = 0;
-			if ( dimensions.length < 2 )
-			{
-				ndims[ 1 ] = 1;
-				nmin[ 1 ] = 0;
-				nmax[ 1 ] = 0;
-			}
-			else
-			{
-				ndims[ 1 ] = dimensions[ 1 ];
-				nmin[ 1 ] = min[ 1 ];
-				nmax[ 1 ] = max[ 1 ];
-
-			}
-			if ( dimensions.length < 1 )
-			{
-				ndims[ 0 ] = 1;
-				nmin[ 0 ] = 0;
-				nmax[ 0 ] = 0;
-			}
-			else
-			{
-				ndims[ 0 ] = dimensions[ 0 ];
-				nmin[ 0 ] = min[ 0 ];
-				nmax[ 0 ] = max[ 0 ];
-			}
-			dimensions = ndims;
-			min = nmin;
-			max = nmax;
-		}
-
-		/*
-		 * Now we can loop, being sure we have at least 3 dimensions defined.
-		 */
-		for ( long z = min[ 2 ]; z <= max[ 2 ]; z++ )
+		final RandomAccess< BitType > randomAccess = neighborhood.randomAccess();
+		if ( neighborhood.numDimensions() > 2 )
 		{
-
-			if ( dimensions[ 2 ] > 1 )
-			{
-				str.append( "Z = " + z + ":\n" );
-			}
-
-			for ( long y = min[ 1 ]; y < max[ 1 ]; y++ )
-			{
-				for ( long x = min[ 0 ]; x < max[ 0 ]; x++ )
-				{
-					final Localizable current = new Point( x, y, z );
-					final boolean in = Intervals.contains( neighborhood, current );
-					if ( in )
-					{
-						str.append( "1\t" );
-					}
-					else
-					{
-						str.append( "\t" );
-					}
-				}
-				str.append( "\n" );
-			}
-
+			appendManySlice( randomAccess, neighborhood.dimension( 0 ), neighborhood.dimension( 1 ), neighborhood.dimension( 2 ), str );
+		}
+		else
+		{
+			appendSingleSlice( randomAccess, neighborhood.dimension( 0 ), neighborhood.dimension( 1 ), str );
 		}
 
 		return str.toString();
 	}
 
-	/*
-	 * PRIVATE METHODS
-	 */
-
-	private static final Neighborhood< UnsignedByteType > getNeighborhoodFrom( final Shape shape )
+	private static final void appendSingleSlice( final RandomAccess< BitType > ra, final long maxX, final long maxY, final StringBuilder str )
 	{
-		final ArrayImg< UnsignedByteType, ByteArray > img = ArrayImgs.unsignedBytes( new long[] { 1, 1, 1 } );
-		final IterableInterval< Neighborhood< UnsignedByteType >> neighborhoods = shape.neighborhoods( img );
-		final Neighborhood< UnsignedByteType > neighborhood = neighborhoods.cursor().next();
-		return neighborhood;
+		// Top line
+		str.append( '┌' );
+		for ( long x = 0; x < maxX; x++ )
+		{
+			str.append( '─' );
+		}
+		str.append( "┐\n" );
+		for ( long y = 0; y < maxY; y++ )
+		{
+			str.append( '│' );
+			ra.setPosition( y, 1 );
+			for ( long x = 0; x < maxX; x++ )
+			{
+				ra.setPosition( x, 0 );
+				if ( ra.get().get() )
+				{
+					str.append( '█' );
+				}
+				else
+				{
+					str.append( ' ' );
+				}
+			}
+			str.append( "│\n" );
+		}
+		// Bottom line
+		str.append( '└' );
+		for ( long x = 0; x < maxX; x++ )
+		{
+			str.append( '─' );
+		}
+		str.append( "┘\n" );
+	}
+
+	private static final void appendManySlice( final RandomAccess< BitType > ra, final long maxX, final long maxY, final long maxZ, final StringBuilder str )
+	{
+		// Z names
+		final long width = Math.max( maxX + 3, 9l );
+		for ( int z = 0; z < maxZ; z++ )
+		{
+			final String sample = "Z = " + z + ":";
+			str.append( sample );
+			for ( int i = 0; i < width - sample.length(); i++ )
+			{
+				str.append( ' ' );
+			}
+		}
+		str.append( '\n' );
+
+		// Top line
+		for ( int z = 0; z < maxZ; z++ )
+		{
+			str.append( '┌' );
+			for ( long x = 0; x < maxX; x++ )
+			{
+				str.append( '─' );
+			}
+			str.append( "┐ " );
+			for ( int i = 0; i < width - maxX - 3; i++ )
+			{
+				str.append( ' ' );
+			}
+		}
+		str.append( '\n' );
+
+		// Neighborhood
+		for ( long y = 0; y < maxY; y++ )
+		{
+			ra.setPosition( y, 1 );
+
+			for ( int z = 0; z < maxZ; z++ )
+			{
+				ra.setPosition( z, 2 );
+				str.append( '│' );
+				for ( long x = 0; x < maxX; x++ )
+				{
+					ra.setPosition( x, 0 );
+					if ( ra.get().get() )
+					{
+						str.append( '█' );
+					}
+					else
+					{
+						str.append( ' ' );
+					}
+				}
+				str.append( '│' );
+				for ( int i = 0; i < width - maxX - 2; i++ )
+				{
+					str.append( ' ' );
+				}
+			}
+			str.append( '\n' );
+		}
+
+		// Bottom line
+		for ( int z = 0; z < maxZ; z++ )
+		{
+			str.append( '└' );
+			for ( long x = 0; x < maxX; x++ )
+			{
+				str.append( '─' );
+			}
+			str.append( "┘ " );
+			for ( int i = 0; i < width - maxX - 3; i++ )
+			{
+				str.append( ' ' );
+			}
+		}
+		str.append( '\n' );
 	}
 
 	public static void main( final String[] args )
 	{
-		System.out.println( printNeighborhood( new RectangleShape( 3, true ) ) );
+
+		System.out.println( printNeighborhood( new HyperSphereShape( 3 ), new EuclideanSpace()
+		{
+			@Override
+			public int numDimensions()
+			{
+				return 3;
+			}
+		} ) );
+
+		System.out.println( printNeighborhood( new RectangleShape( 1, true ), new EuclideanSpace()
+		{
+			@Override
+			public int numDimensions()
+			{
+				return 3;
+			}
+		} ) );
 	}
 
 }
