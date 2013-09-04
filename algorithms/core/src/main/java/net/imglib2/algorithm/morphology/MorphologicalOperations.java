@@ -16,7 +16,6 @@ import net.imglib2.multithreading.Chunk;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
@@ -45,11 +44,12 @@ public class MorphologicalOperations
 	 * elements. This allows to simply use a {@link Shape} as a type for these
 	 * structuring elements.
 	 * <p>
-	 * This method relies on on a test to get a minimal value to start comparing
-	 * to other pixels in the neighborhood. It therefore has a small additional
-	 * cost to be able to operate on any
-	 * <code>T extends {@link Comparable} & {@link Type}</code>, compared to
-	 * what be a more specific method that would apply on {@link RealType}.
+	 * This method relies on a specified minimal value to start comparing to
+	 * other pixels in the neighborhood. For this code to properly perform
+	 * dilation, it is sufficient that the specified min value is smaller
+	 * (against {@link Comparable}) than any of the value found in the source
+	 * image. This normally unseen parameter is required to operate on
+	 * <code>T extends {@link Comparable} & {@link Type}</code>.
 	 * <p>
 	 * <b>Warning:</b> Current implementation does not do <i>stricto sensu</i>
 	 * the full dilation. Indeed, if the structuring element has more dimensions
@@ -76,7 +76,7 @@ public class MorphologicalOperations
 	 *            {@link Type}</code>.
 	 * @return a new {@link Img}, possibly of larger dimensions than the source.
 	 */
-	public static < T extends Type< T > & Comparable< T > > Img< T > dilateFull( final Img< T > source, final Shape strel, int numThreads )
+	public static < T extends Type< T > & Comparable< T > > Img< T > dilateFull( final Img< T > source, final Shape strel, final T minVal, int numThreads )
 	{
 		numThreads = Math.max( 1, numThreads );
 
@@ -176,6 +176,95 @@ public class MorphologicalOperations
 				{
 					final RandomAccess< Neighborhood< T >> randomAccess = accessible.randomAccess( source );
 					final Cursor< T > cursorDilated = iterable.cursor();
+					cursorDilated.jumpFwd( chunk.getStartPosition() );
+
+					final T max = source.firstElement().createVariable();
+					for ( long steps = 0; steps < chunk.getLoopSize(); steps++ )
+					{
+						cursorDilated.fwd();
+						randomAccess.setPosition( cursorDilated );
+						final Neighborhood< T > neighborhood = randomAccess.get();
+						final Cursor< T > nc = neighborhood.cursor();
+
+						/*
+						 * Look for max in the neighborhood.
+						 */
+
+						max.set( minVal );
+						while ( nc.hasNext() )
+						{
+							nc.fwd();
+							if ( !Intervals.contains( source, nc ) )
+							{
+								continue;
+							}
+							final T val = nc.get();
+							// We need only Comparable to do this:
+							if ( val.compareTo( max ) > 0 )
+							{
+								max.set( val );
+							}
+						}
+						cursorDilated.get().set( max );
+					}
+
+				}
+			};
+		}
+
+		/*
+		 * Launch calculation
+		 */
+
+		SimpleMultiThreading.startAndJoin( threads );
+
+		/*
+		 * Return
+		 */
+
+		return dilated;
+	}
+
+	public static < T extends Type< T > & Comparable< T > > Img< T > dilate( final Img< T > source, final Shape strel, final T minVal, int numThreads )
+	{
+		numThreads = Math.max( 1, numThreads );
+
+		/*
+		 * Instantiate target images.
+		 */
+
+		final Img< T > dilated = source.factory().create( source, source.firstElement().copy() );
+
+		/*
+		 * Prepare iteration.
+		 */
+
+		final RandomAccessibleInterval< Neighborhood< T >> accessible;
+		if ( numThreads > 1 )
+		{
+			accessible = strel.neighborhoodsRandomAccessibleSafe( source );
+		}
+		else
+		{
+			accessible = strel.neighborhoodsRandomAccessible( source );
+		}
+
+		/*
+		 * Multithread
+		 */
+
+		final Vector< Chunk > chunks = SimpleMultiThreading.divideIntoChunks( dilated.size(), numThreads );
+		final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+		for ( int i = 0; i < threads.length; i++ )
+		{
+			final Chunk chunk = chunks.get( i );
+			threads[ i ] = new Thread( "Morphology dilate thread " + i )
+			{
+				@Override
+				public void run()
+				{
+					final RandomAccess< Neighborhood< T >> randomAccess = accessible.randomAccess( source );
+					final Cursor< T > cursorDilated = dilated.cursor();
 					cursorDilated.jumpFwd( chunk.getStartPosition() );
 
 					final T max = source.firstElement().createVariable();

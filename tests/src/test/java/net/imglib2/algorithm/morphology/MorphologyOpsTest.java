@@ -39,7 +39,7 @@ public class MorphologyOpsTest {
 		final Shape strel = new CenteredRectangleShape(new int[] { 5, 2 }, true);
 		// final Shape strel = new HyperSphereShape(radius)
 		final Img<UnsignedByteType> full = MorphologicalOperations.dilateFull(
-				img, strel, 4);
+				img, strel, new UnsignedByteType(0), 4);
 
 		new ImageJ();
 		ImageJFunctions.show(img);
@@ -75,8 +75,8 @@ public class MorphologyOpsTest {
 		System.out.println("Before:\n" + toString(img, 14));
 		System.out.println();
 		final Img<StringType> dilated = MorphologicalOperations.dilateFull(img,
-				new RectangleShape(1, false), 2);
-		System.out.println("After:\n" + toString(dilated, 14));// DEBUG
+				new RectangleShape(1, false), new StringType(""), 2);
+		System.out.println("After:\n" + toString(dilated, 14));
 
 	}
 
