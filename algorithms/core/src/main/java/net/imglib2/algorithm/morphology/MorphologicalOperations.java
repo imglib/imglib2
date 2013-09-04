@@ -3,12 +3,18 @@
  */
 package net.imglib2.algorithm.morphology;
 
+import java.util.Vector;
+
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.region.localneighborhood.Neighborhood;
 import net.imglib2.algorithm.region.localneighborhood.Shape;
 import net.imglib2.img.Img;
+import net.imglib2.multithreading.Chunk;
+import net.imglib2.multithreading.SimpleMultiThreading;
+import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
@@ -39,11 +45,11 @@ public class MorphologicalOperations
 	 * elements. This allows to simply use a {@link Shape} as a type for these
 	 * structuring elements.
 	 * <p>
-	 * This method relies on {@link RealType} to get a minimal value to start
-	 * comparing to other pixels in the neighborhood. It is therefore the
-	 * limitation on possible T the source types for this method. Another
-	 * approach could have been to pre-compute the minimum over the whole image,
-	 * and relax the constraints on T. This is done in another method. TODO
+	 * This method relies on on a test to get a minimal value to start comparing
+	 * to other pixels in the neighborhood. It therefore has a small additional
+	 * cost to be able to operate on any
+	 * <code>T extends {@link Comparable} & {@link Type}</code>, compared to
+	 * what be a more specific method that would apply on {@link RealType}.
 	 * <p>
 	 * <b>Warning:</b> Current implementation does not do <i>stricto sensu</i>
 	 * the full dilation. Indeed, if the structuring element has more dimensions
@@ -63,14 +69,16 @@ public class MorphologicalOperations
 	 * @param strel
 	 *            the structuring element as a {@link Shape}.
 	 * @param numThreads
-	 *            the number of threads to use for the calculation. TODO
+	 *            the number of threads to use for the calculation.
 	 * @param <T>
 	 *            the type of the source image and the dilation result. Must be
-	 *            a sub-type of {@link RealType}.
+	 *            a sub-type of <code>T extends {@link Comparable} &
+	 *            {@link Type}</code>.
 	 * @return a new {@link Img}, possibly of larger dimensions than the source.
 	 */
-	public static < T extends RealType< T > > Img< T > dilateFull( final Img< T > source, final Shape strel, final int numThreads )
-	{ // TODO make it multithreaded
+	public static < T extends Type< T > & Comparable< T > > Img< T > dilateFull( final Img< T > source, final Shape strel, int numThreads )
+	{
+		numThreads = Math.max( 1, numThreads );
 
 		/*
 		 * Compute target image size
@@ -138,42 +146,82 @@ public class MorphologicalOperations
 		final IntervalView< T > offsetDilated = Views.offset( dilated, offset );
 
 		/*
-		 * Iterate.
+		 * Prepare iteration.
 		 */
 
-		final Cursor< T > cursorDilated = Views.iterable( offsetDilated ).cursor();
-		final RandomAccessibleInterval< Neighborhood< T >> accessible = strel.neighborhoodsRandomAccessible( source );
-		final RandomAccess< Neighborhood< T >> randomAccess = accessible.randomAccess( source );
-
-		final T max = source.firstElement().createVariable();
-		while ( cursorDilated.hasNext() )
+		final RandomAccessibleInterval< Neighborhood< T >> accessible;
+		if ( numThreads > 1 )
 		{
-			cursorDilated.fwd();
-			randomAccess.setPosition( cursorDilated );
-			final Neighborhood< T > neighborhood = randomAccess.get();
-			final Cursor< T > nc = neighborhood.cursor();
-
-			/*
-			 * Look for max in the neighborhood.
-			 */
-
-			max.setReal( max.getMinValue() ); // We need RealType to do this.
-			while ( nc.hasNext() )
-			{
-				nc.fwd();
-				if ( !Intervals.contains( source, nc ) )
-				{
-					continue;
-				}
-				final T val = nc.get();
-				// We need only Comparable to do this:
-				if ( val.compareTo( max ) > 0 )
-				{
-					max.set( val );
-				}
-			}
-			cursorDilated.get().set( max );
+			accessible = strel.neighborhoodsRandomAccessibleSafe( source );
 		}
+		else
+		{
+			accessible = strel.neighborhoodsRandomAccessible( source );
+		}
+		final IterableInterval< T > iterable = Views.iterable( offsetDilated );
+
+		/*
+		 * Multithread
+		 */
+
+		final Vector< Chunk > chunks = SimpleMultiThreading.divideIntoChunks( iterable.size(), numThreads );
+		final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+		for ( int i = 0; i < threads.length; i++ )
+		{
+			final Chunk chunk = chunks.get( i );
+			threads[ i ] = new Thread( "Morphology dilate thread " + i )
+			{
+				@Override
+				public void run()
+				{
+					final RandomAccess< Neighborhood< T >> randomAccess = accessible.randomAccess( source );
+					final Cursor< T > cursorDilated = iterable.cursor();
+					cursorDilated.jumpFwd( chunk.getStartPosition() );
+
+					final T max = source.firstElement().createVariable();
+					for ( long steps = 0; steps < chunk.getLoopSize(); steps++ )
+					{
+						cursorDilated.fwd();
+						randomAccess.setPosition( cursorDilated );
+						final Neighborhood< T > neighborhood = randomAccess.get();
+						final Cursor< T > nc = neighborhood.cursor();
+
+						/*
+						 * Look for max in the neighborhood.
+						 */
+
+						boolean found = false;
+						while ( nc.hasNext() )
+						{
+							nc.fwd();
+							if ( !Intervals.contains( source, nc ) )
+							{
+								continue;
+							}
+							final T val = nc.get();
+							if ( !found )
+							{
+								max.set( val );
+								found = true;
+							}
+							// We need only Comparable to do this:
+							if ( val.compareTo( max ) > 0 )
+							{
+								max.set( val );
+							}
+						}
+						cursorDilated.get().set( max );
+					}
+
+				}
+			};
+		}
+
+		/*
+		 * Launch calculation
+		 */
+
+		SimpleMultiThreading.startAndJoin( threads );
 
 		/*
 		 * Return
@@ -181,5 +229,4 @@ public class MorphologicalOperations
 
 		return dilated;
 	}
-
 }
