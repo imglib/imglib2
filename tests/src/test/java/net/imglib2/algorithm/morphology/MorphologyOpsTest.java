@@ -40,11 +40,13 @@ public class MorphologyOpsTest {
 		// final Shape strel = new HyperSphereShape(radius)
 		final Img<UnsignedByteType> full = MorphologicalOperations.dilateFull(
 				img, strel, new UnsignedByteType(0), 4);
+		final Img<UnsignedByteType> std = MorphologicalOperations.dilate(img,
+				strel, new UnsignedByteType(0), 4);
 
 		new ImageJ();
 		ImageJFunctions.show(img);
 		ImageJFunctions.show(full);
-
+		ImageJFunctions.show(std);
 	}
 
 	public static void weirdTypeTest() {
@@ -74,9 +76,13 @@ public class MorphologyOpsTest {
 
 		System.out.println("Before:\n" + toString(img, 14));
 		System.out.println();
-		final Img<StringType> dilated = MorphologicalOperations.dilateFull(img,
+		final Img<StringType> dilatedFull = MorphologicalOperations.dilateFull(
+				img, new RectangleShape(1, false), new StringType(""), 2);
+		System.out.println("After full:\n" + toString(dilatedFull, 14));
+		System.out.println();
+		final Img<StringType> dilated = MorphologicalOperations.dilate(img,
 				new RectangleShape(1, false), new StringType(""), 2);
-		System.out.println("After:\n" + toString(dilated, 14));
+		System.out.println("After std:\n" + toString(dilated, 14));
 
 	}
 

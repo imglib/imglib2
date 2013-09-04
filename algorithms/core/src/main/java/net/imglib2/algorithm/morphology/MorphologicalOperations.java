@@ -70,6 +70,12 @@ public class MorphologicalOperations
 	 *            the structuring element as a {@link Shape}.
 	 * @param numThreads
 	 *            the number of threads to use for the calculation.
+	 * @param minVal
+	 *            a T containing set to a value smaller than any of the values
+	 *            in the source {@link Img} (against {@link Comparable}. This is
+	 *            required to perform a proper mathematical dilation. Because we
+	 *            operate on a generic {@link Type}, it has to be provided
+	 *            manually.
 	 * @param <T>
 	 *            the type of the source image and the dilation result. Must be
 	 *            a sub-type of <code>T extends {@link Comparable} &
@@ -225,6 +231,43 @@ public class MorphologicalOperations
 		return dilated;
 	}
 
+	/**
+	 * Performs the dilation morphological operation, on an {@link Img} using a
+	 * {@link Shape} as a flat structuring element.
+	 * 
+	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
+	 * Dilation_(morphology)</a>.
+	 * <p>
+	 * The result image has the same dimensions that of the source image. It is
+	 * limited to flat structuring elements, only having <code>on/off</code>
+	 * pixels, contrary to grayscale structuring elements. This allows to simply
+	 * use a {@link Shape} as a type for these structuring elements.
+	 * <p>
+	 * This method relies on a specified minimal value to start comparing to
+	 * other pixels in the neighborhood. For this code to properly perform
+	 * dilation, it is sufficient that the specified min value is smaller
+	 * (against {@link Comparable}) than any of the value found in the source
+	 * image. This normally unseen parameter is required to operate on
+	 * <code>T extends {@link Comparable} & {@link Type}</code>.
+	 * 
+	 * @param source
+	 *            the source image.
+	 * @param strel
+	 *            the structuring element as a {@link Shape}.
+	 * @param numThreads
+	 *            the number of threads to use for the calculation.
+	 * @param minVal
+	 *            a T containing set to a value smaller than any of the values
+	 *            in the source {@link Img} (against {@link Comparable}. This is
+	 *            required to perform a proper mathematical dilation. Because we
+	 *            operate on a generic {@link Type}, it has to be provided
+	 *            manually.
+	 * @param <T>
+	 *            the type of the source image and the dilation result. Must be
+	 *            a sub-type of <code>T extends {@link Comparable} &
+	 *            {@link Type}</code>.
+	 * @return a new {@link Img}, of same dimensions than the source.
+	 */
 	public static < T extends Type< T > & Comparable< T > > Img< T > dilate( final Img< T > source, final Shape strel, final T minVal, int numThreads )
 	{
 		numThreads = Math.max( 1, numThreads );
@@ -279,7 +322,7 @@ public class MorphologicalOperations
 						 * Look for max in the neighborhood.
 						 */
 
-						boolean found = false;
+						max.set( minVal );
 						while ( nc.hasNext() )
 						{
 							nc.fwd();
@@ -288,11 +331,6 @@ public class MorphologicalOperations
 								continue;
 							}
 							final T val = nc.get();
-							if ( !found )
-							{
-								max.set( val );
-								found = true;
-							}
 							// We need only Comparable to do this:
 							if ( val.compareTo( max ) > 0 )
 							{
