@@ -48,6 +48,8 @@ public class DefaultCalibratedRealInterval extends
 	AbstractCalibratedRealInterval<CalibratedAxis>
 {
 
+	// -- public constructors --
+
 	public DefaultCalibratedRealInterval(RealInterval interval) {
 		super(interval);
 	}
