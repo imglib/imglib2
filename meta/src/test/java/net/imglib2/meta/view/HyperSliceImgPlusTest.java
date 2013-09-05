@@ -48,7 +48,7 @@ import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.ImgPlus;
-import net.imglib2.meta.LinearAxis;
+import net.imglib2.meta.axis.LinearAxis;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
 

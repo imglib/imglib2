@@ -41,6 +41,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.meta.axis.LinearAxis;
 import net.imglib2.type.numeric.integer.ByteType;
 
 import org.junit.Test;

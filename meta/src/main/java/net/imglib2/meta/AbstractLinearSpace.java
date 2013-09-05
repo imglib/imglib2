@@ -39,6 +39,8 @@ package net.imglib2.meta;
 
 import java.util.List;
 
+import net.imglib2.meta.axis.LinearAxis;
+
 /**
  * Abstract base class for {@link DefaultLinearSpace}.
  * 

@@ -35,11 +35,16 @@
  * #L%
  */
 
-package net.imglib2.meta;
+package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import net.imglib2.meta.Axes;
+import net.imglib2.meta.Axes.CustomType;
+import net.imglib2.meta.axis.LinearAxis;
+import net.imglib2.meta.axis.UncalibratedAxis;
 
 import org.junit.Test;
 

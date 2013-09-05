@@ -50,7 +50,7 @@ import net.imglib2.img.imageplus.ShortImagePlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.ImgPlus;
-import net.imglib2.meta.LinearAxis;
+import net.imglib2.meta.axis.LinearAxis;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;

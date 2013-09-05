@@ -50,6 +50,7 @@ import net.imglib2.display.ColorTable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.meta.axis.LinearAxis;
 
 /**
  * A simple container for storing an {@link Img} together with its metadata.

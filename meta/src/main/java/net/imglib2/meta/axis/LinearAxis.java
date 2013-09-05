@@ -35,7 +35,12 @@
  * #L%
  */
 
-package net.imglib2.meta;
+package net.imglib2.meta.axis;
+
+import net.imglib2.meta.AbstractCalibratedAxis;
+import net.imglib2.meta.Axes;
+import net.imglib2.meta.AxisType;
+import net.imglib2.meta.CalibratedAxis;
 
 /**
  * LinearAxis is a {@link CalibratedAxis} that scales coordinates along the axis

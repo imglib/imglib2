@@ -43,6 +43,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import net.imglib2.meta.axis.LinearAxis;
+
 import org.junit.Test;
 
 /**

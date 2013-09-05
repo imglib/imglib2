@@ -48,7 +48,7 @@ import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.meta.DefaultCalibratedSpace;
-import net.imglib2.meta.LinearAxis;
+import net.imglib2.meta.axis.LinearAxis;
 import net.imglib2.type.Type;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
