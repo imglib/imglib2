@@ -3,6 +3,8 @@
  */
 package net.imglib2.algorithm.morphology;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import net.imglib2.Cursor;
@@ -855,4 +857,281 @@ public class MorphologicalOperations
 		maxVal.setReal( maxVal.getMaxValue() );
 		return erodeFull( source, strel, maxVal, numThreads );
 	}
+
+	/*
+	 * EROSION & DILATION IN ONE PASS
+	 */
+
+	/**
+	 * Performs the both dilation and erosion morphological operations, on a
+	 * {@link RealType} {@link Img} using a {@link Shape} as a flat structuring
+	 * element, in a single pass.
+	 * <p>
+	 * This method exists for performance reasons, when both results are needed.
+	 * 
+	 * @param source
+	 *            the source image.
+	 * @param strel
+	 *            the structuring element as a {@link Shape}.
+	 * @param numThreads
+	 *            the number of threads to use for the calculation.
+	 * @param <T>
+	 *            the type of the source image and the results. Must be a
+	 *            sub-type of <code>T extends {@link RealType} </code>.
+	 * @return a list of {@link Img}s, made of two elements:
+	 *         <ol start="0">
+	 *         <li> the dilation results; <li> the erosion results.
+	 *         </ol>
+	 * @see #dilate(Img, Shape, int)
+	 * @see #erode(Img, Shape, int)
+	 */
+	public static < T extends RealType< T > > List< Img< T >> bothErosionDilation( final Img< T > source, final Shape strel, int numThreads )
+	{
+		numThreads = Math.max( 1, numThreads );
+
+		/*
+		 * Instantiate target images.
+		 */
+
+		final Img< T > dilated = source.factory().create( source, source.firstElement().copy() );
+		final Img< T > eroded = source.factory().create( source, source.firstElement().copy() );
+
+		/*
+		 * Prepare iteration.
+		 */
+
+		final RandomAccessibleInterval< Neighborhood< T >> accessible;
+		if ( numThreads > 1 )
+		{
+			accessible = strel.neighborhoodsRandomAccessibleSafe( source );
+		}
+		else
+		{
+			accessible = strel.neighborhoodsRandomAccessible( source );
+		}
+
+		/*
+		 * Multithread
+		 */
+
+		final Vector< Chunk > chunks = SimpleMultiThreading.divideIntoChunks( source.size(), numThreads );
+		final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+		for ( int i = 0; i < threads.length; i++ )
+		{
+			final Chunk chunk = chunks.get( i );
+			threads[ i ] = new Thread( "Morphology erode & dilate thread " + i )
+			{
+				@Override
+				public void run()
+				{
+					final RandomAccess< Neighborhood< T >> randomAccess = accessible.randomAccess( source );
+					final Cursor< T > cursorEroded = eroded.cursor();
+					final Cursor< T > cursorDilated = dilated.cursor();
+					cursorEroded.jumpFwd( chunk.getStartPosition() );
+					cursorDilated.jumpFwd( chunk.getStartPosition() );
+					// Same iteration order by construction
+
+					final T min = source.firstElement().createVariable();
+					final T max = source.firstElement().createVariable();
+					for ( long steps = 0; steps < chunk.getLoopSize(); steps++ )
+					{
+						cursorEroded.fwd();
+						cursorDilated.fwd();
+						randomAccess.setPosition( cursorEroded );
+						final Neighborhood< T > neighborhood = randomAccess.get();
+						final Cursor< T > nc = neighborhood.cursor();
+
+						/*
+						 * Look for max in the neighborhood.
+						 */
+
+						min.setReal( min.getMaxValue() );
+						max.setReal( max.getMinValue() );
+						while ( nc.hasNext() )
+						{
+							nc.fwd();
+							if ( !Intervals.contains( source, nc ) )
+							{
+								continue;
+							}
+							final T val = nc.get();
+							// We need only Comparable to do this:
+							if ( val.compareTo( min ) < 0 )
+							{
+								min.set( val );
+							}
+							if ( val.compareTo( max ) > 0 )
+							{
+								max.set( val );
+							}
+						}
+						cursorEroded.get().set( min );
+						cursorDilated.get().set( max );
+					}
+
+				}
+			};
+		}
+
+		/*
+		 * Launch calculation
+		 */
+
+		SimpleMultiThreading.startAndJoin( threads );
+
+		/*
+		 * Return
+		 */
+		final List< Img< T >> imgs = new ArrayList< Img< T > >( 2 );
+		imgs.add( dilated );
+		imgs.add( eroded );
+		return imgs;
+	}
+
+	/*
+	 * OPENING
+	 */
+
+	/**
+	 * Performs the morphological opening operation on a {@link RealType}
+	 * {@link Img}, using a {@link Shape} as a structuring element. See <a
+	 * href="http://en.wikipedia.org/wiki/Opening_(morphology)"
+	 * >Opening_(morphology)</a>.
+	 * <p>
+	 * The opening operation is simply an erosion followed by a dilation.
+	 * 
+	 * @param source
+	 *            the {@link Img} to operate on.
+	 * @param strel
+	 *            the {@link Shape} that serves as a structuring element.
+	 * @param numThreads
+	 *            the number of threads to use for calculation.
+	 * @param <T>
+	 *            the type of the source image and the result image. Must
+	 *            extends <code>RealType</code>.
+	 * @return an {@link Img} of the same type and same dimensions that of the
+	 *         source.
+	 */
+	public static final < T extends RealType< T >> Img< T > open( final Img< T > source, final Shape strel, final int numThreads )
+	{
+		final Img< T > eroded = erode( source, strel, numThreads );
+		final Img< T > dilated = dilate( eroded, strel, numThreads );
+		return dilated;
+	}
+
+	/**
+	 * Performs the morphological opening operation on an {@link Img} of
+	 * {@link Comparable} , using a {@link Shape} as a structuring element. See
+	 * <a href="http://en.wikipedia.org/wiki/Opening_(morphology)"
+	 * >Opening_(morphology)</a>.
+	 * <p>
+	 * The opening operation is simply an erosion followed by a dilation.
+	 * <p>
+	 * This method relies on a specified minimal and maximal value to start
+	 * comparing to other pixels in the neighborhood. For this code to perform
+	 * properly, it is sufficient that the specified min value is smaller
+	 * (against {@link Comparable}) than any of the value found in the source
+	 * image, and the converse for the max value. These normally unseen
+	 * parameters are required to operate on
+	 * <code>T extends {@link Comparable} & {@link Type}</code>.
+	 * 
+	 * @param source
+	 *            the {@link Img} to operate on.
+	 * @param strel
+	 *            the {@link Shape} that serves as a structuring element.
+	 * @param minVal
+	 *            a T containing set to a value smaller than any of the values
+	 *            in the source {@link Img} (against {@link Comparable}.
+	 * @param maxVal
+	 *            a T containing set to a value larger than any of the values in
+	 *            the source {@link Img} (against {@link Comparable}.
+	 * @param numThreads
+	 *            the number of threads to use for calculation.
+	 * @param <T>
+	 *            the type of the source image and the result. Must be a
+	 *            sub-type of <code>T extends {@link Comparable} & {@link Type}
+	 *            </code>.
+	 * @return an {@link Img} of the same type and same dimensions that of the
+	 *         source.
+	 */
+	public static final < T extends Type< T > & Comparable< T > > Img< T > open( final Img< T > source, final Shape strel, final T minVal, final T maxVal, final int numThreads )
+	{
+		final Img< T > eroded = erode( source, strel, maxVal, numThreads );
+		final Img< T > dilated = dilate( eroded, strel, minVal, numThreads );
+		return dilated;
+	}
+
+	/*
+	 * CLOSING
+	 */
+
+	/**
+	 * Performs the morphological closing operation on a {@link RealType}
+	 * {@link Img}, using a {@link Shape} as a structuring element. See <a
+	 * href="http://en.wikipedia.org/wiki/Closing_(morphology)"
+	 * >Closing_(morphology)</a>.
+	 * <p>
+	 * The closing operation is simply a dilation followed by an erosion .
+	 * 
+	 * @param source
+	 *            the {@link Img} to operate on.
+	 * @param strel
+	 *            the {@link Shape} that serves as a structuring element.
+	 * @param numThreads
+	 *            the number of threads to use for calculation.
+	 * @param <T>
+	 *            the type of the source image and the result image. Must
+	 *            extends <code>RealType</code>.
+	 * @return an {@link Img} of the same type and same dimensions that of the
+	 *         source.
+	 */
+	public static final < T extends RealType< T >> Img< T > close( final Img< T > source, final Shape strel, final int numThreads )
+	{
+		final Img< T > dilated = dilate( source, strel, numThreads );
+		final Img< T > eroded = erode( dilated, strel, numThreads );
+		return eroded;
+	}
+
+	/**
+	 * Performs the morphological closing operation on an {@link Img} of
+	 * {@link Comparable} , using a {@link Shape} as a structuring element. See
+	 * <a href="http://en.wikipedia.org/wiki/Closing_(morphology)"
+	 * >Closing_(morphology)</a>.
+	 * <p>
+	 * The closing operation is simply a dilation followed by an erosion.
+	 * <p>
+	 * This method relies on specified minimal and maximal values to start
+	 * comparing to other pixels in the neighborhood. For this code to perform
+	 * properly, it is sufficient that the specified min value is smaller
+	 * (against {@link Comparable}) than any of the value found in the source
+	 * image, and the converse for the max value. These normally unseen
+	 * parameters are required to operate on
+	 * <code>T extends {@link Comparable} & {@link Type}</code>.
+	 * 
+	 * @param source
+	 *            the {@link Img} to operate on.
+	 * @param strel
+	 *            the {@link Shape} that serves as a structuring element.
+	 * @param minVal
+	 *            a T containing set to a value smaller than any of the values
+	 *            in the source {@link Img} (against {@link Comparable}.
+	 * @param maxVal
+	 *            a T containing set to a value larger than any of the values in
+	 *            the source {@link Img} (against {@link Comparable}.
+	 * @param numThreads
+	 *            the number of threads to use for calculation.
+	 * @param <T>
+	 *            the type of the source image and the result. Must be a
+	 *            sub-type of <code>T extends {@link Comparable} & {@link Type}
+	 *            </code>.
+	 * @return an {@link Img} of the same type and same dimensions that of the
+	 *         source.
+	 */
+	public static final < T extends Type< T > & Comparable< T > > Img< T > close( final Img< T > source, final Shape strel, final T minValue, final T maxValue, final int numThreads )
+	{
+		final Img< T > dilated = dilate( source, strel, minValue, numThreads );
+		final Img< T > eroded = erode( dilated, strel, maxValue, numThreads );
+		return eroded;
+	}
+
 }

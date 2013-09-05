@@ -5,9 +5,11 @@ import ij.ImageJ;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.algorithm.region.localneighborhood.CenteredRectangleShape;
+import net.imglib2.algorithm.region.localneighborhood.HyperSphereShape;
 import net.imglib2.algorithm.region.localneighborhood.RectangleShape;
 import net.imglib2.algorithm.region.localneighborhood.Shape;
 import net.imglib2.img.Img;
@@ -27,7 +29,26 @@ public class MorphologyOpsTest {
 	public static void main(final String[] args) {
 		//		weirdTypeTest();
 		//		standardDilate();
-		standardErode();
+		//		standardErode();
+		openAndClose();
+	}
+
+	public static void openAndClose() {
+		final ArrayImg<UnsignedByteType, ByteArray> img = ArrayImgs.unsignedBytes(new long[] { 50, 50 });
+		final Random ran = new Random();
+		for (final UnsignedByteType pixel : img) {
+			if (ran.nextDouble() > 0.95)
+				pixel.set(255);
+		}
+
+		final Shape strel = new HyperSphereShape(3);
+		final Img<UnsignedByteType> open = MorphologicalOperations.open(img, strel, 4);
+		final Img<UnsignedByteType> closed = MorphologicalOperations.close(img, strel, 4);
+
+		new ImageJ();
+		ImageJFunctions.show(img);
+		ImageJFunctions.show(open);
+		ImageJFunctions.show(closed);
 	}
 
 	public static void standardErode() {
