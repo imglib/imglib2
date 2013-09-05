@@ -38,14 +38,22 @@
 package net.imglib2.meta;
 
 /**
+ * UncalibratedAxis is a {@link CalibratedAxis} with no calibration.
+ * 
  * @author Barry DeZonia
  */
 public class UncalibratedAxis extends AbstractCalibratedAxis {
 
+	/**
+	 * Constructs a default UncalibratedAxis of unknown axis type.
+	 */
 	public UncalibratedAxis() {
 		this(Axes.unknown());
 	}
 
+	/**
+	 * Constructs an UncalibratedAxis of the specified axis type.
+	 */
 	public UncalibratedAxis(AxisType type) {
 		super(type);
 	}
