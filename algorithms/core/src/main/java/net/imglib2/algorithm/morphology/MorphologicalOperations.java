@@ -16,6 +16,7 @@ import net.imglib2.multithreading.Chunk;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
@@ -29,6 +30,79 @@ import net.imglib2.view.Views;
  */
 public class MorphologicalOperations
 {
+
+	/**
+	 * Performs the dilation morphological operation, on an {@link Img} using a
+	 * {@link Shape} as a flat structuring element, on {@link RealType} images.
+	 * 
+	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
+	 * Dilation_(morphology)</a>.
+	 * <p>
+	 * This method performs what is called the 'full' dilation. That is: the
+	 * result image has its dimension dilated by the structuring element, with
+	 * respect to the source image. It is limited to flat structuring elements,
+	 * only having <code>on/off</code> pixels, contrary to grayscale structuring
+	 * elements. This allows to simply use a {@link Shape} as a type for these
+	 * structuring elements.
+	 * <p>
+	 * <b>Warning:</b> Current implementation does not do <i>stricto sensu</i>
+	 * the full dilation. Indeed, if the structuring element has more dimensions
+	 * than the source {@link Img}, they are ignored, and the return {@link Img}
+	 * has the same number of dimensions that of the source (but dilated). This
+	 * is due to the fact that we use a {@link Shape} for structuring elements,
+	 * and that it does not return a number of dimensions. The neighborhood
+	 * created have therefore at most as many dimensions as the source image.
+	 * The real, full dilation results should have a number of dimensions equals
+	 * to the maximum of the number of dimension of both source and structuring
+	 * element.
+	 * 
+	 * @param source
+	 *            the source image.
+	 * @param strel
+	 *            the structuring element as a {@link Shape}.
+	 * @param numThreads
+	 *            the number of threads to use for the calculation.
+	 * @param <T>
+	 *            the type of the source image and the dilation result. Must be
+	 *            a sub-type of <code>T extends {@link RealType}</code>.
+	 * @return a new {@link Img}, possibly of larger dimensions than the source.
+	 */
+	public static < T extends RealType< T > > Img< T > dilateFull( final Img< T > source, final Shape strel, final int numThreads )
+	{
+		final T minVal = source.firstElement().createVariable();
+		minVal.setReal( minVal.getMinValue() );
+		return dilate( source, strel, minVal, numThreads );
+	}
+
+	/**
+	 * Performs the dilation morphological operation, on an {@link Img} using a
+	 * {@link Shape} as a flat structuring element, on {@link RealType} images.
+	 * 
+	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
+	 * Dilation_(morphology)</a>.
+	 * <p>
+	 * The result image has the same dimensions that of the source image. It is
+	 * limited to flat structuring elements, only having <code>on/off</code>
+	 * pixels, contrary to grayscale structuring elements. This allows to simply
+	 * use a {@link Shape} as a type for these structuring elements.
+	 * 
+	 * @param source
+	 *            the source image.
+	 * @param strel
+	 *            the structuring element as a {@link Shape}.
+	 * @param numThreads
+	 *            the number of threads to use for the calculation.
+	 * @param <T>
+	 *            the type of the source image and the dilation result. Must be
+	 *            a sub-type of <code>T extends {@link RealType}</code>.
+	 * @return a new {@link Img}, of same dimensions than the source.
+	 */
+	public static < T extends RealType< T >> Img< T > dilate( final Img< T > source, final Shape strel, final int numThreads )
+	{
+		final T minVal = source.firstElement().createVariable();
+		minVal.setReal( minVal.getMinValue() );
+		return dilate( source, strel, minVal, numThreads );
+	}
 
 	/**
 	 * Performs the dilation morphological operation, on an {@link Img} using a
