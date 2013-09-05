@@ -37,29 +37,11 @@
 
 package net.imglib2.meta;
 
-import java.util.List;
-
 import net.imglib2.meta.axis.LinearAxis;
 
 /**
- * Abstract base class for {@link LinearSpace}.
- * 
  * @author Barry DeZonia
  */
-public abstract class AbstractLinearSpace<A extends LinearAxis> extends
-	AbstractCalibratedSpace<A> implements LinearSpace<A>
-{
-
-	public AbstractLinearSpace(final int numDims) {
-		super(numDims);
-	}
-
-	public AbstractLinearSpace(final A... axes) {
-		super(axes);
-	}
-
-	public AbstractLinearSpace(final List<A> axes) {
-		super(axes);
-	}
-
+public interface LinearSpace<A extends LinearAxis> extends CalibratedSpace<A> {
+	// no additional functionality
 }
