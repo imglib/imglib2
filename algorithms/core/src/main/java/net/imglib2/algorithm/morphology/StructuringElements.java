@@ -28,15 +28,44 @@ import net.imglib2.util.Util;
 public class StructuringElements
 {
 
-	public static final List< Shape > rectangle( final int radius[], final boolean decompose )
+	/**
+	 * Generates a symmetric, centered, rectangular flat structuring element for
+	 * morphological operations.
+	 * <p>
+	 * The structuring element (strel) is returned as a {@link List} of
+	 * {@link Shape}s, for Structuring elements can be decomposed to yield a
+	 * better performance. The rectangle strel can be decomposed in a succession
+	 * of orthogonal lines and yield the exact same results on any of the
+	 * morphological operations.
+	 * 
+	 * @param halfSpans
+	 *            an <code>int[]</code> array containing the half-span of the
+	 *            symmetric rectangle in each dimension. The total extent of the
+	 *            rectangle will therefore be <code>2 × halfSpan[d] + 1</code>
+	 *            in each dimension.
+	 * @param decompose
+	 *            if <code>true</code>, the strel will be returned as a
+	 *            {@link List} of {@link LineShape}, indeed performing the
+	 *            rectangle decomposition. If <code>false</code>, the list will
+	 *            be made of a single {@link CenteredRectangleShape}.
+	 * @return the desired structuring element, as a {@link List} of
+	 *         {@link Shape}s.
+	 */
+	public static final List< Shape > rectangle( final int[] halfSpans, final boolean decompose )
 	{
 		final List< Shape > strels;
 		if ( decompose )
 		{
-			strels = new ArrayList< Shape >( radius.length );
-			for ( int i = 0; i < radius.length; i++ )
+			strels = new ArrayList< Shape >( halfSpans.length );
+			for ( int d = 0; d < halfSpans.length; d++ )
 			{
-				final LineShape line = new LineShape( radius[ i ], i, false );
+				int r = halfSpans[ d ];
+				r = Math.max( 0, r );
+				if ( r == 0 )
+				{ // No need for empty lines
+					continue;
+				}
+				final LineShape line = new LineShape( r, d, false );
 				strels.add( line );
 			}
 		}
@@ -44,14 +73,33 @@ public class StructuringElements
 		{
 
 			strels = new ArrayList< Shape >( 1 );
-			final CenteredRectangleShape square = new CenteredRectangleShape( radius, false );
+			final CenteredRectangleShape square = new CenteredRectangleShape( halfSpans, false );
 			strels.add( square );
 
 		}
 		return strels;
 	}
 
-	public static final List< Shape > rectangle( final int radius[] )
+	/**
+	 * Generates a symmetric, centered, rectangular flat structuring element for
+	 * morphological operations.
+	 * <p>
+	 * The structuring element (strel) is returned as a {@link List} of
+	 * {@link Shape}s, for Structuring elements can be decomposed to yield a
+	 * better performance. The rectangle strel can be decomposed in a succession
+	 * of orthogonal lines and yield the exact same results on any of the
+	 * morphological operations. This method uses a simple heuristic to decide
+	 * whether to decompose the rectangle or not.
+	 * 
+	 * @param halfSpans
+	 *            an <code>int[]</code> array containing the half-span of the
+	 *            symmetric rectangle in each dimension. The total extent of the
+	 *            rectangle will therefore be <code>2 × halfSpan[d] + 1</code>
+	 *            in each dimension.
+	 * @return the desired structuring element, as a {@link List} of
+	 *         {@link Shape}s.
+	 */
+	public static final List< Shape > rectangle( final int halfSpans[] )
 	{
 		/*
 		 * I borrow this "heuristic" to decide whether or not we should
@@ -61,25 +109,41 @@ public class StructuringElements
 		 */
 		long decomposedNNeighbohoods = 0;
 		long fullNNeighbohoods = 1;
-		for ( int i = 0; i < radius.length; i++ )
+		for ( int i = 0; i < halfSpans.length; i++ )
 		{
-			final int r = radius[ i ];
-			decomposedNNeighbohoods += r;
-			fullNNeighbohoods *= r;
+			final int l = 2 * halfSpans[ i ] + 1;
+			decomposedNNeighbohoods += l;
+			fullNNeighbohoods *= l;
 		}
 
 		if ( decomposedNNeighbohoods > fullNNeighbohoods / 2 )
 		{
 			// Do not optimize
-			return rectangle( radius, false );
+			return rectangle( halfSpans, false );
 		}
 		else
 		{
 			// Optimize
-			return rectangle( radius, true );
+			return rectangle( halfSpans, true );
 		}
 	}
 
+	/**
+	 * Returns a string representation of the specified flat structuring element
+	 * (given as a {@link Shape}), cast over the dimensionality specified by an
+	 * {@link EuclideanSpace}.
+	 * <p>
+	 * This method only prints the first 3 dimensions of the structuring
+	 * element. Dimensions above 3 are skipped.
+	 * 
+	 * @param shape
+	 *            the structuring element to print.
+	 * @param space
+	 *            the dimensionality to cast it over. This is required as
+	 *            {@link Shape} does not carry a dimensionality, and we need one
+	 *            to generate a neighborhood to iterate.
+	 * @return a string representation of the structuring element.
+	 */
 	public static final String printNeighborhood( final Shape shape, final EuclideanSpace space )
 	{
 		final Img< BitType > neighborhood;
@@ -108,9 +172,17 @@ public class StructuringElements
 		{
 			appendManySlice( randomAccess, neighborhood.dimension( 0 ), neighborhood.dimension( 1 ), neighborhood.dimension( 2 ), str );
 		}
-		else
+		else if ( neighborhood.numDimensions() > 1 )
 		{
 			appendSingleSlice( randomAccess, neighborhood.dimension( 0 ), neighborhood.dimension( 1 ), str );
+		}
+		else if ( neighborhood.numDimensions() > 0 )
+		{
+			appendLine( randomAccess, neighborhood.dimension( 0 ), str );
+		}
+		else
+		{
+			str.append( "Void structuring element.\n" );
 		}
 
 		return str.toString();
@@ -143,6 +215,39 @@ public class StructuringElements
 			}
 			str.append( "│\n" );
 		}
+		// Bottom line
+		str.append( '└' );
+		for ( long x = 0; x < maxX; x++ )
+		{
+			str.append( '─' );
+		}
+		str.append( "┘\n" );
+	}
+
+	private static final void appendLine( final RandomAccess< BitType > ra, final long maxX, final StringBuilder str )
+	{
+		// Top line
+		str.append( '┌' );
+		for ( long x = 0; x < maxX; x++ )
+		{
+			str.append( '─' );
+		}
+		str.append( "┐\n" );
+		// Center
+		str.append( '│' );
+		for ( long x = 0; x < maxX; x++ )
+		{
+			ra.setPosition( x, 0 );
+			if ( ra.get().get() )
+			{
+				str.append( '█' );
+			}
+			else
+			{
+				str.append( ' ' );
+			}
+		}
+		str.append( "│\n" );
 		// Bottom line
 		str.append( '└' );
 		for ( long x = 0; x < maxX; x++ )
@@ -230,10 +335,14 @@ public class StructuringElements
 		str.append( '\n' );
 	}
 
+	/*
+	 * MAIN METHOD
+	 */
+
 	public static void main( final String[] args )
 	{
 
-		System.out.println( printNeighborhood( new HyperSphereShape( 3 ), new EuclideanSpace()
+		System.out.println( printNeighborhood( new HyperSphereShape( 2 ), new EuclideanSpace()
 		{
 			@Override
 			public int numDimensions()
@@ -242,12 +351,12 @@ public class StructuringElements
 			}
 		} ) );
 
-		System.out.println( printNeighborhood( new RectangleShape( 1, true ), new EuclideanSpace()
+		System.out.println( printNeighborhood( new RectangleShape( 4, true ), new EuclideanSpace()
 		{
 			@Override
 			public int numDimensions()
 			{
-				return 3;
+				return 1;
 			}
 		} ) );
 	}

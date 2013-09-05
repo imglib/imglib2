@@ -80,7 +80,7 @@ public class MorphologicalOperations
 	{
 		final T minVal = source.firstElement().createVariable();
 		minVal.setReal( minVal.getMinValue() );
-		return dilate( source, strel, minVal, numThreads );
+		return dilateFull( source, strel, minVal, numThreads );
 	}
 
 	/**
