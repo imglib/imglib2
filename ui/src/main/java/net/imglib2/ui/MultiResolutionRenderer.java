@@ -61,9 +61,9 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 	 */
 	public static class Factory< A extends AffineSet & AffineGet & Concatenable< AffineGet > > implements RendererFactory< A >
 	{
-		final AffineTransformType< A > transformType;
+		final protected AffineTransformType< A > transformType;
 
-		final RenderSource< ?, A > source;
+		final protected RenderSource< ?, A > source;
 
 		final protected double[] screenScales;
 
