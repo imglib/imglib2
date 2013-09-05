@@ -40,6 +40,9 @@ package net.imglib2.meta;
 import java.util.List;
 
 /**
+ * A simple default {@link CalibratedSpace} that uses linear axes.
+ * 
+ * @see LinearAxis
  * @author Barry DeZonia
  */
 public class DefaultLinearSpace extends AbstractLinearSpace<LinearAxis> {

@@ -42,6 +42,8 @@ import java.util.List;
 import net.imglib2.RealInterval;
 
 /**
+ * A simple default {@link CalibratedRealInterval} implementation.
+ * 
  * @author Barry DeZonia
  */
 public class DefaultCalibratedRealInterval extends

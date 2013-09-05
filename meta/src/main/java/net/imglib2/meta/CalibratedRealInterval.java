@@ -38,6 +38,9 @@
 package net.imglib2.meta;
 
 /**
+ * A CalibratedRealInterval marries a {@link TypedRealInterval} with a
+ * {@link CalibratedSpace}.
+ * 
  * @author Barry DeZonia
  */
 public interface CalibratedRealInterval<A extends CalibratedAxis> extends
