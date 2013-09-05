@@ -40,6 +40,8 @@ package net.imglib2.meta;
 import java.util.List;
 
 /**
+ * Abstract base class for {@link DefaultLinearSpace}.
+ * 
  * @author Barry DeZonia
  */
 public abstract class AbstractLinearSpace<A extends LinearAxis> extends
