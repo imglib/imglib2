@@ -25,23 +25,41 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 public class MorphologyOpsTest {
 
 	public static void main(final String[] args) {
-		weirdTypeTest();
-		standardDilate();
+		//		weirdTypeTest();
+		//		standardDilate();
+		standardErode();
+	}
+
+	public static void standardErode() {
+		final ArrayImg<UnsignedByteType, ByteArray> img = ArrayImgs.unsignedBytes(new long[] { 10, 9 });
+		for (final UnsignedByteType pixel : img) {
+			pixel.set(255);
+		}
+		final ArrayRandomAccess<UnsignedByteType> ra = img.randomAccess();
+		ra.setPosition(new int[] { 1, 4 });
+		ra.get().set(0);
+
+		final Shape strel = new CenteredRectangleShape(new int[] { 3, 2 }, false);
+		// final Shape strel = new HyperSphereShape(radius)
+		final Img<UnsignedByteType> full = MorphologicalOperations.erodeFull(img, strel, 4);
+		final Img<UnsignedByteType> std = MorphologicalOperations.erode(img, strel, 4);
+
+		new ImageJ();
+		ImageJFunctions.show(img);
+		ImageJFunctions.show(full);
+		ImageJFunctions.show(std);
 	}
 
 	public static void standardDilate() {
-		final ArrayImg<UnsignedByteType, ByteArray> img = ArrayImgs
-				.unsignedBytes(new long[] { 3, 9 });
+		final ArrayImg<UnsignedByteType, ByteArray> img = ArrayImgs.unsignedBytes(new long[] { 3, 9 });
 		final ArrayRandomAccess<UnsignedByteType> ra = img.randomAccess();
 		ra.setPosition(new int[] { 1, 4 });
 		ra.get().set(255);
 
 		final Shape strel = new CenteredRectangleShape(new int[] { 5, 2 }, true);
 		// final Shape strel = new HyperSphereShape(radius)
-		final Img<UnsignedByteType> full = MorphologicalOperations.dilateFull(
-				img, strel, new UnsignedByteType(0), 4);
-		final Img<UnsignedByteType> std = MorphologicalOperations.dilate(img,
-				strel, new UnsignedByteType(0), 4);
+		final Img<UnsignedByteType> full = MorphologicalOperations.dilateFull(img, strel, new UnsignedByteType(0), 4);
+		final Img<UnsignedByteType> std = MorphologicalOperations.dilate(img, strel, new UnsignedByteType(0), 4);
 
 		new ImageJ();
 		ImageJFunctions.show(img);
@@ -55,19 +73,11 @@ public class MorphologyOpsTest {
 		 * The 35 words added by the Oxford Online Dictionary during summer
 		 * 2012. And another one.
 		 */
-		final String[] wordArray = new String[] { "Bling", "Bromance",
-				"Chillax", "Crunk", "D'oh", "Droolworthy", "Frankenfood",
-				"Grrrl", "Guyliner", "Hater", "Illiterati", "Infomania",
-				"Jeggings", "La-la Land", "Locavore", "Mankini", "Mini-Me",
-				"Muffin Top", "Muggle", "Noob", "Obvs", "OMG", "Po-po",
-				"Purple State", "Screenager", "Sexting", "Textspeak", "Totes",
-				"Truthiness", "Twitterati", "Unfriend", "Upcycle", "Whatevs",
-				"Whovian", "Woot", "Jean-Yves" };
+		final String[] wordArray = new String[] { "Bling", "Bromance", "Chillax", "Crunk", "D'oh", "Droolworthy", "Frankenfood", "Grrrl", "Guyliner", "Hater", "Illiterati", "Infomania", "Jeggings", "La-la Land", "Locavore", "Mankini", "Mini-Me", "Muffin Top", "Muggle", "Noob", "Obvs", "OMG", "Po-po", "Purple State", "Screenager", "Sexting", "Textspeak", "Totes", "Truthiness", "Twitterati", "Unfriend", "Upcycle", "Whatevs", "Whovian", "Woot", "Jean-Yves" };
 		final List<String> words = Arrays.asList(wordArray);
 		Collections.shuffle(words);
 
-		final ListImg<StringType> img = new ListImgFactory<StringType>()
-				.create(new long[] { 6l, 6l }, new StringType());
+		final ListImg<StringType> img = new ListImgFactory<StringType>().create(new long[] { 6l, 6l }, new StringType());
 		final ListCursor<StringType> cursor = img.cursor();
 		for (final String str : words) {
 			cursor.fwd();
@@ -76,18 +86,15 @@ public class MorphologyOpsTest {
 
 		System.out.println("Before:\n" + toString(img, 14));
 		System.out.println();
-		final Img<StringType> dilatedFull = MorphologicalOperations.dilateFull(
-				img, new RectangleShape(1, false), new StringType(""), 2);
+		final Img<StringType> dilatedFull = MorphologicalOperations.dilateFull(img, new RectangleShape(1, false), new StringType(""), 2);
 		System.out.println("After full:\n" + toString(dilatedFull, 14));
 		System.out.println();
-		final Img<StringType> dilated = MorphologicalOperations.dilate(img,
-				new RectangleShape(1, false), new StringType(""), 2);
+		final Img<StringType> dilated = MorphologicalOperations.dilate(img, new RectangleShape(1, false), new StringType(""), 2);
 		System.out.println("After std:\n" + toString(dilated, 14));
 
 	}
 
-	public static final <T> String toString(final Img<T> img,
-			final int columnSize) {
+	public static final <T> String toString(final Img<T> img, final int columnSize) {
 		final StringBuilder str = new StringBuilder();
 		final long maxX = img.dimension(0);
 		final long maxY = img.dimension(1);
@@ -109,13 +116,11 @@ public class MorphologyOpsTest {
 		return str.toString();
 	}
 
-	public static class StringType implements Type<StringType>,
-			Comparable<StringType> {
+	public static class StringType implements Type<StringType>, Comparable<StringType> {
 
 		private String str;
 
-		public StringType() {
-		}
+		public StringType() {}
 
 		public StringType(final String str) {
 			this.str = str;
