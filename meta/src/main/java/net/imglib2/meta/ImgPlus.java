@@ -49,6 +49,7 @@ import net.imglib2.RealPositionable;
 import net.imglib2.display.ColorTable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImg;
 
 /**
  * A simple container for storing an {@link Img} together with its metadata.
