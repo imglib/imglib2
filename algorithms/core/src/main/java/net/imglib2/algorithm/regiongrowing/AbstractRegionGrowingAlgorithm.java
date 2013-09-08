@@ -37,7 +37,6 @@
 package net.imglib2.algorithm.regiongrowing;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,9 +47,8 @@ import java.util.Queue;
 
 import net.imglib2.Dimensions;
 import net.imglib2.RandomAccess;
-import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
-import net.imglib2.algorithm.OutputAlgorithm;
+import net.imglib2.algorithm.regiongrowing.RegionGrowingTools.GrowingMode;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -72,8 +70,7 @@ import net.imglib2.type.numeric.integer.IntType;
  * <li>A method for determining whether a candidate pixel should be added to
  * region currently under scrutiny. See
  * {@link #includeInRegion(long[], long[], Comparable)}. This method may depend
- * on the pixel value of a source image, which must be of a {@link Comparable}
- * type.
+ * on the pixel value of a source image.
  * </ul>
  * <p>
  * Strongly inspired by Martin Horn (University of Konstanz) work in the
@@ -81,10 +78,9 @@ import net.imglib2.type.numeric.integer.IntType;
  * 
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> 2013
  * 
- * @param <T>
  * @param <L>
  */
-public abstract class AbstractRegionGrowingAlgorithm< T, L extends Comparable< L > > implements Algorithm, OutputAlgorithm< Labeling< L > >, Benchmark
+public abstract class AbstractRegionGrowingAlgorithm< L extends Comparable< L > > implements RegionGrowingAlgorithm< L >, Benchmark
 {
 
 	private final GrowingMode growingMode;
@@ -119,21 +115,7 @@ public abstract class AbstractRegionGrowingAlgorithm< T, L extends Comparable< L
 
 	private final Deque< long[] > seedQueue;
 
-	private final Map< long[], L > seedLabels;
-
-	public static enum GrowingMode
-	{
-		/**
-		 * In synchronous mode, the seeding points are grown after each other
-		 */
-		SYNCHRONOUS,
-
-		/**
-		 * in asynchronous mode, first all seeding points are add to the queue
-		 * and then the growing process is started
-		 */
-		ASYNCHRONOUS;
-	}
+	protected final Map< long[], L > seedLabels;
 
 	/**
 	 * Base constructor for region-growing algorithms. This constructor
@@ -175,7 +157,7 @@ public abstract class AbstractRegionGrowingAlgorithm< T, L extends Comparable< L
 	/**
 	 * Calls one growth step on a single region.
 	 * <p>
-	 * The children of the specified parent positions are inepcted, and used to
+	 * The children of the specified parent positions are inspected, and used to
 	 * create a list of successful child pixel position.
 	 * 
 	 * @param parentPixels
@@ -367,10 +349,12 @@ public abstract class AbstractRegionGrowingAlgorithm< T, L extends Comparable< L
 	@Override
 	public boolean process()
 	{
+		final long start = System.currentTimeMillis();
+
 		/*
 		 * Get the output labeling.
 		 */
-		output = initializeLabeling();
+		final Labeling< L > output = initializeLabeling();
 
 		/*
 		 * Image and random access to keep track of the already visited pixel
@@ -400,28 +384,88 @@ public abstract class AbstractRegionGrowingAlgorithm< T, L extends Comparable< L
 		// Access to the resulting labeling
 		final RandomAccess< LabelingType< L >> outputRandomAccess = output.randomAccess();
 
-		while ( !seedQueue.isEmpty() )
+		switch ( growingMode )
 		{
-			final long[] seed = seedQueue.pollFirst();
-			final L label = seedLabels.get( seed );
+		case SEQUENTIAL:
+		{
+
+			while ( !seedQueue.isEmpty() )
+			{
+				final long[] seed = seedQueue.pollFirst();
+				final L label = seedLabels.get( seed );
+
+				/*
+				 * Instantiate the pixel queue for current label.
+				 */
+				Queue< long[] > pixelQueue = new LinkedList< long[] >();
+				pixelQueue.add( seed );
+
+				while ( true )
+				{
+					final Queue< long[] > childPixels = growProcess( pixelQueue.iterator(), label, outputRandomAccess, output );
+					if ( childPixels.isEmpty() )
+					{
+						finishedLabel( label );
+						break;
+					}
+					pixelQueue = childPixels;
+				}
+			}
+			break;
+		}
+
+		case PARALLEL:
+		{
 
 			/*
-			 * Instantiate the pixel queue for current label.
+			 * Prepare holder for parent pixels for each label.
 			 */
-			Queue< long[] > pixelQueue = new LinkedList< long[] >();
-			pixelQueue.add( seed );
 
-			while ( true )
+			final Map< L, Queue< long[] >> parentPixels = new HashMap< L, Queue< long[] > >( seedLabels.size() );
+			for ( final long[] seed : seedLabels.keySet() )
 			{
-				final Queue< long[] > childPixels = growProcess( pixelQueue.iterator(), label, outputRandomAccess, output );
-				if ( childPixels.isEmpty() )
-				{
-					finishedLabel( label );
-					break;
-				}
-				pixelQueue = childPixels;
+				final Queue< long[] > queue = new LinkedList< long[] >();
+				queue.add( seed );
+				final L label = seedLabels.get( seed );
+				parentPixels.put( label, queue );
 			}
+
+			/*
+			 * Circle through seeds until we exhaust them.
+			 */
+
+			while ( !seedQueue.isEmpty() )
+			{
+				final Iterator< long[] > iterator = seedQueue.iterator();
+				while ( iterator.hasNext() )
+				{
+					final long[] seed = iterator.next();
+					final L label = seedLabels.get( seed );
+					final Queue< long[] > queue = parentPixels.get( label );
+
+					final Queue< long[] > childPixels = growProcess( queue.iterator(), label, outputRandomAccess, output );
+					if ( childPixels.isEmpty() )
+					{
+						finishedLabel( label );
+						// Remove the seed from the queue
+						iterator.remove();
+						parentPixels.remove( label );
+						break;
+					}
+					else
+					{
+						parentPixels.put( label, childPixels );
+					}
+
+				}
+
+			}
+			break;
 		}
+		}
+
+		final long end = System.currentTimeMillis();
+		processingTime = end - start;
 		return true;
 	}
 
@@ -448,129 +492,4 @@ public abstract class AbstractRegionGrowingAlgorithm< T, L extends Comparable< L
 	{
 		return output;
 	}
-
-	/*
-	 * ABSTRACT METHODS
-	 */
-
-	/**
-	 * Creates the {@link Labeling} that will contain the grown region. The
-	 * returned labeling should have the same dimensions that of the source
-	 * image.
-	 * <p>
-	 * Called before the growing process is started.
-	 * 
-	 * @return a new {@link Labeling} instance.
-	 */
-	protected abstract Labeling< L > initializeLabeling();
-
-	/**
-	 * Returns whether a candidate position can be included in the current
-	 * region.
-	 * 
-	 * @param parentPixel
-	 *            the position of the pixel, already part of the current region,
-	 *            whose current candidate pixel is a child.
-	 * @param candidatePixel
-	 *            the position of the candidate pixel to inspect.
-	 * @param label
-	 *            the label of the current region.
-	 * @return <code>true</code> if the candidate pixel can be added to the
-	 *         current region, <code>false</code> otherwise.
-	 */
-	protected abstract boolean includeInRegion( long[] parentPixel, long[] candidatePixel, L label );
-
-	/**
-	 * Called after a round of growing process on a single region.
-	 * 
-	 * @param childPixels
-	 *            the pixel positions that have been added to the current region
-	 *            during this growth step.
-	 * @param label
-	 *            the label of the current region.
-	 */
-	protected abstract void finishedGrowStep( Queue< long[] > childPixels, L label );
-
-	/**
-	 * Called after a region has finished growing.
-	 * 
-	 * @param label
-	 *            the label of the region that finished growing.
-	 */
-	protected abstract void finishedLabel( L label );
-
-	/*
-	 * STATIC METHODS
-	 */
-
-	/**
-	 * Returns an array of offsets to the 8-connected (or N-d equivalent)
-	 * structuring element for the dimension space. The structuring element is
-	 * the list of offsets from the center to the pixels to be examined.
-	 * 
-	 * @param dimensions
-	 * @return the structuring element.
-	 */
-	public static final long[][] get8ConStructuringElement( final int dimensions )
-	{
-		int nElements = 1;
-		for ( int i = 0; i < dimensions; i++ )
-			nElements *= 3;
-		nElements--;
-		final long[][] result = new long[ nElements ][ dimensions ];
-		final long[] position = new long[ dimensions ];
-		Arrays.fill( position, -1 );
-		for ( int i = 0; i < nElements; i++ )
-		{
-			System.arraycopy( position, 0, result[ i ], 0, dimensions );
-			/*
-			 * Special case - skip the center element.
-			 */
-			if ( i == nElements / 2 - 1 )
-			{
-				position[ 0 ] += 2;
-			}
-			else
-			{
-				for ( int j = 0; j < dimensions; j++ )
-				{
-					if ( position[ j ] == 1 )
-					{
-						position[ j ] = -1;
-					}
-					else
-					{
-						position[ j ]++;
-						break;
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Returns an array of offsets to the -connected (or N-d equivalent)
-	 * structuring element for the dimension space. The structuring element is
-	 * the list of offsets from the center to the pixels to be examined.
-	 * 
-	 * @param dimensions
-	 * @return the structuring element.
-	 */
-	public static final long[][] get4ConStructuringElement( final int dimensions )
-	{
-		final int nElements = dimensions * 2;
-
-		final long[][] result = new long[ nElements ][ dimensions ];
-		for ( int d = 0; d < dimensions; d++ )
-		{
-			result[ d * 2 ] = new long[ dimensions ];
-			result[ d * 2 + 1 ] = new long[ dimensions ];
-			result[ d * 2 ][ d ] = -1;
-			result[ d * 2 + 1 ][ d ] = 1;
-
-		}
-		return result;
-	}
-
 }
