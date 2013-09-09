@@ -75,6 +75,22 @@ public class LogLinearAxisTest {
 		assertEquals(calValue(4, axis), axis.calibratedValue(4), 0);
 	}
 
+	@Test
+	public void testOtherStuff() {
+		LogLinearAxis axis = new LogLinearAxis();
+
+		axis.setA(5);
+		axis.setB(10);
+		axis.setC(15);
+		axis.setD(20);
+		assertEquals(5, axis.a(), 0);
+		assertEquals(10, axis.b(), 0);
+		assertEquals(15, axis.c(), 0);
+		assertEquals(20, axis.d(), 0);
+
+		assertEquals(axis.rawValue(axis.calibratedValue(3)), 3, 0.000001);
+	}
+
 	private double calValue(double raw, LogLinearAxis axis) {
 		return axis.a() + axis.b() * (Math.log(axis.c() + (axis.d() * raw)));
 	}
