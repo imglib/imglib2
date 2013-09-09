@@ -37,108 +37,49 @@
 
 package net.imglib2.meta.axis;
 
-import net.imglib2.meta.AbstractCalibratedAxis;
-import net.imglib2.meta.AxisType;
-import net.imglib2.meta.CalibratedAxis;
+import static org.junit.Assert.assertEquals;
+import net.imglib2.meta.Axes;
+
+import org.junit.Test;
 
 /**
- * GaussianAxis is a {@link CalibratedAxis } that scales raw values by the
- * equation y = a + (b-a)^c*exp(-(x-c)*(x-c)/(2*d*d)).
- * 
  * @author Barry DeZonia
  */
-public class GaussianAxis extends AbstractCalibratedAxis {
+public class GammaVariateAxisTest {
 
-	// -- fields --
+	@Test
+	public void testCtor() {
+		GammaVariateAxis axis =
+			new GammaVariateAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
 
-	private double a, b, c, d;
-
-	// -- constructors --
-
-	public GaussianAxis(AxisType type, String unit, double a, double b, double c,
-		double d)
-	{
-		super(type);
-		setUnit(unit);
-		this.a = a;
-		this.b = b;
-		this.c = c;
-		this.d = d;
+		assertEquals(Axes.POLARIZATION, axis.type());
+		assertEquals("lp", axis.unit());
+		assertEquals(1, axis.a(), 0);
+		assertEquals(2, axis.b(), 0);
+		assertEquals(3, axis.c(), 0);
+		assertEquals(4, axis.d(), 0);
+		assertEquals(calValue(4, axis), axis.calibratedValue(4), 0);
 	}
 
-	// -- getters --
+	@Test
+	public void testOtherStuff() {
+		GammaVariateAxis axis =
+			new GammaVariateAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
 
-	public double a() {
-		return a;
+		axis.setA(5);
+		axis.setB(10);
+		axis.setC(15);
+		axis.setD(20);
+		assertEquals(5, axis.a(), 0);
+		assertEquals(10, axis.b(), 0);
+		assertEquals(15, axis.c(), 0);
+		assertEquals(20, axis.d(), 0);
+
+		assertEquals(Double.NaN, axis.rawValue(axis.calibratedValue(3)), 0);
 	}
 
-	public double b() {
-		return b;
+	private double calValue(double raw, GammaVariateAxis axis) {
+		return axis.a() * Math.pow((raw - axis.b()), axis.c()) *
+			Math.exp(-(raw - axis.b()) / axis.d());
 	}
-
-	public double c() {
-		return c;
-	}
-
-	public double d() {
-		return d;
-	}
-
-	// -- setters --
-
-	public void setA(double v) {
-		this.a = v;
-	}
-
-	public void setB(double v) {
-		this.b = v;
-	}
-
-	public void setC(double v) {
-		this.c = v;
-	}
-
-	public void setD(double v) {
-		this.d = v;
-	}
-
-	// -- CalibratedAxis methods --
-
-	@Override
-	public double calibratedValue(double rawValue) {
-		return a + Math.pow((b - a), c) *
-			Math.exp(-(rawValue - c) * (rawValue - c) / (2 * d * d));
-	}
-
-	@Override
-	public double rawValue(double calibratedValue) {
-		return Double.NaN; // TODO - for sure?
-	}
-
-	@Override
-	public String equation() {
-		return "y = a + (b-a)^c * exp(-(x-c)^2 / (2*d^2))";
-	}
-
-	@Override
-	public String calibratedEquation() {
-		return "y = (" + a + ") + ((" + b + ")-(" + a + "))^(" + c +
-			") * exp(-(x-(" + c + "))^2 / (2*(" + d + ")^2))";
-	}
-
-	@Override
-	public boolean update(CalibratedAxis other) {
-		if (other instanceof GaussianAxis) {
-			GaussianAxis axis = (GaussianAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			setA(axis.a());
-			setB(axis.b());
-			setC(axis.c());
-			setD(axis.d());
-			return true;
-		}
-		return false;
-	}
-
 }

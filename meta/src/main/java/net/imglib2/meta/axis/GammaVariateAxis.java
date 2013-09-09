@@ -42,12 +42,12 @@ import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
 
 /**
- * GaussianAxis is a {@link CalibratedAxis } that scales raw values by the
- * equation y = a + (b-a)^c*exp(-(x-c)*(x-c)/(2*d*d)).
+ * GammaVariateAxis is a {@link CalibratedAxis } that scales raw values by the
+ * equation y = a * (x-b)^c*exp(-(x-b)/d).
  * 
  * @author Barry DeZonia
  */
-public class GaussianAxis extends AbstractCalibratedAxis {
+public class GammaVariateAxis extends AbstractCalibratedAxis {
 
 	// -- fields --
 
@@ -55,8 +55,8 @@ public class GaussianAxis extends AbstractCalibratedAxis {
 
 	// -- constructors --
 
-	public GaussianAxis(AxisType type, String unit, double a, double b, double c,
-		double d)
+	public GammaVariateAxis(AxisType type, String unit, double a, double b,
+		double c, double d)
 	{
 		super(type);
 		setUnit(unit);
@@ -106,8 +106,7 @@ public class GaussianAxis extends AbstractCalibratedAxis {
 
 	@Override
 	public double calibratedValue(double rawValue) {
-		return a + Math.pow((b - a), c) *
-			Math.exp(-(rawValue - c) * (rawValue - c) / (2 * d * d));
+		return a * Math.pow((rawValue - b), c) * Math.exp(-(rawValue - b) / d);
 	}
 
 	@Override
@@ -117,19 +116,19 @@ public class GaussianAxis extends AbstractCalibratedAxis {
 
 	@Override
 	public String equation() {
-		return "y = a + (b-a)^c * exp(-(x-c)^2 / (2*d^2))";
+		return "y = a * (x-b)^c*exp(-(x-b)/d)";
 	}
 
 	@Override
 	public String calibratedEquation() {
-		return "y = (" + a + ") + ((" + b + ")-(" + a + "))^(" + c +
-			") * exp(-(x-(" + c + "))^2 / (2*(" + d + ")^2))";
+		return "y = (" + a + ") * (x-(" + b + "))^(" + c + ")*exp(-(x-(" + b +
+			"))/(" + d + "))";
 	}
 
 	@Override
 	public boolean update(CalibratedAxis other) {
-		if (other instanceof GaussianAxis) {
-			GaussianAxis axis = (GaussianAxis) other;
+		if (other instanceof GammaVariateAxis) {
+			GammaVariateAxis axis = (GammaVariateAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setA(axis.a());
