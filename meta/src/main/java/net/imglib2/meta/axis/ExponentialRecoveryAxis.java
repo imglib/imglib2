@@ -135,6 +135,7 @@ public class ExponentialRecoveryAxis extends AbstractCalibratedAxis {
 			setB(axis.b());
 			setC(axis.c());
 			setD(axis.d());
+			return true;
 		}
 		return false;
 	}
