@@ -49,6 +49,11 @@ import net.imglib2.meta.CalibratedAxis;
  */
 public class UncalibratedAxis extends AbstractCalibratedAxis {
 
+	// TODO the javadoc comment above implies this might have an inheritance
+	// problem. Either it is calibrated or it is not. Maybe the naming is wrong.
+
+	// -- constructors --
+
 	/**
 	 * Constructs a default UncalibratedAxis of unknown axis type.
 	 */
@@ -61,6 +66,22 @@ public class UncalibratedAxis extends AbstractCalibratedAxis {
 	 */
 	public UncalibratedAxis(AxisType type) {
 		super(type);
+	}
+
+	// -- CalibratedAxis methods --
+
+	// TODO - is this behavior correct?
+
+	@Override
+	public String unit() {
+		return null;
+	}
+
+	// TODO - is this behavior correct?
+
+	@Override
+	public void setUnit(String unit) {
+		// ignore
 	}
 
 	@Override
@@ -85,7 +106,10 @@ public class UncalibratedAxis extends AbstractCalibratedAxis {
 
 	@Override
 	public boolean update(CalibratedAxis other) {
-		if (other == this) return true;
+		if (other instanceof UncalibratedAxis) {
+			setType(((UncalibratedAxis) other).type());
+			return true;
+		}
 		return false;
 	}
 }
