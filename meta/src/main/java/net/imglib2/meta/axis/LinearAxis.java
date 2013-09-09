@@ -44,7 +44,8 @@ import net.imglib2.meta.CalibratedAxis;
 
 /**
  * LinearAxis is a {@link CalibratedAxis} that scales coordinates along the axis
- * in a linear fashion. Slope and intercept are configurable.
+ * in a linear fashion. Slope and intercept are configurable. Calibrated values
+ * calculated from equation y = a + b *x.
  * 
  * @author Barry DeZonia
  */

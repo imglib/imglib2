@@ -42,7 +42,9 @@ import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
 
 /**
- * An axis that scale nonlinearly as a polynomial of degree >= 2.
+ * PolynomialAxis is a {@link CalibratedAxis} that scale nonlinearly as a
+ * polynomial of degree >= 2. Calibrated values are calculated using the
+ * equation y = a + b*x + c*x^2 + ...
  * 
  * @author Barry DeZonia
  */
