@@ -40,11 +40,8 @@ package net.imglib2.meta.axis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import net.imglib2.meta.Axes;
-import net.imglib2.meta.Axes.CustomType;
-import net.imglib2.meta.axis.LinearAxis;
-import net.imglib2.meta.axis.UncalibratedAxis;
+import net.imglib2.meta.CalibratedAxis;
 
 import org.junit.Test;
 
@@ -167,6 +164,29 @@ public class LinearAxisTest {
 		assertEquals(Axes.Y, axis.type());
 		axis.setUnit("ThisHadBetterWork");
 		assertEquals("ThisHadBetterWork", axis.unit());
+	}
+
+	@Test
+	public void testUpdate() {
+		axis = new LinearAxis();
+
+		CalibratedAxis other = new LogLinearAxis();
+
+		assertFalse(axis.update(other));
+		assertEquals(0, axis.origin(), 0);
+		assertEquals(1, axis.scale(), 0);
+
+		other = new PolynomialAxis(Axes.SPECTRA, "ppm", 1, 2, 3);
+
+		assertFalse(axis.update(other));
+		assertEquals(0, axis.origin(), 0);
+		assertEquals(1, axis.scale(), 0);
+
+		other = new PolynomialAxis(Axes.SPECTRA, "ppm", 10, 15, 0);
+
+		assertTrue(axis.update(other));
+		assertEquals(10, axis.origin(), 0);
+		assertEquals(15, axis.scale(), 0);
 	}
 
 }

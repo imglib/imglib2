@@ -195,11 +195,22 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	@Override
 	public boolean update(CalibratedAxis other) {
 		if (other instanceof LinearAxis) {
-			setOrigin(((LinearAxis) other).origin());
-			setScale(((LinearAxis) other).scale());
-			setType(other.type());
-			setUnit(other.unit());
+			LinearAxis axis = (LinearAxis) other;
+			setOrigin(axis.origin());
+			setScale(axis.scale());
+			setType(axis.type());
+			setUnit(axis.unit());
 			return true;
+		}
+		if (other instanceof PolynomialAxis) {
+			PolynomialAxis axis = (PolynomialAxis) other;
+			if ((axis.order() == 2) && axis.coeff(2) == 0) {
+				setOrigin(axis.coeff(0));
+				setScale(axis.coeff(1));
+				setType(axis.type());
+				setUnit(axis.unit());
+				return true;
+			}
 		}
 		return false;
 	}
