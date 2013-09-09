@@ -55,7 +55,10 @@ public interface CalibratedAxis extends TypedAxis {
 	/** Returns a calibrated value given a raw position along the axis. */
 	double calibratedValue(double rawValue);
 
-	/** Returns a raw value given a calibrated position along the axis. */
+	/**
+	 * Returns a raw value given a calibrated position along the axis. Returns
+	 * Double.NaN if the calibrated value maps to more than one point along axis.
+	 */
 	double rawValue(double calibratedValue);
 
 	/**
