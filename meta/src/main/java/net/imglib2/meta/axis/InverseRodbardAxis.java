@@ -41,7 +41,7 @@ import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
 
 /**
- * RodbardAxis is a {@link CalibratedAxis } that scales raw values by the
+ * InverseRodbardAxis is a {@link CalibratedAxis } that scales raw values by the
  * equation y = a*((x-b)/(c-x))^(1/d).
  * 
  * @author Barry DeZonia
