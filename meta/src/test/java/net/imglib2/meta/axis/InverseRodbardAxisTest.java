@@ -75,7 +75,7 @@ public class InverseRodbardAxisTest {
 		assertEquals(5, axis.c(), 0);
 		assertEquals(7, axis.d(), 0);
 
-		assertEquals(axis.rawValue(axis.calibratedValue(3)), 3, 0.00000005);
+		assertEquals(axis.rawValue(axis.calibratedValue(3)), 3, 0.000001);
 	}
 
 	private double calValue(double raw, InverseRodbardAxis axis) {
