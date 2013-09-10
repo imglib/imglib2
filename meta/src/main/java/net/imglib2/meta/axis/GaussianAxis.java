@@ -65,7 +65,7 @@ public class GaussianAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public double calibratedValue(double rawValue) {
-		return a + Math.pow((b - a), c) *
+		return a + (b - a) *
 			Math.exp(-(rawValue - c) * (rawValue - c) / (2 * d * d));
 	}
 
@@ -76,13 +76,13 @@ public class GaussianAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public String equation() {
-		return "y = a + (b-a)^c * exp(-(x-c)^2 / (2*d^2))";
+		return "y = a + (b-a) * exp(-(x-c)^2 / (2*d^2))";
 	}
 
 	@Override
 	public String calibratedEquation() {
-		return "y = (" + a + ") + ((" + b + ")-(" + a + "))^(" + c +
-			") * exp(-(x-(" + c + "))^2 / (2*(" + d + ")^2))";
+		return "y = (" + a + ") + ((" + b + ")-(" + a + ")) * exp(-(x-(" + c +
+			"))^2 / (2*(" + d + ")^2))";
 	}
 
 	@Override

@@ -78,7 +78,7 @@ public class GaussianAxisTest {
 
 	private double calValue(double raw, GaussianAxis axis) {
 		return axis.a() +
-			Math.pow((axis.b() - axis.a()), axis.c()) *
+			(axis.b() - axis.a()) *
 			Math
 				.exp(-(raw - axis.c()) * (raw - axis.c()) / (2 * axis.d() * axis.d()));
 	}
