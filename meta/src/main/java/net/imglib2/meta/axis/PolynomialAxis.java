@@ -63,7 +63,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	// -- constructors --
 
 	public PolynomialAxis() {
-		this(Axes.unknown(), null, 0, 1, 1);
+		this(Axes.unknown(), null, 0, 0, 1);
 	}
 
 	public PolynomialAxis(AxisType type, String unit, double... coeffs)

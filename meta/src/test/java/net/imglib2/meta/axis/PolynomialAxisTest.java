@@ -57,7 +57,7 @@ public class PolynomialAxisTest {
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertNull(axis.unit());
 		assertEquals(0, axis.coeff(0), 0);
-		assertEquals(1, axis.coeff(1), 0);
+		assertEquals(0, axis.coeff(1), 0);
 		assertEquals(1, axis.coeff(2), 0);
 		for (int i = 3; i < 25; i++)
 			assertEquals(0, axis.coeff(i), 0);
