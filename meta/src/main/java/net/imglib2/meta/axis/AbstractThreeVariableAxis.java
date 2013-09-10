@@ -37,31 +37,46 @@
 
 package net.imglib2.meta.axis;
 
+import net.imglib2.meta.AbstractCalibratedAxis;
 import net.imglib2.meta.AxisType;
 
 /**
  * @author Barry DeZonia
  */
-public abstract class AbstractFourVariableAxis extends
-	AbstractThreeVariableAxis
-{
+public abstract class AbstractThreeVariableAxis extends AbstractCalibratedAxis {
 
-	protected double d;
+	protected double a, b, c;
 
-	public AbstractFourVariableAxis(AxisType type) {
+	public AbstractThreeVariableAxis(AxisType type) {
 		super(type);
 	}
 
 	// -- getters --
 
-	public double d() {
-		return d;
+	public double a() {
+		return a;
+	}
+
+	public double b() {
+		return b;
+	}
+
+	public double c() {
+		return c;
 	}
 
 	// -- setters --
 
-	public void setD(double v) {
-		this.d = v;
+	public void setA(double v) {
+		this.a = v;
+	}
+
+	public void setB(double v) {
+		this.b = v;
+	}
+
+	public void setC(double v) {
+		this.c = v;
 	}
 
 }

@@ -36,7 +36,6 @@
  */
 package net.imglib2.meta.axis;
 
-import net.imglib2.meta.AbstractCalibratedAxis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
@@ -47,11 +46,7 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class PowerAxis extends AbstractCalibratedAxis {
-
-	// -- fields --
-
-	private double a, b, c;
+public class PowerAxis extends AbstractThreeVariableAxis {
 
 	// -- constructors --
 
@@ -69,34 +64,6 @@ public class PowerAxis extends AbstractCalibratedAxis {
 		this.a = a;
 		this.b = b;
 		this.c = c;
-	}
-
-	// -- getters --
-
-	public double a() {
-		return a;
-	}
-
-	public double b() {
-		return b;
-	}
-
-	public double c() {
-		return c;
-	}
-
-	// -- setters --
-
-	public void setA(double v) {
-		this.a = v;
-	}
-
-	public void setB(double v) {
-		this.b = v;
-	}
-
-	public void setC(double v) {
-		this.c = v;
 	}
 
 	// -- CalibratedAxis methods --
