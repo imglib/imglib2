@@ -132,7 +132,37 @@ public class PowerAxis extends AbstractCalibratedAxis {
 			setC(axis.c());
 			return true;
 		}
+		if (other instanceof LinearAxis) {
+			LinearAxis axis = (LinearAxis) other;
+			setType(axis.type());
+			setUnit(axis.unit());
+			setA(axis.origin());
+			setB(axis.scale());
+			setC(1);
+			return true;
+		}
+		if (other instanceof PolynomialAxis) {
+			PolynomialAxis axis = (PolynomialAxis) other;
+			int power = compatiblePolynomial(axis);
+			if (power >= 0) {
+				setType(axis.type());
+				setUnit(axis.unit());
+				setA(axis.coeff(0));
+				setB(axis.coeff(power));
+				setC(power);
+				return true;
+			}
+		}
 		return false;
 	}
 
+	// -- helpers --
+
+	private int compatiblePolynomial(PolynomialAxis axis) {
+		int order = axis.order();
+		for (int i = 1; i < order; i++) {
+			if (axis.coeff(i) != 0) return -1;
+		}
+		return order;
+	}
 }

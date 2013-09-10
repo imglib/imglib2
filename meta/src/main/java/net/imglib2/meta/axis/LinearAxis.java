@@ -197,19 +197,35 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	public boolean update(CalibratedAxis other) {
 		if (other instanceof LinearAxis) {
 			LinearAxis axis = (LinearAxis) other;
-			setOrigin(axis.origin());
-			setScale(axis.scale());
 			setType(axis.type());
 			setUnit(axis.unit());
+			setOrigin(axis.origin());
+			setScale(axis.scale());
 			return true;
 		}
 		if (other instanceof PolynomialAxis) {
 			PolynomialAxis axis = (PolynomialAxis) other;
-			if ((axis.order() == 2) && axis.coeff(2) == 0) {
-				setOrigin(axis.coeff(0));
-				setScale(axis.coeff(1));
+			if (axis.order() == 2 && axis.coeff(2) == 0) {
 				setType(axis.type());
 				setUnit(axis.unit());
+				setOrigin(axis.coeff(0));
+				setScale(axis.coeff(1));
+				return true;
+			}
+		}
+		if (other instanceof PowerAxis) {
+			PowerAxis axis = (PowerAxis) other;
+			if (axis.c() == 0 || axis.c() == 1) {
+				setType(axis.type());
+				setUnit(axis.unit());
+				if (axis.c() == 0) {
+					setOrigin(axis.a() + axis.b());
+					setScale(0);
+				}
+				else { // axis.c() == 1
+					setOrigin(axis.a());
+					setScale(axis.b());
+				}
 				return true;
 			}
 		}

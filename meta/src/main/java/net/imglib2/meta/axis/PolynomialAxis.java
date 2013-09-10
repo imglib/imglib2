@@ -186,6 +186,18 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 			coeffs[2] = 0;
 			return true;
 		}
+		if (other instanceof PowerAxis) {
+			PowerAxis axis = (PowerAxis) other;
+			int power = compatiblePower(axis);
+			if (power >= 0) {
+				setType(axis.type());
+				setUnit(axis.unit());
+				coeffs = new double[power + 1];
+				coeffs[0] = axis.a();
+				coeffs[power] = axis.b();
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -211,4 +223,10 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 		}
 	}
 
+	private int compatiblePower(PowerAxis axis) {
+		if (axis.c() < 2) return -1;
+		if (Math.floor(axis.c()) != axis.c()) return -1;
+		// integer power >= 2
+		return (int) axis.c();
+	}
 }
