@@ -1,4 +1,3 @@
-package interactive;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -11,13 +10,13 @@ package interactive;
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,64 +28,57 @@ package interactive;
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+package net.imglib2.ui;
 
+import net.imglib2.RandomAccessible;
+import net.imglib2.RealRandomAccessible;
 import net.imglib2.converter.Converter;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
-import net.imglib2.meta.ImgPlus;
-import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.ui.overlay.LogoPainter;
-import net.imglib2.ui.viewer.InteractiveViewer2D;
-import net.imglib2.view.Views;
-import net.imglib2.view.composite.CompositeView;
-import net.imglib2.view.composite.NumericComposite;
+import net.imglib2.ui.util.InterpolatingSource;
 
-public class InteractiveCompositeViewer
+/**
+ * Image data to be rendered by imglib2-ui. Consists of a
+ * {@link RealRandomAccessible} of arbitrary pixel type <code>T</code>, a source
+ * transform, and an converter that converts type <code>T</code> to
+ * {@link ARGBType} for display.
+ *
+ * The {@link #getInterpolatedSource() source accessible} is assumed to be
+ * extended to infinity. If the underlying data is a pixel image, it is also
+ * assumed to be interpolated already (see {@link InterpolatingSource}).
+ *
+ * @param <T>
+ *            pixel type
+ * @param <A>
+ *            transform type
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
+public interface RenderSource< T, A >
 {
-	final static public void main( final String[] args ) throws ImgIOException
-	{
-		final String filename = "bike2-composite.tif";
-		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< FloatType >(), new FloatType() );
+	/**
+	 * Get the image, extended to infinity and interpolated.
+	 *
+	 * @return the extended and interpolated {@link RandomAccessible image}.
+	 */
+	public RealRandomAccessible< T > getInterpolatedSource();
 
-		final CompositeView< FloatType, NumericComposite< FloatType > > compositeView =
-				Views.collapseNumeric( Views.extendZero( img ), ( int )img.dimension( 2 ) );
+	/**
+	 * Get the transform from the {@link #getSource(long) source}
+	 * into the global coordinate system.
+	 *
+	 * @return transforms source into the global coordinate system.
+	 */
+	public A getSourceTransform();
 
-		final Converter< NumericComposite< FloatType >, ARGBType > converter =
-				new Converter< NumericComposite< FloatType >, ARGBType >()
-		{
-			@Override
-			public void convert( final NumericComposite< FloatType > input, final ARGBType output )
-			{
-				int r = (int) input.get( 0 ).getRealDouble();
-				r = r > 255 ? 255 : r;
-				int g = (int) input.get( 1 ).getRealDouble();
-				g = g > 255 ? 255 : g;
-				int b = (int) input.get( 2 ).getRealDouble();
-				b = b > 255 ? 255 : b;
-
-				output.set( ( ( ( ( r << 8 ) | g ) << 8 ) | b ) | 0xff000000 );
-			}
-		};
-
-
-		final int w = 720, h = 405;
-
-		final AffineTransform2D initial = new AffineTransform2D();
-
-		System.out.println( compositeView.numDimensions() );
-
-		final InteractiveViewer2D< NumericComposite< FloatType > > viewer = new InteractiveViewer2D< NumericComposite< FloatType > >( w, h, compositeView, initial, converter );
-		viewer.getDisplayCanvas().addOverlayRenderer( new LogoPainter() );
-		viewer.requestRepaint();
-	}
-
+	/**
+	 * Get the {@link Converter} (converts {@link #source} type T to ARGBType
+	 * for display).
+	 */
+	public Converter< ? super T, ARGBType > getConverter();
 }

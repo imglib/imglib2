@@ -1,4 +1,3 @@
-package interactive;
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -11,13 +10,13 @@ package interactive;
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,48 +28,61 @@ package interactive;
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+package net.imglib2.ui;
 
-import ij.ImagePlus;
-import net.imglib2.RandomAccessible;
-import net.imglib2.converter.TypeIdentity;
-import net.imglib2.img.imageplus.ImagePlusImg;
-import net.imglib2.img.imageplus.ImagePlusImgs;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.realtransform.AffineTransform3D;
-import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.ui.overlay.LogoPainter;
-import net.imglib2.ui.viewer.InteractiveViewer3D;
-import net.imglib2.view.Views;
+import java.awt.image.BufferedImage;
 
-public class InteractiveRGBViewer
+/**
+ * Renders some source data applying a viewer
+ * transform (mapping global to screen coordinates). Often there is an
+ * additional {@link RenderSource#getSourceTransform() source transform},
+ * mapping source to global coordinates. The transformation to apply to the
+ * source data then is a composition of this source transform (source to global)
+ * and the viewer transform (global to screen).
+ *
+ * @param <A>
+ *            viewer transform type
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
+public interface Renderer< A >
 {
-	final static public void main( final String[] args ) throws ImgIOException
-	{
-		final String filename = "/home/saalfeld/application/material/confocal/[XYZCT] overlay saalfeld-05-05-5-DPX_L9_Sum.lsm ... saalfeld-05-05-5-DPX_L10_Sum.tif (RGB).tif";
-		final ImagePlus imp = new ImagePlus( filename );
+	/**
+	 * Request a repaint of the display from the painter thread. The painter
+	 * thread will trigger a {@link #paint()} as soon as possible (that is,
+	 * immediately or after the currently running {@link #paint()} has
+	 * completed).
+	 * <p>
+	 * <em>All repaint request should be directed through here,
+	 * usually not to {@link PainterThread#requestRepaint()} directly</em>. The
+	 * reason for this is, that derived classes (i.e.,
+	 * {@link MultiResolutionRenderer}) may choose to cancel the on-going
+	 * rendering operation when a new repaint request comes in.
+	 */
+	public void requestRepaint();
 
-		final ImagePlusImg< ARGBType, ? > map = ImagePlusImgs.from( imp );
-
-		final int w = 720, h = 405;
-
-		final double yScale = 1.0, zScale = 1.0;
-		final AffineTransform3D initial = new AffineTransform3D();
-		initial.set(
-			1.0, 0.0, 0.0, ( w - map.dimension( 0 ) ) / 2.0,
-			0.0, yScale, 0.0, ( h - map.dimension( 1 ) * yScale ) / 2.0,
-			0.0, 0.0, zScale, -( map.dimension( 2 ) / 2.0 - 0.5 ) * zScale );
-
-		final RandomAccessible< ARGBType > extended = Views.extendValue( map, new ARGBType( 0xff000000 ) );
-
-		final InteractiveViewer3D< ARGBType > viewer = new InteractiveViewer3D< ARGBType >( w, h, extended, map, initial, new TypeIdentity< ARGBType >() );
-		viewer.getDisplayCanvas().addOverlayRenderer( new LogoPainter() );
-		viewer.requestRepaint();
-	}
-
+	/**
+	 * Render to our {@link RenderTarget}.
+	 * <p>
+	 * To do this, transform the source according to the given viewer transform,
+	 * render it to a {@link BufferedImage}, and
+	 * {@link RenderTarget#setBufferedImage(BufferedImage) hand} that
+	 * {@link BufferedImage} to the {@link RenderTarget}.
+	 * <p>
+	 * Note that the total transformation to apply to the source is a
+	 * composition of the {@link RenderSource#getSourceTransform() source
+	 * transform} (source to global coordinates) and the viewer transform
+	 * (global to screen).
+	 *
+	 * @param viewerTransform
+	 *            transforms global to screen coordinates.
+	 * @return whether rendering was successful.
+	 */
+	public boolean paint( final A viewerTransform );
 }
