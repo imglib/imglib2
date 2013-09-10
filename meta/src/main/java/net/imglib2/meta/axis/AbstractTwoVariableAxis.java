@@ -42,25 +42,24 @@ import net.imglib2.meta.AxisType;
 /**
  * @author Barry DeZonia
  */
-public abstract class AbstractThreeVariableAxis extends AbstractTwoVariableAxis
-{
+public abstract class AbstractTwoVariableAxis extends AbstractOneVariableAxis {
 
-	protected double c;
+	protected double b;
 
-	public AbstractThreeVariableAxis(AxisType type) {
+	public AbstractTwoVariableAxis(AxisType type) {
 		super(type);
 	}
 
 	// -- getters --
 
-	public double c() {
-		return c;
+	public double b() {
+		return b;
 	}
 
 	// -- setters --
 
-	public void setC(double v) {
-		this.c = v;
+	public void setB(double v) {
+		this.b = v;
 	}
 
 }
