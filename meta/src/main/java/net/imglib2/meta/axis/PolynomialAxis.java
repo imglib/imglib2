@@ -126,11 +126,13 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	@Override
 	public String equation() {
 		// String that looks like y = a + b*x + c*x^2 + ...
+		int v = 0;
 		StringBuilder builder = new StringBuilder();
 		builder.append("y = ");
 		for (int i = 0; i < coeffs.length; i++) {
+			if (coeffs[i] == 0) continue; // skip terms if possible
 			if (i != 0) builder.append(" + ");
-			builder.append(VARS[i]);
+			builder.append(VARS[v++]);
 			if (i != 0) {
 				builder.append("*x");
 				if (i > 1) {
@@ -148,6 +150,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 		StringBuilder builder = new StringBuilder();
 		builder.append("y = (");
 		for (int i = 0; i < coeffs.length; i++) {
+			if (coeffs[i] == 0) continue; // skip terms if possible
 			if (i != 0) builder.append(" + (");
 			builder.append(coeffs[i]);
 			builder.append(")");
