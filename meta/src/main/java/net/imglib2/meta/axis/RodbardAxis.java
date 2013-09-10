@@ -37,7 +37,6 @@
 
 package net.imglib2.meta.axis;
 
-import net.imglib2.meta.AbstractCalibratedAxis;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
 
@@ -47,11 +46,7 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class RodbardAxis extends AbstractCalibratedAxis {
-
-	// -- fields --
-
-	private double a, b, c, d;
+public class RodbardAxis extends AbstractFourVariableAxis {
 
 	// -- constructors --
 
@@ -64,42 +59,6 @@ public class RodbardAxis extends AbstractCalibratedAxis {
 		this.b = b;
 		this.c = c;
 		this.d = d;
-	}
-
-	// -- getters --
-
-	public double a() {
-		return a;
-	}
-
-	public double b() {
-		return b;
-	}
-
-	public double c() {
-		return c;
-	}
-
-	public double d() {
-		return d;
-	}
-
-	// -- setters --
-
-	public void setA(double v) {
-		this.a = v;
-	}
-
-	public void setB(double v) {
-		this.b = v;
-	}
-
-	public void setC(double v) {
-		this.c = v;
-	}
-
-	public void setD(double v) {
-		this.d = v;
 	}
 
 	// -- CalibratedAxis methods --

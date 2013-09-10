@@ -34,80 +34,57 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
 package net.imglib2.meta.axis;
 
-import net.imglib2.meta.Axes;
+import net.imglib2.meta.AbstractCalibratedAxis;
 import net.imglib2.meta.AxisType;
-import net.imglib2.meta.CalibratedAxis;
 
 /**
- * LogLinearAxis is a {@link CalibratedAxis } that scales raw values by the
- * equation y = a + b * ln(c + d*x).
- * 
  * @author Barry DeZonia
  */
-public class LogLinearAxis extends AbstractFourVariableAxis {
+public abstract class AbstractFourVariableAxis extends AbstractCalibratedAxis {
 
-	// -- constructors --
+	protected double a, b, c, d;
 
-	public LogLinearAxis() {
-		this(Axes.unknown());
-	}
-
-	public LogLinearAxis(AxisType type) {
-		this(type, null);
-	}
-
-	public LogLinearAxis(AxisType type, String unit) {
-		this(type, unit, 0, 1, 1, 1);
-	}
-
-	public LogLinearAxis(AxisType type, String unit, double a, double b,
-		double c, double d)
-	{
+	public AbstractFourVariableAxis(AxisType type) {
 		super(type);
-		setUnit(unit);
-		this.a = a;
-		this.b = b;
-		this.c = c;
-		this.d = d;
 	}
 
-	// -- CalibratedAxis methods --
+	// -- getters --
 
-	@Override
-	public double calibratedValue(double rawValue) {
-		return a + b * Math.log(c + d * rawValue);
+	public double a() {
+		return a;
 	}
 
-	@Override
-	public double rawValue(double calibratedValue) {
-		return ((Math.exp((calibratedValue - a) / b)) - c) / d;
+	public double b() {
+		return b;
 	}
 
-	@Override
-	public String equation() {
-		return "y = a + b * ln(c + d * x)";
+	public double c() {
+		return c;
 	}
 
-	@Override
-	public String calibratedEquation() {
-		return "y = (" + a + ") + (" + b + ") * ln((" + c + ") + (" + d + ") * x)";
+	public double d() {
+		return d;
 	}
 
-	@Override
-	public boolean update(CalibratedAxis other) {
-		if (other instanceof LogLinearAxis) {
-			LogLinearAxis axis = (LogLinearAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			setA(axis.a());
-			setB(axis.b());
-			setC(axis.c());
-			setD(axis.d());
-			return true;
-		}
-		return false;
+	// -- setters --
+
+	public void setA(double v) {
+		this.a = v;
+	}
+
+	public void setB(double v) {
+		this.b = v;
+	}
+
+	public void setC(double v) {
+		this.c = v;
+	}
+
+	public void setD(double v) {
+		this.d = v;
 	}
 
 }
