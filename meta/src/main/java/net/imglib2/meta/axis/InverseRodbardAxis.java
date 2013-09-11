@@ -70,9 +70,9 @@ public class InverseRodbardAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public double rawValue(double calibratedValue) {
-		double yToTheD = Math.pow(calibratedValue, d);
 		double aToTheD = Math.pow(a, d);
-		return ((c * yToTheD) + (aToTheD * b)) / (aToTheD + yToTheD);
+		double yToTheD = Math.pow(calibratedValue, d);
+		return ((b * aToTheD) + (c * yToTheD)) / (aToTheD + yToTheD);
 	}
 
 	@Override
