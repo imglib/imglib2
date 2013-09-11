@@ -47,6 +47,7 @@ import net.imglib2.type.Type;
  */
 public class CombinedCursor< A, B, C extends Type< C > > extends AbstractCombinedCursor< A, B, C >
 {
+
 	final protected Combiner< A, B, C > combiner;
 
 	final protected C combined;

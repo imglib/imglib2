@@ -63,7 +63,9 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
 
 	@Override
 	public double calibration(int d) {
-		return axis(d).calibration();
+		A axis = axis(d);
+		if (axis == null) return Double.NaN;
+		return axis.calibration();
 	}
 
 	@Override
@@ -80,7 +82,11 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
 
 	@Override
 	public void setCalibration(double cal, int d) {
-		axis(d).setCalibration(cal);
+		A axis = axis(d);
+		if (axis == null) {
+			throw new IllegalArgumentException("cannot setCalibration() on null axis");
+		}
+		axis.setCalibration(cal);
 	}
 
 	@Override
@@ -97,12 +103,18 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
 
 	@Override
 	public String unit(int d) {
-		return axis(d).unit();
+		A axis = axis(d);
+		if (axis == null) return null;
+		return axis.unit();
 	}
 
 	@Override
 	public void setUnit(String unit, int d) {
-		axis(d).setUnit(unit);
+		A axis = axis(d);
+		if (axis == null) {
+			throw new IllegalArgumentException("cannot setUnit() on null axis");
+		}
+		axis.setUnit(unit);
 	}
 
 }

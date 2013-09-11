@@ -49,6 +49,7 @@ import net.imglib2.RealPositionable;
 import net.imglib2.display.ColorTable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImg;
 
 /**
  * A simple container for storing an {@link Img} together with its metadata.
@@ -57,7 +58,7 @@ import net.imglib2.img.ImgFactory;
  * @author Curtis Rueden
  */
 public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
-	Metadata
+	ImgPlusMetadata
 {
 
 	/** The name assigned to the ImgPlus if none is provided. */
@@ -89,7 +90,7 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 		this(img, name, axes, null);
 	}
 
-	public ImgPlus(final Img<T> img, final Metadata metadata) {
+	public ImgPlus(final Img<T> img, final ImgPlusMetadata metadata) {
 		this(img, metadata.getName(), getAxisTypes(img, metadata),
 			getCalibration(img, metadata));
 		validBits = metadata.getValidBits();
@@ -412,7 +413,7 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	}
 
 	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */
-	public static <T> ImgPlus<T> wrap(final Img<T> img, final Metadata metadata)
+	public static <T> ImgPlus<T> wrap(final Img<T> img, final ImgPlusMetadata metadata)
 	{
 		if (img instanceof ImgPlus) return (ImgPlus<T>) img;
 		return new ImgPlus<T>(img, metadata);
@@ -464,7 +465,7 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	}
 
 	private static AxisType[] getAxisTypes(final Img<?> img,
-		final Metadata metadata)
+		final ImgPlusMetadata metadata)
 	{
 		final AxisType[] types = new AxisType[img.numDimensions()];
 		for (int i = 0; i < types.length; i++) {
@@ -474,7 +475,7 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	}
 
 	private static double[] getCalibration(final Img<?> img,
-		final Metadata metadata)
+		final ImgPlusMetadata metadata)
 	{
 		final double[] cal = new double[img.numDimensions()];
 		for (int i = 0; i < cal.length; i++) {
