@@ -74,11 +74,15 @@ public class DefaultAxisType implements AxisType {
 		return label;
 	}
 
+	// -- Deprecated AxisType methods --
+
+	@Deprecated
 	@Override
 	public boolean isXY() {
 		return (this == Axes.X || this == Axes.Y);
 	}
 
+	@Deprecated
 	@Override
 	public boolean isSpatial() {
 		return spatial;
