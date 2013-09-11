@@ -54,7 +54,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 
 	private static final String[] VARS = new String[] { "a", "b", "c", "d", "e",
 		"f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
-		"u", "v", "w", "x", "y", "z" };
+		"u", "v", "w", /* skipping x and y */"z" };
 
 	// -- fields --
 

@@ -121,11 +121,11 @@ public class PolynomialAxisTest {
 	@Test
 	public void testSetCoeff() {
 		PolynomialAxis axis = new PolynomialAxis();
-		axis.setCoeff(25, 1000);
-		assertEquals(1000, axis.coeff(25), 0);
-		assertEquals(25, axis.order());
+		axis.setCoeff(23, 1000);
+		assertEquals(1000, axis.coeff(23), 0);
+		assertEquals(23, axis.order());
 		try {
-			axis.setCoeff(26, 50);
+			axis.setCoeff(24, 50);
 			fail();
 		}
 		catch (IllegalArgumentException e) {
