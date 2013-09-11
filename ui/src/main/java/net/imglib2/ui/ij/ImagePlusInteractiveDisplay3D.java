@@ -45,7 +45,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import net.imglib2.Interval;
-import net.imglib2.display.ARGBScreenImage;
+import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.ui.AbstractInteractiveDisplay3D;
 import net.imglib2.ui.BoxOverlay;

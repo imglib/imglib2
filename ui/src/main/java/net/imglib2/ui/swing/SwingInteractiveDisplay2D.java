@@ -53,7 +53,7 @@ import java.awt.image.ColorModel;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import net.imglib2.display.ARGBScreenImage;
+import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.ui.AbstractInteractiveDisplay2D;
 import net.imglib2.ui.ScreenImageRenderer;

@@ -32,7 +32,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.display.RealARGBConverter;
+import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.display.projectors.AbstractProjector2D;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;

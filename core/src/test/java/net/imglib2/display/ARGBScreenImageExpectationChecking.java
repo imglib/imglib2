@@ -56,6 +56,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
+
 import org.junit.Test;
 
 public class ARGBScreenImageExpectationChecking

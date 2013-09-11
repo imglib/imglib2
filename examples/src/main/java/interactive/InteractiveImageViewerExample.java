@@ -41,7 +41,7 @@ import ij.IJ;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.display.RealARGBConverter;
+import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgIOException;

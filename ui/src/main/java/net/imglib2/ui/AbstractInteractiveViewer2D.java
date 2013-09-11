@@ -39,9 +39,9 @@ package net.imglib2.ui;
 
 import java.awt.Graphics;
 
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.Volatile2DRandomAccessibleProjector;
 import net.imglib2.display.XYRandomAccessibleProjector;
+import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
+import net.imglib2.display.projectors.volatileprojectors.Volatile2DRandomAccessibleProjector;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.NumericType;
@@ -129,7 +129,7 @@ public abstract class AbstractInteractiveViewer2D< T extends NumericType< T > > 
 		sourceToScreen.concatenate( sourceTransform );
 		projector.map();
 		if ( Volatile2DRandomAccessibleProjector.class.isInstance( projector ) )
-			return ( ( Volatile2DRandomAccessibleProjector< ?, ?, ? > )projector ).isValid();
+			return ( (net.imglib2.display.projectors.volatileprojectors.Volatile2DRandomAccessibleProjector< ?, ?, ? > )projector ).isValid();
 		else
 			return true;
 	}

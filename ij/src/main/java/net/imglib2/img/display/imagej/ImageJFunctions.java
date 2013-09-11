@@ -43,12 +43,12 @@ import ij.measure.Calibration;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.converter.ComplexPowerGLogFloatConverter;
 import net.imglib2.converter.Converter;
+import net.imglib2.converter.RealFloatConverter;
+import net.imglib2.converter.RealUnsignedByteConverter;
+import net.imglib2.converter.RealUnsignedShortConverter;
 import net.imglib2.converter.TypeIdentity;
-import net.imglib2.display.ComplexPowerGLogFloatConverter;
-import net.imglib2.display.RealFloatConverter;
-import net.imglib2.display.RealUnsignedByteConverter;
-import net.imglib2.display.RealUnsignedShortConverter;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;

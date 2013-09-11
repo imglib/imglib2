@@ -43,9 +43,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.border.TitledBorder;
 
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.RealARGBConverter;
+import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.display.projectors.Projector2D;
+import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;

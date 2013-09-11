@@ -37,7 +37,7 @@
 
 package interactive;
 import interactive.fractals.MandelbrotRealRandomAccessible;
-import net.imglib2.display.RealARGBConverter;
+import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;

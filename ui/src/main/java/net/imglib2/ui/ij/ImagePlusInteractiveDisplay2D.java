@@ -44,7 +44,7 @@ import ij.process.ColorProcessor;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import net.imglib2.display.ARGBScreenImage;
+import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.ui.AbstractInteractiveDisplay2D;
 import net.imglib2.ui.ScreenImageRenderer;

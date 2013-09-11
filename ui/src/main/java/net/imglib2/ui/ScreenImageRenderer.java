@@ -39,7 +39,7 @@ package net.imglib2.ui;
 
 import java.awt.Graphics;
 
-import net.imglib2.display.ARGBScreenImage;
+import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
 
 public interface ScreenImageRenderer
 {

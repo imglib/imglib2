@@ -30,7 +30,7 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 import net.imglib2.Interval;
-import net.imglib2.display.VolatileRealType;
+import net.imglib2.type.VolatileRealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 /**
