@@ -40,86 +40,90 @@ package net.imglib2.meta;
 import java.util.Hashtable;
 
 /**
- * An extensible enumeration of common dimensional {@link AxisType}s.
+ * An extensible enumeration of dimensional {@link AxisType}s. Provides a core
+ * set ({@link #X}, {@link #Y}, {@link #Z}, {@link #TIME} and {@link #CHANNEL})
+ * of AxisTypes. The {@link #get} methods can be used to create new, custom
+ * AxisTypes which will be cached for future use.
  * 
  * @author Curtis Rueden
+ * @author Mark Hiner
  */
-public enum Axes implements AxisType {
+public final class Axes {
+
+	// -- Fields --
+
+	/**
+	 * Table of existing AxisTypes
+	 */
+	private static Hashtable<String, AxisType> axes =
+		new Hashtable<String, AxisType>();
+
+	// -- Constructor to prevent instantiation --
+
+	private Axes() {}
+
+	// -- Core axes constants --
 
 	/**
 	 * Identifies the <i>X</i> dimensional type, representing a dimension in the
 	 * first (X) spatial dimension.
 	 */
-	X("X"),
+	public static final AxisType X = get("X", true);
 
 	/**
 	 * Identifies the <i>Y</i> dimensional type, representing a dimension in the
 	 * second (Y) spatial dimension.
 	 */
-	Y("Y"),
+	public static final AxisType Y = get("Y", true);
 
 	/**
 	 * Identifies the <i>Z</i> dimensional type, representing a dimension in the
 	 * third (Z) spatial dimension.
 	 */
-	Z("Z"),
+	public static final AxisType Z = get("Z", true);
 
 	/**
 	 * Identifies the <i>Time</i> dimensional type, representing a dimension
 	 * consisting of time points.
 	 */
-	TIME("Time"),
+	public static final AxisType TIME = get("Time");
 
 	/**
 	 * Identifies the <i>Channel</i> dimensional type, representing a generic
 	 * channel dimension.
 	 */
-	CHANNEL("Channel"),
+	public static final AxisType CHANNEL = get("Channel");
+
+	// -- Static utility methods --
 
 	/**
-	 * Identifies the <i>Spectra</i> dimensional type, representing a dimension
-	 * consisting of spectral channels.
+	 * Accessor for an AxisType of the given label. Creates and caches the
+	 * AxisType as a non-spatial axis if it does not already exist.
 	 */
-	SPECTRA("Spectra"),
-
-	/**
-	 * Identifies the <i>Lifetime</i> dimensional type, representing a dimension
-	 * consisting of a lifetime histogram.
-	 */
-	LIFETIME("Lifetime"),
-
-	/**
-	 * Identifies the <i>Polarization</i> dimensional type, representing a
-	 * dimension consisting of polarization states.
-	 */
-	POLARIZATION("Polarization"),
-
-	/**
-	 * Identifies the <i>Phase</i> dimensional type, representing a dimension
-	 * consisting of phases.
-	 */
-	PHASE("Phase"),
-
-	/**
-	 * Identifies the <i>Frequency</i> dimensional type, representing a dimension
-	 * consisting of frequencies.
-	 */
-	FREQUENCY("Frequency");
-
-	private static Hashtable<String, AxisType> axes =
-		new Hashtable<String, AxisType>();
-
-	static {
-		for (final AxisType axis : Axes.values()) {
-			axes.put(axis.getLabel(), axis);
-		}
+	public static AxisType get(final String label) {
+		return get(label, false);
 	}
 
-	public synchronized static AxisType get(final String label) {
+	/**
+	 * Accessor for an AxisType of the given label. Creates and caches the
+	 * AxisType with the given label and spatial flag if it does not already
+	 * exist.
+	 */
+	public static AxisType get(final String label, final boolean spatial) {
 		AxisType axis = axes.get(label);
+
+		// if the axis is null, create it
 		if (axis == null) {
-			axis = new CustomType(label);
-			axes.put(label, axis);
+			// synchronized to ensure the axis is only created once
+			synchronized (axes) {
+				// see if another thread already created our axis
+				axis = axes.get(label);
+				// if not, create and store it
+				if (axis == null) {
+					axis = new DefaultAxisType(label, spatial);
+					axes.put(label, axis);
+				}
+			}
 		}
 		return axis;
 	}
@@ -132,83 +136,6 @@ public enum Axes implements AxisType {
 	 * </p>
 	 */
 	public static AxisType unknown() {
-		return new CustomType("Unknown");
+		return new DefaultAxisType("Unknown");
 	}
-
-	private String label;
-
-	private Axes(final String label) {
-		this.label = label;
-	}
-
-	// -- AxisType methods --
-
-	@Override
-	public String getLabel() {
-		return label;
-	}
-
-	@Override
-	public boolean isXY() {
-		return this == Axes.X || this == Axes.Y;
-	}
-
-	@Override
-	public boolean isSpatial() {
-		return isXY() || this == Axes.Z;
-	}
-
-	// -- Object methods --
-
-	@Override
-	public String toString() {
-		return label;
-	}
-
-	// -- Helper classes --
-
-	/**
-	 * A custom dimensional axis type, for describing the dimensional axes of a
-	 * {@link TypedSpace} object.
-	 */
-	public static class CustomType implements AxisType {
-
-		private final String label;
-		private final boolean spatial;
-
-		public CustomType(final String label) {
-			this(label, false);
-		}
-
-		public CustomType(final String label, final boolean spatial) {
-			this.label = label;
-			this.spatial = spatial;
-		}
-
-		// -- Axis methods --
-
-		@Override
-		public String getLabel() {
-			return label;
-		}
-
-		@Override
-		public boolean isXY() {
-			return false;
-		}
-
-		@Override
-		public boolean isSpatial() {
-			return spatial;
-		}
-
-		// -- Object methods --
-
-		@Override
-		public String toString() {
-			return label;
-		}
-
-	}
-
 }

@@ -91,9 +91,9 @@ public class DefaultCalibratedSpaceTest {
 	@Test
 	public void test3() {
 		space = new DefaultCalibratedSpace(3);
-		assertTrue(space.axis(0).type() instanceof Axes.CustomType);
-		assertTrue(space.axis(1).type() instanceof Axes.CustomType);
-		assertTrue(space.axis(2).type() instanceof Axes.CustomType);
+		assertTrue(space.axis(0).type() instanceof DefaultAxisType);
+		assertTrue(space.axis(1).type() instanceof DefaultAxisType);
+		assertTrue(space.axis(2).type() instanceof DefaultAxisType);
 		assertNull(space.unit(0));
 		assertNull(space.unit(1));
 		assertNull(space.unit(2));

@@ -47,8 +47,10 @@ public interface AxisType {
 
 	String getLabel();
 
+	@Deprecated
 	boolean isXY();
 
+	@Deprecated
 	boolean isSpatial();
 
 }
