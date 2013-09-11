@@ -45,6 +45,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
+import net.imglib2.display.projectors.AbstractProjector2D;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
@@ -54,15 +55,15 @@ import net.imglib2.type.numeric.ARGBType;
  * the final value. Positions along the axis can be individually toggled for
  * inclusion in the computed composite value using the {@link #setComposite}
  * methods.
- *
+ * 
  * @see XYProjector for the code upon which this class was based.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  * @author Grant Harris
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
+public class CompositeXYProjector< A > extends AbstractProjector2D< A, ARGBType >
 {
 
 	private final ArrayList< Converter< A, ARGBType >> converters;
@@ -79,10 +80,16 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 
 	protected final Converter< A, ARGBType >[] currentConverters;
 
+	private IterableInterval< ARGBType > target;
+
+	private RandomAccessibleInterval< A > source;
+
 	@SuppressWarnings( "unchecked" )
 	public CompositeXYProjector( final RandomAccessibleInterval< A > source, final IterableInterval< ARGBType > target, final ArrayList< Converter< A, ARGBType >> converters, final int dimIndex )
 	{
-		super( source, target, null );
+		super( source.numDimensions() );
+		this.source = source;
+		this.target = target;
 		this.converters = converters;
 		this.dimIndex = dimIndex;
 
@@ -136,11 +143,11 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 	// -- Projector methods --
 
 	// private static long calls = 0;
-	
+
 	@Override
 	public void map()
 	{
-		//System.out.println("    CompositeXYProjector::map() : call #"+(++calls));
+		// System.out.println("    CompositeXYProjector::map() : call #"+(++calls));
 		for ( int d = 2; d < position.length; ++d )
 			min[ d ] = max[ d ] = position[ d ];
 
@@ -221,13 +228,13 @@ public class CompositeXYProjector< A > extends XYProjector< A, ARGBType >
 	 * Walk through composite[] and store the currently active converters and
 	 * positions (in dimension {@link #dimIndex}) to {@link #currentConverters}
 	 * and {@link #currentPositions}.
-	 *
-	 * A special cases is single-position mode.
-	 * The projector is in single-position mode iff all dimensional positions
-	 * along the composited axis are excluded. In this case, the current
-	 * position along that axis is used instead. The converter corresponding to
-	 * the current position is used.
-	 *
+	 * 
+	 * A special cases is single-position mode. The projector is in
+	 * single-position mode iff all dimensional positions along the composited
+	 * axis are excluded. In this case, the current position along that axis is
+	 * used instead. The converter corresponding to the current position is
+	 * used.
+	 * 
 	 * @return number of positions to convert
 	 */
 	protected int updateCurrentArrays()

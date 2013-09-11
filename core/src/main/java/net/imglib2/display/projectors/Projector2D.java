@@ -4,9 +4,8 @@ import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
-import net.imglib2.type.Type;
 import net.imglib2.view.Views;
 
 /**
@@ -21,10 +20,12 @@ import net.imglib2.view.Views;
  * @param <A>
  * @param <B>
  */
-public class Projector2D< A extends Type< A >, B extends Type< B >> extends Abstract2DProjector< A, B >
+public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 {
 
-	final Converter< A, B > converter;
+	final protected Converter< ? super A, B > converter;
+
+	final protected RandomAccessible< A > source;
 
 	final protected IterableInterval< B > target;
 
@@ -34,11 +35,9 @@ public class Projector2D< A extends Type< A >, B extends Type< B >> extends Abst
 
 	private final int dimY;
 
-	final int X = 0;
+	protected final int X = 0;
 
-	final int Y = 1;
-
-	private RandomAccessibleInterval< A > source;
+	protected final int Y = 1;
 
 	/**
 	 * creates a new 2D projector that samples a plain in the dimensions dimX,
@@ -52,7 +51,7 @@ public class Projector2D< A extends Type< A >, B extends Type< B >> extends Abst
 	 *            a converter that is applied to each point in the plain. This
 	 *            can e.g. be used for normalization, conversions, ...
 	 */
-	public Projector2D( final int dimX, final int dimY, final RandomAccessibleInterval< A > source, final IterableInterval< B > target, final Converter< A, B > converter )
+	public Projector2D( final int dimX, final int dimY, final RandomAccessible< A > source, final IterableInterval< B > target, final Converter< ? super A, B > converter )
 	{
 		super( source.numDimensions() );
 		this.dimX = dimX;

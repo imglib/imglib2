@@ -4,7 +4,7 @@ import interactive.remote.openconnectome.VolatileOpenConnectomeRandomAccessibleI
 import net.imglib2.RandomAccessible;
 import net.imglib2.display.VolatileRealType;
 import net.imglib2.display.VolatileRealTypeARGBConverter;
-import net.imglib2.display.VolatileXYRandomAccessibleProjector;
+import net.imglib2.display.Volatile2DRandomAccessibleProjector;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
@@ -51,7 +51,7 @@ public class InteractiveOpenConnectomeRotationExample
 			}
 			
 			@Override
-			protected VolatileXYRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType > createProjector()
+			protected Volatile2DRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType > createProjector()
 			{
 				final InterpolatorFactory< VolatileRealType< UnsignedByteType >, RandomAccessible< VolatileRealType< UnsignedByteType > > > interpolatorFactory;
 				switch ( interpolation )
@@ -68,7 +68,7 @@ public class InteractiveOpenConnectomeRotationExample
 						new Interpolant< VolatileRealType< UnsignedByteType >, RandomAccessible< VolatileRealType< UnsignedByteType > > >( source, interpolatorFactory );
 				final AffineRandomAccessible< VolatileRealType< UnsignedByteType >, AffineGet > mapping =
 						new AffineRandomAccessible< VolatileRealType< UnsignedByteType >, AffineGet >( interpolant, sourceToScreen.inverse() );
-				return new VolatileXYRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType >( mapping, screenImage, converter );
+				return new Volatile2DRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType >( mapping, screenImage, converter );
 			}
 			
 //			@Override

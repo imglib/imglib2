@@ -13,7 +13,7 @@ import net.imglib2.display.projectors.dimsamplers.SelectiveProjectedDimSampler;
 
 /**
  * A general 2D Projector that uses three dimensions as input to create the 2D
- * result. Starting from the reference point (see {@link Abstract2DProjector})
+ * result. Starting from the reference point (see {@link AbstractProjector2D})
  * two dimensions are sampled such that a plain gets cut out of a higher
  * dimensional data volume. The third dimension is projected (in a mathematical
  * sense) onto this plain. <br>
@@ -31,7 +31,7 @@ import net.imglib2.display.projectors.dimsamplers.SelectiveProjectedDimSampler;
  * @param <B>
  *            target type
  */
-public class DimProjector2D< A, B > extends Abstract2DProjector< A, B >
+public class DimProjector2D< A, B > extends AbstractProjector2D< A, B >
 {
 
 	private final static int X = 0;

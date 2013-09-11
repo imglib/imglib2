@@ -41,7 +41,7 @@ import java.awt.Graphics;
 
 import net.imglib2.Interval;
 import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.VolatileXYRandomAccessibleProjector;
+import net.imglib2.display.Volatile2DRandomAccessibleProjector;
 import net.imglib2.display.XYRandomAccessibleProjector;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
@@ -118,8 +118,8 @@ public abstract class AbstractInteractiveViewer3D< T extends NumericType< T > > 
 		}
 		sourceToScreen.concatenate( sourceTransform );
 		projector.map();
-		if ( VolatileXYRandomAccessibleProjector.class.isInstance( projector ) )
-			return ( ( VolatileXYRandomAccessibleProjector< ?, ?, ? > )projector ).isValid();
+		if ( Volatile2DRandomAccessibleProjector.class.isInstance( projector ) )
+			return ( ( Volatile2DRandomAccessibleProjector< ?, ?, ? > )projector ).isValid();
 		else
 			return true;
 	}

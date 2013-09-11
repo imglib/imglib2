@@ -1,6 +1,6 @@
 package net.imglib2.display.projectors.specializedprojectors;
 
-import net.imglib2.display.projectors.Abstract2DProjector;
+import net.imglib2.display.projectors.AbstractProjector2D;
 import net.imglib2.display.projectors.screenimages.ByteScreenImage;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
@@ -10,7 +10,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * Fast implementation of a {@link Abstract2DProjector} that selects a 2D data
+ * Fast implementation of a {@link AbstractProjector2D} that selects a 2D data
  * plain from an ByteType ArrayImg. The map method implements a normalization
  * function. The resulting image is a ByteType ArrayImg.
  * 
@@ -19,7 +19,7 @@ import net.imglib2.util.IntervalIndexer;
  * @param <A>
  *            source
  */
-public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends Abstract2DProjector< A, UnsignedByteType >
+public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends AbstractProjector2D< A, UnsignedByteType >
 {
 
 	private final byte[] sourceArray;

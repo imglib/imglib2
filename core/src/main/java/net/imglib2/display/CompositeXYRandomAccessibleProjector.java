@@ -43,6 +43,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
+import net.imglib2.display.projectors.AbstractProjector2D;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
@@ -52,17 +53,17 @@ import net.imglib2.type.numeric.ARGBType;
  * the final value. Positions along the axis can be individually toggled for
  * inclusion in the computed composite value using the {@link #setComposite}
  * methods.
- *
+ * 
  * @see CompositeXYProjector for the code upon which this class was based.
  * @see XYRandomAccessibleProjector for the code upon which this class was
  *      based.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  * @author Grant Harris
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProjector< A, ARGBType >
+public class CompositeXYRandomAccessibleProjector< A > extends AbstractProjector2D< A, ARGBType >
 {
 	final protected RandomAccessibleInterval< ARGBType > target;
 
@@ -80,10 +81,13 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProject
 
 	protected final Converter< A, ARGBType >[] currentConverters;
 
+	protected final RandomAccessibleInterval< A > source;
+
 	@SuppressWarnings( "unchecked" )
 	public CompositeXYRandomAccessibleProjector( final RandomAccessibleInterval< A > source, final RandomAccessibleInterval< ARGBType > target, final ArrayList< Converter< A, ARGBType >> converters, final int dimIndex )
 	{
-		super( source, null );
+		super( source.numDimensions() );
+		this.source = source;
 		this.target = target;
 		this.converters = converters;
 		this.dimIndex = dimIndex;
@@ -106,13 +110,15 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProject
 	// -- CompositeXYProjector methods --
 
 	/** Toggles the given position index's inclusion in composite values. */
-	public void setComposite(final int index, final boolean on) {
-		composite[index] = on;
+	public void setComposite( final int index, final boolean on )
+	{
+		composite[ index ] = on;
 	}
 
 	/** Gets whether the given position index is included in composite values. */
-	public boolean isComposite(final int index) {
-		return composite[index];
+	public boolean isComposite( final int index )
+	{
+		return composite[ index ];
 	}
 
 	/**
@@ -121,15 +127,18 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProject
 	 * consist of only the projector's current position (i.e., non-composite
 	 * mode).
 	 */
-	public void setComposite(final boolean on) {
-		for (int i = 0; i < composite.length; i++)
-			composite[i] = on;
+	public void setComposite( final boolean on )
+	{
+		for ( int i = 0; i < composite.length; i++ )
+			composite[ i ] = on;
 	}
 
 	/** Gets whether composite mode is enabled for all positions. */
-	public boolean isComposite() {
-		for (int i = 0; i < composite.length; i++)
-			if (!composite[i]) return false;
+	public boolean isComposite()
+	{
+		for ( int i = 0; i < composite.length; i++ )
+			if ( !composite[ i ] )
+				return false;
 		return true;
 	}
 
@@ -181,11 +190,11 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProject
 		final RandomAccess< ARGBType > targetRandomAccess = target.randomAccess();
 
 		targetRandomAccess.setPosition( min[ 1 ], 1 );
-		while (	targetRandomAccess.getLongPosition( 1 ) <= max[ 1 ] )
+		while ( targetRandomAccess.getLongPosition( 1 ) <= max[ 1 ] )
 		{
 			sourceRandomAccess.setPosition( min[ 0 ], 0 );
 			targetRandomAccess.setPosition( min[ 0 ], 0 );
-			while (	targetRandomAccess.getLongPosition( 0 ) <= max[ 0 ] )
+			while ( targetRandomAccess.getLongPosition( 0 ) <= max[ 0 ] )
 			{
 				int aSum = 0, rSum = 0, gSum = 0, bSum = 0;
 				for ( int i = 0; i < size; i++ )
@@ -227,13 +236,13 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProject
 	 * Walk through composite[] and store the currently active converters and
 	 * positions (in dimension {@link #dimIndex}) to {@link #currentConverters}
 	 * and {@link #currentPositions}.
-	 *
-	 * A special cases is single-position mode.
-	 * The projector is in single-position mode iff all dimensional positions
-	 * along the composited axis are excluded. In this case, the current
-	 * position along that axis is used instead. The converter corresponding to
-	 * the current position is used.
-	 *
+	 * 
+	 * A special cases is single-position mode. The projector is in
+	 * single-position mode iff all dimensional positions along the composited
+	 * axis are excluded. In this case, the current position along that axis is
+	 * used instead. The converter corresponding to the current position is
+	 * used.
+	 * 
 	 * @return number of positions to convert
 	 */
 	protected int updateCurrentArrays()
@@ -269,11 +278,11 @@ public class CompositeXYRandomAccessibleProjector< A > extends AbstractXYProject
 	{
 		final RandomAccess< ARGBType > targetRandomAccess = target.randomAccess();
 		targetRandomAccess.setPosition( min[ 1 ], 1 );
-		while (	targetRandomAccess.getLongPosition( 1 ) <= max[ 1 ] )
+		while ( targetRandomAccess.getLongPosition( 1 ) <= max[ 1 ] )
 		{
 			sourceRandomAccess.setPosition( min[ 0 ], 0 );
 			targetRandomAccess.setPosition( min[ 0 ], 0 );
-			while (	targetRandomAccess.getLongPosition( 0 ) <= max[ 0 ] )
+			while ( targetRandomAccess.getLongPosition( 0 ) <= max[ 0 ] )
 			{
 				conv.convert( sourceRandomAccess.get(), targetRandomAccess.get() );
 				sourceRandomAccess.fwd( 0 );
