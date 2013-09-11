@@ -49,10 +49,9 @@ public class InverseRodbardAxisTest {
 
 	@Test
 	public void testCtor() {
-		InverseRodbardAxis axis =
-			new InverseRodbardAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
+		InverseRodbardAxis axis = new InverseRodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
-		assertEquals(Axes.POLARIZATION, axis.type());
+		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
 		assertEquals(1, axis.a(), 0);
 		assertEquals(2, axis.b(), 0);
@@ -63,8 +62,7 @@ public class InverseRodbardAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		InverseRodbardAxis axis =
-			new InverseRodbardAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
+		InverseRodbardAxis axis = new InverseRodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		axis.setA(2.2);
 		axis.setB(105.5); // NB - B and C carefully chosen for range 0 to 100

@@ -50,9 +50,9 @@ public class GammaVariateAxisTest {
 	@Test
 	public void testCtor() {
 		GammaVariateAxis axis =
-			new GammaVariateAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
+ new GammaVariateAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
-		assertEquals(Axes.POLARIZATION, axis.type());
+		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
 		assertEquals(1, axis.a(), 0);
 		assertEquals(2, axis.b(), 0);
@@ -64,7 +64,7 @@ public class GammaVariateAxisTest {
 	@Test
 	public void testOtherStuff() {
 		GammaVariateAxis axis =
-			new GammaVariateAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
+ new GammaVariateAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		axis.setA(2);
 		axis.setB(3);

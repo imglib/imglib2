@@ -49,9 +49,9 @@ public class GaussianAxisTest {
 
 	@Test
 	public void testOtherCtor() {
-		GaussianAxis axis = new GaussianAxis(Axes.POLARIZATION, "lp", 4, 3, 2, 1);
+		GaussianAxis axis = new GaussianAxis(Axes.Z, "lp", 4, 3, 2, 1);
 
-		assertEquals(Axes.POLARIZATION, axis.type());
+		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
 		assertEquals(4, axis.a(), 0);
 		assertEquals(3, axis.b(), 0);
@@ -62,7 +62,7 @@ public class GaussianAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		GaussianAxis axis = new GaussianAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
+		GaussianAxis axis = new GaussianAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		axis.setA(2);
 		axis.setB(3);

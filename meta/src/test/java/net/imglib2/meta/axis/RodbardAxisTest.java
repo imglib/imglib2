@@ -49,9 +49,9 @@ public class RodbardAxisTest {
 
 	@Test
 	public void testCtor() {
-		RodbardAxis axis = new RodbardAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
+		RodbardAxis axis = new RodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
-		assertEquals(Axes.POLARIZATION, axis.type());
+		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
 		assertEquals(1, axis.a(), 0);
 		assertEquals(2, axis.b(), 0);
@@ -62,7 +62,7 @@ public class RodbardAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		RodbardAxis axis = new RodbardAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
+		RodbardAxis axis = new RodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		axis.setA(2.2);
 		axis.setB(3.3);

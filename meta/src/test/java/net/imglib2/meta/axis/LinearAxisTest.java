@@ -135,7 +135,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testOtherMethods() {
-		axis = new LinearAxis(Axes.PHASE, "heptoflops", 5, 3);
+		axis = new LinearAxis(Axes.Y, "heptoflops", 5, 3);
 		assertEquals(5, axis.averageScale(10, 20), 0);
 		assertEquals("y = (3.0) + (5.0) * x", axis.calibratedEquation());
 		assertEquals(23, axis.calibratedValue(4), 0);
@@ -143,15 +143,15 @@ public class LinearAxisTest {
 		assertEquals(3, axis.origin(), 0);
 		assertEquals(7, axis.rawValue(38), 0);
 		assertEquals(5, axis.scale(), 0);
-		assertEquals(Axes.PHASE, axis.type());
+		assertEquals(Axes.Y, axis.type());
 		assertEquals("heptoflops", axis.unit());
 
 		UncalibratedAxis bogusAxis = new UncalibratedAxis();
 		assertFalse(axis.update(bogusAxis));
 
-		LinearAxis goodAxis = new LinearAxis(Axes.SPECTRA, "gabblerousers", 23, 89);
+		LinearAxis goodAxis = new LinearAxis(Axes.Y, "gabblerousers", 23, 89);
 		assertTrue(axis.update(goodAxis));
-		assertEquals(Axes.SPECTRA, axis.type());
+		assertEquals(Axes.Y, axis.type());
 		assertEquals("gabblerousers", axis.unit());
 		assertEquals(23, axis.scale(), 0);
 		assertEquals(89, axis.origin(), 0);
@@ -176,13 +176,13 @@ public class LinearAxisTest {
 		assertEquals(0, axis.origin(), 0);
 		assertEquals(1, axis.scale(), 0);
 
-		other = new PolynomialAxis(Axes.SPECTRA, "ppm", 1, 2, 3);
+		other = new PolynomialAxis(Axes.Z, "ppm", 1, 2, 3);
 
 		assertFalse(axis.update(other));
 		assertEquals(0, axis.origin(), 0);
 		assertEquals(1, axis.scale(), 0);
 
-		other = new PolynomialAxis(Axes.SPECTRA, "ppm", 10, 15, 0);
+		other = new PolynomialAxis(Axes.Z, "ppm", 10, 15, 0);
 
 		assertTrue(axis.update(other));
 		assertEquals(10, axis.origin(), 0);

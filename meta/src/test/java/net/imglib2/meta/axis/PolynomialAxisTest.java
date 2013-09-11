@@ -81,17 +81,17 @@ public class PolynomialAxisTest {
 
 	@Test
 	public void testEquation() {
-		PolynomialAxis axis = new PolynomialAxis(Axes.FREQUENCY, "mm", 7, 2, 1);
+		PolynomialAxis axis = new PolynomialAxis(Axes.Y, "mm", 7, 2, 1);
 		assertEquals("y = a + b*x + c*x^2", axis.equation());
-		axis = new PolynomialAxis(Axes.FREQUENCY, "mm", 5, 4, 3, 2, 1);
+		axis = new PolynomialAxis(Axes.Y, "mm", 5, 4, 3, 2, 1);
 		assertEquals("y = a + b*x + c*x^2 + d*x^3 + e*x^4", axis.equation());
 	}
 
 	@Test
 	public void testCalibratedEquation() {
-		PolynomialAxis axis = new PolynomialAxis(Axes.FREQUENCY, "mm", 7, 2, 1);
+		PolynomialAxis axis = new PolynomialAxis(Axes.Y, "mm", 7, 2, 1);
 		assertEquals("y = (7.0) + (2.0)*x + (1.0)*x^2", axis.calibratedEquation());
-		axis = new PolynomialAxis(Axes.FREQUENCY, "mm", 5, 4, 3, 2, 1);
+		axis = new PolynomialAxis(Axes.Y, "mm", 5, 4, 3, 2, 1);
 		assertEquals("y = (5.0) + (4.0)*x + (3.0)*x^2 + (2.0)*x^3 + (1.0)*x^4",
 			axis.calibratedEquation());
 	}
@@ -136,8 +136,8 @@ public class PolynomialAxisTest {
 	@Test
 	public void testType() {
 		PolynomialAxis axis = new PolynomialAxis();
-		axis.setType(Axes.PHASE);
-		assertEquals(Axes.PHASE, axis.type());
+		axis.setType(Axes.CHANNEL);
+		assertEquals(Axes.CHANNEL, axis.type());
 	}
 
 	@Test
@@ -164,9 +164,9 @@ public class PolynomialAxisTest {
 			assertEquals(0, axis.coeff(i), 0);
 		}
 
-		other = new LinearAxis(Axes.LIFETIME, "pps", 99, 3);
+		other = new LinearAxis(Axes.TIME, "pps", 99, 3);
 		assertTrue(axis.update(other));
-		assertEquals(Axes.LIFETIME, axis.type());
+		assertEquals(Axes.TIME, axis.type());
 		assertEquals("pps", axis.unit());
 		assertEquals(3, axis.coeff(0), 0);
 		assertEquals(99, axis.coeff(1), 0);
@@ -176,7 +176,7 @@ public class PolynomialAxisTest {
 
 		other = new LogLinearAxis();
 		assertFalse(axis.update(other));
-		assertEquals(Axes.LIFETIME, axis.type());
+		assertEquals(Axes.TIME, axis.type());
 		assertEquals("pps", axis.unit());
 		assertEquals(3, axis.coeff(0), 0);
 		assertEquals(99, axis.coeff(1), 0);

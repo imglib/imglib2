@@ -64,10 +64,9 @@ public class ExponentialAxisTest {
 
 	@Test
 	public void testOtherCtor() {
-		ExponentialAxis axis =
-			new ExponentialAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
+		ExponentialAxis axis = new ExponentialAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
-		assertEquals(Axes.POLARIZATION, axis.type());
+		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
 		assertEquals(1, axis.a(), 0);
 		assertEquals(2, axis.b(), 0);
