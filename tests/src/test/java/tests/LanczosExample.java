@@ -34,7 +34,7 @@ import mpicbg.util.Timer;
 import net.imglib2.RandomAccessible;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYRandomAccessibleProjector;
+import net.imglib2.display.projectors.Projector2D;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -84,7 +84,7 @@ public class LanczosExample
 		final AffineRandomAccessible< UnsignedShortType, AffineGet > mapping = new AffineRandomAccessible< UnsignedShortType, AffineGet >( interpolant, affine );
 		
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
-		final XYRandomAccessibleProjector< UnsignedShortType, ARGBType > projector = new XYRandomAccessibleProjector< UnsignedShortType, ARGBType >( mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
+		final Projector2D< UnsignedShortType, ARGBType > projector = new Projector2D< UnsignedShortType, ARGBType >( 0, 1, mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 		
 		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
 		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );

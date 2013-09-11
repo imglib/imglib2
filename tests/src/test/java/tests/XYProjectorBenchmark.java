@@ -28,7 +28,7 @@ package tests;
 
 import ij.ImageJ;
 import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYProjector;
+import net.imglib2.display.projectors.Projector2D;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -57,7 +57,7 @@ public class XYProjectorBenchmark
 
 	public void convert( final Img< UnsignedByteType > in,  final Img< ARGBType > out )
 	{
-		final XYProjector< UnsignedByteType, ARGBType > projector = new XYProjector< UnsignedByteType, ARGBType >( in, out, new RealARGBConverter< UnsignedByteType >(0, 1000) );
+		final Projector2D< UnsignedByteType, ARGBType > projector = new Projector2D< UnsignedByteType, ARGBType >( 0, 1,  in, out, new RealARGBConverter< UnsignedByteType >(0, 1000) );
 		for ( int iteration = 0; iteration < 10; ++iteration )
 		{
 			final long start = System.currentTimeMillis();

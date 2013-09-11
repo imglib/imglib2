@@ -6,6 +6,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.Converter;
+import net.imglib2.view.RandomAccessibleIntervalCursor;
 import net.imglib2.view.Views;
 
 /**
@@ -80,11 +81,12 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 
 		IterableInterval< A > srcIterable = Views.iterable( Views.interval( source, new FinalInterval( min, max ) ) );
 		final Cursor< B > targetCursor = target.localizingCursor();
+		final Cursor< A > sourceCursor = srcIterable.cursor();
 
-		if ( target.iterationOrder().equals( srcIterable.iterationOrder() ) )
+		if ( target.iterationOrder().equals( srcIterable.iterationOrder() ) && !( sourceCursor instanceof RandomAccessibleIntervalCursor ) )
 		{
 			// use cursors
-			final Cursor< A > sourceCursor = srcIterable.cursor();
+
 			while ( targetCursor.hasNext() )
 			{
 				converter.convert( sourceCursor.next(), targetCursor.next() );
