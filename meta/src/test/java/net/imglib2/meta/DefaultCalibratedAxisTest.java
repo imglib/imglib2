@@ -52,15 +52,15 @@ public class DefaultCalibratedAxisTest {
 	@Test
 	public void testDefaultConstruction() {
 		axis = new DefaultCalibratedAxis();
-		assertTrue(axis.type() instanceof Axes.CustomType);
+		assertTrue(axis.type() instanceof DefaultAxisType);
 		assertEquals(null, axis.unit());
 		assertEquals(Double.NaN, axis.calibration(), 0);
 	}
 
 	@Test
 	public void testAxisTypeConstruction() {
-		axis = new DefaultCalibratedAxis(Axes.FREQUENCY);
-		assertEquals(Axes.FREQUENCY, axis.type());
+		axis = new DefaultCalibratedAxis(Axes.TIME);
+		assertEquals(Axes.TIME, axis.type());
 		assertEquals(null, axis.unit());
 		assertEquals(Double.NaN, axis.calibration(), 0);
 	}
