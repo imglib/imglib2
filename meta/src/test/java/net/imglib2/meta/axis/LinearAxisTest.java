@@ -189,4 +189,14 @@ public class LinearAxisTest {
 		assertEquals(15, axis.scale(), 0);
 	}
 
+	@Test
+	public void testInverseMapping() {
+		axis = new LinearAxis();
+		axis.setOrigin(2);
+		axis.setScale(3);
+
+		for (int i = 0; i < 100; i++) {
+			assertEquals(axis.rawValue(axis.calibratedValue(i)), i, 0.000001);
+		}
+	}
 }

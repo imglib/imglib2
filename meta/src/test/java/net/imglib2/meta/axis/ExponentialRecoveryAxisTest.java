@@ -65,16 +65,18 @@ public class ExponentialRecoveryAxisTest {
 	public void testOtherStuff() {
 		LogLinearAxis axis = new LogLinearAxis();
 
-		axis.setA(5);
-		axis.setB(10);
-		axis.setC(15);
-		axis.setD(20);
-		assertEquals(5, axis.a(), 0);
-		assertEquals(10, axis.b(), 0);
-		assertEquals(15, axis.c(), 0);
-		assertEquals(20, axis.d(), 0);
+		axis.setA(2);
+		axis.setB(3);
+		axis.setC(5);
+		axis.setD(7);
+		assertEquals(2, axis.a(), 0);
+		assertEquals(3, axis.b(), 0);
+		assertEquals(5, axis.c(), 0);
+		assertEquals(7, axis.d(), 0);
 
-		assertEquals(axis.rawValue(axis.calibratedValue(3)), 3, 0.000001);
+		for (int i = 0; i < 100; i++) {
+			assertEquals(axis.rawValue(axis.calibratedValue(i)), i, 0.000001);
+		}
 	}
 
 	private double calValue(double raw, ExponentialRecoveryAxis axis) {

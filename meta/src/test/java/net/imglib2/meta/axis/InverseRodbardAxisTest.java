@@ -66,16 +66,18 @@ public class InverseRodbardAxisTest {
 		InverseRodbardAxis axis =
 			new InverseRodbardAxis(Axes.POLARIZATION, "lp", 1, 2, 3, 4);
 
-		axis.setA(2);
-		axis.setB(3);
-		axis.setC(5);
-		axis.setD(7);
-		assertEquals(2, axis.a(), 0);
-		assertEquals(3, axis.b(), 0);
-		assertEquals(5, axis.c(), 0);
-		assertEquals(7, axis.d(), 0);
+		axis.setA(2.2);
+		axis.setB(105.5); // NB - B and C carefully chosen for range 0 to 100
+		axis.setC(-3.3);
+		axis.setD(7.7);
+		assertEquals(2.2, axis.a(), 0);
+		assertEquals(105.5, axis.b(), 0);
+		assertEquals(-3.3, axis.c(), 0);
+		assertEquals(7.7, axis.d(), 0);
 
-		assertEquals(axis.rawValue(axis.calibratedValue(3)), 3, 0.000001);
+		for (int i = 0; i < 100; i++) {
+			assertEquals(axis.rawValue(axis.calibratedValue(i)), i, 0.0001);
+		}
 	}
 
 	private double calValue(double raw, InverseRodbardAxis axis) {
