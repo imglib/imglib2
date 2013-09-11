@@ -58,6 +58,8 @@ public class UncalibratedAxisTest {
 		assertEquals(null, axis.unit());
 		axis.setType(Axes.CHANNEL);
 		assertEquals(Axes.CHANNEL, axis.type());
+		assertEquals(5, axis.calibratedValue(5), 0);
+		assertEquals(5, axis.rawValue(5), 0);
 	}
 
 }
