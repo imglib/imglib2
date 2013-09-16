@@ -52,13 +52,13 @@ public class DefaultTypedAxisTest {
 	@Test
 	public void test1() {
 		axis = new DefaultTypedAxis();
-		assertTrue(axis.type() instanceof Axes.CustomType);
+		assertTrue(axis.type() instanceof DefaultAxisType);
 	}
 
 	@Test
 	public void test2() {
-		axis = new DefaultTypedAxis(Axes.SPECTRA);
-		assertEquals(Axes.SPECTRA, axis.type());
+		axis = new DefaultTypedAxis(Axes.CHANNEL);
+		assertEquals(Axes.CHANNEL, axis.type());
 	}
 
 }
