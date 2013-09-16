@@ -52,7 +52,7 @@ import ucar.nc2.units.SimpleUnit;
  * @author Barry DeZonia
  */
 @Plugin(type = Service.class)
-public class DefaultUnitService extends AbstractService {
+public class DefaultUnitService extends AbstractService implements UnitService {
 
 	// -- fields --
 
@@ -76,6 +76,7 @@ public class DefaultUnitService extends AbstractService {
 //	 * @return The conversion factor which is used to multiply input numbers into
 //	 *         output space.
 
+	@Override
 	public double factor(String inputUnit, String outputUnit)
 	{
 		failureMsg = null;
@@ -87,6 +88,7 @@ public class DefaultUnitService extends AbstractService {
 //	 * desired unit conversion is invalid it returns Double.NaN and sets the
 //	 * internal failure message.
 
+	@Override
 	public String failureMessage() {
 		return failureMsg;
 	}
@@ -107,6 +109,7 @@ public class DefaultUnitService extends AbstractService {
 //	 * @param baseUnit The unit the defined unit is based upon e.g. "m/s^2".
 //	 * @param factor The ratio of defined units to base units e.g. 14.2.
 
+	@Override
 	public void defineUnit(String unitName, String baseUnit, double factor) {
 		if (!Double.isNaN(factor(unitName, baseUnit))) {
 			throw new IllegalArgumentException("unit defined already " + unitName);
