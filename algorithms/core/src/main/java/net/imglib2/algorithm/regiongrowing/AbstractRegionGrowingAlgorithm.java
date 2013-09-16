@@ -205,7 +205,7 @@ public abstract class AbstractRegionGrowingAlgorithm< L extends Comparable< L > 
 				}
 				if ( !outOfBounds )
 				{
-					processPosition( candidatePosition, candidatePosition, newPixelQueue, label, ra );
+					processPosition( pixel, candidatePosition, newPixelQueue, label, ra );
 				}
 			}
 		}
