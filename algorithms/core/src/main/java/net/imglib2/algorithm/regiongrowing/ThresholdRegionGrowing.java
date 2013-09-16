@@ -4,9 +4,10 @@ import java.util.Map;
 import java.util.Queue;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.regiongrowing.RegionGrowingTools.GrowingMode;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.NativeImgLabeling;
 import net.imglib2.type.numeric.integer.IntType;
@@ -25,7 +26,7 @@ import net.imglib2.type.numeric.integer.IntType;
 public class ThresholdRegionGrowing< T extends Comparable< T >, L extends Comparable< L >> extends AbstractRegionGrowingAlgorithm< L >
 {
 
-	private final Img< T > img;
+	private final RandomAccessibleInterval< T > img;
 
 	private final T threshold;
 
@@ -52,7 +53,7 @@ public class ThresholdRegionGrowing< T extends Comparable< T >, L extends Compar
 	 * @param structuringElement
 	 *            the structuring element for the growing process.
 	 */
-	public ThresholdRegionGrowing( final Img< T > img, final T threshold, final Map< long[], L > seedLabels, final GrowingMode growingMode, final long[][] structuringElement )
+	public ThresholdRegionGrowing( final RandomAccessibleInterval< T > img, final T threshold, final Map< long[], L > seedLabels, final GrowingMode growingMode, final long[][] structuringElement )
 	{
 		super( seedLabels, growingMode, structuringElement, false );
 		this.img = img;
@@ -64,12 +65,9 @@ public class ThresholdRegionGrowing< T extends Comparable< T >, L extends Compar
 	public NativeImgLabeling< L, IntType > initializeLabeling()
 	{
 		Img< IntType > backup = null;
-		try
-		{
-			backup = img.factory().imgFactory( new IntType() ).create( img, new IntType() );
-		}
-		catch ( final IncompatibleTypeException e )
-		{}
+		backup = new ArrayImgFactory< IntType >().create( img, new IntType() );
+		// backup = img.factory().imgFactory( new IntType() ).create( img, new
+		// IntType() );
 		labeling = new NativeImgLabeling< L, IntType >( backup );
 		return labeling;
 	}
