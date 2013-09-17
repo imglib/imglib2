@@ -4,11 +4,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.regiongrowing.RegionGrowingTools.GrowingMode;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.NativeImgLabeling;
 import net.imglib2.type.numeric.integer.IntType;
 
@@ -26,17 +22,11 @@ import net.imglib2.type.numeric.integer.IntType;
 public class ThresholdRegionGrowing< T extends Comparable< T >, L extends Comparable< L >> extends AbstractRegionGrowingAlgorithm< L >
 {
 
-	private final RandomAccessibleInterval< T > img;
-
 	private final T threshold;
 
 	private final RandomAccess< T > ra;
 
-	/**
-	 * A dummy copy of the output, made to be able to return a
-	 * {@link NativeImgLabeling} instead of a {@link Labeling}.
-	 */
-	private NativeImgLabeling< L, IntType > labeling;
+	private final NativeImgLabeling< L, IntType > target;
 
 	/**
 	 * Instantiate a new threshold base region algorithm.
@@ -53,23 +43,18 @@ public class ThresholdRegionGrowing< T extends Comparable< T >, L extends Compar
 	 * @param structuringElement
 	 *            the structuring element for the growing process.
 	 */
-	public ThresholdRegionGrowing( final RandomAccessibleInterval< T > img, final T threshold, final Map< long[], L > seedLabels, final GrowingMode growingMode, final long[][] structuringElement )
+	public ThresholdRegionGrowing( final RandomAccess< T > ra, final T threshold, final Map< long[], L > seedLabels, final GrowingMode growingMode, final long[][] structuringElement, final NativeImgLabeling< L, IntType > target )
 	{
 		super( seedLabels, growingMode, structuringElement, false );
-		this.img = img;
-		this.ra = img.randomAccess();
+		this.target = target;
+		this.ra = ra;
 		this.threshold = threshold;
 	}
 
 	@Override
 	public NativeImgLabeling< L, IntType > initializeLabeling()
 	{
-		Img< IntType > backup = null;
-		backup = new ArrayImgFactory< IntType >().create( img, new IntType() );
-		// backup = img.factory().imgFactory( new IntType() ).create( img, new
-		// IntType() );
-		labeling = new NativeImgLabeling< L, IntType >( backup );
-		return labeling;
+		return target;
 	}
 
 	@Override
@@ -90,6 +75,6 @@ public class ThresholdRegionGrowing< T extends Comparable< T >, L extends Compar
 	@Override
 	public NativeImgLabeling< L, IntType > getResult()
 	{
-		return labeling;
+		return target;
 	}
 }
