@@ -169,37 +169,4 @@ public class DefaultUnitService extends AbstractService implements UnitService {
 		Calibrator calibrator;
 	}
 
-	public static void main(String[] args) {
-		DefaultUnitService c = new DefaultUnitService();
-		// a peeb is 5 meters
-		c.defineUnit("peeb", "m", 5);
-		System.out.println("peebs per meter = " + c.value(1, "peeb", "m"));
-		System.out.println("meters per peeb = " + c.value(1, "m", "peeb"));
-		// a wuzpang is 2 peebs
-		c.defineUnit("wuzpang", "peeb", 2);
-		System.out.println("wuzpangs per meter = " + c.value(1, "wuzpang", "m"));
-		System.out.println("meters per wuzpang = " + c.value(1, "m", "wuzpang"));
-		System.out.println("wuzpangs per peeb = " + c.value(1, "wuzpang", "peeb"));
-		System.out.println("peebs per wuzpang = " + c.value(1, "peeb", "wuzpang"));
-		// a plook is 7 wuzpangs
-		c.defineUnit("plook", "wuzpang", 7);
-		System.out
-			.println("wuzpangs per plook = " + c.value(1, "wuzpang", "plook"));
-		System.out
-			.println("plooks per wuzpang = " + c.value(1, "plook", "wuzpang"));
-		System.out.println("plook per meter = " + c.value(1, "m", "plook"));
-		System.out.println("meter per plook = " + c.value(1, "plook", "m"));
-		// a korch is 4 m/s^2
-		c.defineUnit("korch", "m/s^2", 4);
-		System.out.println("korch per m/s^2 = " + c.value(1, "m/s^2", "korch"));
-		System.out.println("korch per km/s^2 = " + c.value(1, "km/s^2", "korch"));
-		// define a scale/offset unit
-		c.defineUnit("MyCel", "K", 1, 273.15);
-		System.out.println("1 degree C to kelvin " + c.value(1, "Cel", "K"));
-		System.out.println("1 degree MyCel to kelvin " + c.value(1, "MyCel", "K"));
-		// complain about a bad conversion
-		System.out.println("Trying bad conversion: kelvin to meter : " +
-			c.value(1, "kelvin", "meter"));
-		System.out.println(c.failureMessage());
-	}
 }
