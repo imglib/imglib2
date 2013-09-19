@@ -44,7 +44,10 @@ import org.scijava.plugin.Plugin;
 import org.scijava.service.AbstractService;
 import org.scijava.service.Service;
 
-import ucar.nc2.units.SimpleUnit;
+import ucar.units.Unit;
+import ucar.units.UnitFormat;
+import ucar.units.UnitFormatManager;
+import ucar.units.UnknownUnit;
 
 /**
  * Service for defining units and making unit conversions.
@@ -59,81 +62,83 @@ public class DefaultUnitService extends AbstractService implements UnitService {
 	private String failureMsg = null;
 	private Map<String, UnitDef> userDefinedUnits =
 		new HashMap<String, DefaultUnitService.UnitDef>();
+	private UnitFormat unitFormatter = UnitFormatManager.instance();
 
 	// -- constructors --
 
 	public DefaultUnitService() {
 	}
 
-//	 * Returns a conversion factor between two compatible types of units. Each
-//	 * unit can be a compound unit string. For instance "inch" or "kg*m/s" or
-//	 * "pounds/inch^2", "km/hour**2", etc. Returns the multiplication factor that
-//	 * will convert values in the input unit space to values in the output unit
-//	 * space. Returns Double.NaN if the unit types are incompatible.
-//	 * 
-//	 * @param inputUnit The string representing the input unit.
-//	 * @param outputUnit The string representing the output unit.
-//	 * @return The conversion factor which is used to multiply input numbers into
-//	 *         output space.
+	// -- UnitService methods --
 
 	@Override
-	public double factor(String inputUnit, String outputUnit)
+	public double value(double inputValue, String inputUnit, String outputUnit)
 	{
 		failureMsg = null;
-		return findConversion(inputUnit, outputUnit, 1);
+		return findConversion(inputValue, inputUnit, outputUnit);
 	}
-
-//	 * Return the last internal error message if any. Each time factor() is called
-//	 * the internal message is initially set to null. When factor() determines a
-//	 * desired unit conversion is invalid it returns Double.NaN and sets the
-//	 * internal failure message.
 
 	@Override
 	public String failureMessage() {
 		return failureMsg;
 	}
 
-	// TODO - we are relying on using NetCDF which has limited API for units. The
-	// udunits package is also released as its own maven artifact in ucar's own
-	// nexus. We could rely on that subproject and maybe have better api for
-	// user defined units. This code below was quick to write and is a minimal
-	// implementation. Note: ucar's nexus link is this:
-	// https://artifacts.unidata.ucar.edu/content/groups/public/edu/ucar/udunits/
-
-//	 * Defines a unit conversion that can be referred to via the factor() method.
-//	 * Note that baseUnit is not necessarily a name. It could be a compound unit
-//	 * string like "m/s^2" etc. Imagine we define a unit called "fliggs" that is
-//	 * 14.2 m/s^2.
-//	 * 
-//	 * @param unitName The name of the unit being defined e.g. "fliggs".
-//	 * @param baseUnit The unit the defined unit is based upon e.g. "m/s^2".
-//	 * @param factor The ratio of defined units to base units e.g. 14.2.
+	@Override
+	public void defineUnit(String unitName, String baseUnit, double scale) {
+		defineUnit(unitName, baseUnit, scale, 0);
+	}
 
 	@Override
-	public void defineUnit(String unitName, String baseUnit, double factor) {
-		if (!Double.isNaN(factor(unitName, baseUnit))) {
-			throw new IllegalArgumentException("unit defined already " + unitName);
+	public void defineUnit(String unitName, String baseUnit, double scale,
+		double offset)
+	{
+		defineUnit(unitName, baseUnit, new LinearCalibrator(scale, offset));
+	}
+
+	@Override
+	public void
+		defineUnit(String unitName, String baseUnit, Calibrator calibrator)
+	{
+		String err = null;
+		if (userDefinedUnits.get(baseUnit) == null) {
+			// make sure that base unit is defined internally
+			if (!definedInternally(baseUnit)) {
+				err = "base unit has not been defined: " + baseUnit;
+			}
 		}
-		UnitDef unitDef = new UnitDef(baseUnit, factor);
+		else { // base unit is one of our user defined ones
+			// make sure our new unit name is not already in use
+			if (userDefinedUnits.get(unitName) != null) {
+				err = "unit has already been defined: " + unitName;
+			}
+			else if (definedInternally(unitName)) {
+				err = "can't redefine internal unit " + unitName;
+			}
+		}
+		if (err != null) {
+			throw new IllegalArgumentException(err);
+		}
+		UnitDef unitDef = new UnitDef(baseUnit, calibrator);
 		userDefinedUnits.put(unitName, unitDef);
 	}
 
 	// -- helpers --
 
-	private double findConversion(String unit1, String unit2, double accum) {
+	private double findConversion(double measure, String unit1, String unit2) {
 		UnitDef unit = userDefinedUnits.get(unit1);
 		if (unit != null) {
-			return findConversion(unit.baseUnit, unit2, accum / unit.amount);
+			return findConversion(unit.calibrator.toOutput(measure), unit.baseUnit,
+				unit2);
 		}
 		unit = userDefinedUnits.get(unit2);
 		if (unit != null) {
-			return findConversion(unit1, unit.baseUnit, accum * unit.amount);
+			return findConversion(unit.calibrator.toInput(measure), unit1,
+				unit.baseUnit);
 		}
-		// Here is the only reliance on underlying library that handles unit
-		// conversion.
-		// Initial release: ucar udunits as shipped in the netcdf library
 		try {
-			return accum * SimpleUnit.getConversionFactor(unit1, unit2);
+			Unit u1 = unitFormatter.parse(unit1);
+			Unit u2 = unitFormatter.parse(unit2);
+			return u1.convertTo(measure, u2);
 		}
 		catch (Exception e) {
 			failureMsg = e.getMessage();
@@ -141,38 +146,60 @@ public class DefaultUnitService extends AbstractService implements UnitService {
 		}
 	}
 
+	private boolean definedInternally(String unitName) {
+		try {
+			Unit o = unitFormatter.parse(unitName);
+			if (o instanceof UnknownUnit) return false;
+			if (o.getDerivedUnit() instanceof UnknownUnit) return false;
+		}
+		catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
 	private class UnitDef {
 
-		UnitDef(String baseUnit, double amount) {
+		UnitDef(String baseUnit, Calibrator calibrator) {
 			this.baseUnit = baseUnit;
-			this.amount = amount;
+			this.calibrator = calibrator;
 		}
 
-		double amount;
 		String baseUnit;
+		Calibrator calibrator;
 	}
 
 	public static void main(String[] args) {
 		DefaultUnitService c = new DefaultUnitService();
 		// a peeb is 5 meters
 		c.defineUnit("peeb", "m", 5);
-		System.out.println("peebs per meter = " + c.factor("peeb", "m"));
-		System.out.println("meters per peeb = " + c.factor("m", "peeb"));
-		// a dub is 2 peebs
-		c.defineUnit("dub", "peeb", 2);
-		System.out.println("dubs per meter = " + c.factor("dub", "m"));
-		System.out.println("meters per dub = " + c.factor("m", "dub"));
-		System.out.println("dubs per peeb = " + c.factor("dub", "peeb"));
-		System.out.println("peebs per dub = " + c.factor("peeb", "dub"));
-		// a plook is 7 dubs
-		c.defineUnit("plook", "dub", 7);
-		System.out.println("dubs per plook = " + c.factor("dub", "plook"));
-		System.out.println("plooks per dub = " + c.factor("plook", "dub"));
-		System.out.println("plook per meter = " + c.factor("m", "plook"));
-		System.out.println("meter per plook = " + c.factor("plook", "m"));
+		System.out.println("peebs per meter = " + c.value(1, "peeb", "m"));
+		System.out.println("meters per peeb = " + c.value(1, "m", "peeb"));
+		// a wuzpang is 2 peebs
+		c.defineUnit("wuzpang", "peeb", 2);
+		System.out.println("wuzpangs per meter = " + c.value(1, "wuzpang", "m"));
+		System.out.println("meters per wuzpang = " + c.value(1, "m", "wuzpang"));
+		System.out.println("wuzpangs per peeb = " + c.value(1, "wuzpang", "peeb"));
+		System.out.println("peebs per wuzpang = " + c.value(1, "peeb", "wuzpang"));
+		// a plook is 7 wuzpangs
+		c.defineUnit("plook", "wuzpang", 7);
+		System.out
+			.println("wuzpangs per plook = " + c.value(1, "wuzpang", "plook"));
+		System.out
+			.println("plooks per wuzpang = " + c.value(1, "plook", "wuzpang"));
+		System.out.println("plook per meter = " + c.value(1, "m", "plook"));
+		System.out.println("meter per plook = " + c.value(1, "plook", "m"));
 		// a korch is 4 m/s^2
 		c.defineUnit("korch", "m/s^2", 4);
-		System.out.println("korch per m/s^2 = " + c.factor("m/s^2", "korch"));
-		System.out.println("korch per km/s^2 = " + c.factor("km/s^2", "korch"));
+		System.out.println("korch per m/s^2 = " + c.value(1, "m/s^2", "korch"));
+		System.out.println("korch per km/s^2 = " + c.value(1, "km/s^2", "korch"));
+		// define a scale/offset unit
+		c.defineUnit("MyCel", "K", 1, 273.15);
+		System.out.println("1 degree C to kelvin " + c.value(1, "Cel", "K"));
+		System.out.println("1 degree MyCel to kelvin " + c.value(1, "MyCel", "K"));
+		// complain about a bad conversion
+		System.out.println("Trying bad conversion: kelvin to meter : " +
+			c.value(1, "kelvin", "meter"));
+		System.out.println(c.failureMessage());
 	}
 }
