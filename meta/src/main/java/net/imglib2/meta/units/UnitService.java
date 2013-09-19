@@ -47,18 +47,19 @@ import org.scijava.service.Service;
 public interface UnitService extends Service {
 
 	/**
-	 * Returns a conversion factor between two compatible types of units. Each
-	 * unit can be a compound unit string. For instance "inch" or "kg*m/s" or
-	 * "pounds/inch^2", "km/hour**2", etc. Returns the multiplication factor that
-	 * will convert values in the input unit space to values in the output unit
-	 * space. Returns Double.NaN if the unit types are incompatible.
+	 * Returns a value after conversion between two compatible types of units.
+	 * Each unit can be a compound unit string. For instance "inch" or "kg*m/s" or
+	 * "pounds/inch^2", "km/hour**2", etc. Returns the number of output unit
+	 * values represented by the number of input values of input type. Returns
+	 * Double.NaN if the unit types are incompatible.
 	 * 
+	 * @param inputValue The double representing the number of input units.
 	 * @param inputUnit The string representing the input unit.
 	 * @param outputUnit The string representing the output unit.
 	 * @return The conversion factor which is used to multiply input numbers into
 	 *         output space.
 	 */
-	public double factor(String inputUnit, String outputUnit);
+	public double value(double inputValue, String inputUnit, String outputUnit);
 
 	/**
 	 * Return the last internal error message if any. Each time factor() is called
@@ -69,14 +70,44 @@ public interface UnitService extends Service {
 	public String failureMessage();
 
 	/**
-	 * Defines a unit conversion that can be referred to via the factor() method.
+	 * Defines a unit conversion that can be referred to via the value() method.
 	 * Note that baseUnit is not necessarily a name. It could be a compound unit
 	 * string like "m/s^2" etc. Imagine we define a unit called "fliggs" that is
 	 * 14.2 m/s^2.
 	 * 
 	 * @param unitName The name of the unit being defined e.g. "fliggs".
 	 * @param baseUnit The unit the defined unit is based upon e.g. "m/s^2".
-	 * @param factor The ratio of defined units to base units e.g. 14.2.
+	 * @param scale The ratio of defined units to base units e.g. 14.2.
 	 */
-	public void defineUnit(String unitName, String baseUnit, double factor);
+	public void defineUnit(String unitName, String baseUnit, double scale);
+
+	/**
+	 * Defines a unit conversion that can be referred to via the value() method.
+	 * Note that baseUnit is not necessarily a name. It could be a compound unit
+	 * string like "m/s^2" etc. Imagine we define a unit called "fliggs" that is
+	 * 14.2 m/s^2 offset by 3.3 from baseUnit. An example of an offset is the 32
+	 * used in conversion between celsius and fahrenheit.
+	 * 
+	 * @param unitName The name of the unit being defined e.g. "fliggs".
+	 * @param baseUnit The unit the defined unit is based upon e.g. "m/s^2".
+	 * @param scale The ratio of defined units to base units e.g. 14.2.
+	 * @param offset The offset of defined units to base units e.g. 3.3.
+	 */
+	public void defineUnit(String unitName, String baseUnit, double scale,
+		double offset);
+
+	/**
+	 * Defines a unit conversion that can be referred to via the value() method.
+	 * Note that baseUnit is not necessarily a name. It could be a compound unit
+	 * string like "m/s^2" etc. Imagine we define a unit called "fliggs" that has
+	 * a nonlinear conversion from baseUnit. One supplies a {@link Calibrator}
+	 * that handles conversion. The Calibrator allows any kind of conversion
+	 * between units including nonlinear ones (i.e. can support log units).
+	 * 
+	 * @param unitName The name of the unit being defined e.g. "fliggs".
+	 * @param baseUnit The unit the defined unit is based upon e.g. "m/s^2".
+	 * @param calibrator The Calibrator the maps between the two unit spaces.
+	 */
+	public void
+		defineUnit(String unitName, String baseUnit, Calibrator calibrator);
 }
