@@ -39,6 +39,7 @@ package net.imglib2.meta.units;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -74,7 +75,7 @@ public class DefaultUnitServiceTest {
 		c.defineUnit("MyCel", "K", 1, 273.15);
 		assertEquals(c.value(1, "Cel", "K"), c.value(1, "MyCel", "K"), 0);
 		// try a bad conversion
-		c.value(1, "kelvin", "meter");
+		assertTrue(Double.isNaN(c.value(1, "kelvin", "meter")));
 		assertNotNull(c.failureMessage());
 	}
 }
