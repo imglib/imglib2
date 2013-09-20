@@ -26,8 +26,8 @@
 		</dependency>
 		<dependency>
 			<groupId>edu.ucar</groupId>
-			<artifactId>netcdf</artifactId>
-			<version>4.2.20</version>
+			<artifactId>udunits</artifactId>
+			<version>4.3.18</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
