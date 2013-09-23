@@ -56,14 +56,14 @@ public interface UnitService extends Service {
 	 * @param inputValue The double representing the number of input units.
 	 * @param inputUnit The string representing the input unit.
 	 * @param outputUnit The string representing the output unit.
-	 * @return The conversion factor which is used to multiply input numbers into
-	 *         output space.
+	 * @return The value in output units after converting the inputValue from
+	 *         input units.
 	 */
 	public double value(double inputValue, String inputUnit, String outputUnit);
 
 	/**
-	 * Return the last internal error message if any. Each time factor() is called
-	 * the internal message is initially set to null. When factor() determines a
+	 * Return the last internal error message if any. Each time value() is called
+	 * the internal message is initially set to null. When value() determines a
 	 * desired unit conversion is invalid it returns Double.NaN and sets the
 	 * internal failure message.
 	 */
