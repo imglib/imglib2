@@ -129,6 +129,14 @@ public final class Axes {
 	}
 
 	/**
+	 * @return an array of {@code AxisType}s corresponding to all currently
+	 *         defined axes.
+	 */
+	public static AxisType[] knownTypes() {
+		return axes.values().toArray(null);
+	}
+
+	/**
 	 * Gets an "unknown" axis type.
 	 * <p>
 	 * Always returns a new object, which is not part of the extended enumeration.
