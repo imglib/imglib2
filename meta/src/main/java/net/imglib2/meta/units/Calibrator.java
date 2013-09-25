@@ -35,30 +35,24 @@
  * #L%
  */
 
-package net.imglib2.meta;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+package net.imglib2.meta.units;
 
 /**
+ * Calibrators map values bidirectionally. One can support user defined units of
+ * arbitrary complexity. For instance supporting Richter scale conversions would
+ * be simple using this interface.
+ * 
  * @author Barry DeZonia
  */
-public class DefaultTypedAxisTest {
+public interface Calibrator {
 
-	private DefaultTypedAxis axis;
+	/**
+	 * Map an input double value to an output double value.
+	 */
+	double toOutput(double input);
 
-	@Test
-	public void test1() {
-		axis = new DefaultTypedAxis();
-		assertTrue(axis.type() instanceof DefaultAxisType);
-	}
-
-	@Test
-	public void test2() {
-		axis = new DefaultTypedAxis(Axes.CHANNEL);
-		assertEquals(Axes.CHANNEL, axis.type());
-	}
-
+	/**
+	 * Map an output double value to an input double value.
+	 */
+	double toInput(double output);
 }

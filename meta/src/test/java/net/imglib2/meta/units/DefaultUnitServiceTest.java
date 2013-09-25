@@ -35,9 +35,10 @@
  * #L%
  */
 
-package net.imglib2.meta;
+package net.imglib2.meta.units;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -45,20 +46,36 @@ import org.junit.Test;
 /**
  * @author Barry DeZonia
  */
-public class DefaultTypedAxisTest {
-
-	private DefaultTypedAxis axis;
+public class DefaultUnitServiceTest {
 
 	@Test
-	public void test1() {
-		axis = new DefaultTypedAxis();
-		assertTrue(axis.type() instanceof DefaultAxisType);
+	public void test() {
+		DefaultUnitService c = new DefaultUnitService();
+		// a peeb is 5 meters
+		c.defineUnit("peeb", "m", 5);
+		assertEquals(5.0, c.value(1, "peeb", "m"), 0);
+		assertEquals(1 / 5.0, c.value(1, "m", "peeb"), 0);
+		// a wuzpang is 2 peebs
+		c.defineUnit("wuzpang", "peeb", 2);
+		assertEquals(2.0, c.value(1, "wuzpang", "peeb"), 0);
+		assertEquals(1 / 2.0, c.value(1, "peeb", "wuzpang"), 0);
+		assertEquals(2.0 * 5, c.value(1, "wuzpang", "m"), 0);
+		assertEquals(1.0 / (2.0 * 5), c.value(1, "m", "wuzpang"), 0);
+		// a plook is 7 wuzpangs
+		c.defineUnit("plook", "wuzpang", 7);
+		assertEquals(1 / 7.0, c.value(1, "wuzpang", "plook"), 0);
+		assertEquals(7.0, c.value(1, "plook", "wuzpang"), 0);
+		assertEquals(7.0 * 2 * 5, c.value(1, "plook", "m"), 0);
+		assertEquals(1 / (7.0 * 2 * 5), c.value(1, "m", "plook"), 0);
+		// a korch is 4 m/s^2
+		c.defineUnit("korch", "m/s^2", 4);
+		assertEquals(1 / 4.0, c.value(1, "m/s^2", "korch"), 0);
+		assertEquals(1000 * 1 / 4.0, c.value(1, "km/s^2", "korch"), 0);
+		// define a scale/offset unit
+		c.defineUnit("MyCel", "K", 1, 273.15);
+		assertEquals(c.value(1, "Cel", "K"), c.value(1, "MyCel", "K"), 0);
+		// try a bad conversion
+		assertTrue(Double.isNaN(c.value(1, "kelvin", "meter")));
+		assertNotNull(c.failureMessage());
 	}
-
-	@Test
-	public void test2() {
-		axis = new DefaultTypedAxis(Axes.CHANNEL);
-		assertEquals(Axes.CHANNEL, axis.type());
-	}
-
 }

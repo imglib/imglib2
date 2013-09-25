@@ -323,8 +323,9 @@ public final class SeparableSymmetricConvolution
 		for ( int i = 0; i < n; ++i )
 		{
 			srcmin[ i ] = min[ i ] + sourceOffset[ i ];
-			srcmax[ i ] = max[ i ] + sourceOffset[ i ] + 2 * k1;
+			srcmax[ i ] = max[ i ] + sourceOffset[ i ];
 		}
+		srcmax[ d ] += 2 * k1;
 
 		final ExecutorService ex = Executors.newFixedThreadPool( numThreads );
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
@@ -397,7 +398,7 @@ public final class SeparableSymmetricConvolution
 		for( int d = n - 2; d >= 0; --d )
 		{
 			tmpdims[ d ] = tmpdims[ d + 1 ].clone();
-			tmpdims[ d ][ d + 1 ] += 2 * halfkernels[ d + 1 ].length;
+			tmpdims[ d ][ d + 1 ] += 2 * halfkernels[ d + 1 ].length - 2;
 		}
 		return tmpdims;
 	}

@@ -37,28 +37,72 @@
 
 package net.imglib2.meta;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import java.io.Serializable;
 
 /**
- * @author Barry DeZonia
+ * Default {@link AxisType} implementation.
+ * 
+ * @see Axes
+ * @author Mark Hiner
  */
-public class DefaultTypedAxisTest {
+public class DefaultAxisType implements AxisType, Serializable,
+	Comparable<AxisType>
+{
 
-	private DefaultTypedAxis axis;
+	// -- Fields --
 
-	@Test
-	public void test1() {
-		axis = new DefaultTypedAxis();
-		assertTrue(axis.type() instanceof DefaultAxisType);
+	private final String label;
+	private final boolean spatial;
+
+	// -- Constructors --
+
+	/**
+	 * Creates a non-spatial AxisType with the given label
+	 */
+	public DefaultAxisType(final String label) {
+		this(label, false);
 	}
 
-	@Test
-	public void test2() {
-		axis = new DefaultTypedAxis(Axes.CHANNEL);
-		assertEquals(Axes.CHANNEL, axis.type());
+	/**
+	 * Creates a new AxisType with the given label and spatial status.
+	 */
+	public DefaultAxisType(final String label, final boolean spatial) {
+		this.label = label;
+		this.spatial = spatial;
 	}
 
+	// -- AxisType methods --
+
+	@Override
+	public String getLabel() {
+		return label;
+	}
+
+	// -- Deprecated AxisType methods --
+
+	@Deprecated
+	@Override
+	public boolean isXY() {
+		return (this == Axes.X || this == Axes.Y);
+	}
+
+	@Deprecated
+	@Override
+	public boolean isSpatial() {
+		return spatial;
+	}
+
+	// -- Comparable methods --
+
+	@Override
+	public int compareTo(AxisType other) {
+		return getLabel().compareTo(other.getLabel());
+	}
+
+	// -- Object methods --
+
+	@Override
+	public String toString() {
+		return label;
+	}
 }

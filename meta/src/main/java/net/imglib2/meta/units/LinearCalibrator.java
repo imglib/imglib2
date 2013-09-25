@@ -35,30 +35,37 @@
  * #L%
  */
 
-package net.imglib2.meta;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+package net.imglib2.meta.units;
 
 /**
+ * LinearCalibrator is a {@link Calibrator} that maps values linearly from an
+ * input space to an output space.
+ * 
  * @author Barry DeZonia
  */
-public class DefaultTypedAxisTest {
+public class LinearCalibrator implements Calibrator {
 
-	private DefaultTypedAxis axis;
+	// -- fields --
 
-	@Test
-	public void test1() {
-		axis = new DefaultTypedAxis();
-		assertTrue(axis.type() instanceof DefaultAxisType);
+	private double scale, offset;
+
+	// -- constructor --
+
+	public LinearCalibrator(double scale, double offset) {
+		this.scale = scale;
+		this.offset = offset;
 	}
 
-	@Test
-	public void test2() {
-		axis = new DefaultTypedAxis(Axes.CHANNEL);
-		assertEquals(Axes.CHANNEL, axis.type());
+	// -- Calibrator methods --
+
+	@Override
+	public double toOutput(double input) {
+		return (input * scale) + offset;
+	}
+
+	@Override
+	public double toInput(double output) {
+		return (output - offset) / scale;
 	}
 
 }
