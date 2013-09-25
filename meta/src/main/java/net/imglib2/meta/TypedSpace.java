@@ -53,6 +53,9 @@ public interface TypedSpace<A extends TypedAxis> extends AnnotatedSpace<A> {
 	 * Note that by convention, each {@link AxisType} may only be used in a
 	 * single dimension of the space.
 	 * </p>
+	 * 
+	 * @return the dimensional index of the specified axis type. Return 
+	 * <code>-1</code> if the specified axis type is not found.
 	 */
 	int dimensionIndex(final AxisType axisType);
 
