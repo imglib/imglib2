@@ -58,7 +58,7 @@ import net.imglib2.meta.axis.LinearAxis;
  * 
  * @author Curtis Rueden
  */
-public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
+public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
 	ImgPlusMetadata
 {
 
@@ -111,38 +111,10 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	public ImgPlus(final Img<T> img, final String name,
 		final AxisType[] axisTypes, final double[] cal, String[] units)
 	{
-		super(img.numDimensions());
-
-		// NB: Do not call numDimensions() here! Calling an instance method from a
-		// constructor can have bizarre and unintuitive results in complex class
-		// hierarchies. For example, suppose a subclass overrides the behavior of
-		// numDimensions() in such a way that it only functions correctly after its
-		// own constructor finishes executing. Then calling numDimensions() here in
-		// the superclass (before the subclass's constructor has finished executing)
-		// will behave improperly.
-		final int numDims = img.numDimensions();
-
+		super(img, createAxes(img, axisTypes, cal, units));
 		this.img = img;
 		this.name = validateName(name);
-		final AxisType[] validTypes =
-			validateAxisTypes(numDims, axisTypes);
-		if (numDims != validTypes.length) {
-			throw new IllegalArgumentException("Axis type count does not match " +
-				"dimensionality: " + validTypes.length + " != " + numDims);
-		}
-		final double[] validCal = validateCalibration(numDims, cal);
-		if (numDims != validCal.length) {
-			throw new IllegalArgumentException("Calibration count does not match " +
-				"dimensionality: " + validCal.length + " != " + numDims);
-		}
-		for (int d = 0; d < numDims; d++) {
-			CalibratedAxis axis = axis(d);
-			axis.setType(validTypes[d]);
-			if (axis instanceof LinearAxis) {
-				((LinearAxis) axis).setScale(validCal[d]);
-			}
-			if (units != null) axis.setUnit(units[d]);
-		}
+
 		channelMin = new ArrayList<Double>();
 		channelMax = new ArrayList<Double>();
 		colorTable = new ArrayList<ColorTable>();
@@ -432,6 +404,37 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 
 	// -- Helper methods --
 
+	/** Creates {@link LinearAxis} objects matching the given arguments. */
+	private static LinearAxis[] createAxes(final Img<?> img,
+		AxisType[] axisTypes, double[] cal, String[] units)
+	{
+		// validate arguments
+		final int numDims = img.numDimensions();
+		final AxisType[] validTypes =
+			validateAxisTypes(numDims, axisTypes);
+		if (numDims != validTypes.length) {
+			throw new IllegalArgumentException("Axis type count does not match " +
+				"dimensionality: " + validTypes.length + " != " + numDims);
+		}
+		final double[] validCal = validateCalibration(numDims, cal);
+		if (numDims != validCal.length) {
+			throw new IllegalArgumentException("Calibration count does not match " +
+				"dimensionality: " + validCal.length + " != " + numDims);
+		}
+		final String[] validUnits = validateUnits(numDims, units);
+		if (numDims != validUnits.length) {
+			throw new IllegalArgumentException("Unit count does not match " +
+				"dimensionality: " + validUnits.length + " != " + numDims);
+		}
+
+		// create axes
+		final LinearAxis[] axes = new LinearAxis[validTypes.length];
+		for (int d = 0; d < numDims; d++) {
+			axes[d] = new LinearAxis(validTypes[d], validUnits[d], validCal[d]);
+		}
+		return axes;
+	}
+
 	/** Ensures the given name is valid. */
 	private static String validateName(final String name) {
 		if (name == null) return DEFAULT_NAME;
@@ -471,6 +474,16 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 		for (int i = 0; i < valid.length; i++) {
 			if (cal != null && cal.length > i) valid[i] = cal[i];
 			else valid[i] = 1;
+		}
+		return valid;
+	}
+
+	/** Ensures the given unit values are valid. */
+	private static String[] validateUnits(int numDims, String[] units) {
+		if (units != null && numDims == units.length) return units;
+		final String[] valid = new String[numDims];
+		for (int i = 0; i < valid.length; i++) {
+			if (units != null && units.length > i) valid[i] = units[i];
 		}
 		return valid;
 	}
