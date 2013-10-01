@@ -46,7 +46,7 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 	extends CombinedRealInterval<A, S> implements CalibratedRealInterval<A>
 {
 
-	// TODO - these methods will need some TLC. Maybe this class will store its
+	// FIXME - these methods need some TLC. Maybe this class will store its
 	// own copy of calibration values and units. And then setUnit() and
 	// setCalibration() on an axis does a unit converted scaling of existing axes
 	// cal values. Pulling values out of this interval will use views and sampling
