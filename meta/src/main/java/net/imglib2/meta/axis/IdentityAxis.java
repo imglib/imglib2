@@ -34,32 +34,66 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
 package net.imglib2.meta.axis;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import net.imglib2.meta.AbstractCalibratedAxis;
 import net.imglib2.meta.Axes;
-
-import org.junit.Test;
+import net.imglib2.meta.AxisType;
+import net.imglib2.meta.CalibratedAxis;
 
 /**
+ * IdentityAxis is a {@link CalibratedAxis} whose raw and calibrated values are
+ * the same.
+ * 
  * @author Barry DeZonia
  */
-public class UncalibratedAxisTest {
+public class IdentityAxis extends AbstractCalibratedAxis {
 
-	@Test
-	public void test() {
-		UncalibratedAxis axis = new UncalibratedAxis();
-		assertTrue(axis.type() instanceof Axes.CustomType);
-		axis = new UncalibratedAxis(Axes.Y);
-		assertEquals(Axes.Y, axis.type());
-		assertEquals(null, axis.unit());
-		axis.setUnit("BAMBALOOIE");
-		assertEquals(null, axis.unit());
-		axis.setType(Axes.CHANNEL);
-		assertEquals(Axes.CHANNEL, axis.type());
-		assertEquals(5, axis.calibratedValue(5), 0);
-		assertEquals(5, axis.rawValue(5), 0);
+	// -- constructors --
+
+	/**
+	 * Constructs a default IdentityAxis of unknown axis type.
+	 */
+	public IdentityAxis() {
+		this(Axes.unknown());
 	}
 
+	/**
+	 * Constructs an IdentityAxis of the specified axis type.
+	 */
+	public IdentityAxis(AxisType type) {
+		super(type);
+	}
+
+	// -- CalibratedAxis methods --
+
+	@Override
+	public double calibratedValue(double rawValue) {
+		return rawValue;
+	}
+
+	@Override
+	public double rawValue(double calibratedValue) {
+		return calibratedValue;
+	}
+
+	@Override
+	public String generalEquation() {
+		return "y = x";
+	}
+
+	@Override
+	public String particularEquation() {
+		return "y = x";
+	}
+
+	@Override
+	public boolean update(CalibratedAxis other) {
+		if (other instanceof IdentityAxis) {
+			setType(((IdentityAxis) other).type());
+			return true;
+		}
+		return false;
+	}
 }

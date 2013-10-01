@@ -37,79 +37,32 @@
 
 package net.imglib2.meta.axis;
 
-import net.imglib2.meta.AbstractCalibratedAxis;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import net.imglib2.meta.Axes;
-import net.imglib2.meta.AxisType;
-import net.imglib2.meta.CalibratedAxis;
+
+import org.junit.Test;
 
 /**
- * UncalibratedAxis is a {@link CalibratedAxis} with no calibration.
+ * Tests {@link IdentityAxis}.
  * 
  * @author Barry DeZonia
  */
-public class UncalibratedAxis extends AbstractCalibratedAxis {
+public class IdentityAxisTest {
 
-	// TODO the javadoc comment above implies this might have an inheritance
-	// problem. Either it is calibrated or it is not. Maybe the naming is wrong.
-
-	// -- constructors --
-
-	/**
-	 * Constructs a default UncalibratedAxis of unknown axis type.
-	 */
-	public UncalibratedAxis() {
-		this(Axes.unknown());
+	@Test
+	public void test() {
+		IdentityAxis axis = new IdentityAxis();
+		assertTrue(axis.type() instanceof Axes.CustomType);
+		axis = new IdentityAxis(Axes.Y);
+		assertEquals(Axes.Y, axis.type());
+		assertEquals(null, axis.unit());
+		axis.setUnit("BAMBALOOIE");
+		assertEquals("BAMBALOOIE", axis.unit());
+		axis.setType(Axes.CHANNEL);
+		assertEquals(Axes.CHANNEL, axis.type());
+		assertEquals(5, axis.calibratedValue(5), 0);
+		assertEquals(5, axis.rawValue(5), 0);
 	}
 
-	/**
-	 * Constructs an UncalibratedAxis of the specified axis type.
-	 */
-	public UncalibratedAxis(AxisType type) {
-		super(type);
-	}
-
-	// -- CalibratedAxis methods --
-
-	// TODO - is this behavior correct?
-
-	@Override
-	public String unit() {
-		return null;
-	}
-
-	// TODO - is this behavior correct?
-
-	@Override
-	public void setUnit(String unit) {
-		// ignore
-	}
-
-	@Override
-	public double calibratedValue(double rawValue) {
-		return rawValue;
-	}
-
-	@Override
-	public double rawValue(double calibratedValue) {
-		return calibratedValue;
-	}
-
-	@Override
-	public String generalEquation() {
-		return "y = x";
-	}
-
-	@Override
-	public String particularEquation() {
-		return "y = x";
-	}
-
-	@Override
-	public boolean update(CalibratedAxis other) {
-		if (other instanceof UncalibratedAxis) {
-			setType(((UncalibratedAxis) other).type());
-			return true;
-		}
-		return false;
-	}
 }

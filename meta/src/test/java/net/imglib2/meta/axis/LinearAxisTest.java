@@ -146,7 +146,7 @@ public class LinearAxisTest {
 		assertEquals(Axes.Y, axis.type());
 		assertEquals("heptoflops", axis.unit());
 
-		UncalibratedAxis bogusAxis = new UncalibratedAxis();
+		IdentityAxis bogusAxis = new IdentityAxis();
 		assertFalse(axis.update(bogusAxis));
 
 		LinearAxis goodAxis = new LinearAxis(Axes.Y, "gabblerousers", 23, 89);
