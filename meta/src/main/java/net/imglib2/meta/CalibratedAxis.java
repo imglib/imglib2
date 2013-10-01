@@ -73,15 +73,15 @@ public interface CalibratedAxis extends TypedAxis {
 	 */
 	String calibratedEquation();
 
-	// NB - in the limit this is actually the derivative at a point. This works
-	// with error for nonlinear axes. For linear axes there is no error.
-
 	/**
 	 * Returns the average scale between two raw value coordinates along an axis.
-	 * For linear axes this value never varies. For nonlinear axes this returns
-	 * the linear scale between the points and thus is somewhat inaccurate. All
-	 * code that relies on averageScale() points out areas of code that should be
-	 * changed to work with nonlinear axes.
+	 * <p>
+	 * In the limit this is actually the derivative at a point. For linear axes
+	 * this value never varies, and there is no error. For nonlinear axes this
+	 * returns the linear scale between the points and thus may be inaccurate.
+	 * Calls to this method may point out areas of code that should be generalized
+	 * to work with nonlinear axes.
+	 * </p>
 	 */
 	double averageScale(double rawValue1, double rawValue2);
 
