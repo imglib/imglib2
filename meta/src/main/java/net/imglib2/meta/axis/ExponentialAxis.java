@@ -43,7 +43,7 @@ import net.imglib2.meta.CalibratedAxis;
 
 /**
  * ExponentialAxis is a {@link CalibratedAxis } that scales raw values by the
- * equation y = a + b * exp(c + d*x).
+ * equation {@code y = a + b * exp(c + d*x)}.
  * 
  * @author Barry DeZonia
  */

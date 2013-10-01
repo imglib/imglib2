@@ -42,7 +42,7 @@ import net.imglib2.meta.CalibratedAxis;
 
 /**
  * ExponentialRecoveryAxis is a {@link CalibratedAxis } that scales raw values by
- * the equation y = a + b * (1 - exp(c + d*x)).
+ * the equation {@code y = a + b * (1 - exp(c + d*x))}.
  * 
  * @author Barry DeZonia
  */

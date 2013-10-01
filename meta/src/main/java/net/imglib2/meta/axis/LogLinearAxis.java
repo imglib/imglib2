@@ -42,7 +42,7 @@ import net.imglib2.meta.CalibratedAxis;
 
 /**
  * LogLinearAxis is a {@link CalibratedAxis } that scales raw values by the
- * equation y = a + b * ln(c + d*x).
+ * equation {@code y = a + b * ln(c + d*x)}.
  * 
  * @author Barry DeZonia
  */

@@ -42,7 +42,7 @@ import net.imglib2.meta.CalibratedAxis;
 
 /**
  * GammaVariateAxis is a {@link CalibratedAxis } that scales raw values by the
- * equation y = a * (x-b)^c*exp(-(x-b)/d).
+ * equation {@code y = a * (x-b)^c*exp(-(x-b)/d)}.
  * 
  * @author Barry DeZonia
  */

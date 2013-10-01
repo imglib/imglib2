@@ -42,7 +42,7 @@ import net.imglib2.meta.CalibratedAxis;
 
 /**
  * RodbardAxis is a {@link CalibratedAxis } that scales raw values by the
- * equation y = a + (b-a) / (1 + (x/c)^d).
+ * equation {@code y = a + (b-a) / (1 + (x/c)^d)}.
  * 
  * @author Barry DeZonia
  */

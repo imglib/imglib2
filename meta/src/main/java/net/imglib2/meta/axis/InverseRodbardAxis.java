@@ -42,7 +42,7 @@ import net.imglib2.meta.CalibratedAxis;
 
 /**
  * InverseRodbardAxis is a {@link CalibratedAxis } that scales raw values by the
- * equation y = a*((x-b)/(c-x))^(1/d).
+ * equation {@code y = a*((x-b)/(c-x))^(1/d)}.
  * 
  * @author Barry DeZonia
  */

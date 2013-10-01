@@ -42,7 +42,7 @@ import net.imglib2.meta.CalibratedAxis;
 
 /**
  * GaussianAxis is a {@link CalibratedAxis } that scales raw values by the
- * equation y = a + (b-a)*exp(-(x-c)*(x-c)/(2*d*d)).
+ * equation {@code y = a + (b-a)*exp(-(x-c)*(x-c)/(2*d*d))}.
  * 
  * @author Barry DeZonia
  */
