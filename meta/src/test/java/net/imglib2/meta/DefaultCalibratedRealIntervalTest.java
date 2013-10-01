@@ -103,9 +103,9 @@ public class DefaultCalibratedRealIntervalTest {
 		assertEquals("froop", interval.axis(0).unit());
 		assertEquals("orp", interval.axis(1).unit());
 		assertEquals("smump", interval.axis(2).unit());
-		assertEquals(1, interval.axis(0).averageScale(0, 1), 0);
-		assertEquals(3, interval.axis(1).averageScale(0, 1), 0);
-		assertEquals(5, interval.axis(2).averageScale(0, 1), 0);
+		assertEquals(1, interval.averageScale(0), 0);
+		assertEquals(3, interval.averageScale(1), 0);
+		assertEquals(5, interval.averageScale(2), 0);
 	}
 
 }

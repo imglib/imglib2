@@ -63,13 +63,13 @@ public class ImgPlusTest {
 		assertEquals("HUBBY", imgPlus.getName());
 		assertEquals(Axes.X, imgPlus.axis(0).type());
 		assertEquals(Axes.Z, imgPlus.axis(1).type());
-		assertEquals(5, imgPlus.axis(0).averageScale(0, 1), 0);
-		assertEquals(13, imgPlus.axis(1).averageScale(0, 1), 0);
+		assertEquals(5, imgPlus.averageScale(0), 0);
+		assertEquals(13, imgPlus.averageScale(1), 0);
 		assertEquals(9, imgPlus.dimension(0));
 		assertEquals(8, imgPlus.dimension(1));
 		assertTrue(imgPlus.axis(1) instanceof LinearAxis);
 		((LinearAxis) imgPlus.axis(1)).setScale(48);
-		assertEquals(48, imgPlus.axis(1).averageScale(0, 1), 0);
+		assertEquals(48, imgPlus.averageScale(1), 0);
 		assertEquals(0, imgPlus.min(0));
 		assertEquals(0, imgPlus.min(1));
 		assertEquals(8, imgPlus.max(0));

@@ -67,7 +67,7 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
 
 	@Override
 	public double averageScale(final int d) {
-		return axis(d).averageScale(0, 1);
+		return averageScale(d);
 	}
 
 	@Override

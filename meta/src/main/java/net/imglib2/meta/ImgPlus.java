@@ -504,7 +504,7 @@ public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
 		final double[] cal = new double[img.numDimensions()];
 		for (int i = 0; i < cal.length; i++) {
 			// TODO - using averageScale() introduces error for nonlinear axes
-			cal[i] = metadata.axis(i).averageScale(0, 1);
+			cal[i] = metadata.averageScale(i);
 		}
 		return cal;
 	}

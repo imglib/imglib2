@@ -50,7 +50,7 @@ public class Utils {
 		for (int d = 0; d < space.numDimensions(); d++) {
 			final CalibratedAxis axis = space.axis(d);
 			// TODO - using averageScale() introduces error for nonlinear axes
-			final double scale = axis.averageScale(0, 1);
+			final double scale = space.averageScale(d);
 			if (axis.type() == Axes.X) {
 				calibration[0] = scale;
 			} else if (axis.type() == Axes.Y) {

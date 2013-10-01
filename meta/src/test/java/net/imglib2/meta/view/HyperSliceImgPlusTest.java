@@ -115,8 +115,8 @@ public class HyperSliceImgPlusTest {
 		int index1 = 0;
 		for (int d = 0; d < dim.length; d++) {
 			if (d != REMOVED_DIM_1) {
-				assertEquals(source.axis(d).averageScale(0, 1), imgplusZ.axis(index1)
-					.averageScale(0, 1), Float.MIN_VALUE);
+				assertEquals(source.averageScale(d), imgplusZ.averageScale(index1),
+					Float.MIN_VALUE);
 				assertEquals(source.axis(d), imgplusZ.axis(index1));
 				index1++;
 			}
@@ -125,8 +125,8 @@ public class HyperSliceImgPlusTest {
 		int index2 = 0;
 		for (int d = 0; d < dim.length; d++) {
 			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2+1)) {
-				assertEquals(source.axis(d).averageScale(0, 1), imgplusZT.axis(index2)
-					.averageScale(0, 1), Float.MIN_VALUE);
+				assertEquals(source.averageScale(d), imgplusZT.averageScale(index2),
+					Float.MIN_VALUE);
 				assertEquals(source.axis(d), imgplusZT.axis(index2));
 				index2++;
 			}

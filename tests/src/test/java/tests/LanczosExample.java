@@ -65,11 +65,9 @@ public class LanczosExample
 		//final RandomAccessibleInterval< UnsignedShortType > img = io.openImg( "/home/saalfeld/phd/light-microscopy/presentation/saalfeld-05-05-4-DPX-05_L1_Sum.lsm", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType());
 		final ImgPlus< UnsignedShortType > imgPlus = io.openImg( "/home/saalfeld/Desktop/l1-cns.tif", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType());
 		
-		CalibratedAxis axis0 = imgPlus.axis(0);
-		CalibratedAxis axis1 = imgPlus.axis(1);
 		// TODO - using averageScale() introduces error for nonlinear axes
-		final double scale0 = axis0.averageScale(0, 1);
-		final double scale1 = axis1.averageScale(0, 1);
+		final double scale0 = imgPlus.averageScale(0);
+		final double scale1 = imgPlus.averageScale(1);
 		final double[][] matrix = new double[][]{
 				{ 0.5, 0, 0, imgPlus.dimension( 0 ) * 0.25 },
 				{ 0, 0.5 * scale1 / scale0, 0, imgPlus.dimension(1) * 0.25 },

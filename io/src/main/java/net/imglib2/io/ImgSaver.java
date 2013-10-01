@@ -657,7 +657,7 @@ public class ImgSaver implements StatusReporter {
 				AxisType axis = axes[i];
 				PositiveFloat physicalSize = null;
 				// TODO - using averageScale() introduces error for nonlinear axes
-				double scale = img.axis(i).averageScale(0, 1);
+				double scale = img.averageScale(i);
 				if (Axes.X.equals(axis)) {
 					physicalSize = new PositiveFloat(scale);
 					meta.setPixelsPhysicalSizeX(physicalSize, w.getSeries());

@@ -81,7 +81,7 @@ public class CopyCalibratedSpace< S extends CalibratedSpace< CalibratedAxis > > 
 				output.setAxis( input.axis( d ), d - offset );
 
 				// No longer needed:
-				// output.setCalibration(input.axis(d).averageScale(0, 1), d - offset);
+				// output.setCalibration(input.averageScale(d), d - offset);
 			}
 		}
 

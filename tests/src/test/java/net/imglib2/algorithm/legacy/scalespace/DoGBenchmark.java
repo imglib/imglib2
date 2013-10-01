@@ -99,7 +99,7 @@ public class DoGBenchmark
 				// TODO - using averageScale() introduces error for nonlinear axes
 				final float sigma1Z =
 					Math.max(imageSigma * 2, sigma1 /
-						(float) image.axis(2).averageScale(0, 1));
+						(float) image.averageScale(2));
 				final float sigma2Z = sigma1Z * k;
 				final float[] sigmaZ = new float[]{ sigma1Z, sigma2Z };
 				final float[] sigmaDiffZ = computeSigmaDiff( sigmaZ, imageSigma );
