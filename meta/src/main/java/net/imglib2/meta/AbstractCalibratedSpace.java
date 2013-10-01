@@ -63,18 +63,12 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
 
 	@Override
 	public String unit(int d) {
-		A axis = axis(d);
-		if (axis == null) return null;
-		return axis.unit();
+		return axis(d).unit();
 	}
 
 	@Override
 	public void setUnit(String unit, int d) {
-		A axis = axis(d);
-		if (axis == null) {
-			throw new IllegalArgumentException("cannot setUnit() on null axis");
-		}
-		axis.setUnit(unit);
+		axis(d).setUnit(unit);
 	}
 
 }
