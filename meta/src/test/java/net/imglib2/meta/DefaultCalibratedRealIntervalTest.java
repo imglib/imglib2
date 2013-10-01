@@ -56,9 +56,9 @@ public class DefaultCalibratedRealIntervalTest {
 	@Test
 	public void test1() {
 		// verify that interval extents are assigned correctly
-		double[] extents = new double[]{5,10,20};
-		double[] temp = new double[extents.length];
-		CalibratedAxis[] axes = new CalibratedAxis[extents.length];
+		final double[] extents = new double[] { 5, 10, 20 };
+		final double[] temp = new double[extents.length];
+		final CalibratedAxis[] axes = new CalibratedAxis[extents.length];
 		interval = new DefaultCalibratedRealInterval(extents);
 		assertEquals(extents.length, interval.numDimensions());
 		interval.realMin(temp);
@@ -81,20 +81,20 @@ public class DefaultCalibratedRealIntervalTest {
 
 	@Test
 	public void test2() {
-		double[] extents = new double[] { 5, 10, 20 };
-		double[] temp = new double[extents.length];
-		CalibratedAxis axis0 = new LinearAxis(Axes.LIFETIME, "froop", 1);
-		CalibratedAxis axis1 = new LinearAxis(Axes.PHASE, "orp", 3);
-		CalibratedAxis axis2 = new LinearAxis(Axes.POLARIZATION, "smump", 5);
+		final double[] extents = new double[] { 5, 10, 20 };
+		final double[] temp = new double[extents.length];
+		final CalibratedAxis axis0 = new LinearAxis(Axes.LIFETIME, "froop", 1);
+		final CalibratedAxis axis1 = new LinearAxis(Axes.PHASE, "orp", 3);
+		final CalibratedAxis axis2 = new LinearAxis(Axes.POLARIZATION, "smump", 5);
 		interval = new DefaultCalibratedRealInterval(extents, axis0, axis1, axis2);
 		assertEquals(extents.length, interval.numDimensions());
 		interval.realMin(temp);
 		assertArrayEquals(new double[3], temp, 0);
 		interval.realMax(temp);
 		assertArrayEquals(new double[] { 5, 10, 20 }, temp, 0);
-		CalibratedAxis[] axes = new CalibratedAxis[extents.length];
+		final CalibratedAxis[] axes = new CalibratedAxis[extents.length];
 		interval.axes(axes);
-		for (CalibratedAxis axis : axes) {
+		for (final CalibratedAxis axis : axes) {
 			assertNotNull(axis);
 		}
 		assertEquals(Axes.LIFETIME, interval.axis(0).type());
