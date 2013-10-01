@@ -41,7 +41,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-
+import static org.junit.Assert.assertSame;
 import net.imglib2.meta.axis.LinearAxis;
 
 import org.junit.Test;
@@ -55,6 +55,7 @@ public class DefaultCalibratedRealIntervalTest {
 
 	@Test
 	public void test1() {
+		// verify that interval extents are assigned correctly
 		double[] extents = new double[]{5,10,20};
 		double[] temp = new double[extents.length];
 		CalibratedAxis[] axes = new CalibratedAxis[extents.length];
@@ -64,21 +65,18 @@ public class DefaultCalibratedRealIntervalTest {
 		assertArrayEquals(new double[3], temp, 0);
 		interval.realMax(temp);
 		assertArrayEquals(new double[] { 5, 10, 20 }, temp, 0);
+		// verify that axes are not yet populated (i.e., null)
 		interval.axes(axes);
-		// TODO - this is a little surprising
-		for (CalibratedAxis axis : axes) {
+		for (final CalibratedAxis axis : axes) {
 			assertNull(axis);
 		}
 		for (int i = 0; i < extents.length; i++) {
-			// TODO can't run this as default interval ctor has null axes
-			// assertEquals(Double.NaN, interval.axis(i).averageScale(0, 1), 0);
-			assertNull(interval.axis(i).unit());
+			assertNull(interval.axis(i));
 		}
+		// verify that axes are assigned correctly
 		LinearAxis axis = new LinearAxis(Axes.X, "plorps", 4);
 		interval.setAxis(axis, 0);
-		assertEquals(Axes.X, interval.axis(0).type());
-		assertEquals("plorps", interval.axis(0).unit());
-		assertEquals(4, interval.axis(0).averageScale(0, 1), 0);
+		assertSame(axis, interval.axis(0));
 	}
 
 	@Test
