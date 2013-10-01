@@ -137,9 +137,9 @@ public class LinearAxisTest {
 	public void testOtherMethods() {
 		axis = new LinearAxis(Axes.Y, "heptoflops", 5, 3);
 		assertEquals(5, axis.averageScale(10, 20), 0);
-		assertEquals("y = (3.0) + (5.0) * x", axis.calibratedEquation());
+		assertEquals("y = (3.0) + (5.0) * x", axis.particularEquation());
 		assertEquals(23, axis.calibratedValue(4), 0);
-		assertEquals("y = a + b*x", axis.equation());
+		assertEquals("y = a + b*x", axis.generalEquation());
 		assertEquals(3, axis.origin(), 0);
 		assertEquals(7, axis.rawValue(38), 0);
 		assertEquals(5, axis.scale(), 0);

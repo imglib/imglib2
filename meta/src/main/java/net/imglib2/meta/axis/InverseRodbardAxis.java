@@ -76,12 +76,12 @@ public class InverseRodbardAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String equation() {
+	public String generalEquation() {
 		return "y = a*((x-b)/(c-x))^(1/d)";
 	}
 
 	@Override
-	public String calibratedEquation() {
+	public String particularEquation() {
 		return "y = (" + a + ")*((x-(" + b + "))/((" + c + ")-x))^(1/(" + d + "))";
 	}
 

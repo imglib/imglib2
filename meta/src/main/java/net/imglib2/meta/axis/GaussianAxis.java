@@ -75,12 +75,12 @@ public class GaussianAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String equation() {
+	public String generalEquation() {
 		return "y = a + (b-a) * exp(-(x-c)^2 / (2*d^2))";
 	}
 
 	@Override
-	public String calibratedEquation() {
+	public String particularEquation() {
 		return "y = (" + a + ") + ((" + b + ")-(" + a + ")) * exp(-(x-(" + c +
 			"))^2 / (2*(" + d + ")^2))";
 	}

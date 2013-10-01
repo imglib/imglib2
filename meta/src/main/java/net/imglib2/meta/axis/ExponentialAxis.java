@@ -79,12 +79,12 @@ public class ExponentialAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String equation() {
+	public String generalEquation() {
 		return "y = a + b * exp(c + d*x)";
 	}
 
 	@Override
-	public String calibratedEquation() {
+	public String particularEquation() {
 		return "y = (" + a + ") + (" + b + ") * exp((" + c + ") + (" + d + ")*x)";
 	}
 

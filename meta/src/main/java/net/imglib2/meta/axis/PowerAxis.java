@@ -79,12 +79,12 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 	}
 
 	@Override
-	public String equation() {
+	public String generalEquation() {
 		return "y = a + b*x^c";
 	}
 
 	@Override
-	public String calibratedEquation() {
+	public String particularEquation() {
 		return "y = (" + a + ") + (" + b + ")*x^(" + c + ")";
 	}
 

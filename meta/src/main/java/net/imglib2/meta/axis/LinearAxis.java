@@ -184,12 +184,12 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	}
 
 	@Override
-	public String equation() {
+	public String generalEquation() {
 		return "y = a + b*x";
 	}
 
 	@Override
-	public String calibratedEquation() {
+	public String particularEquation() {
 		return "y = (" + origin + ") + (" + scale + ") * x";
 	}
 

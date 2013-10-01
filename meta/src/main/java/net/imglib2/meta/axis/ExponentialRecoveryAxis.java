@@ -74,12 +74,12 @@ public class ExponentialRecoveryAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String equation() {
+	public String generalEquation() {
 		return "y = a + b * (1 - exp(c + d*x))";
 	}
 
 	@Override
-	public String calibratedEquation() {
+	public String particularEquation() {
 		return "y = (" + a + ") + (" + b + ") * (1 - exp((" + c + ") + (" + d +
 			")*x))";
 	}

@@ -95,12 +95,12 @@ public class UncalibratedAxis extends AbstractCalibratedAxis {
 	}
 
 	@Override
-	public String equation() {
+	public String generalEquation() {
 		return "y = x";
 	}
 
 	@Override
-	public String calibratedEquation() {
+	public String particularEquation() {
 		return "y = x";
 	}
 

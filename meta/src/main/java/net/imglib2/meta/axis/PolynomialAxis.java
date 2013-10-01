@@ -124,7 +124,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	}
 
 	@Override
-	public String equation() {
+	public String generalEquation() {
 		// String that looks like y = a + b*x + c*x^2 + ...
 		int v = 0;
 		StringBuilder builder = new StringBuilder();
@@ -145,7 +145,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	}
 
 	@Override
-	public String calibratedEquation() {
+	public String particularEquation() {
 		// String that looks like y = (4.0) + (2.7)*x + (8.9)*x^2 + ...
 		StringBuilder builder = new StringBuilder();
 		builder.append("y = (");

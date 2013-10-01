@@ -74,12 +74,12 @@ public class RodbardAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String equation() {
+	public String generalEquation() {
 		return "y = a + (b-a) / (1 + (x/c)^d)";
 	}
 
 	@Override
-	public String calibratedEquation() {
+	public String particularEquation() {
 		return "y = (" + a + ") + ((" + b + ")-(" + a + ")) / (1 + (x/(" + c +
 			"))^(" + d + "))";
 	}

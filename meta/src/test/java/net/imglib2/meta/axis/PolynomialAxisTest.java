@@ -82,18 +82,18 @@ public class PolynomialAxisTest {
 	@Test
 	public void testEquation() {
 		PolynomialAxis axis = new PolynomialAxis(Axes.Y, "mm", 7, 2, 1);
-		assertEquals("y = a + b*x + c*x^2", axis.equation());
+		assertEquals("y = a + b*x + c*x^2", axis.generalEquation());
 		axis = new PolynomialAxis(Axes.Y, "mm", 5, 4, 3, 2, 1);
-		assertEquals("y = a + b*x + c*x^2 + d*x^3 + e*x^4", axis.equation());
+		assertEquals("y = a + b*x + c*x^2 + d*x^3 + e*x^4", axis.generalEquation());
 	}
 
 	@Test
 	public void testCalibratedEquation() {
 		PolynomialAxis axis = new PolynomialAxis(Axes.Y, "mm", 7, 2, 1);
-		assertEquals("y = (7.0) + (2.0)*x + (1.0)*x^2", axis.calibratedEquation());
+		assertEquals("y = (7.0) + (2.0)*x + (1.0)*x^2", axis.particularEquation());
 		axis = new PolynomialAxis(Axes.Y, "mm", 5, 4, 3, 2, 1);
 		assertEquals("y = (5.0) + (4.0)*x + (3.0)*x^2 + (2.0)*x^3 + (1.0)*x^4",
-			axis.calibratedEquation());
+			axis.particularEquation());
 	}
 
 	@Test

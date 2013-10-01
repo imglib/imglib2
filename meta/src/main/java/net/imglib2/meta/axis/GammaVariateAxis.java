@@ -74,12 +74,12 @@ public class GammaVariateAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String equation() {
+	public String generalEquation() {
 		return "y = a * (x-b)^c*exp(-(x-b)/d)";
 	}
 
 	@Override
-	public String calibratedEquation() {
+	public String particularEquation() {
 		return "y = (" + a + ") * (x-(" + b + "))^(" + c + ")*exp(-(x-(" + b +
 			"))/(" + d + "))";
 	}

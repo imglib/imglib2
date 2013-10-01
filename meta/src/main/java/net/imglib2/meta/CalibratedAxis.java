@@ -62,16 +62,16 @@ public interface CalibratedAxis extends TypedAxis {
 	double rawValue(double calibratedValue);
 
 	/**
-	 * Returns a string containing the equation that represents values along this
-	 * axis. For instance "y = mx + b".
+	 * Gets the general equation representing values along this axis; for
+	 * instance: {@code y = m*x + b}.
 	 */
-	String equation();
+	String generalEquation();
 
 	/**
-	 * Returns a string containing the calibrated equation that represents values
-	 * along this axis. For instance "y = (14)*x + (4)".
+	 * Gets the particular equation representing values along this axis; for
+	 * instance: {@code y = (14)*x + (4)}.
 	 */
-	String calibratedEquation();
+	String particularEquation();
 
 	/**
 	 * Returns the average scale between two raw value coordinates along an axis.
