@@ -66,8 +66,8 @@ public abstract class AbstractOneVariableAxis extends AbstractCalibratedAxis {
 
 	// -- setters --
 
-	public void setA(double v) {
-		this.a = v;
+	public void setA(final double a) {
+		this.a = a;
 	}
 
 }

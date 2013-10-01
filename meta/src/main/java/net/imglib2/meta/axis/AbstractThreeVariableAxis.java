@@ -66,8 +66,8 @@ public abstract class AbstractThreeVariableAxis extends AbstractTwoVariableAxis
 
 	// -- setters --
 
-	public void setC(double v) {
-		this.c = v;
+	public void setC(final double c) {
+		this.c = c;
 	}
 
 }

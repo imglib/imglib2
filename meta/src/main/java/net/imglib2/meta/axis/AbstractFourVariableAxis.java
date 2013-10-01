@@ -67,8 +67,8 @@ public abstract class AbstractFourVariableAxis extends
 
 	// -- setters --
 
-	public void setD(double v) {
-		this.d = v;
+	public void setD(final double d) {
+		this.d = d;
 	}
 
 }
