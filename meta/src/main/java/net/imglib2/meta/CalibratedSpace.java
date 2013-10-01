@@ -46,10 +46,18 @@ package net.imglib2.meta;
 public interface CalibratedSpace<A extends CalibratedAxis> extends
 	TypedSpace<A>
 {
-	/** Gets the physical unit for the given dimension. */
+	/**
+	 * @deprecated Use {@code axis(d).unit()} instead.
+	 * @see CalibratedAxis#unit()
+	 */
+	@Deprecated
 	String unit(int d);
 
-	/** Sets the physical unit for the given dimension. */
+	/**
+	 * @deprecated Use {@code axis(d).setUnit(unit)} instead.
+	 * @see CalibratedAxis#setUnit(String)
+	 */
+	@Deprecated
 	void setUnit(String unit, int d);
 
 }
