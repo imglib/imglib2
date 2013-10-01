@@ -51,6 +51,13 @@ public abstract class AbstractThreeVariableAxis extends AbstractTwoVariableAxis
 		super(type);
 	}
 
+	public AbstractThreeVariableAxis(final AxisType type, final String unit,
+		final double a, final double b, final double c)
+	{
+		super(type, unit, a, b);
+		setC(c);
+	}
+
 	// -- getters --
 
 	public double c() {

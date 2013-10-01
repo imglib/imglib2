@@ -45,10 +45,16 @@ package net.imglib2.meta;
 public abstract class AbstractCalibratedAxis extends DefaultTypedAxis implements
 	CalibratedAxis
 {
+
 	private String unit;
 
 	public AbstractCalibratedAxis(AxisType type) {
 		super(type);
+	}
+
+	public AbstractCalibratedAxis(final AxisType type, final String unit) {
+		super(type);
+		setUnit(unit);
 	}
 
 	@Override

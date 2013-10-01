@@ -52,6 +52,13 @@ public abstract class AbstractFourVariableAxis extends
 		super(type);
 	}
 
+	public AbstractFourVariableAxis(final AxisType type, final String unit,
+		final double a, final double b, final double c, final double d)
+	{
+		super(type, unit, a, b, c);
+		setD(d);
+	}
+
 	// -- getters --
 
 	public double d() {

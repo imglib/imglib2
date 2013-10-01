@@ -51,6 +51,13 @@ public abstract class AbstractOneVariableAxis extends AbstractCalibratedAxis {
 		super(type);
 	}
 
+	public AbstractOneVariableAxis(final AxisType type, final String unit,
+		final double a)
+	{
+		super(type, unit);
+		setA(a);
+	}
+
 	// -- getters --
 
 	public double a() {

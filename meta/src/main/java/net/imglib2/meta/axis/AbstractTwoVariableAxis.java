@@ -50,6 +50,13 @@ public abstract class AbstractTwoVariableAxis extends AbstractOneVariableAxis {
 		super(type);
 	}
 
+	public AbstractTwoVariableAxis(final AxisType type, final String unit,
+		final double a, final double b)
+	{
+		super(type, unit, a);
+		setB(b);
+	}
+
 	// -- getters --
 
 	public double b() {
