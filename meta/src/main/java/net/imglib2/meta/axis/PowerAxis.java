@@ -62,11 +62,7 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 	public PowerAxis(final AxisType type, final String unit, final double a,
 		final double b, final double c)
 	{
-		super(type);
-		setUnit(unit);
-		this.a = a;
-		this.b = b;
-		this.c = c;
+		super(type, unit, a, b, c);
 	}
 
 	// -- CalibratedAxis methods --

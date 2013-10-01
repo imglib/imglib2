@@ -53,12 +53,7 @@ public class GammaVariateAxis extends AbstractFourVariableAxis {
 	public GammaVariateAxis(final AxisType type, final String unit,
 		final double a, final double b, final double c, final double d)
 	{
-		super(type);
-		setUnit(unit);
-		this.a = a;
-		this.b = b;
-		this.c = c;
-		this.d = d;
+		super(type, unit, a, b, c, d);
 	}
 
 	// -- CalibratedAxis methods --
