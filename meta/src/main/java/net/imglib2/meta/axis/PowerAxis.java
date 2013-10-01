@@ -69,12 +69,12 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 
 	@Override
 	public double calibratedValue(final double rawValue) {
-		return a + b * Math.pow(rawValue, c);
+		return a() + b() * Math.pow(rawValue, c());
 	}
 
 	@Override
 	public double rawValue(final double calibratedValue) {
-		return Math.pow(((calibratedValue - a) / b), (1.0 / c));
+		return Math.pow(((calibratedValue - a()) / b()), (1.0 / c()));
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 
 	@Override
 	public String particularEquation() {
-		return "y = (" + a + ") + (" + b + ")*x^(" + c + ")";
+		return "y = (" + a() + ") + (" + b() + ")*x^(" + c() + ")";
 	}
 
 	@Override

@@ -45,7 +45,7 @@ import net.imglib2.meta.AxisType;
  */
 public abstract class AbstractOneVariableAxis extends AbstractCalibratedAxis {
 
-	protected double a;
+	private double a;
 
 	public AbstractOneVariableAxis(final AxisType type) {
 		super(type);

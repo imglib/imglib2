@@ -60,12 +60,12 @@ public class ExponentialRecoveryAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public double calibratedValue(final double rawValue) {
-		return a + b * (1 - Math.exp(c + d * rawValue));
+		return a() + b() * (1 - Math.exp(c() + d() * rawValue));
 	}
 
 	@Override
 	public double rawValue(final double calibratedValue) {
-		return (Math.log(-(((calibratedValue - a) / b) - 1)) - c) / d;
+		return (Math.log(-(((calibratedValue - a()) / b()) - 1)) - c()) / d();
 	}
 
 	@Override
@@ -75,8 +75,8 @@ public class ExponentialRecoveryAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public String particularEquation() {
-		return "y = (" + a + ") + (" + b + ") * (1 - exp((" + c + ") + (" + d +
-			")*x))";
+		return "y = (" + a() + ") + (" + b() + ") * (1 - exp((" + c() + ") + (" +
+			d() + ")*x))";
 	}
 
 	@Override

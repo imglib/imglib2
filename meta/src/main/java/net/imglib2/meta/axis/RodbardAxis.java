@@ -60,12 +60,14 @@ public class RodbardAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public double calibratedValue(final double rawValue) {
-		return a + (b - a) / (1 + Math.pow((rawValue / c), d));
+		return a() + (b() - a()) / (1 + Math.pow((rawValue / c()), d()));
 	}
 
 	@Override
 	public double rawValue(final double calibratedValue) {
-		return Math.pow(((b - calibratedValue) / (calibratedValue - a)), 1 / d) * c;
+		return Math.pow(((b() - calibratedValue) / (calibratedValue - a())),
+			1 / d()) *
+			c();
 	}
 
 	@Override
@@ -75,8 +77,8 @@ public class RodbardAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public String particularEquation() {
-		return "y = (" + a + ") + ((" + b + ")-(" + a + ")) / (1 + (x/(" + c +
-			"))^(" + d + "))";
+		return "y = (" + a() + ") + ((" + b() + ")-(" + a() + ")) / (1 + (x/(" +
+			c() + "))^(" + d() + "))";
 	}
 
 	@Override

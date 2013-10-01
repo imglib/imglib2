@@ -45,7 +45,7 @@ import net.imglib2.meta.AxisType;
 public abstract class AbstractThreeVariableAxis extends AbstractTwoVariableAxis
 {
 
-	protected double c;
+	private double c;
 
 	public AbstractThreeVariableAxis(final AxisType type) {
 		super(type);

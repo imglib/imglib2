@@ -65,12 +65,12 @@ public class ExponentialAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public double calibratedValue(final double rawValue) {
-		return a + b * Math.exp(c + d * rawValue);
+		return a() + b() * Math.exp(c() + d() * rawValue);
 	}
 
 	@Override
 	public double rawValue(final double calibratedValue) {
-		return (Math.log((calibratedValue - a) / b) - c) / d;
+		return (Math.log((calibratedValue - a()) / b()) - c()) / d();
 	}
 
 	@Override
@@ -80,7 +80,8 @@ public class ExponentialAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public String particularEquation() {
-		return "y = (" + a + ") + (" + b + ") * exp((" + c + ") + (" + d + ")*x)";
+		return "y = (" + a() + ") + (" + b() + ") * exp((" + c() + ") + (" + d() +
+			")*x)";
 	}
 
 	@Override

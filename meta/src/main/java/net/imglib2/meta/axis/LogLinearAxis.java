@@ -73,12 +73,12 @@ public class LogLinearAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public double calibratedValue(final double rawValue) {
-		return a + b * Math.log(c + d * rawValue);
+		return a() + b() * Math.log(c() + d() * rawValue);
 	}
 
 	@Override
 	public double rawValue(final double calibratedValue) {
-		return ((Math.exp((calibratedValue - a) / b)) - c) / d;
+		return ((Math.exp((calibratedValue - a()) / b())) - c()) / d();
 	}
 
 	@Override
@@ -88,7 +88,8 @@ public class LogLinearAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public String particularEquation() {
-		return "y = (" + a + ") + (" + b + ") * ln((" + c + ") + (" + d + ") * x)";
+		return "y = (" + a() + ") + (" + b() + ") * ln((" + c() + ") + (" + d() +
+			") * x)";
 	}
 
 	@Override

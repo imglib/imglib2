@@ -60,7 +60,8 @@ public class GammaVariateAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public double calibratedValue(final double rawValue) {
-		return a * Math.pow((rawValue - b), c) * Math.exp(-(rawValue - b) / d);
+		return a() * Math.pow((rawValue - b()), c()) *
+			Math.exp(-(rawValue - b()) / d());
 	}
 
 	@Override
@@ -75,8 +76,8 @@ public class GammaVariateAxis extends AbstractFourVariableAxis {
 
 	@Override
 	public String particularEquation() {
-		return "y = (" + a + ") * (x-(" + b + "))^(" + c + ")*exp(-(x-(" + b +
-			"))/(" + d + "))";
+		return "y = (" + a() + ") * (x-(" + b() + "))^(" + c() + ")*exp(-(x-(" +
+			b() + "))/(" + d() + "))";
 	}
 
 	@Override
