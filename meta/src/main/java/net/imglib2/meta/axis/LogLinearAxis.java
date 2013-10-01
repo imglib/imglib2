@@ -34,6 +34,7 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
 package net.imglib2.meta.axis;
 
 import net.imglib2.meta.Axes;

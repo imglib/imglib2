@@ -57,6 +57,8 @@ public abstract class AbstractCalibratedAxis extends DefaultTypedAxis implements
 		setUnit(unit);
 	}
 
+	// -- CalibratedAxis methods --
+
 	@Override
 	public String unit() {
 		return unit;
@@ -72,4 +74,5 @@ public abstract class AbstractCalibratedAxis extends DefaultTypedAxis implements
 		return (calibratedValue(rawValue2) - calibratedValue(rawValue1)) /
 			(rawValue2 - rawValue1);
 	}
+
 }
