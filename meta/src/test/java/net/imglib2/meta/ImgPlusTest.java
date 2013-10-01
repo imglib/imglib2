@@ -39,6 +39,7 @@ package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.meta.axis.LinearAxis;
@@ -66,10 +67,9 @@ public class ImgPlusTest {
 		assertEquals(13, imgPlus.axis(1).averageScale(0, 1), 0);
 		assertEquals(9, imgPlus.dimension(0));
 		assertEquals(8, imgPlus.dimension(1));
-		if (imgPlus.axis(1) instanceof LinearAxis) {
-			((LinearAxis) imgPlus.axis(1)).setScale(48);
-			assertEquals(48, imgPlus.axis(1).averageScale(0, 1), 0);
-		}
+		assertTrue(imgPlus.axis(1) instanceof LinearAxis);
+		((LinearAxis) imgPlus.axis(1)).setScale(48);
+		assertEquals(48, imgPlus.axis(1).averageScale(0, 1), 0);
 		assertEquals(0, imgPlus.min(0));
 		assertEquals(0, imgPlus.min(1));
 		assertEquals(8, imgPlus.max(0));
