@@ -143,6 +143,15 @@ public abstract class AbstractCalibratedRealInterval<A extends CalibratedAxis>
 		this.max = max.clone();
 	}
 
+	// -- CalibratedSpace methods --
+
+	@Override
+	public double averageScale(final int d) {
+		return axis(d).averageScale(realMin(d), realMax(d));
+	}
+
+	// -- RealInterval methods --
+
 	@Override
 	public double realMax(int d) {
 		return max[d];

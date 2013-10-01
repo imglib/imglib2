@@ -37,6 +37,7 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.RealInterval;
 import net.imglib2.meta.axis.LinearAxis;
 
 /**
@@ -48,6 +49,19 @@ import net.imglib2.meta.axis.LinearAxis;
 public interface CalibratedSpace<A extends CalibratedAxis> extends
 	TypedSpace<A>
 {
+
+	/**
+	 * Returns the average scale along the given axis, for some reasonable
+	 * interval.
+	 * <p>
+	 * The exact interval used is implementation dependent, but reasonable effort
+	 * will be made to use the largest in-bounds range for the space; e.g., for
+	 * {@link RealInterval}s, the range used is {@link RealInterval#realMin(int)}
+	 * to {@link RealInterval#realMax(int)}. For spaces in general, the default
+	 * range is {@code [0, 1]}.
+	 * </p>
+	 */
+	double averageScale(int d);
 
 	/**
 	 * @deprecated Use {@code LinearSpace#axis(int).scale()} instead.

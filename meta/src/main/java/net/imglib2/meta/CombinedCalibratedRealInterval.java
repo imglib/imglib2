@@ -48,6 +48,11 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 	extends CombinedRealInterval<A, S> implements CalibratedRealInterval<A>
 {
 
+	@Override
+	public double averageScale(final int d) {
+		return axis(d).averageScale(realMin(d), realMax(d));
+	}
+
 	// FIXME - these methods need some TLC. Maybe this class will store its
 	// own copy of calibration values and units. And then setUnit() and
 	// setCalibration() on an axis does a unit converted scaling of existing axes
