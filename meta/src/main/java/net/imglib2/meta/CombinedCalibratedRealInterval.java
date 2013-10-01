@@ -37,6 +37,8 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.meta.axis.LinearAxis;
+
 /**
  * TODO
  * 
@@ -53,43 +55,43 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 	// as needed to get values along unit/calibration converted points of the
 	// underlying axes.
 
-	/*
 	@Override
-	public double calibration(int d) {
-		return axis(d).calibration();
+	public double calibration(final int d) {
+		return linearAxis(d).scale();
 	}
 
 	@Override
 	public void calibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = calibration(i);
+		for (int d = 0; d < numDimensions(); d++) {
+			cal[d] = calibration(d);
+		}
 	}
 
 	@Override
 	public void calibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = (float) calibration(i);
+		for (int d = 0; d < numDimensions(); d++) {
+			cal[d] = (float) calibration(d);
+		}
 	}
 
 	@Override
 	public void setCalibration(double cal, int d) {
-		// TODO: we could throw an UnsupportedOperationException. But this class
-		// is already broken. Update this method later.
-		axis(d).setCalibration(cal);
+		linearAxis(d).setScale(cal);
 	}
 
 	@Override
 	public void setCalibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
+		for (int d = 0; d < numDimensions(); d++) {
+			setCalibration(cal[d], d);
+		}
 	}
 
 	@Override
 	public void setCalibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
+		for (int d = 0; d < numDimensions(); d++) {
+			setCalibration(cal[d], d);
+		}
 	}
-	*/
 
 	@Override
 	public void setUnit(String unit, int d) {
@@ -99,6 +101,17 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 	@Override
 	public String unit(int d) {
 		return axis(d).unit();
+	}
+
+	// -- Helper methods --
+
+	private LinearAxis linearAxis(final int d) {
+		final A axis = axis(d);
+		if (axis instanceof LinearAxis) {
+			return (LinearAxis) axis;
+		}
+		throw new IllegalArgumentException("Unsupported axis: " +
+			axis.getClass().getName());
 	}
 
 }
