@@ -53,16 +53,6 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 	// as needed to get values along unit/calibration converted points of the
 	// underlying axes.
 
-	@Override
-	public void setUnit(String unit, int d) {
-		axis(d).setUnit(unit);
-	}
-
-	@Override
-	public String unit(int d) {
-		return axis(d).unit();
-	}
-
 	/*
 	@Override
 	public double calibration(int d) {
@@ -100,4 +90,15 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 			setCalibration(cal[i], i);
 	}
 	*/
+
+	@Override
+	public void setUnit(String unit, int d) {
+		axis(d).setUnit(unit);
+	}
+
+	@Override
+	public String unit(int d) {
+		return axis(d).unit();
+	}
+
 }
