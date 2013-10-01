@@ -80,7 +80,7 @@ public class PolynomialAxisTest {
 	}
 
 	@Test
-	public void testEquation() {
+	public void testGeneralEquation() {
 		PolynomialAxis axis = new PolynomialAxis(Axes.Y, "mm", 7, 2, 1);
 		assertEquals("y = a + b*x + c*x^2", axis.generalEquation());
 		axis = new PolynomialAxis(Axes.Y, "mm", 5, 4, 3, 2, 1);
@@ -88,7 +88,7 @@ public class PolynomialAxisTest {
 	}
 
 	@Test
-	public void testCalibratedEquation() {
+	public void testParticularEquation() {
 		PolynomialAxis axis = new PolynomialAxis(Axes.Y, "mm", 7, 2, 1);
 		assertEquals("y = (7.0) + (2.0)*x + (1.0)*x^2", axis.particularEquation());
 		axis = new PolynomialAxis(Axes.Y, "mm", 5, 4, 3, 2, 1);
