@@ -72,7 +72,7 @@ public class DefaultCalibratedRealIntervalTest {
 		for (int i = 0; i < extents.length; i++) {
 			// TODO can't run this as default interval ctor has null axes
 			// assertEquals(Double.NaN, interval.axis(i).averageScale(0, 1), 0);
-			assertNull(interval.unit(i));
+			assertNull(interval.axis(i).unit());
 		}
 		LinearAxis axis = new LinearAxis(Axes.X, "plorps", 4);
 		interval.setAxis(axis, 0);
@@ -102,9 +102,9 @@ public class DefaultCalibratedRealIntervalTest {
 		assertEquals(Axes.LIFETIME, interval.axis(0).type());
 		assertEquals(Axes.PHASE, interval.axis(1).type());
 		assertEquals(Axes.POLARIZATION, interval.axis(2).type());
-		assertEquals("froop", interval.unit(0));
-		assertEquals("orp", interval.unit(1));
-		assertEquals("smump", interval.unit(2));
+		assertEquals("froop", interval.axis(0).unit());
+		assertEquals("orp", interval.axis(1).unit());
+		assertEquals("smump", interval.axis(2).unit());
 		assertEquals(1, interval.axis(0).averageScale(0, 1), 0);
 		assertEquals(3, interval.axis(1).averageScale(0, 1), 0);
 		assertEquals(5, interval.axis(2).averageScale(0, 1), 0);

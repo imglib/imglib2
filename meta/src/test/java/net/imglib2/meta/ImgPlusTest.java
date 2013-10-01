@@ -76,9 +76,9 @@ public class ImgPlusTest {
 		assertEquals(7, imgPlus.max(1));
 		assertEquals(0, imgPlus.getValidBits());
 		assertEquals(72, imgPlus.size());
-		assertNull(imgPlus.unit(0));
-		imgPlus.setUnit("WUNGA", 0);
-		assertEquals("WUNGA", imgPlus.unit(0));
+		assertNull(imgPlus.axis(0).unit());
+		imgPlus.axis(0).setUnit("WUNGA");
+		assertEquals("WUNGA", imgPlus.axis(0).unit());
 	}
 
 }
