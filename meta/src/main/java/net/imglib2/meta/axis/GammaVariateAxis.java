@@ -50,8 +50,8 @@ public class GammaVariateAxis extends AbstractFourVariableAxis {
 
 	// -- constructors --
 
-	public GammaVariateAxis(AxisType type, String unit, double a, double b,
-		double c, double d)
+	public GammaVariateAxis(final AxisType type, final String unit,
+		final double a, final double b, final double c, final double d)
 	{
 		super(type);
 		setUnit(unit);
@@ -64,12 +64,12 @@ public class GammaVariateAxis extends AbstractFourVariableAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		return a * Math.pow((rawValue - b), c) * Math.exp(-(rawValue - b) / d);
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
+	public double rawValue(final double calibratedValue) {
 		return Double.NaN; // TODO - for sure?
 	}
 
@@ -85,9 +85,9 @@ public class GammaVariateAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof GammaVariateAxis) {
-			GammaVariateAxis axis = (GammaVariateAxis) other;
+			final GammaVariateAxis axis = (GammaVariateAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setA(axis.a());

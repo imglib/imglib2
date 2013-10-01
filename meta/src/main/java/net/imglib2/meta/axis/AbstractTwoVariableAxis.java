@@ -46,7 +46,7 @@ public abstract class AbstractTwoVariableAxis extends AbstractOneVariableAxis {
 
 	protected double b;
 
-	public AbstractTwoVariableAxis(AxisType type) {
+	public AbstractTwoVariableAxis(final AxisType type) {
 		super(type);
 	}
 

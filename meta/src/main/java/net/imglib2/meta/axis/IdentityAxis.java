@@ -62,19 +62,19 @@ public class IdentityAxis extends AbstractCalibratedAxis {
 	/**
 	 * Constructs an IdentityAxis of the specified axis type.
 	 */
-	public IdentityAxis(AxisType type) {
+	public IdentityAxis(final AxisType type) {
 		super(type);
 	}
 
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		return rawValue;
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
+	public double rawValue(final double calibratedValue) {
 		return calibratedValue;
 	}
 
@@ -89,7 +89,7 @@ public class IdentityAxis extends AbstractCalibratedAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof IdentityAxis) {
 			setType(((IdentityAxis) other).type());
 			return true;

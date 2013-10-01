@@ -55,8 +55,8 @@ public class ExponentialAxis extends AbstractFourVariableAxis {
 		this(Axes.unknown(), null, 0, 1, 0, 1);
 	}
 
-	public ExponentialAxis(AxisType type, String unit, double a, double b,
-		double c, double d)
+	public ExponentialAxis(final AxisType type, final String unit,
+		final double a, final double b, final double c, final double d)
 	{
 		super(type);
 		setUnit(unit);
@@ -69,12 +69,12 @@ public class ExponentialAxis extends AbstractFourVariableAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		return a + b * Math.exp(c + d * rawValue);
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
+	public double rawValue(final double calibratedValue) {
 		return (Math.log((calibratedValue - a) / b) - c) / d;
 	}
 
@@ -89,9 +89,9 @@ public class ExponentialAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof ExponentialAxis) {
-			ExponentialAxis axis = (ExponentialAxis) other;
+			final ExponentialAxis axis = (ExponentialAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setA(axis.a());

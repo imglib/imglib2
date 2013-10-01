@@ -54,16 +54,16 @@ public class LogLinearAxis extends AbstractFourVariableAxis {
 		this(Axes.unknown());
 	}
 
-	public LogLinearAxis(AxisType type) {
+	public LogLinearAxis(final AxisType type) {
 		this(type, null);
 	}
 
-	public LogLinearAxis(AxisType type, String unit) {
+	public LogLinearAxis(final AxisType type, final String unit) {
 		this(type, unit, 0, 1, 1, 1);
 	}
 
-	public LogLinearAxis(AxisType type, String unit, double a, double b,
-		double c, double d)
+	public LogLinearAxis(final AxisType type, final String unit, final double a,
+		final double b, final double c, final double d)
 	{
 		super(type);
 		setUnit(unit);
@@ -76,12 +76,12 @@ public class LogLinearAxis extends AbstractFourVariableAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		return a + b * Math.log(c + d * rawValue);
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
+	public double rawValue(final double calibratedValue) {
 		return ((Math.exp((calibratedValue - a) / b)) - c) / d;
 	}
 
@@ -96,9 +96,9 @@ public class LogLinearAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof LogLinearAxis) {
-			LogLinearAxis axis = (LogLinearAxis) other;
+			final LogLinearAxis axis = (LogLinearAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setA(axis.a());

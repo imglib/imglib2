@@ -47,7 +47,7 @@ public abstract class AbstractOneVariableAxis extends AbstractCalibratedAxis {
 
 	protected double a;
 
-	public AbstractOneVariableAxis(AxisType type) {
+	public AbstractOneVariableAxis(final AxisType type) {
 		super(type);
 	}
 

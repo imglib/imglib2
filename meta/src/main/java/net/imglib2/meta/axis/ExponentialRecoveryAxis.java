@@ -50,8 +50,8 @@ public class ExponentialRecoveryAxis extends AbstractFourVariableAxis {
 
 	// -- constructors --
 
-	public ExponentialRecoveryAxis(AxisType type, String unit, double a,
-		double b, double c, double d)
+	public ExponentialRecoveryAxis(final AxisType type, final String unit,
+		final double a, final double b, final double c, final double d)
 	{
 		super(type);
 		setUnit(unit);
@@ -64,12 +64,12 @@ public class ExponentialRecoveryAxis extends AbstractFourVariableAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		return a + b * (1 - Math.exp(c + d * rawValue));
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
+	public double rawValue(final double calibratedValue) {
 		return (Math.log(-(((calibratedValue - a) / b) - 1)) - c) / d;
 	}
 
@@ -85,9 +85,9 @@ public class ExponentialRecoveryAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof ExponentialRecoveryAxis) {
-			ExponentialRecoveryAxis axis = (ExponentialRecoveryAxis) other;
+			final ExponentialRecoveryAxis axis = (ExponentialRecoveryAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setA(axis.a());

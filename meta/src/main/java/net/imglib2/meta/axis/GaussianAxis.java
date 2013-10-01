@@ -50,8 +50,8 @@ public class GaussianAxis extends AbstractFourVariableAxis {
 
 	// -- constructors --
 
-	public GaussianAxis(AxisType type, String unit, double a, double b, double c,
-		double d)
+	public GaussianAxis(final AxisType type, final String unit, final double a,
+		final double b, final double c, final double d)
 	{
 		super(type);
 		setUnit(unit);
@@ -64,13 +64,13 @@ public class GaussianAxis extends AbstractFourVariableAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		return a + (b - a) *
 			Math.exp(-(rawValue - c) * (rawValue - c) / (2 * d * d));
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
+	public double rawValue(final double calibratedValue) {
 		return Double.NaN; // TODO - for sure?
 	}
 
@@ -86,9 +86,9 @@ public class GaussianAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof GaussianAxis) {
-			GaussianAxis axis = (GaussianAxis) other;
+			final GaussianAxis axis = (GaussianAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setA(axis.a());

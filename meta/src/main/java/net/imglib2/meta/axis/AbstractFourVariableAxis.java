@@ -48,7 +48,7 @@ public abstract class AbstractFourVariableAxis extends
 
 	protected double d;
 
-	public AbstractFourVariableAxis(AxisType type) {
+	public AbstractFourVariableAxis(final AxisType type) {
 		super(type);
 	}
 

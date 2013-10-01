@@ -50,8 +50,8 @@ public class InverseRodbardAxis extends AbstractFourVariableAxis {
 
 	// -- constructors --
 
-	public InverseRodbardAxis(AxisType type, String unit, double a, double b,
-		double c, double d)
+	public InverseRodbardAxis(final AxisType type, final String unit,
+		final double a, final double b, final double c, final double d)
 	{
 		super(type);
 		setUnit(unit);
@@ -64,14 +64,14 @@ public class InverseRodbardAxis extends AbstractFourVariableAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		return a * Math.pow(((rawValue - b) / (c - rawValue)), (1 / d));
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
-		double aToTheD = Math.pow(a, d);
-		double yToTheD = Math.pow(calibratedValue, d);
+	public double rawValue(final double calibratedValue) {
+		final double aToTheD = Math.pow(a, d);
+		final double yToTheD = Math.pow(calibratedValue, d);
 		return ((b * aToTheD) + (c * yToTheD)) / (aToTheD + yToTheD);
 	}
 
@@ -86,9 +86,9 @@ public class InverseRodbardAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof InverseRodbardAxis) {
-			InverseRodbardAxis axis = (InverseRodbardAxis) other;
+			final InverseRodbardAxis axis = (InverseRodbardAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setA(axis.a());

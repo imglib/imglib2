@@ -69,7 +69,7 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	 * Construct a LinearAxis of specified scale. Axis type is unknown, unit is
 	 * null, slope is the specified scale and intercept is 0.0.
 	 */
-	public LinearAxis(double scale) {
+	public LinearAxis(final double scale) {
 		this(Axes.unknown(), scale);
 	}
 
@@ -77,7 +77,7 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	 * Construct a LinearAxis of specified scale and origin. Axis type is unknown,
 	 * unit is null, slope is specified scale and intercept is specified origin.
 	 */
-	public LinearAxis(double scale, double origin) {
+	public LinearAxis(final double scale, final double origin) {
 		this(Axes.unknown(), scale, origin);
 	}
 
@@ -85,7 +85,7 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	 * Construct a LinearAxis of specified type. Axis type is as specified, unit
 	 * is null, slope is 1.0 and intercept is 0.0.
 	 */
-	public LinearAxis(AxisType type) {
+	public LinearAxis(final AxisType type) {
 		this(type, 1, 0);
 	}
 
@@ -93,7 +93,7 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	 * Construct a LinearAxis of specified type and scale. Axis type is as
 	 * specified, unit is null, slope is the specified scale and intercept is 0.0.
 	 */
-	public LinearAxis(AxisType type, double scale) {
+	public LinearAxis(final AxisType type, final double scale) {
 		this(type, scale, 0);
 	}
 
@@ -102,7 +102,8 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	 * as specified, unit is null, slope is the specified scale and intercept is
 	 * specified origin.
 	 */
-	public LinearAxis(AxisType type, double scale, double origin) {
+	public LinearAxis(final AxisType type, final double scale, final double origin)
+	{
 		super(type);
 		this.scale = scale;
 		this.origin = origin;
@@ -112,7 +113,7 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	 * Construct a LinearAxis of specified type and unit. Axis type is as
 	 * specified, unit is as specified, slope is 1.0 and intercept is 0.0.
 	 */
-	public LinearAxis(AxisType type, String unit) {
+	public LinearAxis(final AxisType type, final String unit) {
 		this(type, unit, 1, 0);
 	}
 
@@ -121,7 +122,8 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	 * specified, unit is as specified, slope is the specified scale and intercept
 	 * is 0.0.
 	 */
-	public LinearAxis(AxisType type, String unit, double scale) {
+	public LinearAxis(final AxisType type, final String unit, final double scale)
+	{
 		this(type, unit, scale, 0);
 	}
 
@@ -130,7 +132,9 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	 * type is as specified, unit is as specified, slope is the specified scale
 	 * and intercept is the specified origin.
 	 */
-	public LinearAxis(AxisType type, String unit, double scale, double origin) {
+	public LinearAxis(final AxisType type, final String unit, final double scale,
+		final double origin)
+	{
 		super(type);
 		setUnit(unit);
 		this.scale = scale;
@@ -142,20 +146,24 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	/**
 	 * Returns the slope of the line connecting two points.
 	 */
-	public static double slope(double x1, double y1, double x2, double y2) {
+	public static double slope(final double x1, final double y1, final double x2,
+		final double y2)
+	{
 		return (y2 - y1) / (x2 - x1);
 	}
 
 	/**
 	 * Returns the y intercept of the line connecting two points.
 	 */
-	public static double intercept(double x1, double y1, double x2, double y2) {
+	public static double intercept(final double x1, final double y1,
+		final double x2, final double y2)
+	{
 		return (y1 + y2 + (((y1 - y2) * (x1 + x2)) / (x2 - x1))) / 2;
 	}
 
 	// -- setters/getters --
 
-	public void setScale(double scale) {
+	public void setScale(final double scale) {
 		this.scale = scale;
 	}
 
@@ -163,7 +171,7 @@ public class LinearAxis extends AbstractCalibratedAxis {
 		return scale;
 	}
 
-	public void setOrigin(double origin) {
+	public void setOrigin(final double origin) {
 		this.origin = origin;
 	}
 
@@ -174,12 +182,12 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		return scale * rawValue + origin;
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
+	public double rawValue(final double calibratedValue) {
 		return (calibratedValue - origin) / scale;
 	}
 
@@ -194,9 +202,9 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof LinearAxis) {
-			LinearAxis axis = (LinearAxis) other;
+			final LinearAxis axis = (LinearAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setOrigin(axis.origin());
@@ -204,7 +212,7 @@ public class LinearAxis extends AbstractCalibratedAxis {
 			return true;
 		}
 		if (other instanceof PolynomialAxis) {
-			PolynomialAxis axis = (PolynomialAxis) other;
+			final PolynomialAxis axis = (PolynomialAxis) other;
 			if (axis.order() == 2 && axis.coeff(2) == 0) {
 				setType(axis.type());
 				setUnit(axis.unit());
@@ -214,7 +222,7 @@ public class LinearAxis extends AbstractCalibratedAxis {
 			}
 		}
 		if (other instanceof PowerAxis) {
-			PowerAxis axis = (PowerAxis) other;
+			final PowerAxis axis = (PowerAxis) other;
 			if (axis.c() == 0 || axis.c() == 1) {
 				setType(axis.type());
 				setUnit(axis.unit());

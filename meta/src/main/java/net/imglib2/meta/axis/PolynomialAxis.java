@@ -66,7 +66,8 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 		this(Axes.unknown(), null, 0, 0, 1);
 	}
 
-	public PolynomialAxis(AxisType type, String unit, double... coeffs)
+	public PolynomialAxis(final AxisType type, final String unit,
+		final double... coeffs)
 	{
 		super(type);
 		setUnit(unit);
@@ -88,7 +89,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 		return coeffs.length - 1;
 	}
 
-	public double coeff(int i) {
+	public double coeff(final int i) {
 		resize(2);
 		if (i < coeffs.length) return coeffs[i];
 		return 0;
@@ -96,7 +97,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 
 	// -- setters --
 
-	public void setCoeff(int i, double v) {
+	public void setCoeff(final int i, final double v) {
 		if (i >= VARS.length) {
 			throw new IllegalArgumentException("polynomial axis limited to " +
 				VARS.length + " coefficients");
@@ -108,7 +109,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		double term = rawValue;
 		double result = coeffs[0];
 		for (int i = 1; i < coeffs.length; i++) {
@@ -119,7 +120,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
+	public double rawValue(final double calibratedValue) {
 		return Double.NaN; // in general polynomial equations are not 1 to 1
 	}
 
@@ -127,7 +128,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	public String generalEquation() {
 		// String that looks like y = a + b*x + c*x^2 + ...
 		int v = 0;
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("y = ");
 		for (int i = 0; i < coeffs.length; i++) {
 			if (coeffs[i] == 0) continue; // skip terms if possible
@@ -147,7 +148,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	@Override
 	public String particularEquation() {
 		// String that looks like y = (4.0) + (2.7)*x + (8.9)*x^2 + ...
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("y = (");
 		for (int i = 0; i < coeffs.length; i++) {
 			if (coeffs[i] == 0) continue; // skip terms if possible
@@ -166,12 +167,12 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof PolynomialAxis) {
-			PolynomialAxis axis = (PolynomialAxis) other;
+			final PolynomialAxis axis = (PolynomialAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
-			int order = axis.order();
+			final int order = axis.order();
 			coeffs = new double[order + 1];
 			// reverse order does fewer resizes
 			for (int i = order; i >= 0; i--) {
@@ -180,7 +181,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 			return true;
 		}
 		if (other instanceof LinearAxis) {
-			LinearAxis axis = (LinearAxis) other;
+			final LinearAxis axis = (LinearAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			coeffs = new double[3];
@@ -190,8 +191,8 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 			return true;
 		}
 		if (other instanceof PowerAxis) {
-			PowerAxis axis = (PowerAxis) other;
-			int power = compatiblePower(axis);
+			final PowerAxis axis = (PowerAxis) other;
+			final int power = compatiblePower(axis);
 			if (power >= 0) {
 				setType(axis.type());
 				setUnit(axis.unit());
@@ -206,7 +207,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 
 	// -- helpers --
 
-	private void resize(int smallestValidIndex) {
+	private void resize(final int smallestValidIndex) {
 		int lastValid = coeffs.length - 1;
 		if (smallestValidIndex >= coeffs.length) {
 			lastValid = smallestValidIndex;
@@ -218,7 +219,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 			}
 		}
 		if (lastValid != coeffs.length - 1) {
-			double[] newCoeffs = new double[lastValid + 1];
+			final double[] newCoeffs = new double[lastValid + 1];
 			for (int i = 0; i < newCoeffs.length; i++) {
 				newCoeffs[i] = (i >= coeffs.length) ? 0 : coeffs[i];
 			}
@@ -226,7 +227,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 		}
 	}
 
-	private int compatiblePower(PowerAxis axis) {
+	private int compatiblePower(final PowerAxis axis) {
 		if (axis.c() < 2) return -1;
 		if (Math.floor(axis.c()) != axis.c()) return -1;
 		// integer power >= 2

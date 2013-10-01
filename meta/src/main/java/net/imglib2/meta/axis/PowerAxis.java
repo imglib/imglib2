@@ -50,15 +50,17 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 
 	// -- constructors --
 
-	public PowerAxis(double power) {
+	public PowerAxis(final double power) {
 		this(Axes.unknown(), power);
 	}
 
-	public PowerAxis(AxisType type, double power) {
+	public PowerAxis(final AxisType type, final double power) {
 		this(type, null, 0, 1, power);
 	}
 
-	public PowerAxis(AxisType type, String unit, double a, double b, double c) {
+	public PowerAxis(final AxisType type, final String unit, final double a,
+		final double b, final double c)
+	{
 		super(type);
 		setUnit(unit);
 		this.a = a;
@@ -69,12 +71,12 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		return a + b * Math.pow(rawValue, c);
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
+	public double rawValue(final double calibratedValue) {
 		return Math.pow(((calibratedValue - a) / b), (1.0 / c));
 	}
 
@@ -89,9 +91,9 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof PowerAxis) {
-			PowerAxis axis = (PowerAxis) other;
+			final PowerAxis axis = (PowerAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setA(axis.a());
@@ -100,7 +102,7 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 			return true;
 		}
 		if (other instanceof LinearAxis) {
-			LinearAxis axis = (LinearAxis) other;
+			final LinearAxis axis = (LinearAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setA(axis.origin());
@@ -109,8 +111,8 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 			return true;
 		}
 		if (other instanceof PolynomialAxis) {
-			PolynomialAxis axis = (PolynomialAxis) other;
-			int power = compatiblePolynomial(axis);
+			final PolynomialAxis axis = (PolynomialAxis) other;
+			final int power = compatiblePolynomial(axis);
 			if (power >= 0) {
 				setType(axis.type());
 				setUnit(axis.unit());
@@ -125,8 +127,8 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 
 	// -- helpers --
 
-	private int compatiblePolynomial(PolynomialAxis axis) {
-		int order = axis.order();
+	private int compatiblePolynomial(final PolynomialAxis axis) {
+		final int order = axis.order();
 		for (int i = 1; i < order; i++) {
 			if (axis.coeff(i) != 0) return -1;
 		}

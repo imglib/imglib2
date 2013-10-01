@@ -48,7 +48,7 @@ public abstract class AbstractCalibratedAxis extends DefaultTypedAxis implements
 
 	private String unit;
 
-	public AbstractCalibratedAxis(AxisType type) {
+	public AbstractCalibratedAxis(final AxisType type) {
 		super(type);
 	}
 

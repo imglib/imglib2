@@ -50,8 +50,8 @@ public class RodbardAxis extends AbstractFourVariableAxis {
 
 	// -- constructors --
 
-	public RodbardAxis(AxisType type, String unit, double a, double b, double c,
-		double d)
+	public RodbardAxis(final AxisType type, final String unit, final double a,
+		final double b, final double c, final double d)
 	{
 		super(type);
 		setUnit(unit);
@@ -64,12 +64,12 @@ public class RodbardAxis extends AbstractFourVariableAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibratedValue(double rawValue) {
+	public double calibratedValue(final double rawValue) {
 		return a + (b - a) / (1 + Math.pow((rawValue / c), d));
 	}
 
 	@Override
-	public double rawValue(double calibratedValue) {
+	public double rawValue(final double calibratedValue) {
 		return Math.pow(((b - calibratedValue) / (calibratedValue - a)), 1 / d) * c;
 	}
 
@@ -85,9 +85,9 @@ public class RodbardAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public boolean update(CalibratedAxis other) {
+	public boolean update(final CalibratedAxis other) {
 		if (other instanceof RodbardAxis) {
-			RodbardAxis axis = (RodbardAxis) other;
+			final RodbardAxis axis = (RodbardAxis) other;
 			setType(axis.type());
 			setUnit(axis.unit());
 			setA(axis.a());
