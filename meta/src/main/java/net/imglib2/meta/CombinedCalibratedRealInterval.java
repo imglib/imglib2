@@ -38,6 +38,8 @@
 package net.imglib2.meta;
 
 /**
+ * TODO
+ * 
  * @author Barry DeZonia
  */
 public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends CalibratedRealInterval<A>>
