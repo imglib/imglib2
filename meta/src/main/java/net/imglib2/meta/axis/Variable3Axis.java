@@ -40,16 +40,18 @@ package net.imglib2.meta.axis;
 import net.imglib2.meta.AxisType;
 
 /**
+ * Abstract superclass for axes with three variables.
+ * 
  * @author Barry DeZonia
  */
-public abstract class AbstractThreeVariableAxis extends AbstractTwoVariableAxis
+public abstract class Variable3Axis extends Variable2Axis
 {
 
-	public AbstractThreeVariableAxis(final AxisType type) {
+	public Variable3Axis(final AxisType type) {
 		super(type);
 	}
 
-	public AbstractThreeVariableAxis(final AxisType type, final String unit,
+	public Variable3Axis(final AxisType type, final String unit,
 		final double a, final double b, final double c)
 	{
 		super(type, unit, a, b);

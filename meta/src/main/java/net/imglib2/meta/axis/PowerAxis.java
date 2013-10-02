@@ -47,7 +47,7 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class PowerAxis extends AbstractThreeVariableAxis {
+public class PowerAxis extends Variable3Axis {
 
 	// -- constructors --
 

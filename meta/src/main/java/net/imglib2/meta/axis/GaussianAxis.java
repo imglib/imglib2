@@ -46,7 +46,7 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class GaussianAxis extends AbstractFourVariableAxis {
+public class GaussianAxis extends Variable4Axis {
 
 	// -- constructors --
 

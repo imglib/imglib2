@@ -40,33 +40,33 @@ package net.imglib2.meta.axis;
 import net.imglib2.meta.AxisType;
 
 /**
+ * Abstract superclass for axes with one variable.
+ * 
  * @author Barry DeZonia
  */
-public abstract class AbstractFourVariableAxis extends
-	AbstractThreeVariableAxis
-{
+public abstract class Variable1Axis extends VariableAxis {
 
-	public AbstractFourVariableAxis(final AxisType type) {
+	public Variable1Axis(final AxisType type) {
 		super(type);
 	}
 
-	public AbstractFourVariableAxis(final AxisType type, final String unit,
-		final double a, final double b, final double c, final double d)
+	public Variable1Axis(final AxisType type, final String unit,
+		final double a)
 	{
-		super(type, unit, a, b, c);
-		setD(d);
+		super(type, unit);
+		setA(a);
 	}
 
 	// -- getters --
 
-	public double d() {
-		return get("d");
+	public double a() {
+		return get("a");
 	}
 
 	// -- setters --
 
-	public void setD(final double d) {
-		set("d", d);
+	public void setA(final double a) {
+		set("a", a);
 	}
 
 }

@@ -47,7 +47,7 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class ExponentialAxis extends AbstractFourVariableAxis {
+public class ExponentialAxis extends Variable4Axis {
 
 	// -- constructors --
 

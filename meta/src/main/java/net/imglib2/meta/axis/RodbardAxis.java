@@ -46,7 +46,7 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class RodbardAxis extends AbstractFourVariableAxis {
+public class RodbardAxis extends Variable4Axis {
 
 	// -- constructors --
 

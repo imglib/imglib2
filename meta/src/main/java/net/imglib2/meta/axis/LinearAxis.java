@@ -48,7 +48,7 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class LinearAxis extends AbstractTwoVariableAxis {
+public class LinearAxis extends Variable2Axis {
 
 	// -- constructors --
 

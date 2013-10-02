@@ -47,7 +47,7 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class LogLinearAxis extends AbstractFourVariableAxis {
+public class LogLinearAxis extends Variable4Axis {
 
 	// -- constructors --
 
