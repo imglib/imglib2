@@ -45,12 +45,14 @@ import net.imglib2.meta.Axes;
 import org.junit.Test;
 
 /**
+ * Tests {@link PolynomialAxis}.
+ * 
  * @author Barry DeZonia
  */
 public class PolynomialAxisTest {
 
 	@Test
-	public void testDefaultCtor() {
+	public void testDefaultConstructor() {
 		PolynomialAxis axis = new PolynomialAxis();
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertNull(axis.unit());
@@ -63,7 +65,7 @@ public class PolynomialAxisTest {
 	}
 
 	@Test
-	public void testSpecificCtor() {
+	public void testSpecificConstructor() {
 		PolynomialAxis axis = new PolynomialAxis(Axes.X, "florps", 1, 2, 3, 4, 5);
 		assertEquals(Axes.X, axis.type());
 		assertEquals("florps", axis.unit());

@@ -53,7 +53,7 @@ public class LinearAxisTest {
 	private LinearAxis axis;
 
 	@Test
-	public void testConstructor1() {
+	public void testDefaultConstructor() {
 		axis = new LinearAxis();
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertEquals(null, axis.unit());
@@ -62,7 +62,7 @@ public class LinearAxisTest {
 	}
 
 	@Test
-	public void testConstructor2() {
+	public void testScaleConstructor() {
 		axis = new LinearAxis(59);
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertEquals(null, axis.unit());
@@ -71,7 +71,7 @@ public class LinearAxisTest {
 	}
 
 	@Test
-	public void testConstructor3() {
+	public void testScaleOriginConstructor() {
 		axis = new LinearAxis(22, 7);
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertEquals(null, axis.unit());
@@ -80,7 +80,7 @@ public class LinearAxisTest {
 	}
 
 	@Test
-	public void testConstructor4() {
+	public void testAxisTypeConstructor() {
 		axis = new LinearAxis(Axes.Z);
 		assertEquals(Axes.Z, axis.type());
 		assertEquals(null, axis.unit());
@@ -89,7 +89,7 @@ public class LinearAxisTest {
 	}
 
 	@Test
-	public void testConstructor5() {
+	public void testAxisTypeScaleConstructor() {
 		axis = new LinearAxis(Axes.X, -3);
 		assertEquals(Axes.X, axis.type());
 		assertEquals(null, axis.unit());
@@ -98,7 +98,7 @@ public class LinearAxisTest {
 	}
 
 	@Test
-	public void testConstructor6() {
+	public void testAxisTypeScaleOriginConstructor() {
 		axis = new LinearAxis(Axes.X, -3, 8);
 		assertEquals(Axes.X, axis.type());
 		assertEquals(null, axis.unit());
@@ -107,7 +107,7 @@ public class LinearAxisTest {
 	}
 
 	@Test
-	public void testConstructor7() {
+	public void testAxisTypeUnitConstructor() {
 		axis = new LinearAxis(Axes.X, "mm");
 		assertEquals(Axes.X, axis.type());
 		assertEquals("mm", axis.unit());
@@ -116,7 +116,7 @@ public class LinearAxisTest {
 	}
 
 	@Test
-	public void testConstructor8() {
+	public void testAxisTypeUnitScaleConstructor() {
 		axis = new LinearAxis(Axes.X, "mm", 9);
 		assertEquals(Axes.X, axis.type());
 		assertEquals("mm", axis.unit());
@@ -125,7 +125,7 @@ public class LinearAxisTest {
 	}
 
 	@Test
-	public void testConstructor9() {
+	public void testAxisTypeUnitScaleOriginConstructor() {
 		axis = new LinearAxis(Axes.X, "mm", 5, 3);
 		assertEquals(Axes.X, axis.type());
 		assertEquals("mm", axis.unit());
