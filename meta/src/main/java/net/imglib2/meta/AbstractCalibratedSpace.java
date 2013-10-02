@@ -39,13 +39,14 @@ package net.imglib2.meta;
 
 import java.util.List;
 
+import net.imglib2.meta.axis.LinearAxis;
+
 /**
  * Abstract base class for {@link CalibratedSpace}.
  * 
  * @author Curtis Rueden
  */
-public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
- extends
+public abstract class AbstractCalibratedSpace<A extends CalibratedAxis> extends
 	AbstractTypedSpace<A> implements CalibratedSpace<A>
 {
 
@@ -61,60 +62,72 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
 		super(axes);
 	}
 
+	// -- CalibratedSpace methods --
+
 	@Override
-	public double calibration(int d) {
-		A axis = axis(d);
-		if (axis == null) return Double.NaN;
-		return axis.calibration();
+	public double averageScale(final int d) {
+		return averageScale(d);
 	}
 
 	@Override
-	public void calibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = calibration(i);
+	public double calibration(final int d) {
+		return linearAxis(d).scale();
 	}
 
 	@Override
-	public void calibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = (float) calibration(i);
-	}
-
-	@Override
-	public void setCalibration(double cal, int d) {
-		A axis = axis(d);
-		if (axis == null) {
-			throw new IllegalArgumentException("cannot setCalibration() on null axis");
+	public void calibration(final double[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			cal[d] = calibration(d);
 		}
-		axis.setCalibration(cal);
 	}
 
 	@Override
-	public void setCalibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
-
-	@Override
-	public void setCalibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
-
-	@Override
-	public String unit(int d) {
-		A axis = axis(d);
-		if (axis == null) return null;
-		return axis.unit();
-	}
-
-	@Override
-	public void setUnit(String unit, int d) {
-		A axis = axis(d);
-		if (axis == null) {
-			throw new IllegalArgumentException("cannot setUnit() on null axis");
+	public void calibration(final float[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			cal[d] = (float) calibration(d);
 		}
-		axis.setUnit(unit);
+	}
+
+	@Override
+	public void setCalibration(final double cal, final int d) {
+		linearAxis(d).setScale(cal);
+	}
+
+	@Override
+	public void setCalibration(final double[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			setCalibration(cal[d], d);
+		}
+	}
+
+	@Override
+	public void setCalibration(final float[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			setCalibration(cal[d], d);
+		}
+	}
+
+	@Override
+	public String unit(final int d) {
+		return axis(d).unit();
+	}
+
+	@Override
+	public void setUnit(final String unit, final int d) {
+		axis(d).setUnit(unit);
+	}
+
+	// -- Helper methods --
+
+	// NB: Only exists to fulfill deprecated method implementations above.
+	// Will go away in a subsequent release to eliminate LinearAxis dependency.
+	private LinearAxis linearAxis(final int d) {
+		final A axis = axis(d);
+		if (axis instanceof LinearAxis) {
+			return (LinearAxis) axis;
+		}
+		throw new IllegalArgumentException("Unsupported axis: " +
+			axis.getClass().getName());
 	}
 
 }

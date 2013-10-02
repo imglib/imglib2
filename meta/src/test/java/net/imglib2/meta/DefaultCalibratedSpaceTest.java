@@ -39,81 +39,92 @@ package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+
+import net.imglib2.meta.axis.DefaultLinearAxis;
+import net.imglib2.meta.axis.LinearAxis;
 
 import org.junit.Test;
 
 /**
+ * Tests {@link DefaultCalibratedSpace}.
+ * 
  * @author Barry DeZonia
  */
-public class DefaultCalibratedSpaceTest {
+public class DefaultCalibratedSpaceTest extends AbstractMetaTest {
 
 	private DefaultCalibratedSpace space;
 
 	@Test
-	public void test1() {
-		DefaultCalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.X, "nm", 2);
-		DefaultCalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.Y, "nm", 3);
-		DefaultCalibratedAxis axis2 = new DefaultCalibratedAxis(Axes.Z, "cm", 4);
+	public void testArrayConstructor() {
+		final LinearAxis axis0 = new DefaultLinearAxis(Axes.X, "nm", 2);
+		final LinearAxis axis1 = new DefaultLinearAxis(Axes.Y, "nm", 3);
+		final LinearAxis axis2 = new DefaultLinearAxis(Axes.Z, "cm", 4);
 		space = new DefaultCalibratedSpace(axis0, axis1, axis2);
 		assertEquals(Axes.X, space.axis(0).type());
 		assertEquals(Axes.Y, space.axis(1).type());
 		assertEquals(Axes.Z, space.axis(2).type());
-		assertEquals("nm", space.unit(0));
-		assertEquals("nm", space.unit(1));
-		assertEquals("cm", space.unit(2));
-		assertEquals(2, space.calibration(0), 0);
-		assertEquals(3, space.calibration(1), 0);
-		assertEquals(4, space.calibration(2), 0);
+		assertEquals("nm", space.axis(0).unit());
+		assertEquals("nm", space.axis(1).unit());
+		assertEquals("cm", space.axis(2).unit());
+		assertEquals(2, space.axis(0).calibratedValue(1), 0);
+		assertEquals(3, space.axis(1).calibratedValue(1), 0);
+		assertEquals(4, space.axis(2).calibratedValue(1), 0);
 	}
 
 	@Test
-	public void test2() {
-		DefaultCalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.X, "nm", 2);
-		DefaultCalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.Y, "nm", 3);
-		DefaultCalibratedAxis axis2 = new DefaultCalibratedAxis(Axes.Z, "cm", 4);
+	public void testListConstructor() {
+		// verify that axes are assigned correctly in the constructor
+		final LinearAxis axis0 = new DefaultLinearAxis(Axes.X, "nm", 2);
+		final LinearAxis axis1 = new DefaultLinearAxis(Axes.Y, "nm", 3);
+		final LinearAxis axis2 = new DefaultLinearAxis(Axes.Z, "cm", 4);
 		space =
 			new DefaultCalibratedSpace(Arrays.asList(new CalibratedAxis[] { axis0,
 				axis1, axis2 }));
 		assertEquals(Axes.X, space.axis(0).type());
 		assertEquals(Axes.Y, space.axis(1).type());
 		assertEquals(Axes.Z, space.axis(2).type());
-		assertEquals("nm", space.unit(0));
-		assertEquals("nm", space.unit(1));
-		assertEquals("cm", space.unit(2));
-		assertEquals(2, space.calibration(0), 0);
-		assertEquals(3, space.calibration(1), 0);
-		assertEquals(4, space.calibration(2), 0);
+		assertEquals("nm", space.axis(0).unit());
+		assertEquals("nm", space.axis(1).unit());
+		assertEquals("cm", space.axis(2).unit());
+		assertEquals(2, space.axis(0).calibratedValue(1), 0);
+		assertEquals(3, space.axis(1).calibratedValue(1), 0);
+		assertEquals(4, space.axis(2).calibratedValue(1), 0);
 	}
 
 	@Test
-	public void test3() {
+	public void testDefaultConstructor() {
 		space = new DefaultCalibratedSpace(3);
-		assertTrue(space.axis(0).type() instanceof DefaultAxisType);
-		assertTrue(space.axis(1).type() instanceof DefaultAxisType);
-		assertTrue(space.axis(2).type() instanceof DefaultAxisType);
-		assertNull(space.unit(0));
-		assertNull(space.unit(1));
-		assertNull(space.unit(2));
-		assertEquals(Double.NaN, space.calibration(0), 0);
-		assertEquals(Double.NaN, space.calibration(1), 0);
-		assertEquals(Double.NaN, space.calibration(2), 0);
-		DefaultCalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.X, "nm", 2);
-		DefaultCalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.Y, "nm", 3);
-		DefaultCalibratedAxis axis2 = new DefaultCalibratedAxis(Axes.Z, "cm", 4);
+		// verify that axes have default (identity) calibrations
+		assertEquals("Unknown", space.axis(0).type().getLabel());
+		assertEquals("Unknown", space.axis(1).type().getLabel());
+		assertEquals("Unknown", space.axis(2).type().getLabel());
+		assertNull(space.axis(0).unit());
+		assertNull(space.axis(1).unit());
+		assertNull(space.axis(2).unit());
+		assertEquals(0, space.axis(0).calibratedValue(0), 0);
+		assertEquals(0, space.axis(1).calibratedValue(0), 0);
+		assertEquals(0, space.axis(2).calibratedValue(0), 0);
+		assertEquals(1, space.axis(0).calibratedValue(1), 0);
+		assertEquals(1, space.axis(1).calibratedValue(1), 0);
+		assertEquals(1, space.axis(2).calibratedValue(1), 0);
+		// verify that axes are assigned correctly
+		final LinearAxis axis0 = new DefaultLinearAxis(Axes.X, "nm", 2);
+		final LinearAxis axis1 = new DefaultLinearAxis(Axes.Y, "nm", 3);
+		final LinearAxis axis2 = new DefaultLinearAxis(Axes.Z, "cm", 4);
 		space.setAxis(axis0, 0);
 		space.setAxis(axis1, 1);
 		space.setAxis(axis2, 2);
 		assertEquals(Axes.X, space.axis(0).type());
 		assertEquals(Axes.Y, space.axis(1).type());
 		assertEquals(Axes.Z, space.axis(2).type());
-		assertEquals("nm", space.unit(0));
-		assertEquals("nm", space.unit(1));
-		assertEquals("cm", space.unit(2));
-		assertEquals(2, space.calibration(0), 0);
-		assertEquals(3, space.calibration(1), 0);
-		assertEquals(4, space.calibration(2), 0);
+		assertEquals("nm", space.axis(0).unit());
+		assertEquals("nm", space.axis(1).unit());
+		assertEquals("cm", space.axis(2).unit());
+		assertEquals(2, space.axis(0).calibratedValue(1), 0);
+		assertEquals(3, space.axis(1).calibratedValue(1), 0);
+		assertEquals(4, space.axis(2).calibratedValue(1), 0);
 	}
+
 }

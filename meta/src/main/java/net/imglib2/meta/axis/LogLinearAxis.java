@@ -35,56 +35,60 @@
  * #L%
  */
 
-package net.imglib2.meta;
+package net.imglib2.meta.axis;
+
+import net.imglib2.meta.Axes;
+import net.imglib2.meta.AxisType;
+import net.imglib2.meta.CalibratedAxis;
 
 /**
- * Simple, default {@link CalibratedAxis} implementation.
+ * LogLinearAxis is a {@link CalibratedAxis } that scales raw values by the
+ * equation {@code y = a + b * ln(c + d*x)}.
  * 
- * @author Curtis Rueden
+ * @author Barry DeZonia
  */
-public class DefaultCalibratedAxis extends DefaultTypedAxis implements
-	CalibratedAxis
-{
+public class LogLinearAxis extends Variable4Axis {
 
-	private String unit;
-	private double cal;
+	// -- constructors --
 
-	public DefaultCalibratedAxis() {
+	public LogLinearAxis() {
 		this(Axes.unknown());
 	}
 
-	public DefaultCalibratedAxis(final AxisType type) {
-		this(type, null, Double.NaN);
+	public LogLinearAxis(final AxisType type) {
+		this(type, null);
 	}
 
-	public DefaultCalibratedAxis(final AxisType type, final String unit,
-		final double cal)
+	public LogLinearAxis(final AxisType type, final String unit) {
+		this(type, unit, 0, 1, 1, 1);
+	}
+
+	public LogLinearAxis(final AxisType type, final String unit, final double a,
+		final double b, final double c, final double d)
 	{
-		super(type);
-		setUnit(unit);
-		setCalibration(cal);
+		super(type, unit, a, b, c, d);
 	}
 
-	// -- UnitAxis methods --
+	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibration() {
-		return cal;
-	}
-
-	@Override
-	public String unit() {
-		return unit;
+	public double calibratedValue(final double rawValue) {
+		return a() + b() * Math.log(c() + d() * rawValue);
 	}
 
 	@Override
-	public void setCalibration(final double cal) {
-		this.cal = cal;
+	public double rawValue(final double calibratedValue) {
+		return ((Math.exp((calibratedValue - a()) / b())) - c()) / d();
 	}
 
 	@Override
-	public void setUnit(final String unit) {
-		this.unit = unit;
+	public String generalEquation() {
+		return "y = a + b * ln(c + d * x)";
+	}
+
+	@Override
+	public LogLinearAxis copy() {
+		return new LogLinearAxis(type(), unit(), a(), b(), c(), d());
 	}
 
 }

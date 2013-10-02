@@ -50,6 +50,8 @@ import net.imglib2.display.ColorTable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.meta.axis.DefaultLinearAxis;
+import net.imglib2.meta.axis.LinearAxis;
 
 /**
  * A simple container for storing an {@link Img} together with its metadata.
@@ -57,8 +59,8 @@ import net.imglib2.img.array.ArrayImg;
  * 
  * @author Curtis Rueden
  */
-public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
-	ImgPlusMetadata
+public class ImgPlus<T> extends DefaultCalibratedRealInterval implements
+	Img<T>, ImgPlusMetadata
 {
 
 	/** The name assigned to the ImgPlus if none is provided. */
@@ -91,8 +93,8 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	}
 
 	public ImgPlus(final Img<T> img, final ImgPlusMetadata metadata) {
-		this(img, metadata.getName(), getAxisTypes(img, metadata),
-			getCalibration(img, metadata));
+		this(img, metadata.getName(), getAxisTypes(img, metadata), getCalibration(
+			img, metadata), getUnits(img, metadata));
 		validBits = metadata.getValidBits();
 		compositeChannelCount = metadata.getCompositeChannelCount();
 		final int count = metadata.getColorTableCount();
@@ -104,34 +106,16 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	public ImgPlus(final Img<T> img, final String name,
 		final AxisType[] axisTypes, final double[] cal)
 	{
-		super(img.numDimensions());
+		this(img, name, axisTypes, cal, null);
+	}
 
-		// NB: Do not call numDimensions() here! Calling an instance method from a
-		// constructor can have bizarre and unintuitive results in complex class
-		// hierarchies. For example, suppose a subclass overrides the behavior of
-		// numDimensions() in such a way that it only functions correctly after its
-		// own constructor finishes executing. Then calling numDimensions() here in
-		// the superclass (before the subclass's constructor has finished executing)
-		// will behave improperly.
-		final int numDims = img.numDimensions();
-
+	public ImgPlus(final Img<T> img, final String name,
+		final AxisType[] axisTypes, final double[] cal, final String[] units)
+	{
+		super(img, createAxes(img, axisTypes, cal, units));
 		this.img = img;
 		this.name = validateName(name);
-		final AxisType[] validTypes =
-			validateAxisTypes(numDims, axisTypes);
-		if (numDims != validTypes.length) {
-			throw new IllegalArgumentException("Axis type count does not match " +
-				"dimensionality: " + validTypes.length + " != " + numDims);
-		}
-		final double[] validCal = validateCalibration(numDims, cal);
-		if (numDims != validCal.length) {
-			throw new IllegalArgumentException("Calibration count does not match " +
-				"dimensionality: " + validCal.length + " != " + numDims);
-		}
-		for (int d = 0; d < numDims; d++) {
-			axis(d).setType(validTypes[d]);
-			axis(d).setCalibration(validCal[d]);
-		}
+
 		channelMin = new ArrayList<Double>();
 		channelMax = new ArrayList<Double>();
 		colorTable = new ArrayList<ColorTable>();
@@ -146,8 +130,8 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	 * Note that most of the time, you do <em>not</em> need to call this method.
 	 * Rather, you can use the {@code ImgPlus} directly because it implements all
 	 * of the same interfaces. However, there are legitimate cases where you may
-	 * need access to the backing container (e.g., for performance, to cast to
-	 * the appropriate {@link Img} implementation such as {@link ArrayImg}).
+	 * need access to the backing container (e.g., for performance, to cast to the
+	 * appropriate {@link Img} implementation such as {@link ArrayImg}).
 	 * </p>
 	 */
 	public Img<T> getImg() {
@@ -267,15 +251,13 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	}
 
 	@Override
-	public Object iterationOrder()
-	{
+	public Object iterationOrder() {
 		return img.iterationOrder();
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
+	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+		return iterationOrder().equals(f.iterationOrder());
 	}
 
 	// -- Iterable methods --
@@ -400,7 +382,7 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	}
 
 	@Override
-	public void setSource(String source) {
+	public void setSource(final String source) {
 		this.source = source;
 	}
 
@@ -413,13 +395,45 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	}
 
 	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */
-	public static <T> ImgPlus<T> wrap(final Img<T> img, final ImgPlusMetadata metadata)
+	public static <T> ImgPlus<T> wrap(final Img<T> img,
+		final ImgPlusMetadata metadata)
 	{
 		if (img instanceof ImgPlus) return (ImgPlus<T>) img;
 		return new ImgPlus<T>(img, metadata);
 	}
 
 	// -- Helper methods --
+
+	/** Creates {@link LinearAxis} objects matching the given arguments. */
+	private static LinearAxis[] createAxes(final Img<?> img,
+		final AxisType[] axisTypes, final double[] cal, final String[] units)
+	{
+		// validate arguments
+		final int numDims = img.numDimensions();
+		final AxisType[] validTypes = validateAxisTypes(numDims, axisTypes);
+		if (numDims != validTypes.length) {
+			throw new IllegalArgumentException("Axis type count does not match " +
+				"dimensionality: " + validTypes.length + " != " + numDims);
+		}
+		final double[] validCal = validateCalibration(numDims, cal);
+		if (numDims != validCal.length) {
+			throw new IllegalArgumentException("Calibration count does not match " +
+				"dimensionality: " + validCal.length + " != " + numDims);
+		}
+		final String[] validUnits = validateUnits(numDims, units);
+		if (numDims != validUnits.length) {
+			throw new IllegalArgumentException("Unit count does not match " +
+				"dimensionality: " + validUnits.length + " != " + numDims);
+		}
+
+		// create axes
+		final LinearAxis[] axes = new LinearAxis[validTypes.length];
+		for (int d = 0; d < numDims; d++) {
+			axes[d] =
+				new DefaultLinearAxis(validTypes[d], validUnits[d], validCal[d]);
+		}
+		return axes;
+	}
 
 	/** Ensures the given name is valid. */
 	private static String validateName(final String name) {
@@ -464,6 +478,18 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 		return valid;
 	}
 
+	/** Ensures the given unit values are valid. */
+	private static String[]
+		validateUnits(final int numDims, final String[] units)
+	{
+		if (units != null && numDims == units.length) return units;
+		final String[] valid = new String[numDims];
+		for (int i = 0; i < valid.length; i++) {
+			if (units != null && units.length > i) valid[i] = units[i];
+		}
+		return valid;
+	}
+
 	private static AxisType[] getAxisTypes(final Img<?> img,
 		final ImgPlusMetadata metadata)
 	{
@@ -479,9 +505,19 @@ public class ImgPlus<T> extends DefaultCalibratedSpace implements Img<T>,
 	{
 		final double[] cal = new double[img.numDimensions()];
 		for (int i = 0; i < cal.length; i++) {
-			cal[i] = metadata.axis(i).calibration();
+			// TODO - using averageScale() introduces error for nonlinear axes
+			cal[i] = metadata.averageScale(i);
 		}
 		return cal;
 	}
 
+	private static String[] getUnits(final Img<?> img,
+		final ImgPlusMetadata metadata)
+	{
+		final String[] units = new String[img.numDimensions()];
+		for (int i = 0; i < units.length; i++) {
+			units[i] = metadata.axis(i).unit();
+		}
+		return units;
+	}
 }
