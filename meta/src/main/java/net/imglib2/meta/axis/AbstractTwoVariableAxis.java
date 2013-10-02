@@ -44,8 +44,6 @@ import net.imglib2.meta.AxisType;
  */
 public abstract class AbstractTwoVariableAxis extends AbstractOneVariableAxis {
 
-	private double b;
-
 	public AbstractTwoVariableAxis(final AxisType type) {
 		super(type);
 	}
@@ -60,13 +58,13 @@ public abstract class AbstractTwoVariableAxis extends AbstractOneVariableAxis {
 	// -- getters --
 
 	public double b() {
-		return b;
+		return get("b");
 	}
 
 	// -- setters --
 
 	public void setB(final double b) {
-		this.b = b;
+		set("b", b);
 	}
 
 }

@@ -46,8 +46,6 @@ public abstract class AbstractFourVariableAxis extends
 	AbstractThreeVariableAxis
 {
 
-	private double d;
-
 	public AbstractFourVariableAxis(final AxisType type) {
 		super(type);
 	}
@@ -62,13 +60,13 @@ public abstract class AbstractFourVariableAxis extends
 	// -- getters --
 
 	public double d() {
-		return d;
+		return get("d");
 	}
 
 	// -- setters --
 
 	public void setD(final double d) {
-		this.d = d;
+		set("d", d);
 	}
 
 }

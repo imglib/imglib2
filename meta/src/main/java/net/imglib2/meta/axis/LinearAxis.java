@@ -37,7 +37,6 @@
 
 package net.imglib2.meta.axis;
 
-import net.imglib2.meta.AbstractCalibratedAxis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
@@ -49,11 +48,7 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class LinearAxis extends AbstractCalibratedAxis {
-
-	// -- fields --
-
-	private double scale, origin;
+public class LinearAxis extends AbstractTwoVariableAxis {
 
 	// -- constructors --
 
@@ -105,8 +100,8 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	public LinearAxis(final AxisType type, final double scale, final double origin)
 	{
 		super(type);
-		this.scale = scale;
-		this.origin = origin;
+		setScale(scale);
+		setOrigin(origin);
 	}
 
 	/**
@@ -137,8 +132,8 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	{
 		super(type);
 		setUnit(unit);
-		this.scale = scale;
-		this.origin = origin;
+		setScale(scale);
+		setOrigin(origin);
 	}
 
 	// -- static helpers --
@@ -164,31 +159,31 @@ public class LinearAxis extends AbstractCalibratedAxis {
 	// -- setters/getters --
 
 	public void setScale(final double scale) {
-		this.scale = scale;
+		setB(scale);
 	}
 
 	public double scale() {
-		return scale;
+		return b();
 	}
 
 	public void setOrigin(final double origin) {
-		this.origin = origin;
+		setA(origin);
 	}
 
 	public double origin() {
-		return origin;
+		return a();
 	}
 
 	// -- CalibratedAxis methods --
 
 	@Override
 	public double calibratedValue(final double rawValue) {
-		return scale * rawValue + origin;
+		return scale() * rawValue + origin();
 	}
 
 	@Override
 	public double rawValue(final double calibratedValue) {
-		return (calibratedValue - origin) / scale;
+		return (calibratedValue - origin()) / scale();
 	}
 
 	@Override

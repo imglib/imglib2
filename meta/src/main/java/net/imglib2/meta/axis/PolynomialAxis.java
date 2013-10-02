@@ -37,7 +37,6 @@
 
 package net.imglib2.meta.axis;
 
-import net.imglib2.meta.AbstractCalibratedAxis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
@@ -49,17 +48,13 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class PolynomialAxis extends AbstractCalibratedAxis {
+public class PolynomialAxis extends VariableAxis {
 
 	// -- constants --
 
 	private static final String[] VARS = new String[] { "a", "b", "c", "d", "e",
 		"f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
 		"u", "v", "w", /* skipping x and y */"z" };
-
-	// -- fields --
-
-	private double[] coeffs;
 
 	// -- constructors --
 
@@ -72,7 +67,9 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	{
 		super(type);
 		setUnit(unit);
-		this.coeffs = coeffs;
+		for (int i = 0; i < coeffs.length; i++) {
+			setCoeff(i, coeffs[i]);
+		}
 		if (coeffs.length < 3) {
 			throw new IllegalArgumentException(
 				"polynomial axis requires at least 3 coefficients");
@@ -90,15 +87,17 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	 * non-zero coefficient).
 	 */
 	public int degree() {
-		resize(2);
-		return coeffs.length - 1;
+		int degree = -1;
+		for (int i = 0; i < VARS.length; i++) {
+			if (coeff(i) != 0) degree = i;
+		}
+		return degree;
 	}
 
 	/** Gets the {@code i}th coefficient of the polynomial. */
 	public double coeff(final int i) {
-		resize(2);
-		if (i < coeffs.length) return coeffs[i];
-		return 0;
+		final Double value = i < VARS.length ? get(VARS[i]) : null;
+		return value == null ? 0 : value;
 	}
 
 	// -- setters --
@@ -109,8 +108,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 			throw new IllegalArgumentException("polynomial axis limited to " +
 				VARS.length + " coefficients");
 		}
-		if (i >= coeffs.length) resize(i);
-		coeffs[i] = v;
+		set(VARS[i], v);
 	}
 
 	// -- CalibratedAxis methods --
@@ -118,9 +116,9 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	@Override
 	public double calibratedValue(final double rawValue) {
 		double term = rawValue;
-		double result = coeffs[0];
-		for (int i = 1; i < coeffs.length; i++) {
-			result += coeffs[i] * term;
+		double result = coeff(0);
+		for (int i = 1; i <= degree(); i++) {
+			result += coeff(i) * term;
 			term *= rawValue;
 		}
 		return result;
@@ -137,8 +135,8 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 		int v = 0;
 		final StringBuilder builder = new StringBuilder();
 		builder.append("y = ");
-		for (int i = 0; i < coeffs.length; i++) {
-			if (coeffs[i] == 0) continue; // skip terms if possible
+		for (int i = 0; i <= degree(); i++) {
+			if (coeff(i) == 0) continue; // skip terms if possible
 			if (i != 0) builder.append(" + ");
 			builder.append(VARS[v++]);
 			if (i != 0) {
@@ -180,28 +178,6 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 			axis.setCoeff(i, coeff(i));
 		}
 		return axis;
-	}
-
-	// -- helpers --
-
-	private void resize(final int smallestValidIndex) {
-		int lastValid = coeffs.length - 1;
-		if (smallestValidIndex >= coeffs.length) {
-			lastValid = smallestValidIndex;
-		}
-		else {
-			for (int i = coeffs.length - 1; i > smallestValidIndex; i--) {
-				if (coeffs[i] == 0) lastValid--;
-				else break;
-			}
-		}
-		if (lastValid != coeffs.length - 1) {
-			final double[] newCoeffs = new double[lastValid + 1];
-			for (int i = 0; i < newCoeffs.length; i++) {
-				newCoeffs[i] = (i >= coeffs.length) ? 0 : coeffs[i];
-			}
-			coeffs = newCoeffs;
-		}
 	}
 
 }

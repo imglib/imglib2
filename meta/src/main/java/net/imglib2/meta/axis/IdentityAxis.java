@@ -37,7 +37,6 @@
 
 package net.imglib2.meta.axis;
 
-import net.imglib2.meta.AbstractCalibratedAxis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
@@ -48,7 +47,7 @@ import net.imglib2.meta.CalibratedAxis;
  * 
  * @author Barry DeZonia
  */
-public class IdentityAxis extends AbstractCalibratedAxis {
+public class IdentityAxis extends VariableAxis {
 
 	// -- constructors --
 

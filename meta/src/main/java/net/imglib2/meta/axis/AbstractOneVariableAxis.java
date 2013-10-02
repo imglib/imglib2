@@ -37,15 +37,12 @@
 
 package net.imglib2.meta.axis;
 
-import net.imglib2.meta.AbstractCalibratedAxis;
 import net.imglib2.meta.AxisType;
 
 /**
  * @author Barry DeZonia
  */
-public abstract class AbstractOneVariableAxis extends AbstractCalibratedAxis {
-
-	private double a;
+public abstract class AbstractOneVariableAxis extends VariableAxis {
 
 	public AbstractOneVariableAxis(final AxisType type) {
 		super(type);
@@ -61,13 +58,13 @@ public abstract class AbstractOneVariableAxis extends AbstractCalibratedAxis {
 	// -- getters --
 
 	public double a() {
-		return a;
+		return get("a");
 	}
 
 	// -- setters --
 
 	public void setA(final double a) {
-		this.a = a;
+		set("a", a);
 	}
 
 }
