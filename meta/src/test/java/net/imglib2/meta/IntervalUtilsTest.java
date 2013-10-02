@@ -51,7 +51,7 @@ import org.junit.Test;
 public class IntervalUtilsTest {
 
 	@Test
-	public void test1() {
+	public void testGetDims() {
 		final Interval interval = new FinalInterval(new long[] { 10, 20 });
 		final long[] dims = IntervalUtils.getDims(interval);
 		assertEquals(10, dims[0]);
