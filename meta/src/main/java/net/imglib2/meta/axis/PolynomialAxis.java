@@ -85,11 +85,16 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 
 	// -- getters --
 
+	/**
+	 * Gets the degree of the polynomial (i.e., the largest exponent with a
+	 * non-zero coefficient).
+	 */
 	public int degree() {
 		resize(2);
 		return coeffs.length - 1;
 	}
 
+	/** Gets the {@code i}th coefficient of the polynomial. */
 	public double coeff(final int i) {
 		resize(2);
 		if (i < coeffs.length) return coeffs[i];
@@ -98,6 +103,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 
 	// -- setters --
 
+	/** Sets the {@code i}th coefficient of the polynomial. */
 	public void setCoeff(final int i, final double v) {
 		if (i >= VARS.length) {
 			throw new IllegalArgumentException("polynomial axis limited to " +
