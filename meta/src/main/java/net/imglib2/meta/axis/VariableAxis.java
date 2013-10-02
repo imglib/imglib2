@@ -66,19 +66,28 @@ public abstract class VariableAxis extends AbstractCalibratedAxis {
 
 	// -- VariableAxis methods --
 
+	/** Gets the value of the variable with the given name, or null if none. */
 	public Double get(final String name) {
 		return vars.get(name);
 	}
 
+	/**
+	 * Sets the specified value to a variable of the given name.
+	 * 
+	 * @param name The variable to assign.
+	 * @param value The value to assign, or null to clear the variable.
+	 */
 	public void set(final String name, final Double value) {
 		if (value == null) vars.remove(name);
 		else vars.put(name, value);
 	}
 
+	/** Gets the number of variables with assigned values. */
 	public int numVars() {
 		return vars.size();
 	}
 
+	/** Gets the set of variables with assigned values. */
 	public Set<String> vars() {
 		return vars.keySet();
 	}
