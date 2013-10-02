@@ -50,6 +50,10 @@ public class DefaultCalibratedSpace extends
 	AbstractCalibratedSpace<CalibratedAxis>
 {
 
+	/**
+	 * Constructs a new calibrated space of the given dimensionality, with default
+	 * {@link IdentityAxis} axes of unknown type ({@link Axes#unknown()}).
+	 */
 	public DefaultCalibratedSpace(final int numDims) {
 		super(numDims);
 		for (int d = 0; d < numDims; d++) {
@@ -57,10 +61,12 @@ public class DefaultCalibratedSpace extends
 		}
 	}
 
+	/** Constructs a new calibrated space with the given axes. */
 	public DefaultCalibratedSpace(final CalibratedAxis... axes) {
 		super(axes);
 	}
 
+	/** Constructs a new calibrated space with the given axes. */
 	public DefaultCalibratedSpace(final List<CalibratedAxis> axes) {
 		super(axes);
 	}
