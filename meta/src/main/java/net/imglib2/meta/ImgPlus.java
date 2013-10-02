@@ -50,6 +50,7 @@ import net.imglib2.display.ColorTable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.meta.axis.DefaultLinearAxis;
 import net.imglib2.meta.axis.LinearAxis;
 
 /**
@@ -428,7 +429,8 @@ public class ImgPlus<T> extends DefaultCalibratedRealInterval implements
 		// create axes
 		final LinearAxis[] axes = new LinearAxis[validTypes.length];
 		for (int d = 0; d < numDims; d++) {
-			axes[d] = new LinearAxis(validTypes[d], validUnits[d], validCal[d]);
+			axes[d] =
+				new DefaultLinearAxis(validTypes[d], validUnits[d], validCal[d]);
 		}
 		return axes;
 	}

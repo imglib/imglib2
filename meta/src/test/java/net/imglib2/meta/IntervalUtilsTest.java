@@ -42,6 +42,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RealInterval;
+import net.imglib2.meta.axis.DefaultLinearAxis;
 import net.imglib2.meta.axis.LinearAxis;
 
 import org.junit.Test;
@@ -74,8 +75,8 @@ public class IntervalUtilsTest {
 	public void test3() {
 		final DefaultCalibratedRealInterval interval =
 			new DefaultCalibratedRealInterval(new double[] { 10, 20 });
-		final LinearAxis axis0 = new LinearAxis(Axes.X, null, 7);
-		final LinearAxis axis1 = new LinearAxis(Axes.Y, null, 9);
+		final LinearAxis axis0 = new DefaultLinearAxis(Axes.X, null, 7);
+		final LinearAxis axis1 = new DefaultLinearAxis(Axes.Y, null, 9);
 		interval.setAxis(axis0, 0);
 		interval.setAxis(axis1, 1);
 		final double[] extents = IntervalUtils.getCalibratedExtents(interval);

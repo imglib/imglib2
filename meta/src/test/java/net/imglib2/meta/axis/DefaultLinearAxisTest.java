@@ -44,17 +44,17 @@ import net.imglib2.meta.Axes;
 import org.junit.Test;
 
 /**
- * Tests {@link LinearAxis}.
+ * Tests {@link DefaultLinearAxis}.
  * 
  * @author Barry DeZonia
  */
-public class LinearAxisTest {
+public class DefaultLinearAxisTest {
 
 	private LinearAxis axis;
 
 	@Test
 	public void testDefaultConstructor() {
-		axis = new LinearAxis();
+		axis = new DefaultLinearAxis();
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertEquals(null, axis.unit());
 		assertEquals(1, axis.scale(), 0);
@@ -63,7 +63,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testScaleConstructor() {
-		axis = new LinearAxis(59);
+		axis = new DefaultLinearAxis(59);
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertEquals(null, axis.unit());
 		assertEquals(59, axis.scale(), 0);
@@ -72,7 +72,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testScaleOriginConstructor() {
-		axis = new LinearAxis(22, 7);
+		axis = new DefaultLinearAxis(22, 7);
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertEquals(null, axis.unit());
 		assertEquals(22, axis.scale(), 0);
@@ -81,7 +81,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testAxisTypeConstructor() {
-		axis = new LinearAxis(Axes.Z);
+		axis = new DefaultLinearAxis(Axes.Z);
 		assertEquals(Axes.Z, axis.type());
 		assertEquals(null, axis.unit());
 		assertEquals(1, axis.scale(), 0);
@@ -90,7 +90,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testAxisTypeScaleConstructor() {
-		axis = new LinearAxis(Axes.X, -3);
+		axis = new DefaultLinearAxis(Axes.X, -3);
 		assertEquals(Axes.X, axis.type());
 		assertEquals(null, axis.unit());
 		assertEquals(-3, axis.scale(), 0);
@@ -99,7 +99,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testAxisTypeScaleOriginConstructor() {
-		axis = new LinearAxis(Axes.X, -3, 8);
+		axis = new DefaultLinearAxis(Axes.X, -3, 8);
 		assertEquals(Axes.X, axis.type());
 		assertEquals(null, axis.unit());
 		assertEquals(-3, axis.scale(), 0);
@@ -108,7 +108,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testAxisTypeUnitConstructor() {
-		axis = new LinearAxis(Axes.X, "mm");
+		axis = new DefaultLinearAxis(Axes.X, "mm");
 		assertEquals(Axes.X, axis.type());
 		assertEquals("mm", axis.unit());
 		assertEquals(1, axis.scale(), 0);
@@ -117,7 +117,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testAxisTypeUnitScaleConstructor() {
-		axis = new LinearAxis(Axes.X, "mm", 9);
+		axis = new DefaultLinearAxis(Axes.X, "mm", 9);
 		assertEquals(Axes.X, axis.type());
 		assertEquals("mm", axis.unit());
 		assertEquals(9, axis.scale(), 0);
@@ -126,7 +126,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testAxisTypeUnitScaleOriginConstructor() {
-		axis = new LinearAxis(Axes.X, "mm", 5, 3);
+		axis = new DefaultLinearAxis(Axes.X, "mm", 5, 3);
 		assertEquals(Axes.X, axis.type());
 		assertEquals("mm", axis.unit());
 		assertEquals(5, axis.scale(), 0);
@@ -135,7 +135,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testOtherMethods() {
-		axis = new LinearAxis(Axes.Y, "heptoflops", 5, 3);
+		axis = new DefaultLinearAxis(Axes.Y, "heptoflops", 5, 3);
 		assertEquals(5, axis.averageScale(10, 20), 0);
 		assertEquals("y = (3.0) + (5.0)*x", axis.particularEquation());
 		assertEquals(23, axis.calibratedValue(4), 0);
@@ -158,7 +158,7 @@ public class LinearAxisTest {
 
 	@Test
 	public void testInverseMapping() {
-		axis = new LinearAxis();
+		axis = new DefaultLinearAxis();
 		axis.setOrigin(2);
 		axis.setScale(3);
 

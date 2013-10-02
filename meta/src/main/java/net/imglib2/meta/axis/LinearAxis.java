@@ -37,163 +37,27 @@
 
 package net.imglib2.meta.axis;
 
-import net.imglib2.meta.Axes;
-import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
 
 /**
- * LinearAxis is a {@link CalibratedAxis} that scales coordinates along the axis
- * in a linear fashion. Slope and intercept are configurable. Calibrated values
- * calculated from equation {@code y = a + b *x}.
+ * A {@link CalibratedAxis} that scales coordinates along the axis in a linear
+ * fashion. Slope and intercept are configurable. Calibrated values calculated
+ * from equation {@code y = a + b *x}.
  * 
  * @author Barry DeZonia
+ * @author Curtis Rueden
  */
-public class LinearAxis extends Variable2Axis {
+public interface LinearAxis extends CalibratedAxis {
 
-	// -- constructors --
+	void setScale(double scale);
 
-	/**
-	 * Construct a default LinearAxis. Axis type is unknown, unit is null, slope
-	 * is 1.0 and intercept is 0.0.
-	 */
-	public LinearAxis() {
-		this(Axes.unknown());
-	}
+	double scale();
 
-	/**
-	 * Construct a LinearAxis of specified scale. Axis type is unknown, unit is
-	 * null, slope is the specified scale and intercept is 0.0.
-	 */
-	public LinearAxis(final double scale) {
-		this(Axes.unknown(), scale);
-	}
+	void setOrigin(double origin);
 
-	/**
-	 * Construct a LinearAxis of specified scale and origin. Axis type is unknown,
-	 * unit is null, slope is specified scale and intercept is specified origin.
-	 */
-	public LinearAxis(final double scale, final double origin) {
-		this(Axes.unknown(), scale, origin);
-	}
-
-	/**
-	 * Construct a LinearAxis of specified type. Axis type is as specified, unit
-	 * is null, slope is 1.0 and intercept is 0.0.
-	 */
-	public LinearAxis(final AxisType type) {
-		this(type, 1, 0);
-	}
-
-	/**
-	 * Construct a LinearAxis of specified type and scale. Axis type is as
-	 * specified, unit is null, slope is the specified scale and intercept is 0.0.
-	 */
-	public LinearAxis(final AxisType type, final double scale) {
-		this(type, scale, 0);
-	}
-
-	/**
-	 * Construct a LinearAxis of specified type, scale, and origin. Axis type is
-	 * as specified, unit is null, slope is the specified scale and intercept is
-	 * specified origin.
-	 */
-	public LinearAxis(final AxisType type, final double scale, final double origin)
-	{
-		super(type);
-		setScale(scale);
-		setOrigin(origin);
-	}
-
-	/**
-	 * Construct a LinearAxis of specified type and unit. Axis type is as
-	 * specified, unit is as specified, slope is 1.0 and intercept is 0.0.
-	 */
-	public LinearAxis(final AxisType type, final String unit) {
-		this(type, unit, 1, 0);
-	}
-
-	/**
-	 * Construct a LinearAxis of specified type, unit, and scale. Axis type is as
-	 * specified, unit is as specified, slope is the specified scale and intercept
-	 * is 0.0.
-	 */
-	public LinearAxis(final AxisType type, final String unit, final double scale)
-	{
-		this(type, unit, scale, 0);
-	}
-
-	/**
-	 * Construct a LinearAxis of specified type, unit, scale, and origin. Axis
-	 * type is as specified, unit is as specified, slope is the specified scale
-	 * and intercept is the specified origin.
-	 */
-	public LinearAxis(final AxisType type, final String unit, final double scale,
-		final double origin)
-	{
-		super(type);
-		setUnit(unit);
-		setScale(scale);
-		setOrigin(origin);
-	}
-
-	// -- static helpers --
-
-	/**
-	 * Returns the slope of the line connecting two points.
-	 */
-	public static double slope(final double x1, final double y1, final double x2,
-		final double y2)
-	{
-		return (y2 - y1) / (x2 - x1);
-	}
-
-	/**
-	 * Returns the y intercept of the line connecting two points.
-	 */
-	public static double intercept(final double x1, final double y1,
-		final double x2, final double y2)
-	{
-		return (y1 + y2 + (((y1 - y2) * (x1 + x2)) / (x2 - x1))) / 2;
-	}
-
-	// -- setters/getters --
-
-	public void setScale(final double scale) {
-		setB(scale);
-	}
-
-	public double scale() {
-		return b();
-	}
-
-	public void setOrigin(final double origin) {
-		setA(origin);
-	}
-
-	public double origin() {
-		return a();
-	}
-
-	// -- CalibratedAxis methods --
+	double origin();
 
 	@Override
-	public double calibratedValue(final double rawValue) {
-		return scale() * rawValue + origin();
-	}
-
-	@Override
-	public double rawValue(final double calibratedValue) {
-		return (calibratedValue - origin()) / scale();
-	}
-
-	@Override
-	public String generalEquation() {
-		return "y = a + b*x";
-	}
-
-	@Override
-	public LinearAxis copy() {
-		return new LinearAxis(type(), unit(), scale(), origin());
-	}
+	LinearAxis copy();
 
 }

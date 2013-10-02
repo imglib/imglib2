@@ -39,9 +39,9 @@ package net.imglib2.meta;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import net.imglib2.meta.axis.DefaultLinearAxis;
 import net.imglib2.meta.axis.LinearAxis;
 
 import org.junit.Test;
@@ -75,7 +75,7 @@ public class DefaultCalibratedRealIntervalTest {
 			assertNull(interval.axis(i).unit());
 		}
 		// verify that axes are assigned correctly
-		final LinearAxis axis = new LinearAxis(Axes.X, "plorps", 4);
+		final LinearAxis axis = new DefaultLinearAxis(Axes.X, "plorps", 4);
 		interval.setAxis(axis, 0);
 		assertSame(axis, interval.axis(0));
 	}
@@ -84,9 +84,11 @@ public class DefaultCalibratedRealIntervalTest {
 	public void testExtentsAxisArrayConstructor() {
 		final double[] extents = new double[] { 5, 10, 20 };
 		final double[] temp = new double[extents.length];
-		final CalibratedAxis axis0 = new LinearAxis(Axes.LIFETIME, "froop", 1);
-		final CalibratedAxis axis1 = new LinearAxis(Axes.PHASE, "orp", 3);
-		final CalibratedAxis axis2 = new LinearAxis(Axes.POLARIZATION, "smump", 5);
+		final CalibratedAxis axis0 =
+			new DefaultLinearAxis(Axes.LIFETIME, "froop", 1);
+		final CalibratedAxis axis1 = new DefaultLinearAxis(Axes.PHASE, "orp", 3);
+		final CalibratedAxis axis2 =
+			new DefaultLinearAxis(Axes.POLARIZATION, "smump", 5);
 		interval = new DefaultCalibratedRealInterval(extents, axis0, axis1, axis2);
 		assertEquals(extents.length, interval.numDimensions());
 		interval.realMin(temp);
@@ -95,9 +97,9 @@ public class DefaultCalibratedRealIntervalTest {
 		assertArrayEquals(new double[] { 5, 10, 20 }, temp, 0);
 		final CalibratedAxis[] axes = new CalibratedAxis[extents.length];
 		interval.axes(axes);
-		for (final CalibratedAxis axis : axes) {
-			assertNotNull(axis);
-		}
+		assertSame(axis0, axes[0]);
+		assertSame(axis1, axes[1]);
+		assertSame(axis2, axes[2]);
 		assertEquals(Axes.LIFETIME, interval.axis(0).type());
 		assertEquals(Axes.PHASE, interval.axis(1).type());
 		assertEquals(Axes.POLARIZATION, interval.axis(2).type());
