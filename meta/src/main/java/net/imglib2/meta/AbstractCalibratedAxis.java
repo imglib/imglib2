@@ -60,6 +60,16 @@ public abstract class AbstractCalibratedAxis extends DefaultTypedAxis implements
 	// -- CalibratedAxis methods --
 
 	@Override
+	public double calibration() {
+		return averageScale(0, 1);
+	}
+
+	@Override
+	public void setCalibration(final double cal) {
+		// NB: Do nothing by default.
+	}
+
+	@Override
 	public String unit() {
 		return unit;
 	}

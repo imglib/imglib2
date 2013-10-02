@@ -37,61 +37,89 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.meta.axis.DefaultLinearAxis;
+
 /**
- * An axis with an associated {@link AxisType}, unit and calibration.
+ * Simple, default {@link CalibratedAxis} implementation.
  * 
  * @author Curtis Rueden
- * @author Barry DeZonia
- * @see TypedAxis
+ * @deprecated Use {@link DefaultLinearAxis}, or one of the axis types from the
+ *             {@link net.imglib2.meta.axis} package, instead.
  */
-public interface CalibratedAxis extends TypedAxis {
+@Deprecated
+public class DefaultCalibratedAxis extends DefaultTypedAxis implements
+	CalibratedAxis
+{
 
-	@Deprecated
-	double calibration();
+	private String unit;
+	private double cal;
 
-	@Deprecated
-	void setCalibration(double cal);
+	public DefaultCalibratedAxis() {
+		this(Axes.unknown());
+	}
 
-	/** Gets the dimension's unit. */
-	String unit();
+	public DefaultCalibratedAxis(final AxisType type) {
+		this(type, null, Double.NaN);
+	}
 
-	/** Sets the dimension's unit. */
-	void setUnit(String unit);
+	public DefaultCalibratedAxis(final AxisType type, final String unit,
+		final double cal)
+	{
+		super(type);
+		setUnit(unit);
+		setCalibration(cal);
+	}
 
-	/** Returns a calibrated value given a raw position along the axis. */
-	double calibratedValue(double rawValue);
+	// -- CalibratedAxis methods --
 
-	/**
-	 * Returns a raw value given a calibrated position along the axis. Returns
-	 * Double.NaN if the calibrated value maps to more than one point along axis.
-	 */
-	double rawValue(double calibratedValue);
+	@Override
+	public double calibration() {
+		return cal;
+	}
 
-	/**
-	 * Gets the general equation representing values along this axis; for
-	 * instance: {@code y = m*x + b}.
-	 */
-	String generalEquation();
+	@Override
+	public void setCalibration(final double cal) {
+		this.cal = cal;
+	}
 
-	/**
-	 * Gets the particular equation representing values along this axis; for
-	 * instance: {@code y = (14)*x + (4)}.
-	 */
-	String particularEquation();
+	@Override
+	public String unit() {
+		return unit;
+	}
 
-	/**
-	 * Returns the average scale between two raw value coordinates along an axis.
-	 * <p>
-	 * In the limit this is actually the derivative at a point. For linear axes
-	 * this value never varies, and there is no error. For nonlinear axes this
-	 * returns the linear scale between the points and thus may be inaccurate.
-	 * Calls to this method may point out areas of code that should be generalized
-	 * to work with nonlinear axes.
-	 * </p>
-	 */
-	double averageScale(double rawValue1, double rawValue2);
+	@Override
+	public void setUnit(final String unit) {
+		this.unit = unit;
+	}
 
-	/** Creates an exact duplicate of this axis. */
-	CalibratedAxis copy();
+	@Override
+	public double calibratedValue(final double rawValue) {
+		return rawValue * calibration();
+	}
+
+	@Override
+	public double rawValue(final double calibratedValue) {
+		return calibratedValue / calibration();
+	}
+
+	@Override
+	public String generalEquation() {
+		return "y = a*x";
+	}
+
+	@Override
+	public String particularEquation() {
+		return "y = " + calibration() + "*x";
+	}
+
+	@Override
+	public double averageScale(final double rawValue1, final double rawValue2) {
+		return calibration();
+	}
+
+	@Override
+	public DefaultCalibratedAxis copy() {
+		return new DefaultCalibratedAxis(type(), unit(), calibration());
+	}
 
 }
