@@ -35,68 +35,20 @@
  * #L%
  */
 
-package net.imglib2.meta.axis;
+package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import net.imglib2.meta.AbstractMetaTest;
-import net.imglib2.meta.Axes;
-
-import org.junit.Test;
+import net.imglib2.meta.TypedAxis;
 
 /**
- * Tests {@link ExponentialAxis}.
+ * Abstract base class for {@link net.imglib2.meta} unit tests.
  * 
- * @author Barry DeZonia
+ * @author Curtis Rueden
  */
-public class ExponentialAxisTest extends AbstractMetaTest {
+public abstract class AbstractMetaTest {
 
-	@Test
-	public void testDefaultCtor() {
-		final ExponentialAxis axis = new ExponentialAxis();
-
-		assertTrue(axis.type() instanceof Axes.CustomType);
-		assertNull(axis.unit());
-		assertEquals(0, axis.a(), 0);
-		assertEquals(1, axis.b(), 0);
-		assertEquals(0, axis.c(), 0);
-		assertEquals(1, axis.d(), 0);
-		assertEquals(calValue(4, axis), axis.calibratedValue(4), 0);
+	public void assertUnknown(final TypedAxis axis) {
+		assertEquals("Unknown", axis.type().getLabel());
 	}
 
-	@Test
-	public void testOtherCtor() {
-		final ExponentialAxis axis = new ExponentialAxis(Axes.Z, "lp", 1, 2, 3, 4);
-
-		assertEquals(Axes.Z, axis.type());
-		assertEquals("lp", axis.unit());
-		assertEquals(1, axis.a(), 0);
-		assertEquals(2, axis.b(), 0);
-		assertEquals(3, axis.c(), 0);
-		assertEquals(4, axis.d(), 0);
-		assertEquals(calValue(4, axis), axis.calibratedValue(4), 0);
-	}
-
-	@Test
-	public void testOtherStuff() {
-		final ExponentialAxis axis = new ExponentialAxis();
-
-		axis.setA(2);
-		axis.setB(3);
-		axis.setC(5);
-		axis.setD(7);
-		assertEquals(2, axis.a(), 0);
-		assertEquals(3, axis.b(), 0);
-		assertEquals(5, axis.c(), 0);
-		assertEquals(7, axis.d(), 0);
-
-		for (int i = 0; i < 100; i++) {
-			assertEquals(axis.rawValue(axis.calibratedValue(i)), i, 0.000001);
-		}
-	}
-
-	private double calValue(final double raw, final ExponentialAxis axis) {
-		return axis.a() + axis.b() * (Math.exp(axis.c() + (axis.d() * raw)));
-	}
 }

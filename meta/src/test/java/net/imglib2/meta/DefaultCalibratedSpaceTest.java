@@ -52,7 +52,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class DefaultCalibratedSpaceTest {
+public class DefaultCalibratedSpaceTest extends AbstractMetaTest {
 
 	private DefaultCalibratedSpace space;
 

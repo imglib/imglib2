@@ -47,7 +47,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class DefaultTypedSpaceTest {
+public class DefaultTypedSpaceTest extends AbstractMetaTest {
 
 	private DefaultTypedSpace space;
 

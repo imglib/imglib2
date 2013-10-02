@@ -39,6 +39,7 @@ package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
 
 import org.junit.Test;
@@ -48,7 +49,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class DefaultLinearAxisTest {
+public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	private LinearAxis axis;
 

@@ -52,7 +52,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class ImgPlusTest {
+public class ImgPlusTest extends AbstractMetaTest {
 
 	private ImgPlus<?> imgPlus;
 

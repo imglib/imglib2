@@ -46,7 +46,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class SpaceUtilsTest {
+public class SpaceUtilsTest extends AbstractMetaTest {
 
 	@Test
 	public void test() {

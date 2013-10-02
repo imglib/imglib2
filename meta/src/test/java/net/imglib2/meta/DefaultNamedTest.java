@@ -46,7 +46,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class DefaultNamedTest {
+public class DefaultNamedTest extends AbstractMetaTest {
 
 	private DefaultNamed named;
 

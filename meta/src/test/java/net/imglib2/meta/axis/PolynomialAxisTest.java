@@ -41,6 +41,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
 
 import org.junit.Test;
@@ -50,7 +51,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class PolynomialAxisTest {
+public class PolynomialAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testDefaultConstructor() {

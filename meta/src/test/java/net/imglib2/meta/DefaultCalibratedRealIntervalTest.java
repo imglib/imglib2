@@ -51,7 +51,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class DefaultCalibratedRealIntervalTest {
+public class DefaultCalibratedRealIntervalTest extends AbstractMetaTest {
 
 	private DefaultCalibratedRealInterval interval;
 

@@ -48,7 +48,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class IntervalUtilsTest {
+public class IntervalUtilsTest extends AbstractMetaTest {
 
 	@Test
 	public void testGetDims() {

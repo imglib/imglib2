@@ -38,6 +38,7 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
+import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
 
 import org.junit.Test;
@@ -47,7 +48,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class InverseRodbardAxisTest {
+public class InverseRodbardAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testCtor() {

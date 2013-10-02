@@ -46,7 +46,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class DefaultSourcedTest {
+public class DefaultSourcedTest extends AbstractMetaTest {
 
 	private DefaultSourced sourced;
 

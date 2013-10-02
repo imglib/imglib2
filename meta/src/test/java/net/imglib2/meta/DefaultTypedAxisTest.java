@@ -47,7 +47,7 @@ import org.junit.Test;
  * 
  * @author Barry DeZonia
  */
-public class DefaultTypedAxisTest {
+public class DefaultTypedAxisTest extends AbstractMetaTest {
 
 	private DefaultTypedAxis axis;
 
