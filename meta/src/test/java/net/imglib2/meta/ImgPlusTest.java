@@ -48,6 +48,8 @@ import net.imglib2.type.numeric.integer.ByteType;
 import org.junit.Test;
 
 /**
+ * Tests {@link ImgPlus}.
+ * 
  * @author Barry DeZonia
  */
 public class ImgPlusTest {

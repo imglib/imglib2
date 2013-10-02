@@ -42,6 +42,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
+ * Tests {@link DefaultNamed}.
+ * 
  * @author Barry DeZonia
  */
 public class DefaultNamedTest {

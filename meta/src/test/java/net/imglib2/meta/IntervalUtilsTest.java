@@ -47,6 +47,8 @@ import net.imglib2.meta.axis.LinearAxis;
 import org.junit.Test;
 
 /**
+ * Tests {@link IntervalUtils}.
+ * 
  * @author Barry DeZonia
  */
 public class IntervalUtilsTest {

@@ -43,6 +43,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
+ * Tests {@link DefaultTypedSpace}.
+ * 
  * @author Barry DeZonia
  */
 public class DefaultTypedSpaceTest {

@@ -42,6 +42,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
+ * Tests {@link SpaceUtils}.
+ * 
  * @author Barry DeZonia
  */
 public class SpaceUtilsTest {
