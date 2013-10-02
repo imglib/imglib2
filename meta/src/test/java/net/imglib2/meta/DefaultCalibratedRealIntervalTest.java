@@ -67,13 +67,12 @@ public class DefaultCalibratedRealIntervalTest {
 		assertArrayEquals(new double[3], temp, 0);
 		interval.realMax(temp);
 		assertArrayEquals(new double[] { 5, 10, 20 }, temp, 0);
-		// verify that axes are not yet populated (i.e., null)
+		// verify that axes have default calibrations
 		interval.axes(axes);
-		for (final CalibratedAxis axis : axes) {
-			assertNull(axis);
-		}
 		for (int i = 0; i < extents.length; i++) {
-			assertNull(interval.axis(i));
+			assertSame(interval.axis(i), axes[i]);
+			assertEquals("Unknown", interval.axis(i).type().getLabel());
+			assertNull(interval.axis(i).unit());
 		}
 		// verify that axes are assigned correctly
 		final LinearAxis axis = new LinearAxis(Axes.X, "plorps", 4);

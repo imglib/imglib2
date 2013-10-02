@@ -40,6 +40,7 @@ package net.imglib2.meta;
 import java.util.List;
 
 import net.imglib2.RealInterval;
+import net.imglib2.meta.axis.IdentityAxis;
 
 /**
  * A simple default {@link CalibratedRealInterval} implementation.
@@ -54,6 +55,7 @@ public class DefaultCalibratedRealInterval extends
 
 	public DefaultCalibratedRealInterval(final RealInterval interval) {
 		super(interval);
+		assignDefaultAxes();
 	}
 
 	public DefaultCalibratedRealInterval(final RealInterval interval,
@@ -70,6 +72,7 @@ public class DefaultCalibratedRealInterval extends
 
 	public DefaultCalibratedRealInterval(final double[] extents) {
 		super(extents);
+		assignDefaultAxes();
 	}
 
 	public DefaultCalibratedRealInterval(final double[] extents,
@@ -86,6 +89,7 @@ public class DefaultCalibratedRealInterval extends
 
 	public DefaultCalibratedRealInterval(final double[] min, final double[] max) {
 		super(min, max);
+		assignDefaultAxes();
 	}
 
 	public DefaultCalibratedRealInterval(final double[] min, final double[] max,
@@ -99,4 +103,13 @@ public class DefaultCalibratedRealInterval extends
 	{
 		super(min, max, axes);
 	}
+
+	// -- Helper methods --
+
+	private void assignDefaultAxes() {
+		for (int d = 0; d < numDimensions(); d++) {
+			setAxis(new IdentityAxis(), d);
+		}
+	}
+
 }
