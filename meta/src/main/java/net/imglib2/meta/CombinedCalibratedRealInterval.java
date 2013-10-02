@@ -66,45 +66,45 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 	}
 
 	@Override
-	public void calibration(double[] cal) {
+	public void calibration(final double[] cal) {
 		for (int d = 0; d < numDimensions(); d++) {
 			cal[d] = calibration(d);
 		}
 	}
 
 	@Override
-	public void calibration(float[] cal) {
+	public void calibration(final float[] cal) {
 		for (int d = 0; d < numDimensions(); d++) {
 			cal[d] = (float) calibration(d);
 		}
 	}
 
 	@Override
-	public void setCalibration(double cal, int d) {
+	public void setCalibration(final double cal, final int d) {
 		linearAxis(d).setScale(cal);
 	}
 
 	@Override
-	public void setCalibration(double[] cal) {
+	public void setCalibration(final double[] cal) {
 		for (int d = 0; d < numDimensions(); d++) {
 			setCalibration(cal[d], d);
 		}
 	}
 
 	@Override
-	public void setCalibration(float[] cal) {
+	public void setCalibration(final float[] cal) {
 		for (int d = 0; d < numDimensions(); d++) {
 			setCalibration(cal[d], d);
 		}
 	}
 
 	@Override
-	public void setUnit(String unit, int d) {
+	public void setUnit(final String unit, final int d) {
 		axis(d).setUnit(unit);
 	}
 
 	@Override
-	public String unit(int d) {
+	public String unit(final int d) {
 		return axis(d).unit();
 	}
 

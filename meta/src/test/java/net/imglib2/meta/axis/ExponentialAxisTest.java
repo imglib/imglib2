@@ -53,7 +53,7 @@ public class ExponentialAxisTest {
 
 	@Test
 	public void testDefaultCtor() {
-		ExponentialAxis axis = new ExponentialAxis();
+		final ExponentialAxis axis = new ExponentialAxis();
 
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertNull(axis.unit());
@@ -66,7 +66,7 @@ public class ExponentialAxisTest {
 
 	@Test
 	public void testOtherCtor() {
-		ExponentialAxis axis = new ExponentialAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final ExponentialAxis axis = new ExponentialAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
@@ -79,7 +79,7 @@ public class ExponentialAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		ExponentialAxis axis = new ExponentialAxis();
+		final ExponentialAxis axis = new ExponentialAxis();
 
 		axis.setA(2);
 		axis.setB(3);
@@ -95,7 +95,7 @@ public class ExponentialAxisTest {
 		}
 	}
 
-	private double calValue(double raw, ExponentialAxis axis) {
+	private double calValue(final double raw, final ExponentialAxis axis) {
 		return axis.a() + axis.b() * (Math.exp(axis.c() + (axis.d() * raw)));
 	}
 }

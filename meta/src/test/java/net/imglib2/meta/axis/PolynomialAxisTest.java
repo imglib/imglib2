@@ -34,6 +34,7 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
@@ -53,7 +54,7 @@ public class PolynomialAxisTest {
 
 	@Test
 	public void testDefaultConstructor() {
-		PolynomialAxis axis = new PolynomialAxis();
+		final PolynomialAxis axis = new PolynomialAxis();
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertNull(axis.unit());
 		assertEquals(0, axis.coeff(0), 0);
@@ -66,7 +67,8 @@ public class PolynomialAxisTest {
 
 	@Test
 	public void testSpecificConstructor() {
-		PolynomialAxis axis = new PolynomialAxis(Axes.X, "florps", 1, 2, 3, 4, 5);
+		final PolynomialAxis axis =
+			new PolynomialAxis(Axes.X, "florps", 1, 2, 3, 4, 5);
 		assertEquals(Axes.X, axis.type());
 		assertEquals("florps", axis.unit());
 		assertEquals(1, axis.coeff(0), 0);
@@ -98,7 +100,7 @@ public class PolynomialAxisTest {
 
 	@Test
 	public void testCalibratedValue() {
-		PolynomialAxis axis = new PolynomialAxis();
+		final PolynomialAxis axis = new PolynomialAxis();
 		axis.setCoeff(0, 1);
 		axis.setCoeff(1, 2);
 		axis.setCoeff(2, 3);
@@ -114,13 +116,13 @@ public class PolynomialAxisTest {
 
 	@Test
 	public void testRawValue() {
-		PolynomialAxis axis = new PolynomialAxis();
+		final PolynomialAxis axis = new PolynomialAxis();
 		assertTrue(Double.isNaN(axis.rawValue(93.7)));
 	}
 
 	@Test
 	public void testSetCoeff() {
-		PolynomialAxis axis = new PolynomialAxis();
+		final PolynomialAxis axis = new PolynomialAxis();
 		axis.setCoeff(23, 1000);
 		assertEquals(1000, axis.coeff(23), 0);
 		assertEquals(23, axis.degree());
@@ -128,21 +130,21 @@ public class PolynomialAxisTest {
 			axis.setCoeff(24, 50);
 			fail();
 		}
-		catch (IllegalArgumentException e) {
+		catch (final IllegalArgumentException e) {
 			assertTrue(true);
 		}
 	}
 
 	@Test
 	public void testType() {
-		PolynomialAxis axis = new PolynomialAxis();
+		final PolynomialAxis axis = new PolynomialAxis();
 		axis.setType(Axes.CHANNEL);
 		assertEquals(Axes.CHANNEL, axis.type());
 	}
 
 	@Test
 	public void testUnit() {
-		PolynomialAxis axis = new PolynomialAxis();
+		final PolynomialAxis axis = new PolynomialAxis();
 		axis.setUnit("hjh");
 		assertEquals("hjh", axis.unit());
 	}

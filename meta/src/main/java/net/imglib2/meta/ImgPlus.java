@@ -58,8 +58,8 @@ import net.imglib2.meta.axis.LinearAxis;
  * 
  * @author Curtis Rueden
  */
-public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
-	ImgPlusMetadata
+public class ImgPlus<T> extends DefaultCalibratedRealInterval implements
+	Img<T>, ImgPlusMetadata
 {
 
 	/** The name assigned to the ImgPlus if none is provided. */
@@ -109,7 +109,7 @@ public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
 	}
 
 	public ImgPlus(final Img<T> img, final String name,
-		final AxisType[] axisTypes, final double[] cal, String[] units)
+		final AxisType[] axisTypes, final double[] cal, final String[] units)
 	{
 		super(img, createAxes(img, axisTypes, cal, units));
 		this.img = img;
@@ -129,8 +129,8 @@ public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
 	 * Note that most of the time, you do <em>not</em> need to call this method.
 	 * Rather, you can use the {@code ImgPlus} directly because it implements all
 	 * of the same interfaces. However, there are legitimate cases where you may
-	 * need access to the backing container (e.g., for performance, to cast to
-	 * the appropriate {@link Img} implementation such as {@link ArrayImg}).
+	 * need access to the backing container (e.g., for performance, to cast to the
+	 * appropriate {@link Img} implementation such as {@link ArrayImg}).
 	 * </p>
 	 */
 	public Img<T> getImg() {
@@ -250,15 +250,13 @@ public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
 	}
 
 	@Override
-	public Object iterationOrder()
-	{
+	public Object iterationOrder() {
 		return img.iterationOrder();
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
+	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+		return iterationOrder().equals(f.iterationOrder());
 	}
 
 	// -- Iterable methods --
@@ -383,7 +381,7 @@ public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
 	}
 
 	@Override
-	public void setSource(String source) {
+	public void setSource(final String source) {
 		this.source = source;
 	}
 
@@ -396,7 +394,8 @@ public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
 	}
 
 	/** Ensures the given {@link Img} is an ImgPlus, wrapping if necessary. */
-	public static <T> ImgPlus<T> wrap(final Img<T> img, final ImgPlusMetadata metadata)
+	public static <T> ImgPlus<T> wrap(final Img<T> img,
+		final ImgPlusMetadata metadata)
 	{
 		if (img instanceof ImgPlus) return (ImgPlus<T>) img;
 		return new ImgPlus<T>(img, metadata);
@@ -406,12 +405,11 @@ public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
 
 	/** Creates {@link LinearAxis} objects matching the given arguments. */
 	private static LinearAxis[] createAxes(final Img<?> img,
-		AxisType[] axisTypes, double[] cal, String[] units)
+		final AxisType[] axisTypes, final double[] cal, final String[] units)
 	{
 		// validate arguments
 		final int numDims = img.numDimensions();
-		final AxisType[] validTypes =
-			validateAxisTypes(numDims, axisTypes);
+		final AxisType[] validTypes = validateAxisTypes(numDims, axisTypes);
 		if (numDims != validTypes.length) {
 			throw new IllegalArgumentException("Axis type count does not match " +
 				"dimensionality: " + validTypes.length + " != " + numDims);
@@ -479,7 +477,9 @@ public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
 	}
 
 	/** Ensures the given unit values are valid. */
-	private static String[] validateUnits(int numDims, String[] units) {
+	private static String[]
+		validateUnits(final int numDims, final String[] units)
+	{
 		if (units != null && numDims == units.length) return units;
 		final String[] valid = new String[numDims];
 		for (int i = 0; i < valid.length; i++) {
@@ -512,7 +512,7 @@ public class ImgPlus<T> extends DefaultCalibratedRealInterval implements Img<T>,
 	private static String[] getUnits(final Img<?> img,
 		final ImgPlusMetadata metadata)
 	{
-		String[] units = new String[img.numDimensions()];
+		final String[] units = new String[img.numDimensions()];
 		for (int i = 0; i < units.length; i++) {
 			units[i] = metadata.axis(i).unit();
 		}

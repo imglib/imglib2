@@ -65,8 +65,8 @@ public class DefaultTypedSpaceTest {
 
 	@Test
 	public void test2() {
-		TypedAxis axis0 = new DefaultTypedAxis(Axes.CHANNEL);
-		TypedAxis axis1 = new DefaultTypedAxis(Axes.FREQUENCY);
+		final TypedAxis axis0 = new DefaultTypedAxis(Axes.CHANNEL);
+		final TypedAxis axis1 = new DefaultTypedAxis(Axes.FREQUENCY);
 		space = new DefaultTypedSpace(axis0, axis1);
 		assertEquals(Axes.CHANNEL, space.axis(0).type());
 		assertEquals(Axes.FREQUENCY, space.axis(1).type());

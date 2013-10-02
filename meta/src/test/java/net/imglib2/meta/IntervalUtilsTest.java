@@ -61,7 +61,8 @@ public class IntervalUtilsTest {
 
 	@Test
 	public void test2() {
-		final RealInterval interval = new FinalRealInterval( new double[] { 0, 0 }, new double[] { 7, 13 });
+		final RealInterval interval =
+			new FinalRealInterval(new double[] { 0, 0 }, new double[] { 7, 13 });
 		final double[] extents = IntervalUtils.getExtents(interval);
 		assertEquals(7, extents[0], 0);
 		assertEquals(13, extents[1], 0);

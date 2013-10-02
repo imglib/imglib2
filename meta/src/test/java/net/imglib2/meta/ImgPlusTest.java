@@ -56,7 +56,7 @@ public class ImgPlusTest {
 
 	@Test
 	public void test() {
-		Img<ByteType> img = ArrayImgs.bytes(9, 8);
+		final Img<ByteType> img = ArrayImgs.bytes(9, 8);
 		imgPlus =
 			new ImgPlus<ByteType>(img, "HUBBY", new AxisType[] { Axes.X, Axes.Z },
 				new double[] { 5, 13 });

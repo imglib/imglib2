@@ -51,7 +51,7 @@ public class GaussianAxisTest {
 
 	@Test
 	public void testOtherCtor() {
-		GaussianAxis axis = new GaussianAxis(Axes.Z, "lp", 4, 3, 2, 1);
+		final GaussianAxis axis = new GaussianAxis(Axes.Z, "lp", 4, 3, 2, 1);
 
 		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
@@ -64,7 +64,7 @@ public class GaussianAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		GaussianAxis axis = new GaussianAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final GaussianAxis axis = new GaussianAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		axis.setA(2);
 		axis.setB(3);
@@ -80,7 +80,7 @@ public class GaussianAxisTest {
 		}
 	}
 
-	private double calValue(double raw, GaussianAxis axis) {
+	private double calValue(final double raw, final GaussianAxis axis) {
 		return axis.a() +
 			(axis.b() - axis.a()) *
 			Math

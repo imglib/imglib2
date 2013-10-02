@@ -51,7 +51,7 @@ public class RodbardAxisTest {
 
 	@Test
 	public void testCtor() {
-		RodbardAxis axis = new RodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final RodbardAxis axis = new RodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
@@ -64,7 +64,7 @@ public class RodbardAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		RodbardAxis axis = new RodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final RodbardAxis axis = new RodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		axis.setA(2.2);
 		axis.setB(3.3);
@@ -80,7 +80,7 @@ public class RodbardAxisTest {
 		}
 	}
 
-	private double calValue(double raw, RodbardAxis axis) {
+	private double calValue(final double raw, final RodbardAxis axis) {
 		return axis.a() + (axis.b() - axis.a()) /
 			(1 + Math.pow((raw / axis.c()), axis.d()));
 	}

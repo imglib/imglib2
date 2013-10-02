@@ -51,7 +51,8 @@ public class InverseRodbardAxisTest {
 
 	@Test
 	public void testCtor() {
-		InverseRodbardAxis axis = new InverseRodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final InverseRodbardAxis axis =
+			new InverseRodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
@@ -64,7 +65,8 @@ public class InverseRodbardAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		InverseRodbardAxis axis = new InverseRodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final InverseRodbardAxis axis =
+			new InverseRodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		axis.setA(2.2);
 		axis.setB(105.5); // NB - B and C carefully chosen for range 0 to 100
@@ -80,7 +82,7 @@ public class InverseRodbardAxisTest {
 		}
 	}
 
-	private double calValue(double raw, InverseRodbardAxis axis) {
+	private double calValue(final double raw, final InverseRodbardAxis axis) {
 		return axis.a() *
 			Math.pow(((raw - axis.b()) / (axis.c() - raw)), (1 / axis.d()));
 	}

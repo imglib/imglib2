@@ -44,16 +44,14 @@ import net.imglib2.meta.AxisType;
  * 
  * @author Barry DeZonia
  */
-public abstract class Variable4Axis extends
-	Variable3Axis
-{
+public abstract class Variable4Axis extends Variable3Axis {
 
 	public Variable4Axis(final AxisType type) {
 		super(type);
 	}
 
-	public Variable4Axis(final AxisType type, final String unit,
-		final double a, final double b, final double c, final double d)
+	public Variable4Axis(final AxisType type, final String unit, final double a,
+		final double b, final double c, final double d)
 	{
 		super(type, unit, a, b, c);
 		setD(d);

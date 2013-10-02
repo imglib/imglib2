@@ -52,49 +52,50 @@ public class DefaultCalibratedRealInterval extends
 
 	// -- public constructors --
 
-	public DefaultCalibratedRealInterval(RealInterval interval) {
+	public DefaultCalibratedRealInterval(final RealInterval interval) {
 		super(interval);
 	}
 
-	public DefaultCalibratedRealInterval(RealInterval interval,
-		CalibratedAxis... axes)
+	public DefaultCalibratedRealInterval(final RealInterval interval,
+		final CalibratedAxis... axes)
 	{
 		super(interval, axes);
 	}
 
-	public DefaultCalibratedRealInterval(RealInterval interval,
-		List<CalibratedAxis> axes)
+	public DefaultCalibratedRealInterval(final RealInterval interval,
+		final List<CalibratedAxis> axes)
 	{
 		super(interval, axes);
 	}
 
-	public DefaultCalibratedRealInterval(double[] extents) {
+	public DefaultCalibratedRealInterval(final double[] extents) {
 		super(extents);
 	}
 
-	public DefaultCalibratedRealInterval(double[] extents, CalibratedAxis... axes)
+	public DefaultCalibratedRealInterval(final double[] extents,
+		final CalibratedAxis... axes)
 	{
 		super(extents, axes);
 	}
 
-	public DefaultCalibratedRealInterval(double[] extents,
-		List<CalibratedAxis> axes)
+	public DefaultCalibratedRealInterval(final double[] extents,
+		final List<CalibratedAxis> axes)
 	{
 		super(extents, axes);
 	}
 
-	public DefaultCalibratedRealInterval(double[] min, double[] max) {
+	public DefaultCalibratedRealInterval(final double[] min, final double[] max) {
 		super(min, max);
 	}
 
-	public DefaultCalibratedRealInterval(double[] min, double[] max,
-		CalibratedAxis... axes)
+	public DefaultCalibratedRealInterval(final double[] min, final double[] max,
+		final CalibratedAxis... axes)
 	{
 		super(min, max, axes);
 	}
 
-	public DefaultCalibratedRealInterval(double[] min, double[] max,
-		List<CalibratedAxis> axes)
+	public DefaultCalibratedRealInterval(final double[] min, final double[] max,
+		final List<CalibratedAxis> axes)
 	{
 		super(min, max, axes);
 	}

@@ -50,9 +50,7 @@ public abstract class Variable1Axis extends VariableAxis {
 		super(type);
 	}
 
-	public Variable1Axis(final AxisType type, final String unit,
-		final double a)
-	{
+	public Variable1Axis(final AxisType type, final String unit, final double a) {
 		super(type, unit);
 		setA(a);
 	}

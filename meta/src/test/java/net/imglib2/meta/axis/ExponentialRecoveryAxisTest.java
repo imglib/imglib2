@@ -51,7 +51,7 @@ public class ExponentialRecoveryAxisTest {
 
 	@Test
 	public void testCtor() {
-		ExponentialRecoveryAxis axis =
+		final ExponentialRecoveryAxis axis =
 			new ExponentialRecoveryAxis(Axes.X, "km", 4, 3, 2, 1);
 
 		assertEquals(Axes.X, axis.type());
@@ -65,7 +65,7 @@ public class ExponentialRecoveryAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		LogLinearAxis axis = new LogLinearAxis();
+		final LogLinearAxis axis = new LogLinearAxis();
 
 		axis.setA(2);
 		axis.setB(3);
@@ -81,7 +81,8 @@ public class ExponentialRecoveryAxisTest {
 		}
 	}
 
-	private double calValue(double raw, ExponentialRecoveryAxis axis) {
+	private double calValue(final double raw, final ExponentialRecoveryAxis axis)
+	{
 		return axis.a() + axis.b() * (1 - Math.exp(axis.c() + (axis.d() * raw)));
 	}
 }

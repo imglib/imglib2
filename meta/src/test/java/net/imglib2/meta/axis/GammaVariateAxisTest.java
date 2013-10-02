@@ -51,8 +51,8 @@ public class GammaVariateAxisTest {
 
 	@Test
 	public void testCtor() {
-		GammaVariateAxis axis =
- new GammaVariateAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final GammaVariateAxis axis =
+			new GammaVariateAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
@@ -65,8 +65,8 @@ public class GammaVariateAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		GammaVariateAxis axis =
- new GammaVariateAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final GammaVariateAxis axis =
+			new GammaVariateAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		axis.setA(2);
 		axis.setB(3);
@@ -82,7 +82,7 @@ public class GammaVariateAxisTest {
 		}
 	}
 
-	private double calValue(double raw, GammaVariateAxis axis) {
+	private double calValue(final double raw, final GammaVariateAxis axis) {
 		return axis.a() * Math.pow((raw - axis.b()), axis.c()) *
 			Math.exp(-(raw - axis.b()) / axis.d());
 	}

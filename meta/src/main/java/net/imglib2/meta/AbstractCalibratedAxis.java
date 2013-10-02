@@ -65,12 +65,12 @@ public abstract class AbstractCalibratedAxis extends DefaultTypedAxis implements
 	}
 
 	@Override
-	public void setUnit(String unit) {
+	public void setUnit(final String unit) {
 		this.unit = unit;
 	}
 
 	@Override
-	public double averageScale(double rawValue1, double rawValue2) {
+	public double averageScale(final double rawValue1, final double rawValue2) {
 		return (calibratedValue(rawValue2) - calibratedValue(rawValue1)) /
 			(rawValue2 - rawValue1);
 	}

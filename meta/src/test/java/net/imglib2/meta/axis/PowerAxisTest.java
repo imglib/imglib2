@@ -53,7 +53,7 @@ public class PowerAxisTest {
 
 	@Test
 	public void testCtor1() {
-		PowerAxis axis = new PowerAxis(2);
+		final PowerAxis axis = new PowerAxis(2);
 
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertNull(axis.unit());
@@ -65,7 +65,7 @@ public class PowerAxisTest {
 
 	@Test
 	public void testOtherCtor() {
-		PowerAxis axis = new PowerAxis(Axes.Z, "lp", 1, 2, 3);
+		final PowerAxis axis = new PowerAxis(Axes.Z, "lp", 1, 2, 3);
 
 		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
@@ -77,7 +77,7 @@ public class PowerAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		PowerAxis axis = new PowerAxis(3);
+		final PowerAxis axis = new PowerAxis(3);
 
 		axis.setA(2);
 		axis.setB(3);
@@ -91,7 +91,7 @@ public class PowerAxisTest {
 		}
 	}
 
-	private double calValue(double raw, PowerAxis axis) {
+	private double calValue(final double raw, final PowerAxis axis) {
 		return axis.a() + axis.b() * (Math.pow(raw, axis.c()));
 	}
 }

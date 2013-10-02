@@ -53,7 +53,7 @@ public class LogLinearAxisTest {
 
 	@Test
 	public void testDefaultCtor() {
-		LogLinearAxis axis = new LogLinearAxis();
+		final LogLinearAxis axis = new LogLinearAxis();
 
 		assertTrue(axis.type() instanceof Axes.CustomType);
 		assertNull(axis.unit());
@@ -66,7 +66,7 @@ public class LogLinearAxisTest {
 
 	@Test
 	public void testOtherCtor() {
-		LogLinearAxis axis = new LogLinearAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final LogLinearAxis axis = new LogLinearAxis(Axes.Z, "lp", 1, 2, 3, 4);
 
 		assertEquals(Axes.Z, axis.type());
 		assertEquals("lp", axis.unit());
@@ -79,7 +79,7 @@ public class LogLinearAxisTest {
 
 	@Test
 	public void testOtherStuff() {
-		LogLinearAxis axis = new LogLinearAxis();
+		final LogLinearAxis axis = new LogLinearAxis();
 
 		axis.setA(2);
 		axis.setB(3);
@@ -95,7 +95,7 @@ public class LogLinearAxisTest {
 		}
 	}
 
-	private double calValue(double raw, LogLinearAxis axis) {
+	private double calValue(final double raw, final LogLinearAxis axis) {
 		return axis.a() + axis.b() * (Math.log(axis.c() + (axis.d() * raw)));
 	}
 }

@@ -74,7 +74,7 @@ public class DefaultCalibratedRealIntervalTest {
 			assertNull(interval.axis(i));
 		}
 		// verify that axes are assigned correctly
-		LinearAxis axis = new LinearAxis(Axes.X, "plorps", 4);
+		final LinearAxis axis = new LinearAxis(Axes.X, "plorps", 4);
 		interval.setAxis(axis, 0);
 		assertSame(axis, interval.axis(0));
 	}

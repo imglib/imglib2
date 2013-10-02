@@ -52,7 +52,7 @@ import net.imglib2.meta.CalibratedAxis;
  */
 public abstract class VariableAxis extends AbstractCalibratedAxis {
 
-	private HashMap<String, Double> vars = new HashMap<String, Double>();
+	private final HashMap<String, Double> vars = new HashMap<String, Double>();
 
 	// -- Constructors --
 
