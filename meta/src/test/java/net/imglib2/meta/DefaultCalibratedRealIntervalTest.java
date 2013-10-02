@@ -71,7 +71,7 @@ public class DefaultCalibratedRealIntervalTest extends AbstractMetaTest {
 		interval.axes(axes);
 		for (int i = 0; i < extents.length; i++) {
 			assertSame(interval.axis(i), axes[i]);
-			assertEquals("Unknown", interval.axis(i).type().getLabel());
+			assertUnknown(interval.axis(i));
 			assertNull(interval.axis(i).unit());
 		}
 		// verify that axes are assigned correctly

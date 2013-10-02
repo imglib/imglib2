@@ -97,9 +97,9 @@ public class DefaultCalibratedSpaceTest extends AbstractMetaTest {
 	public void testDefaultConstructor() {
 		space = new DefaultCalibratedSpace(3);
 		// verify that axes have default (identity) calibrations
-		assertEquals("Unknown", space.axis(0).type().getLabel());
-		assertEquals("Unknown", space.axis(1).type().getLabel());
-		assertEquals("Unknown", space.axis(2).type().getLabel());
+		assertUnknown(space.axis(0));
+		assertUnknown(space.axis(1));
+		assertUnknown(space.axis(2));
 		assertNull(space.axis(0).unit());
 		assertNull(space.axis(1).unit());
 		assertNull(space.axis(2).unit());
