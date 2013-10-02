@@ -81,4 +81,9 @@ public class InverseRodbardAxis extends AbstractFourVariableAxis {
 			d() + "))";
 	}
 
+	@Override
+	public InverseRodbardAxis copy() {
+		return new InverseRodbardAxis(type(), unit(), a(), b(), c(), d());
+	}
+
 }

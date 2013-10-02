@@ -80,4 +80,9 @@ public class GammaVariateAxis extends AbstractFourVariableAxis {
 			b() + "))/(" + d() + "))";
 	}
 
+	@Override
+	public GammaVariateAxis copy() {
+		return new GammaVariateAxis(type(), unit(), a(), b(), c(), d());
+	}
+
 }

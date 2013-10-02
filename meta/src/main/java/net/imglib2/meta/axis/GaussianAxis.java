@@ -80,4 +80,9 @@ public class GaussianAxis extends AbstractFourVariableAxis {
 			c() + "))^2 / (2*(" + d() + ")^2))";
 	}
 
+	@Override
+	public GaussianAxis copy() {
+		return new GaussianAxis(type(), unit(), a(), b(), c(), d());
+	}
+
 }

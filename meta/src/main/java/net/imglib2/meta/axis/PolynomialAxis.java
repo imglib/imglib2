@@ -167,6 +167,15 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 		return builder.toString();
 	}
 
+	@Override
+	public PolynomialAxis copy() {
+		final PolynomialAxis axis = new PolynomialAxis(type(), unit());
+		for (int i = 0; i <= order(); i++) {
+			axis.setCoeff(i, coeff(i));
+		}
+		return axis;
+	}
+
 	// -- helpers --
 
 	private void resize(final int smallestValidIndex) {

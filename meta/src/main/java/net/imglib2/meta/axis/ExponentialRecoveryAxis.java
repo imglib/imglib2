@@ -79,4 +79,9 @@ public class ExponentialRecoveryAxis extends AbstractFourVariableAxis {
 			d() + ")*x))";
 	}
 
+	@Override
+	public ExponentialRecoveryAxis copy() {
+		return new ExponentialRecoveryAxis(type(), unit(), a(), b(), c(), d());
+	}
+
 }

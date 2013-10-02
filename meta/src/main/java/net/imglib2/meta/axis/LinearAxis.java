@@ -201,4 +201,9 @@ public class LinearAxis extends AbstractCalibratedAxis {
 		return "y = (" + origin + ") + (" + scale + ") * x";
 	}
 
+	@Override
+	public LinearAxis copy() {
+		return new LinearAxis(type(), unit(), scale(), origin());
+	}
+
 }

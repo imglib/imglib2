@@ -81,4 +81,9 @@ public class RodbardAxis extends AbstractFourVariableAxis {
 			c() + "))^(" + d() + "))";
 	}
 
+	@Override
+	public RodbardAxis copy() {
+		return new RodbardAxis(type(), unit(), a(), b(), c(), d());
+	}
+
 }

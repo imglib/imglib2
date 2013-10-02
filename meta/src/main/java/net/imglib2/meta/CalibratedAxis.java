@@ -85,4 +85,7 @@ public interface CalibratedAxis extends TypedAxis {
 	 */
 	double averageScale(double rawValue1, double rawValue2);
 
+	/** Creates an exact duplicate of this axis. */
+	CalibratedAxis copy();
+
 }

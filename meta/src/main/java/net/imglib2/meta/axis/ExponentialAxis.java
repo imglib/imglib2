@@ -84,4 +84,9 @@ public class ExponentialAxis extends AbstractFourVariableAxis {
 			")*x)";
 	}
 
+	@Override
+	public ExponentialAxis copy() {
+		return new ExponentialAxis(type(), unit(), a(), b(), c(), d());
+	}
+
 }

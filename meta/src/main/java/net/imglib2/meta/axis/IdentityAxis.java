@@ -52,18 +52,19 @@ public class IdentityAxis extends AbstractCalibratedAxis {
 
 	// -- constructors --
 
-	/**
-	 * Constructs a default IdentityAxis of unknown axis type.
-	 */
+	/** Constructs a default IdentityAxis of unknown axis type. */
 	public IdentityAxis() {
 		this(Axes.unknown());
 	}
 
-	/**
-	 * Constructs an IdentityAxis of the specified axis type.
-	 */
+	/** Constructs an IdentityAxis of the specified axis type. */
 	public IdentityAxis(final AxisType type) {
 		super(type);
+	}
+
+	/** Constructs an IdentityAxis of the specified axis type and unit. */
+	public IdentityAxis(final AxisType type, final String unit) {
+		super(type, unit);
 	}
 
 	// -- CalibratedAxis methods --
@@ -86,6 +87,11 @@ public class IdentityAxis extends AbstractCalibratedAxis {
 	@Override
 	public String particularEquation() {
 		return "y = x";
+	}
+
+	@Override
+	public IdentityAxis copy() {
+		return new IdentityAxis(type(), unit());
 	}
 
 }

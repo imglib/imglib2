@@ -92,4 +92,9 @@ public class LogLinearAxis extends AbstractFourVariableAxis {
 			") * x)";
 	}
 
+	@Override
+	public LogLinearAxis copy() {
+		return new LogLinearAxis(type(), unit(), a(), b(), c(), d());
+	}
+
 }
