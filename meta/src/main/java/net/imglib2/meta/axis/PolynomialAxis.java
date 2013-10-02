@@ -167,45 +167,6 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 		return builder.toString();
 	}
 
-	@Override
-	public boolean update(final CalibratedAxis other) {
-		if (other instanceof PolynomialAxis) {
-			final PolynomialAxis axis = (PolynomialAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			final int order = axis.order();
-			coeffs = new double[order + 1];
-			// reverse order does fewer resizes
-			for (int i = order; i >= 0; i--) {
-				setCoeff(i, axis.coeff(i));
-			}
-			return true;
-		}
-		if (other instanceof LinearAxis) {
-			final LinearAxis axis = (LinearAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			coeffs = new double[3];
-			coeffs[0] = axis.origin();
-			coeffs[1] = axis.scale();
-			coeffs[2] = 0;
-			return true;
-		}
-		if (other instanceof PowerAxis) {
-			final PowerAxis axis = (PowerAxis) other;
-			final int power = compatiblePower(axis);
-			if (power >= 0) {
-				setType(axis.type());
-				setUnit(axis.unit());
-				coeffs = new double[power + 1];
-				coeffs[0] = axis.a();
-				coeffs[power] = axis.b();
-				return true;
-			}
-		}
-		return false;
-	}
-
 	// -- helpers --
 
 	private void resize(final int smallestValidIndex) {
@@ -228,10 +189,4 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 		}
 	}
 
-	private int compatiblePower(final PowerAxis axis) {
-		if (axis.c() < 2) return -1;
-		if (Math.floor(axis.c()) != axis.c()) return -1;
-		// integer power >= 2
-		return (int) axis.c();
-	}
 }

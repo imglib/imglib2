@@ -88,12 +88,4 @@ public class IdentityAxis extends AbstractCalibratedAxis {
 		return "y = x";
 	}
 
-	@Override
-	public boolean update(final CalibratedAxis other) {
-		if (other instanceof IdentityAxis) {
-			setType(((IdentityAxis) other).type());
-			return true;
-		}
-		return false;
-	}
 }

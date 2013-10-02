@@ -38,10 +38,8 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import net.imglib2.meta.Axes;
-import net.imglib2.meta.CalibratedAxis;
 
 import org.junit.Test;
 
@@ -146,16 +144,6 @@ public class LinearAxisTest {
 		assertEquals(Axes.Y, axis.type());
 		assertEquals("heptoflops", axis.unit());
 
-		IdentityAxis bogusAxis = new IdentityAxis();
-		assertFalse(axis.update(bogusAxis));
-
-		LinearAxis goodAxis = new LinearAxis(Axes.Y, "gabblerousers", 23, 89);
-		assertTrue(axis.update(goodAxis));
-		assertEquals(Axes.Y, axis.type());
-		assertEquals("gabblerousers", axis.unit());
-		assertEquals(23, axis.scale(), 0);
-		assertEquals(89, axis.origin(), 0);
-
 		axis.setOrigin(1005);
 		assertEquals(1005, axis.origin(), 0);
 		axis.setScale(0.5);
@@ -164,29 +152,6 @@ public class LinearAxisTest {
 		assertEquals(Axes.Y, axis.type());
 		axis.setUnit("ThisHadBetterWork");
 		assertEquals("ThisHadBetterWork", axis.unit());
-	}
-
-	@Test
-	public void testUpdate() {
-		axis = new LinearAxis();
-
-		CalibratedAxis other = new LogLinearAxis();
-
-		assertFalse(axis.update(other));
-		assertEquals(0, axis.origin(), 0);
-		assertEquals(1, axis.scale(), 0);
-
-		other = new PolynomialAxis(Axes.Z, "ppm", 1, 2, 3);
-
-		assertFalse(axis.update(other));
-		assertEquals(0, axis.origin(), 0);
-		assertEquals(1, axis.scale(), 0);
-
-		other = new PolynomialAxis(Axes.Z, "ppm", 10, 15, 0);
-
-		assertTrue(axis.update(other));
-		assertEquals(10, axis.origin(), 0);
-		assertEquals(15, axis.scale(), 0);
 	}
 
 	@Test

@@ -80,19 +80,4 @@ public class GammaVariateAxis extends AbstractFourVariableAxis {
 			b() + "))/(" + d() + "))";
 	}
 
-	@Override
-	public boolean update(final CalibratedAxis other) {
-		if (other instanceof GammaVariateAxis) {
-			final GammaVariateAxis axis = (GammaVariateAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			setA(axis.a());
-			setB(axis.b());
-			setC(axis.c());
-			setD(axis.d());
-			return true;
-		}
-		return false;
-	}
-
 }

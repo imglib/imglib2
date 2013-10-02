@@ -37,12 +37,10 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import net.imglib2.meta.Axes;
-import net.imglib2.meta.CalibratedAxis;
 
 import org.junit.Test;
 
@@ -147,41 +145,4 @@ public class PolynomialAxisTest {
 		assertEquals("hjh", axis.unit());
 	}
 
-	@Test
-	public void testUpdate() {
-		PolynomialAxis axis = new PolynomialAxis();
-
-		CalibratedAxis other = new PolynomialAxis(Axes.Y, "nm", 1, 2, 3, 4, 5);
-		assertTrue(axis.update(other));
-		assertEquals(Axes.Y, axis.type());
-		assertEquals("nm", axis.unit());
-		assertEquals(1, axis.coeff(0), 0);
-		assertEquals(2, axis.coeff(1), 0);
-		assertEquals(3, axis.coeff(2), 0);
-		assertEquals(4, axis.coeff(3), 0);
-		assertEquals(5, axis.coeff(4), 0);
-		for (int i = 5; i < 25; i++) {
-			assertEquals(0, axis.coeff(i), 0);
-		}
-
-		other = new LinearAxis(Axes.TIME, "pps", 99, 3);
-		assertTrue(axis.update(other));
-		assertEquals(Axes.TIME, axis.type());
-		assertEquals("pps", axis.unit());
-		assertEquals(3, axis.coeff(0), 0);
-		assertEquals(99, axis.coeff(1), 0);
-		for (int i = 2; i < 25; i++) {
-			assertEquals(0, axis.coeff(i), 0);
-		}
-
-		other = new LogLinearAxis();
-		assertFalse(axis.update(other));
-		assertEquals(Axes.TIME, axis.type());
-		assertEquals("pps", axis.unit());
-		assertEquals(3, axis.coeff(0), 0);
-		assertEquals(99, axis.coeff(1), 0);
-		for (int i = 2; i < 25; i++) {
-			assertEquals(0, axis.coeff(i), 0);
-		}
-	}
 }

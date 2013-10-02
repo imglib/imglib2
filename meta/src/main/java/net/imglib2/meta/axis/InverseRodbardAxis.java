@@ -81,19 +81,4 @@ public class InverseRodbardAxis extends AbstractFourVariableAxis {
 			d() + "))";
 	}
 
-	@Override
-	public boolean update(final CalibratedAxis other) {
-		if (other instanceof InverseRodbardAxis) {
-			final InverseRodbardAxis axis = (InverseRodbardAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			setA(axis.a());
-			setB(axis.b());
-			setC(axis.c());
-			setD(axis.d());
-			return true;
-		}
-		return false;
-	}
-
 }

@@ -92,19 +92,4 @@ public class LogLinearAxis extends AbstractFourVariableAxis {
 			") * x)";
 	}
 
-	@Override
-	public boolean update(final CalibratedAxis other) {
-		if (other instanceof LogLinearAxis) {
-			final LogLinearAxis axis = (LogLinearAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			setA(axis.a());
-			setB(axis.b());
-			setC(axis.c());
-			setD(axis.d());
-			return true;
-		}
-		return false;
-	}
-
 }

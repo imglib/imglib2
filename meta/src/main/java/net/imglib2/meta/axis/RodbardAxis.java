@@ -81,19 +81,4 @@ public class RodbardAxis extends AbstractFourVariableAxis {
 			c() + "))^(" + d() + "))";
 	}
 
-	@Override
-	public boolean update(final CalibratedAxis other) {
-		if (other instanceof RodbardAxis) {
-			final RodbardAxis axis = (RodbardAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			setA(axis.a());
-			setB(axis.b());
-			setC(axis.c());
-			setD(axis.d());
-			return true;
-		}
-		return false;
-	}
-
 }

@@ -87,48 +87,4 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 		return "y = (" + a() + ") + (" + b() + ")*x^(" + c() + ")";
 	}
 
-	@Override
-	public boolean update(final CalibratedAxis other) {
-		if (other instanceof PowerAxis) {
-			final PowerAxis axis = (PowerAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			setA(axis.a());
-			setB(axis.b());
-			setC(axis.c());
-			return true;
-		}
-		if (other instanceof LinearAxis) {
-			final LinearAxis axis = (LinearAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			setA(axis.origin());
-			setB(axis.scale());
-			setC(1);
-			return true;
-		}
-		if (other instanceof PolynomialAxis) {
-			final PolynomialAxis axis = (PolynomialAxis) other;
-			final int power = compatiblePolynomial(axis);
-			if (power >= 0) {
-				setType(axis.type());
-				setUnit(axis.unit());
-				setA(axis.coeff(0));
-				setB(axis.coeff(power));
-				setC(power);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	// -- helpers --
-
-	private int compatiblePolynomial(final PolynomialAxis axis) {
-		final int order = axis.order();
-		for (int i = 1; i < order; i++) {
-			if (axis.coeff(i) != 0) return -1;
-		}
-		return order;
-	}
 }

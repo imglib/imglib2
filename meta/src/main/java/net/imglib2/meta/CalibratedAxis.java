@@ -85,12 +85,4 @@ public interface CalibratedAxis extends TypedAxis {
 	 */
 	double averageScale(double rawValue1, double rawValue2);
 
-	/**
-	 * Update this axis' calibration variables to match another calibrated axis'
-	 * values. Returns false if this axis could not determine an update to its
-	 * state that was compatible with the other axis. Returns true if the values
-	 * were successfully updated. Note: it also updates axis type and unit - we
-	 * may need to rethink that.
-	 */
-	boolean update(CalibratedAxis other);
 }

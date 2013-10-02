@@ -84,19 +84,4 @@ public class ExponentialAxis extends AbstractFourVariableAxis {
 			")*x)";
 	}
 
-	@Override
-	public boolean update(final CalibratedAxis other) {
-		if (other instanceof ExponentialAxis) {
-			final ExponentialAxis axis = (ExponentialAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			setA(axis.a());
-			setB(axis.b());
-			setC(axis.c());
-			setD(axis.d());
-			return true;
-		}
-		return false;
-	}
-
 }

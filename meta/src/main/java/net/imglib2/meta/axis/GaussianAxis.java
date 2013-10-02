@@ -80,19 +80,4 @@ public class GaussianAxis extends AbstractFourVariableAxis {
 			c() + "))^2 / (2*(" + d() + ")^2))";
 	}
 
-	@Override
-	public boolean update(final CalibratedAxis other) {
-		if (other instanceof GaussianAxis) {
-			final GaussianAxis axis = (GaussianAxis) other;
-			setType(axis.type());
-			setUnit(axis.unit());
-			setA(axis.a());
-			setB(axis.b());
-			setC(axis.c());
-			setD(axis.d());
-			return true;
-		}
-		return false;
-	}
-
 }
