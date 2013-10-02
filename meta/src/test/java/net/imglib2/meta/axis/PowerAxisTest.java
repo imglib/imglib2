@@ -39,7 +39,6 @@ package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
 
@@ -56,7 +55,7 @@ public class PowerAxisTest extends AbstractMetaTest {
 	public void testCtor1() {
 		final PowerAxis axis = new PowerAxis(2);
 
-		assertTrue(axis.type() instanceof Axes.CustomType);
+		assertUnknown(axis);
 		assertNull(axis.unit());
 		assertEquals(0, axis.a(), 0);
 		assertEquals(1, axis.b(), 0);

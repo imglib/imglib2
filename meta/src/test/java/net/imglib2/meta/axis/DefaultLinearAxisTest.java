@@ -38,7 +38,6 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
 
@@ -56,7 +55,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 	@Test
 	public void testDefaultConstructor() {
 		axis = new DefaultLinearAxis();
-		assertTrue(axis.type() instanceof Axes.CustomType);
+		assertUnknown(axis);
 		assertEquals(null, axis.unit());
 		assertEquals(1, axis.scale(), 0);
 		assertEquals(0, axis.origin(), 0);
@@ -65,7 +64,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 	@Test
 	public void testScaleConstructor() {
 		axis = new DefaultLinearAxis(59);
-		assertTrue(axis.type() instanceof Axes.CustomType);
+		assertUnknown(axis);
 		assertEquals(null, axis.unit());
 		assertEquals(59, axis.scale(), 0);
 		assertEquals(0, axis.origin(), 0);
@@ -74,7 +73,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 	@Test
 	public void testScaleOriginConstructor() {
 		axis = new DefaultLinearAxis(22, 7);
-		assertTrue(axis.type() instanceof Axes.CustomType);
+		assertUnknown(axis);
 		assertEquals(null, axis.unit());
 		assertEquals(22, axis.scale(), 0);
 		assertEquals(7, axis.origin(), 0);

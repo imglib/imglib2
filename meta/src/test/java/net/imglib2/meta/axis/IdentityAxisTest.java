@@ -38,7 +38,6 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
 
@@ -54,7 +53,7 @@ public class IdentityAxisTest extends AbstractMetaTest {
 	@Test
 	public void test() {
 		IdentityAxis axis = new IdentityAxis();
-		assertTrue(axis.type() instanceof Axes.CustomType);
+		assertUnknown(axis);
 		axis = new IdentityAxis(Axes.Y);
 		assertEquals(Axes.Y, axis.type());
 		assertEquals(null, axis.unit());

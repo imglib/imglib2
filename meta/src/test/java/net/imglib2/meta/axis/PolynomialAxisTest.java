@@ -56,7 +56,7 @@ public class PolynomialAxisTest extends AbstractMetaTest {
 	@Test
 	public void testDefaultConstructor() {
 		final PolynomialAxis axis = new PolynomialAxis();
-		assertTrue(axis.type() instanceof Axes.CustomType);
+		assertUnknown(axis);
 		assertNull(axis.unit());
 		assertEquals(0, axis.coeff(0), 0);
 		assertEquals(0, axis.coeff(1), 0);
