@@ -39,7 +39,6 @@ package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
@@ -97,9 +96,9 @@ public class DefaultCalibratedSpaceTest {
 	public void testDefaultConstructor() {
 		space = new DefaultCalibratedSpace(3);
 		// verify that axes have default (identity) calibrations
-		assertTrue(space.axis(0).type() instanceof Axes.CustomType);
-		assertTrue(space.axis(1).type() instanceof Axes.CustomType);
-		assertTrue(space.axis(2).type() instanceof Axes.CustomType);
+		assertEquals("Unknown", space.axis(0).type().getLabel());
+		assertEquals("Unknown", space.axis(1).type().getLabel());
+		assertEquals("Unknown", space.axis(2).type().getLabel());
 		assertNull(space.axis(0).unit());
 		assertNull(space.axis(1).unit());
 		assertNull(space.axis(2).unit());
