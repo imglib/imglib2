@@ -45,6 +45,8 @@ import net.imglib2.meta.Axes;
 import org.junit.Test;
 
 /**
+ * Tests {@link LogLinearAxis}.
+ * 
  * @author Barry DeZonia
  */
 public class LogLinearAxisTest {

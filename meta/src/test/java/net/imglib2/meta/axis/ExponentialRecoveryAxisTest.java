@@ -43,6 +43,8 @@ import net.imglib2.meta.Axes;
 import org.junit.Test;
 
 /**
+ * Tests {@link ExponentialRecoveryAxis}.
+ * 
  * @author Barry DeZonia
  */
 public class ExponentialRecoveryAxisTest {

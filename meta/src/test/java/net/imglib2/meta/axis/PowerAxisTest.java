@@ -45,6 +45,8 @@ import net.imglib2.meta.Axes;
 import org.junit.Test;
 
 /**
+ * Tests {@link PowerAxis}.
+ * 
  * @author Barry DeZonia
  */
 public class PowerAxisTest {

@@ -44,6 +44,8 @@ import net.imglib2.meta.Axes;
 import org.junit.Test;
 
 /**
+ * Tests {@link LinearAxis}.
+ * 
  * @author Barry DeZonia
  */
 public class LinearAxisTest {

@@ -43,6 +43,8 @@ import net.imglib2.meta.Axes;
 import org.junit.Test;
 
 /**
+ * Tests {@link RodbardAxis}.
+ * 
  * @author Barry DeZonia
  */
 public class RodbardAxisTest {
