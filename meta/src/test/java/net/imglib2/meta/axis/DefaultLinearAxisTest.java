@@ -38,6 +38,7 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
 
@@ -56,7 +57,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 	public void testDefaultConstructor() {
 		axis = new DefaultLinearAxis();
 		assertUnknown(axis);
-		assertEquals(null, axis.unit());
+		assertNull(axis.unit());
 		assertEquals(1, axis.scale(), 0);
 		assertEquals(0, axis.origin(), 0);
 	}
@@ -65,7 +66,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 	public void testScaleConstructor() {
 		axis = new DefaultLinearAxis(59);
 		assertUnknown(axis);
-		assertEquals(null, axis.unit());
+		assertNull(axis.unit());
 		assertEquals(59, axis.scale(), 0);
 		assertEquals(0, axis.origin(), 0);
 	}
@@ -74,7 +75,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 	public void testScaleOriginConstructor() {
 		axis = new DefaultLinearAxis(22, 7);
 		assertUnknown(axis);
-		assertEquals(null, axis.unit());
+		assertNull(axis.unit());
 		assertEquals(22, axis.scale(), 0);
 		assertEquals(7, axis.origin(), 0);
 	}
@@ -83,7 +84,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 	public void testAxisTypeConstructor() {
 		axis = new DefaultLinearAxis(Axes.Z);
 		assertEquals(Axes.Z, axis.type());
-		assertEquals(null, axis.unit());
+		assertNull(axis.unit());
 		assertEquals(1, axis.scale(), 0);
 		assertEquals(0, axis.origin(), 0);
 	}
@@ -92,7 +93,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 	public void testAxisTypeScaleConstructor() {
 		axis = new DefaultLinearAxis(Axes.X, -3);
 		assertEquals(Axes.X, axis.type());
-		assertEquals(null, axis.unit());
+		assertNull(axis.unit());
 		assertEquals(-3, axis.scale(), 0);
 		assertEquals(0, axis.origin(), 0);
 	}
@@ -101,7 +102,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 	public void testAxisTypeScaleOriginConstructor() {
 		axis = new DefaultLinearAxis(Axes.X, -3, 8);
 		assertEquals(Axes.X, axis.type());
-		assertEquals(null, axis.unit());
+		assertNull(axis.unit());
 		assertEquals(-3, axis.scale(), 0);
 		assertEquals(8, axis.origin(), 0);
 	}
