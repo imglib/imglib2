@@ -76,12 +76,6 @@ public class RodbardAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String particularEquation() {
-		return "y = (" + a() + ") + ((" + b() + ")-(" + a() + ")) / (1 + (x/(" +
-			c() + "))^(" + d() + "))";
-	}
-
-	@Override
 	public RodbardAxis copy() {
 		return new RodbardAxis(type(), unit(), a(), b(), c(), d());
 	}

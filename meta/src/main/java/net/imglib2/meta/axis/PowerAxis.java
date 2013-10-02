@@ -83,11 +83,6 @@ public class PowerAxis extends AbstractThreeVariableAxis {
 	}
 
 	@Override
-	public String particularEquation() {
-		return "y = (" + a() + ") + (" + b() + ")*x^(" + c() + ")";
-	}
-
-	@Override
 	public PowerAxis copy() {
 		return new PowerAxis(type(), unit(), a(), b(), c());
 	}

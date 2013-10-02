@@ -76,12 +76,6 @@ public class InverseRodbardAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String particularEquation() {
-		return "y = (" + a() + ")*((x-(" + b() + "))/((" + c() + ")-x))^(1/(" +
-			d() + "))";
-	}
-
-	@Override
 	public InverseRodbardAxis copy() {
 		return new InverseRodbardAxis(type(), unit(), a(), b(), c(), d());
 	}

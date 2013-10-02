@@ -192,11 +192,6 @@ public class LinearAxis extends AbstractTwoVariableAxis {
 	}
 
 	@Override
-	public String particularEquation() {
-		return "y = (" + origin + ") + (" + scale + ") * x";
-	}
-
-	@Override
 	public LinearAxis copy() {
 		return new LinearAxis(type(), unit(), scale(), origin());
 	}

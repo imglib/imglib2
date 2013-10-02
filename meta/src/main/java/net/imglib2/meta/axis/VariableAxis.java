@@ -83,4 +83,30 @@ public abstract class VariableAxis extends AbstractCalibratedAxis {
 		return vars.keySet();
 	}
 
+	// -- CalibratedAxis methods --
+
+	@Override
+	public String particularEquation() {
+		final StringBuilder sb = new StringBuilder();
+		// NB: Split general equation on potential variables, including delimiters.
+		// For an explanation, see: http://stackoverflow.com/a/279337
+		final String[] tokens =
+			generalEquation().split("(?<=\\w)(?=\\W)|(?<=\\W)(?=\\w)");
+		for (final String token : tokens) {
+			if (token.matches("\\w+")) {
+				// token might be a variable; check the vars table
+				final Double value = vars.get(token);
+				if (value != null) {
+					// token *is* a variable; substitute the value!
+					sb.append("(");
+					sb.append(value);
+					sb.append(")");
+					continue;
+				}
+			}
+			sb.append(token);
+		}
+		return sb.toString();
+	}
+
 }

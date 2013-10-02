@@ -84,11 +84,6 @@ public class IdentityAxis extends VariableAxis {
 	}
 
 	@Override
-	public String particularEquation() {
-		return "y = x";
-	}
-
-	@Override
 	public IdentityAxis copy() {
 		return new IdentityAxis(type(), unit());
 	}

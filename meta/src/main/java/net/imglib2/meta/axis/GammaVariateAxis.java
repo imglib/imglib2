@@ -75,12 +75,6 @@ public class GammaVariateAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String particularEquation() {
-		return "y = (" + a() + ") * (x-(" + b() + "))^(" + c() + ")*exp(-(x-(" +
-			b() + "))/(" + d() + "))";
-	}
-
-	@Override
 	public GammaVariateAxis copy() {
 		return new GammaVariateAxis(type(), unit(), a(), b(), c(), d());
 	}

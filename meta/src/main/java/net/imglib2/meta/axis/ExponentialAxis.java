@@ -79,12 +79,6 @@ public class ExponentialAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String particularEquation() {
-		return "y = (" + a() + ") + (" + b() + ") * exp((" + c() + ") + (" + d() +
-			")*x)";
-	}
-
-	@Override
 	public ExponentialAxis copy() {
 		return new ExponentialAxis(type(), unit(), a(), b(), c(), d());
 	}

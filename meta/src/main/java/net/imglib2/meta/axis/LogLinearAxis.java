@@ -87,12 +87,6 @@ public class LogLinearAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String particularEquation() {
-		return "y = (" + a() + ") + (" + b() + ") * ln((" + c() + ") + (" + d() +
-			") * x)";
-	}
-
-	@Override
 	public LogLinearAxis copy() {
 		return new LogLinearAxis(type(), unit(), a(), b(), c(), d());
 	}

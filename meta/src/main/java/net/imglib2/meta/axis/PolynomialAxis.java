@@ -151,27 +151,6 @@ public class PolynomialAxis extends VariableAxis {
 	}
 
 	@Override
-	public String particularEquation() {
-		// String that looks like y = (4.0) + (2.7)*x + (8.9)*x^2 + ...
-		final StringBuilder builder = new StringBuilder();
-		builder.append("y = (");
-		for (int i = 0; i < coeffs.length; i++) {
-			if (coeffs[i] == 0) continue; // skip terms if possible
-			if (i != 0) builder.append(" + (");
-			builder.append(coeffs[i]);
-			builder.append(")");
-			if (i != 0) {
-				builder.append("*x");
-				if (i > 1) {
-					builder.append("^");
-					builder.append(i);
-				}
-			}
-		}
-		return builder.toString();
-	}
-
-	@Override
 	public PolynomialAxis copy() {
 		final PolynomialAxis axis = new PolynomialAxis(type(), unit());
 		for (int i = 0; i <= degree(); i++) {

@@ -74,12 +74,6 @@ public class ExponentialRecoveryAxis extends AbstractFourVariableAxis {
 	}
 
 	@Override
-	public String particularEquation() {
-		return "y = (" + a() + ") + (" + b() + ") * (1 - exp((" + c() + ") + (" +
-			d() + ")*x))";
-	}
-
-	@Override
 	public ExponentialRecoveryAxis copy() {
 		return new ExponentialRecoveryAxis(type(), unit(), a(), b(), c(), d());
 	}
