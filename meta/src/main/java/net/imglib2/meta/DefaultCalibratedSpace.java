@@ -39,7 +39,7 @@ package net.imglib2.meta;
 
 import java.util.List;
 
-import net.imglib2.meta.axis.LinearAxis;
+import net.imglib2.meta.axis.IdentityAxis;
 
 /**
  * Simple, default {@link CalibratedSpace} implementation.
@@ -53,7 +53,7 @@ public class DefaultCalibratedSpace extends
 	public DefaultCalibratedSpace(final int numDims) {
 		super(numDims);
 		for (int d = 0; d < numDims; d++) {
-			setAxis(new LinearAxis(), d);
+			setAxis(new IdentityAxis(), d);
 		}
 	}
 
