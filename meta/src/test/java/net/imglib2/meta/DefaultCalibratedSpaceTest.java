@@ -57,7 +57,7 @@ public class DefaultCalibratedSpaceTest {
 	private DefaultCalibratedSpace space;
 
 	@Test
-	public void test1() {
+	public void testArrayConstructor() {
 		final LinearAxis axis0 = new LinearAxis(Axes.X, "nm", 2);
 		final LinearAxis axis1 = new LinearAxis(Axes.Y, "nm", 3);
 		final LinearAxis axis2 = new LinearAxis(Axes.Z, "cm", 4);
@@ -74,7 +74,8 @@ public class DefaultCalibratedSpaceTest {
 	}
 
 	@Test
-	public void test2() {
+	public void testListConstructor() {
+		// verify that axes are assigned correctly in the constructor
 		final LinearAxis axis0 = new LinearAxis(Axes.X, "nm", 2);
 		final LinearAxis axis1 = new LinearAxis(Axes.Y, "nm", 3);
 		final LinearAxis axis2 = new LinearAxis(Axes.Z, "cm", 4);
@@ -93,8 +94,9 @@ public class DefaultCalibratedSpaceTest {
 	}
 
 	@Test
-	public void test3() {
+	public void testDefaultConstructor() {
 		space = new DefaultCalibratedSpace(3);
+		// verify that axes have default (identity) calibrations
 		assertTrue(space.axis(0).type() instanceof Axes.CustomType);
 		assertTrue(space.axis(1).type() instanceof Axes.CustomType);
 		assertTrue(space.axis(2).type() instanceof Axes.CustomType);
@@ -107,6 +109,7 @@ public class DefaultCalibratedSpaceTest {
 		assertEquals(1, space.axis(0).calibratedValue(1), 0);
 		assertEquals(1, space.axis(1).calibratedValue(1), 0);
 		assertEquals(1, space.axis(2).calibratedValue(1), 0);
+		// verify that axes are assigned correctly
 		final LinearAxis axis0 = new LinearAxis(Axes.X, "nm", 2);
 		final LinearAxis axis1 = new LinearAxis(Axes.Y, "nm", 3);
 		final LinearAxis axis2 = new LinearAxis(Axes.Z, "cm", 4);
@@ -123,4 +126,5 @@ public class DefaultCalibratedSpaceTest {
 		assertEquals(3, space.axis(1).calibratedValue(1), 0);
 		assertEquals(4, space.axis(2).calibratedValue(1), 0);
 	}
+
 }

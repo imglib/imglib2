@@ -56,7 +56,7 @@ public class DefaultCalibratedRealIntervalTest {
 	private DefaultCalibratedRealInterval interval;
 
 	@Test
-	public void test1() {
+	public void testExtentsConstructor() {
 		// verify that interval extents are assigned correctly
 		final double[] extents = new double[] { 5, 10, 20 };
 		final double[] temp = new double[extents.length];
@@ -82,7 +82,7 @@ public class DefaultCalibratedRealIntervalTest {
 	}
 
 	@Test
-	public void test2() {
+	public void testExtentsAxisArrayConstructor() {
 		final double[] extents = new double[] { 5, 10, 20 };
 		final double[] temp = new double[extents.length];
 		final CalibratedAxis axis0 = new LinearAxis(Axes.LIFETIME, "froop", 1);
