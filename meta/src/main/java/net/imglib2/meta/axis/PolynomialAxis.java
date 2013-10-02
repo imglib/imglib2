@@ -85,7 +85,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 
 	// -- getters --
 
-	public int order() {
+	public int degree() {
 		resize(2);
 		return coeffs.length - 1;
 	}
@@ -170,7 +170,7 @@ public class PolynomialAxis extends AbstractCalibratedAxis {
 	@Override
 	public PolynomialAxis copy() {
 		final PolynomialAxis axis = new PolynomialAxis(type(), unit());
-		for (int i = 0; i <= order(); i++) {
+		for (int i = 0; i <= degree(); i++) {
 			axis.setCoeff(i, coeff(i));
 		}
 		return axis;

@@ -59,7 +59,7 @@ public class PolynomialAxisTest {
 		assertEquals(1, axis.coeff(2), 0);
 		for (int i = 3; i < 25; i++)
 			assertEquals(0, axis.coeff(i), 0);
-		assertEquals(2, axis.order());
+		assertEquals(2, axis.degree());
 	}
 
 	@Test
@@ -74,7 +74,7 @@ public class PolynomialAxisTest {
 		assertEquals(5, axis.coeff(4), 0);
 		for (int i = 5; i < 25; i++)
 			assertEquals(0, axis.coeff(i), 0);
-		assertEquals(4, axis.order());
+		assertEquals(4, axis.degree());
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class PolynomialAxisTest {
 		PolynomialAxis axis = new PolynomialAxis();
 		axis.setCoeff(23, 1000);
 		assertEquals(1000, axis.coeff(23), 0);
-		assertEquals(23, axis.order());
+		assertEquals(23, axis.degree());
 		try {
 			axis.setCoeff(24, 50);
 			fail();
