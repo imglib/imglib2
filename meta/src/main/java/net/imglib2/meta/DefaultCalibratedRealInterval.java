@@ -55,7 +55,7 @@ public class DefaultCalibratedRealInterval extends
 
 	public DefaultCalibratedRealInterval(final RealInterval interval) {
 		super(interval);
-		assignDefaultAxes();
+		assignDefaultAxes(interval.numDimensions());
 	}
 
 	public DefaultCalibratedRealInterval(final RealInterval interval,
@@ -72,7 +72,7 @@ public class DefaultCalibratedRealInterval extends
 
 	public DefaultCalibratedRealInterval(final double[] extents) {
 		super(extents);
-		assignDefaultAxes();
+		assignDefaultAxes(extents.length);
 	}
 
 	public DefaultCalibratedRealInterval(final double[] extents,
@@ -89,7 +89,7 @@ public class DefaultCalibratedRealInterval extends
 
 	public DefaultCalibratedRealInterval(final double[] min, final double[] max) {
 		super(min, max);
-		assignDefaultAxes();
+		assignDefaultAxes(min.length);
 	}
 
 	public DefaultCalibratedRealInterval(final double[] min, final double[] max,
@@ -106,8 +106,8 @@ public class DefaultCalibratedRealInterval extends
 
 	// -- Helper methods --
 
-	private void assignDefaultAxes() {
-		for (int d = 0; d < numDimensions(); d++) {
+	private void assignDefaultAxes(final int numDimensions) {
+		for (int d = 0; d < numDimensions; d++) {
 			setAxis(new IdentityAxis(), d);
 		}
 	}
