@@ -57,6 +57,7 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 	private final double minVal, maxVal;
 	private final boolean tailBins;
 	private final double binWidth;
+	private final long interiorBins;
 
 	// -- constructor --
 
@@ -87,8 +88,13 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 			throw new IllegalArgumentException(
 				"invalid Real1dBinMapper: nonpositive data range specified");
 		}
-		if (tailBins) binWidth = (maxVal - minVal) / (bins - 2);
-		else binWidth = (maxVal - minVal) / (bins);
+		if (tailBins) {
+			this.interiorBins = bins - 2;
+		}
+		else {
+			this.interiorBins = bins;
+		}
+		this.binWidth = (maxVal - minVal) / (interiorBins);
 	}
 
 	// -- BinMapper methods --
@@ -105,7 +111,8 @@ public class Real1dBinMapper<T extends RealType<T>> implements BinMapper1d<T> {
 		if (val >= minVal && val <= maxVal) {
 			double bin = (val - minVal) / binWidth;
 			pos = (long) Math.floor(bin);
-			if (val == maxVal) pos--;
+			// catch out of bounds which can happen for edge values and roundoff errs
+			if (pos >= interiorBins) pos = interiorBins - 1;
 			if (tailBins) pos++;
 		}
 		else if (tailBins) {
