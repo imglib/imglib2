@@ -46,7 +46,7 @@ import net.imglib2.meta.axis.IdentityAxis;
  * 
  * @author Curtis Rueden
  */
-public class DefaultCalibratedSpace extends
+public final class DefaultCalibratedSpace extends
 	AbstractCalibratedSpace<CalibratedAxis>
 {
 

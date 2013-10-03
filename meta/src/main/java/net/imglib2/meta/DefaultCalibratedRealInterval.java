@@ -47,7 +47,7 @@ import net.imglib2.meta.axis.IdentityAxis;
  * 
  * @author Barry DeZonia
  */
-public class DefaultCalibratedRealInterval extends
+public final class DefaultCalibratedRealInterval extends
 	AbstractCalibratedRealInterval<CalibratedAxis>
 {
 

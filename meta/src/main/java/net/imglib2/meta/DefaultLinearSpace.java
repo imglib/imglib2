@@ -46,7 +46,7 @@ import net.imglib2.meta.axis.LinearAxis;
  * 
  * @author Barry DeZonia
  */
-public class DefaultLinearSpace extends AbstractLinearSpace<LinearAxis> {
+public final class DefaultLinearSpace extends AbstractLinearSpace<LinearAxis> {
 
 	public DefaultLinearSpace(final int numDims) {
 		super(numDims);

@@ -59,8 +59,8 @@ import net.imglib2.meta.axis.LinearAxis;
  * 
  * @author Curtis Rueden
  */
-public class ImgPlus<T> extends DefaultCalibratedRealInterval implements
-	Img<T>, ImgPlusMetadata
+public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
+	implements Img<T>, ImgPlusMetadata
 {
 
 	/** The name assigned to the ImgPlus if none is provided. */
