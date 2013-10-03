@@ -101,8 +101,9 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 
 	@Override
 	public void axes(final A[] axes) {
-		for (int i = 0; i < axes.length; i++)
+		for (int i = 0; i < axes.length; i++) {
 			axes[i] = axis(i);
+		}
 	}
 
 	@Override
