@@ -37,7 +37,7 @@
 
 package net.imglib2.meta;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  * An extensible enumeration of dimensional {@link AxisType}s. Provides a core
@@ -55,8 +55,8 @@ public final class Axes {
 	/**
 	 * Table of existing AxisTypes
 	 */
-	private static Hashtable<String, AxisType> axes =
-		new Hashtable<String, AxisType>();
+	private static HashMap<String, AxisType> axes =
+		new HashMap<String, AxisType>();
 
 	// -- Constructor to prevent instantiation --
 
