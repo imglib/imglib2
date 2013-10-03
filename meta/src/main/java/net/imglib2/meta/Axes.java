@@ -50,6 +50,11 @@ import java.util.HashMap;
  */
 public final class Axes {
 
+	// -- Constants --
+
+	/** Label for unknown axis types, which are returned by {@link #unknown()}. */
+	public static final String UNKNOWN_LABEL = "Unknown";
+
 	// -- Fields --
 
 	/**
@@ -110,6 +115,8 @@ public final class Axes {
 	 * exist.
 	 */
 	public static AxisType get(final String label, final boolean spatial) {
+		if (UNKNOWN_LABEL.equals(label)) return unknown();
+
 		AxisType axis = axes.get(label);
 
 		// if the axis is null, create it
@@ -144,6 +151,6 @@ public final class Axes {
 	 * </p>
 	 */
 	public static AxisType unknown() {
-		return new DefaultAxisType("Unknown");
+		return new DefaultAxisType(UNKNOWN_LABEL);
 	}
 }
