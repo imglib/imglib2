@@ -138,8 +138,13 @@ public class CombinedRealInterval<A extends TypedAxis, S extends TypedRealInterv
 			if (max > maxMax) maxMax = max;
 		}
 
-		public double min() { return minMin; }
-		public double max() { return maxMax; }
+		public double min() {
+			return minMin;
+		}
+
+		public double max() {
+			return maxMax;
+		}
 
 	}
 

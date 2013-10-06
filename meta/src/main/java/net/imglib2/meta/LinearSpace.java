@@ -37,39 +37,11 @@
 
 package net.imglib2.meta;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import net.imglib2.meta.axis.LinearAxis;
 
 /**
  * @author Barry DeZonia
  */
-public class DefaultCalibratedAxisTest {
-
-	private DefaultCalibratedAxis axis;
-
-	@Test
-	public void testDefaultConstruction() {
-		axis = new DefaultCalibratedAxis();
-		assertTrue(axis.type() instanceof DefaultAxisType);
-		assertEquals(null, axis.unit());
-		assertEquals(Double.NaN, axis.calibration(), 0);
-	}
-
-	@Test
-	public void testAxisTypeConstruction() {
-		axis = new DefaultCalibratedAxis(Axes.TIME);
-		assertEquals(Axes.TIME, axis.type());
-		assertEquals(null, axis.unit());
-		assertEquals(Double.NaN, axis.calibration(), 0);
-	}
-
-	@Test
-	public void testFullConstruction() {
-		axis = new DefaultCalibratedAxis(Axes.Z, "mm", 14.3);
-		assertEquals(Axes.Z, axis.type());
-		assertEquals("mm", axis.unit());
-		assertEquals(14.3, axis.calibration(), 0);
-	}
+public interface LinearSpace<A extends LinearAxis> extends CalibratedSpace<A> {
+	// no additional functionality
 }

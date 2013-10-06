@@ -39,43 +39,48 @@ package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.meta.axis.LinearAxis;
 import net.imglib2.type.numeric.integer.ByteType;
 
 import org.junit.Test;
 
 /**
+ * Tests {@link ImgPlus}.
+ * 
  * @author Barry DeZonia
  */
-public class ImgPlusTest {
+public class ImgPlusTest extends AbstractMetaTest {
 
 	private ImgPlus<?> imgPlus;
 
 	@Test
 	public void test() {
-		Img<ByteType> img = ArrayImgs.bytes(9, 8);
+		final Img<ByteType> img = ArrayImgs.bytes(9, 8);
 		imgPlus =
 			new ImgPlus<ByteType>(img, "HUBBY", new AxisType[] { Axes.X, Axes.Z },
 				new double[] { 5, 13 });
 		assertEquals("HUBBY", imgPlus.getName());
 		assertEquals(Axes.X, imgPlus.axis(0).type());
 		assertEquals(Axes.Z, imgPlus.axis(1).type());
-		assertEquals(5, imgPlus.axis(0).calibration(), 0);
-		assertEquals(13, imgPlus.axis(1).calibration(), 0);
+		assertEquals(5, imgPlus.averageScale(0), 0);
+		assertEquals(13, imgPlus.averageScale(1), 0);
 		assertEquals(9, imgPlus.dimension(0));
 		assertEquals(8, imgPlus.dimension(1));
-		imgPlus.setCalibration(48, 1);
-		assertEquals(48, imgPlus.axis(1).calibration(), 0);
+		assertTrue(imgPlus.axis(1) instanceof LinearAxis);
+		((LinearAxis) imgPlus.axis(1)).setScale(48);
+		assertEquals(48, imgPlus.averageScale(1), 0);
 		assertEquals(0, imgPlus.min(0));
 		assertEquals(0, imgPlus.min(1));
 		assertEquals(8, imgPlus.max(0));
 		assertEquals(7, imgPlus.max(1));
 		assertEquals(0, imgPlus.getValidBits());
 		assertEquals(72, imgPlus.size());
-		assertNull(imgPlus.unit(0));
-		imgPlus.setUnit("WUNGA", 0);
-		assertEquals("WUNGA", imgPlus.unit(0));
+		assertNull(imgPlus.axis(0).unit());
+		imgPlus.axis(0).setUnit("WUNGA");
+		assertEquals("WUNGA", imgPlus.axis(0).unit());
 	}
 
 }

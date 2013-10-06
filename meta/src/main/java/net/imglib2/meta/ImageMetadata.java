@@ -42,8 +42,7 @@ import net.imglib2.img.Img;
 
 /**
  * Metadata relating to channels and intensity scales.
- *
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Lee Kamentsky
