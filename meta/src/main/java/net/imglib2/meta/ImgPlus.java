@@ -93,8 +93,8 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 	}
 
 	public ImgPlus(final Img<T> img, final ImgPlusMetadata metadata) {
-		this(img, metadata.getName(), getAxisTypes(img, metadata), getCalibration(
-			img, metadata), getUnits(img, metadata));
+		this(img, metadata.getName(), copyAxes(metadata));
+
 		validBits = metadata.getValidBits();
 		compositeChannelCount = metadata.getCompositeChannelCount();
 		final int count = metadata.getColorTableCount();
@@ -496,34 +496,13 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 		return valid;
 	}
 
-	private static AxisType[] getAxisTypes(final Img<?> img,
-		final ImgPlusMetadata metadata)
-	{
-		final AxisType[] types = new AxisType[img.numDimensions()];
-		for (int i = 0; i < types.length; i++) {
-			types[i] = metadata.axis(i).type();
+	/** Makes a deep copy of the given space's axes. */
+	private static CalibratedAxis[] copyAxes(final CalibratedSpace<?> space) {
+		final CalibratedAxis[] axes = new CalibratedAxis[space.numDimensions()];
+		for (int d = 0; d < axes.length; d++) {
+			axes[d] = space.axis(d).copy();
 		}
-		return types;
+		return axes;
 	}
 
-	private static double[] getCalibration(final Img<?> img,
-		final ImgPlusMetadata metadata)
-	{
-		final double[] cal = new double[img.numDimensions()];
-		for (int i = 0; i < cal.length; i++) {
-			// TODO - using averageScale() introduces error for nonlinear axes
-			cal[i] = metadata.averageScale(i);
-		}
-		return cal;
-	}
-
-	private static String[] getUnits(final Img<?> img,
-		final ImgPlusMetadata metadata)
-	{
-		final String[] units = new String[img.numDimensions()];
-		for (int i = 0; i < units.length; i++) {
-			units[i] = metadata.axis(i).unit();
-		}
-		return units;
-	}
 }
