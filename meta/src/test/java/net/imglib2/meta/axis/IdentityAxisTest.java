@@ -53,7 +53,7 @@ import org.junit.Test;
 public class IdentityAxisTest extends AbstractMetaTest {
 
 	@Test
-	public void test() {
+	public void testVarious() {
 		IdentityAxis axis = new IdentityAxis();
 		assertUnknown(axis);
 		axis = new IdentityAxis(Axes.Y);
