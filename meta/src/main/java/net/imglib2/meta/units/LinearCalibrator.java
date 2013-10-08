@@ -56,6 +56,24 @@ public class LinearCalibrator implements Calibrator {
 		this.offset = offset;
 	}
 
+	// -- accessors --
+
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+
+	public void setOffset(double offset) {
+		this.offset = offset;
+	}
+
+	public double scale() {
+		return scale;
+	}
+
+	public double offset() {
+		return offset;
+	}
+
 	// -- Calibrator methods --
 
 	@Override
