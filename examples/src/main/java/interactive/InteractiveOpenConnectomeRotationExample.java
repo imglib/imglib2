@@ -2,7 +2,8 @@ package interactive;
 
 import interactive.remote.openconnectome.VolatileOpenConnectomeRandomAccessibleInterval;
 import net.imglib2.RandomAccessible;
-import net.imglib2.converter.VolatileRealTypeARGBConverter;
+import net.imglib2.converter.volatileconverters.VolatileRealType;
+import net.imglib2.converter.volatileconverters.VolatileRealTypeARGBConverter;
 import net.imglib2.display.projectors.volatileprojectors.Volatile2DRandomAccessibleProjector;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
@@ -12,7 +13,6 @@ import net.imglib2.io.ImgIOException;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform3D;
-import net.imglib2.type.VolatileRealType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.ui.InteractiveViewer3D;

@@ -23,7 +23,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.display.XYRandomAccessibleProjector;
+import net.imglib2.display.projectors.Projector2D;
 import net.imglib2.view.Views;
 
 /**
