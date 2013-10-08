@@ -50,6 +50,8 @@ abstract public class AbstractCombinedCursor< A, B, C > implements Cursor< C >
 
 	public AbstractCombinedCursor( final Cursor< A > sourceA, final Cursor< B > sourceB )
 	{
+		//TODO: How to check whether they have the same iterationorder?
+		
 		this.sourceA = sourceA;
 		this.sourceB = sourceB;
 
@@ -113,23 +115,28 @@ abstract public class AbstractCombinedCursor< A, B, C > implements Cursor< C >
 	public void jumpFwd( final long steps )
 	{
 		sourceA.jumpFwd( steps );
+		sourceB.jumpFwd( steps );
+		
 	}
 
 	@Override
 	public void fwd()
 	{
 		sourceA.fwd();
+		sourceB.fwd();
 	}
 
 	@Override
 	public void reset()
 	{
 		sourceA.reset();
+		sourceB.reset();
 	}
 
 	@Override
 	public boolean hasNext()
 	{
+		//TODO also check for sourceB?
 		return sourceA.hasNext();
 	}
 
@@ -144,6 +151,7 @@ abstract public class AbstractCombinedCursor< A, B, C > implements Cursor< C >
 	public void remove()
 	{
 		sourceA.remove();
+		sourceB.remove();
 	}
 
 	@Override

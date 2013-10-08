@@ -61,6 +61,7 @@ final public class CombinedRandomAccess< A, B, C extends Type< C > > extends Abs
 	@Override
 	public C get()
 	{
+		sourceB.setPosition( sourceA );
 		combiner.combine( sourceA.get(), sourceB.get(), combined );
 		return combined;
 	}
