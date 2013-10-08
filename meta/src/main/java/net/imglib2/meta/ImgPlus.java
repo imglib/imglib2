@@ -112,7 +112,13 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 	public ImgPlus(final Img<T> img, final String name,
 		final AxisType[] axisTypes, final double[] cal, final String[] units)
 	{
-		super(img, createAxes(img, axisTypes, cal, units));
+		this(img, name, createAxes(img, axisTypes, cal, units));
+	}
+
+	public ImgPlus(final Img<T> img, final String name,
+		final CalibratedAxis... axes)
+	{
+		super(img, axes);
 		this.img = img;
 		this.name = validateName(name);
 
@@ -405,7 +411,7 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 	// -- Helper methods --
 
 	/** Creates {@link LinearAxis} objects matching the given arguments. */
-	private static LinearAxis[] createAxes(final Img<?> img,
+	private static CalibratedAxis[] createAxes(final Img<?> img,
 		final AxisType[] axisTypes, final double[] cal, final String[] units)
 	{
 		// validate arguments
