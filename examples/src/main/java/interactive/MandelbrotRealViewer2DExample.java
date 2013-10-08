@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -43,7 +43,8 @@ import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.LongType;
-import net.imglib2.ui.InteractiveRealViewer2D;
+import net.imglib2.ui.overlay.LogoPainter;
+import net.imglib2.ui.viewer.InteractiveRealViewer2D;
 
 public class MandelbrotRealViewer2DExample< T extends NumericType< T > & NativeType< T > >
 {
@@ -59,17 +60,9 @@ public class MandelbrotRealViewer2DExample< T extends NumericType< T > & NativeT
 		transform.scale( 200 );
 		transform.translate( width / 2.0, height / 2.0 );
 
-		final LogoPainter logo = new LogoPainter();
 		final RealARGBConverter< LongType > converter = new RealARGBConverter< LongType >( 0, maxIterations );
-		new InteractiveRealViewer2D< LongType >( width, height, mandelbrot, transform, converter )
-		{
-			@Override
-			public boolean drawScreenImage()
-			{
-				final boolean valid = super.drawScreenImage();
-				logo.paint( screenImage );
-				return valid;
-			}
-		};
+		final InteractiveRealViewer2D< LongType > viewer = new InteractiveRealViewer2D< LongType >( width, height, mandelbrot, transform, converter );
+		viewer.getDisplayCanvas().addOverlayRenderer( new LogoPainter() );
+		viewer.requestRepaint();
 	}
 }

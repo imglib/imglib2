@@ -37,6 +37,7 @@
 
 package net.imglib2.util;
 
+import net.imglib2.Dimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
@@ -226,6 +227,68 @@ public class Intervals
 	}
 
 	/**
+	 * Compute the smallest {@link Interval} containing the specified
+	 * {@link RealInterval}.
+	 *
+	 * @param ri
+	 *            input interval.
+	 * @return the smallest integer interval that completely contains the input
+	 *         interval.
+	 */
+	public static Interval smallestContainingInterval( final RealInterval ri )
+	{
+		final int n = ri.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] = ( long ) Math.floor( ri.realMin( d ) );
+			max[ d ] = ( long ) Math.ceil( ri.realMax( d ) );
+		}
+		return new FinalInterval( min, max );
+	}
+
+	/**
+	 * Compute the largest {@link Interval} that is contained in the specified
+	 * {@link RealInterval}.
+	 *
+	 * @param ri
+	 *            input interval.
+	 * @return the largest integer interval that is completely contained in the
+	 *         input interval.
+	 */
+	public static Interval largestContainedInterval( final RealInterval ri )
+	{
+		final int n = ri.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] = ( long ) Math.ceil( ri.realMin( d ) );
+			max[ d ] = ( long ) Math.floor( ri.realMax( d ) );
+		}
+		return new FinalInterval( min, max );
+	}
+
+	/**
+	 * Check whether the given interval is empty, that is, the maximum is
+	 * smaller than the minimum in some dimension.
+	 *
+	 * @param interval
+	 *            interval to check
+	 * @return true when the interval is empty, that is, the maximum is smaller
+	 *         than the minimum in some dimension.
+	 */
+	public static boolean isEmpty( final Interval interval )
+	{
+		final int n = interval.numDimensions();
+		for ( int d = 0; d < n; ++d )
+			if (interval.min( d ) > interval.max( d ))
+				return true;
+		return false;
+	}
+
+	/**
 	 * Test whether the {@code containing} interval contains the
 	 * {@code contained} point. The interval is closed, that is, boundary points
 	 * are contained.
@@ -306,7 +369,7 @@ public class Intervals
 	 *
 	 * @return number of elements in {@code interval}.
 	 */
-	public static long numElements( final Interval interval )
+	public static long numElements( final Dimensions interval )
 	{
 		long numPixels = interval.dimension( 0 );
 		final int n = interval.numDimensions();
@@ -324,8 +387,24 @@ public class Intervals
 		if ( a.numDimensions() != b.numDimensions() )
 			return false;
 
-		for ( int d = 0; d < a.numDimensions(); d++ )
+		for ( int d = 0; d < a.numDimensions(); ++d )
 			if ( a.min( d ) != b.min( d ) || a.max( d ) != b.max( d ) )
+				return false;
+
+		return true;
+	}
+
+	/**
+	 * Tests weather two intervals have equal dimensions (same size)
+	 */
+	public static boolean equalDimensions( final Interval a, final Interval b )
+	{
+
+		if ( a.numDimensions() != b.numDimensions() )
+			return false;
+
+		for ( int d = 0; d < a.numDimensions(); ++d )
+			if ( a.dimension( d ) != b.dimension( d ) )
 				return false;
 
 		return true;

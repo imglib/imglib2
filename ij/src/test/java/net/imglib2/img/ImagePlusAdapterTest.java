@@ -42,6 +42,7 @@ import ij.ImagePlus;
 import ij.gui.NewImage;
 import ij.measure.Calibration;
 import net.imglib2.meta.Axes;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 
@@ -82,7 +83,7 @@ public class  ImagePlusAdapterTest <T extends NumericType<T> & NativeType<T>> {
 
 		for (int i = 0; i < dim.length; i++) {
 
-			// Create ImatePlus
+			// Create ImagePlus
 			int slices = dim[i][2] * dim[i][3] * dim[i][4];
 			ImagePlus imp = NewImage.createByteImage("Test "+i, dim[i][0], dim[i][1], slices , NewImage.FILL_BLACK);
 			imp.setDimensions(dim[i][2], dim[i][3], dim[i][4]);
@@ -138,15 +139,17 @@ public class  ImagePlusAdapterTest <T extends NumericType<T> & NativeType<T>> {
 			for (int d = 0; d < calibration[i].length; d++) {
 				if (dim[i][d] > 1 ) {
 					// Is it the channel axis?
-					if (d < expectedNumDimensions && img.axis(d).equals(Axes.CHANNEL)) {
+					if (d < expectedNumDimensions && img.axis(d).type() == Axes.CHANNEL) {
 						
 						// Then the calibration should be 1,
-						assertEquals( 1f, img.calibration(skipDim), Float.MIN_VALUE);
+						assertEquals(1f, img.averageScale(skipDim),
+							Float.MIN_VALUE);
 						
 					} else {
 						
 						// otherwise it should be what we set.
-						assertEquals( calibration[i][d], img.calibration(skipDim), Float.MIN_VALUE);
+						assertEquals(calibration[i][d], img.averageScale(skipDim),
+							Float.MIN_VALUE);
 					}
 					skipDim++;
 					

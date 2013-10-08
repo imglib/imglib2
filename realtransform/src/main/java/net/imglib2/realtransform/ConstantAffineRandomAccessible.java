@@ -67,6 +67,10 @@ public class ConstantAffineRandomAccessible< T, R extends AffineGet > extends Af
 	 */
 	public class ConstantAffineRandomAccess extends AffineRandomAccessible< T, R >.AffineRandomAccess
 	{
+		/**
+		 * TODO this currently creates a copy of the transformation two
+		 *   generations down in the hierarchy that is not required.
+		 */
 		protected ConstantAffineRandomAccess()
 		{
 			super();

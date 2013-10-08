@@ -427,12 +427,6 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	}
 	
 	@Override
-	public AffineTransform3D inverseAffine()
-	{
-		return inverse();
-	}
-	
-	@Override
 	public int numDimensions()
 	{
 		return 3;

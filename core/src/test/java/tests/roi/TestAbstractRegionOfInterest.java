@@ -66,18 +66,18 @@ public class TestAbstractRegionOfInterest {
 	static class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest {
 
 		public Rectangle r;
-		public RectangleRegionOfInterest(Rectangle r) {
+		public RectangleRegionOfInterest(final Rectangle r) {
 			super(2);
 			this.r = r;
 		}
 
 		@Override
-		public boolean contains(double[] position) {
+		public boolean contains(final double[] position) {
 			return r.contains(position[0], position[1]);
 		}
 
 		@Override
-		protected boolean nextRaster(long[] position, long[] end) {
+		protected boolean nextRaster(final long[] position, final long[] end) {
 			assertFalse(contains(new double [] {position[0], position[1]}));
 			if ((position[1] < r.y) || ((position[1] == r.y) && (position[0] < r.x))) {
 				position[0] = r.x;
@@ -98,12 +98,12 @@ public class TestAbstractRegionOfInterest {
 		}
 
 		@Override
-		public void move(double displacement, int d) {
+		public void move(final double displacement, final int d) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public void move(double[] displacement) {
+		public void move(final double[] displacement) {
 			throw new UnsupportedOperationException();
 		}
 		
@@ -116,7 +116,7 @@ public class TestAbstractRegionOfInterest {
 	
 	@Test
 	public final void testnumDimensions() {
-		RectangleRegionOfInterest r = new RectangleRegionOfInterest(new Rectangle(0, 0, 1, 1));
+		final RectangleRegionOfInterest r = new RectangleRegionOfInterest(new Rectangle(0, 0, 1, 1));
 		assertEquals(2, r.numDimensions());
 	}
 
@@ -127,7 +127,7 @@ public class TestAbstractRegionOfInterest {
 	
 	@Test
 	public final void testRandomAccessPositionable() {
-		RealRandomAccess<BitType> r = new RectangleRegionOfInterest(new Rectangle(0,0,1,1)).realRandomAccess();
+		final RealRandomAccess<BitType> r = new RectangleRegionOfInterest(new Rectangle(0,0,1,1)).realRandomAccess();
 		r.setPosition(new double [] { 1.5, 2.5 });
 		assertEquals(1.5, r.getDoublePosition(0), 0);
 		assertEquals(2.5, r.getDoublePosition(1), 0);
@@ -144,13 +144,13 @@ public class TestAbstractRegionOfInterest {
 		assertEquals(15, r.getDoublePosition(0),0);
 		assertEquals(2, r.getDoublePosition(1),0);
 		
-		RealRandomAccess<BitType> r1 = new RectangleRegionOfInterest(new Rectangle(0,0,1,1)).realRandomAccess();
+		final RealRandomAccess<BitType> r1 = new RectangleRegionOfInterest(new Rectangle(0,0,1,1)).realRandomAccess();
 		r1.setPosition(new double [] { 1.5, 2.5});
 		r.setPosition(r1);
 		assertEquals(1.5, r.getDoublePosition(0), 0);
 		assertEquals(2.5, r.getDoublePosition(1), 0);
 		
-		Localizable l = new Localizable() {
+		final Localizable l = new Localizable() {
 			
 			@Override
 			public int numDimensions() {
@@ -158,47 +158,47 @@ public class TestAbstractRegionOfInterest {
 			}
 			
 			@Override
-			public void localize(double[] position) {
+			public void localize(final double[] position) {
 				position[0] = 1;
 				position[1] = 3;
 			}
 			
 			@Override
-			public void localize(float[] position) {
+			public void localize(final float[] position) {
 				position[0] = 1;
 				position[1] = 3;
 			}
 			
 			@Override
-			public float getFloatPosition(int dim) {
+			public float getFloatPosition(final int dim) {
 				return 1 + dim * 2;
 			}
 			
 			@Override
-			public double getDoublePosition(int dim) {
+			public double getDoublePosition(final int dim) {
 				return 1 + dim * 2;
 			}
 			
 			@Override
-			public void localize(long[] position) {
+			public void localize(final long[] position) {
 				position[0] = 1;
 				position[1] = 3;
 				
 			}
 			
 			@Override
-			public void localize(int[] position) {
+			public void localize(final int[] position) {
 				position[0] = 1;
 				position[1] = 3;
 			}
 			
 			@Override
-			public long getLongPosition(int dim) {
+			public long getLongPosition(final int dim) {
 				return 1 + dim * 2;
 			}
 			
 			@Override
-			public int getIntPosition(int dim) {
+			public int getIntPosition(final int dim) {
 				return 1 + dim * 2;
 			}
 		};
@@ -271,16 +271,16 @@ public class TestAbstractRegionOfInterest {
 
 	@Test
 	public final void testRandomAccessLocalizable() {
-		RealRandomAccess<BitType> r = new RectangleRegionOfInterest(new Rectangle(0,0,1,1)).realRandomAccess();
+		final RealRandomAccess<BitType> r = new RectangleRegionOfInterest(new Rectangle(0,0,1,1)).realRandomAccess();
 		r.setPosition(new double [] { 5.5, 3.25});
 		{
-			double [] position = new double [2];
+			final double [] position = new double [2];
 			r.localize(position);
 			assertEquals(5.5, position[0], 0);
 			assertEquals(3.25, position[1], 0);
 		}
 		{
-			float [] position = new float [2];
+			final float [] position = new float [2];
 			r.localize(position);
 			assertEquals(5.5, position[0], 0);
 			assertEquals(3.25, position[1], 0);
@@ -291,7 +291,7 @@ public class TestAbstractRegionOfInterest {
 	
 	@Test
 	public final void testRandomAccessSampler() {
-		RealRandomAccess<BitType> r = new RectangleRegionOfInterest(new Rectangle(0,0,1,1)).realRandomAccess();
+		final RealRandomAccess<BitType> r = new RectangleRegionOfInterest(new Rectangle(0,0,1,1)).realRandomAccess();
 		r.setPosition(new double [] { .5, .5 });
 		assertTrue(r.get().get());
 		
@@ -301,22 +301,23 @@ public class TestAbstractRegionOfInterest {
 	
 	@Test
 	public final void testIterableInterval() {
-		RectangleRegionOfInterest r = new RectangleRegionOfInterest(new Rectangle(0,0,1,1));
-		RandomAccessible<DoubleType> src = new ArrayImgFactory<DoubleType>().create(new long [] {11,14}, new DoubleType());
-		IterableInterval<DoubleType> ii = r.getIterableIntervalOverROI(src);
+		final RectangleRegionOfInterest r = new RectangleRegionOfInterest(new Rectangle(0,0,1,1));
+		final RandomAccessible<DoubleType> src = new ArrayImgFactory<DoubleType>().create(new long [] {11,14}, new DoubleType());
+		@SuppressWarnings( "unused" )
+		final IterableInterval<DoubleType> ii = r.getIterableIntervalOverROI(src);
 	}
 	static class Pair<A,B> {
 		public A first;
 		public B second;
-		public Pair(A a,B b) { first = a; second = b; }
+		public Pair(final A a,final B b) { first = a; second = b; }
 	}
 	private Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>>
-		makeIterableInterval(Rectangle roiRect, long [] dims) {
+		makeIterableInterval(final Rectangle roiRect, final long [] dims) {
 		
-		RectangleRegionOfInterest r = new RectangleRegionOfInterest(roiRect);
-		RandomAccessible<DoubleType> src = new ArrayImgFactory<DoubleType>().create(dims, new DoubleType());
-		RandomAccess<DoubleType> a = src.randomAccess();
-		Random random = new Random(143);
+		final RectangleRegionOfInterest r = new RectangleRegionOfInterest(roiRect);
+		final RandomAccessible<DoubleType> src = new ArrayImgFactory<DoubleType>().create(dims, new DoubleType());
+		final RandomAccess<DoubleType> a = src.randomAccess();
+		final Random random = new Random(143);
 		for (int x = 0; x < 11; x++) {
 			a.setPosition(x, 0);
 			for (int y = 0; y < 14; y++) {
@@ -324,37 +325,37 @@ public class TestAbstractRegionOfInterest {
 				a.get().setReal(random.nextDouble());
 			}
 		}
-		IterableInterval<DoubleType> ii = r.getIterableIntervalOverROI(src);
+		final IterableInterval<DoubleType> ii = r.getIterableIntervalOverROI(src);
 		return new Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>>(ii, a);
 	}
 	@Test
 	public final void testFirstElement() {
-		Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
+		final Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
 			makeIterableInterval(new Rectangle(5,6,4,7), new long [] { 12, 15 });
-		IterableInterval<DoubleType> ii = p.first;
-		RandomAccess<DoubleType> a = p.second;
-		DoubleType first = ii.firstElement();
+		final IterableInterval<DoubleType> ii = p.first;
+		final RandomAccess<DoubleType> a = p.second;
+		final DoubleType first = ii.firstElement();
 		a.setPosition(new long [] { 5, 6} );
 		assertEquals(a.get().get(), first.get(),0);
 	}
 	@Test
 	public final void testDimensions() {
-		Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
+		final Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
 			makeIterableInterval(new Rectangle(5,6,4,7), new long [] { 12, 15 });
-		IterableInterval<DoubleType> ii = p.first;
+		final IterableInterval<DoubleType> ii = p.first;
 		assertEquals(ii.numDimensions(), 2);
 		assertEquals(ii.dimension(0), 4);
 		assertEquals(ii.dimension(1), 7);
-		long [] dimensions = new long [2];
+		final long [] dimensions = new long [2];
 		ii.dimensions(dimensions);
 		assertEquals(dimensions[0], 4);
 		assertEquals(dimensions[1], 7);
 	}
 	@Test
 	public final void testLimits() {
-		Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
+		final Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
 			makeIterableInterval(new Rectangle(5,6,4,7), new long [] { 12, 15 });
-		IterableInterval<DoubleType> ii = p.first;
+		final IterableInterval<DoubleType> ii = p.first;
 		assertEquals(ii.min(0), 5);
 		assertEquals(ii.max(0), 8);
 		assertEquals(ii.min(1), 6);
@@ -363,14 +364,14 @@ public class TestAbstractRegionOfInterest {
 		assertEquals(ii.realMax(0), 8, 0);
 		assertEquals(ii.realMin(1), 6, 0);
 		assertEquals(ii.realMax(1), 12, 0);
-		long [] x = new long [2];
+		final long [] x = new long [2];
 		ii.min(x);
 		assertEquals(x[0], 5);
 		assertEquals(x[1], 6);
 		ii.max(x);
 		assertEquals(x[0], 8);
 		assertEquals(x[1], 12);
-		double [] y = new double [2];
+		final double [] y = new double [2];
 		ii.realMin(y);
 		assertEquals(y[0], 5, 0);
 		assertEquals(y[1], 6, 0);
@@ -380,33 +381,34 @@ public class TestAbstractRegionOfInterest {
 	}
 	@Test
 	public final void testSize() {
-		Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
+		final Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
 			makeIterableInterval(new Rectangle(5,6,4,7), new long [] { 12, 15 });
-		IterableInterval<DoubleType> ii = p.first;
+		final IterableInterval<DoubleType> ii = p.first;
 		assertEquals(ii.size(), 4*7);
 	}
+	@SuppressWarnings( "deprecation" )
 	@Test
 	public final void testEqualIterationOrder() {
-		RectangleRegionOfInterest r = new RectangleRegionOfInterest(new Rectangle(0,0,3,5));
-		RandomAccessible<DoubleType> src_double = new ArrayImgFactory<DoubleType>().create(new long [] { 15,13} , new DoubleType());
-		IterableInterval<DoubleType> ii_double = r.getIterableIntervalOverROI(src_double);
-		RandomAccessible<IntType> src_int = new ArrayImgFactory<IntType>().create(new long [] { 15,13} , new IntType());
-		IterableInterval<IntType> ii_int = r.getIterableIntervalOverROI(src_int);
+		final RectangleRegionOfInterest r = new RectangleRegionOfInterest(new Rectangle(0,0,3,5));
+		final RandomAccessible<DoubleType> src_double = new ArrayImgFactory<DoubleType>().create(new long [] { 15,13} , new DoubleType());
+		final IterableInterval<DoubleType> ii_double = r.getIterableIntervalOverROI(src_double);
+		final RandomAccessible<IntType> src_int = new ArrayImgFactory<IntType>().create(new long [] { 15,13} , new IntType());
+		final IterableInterval<IntType> ii_int = r.getIterableIntervalOverROI(src_int);
 
-		RectangleRegionOfInterest r_alt = new RectangleRegionOfInterest(new Rectangle(1,3,3,5));
-		IterableInterval<DoubleType> ii_alt = r_alt.getIterableIntervalOverROI(src_double);
+		final RectangleRegionOfInterest r_alt = new RectangleRegionOfInterest(new Rectangle(1,3,3,5));
+		final IterableInterval<DoubleType> ii_alt = r_alt.getIterableIntervalOverROI(src_double);
 		assertTrue(ii_int.equalIterationOrder(ii_double));
 		assertTrue(ii_double.equalIterationOrder(ii_int));
 		assertFalse(ii_int.equalIterationOrder(ii_alt));
 	}
 	@Test
 	public final void testIterator() {
-		Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
+		final Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
 			makeIterableInterval(new Rectangle(5,6,4,7), new long [] { 12, 15 });
-		IterableInterval<DoubleType> ii = p.first;
-		RandomAccess<DoubleType> a = p.second;
-		for (boolean use_has_next : new boolean [] { false, true }) {
-			java.util.Iterator<DoubleType> i = ii.iterator();
+		final IterableInterval<DoubleType> ii = p.first;
+		final RandomAccess<DoubleType> a = p.second;
+		for (final boolean use_has_next : new boolean [] { false, true }) {
+			final java.util.Iterator<DoubleType> i = ii.iterator();
 			for (int y = 6; y < 13; y++) {
 				a.setPosition(y, 1);
 				for (int x = 5; x < 9; x++) {
@@ -424,22 +426,22 @@ public class TestAbstractRegionOfInterest {
 	}
 	@Test
 	public final void testCursor() {
-		Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
+		final Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
 			makeIterableInterval(new Rectangle(5,6,4,7), new long [] { 12, 15 });
-		IterableInterval<DoubleType> ii = p.first;
+		final IterableInterval<DoubleType> ii = p.first;
 		ii.cursor();
 		ii.localizingCursor();
 	}
 	@Test
 	public final void testCursorLocalizable() {
-		Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
+		final Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
 			makeIterableInterval(new Rectangle(5,6,4,7), new long [] { 12, 15 });
-		IterableInterval<DoubleType> ii = p.first;
-		Cursor<DoubleType> c = ii.localizingCursor();
-		long [] lll = new long [2];
-		int [] iii = new int [2];
-		float [] fff = new float [2];
-		double [] ddd = new double [2];
+		final IterableInterval<DoubleType> ii = p.first;
+		final Cursor<DoubleType> c = ii.localizingCursor();
+		final long [] lll = new long [2];
+		final int [] iii = new int [2];
+		final float [] fff = new float [2];
+		final double [] ddd = new double [2];
 		
 		for (int y = 6; y < 13; y++) {
 			for (int x = 5; x < 9; x++) {
@@ -469,12 +471,12 @@ public class TestAbstractRegionOfInterest {
 	}
 	@Test
 	public final void testCursorResetFwdAndNext() {
-		Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
+		final Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
 			makeIterableInterval(new Rectangle(5,6,4,7), new long [] { 12, 15 });
-		Cursor<DoubleType> cc = p.first.cursor();
-		RandomAccess<DoubleType> a = p.second;
+		final Cursor<DoubleType> cc = p.first.cursor();
+		final RandomAccess<DoubleType> a = p.second;
 		DoubleType t;
-		for (boolean use_fwd: new boolean [] { false, true}) {
+		for (final boolean use_fwd: new boolean [] { false, true}) {
 			for (int y = 6; y < 13; y++) {
 				a.setPosition(y, 1);
 				for (int x = 5; x < 9; x++) {
@@ -497,17 +499,17 @@ public class TestAbstractRegionOfInterest {
 	}
 	@Test
 	public final void testCursorJumpFwd() {
-		Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
+		final Pair<IterableInterval<DoubleType>, RandomAccess<DoubleType>> p = 
 			makeIterableInterval(new Rectangle(5,6,4,7), new long [] { 12, 15 });
-		Cursor<DoubleType> cc = p.first.cursor();
-		RandomAccess<DoubleType> a = p.second;
-		Random r = new Random(1776);
+		final Cursor<DoubleType> cc = p.first.cursor();
+		final RandomAccess<DoubleType> a = p.second;
+		final Random r = new Random(1776);
 		for (int i=0; i<100; i++) {
 			cc.reset();
-			long x1 = (Math.abs(r.nextLong()) % 3) + 5;
-			long x2 = (Math.abs(r.nextLong()) % (9-x1)) + x1;
-			long y1 = (Math.abs(r.nextLong()) % 6) + 6;
-			long y2 = (Math.abs(r.nextLong()) % (13-y1)) + y1;
+			final long x1 = (Math.abs(r.nextLong()) % 3) + 5;
+			final long x2 = (Math.abs(r.nextLong()) % (9-x1)) + x1;
+			final long y1 = (Math.abs(r.nextLong()) % 6) + 6;
+			final long y2 = (Math.abs(r.nextLong()) % (13-y1)) + y1;
 			// jump long once from the start.
 			cc.jumpFwd(x1-5 + (y1-6) * 4);
 			assertEquals(cc.getLongPosition(0), x1);

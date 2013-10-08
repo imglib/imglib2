@@ -50,6 +50,7 @@ import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.util.Util;
 
 /**
  * Component tree of an image stored as a tree of {@link PixelListComponent}s.
@@ -84,17 +85,10 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 	 *            bright to dark (false)
 	 * @return component tree of the image.
 	 */
-	public static < T extends RealType< T > > PixelListComponentTree< T > buildComponentTree( final RandomAccessibleInterval< T > input, final T type, boolean darkToBright )
+	public static < T extends RealType< T > > PixelListComponentTree< T > buildComponentTree( final RandomAccessibleInterval< T > input, final T type, final boolean darkToBright )
 	{
-		final int numDimensions = input.numDimensions();
-		long size = 1;
-		for ( int d = 0; d < numDimensions; ++d )
-			size *= input.dimension( d );
-		if( size > Integer.MAX_VALUE ) {
-			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
-			return buildComponentTree( input, type, new CellImgFactory< LongType >( cellSize ), darkToBright );
-		}
-		return buildComponentTree( input, type, new ArrayImgFactory< LongType >(), darkToBright );
+		final ImgFactory< LongType > factory = Util.getArrayOrCellImgFactory( input, new LongType() );
+		return buildComponentTree( input, type, factory, darkToBright );
 	}
 
 	/**
@@ -112,9 +106,9 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 	 *            bright to dark (false)
 	 * @return component tree of the image.
 	 */
-	public static < T extends RealType< T > > PixelListComponentTree< T > buildComponentTree( final RandomAccessibleInterval< T > input, final T type, final ImgFactory< LongType > imgFactory, boolean darkToBright )
+	public static < T extends RealType< T > > PixelListComponentTree< T > buildComponentTree( final RandomAccessibleInterval< T > input, final T type, final ImgFactory< LongType > imgFactory, final boolean darkToBright )
 	{
-		T max = type.createVariable();
+		final T max = type.createVariable();
 		max.setReal( darkToBright ? type.getMaxValue() : type.getMinValue() );
 		final PixelListComponentGenerator< T > generator = new PixelListComponentGenerator< T >( max, input, imgFactory );
 		final PixelListComponentTree< T > tree = new PixelListComponentTree< T >();
@@ -139,15 +133,8 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 	 */
 	public static < T extends Type< T > > PixelListComponentTree< T > buildComponentTree( final RandomAccessibleInterval< T > input, final T maxValue, final Comparator< T > comparator )
 	{
-		final int numDimensions = input.numDimensions();
-		long size = 1;
-		for ( int d = 0; d < numDimensions; ++d )
-			size *= input.dimension( d );
-		if( size > Integer.MAX_VALUE ) {
-			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
-			return buildComponentTree( input, maxValue, comparator, new CellImgFactory< LongType >( cellSize ) );
-		}
-		return buildComponentTree( input, maxValue, comparator, new ArrayImgFactory< LongType >() );
+		final ImgFactory< LongType > factory = Util.getArrayOrCellImgFactory( input, new LongType() );
+		return buildComponentTree( input, maxValue, comparator, factory );
 	}
 
 	/**
@@ -184,7 +171,7 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 	}
 
 	@Override
-	public void emit( PixelListComponentIntermediate< T > intermediate )
+	public void emit( final PixelListComponentIntermediate< T > intermediate )
 	{
 		final PixelListComponent< T > component = new PixelListComponent< T >( intermediate );
 		root = component;

@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="159cm" height="71cm" viewBox="-461 -8 3167 1417" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="1100" y="1196.76" width="387.3" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1100" y="1196.76" width="387.3" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1293.65" y="1212.76">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="1293.65" y="1231.76">RenderSource</text>
+    <rect style="fill: #ffffff" x="1100" y="1240.76" width="387.3" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1100" y="1240.76" width="387.3" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1103" y="1254.76">+getInterpolatedSource(): RealRandomAccessible&lt;T&gt;</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1103" y="1270.76">+getSourceTransform(): A</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1103" y="1286.76">+getConverter(): Converter&lt;? super T, ARGBType&gt;</text>
+    <rect style="fill: #ffffff" x="1441.3" y="1166.76" width="69.6" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="1441.3" y="1166.76" width="69.6" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1447.3" y="1180.76">T:Object</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1447.3" y="1196.76">A:Object</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1425.17" y="953.578" width="187.1" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1425.17" y="953.578" width="187.1" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1518.72" y="972.578">PainterThread</text>
+    <rect style="fill: #ffffff" x="1425.17" y="981.578" width="187.1" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1425.17" y="981.578" width="187.1" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1428.17" y="995.578">-paintable: Paintable</text>
+    <rect style="fill: #ffffff" x="1425.17" y="1001.58" width="187.1" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1425.17" y="1001.58" width="187.1" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1428.17" y="1015.58">+requestRepaint(): void</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1121.01" y="955.514" width="228.95" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1121.01" y="955.514" width="228.95" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1235.49" y="971.514">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="1235.49" y="990.514">PainterThread.Paintable</text>
+    <rect style="fill: #ffffff" x="1121.01" y="999.514" width="228.95" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1121.01" y="999.514" width="228.95" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1124.01" y="1013.51">+paint(): void</text>
+  </g>
+  <g>
+    <rect style="fill: #90ee90" x="1437.93" y="1086.38" width="162.2" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1437.93" y="1086.38" width="162.2" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1519.03" y="1105.38">java.lang.Thread</text>
+    <rect style="fill: #90ee90" x="1437.93" y="1114.38" width="162.2" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1437.93" y="1114.38" width="162.2" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:normal" x="1440.93" y="1128.38">+run(): void</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1519.03,1067.14 1519.03,1045.98 1518.72,1045.98 1518.72,1022.59 "/>
+    <polygon style="fill: #ffffff" points="1511.03,1067.14 1519.03,1083.14 1527.03,1067.14 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1511.03,1067.14 1519.03,1083.14 1527.03,1067.14 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="854.716" y="483.242" width="333.4" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="854.716" y="483.242" width="333.4" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1021.42" y="499.242">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="1021.42" y="518.242">OverlayRenderer</text>
+    <rect style="fill: #ffffff" x="854.716" y="527.242" width="333.4" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="854.716" y="527.242" width="333.4" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="857.716" y="541.242">+drawOverlays(g:Graphics): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="857.716" y="557.242">+setCanvasSize(width:int,height:int): void</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="536.942" y="845.746" width="448.9" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="536.942" y="845.746" width="448.9" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="761.392" y="861.746">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="761.392" y="880.746">TransformEventHandler</text>
+    <rect style="fill: #ffffff" x="536.942" y="889.746" width="448.9" height="68"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="536.942" y="889.746" width="448.9" height="68"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="539.942" y="903.746">+setTransformListener(l:TransformListener&lt;A&gt;): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="539.942" y="919.746">+setCanvasSize(w:int,h:int,updateTransform:boolean): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="539.942" y="935.746">+getTransform(): A</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="539.942" y="951.746">+setTransform(t:A): void</text>
+    <rect style="fill: #ffffff" x="939.842" y="831.746" width="69.6" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="939.842" y="831.746" width="69.6" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="945.842" y="845.746">A:Object</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1398.99,987.578 1380.57,987.578 1380.57,987.514 1350.97,987.514 "/>
+    <polygon style="fill: #ffffff" points="1424.17,987.578 1410.17,992.378 1396.17,987.578 1410.17,982.778 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1424.17,987.578 1410.17,992.378 1396.17,987.578 1410.17,982.778 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1382.57" y="984.546"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="1392.17" y="984.578">1</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1354.97" y="984.514">1</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="648.724" y="660.662" width="225.6" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="648.724" y="660.662" width="225.6" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="761.524" y="676.662">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="761.524" y="695.662">TransformListener</text>
+    <rect style="fill: #ffffff" x="648.724" y="704.662" width="225.6" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="648.724" y="704.662" width="225.6" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="651.724" y="718.662">+transformChanged(t:A): void</text>
+    <rect style="fill: #ffffff" x="828.324" y="646.662" width="69.6" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="828.324" y="646.662" width="69.6" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="834.324" y="660.662">A:Object</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="761.392,820.574 761.392,778.708 761.524,778.708 761.524,725.67 "/>
+    <polygon style="fill: #ffffff" points="761.392,845.746 756.592,831.746 761.392,817.746 766.192,831.746 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="761.392,845.746 756.592,831.746 761.392,817.746 766.192,831.746 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="761.458" y="775.708"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="772.392" y="841.746">1</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="765.524" y="737.67">1</text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="441.41" y="1127.98" width="248.3" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="441.41" y="1127.98" width="248.3" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="565.56" y="1146.98">TransformEventHandler2D</text>
+  </g>
+  <g>
+    <rect style="fill: #90ee90" x="617.218" y="1218.51" width="283.3" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="617.218" y="1218.51" width="283.3" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="758.868" y="1237.51">java.awt.event.MouseListener</text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="830.614" y="1070.35" width="248.3" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="830.614" y="1070.35" width="248.3" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="954.764" y="1089.35">TransformEventHandler3D</text>
+  </g>
+  <g>
+    <rect style="fill: #90ee90" x="627.032" y="1273.54" width="258.05" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="627.032" y="1273.54" width="258.05" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="756.057" y="1292.54">java.awt.event.KeyListener</text>
+  </g>
+  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="747.842" y="1263.16">
+    <tspan x="747.842" y="1263.16">...</tspan>
+  </text>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="758.868,1199.27 758.868,1180 565.56,1180 565.56,1156.99 "/>
+    <polygon style="fill: #ffffff" points="750.868,1199.27 758.868,1215.27 766.868,1199.27 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="750.868,1199.27 758.868,1215.27 766.868,1199.27 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="758.868,1199.27 758.868,1180 954.764,1180 954.764,1099.35 "/>
+    <polygon style="fill: #ffffff" points="750.868,1199.27 758.868,1215.27 766.868,1199.27 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="750.868,1199.27 758.868,1215.27 766.868,1199.27 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="761.392,975.982 761.392,1000 565.56,1000 565.56,1127.98 "/>
+    <polygon style="fill: #ffffff" points="769.392,975.982 761.392,959.982 753.392,975.982 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="769.392,975.982 761.392,959.982 753.392,975.982 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="663.476" y="997">&lt;&lt;bind&gt;&gt;</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="663.476" y="1013">A::AffineTransform2D</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="761.392,976.989 761.392,1000 954.764,1000 954.764,1069.34 "/>
+    <polygon style="fill: #ffffff" points="769.392,976.989 761.392,960.989 753.392,976.989 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="769.392,976.989 761.392,960.989 753.392,976.989 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="858.078" y="997">&lt;&lt;bind&gt;&gt;</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="858.078" y="1013">A::AffineTransform2D</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="-100.121" y="813.64" width="487.4" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-100.121" y="813.64" width="487.4" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="143.579" y="829.64">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="143.579" y="848.64">TransformEventHandlerFactory</text>
+    <rect style="fill: #ffffff" x="-100.121" y="857.64" width="487.4" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-100.121" y="857.64" width="487.4" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="-97.121" y="871.64">+create(l:TransformEventListener&lt;A&gt;): TransformEventHandler&lt;A&gt;</text>
+    <rect style="fill: #ffffff" x="341.279" y="799.64" width="69.6" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="341.279" y="799.64" width="69.6" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="347.279" y="813.64">A:Object</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="387.279,867.64 458.11,867.64 458.11,867.746 530.237,867.746 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="517.589,872.746 533.589,867.746 517.589,862.746 "/>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="-220.182" y="1127.9" width="321.7" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-220.182" y="1127.9" width="321.7" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="-59.332" y="1146.9">TransformEventHandler2D.Factory</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="143.579,896.813 143.579,1000 -59.332,1000 -59.332,1126.92 "/>
+    <polygon style="fill: #ffffff" points="151.579,896.813 143.579,880.813 135.579,896.813 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="151.579,896.813 143.579,880.813 135.579,896.813 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="42.1235" y="997">&lt;&lt;bind&gt;&gt;</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="42.1235" y="1013">A::AffineTransform2D</text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="159.202" y="1070.07" width="321.7" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="159.202" y="1070.07" width="321.7" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="320.052" y="1089.07">TransformEventHandler3D.Factory</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="143.579,896.813 143.579,1000 320.052,1000 320.052,1070.07 "/>
+    <polygon style="fill: #ffffff" points="151.579,896.813 143.579,880.813 135.579,896.813 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="151.579,896.813 143.579,880.813 135.579,896.813 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="231.816" y="997">&lt;&lt;bind&gt;&gt;</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="231.816" y="1013">A::AffineTransform2D</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="481.911,1084.07 652.263,1084.07 652.263,1084.35 823.909,1084.35 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="811.261,1089.35 827.261,1084.35 811.261,1079.35 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="101.518,1141.9 267.464,1141.9 267.464,1141.98 434.705,1141.98 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="422.057,1146.98 438.057,1141.98 422.057,1136.98 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1321.75" y="767.792" width="325.7" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1321.75" y="767.792" width="325.7" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1484.6" y="783.792">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="1484.6" y="802.792">RenderTarget</text>
+    <rect style="fill: #ffffff" x="1321.75" y="811.792" width="325.7" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1321.75" y="811.792" width="325.7" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1324.75" y="825.792">+setBufferedImage(bi:BufferedImage): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1324.75" y="841.792">+getWidth(): int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1324.75" y="857.792">+getHeight(): int</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1760.56" y="860" width="233.3" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1760.56" y="860" width="233.3" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="1877.21" y="879">AbstractRenderer</text>
+    <rect style="fill: #ffffff" x="1760.56" y="888" width="233.3" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1760.56" y="888" width="233.3" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1763.56" y="902">#display: RenderTarget</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1763.56" y="918">#painterThread: PainterThread</text>
+    <rect style="fill: #ffffff" x="1760.56" y="924" width="233.3" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1760.56" y="924" width="233.3" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1763.56" y="938">+requestRepaint(): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1763.56" y="954">+paint(transform:A): boolean</text>
+    <rect style="fill: #ffffff" x="1947.86" y="846" width="69.6" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="1947.86" y="846" width="69.6" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1953.86" y="860">A:Object</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1735.39,898 1680,898 1680,815.792 1648.44,815.792 "/>
+    <polygon style="fill: #ffffff" points="1760.56,898 1746.56,902.8 1732.56,898 1746.56,893.2 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1760.56,898 1746.56,902.8 1732.56,898 1746.56,893.2 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1682" y="853.896"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="1728.56" y="895">1</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1652.44" y="812.792">1</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1735.39,914 1679.92,914 1679.92,987.578 1613.28,987.578 "/>
+    <polygon style="fill: #ffffff" points="1760.56,914 1746.56,918.8 1732.56,914 1746.56,909.2 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1760.56,914 1746.56,918.8 1732.56,914 1746.56,909.2 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1681.92" y="947.789"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="1728.56" y="911">1</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1617.28" y="984.578">1</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="2274.55" y="655.693" width="402.7" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="2274.55" y="655.693" width="402.7" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="2475.9" y="671.693">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="2475.9" y="690.693">RendererFactory</text>
+    <rect style="fill: #ffffff" x="2274.55" y="699.693" width="402.7" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="2274.55" y="699.693" width="402.7" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="2277.55" y="713.693">+&lt;A&gt;create(t:TransformType&lt;A&gt;,display:RenderTarget,</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="2277.55" y="729.693">           pt:PainterThread): Renderer&lt;A&gt;</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="2274.55,709.693 2136.31,709.693 2136.31,710 1996.78,710 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="2009.43,705 1993.43,710 2009.43,715 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="-40" y="469.184" width="464.3" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-40" y="469.184" width="464.3" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="192.15" y="485.184">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="192.15" y="504.184">InteractiveDisplayCanvas</text>
+    <rect style="fill: #ffffff" x="-40" y="513.184" width="464.3" height="132"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-40" y="513.184" width="464.3" height="132"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="-37" y="527.184">+addOverlayRenderer(r:OverlayRenderer): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="-37" y="543.184">+removeOverlayRenderer(r:OverlayRenderer): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="-37" y="559.184">+addTransformListener(l:TransformListener&lt;A&gt;): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="-37" y="575.184">+removeTransformListener(l:TransformListener&lt;A&gt;): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="-37" y="591.184">+addHandler(h:Object): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="-37" y="607.184">+removeHandler(h:Object): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="-37" y="623.184">+setTransformEventHandler(h:TransformEventHandler&lt;A&gt;): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="-37" y="639.184">+getTransformEventHandler(): TransformEventHandler&lt;A&gt;</text>
+    <rect style="fill: #ffffff" x="378.3" y="455.184" width="69.6" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="378.3" y="455.184" width="69.6" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="384.3" y="469.184">A:Object</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="449.472,523.184 646.005,523.184 646.005,523.242 853.711,523.242 "/>
+    <polygon style="fill: #ffffff" points="424.3,523.184 438.3,518.384 452.3,523.184 438.3,527.984 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="424.3,523.184 438.3,518.384 452.3,523.184 438.3,527.984 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="648.005" y="520.213"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="456.3" y="520.184">1</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="849.711" y="520.242">*</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="449.472,555.184 761.524,555.184 761.524,660.662 "/>
+    <polygon style="fill: #ffffff" points="424.3,555.184 438.3,550.384 452.3,555.184 438.3,559.984 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="424.3,555.184 438.3,550.384 452.3,555.184 438.3,559.984 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="592.912" y="552.184"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="456.3" y="552.184">1</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="765.524" y="656.662">*</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="449.472,619.184 470.918,619.184 470.918,901.746 535.94,901.746 "/>
+    <polygon style="fill: #ffffff" points="424.3,619.184 438.3,614.384 452.3,619.184 438.3,623.984 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="424.3,619.184 438.3,614.384 452.3,619.184 438.3,623.984 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="472.918" y="757.465"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="456.3" y="616.184">1</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="531.94" y="898.746">1</text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="1700.19" y="1058.94" width="210.2" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1700.19" y="1058.94" width="210.2" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1805.29" y="1077.94">SimpleRenderer</text>
+    <rect style="fill: #d8e5e5" x="1700.19" y="1086.94" width="210.2" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1700.19" y="1086.94" width="210.2" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1703.19" y="1100.94">#numRenderingThread: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1703.19" y="1116.94">#doubleBuffered: boolean</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1703.19" y="1132.94">#source: RenderSource&lt;?,A&gt;</text>
+    <rect style="fill: #d8e5e5" x="1864.39" y="1044.94" width="292.9" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="1864.39" y="1044.94" width="292.9" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1870.39" y="1058.94">A:AffineGet </text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="2247.55" y="1082.91" width="226.05" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="2247.55" y="1082.91" width="226.05" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="2360.57" y="1101.91">SimpleRenderer.Factory</text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="1954.42" y="1148.55" width="235.55" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1954.42" y="1148.55" width="235.55" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="2072.19" y="1167.55">MultiResolutionRenderer</text>
+    <rect style="fill: #d8e5e5" x="1954.42" y="1176.55" width="235.55" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1954.42" y="1176.55" width="235.55" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1957.42" y="1190.55">#numRenderingThread: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1957.42" y="1206.55">#doubleBuffered: boolean</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1957.42" y="1222.55">#source: RenderSource&lt;?,A&gt;</text>
+    <rect style="fill: #d8e5e5" x="2143.97" y="1134.55" width="385.3" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="2143.97" y="1134.55" width="385.3" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="2149.97" y="1148.55">A:AffineSet </text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="2398.07" y="1172.53" width="306.65" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="2398.07" y="1172.53" width="306.65" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="2551.39" y="1191.53">MultiResolutionRenderer.Factory</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1877.21,979.241 1877.21,1020 1805.29,1020 1805.29,1058.94 "/>
+    <polygon style="fill: #ffffff" points="1885.21,979.241 1877.21,963.241 1869.21,979.241 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1885.21,979.241 1877.21,963.241 1869.21,979.241 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1877.21,979.241 1877.21,1020 2072.19,1020 2072.19,1148.55 "/>
+    <polygon style="fill: #ffffff" points="1885.21,979.241 1877.21,963.241 1869.21,979.241 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1885.21,979.241 1877.21,963.241 1869.21,979.241 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="2475.9,754.864 2475.9,1020 2360.57,1020 2360.57,1081.92 "/>
+    <polygon style="fill: #ffffff" points="2483.9,754.864 2475.9,738.864 2467.9,754.864 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="2483.9,754.864 2475.9,738.864 2467.9,754.864 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="2475.9,754.864 2475.9,1020 2551.39,1020 2551.39,1171.55 "/>
+    <polygon style="fill: #ffffff" points="2483.9,754.864 2475.9,738.864 2467.9,754.864 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="2483.9,754.864 2475.9,738.864 2467.9,754.864 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="2397.06,1186.53 2297.51,1186.53 2297.51,1186.55 2196.67,1186.55 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="2209.32,1181.55 2193.32,1186.55 2209.32,1191.55 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="2246.54,1096.91 2082.47,1096.91 2082.47,1096.94 1917.1,1096.94 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1929.75,1091.94 1913.75,1096.94 1929.75,1101.94 "/>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="1336.13" y="509.184" width="296.8" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1336.13" y="509.184" width="296.8" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1484.53" y="528.184">BufferedImageOverlayRenderer</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1207.36,523.242 1270.12,523.242 1270.12,523.184 1335.12,523.184 "/>
+    <polygon style="fill: #ffffff" points="1207.36,515.242 1191.36,523.242 1207.36,531.242 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1207.36,515.242 1191.36,523.242 1207.36,531.242 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1484.6,748.55 1484.6,644.489 1484.53,644.489 1484.53,538.191 "/>
+    <polygon style="fill: #ffffff" points="1476.6,748.55 1484.6,764.55 1492.6,748.55 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1476.6,748.55 1484.6,764.55 1492.6,748.55 "/>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="1126.74" y="262.146" width="217.9" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1126.74" y="262.146" width="217.9" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1235.69" y="281.146">InteractiveRealViewer</text>
+    <rect style="fill: #d8e5e5" x="1126.74" y="290.146" width="217.9" height="68"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1126.74" y="290.146" width="217.9" height="68"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1129.74" y="304.146">#viewerTransform: A</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1129.74" y="320.146">#display: C</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1129.74" y="336.146">#imageRenderer: Renderer&lt;A&gt;</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1129.74" y="352.146">+frame: JFrame</text>
+    <rect style="fill: #d8e5e5" x="1126.74" y="358.146" width="217.9" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1126.74" y="358.146" width="217.9" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:normal" x="1129.74" y="372.146">+requestRepaint(): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:normal" x="1129.74" y="388.146">+getDisplayCanvas(): C</text>
+    <rect style="fill: #d8e5e5" x="1298.64" y="232.146" width="385.3" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="1298.64" y="232.146" width="385.3" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1304.64" y="246.146">A:AffineSet </text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1304.64" y="262.146">C:JComponent </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="892.56,682.662 1235.69,682.662 1235.69,394.146 "/>
+    <polygon style="fill: #ffffff" points="892.56,674.662 876.56,682.662 892.56,690.662 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="892.56,674.662 876.56,682.662 892.56,690.662 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1235.49,936.27 1235.49,666.83 1235.69,666.83 1235.69,395.154 "/>
+    <polygon style="fill: #ffffff" points="1227.49,936.27 1235.49,952.27 1243.49,936.27 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1227.49,936.27 1235.49,952.27 1243.49,936.27 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1101.57,316.146 192.15,316.146 192.15,469.184 "/>
+    <polygon style="fill: #ffffff" points="1126.74,316.146 1112.74,320.946 1098.74,316.146 1112.74,311.346 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1126.74,316.146 1112.74,320.946 1098.74,316.146 1112.74,311.346 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="659.447" y="313.146"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="1094.74" y="313.146"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="196.15" y="465.184"></text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1369.82,332.146 1877.28,332.146 1877.28,688 "/>
+    <polygon style="fill: #ffffff" points="1344.64,332.146 1358.64,327.346 1372.64,332.146 1358.64,336.946 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1344.64,332.146 1358.64,327.346 1372.64,332.146 1358.64,336.946 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1610.96" y="329.146"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1376.64" y="329.146"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1881.28" y="684"></text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1929.24,1218.55 1713.86,1218.55 1713.86,1218.76 1487.3,1218.76 "/>
+    <polygon style="fill: #ffffff" points="1954.42,1218.55 1940.42,1223.35 1926.42,1218.55 1940.42,1213.75 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1954.42,1218.55 1940.42,1223.35 1926.42,1218.55 1940.42,1213.75 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1715.86" y="1215.65"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="1922.42" y="1215.55">*</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1491.3" y="1215.76">1</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="630.488,682.662 560,682.662 560,400 192.15,400 192.15,469.184 "/>
+    <polygon style="fill: #ffffff" points="630.488,690.662 646.488,682.662 630.488,674.662 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="630.488,690.662 646.488,682.662 630.488,674.662 "/>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="923.234" y="620" width="196.05" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="923.234" y="620" width="196.05" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1021.26" y="639">BoxOverlayRenderer</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1021.42,582.483 1021.42,599.62 1021.26,599.62 1021.26,618.993 "/>
+    <polygon style="fill: #ffffff" points="1029.42,582.483 1021.42,566.483 1013.42,582.483 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1029.42,582.483 1021.42,566.483 1013.42,582.483 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="892.56,682.662 1021.26,682.662 1021.26,648 "/>
+    <polygon style="fill: #ffffff" points="892.56,674.662 876.56,682.662 892.56,690.662 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="892.56,674.662 876.56,682.662 892.56,690.662 "/>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="1100" y="1380" width="116.3" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1100" y="1380" width="116.3" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1158.15" y="1399">FinalSource</text>
+    <rect style="fill: #d8e5e5" x="1170.3" y="1350" width="69.6" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="1170.3" y="1350" width="69.6" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1176.3" y="1364">T:Object</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1176.3" y="1380">A:Object</text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="1300" y="1380" width="190.65" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1300" y="1380" width="190.65" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1395.33" y="1399">InterpolatingSource</text>
+    <rect style="fill: #d8e5e5" x="1444.65" y="1350" width="131.2" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="1444.65" y="1350" width="131.2" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1450.65" y="1364">T:NumericType&lt;T&gt;</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1450.65" y="1380">A:Object</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1293.65,1310.99 1293.65,1340 1395.33,1340 1395.33,1380 "/>
+    <polygon style="fill: #ffffff" points="1301.65,1310.99 1293.65,1294.99 1285.65,1310.99 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1301.65,1310.99 1293.65,1294.99 1285.65,1310.99 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1293.65,1310.99 1293.65,1340 1158.15,1340 1158.15,1380 "/>
+    <polygon style="fill: #ffffff" points="1301.65,1310.99 1293.65,1294.99 1285.65,1310.99 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1301.65,1310.99 1293.65,1294.99 1285.65,1310.99 "/>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="-460" y="620" width="342.35" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-460" y="620" width="342.35" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="-288.825" y="639">InteractiveDisplayCanvasComponent</text>
+    <rect style="fill: #d8e5e5" x="-163.65" y="606" width="69.6" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="-163.65" y="606" width="69.6" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="-157.65" y="620">A:Object</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="192.15,663.42 192.15,682.184 -288.825,682.184 -288.825,648 "/>
+    <polygon style="fill: #ffffff" points="200.15,663.42 192.15,647.42 184.15,663.42 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="200.15,663.42 192.15,647.42 184.15,663.42 "/>
+  </g>
+  <g>
+    <rect style="fill: #90ee90" x="-405.956" y="533.554" width="232" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-405.956" y="533.554" width="232" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="-289.956" y="552.554">javax.swing.JComponent</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="-289.956,580.797 -289.956,599.281 -288.825,599.281 -288.825,620 "/>
+    <polygon style="fill: #ffffff" points="-281.956,580.797 -289.956,564.797 -297.956,580.797 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="-281.956,580.797 -289.956,564.797 -297.956,580.797 "/>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="1138.5" y="40" width="194.95" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1138.5" y="40" width="194.95" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1235.98" y="59">InteractiveViewer2D</text>
+    <rect style="fill: #d8e5e5" x="1287.45" y="26" width="131.2" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="1287.45" y="26" width="131.2" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1293.45" y="40">T:NumericType&lt;T&gt;</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1235.69,243.91 1235.69,157.577 1235.98,157.577 1235.98,69.0073 "/>
+    <polygon style="fill: #ffffff" points="1227.69,243.91 1235.69,259.91 1243.69,243.91 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1227.69,243.91 1235.69,259.91 1243.69,243.91 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1235.84" y="154.577">&lt;&lt;bind&gt;&gt;</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1235.84" y="170.577">A::AffineTransform2D, C::InteractiveDisplayCanvasComponent&lt;AffineTransform2D&gt;</text>
+  </g>
+  <text font-size="16.9333" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="1228.57" y="8.56618">
+    <tspan x="1228.57" y="8.56618">...</tspan>
+  </text>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1675.02,1128.94 1640,1128.94 1640,1218.76 1487.3,1218.76 "/>
+    <polygon style="fill: #ffffff" points="1700.19,1128.94 1686.19,1133.74 1672.19,1128.94 1686.19,1124.14 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1700.19,1128.94 1686.19,1133.74 1672.19,1128.94 1686.19,1124.14 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1642" y="1170.85"></text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:end;font-family:monospace;font-style:normal;font-weight:normal" x="1668.19" y="1125.94">*</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1491.3" y="1215.76">1</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="2100" y="60" width="279.5" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="2100" y="60" width="279.5" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="2239.75" y="76">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="2239.75" y="95">InterruptibleProjector</text>
+    <rect style="fill: #ffffff" x="2100" y="104" width="279.5" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="2100" y="104" width="279.5" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="2103" y="118">+map(): boolean</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="2103" y="134">+cancel(): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="2103" y="150">+getLastFrameRenderNanoTime(): long</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1764.48" y="688" width="225.6" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1764.48" y="688" width="225.6" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1877.28" y="704">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="1877.28" y="723">Renderer</text>
+    <rect style="fill: #ffffff" x="1764.48" y="732" width="225.6" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1764.48" y="732" width="225.6" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1767.48" y="746">+requestRepaint(): void</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:italic;font-weight:700" x="1767.48" y="762">+paint(transform:A): boolean</text>
+    <rect style="fill: #ffffff" x="1944.08" y="674" width="69.6" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="1944.08" y="674" width="69.6" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1950.08" y="688">A:Object</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1877.28,787.241 1877.28,822.502 1877.21,822.502 1877.21,860 "/>
+    <polygon style="fill: #ffffff" points="1885.28,787.241 1877.28,771.241 1869.28,787.241 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1885.28,787.241 1877.28,771.241 1869.28,787.241 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="2096.15" y="241.213" width="287.2" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="2096.15" y="241.213" width="287.2" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="2239.75" y="260.213">AbstractInterruptibleProjector</text>
+    <rect style="fill: #ffffff" x="2096.15" y="269.213" width="287.2" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="2096.15" y="269.213" width="287.2" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="2099.15" y="283.213">#converter: Converter&lt;? super A, B&gt;</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="2099.15" y="299.213">#target: RandomAccessibleInterval&lt;B&gt;</text>
+    <rect style="fill: #ffffff" x="2337.35" y="211.213" width="69.6" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="2337.35" y="211.213" width="69.6" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="2343.35" y="225.213">A:Object</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="2343.35" y="241.213">B:Object</text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="2104.72" y="393.739" width="270.05" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="2104.72" y="393.739" width="270.05" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:italic;font-weight:700" x="2239.75" y="412.739">SimpleInterruptibleProjector</text>
+    <rect style="fill: #d8e5e5" x="2104.72" y="421.739" width="270.05" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="2104.72" y="421.739" width="270.05" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="2107.72" y="435.739">#source: RandomAccessible&lt;A&gt;</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="2107.72" y="451.739">#numThreads: int</text>
+    <rect style="fill: #d8e5e5" x="2328.78" y="363.739" width="69.6" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="2328.78" y="363.739" width="69.6" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="2334.78" y="377.739">A:Object</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="2334.78" y="393.739">B:Object</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="2239.75,174.236 2239.75,173 2239.75,240.213 2239.75,241.213 "/>
+    <polygon style="fill: #ffffff" points="2247.75,174.236 2239.75,158.236 2231.75,174.236 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="2247.75,174.236 2239.75,158.236 2231.75,174.236 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="2239.75,323.449 2239.75,322.213 2239.75,392.739 2239.75,393.739 "/>
+    <polygon style="fill: #ffffff" points="2247.75,323.449 2239.75,307.449 2231.75,323.449 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="2247.75,323.449 2239.75,307.449 2231.75,323.449 "/>
+  </g>
+</svg>

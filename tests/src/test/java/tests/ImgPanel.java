@@ -43,20 +43,20 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.border.TitledBorder;
 
+import loci.common.StatusEvent;
+import loci.common.StatusListener;
 import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.display.projectors.Projector2D;
 import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgIOUtils;
 import net.imglib2.io.ImgOpener;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
-import ome.scifio.common.StatusEvent;
-import ome.scifio.common.StatusListener;
 
 /**
  * A simple UI that demonstrates display of {@link Img}s.

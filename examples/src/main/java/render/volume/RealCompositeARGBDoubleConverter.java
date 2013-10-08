@@ -61,12 +61,13 @@ public class RealCompositeARGBDoubleConverter< T extends RealType< T > > impleme
 			output.setB( b );
 		}
 		
-		final double r = Math.max( 0, Math.min( 1.0, output.getR() ) );
-		final double g = Math.max( 0, Math.min( 1.0, output.getG() ) );
-		final double b = Math.max( 0, Math.min( 1.0, output.getB() ) );
+		final double r = output.getR();
+		final double g = output.getG();
+		final double b = output.getB();
 		
-		//final double a = ( r + g + b ) / 3.0;
-		final double a = Math.max( r, Math.max( g, b ) );
+//		final double a = ( r + g + b ) / 3.0;
+		final double a = Math.max( 0, Math.min( 1.0, Math.max( r, Math.max( g, b ) ) ) );
+//		final double a = Math.max( r, Math.max( g, b ) );
 		
 		output.set( a, r, g, b );
 	}

@@ -151,12 +151,6 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 		return inverse;
 	}
 	
-	@Override
-	public AffineTransform inverseAffine()
-	{
-		return inverse();
-	}
-	
 	public void set( final AffineGet affine )
 	{
 		assert n == affine.numSourceDimensions() : "Dimensions do not match.";

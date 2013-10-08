@@ -59,6 +59,7 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testCompositeRegionOfInterestInt() {
+		@SuppressWarnings( "deprecation" )
 		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(2);
 		assertEquals(2, c.numDimensions());
 	}
@@ -68,6 +69,7 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@Test
 	public void testCompositeRegionOfInterestRegionOfInterest() {
+		@SuppressWarnings( "deprecation" )
 		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
 		assertEquals(2, c.numDimensions());
 	}
@@ -80,30 +82,32 @@ public class CompositeRegionOfInterestTest {
 		final ArrayList<RegionOfInterest> list = new ArrayList<RegionOfInterest>();
 		list.add(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
 		list.add(new RectangleRegionOfInterest(new double[] {5,6}, new double[] { 3,4}));
+		@SuppressWarnings( "deprecation" )
 		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(list);
 		assertEquals(2, c.numDimensions());
 	}
 
-	private void assertInside(final CompositeRegionOfInterest c, final double [] position) {
+	private void assertInside(@SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double [] position) {
 		final RealRandomAccess<BitType> ra = c.realRandomAccess();
 		ra.setPosition(position);
 		assertTrue(ra.get().get());
 	}
-	private void assertInside(final CompositeRegionOfInterest c, final double x, final double y) {
+	private void assertInside(@SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double x, final double y) {
 		assertInside(c,new double[] { x,y});
 	}
 
-	private void assertOutside(final CompositeRegionOfInterest c, final double [] position) {
+	private void assertOutside(@SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double [] position) {
 		final RealRandomAccess<BitType> ra = c.realRandomAccess();
 		ra.setPosition(position);
 		assertFalse(ra.get().get());
 	}
-	private void assertOutside(final CompositeRegionOfInterest c, final double x, final double y) {
+	private void assertOutside(@SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double x, final double y) {
 		assertOutside(c,new double[] { x,y});
 	}
 	/**
 	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#or(net.imglib2.roi.RegionOfInterest)}.
 	 */
+	@SuppressWarnings( "deprecation" )
 	@Test
 	public void testOr() {
 		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
@@ -117,6 +121,7 @@ public class CompositeRegionOfInterestTest {
 	/**
 	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#remove(net.imglib2.roi.RegionOfInterest)}.
 	 */
+	@SuppressWarnings( "deprecation" )
 	@Test
 	public void testRemove() {
 		final RectangleRegionOfInterest [] rois = new RectangleRegionOfInterest[] {
@@ -141,6 +146,7 @@ public class CompositeRegionOfInterestTest {
 	/**
 	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#and(net.imglib2.roi.RegionOfInterest)}.
 	 */
+	@SuppressWarnings( "deprecation" )
 	@Test
 	public void testAnd() {
 		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
@@ -154,6 +160,7 @@ public class CompositeRegionOfInterestTest {
 	/**
 	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#xor(net.imglib2.roi.RegionOfInterest)}.
 	 */
+	@SuppressWarnings( "deprecation" )
 	@Test
 	public void testXor() {
 		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
@@ -167,6 +174,7 @@ public class CompositeRegionOfInterestTest {
 	/**
 	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#not(net.imglib2.roi.RegionOfInterest)}.
 	 */
+	@SuppressWarnings( "deprecation" )
 	@Test
 	public void testNot() {
 		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
@@ -180,6 +188,7 @@ public class CompositeRegionOfInterestTest {
 	/*
 	 * Regression test of trak # 704
 	 */
+	@SuppressWarnings( "deprecation" )
 	@Test
 	public void testRealMin() {
 		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
@@ -191,6 +200,7 @@ public class CompositeRegionOfInterestTest {
 	/*
 	 * Regression test of trak # 704
 	 */
+	@SuppressWarnings( "deprecation" )
 	@Test
 	public void testRealMax() {
 		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));

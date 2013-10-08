@@ -42,6 +42,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import loci.common.DataTools;
+import loci.common.StatusEvent;
+import loci.common.StatusListener;
+import loci.common.StatusReporter;
 import loci.common.services.DependencyException;
 import loci.common.services.ServiceException;
 import loci.common.services.ServiceFactory;
@@ -56,17 +60,13 @@ import loci.formats.services.OMEXMLService;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import ome.scifio.common.DataTools;
-import ome.scifio.common.StatusEvent;
-import ome.scifio.common.StatusListener;
-import ome.scifio.common.StatusReporter;
 import ome.xml.model.primitives.PositiveFloat;
 
 /**
@@ -115,8 +115,7 @@ public class ImgSaver implements StatusReporter {
 		final ImgPlus<T> img)
 	{
 
-		final AxisType[] axes = new AxisType[img.numDimensions()];
-		img.axes(axes);
+		final AxisType[] axes = getAxes(img);
 
 		final long[] axisLengths = new long[5];
 		final long[] oldLengths = new long[img.numDimensions()];
@@ -644,8 +643,7 @@ public class ImgSaver implements StatusReporter {
 
 			// TODO is there some way to consolidate this with the isCompressible
 			// method?
-			final AxisType[] axes = new AxisType[img.numDimensions()];
-			img.axes(axes);
+			final AxisType[] axes = getAxes(img);
 
 			String dimOrder = "";
 
@@ -658,17 +656,18 @@ public class ImgSaver implements StatusReporter {
 			for (int i=0; i<axes.length; i++) {
 				AxisType axis = axes[i];
 				PositiveFloat physicalSize = null;
-				
+				// TODO - using averageScale() introduces error for nonlinear axes
+				double scale = img.averageScale(i);
 				if (Axes.X.equals(axis)) {
-					physicalSize = new PositiveFloat(img.calibration(i));
+					physicalSize = new PositiveFloat(scale);
 					meta.setPixelsPhysicalSizeX(physicalSize, w.getSeries());
 				}
 				else if (Axes.Y.equals(axis)) {
-					physicalSize = new PositiveFloat(img.calibration(i));
+					physicalSize = new PositiveFloat(scale);
 					meta.setPixelsPhysicalSizeY(physicalSize, w.getSeries());
 				}
 				else if (Axes.Z.equals(axis)) {
-					physicalSize = new PositiveFloat(img.calibration(i));
+					physicalSize = new PositiveFloat(scale);
 					meta.setPixelsPhysicalSizeZ(physicalSize, w.getSeries());
 				}
 			}
@@ -711,6 +710,16 @@ public class ImgSaver implements StatusReporter {
 				FormatTools.getPixelTypeString(pixelType), sizeX, sizeY, sizeZ, sizeC,
 				sizeT, 1);
 		}
+	}
+
+	private <T extends RealType<T> & NativeType<T>> AxisType[] getAxes(
+		final ImgPlus<T> img)
+	{
+		final AxisType[] axes = new AxisType[img.numDimensions()];
+		for (int d = 0; d < axes.length; d++) {
+			axes[d] = img.axis(d).type();
+		}
+		return axes;
 	}
 
 	private OMEXMLService createOMEXMLService() {
