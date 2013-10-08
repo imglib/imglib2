@@ -38,11 +38,15 @@
 package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.meta.axis.InverseRodbardAxis;
 import net.imglib2.meta.axis.LinearAxis;
+import net.imglib2.meta.axis.LogLinearAxis;
 import net.imglib2.type.numeric.integer.ByteType;
 
 import org.junit.Test;
@@ -79,6 +83,27 @@ public class ImgPlusTest extends AbstractMetaTest {
 		assertNull(imgPlus.axis(0).unit());
 		imgPlus.axis(0).setUnit("WUNGA");
 		assertEquals("WUNGA", imgPlus.axis(0).unit());
+	}
+
+	@Test
+	public void testCopy() {
+		final CalibratedAxis xAxis =
+			new InverseRodbardAxis(Axes.X, "foo", 2.1, 4.3, 6.5, 8.7);
+		final CalibratedAxis yAxis =
+			new LogLinearAxis(Axes.Y, "bar", -6.7, -8.9, -3.4, -1.2);
+		final ImgPlus<ByteType> original =
+			new ImgPlus<ByteType>(ArrayImgs.bytes(9, 8), "original", xAxis, yAxis);
+		final ImgPlus<ByteType> copy = original.copy();
+		assertNotSame(original, copy);
+		assertNotSame(original.getImg(), copy.getImg());
+		assertEquals(original.numDimensions(), copy.numDimensions());
+		for (int d = 0; d < original.numDimensions(); d++) {
+			assertNotSame(original.axis(d), copy.axis(d));
+			assertSame(original.axis(d).getClass(), copy.axis(d).getClass());
+			assertEquals(original.axis(d).unit(), copy.axis(d).unit());
+			assertEquals(original.axis(d).particularEquation(), copy.axis(d)
+				.particularEquation());
+		}
 	}
 
 }
