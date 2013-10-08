@@ -50,7 +50,7 @@ public class DefaultNamed implements Named {
 
 	}
 
-	public DefaultNamed(String name) {
+	public DefaultNamed(final String name) {
 		m_name = name;
 	}
 
@@ -59,7 +59,7 @@ public class DefaultNamed implements Named {
 	 * 
 	 * @param name
 	 */
-	public DefaultNamed(Named name) {
+	public DefaultNamed(final Named name) {
 		m_name = name.getName();
 	}
 
@@ -75,7 +75,7 @@ public class DefaultNamed implements Named {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setName(String name) {
+	public void setName(final String name) {
 		m_name = name;
 	}
 

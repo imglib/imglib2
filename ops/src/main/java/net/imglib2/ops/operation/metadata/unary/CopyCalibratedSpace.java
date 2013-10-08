@@ -45,10 +45,11 @@ import net.imglib2.ops.operation.UnaryOperation;
 /**
  * @author Christian Dietz (University of Konstanz)
  * @author Curtis Rueden
- *
- * @param <S> The type of the space to copy
+ * 
+ * @param <S>
+ *            The type of the space to copy
  */
-public class CopyCalibratedSpace< S extends CalibratedSpace<CalibratedAxis> > implements UnaryOperation< S, S >
+public class CopyCalibratedSpace< S extends CalibratedSpace< CalibratedAxis > > implements UnaryOperation< S, S >
 {
 	private Interval interval;
 
@@ -78,6 +79,9 @@ public class CopyCalibratedSpace< S extends CalibratedSpace<CalibratedAxis> > im
 				// NB: Axes are copied by reference here. If an axis is later
 				// mutated, this could cause unintuitive side effects...
 				output.setAxis( input.axis( d ), d - offset );
+
+				// No longer needed:
+				// output.setCalibration(input.averageScale(d), d - offset);
 			}
 		}
 

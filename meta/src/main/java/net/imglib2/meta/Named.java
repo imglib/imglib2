@@ -39,8 +39,7 @@ package net.imglib2.meta;
 
 /**
  * Interface for things that have names.
- *
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Lee Kamentsky

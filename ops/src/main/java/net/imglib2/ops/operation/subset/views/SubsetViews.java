@@ -47,8 +47,8 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.CalibratedSpace;
-import net.imglib2.meta.DefaultCalibratedAxis;
 import net.imglib2.meta.DefaultCalibratedSpace;
+import net.imglib2.meta.axis.DefaultLinearAxis;
 import net.imglib2.type.Type;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
@@ -165,7 +165,7 @@ public class SubsetViews {
 		for (final AxisType type : missing) {
 			final int idx = targetSpace.dimensionIndex(type);
 			res = Views.addDimension(res, target.min(idx), target.max(idx));
-			resSpace.setAxis( new DefaultCalibratedAxis( type ), i++);
+			resSpace.setAxis(new DefaultLinearAxis(type), i++);
 		}
 
 		// res should have the same size, but with different metadata

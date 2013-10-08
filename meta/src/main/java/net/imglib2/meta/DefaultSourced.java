@@ -46,19 +46,18 @@ public class DefaultSourced implements Sourced {
 
 	private String m_source = "";
 
-	public DefaultSourced() {
-	}
+	public DefaultSourced() {}
 
-	public DefaultSourced(String source) {
+	public DefaultSourced(final String source) {
 		m_source = source;
 	}
 
-	public DefaultSourced(Sourced sourced) {
+	public DefaultSourced(final Sourced sourced) {
 		m_source = sourced.getSource();
 	}
 
 	@Override
-	public void setSource(String source) {
+	public void setSource(final String source) {
 		m_source = source;
 	}
 

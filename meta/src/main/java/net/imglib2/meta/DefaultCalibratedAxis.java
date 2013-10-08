@@ -37,11 +37,16 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.meta.axis.DefaultLinearAxis;
+
 /**
  * Simple, default {@link CalibratedAxis} implementation.
  * 
  * @author Curtis Rueden
+ * @deprecated Use {@link DefaultLinearAxis}, or one of the axis types from the
+ *             {@link net.imglib2.meta.axis} package, instead.
  */
+@Deprecated
 public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 	CalibratedAxis
 {
@@ -54,7 +59,7 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 	}
 
 	public DefaultCalibratedAxis(final AxisType type) {
-		this(type, "pixel", 1);
+		this(type, null, Double.NaN);
 	}
 
 	public DefaultCalibratedAxis(final AxisType type, final String unit,
@@ -65,16 +70,11 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 		setCalibration(cal);
 	}
 
-	// -- UnitAxis methods --
+	// -- CalibratedAxis methods --
 
 	@Override
 	public double calibration() {
 		return cal;
-	}
-
-	@Override
-	public String unit() {
-		return unit;
 	}
 
 	@Override
@@ -83,8 +83,43 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 	}
 
 	@Override
+	public String unit() {
+		return unit;
+	}
+
+	@Override
 	public void setUnit(final String unit) {
 		this.unit = unit;
+	}
+
+	@Override
+	public double calibratedValue(final double rawValue) {
+		return rawValue * calibration();
+	}
+
+	@Override
+	public double rawValue(final double calibratedValue) {
+		return calibratedValue / calibration();
+	}
+
+	@Override
+	public String generalEquation() {
+		return "y = a*x";
+	}
+
+	@Override
+	public String particularEquation() {
+		return "y = " + calibration() + "*x";
+	}
+
+	@Override
+	public double averageScale(final double rawValue1, final double rawValue2) {
+		return calibration();
+	}
+
+	@Override
+	public DefaultCalibratedAxis copy() {
+		return new DefaultCalibratedAxis(type(), unit(), calibration());
 	}
 
 }

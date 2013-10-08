@@ -68,7 +68,7 @@ public class CCATest
 			c.get().setReal( i / step );
 		}
 
-		CCA< ByteType, Img< ByteType >, Labeling< Integer >> cca = new CCA< ByteType, Img< ByteType >, Labeling< Integer >>( AbstractRegionGrowing.get4ConStructuringElement( 2 ), new ByteType( ( byte ) -128 ) );
+		CCA< ByteType > cca = new CCA< ByteType >( AbstractRegionGrowing.get4ConStructuringElement( 2 ), new ByteType( ( byte ) -128 ) );
 		Labeling< Integer > lab = new NativeImgLabeling< Integer, IntType >( new ArrayImgFactory< IntType >().create( testImg, new IntType() ) );
 
 		cca.compute( testImg, lab );
