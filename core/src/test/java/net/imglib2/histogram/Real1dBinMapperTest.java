@@ -39,8 +39,8 @@ package net.imglib2.histogram;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import net.imglib2.histogram.Real1dBinMapper;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -269,5 +269,18 @@ public class Real1dBinMapperTest {
 
 		tmp.setReal(4.001);
 		assertEquals(Long.MAX_VALUE, binMapper.map(tmp));
+	}
+
+	@Test
+	public void testEmptyMapper() {
+		long pos;
+		FloatType tmp = new FloatType();
+		Real1dBinMapper<FloatType> binMapper;
+
+		binMapper = new Real1dBinMapper<FloatType>(0.0, 0.0, 4, false);
+		assertNotNull(binMapper);
+		tmp.set(0);
+		pos = binMapper.map(tmp);
+		assertEquals(0, pos);
 	}
 }

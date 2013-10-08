@@ -47,8 +47,8 @@ import net.imglib2.EuclideanSpace;
  * axes are merged as appropriate by matching the {@link AxisType}s of each
  * {@link TypedAxis}.
  * <p>
- * For example, combining three spaces with dimensions (X, Y, Z, CHANNEL),
- * (X, Y, CHANNEL, TIME) and (X, Z, LIFETIME, TIME) will result in a coordinate
+ * For example, combining three spaces with dimensions (X, Y, Z, CHANNEL), (X,
+ * Y, CHANNEL, TIME) and (X, Z, LIFETIME, TIME) will result in a coordinate
  * space with dimensions (X, Y, Z, CHANNEL, TIME, LIFETIME).
  * </p>
  * 
@@ -101,8 +101,9 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 
 	@Override
 	public void axes(final A[] axes) {
-		for (int i = 0; i < axes.length; i++)
+		for (int i = 0; i < axes.length; i++) {
 			axes[i] = axis(i);
+		}
 	}
 
 	@Override

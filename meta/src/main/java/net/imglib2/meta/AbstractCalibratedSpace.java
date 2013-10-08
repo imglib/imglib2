@@ -39,81 +39,95 @@ package net.imglib2.meta;
 
 import java.util.List;
 
+import net.imglib2.meta.axis.LinearAxis;
+
 /**
  * Abstract base class for {@link CalibratedSpace}.
  * 
  * @author Curtis Rueden
  */
-public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
- extends
+public abstract class AbstractCalibratedSpace<A extends CalibratedAxis> extends
 	AbstractTypedSpace<A> implements CalibratedSpace<A>
 {
 
-	private final double[] calibration;
-
 	public AbstractCalibratedSpace(final int numDims) {
 		super(numDims);
-		calibration = new double[numDims];
-		for (int i = 0; i < calibration.length; i++)
-			calibration[i] = Double.NaN;
 	}
 
 	public AbstractCalibratedSpace(final A... axes) {
 		super(axes);
-		calibration = new double[axes.length];
-		for (int i = 0; i < calibration.length; i++)
-			calibration[i] = Double.NaN;
 	}
 
 	public AbstractCalibratedSpace(final List<A> axes) {
 		super(axes);
-		calibration = new double[axes.size()];
-		for (int i = 0; i < calibration.length; i++)
-			calibration[i] = Double.NaN;
+	}
+
+	// -- CalibratedSpace methods --
+
+	@Override
+	public double averageScale(final int d) {
+		return averageScale(d);
 	}
 
 	@Override
-	public double calibration(int d) {
-		return calibration[d];
+	public double calibration(final int d) {
+		return linearAxis(d).scale();
 	}
 
 	@Override
-	public void calibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = calibration(i);
+	public void calibration(final double[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			cal[d] = calibration(d);
+		}
 	}
 
 	@Override
-	public void calibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = (float) calibration(i);
+	public void calibration(final float[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			cal[d] = (float) calibration(d);
+		}
 	}
 
 	@Override
-	public void setCalibration(double cal, int d) {
-		calibration[d] = cal;
+	public void setCalibration(final double cal, final int d) {
+		linearAxis(d).setScale(cal);
 	}
 
 	@Override
-	public void setCalibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
+	public void setCalibration(final double[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			setCalibration(cal[d], d);
+		}
 	}
 
 	@Override
-	public void setCalibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
+	public void setCalibration(final float[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			setCalibration(cal[d], d);
+		}
 	}
 
 	@Override
-	public String unit(int d) {
+	public String unit(final int d) {
 		return axis(d).unit();
 	}
 
 	@Override
-	public void setUnit(String unit, int d) {
+	public void setUnit(final String unit, final int d) {
 		axis(d).setUnit(unit);
+	}
+
+	// -- Helper methods --
+
+	// NB: Only exists to fulfill deprecated method implementations above.
+	// Will go away in a subsequent release to eliminate LinearAxis dependency.
+	private LinearAxis linearAxis(final int d) {
+		final A axis = axis(d);
+		if (axis instanceof LinearAxis) {
+			return (LinearAxis) axis;
+		}
+		throw new IllegalArgumentException("Unsupported axis: " +
+			axis.getClass().getName());
 	}
 
 }

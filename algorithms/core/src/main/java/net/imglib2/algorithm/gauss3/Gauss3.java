@@ -100,6 +100,9 @@ public final class Gauss3
 	 * in their own precision. The source type S and target type T are either
 	 * both {@link RealType RealTypes} or both the same type.
 	 *
+	 * <p>
+	 * Computation is multi-threaded with as many threads as processors available.
+	 *
 	 * @param sigma
 	 *            standard deviation in every dimension.
 	 * @param source
@@ -119,8 +122,43 @@ public final class Gauss3
 	 */
 	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target ) throws IncompatibleTypeException
 	{
-		final double[][] halfkernels = halfkernels( sigma );
 		final int numthreads = Runtime.getRuntime().availableProcessors();
+		gauss( sigma, source, target, numthreads );
+	}
+
+	/**
+	 * Apply Gaussian convolution to source and write the result to output.
+	 * In-place operation (source==target) is supported.
+	 *
+	 * <p>
+	 * If the target type T is {@link DoubleType}, all calculations are done in
+	 * double precision. For all other target {@link RealType RealTypes} float
+	 * precision is used. General {@link NumericType NumericTypes} are computed
+	 * in their own precision. The source type S and target type T are either
+	 * both {@link RealType RealTypes} or both the same type.
+	 *
+	 * @param sigma
+	 *            standard deviation in every dimension.
+	 * @param source
+	 *            source image, must be sufficiently padded (e.g.
+	 *            {@link Views#extendMirrorSingle(RandomAccessibleInterval)}) to
+	 *            provide values for the target interval plus a border of half
+	 *            the kernel size.
+	 * @param target
+	 *            target image
+	 * @param numthreads
+	 *            how many threads to use for the computation.
+	 * @param <S>
+	 *            source type
+	 * @param <T>
+	 *            target type
+	 * @throws IncompatibleTypeException
+	 *             if source and target type are not compatible (they must be
+	 *             either both {@link RealType RealTypes} or the same type).
+	 */
+	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final int numthreads ) throws IncompatibleTypeException
+	{
+		final double[][] halfkernels = halfkernels( sigma );
 		SeparableSymmetricConvolution.convolve( halfkernels, source, target, numthreads );
 	}
 
@@ -128,12 +166,19 @@ public final class Gauss3
 	{
 		final int n = sigma.length;
 		final double[][] halfkernels = new double[ n ][];
+		final int[] size = halfkernelsizes( sigma );
 		for( int i = 0; i < n; ++i )
-		{
-            final int size = Math.max( 2, (int) (3 * sigma[ i ] + 0.5) + 1 );
-            halfkernels[ i ] = halfkernel( sigma[ i ], size, true );
-		}
+            halfkernels[ i ] = halfkernel( sigma[ i ], size[ i ], true );
 		return halfkernels;
+	}
+
+	public static int[] halfkernelsizes( final double[] sigma )
+	{
+		final int n = sigma.length;
+        final int[] size = new int[ n ];
+		for( int i = 0; i < n; ++i )
+			size[ i ] = Math.max( 2, (int) (3 * sigma[ i ] + 0.5) + 1 );
+		return size;
 	}
 
 	public static double[] halfkernel( final double sigma, final int size, final boolean normalize )

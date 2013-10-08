@@ -40,6 +40,7 @@ import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
+import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineRandomAccessible;
@@ -62,11 +63,15 @@ public class OpenAndDisplayAffineTransformedScreenImage
 		final ImgOpener io = new ImgOpener();
 		//final RandomAccessibleInterval< UnsignedShortType > img = io.openImg( "/home/saalfeld/phd/light-microscopy/presentation/saalfeld-05-05-4-DPX-05_L1_Sum.lsm", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType());
 		final ImgPlus< UnsignedShortType > imgPlus = io.openImg( "/home/saalfeld/phd/light-microscopy/presentation/saalfeld-05-05-4-DPX-05_L1_Sum.0.tif", new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType());
-		
+		// TODO - using averageScale() introduces error for nonlinear axes
+		final double scale0 = imgPlus.averageScale(0);
+		final double scale1 = imgPlus.averageScale(1);
 		final double[][] matrix = new double[][]{
 				{ 0.5, 0, 0, imgPlus.dimension( 0 ) * 0.25 },
-				{ 0, 0.5 * imgPlus.axis( 1 ).calibration() / imgPlus.axis( 0 ).calibration(), 0, imgPlus.dimension( 1 ) * 0.25 },
-				{ 0, 0, 0.5 * imgPlus.axis( 0 ).calibration() / imgPlus.axis( 0 ).calibration(), 0 }
+				{ 0, 0.5 * scale1 / scale0, 0, imgPlus.dimension(1) * 0.25 },
+				// TODO - this scale code is how it was before average() code
+				// added. Might be a bug. Review.
+				{ 0, 0, 0.5 * scale0 / scale0, 0 }
 		};
 //		final AffineTransform affine = new AffineTransform( new Matrix( matrix ) );
 		final AffineTransform3D affine = new AffineTransform3D();

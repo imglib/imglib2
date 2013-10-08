@@ -40,7 +40,7 @@ package net.imglib2.ops.operation.subset.views;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.meta.ImgPlus;
-import net.imglib2.meta.Metadata;
+import net.imglib2.meta.ImgPlusMetadata;
 import net.imglib2.type.Type;
 
 /**
@@ -56,7 +56,7 @@ public class ImgPlusView< T extends Type< T >> extends ImgPlus< T >
 	 * @see ImgView
 	 * 
 	 */
-	public ImgPlusView( RandomAccessibleInterval< T > src, ImgFactory< T > fac, Metadata metadata )
+	public ImgPlusView( RandomAccessibleInterval< T > src, ImgFactory< T > fac, ImgPlusMetadata metadata )
 	{
 		super( new ImgView< T >( src, fac ), metadata );
 	}

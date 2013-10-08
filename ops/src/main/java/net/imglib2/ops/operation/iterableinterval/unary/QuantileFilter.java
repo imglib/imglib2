@@ -40,6 +40,10 @@ public class QuantileFilter< T extends RealType< T >> implements UnaryOperation<
 	public RandomAccessibleInterval< T > compute( final RandomAccessibleInterval< T > src, final RandomAccessibleInterval< T > res )
 	{
 
+		if ( src.numDimensions() != 2 ) { throw new IllegalArgumentException( "Quantil Filter only works on 2-dimensional images" ); }
+
+		if ( src.dimension( 0 ) <= 1 || src.dimension( 1 ) <= 1 ) { throw new IllegalArgumentException( "Dimensions of size 1 are not supported by  " + "Quantil Filter" ); }
+
 		// res = srcIn;
 		RandomAccess< T > srcAccess = src.randomAccess();
 

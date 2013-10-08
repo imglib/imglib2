@@ -44,7 +44,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.meta.ImgPlus;
-import net.imglib2.meta.Metadata;
+import net.imglib2.meta.ImgPlusMetadata;
 import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.ops.operation.metadata.unary.CopyCalibratedSpace;
@@ -113,7 +113,7 @@ public class ImgPlusRemove1Dims< T extends Type< T >> implements UnaryOutputOper
 		Cursor< T > srcCur = op.localizingCursor();
 		RandomAccess< T > resRA = r.randomAccess();
 
-		new CopyMetadata( new CopyNamed< Metadata >(), new CopyImageMetadata< Metadata >(), new CopySourced< Metadata >(), new CopyCalibratedSpace< Metadata >( op ) ).compute( op, r );
+		new CopyMetadata( new CopyNamed< ImgPlusMetadata >(), new CopyImageMetadata< ImgPlusMetadata >(), new CopySourced< ImgPlusMetadata >(), new CopyCalibratedSpace< ImgPlusMetadata >( op ) ).compute( op, r ); 
 
 		BitSet isLength1 = new BitSet( op.numDimensions() );
 		for ( int d = 0; d < op.numDimensions(); d++ )
