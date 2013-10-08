@@ -54,12 +54,10 @@ import org.junit.Test;
  */
 public class ImgPlusTest extends AbstractMetaTest {
 
-	private ImgPlus<?> imgPlus;
-
 	@Test
 	public void test() {
 		final Img<ByteType> img = ArrayImgs.bytes(9, 8);
-		imgPlus =
+		final ImgPlus<?> imgPlus =
 			new ImgPlus<ByteType>(img, "HUBBY", new AxisType[] { Axes.X, Axes.Z },
 				new double[] { 5, 13 });
 		assertEquals("HUBBY", imgPlus.getName());
