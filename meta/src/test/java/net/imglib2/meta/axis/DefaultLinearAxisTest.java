@@ -38,6 +38,7 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
@@ -167,4 +168,14 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 			assertEquals(axis.rawValue(axis.calibratedValue(i)), i, 0.000001);
 		}
 	}
+
+	@Test
+	public void testCopy() {
+		final LinearAxis axis = new DefaultLinearAxis(Axes.Y, "heptoflops", 5, 3);
+		final LinearAxis copy = axis.copy();
+		assertNotSame(axis, copy);
+		assertEquals(axis, copy);
+		assertEquals(axis.hashCode(), copy.hashCode());
+	}
+
 }

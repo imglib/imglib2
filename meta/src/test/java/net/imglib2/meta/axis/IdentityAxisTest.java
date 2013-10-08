@@ -38,6 +38,7 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
@@ -64,6 +65,15 @@ public class IdentityAxisTest extends AbstractMetaTest {
 		assertEquals(Axes.CHANNEL, axis.type());
 		assertEquals(5, axis.calibratedValue(5), 0);
 		assertEquals(5, axis.rawValue(5), 0);
+	}
+
+	@Test
+	public void testCopy() {
+		final IdentityAxis axis = new IdentityAxis(Axes.Z);
+		final IdentityAxis copy = axis.copy();
+		assertNotSame(axis, copy);
+		assertEquals(axis, copy);
+		assertEquals(axis.hashCode(), copy.hashCode());
 	}
 
 }

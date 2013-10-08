@@ -38,6 +38,7 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
 
@@ -81,6 +82,16 @@ public class InverseRodbardAxisTest extends AbstractMetaTest {
 		for (int i = 0; i < 100; i++) {
 			assertEquals(axis.rawValue(axis.calibratedValue(i)), i, 0.0001);
 		}
+	}
+
+	@Test
+	public void testCopy() {
+		final InverseRodbardAxis axis =
+			new InverseRodbardAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final InverseRodbardAxis copy = axis.copy();
+		assertNotSame(axis, copy);
+		assertEquals(axis, copy);
+		assertEquals(axis.hashCode(), copy.hashCode());
 	}
 
 	private double calValue(final double raw, final InverseRodbardAxis axis) {
