@@ -40,7 +40,6 @@ package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 import java.util.Arrays;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.iterator.IntervalIterator;
