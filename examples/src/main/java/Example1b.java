@@ -67,7 +67,7 @@ public class Example1b
 		// defined by the opener
 		// the opener will ignore the Type of the ArrayImgFactory
 		ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
-		Img<RealType> image = new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
+		Img<T> image = new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image );
