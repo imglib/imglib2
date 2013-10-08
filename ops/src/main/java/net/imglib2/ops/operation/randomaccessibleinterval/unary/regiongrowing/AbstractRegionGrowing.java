@@ -67,7 +67,6 @@ import net.imglib2.util.ValuePair;
 public abstract class AbstractRegionGrowing< T extends Type< T >, L extends Comparable< L >> implements UnaryOperation< RandomAccessibleInterval< T >, Labeling< L >>
 {
 
-
     private final GrowingMode m_mode;
 
     private final Map< L, List< L >> m_labelMap;
