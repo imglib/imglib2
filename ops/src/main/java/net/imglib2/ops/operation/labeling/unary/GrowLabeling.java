@@ -41,17 +41,19 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.randomaccessibleinterval.unary.regiongrowing.AbstractRegionGrowing;
 import net.imglib2.util.ValuePair;
+import net.imglib2.view.Views;
 
 /**
  * 
  * @author Christian Dietz (University of Konstanz)
  */
-public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrowing< LabelingType< L >, L, Labeling< L >, Labeling< L >>
+public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrowing< LabelingType< L >, L>
 {
 
 	private Cursor< LabelingType< L >> m_seedLabCur;
@@ -80,9 +82,9 @@ public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrow
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void initRegionGrowing( Labeling< L > srcImg )
+	protected void initRegionGrowing( RandomAccessibleInterval< LabelingType < L > > srcImg )
 	{
-		m_seedLabCur = srcImg.localizingCursor();
+		m_seedLabCur = Views.iterable(srcImg).localizingCursor();
 
 	}
 
@@ -151,7 +153,7 @@ public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrow
 	}
 
 	@Override
-	public UnaryOperation< Labeling< L >, Labeling< L >> copy()
+	public UnaryOperation< RandomAccessibleInterval< LabelingType < L > >, Labeling< L >> copy()
 	{
 		return new GrowLabeling< L >( m_structuringElement.clone(), m_iterations );
 	}

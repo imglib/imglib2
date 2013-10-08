@@ -47,7 +47,7 @@ import ij.process.ShortProcessor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.display.XYProjector;
+import net.imglib2.display.projectors.Projector2D;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
@@ -57,11 +57,11 @@ import net.imglib2.view.Views;
 
 /**
  * TODO
- *
+ * 
  */
-public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends VirtualStack
-{
-	final private XYProjector< S, T > projector;
+public abstract class ImageJVirtualStack<S, T extends NativeType<T>> extends
+		VirtualStack {
+	final private Projector2D<S, T> projector;
 
 	final private int size;
 	final private int numDimensions;
@@ -94,7 +94,7 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 		this.numDimensions = source.numDimensions();
 
 		// if the source interval is not zero-min, we wrap it into a view that translates it to the origin
-		this.projector = new XYProjector< S, T >( Views.isZeroMin( source ) ? source : Views.zeroMin( source ), img, converter );
+		this.projector = new Projector2D< S, T >(0,1, Views.isZeroMin( source ) ? source : Views.zeroMin( source ), img, converter );
 
 		switch ( ijtype )
 		{
@@ -119,19 +119,19 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 			throw new IllegalArgumentException( "unsupported color type " + ijtype );
 		}
 	}
-	
+
 	/**
-	 * Get the size of the Y-dimension. If it is a one-dimensional source, return 1.
+	 * Get the size of the Y-dimension. If it is a one-dimensional source,
+	 * return 1.
 	 * 
 	 * @param interval
 	 * @return 1 if only-dimensional, else the size
 	 */
-	protected static int getDimension1Size( final Interval interval )
-	{
-		if ( interval.numDimensions() == 1 )
+	protected static int getDimension1Size(final Interval interval) {
+		if (interval.numDimensions() == 1)
 			return 1;
 
-		return ( int ) interval.dimension( 1 );
+		return (int) interval.dimension(1);
 	}
 
 	/**
@@ -139,17 +139,16 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	 * Returns null if the stack is empty.
 	 */
 	@Override
-	public ImageProcessor getProcessor( final int n )
-	{
-		if ( numDimensions > 2 )
-		{
+	public ImageProcessor getProcessor(final int n) {
+		if (numDimensions > 2) {
 			final int[] position = new int[3];
-			IntervalIndexer.indexToPosition( n - 1, higherSourceDimensions, position );
-			projector.setPosition( position[0], 2 );
-			if ( numDimensions > 3 )
-				projector.setPosition( position[1], 3 );
-			if ( numDimensions > 4 )
-				projector.setPosition( position[2], 4 );
+			IntervalIndexer.indexToPosition(n - 1, higherSourceDimensions,
+					position);
+			projector.setPosition(position[0], 2);
+			if (numDimensions > 3)
+				projector.setPosition(position[1], 3);
+			if (numDimensions > 4)
+				projector.setPosition(position[2], 4);
 		}
 
 		projector.map();
@@ -157,60 +156,60 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	}
 
 	@Override
-	public int getBitDepth()
-	{
+	public int getBitDepth() {
 		return bitDepth;
 	}
 
 	/** Obsolete. Short images are always unsigned. */
 	@Override
-	public void addUnsignedShortSlice( final String sliceLabel, final Object pixels )
-	{}
+	public void addUnsignedShortSlice(final String sliceLabel,
+			final Object pixels) {
+	}
 
 	/** Adds the image in 'ip' to the end of the stack. */
 	@Override
-	public void addSlice( final String sliceLabel, final ImageProcessor ip )
-	{}
+	public void addSlice(final String sliceLabel, final ImageProcessor ip) {
+	}
 
 	/**
 	 * Adds the image in 'ip' to the stack following slice 'n'. Adds the slice
 	 * to the beginning of the stack if 'n' is zero.
 	 */
 	@Override
-	public void addSlice( final String sliceLabel, final ImageProcessor ip, final int n )
-	{}
+	public void addSlice(final String sliceLabel, final ImageProcessor ip,
+			final int n) {
+	}
 
 	/** Deletes the specified slice, were 1<=n<=nslices. */
 	@Override
-	public void deleteSlice( final int n )
-	{}
+	public void deleteSlice(final int n) {
+	}
 
 	/** Deletes the last slice in the stack. */
 	@Override
-	public void deleteLastSlice()
-	{}
+	public void deleteLastSlice() {
+	}
 
 	/**
 	 * Updates this stack so its attributes, such as min, max, calibration table
 	 * and color model, are the same as 'ip'.
 	 */
 	@Override
-	public void update( final ImageProcessor ip )
-	{}
+	public void update(final ImageProcessor ip) {
+	}
 
 	/** Returns the pixel array for the specified slice, were 1<=n<=nslices. */
 	@Override
-	public Object getPixels( final int n )
-	{
-		return getProcessor( n ).getPixels();
+	public Object getPixels(final int n) {
+		return getProcessor(n).getPixels();
 	}
 
 	/**
 	 * Assigns a pixel array to the specified slice, were 1<=n<=nslices.
 	 */
 	@Override
-	public void setPixels( final Object pixels, final int n )
-	{}
+	public void setPixels(final Object pixels, final int n) {
+	}
 
 	/**
 	 * Returns the stack as an array of 1D pixel arrays. Note that the size of
@@ -218,8 +217,7 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	 * the stack, with unused elements set to null.
 	 */
 	@Override
-	public Object[] getImageArray()
-	{
+	public Object[] getImageArray() {
 		return null;
 	}
 
@@ -230,8 +228,7 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	 * slice is null.
 	 */
 	@Override
-	public String[] getSliceLabels()
-	{
+	public String[] getSliceLabels() {
 		return null;
 	}
 
@@ -241,8 +238,7 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	 * labels may contain header information.
 	 */
 	@Override
-	public String getSliceLabel( final int n )
-	{
+	public String getSliceLabel(final int n) {
 		return "" + n;
 	}
 
@@ -252,27 +248,24 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	 * null if the slice does not have a label.
 	 */
 	@Override
-	public String getShortSliceLabel( final int n )
-	{
-		return getSliceLabel( n );
+	public String getShortSliceLabel(final int n) {
+		return getSliceLabel(n);
 	}
 
 	/** Sets the label of the specified slice, were 1<=n<=nslices. */
 	@Override
-	public void setSliceLabel( final String label, final int n )
-	{}
+	public void setSliceLabel(final String label, final int n) {
+	}
 
 	/** Returns true if this is a 3-slice RGB stack. */
 	@Override
-	public boolean isRGB()
-	{
+	public boolean isRGB() {
 		return false;
 	}
 
 	/** Returns true if this is a 3-slice HSB stack. */
 	@Override
-	public boolean isHSB()
-	{
+	public boolean isHSB() {
 		return false;
 	}
 
@@ -281,35 +274,31 @@ public abstract class ImageJVirtualStack< S, T extends NativeType< T > > extends
 	 * overridden by the VirtualStack subclass.
 	 */
 	@Override
-	public boolean isVirtual()
-	{
+	public boolean isVirtual() {
 		return true;
 	}
 
 	/** Frees memory by deleting a few slices from the end of the stack. */
 	@Override
-	public void trim()
-	{}
+	public void trim() {
+	}
 
 	@Override
-	public int getSize()
-	{
+	public int getSize() {
 		return size;
 	}
 
 	@Override
-	public void setBitDepth( final int bitDepth )
-	{}
+	public void setBitDepth(final int bitDepth) {
+	}
 
 	@Override
-	public String getDirectory()
-	{
+	public String getDirectory() {
 		return null;
 	}
 
 	@Override
-	public String getFileName( final int n )
-	{
+	public String getFileName(final int n) {
 		return null;
 	}
 }

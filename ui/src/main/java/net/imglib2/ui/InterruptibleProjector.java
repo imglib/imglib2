@@ -37,7 +37,7 @@
 package net.imglib2.ui;
 
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.display.Projector;
+import net.imglib2.display.projectors.Projector;
 
 /**
  * Similar to a {@link Projector}, this renders a target image (usually a 2D
