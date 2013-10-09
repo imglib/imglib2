@@ -76,11 +76,6 @@ public class DefaultUnitService extends AbstractService implements UnitService {
 		new HashMap<String, DefaultUnitService.UnitDef>();
 	private UnitFormat unitFormatter = UnitFormatManager.instance();
 
-	// -- constructors --
-
-	public DefaultUnitService() {
-	}
-
 	// -- UnitService methods --
 
 	@Override
