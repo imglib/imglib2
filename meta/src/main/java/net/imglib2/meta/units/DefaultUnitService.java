@@ -71,7 +71,6 @@ public class DefaultUnitService extends AbstractService implements UnitService {
 	@Parameter
 	private LogService log;
 
-	private String failureMsg = null;
 	private Map<String, UnitDef> userDefinedUnits =
 		new HashMap<String, DefaultUnitService.UnitDef>();
 	private UnitFormat unitFormatter = UnitFormatManager.instance();
@@ -81,13 +80,7 @@ public class DefaultUnitService extends AbstractService implements UnitService {
 	@Override
 	public double value(double inputValue, String inputUnit, String outputUnit)
 	{
-		failureMsg = null;
 		return findConversion(inputValue, inputUnit, outputUnit);
-	}
-
-	@Override
-	public String failureMessage() {
-		return failureMsg;
 	}
 
 	@Override
@@ -148,7 +141,6 @@ public class DefaultUnitService extends AbstractService implements UnitService {
 			return u1.convertTo(measure, u2);
 		}
 		catch (final ConversionException e) {
-			failureMsg = e.getMessage();
 			throw new IllegalArgumentException(e);
 		}
 	}

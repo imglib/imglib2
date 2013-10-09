@@ -64,14 +64,6 @@ public interface UnitService extends Service {
 	public double value(double inputValue, String inputUnit, String outputUnit);
 
 	/**
-	 * Return the last internal error message if any. Each time value() is called
-	 * the internal message is initially set to null. When value() determines a
-	 * desired unit conversion is invalid it returns Double.NaN and sets the
-	 * internal failure message.
-	 */
-	public String failureMessage();
-
-	/**
 	 * Defines a unit conversion that can be referred to via the value() method.
 	 * Note that baseUnit is not necessarily a name. It could be a compound unit
 	 * string like "m/s^2" etc. Imagine we define a unit called "fliggs" that is
