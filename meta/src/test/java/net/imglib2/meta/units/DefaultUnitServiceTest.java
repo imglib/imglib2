@@ -49,7 +49,7 @@ import org.junit.Test;
 public class DefaultUnitServiceTest {
 
 	@Test
-	public void test() {
+	public void testConversion() {
 		DefaultUnitService c = new DefaultUnitService();
 		// a peeb is 5 meters
 		c.defineUnit("peeb", "m", 5);
