@@ -42,10 +42,13 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
+ * Tests {@link DefaultUnitService}.
+ * 
  * @author Barry DeZonia
  */
 public class DefaultUnitServiceTest {
 
+	/** Tests {@link DefaultUnitService#value(double, String, String)}. */
 	@Test
 	public void testConversion() {
 		final DefaultUnitService c = new DefaultUnitService();
@@ -74,6 +77,10 @@ public class DefaultUnitServiceTest {
 		assertEquals(c.value(1, "Cel", "K"), c.value(1, "MyCel", "K"), 0);
 	}
 
+	/**
+	 * Tests {@link DefaultUnitService#value(double, String, String)} with invalid
+	 * arguments.
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testBadConversion() {
 		final DefaultUnitService c = new DefaultUnitService();
