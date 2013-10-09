@@ -50,7 +50,7 @@ public class DefaultUnitServiceTest {
 
 	@Test
 	public void testConversion() {
-		DefaultUnitService c = new DefaultUnitService();
+		final DefaultUnitService c = new DefaultUnitService();
 		// a peeb is 5 meters
 		c.defineUnit("peeb", "m", 5);
 		assertEquals(5.0, c.value(1, "peeb", "m"), 0);
