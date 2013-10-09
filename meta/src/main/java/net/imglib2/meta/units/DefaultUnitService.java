@@ -149,7 +149,7 @@ public class DefaultUnitService extends AbstractService implements UnitService {
 		}
 		catch (final ConversionException e) {
 			failureMsg = e.getMessage();
-			return Double.NaN;
+			throw new IllegalArgumentException(e);
 		}
 	}
 

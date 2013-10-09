@@ -38,8 +38,6 @@
 package net.imglib2.meta.units;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -74,8 +72,12 @@ public class DefaultUnitServiceTest {
 		// define a scale/offset unit
 		c.defineUnit("MyCel", "K", 1, 273.15);
 		assertEquals(c.value(1, "Cel", "K"), c.value(1, "MyCel", "K"), 0);
-		// try a bad conversion
-		assertTrue(Double.isNaN(c.value(1, "kelvin", "meter")));
-		assertNotNull(c.failureMessage());
 	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testBadConversion() {
+		final DefaultUnitService c = new DefaultUnitService();
+		c.value(1, "kelvin", "meter");
+	}
+
 }

@@ -58,6 +58,8 @@ public interface UnitService extends Service {
 	 * @param outputUnit The string representing the output unit.
 	 * @return The value in output units after converting the inputValue from
 	 *         input units.
+	 * @throws IllegalArgumentException if conversion fails with the given
+	 *           arguments (e.g., if the units are incompatible).
 	 */
 	public double value(double inputValue, String inputUnit, String outputUnit);
 
