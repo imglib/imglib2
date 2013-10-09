@@ -40,13 +40,22 @@ package net.imglib2.meta.units;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.scijava.log.LogService;
+import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.service.AbstractService;
 import org.scijava.service.Service;
 
+import ucar.units.ConversionException;
+import ucar.units.NoSuchUnitException;
+import ucar.units.PrefixDBException;
+import ucar.units.SpecificationException;
 import ucar.units.Unit;
+import ucar.units.UnitDBException;
 import ucar.units.UnitFormat;
 import ucar.units.UnitFormatManager;
+import ucar.units.UnitParseException;
+import ucar.units.UnitSystemException;
 import ucar.units.UnknownUnit;
 
 /**
@@ -58,6 +67,9 @@ import ucar.units.UnknownUnit;
 public class DefaultUnitService extends AbstractService implements UnitService {
 
 	// -- fields --
+
+	@Parameter
+	private LogService log;
 
 	private String failureMsg = null;
 	private Map<String, UnitDef> userDefinedUnits =
@@ -136,26 +148,46 @@ public class DefaultUnitService extends AbstractService implements UnitService {
 				unit.baseUnit);
 		}
 		try {
-			Unit u1 = unitFormatter.parse(unit1);
-			Unit u2 = unitFormatter.parse(unit2);
+			final Unit u1 = parseUnit(unit1);
+			final Unit u2 = parseUnit(unit2);
 			return u1.convertTo(measure, u2);
 		}
-		catch (Exception e) {
+		catch (final ConversionException e) {
 			failureMsg = e.getMessage();
 			return Double.NaN;
 		}
 	}
 
 	private boolean definedInternally(String unitName) {
-		try {
-			Unit o = unitFormatter.parse(unitName);
-			if (o instanceof UnknownUnit) return false;
-			if (o.getDerivedUnit() instanceof UnknownUnit) return false;
-		}
-		catch (Exception e) {
-			return false;
-		}
+		final Unit o = parseUnit(unitName);
+		if (o == null || o instanceof UnknownUnit) return false;
+		if (o.getDerivedUnit() instanceof UnknownUnit) return false;
 		return true;
+	}
+
+	private Unit parseUnit(final String unitName) {
+		try {
+			return unitFormatter.parse(unitName);
+		}
+		catch (final NoSuchUnitException exc) {
+			log.error("Cannot parse unit: " + unitName, exc);
+		}
+		catch (final UnitParseException exc) {
+			log.error("Cannot parse unit: " + unitName, exc);
+		}
+		catch (final SpecificationException exc) {
+			log.error("Cannot parse unit: " + unitName, exc);
+		}
+		catch (final UnitDBException exc) {
+			log.error("Cannot parse unit: " + unitName, exc);
+		}
+		catch (final PrefixDBException exc) {
+			log.error("Cannot parse unit: " + unitName, exc);
+		}
+		catch (final UnitSystemException exc) {
+			log.error("Cannot parse unit: " + unitName, exc);
+		}
+		return null;
 	}
 
 	private class UnitDef {
