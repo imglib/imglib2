@@ -83,6 +83,7 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 		final Cursor< B > targetCursor = target.localizingCursor();
 		final Cursor< A > sourceCursor = srcIterable.cursor();
 
+		// TODO iteration order doesn't fit here
 		if ( target.iterationOrder().equals( srcIterable.iterationOrder() ) && !( sourceCursor instanceof RandomAccessibleIntervalCursor ) )
 		{
 			// use cursors
@@ -96,6 +97,7 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 		{
 			// use localizing cursor
 			RandomAccess< A > sourceRandomAccess = source.randomAccess();
+			sourceRandomAccess.setPosition( position );
 			while ( targetCursor.hasNext() )
 			{
 				final B b = targetCursor.next();
