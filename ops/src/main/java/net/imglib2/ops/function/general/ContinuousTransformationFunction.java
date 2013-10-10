@@ -35,55 +35,98 @@
  * #L%
  */
 
-package net.imglib2.meta.units;
+package net.imglib2.ops.function.general;
+
+import net.imglib2.ops.function.Function;
 
 /**
- * LinearCalibrator is a {@link Calibrator} that maps values linearly from an
- * input space to an output space.
+ * A {@link Function} that maps real coordinates from one space to another via a
+ * matrix transformation.
  * 
  * @author Barry DeZonia
  */
-public class LinearCalibrator implements Calibrator {
+public class ContinuousTransformationFunction implements
+	Function<double[], double[]>
+{
 
 	// -- fields --
 
-	private double scale, offset;
+	private final double[][] matrix;
+	private final int mrows;
+	private final int mcols;
 
 	// -- constructor --
 
-	public LinearCalibrator(double scale, double offset) {
-		this.scale = scale;
-		this.offset = offset;
+	/**
+	 * Constructor that requires the transformation matrix as input. The matrix is
+	 * of dimension r x c. r matches the number of components in an input point. c
+	 * matches the number of components in an output point.
+	 * 
+	 * @param matrix
+	 */
+	public ContinuousTransformationFunction(double[][] matrix) {
+		this.matrix = matrix;
+		this.mrows = matrix.length;
+		this.mcols = matrix[0].length;
 	}
 
 	// -- accessors --
 
-	public void setScale(double scale) {
-		this.scale = scale;
+	/**
+	 * Returns the transformation matrix of this instance.
+	 */
+	public double[][] matrix() {
+		return matrix;
 	}
 
-	public void setOffset(double offset) {
-		this.offset = offset;
+	/**
+	 * Returns the number of rows in the transformation matrix of this instance.
+	 * Also is the number of components in an input point.
+	 */
+	public int rows() {
+		return mrows;
 	}
 
-	public double scale() {
-		return scale;
+	/**
+	 * Returns the number of cols in transformation matrix of this instance. Also
+	 * is the number of components in an output point.
+	 */
+	public int cols() {
+		return mcols;
 	}
 
-	public double offset() {
-		return offset;
-	}
-
-	// -- Calibrator methods --
+	// -- Function methods --
 
 	@Override
-	public double toOutput(double input) {
-		return (input * scale) + offset;
+	public void compute(double[] input, double[] output) {
+		// input point should be r x 1 transpose (thus 1 x r)
+		// matrix should be r x c
+		// output should be 1 x c
+		if (input.length != mrows) {
+			throw new IllegalArgumentException(
+				"Input point size and matrix shape are incompatible.");
+		}
+		if (output.length != mcols) {
+			throw new IllegalArgumentException(
+				"Output point size and matrix shape are incompatible.");
+		}
+		for (int c = 0; c < mcols; c++) {
+			double sum = 0;
+			for (int r = 0; r < mrows; r++) {
+				sum += input[r] * matrix[r][c];
+			}
+			output[c] = sum;
+		}
 	}
 
 	@Override
-	public double toInput(double output) {
-		return (output - offset) / scale;
+	public double[] createOutput() {
+		return new double[mcols];
+	}
+
+	@Override
+	public ContinuousTransformationFunction copy() {
+		return new ContinuousTransformationFunction(matrix);
 	}
 
 }

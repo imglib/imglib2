@@ -35,66 +35,47 @@
  * #L%
  */
 
-package net.imglib2.meta.axis;
+package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import net.imglib2.meta.AbstractMetaTest;
-import net.imglib2.meta.Axes;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+
+import java.util.Arrays;
+import java.util.Comparator;
 
 import org.junit.Test;
 
 /**
- * Tests {@link GaussianAxis}.
+ * Tests {@link Axes}.
  * 
- * @author Barry DeZonia
+ * @author Curtis Rueden
  */
-public class GaussianAxisTest extends AbstractMetaTest {
+public class AxesTest extends AbstractMetaTest {
 
+	/** Tests {@link Axes#knownTypes()}. */
 	@Test
-	public void testOtherCtor() {
-		final GaussianAxis axis = new GaussianAxis(Axes.Z, "lp", 4, 3, 2, 1);
-
-		assertEquals(Axes.Z, axis.type());
-		assertEquals("lp", axis.unit());
-		assertEquals(4, axis.a(), 0);
-		assertEquals(3, axis.b(), 0);
-		assertEquals(2, axis.c(), 0);
-		assertEquals(1, axis.d(), 0);
-		assertEquals(calValue(4, axis), axis.calibratedValue(4), 0);
+	public void testKnownTypes() {
+		final AxisType[] knownTypes = Axes.knownTypes();
+		assertNotNull(knownTypes);
+		assertEquals(5, knownTypes.length);
+		sort(knownTypes);
+		assertSame(Axes.CHANNEL, knownTypes[0]);
+		assertSame(Axes.TIME, knownTypes[1]);
+		assertSame(Axes.X, knownTypes[2]);
+		assertSame(Axes.Y, knownTypes[3]);
+		assertSame(Axes.Z, knownTypes[4]);
 	}
 
-	@Test
-	public void testOtherStuff() {
-		final GaussianAxis axis = new GaussianAxis(Axes.Z, "lp", 1, 2, 3, 4);
+	private void sort(final AxisType[] axisTypes) {
+		Arrays.sort(axisTypes, 0, axisTypes.length, new Comparator<AxisType>() {
 
-		axis.setA(2);
-		axis.setB(3);
-		axis.setC(5);
-		axis.setD(7);
-		assertEquals(2, axis.a(), 0);
-		assertEquals(3, axis.b(), 0);
-		assertEquals(5, axis.c(), 0);
-		assertEquals(7, axis.d(), 0);
+			@Override
+			public int compare(final AxisType o1, final AxisType o2) {
+				return o1.getLabel().compareTo(o2.getLabel());
+			}
 
-		for (int i = 0; i < 100; i++) {
-			assertEquals(Double.NaN, axis.rawValue(axis.calibratedValue(i)), 0);
-		}
+		});
 	}
 
-	@Test
-	public void testCopy() {
-		final GaussianAxis axis = new GaussianAxis(Axes.Z, "lp", 1, 2, 3, 4);
-		final GaussianAxis copy = axis.copy();
-		assertNotSame(axis, copy);
-		assertEquals(axis, copy);
-		assertEquals(axis.hashCode(), copy.hashCode());
-	}
-
-	private double calValue(final double raw, final GaussianAxis axis) {
-		return axis.a() +
-			(axis.b() - axis.a()) *
-			Math
-				.exp(-(raw - axis.c()) * (raw - axis.c()) / (2 * axis.d() * axis.d()));
-	}
 }

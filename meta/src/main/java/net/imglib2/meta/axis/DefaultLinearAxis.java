@@ -150,7 +150,7 @@ public class DefaultLinearAxis extends Variable2Axis implements LinearAxis {
 	public static double intercept(final double x1, final double y1,
 		final double x2, final double y2)
 	{
-		return (y1 + y2 + (((y1 - y2) * (x1 + x2)) / (x2 - x1))) / 2;
+		return (y1 + y2 + (y1 - y2) * (x1 + x2) / (x2 - x1)) / 2;
 	}
 
 	// -- setters/getters --

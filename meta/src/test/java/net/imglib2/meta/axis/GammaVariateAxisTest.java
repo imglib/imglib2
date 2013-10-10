@@ -38,6 +38,7 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
 
@@ -81,6 +82,16 @@ public class GammaVariateAxisTest extends AbstractMetaTest {
 		for (int i = 0; i < 100; i++) {
 			assertEquals(Double.NaN, axis.rawValue(axis.calibratedValue(i)), 0);
 		}
+	}
+
+	@Test
+	public void testCopy() {
+		final GammaVariateAxis axis =
+			new GammaVariateAxis(Axes.Z, "lp", 1, 2, 3, 4);
+		final GammaVariateAxis copy = axis.copy();
+		assertNotSame(axis, copy);
+		assertEquals(axis, copy);
+		assertEquals(axis.hashCode(), copy.hashCode());
 	}
 
 	private double calValue(final double raw, final GammaVariateAxis axis) {

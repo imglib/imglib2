@@ -38,6 +38,7 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
@@ -89,6 +90,15 @@ public class PowerAxisTest extends AbstractMetaTest {
 		for (int i = 0; i < 100; i++) {
 			assertEquals(axis.rawValue(axis.calibratedValue(i)), i, 0.000001);
 		}
+	}
+
+	@Test
+	public void testCopy() {
+		final PowerAxis axis = new PowerAxis(Axes.Z, "lp", 1, 2, 3);
+		final PowerAxis copy = axis.copy();
+		assertNotSame(axis, copy);
+		assertEquals(axis, copy);
+		assertEquals(axis.hashCode(), copy.hashCode());
 	}
 
 	private double calValue(final double raw, final PowerAxis axis) {
