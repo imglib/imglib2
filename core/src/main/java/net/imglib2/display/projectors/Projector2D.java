@@ -2,14 +2,11 @@ package net.imglib2.display.projectors;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
-import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.type.Type;
-import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.RandomAccessibleIntervalCursor;
 import net.imglib2.view.Views;
@@ -84,12 +81,15 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 		max[ dimX ] = target.max( X );
 		max[ dimY ] = target.max( Y );
 
-		IterableInterval< A > srcIterable = Views.iterable( clean( Views.interval( source, new FinalInterval( min, max ) ) ) );
-		final Cursor< B > targetCursor = target.localizingCursor();
-		final Cursor< A > sourceCursor = srcIterable.cursor();
+		// TODO: this is ugly, but the only way to make sure, that iteration
+		// order fits in the case of one sized dims. Tobi?
+		IntervalView< A > srcIterableForCursor = Views.interval( source, new FinalInterval( min, max ) );
+		IterableInterval< A > srcIterableForIterationOrder = clean( srcIterableForCursor );
 
-		// TODO iteration order doesn't fit here
-		if ( target.iterationOrder().equals( srcIterable.iterationOrder() ) && !( sourceCursor instanceof RandomAccessibleIntervalCursor ) )
+		final Cursor< B > targetCursor = target.localizingCursor();
+		final Cursor< A > sourceCursor = srcIterableForCursor.cursor();
+
+		if ( target.iterationOrder().equals( srcIterableForIterationOrder.iterationOrder() ) && !( sourceCursor instanceof RandomAccessibleIntervalCursor ) )
 		{
 			// use cursors
 
@@ -114,7 +114,7 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 		}
 	}
 
-	private < T > RandomAccessibleInterval< T > clean( IntervalView< T > in )
+	private < T > IntervalView< T > clean( IntervalView< T > in )
 	{
 		IntervalView< T > res = in;
 
