@@ -123,21 +123,26 @@ public final class SubsetOperations
 	private synchronized static < T extends Type< T >, I extends RandomAccessibleInterval< T >> I create( final I in, final Interval i )
 	{
 
-		RandomAccessibleInterval< T > subsetview = subsetview( in, i );
-
 		if ( in instanceof Labeling )
 		{
+			RandomAccessibleInterval< T > subsetview = subsetview( in, i );
 			return ( I ) new LabelingView( subsetview, ( ( Labeling ) in ).factory() );
 		}
 		else if ( in instanceof ImgPlus )
 		{
-			ImgPlusView< T > imgPlusView = new ImgPlusView< T >( subsetview, ( ( ImgPlus ) in ).factory() );
+			ImgPlus< T > imgPlus = ( ImgPlus< T > ) in;
+			while ( imgPlus.getImg() instanceof ImgPlus )
+			{
+				imgPlus = ( ImgPlus< T > ) imgPlus.getImg();
+			}
+
+			ImgPlusView< T > imgPlusView = new ImgPlusView< T >( subsetview( imgPlus.getImg(), i ), ( ( ImgPlus ) in ).factory() );
 			new CopyMetadata( new CopyNamed(), new CopySourced(), new CopyImageMetadata(), new CopyCalibratedSpace( i ) ).compute( ( ImgPlus ) in, imgPlusView );
 			return ( I ) imgPlusView;
 		}
-		else if ( in instanceof Img ) { return ( I ) new ImgView< T >( subsetview, ( ( Img ) in ).factory() ); }
+		else if ( in instanceof Img ) { return ( I ) new ImgView< T >( subsetview( in, i ), ( ( Img ) in ).factory() ); }
 
-		return ( I ) subsetview;
+		return ( I ) subsetview( in, i );
 	}
 
 	public static < T extends Type< T >> RandomAccessibleInterval< T > subsetview( RandomAccessibleInterval< T > in, Interval i )
