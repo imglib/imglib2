@@ -70,11 +70,13 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis> extends
 		return axis(d).averageScale(0,0);
 	}
 
+	@Deprecated
 	@Override
 	public double calibration(final int d) {
 		return linearAxis(d).scale();
 	}
 
+	@Deprecated
 	@Override
 	public void calibration(final double[] cal) {
 		for (int d = 0; d < numDimensions(); d++) {
@@ -82,6 +84,7 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis> extends
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void calibration(final float[] cal) {
 		for (int d = 0; d < numDimensions(); d++) {
@@ -89,11 +92,13 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis> extends
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void setCalibration(final double cal, final int d) {
 		linearAxis(d).setScale(cal);
 	}
 
+	@Deprecated
 	@Override
 	public void setCalibration(final double[] cal) {
 		for (int d = 0; d < numDimensions(); d++) {
@@ -101,6 +106,7 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis> extends
 		}
 	}
 
+	@Deprecated
 	@Override
 	public void setCalibration(final float[] cal) {
 		for (int d = 0; d < numDimensions(); d++) {
@@ -108,11 +114,13 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis> extends
 		}
 	}
 
+	@Deprecated
 	@Override
 	public String unit(final int d) {
 		return axis(d).unit();
 	}
 
+	@Deprecated
 	@Override
 	public void setUnit(final String unit, final int d) {
 		axis(d).setUnit(unit);
