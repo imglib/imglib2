@@ -500,7 +500,7 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 	private static CalibratedAxis[] copyAxes(final CalibratedSpace<?> space) {
 		final CalibratedAxis[] axes = new CalibratedAxis[space.numDimensions()];
 		for (int d = 0; d < axes.length; d++) {
-			axes[d] = space.axis(d).copy();
+			axes[d] = (CalibratedAxis) space.axis(d).copy();
 		}
 		return axes;
 	}
