@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -53,6 +54,7 @@ import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.view.Views;
 
 /**
  * Watershed algorithms. The watershed algorithm segments and labels an image
@@ -126,7 +128,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 		}
 	}
 
-	protected Img< T > image;
+	protected RandomAccessibleInterval< T > image;
 
 	protected Labeling< L > seeds;
 
@@ -143,7 +145,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 	 *            the intensity image that defines the watershed landscape.
 	 *            Lower values will be labeled first.
 	 */
-	public void setIntensityImage( Img< T > image )
+	public void setIntensityImage( RandomAccessibleInterval< T > image )
 	{
 		this.image = image;
 	}
@@ -203,8 +205,6 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 		if ( !checkInput() )
 			return false;
 
-		if ( structuringElement == null )
-			structuringElement = AllConnectedComponents.getStructuringElement( image.numDimensions() );
 		if ( output == null )
 		{
 			long[] dimensions = new long[ seeds.numDimensions() ];
@@ -221,9 +221,9 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 		OutOfBoundsFactory< LabelingType< L >, Labeling< L >> factory = new LabelingOutOfBoundsRandomAccessFactory< L, Labeling< L >>();
 		OutOfBounds< LabelingType< L >> outputAccess = factory.create( output );
 
-		T maxVal = image.firstElement().createVariable();
+		T maxVal = Views.iterable( image ).firstElement().createVariable();
 		maxVal.setReal( maxVal.getMaxValue() );
-		OutOfBoundsFactory< T, Img< T >> oobImageFactory = new OutOfBoundsConstantValueFactory< T, Img< T >>( maxVal );
+		OutOfBoundsFactory< T, RandomAccessibleInterval< T >> oobImageFactory = new OutOfBoundsConstantValueFactory< T, RandomAccessibleInterval< T >>( maxVal );
 		OutOfBounds< T > imageAccess = oobImageFactory.create( image );
 
 		/*
@@ -330,6 +330,8 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 			errorMessage = String.format( "The dimensionality of the seed labeling (%dD) does not match that of the output labeling (%dD)", seeds.numDimensions(), output.numDimensions() );
 			return false;
 		}
+		if ( structuringElement == null )
+			structuringElement = AllConnectedComponents.getStructuringElement( image.numDimensions() );
 		for ( int i = 0; i < structuringElement.length; i++ )
 		{
 			if ( structuringElement[ i ].length != seeds.numDimensions() )
