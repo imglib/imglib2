@@ -44,6 +44,7 @@ import java.util.NoSuchElementException;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingOutOfBoundsRandomAccessFactory;
@@ -51,6 +52,7 @@ import net.imglib2.labeling.LabelingType;
 import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.view.Views;
 
 /**
  * Label all 8-connected components of a binary image
@@ -114,7 +116,7 @@ public class AllConnectedComponents
 	 * @throws NoSuchElementException
 	 *             if there are not enough names
 	 */
-	public static < T extends Comparable< T >> void labelAllConnectedComponents( Labeling< T > labeling, Img< BitType > img, Iterator< T > names ) throws NoSuchElementException
+	public static < T extends Comparable< T >> void labelAllConnectedComponents( Labeling< T > labeling, RandomAccessibleInterval< BitType > img, Iterator< T > names ) throws NoSuchElementException
 	{
 		long[][] offsets = getStructuringElement( img.numDimensions() );
 		labelAllConnectedComponents( labeling, img, names, offsets );
@@ -139,9 +141,9 @@ public class AllConnectedComponents
 	 * @throws NoSuchElementException
 	 *             if there are not enough names
 	 */
-	public static < T extends Comparable< T >> void labelAllConnectedComponents( Labeling< T > labeling, Img< BitType > img, Iterator< T > names, long[][] structuringElement ) throws NoSuchElementException
+	public static < T extends Comparable< T >> void labelAllConnectedComponents( Labeling< T > labeling, RandomAccessibleInterval< BitType > img, Iterator< T > names, long[][] structuringElement ) throws NoSuchElementException
 	{
-		Cursor< BitType > c = img.localizingCursor();
+		Cursor< BitType > c = Views.iterable( img ).localizingCursor();
 		RandomAccess< BitType > raSrc = img.randomAccess();
 		OutOfBoundsFactory< LabelingType< T >, Labeling< T >> factory = new LabelingOutOfBoundsRandomAccessFactory< T, Labeling< T >>();
 		OutOfBounds< LabelingType< T >> raDest = factory.create( labeling );
