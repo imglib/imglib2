@@ -37,14 +37,23 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.meta.axis.LinearAxis;
+
 /**
+ * TODO
+ * 
  * @author Barry DeZonia
  */
 public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends CalibratedRealInterval<A>>
 	extends CombinedRealInterval<A, S> implements CalibratedRealInterval<A>
 {
 
-	// TODO - these methods will need some TLC. Maybe this class will store its
+	@Override
+	public double averageScale(final int d) {
+		return axis(d).averageScale(realMin(d), realMax(d));
+	}
+
+	// FIXME - these methods need some TLC. Maybe this class will store its
 	// own copy of calibration values and units. And then setUnit() and
 	// setCalibration() on an axis does a unit converted scaling of existing axes
 	// cal values. Pulling values out of this interval will use views and sampling
@@ -52,48 +61,64 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 	// underlying axes.
 
 	@Override
-	public void setUnit(String unit, int d) {
+	public double calibration(final int d) {
+		return linearAxis(d).scale();
+	}
+
+	@Override
+	public void calibration(final double[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			cal[d] = calibration(d);
+		}
+	}
+
+	@Override
+	public void calibration(final float[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			cal[d] = (float) calibration(d);
+		}
+	}
+
+	@Override
+	public void setCalibration(final double cal, final int d) {
+		linearAxis(d).setScale(cal);
+	}
+
+	@Override
+	public void setCalibration(final double[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			setCalibration(cal[d], d);
+		}
+	}
+
+	@Override
+	public void setCalibration(final float[] cal) {
+		for (int d = 0; d < numDimensions(); d++) {
+			setCalibration(cal[d], d);
+		}
+	}
+
+	@Override
+	public void setUnit(final String unit, final int d) {
 		axis(d).setUnit(unit);
 	}
 
 	@Override
-	public String unit(int d) {
+	public String unit(final int d) {
 		return axis(d).unit();
 	}
 
-	@Override
-	public double calibration(int d) {
-		return axis(d).calibration();
+	// -- Helper methods --
+
+	// NB: Only exists to fulfill deprecated method implementations above.
+	// Will go away in a subsequent release to eliminate LinearAxis dependency.
+	private LinearAxis linearAxis(final int d) {
+		final A axis = axis(d);
+		if (axis instanceof LinearAxis) {
+			return (LinearAxis) axis;
+		}
+		throw new IllegalArgumentException("Unsupported axis: " +
+			axis.getClass().getName());
 	}
 
-	@Override
-	public void calibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = calibration(i);
-	}
-
-	@Override
-	public void calibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = (float) calibration(i);
-	}
-
-	@Override
-	public void setCalibration(double cal, int d) {
-		// TODO: we could throw an UnsupportedOperationException. But this class
-		// is already broken. Update this method later.
-		axis(d).setCalibration(cal);
-	}
-
-	@Override
-	public void setCalibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
-
-	@Override
-	public void setCalibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
 }

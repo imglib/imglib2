@@ -52,20 +52,20 @@ import net.imglib2.view.Views;
 /**
  * @author Felix Schoenenberger (University of Konstanz)
  */
-public class BinaryOps< K extends RandomAccessibleInterval< BitType > & IterableInterval< BitType >>
+public class BinaryOps
 {
 
-	public K erode( ConnectedType type, final K r, final K op, final int count )
+	public RandomAccessibleInterval< BitType > erode( ConnectedType type, final RandomAccessibleInterval< BitType > r, final RandomAccessibleInterval< BitType > op, final int count )
 	{
 		return binaryop( type, r, op, true, count );
 	}
 
-	public K dilate( ConnectedType type, final K r, final K op, final int count )
+	public RandomAccessibleInterval< BitType > dilate( ConnectedType type, final RandomAccessibleInterval< BitType > r, final RandomAccessibleInterval< BitType > op, final int count )
 	{
 		return binaryop( type, r, op, false, count );
 	}
 
-	private K binaryop( ConnectedType type, final K r, final K op, final boolean erode, final int count )
+	private RandomAccessibleInterval< BitType > binaryop( ConnectedType type, final RandomAccessibleInterval< BitType > r, final RandomAccessibleInterval< BitType > op, final boolean erode, final int count )
 	{
 		long[] dim = new long[ r.numDimensions() ];
 		r.dimensions( dim );
@@ -103,12 +103,12 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 		return r;
 	}
 
-	private void unrolled2DFourConnected( final K r, final K op, final boolean erode, final int count )
+	private void unrolled2DFourConnected( final RandomAccessibleInterval< BitType > r, final RandomAccessibleInterval< BitType > op, final boolean erode, final int count )
 	{
 
-		Cursor< BitType > resCur = r.cursor();
-		Cursor< BitType > srcCur = op.localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
+		Cursor< BitType > resCur = Views.iterable( r ).cursor();
+		Cursor< BitType > srcCur = Views.iterable( op ).localizingCursor();
+		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory< BitType, RandomAccessibleInterval< BitType > >() ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
@@ -159,12 +159,12 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 		}
 	}
 
-	private void unrolled2DEightConnected( final K r, final K op, final boolean erode, final int count )
+	private void unrolled2DEightConnected( final RandomAccessibleInterval< BitType > r, final RandomAccessibleInterval< BitType > op, final boolean erode, final int count )
 	{
 
-		Cursor< BitType > resCur = r.cursor();
-		Cursor< BitType > srcCur = op.localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
+		Cursor< BitType > resCur = Views.iterable( r ).cursor();
+		Cursor< BitType > srcCur = Views.iterable( op ).localizingCursor();
+		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory< BitType, RandomAccessibleInterval< BitType >>() ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
@@ -234,11 +234,11 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 		}
 	}
 
-	private void nDEightConnected( final K res, final K src, final long[] dim, final boolean erode, final int count )
+	private void nDEightConnected( final RandomAccessibleInterval< BitType > res, final RandomAccessibleInterval< BitType > src, final long[] dim, final boolean erode, final int count )
 	{
 
-		RandomAccess< BitType > r = Views.extend( res, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
-		RandomAccess< BitType > op = Views.extend( src , new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
+		RandomAccess< BitType > r = Views.extend( res, new OutOfBoundsBorderFactory< BitType, RandomAccessibleInterval< BitType > >() ).randomAccess();
+		RandomAccess< BitType > op = Views.extend( src, new OutOfBoundsBorderFactory< BitType, RandomAccessibleInterval< BitType > >() ).randomAccess();
 
 		final int kernelSize = ( int ) Math.pow( 3, dim.length );
 		final int[] kernel = new int[ kernelSize ];
@@ -313,11 +313,11 @@ public class BinaryOps< K extends RandomAccessibleInterval< BitType > & Iterable
 		}
 	}
 
-	private void nDFourConnected( final K r, final K op, final long[] dim, final boolean erode, final int count )
+	private void nDFourConnected( final RandomAccessibleInterval< BitType > r, final RandomAccessibleInterval< BitType > op, final long[] dim, final boolean erode, final int count )
 	{
-		Cursor< BitType > resCur = r.cursor();
-		Cursor< BitType > srcCur = op.localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory<BitType, K>() ).randomAccess();
+		Cursor< BitType > resCur = Views.iterable( r ).cursor();
+		Cursor< BitType > srcCur = Views.iterable( op ).localizingCursor();
+		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory< BitType, RandomAccessibleInterval< BitType > >() ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];

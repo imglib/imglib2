@@ -66,7 +66,7 @@ public abstract class AbstractTypedSpace<A extends TypedAxis> extends
 
 	@Override
 	public int dimensionIndex(final AxisType axisType) {
-		for (int d=0; d<numDimensions(); d++) {
+		for (int d = 0; d < numDimensions(); d++) {
 			if (axis(d).type() == axisType) return d;
 		}
 		return -1;

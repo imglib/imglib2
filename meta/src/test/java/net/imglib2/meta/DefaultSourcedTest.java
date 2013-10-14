@@ -42,9 +42,11 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
+ * Tests {@link DefaultSourced}.
+ * 
  * @author Barry DeZonia
  */
-public class DefaultSourcedTest {
+public class DefaultSourcedTest extends AbstractMetaTest {
 
 	private DefaultSourced sourced;
 

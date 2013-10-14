@@ -37,7 +37,6 @@
 package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
@@ -50,7 +49,7 @@ import net.imglib2.view.Views;
  * 
  * @param <T>
  */
-public class ErodeGray< T extends RealType< T >, I extends RandomAccessibleInterval< T > & IterableInterval< T >> implements UnaryOperation< I, I >
+public class ErodeGray< T extends RealType< T >> implements UnaryOperation< RandomAccessibleInterval< T > , RandomAccessibleInterval< T > >
 {
 
 	private final long[][] m_struc;
@@ -65,11 +64,11 @@ public class ErodeGray< T extends RealType< T >, I extends RandomAccessibleInter
 	}
 
 	@Override
-	public I compute( final I input, final I output )
+	public RandomAccessibleInterval< T > compute( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< T > output )
 	{
-		final T v = input.firstElement().createVariable();
+		final T v = Views.iterable(input).firstElement().createVariable();
 		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( Views.extendValue( input, v ).randomAccess(), m_struc );
-		final Cursor< T > out = output.localizingCursor();
+		final Cursor< T > out = Views.iterable(output).localizingCursor();
 		double m;
 		while ( out.hasNext() )
 		{
@@ -88,8 +87,8 @@ public class ErodeGray< T extends RealType< T >, I extends RandomAccessibleInter
 	}
 
 	@Override
-	public ErodeGray< T, I > copy()
+	public ErodeGray< T > copy()
 	{
-		return new ErodeGray< T, I >( m_struc );
+		return new ErodeGray< T >( m_struc );
 	}
 }

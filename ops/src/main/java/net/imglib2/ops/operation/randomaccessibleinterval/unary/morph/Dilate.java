@@ -55,13 +55,13 @@ public final class Dilate< I extends RandomAccessibleInterval< BitType > & Itera
 
 	private final ConnectedType m_type;
 
-	private final BinaryOps< I > m_binOps;
+	private final BinaryOps m_binOps;
 
 	public Dilate( ConnectedType type, final int neighbourhoodCount )
 	{
 		m_neighbourhoodCount = neighbourhoodCount;
 		m_type = type;
-		m_binOps = new BinaryOps< I >();
+		m_binOps = new BinaryOps();
 	}
 
 	@Override

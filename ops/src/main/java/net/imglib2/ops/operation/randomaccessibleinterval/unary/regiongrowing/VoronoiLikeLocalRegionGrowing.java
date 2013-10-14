@@ -41,8 +41,10 @@ import java.util.Collection;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.labeling.Labeling;
+import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 
@@ -78,10 +80,17 @@ public class VoronoiLikeLocalRegionGrowing< L extends Comparable< L >, T extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void initRegionGrowing( Labeling< L > srcLab )
+	protected void initRegionGrowing( RandomAccessibleInterval< LabelingType< L > > in )
 	{
+		if(!(in instanceof Labeling)){
+			throw new IllegalArgumentException("Since now only Labelings are supported");
+		}
+		
+		Labeling<L> srcLab = (Labeling<L>) in;
+		
 		super.initRegionGrowing( srcLab );
 
+		
 		// determine the local threshold for each region by means of the
 		// seeding
 		// regions
@@ -109,7 +118,7 @@ public class VoronoiLikeLocalRegionGrowing< L extends Comparable< L >, T extends
 	}
 
 	@Override
-	public UnaryOperation< Labeling< L >, Labeling< L >> copy()
+	public UnaryOperation< RandomAccessibleInterval< LabelingType< L > >, Labeling< L >> copy()
 	{
 		return new VoronoiLikeLocalRegionGrowing< L, T >( m_srcImg, m_fillHoles );
 

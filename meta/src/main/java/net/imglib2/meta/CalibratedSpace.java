@@ -37,6 +37,9 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.RealInterval;
+import net.imglib2.meta.axis.LinearAxis;
+
 /**
  * A Euclidean space whose dimensions have units and calibrations.
  * 
@@ -46,28 +49,80 @@ package net.imglib2.meta;
 public interface CalibratedSpace<A extends CalibratedAxis> extends
 	TypedSpace<A>
 {
-	/** Gets the space's physical calibration at the given dimension. */
+
+	/**
+	 * Returns the average scale along the given axis, for some reasonable
+	 * interval.
+	 * <p>
+	 * The exact interval used is implementation dependent, but reasonable effort
+	 * will be made to use the largest in-bounds range for the space; e.g., for
+	 * {@link RealInterval}s, the range used is {@link RealInterval#realMin(int)}
+	 * to {@link RealInterval#realMax(int)}. For spaces in general, the default
+	 * range is {@code [0, 1]}.
+	 * </p>
+	 */
+	double averageScale(int d);
+
+	/**
+	 * @deprecated Use {@code LinearSpace#axis(int).scale()} instead.
+	 * @see LinearSpace
+	 * @see LinearAxis#scale()
+	 */
+	@Deprecated
 	double calibration(int d);
 
-	/** Copies the space's physical calibration into the given array. */
+	/**
+	 * @deprecated Use {@code LinearSpace#axis(int).scale()} instead.
+	 * @see LinearSpace
+	 * @see LinearAxis#scale()
+	 */
+	@Deprecated
 	void calibration(double[] cal);
 
-	/** Copies the space's physical calibration into the given array. */
+	/**
+	 * @deprecated Use {@code LinearSpace#axis(int).scale()} instead.
+	 * @see LinearSpace
+	 * @see LinearAxis#scale()
+	 */
+	@Deprecated
 	void calibration(float[] cal);
 
-	/** Sets the physical calibration for the given dimension. */
+	/**
+	 * @deprecated Use {@code LinearSpace#axis(d).setScale(double)} instead.
+	 * @see LinearSpace
+	 * @see LinearAxis#setScale(double)
+	 */
+	@Deprecated
 	void setCalibration(double cal, int d);
 
-	/** Sets the physical calibration for all dimensions. */
+	/**
+	 * @deprecated Use {@code LinearSpace#axis(d).setScale(double)} instead.
+	 * @see LinearSpace
+	 * @see LinearAxis#setScale(double)
+	 */
+	@Deprecated
 	void setCalibration(double[] cal);
 
-	/** Sets the physical calibration for all dimensions. */
+	/**
+	 * @deprecated Use {@code LinearSpace#axis(d).setScale(double)} instead.
+	 * @see LinearSpace
+	 * @see LinearAxis#setScale(double)
+	 */
+	@Deprecated
 	void setCalibration(float[] cal);
 
-	/** Gets the physical unit for the given dimension. */
+	/**
+	 * @deprecated Use {@code axis(d).unit()} instead.
+	 * @see CalibratedAxis#unit()
+	 */
+	@Deprecated
 	String unit(int d);
 
-	/** Sets the physical unit for the given dimension. */
+	/**
+	 * @deprecated Use {@code axis(d).setUnit(unit)} instead.
+	 * @see CalibratedAxis#setUnit(String)
+	 */
+	@Deprecated
 	void setUnit(String unit, int d);
 
 }
