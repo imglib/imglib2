@@ -46,10 +46,12 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.view.Views;
 
 /**
  * TODO
@@ -58,7 +60,7 @@ import net.imglib2.type.logic.BitType;
  * @author Lee Kamentsky
  * @author leek
  */
-public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> extends AbstractRegionOfInterest implements IterableRegionOfInterest
+public class BinaryMaskRegionOfInterest< T extends BitType, I extends RandomAccessibleInterval< T >> extends AbstractRegionOfInterest implements IterableRegionOfInterest
 {
 	final I img;
 
@@ -118,7 +120,7 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 			protected BMROICursor()
 			{
 				super( BMROIIterableInterval.this.numDimensions() );
-				cursor = img.localizingCursor();
+				cursor = Views.iterable(img).localizingCursor();
 				position = new long[ BMROIIterableInterval.this.numDimensions() ];
 			}
 
@@ -446,7 +448,7 @@ public class BinaryMaskRegionOfInterest< T extends BitType, I extends Img< T >> 
 			cached_size = 0;
 			minima = new long[ numDimensions() ];
 			maxima = new long[ numDimensions() ];
-			Cursor< T > c = img.localizingCursor();
+			Cursor< T > c = Views.iterable(img).localizingCursor();
 			while ( c.hasNext() )
 			{
 				if ( c.next().get() )
