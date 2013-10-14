@@ -41,8 +41,8 @@ import java.util.Random;
 
 import net.imglib2.Cursor;
 import net.imglib2.ExtendedRandomAccessibleInterval;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.algorithm.stats.ComputeMinMax;
@@ -55,6 +55,7 @@ import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
+import net.imglib2.view.Views;
 
 /**
  * TODO
@@ -64,7 +65,7 @@ import net.imglib2.util.Util;
 public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlgorithm<Img<BitType>>, Benchmark
 {
 	Img<BitType> result;
-	final Img<T> img;
+	final RandomAccessibleInterval<T> img;
 	final Img<FloatType> errorDiffusionKernel;
 	final long[] dim, tmp1, tmp2;
 	final float ditheringThreshold;
@@ -72,7 +73,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 	
 	String errorMessage = "";
 	
-	public FloydSteinbergDithering( final Img<T> img, final float ditheringThreshold )
+	public FloydSteinbergDithering( final RandomAccessibleInterval<T> img, final float ditheringThreshold )
 	{
 		this.img = img;
 		this.dim = Util.intervalDimensions(img);
@@ -85,7 +86,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 	}
 
 	/** Will estimate the dithering threshold by (max - min) / 2 */
-	public FloydSteinbergDithering( final Img<T> img )
+	public FloydSteinbergDithering( final RandomAccessibleInterval<T> img )
 	{
 		this ( img, Float.NEGATIVE_INFINITY );
 	}	
@@ -95,7 +96,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 	{		
 		final long startTime = System.currentTimeMillis();
 
-		ComputeMinMax<T> cmm = new ComputeMinMax<T>((IterableInterval<T>)img);
+		ComputeMinMax<T> cmm = new ComputeMinMax<T>(img);
 		cmm.process();
 		final float minValue = cmm.getMin().getRealFloat();
 		final float maxValue = cmm.getMax().getRealFloat();
@@ -107,7 +108,7 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 
 		// creates the output image of BitType using the same Storage Strategy as the input image
 		try {
-			result = img.factory().imgFactory(new BitType()).create( dim, new BitType() );
+			result = new ArrayImgFactory<BitType>().imgFactory(new BitType()).create( dim, new BitType() );
 		} catch (IncompatibleTypeException e) {
 			throw new RuntimeException(e);
 		}
@@ -119,9 +120,9 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 
 		// we also need a Cursors for the input, the output and the kernel image
 		final RandomAccess<T> cursorInput
-			= new ExtendedRandomAccessibleInterval<T,Img<T>>
-				(img, new OutOfBoundsConstantValueFactory<T, Img<T>>
-					( img.firstElement().createVariable() ))
+			= new ExtendedRandomAccessibleInterval<T,RandomAccessibleInterval<T>>
+				(img, new OutOfBoundsConstantValueFactory<T, RandomAccessibleInterval<T>>
+					( Views.iterable(img).firstElement().createVariable() ))
 						.randomAccess( img );
 			
 			//img.randomAccess( new OutOfBoundsConstantValueFactory<T,Img<T>>( img.firstElement().createVariable() ) );
