@@ -76,7 +76,19 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 		this.targetType = targetType;
 		this.integralImg = Views.iterable( integralImg );
 		
-		this.imgFactory = new ListImgFactory<R>();
+		//replacement code for non existind factory parameter
+		if ( integralImg instanceof Img) { 
+			try
+			{
+				this.imgFactory = (( Img<T> ) integralImg).factory().imgFactory( targetType );
+			}
+			catch ( IncompatibleTypeException e )
+			{
+				this.imgFactory = new ListImgFactory<R>();
+			}
+		} else {
+			this.imgFactory = new ListImgFactory<R>();
+		}
 		
 		if ( targetType.getClass().isInstance( this.integralImg.firstElement().createVariable() ) )
 		{
