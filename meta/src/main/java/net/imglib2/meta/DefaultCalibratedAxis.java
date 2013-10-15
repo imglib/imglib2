@@ -91,6 +91,12 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 	public void setUnit(final String unit) {
 		this.unit = unit;
 	}
+	
+	@Override
+	public DefaultCalibratedAxis copy()
+	{
+		return new DefaultCalibratedAxis(Axes.get( type().getLabel()), unit, cal );
+	}
 
 	@Override
 	public double calibratedValue(final double rawValue) {
@@ -116,10 +122,4 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 	public double averageScale(final double rawValue1, final double rawValue2) {
 		return calibration();
 	}
-
-	@Override
-	public DefaultCalibratedAxis copy() {
-		return new DefaultCalibratedAxis(type(), unit(), calibration());
-	}
-
 }

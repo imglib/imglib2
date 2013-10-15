@@ -42,28 +42,38 @@ package net.imglib2.meta;
  * 
  * @author Curtis Rueden
  */
-public class DefaultTypedAxis implements TypedAxis {
+public class DefaultTypedAxis implements TypedAxis
+{
 
 	private AxisType type;
 
-	public DefaultTypedAxis() {
-		this(Axes.unknown());
+	public DefaultTypedAxis()
+	{
+		this( Axes.unknown() );
 	}
 
-	public DefaultTypedAxis(final AxisType type) {
-		setType(type);
+	public DefaultTypedAxis( final AxisType type )
+	{
+		setType( type );
 	}
 
 	// -- TypedAxis methods --
 
 	@Override
-	public AxisType type() {
+	public AxisType type()
+	{
 		return type;
 	}
 
 	@Override
 	public void setType(final AxisType type) {
 		this.type = type;
+	}
+
+	@Override
+	public DefaultTypedAxis copy()
+	{
+		return new DefaultTypedAxis(Axes.get( type.getLabel() ));
 	}
 
 }
