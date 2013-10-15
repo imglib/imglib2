@@ -458,22 +458,16 @@ public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractC
 			if ( isOutOfBounds )
 			{
 				// did we come back into the image?
-				isOutOfBounds = false;
 				for ( int d = 0; d < n; ++d )
 					if ( position[ d ] < 0 || position[ d ] >= img.dimension( d ) )
-					{
-						isOutOfBounds = true;
-						break;
-					}
+						return;
 
-				if ( !isOutOfBounds )
-				{
-					// yes. we came back into the image.
-					// re-initialize randomAccessOnCells to the correct
-					// position.
-					img.getCellPosition( position, tmp );
-					randomAccessOnCells.setPosition( tmp );
-				}
+				// yes. we came back into the image.
+				// re-initialize randomAccessOnCells to the correct
+				// position.
+				isOutOfBounds = false;
+				img.getCellPosition( position, tmp );
+				randomAccessOnCells.setPosition( tmp );
 			}
 
 			final C cell = getCell();

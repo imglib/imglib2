@@ -37,11 +37,16 @@
 
 package net.imglib2.meta;
 
+import net.imglib2.meta.axis.DefaultLinearAxis;
+
 /**
  * Simple, default {@link CalibratedAxis} implementation.
  * 
  * @author Curtis Rueden
+ * @deprecated Use {@link DefaultLinearAxis}, or one of the axis types from the
+ *             {@link net.imglib2.meta.axis} package, instead.
  */
+@Deprecated
 public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 	CalibratedAxis
 {
@@ -65,7 +70,7 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 		setCalibration(cal);
 	}
 
-	// -- UnitAxis methods --
+	// -- CalibratedAxis methods --
 
 	@Override
 	public double calibration() {
@@ -73,13 +78,13 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 	}
 
 	@Override
-	public String unit() {
-		return unit;
+	public void setCalibration(final double cal) {
+		this.cal = cal;
 	}
 
 	@Override
-	public void setCalibration(final double cal) {
-		this.cal = cal;
+	public String unit() {
+		return unit;
 	}
 
 	@Override
@@ -93,4 +98,28 @@ public class DefaultCalibratedAxis extends DefaultTypedAxis implements
 		return new DefaultCalibratedAxis(Axes.get( type().getLabel()), unit, cal );
 	}
 
+	@Override
+	public double calibratedValue(final double rawValue) {
+		return rawValue * calibration();
+	}
+
+	@Override
+	public double rawValue(final double calibratedValue) {
+		return calibratedValue / calibration();
+	}
+
+	@Override
+	public String generalEquation() {
+		return "y = a*x";
+	}
+
+	@Override
+	public String particularEquation() {
+		return "y = " + calibration() + "*x";
+	}
+
+	@Override
+	public double averageScale(final double rawValue1, final double rawValue2) {
+		return calibration();
+	}
 }

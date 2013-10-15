@@ -106,7 +106,7 @@ public class MetadataUtil
 	 * @param out
 	 * @return returns out
 	 */
-	public static Metadata copyImgPlusMetadata( Metadata in, Metadata out )
+	public static ImgPlusMetadata copyImgPlusMetadata( ImgPlusMetadata in, ImgPlusMetadata out )
 	{
 		copyName( in, out );
 		copySource( in, out );
@@ -163,7 +163,7 @@ public class MetadataUtil
 	 * @param out
 	 * @return returns out
 	 */
-	public static Metadata copyAndCleanImgPlusMetadata( Interval inInterval, Metadata in, Metadata out )
+	public static ImgPlusMetadata copyAndCleanImgPlusMetadata( Interval inInterval, ImgPlusMetadata in, ImgPlusMetadata out )
 	{
 		copyName( in, out );
 		copySource( in, out );
@@ -174,6 +174,7 @@ public class MetadataUtil
 
 	// PRIVATE HELPERS
 
+	@SuppressWarnings("unchecked")
 	private static < T extends TypedAxis > void copyTypedSpace( Interval inInterval, TypedSpace< T > in, TypedSpace< T > out )
 	{
 
@@ -191,6 +192,7 @@ public class MetadataUtil
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static < C extends CalibratedAxis > void copyTypedSpace( Interval inInterval, CalibratedSpace< C > in, CalibratedSpace< C > out )
 	{
 
@@ -204,8 +206,6 @@ public class MetadataUtil
 			else
 			{
 				out.setAxis( (C) in.axis( d ).copy(), d- offset );
-				out.setCalibration( in.calibration( d ), d - offset );
-				out.setUnit( in.unit( d ), d - offset );
 			}
 		}
 	}

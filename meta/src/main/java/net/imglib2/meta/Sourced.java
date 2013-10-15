@@ -40,8 +40,7 @@ package net.imglib2.meta;
 /**
  * Interface for classes who track their source. Image files have sources (such
  * as "/usr/me/ImageFile.tif"). This information may be of interest to others.
- *  
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Barry DeZonia
@@ -50,7 +49,7 @@ public interface Sourced {
 
 	/** Sets the source String */
 	void setSource(String source);
-	
+
 	/** Gets the source String */
 	String getSource();
 }

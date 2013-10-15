@@ -60,5 +60,4 @@ public interface AnnotatedSpace<A extends Axis> extends EuclideanSpace {
 
 	/** Sets the dimensional axis associated with the given dimension. */
 	void setAxis(A axis, int d);
-
 }

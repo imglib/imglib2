@@ -67,17 +67,6 @@ public class FinalRealInterval extends AbstractRealInterval
 	}
 
 	/**
-	 * Creates a new zero-bounded {@link AbstractRealInterval} with a certain size
-	 *
-	 * @param dimensions
-	 */
-	public FinalRealInterval( final double[] dimensions )
-	{
-		super( dimensions );
-	}
-
-
-	/**
 	 * Create a {@link FinalRealInterval} from a parameter list comprising minimum
 	 * coordinates and size. For example, to create a 2D interval from (10, 10)
 	 * to (20, 40) use createMinSize( 10, 10, 11, 31 ).
