@@ -116,7 +116,7 @@ public class EllipsoidCursor<T> extends AbstractNeighborhoodCursor<T> {
 	 * CONSTRUCTOR
 	 */
 
-	public EllipsoidCursor(AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> ellipsoid) {
+	public EllipsoidCursor(AbstractNeighborhood<T> ellipsoid) {
 		super(ellipsoid);
 		/*
 		 * We have to check what is the smallest dimension between the 1st and
