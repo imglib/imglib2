@@ -83,11 +83,6 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 	int numThreads;
 	long processingTime;
 	
-	public ComputeMinMax( final Img< T > img, final T min, final T max )
-	{
-		this( (IterableInterval<T>) img, min, max );
-	}
-
 	public ComputeMinMax( final IterableInterval<T> interval, final T min, final T max )
 	{
 		setNumThreads();
@@ -96,16 +91,6 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 	
 		this.min = min;
 		this.max = max;
-	}
-
-	public ComputeMinMax( final RandomAccessibleInterval<T> interval, final T min, final T max )
-	{
-		this( Views.iterable( interval ), min, max );
-	}
-
-	public ComputeMinMax( final Img< T > img )
-	{
-		this( (IterableInterval<T>) img );
 	}
 
 	public ComputeMinMax( final IterableInterval< T > interval )
@@ -118,11 +103,6 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 		this.max = this.min.copy();
 	}
 
-	public ComputeMinMax( final RandomAccessibleInterval< T > interval )
-	{
-		this( Views.iterable( interval ) );
-	}
-	
 	public T getMin() { return min; }
 	public T getMax() { return max; }
 	
