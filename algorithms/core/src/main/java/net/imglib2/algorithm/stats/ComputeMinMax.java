@@ -55,10 +55,10 @@ import net.imglib2.view.Views;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
-public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorithm, MultiThreaded, Benchmark
+public class ComputeMinMax< T extends Type< T > & Comparable< T >> implements Algorithm, MultiThreaded, Benchmark
 {
 	/**
 	 * Computes minimal and maximal value in a given interval
@@ -68,27 +68,30 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 	 * @param max
 	 */
 	final public static < T extends Comparable< T > & Type< T > > void computeMinMax( final RandomAccessibleInterval< T > interval, final T min, final T max )
-	{ 
-		ComputeMinMax< T > c = new ComputeMinMax<T>( interval );
+	{
+		ComputeMinMax< T > c = new ComputeMinMax< T >( Views.iterable( interval ) );
 		c.process();
-		
+
 		min.set( c.getMin() );
 		max.set( c.getMax() );
 	}
 
 	final IterableInterval< T > image;
+
 	final T min, max;
-	
+
 	String errorMessage = "";
+
 	int numThreads;
+
 	long processingTime;
-	
-	public ComputeMinMax( final IterableInterval<T> interval, final T min, final T max )
+
+	public ComputeMinMax( final IterableInterval< T > interval, final T min, final T max )
 	{
 		setNumThreads();
-		
+
 		this.image = interval;
-	
+
 		this.min = min;
 		this.max = max;
 	}
@@ -96,16 +99,23 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 	public ComputeMinMax( final IterableInterval< T > interval )
 	{
 		setNumThreads();
-		
+
 		this.image = interval;
-	
+
 		this.min = image.firstElement().createVariable();
 		this.max = this.min.copy();
 	}
 
-	public T getMin() { return min; }
-	public T getMax() { return max; }
-	
+	public T getMin()
+	{
+		return min;
+	}
+
+	public T getMax()
+	{
+		return max;
+	}
+
 	@Override
 	public boolean process()
 	{
@@ -113,88 +123,88 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 
 		final long imageSize = image.size();
 
-		final AtomicInteger ai = new AtomicInteger(0);					
-        final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
+		final AtomicInteger ai = new AtomicInteger( 0 );
+		final Thread[] threads = SimpleMultiThreading.newThreads( getNumThreads() );
 
-        final Vector<Chunk> threadChunks = SimpleMultiThreading.divideIntoChunks( imageSize, numThreads );
-        final Vector<T> minValues = new Vector<T>();
-        final Vector<T> maxValues = new Vector<T>();
-	
-        for (int ithread = 0; ithread < threads.length; ++ithread)
-        {
-        	minValues.add( image.firstElement().createVariable() );
-        	maxValues.add( image.firstElement().createVariable() );
-        	
-            threads[ithread] = new Thread(new Runnable()
-            {
-                @Override
-								public void run()
-                {
-                	// Thread ID
-                	final int myNumber = ai.getAndIncrement();
-        
-                	// get chunk of pixels to process
-                	final Chunk myChunk = threadChunks.get( myNumber );
-                	
-                	// compute min and max
+		final Vector< Chunk > threadChunks = SimpleMultiThreading.divideIntoChunks( imageSize, numThreads );
+		final Vector< T > minValues = new Vector< T >();
+		final Vector< T > maxValues = new Vector< T >();
+
+		for ( int ithread = 0; ithread < threads.length; ++ithread )
+		{
+			minValues.add( image.firstElement().createVariable() );
+			maxValues.add( image.firstElement().createVariable() );
+
+			threads[ ithread ] = new Thread( new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					// Thread ID
+					final int myNumber = ai.getAndIncrement();
+
+					// get chunk of pixels to process
+					final Chunk myChunk = threadChunks.get( myNumber );
+
+					// compute min and max
 					compute( myChunk.getStartPosition(), myChunk.getLoopSize(), minValues.get( myNumber ), maxValues.get( myNumber ) );
 
-                }
-            });
-        }
-        
-        SimpleMultiThreading.startAndJoin( threads );
-        
-        // compute overall min and max
-        min.set( minValues.get( 0 ) );
-        max.set( maxValues.get( 0 ) );
-        
-        for ( int i = 0; i < threads.length; ++i )
-        {
-        	T value = minValues.get( i );
+				}
+			} );
+		}
+
+		SimpleMultiThreading.startAndJoin( threads );
+
+		// compute overall min and max
+		min.set( minValues.get( 0 ) );
+		max.set( maxValues.get( 0 ) );
+
+		for ( int i = 0; i < threads.length; ++i )
+		{
+			T value = minValues.get( i );
 			if ( Util.min( min, value ) == value )
 				min.set( value );
-			
+
 			value = maxValues.get( i );
 			if ( Util.max( max, value ) == value )
-				max.set( value );        	
-        }
-        
+				max.set( value );
+		}
+
 		processingTime = System.currentTimeMillis() - startTime;
-        
+
 		return true;
-	}	
+	}
 
 	protected void compute( final long startPos, final long loopSize, final T min, final T max )
 	{
-		final Cursor<T> cursor = image.cursor();
-		
+		final Cursor< T > cursor = image.cursor();
+
 		// init min and max
 		cursor.fwd();
-		
+
 		min.set( cursor.get() );
 		max.set( cursor.get() );
-		
+
 		cursor.reset();
 
 		// move to the starting position of the current thread
-		cursor.jumpFwd( startPos );		
+		cursor.jumpFwd( startPos );
 
-        // do as many pixels as wanted by this thread
-        for ( long j = 0; j < loopSize; ++j )
-        {
+		// do as many pixels as wanted by this thread
+		for ( long j = 0; j < loopSize; ++j )
+		{
 			cursor.fwd();
-			
+
 			final T value = cursor.get();
-			
+
 			if ( Util.min( min, value ) == value )
 				min.set( value );
-			
+
 			if ( Util.max( max, value ) == value )
 				max.set( value );
 		}
 	}
-	
+
 	@Override
 	public boolean checkInput()
 	{
@@ -212,17 +222,32 @@ public class ComputeMinMax<T extends Type<T> & Comparable<T>> implements Algorit
 	}
 
 	@Override
-	public long getProcessingTime() { return processingTime; }
+	public long getProcessingTime()
+	{
+		return processingTime;
+	}
 
 	@Override
-	public void setNumThreads() { this.numThreads = Runtime.getRuntime().availableProcessors(); }
+	public void setNumThreads()
+	{
+		this.numThreads = Runtime.getRuntime().availableProcessors();
+	}
 
 	@Override
-	public void setNumThreads( final int numThreads ) { this.numThreads = numThreads; }
+	public void setNumThreads( final int numThreads )
+	{
+		this.numThreads = numThreads;
+	}
 
 	@Override
-	public int getNumThreads() { return numThreads; }	
-	
+	public int getNumThreads()
+	{
+		return numThreads;
+	}
+
 	@Override
-	public String getErrorMessage() { return errorMessage; }
+	public String getErrorMessage()
+	{
+		return errorMessage;
+	}
 }
