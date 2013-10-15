@@ -71,37 +71,16 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 	 * @param size The target dimensions of the desired scaled image.
 	 */
 	@SuppressWarnings("unchecked") @Deprecated
-	public ScaleAreaAveraging2d(final RandomAccessibleInterval<T> integralImg, final R targetType, final long[] size) {
-		this.size = size;
-		this.targetType = targetType;
-		this.integralImg = Views.iterable( integralImg );
+	public ScaleAreaAveraging2d(final Img<T> integralImg, final R targetType, final long[] size) {
+		this(integralImg, targetType, size, null);
 		
-		//replacement code for non existind factory parameter
-		if ( integralImg instanceof Img) { 
-			try
-			{
-				this.imgFactory = (( Img<T> ) integralImg).factory().imgFactory( targetType );
-			}
-			catch ( IncompatibleTypeException e )
-			{
-				this.imgFactory = new ListImgFactory<R>();
-			}
-		} else {
+		try
+		{
+			this.imgFactory = integralImg.factory().imgFactory( targetType );
+		}
+		catch ( IncompatibleTypeException e )
+		{
 			this.imgFactory = new ListImgFactory<R>();
-		}
-		
-		if ( targetType.getClass().isInstance( this.integralImg.firstElement().createVariable() ) )
-		{
-			converter = (Converter<T, R>) (Converter<?,?>) new TypeIdentity<T>(); // double cast to workaround javac error
-		}
-		else
-		{
-			converter = new Converter< T, R >() {
-				@Override
-				public void convert(T input, R output) {
-					output.setReal(input.getRealDouble());
-				}
-			};
 		}
 	}
 	
@@ -133,12 +112,17 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 	}
 
 	@Deprecated
-	public ScaleAreaAveraging2d(final RandomAccessibleInterval<T> integralImg, final R targetType, final Converter<T, R> converter, final long[] size) {
-		this.size = size;
-		this.targetType = targetType;
-		this.integralImg = Views.iterable( integralImg );
-		this.converter = converter;
-		this.imgFactory = new ListImgFactory<R>();
+	public ScaleAreaAveraging2d(final Img<T> integralImg, final R targetType, final Converter<T, R> converter, final long[] size) {
+		this(integralImg, targetType, converter, size, null);
+		
+		try
+		{
+			this.imgFactory = integralImg.factory().imgFactory( targetType );
+		}
+		catch ( IncompatibleTypeException e )
+		{
+			this.imgFactory = new ListImgFactory<R>();
+		}
 	}
 	
 	public ScaleAreaAveraging2d(final RandomAccessibleInterval<T> integralImg, final R targetType, final Converter<T, R> converter, final long[] size, ImgFactory<R> imgFactory) {
