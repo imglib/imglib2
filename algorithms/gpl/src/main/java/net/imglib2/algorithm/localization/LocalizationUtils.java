@@ -29,11 +29,14 @@ package net.imglib2.algorithm.localization;
 import java.util.Random;
 
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
 import net.imglib2.Localizable;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.region.localneighborhood.RectangleCursor;
 import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodGPL;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.Views;
 
 /**
  * A collection of utility methods for localization algorithms.
@@ -45,11 +48,12 @@ public class LocalizationUtils {
 	private static final Gaussian gaussian = new Gaussian();
 	private static final Random ran = new Random();
 	
-	public static final <T extends RealType<T>> void addEllipticGaussianSpotToImage(Img<T> img, double[] params) {
-		Cursor<T> lc = img.localizingCursor();
+	public static final <T extends RealType<T>> void addEllipticGaussianSpotToImage(RandomAccessibleInterval<T> img, double[] params) {
+		IterableInterval<T> iterImg = Views.iterable( img );
+		Cursor<T> lc = iterImg.localizingCursor();
 		double[] position = new double[img.numDimensions()];
 		double val;
-		T var = img.firstElement().createVariable();
+		T var = iterImg.firstElement().createVariable();
 		while (lc.hasNext()) {
 			lc.fwd();
 			position[0] = lc.getDoublePosition(0);
@@ -60,12 +64,13 @@ public class LocalizationUtils {
 		}
 	}
 	
-	public static final <T extends RealType<T>> void addGaussianSpotToImage(Img<T> img, double[] params) {
-		Cursor<T> lc = img.localizingCursor();
+	public static final <T extends RealType<T>> void addGaussianSpotToImage(RandomAccessibleInterval<T> img, double[] params) {
+		IterableInterval<T> iterImg = Views.iterable( img );
+		Cursor<T> lc = iterImg.localizingCursor();
 		int nDims = img.numDimensions();
 		double[] position = new double[nDims];
 		double val;
-		T var = img.firstElement().createVariable();
+		T var = iterImg.firstElement().createVariable();
 		while (lc.hasNext()) {
 			lc.fwd();
 			lc.localize(position);
@@ -75,10 +80,11 @@ public class LocalizationUtils {
 		}
 	}
 
-	public static final <T extends RealType<T>> void addGaussianNoiseToImage(Img<T> img, double sigma_noise) {
-		Cursor<T> lc = img.localizingCursor();
+	public static final <T extends RealType<T>> void addGaussianNoiseToImage(RandomAccessibleInterval<T> img, double sigma_noise) {
+		IterableInterval<T> iterImg = Views.iterable( img );
+		Cursor<T> lc = iterImg.localizingCursor();
 		double val;
-		T var = img.firstElement().createVariable();
+		T var = iterImg.firstElement().createVariable();
 		while (lc.hasNext()) {
 			lc.fwd();
 			val = Math.max(0, sigma_noise * ran.nextGaussian());
@@ -96,10 +102,10 @@ public class LocalizationUtils {
 	 * <code>d</code>, the cube sampled if a of size <code>2 x span[d] + 1</code>.
 	 * @return  an {@link Observation} object containing the sampled data.
 	 */
-	public static final <T extends RealType<T>> Observation gatherObservationData(final Img<T> image, final Localizable point, final long[] span) {
+	public static final <T extends RealType<T>> Observation gatherObservationData(final RandomAccessibleInterval<T> image, final Localizable point, final long[] span) {
 		
 		final int ndims = image.numDimensions();
-		RectangleNeighborhoodGPL<T, Img<T>> neighborhood = new RectangleNeighborhoodGPL<T, Img<T>>(image);
+		RectangleNeighborhoodGPL<T, RandomAccessibleInterval<T>> neighborhood = new RectangleNeighborhoodGPL<T, RandomAccessibleInterval<T>>(image);
 		neighborhood.setSpan(span);
 		neighborhood.setPosition(point);
 
