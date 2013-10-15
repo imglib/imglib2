@@ -51,7 +51,7 @@ import net.imglib2.util.Util;
 public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( final NativeImg<UnsignedShortType, ? extends ShortAccess> img ) { super( img ); }
+	public UnsignedShortType( final NativeImg<?, ? extends ShortAccess> img ) { super( img ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedShortType( final int value ) { super( getCodedSignedShortChecked(value) ); }
