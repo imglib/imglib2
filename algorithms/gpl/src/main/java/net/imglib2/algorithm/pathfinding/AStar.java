@@ -2,23 +2,48 @@ package net.imglib2.algorithm.pathfinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import net.imglib2.Cursor;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.OutputAlgorithm;
-import net.imglib2.algorithm.region.localneighborhood.Neighborhood;
-import net.imglib2.algorithm.region.localneighborhood.RectangleShape;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 
-public abstract class AStar< T extends RealType< T >> implements Benchmark, Algorithm, OutputAlgorithm< PathIterable< T >>
+/**
+ * A skeleton of the A* algorithm that finds the path of least cost between two
+ * points. See {@link http://en.wikipedia.org/wiki/A*_search_algorithm} for
+ * details.
+ * <p>
+ * This abstract class provides only the main iteration loop. Concrete
+ * implementations must specify:
+ * <ul>
+ * <li>How to expand a parent node and generate children nodes for the next
+ * iteration. See {@link #expand(long[])}.
+ * <li>The move cost, that is the cost to move from a parent location to a new
+ * location. It is commonly denoted <i>g(x)</i>. See
+ * {@link #moveCost(long[], long[])}.
+ * <li>The future path cost: an admissible heuristic estimate of the cost from
+ * the current location to the goal location. Obviously, only estimates can be
+ * made for this quantity. It is commonly denoted <i>h(x)</i>. See
+ * {@link #heuristic(long[])}.
+ * </ul>
+ * <p>
+ * This class imposes locations that can be represented by <code>long[]</code>
+ * arrays, ideally mapping locations in most imglib2 structures.
+ * <p>
+ * Contrary to verbatim implementations, it does not treat the special case
+ * where an already visited location can be revisited given that the new visit
+ * yields a lower cost. A node is expanded only once, and its cost is never
+ * recalculated. This is not a problem for heuristics that are monotonic or
+ * consistent.
+ * 
+ * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com>
+ */
+public abstract class AStar implements Benchmark, Algorithm, OutputAlgorithm< List< long[] >>
 {
 
 	protected final long[] start;
@@ -29,20 +54,14 @@ public abstract class AStar< T extends RealType< T >> implements Benchmark, Algo
 
 	private long processingTime;
 
-	protected final RandomAccessibleInterval< T > source;
-
-	private final RandomAccess< Neighborhood< T >> neighborhoods;
-
-	private PathIterable< T > output;
+	private List< long[] > output;
 
 	private long expandedNodeNumber;
 
-	public AStar( final RandomAccessibleInterval< T > source, final long[] start, final long[] end )
+	public AStar( final long[] start, final long[] end )
 	{
-		this.source = source;
 		this.start = start.clone();
 		this.end = end.clone();
-		this.neighborhoods = new RectangleShape( 1, true ).neighborhoodsRandomAccessible( source ).randomAccess( source );
 	}
 
 	@Override
@@ -86,32 +105,10 @@ public abstract class AStar< T extends RealType< T >> implements Benchmark, Algo
 			 * Get successors
 			 */
 
-			neighborhoods.setPosition( node.coords );
-			final Neighborhood< T > neighborhood = neighborhoods.get();
+			final Collection< long[] > children = expand( node.coords );
 
-			final Cursor< T > cursor = neighborhood.cursor();
-			while ( cursor.hasNext() )
+			for ( final long[] coords : children )
 			{
-				cursor.fwd();
-
-				// Get current child node coordinates.
-				final long[] coords = new long[ source.numDimensions() ];
-				cursor.localize( coords );
-
-				// Check if not out of bounds. Skip node if this is the case.
-				boolean outOfBounds = false;
-				for ( int d = 0; d < source.numDimensions(); d++ )
-				{
-					if ( coords[ d ] < 0 || coords[ d ] >= source.dimension( d ) )
-					{
-						outOfBounds = true;
-						break;
-					}
-				}
-				if ( outOfBounds )
-				{
-					continue;
-				}
 
 				// Make a blank (no cost yet) node, to see if we have not
 				// visited this one already.
@@ -130,29 +127,25 @@ public abstract class AStar< T extends RealType< T >> implements Benchmark, Algo
 					}
 
 					Collections.reverse( path );
-					output = new ListPathIterable< T >( source, path );
+					output = path;
 					final long endTime = System.currentTimeMillis();
 					processingTime = endTime - startTime;
 					return true;
 				}
 
-				// Compute tentative cost
-				final double tentativeG = node.g + cursor.get().getRealDouble();
-				final double tentativeF = tentativeG + heuristic( coords );
-
-				// Is it in the CLOSED set?
-				if ( closed.contains( child ) )
+				// Is it in the CLOSED set? Or OPEN set?
+				if ( closed.contains( child ) || openSet.contains( child ) )
 				{
 					continue;
 				}
 
+				// Compute tentative cost
+				final double tentativeG = node.g + moveCost( node.coords, coords );
+				final double tentativeF = tentativeG + heuristic( coords );
+
 				child.f = tentativeF;
 				child.g = tentativeG;
-
-				if ( !openSet.contains( child ) )
-				{
-					openSet.add( child );
-				}
+				openSet.add( child );
 			}
 
 		}
@@ -164,7 +157,7 @@ public abstract class AStar< T extends RealType< T >> implements Benchmark, Algo
 	}
 
 	@Override
-	public PathIterable< T > getResult()
+	public List< long[] > getResult()
 	{
 		return output;
 	}
@@ -172,12 +165,38 @@ public abstract class AStar< T extends RealType< T >> implements Benchmark, Algo
 	/**
 	 * Returns the estimate of the total cost required to travel from the
 	 * specified location to the end location.
-	 *
+	 * 
 	 * @param currentPoint
 	 *            the location whose heuristic is to be estimated.
 	 * @return the estimated cost, as a <code>double</code>.
 	 */
 	protected abstract double heuristic( final long[] currentPoint );
+
+	/**
+	 * Returns the cost to move from location <code>from</code> to adjacent
+	 * location <code>to</code>.
+	 * 
+	 * @param from
+	 *            the parent location.
+	 * @param to
+	 *            the target location.
+	 * @return the move cost, as a <code>double</code>.
+	 */
+	protected abstract double moveCost( long[] from, long[] to );
+
+	/**
+	 * Returns the children of a location, that will be added to the queue.
+	 * <p>
+	 * At this stage, one does not need to check whether the new locations have
+	 * already been traversed. This will be done later. However, it is the
+	 * responsibility of this method to return only locations on which costs are
+	 * defined.
+	 * 
+	 * @param location
+	 *            the parent location.
+	 * @return the children locations, in a {@link Collection}.
+	 */
+	protected abstract Collection< long[] > expand( long[] location );
 
 	@Override
 	public String getErrorMessage()
@@ -193,7 +212,7 @@ public abstract class AStar< T extends RealType< T >> implements Benchmark, Algo
 
 	/**
 	 * Returns the number of expanded nodes during the last search.
-	 *
+	 * 
 	 * @return the number of expanded nodes, as a <code>long</code>.
 	 */
 	public long getExpandedNodeNumber()

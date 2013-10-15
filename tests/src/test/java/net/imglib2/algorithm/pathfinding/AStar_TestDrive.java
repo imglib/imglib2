@@ -5,6 +5,8 @@ import ij.ImagePlus;
 import ij.gui.PolygonRoi;
 import ij.gui.Roi;
 
+import java.util.List;
+
 import javax.swing.JFrame;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -23,10 +25,12 @@ public class AStar_TestDrive
 	{
 		ImageJ.main( args );
 
-		final ImagePlus imp = new ImagePlus( "/Users/tinevez/Desktop/Data/PathExample.tif" );
+		// final ImagePlus imp = new ImagePlus(
+		// "/Users/tinevez/Desktop/Data/PathExample.tif" );
+		final ImagePlus imp = new ImagePlus( "/Users/JeanYves/Desktop/Data/PathExample.tif" );
 		final Img< T > wrap = ImageJFunctions.wrap( imp );
 		final long[] start = new long[] { 0, 0 };
-		final long[] end = new long[] { 63, 63 };
+		final long[] end = new long[] { wrap.dimension( 0 ) - 1, wrap.dimension( 1 ) - 1 };
 
 		imp.show();
 
@@ -39,7 +43,7 @@ public class AStar_TestDrive
 			{
 				final int val = slider.getValue();
 				System.out.println( "For heuristics strength = " + val );
-				final AStar< T > aStar = new EuclidianDistanceAStar< T >( wrap, start, end, val );
+				final AStar aStar = new DefaultAStar< T >( wrap, start, end, val );
 				if ( !aStar.checkInput() || !aStar.process() )
 				{
 					System.err.println( aStar.getErrorMessage() );
@@ -48,14 +52,16 @@ public class AStar_TestDrive
 
 				System.out.println( "Pathfinding done in " + aStar.getProcessingTime() + " ms." );
 				System.out.println( "Expanded " + aStar.getExpandedNodeNumber() + " nodes." );
-				final PathIterable< T > result = aStar.getResult();
-				System.out.println( "Path length = " + result.length() + ", number of steps = " + result.size() );
+				final List< long[] > result = aStar.getResult();
+				final ListPathIterable< T > pathIterable = new ListPathIterable< T >( wrap, result );
 
-				final int nPoints = ( int ) result.size();
+				System.out.println( "Path length = " + pathIterable.length() + ", number of steps = " + result.size() );
+
+				final int nPoints = result.size();
 				final int[] xPoints = new int[ nPoints ];
 				final int[] yPoints = new int[ nPoints ];
 				int index = 0;
-				final Cursor< T > cursor = result.cursor();
+				final Cursor< T > cursor = pathIterable.cursor();
 				while ( cursor.hasNext() )
 				{
 					cursor.fwd();
