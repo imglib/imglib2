@@ -38,19 +38,18 @@
 package net.imglib2.ops.operation.randomaccessible.unary;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
-import net.imglib2.RandomAccessible;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.randomaccessible.binary.FloodFill;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.view.Views;
 
 /**
  * Martin Horn  (University of Konstanz)
  *
  * @param <K>
  */
-public final class FillHoles< K extends RandomAccessible< BitType > & IterableInterval< BitType >> implements UnaryOperation< K, K >
+public final class FillHoles implements UnaryOperation< RandomAccessibleInverval<BitType>, RandomAccessibleInverval<BitType> >
 {
 
 	private final ConnectedType m_connectedType;
@@ -64,10 +63,10 @@ public final class FillHoles< K extends RandomAccessible< BitType > & IterableIn
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final K compute( final K op, final K r )
+	public final RandomAccessibleInverval<BitType> compute( final RandomAccessibleInverval op, final RandomAccessibleInverval r )
 	{
-		if ( !r.iterationOrder().equals( op.iterationOrder() ) ) { throw new IllegalStateException( "Intervals are not compatible (IterationOrder)" ); }
-		FloodFill< BitType, K > ff = new FloodFill< BitType, K >( m_connectedType );
+		if ( !r.iterationOrder().equals( Views.iterable( op ).iterationOrder() ) ) { throw new IllegalStateException( "Intervals are not compatible (IterationOrder)" ); }
+		FloodFill< BitType > ff = new FloodFill< BitType >( m_connectedType );
 		long[] dim = new long[ r.numDimensions() ];
 		r.dimensions( dim );
 		Cursor< BitType > rc = r.cursor();
@@ -103,9 +102,9 @@ public final class FillHoles< K extends RandomAccessible< BitType > & IterableIn
 	}
 
 	@Override
-	public UnaryOperation< K, K > copy()
+	public UnaryOperation< RandomAccessibleInverval<BitType>, RandomAccessibleInverval<BitType> > copy()
 	{
-		return new FillHoles< K >( m_connectedType );
+		return new FillHoles ( m_connectedType );
 	}
 
 }
