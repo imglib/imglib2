@@ -13,23 +13,44 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
 import net.imglib2.Sampler;
 
+/**
+ * A concrete implementation of {@link PathIterable}, based on a {@link List} of
+ * coordinates as <code>long[]</code> arrats.
+ *
+ * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> Oct 2013
+ *
+ * @param <T>
+ *            the type of the source iterated over.
+ */
 public class ListPathIterable<T> implements PathIterable<T> {
 
 	private final RandomAccessibleInterval<T> source;
 	private final List<long[]> coords;
 
+	/**
+	 * Constructs a new {@link PathIterable}, that will iterate over the
+	 * specified {@link RandomAccessibleInterval} following the specified
+	 * coordinates in list order.
+	 *
+	 * @param source
+	 *            the {@link RandomAccessibleInterval} to iterate over.
+	 * @param coords
+	 *            the coordinates, as a list <code>long[]</code> to follow.
+	 */
 	public ListPathIterable(final RandomAccessibleInterval<T> source, final List<long[]> coords) {
 		this.source = source;
 		this.coords = coords;
 	}
 
 	@Override
-	public Cursor<T> cursor() {
+	public PathCursor< T > cursor()
+	{
 		return new ListPathIterableCursor();
 	}
 
 	@Override
-	public Cursor<T> localizingCursor() {
+	public PathCursor< T > localizingCursor()
+	{
 		return cursor();
 	}
 
@@ -201,6 +222,16 @@ public class ListPathIterable<T> implements PathIterable<T> {
 		return length;
 	}
 
+	/**
+	 * Creates a new {@link PathIterable} that will iterate over the same path
+	 * as this, but on a different source. It is the responsibility of the
+	 * caller to ensure that the new source is defined over all the coordinates
+	 * of the path.
+	 *
+	 * @param otherSource
+	 *            the source to iterate over in the new {@link PathIterable}.
+	 * @return a new {@link PathIterable}.
+	 */
 	public <R> ListPathIterable<R> copyOn(final RandomAccessibleInterval<R> otherSource) {
 		return new ListPathIterable<R>(otherSource, coords);
 	}
@@ -210,14 +241,20 @@ public class ListPathIterable<T> implements PathIterable<T> {
 	 * INNER CLASSES
 	 */
 
-	public final class ListPathIterableCursor implements Cursor<T> {
+	private final class ListPathIterableCursor implements PathCursor< T >
+	{
 
 		private ListIterator<long[]> listIterator;
 		private final RandomAccess<T> ra;
 
+		private double cumulativeLength;
+
+		private long[] previous;
+
 		public ListPathIterableCursor() {
 			this.listIterator = coords.listIterator();
 			this.ra = source.randomAccess();
+			this.cumulativeLength = 0;
 		}
 
 		@Override
@@ -257,23 +294,34 @@ public class ListPathIterable<T> implements PathIterable<T> {
 
 		@Override
 		public void jumpFwd(final long steps) {
-			for (int i = 0; i < steps - 1; i++) {
-				listIterator.next();
+			for ( int i = 0; i < steps; i++ )
+			{
+				fwd();
 			}
-			final long[] next = listIterator.next();
-			ra.setPosition(next);
 		}
 
 		@Override
 		public void fwd() {
 			final long[] next = listIterator.next();
+			if ( previous != null )
+			{
+				double d2 = 0;
+				for ( int d = 0; d < next.length; d++ )
+				{
+					d2 += ( next[ d ] - previous[ d ] ) * ( next[ d ] - previous[ d ] );
+				}
+				cumulativeLength += Math.sqrt( d2 );
+			}
 			ra.setPosition(next);
+			previous = next;
 		}
 
 		@Override
 		public void reset() {
 			listIterator = coords.listIterator();
 			ra.setPosition(coords.get(0));
+			cumulativeLength = 0;
+			previous = null;
 		}
 
 		@Override
@@ -315,6 +363,12 @@ public class ListPathIterable<T> implements PathIterable<T> {
 		@Override
 		public Cursor<T> copyCursor() {
 			return new ListPathIterableCursor();
+		}
+
+		@Override
+		public double length()
+		{
+			return cumulativeLength;
 		}
 
 	}
