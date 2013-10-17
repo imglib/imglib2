@@ -53,14 +53,13 @@ public class Max< T extends RealType< T >, V extends RealType< V >> implements U
 	@Override
 	public V compute( Iterator< T > input, V output )
 	{
-		double max = -Double.MAX_VALUE;
+		double max = Double.MIN_VALUE;
 		while ( input.hasNext() )
 		{
-			T in = input.next();
-
-			double val = in.getRealDouble();
-			if ( val > max )
+			double val = input.next().getRealDouble();
+			if ( val > max ) {
 				max = val;
+			}
 		}
 
 		output.setReal( max );
