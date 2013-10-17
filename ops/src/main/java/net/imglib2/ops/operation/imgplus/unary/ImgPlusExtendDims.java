@@ -45,8 +45,8 @@ import net.imglib2.RandomAccess;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.ImgPlus;
-import net.imglib2.meta.ImgPlusMetadata;
 import net.imglib2.ops.operation.UnaryOutputOperation;
+import net.imglib2.ops.operation.metadata.unary.CopyMetadata;
 import net.imglib2.type.Type;
 
 /**
@@ -115,7 +115,7 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 		Cursor< T > srcCur = op.localizingCursor();
 		RandomAccess< T > resRA = r.randomAccess();
 
-		copyMetadata(r, op);
+		new CopyMetadata().compute(op, r);
 		
 
 		for ( int d = 0; d < op.numDimensions(); d++ )
@@ -160,38 +160,4 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 		return compute( in, createEmptyOutput( in ) );
 	}
 
-	/**
-	 * Copy Metadata to ImgPlus from ImgPlusMetadata
-	 * @param d {@link ImgPlus}<?> to copy to
-	 * @param m {@link ImgPlusMetadata} to copy from
-	 * 
-	 * TODO: Verify completeness!
-	 */
-	private static ImgPlus<?> copyMetadata(ImgPlus<?> d, ImgPlusMetadata m) {
-		// copy Named and Sourced
-		d.setName( m.getName() );
-		d.setSource( m.getSource() );
-		
-		//copy ImageMetadata
-		d.setValidBits( m.getValidBits() );
-		d.setCompositeChannelCount( m.getCompositeChannelCount() );
-		
-		for ( int i = 0; i < m.getCompositeChannelCount(); ++i ){
-			d.setChannelMinimum( i, m.getChannelMinimum(i) );
-			d.setChannelMaximum( i, m.getChannelMaximum(i) );
-		}
-		
-		d.initializeColorTables( m.getColorTableCount() );
-		
-		for ( int i = 0; i < m.getColorTableCount(); ++i ){
-			d.setColorTable(m.getColorTable( i ), i);
-		}
-		
-		//copy CalibratedSpace
-		for ( int i = 0; i < d.numDimensions(); ++i ) { 
-			d.setAxis( m.axis( i ).copy(), i );
-		}
-		
-		return d;
-	}
 }
