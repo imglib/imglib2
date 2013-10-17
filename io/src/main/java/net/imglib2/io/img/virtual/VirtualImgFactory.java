@@ -48,7 +48,10 @@ import net.imglib2.type.numeric.RealType;
  * anything. Needed by VirtualImg to satisfy the Img contract.
  * 
  * @author Barry DeZonia
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public class VirtualImgFactory<T extends NativeType<T> & RealType<T>> extends
 	ImgFactory<T>
 {
