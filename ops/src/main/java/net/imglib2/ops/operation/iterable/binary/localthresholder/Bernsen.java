@@ -44,8 +44,9 @@ import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 /**
  * @author Markus Friedrich (University of Konstanz)
+ * @author Jonathan Hale (University of Konstanz)
  */
-public class Bernsen< T extends RealType< T >, IN extends Iterator< T >> implements BinaryOperation< IN, T, BitType >
+public class Bernsen< T extends RealType< T > > implements BinaryOperation< Iterator< T >, T, BitType >
 {
 
 	private double m_contrastThreshold;
@@ -59,11 +60,11 @@ public class Bernsen< T extends RealType< T >, IN extends Iterator< T >> impleme
 	}
 
 	@Override
-	public BitType compute( IN input, T px, BitType output )
+	public BitType compute( Iterator< T > input, T px, BitType output )
 	{
 
 		double min = Double.MAX_VALUE;
-		double max = -Double.MAX_VALUE;
+		double max = Double.MIN_VALUE;
 
 		while ( input.hasNext() )
 		{
@@ -88,9 +89,9 @@ public class Bernsen< T extends RealType< T >, IN extends Iterator< T >> impleme
 	}
 
 	@Override
-	public BinaryOperation< IN, T, BitType > copy()
+	public BinaryOperation< Iterator< T >, T, BitType > copy()
 	{
-		return new Bernsen< T, IN >( m_contrastThreshold, m_maxHalfValue );
+		return new Bernsen< T >( m_contrastThreshold, m_maxHalfValue );
 	}
 
 }
