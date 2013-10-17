@@ -44,7 +44,6 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * @author Felix Schönenberger (University of Konstanz)
- *
  * @param <T>
  */
 public class Max< T extends RealType< T >, V extends RealType< V >> implements UnaryOperation< Iterator< T >, V >
@@ -53,7 +52,7 @@ public class Max< T extends RealType< T >, V extends RealType< V >> implements U
 	@Override
 	public V compute( Iterator< T > input, V output )
 	{
-		double max = Double.MIN_VALUE;
+		double max = -Double.MAX_VALUE;
 		while ( input.hasNext() )
 		{
 			double val = input.next().getRealDouble();

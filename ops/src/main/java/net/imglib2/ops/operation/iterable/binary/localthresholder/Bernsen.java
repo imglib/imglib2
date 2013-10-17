@@ -64,7 +64,7 @@ public class Bernsen< T extends RealType< T > > implements BinaryOperation< Iter
 	{
 
 		double min = Double.MAX_VALUE;
-		double max = Double.MIN_VALUE;
+		double max = -Double.MAX_VALUE;
 
 		while ( input.hasNext() )
 		{
