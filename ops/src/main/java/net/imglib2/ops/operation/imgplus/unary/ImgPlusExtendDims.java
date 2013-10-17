@@ -116,7 +116,6 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 		RandomAccess< T > resRA = r.randomAccess();
 
 		new CopyMetadata().compute(op, r);
-		
 
 		for ( int d = 0; d < op.numDimensions(); d++ )
 		{
