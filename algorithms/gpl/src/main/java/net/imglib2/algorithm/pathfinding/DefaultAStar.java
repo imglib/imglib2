@@ -24,9 +24,9 @@ import net.imglib2.type.numeric.RealType;
  * the "strength" of this heuristic, and should be commensurate with the typical
  * source pixel value range.
  * </ul>
- * 
+ *
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com>
- * 
+ *
  * @param <T>
  *            the type of the source {@link RandomAccessibleInterval}. Must
  *            extends {@link RealType} for we sample pixel values to compute
@@ -41,12 +41,12 @@ public class DefaultAStar< T extends RealType< T > > extends AStar
 
 	private final RandomAccessibleInterval< T > source;
 
-	private final RandomAccess< T > ra;
+	protected final RandomAccess< T > ra;
 
 	/**
 	 * Creates a new A* search algorithm, finding the path between the specified
 	 * start and end point, with cost taken from the source interval.
-	 * 
+	 *
 	 * @param source
 	 *            the source interval, from which costs will be drawn.
 	 * @param start
