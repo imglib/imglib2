@@ -53,13 +53,12 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
 /**
- * 
+ * TODO: This class is now able to handle RandomAccessibleIntervals
  * @author Christian Dietz (University of Konstanz)
  *
  * @param <T>
- * @param <II>
  */
-public class Resample< T extends RealType< T >, II extends IterableInterval< T > & RandomAccessibleInterval< T >> implements UnaryOperation< II, II >
+public class Resample< T extends RealType< T > > implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > >
 {
 
 	public enum Mode
@@ -75,7 +74,7 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 	}
 
 	@Override
-	public II compute( II op, II res )
+	public RandomAccessibleInterval< T > compute( RandomAccessibleInterval< T > op, RandomAccessibleInterval< T > res )
 	{
 
 		InterpolatorFactory< T, RandomAccessible< T >> ifac;
@@ -93,7 +92,7 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 		default:
 
 			RandomAccess< T > srcRA = Views.extendPeriodic( op ).randomAccess();
-			Cursor< T > resCur = res.localizingCursor();
+			Cursor< T > resCur = Views.iterable( res ).localizingCursor();
 			while ( resCur.hasNext() )
 			{
 				resCur.fwd();
@@ -104,9 +103,9 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 			return res;
 		}
 
-		final RealRandomAccess< T > inter = ifac.create( Views.extend( op, new OutOfBoundsMirrorFactory< T, II >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) ) );
+		final RealRandomAccess< T > inter = ifac.create( Views.extend( op, new OutOfBoundsMirrorFactory< T, RandomAccessibleInterval< T > >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) ) );
 
-		final Cursor< T > c2 = res.localizingCursor();
+		final Cursor< T > c2 = Views.iterable( res ).localizingCursor();
 		final float[] s = new float[ res.numDimensions() ];
 		for ( int i = 0; i < s.length; i++ )
 			s[ i ] = ( float ) op.dimension( i ) / res.dimension( i );
@@ -128,8 +127,8 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 	}
 
 	@Override
-	public UnaryOperation< II, II > copy()
+	public UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > > copy()
 	{
-		return new Resample< T, II >( m_mode );
+		return new Resample< T >( m_mode );
 	}
 }
