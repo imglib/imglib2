@@ -84,8 +84,15 @@ public class DefaultAStar< T extends RealType< T > > extends AStar
 	@Override
 	protected double moveCost( final long[] from, final long[] to )
 	{
+		double dist = 0;
+		for ( int d = 0; d < to.length; d++ )
+		{
+			final double di = to[ d ] - from[ d ];
+			dist += di * di;
+		}
+		dist = Math.sqrt( dist );
 		ra.setPosition( to );
-		return ra.get().getRealDouble();
+		return ra.get().getRealDouble() * dist;
 	}
 
 	@Override

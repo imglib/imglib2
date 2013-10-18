@@ -27,7 +27,7 @@ public class InvertedCostAStar< T extends RealType< T >> extends DefaultAStar< T
 	 * Creates a new A* search algorithm, finding the path between the specified
 	 * start and end point, with cost taken from the inversion of the source
 	 * pixel values.
-	 * 
+	 *
 	 * @param source
 	 *            the source interval, from which costs will be drawn. Costs are
 	 *            calculated frollowing <code>cost = maxVal - T</code>, where
@@ -54,8 +54,15 @@ public class InvertedCostAStar< T extends RealType< T >> extends DefaultAStar< T
 	@Override
 	protected double moveCost( final long[] from, final long[] to )
 	{
+		double dist = 0;
+		for ( int d = 0; d < to.length; d++ )
+		{
+			final double di = to[ d ] - from[ d ];
+			dist += di * di;
+		}
+		dist = Math.sqrt( dist );
 		ra.setPosition( to );
-		return maxVal - ra.get().getRealDouble();
+		return dist * ( maxVal - ra.get().getRealDouble() );
 	}
 
 }
