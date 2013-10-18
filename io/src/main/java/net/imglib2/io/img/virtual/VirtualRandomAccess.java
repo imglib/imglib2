@@ -47,7 +47,10 @@ import net.imglib2.type.numeric.RealType;
  * from get() can be written to but any changes are never saved to disk.
  * 
  * @author Barry DeZonia
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>> extends
 	Point implements RandomAccess<T>
 {

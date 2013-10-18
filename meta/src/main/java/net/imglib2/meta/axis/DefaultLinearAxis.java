@@ -178,11 +178,6 @@ public class DefaultLinearAxis extends Variable2Axis implements LinearAxis {
 	// -- CalibratedAxis methods --
 
 	@Override
-	public void setCalibration(final double cal) {
-		setScale(cal);
-	}
-
-	@Override
 	public double calibratedValue(final double rawValue) {
 		return scale() * rawValue + origin();
 	}

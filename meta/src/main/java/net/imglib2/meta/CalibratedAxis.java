@@ -46,12 +46,6 @@ package net.imglib2.meta;
  */
 public interface CalibratedAxis extends TypedAxis {
 
-	@Deprecated
-	double calibration();
-
-	@Deprecated
-	void setCalibration(double cal);
-
 	/** Gets the dimension's unit. */
 	String unit();
 
