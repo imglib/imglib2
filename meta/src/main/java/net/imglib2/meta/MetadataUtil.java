@@ -65,20 +65,6 @@ public class MetadataUtil {
 	}
 
 	/**
-	 * copies the TypedSpace attributes from in to out. Both spaces must have
-	 * the same dimensionality.
-	 * 
-	 * @param in
-	 * @param out
-	 * @return returns out
-	 */
-	public static <T extends TypedAxis> TypedSpace<T> copyTypedSpace(
-			TypedSpace<T> in, TypedSpace<T> out) {
-		copyTypedSpace(null, in, out);
-		return out;
-	}
-
-	/**
 	 * copies the CalibratedSpace attributes from in to out. Both spaces must
 	 * have the same dimensionality.
 	 * 
@@ -111,22 +97,6 @@ public class MetadataUtil {
 
 	// with cleaning
 
-	/**
-	 * copies the TypedSpace attributes from in to out. Attributes for
-	 * dimensions of size 1 are removed during copying. The dimensionality of
-	 * the out space must be dimensionality(inSpace) - #removed dims
-	 * 
-	 * @param inInterval
-	 *            provides dimensionality information for the in space
-	 * @param in
-	 * @param out
-	 * @return returns out
-	 */
-	public static <T extends TypedAxis> TypedSpace<T> copyAndCleanTypedSpace(
-			Interval inInterval, TypedSpace<T> in, TypedSpace<T> out) {
-		copyTypedSpace(inInterval, in, out);
-		return out;
-	}
 
 	/**
 	 * copies the CalibratedAxis attributes from in to out. Attributes for
@@ -168,19 +138,19 @@ public class MetadataUtil {
 
 	// PRIVATE HELPERS
 
-	@SuppressWarnings("unchecked")
-	private static < T extends TypedAxis > void copyTypedSpace( Interval inInterval, TypedSpace< T > in, TypedSpace< T > out )
-	{
-
-		int offset = 0;
-		for (int d = 0; d < in.numDimensions(); d++) {
-			if (inInterval != null && inInterval.dimension(d) == 1) {
-				offset++;
-			} else {
-				out.setAxis((T) in.axis(d).copy(), d - offset);
-			}
-		}
-	}
+//	@SuppressWarnings("unchecked")
+//	private static < T extends TypedAxis > void copyTypedSpace( Interval inInterval, TypedSpace< T > in, TypedSpace< T > out )
+//	{
+//
+//		int offset = 0;
+//		for (int d = 0; d < in.numDimensions(); d++) {
+//			if (inInterval != null && inInterval.dimension(d) == 1) {
+//				offset++;
+//			} else {
+//				out.setAxis((T) in.axis(d).copy(), d - offset);
+//			}
+//		}
+//	}
 
 	@SuppressWarnings("unchecked")
 	private static < C extends CalibratedAxis > void copyTypedSpace( Interval inInterval, CalibratedSpace< C > in, CalibratedSpace< C > out )
