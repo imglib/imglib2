@@ -52,12 +52,5 @@ public interface TypedAxis extends Axis {
 
 	/** Sets the type of the axis. */
 	void setType(AxisType type);
-	
-	/**
-	 * Creates a value copy of this {@link TypedAxis}
-	 * 
-	 * @return a new {@link TypedAxis} object
-	 */
-	public TypedAxis copy();
 
 }
