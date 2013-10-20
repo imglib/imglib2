@@ -88,7 +88,10 @@ import ome.xml.model.primitives.PositiveFloat;
  * @author Curtis Rueden
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public class ImgOpener implements StatusReporter {
 
 	// -- Fields --

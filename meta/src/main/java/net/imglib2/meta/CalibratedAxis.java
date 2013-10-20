@@ -41,6 +41,7 @@ package net.imglib2.meta;
  * An axis with an associated {@link AxisType}, unit and calibration.
  * 
  * @author Curtis Rueden
+ * @author Barry DeZonia
  * @see TypedAxis
  */
 public interface CalibratedAxis extends TypedAxis {
@@ -48,13 +49,43 @@ public interface CalibratedAxis extends TypedAxis {
 	/** Gets the dimension's unit. */
 	String unit();
 
-	/** Gets the dimension's calibration value. */
-	double calibration();
-
 	/** Sets the dimension's unit. */
 	void setUnit(String unit);
 
-	/** Sets the dimension's image calibration. */
-	void setCalibration(double cal);
+	/** Returns a calibrated value given a raw position along the axis. */
+	double calibratedValue(double rawValue);
+
+	/**
+	 * Returns a raw value given a calibrated position along the axis. Returns
+	 * Double.NaN if the calibrated value maps to more than one point along axis.
+	 */
+	double rawValue(double calibratedValue);
+
+	/**
+	 * Gets the general equation representing values along this axis; for
+	 * instance: {@code y = m*x + b}.
+	 */
+	String generalEquation();
+
+	/**
+	 * Gets the particular equation representing values along this axis; for
+	 * instance: {@code y = (14)*x + (4)}.
+	 */
+	String particularEquation();
+
+	/**
+	 * Returns the average scale between two raw value coordinates along an axis.
+	 * <p>
+	 * In the limit this is actually the derivative at a point. For linear axes
+	 * this value never varies, and there is no error. For nonlinear axes this
+	 * returns the linear scale between the points and thus may be inaccurate.
+	 * Calls to this method may point out areas of code that should be generalized
+	 * to work with nonlinear axes.
+	 * </p>
+	 */
+	double averageScale(double rawValue1, double rawValue2);
+
+	/** Creates an exact duplicate of this axis. */
+	CalibratedAxis copy();
 
 }

@@ -62,7 +62,7 @@ public class DefaultTypedAxis implements TypedAxis {
 	}
 
 	@Override
-	public void setType(AxisType type) {
+	public void setType(final AxisType type) {
 		this.type = type;
 	}
 

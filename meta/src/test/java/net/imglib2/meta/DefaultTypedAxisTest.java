@@ -38,21 +38,22 @@
 package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 /**
+ * Tests {@link DefaultTypedAxis}.
+ * 
  * @author Barry DeZonia
  */
-public class DefaultTypedAxisTest {
+public class DefaultTypedAxisTest extends AbstractMetaTest {
 
 	private DefaultTypedAxis axis;
 
 	@Test
 	public void test1() {
 		axis = new DefaultTypedAxis();
-		assertTrue(axis.type() instanceof DefaultAxisType);
+		assertUnknown(axis);
 	}
 
 	@Test

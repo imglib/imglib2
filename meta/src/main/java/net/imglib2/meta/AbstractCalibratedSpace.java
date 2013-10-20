@@ -44,8 +44,7 @@ import java.util.List;
  * 
  * @author Curtis Rueden
  */
-public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
- extends
+public abstract class AbstractCalibratedSpace<A extends CalibratedAxis> extends
 	AbstractTypedSpace<A> implements CalibratedSpace<A>
 {
 
@@ -61,60 +60,11 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis>
 		super(axes);
 	}
 
-	@Override
-	public double calibration(int d) {
-		A axis = axis(d);
-		if (axis == null) return Double.NaN;
-		return axis.calibration();
-	}
+	// -- CalibratedSpace methods --
 
 	@Override
-	public void calibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = calibration(i);
-	}
-
-	@Override
-	public void calibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = (float) calibration(i);
-	}
-
-	@Override
-	public void setCalibration(double cal, int d) {
-		A axis = axis(d);
-		if (axis == null) {
-			throw new IllegalArgumentException("cannot setCalibration() on null axis");
-		}
-		axis.setCalibration(cal);
-	}
-
-	@Override
-	public void setCalibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
-
-	@Override
-	public void setCalibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
-
-	@Override
-	public String unit(int d) {
-		A axis = axis(d);
-		if (axis == null) return null;
-		return axis.unit();
-	}
-
-	@Override
-	public void setUnit(String unit, int d) {
-		A axis = axis(d);
-		if (axis == null) {
-			throw new IllegalArgumentException("cannot setUnit() on null axis");
-		}
-		axis.setUnit(unit);
+	public double averageScale(final int d) {
+		return averageScale(d);
 	}
 
 }

@@ -227,6 +227,50 @@ public class Intervals
 	}
 
 	/**
+	 * Compute the smallest {@link Interval} containing the specified
+	 * {@link RealInterval}.
+	 *
+	 * @param ri
+	 *            input interval.
+	 * @return the smallest integer interval that completely contains the input
+	 *         interval.
+	 */
+	public static Interval smallestContainingInterval( final RealInterval ri )
+	{
+		final int n = ri.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] = ( long ) Math.floor( ri.realMin( d ) );
+			max[ d ] = ( long ) Math.ceil( ri.realMax( d ) );
+		}
+		return new FinalInterval( min, max );
+	}
+
+	/**
+	 * Compute the largest {@link Interval} that is contained in the specified
+	 * {@link RealInterval}.
+	 *
+	 * @param ri
+	 *            input interval.
+	 * @return the largest integer interval that is completely contained in the
+	 *         input interval.
+	 */
+	public static Interval largestContainedInterval( final RealInterval ri )
+	{
+		final int n = ri.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] = ( long ) Math.ceil( ri.realMin( d ) );
+			max[ d ] = ( long ) Math.floor( ri.realMax( d ) );
+		}
+		return new FinalInterval( min, max );
+	}
+
+	/**
 	 * Check whether the given interval is empty, that is, the maximum is
 	 * smaller than the minimum in some dimension.
 	 *

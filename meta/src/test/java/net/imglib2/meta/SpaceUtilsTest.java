@@ -42,16 +42,18 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
+ * Tests {@link SpaceUtils}.
+ * 
  * @author Barry DeZonia
  */
-public class SpaceUtilsTest {
+public class SpaceUtilsTest extends AbstractMetaTest {
 
 	@Test
 	public void test() {
-		DefaultTypedAxis axis0 = new DefaultTypedAxis(Axes.X);
-		DefaultTypedAxis axis1 = new DefaultTypedAxis(Axes.Y);
-		DefaultTypedSpace space = new DefaultTypedSpace(axis0, axis1);
-		AxisType[] types = SpaceUtils.getAxisTypes(space);
+		final DefaultTypedAxis axis0 = new DefaultTypedAxis(Axes.X);
+		final DefaultTypedAxis axis1 = new DefaultTypedAxis(Axes.Y);
+		final DefaultTypedSpace space = new DefaultTypedSpace(axis0, axis1);
+		final AxisType[] types = SpaceUtils.getAxisTypes(space);
 		assertEquals(Axes.X, types[0]);
 		assertEquals(Axes.Y, types[1]);
 	}

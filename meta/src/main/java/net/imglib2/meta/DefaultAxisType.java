@@ -37,13 +37,17 @@
 
 package net.imglib2.meta;
 
+import java.io.Serializable;
+
 /**
  * Default {@link AxisType} implementation.
  * 
  * @see Axes
  * @author Mark Hiner
  */
-public class DefaultAxisType implements AxisType {
+public class DefaultAxisType implements AxisType, Serializable,
+	Comparable<AxisType>
+{
 
 	// -- Fields --
 
@@ -86,6 +90,13 @@ public class DefaultAxisType implements AxisType {
 	@Override
 	public boolean isSpatial() {
 		return spatial;
+	}
+
+	// -- Comparable methods --
+
+	@Override
+	public int compareTo(AxisType other) {
+		return getLabel().compareTo(other.getLabel());
 	}
 
 	// -- Object methods --

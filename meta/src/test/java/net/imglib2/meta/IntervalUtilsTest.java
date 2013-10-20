@@ -39,44 +39,23 @@ package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
 import net.imglib2.FinalInterval;
-import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
-import net.imglib2.RealInterval;
 
 import org.junit.Test;
 
 /**
+ * Tests {@link IntervalUtils}.
+ * 
  * @author Barry DeZonia
  */
-public class IntervalUtilsTest {
+public class IntervalUtilsTest extends AbstractMetaTest {
 
 	@Test
-	public void test1() {
+	public void testGetDims() {
 		final Interval interval = new FinalInterval(new long[] { 10, 20 });
 		final long[] dims = IntervalUtils.getDims(interval);
 		assertEquals(10, dims[0]);
 		assertEquals(20, dims[1]);
-	}
-
-	@Test
-	public void test2() {
-		final RealInterval interval = new FinalRealInterval( new double[] { 0, 0 }, new double[] { 7, 13 });
-		final double[] extents = IntervalUtils.getExtents(interval);
-		assertEquals(7, extents[0], 0);
-		assertEquals(13, extents[1], 0);
-	}
-
-	@Test
-	public void test3() {
-		final DefaultCalibratedRealInterval interval =
-			new DefaultCalibratedRealInterval(new double[] { 10, 20 });
-		final DefaultCalibratedAxis axis0 = new DefaultCalibratedAxis(Axes.X, null, 7);
-		final DefaultCalibratedAxis axis1 = new DefaultCalibratedAxis(Axes.Y, null, 9);
-		interval.setAxis(axis0, 0);
-		interval.setAxis(axis1, 1);
-		final double[] extents = IntervalUtils.getCalibratedExtents(interval);
-		assertEquals(10 * axis0.calibration(), extents[0], 0);
-		assertEquals(20 * axis1.calibration(), extents[1], 0);
 	}
 
 }

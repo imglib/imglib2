@@ -38,44 +38,72 @@
 package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.meta.axis.InverseRodbardAxis;
+import net.imglib2.meta.axis.LinearAxis;
+import net.imglib2.meta.axis.LogLinearAxis;
 import net.imglib2.type.numeric.integer.ByteType;
 
 import org.junit.Test;
 
 /**
+ * Tests {@link ImgPlus}.
+ * 
  * @author Barry DeZonia
  */
-public class ImgPlusTest {
-
-	private ImgPlus<?> imgPlus;
+public class ImgPlusTest extends AbstractMetaTest {
 
 	@Test
-	public void test() {
-		Img<ByteType> img = ArrayImgs.bytes(9, 8);
-		imgPlus =
+	public void testAxes() {
+		final Img<ByteType> img = ArrayImgs.bytes(9, 8);
+		final ImgPlus<?> imgPlus =
 			new ImgPlus<ByteType>(img, "HUBBY", new AxisType[] { Axes.X, Axes.Z },
 				new double[] { 5, 13 });
 		assertEquals("HUBBY", imgPlus.getName());
 		assertEquals(Axes.X, imgPlus.axis(0).type());
 		assertEquals(Axes.Z, imgPlus.axis(1).type());
-		assertEquals(5, imgPlus.axis(0).calibration(), 0);
-		assertEquals(13, imgPlus.axis(1).calibration(), 0);
+		assertEquals(5, imgPlus.averageScale(0), 0);
+		assertEquals(13, imgPlus.averageScale(1), 0);
 		assertEquals(9, imgPlus.dimension(0));
 		assertEquals(8, imgPlus.dimension(1));
-		imgPlus.setCalibration(48, 1);
-		assertEquals(48, imgPlus.axis(1).calibration(), 0);
+		assertTrue(imgPlus.axis(1) instanceof LinearAxis);
+		((LinearAxis) imgPlus.axis(1)).setScale(48);
+		assertEquals(48, imgPlus.averageScale(1), 0);
 		assertEquals(0, imgPlus.min(0));
 		assertEquals(0, imgPlus.min(1));
 		assertEquals(8, imgPlus.max(0));
 		assertEquals(7, imgPlus.max(1));
 		assertEquals(0, imgPlus.getValidBits());
 		assertEquals(72, imgPlus.size());
-		assertNull(imgPlus.unit(0));
-		imgPlus.setUnit("WUNGA", 0);
-		assertEquals("WUNGA", imgPlus.unit(0));
+		assertNull(imgPlus.axis(0).unit());
+		imgPlus.axis(0).setUnit("WUNGA");
+		assertEquals("WUNGA", imgPlus.axis(0).unit());
+	}
+
+	@Test
+	public void testCopy() {
+		final CalibratedAxis xAxis =
+			new InverseRodbardAxis(Axes.X, "foo", 2.1, 4.3, 6.5, 8.7);
+		final CalibratedAxis yAxis =
+			new LogLinearAxis(Axes.Y, "bar", -6.7, -8.9, -3.4, -1.2);
+		final ImgPlus<ByteType> original =
+			new ImgPlus<ByteType>(ArrayImgs.bytes(9, 8), "original", xAxis, yAxis);
+		final ImgPlus<ByteType> copy = original.copy();
+		assertNotSame(original, copy);
+		assertNotSame(original.getImg(), copy.getImg());
+		assertEquals(original.numDimensions(), copy.numDimensions());
+		for (int d = 0; d < original.numDimensions(); d++) {
+			assertNotSame(original.axis(d), copy.axis(d));
+			assertSame(original.axis(d).getClass(), copy.axis(d).getClass());
+			assertEquals(original.axis(d).unit(), copy.axis(d).unit());
+			assertEquals(original.axis(d).particularEquation(), copy.axis(d)
+				.particularEquation());
+		}
 	}
 
 }

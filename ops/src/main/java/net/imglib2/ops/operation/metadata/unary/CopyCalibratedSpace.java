@@ -80,7 +80,8 @@ public class CopyCalibratedSpace< S extends CalibratedSpace< CalibratedAxis > > 
 				// mutated, this could cause unintuitive side effects...
 				output.setAxis( input.axis( d ), d - offset );
 
-				output.setCalibration( input.calibration( d ), d - offset );
+				// No longer needed:
+				// output.setCalibration(input.averageScale(d), d - offset);
 			}
 		}
 

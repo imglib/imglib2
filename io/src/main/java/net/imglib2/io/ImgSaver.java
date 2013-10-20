@@ -74,7 +74,10 @@ import ome.xml.model.primitives.PositiveFloat;
  * 
  * @author Mark Hiner
  * @author Curtis Rueden
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public class ImgSaver implements StatusReporter {
 
 	// -- Fields --
@@ -656,17 +659,18 @@ public class ImgSaver implements StatusReporter {
 			for (int i=0; i<axes.length; i++) {
 				AxisType axis = axes[i];
 				PositiveFloat physicalSize = null;
-				
+				// TODO - using averageScale() introduces error for nonlinear axes
+				double scale = img.averageScale(i);
 				if (Axes.X.equals(axis)) {
-					physicalSize = new PositiveFloat(img.axis(i).calibration());
+					physicalSize = new PositiveFloat(scale);
 					meta.setPixelsPhysicalSizeX(physicalSize, w.getSeries());
 				}
 				else if (Axes.Y.equals(axis)) {
-					physicalSize = new PositiveFloat(img.axis(i).calibration());
+					physicalSize = new PositiveFloat(scale);
 					meta.setPixelsPhysicalSizeY(physicalSize, w.getSeries());
 				}
 				else if (Axes.Z.equals(axis)) {
-					physicalSize = new PositiveFloat(img.axis(i).calibration());
+					physicalSize = new PositiveFloat(scale);
 					meta.setPixelsPhysicalSizeZ(physicalSize, w.getSeries());
 				}
 			}

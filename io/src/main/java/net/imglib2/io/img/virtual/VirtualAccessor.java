@@ -53,7 +53,10 @@ import net.imglib2.type.numeric.RealType;
  * changes are never saved to disk.
  * 
  * @author Barry DeZonia
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public class VirtualAccessor<T extends NativeType<T> & RealType<T>> {
 
 	private final PlanarImg<T, ? extends ArrayDataAccess<?>> planeImg;

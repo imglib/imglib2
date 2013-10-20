@@ -37,63 +37,19 @@
 
 package net.imglib2.meta;
 
+
 /**
+ * TODO
+ * 
  * @author Barry DeZonia
  */
 public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends CalibratedRealInterval<A>>
 	extends CombinedRealInterval<A, S> implements CalibratedRealInterval<A>
 {
 
-	// TODO - these methods will need some TLC. Maybe this class will store its
-	// own copy of calibration values and units. And then setUnit() and
-	// setCalibration() on an axis does a unit converted scaling of existing axes
-	// cal values. Pulling values out of this interval will use views and sampling
-	// as needed to get values along unit/calibration converted points of the
-	// underlying axes.
-
 	@Override
-	public void setUnit(String unit, int d) {
-		axis(d).setUnit(unit);
+	public double averageScale(final int d) {
+		return axis(d).averageScale(realMin(d), realMax(d));
 	}
 
-	@Override
-	public String unit(int d) {
-		return axis(d).unit();
-	}
-
-	@Override
-	public double calibration(int d) {
-		return axis(d).calibration();
-	}
-
-	@Override
-	public void calibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = calibration(i);
-	}
-
-	@Override
-	public void calibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = (float) calibration(i);
-	}
-
-	@Override
-	public void setCalibration(double cal, int d) {
-		// TODO: we could throw an UnsupportedOperationException. But this class
-		// is already broken. Update this method later.
-		axis(d).setCalibration(cal);
-	}
-
-	@Override
-	public void setCalibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
-
-	@Override
-	public void setCalibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
 }

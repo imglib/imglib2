@@ -38,23 +38,24 @@
 package net.imglib2.meta;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 /**
+ * Tests {@link DefaultTypedSpace}.
+ * 
  * @author Barry DeZonia
  */
-public class DefaultTypedSpaceTest {
+public class DefaultTypedSpaceTest extends AbstractMetaTest {
 
 	private DefaultTypedSpace space;
 
 	@Test
 	public void test1() {
 		space = new DefaultTypedSpace(3);
-		assertTrue(space.axis(0).type() instanceof DefaultAxisType);
-		assertTrue(space.axis(1).type() instanceof DefaultAxisType);
-		assertTrue(space.axis(2).type() instanceof DefaultAxisType);
+		assertUnknown(space.axis(0));
+		assertUnknown(space.axis(1));
+		assertUnknown(space.axis(2));
 		space.axis(0).setType(Axes.CHANNEL);
 		space.axis(1).setType(Axes.Z);
 		space.axis(2).setType(Axes.TIME);
@@ -65,8 +66,8 @@ public class DefaultTypedSpaceTest {
 
 	@Test
 	public void test2() {
-		TypedAxis axis0 = new DefaultTypedAxis(Axes.CHANNEL);
-		TypedAxis axis1 = new DefaultTypedAxis(Axes.Y);
+		final TypedAxis axis0 = new DefaultTypedAxis(Axes.CHANNEL);
+		final TypedAxis axis1 = new DefaultTypedAxis(Axes.Y);
 		space = new DefaultTypedSpace(axis0, axis1);
 		assertEquals(Axes.CHANNEL, space.axis(0).type());
 		assertEquals(Axes.Y, space.axis(1).type());
