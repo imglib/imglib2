@@ -1,3 +1,4 @@
+
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
@@ -34,7 +35,7 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-package net.imglib2.ops.operation.RandomAccessibleIntervalinterval.unary;
+package net.imglib2.ops.operation.randomaccessibleinterval.unary;
 
 import java.awt.Point;
 import java.awt.Polygon;
