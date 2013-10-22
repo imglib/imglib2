@@ -38,7 +38,6 @@
 package net.imglib2.meta;
 
 import net.imglib2.RealInterval;
-import net.imglib2.meta.axis.LinearAxis;
 
 /**
  * A Euclidean space whose dimensions have units and calibrations.
@@ -62,67 +61,5 @@ public interface CalibratedSpace<A extends CalibratedAxis> extends
 	 * </p>
 	 */
 	double averageScale(int d);
-
-	/**
-	 * @deprecated Use {@code LinearSpace#axis(int).scale()} instead.
-	 * @see LinearSpace
-	 * @see LinearAxis#scale()
-	 */
-	@Deprecated
-	double calibration(int d);
-
-	/**
-	 * @deprecated Use {@code LinearSpace#axis(int).scale()} instead.
-	 * @see LinearSpace
-	 * @see LinearAxis#scale()
-	 */
-	@Deprecated
-	void calibration(double[] cal);
-
-	/**
-	 * @deprecated Use {@code LinearSpace#axis(int).scale()} instead.
-	 * @see LinearSpace
-	 * @see LinearAxis#scale()
-	 */
-	@Deprecated
-	void calibration(float[] cal);
-
-	/**
-	 * @deprecated Use {@code LinearSpace#axis(d).setScale(double)} instead.
-	 * @see LinearSpace
-	 * @see LinearAxis#setScale(double)
-	 */
-	@Deprecated
-	void setCalibration(double cal, int d);
-
-	/**
-	 * @deprecated Use {@code LinearSpace#axis(d).setScale(double)} instead.
-	 * @see LinearSpace
-	 * @see LinearAxis#setScale(double)
-	 */
-	@Deprecated
-	void setCalibration(double[] cal);
-
-	/**
-	 * @deprecated Use {@code LinearSpace#axis(d).setScale(double)} instead.
-	 * @see LinearSpace
-	 * @see LinearAxis#setScale(double)
-	 */
-	@Deprecated
-	void setCalibration(float[] cal);
-
-	/**
-	 * @deprecated Use {@code axis(d).unit()} instead.
-	 * @see CalibratedAxis#unit()
-	 */
-	@Deprecated
-	String unit(int d);
-
-	/**
-	 * @deprecated Use {@code axis(d).setUnit(unit)} instead.
-	 * @see CalibratedAxis#setUnit(String)
-	 */
-	@Deprecated
-	void setUnit(String unit, int d);
 
 }

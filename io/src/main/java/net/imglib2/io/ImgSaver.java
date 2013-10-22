@@ -74,7 +74,10 @@ import ome.xml.model.primitives.PositiveFloat;
  * 
  * @author Mark Hiner
  * @author Curtis Rueden
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public class ImgSaver implements StatusReporter {
 
 	// -- Fields --
