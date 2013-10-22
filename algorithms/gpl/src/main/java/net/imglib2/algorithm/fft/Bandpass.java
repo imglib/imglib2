@@ -48,7 +48,7 @@ public class Bandpass< T extends NumericType< T >> implements OutputAlgorithm< R
 
 	boolean inPlace, bandPass;
 
-	RandomAccessibleInterval< T > img;
+	RandomAccessibleInterval< T > input;
 
 	Img< T > output;
 	
@@ -60,20 +60,20 @@ public class Bandpass< T extends NumericType< T >> implements OutputAlgorithm< R
 
 	long[] origin;
 
-	public Bandpass( final RandomAccessibleInterval< T > img, final int beginRadius, final int endRadius, ImgFactory<T> imgFactory )
+	public Bandpass( final RandomAccessibleInterval< T > input, final int beginRadius, final int endRadius, ImgFactory<T> imgFactory )
 	{
-		this.img = img;
+		this.input = input;
 
 		this.inPlace = false;
 		this.bandPass = true;
 		this.beginRadius = beginRadius;
 		this.endRadius = endRadius;
 
-		this.origin = new long[ img.numDimensions() ];
+		this.origin = new long[ input.numDimensions() ];
 
-		this.origin[ 0 ] = img.dimension( 0 ) - 1;
+		this.origin[ 0 ] = input.dimension( 0 ) - 1;
 		for ( int d = 1; d < this.origin.length; ++d )
-			origin[ d ] = img.dimension( d ) / 2;
+			origin[ d ] = input.dimension( d ) / 2;
 	}
 	
 	public Bandpass( final Img< T > img, final int beginRadius, final int endRadius )
@@ -83,7 +83,7 @@ public class Bandpass< T extends NumericType< T >> implements OutputAlgorithm< R
 
 	public void setImage( final RandomAccessibleInterval< T > img )
 	{
-		this.img = img;
+		this.input = img;
 	}
 
 	public void setInPlace( final boolean inPlace )
@@ -107,9 +107,9 @@ public class Bandpass< T extends NumericType< T >> implements OutputAlgorithm< R
 		this.endRadius = endRadius;
 	}
 
-	public RandomAccessibleInterval< T > getImage()
+	public RandomAccessibleInterval< T > getInput()
 	{
-		return img;
+		return input;
 	}
 
 	public boolean getInPlace()
@@ -136,20 +136,20 @@ public class Bandpass< T extends NumericType< T >> implements OutputAlgorithm< R
 	public boolean process()
 	{
 		final long startTime = System.currentTimeMillis();
-		final IterableInterval< T > img;
+		final IterableInterval< T > iterableInput;
 
 		if ( inPlace )
 		{
-			img = Views.iterable(this.img);
+			iterableInput = Views.iterable(this.input);
 		}
 		else
 		{
-			this.output = imgFactory.create( this.img, Views.iterable( this.img ).firstElement().createVariable());
-			img = this.output;
+			this.output = imgFactory.create( this.input, Views.iterable( this.input ).firstElement().createVariable());
+			iterableInput = this.output;
 		}
 
-		final Cursor< T > cursor = img.cursor();
-		final long[] pos = new long[ img.numDimensions() ];
+		final Cursor< T > cursor = iterableInput.cursor();
+		final long[] pos = new long[ iterableInput.numDimensions() ];
 
 		final boolean actAsBandPass = bandPass;
 
@@ -182,7 +182,7 @@ public class Bandpass< T extends NumericType< T >> implements OutputAlgorithm< R
 	public RandomAccessibleInterval< T > getResult()
 	{
 		if ( inPlace )
-			return img;
+			return input;
 		return output;
 	}
 
