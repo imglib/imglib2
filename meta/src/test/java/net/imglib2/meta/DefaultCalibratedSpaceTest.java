@@ -127,4 +127,12 @@ public class DefaultCalibratedSpaceTest extends AbstractMetaTest {
 		assertEquals(4, space.axis(2).calibratedValue(1), 0);
 	}
 
+	@Test
+	public void testAverageScale() {
+		space = new DefaultCalibratedSpace(3);
+		for (int d = 0; d < space.numDimensions(); d++) {
+			assertEquals(1.0, space.averageScale(d), 0.0);
+		}
+	}
+
 }
