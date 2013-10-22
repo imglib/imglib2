@@ -214,7 +214,7 @@ public class MomentOfInertiaTensor3D< T extends RealType< T >> extends MultiThre
 													// Z, but for all pixels
 
 					OutOfBoundsFactory< T, RandomAccessibleInterval< T >> oobf = new OutOfBoundsMirrorExpWindowingFactory< T, RandomAccessibleInterval< T >>( ( scale - 1 ) / 2 );
-					RectangleNeighborhoodGPL< T, RandomAccessibleInterval< T >> neighborhood = new RectangleNeighborhoodGPL< T, RandomAccessibleInterval< T >>( input, oobf );
+					RectangleNeighborhoodGPL< T > neighborhood = new RectangleNeighborhoodGPL< T >( input, oobf );
 					RectangleCursor< T > neighborhoodCursor = neighborhood.cursor();
 					neighborhood.setSpan( domain );
 

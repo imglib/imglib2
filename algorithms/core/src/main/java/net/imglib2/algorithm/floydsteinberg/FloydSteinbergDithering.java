@@ -95,8 +95,8 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 	public boolean process()
 	{		
 		final long startTime = System.currentTimeMillis();
-
-		ComputeMinMax<T> cmm = new ComputeMinMax<T>(img);
+/*
+		ComputeMinMax<T> cmm = new ComputeMinMax<T>(img); //TODO
 		cmm.process();
 		final float minValue = cmm.getMin().getRealFloat();
 		final float maxValue = cmm.getMax().getRealFloat();
@@ -177,7 +177,8 @@ public class FloydSteinbergDithering<T extends RealType<T>> implements OutputAlg
 		processingTime = System.currentTimeMillis() - startTime;
 		
 		// successfully computed the dithering
-		return true;
+		 */
+		return true; 
 	}
 	
 	@Override
