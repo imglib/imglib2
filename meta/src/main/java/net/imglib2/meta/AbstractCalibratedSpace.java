@@ -61,10 +61,10 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis> extends
 	}
 
 	// -- CalibratedSpace methods --
-
+	// TODO: Replace this with a proper implementation asap
 	@Override
 	public double averageScale(final int d) {
-		return averageScale(d);
+		return axis(d).averageScale(0, 1);
 	}
 
 }
