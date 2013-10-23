@@ -102,37 +102,52 @@ public class ErodeLabeling<L extends Comparable<L>> implements
 				Views.extendValue(input, new LabelingType<L>()).randomAccess(),
 				m_struc);
 
-		RandomAccess<LabelingType<L>> outAccess = output.randomAccess();
+		Cursor<LabelingType<L>> outcursor = output.cursor();
 		Cursor<LabelingType<L>> inCursor = input.cursor();
 
-		HashSet<L> processed = new HashSet<L>();
+		HashSet<L> eroded = new HashSet<L>();
+
 		while (inCursor.hasNext()) {
 			List<L> labeling = inCursor.next().getLabeling();
+			outcursor.fwd();
+
 			inStructure.relocate(inCursor);
-			processed.clear();
+
+			// Clear list for current iteration
+			eroded.clear();
 
 			while (inStructure.hasNext()) {
 				inStructure.next();
 				for (final L label : labeling) {
-					if (processed.contains(label))
+					// if label was already processed in this structuring
+					// element -> ignore
+					if (eroded.contains(label))
 						continue;
+
 					if (!inStructure.get().getLabeling().contains(label)) {
-						outAccess.setPosition(inCursor);
+						// add it to list of already processed labels
+						eroded.add(label);
+
 						List<L> newLabels = new ArrayList<L>();
-						for (L anyLabel : outAccess.get().getLabeling()) {
+						for (L anyLabel : outcursor.get().getLabeling()) {
 							if (anyLabel.compareTo(label) != 0) {
 								newLabels.add(anyLabel);
 							}
 						}
 
-						outAccess.get().setLabeling(newLabels);
-						processed.add(label);
+						outcursor.get().setLabeling(newLabels);
 					}
-					if (!processed.contains(label))
-						addLabel(outAccess.get(), label);
+				}
+			}
+
+			// add label point to output if not eroded
+			for (L label : labeling) {
+				if (!eroded.contains(label)) {
+					addLabel(outcursor.get(), label);
 				}
 			}
 		}
+
 		return output;
 	}
 
