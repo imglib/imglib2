@@ -37,6 +37,7 @@
 package net.imglib2.ops.operation.labeling.unary;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import net.imglib2.Cursor;
@@ -104,11 +105,17 @@ public class ErodeLabeling<L extends Comparable<L>> implements
 		RandomAccess<LabelingType<L>> outAccess = output.randomAccess();
 		Cursor<LabelingType<L>> inCursor = input.cursor();
 
+		HashSet<L> processed = new HashSet<L>();
 		while (inCursor.hasNext()) {
-			next: for (final L label : inCursor.next().getLabeling()) {
-				inStructure.relocate(inCursor);
-				while (inStructure.hasNext()) {
-					inStructure.next();
+			List<L> labeling = inCursor.next().getLabeling();
+			inStructure.relocate(inCursor);
+			processed.clear();
+
+			while (inStructure.hasNext()) {
+				inStructure.next();
+				for (final L label : labeling) {
+					if (processed.contains(label))
+						continue;
 					if (!inStructure.get().getLabeling().contains(label)) {
 						outAccess.setPosition(inCursor);
 						List<L> newLabels = new ArrayList<L>();
@@ -119,10 +126,11 @@ public class ErodeLabeling<L extends Comparable<L>> implements
 						}
 
 						outAccess.get().setLabeling(newLabels);
-						continue next;
+						processed.add(label);
 					}
+					if (!processed.contains(label))
+						addLabel(outAccess.get(), label);
 				}
-				addLabel(outAccess.get(), label);
 			}
 		}
 		return output;
