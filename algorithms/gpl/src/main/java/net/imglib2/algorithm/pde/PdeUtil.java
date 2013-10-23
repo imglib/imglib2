@@ -33,11 +33,16 @@ public class PdeUtil {
 
 	/**
 	 * Return the eigenvalues and the eigenvectors of a 2x2 real symetric matrix:
-	 * <pre> a c
-	 * c b</pre>
-	 * @return a <code>double[]</code> array containing in order: <code>mu_1</code> and <code>mu_2</code> the
-	 * two eigenvalues in ascending order, and <code>cosα</code> and <code>sinα</code> the X & Y 
-	 * components of the first eigenvector.
+	 * 
+	 * <pre>
+	 * a c
+	 * c b
+	 * </pre>
+	 * 
+	 * @return a <code>double[]</code> array containing in order:
+	 *         <code>mu_1</code> and <code>mu_2</code> the two eigenvalues in
+	 *         ascending order, and <code>cosα</code> and <code>sinα</code> the X
+	 *         & Y components of the first eigenvector.
 	 */
 	public static final double[] realSymetricMatrix2x2(final double ixx, final double iyy, final double ixy) {
 		// Matrix: [ Ixx Ixy ; Ixy Iyy ];
@@ -48,7 +53,7 @@ public class PdeUtil {
 		double cosalpha;
 		double sinalpha;
 
-		if (iyy > Float.MIN_VALUE) {
+		if (Math.abs(iyy) > Float.MIN_VALUE) {
 
 			cosalpha = 2 * ixy;
 			sinalpha = iyy - ixx + Math.sqrt( (ixx-iyy)*(ixx-iyy) + 4*ixy*ixy );
@@ -72,5 +77,4 @@ public class PdeUtil {
 		return new double[] { mu_1, mu_2, cosalpha, sinalpha };
 
 	}
-
 }
