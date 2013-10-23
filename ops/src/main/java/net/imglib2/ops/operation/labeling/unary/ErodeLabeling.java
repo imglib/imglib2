@@ -111,6 +111,12 @@ public class ErodeLabeling<L extends Comparable<L>> implements
 			List<L> labeling = inCursor.next().getLabeling();
 			outcursor.fwd();
 
+			// Make sure that output is also empty where input is empty.
+			// we can't assume the input to be empty
+			if (labeling.isEmpty()) {
+				outcursor.get().setLabeling(labeling);
+			}
+
 			inStructure.relocate(inCursor);
 
 			// Clear list for current iteration
