@@ -39,8 +39,6 @@ package net.imglib2.meta;
 
 import java.util.List;
 
-import net.imglib2.meta.axis.LinearAxis;
-
 /**
  * Abstract base class for {@link CalibratedSpace}.
  * 
@@ -66,68 +64,7 @@ public abstract class AbstractCalibratedSpace<A extends CalibratedAxis> extends
 
 	@Override
 	public double averageScale(final int d) {
-		return averageScale(d);
-	}
-
-	@Override
-	public double calibration(final int d) {
-		return linearAxis(d).scale();
-	}
-
-	@Override
-	public void calibration(final double[] cal) {
-		for (int d = 0; d < numDimensions(); d++) {
-			cal[d] = calibration(d);
-		}
-	}
-
-	@Override
-	public void calibration(final float[] cal) {
-		for (int d = 0; d < numDimensions(); d++) {
-			cal[d] = (float) calibration(d);
-		}
-	}
-
-	@Override
-	public void setCalibration(final double cal, final int d) {
-		linearAxis(d).setScale(cal);
-	}
-
-	@Override
-	public void setCalibration(final double[] cal) {
-		for (int d = 0; d < numDimensions(); d++) {
-			setCalibration(cal[d], d);
-		}
-	}
-
-	@Override
-	public void setCalibration(final float[] cal) {
-		for (int d = 0; d < numDimensions(); d++) {
-			setCalibration(cal[d], d);
-		}
-	}
-
-	@Override
-	public String unit(final int d) {
-		return axis(d).unit();
-	}
-
-	@Override
-	public void setUnit(final String unit, final int d) {
-		axis(d).setUnit(unit);
-	}
-
-	// -- Helper methods --
-
-	// NB: Only exists to fulfill deprecated method implementations above.
-	// Will go away in a subsequent release to eliminate LinearAxis dependency.
-	private LinearAxis linearAxis(final int d) {
-		final A axis = axis(d);
-		if (axis instanceof LinearAxis) {
-			return (LinearAxis) axis;
-		}
-		throw new IllegalArgumentException("Unsupported axis: " +
-			axis.getClass().getName());
+		return axis(d).averageScale(0, 1);
 	}
 
 }

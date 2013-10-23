@@ -35,65 +35,98 @@
  * #L%
  */
 
-package net.imglib2.meta;
+package net.imglib2.ops.function.general;
+
+import net.imglib2.ops.function.Function;
 
 /**
- * Abstract base class for {@link CalibratedAxis}.
+ * A {@link Function} that maps real coordinates from one space to another via a
+ * matrix transformation.
  * 
  * @author Barry DeZonia
  */
-public abstract class AbstractCalibratedAxis extends DefaultTypedAxis implements
-	CalibratedAxis
+public class ContinuousTransformationFunction implements
+	Function<double[], double[]>
 {
 
-	private String unit;
+	// -- fields --
 
-	public AbstractCalibratedAxis(final AxisType type) {
-		super(type);
+	private final double[][] matrix;
+	private final int mrows;
+	private final int mcols;
+
+	// -- constructor --
+
+	/**
+	 * Constructor that requires the transformation matrix as input. The matrix is
+	 * of dimension r x c. r matches the number of components in an input point. c
+	 * matches the number of components in an output point.
+	 * 
+	 * @param matrix
+	 */
+	public ContinuousTransformationFunction(double[][] matrix) {
+		this.matrix = matrix;
+		this.mrows = matrix.length;
+		this.mcols = matrix[0].length;
 	}
 
-	public AbstractCalibratedAxis(final AxisType type, final String unit) {
-		super(type);
-		setUnit(unit);
+	// -- accessors --
+
+	/**
+	 * Returns the transformation matrix of this instance.
+	 */
+	public double[][] matrix() {
+		return matrix;
 	}
 
-	// -- CalibratedAxis methods --
+	/**
+	 * Returns the number of rows in the transformation matrix of this instance.
+	 * Also is the number of components in an input point.
+	 */
+	public int rows() {
+		return mrows;
+	}
+
+	/**
+	 * Returns the number of cols in transformation matrix of this instance. Also
+	 * is the number of components in an output point.
+	 */
+	public int cols() {
+		return mcols;
+	}
+
+	// -- Function methods --
 
 	@Override
-	public String unit() {
-		return unit;
+	public void compute(double[] input, double[] output) {
+		// input point should be r x 1 transpose (thus 1 x r)
+		// matrix should be r x c
+		// output should be 1 x c
+		if (input.length != mrows) {
+			throw new IllegalArgumentException(
+				"Input point size and matrix shape are incompatible.");
+		}
+		if (output.length != mcols) {
+			throw new IllegalArgumentException(
+				"Output point size and matrix shape are incompatible.");
+		}
+		for (int c = 0; c < mcols; c++) {
+			double sum = 0;
+			for (int r = 0; r < mrows; r++) {
+				sum += input[r] * matrix[r][c];
+			}
+			output[c] = sum;
+		}
 	}
 
 	@Override
-	public void setUnit(final String unit) {
-		this.unit = unit;
+	public double[] createOutput() {
+		return new double[mcols];
 	}
 
 	@Override
-	public double averageScale(final double rawValue1, final double rawValue2) {
-		return (calibratedValue(rawValue2) - calibratedValue(rawValue1)) /
-			(rawValue2 - rawValue1);
-	}
-
-	// -- Object methods --
-
-	@Override
-	public int hashCode() {
-		return hashString(this).hashCode();
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (!(o instanceof CalibratedAxis)) return false;
-		final CalibratedAxis other = (CalibratedAxis) o;
-		return hashString(this).equals(hashString(other));
-	}
-
-	// -- Helper methods --
-
-	/** Computes a likely-to-be-unique string for this axis. */
-	private String hashString(final CalibratedAxis axis) {
-		return axis.type() + "\n" + axis.unit() + "\n" + axis.particularEquation();
+	public ContinuousTransformationFunction copy() {
+		return new ContinuousTransformationFunction(matrix);
 	}
 
 }

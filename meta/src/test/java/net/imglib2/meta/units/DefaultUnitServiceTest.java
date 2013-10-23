@@ -38,19 +38,20 @@
 package net.imglib2.meta.units;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 /**
+ * Tests {@link DefaultUnitService}.
+ * 
  * @author Barry DeZonia
  */
 public class DefaultUnitServiceTest {
 
+	/** Tests {@link DefaultUnitService#value(double, String, String)}. */
 	@Test
-	public void test() {
-		DefaultUnitService c = new DefaultUnitService();
+	public void testConversion() {
+		final DefaultUnitService c = new DefaultUnitService();
 		// a peeb is 5 meters
 		c.defineUnit("peeb", "m", 5);
 		assertEquals(5.0, c.value(1, "peeb", "m"), 0);
@@ -74,8 +75,16 @@ public class DefaultUnitServiceTest {
 		// define a scale/offset unit
 		c.defineUnit("MyCel", "K", 1, 273.15);
 		assertEquals(c.value(1, "Cel", "K"), c.value(1, "MyCel", "K"), 0);
-		// try a bad conversion
-		assertTrue(Double.isNaN(c.value(1, "kelvin", "meter")));
-		assertNotNull(c.failureMessage());
 	}
+
+	/**
+	 * Tests {@link DefaultUnitService#value(double, String, String)} with invalid
+	 * arguments.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testBadConversion() {
+		final DefaultUnitService c = new DefaultUnitService();
+		c.value(1, "kelvin", "meter");
+	}
+
 }

@@ -50,7 +50,10 @@ import net.imglib2.io.ImgIOUtils;
  * PlanarImg provided at construction time.
  * 
  * @author Barry DeZonia
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public class VirtualPlaneLoader {
 
 	// -- instance variables --

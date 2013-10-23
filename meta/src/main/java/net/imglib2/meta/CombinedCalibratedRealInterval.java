@@ -37,7 +37,6 @@
 
 package net.imglib2.meta;
 
-import net.imglib2.meta.axis.LinearAxis;
 
 /**
  * TODO
@@ -51,74 +50,6 @@ public class CombinedCalibratedRealInterval<A extends CalibratedAxis, S extends 
 	@Override
 	public double averageScale(final int d) {
 		return axis(d).averageScale(realMin(d), realMax(d));
-	}
-
-	// FIXME - these methods need some TLC. Maybe this class will store its
-	// own copy of calibration values and units. And then setUnit() and
-	// setCalibration() on an axis does a unit converted scaling of existing axes
-	// cal values. Pulling values out of this interval will use views and sampling
-	// as needed to get values along unit/calibration converted points of the
-	// underlying axes.
-
-	@Override
-	public double calibration(final int d) {
-		return linearAxis(d).scale();
-	}
-
-	@Override
-	public void calibration(final double[] cal) {
-		for (int d = 0; d < numDimensions(); d++) {
-			cal[d] = calibration(d);
-		}
-	}
-
-	@Override
-	public void calibration(final float[] cal) {
-		for (int d = 0; d < numDimensions(); d++) {
-			cal[d] = (float) calibration(d);
-		}
-	}
-
-	@Override
-	public void setCalibration(final double cal, final int d) {
-		linearAxis(d).setScale(cal);
-	}
-
-	@Override
-	public void setCalibration(final double[] cal) {
-		for (int d = 0; d < numDimensions(); d++) {
-			setCalibration(cal[d], d);
-		}
-	}
-
-	@Override
-	public void setCalibration(final float[] cal) {
-		for (int d = 0; d < numDimensions(); d++) {
-			setCalibration(cal[d], d);
-		}
-	}
-
-	@Override
-	public void setUnit(final String unit, final int d) {
-		axis(d).setUnit(unit);
-	}
-
-	@Override
-	public String unit(final int d) {
-		return axis(d).unit();
-	}
-
-	// -- Helper methods --
-
-	// NB: Only exists to fulfill deprecated method implementations above.
-	// Will go away in a subsequent release to eliminate LinearAxis dependency.
-	private LinearAxis linearAxis(final int d) {
-		final A axis = axis(d);
-		if (axis instanceof LinearAxis) {
-			return (LinearAxis) axis;
-		}
-		throw new IllegalArgumentException("Unsupported axis: " +
-			axis.getClass().getName());
 	}
 
 }

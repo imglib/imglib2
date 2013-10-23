@@ -54,16 +54,15 @@ import net.imglib2.view.Views;
  * 
  * @param <L>
  */
-public class ErodeLabeling< L extends Comparable< L >> implements UnaryOperation< Labeling< L >, Labeling< L >>
-{
+public class ErodeLabeling<L extends Comparable<L>> implements
+		UnaryOperation<Labeling<L>, Labeling<L>> {
 
 	private final long[][] m_struc;
 
 	private final boolean m_labelBased;
 
-	public ErodeLabeling( final long[][] structuringElement )
-	{
-		this( structuringElement, true );
+	public ErodeLabeling(final long[][] structuringElement) {
+		this(structuringElement, true);
 	}
 
 	/**
@@ -80,86 +79,94 @@ public class ErodeLabeling< L extends Comparable< L >> implements UnaryOperation
 	 *            also set to the empty list.</li>
 	 *            </ul>
 	 */
-	public ErodeLabeling( final long[][] structuringElement, final boolean labelBased )
-	{
+	public ErodeLabeling(final long[][] structuringElement,
+			final boolean labelBased) {
 		m_struc = structuringElement;
 		m_labelBased = labelBased;
 	}
 
 	@Override
-	public Labeling< L > compute( final Labeling< L > input, final Labeling< L > output )
-	{
-		if ( m_labelBased ) { return computeLabelBased( input, output ); }
-		return computeBinaryBased( input, output );
+	public Labeling<L> compute(final Labeling<L> input, final Labeling<L> output) {
+
+		if (m_labelBased) {
+			return computeLabelBased(input, output);
+		}
+		return computeBinaryBased(input, output);
 	}
 
-	private Labeling< L > computeLabelBased( final Labeling< L > input, final Labeling< L > output )
-	{
-		final StructuringElementCursor< LabelingType< L >> inStructure = new StructuringElementCursor< LabelingType< L >>( Views.extendValue( input, new LabelingType< L >() ).randomAccess(), m_struc );
-		for ( final L label : input.getLabels() )
-		{
-			final Cursor< LabelingType< L >> out = input.getIterableRegionOfInterest( label ).getIterableIntervalOverROI( output ).localizingCursor();
-			next: while ( out.hasNext() )
-			{
+	private Labeling<L> computeLabelBased(final Labeling<L> input,
+			final Labeling<L> output) {
+		final StructuringElementCursor<LabelingType<L>> inStructure = new StructuringElementCursor<LabelingType<L>>(
+				Views.extendValue(input, new LabelingType<L>()).randomAccess(),
+				m_struc);
+		for (final L label : input.getLabels()) {
+			final Cursor<LabelingType<L>> out = input
+					.getIterableRegionOfInterest(label)
+					.getIterableIntervalOverROI(output).localizingCursor();
+			next: while (out.hasNext()) {
 				out.next();
-				inStructure.relocate( out );
-				while ( inStructure.hasNext() )
-				{
+				inStructure.relocate(out);
+				while (inStructure.hasNext()) {
 					inStructure.next();
-					if ( !inStructure.get().getLabeling().contains( label ) )
-					{
-						// Clear
-						// removeLabel( out.get(), label );
+					if (!inStructure.get().getLabeling().contains(label)) {
+						
+						List<L> newLabels = new ArrayList<L>();
+						for (L anyLabel : out.get().getLabeling()) {
+							if (anyLabel.compareTo(label) != 0) {
+								newLabels.add(anyLabel);
+							}
+						}
+
+						out.get().setLabeling(newLabels);
+
 						continue next;
 					}
 				}
-				addLabel( out.get(), label );
+				addLabel(out.get(), label);
 			}
 		}
 		return output;
 	}
 
-	private Labeling< L > computeBinaryBased( final Labeling< L > input, final Labeling< L > output )
-	{
-		final StructuringElementCursor< LabelingType< L >> inStructure = new StructuringElementCursor< LabelingType< L >>( Views.extendValue( input, new LabelingType< L >() ).randomAccess(), m_struc );
-		final Cursor< LabelingType< L >> out = output.localizingCursor();
-		next: while ( out.hasNext() )
-		{
+	private Labeling<L> computeBinaryBased(final Labeling<L> input,
+			final Labeling<L> output) {
+		final StructuringElementCursor<LabelingType<L>> inStructure = new StructuringElementCursor<LabelingType<L>>(
+				Views.extendValue(input, new LabelingType<L>()).randomAccess(),
+				m_struc);
+		final Cursor<LabelingType<L>> out = output.localizingCursor();
+		next: while (out.hasNext()) {
 			out.next();
-			inStructure.relocate( out );
-			final List< L > center = inStructure.get().getLabeling();
-			if ( center.isEmpty() )
-			{
-				out.get().setLabeling( out.get().getMapping().emptyList() );
+			inStructure.relocate(out);
+			final List<L> center = inStructure.get().getLabeling();
+			if (center.isEmpty()) {
+				out.get().setLabeling(out.get().getMapping().emptyList());
 				continue next;
 			}
-			while ( inStructure.hasNext() )
-			{
+			while (inStructure.hasNext()) {
 				inStructure.next();
-				if ( inStructure.get().getLabeling().isEmpty() )
-				{
-					out.get().setLabeling( out.get().getMapping().emptyList() );
+				if (inStructure.get().getLabeling().isEmpty()) {
+					out.get().setLabeling(out.get().getMapping().emptyList());
 					continue next;
 				}
 			}
-			out.get().setLabeling( center );
+			out.get().setLabeling(center);
 		}
 		return output;
 	}
 
-	private void addLabel( final LabelingType< L > type, final L elmnt )
-	{
-		if ( type.getLabeling().contains( elmnt ) ) { return; }
-		final List< L > current = type.getLabeling();
-		final ArrayList< L > tmp = new ArrayList< L >();
-		tmp.addAll( current );
-		tmp.add( elmnt );
-		type.setLabeling( tmp );
+	private void addLabel(final LabelingType<L> type, final L elmnt) {
+		if (type.getLabeling().contains(elmnt)) {
+			return;
+		}
+		final List<L> current = type.getLabeling();
+		final ArrayList<L> tmp = new ArrayList<L>();
+		tmp.addAll(current);
+		tmp.add(elmnt);
+		type.setLabeling(tmp);
 	}
 
 	@Override
-	public UnaryOperation< Labeling< L >, Labeling< L >> copy()
-	{
-		return new ErodeLabeling< L >( m_struc, m_labelBased );
+	public UnaryOperation<Labeling<L>, Labeling<L>> copy() {
+		return new ErodeLabeling<L>(m_struc, m_labelBased);
 	}
 }

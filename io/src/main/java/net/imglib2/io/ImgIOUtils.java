@@ -75,7 +75,10 @@ import net.imglib2.type.numeric.real.FloatType;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Curtis Rueden
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public final class ImgIOUtils {
 
 	private static final int BUFFER_SIZE = 256 * 1024; // 256K

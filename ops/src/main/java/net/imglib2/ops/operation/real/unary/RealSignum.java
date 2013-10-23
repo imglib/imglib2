@@ -41,7 +41,9 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * Sets the real component of an output real number to the signum of the real
- * component of an input real number.
+ * component of an input real number. It equals -1 if the input number is less
+ * than 0, it equals 1 if the input number is greater than 0, and it equals 0 if
+ * the input number equals 0.
  * 
  * @author Barry DeZonia
  */
