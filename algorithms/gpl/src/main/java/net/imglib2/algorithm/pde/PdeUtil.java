@@ -59,8 +59,21 @@ public class PdeUtil {
 		final double mu_1 = 0.5 * (ixx + iyy + term);
 		final double mu_2 = 0.5 * (ixx + iyy - term);
 
+		if (Math.abs(iyy) > Float.MIN_VALUE) {
+
+			final double cos = 2 * ixy;
+			final double sin = iyy - ixx + term;
+			final double norm = Math.sqrt(cos * cos + sin * sin);
+			if (norm > Float.MIN_VALUE) {
+				return new double[] { mu_1, mu_2, cos / norm, sin / norm };
+			}
+
+		}
+
+		// Edge case logic
+
 		// NB BDZ - cosAlpha and sinAlpha edge cases determined by comparing
-		// Float.MIN cases to values near it to see trend lines.
+		// Float.MIN_VALUE cases to values near it to see trend lines.
 
 		double cosAlpha;
 		double sinAlpha;
@@ -90,20 +103,6 @@ public class PdeUtil {
 				cosAlpha = -1;
 				sinAlpha = 0;
 			}
-		}
-
-		// now try to calc a better approximation for cosAlpha and sinAlpha
-
-		if (Math.abs(iyy) > Float.MIN_VALUE) {
-
-			final double cos = 2 * ixy;
-			final double sin = iyy - ixx + term;
-			final double norm = Math.sqrt(cos * cos + sin * sin);
-			if (norm > Float.MIN_VALUE) {
-				cosAlpha = cos / norm;
-				sinAlpha = sin / norm;
-			}
-
 		}
 
 		return new double[] { mu_1, mu_2, cosAlpha, sinAlpha };
