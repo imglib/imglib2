@@ -4,26 +4,29 @@ import net.imglib2.Localizable;
 
 
 /**
- * An fit initializer suitable for the fitting of gaussian peaks
- * ({@link Gaussian}, on n-dimensional image data. It uses plain 
+ * An fit initializer suitable for the fitting of gaussian peaks (
+ * {@link Gaussian}, on n-dimensional image data. It uses plain
  * maximum-likelohood estimator for a normal distribution.
  * <p>
- * The problem dimensionality is specified at construction by 
- * <code>nDims</code> parameter.
+ * The problem dimensionality is specified at construction by <code>nDims</code>
+ * parameter.
  * <p>
- * The domain span size is simply set to be <code>1 + 2 x ceil(sigma)</code>
- * in all dimensions.
+ * The domain span size is simply set to be <code>1 + 2 x ceil(sigma)</code> in
+ * all dimensions.
  * <p>
- * Parameters estimation returned by {@link #initializeFit(Localizable, Observation)}
- * is based on maximum-likelihood esimtation, which requires the background of the image 
+ * Parameters estimation returned by
+ * {@link #initializeFit(Localizable, Observation)} is based on
+ * maximum-likelihood esimtation, which requires the background of the image
  * (out of peaks) to be close to 0. Returned parameters are ordered as follow:
- * <pre> 0.			A
+ * 
+ * <pre>
+ * 0.			A
  * 1 → ndims		x₀ᵢ
- * ndims+1		b = 1 / σ² </pre>
+ * ndims+1		b = 1 / σ²
+ * </pre>
  * 
  * @see EllipticGaussianOrtho
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> - 2013
- *
  */
 public class MLGaussianEstimator implements StartPointEstimator {
 	
@@ -33,8 +36,9 @@ public class MLGaussianEstimator implements StartPointEstimator {
 
 	/**
 	 * Instantiates a new elliptic gaussian estimator.
-	 * @param typicalSigmas  the typical sigmas of the peak to estimate 
-	 * (one element per dimension).
+	 * 
+	 * @param typicalSigma the typical sigma of the peak to estimate (one element
+	 *          per dimension).
 	 */
 	public MLGaussianEstimator(double typicalSigma, int nDims) {
 		this.sigma = typicalSigma;
