@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.UnaryOperation;
@@ -99,30 +100,29 @@ public class ErodeLabeling<L extends Comparable<L>> implements
 		final StructuringElementCursor<LabelingType<L>> inStructure = new StructuringElementCursor<LabelingType<L>>(
 				Views.extendValue(input, new LabelingType<L>()).randomAccess(),
 				m_struc);
-		for (final L label : input.getLabels()) {
-			final Cursor<LabelingType<L>> out = input
-					.getIterableRegionOfInterest(label)
-					.getIterableIntervalOverROI(output).localizingCursor();
-			next: while (out.hasNext()) {
-				out.next();
-				inStructure.relocate(out);
+
+		RandomAccess<LabelingType<L>> outAccess = output.randomAccess();
+		Cursor<LabelingType<L>> inCursor = input.cursor();
+
+		while (inCursor.hasNext()) {
+			next: for (final L label : inCursor.next().getLabeling()) {
+				inStructure.relocate(inCursor);
 				while (inStructure.hasNext()) {
 					inStructure.next();
 					if (!inStructure.get().getLabeling().contains(label)) {
-						
+						outAccess.setPosition(inCursor);
 						List<L> newLabels = new ArrayList<L>();
-						for (L anyLabel : out.get().getLabeling()) {
+						for (L anyLabel : outAccess.get().getLabeling()) {
 							if (anyLabel.compareTo(label) != 0) {
 								newLabels.add(anyLabel);
 							}
 						}
 
-						out.get().setLabeling(newLabels);
-
+						outAccess.get().setLabeling(newLabels);
 						continue next;
 					}
 				}
-				addLabel(out.get(), label);
+				addLabel(outAccess.get(), label);
 			}
 		}
 		return output;
