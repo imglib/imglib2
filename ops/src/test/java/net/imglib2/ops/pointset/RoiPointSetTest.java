@@ -45,8 +45,13 @@ import net.imglib2.roi.RegionOfInterest;
 
 import org.junit.Test;
 
-public class RoiPointSetTest
-{
+/**
+ * Tests {@link RoiPointSet}.
+ * 
+ * @author Barry DeZonia
+ *
+ */
+public class RoiPointSetTest {
 
 	@Test
 	public void test()

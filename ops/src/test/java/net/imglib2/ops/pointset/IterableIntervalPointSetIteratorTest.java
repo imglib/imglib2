@@ -48,6 +48,8 @@ import net.imglib2.type.numeric.real.DoubleType;
 import org.junit.Test;
 
 /**
+ * Tests {@link IterableIntervalPointSetIterator}.
+ * 
  * @author Barry DeZonia
  */
 public class IterableIntervalPointSetIteratorTest

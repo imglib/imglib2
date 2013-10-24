@@ -49,6 +49,8 @@ import net.imglib2.Cursor;
 import org.junit.Test;
 
 /**
+ * Tests {@link GeneralPointSetIterator}.
+ * 
  * @author Barry DeZonia
  */
 public class GeneralPointSetIteratorTest
