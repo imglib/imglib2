@@ -30,7 +30,7 @@ package net.imglib2.algorithm.pde;
  * A collection of util static methods related to partial differential
  * equations.
  * 
- * @author Unknown
+ * @author Jean-Yves Tivenez
  */
 public class PdeUtil {
 
@@ -46,7 +46,7 @@ public class PdeUtil {
 	 *         <code>mu_1</code> and <code>mu_2</code> the two eigenvalues in
 	 *         ascending order, and <code>cosα</code> and <code>sinα</code> the X
 	 *         & Y components of the first eigenvector.
-	 * @author Unknown
+	 * @author Jean-Yves Tivenez
 	 * @author Barry DeZonia
 	 */
 	public static final double[] realSymetricMatrix2x2(final double ixx,
