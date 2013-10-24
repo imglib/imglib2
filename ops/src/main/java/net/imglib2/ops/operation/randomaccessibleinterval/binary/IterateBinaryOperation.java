@@ -59,7 +59,7 @@ import net.imglib2.ops.operation.subset.views.SubsetViews;
 import net.imglib2.type.Type;
 
 /**
- * Applies a given Operation to each interval RandomAccessibleInterval<T>eparately.
+ * Applies a given Operation to each interval Separately.
  * 
  * @author Christian Dietz (University of Konstanz)
  */
@@ -105,7 +105,7 @@ public final class IterateBinaryOperation< T extends Type< T >, V extends Type< 
 	}
 
 	/**
-	 * Intervals for in0, in1 are the RandomAccessibleInterval<T>ame.
+	 * Intervals for in0, in1 are the Same.
 	 * 
 	 * @param op
 	 * @param intervals
@@ -117,7 +117,7 @@ public final class IterateBinaryOperation< T extends Type< T >, V extends Type< 
 	}
 
 	/**
-	 * Intervals for in0, in1 are the RandomAccessibleInterval<T>ame.
+	 * Intervals for in0, in1 are the Same.
 	 * 
 	 * @param op
 	 * @param intervals
@@ -129,7 +129,7 @@ public final class IterateBinaryOperation< T extends Type< T >, V extends Type< 
 	}
 
 	/**
-	 * Intervals for in0, in1 and out are the RandomAccessibleInterval<T>ame.
+	 * Intervals for in0, in1 and out are the Same.
 	 * 
 	 * @param op
 	 * @param intervals
@@ -141,7 +141,7 @@ public final class IterateBinaryOperation< T extends Type< T >, V extends Type< 
 	}
 
 	/**
-	 * Intervals for in0, in1 and out are the RandomAccessibleInterval<T>ame.
+	 * Intervals for in0, in1 and out are the Same.
 	 * 
 	 * @param op
 	 * @param intervals
