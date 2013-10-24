@@ -53,6 +53,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
 /**
+ * TODO: Implement more interpolators (e.g. bilinear interpolation)
  * 
  * @author Christian Dietz (University of Konstanz)
  *
@@ -90,8 +91,7 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 		case LANCZOS:
 			ifac = new LanczosInterpolatorFactory< T >();
 			break;
-		default:
-
+		case PERIODICAL:
 			RandomAccess< T > srcRA = Views.extendPeriodic( op ).randomAccess();
 			Cursor< T > resCur = res.localizingCursor();
 			while ( resCur.hasNext() )
@@ -100,8 +100,10 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 				srcRA.setPosition( resCur );
 				resCur.get().set( srcRA.get() );
 			}
-
+			
 			return res;
+			default:
+				throw new IllegalArgumentException("Unknown mode in Resample.java");
 		}
 
 		final RealRandomAccess< T > inter = ifac.create( Views.extend( op, new OutOfBoundsMirrorFactory< T, II >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) ) );
