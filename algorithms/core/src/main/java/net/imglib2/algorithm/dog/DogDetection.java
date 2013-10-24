@@ -11,7 +11,7 @@ import net.imglib2.algorithm.localextrema.RefinedPeak;
 import net.imglib2.algorithm.localextrema.SubpixelLocalization;
 import net.imglib2.algorithm.localextrema.LocalExtrema.LocalNeighborhoodCheck;
 import net.imglib2.img.Img;
-import net.imglib2.meta.CalibratedSpace;
+import net.imglib2.meta.LinearSpace;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
@@ -28,7 +28,7 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 		MINIMA, MAXIMA
 	}
 
-	public <I extends RandomAccessibleInterval< T > & CalibratedSpace< ? > > DogDetection(
+	public <I extends RandomAccessibleInterval< T > & LinearSpace< ? > > DogDetection(
 			final I input,
 			final double sigma1,
 			final double sigma2,
@@ -129,10 +129,11 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	public boolean getKeepDoGImg() { return keepDoGImg; }
 	public int getNumThreads() { return numThreads; }
 
-	private static double[] getcalib( final CalibratedSpace< ? > calib )
+	private static double[] getcalib( final LinearSpace< ? > calib )
 	{
 		final double[] c = new double[ calib.numDimensions() ];
-		calib.calibration( c );
+		for ( int d = 0; d < c.length; ++d )
+			c[ d ] = calib.axis( d ).scale();
 		return c;
 	}
 }
