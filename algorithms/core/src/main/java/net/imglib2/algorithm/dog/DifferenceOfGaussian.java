@@ -52,7 +52,9 @@ public class DifferenceOfGaussian
 	{
 		final T type = Util.getTypeFromInterval( dog );
 		final Img< T > g1 = Util.getArrayOrCellImgFactory( dog, type ).create( dog, type );
-		DoG( sigma1, sigma2, input, g1, dog, numThreads );
+		final long[] translation = new long[ dog.numDimensions() ];
+		dog.min( translation );
+		DoG( sigma1, sigma2, input, Views.translate( g1, translation ), dog, numThreads );
 	}
 
 	/**

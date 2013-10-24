@@ -7,10 +7,9 @@ import net.imglib2.Point;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.localextrema.LocalExtrema;
+import net.imglib2.algorithm.localextrema.LocalExtrema.LocalNeighborhoodCheck;
 import net.imglib2.algorithm.localextrema.RefinedPeak;
 import net.imglib2.algorithm.localextrema.SubpixelLocalization;
-import net.imglib2.algorithm.localextrema.LocalExtrema.LocalNeighborhoodCheck;
-import net.imglib2.img.Img;
 import net.imglib2.meta.LinearSpace;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -67,6 +66,10 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	{
 		final T type = Util.getTypeFromInterval( Views.interval( input, interval ) );
 		dogImg = Util.getArrayOrCellImgFactory( interval, type ).create( interval, type );
+		final long[] translation = new long[ interval.numDimensions() ];
+		interval.min( translation );
+		dogImg = Views.translate( dogImg, translation );
+
 		final double[][] sigmas = DifferenceOfGaussian.computeSigmas( imageSigma, minf, pixelSize, sigma1, sigma2 );
 		DifferenceOfGaussian.DoG( sigmas[ 0 ], sigmas[ 1 ], input, dogImg, numThreads );
 		final T val = type.createVariable();
@@ -108,7 +111,7 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	protected final double sigma1;
 	protected final double sigma2;
 	protected final double[] pixelSize;
-	protected Img< T > dogImg;
+	protected RandomAccessibleInterval< T > dogImg;
 
 	protected double imageSigma;
 	protected double minf;
