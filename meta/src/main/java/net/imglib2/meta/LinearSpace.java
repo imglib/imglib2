@@ -40,6 +40,8 @@ package net.imglib2.meta;
 import net.imglib2.meta.axis.LinearAxis;
 
 /**
+ * A {@link CalibratedSpace} whose axes are of type {@link LinearAxis}.
+ * 
  * @author Barry DeZonia
  */
 public interface LinearSpace<A extends LinearAxis> extends CalibratedSpace<A> {
