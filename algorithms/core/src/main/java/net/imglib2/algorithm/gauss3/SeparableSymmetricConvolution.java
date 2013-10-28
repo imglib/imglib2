@@ -211,6 +211,51 @@ public final class SeparableSymmetricConvolution
 	    final long[] sourceOffset = new long[] { 1 - halfkernel.length };
 	    convolveOffset( halfkernel, source, sourceOffset, target, target, 0, convolverFactoryST, service, 1 );
 	}
+
+	/**
+	 * Convolve source with a separable symmetric kernel and write the result to
+	 * output. In-place operation (source==target) is supported. Calculations are
+	 * done in the intermediate type determined by the {@link ConvolverFactory ConvolverFactories}.
+	 * ExecutorService will be created with fixed thread number (available processors).
+	 *
+	 * @param halfkernels
+	 *            an array containing half-kernels for every dimension. A
+	 *            half-kernel is the upper half (starting at the center pixel)
+	 *            of the symmetric convolution kernel for a given dimension.
+	 * @param source
+	 *            source image, must be sufficiently padded (e.g.
+	 *            {@link Views#extendMirrorSingle(RandomAccessibleInterval)}) to
+	 *            provide values for the target interval plus a border of half
+	 *            the kernel size.
+	 * @param target
+	 *            target image.
+	 * @param convolverFactorySI
+	 *            produces line convolvers reading source type and writing
+	 *            temporary type.
+	 * @param convolverFactoryII
+	 *            produces line convolvers reading temporary type and writing
+	 *            temporary type.
+	 * @param convolverFactoryIT
+	 *            produces line convolvers reading temporary type and writing
+	 *            target type.
+	 * @param convolverFactoryST
+	 *            produces line convolvers reading source type and writing
+	 *            target type.
+	 * @param imgFactory
+	 *            factory to create temporary images.
+	 * @param type
+	 *            instance of the temporary image type.
+	 */
+	public static < S, I, T > void convolve( final double[][] halfkernels,
+			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target,
+			final ConvolverFactory< S, I > convolverFactorySI,
+			final ConvolverFactory< I, I > convolverFactoryII,
+			final ConvolverFactory< I, T > convolverFactoryIT,
+			final ConvolverFactory< S, T > convolverFactoryST,
+			final ImgFactory< I > imgFactory, final I type )
+	{
+		convolve(halfkernels, source, target, convolverFactorySI, convolverFactoryII, convolverFactoryIT, convolverFactoryST, imgFactory, type, Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
+	}
 	
 	/**
 	 * Convolve source with a separable symmetric kernel and write the result to
