@@ -37,6 +37,9 @@
 
 package net.imglib2.algorithm.gauss3;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.exception.IncompatibleTypeException;
@@ -122,8 +125,8 @@ public final class Gauss3
 	 */
 	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target ) throws IncompatibleTypeException
 	{
-		final int numthreads = Runtime.getRuntime().availableProcessors();
-		gauss( sigma, source, target, numthreads );
+		// TODO: No more numthreads needed. we use an own, new threadpool
+		gauss( sigma, source, target,  Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() ) );
 	}
 
 	/**
@@ -156,10 +159,10 @@ public final class Gauss3
 	 *             if source and target type are not compatible (they must be
 	 *             either both {@link RealType RealTypes} or the same type).
 	 */
-	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final int numthreads ) throws IncompatibleTypeException
+	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ExecutorService service ) throws IncompatibleTypeException
 	{
 		final double[][] halfkernels = halfkernels( sigma );
-		SeparableSymmetricConvolution.convolve( halfkernels, source, target, numthreads );
+		SeparableSymmetricConvolution.convolve( halfkernels, source, target, service );
 	}
 
 	public static double[][] halfkernels( final double[] sigma )
