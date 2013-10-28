@@ -311,8 +311,9 @@ public class Gauss3Benchmark
 				final RandomAccessibleInterval< FloatType > rIn = new WriteConvertedRandomAccessibleInterval< UnsignedByteType, FloatType >( img, new RealFloatSamplerConverter< UnsignedByteType >() );
 				final RandomAccessibleInterval< FloatType > rOut = new WriteConvertedRandomAccessibleInterval< UnsignedByteType, FloatType >( convolved, new RealFloatSamplerConverter< UnsignedByteType >() );
 				final double[][] halfkernels = Gauss3.halfkernels( sigmas );
-				final int numthreads = Runtime.getRuntime().availableProcessors();
-				SeparableSymmetricConvolution.convolve( halfkernels, Views.extendMirrorSingle( rIn ), rOut, cff, cff, cff, cff, floatFactory, floatType, numthreads );
+				
+//				final int numthreads = Runtime.getRuntime().availableProcessors();
+				SeparableSymmetricConvolution.convolve( halfkernels, Views.extendMirrorSingle( rIn ), rOut, cff, cff, cff, cff, floatFactory, floatType );
 			}
 	    } );
 
