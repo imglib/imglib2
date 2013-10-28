@@ -39,7 +39,6 @@ package net.imglib2.algorithm.gauss3;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import net.imglib2.Dimensions;
@@ -292,8 +291,8 @@ public final class SeparableSymmetricConvolution
 	 *            factory to create temporary images.
 	 * @param type
 	 *            instance of the temporary image type.
-	 * @param numThreads
-	 *            how many threads to use for the computation.
+	 * @param ExecutorService
+	 *            service which will be used for multi threading.
 	 */
 	public static < S, I, T > void convolve( final double[][] halfkernels,
 			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target,
