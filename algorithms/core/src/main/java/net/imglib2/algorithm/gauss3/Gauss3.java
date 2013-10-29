@@ -94,7 +94,7 @@ public final class Gauss3
 
 	/**
 	 * Apply Gaussian convolution to source and write the result to output.
-	 * In-place operation (source==target) is supported.
+	 * In-place operation (source==target) is supported. Number of threads will be automatically determined.
 	 *
 	 * <p>
 	 * If the target type T is {@link DoubleType}, all calculations are done in
@@ -125,9 +125,49 @@ public final class Gauss3
 	 */
 	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target ) throws IncompatibleTypeException
 	{
-		// TODO: No more numthreads needed. we use an own, new threadpool
-		gauss( sigma, source, target,  Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() ) );
+		gauss(sigma, source, target, Runtime.getRuntime().availableProcessors() );
 	}
+	
+	/**
+	 * Apply Gaussian convolution to source and write the result to output.
+	 * In-place operation (source==target) is supported.
+	 *
+	 * <p>
+	 * If the target type T is {@link DoubleType}, all calculations are done in
+	 * double precision. For all other target {@link RealType RealTypes} float
+	 * precision is used. General {@link NumericType NumericTypes} are computed
+	 * in their own precision. The source type S and target type T are either
+	 * both {@link RealType RealTypes} or both the same type.
+	 *
+	 * <p>
+	 * Computation is multi-threaded with as many threads as processors available.
+	 *
+	 * @param sigma
+	 *            standard deviation in every dimension.
+	 * @param source
+	 *            source image, must be sufficiently padded (e.g.
+	 *            {@link Views#extendMirrorSingle(RandomAccessibleInterval)}) to
+	 *            provide values for the target interval plus a border of half
+	 *            the kernel size.
+	 * @param target
+	 *            target image
+	 * @param numThreads
+	 * 			  number of threads which will be used
+	 * @param <S>
+	 *            source type
+	 * @param <T>
+	 *            target type
+	 * @throws IncompatibleTypeException
+	 *             if source and target type are not compatible (they must be
+	 *             either both {@link RealType RealTypes} or the same type).
+	 */
+	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, int numThreads ) throws IncompatibleTypeException
+	{
+		ExecutorService service =  Executors.newFixedThreadPool( numThreads );
+		gauss(sigma, source, target, service );
+		service.shutdown();
+	}
+	
 
 	/**
 	 * Apply Gaussian convolution to source and write the result to output.
