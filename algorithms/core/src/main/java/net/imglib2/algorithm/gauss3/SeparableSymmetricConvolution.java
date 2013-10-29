@@ -378,15 +378,6 @@ public final class SeparableSymmetricConvolution
 			};
 			service.execute( r );
 		}
-
-		try
-		{
-			service.awaitTermination( 1000, TimeUnit.DAYS );
-		}
-		catch ( final InterruptedException e )
-		{
-			e.printStackTrace();
-		}
 	}
 
 	static long[][] getTempImageDimensions( final Dimensions targetsize, final double[][] halfkernels )
