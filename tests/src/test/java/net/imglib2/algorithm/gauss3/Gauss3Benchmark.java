@@ -27,6 +27,8 @@
 package net.imglib2.algorithm.gauss3;
 
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.imglib2.Point;
 import net.imglib2.RandomAccessible;
@@ -85,8 +87,9 @@ public class Gauss3Benchmark
 			final ConvolverFactory< T, T > convf, final ImgFactory< T > imgf, final T type )
 	{
 		final double[][] halfkernels = Gauss3.halfkernels( sigmas );
-		final int numthreads = Runtime.getRuntime().availableProcessors();
-		SeparableSymmetricConvolution.convolve( halfkernels, source, target, convf, convf,convf, convf, imgf, type, numthreads );
+		final ExecutorService service = Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() );
+		SeparableSymmetricConvolution.convolve( halfkernels, source, target, convf, convf,convf, convf, imgf, type, service );
+		service.shutdown();
 	}
 
 	public static void benchmarkFloat( final long[] dimensions, final double sigma, final boolean printIndividualTimes, final int numRuns) throws ImgIOException
@@ -312,8 +315,9 @@ public class Gauss3Benchmark
 				final RandomAccessibleInterval< FloatType > rOut = new WriteConvertedRandomAccessibleInterval< UnsignedByteType, FloatType >( convolved, new RealFloatSamplerConverter< UnsignedByteType >() );
 				final double[][] halfkernels = Gauss3.halfkernels( sigmas );
 				
-				final int numthreads = Runtime.getRuntime().availableProcessors();
-				SeparableSymmetricConvolution.convolve( halfkernels, Views.extendMirrorSingle( rIn ), rOut, cff, cff, cff, cff, floatFactory, floatType, numthreads);
+				final ExecutorService service = Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() );
+				SeparableSymmetricConvolution.convolve( halfkernels, Views.extendMirrorSingle( rIn ), rOut, cff, cff, cff, cff, floatFactory, floatType, service);
+				service.shutdown();
 			}
 	    } );
 
@@ -327,8 +331,9 @@ public class Gauss3Benchmark
 			    final ConvolverFactory< UnsignedByteType, FloatType > cif = FloatConvolverRealTypeBuffered.< UnsignedByteType, FloatType >factory();
 			    final ConvolverFactory< UnsignedByteType, UnsignedByteType > cii = FloatConvolverRealTypeBuffered.< UnsignedByteType, UnsignedByteType >factory();
 				final double[][] halfkernels = Gauss3.halfkernels( sigmas );
-				final int numthreads = Runtime.getRuntime().availableProcessors();
-				SeparableSymmetricConvolution.convolve( halfkernels, Views.extendMirrorSingle( img ), convolved, cif, cff, cfi, cii, floatFactory, floatType, numthreads );
+				final ExecutorService service = Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() );
+				SeparableSymmetricConvolution.convolve( halfkernels, Views.extendMirrorSingle( img ), convolved, cif, cff, cfi, cii, floatFactory, floatType, service );
+				service.shutdown();
 			}
 	    } );
 	}
