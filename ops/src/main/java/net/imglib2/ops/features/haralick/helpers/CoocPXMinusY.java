@@ -54,47 +54,55 @@ import net.imglib2.ops.features.AbstractFeature;
 import net.imglib2.ops.features.RequiredFeature;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 
-public class CoocPXMinusY extends AbstractFeature<double[]> {
+public class CoocPXMinusY extends AbstractFeature< double[] >
+{
 
-    @RequiredFeature
-    private HaralickCoocMatrix<?> cooc;
+	@RequiredFeature
+	private HaralickCoocMatrix< ? > cooc;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String name() {
-        return "Helper CoocPXMinusY";
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String name()
+	{
+		return "Helper CoocPXMinusY";
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public CoocPXMinusY copy() {
-        return new CoocPXMinusY();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public CoocPXMinusY copy()
+	{
+		return new CoocPXMinusY();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected double[] recompute() {
-        int nrGrayLevels = cooc.getNrGrayLevels();
-        CooccurrenceMatrix matrix = cooc.get();
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected double[] recompute()
+	{
+		int nrGrayLevels = cooc.getNrGrayLevels();
+		CooccurrenceMatrix matrix = cooc.get();
 
-        double[] pxminusy = new double[nrGrayLevels];
-        for (int k = 0; k < nrGrayLevels; k++) {
-            for (int i = 0; i < nrGrayLevels; i++) {
-                for (int j = 0; j < nrGrayLevels; j++) {
-                    if (Math.abs(i - j) == k) {
-                        pxminusy[k] += matrix.getValueAt(i, j);
-                    }
-                }
-            }
-        }
+		double[] pxminusy = new double[ nrGrayLevels ];
+		for ( int k = 0; k < nrGrayLevels; k++ )
+		{
+			for ( int i = 0; i < nrGrayLevels; i++ )
+			{
+				for ( int j = 0; j < nrGrayLevels; j++ )
+				{
+					if ( Math.abs( i - j ) == k )
+					{
+						pxminusy[ k ] += matrix.getValueAt( i, j );
+					}
+				}
+			}
+		}
 
-        return pxminusy;
-    }
+		return pxminusy;
+	}
 
 }

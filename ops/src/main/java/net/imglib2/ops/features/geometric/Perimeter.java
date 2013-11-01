@@ -12,7 +12,7 @@ public class Perimeter extends AbstractFeature< DoubleType >
 {
 
 	@RequiredFeature
-	GetPolygon polygonProvider;
+	GetPolygon polygonGet;
 
 	/**
 	 * {@inheritDoc}
@@ -21,7 +21,7 @@ public class Perimeter extends AbstractFeature< DoubleType >
 	protected DoubleType recompute()
 	{
 
-		final Polygon poly = polygonProvider.get();
+		final Polygon poly = polygonGet.get();
 		final int numPoints = poly.npoints;
 
 		double perimeter = dist( poly.xpoints[ numPoints - 1 ], poly.ypoints[ numPoints - 1 ], poly.xpoints[ 0 ], poly.ypoints[ 0 ] );

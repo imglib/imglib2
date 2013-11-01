@@ -2,11 +2,14 @@ package net.imglib2.ops.features;
 
 public abstract class AbstractFeature< A > implements Feature< A >
 {
-
-	protected boolean dirty = true;
-
+	// cached result
 	private A m_res;
 
+	// if source updated the pipeline, dirty = true, feature should be
+	// recomputed
+	protected boolean dirty = true;
+
+	// recompute the feature on get()
 	protected abstract A recompute();
 
 	/**

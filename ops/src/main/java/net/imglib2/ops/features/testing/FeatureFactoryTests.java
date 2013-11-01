@@ -5,7 +5,7 @@ import java.util.Iterator;
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
 import net.imglib2.ops.features.Feature;
-import net.imglib2.ops.features.TestFeatureSet;
+import net.imglib2.ops.features.GenericFeatureProcessor;
 import net.imglib2.ops.features.firstorder.GeometricMean;
 import net.imglib2.ops.features.firstorder.HarmonicMean;
 import net.imglib2.ops.features.firstorder.Kurtosis;
@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 
 public class FeatureFactoryTests<T extends RealType<T>> {
 
-    private TestFeatureSet<T> m_myFeatureSet;
+    private GenericFeatureProcessor<T> m_myFeatureSet;
 
     public FeatureFactoryTests() {
         m_myFeatureSet = new MyFeatureSet<T>();

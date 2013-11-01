@@ -6,48 +6,53 @@ import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocPXPlusY;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class SumVariance extends AbstractFeature<DoubleType> {
+public class SumVariance extends AbstractFeature< DoubleType >
+{
 
-    @RequiredFeature
-    private SumAverage sumAverage;
+	@RequiredFeature
+	private SumAverage sumAverage;
 
-    @RequiredFeature
-    private CoocPXPlusY coocPXPlusY;
+	@RequiredFeature
+	private CoocPXPlusY coocPXPlusY;
 
-    @RequiredFeature
-    private HaralickCoocMatrix<?> cooc;
+	@RequiredFeature
+	private HaralickCoocMatrix< ? > cooc;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String name() {
-        return "Sum Variance";
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String name()
+	{
+		return "Sum Variance";
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public SumVariance copy() {
-        return new SumVariance();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public SumVariance copy()
+	{
+		return new SumVariance();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected DoubleType recompute() {
-        final double[] pxplusy = coocPXPlusY.get();
-        final int numGrayLevels = cooc.getNrGrayLevels();
-        final double average = this.sumAverage.get().get();
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected DoubleType recompute()
+	{
+		final double[] pxplusy = coocPXPlusY.get();
+		final int numGrayLevels = cooc.getNrGrayLevels();
+		final double average = this.sumAverage.get().get();
 
-        double res = 0;
-        for (int i = 2; i <= 2 * numGrayLevels; i++) {
-            res += (i - average) * (i - average) * pxplusy[i];
-        }
+		double res = 0;
+		for ( int i = 2; i <= 2 * numGrayLevels; i++ )
+		{
+			res += ( i - average ) * ( i - average ) * pxplusy[ i ];
+		}
 
-        return new DoubleType(res);
-    }
+		return new DoubleType( res );
+	}
 
 }

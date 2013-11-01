@@ -7,35 +7,39 @@ import net.imglib2.ops.features.geometric.Area;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class HarmonicMean<T extends RealType<T>> extends AbstractFeature<DoubleType> {
+public class HarmonicMean< T extends RealType< T >> extends AbstractFeature< DoubleType >
+{
 
-    @RequiredFeature
-    private SumOfInverses<T> m_inverseSum;
+	@RequiredFeature
+	private SumOfInverses< T > inverseSum;
 
-    @RequiredFeature
-    private Area m_area = new Area();
+	@RequiredFeature
+	private Area area;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String name() {
-        return "Harmonic Mean";
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String name()
+	{
+		return "Harmonic Mean";
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public HarmonicMean<T> copy() {
-        return new HarmonicMean<T>();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public HarmonicMean< T > copy()
+	{
+		return new HarmonicMean< T >();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected DoubleType recompute() {
-        return new DoubleType(m_area.get().get() / m_inverseSum.get().get());
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected DoubleType recompute()
+	{
+		return new DoubleType( area.get().get() / inverseSum.get().get() );
+	}
 }

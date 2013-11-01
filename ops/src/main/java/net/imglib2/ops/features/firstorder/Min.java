@@ -8,40 +8,45 @@ import net.imglib2.ops.features.providers.GetIterableInterval;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Min<T extends RealType<T>> extends AbstractFeature<DoubleType> {
+public class Min< T extends RealType< T >> extends AbstractFeature< DoubleType >
+{
 
-    @RequiredFeature
-    private GetIterableInterval<T> interval;
+	@RequiredFeature
+	private GetIterableInterval< T > ii;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String name() {
-        return "Minimum";
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String name()
+	{
+		return "Minimum";
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Min<T> copy() {
-        return new Min<T>();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Min< T > copy()
+	{
+		return new Min< T >();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected DoubleType recompute() {
-        double min = Double.MAX_VALUE;
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected DoubleType recompute()
+	{
+		double min = Double.MAX_VALUE;
 
-        Iterator<T> it = interval.get().iterator();
-        while (it.hasNext()) {
-            double val = it.next().getRealDouble();
-            min = val < min ? val : min;
-        }
+		Iterator< T > it = ii.get().iterator();
+		while ( it.hasNext() )
+		{
+			double val = it.next().getRealDouble();
+			min = val < min ? val : min;
+		}
 
-        return new DoubleType(min);
-    }
+		return new DoubleType( min );
+	}
 }

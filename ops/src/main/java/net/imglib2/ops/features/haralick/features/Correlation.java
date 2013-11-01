@@ -10,64 +10,71 @@ import net.imglib2.ops.features.haralick.helpers.CoocStdX;
 import net.imglib2.ops.features.haralick.helpers.CoocStdY;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Correlation extends AbstractFeature<DoubleType> {
+public class Correlation extends AbstractFeature< DoubleType >
+{
 
-    @RequiredFeature
-    HaralickCoocMatrix<?> cooc;
+	@RequiredFeature
+	HaralickCoocMatrix< ? > cooc;
 
-    @RequiredFeature
-    CoocMeanX coocMeanX = new CoocMeanX();
+	@RequiredFeature
+	CoocMeanX coocMeanX = new CoocMeanX();
 
-    @RequiredFeature
-    CoocMeanY coocMeanY = new CoocMeanY();
+	@RequiredFeature
+	CoocMeanY coocMeanY = new CoocMeanY();
 
-    @RequiredFeature
-    CoocStdX coocStdX = new CoocStdX();
+	@RequiredFeature
+	CoocStdX coocStdX = new CoocStdX();
 
-    @RequiredFeature
-    CoocStdY coocStdY = new CoocStdY();
+	@RequiredFeature
+	CoocStdY coocStdY = new CoocStdY();
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String name() {
-        return "Correlation";
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String name()
+	{
+		return "Correlation";
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Correlation copy() {
-        return new Correlation();
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Correlation copy()
+	{
+		return new Correlation();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected DoubleType recompute() {
-        final int nrGrayLevels = cooc.getNrGrayLevels();
-        final CooccurrenceMatrix matrix = cooc.get();
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected DoubleType recompute()
+	{
+		final int nrGrayLevels = cooc.getNrGrayLevels();
+		final CooccurrenceMatrix matrix = cooc.get();
 
-        final double meanx = coocMeanX.get().get();
-        final double meany = coocMeanY.get().get();
-        final double stdx = coocStdX.get().get();
-        final double stdy = coocStdY.get().get();
+		final double meanx = coocMeanX.get().get();
+		final double meany = coocMeanY.get().get();
+		final double stdx = coocStdX.get().get();
+		final double stdy = coocStdY.get().get();
 
-        double res = 0;
-        for (int i = 0; i < nrGrayLevels; i++) {
-            for (int j = 0; j < nrGrayLevels; j++) {
-                res += ((i - meanx) * (j - meany)) * matrix.getValueAt(i, j) / (stdx * stdy);
-            }
-        }
+		double res = 0;
+		for ( int i = 0; i < nrGrayLevels; i++ )
+		{
+			for ( int j = 0; j < nrGrayLevels; j++ )
+			{
+				res += ( ( i - meanx ) * ( j - meany ) ) * matrix.getValueAt( i, j ) / ( stdx * stdy );
+			}
+		}
 
-        // if NaN
-        if (Double.isNaN(res)) {
-            res = 0;
-        }
+		// if NaN
+		if ( Double.isNaN( res ) )
+		{
+			res = 0;
+		}
 
-        return new DoubleType(res);
-    }
+		return new DoubleType( res );
+	}
 }

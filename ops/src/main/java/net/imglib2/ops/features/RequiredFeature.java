@@ -6,8 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 
- * @author graumanna
+ * Marks a feature as required (in another class). The {@link FeatureSet}
+ * resolve this dependency
  */
 @Retention( RetentionPolicy.RUNTIME )
 @Target( ElementType.FIELD )
