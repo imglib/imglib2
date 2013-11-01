@@ -37,7 +37,6 @@
 
 package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.types.ConnectedType;
@@ -45,27 +44,27 @@ import net.imglib2.type.logic.BitType;
 
 /**
  * @author Felix Schonenberger (University of Konstanz)
- *
+ * 
  * @param <I>
  */
-public final class Dilate< I extends RandomAccessibleInterval< BitType > & IterableInterval< BitType >> implements UnaryOperation< I, I >
+public final class Dilate implements UnaryOperation< RandomAccessibleInterval< BitType >, RandomAccessibleInterval< BitType > >
 {
 
 	private final int m_neighbourhoodCount;
 
 	private final ConnectedType m_type;
 
-	private final BinaryOps< I > m_binOps;
+	private final BinaryOps m_binOps;
 
 	public Dilate( ConnectedType type, final int neighbourhoodCount )
 	{
 		m_neighbourhoodCount = neighbourhoodCount;
 		m_type = type;
-		m_binOps = new BinaryOps< I >();
+		m_binOps = new BinaryOps();
 	}
 
 	@Override
-	public I compute( I op, I r )
+	public RandomAccessibleInterval< BitType > compute( RandomAccessibleInterval< BitType > op, RandomAccessibleInterval< BitType > r )
 	{
 		m_binOps.dilate( m_type, r, op, m_neighbourhoodCount );
 		return r;
@@ -73,8 +72,8 @@ public final class Dilate< I extends RandomAccessibleInterval< BitType > & Itera
 	}
 
 	@Override
-	public UnaryOperation< I, I > copy()
+	public UnaryOperation< RandomAccessibleInterval< BitType >, RandomAccessibleInterval< BitType > > copy()
 	{
-		return new Dilate< I >( m_type, m_neighbourhoodCount );
+		return new Dilate( m_type, m_neighbourhoodCount );
 	}
 }

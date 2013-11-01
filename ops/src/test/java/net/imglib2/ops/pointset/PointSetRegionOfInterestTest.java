@@ -42,6 +42,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
+ * Tests {@link PointSetRegionOfInterestIterator}.
  * 
  * @author Barry DeZonia
  *

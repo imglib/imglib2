@@ -38,10 +38,10 @@
 package net.imglib2;
 
 /**
- *
+ * {R<sup><em>n</em></sup>}: an N-dimensional Euclidean space.
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface EuclideanSpace
 {

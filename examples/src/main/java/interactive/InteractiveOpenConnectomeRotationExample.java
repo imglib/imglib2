@@ -1,32 +1,16 @@
 package interactive;
 
-import interactive.remote.openconnectome.VolatileOpenConnectomeRandomAccessibleInterval;
-import net.imglib2.RandomAccessible;
-import net.imglib2.display.VolatileRealType;
-import net.imglib2.display.VolatileRealTypeARGBConverter;
-import net.imglib2.display.VolatileXYRandomAccessibleProjector;
-import net.imglib2.interpolation.Interpolant;
-import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.realtransform.AffineGet;
-import net.imglib2.realtransform.AffineRandomAccessible;
-import net.imglib2.realtransform.AffineTransform3D;
-import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.ui.InteractiveViewer3D;
-import net.imglib2.view.Views;
 
 public class InteractiveOpenConnectomeRotationExample
 {
+/*
 	final static public void main( final String[] args ) throws ImgIOException
 	{
 		//final OpenConnectomeRandomAccessibleInterval map = new OpenConnectomeRandomAccessibleInterval( "http://openconnecto.me/emca/kasthuri11", 21504, 26624, 1850, 64, 64, 8, 1, 0 );
 //		final VolatileOpenConnectomeRandomAccessibleInterval map = new VolatileOpenConnectomeRandomAccessibleInterval( "http://openconnecto.me/emca/bock11", 135424, 119808, 1239, 128, 128, 16, 2917, 0 );
 		final VolatileOpenConnectomeRandomAccessibleInterval map = new VolatileOpenConnectomeRandomAccessibleInterval( "http://openconnecto.me/emca/bock11", 135424, 119808, 1239, 256, 256, 32, 2917, 0 );
 		//final VolatileOpenConnectomeRandomAccessibleInterval map = new VolatileOpenConnectomeRandomAccessibleInterval( "http://openconnecto.me/emca/kasthuri11", 21504, 26624, 1850, 50, 50, 5, 1, 0 );
-		
+
 		final int w = 720, h = 405;
 
 		final double yScale = 1.0, zScale = 10.0;
@@ -49,7 +33,7 @@ public class InteractiveOpenConnectomeRotationExample
 				logo.paint( screenImage );
 				return valid;
 			}
-			
+
 			@Override
 			protected VolatileXYRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType > createProjector()
 			{
@@ -70,7 +54,7 @@ public class InteractiveOpenConnectomeRotationExample
 						new AffineRandomAccessible< VolatileRealType< UnsignedByteType >, AffineGet >( interpolant, sourceToScreen.inverse() );
 				return new VolatileXYRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType >( mapping, screenImage, converter );
 			}
-			
+
 //			@Override
 //			protected XYRandomAccessibleProjector< UnsignedByteType, ARGBType > createProjector()
 //			{
@@ -93,5 +77,5 @@ public class InteractiveOpenConnectomeRotationExample
 //			}
 		};
 	}
-
+*/
 }

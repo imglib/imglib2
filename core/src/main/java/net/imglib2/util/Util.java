@@ -39,6 +39,7 @@ package net.imglib2.util;
 
 import java.util.List;
 
+import net.imglib2.Dimensions;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
@@ -49,6 +50,11 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.RealRandomAccessibleRealInterval;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ExponentialMathType;
 
@@ -1180,6 +1186,53 @@ public class Util
 		if ( RealRandomAccessibleRealInterval.class.isInstance( ra ) )
 			return getTypeFromRealInterval( ( RealRandomAccessibleRealInterval< T > ) ra );
 		return ra.realRandomAccess().get();
+	}
+
+	/**
+	 * Create an {@link ArrayImgFactory} if an image of the requested
+	 * <code>targetSize</code> could be held in an {@link ArrayImg}. Otherwise
+	 * return a {@link CellImgFactory} with as large as possible cell size.
+	 *
+	 * @param targetSize
+	 *            size of image that the factory should be able to create.
+	 * @param type
+	 *            type of the factory.
+	 * @return an {@link ArrayImgFactory} or a {@link CellImgFactory}.
+	 */
+	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final T type )
+	{
+		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
+			return new ArrayImgFactory< T >();
+		final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel(), 1.0 / targetSize.numDimensions() );
+		return new CellImgFactory< T >( cellSize );
+	}
+
+	/**
+	 * Create an {@link ArrayImgFactory} if an image of the requested
+	 * <code>targetSize</code> could be held in an {@link ArrayImg}. Otherwise
+	 * return a {@link CellImgFactory} with cell size
+	 * <code>targetCellSize</code> (or as large as possible if
+	 * <code>targetCellSize</code> is too large).
+	 *
+	 * @param targetSize
+	 *            size of image that the factory should be able to create.
+	 * @param targetCellSize
+	 *            if a {@link CellImgFactory} is created, what should be the
+	 *            cell size.
+	 * @param type
+	 *            type of the factory.
+	 * @return an {@link ArrayImgFactory} or a {@link CellImgFactory}.
+	 */
+	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final int targetCellSize, final T type )
+	{
+		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
+			return new ArrayImgFactory< T >();
+		final int cellSize;
+		if ( Math.pow( targetCellSize, targetSize.numDimensions() ) <= Integer.MAX_VALUE )
+			cellSize = targetCellSize;
+		else
+			cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel(), 1.0 / targetSize.numDimensions() );
+		return new CellImgFactory< T >( cellSize );
 	}
 
 	/**

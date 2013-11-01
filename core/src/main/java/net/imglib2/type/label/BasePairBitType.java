@@ -68,7 +68,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 	int j1, j2, j3;
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( NativeImg<BasePairBitType, ? extends BitAccess> bitStorage )
+	public BasePairBitType( final NativeImg<BasePairBitType, ? extends BitAccess> bitStorage )
 	{
 		img = bitStorage;
 		updateIndex( 0 );
@@ -245,6 +245,7 @@ public class BasePairBitType implements BasePairType<BasePairBitType>, NativeTyp
 			case T: set( Base.A ); break;
 			case G: set( Base.C ); break;
 			case C: set( Base.G ); break;
+			default: break;
 		}
 	}
 

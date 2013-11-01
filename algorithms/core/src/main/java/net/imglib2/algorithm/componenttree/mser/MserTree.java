@@ -54,6 +54,7 @@ import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
+import net.imglib2.util.Util;
 
 /**
  * MSER tree of an image stored as a tree of {@link PixelListComponent}s. This
@@ -121,7 +122,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 *            bright to dark (false)
 	 * @return MSER tree of the image.
 	 */
-	public static < T extends RealType< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final double delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, boolean darkToBright )
+	public static < T extends RealType< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final double delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final boolean darkToBright )
 	{
 		return buildMserTree( input, MserTree.getDeltaVariable( input, delta ), minSize, maxSize, maxVar, minDiversity, darkToBright );
 	}
@@ -149,17 +150,10 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 *            bright to dark (false)
 	 * @return MSER tree of the image.
 	 */
-	public static < T extends RealType< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final T delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, boolean darkToBright )
+	public static < T extends RealType< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final T delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final boolean darkToBright )
 	{
-		final int numDimensions = input.numDimensions();
-		long size = 1;
-		for ( int d = 0; d < numDimensions; ++d )
-			size *= input.dimension( d );
-		if( size > Integer.MAX_VALUE ) {
-			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
-			return buildMserTree( input, delta, minSize, maxSize, maxVar, minDiversity, new CellImgFactory< LongType >( cellSize ), darkToBright );
-		}
-		return buildMserTree( input, delta, minSize, maxSize, maxVar, minDiversity, new ArrayImgFactory< LongType >(), darkToBright );
+		final ImgFactory< LongType > factory = Util.getArrayOrCellImgFactory( input, new LongType() );
+		return buildMserTree( input, delta, minSize, maxSize, maxVar, minDiversity, factory, darkToBright );
 	}
 
 	/**
@@ -185,13 +179,13 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 * @return MSER tree of the image.
 	 * @see MserComponentGenerator
 	 */
-	public static < T extends RealType< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final T delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final ImgFactory< LongType > imgFactory, boolean darkToBright )
+	public static < T extends RealType< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final T delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final ImgFactory< LongType > imgFactory, final boolean darkToBright )
 	{
 		final T max = delta.createVariable();
 		max.setReal( darkToBright ? delta.getMaxValue() : delta.getMinValue() );
 		final MserComponentGenerator< T > generator = new MserComponentGenerator< T >( max, input, imgFactory );
 		final Comparator< T > comparator = darkToBright ? new ComponentTree.DarkToBright< T >() : new ComponentTree.BrightToDark< T >();
-		final ComputeDelta< T > computeDelta = darkToBright ? new ComputeDeltaDarkToBright< T >( delta ) : new ComputeDeltaBrightToDark< T >( delta ); 
+		final ComputeDelta< T > computeDelta = darkToBright ? new ComputeDeltaDarkToBright< T >( delta ) : new ComputeDeltaBrightToDark< T >( delta );
 		final MserTree< T > tree = new MserTree< T >( comparator, computeDelta, minSize, maxSize, maxVar, minDiversity );
 		ComponentTree.buildComponentTree( input, generator, tree, comparator );
 		tree.pruneDuplicates();
@@ -225,15 +219,8 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 */
 	public static < T extends Type< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final ComputeDelta< T > computeDelta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final T maxValue, final Comparator< T > comparator )
 	{
-		final int numDimensions = input.numDimensions();
-		long size = 1;
-		for ( int d = 0; d < numDimensions; ++d )
-			size *= input.dimension( d );
-		if( size > Integer.MAX_VALUE ) {
-			int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / new LongType().getEntitiesPerPixel(), 1.0 / numDimensions );
-			return buildMserTree( input, computeDelta, minSize, maxSize, maxVar, minDiversity, new CellImgFactory< LongType >( cellSize ), maxValue, comparator );
-		}
-		return buildMserTree( input, computeDelta, minSize, maxSize, maxVar, minDiversity, new ArrayImgFactory< LongType >(), maxValue, comparator );
+		final ImgFactory< LongType > factory = Util.getArrayOrCellImgFactory( input, new LongType() );
+		return buildMserTree( input, computeDelta, minSize, maxSize, maxVar, minDiversity, factory, maxValue, comparator );
 	}
 
 	/**
@@ -274,11 +261,11 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 * Create a variable of type T with value delta by copying
 	 * and setting a value from the input {@link RandomAccessibleInterval}.
 	 */
-	private static < T extends RealType< T > > T getDeltaVariable( final RandomAccessibleInterval< T > input, double delta )
+	private static < T extends RealType< T > > T getDeltaVariable( final RandomAccessibleInterval< T > input, final double delta )
 	{
-		RandomAccess< T > a = input.randomAccess();
+		final RandomAccess< T > a = input.randomAccess();
 		input.min( a );
-		T deltaT = a.get().createVariable();
+		final T deltaT = a.get().createVariable();
 		deltaT.setReal( delta );
 		return deltaT;
 	}
@@ -310,10 +297,10 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 * Minimal diversity of adjacent accepted MSER.
 	 */
 	private final double minDiversity;
-	
+
 	/**
 	 * The number of minima found since the last {@link #pruneDuplicates()}.
-	 * 
+	 *
 	 * @see #foundNewMinimum(MserEvaluationNode)
 	 */
 	private int minimaFoundSinceLastPrune;
@@ -341,18 +328,18 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	private void pruneDuplicates()
 	{
 		nodes.clear();
-		for ( Mser< T > mser : roots )
+		for ( final Mser< T > mser : roots )
 			pruneChildren ( mser );
 		nodes.addAll( roots );
 	}
 
-	private void pruneChildren( Mser< T > mser )
+	private void pruneChildren( final Mser< T > mser )
 	{
 		final ArrayList< Mser< T > > validChildren = new ArrayList< Mser< T > >();
 		for ( int i = 0; i < mser.children.size(); ++i )
 		{
-			Mser< T > m = mser.children.get( i );
-			double div = ( mser.size() - m.size() ) / (double) mser.size();
+			final Mser< T > m = mser.children.get( i );
+			final double div = ( mser.size() - m.size() ) / (double) mser.size();
 			if ( div > minDiversity )
 			{
 				validChildren.add( m );
@@ -361,7 +348,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 			else
 			{
 				mser.children.addAll( m.children );
-				for ( Mser< T > m2 : m.children )
+				for ( final Mser< T > m2 : m.children )
 					m2.parent = mser;
 			}
 		}
@@ -371,7 +358,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	}
 
 	@Override
-	public void emit( MserComponentIntermediate< T > component )
+	public void emit( final MserComponentIntermediate< T > component )
 	{
 		new MserEvaluationNode< T >( component, comparator, delta, this );
 		component.children.clear();
@@ -384,17 +371,17 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 * @param node
 	 *            MSER candidate.
 	 */
-	void foundNewMinimum( MserEvaluationNode< T > node )
+	void foundNewMinimum( final MserEvaluationNode< T > node )
 	{
 		if ( node.size >= minSize && node.size <= maxSize && node.score <= maxVar )
 		{
-			Mser< T > mser = new Mser< T >( node );
-			for ( Mser< T > m : node.mserThisOrChildren )
+			final Mser< T > mser = new Mser< T >( node );
+			for ( final Mser< T > m : node.mserThisOrChildren )
 				mser.children.add( m );
 			node.mserThisOrChildren.clear();
 			node.mserThisOrChildren.add( mser );
-			
-			for ( Mser< T > m : mser.children )
+
+			for ( final Mser< T > m : mser.children )
 				roots.remove( m );
 			roots.add( mser );
 			nodes.add( mser );

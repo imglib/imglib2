@@ -125,10 +125,7 @@ public class DilateLabeling< L extends Comparable< L >> implements UnaryOperatio
 	@Override
 	public Labeling< L > compute( final Labeling< L > input, final Labeling< L > output )
 	{
-		if ( m_labelBased )
-		{
-			return computeLabelBased( input, output );
-		}
+		if ( m_labelBased ) { return computeLabelBased( input, output ); }
 		return computeBinaryBased( input, output );
 	}
 
@@ -163,6 +160,7 @@ public class DilateLabeling< L extends Comparable< L >> implements UnaryOperatio
 			final List< L > center = inStructure.get().getLabeling();
 			if ( !center.isEmpty() )
 			{
+				out.get().setLabeling( center );
 				continue next;
 			}
 			while ( inStructure.hasNext() )

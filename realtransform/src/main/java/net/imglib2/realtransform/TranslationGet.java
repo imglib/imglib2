@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009--2012, ImgLib2 developers
+ * Copyright (c) 2009--2013, ImgLib2 developers
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -52,14 +52,6 @@ public interface TranslationGet extends AffineGet
 	 */
 	public double[] getTranslationCopy();
 	
-	// NB: Ideally, we would utilize covariant inheritance to narrow the return
-	// type of a single inverse() method here, rather than needing separate
-	// methods inverse(), inverseAffine().  Unfortunately, due to a Javac bug
-	// with multiple interface inheritance, we must avoid doing so for now. For
-	// details, see:
-	//     http://bugs.sun.com/view_bug.do?bug_id=6656332
-	// The bug is fixed in JDK7.
-	public TranslationGet inverseTranslation();
-//	@Override
-//	TranslationGet inverse();
+	@Override
+	TranslationGet inverse();
 }

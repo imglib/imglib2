@@ -27,147 +27,55 @@
  */
 package net.imglib2.realtransform;
 
-import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
-import net.imglib2.RealPositionable;
 
 /**
  * <em>n</em>-d arbitrary scaling.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class Scale implements AffineGet
+public class Scale extends AbstractScale
 {
-	final protected double[] s;
 	final protected Scale inverse;
-	final protected RealPoint[] ds;
 	
 	protected Scale( final double[] s, final Scale inverse, final RealPoint[] ds )
 	{
-		this.s = s;
-		this.ds = ds;
+		super( s, ds );
 		this.inverse = inverse;
 	}
 	
 	public Scale( final double... s )
 	{
-		this.s = s.clone();
-		ds = new RealPoint[ s.length ];
+		super( s.clone(), new RealPoint[ s.length ] );
 		final double[] si = new double[ s.length ];
+		final RealPoint[] dis = new RealPoint[ s.length ]; 
 		for ( int d =0; d < s.length; ++d )
 		{
 			si[ d ] = 1.0 / s[ d ];
 			final RealPoint dd = new RealPoint( s.length );
 			dd.setPosition( s[ d ], d );
+			final RealPoint ddi = new RealPoint( s.length );
+			ddi.setPosition( si[ d ], d );
 		}
-		inverse = new Scale( si, this, ds );
+		inverse = new Scale( si, this, dis );
 	}
 	
 	@Override
-	public void applyInverse( final double[] source, final double[] target )
+	public void set( final double... s )
 	{
-		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
-		
 		for ( int d =0; d < s.length; ++d )
-			source[ d ] = target[ d ] / s[ d ];
+		{
+			this.s[ d ] = s[ d ];
+			inverse.s[ d ] = 1.0 / s[ d ];
+			ds[ d ].setPosition( s[ d ], d );
+			inverse.ds[ d ].setPosition( inverse.s[ d ], d );
+		}
 	}
-
-	@Override
-	public void applyInverse( final float[] source, final float[] target )
-	{
-		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
-		
-		for ( int d =0; d < s.length; ++d )
-			source[ d ] = ( float )( target[ d ] / s[ d ] );
-		
-	}
-
-	@Override
-	public void applyInverse( final RealPositionable source, final RealLocalizable target )
-	{
-		assert source.numDimensions() >= s.length && target.numDimensions() >= s.length : "Input dimensions too small.";
-		
-		for ( int d =0; d < s.length; ++d )
-			source.setPosition( target.getDoublePosition( d ) / s[ d ], d );
-	}
-
+	
 	@Override
 	public Scale inverse()
 	{
 		return inverse;
-	}
-	
-	@Override
-	public int numDimensions()
-	{
-		return s.length;
-	}
-
-	@Override
-	public int numSourceDimensions()
-	{
-		return s.length;
-	}
-
-	@Override
-	public int numTargetDimensions()
-	{
-		return s.length;
-	}
-
-	@Override
-	public void apply( final double[] source, final double[] target )
-	{
-		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
-		
-		for ( int d =0; d < s.length; ++d )
-			target[ d ] = source[ d ] * s[ d ];
-	}
-
-	@Override
-	public void apply( final float[] source, final float[] target )
-	{
-		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
-		
-		for ( int d =0; d < s.length; ++d )
-			target[ d ] = ( float )( source[ d ] * s[ d ] );
-	}
-
-	@Override
-	public void apply( final RealLocalizable source, final RealPositionable target )
-	{
-		assert source.numDimensions() >= s.length && target.numDimensions() >= s.length : "Input dimensions too small.";
-		
-		for ( int d =0; d < s.length; ++d )
-			target.setPosition( source.getDoublePosition( d ) / s[ d ], d );
-	}
-
-	@Override
-	public double get( final int row, final int column )
-	{
-		return row == column ? s[ row ] : 0;
-	}
-
-	@Override
-	public double[] getRowPackedCopy()
-	{
-		final int step = s.length + 2;
-		final double[] matrix = new double[ s.length * s.length + s.length ];
-		for ( int d = 0; d < s.length; ++d )
-			matrix[ d * step ] = s[ d ];
-		return matrix;
-	}
-
-	@Override
-	public RealLocalizable d( final int d )
-	{
-		return ds[ d ];
-	}
-
-	@Override
-	public AffineGet inverseAffine()
-	{
-		return inverse();
 	}
 	
 	@Override

@@ -37,10 +37,13 @@
 package net.imglib2.view.composite;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * 
+ * A vector of {@link RealType} scalars.  It is a {@link NumericType}
+ * itself, implementing the {@link NumericType} algebra as element-wise
+ * operations.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

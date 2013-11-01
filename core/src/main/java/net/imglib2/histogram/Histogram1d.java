@@ -609,7 +609,7 @@ public class Histogram1d<T> implements Img<LongType> {
 	}
 
 	@Override
-	public Img<LongType> copy() {
+	public Histogram1d<T> copy() {
 		return new Histogram1d<T>(this);
 	}
 

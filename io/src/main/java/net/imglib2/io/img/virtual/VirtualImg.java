@@ -64,7 +64,10 @@ import net.imglib2.type.numeric.real.FloatType;
  * memory values can be changed the data is never written to disk.
  * 
  * @author Barry DeZonia
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public class VirtualImg<T extends NativeType<T> & RealType<T>> extends
 	AbstractImg<T>
 {

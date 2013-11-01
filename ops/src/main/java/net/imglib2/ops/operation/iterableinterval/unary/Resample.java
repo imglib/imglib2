@@ -44,6 +44,7 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.LanczosInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.ops.operation.UnaryOperation;
@@ -52,6 +53,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
 /**
+ * TODO: Implement more interpolators (e.g. bilinear interpolation)
  * 
  * @author Christian Dietz (University of Konstanz)
  *
@@ -63,7 +65,7 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 
 	public enum Mode
 	{
-		LINEAR, NEAREST_NEIGHBOR, PERIODICAL;
+		LINEAR, NEAREST_NEIGHBOR, PERIODICAL, LANCZOS;
 	}
 
 	private final Mode m_mode;
@@ -86,8 +88,10 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 		case NEAREST_NEIGHBOR:
 			ifac = new NearestNeighborInterpolatorFactory< T >();
 			break;
-		default:
-
+		case LANCZOS:
+			ifac = new LanczosInterpolatorFactory< T >();
+			break;
+		case PERIODICAL:
 			RandomAccess< T > srcRA = Views.extendPeriodic( op ).randomAccess();
 			Cursor< T > resCur = res.localizingCursor();
 			while ( resCur.hasNext() )
@@ -96,8 +100,10 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 				srcRA.setPosition( resCur );
 				resCur.get().set( srcRA.get() );
 			}
-
+			
 			return res;
+			default:
+				throw new IllegalArgumentException("Unknown mode in Resample.java");
 		}
 
 		final RealRandomAccess< T > inter = ifac.create( Views.extend( op, new OutOfBoundsMirrorFactory< T, II >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) ) );

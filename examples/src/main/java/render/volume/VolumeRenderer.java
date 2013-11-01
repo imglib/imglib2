@@ -20,16 +20,15 @@ import ij.IJ;
 import ij.ImageJ;
 import net.imglib2.Cursor;
 import net.imglib2.ExtendedRandomAccessibleInterval;
-import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.converter.ARGBDoubleARGBConverter;
 import net.imglib2.converter.Converters;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -38,11 +37,14 @@ import net.imglib2.img.imageplus.ImagePlusImgs;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.realtransform.InvertibleRealTransformSequence;
 import net.imglib2.realtransform.Perspective3D;
 import net.imglib2.realtransform.RealViews;
 import net.imglib2.realtransform.Scale;
+import net.imglib2.realtransform.Scale3D;
+import net.imglib2.realtransform.Translation3D;
 import net.imglib2.type.numeric.ARGBDoubleType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.AbstractARGBDoubleType;
@@ -51,7 +53,7 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
-import net.imglib2.view.composite.CompositeView;
+import net.imglib2.view.composite.CompositeIntervalView;
 import net.imglib2.view.composite.RealComposite;
 
 /**
@@ -250,10 +252,8 @@ public class VolumeRenderer
 		final String filename = "/home/saalfeld/examples/l1-cns-05-05-5-DPX-9-10.tif";
 		final ImgPlus< UnsignedShortType > xycz = new ImgOpener().openImg( filename, new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType() );
 		final RandomAccessibleInterval< UnsignedShortType > xyzc = Views.permute( xycz, 2, 3 );
-		final CompositeView< UnsignedShortType, RealComposite< UnsignedShortType > > img =
-				Views.collapseReal( Views.extendZero( xyzc ), ( int )xyzc.dimension( 3 ) );
-		
-		final FinalInterval box = new FinalInterval( xyzc.dimension( 0 ), xyzc.dimension( 1 ), xyzc.dimension( 2 ) );
+		final CompositeIntervalView< UnsignedShortType, RealComposite< UnsignedShortType > > img =
+				Views.collapseReal( xyzc );
 		
 		/* composing converter */
 		final RealCompositeARGBDoubleConverter< UnsignedShortType > composite2ARGBDouble =
@@ -265,15 +265,15 @@ public class VolumeRenderer
 		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, 0, s, 0 ), 3 );
 		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, 0, 0, s ), 4 );
 		
-		final RandomAccessible< ARGBDoubleType > argbComposite = Converters.convert( img, composite2ARGBDouble, new ARGBDoubleType() );
+		final RandomAccessibleInterval< ARGBDoubleType > argbComposite = Converters.convert( img, composite2ARGBDouble, new ARGBDoubleType() );
 		
 		/* copy it as on-the-fly conversion isn't the quickest thing in the world */
 		
-		final RandomAccessible< ARGBType > argb = Converters.convert(
+		final RandomAccessibleInterval< ARGBType > argb = Converters.convert(
 				argbComposite,
 				new ARGBDoubleARGBConverter< ARGBDoubleType >(),
 				new ARGBType() );
-		ImageJFunctions.show( Views.interval( argb, box ) );
+		ImageJFunctions.show( argb );
 		
 		
 		final ImagePlusImg< ARGBType, ? > movie = ImagePlusImgs.argbs( xycz.dimension( 0 ), xycz.dimension( 1 ), numFrames );
@@ -323,7 +323,7 @@ public class VolumeRenderer
 //		final ARGBDoubleLayers< NativeARGBDoubleType > accumulator = new ARGBDoubleLayers();
 		final ARGBDoubleLayers< ARGBDoubleType > accumulator = new ARGBDoubleLayers< ARGBDoubleType >();
 		
-		for ( int i = 39; i < numFrames; ++i )
+		for ( int i = 44; i < numFrames; ++i )
 		{
 			final double j = ( double )i / numFrames;
 			//final double k = Math.max( 0, Math.min( 1, j * 1.5 - 0.25 ) );
@@ -344,11 +344,7 @@ public class VolumeRenderer
 			affine.preConcatenate( rotation );
 			affine.preConcatenate( zShift );
 		
-			final FinalRealInterval bounds = affine.estimateBounds(
-					new FinalInterval( new long[]{
-							xyzc.dimension( 0 ),
-							xyzc.dimension( 1 ),
-							xyzc.dimension( 2 ) } ) );
+			final FinalRealInterval bounds = affine.estimateBounds( img );
 			final long minZ	= ( long )Math.floor( bounds.realMin( 2 ) );
 			final long maxZ	= ( long )Math.ceil( bounds.realMax( 2 ) );
 			
@@ -364,38 +360,38 @@ public class VolumeRenderer
 	{
 		new ImageJ();
 		
-		final double s = 1.0 / 4095.0;
+		final double s = 10.0 / 4095.0;
+		final double a = 0.5;
 		
 		final String filename = "/home/saalfeld/examples/l1-cns-05-05-5-DPX-9.tif";
 		//final String filename = "/home/saalfeld/examples/l1-cns-05-05-5-DPX-9-10.tif";
 		final ImgPlus< UnsignedShortType > xycz = new ImgOpener().openImg( filename, new ArrayImgFactory< UnsignedShortType >(), new UnsignedShortType() );
 		final RandomAccessibleInterval< UnsignedShortType > xyzc = Views.permute( xycz, 2, 3 );
-		final CompositeView< UnsignedShortType, RealComposite< UnsignedShortType > > img =
-				Views.collapseReal( Views.extendZero( xyzc ), ( int )xyzc.dimension( 3 ) );
-		
-		final FinalInterval box = new FinalInterval( xyzc.dimension( 0 ), xyzc.dimension( 1 ), xyzc.dimension( 2 ) );
+		final CompositeIntervalView< UnsignedShortType, RealComposite< UnsignedShortType > > img =
+				Views.collapseReal( xyzc );
 		
 		/* composing converter */
 		final RealCompositeARGBDoubleConverter< UnsignedShortType > composite2ARGBDouble =
 				new RealCompositeARGBDoubleConverter< UnsignedShortType >( ( int )xyzc.dimension( 3 ) );
 		
-		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, s, 0, 0 ), 0 );
-		composite2ARGBDouble.setARGB( new ARGBDoubleType( 0.35, s, s, s ), 1 );
-		composite2ARGBDouble.setARGB( new ARGBDoubleType( 0, s, s, s ), 2 );
-		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, 0, s, 0 ), 3 );
-		composite2ARGBDouble.setARGB( new ARGBDoubleType( 1, 0, 0, s ), 4 );
 		
-		final RandomAccessible< ARGBDoubleType > argbComposite = Converters.convert( img, composite2ARGBDouble, new ARGBDoubleType() );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( a, s, 0, 0 ), 0 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( 0.35 * a, s, s, s ), 1 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( 0, s, s, s ), 2 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( a, 0, s, 0 ), 3 );
+		composite2ARGBDouble.setARGB( new ARGBDoubleType( a, 0, 0, s ), 4 );
+		
+		final RandomAccessibleInterval< ARGBDoubleType > argbComposite = Converters.convert( img, composite2ARGBDouble, new ARGBDoubleType() );
 		
 		/* copy it as on-the-fly conversion isn't the quickest thing in the world */
 		final Img< NativeARGBDoubleType > argbCopy;
 		if ( xyzc.dimension( 0 ) * xyzc.dimension( 1 ) * xyzc.dimension( 2 ) * 4 > Integer.MAX_VALUE )
-			argbCopy = new CellImgFactory< NativeARGBDoubleType >( 256 ).create( box, new NativeARGBDoubleType() );
+			argbCopy = new CellImgFactory< NativeARGBDoubleType >( 256 ).create( img, new NativeARGBDoubleType() );
 		else
-			argbCopy = new ArrayImgFactory< NativeARGBDoubleType >().create( box, new NativeARGBDoubleType() );
+			argbCopy = new ArrayImgFactory< NativeARGBDoubleType >().create( img, new NativeARGBDoubleType() );
 		
-		final IterableInterval< ARGBDoubleType > sourceIterable = Views.flatIterable( Views.interval( argbComposite, box ) );
-		final IterableInterval< NativeARGBDoubleType > targetIterable = Views.flatIterable( Views.interval( argbCopy, box ) );
+		final IterableInterval< ARGBDoubleType > sourceIterable = Views.flatIterable( argbComposite );
+		final IterableInterval< NativeARGBDoubleType > targetIterable = Views.flatIterable( argbCopy );
 		final Cursor< ARGBDoubleType > sourceCursor = sourceIterable.cursor();
 		final Cursor< NativeARGBDoubleType > targetCursor = targetIterable.cursor();
 		while ( targetCursor.hasNext() )
@@ -405,7 +401,7 @@ public class VolumeRenderer
 				( RandomAccessibleInterval< NativeARGBDoubleType > )argbCopy,
 				new ARGBDoubleARGBConverter< NativeARGBDoubleType >(),
 				new ARGBType() );
-		ImageJFunctions.show( Views.interval( argb, box ) );
+		ImageJFunctions.show( argb );
 		
 		
 		
@@ -413,28 +409,25 @@ public class VolumeRenderer
 		final ImagePlusImg< ARGBType, ? > movie = ImagePlusImgs.argbs( xycz.dimension( 0 ), xycz.dimension( 1 ), numFrames );
 		ImageJFunctions.show( movie );
 				
-		final AffineTransform3D centerShift = new AffineTransform3D();
-		centerShift.set(
-				1, 0, 0, -xyzc.dimension( 0 ) / 2.0 - xyzc.min( 0 ),
-				0, 1, 0, -xyzc.dimension( 1 ) / 2.0 - xyzc.min( 1 ),
-				0, 0, 1, -xyzc.dimension( 2 ) / 2.0 - xyzc.min( 2 ) );
+		final Translation3D centerShift = new Translation3D(
+				-xyzc.dimension( 0 ) / 2.0 - xyzc.min( 0 ),
+				-xyzc.dimension( 1 ) / 2.0 - xyzc.min( 1 ),
+				-xyzc.dimension( 2 ) / 2.0 - xyzc.min( 2 ) );
 		
-		final AffineTransform3D centerUnshiftXY = centerShift.inverse();
-		centerUnshiftXY.set( 0, 2, 3 );
+		final Translation3D centerUnshiftXY = new Translation3D(
+				xyzc.dimension( 0 ) / 2.0 + xyzc.min( 0 ),
+				xyzc.dimension( 1 ) / 2.0 + xyzc.min( 1 ),
+				0 );
 		
 		final double f = xyzc.dimension( 1 );
 		
-		final AffineTransform3D zShift = new AffineTransform3D();
-		zShift.set(
-				1, 0, 0, 0,
-				0, 1, 0, 0,
-				0, 0, 1, xyzc.dimension( 2 ) / 2.0 + f );
+		final Translation3D zShift = new Translation3D( 0, 0, xyzc.dimension( 2 ) / 2.0 + f );
 		
 		final AffineTransform3D rotation = new AffineTransform3D();
 		final AffineTransform3D affine = new AffineTransform3D();
 		
 		final Perspective3D perspective = Perspective3D.getInstance();
-		final Scale scale = new Scale( f, f, 1 );
+		final Scale3D scale = new Scale3D( f, f, 1 );
 		
 		final InvertibleRealTransformSequence transformSequence = new InvertibleRealTransformSequence();
 		
@@ -477,11 +470,7 @@ public class VolumeRenderer
 			affine.preConcatenate( rotation );
 			affine.preConcatenate( zShift );
 		
-			final FinalRealInterval bounds = affine.estimateBounds(
-					new FinalInterval( new long[]{
-							xyzc.dimension( 0 ),
-							xyzc.dimension( 1 ),
-							xyzc.dimension( 2 ) } ) );
+			final FinalRealInterval bounds = affine.estimateBounds( img );
 			final long minZ	= ( long )Math.floor( bounds.realMin( 2 ) );
 			final long maxZ	= ( long )Math.ceil( bounds.realMax( 2 ) );
 			
