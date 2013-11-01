@@ -6,7 +6,7 @@ package net.imglib2.ops.features;
  * 
  * @param <A>
  */
-public interface Source< A >
+public interface Source< A > extends Feature< A >
 {
 	/**
 	 * Update the {@link Source}

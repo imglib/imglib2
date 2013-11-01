@@ -2,12 +2,10 @@ package net.imglib2.ops.features.geometric;
 
 import net.imglib2.ops.features.AbstractFeature;
 import net.imglib2.ops.features.RequiredFeature;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Circularity< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class Circularity extends AbstractFeature< DoubleType >
 {
-
 	@RequiredFeature
 	private Perimeter perimeter;
 
@@ -27,9 +25,9 @@ public class Circularity< T extends RealType< T >> extends AbstractFeature< Doub
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Circularity< T > copy()
+	public Circularity copy()
 	{
-		return new Circularity< T >();
+		return new Circularity();
 	}
 
 	/**

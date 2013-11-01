@@ -22,9 +22,9 @@ import net.imglib2.ops.features.firstorder.moments.Moment4AboutMean;
 import net.imglib2.ops.features.firstorder.sums.SumOfInverses;
 import net.imglib2.ops.features.firstorder.sums.SumOfLogs;
 import net.imglib2.ops.features.firstorder.sums.SumOfSquares;
-import net.imglib2.ops.features.geometric.Area;
 import net.imglib2.ops.features.geometric.Circularity;
-import net.imglib2.ops.features.geometric.Perimeter;
+import net.imglib2.ops.features.geometric.area.AreaIterableInterval;
+import net.imglib2.ops.features.geometric.perimeter.Perimeter2DPolygon;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.features.ASM;
 import net.imglib2.ops.features.haralick.features.ClusterPromenence;
@@ -48,26 +48,7 @@ public class FeatureFactoryTests<T extends RealType<T>> {
 
     public FeatureFactoryTests() {
         m_myFeatureSet = new MyFeatureSet<T>();
-        m_myFeatureSet.register(new Mean<T>());
-        m_myFeatureSet.register(new Area());
-        m_myFeatureSet.register(new Variance<T>());
-        m_myFeatureSet.register(new StdDeviation<T>());
-        m_myFeatureSet.register(new Skewness<T>());
-        m_myFeatureSet.register(new Kurtosis<T>());
-        m_myFeatureSet.register(new Sum<T>());
-        m_myFeatureSet.register(new SumOfInverses<T>());
-        m_myFeatureSet.register(new SumOfLogs<T>());
-        m_myFeatureSet.register(new SumOfSquares<T>());
-        m_myFeatureSet.register(new Moment1AboutMean<T>());
-        m_myFeatureSet.register(new Moment2AboutMean<T>());
-        m_myFeatureSet.register(new Moment3AboutMean<T>());
-        m_myFeatureSet.register(new Moment4AboutMean<T>());
-        m_myFeatureSet.register(new GeometricMean<T>());
-        m_myFeatureSet.register(new HarmonicMean<T>());
-        m_myFeatureSet.register(new Max<T>());
-        m_myFeatureSet.register(new Min<T>());
-        m_myFeatureSet.register(new Perimeter());
-        m_myFeatureSet.register(new Circularity<T>());
+
 
         // Haralick Features
         m_myFeatureSet.registerNonPublic(new HaralickCoocMatrix<T>(32, 1, MatrixOrientation.ANTIDIAGONAL));
