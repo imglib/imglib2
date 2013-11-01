@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
+import net.imglib2.ops.features.Feature;
+import net.imglib2.ops.features.TestFeatureSet;
 import net.imglib2.ops.features.firstorder.GeometricMean;
 import net.imglib2.ops.features.firstorder.HarmonicMean;
 import net.imglib2.ops.features.firstorder.Kurtosis;
@@ -17,6 +19,9 @@ import net.imglib2.ops.features.firstorder.moments.Moment1AboutMean;
 import net.imglib2.ops.features.firstorder.moments.Moment2AboutMean;
 import net.imglib2.ops.features.firstorder.moments.Moment3AboutMean;
 import net.imglib2.ops.features.firstorder.moments.Moment4AboutMean;
+import net.imglib2.ops.features.firstorder.sums.SumOfInverses;
+import net.imglib2.ops.features.firstorder.sums.SumOfLogs;
+import net.imglib2.ops.features.firstorder.sums.SumOfSquares;
 import net.imglib2.ops.features.geometric.Area;
 import net.imglib2.ops.features.geometric.Circularity;
 import net.imglib2.ops.features.geometric.Perimeter;
@@ -36,13 +41,6 @@ import net.imglib2.ops.features.haralick.features.SumEntropy;
 import net.imglib2.ops.features.haralick.features.SumVariance;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
-
-import org.knime.knip.core.features.Feature;
-import org.knime.knip.core.features.MyFeatureSet;
-import org.knime.knip.core.features.firstorder.sums.Sum;
-import org.knime.knip.core.features.firstorder.sums.SumOfInverses;
-import org.knime.knip.core.features.firstorder.sums.SumOfLogs;
-import org.knime.knip.core.features.firstorder.sums.SumOfSquares;
 
 public class FeatureFactoryTests<T extends RealType<T>> {
 

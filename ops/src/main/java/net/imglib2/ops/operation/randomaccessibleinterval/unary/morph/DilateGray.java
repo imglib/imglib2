@@ -42,7 +42,6 @@ import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.ops.operation.UnaryOperation;
-import net.imglib2.ops.operation.randomaccessibleinterval.unary.morph.StructuringElementCursor;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;

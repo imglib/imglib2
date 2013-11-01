@@ -1,10 +1,9 @@
 package net.imglib2.ops.features.haralick.features;
 
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredFeature;
 import net.imglib2.ops.features.haralick.helpers.CoocHXY;
 import net.imglib2.type.numeric.real.DoubleType;
-
-import org.knime.knip.core.features.AbstractFeature;
-import org.knime.knip.core.features.RequiredFeature;
 
 public class ICM2 extends AbstractFeature<DoubleType> {
 

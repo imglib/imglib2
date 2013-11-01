@@ -2,10 +2,9 @@ package net.imglib2.ops.features.geometric;
 
 import java.awt.Polygon;
 
-import net.imglib2.ops.features.providers.PolygonProvider;
-
-import org.knime.knip.core.features.AbstractFeature;
-import org.knime.knip.core.features.RequiredFeature;
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.providers.GetPolygon;
 
 public class CenterOfGravityPolygon extends AbstractFeature<double[]> {
 
@@ -13,7 +12,7 @@ public class CenterOfGravityPolygon extends AbstractFeature<double[]> {
     Area2DPolygon m_area;
 
     @RequiredFeature
-    PolygonProvider polygonProvider;
+    GetPolygon polygonProvider;
 
     /**
      * {@inheritDoc}

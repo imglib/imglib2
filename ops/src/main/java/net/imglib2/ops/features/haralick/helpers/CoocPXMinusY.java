@@ -50,10 +50,9 @@
 package net.imglib2.ops.features.haralick.helpers;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-
-import org.knime.knip.core.features.AbstractFeature;
-import org.knime.knip.core.features.RequiredFeature;
-import org.knime.knip.core.features.haralick.HaralickCoocMatrix;
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 
 public class CoocPXMinusY extends AbstractFeature<double[]> {
 

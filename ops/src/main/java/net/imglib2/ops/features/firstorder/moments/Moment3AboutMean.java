@@ -51,14 +51,11 @@ package net.imglib2.ops.features.firstorder.moments;
 
 import java.util.Iterator;
 
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.providers.GetIterableInterval;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
-
-import org.knime.knip.core.features.AbstractFeature;
-import org.knime.knip.core.features.RequiredFeature;
-import org.knime.knip.core.features.firstorder.Mean;
-import org.knime.knip.core.features.geometric.Area;
-import org.knime.knip.core.features.provider.IterableIntervalProvider;
 
 /**
  *
@@ -67,7 +64,7 @@ import org.knime.knip.core.features.provider.IterableIntervalProvider;
 public class Moment3AboutMean<T extends RealType<T>> extends AbstractFeature<DoubleType> {
 
     @RequiredFeature
-    private IterableIntervalProvider<T> interval;
+    private GetIterableInterval<T> interval;
 
     @RequiredFeature
     private Mean<T> m_mean;

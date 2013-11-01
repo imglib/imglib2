@@ -1,7 +1,5 @@
 package net.imglib2.ops.features.tamura;
 
-import org.knime.knip.core.features.tamura.TamuraFeatureSet;
-
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.type.numeric.RealType;

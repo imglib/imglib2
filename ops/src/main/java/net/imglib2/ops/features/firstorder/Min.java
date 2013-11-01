@@ -2,17 +2,16 @@ package net.imglib2.ops.features.firstorder;
 
 import java.util.Iterator;
 
-import net.imglib2.ops.features.providers.IterableIntervalProvider;
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.providers.GetIterableInterval;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
-
-import org.knime.knip.core.features.AbstractFeature;
-import org.knime.knip.core.features.RequiredFeature;
 
 public class Min<T extends RealType<T>> extends AbstractFeature<DoubleType> {
 
     @RequiredFeature
-    private IterableIntervalProvider<T> interval;
+    private GetIterableInterval<T> interval;
 
     /**
      * {@inheritDoc}

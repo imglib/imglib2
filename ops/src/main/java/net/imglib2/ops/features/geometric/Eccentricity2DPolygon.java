@@ -2,16 +2,15 @@ package net.imglib2.ops.features.geometric;
 
 import java.awt.geom.Rectangle2D;
 
-import net.imglib2.ops.features.providers.PolygonProvider;
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.providers.GetPolygon;
 import net.imglib2.type.numeric.real.DoubleType;
-
-import org.knime.knip.core.features.AbstractFeature;
-import org.knime.knip.core.features.RequiredFeature;
 
 public class Eccentricity2DPolygon extends AbstractFeature<DoubleType> {
 
     @RequiredFeature
-    PolygonProvider polygon;
+    GetPolygon polygon;
 
     /**
      * {@inheritDoc}
