@@ -1,7 +1,7 @@
 package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredFeature;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocPXMinusY;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -31,9 +31,9 @@ public class DifferenceEntropy extends AbstractFeature< DoubleType >
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CoocPXMinusY copy()
+	public DifferenceEntropy copy()
 	{
-		return new CoocPXMinusY();
+		return new DifferenceEntropy();
 	}
 
 	/**

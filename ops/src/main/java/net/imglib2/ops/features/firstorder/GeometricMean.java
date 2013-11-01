@@ -1,7 +1,7 @@
 package net.imglib2.ops.features.firstorder;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredFeature;
 import net.imglib2.ops.features.firstorder.sums.SumOfLogs;
 import net.imglib2.ops.features.geometric.area.AreaIterableInterval;
 import net.imglib2.type.numeric.RealType;

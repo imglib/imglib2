@@ -3,9 +3,11 @@ package net.imglib2.ops.features.testing;
 import java.util.Iterator;
 
 import net.imglib2.IterableInterval;
+import net.imglib2.Pair;
 import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
 import net.imglib2.ops.features.Feature;
-import net.imglib2.ops.features.GenericFeatureProcessor;
+import net.imglib2.ops.features.IterableIntervalFeatureProcessorBuilder;
+import net.imglib2.ops.features.firstorder.FirstOrderFeatureSet;
 import net.imglib2.ops.features.firstorder.GeometricMean;
 import net.imglib2.ops.features.firstorder.HarmonicMean;
 import net.imglib2.ops.features.firstorder.Kurtosis;
@@ -42,39 +44,27 @@ import net.imglib2.ops.features.haralick.features.SumVariance;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class FeatureFactoryTests<T extends RealType<T>> {
+public class FeatureFactoryTests< T extends RealType< T >>
+{
 
-    private GenericFeatureProcessor<T> m_myFeatureSet;
+	private IterableIntervalFeatureProcessorBuilder< T > builder;
 
-    public FeatureFactoryTests() {
-        m_myFeatureSet = new MyFeatureSet<T>();
+	public FeatureFactoryTests()
+	{
+		FirstOrderFeatureSet< T > firstOrderFeatureSet = new FirstOrderFeatureSet< T >( null );
+		builder = new IterableIntervalFeatureProcessorBuilder< T >();
+		builder.registerFeatureSet( firstOrderFeatureSet );
+		builder.build();
 
+	}
 
-        // Haralick Features
-        m_myFeatureSet.registerNonPublic(new HaralickCoocMatrix<T>(32, 1, MatrixOrientation.ANTIDIAGONAL));
-
-        m_myFeatureSet.register(new ASM());
-        m_myFeatureSet.register(new ClusterPromenence());
-        m_myFeatureSet.register(new ClusterShade());
-        m_myFeatureSet.register(new Correlation());
-        m_myFeatureSet.register(new Contrast());
-        m_myFeatureSet.register(new DifferenceVariance());
-        m_myFeatureSet.register(new Entropy());
-        m_myFeatureSet.register(new ICM1());
-        m_myFeatureSet.register(new ICM2());
-        m_myFeatureSet.register(new IFDM());
-        m_myFeatureSet.register(new SumAverage());
-        m_myFeatureSet.register(new SumEntropy());
-        m_myFeatureSet.register(new SumVariance());
-        m_myFeatureSet.register(new net.imglib2.ops.features.haralick.features.Variance());
-
-    }
-
-    public void runFirstOrderTest(final IterableInterval<T> ii) {
-        Iterator<Feature<DoubleType>> iterator = m_myFeatureSet.iterator(ii);
-        while (iterator.hasNext()) {
-            Feature next = iterator.next();
-            System.out.println(next.name() + ": " + next.get());
-        }
-    }
+	public void runFirstOrderTest( final IterableInterval< T > ii )
+	{
+		Iterator< Pair< String, Feature< DoubleType >>> iterator = builder.iterator( ii );
+		while ( iterator.hasNext() )
+		{
+			Pair< String, Feature< DoubleType >> next = iterator.next();
+			System.out.println( next.getA() + ": " + next.getB().get() );
+		}
+	}
 }

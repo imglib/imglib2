@@ -2,12 +2,12 @@ package net.imglib2.ops.features.providers;
 
 import net.imglib2.Cursor;
 import net.imglib2.Localizable;
-import net.imglib2.ops.features.AbstractFeature;
 import net.imglib2.ops.features.Feature;
 import net.imglib2.ops.features.PositionIterator;
-import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.providers.sources.GetAreaIterator;
 
-public class GetCursorBasedPositionIterator extends AbstractFeature< PositionIterator > implements GetPositionIterator
+public class GetCursorBasedPositionIterator extends GetAreaIterator
 {
 
 	@RequiredFeature
@@ -54,6 +54,12 @@ public class GetCursorBasedPositionIterator extends AbstractFeature< PositionIte
 			public boolean hasNext()
 			{
 				return it.hasNext();
+			}
+
+			@Override
+			public int numDimensions()
+			{
+				return it.numDimensions();
 			}
 		};
 	}

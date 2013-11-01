@@ -4,7 +4,6 @@ import java.util.Set;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.features.AbstractFeatureSet;
-import net.imglib2.ops.features.Feature;
 import net.imglib2.ops.features.firstorder.moments.Moment1AboutMean;
 import net.imglib2.ops.features.firstorder.moments.Moment2AboutMean;
 import net.imglib2.ops.features.firstorder.moments.Moment3AboutMean;
@@ -13,9 +12,6 @@ import net.imglib2.ops.features.firstorder.sums.Sum;
 import net.imglib2.ops.features.firstorder.sums.SumOfInverses;
 import net.imglib2.ops.features.firstorder.sums.SumOfLogs;
 import net.imglib2.ops.features.firstorder.sums.SumOfSquares;
-import net.imglib2.ops.features.geometric.Circularity;
-import net.imglib2.ops.features.geometric.perimeter.Perimeter2DPolygon;
-import net.imglib2.ops.features.providers.GetIterableInterval;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -23,7 +19,7 @@ public class FirstOrderFeatureSet< T extends RealType< T >> extends AbstractFeat
 {
 	public FirstOrderFeatureSet( Set< String > active )
 	{
-		super( new GetIterableInterval< T >(), active );
+		super( active );
 
 		register( new Mean< T >() );
 		register( new Variance< T >() );
@@ -42,8 +38,6 @@ public class FirstOrderFeatureSet< T extends RealType< T >> extends AbstractFeat
 		register( new HarmonicMean< T >() );
 		register( new Max< T >() );
 		register( new Min< T >() );
-		register( new Perimeter2DPolygon() );
-		register( new Circularity< T >() );
 	}
 
 	@Override

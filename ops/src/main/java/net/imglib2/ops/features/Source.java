@@ -1,7 +1,7 @@
 package net.imglib2.ops.features;
 
 /**
- * Sources are not added automatically to the {@link FeatureProcessor}.
+ * Sources are not added automatically to the {@link FeatureProcessorBuilder}.
  * {@link Source}s need to be added manually.
  * 
  * @param <A>

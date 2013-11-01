@@ -22,12 +22,4 @@ public interface FeatureSet< T, V >
 	 * List of public features
 	 */
 	List< Feature< V >> features();
-
-	/**
-	 * Get the source
-	 * 
-	 * @return
-	 */
-	Source< T > source();
-
 }

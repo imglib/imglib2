@@ -3,15 +3,14 @@ package net.imglib2.ops.features.geometric.generic;
 import net.imglib2.Localizable;
 import net.imglib2.ops.features.AbstractFeature;
 import net.imglib2.ops.features.PositionIterator;
-import net.imglib2.ops.features.RequiredFeature;
-import net.imglib2.ops.features.geometric.Eccentricity;
-import net.imglib2.ops.features.providers.GetPositionIterator;
+import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.providers.sources.GetAreaIterator;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class GenericEccentricity extends AbstractFeature< DoubleType > implements Eccentricity
+public class GenericEccentricity extends AbstractFeature< DoubleType >
 {
 	@RequiredFeature
-	GetPositionIterator cursorGet;
+	GetAreaIterator cursorGet;
 
 	/**
 	 * {@inheritDoc}

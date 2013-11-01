@@ -5,7 +5,6 @@ import net.imglib2.Sampler;
 // Feature is simply a Sampler with some additional method
 public interface Feature< A > extends Sampler< A >
 {
-
 	/**
 	 * Name of the feature
 	 * 

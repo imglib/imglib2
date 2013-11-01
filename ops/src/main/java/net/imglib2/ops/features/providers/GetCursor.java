@@ -2,13 +2,13 @@ package net.imglib2.ops.features.providers;
 
 import net.imglib2.Cursor;
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.providers.sources.GetIterableInterval;
 
 public class GetCursor< T > extends AbstractFeature< Cursor< T >>
 {
-
 	@RequiredFeature
-	private final GetIterableInterval< T > provider = new GetIterableInterval< T >();
+	GetIterableInterval< T > ii;
 
 	/**
 	 * {@inheritDoc}
@@ -43,6 +43,6 @@ public class GetCursor< T > extends AbstractFeature< Cursor< T >>
 	@Override
 	protected Cursor< T > recompute()
 	{
-		return provider.get().cursor();
+		return ii.get().cursor();
 	}
 }

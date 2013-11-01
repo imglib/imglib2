@@ -3,15 +3,14 @@ package net.imglib2.ops.features.geometric.centerofgravity;
 import net.imglib2.Localizable;
 import net.imglib2.ops.features.AbstractFeature;
 import net.imglib2.ops.features.PositionIterator;
-import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredFeature;
 import net.imglib2.ops.features.geometric.Area;
-import net.imglib2.ops.features.geometric.CenterOfGravity;
-import net.imglib2.ops.features.providers.GetPositionIterator;
+import net.imglib2.ops.features.providers.sources.GetAreaIterator;
 
-public class CenterOfGravityGeneric extends AbstractFeature< double[] > implements CenterOfGravity
+public class CenterOfGravityGeneric extends AbstractFeature< double[] >
 {
 	@RequiredFeature
-	GetPositionIterator provider;
+	GetAreaIterator provider;
 
 	@RequiredFeature
 	Area area;

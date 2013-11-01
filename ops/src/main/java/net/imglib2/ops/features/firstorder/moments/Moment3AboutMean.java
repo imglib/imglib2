@@ -3,10 +3,10 @@ package net.imglib2.ops.features.firstorder.moments;
 import java.util.Iterator;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredFeature;
 import net.imglib2.ops.features.firstorder.Mean;
 import net.imglib2.ops.features.geometric.area.AreaIterableInterval;
-import net.imglib2.ops.features.providers.GetIterableInterval;
+import net.imglib2.ops.features.providers.sources.GetIterableInterval;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 

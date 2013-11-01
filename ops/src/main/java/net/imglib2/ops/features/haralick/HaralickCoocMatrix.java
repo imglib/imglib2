@@ -7,10 +7,10 @@ import net.imglib2.IterableInterval;
 import net.imglib2.ops.data.CooccurrenceMatrix;
 import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredFeature;
 import net.imglib2.ops.features.firstorder.Max;
 import net.imglib2.ops.features.firstorder.Min;
-import net.imglib2.ops.features.providers.GetIterableInterval;
+import net.imglib2.ops.features.providers.sources.GetIterableInterval;
 import net.imglib2.type.numeric.RealType;
 
 public class HaralickCoocMatrix< T extends RealType< T >> extends AbstractFeature< CooccurrenceMatrix >

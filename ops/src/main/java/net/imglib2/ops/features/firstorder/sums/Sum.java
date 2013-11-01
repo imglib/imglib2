@@ -3,16 +3,15 @@ package net.imglib2.ops.features.firstorder.sums;
 import java.util.Iterator;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredFeature;
-import net.imglib2.ops.features.providers.GetIterableInterval;
+import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.providers.sources.GetIterable;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class Sum< T extends RealType< T >> extends AbstractFeature< DoubleType >
 {
-
 	@RequiredFeature
-	private GetIterableInterval< T > ii;
+	private GetIterable< T > ii;
 
 	/**
 	 * {@inheritDoc}

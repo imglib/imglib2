@@ -2,7 +2,7 @@ package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredFeature;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocMeanX;
 import net.imglib2.ops.features.haralick.helpers.CoocMeanY;

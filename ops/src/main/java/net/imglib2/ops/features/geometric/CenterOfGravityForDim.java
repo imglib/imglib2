@@ -1,16 +1,14 @@
 package net.imglib2.ops.features.geometric;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredFeature;
-import net.imglib2.ops.features.geometric.centerofgravity.CenterOfGravityGeneric;
+import net.imglib2.ops.features.annotations.RequiredFeature;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class CenterOfGravityForDim extends AbstractFeature< DoubleType >
 {
 	@RequiredFeature
-	CenterOfGravityGeneric centerOfGravity;
+	CenterOfGravity centerOfGravity;
 
-	// defines the dim
 	private final int dim;
 
 	public CenterOfGravityForDim( final int dim )
@@ -33,7 +31,6 @@ public class CenterOfGravityForDim extends AbstractFeature< DoubleType >
 	@Override
 	public int hashCode()
 	{
-		// TODO Auto-generated method stub
 		return super.hashCode() + dim;
 	}
 

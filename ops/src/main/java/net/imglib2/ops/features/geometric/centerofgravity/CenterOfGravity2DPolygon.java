@@ -3,18 +3,17 @@ package net.imglib2.ops.features.geometric.centerofgravity;
 import java.awt.Polygon;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredFeature;
 import net.imglib2.ops.features.geometric.Area;
-import net.imglib2.ops.features.geometric.CenterOfGravity;
-import net.imglib2.ops.features.providers.GetPolygon;
+import net.imglib2.ops.features.providers.GetPolygonFromBitmask;
 
-public class CenterOfGravity2DPolygon extends AbstractFeature< double[] > implements CenterOfGravity
+public class CenterOfGravity2DPolygon extends AbstractFeature< double[] >
 {
 	@RequiredFeature
 	Area m_area;
 
 	@RequiredFeature
-	GetPolygon polygonProvider;
+	GetPolygonFromBitmask polygonProvider;
 
 	/**
 	 * {@inheritDoc}

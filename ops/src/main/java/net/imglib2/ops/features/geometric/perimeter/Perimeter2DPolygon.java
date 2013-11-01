@@ -3,17 +3,16 @@ package net.imglib2.ops.features.geometric.perimeter;
 import java.awt.Polygon;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredFeature;
-import net.imglib2.ops.features.geometric.Perimeter;
-import net.imglib2.ops.features.providers.GetPolygon;
+import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.providers.GetPolygonFromBitmask;
 import net.imglib2.type.numeric.real.DoubleType;
 
 //TODO: Please verfiy this computation or even better: make it correct:-)
-public class Perimeter2DPolygon extends AbstractFeature< DoubleType > implements Perimeter
+public class Perimeter2DPolygon extends AbstractFeature< DoubleType >
 {
 
 	@RequiredFeature
-	GetPolygon polygonGet;
+	GetPolygonFromBitmask polygonGet;
 
 	/**
 	 * {@inheritDoc}
