@@ -1,31 +1,29 @@
 package net.imglib2.ops.features;
+
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import net.imglib2.IterableInterval;
+import net.imglib2.Pair;
 import net.imglib2.ops.features.providers.GetIterableInterval;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.util.ValuePair;
 
-/**
- * 
- * @author dietzc
- * @param <T>
- *            Type must be the most generic type which is supported by a
- *            updatehandler
- */
-public class GenericFeatureProcessor< T extends Type< T >> implements FeatureSet< IterableInterval< T >, DoubleType >
+public class GenericFeatureProcessor< T extends Type< T >> implements FeatureProcessor< IterableInterval< T >, DoubleType >
 {
-
 	// all public features
 	private final HashMap< String, Feature< DoubleType >> m_publicFeatures;
 
 	// all features including dependencies which are hidden
 	private final HashMap< String, Feature< ? >> m_requiredFeatures;
 
-	// the actual updater (can be multithreaded etc)
+	// group of the feature
+	private final HashMap< String, String > m_featureGroups;
+
+	// the actual updater
 	private final GetIterableInterval< T > m_updater;
 
 	/**
@@ -35,33 +33,38 @@ public class GenericFeatureProcessor< T extends Type< T >> implements FeatureSet
 	{
 		m_requiredFeatures = new HashMap< String, Feature< ? >>();
 		m_publicFeatures = new HashMap< String, Feature< DoubleType >>();
-		registerHidden( m_updater = new GetIterableInterval< T >() );
+		m_featureGroups = new HashMap< String, String >();
+
+		// we need to register our source
+		registerNonPublic( m_updater = new GetIterableInterval< T >() );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int numFeatures()
+	public void register( final Feature< DoubleType > feature, String groupName )
 	{
-		return m_publicFeatures.size();
-	}
+		registerNonPublic( feature );
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void register( final Feature< DoubleType > feature )
-	{
-		registerHidden( feature );
-
-		if ( !m_publicFeatures.containsKey( feature.getClass().getCanonicalName() ) )
+		// we may want to calculate the same feature for two different feature
+		// sets
+		if ( !m_publicFeatures.containsKey( feature.getClass().getCanonicalName() + groupName ) )
 		{
-			m_publicFeatures.put( feature.getClass().getCanonicalName(), ( Feature< DoubleType > ) m_requiredFeatures.get( feature.getClass().getCanonicalName() ) );
+			m_publicFeatures.put( feature.getClass().getCanonicalName() + groupName, ( Feature< DoubleType > ) m_requiredFeatures.get( feature.getClass().getCanonicalName() ) );
+			m_featureGroups.put( feature.getClass().getCanonicalName() + groupName, groupName );
 		}
+
 	}
 
-	public void registerHidden( final Feature< ? > feature )
+	/**
+	 * Registers a feature. This feature will not be available as a public
+	 * feature after registration. This method can be used to register a
+	 * {@link Feature} which can't be instantiated automatically.
+	 * 
+	 * @param feature
+	 */
+	public void registerNonPublic( final Feature< ? > feature )
 	{
 		if ( !m_requiredFeatures.containsKey( feature.getClass().getCanonicalName() ) )
 		{
@@ -69,6 +72,7 @@ public class GenericFeatureProcessor< T extends Type< T >> implements FeatureSet
 		}
 	}
 
+	// Parsing for dependencies
 	private void parse( final Feature< ? > feature )
 	{
 		if ( !m_requiredFeatures.containsKey( feature ) )
@@ -102,28 +106,30 @@ public class GenericFeatureProcessor< T extends Type< T >> implements FeatureSet
 							f.set( feature, storedFeature );
 						}
 
-						// TODO UGLY make sure that access manager is closed
-						// again
+						// TODO dirty but works for now
 						AccessibleObject.setAccessible( new AccessibleObject[] { f }, false );
 
 					}
 					catch ( IllegalArgumentException e )
 					{
+						// TODO
 						e.printStackTrace();
 					}
 					catch ( IllegalAccessException e )
 					{
+						// TODO
 						e.printStackTrace();
 					}
 					catch ( InstantiationException e )
 					{
+						// TODO
 						throw new IllegalStateException( "Couldn't instantiate a class. Please not that parametrized features have to be added manually." );
 					}
 				}
-			}// end loop over dependencies
+			}
 
 			// Cycle detected
-			if ( m_requiredFeatures.containsKey( feature ) ) { throw new IllegalStateException( "cycle detected" ); }
+			if ( m_requiredFeatures.containsKey( feature ) ) { throw new IllegalStateException( "Cycle detected" ); }
 
 			m_requiredFeatures.put( feature.getClass().getCanonicalName(), feature );
 		}
@@ -133,18 +139,10 @@ public class GenericFeatureProcessor< T extends Type< T >> implements FeatureSet
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String featureSetName()
-	{
-		return "MyFeatureSet";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Iterator< Feature< DoubleType >> iterator( final IterableInterval< T > objectOfInterest )
+	public Iterator< Pair< String, Feature< DoubleType >>> iterator( final IterableInterval< T > objectOfInterest )
 	{
 
+		// update all public features
 		m_updater.update( objectOfInterest );
 
 		// Notify the features that something happened
@@ -153,6 +151,38 @@ public class GenericFeatureProcessor< T extends Type< T >> implements FeatureSet
 			f.update();
 		}
 
-		return m_publicFeatures.values().iterator();
+		final Iterator< Feature< DoubleType >> iterator = m_publicFeatures.values().iterator();
+
+		return new Iterator< Pair< String, Feature< DoubleType >> >()
+		{
+
+			@Override
+			public boolean hasNext()
+			{
+				return iterator.hasNext();
+			}
+
+			@Override
+			public Pair< String, Feature< DoubleType >> next()
+			{
+				Feature< DoubleType > next = iterator.next();
+				return new ValuePair< String, Feature< DoubleType >>( m_featureGroups.get( next.getClass().getCanonicalName() ), next );
+			}
+
+			@Override
+			public void remove()
+			{
+				throw new UnsupportedOperationException( "remove not supported" );
+			}
+		};
+	}
+
+	@Override
+	public void register( FeatureSet< IterableInterval< T >, DoubleType > featureSet )
+	{
+		for ( Feature< DoubleType > feature : featureSet.features() )
+		{
+			register( feature, featureSet.name() );
+		}
 	}
 }

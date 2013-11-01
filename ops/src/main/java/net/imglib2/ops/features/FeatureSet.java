@@ -1,6 +1,7 @@
 package net.imglib2.ops.features;
 
 import java.util.Iterator;
+import java.util.List;
 
 public interface FeatureSet< T, V >
 {
@@ -16,6 +17,11 @@ public interface FeatureSet< T, V >
 	 * 
 	 * @return a unique id
 	 */
-	String featureSetName();
+	String name();
+
+	/**
+	 * List of public features
+	 */
+	List< Feature< V >> features();
 
 }

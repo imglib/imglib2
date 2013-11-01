@@ -70,7 +70,7 @@ public class FeatureFactoryTests<T extends RealType<T>> {
         m_myFeatureSet.register(new Circularity<T>());
 
         // Haralick Features
-        m_myFeatureSet.registerHidden(new HaralickCoocMatrix<T>(32, 1, MatrixOrientation.ANTIDIAGONAL));
+        m_myFeatureSet.registerNonPublic(new HaralickCoocMatrix<T>(32, 1, MatrixOrientation.ANTIDIAGONAL));
 
         m_myFeatureSet.register(new ASM());
         m_myFeatureSet.register(new ClusterPromenence());

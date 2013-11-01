@@ -6,16 +6,27 @@ import net.imglib2.Sampler;
 public interface Feature< A > extends Sampler< A >
 {
 
-	// Name of the feature
+	/**
+	 * Name of the feature
+	 * 
+	 * @return
+	 */
 	String name();
 
-	// Create a copy of the feature (maybe intersting later for multi-threading
-	// purposes)
+	/**
+	 * Create a copy of the {@link Feature}.
+	 */
 	Feature< A > copy();
 
-	// tell the feature that the source was updated
+	/**
+	 * Notify the {@link Feature} that it should be updated
+	 */
 	void update();
 
-	// hash code
+	/**
+	 * HashCode implementation
+	 * 
+	 * @return
+	 */
 	int hashCode();
 }

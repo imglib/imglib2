@@ -15,25 +15,35 @@ import net.imglib2.Pair;
 public interface FeatureProcessor< T, V >
 {
 	/**
+	 * Register a {@link FeatureSet} which will be calculated
+	 * 
+	 * 
+	 * @param setName
+	 *            Name of the corresponding {@link FeatureSet}. Can be any
+	 *            string.
 	 * @param feature
+	 *            The {@link Feature} to be added
 	 * 
 	 */
 	void register( Feature< V > feature, String setName );
 
 	/**
-	 * @param feature
+	 * Register a {@link FeatureSet} which will be entirely calculated
 	 * 
+	 * @param feature
 	 */
-	void register( FeatureSet< T, V > feature );
+	void register( FeatureSet< T, V > featureSet );
 
 	/**
-	 * Retrieve iterator over active features (which were directly added, not
-	 * indirectly via dependencies). Features are calculated before hands so if
-	 * you call .get() on a feature twice without any update, this should be
-	 * cached.
+	 * Retrieve iterator over active {@link Feature}s (which were directly
+	 * added, not indirectly via dependencies). {@link Feature}s are calculated
+	 * before hands so if you call .get() on a feature twice without any update,
+	 * this should be cached.
 	 * 
 	 * @param objectOfInterest
-	 * @return Result Cursor
+	 *            Object on which the {@link Feature}s will be calculated
+	 * 
+	 * @return {@link Iterator} over resulting {@link Feature}s
 	 */
 	Iterator< Pair< String, Feature< V >>> iterator( T objectOfInterest );
 }
