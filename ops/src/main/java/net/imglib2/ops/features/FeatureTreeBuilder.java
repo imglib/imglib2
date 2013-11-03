@@ -18,6 +18,7 @@ import net.imglib2.util.ValuePair;
 
 //TODO: this class needs a cleanup!! works for demonstration. I was thinking about using SciJava Services to register certain features
 // or CachedSamplers which then can be used. This complete feature package is by far not ready, but demonstrates some desired functionality.
+// Especially I think a lot of these ideas could easily be integrated as extensions of the MeasurementService which basically does the same thing and is much cleaner implemented.
 public class FeatureTreeBuilder< T extends Type< T >> implements FeatureProcessorBuilder< IterableInterval< T >, DoubleType >
 {
 
