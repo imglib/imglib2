@@ -11,6 +11,12 @@ public class GenericEccentricity extends AbstractFeature implements Eccentricity
 	@RequiredInput
 	IterableInterval< ? > ii;
 
+	@Override
+	public boolean isCompatible( Class< ? > clazz )
+	{
+		return Eccentricity.class.isAssignableFrom( clazz );
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

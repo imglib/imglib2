@@ -249,7 +249,11 @@ public class FeatureTreeBuilder< T extends Type< T >> implements FeatureProcesso
 			{
 
 				// TODO
-				if ( m_postponed.size() > 0 ) { throw new IllegalArgumentException( "This shouldn't happen. if so, we need to implement more iterations of postponing.. " ); }
+				if ( m_postponed.size() > 0 )
+				{
+//					System.out.println( m_postponed.get( 0 ).sampler );
+					throw new IllegalArgumentException( "This shouldn't happen. if so, we need to implement more iterations of postponing.. " );
+				}
 
 				// update the sources
 				for ( Pair< ? extends CachedSampler< ? >, Field > o : m_sourceUpdateListeners )

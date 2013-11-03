@@ -52,6 +52,6 @@ public class CenterOfGravityGeneric extends CachedAbstractSampler< double[] > im
 	@Override
 	public boolean isCompatible( Class< ? > c )
 	{
-		return c.isAssignableFrom( new double[ 0 ].getClass() );
+		return CenterOfGravity.class.isAssignableFrom( c );
 	}
 }

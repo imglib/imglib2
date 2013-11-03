@@ -3,7 +3,6 @@ package net.imglib2.ops.features.sets;
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.features.AbstractFeatureSet;
 import net.imglib2.ops.features.geometric.CenterOfGravityForDim;
-import net.imglib2.ops.features.geometric.Circularity;
 import net.imglib2.ops.features.geometric.area.AreaIterableInterval;
 import net.imglib2.ops.features.geometric.centerofgravity.CenterOfGravityGeneric;
 import net.imglib2.ops.features.geometric.eccentricity.GenericEccentricity;
@@ -15,14 +14,14 @@ public class GeometricFeatureSet< I extends IterableInterval< ? > > extends Abst
 	{
 		registerFeature( new AreaIterableInterval() );
 		registerFeature( new GenericEccentricity() );
-		registerFeature( new Circularity() );
+		// registerFeature( new Circularity() );
+		registerRequired( new CenterOfGravityGeneric() );
 
 		for ( int i = 0; i < numDims; i++ )
 		{
 			registerFeature( new CenterOfGravityForDim( i ) );
 		}
 
-		registerRequired( new CenterOfGravityGeneric() );
 	}
 
 	@Override

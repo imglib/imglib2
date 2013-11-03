@@ -12,6 +12,12 @@ public class Eccentricity2DPolygon extends AbstractFeature implements Eccentrici
 	@RequiredInput
 	Polygon polygon;
 
+	@Override
+	public boolean isCompatible( Class< ? > clazz )
+	{
+		return Eccentricity.class.isAssignableFrom(  clazz );
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

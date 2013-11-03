@@ -1,4 +1,4 @@
-package net.imglib2.ops.features;
+package net.imglib2.ops.features.sets;
 
 import java.awt.Polygon;
 
@@ -10,11 +10,17 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.ops.features.sets.PolygonFeatureSet;
+import net.imglib2.ops.features.AbstractFeatureSet;
+import net.imglib2.ops.features.BitMask;
+import net.imglib2.ops.features.CachedAbstractSampler;
+import net.imglib2.ops.features.CachedSampler;
+import net.imglib2.ops.features.Feature;
+import net.imglib2.ops.features.RequiredInput;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.view.Views;
 
 public class WrappedPolygonFeatureSet< I extends IterableInterval< ? extends RealType< ? >> > extends AbstractFeatureSet< I, DoubleType >
 {
@@ -72,10 +78,8 @@ public class WrappedPolygonFeatureSet< I extends IterableInterval< ? extends Rea
 
 				access.get().set( true );
 			}
-
 			return img;
 		}
-
 	}
 
 	class IterableIntervalToPolygon extends CachedAbstractSampler< Polygon >
@@ -92,7 +96,9 @@ public class WrappedPolygonFeatureSet< I extends IterableInterval< ? extends Rea
 		@Override
 		protected Polygon recompute()
 		{
-			return extractPolygon( ii.get(), new int[ ii.get().numDimensions() ] );
+			long[] min = new long[ ii.get().numDimensions() ];
+			ii.get().min( min );
+			return extractPolygon( ii.get(), min );
 		}
 
 		@Override
@@ -113,7 +119,7 @@ public class WrappedPolygonFeatureSet< I extends IterableInterval< ? extends Rea
 		 *            an offset for the points to be set in the new polygon
 		 * @return
 		 */
-		private Polygon extractPolygon( final RandomAccessibleInterval< BitType > img, final int[] offset )
+		private Polygon extractPolygon( final RandomAccessibleInterval< BitType > img, final long[] offset )
 		{
 			final RandomAccess< BitType > cur = new ExtendedRandomAccessibleInterval< BitType, RandomAccessibleInterval< BitType >>( img, new OutOfBoundsConstantValueFactory< BitType, RandomAccessibleInterval< BitType >>( new BitType( false ) ) ).randomAccess();
 			boolean start = false;
@@ -145,7 +151,7 @@ public class WrappedPolygonFeatureSet< I extends IterableInterval< ? extends Rea
 			{
 				if ( cur.get().get() )
 				{
-					p.addPoint( offset[ 0 ] + cur.getIntPosition( 0 ), offset[ 1 ] + cur.getIntPosition( 1 ) );
+					p.addPoint( ( int ) offset[ 0 ] + cur.getIntPosition( 0 ), ( int ) offset[ 1 ] + cur.getIntPosition( 1 ) );
 					cur.setPosition( cur.getIntPosition( dim ) - dir, dim );
 					if ( ( ( dim == 1 ) && ( dir == 1 ) ) || ( ( dim == 1 ) && ( dir == -1 ) ) )
 					{

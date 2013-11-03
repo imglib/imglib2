@@ -15,6 +15,12 @@ public class CenterOfGravity2DPolygon extends CachedAbstractSampler< double[] > 
 	@RequiredInput
 	Polygon polygon;
 
+	@Override
+	public boolean isCompatible( Class< ? > clazz )
+	{
+		return CenterOfGravity.class.isAssignableFrom( clazz );
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -54,6 +60,6 @@ public class CenterOfGravity2DPolygon extends CachedAbstractSampler< double[] > 
 	@Override
 	public Sampler< double[] > copy()
 	{
-		return null;
+		return new CenterOfGravity2DPolygon();
 	}
 }

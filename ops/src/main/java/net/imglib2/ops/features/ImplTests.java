@@ -8,6 +8,7 @@ import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
 import net.imglib2.ops.features.sets.FirstOrderFeatureSet;
 import net.imglib2.ops.features.sets.GeometricFeatureSet;
 import net.imglib2.ops.features.sets.HaralickFeatureSet;
+import net.imglib2.ops.features.sets.WrappedPolygonFeatureSet;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
