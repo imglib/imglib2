@@ -28,6 +28,12 @@ public class AreaIterableInterval extends AbstractFeature implements Area
 		return new AreaIterableInterval();
 	}
 
+	@Override
+	public boolean isCompatible( Class< ? > clazz )
+	{
+		return Area.class.isAssignableFrom( clazz );
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

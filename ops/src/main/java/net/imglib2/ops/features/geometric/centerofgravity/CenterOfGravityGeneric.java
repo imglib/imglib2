@@ -50,12 +50,6 @@ public class CenterOfGravityGeneric extends CachedAbstractSampler< double[] > im
 	}
 
 	@Override
-	public double priority()
-	{
-		return 0;
-	}
-
-	@Override
 	public boolean isCompatible( Class< ? > c )
 	{
 		return c.isAssignableFrom( new double[ 0 ].getClass() );

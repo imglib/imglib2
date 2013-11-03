@@ -44,6 +44,12 @@ public class CenterOfGravityForDim extends AbstractFeature
 		return new CenterOfGravityForDim( dim );
 	}
 
+	@Override
+	public boolean isCompatible( Class< ? > clazz )
+	{
+		return false;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

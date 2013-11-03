@@ -56,10 +56,4 @@ public class CenterOfGravity2DPolygon extends CachedAbstractSampler< double[] > 
 	{
 		return null;
 	}
-
-	@Override
-	public double priority()
-	{
-		return 1.0;
-	}
 }

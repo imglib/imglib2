@@ -37,6 +37,7 @@ public class Min extends AbstractFeature
 	@Override
 	protected DoubleType recompute()
 	{
+		System.out.println( "CALCULATED ONCE" );
 		double min = Double.MAX_VALUE;
 
 		final Iterator< ? extends RealType< ? > > it = ii.iterator();

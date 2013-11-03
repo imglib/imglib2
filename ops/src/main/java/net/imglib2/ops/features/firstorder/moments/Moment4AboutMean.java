@@ -5,7 +5,7 @@ import java.util.Iterator;
 import net.imglib2.ops.features.annotations.RequiredInput;
 import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.firstorder.Mean;
-import net.imglib2.ops.features.geometric.area.AreaIterableInterval;
+import net.imglib2.ops.features.geometric.area.Area;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -19,7 +19,7 @@ public class Moment4AboutMean extends AbstractFeature
 	private Mean mean;
 
 	@RequiredInput
-	private AreaIterableInterval area;
+	private Area area;
 
 	/**
 	 * {@inheritDoc}

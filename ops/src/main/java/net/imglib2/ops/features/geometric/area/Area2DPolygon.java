@@ -20,6 +20,12 @@ public class Area2DPolygon extends AbstractFeature implements Area
 		return "Area Polygon";
 	}
 
+	@Override
+	public boolean isCompatible( Class< ? > clazz )
+	{
+		return Area.class.isAssignableFrom( clazz );
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
