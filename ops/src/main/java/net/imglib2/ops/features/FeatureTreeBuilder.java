@@ -3,7 +3,6 @@ package net.imglib2.ops.features;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,7 +12,6 @@ import java.util.Set;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.Pair;
-import net.imglib2.ops.features.FeatureTreeBuilder.PostponedSampler;
 import net.imglib2.ops.features.annotations.RequiredInput;
 import net.imglib2.ops.features.datastructures.CachedSampler;
 import net.imglib2.ops.features.datastructures.Feature;
@@ -24,6 +22,7 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.ValuePair;
 
+//TODO: this class needs a cleanup!! works for demonstration
 public class FeatureTreeBuilder< T extends Type< T >> implements FeatureProcessorBuilder< IterableInterval< T >, DoubleType >
 {
 
@@ -168,6 +167,7 @@ public class FeatureTreeBuilder< T extends Type< T >> implements FeatureProcesso
 		}
 	}
 
+	// TODO: Super dirty access here. we need to find another way:)
 	private void injectObject( Object to, Field field, Object o )
 	{
 		AccessibleObject.setAccessible( new AccessibleObject[] { field }, true );
