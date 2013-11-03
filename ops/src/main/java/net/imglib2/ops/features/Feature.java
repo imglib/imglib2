@@ -1,8 +1,10 @@
-package net.imglib2.ops.features.datastructures;
+package net.imglib2.ops.features;
 
 import net.imglib2.type.numeric.real.DoubleType;
 
-// Feature is simply a Sampler with some additional method
+/**
+ * Giving the {@link Feature} a name
+ */
 public interface Feature extends CachedSampler< DoubleType >
 {
 
@@ -12,11 +14,4 @@ public interface Feature extends CachedSampler< DoubleType >
 	 * @return
 	 */
 	String name();
-
-	/**
-	 * HashCode implementation
-	 * 
-	 * @return
-	 */
-	int hashCode();
 }

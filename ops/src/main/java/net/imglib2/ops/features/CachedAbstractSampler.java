@@ -1,5 +1,8 @@
-package net.imglib2.ops.features.datastructures;
+package net.imglib2.ops.features;
 
+/**
+ * Straightforward implemenation of a {@link CachedSampler}
+ */
 public abstract class CachedAbstractSampler< T > implements CachedSampler< T >
 {
 	// cached result
@@ -58,7 +61,6 @@ public abstract class CachedAbstractSampler< T > implements CachedSampler< T >
 	@Override
 	public boolean isCompatible( Class< ? > clazz )
 	{
-		// clazz is same or superclass/type of myself.
 		return clazz.isAssignableFrom( getClass() );
 	}
 }

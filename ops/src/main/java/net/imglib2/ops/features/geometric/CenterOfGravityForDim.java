@@ -1,7 +1,7 @@
 package net.imglib2.ops.features.geometric;
 
-import net.imglib2.ops.features.annotations.RequiredInput;
-import net.imglib2.ops.features.datastructures.AbstractFeature;
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredInput;
 import net.imglib2.ops.features.geometric.centerofgravity.CenterOfGravity;
 import net.imglib2.type.numeric.real.DoubleType;
 

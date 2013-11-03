@@ -1,7 +1,7 @@
-package net.imglib2.ops.features.datastructures;
+package net.imglib2.ops.features;
 
 /**
- * Processes one feature or a complete feature set
+ * Optimizes the calculation of many combined featureSets
  * 
  * @param <T>Input for the features of this processor
  * @param <V>
@@ -12,7 +12,7 @@ public interface FeatureProcessorBuilder< T, V >
 {
 
 	/**
-	 * Register a {@link FeatureSet} which will be entirely calculated
+	 * Register a {@link FeatureSet}
 	 * 
 	 * @param feature
 	 */

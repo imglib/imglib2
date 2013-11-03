@@ -1,8 +1,8 @@
 package net.imglib2.ops.features.haralick.helpers;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.features.annotations.RequiredInput;
-import net.imglib2.ops.features.datastructures.CachedAbstractSampler;
+import net.imglib2.ops.features.CachedAbstractSampler;
+import net.imglib2.ops.features.RequiredInput;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 
 public class CoocPXPlusY extends CachedAbstractSampler< double[] >

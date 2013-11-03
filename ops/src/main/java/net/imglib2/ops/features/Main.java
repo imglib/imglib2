@@ -34,7 +34,7 @@ public class Main
 		sphere.setOrigin( new Point( new long[] { 200, 200 } ) );
 
 		// Create test factories
-		CurrentImplementationTests< FloatType > newFrameWorkTest = new CurrentImplementationTests< FloatType >();
+		ImplTests< FloatType > newFrameWorkTest = new ImplTests< FloatType >();
 		// ImgLib2Tests< FloatType > test = new ImgLib2Tests< FloatType >();
 		// tests
 

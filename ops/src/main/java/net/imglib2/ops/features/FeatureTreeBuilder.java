@@ -12,12 +12,6 @@ import java.util.Set;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.Pair;
-import net.imglib2.ops.features.annotations.RequiredInput;
-import net.imglib2.ops.features.datastructures.CachedSampler;
-import net.imglib2.ops.features.datastructures.Feature;
-import net.imglib2.ops.features.datastructures.FeatureProcessorBuilder;
-import net.imglib2.ops.features.datastructures.FeatureSet;
-import net.imglib2.ops.features.datastructures.FeatureSetProcessor;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.ValuePair;
@@ -145,7 +139,7 @@ public class FeatureTreeBuilder< T extends Type< T >> implements FeatureProcesso
 				}
 				else
 				{
-					storedSampler = ( net.imglib2.ops.features.datastructures.CachedSampler< ? > ) samplerClazz.newInstance();
+					storedSampler = ( net.imglib2.ops.features.CachedSampler< ? > ) samplerClazz.newInstance();
 					parse( storedSampler );
 				}
 			}

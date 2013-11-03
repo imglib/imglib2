@@ -1,4 +1,4 @@
-package net.imglib2.ops.features.datastructures;
+package net.imglib2.ops.features;
 
 import java.util.ArrayList;
 import java.util.List;

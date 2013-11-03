@@ -1,8 +1,8 @@
 package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.features.annotations.RequiredInput;
-import net.imglib2.ops.features.datastructures.AbstractFeature;
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredInput;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.type.numeric.real.DoubleType;
 

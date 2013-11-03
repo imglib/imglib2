@@ -1,7 +1,16 @@
-package net.imglib2.ops.features.datastructures;
+package net.imglib2.ops.features;
 
 import java.util.List;
 
+import net.imglib2.Sampler;
+
+/**
+ * Unoptimized set of {@link Feature}s which contains _all_ {@link Feature}s and
+ * {@link Sampler}s which are required for the calculation
+ * 
+ * @param <T>
+ * @param <V>
+ */
 public interface FeatureSet< T, V >
 {
 
@@ -30,7 +39,7 @@ public interface FeatureSet< T, V >
 	// List< Source< ? > > sources();
 
 	/**
-	 * List of all non-public, but required {@link Feature}s
+	 * List of all non-public, but required {@link CachedSampler}s
 	 */
 	List< CachedSampler< ? > > required();
 }

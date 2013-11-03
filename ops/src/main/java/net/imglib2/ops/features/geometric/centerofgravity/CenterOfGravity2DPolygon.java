@@ -3,8 +3,8 @@ package net.imglib2.ops.features.geometric.centerofgravity;
 import java.awt.Polygon;
 
 import net.imglib2.Sampler;
-import net.imglib2.ops.features.annotations.RequiredInput;
-import net.imglib2.ops.features.datastructures.CachedAbstractSampler;
+import net.imglib2.ops.features.CachedAbstractSampler;
+import net.imglib2.ops.features.RequiredInput;
 import net.imglib2.ops.features.geometric.area.Area;
 
 public class CenterOfGravity2DPolygon extends CachedAbstractSampler< double[] > implements CenterOfGravity

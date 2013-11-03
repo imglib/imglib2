@@ -1,7 +1,7 @@
-package net.imglib2.ops.features;
+package net.imglib2.ops.features.sets;
 
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.features.datastructures.AbstractFeatureSet;
+import net.imglib2.ops.features.AbstractFeatureSet;
 import net.imglib2.ops.features.firstorder.GeometricMean;
 import net.imglib2.ops.features.firstorder.HarmonicMean;
 import net.imglib2.ops.features.firstorder.Kurtosis;

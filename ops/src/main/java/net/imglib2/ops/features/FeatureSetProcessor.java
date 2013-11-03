@@ -1,4 +1,4 @@
-package net.imglib2.ops.features.datastructures;
+package net.imglib2.ops.features;
 
 import java.util.Iterator;
 
@@ -9,9 +9,8 @@ public interface FeatureSetProcessor< T, V >
 
 	/**
 	 * Retrieve {@link Iterator} over active {@link Feature}s (which were
-	 * directly added, not indirectly via dependencies). {@link Feature}s are
-	 * calculated before hands so if you call .get() on a feature twice without
-	 * any update, this should be cached.
+	 * directly added, not indirectly via dependencies or as required
+	 * {@link CachedSampler}s).
 	 * 
 	 * @param objectOfInterest
 	 *            Object on which the {@link Feature}s will be calculated

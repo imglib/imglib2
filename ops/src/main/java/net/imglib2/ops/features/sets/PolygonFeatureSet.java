@@ -1,8 +1,8 @@
-package net.imglib2.ops.features;
+package net.imglib2.ops.features.sets;
 
 import java.awt.Polygon;
 
-import net.imglib2.ops.features.datastructures.AbstractFeatureSet;
+import net.imglib2.ops.features.AbstractFeatureSet;
 import net.imglib2.ops.features.geometric.CenterOfGravityForDim;
 import net.imglib2.ops.features.geometric.Circularity;
 import net.imglib2.ops.features.geometric.area.Area2DPolygon;

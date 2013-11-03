@@ -2,8 +2,8 @@ package net.imglib2.ops.features.geometric.perimeter;
 
 import java.awt.Polygon;
 
-import net.imglib2.ops.features.annotations.RequiredInput;
-import net.imglib2.ops.features.datastructures.AbstractFeature;
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredInput;
 import net.imglib2.type.numeric.real.DoubleType;
 
 //TODO: Please verfiy this computation or even better: make it correct:-)

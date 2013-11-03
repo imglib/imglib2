@@ -2,8 +2,8 @@ package net.imglib2.ops.features.firstorder.moments;
 
 import java.util.Iterator;
 
-import net.imglib2.ops.features.annotations.RequiredInput;
-import net.imglib2.ops.features.datastructures.AbstractFeature;
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredInput;
 import net.imglib2.ops.features.firstorder.Mean;
 import net.imglib2.ops.features.geometric.area.Area;
 import net.imglib2.type.numeric.RealType;

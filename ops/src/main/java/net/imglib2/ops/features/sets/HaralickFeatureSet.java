@@ -1,8 +1,8 @@
-package net.imglib2.ops.features;
+package net.imglib2.ops.features.sets;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
-import net.imglib2.ops.features.datastructures.AbstractFeatureSet;
+import net.imglib2.ops.features.AbstractFeatureSet;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.features.ASM;
 import net.imglib2.ops.features.haralick.features.ClusterPromenence;

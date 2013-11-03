@@ -1,7 +1,7 @@
 package net.imglib2.ops.features.firstorder;
 
-import net.imglib2.ops.features.annotations.RequiredInput;
-import net.imglib2.ops.features.datastructures.AbstractFeature;
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredInput;
 import net.imglib2.ops.features.firstorder.moments.Moment4AboutMean;
 import net.imglib2.type.numeric.real.DoubleType;
 

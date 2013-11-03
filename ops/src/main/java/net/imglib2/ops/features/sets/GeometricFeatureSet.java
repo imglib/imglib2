@@ -1,7 +1,7 @@
-package net.imglib2.ops.features;
+package net.imglib2.ops.features.sets;
 
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.features.datastructures.AbstractFeatureSet;
+import net.imglib2.ops.features.AbstractFeatureSet;
 import net.imglib2.ops.features.geometric.CenterOfGravityForDim;
 import net.imglib2.ops.features.geometric.Circularity;
 import net.imglib2.ops.features.geometric.area.AreaIterableInterval;

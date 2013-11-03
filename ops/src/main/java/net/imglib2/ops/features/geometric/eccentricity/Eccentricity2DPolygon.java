@@ -3,8 +3,8 @@ package net.imglib2.ops.features.geometric.eccentricity;
 import java.awt.Polygon;
 import java.awt.geom.Rectangle2D;
 
-import net.imglib2.ops.features.annotations.RequiredInput;
-import net.imglib2.ops.features.datastructures.AbstractFeature;
+import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.RequiredInput;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class Eccentricity2DPolygon extends AbstractFeature implements Eccentricity

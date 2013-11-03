@@ -2,8 +2,8 @@ package net.imglib2.ops.features.geometric.centerofgravity;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.features.annotations.RequiredInput;
-import net.imglib2.ops.features.datastructures.CachedAbstractSampler;
+import net.imglib2.ops.features.CachedAbstractSampler;
+import net.imglib2.ops.features.RequiredInput;
 import net.imglib2.ops.features.geometric.area.Area;
 
 public class CenterOfGravityGeneric extends CachedAbstractSampler< double[] > implements CenterOfGravity
