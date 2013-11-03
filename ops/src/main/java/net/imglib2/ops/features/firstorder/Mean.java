@@ -1,20 +1,18 @@
 package net.imglib2.ops.features.firstorder;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.firstorder.sums.Sum;
-import net.imglib2.ops.features.geometric.Area;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.ops.features.geometric.area.Area;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Mean< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class Mean extends AbstractFeature
 {
+	@RequiredInput
+	Sum sum;
 
-	@RequiredFeature
-	private Sum< T > sum;
-
-	@RequiredFeature
-	private Area area;
+	@RequiredInput
+	Area area;
 
 	/**
 	 * {@inheritDoc}
@@ -35,8 +33,8 @@ public class Mean< T extends RealType< T >> extends AbstractFeature< DoubleType 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Mean< T > copy()
+	public Mean copy()
 	{
-		return new Mean< T >();
+		return new Mean();
 	}
 }

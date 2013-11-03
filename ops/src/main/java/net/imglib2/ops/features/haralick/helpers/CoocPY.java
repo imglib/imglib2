@@ -1,23 +1,14 @@
 package net.imglib2.ops.features.haralick.helpers;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.CachedAbstractSampler;
 
-public class CoocPY extends AbstractFeature< double[] >
+public class CoocPY extends CachedAbstractSampler< double[] >
 {
 
 	// in the symmetric case px = py
-	@RequiredFeature
+	@RequiredInput
 	CoocPX coocPX = new CoocPX();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String name()
-	{
-		return "Helper CoocPY";
-	}
 
 	/**
 	 * {@inheritDoc}

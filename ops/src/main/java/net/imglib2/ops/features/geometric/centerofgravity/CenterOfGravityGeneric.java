@@ -1,28 +1,18 @@
 package net.imglib2.ops.features.geometric.centerofgravity;
 
-import net.imglib2.Localizable;
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.PositionIterator;
-import net.imglib2.ops.features.annotations.RequiredFeature;
-import net.imglib2.ops.features.geometric.Area;
-import net.imglib2.ops.features.providers.sources.GetAreaIterator;
+import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.CachedAbstractSampler;
+import net.imglib2.ops.features.geometric.area.Area;
 
-public class CenterOfGravityGeneric extends AbstractFeature< double[] >
+public class CenterOfGravityGeneric extends CachedAbstractSampler< double[] > implements CenterOfGravity
 {
-	@RequiredFeature
-	GetAreaIterator provider;
+	@RequiredInput
+	IterableInterval< ? > ii;
 
-	@RequiredFeature
+	@RequiredInput
 	Area area;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String name()
-	{
-		return "Center of Gravity";
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -37,25 +27,37 @@ public class CenterOfGravityGeneric extends AbstractFeature< double[] >
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected double[] recompute()
+	public double[] recompute()
 	{
-		PositionIterator it = provider.get();
+		final Cursor< ? > it = ii.cursor();
 		final double[] r = new double[ it.numDimensions() ];
 
 		while ( it.hasNext() )
 		{
-			Localizable next = it.next();
+			it.fwd();
 			for ( int i = 0; i < r.length; i++ )
 			{
-				r[ i ] += next.getDoublePosition( i );
+				r[ i ] += it.getDoublePosition( i );
 			}
 		}
 
 		for ( int i = 0; i < r.length; i++ )
 		{
-			r[ i ] /= area.get().getRealDouble();
+			r[ i ] /= area.get().get();
 		}
 
 		return r;
+	}
+
+	@Override
+	public double priority()
+	{
+		return 0;
+	}
+
+	@Override
+	public boolean isCompatible( Class< ? > c )
+	{
+		return c.isAssignableFrom( new double[ 0 ].getClass() );
 	}
 }

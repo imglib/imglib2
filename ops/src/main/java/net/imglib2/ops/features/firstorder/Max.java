@@ -2,17 +2,15 @@ package net.imglib2.ops.features.firstorder;
 
 import java.util.Iterator;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
-import net.imglib2.ops.features.providers.sources.GetIterableInterval;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Max< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class Max extends AbstractFeature
 {
-
-	@RequiredFeature
-	private GetIterableInterval< T > ii;
+	@RequiredInput
+	private Iterable< ? extends RealType< ? > > ii;
 
 	/**
 	 * {@inheritDoc}
@@ -27,9 +25,9 @@ public class Max< T extends RealType< T >> extends AbstractFeature< DoubleType >
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Max< T > copy()
+	public Max copy()
 	{
-		return new Max< T >();
+		return new Max();
 	}
 
 	/**
@@ -40,7 +38,7 @@ public class Max< T extends RealType< T >> extends AbstractFeature< DoubleType >
 	{
 		double max = Double.MIN_VALUE;
 
-		Iterator< T > it = ii.get().iterator();
+		final Iterator< ? extends RealType< ? >> it = ii.iterator();
 		while ( it.hasNext() )
 		{
 			double val = it.next().getRealDouble();

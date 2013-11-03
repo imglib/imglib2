@@ -1,22 +1,22 @@
 package net.imglib2.ops.features.haralick.features;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocPXPlusY;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class SumVariance extends AbstractFeature< DoubleType >
+public class SumVariance extends AbstractFeature
 {
 
-	@RequiredFeature
+	@RequiredInput
 	private SumAverage sumAverage;
 
-	@RequiredFeature
+	@RequiredInput
 	private CoocPXPlusY coocPXPlusY;
 
-	@RequiredFeature
-	private HaralickCoocMatrix< ? > cooc;
+	@RequiredInput
+	private HaralickCoocMatrix cooc;
 
 	/**
 	 * {@inheritDoc}

@@ -2,17 +2,15 @@ package net.imglib2.ops.features.firstorder.sums;
 
 import java.util.Iterator;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
-import net.imglib2.ops.features.providers.sources.GetIterableInterval;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class SumOfInverses< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class SumOfInverses extends AbstractFeature
 {
-
-	@RequiredFeature
-	private GetIterableInterval< T > ii;
+	@RequiredInput
+	private Iterable< ? extends RealType< ? > > ii;
 
 	/**
 	 * {@inheritDoc}
@@ -27,9 +25,9 @@ public class SumOfInverses< T extends RealType< T >> extends AbstractFeature< Do
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SumOfInverses< T > copy()
+	public SumOfInverses copy()
 	{
-		return new SumOfInverses< T >();
+		return new SumOfInverses();
 	}
 
 	/**
@@ -38,7 +36,7 @@ public class SumOfInverses< T extends RealType< T >> extends AbstractFeature< Do
 	@Override
 	protected DoubleType recompute()
 	{
-		Iterator< T > it = ii.get().iterator();
+		Iterator< ? extends RealType< ? > > it = ii.iterator();
 		double result = 0.0;
 
 		while ( it.hasNext() )
@@ -47,5 +45,4 @@ public class SumOfInverses< T extends RealType< T >> extends AbstractFeature< Do
 		}
 		return new DoubleType( result );
 	}
-
 }

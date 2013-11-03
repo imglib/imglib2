@@ -1,24 +1,14 @@
 package net.imglib2.ops.features.haralick.helpers;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.CachedAbstractSampler;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 
-public class CoocPX extends AbstractFeature< double[] >
+public class CoocPX extends CachedAbstractSampler< double[] >
 {
-
-	@RequiredFeature
-	private HaralickCoocMatrix< ? > cooc;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String name()
-	{
-		return "Helper CoocPX";
-	}
+	@RequiredInput
+	private HaralickCoocMatrix cooc;
 
 	/**
 	 * {@inheritDoc}

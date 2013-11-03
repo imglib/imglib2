@@ -1,21 +1,21 @@
 package net.imglib2.ops.features.haralick.features;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocPXMinusY;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class DifferenceEntropy extends AbstractFeature< DoubleType >
+public class DifferenceEntropy extends AbstractFeature
 {
 
 	// Avoid log 0
 	private static final double EPSILON = 0.00000001f;
 
-	@RequiredFeature
-	private HaralickCoocMatrix< ? > cooc;
+	@RequiredInput
+	private HaralickCoocMatrix cooc;
 
-	@RequiredFeature
+	@RequiredInput
 	CoocPXMinusY coocPXMinusY;
 
 	/**

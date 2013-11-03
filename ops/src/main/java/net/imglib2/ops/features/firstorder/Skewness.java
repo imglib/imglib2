@@ -1,19 +1,18 @@
 package net.imglib2.ops.features.firstorder;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.firstorder.moments.Moment3AboutMean;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Skewness< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class Skewness extends AbstractFeature
 {
 
-	@RequiredFeature
-	private Moment3AboutMean< T > moment3;
+	@RequiredInput
+	private Moment3AboutMean moment3;
 
-	@RequiredFeature
-	private StdDeviation< T > stdDev;
+	@RequiredInput
+	private StdDeviation stdDev;
 
 	/**
 	 * {@inheritDoc}
@@ -28,9 +27,9 @@ public class Skewness< T extends RealType< T >> extends AbstractFeature< DoubleT
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Skewness< T > copy()
+	public Skewness copy()
 	{
-		return new Skewness< T >();
+		return new Skewness();
 	}
 
 	/**
@@ -40,8 +39,8 @@ public class Skewness< T extends RealType< T >> extends AbstractFeature< DoubleT
 	public DoubleType recompute()
 	{
 
-		double moment3 = this.moment3.get().get();
-		double std = this.stdDev.get().get();
+		final double moment3 = this.moment3.get().get();
+		final double std = this.stdDev.get().get();
 
 		if ( std != 0 )
 		{

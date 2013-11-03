@@ -1,15 +1,15 @@
 package net.imglib2.ops.features.haralick.features;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.haralick.helpers.CoocStdX;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Variance extends AbstractFeature< DoubleType >
+public class Variance extends AbstractFeature
 {
 
-	@RequiredFeature
-	private CoocStdX coocStdX = new CoocStdX();
+	@RequiredInput
+	private CoocStdX coocStdX;
 
 	/**
 	 * {@inheritDoc}

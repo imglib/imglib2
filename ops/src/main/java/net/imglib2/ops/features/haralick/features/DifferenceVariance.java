@@ -1,14 +1,14 @@
 package net.imglib2.ops.features.haralick.features;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.haralick.helpers.CoocPXMinusY;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class DifferenceVariance extends AbstractFeature< DoubleType >
+public class DifferenceVariance extends AbstractFeature
 {
 
-	@RequiredFeature
+	@RequiredInput
 	CoocPXMinusY coocPXMinusY;
 
 	/**

@@ -1,15 +1,14 @@
 package net.imglib2.ops.features.firstorder;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.firstorder.moments.Moment2AboutMean;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Variance< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class Variance extends AbstractFeature
 {
-	@RequiredFeature
-	Moment2AboutMean< T > moment2;
+	@RequiredInput
+	Moment2AboutMean moment2;
 
 	/**
 	 * {@inheritDoc}
@@ -24,9 +23,9 @@ public class Variance< T extends RealType< T >> extends AbstractFeature< DoubleT
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Variance< T > copy()
+	public Variance copy()
 	{
-		return new Variance< T >();
+		return new Variance();
 	}
 
 	/**

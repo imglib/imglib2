@@ -1,15 +1,17 @@
 package net.imglib2.ops.features.geometric;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
+import net.imglib2.ops.features.geometric.area.Area;
+import net.imglib2.ops.features.geometric.perimeter.Perimeter;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Circularity extends AbstractFeature< DoubleType >
+public class Circularity extends AbstractFeature
 {
-	@RequiredFeature
+	@RequiredInput
 	private Perimeter perimeter;
 
-	@RequiredFeature
+	@RequiredInput
 	private Area area;
 
 	/**
@@ -42,8 +44,7 @@ public class Circularity extends AbstractFeature< DoubleType >
 		// As the value approaches 0.0, it indicates an increasingly elongated
 		// polygon.
 		// http://rsbweb.nih.gov/ij/plugins/circularity.html
-		final double result = 4 * Math.PI * ( area.get().get() / Math.pow( perimeter.get().get(), 2 ) );
-		return new DoubleType( result );
+		return new DoubleType( 4 * Math.PI * ( area.get().get() / Math.pow( perimeter.get().get(), 2 ) ) );
 	}
 
 }

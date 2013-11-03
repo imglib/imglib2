@@ -2,46 +2,25 @@ package net.imglib2.ops.features.geometric.centerofgravity;
 
 import java.awt.Polygon;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
-import net.imglib2.ops.features.geometric.Area;
-import net.imglib2.ops.features.providers.GetPolygonFromBitmask;
+import net.imglib2.Sampler;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.CachedAbstractSampler;
+import net.imglib2.ops.features.geometric.area.Area;
 
-public class CenterOfGravity2DPolygon extends AbstractFeature< double[] >
+public class CenterOfGravity2DPolygon extends CachedAbstractSampler< double[] > implements CenterOfGravity
 {
-	@RequiredFeature
-	Area m_area;
+	@RequiredInput
+	Area area;
 
-	@RequiredFeature
-	GetPolygonFromBitmask polygonProvider;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String name()
-	{
-		return "Polygon Center of Gravity";
-	}
+	@RequiredInput
+	Polygon polygon;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CenterOfGravity2DPolygon copy()
+	public double[] recompute()
 	{
-		return new CenterOfGravity2DPolygon();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected double[] recompute()
-	{
-
-		Polygon polygon = polygonProvider.get();
-
 		double[] result = new double[ 2 ];
 
 		// Yang Mingqiang:
@@ -66,9 +45,21 @@ public class CenterOfGravity2DPolygon extends AbstractFeature< double[] >
 		result[ 0 ] += ( x + x1 ) * ( x * y1 - x1 * y );
 		result[ 1 ] += ( y + y1 ) * ( x * y1 - x1 * y );
 
-		result[ 0 ] = ( 1 / ( 6 * m_area.get().get() ) ) * Math.abs( result[ 0 ] );
-		result[ 1 ] = ( 1 / ( 6 * m_area.get().get() ) ) * Math.abs( result[ 1 ] );
+		result[ 0 ] = ( 1 / ( 6 * area.get().get() ) ) * Math.abs( result[ 0 ] );
+		result[ 1 ] = ( 1 / ( 6 * area.get().get() ) ) * Math.abs( result[ 1 ] );
 
 		return result;
+	}
+
+	@Override
+	public Sampler< double[] > copy()
+	{
+		return null;
+	}
+
+	@Override
+	public double priority()
+	{
+		return 1.0;
 	}
 }

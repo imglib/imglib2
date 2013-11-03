@@ -1,15 +1,14 @@
 package net.imglib2.ops.features.firstorder;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class StdDeviation< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class StdDeviation extends AbstractFeature
 {
 
-	@RequiredFeature
-	private Variance< T > variance;
+	@RequiredInput
+	private Variance variance;
 
 	/**
 	 * {@inheritDoc}
@@ -24,9 +23,9 @@ public class StdDeviation< T extends RealType< T >> extends AbstractFeature< Dou
 	 * {@inheritDoc}
 	 */
 	@Override
-	public StdDeviation< T > copy()
+	public StdDeviation copy()
 	{
-		return new StdDeviation< T >();
+		return new StdDeviation();
 	}
 
 	/**

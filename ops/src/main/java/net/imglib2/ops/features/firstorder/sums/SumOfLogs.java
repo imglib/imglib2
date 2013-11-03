@@ -2,17 +2,15 @@ package net.imglib2.ops.features.firstorder.sums;
 
 import java.util.Iterator;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
-import net.imglib2.ops.features.providers.sources.GetIterableInterval;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class SumOfLogs< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class SumOfLogs extends AbstractFeature
 {
-
-	@RequiredFeature
-	private GetIterableInterval< T > ii;
+	@RequiredInput
+	private Iterable< ? extends RealType< ? > > ii;
 
 	/**
 	 * {@inheritDoc}
@@ -20,16 +18,16 @@ public class SumOfLogs< T extends RealType< T >> extends AbstractFeature< Double
 	@Override
 	public String name()
 	{
-		return "Sum of logs";
+		return "Sum of Logs";
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SumOfLogs< T > copy()
+	public SumOfLogs copy()
 	{
-		return new SumOfLogs< T >();
+		return new SumOfLogs();
 	}
 
 	/**
@@ -38,7 +36,7 @@ public class SumOfLogs< T extends RealType< T >> extends AbstractFeature< Double
 	@Override
 	protected DoubleType recompute()
 	{
-		Iterator< T > it = ii.get().iterator();
+		Iterator< ? extends RealType< ? > > it = ii.iterator();
 		double result = 0.0;
 
 		while ( it.hasNext() )

@@ -2,16 +2,15 @@ package net.imglib2.ops.features.firstorder.sums;
 
 import java.util.Iterator;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
-import net.imglib2.ops.features.providers.sources.GetIterable;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Sum< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class Sum extends AbstractFeature
 {
-	@RequiredFeature
-	private GetIterable< T > ii;
+	@RequiredInput
+	private Iterable< ? extends RealType< ? >> ii;
 
 	/**
 	 * {@inheritDoc}
@@ -26,9 +25,9 @@ public class Sum< T extends RealType< T >> extends AbstractFeature< DoubleType >
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Sum< T > copy()
+	public Sum copy()
 	{
-		return new Sum< T >();
+		return new Sum();
 	}
 
 	/**
@@ -39,7 +38,7 @@ public class Sum< T extends RealType< T >> extends AbstractFeature< DoubleType >
 	{
 		double result = 0.0f;
 
-		Iterator< T > it = ii.get().iterator();
+		Iterator< ? extends RealType< ? > > it = ii.iterator();
 		while ( it.hasNext() )
 		{
 			result += it.next().getRealDouble();
@@ -47,5 +46,4 @@ public class Sum< T extends RealType< T >> extends AbstractFeature< DoubleType >
 
 		return new DoubleType( result );
 	}
-
 }

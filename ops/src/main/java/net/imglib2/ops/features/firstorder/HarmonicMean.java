@@ -1,20 +1,18 @@
 package net.imglib2.ops.features.firstorder;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.firstorder.sums.SumOfInverses;
-import net.imglib2.ops.features.geometric.area.AreaIterableInterval;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.ops.features.geometric.area.Area;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class HarmonicMean< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class HarmonicMean extends AbstractFeature
 {
+	@RequiredInput
+	private SumOfInverses inverseSum;
 
-	@RequiredFeature
-	private SumOfInverses< T > inverseSum;
-
-	@RequiredFeature
-	private AreaIterableInterval area;
+	@RequiredInput
+	private Area area;
 
 	/**
 	 * {@inheritDoc}
@@ -29,9 +27,9 @@ public class HarmonicMean< T extends RealType< T >> extends AbstractFeature< Dou
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HarmonicMean< T > copy()
+	public HarmonicMean copy()
 	{
-		return new HarmonicMean< T >();
+		return new HarmonicMean();
 	}
 
 	/**

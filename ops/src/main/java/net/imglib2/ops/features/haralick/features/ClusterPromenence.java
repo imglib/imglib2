@@ -1,21 +1,21 @@
 package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocStdX;
 import net.imglib2.type.numeric.real.DoubleType;
 
 //cluster promenence (from cellcognition)
 // https://github.com/CellCognition/cecog/blob/master/csrc/include/cecog/features.hxx#L479
-public class ClusterPromenence extends AbstractFeature< DoubleType >
+public class ClusterPromenence extends AbstractFeature
 {
 
-	@RequiredFeature
-	HaralickCoocMatrix< ? > cooc;
+	@RequiredInput
+	HaralickCoocMatrix cooc;
 
-	@RequiredFeature
+	@RequiredInput
 	CoocStdX coocStdX;
 
 	/**

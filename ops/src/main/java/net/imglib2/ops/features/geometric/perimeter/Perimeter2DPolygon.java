@@ -2,17 +2,15 @@ package net.imglib2.ops.features.geometric.perimeter;
 
 import java.awt.Polygon;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
-import net.imglib2.ops.features.providers.GetPolygonFromBitmask;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.type.numeric.real.DoubleType;
 
 //TODO: Please verfiy this computation or even better: make it correct:-)
-public class Perimeter2DPolygon extends AbstractFeature< DoubleType >
+public class Perimeter2DPolygon extends AbstractFeature implements Perimeter
 {
-
-	@RequiredFeature
-	GetPolygonFromBitmask polygonGet;
+	@RequiredInput
+	Polygon polygon;
 
 	/**
 	 * {@inheritDoc}
@@ -21,14 +19,13 @@ public class Perimeter2DPolygon extends AbstractFeature< DoubleType >
 	protected DoubleType recompute()
 	{
 
-		final Polygon poly = polygonGet.get();
-		final int numPoints = poly.npoints;
+		final int numPoints = polygon.npoints;
 
-		double perimeter = dist( poly.xpoints[ numPoints - 1 ], poly.ypoints[ numPoints - 1 ], poly.xpoints[ 0 ], poly.ypoints[ 0 ] );
+		double perimeter = dist( polygon.xpoints[ numPoints - 1 ], polygon.ypoints[ numPoints - 1 ], polygon.xpoints[ 0 ], polygon.ypoints[ 0 ] );
 
 		for ( int i = 0; i < numPoints - 1; i++ )
 		{
-			perimeter += dist( poly.xpoints[ i ], poly.ypoints[ i ], poly.xpoints[ i + 1 ], poly.ypoints[ i + 1 ] );
+			perimeter += dist( polygon.xpoints[ i ], polygon.ypoints[ i ], polygon.xpoints[ i + 1 ], polygon.ypoints[ i + 1 ] );
 		}
 
 		return new DoubleType( perimeter );

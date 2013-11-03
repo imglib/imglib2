@@ -1,8 +1,8 @@
 package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocMeanX;
 import net.imglib2.ops.features.haralick.helpers.CoocMeanY;
@@ -10,22 +10,22 @@ import net.imglib2.ops.features.haralick.helpers.CoocStdX;
 import net.imglib2.ops.features.haralick.helpers.CoocStdY;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Correlation extends AbstractFeature< DoubleType >
+public class Correlation extends AbstractFeature
 {
 
-	@RequiredFeature
-	HaralickCoocMatrix< ? > cooc;
+	@RequiredInput
+	HaralickCoocMatrix cooc;
 
-	@RequiredFeature
+	@RequiredInput
 	CoocMeanX coocMeanX = new CoocMeanX();
 
-	@RequiredFeature
+	@RequiredInput
 	CoocMeanY coocMeanY = new CoocMeanY();
 
-	@RequiredFeature
+	@RequiredInput
 	CoocStdX coocStdX = new CoocStdX();
 
-	@RequiredFeature
+	@RequiredInput
 	CoocStdY coocStdY = new CoocStdY();
 
 	/**

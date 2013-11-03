@@ -6,24 +6,23 @@ import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.data.CooccurrenceMatrix;
 import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.CachedAbstractSampler;
 import net.imglib2.ops.features.firstorder.Max;
 import net.imglib2.ops.features.firstorder.Min;
-import net.imglib2.ops.features.providers.sources.GetIterableInterval;
 import net.imglib2.type.numeric.RealType;
 
-public class HaralickCoocMatrix< T extends RealType< T >> extends AbstractFeature< CooccurrenceMatrix >
+public class HaralickCoocMatrix extends CachedAbstractSampler< CooccurrenceMatrix >
 {
 
-	@RequiredFeature
-	GetIterableInterval< T > ii;
+	@RequiredInput
+	IterableInterval< ? extends RealType< ? >> ii;
 
-	@RequiredFeature
-	Min< T > min;
+	@RequiredInput
+	Min min;
 
-	@RequiredFeature
-	Max< T > max;
+	@RequiredInput
+	Max max;
 
 	private final int nrGrayLevels;
 
@@ -42,27 +41,16 @@ public class HaralickCoocMatrix< T extends RealType< T >> extends AbstractFeatur
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String name()
-	{
-		return "Cooccurence Matrix Provider";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	protected CooccurrenceMatrix recompute()
 	{
 
-		final IterableInterval< T > input = ii.get();
-
-		final Cursor< T > cursor = input.cursor();
+		final Cursor< ? extends RealType< ? > > cursor = ii.cursor();
 
 		final double localMin = this.min.get().get();
 
 		final double localMax = this.max.get().get();
 
-		int[][] pixels = new int[ ( int ) input.dimension( 0 ) ][ ( int ) input.dimension( 1 ) ];
+		int[][] pixels = new int[ ( int ) ii.dimension( 0 ) ][ ( int ) ii.dimension( 1 ) ];
 
 		for ( int i = 0; i < pixels.length; i++ )
 		{
@@ -74,7 +62,7 @@ public class HaralickCoocMatrix< T extends RealType< T >> extends AbstractFeatur
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			pixels[ cursor.getIntPosition( 1 ) - ( int ) input.min( 1 ) ][ cursor.getIntPosition( 0 ) - ( int ) input.min( 0 ) ] = ( int ) ( ( ( cursor.get().getRealDouble() - localMin ) / ( localMax - localMin + 1 ) ) * nrGrayLevels );
+			pixels[ cursor.getIntPosition( 1 ) - ( int ) ii.min( 1 ) ][ cursor.getIntPosition( 0 ) - ( int ) ii.min( 0 ) ] = ( int ) ( ( ( cursor.get().getRealDouble() - localMin ) / ( localMax - localMin + 1 ) ) * nrGrayLevels );
 
 		}
 
@@ -124,9 +112,9 @@ public class HaralickCoocMatrix< T extends RealType< T >> extends AbstractFeatur
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HaralickCoocMatrix< T > copy()
+	public HaralickCoocMatrix copy()
 	{
-		return new HaralickCoocMatrix< T >( nrGrayLevels, getDistance(), getOrientation() );
+		return new HaralickCoocMatrix( nrGrayLevels, distance, orientation );
 	}
 
 	public int getNrGrayLevels()

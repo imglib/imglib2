@@ -2,24 +2,23 @@ package net.imglib2.ops.features.firstorder.moments;
 
 import java.util.Iterator;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.firstorder.Mean;
 import net.imglib2.ops.features.geometric.area.AreaIterableInterval;
-import net.imglib2.ops.features.providers.sources.GetIterableInterval;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Moment4AboutMean< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class Moment4AboutMean extends AbstractFeature
 {
 
-	@RequiredFeature
-	private GetIterableInterval< T > interval;
+	@RequiredInput
+	private Iterable< ? extends RealType< ? >> i;
 
-	@RequiredFeature
-	private Mean< T > mean;
+	@RequiredInput
+	private Mean mean;
 
-	@RequiredFeature
+	@RequiredInput
 	private AreaIterableInterval area;
 
 	/**
@@ -28,16 +27,16 @@ public class Moment4AboutMean< T extends RealType< T >> extends AbstractFeature<
 	@Override
 	public String name()
 	{
-		return "Moment 4 about mean";
+		return "Moment 4 About Mean";
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Moment4AboutMean< T > copy()
+	public Moment4AboutMean copy()
 	{
-		return new Moment4AboutMean< T >();
+		return new Moment4AboutMean();
 	}
 
 	/**
@@ -50,7 +49,7 @@ public class Moment4AboutMean< T extends RealType< T >> extends AbstractFeature<
 		final double area = this.area.get().get();
 		double res = 0.0;
 
-		Iterator< T > it = interval.get().iterator();
+		Iterator< ? extends RealType< ? >> it = i.iterator();
 		while ( it.hasNext() )
 		{
 			final double val = it.next().getRealDouble() - mean;

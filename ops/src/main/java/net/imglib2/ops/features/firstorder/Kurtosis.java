@@ -1,19 +1,18 @@
 package net.imglib2.ops.features.firstorder;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.firstorder.moments.Moment4AboutMean;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Kurtosis< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class Kurtosis extends AbstractFeature
 {
 
-	@RequiredFeature
-	StdDeviation< T > stdDev;
+	@RequiredInput
+	StdDeviation stdDev;
 
-	@RequiredFeature
-	Moment4AboutMean< T > moment4;
+	@RequiredInput
+	Moment4AboutMean moment4;
 
 	/**
 	 * {@inheritDoc}
@@ -28,9 +27,9 @@ public class Kurtosis< T extends RealType< T >> extends AbstractFeature< DoubleT
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Kurtosis< T > copy()
+	public Kurtosis copy()
 	{
-		return new Kurtosis< T >();
+		return new Kurtosis();
 	}
 
 	/**

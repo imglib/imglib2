@@ -1,20 +1,18 @@
 package net.imglib2.ops.features.firstorder;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.annotations.RequiredFeature;
+import net.imglib2.ops.features.annotations.RequiredInput;
+import net.imglib2.ops.features.datastructures.AbstractFeature;
 import net.imglib2.ops.features.firstorder.sums.SumOfLogs;
-import net.imglib2.ops.features.geometric.area.AreaIterableInterval;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.ops.features.geometric.area.Area;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class GeometricMean< T extends RealType< T >> extends AbstractFeature< DoubleType >
+public class GeometricMean extends AbstractFeature
 {
+	@RequiredInput
+	private SumOfLogs logSum;
 
-	@RequiredFeature
-	private SumOfLogs< T > logSum;
-
-	@RequiredFeature
-	private AreaIterableInterval area;
+	@RequiredInput
+	private Area area;
 
 	/**
 	 * {@inheritDoc}
@@ -29,9 +27,9 @@ public class GeometricMean< T extends RealType< T >> extends AbstractFeature< Do
 	 * {@inheritDoc}
 	 */
 	@Override
-	public GeometricMean< T > copy()
+	public GeometricMean copy()
 	{
-		return new GeometricMean< T >();
+		return new GeometricMean();
 	}
 
 	/**
