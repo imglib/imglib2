@@ -53,17 +53,17 @@ public abstract class AbstractCell< A > implements Serializable
 
 	protected int n;
 
-	int[] dimensions;
+	protected int[] dimensions;
 
-	int[] steps;
+	protected int[] steps;
 
-	long[] min;
+	protected long[] min;
 
-	long[] max;
+	protected long[] max;
 
 	protected int numPixels;
-	
-	public AbstractCell() { 
+
+	public AbstractCell() {
 	}
 
 	public AbstractCell( final int[] dimensions, final long[] min )
