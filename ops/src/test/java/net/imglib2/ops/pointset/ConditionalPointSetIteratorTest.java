@@ -47,6 +47,8 @@ import net.imglib2.ops.condition.RangeCondition;
 import org.junit.Test;
 
 /**
+ * Tests {@link ConditionalPointSetIterator}.
+ * 
  * @author Barry DeZonia
  */
 public class ConditionalPointSetIteratorTest {

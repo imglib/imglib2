@@ -38,7 +38,6 @@
 package net.imglib2.ops.operation.iterableinterval.unary;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -53,9 +52,10 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
 /**
- * TODO: This class is now able to handle RandomAccessibleIntervals
+ * Implement more interpolators (e.g. bilinear interpolation)
+ * 
  * @author Christian Dietz (University of Konstanz)
- *
+ * 
  * @param <T>
  */
 public class Resample< T extends RealType< T > > implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > >
@@ -89,8 +89,7 @@ public class Resample< T extends RealType< T > > implements UnaryOperation< Rand
 		case LANCZOS:
 			ifac = new LanczosInterpolatorFactory< T >();
 			break;
-		default:
-
+		case PERIODICAL:
 			RandomAccess< T > srcRA = Views.extendPeriodic( op ).randomAccess();
 			Cursor< T > resCur = Views.iterable( res ).localizingCursor();
 			while ( resCur.hasNext() )
@@ -101,6 +100,8 @@ public class Resample< T extends RealType< T > > implements UnaryOperation< Rand
 			}
 
 			return res;
+		default:
+			throw new IllegalArgumentException( "Unknown mode in Resample.java" );
 		}
 
 		final RealRandomAccess< T > inter = ifac.create( Views.extend( op, new OutOfBoundsMirrorFactory< T, RandomAccessibleInterval< T > >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) ) );

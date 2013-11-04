@@ -51,6 +51,8 @@ import org.junit.Test;
 
 
 /**
+ * Test code for Histogram1d.
+ * 
  * @author Barry DeZonia
  */
 public class Histogram1dTest {
