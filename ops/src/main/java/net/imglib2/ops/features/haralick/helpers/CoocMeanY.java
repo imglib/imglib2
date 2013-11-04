@@ -1,15 +1,14 @@
 package net.imglib2.ops.features.haralick.helpers;
 
-import net.imglib2.ops.features.CachedAbstractSampler;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.AbstractModule;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class CoocMeanY extends CachedAbstractSampler< DoubleType >
+public class CoocMeanY extends AbstractModule< DoubleType >
 {
-
 	// for symmetric cooccurence matrices stdx = stdy
-	@RequiredInput
-	private CoocMeanX coocMeanX = new CoocMeanX();
+	@ModuleInput
+	private CoocMeanX coocMeanX;
 
 	/**
 	 * {@inheritDoc}
@@ -24,7 +23,7 @@ public class CoocMeanY extends CachedAbstractSampler< DoubleType >
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType calculateDescriptor()
 	{
 		return coocMeanX.get();
 	}

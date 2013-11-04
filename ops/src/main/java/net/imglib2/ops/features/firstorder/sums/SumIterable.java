@@ -2,15 +2,15 @@ package net.imglib2.ops.features.firstorder.sums;
 
 import java.util.Iterator;
 
-import net.imglib2.ops.features.AbstractFeature;
+import net.imglib2.ops.features.AbstractFeatureModule;
 import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class SumOfLogs extends AbstractFeature
+public class SumIterable extends AbstractFeatureModule
 {
 	@ModuleInput
-	private Iterable< ? extends RealType< ? > > ii;
+	private Iterable< ? extends RealType< ? >> ii;
 
 	/**
 	 * {@inheritDoc}
@@ -18,32 +18,23 @@ public class SumOfLogs extends AbstractFeature
 	@Override
 	public String name()
 	{
-		return "Sum of Logs";
+		return "Sum";
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SumOfLogs copy()
+	public DoubleType compute()
 	{
-		return new SumOfLogs();
-	}
+		double result = 0.0f;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType compute()
-	{
 		Iterator< ? extends RealType< ? > > it = ii.iterator();
-		double result = 0.0;
-
 		while ( it.hasNext() )
 		{
-			result += Math.log( it.next().getRealDouble() );
+			result += it.next().getRealDouble();
 		}
+
 		return new DoubleType( result );
 	}
-
 }

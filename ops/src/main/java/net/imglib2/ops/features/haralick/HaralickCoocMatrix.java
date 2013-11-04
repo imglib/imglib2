@@ -6,22 +6,22 @@ import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.data.CooccurrenceMatrix;
 import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
-import net.imglib2.ops.features.CachedAbstractSampler;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.AbstractModule;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.firstorder.Max;
 import net.imglib2.ops.features.firstorder.Min;
 import net.imglib2.type.numeric.RealType;
 
-public class HaralickCoocMatrix extends CachedAbstractSampler< CooccurrenceMatrix >
+public class HaralickCoocMatrix extends AbstractModule< CooccurrenceMatrix >
 {
 
-	@RequiredInput
+	@ModuleInput
 	IterableInterval< ? extends RealType< ? >> ii;
 
-	@RequiredInput
+	@ModuleInput
 	Min min;
 
-	@RequiredInput
+	@ModuleInput
 	Max max;
 
 	private final int nrGrayLevels;
@@ -41,7 +41,7 @@ public class HaralickCoocMatrix extends CachedAbstractSampler< CooccurrenceMatri
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected CooccurrenceMatrix recompute()
+	protected CooccurrenceMatrix calculateDescriptor()
 	{
 
 		final Cursor< ? extends RealType< ? > > cursor = ii.cursor();

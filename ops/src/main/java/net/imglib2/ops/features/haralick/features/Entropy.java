@@ -2,7 +2,7 @@ package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -11,7 +11,7 @@ public class Entropy extends AbstractFeature
 
 	private static final double EPSILON = 0.00000001f;
 
-	@RequiredInput
+	@ModuleInput
 	private HaralickCoocMatrix cooc;
 
 	/**
@@ -36,7 +36,7 @@ public class Entropy extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		final int nrGrayLevels = cooc.getNrGrayLevels();
 		final CooccurrenceMatrix matrix = cooc.get();

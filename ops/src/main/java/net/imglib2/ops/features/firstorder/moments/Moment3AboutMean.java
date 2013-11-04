@@ -3,7 +3,7 @@ package net.imglib2.ops.features.firstorder.moments;
 import java.util.Iterator;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.firstorder.Mean;
 import net.imglib2.ops.features.geometric.area.Area;
 import net.imglib2.type.numeric.RealType;
@@ -12,13 +12,13 @@ import net.imglib2.type.numeric.real.DoubleType;
 public class Moment3AboutMean extends AbstractFeature
 {
 
-	@RequiredInput
+	@ModuleInput
 	private Iterable< ? extends RealType< ? > > ii;
 
-	@RequiredInput
+	@ModuleInput
 	private Mean mean;
 
-	@RequiredInput
+	@ModuleInput
 	private Area area;
 
 	/**
@@ -43,7 +43,7 @@ public class Moment3AboutMean extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		final double mean = this.mean.get().get();
 		final double area = this.area.get().get();

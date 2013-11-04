@@ -1,14 +1,14 @@
 package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.haralick.helpers.CoocStdX;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class Variance extends AbstractFeature
 {
 
-	@RequiredInput
+	@ModuleInput
 	private CoocStdX coocStdX;
 
 	/**
@@ -33,7 +33,7 @@ public class Variance extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		return new DoubleType( coocStdX.get().get() * coocStdX.get().get() );
 	}

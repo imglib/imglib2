@@ -1,9 +1,9 @@
 package net.imglib2.ops.features;
 
 /**
- * Straightforward implemenation of a {@link CachedSampler}
+ * Straightforward implementation of a {@link CachedModule}
  */
-public abstract class CachedAbstractSampler< T > implements CachedSampler< T >
+public abstract class AbstractModule< T > implements Module< T >
 {
 	// cached result
 	private T m_res;
@@ -13,7 +13,7 @@ public abstract class CachedAbstractSampler< T > implements CachedSampler< T >
 	protected boolean dirty = true;
 
 	// recompute the feature on get()
-	protected abstract T recompute();
+	protected abstract T calculateDescriptor();
 
 	/**
 	 * {@inheritDoc}
@@ -24,7 +24,7 @@ public abstract class CachedAbstractSampler< T > implements CachedSampler< T >
 
 		if ( dirty )
 		{
-			m_res = recompute();
+			m_res = calculateDescriptor();
 			dirty = false;
 		}
 
@@ -59,8 +59,14 @@ public abstract class CachedAbstractSampler< T > implements CachedSampler< T >
 	}
 
 	@Override
-	public boolean isCompatible( Class< ? > clazz )
+	public double priority()
 	{
-		return clazz.isAssignableFrom( getClass() );
+		return 0;
+	}
+
+	@Override
+	public boolean isDirty()
+	{
+		return dirty;
 	}
 }

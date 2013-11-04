@@ -1,4 +1,4 @@
-package net.imglib2.ops.features;
+package net.imglib2.ops.features.todo;
 
 import net.imglib2.IterableInterval;
 import net.imglib2.ops.operation.iterable.unary.Max;

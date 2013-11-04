@@ -3,29 +3,23 @@ package net.imglib2.ops.features.geometric.centerofgravity;
 import java.awt.Polygon;
 
 import net.imglib2.Sampler;
-import net.imglib2.ops.features.CachedAbstractSampler;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.AbstractModule;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.geometric.area.Area;
 
-public class CenterOfGravity2DPolygon extends CachedAbstractSampler< double[] > implements CenterOfGravity
+public class CenterOfGravity2DPolygon extends CenterOfGravity
 {
-	@RequiredInput
+	@ModuleInput
 	Area area;
 
-	@RequiredInput
+	@ModuleInput
 	Polygon polygon;
-
-	@Override
-	public boolean isCompatible( Class< ? > clazz )
-	{
-		return CenterOfGravity.class.isAssignableFrom( clazz );
-	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public double[] recompute()
+	public double[] calculateDescriptor()
 	{
 		double[] result = new double[ 2 ];
 

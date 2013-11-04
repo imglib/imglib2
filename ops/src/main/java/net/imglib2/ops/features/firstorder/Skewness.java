@@ -1,17 +1,17 @@
 package net.imglib2.ops.features.firstorder;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.firstorder.moments.Moment3AboutMean;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class Skewness extends AbstractFeature
 {
 
-	@RequiredInput
+	@ModuleInput
 	private Moment3AboutMean moment3;
 
-	@RequiredInput
+	@ModuleInput
 	private StdDeviation stdDev;
 
 	/**
@@ -36,7 +36,7 @@ public class Skewness extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DoubleType recompute()
+	public DoubleType compute()
 	{
 
 		final double moment3 = this.moment3.get().get();

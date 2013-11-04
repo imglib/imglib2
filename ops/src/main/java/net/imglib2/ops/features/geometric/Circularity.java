@@ -1,17 +1,17 @@
 package net.imglib2.ops.features.geometric;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.geometric.area.Area;
 import net.imglib2.ops.features.geometric.perimeter.Perimeter;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class Circularity extends AbstractFeature
 {
-	@RequiredInput
+	@ModuleInput
 	private Perimeter perimeter;
 
-	@RequiredInput
+	@ModuleInput
 	private Area area;
 
 	/**
@@ -36,7 +36,7 @@ public class Circularity extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 
 		// circularity = 4pi(area/perimeter^2)

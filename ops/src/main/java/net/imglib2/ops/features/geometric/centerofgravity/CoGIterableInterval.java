@@ -2,32 +2,22 @@ package net.imglib2.ops.features.geometric.centerofgravity;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.features.CachedAbstractSampler;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.geometric.area.Area;
 
-public class CenterOfGravityGeneric extends CachedAbstractSampler< double[] > implements CenterOfGravity
+public class CoGIterableInterval extends CenterOfGravity
 {
-	@RequiredInput
+	@ModuleInput
 	IterableInterval< ? > ii;
 
-	@RequiredInput
+	@ModuleInput
 	Area area;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CenterOfGravityGeneric copy()
-	{
-		return new CenterOfGravityGeneric();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public double[] recompute()
+	public double[] calculateDescriptor()
 	{
 		final Cursor< ? > it = ii.cursor();
 		final double[] r = new double[ it.numDimensions() ];
@@ -43,15 +33,9 @@ public class CenterOfGravityGeneric extends CachedAbstractSampler< double[] > im
 
 		for ( int i = 0; i < r.length; i++ )
 		{
-			r[ i ] /= area.get().get();
+			r[ i ] /= area.value();
 		}
 
 		return r;
-	}
-
-	@Override
-	public boolean isCompatible( Class< ? > c )
-	{
-		return CenterOfGravity.class.isAssignableFrom( c );
 	}
 }

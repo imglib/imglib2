@@ -2,299 +2,353 @@ package net.imglib2.ops.features;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
-import net.imglib2.IterableInterval;
 import net.imglib2.Pair;
-import net.imglib2.type.Type;
-import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.ValuePair;
 
-//TODO: this class needs a cleanup!! works for demonstration. I was thinking about using SciJava Services to register certain features
-// or CachedSamplers which then can be used. This complete feature package is by far not ready, but demonstrates some desired functionality.
-// Especially I think a lot of these ideas could easily be integrated as extensions of the MeasurementService which basically does the same thing and is much cleaner implemented.
-public class FeatureTreeBuilder< T extends Type< T >> implements FeatureProcessorBuilder< IterableInterval< T >, DoubleType >
+public class FeatureTreeBuilder implements TreeSourceListener
 {
 
-	private final List< CachedSampler< ? > > m_samplers;
+	private final List< DescriptorSet > sets;
 
-	private final List< Pair< String, Feature > > m_features;
+	private final List< Module< ? > > modules;
 
-	private final Set< FeatureSet< IterableInterval< T >, DoubleType > > m_featureSets;
+	private final Map< Module< ? >, List< Pair< Module< ? >, Field >> > dependencies;
 
-	private final List< PostponedSampler > m_postponed;
+	private final Map< Module< ? >, List< Pair< Module< ? >, Field >>> sourceListenerMap;
 
-	private final List< Pair< ? extends CachedSampler< ? >, Field > > m_sourceUpdateListeners;
+	private final FeatureRepository repository;
 
-	private final Map< CachedSampler< ? >, List< Pair< Field, Object >>> m_nativeTypeSamplers;
+	private final List< Pair< Module< ? >, Field > > sourceListenerQueue;
+
+	private final List< TreeSource< ? > > sourcesQueue;
+
+	private final List< Descriptor > outputDescriptors;
 
 	public FeatureTreeBuilder()
 	{
-		m_nativeTypeSamplers = new HashMap< CachedSampler< ? >, List< Pair< Field, Object >> >();
-		m_samplers = new ArrayList< CachedSampler< ? > >();
-		m_features = new ArrayList< Pair< String, Feature > >();
-		m_postponed = new ArrayList< PostponedSampler >();
-		m_featureSets = new HashSet< FeatureSet< IterableInterval< T >, DoubleType >>();
-		m_sourceUpdateListeners = new ArrayList< Pair< ? extends CachedSampler< ? >, Field > >();
+		this.sets = new ArrayList< DescriptorSet >();
+		this.repository = FeatureRepository.getInstance();
+		this.sourcesQueue = new ArrayList< TreeSource< ? > >();
+
+		// this can be erased
+		this.outputDescriptors = new ArrayList< Descriptor >();
+		this.modules = new ArrayList< Module< ? > >();
+		this.sourceListenerMap = new HashMap< Module< ? >, List< Pair< Module< ? >, Field >> >();
+		this.sourceListenerQueue = new ArrayList< Pair< Module< ? >, Field > >();
+		this.dependencies = new HashMap< Module< ? >, List< Pair< Module< ? >, Field >> >();
 	}
 
-	private void register( final Feature feature, String group )
+	private void reset()
 	{
-		Pair< CachedSampler< ? >, Boolean > sampler = registerSampler( feature );
+		modules.clear();
+		sourceListenerQueue.clear();
+		sourceListenerMap.clear();
+		dependencies.clear();
+		outputDescriptors.clear();
+	}
 
-		// we may want to calculate the same feature for two different feature
-		if ( sampler.getB() )
+	public void registerSource( TreeSource< ? > s )
+	{
+		sourcesQueue.add( s );
+		if ( !s.isRegistered( this ) )
+			s.registerListener( this );
+	}
+
+	public void registerFeatureSet( DescriptorSet set )
+	{
+		this.sets.add( set );
+	}
+
+	public void build()
+	{
+
+		reset();
+
+		// 0. register our sources
+		for ( TreeSource< ? > s : sourcesQueue )
 		{
-			m_features.add( new ValuePair< String, Feature >( group, ( Feature ) sampler.getA() ) );
+			register( s );
 		}
-	}
 
-	private Pair< CachedSampler< ? >, Boolean > registerSampler( final CachedSampler< ? > sampler )
-	{
-		boolean added = false;
-		CachedSampler< ? > res = null;
-		if ( ( res = findSampler( sampler.getClass() ) ) == null )
+		// 1. step: find all features and add them.
+		for ( DescriptorSet fs : sets )
 		{
-			res = parse( sampler );
-			added = true;
-		}
-
-		return new ValuePair< CachedSampler< ? >, Boolean >( res, added );
-	}
-
-	private CachedSampler< ? > parse( final CachedSampler< ? > parentSampler )
-	{
-		for ( Field samplerField : parentSampler.getClass().getDeclaredFields() )
-		{
-			Class< ? > clazz = samplerField.getType();
-
-			if ( samplerField.isAnnotationPresent( RequiredInput.class ) )
+			for ( Class< ? extends Descriptor > descriptor : fs.descriptors() )
 			{
-				if ( CachedSampler.class.isAssignableFrom( clazz ) )
-				{
-					process( parentSampler, samplerField, clazz );
-				}
-				else
-				{
-					CachedSampler< ? > stored;
+				registerOutputDescriptor( ( Descriptor ) register( instantiateModule( descriptor ) ) );
+			}
+		}
 
-					// first case: we have a sampler which can produce the
-					// wished input
-					if ( isCompatibleToSource( clazz ) )
-					{
-						m_sourceUpdateListeners.add( new ValuePair< CachedSampler< ? >, Field >( parentSampler, samplerField ) );
-					}
-					else if ( ( stored = findSampler( clazz ) ) != null )
-					{
-						List< Pair< Field, Object >> list;
-						if ( ( list = m_nativeTypeSamplers.get( stored ) ) == null )
-						{
-							list = new ArrayList< Pair< Field, Object >>();
-							m_nativeTypeSamplers.put( stored, list );
-						}
+		// 2. step parse features for dependencies and set-up graph. Since now
+		// we have nothing but a list of features
+		List< Module< ? >> helper = new ArrayList< Module< ? >>( modules );
+		for ( Module< ? > f : helper )
+		{
+			parse( f );
+		}
 
-						list.add( new ValuePair< Field, Object >( samplerField, parentSampler ) );
-					}
-					else
-					{
-						throw new RuntimeException( "actually we could postpone the event now and try again later etc. but for now, we force the developer to have an intelligent ordering in his required features" );
-					}
+		// 3. we have a dependency graph now. let's check for our
+		// sourceListeners
+		for ( Pair< Module< ? >, Field > pair : sourceListenerQueue )
+		{
+			Field field = pair.getB();
+
+			Module< ? > source = null;
+			for ( Module< ? > f : modules )
+			{
+				if ( f.isCompatibleOutput( field.getType() ) )
+				{
+					source = f;
+					break;
 				}
 			}
 
-			// works for testing
-		}
-
-		m_samplers.add( parentSampler );
-		return parentSampler;
-	}
-
-	private boolean isCompatibleToSource( Class< ? > clazz )
-	{
-		return clazz.isAssignableFrom( IterableInterval.class );
-	}
-
-	@SuppressWarnings( "unchecked" )
-	private void process( CachedSampler< ? > parentSampler, Field samplerField, Class< ? > samplerClazz )
-	{
-		try
-		{
-			// go through all registered samplers an check if
-			// there is a sampler compatible to the current
-			// one...
-			CachedSampler< ? > storedSampler = findSampler( samplerClazz );
-
-			// If stored feature == null
-			if ( storedSampler == null )
+			// lets check if we found something
+			if ( source != null )
 			{
-				// if it's an interface, we postpone parsing &
-				// creation
-				if ( samplerClazz.isInterface() )
-				{
-					m_postponed.add( new PostponedSampler( parentSampler, samplerField, ( Class< ? extends CachedSampler< ? >> ) samplerClazz ) );
-				}
-				else
-				{
-					storedSampler = ( net.imglib2.ops.features.CachedSampler< ? > ) samplerClazz.newInstance();
-					parse( storedSampler );
-				}
+				// we found a compatible module. we need to register to
+				// listen for updates. here we make use of a different
+				// mechanism: we register the parent object with it's
+				// field and a reference to the FeatureModule.
+				// on each update, the parents get the objects injected
+				registerSource( pair, source );
 			}
+			else
+			{
+				// TODO:
+				// what we could do here: we search our repository for a
+				// shortest path to one of our registered FeatureModules etc
+				// For now we simply assume any source is present
+				throw new IllegalArgumentException( "to be done" );
+			}
+		}
 
-			// works for testing..
-			injectObject( parentSampler, samplerField, storedSampler );
-		}
-		catch ( IllegalArgumentException e )
+		// 4. we need to build our dependency tree (inject the depended
+		// FeatureModules)
+		for ( Entry< Module< ? >, List< Pair< Module< ? >, Field >>> e : dependencies.entrySet() )
 		{
-			new RuntimeException( e );
+			for ( Pair< Module< ? >, Field > dependend : e.getValue() )
+			{
+				inject( dependend.getA(), dependend.getB(), e.getKey() );
+			}
 		}
-		catch ( IllegalAccessException e )
-		{
-			new RuntimeException( e );
-		}
-		catch ( InstantiationException e )
-		{
-			new RuntimeException( e );
-		}
-	}
 
-	// TODO: Super dirty access here. we need to find another way:)
-	private void injectObject( Object to, Field field, Object o )
-	{
-		AccessibleObject.setAccessible( new AccessibleObject[] { field }, true );
-		try
-		{
-			field.set( to, o );
-		}
-		catch ( IllegalArgumentException e )
-		{
-			new RuntimeException( e );
-		}
-		catch ( IllegalAccessException e )
-		{
-			new RuntimeException( e );
-		}
-		AccessibleObject.setAccessible( new AccessibleObject[] { field }, false );
+		// we are done. now we can return an iterator over our funny thingy here
 	}
 
 	/**
-	 * @param samplerClazz
-	 * @param storedSampler
+	 * Retrieve the iterator over numeric features
+	 * 
 	 * @return
 	 */
-	private CachedSampler< ? > findSampler( final Class< ? > samplerClazz )
+	public Iterator< Descriptor > iterator()
 	{
-		CachedSampler< ? > storedSampler = null;
-		for ( CachedSampler< ? > registered : m_samplers )
+		return outputDescriptors.iterator();
+	}
+
+	private void registerOutputDescriptor( Descriptor descriptor )
+	{
+		outputDescriptors.add( descriptor );
+	}
+
+	// TODO: this is dirty, hacky, ugly, ... but really works nice for testing
+	// ;-)
+	private void inject( Module< ? > mod, Field f, Object object )
+	{
+		AccessibleObject.setAccessible( new AccessibleObject[] { f }, true );
+		try
 		{
-			if ( registered.isCompatible( samplerClazz ) )
+			f.set( mod, object );
+		}
+		catch ( IllegalArgumentException e )
+		{
+			e.printStackTrace();
+		}
+		catch ( IllegalAccessException e )
+		{
+			e.printStackTrace();
+		}
+		AccessibleObject.setAccessible( new AccessibleObject[] { f }, true );
+	}
+
+	// recursively mark all dependend features as dirty
+	private void markDirty( Module< ? > in )
+	{
+		for ( Pair< Module< ? >, Field > mod : dependencies.get( in ) )
+		{
+			if ( !mod.getA().isDirty() )
 			{
-				if ( storedSampler == null )
+				mod.getA().markDirty();
+				markDirty( mod.getA() );
+			}
+		}
+	}
+
+	private void parse( Module< ? > parent )
+	{
+		for ( Field annotatedField : parent.getClass().getDeclaredFields() )
+		{
+			if ( annotatedField.isAnnotationPresent( ModuleInput.class ) )
+			{
+				// we found a dependency. two types of dependency:
+				// auto-instantiable dependencies and
+				// not-autoinstantiable-dependencies
+				// if we found a FeatureModule
+
+				Class< ? > annotatedType = annotatedField.getType();
+				if ( Module.class.isAssignableFrom( annotatedType ) )
 				{
-					storedSampler = registered;
+					// Instantiate a module from anywhere
+					Module< ? > module = instantiateModule( annotatedType );
+
+					// as we now have instantiated a module, we can check
+					// whether our features already contains a better one
+					Module< ? > registered = register( module );
+
+					// if we found something new, we need to parse it again
+					if ( registered == module )
+						parse( registered );
+
+					// anyway, we need to register our parent to the module type
+					addDependency( registered, new ValuePair< Module< ? >, Field >( parent, annotatedField ) );
+				}
+				else
+				{
+					// we didn't find a feature module, so it has to be some
+					// native class. We need to find a compatible module! We
+					// will do this later
+					sourceListenerQueue.add( new ValuePair< Module< ? >, Field >( parent, annotatedField ) );
 				}
 			}
 		}
-		return storedSampler;
 	}
 
-	@Override
-	public void registerFeatureSet( FeatureSet< IterableInterval< T >, DoubleType > featureSet )
+	private void registerSource( Pair< Module< ? >, Field > pair, Module< ? > source )
 	{
-		m_featureSets.add( featureSet );
-	}
-
-	@Override
-	public FeatureSetProcessor< IterableInterval< T >, DoubleType > build()
-	{
-		// Cleanup
-		m_features.clear();
-		m_nativeTypeSamplers.clear();
-		m_postponed.clear();
-		m_samplers.clear();
-		m_sourceUpdateListeners.clear();
-
-		for ( FeatureSet< IterableInterval< T >, DoubleType > set : m_featureSets )
+		List< Pair< Module< ? >, Field >> listeners = sourceListenerMap.get( source );
+		if ( listeners == null )
 		{
-			// First registered any required
-			for ( CachedSampler< ? > sampler : set.required() )
-			{
-				registerSampler( sampler );
-			}
+			listeners = new ArrayList< Pair< Module< ? >, Field > >();
+			sourceListenerMap.put( source, listeners );
+		}
 
-			// Then the features
-			for ( Feature f : set.features() )
-			{
-				register( f, set.name() );
-			}
+		listeners.add( pair );
+	}
 
-			// try postponed ones again, as we added everything now
-			List< PostponedSampler > itList = new ArrayList< PostponedSampler >( m_postponed );
-			m_postponed.clear();
-			for ( PostponedSampler sampler : itList )
+	private void addDependency( Module< ? > module, Pair< Module< ? >, Field > dependend )
+	{
+		List< Pair< Module< ? >, Field >> list = dependencies.get( module );
+		if ( list == null )
+		{
+			list = new ArrayList< Pair< Module< ? >, Field > >();
+			dependencies.put( module, list );
+		}
+		list.add( dependend );
+	}
+
+	private void updateDependencies( Module< ? > oldModule, Module< ? > newModule )
+	{
+		dependencies.put( newModule, dependencies.get( oldModule ) );
+		dependencies.remove( oldModule );
+	}
+
+	/**
+	 * @param annotatedType
+	 * @return
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	private Module< ? > instantiateModule( Class< ? > annotatedType )
+	{
+		Module< ? > module = null;
+		// we found a feature module, so lets try to instantiate it
+		if ( Modifier.isInterface( annotatedType.getModifiers() ) || Modifier.isAbstract( annotatedType.getModifiers() ) )
+		{
+			// find in repository
+			module = repository.findFeatureModule( annotatedType, sourcesQueue );
+		}
+		else
+		{
+			// emptry constructor has to exist
+			try
 			{
-				process( sampler.sampler, sampler.samplerField, sampler.samplerChild );
+				// TODO check whether empy contructor exists if not, try repo
+				module = ( Module< ? > ) annotatedType.newInstance();
+			}
+			catch ( InstantiationException e )
+			{
+				e.printStackTrace();
+			}
+			catch ( IllegalAccessException e )
+			{
+				e.printStackTrace();
 			}
 		}
 
-		return new FeatureSetProcessor< IterableInterval< T >, DoubleType >()
-		{
-			@Override
-			public Iterator< Pair< String, Feature >> iterator( IterableInterval< T > objectOfInterest )
-			{
-
-				// TODO
-				if ( m_postponed.size() > 0 )
-				{
-//					System.out.println( m_postponed.get( 0 ).sampler );
-					throw new IllegalArgumentException( "This shouldn't happen. if so, we need to implement more iterations of postponing.. " );
-				}
-
-				// update the sources
-				for ( Pair< ? extends CachedSampler< ? >, Field > o : m_sourceUpdateListeners )
-				{
-					injectObject( o.getA(), o.getB(), objectOfInterest );
-					o.getA().markDirty();
-				}
-
-				// update the native type samplers
-				for ( CachedSampler< ? > sampler : m_nativeTypeSamplers.keySet() )
-				{
-					sampler.markDirty();
-					for ( Pair< Field, Object > pair : m_nativeTypeSamplers.get( sampler ) )
-					{
-						injectObject( pair.getB(), pair.getA(), sampler.get() );
-					}
-				}
-
-				// mark all features as dirty
-				for ( Pair< String, Feature > f : m_features )
-				{
-					f.getB().markDirty();
-				}
-				return m_features.iterator();
-			}
-		};
+		return module;
 	}
 
-	class PostponedSampler
+	private Module< ? > register( Module< ? > feature )
 	{
-		private Field samplerField;
-
-		private CachedSampler< ? > sampler;
-
-		private Class< ? extends CachedSampler< ? >> samplerChild;
-
-		private PostponedSampler( CachedSampler< ? > sampler, Field samplerField, Class< ? extends CachedSampler< ? >> childClass )
+		Module< ? > toCheck = feature;
+		for ( Module< ? > f : modules )
 		{
-			this.sampler = sampler;
-			this.samplerField = samplerField;
-			this.samplerChild = childClass;
+			if ( f.isEquivalentModule( feature ) )
+			{
+				toCheck = tryReplace( f, feature );
+			}
+		}
+
+		if ( !dependencies.containsKey( toCheck ) )
+		{
+			dependencies.put( feature, new ArrayList< Pair< Module< ? >, Field > >() );
+			modules.add( feature );
+		}
+
+		return toCheck;
+	}
+
+	private Module< ? > tryReplace( Module< ? > oldFeature, Module< ? > newFeature )
+	{
+		if ( oldFeature.priority() < newFeature.priority() )
+		{
+			modules.set( modules.indexOf( oldFeature ), newFeature );
+			updateDependencies( oldFeature, newFeature );
+
+			if ( outputDescriptors.contains( oldFeature ) )
+			{
+				outputDescriptors.set( outputDescriptors.indexOf( oldFeature ), ( Descriptor ) newFeature );
+			}
+			return newFeature;
+		}
+		else
+		{
+			return oldFeature;
+		}
+
+	}
+
+	@Override
+	public void updated( TreeSource< ? > source )
+	{
+		for ( Pair< Module< ? >, Field > f : sourceListenerMap.get( source ) )
+		{
+			// First we mark everything as dirty
+			Module< ? > mod = f.getA();
+			mod.markDirty();
+			markDirty( mod );
+
+			// second we inject what ever is needed
+			inject( f.getA(), f.getB(), source.get() );
+
 		}
 	}
 }

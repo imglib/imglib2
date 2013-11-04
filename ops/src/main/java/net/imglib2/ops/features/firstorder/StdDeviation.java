@@ -1,13 +1,13 @@
 package net.imglib2.ops.features.firstorder;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class StdDeviation extends AbstractFeature
 {
 
-	@RequiredInput
+	@ModuleInput
 	private Variance variance;
 
 	/**
@@ -32,7 +32,7 @@ public class StdDeviation extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DoubleType recompute()
+	public DoubleType compute()
 	{
 		return new DoubleType( Math.sqrt( variance.get().get() ) );
 	}

@@ -1,17 +1,17 @@
 package net.imglib2.ops.features.firstorder;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.firstorder.moments.Moment4AboutMean;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class Kurtosis extends AbstractFeature
 {
 
-	@RequiredInput
+	@ModuleInput
 	StdDeviation stdDev;
 
-	@RequiredInput
+	@ModuleInput
 	Moment4AboutMean moment4;
 
 	/**
@@ -36,7 +36,7 @@ public class Kurtosis extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		final double std = this.stdDev.get().get();
 		final double moment4 = this.moment4.get().get();

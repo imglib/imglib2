@@ -2,7 +2,7 @@ package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocMeanX;
 import net.imglib2.ops.features.haralick.helpers.CoocMeanY;
@@ -12,21 +12,20 @@ import net.imglib2.type.numeric.real.DoubleType;
 
 public class Correlation extends AbstractFeature
 {
-
-	@RequiredInput
+	@ModuleInput
 	HaralickCoocMatrix cooc;
 
-	@RequiredInput
-	CoocMeanX coocMeanX = new CoocMeanX();
+	@ModuleInput
+	CoocMeanX coocMeanX;
 
-	@RequiredInput
-	CoocMeanY coocMeanY = new CoocMeanY();
+	@ModuleInput
+	CoocMeanY coocMeanY;
 
-	@RequiredInput
-	CoocStdX coocStdX = new CoocStdX();
+	@ModuleInput
+	CoocStdX coocStdX;
 
-	@RequiredInput
-	CoocStdY coocStdY = new CoocStdY();
+	@ModuleInput
+	CoocStdY coocStdY;
 
 	/**
 	 * {@inheritDoc}
@@ -50,7 +49,7 @@ public class Correlation extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		final int nrGrayLevels = cooc.getNrGrayLevels();
 		final CooccurrenceMatrix matrix = cooc.get();

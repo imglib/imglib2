@@ -1,13 +1,13 @@
 package net.imglib2.ops.features.haralick.helpers;
 
-import net.imglib2.ops.features.CachedAbstractSampler;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.AbstractModule;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class CoocStdY extends CachedAbstractSampler< DoubleType >
+public class CoocStdY extends AbstractModule< DoubleType >
 {
 	// for symmetric cooccurence matrices stdx = stdy
-	@RequiredInput
+	@ModuleInput
 	private CoocStdX coocStdX = new CoocStdX();
 
 	/**
@@ -23,7 +23,7 @@ public class CoocStdY extends CachedAbstractSampler< DoubleType >
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType calculateDescriptor()
 	{
 		return coocStdX.get();
 	}

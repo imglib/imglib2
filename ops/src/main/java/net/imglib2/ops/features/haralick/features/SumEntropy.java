@@ -1,7 +1,7 @@
 package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocPXPlusY;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -11,10 +11,10 @@ public class SumEntropy extends AbstractFeature
 
 	private static final double EPSILON = 0.00000001f;
 
-	@RequiredInput
+	@ModuleInput
 	private HaralickCoocMatrix cooc;
 
-	@RequiredInput
+	@ModuleInput
 	private CoocPXPlusY coocPXPlusY;
 
 	/**
@@ -39,7 +39,7 @@ public class SumEntropy extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		final double[] pxplusy = coocPXPlusY.get();
 		final int numGrayLevels = cooc.getDistance();

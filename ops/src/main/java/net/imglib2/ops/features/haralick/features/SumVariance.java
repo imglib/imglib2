@@ -1,7 +1,7 @@
 package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocPXPlusY;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -9,13 +9,13 @@ import net.imglib2.type.numeric.real.DoubleType;
 public class SumVariance extends AbstractFeature
 {
 
-	@RequiredInput
+	@ModuleInput
 	private SumAverage sumAverage;
 
-	@RequiredInput
+	@ModuleInput
 	private CoocPXPlusY coocPXPlusY;
 
-	@RequiredInput
+	@ModuleInput
 	private HaralickCoocMatrix cooc;
 
 	/**
@@ -40,7 +40,7 @@ public class SumVariance extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		final double[] pxplusy = coocPXPlusY.get();
 		final int numGrayLevels = cooc.getNrGrayLevels();

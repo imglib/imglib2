@@ -1,13 +1,13 @@
 package net.imglib2.ops.features.haralick.helpers;
 
-import net.imglib2.ops.features.CachedAbstractSampler;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.AbstractModule;
+import net.imglib2.ops.features.ModuleInput;
 
-public class CoocPY extends CachedAbstractSampler< double[] >
+public class CoocPY extends AbstractModule< double[] >
 {
 
 	// in the symmetric case px = py
-	@RequiredInput
+	@ModuleInput
 	CoocPX coocPX = new CoocPX();
 
 	/**
@@ -23,7 +23,7 @@ public class CoocPY extends CachedAbstractSampler< double[] >
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected double[] recompute()
+	protected double[] calculateDescriptor()
 	{
 		return coocPX.get();
 	}

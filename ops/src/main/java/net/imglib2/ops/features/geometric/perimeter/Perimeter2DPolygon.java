@@ -3,20 +3,20 @@ package net.imglib2.ops.features.geometric.perimeter;
 import java.awt.Polygon;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.type.numeric.real.DoubleType;
 
 //TODO: Please verfiy this computation or even better: make it correct:-)
 public class Perimeter2DPolygon extends AbstractFeature implements Perimeter
 {
-	@RequiredInput
+	@ModuleInput
 	Polygon polygon;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 
 		final int numPoints = polygon.npoints;

@@ -2,7 +2,7 @@ package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.features.haralick.helpers.CoocStdX;
 import net.imglib2.type.numeric.real.DoubleType;
@@ -12,10 +12,10 @@ import net.imglib2.type.numeric.real.DoubleType;
 public class ClusterShade extends AbstractFeature
 {
 
-	@RequiredInput
+	@ModuleInput
 	HaralickCoocMatrix cooc;
 
-	@RequiredInput
+	@ModuleInput
 	CoocStdX coocStdX;
 
 	/**
@@ -40,7 +40,7 @@ public class ClusterShade extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		final int nrGrayLevels = cooc.getNrGrayLevels();
 		final double stdx = coocStdX.get().get();

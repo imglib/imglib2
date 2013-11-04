@@ -1,9 +1,6 @@
 package net.imglib2.ops.features.sets;
 
-import net.imglib2.IterableInterval;
-import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
-import net.imglib2.ops.features.AbstractFeatureSet;
-import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
+import net.imglib2.ops.features.AbstractDescriptorSet;
 import net.imglib2.ops.features.haralick.features.ASM;
 import net.imglib2.ops.features.haralick.features.ClusterPromenence;
 import net.imglib2.ops.features.haralick.features.ClusterShade;
@@ -18,18 +15,13 @@ import net.imglib2.ops.features.haralick.features.IFDM;
 import net.imglib2.ops.features.haralick.features.SumAverage;
 import net.imglib2.ops.features.haralick.features.SumVariance;
 import net.imglib2.ops.features.haralick.features.Variance;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.DoubleType;
 
-public class HaralickFeatureSet< I extends IterableInterval< ? extends RealType< ? >>> extends AbstractFeatureSet< I, DoubleType >
+public class HaralickFeatureSet extends AbstractDescriptorSet
 {
-	public HaralickFeatureSet( int nrGrayLevels, int distance, MatrixOrientation orientation )
+	public HaralickFeatureSet()
 	{
 		super();
-
-		// Register required
-		registerRequired( new HaralickCoocMatrix( nrGrayLevels, distance, orientation ) );
-
+		
 		// Feature registered
 		registerFeature( new ASM() );
 		registerFeature( new ClusterPromenence() );

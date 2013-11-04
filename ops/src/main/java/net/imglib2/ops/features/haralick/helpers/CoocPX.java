@@ -1,13 +1,13 @@
 package net.imglib2.ops.features.haralick.helpers;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.features.CachedAbstractSampler;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.AbstractModule;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 
-public class CoocPX extends CachedAbstractSampler< double[] >
+public class CoocPX extends AbstractModule< double[] >
 {
-	@RequiredInput
+	@ModuleInput
 	private HaralickCoocMatrix cooc;
 
 	/**
@@ -23,7 +23,7 @@ public class CoocPX extends CachedAbstractSampler< double[] >
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected double[] recompute()
+	protected double[] calculateDescriptor()
 	{
 		int nrGrayLevels = cooc.getNrGrayLevels();
 		CooccurrenceMatrix matrix = cooc.get();

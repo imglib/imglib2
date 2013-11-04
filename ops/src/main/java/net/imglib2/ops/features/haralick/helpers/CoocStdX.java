@@ -1,16 +1,16 @@
 package net.imglib2.ops.features.haralick.helpers;
 
-import net.imglib2.ops.features.CachedAbstractSampler;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.AbstractModule;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class CoocStdX extends CachedAbstractSampler< DoubleType >
+public class CoocStdX extends AbstractModule< DoubleType >
 {
 
-	@RequiredInput
+	@ModuleInput
 	private CoocPX coocPX = new CoocPX();
 
-	@RequiredInput
+	@ModuleInput
 	private CoocMeanX coocMeanX = new CoocMeanX();
 
 	/**
@@ -26,7 +26,7 @@ public class CoocStdX extends CachedAbstractSampler< DoubleType >
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType calculateDescriptor()
 	{
 		double res = 0;
 

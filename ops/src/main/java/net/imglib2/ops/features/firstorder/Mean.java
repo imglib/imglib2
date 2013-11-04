@@ -1,17 +1,16 @@
 package net.imglib2.ops.features.firstorder;
 
-import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.AbstractFeatureModule;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.firstorder.sums.Sum;
 import net.imglib2.ops.features.geometric.area.Area;
-import net.imglib2.type.numeric.real.DoubleType;
 
-public class Mean extends AbstractFeature
+public class Mean extends AbstractFeatureModule
 {
-	@RequiredInput
+	@ModuleInput
 	Sum sum;
 
-	@RequiredInput
+	@ModuleInput
 	Area area;
 
 	/**
@@ -24,17 +23,8 @@ public class Mean extends AbstractFeature
 	}
 
 	@Override
-	public DoubleType recompute()
+	public double calculateFeature()
 	{
-		return new DoubleType( sum.get().get() / area.get().get() );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Mean copy()
-	{
-		return new Mean();
+		return sum.value() / area.value();
 	}
 }

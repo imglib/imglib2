@@ -3,43 +3,26 @@ package net.imglib2.ops.features.geometric.area;
 import java.awt.Polygon;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.Module;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.type.numeric.real.DoubleType;
 
-public class Area2DPolygon extends AbstractFeature implements Area
+public class Area2DPolygon extends Area
 {
-	@RequiredInput
+	@ModuleInput
 	Polygon polygon;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public String name()
+	public boolean isEquivalentModule( Module< ? > output )
 	{
-		return "Area Polygon";
-	}
-
-	@Override
-	public boolean isCompatible( Class< ? > clazz )
-	{
-		return Area.class.isAssignableFrom( clazz );
+		return Area.class.isAssignableFrom( output.getClass() );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Area2DPolygon copy()
-	{
-		return new Area2DPolygon();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		double sum1 = 0.0f;
 		double sum2 = 0.0f;

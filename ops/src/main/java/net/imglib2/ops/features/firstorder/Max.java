@@ -3,13 +3,13 @@ package net.imglib2.ops.features.firstorder;
 import java.util.Iterator;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class Max extends AbstractFeature
 {
-	@RequiredInput
+	@ModuleInput
 	private Iterable< ? extends RealType< ? > > ii;
 
 	/**
@@ -34,7 +34,7 @@ public class Max extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		double max = Double.MIN_VALUE;
 

@@ -1,17 +1,17 @@
 package net.imglib2.ops.features.firstorder;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.firstorder.sums.SumOfInverses;
 import net.imglib2.ops.features.geometric.area.Area;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class HarmonicMean extends AbstractFeature
 {
-	@RequiredInput
+	@ModuleInput
 	private SumOfInverses inverseSum;
 
-	@RequiredInput
+	@ModuleInput
 	private Area area;
 
 	/**
@@ -36,7 +36,7 @@ public class HarmonicMean extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		return new DoubleType( area.get().get() / inverseSum.get().get() );
 	}

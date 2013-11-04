@@ -4,12 +4,12 @@ import java.awt.Polygon;
 import java.awt.geom.Rectangle2D;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class Eccentricity2DPolygon extends AbstractFeature implements Eccentricity
 {
-	@RequiredInput
+	@ModuleInput
 	Polygon polygon;
 
 	@Override
@@ -40,7 +40,7 @@ public class Eccentricity2DPolygon extends AbstractFeature implements Eccentrici
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 		Rectangle2D rec = polygon.getBounds2D();
 

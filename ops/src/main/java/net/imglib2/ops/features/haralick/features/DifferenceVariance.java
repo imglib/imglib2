@@ -1,14 +1,14 @@
 package net.imglib2.ops.features.haralick.features;
 
 import net.imglib2.ops.features.AbstractFeature;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.haralick.helpers.CoocPXMinusY;
 import net.imglib2.type.numeric.real.DoubleType;
 
 public class DifferenceVariance extends AbstractFeature
 {
 
-	@RequiredInput
+	@ModuleInput
 	CoocPXMinusY coocPXMinusY;
 
 	/**
@@ -33,7 +33,7 @@ public class DifferenceVariance extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected DoubleType recompute()
+	protected DoubleType compute()
 	{
 
 		final double[] pxminusy = coocPXMinusY.get();

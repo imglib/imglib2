@@ -1,22 +1,21 @@
 package net.imglib2.ops.features.haralick.helpers;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.features.CachedAbstractSampler;
-import net.imglib2.ops.features.RequiredInput;
+import net.imglib2.ops.features.AbstractModule;
+import net.imglib2.ops.features.ModuleInput;
 import net.imglib2.ops.features.haralick.HaralickCoocMatrix;
 
-public class CoocHXY extends CachedAbstractSampler< double[] >
+public class CoocHXY extends AbstractModule< double[] >
 {
-
 	private static final double EPSILON = 0.00000001f;
 
-	@RequiredInput
-	private HaralickCoocMatrix cooc;
+	@ModuleInput
+	HaralickCoocMatrix cooc;
 
-	@RequiredInput
+	@ModuleInput
 	CoocPX coocPX;
 
-	@RequiredInput
+	@ModuleInput
 	CoocPY coocPY;
 
 	/**
@@ -32,7 +31,7 @@ public class CoocHXY extends CachedAbstractSampler< double[] >
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected double[] recompute()
+	protected double[] calculateDescriptor()
 	{
 		double hx = 0.0d;
 		double hy = 0.0d;
