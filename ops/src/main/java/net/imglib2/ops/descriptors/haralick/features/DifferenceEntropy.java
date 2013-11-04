@@ -1,19 +1,18 @@
 package net.imglib2.ops.descriptors.haralick.features;
 
-import net.imglib2.ops.descriptors.AbstractFeature;
+import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocPXMinusY;
-import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.ops.descriptors.haralick.helpers.CoocParameter;
 
-public class DifferenceEntropy extends AbstractFeature
+public class DifferenceEntropy extends AbstractFeatureModule
 {
 
 	// Avoid log 0
 	private static final double EPSILON = 0.00000001f;
 
 	@ModuleInput
-	private HaralickCoocMatrix cooc;
+	CoocParameter param;
 
 	@ModuleInput
 	CoocPXMinusY coocPXMinusY;
@@ -31,19 +30,10 @@ public class DifferenceEntropy extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DifferenceEntropy copy()
-	{
-		return new DifferenceEntropy();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType compute()
+	protected double calculateFeature()
 	{
 		final double[] pxminusy = coocPXMinusY.get();
-		final int nrGrayLevels = cooc.getNrGrayLevels();
+		final int nrGrayLevels = param.nrGrayLevels;
 
 		double res = 0;
 		for ( int k = 0; k <= nrGrayLevels - 1; k++ )
@@ -53,7 +43,7 @@ public class DifferenceEntropy extends AbstractFeature
 
 		res = -res;
 
-		return new DoubleType( res );
+		return res;
 	}
 
 }

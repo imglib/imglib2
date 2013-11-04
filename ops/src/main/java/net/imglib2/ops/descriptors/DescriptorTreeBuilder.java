@@ -104,7 +104,7 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 			Module< ? > source = null;
 			for ( Module< ? > f : modules )
 			{
-				if ( f.isCompatibleOutput( field.getType() ) )
+				if ( f.hasCompatibleOutput( field.getType() ) )
 				{
 					source = f;
 					break;

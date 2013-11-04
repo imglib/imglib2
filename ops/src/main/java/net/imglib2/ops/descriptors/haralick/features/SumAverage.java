@@ -1,19 +1,18 @@
 package net.imglib2.ops.descriptors.haralick.features;
 
-import net.imglib2.ops.descriptors.AbstractFeature;
+import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocPXPlusY;
-import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.ops.descriptors.haralick.helpers.CoocParameter;
 
-public class SumAverage extends AbstractFeature
+public class SumAverage extends AbstractFeatureModule
 {
 
 	@ModuleInput
-	private CoocPXPlusY coocPXPlusY;
+	CoocPXPlusY coocPXPlusY;
 
 	@ModuleInput
-	private HaralickCoocMatrix cooc;
+	CoocParameter param;
 
 	/**
 	 * {@inheritDoc}
@@ -28,19 +27,10 @@ public class SumAverage extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public SumAverage copy()
-	{
-		return new SumAverage();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType compute()
+	protected double calculateFeature()
 	{
 		double[] pxplusy = coocPXPlusY.get();
-		int numGrayLevels = cooc.getNrGrayLevels();
+		int numGrayLevels = param.nrGrayLevels;
 
 		double res = 0;
 		for ( int i = 2; i <= 2 * numGrayLevels; i++ )
@@ -48,7 +38,7 @@ public class SumAverage extends AbstractFeature
 			res += i * pxplusy[ i ];
 		}
 
-		return new DoubleType( res );
+		return res;
 	}
 
 }

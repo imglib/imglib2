@@ -1,13 +1,11 @@
 package net.imglib2.ops.descriptors.haralick.features;
 
-import net.imglib2.ops.descriptors.AbstractFeature;
+import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocHXY;
-import net.imglib2.type.numeric.real.DoubleType;
 
-public class ICM1 extends AbstractFeature
+public class ICM1 extends AbstractFeatureModule
 {
-
 	@ModuleInput
 	Entropy entropy;
 
@@ -27,22 +25,12 @@ public class ICM1 extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ICM1 copy()
+	protected double calculateFeature()
 	{
-		return new ICM1();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType compute()
-	{
-
 		final double[] coochxy = coocHXY.get();
-		final double res = ( entropy.get().get() - coochxy[ 2 ] ) / Math.max( coochxy[ 0 ], coochxy[ 1 ] );
+		final double res = ( entropy.value() - coochxy[ 2 ] ) / Math.max( coochxy[ 0 ], coochxy[ 1 ] );
 
-		return new DoubleType( res );
+		return res;
 	}
 
 }

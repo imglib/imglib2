@@ -1,31 +1,25 @@
 package net.imglib2.ops.descriptors.haralick.helpers;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.descriptors.AbstractModule;
+import net.imglib2.ops.descriptors.AbstractDescriptorModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.haralick.HaralickCoocMatrix;
+import net.imglib2.ops.descriptors.haralick.CoocccurrenceMatrix;
 
-public class CoocHXY extends AbstractModule< double[] >
+public class CoocHXY extends AbstractDescriptorModule
 {
 	private static final double EPSILON = 0.00000001f;
 
 	@ModuleInput
-	HaralickCoocMatrix cooc;
+	CoocParameter param;
+
+	@ModuleInput
+	CoocccurrenceMatrix cooc;
 
 	@ModuleInput
 	CoocPX coocPX;
 
 	@ModuleInput
 	CoocPY coocPY;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CoocHXY copy()
-	{
-		return new CoocHXY();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -39,7 +33,7 @@ public class CoocHXY extends AbstractModule< double[] >
 		double hxy2 = 0.0d;
 
 		final CooccurrenceMatrix matrix = cooc.get();
-		final int nrGrayLevels = cooc.getNrGrayLevels();
+		final int nrGrayLevels = param.nrGrayLevels;
 		final double[] px = coocPX.get();
 		final double[] py = coocPY.get();
 
@@ -67,4 +61,11 @@ public class CoocHXY extends AbstractModule< double[] >
 
 		return new double[] { hx, hy, hxy1, hxy2 };
 	}
+
+	@Override
+	public String name()
+	{
+		return "CooHXY";
+	}
+
 }

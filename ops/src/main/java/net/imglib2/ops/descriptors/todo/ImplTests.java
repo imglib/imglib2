@@ -10,10 +10,14 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
 import net.imglib2.ops.descriptors.Descriptor;
 import net.imglib2.ops.descriptors.DescriptorTreeBuilder;
+import net.imglib2.ops.descriptors.haralick.helpers.CoocParameter;
 import net.imglib2.ops.descriptors.sets.FirstOrderDescriptors;
 import net.imglib2.ops.descriptors.sets.GeometricFeatureSet;
+import net.imglib2.ops.descriptors.sets.HaralickFeatureSet;
+import net.imglib2.ops.descriptors.todo.ImplTests.ExampleHaralickParameterSource;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
@@ -27,6 +31,8 @@ public class ImplTests< T extends RealType< T >>
 
 	private ExamplePolygonSource sourcePolygon;
 
+	private ExampleHaralickParameterSource sourceHaralickParam;
+
 	public ImplTests()
 	{
 		// each feature is only calculated once, even if present in various
@@ -35,14 +41,16 @@ public class ImplTests< T extends RealType< T >>
 		// Create feature sets
 		sourceII = new ExampleIterableIntervalSource();
 		sourcePolygon = new ExamplePolygonSource();
+		sourceHaralickParam = new ExampleHaralickParameterSource();
 
 		builder = new DescriptorTreeBuilder();
-
 		builder.registerDescriptorSet( new FirstOrderDescriptors() );
 		builder.registerDescriptorSet( new GeometricFeatureSet() );
+		builder.registerDescriptorSet( new HaralickFeatureSet() );
 
 		builder.registerSource( sourceII );
 		builder.registerSource( sourcePolygon );
+		builder.registerSource( sourceHaralickParam );
 
 		builder.build();
 	}
@@ -57,18 +65,43 @@ public class ImplTests< T extends RealType< T >>
 		ii.min( min );
 		sourcePolygon.update( extractPolygon( binaryMask( ii ), min ) );
 
+		// TODO: Only output required on iterator
+		sourceHaralickParam.update( createHaralickParam( 1 ) );
+
 		Iterator< Descriptor > iterator = builder.iterator();
 		while ( iterator.hasNext() )
 		{
 			final Descriptor next = iterator.next();
 			System.out.println( " [" + next.name() + "]: " + next.get()[ 0 ] );
 		}
+
+		sourceHaralickParam.update( createHaralickParam( 2 ) );
+
+		System.out.println( "PARAM UPDATE OF HARALICK" );
+
+		// TODO: Only output recalced on iterator
+		iterator = builder.iterator();
+		while ( iterator.hasNext() )
+		{
+			final Descriptor next = iterator.next();
+			System.out.println( " [" + next.name() + "]: " + next.get()[ 0 ] );
+		}
+
+	}
+
+	private CoocParameter createHaralickParam( int distance )
+	{
+		CoocParameter param = new CoocParameter();
+		param.nrGrayLevels = 32;
+		param.distance = distance;
+		param.orientation = MatrixOrientation.HORIZONTAL;
+		return param;
 	}
 
 	class ExampleIterableIntervalSource extends AbstractTreeSource< IterableInterval< T >>
 	{
 		@Override
-		public boolean isCompatibleOutput( Class< ? > clazz )
+		public boolean hasCompatibleOutput( Class< ? > clazz )
 		{
 			return clazz.isAssignableFrom( IterableInterval.class );
 		}
@@ -81,11 +114,27 @@ public class ImplTests< T extends RealType< T >>
 
 	}
 
+	class ExampleHaralickParameterSource extends AbstractTreeSource< CoocParameter >
+	{
+
+		@Override
+		public boolean hasCompatibleOutput( Class< ? > clazz )
+		{
+			return clazz.isAssignableFrom( CoocParameter.class );
+		}
+
+		@Override
+		public double priority()
+		{
+			return Double.MAX_VALUE;
+		}
+	}
+
 	class ExamplePolygonSource extends AbstractTreeSource< Polygon >
 	{
 
 		@Override
-		public boolean isCompatibleOutput( Class< ? > clazz )
+		public boolean hasCompatibleOutput( Class< ? > clazz )
 		{
 			return clazz.isAssignableFrom( Polygon.class );
 		}

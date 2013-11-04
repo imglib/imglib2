@@ -1,19 +1,22 @@
 package net.imglib2.ops.descriptors.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.descriptors.AbstractFeature;
+import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.haralick.HaralickCoocMatrix;
+import net.imglib2.ops.descriptors.haralick.CoocccurrenceMatrix;
+import net.imglib2.ops.descriptors.haralick.helpers.CoocParameter;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocStdX;
-import net.imglib2.type.numeric.real.DoubleType;
 
 // cluster shade (from cellcognition)
 // https://github.com/CellCognition/cecog/blob/master/csrc/include/cecog/features.hxx#L495
-public class ClusterShade extends AbstractFeature
+public class ClusterShade extends AbstractFeatureModule
 {
 
 	@ModuleInput
-	HaralickCoocMatrix cooc;
+	CoocParameter param;
+
+	@ModuleInput
+	CoocccurrenceMatrix cooc;
 
 	@ModuleInput
 	CoocStdX coocStdX;
@@ -31,19 +34,10 @@ public class ClusterShade extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ClusterShade copy()
+	protected double calculateFeature()
 	{
-		return new ClusterShade();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType compute()
-	{
-		final int nrGrayLevels = cooc.getNrGrayLevels();
-		final double stdx = coocStdX.get().get();
+		final int nrGrayLevels = param.nrGrayLevels;
+		final double stdx = coocStdX.value();
 		final CooccurrenceMatrix matrix = cooc.get();
 
 		double res = 0.0d;
@@ -56,6 +50,6 @@ public class ClusterShade extends AbstractFeature
 			}
 		}
 
-		return new DoubleType( res );
+		return res;
 	}
 }

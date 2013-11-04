@@ -31,7 +31,7 @@ public interface Module< O >
 	 * @param annotatedType
 	 * @return
 	 */
-	boolean isCompatibleOutput( Class< ? > clazz );
+	boolean hasCompatibleOutput( Class< ? > clazz );
 
 	/**
 	 * Priority of this module. High, if this module should be preferred

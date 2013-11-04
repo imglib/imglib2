@@ -1,11 +1,10 @@
 package net.imglib2.ops.descriptors.haralick.features;
 
-import net.imglib2.ops.descriptors.AbstractFeature;
+import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocPXMinusY;
-import net.imglib2.type.numeric.real.DoubleType;
 
-public class DifferenceVariance extends AbstractFeature
+public class DifferenceVariance extends AbstractFeatureModule
 {
 
 	@ModuleInput
@@ -24,18 +23,8 @@ public class DifferenceVariance extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DifferenceVariance copy()
+	protected double calculateFeature()
 	{
-		return new DifferenceVariance();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType compute()
-	{
-
 		final double[] pxminusy = coocPXMinusY.get();
 
 		double sum = 0.0d;
@@ -49,7 +38,6 @@ public class DifferenceVariance extends AbstractFeature
 			res += ( k - sum ) * pxminusy[ k ];
 		}
 
-		return new DoubleType( res );
+		return res;
 	}
-
 }

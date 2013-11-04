@@ -1,9 +1,9 @@
 package net.imglib2.ops.descriptors.haralick.helpers;
 
-import net.imglib2.ops.descriptors.AbstractModule;
+import net.imglib2.ops.descriptors.AbstractDescriptorModule;
 import net.imglib2.ops.descriptors.ModuleInput;
 
-public class CoocPY extends AbstractModule< double[] >
+public class CoocPY extends AbstractDescriptorModule
 {
 
 	// in the symmetric case px = py
@@ -14,18 +14,15 @@ public class CoocPY extends AbstractModule< double[] >
 	 * {@inheritDoc}
 	 */
 	@Override
-	public CoocPY copy()
-	{
-		return new CoocPY();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	protected double[] recompute()
 	{
 		return coocPX.get();
+	}
+
+	@Override
+	public String name()
+	{
+		return "CoocPY";
 	}
 
 }

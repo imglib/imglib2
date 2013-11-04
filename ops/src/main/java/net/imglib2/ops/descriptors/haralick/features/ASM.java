@@ -1,16 +1,19 @@
 package net.imglib2.ops.descriptors.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.descriptors.AbstractFeature;
+import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.haralick.HaralickCoocMatrix;
-import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.ops.descriptors.haralick.CoocccurrenceMatrix;
+import net.imglib2.ops.descriptors.haralick.helpers.CoocParameter;
 
-public class ASM extends AbstractFeature
+public class ASM extends AbstractFeatureModule
 {
 
 	@ModuleInput
-	HaralickCoocMatrix cooc;
+	CoocParameter param;
+
+	@ModuleInput
+	CoocccurrenceMatrix cooc;
 
 	/**
 	 * {@inheritDoc}
@@ -25,18 +28,9 @@ public class ASM extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ASM copy()
+	public double calculateFeature()
 	{
-		return new ASM();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType compute()
-	{
-		final int nrGrayLevels = cooc.getNrGrayLevels();
+		final int nrGrayLevels = param.nrGrayLevels;
 		final CooccurrenceMatrix matrix = cooc.get();
 
 		double res = 0;
@@ -48,7 +42,7 @@ public class ASM extends AbstractFeature
 			}
 		}
 
-		return new DoubleType( res );
+		return res;
 	}
 
 }

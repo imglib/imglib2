@@ -65,7 +65,7 @@ public class DescriptorRepository
 						{
 							for ( TreeSource< ? > source : sources )
 							{
-								if ( source.isCompatibleOutput( f.getType() ) )
+								if ( source.hasCompatibleOutput( f.getType() ) )
 								{
 									if ( res == null || module.priority() > res.priority() )
 									{

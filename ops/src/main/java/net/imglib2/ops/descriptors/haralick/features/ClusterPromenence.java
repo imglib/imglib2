@@ -1,19 +1,21 @@
 package net.imglib2.ops.descriptors.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.descriptors.AbstractFeature;
+import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.haralick.HaralickCoocMatrix;
+import net.imglib2.ops.descriptors.haralick.CoocccurrenceMatrix;
+import net.imglib2.ops.descriptors.haralick.helpers.CoocParameter;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocStdX;
-import net.imglib2.type.numeric.real.DoubleType;
 
 //cluster promenence (from cellcognition)
 // https://github.com/CellCognition/cecog/blob/master/csrc/include/cecog/features.hxx#L479
-public class ClusterPromenence extends AbstractFeature
+public class ClusterPromenence extends AbstractFeatureModule
 {
+	@ModuleInput
+	CoocParameter param;
 
 	@ModuleInput
-	HaralickCoocMatrix cooc;
+	CoocccurrenceMatrix cooc;
 
 	@ModuleInput
 	CoocStdX coocStdX;
@@ -31,20 +33,10 @@ public class ClusterPromenence extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ClusterPromenence copy()
+	protected double calculateFeature()
 	{
-		return new ClusterPromenence();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType compute()
-	{
-
-		final int nrGrayLevels = cooc.getNrGrayLevels();
-		final double stdx = coocStdX.get().get();
+		final int nrGrayLevels = param.nrGrayLevels;
+		final double stdx = coocStdX.value();
 		final CooccurrenceMatrix matrix = cooc.get();
 
 		double res = 0;
@@ -56,7 +48,7 @@ public class ClusterPromenence extends AbstractFeature
 				res += 2 * Math.pow( ( i + j - 2 * stdx ), 4 ) * matrix.getValueAt( i, j );
 			}
 		}
-		return new DoubleType( res );
+		return res;
 	}
 
 }

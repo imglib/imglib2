@@ -17,7 +17,7 @@ public abstract class AbstractDescriptorModule extends AbstractModule< double[] 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isCompatibleOutput( Class< ? > annotatedType )
+	public boolean hasCompatibleOutput( Class< ? > annotatedType )
 	{
 		return DoubleType.class.isAssignableFrom( annotatedType );
 	}

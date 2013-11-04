@@ -1,19 +1,22 @@
 package net.imglib2.ops.descriptors.haralick.features;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.descriptors.AbstractFeature;
+import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.haralick.HaralickCoocMatrix;
+import net.imglib2.ops.descriptors.haralick.CoocccurrenceMatrix;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocMeanX;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocMeanY;
+import net.imglib2.ops.descriptors.haralick.helpers.CoocParameter;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocStdX;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocStdY;
-import net.imglib2.type.numeric.real.DoubleType;
 
-public class Correlation extends AbstractFeature
+public class Correlation extends AbstractFeatureModule
 {
 	@ModuleInput
-	HaralickCoocMatrix cooc;
+	CoocParameter param;
+
+	@ModuleInput
+	CoocccurrenceMatrix cooc;
 
 	@ModuleInput
 	CoocMeanX coocMeanX;
@@ -40,24 +43,15 @@ public class Correlation extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Correlation copy()
+	protected double calculateFeature()
 	{
-		return new Correlation();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType compute()
-	{
-		final int nrGrayLevels = cooc.getNrGrayLevels();
+		final int nrGrayLevels = param.nrGrayLevels;
 		final CooccurrenceMatrix matrix = cooc.get();
 
-		final double meanx = coocMeanX.get().get();
-		final double meany = coocMeanY.get().get();
-		final double stdx = coocStdX.get().get();
-		final double stdy = coocStdY.get().get();
+		final double meanx = coocMeanX.value();
+		final double meany = coocMeanY.value();
+		final double stdx = coocStdX.value();
+		final double stdy = coocStdY.value();
 
 		double res = 0;
 		for ( int i = 0; i < nrGrayLevels; i++ )
@@ -74,6 +68,6 @@ public class Correlation extends AbstractFeature
 			res = 0;
 		}
 
-		return new DoubleType( res );
+		return res;
 	}
 }

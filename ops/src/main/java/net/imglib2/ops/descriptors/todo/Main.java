@@ -34,7 +34,7 @@ public class Main
 		// tests
 
 		long startTime = System.currentTimeMillis();
-		for ( int i = 0; i < 10; i++ )
+		for ( int i = 0; i < 1; i++ )
 		{
 			sphere.move( i, 0 );
 			newFrameWorkTest.runFirstOrderTest( sphere.getIterableIntervalOverROI( testImg ) );

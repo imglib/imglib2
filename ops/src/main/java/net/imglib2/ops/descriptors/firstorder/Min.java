@@ -27,6 +27,7 @@ public class Min extends AbstractFeatureModule
 	@Override
 	public double calculateFeature()
 	{
+		System.out.println( "12355" );
 		double min = Double.MAX_VALUE;
 
 		final Iterator< ? extends RealType< ? > > it = ii.iterator();

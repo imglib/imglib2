@@ -20,23 +20,21 @@ public class HaralickFeatureSet extends AbstractDescriptorSet
 {
 	public HaralickFeatureSet()
 	{
-		super();
-		
 		// Feature registered
-		registerFeature( new ASM() );
-		registerFeature( new ClusterPromenence() );
-		registerFeature( new ClusterShade() );
-		registerFeature( new Contrast() );
-		registerFeature( new Correlation() );
-		registerFeature( new DifferenceEntropy() );
-		registerFeature( new DifferenceVariance() );
-		registerFeature( new Entropy() );
-		registerFeature( new ICM1() );
-		registerFeature( new ICM2() );
-		registerFeature( new IFDM() );
-		registerFeature( new SumAverage() );
-		registerFeature( new SumVariance() );
-		registerFeature( new Variance() );
+		registerFeature( ASM.class );
+		registerFeature( ClusterPromenence.class );
+		registerFeature( ClusterShade.class );
+		registerFeature( Contrast.class );
+		registerFeature( Correlation.class );
+		registerFeature( DifferenceEntropy.class );
+		registerFeature( DifferenceVariance.class );
+		registerFeature( Entropy.class );
+		registerFeature( ICM1.class );
+		registerFeature( ICM2.class );
+		registerFeature( IFDM.class );
+		registerFeature( SumAverage.class );
+		registerFeature( SumVariance.class );
+		registerFeature( Variance.class );
 	}
 
 	@Override

@@ -50,24 +50,18 @@
 package net.imglib2.ops.descriptors.haralick.helpers;
 
 import net.imglib2.ops.data.CooccurrenceMatrix;
-import net.imglib2.ops.descriptors.AbstractModule;
+import net.imglib2.ops.descriptors.AbstractDescriptorModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.haralick.HaralickCoocMatrix;
+import net.imglib2.ops.descriptors.haralick.CoocccurrenceMatrix;
 
-public class CoocPXMinusY extends AbstractModule< double[] >
+public class CoocPXMinusY extends AbstractDescriptorModule
 {
 
 	@ModuleInput
-	private HaralickCoocMatrix cooc;
+	CoocParameter param;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public CoocPXMinusY copy()
-	{
-		return new CoocPXMinusY();
-	}
+	@ModuleInput
+	CoocccurrenceMatrix cooc;
 
 	/**
 	 * {@inheritDoc}
@@ -75,7 +69,7 @@ public class CoocPXMinusY extends AbstractModule< double[] >
 	@Override
 	protected double[] recompute()
 	{
-		int nrGrayLevels = cooc.getNrGrayLevels();
+		int nrGrayLevels = param.nrGrayLevels;
 		CooccurrenceMatrix matrix = cooc.get();
 
 		double[] pxminusy = new double[ nrGrayLevels ];
@@ -94,6 +88,12 @@ public class CoocPXMinusY extends AbstractModule< double[] >
 		}
 
 		return pxminusy;
+	}
+
+	@Override
+	public String name()
+	{
+		return "CoocPXMinusY";
 	}
 
 }

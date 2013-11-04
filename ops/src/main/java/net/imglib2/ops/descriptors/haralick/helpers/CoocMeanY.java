@@ -1,31 +1,24 @@
 package net.imglib2.ops.descriptors.haralick.helpers;
 
-import net.imglib2.ops.descriptors.AbstractModule;
+import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.type.numeric.real.DoubleType;
 
-public class CoocMeanY extends AbstractModule< DoubleType >
+public class CoocMeanY extends AbstractFeatureModule
 {
 	// for symmetric cooccurence matrices stdx = stdy
 	@ModuleInput
 	private CoocMeanX coocMeanX;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public CoocMeanY copy()
+	public String name()
 	{
-		return new CoocMeanY();
+		return "CoocMeanY";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	protected DoubleType recompute()
+	protected double calculateFeature()
 	{
-		return coocMeanX.get();
+		return coocMeanX.value();
 	}
 
 }

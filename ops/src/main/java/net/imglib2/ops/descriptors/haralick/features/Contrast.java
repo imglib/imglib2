@@ -1,19 +1,18 @@
 package net.imglib2.ops.descriptors.haralick.features;
 
-import net.imglib2.ops.descriptors.AbstractFeature;
+import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.haralick.HaralickCoocMatrix;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocPXMinusY;
-import net.imglib2.type.numeric.real.DoubleType;
+import net.imglib2.ops.descriptors.haralick.helpers.CoocParameter;
 
-public class Contrast extends AbstractFeature
+public class Contrast extends AbstractFeatureModule
 {
 
 	@ModuleInput
-	CoocPXMinusY coocPXMinusZ = new CoocPXMinusY();
+	CoocPXMinusY coocPXMinusZ;
 
 	@ModuleInput
-	private HaralickCoocMatrix cooc;
+	CoocParameter param;
 
 	/**
 	 * {@inheritDoc}
@@ -28,19 +27,9 @@ public class Contrast extends AbstractFeature
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Contrast copy()
+	protected double calculateFeature()
 	{
-		return new Contrast();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected DoubleType compute()
-	{
-
-		final int nrGrayLevels = cooc.getNrGrayLevels();
+		final int nrGrayLevels = param.nrGrayLevels;
 		final double[] pxminusxy = coocPXMinusZ.get();
 
 		double res = 0;
@@ -49,7 +38,7 @@ public class Contrast extends AbstractFeature
 			res += k * k * pxminusxy[ k ];
 		}
 
-		return new DoubleType( res );
+		return res;
 	}
 
 }
