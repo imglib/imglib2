@@ -21,7 +21,12 @@ import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 
-public class ImplTests< T extends RealType< T >>
+/**
+ * Simple Class for demo of the DescriptorTreeBuilder
+ * 
+ * @param <T>
+ */
+public class SimpleTesting< T extends RealType< T >>
 {
 
 	private DescriptorTreeBuilder builder;
@@ -32,55 +37,64 @@ public class ImplTests< T extends RealType< T >>
 
 	private ExampleHaralickParameterSource sourceHaralickParam;
 
-	public ImplTests()
+	public SimpleTesting()
 	{
-		// each feature is only calculated once, even if present in various
+		// each descriptor is only calculated once per source, even if present
+		// in various
 		// feature sets
 
-		// Create feature sets
+		// Create sources sets
 		sourceII = new ExampleIterableIntervalSource();
 		sourcePolygon = new ExamplePolygonSource();
 		sourceHaralickParam = new ExampleHaralickParameterSource();
 
+		// create the builder
 		builder = new DescriptorTreeBuilder();
 		builder.registerDescriptorSet( new FirstOrderDescriptors() );
 		builder.registerDescriptorSet( new GeometricFeatureSet() );
 		builder.registerDescriptorSet( new HaralickFeatureSet() );
 
+		// set the sources
 		builder.registerSource( sourceII );
 		builder.registerSource( sourcePolygon );
 		builder.registerSource( sourceHaralickParam );
 
+		// optimize the featureset
 		builder.build();
 	}
 
-	public void runFirstOrderTest( final IterableInterval< T > ii )
+	public void test( final IterableInterval< T > ii )
 	{
-		// updating source
+		// updating sources
 		sourceII.update( ii );
-
-		// extracting polygon (test reasons)
-		long[] min = new long[ ii.numDimensions() ];
-		ii.min( min );
-
-		sourcePolygon.update( extractPolygon( binaryMask( ii ), min ) );
+		sourcePolygon.update( extractPolygon( binaryMask( ii ) ) );
 		sourceHaralickParam.update( createHaralickParam( 1 ) );
 
 		// iterating over results
 		Iterator< Descriptor > iterator = builder.iterator();
 		while ( iterator.hasNext() )
 		{
-			final Descriptor next = iterator.next();
-			System.out.println( " [" + next.name() + "]: " + next.get()[ 0 ] );
+			final Descriptor descriptor = iterator.next();
+			final double[] res = descriptor.get();
+
+			for ( int i = 0; i < res.length; i++ )
+				System.out.println( " [" + descriptor.name() + "](" + i + "): " + res[ i ] );
 		}
 
-		// We update some haralick parameters which are then recomputed
+		// We update some haralick parameters which are then recomputed. The
+		// updatedIterator only contains dirty features
 		sourceHaralickParam.update( createHaralickParam( 2 ) );
-		iterator = builder.dirtyIterator();
+
+		// we iterate over all features which were affected by the parameter
+		// change
+		iterator = builder.updatedIterator();
 		while ( iterator.hasNext() )
 		{
-			final Descriptor next = iterator.next();
-			System.out.println( " [" + next.name() + "]: " + next.get()[ 0 ] );
+			final Descriptor descriptor = iterator.next();
+			final double[] res = descriptor.get();
+
+			for ( int i = 0; i < res.length; i++ )
+				System.out.println( " [" + descriptor.name() + "](" + i + "): " + res[ i ] );
 		}
 
 	}
@@ -133,7 +147,7 @@ public class ImplTests< T extends RealType< T >>
 		}
 	}
 
-	/**
+	/*
 	 * FOR TESTING
 	 */
 	private CoocParameter createHaralickParam( int distance )
@@ -145,7 +159,7 @@ public class ImplTests< T extends RealType< T >>
 		return param;
 	}
 
-	/**
+	/*
 	 * FOR TESTING
 	 */
 	private Img< BitType > binaryMask( final IterableInterval< T > ii )
@@ -167,17 +181,17 @@ public class ImplTests< T extends RealType< T >>
 		return binaryMask;
 	}
 
-	/**
+	/*
 	 * FOR TESTING
 	 */
-	private Polygon extractPolygon( final RandomAccessibleInterval< BitType > img, final long[] offset )
+	private Polygon extractPolygon( final RandomAccessibleInterval< BitType > in )
 	{
-		final RandomAccess< BitType > cur = new ExtendedRandomAccessibleInterval< BitType, RandomAccessibleInterval< BitType >>( img, new OutOfBoundsConstantValueFactory< BitType, RandomAccessibleInterval< BitType >>( new BitType( false ) ) ).randomAccess();
+		final RandomAccess< BitType > cur = new ExtendedRandomAccessibleInterval< BitType, RandomAccessibleInterval< BitType >>( in, new OutOfBoundsConstantValueFactory< BitType, RandomAccessibleInterval< BitType >>( new BitType( false ) ) ).randomAccess();
 		boolean start = false;
 		// find the starting point
-		for ( int i = 0; i < img.dimension( 0 ); i++ )
+		for ( int i = 0; i < in.dimension( 0 ); i++ )
 		{
-			for ( int j = 0; j < img.dimension( 1 ); j++ )
+			for ( int j = 0; j < in.dimension( 1 ); j++ )
 			{
 				cur.setPosition( i, 0 );
 				cur.setPosition( j, 1 );
@@ -202,7 +216,7 @@ public class ImplTests< T extends RealType< T >>
 		{
 			if ( cur.get().get() )
 			{
-				p.addPoint( ( int ) offset[ 0 ] + cur.getIntPosition( 0 ), ( int ) offset[ 1 ] + cur.getIntPosition( 1 ) );
+				p.addPoint( ( int ) in.min( 0 ) + cur.getIntPosition( 0 ), ( int ) in.min( 1 ) + cur.getIntPosition( 1 ) );
 				cur.setPosition( cur.getIntPosition( dim ) - dir, dim );
 				if ( ( ( dim == 1 ) && ( dir == 1 ) ) || ( ( dim == 1 ) && ( dir == -1 ) ) )
 				{

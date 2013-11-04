@@ -12,9 +12,7 @@ public class Main
 	public static void main( final String[] args )
 	{
 
-		// TODO: We should also test against barrys implementation.
-		// (measurementtests2)
-		// standard test image
+		// Creating a testimg
 		Img< FloatType > testImg = new ArrayImgFactory< FloatType >().create( new long[] { 10000, 10000 }, new FloatType() );
 		Cursor< FloatType > cursor = testImg.cursor();
 		while ( cursor.hasNext() )
@@ -24,22 +22,23 @@ public class Main
 			cursor.get().set( val );
 		}
 
+		// Set up any ROI
 		EllipseRegionOfInterest sphere = new EllipseRegionOfInterest( 2 );
 		sphere.setRadius( 100 );
 		sphere.setOrigin( new Point( new long[] { 200, 200 } ) );
 
 		// Create test factories
-		ImplTests< FloatType > newFrameWorkTest = new ImplTests< FloatType >();
-		// ImgLib2Tests< FloatType > test = new ImgLib2Tests< FloatType >();
-		// tests
+		SimpleTesting< FloatType > testClass = new SimpleTesting< FloatType >();
 
 		long startTime = System.currentTimeMillis();
 		for ( int i = 0; i < 20; i++ )
 		{
-			System.out.println( "###### Testrun " + i );
+			System.out.println( "###### BEGIN " + i );
+			
 			sphere.move( i, 0 );
-			newFrameWorkTest.runFirstOrderTest( sphere.getIterableIntervalOverROI( testImg ) );
-			// test.runFirstOrderTest(sphere.getIterableIntervalOverROI(testImg));
+			testClass.test( sphere.getIterableIntervalOverROI( testImg ) );
+
+			System.out.println( "###### END \n \n" );
 		}
 
 		long estimatedTime = System.currentTimeMillis() - startTime;

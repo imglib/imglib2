@@ -32,7 +32,7 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 
 	private final List< Descriptor > outputDescriptors;
 
-	private final List< Descriptor > dirtyDescriptors;
+	private final List< Descriptor > updatedDescriptors;
 
 	public DescriptorTreeBuilder()
 	{
@@ -46,7 +46,7 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 		this.sourceListenerMap = new HashMap< Module< ? >, List< Pair< Module< ? >, Field >> >();
 		this.sourceListenerQueue = new ArrayList< Pair< Module< ? >, Field > >();
 		this.dependencies = new HashMap< Module< ? >, List< Pair< Module< ? >, Field >> >();
-		this.dirtyDescriptors = new ArrayList< Descriptor >();
+		this.updatedDescriptors = new ArrayList< Descriptor >();
 	}
 
 	private void reset()
@@ -152,9 +152,9 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 	 * 
 	 * @return
 	 */
-	public Iterator< Descriptor > dirtyIterator()
+	public Iterator< Descriptor > updatedIterator()
 	{
-		return dirtyDescriptors.iterator();
+		return updatedDescriptors.iterator();
 	}
 
 	/**
@@ -375,12 +375,12 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 
 		}
 
-		dirtyDescriptors.clear();
+		updatedDescriptors.clear();
 		for ( Descriptor d : outputDescriptors )
 		{
 			if ( d.isDirty() )
 			{
-				dirtyDescriptors.add( d );
+				updatedDescriptors.add( d );
 			}
 		}
 	}
