@@ -16,4 +16,10 @@ public class AreaIterableInterval extends Area
 	{
 		return ii.size();
 	}
+
+	@Override
+	public double priority()
+	{
+		return 1.0;
+	}
 }

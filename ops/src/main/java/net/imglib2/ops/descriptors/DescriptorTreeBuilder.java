@@ -75,7 +75,7 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 		// 0. register our sources
 		for ( TreeSource< ? > s : sourcesQueue )
 		{
-			register( s );
+			register( s, false );
 		}
 
 		// 1. step: find all descriptors and add them.
@@ -83,7 +83,7 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 		{
 			for ( Class< ? extends Descriptor > descriptor : ds.descriptors() )
 			{
-				registerOutputDescriptor( ( Descriptor ) register( instantiateModule( descriptor ) ) );
+				registerOutputDescriptor( ( Descriptor ) register( instantiateModule( descriptor ), false ) );
 			}
 		}
 
@@ -215,11 +215,7 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 
 					// as we now have instantiated a module, we can check
 					// whether our features already contains a better one
-					Module< ? > registered = register( module );
-
-					// if we found something new, we need to parse it again
-					if ( registered == module )
-						parse( registered );
+					Module< ? > registered = register( module, true );
 
 					// anyway, we need to register our parent to the module type
 					addDependency( registered, new ValuePair< Module< ? >, Field >( parent, annotatedField ) );
@@ -302,21 +298,26 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 		return module;
 	}
 
-	private Module< ? > register( Module< ? > feature )
+	private Module< ? > register( Module< ? > feature, boolean doParse )
 	{
 		Module< ? > toCheck = feature;
+		boolean foundExisting = false;
 		for ( Module< ? > f : modules )
 		{
 			if ( f.isEquivalentModule( feature ) )
 			{
 				toCheck = tryReplace( f, feature );
+				foundExisting = true;
 			}
 		}
 
-		if ( !dependencies.containsKey( toCheck ) )
+		if ( !foundExisting )
 		{
-			dependencies.put( feature, new ArrayList< Pair< Module< ? >, Field > >() );
-			modules.add( feature );
+			dependencies.put( toCheck, new ArrayList< Pair< Module< ? >, Field > >() );
+			modules.add( toCheck );
+
+			if ( doParse )
+				parse( toCheck );
 		}
 
 		return toCheck;

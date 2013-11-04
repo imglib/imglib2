@@ -14,7 +14,6 @@ public class EccentricityIterableInterval extends Eccentricity
 	 */
 	public double calculateFeature()
 	{
-		System.out.println( "Shouldn't be called" );
 		Cursor< ? > cursor = ii.cursor();
 
 		final int d = cursor.numDimensions();

@@ -14,7 +14,6 @@ import net.imglib2.ops.descriptors.Descriptor;
 import net.imglib2.ops.descriptors.DescriptorTreeBuilder;
 import net.imglib2.ops.descriptors.sets.FirstOrderDescriptors;
 import net.imglib2.ops.descriptors.sets.GeometricFeatureSet;
-import net.imglib2.ops.descriptors.todo.ImplTests.ExamplePolygonSource;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
@@ -77,7 +76,7 @@ public class ImplTests< T extends RealType< T >>
 		@Override
 		public double priority()
 		{
-			return 10;
+			return 1;
 		}
 
 	}

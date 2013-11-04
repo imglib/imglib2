@@ -16,7 +16,6 @@ public class EccentricityPolygon extends Eccentricity
 	@Override
 	protected double calculateFeature()
 	{
-		System.out.println( "Eccentricity Polygon" );
 		Rectangle2D rec = polygon.getBounds2D();
 		return ( rec.getWidth() > rec.getHeight() ) ? rec.getWidth() / rec.getHeight() : rec.getHeight() / rec.getWidth();
 	}
@@ -24,6 +23,6 @@ public class EccentricityPolygon extends Eccentricity
 	@Override
 	public double priority()
 	{
-		return 10;
+		return 1;
 	}
 }

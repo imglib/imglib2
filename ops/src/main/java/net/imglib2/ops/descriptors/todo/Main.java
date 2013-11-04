@@ -7,13 +7,8 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.roi.EllipseRegionOfInterest;
 import net.imglib2.type.numeric.real.FloatType;
 
-/**
- * 
- * @author dietzc
- */
 public class Main
 {
-
 	public static void main( final String[] args )
 	{
 
@@ -39,9 +34,11 @@ public class Main
 		// tests
 
 		long startTime = System.currentTimeMillis();
-		for ( int i = 0; i < 1; i++ )
+		for ( int i = 0; i < 10; i++ )
 		{
+			sphere.move( i, 0 );
 			newFrameWorkTest.runFirstOrderTest( sphere.getIterableIntervalOverROI( testImg ) );
+			System.out.println( "RESET \n\n" );
 			// test.runFirstOrderTest(sphere.getIterableIntervalOverROI(testImg));
 		}
 

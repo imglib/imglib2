@@ -32,4 +32,10 @@ public class PerimeterPolygon extends Perimeter
 	{
 		return Math.sqrt( ( x1 - x2 ) * ( x1 - x2 ) + ( y1 - y2 ) * ( y1 - y2 ) );
 	}
+
+	@Override
+	public double priority()
+	{
+		return 1.0;
+	}
 }
