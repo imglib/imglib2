@@ -219,7 +219,6 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 				// auto-instantiable dependencies and
 				// not-autoinstantiable-dependencies
 				// if we found a FeatureModule
-
 				Class< ? > annotatedType = annotatedField.getType();
 				if ( Module.class.isAssignableFrom( annotatedType ) )
 				{
@@ -290,10 +289,11 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 		}
 		else
 		{
-			// emptry constructor has to exist
+			// empty constructor has to exist
 			try
 			{
-				// TODO check whether empy contructor exists if not, try repo
+				// TODO check whether empty constructor exists if not, try
+				// FeatuerRepository
 				module = ( Module< ? > ) moduleClazz.newInstance();
 			}
 			catch ( InstantiationException e )

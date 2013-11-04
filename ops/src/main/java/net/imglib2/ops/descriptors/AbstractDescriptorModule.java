@@ -1,6 +1,6 @@
 package net.imglib2.ops.descriptors;
 
-import net.imglib2.type.numeric.real.DoubleType;
+import java.lang.reflect.Array;
 
 public abstract class AbstractDescriptorModule extends AbstractModule< double[] > implements Descriptor
 {
@@ -19,6 +19,7 @@ public abstract class AbstractDescriptorModule extends AbstractModule< double[] 
 	@Override
 	public boolean hasCompatibleOutput( Class< ? > annotatedType )
 	{
-		return DoubleType.class.isAssignableFrom( annotatedType );
+		// does this work? how else?
+		return Array.class.isAssignableFrom( annotatedType );
 	}
 }
