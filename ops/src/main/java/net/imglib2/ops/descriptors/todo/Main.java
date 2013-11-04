@@ -34,11 +34,11 @@ public class Main
 		// tests
 
 		long startTime = System.currentTimeMillis();
-		for ( int i = 0; i < 1; i++ )
+		for ( int i = 0; i < 20; i++ )
 		{
+			System.out.println( "###### Testrun " + i );
 			sphere.move( i, 0 );
 			newFrameWorkTest.runFirstOrderTest( sphere.getIterableIntervalOverROI( testImg ) );
-			System.out.println( "RESET \n\n" );
 			// test.runFirstOrderTest(sphere.getIterableIntervalOverROI(testImg));
 		}
 

@@ -17,7 +17,6 @@ import net.imglib2.ops.descriptors.haralick.helpers.CoocParameter;
 import net.imglib2.ops.descriptors.sets.FirstOrderDescriptors;
 import net.imglib2.ops.descriptors.sets.GeometricFeatureSet;
 import net.imglib2.ops.descriptors.sets.HaralickFeatureSet;
-import net.imglib2.ops.descriptors.todo.ImplTests.ExampleHaralickParameterSource;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
@@ -60,14 +59,14 @@ public class ImplTests< T extends RealType< T >>
 		// updating source
 		sourceII.update( ii );
 
-		// extracting polygon..
+		// extracting polygon (test reasons)
 		long[] min = new long[ ii.numDimensions() ];
 		ii.min( min );
-		sourcePolygon.update( extractPolygon( binaryMask( ii ), min ) );
 
-		// TODO: Only output required on iterator
+		sourcePolygon.update( extractPolygon( binaryMask( ii ), min ) );
 		sourceHaralickParam.update( createHaralickParam( 1 ) );
 
+		// iterating over results
 		Iterator< Descriptor > iterator = builder.iterator();
 		while ( iterator.hasNext() )
 		{
@@ -75,27 +74,15 @@ public class ImplTests< T extends RealType< T >>
 			System.out.println( " [" + next.name() + "]: " + next.get()[ 0 ] );
 		}
 
+		// We update some haralick parameters which are then recomputed
 		sourceHaralickParam.update( createHaralickParam( 2 ) );
-
-		System.out.println( "PARAM UPDATE OF HARALICK" );
-
-		// TODO: Only output recalced on iterator
-		iterator = builder.iterator();
+		iterator = builder.dirtyIterator();
 		while ( iterator.hasNext() )
 		{
 			final Descriptor next = iterator.next();
 			System.out.println( " [" + next.name() + "]: " + next.get()[ 0 ] );
 		}
 
-	}
-
-	private CoocParameter createHaralickParam( int distance )
-	{
-		CoocParameter param = new CoocParameter();
-		param.nrGrayLevels = 32;
-		param.distance = distance;
-		param.orientation = MatrixOrientation.HORIZONTAL;
-		return param;
 	}
 
 	class ExampleIterableIntervalSource extends AbstractTreeSource< IterableInterval< T >>
@@ -146,7 +133,22 @@ public class ImplTests< T extends RealType< T >>
 		}
 	}
 
-	public Img< BitType > binaryMask( final IterableInterval< T > ii )
+	/**
+	 * FOR TESTING
+	 */
+	private CoocParameter createHaralickParam( int distance )
+	{
+		CoocParameter param = new CoocParameter();
+		param.nrGrayLevels = 32;
+		param.distance = distance;
+		param.orientation = MatrixOrientation.HORIZONTAL;
+		return param;
+	}
+
+	/**
+	 * FOR TESTING
+	 */
+	private Img< BitType > binaryMask( final IterableInterval< T > ii )
 	{
 		Img< BitType > binaryMask = new ArrayImgFactory< BitType >().create( ii, new BitType() );
 		final RandomAccess< BitType > maskRA = binaryMask.randomAccess();
@@ -166,18 +168,9 @@ public class ImplTests< T extends RealType< T >>
 	}
 
 	/**
-	 * Extracts a polygon of a 2D binary image using the Square Tracing
-	 * Algorithm (be aware of its drawbacks, e.g. if the pattern is
-	 * 4-connected!)
-	 * 
-	 * @param img
-	 *            the image, note that only the first and second dimension are
-	 *            taken into account
-	 * @param offset
-	 *            an offset for the points to be set in the new polygon
-	 * @return
+	 * FOR TESTING
 	 */
-	public static Polygon extractPolygon( final RandomAccessibleInterval< BitType > img, final long[] offset )
+	private Polygon extractPolygon( final RandomAccessibleInterval< BitType > img, final long[] offset )
 	{
 		final RandomAccess< BitType > cur = new ExtendedRandomAccessibleInterval< BitType, RandomAccessibleInterval< BitType >>( img, new OutOfBoundsConstantValueFactory< BitType, RandomAccessibleInterval< BitType >>( new BitType( false ) ) ).randomAccess();
 		boolean start = false;

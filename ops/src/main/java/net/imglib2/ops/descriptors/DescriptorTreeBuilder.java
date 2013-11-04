@@ -32,6 +32,8 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 
 	private final List< Descriptor > outputDescriptors;
 
+	private final List< Descriptor > dirtyDescriptors;
+
 	public DescriptorTreeBuilder()
 	{
 		this.sets = new ArrayList< DescriptorSet >();
@@ -44,6 +46,7 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 		this.sourceListenerMap = new HashMap< Module< ? >, List< Pair< Module< ? >, Field >> >();
 		this.sourceListenerQueue = new ArrayList< Pair< Module< ? >, Field > >();
 		this.dependencies = new HashMap< Module< ? >, List< Pair< Module< ? >, Field >> >();
+		this.dirtyDescriptors = new ArrayList< Descriptor >();
 	}
 
 	private void reset()
@@ -149,6 +152,16 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 	 * 
 	 * @return
 	 */
+	public Iterator< Descriptor > dirtyIterator()
+	{
+		return dirtyDescriptors.iterator();
+	}
+
+	/**
+	 * Retrieve the iterator over numeric features
+	 * 
+	 * @return
+	 */
 	public Iterator< Descriptor > iterator()
 	{
 		return outputDescriptors.iterator();
@@ -180,17 +193,17 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 	}
 
 	// recursively mark all dependend features as dirty
-	private void markDirty( Module< ? > in )
+	private void markDirty( Module< ? > parent )
 	{
-		for ( Pair< Module< ? >, Field > mod : dependencies.get( in ) )
+		for ( Pair< Module< ? >, Field > pair : dependencies.get( parent ) )
 		{
-			if ( mod.getA() instanceof CachedModule )
+			if ( pair.getA() instanceof CachedModule )
 			{
-				CachedModule< ? > cached = ( CachedModule< ? > ) mod.getA();
-				if ( !cached.isDirty() )
+				CachedModule< ? > mod = ( CachedModule< ? > ) pair.getA();
+				if ( !mod.isDirty() )
 				{
-					cached.markDirty();
-					markDirty( cached );
+					mod.markDirty();
+					markDirty( mod );
 				}
 			}
 		}
@@ -353,12 +366,22 @@ public class DescriptorTreeBuilder implements TreeSourceListener
 			if ( mod instanceof CachedModule )
 			{
 				( ( CachedModule< ? > ) mod ).markDirty();
+
 				markDirty( mod );
 			}
 
 			// second we inject what ever is needed
 			inject( f.getA(), f.getB(), source.get() );
 
+		}
+
+		dirtyDescriptors.clear();
+		for ( Descriptor d : outputDescriptors )
+		{
+			if ( d.isDirty() )
+			{
+				dirtyDescriptors.add( d );
+			}
 		}
 	}
 }
