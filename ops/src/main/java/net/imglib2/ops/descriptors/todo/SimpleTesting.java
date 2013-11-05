@@ -83,21 +83,21 @@ public class SimpleTesting< T extends RealType< T >>
 				System.out.println( " [" + descriptor.name() + "](" + i + "): " + res[ i ] );
 		}
 
-		// We update some haralick parameters which are then recomputed. The
-		// updatedIterator only contains dirty features
-		sourceHaralickParam.update( createHaralickParam( 2 ) );
-
-		// we iterate over all features which were affected by the parameter
-		// change
-		iterator = builder.updatedIterator();
-		while ( iterator.hasNext() )
-		{
-			final Descriptor descriptor = iterator.next();
-			final double[] res = descriptor.get();
-
-			for ( int i = 0; i < res.length; i++ )
-				System.out.println( " [" + descriptor.name() + "](" + i + "): " + res[ i ] );
-		}
+//		// We update some haralick parameters which are then recomputed. The
+//		// updatedIterator only contains dirty features
+//		sourceHaralickParam.update( createHaralickParam( 2 ) );
+//
+//		// we iterate over all features which were affected by the parameter
+//		// change
+//		iterator = builder.updatedIterator();
+//		while ( iterator.hasNext() )
+//		{
+//			final Descriptor descriptor = iterator.next();
+//			final double[] res = descriptor.get();
+//
+//			for ( int i = 0; i < res.length; i++ )
+//				System.out.println( " [" + descriptor.name() + "](" + i + "): " + res[ i ] );
+//		}
 
 	}
 

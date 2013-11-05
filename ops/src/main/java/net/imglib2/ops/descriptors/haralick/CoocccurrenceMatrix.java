@@ -15,7 +15,6 @@ import net.imglib2.type.numeric.RealType;
 
 public class CoocccurrenceMatrix extends AbstractModule< CooccurrenceMatrix >
 {
-
 	@ModuleInput
 	CoocParameter parameter;
 
