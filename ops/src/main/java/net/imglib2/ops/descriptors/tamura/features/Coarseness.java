@@ -80,8 +80,8 @@ public class Coarseness extends AbstractFeatureModule
 	
 	private final double averageOverNeighborhoods(final int x, final  int y, final int k) 
 	{
-        double result = 0, border;
-        border = Math.pow(2, 2 * k);
+        double result = 0;
+        double border = Math.pow(2, 2 * k);
         int x0 = 0, y0 = 0;
 
         for (int i = 0; i < border; i++) 
@@ -100,8 +100,7 @@ public class Coarseness extends AbstractFeatureModule
             }
         }
         
-        result = (1 / Math.pow(2, 2 * k)) * result;
-        return result;
+        return (1 / Math.pow(2, 2 * k)) * result;
 	}
 
 }
