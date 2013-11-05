@@ -57,7 +57,7 @@ public class Scale extends AbstractScale
 			ds[ d ] = dd;
 			final RealPoint ddi = new RealPoint( s.length );
 			ddi.setPosition( si[ d ], d );
-			dis[ d ] = dd;
+			dis[ d ] = ddi;
 		}
 		inverse = new Scale( si, this, dis );
 	}
