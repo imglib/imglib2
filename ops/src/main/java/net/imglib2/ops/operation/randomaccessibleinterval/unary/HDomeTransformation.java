@@ -83,6 +83,7 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 		m_imgFactory = new ListImgFactory< T >();
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public HDomeTransformation( ConnectedType type, double height, double substractBefore, ImgFactory imgFactory )
 	{
 		m_type = type;
@@ -135,7 +136,7 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 		// height from image
 		UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >> op = new SubstractConstantOp( height );
 
-		op.compute( Views.iterable( img ), Views.iterable( output ) );
+		op.compute( img, output );
 
 		// reconstruct the image from the marker and the
 		// original image

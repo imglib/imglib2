@@ -38,12 +38,12 @@
 package net.imglib2.ops.operation.randomaccessible.unary;
 
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.randomaccessible.binary.FloodFill;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.logic.BitType;
-import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**
@@ -67,8 +67,8 @@ public final class FillHoles implements UnaryOperation< RandomAccessibleInterval
 	@Override
 	public final RandomAccessibleInterval< BitType > compute( final RandomAccessibleInterval< BitType > op, final RandomAccessibleInterval< BitType > r )
 	{
-		IterableRandomAccessibleInterval< BitType > iterOp = Views.iterable( op );
-		IterableRandomAccessibleInterval< BitType > iterR = Views.iterable( r );
+		IterableInterval< BitType > iterOp = Views.iterable( op );
+		IterableInterval< BitType > iterR = Views.iterable( r );
 		if ( !iterR.iterationOrder().equals( iterOp.iterationOrder() ) ) { throw new IllegalStateException( "Intervals are not compatible (IterationOrder)" ); }
 		FloodFill< BitType > ff = new FloodFill< BitType >( m_connectedType );
 		long[] dim = new long[ r.numDimensions() ];

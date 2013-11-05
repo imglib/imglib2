@@ -777,10 +777,10 @@ public class Views
 	 * @return an {@link IterableInterval}
 	 */
 	@SuppressWarnings( "unchecked" )
-	public static < T > IterableRandomAccessibleInterval< T > iterable( final RandomAccessibleInterval< T > randomAccessibleInterval )
+	public static < T > IterableInterval< T > iterable( final RandomAccessibleInterval< T > randomAccessibleInterval )
 	{
 		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) )
-			return ( IterableRandomAccessibleInterval< T > )randomAccessibleInterval;
+			return ( IterableInterval< T > )randomAccessibleInterval;
 		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
 	}
 

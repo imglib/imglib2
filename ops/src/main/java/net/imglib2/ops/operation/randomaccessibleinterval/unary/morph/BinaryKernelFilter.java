@@ -39,6 +39,7 @@ package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 
 import java.util.ArrayList;
 
+import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
@@ -47,7 +48,6 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**
@@ -178,7 +178,7 @@ public final class BinaryKernelFilter< T extends RealType< T > > implements Unar
 	@Override
 	public final RandomAccessibleInterval< T >  compute( final RandomAccessibleInterval< T >  op, final RandomAccessibleInterval< T >  r )
 	{
-		IterableRandomAccessibleInterval<T> iterOp = Views.iterable( op );
+		IterableInterval<T> iterOp = Views.iterable( op );
 		int i = 0;
 		final long dim0 = op.dimension( m_dimIndex0 );
 		for ( Queue< T > q : m_kernel )

@@ -48,7 +48,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**
@@ -59,7 +58,7 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 {
 	protected ImgFactory<R> imgFactory;
 	protected Img<R> scaled;
-	protected IterableRandomAccessibleInterval<T> integralImg;
+	protected RandomAccessibleInterval<T> integralImg;
 	protected String error;
 	protected final long[] size;
 	final R targetType;
@@ -70,7 +69,7 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 	 * @param targetType The desired type of the scaled image.
 	 * @param size The target dimensions of the desired scaled image.
 	 */
-	@SuppressWarnings("unchecked") @Deprecated
+	@Deprecated
 	public ScaleAreaAveraging2d(final Img<T> integralImg, final R targetType, final long[] size) {
 		this(integralImg, targetType, size, null);
 		
@@ -93,10 +92,10 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 	public ScaleAreaAveraging2d(final RandomAccessibleInterval<T> integralImg, final R targetType, final long[] size, ImgFactory<R> imgFactory) {
 		this.size = size;
 		this.targetType = targetType;
-		this.integralImg = Views.iterable( integralImg );
+		this.integralImg = integralImg;
 		this.imgFactory = imgFactory;
 		
-		if ( targetType.getClass().isInstance( this.integralImg.firstElement().createVariable() ) )
+		if ( targetType.getClass().isInstance( Views.iterable( integralImg ).firstElement().createVariable() ) )
 		{
 			converter = (Converter<T, R>) (Converter<?,?>) new TypeIdentity<T>(); // double cast to workaround javac error
 		}
@@ -128,7 +127,7 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 	public ScaleAreaAveraging2d(final RandomAccessibleInterval<T> integralImg, final R targetType, final Converter<T, R> converter, final long[] size, ImgFactory<R> imgFactory) {
 		this.size = size;
 		this.targetType = targetType;
-		this.integralImg = Views.iterable( integralImg );
+		this.integralImg = integralImg;
 		this.converter = converter;
 		this.imgFactory = imgFactory;
 	}
@@ -153,7 +152,7 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 		final Cursor< R > cursor = scaled.cursor();
 		final RandomAccess< T > c2 = integralImg.randomAccess();
 		
-		final T sum = integralImg.firstElement().createVariable();
+		final T sum = Views.iterable( integralImg ).firstElement().createVariable();
 		final T area = sum.createVariable();
 		
 		if ( isIntegerDivision( integralImg, scaled ) )

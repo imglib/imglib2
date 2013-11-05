@@ -157,7 +157,7 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 	@Override
 	public RandomAccessibleInterval< O > compute( RandomAccessibleInterval< I > img, RandomAccessibleInterval< O > r )
 	{
-		IterableRandomAccessibleInterval<I> iterImg = Views.iterable( img );
+		Iterable<I> iterImg = Views.iterable( img );
 		double factor;
 		ValuePair< I, I > oldMinMax;
 		Convert< I, O > convertOp = null;
@@ -205,7 +205,7 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 		}
 
 		UnaryOperationAssignment< I, O > map = new UnaryOperationAssignment< I, O >( convertOp );
-		map.compute( Views.flatIterable( iterImg ), Views.flatIterable( r ) );
+		map.compute( Views.flatIterable( img ), Views.flatIterable( r ) );
 		return r;
 	}
 	
