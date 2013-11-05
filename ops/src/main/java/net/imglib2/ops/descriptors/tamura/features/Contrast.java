@@ -1,13 +1,16 @@
 package net.imglib2.ops.descriptors.tamura.features;
 
-import net.imglib2.IterableInterval;
 import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.ModuleInput;
 import net.imglib2.ops.descriptors.firstorder.Mean;
 import net.imglib2.ops.descriptors.geometric.area.Area;
 import net.imglib2.ops.descriptors.tamura.GreyValueMatrix;
-import net.imglib2.type.numeric.RealType;
 
+/**
+ * Implementation of Contrast Tamura feature done by Marko Keuschnig & Christian Penz
+ * as used in jfeaturelib
+ *
+ */
 public class Contrast extends AbstractFeatureModule 
 {
 	@ModuleInput
@@ -36,8 +39,10 @@ public class Contrast extends AbstractFeatureModule
 
         sigma = this.calculateSigma();
 
-        for (int x = 0; x < greyValues.length; x++) {
-            for (int y = 0; y < greyValues[x].length; y++) {
+        for (int x = 0; x < greyValues.length; x++) 
+        {
+            for (int y = 0; y < greyValues[x].length; y++) 
+            {
                 my4 = my4 + Math.pow(greyValues[x][y] - mean.value(), 4);
             }
         }
@@ -47,15 +52,19 @@ public class Contrast extends AbstractFeatureModule
         return result;
 	}
 	
-    private final double calculateSigma() {
+    private final double calculateSigma() 
+    {
         double result = 0;
 
-        for (int x = 0; x < greyValues.length; x++) {
-            for (int y = 0; y < greyValues[x].length; y++) {
+        for (int x = 0; x < greyValues.length; x++) 
+        {
+            for (int y = 0; y < greyValues[x].length; y++) 
+            {
                 result = result + Math.pow(greyValues[x][y] - mean.value(), 2);
 
             }
         }
+        
         result = result / area.value();
         return Math.sqrt(result);
     }

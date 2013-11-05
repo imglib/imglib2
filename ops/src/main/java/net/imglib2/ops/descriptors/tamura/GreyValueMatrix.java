@@ -5,7 +5,6 @@ import net.imglib2.IterableInterval;
 import net.imglib2.ops.descriptors.AbstractModule;
 import net.imglib2.ops.descriptors.Module;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.haralick.CoocccurrenceMatrix;
 import net.imglib2.type.numeric.RealType;
 
 public class GreyValueMatrix extends AbstractModule< int[][] >  
@@ -35,7 +34,7 @@ public class GreyValueMatrix extends AbstractModule< int[][] >
 		
 		greyValues =  new int[(int) ii.dimension(0)][(int) ii.dimension(1)];
 		
-		// filll gray values
+		// fill gray values
         while (cursor.hasNext()) 
         {
             cursor.fwd();

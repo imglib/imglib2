@@ -5,6 +5,11 @@ import net.imglib2.ops.descriptors.ModuleInput;
 import net.imglib2.ops.descriptors.geometric.area.Area;
 import net.imglib2.ops.descriptors.tamura.GreyValueMatrix;
 
+/**
+ * Implementation of Coarseness Tamura feature done by Marko Keuschnig & Christian Penz
+ * as used in jfeaturelib
+ *
+ */
 public class Coarseness extends AbstractFeatureModule
 {
 	@ModuleInput
@@ -86,14 +91,10 @@ public class Coarseness extends AbstractFeatureModule
                 x0 = (x - (int)Math.pow(2, k - 1)) + i;
                 y0 = (y - (int)Math.pow(2, k - 1)) + j;
                 
-                if (x0 < 0) 
-                    x0 = 0;
-                if (y0 < 0) 
-                    y0 = 0;
-                if (x0 >= greyValues.length) 
-                    x0 = greyValues.length - 1;
-                if (y0 >= greyValues[0].length) 
-                    y0 = greyValues[0].length - 1;
+                if (x0 < 0)  x0 = 0;
+                if (y0 < 0)  y0 = 0;
+                if (x0 >= greyValues.length)  x0 = greyValues.length - 1;
+                if (y0 >= greyValues[0].length) y0 = greyValues[0].length - 1;
 
                 result = result + greyValues[x0][y0];
             }
