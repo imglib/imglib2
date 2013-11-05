@@ -38,7 +38,7 @@
 package net.imglib2.ops.img;
 
 import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
+import net.imglib2.RandomAccessible;
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.input.InputIterator;
@@ -63,7 +63,7 @@ import net.imglib2.type.numeric.ComplexType;
  */
 public class SerialImageAssignment<U extends ComplexType<U>,V extends ComplexType<V>,INPUT> {
 
-	private final Img<U> img;
+	private final RandomAccessible<U> img;
 	private final Function<INPUT,V> function;
 	private final InputIterator<INPUT> iter;
 	private final Condition<INPUT> condition;
@@ -72,7 +72,7 @@ public class SerialImageAssignment<U extends ComplexType<U>,V extends ComplexTyp
 	 * SerialImageAssignment constructor
 	 * 
 	 * @param img
-	 * 	The Img<?> to assign output values to
+	 * 	The RandomAccess<?> to assign output values to
 	 * @param function
 	 * 	The Function<?,?> to obtain values from
 	 * @param iter
@@ -80,7 +80,7 @@ public class SerialImageAssignment<U extends ComplexType<U>,V extends ComplexTyp
 	 * @param condition
 	 * 	The optional Condition<?> that can further constrain which values to fill
 	 */
-	public SerialImageAssignment(Img<U> img, Function<INPUT,V> function,
+	public SerialImageAssignment(RandomAccessible<U> img, Function<INPUT,V> function,
 		InputIterator<INPUT> iter, Condition<INPUT> condition)
 	{
 		this.img = img;

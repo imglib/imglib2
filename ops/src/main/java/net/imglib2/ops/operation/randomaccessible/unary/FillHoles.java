@@ -38,19 +38,20 @@
 package net.imglib2.ops.operation.randomaccessible.unary;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
-import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.randomaccessible.binary.FloodFill;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.view.IterableRandomAccessibleInterval;
+import net.imglib2.view.Views;
 
 /**
- * Martin Horn  (University of Konstanz)
- *
+ * Martin Horn (University of Konstanz)
+ * 
  * @param <K>
  */
-public final class FillHoles< K extends RandomAccessible< BitType > & IterableInterval< BitType >> implements UnaryOperation< K, K >
+public final class FillHoles implements UnaryOperation< RandomAccessibleInterval< BitType >, RandomAccessibleInterval< BitType > >
 {
 
 	private final ConnectedType m_connectedType;
@@ -64,14 +65,16 @@ public final class FillHoles< K extends RandomAccessible< BitType > & IterableIn
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final K compute( final K op, final K r )
+	public final RandomAccessibleInterval< BitType > compute( final RandomAccessibleInterval< BitType > op, final RandomAccessibleInterval< BitType > r )
 	{
-		if ( !r.iterationOrder().equals( op.iterationOrder() ) ) { throw new IllegalStateException( "Intervals are not compatible (IterationOrder)" ); }
-		FloodFill< BitType, K > ff = new FloodFill< BitType, K >( m_connectedType );
+		IterableRandomAccessibleInterval< BitType > iterOp = Views.iterable( op );
+		IterableRandomAccessibleInterval< BitType > iterR = Views.iterable( r );
+		if ( !iterR.iterationOrder().equals( iterOp.iterationOrder() ) ) { throw new IllegalStateException( "Intervals are not compatible (IterationOrder)" ); }
+		FloodFill< BitType > ff = new FloodFill< BitType >( m_connectedType );
 		long[] dim = new long[ r.numDimensions() ];
 		r.dimensions( dim );
-		Cursor< BitType > rc = r.cursor();
-		Cursor< BitType > opc = op.localizingCursor();
+		Cursor< BitType > rc = iterR.cursor();
+		Cursor< BitType > opc = iterOp.localizingCursor();
 		// Fill with non background marker
 		while ( rc.hasNext() )
 		{
@@ -103,9 +106,9 @@ public final class FillHoles< K extends RandomAccessible< BitType > & IterableIn
 	}
 
 	@Override
-	public UnaryOperation< K, K > copy()
+	public UnaryOperation< RandomAccessibleInterval< BitType >, RandomAccessibleInterval< BitType > > copy()
 	{
-		return new FillHoles< K >( m_connectedType );
+		return new FillHoles( m_connectedType );
 	}
 
 }

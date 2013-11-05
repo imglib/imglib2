@@ -39,12 +39,17 @@ package net.imglib2.algorithm.integral;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.converter.Converter;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.IterableRandomAccessibleInterval;
+import net.imglib2.view.Views;
 
 /**
  * TODO
@@ -52,8 +57,9 @@ import net.imglib2.type.numeric.RealType;
  */
 public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>> implements OutputAlgorithm< Img< R > >
 {
+	protected ImgFactory<R> imgFactory;
 	protected Img<R> scaled;
-	protected Img<T> integralImg;
+	protected IterableRandomAccessibleInterval<T> integralImg;
 	protected String error;
 	protected final long[] size;
 	final R targetType;
@@ -64,13 +70,33 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 	 * @param targetType The desired type of the scaled image.
 	 * @param size The target dimensions of the desired scaled image.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") @Deprecated
 	public ScaleAreaAveraging2d(final Img<T> integralImg, final R targetType, final long[] size) {
+		this(integralImg, targetType, size, null);
+		
+		try
+		{
+			this.imgFactory = integralImg.factory().imgFactory( targetType );
+		}
+		catch ( IncompatibleTypeException e )
+		{
+			this.imgFactory = new ListImgFactory<R>();
+		}
+	}
+	
+	/**
+	 * @param integralImg The instance of {@link IntegralImg} or equivalent.
+	 * @param targetType The desired type of the scaled image.
+	 * @param size The target dimensions of the desired scaled image.
+	 */
+	@SuppressWarnings("unchecked") 
+	public ScaleAreaAveraging2d(final RandomAccessibleInterval<T> integralImg, final R targetType, final long[] size, ImgFactory<R> imgFactory) {
 		this.size = size;
 		this.targetType = targetType;
-		this.integralImg = integralImg;
+		this.integralImg = Views.iterable( integralImg );
+		this.imgFactory = imgFactory;
 		
-		if ( targetType.getClass().isInstance( integralImg.firstElement().createVariable() ) )
+		if ( targetType.getClass().isInstance( this.integralImg.firstElement().createVariable() ) )
 		{
 			converter = (Converter<T, R>) (Converter<?,?>) new TypeIdentity<T>(); // double cast to workaround javac error
 		}
@@ -85,11 +111,26 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 		}
 	}
 
+	@Deprecated
 	public ScaleAreaAveraging2d(final Img<T> integralImg, final R targetType, final Converter<T, R> converter, final long[] size) {
+		this(integralImg, targetType, converter, size, null);
+		
+		try
+		{
+			this.imgFactory = integralImg.factory().imgFactory( targetType );
+		}
+		catch ( IncompatibleTypeException e )
+		{
+			this.imgFactory = new ListImgFactory<R>();
+		}
+	}
+	
+	public ScaleAreaAveraging2d(final RandomAccessibleInterval<T> integralImg, final R targetType, final Converter<T, R> converter, final long[] size, ImgFactory<R> imgFactory) {
 		this.size = size;
 		this.targetType = targetType;
-		this.integralImg = integralImg;
+		this.integralImg = Views.iterable( integralImg );
 		this.converter = converter;
+		this.imgFactory = imgFactory;
 	}
 	
 	/**
@@ -107,12 +148,7 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 
 	@Override
 	public boolean process() {		
-		try {
-			scaled = integralImg.factory().imgFactory( targetType ).create( size, targetType );
-		} catch (IncompatibleTypeException e) {
-			e.printStackTrace();
-			return false;
-		} 
+		scaled = imgFactory.create( size, targetType ); 
 		
 		final Cursor< R > cursor = scaled.cursor();
 		final RandomAccess< T > c2 = integralImg.randomAccess();
@@ -209,7 +245,7 @@ public class ScaleAreaAveraging2d< T extends RealType<T>, R extends RealType<R>>
 	}
 	
 	/** The dimensions of the integral image are always +1 from the integrated image. */
-	protected static final boolean isIntegerDivision(Img<?> integralImg, Img<?> scaled) {
+	protected static final boolean isIntegerDivision(RandomAccessibleInterval<?> integralImg, RandomAccessibleInterval<?> scaled) {
 		for ( int d = 0; d < scaled.numDimensions(); ++d )
 			if ( 0 != (integralImg.dimension( d ) -1) % scaled.dimension( d ) )
 				return false;

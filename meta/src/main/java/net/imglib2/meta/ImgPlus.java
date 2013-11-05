@@ -504,5 +504,6 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 		}
 		return axes;
 	}
+	
 
 }
