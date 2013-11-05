@@ -62,6 +62,7 @@ import net.imglib2.view.Views;
  * @param <S>
  *            - {@link RealType} of the kernel
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
+ * @deprecated use {@link net.imglib2.algorithm.fft2.FFTConvolution} instead
  */
 public class FourierConvolution< T extends RealType< T >, S extends RealType< S >> implements MultiThreaded, OutputAlgorithm< Img< T >>, Benchmark
 {

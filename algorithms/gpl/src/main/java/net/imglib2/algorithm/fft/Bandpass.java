@@ -41,6 +41,7 @@ import net.imglib2.view.Views;
 /**
  * TODO
  * 
+ * @deprecated use {@link net.imglib2.algorithm.fft2.FFT} instead
  */
 public class Bandpass< T extends NumericType< T >> implements OutputAlgorithm< RandomAccessibleInterval< T >>, Benchmark
 {

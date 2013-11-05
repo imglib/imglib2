@@ -32,6 +32,7 @@ import net.imglib2.RandomAccess;
 /**
  * TODO
  *
+ * @deprecated
  */
 public class LocalNeighborhoodCursor<T> extends AbstractCursor<T>
 {

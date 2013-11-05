@@ -46,6 +46,7 @@ import net.imglib2.type.numeric.RealType;
  * @param <T> - the output, {@link RealType}
  * @param <S> - the input, {@link ComplexType}
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
+ * @deprecated use {@link net.imglib2.algorithm.fft2.FFT} instead
  */
 public class InverseFourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<Img<T>>, Benchmark
 {
