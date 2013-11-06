@@ -36,7 +36,6 @@
  */
 package net.imglib2.ops.operation.randomaccessibleinterval.unary;
 
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;

@@ -38,9 +38,9 @@
 package net.imglib2.ops.operation.imgplus.unary;
 
 import net.imglib2.meta.ImgPlus;
+import net.imglib2.meta.MetadataUtil;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.img.unary.ImgCopyOperation;
-import net.imglib2.ops.operation.metadata.unary.CopyMetadata;
 import net.imglib2.type.Type;
 
 /**
@@ -56,7 +56,7 @@ public class ImgPlusCopy< T extends Type< T >> implements UnaryOperation< ImgPlu
 	@Override
 	public ImgPlus< T > compute( ImgPlus< T > op, ImgPlus< T > r )
 	{
-		new CopyMetadata().compute(op, r);
+		MetadataUtil.copyImageMetadata( op, r );
 		new ImgCopyOperation< T >().compute( op, r );
 		return r;
 	}

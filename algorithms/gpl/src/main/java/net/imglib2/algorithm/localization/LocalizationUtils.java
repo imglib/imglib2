@@ -34,7 +34,6 @@ import net.imglib2.Localizable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.region.localneighborhood.RectangleCursor;
 import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodGPL;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 

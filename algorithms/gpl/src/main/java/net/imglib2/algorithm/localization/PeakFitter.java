@@ -38,7 +38,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.OutputAlgorithm;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 
 /**
