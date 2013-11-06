@@ -41,6 +41,7 @@ import java.util.Arrays;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.roi.RectangleRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
@@ -53,8 +54,7 @@ import net.imglib2.type.numeric.real.DoubleType;
  */
 public class NewImageAssign< U extends ComplexType< U >, V extends ComplexType< V >>
 {
-
-	Img< U > img;
+	RandomAccessibleInterval< U > img;
 
 	double[] origin;
 
@@ -62,7 +62,7 @@ public class NewImageAssign< U extends ComplexType< U >, V extends ComplexType< 
 
 	NewFunc< U, V > func;
 
-	public NewImageAssign( Img< U > img, double[] origin, double[] span, NewFunc< U, V > func )
+	public NewImageAssign( RandomAccessibleInterval< U > img, double[] origin, double[] span, NewFunc< U, V > func )
 	{
 		this.img = img;
 		this.origin = origin;

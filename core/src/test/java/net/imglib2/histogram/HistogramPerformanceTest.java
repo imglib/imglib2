@@ -51,7 +51,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 // with newer histogram implementations.
 
 /**
- * TODO
+ * Performance testing code for the histogram clases.
  * 
  * @author Curtis Rueden
  * @author Barry DeZonia

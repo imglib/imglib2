@@ -38,6 +38,8 @@
 package net.imglib2.ops.util;
 
 /**
+ * Implementing this interface allows a class to set its value directly from the
+ * specified type T.
  * 
  * @author Barry DeZonia
  */

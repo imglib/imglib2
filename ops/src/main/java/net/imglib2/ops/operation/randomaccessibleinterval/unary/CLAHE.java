@@ -53,7 +53,7 @@ import net.imglib2.view.Views;
  *         Processing, summer term 2011.
  * 
  */
-public class CLAHE< T extends RealType< T >, K extends RandomAccessibleInterval< T > & IterableInterval< T >> implements UnaryOperation< K, K >
+public class CLAHE< T extends RealType< T >> implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > >
 {
 
 	// ALGORITHM SETUP
@@ -133,10 +133,10 @@ public class CLAHE< T extends RealType< T >, K extends RandomAccessibleInterval<
 	}
 
 	@Override
-	public K compute( K in, K r )
+	public RandomAccessibleInterval< T > compute( RandomAccessibleInterval< T > in, RandomAccessibleInterval< T > r )
 	{
 
-		T type = r.firstElement().createVariable();
+		T type = Views.iterable( r ).firstElement().createVariable();
 		m_imgGrayMin = ( int ) Math.round( type.getMinValue() );
 		m_imgGrayMax = ( int ) Math.round( type.getMaxValue() );
 		m_imgNrGrayVals = m_imgGrayMax - m_imgGrayMin + 1;
@@ -312,7 +312,7 @@ public class CLAHE< T extends RealType< T >, K extends RandomAccessibleInterval<
 	 * Creates the histograms for all contextual regions. The image is scanned
 	 * line by line as this (hopefully) speeds up the underlying image cursor.
 	 */
-	private int[] createHistograms( K img )
+	private int[] createHistograms( RandomAccessibleInterval< T > img )
 	{
 		RandomAccess< T > ra = Views.extendPeriodic( img ).randomAccess();
 		int[] histograms = new int[ m_ctxNrX * m_ctxNrY * histNrBins ];
@@ -430,9 +430,9 @@ public class CLAHE< T extends RealType< T >, K extends RandomAccessibleInterval<
 	}
 
 	@Override
-	public UnaryOperation< K, K > copy()
+	public UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > > copy()
 	{
-		return new CLAHE< T, K >( m_ctxNrX, m_ctxNrY, m_enableClipping );
+		return new CLAHE< T >( m_ctxNrX, m_ctxNrY, m_enableClipping );
 	}
 
 }

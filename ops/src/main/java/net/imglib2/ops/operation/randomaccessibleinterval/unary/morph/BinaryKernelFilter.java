@@ -53,7 +53,7 @@ import net.imglib2.view.Views;
 /**
  * @author Felix Schonenberger (University of Konstanz)
  */
-public final class BinaryKernelFilter< T extends RealType< T >, K extends RandomAccessibleInterval< T > & IterableInterval< T >> implements UnaryOperation< K, K >
+public final class BinaryKernelFilter< T extends RealType< T > > implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >  >
 {
 
 	/*
@@ -176,13 +176,14 @@ public final class BinaryKernelFilter< T extends RealType< T >, K extends Random
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final K compute( final K op, final K r )
+	public final RandomAccessibleInterval< T >  compute( final RandomAccessibleInterval< T >  op, final RandomAccessibleInterval< T >  r )
 	{
+		IterableInterval<T> iterOp = Views.iterable( op );
 		int i = 0;
 		final long dim0 = op.dimension( m_dimIndex0 );
 		for ( Queue< T > q : m_kernel )
 		{
-			q.init( op.firstElement().createVariable() );
+			q.init( iterOp.firstElement().createVariable() );
 			for ( int j = 0; j < q.size(); j++ )
 				m_kernelReferenceArray.add( q.getType( j ) );
 		}
@@ -193,7 +194,7 @@ public final class BinaryKernelFilter< T extends RealType< T >, K extends Random
 		// TODO: IntervalIterator
 		final IntervalIterator ii = new IntervalIterator( dim );
 		RandomAccess< T > cr = r.randomAccess();
-		RandomAccess< T > co = Views.extendValue( op, op.firstElement().createVariable() ).randomAccess();
+		RandomAccess< T > co = Views.extendValue( op, iterOp.firstElement().createVariable() ).randomAccess();
 		// Iterate over image
 		long x0;
 		while ( ii.hasNext() )
@@ -298,8 +299,8 @@ public final class BinaryKernelFilter< T extends RealType< T >, K extends Random
 	}
 
 	@Override
-	public UnaryOperation< K, K > copy()
+	public UnaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<T> > copy()
 	{
-		return new BinaryKernelFilter< T, K >( m_kernel, m_dimIndex0, m_op );
+		return new BinaryKernelFilter< T >( m_kernel, m_dimIndex0, m_op );
 	}
 }

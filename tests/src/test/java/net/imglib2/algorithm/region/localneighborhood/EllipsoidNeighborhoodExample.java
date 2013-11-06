@@ -69,7 +69,7 @@ public class EllipsoidNeighborhoodExample
 			span[ 1 ] = ( long ) ( Math.random() / 10 * DIM );
 			span[ 2 ] = ( long ) ( Math.random() / 10 * DIM );
 
-			EllipsoidNeighborhood< UnsignedByteType, Img< UnsignedByteType >> ellipsoid = new EllipsoidNeighborhood< UnsignedByteType, Img< UnsignedByteType >>( image, center, span );
+			EllipsoidNeighborhood< UnsignedByteType > ellipsoid = new EllipsoidNeighborhood< UnsignedByteType >( image, center, span );
 
 			System.out.println( "Center: " + Util.printCoordinates( center ) );// DEBUG
 			System.out.println( "Span: " + Util.printCoordinates( span ) );// DEBUG
@@ -96,7 +96,7 @@ public class EllipsoidNeighborhoodExample
 		long[] span = new long[] { 0, 10, 10 };
 
 		// Write into the image
-		EllipsoidNeighborhood< UnsignedShortType, Img< UnsignedShortType >> ellipsoid = new EllipsoidNeighborhood< UnsignedShortType, Img< UnsignedShortType >>( image, center, span );
+		EllipsoidNeighborhood< UnsignedShortType > ellipsoid = new EllipsoidNeighborhood< UnsignedShortType >( image, center, span );
 
 		int val = 250;
 		for ( UnsignedShortType pixel : ellipsoid )
@@ -121,7 +121,7 @@ public class EllipsoidNeighborhoodExample
 		for ( int i = 0; i < spans.length; i++ )
 		{
 
-			EllipsoidNeighborhood< UnsignedByteType, Img< UnsignedByteType >> ellipsoid = new EllipsoidNeighborhood< UnsignedByteType, Img< UnsignedByteType > >( image, centers[i], spans[i] );
+			EllipsoidNeighborhood< UnsignedByteType > ellipsoid = new EllipsoidNeighborhood< UnsignedByteType >( image, centers[i], spans[i] );
 
 			// Write into the image
 			int val = 200;

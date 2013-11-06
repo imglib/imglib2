@@ -39,7 +39,7 @@ package net.imglib2.meta;
 
 
 /**
- * TODO
+ * A {@link CombinedRealInterval} that has calibrated axes. 
  * 
  * @author Barry DeZonia
  */

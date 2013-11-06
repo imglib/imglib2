@@ -47,7 +47,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 /**
  * @author Markus Friedrich (University of Konstanz)
  */
-public class MedianLocalThreshold< T extends RealType< T >, IN extends Iterator< T >> implements BinaryOperation< IN, T, BitType >
+public class MedianLocalThreshold< T extends RealType< T >> implements BinaryOperation< Iterator< T >, T, BitType >
 {
 
 	private double m_c;
@@ -64,16 +64,16 @@ public class MedianLocalThreshold< T extends RealType< T >, IN extends Iterator<
 	}
 
 	@Override
-	public BitType compute( IN input, T px, BitType output )
+	public BitType compute( Iterator< T > input, T px, BitType output )
 	{
 		output.set( px.getRealDouble() > m_median.compute( input, m_tmp ).getRealDouble() - m_c );
 		return output;
 	}
 
 	@Override
-	public BinaryOperation< IN, T, BitType > copy()
+	public BinaryOperation< Iterator< T >, T, BitType > copy()
 	{
-		return new MedianLocalThreshold< T, IN >( m_c );
+		return new MedianLocalThreshold< T >( m_c );
 	}
 
 }

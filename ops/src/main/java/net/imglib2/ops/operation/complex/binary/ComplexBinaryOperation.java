@@ -41,6 +41,7 @@ import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.numeric.ComplexType;
 
 /**
+ * A {@link BinaryOperation} between {@link ComplexType}s.
  * 
  * @author Barry DeZonia
  */

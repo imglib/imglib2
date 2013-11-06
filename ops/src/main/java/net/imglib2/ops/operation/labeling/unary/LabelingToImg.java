@@ -37,6 +37,7 @@
 package net.imglib2.ops.operation.labeling.unary;
 
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
 import net.imglib2.img.Img;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingMapping;
@@ -45,17 +46,17 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * 
+ * TODO: Now computes to IterableInterval.
  * @author Martin Horn (University of Konstanz)
  * 
  * @param <L>
  * @param <T>
  */
-public class LabelingToImg< L extends Comparable< L >, T extends RealType< T >> implements UnaryOperation< Labeling< L >, Img< T >>
+public class LabelingToImg< L extends Comparable< L >, T extends RealType< T >> implements UnaryOperation< Labeling< L >, IterableInterval< T >>
 {
 
 	@Override
-	public Img< T > compute( Labeling< L > op, Img< T > r )
+	public IterableInterval< T > compute( Labeling< L > op, IterableInterval< T > r )
 	{
 		T ref = r.firstElement().createVariable();
 		final Cursor< T > rc = r.cursor();
@@ -79,7 +80,7 @@ public class LabelingToImg< L extends Comparable< L >, T extends RealType< T >> 
 	}
 
 	@Override
-	public UnaryOperation< Labeling< L >, Img< T >> copy()
+	public UnaryOperation< Labeling< L >, IterableInterval< T >> copy()
 	{
 		return new LabelingToImg< L, T >();
 	}

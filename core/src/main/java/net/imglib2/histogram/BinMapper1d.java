@@ -39,6 +39,9 @@ package net.imglib2.histogram;
 
 
 /**
+ * An interface for defining a bin mapping algorithm. Arbitrary values of type T
+ * are mapped to long indices. There are also bounds testing methods.
+ *  
  * @author Barry DeZonia
  */
 public interface BinMapper1d<T> {

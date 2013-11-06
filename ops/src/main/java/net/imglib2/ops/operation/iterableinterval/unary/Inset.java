@@ -51,7 +51,7 @@ import net.imglib2.type.Type;
  * @param <T>
  *            image type
  */
-public class Inset< T extends Type< T >, K extends RandomAccessibleInterval< T >> implements UnaryOperation< IterableInterval< T >, K >
+public class Inset< T extends Type< T > > implements UnaryOperation< IterableInterval< T >, RandomAccessibleInterval< T >>
 {
 
 	private final long[] m_offset;
@@ -62,7 +62,7 @@ public class Inset< T extends Type< T >, K extends RandomAccessibleInterval< T >
 	}
 
 	@Override
-	public K compute( IterableInterval< T > inset, K res )
+	public RandomAccessibleInterval< T > compute( IterableInterval< T > inset, RandomAccessibleInterval< T > res )
 	{
 		long[] pos = new long[ inset.numDimensions() ];
 
@@ -88,8 +88,8 @@ public class Inset< T extends Type< T >, K extends RandomAccessibleInterval< T >
 	}
 
 	@Override
-	public Inset< T, K > copy()
+	public Inset< T > copy()
 	{
-		return new Inset< T, K >( m_offset.clone() );
+		return new Inset< T >( m_offset.clone() );
 	}
 }

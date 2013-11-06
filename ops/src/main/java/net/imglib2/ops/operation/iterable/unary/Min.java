@@ -54,9 +54,7 @@ public class Min< T extends RealType< T >, V extends RealType< V >> implements U
 		double min = Double.MAX_VALUE;
 		while ( input.hasNext() )
 		{
-			T in = input.next();
-
-			double val = in.getRealDouble();
+			double val = input.next().getRealDouble();
 			if ( val < min )
 				min = val;
 		}
