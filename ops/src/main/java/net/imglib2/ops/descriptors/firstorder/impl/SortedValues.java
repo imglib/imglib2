@@ -1,4 +1,4 @@
-package net.imglib2.ops.descriptors.firstorder.percentile;
+package net.imglib2.ops.descriptors.firstorder.impl;
 
 import java.util.Arrays;
 import java.util.Iterator;

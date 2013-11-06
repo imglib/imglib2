@@ -1,6 +1,7 @@
 package net.imglib2.ops.descriptors.firstorder.percentile;
 
 import net.imglib2.ops.descriptors.ModuleInput;
+import net.imglib2.ops.descriptors.firstorder.impl.SortedValues;
 
 public class Percentile75 extends Percentile 
 {

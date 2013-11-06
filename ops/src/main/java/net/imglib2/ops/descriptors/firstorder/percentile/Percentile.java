@@ -5,7 +5,7 @@ import net.imglib2.ops.descriptors.AbstractFeatureModule;
 public abstract class Percentile extends AbstractFeatureModule
 {
 	protected double calculatePercentile(double p, double[] v) {
-		double[] values = v;//sortedValues.get();
+		double[] values = v;
 		final int size = values.length;
 		
 		if (size == 0)
