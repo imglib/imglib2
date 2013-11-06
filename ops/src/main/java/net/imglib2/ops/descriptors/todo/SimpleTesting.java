@@ -13,6 +13,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.data.CooccurrenceMatrix.MatrixOrientation;
 import net.imglib2.ops.descriptors.Descriptor;
 import net.imglib2.ops.descriptors.DescriptorTreeBuilder;
+import net.imglib2.ops.descriptors.firstorder.percentile.helper.PercentileParameter;
 import net.imglib2.ops.descriptors.haralick.helpers.CoocParameter;
 import net.imglib2.ops.descriptors.sets.FirstOrderDescriptors;
 import net.imglib2.ops.descriptors.sets.GeometricFeatureSet;
@@ -37,6 +38,8 @@ public class SimpleTesting< T extends RealType< T >>
 	private ExamplePolygonSource sourcePolygon;
 
 	private ExampleHaralickParameterSource sourceHaralickParam;
+	
+	private ExamplePercentileParameterSource sourcePercentileParam;
 
 	public SimpleTesting()
 	{
@@ -48,6 +51,7 @@ public class SimpleTesting< T extends RealType< T >>
 		sourceII = new ExampleIterableIntervalSource();
 		sourcePolygon = new ExamplePolygonSource();
 		sourceHaralickParam = new ExampleHaralickParameterSource();
+		sourcePercentileParam = new ExamplePercentileParameterSource();
 
 		// create the builder
 		builder = new DescriptorTreeBuilder();
@@ -55,11 +59,13 @@ public class SimpleTesting< T extends RealType< T >>
 		builder.registerDescriptorSet( new GeometricFeatureSet() );
 		builder.registerDescriptorSet( new HaralickFeatureSet() );
 		builder.registerDescriptorSet( new TamuraFeatureSet() );
+		
 
 		// set the sources
 		builder.registerSource( sourceII );
 		builder.registerSource( sourcePolygon );
 		builder.registerSource( sourceHaralickParam );
+		builder.registerSource( sourcePercentileParam );
 
 		// optimize the featureset
 		builder.build();
@@ -71,6 +77,7 @@ public class SimpleTesting< T extends RealType< T >>
 		sourceII.update( ii );
 		sourcePolygon.update( extractPolygon( binaryMask( ii ) ) );
 		sourceHaralickParam.update( createHaralickParam( 1 ) );
+		sourcePercentileParam.update(createPercentileParam(0.88));
 
 		// iterating over results
 		Iterator< Descriptor > iterator = builder.iterator();
@@ -132,6 +139,21 @@ public class SimpleTesting< T extends RealType< T >>
 			return Double.MAX_VALUE;
 		}
 	}
+	
+	class ExamplePercentileParameterSource extends AbstractTreeSource< PercentileParameter >
+	{
+		@Override
+		public boolean hasCompatibleOutput( Class< ? > clazz )
+		{
+			return clazz.isAssignableFrom( PercentileParameter.class );
+		}
+
+		@Override
+		public double priority()
+		{
+			return Double.MAX_VALUE;
+		}
+	}
 
 	class ExamplePolygonSource extends AbstractTreeSource< Polygon >
 	{
@@ -158,6 +180,16 @@ public class SimpleTesting< T extends RealType< T >>
 		param.nrGrayLevels = 32;
 		param.distance = distance;
 		param.orientation = MatrixOrientation.HORIZONTAL;
+		return param;
+	}
+	
+	/*
+	 * FOR TESTING
+	 */
+	private PercentileParameter createPercentileParam( double p )
+	{
+		PercentileParameter param = new PercentileParameter();
+		param.setP(p);
 		return param;
 	}
 
