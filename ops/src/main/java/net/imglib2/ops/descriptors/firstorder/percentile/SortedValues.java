@@ -1,18 +1,11 @@
 package net.imglib2.ops.descriptors.firstorder.percentile;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
-
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.descriptors.AbstractFeatureModule;
 import net.imglib2.ops.descriptors.AbstractModule;
 import net.imglib2.ops.descriptors.Module;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.tamura.GreyValueMatrix;
 import net.imglib2.type.numeric.RealType;
 
 public class SortedValues extends AbstractModule<double[]> 

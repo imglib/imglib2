@@ -1,8 +1,9 @@
 package net.imglib2.ops.descriptors.sets;
 
 import net.imglib2.ops.descriptors.AbstractDescriptorSet;
+import net.imglib2.ops.descriptors.firstorder.Max;
 import net.imglib2.ops.descriptors.firstorder.Mean;
-import net.imglib2.ops.descriptors.firstorder.percentile.Percentile;
+import net.imglib2.ops.descriptors.firstorder.Min;
 import net.imglib2.ops.descriptors.firstorder.percentile.Percentile25;
 import net.imglib2.ops.descriptors.firstorder.percentile.Percentile50;
 import net.imglib2.ops.descriptors.firstorder.percentile.Percentile75;
@@ -22,6 +23,8 @@ public class FirstOrderDescriptors extends AbstractDescriptorSet
 		registerFeature(Percentile25.class);
 		registerFeature(Percentile50.class);
 		registerFeature(Percentile75.class);
+		registerFeature(Min.class);
+		registerFeature(Max.class);
 
 		// registerFeature( new SumOfLogs() );
 		// registerFeature( new SumOfSquares() );
