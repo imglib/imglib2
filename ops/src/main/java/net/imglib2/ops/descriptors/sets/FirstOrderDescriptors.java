@@ -2,6 +2,10 @@ package net.imglib2.ops.descriptors.sets;
 
 import net.imglib2.ops.descriptors.AbstractDescriptorSet;
 import net.imglib2.ops.descriptors.firstorder.Mean;
+import net.imglib2.ops.descriptors.firstorder.percentile.Percentile;
+import net.imglib2.ops.descriptors.firstorder.percentile.Percentile25;
+import net.imglib2.ops.descriptors.firstorder.percentile.Percentile50;
+import net.imglib2.ops.descriptors.firstorder.percentile.Percentile75;
 import net.imglib2.ops.descriptors.geometric.centerofgravity.CenterOfGravity;
 
 /**
@@ -15,6 +19,9 @@ public class FirstOrderDescriptors extends AbstractDescriptorSet
 
 		registerFeature( Mean.class );
 		registerFeature( CenterOfGravity.class );
+		registerFeature(Percentile25.class);
+		registerFeature(Percentile50.class);
+		registerFeature(Percentile75.class);
 
 		// registerFeature( new SumOfLogs() );
 		// registerFeature( new SumOfSquares() );
