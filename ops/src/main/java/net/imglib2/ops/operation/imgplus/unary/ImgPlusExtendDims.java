@@ -47,6 +47,7 @@ import net.imglib2.meta.AxisType;
 import net.imglib2.ops.img.UnaryObjectFactory;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.ops.operation.UnaryOutputOperation;
+import net.imglib2.ops.operation.metadata.unary.CopyMetadata;
 import net.imglib2.type.Type;
 
 /**
@@ -127,8 +128,7 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 		Cursor< T > srcCur = op.localizingCursor();
 		RandomAccess< T > resRA = r.randomAccess();
 
-		// TODO: Copy metadata!
-		r.setName( op.getName() );
+		new CopyMetadata().compute(op, r);
 
 		for ( int d = 0; d < op.numDimensions(); d++ )
 		{

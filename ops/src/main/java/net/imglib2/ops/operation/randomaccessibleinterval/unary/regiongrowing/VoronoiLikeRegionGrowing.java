@@ -59,7 +59,7 @@ import net.imglib2.view.Views;
 /**
  * @author Martin Horn (University of Konstanz)
  */
-public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type< T > & Comparable< T >> extends AbstractRegionGrowing< LabelingType< L >, L>
+public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type< T > & Comparable< T >> extends AbstractRegionGrowing< LabelingType< L >, L >
 {
 
 	private Cursor< LabelingType< L >> m_seedLabCur;
@@ -68,7 +68,7 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 
 	private final T m_threshold;
 
-	protected Img< T > m_srcImg;
+	protected RandomAccessibleInterval< T > m_srcImg;
 
 	protected final boolean m_fillHoles;
 
@@ -83,7 +83,7 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 	 *            fills the wholes in a post-processing step within segments of
 	 *            the same label
 	 */
-	public VoronoiLikeRegionGrowing( Img< T > srcImg, T threshold, boolean fillHoles )
+	public VoronoiLikeRegionGrowing( RandomAccessibleInterval< T > srcImg, T threshold, boolean fillHoles )
 	{
 		super( AbstractRegionGrowing.get8ConStructuringElement( srcImg.numDimensions() ), GrowingMode.SYNCHRONOUS, false );
 		m_threshold = threshold;
@@ -109,7 +109,7 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 	@Override
 	protected void initRegionGrowing( RandomAccessibleInterval< LabelingType< L > > srcImg )
 	{
-		m_seedLabCur = Views.iterable(srcImg).localizingCursor();
+		m_seedLabCur = Views.iterable( srcImg ).localizingCursor();
 
 	}
 

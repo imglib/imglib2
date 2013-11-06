@@ -51,7 +51,8 @@ import org.junit.Test;
  * @author Barry DeZonia
  *
  */
-public class RoiPointSetTest {
+public class RoiPointSetTest
+{
 
 	@Test
 	public void test()

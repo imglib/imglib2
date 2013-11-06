@@ -50,7 +50,11 @@ import net.imglib2.ops.operation.UnaryOperation;
  * 
  * @param <L>
  */
+<<<<<<< HEAD:ops/src/main/java/net/imglib2/ops/operation/labeling/unary/ExcludeOnEdges.java
 public class ExcludeOnEdges< L extends Comparable< L >> implements UnaryOperation< Labeling< L >, Labeling< L >>
+=======
+public class ResultAsAdditionalDimOp< T extends Type< T >, O extends Type< O >, IN extends RandomAccessibleInterval< T >> implements UnaryOutputOperation< IN, RandomAccessibleInterval< O > >
+>>>>>>> master:ops/src/main/java/net/imglib2/ops/img/ResultAsAdditionalDimOp.java
 {
 
 	@Override
@@ -64,8 +68,14 @@ public class ExcludeOnEdges< L extends Comparable< L >> implements UnaryOperatio
 
 		HashSet< List< L >> indices = new HashSet< List< L >>();
 
+<<<<<<< HEAD:ops/src/main/java/net/imglib2/ops/operation/labeling/unary/ExcludeOnEdges.java
 		RandomAccess< LabelingType< L >> outRndAccess = outLabeling.randomAccess();
 		RandomAccess< LabelingType< L >> inRndAccess = inLabeling.randomAccess();
+=======
+	@Override
+	public RandomAccessibleInterval< O > compute( IN input, RandomAccessibleInterval< O > output )
+	{
+>>>>>>> master:ops/src/main/java/net/imglib2/ops/img/ResultAsAdditionalDimOp.java
 
 		Cursor< LabelingType< L >> cur = inLabeling.cursor();
 
@@ -73,10 +83,18 @@ public class ExcludeOnEdges< L extends Comparable< L >> implements UnaryOperatio
 
 		for ( int d = 0; d < dims.length; d++ )
 		{
+<<<<<<< HEAD:ops/src/main/java/net/imglib2/ops/operation/labeling/unary/ExcludeOnEdges.java
+=======
+			max[ max.length - 1 ] = i;
+			min[ min.length - 1 ] = i;
+			m_operations[ i ].compute( input, new ImgView< O >( SubsetViews.iterableSubsetView( output, new FinalInterval( min, max ) ), m_fac ) );
+		}
+>>>>>>> master:ops/src/main/java/net/imglib2/ops/img/ResultAsAdditionalDimOp.java
 
 			for ( int i = 0; i < Math.pow( 2, dims.length - 1 ); i++ )
 			{
 
+<<<<<<< HEAD:ops/src/main/java/net/imglib2/ops/operation/labeling/unary/ExcludeOnEdges.java
 				int offset = 0;
 				for ( int dd = 0; dd < dims.length; dd++ )
 				{
@@ -87,6 +105,13 @@ public class ExcludeOnEdges< L extends Comparable< L >> implements UnaryOperatio
 					}
 					pos[ dd ] = ( i % Math.pow( 2, dd - offset + 1 ) == 0 ) ? 0 : dims[ dd ] - 1;
 				}
+=======
+	@Override
+	public RandomAccessibleInterval< O > compute( IN in )
+	{
+		return compute( in, createEmptyOutput( in ) );
+	}
+>>>>>>> master:ops/src/main/java/net/imglib2/ops/img/ResultAsAdditionalDimOp.java
 
 				pos[ d ] = 0;
 				for ( int k = 0; k < dims[ d ]; k++ )
@@ -117,7 +142,11 @@ public class ExcludeOnEdges< L extends Comparable< L >> implements UnaryOperatio
 	}
 
 	@Override
+<<<<<<< HEAD:ops/src/main/java/net/imglib2/ops/operation/labeling/unary/ExcludeOnEdges.java
 	public UnaryOperation< Labeling< L >, Labeling< L >> copy()
+=======
+	public UnaryOutputOperation< IN, RandomAccessibleInterval< O >> copy()
+>>>>>>> master:ops/src/main/java/net/imglib2/ops/img/ResultAsAdditionalDimOp.java
 	{
 		return new ExcludeOnEdges< L >();
 	}

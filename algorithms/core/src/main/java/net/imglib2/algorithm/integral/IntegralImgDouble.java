@@ -38,8 +38,8 @@
 package net.imglib2.algorithm.integral;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.real.DoubleType;
 
@@ -52,7 +52,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 public class IntegralImgDouble< R extends NumericType< R > > extends IntegralImg< R, DoubleType >
 {
 
-	public IntegralImgDouble( final Img<R> img, final DoubleType type, final Converter<R, DoubleType> converter) 
+	public IntegralImgDouble( final RandomAccessibleInterval<R> img, final DoubleType type, final Converter<R, DoubleType> converter) 
 	{
 		super( img, type, converter );
 	}

@@ -49,7 +49,7 @@ public class RectangleCursor<T> extends AbstractNeighborhoodCursor<T> {
 	 */
 
 	public RectangleCursor(
-			AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> rectangle) {
+			AbstractNeighborhood<T> rectangle) {
 		super(rectangle);
 		this.position = new long[rectangle.source.numDimensions()];
 		reset();

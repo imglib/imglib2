@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * @author Clemens Muething (University of Konstanz)
  */
-public class GrayscaleReconstructionByDilation< T extends RealType< T >, V extends RealType< V >, MASK extends RandomAccessibleInterval< T >, MARKER extends RandomAccessibleInterval< V >> extends AbstractGrayscaleReconstruction< T, V, MASK, MARKER >
+public class GrayscaleReconstructionByDilation< T extends RealType< T >, V extends RealType< V >> extends AbstractGrayscaleReconstruction< T, V >
 {
 
 	public GrayscaleReconstructionByDilation( final ConnectedType connection )
@@ -52,7 +52,7 @@ public class GrayscaleReconstructionByDilation< T extends RealType< T >, V exten
 		super( connection );
 	}
 
-	public GrayscaleReconstructionByDilation( final GrayscaleReconstructionByDilation< T, V, MASK, MARKER > copy )
+	public GrayscaleReconstructionByDilation( final GrayscaleReconstructionByDilation< T, V > copy )
 	{
 		super( copy );
 	}
@@ -113,8 +113,8 @@ public class GrayscaleReconstructionByDilation< T extends RealType< T >, V exten
 	}
 
 	@Override
-	public UnaryOperation< MASK, MARKER > copy()
+	public UnaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V> > copy()
 	{
-		return new GrayscaleReconstructionByDilation< T, V, MASK, MARKER >( this );
+		return new GrayscaleReconstructionByDilation< T, V >( this );
 	}
 }

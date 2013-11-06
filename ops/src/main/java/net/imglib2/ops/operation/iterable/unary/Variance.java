@@ -58,7 +58,7 @@ public class Variance< T extends RealType< T >, V extends RealType< V >> impleme
 		while ( input.hasNext() )
 		{
 			double px = input.next().getRealDouble();
-			n++;
+			++n;
 			sum += px;
 			sumSqr += px * px;
 		}
