@@ -83,8 +83,8 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 
 		// TODO: this is ugly, but the only way to make sure, that iteration
 		// order fits in the case of one sized dims. Tobi?
-		IntervalView< A > srcIterableForCursor = Views.interval( source, new FinalInterval( min, max ) );
-		IterableInterval< A > srcIterableForIterationOrder = clean( srcIterableForCursor );
+		IterableInterval< A > srcIterableForCursor = Views.iterable( Views.interval( source, new FinalInterval( min, max ) ) );
+		IterableInterval< A > srcIterableForIterationOrder = Views.iterable( clean( Views.interval( source, new FinalInterval( min, max ) ) ) );
 
 		final Cursor< B > targetCursor = target.localizingCursor();
 		final Cursor< A > sourceCursor = srcIterableForCursor.cursor();
