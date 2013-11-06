@@ -48,6 +48,7 @@ import net.imglib2.converter.Converter;
  *
  * @author Stephan Preibisch
  */
+@Deprecated
 public abstract class AbstractLineIterator implements Iterator
 {
 	long i;

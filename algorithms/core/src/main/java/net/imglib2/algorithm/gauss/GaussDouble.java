@@ -61,6 +61,7 @@ import net.imglib2.view.Views;
  *
  * @author Stephan Preibisch
  */
+@Deprecated
 final public class GaussDouble extends AbstractGauss< DoubleType >
 {
 	protected boolean isArray;

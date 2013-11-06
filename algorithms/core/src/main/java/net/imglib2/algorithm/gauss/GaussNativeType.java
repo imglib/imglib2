@@ -61,6 +61,7 @@ import net.imglib2.view.Views;
  *
  * @author Stephan Preibisch
  */
+@Deprecated
 public class GaussNativeType< T extends NumericType< T > & NativeType< T > > extends AbstractGauss< T >
 {
 	protected boolean isArray;
