@@ -1,16 +1,9 @@
-package net.imglib2.ops.descriptors.todo;
+package net.imglib2.ops.descriptors.zernike.helper;
 
 import java.util.ArrayList;
 
-/**
- * TODO: Auto-generated
- * 
- * @author <a href="mailto:dietzc85@googlemail.com">Christian Dietz</a>
- * @author <a href="mailto:horn_martin@gmx.de">Martin Horn</a>
- * @author <a href="mailto:michael.zinsmaier@googlemail.com">Michael Zinsmaier</a>
- */
-class FactorialComputer {
-    /** the highest number this thing can handle. */
+public class FactComputer {
+	   /** the highest number this thing can handle. */
     private final int m_high;
 
     /** array of prime numbers up to m_high. */
@@ -25,9 +18,12 @@ class FactorialComputer {
      * @param n the number to test
      * @return is the number prime?
      */
-    private boolean isPrime(final int n) {
-        for (int i = 0; i < m_primes.size(); ++i) {
-            if ((n % m_primes.get(i)) == 0) {
+    private boolean isPrime(final int n) 
+    {
+        for (int i = 0; i < m_primes.size(); ++i) 
+        {
+            if ((n % m_primes.get(i)) == 0) 
+            {
                 return false;
             }
         }
@@ -39,12 +35,15 @@ class FactorialComputer {
      * 
      * @param high the highest number we want to handle
      */
-    public FactorialComputer(final int high) {
+    public FactComputer(final int high) 
+    {
         m_high = high;
 
         m_primes = new ArrayList<Integer>();
-        for (int i = 2; i <= high; ++i) {
-            if (isPrime(i)) {
+        for (int i = 2; i <= high; ++i) 
+        {
+            if (isPrime(i)) 
+            {
                 m_primes.add(i);
             }
         }
@@ -56,13 +55,17 @@ class FactorialComputer {
      * 
      * @param nParam the number
      */
-    public void multiplyBy(final int nParam) {
+    public void multiplyBy(final int nParam) 
+    {
         int n = nParam;
-        if ((nParam < 0) || (nParam > m_high)) {
+        if ((nParam < 0) || (nParam > m_high)) 
+        {
             throw new IllegalArgumentException("Multiplication with out of range number!");
         }
-        for (int i = 0; i < m_primes.size(); ++i) {
-            while ((n % m_primes.get(i)) == 0) {
+        for (int i = 0; i < m_primes.size(); ++i) 
+        {
+            while ((n % m_primes.get(i)) == 0) 
+            {
                 n /= m_primes.get(i);
                 m_values[i]++;
             }
@@ -74,13 +77,17 @@ class FactorialComputer {
      * 
      * @param nParam the number
      */
-    public void divideBy(final int nParam) {
+    public void divideBy(final int nParam)
+    {
         int n = nParam;
-        if ((nParam < 0) || (nParam > m_high)) {
+        if ((nParam < 0) || (nParam > m_high)) 
+        {
             throw new IllegalArgumentException("Division with out of range number!");
         }
-        for (int i = 0; i < m_primes.size(); ++i) {
-            while ((n % m_primes.get(i)) == 0) {
+        for (int i = 0; i < m_primes.size(); ++i) 
+        {
+            while ((n % m_primes.get(i)) == 0) 
+            {
                 n /= m_primes.get(i);
                 m_values[i]--;
             }
@@ -92,11 +99,14 @@ class FactorialComputer {
      * 
      * @param n the factorial
      */
-    public void multiplyByFactorialOf(final int n) {
-        if ((n < 0) || (n > m_high)) {
+    public void multiplyByFactorialOf(final int n) 
+    {
+        if ((n < 0) || (n > m_high)) 
+        {
             throw new IllegalArgumentException("Not able to handle multiplication by " + " factorial of " + n);
         }
-        for (int i = 2; i <= n; ++i) {
+        for (int i = 2; i <= n; ++i) 
+        {
             multiplyBy(i);
         }
     }
@@ -106,11 +116,14 @@ class FactorialComputer {
      * 
      * @param n the factorial
      */
-    public void divideByFactorialOf(final int n) {
-        if ((n < 0) || (n > m_high)) {
+    public void divideByFactorialOf(final int n)
+    {
+        if ((n < 0) || (n > m_high)) 
+        {
             throw new IllegalArgumentException("Not able to handle division by factorial of " + n);
         }
-        for (int i = 2; i <= n; ++i) {
+        for (int i = 2; i <= n; ++i) 
+        {
             divideBy(i);
         }
     }
@@ -120,16 +133,21 @@ class FactorialComputer {
      * 
      * @return the value computed so far
      */
-    public int value() {
+    public int value() 
+    {
         int result = 1;
-        for (int i = 0; i < m_primes.size(); ++i) {
-            if (m_values[i] < 0) {
+        for (int i = 0; i < m_primes.size(); ++i) 
+        {
+            if (m_values[i] < 0) 
+            {
                 throw new IllegalArgumentException("Result is not an integer");
             }
-            for (int j = 0; j < m_values[i]; ++j) {
+            for (int j = 0; j < m_values[i]; ++j) 
+            {
                 final int oldResult = result;
                 result *= m_primes.get(i);
-                if ((result / m_primes.get(i)) != oldResult) {
+                if ((result / m_primes.get(i)) != oldResult) 
+                {
                     throw new IllegalArgumentException("Overflow while computing factorial!");
                 }
             }

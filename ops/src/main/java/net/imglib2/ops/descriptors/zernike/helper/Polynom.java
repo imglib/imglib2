@@ -1,9 +1,10 @@
-package net.imglib2.ops.descriptors.todo;
+package net.imglib2.ops.descriptors.zernike.helper;
 
 /**
  * class used to represent a zernike moment polynomial.
  */
-public class Polynom {
+public class Polynom 
+{
     /** the array of polynom coefficients. */
     private final int[] m_coefficients;
 
@@ -15,10 +16,12 @@ public class Polynom {
      * 
      * @param degree the degree of the polynom
      */
-    public Polynom(final int degree) {
+    public Polynom(final int degree) 
+    {
         m_degree = degree;
         m_coefficients = new int[m_degree + 1];
-        for (int i = 0; i <= m_degree; ++i) {
+        for (int i = 0; i <= m_degree; ++i) 
+        {
             setCoefficient(i, 0);
         }
     }
@@ -29,7 +32,8 @@ public class Polynom {
      * @param pos the position (the power of the monom)
      * @param coef the coefficient
      */
-    public void setCoefficient(final int pos, final int coef) {
+    public void setCoefficient(final int pos, final int coef) 
+    {
         m_coefficients[pos] = coef;
     }
 
@@ -39,7 +43,8 @@ public class Polynom {
      * @param pos the position
      * @return the coefficient
      */
-    public int getCoefficient(final int pos) {
+    public int getCoefficient(final int pos) 
+    {
         return m_coefficients[pos];
     }
 
@@ -49,10 +54,12 @@ public class Polynom {
      * @param x the point
      * @return the value of the polynom
      */
-    public double evaluate(final double x) {
+    public double evaluate(final double x) 
+    {
         double power = 1.0;
         double result = 0.0;
-        for (int i = 0; i <= m_degree; ++i) {
+        for (int i = 0; i <= m_degree; ++i) 
+        {
             result += m_coefficients[i] * power;
             power *= x;
         }
@@ -65,10 +72,13 @@ public class Polynom {
      * @return the String representation
      */
     @Override
-    public String toString() {
+    public String toString() 
+    {
         final StringBuffer result = new StringBuffer();
-        for (int i = 0; i <= m_degree; ++i) {
-            if (m_coefficients[i] != 0) {
+        for (int i = 0; i <= m_degree; ++i) 
+        {
+            if (m_coefficients[i] != 0) 
+            {
                 result.append(m_coefficients[i] + "X^" + i + "  ");
             }
         }

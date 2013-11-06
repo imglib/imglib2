@@ -1,6 +1,5 @@
 package net.imglib2.ops.descriptors.firstorder.percentile;
 
-import java.util.ArrayList;
 import net.imglib2.ops.descriptors.ModuleInput;
 import net.imglib2.ops.descriptors.firstorder.impl.SortedValues;
 
@@ -20,6 +19,4 @@ public class Percentile25 extends Percentile
 		return this.calculatePercentile(0.25, sortedValues.get());
 		
 	}
-	
-	
 }

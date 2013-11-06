@@ -19,6 +19,8 @@ import net.imglib2.ops.descriptors.sets.FirstOrderDescriptors;
 import net.imglib2.ops.descriptors.sets.GeometricFeatureSet;
 import net.imglib2.ops.descriptors.sets.HaralickFeatureSet;
 import net.imglib2.ops.descriptors.sets.TamuraFeatureSet;
+import net.imglib2.ops.descriptors.sets.ZernikeDescriptorSet;
+import net.imglib2.ops.descriptors.zernike.ZernikeParameter;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
@@ -40,6 +42,8 @@ public class SimpleTesting< T extends RealType< T >>
 	private ExampleHaralickParameterSource sourceHaralickParam;
 	
 	private ExamplePercentileParameterSource sourcePercentileParam;
+	
+	private ExamplezernikeParameterSource sourceZernikeParam;
 
 	public SimpleTesting()
 	{
@@ -52,6 +56,7 @@ public class SimpleTesting< T extends RealType< T >>
 		sourcePolygon = new ExamplePolygonSource();
 		sourceHaralickParam = new ExampleHaralickParameterSource();
 		sourcePercentileParam = new ExamplePercentileParameterSource();
+		sourceZernikeParam = new ExamplezernikeParameterSource();
 
 		// create the builder
 		builder = new DescriptorTreeBuilder();
@@ -59,6 +64,7 @@ public class SimpleTesting< T extends RealType< T >>
 		builder.registerDescriptorSet( new GeometricFeatureSet() );
 		builder.registerDescriptorSet( new HaralickFeatureSet() );
 		builder.registerDescriptorSet( new TamuraFeatureSet() );
+		builder.registerDescriptorSet( new ZernikeDescriptorSet() );
 		
 
 		// set the sources
@@ -66,6 +72,7 @@ public class SimpleTesting< T extends RealType< T >>
 		builder.registerSource( sourcePolygon );
 		builder.registerSource( sourceHaralickParam );
 		builder.registerSource( sourcePercentileParam );
+		builder.registerSource(sourceZernikeParam);
 
 		// optimize the featureset
 		builder.build();
@@ -77,7 +84,8 @@ public class SimpleTesting< T extends RealType< T >>
 		sourceII.update( ii );
 		sourcePolygon.update( extractPolygon( binaryMask( ii ) ) );
 		sourceHaralickParam.update( createHaralickParam( 1 ) );
-		sourcePercentileParam.update(createPercentileParam(0.88));
+		sourcePercentileParam.update(createPercentileParam(0.5));
+		sourceZernikeParam.update(createZernikeParam(1, 2));
 
 		// iterating over results
 		Iterator< Descriptor > iterator = builder.iterator();
@@ -154,6 +162,21 @@ public class SimpleTesting< T extends RealType< T >>
 			return Double.MAX_VALUE;
 		}
 	}
+	
+	class ExamplezernikeParameterSource extends AbstractTreeSource< ZernikeParameter >
+	{
+		@Override
+		public boolean hasCompatibleOutput( Class< ? > clazz )
+		{
+			return clazz.isAssignableFrom( ZernikeParameter.class );
+		}
+
+		@Override
+		public double priority()
+		{
+			return Double.MAX_VALUE;
+		}
+	}
 
 	class ExamplePolygonSource extends AbstractTreeSource< Polygon >
 	{
@@ -190,6 +213,17 @@ public class SimpleTesting< T extends RealType< T >>
 	{
 		PercentileParameter param = new PercentileParameter();
 		param.setP(p);
+		return param;
+	}
+	
+	/*
+	 * FOR TESTING
+	 */
+	private ZernikeParameter createZernikeParam( int m, int n )
+	{
+		ZernikeParameter param = new ZernikeParameter();
+		param.setM(m);
+		param.setN(n);
 		return param;
 	}
 
