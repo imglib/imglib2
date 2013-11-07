@@ -6,7 +6,6 @@ import net.imglib2.ops.descriptors.AbstractModule;
 import net.imglib2.ops.descriptors.Module;
 import net.imglib2.ops.descriptors.ModuleInput;
 import net.imglib2.ops.descriptors.geometric.centerofgravity.CenterOfGravity;
-import net.imglib2.ops.descriptors.haralick.CoocccurrenceMatrix;
 import net.imglib2.ops.descriptors.zernike.helper.Polynom;
 import net.imglib2.ops.descriptors.zernike.helper.FactComputer;
 import net.imglib2.type.numeric.RealType;

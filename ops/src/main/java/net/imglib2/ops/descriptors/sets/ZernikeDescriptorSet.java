@@ -12,7 +12,7 @@ public class ZernikeDescriptorSet extends AbstractDescriptorSet
 		super();
 
 		registerFeature(ZernikeComplexValues.class );
-		registerFeature(ZernikeComplexMagnitude.class );
+		//registerFeature(ZernikeComplexMagnitude.class );
 	}
 	
 	@Override
