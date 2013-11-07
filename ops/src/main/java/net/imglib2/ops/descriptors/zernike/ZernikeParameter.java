@@ -2,7 +2,14 @@ package net.imglib2.ops.descriptors.zernike;
 
 public class ZernikeParameter 
 {
+	/**
+	 * repition
+	 */
 	private int m;
+	
+	/**
+	 * order
+	 */
 	private int n;
 	
 	public int getM() 

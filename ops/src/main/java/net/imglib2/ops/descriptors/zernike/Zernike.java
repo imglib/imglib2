@@ -1,17 +1,17 @@
 package net.imglib2.ops.descriptors.zernike;
 
-import java.util.Iterator;
-
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
-import net.imglib2.ops.descriptors.AbstractDescriptorModule;
+import net.imglib2.ops.descriptors.AbstractModule;
+import net.imglib2.ops.descriptors.Module;
 import net.imglib2.ops.descriptors.ModuleInput;
 import net.imglib2.ops.descriptors.geometric.centerofgravity.CenterOfGravity;
+import net.imglib2.ops.descriptors.haralick.CoocccurrenceMatrix;
 import net.imglib2.ops.descriptors.zernike.helper.Polynom;
 import net.imglib2.ops.descriptors.zernike.helper.FactComputer;
 import net.imglib2.type.numeric.RealType;
 
-public class Zernike extends AbstractDescriptorModule
+public class Zernike extends AbstractModule<double[]>
 {
 	private static final double MAX_PIXEL_VALUE = 255.0;
 	
@@ -23,25 +23,31 @@ public class Zernike extends AbstractDescriptorModule
 	
 	@ModuleInput
 	ZernikeParameter param;
-
+	
 	@Override
-	public String name() {
-		return "Zernike Moment";
+	public boolean isEquivalentModule( Module< ? > output )
+	{
+		return Zernike.class.isAssignableFrom( output.getClass() );
 	}
 
 	@Override
+	public boolean hasCompatibleOutput( Class< ? > clazz )
+	{
+		return clazz.isAssignableFrom( double[].class );
+	}
+
 	protected double[] recompute() {
 		
         double real = 0;
         double imag = 0;
 		
+        // order
 		final int n = param.getN();
+		// repetition
 		final int m = param.getN();
 		
-		 if ((m < 0) || (((m - Math.abs(n)) % 2) != 0) || (Math.abs(n) > m)) 
-		 {
+		if ((m < 0) || (((m - Math.abs(n)) % 2) != 0) || (Math.abs(n) > m)) 
 	            throw new IllegalArgumentException("m and n do not satisfy the" + "Zernike moment properties");
-	     }
 
         final double centerX = center.get()[0];
         final double centerY = center.get()[1];

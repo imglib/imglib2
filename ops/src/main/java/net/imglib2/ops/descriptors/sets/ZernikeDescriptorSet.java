@@ -2,6 +2,8 @@ package net.imglib2.ops.descriptors.sets;
 
 import net.imglib2.ops.descriptors.AbstractDescriptorSet;
 import net.imglib2.ops.descriptors.zernike.Zernike;
+import net.imglib2.ops.descriptors.zernike.features.ZernikeComplexMagnitude;
+import net.imglib2.ops.descriptors.zernike.features.ZernikeComplexValues;
 
 public class ZernikeDescriptorSet extends AbstractDescriptorSet  
 {
@@ -9,7 +11,8 @@ public class ZernikeDescriptorSet extends AbstractDescriptorSet
 	{
 		super();
 
-		registerFeature(Zernike.class );
+		registerFeature(ZernikeComplexValues.class );
+		registerFeature(ZernikeComplexMagnitude.class );
 	}
 	
 	@Override
