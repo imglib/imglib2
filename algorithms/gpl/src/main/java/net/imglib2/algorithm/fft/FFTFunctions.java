@@ -53,6 +53,7 @@ import net.imglib2.view.Views;
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  * @deprecated use {@link net.imglib2.algorithm.fft2.FFTMethods} instead
  */
+@Deprecated
 final public class FFTFunctions 
 {
 	final public static <T extends RealType<T>, S extends ComplexType<S>> Img<T> 
