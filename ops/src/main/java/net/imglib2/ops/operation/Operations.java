@@ -6,11 +6,32 @@ import net.imglib2.ops.img.UnaryOperationAssignment;
 import net.imglib2.ops.img.UnaryOperationBridge;
 import net.imglib2.ops.img.UnaryOperationWrapper;
 
-public class Operations
+/**
+ * Utility methods to concatenate, wrap, map and compute mainly
+ * {@link UnaryOutputOperation}s.
+ * 
+ */
+public final class Operations
 {
+
+	private Operations()
+	{
+		// utility class
+	}
 
 	/*
 	 * General Joiner
+	 */
+	/**
+	 * Concatenates two operations where the input and output types of the first
+	 * operation has a different input type.
+	 * 
+	 * @param op1
+	 *            operation 1 with a different input type
+	 * @param op2
+	 *            operation 2 with the same input and output type (the same as
+	 *            operation 1's output type)
+	 * @return a new unary operation
 	 */
 	@SuppressWarnings( "unchecked" )
 	public static < A, B > UnaryOutputOperation< A, B > joinLeft( UnaryOutputOperation< A, B > op1, UnaryOutputOperation< B, B > op2 )
@@ -18,17 +39,44 @@ public class Operations
 		return new LeftJoinedUnaryOperation< A, B >( op1, concat( op2 ) );
 	}
 
+	/**
+	 * Concatenates two operations where the input and output types of the
+	 * second operation has a different input type.
+	 * 
+	 * @param op1
+	 *            operation 1 with the same input and output type (the same as
+	 *            operation 2's input type)
+	 * @param op2
+	 *            operation 2 with a different output type
+	 * @return a new unary operation
+	 */
 	@SuppressWarnings( "unchecked" )
 	public static < A, B > UnaryOutputOperation< A, B > joinRight( UnaryOutputOperation< A, A > op1, UnaryOutputOperation< A, B > op2 )
 	{
 		return new RightJoinedUnaryOperation< A, B >( concat( op1 ), op2 );
 	}
 
+	/**
+	 * Concatenates two operations where only the output type of the first
+	 * operation matches the input type of the second operation.
+	 * 
+	 * @param op1
+	 * @param op2
+	 * @return the concatenation as a new operation
+	 */
 	public static < A, B, C > UnaryOperationBridge< A, B, C > bridge( UnaryOutputOperation< A, B > op1, UnaryOutputOperation< B, C > op2 )
 	{
 		return new UnaryOperationBridge< A, B, C >( op1, op2 );
 	}
 
+	/**
+	 * Concatenates two operations where all inputs and outputs are of the same
+	 * type.
+	 * 
+	 * @param op1
+	 * @param op2
+	 * @return concatenated operation
+	 */
 	@SuppressWarnings( "unchecked" )
 	public static < A > UnaryOutputOperation< A, A > concat( UnaryOutputOperation< A, A > op1, UnaryOutputOperation< A, A > op2 )
 	{
@@ -40,36 +88,42 @@ public class Operations
 		return new PipedUnaryOperation< A >( ops );
 	}
 
-	/*
-	 * Helper to create output operation
+	/**
+	 * Wraps an {@link UnaryOperation} as an {@link UnaryOutputOperation} (such
+	 * that methods like {@link #concat(UnaryOutputOperation...)} etc. can be
+	 * used)
 	 */
 	public static < A, B > UnaryOutputOperation< A, B > wrap( final UnaryOperation< A, B > op, final UnaryObjectFactory< A, B > fac )
 	{
 		return new UnaryOperationWrapper< A, B >( op, fac );
 	}
 
-	/*
-	 * Mapper
+	/**
+	 * Returns a new operation which applies the given operation to each single
+	 * entry of the {@link IterableInterval}.
 	 */
 	public static < A, B > UnaryOperation< IterableInterval< A >, IterableInterval< B >> map( UnaryOperation< A, B > op )
 	{
 		return new UnaryOperationAssignment< A, B >( op );
 	}
 
-	/*
-	 * Compute
+	/**
+	 * Computes all given operations in a sequence.
 	 */
-	public static < A, B > B compute( B input, B output, UnaryOutputOperation< B, B >[] ops )
+	public static < B > B compute( B input, B output, UnaryOutputOperation< B, B >[] ops )
 	{
 
-		if(ops.length==1) {
-			return ops[0].compute( input , output );
-		} else {
-			
+		if ( ops.length == 1 )
+		{
+			return ops[ 0 ].compute( input, output );
+		}
+		else
+		{
+
 			@SuppressWarnings( "unchecked" )
 			UnaryOutputOperation< B, B >[] follower = new UnaryOutputOperation[ ops.length - 1 ];
 			System.arraycopy( ops, 1, follower, 0, follower.length );
-			
+
 			return compute( input, output, ops[ 0 ], concat( follower ) );
 		}
 	}
