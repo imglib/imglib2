@@ -26,7 +26,7 @@ public final class ImgOperations
 	 * @param outType
 	 * @return a {@link UnaryOutputOperation} with ImgPlus as input and ouput
 	 */
-	public < T extends RealType< T >, V extends RealType< V > > UnaryOutputOperation< ImgPlus< T >, ImgPlus< V > > wrapRA( UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V >> op, V outType )
+	public static < T extends RealType< T >, V extends RealType< V > > UnaryOutputOperation< ImgPlus< T >, ImgPlus< V > > wrapRA( UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V >> op, V outType )
 	{
 		return new ImgPlusToImgPlusRAIWrapperOp< T, V >( op, outType );
 	}
@@ -39,7 +39,7 @@ public final class ImgOperations
 	 * @param outType
 	 * @return a {@link UnaryOutputOperation} with ImgPlus as input and ouput
 	 */
-	public < T extends RealType< T >, V extends RealType< V >> UnaryOutputOperation< ImgPlus< T >, ImgPlus< V > > wrapII( UnaryOperation< IterableInterval< T >, IterableInterval< V >> op, V outType )
+	public static < T extends RealType< T >, V extends RealType< V >> UnaryOutputOperation< ImgPlus< T >, ImgPlus< V > > wrapII( UnaryOperation< IterableInterval< T >, IterableInterval< V >> op, V outType )
 	{
 		return new ImgPlusToImgPlusIIWrapperOp< T, V >( op, outType );
 	}
@@ -48,7 +48,7 @@ public final class ImgOperations
 	 * Simple wrapper class to wrap UnaryOperations to UnaryOutputOperations
 	 * which run on ImgPlus basis
 	 */
-	private class ImgPlusToImgPlusRAIWrapperOp< T extends RealType< T >, V extends RealType< V >> implements UnaryOutputOperation< ImgPlus< T >, ImgPlus< V >>
+	private static class ImgPlusToImgPlusRAIWrapperOp< T extends RealType< T >, V extends RealType< V >> implements UnaryOutputOperation< ImgPlus< T >, ImgPlus< V >>
 	{
 
 		private UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V >> m_op;
@@ -98,7 +98,7 @@ public final class ImgOperations
 	/*
 	 * A {@link UnaryObjectFactory} producing new empty images (ImgPlus)F.
 	 */
-	private class ImgPlusFactory< T extends RealType< T >, V extends RealType< V >> implements UnaryObjectFactory< ImgPlus< T >, ImgPlus< V >>
+	private static class ImgPlusFactory< T extends RealType< T >, V extends RealType< V >> implements UnaryObjectFactory< ImgPlus< T >, ImgPlus< V >>
 	{
 
 		private final V m_outType;
@@ -129,7 +129,7 @@ public final class ImgOperations
 	 * Simple wrapper class to wrap UnaryOperations to UnaryOutputOperations
 	 * which run on ImgPlus basis
 	 */
-	private class ImgPlusToImgPlusIIWrapperOp< T extends RealType< T >, V extends RealType< V >> implements UnaryOutputOperation< ImgPlus< T >, ImgPlus< V >>
+	private static class ImgPlusToImgPlusIIWrapperOp< T extends RealType< T >, V extends RealType< V >> implements UnaryOutputOperation< ImgPlus< T >, ImgPlus< V >>
 	{
 
 		private UnaryOperation< IterableInterval< T >, IterableInterval< V >> m_op;
