@@ -52,7 +52,7 @@ public class CoocccurrenceMatrix extends AbstractModule< CooccurrenceMatrix >
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			pixels[ cursor.getIntPosition( 1 ) - ( int ) ii.min( 1 ) ][ cursor.getIntPosition( 0 ) - ( int ) ii.min( 0 ) ] = ( int ) ( ( ( cursor.get().getRealDouble() - localMin ) / ( localMax - localMin + 1 ) ) * parameter.nrGrayLevels );
+			pixels[ cursor.getIntPosition( 1 ) - ( int ) ii.min( 1 ) ][ cursor.getIntPosition( 0 ) - ( int ) ii.min( 0 ) ] = ( int ) ( ( ( cursor.get().getRealDouble() - localMin ) / ( localMax - localMin ) ) * (parameter.nrGrayLevels - 1) );
 
 		}
 

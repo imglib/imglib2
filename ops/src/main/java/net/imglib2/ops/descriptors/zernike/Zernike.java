@@ -41,7 +41,7 @@ public class Zernike extends AbstractDescriptorModule
 		 if ((m < 0) || (((m - Math.abs(n)) % 2) != 0) || (Math.abs(n) > m)) 
 		 {
 	            throw new IllegalArgumentException("m and n do not satisfy the" + "Zernike moment properties");
-	        }
+	     }
 
         final double centerX = center.get()[0];
         final double centerY = center.get()[1];
