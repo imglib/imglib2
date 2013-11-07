@@ -35,7 +35,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Util;
-import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**
@@ -43,6 +42,7 @@ import net.imglib2.view.Views;
  * 
  * @deprecated use {@link net.imglib2.algorithm.fft2.FFT} instead
  */
+@Deprecated
 public class Bandpass< T extends NumericType< T >> implements OutputAlgorithm< RandomAccessibleInterval< T >>, Benchmark
 {
 	String errorMessage = "";

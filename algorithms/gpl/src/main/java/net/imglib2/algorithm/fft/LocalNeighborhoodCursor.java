@@ -34,6 +34,7 @@ import net.imglib2.RandomAccess;
  *
  * @deprecated
  */
+@Deprecated
 public class LocalNeighborhoodCursor<T> extends AbstractCursor<T>
 {
 	protected final RandomAccess<T> parent;

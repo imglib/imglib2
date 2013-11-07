@@ -148,7 +148,7 @@ public class MakeCooccurrenceMatrix< T extends RealType< T >> implements UnaryOp
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			m_pixels[ cursor.getIntPosition( m_dimY ) - ( int ) input.min( m_dimY ) ][ cursor.getIntPosition( m_dimX ) - ( int ) input.min( m_dimX ) ] = ( int ) ( ( ( cursor.get().getRealDouble() - m_min ) / ( m_max - m_min + 1 ) ) * m_nrGrayLevels );
+			m_pixels[ cursor.getIntPosition( m_dimY ) - ( int ) input.min( m_dimY ) ][ cursor.getIntPosition( m_dimX ) - ( int ) input.min( m_dimX ) ] = ( int ) ( ( ( cursor.get().getRealDouble() - m_min ) / ( m_max - m_min ) ) * ( m_nrGrayLevels - 1 ) );
 
 		}
 		output.clear();

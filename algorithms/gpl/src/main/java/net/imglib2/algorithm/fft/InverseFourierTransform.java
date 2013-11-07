@@ -48,6 +48,7 @@ import net.imglib2.type.numeric.RealType;
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  * @deprecated use {@link net.imglib2.algorithm.fft2.FFT} instead
  */
+@Deprecated
 public class InverseFourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<Img<T>>, Benchmark
 {
 	final RandomAccessibleInterval<S> fftImage;	

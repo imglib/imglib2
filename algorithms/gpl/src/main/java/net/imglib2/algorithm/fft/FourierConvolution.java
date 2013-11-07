@@ -64,6 +64,7 @@ import net.imglib2.view.Views;
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  * @deprecated use {@link net.imglib2.algorithm.fft2.FFTConvolution} instead
  */
+@Deprecated
 public class FourierConvolution< T extends RealType< T >, S extends RealType< S >> implements MultiThreaded, OutputAlgorithm< Img< T >>, Benchmark
 {
 	public static < T extends RealType< T >, S extends RealType< S > > Img< T > convolve( final Img< T > img, final Img< S > kernel ) throws IncompatibleTypeException

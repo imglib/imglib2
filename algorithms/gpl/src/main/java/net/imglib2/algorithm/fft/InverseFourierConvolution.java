@@ -44,6 +44,7 @@ import net.imglib2.view.Views;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @deprecated use {@link net.imglib2.algorithm.fft2.FFT} instead
  */
+@Deprecated
 public class InverseFourierConvolution< T extends RealType< T >, S extends RealType< S > > extends FourierConvolution< T, S >
 {
 	public InverseFourierConvolution( final RandomAccessibleInterval< T > image, final RandomAccessibleInterval< S > kernel, final ImgFactory< T > imgFactory, final ImgFactory< S > kernelImgFactory, final ImgFactory< ComplexFloatType > fftImgFactory )
