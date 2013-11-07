@@ -37,9 +37,10 @@
 
 package net.imglib2.ops.operation.img.unary;
 
-import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.ops.img.UnaryOperationAssignment;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.ops.operation.iterableinterval.unary.MinMax;
@@ -49,14 +50,16 @@ import net.imglib2.ops.operation.real.unary.Normalize;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.ValuePair;
+import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**
  * Converts complete images from one type into another
+ * TODO: Can now convert RandomAccessibleIntervals from one type into another.
  * 
  * @author hornm, dietzc, University of Konstanz
  */
-public class ImgConvert< I extends RealType< I >, O extends RealType< O > & NativeType< O >> implements UnaryOutputOperation< Img< I >, Img< O >>
+public class ImgConvert< I extends RealType< I >, O extends RealType< O > & NativeType< O >> implements UnaryOutputOperation< RandomAccessibleInterval< I >, RandomAccessibleInterval< O >>
 {
 
 	public enum ImgConversionTypes
@@ -108,6 +111,8 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 	private final I m_inType;
 
 	private final ImgConversionTypes m_conversionType;
+	
+	private ImgFactory<O> m_outFactory; //TODO: Make final, when deprecated API is removed!
 
 	/**
 	 * Convert to the new type. Scale values with respect to the old type range.
@@ -116,24 +121,43 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 	 *            The new type.
 	 * @param inType
 	 *            The old type.
+	 * @param type
+	 * 			  The {@link ImgConversionTypes}, type of conversion.
 	 * @param imgFac
 	 *            the image factory to produce the image
 	 */
-	public ImgConvert( final I inType, final O outType, ImgConversionTypes type )
+	public ImgConvert( final I inType, final O outType, ImgConversionTypes type, ImgFactory<O> imgFac)
 	{
 		m_outType = outType;
 		m_conversionType = type;
 		m_inType = inType;
-
+		m_outFactory = imgFac;
+	}
+	
+	/**
+	 * For Compatability with previous API, this creates a default ImgFactory.
+	 * 
+	 * @param inType
+	 * @param outType
+	 * @param type
+	 * @deprecated Use the other constructor and specify a ImgFactory yourself.
+	 */
+	@Deprecated
+	public ImgConvert( final I inType, final O outType, ImgConversionTypes type)
+	{
+		m_outType = outType;
+		m_conversionType = type;
+		m_inType = inType;
+		m_outFactory = new ListImgFactory<O>();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Img< O > compute( Img< I > img, Img< O > r )
+	public RandomAccessibleInterval< O > compute( RandomAccessibleInterval< I > img, RandomAccessibleInterval< O > r )
 	{
-
+		Iterable<I> iterImg = Views.iterable( img );
 		double factor;
 		ValuePair< I, I > oldMinMax;
 		Convert< I, O > convertOp = null;
@@ -147,7 +171,7 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.DIRECTCLIP );
 			break;
 		case NORMALIZEDIRECT:
-			oldMinMax = new MinMax< I >( 0, img.firstElement() ).compute( img );
+			oldMinMax = new MinMax< I >().compute( iterImg );
 			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
 
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALE );
@@ -157,7 +181,7 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 			convertOp.setOutMin( 0 );
 			break;
 		case NORMALIZESCALE:
-			oldMinMax = new MinMax< I >( 0, img.firstElement() ).compute( img );
+			oldMinMax = new MinMax< I >().compute( iterImg );
 			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
 
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALE );
@@ -165,7 +189,7 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 			convertOp.setInMin( oldMinMax.a.getRealDouble() );
 			break;
 		case NORMALIZEDIRECTCLIP:
-			oldMinMax = new MinMax< I >( 0, img.firstElement() ).compute( img );
+			oldMinMax = new MinMax< I >().compute( iterImg );
 			factor = Normalize.normalizationFactor( oldMinMax.a.getRealDouble(), oldMinMax.b.getRealDouble(), m_inType.getMinValue(), m_inType.getMaxValue() );
 
 			convertOp = new Convert< I, O >( m_inType, m_outType, TypeConversionTypes.SCALECLIP );
@@ -184,28 +208,31 @@ public class ImgConvert< I extends RealType< I >, O extends RealType< O > & Nati
 		map.compute( Views.flatIterable( img ), Views.flatIterable( r ) );
 		return r;
 	}
-
-	@Override
-	public UnaryOutputOperation< Img< I >, Img< O >> copy()
+	
+	/**
+	 * @deprecated This is for compatability with old API only.
+	 */
+	@Deprecated
+	public RandomAccessibleInterval< O > compute( Img< I > img, Img< O > r )
 	{
-		return new ImgConvert< I, O >( m_inType.copy(), m_outType.copy(), m_conversionType );
+		m_outFactory = r.factory();
+		return compute(img, r);
 	}
 
 	@Override
-	public Img< O > createEmptyOutput( Img< I > in )
+	public UnaryOutputOperation< RandomAccessibleInterval< I >, RandomAccessibleInterval< O >> copy()
 	{
-		try
-		{
-			return in.factory().imgFactory( m_outType ).create( in, m_outType );
-		}
-		catch ( IncompatibleTypeException e )
-		{
-			return new ArrayImgFactory< O >().create( in, m_outType );
-		}
+		return new ImgConvert< I, O >( m_inType.copy(), m_outType.copy(), m_conversionType, m_outFactory );
 	}
 
 	@Override
-	public Img< O > compute( Img< I > in )
+	public Img< O > createEmptyOutput( RandomAccessibleInterval< I > in )
+	{
+			return m_outFactory.create( in, m_outType );
+	}
+
+	@Override
+	public RandomAccessibleInterval< O > compute( RandomAccessibleInterval< I > in )
 	{
 		return compute( in, createEmptyOutput( in ) );
 	}

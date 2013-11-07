@@ -39,7 +39,7 @@ package net.imglib2.view.composite;
 import net.imglib2.RandomAccess;
 
 /**
- * 
+ * Abstract implementation of {@link Composite}.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

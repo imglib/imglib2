@@ -45,6 +45,7 @@ import java.util.Queue;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -53,11 +54,12 @@ import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.view.Views;
 
 /**
  * @author Martin Horn (University of Konstanz)
  */
-public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type< T > & Comparable< T >> extends AbstractRegionGrowing< LabelingType< L >, L, Labeling< L >, Labeling< L >>
+public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type< T > & Comparable< T >> extends AbstractRegionGrowing< LabelingType< L >, L >
 {
 
 	private Cursor< LabelingType< L >> m_seedLabCur;
@@ -66,7 +68,7 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 
 	private final T m_threshold;
 
-	protected Img< T > m_srcImg;
+	protected RandomAccessibleInterval< T > m_srcImg;
 
 	protected final boolean m_fillHoles;
 
@@ -81,7 +83,7 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 	 *            fills the wholes in a post-processing step within segments of
 	 *            the same label
 	 */
-	public VoronoiLikeRegionGrowing( Img< T > srcImg, T threshold, boolean fillHoles )
+	public VoronoiLikeRegionGrowing( RandomAccessibleInterval< T > srcImg, T threshold, boolean fillHoles )
 	{
 		super( AbstractRegionGrowing.get8ConStructuringElement( srcImg.numDimensions() ), GrowingMode.SYNCHRONOUS, false );
 		m_threshold = threshold;
@@ -92,7 +94,7 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 	}
 
 	@Override
-	public Labeling< L > compute( Labeling< L > in, Labeling< L > out )
+	public Labeling< L > compute( RandomAccessibleInterval< LabelingType< L > > in, Labeling< L > out )
 	{
 		super.compute( in, out );
 		// post-process the result
@@ -105,9 +107,9 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 	}
 
 	@Override
-	protected void initRegionGrowing( Labeling< L > srcImg )
+	protected void initRegionGrowing( RandomAccessibleInterval< LabelingType< L > > srcImg )
 	{
-		m_seedLabCur = srcImg.localizingCursor();
+		m_seedLabCur = Views.iterable( srcImg ).localizingCursor();
 
 	}
 
@@ -276,7 +278,7 @@ public class VoronoiLikeRegionGrowing< L extends Comparable< L >, T extends Type
 	}
 
 	@Override
-	public UnaryOperation< Labeling< L >, Labeling< L >> copy()
+	public UnaryOperation< RandomAccessibleInterval< LabelingType< L > >, Labeling< L >> copy()
 	{
 		return new VoronoiLikeRegionGrowing< L, T >( m_srcImg, m_threshold.copy(), m_fillHoles );
 	}

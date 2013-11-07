@@ -55,8 +55,6 @@ import org.junit.Test;
  */
 public class BinningTest {
     private static final double EPSILON_FACTOR = 1000000;
-    private static final int MIN_EXPONENT = -1022;
-    private static final int MAX_EXPONENT = 1023;
     private static final boolean TEST_INTERNAL = false;
     
     public BinningTest() {
@@ -257,12 +255,12 @@ public class BinningTest {
         max = 1.0;
         edgeValues = Binning.edgeValuesPerBin(bins, min, max);
         for (int i = 0; i < bins; ++i) {
-            int edgeBin = Binning.exclusiveValueToBin(bins, min, max, edgeValues[i]);
+            final int edgeBin = Binning.exclusiveValueToBin(bins, min, max, edgeValues[i]);
             assertEquals(i, edgeBin);
  
             // previous double should map to previous bin
-            double prevValue = DoubleUtil.nextDouble(edgeValues[i], false);
-            int prevBin = Binning.exclusiveValueToBin(bins, min, max, prevValue);
+            final double prevValue = DoubleUtil.nextDouble(edgeValues[i], false);
+            final int prevBin = Binning.exclusiveValueToBin(bins, min, max, prevValue);
             assertEquals(i - 1, prevBin);
         }
     }
@@ -276,13 +274,12 @@ public class BinningTest {
         int bins;
         double min;
         double max;
-        double[] centerValuse;
         double[] expectedValues;
         
         bins = 256;
         min = 0.0;
         max = 1.0;
-        double[] centerValues = Binning.centerValuesPerBin(bins, min, max);
+        final double[] centerValues = Binning.centerValuesPerBin(bins, min, max);
         expectedValues = new double[] {
             0.001953125, 0.005859375, 0.009765625, 0.013671875, 
             0.017578125, 0.021484375, 0.025390625, 0.029296875, 
@@ -357,7 +354,7 @@ public class BinningTest {
         
         // make sure center value maps to correct bin
         for (int i = 0; i < bins; ++i) {
-            int centerBin = Binning.exclusiveValueToBin(bins, min, max, centerValues[i]);
+            final int centerBin = Binning.exclusiveValueToBin(bins, min, max, centerValues[i]);
             assertEquals(i, centerBin);
         }
     }
@@ -367,7 +364,7 @@ public class BinningTest {
      * 
      * @param bins 
      */    
-    private void testSomeValues(int bins) {
+    private void testSomeValues(final int bins) {
         double min;
         double max;
         double value;
@@ -417,7 +414,7 @@ public class BinningTest {
      * @param bins
      * @param d1 
      */
-    private void testSomeEdges(int bins, double d1) {
+    private void testSomeEdges(final int bins, double d1) {
         double min;
         double max;
         double value;
@@ -427,7 +424,7 @@ public class BinningTest {
         double d2 = DoubleUtil.nextDouble(d1, true);
         if (d2 < d1) {
             // allow for negative numbers
-            double tmp = d1;
+            final double tmp = d1;
             d1 = d2;
             d2 = tmp;
         }
@@ -464,20 +461,20 @@ public class BinningTest {
      * @param inc
      * @param bins 
      */
-    private void testHistogram(double min, double max, double inc, int bins) {
-        long[] histogram = new long[bins];
+    private void testHistogram(final double min, final double max, final double inc, final int bins) {
+        final long[] histogram = new long[bins];
 
         // fill up the histogram with uniform values
         for (double value = min; value <= max; value += inc) {
-            int bin = Binning.valueToBin(bins, min, max, value);
+            final int bin = Binning.valueToBin(bins, min, max, value);
             ++histogram[bin];
         }
 
         // make a list of histogram count values
-        List<Long> values = new ArrayList<Long>();
+        final List<Long> values = new ArrayList<Long>();
         Arrays.sort(histogram);
         long previousCount = -1;
-        for (long count : histogram) {
+        for (final long count : histogram) {
             if (count != previousCount) {
                 values.add(count);
                 previousCount = count;
@@ -488,8 +485,8 @@ public class BinningTest {
         assertEquals(2, values.size());
 
         // values should be off by one
-        long v1 = values.get(0);
-        long v2 = values.get(1);
+        final long v1 = values.get(0);
+        final long v2 = values.get(1);
         assertEquals(v1 + 1, v2);
     }
 
@@ -499,23 +496,23 @@ public class BinningTest {
      * @param value
      * @param number 
      */
-    private void testNextDouble(double value, int number) {
-        double[] values = new double[number];
+    private void testNextDouble(final double value, final int number) {
+        final double[] values = new double[number];
  
         // generate 'number' adjacent double values
         int i = 0;
         values[i] = value;
         do {
-            double prev = values[i++];
-            double next = DoubleUtil.nextDouble(prev, true);
+            final double prev = values[i++];
+            final double next = DoubleUtil.nextDouble(prev, true);
             values[i] = next;
         }
         while (i < number - 1);
 
         // go down the list backwards
         do {
-            double next = values[i--];
-            double prev = DoubleUtil.nextDouble(next, false);
+            final double next = values[i--];
+            final double prev = DoubleUtil.nextDouble(next, false);
             assertEquals(values[i], prev, prev / EPSILON_FACTOR);
         }
         while (i > 0);

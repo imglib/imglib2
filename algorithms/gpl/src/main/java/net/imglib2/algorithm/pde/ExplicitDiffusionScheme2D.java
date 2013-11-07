@@ -27,7 +27,8 @@
 package net.imglib2.algorithm.pde;
 
 import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -49,9 +50,12 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends E
 	 * PROTECTED CONSTRUCTOR
 	 */
 
-	public ExplicitDiffusionScheme2D(final Img<T> input, final Img<FloatType> D) {
+	public ExplicitDiffusionScheme2D(final RandomAccessibleInterval<T> input, final RandomAccessibleInterval<FloatType> D) {
 		super(input, D);
-		
+	}
+	
+	public ExplicitDiffusionScheme2D(final RandomAccessibleInterval<T> input, final RandomAccessibleInterval<FloatType> D, ImgFactory<FloatType> imgFactory) {
+		super(input, D, imgFactory);
 	}
 
 	/*

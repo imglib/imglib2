@@ -11,13 +11,13 @@ package interactive;
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,7 +29,7 @@ package interactive;
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -37,14 +37,15 @@ package interactive;
  */
 
 import net.imglib2.converter.Converter;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.ui.InteractiveViewer2D;
+import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.ui.overlay.LogoPainter;
+import net.imglib2.ui.viewer.InteractiveViewer2D;
 import net.imglib2.view.Views;
 import net.imglib2.view.composite.CompositeView;
 import net.imglib2.view.composite.NumericComposite;
@@ -54,44 +55,38 @@ public class InteractiveCompositeViewer
 	final static public void main( final String[] args ) throws ImgIOException
 	{
 		final String filename = "bike2-composite.tif";
-		final ImgPlus< UnsignedByteType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< UnsignedByteType >(), new UnsignedByteType() );
-		
-		final CompositeView< UnsignedByteType, NumericComposite< UnsignedByteType > > compositeView =
+		final ImgPlus< FloatType > img = new ImgOpener().openImg( filename, new ArrayImgFactory< FloatType >(), new FloatType() );
+
+		final CompositeView< FloatType, NumericComposite< FloatType > > compositeView =
 				Views.collapseNumeric( Views.extendZero( img ), ( int )img.dimension( 2 ) );
-		
-		final Converter< NumericComposite< UnsignedByteType >, ARGBType > converter =
-				new Converter< NumericComposite< UnsignedByteType >, ARGBType >()
+
+		final Converter< NumericComposite< FloatType >, ARGBType > converter =
+				new Converter< NumericComposite< FloatType >, ARGBType >()
 		{
 			@Override
-			public void convert( final NumericComposite< UnsignedByteType > input, final ARGBType output )
+			public void convert( final NumericComposite< FloatType > input, final ARGBType output )
 			{
-				final int r = input.get( 0 ).getInteger();
-				final int g = input.get( 1 ).getInteger();
-				final int b = input.get( 2 ).getInteger();
-				
+				int r = (int) input.get( 0 ).getRealDouble();
+				r = r > 255 ? 255 : r;
+				int g = (int) input.get( 1 ).getRealDouble();
+				g = g > 255 ? 255 : g;
+				int b = (int) input.get( 2 ).getRealDouble();
+				b = b > 255 ? 255 : b;
+
 				output.set( ( ( ( ( r << 8 ) | g ) << 8 ) | b ) | 0xff000000 );
 			}
 		};
-		
-		
+
+
 		final int w = 720, h = 405;
 
 		final AffineTransform2D initial = new AffineTransform2D();
-		
-		final LogoPainter logo = new LogoPainter();
-		
+
 		System.out.println( compositeView.numDimensions() );
-		
-		new InteractiveViewer2D< NumericComposite< UnsignedByteType > >( w, h, compositeView, initial, converter )
-		{
-			@Override
-			public boolean drawScreenImage()
-			{
-				final boolean valid = super.drawScreenImage();
-				logo.paint( screenImage );
-				return valid;
-			}
-		};
+
+		final InteractiveViewer2D< NumericComposite< FloatType > > viewer = new InteractiveViewer2D< NumericComposite< FloatType > >( w, h, compositeView, initial, converter );
+		viewer.getDisplayCanvas().addOverlayRenderer( new LogoPainter() );
+		viewer.requestRepaint();
 	}
 
 }

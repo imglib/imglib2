@@ -65,7 +65,6 @@ import net.imglib2.display.ColorTable8;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
@@ -75,6 +74,7 @@ import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
@@ -88,7 +88,10 @@ import ome.xml.model.primitives.PositiveFloat;
  * @author Curtis Rueden
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public class ImgOpener implements StatusReporter {
 
 	// -- Fields --

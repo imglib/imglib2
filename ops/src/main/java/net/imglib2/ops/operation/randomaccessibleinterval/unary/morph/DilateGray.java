@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -37,27 +37,30 @@
 
 package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 
+
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
 import net.imglib2.ops.operation.UnaryOperation;
+import net.imglib2.ops.operation.randomaccessibleinterval.unary.morph.StructuringElementCursor;
+import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
 /**
  * Dilate operation on gray-level.
- * 
+ *
  * @author Felix Schoenenberger (University of Konstanz)
- * 
+ *
  * @param <T>
  */
-public class DilateGray< T extends RealType< T >, I extends RandomAccessibleInterval< T > & IterableInterval< T >> implements UnaryOperation< I, I >
+public class DilateGray< T extends RealType< T >> implements UnaryOperation<  RandomAccessibleInterval< T >,  RandomAccessibleInterval< T > >
 {
 
 	private final long[][] m_struc;
 
 	/**
-	 * 
+	 *
 	 * @param structuringElement
 	 */
 	public DilateGray( final long[][] structuringElement )
@@ -65,12 +68,20 @@ public class DilateGray< T extends RealType< T >, I extends RandomAccessibleInte
 		m_struc = structuringElement;
 	}
 
+	/**
+	 * @param structuringElement
+	 */
+	public DilateGray( final Img<BitType> structuringElement )
+    {
+        m_struc = StructuringElementCursor.createElementFromImg(structuringElement);
+    }
+
 	@Override
-	public I compute( final I input, final I output )
+	public RandomAccessibleInterval< T > compute( final  RandomAccessibleInterval< T > input, final  RandomAccessibleInterval< T > output )
 	{
-		final T v = input.firstElement().createVariable();
+		final T v = Views.iterable(input).firstElement().createVariable();
 		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( Views.extendValue( input, v ).randomAccess(), m_struc );
-		final Cursor< T > out = output.localizingCursor();
+		final Cursor< T > out = Views.iterable(output).localizingCursor();
 		double m;
 		while ( out.hasNext() )
 		{
@@ -89,8 +100,8 @@ public class DilateGray< T extends RealType< T >, I extends RandomAccessibleInte
 	}
 
 	@Override
-	public DilateGray< T, I > copy()
+	public DilateGray< T > copy()
 	{
-		return new DilateGray< T, I >( m_struc );
+		return new DilateGray< T >( m_struc );
 	}
 }

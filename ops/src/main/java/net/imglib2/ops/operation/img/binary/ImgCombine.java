@@ -39,20 +39,24 @@ package net.imglib2.ops.operation.img.binary;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.Views;
 
 /**
  * This class can be used to combine two input {@link Img}'s into an output
  * {@link Img}. A {@link BinaryOperation} is specified which defines the rule
  * by which the input data values are combined.
  * 
+ * TODO: This class can now be used to combine to {@link RandomAccessibleIntervals}.
+ * 
  * @author Barry DeZonia
  */
 public class ImgCombine
 	< U extends RealType< U >, V extends RealType< V >, W extends RealType< W >>
-implements BinaryOperation< Img< U >, Img< V >, Img< W > >
+implements BinaryOperation< RandomAccessibleInterval< U >, RandomAccessibleInterval< V >, RandomAccessibleInterval< W > >
 {
 	// -- instacne variables --
 	
@@ -79,10 +83,10 @@ implements BinaryOperation< Img< U >, Img< V >, Img< W > >
 	 * contained within the extents of each of the input regions.
 	 */
 	@Override
-	public Img<W> compute(Img<U> input1, Img<V> input2, Img<W> output)
+	public RandomAccessibleInterval<W> compute(RandomAccessibleInterval<U> input1, RandomAccessibleInterval<V> input2, RandomAccessibleInterval<W> output)
 	{
 		long[] position = new long[output.numDimensions()];
-		Cursor<W> cursor = output.localizingCursor();
+		Cursor<W> cursor = Views.iterable( output ).localizingCursor();
 		RandomAccess<U> accessor1 = input1.randomAccess();
 		RandomAccess<V> accessor2 = input2.randomAccess();
 		while (cursor.hasNext()) {
