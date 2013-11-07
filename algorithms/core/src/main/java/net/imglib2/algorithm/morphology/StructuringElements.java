@@ -22,7 +22,7 @@ import net.imglib2.util.Util;
  * A collection of static utilities to facilitate the creation and visualization
  * of morphological structuring elements.
  * 
- * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> Sep 3, 2013
+ * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> Sep - Oct 2013
  * 
  */
 public class StructuringElements
