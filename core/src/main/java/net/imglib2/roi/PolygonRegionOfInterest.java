@@ -504,7 +504,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	protected void getRealExtrema( final double[] minima, final double[] maxima )
 	{
 		Arrays.fill( minima, Double.MAX_VALUE );
-		Arrays.fill( maxima, Double.MIN_VALUE );
+		Arrays.fill( maxima, -Double.MAX_VALUE );
 		for ( int i = 0; i < points.size(); i++ )
 		{
 			final RealPoint p = points.get( i );
@@ -852,7 +852,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 		{
 			x_intercepts = new double[ 2 ];
 		}
-		x_intercepts[ 0 ] = Double.MIN_VALUE;
+		x_intercepts[ 0 ] = -Double.MAX_VALUE;
 		x_intercepts[ 1 ] = Double.MAX_VALUE;
 		int count_to_left = 0;
 		for ( int i = 0; i < getVertexCount(); i++ )

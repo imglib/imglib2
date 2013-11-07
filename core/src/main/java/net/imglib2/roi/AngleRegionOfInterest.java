@@ -38,6 +38,8 @@
 package net.imglib2.roi;
 
 /**
+ * A {@link RegionOfInterest} that supports a two segment angle by combining two
+ * {@link LineRegionOfInterest}s.
  * 
  * @author Barry DeZonia
  *

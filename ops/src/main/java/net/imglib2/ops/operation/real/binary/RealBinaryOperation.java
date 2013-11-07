@@ -41,6 +41,8 @@ import net.imglib2.ops.operation.complex.binary.ComplexBinaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * A {@link BinaryOperation} between {@link RealType}s.
+ * 
  * @author Barry DeZonia
  */
 public interface RealBinaryOperation<

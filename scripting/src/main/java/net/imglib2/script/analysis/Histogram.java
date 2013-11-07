@@ -78,11 +78,18 @@ public class Histogram<T extends RealType<T>> extends TreeMap<Double,Long>
 	@SuppressWarnings("unchecked")
 	public Histogram(final Object fn, final int nBins) throws Exception {
 		this.img = AlgorithmUtil.wrap(fn);
-		ComputeMinMax<T> cmm = new ComputeMinMax<T>(this.img);
+		
+		T min = img.firstElement().createVariable();
+		T max = min.copy();
+		
+		min.setReal( min.getMinValue() );
+		max.setReal( max.getMinValue() );
+		
+		ComputeMinMax<T> cmm = new ComputeMinMax<T>(this.img, min, max);
 		cmm.process();
 		this.min = cmm.getMin().getRealDouble();
 		this.max = cmm.getMax().getRealDouble();
-		this.increment = process(this, img, nBins, min, max);
+		this.increment = process(this, img, nBins, this.min, this.max);
 	}
 
 	@SuppressWarnings("unchecked")

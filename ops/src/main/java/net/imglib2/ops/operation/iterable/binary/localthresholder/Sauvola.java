@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * @author Markus Friedrich (University of Konstanz)
  */
-public class Sauvola< T extends RealType< T >, IN extends Iterator< T >> implements BinaryOperation< IN, T, BitType >
+public class Sauvola< T extends RealType< T >> implements BinaryOperation< Iterator<T>, T, BitType >
 {
 
 	private double m_r;
@@ -58,16 +58,16 @@ public class Sauvola< T extends RealType< T >, IN extends Iterator< T >> impleme
 	}
 
 	@Override
-	public BitType compute( IN input, T px, BitType output )
+	public BitType compute( Iterator<T> input, T px, BitType output )
 	{
 		double sum = 0;
 		double sumSqr = 0;
-		int n = 0;
+		int n = 0; 
 
 		while ( input.hasNext() )
 		{
 			double val = input.next().getRealDouble();
-			n++;
+			++n;
 			sum += val;
 			sumSqr += val * val;
 		}
@@ -81,9 +81,9 @@ public class Sauvola< T extends RealType< T >, IN extends Iterator< T >> impleme
 	}
 
 	@Override
-	public BinaryOperation< IN, T, BitType > copy()
+	public BinaryOperation<Iterator<T>, T, BitType > copy()
 	{
-		return new Sauvola< T, IN >( m_k, m_r );
+		return new Sauvola< T >( m_k, m_r );
 	}
 
 }

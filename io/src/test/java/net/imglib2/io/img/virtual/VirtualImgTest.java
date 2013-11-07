@@ -49,7 +49,7 @@ import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
 
 /**
- * TODO
+ * Tests the VirtualImg class.
  * 
  * @author Barry DeZonia
  */

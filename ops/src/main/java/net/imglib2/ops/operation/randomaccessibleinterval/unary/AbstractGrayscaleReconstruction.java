@@ -57,7 +57,7 @@ import net.imglib2.type.Type;
  * 
  * @author Clemens Muehting (University of Konstanz)
  */
-public abstract class AbstractGrayscaleReconstruction< T extends Type< T >, V extends Type< V >, MASK extends RandomAccessibleInterval< T >, MARKER extends RandomAccessibleInterval< V >> implements UnaryOperation< MASK, MARKER >
+public abstract class AbstractGrayscaleReconstruction< T extends Type< T >, V extends Type< V > > implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > >
 {
 
 	/**
@@ -218,7 +218,7 @@ public abstract class AbstractGrayscaleReconstruction< T extends Type< T >, V ex
 		m_connection = connection;
 	}
 
-	protected AbstractGrayscaleReconstruction( final AbstractGrayscaleReconstruction< T, V, MASK, MARKER > copy )
+	protected AbstractGrayscaleReconstruction( final AbstractGrayscaleReconstruction< T, V > copy )
 	{
 		m_connection = copy.m_connection;
 	}
@@ -241,7 +241,7 @@ public abstract class AbstractGrayscaleReconstruction< T extends Type< T >, V ex
 	}
 
 	@Override
-	public MARKER compute( MASK input, MARKER output )
+	public RandomAccessibleInterval< V > compute( RandomAccessibleInterval< T > input, RandomAccessibleInterval< V > output )
 	{
 		setUpNeighbours( input.numDimensions() );
 

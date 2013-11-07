@@ -118,10 +118,10 @@ public class MedianOp< T extends RealType< T >, V extends RealType< V >> impleme
 			while ( true )
 			{
 				do
-					i++;
+					++i;
 				while ( array.get( i ) < pivot );
 				do
-					j--;
+					--j;
 				while ( array.get( j ) > pivot );
 
 				if ( j < i )
