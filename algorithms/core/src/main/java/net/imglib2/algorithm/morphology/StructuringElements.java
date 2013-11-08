@@ -191,17 +191,17 @@ public class StructuringElements
 	 *
 	 * @param shape
 	 *            the structuring element to print.
-	 * @param space
+	 * @param dimensionality
 	 *            the dimensionality to cast it over. This is required as
 	 *            {@link Shape} does not carry a dimensionality, and we need one
 	 *            to generate a neighborhood to iterate.
 	 * @return a string representation of the structuring element.
 	 */
-	public static final String printNeighborhood( final Shape shape, final EuclideanSpace space )
+	public static final String printNeighborhood( final Shape shape, final int dimensionality )
 	{
 		final Img< BitType > neighborhood;
 		{
-			final long[] dimensions = Util.getArrayFromValue( 1l, space.numDimensions() );
+			final long[] dimensions = Util.getArrayFromValue( 1l, dimensionality );
 
 			final ArrayImg< BitType, BitArray > img = ArrayImgs.bits( dimensions );
 			final ArrayRandomAccess< BitType > randomAccess = img.randomAccess();
@@ -394,25 +394,8 @@ public class StructuringElements
 
 	public static void main( final String[] args )
 	{
-
-		System.out.println( printNeighborhood( new HyperSphereShape( 2 ), new EuclideanSpace()
-		{
-			@Override
-			public int numDimensions()
-			{
-				return 3;
-			}
-		} ) );
-
-		System.out.println( printNeighborhood( new RectangleShape( 4, true ), new EuclideanSpace()
-		{
-			@Override
-			public int numDimensions()
-			{
-				return 1;
-			}
-		} ) );
-
+		System.out.println( printNeighborhood( new HyperSphereShape( 2 ), 3 ) );
+		System.out.println( printNeighborhood( new RectangleShape( 4, true ), 1 ) );
 	}
 
 }

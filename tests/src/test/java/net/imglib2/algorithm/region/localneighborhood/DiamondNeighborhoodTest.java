@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.imglib2.Cursor;
-import net.imglib2.EuclideanSpace;
 import net.imglib2.algorithm.morphology.MorphologicalOperations;
 import net.imglib2.algorithm.morphology.StructuringElements;
 import net.imglib2.img.ImagePlusAdapter;
@@ -34,14 +33,7 @@ public class DiamondNeighborhoodTest
 
 		for ( final Shape strel : strels )
 		{
-			final String str = StructuringElements.printNeighborhood( strel, new EuclideanSpace()
-			{
-				@Override
-				public int numDimensions()
-				{
-					return 2;
-				}
-			} );
+			final String str = StructuringElements.printNeighborhood( strel, 2 );
 			System.out.println( str );
 		}
 
