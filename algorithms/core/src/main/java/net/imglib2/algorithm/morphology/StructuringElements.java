@@ -6,6 +6,8 @@ import java.util.List;
 import net.imglib2.EuclideanSpace;
 import net.imglib2.RandomAccess;
 import net.imglib2.algorithm.region.localneighborhood.CenteredRectangleShape;
+import net.imglib2.algorithm.region.localneighborhood.DiamondShape;
+import net.imglib2.algorithm.region.localneighborhood.DiamondTipsShape;
 import net.imglib2.algorithm.region.localneighborhood.HyperSphereShape;
 import net.imglib2.algorithm.region.localneighborhood.LineShape;
 import net.imglib2.algorithm.region.localneighborhood.RectangleShape;
@@ -21,12 +23,19 @@ import net.imglib2.util.Util;
 /**
  * A collection of static utilities to facilitate the creation and visualization
  * of morphological structuring elements.
- * 
+ *
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> Sep 3, 2013
- * 
+ *
  */
 public class StructuringElements
 {
+
+	/**
+	 * Radius above which it is advantageous for the diamond structuring element
+	 * to be decomposed in a sequence of small {@link DiamondTipsShape}s rather
+	 * than in a single, large {@link DiamondShape}.
+	 */
+	private static final int HEURISTICS_DIAMOND_RADIUS = 2;
 
 	/**
 	 * Generates a symmetric, centered, rectangular flat structuring element for
@@ -37,7 +46,7 @@ public class StructuringElements
 	 * better performance. The rectangle strel can be decomposed in a succession
 	 * of orthogonal lines and yield the exact same results on any of the
 	 * morphological operations.
-	 * 
+	 *
 	 * @param halfSpans
 	 *            an <code>int[]</code> array containing the half-span of the
 	 *            symmetric rectangle in each dimension. The total extent of the
@@ -90,7 +99,7 @@ public class StructuringElements
 	 * of orthogonal lines and yield the exact same results on any of the
 	 * morphological operations. This method uses a simple heuristic to decide
 	 * whether to decompose the rectangle or not.
-	 * 
+	 *
 	 * @param halfSpans
 	 *            an <code>int[]</code> array containing the half-span of the
 	 *            symmetric rectangle in each dimension. The total extent of the
@@ -128,6 +137,48 @@ public class StructuringElements
 		}
 	}
 
+	public static final List< Shape > diamond( final int radius, final boolean decompose )
+	{
+		if ( decompose && radius > 1 )
+		{
+			/*
+			 * Logarithmic decomposition: Rein van den Boomgard and Richard van
+			 * Balen, "Methods for Fast Morphological Image Transforms Using
+			 * Bitmapped Binary Images," CVGIP: Models and Image Processing,
+			 * vol. 54, no. 3, May 1992, pp. 252-254.
+			 */
+			final int ndecomp = ( int ) Math.floor( Math.log( radius ) / Math.log( 2d ) );
+			final List< Shape > shapes = new ArrayList< Shape >( ndecomp );
+
+			// Base
+			final DiamondShape shapeBase = new DiamondShape( 1 );
+			shapes.add( shapeBase );
+
+			// Power of 2s
+			for ( int k = 0; k < ndecomp; k++ )
+			{
+				final int p = 1 << k;
+				final DiamondTipsShape shape = new DiamondTipsShape( p );
+				shapes.add( shape );
+			}
+
+			// Remainder
+			final int q = radius - ( 1 << ndecomp );
+			if ( q > 0 )
+			{
+				final DiamondTipsShape shape = new DiamondTipsShape( q );
+				shapes.add( shape );
+			}
+			return shapes;
+		}
+		else
+		{
+			final List< Shape > shape = new ArrayList< Shape >( 1 );
+			shape.add( new DiamondShape( radius ) );
+			return shape;
+		}
+	}
+
 	/**
 	 * Returns a string representation of the specified flat structuring element
 	 * (given as a {@link Shape}), cast over the dimensionality specified by an
@@ -135,7 +186,7 @@ public class StructuringElements
 	 * <p>
 	 * This method only prints the first 3 dimensions of the structuring
 	 * element. Dimensions above 3 are skipped.
-	 * 
+	 *
 	 * @param shape
 	 *            the structuring element to print.
 	 * @param space
@@ -359,6 +410,7 @@ public class StructuringElements
 				return 1;
 			}
 		} ) );
+
 	}
 
 }
