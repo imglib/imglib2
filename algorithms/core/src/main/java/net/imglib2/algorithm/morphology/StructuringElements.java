@@ -24,7 +24,7 @@ import net.imglib2.util.Util;
  * A collection of static utilities to facilitate the creation and visualization
  * of morphological structuring elements.
  *
- * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> Sep 3, 2013
+ * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> Sep - Oct 2013
  *
  */
 public class StructuringElements
@@ -33,7 +33,9 @@ public class StructuringElements
 	/**
 	 * Radius above which it is advantageous for the diamond structuring element
 	 * to be decomposed in a sequence of small {@link DiamondTipsShape}s rather
-	 * than in a single, large {@link DiamondShape}.
+	 * than in a single, large {@link DiamondShape}. I have found experimenting
+	 * that in 2D, there is no point using the non-optimized version for radius
+	 * lower than 2.
 	 */
 	private static final int HEURISTICS_DIAMOND_RADIUS = 2;
 
