@@ -40,12 +40,13 @@ package net.imglib2.algorithm.region.localneighborhood;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
 
 /**
  * A factory for Accessibles on {@link Neighborhood Neighborhoods}.
- * 
+ *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface Shape
@@ -53,14 +54,14 @@ public interface Shape
 	/**
 	 * Get an {@link IterableInterval} that contains all {@link Neighborhood
 	 * Neighborhoods} of the source image.
-	 * 
+	 *
 	 * <p>
 	 * A {@link Cursor} on the resulting accessible can be used to access the
 	 * {@link Neighborhood neighborhoods}. As usual, when the cursor is moved, a
 	 * neighborhood {@link Sampler#get() obtained} previously from the cursor
 	 * should be considered invalid.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * <em>The {@link Neighborhood neighborhoods} that are obtained from the
 	 * resulting accessible are unsafe in the following sense:</em> Every time,
@@ -78,7 +79,7 @@ public interface Shape
 	 * not recommended if you want to use enhanced for loops).
 	 * </ol>
 	 * </p>
-	 * 
+	 *
 	 * @param source
 	 *            source image.
 	 * @return an {@link IterableInterval} that contains all
@@ -89,14 +90,14 @@ public interface Shape
 	/**
 	 * Get an {@link RandomAccessibleInterval} that contains all
 	 * {@link Neighborhood Neighborhoods} of the source image.
-	 * 
+	 *
 	 * <p>
 	 * A {@link RandomAccess} on the resulting accessible can be used to access
 	 * the {@link Neighborhood neighborhoods}. As usual, when the access is
 	 * moved, a neighborhood {@link Sampler#get() obtained} previously from the
 	 * access should be considered invalid.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * <em>The {@link Neighborhood neighborhoods} that are obtained from the
 	 * resulting accessible are unsafe in the following sense:</em> Every time,
@@ -115,25 +116,25 @@ public interface Shape
 	 * therefore is not recommended if you want to use enhanced for loops).
 	 * </ol>
 	 * </p>
-	 * 
+	 *
 	 * @param source
 	 *            source image.
 	 * @return an {@link RandomAccessibleInterval} that contains all
 	 *         {@link Neighborhood Neighborhoods} of the source image.
 	 */
-	public < T > RandomAccessibleInterval< Neighborhood< T > > neighborhoodsRandomAccessible( final RandomAccessibleInterval< T > source );
+	public < T > RandomAccessible< Neighborhood< T > > neighborhoodsRandomAccessible( final RandomAccessible< T > source );
 
 	/**
 	 * Get an {@link IterableInterval} that contains all {@link Neighborhood
 	 * Neighborhoods} of the source image.
-	 * 
+	 *
 	 * <p>
 	 * A {@link Cursor} on the resulting accessible can be used to access the
 	 * {@link Neighborhood neighborhoods}. As usual, when the cursor is moved, a
 	 * neighborhood {@link Sampler#get() obtained} previously from the cursor
 	 * should be considered invalid.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Every time, a {@link Cursor} is requested from a {@link Neighborhood}
 	 * (where the neighborhood in turn is obtained from a cursor on the
@@ -143,7 +144,7 @@ public interface Shape
 	 * {@link #neighborhoods(RandomAccessibleInterval)} which re-uses the same
 	 * instance every time (but therefore has to be used carefully).
 	 * </p>
-	 * 
+	 *
 	 * @param source
 	 *            source image.
 	 * @return an {@link IterableInterval} that contains all
@@ -154,14 +155,14 @@ public interface Shape
 	/**
 	 * Get an {@link RandomAccessibleInterval} that contains all
 	 * {@link Neighborhood Neighborhoods} of the source image.
-	 * 
+	 *
 	 * <p>
 	 * A {@link RandomAccess} on the resulting accessible can be used to access
 	 * the {@link Neighborhood neighborhoods}. As usual, when the access is
 	 * moved, a neighborhood {@link Sampler#get() obtained} previously from the
 	 * access should be considered invalid.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Every time, a {@link Cursor} is requested from a {@link Neighborhood}
 	 * (where the neighborhood in turn is obtained from a cursor on the
@@ -171,11 +172,11 @@ public interface Shape
 	 * {@link #neighborhoods(RandomAccessibleInterval)} which re-uses the same
 	 * instance every time (but therefore has to be used carefully).
 	 * </p>
-	 * 
+	 *
 	 * @param source
 	 *            source image.
 	 * @return an {@link RandomAccessibleInterval} that contains all
 	 *         {@link Neighborhood Neighborhoods} of the source image.
 	 */
-	public < T > RandomAccessibleInterval< Neighborhood< T > > neighborhoodsRandomAccessibleSafe( final RandomAccessibleInterval< T > source );
+	public < T > RandomAccessible< Neighborhood< T > > neighborhoodsRandomAccessibleSafe( final RandomAccessible< T > source );
 }
