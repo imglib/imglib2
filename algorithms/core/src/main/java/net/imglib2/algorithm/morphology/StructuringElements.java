@@ -139,39 +139,56 @@ public class StructuringElements
 		}
 	}
 
-	public static final List< Shape > diamond( final int radius, final boolean decompose )
+	public static final List< Shape > diamond( final int radius, final int dimensionality, final boolean decompose )
 	{
 		if ( decompose && radius > 1 )
 		{
-			/*
-			 * Logarithmic decomposition: Rein van den Boomgard and Richard van
-			 * Balen, "Methods for Fast Morphological Image Transforms Using
-			 * Bitmapped Binary Images," CVGIP: Models and Image Processing,
-			 * vol. 54, no. 3, May 1992, pp. 252-254.
-			 */
-			final int ndecomp = ( int ) Math.floor( Math.log( radius ) / Math.log( 2d ) );
-			final List< Shape > shapes = new ArrayList< Shape >( ndecomp );
-
-			// Base
-			final DiamondShape shapeBase = new DiamondShape( 1 );
-			shapes.add( shapeBase );
-
-			// Power of 2s
-			for ( int k = 0; k < ndecomp; k++ )
+			switch ( dimensionality )
 			{
-				final int p = 1 << k;
-				final DiamondTipsShape shape = new DiamondTipsShape( p );
-				shapes.add( shape );
-			}
-
-			// Remainder
-			final int q = radius - ( 1 << ndecomp );
-			if ( q > 0 )
+			case 1:
+			case 2:
 			{
-				final DiamondTipsShape shape = new DiamondTipsShape( q );
-				shapes.add( shape );
+				/*
+				 * Logarithmic decomposition: Rein van den Boomgard and Richard
+				 * van Balen, "Methods for Fast Morphological Image Transforms
+				 * Using Bitmapped Binary Images," CVGIP: Models and Image
+				 * Processing, vol. 54, no. 3, May 1992, pp. 252-254.
+				 */
+				final int ndecomp = ( int ) Math.floor( Math.log( radius ) / Math.log( 2d ) );
+				final List< Shape > shapes = new ArrayList< Shape >( ndecomp );
+
+				// Base
+				final DiamondShape shapeBase = new DiamondShape( 1 );
+				shapes.add( shapeBase );
+
+				// Power of 2s
+				for ( int k = 0; k < ndecomp; k++ )
+				{
+					final int p = 1 << k;
+					final DiamondTipsShape shape = new DiamondTipsShape( p );
+					shapes.add( shape );
+				}
+
+				// Remainder
+				final int q = radius - ( 1 << ndecomp );
+				if ( q > 0 )
+				{
+					final DiamondTipsShape shape = new DiamondTipsShape( q );
+					shapes.add( shape );
+				}
+				return shapes;
 			}
-			return shapes;
+			default:
+			{
+				final List< Shape > shapes = new ArrayList< Shape >( radius );
+				shapes.add( new DiamondShape( 1 ) );
+				for ( int k = 0; k < radius - 2; k++ )
+				{
+					shapes.add( new DiamondTipsShape( 1 ) );
+				}
+				return shapes;
+			}
+			}
 		}
 		else
 		{
@@ -396,6 +413,7 @@ public class StructuringElements
 	{
 		System.out.println( printNeighborhood( new HyperSphereShape( 2 ), 3 ) );
 		System.out.println( printNeighborhood( new RectangleShape( 4, true ), 1 ) );
+		System.out.println( printNeighborhood( new DiamondShape( 3 ), 3 ) );
 	}
 
 }

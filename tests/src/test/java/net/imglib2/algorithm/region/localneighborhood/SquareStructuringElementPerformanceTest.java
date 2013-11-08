@@ -19,7 +19,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 public class SquareStructuringElementPerformanceTest
 {
 
-	public static void main( final String[] args )
+	public static void main1( final String[] args )
 	{
 		ImageJ.main( args );
 
@@ -61,7 +61,7 @@ public class SquareStructuringElementPerformanceTest
 
 	}
 
-	public static void main2( final String[] args )
+	public static void main( final String[] args )
 	{
 		ImageJ.main( args );
 
