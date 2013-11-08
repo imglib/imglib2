@@ -35,13 +35,14 @@
  * #L%
  */
 
-package net.imglib2.ops.operation.imgplus.unary;
+package net.imglib2.ops.operation.img.unary;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealInterval;
+import net.imglib2.img.Img;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
@@ -51,7 +52,7 @@ import net.imglib2.type.Type;
  * 
  * @author dietzc, hornm, University of Konstanz
  */
-public class ImgPlusCrop< T extends Type< T >> implements UnaryOperation< ImgPlus< T >, ImgPlus< T >>
+public class ImgCrop< T extends Type< T >> implements UnaryOperation< Img< T >, Img< T >>
 {
 
 	/**
@@ -68,7 +69,7 @@ public class ImgPlusCrop< T extends Type< T >> implements UnaryOperation< ImgPlu
 	 * @param extend
 	 *            extend of the interval
 	 */
-	public ImgPlusCrop( long[] origin, long[] extend )
+	public ImgCrop( long[] origin, long[] extend )
 	{
 		long[] max = new long[ extend.length ];
 		for ( int i = 0; i < max.length; i++ )
@@ -87,7 +88,7 @@ public class ImgPlusCrop< T extends Type< T >> implements UnaryOperation< ImgPlu
 	 * @param extend
 	 *            extend of the interval
 	 */
-	public ImgPlusCrop( int[] origin, int[] extend )
+	public ImgCrop( int[] origin, int[] extend )
 	{
 		long[] max = new long[ extend.length ];
 		long[] loffset = new long[ extend.length ];
@@ -104,7 +105,7 @@ public class ImgPlusCrop< T extends Type< T >> implements UnaryOperation< ImgPlu
 	 * 
 	 * @param interval
 	 */
-	public ImgPlusCrop( Interval interval )
+	public ImgCrop( Interval interval )
 	{
 		m_interval = interval;
 	}
@@ -114,7 +115,7 @@ public class ImgPlusCrop< T extends Type< T >> implements UnaryOperation< ImgPlu
 	 * @param interval
 	 * @param imgFac
 	 */
-	public ImgPlusCrop( RealInterval interval )
+	public ImgCrop( RealInterval interval )
 	{
 		long[] min = new long[ interval.numDimensions() ];
 		long[] max = new long[ interval.numDimensions() ];
@@ -127,7 +128,7 @@ public class ImgPlusCrop< T extends Type< T >> implements UnaryOperation< ImgPlu
 	}
 
 	@Override
-	public ImgPlus< T > compute( ImgPlus< T > op, ImgPlus< T > r )
+	public Img< T > compute( Img< T > op, Img< T > r )
 	{
 		Cursor< T > rc = r.localizingCursor();
 		RandomAccess< T > opc = op.randomAccess();
@@ -145,8 +146,8 @@ public class ImgPlusCrop< T extends Type< T >> implements UnaryOperation< ImgPlu
 	}
 
 	@Override
-	public UnaryOperation< ImgPlus< T >, ImgPlus< T >> copy()
+	public UnaryOperation< Img< T >, Img< T >> copy()
 	{
-		return new ImgPlusCrop< T >( m_interval );
+		return new ImgCrop< T >( m_interval );
 	}
 }

@@ -47,6 +47,7 @@ import net.imglib2.img.Img;
  *
  * @author Stephan Preibisch
  */
+@Deprecated
 public class SamplingLineIterator<T> extends AbstractLineIterator implements Sampler<T>
 {
 	final Img<T> processLine;

@@ -43,7 +43,7 @@ import net.imglib2.ops.parse.token.Token;
 import net.imglib2.ops.pointset.EmptyPointSet;
 
 /**
- * Static methods used by various parsers
+ * Static methods used by various parsers.
  * 
  * @author Barry DeZonia
  *

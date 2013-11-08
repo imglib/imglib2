@@ -61,36 +61,39 @@ import net.imglib2.type.Type;
 /**
  * Applies a given Operation to each interval separately.
  * 
+ * TODO: Now works on RandomAccessibleIntervals
+ * 
  * @author Christian Dietz (University of Konstanz)
  * @author Clemens Muething (University of Konstanz)
+ * @author Jonathan Hale (University of Konstanz)
  */
-public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V >, S extends RandomAccessibleInterval< T >, U extends RandomAccessibleInterval< V >> implements UnaryOperation< S, U >
+public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V >> implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > >
 {
 
 	private final ExecutorService m_service;
 
-	private final UnaryOperation< S, U > m_op;
+	private final UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > m_op;
 
 	private final Interval[] m_outIntervals;
 
 	private final Interval[] m_inIntervals;
 
-	public IterateUnaryOperation( UnaryOperation< S, U > op, Interval[] inIntervals )
+	public IterateUnaryOperation( UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > op, Interval[] inIntervals )
 	{
 		this( op, inIntervals, inIntervals, null );
 	}
 
-	public IterateUnaryOperation( UnaryOperation< S, U > op, Interval[] inIntervals, Interval[] outIntervals )
+	public IterateUnaryOperation( UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > op, Interval[] inIntervals, Interval[] outIntervals )
 	{
 		this( op, inIntervals, outIntervals, null );
 	}
 
-	public IterateUnaryOperation( UnaryOperation< S, U > op, Interval[] inIntervals, ExecutorService service )
+	public IterateUnaryOperation( UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > op, Interval[] inIntervals, ExecutorService service )
 	{
 		this( op, inIntervals, inIntervals, service );
 	}
 
-	public IterateUnaryOperation( UnaryOperation< S, U > op, Interval[] inIntervals, Interval[] outIntervals, ExecutorService service )
+	public IterateUnaryOperation( UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > op, Interval[] inIntervals, Interval[] outIntervals, ExecutorService service )
 	{
 
 		if ( inIntervals.length != outIntervals.length ) { throw new IllegalArgumentException( "In and out intervals do not match! Most likely an implementation error!" ); }
@@ -105,7 +108,7 @@ public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final U compute( final S in, final U out )
+	public final RandomAccessibleInterval< V > compute( final RandomAccessibleInterval< T > in, final RandomAccessibleInterval< V > out )
 	{
 
 		Future< ? >[] futures = new Future< ? >[ m_inIntervals.length ];
@@ -173,9 +176,9 @@ public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V
 	}
 
 	@Override
-	public UnaryOperation< S, U > copy()
+	public UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > copy()
 	{
-		return new IterateUnaryOperation< T, V, S, U >( m_op.copy(), m_inIntervals, m_outIntervals, m_service );
+		return new IterateUnaryOperation< T, V >( m_op.copy(), m_inIntervals, m_outIntervals, m_service );
 	}
 
 	/**
@@ -187,13 +190,13 @@ public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V
 	private class OperationTask implements Runnable
 	{
 
-		private final UnaryOperation< S, U > m_op;
+		private final UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > m_op;
 
-		private final S m_in;
+		private final RandomAccessibleInterval< T > m_in;
 
-		private final U m_out;
+		private final RandomAccessibleInterval< V > m_out;
 
-		public OperationTask( final UnaryOperation< S, U > op, final S in, final U out )
+		public OperationTask( final UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > op, final RandomAccessibleInterval< T > in, final RandomAccessibleInterval< V > out )
 		{
 			m_in = in;
 			m_out = out;

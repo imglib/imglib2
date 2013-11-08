@@ -51,11 +51,6 @@ abstract public class AbstractScale implements ScaleGet
 	{
 		this.s = s.clone();
 		ds = new RealPoint[ s.length ];
-		for ( int d =0; d < s.length; ++d )
-		{
-			final RealPoint dd = new RealPoint( s.length );
-			dd.setPosition( s[ d ], d );
-		}
 	}
 	
 	/**

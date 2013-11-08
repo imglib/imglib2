@@ -53,7 +53,7 @@ import net.imglib2.type.Type;
  * 
  * @author Christian Dietz (University of Konstanz)
  */
-public class ResultAsAdditionalDimOp< T extends Type< T >, O extends Type< O >, IN extends RandomAccessibleInterval< T >> implements UnaryOutputOperation< IN, Img< O > >
+public class ResultAsAdditionalDimOp< T extends Type< T >, O extends Type< O >, IN extends RandomAccessibleInterval< T >> implements UnaryOutputOperation< IN, RandomAccessibleInterval< O > >
 {
 
 	private UnaryOperation< IN, Img< O > >[] m_operations;
@@ -70,7 +70,7 @@ public class ResultAsAdditionalDimOp< T extends Type< T >, O extends Type< O >, 
 	}
 
 	@Override
-	public Img< O > compute( IN input, Img< O > output )
+	public RandomAccessibleInterval< O > compute( IN input, RandomAccessibleInterval< O > output )
 	{
 
 		final long[] min = new long[ output.numDimensions() ];
@@ -81,14 +81,14 @@ public class ResultAsAdditionalDimOp< T extends Type< T >, O extends Type< O >, 
 		{
 			max[ max.length - 1 ] = i;
 			min[ min.length - 1 ] = i;
-			m_operations[ i ].compute( input, new ImgView< O >( SubsetViews.iterableSubsetView( output, new FinalInterval( min, max ) ), output.factory() ) );
+			m_operations[ i ].compute( input, new ImgView< O >( SubsetViews.iterableSubsetView( output, new FinalInterval( min, max ) ), m_fac ) );
 		}
 
 		return output;
 	}
 
 	@Override
-	public Img< O > compute( IN in )
+	public RandomAccessibleInterval< O > compute( IN in )
 	{
 		return compute( in, createEmptyOutput( in ) );
 	}
@@ -110,7 +110,7 @@ public class ResultAsAdditionalDimOp< T extends Type< T >, O extends Type< O >, 
 	}
 
 	@Override
-	public UnaryOutputOperation< IN, Img< O >> copy()
+	public UnaryOutputOperation< IN, RandomAccessibleInterval< O >> copy()
 	{
 		return new ResultAsAdditionalDimOp< T, O, IN >( m_resType, m_fac, Arrays.copyOf( m_operations, m_operations.length ) );
 	}

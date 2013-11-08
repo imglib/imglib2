@@ -44,6 +44,8 @@ import net.imglib2.type.numeric.RealType;
 // It should be possible to blend across other dims too.
 
 /**
+ * A real space {@link Function} that interpolates value from an underlying
+ * discrete space Function. Interpolation is bilinear and in the XY plane.
  * 
  * @author Barry DeZonia
  *

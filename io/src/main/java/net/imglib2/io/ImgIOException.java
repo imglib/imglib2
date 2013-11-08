@@ -45,7 +45,10 @@ import net.imglib2.exception.ImgLibException;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Curtis Rueden
+ * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
+ * @see "https://github.com/scifio/scifio"
  */
+@Deprecated
 public class ImgIOException extends ImgLibException {
 
 	public ImgIOException(final Object obj, final String message) {

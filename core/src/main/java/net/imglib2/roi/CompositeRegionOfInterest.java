@@ -230,7 +230,7 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 	protected void getRealExtrema( double[] minima, double[] maxima )
 	{
 		Arrays.fill( minima, Double.MAX_VALUE );
-		Arrays.fill( maxima, Double.MIN_VALUE );
+		Arrays.fill( maxima, -Double.MAX_VALUE );
 		for ( RegionOfInterest roi : rois )
 		{
 			for ( int i = 0; i < numDimensions(); i++ )

@@ -26,7 +26,9 @@
 
 package net.imglib2.algorithm.pde;
 
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -52,6 +54,15 @@ public class NonNegativityDiffusionScheme2D<T extends RealType<T>> extends Expli
 	
 	public NonNegativityDiffusionScheme2D(Img<T> input, Img<FloatType> D) {
 		this(input, D, DEFAULT_DT);
+	}
+	
+	public NonNegativityDiffusionScheme2D(RandomAccessibleInterval<T> input, RandomAccessibleInterval<FloatType> D, ImgFactory<FloatType> imgFactory, float dt) {
+		super(input, D, imgFactory);
+		this.dt = dt;
+	}
+	
+	public NonNegativityDiffusionScheme2D(RandomAccessibleInterval<T> input, RandomAccessibleInterval<FloatType> D, ImgFactory<FloatType> imgFactory) {
+		this(input, D, imgFactory, DEFAULT_DT);
 	}
 
 	/*

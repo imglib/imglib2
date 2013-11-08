@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * @author Clemens Muething (University of Konstanz)
  */
-public class GrayscaleReconstructionByErosion< T extends RealType< T >, V extends RealType< V >, MASK extends RandomAccessibleInterval< T >, MARKER extends RandomAccessibleInterval< V >> extends AbstractGrayscaleReconstruction< T, V, MASK, MARKER >
+public class GrayscaleReconstructionByErosion< T extends RealType< T >, V extends RealType< V >> extends AbstractGrayscaleReconstruction< T, V >
 {
 
 	public GrayscaleReconstructionByErosion( final ConnectedType connection )
@@ -52,7 +52,7 @@ public class GrayscaleReconstructionByErosion< T extends RealType< T >, V extend
 		super( connection );
 	}
 
-	public GrayscaleReconstructionByErosion( final GrayscaleReconstructionByErosion< T, V, MASK, MARKER > copy )
+	public GrayscaleReconstructionByErosion( final GrayscaleReconstructionByErosion< T, V > copy )
 	{
 		super( copy );
 	}
@@ -112,8 +112,8 @@ public class GrayscaleReconstructionByErosion< T extends RealType< T >, V extend
 	}
 
 	@Override
-	public UnaryOperation< MASK, MARKER > copy()
+	public UnaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V> > copy()
 	{
-		return new GrayscaleReconstructionByErosion< T, V, MASK, MARKER >( this );
+		return new GrayscaleReconstructionByErosion< T, V >( this );
 	}
 }
