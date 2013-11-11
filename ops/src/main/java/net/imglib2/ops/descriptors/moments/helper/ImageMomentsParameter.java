@@ -1,6 +1,6 @@
-package net.imglib2.ops.descriptors.moments.zernike.helper;
+package net.imglib2.ops.descriptors.moments.helper;
 
-public class ZernikeParameter 
+public class ImageMomentsParameter 
 {
 	/**
 	 * order
