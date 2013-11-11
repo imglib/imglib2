@@ -20,7 +20,7 @@ import net.imglib2.ops.descriptors.sets.GeometricFeatureSet;
 import net.imglib2.ops.descriptors.sets.HaralickFeatureSet;
 import net.imglib2.ops.descriptors.sets.TamuraFeatureSet;
 import net.imglib2.ops.descriptors.sets.ZernikeDescriptorSet;
-import net.imglib2.ops.descriptors.zernike.ZernikeParameter;
+import net.imglib2.ops.descriptors.zernike.helper.ZernikeParameter;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
@@ -85,7 +85,7 @@ public class SimpleTesting< T extends RealType< T >>
 		sourcePolygon.update( extractPolygon( binaryMask( ii ) ) );
 		sourceHaralickParam.update( createHaralickParam( 1 ) );
 		sourcePercentileParam.update(createPercentileParam(0.5));
-		sourceZernikeParam.update(createZernikeParam(1, 2));
+		sourceZernikeParam.update(createZernikeParam(3));
 
 		// iterating over results
 		Iterator< Descriptor > iterator = builder.iterator();
@@ -219,11 +219,10 @@ public class SimpleTesting< T extends RealType< T >>
 	/*
 	 * FOR TESTING
 	 */
-	private ZernikeParameter createZernikeParam( int m, int n )
+	private ZernikeParameter createZernikeParam( int _order )
 	{
 		ZernikeParameter param = new ZernikeParameter();
-		param.setM(m);
-		param.setN(n);
+		param.setOrder(_order);
 		return param;
 	}
 
