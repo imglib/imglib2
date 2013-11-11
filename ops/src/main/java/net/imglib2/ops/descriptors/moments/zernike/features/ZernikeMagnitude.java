@@ -1,21 +1,27 @@
-package net.imglib2.ops.descriptors.zernike.features;
+package net.imglib2.ops.descriptors.moments.zernike.features;
 
 import net.imglib2.ops.descriptors.AbstractDescriptorModule;
 import net.imglib2.ops.descriptors.ModuleInput;
-import net.imglib2.ops.descriptors.zernike.ZernikeMomentComputer;
+import net.imglib2.ops.descriptors.moments.zernike.ZernikeMomentComputer;
+import net.imglib2.ops.descriptors.moments.zernike.helper.ZernikeParameter;
 
 public class ZernikeMagnitude extends AbstractDescriptorModule
 {
 	@ModuleInput
+	ZernikeParameter param;
+	
+	@ModuleInput
 	ZernikeMomentComputer zernike;
 	
 	@Override
-	public String name() {
-		return "Magnitude of Zernike Moment";
+	public String name() 
+	{
+		return "Magnitude of Zernike Moment up to order " + param.getOrder();
 	}
 
 	@Override
-	protected double[] recompute() {
+	protected double[] recompute() 
+	{
 		
 		double[] val = zernike.get();
 		

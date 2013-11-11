@@ -1,4 +1,4 @@
-package net.imglib2.ops.descriptors.zernike.helper;
+package net.imglib2.ops.descriptors.moments.zernike.helper;
 
 import java.util.ArrayList;
 

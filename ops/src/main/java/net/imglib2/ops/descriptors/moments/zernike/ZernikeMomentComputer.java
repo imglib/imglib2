@@ -1,7 +1,9 @@
-package net.imglib2.ops.descriptors.zernike;
+package net.imglib2.ops.descriptors.moments.zernike;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.scijava.util.ArrayUtils;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
@@ -9,9 +11,9 @@ import net.imglib2.ops.descriptors.AbstractModule;
 import net.imglib2.ops.descriptors.Module;
 import net.imglib2.ops.descriptors.ModuleInput;
 import net.imglib2.ops.descriptors.geometric.centerofgravity.CenterOfGravity;
-import net.imglib2.ops.descriptors.zernike.helper.Polynom;
-import net.imglib2.ops.descriptors.zernike.helper.FactComputer;
-import net.imglib2.ops.descriptors.zernike.helper.ZernikeParameter;
+import net.imglib2.ops.descriptors.moments.zernike.helper.FactComputer;
+import net.imglib2.ops.descriptors.moments.zernike.helper.Polynom;
+import net.imglib2.ops.descriptors.moments.zernike.helper.ZernikeParameter;
 import net.imglib2.type.numeric.RealType;
 
 public class ZernikeMomentComputer extends AbstractModule<double[]>
@@ -42,20 +44,24 @@ public class ZernikeMomentComputer extends AbstractModule<double[]>
 	{
 		int order = param.getOrder();
 		
-		List<Integer> list = computeRepitionsOfOrder(order);
-		double[] result = new double[list.size()*2];
+		List<Double> fR = new ArrayList<Double>();
 		
-		int j = 0;
-		for (int i = 0; i< list.size(); i++)
+		for (int o = 0; o <= order; o++)
 		{
-			double[] val = this.computeMoment(order, list.get(i));
+			List<Integer> list = computeRepitionsOfOrder(o);
 			
-			result[j] = val[0];
-			result[++j] = val[1];
-			j++;
+			for (int i = 0; i< list.size(); i++)
+			{
+				double[] val = this.computeMoment(o, list.get(i));
+				fR.add(val[0]); fR.add(val[1]);
+			}
 		}
 		
-		return result;
+		double[] finalResult = new double[fR.size()];
+		for (int i = 0; i < fR.size(); i++)
+			finalResult[i] = fR.get(i);
+		
+		return finalResult;
 	}
 	
     private List<Integer> computeRepitionsOfOrder(int n) {
