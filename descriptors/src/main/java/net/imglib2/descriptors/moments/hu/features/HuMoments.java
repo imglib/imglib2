@@ -5,13 +5,13 @@ import net.imglib2.IterableInterval;
 import net.imglib2.descriptors.AbstractDescriptorModule;
 import net.imglib2.descriptors.ModuleInput;
 import net.imglib2.descriptors.geometric.centerofgravity.CenterOfGravity;
-import net.imglib2.descriptors.moments.central.helper.NormalizedCentralMoment02;
-import net.imglib2.descriptors.moments.central.helper.NormalizedCentralMoment03;
-import net.imglib2.descriptors.moments.central.helper.NormalizedCentralMoment11;
-import net.imglib2.descriptors.moments.central.helper.NormalizedCentralMoment12;
-import net.imglib2.descriptors.moments.central.helper.NormalizedCentralMoment20;
-import net.imglib2.descriptors.moments.central.helper.NormalizedCentralMoment21;
-import net.imglib2.descriptors.moments.central.helper.NormalizedCentralMoment30;
+import net.imglib2.descriptors.moments.image.helper.NormalizedCentralMoment02;
+import net.imglib2.descriptors.moments.image.helper.NormalizedCentralMoment03;
+import net.imglib2.descriptors.moments.image.helper.NormalizedCentralMoment11;
+import net.imglib2.descriptors.moments.image.helper.NormalizedCentralMoment12;
+import net.imglib2.descriptors.moments.image.helper.NormalizedCentralMoment20;
+import net.imglib2.descriptors.moments.image.helper.NormalizedCentralMoment21;
+import net.imglib2.descriptors.moments.image.helper.NormalizedCentralMoment30;
 import net.imglib2.type.numeric.RealType;
 
 public class HuMoments extends AbstractDescriptorModule

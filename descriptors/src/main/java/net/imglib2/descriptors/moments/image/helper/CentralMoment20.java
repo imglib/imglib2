@@ -1,4 +1,4 @@
-package net.imglib2.descriptors.moments.central.helper;
+package net.imglib2.descriptors.moments.image.helper;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
@@ -7,7 +7,7 @@ import net.imglib2.descriptors.ModuleInput;
 import net.imglib2.descriptors.geometric.centerofgravity.CenterOfGravity;
 import net.imglib2.type.numeric.RealType;
 
-public class NormalizedCentralMoment21 extends AbstractFeatureModule
+public class CentralMoment20 extends AbstractFeatureModule
 {
 	@ModuleInput
 	IterableInterval< ? extends RealType< ? >> ii;
@@ -37,13 +37,12 @@ public class NormalizedCentralMoment21 extends AbstractFeatureModule
 
 	@Override
 	public String name() {
-		return "Normalized central moment p = 2 and q = 1";
+		return "Central moment p = 2 and q = 0";
 	}
 
 	@Override
 	protected double calculateFeature() {
-		int p = 2; int q = 1;
-		double norm = Math.pow(ii.size(), (p + q + 2) / 2);
-		return computeCentralMoment(p, q)/norm;
+		int p = 2; int q = 0;
+		return computeCentralMoment(p, q);
 	}
 }
