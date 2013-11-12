@@ -31,13 +31,19 @@ public class StructuringElements
 {
 
 	/**
+	 * Radius above which it is advantageous <b>in 2D</b> for the diamond
+	 * structuring element to be decomposed in a sequence of small
+	 * {@link DiamondTipsShape}s rather than in a single, large
+	 * {@link DiamondShape}.
+	 */
+	private static final int HEURISTICS_DIAMOND_RADIUS_2D = 4;
+
+	/**
 	 * Radius above which it is advantageous for the diamond structuring element
 	 * to be decomposed in a sequence of small {@link DiamondTipsShape}s rather
-	 * than in a single, large {@link DiamondShape}. I have found experimenting
-	 * that in 2D, there is no point using the non-optimized version for radius
-	 * lower than 2.
+	 * than in a single, large {@link DiamondShape}.
 	 */
-	private static final int HEURISTICS_DIAMOND_RADIUS = 2;
+	private static final int HEURISTICS_DIAMOND_RADIUS_OTHERSD = 2;
 
 	/**
 	 * Generates a symmetric, centered, rectangular flat structuring element for
@@ -139,14 +145,94 @@ public class StructuringElements
 		}
 	}
 
+	/**
+	 * Generates a centered flat diamond structuring element for morphological
+	 * operations.
+	 * <p>
+	 * The structuring element (strel) is returned as a {@link List} of
+	 * {@link Shape}s, for Structuring elements can be decomposed to yield a
+	 * better performance. Because the decomposition is dimension-specific, this
+	 * methods requires it to be specified. <b>Warning:</b> using a structuring
+	 * element built with the wrong dimension can and will lead to undesired
+	 * (and sometimes hard to detect) defects in subsequent morphological
+	 * operations.
+	 * <p>
+	 * The diamond strel can be effectively decomposed in 2D (and 1D) using the
+	 * logarithmic decomposition in extreme sets, as explained in [1]. For other
+	 * dimensions, the theorem does not hold (even in practice), and we have to
+	 * fall back on a linear decomposition, still very effective (see [1] as
+	 * well).
+	 *
+	 * @param radius
+	 *            the desired radius of the diamond structuring element. The
+	 *            strel will extend over <code>2 × radius + 1</code> in all
+	 *            dimensions.
+	 * @param dimensionality
+	 *            the target dimensionality this structuring element will be
+	 *            used with. A structuring element build for one dimension will
+	 *            <b>not</b> work properly for any other dimensions.
+	 * @return the structuring element as a list of {@link Shape}s.
+	 *
+	 * @see <a href =
+	 *      "http://www.sciencedirect.com/science/article/pii/1049965292900553.htm"
+	 *      >[1]</a> Rein van den Boomgard and Richard van Balen, <i>Methods for
+	 *      Fast Morphological Image Transforms Using Bitmapped Binary
+	 *      Images</i>, CVGIP: Models and Image Processing, vol. 54, no. 3, May
+	 *      1992, pp. 252-254.
+	 */
+	public static final List< Shape > diamond( final int radius, final int dimensionality) {
+		final boolean decompose;
+		if (dimensionality <= 2) {
+			decompose = radius > HEURISTICS_DIAMOND_RADIUS_2D;
+		} else {
+			decompose = radius > HEURISTICS_DIAMOND_RADIUS_OTHERSD;
+		}
+		return diamond( radius, dimensionality, decompose );
+	}
+
+	/**
+	 * Generates a centered flat diamond structuring element for morphological
+	 * operations.
+	 * <p>
+	 * The structuring element (strel) is returned as a {@link List} of
+	 * {@link Shape}s, for Structuring elements can be decomposed to yield a
+	 * better performance. Because the decomposition is dimension-specific, this
+	 * methods requires it to be specified. <b>Warning:</b> using a structuring
+	 * element built with the wrong dimension can and will lead to undesired
+	 * (and sometimes hard to detect) defects in subsequent morphological
+	 * operations. Non-optimized versions of this strel are dimension-generic.
+	 * <p>
+	 * The diamond strel can be effectively decomposed in 2D (and 1D) using the
+	 * logarithmic decomposition in extreme sets, as explained in [1]. For other
+	 * dimensions, the theorem does not hold (even in practice), and we have to
+	 * fall back on a linear decomposition, still very effective (see [1] as
+	 * well).
+	 *
+	 * @param radius
+	 *            the desired radius of the diamond structuring element. The
+	 *            strel will extend over <code>2 × radius + 1</code> in all
+	 *            dimensions.
+	 * @param dimensionality
+	 *            the target dimensionality this structuring element will be
+	 *            used with. A structuring element build for one dimension will
+	 *            <b>not</b> work properly for any other dimensions.
+	 * @param decompose
+	 *            if <code>true</code>, this strel will be optimized through
+	 *            decomposition.
+	 * @return the structuring element as a list of {@link Shape}s.
+	 *
+	 * @see <a href =
+	 *      "http://www.sciencedirect.com/science/article/pii/1049965292900553.htm"
+	 *      >[1]</a> Rein van den Boomgard and Richard van Balen, <i>Methods for
+	 *      Fast Morphological Image Transforms Using Bitmapped Binary
+	 *      Images</i>, CVGIP: Models and Image Processing, vol. 54, no. 3, May
+	 *      1992, pp. 252-254.
+	 */
 	public static final List< Shape > diamond( final int radius, final int dimensionality, final boolean decompose )
 	{
 		if ( decompose && radius > 1 )
 		{
-			switch ( dimensionality )
-			{
-			case 1:
-			case 2:
+			if ( dimensionality <= 2 )
 			{
 				/*
 				 * Logarithmic decomposition: Rein van den Boomgard and Richard
@@ -178,8 +264,10 @@ public class StructuringElements
 				}
 				return shapes;
 			}
-			default:
+			else
 			{
+				// Linear decomposition, also explained in van den Boomgard &
+				// van Balen.
 				final List< Shape > shapes = new ArrayList< Shape >( radius );
 				shapes.add( new DiamondShape( 1 ) );
 				for ( int k = 0; k < radius - 2; k++ )
@@ -187,7 +275,6 @@ public class StructuringElements
 					shapes.add( new DiamondTipsShape( 1 ) );
 				}
 				return shapes;
-			}
 			}
 		}
 		else
