@@ -2,6 +2,8 @@ package net.imglib2.descriptors.sets;
 
 import net.imglib2.descriptors.AbstractDescriptorSet;
 import net.imglib2.descriptors.moments.central.features.NormalizedCentralMoments;
+import net.imglib2.descriptors.moments.central.helper.NormalizedCentralMoment20;
+import net.imglib2.descriptors.moments.hu.features.HuMoments;
 
 public class ImageMomentsDescriptorSet extends AbstractDescriptorSet
 {
@@ -16,6 +18,7 @@ public class ImageMomentsDescriptorSet extends AbstractDescriptorSet
 		super();
 
 		registerFeature( NormalizedCentralMoments.class );
+		registerFeature( HuMoments.class );
 	}
 
 }

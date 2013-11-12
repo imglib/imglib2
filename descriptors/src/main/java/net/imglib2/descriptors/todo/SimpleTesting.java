@@ -12,7 +12,6 @@ import net.imglib2.descriptors.Descriptor;
 import net.imglib2.descriptors.DescriptorTreeBuilder;
 import net.imglib2.descriptors.firstorder.percentile.helper.PercentileParameter;
 import net.imglib2.descriptors.haralick.helpers.CoocParameter;
-import net.imglib2.descriptors.moments.central.helper.ImageMomentsParameter;
 import net.imglib2.descriptors.moments.zernike.helper.ZernikeParameter;
 import net.imglib2.descriptors.sets.FirstOrderDescriptors;
 import net.imglib2.descriptors.sets.GeometricFeatureSet;
@@ -47,7 +46,6 @@ public class SimpleTesting< T extends RealType< T >>
 
 	private ExamplezernikeParameterSource sourceZernikeParam;
 
-	private ExampleCentralMomentParameterSource sourceCentralMomentParam;
 
 	public SimpleTesting()
 	{
@@ -61,7 +59,6 @@ public class SimpleTesting< T extends RealType< T >>
 		sourceHaralickParam = new ExampleHaralickParameterSource();
 		sourcePercentileParam = new ExamplePercentileParameterSource();
 		sourceZernikeParam = new ExamplezernikeParameterSource();
-		sourceCentralMomentParam = new ExampleCentralMomentParameterSource();
 
 		// create the builder
 		builder = new DescriptorTreeBuilder();
@@ -78,7 +75,7 @@ public class SimpleTesting< T extends RealType< T >>
 		builder.registerSource( sourceHaralickParam );
 		builder.registerSource( sourcePercentileParam );
 		builder.registerSource( sourceZernikeParam );
-		builder.registerSource( sourceCentralMomentParam );
+
 
 		// optimize the featureset
 		builder.build();
@@ -92,7 +89,7 @@ public class SimpleTesting< T extends RealType< T >>
 		sourceHaralickParam.update( createHaralickParam( 1 ) );
 		sourcePercentileParam.update( createPercentileParam( 0.5 ) );
 		sourceZernikeParam.update( createZernikeParam( 3 ) );
-		sourceCentralMomentParam.update( createImageMomentsParam( 3 ) );
+
 
 		// iterating over results
 		Iterator< Descriptor > iterator = builder.iterator();
@@ -186,20 +183,7 @@ public class SimpleTesting< T extends RealType< T >>
 		}
 	}
 
-	class ExampleCentralMomentParameterSource extends AbstractTreeSource< ImageMomentsParameter >
-	{
-		@Override
-		public boolean hasCompatibleOutput( Class< ? > clazz )
-		{
-			return clazz.isAssignableFrom( ImageMomentsParameter.class );
-		}
 
-		@Override
-		public double priority()
-		{
-			return Double.MAX_VALUE;
-		}
-	}
 
 	class ExamplePolygonSource extends AbstractTreeSource< Polygon >
 	{
@@ -249,15 +233,6 @@ public class SimpleTesting< T extends RealType< T >>
 		return param;
 	}
 
-	/*
-	 * FOR TESTING
-	 */
-	private ImageMomentsParameter createImageMomentsParam( int _order )
-	{
-		ImageMomentsParameter param = new ImageMomentsParameter();
-		param.setOrder( _order );
-		return param;
-	}
 
 	/*
 	 * FOR TESTING
