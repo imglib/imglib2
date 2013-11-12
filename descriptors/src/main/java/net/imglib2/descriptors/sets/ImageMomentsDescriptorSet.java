@@ -23,5 +23,4 @@ public class ImageMomentsDescriptorSet extends AbstractDescriptorSet
 		registerFeature( NormalizedCentralMoments.class );
 		registerFeature( HuMoments.class );
 	}
-
 }

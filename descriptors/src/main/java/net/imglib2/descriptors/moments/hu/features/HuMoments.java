@@ -1,6 +1,5 @@
 package net.imglib2.descriptors.moments.hu.features;
 
-
 import net.imglib2.IterableInterval;
 import net.imglib2.descriptors.AbstractDescriptorModule;
 import net.imglib2.descriptors.ModuleInput;
