@@ -1,4 +1,4 @@
-package net.imglib2.descriptors.moments.helper;
+package net.imglib2.descriptors.moments.central.helper;
 
 public class ImageMomentsParameter
 {

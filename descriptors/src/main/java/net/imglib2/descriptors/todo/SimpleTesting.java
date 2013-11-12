@@ -12,7 +12,7 @@ import net.imglib2.descriptors.Descriptor;
 import net.imglib2.descriptors.DescriptorTreeBuilder;
 import net.imglib2.descriptors.firstorder.percentile.helper.PercentileParameter;
 import net.imglib2.descriptors.haralick.helpers.CoocParameter;
-import net.imglib2.descriptors.moments.helper.ImageMomentsParameter;
+import net.imglib2.descriptors.moments.central.helper.ImageMomentsParameter;
 import net.imglib2.descriptors.moments.zernike.helper.ZernikeParameter;
 import net.imglib2.descriptors.sets.FirstOrderDescriptors;
 import net.imglib2.descriptors.sets.GeometricFeatureSet;

@@ -9,10 +9,10 @@ import net.imglib2.descriptors.AbstractModule;
 import net.imglib2.descriptors.Module;
 import net.imglib2.descriptors.ModuleInput;
 import net.imglib2.descriptors.geometric.centerofgravity.CenterOfGravity;
-import net.imglib2.descriptors.moments.helper.ImageMomentsParameter;
+import net.imglib2.descriptors.moments.central.helper.ImageMomentsParameter;
 import net.imglib2.type.numeric.RealType;
 
-public class CentralMomentComputer extends AbstractModule< double[] >
+public class NormalizedCentralMomentComputer extends AbstractModule< double[] >
 {
 	@ModuleInput
 	ImageMomentsParameter param;
@@ -26,7 +26,7 @@ public class CentralMomentComputer extends AbstractModule< double[] >
 	@Override
 	public boolean isEquivalentModule( Module< ? > output )
 	{
-		return CentralMomentComputer.class.isAssignableFrom( output.getClass() );
+		return NormalizedCentralMomentComputer.class.isAssignableFrom( output.getClass() );
 	}
 
 	@Override
@@ -40,7 +40,8 @@ public class CentralMomentComputer extends AbstractModule< double[] >
 	{
 		int order = param.getOrder();
 
-		List< Double > fR = new ArrayList< Double >();
+		List< Double > resultList = new ArrayList< Double >();
+	
 
 		for ( int o = 0; o <= order; o++ )
 		{
@@ -48,17 +49,17 @@ public class CentralMomentComputer extends AbstractModule< double[] >
 
 			for ( int i = 0; i < list.size(); i++ )
 			{
-				System.out.println( list.get( i )[ 0 ] + " " + list.get( i )[ 1 ] );
 				double val = this.computeCentralMoment( list.get( i )[ 0 ], list.get( i )[ 1 ] );
-				fR.add( val );
+				double norm = Math.pow(ii.size(), (double)(list.get( i )[ 0 ] + list.get( i )[ 1 ] + 2) / 2);
+				resultList.add( (val/norm) );
 			}
 		}
 
-		double[] finalResult = new double[ fR.size() ];
-		for ( int i = 0; i < fR.size(); i++ )
-			finalResult[ i ] = fR.get( i );
+		double[] resultArray = new double[ resultList.size() ];
+		for ( int i = 0; i < resultList.size(); i++ )
+			resultArray[ i ] = resultList.get( i );
 
-		return finalResult;
+		return resultArray;
 	}
 
 	protected double computeCentralMoment( int p, int q )
