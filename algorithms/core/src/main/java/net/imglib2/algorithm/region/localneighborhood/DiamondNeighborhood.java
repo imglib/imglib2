@@ -17,13 +17,13 @@ public class DiamondNeighborhood< T > extends AbstractLocalizable implements Nei
 	public static < T > DiamondNeighborhoodFactory< T > factory()
 	{
 		return new DiamondNeighborhoodFactory< T >()
-		{
+				{
 			@Override
 			public Neighborhood< T > create( final long[] position, final long radius, final RandomAccess< T > sourceRandomAccess )
 			{
 				return new DiamondNeighborhood< T >( position, radius, sourceRandomAccess );
 			}
-		};
+				};
 	}
 
 	private final RandomAccess< T > sourceRandomAccess;
@@ -32,7 +32,7 @@ public class DiamondNeighborhood< T > extends AbstractLocalizable implements Nei
 
 	private final int maxDim;
 
-	private final long size;
+	// private final long size;
 
 	private final FinalInterval structuringElementBoundingBox;
 
@@ -42,7 +42,7 @@ public class DiamondNeighborhood< T > extends AbstractLocalizable implements Nei
 		this.sourceRandomAccess = sourceRandomAccess;
 		this.radius = radius;
 		maxDim = n - 1;
-		size = computeSize();
+		// size = computeSize();
 
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];
@@ -53,24 +53,6 @@ public class DiamondNeighborhood< T > extends AbstractLocalizable implements Nei
 			max[ d ] = radius;
 		}
 		structuringElementBoundingBox = new FinalInterval( min, max );
-	}
-
-	/**
-	 * Compute the number of elements for iteration
-	 */
-	protected long computeSize()
-	{
-		final LocalCursor cursor = new LocalCursor( sourceRandomAccess );
-
-		// "compute number of pixels"
-		long size = 0;
-		while ( cursor.hasNext() )
-		{
-			cursor.fwd();
-			++size;
-		}
-
-		return size;
 	}
 
 	public class LocalCursor extends AbstractEuclideanSpace implements Cursor< T >
@@ -111,7 +93,9 @@ public class DiamondNeighborhood< T > extends AbstractLocalizable implements Nei
 		{
 
 			if ( --s[ 0 ] >= 0 )
+			{
 				source.fwd( 0 );
+			}
 			else
 			{
 				int d = 1;
@@ -141,7 +125,9 @@ public class DiamondNeighborhood< T > extends AbstractLocalizable implements Nei
 		public void jumpFwd( final long steps )
 		{
 			for ( long i = 0; i < steps; ++i )
+			{
 				fwd();
+			}
 		}
 
 		@Override
@@ -246,7 +232,41 @@ public class DiamondNeighborhood< T > extends AbstractLocalizable implements Nei
 	@Override
 	public long size()
 	{
-		return size;
+		if ( n < 1 )
+		{
+			return 1;
+		}
+		else if ( n < 2 )
+		{
+			return 2 * radius + 1;
+		}
+		else if ( n < 3 )
+		{
+			return radius * radius + ( radius + 1 ) * ( radius + 1 );
+		}
+		else
+		{
+			return diamondSize( radius, n );
+		}
+	}
+
+	private final static long diamondSize( final long rad, final int dim )
+	{
+		if ( dim == 2 )
+		{
+			return rad * rad + ( rad + 1 ) * ( rad + 1 );
+		}
+		else
+		{
+			long size = 0;
+			for ( int r = 0; r < rad; r++ )
+			{
+				size += 2 * diamondSize( r, dim - 1 );
+			}
+			size += diamondSize( rad, dim - 1 );
+			return size;
+		}
+
 	}
 
 	@Override

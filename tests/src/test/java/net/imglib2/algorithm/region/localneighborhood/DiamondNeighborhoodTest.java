@@ -26,6 +26,27 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 public class DiamondNeighborhoodTest
 {
 
+	public static void main( final String[] args )
+	{
+		ImageJ.main( args );
+		final ArrayImg< UnsignedByteType, ByteArray > img = ArrayImgs.unsignedBytes( 19, 19, 19 );
+		final ArrayRandomAccess< UnsignedByteType > ra = img.randomAccess();
+		ra.setPosition( new long[] { 9, 9, 9 } );
+		ra.get().set( 255 );
+
+		final int[] radiuses = new int[] { 2, 3, 5 };
+		for ( final int radius : radiuses )
+		{
+			final List< Shape > strelStd = StructuringElements.diamond( radius, img.numDimensions(), false );
+			final Img< UnsignedByteType > std = MorphologicalOperations.dilate( img, strelStd, 1 );
+			final List< Shape > strelOpt = StructuringElements.diamond( radius, img.numDimensions(), true );
+			final Img< UnsignedByteType > opt = MorphologicalOperations.dilate( img, strelOpt, 1 );
+
+			ImageJFunctions.show( std, "Std " + radius );
+			ImageJFunctions.show( opt, "Opt " + radius );
+		}
+	}
+
 	/**
 	 * Performance comparison between optimized & standard strel, 3D case.
 	 */
