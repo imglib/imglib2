@@ -270,7 +270,7 @@ public class StructuringElements
 				// van Balen.
 				final List< Shape > shapes = new ArrayList< Shape >( radius );
 				shapes.add( new DiamondShape( 1 ) );
-				for ( int k = 0; k < radius - 2; k++ )
+				for ( int k = 0; k < radius - 1; k++ )
 				{
 					shapes.add( new DiamondTipsShape( 1 ) );
 				}
