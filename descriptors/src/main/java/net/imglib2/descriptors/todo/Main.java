@@ -31,7 +31,7 @@ public class Main
 		SimpleTesting< FloatType > testClass = new SimpleTesting< FloatType >();
 
 		long startTime = System.currentTimeMillis();
-		for ( int i = 0; i < 10; i++ )
+		for ( int i = 0; i < 1; i++ )
 		{
 			System.out.println( "###### BEGIN " + i );
 
