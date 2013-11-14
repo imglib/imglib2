@@ -46,6 +46,93 @@ public class StructuringElements
 	private static final int HEURISTICS_DIAMOND_RADIUS_OTHERSD = 2;
 
 	/**
+	 * Generates a centered square flat structuring element for morphological
+	 * operations.
+	 * <p>
+	 * This method specify the square size using its <b>radius</b> to comply to
+	 * sibling methods. The extend of the generated square is
+	 * <code>2 × radius + 1</code> in all dimensions.
+	 * <p>
+	 * The structuring element (strel) is returned as a {@link List} of
+	 * {@link Shape}s, for Structuring elements can be decomposed to yield a
+	 * better performance. The square strel can be decomposed in a succession of
+	 * orthogonal lines and yield the exact same results on any of the
+	 * morphological operations. Because the decomposition becomes
+	 * dimension-specific, the dimensionality of the target problem must be
+	 * specified. <b>Warning:</b> Undesired effects will occur if the specified
+	 * dimensionality and target dimensionality do not match. Non-decomposed
+	 * vesion are dimension-generic.
+	 *
+	 * @param radius
+	 *            the radius of the square.
+	 * @param dimensionality
+	 *            the dimensionality of the target problem.
+	 * @param decompose
+	 *            if <code>true</code>, the structuring element will be
+	 *            optimized through decomposition.
+	 * @return a new structuring element, as a list of {@link Shape}s.
+	 */
+	public static final List< Shape > square( final int radius, final int dimensionality, final boolean decompose )
+	{
+		if ( decompose )
+		{
+			final List< Shape > strels = new ArrayList< Shape >( dimensionality );
+			for ( int d = 0; d < dimensionality; d++ )
+			{
+				strels.add( new LineShape( radius, d, false ) );
+			}
+			return strels;
+		}
+		else
+		{
+			final List< Shape > strel = new ArrayList< Shape >( 1 );
+			strel.add( new RectangleShape( radius, false ) );
+			return strel;
+		}
+	}
+
+	/**
+	 * Generates a centered square flat structuring element for morphological
+	 * operations.
+	 * <p>
+	 * This method specify the square size using its <b>radius</b> to comply to
+	 * sibling methods. The extend of the generated square is
+	 * <code>2 × radius + 1</code> in all dimensions.
+	 * <p>
+	 * The structuring element (strel) is returned as a {@link List} of
+	 * {@link Shape}s, for Structuring elements can be decomposed to yield a
+	 * better performance. The square strel can be decomposed in a succession of
+	 * orthogonal lines and yield the exact same results on any of the
+	 * morphological operations. Because the decomposition becomes
+	 * dimension-specific, the dimensionality of the target problem must be
+	 * specified. <b>Warning:</b> Undesired effects will occur if the specified
+	 * dimensionality and target dimensionality do not match. Non-decomposed
+	 * vesion are dimension-generic.
+	 * <p>
+	 * This method determines whether it is worth returning a decomposed strel
+	 * based on simple heuristics.
+	 *
+	 * @param radius
+	 *            the radius of the square.
+	 * @param dimensionality
+	 *            the dimensionality of the target problem.
+	 * @return a new structuring element, as a list of {@link Shape}s.
+	 */
+	public static final List< Shape > square( final int radius, final int dimensionality )
+	{
+		/*
+		 * I borrow this "heuristic" to decide whether or not we should
+		 * decompose to MATLAB: If the number of neighborhood we get by
+		 * decomposing is more than half of what we get without decomposition,
+		 * then it is not worth doing decomposition.
+		 */
+		final long decomposedNNeighbohoods = dimensionality * ( 2 * radius + 1 );
+		final long fullNNeighbohoods = ( long ) Math.pow( 2 * radius + 1, dimensionality );
+		final boolean decompose = ( decomposedNNeighbohoods < fullNNeighbohoods / 2 );
+		return square( radius, dimensionality, decompose );
+	}
+
+	/**
 	 * Generates a symmetric, centered, rectangular flat structuring element for
 	 * morphological operations.
 	 * <p>
