@@ -38,7 +38,7 @@ public class LineNeighborhoodTest
 
 		for ( int i = 0; i < spans.length; i++ )
 		{
-			final LineNeighborhood< UnsignedByteType > ln = new LineNeighborhood< UnsignedByteType >( positions[ i ], spans[ i ], dims[ i ], skipCenters[ i ], sourceRandomAccess );
+			final HorizontalLineNeighborhood< UnsignedByteType > ln = new HorizontalLineNeighborhood< UnsignedByteType >( positions[ i ], spans[ i ], dims[ i ], skipCenters[ i ], sourceRandomAccess );
 
 			for ( final UnsignedByteType t : ln )
 			{

@@ -49,16 +49,16 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RealPositionable;
 import net.imglib2.util.Intervals;
 
-public class LineNeighborhood< T > extends AbstractLocalizable implements Neighborhood< T >
+public class HorizontalLineNeighborhood< T > extends AbstractLocalizable implements Neighborhood< T >
 {
-	public static < T > LineNeighborhoodFactory< T > factory()
+	public static < T > HorizontalLineNeighborhoodFactory< T > factory()
 	{
-		return new LineNeighborhoodFactory< T >()
+		return new HorizontalLineNeighborhoodFactory< T >()
 		{
 			@Override
 			public Neighborhood< T > create( final long[] position, final long span, final int dim, final boolean skipCenter, final RandomAccess< T > sourceRandomAccess )
 			{
-				return new LineNeighborhood< T >( position, span, dim, skipCenter, sourceRandomAccess );
+				return new HorizontalLineNeighborhood< T >( position, span, dim, skipCenter, sourceRandomAccess );
 			}
 		};
 	}
@@ -83,7 +83,7 @@ public class LineNeighborhood< T > extends AbstractLocalizable implements Neighb
 	/** If <code>true</code>, the central pixel will be skipped. */
 	private final boolean skipCenter;
 
-	LineNeighborhood( final long[] position, final long span, final int dim, final boolean skipCenter, final RandomAccess< T > sourceRandomAccess )
+	HorizontalLineNeighborhood( final long[] position, final long span, final int dim, final boolean skipCenter, final RandomAccess< T > sourceRandomAccess )
 	{
 		super( position );
 		this.skipCenter = skipCenter;

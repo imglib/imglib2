@@ -11,7 +11,13 @@ import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 
-public class LineShape implements Shape
+/**
+ * A {@link Shape} representing finite, centered, symmetric lines, that are
+ * parallel to the image axes.
+ *
+ * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com>
+ */
+public class HorizontalLineShape implements Shape
 {
 	private final long span;
 
@@ -20,10 +26,18 @@ public class LineShape implements Shape
 	private final int dim;
 
 	/**
+	 * Create a new line shape.
+	 *
 	 * @param span
+	 *            the span of the line in both directions, so that its total
+	 *            extend is given by <code>2 x span + 1</code>.
+	 * @param dim
+	 *            the dimension along which to lay this line.
 	 * @param skipCenter
+	 *            if <code>true</code>, the shape will skip the center point of
+	 *            the line.
 	 */
-	public LineShape( final long span, final int dim, final boolean skipCenter )
+	public HorizontalLineShape( final long span, final int dim, final boolean skipCenter )
 	{
 		this.span = span;
 		this.dim = dim;
@@ -39,7 +53,7 @@ public class LineShape implements Shape
 	@Override
 	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessible( final RandomAccessibleInterval< T > source )
 	{
-		final LineNeighborhoodFactory< T > f = LineNeighborhoodUnsafe.< T >factory();
+		final HorizontalLineNeighborhoodFactory< T > f = HorizontalLineNeighborhoodUnsafe.< T >factory();
 		return new NeighborhoodsAccessible< T >( source, span, dim, skipCenter, f );
 	}
 
@@ -52,7 +66,7 @@ public class LineShape implements Shape
 	@Override
 	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessibleSafe( final RandomAccessibleInterval< T > source )
 	{
-		final LineNeighborhoodFactory< T > f = LineNeighborhood.< T >factory();
+		final HorizontalLineNeighborhoodFactory< T > f = HorizontalLineNeighborhood.< T >factory();
 		return new NeighborhoodsAccessible< T >( source, span, dim, skipCenter, f );
 	}
 
@@ -62,7 +76,7 @@ public class LineShape implements Shape
 
 		final long span;
 
-		final LineNeighborhoodFactory< T > factory;
+		final HorizontalLineNeighborhoodFactory< T > factory;
 
 		final long size;
 
@@ -70,7 +84,7 @@ public class LineShape implements Shape
 
 		final boolean skipCenter;
 
-		public NeighborhoodsAccessible( final RandomAccessibleInterval< T > source, final long span, final int dim, final boolean skipCenter, final LineNeighborhoodFactory< T > factory )
+		public NeighborhoodsAccessible( final RandomAccessibleInterval< T > source, final long span, final int dim, final boolean skipCenter, final HorizontalLineNeighborhoodFactory< T > factory )
 		{
 			super( source );
 			this.source = source;
@@ -87,13 +101,13 @@ public class LineShape implements Shape
 		@Override
 		public RandomAccess< Neighborhood< T >> randomAccess()
 		{
-			return new LineNeighborhoodRandomAccess< T >( source, span, dim, skipCenter, factory );
+			return new HorizontalLineNeighborhoodRandomAccess< T >( source, span, dim, skipCenter, factory );
 		}
 
 		@Override
 		public Cursor< Neighborhood< T >> cursor()
 		{
-			return new LineNeighborhoodCursor< T >( source, span, dim, skipCenter, factory );
+			return new HorizontalLineNeighborhoodCursor< T >( source, span, dim, skipCenter, factory );
 		}
 
 		@Override

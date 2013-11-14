@@ -4,7 +4,7 @@ import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.util.IntervalIndexer;
 
-public class LineNeighborhoodCursor< T > extends LineNeighborhoodLocalizableSampler< T > implements Cursor< Neighborhood< T > >
+public class HorizontalLineNeighborhoodCursor< T > extends HorizontalLineNeighborhoodLocalizableSampler< T > implements Cursor< Neighborhood< T > >
 {
 	private final long[] dimensions;
 
@@ -14,7 +14,7 @@ public class LineNeighborhoodCursor< T > extends LineNeighborhoodLocalizableSamp
 
 	private long maxIndexOnLine;
 
-	public LineNeighborhoodCursor( final RandomAccessibleInterval< T > source, final long span, final int dim, final boolean skipCenter, final LineNeighborhoodFactory< T > factory )
+	public HorizontalLineNeighborhoodCursor( final RandomAccessibleInterval< T > source, final long span, final int dim, final boolean skipCenter, final HorizontalLineNeighborhoodFactory< T > factory )
 	{
 		super( source, span, dim, skipCenter, factory );
 
@@ -27,7 +27,7 @@ public class LineNeighborhoodCursor< T > extends LineNeighborhoodLocalizableSamp
 		reset();
 	}
 
-	private LineNeighborhoodCursor( final LineNeighborhoodCursor< T > c )
+	private HorizontalLineNeighborhoodCursor( final HorizontalLineNeighborhoodCursor< T > c )
 	{
 		super( c );
 		dimensions = c.dimensions.clone();
@@ -99,13 +99,13 @@ public class LineNeighborhoodCursor< T > extends LineNeighborhoodLocalizableSamp
 	}
 
 	@Override
-	public LineNeighborhoodCursor< T > copy()
+	public HorizontalLineNeighborhoodCursor< T > copy()
 	{
-		return new LineNeighborhoodCursor< T >( this );
+		return new HorizontalLineNeighborhoodCursor< T >( this );
 	}
 
 	@Override
-	public LineNeighborhoodCursor< T > copyCursor()
+	public HorizontalLineNeighborhoodCursor< T > copyCursor()
 	{
 		return copy();
 	}

@@ -9,7 +9,7 @@ import net.imglib2.algorithm.region.localneighborhood.CenteredRectangleShape;
 import net.imglib2.algorithm.region.localneighborhood.DiamondShape;
 import net.imglib2.algorithm.region.localneighborhood.DiamondTipsShape;
 import net.imglib2.algorithm.region.localneighborhood.HyperSphereShape;
-import net.imglib2.algorithm.region.localneighborhood.LineShape;
+import net.imglib2.algorithm.region.localneighborhood.HorizontalLineShape;
 import net.imglib2.algorithm.region.localneighborhood.RectangleShape;
 import net.imglib2.algorithm.region.localneighborhood.Shape;
 import net.imglib2.img.Img;
@@ -79,7 +79,7 @@ public class StructuringElements
 			final List< Shape > strels = new ArrayList< Shape >( dimensionality );
 			for ( int d = 0; d < dimensionality; d++ )
 			{
-				strels.add( new LineShape( radius, d, false ) );
+				strels.add( new HorizontalLineShape( radius, d, false ) );
 			}
 			return strels;
 		}
@@ -149,7 +149,7 @@ public class StructuringElements
 	 *            in each dimension.
 	 * @param decompose
 	 *            if <code>true</code>, the strel will be returned as a
-	 *            {@link List} of {@link LineShape}, indeed performing the
+	 *            {@link List} of {@link HorizontalLineShape}, indeed performing the
 	 *            rectangle decomposition. If <code>false</code>, the list will
 	 *            be made of a single {@link CenteredRectangleShape}.
 	 * @return the desired structuring element, as a {@link List} of
@@ -169,7 +169,7 @@ public class StructuringElements
 				{ // No need for empty lines
 					continue;
 				}
-				final LineShape line = new LineShape( r, d, false );
+				final HorizontalLineShape line = new HorizontalLineShape( r, d, false );
 				strels.add( line );
 			}
 		}

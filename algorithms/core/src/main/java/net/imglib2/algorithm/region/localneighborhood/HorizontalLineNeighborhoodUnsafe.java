@@ -2,17 +2,17 @@ package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.RandomAccess;
 
-public class LineNeighborhoodUnsafe< T > extends LineNeighborhood< T >
+public class HorizontalLineNeighborhoodUnsafe< T > extends HorizontalLineNeighborhood< T >
 {
 
-	public static < T > LineNeighborhoodFactory< T > factory()
+	public static < T > HorizontalLineNeighborhoodFactory< T > factory()
 	{
-		return new LineNeighborhoodFactory< T >()
+		return new HorizontalLineNeighborhoodFactory< T >()
 		{
 			@Override
 			public Neighborhood< T > create( final long[] position, final long span, final int dim, final boolean skipCenter, final RandomAccess< T > sourceRandomAccess )
 			{
-				return new LineNeighborhoodUnsafe< T >( position, span, dim, skipCenter, sourceRandomAccess );
+				return new HorizontalLineNeighborhoodUnsafe< T >( position, span, dim, skipCenter, sourceRandomAccess );
 			}
 		};
 	}
@@ -21,7 +21,7 @@ public class LineNeighborhoodUnsafe< T > extends LineNeighborhood< T >
 
 	private final LocalCursor firstElementCursor;
 
-	LineNeighborhoodUnsafe( final long[] position, final long span, final int dim, final boolean skipCenter, final RandomAccess< T > sourceRandomAccess )
+	HorizontalLineNeighborhoodUnsafe( final long[] position, final long span, final int dim, final boolean skipCenter, final RandomAccess< T > sourceRandomAccess )
 	{
 		super( position, span, dim, skipCenter, sourceRandomAccess );
 		theCursor = super.cursor();

@@ -4,14 +4,14 @@ import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 
-public class LineNeighborhoodRandomAccess< T > extends LineNeighborhoodLocalizableSampler< T > implements RandomAccess< Neighborhood< T > >
+public class HorizontalLineNeighborhoodRandomAccess< T > extends HorizontalLineNeighborhoodLocalizableSampler< T > implements RandomAccess< Neighborhood< T > >
 {
-	public LineNeighborhoodRandomAccess( final RandomAccessibleInterval< T > source, final long span, final int dim, final boolean skipCenter, final LineNeighborhoodFactory< T > factory )
+	public HorizontalLineNeighborhoodRandomAccess( final RandomAccessibleInterval< T > source, final long span, final int dim, final boolean skipCenter, final HorizontalLineNeighborhoodFactory< T > factory )
 	{
 		super( source, span, dim, skipCenter, factory );
 	}
 
-	private LineNeighborhoodRandomAccess( final LineNeighborhoodRandomAccess< T > c )
+	private HorizontalLineNeighborhoodRandomAccess( final HorizontalLineNeighborhoodRandomAccess< T > c )
 	{
 		super( c );
 	}
@@ -109,13 +109,13 @@ public class LineNeighborhoodRandomAccess< T > extends LineNeighborhoodLocalizab
 	}
 
 	@Override
-	public LineNeighborhoodRandomAccess< T > copy()
+	public HorizontalLineNeighborhoodRandomAccess< T > copy()
 	{
-		return new LineNeighborhoodRandomAccess< T >( this );
+		return new HorizontalLineNeighborhoodRandomAccess< T >( this );
 	}
 
 	@Override
-	public LineNeighborhoodRandomAccess< T > copyRandomAccess()
+	public HorizontalLineNeighborhoodRandomAccess< T > copyRandomAccess()
 	{
 		return copy();
 	}

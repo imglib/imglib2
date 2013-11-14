@@ -27,7 +27,7 @@ public class LineNeighborhoodTest {
 
 		final long start = System.currentTimeMillis();
 
-		final Shape shape = new LineShape(10, 1, true);
+		final Shape shape = new HorizontalLineShape(10, 1, true);
 		final Img<T> target = dilate(img, shape);
 
 		final long end = System.currentTimeMillis();

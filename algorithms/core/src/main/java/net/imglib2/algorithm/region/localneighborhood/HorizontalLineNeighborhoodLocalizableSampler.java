@@ -6,7 +6,7 @@ import net.imglib2.Localizable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
 
-public abstract class LineNeighborhoodLocalizableSampler< T > extends AbstractInterval implements Localizable, Sampler< Neighborhood< T > >
+public abstract class HorizontalLineNeighborhoodLocalizableSampler< T > extends AbstractInterval implements Localizable, Sampler< Neighborhood< T > >
 {
 	protected final RandomAccessibleInterval< T > source;
 
@@ -16,13 +16,13 @@ public abstract class LineNeighborhoodLocalizableSampler< T > extends AbstractIn
 
 	protected final long[] currentPos;
 
-	protected final LineNeighborhoodFactory< T > neighborhoodFactory;
+	protected final HorizontalLineNeighborhoodFactory< T > neighborhoodFactory;
 
 	protected final Neighborhood< T > currentNeighborhood;
 
 	private final boolean skipCenter;
 
-	public LineNeighborhoodLocalizableSampler( final RandomAccessibleInterval< T > source, final long span, final int dim, final boolean skipCenter, final LineNeighborhoodFactory< T > factory )
+	public HorizontalLineNeighborhoodLocalizableSampler( final RandomAccessibleInterval< T > source, final long span, final int dim, final boolean skipCenter, final HorizontalLineNeighborhoodFactory< T > factory )
 	{
 		super( source );
 		this.source = source;
@@ -43,7 +43,7 @@ public abstract class LineNeighborhoodLocalizableSampler< T > extends AbstractIn
 		currentNeighborhood = neighborhoodFactory.create( currentPos, span, dim, false, source.randomAccess( new FinalInterval( accessMin, accessMax ) ) );
 	}
 
-	protected LineNeighborhoodLocalizableSampler( final LineNeighborhoodLocalizableSampler< T > c )
+	protected HorizontalLineNeighborhoodLocalizableSampler( final HorizontalLineNeighborhoodLocalizableSampler< T > c )
 	{
 		super( c.source );
 		source = c.source;
