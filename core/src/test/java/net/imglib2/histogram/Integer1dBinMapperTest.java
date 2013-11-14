@@ -38,7 +38,6 @@
 package net.imglib2.histogram;
 
 import static org.junit.Assert.assertEquals;
-import net.imglib2.histogram.Integer1dBinMapper;
 import net.imglib2.type.numeric.integer.IntType;
 
 import org.junit.Test;
