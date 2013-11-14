@@ -43,9 +43,9 @@ import net.imglib2.RandomAccess;
 /**
  * Iterates all pixels in a 3 by 3 by .... by 3 neighborhood of a certain
  * location but skipping the central pixel
- *
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Benjamin Schmid
@@ -195,7 +195,7 @@ public class LocalNeighborhoodCursor2< T > extends AbstractCursor< T >
 	@Override
 	public LocalNeighborhoodCursor2< T > copy()
 	{
-		return new LocalNeighborhoodCursor2< T >(this);
+		return new LocalNeighborhoodCursor2< T >( this );
 	}
 
 	@Override

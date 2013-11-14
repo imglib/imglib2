@@ -277,6 +277,10 @@ public class Lexer {
 			}
 			else if (ch == '*') {
 				i++;
+				if (i < chars.length && chars[i] == '*') {
+					i++;
+					tokens.add(new Exponent(i - 2, "**"));
+				}
 				tokens.add(new Times(i-1, "*"));
 			}
 			else if (ch == '/') {

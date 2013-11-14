@@ -38,8 +38,8 @@
 package net.imglib2.algorithm.integral;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.img.Img;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.LongType;
 
@@ -52,7 +52,7 @@ import net.imglib2.type.numeric.integer.LongType;
 public class IntegralImgLong< R extends NumericType< R > > extends IntegralImg< R, LongType >
 {
 
-	public IntegralImgLong( final Img<R> img, final LongType type, final Converter<R, LongType> converter) 
+	public IntegralImgLong( final RandomAccessibleInterval<R> img, final LongType type, final Converter<R, LongType> converter) 
 	{
 		super( img, type, converter );
 	}

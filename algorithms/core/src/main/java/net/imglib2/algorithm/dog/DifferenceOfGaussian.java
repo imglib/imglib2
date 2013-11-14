@@ -1,0 +1,197 @@
+package net.imglib2.algorithm.dog;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.algorithm.gauss3.Gauss3;
+import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.img.Img;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.NumericType;
+import net.imglib2.util.Util;
+import net.imglib2.view.IntervalView;
+import net.imglib2.view.Views;
+
+
+/**
+ * Compute Difference-of-Gaussian of a {@link RandomAccessible}.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
+public class DifferenceOfGaussian
+{
+	/**
+	 * Compute the difference of Gaussian for the input. Input convolved with
+	 * Gaussian of sigma1 is subtracted from input convolved with Gaussian of
+	 * sigma2 (where sigma2 > sigma1).
+	 *
+	 * <p>
+	 * Creates an appropriate temporary image and calls
+	 * {@link #DoG(double[], double[], RandomAccessible, RandomAccessible, RandomAccessibleInterval, int)}.
+	 *
+	 * @param sigma1
+	 *            stddev (in every dimension) of smaller Gaussian.
+	 * @param sigma2
+	 *            stddev (in every dimension) of larger Gaussian.
+	 * @param input
+	 *            the input image extended to infinity (or at least covering the
+	 *            same interval as the dog result image, plus borders for
+	 *            convolution).
+	 * @param dog
+	 *            the Difference-of-Gaussian result image.
+	 * @param numThreads
+	 *            how many threads to use for the computation.
+	 */
+	public static < T extends NumericType< T > & NativeType< T > > void DoG( final double[] sigma1, final double[] sigma2, final RandomAccessible< T > input, final RandomAccessibleInterval< T > dog, final int numThreads )
+	{
+		final T type = Util.getTypeFromInterval( dog );
+		final Img< T > g1 = Util.getArrayOrCellImgFactory( dog, type ).create( dog, type );
+		final long[] translation = new long[ dog.numDimensions() ];
+		dog.min( translation );
+		DoG( sigma1, sigma2, input, Views.translate( g1, translation ), dog, numThreads );
+	}
+
+	/**
+	 * Compute the difference of Gaussian for the input. Input convolved with
+	 * Gaussian of sigma1 is subtracted from input convolved with Gaussian of
+	 * sigma2 (where sigma2 > sigma1).
+	 *
+	 * @param sigma1
+	 *            stddev (in every dimension) of smaller Gaussian.
+	 * @param sigma2
+	 *            stddev (in every dimension) of larger Gaussian.
+	 * @param input
+	 *            the input image extended to infinity (or at least covering the
+	 *            same interval as the dog result image, plus borders for
+	 *            convolution).
+	 * @param tmp
+	 *            temporary image, must at least cover the same interval as the
+	 *            dog result image.
+	 * @param dog
+	 *            the Difference-of-Gaussian result image.
+	 * @param numThreads
+	 *            how many threads to use for the computation.
+	 */
+	public static < T extends NumericType< T > > void DoG( final double[] sigma1, final double[] sigma2, final RandomAccessible< T > input, final RandomAccessible< T > tmp, final RandomAccessibleInterval< T > dog, final int numThreads )
+	{
+		final IntervalView< T > tmpInterval = Views.interval( tmp, dog );
+		try
+		{
+			Gauss3.gauss( sigma1, input, tmpInterval, numThreads );
+			Gauss3.gauss( sigma2, input, dog, numThreads );
+		}
+		catch ( final IncompatibleTypeException e )
+		{
+			e.printStackTrace();
+		}
+		final IterableInterval< T > dogIterable = Views.iterable( dog );
+		final IterableInterval< T > tmpIterable = Views.iterable( tmpInterval );
+		final long size = dogIterable.size();
+		final int numTasks = numThreads <= 1 ? 1 : numThreads * 20;
+		final long taskSize = size / numTasks;
+		final ExecutorService ex = Executors.newFixedThreadPool( numThreads );
+		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
+		{
+			final long fromIndex = taskNum * taskSize;
+			final long thisTaskSize = ( taskNum == numTasks - 1 ) ? size - fromIndex : taskSize;
+			if ( dogIterable.iterationOrder().equals( tmpIterable.iterationOrder() ) )
+				ex.execute( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						final Cursor< T > dogCursor = dogIterable.cursor();
+						final Cursor< T > tmpCursor = tmpIterable.cursor();
+						dogCursor.jumpFwd( fromIndex );
+						tmpCursor.jumpFwd( fromIndex );
+						for ( int i = 0; i < thisTaskSize; ++i )
+							dogCursor.next().sub( tmpCursor.next() );
+					}
+				} );
+			else
+				ex.execute( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						final Cursor< T > dogCursor = dogIterable.localizingCursor();
+						final RandomAccess< T > tmpAccess = tmpInterval.randomAccess();
+						dogCursor.jumpFwd( fromIndex );
+						for ( int i = 0; i < thisTaskSize; ++i )
+						{
+							final T o = dogCursor.next();
+							tmpAccess.setPosition( dogCursor );
+							o.sub( tmpAccess.get() );
+						}
+					}
+				} );
+		}
+		ex.shutdown();
+		try
+		{
+			ex.awaitTermination( 1000, TimeUnit.DAYS );
+		}
+		catch ( final InterruptedException e )
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Helper function to compute per-dimension sigmas in pixel coordinates. The
+	 * parameters <code>sigma1</code> and <code>sigma2</code> specify desired
+	 * sigmas (scale) in image coordinates. Taking into account the sigma of the
+	 * input image as well as the image calibration, the resulting sigma arrays
+	 * specifiy the smoothing that has to be applied to achieve the desired
+	 * sigmas.
+	 *
+	 * @param imageSigma
+	 *            estimated sigma of the input image, in pixel coordinates.
+	 * @param minf
+	 *            multiple of the <code>imageSigma</code> that smoothing with
+	 *            the resulting sigma must at least achieve.
+	 * @param pixelSize
+	 *            calibration. Dimensions of a pixel in image units.
+	 * @param sigma1
+	 *            desired sigma in image coordinates.
+	 * @param sigma2
+	 *            desired sigma in image coordinates.
+	 * @return <code>double[2][numDimensions]</code>, array of two arrays
+	 *         contains resulting sigmas for sigma1, sigma2.
+	 */
+	public static double[][] computeSigmas( final double imageSigma, final double minf, final double[] pixelSize, final double sigma1, final double sigma2 )
+	{
+		final int n = pixelSize.length;
+		final double k = sigma2 / sigma1;
+		final double[] sigmas1 = new double[ n ];
+		final double[] sigmas2 = new double[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			final double s1 = Math.max( minf * imageSigma, sigma1 / pixelSize[ d ] );
+			final double s2 = k * s1;
+			sigmas1[ d ] = Math.sqrt( s1 * s1 - imageSigma * imageSigma );
+			sigmas2[ d ] = Math.sqrt( s2 * s2 - imageSigma * imageSigma );
+		}
+		return new double[][] { sigmas1, sigmas2 };
+	}
+
+	/**
+	 * Helper function to compute the minimum sigma that can be given to
+	 * {@link #computeSigmas(double, double, double[], double, double)} while
+	 * still achieving isotropic smoothed images.
+	 */
+	public static double computeMinIsotropicSigma( final double imageSigma, final double minf, final double[] pixelSize )
+	{
+		final int n = pixelSize.length;
+		double s = pixelSize[ 0 ];
+		for ( int d = 1; d < n; ++d )
+			s = Math.max( s, pixelSize[ d ] );
+		return minf * imageSigma * s;
+	}
+}

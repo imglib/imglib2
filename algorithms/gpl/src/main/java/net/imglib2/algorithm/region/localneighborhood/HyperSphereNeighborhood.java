@@ -30,16 +30,16 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.region.hypersphere.HyperSphereCursor;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 
-public class HyperSphereNeighborhood<T, IN extends RandomAccessibleInterval<T>>
-		extends AbstractNeighborhood<T, IN> {
+public class HyperSphereNeighborhood<T>
+		extends AbstractNeighborhood<T> {
 
 	private long radius;
 
 	/*
 	 * CONSTRUCTORS
 	 */
-	public HyperSphereNeighborhood(final IN source,
-			final OutOfBoundsFactory<T, IN> outOfBounds, final long radius) {
+	public HyperSphereNeighborhood(final RandomAccessibleInterval<T> source,
+			final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds, final long radius) {
 		super(source.numDimensions(), outOfBounds);
 		this.radius = radius;
 	}
@@ -48,7 +48,7 @@ public class HyperSphereNeighborhood<T, IN extends RandomAccessibleInterval<T>>
 	 * CONSTRUCTORS
 	 */
 	public HyperSphereNeighborhood(final int numDims,
-			final OutOfBoundsFactory<T, IN> outOfBounds, final long radius) {
+			final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds, final long radius) {
 		super(numDims, outOfBounds);
 		this.radius = radius;
 	}
@@ -91,11 +91,11 @@ public class HyperSphereNeighborhood<T, IN extends RandomAccessibleInterval<T>>
 	}
 
 	@Override
-	public AbstractNeighborhood<T, IN> copy() {
+	public AbstractNeighborhood<T> copy() {
 		if (source != null)
-			return new HyperSphereNeighborhood<T, IN>(source, outOfBounds,
+			return new HyperSphereNeighborhood<T>(source, outOfBounds,
 					radius);
-		return new HyperSphereNeighborhood<T, IN>(n, outOfBounds, radius);
+		return new HyperSphereNeighborhood<T>(n, outOfBounds, radius);
 	}
 
 }

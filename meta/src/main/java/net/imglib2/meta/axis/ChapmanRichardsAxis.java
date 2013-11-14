@@ -35,91 +35,45 @@
  * #L%
  */
 
-package net.imglib2.meta;
+package net.imglib2.meta.axis;
 
-import net.imglib2.meta.axis.DefaultLinearAxis;
+import net.imglib2.meta.AxisType;
 
 /**
- * Simple, default {@link CalibratedAxis} implementation.
+ * Implement an axis that uses Chapman and Richards method of scaling. This axis
+ * based on ImageJ 1.x's CurveFitter algorithm.
  * 
- * @author Curtis Rueden
- * @deprecated Use {@link DefaultLinearAxis}, or one of the axis types from the
- *             {@link net.imglib2.meta.axis} package, instead.
+ * @author Barry DeZonia
  */
-@Deprecated
-public class DefaultCalibratedAxis extends DefaultTypedAxis implements
-	CalibratedAxis
-{
+public class ChapmanRichardsAxis extends Variable3Axis {
 
-	private String unit;
-	private double cal;
+	// -- constructor --
 
-	public DefaultCalibratedAxis() {
-		this(Axes.unknown());
-	}
-
-	public DefaultCalibratedAxis(final AxisType type) {
-		this(type, null, Double.NaN);
-	}
-
-	public DefaultCalibratedAxis(final AxisType type, final String unit,
-		final double cal)
+	public ChapmanRichardsAxis(AxisType type, String unit, double a, double b,
+		double c)
 	{
-		super(type);
-		setUnit(unit);
-		setCalibration(cal);
+		super(type, unit, a, b, c);
 	}
 
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibration() {
-		return cal;
+	public double calibratedValue(double rawValue) {
+		return Math.pow(a() * (1 - Math.exp(-b() * rawValue)), c());
 	}
 
 	@Override
-	public void setCalibration(final double cal) {
-		this.cal = cal;
-	}
-
-	@Override
-	public String unit() {
-		return unit;
-	}
-
-	@Override
-	public void setUnit(final String unit) {
-		this.unit = unit;
-	}
-
-	@Override
-	public double calibratedValue(final double rawValue) {
-		return rawValue * calibration();
-	}
-
-	@Override
-	public double rawValue(final double calibratedValue) {
-		return calibratedValue / calibration();
+	public double rawValue(double calibratedValue) {
+		return Math.log(1 - Math.pow(calibratedValue / a(), 1 / c())) / -b();
 	}
 
 	@Override
 	public String generalEquation() {
-		return "y = a*x";
+		return "a*(1-exp(-b*x))^c";
 	}
 
 	@Override
-	public String particularEquation() {
-		return "y = " + calibration() + "*x";
+	public ChapmanRichardsAxis copy() {
+		return new ChapmanRichardsAxis(type(), unit(), a(), b(), c());
 	}
-
-	@Override
-	public double averageScale(final double rawValue1, final double rawValue2) {
-		return calibration();
-	}
-
-	@Override
-	public DefaultCalibratedAxis copy() {
-		return new DefaultCalibratedAxis(type(), unit(), calibration());
-	}
-
 }

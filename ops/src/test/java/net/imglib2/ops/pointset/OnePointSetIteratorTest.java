@@ -45,6 +45,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
+ * Tests {@link OnePointSetIterator}.
+ * 
  * @author Barry DeZonia
  */
 public class OnePointSetIteratorTest {

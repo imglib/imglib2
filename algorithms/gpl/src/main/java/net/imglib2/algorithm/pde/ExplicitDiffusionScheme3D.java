@@ -27,14 +27,40 @@
 package net.imglib2.algorithm.pde;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
 public abstract class ExplicitDiffusionScheme3D<T extends RealType<T>> extends ExplicitDiffusionScheme<T> {
 
+	/**
+	 * {@inheritDoc}
+	 * @param input
+	 * @param D
+	 */
 	public ExplicitDiffusionScheme3D(Img<T> input, Img<FloatType> D) {
 		super(input, D);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @param input
+	 * @param D
+	 */
+	public ExplicitDiffusionScheme3D(RandomAccessibleInterval<T> input, RandomAccessibleInterval<FloatType> D) {
+		super(input, D);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @param input
+	 * @param D
+	 * @param imgFactory
+	 */
+	public ExplicitDiffusionScheme3D(RandomAccessibleInterval<T> input, RandomAccessibleInterval<FloatType> D, ImgFactory<FloatType> imgFactory) {
+		super(input, D, imgFactory);
 	}
 
 	

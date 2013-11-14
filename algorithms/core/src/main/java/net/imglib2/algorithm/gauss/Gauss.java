@@ -67,6 +67,7 @@ import net.imglib2.view.Views;
  * TODO
  *
  */
+@Deprecated
 public class Gauss
 {	
 	/**

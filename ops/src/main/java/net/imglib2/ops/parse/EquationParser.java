@@ -429,8 +429,7 @@ public class EquationParser<T extends RealType<T>> {
 			Real r = (Real) tokens.get(pos);
 			ParseStatus status = new ParseStatus();
 			status.function =
-				new RealConstantFunction<long[],DoubleType>(
-new DoubleType(r
+				new RealConstantFunction<long[], DoubleType>(new DoubleType(r
 					.getValue()));
 			status.tokenNumber = pos + 1;
 			return status;
@@ -439,8 +438,7 @@ new DoubleType(r
 			Int i = (Int) tokens.get(pos);
 			ParseStatus status = new ParseStatus();
 			status.function =
-				new RealConstantFunction<long[],DoubleType>(
-new DoubleType(i
+				new RealConstantFunction<long[], DoubleType>(new DoubleType(i
 					.getValue()));
 			status.tokenNumber = pos + 1;
 			return status;

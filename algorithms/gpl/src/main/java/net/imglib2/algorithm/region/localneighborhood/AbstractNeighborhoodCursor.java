@@ -34,14 +34,14 @@ import net.imglib2.outofbounds.OutOfBounds;
 public abstract class AbstractNeighborhoodCursor<T> implements Cursor<T>,
 		Bounded {
 
-	protected AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> neighborhood;
+	protected AbstractNeighborhood<T> neighborhood;
 	protected final OutOfBounds<T> ra;
 
 	/*
 	 * CONSTRUCTOR
 	 */
 
-	public AbstractNeighborhoodCursor(AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> neighborhood) {
+	public AbstractNeighborhoodCursor(AbstractNeighborhood<T> neighborhood) {
 		this.neighborhood = neighborhood;
 		this.ra = neighborhood.extendedSource.randomAccess();
 	}

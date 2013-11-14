@@ -38,6 +38,7 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -148,6 +149,15 @@ public class PolynomialAxisTest extends AbstractMetaTest {
 		final PolynomialAxis axis = new PolynomialAxis();
 		axis.setUnit("hjh");
 		assertEquals("hjh", axis.unit());
+	}
+
+	@Test
+	public void testCopy() {
+		final PolynomialAxis axis = new PolynomialAxis(Axes.Y, "mm", 7, 2, 1);
+		final PolynomialAxis copy = axis.copy();
+		assertNotSame(axis, copy);
+		assertEquals(axis, copy);
+		assertEquals(axis.hashCode(), copy.hashCode());
 	}
 
 }

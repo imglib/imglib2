@@ -140,7 +140,7 @@ public final class Axes {
 	 *         defined axes.
 	 */
 	public static AxisType[] knownTypes() {
-		return axes.values().toArray(null);
+		return axes.values().toArray(new AxisType[0]);
 	}
 
 	/**

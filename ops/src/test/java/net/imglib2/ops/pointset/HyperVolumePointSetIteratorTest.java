@@ -44,6 +44,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
+ * Tests {@link HyperVolumePointSetIterator}.
+ * 
  * @author Barry DeZonia
  */
 public class HyperVolumePointSetIteratorTest {
