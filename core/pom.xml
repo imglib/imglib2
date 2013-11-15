@@ -53,22 +53,4 @@
 		</repository>
 	</repositories>
 
-	<profiles>
-		<profile>
-			<id>java5</id>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<!-- Target Java 5, for compatibility with SCIFIO. -->
-						<configuration>
-							<source>1.5</source>
-							<target>1.5</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
 </project>
