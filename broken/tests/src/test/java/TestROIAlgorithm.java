@@ -31,7 +31,7 @@ import net.imglib2.img.Image;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.LOCI;
+import io.scif.img.LOCI;
 import net.imglib2.type.numeric.RealType;
 import ij.IJ;
 import ij.ImagePlus;

@@ -43,7 +43,7 @@ import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.display.RealARGBConverter;
-import net.imglib2.io.ImgIOException;
+import io.scif.img.ImgIOException;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.ui.overlay.LogoPainter;

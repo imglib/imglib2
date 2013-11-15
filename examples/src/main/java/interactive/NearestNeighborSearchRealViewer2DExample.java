@@ -42,7 +42,7 @@ import net.imglib2.collection.RealPointSampleList;
 import net.imglib2.display.RealARGBConverter;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.neighborsearch.NearestNeighborInterpolatorFactory;
-import net.imglib2.io.ImgIOException;
+import io.scif.img.ImgIOException;
 import net.imglib2.neighborsearch.NearestNeighborSearch;
 import net.imglib2.neighborsearch.NearestNeighborSearchOnKDTree;
 import net.imglib2.realtransform.AffineTransform2D;

@@ -49,11 +49,6 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>imglib2-io</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2-meta</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -62,6 +57,11 @@
 			<groupId>${mpicbg.groupId}</groupId>
 			<artifactId>mpicbg</artifactId>
 			<version>${mpicbg.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.scif</groupId>
+			<artifactId>scifio</artifactId>
+			<version>${scifio.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jfree</groupId>

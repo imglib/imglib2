@@ -39,7 +39,7 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgOpener;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.real.FloatType;
 

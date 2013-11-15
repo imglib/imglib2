@@ -43,7 +43,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 
 import net.imglib2.converter.Converter;
-import net.imglib2.io.ImgIOException;
+import io.scif.img.ImgIOException;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;

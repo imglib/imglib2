@@ -54,12 +54,6 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>imglib2-io</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2-meta</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
@@ -84,6 +78,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>io.scif</groupId>
+			<artifactId>scifio</artifactId>
+			<version>${scifio.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>jama</groupId>
 			<artifactId>jama</artifactId>

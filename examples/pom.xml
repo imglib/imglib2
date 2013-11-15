@@ -38,11 +38,6 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>imglib2-io</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2-meta</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -55,6 +50,11 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2-ui</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.scif</groupId>
+			<artifactId>scifio</artifactId>
+			<version>${scifio.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
