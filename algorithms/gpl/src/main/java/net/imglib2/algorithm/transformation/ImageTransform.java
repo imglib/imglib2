@@ -1,6 +1,6 @@
 /*
  * #%L
- * RandomAccessibleIntervalLib2: a general-purpose, multidimensional image processing library.
+ * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
  * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
