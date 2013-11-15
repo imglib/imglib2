@@ -13,7 +13,7 @@ import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.util.Util;
 
-class MorphologyUtils
+public class MorphologyUtils
 {
 
 	static final Neighborhood< BitType > getNeighborhood( final Shape shape, final EuclideanSpace space )
@@ -33,7 +33,7 @@ class MorphologyUtils
 	 * <p>
 	 * This method only prints the first 3 dimensions of the structuring
 	 * element. Dimensions above 3 are skipped.
-	 * 
+	 *
 	 * @param shape
 	 *            the structuring element to print.
 	 * @param dimensionality

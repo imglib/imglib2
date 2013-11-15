@@ -1,4 +1,4 @@
-package net.imglib2.algorithm.region.localneighborhood;
+package net.imglib2.algorithm.morphology;
 
 import ij.IJ;
 import ij.ImageJ;
@@ -9,6 +9,9 @@ import java.io.File;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.algorithm.region.localneighborhood.Neighborhood;
+import net.imglib2.algorithm.region.localneighborhood.PeriodicLineShape;
+import net.imglib2.algorithm.region.localneighborhood.Shape;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;

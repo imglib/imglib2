@@ -1,4 +1,4 @@
-package net.imglib2.algorithm.region.localneighborhood;
+package net.imglib2.algorithm.morphology;
 
 import ij.ImageJ;
 
@@ -6,8 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.imglib2.Cursor;
-import net.imglib2.algorithm.morphology.MorphologicalOperations;
-import net.imglib2.algorithm.morphology.StructuringElements;
+import net.imglib2.algorithm.region.localneighborhood.Shape;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;

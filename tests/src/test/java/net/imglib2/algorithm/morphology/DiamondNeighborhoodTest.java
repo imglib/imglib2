@@ -1,4 +1,4 @@
-package net.imglib2.algorithm.region.localneighborhood;
+package net.imglib2.algorithm.morphology;
 
 
 import ij.IJ;
@@ -6,11 +6,10 @@ import ij.ImageJ;
 import ij.ImagePlus;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 
-import net.imglib2.algorithm.morphology.MorphologicalOperations;
-import net.imglib2.algorithm.morphology.StructuringElements;
+import net.imglib2.algorithm.region.localneighborhood.DiamondShape;
+import net.imglib2.algorithm.region.localneighborhood.Shape;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
@@ -106,7 +105,7 @@ public class DiamondNeighborhoodTest
 		Img< UnsignedByteType > dilated = img;
 		for ( final Shape strel : strels )
 		{
-			final String str = StructuringElements.printNeighborhood( strel, img.numDimensions() );
+			final String str = MorphologyUtils.printNeighborhood( strel, img.numDimensions() );
 			System.out.println( str );
 			dilated = MorphologicalOperations.dilate( dilated, strel, 1 );
 			ImageJFunctions.show( dilated, "Decomposed strel: " + strel );
@@ -130,8 +129,6 @@ public class DiamondNeighborhoodTest
 		ra.setPosition( new long[] { 49, 49 } );
 		ra.get().set( 255 );
 
-		// final ArrayImg< UnsignedByteType, ByteArray > target1 =
-		// ArrayImgs.unsignedBytes( 100, 100, 40 );
 		System.out.println( "Full strel" );
 		System.out.println( "radius\ttime(ms)" );
 		// Warm up
@@ -141,27 +138,11 @@ public class DiamondNeighborhoodTest
 		{
 			final long start = System.currentTimeMillis();
 			final List< Shape > strels = StructuringElements.diamond( i, img.numDimensions(), false );
-			final Img< UnsignedByteType > dilated = MorphologicalOperations.dilate( img, strels, 1 );
+			MorphologicalOperations.dilate( img, strels, 1 );
 			final long end = System.currentTimeMillis();
 			System.out.println( "" + i + '\t' + ( end - start ) );
-
-			// // copy to target
-			// final ArrayRandomAccess< UnsignedByteType > ra1 =
-			// target1.randomAccess();
-			// ra1.setPosition( i, 2 );
-			// final Cursor< UnsignedByteType > c = dilated.cursor();
-			// while ( c.hasNext() )
-			// {
-			// c.fwd();
-			// ra1.setPosition( c );
-			// ra1.get().set( c.get() );
-			// }
 		}
 
-		// ImageJFunctions.show( target1, "Full strel" );
-
-		// final ArrayImg< UnsignedByteType, ByteArray > target2 =
-		// ArrayImgs.unsignedBytes( 100, 100, 40 );
 		System.out.println( "Decomposed strel" );
 		System.out.println( "radius\ttime(ms)" );
 		// Warm up
@@ -171,64 +152,10 @@ public class DiamondNeighborhoodTest
 		{
 			final long start = System.currentTimeMillis();
 			final List< Shape > strels = StructuringElements.diamond( i, img.numDimensions(), true );
-			final Img< UnsignedByteType > dilated = MorphologicalOperations.dilate( img, strels, 1 );
+			MorphologicalOperations.dilate( img, strels, 1 );
 			final long end = System.currentTimeMillis();
 			System.out.println( "" + i + '\t' + ( end - start ) );
-
-			// copy to target
-			// final ArrayRandomAccess< UnsignedByteType > ra1 =
-			// target2.randomAccess();
-			// ra1.setPosition( i, 2 );
-			// final Cursor< UnsignedByteType > c = dilated.cursor();
-			// while ( c.hasNext() )
-			// {
-			// c.fwd();
-			// ra1.setPosition( c );
-			// ra1.get().set( c.get() );
-			// }
 		}
-
-		// ImageJFunctions.show( target2, "Decomposed strel" );
-
-	}
-
-	/**
-	 * 2D & 3D processing.
-	 */
-	public static void main2( final String[] args )
-	{
-		ImageJ.main( args );
-
-		final ArrayImg< UnsignedByteType, ByteArray > img1 = ArrayImgs.unsignedBytes( 20, 20 );
-		final DiamondNeighborhood< UnsignedByteType > diamond1 = new DiamondNeighborhood< UnsignedByteType >( new long[] { 10, 10 }, 3, img1.randomAccess() );
-		final Iterator< UnsignedByteType > c1 = diamond1.iterator();
-		while ( c1.hasNext() )
-		{
-			c1.next().set( 255 );
-		}
-
-		final ArrayRandomAccess< UnsignedByteType > ra = img1.randomAccess();
-		ra.setPosition( new int[] { 10, 10 } );
-		ra.get().set( 55 );
-
-		ImageJFunctions.show( img1 );
-
-		//
-
-		final ArrayImg< UnsignedByteType, ByteArray > img2 = ArrayImgs.unsignedBytes( 20, 20, 20 );
-		final DiamondNeighborhood< UnsignedByteType > diamond2 = new DiamondNeighborhood< UnsignedByteType >( new long[] { 10, 10, 10 }, 5, img2.randomAccess() );
-		final Iterator< UnsignedByteType > c2 = diamond2.iterator();
-		while ( c2.hasNext() )
-		{
-			c2.next().set( 255 );
-		}
-
-		final ArrayRandomAccess< UnsignedByteType > ra2 = img2.randomAccess();
-		ra2.setPosition( new int[] { 10, 10, 10 } );
-		ra2.get().set( 55 );
-
-		ImageJFunctions.show( img2 );
-
 	}
 
 	/**
@@ -251,7 +178,7 @@ public class DiamondNeighborhoodTest
 
 		final long end = System.currentTimeMillis();
 
-		System.out.println( "Processing done in " + ( end - start ) + " ms." );// DEBUG
+		System.out.println( "Processing done in " + ( end - start ) + " ms." );
 
 		ImageJFunctions.show( img );
 		ImageJFunctions.show( target );
