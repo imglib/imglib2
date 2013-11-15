@@ -8,8 +8,9 @@ import net.imglib2.RandomAccess;
 import net.imglib2.algorithm.region.localneighborhood.CenteredRectangleShape;
 import net.imglib2.algorithm.region.localneighborhood.DiamondShape;
 import net.imglib2.algorithm.region.localneighborhood.DiamondTipsShape;
-import net.imglib2.algorithm.region.localneighborhood.HyperSphereShape;
 import net.imglib2.algorithm.region.localneighborhood.HorizontalLineShape;
+import net.imglib2.algorithm.region.localneighborhood.HyperSphereShape;
+import net.imglib2.algorithm.region.localneighborhood.PeriodicLineShape;
 import net.imglib2.algorithm.region.localneighborhood.RectangleShape;
 import net.imglib2.algorithm.region.localneighborhood.Shape;
 import net.imglib2.img.Img;
@@ -44,6 +45,209 @@ public class StructuringElements
 	 * than in a single, large {@link DiamondShape}.
 	 */
 	private static final int HEURISTICS_DIAMOND_RADIUS_OTHERSD = 2;
+
+	/*
+	 * METHODS
+	 */
+
+	/**
+	 * Generate a centered disk flat structuring element for morphological
+	 * operations.
+	 * <p>
+	 * The structuring element (strel) is returned as a {@link List} of
+	 * {@link Shape}s, for structuring elements can be decomposed to yield a
+	 * better performance. In <b>2D</b>, the disk strel can be
+	 * <b>approximated</b> by several periodic lines. The resulting strel is
+	 * only an approximation of a disk, and this method offers a parameter to
+	 * select the level of approximation. For other dimensionalities, no
+	 * optimization are available yet and the parameter is ignored.
+	 * <p>
+	 * This methods relies on heuristics to determine automatically what
+	 * decomposition level to use.
+	 * 
+	 * @param radius
+	 *            the radius of the disk, so that it extends over
+	 *            <code>2 × radius + 1</code> in all dimensions
+	 * @param dimensionality
+	 *            the dimensionality of the target problem.
+	 * @return a disk structuring element as a new list of {@link Shape}s.
+	 */
+	public static final List< Shape > disk( final long radius, final int dimensionality )
+	{
+		final int decomposition;
+		/*
+		 * My great heuristics, "determined experimentally". I choose the non-0
+		 * (expect for small radius) decomposition that was giving the most
+		 * resembling disk shape.
+		 */
+		if ( dimensionality == 2 )
+		{
+			if ( radius < 4 )
+			{
+				decomposition = 0;
+			}
+			else if ( radius < 9 )
+			{
+				decomposition = 4;
+			}
+			else if ( radius < 12 )
+			{
+				decomposition = 6;
+			}
+			else if ( radius < 17 )
+			{
+				decomposition = 8;
+			}
+			else
+			{
+				decomposition = 6;
+			}
+		}
+		else
+		{
+			decomposition = 0;
+		}
+		return disk( radius, dimensionality, decomposition );
+	}
+
+	/**
+	 * Generate a centered disk flat structuring element for morphological
+	 * operations.
+	 * <p>
+	 * The structuring element (strel) is returned as a {@link List} of
+	 * {@link Shape}s, for structuring elements can be decomposed to yield a
+	 * better performance. In <b>2D</b>, the disk strel can be
+	 * <b>approximated</b> by several periodic lines. The resulting strel is
+	 * only an approximation of a disk, and this method offers a parameter to
+	 * select the level of approximation. For other dimensionalities, no
+	 * optimization are available yet and the parameter is ignored.
+	 * 
+	 * @param radius
+	 *            the radius of the disk, so that it extends over
+	 *            <code>2 × radius + 1</code> in all dimensions
+	 * @param dimensionality
+	 *            the dimensionality of the target problem.
+	 * @param decomposition
+	 *            the decomposition to use. Only values 0, 4, 6 and 8 are
+	 *            accepted:
+	 *            <ol start="0">
+	 *            <li> No approximation is made and a full dimension-generic
+	 *            disk is returned. <li value="4"> The disk is decomposed in 4
+	 *            periodic lines, plus in some cases 2 horizontal lines. <li * *
+	 *            * * value="6"> The disk is decomposed in 6 periodic lines,
+	 *            plus in some cases 2 horizontal lines. <li value="8"> The disk
+	 *            is decomposed in 8 periodic lines, plus in some cases 2
+	 *            horizontal lines.
+	 *            </ol>
+	 *            This parameter is ignored for dimensionality other than 2.
+	 * @return a disk structuring element as a new list of {@link Shape}s.
+	 */
+	public static final List< Shape > disk( final long radius, final int dimensionality, final int decomposition )
+	{
+		if ( dimensionality == 2 )
+		{
+
+			if ( decomposition == 0 )
+			{
+				/*
+				 * No approximation
+				 */
+				final List< Shape > strel = new ArrayList< Shape >( 1 );
+				strel.add( new HyperSphereShape( radius ) );
+				return strel;
+			}
+			else if ( decomposition == 8 || decomposition == 4 || decomposition == 6 )
+			{
+				/*
+				 * Rolf Adams, "Radial Decomposition of Discs and Spheres,"
+				 * CVGIP: Graphical Models and Image Processing, vol. 55, no. 5,
+				 * September 1993, pp. 325-332.
+				 */
+
+				final List< int[] > vectors = new ArrayList< int[] >( decomposition );
+				switch ( decomposition )
+				{
+				case 4:
+				{
+					vectors.add( new int[] { 1, 0 } ); // 0º
+					vectors.add( new int[] { 1, 1 } ); // 45º
+					vectors.add( new int[] { 0, 1 } ); // 90º
+					vectors.add( new int[] { -1, 1 } ); // 135º
+					break;
+				}
+				case 6:
+				{
+					vectors.add( new int[] { 1, 0 } ); // 0º
+					vectors.add( new int[] { 2, 1 } ); // 60º
+					vectors.add( new int[] { 1, 2 } ); // 30º
+					vectors.add( new int[] { 0, 1 } ); // 90º
+					vectors.add( new int[] { -1, 2 } ); // 120º
+					vectors.add( new int[] { -2, 1 } ); // 150º
+					break;
+				}
+				case 8:
+				{
+					vectors.add( new int[] { 1, 0 } ); // 0º
+					vectors.add( new int[] { 2, 1 } ); // 60º
+					vectors.add( new int[] { 1, 1 } ); // 45º
+					vectors.add( new int[] { 1, 2 } ); // 30º
+					vectors.add( new int[] { 0, 1 } ); // 90º
+					vectors.add( new int[] { -1, 2 } ); // 120º
+					vectors.add( new int[] { -1, 1 } ); // 135º
+					vectors.add( new int[] { -2, 1 } ); // 150º
+					break;
+				}
+				default:
+					throw new IllegalArgumentException( "The decomposition number must be 0, 4, 6 or 8. Got " + decomposition + "." );
+				}
+
+				final double theta = Math.PI / ( 2 * decomposition );
+				final double radialExtent = 2 * radius / ( 1 / Math.tan( theta ) + 1 / Math.sin( theta ) );
+				final List< Shape > lines = new ArrayList< Shape >( decomposition + 2 );
+
+				long actualRadius = 0;
+				for ( final int[] vector : vectors )
+				{
+					final double norm = Math.sqrt( vector[ 0 ] * vector[ 0 ] + vector[ 1 ] * vector[ 1 ] );
+					final long span = ( long ) Math.floor( radialExtent / norm );
+					lines.add( new PeriodicLineShape( span, vector ) );
+					/*
+					 * This estimates the actual radius of the final strel.
+					 * Because of the digitization on a grid (we used floor()
+					 * above), it will be smaller than the desired radius.
+					 */
+					actualRadius += span * Math.abs( vector[ 0 ] );
+				}
+
+				/*
+				 * Compensate for the actual strel being too small
+				 */
+				if ( actualRadius < radius )
+				{
+					final long dif = radius - actualRadius;
+					lines.add( new HorizontalLineShape( dif, 0, false ) );
+					lines.add( new HorizontalLineShape( dif, 1, false ) );
+				}
+
+				return lines;
+			}
+			else
+			{
+				throw new IllegalArgumentException( "The decomposition number must be 0, 4, 6 or 8. Got " + decomposition + "." );
+			}
+
+		}
+		else
+		{
+			/*
+			 * All other dims
+			 */
+			final List< Shape > strel = new ArrayList< Shape >( 1 );
+			strel.add( new HyperSphereShape( radius ) );
+			return strel;
+		}
+
+	}
 
 	/**
 	 * Generates a centered square flat structuring element for morphological
@@ -133,7 +337,7 @@ public class StructuringElements
 	}
 
 	/**
-	 * Generates a symmetric, centered, rectangular flat structuring element for
+	 * Generate a symmetric, centered, rectangular flat structuring element for
 	 * morphological operations.
 	 * <p>
 	 * The structuring element (strel) is returned as a {@link List} of
@@ -149,9 +353,9 @@ public class StructuringElements
 	 *            in each dimension.
 	 * @param decompose
 	 *            if <code>true</code>, the strel will be returned as a
-	 *            {@link List} of {@link HorizontalLineShape}, indeed performing the
-	 *            rectangle decomposition. If <code>false</code>, the list will
-	 *            be made of a single {@link CenteredRectangleShape}.
+	 *            {@link List} of {@link HorizontalLineShape}, indeed performing
+	 *            the rectangle decomposition. If <code>false</code>, the list
+	 *            will be made of a single {@link CenteredRectangleShape}.
 	 * @return the desired structuring element, as a {@link List} of
 	 *         {@link Shape}s.
 	 */
@@ -185,7 +389,7 @@ public class StructuringElements
 	}
 
 	/**
-	 * Generates a symmetric, centered, rectangular flat structuring element for
+	 * Generate a symmetric, centered, rectangular flat structuring element for
 	 * morphological operations.
 	 * <p>
 	 * The structuring element (strel) is returned as a {@link List} of
@@ -233,7 +437,7 @@ public class StructuringElements
 	}
 
 	/**
-	 * Generates a centered flat diamond structuring element for morphological
+	 * Generate a centered flat diamond structuring element for morphological
 	 * operations.
 	 * <p>
 	 * The structuring element (strel) is returned as a {@link List} of
@@ -267,18 +471,22 @@ public class StructuringElements
 	 *      Images</i>, CVGIP: Models and Image Processing, vol. 54, no. 3, May
 	 *      1992, pp. 252-254.
 	 */
-	public static final List< Shape > diamond( final int radius, final int dimensionality) {
+	public static final List< Shape > diamond( final int radius, final int dimensionality )
+	{
 		final boolean decompose;
-		if (dimensionality <= 2) {
+		if ( dimensionality <= 2 )
+		{
 			decompose = radius > HEURISTICS_DIAMOND_RADIUS_2D;
-		} else {
+		}
+		else
+		{
 			decompose = radius > HEURISTICS_DIAMOND_RADIUS_OTHERSD;
 		}
 		return diamond( radius, dimensionality, decompose );
 	}
 
 	/**
-	 * Generates a centered flat diamond structuring element for morphological
+	 * Generate a centered flat diamond structuring element for morphological
 	 * operations.
 	 * <p>
 	 * The structuring element (strel) is returned as a {@link List} of
@@ -578,16 +786,4 @@ public class StructuringElements
 		}
 		str.append( '\n' );
 	}
-
-	/*
-	 * MAIN METHOD
-	 */
-
-	public static void main( final String[] args )
-	{
-		System.out.println( printNeighborhood( new HyperSphereShape( 2 ), 3 ) );
-		System.out.println( printNeighborhood( new RectangleShape( 4, true ), 1 ) );
-		System.out.println( printNeighborhood( new DiamondShape( 3 ), 3 ) );
-	}
-
 }
