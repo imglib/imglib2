@@ -33,7 +33,7 @@
 	</modules>
 
 	<properties>
-		<project.rootdir>${basedir}/..</project.rootdir>
+		<project.rootdir>${basedir}</project.rootdir>
 		<jama.version>1.0.2</jama.version>
 	</properties>
 
