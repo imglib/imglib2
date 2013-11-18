@@ -1,10 +1,9 @@
-package net.imglib2.display.projectors.specializedprojectors;
+package net.imglib2.display.projectors.specialized;
 
 import net.imglib2.display.projectors.AbstractProjector2D;
 import net.imglib2.display.projectors.screenimages.ByteScreenImage;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
-import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.numeric.integer.GenericShortType;
 import net.imglib2.type.numeric.integer.ShortType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -12,17 +11,17 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * Fast implementation of a {@link AbstractProjector2D} that selects a 2D data
- * plain from an ShortType PlanarImg. The map method implements a normalization
+ * plain from an ShortType ArrayImg. The map method implements a normalization
  * function. The resulting image is a ShortType ArrayImg. *
  * 
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
  * @param <A>
  */
-public class PlanarImgXYShortProjector< A extends GenericShortType< A >> extends AbstractProjector2D< A, UnsignedShortType >
+public class ArrayImgXYShortProjector< A extends GenericShortType< A >> extends AbstractProjector2D< A, UnsignedShortType >
 {
 
-	private final PlanarImg< A, ShortArray > source;
+	private final short[] sourceArray;
 
 	private final short[] targetArray;
 
@@ -35,7 +34,7 @@ public class PlanarImgXYShortProjector< A extends GenericShortType< A >> extends
 	private final long[] dims;
 
 	/**
-	 * Normalizes a PlanarImg and writes the result into target. This can be used in conjunction with {@link ByteScreenImage} for direct displaying.
+	 * Normalizes an ArrayImg and writes the result into target. This can be used in conjunction with {@link ByteScreenImage} for direct displaying.
 	 * The normalization is based on a normalization factor and a minimum value with the following dependency:<br>
 	 * <br>
 	 * normalizationFactor = (typeMax - typeMin) / (newMax - newMin) <br>
@@ -49,7 +48,7 @@ public class PlanarImgXYShortProjector< A extends GenericShortType< A >> extends
 	 * @param normalizationFactor
 	 * @param min
 	 */
-	public PlanarImgXYShortProjector( PlanarImg< A, ShortArray > source, ArrayImg< UnsignedShortType, ShortArray > target, double normalizationFactor, double min)
+	public ArrayImgXYShortProjector( ArrayImg< A, ShortArray > source, ArrayImg< UnsignedShortType, ShortArray > target, double normalizationFactor, double min)
 	{
 		super( source.numDimensions() );
 
@@ -60,7 +59,7 @@ public class PlanarImgXYShortProjector< A extends GenericShortType< A >> extends
 		this.dims = new long[ n ];
 		source.dimensions( dims );
 
-		this.source = source;
+		sourceArray = source.update( null ).getCurrentStorageArray();
 	}
 
 	@Override
@@ -70,27 +69,11 @@ public class PlanarImgXYShortProjector< A extends GenericShortType< A >> extends
 		
 		double minCopy = min;
 		int offset = 0;
+		long[] tmpPos = position.clone();
+		tmpPos[ 0 ] = 0;
+		tmpPos[ 1 ] = 0;
 
-		// positioning for every call to map because the plane index is
-		// position dependent
-		int planeIndex;
-		if ( position.length > 2 )
-		{
-			long[] tmpPos = new long[ position.length - 2 ];
-			long[] tmpDim = new long[ position.length - 2 ];
-			for ( int i = 0; i < tmpDim.length; i++ )
-			{
-				tmpPos[ i ] = position[ i + 2 ];
-				tmpDim[ i ] = source.dimension( i + 2 );
-			}
-			planeIndex = ( int ) IntervalIndexer.positionToIndex( tmpPos, tmpDim );
-		}
-		else
-		{
-			planeIndex = 0;
-		}
-
-		short[] sourceArray = source.update( new PlanarImgContainerSamplerImpl( planeIndex ) ).getCurrentStorageArray();
+		offset = ( int ) IntervalIndexer.positionToIndex( tmpPos, dims );
 
 		// copy the selected part of the source array (e.g. a xy plane at time t
 		// in a video) into the target array.

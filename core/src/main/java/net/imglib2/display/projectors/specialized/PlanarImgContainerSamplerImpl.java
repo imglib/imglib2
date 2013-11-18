@@ -1,4 +1,4 @@
-package net.imglib2.display.projectors.specializedprojectors;
+package net.imglib2.display.projectors.specialized;
 
 import net.imglib2.img.planar.PlanarImg.PlanarContainerSampler;
 
