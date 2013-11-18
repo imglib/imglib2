@@ -289,14 +289,14 @@ public class PeriodicLineNeighborhood< T > extends AbstractLocalizable implement
 
 		private long index;
 
-		public LocalCursor( final RandomAccess< T > source )
+		private LocalCursor( final RandomAccess< T > source )
 		{
 			super( source.numDimensions() );
 			this.source = source;
 			reset();
 		}
 
-		protected LocalCursor( final LocalCursor c )
+		private LocalCursor( final LocalCursor c )
 		{
 			super( c.numDimensions() );
 			source = c.source.copyRandomAccess();

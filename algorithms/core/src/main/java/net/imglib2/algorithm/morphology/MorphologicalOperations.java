@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package net.imglib2.algorithm.morphology;
 
@@ -27,7 +27,7 @@ import net.imglib2.view.Views;
  * A set of static methods performing various morphological operations, such as
  * dilation, erosion, etc... Should be used in conjunction with
  * {@link StructuringElements} to generate optimized structuring elements.
- * 
+ *
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> 2013
  */
 public class MorphologicalOperations
@@ -43,7 +43,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the dilation morphological operation, on a {@link RealType}
 	 * {@link Img} using a {@link Shape} as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
 	 * Dilation_(morphology)</a>.
 	 * <p>
@@ -64,7 +64,7 @@ public class MorphologicalOperations
 	 * source image. The real, full dilation results should have a number of
 	 * dimensions equals to the maximum of the number of dimension of both
 	 * source and structuring element.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -86,7 +86,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the dilation morphological operation, on a {@link RealType}
 	 * {@link Img} using a {@link Shape} as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
 	 * Dilation_(morphology)</a>.
 	 * <p>
@@ -94,7 +94,7 @@ public class MorphologicalOperations
 	 * limited to flat structuring elements, only having <code>on/off</code>
 	 * pixels, contrary to grayscale structuring elements. This allows to simply
 	 * use a {@link Shape} as a type for these structuring elements.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -116,7 +116,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the dilation morphological operation, on an {@link Img} using a
 	 * {@link Shape} as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
 	 * Dilation_(morphology)</a>.
 	 * <p>
@@ -144,7 +144,7 @@ public class MorphologicalOperations
 	 * source image. The real, full dilation results should have a number of
 	 * dimensions equals to the maximum of the number of dimension of both
 	 * source and structuring element.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -315,7 +315,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the dilation morphological operation, on an {@link Img} using a
 	 * {@link Shape} as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
 	 * Dilation_(morphology)</a>.
 	 * <p>
@@ -330,7 +330,7 @@ public class MorphologicalOperations
 	 * (against {@link Comparable}) than any of the value found in the source
 	 * image. This normally unseen parameter is required to operate on
 	 * <code>T extends {@link Comparable} & {@link Type}</code>.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -441,7 +441,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the dilation morphological operation, on an {@link Img} using a
 	 * list of {@link Shape}s as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
 	 * Dilation_(morphology)</a>.
 	 * <p>
@@ -461,7 +461,7 @@ public class MorphologicalOperations
 	 * (against {@link Comparable}) than any of the value found in the source
 	 * image. This normally unseen parameter is required to operate on
 	 * <code>T extends {@link Comparable} & {@link Type}</code>.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -494,7 +494,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the dilation morphological operation, on a {@link RealType}
 	 * {@link Img} using a list of {@link Shape}s as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
 	 * Dilation_(morphology)</a>.
 	 * <p>
@@ -507,7 +507,7 @@ public class MorphologicalOperations
 	 * limited to flat structuring elements, only having <code>on/off</code>
 	 * pixels, contrary to grayscale structuring elements. This allows to simply
 	 * use a {@link Shape} as a type for these structuring elements.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -532,7 +532,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the dilation morphological operation, on an {@link Img} using a
 	 * list of {@link Shape}s as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
 	 * Dilation_(morphology)</a>.
 	 * <p>
@@ -565,7 +565,7 @@ public class MorphologicalOperations
 	 * source image. The real, full dilation results should have a number of
 	 * dimensions equals to the maximum of the number of dimension of both
 	 * source and structuring element.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -597,7 +597,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the dilation morphological operation, on a {@link RealType}
 	 * {@link Img} using a list of {@link Shape}s as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Dilation_(morphology)">
 	 * Dilation_(morphology)</a>.
 	 * <p>
@@ -623,7 +623,7 @@ public class MorphologicalOperations
 	 * source image. The real, full dilation results should have a number of
 	 * dimensions equals to the maximum of the number of dimension of both
 	 * source and structuring element.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -652,7 +652,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the erosion morphological operation, on an {@link Img} using a
 	 * {@link Shape} as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Erosion_(morphology)">
 	 * Erosion_(morphology)</a>.
 	 * <p>
@@ -667,7 +667,7 @@ public class MorphologicalOperations
 	 * {@link Comparable}) than any of the value found in the source image. This
 	 * normally unseen parameter is required to operate on
 	 * <code>T extends {@link Comparable} & {@link Type}</code>.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -683,7 +683,7 @@ public class MorphologicalOperations
 	 * @param <T>
 	 *            the type of the source image and the erosion result. Must be a
 	 *            sub-type of
-	 * 
+	 *
 	 *            <code>T extends {@link Comparable} & {@link Type}</code>.
 	 * @return a new {@link Img}, of same dimensions than the source.
 	 */
@@ -779,7 +779,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the erosion morphological operation, on a {@link RealType}
 	 * {@link Img} using a {@link Shape} as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Erosion_(morphology)">
 	 * Erosion_(morphology)</a>.
 	 * <p>
@@ -787,7 +787,7 @@ public class MorphologicalOperations
 	 * limited to flat structuring elements, only having <code>on/off</code>
 	 * pixels, contrary to grayscale structuring elements. This allows to simply
 	 * use a {@link Shape} as a type for these structuring elements.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -809,7 +809,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the full erosion morphological operation, on an {@link Img}
 	 * using a {@link Shape} as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Erosion_(morphology)">
 	 * Erosion_(morphology)</a>.
 	 * <p>
@@ -837,7 +837,7 @@ public class MorphologicalOperations
 	 * source image. The real, full erosion results should have a number of
 	 * dimensions equals to the minimum of the number of dimension of both
 	 * source and structuring element.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -1010,7 +1010,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the full erosion morphological operation, on a {@link RealType}
 	 * {@link Img} using a {@link Shape} as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Erosion_(morphology)">
 	 * Erosion_(morphology)</a>.
 	 * <p>
@@ -1038,7 +1038,7 @@ public class MorphologicalOperations
 	 * source image. The real, full erosion results should have a number of
 	 * dimensions equals to the minimum of the number of dimension of both
 	 * source and structuring element.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -1068,7 +1068,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the erosion morphological operation, on an {@link Img} using a
 	 * list of {@link Shape}s as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Erosion_(morphology)">
 	 * Erosion_(morphology)</a>.
 	 * <p>
@@ -1088,7 +1088,7 @@ public class MorphologicalOperations
 	 * {@link Comparable}) than any of the value found in the source image. This
 	 * normally unseen parameter is required to operate on
 	 * <code>T extends {@link Comparable} & {@link Type}</code>.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -1104,7 +1104,7 @@ public class MorphologicalOperations
 	 * @param <T>
 	 *            the type of the source image and the erosion result. Must be a
 	 *            sub-type of
-	 * 
+	 *
 	 *            <code>T extends {@link Comparable} & {@link Type}</code>.
 	 * @return a new {@link Img}, of same dimensions than the source.
 	 */
@@ -1121,7 +1121,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the erosion morphological operation, on a {@link RealType}
 	 * {@link Img} using a list of {@link Shape}s as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Erosion_(morphology)">
 	 * Erosion_(morphology)</a>.
 	 * <p>
@@ -1134,7 +1134,7 @@ public class MorphologicalOperations
 	 * limited to flat structuring elements, only having <code>on/off</code>
 	 * pixels, contrary to grayscale structuring elements. This allows to simply
 	 * use a {@link Shape} as a type for these structuring elements.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -1159,7 +1159,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the full erosion morphological operation, on an {@link Img}
 	 * using a list of {@link Shape}s as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Erosion_(morphology)">
 	 * Erosion_(morphology)</a>.
 	 * <p>
@@ -1192,7 +1192,7 @@ public class MorphologicalOperations
 	 * source image. The real, full erosion results should have a number of
 	 * dimensions equals to the minimum of the number of dimension of both
 	 * source and structuring element.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -1225,7 +1225,7 @@ public class MorphologicalOperations
 	/**
 	 * Performs the full erosion morphological operation, on a {@link RealType}
 	 * {@link Img} using a lsit of {@link Shape}s as a flat structuring element.
-	 * 
+	 *
 	 * See <a href="http://en.wikipedia.org/wiki/Erosion_(morphology)">
 	 * Erosion_(morphology)</a>.
 	 * <p>
@@ -1258,7 +1258,7 @@ public class MorphologicalOperations
 	 * source image. The real, full erosion results should have a number of
 	 * dimensions equals to the minimum of the number of dimension of both
 	 * source and structuring element.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -1298,7 +1298,7 @@ public class MorphologicalOperations
 	 * element, in a single pass.
 	 * <p>
 	 * This method exists for performance reasons, when both results are needed.
-	 * 
+	 *
 	 * @param source
 	 *            the source image.
 	 * @param strel
@@ -1429,7 +1429,7 @@ public class MorphologicalOperations
 	 * >Opening_(morphology)</a>.
 	 * <p>
 	 * The opening operation is simply an erosion followed by a dilation.
-	 * 
+	 *
 	 * @param source
 	 *            the {@link Img} to operate on.
 	 * @param strel
@@ -1461,7 +1461,7 @@ public class MorphologicalOperations
 	 * allow for performance optimization through structuring element
 	 * decomposition. Each shape is processed in order as given in the list. If
 	 * the list is empty, the source image is returned.
-	 * 
+	 *
 	 * @param source
 	 *            the {@link Img} to operate on.
 	 * @param strel
@@ -1497,7 +1497,7 @@ public class MorphologicalOperations
 	 * image, and the converse for the max value. These normally unseen
 	 * parameters are required to operate on
 	 * <code>T extends {@link Comparable} & {@link Type}</code>.
-	 * 
+	 *
 	 * @param source
 	 *            the {@link Img} to operate on.
 	 * @param strel
@@ -1544,7 +1544,7 @@ public class MorphologicalOperations
 	 * image, and the converse for the max value. These normally unseen
 	 * parameters are required to operate on
 	 * <code>T extends {@link Comparable} & {@link Type}</code>.
-	 * 
+	 *
 	 * @param source
 	 *            the {@link Img} to operate on.
 	 * @param strel
@@ -1583,7 +1583,7 @@ public class MorphologicalOperations
 	 * >Closing_(morphology)</a>.
 	 * <p>
 	 * The closing operation is simply a dilation followed by an erosion .
-	 * 
+	 *
 	 * @param source
 	 *            the {@link Img} to operate on.
 	 * @param strel
@@ -1615,7 +1615,7 @@ public class MorphologicalOperations
 	 * the list is empty, the source image is returned.
 	 * <p>
 	 * The closing operation is simply a dilation followed by an erosion .
-	 * 
+	 *
 	 * @param source
 	 *            the {@link Img} to operate on.
 	 * @param strel
@@ -1651,7 +1651,7 @@ public class MorphologicalOperations
 	 * image, and the converse for the max value. These normally unseen
 	 * parameters are required to operate on
 	 * <code>T extends {@link Comparable} & {@link Type}</code>.
-	 * 
+	 *
 	 * @param source
 	 *            the {@link Img} to operate on.
 	 * @param strel
@@ -1698,7 +1698,7 @@ public class MorphologicalOperations
 	 * image, and the converse for the max value. These normally unseen
 	 * parameters are required to operate on
 	 * <code>T extends {@link Comparable} & {@link Type}</code>.
-	 * 
+	 *
 	 * @param source
 	 *            the {@link Img} to operate on.
 	 * @param strel
