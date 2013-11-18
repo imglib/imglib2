@@ -58,7 +58,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.display.projector.Projector2D;
-import net.imglib2.display.screenimage.ARGBScreenImage;
+import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 import net.imglib2.type.numeric.ARGBType;
 
 /**

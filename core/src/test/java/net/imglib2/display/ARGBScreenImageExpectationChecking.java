@@ -56,7 +56,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import net.imglib2.display.screenimage.ARGBScreenImage;
+import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 
 import org.junit.Test;
 

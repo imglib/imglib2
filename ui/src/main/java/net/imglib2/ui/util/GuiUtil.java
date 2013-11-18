@@ -48,7 +48,7 @@ import java.awt.image.Raster;
 import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 
-import net.imglib2.display.screenimage.ARGBScreenImage;
+import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 
 /**
  * Static helper methods for setting up {@link GraphicsConfiguration} and

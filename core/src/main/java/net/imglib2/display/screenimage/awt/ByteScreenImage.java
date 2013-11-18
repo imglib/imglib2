@@ -1,4 +1,4 @@
-package net.imglib2.display.screenimage;
+package net.imglib2.display.screenimage.awt;
 
 import java.awt.Image;
 import java.awt.Transparency;
@@ -23,7 +23,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
  */
-public class ByteScreenImage extends ArrayImg< UnsignedByteType, ByteArray > implements ScreenImage
+public class ByteScreenImage extends ArrayImg< UnsignedByteType, ByteArray > implements AWTScreenImage
 {
 
 	private static final ColorSpace CS = ColorSpace.getInstance( ColorSpace.CS_GRAY );

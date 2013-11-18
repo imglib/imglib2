@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.display.screenimage;
+package net.imglib2.display.screenimage.awt;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -62,7 +62,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class UnsignedByteScreenImage implements ScreenImage, IterableInterval< UnsignedByteType >
+public class UnsignedByteScreenImage implements AWTScreenImage, IterableInterval< UnsignedByteType >
 {
 	final protected byte[] data; 
 	final protected ArrayImg< UnsignedByteType, ByteArray > argbArray;

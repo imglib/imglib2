@@ -32,7 +32,7 @@ import ij.process.ColorProcessor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.display.projector.Projector2D;
-import net.imglib2.display.screenimage.ARGBScreenImage;
+import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;

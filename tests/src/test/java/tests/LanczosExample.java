@@ -34,7 +34,7 @@ import mpicbg.util.Timer;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.display.projector.Projector2D;
-import net.imglib2.display.screenimage.ARGBScreenImage;
+import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;

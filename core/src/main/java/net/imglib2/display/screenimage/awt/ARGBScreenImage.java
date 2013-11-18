@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.display.screenimage;
+package net.imglib2.display.screenimage.awt;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -57,7 +57,7 @@ import net.imglib2.type.numeric.ARGBType;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements ScreenImage
+public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements AWTScreenImage
 {
 	final protected int[] data;
 	final protected BufferedImage image;

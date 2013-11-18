@@ -35,17 +35,21 @@
  * #L%
  */
 
-package net.imglib2.display.screenimage;
+package net.imglib2.display.screenimage.awt;
+
+import java.awt.Image;
+
+import net.imglib2.display.screenimage.ScreenImage;
 
 /**
- * Toplevel interface for screen images.
+ * A {@link ScreenImage} that produces AWT {@link Image} objects.
  * 
- * @param <T> The type of images this screen image produces.
- *
- * @author Curtis Rueden
- * @author Christian Dietz
+ * @author Stephan Saalfeld
  */
-public interface ScreenImage< T >
+public interface AWTScreenImage extends ScreenImage< Image >
 {
-	public T image();
+
+	@Override
+	public Image image();
+
 }
