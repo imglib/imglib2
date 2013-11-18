@@ -1,4 +1,4 @@
-package net.imglib2.display.projectors.screenimages;
+package net.imglib2.display.screenimage;
 
 import java.awt.Image;
 import java.awt.Transparency;

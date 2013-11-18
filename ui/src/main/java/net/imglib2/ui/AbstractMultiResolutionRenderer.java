@@ -40,7 +40,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import net.imglib2.concatenate.Concatenable;
-import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
+import net.imglib2.display.screenimage.ARGBScreenImage;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
 import net.imglib2.ui.util.GuiUtil;

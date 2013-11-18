@@ -39,7 +39,7 @@ package net.imglib2.ui;
 import java.awt.image.BufferedImage;
 
 import net.imglib2.concatenate.Concatenable;
-import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
+import net.imglib2.display.screenimage.ARGBScreenImage;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.ui.util.GuiUtil;
 

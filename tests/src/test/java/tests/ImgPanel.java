@@ -47,7 +47,7 @@ import loci.common.StatusEvent;
 import loci.common.StatusListener;
 import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.display.projectors.Projector2D;
-import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
+import net.imglib2.display.screenimage.ARGBScreenImage;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.io.ImgIOException;

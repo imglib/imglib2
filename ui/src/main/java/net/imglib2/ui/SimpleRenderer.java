@@ -39,7 +39,7 @@ package net.imglib2.ui;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.concatenate.Concatenable;
-import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
+import net.imglib2.display.screenimage.ARGBScreenImage;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineSet;
 import net.imglib2.realtransform.RealViews;
