@@ -23,7 +23,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
  */
-public class ByteScreenImage extends ArrayImg< UnsignedByteType, ByteArray > implements AWTScreenImage
+public class UnsignedByteAWTScreenImage extends ArrayImg< UnsignedByteType, ByteArray > implements AWTScreenImage
 {
 
 	private static final ColorSpace CS = ColorSpace.getInstance( ColorSpace.CS_GRAY );
@@ -34,7 +34,7 @@ public class ByteScreenImage extends ArrayImg< UnsignedByteType, ByteArray > imp
 
 	private final BufferedImage m_image;
 
-	public ByteScreenImage( ByteArray data, long[] dim )
+	public UnsignedByteAWTScreenImage( ByteArray data, long[] dim )
 	{
 		super( data, dim, 1 );
 		byte[] sourceArray = data.getCurrentStorageArray();

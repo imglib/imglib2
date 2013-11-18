@@ -1,7 +1,7 @@
 package net.imglib2.display.projector.specialized;
 
 import net.imglib2.display.projector.AbstractProjector2D;
-import net.imglib2.display.screenimage.awt.ByteScreenImage;
+import net.imglib2.display.screenimage.awt.UnsignedByteAWTScreenImage;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.numeric.integer.GenericShortType;
@@ -34,7 +34,7 @@ public class ArrayImgXYShortProjector< A extends GenericShortType< A >> extends 
 	private final long[] dims;
 
 	/**
-	 * Normalizes an ArrayImg and writes the result into target. This can be used in conjunction with {@link ByteScreenImage} for direct displaying.
+	 * Normalizes an ArrayImg and writes the result into target. This can be used in conjunction with {@link UnsignedByteAWTScreenImage} for direct displaying.
 	 * The normalization is based on a normalization factor and a minimum value with the following dependency:<br>
 	 * <br>
 	 * normalizationFactor = (typeMax - typeMin) / (newMax - newMin) <br>
