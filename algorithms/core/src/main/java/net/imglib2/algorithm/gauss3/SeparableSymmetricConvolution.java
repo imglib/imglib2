@@ -37,8 +37,12 @@
 
 package net.imglib2.algorithm.gauss3;
 
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 
 import net.imglib2.Dimensions;
 import net.imglib2.FinalInterval;
@@ -302,6 +306,7 @@ public final class SeparableSymmetricConvolution
 	 */
 	static < S, T > void convolveOffset( final double[] halfkernel, final RandomAccessible< S > source, final long[] sourceOffset, final RandomAccessible< T > target, final Interval targetInterval, final int d, final ConvolverFactory< S, T > factory, final ExecutorService service, final int numTasks )
 	{
+		final ArrayList<Future<Void>> futures = new ArrayList<Future<Void>>();
 		final int n = source.numDimensions();
 		final int k1 = halfkernel.length - 1;
 		long tmp = 1;
@@ -333,10 +338,10 @@ public final class SeparableSymmetricConvolution
 			final long myEndIndex = ( taskNum == numTasks - 1 ) ?
 					endIndex :
 					( taskNum + 1 ) * ( ( endIndex + 1 ) / numTasks );
-			final Runnable r = new Runnable()
+			final Callable<Void> r = new Callable<Void>()
 			{
 				@Override
-				public void run()
+				public Void call()
 				{
 					final RandomAccess< S > in = source.randomAccess( new FinalInterval( srcmin, srcmax ) );
 					final RandomAccess< T > out = target.randomAccess( targetInterval );
@@ -373,19 +378,21 @@ public final class SeparableSymmetricConvolution
 							}
 						}
 					}
+					return null;
 				}
 			};
-			service.execute( r );
+			futures.add(service.submit(r));
 		}
 		
-	    try
-        {
-                service.awaitTermination( 1000, TimeUnit.DAYS );
-        }
-        catch ( final InterruptedException e )
-        {
-                e.printStackTrace();
-        }
+		for(Future<Void> f : futures){
+			try {
+				f.get();
+			} catch (InterruptedException e) {
+				throw new RuntimeException( e );
+			} catch (ExecutionException e) {
+				throw new RuntimeException( e );
+			}
+		}
 	}
 
 	static long[][] getTempImageDimensions( final Dimensions targetsize, final double[][] halfkernels )
