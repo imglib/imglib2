@@ -42,8 +42,7 @@ import net.imglib2.Interval;
 import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.display.RealARGBConverter;
-import io.scif.img.ImgIOException;
+import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.ui.overlay.LogoPainter;
@@ -52,7 +51,7 @@ import net.imglib2.util.Intervals;
 
 public class Interactive3DRealRandomAccessibleExample
 {
-	final static public void main( final String[] args ) throws ImgIOException
+	final static public void main( final String[] args )
 	{
 		final long maxIterations = 20;
 
