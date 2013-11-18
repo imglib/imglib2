@@ -38,6 +38,7 @@ package net.imglib2.converter.volatiles;
 
 import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.volatiles.VolatileRealType;
 
 /**
  * Converts a {@link VolatileRealType} to an {@link ARGBType}.

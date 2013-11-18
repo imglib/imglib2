@@ -34,202 +34,70 @@
  * #L%
  */
 
-package net.imglib2.converter.volatiles;
+package net.imglib2.type.volatiles;
 
 import net.imglib2.Volatile;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.NumericType;
 
 /**
  * Something volatile that has a value and is either VALID or INVALID.
  *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class VolatileRealType< T extends RealType< T > > extends Volatile< T > implements RealType< VolatileRealType< T > >
+public class VolatileNumericType< T extends NumericType< T > > extends Volatile< T > implements NumericType< VolatileNumericType< T > >
 {
-	public VolatileRealType( final T t, final boolean valid )
+	public VolatileNumericType( final T t, final boolean valid )
 	{
 		super( t, valid );
 	}
 	
-	public VolatileRealType( final T t )
+	public VolatileNumericType( final T t )
 	{
 		this( t, false );
 	}
 
 	@Override
-	public double getRealDouble()
+	public VolatileNumericType< T > createVariable()
 	{
-		return t.getRealDouble();
+		return new VolatileNumericType< T >( t.createVariable(), false );
 	}
 
 	@Override
-	public float getRealFloat()
+	public VolatileNumericType< T > copy()
 	{
-		return t.getRealFloat();
+		return new VolatileNumericType< T >( t.copy(), false );
 	}
 
 	@Override
-	public double getImaginaryDouble()
-	{
-		return t.getImaginaryDouble();
-	}
-
-	@Override
-	public float getImaginaryFloat()
-	{
-		return t.getImaginaryFloat();
-	}
-
-	@Override
-	public void setReal( final float f )
-	{
-		t.setReal( f );
-	}
-
-	@Override
-	public void setReal( final double f )
-	{
-		t.setReal( f );
-	}
-
-	@Override
-	public void setImaginary( final float f )
-	{
-		t.setImaginary( f );
-	}
-
-	@Override
-	public void setImaginary( final double f )
-	{
-		t.setImaginary( f );
-	}
-
-	@Override
-	public void setComplexNumber( final float r, final float i )
-	{
-		t.setComplexNumber( r, i );
-	}
-
-	@Override
-	public void setComplexNumber( final double r, final double i )
-	{
-		t.setComplexNumber( r, i );
-	}
-
-	@Override
-	public float getPowerFloat()
-	{
-		return t.getPowerFloat();
-	}
-
-	@Override
-	public double getPowerDouble()
-	{
-		return t.getPowerDouble();
-	}
-
-	@Override
-	public float getPhaseFloat()
-	{
-		return t.getPhaseFloat();
-	}
-
-	@Override
-	public double getPhaseDouble()
-	{
-		return t.getPhaseDouble();
-	}
-
-	@Override
-	public void complexConjugate()
-	{
-		t.complexConjugate();
-	}
-
-	@Override
-	public int compareTo( final VolatileRealType< T > o )
-	{
-		return t.compareTo( o.t );
-	}
-
-	@Override
-	public void inc()
-	{
-		t.inc();
-	}
-
-	@Override
-	public void dec()
-	{
-		t.dec();
-	}
-
-	@Override
-	public double getMaxValue()
-	{
-		return t.getMaxValue();
-	}
-
-	@Override
-	public double getMinValue()
-	{
-		return t.getMinValue();
-	}
-
-	@Override
-	public double getMinIncrement()
-	{
-		return t.getMinIncrement();
-	}
-
-	@Override
-	public int getBitsPerPixel()
-	{
-		return t.getBitsPerPixel();
-	}
-
-	@Override
-	public VolatileRealType< T > createVariable()
-	{
-		return new VolatileRealType< T >( t.createVariable(), false );
-	}
-
-	@Override
-	public VolatileRealType< T > copy()
-	{
-		return new VolatileRealType< T >( t.copy(), false );
-	}
-
-	@Override
-	public void set( final VolatileRealType< T > c )
+	public void set( final VolatileNumericType< T > c )
 	{
 		t.set( c.t );
 		valid = c.valid;
 	}
 
 	@Override
-	public void add( final VolatileRealType< T > c )
+	public void add( final VolatileNumericType< T > c )
 	{
 		t.add( c.t );
 		valid &= c.valid;
 	}
 
 	@Override
-	public void sub( final VolatileRealType< T > c )
+	public void sub( final VolatileNumericType< T > c )
 	{
 		t.sub( c.t );
 		valid &= c.valid;
 	}
 
 	@Override
-	public void mul( final VolatileRealType< T > c )
+	public void mul( final VolatileNumericType< T > c )
 	{
 		t.mul( c.t );
 		valid &= c.valid;
 	}
 
 	@Override
-	public void div( final VolatileRealType< T > c )
+	public void div( final VolatileNumericType< T > c )
 	{
 		t.div( c.t );
 		valid &= c.valid;
