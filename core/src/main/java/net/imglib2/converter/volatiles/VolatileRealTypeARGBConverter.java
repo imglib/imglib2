@@ -34,7 +34,7 @@
  * #L%
  */
 
-package net.imglib2.converter.volatileconverters;
+package net.imglib2.converter.volatiles;
 
 import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.type.numeric.ARGBType;
