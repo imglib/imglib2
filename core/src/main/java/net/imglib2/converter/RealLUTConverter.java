@@ -40,7 +40,7 @@ package net.imglib2.converter;
 import net.imglib2.display.AbstractLinearRange;
 import net.imglib2.display.ColorTable;
 import net.imglib2.display.ColorTable8;
-import net.imglib2.display.projectors.compositeprojectors.CompositeXYProjector;
+import net.imglib2.display.projectors.composite.CompositeXYProjector;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 

@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.display.projectors.compositeprojectors;
+package net.imglib2.display.projectors.composite;
 
 import java.util.ArrayList;
 

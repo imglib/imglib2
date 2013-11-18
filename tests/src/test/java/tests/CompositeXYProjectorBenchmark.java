@@ -28,7 +28,7 @@ package tests;
 
 import ij.ImageJ;
 import net.imglib2.converter.ChannelARGBConverter;
-import net.imglib2.display.projectors.compositeprojectors.CompositeXYProjector;
+import net.imglib2.display.projectors.composite.CompositeXYProjector;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
