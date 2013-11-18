@@ -1,62 +1,38 @@
 package net.imglib2.display.screenimage.awt;
 
-import java.awt.Image;
-import java.awt.Transparency;
-import java.awt.color.ColorSpace;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.ComponentColorModel;
-import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferUShort;
-import java.awt.image.PixelInterleavedSampleModel;
-import java.awt.image.Raster;
-import java.awt.image.SampleModel;
-import java.awt.image.WritableRaster;
 
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 /**
- * Creates an {@link Image} from a ShortType ArrayImg
+ * A {@link AWTScreenImage} that is an
+ * {@code ArrayImg<UnsignedShortType, ShortArray>}.
  * 
- * @author Michael Zinsmaier, Martin Horn, Christian Dietz
- * 
+ * @author Michael Zinsmaier
+ * @author Martin Horn
+ * @author Christian Dietz
+ * @author Curtis Rueden
  */
-public class UnsignedShortAWTScreenImage extends ArrayImg< UnsignedShortType, ShortArray > implements AWTScreenImage
+public class UnsignedShortAWTScreenImage extends ArrayImgAWTScreenImage< UnsignedShortType, ShortArray >
 {
 
-	private static final ColorSpace CS = ColorSpace.getInstance( ColorSpace.CS_GRAY );
-
-	private static final int[] BITS = new int[] { 16 };
-
-	private static final ColorModel GRAY16_COLOR_MODEL = new ComponentColorModel( CS, BITS, false, false, Transparency.OPAQUE, DataBuffer.TYPE_USHORT );
-
-	private final BufferedImage m_image;
-
-	public UnsignedShortAWTScreenImage( ShortArray data, long[] dim )
+	public UnsignedShortAWTScreenImage( final ArrayImg< UnsignedShortType, ShortArray > img )
 	{
-		super( data, dim, 1 );
-		short[] sourceArray = data.getCurrentStorageArray();
-		m_image = createBufferedImage( sourceArray, ( int ) dim[ 0 ], ( int ) dim[ 1 ] );
+		super( img );
 	}
 
-	public static BufferedImage createBufferedImage( short[] sourceArray, int width, int height )
+	public UnsignedShortAWTScreenImage( final UnsignedShortType type, final ShortArray data, final long[] dim )
 	{
-
-		DataBuffer buffer = new DataBufferUShort( sourceArray, sourceArray.length );
-
-		SampleModel model = new PixelInterleavedSampleModel( DataBuffer.TYPE_USHORT, width, height, 1, width, new int[] { 0 } );
-
-		WritableRaster raster = Raster.createWritableRaster( model, buffer, null );
-
-		return new BufferedImage( GRAY16_COLOR_MODEL, raster, false, null );
+		super( type, data, dim );
 	}
 
 	@Override
-	public Image image()
+	protected DataBufferUShort createDataBuffer( final ShortArray data )
 	{
-		return m_image;
+		final short[] sourceArray = data.getCurrentStorageArray();
+		return new DataBufferUShort( sourceArray, sourceArray.length );
 	}
 
 }
