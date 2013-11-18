@@ -1,6 +1,8 @@
 package net.imglib2.algorithm.morphology;
 
 import ij.ImageJ;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +16,6 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.labeling.NativeImgLabeling;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -26,6 +26,7 @@ public class RegionGrowingToolsTest {
 
 		final String fn = "/Users/tinevez/Desktop/Data/brightblobs.tif";
 		//		final String fn = "/Users/JeanYves/Desktop/Data/brightblobs.tif";
+		@SuppressWarnings( "unchecked" )
 		final Img<UnsignedByteType> img = new ImgOpener().openImg(fn);
 		final long[][] seeds = new long[][] { { 105, 110 }, { 102, 73 } };
 
