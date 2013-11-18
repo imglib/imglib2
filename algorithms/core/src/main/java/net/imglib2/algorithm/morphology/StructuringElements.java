@@ -54,7 +54,7 @@ public class StructuringElements
 	 * <p>
 	 * This methods relies on heuristics to determine automatically what
 	 * decomposition level to use.
-	 * 
+	 *
 	 * @param radius
 	 *            the radius of the disk, so that it extends over
 	 *            <code>2 × radius + 1</code> in all dimensions
@@ -111,7 +111,7 @@ public class StructuringElements
 	 * only an approximation of a disk, and this method offers a parameter to
 	 * select the level of approximation. For other dimensionalities, no
 	 * optimization are available yet and the parameter is ignored.
-	 * 
+	 *
 	 * @param radius
 	 *            the radius of the disk, so that it extends over
 	 *            <code>2 × radius + 1</code> in all dimensions
@@ -335,7 +335,7 @@ public class StructuringElements
 	 * better performance. The rectangle strel can be decomposed in a succession
 	 * of orthogonal lines and yield the exact same results on any of the
 	 * morphological operations.
-	 * 
+	 *
 	 * @param halfSpans
 	 *            an <code>int[]</code> array containing the half-span of the
 	 *            symmetric rectangle in each dimension. The total extent of the
@@ -388,7 +388,7 @@ public class StructuringElements
 	 * of orthogonal lines and yield the exact same results on any of the
 	 * morphological operations. This method uses a simple heuristic to decide
 	 * whether to decompose the rectangle or not.
-	 * 
+	 *
 	 * @param halfSpans
 	 *            an <code>int[]</code> array containing the half-span of the
 	 *            symmetric rectangle in each dimension. The total extent of the
@@ -443,7 +443,7 @@ public class StructuringElements
 	 * dimensions, the theorem does not hold (even in practice), and we have to
 	 * fall back on a linear decomposition, still very effective (see [1] as
 	 * well).
-	 * 
+	 *
 	 * @param radius
 	 *            the desired radius of the diamond structuring element. The
 	 *            strel will extend over <code>2 × radius + 1</code> in all
@@ -453,7 +453,7 @@ public class StructuringElements
 	 *            used with. A structuring element build for one dimension will
 	 *            <b>not</b> work properly for any other dimensions.
 	 * @return the structuring element as a list of {@link Shape}s.
-	 * 
+	 *
 	 * @see <a href =
 	 *      "http://www.sciencedirect.com/science/article/pii/1049965292900553.htm"
 	 *      >[1]</a> Rein van den Boomgard and Richard van Balen, <i>Methods for
@@ -492,7 +492,7 @@ public class StructuringElements
 	 * dimensions, the theorem does not hold (even in practice), and we have to
 	 * fall back on a linear decomposition, still very effective (see [1] as
 	 * well).
-	 * 
+	 *
 	 * @param radius
 	 *            the desired radius of the diamond structuring element. The
 	 *            strel will extend over <code>2 × radius + 1</code> in all
@@ -505,7 +505,7 @@ public class StructuringElements
 	 *            if <code>true</code>, this strel will be optimized through
 	 *            decomposition.
 	 * @return the structuring element as a list of {@link Shape}s.
-	 * 
+	 *
 	 * @see <a href =
 	 *      "http://www.sciencedirect.com/science/article/pii/1049965292900553.htm"
 	 *      >[1]</a> Rein van den Boomgard and Richard van Balen, <i>Methods for
@@ -568,5 +568,40 @@ public class StructuringElements
 			shape.add( new DiamondShape( radius ) );
 			return shape;
 		}
+	}
+
+	/**
+	 * Creates a new periodic line structuring element, that will iterate over
+	 * <code>2 × span + 1</code> pixels as follow:
+	 *
+	 * <pre>
+	 * position - span x increments,
+	 * ...
+	 * position - 2 × increments,
+	 * position - increments,
+	 * position,
+	 * position + increments,
+	 * position + 2 × increments,
+	 * ...
+	 * position + span x increments
+	 * </pre>
+	 * 
+	 * The importance of periodic lines is explained in [1].
+	 * 
+	 * @param span
+	 *            the span of the neighborhood, so that it will iterate over
+	 *            <code>2 × span + 1</code> pixels.
+	 * @param increments
+	 *            the values by which each element of the position vector is to
+	 *            be incremented when iterating.
+	 * @see <a
+	 *      href="http://www.sciencedirect.com/science/article/pii/0167865596000669">[1]</a>
+	 *      Jones and Soilles.Periodic lines: Definition, cascades, and
+	 *      application to granulometries. Pattern Recognition Letters (1996)
+	 *      vol. 17 (10) pp. 1057-1063.
+	 */
+	public static final Shape periodicLine( final long span, final int[] increments )
+	{
+		return new PeriodicLineShape( span, increments );
 	}
 }
