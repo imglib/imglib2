@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -53,11 +53,11 @@ import net.imglib2.util.Intervals;
  * A neighborhood that iterates over what is termed "Periodic lines", and best
  * explained in Ronald Jones and Pierre Soilles publication:
  * <p>
- * <tt>Jones and Soilles. Periodic lines: Definition, cascades, and application 
+ * <tt>Jones and Soilles. Periodic lines: Definition, cascades, and application
  * to granulometries. Pattern Recognition Letters (1996) vol. 17 (10) pp. 1057-1063</tt>
- * 
+ *
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> Sep 3, 2013
- * 
+ *
  * @param <T>
  */
 public class PeriodicLineNeighborhood< T > extends AbstractLocalizable implements Neighborhood< T >
@@ -84,16 +84,16 @@ public class PeriodicLineNeighborhood< T > extends AbstractLocalizable implement
 	/**
 	 * The increments for the periodic line. The elements iterated have an index
 	 * calculated from:
-	 * 
+	 *
 	 * <pre>
 	 * position - span x increments,
-	 * ... 
-	 * position - 2 × increments, 
+	 * ...
+	 * position - 2 × increments,
 	 * position - increments,
-	 * position, 
-	 * position + increments, 
-	 * position + 2 × increments, 
-	 * ... 
+	 * position,
+	 * position + increments,
+	 * position + 2 × increments,
+	 * ...
 	 * position + span x increments
 	 * </pre>
 	 */
@@ -108,19 +108,19 @@ public class PeriodicLineNeighborhood< T > extends AbstractLocalizable implement
 	/**
 	 * Creates a new periodic line, centered on <code>position</code>, and that
 	 * will iterate over <code>2 × span + 1</code> pixels as follow:
-	 * 
+	 *
 	 * <pre>
 	 * position - span x increments,
-	 * ... 
-	 * position - 2 × increments, 
+	 * ...
+	 * position - 2 × increments,
 	 * position - increments,
-	 * position, 
-	 * position + increments, 
-	 * position + 2 × increments, 
-	 * ... 
+	 * position,
+	 * position + increments,
+	 * position + 2 × increments,
+	 * ...
 	 * position + span x increments
 	 * </pre>
-	 * 
+	 *
 	 * @param position
 	 *            the center of the neighborhood.
 	 * @param span
@@ -268,7 +268,7 @@ public class PeriodicLineNeighborhood< T > extends AbstractLocalizable implement
 	@Override
 	public long dimension( final int d )
 	{
-		return 2 * span * increments[ d ];
+		return 1 + 2 * span * increments[ d ];
 	}
 
 	@Override
