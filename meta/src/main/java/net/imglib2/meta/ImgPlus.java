@@ -49,6 +49,7 @@ import net.imglib2.RealPositionable;
 import net.imglib2.display.ColorTable;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
+import net.imglib2.img.WrappedImg;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.meta.axis.DefaultLinearAxis;
 import net.imglib2.meta.axis.LinearAxis;
@@ -60,7 +61,7 @@ import net.imglib2.meta.axis.LinearAxis;
  * @author Curtis Rueden
  */
 public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
-	implements Img<T>, ImgPlusMetadata
+	implements WrappedImg<T>, ImgPlusMetadata
 {
 
 	/** The name assigned to the ImgPlus if none is provided. */
