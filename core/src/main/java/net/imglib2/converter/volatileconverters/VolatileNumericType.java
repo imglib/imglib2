@@ -36,7 +36,7 @@
 
 package net.imglib2.converter.volatileconverters;
 
-import net.imglib2.display.projectors.volatileprojectors.Volatile;
+import net.imglib2.display.projectors.volatiles.Volatile;
 import net.imglib2.type.numeric.NumericType;
 
 /**

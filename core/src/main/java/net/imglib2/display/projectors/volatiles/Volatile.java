@@ -34,7 +34,7 @@
  * #L%
  */
 
-package net.imglib2.display.projectors.volatileprojectors;
+package net.imglib2.display.projectors.volatiles;
 
 /**
  * Something volatile that has a value and is either VALID or INVALID.
