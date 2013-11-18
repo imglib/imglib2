@@ -5,7 +5,6 @@ import net.imglib2.display.screenimage.awt.UnsignedByteAWTScreenImage;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.numeric.integer.GenericShortType;
-import net.imglib2.type.numeric.integer.ShortType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.IntervalIndexer;
 
@@ -52,7 +51,7 @@ public class ArrayImgXYShortProjector< A extends GenericShortType< A >> extends 
 	{
 		super( source.numDimensions() );
 
-		this.isSigned = (source.firstElement() instanceof ShortType);
+		this.isSigned = source.firstElement().getMinValue() < 0;
 		this.targetArray = target.update( null ).getCurrentStorageArray();
 		this.normalizationFactor = normalizationFactor;
 		this.min = min;

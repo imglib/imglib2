@@ -5,7 +5,6 @@ import net.imglib2.display.screenimage.awt.UnsignedByteAWTScreenImage;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.planar.PlanarImg;
-import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.GenericByteType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.IntervalIndexer;
@@ -53,7 +52,7 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends A
 	{
 		super( source.numDimensions() );
 
-		this.isSigned = (source.firstElement() instanceof ByteType);
+		this.isSigned = source.firstElement().getMinValue() < 0;
 		this.targetArray = target.update( null ).getCurrentStorageArray();
 		this.normalizationFactor = normalizationFactor;
 		this.min = min;
