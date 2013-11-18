@@ -42,6 +42,6 @@ package net.imglib2.img;
  * 
  * @author Christian Dietz
  */
-public interface WrappedImg<T> extends Img<T> {
+public interface WrappedImg<T> {
 	Img<T> getImg();
 }
