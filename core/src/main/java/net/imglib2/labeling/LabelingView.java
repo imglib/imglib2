@@ -49,12 +49,11 @@ import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**
- * Wrapper for and {@link RandomAccessibleInterval} of type {@link LabelingType}
- * which exactly behaves like a {@link Labeling}
+ * Allows a {@link RandomAccessibleInterval} of type {@link LabelingType} to be
+ * treated as a {@link Labeling}.
  * 
  * @author Christian Dietz (dietzc85@googlemail.com)
  * @author Martin Horn (martin.horn@uni-konstanz.de)
- * 
  */
 public class LabelingView<L extends Comparable<L>> extends
 		IterableRandomAccessibleInterval<LabelingType<L>> implements
