@@ -34,40 +34,49 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+package net.imglib2.algorithm.localextrema;
 
-package net.imglib2.io.img.virtual;
-
-import net.imglib2.exception.IncompatibleTypeException;
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.Localizable;
+import net.imglib2.RealLocalizable;
+import net.imglib2.RealPoint;
 
 /**
- * Dummy implementation of an ImgFactory for VirtualImgs. Does not actually do
- * anything. Needed by VirtualImg to satisfy the Img contract.
- * 
- * @author Barry DeZonia
- * @deprecated Use {@code io.scif.img} from {@code io.scif:scifio} instead.
- * @see "https://github.com/scifio/scifio"
+ * A {@link RealPoint} representing a sub-pixel-localized peak. Contains the
+ * original non-refined peak, a value, and a boolean validity flag. See
+ * {@link SubpixelLocalization}.
+ *
+ * @param <P>
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-@Deprecated
-public class VirtualImgFactory<T extends NativeType<T> & RealType<T>> extends
-	ImgFactory<T>
+public class RefinedPeak< P extends Localizable > extends RealPoint
 {
+	protected final P originalPeak;
 
-	@Override
-	public Img<T> create(final long[] dim, final T type) {
-		throw new UnsupportedOperationException(
-			"VirtualImgFactories cannot actually create images");
-	}
+	protected final double value;
 
-	@Override
-	public <S> ImgFactory<S> imgFactory(final S type)
-		throws IncompatibleTypeException
+	protected final boolean valid;
+
+	public RefinedPeak( final P originalPeak, final RealLocalizable refinedLocation, final double refinedValue, final boolean valid )
 	{
-		throw new UnsupportedOperationException(
-			"VirtualImgFactories cannot actually create images");
+		super( refinedLocation );
+		this.originalPeak = originalPeak;
+		this.value = refinedValue;
+		this.valid = valid;
 	}
 
+	public P getOriginalPeak()
+	{
+		return originalPeak;
+	}
+
+	public double getValue()
+	{
+		return value;
+	}
+
+	public boolean isValid()
+	{
+		return valid;
+	}
 }

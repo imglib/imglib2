@@ -50,9 +50,9 @@ import net.imglib2.display.RealARGBConverter;
 import net.imglib2.display.XYProjector;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgIOUtils;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
+import io.scif.img.ImgUtilityService;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -173,20 +173,13 @@ public class ImgPanel extends JPanel {
 		final String url)
 	{
 		try {
-			System.out.println("Downloading " + url);
-			final String id = ImgIOUtils.cacheId(url);
-			System.out.println("Opening " + id);
 			final ImgOpener imgOpener = new ImgOpener();
-			imgOpener.addStatusListener(new StatusListener() {
-				@Override
-				public void statusUpdated(StatusEvent e) {
-					System.out.println(e.getStatusMessage());
-				}
-			});
+			System.out.println("Downloading " + url);
+			final ImgUtilityService imgUtilityService =
+				imgOpener.getContext().getService(ImgUtilityService.class);
+			final String id = imgUtilityService.cacheId(url);
+			System.out.println("Opening " + id);
 			return imgOpener.openImg(id);
-		}
-		catch (final IncompatibleTypeException e) {
-			e.printStackTrace();
 		}
 		catch (final ImgIOException e) {
 			e.printStackTrace();
