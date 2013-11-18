@@ -1,4 +1,4 @@
-package net.imglib2.display.projectors.sampler;
+package net.imglib2.display.projector.sampler;
 
 import net.imglib2.Iterator;
 import net.imglib2.RandomAccess;

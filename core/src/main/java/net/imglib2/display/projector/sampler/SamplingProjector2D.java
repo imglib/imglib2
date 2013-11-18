@@ -1,4 +1,4 @@
-package net.imglib2.display.projectors.sampler;
+package net.imglib2.display.projector.sampler;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
@@ -7,7 +7,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.display.projectors.AbstractProjector2D;
+import net.imglib2.display.projector.AbstractProjector2D;
 
 /**
  * A general 2D Projector that uses three dimensions as input to create the 2D

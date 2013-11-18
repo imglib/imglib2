@@ -1,8 +1,8 @@
-package net.imglib2.display.projectors;
+package net.imglib2.display.projector;
 
 import net.imglib2.Point;
-import net.imglib2.display.projectors.sampler.SamplingProjector2D;
-import net.imglib2.display.projectors.specialized.ArrayImgXYByteProjector;
+import net.imglib2.display.projector.sampler.SamplingProjector2D;
+import net.imglib2.display.projector.specialized.ArrayImgXYByteProjector;
 
 /**
  * Base class for 2D projectors. Projecting means in this case projecting from a

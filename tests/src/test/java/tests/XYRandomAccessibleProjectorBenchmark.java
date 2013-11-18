@@ -28,7 +28,7 @@ package tests;
 
 import ij.ImageJ;
 import net.imglib2.converter.RealARGBConverter;
-import net.imglib2.display.projectors.Projector2D;
+import net.imglib2.display.projector.Projector2D;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;

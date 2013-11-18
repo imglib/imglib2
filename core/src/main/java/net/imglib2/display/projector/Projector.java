@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.display.projectors;
+package net.imglib2.display.projector;
 
 /**
  * 

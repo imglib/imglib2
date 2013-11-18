@@ -31,7 +31,7 @@ import ij.ImagePlus;
 import ij.process.ColorProcessor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.RealARGBConverter;
-import net.imglib2.display.projectors.Projector2D;
+import net.imglib2.display.projector.Projector2D;
 import net.imglib2.display.screenimage.ARGBScreenImage;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.io.ImgIOException;

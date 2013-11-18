@@ -1,4 +1,4 @@
-package net.imglib2.display.projectors;
+package net.imglib2.display.projector;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;

@@ -35,7 +35,7 @@
  * #L%
  */
 
-package net.imglib2.display.projectors.composite;
+package net.imglib2.display.projector.composite;
 
 import java.util.ArrayList;
 
@@ -43,7 +43,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.display.projectors.AbstractProjector2D;
+import net.imglib2.display.projector.AbstractProjector2D;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
