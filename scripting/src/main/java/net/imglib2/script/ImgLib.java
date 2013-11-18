@@ -33,9 +33,10 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
-import net.imglib2.io.img.virtual.VirtualImg;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
+import io.scif.img.ImgOptions;
+import io.scif.img.ImgOptions.ImgMode;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -51,17 +52,17 @@ import net.imglib2.type.numeric.RealType;
  * @author Albert Cardona
  */
 public class ImgLib {
-	/** Open an image from a file path or a web URL. 
-	 * @throws IncompatibleTypeException 
-	 * @throws ImgIOException */
+	/** @deprecated Use {@link io.scif.img.IO#openImg(String, ImgOptions)}. */
 	public static<T extends RealType<T> & NativeType<T>> Img<T> open(final String pathOrURL) throws ImgIOException, IncompatibleTypeException {
 		return new ImgOpener().openImg(pathOrURL);
 		// Old:
 		//return wrap(IJ.openImage(pathOrURL));
 	}
 
+	/** @deprecated Use {@link io.scif.img.IO#openImg(String, ImgOptions)}. */
+	@Deprecated
 	public static<T extends RealType<T> & NativeType<T>> Img<T> openVirtual(final String pathOrUrl) throws ImgIOException, IncompatibleTypeException {
-		return (Img<T>) VirtualImg.create(pathOrUrl, false);
+		return new ImgOpener().openImg(pathOrUrl, new ImgOptions().setImgModes(ImgMode.CELL));
 	}
 
 	/** Wrap an ImageJ's {@link ImagePlus} as an Imglib {@link Image} of the appropriate type.

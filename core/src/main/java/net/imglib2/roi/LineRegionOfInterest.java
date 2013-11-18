@@ -38,6 +38,7 @@
 package net.imglib2.roi;
 
 /**
+ * A {@link RegionOfInterest} that allows one represents a line segment.
  * 
  * @author Barry DeZonia
  *

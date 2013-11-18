@@ -60,16 +60,6 @@ public abstract class AbstractCalibratedAxis extends DefaultTypedAxis implements
 	// -- CalibratedAxis methods --
 
 	@Override
-	public double calibration() {
-		return averageScale(0, 1);
-	}
-
-	@Override
-	public void setCalibration(final double cal) {
-		// NB: Do nothing by default.
-	}
-
-	@Override
 	public String unit() {
 		return unit;
 	}
@@ -83,6 +73,27 @@ public abstract class AbstractCalibratedAxis extends DefaultTypedAxis implements
 	public double averageScale(final double rawValue1, final double rawValue2) {
 		return (calibratedValue(rawValue2) - calibratedValue(rawValue1)) /
 			(rawValue2 - rawValue1);
+	}
+
+	// -- Object methods --
+
+	@Override
+	public int hashCode() {
+		return hashString(this).hashCode();
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (!(o instanceof CalibratedAxis)) return false;
+		final CalibratedAxis other = (CalibratedAxis) o;
+		return hashString(this).equals(hashString(other));
+	}
+
+	// -- Helper methods --
+
+	/** Computes a likely-to-be-unique string for this axis. */
+	private String hashString(final CalibratedAxis axis) {
+		return axis.type() + "\n" + axis.unit() + "\n" + axis.particularEquation();
 	}
 
 }

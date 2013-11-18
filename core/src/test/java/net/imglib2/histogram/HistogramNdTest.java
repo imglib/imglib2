@@ -58,6 +58,8 @@ import org.junit.Test;
 
 
 /**
+ * Test code for HistogramNd.
+ * 
  * @author Barry DeZonia
  */
 public class HistogramNdTest {

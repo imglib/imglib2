@@ -34,83 +34,49 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
+package net.imglib2.algorithm.localextrema;
 
-package net.imglib2.io.img.virtual;
-
-import net.imglib2.AbstractCursor;
-import net.imglib2.iterator.IntervalIterator;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.Localizable;
+import net.imglib2.RealLocalizable;
+import net.imglib2.RealPoint;
 
 /**
- * This class manages read only nonspatial access to a virtual image. Data
- * returned from get() can be written to but any changes are never saved to
- * disk.
- * 
- * @author Barry DeZonia
+ * A {@link RealPoint} representing a sub-pixel-localized peak. Contains the
+ * original non-refined peak, a value, and a boolean validity flag. See
+ * {@link SubpixelLocalization}.
+ *
+ * @param <P>
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class VirtualCursor<T extends NativeType<T> & RealType<T>> extends
-	AbstractCursor<T>
+public class RefinedPeak< P extends Localizable > extends RealPoint
 {
+	protected final P originalPeak;
 
-	private final VirtualImg<T> virtImage;
-	private final IntervalIterator iter;
-	private final long[] position;
-	private final VirtualAccessor<T> accessor;
+	protected final double value;
 
-	public VirtualCursor(final VirtualImg<T> image) {
-		super(image.numDimensions());
-		this.virtImage = image;
-		final long[] fullDimensions = new long[image.numDimensions()];
-		image.dimensions(fullDimensions);
-		this.iter = new IntervalIterator(fullDimensions);
-		this.position = new long[fullDimensions.length];
-		this.accessor = new VirtualAccessor<T>(virtImage);
+	protected final boolean valid;
+
+	public RefinedPeak( final P originalPeak, final RealLocalizable refinedLocation, final double refinedValue, final boolean valid )
+	{
+		super( refinedLocation );
+		this.originalPeak = originalPeak;
+		this.value = refinedValue;
+		this.valid = valid;
 	}
 
-	@Override
-	public T get() {
-		iter.localize(position);
-		return accessor.get(position);
+	public P getOriginalPeak()
+	{
+		return originalPeak;
 	}
 
-	@Override
-	public void fwd() {
-		iter.fwd();
+	public double getValue()
+	{
+		return value;
 	}
 
-	@Override
-	public void reset() {
-		iter.reset();
+	public boolean isValid()
+	{
+		return valid;
 	}
-
-	@Override
-	public boolean hasNext() {
-		return iter.hasNext();
-	}
-
-	@Override
-	public void localize(final long[] pos) {
-		iter.localize(pos);
-	}
-
-	@Override
-	public long getLongPosition(final int d) {
-		return iter.getLongPosition(d);
-	}
-
-	@Override
-	public VirtualCursor<T> copy() {
-		return new VirtualCursor<T>(virtImage);
-	}
-
-	@Override
-	public VirtualCursor<T> copyCursor() {
-		return new VirtualCursor<T>(virtImage);
-	}
-
-	public Object getCurrentPlane() {
-		return accessor.getCurrentPlane();
-	}
-
 }

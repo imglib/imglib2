@@ -38,6 +38,7 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
@@ -51,11 +52,9 @@ import org.junit.Test;
  */
 public class DefaultLinearAxisTest extends AbstractMetaTest {
 
-	private LinearAxis axis;
-
 	@Test
 	public void testDefaultConstructor() {
-		axis = new DefaultLinearAxis();
+		final LinearAxis axis = new DefaultLinearAxis();
 		assertUnknown(axis);
 		assertNull(axis.unit());
 		assertEquals(1, axis.scale(), 0);
@@ -64,7 +63,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testScaleConstructor() {
-		axis = new DefaultLinearAxis(59);
+		final LinearAxis axis = new DefaultLinearAxis(59);
 		assertUnknown(axis);
 		assertNull(axis.unit());
 		assertEquals(59, axis.scale(), 0);
@@ -73,7 +72,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testScaleOriginConstructor() {
-		axis = new DefaultLinearAxis(22, 7);
+		final LinearAxis axis = new DefaultLinearAxis(22, 7);
 		assertUnknown(axis);
 		assertNull(axis.unit());
 		assertEquals(22, axis.scale(), 0);
@@ -82,7 +81,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testAxisTypeConstructor() {
-		axis = new DefaultLinearAxis(Axes.Z);
+		final LinearAxis axis = new DefaultLinearAxis(Axes.Z);
 		assertEquals(Axes.Z, axis.type());
 		assertNull(axis.unit());
 		assertEquals(1, axis.scale(), 0);
@@ -91,7 +90,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testAxisTypeScaleConstructor() {
-		axis = new DefaultLinearAxis(Axes.X, -3);
+		final LinearAxis axis = new DefaultLinearAxis(Axes.X, -3);
 		assertEquals(Axes.X, axis.type());
 		assertNull(axis.unit());
 		assertEquals(-3, axis.scale(), 0);
@@ -100,7 +99,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testAxisTypeScaleOriginConstructor() {
-		axis = new DefaultLinearAxis(Axes.X, -3, 8);
+		final LinearAxis axis = new DefaultLinearAxis(Axes.X, -3, 8);
 		assertEquals(Axes.X, axis.type());
 		assertNull(axis.unit());
 		assertEquals(-3, axis.scale(), 0);
@@ -109,7 +108,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testAxisTypeUnitConstructor() {
-		axis = new DefaultLinearAxis(Axes.X, "mm");
+		final LinearAxis axis = new DefaultLinearAxis(Axes.X, "mm");
 		assertEquals(Axes.X, axis.type());
 		assertEquals("mm", axis.unit());
 		assertEquals(1, axis.scale(), 0);
@@ -118,7 +117,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testAxisTypeUnitScaleConstructor() {
-		axis = new DefaultLinearAxis(Axes.X, "mm", 9);
+		final LinearAxis axis = new DefaultLinearAxis(Axes.X, "mm", 9);
 		assertEquals(Axes.X, axis.type());
 		assertEquals("mm", axis.unit());
 		assertEquals(9, axis.scale(), 0);
@@ -127,7 +126,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testAxisTypeUnitScaleOriginConstructor() {
-		axis = new DefaultLinearAxis(Axes.X, "mm", 5, 3);
+		final LinearAxis axis = new DefaultLinearAxis(Axes.X, "mm", 5, 3);
 		assertEquals(Axes.X, axis.type());
 		assertEquals("mm", axis.unit());
 		assertEquals(5, axis.scale(), 0);
@@ -136,7 +135,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testOtherMethods() {
-		axis = new DefaultLinearAxis(Axes.Y, "heptoflops", 5, 3);
+		final LinearAxis axis = new DefaultLinearAxis(Axes.Y, "heptoflops", 5, 3);
 		assertEquals(5, axis.averageScale(10, 20), 0);
 		assertEquals("y = (3.0) + (5.0)*x", axis.particularEquation());
 		assertEquals(23, axis.calibratedValue(4), 0);
@@ -159,7 +158,7 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 
 	@Test
 	public void testInverseMapping() {
-		axis = new DefaultLinearAxis();
+		final LinearAxis axis = new DefaultLinearAxis();
 		axis.setOrigin(2);
 		axis.setScale(3);
 
@@ -167,4 +166,14 @@ public class DefaultLinearAxisTest extends AbstractMetaTest {
 			assertEquals(axis.rawValue(axis.calibratedValue(i)), i, 0.000001);
 		}
 	}
+
+	@Test
+	public void testCopy() {
+		final LinearAxis axis = new DefaultLinearAxis(Axes.Y, "heptoflops", 5, 3);
+		final LinearAxis copy = axis.copy();
+		assertNotSame(axis, copy);
+		assertEquals(axis, copy);
+		assertEquals(axis.hashCode(), copy.hashCode());
+	}
+
 }

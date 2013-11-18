@@ -35,56 +35,47 @@
  * #L%
  */
 
-package net.imglib2.io.img.virtual;
+package net.imglib2.meta;
 
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.planar.PlanarImg;
-import net.imglib2.img.planar.PlanarImgFactory;
-import net.imglib2.img.planar.PlanarRandomAccess;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+import org.junit.Test;
 
 /**
- * This class manages read only random access to a virtual image. The random
- * access position is provided by the user of the get(position) call. When user
- * tries to get a value from this accessor planes are loaded into memory as
- * needed. Planes are stored in a two dimensional PlanarImg that contains a
- * single plane. The user can modify the data values returned from get() but the
- * changes are never saved to disk.
+ * Tests {@link Axes}.
  * 
- * @author Barry DeZonia
+ * @author Curtis Rueden
  */
-public class VirtualAccessor<T extends NativeType<T> & RealType<T>> {
+public class AxesTest extends AbstractMetaTest {
 
-	private final PlanarImg<T, ? extends ArrayDataAccess<?>> planeImg;
-	private final PlanarRandomAccess<T> accessor;
-	private final VirtualPlaneLoader planeLoader;
-
-	public VirtualAccessor(final VirtualImg<T> virtImage) {
-		final long[] planeSize =
-			new long[] { virtImage.dimension(0), virtImage.dimension(1) };
-		this.planeImg =
-			new PlanarImgFactory<T>().create(planeSize, virtImage.getType().copy());
-		this.planeLoader =
-			new VirtualPlaneLoader(virtImage, planeImg, virtImage.isByteOnly());
-		// this initialization must follow loadPlane()
-		this.accessor = planeImg.randomAccess();
+	/** Tests {@link Axes#knownTypes()}. */
+	@Test
+	public void testKnownTypes() {
+		final AxisType[] knownTypes = Axes.knownTypes();
+		assertNotNull(knownTypes);
+		assertEquals(5, knownTypes.length);
+		sort(knownTypes);
+		assertSame(Axes.CHANNEL, knownTypes[0]);
+		assertSame(Axes.TIME, knownTypes[1]);
+		assertSame(Axes.X, knownTypes[2]);
+		assertSame(Axes.Y, knownTypes[3]);
+		assertSame(Axes.Z, knownTypes[4]);
 	}
 
-	public T get(final long[] position) {
+	private void sort(final AxisType[] axisTypes) {
+		Arrays.sort(axisTypes, 0, axisTypes.length, new Comparator<AxisType>() {
 
-		if (planeLoader.virtualSwap(position)) {
-			accessor.get().updateContainer(accessor);
-		}
+			@Override
+			public int compare(final AxisType o1, final AxisType o2) {
+				return o1.getLabel().compareTo(o2.getLabel());
+			}
 
-		accessor.setPosition(position[0], 0);
-		accessor.setPosition(position[1], 1);
-
-		return accessor.get();
-	}
-
-	public Object getCurrentPlane() {
-		return planeImg.getPlane(0);
+		});
 	}
 
 }

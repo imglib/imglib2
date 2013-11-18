@@ -35,59 +35,98 @@
  * #L%
  */
 
-package net.imglib2.io.img.virtual;
+package net.imglib2.ops.function.general;
 
-import net.imglib2.Point;
-import net.imglib2.RandomAccess;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.ops.function.Function;
 
 /**
- * This class manages read only spatial access to a virtual image. Data returned
- * from get() can be written to but any changes are never saved to disk.
+ * A {@link Function} that maps real coordinates from one space to another via a
+ * matrix transformation.
  * 
  * @author Barry DeZonia
  */
-public class VirtualRandomAccess<T extends NativeType<T> & RealType<T>> extends
-	Point implements RandomAccess<T>
+public class ContinuousTransformationFunction implements
+	Function<double[], double[]>
 {
 
-	private final VirtualImg<T> virtImage;
-	private final VirtualAccessor<T> accessor;
+	// -- fields --
+
+	private final double[][] matrix;
+	private final int mrows;
+	private final int mcols;
+
+	// -- constructor --
 
 	/**
-	 * Constructor
+	 * Constructor that requires the transformation matrix as input. The matrix is
+	 * of dimension r x c. r matches the number of components in an input point. c
+	 * matches the number of components in an output point.
 	 * 
-	 * @param image - the VirtualImg to access randomly
+	 * @param matrix
 	 */
-	public VirtualRandomAccess(final VirtualImg<T> image) {
-		super(image.numDimensions());
-		this.accessor = new VirtualAccessor<T>(image);
-		this.virtImage = image;
+	public ContinuousTransformationFunction(double[][] matrix) {
+		this.matrix = matrix;
+		this.mrows = matrix.length;
+		this.mcols = matrix[0].length;
+	}
+
+	// -- accessors --
+
+	/**
+	 * Returns the transformation matrix of this instance.
+	 */
+	public double[][] matrix() {
+		return matrix;
+	}
+
+	/**
+	 * Returns the number of rows in the transformation matrix of this instance.
+	 * Also is the number of components in an input point.
+	 */
+	public int rows() {
+		return mrows;
+	}
+
+	/**
+	 * Returns the number of cols in transformation matrix of this instance. Also
+	 * is the number of components in an output point.
+	 */
+	public int cols() {
+		return mcols;
+	}
+
+	// -- Function methods --
+
+	@Override
+	public void compute(double[] input, double[] output) {
+		// input point should be r x 1 transpose (thus 1 x r)
+		// matrix should be r x c
+		// output should be 1 x c
+		if (input.length != mrows) {
+			throw new IllegalArgumentException(
+				"Input point size and matrix shape are incompatible.");
+		}
+		if (output.length != mcols) {
+			throw new IllegalArgumentException(
+				"Output point size and matrix shape are incompatible.");
+		}
+		for (int c = 0; c < mcols; c++) {
+			double sum = 0;
+			for (int r = 0; r < mrows; r++) {
+				sum += input[r] * matrix[r][c];
+			}
+			output[c] = sum;
+		}
 	}
 
 	@Override
-	public void setPosition(final long pos, final int d) {
-		position[d] = pos;
+	public double[] createOutput() {
+		return new double[mcols];
 	}
 
 	@Override
-	public VirtualRandomAccess<T> copy() {
-		return new VirtualRandomAccess<T>(virtImage);
-	}
-
-	@Override
-	public VirtualRandomAccess<T> copyRandomAccess() {
-		return new VirtualRandomAccess<T>(virtImage);
-	}
-
-	@Override
-	public T get() {
-		return accessor.get(position);
-	}
-
-	public Object getCurrentPlane() {
-		return accessor.getCurrentPlane();
+	public ContinuousTransformationFunction copy() {
+		return new ContinuousTransformationFunction(matrix);
 	}
 
 }

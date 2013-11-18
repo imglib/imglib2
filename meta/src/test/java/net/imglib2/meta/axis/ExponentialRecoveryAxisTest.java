@@ -38,6 +38,7 @@
 package net.imglib2.meta.axis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import net.imglib2.meta.AbstractMetaTest;
 import net.imglib2.meta.Axes;
 
@@ -80,6 +81,16 @@ public class ExponentialRecoveryAxisTest extends AbstractMetaTest {
 		for (int i = 0; i < 100; i++) {
 			assertEquals(axis.rawValue(axis.calibratedValue(i)), i, 0.000001);
 		}
+	}
+
+	@Test
+	public void testCopy() {
+		final ExponentialRecoveryAxis axis =
+			new ExponentialRecoveryAxis(Axes.X, "km", 4, 3, 2, 1);
+		final ExponentialRecoveryAxis copy = axis.copy();
+		assertNotSame(axis, copy);
+		assertEquals(axis, copy);
+		assertEquals(axis.hashCode(), copy.hashCode());
 	}
 
 	private double calValue(final double raw, final ExponentialRecoveryAxis axis)

@@ -70,7 +70,7 @@ public class BufferedRectangularNeighborhoodCursor<T extends Type<T>> extends
 
 	@SuppressWarnings("unchecked")
 	public BufferedRectangularNeighborhoodCursor(
-			BufferedRectangularNeighborhood<T, ? extends RandomAccessibleInterval<T>> neighborhood) {
+			BufferedRectangularNeighborhood<T> neighborhood) {
 		super(neighborhood);
 
 		n = neighborhood.numDimensions();
@@ -107,7 +107,7 @@ public class BufferedRectangularNeighborhoodCursor<T extends Type<T>> extends
 	protected BufferedRectangularNeighborhoodCursor(
 			final BufferedRectangularNeighborhoodCursor<T> c) {
 		this(
-				(BufferedRectangularNeighborhood<T, ? extends RandomAccessibleInterval<T>>) c.neighborhood);
+				(BufferedRectangularNeighborhood<T>) c.neighborhood);
 	}
 
 	@Override

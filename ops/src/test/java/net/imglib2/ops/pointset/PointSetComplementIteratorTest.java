@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 /**
+ * Tests {@link PointSetComplementIterator}.
+ * 
  * @author Barry DeZonia
  */
 public class PointSetComplementIteratorTest {

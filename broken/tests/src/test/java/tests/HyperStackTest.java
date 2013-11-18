@@ -32,7 +32,7 @@ import net.imglib2.converter.TypeIdentity;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJVirtualStackFloat;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgOpener;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 

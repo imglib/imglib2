@@ -70,10 +70,6 @@ public class PolynomialAxis extends VariableAxis {
 		for (int i = 0; i < coeffs.length; i++) {
 			setCoeff(i, coeffs[i]);
 		}
-		if (coeffs.length < 3) {
-			throw new IllegalArgumentException(
-				"polynomial axis requires at least 3 coefficients");
-		}
 		if (coeffs.length > VARS.length) {
 			throw new IllegalArgumentException("polynomial axis limited to " +
 				VARS.length + " coefficients");

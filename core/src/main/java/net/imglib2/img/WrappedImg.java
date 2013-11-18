@@ -35,29 +35,13 @@
  * #L%
  */
 
-package net.imglib2.io;
-
-import net.imglib2.exception.ImgLibException;
+package net.imglib2.img;
 
 /**
- * Exception indicating something went wrong during I/O.
+ * An object that wraps an {@link Img} somehow.
  * 
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Curtis Rueden
+ * @author Christian Dietz
  */
-public class ImgIOException extends ImgLibException {
-
-	public ImgIOException(final Object obj, final String message) {
-		super(obj.getClass().getCanonicalName() + ": " + message);
-	}
-
-	public ImgIOException(final Throwable t) {
-		super(t);
-	}
-
-	public ImgIOException(final String s) {
-		super(s);
-	}
-
+public interface WrappedImg<T> {
+	Img<T> getImg();
 }

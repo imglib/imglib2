@@ -38,6 +38,7 @@
 package net.imglib2.algorithm.integral;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.converter.Converter;
 import net.imglib2.img.Img;
@@ -65,12 +66,12 @@ import net.imglib2.type.numeric.NumericType;
  */
 public class IntegralImg< R extends NumericType< R >, T extends NumericType< T > & NativeType< T > > implements OutputAlgorithm< Img< T > >
 {
-	protected final Img< R > img;
+	protected final RandomAccessibleInterval< R > img;
 	protected final T type;
 	protected Img< T > integral;
 	protected final Converter< R, T > converter;
 
-	public IntegralImg( final Img< R > img, final T type, final Converter< R, T > converter )
+	public IntegralImg( final RandomAccessibleInterval< R > img, final T type, final Converter< R, T > converter )
 	{
 		this.img = img;
 		this.type = type;

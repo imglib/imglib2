@@ -35,91 +35,81 @@
  * #L%
  */
 
-package net.imglib2.meta;
+package net.imglib2.img;
 
-import net.imglib2.meta.axis.DefaultLinearAxis;
+import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
+import net.imglib2.IterableRealInterval;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.type.Type;
+import net.imglib2.view.IterableRandomAccessibleInterval;
+import net.imglib2.view.Views;
 
 /**
- * Simple, default {@link CalibratedAxis} implementation.
+ * Allows a {@link RandomAccessibleInterval} to be treated as an {@link Img}.
  * 
- * @author Curtis Rueden
- * @deprecated Use {@link DefaultLinearAxis}, or one of the axis types from the
- *             {@link net.imglib2.meta.axis} package, instead.
+ * @author Tobias Pietzsch 
+ * @author Christian Dietz (dietzc85@googlemail.com)
  */
-@Deprecated
-public class DefaultCalibratedAxis extends DefaultTypedAxis implements
-	CalibratedAxis
-{
+public class ImgView<T extends Type<T>> extends
+		IterableRandomAccessibleInterval<T> implements Img<T> {
 
-	private String unit;
-	private double cal;
+	// factory
+	private final ImgFactory<T> factory;
 
-	public DefaultCalibratedAxis() {
-		this(Axes.unknown());
-	}
+	// ImgView ii
+	private final IterableInterval<T> ii;
 
-	public DefaultCalibratedAxis(final AxisType type) {
-		this(type, null, Double.NaN);
-	}
-
-	public DefaultCalibratedAxis(final AxisType type, final String unit,
-		final double cal)
-	{
-		super(type);
-		setUnit(unit);
-		setCalibration(cal);
-	}
-
-	// -- CalibratedAxis methods --
-
-	@Override
-	public double calibration() {
-		return cal;
+	/**
+	 * View on {@link Img} which is defined by a given Interval, but still is an
+	 * {@link Img}.
+	 * 
+	 * @param in
+	 *            Source interval for the view
+	 * @param fac
+	 *            <T> Factory to create img
+	 */
+	public ImgView(final RandomAccessibleInterval<T> in, ImgFactory<T> fac) {
+		super(in);
+		factory = fac;
+		ii = Views.flatIterable(in);
 	}
 
 	@Override
-	public void setCalibration(final double cal) {
-		this.cal = cal;
+	public ImgFactory<T> factory() {
+		return factory;
 	}
 
 	@Override
-	public String unit() {
-		return unit;
+	public Img<T> copy() {
+		final Img<T> copy = factory.create(this, randomAccess().get()
+				.createVariable());
+
+		Cursor<T> srcCursor = localizingCursor();
+		RandomAccess<T> resAccess = copy.randomAccess();
+
+		while (srcCursor.hasNext()) {
+			srcCursor.fwd();
+			resAccess.setPosition(srcCursor);
+			resAccess.get().set(srcCursor.get());
+		}
+
+		return copy;
 	}
 
 	@Override
-	public void setUnit(final String unit) {
-		this.unit = unit;
+	public Cursor<T> cursor() {
+		return ii.cursor();
 	}
 
 	@Override
-	public double calibratedValue(final double rawValue) {
-		return rawValue * calibration();
+	public Cursor<T> localizingCursor() {
+		return ii.localizingCursor();
 	}
 
 	@Override
-	public double rawValue(final double calibratedValue) {
-		return calibratedValue / calibration();
+	public boolean equalIterationOrder(IterableRealInterval<?> f) {
+		return iterationOrder().equals(f.iterationOrder());
 	}
-
-	@Override
-	public String generalEquation() {
-		return "y = a*x";
-	}
-
-	@Override
-	public String particularEquation() {
-		return "y = " + calibration() + "*x";
-	}
-
-	@Override
-	public double averageScale(final double rawValue1, final double rawValue2) {
-		return calibration();
-	}
-
-	@Override
-	public DefaultCalibratedAxis copy() {
-		return new DefaultCalibratedAxis(type(), unit(), calibration());
-	}
-
 }

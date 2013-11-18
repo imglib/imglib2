@@ -35,36 +35,45 @@
  * #L%
  */
 
-package net.imglib2.io.img.virtual;
+package net.imglib2.meta.axis;
 
-import net.imglib2.exception.IncompatibleTypeException;
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
+import net.imglib2.meta.AxisType;
 
 /**
- * Dummy implementation of an ImgFactory for VirtualImgs. Does not actually do
- * anything. Needed by VirtualImg to satisfy the Img contract.
+ * Implement an axis that uses Chapman and Richards method of scaling. This axis
+ * based on ImageJ 1.x's CurveFitter algorithm.
  * 
  * @author Barry DeZonia
  */
-public class VirtualImgFactory<T extends NativeType<T> & RealType<T>> extends
-	ImgFactory<T>
-{
+public class ChapmanRichardsAxis extends Variable3Axis {
 
-	@Override
-	public Img<T> create(final long[] dim, final T type) {
-		throw new UnsupportedOperationException(
-			"VirtualImgFactories cannot actually create images");
-	}
+	// -- constructor --
 
-	@Override
-	public <S> ImgFactory<S> imgFactory(final S type)
-		throws IncompatibleTypeException
+	public ChapmanRichardsAxis(AxisType type, String unit, double a, double b,
+		double c)
 	{
-		throw new UnsupportedOperationException(
-			"VirtualImgFactories cannot actually create images");
+		super(type, unit, a, b, c);
 	}
 
+	// -- CalibratedAxis methods --
+
+	@Override
+	public double calibratedValue(double rawValue) {
+		return Math.pow(a() * (1 - Math.exp(-b() * rawValue)), c());
+	}
+
+	@Override
+	public double rawValue(double calibratedValue) {
+		return Math.log(1 - Math.pow(calibratedValue / a(), 1 / c())) / -b();
+	}
+
+	@Override
+	public String generalEquation() {
+		return "a*(1-exp(-b*x))^c";
+	}
+
+	@Override
+	public ChapmanRichardsAxis copy() {
+		return new ChapmanRichardsAxis(type(), unit(), a(), b(), c());
+	}
 }

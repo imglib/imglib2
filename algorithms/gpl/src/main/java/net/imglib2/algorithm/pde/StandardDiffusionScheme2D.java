@@ -26,6 +26,7 @@
 
 package net.imglib2.algorithm.pde;
 
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -45,7 +46,7 @@ public class StandardDiffusionScheme2D<T extends RealType<T>> extends ExplicitDi
 	 * CONSTRUCTORS
 	 */
 
-	public StandardDiffusionScheme2D(Img<T> input, Img<FloatType> D, float dt) {
+	public StandardDiffusionScheme2D(RandomAccessibleInterval<T> input, RandomAccessibleInterval<FloatType> D, float dt) {
 		super(input, D);
 		this.dt = dt;
 	}
