@@ -45,6 +45,7 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.WrappedImg;
 import net.imglib2.transform.Transform;
 import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.BoundingBoxTransform;
@@ -169,9 +170,9 @@ public class TransformBuilder< T >
 		{
 			visit( ( ( IntervalView< T > ) randomAccessible ).getSource() );
 		}
-		else if ( ImgPlus.class.isInstance( randomAccessible ) )
+		else if ( WrappedImg.class.isInstance( randomAccessible ) )
 		{
-			visit( ( ( ImgPlus< T > ) randomAccessible ).getImg() );
+			visit( ( ( WrappedImg< T > ) randomAccessible ).getImg() );
 		}
 		else
 		{
