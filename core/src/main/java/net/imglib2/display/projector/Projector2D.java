@@ -5,9 +5,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converter;
-import net.imglib2.view.IntervalView;
 import net.imglib2.view.RandomAccessibleIntervalCursor;
 import net.imglib2.view.Views;
 
@@ -83,13 +81,12 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 
 		// TODO: this is ugly, but the only way to make sure, that iteration
 		// order fits in the case of one sized dims. Tobi?
-		IterableInterval< A > srcIterableForCursor = Views.iterable( Views.interval( source, new FinalInterval( min, max ) ) );
-		IterableInterval< A > srcIterableForIterationOrder = Views.iterable( clean( Views.interval( source, new FinalInterval( min, max ) ) ) );
+		IterableInterval< A > ii = Views.iterable( Views.interval( source, new FinalInterval( min, max ) ) );
 
 		final Cursor< B > targetCursor = target.localizingCursor();
-		final Cursor< A > sourceCursor = srcIterableForCursor.cursor();
+		final Cursor< A > sourceCursor = ii.cursor();
 
-		if ( target.iterationOrder().equals( srcIterableForIterationOrder.iterationOrder() ) && !( sourceCursor instanceof RandomAccessibleIntervalCursor ) )
+		if ( target.iterationOrder().equals( ii.iterationOrder() ) && !( sourceCursor instanceof RandomAccessibleIntervalCursor ) )
 		{
 			// use cursors
 
@@ -113,16 +110,4 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 			}
 		}
 	}
-
-	private < T > IntervalView< T > clean( IntervalView< T > in )
-	{
-		IntervalView< T > res = in;
-
-		for ( int d = in.numDimensions() - 1; d >= 0; --d )
-			if ( in.dimension( d ) == 1 && res.numDimensions() > 1 )
-				res = Views.hyperSlice( res, d, 0 );
-
-		return res;
-	}
-
 }
