@@ -25,7 +25,8 @@ import net.imglib2.type.numeric.real.FloatType;
  * @author Christian Dietz
  * 
  */
-public class AWTScreenImageUtil {
+public class AWTScreenImageUtil
+{
 
 	/**
 	 * Get an appropriate {@link AWTScreenImage} given a type and the
@@ -44,49 +45,34 @@ public class AWTScreenImageUtil {
 	 *            dimensions of the resulting img
 	 * @return
 	 */
-	public static <T extends NativeType<T>> AWTScreenImage emptyScreenImage(
-			T type, long[] dims) {
-		
-		if (BitType.class.isAssignableFrom(type.getClass())) {
-			return new ByteAWTScreenImage(ByteType.class.cast(type),
-					new ByteArray(numElements(dims)), dims);
-		} else if (ByteType.class.isAssignableFrom(type.getClass())) {
-			return new ByteAWTScreenImage(ByteType.class.cast(type),
-					new ByteArray(numElements(dims)), dims);
-		} else if (UnsignedByteType.class.isAssignableFrom(type.getClass())) {
-			return new UnsignedByteAWTScreenImage(
-					UnsignedByteType.class.cast(type), new ByteArray(
-							numElements(dims)), dims);
-		} else if (ShortType.class.isAssignableFrom(type.getClass())) {
-			return new ShortAWTScreenImage(ShortType.class.cast(type),
-					new ShortArray(numElements(dims)), dims);
-		} else if (UnsignedShortType.class.isAssignableFrom(type.getClass())) {
-			return new UnsignedShortAWTScreenImage(
-					UnsignedShortType.class.cast(type), new ShortArray(
-							numElements(dims)), dims);
-		} else if (IntType.class.isAssignableFrom(type.getClass())) {
-			return new IntAWTScreenImage(IntType.class.cast(type),
-					new IntArray(numElements(dims)), dims);
-		} else if (UnsignedIntType.class.isAssignableFrom(type.getClass())) {
-			return new UnsignedIntAWTScreenImage(
-					UnsignedIntType.class.cast(type), new IntArray(
-							numElements(dims)), dims);
-		} else if (FloatType.class.isAssignableFrom(type.getClass())) {
-			return new FloatAWTScreenImage(FloatType.class.cast(type),
-					new FloatArray(numElements(dims)), dims);
-		} else if (DoubleType.class.isAssignableFrom(type.getClass())) {
-			return new DoubleAWTScreenImage(DoubleType.class.cast(type),
-					new DoubleArray(numElements(dims)), dims);
-		} else {
-			throw new IllegalArgumentException(
-					"Can't find AWTScreenImage for type " + type.toString()
-							+ "!");
-		}
+	public static < T extends NativeType< T >> AWTScreenImage emptyScreenImage( T type, long[] dims )
+	{
+
+		if ( BitType.class.isAssignableFrom( type.getClass() ) ) { return new ByteAWTScreenImage( ByteType.class.cast( type ), new ByteArray( numElements( dims ) ), dims ); }
+
+		if ( ByteType.class.isAssignableFrom( type.getClass() ) ) { return new ByteAWTScreenImage( ByteType.class.cast( type ), new ByteArray( numElements( dims ) ), dims ); }
+
+		if ( UnsignedByteType.class.isAssignableFrom( type.getClass() ) ) { return new UnsignedByteAWTScreenImage( UnsignedByteType.class.cast( type ), new ByteArray( numElements( dims ) ), dims ); }
+
+		if ( ShortType.class.isAssignableFrom( type.getClass() ) ) { return new ShortAWTScreenImage( ShortType.class.cast( type ), new ShortArray( numElements( dims ) ), dims ); }
+
+		if ( UnsignedShortType.class.isAssignableFrom( type.getClass() ) ) { return new UnsignedShortAWTScreenImage( UnsignedShortType.class.cast( type ), new ShortArray( numElements( dims ) ), dims ); }
+
+		if ( IntType.class.isAssignableFrom( type.getClass() ) ) { return new IntAWTScreenImage( IntType.class.cast( type ), new IntArray( numElements( dims ) ), dims ); }
+
+		if ( UnsignedIntType.class.isAssignableFrom( type.getClass() ) ) { return new UnsignedIntAWTScreenImage( UnsignedIntType.class.cast( type ), new IntArray( numElements( dims ) ), dims ); }
+
+		if ( FloatType.class.isAssignableFrom( type.getClass() ) ) { return new FloatAWTScreenImage( FloatType.class.cast( type ), new FloatArray( numElements( dims ) ), dims ); }
+
+		if ( DoubleType.class.isAssignableFrom( type.getClass() ) ) { return new DoubleAWTScreenImage( DoubleType.class.cast( type ), new DoubleArray( numElements( dims ) ), dims ); }
+
+		throw new IllegalArgumentException( "Can't find AWTScreenImage for type " + type.toString() + "!" );
 	}
 
 	// only the first two dimensions are considered
-	private static int numElements(long[] dims) {
-		return (int) (dims[0] * dims[1]);
+	private static int numElements( long[] dims )
+	{
+		return ( int ) ( dims[ 0 ] * dims[ 1 ] );
 	}
 
 }
