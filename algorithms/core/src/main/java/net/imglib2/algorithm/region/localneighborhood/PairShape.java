@@ -26,7 +26,7 @@ public class PairShape implements Shape
 	/**
 	 * Create a new pair of points shape.
 	 * <p>
-	 * 
+	 *
 	 * @param offset
 	 *            the offset of the second point with respect to the origin, as
 	 *            a <code>long[]</code> array.
@@ -45,7 +45,7 @@ public class PairShape implements Shape
 	@Override
 	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessible( final RandomAccessibleInterval< T > source )
 	{
-		final PairNeighborhoodFactory< T > f = PairNeighborhood.< T >factory();
+		final PairNeighborhoodFactory< T > f = PairNeighborhoodUnsafe.< T >factory();
 		return new NeighborhoodsAccessible< T >( source, offset, f );
 	}
 

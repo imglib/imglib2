@@ -18,7 +18,7 @@ import net.imglib2.RandomAccessibleInterval;
  * <p>
  * <tt>Jones and Soilles. Periodic lines: Definition, cascades, and application
  * to granulometries. Pattern Recognition Letters (1996) vol. 17 (10) pp. 1057-1063</tt>
- * 
+ *
  * @author Jean-Yves Tinevez, 2013
  */
 public class PeriodicLineShape implements Shape
@@ -65,7 +65,7 @@ public class PeriodicLineShape implements Shape
 	@Override
 	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessible( final RandomAccessibleInterval< T > source )
 	{
-		final PeriodicLineNeighborhoodFactory< T > f = PeriodicLineNeighborhood.< T >factory();
+		final PeriodicLineNeighborhoodFactory< T > f = PeriodicLineNeighborhoodUnsafe.< T >factory();
 		return new NeighborhoodsAccessible< T >( source, span, increments, f );
 	}
 
