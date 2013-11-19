@@ -1,6 +1,7 @@
 package net.imglib2.display.screenimage.awt;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
@@ -48,7 +49,7 @@ public class AWTScreenImageUtil
 	public static < T extends NativeType< T >> AWTScreenImage emptyScreenImage( T type, long[] dims )
 	{
 
-		if ( BitType.class.isAssignableFrom( type.getClass() ) ) { return new ByteAWTScreenImage( ByteType.class.cast( type ), new ByteArray( numElements( dims ) ), dims ); }
+		if ( BitType.class.isAssignableFrom( type.getClass() ) ) { return new BitAWTScreenImage( BitType.class.cast( type ), new BitArray( numElements( dims ) ), dims ); }
 
 		if ( ByteType.class.isAssignableFrom( type.getClass() ) ) { return new ByteAWTScreenImage( ByteType.class.cast( type ), new ByteArray( numElements( dims ) ), dims ); }
 
