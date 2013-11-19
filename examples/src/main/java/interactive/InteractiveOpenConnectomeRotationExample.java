@@ -36,7 +36,6 @@
  */
 package interactive;
 
-
 public class InteractiveOpenConnectomeRotationExample
 {
 /*
@@ -71,7 +70,7 @@ public class InteractiveOpenConnectomeRotationExample
 			}
 
 			@Override
-			protected VolatileXYRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType > createProjector()
+			protected Volatile2DRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType > createProjector()
 			{
 				final InterpolatorFactory< VolatileRealType< UnsignedByteType >, RandomAccessible< VolatileRealType< UnsignedByteType > > > interpolatorFactory;
 				switch ( interpolation )
@@ -88,7 +87,7 @@ public class InteractiveOpenConnectomeRotationExample
 						new Interpolant< VolatileRealType< UnsignedByteType >, RandomAccessible< VolatileRealType< UnsignedByteType > > >( source, interpolatorFactory );
 				final AffineRandomAccessible< VolatileRealType< UnsignedByteType >, AffineGet > mapping =
 						new AffineRandomAccessible< VolatileRealType< UnsignedByteType >, AffineGet >( interpolant, sourceToScreen.inverse() );
-				return new VolatileXYRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType >( mapping, screenImage, converter );
+				return new Volatile2DRandomAccessibleProjector< UnsignedByteType, VolatileRealType< UnsignedByteType >, ARGBType >( mapping, screenImage, converter );
 			}
 
 //			@Override

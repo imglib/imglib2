@@ -27,7 +27,6 @@ package net.imglib2.converter;
 
 import ij.ImageJ;
 import net.imglib2.Cursor;
-import net.imglib2.display.RealARGBConverter;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;

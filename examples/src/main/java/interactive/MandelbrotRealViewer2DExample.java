@@ -37,8 +37,7 @@
 
 package interactive;
 import interactive.fractals.MandelbrotRealRandomAccessible;
-import net.imglib2.display.RealARGBConverter;
-import io.scif.img.ImgIOException;
+import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
@@ -48,7 +47,7 @@ import net.imglib2.ui.viewer.InteractiveRealViewer2D;
 
 public class MandelbrotRealViewer2DExample< T extends NumericType< T > & NativeType< T > >
 {
-	final static public void main( final String[] args ) throws ImgIOException
+	final static public void main( final String[] args )
 	{
 		final int width = 800;
 		final int height = 600;

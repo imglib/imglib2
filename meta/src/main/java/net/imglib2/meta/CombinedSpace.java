@@ -65,13 +65,15 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 
 	/** Recomputes the combined space based on its current constituents. */
 	public void update() {
-		axisTypes.clear();
-		for (final TypedSpace<A> space : this) {
-			for (int d = 0; d < space.numDimensions(); d++) {
-				final AxisType axisType = space.axis(d).type();
-				if (!axisTypes.contains(axisType)) {
-					// new axis; add to the list
-					axisTypes.add(axisType);
+		synchronized (this) {
+			axisTypes.clear();
+			for (final TypedSpace<A> space : this) {
+				for (int d = 0; d < space.numDimensions(); d++) {
+					final AxisType axisType = space.axis(d).type();
+					if (!axisTypes.contains(axisType)) {
+						// new axis; add to the list
+						axisTypes.add(axisType);
+					}
 				}
 			}
 		}
@@ -81,14 +83,14 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 
 	@Override
 	public int dimensionIndex(final AxisType axis) {
-		return axisTypes.indexOf(axis);
+		return axisTypes().indexOf(axis);
 	}
 
 	// -- AnnotatedSpace methods --
 
 	@Override
 	public A axis(final int d) {
-		final AxisType type = axisTypes.get(d);
+		AxisType type = axisTypes().get(d);
 
 		// find the first axis of a constituent space that matches the type
 		for (final TypedSpace<A> space : this) {
@@ -108,7 +110,7 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 
 	@Override
 	public void setAxis(final A axis, final int d) {
-		final AxisType type = axisTypes.get(d);
+		final AxisType type = axisTypes().get(d);
 
 		// assign the axis to all constituent spaces of matching type
 		for (final TypedSpace<A> space : this) {
@@ -122,7 +124,21 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 
 	@Override
 	public int numDimensions() {
-		return axisTypes.size();
+		return axisTypes().size();
+	}
+
+	// -- Helper methods --
+
+	/**
+	 * Helper method to return axis types in a threadsafe way, so as not to
+	 * conflict with {@link #update()}
+	 * 
+	 * @return list of axis types for this space.
+	 */
+	private ArrayList<AxisType> axisTypes() {
+		synchronized (this) {
+			return axisTypes;
+		}
 	}
 
 }

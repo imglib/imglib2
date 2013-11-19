@@ -50,8 +50,7 @@ import net.imglib2.view.Views;
 import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
- * Helper class to create a {@link ImgView} on an
- * {@link RandomAccessibleInterval} which behaves exactly as an {@link Img}.
+ * Allows a {@link RandomAccessibleInterval} to be treated as an {@link Img}.
  * 
  * @author Tobias Pietzsch 
  * @author Christian Dietz (dietzc85@googlemail.com)
@@ -69,9 +68,9 @@ public class ImgView<T extends Type<T>> extends
 	 * View on {@link Img} which is defined by a given Interval, but still is an
 	 * {@link Img}.
 	 * 
-	 * @param RandomAccessibleInterval
+	 * @param in
 	 *            Source interval for the view
-	 * @param ImgFactory
+	 * @param fac
 	 *            <T> Factory to create img
 	 */
 	public ImgView(final RandomAccessibleInterval<T> in, ImgFactory<T> fac) {
