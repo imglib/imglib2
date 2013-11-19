@@ -45,6 +45,9 @@ public class AWTScreenImageUtil
 	 * @param dims
 	 *            dimensions of the resulting {@link ArrayImgAWTScreenImage}
 	 * @return
+	 * 
+	 *  // HACK: raw-cast of container to ArrayImgAWTScreenImage needed for Sun Java 6 compiler
+	 * 
 	 */
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	public static < T extends NativeType< T >> ArrayImgAWTScreenImage< T, ? > emptyScreenImage( T type, long[] dims )
