@@ -42,32 +42,32 @@ public class AWTScreenImageUtil {
 	public static <T extends NativeType<T>> AWTScreenImage emptyScreenImage(
 			T type, long[] dims) {
 
-		if (BitType.class.isAssignableFrom(type.getClass())) {
-			return new ByteAWTScreenImage((ByteType) type, new ByteArray(
+		if (type instanceof BitType) {
+			return new ByteAWTScreenImage(ByteType.class.cast(type), new ByteArray(
 					numElements(dims)), dims);
-		} else if (ByteType.class.isAssignableFrom(type.getClass())) {
-			return new ByteAWTScreenImage((ByteType) type, new ByteArray(
+		} else if (type instanceof ByteType) {
+			return new ByteAWTScreenImage(ByteType.class.cast(type), new ByteArray(
 					numElements(dims)), dims);
-		} else if (UnsignedByteType.class.isAssignableFrom(type.getClass())) {
-			return new UnsignedByteAWTScreenImage((UnsignedByteType) type,
+		} else if (type instanceof UnsignedByteType) {
+			return new UnsignedByteAWTScreenImage(UnsignedByteType.class.cast(type),
 					new ByteArray(numElements(dims)), dims);
-		} else if (ShortType.class.isAssignableFrom(type.getClass())) {
-			return new ShortAWTScreenImage((ShortType) type, new ShortArray(
+		} else if (type instanceof ShortType) {
+			return new ShortAWTScreenImage(ShortType.class.cast(type), new ShortArray(
 					numElements(dims)), dims);
-		} else if (UnsignedShortType.class.isAssignableFrom(type.getClass())) {
-			return new UnsignedShortAWTScreenImage((UnsignedShortType) type,
+		} else if (type instanceof UnsignedShortType) {
+			return new UnsignedShortAWTScreenImage(UnsignedShortType.class.cast(type),
 					new ShortArray(numElements(dims)), dims);
-		} else if (IntType.class.isAssignableFrom(type.getClass())) {
-			return new IntAWTScreenImage((IntType) type, new IntArray(
+		} else if (type instanceof IntType) {
+			return new IntAWTScreenImage(IntType.class.cast(type), new IntArray(
 					numElements(dims)), dims);
-		} else if (UnsignedIntType.class.isAssignableFrom(type.getClass())) {
-			return new UnsignedIntAWTScreenImage((UnsignedIntType) type,
+		} else if (type instanceof UnsignedIntType) {
+			return new UnsignedIntAWTScreenImage(UnsignedIntType.class.cast(type),
 					new IntArray(numElements(dims)), dims);
-		} else if (FloatType.class.isAssignableFrom(type.getClass())) {
-			return new FloatAWTScreenImage((FloatType) type, new FloatArray(
+		} else if (type instanceof FloatType) {
+			return new FloatAWTScreenImage(FloatType.class.cast(type), new FloatArray(
 					numElements(dims)), dims);
-		} else if (DoubleType.class.isAssignableFrom(type.getClass())) {
-			return new DoubleAWTScreenImage((DoubleType) type, new DoubleArray(
+		} else if (type instanceof DoubleType) {
+			return new DoubleAWTScreenImage(DoubleType.class.cast(type), new DoubleArray(
 					numElements(dims)), dims);
 		} else {
 			throw new IllegalArgumentException(
