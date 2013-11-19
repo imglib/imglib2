@@ -312,6 +312,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		return copy;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean supportsOptimizedCursor( final Interval interval )
 	{
@@ -332,18 +335,27 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Object subIntervalIterationOrder( Interval interval )
 	{
 		return new FlatIterationOrder( interval );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Cursor< T > cursor( Interval interval )
 	{
 		return new PlanarSubsetCursor< T >( this, interval );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Cursor< T > localizingCursor( Interval interval )
 	{

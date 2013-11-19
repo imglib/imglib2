@@ -145,7 +145,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	}
 
 	/**
-	 * Dummy implementation. TODO: add optimized ArrayCursor.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Cursor< T > cursor( final Interval interval )
@@ -204,7 +204,10 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 
 		return dimIdx;
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Cursor< T > localizingCursor( final Interval interval )
 	{
@@ -215,12 +218,18 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 		return new ArrayLocalizingSubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean supportsOptimizedCursor( final Interval interval )
 	{
 		return fastCursorAvailable( interval ) > 0;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Object subIntervalIterationOrder( final Interval interval )
 	{
