@@ -42,31 +42,31 @@ public class AWTScreenImageUtil {
 	public static <T extends NativeType<T>> AWTScreenImage emptyScreenImage(
 			T type, long[] dims) {
 
-		if (type instanceof BitType) {
+		if (BitType.class.isAssignableFrom(type.getClass())) {
 			return new ByteAWTScreenImage((ByteType) type, new ByteArray(
 					numElements(dims)), dims);
-		} else if (type instanceof ByteType) {
+		} else if (ByteType.class.isAssignableFrom(type.getClass())) {
 			return new ByteAWTScreenImage((ByteType) type, new ByteArray(
 					numElements(dims)), dims);
-		} else if (type instanceof UnsignedByteType) {
+		} else if (UnsignedByteType.class.isAssignableFrom(type.getClass())) {
 			return new UnsignedByteAWTScreenImage((UnsignedByteType) type,
 					new ByteArray(numElements(dims)), dims);
-		} else if (type instanceof ShortType) {
+		} else if (ShortType.class.isAssignableFrom(type.getClass())) {
 			return new ShortAWTScreenImage((ShortType) type, new ShortArray(
 					numElements(dims)), dims);
-		} else if (type instanceof UnsignedShortType) {
+		} else if (UnsignedShortType.class.isAssignableFrom(type.getClass())) {
 			return new UnsignedShortAWTScreenImage((UnsignedShortType) type,
 					new ShortArray(numElements(dims)), dims);
-		} else if (type instanceof IntType) {
+		} else if (IntType.class.isAssignableFrom(type.getClass())) {
 			return new IntAWTScreenImage((IntType) type, new IntArray(
 					numElements(dims)), dims);
-		} else if (type instanceof UnsignedIntType) {
+		} else if (UnsignedIntType.class.isAssignableFrom(type.getClass())) {
 			return new UnsignedIntAWTScreenImage((UnsignedIntType) type,
 					new IntArray(numElements(dims)), dims);
-		} else if (type instanceof FloatType) {
+		} else if (FloatType.class.isAssignableFrom(type.getClass())) {
 			return new FloatAWTScreenImage((FloatType) type, new FloatArray(
 					numElements(dims)), dims);
-		} else if (type instanceof DoubleType) {
+		} else if (DoubleType.class.isAssignableFrom(type.getClass())) {
 			return new DoubleAWTScreenImage((DoubleType) type, new DoubleArray(
 					numElements(dims)), dims);
 		} else {
