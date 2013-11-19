@@ -63,19 +63,11 @@ public class DataBufferBitType extends DataBuffer
 	 */
 	protected DataBufferBitType( int[] source, final int numEntities )
 	{
-		super( TYPE_INT, source.length );
+		super( TYPE_INT, numEntities );
 
-		final int bufferSize;
-
-		if ( numEntities % bitsPerEntity == 0 )
-			bufferSize = numEntities / bitsPerEntity;
-		else
-			bufferSize = numEntities / bitsPerEntity + 1;
-
-		this.data = new int[ bufferSize ];
-
+		this.data = source;
 		this.bankdata = new int[ 1 ][];
-		this.bankdata[ 0 ] = data;
+		this.bankdata[ 0 ] = source;
 	}
 
 	/***
@@ -115,7 +107,7 @@ public class DataBufferBitType extends DataBuffer
 		final int entry = data[ arrayIndex ];
 		final int value = ( entry & ( 1 << arrayOffset ) );
 
-		return value;
+		return value == 0 ? value : 1;
 	}
 
 	/**
