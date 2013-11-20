@@ -1,5 +1,6 @@
 package net.imglib2.display.screenimage.awt;
 
+import net.imglib2.display.awt.BitDataBuffer;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.type.logic.BitType;
@@ -26,9 +27,9 @@ public class BitAWTScreenImage extends ArrayImgAWTScreenImage< BitType, BitArray
 	}
 
 	@Override
-	protected DataBufferBitType createDataBuffer( final BitArray data )
+	protected BitDataBuffer createDataBuffer( final BitArray data )
 	{
 		final int[] sourceArray = data.getCurrentStorageArray();
-		return new DataBufferBitType( sourceArray, sourceArray.length );
+		return new BitDataBuffer( sourceArray, sourceArray.length );
 	}
 }
