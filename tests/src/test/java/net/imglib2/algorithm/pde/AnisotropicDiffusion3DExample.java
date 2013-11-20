@@ -28,18 +28,17 @@ package net.imglib2.algorithm.pde;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.ImageWindow;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 
 import java.io.File;
 
 import net.imglib2.Point;
 import net.imglib2.algorithm.region.BresenhamLine;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -112,8 +111,6 @@ public class AnisotropicDiffusion3DExample {
 		try {
 			image = new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
 		} catch (ImgIOException e) {
-			e.printStackTrace();
-		} catch (IncompatibleTypeException e) {
 			e.printStackTrace();
 		}
 

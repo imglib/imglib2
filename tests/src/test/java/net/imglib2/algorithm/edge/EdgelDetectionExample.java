@@ -31,6 +31,8 @@ import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.Line;
 import ij.gui.Overlay;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -39,8 +41,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.real.FloatType;
 
 public class EdgelDetectionExample

@@ -27,13 +27,13 @@
 package net.imglib2.img.sparse;
 
 import ij.ImageJ;
+import io.scif.img.ImgOpener;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.integer.IntType;
 
 public class ExampleQuadtree

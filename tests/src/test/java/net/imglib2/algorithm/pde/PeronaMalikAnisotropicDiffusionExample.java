@@ -28,6 +28,7 @@ package net.imglib2.algorithm.pde;
 
 import ij.IJ;
 import ij.ImagePlus;
+import io.scif.img.ImgIOException;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -35,7 +36,6 @@ import java.net.URISyntaxException;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 

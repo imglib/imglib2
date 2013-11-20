@@ -26,6 +26,10 @@
 
 package tests;
 
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
+import io.scif.img.ImgUtilityService;
+
 import java.awt.Adjustable;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -43,16 +47,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.border.TitledBorder;
 
-import loci.common.StatusEvent;
-import loci.common.StatusListener;
 import net.imglib2.converter.RealARGBConverter;
-import net.imglib2.display.projectors.Projector2D;
-import net.imglib2.display.projectors.screenimages.ARGBScreenImage;
-import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.display.projector.Projector2D;
+import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 import net.imglib2.img.Img;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgIOUtils;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -60,7 +58,7 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * A simple UI that demonstrates display of {@link Img}s.
- *
+ * 
  * @author Curtis Rueden
  */
 public class ImgPanel extends JPanel {
@@ -76,8 +74,7 @@ public class ImgPanel extends JPanel {
 		public Projector2D<T, ARGBType> projector;
 
 		public ImgData(final String name, final ImgPlus<T> imgPlus,
-			final ImgPanel owner)
-		{
+				final ImgPanel owner) {
 			this.name = name;
 			this.imgPlus = imgPlus;
 			this.owner = owner;
@@ -86,8 +83,8 @@ public class ImgPanel extends JPanel {
 			screenImage = new ARGBScreenImage(width, height);
 			final int min = 0, max = 255;
 			converter = new RealARGBConverter<T>(min, max);
-			projector =
-				new Projector2D<T, ARGBType>(0, 1, imgPlus, screenImage, converter);
+			projector = new Projector2D<T, ARGBType>(0, 1, imgPlus,
+					screenImage, converter);
 			projector.map();
 		}
 	}
@@ -100,8 +97,8 @@ public class ImgPanel extends JPanel {
 			// add one slider per dimension beyond the first two
 			for (int d = 2; d < imgData.imgPlus.numDimensions(); d++) {
 				final int dimLength = (int) imgData.imgPlus.dimension(d);
-				final JScrollBar bar =
-					new JScrollBar(Adjustable.HORIZONTAL, 0, 1, 0, dimLength);
+				final JScrollBar bar = new JScrollBar(Adjustable.HORIZONTAL, 0,
+						1, 0, dimLength);
 				final int dim = d;
 				bar.addAdjustmentListener(new AdjustmentListener() {
 
@@ -141,21 +138,19 @@ public class ImgPanel extends JPanel {
 	}
 
 	public <T extends RealType<T> & NativeType<T>> void addImage(
-		final String name, final ImgPlus<T> img)
-	{
+			final String name, final ImgPlus<T> img) {
 		final ImgData<T> imgData = new ImgData<T>(name, img, this);
 		images.add(imgData);
-		if (imgData.width > maxWidth) maxWidth = imgData.width;
-		if (imgData.height > maxHeight) maxHeight = imgData.height;
+		if (imgData.width > maxWidth)
+			maxWidth = imgData.width;
+		if (imgData.height > maxHeight)
+			maxHeight = imgData.height;
 		add(new SliderPanel(imgData));
 	}
 
 	public static final <T extends RealType<T> & NativeType<T>> void main(
-		final String[] args)
-	{
-		final String[] urls = {
-			"http://loci.wisc.edu/files/software/ome-tiff/z-series.zip"
-		};
+			final String[] args) {
+		final String[] urls = { "http://loci.wisc.edu/files/software/ome-tiff/z-series.zip" };
 		final JFrame frame = new JFrame("ImgPanel Test Frame");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		final ImgPanel imgPanel = new ImgPanel();
@@ -170,19 +165,16 @@ public class ImgPanel extends JPanel {
 	}
 
 	private static <T extends RealType<T> & NativeType<T>> ImgPlus<T> loadImage(
-		final String url)
-	{
+			final String url) {
 		try {
-			System.out.println("Downloading " + url);
-			final String id = ImgIOUtils.cacheId(url);
-			System.out.println("Opening " + id);
 			final ImgOpener imgOpener = new ImgOpener();
+			System.out.println("Downloading " + url);
+			final ImgUtilityService imgUtilityService = imgOpener.getContext()
+					.getService(ImgUtilityService.class);
+			final String id = imgUtilityService.cacheId(url);
+			System.out.println("Opening " + id);
 			return imgOpener.openImg(id);
-		}
-		catch (final IncompatibleTypeException e) {
-			e.printStackTrace();
-		}
-		catch (final ImgIOException e) {
+		} catch (final ImgIOException e) {
 			e.printStackTrace();
 		}
 		return null;

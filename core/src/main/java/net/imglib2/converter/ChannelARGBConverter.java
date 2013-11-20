@@ -45,7 +45,7 @@ import static net.imglib2.converter.ChannelARGBConverter.Channel.R;
 
 import java.util.ArrayList;
 
-import net.imglib2.display.projectors.compositeprojectors.CompositeXYProjector;
+import net.imglib2.display.projector.composite.CompositeXYProjector;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 

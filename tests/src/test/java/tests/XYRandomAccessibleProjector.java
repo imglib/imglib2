@@ -37,11 +37,5 @@
 
 package tests;
 
-import net.imglib2.FinalInterval;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.converter.Converter;
-import net.imglib2.display.projectors.AbstractProjector2D;
 
 
