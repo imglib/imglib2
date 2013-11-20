@@ -34,7 +34,7 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-package net.imglib2.display.screenimage.awt;
+package net.imglib2.display.awt;
 
 import java.awt.image.DataBuffer;
 
@@ -47,7 +47,7 @@ import net.imglib2.img.basictypeaccess.array.BitArray;
  * @author Christian Dietz
  * 
  */
-public class DataBufferBitType extends DataBuffer
+public class BitDataBuffer extends DataBuffer
 {
 
 	final static protected int bitsPerEntity = Integer.SIZE;
@@ -61,7 +61,7 @@ public class DataBufferBitType extends DataBuffer
 	 * 
 	 * @param numEntities
 	 */
-	protected DataBufferBitType( int[] source, final int numEntities )
+	public BitDataBuffer( int[] source, final int numEntities )
 	{
 		super( TYPE_INT, numEntities );
 
@@ -75,7 +75,7 @@ public class DataBufferBitType extends DataBuffer
 	 * 
 	 * @param numEntities
 	 */
-	protected DataBufferBitType( final int numEntities )
+	protected BitDataBuffer( final int numEntities )
 	{
 		super( TYPE_INT, numEntities );
 
