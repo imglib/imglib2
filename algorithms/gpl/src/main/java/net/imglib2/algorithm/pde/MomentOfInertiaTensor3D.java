@@ -46,9 +46,9 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorExpWindowingFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.Views;
 import edu.mines.jtk.la.DMatrix;
 import edu.mines.jtk.la.DMatrixEvd;
-import net.imglib2.view.Views;
 
 /**
  * A class to compute a diffusion tensor for anisotropic diffusion, based on

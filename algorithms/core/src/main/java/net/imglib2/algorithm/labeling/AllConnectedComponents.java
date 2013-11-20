@@ -45,7 +45,6 @@ import java.util.NoSuchElementException;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.Img;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingOutOfBoundsRandomAccessFactory;
 import net.imglib2.labeling.LabelingType;

@@ -37,36 +37,57 @@ package net.imglib2.view.iteration;
 
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
+import net.imglib2.IterableRealInterval;
 
 /**
- * TODO
- *
+ * Implementing this interface enables the implementor to return optimized
+ * {@link Cursor}s for certain {@link Interval}s
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public interface SubIntervalIterable< T >
-{
-	// TODO: How to deal with iterationOrder() ???
-	//       Enforce FlatIterationOrder?
-
-	public boolean supportsOptimizedCursor( Interval interval );
-
-	public Object subIntervalIterationOrder( Interval interval );
+public interface SubIntervalIterable<T> {
+	// TODO: How to deal with iterationOrder() ??? Enforce FlatIterationOrder?
 
 	/**
-	 * TODO
-	 *
+	 * Determine whether a {@link Cursor} can be optimized, given the current
+	 * {@link Interval}
+	 * 
 	 * @param interval
-	 *            interval over which to iterate
-	 * @return
+	 *            to be checked
+	 * 
+	 * @return true if a {@link Cursor} can be optimized given the
+	 *         {@link Interval}
+	 * 
 	 */
-	public Cursor< T > cursor( Interval interval );
+	public boolean supportsOptimizedCursor(Interval interval);
 
 	/**
-	 * TODO
-	 *
+	 * Returns the iteration order given the interval
+	 * 
 	 * @param interval
-	 *            interval over which to iterate
-	 * @return
+	 *            {@link Interval} over which to iterate
+	 * 
+	 * @return the iteration order object @see {@link IterableRealInterval}
 	 */
-	public Cursor< T > localizingCursor( Interval interval );
+	public Object subIntervalIterationOrder(Interval interval);
+
+	/**
+	 * Create a {@link Cursor} to iterate over the given {@link Interval}
+	 * 
+	 * @param interval
+	 *            {@link Interval} over which to iterate
+	 * 
+	 * @return {@link Cursor}
+	 */
+	public Cursor<T> cursor(Interval interval);
+
+	/**
+	 * Create a {@link Cursor} to iterate over the given {@link Interval}
+	 * 
+	 * @param interval
+	 *            {@link Interval} over which to iterate
+	 * 
+	 * @return {@link Cursor}
+	 */
+	public Cursor<T> localizingCursor(Interval interval);
 }

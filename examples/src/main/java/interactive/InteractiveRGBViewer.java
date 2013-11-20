@@ -37,11 +37,11 @@ package interactive;
  */
 
 import ij.ImagePlus;
+import io.scif.img.ImgIOException;
 import net.imglib2.RandomAccessible;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgs;
-import io.scif.img.ImgIOException;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.ui.overlay.LogoPainter;

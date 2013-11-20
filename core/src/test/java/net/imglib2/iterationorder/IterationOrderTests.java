@@ -37,12 +37,11 @@
 
 package net.imglib2.iterationorder;
 
+import static org.junit.Assert.assertTrue;
 import net.imglib2.FinalInterval;
 import net.imglib2.FlatIterationOrder;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests to check code of iteration orders

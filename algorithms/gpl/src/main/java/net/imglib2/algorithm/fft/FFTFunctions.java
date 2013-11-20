@@ -26,9 +26,6 @@
 
 package net.imglib2.algorithm.fft;
 
-import edu.mines.jtk.dsp.FftComplex;
-import edu.mines.jtk.dsp.FftReal;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.RandomAccess;
@@ -44,6 +41,8 @@ import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
+import edu.mines.jtk.dsp.FftComplex;
+import edu.mines.jtk.dsp.FftReal;
 
 /**
  * Provides all Fourier-based methods required by {@link FourierTransform}, {@link InverseFourierTransform}, {@link FourierConvolution} and {@link PhaseCorrelation}

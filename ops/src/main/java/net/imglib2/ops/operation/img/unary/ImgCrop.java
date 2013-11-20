@@ -43,7 +43,6 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealInterval;
 import net.imglib2.img.Img;
-import net.imglib2.meta.ImgPlus;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 

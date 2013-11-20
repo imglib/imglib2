@@ -43,7 +43,6 @@ import java.util.PriorityQueue;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.OutputAlgorithm;
-import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingOutOfBoundsRandomAccessFactory;

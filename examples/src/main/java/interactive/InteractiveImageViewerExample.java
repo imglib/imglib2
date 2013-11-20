@@ -38,13 +38,13 @@
 package interactive;
 
 import ij.IJ;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.RealARGBConverter;
 import net.imglib2.img.array.ArrayImgFactory;
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
 import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.realtransform.AffineTransform2D;

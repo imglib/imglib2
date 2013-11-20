@@ -28,6 +28,7 @@ package script.imglib.test;
 
 import ij.ImageJ;
 import ij.ImagePlus;
+import io.scif.img.ImgOpener;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.exception.ImgLibException;
@@ -35,7 +36,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
-import io.scif.img.ImgOpener;
 import net.imglib2.script.math.ASin;
 import net.imglib2.script.math.Add;
 import net.imglib2.script.math.Cbrt;

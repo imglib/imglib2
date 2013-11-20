@@ -28,15 +28,15 @@ package net.imglib2.script;
 
 import ij.ImagePlus;
 import ij.io.FileSaver;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
+import io.scif.img.ImgOptions;
+import io.scif.img.ImgOptions.ImgMode;
 import net.imglib2.exception.ImgLibException;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
-import io.scif.img.ImgOptions;
-import io.scif.img.ImgOptions.ImgMode;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 

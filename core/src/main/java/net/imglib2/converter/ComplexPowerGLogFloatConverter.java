@@ -37,7 +37,6 @@
 
 package net.imglib2.converter;
 
-import net.imglib2.converter.Converter;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;

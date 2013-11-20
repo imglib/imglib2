@@ -37,11 +37,11 @@
 
 package net.imglib2.tutorial.t01;
 
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 /**

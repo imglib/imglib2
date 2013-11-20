@@ -25,7 +25,7 @@
  */
 package net.imglib2.algorithm.localization;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 

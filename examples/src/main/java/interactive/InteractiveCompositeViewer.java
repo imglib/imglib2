@@ -36,10 +36,10 @@ package interactive;
  * #L%
  */
 
-import net.imglib2.converter.Converter;
-import net.imglib2.img.array.ArrayImgFactory;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
+import net.imglib2.converter.Converter;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.numeric.ARGBType;

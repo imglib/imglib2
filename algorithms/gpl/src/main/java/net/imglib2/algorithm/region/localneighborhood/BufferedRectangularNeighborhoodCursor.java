@@ -29,7 +29,6 @@ package net.imglib2.algorithm.region.localneighborhood;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.Type;
 
 /**

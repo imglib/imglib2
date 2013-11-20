@@ -27,7 +27,6 @@
 package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.Cursor;
-import net.imglib2.RandomAccessibleInterval;
 
 /**
  * A {@link Cursor} that iterates over a {@link RectangleNeighborhoodGPL}.

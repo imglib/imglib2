@@ -27,7 +27,6 @@
 package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.Cursor;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Sampler;
 
 public final class EllipseCursor <T> extends AbstractNeighborhoodCursor<T> {
