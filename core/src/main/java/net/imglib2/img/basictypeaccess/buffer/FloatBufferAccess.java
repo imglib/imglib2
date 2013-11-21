@@ -1,6 +1,7 @@
 package net.imglib2.img.basictypeaccess.buffer;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import net.imglib2.img.basictypeaccess.FloatAccess;
@@ -11,7 +12,7 @@ public class FloatBufferAccess implements FloatAccess, BufferDataAccess< FloatBu
 
 	public FloatBufferAccess( final int numEntities )
 	{
-		this.data = ByteBuffer.allocateDirect( numEntities * 4 ).asFloatBuffer();
+		this.data = ByteBuffer.allocateDirect( numEntities * 4 ).order(ByteOrder.nativeOrder()).asFloatBuffer();
 	}
 
 	@Override
