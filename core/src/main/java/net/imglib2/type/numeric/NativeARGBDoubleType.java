@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -42,6 +42,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.NativeTypeId;
 
 /**
  *
@@ -100,33 +101,33 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	@Override
 	public NativeARGBDoubleType duplicateTypeOnSameNativeImg()
 	{
-		return new NativeARGBDoubleType( img ); 
+		return new NativeARGBDoubleType( img );
 	}
-	
+
 	@Override
 	public double getA()
 	{
 		return dataAccess.getValue( ai );
 	}
-	
+
 	@Override
 	public double getR()
 	{
 		return dataAccess.getValue( ri );
 	}
-	
+
 	@Override
 	public double getG()
 	{
 		return dataAccess.getValue( gi );
 	}
-	
+
 	@Override
 	public double getB()
 	{
 		return dataAccess.getValue( bi );
 	}
-	
+
 	@Override
 	public void setA( final double a )
 	{
@@ -152,16 +153,16 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	}
 
 	@Override
-	public void set( final double a, final double r, final double g, final double b ) 
-	{ 
+	public void set( final double a, final double r, final double g, final double b )
+	{
 		dataAccess.setValue( ai, a );
 		dataAccess.setValue( ri, r );
 		dataAccess.setValue( gi, g );
 		dataAccess.setValue( bi, b );
 	}
-	
-	public void set( final ARGBDoubleType c ) 
-	{ 
+
+	public void set( final ARGBDoubleType c )
+	{
 		set( c.getA(), c.getR(), c.getG(), c.getB() );
 	}
 
@@ -202,7 +203,7 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 		gi += 4;
 		bi += 4;
 	}
-	
+
 	@Override
 	public void incIndex( final int increment )
 	{
@@ -239,5 +240,11 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	public int getIndex()
 	{
 		return i;
+	}
+
+	@Override
+	public NativeTypeId getNativeTypeId()
+	{
+		return NativeTypeId.Other;
 	}
 }
