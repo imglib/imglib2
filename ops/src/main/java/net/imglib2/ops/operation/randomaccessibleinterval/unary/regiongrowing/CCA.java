@@ -92,7 +92,7 @@ public class CCA< T extends RealType< T >> extends AbstractRegionGrowing< T, Int
         }
 
 		m_background = background;
-		m_labelNumber = m_synchronizer.aquireNewLabelNumber();
+		m_labelNumber = m_synchronizer.m_labelNumber;
 	}
 
 	/**
