@@ -7,11 +7,11 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
-import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.basictypeaccess.buffer.ByteBufferAccess;
 import net.imglib2.img.basictypeaccess.buffer.FloatBufferAccess;
+import net.imglib2.img.basictypeaccess.buffer.IntBufferAccess;
 import net.imglib2.type.NativeType;
 
 public class ArrayImgBufferFactory< T extends NativeType<T> > extends NativeImgFactory< T >
@@ -67,9 +67,11 @@ public class ArrayImgBufferFactory< T extends NativeType<T> > extends NativeImgF
 	}
 
 	@Override
-	public ArrayImg< T, IntArray > createIntInstance( final long[] dimensions, final int entitiesPerPixel )
+	public ArrayImg< T, IntBufferAccess > createIntInstance( final long[] dimensions, final int entitiesPerPixel )
 	{
-		throw new UnsupportedOperationException();
+		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
+
+		return new ArrayImg< T, IntBufferAccess >( new IntBufferAccess( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
