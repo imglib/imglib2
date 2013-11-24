@@ -91,7 +91,6 @@ public class CCA< T extends RealType< T >> extends AbstractRegionGrowing< T, Int
         }
 
 		m_background = background;
-		m_labelNumber = m_synchronizer.aquireNewLabelNumber();
 	}
 
 	/**
@@ -102,6 +101,7 @@ public class CCA< T extends RealType< T >> extends AbstractRegionGrowing< T, Int
 	{
 		srcCur = Views.iterable(src).localizingCursor();
 		srcRA = src.randomAccess();
+		m_labelNumber = m_synchronizer.aquireNewLabelNumber();
 	}
 
 	/**
