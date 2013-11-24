@@ -45,14 +45,14 @@ import javax.swing.border.TitledBorder;
 
 import loci.common.StatusEvent;
 import loci.common.StatusListener;
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYProjector;
+import net.imglib2.converter.RealARGBConverter;
+import net.imglib2.display.projector.Projector2D;
+import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgIOUtils;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
+import io.scif.img.ImgUtilityService;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -73,7 +73,7 @@ public class ImgPanel extends JPanel {
 		public int width, height;
 		public ARGBScreenImage screenImage;
 		public RealARGBConverter<T> converter;
-		public XYProjector<T, ARGBType> projector;
+		public Projector2D<T, ARGBType> projector;
 
 		public ImgData(final String name, final ImgPlus<T> imgPlus,
 			final ImgPanel owner)
@@ -87,7 +87,7 @@ public class ImgPanel extends JPanel {
 			final int min = 0, max = 255;
 			converter = new RealARGBConverter<T>(min, max);
 			projector =
-				new XYProjector<T, ARGBType>(imgPlus, screenImage, converter);
+				new Projector2D<T, ARGBType>(0, 1, imgPlus, screenImage, converter);
 			projector.map();
 		}
 	}
@@ -173,14 +173,14 @@ public class ImgPanel extends JPanel {
 		final String url)
 	{
 		try {
-			System.out.println("Downloading " + url);
-			final String id = ImgIOUtils.cacheId(url);
-			System.out.println("Opening " + id);
 			final ImgOpener imgOpener = new ImgOpener();
+			System.out.println("Downloading " + url);
+			final ImgUtilityService imgUtilityService =
+				imgOpener.getContext().getService(ImgUtilityService.class);
+			final String id = imgUtilityService.cacheId(url);
+			System.out.println("Opening " + id);
+
 			return imgOpener.openImg(id);
-		}
-		catch (final IncompatibleTypeException e) {
-			e.printStackTrace();
 		}
 		catch (final ImgIOException e) {
 			e.printStackTrace();

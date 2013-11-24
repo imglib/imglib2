@@ -47,13 +47,13 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>imglib2-io</artifactId>
+			<artifactId>imglib2-scripting</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>imglib2-scripting</artifactId>
-			<version>${project.version}</version>
+			<groupId>io.scif</groupId>
+			<artifactId>scifio</artifactId>
+			<version>${scifio.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>java3d</groupId>
@@ -63,7 +63,7 @@
 	</dependencies>
 
 	<properties>
-		<project.rootdir>${basedir}/../../..</project.rootdir>
+		<project.rootdir>${basedir}/../..</project.rootdir>
 	</properties>
 
 	<build>

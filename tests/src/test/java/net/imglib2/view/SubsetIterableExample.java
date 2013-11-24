@@ -1,11 +1,11 @@
 package net.imglib2.view;
 
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Intervals;

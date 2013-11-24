@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -45,12 +45,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.Dimensions;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.converter.ComplexPowerGLogFloatConverter;
 import net.imglib2.converter.Converter;
+import net.imglib2.converter.RealFloatConverter;
+import net.imglib2.converter.RealUnsignedByteConverter;
+import net.imglib2.converter.RealUnsignedShortConverter;
 import net.imglib2.converter.TypeIdentity;
-import net.imglib2.display.ComplexPowerGLogFloatConverter;
-import net.imglib2.display.RealFloatConverter;
-import net.imglib2.display.RealUnsignedByteConverter;
-import net.imglib2.display.RealUnsignedShortConverter;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.meta.Axes;

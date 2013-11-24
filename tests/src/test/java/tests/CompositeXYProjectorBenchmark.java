@@ -27,14 +27,14 @@
 package tests;
 
 import ij.ImageJ;
-import net.imglib2.display.ChannelARGBConverter;
-import net.imglib2.display.CompositeXYProjector;
+import net.imglib2.converter.ChannelARGBConverter;
+import net.imglib2.display.projector.composite.CompositeXYProjector;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 

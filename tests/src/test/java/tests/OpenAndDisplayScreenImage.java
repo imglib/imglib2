@@ -30,12 +30,12 @@ import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYProjector;
+import net.imglib2.converter.RealARGBConverter;
+import net.imglib2.display.projector.Projector2D;
+import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -54,7 +54,7 @@ public class OpenAndDisplayScreenImage
 		RandomAccessibleInterval< FloatType > img = io.openImg( "/home/tobias/workspace/data/73_float.tif", new ArrayImgFactory<FloatType>(), new FloatType());
 		
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )img.dimension( 0 ), ( int )img.dimension( 1 ) );
-		final XYProjector< FloatType, ARGBType > projector = new XYProjector< FloatType, ARGBType >( img, screenImage, new RealARGBConverter< FloatType >( 0, 127 ) );
+		final Projector2D< FloatType, ARGBType > projector = new Projector2D< FloatType, ARGBType >(0, 1, img, screenImage, new RealARGBConverter< FloatType >( 0, 127 ) );
 		
 		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
 		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );

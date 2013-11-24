@@ -75,17 +75,19 @@ public class CombinedRealInterval<A extends TypedAxis, S extends TypedRealInterv
 
 	@Override
 	public void update() {
-		minMax.clear();
-		super.update();
-		for (final TypedRealInterval<A> interval : this) {
-			for (int d = 0; d < interval.numDimensions(); d++) {
-				final AxisType axisType = interval.axis(d).type();
-				if (!minMax.containsKey(axisType)) {
-					// new axis; add to the hash
-					minMax.put(axisType, new MinMax());
+		synchronized(this) {
+			super.update();
+			minMax.clear();
+			for (final TypedRealInterval<A> interval : this) {
+				for (int d = 0; d < interval.numDimensions(); d++) {
+					final AxisType axisType = interval.axis(d).type();
+					if (!minMax.containsKey(axisType)) {
+						// new axis; add to the hash
+						minMax.put(axisType, new MinMax());
+					}
+					final MinMax mm = minMax.get(axisType);
+					mm.expand(interval.realMin(d), interval.realMax(d));
 				}
-				final MinMax mm = minMax.get(axisType);
-				mm.expand(interval.realMin(d), interval.realMax(d));
 			}
 		}
 	}
@@ -94,7 +96,7 @@ public class CombinedRealInterval<A extends TypedAxis, S extends TypedRealInterv
 
 	@Override
 	public double realMin(final int d) {
-		return minMax.get(axis(d).type()).min();
+			return (minMax().get(axis(d).type())).min();
 	}
 
 	@Override
@@ -111,7 +113,7 @@ public class CombinedRealInterval<A extends TypedAxis, S extends TypedRealInterv
 
 	@Override
 	public double realMax(final int d) {
-		return minMax.get(axis(d).type()).max();
+		return (minMax().get(axis(d).type())).max();
 	}
 
 	@Override
@@ -146,6 +148,20 @@ public class CombinedRealInterval<A extends TypedAxis, S extends TypedRealInterv
 			return maxMax;
 		}
 
+	}
+	
+	// -- Helper methods --
+
+	/**
+	 * Helper method to return min max map in a threadsafe way, so as not to
+	 * conflict with {@link #update()}
+	 * 
+	 * @return map of axis types to MinMax for this interval
+	 */
+	private HashMap<AxisType, MinMax> minMax() {
+		synchronized (this) {
+			return minMax;
+		}
 	}
 
 }

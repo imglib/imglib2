@@ -27,14 +27,14 @@
 package tests;
 
 import ij.ImageJ;
-import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYRandomAccessibleProjector;
+import net.imglib2.converter.RealARGBConverter;
+import net.imglib2.display.projector.Projector2D;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
@@ -57,7 +57,7 @@ public class XYRandomAccessibleProjectorBenchmark
 
 	public void convert( final Img< UnsignedByteType > in, final Img< ARGBType > out )
 	{
-		final XYRandomAccessibleProjector< UnsignedByteType, ARGBType > projector = new XYRandomAccessibleProjector< UnsignedByteType, ARGBType >( in, out, new RealARGBConverter< UnsignedByteType >(0, 1000) );
+		final Projector2D< UnsignedByteType, ARGBType > projector = new Projector2D< UnsignedByteType, ARGBType >( 0, 1, in, out, new RealARGBConverter< UnsignedByteType >(0, 1000) );
 		for ( int iteration = 0; iteration < 10; ++iteration )
 		{
 			final long start = System.currentTimeMillis();
@@ -71,6 +71,8 @@ public class XYRandomAccessibleProjectorBenchmark
 	public static void main( final String[] args ) throws IncompatibleTypeException, ImgIOException
 	{
 		new ImageJ();
-		new XYRandomAccessibleProjectorBenchmark( "/home/tobias/workspace/data/DrosophilaWing.tif" );
+		new XYRandomAccessibleProjectorBenchmark( "DrosophilaWing.tif" );
 	}
 }
+
+

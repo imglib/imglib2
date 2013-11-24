@@ -55,6 +55,7 @@ import net.imglib2.view.Views;
  * TODO
  *
  */
+@Deprecated
 public class GaussGeneral< T extends NumericType< T > > extends AbstractGauss< T >
 {
 	/**
