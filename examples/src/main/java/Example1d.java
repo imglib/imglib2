@@ -37,7 +37,6 @@
 import ij.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
@@ -52,8 +51,8 @@ public class Example1d
 	public Example1d() throws ImgIOException
 	{
 		// open file as float
-		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
-				new ArrayImgFactory< FloatType >(), new FloatType() );
+		Img< FloatType > img =
+			new ImgOpener().openImg( "DrosophilaWing.tif", new FloatType() );
 
 		// display image
 		ImageJFunctions.show( img );
