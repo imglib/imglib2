@@ -35,16 +35,15 @@
  * #L%
  */
 import ij.ImageJ;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
@@ -60,9 +59,9 @@ public class Example2c
 {
 	public Example2c() throws ImgIOException
 	{
-		// open with ImgOpener using an ArrayImgFactory
-		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+		// open with ImgOpener as a float
+		Img<FloatType> img = new ImgOpener().openImg("DrosophilaWing.tif",
+			new FloatType());
 
 		// copy & display an image
 		Img< FloatType > duplicate = img.factory().create( img, img.firstElement() );

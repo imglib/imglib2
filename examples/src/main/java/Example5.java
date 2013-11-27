@@ -35,14 +35,13 @@
  * #L%
  */
 import ij.ImageJ;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
 import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
@@ -55,9 +54,9 @@ public class Example5
 {
 	public Example5() throws ImgIOException
 	{
-		// open with ImgOpener using an ArrayImgFactory
+		// open with ImgOpener as a FloatType
 		Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWingSmall.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+			new FloatType() );
 
 		// create an infinite view where all values outside of the Interval are 0
 		RandomAccessible< FloatType> infinite1 =
@@ -67,7 +66,7 @@ public class Example5
 		RandomAccessible< FloatType> infinite2 =
 			Views.extendValue( image, new FloatType( 128 ) );
 
-		// create an infinite view where all outside valuesare random in a range of 0-255
+		// create an infinite view where all outside values are random in a range of 0-255
 		RandomAccessible< FloatType> infinite3 = Views.extendRandom( image, 0, 255 );
 
 		// create an infinite view where all values outside of the Interval are

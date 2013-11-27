@@ -34,10 +34,9 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-import net.imglib2.img.Img;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
-import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.RealSum;
@@ -53,9 +52,8 @@ public class Example3b
 	public < T extends RealType< T > & NativeType< T > > Example3b() throws
 		ImgIOException
 	{
-		// open with ImgOpener using an ArrayImgFactory
-		final Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< T >() );
+		// open with ImgOpener
+		final Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif" );
 
 		// compute average of the image
 		final double avg = computeAverage( img );

@@ -35,12 +35,11 @@
  * #L%
  */
 import ij.ImageJ;
-import net.imglib2.algorithm.gauss.Gauss;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
+import net.imglib2.algorithm.gauss.Gauss;
+import net.imglib2.img.Img;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.real.FloatType;
 
 /**
@@ -53,9 +52,9 @@ public class Example6a1
 {
 	public Example6a1() throws ImgIOException
 	{
-		// open with ImgOpener using an ArrayImgFactory
+		// open with ImgOpener as a FloatType
 		Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+			new FloatType() );
 
 		// perform gaussian convolution with float precision
 		double[] sigma = new double[ image.numDimensions() ];

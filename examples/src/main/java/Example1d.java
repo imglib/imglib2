@@ -50,14 +50,14 @@ public class Example1d
 {
 	public Example1d() throws ImgIOException
 	{
-		// open file as float
+		// open file as float with ImgOpener
 		Img< FloatType > img =
 			new ImgOpener().openImg( "DrosophilaWing.tif", new FloatType() );
 
 		// display image
 		ImageJFunctions.show( img );
 
-		// use a View to define an interval (min and max coordinate, including) to display
+		// use a View to define an interval (min and max coordinate, inclusive) to display
 		RandomAccessibleInterval< FloatType > view =
 				Views.interval( img, new long[] { 200, 200 }, new long[]{ 500, 350 } );
 
