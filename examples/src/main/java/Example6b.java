@@ -57,7 +57,7 @@
 import ij.ImageJ;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
-import net.imglib2.algorithm.fft.FourierConvolution;
+import net.imglib2.algorithm.fft2.FFTConvolution;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -75,7 +75,7 @@ public class Example6b
 		// open with ImgOpener using an ArrayImgFactory
 		final Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWing.tif",
 			new FloatType() );
-		final Img< FloatType > kernel = new ImgOpener().openImg( "kernelGauss.tif",
+		final Img< FloatType > kernel = new ImgOpener().openImg( "kernelRing.tif",
 			new FloatType() );
 
 		// normalize the kernel, otherwise we add energy to the image
@@ -85,8 +85,9 @@ public class Example6b
 		ImageJFunctions.show( kernel ).setTitle( "kernel" );
 		ImageJFunctions.show( image ).setTitle( "drosophila wing");
 
-		// compute & show fourier convolution
-		ImageJFunctions.show( FourierConvolution.convolve( image, kernel ) )
+		// compute & show fourier convolution (in-place)
+		new FFTConvolution<FloatType>( image, kernel ).run();
+		ImageJFunctions.show( image )
 			.setTitle( "convolution" );
 	}
 
