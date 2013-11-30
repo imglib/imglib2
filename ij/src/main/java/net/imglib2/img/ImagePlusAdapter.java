@@ -61,8 +61,12 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 
 /**
- * TODO
- *
+ * Provides convenience functions to wrap ImageJ 1.x data structures as ImgLib2
+ * ones, and vice versa.
+ * <p>
+ * @see net.imglib2.img.display.imagej.ImageJFunctions
+ * </p>
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
