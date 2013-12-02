@@ -8,16 +8,43 @@ public class VolatileUnsignedShortType extends AbstractVolatileNativeRealType< U
 {
 	final protected NativeImg< ?, ? extends VolatileShortAccess > img;
 
+	// this is the constructor if you want it to read from an array
 	public VolatileUnsignedShortType( final NativeImg< ?, ? extends VolatileShortAccess > img )
 	{
 		super( new UnsignedShortType( img ), false );
 		this.img = img;
 	}
 
+	// this is the constructor if you want to specify the wrapped type
 	public VolatileUnsignedShortType( final UnsignedShortType t, final boolean valid )
 	{
 		super( t, valid );
 		this.img = null;
+	}
+
+	// this is the constructor if you want to specify the dataAccess
+	public VolatileUnsignedShortType( final VolatileShortAccess access )
+	{
+		super( new UnsignedShortType( access ), access.isValid() );
+		this.img = null;
+	}
+
+	// this is the constructor if you want it to be a variable
+	public VolatileUnsignedShortType( final int value )
+	{
+		this( new UnsignedShortType( new VolatileShortArray( 1, true ) ), true );
+		set( value );
+	}
+
+	// this is the constructor if you want it to be a variable
+	public VolatileUnsignedShortType()
+	{
+		this( 0 );
+	}
+
+	public void set( final int value )
+	{
+		get().set( value );
 	}
 
 	@Override
@@ -26,7 +53,6 @@ public class VolatileUnsignedShortType extends AbstractVolatileNativeRealType< U
 		t.updateContainer( c );
 		setValid( img.update( c ).isValid() );
 	}
-
 
 	@Override
 	public NativeImg< VolatileUnsignedShortType, ? > createSuitableNativeImg( final NativeImgFactory< VolatileUnsignedShortType > storageFactory, final long[] dim )
