@@ -32,6 +32,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -74,7 +75,7 @@ import net.imglib2.view.Views;
  *
  * @author Stephan Preibisch
  */
-public class FFTConvolution< R extends RealType< R > > implements Runnable
+public class FFTConvolution< R extends RealType< R > > implements Runnable, MultiThreaded
 {
 	Img< ComplexFloatType > fftImg, fftKernel;
 
@@ -91,6 +92,8 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable
 
 	// by default we do not keep the image
 	boolean keepImgFFT = false;
+
+	private int numThreads;
 
 	/**
 	 * Compute a Fourier space based convolution in-place (img will be replaced
@@ -220,6 +223,7 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable
 		this.kernelInterval = kernelInterval;
 		this.output = output;
 		this.fftFactory = factory;
+		setNumThreads();
 	}
 
 	public void setImg( final RandomAccessibleInterval< R > img )
@@ -347,11 +351,11 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable
 
 		// compute the FFT's if they do not exist yet
 		if ( fftImg == null )
-			fftImg = FFT.realToComplex( imgInput, fftFactory );
+			fftImg = FFT.realToComplex( imgInput, fftFactory, numThreads );
 
 		if ( fftKernel == null )
 		{
-			fftKernel = FFT.realToComplex( kernelInput, fftFactory );
+			fftKernel = FFT.realToComplex( kernelInput, fftFactory, numThreads );
 
 			// compute the complex conjugate of the FFT of the kernel (same as
 			// mirroring the input image)
@@ -371,10 +375,10 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable
 		multiplyComplex( fftconvolved, fftKernel );
 
 		// inverse FFT in place
-		FFT.complexToRealUnpad( fftconvolved, output );
+		FFT.complexToRealUnpad( fftconvolved, output, numThreads );
 	}
 
-	final public static < R extends RealType< R > > void convolve( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory )
+	final public static < R extends RealType< R > > void convolve( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory, final int numThreads )
 	{
 		final int numDimensions = imgInterval.numDimensions();
 
@@ -418,14 +422,14 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable
 		final RandomAccessibleInterval< R > imgInput = Views.interval( img, imgConvolutionInterval );
 
 		// compute the FFT's
-		final Img< ComplexFloatType > fftImg = FFT.realToComplex( imgInput, factory );
-		final Img< ComplexFloatType > fftKernel = FFT.realToComplex( kernelInput, factory );
+		final Img< ComplexFloatType > fftImg = FFT.realToComplex( imgInput, factory, numThreads );
+		final Img< ComplexFloatType > fftKernel = FFT.realToComplex( kernelInput, factory, numThreads );
 
 		// multiply in place
 		multiplyComplex( fftImg, fftKernel );
 
 		// inverse FFT in place
-		FFT.complexToRealUnpad( fftImg, output );
+		FFT.complexToRealUnpad( fftImg, output, numThreads );
 	}
 
 	final public static void multiplyComplex( final Img< ComplexFloatType > img, final Img< ComplexFloatType > kernel )
@@ -449,5 +453,23 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable
 				return new CellImgFactory< ComplexFloatType >( 1024 );
 			return new ArrayImgFactory< ComplexFloatType >();
 		}
+	}
+
+	@Override
+	public void setNumThreads()
+	{
+		this.numThreads = Runtime.getRuntime().availableProcessors();
+	}
+
+	@Override
+	public void setNumThreads( final int numThreads )
+	{
+		this.numThreads = numThreads;
+	}
+
+	@Override
+	public int getNumThreads()
+	{
+		return numThreads;
 	}
 }
