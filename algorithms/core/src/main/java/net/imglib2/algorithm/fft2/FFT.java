@@ -89,22 +89,22 @@ public class FFT
 		return fft;
 	}
 
-	final public static < C extends ComplexType< C >, R extends RealType< R > > Img< R > complexToReal( final RandomAccessibleInterval< C > input, final ImgFactory< R > factory, final R type, final int numThreads )
+	final public static < C extends ComplexType< C >, R extends RealType< R > > Img< R > complexToReal( final RandomAccessibleInterval< C > input, final ImgFactory< R > factory, final R type )
 	{
-		return complexToReal( input, input, null, factory, type, numThreads );
+		return complexToReal( input, input, null, factory, type );
 	}
 
-	final public static < C extends ComplexType< C >, R extends RealType< R > > Img< R > complexToReal( final RandomAccessibleInterval< C > input, final Interval outputDimensions, final ImgFactory< R > factory, final R type, final int numThreads )
+	final public static < C extends ComplexType< C >, R extends RealType< R > > Img< R > complexToReal( final RandomAccessibleInterval< C > input, final Interval outputDimensions, final ImgFactory< R > factory, final R type )
 	{
-		return complexToReal( input, input, outputDimensions, factory, type, numThreads );
+		return complexToReal( input, input, outputDimensions, factory, type );
 	}
 
-	final public static < C extends ComplexType< C >, R extends RealType< R > > Img< R > complexToReal( final RandomAccessible< C > input, final Interval inputInterval, final ImgFactory< R > factory, final R type, final int numThreads )
+	final public static < C extends ComplexType< C >, R extends RealType< R > > Img< R > complexToReal( final RandomAccessible< C > input, final Interval inputInterval, final ImgFactory< R > factory, final R type )
 	{
-		return complexToReal( input, inputInterval, null, factory, type, numThreads );
+		return complexToReal( input, inputInterval, null, factory, type );
 	}
 
-	final public static < C extends ComplexType< C >, R extends RealType< R > > Img< R > complexToReal( final RandomAccessible< C > input, Interval inputInterval, final Interval outputDimensions, final ImgFactory< R > factory, final R type, final int numThreads )
+	final public static < C extends ComplexType< C >, R extends RealType< R > > Img< R > complexToReal( final RandomAccessible< C > input, Interval inputInterval, final Interval outputDimensions, final ImgFactory< R > factory, final R type )
 	{
 		final int numDimensions = input.numDimensions();
 
@@ -132,7 +132,7 @@ public class FFT
 			for ( int d = numDimensions - 1; d > 0; --d )
 				FFTMethods.complexToComplex( fft, d, false );
 
-			FFTMethods.complexToReal( fft, output, 0, true, numThreads );
+			FFTMethods.complexToReal( fft, output, 0 );
 
 			return output;
 		}
@@ -140,9 +140,9 @@ public class FFT
 		final Img< R > output =  factory.create( outputDimensions, type );
 
 		for ( int d = numDimensions - 1; d > 0; --d )
-			FFTMethods.complexToComplex( fft, d, false, false, numThreads );
+			FFTMethods.complexToComplex( fft, d, false );
 
-		FFTMethods.complexToReal( fft, output, FFTMethods.unpaddingIntervalCentered( inputInterval, outputDimensions ), 0, true, numThreads );
+		FFTMethods.complexToReal( fft, output, FFTMethods.unpaddingIntervalCentered( inputInterval, outputDimensions ), 0 );
 
 		return output;
 	}
@@ -155,31 +155,31 @@ public class FFT
 			FFTMethods.complexToComplex( output, d, true, false, numThreads );
 	}
 
-	final public static < C extends ComplexType< C > > void complexToComplexForward( final RandomAccessibleInterval< C > data, final int numThreads )
+	final public static < C extends ComplexType< C > > void complexToComplexForward( final RandomAccessibleInterval< C > data )
 	{
 		for ( int d = 0; d < data.numDimensions(); ++d )
-			FFTMethods.complexToComplex( data, d, true, false, numThreads );
+			FFTMethods.complexToComplex( data, d, true );
 	}
 
-	final public static < C extends ComplexType< C > > void complexToComplexInverse( final RandomAccessibleInterval< C > data, final int numThreads )
+	final public static < C extends ComplexType< C > > void complexToComplexInverse( final RandomAccessibleInterval< C > data )
 	{
 		for ( int d = 0; d < data.numDimensions(); ++d )
-			FFTMethods.complexToComplex( data, d, false, false, numThreads );
+			FFTMethods.complexToComplex( data, d, false );
 	}
 
-	final public static < C extends ComplexType< C >, R extends RealType< R > > void complexToReal( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output, final int numThreads )
+	final public static < C extends ComplexType< C >, R extends RealType< R > > void complexToReal( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output )
 	{
 		for ( int d = 1; d < input.numDimensions(); ++d )
-			FFTMethods.complexToComplex( input, d, false, false, numThreads );
+			FFTMethods.complexToComplex( input, d, false );
 
-		FFTMethods.complexToReal( input, output, 0, true, numThreads );
+		FFTMethods.complexToReal( input, output, 0 );
 	}
 
-	final public static < C extends ComplexType< C >, R extends RealType< R > > void complexToRealUnpad( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output, final int numThreads )
+	final public static < C extends ComplexType< C >, R extends RealType< R > > void complexToRealUnpad( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output )
 	{
 		for ( int d = 1; d < input.numDimensions(); ++d )
-			FFTMethods.complexToComplex( input, d, false, false, numThreads );
+			FFTMethods.complexToComplex( input, d, false );
 
-		FFTMethods.complexToReal( input, output, FFTMethods.unpaddingIntervalCentered( input, output ), 0, true, numThreads );
+		FFTMethods.complexToReal( input, output, FFTMethods.unpaddingIntervalCentered( input, output ), 0 );
 	}
 }

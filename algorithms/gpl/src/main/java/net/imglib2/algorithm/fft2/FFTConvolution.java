@@ -288,7 +288,7 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 		multiplyComplex( fftconvolved, fftKernel );
 
 		// inverse FFT in place
-		FFT.complexToRealUnpad( fftconvolved, output, numThreads );
+		FFT.complexToRealUnpad( fftconvolved, output );
 	}
 
 	final public static < R extends RealType< R > > void convolve( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory, final int numThreads )
@@ -338,7 +338,7 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 		multiplyComplex( fftImg, fftKernel );
 
 		// inverse FFT in place
-		FFT.complexToRealUnpad( fftImg, output, numThreads );
+		FFT.complexToRealUnpad( fftImg, output );
 	}
 
 	final public static void multiplyComplex( final Img< ComplexFloatType > img, final Img< ComplexFloatType > kernel )
