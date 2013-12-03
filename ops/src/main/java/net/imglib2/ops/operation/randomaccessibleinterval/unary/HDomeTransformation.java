@@ -84,7 +84,7 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 	}
 
 	@SuppressWarnings( "unchecked" )
-	public HDomeTransformation( ConnectedType type, double height, double substractBefore, ImgFactory imgFactory )
+	public HDomeTransformation( ConnectedType type, double height, double substractBefore, @SuppressWarnings( "rawtypes" ) ImgFactory imgFactory )
 	{
 		m_type = type;
 		m_height = height;
@@ -126,7 +126,7 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 	@Override
 	public UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >> copy()
 	{
-		return new HDomeTransformation< T >( m_type, m_height, m_substractBefore );
+		return new HDomeTransformation< T >( m_type, m_height, m_substractBefore, m_imgFactory );
 	}
 
 	private RandomAccessibleInterval< T > getRegionalMaxima( final RandomAccessibleInterval< T > img, double height, RandomAccessibleInterval< T > output )
