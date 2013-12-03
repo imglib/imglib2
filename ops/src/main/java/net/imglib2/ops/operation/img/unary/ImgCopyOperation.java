@@ -39,7 +39,6 @@ package net.imglib2.ops.operation.img.unary;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
-import net.imglib2.img.Img;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 

@@ -50,7 +50,6 @@ import net.imglib2.ops.operation.real.unary.Normalize;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.ValuePair;
-import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**
