@@ -44,6 +44,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.iterator.IntervalIterator;
 import net.imglib2.ops.types.ConnectedType;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.view.Views;
 
@@ -53,6 +54,13 @@ import net.imglib2.view.Views;
  */
 public class BinaryOps
 {
+
+	private OutOfBoundsFactory< BitType, RandomAccessibleInterval< BitType >> m_factory;
+
+	public BinaryOps( OutOfBoundsFactory< BitType, RandomAccessibleInterval< BitType >> factory )
+	{
+		m_factory = factory;
+	}
 
 	public RandomAccessibleInterval< BitType > erode( ConnectedType type, final RandomAccessibleInterval< BitType > r, final RandomAccessibleInterval< BitType > op, final int count )
 	{
@@ -107,7 +115,7 @@ public class BinaryOps
 
 		Cursor< BitType > resCur = Views.iterable( r ).cursor();
 		Cursor< BitType > srcCur = Views.iterable( op ).localizingCursor();
-		RandomAccess< BitType > srcRA = op.randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, m_factory ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
@@ -163,7 +171,7 @@ public class BinaryOps
 
 		Cursor< BitType > resCur = Views.flatIterable( r ).cursor();
 		Cursor< BitType > srcCur = Views.flatIterable( op ).localizingCursor();
-		RandomAccess< BitType > srcRA = op.randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, m_factory ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
@@ -236,8 +244,8 @@ public class BinaryOps
 	private void nDEightConnected( final RandomAccessibleInterval< BitType > res, final RandomAccessibleInterval< BitType > src, final long[] dim, final boolean erode, final int count )
 	{
 
-		RandomAccess< BitType > r = res.randomAccess();
-		RandomAccess< BitType > op = src.randomAccess();
+		RandomAccess< BitType > r = Views.extend( res, m_factory ).randomAccess();
+		RandomAccess< BitType > op = Views.extend( src, m_factory ).randomAccess();
 
 		final int kernelSize = ( int ) Math.pow( 3, dim.length );
 		final int[] kernel = new int[ kernelSize ];
@@ -316,7 +324,7 @@ public class BinaryOps
 	{
 		Cursor< BitType > resCur = Views.iterable( r ).cursor();
 		Cursor< BitType > srcCur = Views.iterable( op ).localizingCursor();
-		RandomAccess< BitType > srcRA = op.randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, m_factory ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
