@@ -1,5 +1,6 @@
 package net.imglib2.img.array;
 
+import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.ImgFactory;
@@ -20,6 +21,14 @@ public class ArrayImgBufferFactory< T extends NativeType<T> > extends NativeImgF
 	public ArrayImg< T, ? > create( final long[] dim, final T type )
 	{
 		return ( ArrayImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+	}
+
+	@Override
+	public  ArrayImg< T, ? > create( final Dimensions dim, final T type )
+	{
+		final long[] size = new long[ dim.numDimensions() ];
+		dim.dimensions( size );
+		return create( size, type );
 	}
 
 	public static int numEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )

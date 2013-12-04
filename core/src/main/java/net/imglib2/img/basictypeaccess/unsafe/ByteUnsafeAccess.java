@@ -1,28 +1,13 @@
 package net.imglib2.img.basictypeaccess.unsafe;
 
-import java.lang.reflect.Field;
-
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import sun.misc.Unsafe;
 
 public class ByteUnsafeAccess implements ByteAccess, UnsafeDataAccess< ByteUnsafeAccess >
 {
-	private static final Unsafe unsafe;
-	static
-	{
-		try
-		{
-			final Field field = Unsafe.class.getDeclaredField( "theUnsafe" );
-			field.setAccessible( true );
-			unsafe = ( Unsafe ) field.get( null );
-		}
-		catch ( final Exception e )
-		{
-			throw new RuntimeException( e );
-		}
-	}
+	private static final Unsafe unsafe = UnsafeUtils.getUnsafe();
 
-	protected long address;
+	protected final long address;
 
 	public ByteUnsafeAccess( final int numEntities )
 	{
