@@ -62,7 +62,7 @@ import net.imglib2.view.Views;
 public class Example4b
 {
 	public < T extends RealType< T > & NativeType< T > > Example4b()
-		throws ImgIOException, IncompatibleTypeException
+		throws ImgIOException
 	{
 		// open with ImgOpener
 		Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif" );

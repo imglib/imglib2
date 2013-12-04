@@ -34,10 +34,8 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-import ij.ImageJ;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -52,9 +50,9 @@ import net.imglib2.util.RealSum;
 public class Example3b
 {
 	public < T extends RealType< T > & NativeType< T > > Example3b() throws
-		ImgIOException, IncompatibleTypeException
+		ImgIOException
 	{
-		// open with ImgOpener using an ArrayImgFactory
+		// open with ImgOpener
 		final Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif" );
 
 		// compute average of the image
@@ -84,11 +82,8 @@ public class Example3b
 		return realSum.getSum() / count;
 	}
 
-	public static void main( final String[] args ) throws ImgIOException, IncompatibleTypeException
+	public static void main( final String[] args ) throws ImgIOException
 	{
-		// open an ImageJ window
-		new ImageJ();
-
 		// run the example
 		new Example3b();
 	}

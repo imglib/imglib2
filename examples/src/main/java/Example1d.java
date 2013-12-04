@@ -39,7 +39,6 @@ import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
@@ -51,14 +50,14 @@ public class Example1d
 {
 	public Example1d() throws ImgIOException
 	{
-		// open file as float
-		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
-				new ArrayImgFactory< FloatType >(), new FloatType() );
+		// open file as float with ImgOpener
+		Img< FloatType > img =
+			new ImgOpener().openImg( "DrosophilaWing.tif", new FloatType() );
 
 		// display image
 		ImageJFunctions.show( img );
 
-		// use a View to define an interval (min and max coordinate, including) to display
+		// use a View to define an interval (min and max coordinate, inclusive) to display
 		RandomAccessibleInterval< FloatType > view =
 				Views.interval( img, new long[] { 200, 200 }, new long[]{ 500, 350 } );
 

@@ -63,7 +63,7 @@ public class Example7
 	{
 		// open with ImgOpener using an ArrayImgFactory
 		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+			new FloatType() );
 
 		ImageJFunctions.show( img );
 

@@ -62,25 +62,30 @@ public class Example1b
 		File file = new File( "DrosophilaWing.tif" );
 		String path = file.getAbsolutePath();
 
-		// create the ImgOpener and ImgOptions
+		// create the ImgOpener
 		ImgOpener imgOpener = new ImgOpener();
-		ImgOptions imgOptions = new ImgOptions();
 
 		// open with ImgOpener as an ArrayImg
-		imgOptions.setImgModes( ImgMode.ARRAY );
-		Img< T > image = imgOpener.openImg( path, imgOptions );
+		Img< T > image = imgOpener.openImg( path );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image );
 
-		// open with ImgOpener as a CellImg with FloatType
-		// it will be opened as float independent of the type of the image
-		// to enforce to open it as FloatType, an instance of FloatType has to be passed along
+		// create the ImgOptions. This gives us configuration control over how
+		// the ImgOpener will open its datasets.
+		ImgOptions imgOptions = new ImgOptions();
+
+		// ImgOpener will use its own heuristic for determining what Img type to
+		// use, but we can encourage specific types through our ImgOptions.
+		// CellImgs dynamically load image regions and are useful when an image
+		// won't fit in memory
 		imgOptions.setImgModes( ImgMode.CELL );
-		Img< FloatType > imageFloat = imgOpener.openImg( path, new FloatType(), imgOptions );
+
+		// open with ImgOpener as a CellImg
+		Img< FloatType > imageCell = imgOpener.openImg( path, imgOptions );
 
 		// display it via ImgLib using ImageJ
-		ImageJFunctions.show( imageFloat );
+		ImageJFunctions.show( imageCell );
 	}
 
 	public static void main( String[] args ) throws ImgIOException

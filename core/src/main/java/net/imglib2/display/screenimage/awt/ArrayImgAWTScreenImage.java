@@ -45,6 +45,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.PixelInterleavedSampleModel;
+import java.awt.image.Raster;
 import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 
@@ -93,7 +94,7 @@ public abstract class ArrayImgAWTScreenImage< T extends NativeType< T >, A > ext
 		final DataBuffer buffer = createDataBuffer( data );
 		final SampleModel model = new PixelInterleavedSampleModel( buffer.getDataType(), width, height, 1, width, new int[] { 0 } );
 		final ColorModel colorModel = createColorModel( type, buffer );
-		final WritableRaster raster = new WR( model, buffer );
+		final WritableRaster raster = Raster.createWritableRaster(model, buffer, null);
 		return new BufferedImage( colorModel, raster, false, null );
 	}
 
@@ -110,15 +111,4 @@ public abstract class ArrayImgAWTScreenImage< T extends NativeType< T >, A > ext
 		img.dimensions( dimensions );
 		return dimensions;
 	}
-
-	// workaround for bug in jdk. see:
-	// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6353518
-	private final class WR extends WritableRaster
-	{
-		public WR( SampleModel sampleModel, DataBuffer dataBuffer )
-		{
-			super( sampleModel, dataBuffer, new Point( 0, 0 ) );
-		}
-	}
-
 }
