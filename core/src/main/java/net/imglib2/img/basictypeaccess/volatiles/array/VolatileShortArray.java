@@ -1,7 +1,14 @@
-package net.imglib2.type.volatiles.natives;
+package net.imglib2.img.basictypeaccess.volatiles.array;
 
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.img.basictypeaccess.volatiles.VolatileShortAccess;
 
+/**
+ * A {@link ShortArray} with an {@link #isValid()} flag.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
 public class VolatileShortArray implements VolatileShortAccess, ArrayDataAccess< VolatileShortArray >
 {
 	private final boolean isValid;

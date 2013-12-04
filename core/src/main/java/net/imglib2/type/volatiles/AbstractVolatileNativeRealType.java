@@ -34,14 +34,19 @@
  * #L%
  */
 
-package net.imglib2.type.volatiles.natives;
+package net.imglib2.type.volatiles;
 
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.volatiles.AbstractVolatileRealType;
 
 /**
- * Something volatile that has a value and is either VALID or INVALID.
+ * Abstract base class for {@link VolatileRealType}s that wrap
+ * {@link NativeType native} {@link RealType}s.
+ *
+ * @param <R>
+ *            wrapped native {@link RealType}.
+ * @param <T>
+ *            type of derived concrete class.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */

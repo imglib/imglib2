@@ -1,9 +1,19 @@
-package net.imglib2.type.volatiles.natives;
+package net.imglib2.type.numeric.integer;
 
+import net.imglib2.Volatile;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.img.basictypeaccess.volatiles.VolatileShortAccess;
+import net.imglib2.img.basictypeaccess.volatiles.array.VolatileShortArray;
+import net.imglib2.type.volatiles.AbstractVolatileNativeRealType;
 
+/**
+ * A {@link Volatile} variant of {@link UnsignedShortType}. It uses an
+ * underlying {@link UnsignedShortType} that maps into a
+ * {@link VolatileShortAccess}.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
 public class VolatileUnsignedShortType extends AbstractVolatileNativeRealType< UnsignedShortType, VolatileUnsignedShortType >
 {
 	final protected NativeImg< ?, ? extends VolatileShortAccess > img;
@@ -50,14 +60,14 @@ public class VolatileUnsignedShortType extends AbstractVolatileNativeRealType< U
 	@Override
 	public void updateContainer( final Object c )
 	{
-		t.updateContainer( c );
-		setValid( img.update( c ).isValid() );
+		final VolatileShortAccess a = img.update( c );
+		t.dataAccess = a;
+		setValid( a.isValid() );
 	}
 
 	@Override
-	public NativeImg< VolatileUnsignedShortType, ? > createSuitableNativeImg( final NativeImgFactory< VolatileUnsignedShortType > storageFactory, final long[] dim )
+	public NativeImg< VolatileUnsignedShortType, ? extends VolatileShortAccess > createSuitableNativeImg( final NativeImgFactory< VolatileUnsignedShortType > storageFactory, final long[] dim )
 	{
-		// TODO
 		throw new UnsupportedOperationException();
 	}
 

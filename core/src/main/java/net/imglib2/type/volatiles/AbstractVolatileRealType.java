@@ -4,9 +4,12 @@ import net.imglib2.Volatile;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * Abstract base class for {@link VolatileRealType}s that wrap {@link RealType}.
  *
+ * @param <R>
+ *            wrapped {@link RealType}.
  * @param <T>
- *            wrapped {@link RealType}
+ *            type of derived concrete class.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
