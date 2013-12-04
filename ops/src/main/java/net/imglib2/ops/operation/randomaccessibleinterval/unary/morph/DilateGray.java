@@ -41,6 +41,7 @@ import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.ops.operation.UnaryOperation;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
@@ -57,12 +58,15 @@ public class DilateGray< T extends RealType< T >> implements UnaryOperation< Ran
 
 	private final long[][] m_struc;
 
+	private OutOfBoundsFactory< T, RandomAccessibleInterval< T >> m_factory;
+
 	/**
 	 * 
 	 * @param structuringElement
 	 */
-	public DilateGray( final long[][] structuringElement )
+	public DilateGray( final long[][] structuringElement, OutOfBoundsFactory< T, RandomAccessibleInterval< T > > factory )
 	{
+		m_factory = factory;
 		m_struc = structuringElement;
 	}
 
@@ -77,7 +81,7 @@ public class DilateGray< T extends RealType< T >> implements UnaryOperation< Ran
 	@Override
 	public RandomAccessibleInterval< T > compute( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< T > output )
 	{
-		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( input.randomAccess(), m_struc );
+		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( Views.extend( input, m_factory ).randomAccess(), m_struc );
 		final Cursor< T > out = Views.iterable( output ).localizingCursor();
 		double m;
 		while ( out.hasNext() )
@@ -99,6 +103,6 @@ public class DilateGray< T extends RealType< T >> implements UnaryOperation< Ran
 	@Override
 	public DilateGray< T > copy()
 	{
-		return new DilateGray< T >( m_struc );
+		return new DilateGray< T >( m_struc, m_factory );
 	}
 }

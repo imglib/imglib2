@@ -40,6 +40,7 @@ package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.types.ConnectedType;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.logic.BitType;
 
 /**
@@ -56,11 +57,13 @@ public final class Dilate implements UnaryOperation< RandomAccessibleInterval< B
 
 	private final BinaryOps m_binOps;
 
-	public Dilate( ConnectedType type, final int neighbourhoodCount )
+	private final OutOfBoundsFactory< BitType, RandomAccessibleInterval< BitType >> m_factory;
+
+	public Dilate( ConnectedType type, OutOfBoundsFactory< BitType, RandomAccessibleInterval< BitType > > factory, final int neighbourhoodCount )
 	{
 		m_neighbourhoodCount = neighbourhoodCount;
 		m_type = type;
-		m_binOps = new BinaryOps();
+		m_binOps = new BinaryOps( m_factory =  factory );
 	}
 
 	@Override
@@ -74,6 +77,6 @@ public final class Dilate implements UnaryOperation< RandomAccessibleInterval< B
 	@Override
 	public UnaryOperation< RandomAccessibleInterval< BitType >, RandomAccessibleInterval< BitType > > copy()
 	{
-		return new Dilate( m_type, m_neighbourhoodCount );
+		return new Dilate( m_type, m_factory, m_neighbourhoodCount );
 	}
 }

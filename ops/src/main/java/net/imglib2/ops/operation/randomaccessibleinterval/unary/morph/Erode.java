@@ -40,6 +40,7 @@ package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.types.ConnectedType;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.logic.BitType;
 
 /**
@@ -54,17 +55,19 @@ public final class Erode implements UnaryOperation< RandomAccessibleInterval< Bi
 
 	private final BinaryOps m_binOps;
 
+	private final OutOfBoundsFactory< BitType, RandomAccessibleInterval< BitType >> m_factory;
+
 	/**
 	 * @param type
 	 * @param neighbourhoodCount
 	 * @param iterations
 	 *            number of iterations, at least 1
 	 */
-	public Erode( ConnectedType type, final int neighbourhoodCount )
+	public Erode( ConnectedType type, OutOfBoundsFactory< BitType, RandomAccessibleInterval< BitType > > factory, final int neighbourhoodCount )
 	{
 		m_neighbourhoodCount = neighbourhoodCount;
 		m_type = type;
-		m_binOps = new BinaryOps();
+		m_binOps = new BinaryOps( m_factory = factory );
 	}
 
 	@Override
@@ -78,6 +81,6 @@ public final class Erode implements UnaryOperation< RandomAccessibleInterval< Bi
 	@Override
 	public UnaryOperation< RandomAccessibleInterval< BitType >, RandomAccessibleInterval< BitType > > copy()
 	{
-		return new Erode( m_type, m_neighbourhoodCount );
+		return new Erode( m_type, m_factory, m_neighbourhoodCount );
 	}
 }
