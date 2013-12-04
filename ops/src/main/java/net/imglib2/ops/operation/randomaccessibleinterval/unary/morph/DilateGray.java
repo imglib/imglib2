@@ -37,7 +37,6 @@
 
 package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 
-
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
@@ -48,18 +47,18 @@ import net.imglib2.view.Views;
 
 /**
  * Dilate operation on gray-level.
- *
+ * 
  * @author Felix Schoenenberger (University of Konstanz)
- *
+ * 
  * @param <T>
  */
-public class DilateGray< T extends RealType< T >> implements UnaryOperation<  RandomAccessibleInterval< T >,  RandomAccessibleInterval< T > >
+public class DilateGray< T extends RealType< T >> implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > >
 {
 
 	private final long[][] m_struc;
 
 	/**
-	 *
+	 * 
 	 * @param structuringElement
 	 */
 	public DilateGray( final long[][] structuringElement )
@@ -70,17 +69,16 @@ public class DilateGray< T extends RealType< T >> implements UnaryOperation<  Ra
 	/**
 	 * @param structuringElement
 	 */
-	public DilateGray( final Img<BitType> structuringElement )
-    {
-        m_struc = StructuringElementCursor.createElementFromImg(structuringElement);
-    }
+	public DilateGray( final Img< BitType > structuringElement )
+	{
+		m_struc = StructuringElementCursor.createElementFromImg( structuringElement );
+	}
 
 	@Override
-	public RandomAccessibleInterval< T > compute( final  RandomAccessibleInterval< T > input, final  RandomAccessibleInterval< T > output )
+	public RandomAccessibleInterval< T > compute( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< T > output )
 	{
-		final T v = Views.iterable(input).firstElement().createVariable();
-		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( Views.extendValue( input, v ).randomAccess(), m_struc );
-		final Cursor< T > out = Views.iterable(output).localizingCursor();
+		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( input.randomAccess(), m_struc );
+		final Cursor< T > out = Views.iterable( output ).localizingCursor();
 		double m;
 		while ( out.hasNext() )
 		{

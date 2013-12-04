@@ -66,8 +66,7 @@ public class ErodeGray< T extends RealType< T >> implements UnaryOperation< Rand
 	@Override
 	public RandomAccessibleInterval< T > compute( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< T > output )
 	{
-		final T v = Views.iterable(input).firstElement().createVariable();
-		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( Views.extendValue( input, v ).randomAccess(), m_struc );
+		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( input.randomAccess(), m_struc );
 		final Cursor< T > out = Views.iterable(output).localizingCursor();
 		double m;
 		while ( out.hasNext() )
