@@ -37,7 +37,10 @@
 package net.imglib2.ui;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import net.imglib2.concatenate.Concatenable;
 import net.imglib2.display.screenimage.awt.ARGBScreenImage;
@@ -107,6 +110,17 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 	 * Whether double buffering is used.
 	 */
 	final protected boolean doubleBuffered;
+
+	/**
+	 * Double-buffer index of next {@link #screenImages image} to render.
+	 */
+	final protected ArrayDeque< Integer > renderIdQueue;
+
+	/**
+	 * Maps from {@link BufferedImage} to double-buffer index.
+	 * Needed for double-buffering.
+	 */
+	final protected HashMap< BufferedImage, Integer > bufferedImageToRenderId;
 
 	/**
 	 * Used to render the image for display. Two images per screen resolution
@@ -214,8 +228,10 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 		this.screenScales = screenScales.clone();
 		this.doubleBuffered = doubleBuffered;
 		this.numRenderingThreads = numRenderingThreads;
-		screenImages = new ARGBScreenImage[ screenScales.length ][ 2 ];
-		bufferedImages = new BufferedImage[ screenScales.length ][ 2 ];
+		renderIdQueue = new ArrayDeque< Integer >();
+		bufferedImageToRenderId = new HashMap< BufferedImage, Integer >();
+		screenImages = new ARGBScreenImage[ screenScales.length ][ 3 ];
+		bufferedImages = new BufferedImage[ screenScales.length ][ 3 ];
 		screenScaleTransforms = new ArrayList< A >();
 		for ( int i = 0; i < screenScales.length; ++i )
 			screenScaleTransforms.add( transformType.createTransform() );
@@ -253,24 +269,40 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 	/**
 	 * Check whether the size of the display component was changed and
 	 * recreate {@link #screenImages} and {@link #screenScaleTransforms} accordingly.
+	 *
+	 * @return whether the size was changed.
 	 */
 	protected synchronized boolean checkResize()
 	{
 		final int componentW = display.getWidth();
 		final int componentH = display.getHeight();
-		if ( componentW <= 0 || componentH <= 0 )
-			return false;
-		if ( screenImages[ 0 ][ 0 ] == null || screenImages[ 0 ][ 0 ].dimension( 0 ) * screenScales[ 0 ] != componentW || screenImages[ 0 ][ 0 ].dimension( 1 )  * screenScales[ 0 ] != componentH )
+		if ( screenImages[ 0 ][ 0 ] == null || screenImages[ 0 ][ 0 ].dimension( 0 ) * screenScales[ 0 ] != componentW || screenImages[ 0 ][ 0 ].dimension( 1 ) * screenScales[ 0 ] != componentH )
 		{
+			renderIdQueue.clear();
+			renderIdQueue.addAll( Arrays.asList( 0, 1, 2 ) );
+			bufferedImageToRenderId.clear();
 			for ( int i = 0; i < screenScales.length; ++i )
 			{
 				final double screenToViewerScale = screenScales[ i ];
 				final int w = ( int ) ( screenToViewerScale * componentW );
 				final int h = ( int ) ( screenToViewerScale * componentH );
-				for ( int b = 0; b < ( doubleBuffered ? 2 : 1 ); ++b )
+				if ( doubleBuffered )
 				{
-					screenImages[ i ][ b ] = new ARGBScreenImage( w, h );
-					bufferedImages[ i ][ b ] = GuiUtil.getBufferedImage( screenImages[ i ][ b ] );
+					for ( int b = 0; b < ( doubleBuffered ? 3 : 1 ); ++b )
+					{
+						// reuse storage arrays of level 0 (highest resolution)
+						screenImages[ i ][ b ] = ( i == 0 ) ?
+								new ARGBScreenImage( w, h ) :
+								new ARGBScreenImage( w, h, screenImages[ 0 ][ b ].getData() );
+						final BufferedImage bi = GuiUtil.getBufferedImage( screenImages[ i ][ b ] );
+						bufferedImages[ i ][ b ] = bi;
+						bufferedImageToRenderId.put( bi, b );
+					}
+				}
+				else
+				{
+					screenImages[ i ][ 0 ] = new ARGBScreenImage( w, h );
+					bufferedImages[ i ][ 0 ] = GuiUtil.getBufferedImage( screenImages[ i ][ 0 ] );
 				}
 				final A scale = screenScaleTransforms.get( i );
 				final double xScale = ( double ) w / componentW;
@@ -280,8 +312,9 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 				scale.set( 0.5 * xScale - 0.5, 0, scale.numDimensions() );
 				scale.set( 0.5 * yScale - 0.5, 1, scale.numDimensions() );
 			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	/**
@@ -321,17 +354,16 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 	@Override
 	public boolean paint( final A viewerTransform )
 	{
-		if ( !checkResize() )
+		if ( display.getWidth() <= 0 || display.getHeight() <= 0 )
 			return false;
+
+		checkResize();
 
 		// the screen scale at which we will be rendering
 		final int currentScreenScaleIndex;
 
 		// the corresponding screen scale transform
 		final A currentScreenScaleTransform;
-
-		// the corresponding ARGBScreenImage (to render to)
-		final ARGBScreenImage screenImage;
 
 		// the corresponding BufferedImage (to paint to the canvas)
 		final BufferedImage bufferedImage;
@@ -345,8 +377,9 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 			currentScreenScaleIndex = requestedScreenScaleIndex;
 			currentScreenScaleTransform = screenScaleTransforms.get( currentScreenScaleIndex );
 
-			screenImage = screenImages[ currentScreenScaleIndex ][ 0 ];
-			bufferedImage = bufferedImages[ currentScreenScaleIndex ][ 0 ];
+			final int renderId = renderIdQueue.peek();
+			bufferedImage = bufferedImages[ currentScreenScaleIndex ][ renderId ];
+			final ARGBScreenImage screenImage = screenImages[ currentScreenScaleIndex ][ renderId ];
 			p = createProjector( viewerTransform, currentScreenScaleTransform, screenImage );
 			projector = p;
 		}
@@ -359,14 +392,13 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 			// if rendering was not cancelled...
 			if ( success )
 			{
-				display.setBufferedImage( bufferedImage );
-
+				final BufferedImage bi = display.setBufferedImage( bufferedImage );
 				if ( doubleBuffered )
 				{
-					screenImages[ currentScreenScaleIndex ][ 0 ] = screenImages[ currentScreenScaleIndex ][ 1 ];
-					screenImages[ currentScreenScaleIndex ][ 1 ] = screenImage;
-					bufferedImages[ currentScreenScaleIndex ][ 0 ] = bufferedImages[ currentScreenScaleIndex ][ 1 ];
-					bufferedImages[ currentScreenScaleIndex ][ 1 ] = bufferedImage;
+					renderIdQueue.pop();
+					final Integer id = bufferedImageToRenderId.get( bi );
+					if ( id != null )
+						renderIdQueue.add( id );
 				}
 
 				final long rendertime = p.getLastFrameRenderNanoTime();
