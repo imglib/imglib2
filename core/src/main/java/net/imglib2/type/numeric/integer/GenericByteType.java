@@ -53,13 +53,13 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 {
 	int i = 0;
 
-	final protected NativeImg<T, ? extends ByteAccess> img;
+	final protected NativeImg<?, ? extends ByteAccess> img;
 
 	// the DataAccess that holds the information
 	protected ByteAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public GenericByteType( final NativeImg<T, ? extends ByteAccess> byteStorage )
+	public GenericByteType( final NativeImg<?, ? extends ByteAccess> byteStorage )
 	{
 		img = byteStorage;
 	}

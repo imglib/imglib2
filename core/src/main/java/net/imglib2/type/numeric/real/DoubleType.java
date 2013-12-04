@@ -55,13 +55,13 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 {
 	private int i = 0;
 
-	final protected NativeImg<DoubleType, ? extends DoubleAccess> img;
-	
-	// the DataAccess that holds the information 
+	final protected NativeImg<?, ? extends DoubleAccess> img;
+
+	// the DataAccess that holds the information
 	protected DoubleAccess dataAccess;
-	
+
 	// this is the constructor if you want it to read from an array
-	public DoubleType( NativeImg<DoubleType, ? extends DoubleAccess> doubleStorage )
+	public DoubleType( final NativeImg<?, ? extends DoubleAccess> doubleStorage )
 	{
 		img = doubleStorage;
 	}
