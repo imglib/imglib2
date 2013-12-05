@@ -117,6 +117,9 @@ public class LocalExtrema {
 		final int splitd = n - 1;
 		final int numTasks = (int) Math.min(full.dimension(splitd), Runtime
 				.getRuntime().availableProcessors() * 20);
+		if (numTaks == 0) {
+			numTasks = 1;
+		}
 		final long dsize = full.dimension(splitd) / numTasks;
 		final long[] min = new long[n];
 		final long[] max = new long[n];
