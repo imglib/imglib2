@@ -65,15 +65,50 @@ public class DogDetection<T extends RealType<T> & NativeType<T>> {
 
 	public <I extends RandomAccessibleInterval<T> & LinearSpace<?>> DogDetection(
 			final I input, final double sigma1, final double sigma2,
-			final ExtremaType extremaType, final double minPeakValue) {
+			final ExtremaType extremaType, final double minPeakValue,
+			final ExecutorService service) {
 		this(Views.extendMirrorSingle(input), input, getcalib(input), sigma1,
-				sigma2, extremaType, minPeakValue);
+				sigma2, extremaType, minPeakValue, true, service);
 	}
 
+	/**
+	 * Sets up a {@link DogDetection} with the specified parameters (does not do
+	 * any computation yet).
+	 * 
+	 * @param input
+	 *            the input image.
+	 * @param interval
+	 *            which interval of the input image to process
+	 * @param calibration
+	 *            The calibration, i.e., the voxel sizes in some unit for the
+	 *            input image.
+	 * @param sigma1
+	 *            sigma for the smaller scale in the same units as calibration.
+	 * @param sigma2
+	 *            sigma for the larger scale in the same units as calibration.
+	 * @param extremaType
+	 *            which type of extrema (minima, maxima) to detect. Note that
+	 *            minima in the Difference-of-Gaussian correspond to bright
+	 *            blobs on dark background. Maxima correspond to dark blobs on
+	 *            bright background.
+	 * @param minPeakValue
+	 *            threshold value for detected extrema. Maxima below
+	 *            {@code minPeakValue} or minima above {@code -minPeakValue}
+	 *            will be disregarded.
+	 * @param normalizeMinPeakValue
+	 *            Whether the peak value should be normalized. The
+	 *            Difference-of-Gaussian is an approximation of the
+	 *            scale-normalized Laplacian-of-Gaussian, with a factor of
+	 *            <em>f = sigma1 / (sigma2 - sigma1)</em>. If
+	 *            {@code normalizeMinPeakValue=true}, the {@code minPeakValue}
+	 *            will be divided by <em>f</em> (which is equivalent to scaling
+	 *            the DoG by <em>f</em>).
+	 */
 	public DogDetection(final RandomAccessible<T> input,
 			final Interval interval, final double[] calibration,
 			final double sigma1, final double sigma2,
-			final ExtremaType extremaType, final double minPeakValue) {
+			final ExtremaType extremaType, final double minPeakValue,
+			final boolean normalizeMinPeakValue, final ExecutorService service) {
 		this.input = input;
 		this.interval = interval;
 		this.sigma1 = sigma1;
@@ -83,6 +118,7 @@ public class DogDetection<T extends RealType<T> & NativeType<T>> {
 		this.minf = 2;
 		this.extremaType = extremaType;
 		this.minPeakValue = minPeakValue;
+		this.normalizeMinPeakValue = normalizeMinPeakValue;
 		this.keepDoGImg = true;
 	}
 
@@ -111,15 +147,23 @@ public class DogDetection<T extends RealType<T> & NativeType<T>> {
 				imageSigma, minf, pixelSize, sigma1, sigma2);
 		DifferenceOfGaussian.DoG(sigmas[0], sigmas[1], input, dogImg, service);
 		final T val = type.createVariable();
+		final double minValueT = type.getMinValue();
+		final double maxValueT = type.getMaxValue();
 		final LocalNeighborhoodCheck<Point, T> localNeighborhoodCheck;
+		final double normalization = normalizeMinPeakValue ? (sigma2 / sigma1 - 1.0)
+				: 1.0;
 		switch (extremaType) {
 		case MINIMA:
-			val.setReal(-minPeakValue * (sigma2 / sigma1 - 1.0));
+			val.setReal(Math.max(
+					Math.min(-minPeakValue * normalization, maxValueT),
+					minValueT));
 			localNeighborhoodCheck = new LocalExtrema.MinimumCheck<T>(val);
 			break;
 		case MAXIMA:
 		default:
-			val.setReal(minPeakValue * (sigma2 / sigma1 - 1.0));
+			val.setReal(Math.max(
+					Math.min(minPeakValue * normalization, maxValueT),
+					minValueT));
 			localNeighborhoodCheck = new LocalExtrema.MaximumCheck<T>(val);
 		}
 		final ArrayList<Point> peaks = LocalExtrema.findLocalExtrema(dogImg,
@@ -156,6 +200,7 @@ public class DogDetection<T extends RealType<T> & NativeType<T>> {
 	protected double minf;
 	protected ExtremaType extremaType;
 	protected double minPeakValue;
+	protected boolean normalizeMinPeakValue;
 	protected boolean keepDoGImg;
 
 	public void setImageSigma(final double imageSigma) {
