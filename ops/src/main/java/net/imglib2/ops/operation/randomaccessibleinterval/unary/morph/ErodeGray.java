@@ -39,6 +39,7 @@ package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
@@ -49,26 +50,28 @@ import net.imglib2.view.Views;
  * 
  * @param <T>
  */
-public class ErodeGray< T extends RealType< T >> implements UnaryOperation< RandomAccessibleInterval< T > , RandomAccessibleInterval< T > >
+public class ErodeGray< T extends RealType< T >> implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > >
 {
 
 	private final long[][] m_struc;
+
+	private OutOfBoundsFactory< T, RandomAccessibleInterval< T >> m_factory;
 
 	/**
 	 * 
 	 * @param structuringElement
 	 */
-	public ErodeGray( final long[][] structuringElement )
+	public ErodeGray( final long[][] structuringElement, OutOfBoundsFactory< T, RandomAccessibleInterval< T > > factory )
 	{
+		m_factory = factory;
 		m_struc = structuringElement;
 	}
 
 	@Override
 	public RandomAccessibleInterval< T > compute( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< T > output )
 	{
-		final T v = Views.iterable(input).firstElement().createVariable();
-		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( Views.extendValue( input, v ).randomAccess(), m_struc );
-		final Cursor< T > out = Views.iterable(output).localizingCursor();
+		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( Views.extend( input, m_factory ).randomAccess(), m_struc );
+		final Cursor< T > out = Views.iterable( output ).localizingCursor();
 		double m;
 		while ( out.hasNext() )
 		{
@@ -89,6 +92,6 @@ public class ErodeGray< T extends RealType< T >> implements UnaryOperation< Rand
 	@Override
 	public ErodeGray< T > copy()
 	{
-		return new ErodeGray< T >( m_struc );
+		return new ErodeGray< T >( m_struc, m_factory );
 	}
 }

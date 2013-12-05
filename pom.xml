@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>1.94</version>
+		<version>1.106</version>
 	</parent>
 
 	<groupId>net.imglib2</groupId>
@@ -23,7 +23,6 @@
 		<module>core</module>
 		<module>examples</module>
 		<module>ij</module>
-		<module>io</module>
 		<module>meta</module>
 		<module>ops</module>
 		<module>realtransform</module>
@@ -33,7 +32,8 @@
 	</modules>
 
 	<properties>
-		<project.rootdir>${basedir}/..</project.rootdir>
+		<project.rootdir>${basedir}</project.rootdir>
+		<jama.version>1.0.2</jama.version>
 	</properties>
 
 	<build>
@@ -258,13 +258,6 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			<unsubscribe>http://imagej.net/mailman/listinfo/imagej-devel</unsubscribe>
 			<post>imagej-devel@imagej.net</post>
 			<archive>http://imagej.net/pipermail/imagej-devel/</archive>
-		</mailingList>
-		<mailingList>
-			<name>Fiji-users</name>
-			<subscribe>http://groups.google.com/group/fiji-users</subscribe>
-			<unsubscribe>http://groups.google.com/group/fiji-users</unsubscribe>
-			<post>fiji-users@googlegroups.com</post>
-			<archive>http://groups.google.com/group/fiji-users</archive>
 		</mailingList>
 		<mailingList>
 			<name>Fiji-devel</name>

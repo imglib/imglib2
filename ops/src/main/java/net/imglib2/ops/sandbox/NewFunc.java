@@ -39,11 +39,14 @@ package net.imglib2.ops.sandbox;
 
 /**
  * TODO
- *
+ * 
  */
-public interface NewFunc<U,V> {
-	void evaluate(NewIterableInterval<U> interval, V output);
-	//void evaluate(Cursor<U> interval, V output);
+public interface NewFunc< U, V >
+{
+	void evaluate( NewIterableInterval< U > interval, V output );
+
+	// void evaluate(Cursor<U> interval, V output);
 	V createOutput();
-	NewFunc<U,V> copy();
+
+	NewFunc< U, V > copy();
 }

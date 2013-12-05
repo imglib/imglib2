@@ -19,17 +19,32 @@
 			<artifactId>imglib2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>imglib2-meta</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>jama</groupId>
+			<artifactId>jama</artifactId>
+			<version>${jama.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<!-- TODO: define a real POM for mines-jtk project -->
+			<groupId>edu.mines</groupId>
+			<artifactId>mines-jtk</artifactId>
+			<version>20100113</version>
+		</dependency>
 	</dependencies>
 
 	<properties>
-		<project.rootdir>${basedir}/../../..</project.rootdir>
+		<project.rootdir>${basedir}/../..</project.rootdir>
 	</properties>
 
 	<build>

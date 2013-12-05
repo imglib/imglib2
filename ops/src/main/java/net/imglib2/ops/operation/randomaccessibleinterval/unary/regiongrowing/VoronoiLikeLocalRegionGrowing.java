@@ -42,11 +42,11 @@ import java.util.Collection;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.Img;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
+import net.imglib2.view.Views;
 
 /**
  * First attempt to voronoi-like local region growing. NOT FINISHED YET!
@@ -56,7 +56,7 @@ import net.imglib2.type.Type;
 public class VoronoiLikeLocalRegionGrowing< L extends Comparable< L >, T extends Type< T > & Comparable< T >> extends VoronoiLikeRegionGrowing< L, T >
 {
 
-	private Img< T > m_srcImg;
+	private RandomAccessibleInterval< T > m_srcImg;
 
 	private RandomAccess< T > m_srcImgRA;
 
@@ -68,9 +68,9 @@ public class VoronoiLikeLocalRegionGrowing< L extends Comparable< L >, T extends
 	 *            fills the wholes in a post-processing step within segments of
 	 *            the same label
 	 */
-	public VoronoiLikeLocalRegionGrowing( Img< T > srcImg, boolean fillHoles )
+	public VoronoiLikeLocalRegionGrowing( RandomAccessibleInterval< T > srcImg, boolean fillHoles )
 	{
-		super( srcImg, srcImg.firstElement().createVariable(), fillHoles );
+		super( srcImg, Views.iterable( srcImg ).firstElement().createVariable(), fillHoles );
 		m_srcImg = srcImg;
 		m_srcImgRA = m_srcImg.randomAccess();
 

@@ -31,7 +31,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgOpener;
 import net.imglib2.type.numeric.real.FloatType;
 
 /**

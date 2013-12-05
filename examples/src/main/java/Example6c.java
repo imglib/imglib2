@@ -53,18 +53,17 @@
  * v1.0, which is available at http://www.eclipse.org/legal/cpl-v10.html
  */
 import ij.ImageJ;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.algorithm.fft.FourierConvolution;
 import net.imglib2.algorithm.fft.FourierTransform;
 import net.imglib2.algorithm.fft.InverseFourierTransform;
-import net.imglib2.display.ComplexImaginaryFloatConverter;
-import net.imglib2.display.ComplexPhaseFloatConverter;
-import net.imglib2.display.ComplexRealFloatConverter;
+import net.imglib2.converter.ComplexImaginaryFloatConverter;
+import net.imglib2.converter.ComplexPhaseFloatConverter;
+import net.imglib2.converter.ComplexRealFloatConverter;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -80,11 +79,11 @@ public class Example6c
 {
 	public Example6c() throws ImgIOException, IncompatibleTypeException
 	{
-		// open with ImgOpener using an ArrayImgFactory
+		// open with ImgOpener as FloatTypes
 		final Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+			new FloatType() );
 		final Img< FloatType > template = new ImgOpener().openImg( "WingTemplate.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+			new FloatType() );
 
 		// display image and template
 		ImageJFunctions.show( image ).setTitle( "input" );

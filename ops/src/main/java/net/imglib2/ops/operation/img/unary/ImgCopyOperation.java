@@ -38,19 +38,20 @@
 package net.imglib2.ops.operation.img.unary;
 
 import net.imglib2.Cursor;
-import net.imglib2.img.Img;
+import net.imglib2.IterableInterval;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 
 /**
+ * TODO: Can now copy IterableIntervals. Possibly rename/move to different package?
  * @author Christian Dietz (University of Konstanz)
  * @author Martin Horn (University of Konstanz)
  */
-public class ImgCopyOperation< T extends Type< T >> implements UnaryOperation< Img< T >, Img< T >>
+public class ImgCopyOperation< T extends Type< T >> implements UnaryOperation< IterableInterval< T >, IterableInterval< T >>
 {
 
 	@Override
-	public Img< T > compute( Img< T > input, Img< T > output )
+	public IterableInterval< T > compute( IterableInterval< T > input, IterableInterval< T > output )
 	{
 		
 		if(!input.iterationOrder().equals(output.iterationOrder())){

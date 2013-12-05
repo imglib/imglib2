@@ -42,8 +42,8 @@ import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -59,9 +59,11 @@ public class Example2b
 
 	public Example2b() throws ImgIOException
 	{
-		// open with ImgOpener using an ArrayImgFactory
+		// open with ImgOpener. In addition to using ImgOptions, we can directly
+		// pass an ImgFactory to the ImgOpener. This bypasses the Img selection
+		// heuristic and allows custom ImgFactory implementations to be used
 		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+			new ArrayImgFactory< FloatType >() );
 
 		// copy the image into a CellImg with a cellsize of 20x20
 //		Img< FloatType > duplicate = copyImageWrong( img, new CellImgFactory< FloatType >( 20 ) );

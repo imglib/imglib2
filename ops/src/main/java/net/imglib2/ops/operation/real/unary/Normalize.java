@@ -41,49 +41,85 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
+ * 
+ * Scales the value of the input type (supposed to be lying within the origin
+ * interval [oldMin,oldMax]) to the a value within the interval [newMin,newMax]
+ * by a certain factor. If the the new value exceeds the interval
+ * [newMin,newMax] it will be clipped.
+ * 
  * @author Christian Dietz (University of Konstanz)
  * @author Martin Horn (University of Konstanz)
  * 
- * @param <I>
- * @param <O>
+ * @param <T>
  */
 public class Normalize< T extends RealType< T >> implements UnaryOperation< T, T >, Converter< T, T >
 {
 
-	private final double m_newMin;
+	private final double oldMin;
 
-	private final double m_factor;
+	private final double oldMax;
 
-	private final double m_oldMin;
+	private final double newMin;
 
+	private final double newMax;
+
+	private final double factor;
+
+	/**
+	 * The normalization factor is automatically determined from the input
+	 * parameters types.
+	 * 
+	 * @param oldMin
+	 * @param oldMax
+	 * @param newMin
+	 * @param newMax
+	 */
 	public Normalize( T oldMin, T oldMax, T newMin, T newMax )
 	{
 		this( oldMin.getRealDouble(), oldMax.getRealDouble(), newMin.getRealDouble(), newMax.getRealDouble() );
 	}
 
-	protected Normalize( double factor, double oldMin, double newMin )
+	/**
+	 * @param factor
+	 * @param oldMin
+	 * @param oldMax
+	 * @param newMin
+	 * @param newMax
+	 */
+	protected Normalize( double factor, double oldMin, double oldMax, double newMin, double newMax )
 	{
-		m_oldMin = oldMin;
-		m_newMin = newMin;
-		m_factor = factor;
+		this.oldMin = oldMin;
+		this.oldMax = oldMax;
+		this.newMin = newMin;
+		this.newMax = newMax;
+		this.factor = factor;
 	}
 
+	/**
+	 * The normalization factor is automatically determined from the input
+	 * parameters.
+	 * 
+	 * @param oldMin
+	 * @param oldMax
+	 * @param newMin
+	 * @param newMax
+	 */
 	public Normalize( double oldMin, double oldMax, double newMin, double newMax )
 	{
-		this( normalizationFactor( oldMin, oldMax, newMin, newMax ), oldMin, newMin );
+		this( normalizationFactor( oldMin, oldMax, newMin, newMax ), oldMin, oldMax, newMin, newMax );
 	}
 
 	@Override
 	public T compute( T input, T output )
 	{
-		output.setReal( ( input.getRealDouble() - m_oldMin ) * m_factor + m_newMin );
+		output.setReal( Math.min( newMax, +Math.max( newMin, ( input.getRealDouble() - oldMin ) * factor + newMin ) ) );
 		return output;
 	}
 
 	@Override
 	public UnaryOperation< T, T > copy()
 	{
-		return new Normalize< T >( m_factor, m_oldMin, m_newMin );
+		return new Normalize< T >( factor, oldMin, oldMax, newMin, newMax );
 	}
 
 	@Override
@@ -92,6 +128,16 @@ public class Normalize< T extends RealType< T >> implements UnaryOperation< T, T
 		compute( input, output );
 	}
 
+	/**
+	 * Determines the factor to map the interval [oldMin, oldMax] to
+	 * [newMin,newMax].
+	 * 
+	 * @param oldMin
+	 * @param oldMax
+	 * @param newMin
+	 * @param newMax
+	 * @return the normalization factor
+	 */
 	public synchronized static double normalizationFactor( double oldMin, double oldMax, double newMin, double newMax )
 	{
 		return 1.0d / ( oldMax - oldMin ) * ( ( newMax - newMin ) );

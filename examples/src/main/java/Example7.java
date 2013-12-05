@@ -47,8 +47,8 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.interpolation.randomaccess.LanczosInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
@@ -63,7 +63,7 @@ public class Example7
 	{
 		// open with ImgOpener using an ArrayImgFactory
 		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+			new FloatType() );
 
 		ImageJFunctions.show( img );
 

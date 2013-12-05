@@ -38,7 +38,6 @@
 package net.imglib2.ops.operation.iterableinterval.unary;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -53,14 +52,14 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
 /**
- * TODO: Implement more interpolators (e.g. bilinear interpolation)
+ * Implement more interpolators (e.g. bilinear interpolation)
  * 
  * @author Christian Dietz (University of Konstanz)
- *
+ * 
  * @param <T>
- * @param <II>
  */
-public class Resample< T extends RealType< T >, II extends IterableInterval< T > & RandomAccessibleInterval< T >> implements UnaryOperation< II, II >
+@Deprecated
+public class Resample< T extends RealType< T > > implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > >
 {
 
 	public enum Mode
@@ -76,7 +75,7 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 	}
 
 	@Override
-	public II compute( II op, II res )
+	public RandomAccessibleInterval< T > compute( RandomAccessibleInterval< T > op, RandomAccessibleInterval< T > res )
 	{
 
 		InterpolatorFactory< T, RandomAccessible< T >> ifac;
@@ -93,22 +92,22 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 			break;
 		case PERIODICAL:
 			RandomAccess< T > srcRA = Views.extendPeriodic( op ).randomAccess();
-			Cursor< T > resCur = res.localizingCursor();
+			Cursor< T > resCur = Views.iterable( res ).localizingCursor();
 			while ( resCur.hasNext() )
 			{
 				resCur.fwd();
 				srcRA.setPosition( resCur );
 				resCur.get().set( srcRA.get() );
 			}
-			
+
 			return res;
-			default:
-				throw new IllegalArgumentException("Unknown mode in Resample.java");
+		default:
+			throw new IllegalArgumentException( "Unknown mode in Resample.java" );
 		}
 
-		final RealRandomAccess< T > inter = ifac.create( Views.extend( op, new OutOfBoundsMirrorFactory< T, II >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) ) );
+		final RealRandomAccess< T > inter = ifac.create( Views.extend( op, new OutOfBoundsMirrorFactory< T, RandomAccessibleInterval< T > >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) ) );
 
-		final Cursor< T > c2 = res.localizingCursor();
+		final Cursor< T > c2 = Views.iterable( res ).localizingCursor();
 		final float[] s = new float[ res.numDimensions() ];
 		for ( int i = 0; i < s.length; i++ )
 			s[ i ] = ( float ) op.dimension( i ) / res.dimension( i );
@@ -130,8 +129,8 @@ public class Resample< T extends RealType< T >, II extends IterableInterval< T >
 	}
 
 	@Override
-	public UnaryOperation< II, II > copy()
+	public UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > > copy()
 	{
-		return new Resample< T, II >( m_mode );
+		return new Resample< T >( m_mode );
 	}
 }

@@ -45,6 +45,7 @@ import net.imglib2.type.Type;
  *
  * @author Stephan Preibisch
  */
+@Deprecated
 public class WritableLineIterator< T extends Type<T> > extends AbstractLineIterator
 {
 	final RandomAccess< T > randomAccess;

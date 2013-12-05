@@ -37,6 +37,7 @@
 
 package net.imglib2.ops.operation.real.binary;
 
+import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.ops.operation.complex.binary.ComplexBinaryOperation;
 import net.imglib2.type.numeric.RealType;
 

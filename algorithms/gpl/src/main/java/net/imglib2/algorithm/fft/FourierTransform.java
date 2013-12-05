@@ -51,7 +51,9 @@ import net.imglib2.util.Util;
  * @param <T> - the intput, {@link RealType}
  * @param <S> - the ouput, {@link ComplexType}
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
+ * @deprecated use {@link net.imglib2.algorithm.fft2.FFT} instead
  */
+@Deprecated
 public class FourierTransform<T extends RealType<T>, S extends ComplexType<S>> implements MultiThreaded, OutputAlgorithm<Img<S>>, Benchmark
 {
 	public static enum PreProcessing { NONE, EXTEND_MIRROR, EXTEND_MIRROR_FADING, USE_GIVEN_OUTOFBOUNDSSTRATEGY }
