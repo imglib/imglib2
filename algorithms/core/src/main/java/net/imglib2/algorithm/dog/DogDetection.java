@@ -37,6 +37,8 @@
 package net.imglib2.algorithm.dog;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.imglib2.Interval;
 import net.imglib2.Point;
@@ -82,14 +84,21 @@ public class DogDetection<T extends RealType<T> & NativeType<T>> {
 		this.extremaType = extremaType;
 		this.minPeakValue = minPeakValue;
 		this.keepDoGImg = true;
-		this.numThreads = Runtime.getRuntime().availableProcessors();
+	}
+
+	public ArrayList<Point> getPeaks() {
+		ExecutorService service = Executors.newFixedThreadPool(Runtime
+				.getRuntime().availableProcessors() * 8);
+		ArrayList<Point> peaks = getPeaks(service);
+		service.shutdown();
+		return peaks;
 	}
 
 	/**
 	 * If you want to get subpixel-localized peaks, call
 	 * {@link #getSubpixelPeaks()} directly.
 	 */
-	public ArrayList<Point> getPeaks() {
+	public ArrayList<Point> getPeaks(ExecutorService service) {
 		final T type = Util
 				.getTypeFromInterval(Views.interval(input, interval));
 		dogImg = Util.getArrayOrCellImgFactory(interval, type).create(interval,
@@ -100,8 +109,7 @@ public class DogDetection<T extends RealType<T> & NativeType<T>> {
 
 		final double[][] sigmas = DifferenceOfGaussian.computeSigmas(
 				imageSigma, minf, pixelSize, sigma1, sigma2);
-		DifferenceOfGaussian.DoG(sigmas[0], sigmas[1], input, dogImg,
-				numThreads);
+		DifferenceOfGaussian.DoG(sigmas[0], sigmas[1], input, dogImg, service);
 		final T val = type.createVariable();
 		final LocalNeighborhoodCheck<Point, T> localNeighborhoodCheck;
 		switch (extremaType) {
@@ -115,7 +123,7 @@ public class DogDetection<T extends RealType<T> & NativeType<T>> {
 			localNeighborhoodCheck = new LocalExtrema.MaximumCheck<T>(val);
 		}
 		final ArrayList<Point> peaks = LocalExtrema.findLocalExtrema(dogImg,
-				localNeighborhoodCheck, numThreads);
+				localNeighborhoodCheck, service);
 		if (!keepDoGImg)
 			dogImg = null;
 		return peaks;
@@ -149,7 +157,6 @@ public class DogDetection<T extends RealType<T> & NativeType<T>> {
 	protected ExtremaType extremaType;
 	protected double minPeakValue;
 	protected boolean keepDoGImg;
-	protected int numThreads;
 
 	public void setImageSigma(final double imageSigma) {
 		this.imageSigma = imageSigma;
@@ -167,10 +174,6 @@ public class DogDetection<T extends RealType<T> & NativeType<T>> {
 		this.keepDoGImg = keepDoGImg;
 	}
 
-	public void setNumThreads(final int numThreads) {
-		this.numThreads = numThreads;
-	}
-
 	public double getImageSigma() {
 		return imageSigma;
 	}
@@ -185,10 +188,6 @@ public class DogDetection<T extends RealType<T> & NativeType<T>> {
 
 	public boolean getKeepDoGImg() {
 		return keepDoGImg;
-	}
-
-	public int getNumThreads() {
-		return numThreads;
 	}
 
 	private static double[] getcalib(final LinearSpace<?> calib) {
