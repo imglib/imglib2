@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -208,13 +208,13 @@ public final class SeparableSymmetricConvolution
 
 	public static < S, T > void convolve1d( final double[] halfkernel,
 			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target,
-			final ConvolverFactory< S, T > convolverFactoryST, ExecutorService service )
+			final ConvolverFactory< S, T > convolverFactoryST, final ExecutorService service )
 	{
 	    final long[] sourceOffset = new long[] { 1 - halfkernel.length };
 	    convolveOffset( halfkernel, source, sourceOffset, target, target, 0, convolverFactoryST, service, 1 );
 	}
 
-	
+
 	/**
 	 * Convolve source with a separable symmetric kernel and write the result to
 	 * output. In-place operation (source==target) is supported. Calculations are
@@ -305,7 +305,7 @@ public final class SeparableSymmetricConvolution
 	 */
 	static < S, T > void convolveOffset( final double[] halfkernel, final RandomAccessible< S > source, final long[] sourceOffset, final RandomAccessible< T > target, final Interval targetInterval, final int d, final ConvolverFactory< S, T > factory, final ExecutorService service, final int numTasks )
 	{
-		final ArrayList<Future<Void>> futures = new ArrayList<Future<Void>>();
+		final ArrayList< Future< Void > > futures = new ArrayList< Future< Void > >();
 		final int n = source.numDimensions();
 		final int k1 = halfkernel.length - 1;
 		long tmp = 1;
@@ -337,7 +337,7 @@ public final class SeparableSymmetricConvolution
 			final long myEndIndex = ( taskNum == numTasks - 1 ) ?
 					endIndex :
 					( taskNum + 1 ) * ( ( endIndex + 1 ) / numTasks );
-			final Callable<Void> r = new Callable<Void>()
+			final Callable< Void > r = new Callable< Void >()
 			{
 				@Override
 				public Void call()
@@ -380,15 +380,21 @@ public final class SeparableSymmetricConvolution
 					return null;
 				}
 			};
-			futures.add(service.submit(r));
+			futures.add( service.submit( r ) );
 		}
-		
-		for(Future<Void> f : futures){
-			try {
+
+		for ( final Future< Void > f : futures )
+		{
+			try
+			{
 				f.get();
-			} catch (InterruptedException e) {
+			}
+			catch ( final InterruptedException e )
+			{
 				throw new RuntimeException( e );
-			} catch (ExecutionException e) {
+			}
+			catch ( final ExecutionException e )
+			{
 				throw new RuntimeException( e );
 			}
 		}
