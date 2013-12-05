@@ -115,11 +115,9 @@ public class LocalExtrema {
 		final Interval full = Intervals.expand(img, -1);
 		final int n = img.numDimensions();
 		final int splitd = n - 1;
-		final int numTasks = (int) Math.min(full.dimension(splitd), Runtime
-				.getRuntime().availableProcessors() * 20);
-		if (numTaks == 0) {
-			numTasks = 1;
-		}
+		final int numTasks = Math.max(1, (int) Math.min(full.dimension(splitd),
+				Runtime.getRuntime().availableProcessors() * 20));
+
 		final long dsize = full.dimension(splitd) / numTasks;
 		final long[] min = new long[n];
 		final long[] max = new long[n];
