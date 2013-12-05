@@ -63,7 +63,8 @@ import net.imglib2.type.numeric.IntegerType;
  * caller first interns { "Foo", "Bar" } and then requests the mapping of the
  * returned object.
  * 
- * @param <T> TODO
+ * @param <T>
+ *            TODO
  * 
  * @author Lee Kamentsky
  */
@@ -303,15 +304,18 @@ public class LabelingMapping< T extends Comparable< T >>
 
 		if ( interned == null )
 		{
-			final int intIndex = listsByIndex.size();
+			synchronized ( listsByIndex )
+			{
 
-			if ( intIndex > maxNumLabels )
-				throw new AssertionError( String.format( "Too many labels (or types of multiply-labeled pixels): %d maximum", intIndex ) );
+				final int intIndex = listsByIndex.size();
 
-			interned = new InternedList< T >( src, intIndex, this );
-			listsByIndex.add( interned );
-			internedLists.put( src, interned );
+				if ( intIndex > maxNumLabels )
+					throw new AssertionError( String.format( "Too many labels (or types of multiply-labeled pixels): %d maximum", intIndex ) );
 
+				interned = new InternedList< T >( src, intIndex, this );
+				listsByIndex.add( interned );
+				internedLists.put( src, interned );
+			}
 		}
 
 		return interned;
