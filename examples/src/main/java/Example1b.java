@@ -46,7 +46,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * Opens a file with SCIFIO's ImgOpener as an ImgLib2 Img.
@@ -65,7 +64,9 @@ public class Example1b
 		// create the ImgOpener
 		ImgOpener imgOpener = new ImgOpener();
 
-		// open with ImgOpener as an ArrayImg
+		// open with ImgOpener. The type (e.g. ArrayImg, PlanarImg, CellImg) is
+		// automatically determined. For a small image that fits in memory, this
+		// should open as an ArrayImg.
 		Img< T > image = imgOpener.openImg( path );
 
 		// display it via ImgLib using ImageJ
@@ -75,16 +76,16 @@ public class Example1b
 		// the ImgOpener will open its datasets.
 		ImgOptions imgOptions = new ImgOptions();
 
-		// ImgOpener will use its own heuristic for determining what Img type to
-		// use, but we can encourage specific types through our ImgOptions.
-		// CellImgs dynamically load image regions and are useful when an image
-		// won't fit in memory
+		// If we know what type of Img we want, we can encourage their use through
+		// an ImgOptions instance. CellImgs dynamically load image regions and are
+		// useful when an image won't fit in memory
 		imgOptions.setImgModes( ImgMode.CELL );
 
 		// open with ImgOpener as a CellImg
-		Img< FloatType > imageCell = imgOpener.openImg( path, imgOptions );
+		Img< T > imageCell = imgOpener.openImg( path, imgOptions );
 
-		// display it via ImgLib using ImageJ
+		// display it via ImgLib using ImageJ. The Img type only affects how the
+		// underlying data is accessed, so these images should look identical.
 		ImageJFunctions.show( imageCell );
 	}
 
