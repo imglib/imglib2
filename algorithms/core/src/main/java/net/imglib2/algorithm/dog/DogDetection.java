@@ -129,22 +129,22 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 		this.minPeakValue = minPeakValue;
 		this.normalizeMinPeakValue = normalizeMinPeakValue;
 		this.keepDoGImg = true;
-	}
-
-	public ArrayList< Point > getPeaks()
-	{
-		final ExecutorService service = Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() * 8 );
-		final ArrayList< Point > peaks = getPeaks( service );
-		service.shutdown();
-		return peaks;
+		this.numThreads = Runtime.getRuntime().availableProcessors();
+		this.executorService = null;
 	}
 
 	/**
 	 * If you want to get subpixel-localized peaks, call
 	 * {@link #getSubpixelPeaks()} directly.
 	 */
-	public ArrayList< Point > getPeaks( final ExecutorService service )
+	public ArrayList< Point > getPeaks()
 	{
+		final ExecutorService service;
+		if ( executorService == null )
+			service = Executors.newFixedThreadPool( numThreads );
+		else
+			service = executorService;
+
 		final T type = Util.getTypeFromInterval( Views.interval( input, interval ) );
 		dogImg = Util.getArrayOrCellImgFactory( interval, type ).create( interval, type );
 		final long[] translation = new long[ interval.numDimensions() ];
@@ -172,6 +172,10 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 		final ArrayList< Point > peaks = LocalExtrema.findLocalExtrema( dogImg, localNeighborhoodCheck, service );
 		if ( !keepDoGImg )
 			dogImg = null;
+
+		if ( executorService == null )
+			service.shutdown();
+
 		return peaks;
 	}
 
@@ -203,18 +207,24 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	protected double minPeakValue;
 	protected boolean normalizeMinPeakValue;
 	protected boolean keepDoGImg;
+	protected int numThreads;
+	protected ExecutorService executorService;
 
 	public void setImageSigma( final double imageSigma ) { this.imageSigma = imageSigma; }
 	public void setMinf( final double minf ) { this.minf = minf; }
 	public void setMinPeakValue( final double minPeakValue ) { this.minPeakValue = minPeakValue; }
 	public void setNormalizeMinPeakValue( final boolean normalizeMinPeakValue ) { this.normalizeMinPeakValue = normalizeMinPeakValue; }
 	public void setKeepDoGImg( final boolean keepDoGImg ) { this.keepDoGImg = keepDoGImg; }
+	public void setNumThreads( final int numThreads ) { this.numThreads = numThreads; }
+	public void setExecutorService( final ExecutorService service ) { this.executorService = service; }
 
 	public double getImageSigma() { return imageSigma; }
 	public double getMinf() { return minf; }
 	public double getMinPeakValue() { return minPeakValue; }
 	public boolean getNormalizeMinPeakValue() { return normalizeMinPeakValue; }
 	public boolean getKeepDoGImg() { return keepDoGImg; }
+	public int getNumThreads() { return numThreads; }
+	public ExecutorService getExecutorService() { return executorService; }
 
 	private static double[] getcalib( final LinearSpace< ? > calib )
 	{
