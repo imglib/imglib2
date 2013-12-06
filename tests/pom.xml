@@ -85,7 +85,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>jama</groupId>
+			<groupId>gov.nist.math</groupId>
 			<artifactId>jama</artifactId>
 			<version>${jama.version}</version>
 			<scope>test</scope>
