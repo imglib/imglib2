@@ -97,9 +97,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>mpicbg</groupId>
+			<groupId>${mpicbg.groupId}</groupId>
 			<artifactId>mpicbg</artifactId>
-			<version>20111128</version>
+			<version>${mpicbg.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
