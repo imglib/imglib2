@@ -22,6 +22,9 @@
 	</licenses>
 
 	<dependencies>
+		<!-- NB: All dependencies for this component are test scope. -->
+
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -65,7 +68,9 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- External dependencies -->
 		<dependency>
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>${bio-formats.groupId}</groupId>
 			<artifactId>loci-common</artifactId>
 			<version>${bio-formats.version}</version>
@@ -77,7 +82,12 @@
 			<version>${imagej1.version}</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>${mpicbg.groupId}</groupId>
+			<artifactId>mpicbg</artifactId>
+			<version>${mpicbg.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>io.scif</groupId>
 			<artifactId>scifio</artifactId>
@@ -94,12 +104,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.9</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>${mpicbg.groupId}</groupId>
-			<artifactId>mpicbg</artifactId>
-			<version>${mpicbg.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

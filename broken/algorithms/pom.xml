@@ -17,6 +17,7 @@
 	<description>Non-compiling ImgLib2 Algorithms classes.</description>
 
 	<dependencies>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -32,16 +33,13 @@
 			<artifactId>imglib2-ij</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- External dependencies -->
 		<dependency>
-			<!-- TODO: define a real POM for mpicbg project -->
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>${mpicbg.groupId}</groupId>
 			<artifactId>mpicbg</artifactId>
 			<version>${mpicbg.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.scif</groupId>
-			<artifactId>scifio</artifactId>
-			<version>${scifio.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.nist.math</groupId>
@@ -49,9 +47,17 @@
 			<version>${jama.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>io.scif</groupId>
+			<artifactId>scifio</artifactId>
+			<version>${scifio.version}</version>
+		</dependency>
+
+		<!-- Test scope dependencies -->
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.9</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

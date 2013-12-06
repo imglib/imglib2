@@ -14,21 +14,27 @@
 	<description>ImgLib2 classes which provide additional metadata associated with N-dimensional image data structures.</description>
 
 	<dependencies>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- External dependencies -->
 		<dependency>
 			<groupId>${scijava-common.groupId}</groupId>
 			<artifactId>scijava-common</artifactId>
 			<version>${scijava-common.version}</version>
 		</dependency>
 		<dependency>
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>edu.ucar</groupId>
 			<artifactId>udunits</artifactId>
 			<version>4.3.18</version>
 		</dependency>
+
+		<!-- Test scope dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
