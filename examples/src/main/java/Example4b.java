@@ -35,6 +35,8 @@
  * #L%
  */
 import ij.ImageJ;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -47,8 +49,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
@@ -62,7 +62,7 @@ import net.imglib2.view.Views;
 public class Example4b
 {
 	public < T extends RealType< T > & NativeType< T > > Example4b()
-		throws ImgIOException, IncompatibleTypeException
+		throws ImgIOException
 	{
 		// open with ImgOpener
 		Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif" );

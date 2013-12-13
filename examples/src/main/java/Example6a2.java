@@ -35,14 +35,13 @@
  * #L%
  */
 import ij.ImageJ;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import net.imglib2.RandomAccessible;
 import net.imglib2.algorithm.gauss3.Gauss3;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
@@ -57,9 +56,9 @@ public class Example6a2
 {
 	public Example6a2() throws ImgIOException, IncompatibleTypeException
 	{
-		// open with ImgOpener using an ArrayImgFactory
+		// open with ImgOpener as a FloatType
 		Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+			new FloatType() );
 
 		// perform gaussian convolution with float precision
 		double[] sigma = new double[ image.numDimensions() ];

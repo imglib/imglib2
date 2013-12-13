@@ -67,15 +67,26 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 
 /**
- * Convenience methods for interactions with ImageJ.
- *
- * @version 0.1a
- * @author Pietzsch
- * @author Preibisch
- * @author Saalfeld
+ * Provides static convenience methods to facilitate interacting with ImageJ
+ * 1.x.
+ * <p>
+ * When interacting between ImageJ 1.x and ImgLib2, it is desirable to adapt
+ * data structures instead of copying data.
+ * </p>
+ * <p>
+ * For example, when an {@link ImagePlus} is made available by ImageJ 1.x, you
+ * can pass it to ImgLib2 as an {@link Img} via
+ * {@code ImageJFunctions.wrap(imp)}.
+ * </p>
+ * <p>
+ * Likewise, when an ImgLib2 {@link RandomAccessibleInterval} needs to be passed
+ * to ImageJ 1.x, it can be wrapped into an {@link ImagePlus} via
+ * {@code ImageJFunctions.wrap(img, title)}.
+ * </p>
+ * 
+ * @author Tobis Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class ImageJFunctions
 {

@@ -14,6 +14,7 @@
 	<description>Transformation and composition by function.</description>
 
 	<dependencies>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -25,16 +26,19 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<!-- External dependencies -->
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-common</artifactId>
+			<version>${scijava-common.version}</version>
+		</dependency>
+
+		<!-- Test scope dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.scijava</groupId>
-			<artifactId>scijava-common</artifactId>
-			<version>${scijava-common.version}</version>
 		</dependency>
 	</dependencies>
 

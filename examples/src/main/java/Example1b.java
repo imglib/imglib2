@@ -46,7 +46,6 @@ import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * Opens a file with SCIFIO's ImgOpener as an ImgLib2 Img.
@@ -62,25 +61,32 @@ public class Example1b
 		File file = new File( "DrosophilaWing.tif" );
 		String path = file.getAbsolutePath();
 
-		// create the ImgOpener and ImgOptions
+		// create the ImgOpener
 		ImgOpener imgOpener = new ImgOpener();
-		ImgOptions imgOptions = new ImgOptions();
 
-		// open with ImgOpener as an ArrayImg
-		imgOptions.setImgModes( ImgMode.ARRAY );
-		Img< T > image = imgOpener.openImg( path, imgOptions );
+		// open with ImgOpener. The type (e.g. ArrayImg, PlanarImg, CellImg) is
+		// automatically determined. For a small image that fits in memory, this
+		// should open as an ArrayImg.
+		Img< T > image = imgOpener.openImg( path );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image );
 
-		// open with ImgOpener as a CellImg with FloatType
-		// it will be opened as float independent of the type of the image
-		// to enforce to open it as FloatType, an instance of FloatType has to be passed along
-		imgOptions.setImgModes( ImgMode.CELL );
-		Img< FloatType > imageFloat = imgOpener.openImg( path, new FloatType(), imgOptions );
+		// create the ImgOptions. This gives us configuration control over how
+		// the ImgOpener will open its datasets.
+		ImgOptions imgOptions = new ImgOptions();
 
-		// display it via ImgLib using ImageJ
-		ImageJFunctions.show( imageFloat );
+		// If we know what type of Img we want, we can encourage their use through
+		// an ImgOptions instance. CellImgs dynamically load image regions and are
+		// useful when an image won't fit in memory
+		imgOptions.setImgModes( ImgMode.CELL );
+
+		// open with ImgOpener as a CellImg
+		Img< T > imageCell = imgOpener.openImg( path, imgOptions );
+
+		// display it via ImgLib using ImageJ. The Img type only affects how the
+		// underlying data is accessed, so these images should look identical.
+		ImageJFunctions.show( imageCell );
 	}
 
 	public static void main( String[] args ) throws ImgIOException

@@ -35,12 +35,11 @@
  * #L%
  */
 import ij.ImageJ;
-import net.imglib2.Cursor;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
+import net.imglib2.Cursor;
+import net.imglib2.img.Img;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -54,9 +53,9 @@ public class Example2a
 {
 	public Example2a() throws ImgIOException
 	{
-		// open with ImgOpener using an ArrayImgFactory
+		// open with ImgOpener as a FloatType
 		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+			new FloatType() );
 
 		// copy the image, as it is a generic method it also works with FloatType
 		Img< FloatType > duplicate = copyImage( img );

@@ -37,51 +37,52 @@
 
 package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 
-
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.ops.operation.UnaryOperation;
-import net.imglib2.ops.operation.randomaccessibleinterval.unary.morph.StructuringElementCursor;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
 /**
  * Dilate operation on gray-level.
- *
+ * 
  * @author Felix Schoenenberger (University of Konstanz)
- *
+ * 
  * @param <T>
  */
-public class DilateGray< T extends RealType< T >> implements UnaryOperation<  RandomAccessibleInterval< T >,  RandomAccessibleInterval< T > >
+public class DilateGray< T extends RealType< T >> implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > >
 {
 
 	private final long[][] m_struc;
 
+	private OutOfBoundsFactory< T, RandomAccessibleInterval< T >> m_factory;
+
 	/**
-	 *
+	 * 
 	 * @param structuringElement
 	 */
-	public DilateGray( final long[][] structuringElement )
+	public DilateGray( final long[][] structuringElement, OutOfBoundsFactory< T, RandomAccessibleInterval< T > > factory )
 	{
+		m_factory = factory;
 		m_struc = structuringElement;
 	}
 
 	/**
 	 * @param structuringElement
 	 */
-	public DilateGray( final Img<BitType> structuringElement )
-    {
-        m_struc = StructuringElementCursor.createElementFromImg(structuringElement);
-    }
+	public DilateGray( final Img< BitType > structuringElement )
+	{
+		m_struc = StructuringElementCursor.createElementFromImg( structuringElement );
+	}
 
 	@Override
-	public RandomAccessibleInterval< T > compute( final  RandomAccessibleInterval< T > input, final  RandomAccessibleInterval< T > output )
+	public RandomAccessibleInterval< T > compute( final RandomAccessibleInterval< T > input, final RandomAccessibleInterval< T > output )
 	{
-		final T v = Views.iterable(input).firstElement().createVariable();
-		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( Views.extendValue( input, v ).randomAccess(), m_struc );
-		final Cursor< T > out = Views.iterable(output).localizingCursor();
+		final StructuringElementCursor< T > inStructure = new StructuringElementCursor< T >( Views.extend( input, m_factory ).randomAccess(), m_struc );
+		final Cursor< T > out = Views.iterable( output ).localizingCursor();
 		double m;
 		while ( out.hasNext() )
 		{
@@ -102,6 +103,6 @@ public class DilateGray< T extends RealType< T >> implements UnaryOperation<  Ra
 	@Override
 	public DilateGray< T > copy()
 	{
-		return new DilateGray< T >( m_struc );
+		return new DilateGray< T >( m_struc, m_factory );
 	}
 }

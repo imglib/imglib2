@@ -14,17 +14,21 @@
 	<description>Real space coordinate transformations.</description>
 
 	<dependencies>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- External dependencies -->
 		<dependency>
-			<groupId>jama</groupId>
+			<groupId>gov.nist.math</groupId>
 			<artifactId>jama</artifactId>
 			<version>${jama.version}</version>
 		</dependency>
 
+		<!-- Test scope dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

@@ -34,8 +34,6 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-import ij.ImageJ;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -112,9 +110,6 @@ public class Example3a2
 
 	public static void main( String[] args )
 	{
-		// open an ImageJ window
-		new ImageJ();
-
 		// run the example
 		new Example3a2();
 	}

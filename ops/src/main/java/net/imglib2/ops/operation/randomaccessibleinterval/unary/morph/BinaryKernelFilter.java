@@ -53,7 +53,7 @@ import net.imglib2.view.Views;
 /**
  * @author Felix Schonenberger (University of Konstanz)
  */
-public final class BinaryKernelFilter< T extends RealType< T > > implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >  >
+public final class BinaryKernelFilter< T extends RealType< T > > implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > >
 {
 
 	/*
@@ -176,9 +176,9 @@ public final class BinaryKernelFilter< T extends RealType< T > > implements Unar
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final RandomAccessibleInterval< T >  compute( final RandomAccessibleInterval< T >  op, final RandomAccessibleInterval< T >  r )
+	public final RandomAccessibleInterval< T > compute( final RandomAccessibleInterval< T > op, final RandomAccessibleInterval< T > r )
 	{
-		IterableInterval<T> iterOp = Views.iterable( op );
+		IterableInterval< T > iterOp = Views.iterable( op );
 		int i = 0;
 		final long dim0 = op.dimension( m_dimIndex0 );
 		for ( Queue< T > q : m_kernel )
@@ -299,7 +299,7 @@ public final class BinaryKernelFilter< T extends RealType< T > > implements Unar
 	}
 
 	@Override
-	public UnaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<T> > copy()
+	public UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T > > copy()
 	{
 		return new BinaryKernelFilter< T >( m_kernel, m_dimIndex0, m_op );
 	}

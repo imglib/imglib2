@@ -25,6 +25,7 @@
 	</licenses>
 
 	<dependencies>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -49,8 +50,10 @@
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Test scope dependencies -->
 		<dependency>
-			<!-- TODO: define a real POM for mpicbg project -->
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>${mpicbg.groupId}</groupId>
 			<artifactId>mpicbg</artifactId>
 			<version>${mpicbg.version}</version>

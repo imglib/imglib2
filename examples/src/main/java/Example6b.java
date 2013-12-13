@@ -55,13 +55,12 @@
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
 import ij.ImageJ;
-import net.imglib2.algorithm.fft.FourierConvolution;
-import net.imglib2.exception.IncompatibleTypeException;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
+import net.imglib2.algorithm.fft2.FFTConvolution;
+import net.imglib2.exception.IncompatibleTypeException;
+import net.imglib2.img.Img;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.RealSum;
@@ -69,59 +68,59 @@ import net.imglib2.util.RealSum;
 /**
  * Perform a gaussian convolution using fourier convolution
  */
-public class Example6b
-{
-	public Example6b() throws ImgIOException, IncompatibleTypeException
-	{
+public class Example6b {
+	public Example6b() throws ImgIOException, IncompatibleTypeException {
 		// open with ImgOpener using an ArrayImgFactory
-		final Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
-		final Img< FloatType > kernel = new ImgOpener().openImg( "kernelGauss.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+		final Img<FloatType> image = new ImgOpener().openImg(
+				"DrosophilaWing.tif", new FloatType());
+		final Img<FloatType> kernel = new ImgOpener().openImg("kernelRing.tif",
+				new FloatType());
 
 		// normalize the kernel, otherwise we add energy to the image
-		norm( kernel );
+		norm(kernel);
 
 		// display image & kernel
-		ImageJFunctions.show( kernel ).setTitle( "kernel" );
-		ImageJFunctions.show( image ).setTitle( "drosophila wing");
+		ImageJFunctions.show(kernel).setTitle("kernel");
+		ImageJFunctions.show(image).setTitle("drosophila wing");
 
-		// compute & show fourier convolution
-		ImageJFunctions.show( FourierConvolution.convolve( image, kernel ) )
-			.setTitle( "convolution" );
+		// compute & show fourier convolution (in-place)
+		FFTConvolution.create(image, kernel).run();
+
+		ImageJFunctions.show(image).setTitle("convolution");
 	}
 
 	/**
 	 * Computes the sum of all pixels in an iterable using RealSum
-	 *
-	 * @param iterable - the image data
+	 * 
+	 * @param iterable
+	 *            - the image data
 	 * @return - the sum of values
 	 */
-	public static < T extends RealType< T > > double sumImage( final Iterable< T > iterable )
-	{
+	public static <T extends RealType<T>> double sumImage(
+			final Iterable<T> iterable) {
 		final RealSum sum = new RealSum();
 
-		for ( final T type : iterable )
-			sum.add( type.getRealDouble() );
+		for (final T type : iterable)
+			sum.add(type.getRealDouble());
 
 		return sum.getSum();
 	}
 
 	/**
 	 * Norms all image values so that their sum is 1
-	 *
-	 * @param iterable - the image data
+	 * 
+	 * @param iterable
+	 *            - the image data
 	 */
-	public static void norm( final Iterable< FloatType > iterable )
-	{
-		final double sum = sumImage( iterable );
+	public static void norm(final Iterable<FloatType> iterable) {
+		final double sum = sumImage(iterable);
 
-		for ( final FloatType type : iterable )
-			type.setReal( type.get() / sum );
+		for (final FloatType type : iterable)
+			type.setReal(type.get() / sum);
 	}
 
-	public static void main( final String[] args ) throws ImgIOException, IncompatibleTypeException
-	{
+	public static void main(final String[] args) throws ImgIOException,
+			IncompatibleTypeException {
 		// open an ImageJ window
 		new ImageJ();
 

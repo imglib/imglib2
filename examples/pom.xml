@@ -16,6 +16,7 @@
 	<url>http://fiji.sc/ImgLib2_Examples</url>
 
 	<dependencies>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -51,6 +52,8 @@
 			<artifactId>imglib2-ui</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- External dependencies -->
 		<dependency>
 			<groupId>io.scif</groupId>
 			<artifactId>scifio</artifactId>

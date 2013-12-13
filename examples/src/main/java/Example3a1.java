@@ -34,13 +34,11 @@
  * policies, either expressed or implied, of any organization.
  * #L%
  */
-import ij.ImageJ;
 
 import java.util.Iterator;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
@@ -54,9 +52,12 @@ import net.imglib2.type.numeric.RealType;
  * @author Stephan Preibisch & Stephan Saalfeld
  * 
  */
-public class Example3a1 {
-	public <T extends RealType<T> & NativeType<T>> Example3a1()
-			throws ImgIOException, IncompatibleTypeException {
+
+public class Example3a1
+{
+	public < T extends RealType< T > & NativeType< T > > Example3a1()
+		throws ImgIOException
+	{
 		// open with ImgOpener (he will decide which Img is best)
 		Img<T> img = new ImgOpener().openImg("DrosophilaWing.tif");
 
@@ -110,11 +111,8 @@ public class Example3a1 {
 		}
 	}
 
-	public static void main(String[] args) throws ImgIOException,
-			IncompatibleTypeException {
-		// open an ImageJ window
-		new ImageJ();
-
+	public static void main( String[] args ) throws ImgIOException
+	{
 		// run the example
 		new Example3a1();
 	}
