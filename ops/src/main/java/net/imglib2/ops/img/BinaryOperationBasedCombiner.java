@@ -38,7 +38,6 @@ package net.imglib2.ops.img;
 
 import net.imglib2.combiner.Combiner;
 import net.imglib2.ops.operation.BinaryOperation;
-import net.imglib2.type.numeric.RealType;
 
 /**
  * 
@@ -49,7 +48,7 @@ import net.imglib2.type.numeric.RealType;
  * @param <A>
  * @param <B>
  */
-public class BinaryOperationBasedCombiner< A extends RealType< A >, B extends RealType< B >, C extends RealType< C >> implements Combiner< A, B, C >
+public class BinaryOperationBasedCombiner< A, B, C > implements Combiner< A, B, C >
 {
 
 	private final BinaryOperation< A, B, C > m_op;
