@@ -91,7 +91,7 @@ public final class MergeLabelings< L extends Comparable< L >> implements UnaryOu
 		long[] resDims = initConstants( src );
 
 		@SuppressWarnings( "unchecked" )
-		NativeImgLabeling< L, ? extends IntegerType< ? >> res = new NativeImgLabeling( new ArrayImgFactory().create( resDims, ( NativeType ) m_resType ) );
+		NativeImgLabeling< L, ? extends IntegerType< ? >> res = new NativeImgLabeling( new ArrayImgFactory(( NativeType ) m_resType).create( resDims ) );
 		return res;
 	}
 

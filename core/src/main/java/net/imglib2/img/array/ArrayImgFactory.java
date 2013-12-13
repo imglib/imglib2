@@ -60,10 +60,14 @@ import net.imglib2.type.NativeType;
  */
 public class ArrayImgFactory< T extends NativeType<T> > extends NativeImgFactory< T >
 {
+	public ArrayImgFactory(final T type) {
+		super(type);
+	}
+
 	@Override
-	public ArrayImg< T, ? > create( final long[] dim, final T type )
+	public ArrayImg< T, ? > create( final long[] dim )
 	{
-		return ( ArrayImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		return ( ArrayImg< T, ? > ) getType().createSuitableNativeImg( this, dim );
 	}
 
 	public static int numEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )
@@ -140,11 +144,16 @@ public class ArrayImgFactory< T extends NativeType<T> > extends NativeImgFactory
 		return new ArrayImg< T, ShortArray >( new ShortArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
-	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
-		if ( NativeType.class.isInstance( type ) ) return new ArrayImgFactory();
+		if ( NativeType.class.isInstance( type ) ) {
+			return typedImgFactory((NativeType) type);
+		}
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
+	}
+
+	private < S extends NativeType<S> > ImgFactory< S > typedImgFactory( final S type ) {
+		return new ArrayImgFactory< S >( type );
 	}
 }

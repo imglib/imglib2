@@ -51,28 +51,13 @@ import net.imglib2.util.Util;
  */
 public abstract class ImgFactory< T >
 {
-	/**
-	 * The {@link ImgFactory} can decide how to create the
-	 * {@link Img}.  A {@link NativeImgFactory} will ask the
-	 * {@link Type} to create a suitable {@link NativeImg}.
-	 * 
-	 * @return {@link Img}
-	 */
-	public abstract Img< T > create( final long[] dim, final T type );
+	private T type;
 
-	/**
-	 * The {@link ImgFactory} can decide how to create the
-	 * {@link Img}.  A {@link NativeImgFactory} will ask the
-	 * {@link Type} to create a suitable {@link NativeImg}.
-	 * 
-	 * @return {@link Img}
-	 */
-	public Img< T > create( final Dimensions dim, final T type )
-	{
-		final long[] size = new long[ dim.numDimensions() ];
-		dim.dimensions( size );
-		
-		return create( size, type );
+	public T getType() {
+		return type;
+	}
+	public ImgFactory(T type) {
+		this.type = type;
 	}
 
 	/**
@@ -82,9 +67,33 @@ public abstract class ImgFactory< T >
 	 * 
 	 * @return {@link Img}
 	 */
-	public Img< T > create( final int[] dim, final T type )
+	public abstract Img< T > create( final long[] dim );
+
+	/**
+	 * The {@link ImgFactory} can decide how to create the
+	 * {@link Img}.  A {@link NativeImgFactory} will ask the
+	 * {@link Type} to create a suitable {@link NativeImg}.
+	 * 
+	 * @return {@link Img}
+	 */
+	public Img< T > create( final Dimensions dim )
 	{
-		return create( Util.int2long( dim ), type );
+		final long[] size = new long[ dim.numDimensions() ];
+		dim.dimensions( size );
+		
+		return create( size );
+	}
+
+	/**
+	 * The {@link ImgFactory} can decide how to create the
+	 * {@link Img}.  A {@link NativeImgFactory} will ask the
+	 * {@link Type} to create a suitable {@link NativeImg}.
+	 * 
+	 * @return {@link Img}
+	 */
+	public Img< T > create( final int[] dim )
+	{
+		return create( Util.int2long( dim ) );
 	}
 	
 	/**
