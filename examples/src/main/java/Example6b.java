@@ -85,6 +85,7 @@ public class Example6b {
 
 		// compute & show fourier convolution (in-place)
 		FFTConvolution.create(image, kernel).run();
+		
 		ImageJFunctions.show(image).setTitle("convolution");
 	}
 

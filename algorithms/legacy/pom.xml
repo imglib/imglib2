@@ -22,6 +22,7 @@
 	</licenses>
 
 	<dependencies>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -32,39 +33,38 @@
 			<artifactId>imglib2-algorithms</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2-algorithms-gpl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
+		<!-- External dependencies -->
 		<dependency>
-			<!-- TODO: define a real POM for mpicbg project -->
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>${mpicbg.groupId}</groupId>
 			<artifactId>mpicbg</artifactId>
 			<version>${mpicbg.version}</version>
 		</dependency>
-
 		<dependency>
-			<!-- TODO: define a real POM for mines-jtk project -->
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>edu.mines</groupId>
 			<artifactId>mines-jtk</artifactId>
 			<version>20100113</version>
 		</dependency>
+		<dependency>
+			<groupId>gov.nist.math</groupId>
+			<artifactId>jama</artifactId>
+			<version>${jama.version}</version>
+		</dependency>
 
+		<!-- Test scope dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-        
-		<dependency>
-			<groupId>jama</groupId>
-			<artifactId>jama</artifactId>
-			<version>${jama.version}</version>
-		</dependency>        
 	</dependencies>
 
 	<properties>

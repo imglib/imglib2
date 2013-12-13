@@ -14,11 +14,7 @@
 	<description>ImgLib2 display logic using ImageJ.</description>
 
 	<dependencies>
-		<dependency>
-			<groupId>${imagej.groupId}</groupId>
-			<artifactId>ij</artifactId>
-			<version>${imagej1.version}</version>
-		</dependency>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -30,8 +26,16 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<!-- External dependencies -->
 		<dependency>
-			<!-- TODO: define a real POM for mpicbg project -->
+			<groupId>${imagej.groupId}</groupId>
+			<artifactId>ij</artifactId>
+			<version>${imagej1.version}</version>
+		</dependency>
+
+		<!-- Test scope dependencies -->
+		<dependency>
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>${mpicbg.groupId}</groupId>
 			<artifactId>mpicbg</artifactId>
 			<version>${mpicbg.version}</version>

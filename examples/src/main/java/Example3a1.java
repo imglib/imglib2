@@ -53,9 +53,11 @@ import net.imglib2.type.numeric.RealType;
  * @author Stephan Preibisch & Stephan Saalfeld
  * 
  */
-public class Example3a1 {
-	public <T extends RealType<T> & NativeType<T>> Example3a1()
-			throws ImgIOException {
+public class Example3a1
+{
+	public < T extends RealType< T > & NativeType< T > > Example3a1()
+		throws ImgIOException
+	{
 		// open with ImgOpener (he will decide which Img is best)
 		Img<T> img = new ImgOpener().openImg("DrosophilaWing.tif");
 
@@ -109,7 +111,8 @@ public class Example3a1 {
 		}
 	}
 
-	public static void main(String[] args) throws ImgIOException {
+	public static void main( String[] args ) throws ImgIOException
+	{
 		// run the example
 		new Example3a1();
 	}
