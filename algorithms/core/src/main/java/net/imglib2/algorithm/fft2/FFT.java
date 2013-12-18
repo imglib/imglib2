@@ -143,7 +143,7 @@ public class FFT
 		final Img< R > output = factory.create( outputDimensions, type );
 
 		for ( int d = numDimensions - 1; d > 0; --d )
-			FFTMethods.complexToComplex( fft, d, false, false, numThreads );
+			FFTMethods.complexToComplex( fft, d, false, true, numThreads );
 
 		FFTMethods.complexToReal( fft, output, FFTMethods.unpaddingIntervalCentered( inputInterval, outputDimensions ), 0, true, numThreads );
 
@@ -167,13 +167,13 @@ public class FFT
 	final public static < C extends ComplexType< C > > void complexToComplexInverse( final RandomAccessibleInterval< C > data, final int numThreads )
 	{
 		for ( int d = 0; d < data.numDimensions(); ++d )
-			FFTMethods.complexToComplex( data, d, false, false, numThreads );
+			FFTMethods.complexToComplex( data, d, false, true, numThreads );
 	}
 
 	final public static < C extends ComplexType< C >, R extends RealType< R > > void complexToReal( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output, final int numThreads )
 	{
 		for ( int d = 1; d < input.numDimensions(); ++d )
-			FFTMethods.complexToComplex( input, d, false, false, numThreads );
+			FFTMethods.complexToComplex( input, d, false, true, numThreads );
 
 		FFTMethods.complexToReal( input, output, 0, true, numThreads );
 	}
@@ -181,7 +181,7 @@ public class FFT
 	final public static < C extends ComplexType< C >, R extends RealType< R > > void complexToRealUnpad( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output, final int numThreads )
 	{
 		for ( int d = 1; d < input.numDimensions(); ++d )
-			FFTMethods.complexToComplex( input, d, false, false, numThreads );
+			FFTMethods.complexToComplex( input, d, false, true, numThreads );
 
 		FFTMethods.complexToReal( input, output, FFTMethods.unpaddingIntervalCentered( input, output ), 0, true, numThreads );
 	}
