@@ -1015,11 +1015,7 @@ public class FFTMethods
 	 * dimensions are known. It will define the padding area around the input.
 	 * If the extension is not even, it will add the one pixel more on the right
 	 * side.
-<<<<<<< HEAD
-	 * 
-=======
 	 *
->>>>>>> master
 	 * @param input
 	 *            - the input interval
 	 * @param paddingDimensions
@@ -1058,19 +1054,11 @@ public class FFTMethods
 	 * assumes that the original padding was computed using the method
 	 * paddingIntervalCentered( final Interval input, final int[]
 	 * paddingDimensions ).
-<<<<<<< HEAD
-	 * 
-	 * Therefore, it will define the padding area around the input. If the
-	 * extension is not even on all sides, it will assume the one pixel to be on
-	 * the right side.
-	 * 
-=======
 	 *
 	 * Therefore, it will define the padding area around the input. If the
 	 * extension is not even on all sides, it will assume the one pixel to be on
 	 * the right side.
 	 *
->>>>>>> master
 	 * @param fftDimensions
 	 *            - the input interval
 	 * @param originalDimensions
@@ -1104,11 +1092,7 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for an inverse FFT of the entire dataset AS SMALL AS POSSIBLE
-<<<<<<< HEAD
-	 * 
-=======
 	 *
->>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the complex-valued input
 	 * @param paddedDimensions
@@ -1137,11 +1121,7 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for an inverse FFT of the entire dataset AS FAST AS POSSIBLE
-<<<<<<< HEAD
-	 * 
-=======
 	 *
->>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the complex-valued input
 	 * @param paddedDimensions
@@ -1169,11 +1149,7 @@ public class FFTMethods
 
 	/**
 	 * A helper method to test if padding is actually necessary
-<<<<<<< HEAD
-	 * 
-=======
 	 *
->>>>>>> master
 	 * @param interval
 	 *            - the dimensions of a dataset
 	 * @param paddedDimensions
@@ -1191,11 +1167,7 @@ public class FFTMethods
 
 	/**
 	 * A helper method to test if padding is actually necessary
-<<<<<<< HEAD
-	 * 
-=======
 	 *
->>>>>>> master
 	 * @param interval
 	 *            - the dimensions of a dataset
 	 * @param padded
@@ -1214,11 +1186,7 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of real
 	 * numbers) for a forward FFT of the entire dataset AS FAST AS POSSIBLE
-<<<<<<< HEAD
-	 * 
-=======
 	 *
->>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the real-valued input
 	 * @param paddedDimensions
@@ -1240,11 +1208,7 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of real
 	 * numbers) for a forward FFT of the entire dataset AS SMALL AS POSSIBLE
-<<<<<<< HEAD
-	 * 
-=======
 	 *
->>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the real-valued input
 	 * @param paddedDimensions
@@ -1267,11 +1231,7 @@ public class FFTMethods
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for a forward/inverse FFT of the entire dataset AS FAST AS
 	 * POSSIBLE
-<<<<<<< HEAD
-	 * 
-=======
 	 *
->>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the input
 	 * @param paddedDimensions
@@ -1287,11 +1247,7 @@ public class FFTMethods
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for a forward/inverse FFT of the entire dataset AS SMALL AS
 	 * POSSIBLE
-<<<<<<< HEAD
-	 * 
-=======
 	 *
->>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the input
 	 * @param paddedDimensions
