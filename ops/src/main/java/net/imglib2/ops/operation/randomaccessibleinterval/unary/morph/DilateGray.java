@@ -50,6 +50,7 @@ import net.imglib2.view.Views;
  * Dilate operation on gray-level.
  * 
  * @author Felix Schoenenberger (University of Konstanz)
+ * @author Jonathan Hale (University of Konstanz)
  * 
  * @param <T>
  */
@@ -58,13 +59,14 @@ public class DilateGray< T extends RealType< T >> implements UnaryOperation< Ran
 
 	private final long[][] m_struc;
 
-	private OutOfBoundsFactory< T, RandomAccessibleInterval< T >> m_factory;
+	private final OutOfBoundsFactory< T, RandomAccessibleInterval< T >> m_factory;
 
 	/**
 	 * 
 	 * @param structuringElement
+	 * @param factory
 	 */
-	public DilateGray( final long[][] structuringElement, OutOfBoundsFactory< T, RandomAccessibleInterval< T > > factory )
+	public DilateGray( final long[][] structuringElement, final OutOfBoundsFactory< T, RandomAccessibleInterval< T > > factory )
 	{
 		m_factory = factory;
 		m_struc = structuringElement;
@@ -72,10 +74,12 @@ public class DilateGray< T extends RealType< T >> implements UnaryOperation< Ran
 
 	/**
 	 * @param structuringElement
+	 * @param factory
 	 */
-	public DilateGray( final Img< BitType > structuringElement )
+	public DilateGray( final Img< BitType > structuringElement, final OutOfBoundsFactory< T, RandomAccessibleInterval< T > > factory )
 	{
 		m_struc = StructuringElementCursor.createElementFromImg( structuringElement );
+		m_factory = factory;
 	}
 
 	@Override

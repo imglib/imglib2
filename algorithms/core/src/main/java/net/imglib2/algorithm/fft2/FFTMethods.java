@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -56,7 +56,7 @@ import edu.mines.jtk.dsp.FftReal;
  * complex-to-real for individual dimensions. Unfortunately only supports a
  * maximal size of INT in each dimension as the one-dimensional FFT is based on
  * arrays.
- * 
+ *
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
 public class FFTMethods
@@ -69,6 +69,7 @@ public class FFTMethods
 	 * way after performing a forward and reverse FFT, the values will be
 	 * exactly the same
 	 * 
+	 *
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -91,7 +92,7 @@ public class FFTMethods
 	 * are scaled (divided by the amount of pixels in the input dataset), this
 	 * way after performing a forward and reverse FFT, the values will be
 	 * exactly the same
-	 * 
+	 *
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -114,7 +115,7 @@ public class FFTMethods
 	 * Computes a complex-to-real inverse FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0). By default as many
 	 * threads as processors are available are used.
-	 * 
+	 *
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -137,7 +138,7 @@ public class FFTMethods
 	 * Computes a complex-to-real inverse FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0). By default as many
 	 * threads as processors are available are used.
-	 * 
+	 *
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -162,7 +163,7 @@ public class FFTMethods
 	/**
 	 * Computes a complex-to-real inverse FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0).
-	 * 
+	 *
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -187,7 +188,7 @@ public class FFTMethods
 	/**
 	 * Computes a complex-to-real inverse FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0).
-	 * 
+	 *
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -232,7 +233,7 @@ public class FFTMethods
 		if ( numDimensions > 1 )
 		{
 			final AtomicInteger ai = new AtomicInteger( 0 );
-			Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+			final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
 
 			for ( int ithread = 0; ithread < threads.length; ++ithread )
 				threads[ ithread ] = new Thread( new Runnable()
@@ -359,7 +360,7 @@ public class FFTMethods
 	 * threads as processors are available are used. By default the complex
 	 * values are not scaled (not divided by the amount of pixels in the input
 	 * dataset)
-	 * 
+	 *
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -381,7 +382,7 @@ public class FFTMethods
 	 * threads as processors are available are used. By default the complex
 	 * values are not scaled (not divided by the amount of pixels in the input
 	 * dataset)
-	 * 
+	 *
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -404,7 +405,7 @@ public class FFTMethods
 	 * Computes a real-to-complex forward FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0). By default as many
 	 * threads as processors are available are used.
-	 * 
+	 *
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -427,7 +428,7 @@ public class FFTMethods
 	 * Computes a real-to-complex forward FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0). By default as many
 	 * threads as processors are available are used.
-	 * 
+	 *
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -452,7 +453,7 @@ public class FFTMethods
 	/**
 	 * Computes a real-to-complex forward FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0).
-	 * 
+	 *
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -477,7 +478,7 @@ public class FFTMethods
 	/**
 	 * Computes a real-to-complex forward FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0).
-	 * 
+	 *
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -522,7 +523,7 @@ public class FFTMethods
 		if ( numDimensions > 1 )
 		{
 			final AtomicInteger ai = new AtomicInteger( 0 );
-			Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+			final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
 
 			for ( int ithread = 0; ithread < threads.length; ++ithread )
 				threads[ ithread ] = new Thread( new Runnable()
@@ -653,7 +654,7 @@ public class FFTMethods
 	 * the values will be exactly the same. By default the real values are not
 	 * scaled if it is a forward transform (not divided by the amount of pixels
 	 * in the input dataset)
-	 * 
+	 *
 	 * @param data
 	 *            - the complex-valued dataset (FFT performed in-place)
 	 * @param dim
@@ -675,7 +676,7 @@ public class FFTMethods
 	 * Computes a complex-to-complex forward or inverse FFT transform of an
 	 * n-dimensional dataset in a certain dimension. By default as many threads
 	 * as processors are available are used.
-	 * 
+	 *
 	 * @param data
 	 *            - the complex-valued dataset (FFT performed in-place)
 	 * @param dim
@@ -697,7 +698,7 @@ public class FFTMethods
 	/**
 	 * Computes a complex-to-complex forward or inverse FFT transform of an
 	 * n-dimensional dataset in a certain dimension.
-	 * 
+	 *
 	 * @param data
 	 *            - the complex-valued dataset (FFT performed in-place)
 	 * @param dim
@@ -738,7 +739,7 @@ public class FFTMethods
 		if ( numDimensions > 1 )
 		{
 			final AtomicInteger ai = new AtomicInteger( 0 );
-			Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
+			final Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
 
 			for ( int ithread = 0; ithread < threads.length; ++ithread )
 				threads[ ithread ] = new Thread( new Runnable()
@@ -1014,7 +1015,11 @@ public class FFTMethods
 	 * dimensions are known. It will define the padding area around the input.
 	 * If the extension is not even, it will add the one pixel more on the right
 	 * side.
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> master
 	 * @param input
 	 *            - the input interval
 	 * @param paddingDimensions
@@ -1053,11 +1058,19 @@ public class FFTMethods
 	 * assumes that the original padding was computed using the method
 	 * paddingIntervalCentered( final Interval input, final int[]
 	 * paddingDimensions ).
+<<<<<<< HEAD
 	 * 
 	 * Therefore, it will define the padding area around the input. If the
 	 * extension is not even on all sides, it will assume the one pixel to be on
 	 * the right side.
 	 * 
+=======
+	 *
+	 * Therefore, it will define the padding area around the input. If the
+	 * extension is not even on all sides, it will assume the one pixel to be on
+	 * the right side.
+	 *
+>>>>>>> master
 	 * @param fftDimensions
 	 *            - the input interval
 	 * @param originalDimensions
@@ -1091,7 +1104,11 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for an inverse FFT of the entire dataset AS SMALL AS POSSIBLE
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the complex-valued input
 	 * @param paddedDimensions
@@ -1120,7 +1137,11 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for an inverse FFT of the entire dataset AS FAST AS POSSIBLE
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the complex-valued input
 	 * @param paddedDimensions
@@ -1148,7 +1169,11 @@ public class FFTMethods
 
 	/**
 	 * A helper method to test if padding is actually necessary
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> master
 	 * @param interval
 	 *            - the dimensions of a dataset
 	 * @param paddedDimensions
@@ -1166,7 +1191,11 @@ public class FFTMethods
 
 	/**
 	 * A helper method to test if padding is actually necessary
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> master
 	 * @param interval
 	 *            - the dimensions of a dataset
 	 * @param padded
@@ -1185,7 +1214,11 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of real
 	 * numbers) for a forward FFT of the entire dataset AS FAST AS POSSIBLE
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the real-valued input
 	 * @param paddedDimensions
@@ -1207,7 +1240,11 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of real
 	 * numbers) for a forward FFT of the entire dataset AS SMALL AS POSSIBLE
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the real-valued input
 	 * @param paddedDimensions
@@ -1230,7 +1267,11 @@ public class FFTMethods
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for a forward/inverse FFT of the entire dataset AS FAST AS
 	 * POSSIBLE
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the input
 	 * @param paddedDimensions
@@ -1246,7 +1287,11 @@ public class FFTMethods
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for a forward/inverse FFT of the entire dataset AS SMALL AS
 	 * POSSIBLE
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> master
 	 * @param inputDimensions
 	 *            - the dimensions of the input
 	 * @param paddedDimensions
@@ -1272,7 +1317,7 @@ public class FFTMethods
 		return false;
 	}
 
-	final public static < T extends ComplexType< T > > void complexConjugate( RandomAccessibleInterval< T > complexData )
+	final public static < T extends ComplexType< T > > void complexConjugate( final RandomAccessibleInterval< T > complexData )
 	{
 		for ( final T type : Views.iterable( complexData ) )
 			type.complexConjugate();

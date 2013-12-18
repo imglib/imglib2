@@ -10,15 +10,15 @@
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 2 of the 
+ * published by the Free Software Foundation, either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public 
+ *
+ * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-2.0.html>.
  * #L%
@@ -93,6 +93,8 @@ public class FFTConvolution<T extends RealType<T>, K extends RealType<K>, R exte
 
 	// by default we do not keep the image
 	boolean keepImgFFT = false;
+
+	private int numThreads = -1;
 
 	/**
 	 * Compute a Fourier space based convolution in-place (img will be replaced
@@ -245,6 +247,10 @@ public class FFTConvolution<T extends RealType<T>, K extends RealType<K>, R exte
 		this.kernelInterval = kernelInterval;
 		this.output = output;
 		this.fftFactory = factory;
+
+		if (numThreads == -1) {
+			numThreads = Runtime.getRuntime().availableProcessors();
+		}
 	}
 
 	public void setImg(final RandomAccessibleInterval<T> img) {
@@ -370,10 +376,10 @@ public class FFTConvolution<T extends RealType<T>, K extends RealType<K>, R exte
 
 		// compute the FFT's if they do not exist yet
 		if (fftImg == null)
-			fftImg = FFT.realToComplex(imgInput, fftFactory);
+			fftImg = FFT.realToComplex(imgInput, fftFactory, numThreads);
 
 		if (fftKernel == null) {
-			fftKernel = FFT.realToComplex(kernelInput, fftFactory);
+			fftKernel = FFT.realToComplex(kernelInput, fftFactory, numThreads);
 
 			// compute the complex conjugate of the FFT of the kernel (same as
 			// mirroring the input image)
@@ -393,14 +399,14 @@ public class FFTConvolution<T extends RealType<T>, K extends RealType<K>, R exte
 		multiplyComplex(fftconvolved, fftKernel);
 
 		// inverse FFT in place
-		FFT.complexToRealUnpad(fftconvolved, output);
+		FFT.complexToRealUnpad(fftconvolved, output, numThreads);
 	}
 
 	final public static <T extends RealType<T>, K extends RealType<K>, R extends RealType<R>> void convolve(
 			final RandomAccessible<T> img, final Interval imgInterval,
 			final RandomAccessible<K> kernel, final Interval kernelInterval,
 			final RandomAccessibleInterval<R> output,
-			final ImgFactory<ComplexFloatType> factory) {
+			final ImgFactory<ComplexFloatType> factory, int numThreads) {
 		final int numDimensions = imgInterval.numDimensions();
 
 		// the image has to be extended at least by kernelDimensions/2-1 in each
@@ -454,15 +460,15 @@ public class FFTConvolution<T extends RealType<T>, K extends RealType<K>, R exte
 
 		// compute the FFT's
 		final Img<ComplexFloatType> fftImg = FFT.realToComplex(imgInput,
-				factory);
+				factory, 1);
 		final Img<ComplexFloatType> fftKernel = FFT.realToComplex(kernelInput,
-				factory);
+				factory, numThreads);
 
 		// multiply in place
 		multiplyComplex(fftImg, fftKernel);
 
 		// inverse FFT in place
-		FFT.complexToRealUnpad(fftImg, output);
+		FFT.complexToRealUnpad(fftImg, output, numThreads);
 	}
 
 	final public static void multiplyComplex(final Img<ComplexFloatType> img,
@@ -483,6 +489,7 @@ public class FFTConvolution<T extends RealType<T>, K extends RealType<K>, R exte
 				return new CellImgFactory<ComplexFloatType>(1024);
 			else
 				return new ArrayImgFactory<ComplexFloatType>();
+
 		}
 	}
 }
