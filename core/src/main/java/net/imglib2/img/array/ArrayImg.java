@@ -111,12 +111,12 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	}
 
 	@Override
-	public ArrayImgFactory<T> factory() { return new ArrayImgFactory<T>(); }
+	public ArrayImgFactory<T> factory() { return new ArrayImgFactory<T>(firstElement().createVariable()); }
 
 	@Override
 	public ArrayImg< T, ? > copy()
 	{
-		final ArrayImg< T, ? > copy = factory().create( dimension, firstElement().createVariable() );
+		final ArrayImg< T, ? > copy = factory().create( dimension );
 
 		final ArrayCursor< T > source = this.cursor();
 		final ArrayCursor< T > target = copy.cursor();

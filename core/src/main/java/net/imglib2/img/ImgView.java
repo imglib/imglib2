@@ -83,8 +83,7 @@ public class ImgView<T extends Type<T>> extends
 
 	@Override
 	public Img<T> copy() {
-		final Img<T> copy = factory.create(this, randomAccess().get()
-				.createVariable());
+		final Img<T> copy = factory.create(this);
 
 		Cursor<T> srcCursor = localizingCursor();
 		RandomAccess<T> resAccess = copy.randomAccess();

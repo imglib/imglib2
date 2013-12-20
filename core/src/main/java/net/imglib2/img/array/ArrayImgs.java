@@ -86,7 +86,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedByteType, ByteArray > unsignedBytes( final long... dim )
 	{
-		return ( ArrayImg< UnsignedByteType, ByteArray > )new ArrayImgFactory< UnsignedByteType >().create( dim, new UnsignedByteType() );
+		return ( ArrayImg< UnsignedByteType, ByteArray > )new ArrayImgFactory< UnsignedByteType >(new UnsignedByteType()).create( dim );
 	}
 	
 	/**
@@ -108,7 +108,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ByteType, ByteArray > bytes( final long... dim )
 	{
-		return ( ArrayImg< ByteType, ByteArray > )new ArrayImgFactory< ByteType >().create( dim, new ByteType() );
+		return ( ArrayImg< ByteType, ByteArray > )new ArrayImgFactory< ByteType >(new ByteType()).create( dim );
 	}
 	
 	/**
@@ -130,7 +130,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedShortType, ShortArray > unsignedShorts( final long... dim )
 	{
-		return ( ArrayImg< UnsignedShortType, ShortArray > )new ArrayImgFactory< UnsignedShortType >().create( dim, new UnsignedShortType() );
+		return ( ArrayImg< UnsignedShortType, ShortArray > )new ArrayImgFactory< UnsignedShortType >(new UnsignedShortType()).create( dim );
 	}
 	
 	/**
@@ -152,7 +152,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ShortType, ShortArray > shorts( final long... dim )
 	{
-		return ( ArrayImg< ShortType, ShortArray > )new ArrayImgFactory< ShortType >().create( dim, new ShortType() );
+		return ( ArrayImg< ShortType, ShortArray > )new ArrayImgFactory< ShortType >(new ShortType()).create( dim );
 	}
 	
 	/**
@@ -174,7 +174,7 @@ final public class ArrayImgs
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedIntType, IntArray > unsignedInts( final long... dim )
 	{
-		return ( ArrayImg< UnsignedIntType, IntArray > )new ArrayImgFactory< UnsignedIntType >().create( dim, new UnsignedIntType() );
+		return ( ArrayImg< UnsignedIntType, IntArray > )new ArrayImgFactory< UnsignedIntType >(new UnsignedIntType()).create( dim );
 	}
 	
 	/**
