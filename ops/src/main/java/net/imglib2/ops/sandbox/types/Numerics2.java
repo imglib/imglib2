@@ -48,11 +48,15 @@ public class Numerics2 {
  * or Ruby's unknown method approach. I have mocked up such an approach
  * near the bottom of this file.
  * 
+ * More on the casting approach. You make the data structures store the
+ * least restrictive class (i.e. List<GroupMember>). And the plugins
+ * cast to the most restrictive class they handle (i.e. List<Float64>)
+ * 
  * Some things to note:
  * 1) this hierarchy is algebraically correct (as far as I can tell
  *    after reading a book on abstract algebra by Pinter).
  * 2) it supports various number systems (integer, rational, real,
- *    complex, quaternion, matrix)
+ *    complex, quaternion, matrix) and is extensible
  * 3) More sophisticated values (like complex variables) can be set from
  *    less sophisticated values (like reals, rationals, etc.)
  * 4) TODO document the algebraic hierarchy
@@ -2355,7 +2359,7 @@ public class Numerics2 {
 		List<Object> outputs();
 	}
 
-	// example of a plugin implementation
+	// example of a plugin implementation that works with any FieldMember derived class
 	
 	public static class MyFieldMemberPlugin<T extends FieldMember<T>> implements Plugin<T> {
 		private List<FieldMember<T>> fieldData;
@@ -2395,6 +2399,46 @@ public class Numerics2 {
 		public List<Object> outputs() { return outputs; }
 	}
 	
+	// example of a plugin implementation that works with a specific
+	// type of data. Note how isAssignableFrom() required to allow
+	// runtime determination of type. Due to type erasure this is
+	// required if not using compile checks.
+
+	public static class MySumIntPlugin implements Plugin<Signed32BitInt> {
+		
+		private List<Signed32BitInt> data;
+		private String err;
+		private List<Object> outputs;
+
+		public void setup(Data data) {
+			this.data = null;
+			this.outputs = new ArrayList<Object>();
+			try {
+				if (Signed32BitInt.class.isAssignableFrom(data.type().getClass())) {
+					this.data = (List<Signed32BitInt>) data.data();
+				}
+			} catch (Exception e) {
+				// do nothing
+			}
+			if (this.data == null) {
+				err = "Data is not made of Signed32BitInts";
+			}
+		}
+		
+		public void run() {
+			if (data == null) return;
+			Signed32BitInt sum = new Signed32BitInt();
+			for (Signed32BitInt i : data) {
+				sum.add(sum, i);
+			}
+			outputs.add(sum);
+		}
+		
+		public String error() { return err; }
+		
+		public List<Object> outputs() { return outputs; }
+	}
+	
 	// other plugin impls could test for all kinds of things in the
 	// setup() method:
 	//   has 3 channels, data is integral, all data values are > 10.0,
@@ -2408,8 +2452,10 @@ public class Numerics2 {
 			// TODO: implement. For now hack to work for testing.
 			List<GroupMember<?>> list = new ArrayList<GroupMember<?>>();
 			list.add(null);
-			list.set(0, new Float32(0.5f)); // success below: correct
-//			list.set(0, new UnboundedInt(BigInteger.ONE)); // failure below: correct
+// TODO tweak these lines to test various behaviors
+			list.set(0, new Float32(0.5f));
+//			list.set(0, new UnboundedInt(BigInteger.ONE));
+//			list.set(0, new Signed32BitInt(175));
 			return new Data(new int[]{1}, list);
 		}
 	}
@@ -2420,13 +2466,17 @@ public class Numerics2 {
 		URL someUrl = null;
 		Data data = DataLoader.load(someUrl);
 		// this next line has no generics on purpose
-		MyFieldMemberPlugin plugin = new MyFieldMemberPlugin();
+		runPlugin(new MyFieldMemberPlugin(), "field member", data);
+		runPlugin(new MySumIntPlugin(), "sum int", data);
+	}
+	
+	public static void runPlugin(Plugin<?> plugin, String pluginName, Data data) {
 		plugin.setup(data);
 		plugin.run();
 		String err = plugin.error();
 		if (err == null)
-		  System.out.println("Successful plugin run: " + plugin.outputs().get(0));
+		  System.out.println("Successfully ran "+pluginName+" plugin: " + plugin.outputs().get(0));
 		else
-		  System.out.println("Plugin error: " + err);
+		  System.out.println("Could not run "+pluginName+" plugin: " + err);
 	}
 }
