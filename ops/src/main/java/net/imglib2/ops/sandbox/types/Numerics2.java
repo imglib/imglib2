@@ -172,6 +172,7 @@ public class Numerics2 {
 		boolean isLessEqual(T other); 
 		boolean isGreater(T other); 
 		boolean isGreaterEqual(T other);
+		int compare(T other);
 	}
 
 	public interface Bounded<T extends Bounded<T>> {
@@ -201,6 +202,22 @@ public class Numerics2 {
 	{
 		// has cancellation property
 	}
+	
+	public interface EuclideanRingMember<T extends EuclideanRingMember<T>>
+		extends RingMember<T> // or is it a ring with unity member?
+	{
+		void div(T a, T b);
+		void mod(T a, T b);
+		void divMod(T a, T b, T r);
+		void gcd(T a, T b);
+		void lcm(T a, T b);
+		T norm();
+	}
+	
+	public interface EuclideanDomainMember<T extends EuclideanDomainMember<T>>
+		extends IntegralDomainMember<T>, EuclideanRingMember<T>
+	{
+	}
 
 	public interface OrderedIntegralDomainMember<T extends OrderedIntegralDomainMember<T>>
 		extends IntegralDomainMember<T>, OrderedMember<T>
@@ -225,6 +242,13 @@ public class Numerics2 {
 	{
 	}
 
+	public interface PolynomialRingMember<T extends PolynomialRingMember<T,U>, U extends IntegralDomainMember<U>>
+		extends EuclideanRingMember<T>, RingWithUnityMember<T>
+	{
+		List<U> coefficients();
+		List<Long> powers();
+	}
+	
 	// rings: general real matrices? complex matrices too?
 	
 	// TODO: should V extend FieldMember?
@@ -269,17 +293,10 @@ public class Numerics2 {
 	// integral domains: Z
 
 	public interface IntegerMember<T extends IntegerMember<T>>
-		extends OrderedIntegralDomainMember<T>
+		extends OrderedIntegralDomainMember<T>, EuclideanDomainMember<T>
 	{
-		// TODO: are divMod things a part of IntegralDomain or Integers
-		// or even as low as Rings?????
-		void div(T a, T b); // okay for polynomials: move to IntegralDomain?
-		void mod(T a, T b); // okay for polynomials: move to IntegralDomain?
-		void divMod(T a, T b, T r); // okay for polynomials: move to IntegralDomain?
-		void gcd(T a, T b); // okay for polynomials: move to IntegralDomain?
-		void lcm(T a, T b); // okay for polynomials: move to IntegralDomain?
-		void pred(T a); // broken for polynomials: stay here
-		void succ(T a); // broken for polynomials: stay here
+		void pred(T a);
+		void succ(T a);
 
 		UnboundedInt intPart();
 		void set(IntegerMember<?> val);
@@ -372,6 +389,12 @@ public class Numerics2 {
 		
 		public boolean isGreaterEqual(Signed32BitInt other) {
 			return v >= other.v;
+		}
+		
+		public int compare(Signed32BitInt other) {
+			if (v < other.v) return -1;
+			if (v > other.v) return  1;
+			return 0;
 		}
 		
 		public Signed32BitInt copy() {
@@ -473,6 +496,10 @@ public class Numerics2 {
 		public String toString() {
 			return Integer.toString(v);
 		}
+		
+		public Signed32BitInt norm() {
+			return new Signed32BitInt(v < 0 ? -v : v);
+		}
 	}
 	
 	public static class Unsigned16BitInt
@@ -480,28 +507,30 @@ public class Numerics2 {
 	{
 		private short v;
 
-		private static Unsigned16BitInt ZERO = new Unsigned16BitInt((short) 0);
-		private static Unsigned16BitInt ONE = new Unsigned16BitInt((short) 1);
+		private static Unsigned16BitInt ZERO = new Unsigned16BitInt(0);
+		private static Unsigned16BitInt ONE = new Unsigned16BitInt(1);
 		
 		public Unsigned16BitInt() {
 			v = 0;
 		}
 		
-		public Unsigned16BitInt(short v) {
+		public Unsigned16BitInt(int v) {
 			this();
 			set(v);
 		}
 		
 		public Unsigned16BitInt(Unsigned16BitInt other) {
-			this(other.v);
+			this(other.v & 0xffff);
 		}
 	
-		public void set(short v) {
-			this.v = v;
+		public void set(int v) {
+			if (v < 0 || v > 0xffff)
+				throw new IllegalArgumentException("value out of range");
+			this.v = (short) (v & 0xffff);
 		}
 		
 		public void set(Unsigned16BitInt other) {
-			set(other.v);
+			set(other.v & 0xffff);
 		}
 		
 		public Unsigned16BitInt variable() {
@@ -509,29 +538,37 @@ public class Numerics2 {
 		}
 		
 		public boolean isEqual(Unsigned16BitInt other) {
-			return v == other.v;
+			return compare(other) == 0;
 		}
 		
 		public boolean isNotEqual(Unsigned16BitInt other) {
-			return v != other.v;
+			return compare(other) != 0;
 		}
 		
 		public boolean isLess(Unsigned16BitInt other) {
-			return v < other.v;
+			return compare(other) < 0;
 		}
 		
 		public boolean isLessEqual(Unsigned16BitInt other) {
-			return v <= other.v;
+			return compare(other) <= 0;
 		}
 		
 		public boolean isGreater(Unsigned16BitInt other) {
-			return v > other.v;
+			return compare(other) > 0;
 		}
 		
 		public boolean isGreaterEqual(Unsigned16BitInt other) {
-			return v >= other.v;
+			return compare(other) >= 0;
 		}
 		
+		public int compare(Unsigned16BitInt other) {
+			int thisI = v & 0xffff;
+			int otherI = other.v & 0xffff;
+			if (thisI < otherI) return -1;
+			if (thisI > otherI) return  1;
+			return 0;
+		}
+
 		public Unsigned16BitInt copy() {
 			return new Unsigned16BitInt(this);
 		}
@@ -545,22 +582,26 @@ public class Numerics2 {
 		}
 		
 		public void negate(Unsigned16BitInt other) {
-			subtract(ZERO,other);
+			v = other.v; // negate unsupported
 		}
 		
 		public void add(Unsigned16BitInt a, Unsigned16BitInt b) {
+			// TODO: okay via two's complement or translate to integers?
 			v = (short) (a.v + b.v);
 		}
 		
 		public void subtract(Unsigned16BitInt a, Unsigned16BitInt b) {
+			// TODO: okay via two's complement or translate to integers?
 			v = (short) (a.v - b.v);
 		}
 		
 		public void multiply(Unsigned16BitInt a, Unsigned16BitInt b) {
+			// TODO: okay via two's complement or translate to integers?
 			v = (short) (a.v * b.v);
 		}
 		
 		public void power(Unsigned16BitInt input, long power) {
+			// TODO: okay via two's complement or translate to integers?
 			v = 1;
 			for (int i = 0; i < power; i++) {
 				v *= input.v;
@@ -572,27 +613,31 @@ public class Numerics2 {
 		}
 		
 		public void max() {
-			set((short) 0xffff);
+			set(0xffff);
 		}
 		
 		public void min() {
-			set((short) 0);
+			set(0);
 		}
 		
 		public void div(Unsigned16BitInt a, Unsigned16BitInt b) {
+			// TODO: okay via two's complement or translate to integers?
 			v = (short) (a.v / b.v);
 		}
 		
 		public void mod(Unsigned16BitInt a, Unsigned16BitInt b) {
+			// TODO: okay via two's complement or translate to integers?
 			v = (short) (a.v % b.v);
 		}
 		
 		public void divMod(Unsigned16BitInt a, Unsigned16BitInt b, Unsigned16BitInt r) {
+			// TODO: okay via two's complement or translate to integers?
 			v = (short) (a.v / b.v);
 			r.v = (short) (a.v % b.v);
 		}
 		
 		public void gcd(Unsigned16BitInt a, Unsigned16BitInt b) {
+			// TODO: okay via two's complement or translate to integers?
 			int val = gcdHelper(a, b);
 			if (val < 0) val =  0;
 			if (val > 0xffff) val = 0xffff;
@@ -600,6 +645,7 @@ public class Numerics2 {
 		}
 		
 		public void lcm(Unsigned16BitInt a, Unsigned16BitInt b) {
+			// TODO: okay via two's complement or translate to integers?
 			int n = (int) Math.abs(a.v * b.v);
 			int d = gcdHelper(a, b);
 			int val = n / d;
@@ -619,10 +665,12 @@ public class Numerics2 {
 		}
 		
 		public void pred(Unsigned16BitInt a) {
+			// TODO: okay via two's complement or translate to integers?
 			v = (short) (a.v - 1);
 		}
 		
 		public void succ(Unsigned16BitInt a) {
+			// TODO: okay via two's complement or translate to integers?
 			v = (short) (a.v + 1);
 		}
 		
@@ -631,14 +679,15 @@ public class Numerics2 {
 		}
 		
 		public void set(IntegerMember<?> val) {
-			int tmp = val.intPart().v.intValue();
-			if (tmp < 0) tmp = 0;
-			if (tmp > 0xffff) tmp = 0xffff;
-			v = (short) (tmp & 0xffff);
+			set(val.intPart().v.intValue());
 		}
 		
 		public String toString() {
 			return Integer.toString(v & 0xffff);
+		}
+		
+		public Unsigned16BitInt norm() {
+			return new Unsigned16BitInt(v);
 		}
 	}
 	
@@ -676,27 +725,31 @@ public class Numerics2 {
 		}
 		
 		public boolean isEqual(UnboundedInt other) {
-			return v.compareTo(other.v) == 0;
+			return compare(other) == 0;
 		}
 		
 		public boolean isNotEqual(UnboundedInt other) {
-			return v.compareTo(other.v) != 0;
+			return compare(other) != 0;
 		}
 		
 		public boolean isLess(UnboundedInt other) {
-			return v.compareTo(other.v) < 0;
+			return compare(other) < 0;
 		}
 		
 		public boolean isLessEqual(UnboundedInt other) {
-			return v.compareTo(other.v) <= 0;
+			return compare(other) <= 0;
 		}
 		
 		public boolean isGreater(UnboundedInt other) {
-			return v.compareTo(other.v) > 0;
+			return compare(other) > 0;
 		}
 		
 		public boolean isGreaterEqual(UnboundedInt other) {
-			return v.compareTo(other.v) >= 0;
+			return compare(other) >= 0;
+		}
+		
+		public int compare(UnboundedInt other) {
+			return v.compareTo(other.v);
 		}
 		
 		public UnboundedInt copy() {
@@ -797,6 +850,12 @@ public class Numerics2 {
 		public String toString() {
 			return v.toString();
 		}
+		
+		public UnboundedInt norm() {
+			UnboundedInt i = new UnboundedInt();
+			i.abs(this);
+			return i;
+		}
 	} 
 	
 	public interface UnboundedRational
@@ -862,6 +921,12 @@ public class Numerics2 {
 		
 		public boolean isGreaterEqual(Float32 other) {
 			return v >= other.v;
+		}
+		
+		public int compare(Float32 other) {
+			if (v < other.v) return -1;
+			if (v > other.v) return  1;
+			return 0;
 		}
 		
 		public Float32 copy() {
@@ -1005,6 +1070,12 @@ public class Numerics2 {
 		
 		public boolean isGreaterEqual(Float64 other) {
 			return v >= other.v;
+		}
+		
+		public int compare(Float64 other) {
+			if (v < other.v) return -1;
+			if (v > other.v) return  1;
+			return 0;
 		}
 		
 		public Float64 copy() {
@@ -1239,11 +1310,10 @@ public class Numerics2 {
 		
 		public String toString() {
 			StringBuilder b = new StringBuilder();
-			b.append("(");
 			b.append(r.v);
-			b.append(",");
-			b.append(i.v);
-			b.append(")");
+			b.append(i.v < 0 ? "-" : "+");
+			b.append(Math.abs(i.v));
+			b.append("i");
 			return b.toString();
 		}
 	}
@@ -1395,11 +1465,10 @@ public class Numerics2 {
 		
 		public String toString() {
 			StringBuilder b = new StringBuilder();
-			b.append("(");
 			b.append(r.v);
-			b.append(",");
-			b.append(i.v);
-			b.append(")");
+			b.append(i.v < 0 ? "-" : "+");
+			b.append(Math.abs(i.v));
+			b.append("i");
 			return b.toString();
 		}
 	}
@@ -2061,15 +2130,16 @@ public class Numerics2 {
 		
 		public String toString() {
 			StringBuilder b = new StringBuilder();
-			b.append("(");
 			b.append(a().v);
-			b.append(",");
-			b.append(b().v);
-			b.append(",");
-			b.append(c().v);
-			b.append(",");
-			b.append(d().v);
-			b.append(")");
+			b.append(b().v < 0 ? "-" : "+");
+			b.append(Math.abs(b().v));
+			b.append("i");
+			b.append(c().v < 0 ? "-" : "+");
+			b.append(Math.abs(c().v));
+			b.append("j");
+			b.append(d().v < 0 ? "-" : "+");
+			b.append(Math.abs(d().v));
+			b.append("k");
 			return b.toString();
 		}
 	}
@@ -2280,15 +2350,16 @@ public class Numerics2 {
 		
 		public String toString() {
 			StringBuilder b = new StringBuilder();
-			b.append("(");
 			b.append(a().v);
-			b.append(",");
-			b.append(b().v);
-			b.append(",");
-			b.append(c().v);
-			b.append(",");
-			b.append(d().v);
-			b.append(")");
+			b.append(b().v < 0 ? "-" : "+");
+			b.append(Math.abs(b().v));
+			b.append("i");
+			b.append(c().v < 0 ? "-" : "+");
+			b.append(Math.abs(c().v));
+			b.append("j");
+			b.append(d().v < 0 ? "-" : "+");
+			b.append(Math.abs(d().v));
+			b.append("k");
 			return b.toString();
 		}
 	}
