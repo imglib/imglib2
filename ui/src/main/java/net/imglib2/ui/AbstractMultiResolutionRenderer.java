@@ -85,12 +85,15 @@ import net.imglib2.ui.util.GuiUtil;
  * The renderer uses multiple threads (if desired) and double-buffering (if
  * desired).
  * <p>
- * Double buffering means that two {@link BufferedImage BufferedImages} are
+ * Double buffering means that three {@link BufferedImage BufferedImages} are
  * created for every screen scale. After rendering the first one of them and
  * setting it to the {@link RenderTarget}, next time, rendering goes to the
- * second one. Thus, the {@link RenderTarget} will always have a complete image.
- * Rendering will not interfere with painting the {@link BufferedImage} to the
- * canvas.
+ * second one, then to the third. The {@link RenderTarget} will always have a
+ * complete image, which is not rendered to while it is potentially drawn to the
+ * screen. When setting an image to the {@link RenderTarget}, the
+ * {@link RenderTarget} will release one of the previously set images to be
+ * rendered again. Thus, rendering will not interfere with painting the
+ * {@link BufferedImage} to the canvas.
  *
  * @param <A>
  *            transform type
