@@ -94,7 +94,6 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 	 * from three dimensions, an x,y,c image, and from four dimensions, an
 	 * x,y,c,z image.</em>
 	 *
-	 * @param factory
 	 * @param dim
 	 * @param entitiesPerPixel
 	 */
