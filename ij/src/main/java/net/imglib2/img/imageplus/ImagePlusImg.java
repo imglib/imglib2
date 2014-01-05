@@ -44,30 +44,25 @@ import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.NativeType;
 
 /**
- * A container that stores data in an array of 2d-slices each as a
- * linear array of basic types.  For types that are supported by ImageJ (byte,
- * short, int, float), an actual ImagePlus is created or used to store the
- * data.  Alternatively, an {@link ImagePlusImg} can be created using
- * an already existing {@link ImagePlus} instance.
- *
- * {@link ImagePlusImg ImagePlusContainers} provides a legacy layer to
- * apply imglib-based algorithm implementations directly on the data stored in
- * an ImageJ {@link ImagePlus}.  For all types that are supported by ImageJ, the
- * {@link ImagePlusImg} provides access to the pixels of an
- * {@link ImagePlus} instance that can be accessed via {@link getImagePlus}().
- *
- *   Johannes Schindelin
- *
- * @author Funke
- * @author Preibisch
- * @author Rueden
- * @author Saalfeld
- * @author Schindelin
+ * A container that stores data in an array of 2D slices each as a linear array
+ * of basic types. For types that are supported by ImageJ ({@code byte},
+ * {@code short}, {@code int}, {@code float}), an actual {@link ImagePlus} is
+ * created or used to store the data. Alternatively, an {@link ImagePlusImg} can
+ * be created using an already existing {@link ImagePlus} instance.
+ * <p>
+ * {@link ImagePlusImg} provides a legacy layer to apply ImgLib-based algorithm
+ * implementations directly on the data stored in an ImageJ {@link ImagePlus}.
+ * For all types that are supported by ImageJ, the {@link ImagePlusImg} provides
+ * access to the pixels of an {@link ImagePlus} instance that can be accessed
+ * via {@link #getImagePlus()}.
+ * </p>
+ * 
  * @author Jan Funke
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Curtis Rueden
  * @author Stephan Saalfeld
+ * @author Johannes Schindelin
  */
 public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<A> > extends PlanarImg< T, A >
 {
