@@ -48,9 +48,12 @@ public class Numerics2 {
  * or Ruby's unknown method approach. I have mocked up such an approach
  * near the bottom of this file.
  * 
- * More on the casting approach. You make the data structures store the
- * least restrictive class (i.e. List<GroupMember>). And the plugins
- * cast to the most restrictive class they handle (i.e. List<Float64>)
+ * More on the casting approach. The data structures of an image store
+ * specifically (i.e. List<Float64>). However it returns a facade in a
+ * very generic type (i.e. List<GroupMember>) to outside observers. This
+ * is what gets passed around to plugins. The plugins cast to the most
+ * restrictive class they handle (i.e. List<Float64>, or List<Real<?>>
+ * etc.).
  * 
  * Some things to note:
  * 1) this hierarchy is algebraically correct (as far as I can tell
@@ -140,7 +143,7 @@ public class Numerics2 {
 
 	public interface GroupMember<T extends GroupMember<T>> {
 		boolean isEqual(T other);
-		boolean isNotEqual(T other); 
+		boolean isNotEqual(T other);
 		T variable(); // a default group member constructor
 		T copy();
 		void set(T other);
@@ -159,7 +162,7 @@ public class Numerics2 {
 		extends AdditiveGroupMember<T>
 	{
 		void multiply(T a, T b);
-		void power(T a, long power);  // implementations decide if arg can be negative
+		void power(T a, int power);  // implementations decide if arg can be negative
 	}
 	
 	public interface InvertibleMember<T extends InvertibleMember<T>> {
@@ -173,11 +176,65 @@ public class Numerics2 {
 		boolean isGreater(T other); 
 		boolean isGreaterEqual(T other);
 		int compare(T other);
+		int signum();
 	}
 
 	public interface Bounded<T extends Bounded<T>> {
 		void max();  // set self to max value of type
 		void min();  // set self to min value of type
+	}
+
+	// TODO
+	// 1) get mathematical name here
+	// 2) incorporate
+
+	public interface FloatStuff<T> {
+		void sin(T other);
+		void cos(T other);
+		void tan(T other);
+		void sinh(T other);
+		void cosh(T other);
+		void tanh(T other);
+		void log(T other);
+		void exp(T other);
+		void root(T other, int power);
+		//void sqrt(T other);
+		//void cbrt(T other);
+	}
+	
+	// TODO
+	// 1) get mathematical name here
+	// 2) incorporate
+
+	public interface InverseFloatStuff<T> {
+		T arcsin();
+		T arccos();
+		T arctan();
+		T arcsinh();
+		T arccosh();
+		T arctanh();
+		<U> T atan2(U a, U b); // TODO: this is too awkward
+	}
+	
+	// TODO
+	// 1) get mathematical name here
+	// 2) incorporate
+
+	public interface RealBoundStuff {
+		boolean isNan();
+		boolean isPositiveInfinity();
+		boolean isNegativeInfinity();
+	}
+
+	// TODO
+	// 1) get mathematical name here
+	// 2) incorporate
+
+	public interface RealRoundingStuff {
+		void trunc();
+		void round();
+		void ceil();
+		void floor();
 	}
 	
 	public interface CommutativeRingMember<T extends CommutativeRingMember<T>>
@@ -212,6 +269,8 @@ public class Numerics2 {
 		void gcd(T a, T b);
 		void lcm(T a, T b);
 		T norm();
+		boolean isEven();
+		boolean isOdd();
 	}
 	
 	public interface EuclideanDomainMember<T extends EuclideanDomainMember<T>>
@@ -242,11 +301,14 @@ public class Numerics2 {
 	{
 	}
 
+	// not sure if the U def is right yet. An IntegralDomain? A EuclideanDomain? Or less likely a Field?
+	// Note that integers are not really part of a euclidean ring as q/r uniqueness is not guaranteed
+	// for neg vs. pos numbers. I can still relax uniqueness of result in my implementations?
 	public interface PolynomialRingMember<T extends PolynomialRingMember<T,U>, U extends IntegralDomainMember<U>>
 		extends EuclideanRingMember<T>, RingWithUnityMember<T>
 	{
 		List<U> coefficients();
-		List<Long> powers();
+		List<Integer> powers();
 	}
 	
 	// rings: general real matrices? complex matrices too?
@@ -397,6 +459,10 @@ public class Numerics2 {
 			return 0;
 		}
 		
+		public int signum() {
+			return compare(ZERO);
+		}
+		
 		public Signed32BitInt copy() {
 			return new Signed32BitInt(this);
 		}
@@ -410,7 +476,7 @@ public class Numerics2 {
 		}
 		
 		public void negate(Signed32BitInt other) {
-			subtract(ZERO,other);
+			v = -other.v;
 		}
 		
 		public void add(Signed32BitInt a, Signed32BitInt b) {
@@ -425,7 +491,7 @@ public class Numerics2 {
 			v = a.v * b.v;
 		}
 		
-		public void power(Signed32BitInt input, long power) {
+		public void power(Signed32BitInt input, int power) {
 			v = 1;
 			for (int i = 0; i < power; i++) {
 				v *= input.v;
@@ -500,6 +566,14 @@ public class Numerics2 {
 		public Signed32BitInt norm() {
 			return new Signed32BitInt(v < 0 ? -v : v);
 		}
+		
+		public boolean isEven() {
+			return v % 2 == 0;
+		}
+
+		public boolean isOdd() {
+			return v % 2 == 1;
+		}
 	}
 	
 	public static class Unsigned16BitInt
@@ -568,6 +642,10 @@ public class Numerics2 {
 			if (thisI > otherI) return  1;
 			return 0;
 		}
+		
+		public int signum() {
+			return compare(ZERO);
+		}
 
 		public Unsigned16BitInt copy() {
 			return new Unsigned16BitInt(this);
@@ -600,7 +678,7 @@ public class Numerics2 {
 			v = (short) (a.v * b.v);
 		}
 		
-		public void power(Unsigned16BitInt input, long power) {
+		public void power(Unsigned16BitInt input, int power) {
 			// TODO: okay via two's complement or translate to integers?
 			v = 1;
 			for (int i = 0; i < power; i++) {
@@ -689,6 +767,14 @@ public class Numerics2 {
 		public Unsigned16BitInt norm() {
 			return new Unsigned16BitInt(v);
 		}
+		
+		public boolean isEven() {
+			return v % 2 == 0;
+		}
+
+		public boolean isOdd() {
+			return v % 2 == 1;
+		}
 	}
 	
 	public static class UnboundedInt
@@ -750,6 +836,10 @@ public class Numerics2 {
 		
 		public int compare(UnboundedInt other) {
 			return v.compareTo(other.v);
+		}		
+		
+		public int signum() {
+			return compare(ZERO);
 		}
 		
 		public UnboundedInt copy() {
@@ -780,7 +870,7 @@ public class Numerics2 {
 			v = a.v.multiply(b.v);
 		}
 		
-		public void power(UnboundedInt input, long power) {
+		public void power(UnboundedInt input, int power) {
 			v = BigInteger.ONE;
 			for (int i = 0; i < power; i++) {
 				v = v.multiply(input.v);
@@ -788,7 +878,8 @@ public class Numerics2 {
 		}
 		
 		public void abs(UnboundedInt other) {
-			v = other.v.negate();
+			if (other.compare(ZERO) < 0) negate(other);
+			else v = other.v;
 		}
 		
 		public void div(UnboundedInt a, UnboundedInt b) {
@@ -805,13 +896,7 @@ public class Numerics2 {
 		}
 		
 		public void gcd(UnboundedInt a, UnboundedInt b) {
-			BigInteger av = a.v, bv = b.v;
-			while (bv.compareTo(BigInteger.ZERO) != 0 ) {
-				BigInteger t = bv;
-				bv = av.mod(bv);
-				av = t;
-			}
-			v = av;
+			v = gcdHelper(a, b);
 		}
 		
 		public void lcm(UnboundedInt a, UnboundedInt b) {
@@ -855,6 +940,16 @@ public class Numerics2 {
 			UnboundedInt i = new UnboundedInt();
 			i.abs(this);
 			return i;
+		}
+		
+		public boolean isEven() {
+			BigInteger two = BigInteger.ONE.add(BigInteger.ONE);
+			return v.mod(two).equals(BigInteger.ZERO);
+		}
+
+		public boolean isOdd() {
+			BigInteger two = BigInteger.ONE.add(BigInteger.ONE);
+			return v.mod(two).equals(BigInteger.ONE);
 		}
 	} 
 	
@@ -929,6 +1024,10 @@ public class Numerics2 {
 			return 0;
 		}
 		
+		public int signum() {
+			return compare(ZERO);
+		}
+		
 		public Float32 copy() {
 			return new Float32(this);
 		}
@@ -942,7 +1041,7 @@ public class Numerics2 {
 		}
 		
 		public void negate(Float32 other) {
-			subtract(ZERO,other);
+			v = -other.v;
 		}
 		
 		public void add(Float32 a, Float32 b) {
@@ -965,7 +1064,7 @@ public class Numerics2 {
 			divide(ONE, other);
 		}
 		
-		public void power(Float32 input, long power) {
+		public void power(Float32 input, int power) {
 			v = (float) Math.pow(input.v, power);
 		}
 		
@@ -1078,6 +1177,10 @@ public class Numerics2 {
 			return 0;
 		}
 		
+		public int signum() {
+			return compare(ZERO);
+		}
+		
 		public Float64 copy() {
 			return new Float64(this);
 		}
@@ -1091,7 +1194,7 @@ public class Numerics2 {
 		}
 		
 		public void negate(Float64 other) {
-			subtract(ZERO,other);
+			v = -other.v;
 		}
 		
 		public void add(Float64 a, Float64 b) {
@@ -1114,7 +1217,7 @@ public class Numerics2 {
 			divide(ONE, other);
 		}
 		
-		public void power(Float64 input, long power) {
+		public void power(Float64 input, int power) {
 			v = (double) Math.pow(input.v, power);
 		}
 		
@@ -1265,7 +1368,7 @@ public class Numerics2 {
 			divide(ONE, other);
 		}
 		
-		public void power(ComplexFloat32 input, long power) {
+		public void power(ComplexFloat32 input, int power) {
 			set(ONE);
 			for (int i = 0; i < power; i++) {
 				multiply(this,input);
@@ -1420,7 +1523,7 @@ public class Numerics2 {
 			divide(ONE, other);
 		}
 		
-		public void power(ComplexFloat64 input, long power) {
+		public void power(ComplexFloat64 input, int power) {
 			set(ONE);
 			for (int i = 0; i < power; i++) {
 				multiply(this,input);
@@ -1597,7 +1700,7 @@ public class Numerics2 {
 			}
 		}
 		
-		public void power(Matrix<U,V> input, long power) {
+		public void power(Matrix<U,V> input, int power) {
 			if (power < 0) {
 				throw new IllegalArgumentException(
 					"negative power not allowed");
@@ -1619,7 +1722,7 @@ public class Numerics2 {
 			}
 			else { // power >= 2
 				set(input);
-				for (long i = 1; i < power; i++) {
+				for (int i = 1; i < power; i++) {
 					multiply(this, input);
 				}
 			} 
@@ -1716,7 +1819,7 @@ public class Numerics2 {
 			super.multiply(a, b);
 		}
 		
-		public void power(RealFloat32Matrix other, long power) {
+		public void power(RealFloat32Matrix other, int power) {
 			super.power(other, power);
 		}
 		
@@ -1773,7 +1876,7 @@ public class Numerics2 {
 			super.multiply(a, b);
 		}
 		
-		public void power(RealFloat64Matrix other, long power) {
+		public void power(RealFloat64Matrix other, int power) {
 			super.power(other, power);
 		}
 		
@@ -1830,7 +1933,7 @@ public class Numerics2 {
 			super.multiply(a, b);
 		}
 		
-		public void power(ComplexFloat32Matrix other, long power) {
+		public void power(ComplexFloat32Matrix other, int power) {
 			super.power(other, power);
 		}
 		
@@ -1887,7 +1990,7 @@ public class Numerics2 {
 			super.multiply(a, b);
 		}
 		
-		public void power(ComplexFloat64Matrix other, long power) {
+		public void power(ComplexFloat64Matrix other, int power) {
 			super.power(other, power);
 		}
 		
@@ -2056,7 +2159,7 @@ public class Numerics2 {
 			v.i().negate(other.value.value(1,1).i());
 		}
 		
-		public void power(QuaternionFloat32 other, long power) {
+		public void power(QuaternionFloat32 other, int power) {
 			unity();
 			for (int i = 0; i < power; i++) {
 				multiply(this, other);
@@ -2276,7 +2379,7 @@ public class Numerics2 {
 			v.i().negate(other.value.value(1,1).i());
 		}
 
-		public void power(QuaternionFloat64 other, long power) {
+		public void power(QuaternionFloat64 other, int power) {
 			unity();
 			for (int i = 0; i < power; i++) {
 				multiply(this, other);
