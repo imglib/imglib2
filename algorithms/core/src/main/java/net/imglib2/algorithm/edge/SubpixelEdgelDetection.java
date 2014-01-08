@@ -87,8 +87,19 @@ public class SubpixelEdgelDetection
 					final ImgFactory< T > factory,
 					final float minGradientMagnitude )
 	{
+		final ArrayList< Edgel > edgels = new ArrayList< Edgel >();
+
 		// number of dimensions of the input image.
 		final int n = input.numDimensions();
+
+		// For computing partial derivatives of input we require a border of 1
+		// pixel. Then we want to find local maxima of the gradient which
+		// requires again a border of 1 pixel. So if the image size is smaller
+		// than 5 pixels in any dimension, we can abort because we will not find
+		// any gradient maxima.
+		for ( int d = 0; d < n; ++d )
+			if ( input.dimension( d ) < 5 )
+				return edgels;
 
 		// Image of n+1 dimensions to store the partial derivatives of the input
 		// image. The (n+1)-th dimension is used to index the partial
@@ -109,8 +120,6 @@ public class SubpixelEdgelDetection
 		// Find gradient maxima. This requires a border of 2 pixels with respect
 		// to the input image
 		final Interval maximaComputationInterval = Intervals.expand( input, -2 );
-
-		final ArrayList< Edgel > edgels = new ArrayList< Edgel >();
 
 		final long[] min = new long[ n ];
 		maximaComputationInterval.min( min );
