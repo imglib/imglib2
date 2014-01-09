@@ -71,7 +71,10 @@ public class SubpixelEdgelDetection
 	 * the gradient (perpendicular to the edge). The sub-pixel position of the
 	 * edgel is found as the maximum of a quadratic function fitted to the
 	 * neighboring magnitudes in the gradient direction.
-	 *
+	 * <p>
+	 * Note: The input image type must be a signed type! Otherwise gradient
+	 * computation will not work.
+	 * 
 	 * @param input
 	 *            input image
 	 * @param factory
