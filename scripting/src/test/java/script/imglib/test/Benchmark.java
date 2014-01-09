@@ -278,7 +278,7 @@ public class Benchmark {
 			
 			//String src = "http://imagej.nih.gov/ij/images/bridge.gif";
 			String src = "/home/albert/Desktop/t2/bridge.gif";
-			Img<UnsignedByteType> img1 = new ImgOpener().openImg(src);
+			Img<UnsignedByteType> img1 = (Img<UnsignedByteType>) new ImgOpener().openImg(src);
 
 			System.out.println("dimensions of image opened by ImgOpener: " + img1.numDimensions());
 			System.out.println(" and 3rd dimension is: " + img1.dimension(2));
