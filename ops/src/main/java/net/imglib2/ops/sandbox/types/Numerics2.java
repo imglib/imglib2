@@ -188,13 +188,16 @@ public class Numerics2 {
 	// 1) get mathematical name here
 	// 2) incorporate
 
-	public interface FloatStuff<T> {
+	public interface Trigonometric<T extends Trigonometric<T>> {
 		void sin(T other);
 		void cos(T other);
 		void tan(T other);
 		void sinh(T other);
 		void cosh(T other);
 		void tanh(T other);
+	}
+	
+	public interface Exponential<T extends Exponential<T>> {
 		void log(T other);
 		void exp(T other);
 		void root(T other, int power);
@@ -206,14 +209,14 @@ public class Numerics2 {
 	// 1) get mathematical name here
 	// 2) incorporate
 
-	public interface InverseFloatStuff<T> {
-		T arcsin();
-		T arccos();
-		T arctan();
-		T arcsinh();
-		T arccosh();
-		T arctanh();
-		<U> T atan2(U a, U b); // TODO: this is too awkward
+	public interface InverseTrigonometric<T extends InverseTrigonometric<T,U>,U> {
+		U arcsin(T other);
+		U arccos(T other);
+		U arctan(T other);
+		U arcsinh(T other);
+		U arccosh(T other);
+		U arctanh(T other);
+		U atan2(T a, T b);
 	}
 	
 	// TODO
@@ -528,7 +531,7 @@ public class Numerics2 {
 		}
 		
 		public void lcm(Signed32BitInt a, Signed32BitInt b) {
-			int n = (int) Math.abs(a.v * b.v);
+			int n = Math.abs(a.v * b.v);
 			int d = gcdHelper(a, b);
 			v = n / d;
 		}
@@ -724,7 +727,7 @@ public class Numerics2 {
 		
 		public void lcm(Unsigned16BitInt a, Unsigned16BitInt b) {
 			// TODO: okay via two's complement or translate to integers?
-			int n = (int) Math.abs(a.v * b.v);
+			int n = Math.abs(a.v * b.v);
 			int d = gcdHelper(a, b);
 			int val = n / d;
 			if (val < 0) val =  0;
@@ -1218,7 +1221,7 @@ public class Numerics2 {
 		}
 		
 		public void power(Float64 input, int power) {
-			v = (double) Math.pow(input.v, power);
+			v = Math.pow(input.v, power);
 		}
 		
 		public void abs(Float64 other) {
@@ -2502,7 +2505,7 @@ public class Numerics2 {
 
 		// Note: we expect all data to be monotyped.
 		
-		public GroupMember type() {
+		public GroupMember<?> type() {
 			return data.get(0);
 		}
 		
@@ -2540,6 +2543,7 @@ public class Numerics2 {
 		private String err;
 		private List<Object> outputs;
 		
+		@SuppressWarnings("unchecked")
 		public void setup(Data data) {
 			fieldData = null;
 			try {
@@ -2584,6 +2588,7 @@ public class Numerics2 {
 		private String err;
 		private List<Object> outputs;
 
+		@SuppressWarnings("unchecked")
 		public void setup(Data data) {
 			this.data = null;
 			this.outputs = new ArrayList<Object>();
