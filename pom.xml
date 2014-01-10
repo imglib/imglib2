@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>1.111</version>
+		<version>1.116</version>
 	</parent>
 
 	<groupId>net.imglib2</groupId>
@@ -32,6 +32,7 @@
 	</modules>
 
 	<properties>
+		<argLine>-Dapple.awt.UIElement="true" -Xmx512m</argLine>
 		<project.rootdir>${basedir}</project.rootdir>
 		<jama.version>1.0.3</jama.version>
 	</properties>
@@ -68,6 +69,26 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 				<artifactId>maven-graph-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--
+				 Sometimes, one needs to pass JVM options to the JVM
+				 running the unit tests, such as -verbose:class or
+				 -Djava.awt.headless=true.
+
+				 Unfortunately, maven-surefire does not expose a
+				 command-line interface to do so, therefore let's
+				 simulate it by re-using the property 'argLine' to
+				 specify those options.
+				 -->
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<argLine>${argLine}</argLine>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<licenses>

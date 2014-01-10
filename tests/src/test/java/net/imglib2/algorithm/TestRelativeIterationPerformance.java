@@ -483,7 +483,7 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 
 		// Open file in imglib2
 		final ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
-		final Img< T > image = new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
+		final Img< T > image = (Img< T >) new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
 
 		// Display it via ImgLib using ImageJ
 		new ImageJ();

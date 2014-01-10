@@ -65,7 +65,7 @@ public class Example4b
 		throws ImgIOException
 	{
 		// open with ImgOpener
-		Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif" );
+		Img< T > img = (Img< T >) new ImgOpener().openImg( "DrosophilaWing.tif" );
 
 		// first we do a small in-place gaussian smoothing with a sigma of 1
 		Gauss.inDoubleInPlace( new double[]{ 1, 1 }, img );
