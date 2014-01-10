@@ -51,7 +51,7 @@ import net.imglib2.util.Util;
 public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( final NativeImg<UnsignedIntType, ? extends IntAccess> img ) { super( img ); }
+	public UnsignedIntType( final NativeImg<?, ? extends IntAccess> img ) { super( img ); }
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }

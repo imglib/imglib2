@@ -50,7 +50,7 @@ import net.imglib2.img.basictypeaccess.ShortAccess;
 public class ShortType extends GenericShortType<ShortType>
 {
 	// this is the constructor if you want it to read from an array
-	public ShortType( final NativeImg<ShortType, ? extends ShortAccess> img ) { super( img ); }
+	public ShortType( final NativeImg<?, ? extends ShortAccess> img ) { super( img ); }
 
 	// this is the constructor if you want it to be a variable
 	public ShortType( final short value ) { super( value ); }

@@ -50,7 +50,7 @@ import net.imglib2.img.basictypeaccess.IntAccess;
 public class IntType extends GenericIntType<IntType>
 {
 	// this is the constructor if you want it to read from an array
-	public IntType( final NativeImg<IntType, ? extends IntAccess> img ) { super( img ); }
+	public IntType( final NativeImg<?, ? extends IntAccess> img ) { super( img ); }
 
 	// this is the constructor if you want it to be a variable
 	public IntType( final int value ) { super( value ); }

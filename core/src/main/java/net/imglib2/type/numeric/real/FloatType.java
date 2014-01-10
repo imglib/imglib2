@@ -53,13 +53,13 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 {
 	private int i = 0;
 
-	final protected NativeImg<FloatType, ? extends FloatAccess> img;
-	
-	// the DataAccess that holds the information 
+	final protected NativeImg<?, ? extends FloatAccess> img;
+
+	// the DataAccess that holds the information
 	protected FloatAccess dataAccess;
-	
+
 	// this is the constructor if you want it to read from an array
-	public FloatType( NativeImg<FloatType, ? extends FloatAccess> floatStorage )
+	public FloatType( final NativeImg<?, ? extends FloatAccess> floatStorage )
 	{
 		img = floatStorage;
 	}
