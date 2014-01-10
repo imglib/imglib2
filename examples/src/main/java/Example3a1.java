@@ -58,7 +58,7 @@ public class Example3a1
 		throws ImgIOException
 	{
 		// open with ImgOpener (he will decide which Img is best)
-		Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif" );
+		Img< T > img = (Img< T >) new ImgOpener().openImg( "DrosophilaWing.tif" );
 
 		// create two empty variables
 		T min = img.firstElement().createVariable();

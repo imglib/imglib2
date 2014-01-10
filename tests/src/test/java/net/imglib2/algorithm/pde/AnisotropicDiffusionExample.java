@@ -53,7 +53,7 @@ public class AnisotropicDiffusionExample {
 
 		ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
 		
-		Img< T > image = new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
+		Img< T > image = (Img< T >) new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
 		Img<T> copy = image.copy();
 
 		// Display it via ImgLib using ImageJ

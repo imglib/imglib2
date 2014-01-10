@@ -67,7 +67,7 @@ public class Example1b
 		// open with ImgOpener. The type (e.g. ArrayImg, PlanarImg, CellImg) is
 		// automatically determined. For a small image that fits in memory, this
 		// should open as an ArrayImg.
-		Img< T > image = imgOpener.openImg( path );
+		Img< T > image = (Img< T >) imgOpener.openImg( path );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image );
@@ -82,7 +82,7 @@ public class Example1b
 		imgOptions.setImgModes( ImgMode.CELL );
 
 		// open with ImgOpener as a CellImg
-		Img< T > imageCell = imgOpener.openImg( path, imgOptions );
+		Img< T > imageCell = (Img< T >) imgOpener.openImg( path, imgOptions );
 
 		// display it via ImgLib using ImageJ. The Img type only affects how the
 		// underlying data is accessed, so these images should look identical.

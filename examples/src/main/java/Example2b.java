@@ -62,7 +62,7 @@ public class Example2b
 		// open with ImgOpener. In addition to using ImgOptions, we can directly
 		// pass an ImgFactory to the ImgOpener. This bypasses the Img selection
 		// heuristic and allows custom ImgFactory implementations to be used
-		Img< FloatType > img = new ImgOpener().openImg( "DrosophilaWing.tif",
+		Img< FloatType > img = (Img< FloatType >) new ImgOpener().openImg( "DrosophilaWing.tif",
 			new ArrayImgFactory< FloatType >() );
 
 		// copy the image into a CellImg with a cellsize of 20x20
