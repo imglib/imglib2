@@ -141,6 +141,27 @@ public class Numerics2 {
 //   not a field: x^2 is not invertible
 //   not an integral domain: piecewise functions may be divisors of zero
 
+/*
+ * Maybe remove all methods from interfaces that are part of inheritance
+ * hierarchy. All methods (for instance like unity()) should live in an
+ * uninherited base interface (like HasUnity) that the inheritance
+ * hierarchy mixes in. But this also allows users to write methods for
+ * objects of type HasUnity only. Steffi had mentioned that the Lifeform
+ * class needed to implement many methods it wouldn't use because of its
+ * inheritance hierarchy. The above mentioned idea solves this. But it
+ * makes algorithms work on <T extends HasUnity<T> & Trigonomentric<T> &
+ * etc.>. However, the inheritance hierarchy below would likely have
+ * solved this problem too as a LifeForm may only be a RingMember or
+ * some such. But the most powerful approach is to provide base
+ * interfaces that inherit from nothing and an inheritance hierarchy
+ * that mixes them in.
+ *
+ * It would be fun to take a duck typing approach to input data in
+ * plugins. If it responds to "unity()" then we can call it. But that
+ * would also require using reflection in method calls which would be
+ * expensive and possibly error prone for parameter passing.
+ */
+ 
 	public interface GroupMember<T extends GroupMember<T>> {
 		boolean isEqual(T other);
 		boolean isNotEqual(T other);
@@ -304,9 +325,13 @@ public class Numerics2 {
 	{
 	}
 
-	// not sure if the U def is right yet. An IntegralDomain? A EuclideanDomain? Or less likely a Field?
-	// Note that integers are not really part of a euclidean ring as q/r uniqueness is not guaranteed
-	// for neg vs. pos numbers. I can still relax uniqueness of result in my implementations?
+	// Note on generic declaration here:
+	// not sure if the U def is right yet. An IntegralDomain? A
+	// EuclideanDomain? A Field certainly works but not general enough.
+	// Note that integers are not really part of a euclidean ring as q/r
+	// uniqueness is not guaranteed for neg vs. pos numbers. I can still
+	// relax uniqueness of result in my implementations?
+	
 	public interface PolynomialRingMember<T extends PolynomialRingMember<T,U>, U extends IntegralDomainMember<U>>
 		extends EuclideanRingMember<T>, RingWithUnityMember<T>
 	{
