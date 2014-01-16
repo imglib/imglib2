@@ -53,13 +53,13 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ab
 {
 	int i = 0;
 
-	final protected NativeImg<T, ? extends ShortAccess> img;
+	final protected NativeImg<?, ? extends ShortAccess> img;
 
 	// the DataAccess that holds the information
 	protected ShortAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public GenericShortType( final NativeImg<T, ? extends ShortAccess> shortStorage )
+	public GenericShortType( final NativeImg<?, ? extends ShortAccess> shortStorage )
 	{
 		img = shortStorage;
 	}

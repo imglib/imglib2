@@ -54,13 +54,13 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 {
 	private int i = 0;
 
-	final protected NativeImg<LongType, ? extends LongAccess> img;
+	final protected NativeImg<?, ? extends LongAccess> img;
 
 	// the DataAccess that holds the information
 	protected LongAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public LongType( final NativeImg<LongType, ? extends LongAccess> longStorage )
+	public LongType( final NativeImg<?, ? extends LongAccess> longStorage )
 	{
 		img = longStorage;
 	}

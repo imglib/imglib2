@@ -50,7 +50,7 @@ import net.imglib2.img.basictypeaccess.ByteAccess;
 public class ByteType extends GenericByteType<ByteType>
 {
 	// this is the constructor if you want it to read from an array
-	public ByteType( final NativeImg<ByteType, ? extends ByteAccess> img ) { super( img ); }
+	public ByteType( final NativeImg<?, ? extends ByteAccess> img ) { super( img ); }
 
 	// this is the constructor if you want it to be a variable
 	public ByteType( final byte value ) { super( value ); }

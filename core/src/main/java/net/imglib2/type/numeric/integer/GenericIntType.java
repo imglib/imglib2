@@ -53,13 +53,13 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 {
 	int i = 0;
 
-	final protected NativeImg<T, ? extends IntAccess> img;
+	final protected NativeImg<?, ? extends IntAccess> img;
 
 	// the DataAccess that holds the information
 	protected IntAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public GenericIntType( final NativeImg<T, ? extends IntAccess> intStorage )
+	public GenericIntType( final NativeImg<?, ? extends IntAccess> intStorage )
 	{
 		img = intStorage;
 	}
