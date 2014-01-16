@@ -109,7 +109,7 @@ public class AnisotropicDiffusion3DExample {
 		ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
 		Img<T> image = null;
 		try {
-			image = new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
+			image = (Img<T>) new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
 		} catch (ImgIOException e) {
 			e.printStackTrace();
 		}

@@ -50,22 +50,13 @@ import net.imglib2.type.NativeType;
 import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
- * A {@link NativeImg} that stores data in an array of 2d-slices each as a
- * linear array of basic types. For types that are supported by ImageJ (byte,
- * short, int, float), an actual Planar is created or used to store the data.
- * Alternatively, an {@link PlanarImg} can be created using an already existing
- * {@link Planar} instance.
+ * A {@link NativeImg} that stores data in an list of primitive arrays, one per
+ * image plane.
+ * <p>
+ * The {@link PlanarImg} provides access to the underlying data arrays via the
+ * {@link #getPlane(int)} method.
+ * </p>
  * 
- * {@link PlanarImg PlanarContainers} provides a legacy layer to apply
- * imglib-based algorithm implementations directly on the data stored in an
- * ImageJ {@link Planar}. For all types that are supported by ImageJ, the
- * {@link PlanarImg} provides access to the pixels of an {@link Planar} instance
- * that can be accessed ({@link #getPlanar()}.
- * 
- * @author Funke
- * @author Preibisch
- * @author Saalfeld
- * @author Schindelin
  * @author Jan Funke
  * @author Stephan Preibisch
  * @author Stephan Saalfeld

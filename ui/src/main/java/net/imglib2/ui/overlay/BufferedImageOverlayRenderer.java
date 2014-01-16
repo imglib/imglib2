@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * The views and conclusions contained in the software and documentation are
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of any organization.
@@ -60,6 +60,21 @@ public class BufferedImageOverlayRenderer implements OverlayRenderer, RenderTarg
 	protected BufferedImage bufferedImage;
 
 	/**
+	 * A {@link BufferedImage} that has been previously
+	 * {@link #setBufferedImage(BufferedImage) set} for painting. Whenever a new
+	 * image is set, this is stored here and marked {@link #pending}. Whenever
+	 * an image is painted and a new image is pending, the new image is painted
+	 * to the screen. Before doing this, the image previously used for painting
+	 * is swapped into {@link #pendingImage}. This is used for double-buffering.
+	 */
+	protected BufferedImage pendingImage;
+
+	/**
+	 * Whether an image is pending.
+	 */
+	protected boolean pending;
+
+	/**
 	 * The current canvas width.
 	 */
 	protected volatile int width;
@@ -72,6 +87,8 @@ public class BufferedImageOverlayRenderer implements OverlayRenderer, RenderTarg
 	public BufferedImageOverlayRenderer()
 	{
 		bufferedImage = null;
+		pendingImage = null;
+		pending = false;
 		width = 0;
 		height = 0;
 	}
@@ -79,13 +96,16 @@ public class BufferedImageOverlayRenderer implements OverlayRenderer, RenderTarg
 	/**
 	 * Set the {@link BufferedImage} that is to be drawn on the canvas.
 	 *
-	 * @param bufferedImage
+	 * @param img
 	 *            image to draw (may be null).
 	 */
 	@Override
-	public synchronized void setBufferedImage( final BufferedImage bufferedImage )
+	public synchronized BufferedImage setBufferedImage( final BufferedImage img )
 	{
-		this.bufferedImage = bufferedImage;
+		final BufferedImage tmp = pendingImage;
+		pendingImage = img;
+		pending = true;
+		return tmp;
 	}
 
 	@Override
@@ -103,17 +123,22 @@ public class BufferedImageOverlayRenderer implements OverlayRenderer, RenderTarg
 	@Override
 	public void drawOverlays( final Graphics g )
 	{
-		final BufferedImage bi;
 		synchronized ( this )
 		{
-			bi = bufferedImage;
+			if ( pending )
+			{
+				final BufferedImage tmp = bufferedImage;
+				bufferedImage = pendingImage;
+				pendingImage = tmp;
+				pending = false;
+			}
 		}
-		if ( bi != null )
+		if ( bufferedImage != null )
 		{
 //			final StopWatch watch = new StopWatch();
 //			watch.start();
 //			( ( Graphics2D ) g ).setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
-			g.drawImage( bi, 0, 0, getWidth(), getHeight(), null );
+			g.drawImage( bufferedImage, 0, 0, getWidth(), getHeight(), null );
 //			System.out.println( String.format( "g.drawImage() :%4d ms", watch.nanoTime() / 1000000 ) );
 		}
 	}

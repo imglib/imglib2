@@ -53,7 +53,7 @@ public class Example3b
 		ImgIOException
 	{
 		// open with ImgOpener
-		final Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif" );
+		final Img< T > img = (Img< T >) new ImgOpener().openImg( "DrosophilaWing.tif" );
 
 		// compute average of the image
 		final double avg = computeAverage( img );

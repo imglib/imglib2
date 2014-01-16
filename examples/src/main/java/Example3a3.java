@@ -56,7 +56,7 @@ public class Example3a3
 		throws ImgIOException
 	{
 		// open with ImgOpener (he will decide which Img is best)
-		Img< T > img = new ImgOpener().openImg( "DrosophilaWing.tif" );
+		Img< T > img = (Img< T >) new ImgOpener().openImg( "DrosophilaWing.tif" );
 
 		// create two location objects
 		Point locationMin = new Point( img.numDimensions() );
