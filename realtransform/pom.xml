@@ -56,15 +56,11 @@
 		</plugins>
 	</build>
 
-	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
+		<!-- NB: for project parent, in case of partial checkout -->
 		<repository>
-			<id>imagej.releases</id>
+			<id>imagej.public</id>
 			<url>http://code.imagej.net/maven2/releases</url>
-		</repository>
-		<repository>
-			<id>imagej.snapshots</id>
-			<url>http://code.imagej.net/maven2/snapshots</url>
 		</repository>
 	</repositories>
 
