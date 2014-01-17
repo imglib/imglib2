@@ -129,18 +129,6 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			<timezone>+1</timezone>
 		</developer>
 		<developer>
-			<id>bdezonia</id>
-			<name>Barry DeZonia</name>
-			<email>bdezonia@wisc.edu</email>
-			<url>http://loci.wisc.edu/people/barry-dezonia</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-		<developer>
 			<id>axtimwalde</id>
 			<name>Stephan Saalfeld</name>
 			<email>saalfeld@mpi-cbg.de</email>
@@ -149,18 +137,6 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
 			<roles>
 				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>acardona</id>
-			<name>Albert Cardona</name>
-			<email>sapristi@gmail.com</email>
-			<url>http://albert.rierol.net/</url>
-			<organization>Institute of Neuroinformatics, Uni/ETH Zürich</organization>
-			<organizationUrl>http://www.ini.uzh.ch/</organizationUrl>
-			<roles>
 				<role>developer</role>
 			</roles>
 			<timezone>+1</timezone>
@@ -225,8 +201,31 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			</roles>
 			<timezone>-5</timezone>
 		</developer>
-		<developer>
-			<id>larrylindsey</id>
+	</developers>
+
+	<contributors>
+		<contributor>
+			<name>Barry DeZonia</name>
+			<url>http://loci.wisc.edu/people/barry-dezonia</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</contributor>
+		<contributor>
+			<name>Albert Cardona</name>
+			<email>sapristi@gmail.com</email>
+			<url>http://albert.rierol.net/</url>
+			<organization>Institute of Neuroinformatics, Uni/ETH Zürich</organization>
+			<organizationUrl>http://www.ini.uzh.ch/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</contributor>
+		<contributor>
 			<name>Larry Lindsey</name>
 			<email>llindsey@clm.utexas.edu</email>
 			<url>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.htm</url>
@@ -236,10 +235,18 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 				<role>developer</role>
 			</roles>
 			<timezone>-6</timezone>
-		</developer>
-	</developers>
-
-	<contributors>
+		</contributor>
+		<contributor>
+			<name>Mark Hiner</name>
+			<email>hiner@wisc.edu</email>
+			<url>http://loci.wisc.edu/people/mark-hiner</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</contributor>
 		<contributor>
 			<name>Grant Harris</name>
 			<email>gharris@mbl.edu</email>
@@ -251,7 +258,6 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			</roles>
 			<timezone>-5</timezone>
 		</contributor>
-		<contributor><name>Mark Hiner</name></contributor>
 		<contributor><name>Aivar Grislis</name></contributor>
 		<contributor><name>Martin Horn</name></contributor>
 		<contributor><name>Nick Perry</name></contributor>
