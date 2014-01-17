@@ -2,7 +2,7 @@
 # #%L
 # ImgLib2: a general-purpose, multidimensional image processing library.
 # %%
-# Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+# Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
 # Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
 # Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
 # Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-# 
-# The views and conclusions contained in the software and documentation are
-# those of the authors and should not be interpreted as representing official
-# policies, either expressed or implied, of any organization.
 # #L%
 ###
 
