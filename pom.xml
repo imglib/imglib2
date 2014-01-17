@@ -43,8 +43,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
-					<licenseName>imglib2</licenseName>
-					<licenseResolver>file://${project.rootdir}/license</licenseResolver>
+					<licenseName>bsd_2</licenseName>
 					<organizationName>Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
 Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
 Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
