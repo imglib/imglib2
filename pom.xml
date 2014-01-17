@@ -270,7 +270,7 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/imagej/imglib/issues</url>
+		<url>https://github.com/imglib/imglib/issues</url>
 	</issueManagement>
 
 	<ciManagement>
@@ -296,10 +296,10 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/imagej/imglib.git</connection>
-		<developerConnection>scm:git:git@github.com:imagej/imglib.git</developerConnection>
+		<connection>scm:git:git://github.com/imglib/imglib</connection>
+		<developerConnection>scm:git:git@github.com:imglib/imglib</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/imagej/imglib</url>
+		<url>https://github.com/imglib/imglib</url>
 	</scm>
 
 	<repositories>
