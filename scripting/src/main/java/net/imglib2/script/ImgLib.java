@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -54,7 +54,7 @@ import net.imglib2.type.numeric.RealType;
 public class ImgLib {
 	/** @deprecated Use {@link io.scif.img.IO#openImg(String, ImgOptions)}. */
 	public static<T extends RealType<T> & NativeType<T>> Img<T> open(final String pathOrURL) throws ImgIOException, IncompatibleTypeException {
-		return new ImgOpener().openImg(pathOrURL);
+		return (Img<T>) new ImgOpener().openImg(pathOrURL);
 		// Old:
 		//return wrap(IJ.openImage(pathOrURL));
 	}
@@ -62,7 +62,7 @@ public class ImgLib {
 	/** @deprecated Use {@link io.scif.img.IO#openImg(String, ImgOptions)}. */
 	@Deprecated
 	public static<T extends RealType<T> & NativeType<T>> Img<T> openVirtual(final String pathOrUrl) throws ImgIOException, IncompatibleTypeException {
-		return new ImgOpener().openImg(pathOrUrl, new ImgOptions().setImgModes(ImgMode.CELL));
+		return (Img<T>) new ImgOpener().openImg(pathOrUrl, new ImgOptions().setImgModes(ImgMode.CELL));
 	}
 
 	/** Wrap an ImageJ's {@link ImagePlus} as an Imglib {@link Image} of the appropriate type.

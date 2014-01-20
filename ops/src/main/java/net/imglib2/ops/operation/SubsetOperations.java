@@ -41,7 +41,9 @@ import java.util.concurrent.ExecutorService;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgView;
 import net.imglib2.labeling.Labeling;
+import net.imglib2.labeling.LabelingView;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.ops.operation.interval.binary.IntervalsFromDimSelection;
 import net.imglib2.ops.operation.metadata.unary.CopyCalibratedSpace;
@@ -49,9 +51,6 @@ import net.imglib2.ops.operation.metadata.unary.CopyImageMetadata;
 import net.imglib2.ops.operation.metadata.unary.CopyMetadata;
 import net.imglib2.ops.operation.metadata.unary.CopyNamed;
 import net.imglib2.ops.operation.metadata.unary.CopySourced;
-import net.imglib2.ops.operation.subset.views.ImgPlusView;
-import net.imglib2.ops.operation.subset.views.ImgView;
-import net.imglib2.ops.operation.subset.views.LabelingView;
 import net.imglib2.type.Type;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
@@ -136,7 +135,7 @@ public final class SubsetOperations
 				imgPlus = ( ImgPlus< T > ) imgPlus.getImg();
 			}
 
-			ImgPlusView< T > imgPlusView = new ImgPlusView< T >( subsetview( imgPlus.getImg(), i ), ( ( ImgPlus ) in ).factory() );
+			ImgPlus< T > imgPlusView = new ImgPlus< T >( new ImgView< T >( subsetview( imgPlus.getImg(), i ), ( ( ImgPlus ) in ).factory() ) );
 			new CopyMetadata( new CopyNamed(), new CopySourced(), new CopyImageMetadata(), new CopyCalibratedSpace( i ) ).compute( ( ImgPlus ) in, imgPlusView );
 			return ( I ) imgPlusView;
 		}

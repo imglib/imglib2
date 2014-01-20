@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -483,7 +483,7 @@ public class TestRelativeIterationPerformance<T extends RealType<T>> implements 
 
 		// Open file in imglib2
 		final ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
-		final Img< T > image = new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
+		final Img< T > image = (Img< T >) new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
 
 		// Display it via ImgLib using ImageJ
 		new ImageJ();

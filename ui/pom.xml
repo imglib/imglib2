@@ -27,16 +27,7 @@
 		</dependency>
 
 		<!-- External dependencies -->
-		<dependency>
-			<groupId>net.imagej</groupId>
-			<artifactId>ij</artifactId>
-			<version>${imagej1.version}</version>
-		</dependency>
 	</dependencies>
-
-	<properties>
-		<project.rootdir>${basedir}/..</project.rootdir>
-	</properties>
 
 	<build>
 		<plugins>
@@ -53,15 +44,11 @@
 		</plugins>
 	</build>
 
-	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
+		<!-- NB: for project parent, in case of partial checkout -->
 		<repository>
-			<id>imagej.releases</id>
-			<url>http://maven.imagej.net/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>imagej.snapshots</id>
-			<url>http://maven.imagej.net/content/repositories/snapshots</url>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
 

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,30 +40,25 @@ import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.NativeType;
 
 /**
- * A container that stores data in an array of 2d-slices each as a
- * linear array of basic types.  For types that are supported by ImageJ (byte,
- * short, int, float), an actual ImagePlus is created or used to store the
- * data.  Alternatively, an {@link ImagePlusImg} can be created using
- * an already existing {@link ImagePlus} instance.
- *
- * {@link ImagePlusImg ImagePlusContainers} provides a legacy layer to
- * apply imglib-based algorithm implementations directly on the data stored in
- * an ImageJ {@link ImagePlus}.  For all types that are supported by ImageJ, the
- * {@link ImagePlusImg} provides access to the pixels of an
- * {@link ImagePlus} instance that can be accessed via {@link getImagePlus}().
- *
- *   Johannes Schindelin
- *
- * @author Funke
- * @author Preibisch
- * @author Rueden
- * @author Saalfeld
- * @author Schindelin
+ * A container that stores data in an array of 2D slices each as a linear array
+ * of basic types. For types that are supported by ImageJ ({@code byte},
+ * {@code short}, {@code int}, {@code float}), an actual {@link ImagePlus} is
+ * created or used to store the data. Alternatively, an {@link ImagePlusImg} can
+ * be created using an already existing {@link ImagePlus} instance.
+ * <p>
+ * {@link ImagePlusImg} provides a legacy layer to apply ImgLib-based algorithm
+ * implementations directly on the data stored in an ImageJ {@link ImagePlus}.
+ * For all types that are supported by ImageJ, the {@link ImagePlusImg} provides
+ * access to the pixels of an {@link ImagePlus} instance that can be accessed
+ * via {@link #getImagePlus()}.
+ * </p>
+ * 
  * @author Jan Funke
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Curtis Rueden
  * @author Stephan Saalfeld
+ * @author Johannes Schindelin
  */
 public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<A> > extends PlanarImg< T, A >
 {
@@ -99,7 +90,6 @@ public class ImagePlusImg< T extends NativeType< T >, A extends ArrayDataAccess<
 	 * from three dimensions, an x,y,c image, and from four dimensions, an
 	 * x,y,c,z image.</em>
 	 *
-	 * @param factory
 	 * @param dim
 	 * @param entitiesPerPixel
 	 */

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 import ij.ImageJ;
@@ -67,7 +63,7 @@ public class Example1b
 		// open with ImgOpener. The type (e.g. ArrayImg, PlanarImg, CellImg) is
 		// automatically determined. For a small image that fits in memory, this
 		// should open as an ArrayImg.
-		Img< T > image = imgOpener.openImg( path );
+		Img< T > image = (Img< T >) imgOpener.openImg( path );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image );
@@ -82,7 +78,7 @@ public class Example1b
 		imgOptions.setImgModes( ImgMode.CELL );
 
 		// open with ImgOpener as a CellImg
-		Img< T > imageCell = imgOpener.openImg( path, imgOptions );
+		Img< T > imageCell = (Img< T >) imgOpener.openImg( path, imgOptions );
 
 		// display it via ImgLib using ImageJ. The Img type only affects how the
 		// underlying data is accessed, so these images should look identical.

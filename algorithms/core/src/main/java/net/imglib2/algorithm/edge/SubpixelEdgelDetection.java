@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -71,7 +67,10 @@ public class SubpixelEdgelDetection
 	 * the gradient (perpendicular to the edge). The sub-pixel position of the
 	 * edgel is found as the maximum of a quadratic function fitted to the
 	 * neighboring magnitudes in the gradient direction.
-	 *
+	 * <p>
+	 * Note: The input image type must be a signed type! Otherwise gradient
+	 * computation will not work.
+	 * 
 	 * @param input
 	 *            input image
 	 * @param factory
@@ -87,8 +86,19 @@ public class SubpixelEdgelDetection
 					final ImgFactory< T > factory,
 					final float minGradientMagnitude )
 	{
+		final ArrayList< Edgel > edgels = new ArrayList< Edgel >();
+
 		// number of dimensions of the input image.
 		final int n = input.numDimensions();
+
+		// For computing partial derivatives of input we require a border of 1
+		// pixel. Then we want to find local maxima of the gradient which
+		// requires again a border of 1 pixel. So if the image size is smaller
+		// than 5 pixels in any dimension, we can abort because we will not find
+		// any gradient maxima.
+		for ( int d = 0; d < n; ++d )
+			if ( input.dimension( d ) < 5 )
+				return edgels;
 
 		// Image of n+1 dimensions to store the partial derivatives of the input
 		// image. The (n+1)-th dimension is used to index the partial
@@ -109,8 +119,6 @@ public class SubpixelEdgelDetection
 		// Find gradient maxima. This requires a border of 2 pixels with respect
 		// to the input image
 		final Interval maximaComputationInterval = Intervals.expand( input, -2 );
-
-		final ArrayList< Edgel > edgels = new ArrayList< Edgel >();
 
 		final long[] min = new long[ n ];
 		maximaComputationInterval.min( min );

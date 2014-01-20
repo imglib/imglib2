@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -53,13 +49,11 @@ import net.imglib2.type.numeric.RealType;
  * 
  */
 
-public class Example3a1
-{
-	public < T extends RealType< T > & NativeType< T > > Example3a1()
-		throws ImgIOException
-	{
+public class Example3a1 {
+	public <T extends RealType<T> & NativeType<T>> Example3a1()
+			throws ImgIOException {
 		// open with ImgOpener (he will decide which Img is best)
-		Img<T> img = new ImgOpener().openImg("DrosophilaWing.tif");
+		Img<T> img = (Img<T>) new ImgOpener().openImg("DrosophilaWing.tif");
 
 		// create two empty variables
 		T min = img.firstElement().createVariable();
@@ -111,8 +105,7 @@ public class Example3a1
 		}
 	}
 
-	public static void main( String[] args ) throws ImgIOException
-	{
+	public static void main(String[] args) throws ImgIOException {
 		// run the example
 		new Example3a1();
 	}
