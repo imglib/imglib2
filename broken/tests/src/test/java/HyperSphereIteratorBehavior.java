@@ -44,7 +44,8 @@ import net.imglib2.util.Util;
 /**
  * TODO
  *
- * Copyright (c) 2010, Stephan Preibisch & Stephan Saalfeld
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
  */
 public class HyperSphereIteratorBehavior
 {
