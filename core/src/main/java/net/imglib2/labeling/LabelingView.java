@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -58,15 +54,14 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * @author Christian Dietz (dietzc85@googlemail.com)
  * @author Martin Horn (martin.horn@uni-konstanz.de)
  */
-public class LabelingView<L extends Comparable<L>> extends
-		IterableRandomAccessibleInterval<LabelingType<L>> implements
-		Labeling<L>, SubIntervalIterable<LabelingType<L>> {
+public class LabelingView< L extends Comparable< L >> extends IterableRandomAccessibleInterval< LabelingType< L >> implements Labeling< L >, SubIntervalIterable< LabelingType< L >>
+{
 
-	protected LabelingROIStrategy<L, ? extends Labeling<L>> m_strategy;
+	protected LabelingROIStrategy< L, ? extends Labeling< L >> m_strategy;
 
-	private final LabelingFactory<L> m_fac;
+	private final LabelingFactory< L > m_fac;
 
-	private final IterableInterval<LabelingType<L>> m_ii;
+	private final IterableInterval< LabelingType< L >> m_ii;
 
 	/**
 	 * @param in
@@ -74,113 +69,123 @@ public class LabelingView<L extends Comparable<L>> extends
 	 * @param fac
 	 *            factory to create a new {@link Labeling}
 	 */
-	public LabelingView(RandomAccessibleInterval<LabelingType<L>> in,
-			LabelingFactory<L> fac) {
-		super(in);
+	public LabelingView( RandomAccessibleInterval< LabelingType< L >> in, LabelingFactory< L > fac )
+	{
+		super( in );
 		m_fac = fac;
-		m_strategy = new DefaultROIStrategy<L, Labeling<L>>(this);
-		m_ii = Views.flatIterable(in);
+		m_strategy = new DefaultROIStrategy< L, Labeling< L >>( this );
+		m_ii = Views.flatIterable( in );
 	}
 
 	@Override
-	public boolean getExtents(L label, long[] minExtents, long[] maxExtents) {
-		return m_strategy.getExtents(label, minExtents, maxExtents);
+	public boolean getExtents( L label, long[] minExtents, long[] maxExtents )
+	{
+		return m_strategy.getExtents( label, minExtents, maxExtents );
 	}
 
 	@Override
-	public boolean getRasterStart(L label, long[] start) {
-		return m_strategy.getRasterStart(label, start);
+	public boolean getRasterStart( L label, long[] start )
+	{
+		return m_strategy.getRasterStart( label, start );
 	}
 
 	@Override
-	public long getArea(L label) {
-		return m_strategy.getArea(label);
+	public long getArea( L label )
+	{
+		return m_strategy.getArea( label );
 	}
 
 	@Override
-	public Collection<L> getLabels() {
+	public Collection< L > getLabels()
+	{
 		return m_strategy.getLabels();
 	}
 
 	@Override
-	public Cursor<LabelingType<L>> cursor() {
+	public Cursor< LabelingType< L >> cursor()
+	{
 		return m_ii.cursor();
 	}
 
 	@Override
-	public Cursor<LabelingType<L>> localizingCursor() {
+	public Cursor< LabelingType< L >> localizingCursor()
+	{
 		return m_ii.localizingCursor();
 	}
 
 	@Override
-	public RegionOfInterest getRegionOfInterest(L label) {
-		return m_strategy.createRegionOfInterest(label);
+	public RegionOfInterest getRegionOfInterest( L label )
+	{
+		return m_strategy.createRegionOfInterest( label );
 	}
 
 	@Override
-	public IterableRegionOfInterest getIterableRegionOfInterest(L label) {
-		return m_strategy.createIterableRegionOfInterest(label);
+	public IterableRegionOfInterest getIterableRegionOfInterest( L label )
+	{
+		return m_strategy.createIterableRegionOfInterest( label );
 	}
 
 	@Override
-	public Labeling<L> copy() {
-		Labeling<L> copy = m_fac.create(this);
-		Cursor<LabelingType<L>> cursor = copy.cursor();
-		RandomAccess<LabelingType<L>> srcAccess = randomAccess();
+	public Labeling< L > copy()
+	{
+		Labeling< L > copy = m_fac.create( this );
+		Cursor< LabelingType< L >> cursor = copy.cursor();
+		RandomAccess< LabelingType< L >> srcAccess = randomAccess();
 
-		while (cursor.hasNext()) {
+		while ( cursor.hasNext() )
+		{
 			cursor.fwd();
-			srcAccess.setPosition(cursor);
-			cursor.get().set(srcAccess.get());
+			srcAccess.setPosition( cursor );
+			cursor.get().set( srcAccess.get() );
 		}
 
 		return copy;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	@Override
-	public <LL extends Comparable<LL>> LabelingFactory<LL> factory() {
-		return (LabelingFactory<LL>) m_fac;
+	public < LL extends Comparable< LL >> LabelingFactory< LL > factory()
+	{
+		return ( LabelingFactory< LL > ) m_fac;
 	}
-	
-	@SuppressWarnings("unchecked")
+
+	@SuppressWarnings( "unchecked" )
 	@Override
-	public boolean supportsOptimizedCursor(Interval interval) {
-		if (this.sourceInterval instanceof SubIntervalIterable)
-			return ((SubIntervalIterable<LabelingType<L>>) this.sourceInterval)
-					.supportsOptimizedCursor(interval);
+	public boolean supportsOptimizedCursor( Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval ).supportsOptimizedCursor( interval );
 		else
 			return false;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	@Override
-	public Object subIntervalIterationOrder(Interval interval) {
-		if (this.sourceInterval instanceof SubIntervalIterable)
-			return ((SubIntervalIterable<LabelingType<L>>) this.sourceInterval)
-					.subIntervalIterationOrder(interval);
+	public Object subIntervalIterationOrder( Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval ).subIntervalIterationOrder( interval );
 		else
-			return new FlatIterationOrder(interval);
+			return new FlatIterationOrder( interval );
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	@Override
-	public Cursor<LabelingType<L>> cursor(Interval interval) {
-		if (this.sourceInterval instanceof SubIntervalIterable)
-			return ((SubIntervalIterable<LabelingType<L>>) this.sourceInterval)
-					.cursor(interval);
+	public Cursor< LabelingType< L >> cursor( Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval ).cursor( interval );
 		else
-			return Views.interval(this.sourceInterval, interval).cursor();
+			return Views.interval( this.sourceInterval, interval ).cursor();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	@Override
-	public Cursor<LabelingType<L>> localizingCursor(Interval interval) {
-		if (this.sourceInterval instanceof SubIntervalIterable)
-			return ((SubIntervalIterable<LabelingType<L>>) this.sourceInterval)
-					.localizingCursor(interval);
+	public Cursor< LabelingType< L >> localizingCursor( Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval ).localizingCursor( interval );
 		else
-			return Views.interval(this.sourceInterval, interval)
-					.localizingCursor();
+			return Views.interval( this.sourceInterval, interval ).localizingCursor();
 	}
 }

@@ -131,8 +131,9 @@ public final class SubsetOperations
 				imgPlus = ( ImgPlus< T > ) imgPlus.getImg();
 			}
 
-			ImgPlus< T > imgPlusView = new ImgPlus< T >( new ImgView<T>(subsetview( imgPlus.getImg(), i ), ( ( ImgPlus ) in ).factory() ));
-			MetadataUtil.copyAndCleanImgPlusMetadata(i, (ImgPlus)in, imgPlusView);
+			ImgPlus< T > imgPlusView = new ImgPlus< T >( new ImgView< T >( subsetview( imgPlus.getImg(), i ), ( ( ImgPlus ) in ).factory() ) );
+			MetadataUtil.copyAndCleanImgPlusMetadata( i, ( ImgPlus ) in, imgPlusView );
+
 			return ( I ) imgPlusView;
 		}
 		else if ( in instanceof Img ) { return ( I ) new ImgView< T >( subsetview( in, i ), ( ( Img ) in ).factory() ); }
