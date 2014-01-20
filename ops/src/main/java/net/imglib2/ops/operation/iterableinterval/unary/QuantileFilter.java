@@ -41,6 +41,8 @@ import net.imglib2.view.Views;
 
 /**
  * 
+ * Deprecation: is going to be replaced by a revised version soon from the KNIME image processing project.
+ * 
  * @author dietzc, hornm, zinsmaierm, seebacherd, riesst (University of
  *         Konstanz)
  */
