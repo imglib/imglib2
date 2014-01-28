@@ -127,10 +127,6 @@ public class Numerics2 {
 // do math with. Think of best way to implement: tradeoff of mem use
 // vs. clarity of code.
 
-// can any complex number be represented by a quaternion? like how every
-// real number can be represented by a complex num w/ imag part == 0. If
-// so then we need set(ComplexMember<?>) for the quaternion interface.
-
 // some quaternion methods allocate objects when maybe they could be
 // inlined. For instance invert() and one other. Investigate.
 
@@ -221,6 +217,9 @@ public class Numerics2 {
 	public interface Exponential<T extends Exponential<T>> {
 		void log(T other);
 		void exp(T other);
+	}
+	
+	public interface Power<T extends Power<T>> {
 		void root(T other, int power);
 		//void sqrt(T other);
 		//void cbrt(T other);
@@ -255,6 +254,7 @@ public class Numerics2 {
 	// 2) incorporate
 
 	public interface RealRoundingStuff {
+		// TODO - rethink these. There are better rounding mode impls.
 		void trunc();
 		void round();
 		void ceil();
@@ -369,6 +369,7 @@ public class Numerics2 {
 		// TODO
 		//void conjugate(Quaternion<T> other);
 		void set(Quaternion<?,?> val);
+		void set(ComplexMember<?> val);
 		void set(RealMember<?> val);
 		void set(RationalMember<?> val);
 		void set(IntegerMember<?> val);
@@ -2218,6 +2219,18 @@ public class Numerics2 {
 			setA(f);
 		}
 		
+		public void set(ComplexMember<?> val) {
+			BigDecimal tmp = new BigDecimal(val.realIntPart().v);
+			tmp = tmp.movePointLeft(val.decPower());
+			Float32 r = new Float32(tmp.floatValue());
+			tmp = new BigDecimal(val.imagIntPart().v);
+			tmp = tmp.movePointLeft(val.decPower());
+			Float32 i = new Float32(tmp.floatValue());
+			zero();
+			setA(r);
+			setB(i);
+		}
+		
 		public void set(Quaternion<?,?> val) {
 			BigDecimal tmp;
 			Float32 f = new Float32();
@@ -2436,6 +2449,18 @@ public class Numerics2 {
 			Float64 f = new Float64(n.doubleValue());
 			zero();
 			setA(f);
+		}
+		
+		public void set(ComplexMember<?> val) {
+			BigDecimal tmp = new BigDecimal(val.realIntPart().v);
+			tmp = tmp.movePointLeft(val.decPower());
+			Float64 r = new Float64(tmp.floatValue());
+			tmp = new BigDecimal(val.imagIntPart().v);
+			tmp = tmp.movePointLeft(val.decPower());
+			Float64 i = new Float64(tmp.floatValue());
+			zero();
+			setA(r);
+			setB(i);
 		}
 		
 		public void set(Quaternion<?,?> val) {
