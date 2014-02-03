@@ -33,8 +33,10 @@
 
 package net.imglib2.algorithm.componenttree;
 
+import java.util.Set;
+
 /**
- * A component tree.
+ * A component forest.
  *
  * @param <C>
  *            component type
@@ -42,12 +44,12 @@ package net.imglib2.algorithm.componenttree;
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Florian Jug
  */
-public interface ComponentTree< C extends Component< ?, C > > extends ComponentForest< C >
+public interface ComponentForest< C extends Component< ?, C > >
 {
 	/**
-	 * Get the root component.
+	 * Get the set of root nodes of this component forest.
 	 *
-	 * @return root component.
+	 * @return set of roots.
 	 */
-	public C root();
+	public Set< C > roots();
 }

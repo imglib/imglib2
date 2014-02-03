@@ -42,7 +42,7 @@ import net.imglib2.type.Type;
 /**
  * Store {@link PixelList}, mean, covariance, instability score, parent, and
  * children of a extremal region. A tree of {@link MserEvaluationNode} is built
- * from emitted {@link MserComponentIntermediate}. As soon as the parent of a
+ * from emitted {@link MserPartialComponent}. As soon as the parent of a
  * node is available, it is checked whether the instability score is a local
  * minimum. In this case, it is passed to
  * {@link MserTree#foundNewMinimum(MserEvaluationNode)}, where a MSER is
@@ -51,12 +51,12 @@ import net.imglib2.type.Type;
  * We construct the component tree for generic types, which means that we cannot
  * raise the threshold values in steps of 1 (value type might be continuous or
  * non-numeric). To create a tree whose every branch covers a continuous range
- * of values, two nodes are created for every {@link MserComponentIntermediate}.
+ * of values, two nodes are created for every {@link MserPartialComponent}.
  * These mark the range of values covered by that component. The first node is
  * called the <em>"direct"</em> or <em>"non-intermediate node"</em> and is
- * created, when the {@link MserComponentIntermediate} is emitted. It marks the
+ * created, when the {@link MserPartialComponent} is emitted. It marks the
  * lower bound (inclusive) of the value range. When the parent of the
- * {@link MserComponentIntermediate} is emitted, the
+ * {@link MserPartialComponent} is emitted, the
  * <em>"intermediate node"</em> is created which covers the same pixels as the
  * direct node but marks the upper bound (exclusive) of the value range.
  *
@@ -124,7 +124,7 @@ final class MserEvaluationNode< T extends Type< T > >
 	 */
 	final ArrayList< Mser< T > > mserThisOrChildren;
 
-	MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDelta< T > delta, final MserTree< T > tree )
+	MserEvaluationNode( final MserPartialComponent< T > component, final Comparator< T > comparator, final ComputeDelta< T > delta, final MserTree< T > tree )
 	{
 		value = component.getValue().copy();
 		pixelList = new PixelList( component.pixelList );
@@ -143,7 +143,7 @@ final class MserEvaluationNode< T extends Type< T > >
 		}
 
 		MserEvaluationNode< T > historyWinner = node;
-		for ( MserComponentIntermediate< T > c : component.children )
+		for ( MserPartialComponent< T > c : component.children )
 		{
 			// create intermediate MserEvaluationNode between child and this node.
 			node = new MserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta );

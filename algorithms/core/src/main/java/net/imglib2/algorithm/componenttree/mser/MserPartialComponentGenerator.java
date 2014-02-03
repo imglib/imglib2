@@ -31,20 +31,21 @@
  * #L%
  */
 
-package net.imglib2.algorithm.componenttree.pixellist;
+package net.imglib2.algorithm.componenttree.mser;
 
 import java.util.LinkedList;
 
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.algorithm.componenttree.Component;
+import net.imglib2.algorithm.componenttree.PartialComponent;
+import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.integer.LongType;
 
 /**
- * Implementation of {@link Component.Generator} for creating
- * {@link PixelListComponentIntermediate} components. According to the
+ * Implementation of {@link PartialComponent.Generator} for creating
+ * {@link MserPartialComponent} components. According to the
  * dimensions of the input image it creates a {@link LongType} {@link Img} to
  * store the {@link PixelList} used in the components.
  *
@@ -53,9 +54,9 @@ import net.imglib2.type.numeric.integer.LongType;
  *
  * @author Tobias Pietzsch
  */
-final class PixelListComponentGenerator< T extends Type< T > > implements Component.Generator< T, PixelListComponentIntermediate< T > >
+final class MserPartialComponentGenerator< T extends Type< T > > implements PartialComponent.Generator< T, MserPartialComponent< T > >
 {
-	private final T maxValue;
+	final T maxValue;
 
 	/**
 	 * Dimensions of the {@link LinkedList} image.
@@ -63,7 +64,7 @@ final class PixelListComponentGenerator< T extends Type< T > > implements Compon
 	final long[] dimensions;
 
 	/**
-	 * Represents a singly-linked list of pixel locations {@see PixelList}. 
+	 * Represents a singly-linked list of pixel locations {@see PixelList}.
 	 */
 	final Img< LongType > linkedList;
 
@@ -80,7 +81,7 @@ final class PixelListComponentGenerator< T extends Type< T > > implements Compon
 	 * @param imgFactory
 	 *            used to create PixelList image.
 	 */
-	PixelListComponentGenerator( final T maxValue, final RandomAccessibleInterval< T > input, final ImgFactory< LongType > imgFactory )
+	public MserPartialComponentGenerator( final T maxValue, final RandomAccessibleInterval< T > input, final ImgFactory< LongType > imgFactory )
 	{
 		this.maxValue = maxValue;
 		dimensions = new long[ input.numDimensions() ];
@@ -89,14 +90,14 @@ final class PixelListComponentGenerator< T extends Type< T > > implements Compon
 	}
 
 	@Override
-	public PixelListComponentIntermediate< T > createComponent( T value )
+	public MserPartialComponent< T > createComponent( T value )
 	{
-		return new PixelListComponentIntermediate< T >( value, this );
+		return new MserPartialComponent< T >( value, this );
 	}
 
 	@Override
-	public PixelListComponentIntermediate< T > createMaxComponent()
+	public MserPartialComponent< T > createMaxComponent()
 	{
-		return new PixelListComponentIntermediate< T >( maxValue, this );
+		return new MserPartialComponent< T >( maxValue, this );
 	}
 }

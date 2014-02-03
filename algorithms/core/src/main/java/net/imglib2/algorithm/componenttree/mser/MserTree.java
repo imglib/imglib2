@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,8 +40,9 @@ import java.util.Iterator;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.algorithm.componenttree.Component;
-import net.imglib2.algorithm.componenttree.ComponentTree;
+import net.imglib2.algorithm.componenttree.BuildComponentTree;
+import net.imglib2.algorithm.componenttree.ComponentForest;
+import net.imglib2.algorithm.componenttree.PartialComponent;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.algorithm.componenttree.pixellist.PixelListComponent;
 import net.imglib2.img.ImgFactory;
@@ -55,8 +56,8 @@ import net.imglib2.util.Util;
 /**
  * MSER tree of an image stored as a tree of {@link PixelListComponent}s. This
  * class is used both to represent and build the tree. For building the tree
- * {@link Component.Handler} is implemented to gather
- * {@link MserComponentIntermediate} emitted by {@link ComponentTree}.
+ * {@link PartialComponent.Handler} is implemented to gather
+ * {@link MserPartialComponent} emitted by {@link BuildComponentTree}.
  *
  * <p>
  * Maximally Stable Extremal Regions (MSER) are selected from the component tree
@@ -93,7 +94,7 @@ import net.imglib2.util.Util;
  *
  * @author Tobias Pietzsch
  */
-public final class MserTree< T extends Type< T > > implements Component.Handler< MserComponentIntermediate< T > >, Iterable< Mser< T > >
+public final class MserTree< T extends Type< T > > implements ComponentForest< Mser< T > >, Iterable< Mser< T > >, PartialComponent.Handler< MserPartialComponent< T > >
 {
 	/**
 	 * Build a MSER tree from an input image. Calls
@@ -173,17 +174,17 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 *            whether to apply thresholds from dark to bright (true) or
 	 *            bright to dark (false)
 	 * @return MSER tree of the image.
-	 * @see MserComponentGenerator
+	 * @see MserPartialComponentGenerator
 	 */
 	public static < T extends RealType< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final T delta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final ImgFactory< LongType > imgFactory, final boolean darkToBright )
 	{
 		final T max = delta.createVariable();
 		max.setReal( darkToBright ? delta.getMaxValue() : delta.getMinValue() );
-		final MserComponentGenerator< T > generator = new MserComponentGenerator< T >( max, input, imgFactory );
-		final Comparator< T > comparator = darkToBright ? new ComponentTree.DarkToBright< T >() : new ComponentTree.BrightToDark< T >();
+		final MserPartialComponentGenerator< T > generator = new MserPartialComponentGenerator< T >( max, input, imgFactory );
+		final Comparator< T > comparator = darkToBright ? new BuildComponentTree.DarkToBright< T >() : new BuildComponentTree.BrightToDark< T >();
 		final ComputeDelta< T > computeDelta = darkToBright ? new ComputeDeltaDarkToBright< T >( delta ) : new ComputeDeltaBrightToDark< T >( delta );
 		final MserTree< T > tree = new MserTree< T >( comparator, computeDelta, minSize, maxSize, maxVar, minDiversity );
-		ComponentTree.buildComponentTree( input, generator, tree, comparator );
+		BuildComponentTree.buildComponentTree( input, generator, tree, comparator );
 		tree.pruneDuplicates();
 		return tree;
 	}
@@ -242,13 +243,13 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 * @param comparator
 	 *            determines ordering of threshold values.
 	 * @return MSER tree of the image.
-	 * @see MserComponentGenerator
+	 * @see MserPartialComponentGenerator
 	 */
 	public static < T extends Type< T > > MserTree< T > buildMserTree( final RandomAccessibleInterval< T > input, final ComputeDelta< T > computeDelta, final long minSize, final long maxSize, final double maxVar, final double minDiversity, final ImgFactory< LongType > imgFactory, final T maxValue, final Comparator< T > comparator )
 	{
-		final MserComponentGenerator< T > generator = new MserComponentGenerator< T >( maxValue, input, imgFactory );
+		final MserPartialComponentGenerator< T > generator = new MserPartialComponentGenerator< T >( maxValue, input, imgFactory );
 		final MserTree< T > tree = new MserTree< T >( comparator, computeDelta, minSize, maxSize, maxVar, minDiversity );
-		ComponentTree.buildComponentTree( input, generator, tree, comparator );
+		BuildComponentTree.buildComponentTree( input, generator, tree, comparator );
 		tree.pruneDuplicates();
 		return tree;
 	}
@@ -354,7 +355,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	}
 
 	@Override
-	public void emit( final MserComponentIntermediate< T > component )
+	public void emit( final MserPartialComponent< T > component )
 	{
 		new MserEvaluationNode< T >( component, comparator, delta, this );
 		component.children.clear();
@@ -415,6 +416,7 @@ public final class MserTree< T extends Type< T > > implements Component.Handler<
 	 *
 	 * @return set of roots.
 	 */
+	@Override
 	public HashSet< Mser< T > > roots()
 	{
 		return roots;
