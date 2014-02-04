@@ -22,11 +22,7 @@
 	</licenses>
 
 	<dependencies>
-		<dependency>
-			<groupId>${imagej.groupId}</groupId>
-			<artifactId>ij</artifactId>
-			<version>${imagej1.version}</version>
-		</dependency>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -49,19 +45,26 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>imglib2-io</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2-meta</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- External dependencies -->
 		<dependency>
-			<!-- TODO: define a real POM for mpicbg project -->
+			<groupId>${imagej.groupId}</groupId>
+			<artifactId>ij</artifactId>
+			<version>${imagej1.version}</version>
+		</dependency>
+		<dependency>
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>${mpicbg.groupId}</groupId>
 			<artifactId>mpicbg</artifactId>
 			<version>${mpicbg.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.scif</groupId>
+			<artifactId>scifio</artifactId>
+			<version>${scifio.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jfree</groupId>
@@ -69,10 +72,6 @@
 			<version>1.0.14</version>
 		</dependency>
 	</dependencies>
-
-	<properties>
-		<project.rootdir>${basedir}/../..</project.rootdir>
-	</properties>
 
 	<build>
 		<plugins>
@@ -97,15 +96,11 @@
 		</plugins>
 	</build>
 
-	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
+		<!-- NB: for project parent, in case of partial checkout -->
 		<repository>
-			<id>imagej.releases</id>
-			<url>http://maven.imagej.net/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>imagej.snapshots</id>
-			<url>http://maven.imagej.net/content/repositories/snapshots</url>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
 

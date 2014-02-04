@@ -2,25 +2,32 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
  * Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.
  * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 2 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/gpl-2.0.html>.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
 
@@ -43,6 +50,7 @@ import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
+import Jama.LUDecomposition;
 import Jama.Matrix;
 
 /**
@@ -161,7 +169,7 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 			final List< P > peaks, final RandomAccessible< T > img, final Interval validInterval, final boolean returnInvalidPeaks,
 			final int maxNumMoves, final boolean allowMaximaTolerance, final float maximaTolerance, final boolean[] allowedToMoveInDim,
 			final int numThreads )
-	{
+			{
 		final int numPeaks = peaks.size();
 		final ArrayList< RefinedPeak< P > > allRefinedPeaks = new ArrayList< RefinedPeak< P > >( numPeaks );
 
@@ -198,7 +206,7 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 		}
 
 		return allRefinedPeaks;
-	}
+			}
 
 	/**
 	 * Refine a set of peaks to subpixel coordinates. Single-threaded version.
@@ -240,7 +248,7 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 	public static < T extends RealType< T >, P extends Localizable > ArrayList< RefinedPeak< P > > refinePeaks(
 			final List< P > peaks, final RandomAccessible< T > img, final Interval validInterval, final boolean returnInvalidPeaks,
 			final int maxNumMoves, final boolean allowMaximaTolerance, final float maximaTolerance, final boolean[] allowedToMoveInDim )
-	{
+			{
 		final ArrayList< RefinedPeak< P >> refinedPeaks = new ArrayList< RefinedPeak< P > >();
 
 		final int n = img.numDimensions();
@@ -278,7 +286,9 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 			{
 				// check validity of the current location
 				if ( !( canMoveOutside || Intervals.contains( interval, currentPosition ) ) )
+				{
 					break;
+				}
 
 				quadraticFitOffset( currentPosition, access, g, H, subpixelOffset );
 
@@ -313,7 +323,9 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 					}
 				}
 				if ( foundStableMaxima )
+				{
 					break;
+				}
 			}
 
 			if ( foundStableMaxima )
@@ -321,7 +333,9 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 				// compute the function value (intensity) of the fit
 				double value = 0;
 				for ( int d = 0; d < n; ++d )
+				{
 					value += g.get( d, 0 ) * subpixelOffset.getDoublePosition( d );
+				}
 				value *= 0.5;
 				access.setPosition( currentPosition );
 				value += access.get().getRealDouble();
@@ -332,11 +346,13 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 			}
 			else
 				if ( returnInvalidPeaks )
+				{
 					refinedPeaks.add( new RefinedPeak< P >( p, p, 0, false ) );
+				}
 		}
 
 		return refinedPeaks;
-	}
+			}
 
 	/**
 	 * Estimate subpixel <code>offset</code> of extremum of quadratic function
@@ -427,9 +443,24 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 				H.set( e, d, v );
 			}
 		}
-		final Matrix minusOffset = H.solve( g );
-		for ( int d = 0; d < n; ++d )
-			offset.setPosition( -minusOffset.get( d, 0 ), d );
+
+		// Do not move in a plane if the matrix is singular.
+		final LUDecomposition decomp = new LUDecomposition( H );
+		if ( decomp.isNonsingular() )
+		{
+			final Matrix minusOffset = decomp.solve( g );
+			for ( int d = 0; d < n; ++d )
+			{
+				offset.setPosition( -minusOffset.get( d, 0 ), d );
+			}
+		}
+		else
+		{
+			for ( int d = 0; d < n; d++ )
+			{
+				offset.setPosition( 0l, d );
+			}
+		}
 	}
 }
 

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,61 +28,64 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 import ij.ImageJ;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
+import io.scif.img.ImgOptions;
+import io.scif.img.ImgOptions.ImgMode;
 
 import java.io.File;
 
-import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.FloatType;
 
 /**
- * Opens a file with ImgOpener Bioformats as an ImgLib2 Img.
+ * Opens a file with SCIFIO's ImgOpener as an ImgLib2 Img.
  */
 public class Example1b
 {
 	// within this method we define <T> to be a RealType and a NativeType which means the
 	// Type is able to map the data into an java basic type array
 	public < T extends RealType< T > & NativeType< T > > Example1b()
-		throws ImgIOException, IncompatibleTypeException
+		throws ImgIOException
 	{
 		// define the file to open
 		File file = new File( "DrosophilaWing.tif" );
+		String path = file.getAbsolutePath();
 
-		// open with ImgOpener using an ArrayImgFactory, here the return type will be
-		// defined by the opener
-		// the opener will ignore the Type of the ArrayImgFactory
-		ImgFactory< ? > imgFactory = new ArrayImgFactory< T >();
-		Img< T > image = new ImgOpener().openImg( file.getAbsolutePath(), imgFactory );
+		// create the ImgOpener
+		ImgOpener imgOpener = new ImgOpener();
+
+		// open with ImgOpener. The type (e.g. ArrayImg, PlanarImg, CellImg) is
+		// automatically determined. For a small image that fits in memory, this
+		// should open as an ArrayImg.
+		Img< T > image = (Img< T >) imgOpener.openImg( path );
 
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image );
 
-		// open with ImgOpener as Float using a CellImgFactory, it will be opened as float
-		// independent of the type of the image
-		// to enforce to open it as FloatType, an instance of FloatType has to be passed along
-		Img< FloatType > imageFloat = new ImgOpener().openImg( file.getAbsolutePath(),
-			new CellImgFactory< FloatType >( 10 ), new FloatType() );
+		// create the ImgOptions. This gives us configuration control over how
+		// the ImgOpener will open its datasets.
+		ImgOptions imgOptions = new ImgOptions();
 
-		// display it via ImgLib using ImageJ
-		ImageJFunctions.show( imageFloat );
+		// If we know what type of Img we want, we can encourage their use through
+		// an ImgOptions instance. CellImgs dynamically load image regions and are
+		// useful when an image won't fit in memory
+		imgOptions.setImgModes( ImgMode.CELL );
+
+		// open with ImgOpener as a CellImg
+		Img< T > imageCell = (Img< T >) imgOpener.openImg( path, imgOptions );
+
+		// display it via ImgLib using ImageJ. The Img type only affects how the
+		// underlying data is accessed, so these images should look identical.
+		ImageJFunctions.show( imageCell );
 	}
 
-	public static void main( String[] args ) throws ImgIOException, IncompatibleTypeException
+	public static void main( String[] args ) throws ImgIOException
 	{
 		// open an ImageJ window
 		new ImageJ();

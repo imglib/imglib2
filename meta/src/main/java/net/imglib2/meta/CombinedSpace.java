@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -65,13 +61,15 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 
 	/** Recomputes the combined space based on its current constituents. */
 	public void update() {
-		axisTypes.clear();
-		for (final TypedSpace<A> space : this) {
-			for (int d = 0; d < space.numDimensions(); d++) {
-				final AxisType axisType = space.axis(d).type();
-				if (!axisTypes.contains(axisType)) {
-					// new axis; add to the list
-					axisTypes.add(axisType);
+		synchronized (this) {
+			axisTypes.clear();
+			for (final TypedSpace<A> space : this) {
+				for (int d = 0; d < space.numDimensions(); d++) {
+					final AxisType axisType = space.axis(d).type();
+					if (!axisTypes.contains(axisType)) {
+						// new axis; add to the list
+						axisTypes.add(axisType);
+					}
 				}
 			}
 		}
@@ -81,14 +79,14 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 
 	@Override
 	public int dimensionIndex(final AxisType axis) {
-		return axisTypes.indexOf(axis);
+		return axisTypes().indexOf(axis);
 	}
 
 	// -- AnnotatedSpace methods --
 
 	@Override
 	public A axis(final int d) {
-		final AxisType type = axisTypes.get(d);
+		AxisType type = axisTypes().get(d);
 
 		// find the first axis of a constituent space that matches the type
 		for (final TypedSpace<A> space : this) {
@@ -108,7 +106,7 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 
 	@Override
 	public void setAxis(final A axis, final int d) {
-		final AxisType type = axisTypes.get(d);
+		final AxisType type = axisTypes().get(d);
 
 		// assign the axis to all constituent spaces of matching type
 		for (final TypedSpace<A> space : this) {
@@ -122,7 +120,21 @@ public class CombinedSpace<A extends TypedAxis, S extends TypedSpace<A>>
 
 	@Override
 	public int numDimensions() {
-		return axisTypes.size();
+		return axisTypes().size();
+	}
+
+	// -- Helper methods --
+
+	/**
+	 * Helper method to return axis types in a threadsafe way, so as not to
+	 * conflict with {@link #update()}
+	 * 
+	 * @return list of axis types for this space.
+	 */
+	private ArrayList<AxisType> axisTypes() {
+		synchronized (this) {
+			return axisTypes;
+		}
 	}
 
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,15 +40,23 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.iterator.IntervalIterator;
 import net.imglib2.ops.types.ConnectedType;
-import net.imglib2.outofbounds.OutOfBoundsBorderFactory;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.view.Views;
 
 /**
+ * @author Christian Dietz (University of Konstanz)
  * @author Felix Schoenenberger (University of Konstanz)
  */
 public class BinaryOps
 {
+
+	private OutOfBoundsFactory< BitType, RandomAccessibleInterval< BitType >> m_factory;
+
+	public BinaryOps( OutOfBoundsFactory< BitType, RandomAccessibleInterval< BitType >> factory )
+	{
+		m_factory = factory;
+	}
 
 	public RandomAccessibleInterval< BitType > erode( ConnectedType type, final RandomAccessibleInterval< BitType > r, final RandomAccessibleInterval< BitType > op, final int count )
 	{
@@ -107,7 +111,7 @@ public class BinaryOps
 
 		Cursor< BitType > resCur = Views.iterable( r ).cursor();
 		Cursor< BitType > srcCur = Views.iterable( op ).localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory< BitType, RandomAccessibleInterval< BitType > >() ).randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, m_factory ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
@@ -161,9 +165,9 @@ public class BinaryOps
 	private void unrolled2DEightConnected( final RandomAccessibleInterval< BitType > r, final RandomAccessibleInterval< BitType > op, final boolean erode, final int count )
 	{
 
-		Cursor< BitType > resCur = Views.iterable( r ).cursor();
-		Cursor< BitType > srcCur = Views.iterable( op ).localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory< BitType, RandomAccessibleInterval< BitType >>() ).randomAccess();
+		Cursor< BitType > resCur = Views.flatIterable( r ).cursor();
+		Cursor< BitType > srcCur = Views.flatIterable( op ).localizingCursor();
+		RandomAccess< BitType > srcRA = Views.extend( op, m_factory ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];
@@ -236,8 +240,8 @@ public class BinaryOps
 	private void nDEightConnected( final RandomAccessibleInterval< BitType > res, final RandomAccessibleInterval< BitType > src, final long[] dim, final boolean erode, final int count )
 	{
 
-		RandomAccess< BitType > r = Views.extend( res, new OutOfBoundsBorderFactory< BitType, RandomAccessibleInterval< BitType > >() ).randomAccess();
-		RandomAccess< BitType > op = Views.extend( src, new OutOfBoundsBorderFactory< BitType, RandomAccessibleInterval< BitType > >() ).randomAccess();
+		RandomAccess< BitType > r = Views.extend( res, m_factory ).randomAccess();
+		RandomAccess< BitType > op = Views.extend( src, m_factory ).randomAccess();
 
 		final int kernelSize = ( int ) Math.pow( 3, dim.length );
 		final int[] kernel = new int[ kernelSize ];
@@ -316,7 +320,7 @@ public class BinaryOps
 	{
 		Cursor< BitType > resCur = Views.iterable( r ).cursor();
 		Cursor< BitType > srcCur = Views.iterable( op ).localizingCursor();
-		RandomAccess< BitType > srcRA = Views.extend( op, new OutOfBoundsBorderFactory< BitType, RandomAccessibleInterval< BitType > >() ).randomAccess();
+		RandomAccess< BitType > srcRA = Views.extend( op, m_factory ).randomAccess();
 
 		int c = 0;
 		int[] pos = new int[ op.numDimensions() ];

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 /**
@@ -55,13 +51,12 @@
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
 import ij.ImageJ;
-import net.imglib2.algorithm.fft.FourierConvolution;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
+import net.imglib2.algorithm.fft2.FFTConvolution;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.RealSum;
@@ -75,9 +70,9 @@ public class Example6b
 	{
 		// open with ImgOpener using an ArrayImgFactory
 		final Img< FloatType > image = new ImgOpener().openImg( "DrosophilaWing.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
-		final Img< FloatType > kernel = new ImgOpener().openImg( "kernelGauss.tif",
-			new ArrayImgFactory< FloatType >(), new FloatType() );
+			new FloatType() );
+		final Img< FloatType > kernel = new ImgOpener().openImg( "kernelRing.tif",
+			new FloatType() );
 
 		// normalize the kernel, otherwise we add energy to the image
 		norm( kernel );
@@ -86,8 +81,9 @@ public class Example6b
 		ImageJFunctions.show( kernel ).setTitle( "kernel" );
 		ImageJFunctions.show( image ).setTitle( "drosophila wing");
 
-		// compute & show fourier convolution
-		ImageJFunctions.show( FourierConvolution.convolve( image, kernel ) )
+		// compute & show fourier convolution (in-place)
+		new FFTConvolution<FloatType>( image, kernel ).run();
+		ImageJFunctions.show( image )
 			.setTitle( "convolution" );
 	}
 

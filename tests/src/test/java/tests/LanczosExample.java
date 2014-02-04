@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -30,18 +30,17 @@ import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
+import io.scif.img.ImgIOException;
+import io.scif.img.ImgOpener;
 import mpicbg.util.Timer;
 import net.imglib2.RandomAccessible;
-import net.imglib2.display.ARGBScreenImage;
-import net.imglib2.display.RealARGBConverter;
-import net.imglib2.display.XYRandomAccessibleProjector;
+import net.imglib2.converter.RealARGBConverter;
+import net.imglib2.display.projector.Projector2D;
+import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.LanczosInterpolatorFactory;
-import net.imglib2.io.ImgIOException;
-import net.imglib2.io.ImgOpener;
-import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineRandomAccessible;
@@ -88,7 +87,7 @@ public class LanczosExample
 		final AffineRandomAccessible< UnsignedShortType, AffineGet > mapping = new AffineRandomAccessible< UnsignedShortType, AffineGet >( interpolant, affine );
 		
 		final ARGBScreenImage screenImage = new ARGBScreenImage( ( int )imgPlus.dimension( 0 ), ( int )imgPlus.dimension( 1 ) );
-		final XYRandomAccessibleProjector< UnsignedShortType, ARGBType > projector = new XYRandomAccessibleProjector< UnsignedShortType, ARGBType >( mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
+		final Projector2D< UnsignedShortType, ARGBType > projector = new Projector2D< UnsignedShortType, ARGBType >( 0, 1, mapping, screenImage, new RealARGBConverter< UnsignedShortType >( 0, 4095 ) );
 		
 		final ColorProcessor cp = new ColorProcessor( screenImage.image() );
 		final ImagePlus imp = new ImagePlus( "argbScreenProjection", cp );

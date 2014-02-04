@@ -17,6 +17,7 @@
 	<description>Non-compiling ImgLib2 Algorithms classes.</description>
 
 	<dependencies>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -32,42 +33,39 @@
 			<artifactId>imglib2-ij</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- External dependencies -->
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>imglib2-io</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<!-- TODO: define a real POM for mpicbg project -->
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>${mpicbg.groupId}</groupId>
 			<artifactId>mpicbg</artifactId>
 			<version>${mpicbg.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>jama</groupId>
+			<groupId>gov.nist.math</groupId>
 			<artifactId>jama</artifactId>
-			<version>1.0.2</version>
+			<version>${jama.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>io.scif</groupId>
+			<artifactId>scifio</artifactId>
+			<version>${scifio.version}</version>
+		</dependency>
+
+		<!-- Test scope dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.9</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
-	<properties>
-		<project.rootdir>${basedir}/../../..</project.rootdir>
-	</properties>
-
-	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
+		<!-- NB: for project parent, in case of partial checkout -->
 		<repository>
-			<id>imagej.releases</id>
-			<url>http://maven.imagej.net/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>imagej.snapshots</id>
-			<url>http://maven.imagej.net/content/repositories/snapshots</url>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
 

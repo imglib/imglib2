@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -35,7 +35,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.imageplus.ImagePlusImg;
 import net.imglib2.img.imageplus.ImagePlusImgFactory;
-import net.imglib2.io.ImgOpener;
+import io.scif.img.ImgOpener;
 import net.imglib2.script.math.ASin;
 import net.imglib2.script.math.Add;
 import net.imglib2.script.math.Cbrt;
@@ -278,7 +278,7 @@ public class Benchmark {
 			
 			//String src = "http://imagej.nih.gov/ij/images/bridge.gif";
 			String src = "/home/albert/Desktop/t2/bridge.gif";
-			Img<UnsignedByteType> img1 = new ImgOpener().openImg(src);
+			Img<UnsignedByteType> img1 = (Img<UnsignedByteType>) new ImgOpener().openImg(src);
 
 			System.out.println("dimensions of image opened by ImgOpener: " + img1.numDimensions());
 			System.out.println(" and 3rd dimension is: " + img1.dimension(2));
