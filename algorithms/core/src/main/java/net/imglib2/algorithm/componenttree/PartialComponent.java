@@ -36,12 +36,12 @@ package net.imglib2.algorithm.componenttree;
 import net.imglib2.Localizable;
 
 /**
- * This interface is used by {@link BuildComponentTree} to build the
- * component tree of an image. In the algorithm described by D. Nister and H.
- * Stewenius in "Linear Time Maximally Stable Extremal Regions" (ECCV 2008) a
- * stack of incomplete components is maintained while visiting the pixels of the
- * input image. {@link PartialComponent} represents an element on the component
- * stack, i.e., a connected component in the making.
+ * This interface is used by {@link BuildComponentTree} to build the component
+ * tree of an image. In the algorithm described by D. Nister and H. Stewenius in
+ * "Linear Time Maximally Stable Extremal Regions" (ECCV 2008) a stack of
+ * incomplete components is maintained while visiting the pixels of the input
+ * image. {@link PartialComponent} represents an element on the component stack,
+ * i.e., a connected component in the making.
  *
  * It provides methods to get/set the threshold value for the connected
  * component, to add pixels to the component, and to merge it with another
@@ -79,8 +79,8 @@ public interface PartialComponent< T >
 
 		/**
 		 * Create a component with a value (e.g., grey-level) greater than any
-		 * occurring in the input for the {@link BuildComponentTree}. This is used as a
-		 * terminator element on the component stack.
+		 * occurring in the input for the {@link BuildComponentTree}. This is
+		 * used as a terminator element on the component stack.
 		 *
 		 * @return new component
 		 */
@@ -88,7 +88,8 @@ public interface PartialComponent< T >
 	}
 
 	/**
-	 * Handle completed components that are output by {@link BuildComponentTree}.
+	 * Handle completed components that are output by {@link BuildComponentTree}
+	 * .
 	 *
 	 * @param <C>
 	 *            component type.
@@ -96,10 +97,10 @@ public interface PartialComponent< T >
 	public interface Handler< C >
 	{
 		/**
-		 * {@link BuildComponentTree} calls this for every completed component. NOTE
-		 * THAT THE COMPONENT IS RE-USED BY {@link BuildComponentTree}! That is,
-		 * after calling emit() new pixels may be added, etc. Do not store the
-		 * component object but rather copy the relevant data!
+		 * {@link BuildComponentTree} calls this for every completed component.
+		 * NOTE THAT THE COMPONENT IS RE-USED BY {@link BuildComponentTree}!
+		 * That is, after calling emit() new pixels may be added, etc. Do not
+		 * store the component object but rather copy the relevant data!
 		 *
 		 * @param component
 		 *            a completed component
@@ -138,4 +139,3 @@ public interface PartialComponent< T >
 	 */
 	public abstract void merge( final PartialComponent< T > component );
 }
-

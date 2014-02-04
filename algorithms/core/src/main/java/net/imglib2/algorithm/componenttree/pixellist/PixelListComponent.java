@@ -80,7 +80,7 @@ public final class PixelListComponent< T extends Type< T > > implements Componen
 		parent = null;
 		value = intermediate.getValue().copy();
 		pixelList = new PixelList( intermediate.pixelList );
-		if( intermediate.emittedComponent != null )
+		if ( intermediate.emittedComponent != null )
 			children.add( intermediate.emittedComponent );
 		for ( final PixelListPartialComponent< T > c : intermediate.children )
 		{

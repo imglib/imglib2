@@ -45,9 +45,9 @@ import net.imglib2.type.numeric.integer.LongType;
 
 /**
  * Implementation of {@link PartialComponent.Generator} for creating
- * {@link MserPartialComponent} components. According to the
- * dimensions of the input image it creates a {@link LongType} {@link Img} to
- * store the {@link PixelList} used in the components.
+ * {@link MserPartialComponent} components. According to the dimensions of the
+ * input image it creates a {@link LongType} {@link Img} to store the
+ * {@link PixelList} used in the components.
  *
  * @param <T>
  *            value type of the input image.
@@ -90,7 +90,7 @@ final class MserPartialComponentGenerator< T extends Type< T > > implements Part
 	}
 
 	@Override
-	public MserPartialComponent< T > createComponent( T value )
+	public MserPartialComponent< T > createComponent( final T value )
 	{
 		return new MserPartialComponent< T >( value, this );
 	}

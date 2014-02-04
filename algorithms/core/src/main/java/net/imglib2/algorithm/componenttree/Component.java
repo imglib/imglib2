@@ -57,7 +57,8 @@ public interface Component< T, C extends Component< T, C > > extends Iterable< L
 	public long size();
 
 	/**
-	 * Get the image threshold that created the connected component (extremal region).
+	 * Get the image threshold that created the connected component (extremal
+	 * region).
 	 *
 	 * @return the image threshold that created the connected component.
 	 */

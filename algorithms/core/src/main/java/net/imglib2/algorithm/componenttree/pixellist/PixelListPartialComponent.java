@@ -40,8 +40,8 @@ import net.imglib2.algorithm.componenttree.PartialComponent;
 import net.imglib2.type.Type;
 
 /**
- * Implementation of {@link PartialComponent} that stores a list of associated pixels
- * in a {@link PixelList}.
+ * Implementation of {@link PartialComponent} that stores a list of associated
+ * pixels in a {@link PixelList}.
  *
  * @param <T>
  *            value type of the input image.
@@ -61,13 +61,13 @@ final class PixelListPartialComponent< T extends Type< T > > implements PartialC
 	final PixelList pixelList;
 
 	/**
-	 * A list of PixelListComponentIntermediate merged into this one since it
+	 * A list of {@link PixelListPartialComponent} merged into this one since it
 	 * was last emitted. (For building up component tree.)
 	 */
 	final ArrayList< PixelListPartialComponent< T > > children;
 
 	/**
-	 * The PixelListComponent assigned to this PixelListComponentIntermediate
+	 * The PixelListComponent assigned to this {@link PixelListPartialComponent}
 	 * when it was last emitted. (For building up component tree.)
 	 */
 	PixelListComponent< T > emittedComponent;
@@ -78,8 +78,8 @@ final class PixelListPartialComponent< T extends Type< T > > implements PartialC
 	 * @param value
 	 *            (initial) threshold value {@see #getValue()}.
 	 * @param generator
-	 *            the {@link PixelListPartialComponentGenerator#linkedList} is used to
-	 *            store the {@link #pixelList}.
+	 *            the {@link PixelListPartialComponentGenerator#linkedList} is
+	 *            used to store the {@link #pixelList}.
 	 */
 	PixelListPartialComponent( final T value, final PixelListPartialComponentGenerator< T > generator )
 	{
@@ -110,7 +110,7 @@ final class PixelListPartialComponent< T extends Type< T > > implements PartialC
 	@Override
 	public void merge( final PartialComponent< T > component )
 	{
-		final PixelListPartialComponent< T > c = (PixelListPartialComponent< T > ) component;
+		final PixelListPartialComponent< T > c = ( PixelListPartialComponent< T > ) component;
 		pixelList.merge( c.pixelList );
 		children.add( c );
 	}
@@ -120,7 +120,7 @@ final class PixelListPartialComponent< T extends Type< T > > implements PartialC
 	{
 		String s = "{" + value.toString() + " : ";
 		boolean first = true;
-		for ( Localizable l : pixelList )
+		for ( final Localizable l : pixelList )
 		{
 			if ( first )
 			{

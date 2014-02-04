@@ -86,10 +86,11 @@ final class MserPartialComponent< T extends Type< T > > implements PartialCompon
 	 * was last emitted. (For building up MSER evaluation structure.)
 	 */
 	ArrayList< MserPartialComponent< T > > children;
-	
+
 	/**
-	 * The {@link MserEvaluationNode} assigned to this MserComponent when it was
-	 * last emitted. (For building up MSER evaluation structure.)
+	 * The {@link MserEvaluationNode} assigned to this
+	 * {@link MserPartialComponent} when it was last emitted. (For building up
+	 * MSER evaluation structure.)
 	 */
 	MserEvaluationNode< T > evaluationNode;
 
@@ -113,7 +114,7 @@ final class MserPartialComponent< T extends Type< T > > implements PartialCompon
 		this.evaluationNode = null;
 		tmp = new long[ n ];
 	}
-	
+
 	@Override
 	public void addPosition( final Localizable position )
 	{
@@ -139,7 +140,7 @@ final class MserPartialComponent< T extends Type< T > > implements PartialCompon
 	{
 		this.value.set( value );
 	}
-	
+
 	@Override
 	public void merge( final PartialComponent< T > component )
 	{
@@ -157,7 +158,7 @@ final class MserPartialComponent< T extends Type< T > > implements PartialCompon
 	{
 		String s = "{" + value.toString() + " : ";
 		boolean first = true;
-		for ( Localizable l : pixelList )
+		for ( final Localizable l : pixelList )
 		{
 			if ( first )
 			{
@@ -181,7 +182,7 @@ final class MserPartialComponent< T extends Type< T > > implements PartialCompon
 	{
 		return pixelList.size();
 	}
-	
+
 	/**
 	 * Get the {@link MserEvaluationNode} assigned to this
 	 * {@link MserPartialComponent} when it was last emitted.
@@ -192,12 +193,12 @@ final class MserPartialComponent< T extends Type< T > > implements PartialCompon
 	{
 		return evaluationNode;
 	}
-	
+
 	/**
 	 * Set the {@link MserEvaluationNode} created from this
 	 * {@link MserPartialComponent} when it is emitted.
 	 */
-	void setEvaluationNode( MserEvaluationNode< T > node )
+	void setEvaluationNode( final MserEvaluationNode< T > node )
 	{
 		evaluationNode = node;
 	}

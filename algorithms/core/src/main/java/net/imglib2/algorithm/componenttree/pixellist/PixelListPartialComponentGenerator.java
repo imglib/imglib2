@@ -44,9 +44,9 @@ import net.imglib2.type.numeric.integer.LongType;
 
 /**
  * Implementation of {@link PartialComponent.Generator} for creating
- * {@link PixelListPartialComponent} components. According to the
- * dimensions of the input image it creates a {@link LongType} {@link Img} to
- * store the {@link PixelList} used in the components.
+ * {@link PixelListPartialComponent} components. According to the dimensions of
+ * the input image it creates a {@link LongType} {@link Img} to store the
+ * {@link PixelList} used in the components.
  *
  * @param <T>
  *            value type of the input image.
@@ -63,7 +63,7 @@ final class PixelListPartialComponentGenerator< T extends Type< T > > implements
 	final long[] dimensions;
 
 	/**
-	 * Represents a singly-linked list of pixel locations {@see PixelList}. 
+	 * Represents a singly-linked list of pixel locations {@see PixelList}.
 	 */
 	final Img< LongType > linkedList;
 
@@ -89,7 +89,7 @@ final class PixelListPartialComponentGenerator< T extends Type< T > > implements
 	}
 
 	@Override
-	public PixelListPartialComponent< T > createComponent( T value )
+	public PixelListPartialComponent< T > createComponent( final T value )
 	{
 		return new PixelListPartialComponent< T >( value, this );
 	}

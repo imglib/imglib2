@@ -255,8 +255,8 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 	}
 
 	/**
-	 * Create a variable of type T with value delta by copying
-	 * and setting a value from the input {@link RandomAccessibleInterval}.
+	 * Create a variable of type T with value delta by copying and setting a
+	 * value from the input {@link RandomAccessibleInterval}.
 	 */
 	private static < T extends RealType< T > > T getDeltaVariable( final RandomAccessibleInterval< T > input, final double delta )
 	{
@@ -319,14 +319,14 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 
 	/**
 	 * Remove from the tree candidates which are too similar to their parent.
-	 * Let <em>A</em>, <em>B</em> be a region and its parent.
-	 * Then <em>A</em> is discarded if |B - A| / |B| <= minDiversity.
+	 * Let <em>A</em>, <em>B</em> be a region and its parent. Then <em>A</em> is
+	 * discarded if |B - A| / |B| <= minDiversity.
 	 */
 	private void pruneDuplicates()
 	{
 		nodes.clear();
 		for ( final Mser< T > mser : roots )
-			pruneChildren ( mser );
+			pruneChildren( mser );
 		nodes.addAll( roots );
 	}
 
@@ -336,7 +336,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 		for ( int i = 0; i < mser.children.size(); ++i )
 		{
 			final Mser< T > m = mser.children.get( i );
-			final double div = ( mser.size() - m.size() ) / (double) mser.size();
+			final double div = ( mser.size() - m.size() ) / ( double ) mser.size();
 			if ( div > minDiversity )
 			{
 				validChildren.add( m );
