@@ -56,7 +56,7 @@ import net.imglib2.Localizable;
  *
  * @author Tobias Pietzsch
  */
-public interface PartialComponent< T >
+public interface PartialComponent< T, C extends PartialComponent< T, C > >
 {
 	/**
 	 * Create new components.
@@ -66,7 +66,7 @@ public interface PartialComponent< T >
 	 * @param <C>
 	 *            component type.
 	 */
-	public interface Generator< T, C extends PartialComponent< T > >
+	public interface Generator< T, C extends PartialComponent< T, C > >
 	{
 		/**
 		 * Create a new empty component with the given value (e.g., grey-level).
@@ -137,5 +137,5 @@ public interface PartialComponent< T >
 	 * @param component
 	 *            the other component
 	 */
-	public abstract void merge( final PartialComponent< T > component );
+	public abstract void merge( final C component );
 }

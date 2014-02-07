@@ -76,7 +76,7 @@ import net.imglib2.type.logic.BitType;
  *
  * @author Tobias Pietzsch
  */
-public final class BuildComponentTree< T extends Type< T >, C extends PartialComponent< T > >
+public final class BuildComponentTree< T extends Type< T >, C extends PartialComponent< T, C > >
 {
 	/**
 	 * Run the algorithm. Completed components are emitted to the
@@ -93,7 +93,7 @@ public final class BuildComponentTree< T extends Type< T >, C extends PartialCom
 	 * @param comparator
 	 *            determines ordering of threshold values.
 	 */
-	public static < T extends Type< T >, C extends PartialComponent< T > > void buildComponentTree(
+	public static < T extends Type< T >, C extends PartialComponent< T, C > > void buildComponentTree(
 			final RandomAccessibleInterval< T > input,
 			final PartialComponent.Generator< T, C > componentGenerator,
 			final PartialComponent.Handler< C > componentHandler,
@@ -123,7 +123,7 @@ public final class BuildComponentTree< T extends Type< T >, C extends PartialCom
 	 *            {@link PartialComponent.Generator#createMaxComponent()} should
 	 *            provide a Integer.MIN_VALUE valued component.
 	 */
-	public static < T extends Type< T > & Comparable< T >, C extends PartialComponent< T > > void buildComponentTree(
+	public static < T extends Type< T > & Comparable< T >, C extends PartialComponent< T, C > > void buildComponentTree(
 			final RandomAccessibleInterval< T > input,
 			final PartialComponent.Generator< T, C > componentGenerator,
 			final PartialComponent.Handler< C > componentHandler,
