@@ -130,6 +130,7 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			<timezone>+1</timezone>
 		</developer>
 		<developer>
+			<id>tinevez</id>
 			<name>Jean-Yves Tinevez</name>
 			<email>jean-yves.tinevez@pasteur.fr</email>
 			<url>http://www.pasteur.fr/ip/easysite/pasteur/fr/recherche/plates-formes-technologiques/imagopole/plates-formes-imagopole/la-plate-forme-d-imagerie-dynamique/equipe-pfid/equipe-pfid-jyt</url>
