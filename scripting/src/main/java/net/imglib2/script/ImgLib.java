@@ -33,10 +33,10 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImagePlusAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import io.scif.config.SCIFIOConfig;
+import io.scif.config.SCIFIOConfig.ImgMode;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
-import io.scif.img.ImgOptions;
-import io.scif.img.ImgOptions.ImgMode;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -62,7 +62,7 @@ public class ImgLib {
 	/** @deprecated Use {@link io.scif.img.IO#openImg(String, ImgOptions)}. */
 	@Deprecated
 	public static<T extends RealType<T> & NativeType<T>> Img<T> openVirtual(final String pathOrUrl) throws ImgIOException, IncompatibleTypeException {
-		return (Img<T>) new ImgOpener().openImg(pathOrUrl, new ImgOptions().setImgModes(ImgMode.CELL));
+		return (Img<T>) new ImgOpener().openImg(pathOrUrl, new SCIFIOConfig().imgOpenerSetImgModes( ImgMode.CELL ));
 	}
 
 	/** Wrap an ImageJ's {@link ImagePlus} as an Imglib {@link Image} of the appropriate type.
