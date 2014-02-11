@@ -273,13 +273,4 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 		</repository>
 	</repositories>
 
-	<profiles>
-		<profile>
-			<id>broken</id>
-			<modules>
-				<module>broken</module>
-			</modules>
-		</profile>
-	</profiles>
-
 </project>
