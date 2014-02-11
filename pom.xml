@@ -34,6 +34,8 @@
 
 	<properties>
 		<jama.version>1.0.3</jama.version>
+		<mpicbg.groupId>mpicbg</mpicbg.groupId>
+		<mpicbg.version>20111128</mpicbg.version>
 	</properties>
 
 	<build>
