@@ -31,10 +31,10 @@
  * #L%
  */
 import ij.ImageJ;
+import io.scif.config.SCIFIOConfig;
+import io.scif.config.SCIFIOConfig.ImgMode;
 import io.scif.img.ImgIOException;
 import io.scif.img.ImgOpener;
-import io.scif.img.ImgOptions;
-import io.scif.img.ImgOptions.ImgMode;
 
 import java.io.File;
 
@@ -68,17 +68,17 @@ public class Example1b
 		// display it via ImgLib using ImageJ
 		ImageJFunctions.show( image );
 
-		// create the ImgOptions. This gives us configuration control over how
+		// create the SCIFIOConfig. This gives us configuration control over how
 		// the ImgOpener will open its datasets.
-		ImgOptions imgOptions = new ImgOptions();
+		SCIFIOConfig config = new SCIFIOConfig();
 
 		// If we know what type of Img we want, we can encourage their use through
-		// an ImgOptions instance. CellImgs dynamically load image regions and are
+		// an SCIFIOConfig instance. CellImgs dynamically load image regions and are
 		// useful when an image won't fit in memory
-		imgOptions.setImgModes( ImgMode.CELL );
+		config.imgOpenerSetImgModes( ImgMode.CELL );
 
 		// open with ImgOpener as a CellImg
-		Img< T > imageCell = (Img< T >) imgOpener.openImg( path, imgOptions );
+		Img< T > imageCell = (Img< T >) imgOpener.openImg( path, config );
 
 		// display it via ImgLib using ImageJ. The Img type only affects how the
 		// underlying data is accessed, so these images should look identical.
