@@ -85,7 +85,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 /**
- * TODO
+ * Manual tests for {@link KNearestNeighborSearch}.
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld

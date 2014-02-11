@@ -83,13 +83,14 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>${mpicbg.groupId}</groupId>
 			<artifactId>mpicbg</artifactId>
 			<version>${mpicbg.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.scif</groupId>
+			<groupId>${scifio.groupId}</groupId>
 			<artifactId>scifio</artifactId>
 			<version>${scifio.version}</version>
 			<scope>test</scope>
@@ -98,6 +99,12 @@
 			<groupId>gov.nist.math</groupId>
 			<artifactId>jama</artifactId>
 			<version>${jama.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ijaux</groupId>
+			<artifactId>pixlib</artifactId>
+			<version>0.8.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

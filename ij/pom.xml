@@ -35,19 +35,6 @@
 
 		<!-- Test scope dependencies -->
 		<dependency>
-			<!-- FIXME: NOT IN CENTRAL -->
-			<groupId>${mpicbg.groupId}</groupId>
-			<artifactId>mpicbg</artifactId>
-			<version>${mpicbg.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>ijaux</groupId>
-			<artifactId>pixlib</artifactId>
-			<version>0.8.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
