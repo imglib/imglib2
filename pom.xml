@@ -22,7 +22,6 @@
 	<modules>
 		<module>algorithms</module>
 		<module>core</module>
-		<module>examples</module>
 		<module>meta</module>
 		<module>ops</module>
 		<module>realtransform</module>
