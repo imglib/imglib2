@@ -23,7 +23,6 @@
 		<module>algorithms</module>
 		<module>core</module>
 		<module>examples</module>
-		<module>ij</module>
 		<module>meta</module>
 		<module>ops</module>
 		<module>realtransform</module>
