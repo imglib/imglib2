@@ -26,7 +26,6 @@
 		<module>meta</module>
 		<module>ops</module>
 		<module>realtransform</module>
-		<module>scripting</module>
 		<module>ui</module>
 	</modules>
 
