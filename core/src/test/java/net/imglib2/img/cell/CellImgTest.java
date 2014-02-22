@@ -33,14 +33,6 @@
 
 package net.imglib2.img.cell;
 
-<<<<<<< HEAD:examples/src/main/java/net/imglib2/tutorial/t02/FindMaximumValueAndLocation.java
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
-import net.imglib2.Cursor;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-=======
 import static org.junit.Assert.assertTrue;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.real.FloatType;
@@ -48,7 +40,6 @@ import net.imglib2.util.ImgTestHelper;
 import net.imglib2.util.Util;
 
 import org.junit.Test;
->>>>>>> optimized-ops:core/src/test/java/net/imglib2/img/cell/CellImgTest.java
 
 /**
  * Unit tests for {@link CellImg}.
