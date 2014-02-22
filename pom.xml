@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>1.126</version>
+		<version>1.132</version>
 		<relativePath />
 	</parent>
 
@@ -22,18 +22,16 @@
 	<modules>
 		<module>algorithms</module>
 		<module>core</module>
-		<module>examples</module>
-		<module>ij</module>
 		<module>meta</module>
 		<module>ops</module>
 		<module>realtransform</module>
-		<module>scripting</module>
-		<module>tests</module>
 		<module>ui</module>
 	</modules>
 
 	<properties>
 		<jama.version>1.0.3</jama.version>
+		<mpicbg.groupId>mpicbg</mpicbg.groupId>
+		<mpicbg.version>20111128</mpicbg.version>
 	</properties>
 
 	<build>
@@ -130,6 +128,7 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			<timezone>+1</timezone>
 		</developer>
 		<developer>
+			<id>tinevez</id>
 			<name>Jean-Yves Tinevez</name>
 			<email>jean-yves.tinevez@pasteur.fr</email>
 			<url>http://www.pasteur.fr/ip/easysite/pasteur/fr/recherche/plates-formes-technologiques/imagopole/plates-formes-imagopole/la-plate-forme-d-imagerie-dynamique/equipe-pfid/equipe-pfid-jyt</url>
@@ -273,13 +272,18 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 		</repository>
 	</repositories>
 
-	<profiles>
-		<profile>
-			<id>broken</id>
-			<modules>
-				<module>broken</module>
-			</modules>
-		</profile>
-	</profiles>
+	<!-- NB: for deploying to maven.imagej.net -->
+	<distributionManagement>
+		<repository>
+			<id>imagej.releases</id>
+			<name>ImageJ Releases Repository</name>
+			<url>dav:http://maven.imagej.net/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>imagej.snapshots</id>
+			<name>ImageJ Snapshots Repository</name>
+			<url>dav:http://maven.imagej.net/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
