@@ -160,7 +160,7 @@ public final class Gauss3
 	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, int numThreads ) throws IncompatibleTypeException
 	{
 		ExecutorService service =  Executors.newFixedThreadPool( numThreads );
-		gauss(sigma, source, target, service );
+		gauss( sigma, source, target, service );
 		service.shutdown();
 	}
 	
