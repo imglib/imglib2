@@ -14,6 +14,7 @@
 	<description>Useful image processing algorithms.</description>
 
 	<dependencies>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -24,28 +25,28 @@
 			<artifactId>imglib2-meta</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- External dependencies -->
 		<dependency>
-			<groupId>jama</groupId>
+			<!-- FIXME: NOT IN CENTRAL -->
+			<groupId>edu.mines</groupId>
+			<artifactId>mines-jtk</artifactId>
+			<version>20100113</version>
+		</dependency>
+		<dependency>
+			<groupId>gov.nist.math</groupId>
 			<artifactId>jama</artifactId>
 			<version>${jama.version}</version>
 		</dependency>
+
+		<!-- Test scope dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<!-- TODO: define a real POM for mines-jtk project -->
-			<groupId>edu.mines</groupId>
-			<artifactId>mines-jtk</artifactId>
-			<version>20100113</version>
-		</dependency>
 	</dependencies>
-
-	<properties>
-		<project.rootdir>${basedir}/../..</project.rootdir>
-	</properties>
 
 	<build>
 		<plugins>
@@ -62,15 +63,11 @@
 		</plugins>
 	</build>
 
-	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
+		<!-- NB: for project parent, in case of partial checkout -->
 		<repository>
-			<id>imagej.releases</id>
-			<url>http://maven.imagej.net/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>imagej.snapshots</id>
-			<url>http://maven.imagej.net/content/repositories/snapshots</url>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
 

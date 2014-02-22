@@ -15,13 +15,14 @@
 
 	<licenses>
 		<license>
-			<name>GPL 2 or later</name>
+			<name>GNU General Public License v2+</name>
 			<url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
 	<dependencies>
+		<!-- Project dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
@@ -32,44 +33,39 @@
 			<artifactId>imglib2-algorithms</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2-algorithms-gpl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
+		<!-- External dependencies -->
 		<dependency>
-			<!-- TODO: define a real POM for mpicbg project -->
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>${mpicbg.groupId}</groupId>
 			<artifactId>mpicbg</artifactId>
 			<version>${mpicbg.version}</version>
 		</dependency>
-
 		<dependency>
-			<!-- TODO: define a real POM for mines-jtk project -->
+			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>edu.mines</groupId>
 			<artifactId>mines-jtk</artifactId>
 			<version>20100113</version>
 		</dependency>
+		<dependency>
+			<groupId>gov.nist.math</groupId>
+			<artifactId>jama</artifactId>
+			<version>${jama.version}</version>
+		</dependency>
 
+		<!-- Test scope dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-        
-		<dependency>
-			<groupId>jama</groupId>
-			<artifactId>jama</artifactId>
-			<version>${jama.version}</version>
-		</dependency>        
 	</dependencies>
-
-	<properties>
-		<project.rootdir>${basedir}/../..</project.rootdir>
-	</properties>
 
 	<build>
 		<plugins>
@@ -94,15 +90,11 @@
 		</plugins>
 	</build>
 
-	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
+		<!-- NB: for project parent, in case of partial checkout -->
 		<repository>
-			<id>imagej.releases</id>
-			<url>http://maven.imagej.net/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>imagej.snapshots</id>
-			<url>http://maven.imagej.net/content/repositories/snapshots</url>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
 

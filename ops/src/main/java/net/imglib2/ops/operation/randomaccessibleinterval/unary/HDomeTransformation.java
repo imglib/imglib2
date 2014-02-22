@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.randomaccessibleinterval.unary;
@@ -84,7 +80,7 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 	}
 
 	@SuppressWarnings( "unchecked" )
-	public HDomeTransformation( ConnectedType type, double height, double substractBefore, ImgFactory imgFactory )
+	public HDomeTransformation( ConnectedType type, double height, double substractBefore, @SuppressWarnings( "rawtypes" ) ImgFactory imgFactory )
 	{
 		m_type = type;
 		m_height = height;
@@ -126,7 +122,7 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 	@Override
 	public UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >> copy()
 	{
-		return new HDomeTransformation< T >( m_type, m_height, m_substractBefore );
+		return new HDomeTransformation< T >( m_type, m_height, m_substractBefore, m_imgFactory );
 	}
 
 	private RandomAccessibleInterval< T > getRegionalMaxima( final RandomAccessibleInterval< T > img, double height, RandomAccessibleInterval< T > output )
