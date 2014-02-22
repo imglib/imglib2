@@ -206,10 +206,10 @@ public class HyperSliceImgPlusTest {
 	 */
 	@Test
 	public void testMinLongArray() {
-		long[] min1 = new long[imgplusZ.nDimensions];
-		long[] expected1 = Util.getArrayFromValue(0l, imgplusZ.nDimensions);
-		long[] min2 = new long[imgplusZT.nDimensions];
-		long[] expected2 = Util.getArrayFromValue(0l, imgplusZT.nDimensions);
+		long[] min1 = new long[imgplusZ.numDimensions()];
+		long[] expected1 = Util.getArrayFromValue(0l, imgplusZ.numDimensions());
+		long[] min2 = new long[imgplusZT.numDimensions()];
+		long[] expected2 = Util.getArrayFromValue(0l, imgplusZT.numDimensions());
 		imgplusZ.min(min1);
 		imgplusZT.min(min2);
 		assertArrayEquals(expected1, min1);
@@ -242,10 +242,10 @@ public class HyperSliceImgPlusTest {
 	 */
 	@Test
 	public void testMaxLongArray() {
-		long[] max1 = new long[imgplusZ.nDimensions];
-		long[] expected1 = new long[imgplusZ.nDimensions];
-		long[] max2 = new long[imgplusZT.nDimensions];
-		long[] expected2 = new long[imgplusZT.nDimensions];
+		long[] max1 = new long[imgplusZ.numDimensions()];
+		long[] expected1 = new long[imgplusZ.numDimensions()];
+		long[] max2 = new long[imgplusZT.numDimensions()];
+		long[] expected2 = new long[imgplusZT.numDimensions()];
 
 		int index1 = 0;
 		int index2 = 0;
