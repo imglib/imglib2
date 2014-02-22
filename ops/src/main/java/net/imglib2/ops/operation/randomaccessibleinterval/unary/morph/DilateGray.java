@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -50,6 +46,7 @@ import net.imglib2.view.Views;
  * Dilate operation on gray-level.
  * 
  * @author Felix Schoenenberger (University of Konstanz)
+ * @author Jonathan Hale (University of Konstanz)
  * 
  * @param <T>
  */
@@ -58,13 +55,14 @@ public class DilateGray< T extends RealType< T >> implements UnaryOperation< Ran
 
 	private final long[][] m_struc;
 
-	private OutOfBoundsFactory< T, RandomAccessibleInterval< T >> m_factory;
+	private final OutOfBoundsFactory< T, RandomAccessibleInterval< T >> m_factory;
 
 	/**
 	 * 
 	 * @param structuringElement
+	 * @param factory
 	 */
-	public DilateGray( final long[][] structuringElement, OutOfBoundsFactory< T, RandomAccessibleInterval< T > > factory )
+	public DilateGray( final long[][] structuringElement, final OutOfBoundsFactory< T, RandomAccessibleInterval< T > > factory )
 	{
 		m_factory = factory;
 		m_struc = structuringElement;
@@ -72,10 +70,12 @@ public class DilateGray< T extends RealType< T >> implements UnaryOperation< Ran
 
 	/**
 	 * @param structuringElement
+	 * @param factory
 	 */
-	public DilateGray( final Img< BitType > structuringElement )
+	public DilateGray( final Img< BitType > structuringElement, final OutOfBoundsFactory< T, RandomAccessibleInterval< T > > factory )
 	{
 		m_struc = StructuringElementCursor.createElementFromImg( structuringElement );
+		m_factory = factory;
 	}
 
 	@Override
