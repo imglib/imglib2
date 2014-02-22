@@ -62,14 +62,6 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 		MINIMA, MAXIMA
 	}
 
-<<<<<<< HEAD
-	public <I extends RandomAccessibleInterval<T> & LinearSpace<?>> DogDetection(
-			final I input, final double sigma1, final double sigma2,
-			final ExtremaType extremaType, final double minPeakValue,
-			final ExecutorService service) {
-		this(Views.extendMirrorSingle(input), input, getcalib(input), sigma1,
-				sigma2, extremaType, minPeakValue, true, service);
-=======
 	public < I extends RandomAccessibleInterval< T > & LinearSpace< ? > > DogDetection(
 			final I input,
 			final double sigma1,
@@ -78,7 +70,6 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 			final double minPeakValue )
 	{
 		this( Views.extendMirrorSingle( input ), input, getcalib( input ), sigma1, sigma2, extremaType, minPeakValue, true );
->>>>>>> gauss-executionservice
 	}
 
 	/**
@@ -114,13 +105,6 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	 *            will be divided by <em>f</em> (which is equivalent to scaling
 	 *            the DoG by <em>f</em>).
 	 */
-<<<<<<< HEAD
-	public DogDetection(final RandomAccessible<T> input,
-			final Interval interval, final double[] calibration,
-			final double sigma1, final double sigma2,
-			final ExtremaType extremaType, final double minPeakValue,
-			final boolean normalizeMinPeakValue, final ExecutorService service) {
-=======
 	public DogDetection(
 			final RandomAccessible< T > input,
 			final Interval interval,
@@ -131,7 +115,6 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 			final double minPeakValue,
 			final boolean normalizeMinPeakValue )
 	{
->>>>>>> gauss-executionservice
 		this.input = input;
 		this.interval = interval;
 		this.sigma1 = sigma1;
@@ -170,24 +153,6 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 		final T val = type.createVariable();
 		final double minValueT = type.getMinValue();
 		final double maxValueT = type.getMaxValue();
-<<<<<<< HEAD
-		final LocalNeighborhoodCheck<Point, T> localNeighborhoodCheck;
-		final double normalization = normalizeMinPeakValue ? (sigma2 / sigma1 - 1.0)
-				: 1.0;
-		switch (extremaType) {
-		case MINIMA:
-			val.setReal(Math.max(
-					Math.min(-minPeakValue * normalization, maxValueT),
-					minValueT));
-			localNeighborhoodCheck = new LocalExtrema.MinimumCheck<T>(val);
-			break;
-		case MAXIMA:
-		default:
-			val.setReal(Math.max(
-					Math.min(minPeakValue * normalization, maxValueT),
-					minValueT));
-			localNeighborhoodCheck = new LocalExtrema.MaximumCheck<T>(val);
-=======
 		final LocalNeighborhoodCheck< Point, T > localNeighborhoodCheck;
 		final double normalization = normalizeMinPeakValue ? ( sigma2 / sigma1 - 1.0 ) : 1.0;
 		switch ( extremaType )
@@ -200,7 +165,6 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 		default:
 			val.setReal( Math.max( Math.min( minPeakValue * normalization, maxValueT ), minValueT ) );
 			localNeighborhoodCheck = new LocalExtrema.MaximumCheck< T >( val );
->>>>>>> gauss-executionservice
 		}
 		final ArrayList< Point > peaks = LocalExtrema.findLocalExtrema( dogImg, localNeighborhoodCheck, service );
 		if ( !keepDoGImg )
@@ -240,45 +204,6 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	protected double minPeakValue;
 	protected boolean normalizeMinPeakValue;
 	protected boolean keepDoGImg;
-<<<<<<< HEAD
-
-	public void setImageSigma(final double imageSigma) {
-		this.imageSigma = imageSigma;
-	}
-
-	public void setMinf(final double minf) {
-		this.minf = minf;
-	}
-
-	public void setMinPeakValue(final double minPeakValue) {
-		this.minPeakValue = minPeakValue;
-	}
-
-	public void setKeepDoGImg(final boolean keepDoGImg) {
-		this.keepDoGImg = keepDoGImg;
-	}
-
-	public double getImageSigma() {
-		return imageSigma;
-	}
-
-	public double getMinf() {
-		return minf;
-	}
-
-	public double getMinPeakValue() {
-		return minPeakValue;
-	}
-
-	public boolean getKeepDoGImg() {
-		return keepDoGImg;
-	}
-
-	private static double[] getcalib(final LinearSpace<?> calib) {
-		final double[] c = new double[calib.numDimensions()];
-		for (int d = 0; d < c.length; ++d)
-			c[d] = calib.axis(d).scale();
-=======
 	protected int numThreads;
 	protected ExecutorService executorService;
 
@@ -303,7 +228,6 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 		final double[] c = new double[ calib.numDimensions() ];
 		for ( int d = 0; d < c.length; ++d )
 			c[ d ] = calib.axis( d ).scale();
->>>>>>> gauss-executionservice
 		return c;
 	}
 }

@@ -110,29 +110,6 @@ public class LocalExtrema
 		final Interval full = Intervals.expand( img, -1 );
 		final int n = img.numDimensions();
 		final int splitd = n - 1;
-<<<<<<< HEAD
-		final int numTasks = Math.max(1, (int) Math.min(full.dimension(splitd),
-				Runtime.getRuntime().availableProcessors() * 20));
-
-		final long dsize = full.dimension(splitd) / numTasks;
-		final long[] min = new long[n];
-		final long[] max = new long[n];
-		full.min(min);
-		full.max(max);
-
-		final RectangleShape shape = new RectangleShape(1, true);
-
-		final List<P> synchronizedAllExtrema = Collections
-				.synchronizedList(allExtrema);
-		for (int taskNum = 0; taskNum < numTasks; ++taskNum) {
-			min[splitd] = full.min(splitd) + taskNum * dsize;
-			max[splitd] = (taskNum == numTasks - 1) ? full.max(splitd)
-					: min[splitd] + dsize - 1;
-			final RandomAccessibleInterval<T> source = Views.interval(img,
-					new FinalInterval(min, max));
-			final ArrayList<P> extrema = new ArrayList<P>(128);
-			final Callable<Void> r = new Callable<Void>() {
-=======
 		final int numTasks = ( int ) Math.min( full.dimension( splitd ), Runtime.getRuntime().availableProcessors() * 20 );
 		final long dsize = full.dimension( splitd ) / numTasks;
 		final long[] min = new long[ n ];
@@ -151,7 +128,6 @@ public class LocalExtrema
 			final ArrayList< P > extrema = new ArrayList< P >( 128 );
 			final Callable< Void > r = new Callable< Void >()
 			{
->>>>>>> gauss-executionservice
 				@Override
 				public Void call()
 				{

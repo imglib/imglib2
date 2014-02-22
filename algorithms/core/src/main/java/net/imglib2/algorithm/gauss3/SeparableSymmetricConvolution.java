@@ -224,18 +224,6 @@ public final class SeparableSymmetricConvolution {
 		return a.get();
 	}
 
-<<<<<<< HEAD
-	public static <S, T> void convolve1d(final double[] halfkernel,
-			final RandomAccessible<S> source,
-			final RandomAccessibleInterval<T> target,
-			final ConvolverFactory<S, T> convolverFactoryST,
-			ExecutorService service) {
-		final long[] sourceOffset = new long[] { 1 - halfkernel.length };
-		convolveOffset(halfkernel, source, sourceOffset, target, target, 0,
-				convolverFactoryST, service, 1);
-	}
-
-=======
 	public static < S, T > void convolve1d( final double[] halfkernel,
 			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target,
 			final ConvolverFactory< S, T > convolverFactoryST, final ExecutorService service )
@@ -245,7 +233,6 @@ public final class SeparableSymmetricConvolution {
 	}
 
 
->>>>>>> gauss-executionservice
 	/**
 	 * Convolve source with a separable symmetric kernel and write the result to
 	 * output. In-place operation (source==target) is supported. Calculations
@@ -335,18 +322,9 @@ public final class SeparableSymmetricConvolution {
 	/**
 	 * 1D convolution in dimension d.
 	 */
-<<<<<<< HEAD
-	static <S, T> void convolveOffset(final double[] halfkernel,
-			final RandomAccessible<S> source, final long[] sourceOffset,
-			final RandomAccessible<T> target, final Interval targetInterval,
-			final int d, final ConvolverFactory<S, T> factory,
-			final ExecutorService service, final int numTasks) {
-		final ArrayList<Future<Void>> futures = new ArrayList<Future<Void>>();
-=======
 	static < S, T > void convolveOffset( final double[] halfkernel, final RandomAccessible< S > source, final long[] sourceOffset, final RandomAccessible< T > target, final Interval targetInterval, final int d, final ConvolverFactory< S, T > factory, final ExecutorService service, final int numTasks )
 	{
 		final ArrayList< Future< Void > > futures = new ArrayList< Future< Void > >();
->>>>>>> gauss-executionservice
 		final int n = source.numDimensions();
 		final int k1 = halfkernel.length - 1;
 		long tmp = 1;
@@ -371,13 +349,6 @@ public final class SeparableSymmetricConvolution {
 		}
 		srcmax[d] += 2 * k1;
 
-<<<<<<< HEAD
-		for (int taskNum = 0; taskNum < numTasks; ++taskNum) {
-			final long myStartIndex = taskNum * ((endIndex + 1) / numTasks);
-			final long myEndIndex = (taskNum == numTasks - 1) ? endIndex
-					: (taskNum + 1) * ((endIndex + 1) / numTasks);
-			final Callable<Void> r = new Callable<Void>() {
-=======
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
 			final long myStartIndex = taskNum * ( ( endIndex + 1 ) / numTasks );
@@ -386,7 +357,6 @@ public final class SeparableSymmetricConvolution {
 					( taskNum + 1 ) * ( ( endIndex + 1 ) / numTasks );
 			final Callable< Void > r = new Callable< Void >()
 			{
->>>>>>> gauss-executionservice
 				@Override
 				public Void call() {
 					final RandomAccess<S> in = source
@@ -428,15 +398,6 @@ public final class SeparableSymmetricConvolution {
 			futures.add( service.submit( r ) );
 		}
 
-<<<<<<< HEAD
-		for (Future<Void> f : futures) {
-			try {
-				f.get();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			} catch (ExecutionException e) {
-				throw new RuntimeException(e);
-=======
 		for ( final Future< Void > f : futures )
 		{
 			try
@@ -450,7 +411,6 @@ public final class SeparableSymmetricConvolution {
 			catch ( final ExecutionException e )
 			{
 				throw new RuntimeException( e );
->>>>>>> gauss-executionservice
 			}
 		}
 	}
