@@ -56,6 +56,7 @@ import net.imglib2.view.Views;
  * Internally, we strongly rely on the fantastic {@link Views} class.
  * 
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com>
+ * @author Christian Dietz <christian.dietz@uni-konstanz.de>
  */
 public class HyperSliceImgPlus<T extends Type<T>> extends ImgPlus<T> {
 
