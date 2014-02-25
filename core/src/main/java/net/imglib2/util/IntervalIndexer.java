@@ -33,6 +33,7 @@
 
 package net.imglib2.util;
 
+import net.imglib2.Cursor;
 import net.imglib2.Dimensions;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
@@ -103,170 +104,107 @@ public class IntervalIndexer
 
 	final static public void indexToPosition( int index, final int[] dimensions, final int[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final int j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index;
+		indexToPositionWithOffset( index, position.length, dimensions, null, position );
 	}
 
 	final static public void indexToPosition( long index, final long[] dimensions, final int[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final long j = index / dimensions[ d ];
-			position[ d ] = ( int )( index - j * dimensions[ d ] );
-			index = j;
-		}
-		position[ maxDim ] = ( int )index;
+		indexToPositionWithOffset( ( int ) index, position.length, dimensions, null, position );
 	}
 
 	final static public void indexToPosition( int index, final int[] dimensions, final long[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final int j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index;
+		indexToPositionWithOffset( index, position.length, dimensions, null, position );
 	}
 
 	final static public void indexToPosition( long index, final long[] dimensions, final long[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final long j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index;
+		indexToPositionWithOffset( index, position.length, dimensions, null, position );
 	}
 
 	final static public void indexToPosition( long index, final Dimensions dimensions, final Positionable position )
 	{
 		final int maxDim = dimensions.numDimensions() - 1;
-		for ( int d = 0; d < maxDim; ++d )
+		if ( index == -1 )
 		{
-			final long j = index / dimensions.dimension( d );
-			position.setPosition( index - j * dimensions.dimension( d ), d );
-			index = j;
+			// -1 index indicates we wan't to go one back from the starting
+			// position. So set position to [0,..0]
+			position.setPosition( new long[ position.numDimensions() ] );
+			// and move back one in the first axis.
+			position.bck( 0 );
 		}
-		position.setPosition( index, maxDim );
+		else
+		{
+			for ( int d = 0; d < maxDim; ++d )
+			{
+				final long j = index / dimensions.dimension( d );
+				position.setPosition( index - j * dimensions.dimension( d ), d );
+				index = j;
+			}
+			position.setPosition( index, maxDim );
+		}
 	}
 
 	final static public void indexToPosition( int index, final int[] dimensions, final float[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final int j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index;
+		indexToPositionWithOffset( index, position.length, dimensions, null, position );
 	}
 
 	final static public void indexToPosition( long index, final long[] dimensions, final float[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final long j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index;
+		indexToPositionWithOffset( index, position.length, dimensions, null, position );
 	}
 
 	final static public void indexToPosition( int index, final int[] dimensions, final double[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final int j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index;
+		indexToPositionWithOffset( index, position.length, dimensions, null, position );
 	}
 
 	final static public void indexToPosition( long index, final long[] dimensions, final double[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final long j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index;
+		indexToPositionWithOffset( index, position.length, dimensions, null, position );
 	}
 
 	final static public void indexToPositionWithOffset( int index, final int[] dimensions, final int[] offsets, final int[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final int j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ] + offsets[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index + offsets[ maxDim ];
+		indexToPositionWithOffset( index, position.length, dimensions, offsets, position );
+	}
+
+	final static public void indexToPositionWithOffset( long index, final int[] dimensions, final long[] offsets, final long[] position )
+	{
+
+		indexToPositionWithOffset( index, position.length, dimensions, offsets, position );
+
 	}
 
 	final static public void indexToPositionWithOffset( long index, final long[] dimensions, final long[] offsets, final long[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final long j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ] + offsets[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index + offsets[ maxDim ];
+		indexToPositionWithOffset( index, position.length, dimensions, offsets, position );
 	}
 
 	final static public void indexToPositionWithOffset( long index, final long[] dimensions, final long[] offsets, final int[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final long j = index / dimensions[ d ];
-			position[ d ] = ( int )( index - j * dimensions[ d ] + offsets[ d ] );
-			index = j;
-		}
-		position[ maxDim ] = ( int )( index + offsets[ maxDim ] );
+		indexToPositionWithOffset( index, position.length, dimensions, offsets, position );
+	}
+
+	final static public void indexToPositionWithOffset( long index, final int[] dimensions, final long[] offsets, final float[] position )
+	{
+		indexToPositionWithOffset( index, position.length, dimensions, offsets, position );
 	}
 
 	final static public void indexToPositionWithOffset( long index, final long[] dimensions, final long[] offsets, final float[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final long j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ] + offsets[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index + offsets[ maxDim ];
+		indexToPositionWithOffset( index, position.length, dimensions, offsets, position );
+	}
+
+	final static public void indexToPositionWithOffset( long index, final int[] dimensions, final long[] offsets, final double[] position )
+	{
+		indexToPositionWithOffset( index, position.length, dimensions, offsets, position );
 	}
 
 	final static public void indexToPositionWithOffset( long index, final long[] dimensions, final long[] offsets, final double[] position )
 	{
-		final int maxDim = dimensions.length - 1;
-		for ( int d = 0; d < maxDim; ++d )
-		{
-			final long j = index / dimensions[ d ];
-			position[ d ] = index - j * dimensions[ d ] + offsets[ d ];
-			index = j;
-		}
-		position[ maxDim ] = index + offsets[ maxDim ];
+		indexToPositionWithOffset( index, position.length, dimensions, offsets, position );
 	}
 
 	final static public int indexToPosition( final int index, final int[] dimensions, final int dimension )
@@ -336,4 +274,117 @@ public class IntervalIndexer
 			steps[ d ] = steps[ d - 1 ] * dimensions[ d - 1 ];
 	}
 
+	private static void indexToPositionWithOffset( long index, final int size, final Object dimensions, final Object offsets, final Object position )
+	{
+		final int maxDim = size - 1;
+		// The "-1" index has special significance. It indicates a position
+		// such that, with one cursor.fwd() call, the array will be in its
+		// starting position. Thus we need to circumvent the normal index to
+		// position algorithm and create a starting array explicitly.
+		if ( index == -1 )
+		{
+			makeStartingPositionArray( offsets, position, size );
+		}
+		else
+		{
+			// In the general case, just compute the position for the given
+			// index.
+			for ( int d = 0; d < maxDim; ++d )
+			{
+				final double value = getValue( dimensions, d );
+				final double offset = getValue( offsets, d );
+				final long j = ( long ) ( index / getValue( dimensions, d ) );
+				setValue( position, d, index - j * value + offset );
+				index = j;
+			}
+			setValue( position, maxDim, index + getValue( offsets, maxDim ) );
+		}
+	}
+
+	// -- Helper methods --
+
+	/**
+	 * Helper method to get the value of a primitive array of unknown type.
+	 * Casts to a concrete array type.
+	 */
+	private static double getValue( Object source, int position )
+	{
+		if ( source == null )
+		{
+			return 0;
+		}
+		else if ( source instanceof long[] )
+		{
+			return ( ( long[] ) source )[ position ];
+		}
+		else if ( source instanceof int[] )
+		{
+			return ( ( int[] ) source )[ position ];
+		}
+		else if ( source instanceof double[] )
+		{
+			return ( ( double[] ) source )[ position ];
+		}
+		else if ( source instanceof float[] ) { return ( ( float[] ) source )[ position ]; }
+		throw new IllegalArgumentException( "Can only operate on float, int, long or double arrays." );
+	}
+
+	/**
+	 * Helper method to set the value of a primitive array of unknown type.
+	 * Casts to a concrete array type.
+	 */
+	private static void setValue( Object dest, int position, double value )
+	{
+		if ( dest instanceof long[] )
+		{
+			( ( long[] ) dest )[ position ] = ( long ) value;
+			return;
+		}
+		else if ( dest instanceof int[] )
+		{
+			( ( int[] ) dest )[ position ] = ( int ) value;
+			return;
+		}
+		else if ( dest instanceof double[] )
+		{
+			( ( double[] ) dest )[ position ] = value;
+			return;
+		}
+		else if ( dest instanceof float[] )
+		{
+			( ( float[] ) dest )[ position ] = ( float ) value;
+			return;
+		}
+		throw new IllegalArgumentException( "Can only operate on float, int, long or double arrays." );
+	}
+
+	/**
+	 * Sets a position array to the special "starting" position, which is
+	 * equivalent to the given offset array with the first index decremented
+	 * once. For example, if the offset array is [0, 0, 0] then the position
+	 * array will be [-1, 0, 0]. This ensures that when {@link Cursor#fwd()} is
+	 * called, the position will advance to [0, 0, 0].
+	 * 
+	 * @param offsets
+	 *            base position values. Defaults to the origin if null.
+	 * @param position
+	 *            position array to modify.
+	 * @param size
+	 *            the position array size
+	 */
+	private static void makeStartingPositionArray( final Object offsets, final Object position, final int size )
+	{
+		for ( int i = 0; i < size; i++ )
+		{
+			if ( offsets == null )
+			{
+				setValue( position, i, 0 );
+			}
+			else
+			{
+				setValue( position, i, getValue( offsets, i ) );
+			}
+		}
+		setValue( position, 0, getValue( position, 0 ) - 1 );
+	}
 }
