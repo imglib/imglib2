@@ -51,15 +51,14 @@ import net.imglib2.view.Views;
  * @author Christian Dietz (dietzc85@googlemail.com)
  * @author Martin Horn (martin.horn@uni-konstanz.de)
  */
-public class LabelingView<L extends Comparable<L>> extends
-		IterableRandomAccessibleInterval<LabelingType<L>> implements
-		Labeling<L> {
+public class LabelingView< L extends Comparable< L >> extends IterableRandomAccessibleInterval< LabelingType< L >> implements Labeling< L >
+{
 
-	protected LabelingROIStrategy<L, ? extends Labeling<L>> m_strategy;
+	protected LabelingROIStrategy< L, ? extends Labeling< L >> m_strategy;
 
-	private final LabelingFactory<L> m_fac;
+	private final LabelingFactory< L > m_fac;
 
-	private final IterableInterval<LabelingType<L>> m_ii;
+	private final IterableInterval< LabelingType< L >> m_ii;
 
 	/**
 	 * @param in
@@ -67,72 +66,83 @@ public class LabelingView<L extends Comparable<L>> extends
 	 * @param fac
 	 *            factory to create a new {@link Labeling}
 	 */
-	public LabelingView(RandomAccessibleInterval<LabelingType<L>> in,
-			LabelingFactory<L> fac) {
-		super(in);
+	public LabelingView( RandomAccessibleInterval< LabelingType< L >> in, LabelingFactory< L > fac )
+	{
+		super( in );
 		m_fac = fac;
-		m_strategy = new DefaultROIStrategy<L, Labeling<L>>(this);
-		m_ii = Views.flatIterable(in);
+		m_strategy = new DefaultROIStrategy< L, Labeling< L >>( this );
+		m_ii = Views.flatIterable( in );
 	}
 
 	@Override
-	public boolean getExtents(L label, long[] minExtents, long[] maxExtents) {
-		return m_strategy.getExtents(label, minExtents, maxExtents);
+	public boolean getExtents( L label, long[] minExtents, long[] maxExtents )
+	{
+		return m_strategy.getExtents( label, minExtents, maxExtents );
 	}
 
 	@Override
-	public boolean getRasterStart(L label, long[] start) {
-		return m_strategy.getRasterStart(label, start);
+	public boolean getRasterStart( L label, long[] start )
+	{
+		return m_strategy.getRasterStart( label, start );
 	}
 
 	@Override
-	public long getArea(L label) {
-		return m_strategy.getArea(label);
+	public long getArea( L label )
+	{
+		return m_strategy.getArea( label );
 	}
 
 	@Override
-	public Collection<L> getLabels() {
+	public Collection< L > getLabels()
+	{
 		return m_strategy.getLabels();
 	}
 
 	@Override
-	public Cursor<LabelingType<L>> cursor() {
+	public Cursor< LabelingType< L >> cursor()
+	{
 		return m_ii.cursor();
 	}
 
 	@Override
-	public Cursor<LabelingType<L>> localizingCursor() {
+	public Cursor< LabelingType< L >> localizingCursor()
+	{
 		return m_ii.localizingCursor();
 	}
 
 	@Override
-	public RegionOfInterest getRegionOfInterest(L label) {
-		return m_strategy.createRegionOfInterest(label);
+	public RegionOfInterest getRegionOfInterest( L label )
+	{
+		return m_strategy.createRegionOfInterest( label );
 	}
 
 	@Override
-	public IterableRegionOfInterest getIterableRegionOfInterest(L label) {
-		return m_strategy.createIterableRegionOfInterest(label);
+	public IterableRegionOfInterest getIterableRegionOfInterest( L label )
+	{
+		return m_strategy.createIterableRegionOfInterest( label );
 	}
 
 	@Override
-	public Labeling<L> copy() {
-		Labeling<L> copy = m_fac.create(this);
-		Cursor<LabelingType<L>> cursor = copy.cursor();
-		RandomAccess<LabelingType<L>> srcAccess = randomAccess();
+	public Labeling< L > copy()
+	{
+		Labeling< L > copy = m_fac.create( this );
+		Cursor< LabelingType< L >> cursor = copy.cursor();
+		RandomAccess< LabelingType< L >> srcAccess = randomAccess();
 
-		while (cursor.hasNext()) {
+		while ( cursor.hasNext() )
+		{
 			cursor.fwd();
-			srcAccess.setPosition(cursor);
-			cursor.get().set(srcAccess.get());
+			srcAccess.setPosition( cursor );
+			cursor.get().set( srcAccess.get() );
 		}
 
 		return copy;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( "unchecked" )
 	@Override
-	public <LL extends Comparable<LL>> LabelingFactory<LL> factory() {
-		return (LabelingFactory<LL>) m_fac;
+	public < LL extends Comparable< LL >> LabelingFactory< LL > factory()
+	{
+		return ( LabelingFactory< LL > ) m_fac;
 	}
 }
