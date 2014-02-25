@@ -46,7 +46,7 @@ import net.imglib2.view.Views;
 
 /**
  * Gaussian convolution.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public final class Gauss3
@@ -54,14 +54,14 @@ public final class Gauss3
 	/**
 	 * Apply Gaussian convolution to source and write the result to output.
 	 * In-place operation (source==target) is supported.
-	 *
+	 * 
 	 * <p>
 	 * If the target type T is {@link DoubleType}, all calculations are done in
 	 * double precision. For all other target {@link RealType RealTypes} float
 	 * precision is used. General {@link NumericType NumericTypes} are computed
 	 * in their own precision. The source type S and target type T are either
 	 * both {@link RealType RealTypes} or both the same type.
-	 *
+	 * 
 	 * @param sigma
 	 *            standard deviation of isotropic Gaussian.
 	 * @param source
@@ -90,18 +90,20 @@ public final class Gauss3
 
 	/**
 	 * Apply Gaussian convolution to source and write the result to output.
-	 * In-place operation (source==target) is supported. Number of threads will be automatically determined.
-	 *
+	 * In-place operation (source==target) is supported. Number of threads will
+	 * be automatically determined.
+	 * 
 	 * <p>
 	 * If the target type T is {@link DoubleType}, all calculations are done in
 	 * double precision. For all other target {@link RealType RealTypes} float
 	 * precision is used. General {@link NumericType NumericTypes} are computed
 	 * in their own precision. The source type S and target type T are either
 	 * both {@link RealType RealTypes} or both the same type.
-	 *
+	 * 
 	 * <p>
-	 * Computation is multi-threaded with as many threads as processors available.
-	 *
+	 * Computation is multi-threaded with as many threads as processors
+	 * available.
+	 * 
 	 * @param sigma
 	 *            standard deviation in every dimension.
 	 * @param source
@@ -121,23 +123,24 @@ public final class Gauss3
 	 */
 	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target ) throws IncompatibleTypeException
 	{
-		gauss(sigma, source, target, Runtime.getRuntime().availableProcessors() );
+		gauss( sigma, source, target, Runtime.getRuntime().availableProcessors() );
 	}
-	
+
 	/**
 	 * Apply Gaussian convolution to source and write the result to output.
 	 * In-place operation (source==target) is supported.
-	 *
+	 * 
 	 * <p>
 	 * If the target type T is {@link DoubleType}, all calculations are done in
 	 * double precision. For all other target {@link RealType RealTypes} float
 	 * precision is used. General {@link NumericType NumericTypes} are computed
 	 * in their own precision. The source type S and target type T are either
 	 * both {@link RealType RealTypes} or both the same type.
-	 *
+	 * 
 	 * <p>
-	 * Computation is multi-threaded with as many threads as processors available.
-	 *
+	 * Computation is multi-threaded with as many threads as processors
+	 * available.
+	 * 
 	 * @param sigma
 	 *            standard deviation in every dimension.
 	 * @param source
@@ -148,7 +151,7 @@ public final class Gauss3
 	 * @param target
 	 *            target image
 	 * @param numThreads
-	 * 			  number of threads which will be used
+	 *            number of threads which will be used
 	 * @param <S>
 	 *            source type
 	 * @param <T>
@@ -159,23 +162,22 @@ public final class Gauss3
 	 */
 	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, int numThreads ) throws IncompatibleTypeException
 	{
-		ExecutorService service =  Executors.newFixedThreadPool( numThreads );
+		ExecutorService service = Executors.newFixedThreadPool( numThreads );
 		gauss( sigma, source, target, service );
 		service.shutdown();
 	}
-	
 
 	/**
 	 * Apply Gaussian convolution to source and write the result to output.
 	 * In-place operation (source==target) is supported.
-	 *
+	 * 
 	 * <p>
 	 * If the target type T is {@link DoubleType}, all calculations are done in
 	 * double precision. For all other target {@link RealType RealTypes} float
 	 * precision is used. General {@link NumericType NumericTypes} are computed
 	 * in their own precision. The source type S and target type T are either
 	 * both {@link RealType RealTypes} or both the same type.
-	 *
+	 * 
 	 * @param sigma
 	 *            standard deviation in every dimension.
 	 * @param source
@@ -186,7 +188,8 @@ public final class Gauss3
 	 * @param target
 	 *            target image
 	 * @param service
-	 *            the {@link ExecutorService} which will be used for multi-threading
+	 *            the {@link ExecutorService} which will be used for
+	 *            multi-threading
 	 * @param <S>
 	 *            source type
 	 * @param <T>
@@ -206,17 +209,17 @@ public final class Gauss3
 		final int n = sigma.length;
 		final double[][] halfkernels = new double[ n ][];
 		final int[] size = halfkernelsizes( sigma );
-		for( int i = 0; i < n; ++i )
-            halfkernels[ i ] = halfkernel( sigma[ i ], size[ i ], true );
+		for ( int i = 0; i < n; ++i )
+			halfkernels[ i ] = halfkernel( sigma[ i ], size[ i ], true );
 		return halfkernels;
 	}
 
 	public static int[] halfkernelsizes( final double[] sigma )
 	{
 		final int n = sigma.length;
-        final int[] size = new int[ n ];
-		for( int i = 0; i < n; ++i )
-			size[ i ] = Math.max( 2, (int) (3 * sigma[ i ] + 0.5) + 1 );
+		final int[] size = new int[ n ];
+		for ( int i = 0; i < n; ++i )
+			size[ i ] = Math.max( 2, ( int ) ( 3 * sigma[ i ] + 0.5 ) + 1 );
 		return size;
 	}
 
