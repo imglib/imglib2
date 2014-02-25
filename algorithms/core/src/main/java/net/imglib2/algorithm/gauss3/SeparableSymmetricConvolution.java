@@ -63,7 +63,7 @@ import net.imglib2.view.Views;
 
 /**
  * Convolution with a separable symmetric kernel.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public final class SeparableSymmetricConvolution
@@ -71,14 +71,14 @@ public final class SeparableSymmetricConvolution
 	/**
 	 * Convolve source with a separable symmetric kernel and write the result to
 	 * output. In-place operation (source==target) is supported.
-	 *
+	 * 
 	 * <p>
 	 * If the target type T is {@link DoubleType}, all calculations are done in
 	 * double precision. For all other target {@link RealType RealTypes} float
 	 * precision is used. General {@link NumericType NumericTypes} are computed
 	 * in their own precision. The source type S and target type T are either
 	 * both {@link RealType RealTypes} or both the same type.
-	 *
+	 * 
 	 * @param halfkernels
 	 *            an array containing half-kernels for every dimension. A
 	 *            half-kernel is the upper half (starting at the center pixel)
@@ -107,7 +107,7 @@ public final class SeparableSymmetricConvolution
 		final S sourceType = getType( source, target );
 		if ( targetType instanceof RealType )
 		{
-			if ( ! ( sourceType instanceof RealType ) )
+			if ( !( sourceType instanceof RealType ) )
 				throw new IncompatibleTypeException( sourceType, "RealType source required for convolving into a RealType target" );
 			// NB: Casting madness thanks to a long standing javac bug;
 			// see e.g. http://bugs.sun.com/view_bug.do?bug_id=6548436
@@ -120,7 +120,7 @@ public final class SeparableSymmetricConvolution
 		}
 		else
 		{
-			if ( ! targetType.getClass().isInstance( sourceType ) )
+			if ( !targetType.getClass().isInstance( sourceType ) )
 				throw new IncompatibleTypeException( sourceType, targetType.getClass().getCanonicalName() + " source required for convolving into a " + targetType.getClass().getCanonicalName() + " target" );
 			if ( targetType instanceof NativeType )
 				convolveNativeType( halfkernels, ( RandomAccessible ) source, ( RandomAccessibleInterval ) target, service );
@@ -129,46 +129,27 @@ public final class SeparableSymmetricConvolution
 		}
 	}
 
-	private static < S extends RealType< S >, T extends RealType< T > > void convolveRealTypeFloat( final double[][] halfkernels,
-			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
+	private static < S extends RealType< S >, T extends RealType< T > > void convolveRealTypeFloat( final double[][] halfkernels, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
 	{
 		final FloatType type = new FloatType();
 		final ImgFactory< FloatType > imgfac = getImgFactory( target, halfkernels, type );
 		if ( canUseBufferedConvolver( target, halfkernels ) )
-			convolve( halfkernels, source, target,
-					FloatConvolverRealTypeBuffered.< S, FloatType >factory(),
-					FloatConvolverRealTypeBuffered.< FloatType, FloatType >factory(),
-					FloatConvolverRealTypeBuffered.< FloatType, T >factory(),
-					FloatConvolverRealTypeBuffered.< S, T >factory(), imgfac, type, service );
+			convolve( halfkernels, source, target, FloatConvolverRealTypeBuffered.< S, FloatType >factory(), FloatConvolverRealTypeBuffered.< FloatType, FloatType >factory(), FloatConvolverRealTypeBuffered.< FloatType, T >factory(), FloatConvolverRealTypeBuffered.< S, T >factory(), imgfac, type, service );
 		else
-			convolve( halfkernels, source, target,
-					FloatConvolverRealType.< S, FloatType >factory(),
-					FloatConvolverRealType.< FloatType, FloatType >factory(),
-					FloatConvolverRealType.< FloatType, T >factory(),
-					FloatConvolverRealType.< S, T >factory(), imgfac, type, service );
+			convolve( halfkernels, source, target, FloatConvolverRealType.< S, FloatType >factory(), FloatConvolverRealType.< FloatType, FloatType >factory(), FloatConvolverRealType.< FloatType, T >factory(), FloatConvolverRealType.< S, T >factory(), imgfac, type, service );
 	}
 
-	private static < S extends RealType< S >, T extends RealType< T > > void convolveRealTypeDouble( final double[][] halfkernels,
-			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
+	private static < S extends RealType< S >, T extends RealType< T > > void convolveRealTypeDouble( final double[][] halfkernels, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
 	{
 		final DoubleType type = new DoubleType();
 		final ImgFactory< DoubleType > imgfac = getImgFactory( target, halfkernels, type );
 		if ( canUseBufferedConvolver( target, halfkernels ) )
-			convolve( halfkernels, source, target,
-					DoubleConvolverRealTypeBuffered.< S, DoubleType >factory(),
-					DoubleConvolverRealTypeBuffered.< DoubleType, DoubleType >factory(),
-					DoubleConvolverRealTypeBuffered.< DoubleType, T >factory(),
-					DoubleConvolverRealTypeBuffered.< S, T >factory(), imgfac, type, service );
+			convolve( halfkernels, source, target, DoubleConvolverRealTypeBuffered.< S, DoubleType >factory(), DoubleConvolverRealTypeBuffered.< DoubleType, DoubleType >factory(), DoubleConvolverRealTypeBuffered.< DoubleType, T >factory(), DoubleConvolverRealTypeBuffered.< S, T >factory(), imgfac, type, service );
 		else
-			convolve( halfkernels, source, target,
-					DoubleConvolverRealType.< S, DoubleType >factory(),
-					DoubleConvolverRealType.< DoubleType, DoubleType >factory(),
-					DoubleConvolverRealType.< DoubleType, T >factory(),
-					DoubleConvolverRealType.< S, T >factory(), imgfac, type, service );
+			convolve( halfkernels, source, target, DoubleConvolverRealType.< S, DoubleType >factory(), DoubleConvolverRealType.< DoubleType, DoubleType >factory(), DoubleConvolverRealType.< DoubleType, T >factory(), DoubleConvolverRealType.< S, T >factory(), imgfac, type, service );
 	}
 
-	private static < T extends NumericType< T > & NativeType< T > > void convolveNativeType( final double[][] halfkernels,
-			final RandomAccessible< T > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
+	private static < T extends NumericType< T > & NativeType< T > > void convolveNativeType( final double[][] halfkernels, final RandomAccessible< T > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
 	{
 		final T type = Util.getTypeFromInterval( target );
 		final ConvolverFactory< T, T > convfac;
@@ -180,8 +161,7 @@ public final class SeparableSymmetricConvolution
 		convolve( halfkernels, source, target, convfac, convfac, convfac, convfac, imgfac, type, service );
 	}
 
-	private static < T extends NumericType< T > > void convolveNumericType( final double[][] halfkernels,
-			final RandomAccessible< T > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
+	private static < T extends NumericType< T > > void convolveNumericType( final double[][] halfkernels, final RandomAccessible< T > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
 	{
 		final T type = Util.getTypeFromInterval( target );
 		final ConvolverFactory< T, T > convfac = ConvolverNumericType.factory( type );
@@ -191,7 +171,7 @@ public final class SeparableSymmetricConvolution
 	/**
 	 * Get an instance of type T from a {@link RandomAccess} on accessible that
 	 * is positioned at the min of interval.
-	 *
+	 * 
 	 * @param accessible
 	 * @param interval
 	 * @return type instance
@@ -203,20 +183,18 @@ public final class SeparableSymmetricConvolution
 		return a.get();
 	}
 
-	public static < S, T > void convolve1d( final double[] halfkernel,
-			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target,
-			final ConvolverFactory< S, T > convolverFactoryST, final ExecutorService service )
+	public static < S, T > void convolve1d( final double[] halfkernel, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ConvolverFactory< S, T > convolverFactoryST, final ExecutorService service )
 	{
-	    final long[] sourceOffset = new long[] { 1 - halfkernel.length };
-	    convolveOffset( halfkernel, source, sourceOffset, target, target, 0, convolverFactoryST, service, 1 );
+		final long[] sourceOffset = new long[] { 1 - halfkernel.length };
+		convolveOffset( halfkernel, source, sourceOffset, target, target, 0, convolverFactoryST, service, 1 );
 	}
-
 
 	/**
 	 * Convolve source with a separable symmetric kernel and write the result to
-	 * output. In-place operation (source==target) is supported. Calculations are
-	 * done in the intermediate type determined by the {@link ConvolverFactory ConvolverFactories}.
-	 *
+	 * output. In-place operation (source==target) is supported. Calculations
+	 * are done in the intermediate type determined by the
+	 * {@link ConvolverFactory ConvolverFactories}.
+	 * 
 	 * @param halfkernels
 	 *            an array containing half-kernels for every dimension. A
 	 *            half-kernel is the upper half (starting at the center pixel)
@@ -247,14 +225,7 @@ public final class SeparableSymmetricConvolution
 	 * @param ExecutorService
 	 *            service which will be used for multi threading.
 	 */
-	public static < S, I, T > void convolve( final double[][] halfkernels,
-			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target,
-			final ConvolverFactory< S, I > convolverFactorySI,
-			final ConvolverFactory< I, I > convolverFactoryII,
-			final ConvolverFactory< I, T > convolverFactoryIT,
-			final ConvolverFactory< S, T > convolverFactoryST,
-			final ImgFactory< I > imgFactory, final I type,
-			final ExecutorService service )
+	public static < S, I, T > void convolve( final double[][] halfkernels, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ConvolverFactory< S, I > convolverFactorySI, final ConvolverFactory< I, I > convolverFactoryII, final ConvolverFactory< I, T > convolverFactoryIT, final ConvolverFactory< S, T > convolverFactoryST, final ImgFactory< I > imgFactory, final I type, final ExecutorService service )
 	{
 		final int n = source.numDimensions();
 		if ( n == 1 )
@@ -264,36 +235,36 @@ public final class SeparableSymmetricConvolution
 		else
 		{
 			final int numTasks = Runtime.getRuntime().availableProcessors() * 4;
-		    final long[] sourceOffset = new long[ n ];
-		    final long[] targetOffset = new long[ n ];
-		    target.min( sourceOffset );
-		    for ( int d = 0; d < n; ++d )
-		    {
-		    	targetOffset[ d ] = -sourceOffset[ d ];
-		    	sourceOffset[ d ] += 1 - halfkernels[ d ].length;
-		    }
+			final long[] sourceOffset = new long[ n ];
+			final long[] targetOffset = new long[ n ];
+			target.min( sourceOffset );
+			for ( int d = 0; d < n; ++d )
+			{
+				targetOffset[ d ] = -sourceOffset[ d ];
+				sourceOffset[ d ] += 1 - halfkernels[ d ].length;
+			}
 
 			final long[][] tmpdims = getTempImageDimensions( target, halfkernels );
 			Img< I > tmp1 = imgFactory.create( tmpdims[ 0 ], type );
-		    if ( n == 2 )
-		    {
-			    convolveOffset( halfkernels[ 0 ], source, sourceOffset, tmp1, tmp1, 0, convolverFactorySI, service, numTasks );
-			    convolveOffset( halfkernels[ 1 ], tmp1, targetOffset, target, target, 1, convolverFactoryIT, service, numTasks );
-		    }
-		    else
-		    {
+			if ( n == 2 )
+			{
+				convolveOffset( halfkernels[ 0 ], source, sourceOffset, tmp1, tmp1, 0, convolverFactorySI, service, numTasks );
+				convolveOffset( halfkernels[ 1 ], tmp1, targetOffset, target, target, 1, convolverFactoryIT, service, numTasks );
+			}
+			else
+			{
 				Img< I > tmp2 = imgFactory.create( tmpdims[ 1 ], type );
-			    final long[] zeroOffset = new long[ n ];
-			    convolveOffset( halfkernels[ 0 ], source, sourceOffset, tmp1, new FinalInterval( tmpdims[ 0 ] ), 0, convolverFactorySI, service, numTasks );
-				for( int d = 1; d < n - 1; ++d )
+				final long[] zeroOffset = new long[ n ];
+				convolveOffset( halfkernels[ 0 ], source, sourceOffset, tmp1, new FinalInterval( tmpdims[ 0 ] ), 0, convolverFactorySI, service, numTasks );
+				for ( int d = 1; d < n - 1; ++d )
 				{
-				    convolveOffset( halfkernels[ d ], tmp1, zeroOffset, tmp2, new FinalInterval( tmpdims[ d ] ), d, convolverFactoryII, service, numTasks );
-				    final Img< I > tmp = tmp2;
-				    tmp2 = tmp1;
-				    tmp1 = tmp;
+					convolveOffset( halfkernels[ d ], tmp1, zeroOffset, tmp2, new FinalInterval( tmpdims[ d ] ), d, convolverFactoryII, service, numTasks );
+					final Img< I > tmp = tmp2;
+					tmp2 = tmp1;
+					tmp1 = tmp;
 				}
-			    convolveOffset( halfkernels[ n - 1 ], tmp1, targetOffset, target, target, n - 1, convolverFactoryIT, service, numTasks );
-		    }
+				convolveOffset( halfkernels[ n - 1 ], tmp1, targetOffset, target, target, n - 1, convolverFactoryIT, service, numTasks );
+			}
 		}
 	}
 
@@ -307,7 +278,7 @@ public final class SeparableSymmetricConvolution
 		final int k1 = halfkernel.length - 1;
 		long tmp = 1;
 		for ( int i = 0; i < n; ++i )
-			if ( i != d)
+			if ( i != d )
 				tmp *= targetInterval.dimension( i );
 		final long endIndex = tmp;
 
@@ -331,9 +302,7 @@ public final class SeparableSymmetricConvolution
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
 			final long myStartIndex = taskNum * ( ( endIndex + 1 ) / numTasks );
-			final long myEndIndex = ( taskNum == numTasks - 1 ) ?
-					endIndex :
-					( taskNum + 1 ) * ( ( endIndex + 1 ) / numTasks );
+			final long myEndIndex = ( taskNum == numTasks - 1 ) ? endIndex : ( taskNum + 1 ) * ( ( endIndex + 1 ) / numTasks );
 			final Callable< Void > r = new Callable< Void >()
 			{
 				@Override
@@ -351,7 +320,7 @@ public final class SeparableSymmetricConvolution
 					out.move( moveToStart );
 					in.move( moveToStart );
 
-					for( long index = myStartIndex; index < myEndIndex; ++index )
+					for ( long index = myStartIndex; index < myEndIndex; ++index )
 					{
 						convolver.run();
 						out.setPosition( min[ d ], d );
@@ -403,7 +372,7 @@ public final class SeparableSymmetricConvolution
 		final long[][] tmpdims = new long[ n ][];
 		tmpdims[ n - 1 ] = new long[ n ];
 		targetsize.dimensions( tmpdims[ n - 1 ] );
-		for( int d = n - 2; d >= 0; --d )
+		for ( int d = n - 2; d >= 0; --d )
 		{
 			tmpdims[ d ] = tmpdims[ d + 1 ].clone();
 			tmpdims[ d ][ d + 1 ] += 2 * halfkernels[ d + 1 ].length - 2;
@@ -414,7 +383,7 @@ public final class SeparableSymmetricConvolution
 	static boolean canUseBufferedConvolver( final Dimensions targetsize, final double[][] halfkernels )
 	{
 		final int n = targetsize.numDimensions();
-		for( int d = 0; d < n; ++d )
+		for ( int d = 0; d < n; ++d )
 			if ( targetsize.dimension( d ) + 4 * halfkernels[ d ].length - 4 > Integer.MAX_VALUE )
 				return false;
 		return true;
@@ -424,7 +393,7 @@ public final class SeparableSymmetricConvolution
 	{
 		final int n = targetsize.numDimensions();
 		long size = targetsize.dimension( 0 );
-		for( int d = 1; d < n; ++d )
+		for ( int d = 1; d < n; ++d )
 			size *= targetsize.dimension( d ) + 2 * halfkernels[ d ].length;
 		return size <= Integer.MAX_VALUE;
 	}
