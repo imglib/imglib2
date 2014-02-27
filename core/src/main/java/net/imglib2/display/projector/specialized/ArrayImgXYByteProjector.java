@@ -66,21 +66,27 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends Ab
 	private final long[] dims;
 
 	/**
-	 * Normalizes an ArrayImg and writes the result into target. This can be used in conjunction with {@link UnsignedByteAWTScreenImage} for direct displaying.
-	 * The normalization is based on a normalization factor and a minimum value with the following dependency:<br>
+	 * Normalizes an ArrayImg and writes the result into target. This can be
+	 * used in conjunction with {@link UnsignedByteAWTScreenImage} for direct
+	 * displaying. The normalization is based on a normalization factor and a
+	 * minimum value with the following dependency:<br>
 	 * <br>
 	 * normalizationFactor = (typeMax - typeMin) / (newMax - newMin) <br>
 	 * min = newMin <br>
 	 * <br>
-	 * A value is normalized by: normalizedValue = (value - min) * normalizationFactor.<br>
-	 * Additionally the result gets clamped to the type range of target (that allows playing with saturation...).
-	 *  
-	 * @param source Signed/Unsigned input data
-	 * @param target Unsigned output
+	 * A value is normalized by: normalizedValue = (value - min) *
+	 * normalizationFactor.<br>
+	 * Additionally the result gets clamped to the type range of target (that
+	 * allows playing with saturation...).
+	 * 
+	 * @param source
+	 *            Signed/Unsigned input data
+	 * @param target
+	 *            Unsigned output
 	 * @param normalizationFactor
 	 * @param min
 	 */
-	public ArrayImgXYByteProjector( ArrayImg< A, ByteArray > source, ArrayImg< UnsignedByteType, ByteArray > target, double normalizationFactor, double min )
+	public ArrayImgXYByteProjector( final ArrayImg< A, ByteArray > source, final ArrayImg< UnsignedByteType, ByteArray > target, final double normalizationFactor, final double min )
 	{
 		super( source.numDimensions() );
 
@@ -99,7 +105,7 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends Ab
 	{
 		double minCopy = min;
 		int offset = 0;
-		long[] tmpPos = position.clone();
+		final long[] tmpPos = position.clone();
 		tmpPos[ 0 ] = 0;
 		tmpPos[ 1 ] = 0;
 
@@ -136,13 +142,13 @@ public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends Ab
 		{
 			for ( int i = 0; i < targetArray.length; i++ )
 			{
-				//                          |  ensure   0 <= x <= 255 | 
-				//                          |                         | calculate newValue: x
-				//                          |                         |                   unsigned_byte => int
-				//							|						  |                            value        - min       * normalizationFactor
-				targetArray[ i ] = ( byte ) Math.min( 255, Math.max( 0, ( Math.round( ( (targetArray[i] & 0xFF) - minCopy ) * normalizationFactor ) ) ) );
+				// | ensure 0 <= x <= 255 |
+				// | | calculate newValue: x
+				// | | unsigned_byte => int
+				// | | value - min * normalizationFactor
+				targetArray[ i ] = ( byte ) Math.min( 255, Math.max( 0, ( Math.round( ( ( targetArray[ i ] & 0xFF ) - minCopy ) * normalizationFactor ) ) ) );
 			}
 		}
 	}
-	
+
 }

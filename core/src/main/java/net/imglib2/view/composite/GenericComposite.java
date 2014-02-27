@@ -36,21 +36,21 @@ import net.imglib2.RandomAccess;
 
 /**
  * A generic vector of scalars T.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class GenericComposite< T > extends AbstractComposite< T >
 {
-	static public class Factory< T > implements CompositeFactory< T, GenericComposite< T > > 
+	static public class Factory< T > implements CompositeFactory< T, GenericComposite< T > >
 	{
 		@Override
 		public GenericComposite< T > create( final RandomAccess< T > sourceAccess )
 		{
 			return new GenericComposite< T >( sourceAccess );
 		}
-		
+
 	}
-	
+
 	public GenericComposite( final RandomAccess< T > sourceAccess )
 	{
 		super( sourceAccess );

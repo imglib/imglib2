@@ -36,11 +36,11 @@ package net.imglib2.img.basictypeaccess.array;
 import net.imglib2.img.basictypeaccess.BitAccess;
 
 /**
-*
-*/
+ *
+ */
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -84,13 +84,13 @@ public class BitArray implements BitAccess, ArrayDataAccess< BitArray >
 	{
 		final int arrayIndex = index / bitsPerEntity;
 		final int arrayOffset = index % bitsPerEntity;
-		
+
 		synchronized ( data )
 		{
 			if ( value )
 				data[ arrayIndex ] = data[ arrayIndex ] | ( 1 << arrayOffset );
 			else
-				data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset );			
+				data[ arrayIndex ] = data[ arrayIndex ] & ~( 1 << arrayOffset );
 		}
 	}
 

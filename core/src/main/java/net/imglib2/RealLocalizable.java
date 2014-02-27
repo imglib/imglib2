@@ -36,8 +36,8 @@ package net.imglib2;
 /**
  * The {@link RealLocalizable} interface can localize itself in an n-dimensional
  * real space.
- *  
- *
+ * 
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -46,30 +46,34 @@ public interface RealLocalizable extends EuclideanSpace
 	/**
 	 * Write the current position into the passed array.
 	 * 
-	 * @param position   receives current position
+	 * @param position
+	 *            receives current position
 	 */
 	public void localize( float[] position );
-	
+
 	/**
 	 * Write the current position into the passed array.
 	 * 
-	 * @param position   receives current position
+	 * @param position
+	 *            receives current position
 	 */
 	public void localize( double[] position );
-	
+
 	/**
 	 * Return the current position in a given dimension.
 	 * 
-	 * @param d   dimension
-	 * @return      dimension of current position
+	 * @param d
+	 *            dimension
+	 * @return dimension of current position
 	 */
 	public float getFloatPosition( int d );
-	
+
 	/**
 	 * Return the current position in a given dimension.
 	 * 
-	 * @param d   dimension
-	 * @return      dimension of current position
+	 * @param d
+	 *            dimension
+	 * @return dimension of current position
 	 */
 	public double getDoublePosition( int d );
 }

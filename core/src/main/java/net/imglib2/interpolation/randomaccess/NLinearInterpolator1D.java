@@ -39,18 +39,18 @@ import net.imglib2.type.numeric.NumericType;
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinearInterpolator< T > 
-{	
+public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinearInterpolator< T >
+{
 	protected NLinearInterpolator1D( final NLinearInterpolator1D< T > interpolator )
 	{
 		super( interpolator );
 	}
-	
+
 	protected NLinearInterpolator1D( final RandomAccessible< T > randomAccessible, final T type )
 	{
 		super( randomAccessible, type );
@@ -62,7 +62,10 @@ public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinear
 	}
 
 	@Override
-	final public int numDimensions() { return 1; }
+	final public int numDimensions()
+	{
+		return 1;
+	}
 
 	@Override
 	protected void fillWeights()
@@ -71,7 +74,7 @@ public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinear
 		weights[ 0 ] = 1.0d - w0;
 		weights[ 1 ] = w0;
 	}
-	
+
 	@Override
 	public T get()
 	{
@@ -88,7 +91,7 @@ public class NLinearInterpolator1D< T extends NumericType< T > > extends NLinear
 
 		return accumulator;
 	}
-	
+
 	@Override
 	public NLinearInterpolator1D< T > copy()
 	{

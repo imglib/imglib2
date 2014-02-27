@@ -38,7 +38,7 @@ import net.imglib2.converter.AbstractConvertedCursor;
 
 /**
  * TODO
- *
+ * 
  */
 public class WriteConvertedCursor< A, B > extends AbstractConvertedCursor< A, B >
 {

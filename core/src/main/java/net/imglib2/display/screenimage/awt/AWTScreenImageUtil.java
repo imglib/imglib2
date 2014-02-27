@@ -78,81 +78,82 @@ public class AWTScreenImageUtil
 	 *            dimensions of the resulting {@link ArrayImgAWTScreenImage}
 	 * @return
 	 * 
-	 *  // HACK: raw-cast of container to ArrayImgAWTScreenImage needed for Sun Java 6 compiler
+	 *         // HACK: raw-cast of container to ArrayImgAWTScreenImage needed
+	 *         for Sun Java 6 compiler
 	 * 
 	 */
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
-	public static < T extends NativeType< T >> ArrayImgAWTScreenImage< T, ? > emptyScreenImage( T type, long[] dims )
+	public static < T extends NativeType< T >> ArrayImgAWTScreenImage< T, ? > emptyScreenImage( final T type, final long[] dims )
 	{
 
 		if ( BitType.class.isAssignableFrom( type.getClass() ) )
 		{
-			BitArray array = new BitArray( numElements( dims ) );
-			ArrayImgAWTScreenImage< BitType, BitArray > container = new BitAWTScreenImage( new BitType( array ), array, dims );
+			final BitArray array = new BitArray( numElements( dims ) );
+			final ArrayImgAWTScreenImage< BitType, BitArray > container = new BitAWTScreenImage( new BitType( array ), array, dims );
 			container.setLinkedType( new BitType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
 
 		if ( ByteType.class.isAssignableFrom( type.getClass() ) )
 		{
-			ByteArray array = new ByteArray( numElements( dims ) );
-			ArrayImgAWTScreenImage< ByteType, ByteArray > container = new ByteAWTScreenImage( new ByteType( array ), array, dims );
+			final ByteArray array = new ByteArray( numElements( dims ) );
+			final ArrayImgAWTScreenImage< ByteType, ByteArray > container = new ByteAWTScreenImage( new ByteType( array ), array, dims );
 			container.setLinkedType( new ByteType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
 
 		if ( UnsignedByteType.class.isAssignableFrom( type.getClass() ) )
 		{
-			ByteArray array = new ByteArray( numElements( dims ) );
-			ArrayImgAWTScreenImage< UnsignedByteType, ByteArray > container = new UnsignedByteAWTScreenImage( new UnsignedByteType( array ), array, dims );
+			final ByteArray array = new ByteArray( numElements( dims ) );
+			final ArrayImgAWTScreenImage< UnsignedByteType, ByteArray > container = new UnsignedByteAWTScreenImage( new UnsignedByteType( array ), array, dims );
 			container.setLinkedType( new UnsignedByteType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
 
 		if ( ShortType.class.isAssignableFrom( type.getClass() ) )
 		{
-			ShortArray array = new ShortArray( numElements( dims ) );
-			ArrayImgAWTScreenImage< ShortType, ShortArray > container = new ShortAWTScreenImage( new ShortType( array ), array, dims );
+			final ShortArray array = new ShortArray( numElements( dims ) );
+			final ArrayImgAWTScreenImage< ShortType, ShortArray > container = new ShortAWTScreenImage( new ShortType( array ), array, dims );
 			container.setLinkedType( new ShortType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
 
 		if ( UnsignedShortType.class.isAssignableFrom( type.getClass() ) )
 		{
-			ShortArray array = new ShortArray( numElements( dims ) );
-			ArrayImgAWTScreenImage< UnsignedShortType, ShortArray > container = new UnsignedShortAWTScreenImage( new UnsignedShortType( array ), array, dims );
+			final ShortArray array = new ShortArray( numElements( dims ) );
+			final ArrayImgAWTScreenImage< UnsignedShortType, ShortArray > container = new UnsignedShortAWTScreenImage( new UnsignedShortType( array ), array, dims );
 			container.setLinkedType( new UnsignedShortType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
 
 		if ( IntType.class.isAssignableFrom( type.getClass() ) )
 		{
-			IntArray array = new IntArray( numElements( dims ) );
-			ArrayImgAWTScreenImage< IntType, IntArray > container = new IntAWTScreenImage( new IntType( array ), array, dims );
+			final IntArray array = new IntArray( numElements( dims ) );
+			final ArrayImgAWTScreenImage< IntType, IntArray > container = new IntAWTScreenImage( new IntType( array ), array, dims );
 			container.setLinkedType( new IntType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
 
 		if ( UnsignedIntType.class.isAssignableFrom( type.getClass() ) )
 		{
-			IntArray array = new IntArray( numElements( dims ) );
-			ArrayImgAWTScreenImage< UnsignedIntType, IntArray > container = new UnsignedIntAWTScreenImage( new UnsignedIntType( array ), array, dims );
+			final IntArray array = new IntArray( numElements( dims ) );
+			final ArrayImgAWTScreenImage< UnsignedIntType, IntArray > container = new UnsignedIntAWTScreenImage( new UnsignedIntType( array ), array, dims );
 			container.setLinkedType( new UnsignedIntType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
 
 		if ( FloatType.class.isAssignableFrom( type.getClass() ) )
 		{
-			FloatArray array = new FloatArray( numElements( dims ) );
-			ArrayImgAWTScreenImage< FloatType, FloatArray > container = new FloatAWTScreenImage( new FloatType( array ), array, dims );
+			final FloatArray array = new FloatArray( numElements( dims ) );
+			final ArrayImgAWTScreenImage< FloatType, FloatArray > container = new FloatAWTScreenImage( new FloatType( array ), array, dims );
 			container.setLinkedType( new FloatType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
 
 		if ( DoubleType.class.isAssignableFrom( type.getClass() ) )
 		{
-			DoubleArray array = new DoubleArray( numElements( dims ) );
-			ArrayImgAWTScreenImage< DoubleType, DoubleArray > container = new DoubleAWTScreenImage( new DoubleType( array ), array, dims );
+			final DoubleArray array = new DoubleArray( numElements( dims ) );
+			final ArrayImgAWTScreenImage< DoubleType, DoubleArray > container = new DoubleAWTScreenImage( new DoubleType( array ), array, dims );
 			container.setLinkedType( new DoubleType( container ) );
 			return ( ArrayImgAWTScreenImage ) container;
 		}
@@ -161,7 +162,7 @@ public class AWTScreenImageUtil
 	}
 
 	// only the first two dimensions are considered
-	private static int numElements( long[] dims )
+	private static int numElements( final long[] dims )
 	{
 		return ( int ) ( dims[ 0 ] * dims[ 1 ] );
 	}

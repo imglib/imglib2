@@ -58,14 +58,14 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 
 	protected ArrayList< ValuePair< KDTreeNode< T >, Double > > resultPoints;
 
-	public RadiusNeighborSearchOnKDTree( KDTree< T > tree )
+	public RadiusNeighborSearchOnKDTree( final KDTree< T > tree )
 	{
 		this.tree = tree;
 		this.n = tree.numDimensions();
 		this.pos = new double[ n ];
 		this.resultPoints = new ArrayList< ValuePair< KDTreeNode< T >, Double > >();
 	}
-	
+
 	@Override
 	public void search( final RealLocalizable reference, final double radius, final boolean sortResults )
 	{
@@ -78,7 +78,7 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 			Collections.sort( resultPoints, new Comparator< ValuePair< KDTreeNode< T >, Double > >()
 			{
 				@Override
-				public int compare( ValuePair< KDTreeNode< T >, Double > o1, ValuePair< KDTreeNode< T >, Double > o2 )
+				public int compare( final ValuePair< KDTreeNode< T >, Double > o1, final ValuePair< KDTreeNode< T >, Double > o2 )
 				{
 					return Double.compare( o1.b, o2.b );
 				}
@@ -87,9 +87,12 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 	}
 
 	@Override
-	public int numDimensions() { return n; }
-	
-	protected void searchNode( KDTreeNode< T > current, final double squRadius )
+	public int numDimensions()
+	{
+		return n;
+	}
+
+	protected void searchNode( final KDTreeNode< T > current, final double squRadius )
 	{
 		// consider the current node
 		final double squDistance = current.squDistanceTo( pos );
@@ -120,25 +123,25 @@ public class RadiusNeighborSearchOnKDTree< T > implements RadiusNeighborSearch< 
 	}
 
 	@Override
-	public Sampler< T > getSampler( int i )
+	public Sampler< T > getSampler( final int i )
 	{
 		return resultPoints.get( i ).a;
 	}
 
 	@Override
-	public RealLocalizable getPosition( int i )
+	public RealLocalizable getPosition( final int i )
 	{
 		return resultPoints.get( i ).a;
 	}
 
 	@Override
-	public double getSquareDistance( int i )
+	public double getSquareDistance( final int i )
 	{
 		return resultPoints.get( i ).b;
 	}
 
 	@Override
-	public double getDistance( int i )
+	public double getDistance( final int i )
 	{
 		return Math.sqrt( resultPoints.get( i ).b );
 	}

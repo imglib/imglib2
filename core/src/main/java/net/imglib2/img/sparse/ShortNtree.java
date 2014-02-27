@@ -36,7 +36,7 @@ package net.imglib2.img.sparse;
 import net.imglib2.img.basictypeaccess.ShortAccess;
 
 /**
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class ShortNtree implements ShortAccess, NtreeAccess< Short, ShortNtree >

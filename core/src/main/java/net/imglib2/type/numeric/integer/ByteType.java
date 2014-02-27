@@ -39,29 +39,41 @@ import net.imglib2.img.basictypeaccess.ByteAccess;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ByteType extends GenericByteType<ByteType>
+public class ByteType extends GenericByteType< ByteType >
 {
 	// this is the constructor if you want it to read from an array
-	public ByteType( final NativeImg<?, ? extends ByteAccess> img ) { super( img ); }
+	public ByteType( final NativeImg< ?, ? extends ByteAccess > img )
+	{
+		super( img );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public ByteType( final byte value ) { super( value ); }
+	public ByteType( final byte value )
+	{
+		super( value );
+	}
 
 	// this is the constructor if you want to specify the dataAccess
-	public ByteType( final ByteAccess access ) { super( access ); }
+	public ByteType( final ByteAccess access )
+	{
+		super( access );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public ByteType() { super( (byte)0 ); }
+	public ByteType()
+	{
+		super( ( byte ) 0 );
+	}
 
 	@Override
-	public NativeImg<ByteType, ? extends ByteAccess> createSuitableNativeImg( final NativeImgFactory<ByteType> storageFactory, final long dim[] )
+	public NativeImg< ByteType, ? extends ByteAccess > createSuitableNativeImg( final NativeImgFactory< ByteType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<ByteType, ? extends ByteAccess> container = storageFactory.createByteInstance( dim, 1 );
+		final NativeImg< ByteType, ? extends ByteAccess > container = storageFactory.createByteInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final ByteType linkedType = new ByteType( container );
@@ -73,28 +85,66 @@ public class ByteType extends GenericByteType<ByteType>
 	}
 
 	@Override
-	public ByteType duplicateTypeOnSameNativeImg() { return new ByteType( img ); }
+	public ByteType duplicateTypeOnSameNativeImg()
+	{
+		return new ByteType( img );
+	}
 
-	public byte get() { return getValue(); }
-	public void set( final byte b ) { setValue( b ); }
+	public byte get()
+	{
+		return getValue();
+	}
 
-	@Override
-	public int getInteger(){ return get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ){ set( (byte)f ); }
-	@Override
-	public void setInteger( final long f ){ set( (byte)f ); }
-
-	@Override
-	public double getMaxValue() { return Byte.MAX_VALUE; }
-	@Override
-	public double getMinValue()  { return Byte.MIN_VALUE; }
+	public void set( final byte b )
+	{
+		setValue( b );
+	}
 
 	@Override
-	public ByteType createVariable(){ return new ByteType( (byte)0 ); }
+	public int getInteger()
+	{
+		return get();
+	}
 
 	@Override
-	public ByteType copy(){ return new ByteType( getValue() ); }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
+	@Override
+	public void setInteger( final int f )
+	{
+		set( ( byte ) f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( ( byte ) f );
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return Byte.MAX_VALUE;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return Byte.MIN_VALUE;
+	}
+
+	@Override
+	public ByteType createVariable()
+	{
+		return new ByteType( ( byte ) 0 );
+	}
+
+	@Override
+	public ByteType copy()
+	{
+		return new ByteType( getValue() );
+	}
 }

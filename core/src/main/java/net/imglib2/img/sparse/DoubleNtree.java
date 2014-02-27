@@ -37,7 +37,7 @@ import net.imglib2.img.basictypeaccess.DoubleAccess;
 
 /**
  * DoubleAccess based on a {@link Ntree}<Double>.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class DoubleNtree implements DoubleAccess, NtreeAccess< Double, DoubleNtree >

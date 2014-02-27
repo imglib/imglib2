@@ -48,14 +48,15 @@ import net.imglib2.RealRandomAccessible;
 final public class Interpolant< T, F extends EuclideanSpace > implements RealRandomAccessible< T >
 {
 	final protected F source;
+
 	final InterpolatorFactory< T, F > factory;
-	
+
 	public Interpolant( final F source, final InterpolatorFactory< T, F > factory )
 	{
 		this.source = source;
 		this.factory = factory;
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{

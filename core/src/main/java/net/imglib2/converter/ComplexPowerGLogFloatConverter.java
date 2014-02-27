@@ -33,7 +33,6 @@
 
 package net.imglib2.converter;
 
-import net.imglib2.converter.Converter;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
@@ -50,5 +49,5 @@ public class ComplexPowerGLogFloatConverter< R extends ComplexType< R > > implem
 	public void convert( final R input, final FloatType output )
 	{
 		output.set( Util.gLog( input.getPowerFloat(), 2 ) );
-	}	
+	}
 }

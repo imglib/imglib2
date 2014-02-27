@@ -48,91 +48,104 @@ import org.junit.Test;
 /**
  * @author Lee Kamentsky
  * 
- * Test cases exercising functionality provided
- * by AbstractIterableRegionOfInterest
- *
+ *         Test cases exercising functionality provided by
+ *         AbstractIterableRegionOfInterest
+ * 
  */
 public class AbstractIterableRegionOfInterestTest
 {
 	/**
-	 * Regression test of bug 434 - make sure that the interval
-	 * returned by getIterableIntervalOverROI does not extend
-	 * past the ROI.
+	 * Regression test of bug 434 - make sure that the interval returned by
+	 * getIterableIntervalOverROI does not extend past the ROI.
 	 */
 	@Test
-	public void testIntervalOfIteratorOverRandomAccessibleInterval() {
+	public void testIntervalOfIteratorOverRandomAccessibleInterval()
+	{
 		final int width = 27;
 		final int height = 16;
 		final int depth = 17;
-		final Img<IntType> img = new ArrayImgFactory<IntType>().create(new long [] {width, height, depth} , new IntType());
-		final double dimensions [][][] = {
-				{ { 1.0, 2.0, 3.0 }, {28.5, 6.0, 7.0 } },
-				{ { 1.0, 2.0, 3.0 }, {5.0, 17.5, 7.0 } },
-				{ { 1.0, 2.0, 3.0 }, {5.0,  6.0, 18.5 } },
-				{ { -1.0, 2.0, 3.0 }, {5.0, 6.0, 7.0 } },
-				{ { 1.0, -2.0, 3.0 }, {5.0, 6.0, 7.0 } },
-				{ { 1.0, 2.0, -3.0 }, {5.0, 6.0, 7.0 } }};
+		final Img< IntType > img = new ArrayImgFactory< IntType >().create( new long[] { width, height, depth }, new IntType() );
+		final double dimensions[][][] = {
+				{ { 1.0, 2.0, 3.0 }, { 28.5, 6.0, 7.0 } },
+				{ { 1.0, 2.0, 3.0 }, { 5.0, 17.5, 7.0 } },
+				{ { 1.0, 2.0, 3.0 }, { 5.0, 6.0, 18.5 } },
+				{ { -1.0, 2.0, 3.0 }, { 5.0, 6.0, 7.0 } },
+				{ { 1.0, -2.0, 3.0 }, { 5.0, 6.0, 7.0 } },
+				{ { 1.0, 2.0, -3.0 }, { 5.0, 6.0, 7.0 } } };
 
-		for (final double [][] dd: dimensions) {
-			final RectangleRegionOfInterest r = new RectangleRegionOfInterest(dd[0], dd[1]);
-			final IterableInterval<IntType> ii = r.getIterableIntervalOverROI(img);
-			for ( int i = 0; i < ii.numDimensions(); i++ ) {
-				assertEquals(Math.max( r.min( i ), img.min(i) ), ii.min( i ));
-				assertEquals(Math.min( r.max( i ), img.max(i) ), ii.max( i ));
-				assertEquals(Math.max( r.realMin( i ), img.realMin(i) ), ii.realMin( i ), 0);
-				assertEquals(Math.min( r.realMax( i ), img.realMax(i) ), ii.realMax( i ), 0);
+		for ( final double[][] dd : dimensions )
+		{
+			final RectangleRegionOfInterest r = new RectangleRegionOfInterest( dd[ 0 ], dd[ 1 ] );
+			final IterableInterval< IntType > ii = r.getIterableIntervalOverROI( img );
+			for ( int i = 0; i < ii.numDimensions(); i++ )
+			{
+				assertEquals( Math.max( r.min( i ), img.min( i ) ), ii.min( i ) );
+				assertEquals( Math.min( r.max( i ), img.max( i ) ), ii.max( i ) );
+				assertEquals( Math.max( r.realMin( i ), img.realMin( i ) ), ii.realMin( i ), 0 );
+				assertEquals( Math.min( r.realMax( i ), img.realMax( i ) ), ii.realMax( i ), 0 );
 			}
 		}
 	}
+
 	/**
 	 * Regression test of bug 434 - make sure that the cursor from
-	 * getIterableIntervalOverROI().cursor() iterates over the pixels
-	 * within a RandomAccessibleInterval that is not entirely within the ROI.
+	 * getIterableIntervalOverROI().cursor() iterates over the pixels within a
+	 * RandomAccessibleInterval that is not entirely within the ROI.
 	 * 
 	 * Prior to fix, the cursor threw an ArrayIndexOutOfBoundsException.
 	 */
 	@Test
-	public void testCursorOverRandomAccessibleInterval() {
+	public void testCursorOverRandomAccessibleInterval()
+	{
 		final int width = 27;
 		final int height = 16;
 		final int depth = 17;
-		final Img<IntType> img = new ArrayImgFactory<IntType>().create(new long [] {width, height, depth} , new IntType());
-		final double dimensions [][][] = {
-				{ { 1.0, 2.0, 3.0 }, {28.5, 6.0, 7.0 } },
-				{ { 1.0, 2.0, 3.0 }, {5.0, 17.5, 7.0 } },
-				{ { 1.0, 2.0, 3.0 }, {5.0,  6.0, 18.5 } },
-				{ { -1.0, 2.0, 3.0 }, {5.0, 6.0, 7.0 } },
-				{ { 1.0, -2.0, 3.0 }, {5.0, 6.0, 7.0 } },
-				{ { 1.0, 2.0, -3.0 }, {5.0, 6.0, 7.0 } }};
+		final Img< IntType > img = new ArrayImgFactory< IntType >().create( new long[] { width, height, depth }, new IntType() );
+		final double dimensions[][][] = {
+				{ { 1.0, 2.0, 3.0 }, { 28.5, 6.0, 7.0 } },
+				{ { 1.0, 2.0, 3.0 }, { 5.0, 17.5, 7.0 } },
+				{ { 1.0, 2.0, 3.0 }, { 5.0, 6.0, 18.5 } },
+				{ { -1.0, 2.0, 3.0 }, { 5.0, 6.0, 7.0 } },
+				{ { 1.0, -2.0, 3.0 }, { 5.0, 6.0, 7.0 } },
+				{ { 1.0, 2.0, -3.0 }, { 5.0, 6.0, 7.0 } } };
 
-		final int [] position = new int[img.numDimensions()];
-		for (final double [][] dd: dimensions) {
-			final RectangleRegionOfInterest r = new RectangleRegionOfInterest(dd[0], dd[1]);
+		final int[] position = new int[ img.numDimensions() ];
+		for ( final double[][] dd : dimensions )
+		{
+			final RectangleRegionOfInterest r = new RectangleRegionOfInterest( dd[ 0 ], dd[ 1 ] );
 //			IterableInterval<IntType> ii = r.getIterableIntervalOverROI(img);
-			final boolean mask [][][] = new boolean[width][height][depth];
-			final RealRandomAccess<BitType> ra = r.realRandomAccess();
-			for (int i=0; i<width; i++) {
-				ra.setPosition( i, 0);
-				for (int j=0; j<height; j++) {
-					ra.setPosition(j, 1);
-					for (int k=0; k<depth; k++) {
-						ra.setPosition(k, 2);
-						if (ra.get().get()) mask[i][j][k] = true;
+			final boolean mask[][][] = new boolean[ width ][ height ][ depth ];
+			final RealRandomAccess< BitType > ra = r.realRandomAccess();
+			for ( int i = 0; i < width; i++ )
+			{
+				ra.setPosition( i, 0 );
+				for ( int j = 0; j < height; j++ )
+				{
+					ra.setPosition( j, 1 );
+					for ( int k = 0; k < depth; k++ )
+					{
+						ra.setPosition( k, 2 );
+						if ( ra.get().get() )
+							mask[ i ][ j ][ k ] = true;
 					}
 				}
 			}
-			
-			final Cursor<IntType> c = r.getIterableIntervalOverROI(img).localizingCursor();
-			while(c.hasNext()) {
+
+			final Cursor< IntType > c = r.getIterableIntervalOverROI( img ).localizingCursor();
+			while ( c.hasNext() )
+			{
 				c.next();
 				c.localize( position );
-				assertTrue(mask[position[0]][position[1]][position[2]]);
-				mask[position[0]][position[1]][position[2]] = false;
+				assertTrue( mask[ position[ 0 ] ][ position[ 1 ] ][ position[ 2 ] ] );
+				mask[ position[ 0 ] ][ position[ 1 ] ][ position[ 2 ] ] = false;
 			}
-			for (int i=0; i<width; i++) {
-				for (int j=0; j<height; j++) {
-					for (int k=0; k<depth; k++) {
-						assertFalse(mask[i][j][k]);
+			for ( int i = 0; i < width; i++ )
+			{
+				for ( int j = 0; j < height; j++ )
+				{
+					for ( int k = 0; k < depth; k++ )
+					{
+						assertFalse( mask[ i ][ j ][ k ] );
 					}
 				}
 			}

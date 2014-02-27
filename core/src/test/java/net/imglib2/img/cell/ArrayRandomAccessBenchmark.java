@@ -47,7 +47,7 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * TODO
- *
+ * 
  */
 public class ArrayRandomAccessBenchmark
 {
@@ -60,6 +60,7 @@ public class ArrayRandomAccessBenchmark
 	long intDataSum;
 
 	ArrayImg< IntType, ? > intImg;
+
 	ArrayImg< IntType, ? > intImgCopy;
 
 	public void createSourceData()
@@ -72,7 +73,7 @@ public class ArrayRandomAccessBenchmark
 
 		intData = new int[ numValues ];
 		intDataSum = 0;
-		Random random = new Random( 0 );
+		final Random random = new Random( 0 );
 		for ( int i = 0; i < numValues; ++i )
 		{
 			intData[ i ] = random.nextInt();
@@ -83,17 +84,18 @@ public class ArrayRandomAccessBenchmark
 	}
 
 	/**
-	 * Fill intImg (a CellContainer with 40x40x40 cells) with data using flat array iteration order.
+	 * Fill intImg (a CellContainer with 40x40x40 cells) with data using flat
+	 * array iteration order.
 	 */
 	public void fillImage()
 	{
-		int[] pos = new int[ dimensions.length ];
-		RandomAccess< IntType > a = intImg.randomAccess();
+		final int[] pos = new int[ dimensions.length ];
+		final RandomAccess< IntType > a = intImg.randomAccess();
 
-		int[] idim = new int[ dimensions.length ];
+		final int[] idim = new int[ dimensions.length ];
 		for ( int d = 0; d < dimensions.length; ++d )
 			idim[ d ] = ( int ) dimensions[ d ];
-		
+
 		for ( int i = 0; i < numValues; ++i )
 		{
 			IntervalIndexer.indexToPosition( i, idim, pos );
@@ -102,13 +104,13 @@ public class ArrayRandomAccessBenchmark
 		}
 	}
 
-	
-	public void copyWithSourceIteration(Img< IntType > srcImg, Img< IntType > dstImg)
+	public void copyWithSourceIteration( final Img< IntType > srcImg, final Img< IntType > dstImg )
 	{
-		int[] pos = new int[ dimensions.length ];
-		Cursor< IntType > src = srcImg.localizingCursor();
-		RandomAccess< IntType > dst = dstImg.randomAccess();
-		while( src.hasNext() ) {
+		final int[] pos = new int[ dimensions.length ];
+		final Cursor< IntType > src = srcImg.localizingCursor();
+		final RandomAccess< IntType > dst = dstImg.randomAccess();
+		while ( src.hasNext() )
+		{
 			src.fwd();
 			src.localize( pos );
 			dst.setPosition( pos );
@@ -116,25 +118,26 @@ public class ArrayRandomAccessBenchmark
 		}
 	}
 
-	public void copyWithIterationBoth(Img< IntType > srcImg, Img< IntType > dstImg)
+	public void copyWithIterationBoth( final Img< IntType > srcImg, final Img< IntType > dstImg )
 	{
-		Cursor< IntType > src = srcImg.cursor();
-		Cursor< IntType > dst = dstImg.cursor();
-		while( src.hasNext() ) {
+		final Cursor< IntType > src = srcImg.cursor();
+		final Cursor< IntType > dst = dstImg.cursor();
+		while ( src.hasNext() )
+		{
 			dst.next().set( src.next().get() );
 		}
 	}
 
-	public static Long median( ArrayList<Long> values )
+	public static Long median( final ArrayList< Long > values )
 	{
-		Collections.sort(values);
+		Collections.sort( values );
 
-		if (values.size() % 2 == 1)
-			return values.get((values.size() + 1) / 2 - 1);
-		long lower = values.get(values.size() / 2 - 1);
-		long upper = values.get(values.size() / 2);
+		if ( values.size() % 2 == 1 )
+			return values.get( ( values.size() + 1 ) / 2 - 1 );
+		final long lower = values.get( values.size() / 2 - 1 );
+		final long upper = values.get( values.size() / 2 );
 
-		return (lower + upper) / 2;
+		return ( lower + upper ) / 2;
 	}
 
 	public interface Benchmark
@@ -142,15 +145,15 @@ public class ArrayRandomAccessBenchmark
 		public void run();
 	}
 
-	public static void benchmark( Benchmark b )
+	public static void benchmark( final Benchmark b )
 	{
-		ArrayList<Long> times = new ArrayList<Long>( 100 );
+		final ArrayList< Long > times = new ArrayList< Long >( 100 );
 		final int numRuns = 20;
 		for ( int i = 0; i < numRuns; ++i )
 		{
-			long startTime = System.currentTimeMillis();
+			final long startTime = System.currentTimeMillis();
 			b.run();
-			long endTime = System.currentTimeMillis();
+			final long endTime = System.currentTimeMillis();
 			times.add( endTime - startTime );
 		}
 		for ( int i = 0; i < numRuns; ++i )
@@ -162,7 +165,7 @@ public class ArrayRandomAccessBenchmark
 		System.out.println();
 	}
 
-	public static void main( String[] args )
+	public static void main( final String[] args )
 	{
 		final ArrayRandomAccessBenchmark randomAccessBenchmark = new ArrayRandomAccessBenchmark();
 		randomAccessBenchmark.createSourceData();
@@ -177,7 +180,7 @@ public class ArrayRandomAccessBenchmark
 			}
 		} );
 		randomAccessBenchmark.intData = null;
-		
+
 		randomAccessBenchmark.intImgCopy = new ArrayImgFactory< IntType >().create( randomAccessBenchmark.dimensions, new IntType() );
 		System.out.println( "benchmarking copy to array" );
 		benchmark( new Benchmark()

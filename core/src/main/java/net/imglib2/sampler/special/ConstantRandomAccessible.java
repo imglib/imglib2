@@ -39,51 +39,66 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 
 /**
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Lee Kamentsky
  */
-public class ConstantRandomAccessible<T> implements RandomAccessible<T> {
+public class ConstantRandomAccessible< T > implements RandomAccessible< T >
+{
 
-	protected class ConstantRandomAccess extends Point implements RandomAccess<T> {
-		public ConstantRandomAccess() {
-			super(nDimensions);
+	protected class ConstantRandomAccess extends Point implements RandomAccess< T >
+	{
+		public ConstantRandomAccess()
+		{
+			super( nDimensions );
 		}
 
 		@Override
-		public T get() {
+		public T get()
+		{
 			return constant;
 		}
 
 		@Override
-		public ConstantRandomAccess copy() {
+		public ConstantRandomAccess copy()
+		{
 			return new ConstantRandomAccess();
 		}
 
 		@Override
-		public ConstantRandomAccess copyRandomAccess() {
+		public ConstantRandomAccess copyRandomAccess()
+		{
 			return new ConstantRandomAccess();
 		}
 
 	}
+
 	private final int nDimensions;
+
 	private final T constant;
-	public ConstantRandomAccessible(final T constant, final int nDimensions) {
+
+	public ConstantRandomAccessible( final T constant, final int nDimensions )
+	{
 		this.nDimensions = nDimensions;
 		this.constant = constant;
 	}
+
 	@Override
-	public int numDimensions() {
+	public int numDimensions()
+	{
 		return nDimensions;
 	}
 
 	@Override
-	public RandomAccess<T> randomAccess() {
+	public RandomAccess< T > randomAccess()
+	{
 		return new ConstantRandomAccess();
 	}
+
 	@Override
-	public RandomAccess<T> randomAccess(final Interval interval) {
+	public RandomAccess< T > randomAccess( final Interval interval )
+	{
 		return new ConstantRandomAccess();
 	}
 }

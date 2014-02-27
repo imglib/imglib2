@@ -35,10 +35,11 @@ package net.imglib2.type.numeric;
 
 /**
  * TODO
- *
+ * 
  */
-public interface ExponentialMathType< T extends ExponentialMathType<T> > extends RealType<T>
+public interface ExponentialMathType< T extends ExponentialMathType< T > > extends RealType< T >
 {
 	public void exp();
+
 	public void round();
 }

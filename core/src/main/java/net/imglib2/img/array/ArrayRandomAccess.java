@@ -40,9 +40,9 @@ import net.imglib2.type.NativeType;
 
 /**
  * {@link RandomAccess} on an {@link ArrayImg}.
- *
+ * 
  * @param <T>
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -51,6 +51,7 @@ import net.imglib2.type.NativeType;
 public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLocalizableInt implements RandomAccess< T >
 {
 	protected final T type;
+
 	final ArrayImg< T, ? > img;
 
 	protected ArrayRandomAccess( final ArrayRandomAccess< T > randomAccess )
@@ -115,7 +116,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 	@Override
 	public void move( final long distance, final int d )
 	{
-		type.incIndex( img.steps[ d ] * ( int )distance );
+		type.incIndex( img.steps[ d ] * ( int ) distance );
 		position[ d ] += distance;
 	}
 
@@ -184,7 +185,7 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 		int index = 0;
 		for ( int d = 0; d < n; ++d )
 		{
-			final int p = ( int )pos[ d ];
+			final int p = ( int ) pos[ d ];
 			position[ d ] = p;
 			index += p * img.steps[ d ];
 		}
@@ -239,8 +240,9 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 
 	/**
 	 * Moves n steps in dimension 0
-	 *
-	 * @param distance - how many steps (positive or negative)
+	 * 
+	 * @param distance
+	 *            - how many steps (positive or negative)
 	 */
 	public void moveDim0( final int distance )
 	{
@@ -250,21 +252,24 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 
 	/**
 	 * Moves n steps in dimension 0
-	 *
-	 * @param distance - how many steps (positive or negative)
+	 * 
+	 * @param distance
+	 *            - how many steps (positive or negative)
 	 */
 	public void move( final long distance )
 	{
-		type.incIndex( (int)distance );
+		type.incIndex( ( int ) distance );
 		position[ 0 ] += distance;
 	}
 
 	/**
 	 * Sets the {@link ArrayRandomAccess} to a certain position in dimension 0
-	 *
-	 * Careful: it assumes that it is only a one-dimensional image, all other dimensions would be set to zero (this saves one subtraction)
-	 *
-	 * @param pos - the new position
+	 * 
+	 * Careful: it assumes that it is only a one-dimensional image, all other
+	 * dimensions would be set to zero (this saves one subtraction)
+	 * 
+	 * @param pos
+	 *            - the new position
 	 */
 	public void setPositionDim0( final int pos )
 	{
@@ -274,14 +279,16 @@ public class ArrayRandomAccess< T extends NativeType< T > > extends AbstractLoca
 
 	/**
 	 * Sets the {@link ArrayRandomAccess} to a certain position in dimension 0
-	 *
-	 * Careful: it assumes that it is only a one-dimensional image, all other dimensions would be set to zero (this saves one subtraction)
-	 *
-	 * @param pos - the new position
+	 * 
+	 * Careful: it assumes that it is only a one-dimensional image, all other
+	 * dimensions would be set to zero (this saves one subtraction)
+	 * 
+	 * @param pos
+	 *            - the new position
 	 */
 	public void setPositionDim0( final long pos )
 	{
-		type.updateIndex( (int)pos );
-		position[ 0 ] = (int)pos;
+		type.updateIndex( ( int ) pos );
+		position[ 0 ] = ( int ) pos;
 	}
 }

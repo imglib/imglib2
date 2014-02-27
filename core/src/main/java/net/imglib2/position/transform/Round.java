@@ -39,11 +39,11 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 
 /**
- * A {@link RealPositionable} that drives a {@link Positionable} to its
- * round discrete coordinates:
- *
+ * A {@link RealPositionable} that drives a {@link Positionable} to its round
+ * discrete coordinates:
+ * 
  * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -66,12 +66,12 @@ public class Round< LocalizablePositionable extends Localizable & Positionable >
 
 	public static final long round( final double r )
 	{
-		return r < 0 ? ( long )( r - 0.5 ) : ( long )( r + 0.5 );
+		return r < 0 ? ( long ) ( r - 0.5 ) : ( long ) ( r + 0.5 );
 	}
 
 	public static final long round( final float r )
 	{
-		return r < 0 ? ( long )( r - 0.5f ) : ( long )( r + 0.5f );
+		return r < 0 ? ( long ) ( r - 0.5f ) : ( long ) ( r + 0.5f );
 	}
 
 	public static final void round( final double[] r, final long[] f )

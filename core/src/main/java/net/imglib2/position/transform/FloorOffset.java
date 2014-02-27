@@ -39,13 +39,12 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 
 /**
- * A {@link RealPositionable} that drives a {@link Positionable} to its
- * floor discrete coordinates plus a discrete offset vector.  For practical
- * useage, the floor operation is defined as the integer smaller than the real
- * value:
- *
+ * A {@link RealPositionable} that drives a {@link Positionable} to its floor
+ * discrete coordinates plus a discrete offset vector. For practical useage, the
+ * floor operation is defined as the integer smaller than the real value:
+ * 
  * f = r < 0 ? (long)r - 1 : (long)r
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -106,12 +105,12 @@ public class FloorOffset< LocalizablePositionable extends Localizable & Position
 
 	final static protected long f( final double r, final long off )
 	{
-		return r < 0 ? ( long )r + off - 1 : ( long )r + off;
+		return r < 0 ? ( long ) r + off - 1 : ( long ) r + off;
 	}
 
 	final static protected long f( final float r, final long off )
 	{
-		return r < 0 ? ( long )r + off - 1 : ( long )r + off;
+		return r < 0 ? ( long ) r + off - 1 : ( long ) r + off;
 	}
 
 	protected void f( final double[] r, final long[] f )

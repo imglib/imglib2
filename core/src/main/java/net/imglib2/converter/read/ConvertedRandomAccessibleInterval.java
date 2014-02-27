@@ -41,11 +41,12 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- *
+ * 
  */
-public class ConvertedRandomAccessibleInterval< A, B extends Type< B > > extends AbstractWrappedInterval< RandomAccessibleInterval< A > >  implements RandomAccessibleInterval< B >
+public class ConvertedRandomAccessibleInterval< A, B extends Type< B > > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< B >
 {
 	final protected Converter< A, B > converter;
+
 	final protected B converted;
 
 	public ConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source, final Converter< A, B > converter, final B b )

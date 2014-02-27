@@ -35,20 +35,22 @@ package net.imglib2;
 
 /**
  * Implementation of the {@link RealInterval} interface.
- *
- *
+ * 
+ * 
  * @author Stephan Preibisch
  */
-public class AbstractRealInterval extends AbstractEuclideanSpace  implements RealInterval
+public class AbstractRealInterval extends AbstractEuclideanSpace implements RealInterval
 {
 	final protected double[] min;
+
 	final protected double[] max;
 
 	/**
 	 * Creates an <em>n</em>-dimensional {@link AbstractInterval} with min and
 	 * max = 0<sup>n</sup>.
-	 *
-	 * @param n number of dimensions
+	 * 
+	 * @param n
+	 *            number of dimensions
 	 */
 	public AbstractRealInterval( final int n )
 	{
@@ -57,10 +59,10 @@ public class AbstractRealInterval extends AbstractEuclideanSpace  implements Rea
 		this.max = new double[ n ];
 	}
 
-
 	/**
-	 * Creates a new {@link AbstractRealInterval} using an existing {@link RealInterval}
-	 *
+	 * Creates a new {@link AbstractRealInterval} using an existing
+	 * {@link RealInterval}
+	 * 
 	 * @param interval
 	 */
 	public AbstractRealInterval( final RealInterval interval )
@@ -72,7 +74,7 @@ public class AbstractRealInterval extends AbstractEuclideanSpace  implements Rea
 
 	/**
 	 * Creates a new {@link AbstractRealInterval} from min and max coordinates
-	 *
+	 * 
 	 * @param min
 	 * @param max
 	 */
@@ -84,7 +86,10 @@ public class AbstractRealInterval extends AbstractEuclideanSpace  implements Rea
 	}
 
 	@Override
-	public double realMin( final int d) { return min[ d ]; }
+	public double realMin( final int d )
+	{
+		return min[ d ];
+	}
 
 	@Override
 	public void realMin( final double[] realMin )
@@ -101,7 +106,10 @@ public class AbstractRealInterval extends AbstractEuclideanSpace  implements Rea
 	}
 
 	@Override
-	public double realMax( final int d ) { return max[ d ]; }
+	public double realMax( final int d )
+	{
+		return max[ d ];
+	}
 
 	@Override
 	public void realMax( final double[] realMax )

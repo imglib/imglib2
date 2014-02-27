@@ -45,11 +45,12 @@ import net.imglib2.type.logic.BitType;
 /**
  * A composite region of interest contains all points in its member regions of
  * interest
- *
- * <b>Note</b>: please use the class {@link GeneralPathRegionOfInterest} instead.
- *
+ * 
+ * <b>Note</b>: please use the class {@link GeneralPathRegionOfInterest}
+ * instead.
+ * 
  * @deprecated
- *
+ * 
  * @author Stephan Saalfeld
  * @author Lee Kamentsky
  */
@@ -72,7 +73,7 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 	 * 
 	 * @param nDimensions
 	 */
-	public CompositeRegionOfInterest( int nDimensions )
+	public CompositeRegionOfInterest( final int nDimensions )
 	{
 		super( nDimensions );
 	}
@@ -82,17 +83,17 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 	 * 
 	 * @param roi
 	 */
-	public CompositeRegionOfInterest( RegionOfInterest roi )
+	public CompositeRegionOfInterest( final RegionOfInterest roi )
 	{
 		super( roi.numDimensions() );
 		rois.add( roi );
 		operations.put( roi, Operation.OR );
 	}
 
-	public CompositeRegionOfInterest( Collection< RegionOfInterest > rois )
+	public CompositeRegionOfInterest( final Collection< RegionOfInterest > rois )
 	{
 		super( rois.size() == 0 ? 0 : rois.iterator().next().numDimensions() );
-		for ( RegionOfInterest roi : rois )
+		for ( final RegionOfInterest roi : rois )
 		{
 			this.rois.add( roi );
 			operations.put( roi, Operation.OR );
@@ -105,7 +106,7 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 	 * 
 	 * @param roi
 	 */
-	public void or( RegionOfInterest roi )
+	public void or( final RegionOfInterest roi )
 	{
 		rois.add( roi );
 		operations.put( roi, Operation.OR );
@@ -116,7 +117,7 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 	 * 
 	 * @param roi
 	 */
-	public void remove( RegionOfInterest roi )
+	public void remove( final RegionOfInterest roi )
 	{
 		rois.remove( roi );
 		operations.remove( roi );
@@ -127,7 +128,7 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 	 * 
 	 * @param roi
 	 */
-	public void and( RegionOfInterest roi )
+	public void and( final RegionOfInterest roi )
 	{
 		rois.add( roi );
 		operations.put( roi, Operation.AND );
@@ -138,7 +139,7 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 	 * 
 	 * @param roi
 	 */
-	public void xor( RegionOfInterest roi )
+	public void xor( final RegionOfInterest roi )
 	{
 		rois.add( roi );
 		operations.put( roi, Operation.XOR );
@@ -149,30 +150,31 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 	 * 
 	 * @param roi
 	 */
-	public void not( RegionOfInterest roi )
+	public void not( final RegionOfInterest roi )
 	{
 		rois.add( roi );
 		operations.put( roi, Operation.NOT );
 	}
 
 	@Override
-	public void move(double displacement, int d) {
-		for (RegionOfInterest roi : rois)
-			roi.move(displacement, d);
+	public void move( final double displacement, final int d )
+	{
+		for ( final RegionOfInterest roi : rois )
+			roi.move( displacement, d );
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see net.imglib2.roi.AbstractRegionOfInterest#isMember(double[])
 	 */
 	@Override
-	public boolean contains( double[] position )
+	public boolean contains( final double[] position )
 	{
 		boolean result = false;
-		for ( RegionOfInterest roi : rois )
+		for ( final RegionOfInterest roi : rois )
 		{
-			Operation operation = operations.get( roi );
+			final Operation operation = operations.get( roi );
 			switch ( operation )
 			{
 			case AND:
@@ -201,7 +203,7 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 		return result;
 	}
 
-	private boolean isMember( RegionOfInterest roi, double[] position )
+	private boolean isMember( final RegionOfInterest roi, final double[] position )
 	{
 		if ( randomAccess.get() == null )
 		{
@@ -223,11 +225,11 @@ public class CompositeRegionOfInterest extends AbstractRegionOfInterest
 	 * double[])
 	 */
 	@Override
-	protected void getRealExtrema( double[] minima, double[] maxima )
+	protected void getRealExtrema( final double[] minima, final double[] maxima )
 	{
 		Arrays.fill( minima, Double.MAX_VALUE );
 		Arrays.fill( maxima, -Double.MAX_VALUE );
-		for ( RegionOfInterest roi : rois )
+		for ( final RegionOfInterest roi : rois )
 		{
 			for ( int i = 0; i < numDimensions(); i++ )
 			{

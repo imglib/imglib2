@@ -46,14 +46,15 @@ package net.imglib2;
  * 
  * @author Curtis Rueden
  */
-public interface AnnotatedSpace<A extends Axis> extends EuclideanSpace {
+public interface AnnotatedSpace< A extends Axis > extends EuclideanSpace
+{
 
 	/** Gets the axis associated with the given dimension of the space. */
-	A axis(int d);
+	A axis( int d );
 
 	/** Copies the space's axes into the given array. */
-	void axes(A[] axes);
+	void axes( A[] axes );
 
 	/** Sets the dimensional axis associated with the given dimension. */
-	void setAxis(A axis, int d);
+	void setAxis( A axis, int d );
 }

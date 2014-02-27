@@ -37,9 +37,10 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.type.NativeType;
 
 /**
- * Abstract superclass for {@link NativeImgFactory> implementations using {
+ * Abstract superclass for {@link NativeImgFactory> implementations using
+ * 
  * @link CellImg}s.
- *
+ * 
  * @author ImgLib2 developers
  * @author Mark Hiner hinerm at gmail.com
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -107,7 +108,9 @@ public abstract class AbstractCellImgFactory< T extends NativeType< T > > extend
 
 		if ( cellDimensions.length != dimensions.length )
 		{
-			// System.err.println( "CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality." );
+			// System.err.println(
+			// "CellContainerFactory(): dimensionality of image is unequal to dimensionality of cells, adjusting cell dimensionality."
+			// );
 			final int[] cellDimensionsNew = new int[ dimensions.length ];
 
 			for ( int i = 0; i < dimensions.length; i++ )

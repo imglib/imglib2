@@ -63,8 +63,8 @@ package net.imglib2;
  * imglib Cursors, in general.
  * </p>
  * 
- *         <saalfeld@mpi-cbg.de>
- *
+ * <saalfeld@mpi-cbg.de>
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -76,7 +76,7 @@ public interface RealCursor< T > extends RealLocalizable, Sampler< T >, Iterator
 	// copy(), copyCursor(), copyRandomAccess() and copyRealRandomAccess().
 	// Unfortunately, due to a Javac bug with multiple interface inheritance,
 	// we must avoid doing so for now. For details, see:
-	//     http://bugs.sun.com/view_bug.do?bug_id=6656332
+	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
 	public RealCursor< T > copyCursor();
 //@Override

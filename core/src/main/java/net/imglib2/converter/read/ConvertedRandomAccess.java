@@ -40,11 +40,12 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- *
+ * 
  */
 final public class ConvertedRandomAccess< A, B extends Type< B > > extends AbstractConvertedRandomAccess< A, B >
 {
 	final protected Converter< A, B > converter;
+
 	final protected B converted;
 
 	public ConvertedRandomAccess( final RandomAccess< A > source, final Converter< A, B > converter, final B b )

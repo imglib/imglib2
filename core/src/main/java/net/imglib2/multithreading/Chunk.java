@@ -35,20 +35,28 @@ package net.imglib2.multithreading;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
 public class Chunk
 {
-	public Chunk( final long startPosition, long loopSize )
+	public Chunk( final long startPosition, final long loopSize )
 	{
 		this.startPosition = startPosition;
 		this.loopSize = loopSize;
 	}
-	
-	public long getStartPosition() { return startPosition; }
-	public long getLoopSize() { return loopSize; }
-	
+
+	public long getStartPosition()
+	{
+		return startPosition;
+	}
+
+	public long getLoopSize()
+	{
+		return loopSize;
+	}
+
 	protected long startPosition;
+
 	protected long loopSize;
 }

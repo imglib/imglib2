@@ -40,7 +40,8 @@ import net.imglib2.util.Util;
 
 /**
  * 
- * Adds a exponential windowing to the mirrored content outside the Interval boundaries
+ * Adds a exponential windowing to the mirrored content outside the Interval
+ * boundaries
  * 
  * @param <T>
  * @author Stephan Preibisch
@@ -49,13 +50,16 @@ import net.imglib2.util.Util;
 public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends OutOfBoundsMirrorSingleBoundary< T >
 {
 	final T type;
+
 	final float[][] weights;
-	
+
 	final protected long[] max;
+
 	final float exponent;
+
 	final int[] fadeOutDistance;
-	
-	public OutOfBoundsMirrorExpWindowing( final OutOfBoundsMirrorExpWindowing<T> outOfBounds )
+
+	public OutOfBoundsMirrorExpWindowing( final OutOfBoundsMirrorExpWindowing< T > outOfBounds )
 	{
 		super( outOfBounds );
 
@@ -63,57 +67,60 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 		this.fadeOutDistance = outOfBounds.fadeOutDistance;
 		this.exponent = outOfBounds.exponent;
 		this.max = outOfBounds.max.clone();
-		
+
 		// copy lookup table for the weights
 		weights = outOfBounds.weights.clone();
 	}
-	
+
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsMirrorExpWindowing( final F f, final int[] fadeOutDistance, final float exponent )
 	{
 		super( f );
-		
-		/* Sun javac fails to infer return types, so make it explicit, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=98379 */
+
+		/*
+		 * Sun javac fails to infer return types, so make it explicit, see
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=98379
+		 */
 		this.type = Util.< T, F >getTypeFromInterval( f ).createVariable();
 		this.fadeOutDistance = fadeOutDistance;
 		this.exponent = exponent;
 		this.max = new long[ n ];
 		f.max( max );
-				
+
 		// create lookup table for the weights
 		weights = preComputeWeights( n, fadeOutDistance, exponent );
 	}
-	
+
 	final protected static float[][] preComputeWeights( final int n, final int[] fadeOutDistance, final float exponent )
 	{
 		// create lookup table for the weights
 		final float[][] weights = new float[ n ][];
-		
+
 		for ( int d = 0; d < n; ++d )
 			weights[ d ] = new float[ Math.max( 1, fadeOutDistance[ d ] ) ];
-				
+
 		for ( int d = 0; d < n; ++d )
 		{
 			final int maxDistance = weights[ d ].length;
-			
+
 			if ( maxDistance > 1 )
 			{
 				for ( int pos = 0; pos < maxDistance; ++pos )
 				{
-					final float relPos = pos / (float)( maxDistance - 1 );
-	
+					final float relPos = pos / ( float ) ( maxDistance - 1 );
+
 					// if exponent equals one means linear function
 					if ( Util.isApproxEqual( exponent, 1f, 0.0001f ) )
 						weights[ d ][ pos ] = 1 - relPos;
 					else
-						weights[ d ][ pos ] = (float)( 1 - ( 1 / Math.pow( exponent, 1 - relPos ) ) ) * ( 1 + 1/(exponent-1) );
+						weights[ d ][ pos ] = ( float ) ( 1 - ( 1 / Math.pow( exponent, 1 - relPos ) ) ) * ( 1 + 1 / ( exponent - 1 ) );
 				}
 			}
 			else
 			{
 				weights[ d ][ 0 ] = 0;
 			}
-		}	
-		
+		}
+
 		return weights;
 	}
 
@@ -128,7 +135,7 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 		}
 		return outOfBoundsRandomAccess.get();
 	}
-	
+
 	final protected float getWeight( final long[] zeroMinPosition )
 	{
 		float weight = 1;
@@ -153,7 +160,7 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 
 		return weight;
 	}
-	
+
 	@Override
 	public OutOfBoundsMirrorExpWindowing< T > copy()
 	{
@@ -164,5 +171,5 @@ public class OutOfBoundsMirrorExpWindowing< T extends NumericType< T > > extends
 	public OutOfBoundsMirrorExpWindowing< T > copyRandomAccess()
 	{
 		return copy();
-	}	
+	}
 }

@@ -56,13 +56,13 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * Create a view that defines an interval on a source. It is the callers
 	 * responsibility to ensure that the source is defined in the specified
 	 * interval.
-	 *
+	 * 
 	 * @see Views#interval(RandomAccessible, Interval)
 	 */
 	public IntervalView( final RandomAccessible< T > source, final Interval interval )
 	{
 		super( interval );
-		assert( source.numDimensions() == interval.numDimensions() );
+		assert ( source.numDimensions() == interval.numDimensions() );
 
 		this.source = source;
 		this.fullViewRandomAccessible = null;
@@ -72,9 +72,9 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * Create a view that defines an interval on a source. It is the callers
 	 * responsibility to ensure that the source is defined in the specified
 	 * interval.
-	 *
+	 * 
 	 * @see Views#interval(RandomAccessible, Interval)
-	 *
+	 * 
 	 * @param min
 	 *            minimum coordinate of the interval.
 	 * @param max
@@ -83,7 +83,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	public IntervalView( final RandomAccessible< T > source, final long[] min, final long[] max )
 	{
 		super( min, max );
-		assert( source.numDimensions() == min.length );
+		assert ( source.numDimensions() == min.length );
 
 		this.source = source;
 		this.fullViewRandomAccessible = null;

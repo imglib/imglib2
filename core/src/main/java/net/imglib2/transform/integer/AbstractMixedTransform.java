@@ -35,7 +35,7 @@ package net.imglib2.transform.integer;
 
 /**
  * TODO
- *
+ * 
  */
 public abstract class AbstractMixedTransform implements Mixed
 {
@@ -44,11 +44,11 @@ public abstract class AbstractMixedTransform implements Mixed
 	 */
 	protected final int numTargetDimensions;
 
-	protected AbstractMixedTransform( int numTargetDimensions )
+	protected AbstractMixedTransform( final int numTargetDimensions )
 	{
 		this.numTargetDimensions = numTargetDimensions;
 	}
-	
+
 	@Override
 	public int numSourceDimensions()
 	{
@@ -77,7 +77,7 @@ public abstract class AbstractMixedTransform implements Mixed
 	}
 
 	@Override
-	public void getComponentZero( boolean[] zero )
+	public void getComponentZero( final boolean[] zero )
 	{
 		assert zero.length >= numTargetDimensions;
 
@@ -92,7 +92,7 @@ public abstract class AbstractMixedTransform implements Mixed
 	}
 
 	@Override
-	public void getComponentMapping( int[] component )
+	public void getComponentMapping( final int[] component )
 	{
 		assert component.length >= numTargetDimensions;
 
@@ -107,7 +107,7 @@ public abstract class AbstractMixedTransform implements Mixed
 	}
 
 	@Override
-	public void getComponentInversion( boolean[] invert )
+	public void getComponentInversion( final boolean[] invert )
 	{
 		assert invert.length >= numTargetDimensions;
 
@@ -122,20 +122,20 @@ public abstract class AbstractMixedTransform implements Mixed
 	}
 
 	@Override
-	public BoundingBox transform( BoundingBox boundingBox )
+	public BoundingBox transform( final BoundingBox boundingBox )
 	{
 		assert boundingBox.numDimensions() == numSourceDimensions();
 
 		if ( numSourceDimensions() == numTargetDimensions )
 		{ // apply in-place
-			long[] tmp = new long[ numTargetDimensions ];
+			final long[] tmp = new long[ numTargetDimensions ];
 			boundingBox.corner1( tmp );
 			apply( tmp, boundingBox.corner1 );
 			boundingBox.corner2( tmp );
 			apply( tmp, boundingBox.corner2 );
 			return boundingBox;
 		}
-		BoundingBox b = new BoundingBox( numTargetDimensions );
+		final BoundingBox b = new BoundingBox( numTargetDimensions );
 		apply( boundingBox.corner1, b.corner1 );
 		apply( boundingBox.corner2, b.corner2 );
 		return b;

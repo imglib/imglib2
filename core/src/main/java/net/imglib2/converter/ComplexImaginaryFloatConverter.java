@@ -33,7 +33,6 @@
 
 package net.imglib2.converter;
 
-import net.imglib2.converter.Converter;
 import net.imglib2.type.numeric.ComplexType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -49,5 +48,5 @@ public class ComplexImaginaryFloatConverter< R extends ComplexType< R > > implem
 	public void convert( final R input, final FloatType output )
 	{
 		output.set( input.getImaginaryFloat() );
-	}	
+	}
 }

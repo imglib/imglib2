@@ -35,8 +35,8 @@ package net.imglib2;
 
 /**
  * An {@link IterableRealInterval} whose elements are located at integer
- * coordinates. 
- *
+ * coordinates.
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -46,7 +46,7 @@ public interface IterableInterval< T > extends IterableRealInterval< T >, Interv
 {
 	@Override
 	public Cursor< T > cursor();
-	
+
 	@Override
 	public Cursor< T > localizingCursor();
 }

@@ -43,28 +43,29 @@ import net.imglib2.type.numeric.RealType;
  * Return a random value in a certain range when outside of the Interval
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractOutOfBoundsValue< T >
 {
 	final T value;
-	
+
 	final protected double minValue, maxValue, range;
+
 	final protected Random rnd;
 
 	protected OutOfBoundsRandomValue( final OutOfBoundsRandomValue< T > outOfBounds )
 	{
 		super( outOfBounds );
-		
+
 		this.value = outOfBounds.value.copy();
 		this.minValue = outOfBounds.minValue;
 		this.maxValue = outOfBounds.maxValue;
 		this.range = outOfBounds.range;
 		this.rnd = new Random();
 	}
-	
+
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsRandomValue( final F f, final T value, final Random rnd, final double min, final double max )
 	{
 		super( f );
@@ -75,7 +76,7 @@ public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractO
 		this.maxValue = max;
 		this.range = max - min;
 	}
-	
+
 	@Override
 	final public T get()
 	{
@@ -86,7 +87,7 @@ public class OutOfBoundsRandomValue< T extends RealType< T > > extends AbstractO
 		}
 		return sampler.get();
 	}
-	
+
 	@Override
 	final public OutOfBoundsRandomValue< T > copy()
 	{

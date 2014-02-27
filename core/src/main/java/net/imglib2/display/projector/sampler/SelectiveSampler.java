@@ -53,14 +53,14 @@ public class SelectiveSampler< T > implements ProjectedSampler< T >
 
 	private int m_selectedIndex = 0;
 
-	public SelectiveSampler( int projectionDimension, long[] projectedPositions )
+	public SelectiveSampler( final int projectionDimension, final long[] projectedPositions )
 	{
 		m_projectedPositions = projectedPositions;
 		m_projectionDimension = projectionDimension;
 	}
 
 	@Override
-	public void jumpFwd( long steps )
+	public void jumpFwd( final long steps )
 	{
 		m_selectedIndex += steps;
 	}
@@ -98,7 +98,7 @@ public class SelectiveSampler< T > implements ProjectedSampler< T >
 	}
 
 	@Override
-	public void setRandomAccess( RandomAccess< T > srcAccess )
+	public void setRandomAccess( final RandomAccess< T > srcAccess )
 	{
 		m_source = srcAccess;
 	}

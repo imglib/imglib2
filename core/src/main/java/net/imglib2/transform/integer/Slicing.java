@@ -35,8 +35,7 @@ package net.imglib2.transform.integer;
 
 /**
  * TODO
- *
+ * 
  */
 public interface Slicing extends Mixed
-{
-}
+{}

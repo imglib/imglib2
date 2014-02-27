@@ -54,7 +54,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -77,7 +77,7 @@ public class RandomAccessibleIntervalCursorTest
 	@Before
 	public void setUp()
 	{
-		dimensions = new long[] {207, 103};
+		dimensions = new long[] { 207, 103 };
 		array1 = ( ArrayImg< IntType, IntArray > ) new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
 		array2 = ( ArrayImg< IntType, IntArray > ) new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
 		cell = ( CellImg< IntType, IntArray, DefaultCell< IntArray > > ) new CellImgFactory< IntType >().create( dimensions, new IntType() );
@@ -104,7 +104,7 @@ public class RandomAccessibleIntervalCursorTest
 
 	public void copy( final Cursor< IntType > src, final Cursor< IntType > dst )
 	{
-		while( src.hasNext() )
+		while ( src.hasNext() )
 			dst.next().set( src.next().get() );
 	}
 
@@ -116,7 +116,8 @@ public class RandomAccessibleIntervalCursorTest
 		final long[] dim = new long[ img.numDimensions() ];
 		final long[] pos = new long[ img.numDimensions() ];
 		img.dimensions( dim );
-		for ( int i = 0; i < N; ++i ) {
+		for ( int i = 0; i < N; ++i )
+		{
 			IntervalIndexer.indexToPosition( i, dim, pos );
 			a.setPosition( pos );
 			data[ i ] = a.get().get();
@@ -134,7 +135,7 @@ public class RandomAccessibleIntervalCursorTest
 		c2.fwd();
 		assertEquals( c1.get().get(), c2.get().get() );
 
-		for ( int i=0; i<10; ++i )
+		for ( int i = 0; i < 10; ++i )
 			c1.fwd();
 		c2.jumpFwd( 10 );
 		assertEquals( c1.get().get(), c2.get().get() );

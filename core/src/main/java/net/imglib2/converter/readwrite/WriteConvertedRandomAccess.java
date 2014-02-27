@@ -38,7 +38,7 @@ import net.imglib2.converter.AbstractConvertedRandomAccess;
 
 /**
  * TODO
- *
+ * 
  */
 public final class WriteConvertedRandomAccess< A, B > extends AbstractConvertedRandomAccess< A, B >
 {

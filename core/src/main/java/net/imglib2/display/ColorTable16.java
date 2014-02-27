@@ -34,63 +34,74 @@ package net.imglib2.display;
 
 /**
  * 16-bit color lookup table.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
-public class ColorTable16 extends AbstractArrayColorTable<short[]> {
+public class ColorTable16 extends AbstractArrayColorTable< short[] >
+{
 
 	/**
 	 * Initializes a 16-bit color table with a linear grayscale ramp.
 	 */
-	public ColorTable16() {
-		super(gray());
+	public ColorTable16()
+	{
+		super( gray() );
 	}
 
 	/**
 	 * Initializes a 16-bit color table with the given table values.
 	 */
-	public ColorTable16(final short[]... values) {
-		super(values);
+	public ColorTable16( final short[]... values )
+	{
+		super( values );
 	}
 
 	@Override
-	public int getLength() {
-		return values[0].length;
+	public int getLength()
+	{
+		return values[ 0 ].length;
 	}
 
 	@Override
-	public int getBits() {
+	public int getBits()
+	{
 		return 16;
 	}
 
 	@Override
-	public int get(final int comp, final int bin) {
+	public int get( final int comp, final int bin )
+	{
 		// convert 0xffff to 0xff
-		return getNative(comp, bin) >> 8;
+		return getNative( comp, bin ) >> 8;
 	}
 
 	@Override
-	public int getNative(final int c, final int i) {
+	public int getNative( final int c, final int i )
+	{
 		// returns short value as unsigned, expressed as int
-		return values[c][i] & 0xffff;
+		return values[ c ][ i ] & 0xffff;
 	}
 
 	@Override
-	public int getResampled(final int comp, final int bins, final int bin) {
-		final int newBin = (int)((long) getLength() * bin / bins);
-		return get(comp, newBin);
+	public int getResampled( final int comp, final int bins, final int bin )
+	{
+		final int newBin = ( int ) ( ( long ) getLength() * bin / bins );
+		return get( comp, newBin );
 	}
 
 	// -- Helper methods --
 	/**
 	 * Creates a linear grayscale ramp with 3 components and 65536 values.
 	 */
-	private static short[][] gray() {
-		final short[][] gray = new short[3][65536];
-		for (int j = 0; j < gray.length; j++) {
-			for (int i = 0; i < gray[j].length; i++) {
-				gray[j][i] = (short) i;
+	private static short[][] gray()
+	{
+		final short[][] gray = new short[ 3 ][ 65536 ];
+		for ( int j = 0; j < gray.length; j++ )
+		{
+			for ( int i = 0; i < gray[ j ].length; i++ )
+			{
+				gray[ j ][ i ] = ( short ) i;
 			}
 		}
 		return gray;

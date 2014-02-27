@@ -42,11 +42,11 @@ import net.imglib2.type.NativeType;
  * Much larger images can be represented than with {@link ArrayImg}. The number
  * of basic types that can be stored is {@link Integer#MAX_VALUE}<sup>2</sup>.
  * However, access is less efficient than for {@link ArrayImg}.
- *
+ * 
  * The image is divided into cells, that is, equally sized hyper-cubes (only
  * cells at the max boundary of the image may have non-standard sizes). Each
  * basic type array corresponds to a cell.
- *
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */

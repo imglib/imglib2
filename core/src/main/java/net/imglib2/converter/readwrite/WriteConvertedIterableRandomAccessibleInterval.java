@@ -40,7 +40,7 @@ import net.imglib2.converter.AbstractConvertedIterableRandomAccessibleInterval;
 
 /**
  * TODO
- *
+ * 
  */
 public class WriteConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAccessible< A > & IterableInterval< A > > extends AbstractConvertedIterableRandomAccessibleInterval< A, B, S >
 {

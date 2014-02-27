@@ -38,11 +38,11 @@ import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 
 /**
- * N-dimensional data is often stored in a flat 1-dimensional array.
- * This class provides convenience methods to translate between N-dimensional
- * indices (positions) and 1-dimensional indices.
- *
- *
+ * N-dimensional data is often stored in a flat 1-dimensional array. This class
+ * provides convenience methods to translate between N-dimensional indices
+ * (positions) and 1-dimensional indices.
+ * 
+ * 
  * @author Tobias Pietzsch
  */
 public class IntervalIndexer
@@ -59,9 +59,9 @@ public class IntervalIndexer
 	final static public int positionToIndex( final long[] position, final int[] dimensions )
 	{
 		final int maxDim = dimensions.length - 1;
-		int i = ( int )position[ maxDim ];
+		int i = ( int ) position[ maxDim ];
 		for ( int d = maxDim - 1; d >= 0; --d )
-			i = i * dimensions[ d ] + ( int )position[ d ];
+			i = i * dimensions[ d ] + ( int ) position[ d ];
 		return i;
 	}
 
@@ -119,10 +119,10 @@ public class IntervalIndexer
 		for ( int d = 0; d < maxDim; ++d )
 		{
 			final long j = index / dimensions[ d ];
-			position[ d ] = ( int )( index - j * dimensions[ d ] );
+			position[ d ] = ( int ) ( index - j * dimensions[ d ] );
 			index = j;
 		}
-		position[ maxDim ] = ( int )index;
+		position[ maxDim ] = ( int ) index;
 	}
 
 	final static public void indexToPosition( int index, final int[] dimensions, final long[] position )
@@ -239,10 +239,10 @@ public class IntervalIndexer
 		for ( int d = 0; d < maxDim; ++d )
 		{
 			final long j = index / dimensions[ d ];
-			position[ d ] = ( int )( index - j * dimensions[ d ] + offsets[ d ] );
+			position[ d ] = ( int ) ( index - j * dimensions[ d ] + offsets[ d ] );
 			index = j;
 		}
-		position[ maxDim ] = ( int )( index + offsets[ maxDim ] );
+		position[ maxDim ] = ( int ) ( index + offsets[ maxDim ] );
 	}
 
 	final static public void indexToPositionWithOffset( long index, final long[] dimensions, final long[] offsets, final float[] position )
@@ -311,8 +311,9 @@ public class IntervalIndexer
 	}
 
 	/**
-	 * Create allocation step array from the dimensions of an N-dimensional array.
-	 *
+	 * Create allocation step array from the dimensions of an N-dimensional
+	 * array.
+	 * 
 	 * @param dimensions
 	 * @param steps
 	 */
@@ -324,8 +325,9 @@ public class IntervalIndexer
 	}
 
 	/**
-	 * Create allocation step array from the dimensions of an N-dimensional array.
-	 *
+	 * Create allocation step array from the dimensions of an N-dimensional
+	 * array.
+	 * 
 	 * @param dimensions
 	 * @param steps
 	 */

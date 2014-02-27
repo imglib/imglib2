@@ -35,7 +35,7 @@ package net.imglib2.exception;
 
 /**
  * TODO
- *
+ * 
  * @author Curtis Rueden
  * @author Stephan Preibisch
  */
@@ -46,11 +46,23 @@ public class ImgLibException extends Exception
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public ImgLibException( final String message ) { super( message ); }
+	public ImgLibException( final String message )
+	{
+		super( message );
+	}
 
-	public ImgLibException( final Object obj, final String message ) { super( obj.getClass().getCanonicalName() + ": " + message ); }
+	public ImgLibException( final Object obj, final String message )
+	{
+		super( obj.getClass().getCanonicalName() + ": " + message );
+	}
 
-	public ImgLibException() { super(); }
+	public ImgLibException()
+	{
+		super();
+	}
 
-	public ImgLibException( final Throwable t ) { super(t); }
+	public ImgLibException( final Throwable t )
+	{
+		super( t );
+	}
 }

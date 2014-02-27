@@ -43,63 +43,72 @@ import java.awt.image.DataBufferShort;
  * a workaround for the fact that java.awt.image.BufferedImage does not support
  * DataBuffers with type DataBuffer.TYPE_SHORT.
  */
-public class SignedShortDataBuffer extends DataBuffer {
+public class SignedShortDataBuffer extends DataBuffer
+{
 
 	private final DataBufferShort helper;
 
 	// -- Constructors --
 
-	public SignedShortDataBuffer(final int size) {
-		super(DataBuffer.TYPE_USHORT, size);
-		helper = new DataBufferShort(size);
-	}
-
-	public SignedShortDataBuffer(final int size, final int numbanks) {
-		super(DataBuffer.TYPE_USHORT, size, numbanks);
-		helper = new DataBufferShort(size, numbanks);
-	}
-
-	public SignedShortDataBuffer(final short[] data, final int size) {
-		super(DataBuffer.TYPE_USHORT, size);
-		helper = new DataBufferShort(data, size);
-	}
-
-	public SignedShortDataBuffer(final short[] data, final int size, final int offset)
+	public SignedShortDataBuffer( final int size )
 	{
-		super(DataBuffer.TYPE_USHORT, size, 1, offset);
-		helper = new DataBufferShort(data, size, offset);
+		super( DataBuffer.TYPE_USHORT, size );
+		helper = new DataBufferShort( size );
 	}
 
-	public SignedShortDataBuffer(final short[][] data, final int size) {
-		super(DataBuffer.TYPE_USHORT, size, data.length);
-		helper = new DataBufferShort(data, size);
-	}
-
-	public SignedShortDataBuffer(final short[][] data, final int size,
-		final int[] offsets)
+	public SignedShortDataBuffer( final int size, final int numbanks )
 	{
-		super(DataBuffer.TYPE_USHORT, size, data.length, offsets);
-		helper = new DataBufferShort(data, size, offsets);
+		super( DataBuffer.TYPE_USHORT, size, numbanks );
+		helper = new DataBufferShort( size, numbanks );
+	}
+
+	public SignedShortDataBuffer( final short[] data, final int size )
+	{
+		super( DataBuffer.TYPE_USHORT, size );
+		helper = new DataBufferShort( data, size );
+	}
+
+	public SignedShortDataBuffer( final short[] data, final int size, final int offset )
+	{
+		super( DataBuffer.TYPE_USHORT, size, 1, offset );
+		helper = new DataBufferShort( data, size, offset );
+	}
+
+	public SignedShortDataBuffer( final short[][] data, final int size )
+	{
+		super( DataBuffer.TYPE_USHORT, size, data.length );
+		helper = new DataBufferShort( data, size );
+	}
+
+	public SignedShortDataBuffer( final short[][] data, final int size,
+			final int[] offsets )
+	{
+		super( DataBuffer.TYPE_USHORT, size, data.length, offsets );
+		helper = new DataBufferShort( data, size, offsets );
 	}
 
 	// -- DataBuffer API methods --
 
-	public short[] getData() {
+	public short[] getData()
+	{
 		return helper.getData();
 	}
 
-	public short[] getData(final int bank) {
-		return helper.getData(bank);
+	public short[] getData( final int bank )
+	{
+		return helper.getData( bank );
 	}
 
 	@Override
-	public int getElem(final int bank, final int i) {
-		return helper.getElem(bank, i);
+	public int getElem( final int bank, final int i )
+	{
+		return helper.getElem( bank, i );
 	}
 
 	@Override
-	public void setElem(final int bank, final int i, final int val) {
-		helper.setElem(bank, i, val);
+	public void setElem( final int bank, final int i, final int val )
+	{
+		helper.setElem( bank, i, val );
 	}
 
 }

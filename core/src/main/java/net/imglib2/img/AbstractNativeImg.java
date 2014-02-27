@@ -37,15 +37,16 @@ import net.imglib2.type.NativeType;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public abstract class AbstractNativeImg< T extends NativeType< T >, A >
-	extends AbstractImg< T >
-	implements NativeImg< T, A >
+		extends AbstractImg< T >
+		implements NativeImg< T, A >
 {
 	final protected int entitiesPerPixel;
+
 	protected long numEntities;
 
 	protected T linkedType;
@@ -58,12 +59,21 @@ public abstract class AbstractNativeImg< T extends NativeType< T >, A >
 	}
 
 	@Override
-	public void setLinkedType( final T type ) { this.linkedType = type; }
+	public void setLinkedType( final T type )
+	{
+		this.linkedType = type;
+	}
 
 	@Override
 	public T createLinkedType()
 	{
-		try{ return linkedType.duplicateTypeOnSameNativeImg(); }
-		catch ( final NullPointerException e ){ return null; }
+		try
+		{
+			return linkedType.duplicateTypeOnSameNativeImg();
+		}
+		catch ( final NullPointerException e )
+		{
+			return null;
+		}
 	}
 }

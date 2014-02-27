@@ -37,7 +37,7 @@ import net.imglib2.img.basictypeaccess.IntAccess;
 
 /**
  * IntAccess based on a {@link Ntree}<Integer>.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class IntNtree implements IntAccess, NtreeAccess< Integer, IntNtree >
@@ -49,7 +49,7 @@ public final class IntNtree implements IntAccess, NtreeAccess< Integer, IntNtree
 
 	/**
 	 * Standard constructor called by factory
-	 *
+	 * 
 	 * @param dimensions
 	 *            The dimensions of the tree
 	 * @param value

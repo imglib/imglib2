@@ -35,7 +35,7 @@ package net.imglib2.converter;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
 public interface Converter< A, B >

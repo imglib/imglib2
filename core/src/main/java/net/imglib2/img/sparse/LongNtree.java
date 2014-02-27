@@ -37,7 +37,7 @@ import net.imglib2.img.basictypeaccess.LongAccess;
 
 /**
  * LongAccess based on a {@link Ntree}<Longeger>.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class LongNtree implements LongAccess, NtreeAccess< Long, LongNtree >
@@ -49,7 +49,7 @@ public final class LongNtree implements LongAccess, NtreeAccess< Long, LongNtree
 
 	/**
 	 * Standard constructor called by factory
-	 *
+	 * 
 	 * @param dimensions
 	 *            The dimensions of the tree
 	 * @param value

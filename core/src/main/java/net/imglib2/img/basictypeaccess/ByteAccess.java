@@ -35,12 +35,13 @@ package net.imglib2.img.basictypeaccess;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public interface ByteAccess
 {
 	public byte getValue( final int index );
+
 	public void setValue( final int index, final byte value );
 }

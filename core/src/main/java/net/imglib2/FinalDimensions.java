@@ -34,24 +34,26 @@
 package net.imglib2;
 
 /**
- * An implementation of dimensionality that can wrap a long[] array. The same principle
- * for wrapping as in Point is used.
+ * An implementation of dimensionality that can wrap a long[] array. The same
+ * principle for wrapping as in Point is used.
  * 
  * @author Stephan Preibisch
  */
 public class FinalDimensions implements Dimensions
 {
 	final long[] dimensions;
-	
+
 	/**
 	 * Protected constructor that can re-use the passed position array.
-	 *
-	 * @param dimensions - array used to store the position.
-	 * @param copy - flag indicating whether position array should be duplicated.
+	 * 
+	 * @param dimensions
+	 *            - array used to store the position.
+	 * @param copy
+	 *            - flag indicating whether position array should be duplicated.
 	 */
 	protected FinalDimensions( final long[] dimensions, final boolean copy )
 	{
-		if ( copy ) 
+		if ( copy )
 			this.dimensions = dimensions.clone();
 		else
 			this.dimensions = dimensions;
@@ -60,32 +62,44 @@ public class FinalDimensions implements Dimensions
 	/**
 	 * Creates a FinalDimensions object with size zero in all dimensions
 	 * 
-	 * @param n - number of dimensions
+	 * @param n
+	 *            - number of dimensions
 	 */
-	public FinalDimensions( final int n ) { this.dimensions = new long[ n ]; }
-	
-	/**
-	 * Create a FinalDimensions with a defined size
-	 * 
-	 * @param dimensions - the size
-	 */
-	public FinalDimensions( final long... dimensions ) { this( dimensions, true ); }
+	public FinalDimensions( final int n )
+	{
+		this.dimensions = new long[ n ];
+	}
 
 	/**
 	 * Create a FinalDimensions with a defined size
 	 * 
-	 * @param dimensions - the size
+	 * @param dimensions
+	 *            - the size
+	 */
+	public FinalDimensions( final long... dimensions )
+	{
+		this( dimensions, true );
+	}
+
+	/**
+	 * Create a FinalDimensions with a defined size
+	 * 
+	 * @param dimensions
+	 *            - the size
 	 */
 	public FinalDimensions( final int... dimensions )
 	{
 		this.dimensions = new long[ dimensions.length ];
-		
+
 		for ( int d = 0; d < dimensions.length; ++d )
 			this.dimensions[ d ] = dimensions[ d ];
 	}
 
 	@Override
-	public int numDimensions() { return dimensions.length; }
+	public int numDimensions()
+	{
+		return dimensions.length;
+	}
 
 	@Override
 	public void dimensions( final long[] dims )
@@ -95,13 +109,17 @@ public class FinalDimensions implements Dimensions
 	}
 
 	@Override
-	public long dimension( final int d ) { return dimensions[ d ]; }
-	
+	public long dimension( final int d )
+	{
+		return dimensions[ d ];
+	}
+
 	/**
-	 * Create a FinalDimensions object that stores its coordinates in the provided position
-	 * array.
-	 *
-	 * @param dimensions -array to use for storing the position.
+	 * Create a FinalDimensions object that stores its coordinates in the
+	 * provided position array.
+	 * 
+	 * @param dimensions
+	 *            -array to use for storing the position.
 	 */
 	public static FinalDimensions wrap( final long[] dimensions )
 	{

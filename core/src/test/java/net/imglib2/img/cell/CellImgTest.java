@@ -43,25 +43,27 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link CellImg}.
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
 public class CellImgTest
 {
-	@Test public void testCellImg()
+	@Test
+	public void testCellImg()
 	{
 		final long[][] dim = ImgTestHelper.dims();
 		for ( int i = 0; i < dim.length; ++i )
 		{
-			if ( dim[ i ].length > 1 ) {
-			assertTrue( "ArrayImg vs CellImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-			            ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory< FloatType >(), new CellImgFactory< FloatType >( 10 ) ) );
-			assertTrue( "CellImg vs ArrayImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-			            ImgTestHelper.testImg( dim[ i ], new CellImgFactory< FloatType >(), new ArrayImgFactory< FloatType >() ) );
-			assertTrue( "CellImg vs CellImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
-			            ImgTestHelper.testImg( dim[ i ], new CellImgFactory< FloatType >( 5 ), new CellImgFactory< FloatType >() ) );
+			if ( dim[ i ].length > 1 )
+			{
+				assertTrue( "ArrayImg vs CellImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
+						ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory< FloatType >(), new CellImgFactory< FloatType >( 10 ) ) );
+				assertTrue( "CellImg vs ArrayImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
+						ImgTestHelper.testImg( dim[ i ], new CellImgFactory< FloatType >(), new ArrayImgFactory< FloatType >() ) );
+				assertTrue( "CellImg vs CellImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
+						ImgTestHelper.testImg( dim[ i ], new CellImgFactory< FloatType >( 5 ), new CellImgFactory< FloatType >() ) );
 			}
 		}
 	}

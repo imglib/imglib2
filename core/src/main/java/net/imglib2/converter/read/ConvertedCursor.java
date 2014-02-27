@@ -40,15 +40,17 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- *
+ * 
  */
 public class ConvertedCursor< A, B extends Type< B > > extends AbstractConvertedCursor< A, B >
 {
 	final protected Converter< A, B > converter;
+
 	final protected B converted;
 
 	/**
-	 * Creates a copy of b for conversion that can be accessed through {@link #get()}.
+	 * Creates a copy of b for conversion that can be accessed through
+	 * {@link #get()}.
 	 * 
 	 * @param source
 	 * @param converter

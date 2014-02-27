@@ -37,12 +37,12 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * Abstract base class for {@link VolatileRealType}s that wrap {@link RealType}.
- *
+ * 
  * @param <R>
  *            wrapped {@link RealType}.
  * @param <T>
  *            type of derived concrete class.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public abstract class AbstractVolatileRealType< R extends RealType< R >, T extends AbstractVolatileRealType< R, T > > extends Volatile< R > implements RealType< T >

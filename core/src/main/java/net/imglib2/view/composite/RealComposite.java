@@ -37,30 +37,29 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * A vector of {@link RealType} scalars.  It is a {@link NumericType}
- * itself, implementing the {@link NumericType} algebra as element-wise
- * operations.
- *
+ * A vector of {@link RealType} scalars. It is a {@link NumericType} itself,
+ * implementing the {@link NumericType} algebra as element-wise operations.
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealComposite< T extends RealType< T > > extends NumericComposite< T >
 {
-	static public class Factory< T extends RealType< T > > implements CompositeFactory< T, RealComposite< T > > 
+	static public class Factory< T extends RealType< T > > implements CompositeFactory< T, RealComposite< T > >
 	{
 		final protected int numChannels;
-		
+
 		public Factory( final int numChannels )
 		{
 			this.numChannels = numChannels;
 		}
-		
+
 		@Override
 		public RealComposite< T > create( final RandomAccess< T > sourceAccess )
 		{
 			return new RealComposite< T >( sourceAccess, numChannels );
 		}
 	}
-	
+
 	public RealComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
 		super( sourceAccess, length );

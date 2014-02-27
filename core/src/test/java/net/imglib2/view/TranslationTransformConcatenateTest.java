@@ -27,38 +27,40 @@
 package net.imglib2.view;
 
 import static org.junit.Assert.assertTrue;
-import Jama.Matrix;
 import net.imglib2.transform.integer.Translation;
 import net.imglib2.transform.integer.TranslationTransform;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import Jama.Matrix;
+
 /**
  * TODO
- *
+ * 
  */
 public class TranslationTransformConcatenateTest
 {
-	public static boolean testConcatenation( TranslationTransform t1, Translation t2 )
+	public static boolean testConcatenation( final TranslationTransform t1, final Translation t2 )
 	{
-		if (t1.numSourceDimensions() != t2.numTargetDimensions() )
+		if ( t1.numSourceDimensions() != t2.numTargetDimensions() )
 		{
-			System.out.println("incompatible dimensions");
+			System.out.println( "incompatible dimensions" );
 			return false;
 		}
 
-		TranslationTransform t1t2 = t1.concatenate( t2 );
+		final TranslationTransform t1t2 = t1.concatenate( t2 );
 
-		Matrix mt1 = new Matrix( t1.getMatrix() ); 
-		Matrix mt2 = new Matrix( t2.getMatrix() ); 
-		Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
+		final Matrix mt1 = new Matrix( t1.getMatrix() );
+		final Matrix mt2 = new Matrix( t2.getMatrix() );
+		final Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
-		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
-			System.out.println("=======================");
-			System.out.println("t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );			
+		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 )
+		{
+			System.out.println( "=======================" );
+			System.out.println( "t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
 
 			System.out.print( "t1 = " );
 			mt1.print( 1, 0 );
@@ -70,32 +72,33 @@ public class TranslationTransformConcatenateTest
 			mt1.times( mt2 ).print( 1, 0 );
 
 			System.out.println( "wrong result" );
-			System.out.println("=======================");
+			System.out.println( "=======================" );
 			return false;
 		}
 
 		return true;
 	}
-	
-	public static boolean testPreConcatenation( Translation t1, TranslationTransform t2 )
+
+	public static boolean testPreConcatenation( final Translation t1, final TranslationTransform t2 )
 	{
-		if (t1.numSourceDimensions() != t2.numTargetDimensions() )
+		if ( t1.numSourceDimensions() != t2.numTargetDimensions() )
 		{
-			System.out.println("incompatible dimensions");
+			System.out.println( "incompatible dimensions" );
 			return false;
 		}
 
-		TranslationTransform t1t2 = t2.preConcatenate( t1 );
+		final TranslationTransform t1t2 = t2.preConcatenate( t1 );
 
-		Matrix mt1 = new Matrix( t1.getMatrix() ); 
-		Matrix mt2 = new Matrix( t2.getMatrix() ); 
-		Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
+		final Matrix mt1 = new Matrix( t1.getMatrix() );
+		final Matrix mt2 = new Matrix( t2.getMatrix() );
+		final Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
-		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
-			System.out.println("=======================");
-			System.out.println("t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );			
+		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 )
+		{
+			System.out.println( "=======================" );
+			System.out.println( "t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
 
 			System.out.print( "t1 = " );
 			mt1.print( 1, 0 );
@@ -107,7 +110,7 @@ public class TranslationTransformConcatenateTest
 			mt1.times( mt2 ).print( 1, 0 );
 
 			System.out.println( "wrong result" );
-			System.out.println("=======================");
+			System.out.println( "=======================" );
 			return false;
 		}
 
@@ -115,17 +118,18 @@ public class TranslationTransformConcatenateTest
 	}
 
 	TranslationTransform tr1;
+
 	TranslationTransform tr2;
-	
+
 	@Before
 	public void setUp()
-    { 
+	{
 		tr1 = new TranslationTransform( 3 );
-		long[] translation = new long[] {3, 4, 5};
+		final long[] translation = new long[] { 3, 4, 5 };
 		tr1.setTranslation( translation );
 
-		tr2 = new TranslationTransform( new long[] {7, 8, 9} );
-    }
+		tr2 = new TranslationTransform( new long[] { 7, 8, 9 } );
+	}
 
 	@Test
 	public void concatenateTr1Tr2()
@@ -138,7 +142,7 @@ public class TranslationTransformConcatenateTest
 	{
 		assertTrue( testPreConcatenation( tr1, tr2 ) );
 	}
-	
+
 	@Test
 	public void concatenateTr2Tr1()
 	{

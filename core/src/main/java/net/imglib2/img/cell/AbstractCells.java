@@ -45,7 +45,7 @@ import net.imglib2.img.Img;
  * method which derived classes must implement to return the cells as a
  * {@link RandomAccessibleInterval} and {@link IterableInterval} with minimum at
  * 0 and flat iteration order.
- *
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -84,7 +84,7 @@ public abstract class AbstractCells< A, C extends AbstractCell< A >, I extends R
 	 * Get the {@link Img} containing the cells. Derived classes must implement
 	 * this to return the cells as a {@link RandomAccessibleInterval} and
 	 * {@link IterableInterval} with minimum at 0 and flat iteration order.
-	 *
+	 * 
 	 * @return the {@link Img} containing the cells.
 	 */
 	protected abstract I cells();
@@ -95,7 +95,7 @@ public abstract class AbstractCells< A, C extends AbstractCell< A >, I extends R
 	 * image coordinates) and the dimensions of the cell. The dimensions will be
 	 * the standard {@link #cellDimensions} unless the cell is at the border of
 	 * the image in which case it might be truncated.
-	 *
+	 * 
 	 * @param cellGridPosition
 	 *            grid coordinates of the cell.
 	 * @param cellMin

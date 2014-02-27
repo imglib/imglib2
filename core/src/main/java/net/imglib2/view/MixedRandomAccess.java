@@ -39,9 +39,9 @@ import net.imglib2.RandomAccess;
 import net.imglib2.transform.integer.Mixed;
 
 /**
- * Wrap a {@code source} RandomAccess which is related to this by a {@link Mixed}
- * {@code transformToSource}.
- *
+ * Wrap a {@code source} RandomAccess which is related to this by a
+ * {@link Mixed} {@code transformToSource}.
+ * 
  * @param <T>
  * @author Tobias Pietzsch
  */
@@ -204,7 +204,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert localizable.numDimensions() >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in tmpDistance[].
+		// this may not assign all components of the target distance in
+		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 		{
@@ -225,7 +226,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert distance.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in tmpDistance[].
+		// this may not assign all components of the target distance in
+		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 		{
@@ -245,7 +247,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert distance.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in tmpDistance[].
+		// this may not assign all components of the target distance in
+		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 		{
@@ -265,7 +268,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert localizable.numDimensions() >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target position in tmpPosition[].
+		// this may not assign all components of the target position in
+		// tmpPosition[].
 		// however, the missing components are already assigned to the correct
 		// translation components.
 		for ( int d = 0; d < n; ++d )
@@ -287,7 +291,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert position.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target position in tmpPosition[].
+		// this may not assign all components of the target position in
+		// tmpPosition[].
 		// however, the missing components are already assigned to the correct
 		// translation components.
 		for ( int d = 0; d < n; ++d )
@@ -309,7 +314,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert position.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target position in tmpPosition[].
+		// this may not assign all components of the target position in
+		// tmpPosition[].
 		// however, the missing components are already assigned to the correct
 		// translation components.
 		for ( int d = 0; d < n; ++d )

@@ -35,19 +35,22 @@ package net.imglib2.type;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface BooleanType<T extends BooleanType<T>> extends Type<T>, Comparable<T>
+public interface BooleanType< T extends BooleanType< T >> extends Type< T >, Comparable< T >
 {
 	public boolean get();
+
 	public void set( boolean value );
-	
+
 	public void and( T c );
+
 	public void or( T c );
+
 	public void xor( T c );
-	
+
 	public void not();
-	
+
 }

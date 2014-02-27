@@ -34,14 +34,17 @@
 package net.imglib2;
 
 /**
- * <p><em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}</em></p>
+ * <p>
+ * <em>f</em>:{x&isin;R<sup><em>n</em></sup>|[min,max]&rarr;T}</em>
+ * </p>
  * 
- * <p>A function over an n-dimensional real interval that can create a
- * random access {@link Sampler}.</p>
- *
+ * <p>
+ * A function over an n-dimensional real interval that can create a random
+ * access {@link Sampler}.
+ * </p>
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface RealRandomAccessibleRealInterval< T > extends RealRandomAccessible< T >, RealInterval
-{
-}
+{}

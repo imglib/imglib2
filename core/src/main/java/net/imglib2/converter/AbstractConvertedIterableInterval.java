@@ -41,7 +41,7 @@ import net.imglib2.IterableRealInterval;
 
 /**
  * TODO
- *
+ * 
  */
 abstract public class AbstractConvertedIterableInterval< A, B > extends AbstractWrappedInterval< IterableInterval< A > > implements IterableInterval< B >
 {

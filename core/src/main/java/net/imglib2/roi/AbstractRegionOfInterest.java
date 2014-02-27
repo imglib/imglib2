@@ -457,10 +457,11 @@ public abstract class AbstractRegionOfInterest implements RegionOfInterest
 	{
 		return realRandomAccess();
 	}
-	
+
 	@Override
-	public void move(double[] displacement) {
-		for (int i = 0; i < displacement.length; i++)
-			move(displacement[i],i);
+	public void move( final double[] displacement )
+	{
+		for ( int i = 0; i < displacement.length; i++ )
+			move( displacement[ i ], i );
 	}
 }

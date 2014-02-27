@@ -40,69 +40,109 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public class OutOfBoundsMirrorExpWindowingFactory< T extends NumericType< T >, F extends Interval & RandomAccessible< T > >
-					implements OutOfBoundsFactory< T, F >
+		implements OutOfBoundsFactory< T, F >
 {
 	int[] fadeOutDistance = null;
+
 	int minFadeOutDistance = 6;
+
 	int commonFadeOutDistance = 6;
+
 	float commonRelativeDistanceFadeOut = Float.NaN;
+
 	float exponent = 10;
 
-	public OutOfBoundsMirrorExpWindowingFactory( ) { }
-	
-	public OutOfBoundsMirrorExpWindowingFactory( final float relativeDistanceFadeOut ) 
-	{ 
-		this.commonRelativeDistanceFadeOut = relativeDistanceFadeOut; 
+	public OutOfBoundsMirrorExpWindowingFactory()
+	{}
+
+	public OutOfBoundsMirrorExpWindowingFactory( final float relativeDistanceFadeOut )
+	{
+		this.commonRelativeDistanceFadeOut = relativeDistanceFadeOut;
 	}
 
-	public OutOfBoundsMirrorExpWindowingFactory( final int fadeOutDistance ) 
-	{ 
-		this.commonFadeOutDistance = fadeOutDistance; 
+	public OutOfBoundsMirrorExpWindowingFactory( final int fadeOutDistance )
+	{
+		this.commonFadeOutDistance = fadeOutDistance;
 	}
 
-	public OutOfBoundsMirrorExpWindowingFactory( final int[] fadeOutDistance ) 
+	public OutOfBoundsMirrorExpWindowingFactory( final int[] fadeOutDistance )
 	{
 		this.fadeOutDistance = fadeOutDistance.clone();
 	}
 
-	public void setExponent( final float exponent )  { this.exponent = exponent; }
-	public float getExponent() { return exponent; }
-	
-	public void setMinFadeOutDistance( final int minFadeOutDistance ) { this.minFadeOutDistance = minFadeOutDistance; }
-	public long getMinFadeOutDistance() { return minFadeOutDistance; }
-	
-	public void setCommonFadeOutDistance( final int fadeOutDistance ) { this.commonFadeOutDistance = fadeOutDistance; }
-	public long getCommonFadeOutDistance() { return commonFadeOutDistance; }
+	public void setExponent( final float exponent )
+	{
+		this.exponent = exponent;
+	}
 
-	public void setCommonRelativeFadeOutDistance( final float commonRelativeDistanceFadeOut ) { this.commonRelativeDistanceFadeOut = commonRelativeDistanceFadeOut; }
-	public float getCommonRelativeFadeOutDistance() { return commonRelativeDistanceFadeOut; }
+	public float getExponent()
+	{
+		return exponent;
+	}
 
-	public void setFadeOutDistance( final int[] fadeOutDistance ) { this.fadeOutDistance = fadeOutDistance.clone(); }
-	public int[] getFadeOutDistance() { return fadeOutDistance.clone(); }
+	public void setMinFadeOutDistance( final int minFadeOutDistance )
+	{
+		this.minFadeOutDistance = minFadeOutDistance;
+	}
+
+	public long getMinFadeOutDistance()
+	{
+		return minFadeOutDistance;
+	}
+
+	public void setCommonFadeOutDistance( final int fadeOutDistance )
+	{
+		this.commonFadeOutDistance = fadeOutDistance;
+	}
+
+	public long getCommonFadeOutDistance()
+	{
+		return commonFadeOutDistance;
+	}
+
+	public void setCommonRelativeFadeOutDistance( final float commonRelativeDistanceFadeOut )
+	{
+		this.commonRelativeDistanceFadeOut = commonRelativeDistanceFadeOut;
+	}
+
+	public float getCommonRelativeFadeOutDistance()
+	{
+		return commonRelativeDistanceFadeOut;
+	}
+
+	public void setFadeOutDistance( final int[] fadeOutDistance )
+	{
+		this.fadeOutDistance = fadeOutDistance.clone();
+	}
+
+	public int[] getFadeOutDistance()
+	{
+		return fadeOutDistance.clone();
+	}
 
 	@Override
-	public OutOfBoundsMirrorExpWindowing<T> create( final F f )
+	public OutOfBoundsMirrorExpWindowing< T > create( final F f )
 	{
 		final int numDimensions = f.numDimensions();
-		
+
 		if ( Float.isNaN( commonRelativeDistanceFadeOut ) )
-		{					
-			if ( fadeOutDistance == null  )
+		{
+			if ( fadeOutDistance == null )
 			{
 				fadeOutDistance = new int[ numDimensions ];
-				
+
 				for ( int d = 0; d < numDimensions; ++d )
 					fadeOutDistance[ d ] = Math.max( minFadeOutDistance, commonFadeOutDistance );
 			}
 			else
 			{
 				for ( int d = 0; d < numDimensions; ++d )
-					fadeOutDistance[ d ] = Math.max( minFadeOutDistance, fadeOutDistance[ d ] );				
+					fadeOutDistance[ d ] = Math.max( minFadeOutDistance, fadeOutDistance[ d ] );
 			}
 		}
 		else
@@ -111,12 +151,12 @@ public class OutOfBoundsMirrorExpWindowingFactory< T extends NumericType< T >, F
 				commonRelativeDistanceFadeOut = 0.1f;
 
 			fadeOutDistance = new int[ numDimensions ];
-			
+
 			for ( int d = 0; d < numDimensions; ++d )
 				fadeOutDistance[ d ] = Math.max( minFadeOutDistance, Util.round( f.dimension( d ) * commonRelativeDistanceFadeOut ) / 2 );
 		}
-		
-		return new OutOfBoundsMirrorExpWindowing<T>( f, fadeOutDistance, exponent );
+
+		return new OutOfBoundsMirrorExpWindowing< T >( f, fadeOutDistance, exponent );
 	}
 
 }

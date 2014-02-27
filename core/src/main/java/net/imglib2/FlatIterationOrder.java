@@ -49,10 +49,12 @@ import java.util.List;
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Chrisitan Dietz <cdietz85@googlemail.com>
  */
-public class FlatIterationOrder {
+public class FlatIterationOrder
+{
 	private final Interval interval;
 
-	public FlatIterationOrder(final Interval interval) {
+	public FlatIterationOrder( final Interval interval )
+	{
 		this.interval = interval;
 	}
 
@@ -66,30 +68,34 @@ public class FlatIterationOrder {
 	 * negatives: e.g., both objects must be instances of
 	 * {@link FlatIterationOrder} in order to be reported as equal.
 	 * </p>
-	 *
-	 * <p>TODO: consider improving this definition </p>
+	 * 
+	 * <p>
+	 * TODO: consider improving this definition
+	 * </p>
 	 * 
 	 * @return true, if obj is a compatible {@link FlatIterationOrder}.
 	 */
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals( final Object obj )
+	{
 
-		if (!(obj instanceof FlatIterationOrder))
+		if ( !( obj instanceof FlatIterationOrder ) )
 			return false;
 
-		final Interval i = ((FlatIterationOrder) obj).interval;
+		final Interval i = ( ( FlatIterationOrder ) obj ).interval;
 
-		final List<Integer> l1 = validIndices(i);
-		final List<Integer> l2 = validIndices(interval);
+		final List< Integer > l1 = validIndices( i );
+		final List< Integer > l2 = validIndices( interval );
 
 		// if the number of valid dims diverges, the intervals can't have same
 		// iteration order
-		if (l1.size() != l2.size())
+		if ( l1.size() != l2.size() )
 			return false;
 
-		for (int d = 0; d < l1.size(); d++) {
-			if (i.min(l1.get(d)) != interval.min(l2.get(d))
-					|| i.dimension(l1.get(d)) != interval.dimension(l2.get(d)))
+		for ( int d = 0; d < l1.size(); d++ )
+		{
+			if ( i.min( l1.get( d ) ) != interval.min( l2.get( d ) )
+					|| i.dimension( l1.get( d ) ) != interval.dimension( l2.get( d ) ) )
 				return false;
 		}
 
@@ -98,11 +104,13 @@ public class FlatIterationOrder {
 
 	// create a list with all valid dimension indices.
 	// a dimension is considered to be valid iff its larger than 1.
-	private List<Integer> validIndices(Interval i) {
-		List<Integer> indices = new ArrayList<Integer>(i.numDimensions());
-		for (int j = 0; j < i.numDimensions(); j++) {
-			if (i.dimension(j) > 1)
-				indices.add(j);
+	private List< Integer > validIndices( final Interval i )
+	{
+		final List< Integer > indices = new ArrayList< Integer >( i.numDimensions() );
+		for ( int j = 0; j < i.numDimensions(); j++ )
+		{
+			if ( i.dimension( j ) > 1 )
+				indices.add( j );
 		}
 		return indices;
 	}

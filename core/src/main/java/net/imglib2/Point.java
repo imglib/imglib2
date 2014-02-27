@@ -35,7 +35,7 @@ package net.imglib2;
 
 /**
  * A Point is a position in Euclidean space specified in integer coordinates.
- *
+ * 
  * @author ImgLib2 developers
  * @author Lee Kamentsky
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -44,7 +44,7 @@ public class Point extends AbstractLocalizable implements Positionable
 {
 	/**
 	 * Protected constructor that can re-use the passed position array.
-	 *
+	 * 
 	 * @param position
 	 *            array used to store the position.
 	 * @param copy
@@ -57,7 +57,7 @@ public class Point extends AbstractLocalizable implements Positionable
 
 	/**
 	 * Create a point in <i>nDimensional</i> space initialized to 0,0,...
-	 *
+	 * 
 	 * @param n
 	 *            number of dimensions of the space
 	 */
@@ -69,7 +69,7 @@ public class Point extends AbstractLocalizable implements Positionable
 	/**
 	 * Create a point at a definite location in a space of the dimensionality of
 	 * the position.
-	 *
+	 * 
 	 * @param position
 	 *            the initial position. The length of the array determines the
 	 *            dimensionality of the space.
@@ -82,7 +82,7 @@ public class Point extends AbstractLocalizable implements Positionable
 	/**
 	 * Create a point at a definite location in a space of the dimensionality of
 	 * the position.
-	 *
+	 * 
 	 * @param position
 	 *            the initial position. The length of the array determines the
 	 *            dimensionality of the space.
@@ -96,7 +96,7 @@ public class Point extends AbstractLocalizable implements Positionable
 	/**
 	 * Create a point using the position and dimensionality of a
 	 * {@link Localizable}
-	 *
+	 * 
 	 * @param localizable
 	 *            the initial position. Its dimensionality determines the
 	 *            dimensionality of the space.
@@ -202,7 +202,7 @@ public class Point extends AbstractLocalizable implements Positionable
 	/**
 	 * Create a point that stores its coordinates in the provided position
 	 * array.
-	 *
+	 * 
 	 * @param position
 	 *            array to use for storing the position.
 	 */

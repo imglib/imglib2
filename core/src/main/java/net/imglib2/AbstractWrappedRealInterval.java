@@ -36,7 +36,7 @@ package net.imglib2;
  * Convenient base class for {@link IterableRealInterval IterableRealIntervals},
  * etc that forward the {@link RealInterval} interface to, for example, their
  * source accessible.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public abstract class AbstractWrappedRealInterval< I extends RealInterval > implements RealInterval

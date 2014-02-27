@@ -34,13 +34,13 @@
 package net.imglib2;
 
 /**
- * {@link RandomAccessible} on a {@link RealRandomAccessible}.  For optimal
+ * {@link RandomAccessible} on a {@link RealRandomAccessible}. For optimal
  * performance, no integer coordinates are stored in the {@link RandomAccess}
  * but only method calls passed through to an actual {@link RealRandomAccess}.
  * Therefore, localization into integer fields performs a Math.round operation
- * per field and is thus not very efficient.  Localization into real fields,
+ * per field and is thus not very efficient. Localization into real fields,
  * however, is passed through and thus performs optimally.
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -61,20 +61,20 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 		public void localize( final int[] position )
 		{
 			for ( int d = 0; d < n; ++d )
-				position[ d ] = ( int )Math.round( targetAccess.getDoublePosition( d ) );
+				position[ d ] = ( int ) Math.round( targetAccess.getDoublePosition( d ) );
 		}
 
 		@Override
 		public void localize( final long[] position )
 		{
 			for ( int d = 0; d < n; ++d )
-				position[ d ] = Math.round( targetAccess.getDoublePosition( d ) );			
+				position[ d ] = Math.round( targetAccess.getDoublePosition( d ) );
 		}
 
 		@Override
 		public int getIntPosition( final int d )
 		{
-			return ( int )Math.round( targetAccess.getDoublePosition( d ) );
+			return ( int ) Math.round( targetAccess.getDoublePosition( d ) );
 		}
 
 		@Override
@@ -106,7 +106,7 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 		{
 			return targetAccess.getDoublePosition( d );
 		}
-		
+
 		@Override
 		public void fwd( final int d )
 		{

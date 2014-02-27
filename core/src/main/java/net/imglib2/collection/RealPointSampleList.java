@@ -43,8 +43,8 @@ import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
 
 /**
- * A list of data samples at explicit {@link RealLocalizable real coordinates}. 
- *
+ * A list of data samples at explicit {@link RealLocalizable real coordinates}.
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -53,9 +53,11 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 	public class RealPointSampleListCursor implements RealCursor< T >
 	{
 		protected int index = -1;
+
 		protected RealPoint position = null;
+
 		protected T sample = null;
-		
+
 		@Override
 		public RealCursor< T > copy()
 		{
@@ -63,7 +65,7 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 			copy.index = index;
 			copy.position = position;
 			copy.sample = sample;
-			
+
 			return copy;
 		}
 
@@ -152,15 +154,20 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 			/* Not yet implemented */
 		}
 	}
-	
+
 	final protected int n;
+
 	final protected ArrayList< RealPoint > coordinates = new ArrayList< RealPoint >();
+
 	final protected ArrayList< T > samples = new ArrayList< T >();
+
 	protected int lastIndex = -1;
+
 	final protected double[] min, max;
-	
+
 	/**
-	 * @param n - number of dimensions
+	 * @param n
+	 *            - number of dimensions
 	 */
 	public RealPointSampleList( final int n )
 	{
@@ -173,7 +180,7 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 			max[ d ] = -Double.MAX_VALUE;
 		}
 	}
-	
+
 	public void add( final RealPoint position, final T sample )
 	{
 		coordinates.add( position );
@@ -182,7 +189,7 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 		for ( int d = 0; d < n; ++d )
 		{
 			final double x = position.getDoublePosition( d );
-			
+
 			if ( x < min[ d ] )
 				min[ d ] = x;
 			if ( x > max[ d ] )

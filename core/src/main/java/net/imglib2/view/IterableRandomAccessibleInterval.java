@@ -46,9 +46,9 @@ import net.imglib2.RandomAccessibleInterval;
 
 /**
  * Generates {@link Cursor Cursors} that iterate a
- * {@link RandomAccessibleInterval} in flat order, that is: row by row, plane
- * by plane, cube by cube, ...
- *
+ * {@link RandomAccessibleInterval} in flat order, that is: row by row, plane by
+ * plane, cube by cube, ...
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

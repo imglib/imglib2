@@ -47,6 +47,7 @@ package net.imglib2;
  * 
  * @author Curtis Rueden
  */
-public interface Axis {
+public interface Axis
+{
 	// NB: Marker interface.
 }

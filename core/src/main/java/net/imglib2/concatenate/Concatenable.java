@@ -40,7 +40,7 @@ package net.imglib2.concatenate;
  * <em>ba = b.concatenate(a)</em>. Applying <em>ba</em> to <em>x</em> is
  * equivalent to first applying <em>a</em> to <em>x</em> and then applying
  * <em>b</em> to the result.
- *
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld

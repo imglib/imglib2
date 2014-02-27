@@ -38,7 +38,7 @@ import net.imglib2.converter.AbstractConvertedIterableInterval;
 
 /**
  * TODO
- *
+ * 
  */
 public class WriteConvertedIterableInterval< A, B > extends AbstractConvertedIterableInterval< A, B >
 {

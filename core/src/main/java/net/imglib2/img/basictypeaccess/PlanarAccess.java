@@ -35,12 +35,14 @@ package net.imglib2.img.basictypeaccess;
 
 /**
  * Interface allowing access to data on a plane-by-plane basis.
- *
- * @param <A> primitive array type
+ * 
+ * @param <A>
+ *            primitive array type
  * @author Curtis Rueden ctrueden at wisc.edu
  */
-public interface PlanarAccess<A>
+public interface PlanarAccess< A >
 {
 	A getPlane( int no );
+
 	void setPlane( int no, A plane );
 }

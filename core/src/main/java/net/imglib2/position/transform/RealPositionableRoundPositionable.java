@@ -41,17 +41,18 @@ import net.imglib2.RealPositionable;
 
 /**
  * Moves a {@link RealLocalizable} & {@link RealPositionable} and a
- * {@link Positionable} in synchrony.  The position of the latter is at the
- * round coordinates of the former:
- *
+ * {@link Positionable} in synchrony. The position of the latter is at the round
+ * coordinates of the former:
+ * 
  * f = r < 0 ? (long)( r - 0.5 ) : (long)( r + 0.5 )
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealPositionableRoundPositionable< P extends RealLocalizable & RealPositionable > extends AbstractEuclideanSpace implements RealPositionable, RealLocalizable
 {
 	final protected P source;
+
 	final protected Positionable target;
 
 	final private long[] round;

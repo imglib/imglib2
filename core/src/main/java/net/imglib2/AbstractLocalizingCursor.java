@@ -34,12 +34,12 @@
 package net.imglib2;
 
 /**
- * Abstract base class for localizing {@link Cursor}s.
- * The current position is maintained in the inherited
- * long[] {@link AbstractLocalizable#position position} field.
- *
+ * Abstract base class for localizing {@link Cursor}s. The current position is
+ * maintained in the inherited long[] {@link AbstractLocalizable#position
+ * position} field.
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
@@ -47,7 +47,8 @@ package net.imglib2;
 public abstract class AbstractLocalizingCursor< T > extends AbstractLocalizable implements Cursor< T >
 {
 	/**
-	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
+	 * @param n
+	 *            number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
 	public AbstractLocalizingCursor( final int n )
 	{

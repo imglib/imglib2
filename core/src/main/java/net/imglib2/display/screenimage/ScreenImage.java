@@ -36,8 +36,9 @@ package net.imglib2.display.screenimage;
 /**
  * Toplevel interface for screen images.
  * 
- * @param <T> The type of images this screen image produces.
- *
+ * @param <T>
+ *            The type of images this screen image produces.
+ * 
  * @author Curtis Rueden
  * @author Christian Dietz
  */

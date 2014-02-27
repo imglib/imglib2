@@ -40,21 +40,28 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * TODO
- *
+ * 
  * @author ImgLib2 developers
  */
-public class LanczosInterpolatorFactory<T extends RealType<T>> implements InterpolatorFactory< T, RandomAccessible< T > >
+public class LanczosInterpolatorFactory< T extends RealType< T >> implements InterpolatorFactory< T, RandomAccessible< T > >
 {
 	int alpha;
+
 	boolean clipping;
+
 	double min, max;
-	
+
 	/**
-	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc) interpolation in a certain window
+	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc)
+	 * interpolation in a certain window
 	 * 
-	 * @param alpha - the rectangular radius of the window for perfoming the lanczos interpolation
-	 * @param clipping - the lanczos-interpolation can create values that are bigger or smaller than the original values,
-	 *        so they can be clipped to the range of the {@link Type} if wanted
+	 * @param alpha
+	 *            - the rectangular radius of the window for perfoming the
+	 *            lanczos interpolation
+	 * @param clipping
+	 *            - the lanczos-interpolation can create values that are bigger
+	 *            or smaller than the original values, so they can be clipped to
+	 *            the range of the {@link Type} if wanted
 	 */
 	public LanczosInterpolatorFactory( final int alpha, final boolean clipping )
 	{
@@ -64,13 +71,20 @@ public class LanczosInterpolatorFactory<T extends RealType<T>> implements Interp
 	}
 
 	/**
-	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc) interpolation in a certain window
+	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc)
+	 * interpolation in a certain window
 	 * 
-	 * @param alpha - the rectangular radius of the window for perfoming the lanczos interpolation
-	 * @param min - the lanczos-interpolation can create values that are bigger or smaller than the original values,
-	 *        so they can be clipped to the range of the if wanted
-	 * @param max - the lanczos-interpolation can create values that are bigger or smaller than the original values,
-	 *        so they can be clipped to the range of the if wanted
+	 * @param alpha
+	 *            - the rectangular radius of the window for perfoming the
+	 *            lanczos interpolation
+	 * @param min
+	 *            - the lanczos-interpolation can create values that are bigger
+	 *            or smaller than the original values, so they can be clipped to
+	 *            the range of the if wanted
+	 * @param max
+	 *            - the lanczos-interpolation can create values that are bigger
+	 *            or smaller than the original values, so they can be clipped to
+	 *            the range of the if wanted
 	 */
 	public LanczosInterpolatorFactory( final int alpha, final double min, final double max )
 	{
@@ -81,12 +95,17 @@ public class LanczosInterpolatorFactory<T extends RealType<T>> implements Interp
 	}
 
 	/**
-	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc) interpolation in a certain window
+	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc)
+	 * interpolation in a certain window
 	 * 
-	 * @param min - the lanczos-interpolation can create values that are bigger or smaller than the original values,
-	 *        so they can be clipped to the range of the if wanted
-	 * @param max - the lanczos-interpolation can create values that are bigger or smaller than the original values,
-	 *        so they can be clipped to the range of the if wanted
+	 * @param min
+	 *            - the lanczos-interpolation can create values that are bigger
+	 *            or smaller than the original values, so they can be clipped to
+	 *            the range of the if wanted
+	 * @param max
+	 *            - the lanczos-interpolation can create values that are bigger
+	 *            or smaller than the original values, so they can be clipped to
+	 *            the range of the if wanted
 	 */
 	public LanczosInterpolatorFactory( final double min, final double max )
 	{
@@ -97,13 +116,14 @@ public class LanczosInterpolatorFactory<T extends RealType<T>> implements Interp
 	}
 
 	/**
-	 * Creates a new {@link LanczosInterpolatorFactory} with standard parameters (do clipping, alpha=3)
+	 * Creates a new {@link LanczosInterpolatorFactory} with standard parameters
+	 * (do clipping, alpha=3)
 	 */
 	public LanczosInterpolatorFactory()
 	{
 		this( 3, true );
 	}
-	
+
 	@Override
 	public LanczosInterpolator< T > create( final RandomAccessible< T > randomAccessible )
 	{
@@ -121,26 +141,44 @@ public class LanczosInterpolatorFactory<T extends RealType<T>> implements Interp
 	}
 
 	/**
-	 * Set the rectangular radius of the window for perfoming the lanczos interpolation
-	 * @param alpha - radius
-	 */
-	public void setAlpha( final int alpha ) { this.alpha = alpha; }
-	
-	/**
-	 * The lanczos-interpolation can create values that are bigger or smaller than the original values,
-	 * so they can be clipped to the range of the {@link RealType} if wanted
+	 * Set the rectangular radius of the window for perfoming the lanczos
+	 * interpolation
 	 * 
-	 * @param clipping - perform clipping (true)
+	 * @param alpha
+	 *            - radius
 	 */
-	public void setClipping( final boolean clipping ) { this.clipping = clipping; }
-	
+	public void setAlpha( final int alpha )
+	{
+		this.alpha = alpha;
+	}
+
 	/**
-	 * @return - rectangular radius of the window for perfoming the lanczos interpolation 
+	 * The lanczos-interpolation can create values that are bigger or smaller
+	 * than the original values, so they can be clipped to the range of the
+	 * {@link RealType} if wanted
+	 * 
+	 * @param clipping
+	 *            - perform clipping (true)
 	 */
-	public int getAlpha() { return alpha; }
-	
+	public void setClipping( final boolean clipping )
+	{
+		this.clipping = clipping;
+	}
+
 	/**
-	 * @return - if clipping to the {@link RealType} range will be performed 
+	 * @return - rectangular radius of the window for perfoming the lanczos
+	 *         interpolation
 	 */
-	public boolean getClipping() { return clipping; }
+	public int getAlpha()
+	{
+		return alpha;
+	}
+
+	/**
+	 * @return - if clipping to the {@link RealType} range will be performed
+	 */
+	public boolean getClipping()
+	{
+		return clipping;
+	}
 }

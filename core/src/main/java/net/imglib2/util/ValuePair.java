@@ -37,7 +37,7 @@ import net.imglib2.Pair;
 
 /**
  * TODO
- *
+ * 
  */
 public class ValuePair< A, B > implements Pair< A, B >
 {

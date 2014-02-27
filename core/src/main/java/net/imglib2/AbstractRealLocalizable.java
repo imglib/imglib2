@@ -36,7 +36,7 @@ package net.imglib2;
 /**
  * An abstract class that implements the {@link RealLocalizable} interface using
  * an array of doubles to maintain position
- *
+ * 
  * @author ImgLib2 developers
  * @author Lee Kamentsky
  * @author Stephan Saalfeld
@@ -46,8 +46,8 @@ public abstract class AbstractRealLocalizable extends AbstractEuclideanSpace imp
 {
 	/**
 	 * The {@link RealLocalizable} interface is implemented using the position
-	 * stored here. {@link RealPositionable} subclasses, such as {@link RealPoint},
-	 * modify this array.
+	 * stored here. {@link RealPositionable} subclasses, such as
+	 * {@link RealPoint}, modify this array.
 	 */
 	protected final double[] position;
 
@@ -64,7 +64,7 @@ public abstract class AbstractRealLocalizable extends AbstractEuclideanSpace imp
 	/**
 	 * Protected constructor that re-uses the passed position array. This is
 	 * intended to allow subclasses to provide a way to wrap a double[] array.
-	 *
+	 * 
 	 * @param position
 	 *            position array to use.
 	 */

@@ -40,7 +40,7 @@ import net.imglib2.concatenate.PreConcatenable;
 
 /**
  * TODO
- *
+ * 
  */
 public class TranslationTransform extends AbstractMixedTransform implements Translation, Concatenable< Translation >, PreConcatenable< Translation >
 {
@@ -48,8 +48,8 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 	 * target = source + translation.
 	 */
 	protected final long[] translation;
-	
-	protected final InverseTranslationTransform inverse;	
+
+	protected final InverseTranslationTransform inverse;
 
 	public TranslationTransform( final int targetDim )
 	{
@@ -88,7 +88,7 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 	}
 
 	@Override
-	public void apply( long[] source, long[] target )
+	public void apply( final long[] source, final long[] target )
 	{
 		assert source.length >= numTargetDimensions;
 		assert target.length >= numTargetDimensions;
@@ -98,7 +98,7 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 	}
 
 	@Override
-	public void apply( int[] source, int[] target )
+	public void apply( final int[] source, final int[] target )
 	{
 		assert source.length >= numTargetDimensions;
 		assert target.length >= numTargetDimensions;
@@ -108,21 +108,21 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 	}
 
 	@Override
-	public void apply( Localizable source, Positionable target )
+	public void apply( final Localizable source, final Positionable target )
 	{
 		assert source.numDimensions() >= numTargetDimensions;
 		assert target.numDimensions() >= numTargetDimensions;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
-			target.setPosition( source.getLongPosition( d ) + translation[ d ] , d );
+			target.setPosition( source.getLongPosition( d ) + translation[ d ], d );
 	}
 
 	@Override
-	public TranslationTransform concatenate( Translation t )
+	public TranslationTransform concatenate( final Translation t )
 	{
 		assert numTargetDimensions == t.numTargetDimensions();
-			
-		TranslationTransform result = new TranslationTransform( numTargetDimensions );
+
+		final TranslationTransform result = new TranslationTransform( numTargetDimensions );
 		for ( int d = 0; d < numTargetDimensions; ++d )
 			result.translation[ d ] = this.translation[ d ] + t.getTranslation( d );
 		return result;
@@ -135,7 +135,7 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 	}
 
 	@Override
-	public TranslationTransform preConcatenate( Translation t )
+	public TranslationTransform preConcatenate( final Translation t )
 	{
 		return concatenate( t );
 	}
@@ -165,9 +165,9 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 	@Override
 	public double[][] getMatrix()
 	{
-		double[][] mat = new double[ numTargetDimensions + 1][ numTargetDimensions + 1 ];
+		final double[][] mat = new double[ numTargetDimensions + 1 ][ numTargetDimensions + 1 ];
 
-		mat[ numTargetDimensions ][ numTargetDimensions] = 1 ;
+		mat[ numTargetDimensions ][ numTargetDimensions ] = 1;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 		{
@@ -179,7 +179,7 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 	}
 
 	@Override
-	public void applyInverse( long[] source, long[] target )
+	public void applyInverse( final long[] source, final long[] target )
 	{
 		assert source.length >= numTargetDimensions;
 		assert target.length >= numTargetDimensions;
@@ -189,64 +189,64 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 	}
 
 	@Override
-	public void applyInverse( int[] source, int[] target )
+	public void applyInverse( final int[] source, final int[] target )
 	{
 		assert source.length >= numTargetDimensions;
 		assert target.length >= numTargetDimensions;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
-			source[ d ] = target[ d ] - ( int )translation[ d ];
+			source[ d ] = target[ d ] - ( int ) translation[ d ];
 	}
 
 	@Override
-	public void applyInverse( Positionable source, Localizable target )
+	public void applyInverse( final Positionable source, final Localizable target )
 	{
 		assert source.numDimensions() >= numTargetDimensions;
 		assert target.numDimensions() >= numTargetDimensions;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
-			source.setPosition( target.getLongPosition( d ) - translation[ d ] , d );
+			source.setPosition( target.getLongPosition( d ) - translation[ d ], d );
 	}
 
 	public class InverseTranslationTransform extends AbstractMixedTransform implements Translation, Concatenable< Translation >, PreConcatenable< Translation >
 	{
-		InverseTranslationTransform( int targetDim )
+		InverseTranslationTransform( final int targetDim )
 		{
 			super( targetDim );
 		}
 
 		@Override
-		public void apply( long[] source, long[] target )
+		public void apply( final long[] source, final long[] target )
 		{
 			TranslationTransform.this.applyInverse( target, source );
 		}
 
 		@Override
-		public void apply( int[] source, int[] target )
+		public void apply( final int[] source, final int[] target )
 		{
 			TranslationTransform.this.applyInverse( target, source );
 		}
 
 		@Override
-		public void apply( Localizable source, Positionable target )
+		public void apply( final Localizable source, final Positionable target )
 		{
 			TranslationTransform.this.applyInverse( target, source );
 		}
 
 		@Override
-		public void applyInverse( long[] source, long[] target )
+		public void applyInverse( final long[] source, final long[] target )
 		{
 			TranslationTransform.this.apply( target, source );
 		}
 
 		@Override
-		public void applyInverse( int[] source, int[] target )
+		public void applyInverse( final int[] source, final int[] target )
 		{
 			TranslationTransform.this.apply( target, source );
 		}
 
 		@Override
-		public void applyInverse( Positionable source, Localizable target )
+		public void applyInverse( final Positionable source, final Localizable target )
 		{
 			TranslationTransform.this.apply( target, source );
 		}
@@ -254,9 +254,9 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 		@Override
 		public double[][] getMatrix()
 		{
-			double[][] mat = new double[ numTargetDimensions + 1 ][ numTargetDimensions + 1 ];
+			final double[][] mat = new double[ numTargetDimensions + 1 ][ numTargetDimensions + 1 ];
 
-			mat[ numTargetDimensions][ numTargetDimensions ] = 1;
+			mat[ numTargetDimensions ][ numTargetDimensions ] = 1;
 
 			for ( int d = 0; d < numTargetDimensions; ++d )
 			{
@@ -289,10 +289,10 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 		}
 
 		@Override
-		public TranslationTransform concatenate( Translation t )
+		public TranslationTransform concatenate( final Translation t )
 		{
 			assert numTargetDimensions == t.numTargetDimensions();
-			TranslationTransform result = new TranslationTransform( numTargetDimensions );
+			final TranslationTransform result = new TranslationTransform( numTargetDimensions );
 			for ( int d = 0; d < numTargetDimensions; ++d )
 				result.translation[ d ] = t.getTranslation( d ) - TranslationTransform.this.translation[ d ];
 			return result;
@@ -305,7 +305,7 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 		}
 
 		@Override
-		public TranslationTransform preConcatenate( Translation t )
+		public TranslationTransform preConcatenate( final Translation t )
 		{
 			return concatenate( t );
 		}
@@ -316,7 +316,7 @@ public class TranslationTransform extends AbstractMixedTransform implements Tran
 			return Translation.class;
 		}
 	}
-	
+
 	@Override
 	public InverseTranslationTransform inverse()
 	{

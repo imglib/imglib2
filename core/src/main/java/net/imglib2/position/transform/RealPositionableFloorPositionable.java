@@ -41,18 +41,19 @@ import net.imglib2.RealPositionable;
 
 /**
  * Moves a {@link RealLocalizable} & {@link RealPositionable} and a
- * {@link Positionable} in synchrony.  The position of the latter is at the
- * floor coordinates of the former.  For practical useage, the floor operation
- * is defined as the integer smaller than the real value:
- *
+ * {@link Positionable} in synchrony. The position of the latter is at the floor
+ * coordinates of the former. For practical useage, the floor operation is
+ * defined as the integer smaller than the real value:
+ * 
  * f = r < 0 ? (long)r - 1 : (long)r
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealPositionableFloorPositionable< P extends RealLocalizable & RealPositionable > extends AbstractEuclideanSpace implements RealPositionable, RealLocalizable
 {
 	final protected P source;
+
 	final protected Positionable target;
 
 	/* temporary floor position register */

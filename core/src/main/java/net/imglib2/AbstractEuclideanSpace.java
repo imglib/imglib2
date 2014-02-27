@@ -37,8 +37,9 @@ package net.imglib2;
  * Superclass of abstract EuclideanSpace implementations (accessors, containers,
  * etc). Does nothing but store the number of dimensions of the underlying
  * function.
- *
- *         Stephan Saalfeld
+ * 
+ * Stephan Saalfeld
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>

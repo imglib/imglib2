@@ -59,129 +59,144 @@ import org.junit.Test;
  * @author Johannes Schindelin
  */
 
-public class GeneralPathRegionOfInterestTest {
+public class GeneralPathRegionOfInterestTest
+{
 
 	@Test
-	public void testIsMemberInCircle() {
+	public void testIsMemberInCircle()
+	{
 		/*
 		 * Testing with non-integral center because otherwise the right- and the
 		 * bottom-most pixel would be triggering an assertion error.
 		 */
 		final double x0 = 100.5, y0 = 120.5, radius = 50;
-		final AbstractRegionOfInterest roi = makeCircle(x0, y0, radius);
+		final AbstractRegionOfInterest roi = makeCircle( x0, y0, radius );
 
-		final double[] coords = new double[2];
-		for (coords[0] = 0; coords[0] < x0 + radius + 10; coords[0] += 1) {
-			for (coords[1] = 0; coords[1] < y0 + radius + 10; coords[1] += 1) {
-				final double distance = getDistance(x0, y0, coords[0], coords[1]);
-				if (distance <= radius) assertTrue("(" + coords[0] + ", " + coords[1] +
-					") is inside", roi.contains(coords));
-				else assertFalse("(" + coords[0] + ", " + coords[1] + ") is outside",
-					roi.contains(coords));
+		final double[] coords = new double[ 2 ];
+		for ( coords[ 0 ] = 0; coords[ 0 ] < x0 + radius + 10; coords[ 0 ] += 1 )
+		{
+			for ( coords[ 1 ] = 0; coords[ 1 ] < y0 + radius + 10; coords[ 1 ] += 1 )
+			{
+				final double distance = getDistance( x0, y0, coords[ 0 ], coords[ 1 ] );
+				if ( distance <= radius )
+					assertTrue( "(" + coords[ 0 ] + ", " + coords[ 1 ] +
+							") is inside", roi.contains( coords ) );
+				else
+					assertFalse( "(" + coords[ 0 ] + ", " + coords[ 1 ] + ") is outside",
+							roi.contains( coords ) );
 			}
 		}
 	}
 
 	@Test
-	public void testCircleAsIterator() {
+	public void testCircleAsIterator()
+	{
 		/*
 		 * Testing with non-integral center because otherwise the right- and the
 		 * bottom-most pixel would be triggering an assertion error.
 		 */
 		final double x0 = 10, y0 = 12, radius = 5;
-		final IterableRegionOfInterest roi = makeCircle(x0, y0, radius);
+		final IterableRegionOfInterest roi = makeCircle( x0, y0, radius );
 
-		final long width = (int)Math.ceil(x0 + radius + 10);
-		final long height = (int)Math.ceil(y0 + radius + 10);
+		final long width = ( int ) Math.ceil( x0 + radius + 10 );
+		final long height = ( int ) Math.ceil( y0 + radius + 10 );
 
-		RandomAccessible<BitType> randomAccessible = new ArrayImgFactory<BitType>().create(new long[] { width, height }, new BitType());
-		IterableInterval<BitType> interval = roi.getIterableIntervalOverROI(randomAccessible);
-		Cursor<BitType> cursor = interval.localizingCursor();
+		final RandomAccessible< BitType > randomAccessible = new ArrayImgFactory< BitType >().create( new long[] { width, height }, new BitType() );
+		final IterableInterval< BitType > interval = roi.getIterableIntervalOverROI( randomAccessible );
+		final Cursor< BitType > cursor = interval.localizingCursor();
 
-		int y = (int)Math.ceil(y0 - radius);
-		int x = (int)Math.ceil(x0 - Math.sqrt(radius * radius - (y - y0) * (y - y0)));
+		int y = ( int ) Math.ceil( y0 - radius );
+		int x = ( int ) Math.ceil( x0 - Math.sqrt( radius * radius - ( y - y0 ) * ( y - y0 ) ) );
 
 		// For AWT, we are pretty lenient about boundary pixels...
-		double[] coords = new double[2];
-		while (cursor.hasNext()) {
+		final double[] coords = new double[ 2 ];
+		while ( cursor.hasNext() )
+		{
 			cursor.fwd();
-			cursor.localize(coords);
-			if (Math.abs(x - coords[0]) > 1e-10 || Math.abs(y - coords[1]) > 1e-10) {
-				assertTrue("< 1", Math.abs(y - coords[1]) <= 1 + 1e-10);
+			cursor.localize( coords );
+			if ( Math.abs( x - coords[ 0 ] ) > 1e-10 || Math.abs( y - coords[ 1 ] ) > 1e-10 )
+			{
+				assertTrue( "< 1", Math.abs( y - coords[ 1 ] ) <= 1 + 1e-10 );
 				y++;
-				x = (int)Math.ceil(x0 - Math.sqrt(radius * radius - (y - y0) * (y - y0)));
-				if (Math.abs(x - coords[0]) <= 1 + 1e-10) {
-					x = (int)Math.round(coords[0]);
+				x = ( int ) Math.ceil( x0 - Math.sqrt( radius * radius - ( y - y0 ) * ( y - y0 ) ) );
+				if ( Math.abs( x - coords[ 0 ] ) <= 1 + 1e-10 )
+				{
+					x = ( int ) Math.round( coords[ 0 ] );
 				}
 			}
-			assertEquals("x", x, coords[0], 1e-10);
-			assertEquals("y", y, coords[1], 1e-10);
+			assertEquals( "x", x, coords[ 0 ], 1e-10 );
+			assertEquals( "y", y, coords[ 1 ], 1e-10 );
 			x++;
 		}
 	}
 
-	private double getDistance(final double x0, final double y0,
-		final double x1, final double y1)
+	private double getDistance( final double x0, final double y0,
+			final double x1, final double y1 )
 	{
 		final double x = x1 - x0;
 		final double y = y1 - y0;
-		final double distance = Math.sqrt(x * x + y * y);
+		final double distance = Math.sqrt( x * x + y * y );
 		return distance;
 	}
 
 	/**
 	 * Approximate a circle.
-	 *
-	 * For a subdivision into n segments, the inner control
-	 * points of each cubic Bézier segment should be tangential at a distance of
-	 * 4/3 * tan(2*PI/n) to the closest end point.
+	 * 
+	 * For a subdivision into n segments, the inner control points of each cubic
+	 * Bézier segment should be tangential at a distance of 4/3 * tan(2*PI/n) to
+	 * the closest end point.
 	 */
-	private GeneralPathRegionOfInterest makeCircle(final double x0,
-		final double y0, final double radius)
+	private GeneralPathRegionOfInterest makeCircle( final double x0,
+			final double y0, final double radius )
 	{
 		final GeneralPath path = new GeneralPath();
 		final double controlDistance =
-			4.0 / 3.0 * Math.tan(1.0 / 4.0 * (Math.PI * 2 / 4)) * radius;
+				4.0 / 3.0 * Math.tan( 1.0 / 4.0 * ( Math.PI * 2 / 4 ) ) * radius;
 
-		path.moveTo(x0 + radius, y0);
-		path.curveTo(x0 + radius, y0 - controlDistance, x0 + controlDistance, y0 -
-			radius, x0, y0 - radius);
-		path.curveTo(x0 - controlDistance, y0 - radius, x0 - radius, y0 -
-			controlDistance, x0 - radius, y0);
-		path.curveTo(x0 - radius, y0 + controlDistance, x0 - controlDistance, y0 +
-			radius, x0, y0 + radius);
-		path.curveTo(x0 + controlDistance, y0 + radius, x0 + radius, y0 +
-			controlDistance, x0 + radius, y0);
+		path.moveTo( x0 + radius, y0 );
+		path.curveTo( x0 + radius, y0 - controlDistance, x0 + controlDistance, y0 -
+				radius, x0, y0 - radius );
+		path.curveTo( x0 - controlDistance, y0 - radius, x0 - radius, y0 -
+				controlDistance, x0 - radius, y0 );
+		path.curveTo( x0 - radius, y0 + controlDistance, x0 - controlDistance, y0 +
+				radius, x0, y0 + radius );
+		path.curveTo( x0 + controlDistance, y0 + radius, x0 + radius, y0 +
+				controlDistance, x0 + radius, y0 );
 		path.closePath();
 
 		final GeneralPathRegionOfInterest roi = new GeneralPathRegionOfInterest();
-		roi.setGeneralPath(path);
+		roi.setGeneralPath( path );
 
 		return roi;
 	}
 
-	@SuppressWarnings("unused") // for debugging
-	private void showPath(final GeneralPath path) {
-		final JFrame frame = new JFrame("Path " + path);
-		final JPanel panel = new JPanel() {
+	@SuppressWarnings( "unused" )
+	// for debugging
+	private void showPath( final GeneralPath path )
+	{
+		final JFrame frame = new JFrame( "Path " + path );
+		final JPanel panel = new JPanel()
+		{
 
 			private static final long serialVersionUID = 5294182503921406779L;
 
 			@Override
-			public void paint(final Graphics g) {
-				final Graphics2D g2d = (Graphics2D) g;
-				g2d.setColor(Color.BLACK);
-				g2d.fill(path);
+			public void paint( final Graphics g )
+			{
+				final Graphics2D g2d = ( Graphics2D ) g;
+				g2d.setColor( Color.BLACK );
+				g2d.fill( path );
 			}
 
 			@Override
-			public Dimension getPreferredSize() {
+			public Dimension getPreferredSize()
+			{
 				final Rectangle bounds = path.getBounds();
-				return new Dimension(bounds.width + bounds.x, bounds.height + bounds.y);
+				return new Dimension( bounds.width + bounds.x, bounds.height + bounds.y );
 			}
 		};
-		frame.getContentPane().add(panel);
+		frame.getContentPane().add( panel );
 		frame.pack();
-		frame.setVisible(true);
+		frame.setVisible( true );
 	}
 }

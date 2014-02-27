@@ -40,7 +40,7 @@ import org.junit.Test;
 
 /**
  * @author Tobias Pietzsch
- *
+ * 
  */
 public class NtreeTest
 {
@@ -48,8 +48,8 @@ public class NtreeTest
 	public void test_getNode()
 	{
 		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
+		final Ntree< Integer > t = new Ntree< Integer >( new long[] { 256, 257, 100 }, v );
+		final long[] pos = new long[] { 27, 38, 99 };
 		final Ntree.NtreeNode< Integer > n = t.getNode( pos );
 
 		assertTrue( n != null );
@@ -60,15 +60,15 @@ public class NtreeTest
 	public void test_createNote()
 	{
 		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
+		final Ntree< Integer > t = new Ntree< Integer >( new long[] { 256, 257, 100 }, v );
+		final long[] pos = new long[] { 27, 38, 99 };
 		final Ntree.NtreeNode< Integer > n = t.createNode( pos );
 
 		assertTrue( n != null );
 		assertTrue( n.getValue() == v );
 
 		n.setValue( v + 1 );
-		final long[] pos2 = new long[] {28, 38, 99};
+		final long[] pos2 = new long[] { 28, 38, 99 };
 		final Ntree.NtreeNode< Integer > n2 = t.getNode( pos2 );
 
 		assertTrue( n2 != null );
@@ -79,8 +79,8 @@ public class NtreeTest
 	public void test_mergeUpwards()
 	{
 		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
+		final Ntree< Integer > t = new Ntree< Integer >( new long[] { 256, 257, 100 }, v );
+		final long[] pos = new long[] { 27, 38, 99 };
 		t.createNode( pos ).setValue( v + 1 );
 
 		final Ntree.NtreeNode< Integer > n = t.getNode( pos );

@@ -39,29 +39,32 @@ import net.imglib2.RandomAccessible;
 
 /**
  * {@link CompositeView} collapses the trailing dimension of a
- * {@link RandomAccessible} of T into a {@link Composite} of T.  The results is
+ * {@link RandomAccessible} of T into a {@link Composite} of T. The results is
  * an (<em>n</em>-1)-dimensional {@link RandomAccessible} of {@link Composite}
  * of T.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class CompositeView< T, C extends Composite< T > > implements RandomAccessible< C >
 {
 	final protected CompositeFactory< T, C > compositeFactory;
+
 	final protected RandomAccessible< T > source;
+
 	final protected int n;
-	
+
 	public class CompositeRandomAccess implements RandomAccess< C >
 	{
 		final protected RandomAccess< T > sourceAccess;
+
 		final protected C composite;
-		
+
 		public CompositeRandomAccess()
 		{
 			sourceAccess = source.randomAccess();
 			composite = compositeFactory.create( sourceAccess );
 		}
-		
+
 		@Override
 		public void localize( final int[] position )
 		{
@@ -216,14 +219,14 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 			return copy();
 		}
 	}
-	
+
 	public CompositeView( final RandomAccessible< T > source, final CompositeFactory< T, C > compositeFactory )
 	{
 		this.source = source;
 		this.compositeFactory = compositeFactory;
 		n = source.numDimensions() - 1;
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{

@@ -34,23 +34,27 @@
 package net.imglib2;
 
 /**
- * <p>{x&isin;R<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;<em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;<em>n</em>-1}}</p>
- *
- * An {@link RealInterval} over the real source domain.  <em>Note</em> that
- * this does <em>not</em> imply that for <em>all</em> coordinates in the
- * {@link RealInterval} function values exist or can be generated.  It only
- * defines where the minimum and maximum source coordinates are.  E.g. an
+ * <p>
+ * {x&isin;R<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;
+ * <em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;
+ * <em>n</em>-1}}
+ * </p>
+ * 
+ * An {@link RealInterval} over the real source domain. <em>Note</em> that this
+ * does <em>not</em> imply that for <em>all</em> coordinates in the
+ * {@link RealInterval} function values exist or can be generated. It only
+ * defines where the minimum and maximum source coordinates are. E.g. an
  * {@link IterableRealInterval} has a limited number of values and a source
- * coordinate for each.  By that, minimum and maximum are defined but the
+ * coordinate for each. By that, minimum and maximum are defined but the
  * {@link RealInterval} does not define a value for all coordinates in between.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface RealInterval extends EuclideanSpace
 {
 	/**
 	 * Get the minimum in dimension d.
-	 *
+	 * 
 	 * @param d
 	 *            dimension
 	 * @return minimum in dimension d.
@@ -59,21 +63,21 @@ public interface RealInterval extends EuclideanSpace
 
 	/**
 	 * Write the minimum of each dimension into double[].
-	 *
+	 * 
 	 * @param min
 	 */
 	public void realMin( double[] min );
 
 	/**
 	 * Sets a {@link RealPositionable} to the minimum of this {@link Interval}
-	 *
+	 * 
 	 * @param min
 	 */
 	public void realMin( RealPositionable min );
 
 	/**
 	 * Get the maximum in dimension d.
-	 *
+	 * 
 	 * @param d
 	 *            dimension
 	 * @return maximum in dimension d.
@@ -82,14 +86,14 @@ public interface RealInterval extends EuclideanSpace
 
 	/**
 	 * Write the maximum of each dimension into double[].
-	 *
+	 * 
 	 * @param max
 	 */
 	public void realMax( double[] max );
 
 	/**
 	 * Sets a {@link RealPositionable} to the maximum of this {@link Interval}
-	 *
+	 * 
 	 * @param max
 	 */
 	public void realMax( RealPositionable max );

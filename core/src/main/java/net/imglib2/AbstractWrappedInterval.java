@@ -36,7 +36,7 @@ package net.imglib2;
  * Convenient base class for {@link IterableInterval IterableIntervals},
  * {@link RandomAccessibleInterval RandomAccessibleIntervals}, etc that forward
  * the {@link Interval} interface to, for example, their source accessible.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public abstract class AbstractWrappedInterval< I extends Interval > extends AbstractWrappedRealInterval< I > implements Interval

@@ -44,14 +44,16 @@ import org.junit.Test;
 
 /**
  * TODO
- *
+ * 
  */
 public class CellContainerTest
 {
 	int[] cellDimensions;
+
 	long[] dimensions;
+
 	Img< FloatType > img;
-	
+
 	@Before
 	public void setUp()
 	{
@@ -65,15 +67,15 @@ public class CellContainerTest
 	public void equalIterationOrder()
 	{
 		final Img< FloatType > img2 = new CellImgFactory< FloatType >( cellDimensions ).create( dimensions, new FloatType() );
-		assertTrue( img2.equalIterationOrder( img ) );		
-		assertTrue( img.equalIterationOrder( img2 ) );		
+		assertTrue( img2.equalIterationOrder( img ) );
+		assertTrue( img.equalIterationOrder( img2 ) );
 
 		final Img< FloatType > img3 = new CellImgFactory< FloatType >( 9 ).create( dimensions, new FloatType() );
-		assertFalse( img3.equalIterationOrder( img ) );		
-		assertFalse( img.equalIterationOrder( img3 ) );		
+		assertFalse( img3.equalIterationOrder( img ) );
+		assertFalse( img.equalIterationOrder( img3 ) );
 
 		final Img< FloatType > img4 = new ArrayImgFactory< FloatType >().create( dimensions, new FloatType() );
-		assertFalse( img4.equalIterationOrder( img ) );		
-		assertFalse( img.equalIterationOrder( img4 ) );		
+		assertFalse( img4.equalIterationOrder( img ) );
+		assertFalse( img.equalIterationOrder( img4 ) );
 	}
 }

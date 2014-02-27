@@ -35,7 +35,7 @@ package net.imglib2.util;
 
 /**
  * TODO
- *
+ * 
  */
 public class Triple< A, B, C >
 {

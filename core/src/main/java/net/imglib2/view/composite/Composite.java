@@ -34,14 +34,14 @@ package net.imglib2.view.composite;
 
 /**
  * A {@link Composite} is a vector of scalars T.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface Composite< T >
 {
 	/**
 	 * Get the <em>i</em><sup>th</sup> scalar value of the {@link Composite}.
-	 *  
+	 * 
 	 * @param i
 	 * @return
 	 */

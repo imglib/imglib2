@@ -41,25 +41,26 @@ import net.imglib2.RealPositionable;
 /**
  * {@link SubsampleIntervalView} is a view that provides access to only every
  * <em>s<sub>d</sub></em><sup>th</sup> value of a source
- * {@link RandomAccessibleInterval}.  Its transformed origin is at the min
- * coordinate of the source {@link Interval}.  This is effectively an integer
- * scaling and optional offset transformation.  Localization calls to the
+ * {@link RandomAccessibleInterval}. Its transformed origin is at the min
+ * coordinate of the source {@link Interval}. This is effectively an integer
+ * scaling and optional offset transformation. Localization calls to the
  * {@link RandomAccess} and {@link Interval} dimension calls to the
  * {@link SubsampleIntervalView} return scaled and translated coordinates that
- * are generated on-the-fly.  Localization is thus moderately inefficient to
- * the benefit of faster positioning.  Don't ask for what you already know ;).
- *
+ * are generated on-the-fly. Localization is thus moderately inefficient to the
+ * benefit of faster positioning. Don't ask for what you already know ;).
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class SubsampleIntervalView< T > extends SubsampleView< T > implements RandomAccessibleInterval< T >
 {
 	final protected long[] dimensions;
+
 	final protected long[] max;
-	
+
 	public SubsampleIntervalView( final RandomAccessibleInterval< T > source, final long step )
 	{
 		super( Views.zeroMin( source ), step );
-		
+
 		dimensions = new long[ steps.length ];
 		max = new long[ steps.length ];
 		for ( int d = 0; d < steps.length; ++d )
@@ -69,11 +70,11 @@ public class SubsampleIntervalView< T > extends SubsampleView< T > implements Ra
 			max[ d ] = dimensions[ d ] - 1;
 		}
 	}
-	
+
 	public SubsampleIntervalView( final RandomAccessibleInterval< T > source, final long... steps )
 	{
 		super( Views.zeroMin( source ), steps );
-		
+
 		dimensions = new long[ steps.length ];
 		max = new long[ steps.length ];
 		for ( int d = 0; d < steps.length; ++d )
@@ -83,7 +84,7 @@ public class SubsampleIntervalView< T > extends SubsampleView< T > implements Ra
 			max[ d ] = dimensions[ d ] - 1;
 		}
 	}
-	
+
 	@Override
 	public long min( final int d )
 	{
@@ -94,7 +95,7 @@ public class SubsampleIntervalView< T > extends SubsampleView< T > implements Ra
 	public void min( final long[] min )
 	{
 		for ( int d = 0; d < steps.length; ++d )
-			min[ d ] = 0;		
+			min[ d ] = 0;
 	}
 
 	@Override
@@ -169,7 +170,7 @@ public class SubsampleIntervalView< T > extends SubsampleView< T > implements Ra
 	{
 		for ( int d = 0; d < steps.length; ++d )
 			dim[ d ] = this.dimensions[ d ];
-		
+
 	}
 
 	@Override

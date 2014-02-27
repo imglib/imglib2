@@ -35,7 +35,7 @@ package net.imglib2.exception;
 
 /**
  * TODO
- *
+ * 
  * @author Curtis Rueden
  * @author Stephan Preibisch
  * @author Johannes Schindelin
@@ -47,5 +47,8 @@ public class IncompatibleTypeException extends ImgLibException
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public IncompatibleTypeException( final Object obj, final String message ) { super( obj.getClass().getCanonicalName() + ": " + message ); }
+	public IncompatibleTypeException( final Object obj, final String message )
+	{
+		super( obj.getClass().getCanonicalName() + ": " + message );
+	}
 }

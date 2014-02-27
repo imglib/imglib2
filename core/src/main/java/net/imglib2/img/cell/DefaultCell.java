@@ -37,8 +37,8 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 
 /**
  * Default (empty) implementation of the {@link AbstractCell}.
- *
- *
+ * 
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */

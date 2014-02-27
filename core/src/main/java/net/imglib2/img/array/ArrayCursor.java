@@ -39,9 +39,9 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * {@link Cursor} on an {@link ArrayImg}.
- *
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -59,7 +59,7 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 
 		this.img = cursor.img;
 		this.type = img.createLinkedType();
-		this.lastIndex = ( int )img.size() - 1;
+		this.lastIndex = ( int ) img.size() - 1;
 
 		type.updateIndex( cursor.type.getIndex() );
 		type.updateContainer( this );
@@ -71,7 +71,7 @@ public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt<
 
 		this.type = img.createLinkedType();
 		this.img = img;
-		this.lastIndex = ( int )img.size() - 1;
+		this.lastIndex = ( int ) img.size() - 1;
 
 		reset();
 	}

@@ -40,8 +40,8 @@ import net.imglib2.util.Util;
 
 /**
  * Use this class to iterate a virtual {@link Interval} in flat order, that is:
- * row by row, plane by plane, cube by cube, ...  This is useful for iterating
- * an arbitrary interval in a defined order.  For that, connect a
+ * row by row, plane by plane, cube by cube, ... This is useful for iterating an
+ * arbitrary interval in a defined order. For that, connect a
  * {@link LocalizingIntervalIterator} to a {@link Positionable}.
  * 
  * <pre>
@@ -59,10 +59,10 @@ import net.imglib2.util.Util;
  * 
  * Note that {@link LocalizingIntervalIterator} is the right choice in
  * situations where, for <em>each</em> pixel, you want to localize and/or set
- * the {@link RandomAccess}, that is, in a dense sampling situation.  For
+ * the {@link RandomAccess}, that is, in a dense sampling situation. For
  * localizing sparsely (e.g. under an external condition), use
  * {@link IntervalIterator} instead.
- *  
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -70,7 +70,7 @@ import net.imglib2.util.Util;
 public class LocalizingIntervalIterator extends IntervalIterator
 {
 	final protected long[] position;
-	
+
 	public LocalizingIntervalIterator( final long[] dimensions )
 	{
 		super( dimensions );
@@ -94,14 +94,13 @@ public class LocalizingIntervalIterator extends IntervalIterator
 	{
 		this( Util.int2long( min ), Util.int2long( max ) );
 	}
-	
+
 	public LocalizingIntervalIterator( final Interval interval )
 	{
 		super( interval );
 		position = new long[ n ];
 		reset();
 	}
-	
 
 	/* Iterator */
 
@@ -135,10 +134,9 @@ public class LocalizingIntervalIterator extends IntervalIterator
 		for ( int d = 1; d < n; ++d )
 			position[ d ] = min[ d ];
 	}
-	
-	
+
 	/* Localizable */
-	
+
 	@Override
 	public void localize( final float[] pos )
 	{
@@ -157,32 +155,32 @@ public class LocalizingIntervalIterator extends IntervalIterator
 	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = ( int )this.position[ d ];
+			pos[ d ] = ( int ) this.position[ d ];
 	}
-	
+
 	@Override
 	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
 			pos[ d ] = this.position[ d ];
 	}
-	
+
 	@Override
 	public float getFloatPosition( final int d )
 	{
 		return position[ d ];
 	}
-	
+
 	@Override
 	public double getDoublePosition( final int d )
 	{
 		return position[ d ];
 	}
-	
+
 	@Override
 	public int getIntPosition( final int d )
 	{
-		return ( int )position[ d ];
+		return ( int ) position[ d ];
 	}
 
 	@Override

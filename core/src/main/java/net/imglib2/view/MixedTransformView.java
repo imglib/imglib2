@@ -41,7 +41,7 @@ import net.imglib2.transform.integer.MixedTransform;
 
 /**
  * TODO
- *
+ * 
  */
 public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 {
@@ -91,7 +91,7 @@ public class MixedTransformView< T > implements TransformedRandomAccessible< T >
 	public String toString()
 	{
 		String className = this.getClass().getCanonicalName();
-		className = className.substring( className.lastIndexOf(".") + 1, className.length());
+		className = className.substring( className.lastIndexOf( "." ) + 1, className.length() );
 		return className + "(" + super.toString() + ")";
 	}
 

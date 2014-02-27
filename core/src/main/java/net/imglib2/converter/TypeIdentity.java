@@ -37,7 +37,7 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
 public class TypeIdentity< T extends Type< T > > implements Converter< T, T >

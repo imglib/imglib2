@@ -40,7 +40,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 
 /**
  * TODO
- *
+ * 
  */
 public final class RealDoubleSamplerConverter< R extends RealType< R > > implements SamplerConverter< R, DoubleType >
 {
@@ -60,8 +60,7 @@ public final class RealDoubleSamplerConverter< R extends RealType< R > > impleme
 		}
 
 		/**
-		 * This is only intended to work with DoubleType!
-		 * We ignore index!!!
+		 * This is only intended to work with DoubleType! We ignore index!!!
 		 */
 		@Override
 		public double getValue( final int index )
@@ -70,8 +69,7 @@ public final class RealDoubleSamplerConverter< R extends RealType< R > > impleme
 		}
 
 		/**
-		 * This is only intended to work with DoubleType!
-		 * We ignore index!!!
+		 * This is only intended to work with DoubleType! We ignore index!!!
 		 */
 		@Override
 		public void setValue( final int index, final double value )

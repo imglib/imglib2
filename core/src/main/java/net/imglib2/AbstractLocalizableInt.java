@@ -36,11 +36,11 @@ package net.imglib2;
 /**
  * An abstract class that implements the {@link Localizable} interface using an
  * int[] array to maintain position.
- *
+ * 
  * <p>
  * This is identical to {@link AbstractLocalizable}, except that the position is
  * limited to {@link Integer#MAX_VALUE} in every dimension.
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -68,7 +68,7 @@ public abstract class AbstractLocalizableInt extends AbstractEuclideanSpace impl
 	/**
 	 * Protected constructor that re-uses the passed position array. This is
 	 * intended to allow subclasses to provide a way to wrap a int[] array.
-	 *
+	 * 
 	 * @param position
 	 *            position array to use.
 	 */

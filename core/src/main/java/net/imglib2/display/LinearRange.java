@@ -35,14 +35,17 @@ package net.imglib2.display;
 
 /**
  * 
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface LinearRange
 {
 	public double getMin();
+
 	public double getMax();
+
 	public void setMin( double min );
+
 	public void setMax( double max );
 }

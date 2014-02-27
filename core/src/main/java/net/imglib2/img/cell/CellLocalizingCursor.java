@@ -39,7 +39,7 @@ import net.imglib2.type.NativeType;
 
 /**
  * Localizing {@link Cursor} on a {@link CellImg}.
- *
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */

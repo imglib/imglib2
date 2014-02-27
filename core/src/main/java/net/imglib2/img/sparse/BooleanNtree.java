@@ -37,7 +37,7 @@ import net.imglib2.img.basictypeaccess.BitAccess;
 
 /**
  * BitAccess based on a {@link Ntree}<Boolean>.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class BooleanNtree implements BitAccess, NtreeAccess< Boolean, BooleanNtree >

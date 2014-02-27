@@ -42,63 +42,70 @@ import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * Utility methods for developers
- *
+ * 
  * Stephan Preibisch, Curtis Rueden
- *
- *
+ * 
+ * 
  */
 @Deprecated
 final public class DevUtil
 {
-	private DevUtil() {}
-	
+	private DevUtil()
+	{}
+
 	/**
-	 * This method is deprecated. Use {@link ArrayImgs#bytes(byte[], long...)} instead.
-	 * Creates an {@link ArrayImg} of UnsignedByteType from a java byte array by wrapping it
-	 *
-	 * @param data - the array
-	 * @param dim - the dimensionality
-	 *
+	 * This method is deprecated. Use {@link ArrayImgs#bytes(byte[], long...)}
+	 * instead. Creates an {@link ArrayImg} of UnsignedByteType from a java byte
+	 * array by wrapping it
+	 * 
+	 * @param data
+	 *            - the array
+	 * @param dim
+	 *            - the dimensionality
+	 * 
 	 * @return the instance of {@link ArrayImg} using the given byte array
 	 */
 	@Deprecated
-	final public static ArrayImg<UnsignedByteType, ByteArray> createImageFromArray( final byte[] data, final long[] dim )
+	final public static ArrayImg< UnsignedByteType, ByteArray > createImageFromArray( final byte[] data, final long[] dim )
 	{
 		final ByteArray byteArray = new ByteArray( data );
-		final ArrayImg<UnsignedByteType, ByteArray> array = 
-			new ArrayImg<UnsignedByteType, ByteArray>( byteArray, dim, 1 );
-			
+		final ArrayImg< UnsignedByteType, ByteArray > array =
+				new ArrayImg< UnsignedByteType, ByteArray >( byteArray, dim, 1 );
+
 		// create a Type that is linked to the container
 		final UnsignedByteType linkedType = new UnsignedByteType( array );
-		
+
 		// pass it to the DirectAccessContainer
 		array.setLinkedType( linkedType );
-		
+
 		return array;
 	}
 
 	/**
-	 * This method is deprecated. Use {@link ArrayImgs#floats(float[], long...)} instead.
-	 * Creates an {@link ArrayImg} of FloatType from a java float array by wrapping it
-	 *
-	 * @param data - the array
-	 * @param dim - the dimensionality
-	 *
+	 * This method is deprecated. Use {@link ArrayImgs#floats(float[], long...)}
+	 * instead. Creates an {@link ArrayImg} of FloatType from a java float array
+	 * by wrapping it
+	 * 
+	 * @param data
+	 *            - the array
+	 * @param dim
+	 *            - the dimensionality
+	 * 
 	 * @return the instance of {@link ArrayImg} using the given float array
 	 */
 	@Deprecated
-	final public static ArrayImg<FloatType,FloatArray> createImageFromArray( final float[] data, final long[] dim )
+	final public static ArrayImg< FloatType, FloatArray > createImageFromArray( final float[] data, final long[] dim )
 	{
 		final FloatArray floatArray = new FloatArray( data );
-		final ArrayImg<FloatType, FloatArray> array = 
-			new ArrayImg<FloatType, FloatArray>( floatArray, dim, 1 );
-			
+		final ArrayImg< FloatType, FloatArray > array =
+				new ArrayImg< FloatType, FloatArray >( floatArray, dim, 1 );
+
 		// create a Type that is linked to the container
 		final FloatType linkedType = new FloatType( array );
-		
+
 		// pass it to the DirectAccessContainer
 		array.setLinkedType( linkedType );
-		
+
 		return array;
 	}
 }

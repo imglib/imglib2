@@ -37,7 +37,7 @@ import net.imglib2.img.basictypeaccess.FloatAccess;
 
 /**
  * FloatAccess based on a {@link Ntree}<Float>.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class FloatNtree implements FloatAccess, NtreeAccess< Float, FloatNtree >

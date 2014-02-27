@@ -40,13 +40,13 @@ import net.imglib2.view.Views;
 
 /**
  * {@link CompositeView} of a {@link RandomAccessibleInterval}.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class CompositeIntervalView< T, C extends Composite< T > > extends CompositeView< T, C > implements RandomAccessibleInterval< C >
 {
 	final Interval interval;
-	
+
 	final static protected < T > RandomAccessibleInterval< T > zeroMinN( final RandomAccessibleInterval< T > source )
 	{
 		final long[] min = new long[ source.numDimensions() ];
@@ -54,8 +54,8 @@ public class CompositeIntervalView< T, C extends Composite< T > > extends Compos
 		min[ n ] = source.min( n );
 		return Views.offset( source, min );
 	}
-	
-	public CompositeIntervalView( final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory)
+
+	public CompositeIntervalView( final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory )
 	{
 		super( zeroMinN( source ), compositeFactory );
 		interval = source;

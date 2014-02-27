@@ -44,7 +44,7 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * TODO
- *
+ * 
  */
 public class CellRandomAccessBenchmark
 {
@@ -57,6 +57,7 @@ public class CellRandomAccessBenchmark
 	long intDataSum;
 
 	CellImg< IntType, ?, ? > intImg;
+
 	CellImg< IntType, ?, ? > intImgCopy;
 
 	public void createSourceData()
@@ -80,7 +81,8 @@ public class CellRandomAccessBenchmark
 	}
 
 	/**
-	 * Fill intImg (a CellContainer with 40x40x40 cells) with data using flat array iteration order.
+	 * Fill intImg (a CellContainer with 40x40x40 cells) with data using flat
+	 * array iteration order.
 	 */
 	public void fillImage()
 	{
@@ -99,12 +101,13 @@ public class CellRandomAccessBenchmark
 		}
 	}
 
-	public void copyWithSourceIteration(final Img< IntType > srcImg, final Img< IntType > dstImg)
+	public void copyWithSourceIteration( final Img< IntType > srcImg, final Img< IntType > dstImg )
 	{
 		final long[] pos = new long[ dimensions.length ];
 		final Cursor< IntType > src = srcImg.localizingCursor();
 		final RandomAccess< IntType > dst = dstImg.randomAccess();
-		while( src.hasNext() ) {
+		while ( src.hasNext() )
+		{
 			src.fwd();
 			src.localize( pos );
 			dst.setPosition( pos );
@@ -152,7 +155,7 @@ public class CellRandomAccessBenchmark
 		} );
 		randomAccessBenchmark.intImgCopy = null;
 
-		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( new int[] {32, 64, 16} ).create( randomAccessBenchmark.dimensions, new IntType() );
+		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( new int[] { 32, 64, 16 } ).create( randomAccessBenchmark.dimensions, new IntType() );
 		System.out.println( "benchmarking copy to mixed" );
 		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
 		{

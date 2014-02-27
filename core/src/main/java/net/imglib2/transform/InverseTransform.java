@@ -37,8 +37,8 @@ import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 
 /**
- * Final implementation of the inverse of an {@link InvertibleTransform}
- * that simply replaces apply by applyInverse and conversely.  The original
+ * Final implementation of the inverse of an {@link InvertibleTransform} that
+ * simply replaces apply by applyInverse and conversely. The original
  * {@link InvertibleTransform} is returned on {@link #inverse()}.
  * 
  * @author ImgLib2 developers
@@ -48,8 +48,8 @@ import net.imglib2.Positionable;
 final public class InverseTransform implements InvertibleTransform
 {
 	private final InvertibleTransform inverse;
-	
-	public InverseTransform (final InvertibleTransform transform)
+
+	public InverseTransform( final InvertibleTransform transform )
 	{
 		inverse = transform;
 	}

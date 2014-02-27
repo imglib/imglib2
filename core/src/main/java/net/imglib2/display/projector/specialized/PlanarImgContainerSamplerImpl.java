@@ -44,7 +44,7 @@ public class PlanarImgContainerSamplerImpl implements PlanarContainerSampler
 
 	private int m_currentSliceIndex = -1;
 
-	public PlanarImgContainerSamplerImpl( int startIndex )
+	public PlanarImgContainerSamplerImpl( final int startIndex )
 	{
 		m_currentSliceIndex = startIndex;
 	}
@@ -60,7 +60,7 @@ public class PlanarImgContainerSamplerImpl implements PlanarContainerSampler
 		return m_currentSliceIndex++;
 	}
 
-	public void setCurrentSlice( int slice )
+	public void setCurrentSlice( final int slice )
 	{
 		m_currentSliceIndex = slice;
 	}

@@ -42,7 +42,7 @@ import net.imglib2.RealPositionable;
 /**
  * A {@link RealPositionable} that drives a {@link Positionable} to somehow
  * derived discrete coordinates.
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -53,7 +53,10 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 	/* current position, required for relative movement */
 	final protected double[] position;
 
-	/* current discrete position for temporary storage, this field does not necessarily contain the actual discrete position! */
+	/*
+	 * current discrete position for temporary storage, this field does not
+	 * necessarily contain the actual discrete position!
+	 */
 	final protected long[] discrete;
 
 	public AbstractPositionableTransform( final LocalizablePositionable target )
@@ -77,14 +80,14 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 	@Override
 	public float getFloatPosition( final int dim )
 	{
-		return ( float )position[ dim ];
+		return ( float ) position[ dim ];
 	}
 
 	@Override
 	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < pos.length; ++d )
-			pos[ d ] = ( float )this.position[ d ];
+			pos[ d ] = ( float ) this.position[ d ];
 	}
 
 	@Override

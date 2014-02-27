@@ -37,14 +37,17 @@ import net.imglib2.RealInterval;
 import net.imglib2.RealRandomAccess;
 
 /**
- * @param <T> Type of values provided by the interpolator.
- * @param <F> Type of function, which the interpolator operates on. 
+ * @param <T>
+ *            Type of values provided by the interpolator.
+ * @param <F>
+ *            Type of function, which the interpolator operates on.
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
 public interface InterpolatorFactory< T, F >
-{	
+{
 	public RealRandomAccess< T > create( final F f );
+
 	public RealRandomAccess< T > create( final F f, final RealInterval interval );
 }

@@ -48,10 +48,9 @@ import net.imglib2.Positionable;
  * 
  * <p>
  * You can also
- * {@link InvertibleTransform#applyInverse(Positionable, Localizable)
- * apply the inverse transformation} to a <em>m</em>-dimensional integer
- * <em>target</em> vector to get the <em>n</em>-dimensional integer
- * <em>source</em> vector.
+ * {@link InvertibleTransform#applyInverse(Positionable, Localizable) apply the
+ * inverse transformation} to a <em>m</em>-dimensional integer <em>target</em>
+ * vector to get the <em>n</em>-dimensional integer <em>source</em> vector.
  * </p>
  * 
  * @author ImgLib2 developers
