@@ -35,12 +35,15 @@ package net.imglib2.img.planar;
 
 import java.util.ArrayList;
 
+import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
+import net.imglib2.Interval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
+import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
  * A {@link NativeImg} that stores data in an list of primitive arrays, one per
@@ -56,7 +59,7 @@ import net.imglib2.type.NativeType;
  * @author Johannes Schindelin
  * @author Tobias Pietzsch
  */
-public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> > extends AbstractNativeImg< T, A > implements PlanarAccess< A >
+public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeImg< T, A > implements PlanarAccess< A >, SubIntervalIterable< T >
 {
 	final protected int numSlices;
 
@@ -105,14 +108,14 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 
 		mirror = new ArrayList< A >( numSlices );
 
-		if ( creator == null)
+		if ( creator == null )
 		{
 			for ( int i = 0; i < numSlices; ++i )
 				mirror.add( null );
 		}
 		else
 		{
-			final int entitiesPerSlice = ( ( n > 1 ) ? dimensions[ 1 ] : 1 )  *  dimensions[ 0 ] * entitiesPerPixel;
+			final int entitiesPerSlice = ( ( n > 1 ) ? dimensions[ 1 ] : 1 ) * dimensions[ 0 ] * entitiesPerPixel;
 			for ( int i = 0; i < numSlices; ++i )
 				mirror.add( creator.createArray( entitiesPerSlice ) );
 		}
@@ -138,17 +141,20 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	}
 
 	/**
-   * @return total number of image planes
+	 * @return total number of image planes
 	 */
-	public int numSlices() { return numSlices; }
+	public int numSlices()
+	{
+		return numSlices;
+	}
 
 	/**
 	 * For a given >=2d location, estimate the pixel index in the stack slice.
-	 *
+	 * 
 	 * @param l
 	 * @return
-	 *
-	 * TODO: remove this method? (it doesn't seem to be used anywhere)
+	 * 
+	 *         TODO: remove this method? (it doesn't seem to be used anywhere)
 	 */
 	public final int getIndex( final int[] l )
 	{
@@ -158,17 +164,22 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	}
 
 	/**
-	 * Compute a global position from the index of a slice and an index within that slice.
-	 *
-	 * @param sliceIndex    index of slice
-	 * @param indexInSlice  index of element within slice
-	 * @param position      receives global position of element
-	 *
-	 * TODO: move this method to AbstractPlanarCursor? (that seems to be the only place where it is needed)
+	 * Compute a global position from the index of a slice and an index within
+	 * that slice.
+	 * 
+	 * @param sliceIndex
+	 *            index of slice
+	 * @param indexInSlice
+	 *            index of element within slice
+	 * @param position
+	 *            receives global position of element
+	 * 
+	 *            TODO: move this method to AbstractPlanarCursor? (that seems to
+	 *            be the only place where it is needed)
 	 */
 	public void indexToGlobalPosition( int sliceIndex, final int indexInSlice, final int[] position )
 	{
-		if (n > 1)
+		if ( n > 1 )
 		{
 			position[ 1 ] = indexInSlice / dimensions[ 0 ];
 			position[ 0 ] = indexInSlice - position[ 1 ] * dimensions[ 0 ];
@@ -185,20 +196,27 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 				}
 				position[ maxDim ] = sliceIndex;
 			}
-		} else {
+		}
+		else
+		{
 			position[ 0 ] = indexInSlice;
 		}
 	}
 
 	/**
-	 * Compute a global position from the index of a slice and an index within that slice.
-	 *
-	 * @param sliceIndex    index of slice
-	 * @param indexInSlice  index of element within slice
-	 * @param dim           which dimension of the position we are interested in
-	 * @return              dimension dim of global position
-	 *
-	 * TODO: move this method to AbstractPlanarCursor? (that seems to be the only place where it is needed)
+	 * Compute a global position from the index of a slice and an index within
+	 * that slice.
+	 * 
+	 * @param sliceIndex
+	 *            index of slice
+	 * @param indexInSlice
+	 *            index of element within slice
+	 * @param dim
+	 *            which dimension of the position we are interested in
+	 * @return dimension dim of global position
+	 * 
+	 *         TODO: move this method to AbstractPlanarCursor? (that seems to be
+	 *         the only place where it is needed)
 	 */
 	public int indexToGlobalPosition( final int sliceIndex, final int indexInSlice, final int dim )
 	{
@@ -213,7 +231,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	}
 
 	@Override
-	public PlanarCursor<T> cursor()
+	public PlanarCursor< T > cursor()
 	{
 		if ( n == 1 )
 			return new PlanarCursor1D< T >( this );
@@ -224,22 +242,23 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	}
 
 	@Override
-	public PlanarLocalizingCursor<T> localizingCursor()
+	public PlanarLocalizingCursor< T > localizingCursor()
 	{
 		if ( n == 1 )
 			return new PlanarLocalizingCursor1D< T >( this );
 		else if ( n == 2 )
 			return new PlanarLocalizingCursor2D< T >( this );
 		else
-			return new PlanarLocalizingCursor<T>( this );
+			return new PlanarLocalizingCursor< T >( this );
 	}
 
 	@Override
-	public PlanarRandomAccess<T> randomAccess()
+	public PlanarRandomAccess< T > randomAccess()
 	{
 		if ( n == 1 )
-			return new PlanarRandomAccess1D<T>( this );
-		return new PlanarRandomAccess<T>( this );
+			return new PlanarRandomAccess1D< T >( this );
+
+		return new PlanarRandomAccess< T >( this );
 	}
 
 	@Override
@@ -249,13 +268,22 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 	}
 
 	@Override
-	public A getPlane( final int no ) { return mirror.get( no ); }
+	public A getPlane( final int no )
+	{
+		return mirror.get( no );
+	}
 
 	@Override
-	public void setPlane( final int no, final A plane ) { mirror.set( no, plane ); }
+	public void setPlane( final int no, final A plane )
+	{
+		mirror.set( no, plane );
+	}
 
 	@Override
-	public PlanarImgFactory< T > factory() { return new PlanarImgFactory<T>(); }
+	public PlanarImgFactory< T > factory()
+	{
+		return new PlanarImgFactory< T >();
+	}
 
 	@Override
 	public PlanarImg< T, ? > copy()
@@ -269,5 +297,55 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess<A> 
 			cursor2.next().set( cursor1.next() );
 
 		return copy;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean supportsOptimizedCursor( final Interval interval )
+	{
+		int dimIdx = 0;
+
+		// Find equal dims
+		for ( int d = 0; d < interval.numDimensions(); d++, dimIdx++ )
+			if ( interval.dimension( d ) != dimension( d ) )
+			{
+				dimIdx++;
+				break;
+			}
+
+		for ( int d = dimIdx; d < interval.numDimensions(); d++ )
+			if ( interval.dimension( d ) != 1 )
+				return false;
+
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object subIntervalIterationOrder( Interval interval )
+	{
+		return new FlatIterationOrder( interval );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Cursor< T > cursor( Interval interval )
+	{
+		return new PlanarSubsetCursor< T >( this, interval );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Cursor< T > localizingCursor( Interval interval )
+	{
+		return new PlanarSubsetLocalizingCursor< T >( this, interval );
 	}
 }

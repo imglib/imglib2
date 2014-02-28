@@ -63,7 +63,7 @@ import net.imglib2.view.Views;
  * @author Christian Dietz (University of Konstanz)
  * @param <T>
  * 
- * IMPORTANT: WILL BE INTEGRATED IN VIEW FRAMEWORK IN THE FUTURE
+ *            IMPORTANT: WILL BE INTEGRATED IN VIEW FRAMEWORK IN THE FUTURE
  */
 public class IterableSubsetView< T extends Type< T >> extends IterableRandomAccessibleInterval< T >
 {
@@ -177,6 +177,7 @@ public class IterableSubsetView< T extends Type< T >> extends IterableRandomAcce
 	{
 		if ( isOptimizable )
 			return new IterableSubsetViewCursor< T >( Views.iterable( src ).cursor(), ( int ) super.size(), planeOffset, numPlaneDims );
+
 		return Views.iterable( super.sourceInterval ).cursor();
 	}
 
@@ -185,7 +186,7 @@ public class IterableSubsetView< T extends Type< T >> extends IterableRandomAcce
 	{
 		if ( isOptimizable )
 			return new IterableSubsetViewCursor< T >( Views.iterable( src ).localizingCursor(), ( int ) super.size(), planeOffset, numPlaneDims );
+
 		return Views.iterable( super.sourceInterval ).cursor();
 	}
-
 }

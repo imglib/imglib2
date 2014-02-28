@@ -41,9 +41,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.imglib2.Cursor;
-import net.imglib2.histogram.HistogramNd;
-import net.imglib2.histogram.Integer1dBinMapper;
-import net.imglib2.histogram.Real1dBinMapper;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.numeric.ARGBType;

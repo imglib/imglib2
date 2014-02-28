@@ -268,27 +268,4 @@ public class SubsetViews {
 		return true;
 	}
 
-//	public static void main(String[] args) {
-//		ImgPlus<BitType> a = new ImgPlus<BitType>(
-//				new ArrayImgFactory<BitType>().create(
-//						new long[] { 10, 15, 5, 2 }, new BitType()));
-//
-//		a.setAxis(Axes.get("X"), 0);
-//		a.setAxis(Axes.get("Y"), 1);
-//		a.setAxis(Axes.get("T"), 2);
-//
-//		ImgPlus<BitType> b = new ImgPlus<BitType>(
-//				new ArrayImgFactory<BitType>().create(
-//						new long[] { 15, 5, 10, 1 }, new BitType()));
-//
-//		b.setAxis(Axes.get("Y"), 0);
-//		b.setAxis(Axes.get("T"), 1);
-//		b.setAxis(Axes.get("Channel"), 2);
-//		b.setAxis(Axes.get("X"), 3);
-//
-//		RandomAccessibleInterval<BitType> res = SubsetViews
-//				.synchronizeDimensionality(a, a, b, b);
-//
-//	}
-
 }
