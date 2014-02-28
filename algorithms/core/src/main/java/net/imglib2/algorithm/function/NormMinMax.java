@@ -38,22 +38,22 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
-public class NormMinMax< A extends RealType<A> > implements Converter< A, A >
+public class NormMinMax< A extends RealType< A > > implements Converter< A, A >
 {
 	final double min, tmp;
-	
+
 	public NormMinMax( final double min, final double max )
 	{
 		this.min = min;
 		this.tmp = max - min;
 	}
-	
+
 	@Override
 	public void convert( final A input, final A output )
 	{
-		output.setReal( (input.getRealDouble() - min) / tmp );	
+		output.setReal( ( input.getRealDouble() - min ) / tmp );
 	}
 }

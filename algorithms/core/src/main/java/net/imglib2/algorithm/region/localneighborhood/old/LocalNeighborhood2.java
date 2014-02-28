@@ -45,11 +45,12 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  */
 public class LocalNeighborhood2< T > implements IterableInterval< T >
 {
 	final int numDimensions;
+
 	final long size;
 
 	final long[] center;
@@ -80,7 +81,10 @@ public class LocalNeighborhood2< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public long size() { return size; }
+	public long size()
+	{
+		return size;
+	}
 
 	@Override
 	public T firstElement()
@@ -101,7 +105,10 @@ public class LocalNeighborhood2< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public double realMin( final int d ) { return center[ d ] - 1; }
+	public double realMin( final int d )
+	{
+		return center[ d ] - 1;
+	}
 
 	@Override
 	public void realMin( final double[] min )
@@ -118,7 +125,10 @@ public class LocalNeighborhood2< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public double realMax( final int d ) { return center[ d ] + 1; }
+	public double realMax( final int d )
+	{
+		return center[ d ] + 1;
+	}
 
 	@Override
 	public void realMax( final double[] max )
@@ -135,13 +145,22 @@ public class LocalNeighborhood2< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public int numDimensions() { return numDimensions; }
+	public int numDimensions()
+	{
+		return numDimensions;
+	}
 
 	@Override
-	public Iterator<T> iterator() { return cursor(); }
+	public Iterator< T > iterator()
+	{
+		return cursor();
+	}
 
 	@Override
-	public long min( final int d ) { return center[ d ] - 1; }
+	public long min( final int d )
+	{
+		return center[ d ] - 1;
+	}
 
 	@Override
 	public void min( final long[] min )
@@ -158,7 +177,10 @@ public class LocalNeighborhood2< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public long max( final int d ) { return center[ d ] + 1; }
+	public long max( final int d )
+	{
+		return center[ d ] + 1;
+	}
 
 	@Override
 	public void max( final long[] max )
@@ -182,12 +204,21 @@ public class LocalNeighborhood2< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public long dimension( final int d ) { return 3; }
+	public long dimension( final int d )
+	{
+		return 3;
+	}
 
 	@Override
-	public LocalNeighborhoodCursor2<T> cursor() { return new LocalNeighborhoodCursor2< T >( source.randomAccess(), center ); }
+	public LocalNeighborhoodCursor2< T > cursor()
+	{
+		return new LocalNeighborhoodCursor2< T >( source.randomAccess(), center );
+	}
 
 	@Override
-	public LocalNeighborhoodCursor2<T> localizingCursor() { return cursor(); }
+	public LocalNeighborhoodCursor2< T > localizingCursor()
+	{
+		return cursor();
+	}
 
 }

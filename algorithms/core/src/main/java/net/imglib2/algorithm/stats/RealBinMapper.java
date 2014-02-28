@@ -37,80 +37,95 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * A HistogramBinMapper over RealType, using arbitrary-width histogram bins.
- *
+ * 
  * @author 2011 Larry Lindsey
  * @author Larry Lindsey
  */
-public class RealBinMapper <T extends RealType<T>>
-    implements HistogramBinMapper<T>{
+public class RealBinMapper< T extends RealType< T >>
+		implements HistogramBinMapper< T >
+{
 
 	private final int numBins;
+
 	private final T minBin;
+
 	private final T maxBin;
+
 	private final double binWidth;
+
 	private final double halfBinWidth;
+
 	private final double minVal;
-	
+
 	/**
 	 * Creates a RealBinMapper for a histogram with the given minimum bin
 	 * center, maximum bin center, and number of bins.
-	 * @param minBin the minimal bin center.
-	 * @param maxBin the maximal bin center.
-	 * @param numBins the number of histogram bins to use.
+	 * 
+	 * @param minBin
+	 *            the minimal bin center.
+	 * @param maxBin
+	 *            the maximal bin center.
+	 * @param numBins
+	 *            the number of histogram bins to use.
 	 */
-	public RealBinMapper(final T minBin, final T maxBin, final int numBins)	
+	public RealBinMapper( final T minBin, final T maxBin, final int numBins )
 	{
 		this.numBins = numBins;
 		this.minBin = minBin;
 		this.maxBin = maxBin;
-		
-		//Save a little computation time by calculating these only once.
-		binWidth = (1 + maxBin.getRealDouble() - minBin.getRealDouble()) /
-			(numBins);
+
+		// Save a little computation time by calculating these only once.
+		binWidth = ( 1 + maxBin.getRealDouble() - minBin.getRealDouble() ) /
+				( numBins );
 		halfBinWidth = binWidth / 2;
-		
+
 		minVal = minBin.getRealDouble();
 	}
-	
+
 	@Override
-	public T getMaxBin() {
+	public T getMaxBin()
+	{
 		return maxBin;
 	}
 
 	@Override
-	public T getMinBin() {
+	public T getMinBin()
+	{
 		return minBin;
 	}
 
 	@Override
-	public int getNumBins() {
+	public int getNumBins()
+	{
 		return numBins;
 	}
 
 	@Override
-	public T invMap(final int i) {				
-		T out = minBin.createVariable();
+	public T invMap( final int i )
+	{
+		final T out = minBin.createVariable();
 		double t = i;
-	
-		t *= binWidth;		
+
+		t *= binWidth;
 		t += minVal;
-		out.setReal(t);
+		out.setReal( t );
 		return out;
 	}
 
 	@Override
-	public int map(final T type) {
+	public int map( final T type )
+	{
 		double tVal = type.getRealDouble();
 		tVal -= minVal;
 		tVal += halfBinWidth;
 		tVal /= binWidth;
-		
-		return (int)tVal;
+
+		return ( int ) tVal;
 	}
 
 	public double getBinWidth()
 	{
-	    return binWidth;
+		return binWidth;
 	}
-	
+
 }

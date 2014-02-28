@@ -44,25 +44,27 @@ import net.imglib2.RealPositionable;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public class HyperSphere< T > implements IterableInterval< T >
 {
 	final int numDimensions;
+
 	long radius;
 
 	final RandomAccessible< T > source;
+
 	final long[] center;
-	
+
 	public HyperSphere( final RandomAccessible< T > source, final Localizable center, final long radius )
 	{
 		this.numDimensions = source.numDimensions();
 		this.source = source;
 		this.center = new long[ numDimensions ];
 		center.localize( this.center );
-		
+
 		updateRadius( radius );
 	}
 
@@ -71,25 +73,25 @@ public class HyperSphere< T > implements IterableInterval< T >
 		for ( int d = 0; d < numDimensions; ++d )
 			this.center[ d ] = center[ d ];
 	}
-	
+
 	public void updateCenter( final Localizable center )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			this.center[ d ] = center.getLongPosition( d );
 	}
-	
+
 	public void updateRadius( final long radius )
 	{
 		this.radius = radius;
 	}
-	
+
 	/**
 	 * Compute the number of elements for iteration
 	 */
 	protected long computeSize()
 	{
 		final HyperSphereCursor< T > cursor = new HyperSphereCursor< T >( source, this.center, radius );
-		
+
 		// "compute number of pixels"
 		long size = 0;
 		while ( cursor.hasNext() )
@@ -97,10 +99,10 @@ public class HyperSphere< T > implements IterableInterval< T >
 			cursor.fwd();
 			++size;
 		}
-		
+
 		return size;
 	}
-	
+
 	public void update( final Localizable center, final long radius )
 	{
 		updateCenter( center );
@@ -114,12 +116,15 @@ public class HyperSphere< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public long size() { return computeSize(); }
+	public long size()
+	{
+		return computeSize();
+	}
 
 	@Override
-	public T firstElement() 
+	public T firstElement()
 	{
-		HyperSphereCursor< T > cursor = new HyperSphereCursor< T >( source, center, radius );
+		final HyperSphereCursor< T > cursor = new HyperSphereCursor< T >( source, center, radius );
 		cursor.fwd();
 		return cursor.get();
 	}
@@ -137,10 +142,13 @@ public class HyperSphere< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public double realMin( final int d ) { return min( d ); }
+	public double realMin( final int d )
+	{
+		return min( d );
+	}
 
 	@Override
-	public void realMin( final double[] min ) 
+	public void realMin( final double[] min )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			min[ d ] = center[ d ] - radius;
@@ -154,7 +162,10 @@ public class HyperSphere< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public double realMax( final int d ) { return max( d ); }
+	public double realMax( final int d )
+	{
+		return max( d );
+	}
 
 	@Override
 	public void realMax( final double[] max )
@@ -171,13 +182,22 @@ public class HyperSphere< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public int numDimensions() { return numDimensions; }
+	public int numDimensions()
+	{
+		return numDimensions;
+	}
 
 	@Override
-	public Iterator<T> iterator() { return cursor(); }
+	public Iterator< T > iterator()
+	{
+		return cursor();
+	}
 
 	@Override
-	public long min( final int d ) { return center[ d ] - radius; }
+	public long min( final int d )
+	{
+		return center[ d ] - radius;
+	}
 
 	@Override
 	public void min( final long[] min )
@@ -214,7 +234,7 @@ public class HyperSphere< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public void dimensions( final long[] dimensions ) 
+	public void dimensions( final long[] dimensions )
 	{
 		final long size = radius * 2 + 1;
 		for ( int d = 0; d < numDimensions; ++d )
@@ -222,11 +242,20 @@ public class HyperSphere< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public long dimension( final int d ) { return radius * 2 + 1; }
+	public long dimension( final int d )
+	{
+		return radius * 2 + 1;
+	}
 
 	@Override
-	public HyperSphereCursor< T > cursor() { return localizingCursor(); }
+	public HyperSphereCursor< T > cursor()
+	{
+		return localizingCursor();
+	}
 
 	@Override
-	public HyperSphereCursor< T > localizingCursor() { return new HyperSphereCursor< T >( source, center, radius ); }
+	public HyperSphereCursor< T > localizingCursor()
+	{
+		return new HyperSphereCursor< T >( source, center, radius );
+	}
 }

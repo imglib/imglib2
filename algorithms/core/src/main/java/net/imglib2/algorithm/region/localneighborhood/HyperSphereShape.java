@@ -47,7 +47,7 @@ import net.imglib2.view.Views;
 
 /**
  * A factory for Accessibles on hyper-sphere neighboorhoods.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class HyperSphereShape implements Shape

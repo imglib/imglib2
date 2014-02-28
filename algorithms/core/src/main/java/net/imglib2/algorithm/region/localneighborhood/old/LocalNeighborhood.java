@@ -45,45 +45,49 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  */
 public class LocalNeighborhood< T > implements IterableInterval< T >
 {
 	final int numDimensions;
+
 	final long size;
-	
+
 	final long[] center;
-	
+
 	final RandomAccessible< T > source;
-	
+
 	public LocalNeighborhood( final RandomAccessible< T > source, final Localizable center )
 	{
 		this.numDimensions = source.numDimensions();
 		this.center = new long[ numDimensions ];
 		center.localize( this.center );
-		
+
 		this.size = Util.pow( 3, numDimensions ) - 1;
-		
+
 		this.source = source;
 	}
-	
+
 	public void updateCenter( final long[] center )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			this.center[ d ] = center[ d ];
 	}
-	
+
 	public void updateCenter( final Localizable center )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			this.center[ d ] = center.getLongPosition( d );
 	}
-	
-	@Override
-	public long size() { return size; }
 
 	@Override
-	public T firstElement() 
+	public long size()
+	{
+		return size;
+	}
+
+	@Override
+	public T firstElement()
 	{
 		final LocalNeighborhoodCursor< T > cursor = new LocalNeighborhoodCursor< T >( source, center );
 		cursor.fwd();
@@ -103,7 +107,10 @@ public class LocalNeighborhood< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public double realMin( final int d ) { return center[ d ] - 1; }
+	public double realMin( final int d )
+	{
+		return center[ d ] - 1;
+	}
 
 	@Override
 	public void realMin( final double[] min )
@@ -120,7 +127,10 @@ public class LocalNeighborhood< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public double realMax( final int d ) { return center[ d ] + 1; }
+	public double realMax( final int d )
+	{
+		return center[ d ] + 1;
+	}
 
 	@Override
 	public void realMax( final double[] max )
@@ -137,13 +147,22 @@ public class LocalNeighborhood< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public int numDimensions() { return numDimensions; }
+	public int numDimensions()
+	{
+		return numDimensions;
+	}
 
 	@Override
-	public Iterator<T> iterator() { return cursor(); }
+	public Iterator< T > iterator()
+	{
+		return cursor();
+	}
 
 	@Override
-	public long min( final int d ) { return center[ d ] - 1; }
+	public long min( final int d )
+	{
+		return center[ d ] - 1;
+	}
 
 	@Override
 	public void min( final long[] min )
@@ -160,13 +179,16 @@ public class LocalNeighborhood< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public long max( final int d ) { return center[ d ] + 1; }
+	public long max( final int d )
+	{
+		return center[ d ] + 1;
+	}
 
 	@Override
 	public void max( final long[] max )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
-			max[ d ] = center[ d ] + 1;		
+			max[ d ] = center[ d ] + 1;
 	}
 
 	@Override
@@ -184,12 +206,21 @@ public class LocalNeighborhood< T > implements IterableInterval< T >
 	}
 
 	@Override
-	public long dimension( final int d ) { return 3; }
+	public long dimension( final int d )
+	{
+		return 3;
+	}
 
 	@Override
-	public LocalNeighborhoodCursor<T> cursor() { return new LocalNeighborhoodCursor< T >( source, center ); }
+	public LocalNeighborhoodCursor< T > cursor()
+	{
+		return new LocalNeighborhoodCursor< T >( source, center );
+	}
 
 	@Override
-	public LocalNeighborhoodCursor<T> localizingCursor() { return cursor(); }
+	public LocalNeighborhoodCursor< T > localizingCursor()
+	{
+		return cursor();
+	}
 
 }

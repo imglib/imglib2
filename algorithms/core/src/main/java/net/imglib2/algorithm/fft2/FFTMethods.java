@@ -52,7 +52,7 @@ import edu.mines.jtk.dsp.FftReal;
  * complex-to-real for individual dimensions. Unfortunately only supports a
  * maximal size of INT in each dimension as the one-dimensional FFT is based on
  * arrays.
- *
+ * 
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
 public class FFTMethods
@@ -64,7 +64,7 @@ public class FFTMethods
 	 * are scaled (divided by the amount of pixels in the input dataset), this
 	 * way after performing a forward and reverse FFT, the values will be
 	 * exactly the same
-	 *
+	 * 
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -87,7 +87,7 @@ public class FFTMethods
 	 * are scaled (divided by the amount of pixels in the input dataset), this
 	 * way after performing a forward and reverse FFT, the values will be
 	 * exactly the same
-	 *
+	 * 
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -110,7 +110,7 @@ public class FFTMethods
 	 * Computes a complex-to-real inverse FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0). By default as many
 	 * threads as processors are available are used.
-	 *
+	 * 
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -133,7 +133,7 @@ public class FFTMethods
 	 * Computes a complex-to-real inverse FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0). By default as many
 	 * threads as processors are available are used.
-	 *
+	 * 
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -158,7 +158,7 @@ public class FFTMethods
 	/**
 	 * Computes a complex-to-real inverse FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0).
-	 *
+	 * 
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -183,7 +183,7 @@ public class FFTMethods
 	/**
 	 * Computes a complex-to-real inverse FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0).
-	 *
+	 * 
 	 * @param input
 	 *            - the complex-valued input dataset
 	 * @param output
@@ -355,7 +355,7 @@ public class FFTMethods
 	 * threads as processors are available are used. By default the complex
 	 * values are not scaled (not divided by the amount of pixels in the input
 	 * dataset)
-	 *
+	 * 
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -377,7 +377,7 @@ public class FFTMethods
 	 * threads as processors are available are used. By default the complex
 	 * values are not scaled (not divided by the amount of pixels in the input
 	 * dataset)
-	 *
+	 * 
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -400,7 +400,7 @@ public class FFTMethods
 	 * Computes a real-to-complex forward FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0). By default as many
 	 * threads as processors are available are used.
-	 *
+	 * 
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -423,7 +423,7 @@ public class FFTMethods
 	 * Computes a real-to-complex forward FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0). By default as many
 	 * threads as processors are available are used.
-	 *
+	 * 
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -448,7 +448,7 @@ public class FFTMethods
 	/**
 	 * Computes a real-to-complex forward FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0).
-	 *
+	 * 
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -473,7 +473,7 @@ public class FFTMethods
 	/**
 	 * Computes a real-to-complex forward FFT transform of an n-dimensional
 	 * dataset in a certain dimension (typically dim = 0).
-	 *
+	 * 
 	 * @param input
 	 *            - the real-valued input dataset
 	 * @param output
@@ -649,7 +649,7 @@ public class FFTMethods
 	 * the values will be exactly the same. By default the real values are not
 	 * scaled if it is a forward transform (not divided by the amount of pixels
 	 * in the input dataset)
-	 *
+	 * 
 	 * @param data
 	 *            - the complex-valued dataset (FFT performed in-place)
 	 * @param dim
@@ -671,7 +671,7 @@ public class FFTMethods
 	 * Computes a complex-to-complex forward or inverse FFT transform of an
 	 * n-dimensional dataset in a certain dimension. By default as many threads
 	 * as processors are available are used.
-	 *
+	 * 
 	 * @param data
 	 *            - the complex-valued dataset (FFT performed in-place)
 	 * @param dim
@@ -693,7 +693,7 @@ public class FFTMethods
 	/**
 	 * Computes a complex-to-complex forward or inverse FFT transform of an
 	 * n-dimensional dataset in a certain dimension.
-	 *
+	 * 
 	 * @param data
 	 *            - the complex-valued dataset (FFT performed in-place)
 	 * @param dim
@@ -1010,7 +1010,7 @@ public class FFTMethods
 	 * dimensions are known. It will define the padding area around the input.
 	 * If the extension is not even, it will add the one pixel more on the right
 	 * side.
-	 *
+	 * 
 	 * @param input
 	 *            - the input interval
 	 * @param paddingDimensions
@@ -1049,11 +1049,11 @@ public class FFTMethods
 	 * assumes that the original padding was computed using the method
 	 * paddingIntervalCentered( final Interval input, final int[]
 	 * paddingDimensions ).
-	 *
+	 * 
 	 * Therefore, it will define the padding area around the input. If the
 	 * extension is not even on all sides, it will assume the one pixel to be on
 	 * the right side.
-	 *
+	 * 
 	 * @param fftDimensions
 	 *            - the input interval
 	 * @param originalDimensions
@@ -1087,7 +1087,7 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for an inverse FFT of the entire dataset AS SMALL AS POSSIBLE
-	 *
+	 * 
 	 * @param inputDimensions
 	 *            - the dimensions of the complex-valued input
 	 * @param paddedDimensions
@@ -1116,7 +1116,7 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for an inverse FFT of the entire dataset AS FAST AS POSSIBLE
-	 *
+	 * 
 	 * @param inputDimensions
 	 *            - the dimensions of the complex-valued input
 	 * @param paddedDimensions
@@ -1144,7 +1144,7 @@ public class FFTMethods
 
 	/**
 	 * A helper method to test if padding is actually necessary
-	 *
+	 * 
 	 * @param interval
 	 *            - the dimensions of a dataset
 	 * @param paddedDimensions
@@ -1162,7 +1162,7 @@ public class FFTMethods
 
 	/**
 	 * A helper method to test if padding is actually necessary
-	 *
+	 * 
 	 * @param interval
 	 *            - the dimensions of a dataset
 	 * @param padded
@@ -1181,7 +1181,7 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of real
 	 * numbers) for a forward FFT of the entire dataset AS FAST AS POSSIBLE
-	 *
+	 * 
 	 * @param inputDimensions
 	 *            - the dimensions of the real-valued input
 	 * @param paddedDimensions
@@ -1203,7 +1203,7 @@ public class FFTMethods
 	/**
 	 * Computes the supported dimensionality of an input dataset (of real
 	 * numbers) for a forward FFT of the entire dataset AS SMALL AS POSSIBLE
-	 *
+	 * 
 	 * @param inputDimensions
 	 *            - the dimensions of the real-valued input
 	 * @param paddedDimensions
@@ -1226,7 +1226,7 @@ public class FFTMethods
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for a forward/inverse FFT of the entire dataset AS FAST AS
 	 * POSSIBLE
-	 *
+	 * 
 	 * @param inputDimensions
 	 *            - the dimensions of the input
 	 * @param paddedDimensions
@@ -1242,7 +1242,7 @@ public class FFTMethods
 	 * Computes the supported dimensionality of an input dataset (of complex
 	 * numbers) for a forward/inverse FFT of the entire dataset AS SMALL AS
 	 * POSSIBLE
-	 *
+	 * 
 	 * @param inputDimensions
 	 *            - the dimensions of the input
 	 * @param paddedDimensions

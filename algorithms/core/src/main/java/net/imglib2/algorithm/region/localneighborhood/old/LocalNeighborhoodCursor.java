@@ -41,36 +41,44 @@ import net.imglib2.iterator.LocalizingZeroMinIntervalIterator;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * Iterates all pixels in a 3 by 3 by .... by 3 neighborhood of a certain location but skipping the central pixel
+ * Iterates all pixels in a 3 by 3 by .... by 3 neighborhood of a certain
+ * location but skipping the central pixel
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public class LocalNeighborhoodCursor< T > implements Cursor< T >
-{	
+{
 	final RandomAccessible< T > source;
+
 	final protected RandomAccess< T > randomAccess;
-	
+
 	final LocalizingZeroMinIntervalIterator driver;
 
 	final long[] positionMinus1, tmp;
+
 	final int numDimensions, centralPositionIndex;
-	
+
 	/**
-	 * Create new {@link LocalNeighborhoodCursor} on a {@link RandomAccessible} at a certain location.
+	 * Create new {@link LocalNeighborhoodCursor} on a {@link RandomAccessible}
+	 * at a certain location.
 	 * 
-	 * Note: the location can be updated without need to re-instantiate all the times.
+	 * Note: the location can be updated without need to re-instantiate all the
+	 * times.
 	 * 
-	 * @param source - the data as {@link RandomAccessible}
-	 * @param center - the center location of the 3x3x3...x3 environment that will be skipped
+	 * @param source
+	 *            - the data as {@link RandomAccessible}
+	 * @param center
+	 *            - the center location of the 3x3x3...x3 environment that will
+	 *            be skipped
 	 */
 	public LocalNeighborhoodCursor( final RandomAccessible< T > source, final long[] center )
 	{
 		this.source = source;
 		this.randomAccess = source.randomAccess();
-		
+
 		this.numDimensions = source.numDimensions();
 		this.tmp = new long[ numDimensions ];
 		this.positionMinus1 = new long[ numDimensions ];
@@ -84,24 +92,29 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 			dim2[ d ] = 1;
 			positionMinus1[ d ] = center[ d ] - 1;
 		}
-		
+
 		this.driver = new LocalizingZeroMinIntervalIterator( dim );
 		this.centralPositionIndex = IntervalIndexer.positionToIndex( dim2, dim );
 	}
-	
+
 	/**
-	 * Create new {@link LocalNeighborhoodCursor} on a {@link RandomAccessible} at a certain location.
+	 * Create new {@link LocalNeighborhoodCursor} on a {@link RandomAccessible}
+	 * at a certain location.
 	 * 
-	 * Note: the location can be updated without need to re-instantiate all the times.
+	 * Note: the location can be updated without need to re-instantiate all the
+	 * times.
 	 * 
-	 * @param source - the data as {@link RandomAccessible}
-	 * @param center - the center location of the 3x3x3...x3 environment that will be skipped
+	 * @param source
+	 *            - the data as {@link RandomAccessible}
+	 * @param center
+	 *            - the center location of the 3x3x3...x3 environment that will
+	 *            be skipped
 	 */
 	public LocalNeighborhoodCursor( final RandomAccessible< T > source, final Localizable center )
 	{
 		this.source = source;
 		this.randomAccess = source.randomAccess();
-		
+
 		this.numDimensions = source.numDimensions();
 		this.tmp = new long[ numDimensions ];
 		this.positionMinus1 = new long[ numDimensions ];
@@ -115,17 +128,17 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 			dim2[ d ] = 1;
 			positionMinus1[ d ] = center.getLongPosition( d ) - 1;
 		}
-		
+
 		this.driver = new LocalizingZeroMinIntervalIterator( dim );
 		this.centralPositionIndex = IntervalIndexer.positionToIndex( dim2, dim );
 	}
-	
+
 	public LocalNeighborhoodCursor( final LocalNeighborhoodCursor< T > cursor )
 	{
 		this.source = cursor.source;
 		this.randomAccess = source.randomAccess();
 		this.randomAccess.setPosition( cursor.randomAccess );
-		
+
 		this.numDimensions = cursor.numDimensions();
 		this.tmp = cursor.tmp.clone();
 		this.positionMinus1 = cursor.positionMinus1.clone();
@@ -136,15 +149,15 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 
 		this.driver = new LocalizingZeroMinIntervalIterator( dim );
 		this.driver.jumpFwd( cursor.driver.getIndex() );
-		
+
 		this.centralPositionIndex = cursor.centralPositionIndex;
 	}
-	
+
 	public void updateCenter( final long[] center )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			positionMinus1[ d ] = center[ d ] - 1;
-		
+
 		reset();
 	}
 
@@ -152,25 +165,28 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			positionMinus1[ d ] = center.getLongPosition( d ) - 1;
-		
+
 		reset();
 	}
 
 	@Override
-	public boolean hasNext() { return driver.hasNext(); }	
+	public boolean hasNext()
+	{
+		return driver.hasNext();
+	}
 
 	@Override
 	public void fwd()
 	{
 		driver.fwd();
-		
+
 		if ( driver.getIndex() == centralPositionIndex )
 			driver.fwd();
-		
+
 		for ( int d = 0; d < numDimensions; ++d )
 			randomAccess.setPosition( positionMinus1[ d ] + driver.getLongPosition( d ), d );
 	}
-	
+
 	@Override
 	public void jumpFwd( final long steps )
 	{
@@ -179,51 +195,91 @@ public class LocalNeighborhoodCursor< T > implements Cursor< T >
 	}
 
 	@Override
-	public void reset() { this.driver.reset(); }
-	
-	@Override
-	public void localize( final float[] position ) { randomAccess.localize( position ); }
+	public void reset()
+	{
+		this.driver.reset();
+	}
 
 	@Override
-	public void localize( final double[] position ) { randomAccess.localize( position ); }
+	public void localize( final float[] position )
+	{
+		randomAccess.localize( position );
+	}
 
 	@Override
-	public float getFloatPosition( final int d ) { return randomAccess.getFloatPosition( d ); }
+	public void localize( final double[] position )
+	{
+		randomAccess.localize( position );
+	}
 
 	@Override
-	public double getDoublePosition( final int d ) { return randomAccess.getDoublePosition( d ); }
+	public float getFloatPosition( final int d )
+	{
+		return randomAccess.getFloatPosition( d );
+	}
 
 	@Override
-	public int numDimensions() { return numDimensions; }
+	public double getDoublePosition( final int d )
+	{
+		return randomAccess.getDoublePosition( d );
+	}
 
 	@Override
-	public T get() { return randomAccess.get(); }
+	public int numDimensions()
+	{
+		return numDimensions;
+	}
 
 	@Override
-	public T next() 
+	public T get()
+	{
+		return randomAccess.get();
+	}
+
+	@Override
+	public T next()
 	{
 		fwd();
 		return get();
 	}
 
 	@Override
-	public void remove() {}
+	public void remove()
+	{}
 
 	@Override
-	public void localize( final int[] position ) { randomAccess.localize( position ); }
+	public void localize( final int[] position )
+	{
+		randomAccess.localize( position );
+	}
 
 	@Override
-	public void localize( final long[] position ) { randomAccess.localize( position ); }
+	public void localize( final long[] position )
+	{
+		randomAccess.localize( position );
+	}
 
 	@Override
-	public int getIntPosition( final int d ) { return randomAccess.getIntPosition( d ); }
+	public int getIntPosition( final int d )
+	{
+		return randomAccess.getIntPosition( d );
+	}
 
 	@Override
-	public long getLongPosition( final int d )  { return randomAccess.getLongPosition( d ); }
-	
+	public long getLongPosition( final int d )
+	{
+		return randomAccess.getLongPosition( d );
+	}
+
 	@Override
-	public LocalNeighborhoodCursor<T> copyCursor() { return new LocalNeighborhoodCursor< T >( this ); }
-	
+	public LocalNeighborhoodCursor< T > copyCursor()
+	{
+		return new LocalNeighborhoodCursor< T >( this );
+	}
+
 	@Override
-	public LocalNeighborhoodCursor<T> copy() { return copyCursor(); }
+	public LocalNeighborhoodCursor< T > copy()
+	{
+		return copyCursor();
+	}
 }

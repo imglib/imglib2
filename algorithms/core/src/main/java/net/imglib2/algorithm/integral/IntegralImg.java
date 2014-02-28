@@ -43,28 +43,36 @@ import net.imglib2.iterator.LocalizingZeroMinIntervalIterator;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 
-/** n-dimensional integral image that stores sums using type {@param <T>}.
- * Care must be taken that sums do not overflow the capacity of type {@param <T>}.
- *
- * The integral image will be one pixel larger in each dimension as for easy computation
- * of sums it has to contain "zeros" at the beginning of each dimension
- *
- * The {@link Converter} defines howto convert from Type {@param <R>} to {@param <T>}.
- *
- * Sums are done with the precision of {@param <T>} and then set to the integral image type,
- * which may crop the values according to the type's capabilities.
- *
- * @param <R> The type of the input image.
- * @param <T> The type of the integral image.
- *
+/**
+ * n-dimensional integral image that stores sums using type {@param <T>}. Care
+ * must be taken that sums do not overflow the capacity of type {@param <T>}.
+ * 
+ * The integral image will be one pixel larger in each dimension as for easy
+ * computation of sums it has to contain "zeros" at the beginning of each
+ * dimension
+ * 
+ * The {@link Converter} defines howto convert from Type {@param <R>} to {@param
+ * <T>}.
+ * 
+ * Sums are done with the precision of {@param <T>} and then set to the integral
+ * image type, which may crop the values according to the type's capabilities.
+ * 
+ * @param <R>
+ *            The type of the input image.
+ * @param <T>
+ *            The type of the integral image.
+ * 
  * @author Stephan Preibisch
  * @author Albert Cardona
  */
 public class IntegralImg< R extends NumericType< R >, T extends NumericType< T > & NativeType< T > > implements OutputAlgorithm< Img< T > >
 {
 	protected final RandomAccessibleInterval< R > img;
+
 	protected final T type;
+
 	protected Img< T > integral;
+
 	protected final Converter< R, T > converter;
 
 	public IntegralImg( final RandomAccessibleInterval< R > img, final T type, final Converter< R, T > converter )
@@ -82,9 +90,9 @@ public class IntegralImg< R extends NumericType< R >, T extends NumericType< T >
 
 		// the size of the first dimension is changed
 		for ( int d = 0; d < numDimensions; ++d )
-			integralSize[ d ] = (int) img.dimension( d ) + 1;
+			integralSize[ d ] = ( int ) img.dimension( d ) + 1;
 
-		final Img< T > integral = new ArrayImgFactory<T>().create( integralSize, type.createVariable() );
+		final Img< T > integral = new ArrayImgFactory< T >().create( integralSize, type.createVariable() );
 
 		// not enough RAM or disc space
 		if ( integral == null )
@@ -94,7 +102,8 @@ public class IntegralImg< R extends NumericType< R >, T extends NumericType< T >
 		if ( numDimensions > 1 )
 		{
 			/**
-			 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the integral image in
+			 * Here we "misuse" a ArrayLocalizableCursor to iterate through all
+			 * dimensions except the one we are computing the integral image in
 			 */
 			final long[] fakeSize = new long[ numDimensions - 1 ];
 
@@ -118,12 +127,14 @@ public class IntegralImg< R extends NumericType< R >, T extends NumericType< T >
 			final T tmpVar = type.createVariable();
 			final T sum = type.createVariable();
 
-			// iterate over all dimensions except the one we are computing the integral in, which is dim=0 here
-main:		while( cursorDim.hasNext() )
+			// iterate over all dimensions except the one we are computing the
+			// integral in, which is dim=0 here
+			main: while ( cursorDim.hasNext() )
 			{
 				cursorDim.fwd();
 
-				// get all dimensions except the one we are currently doing the integral on
+				// get all dimensions except the one we are currently doing the
+				// integral on
 				cursorDim.localize( fakeSize );
 
 				tmpIn[ 0 ] = 0;
@@ -144,24 +155,19 @@ main:		while( cursorDim.hasNext() )
 
 				// set the cursor in the integral image to the right position
 				cursorOut.setPosition( tmpOut );
-				
+
 				// integrate over the line
 				integrateLineDim0( converter, cursorIn, cursorOut, sum, tmpVar, size );
 				/*
-				// compute the first pixel
-				converter.convert( cursorIn.getType(), sum );
-				cursorOut.getType().set( sum );
-
-				for ( int i = 2; i < size; ++i )
-				{
-					cursorIn.fwd( 0 );
-					cursorOut.fwd( 0 );
-
-					converter.convert( cursorIn.getType(), tmpVar );
-					sum.add( tmpVar );
-					cursorOut.getType().set( sum );
-				}
-				*/
+				 * // compute the first pixel converter.convert(
+				 * cursorIn.getType(), sum ); cursorOut.getType().set( sum );
+				 * 
+				 * for ( int i = 2; i < size; ++i ) { cursorIn.fwd( 0 );
+				 * cursorOut.fwd( 0 );
+				 * 
+				 * converter.convert( cursorIn.getType(), tmpVar ); sum.add(
+				 * tmpVar ); cursorOut.getType().set( sum ); }
+				 */
 			}
 		}
 		else
@@ -198,7 +204,8 @@ main:		while( cursorDim.hasNext() )
 		for ( int d = 1; d < numDimensions; ++d )
 		{
 			/**
-			 * Here we "misuse" a ArrayLocalizableCursor to iterate through all dimensions except the one we are computing the fft in
+			 * Here we "misuse" a ArrayLocalizableCursor to iterate through all
+			 * dimensions except the one we are computing the fft in
 			 */
 			final long[] fakeSize = new long[ numDimensions - 1 ];
 			final long[] tmp = new long[ numDimensions ];
@@ -206,7 +213,8 @@ main:		while( cursorDim.hasNext() )
 			// the size of dimension d
 			final long size = integralSize[ d ];
 
-			// get all dimensions except the one we are currently doing the integral on
+			// get all dimensions except the one we are currently doing the
+			// integral on
 			int countDim = 0;
 			for ( int e = 0; e < numDimensions; ++e )
 				if ( e != d )
@@ -217,11 +225,12 @@ main:		while( cursorDim.hasNext() )
 			final RandomAccess< T > cursor = integral.randomAccess();
 			final T sum = type.createVariable();
 
-			while( cursorDim.hasNext() )
+			while ( cursorDim.hasNext() )
 			{
 				cursorDim.fwd();
 
-				// get all dimensions except the one we are currently doing the integral on
+				// get all dimensions except the one we are currently doing the
+				// integral on
 				cursorDim.localize( fakeSize );
 
 				tmp[ d ] = 1;
@@ -230,29 +239,26 @@ main:		while( cursorDim.hasNext() )
 					if ( e != d )
 						tmp[ e ] = fakeSize[ countDim++ ];
 
-				// update the cursor in the input image to the current dimension position
+				// update the cursor in the input image to the current dimension
+				// position
 				cursor.setPosition( tmp );
 
 				// sum up line
 				integrateLine( d, cursor, sum, size );
 				/*
-				// init sum on first pixel that is not zero
-				sum.set( cursor.getType() );
-
-				for ( int i = 2; i < size; ++i )
-				{
-					cursor.fwd( d );
-
-					sum.add( cursor.getType() );
-					cursor.getType().set( sum );
-				}
-				*/
+				 * // init sum on first pixel that is not zero sum.set(
+				 * cursor.getType() );
+				 * 
+				 * for ( int i = 2; i < size; ++i ) { cursor.fwd( d );
+				 * 
+				 * sum.add( cursor.getType() ); cursor.getType().set( sum ); }
+				 */
 			}
 		}
 
 		return true;
 	}
-	
+
 	protected void integrateLineDim0( final Converter< R, T > converter, final RandomAccess< R > cursorIn, final RandomAccess< T > cursorOut, final T sum, final T tmpVar, final long size )
 	{
 		// compute the first pixel
@@ -267,7 +273,7 @@ main:		while( cursorDim.hasNext() )
 			converter.convert( cursorIn.get(), tmpVar );
 			sum.add( tmpVar );
 			cursorOut.get().set( sum );
-		}		
+		}
 	}
 
 	protected void integrateLine( final int d, final RandomAccess< T > cursor, final T sum, final long size )
@@ -285,18 +291,20 @@ main:		while( cursorDim.hasNext() )
 	}
 
 	@Override
-	public boolean checkInput() {
+	public boolean checkInput()
+	{
 		return true;
 	}
 
 	@Override
-	public String getErrorMessage() {
+	public String getErrorMessage()
+	{
 		return null;
 	}
 
 	@Override
-	public Img<T> getResult() {
+	public Img< T > getResult()
+	{
 		return integral;
 	}
 }
-

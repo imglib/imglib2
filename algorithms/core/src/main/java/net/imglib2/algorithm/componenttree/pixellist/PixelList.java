@@ -46,8 +46,8 @@ import net.imglib2.util.IntervalIndexer;
  * A singly-linked list of pixel locations stored in a {@link RandomAccessible}.
  * (the value at a given location in the {@link RandomAccessible} is the index
  * of the next location in the list.)
- *
- *
+ * 
+ * 
  * @author Tobias Pietzsch
  */
 public final class PixelList implements Iterable< Localizable >
@@ -102,7 +102,7 @@ public final class PixelList implements Iterable< Localizable >
 	}
 
 	/**
-	 * Append a pixel location to the list. 
+	 * Append a pixel location to the list.
 	 */
 	public void addPosition( final Localizable position )
 	{
@@ -123,7 +123,7 @@ public final class PixelList implements Iterable< Localizable >
 	}
 
 	/**
-	 * Append another {@link PixelList} to this one. 
+	 * Append another {@link PixelList} to this one.
 	 */
 	public void merge( final PixelList l )
 	{
@@ -131,14 +131,14 @@ public final class PixelList implements Iterable< Localizable >
 		{
 			headIndex = l.headIndex;
 			for ( int i = 0; i < tailPos.length; ++i )
-				tailPos[i] = l.tailPos[i];
+				tailPos[ i ] = l.tailPos[ i ];
 		}
 		else
 		{
 			locationsAccess.setPosition( tailPos );
 			locationsAccess.get().set( l.headIndex );
 			for ( int i = 0; i < tailPos.length; ++i )
-				tailPos[i] = l.tailPos[i];
+				tailPos[ i ] = l.tailPos[ i ];
 		}
 		size += l.size;
 	}
@@ -146,8 +146,11 @@ public final class PixelList implements Iterable< Localizable >
 	public class PixelListIterator implements Iterator< Localizable >
 	{
 		private long i;
+
 		private long nextIndex;
+
 		private final long[] tmp;
+
 		private final Point pos;
 
 		public PixelListIterator()
@@ -176,7 +179,8 @@ public final class PixelList implements Iterable< Localizable >
 		}
 
 		@Override
-		public void remove() {}
+		public void remove()
+		{}
 	}
 
 	@Override
@@ -187,7 +191,7 @@ public final class PixelList implements Iterable< Localizable >
 
 	/**
 	 * Get the size of the list.
-	 *
+	 * 
 	 * @return number of elements in this list.
 	 */
 	public long size()

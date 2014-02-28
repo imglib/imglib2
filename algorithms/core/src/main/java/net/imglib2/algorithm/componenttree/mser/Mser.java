@@ -41,15 +41,16 @@ import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.Type;
 
 /**
- * A maximally stable extremal region (MSER) of the image thresholded at {@link #value()}. The set
- * of pixels can be accessed by iterating ({@link #iterator()}) the component.
- *
- * This is a node in a {@link MserTree}. The child and parent
- * nodes can be accessed by {@link #getChildren()} and {@link #getParent()}.
- *
+ * A maximally stable extremal region (MSER) of the image thresholded at
+ * {@link #value()}. The set of pixels can be accessed by iterating (
+ * {@link #iterator()}) the component.
+ * 
+ * This is a node in a {@link MserTree}. The child and parent nodes can be
+ * accessed by {@link #getChildren()} and {@link #getParent()}.
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class Mser< T extends Type< T > > implements Iterable< Localizable >
@@ -89,7 +90,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 	 */
 	private final double[] cov;
 
-	Mser( MserEvaluationNode< T > node )
+	Mser( final MserEvaluationNode< T > node )
 	{
 		children = new ArrayList< Mser< T > >();
 		parent = null;
@@ -103,7 +104,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 
 	/**
 	 * Get the image threshold that created the extremal region.
-	 *
+	 * 
 	 * @return the image threshold that created the extremal region.
 	 */
 	public T value()
@@ -113,7 +114,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 
 	/**
 	 * Get the number of pixels in the extremal region.
-	 *
+	 * 
 	 * @return number of pixels in the extremal region.
 	 */
 	public long size()
@@ -132,8 +133,8 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 	}
 
 	/**
-	 * Mean of the pixel positions in the region. This is a position vector
-	 * (x, y, z, ...)
+	 * Mean of the pixel positions in the region. This is a position vector (x,
+	 * y, z, ...)
 	 * 
 	 * @return mean vector.
 	 */
@@ -143,9 +144,9 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 	}
 
 	/**
-	 * Covariance of the pixel positions in the region. This is a vector of
-	 * the independent elements of the covariance matrix (xx, xy, xz, ...,
-	 * yy, yz, ..., zz, ...)
+	 * Covariance of the pixel positions in the region. This is a vector of the
+	 * independent elements of the covariance matrix (xx, xy, xz, ..., yy, yz,
+	 * ..., zz, ...)
 	 * 
 	 * @return vector of covariance elements.
 	 */
@@ -157,7 +158,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 	/**
 	 * Get an iterator over the pixel locations ({@link Localizable}) in this
 	 * connected component.
-	 *
+	 * 
 	 * @return iterator over locations.
 	 */
 	@Override
@@ -168,7 +169,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 
 	/**
 	 * Get the children of this node in the {@link MserTree}.
-	 *
+	 * 
 	 * @return the children of this node in the {@link MserTree}.
 	 */
 	public ArrayList< Mser< T > > getChildren()
@@ -178,7 +179,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 
 	/**
 	 * Get the parent of this node in the {@link MserTree}.
-	 *
+	 * 
 	 * @return the parent of this node in the {@link MserTree}.
 	 */
 	public Mser< T > getParent()

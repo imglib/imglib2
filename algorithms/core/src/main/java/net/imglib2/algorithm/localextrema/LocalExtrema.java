@@ -55,14 +55,14 @@ import net.imglib2.view.Views;
  * Provides
  * {@link #findLocalExtrema(RandomAccessibleInterval, LocalNeighborhoodCheck, int)}
  * to find pixels that are extrema in their local neighborhood.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class LocalExtrema
 {
 	/**
 	 * A local extremum check.
-	 *
+	 * 
 	 * @param <P>
 	 *            A representation of the extremum. For example, this could be
 	 *            just a {@link Point} describing the location of the extremum.
@@ -77,7 +77,7 @@ public class LocalExtrema
 		 * Determine whether a pixel is a local extremum. If so, return a
 		 * <code>P</code> that represents the maximum. Otherwise return
 		 * <code>null</code>.
-		 *
+		 * 
 		 * @param center
 		 *            an access located on the pixel to test
 		 * @param neighborhood
@@ -92,9 +92,10 @@ public class LocalExtrema
 	 * Find pixels that are extrema in their local neighborhood. The specific
 	 * test for being an extremum can is specified as an implementation of the
 	 * {@link LocalNeighborhoodCheck} interface.
-	 *
-	 * TODO: Make neighborhood shape configurable. This will require that Shape can give a bounding box.
-	 *
+	 * 
+	 * TODO: Make neighborhood shape configurable. This will require that Shape
+	 * can give a bounding box.
+	 * 
 	 * @param img
 	 * @param localNeighborhoodCheck
 	 * @param numThreads
@@ -161,10 +162,10 @@ public class LocalExtrema
 	 * equal to a specified minimum allowed value, and no pixel in the
 	 * neighborhood has a greater value. That means that maxima are non-strict.
 	 * Intensity plateaus may result in multiple maxima.
-	 *
+	 * 
 	 * @param <T>
 	 *            pixel type.
-	 *
+	 * 
 	 * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
 	 */
 	public static class MaximumCheck< T extends Comparable< T > > implements LocalNeighborhoodCheck< Point, T >
@@ -197,10 +198,10 @@ public class LocalExtrema
 	 * equal to a specified maximum allowed value, and no pixel in the
 	 * neighborhood has a smaller value. That means that minima are non-strict.
 	 * Intensity plateaus may result in multiple minima.
-	 *
+	 * 
 	 * @param <T>
 	 *            pixel type.
-	 *
+	 * 
 	 * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
 	 */
 	public static class MinimumCheck< T extends Comparable< T > > implements LocalNeighborhoodCheck< Point, T >

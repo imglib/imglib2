@@ -41,7 +41,7 @@ public class Normalize
 {
 	/**
 	 * Normalize values of an {@link IterableInterval} to the range [min, max].
-	 *
+	 * 
 	 * @param iterable
 	 *            the interval to be normalized.
 	 * @param min

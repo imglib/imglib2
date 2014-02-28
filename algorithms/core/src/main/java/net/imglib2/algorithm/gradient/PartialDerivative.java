@@ -46,7 +46,7 @@ public class PartialDerivative
 	// nice version...
 	/**
 	 * Compute the partial derivative of source in a particular dimension.
-	 *
+	 * 
 	 * @param source
 	 *            source image, has to provide valid data in the interval of the
 	 *            gradient image plus a one pixel border in dimension.
@@ -60,7 +60,7 @@ public class PartialDerivative
 		final Cursor< T > front = Views.flatIterable( Views.interval( source, Intervals.translate( gradient, 1, dimension ) ) ).cursor();
 		final Cursor< T > back = Views.flatIterable( Views.interval( source, Intervals.translate( gradient, -1, dimension ) ) ).cursor();
 
-		for( final T t : Views.flatIterable( gradient ) )
+		for ( final T t : Views.flatIterable( gradient ) )
 		{
 			t.set( front.next() );
 			t.sub( back.next() );
@@ -71,7 +71,7 @@ public class PartialDerivative
 	// fast version
 	/**
 	 * Compute the partial derivative of source in a particular dimension.
-	 *
+	 * 
 	 * @param source
 	 *            source image, has to provide valid data in the interval of the
 	 *            gradient image plus a one pixel border in dimension.
@@ -112,7 +112,8 @@ public class PartialDerivative
 			t.mul( 0.5 );
 
 			// move to next pixel
-			// check dimension 0 separately to avoid the loop over d in most iterations
+			// check dimension 0 separately to avoid the loop over d in most
+			// iterations
 			if ( result.getLongPosition( 0 ) == max0 )
 			{
 				if ( n == 1 )

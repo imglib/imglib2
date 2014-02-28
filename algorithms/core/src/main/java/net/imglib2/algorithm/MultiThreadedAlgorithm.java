@@ -34,30 +34,48 @@
 package net.imglib2.algorithm;
 
 /**
- * This is a convenience implementation of an algorithm that implements {@link MultiThreaded}
- * and {@link Algorithm} so that less code has to be re-implemented.
+ * This is a convenience implementation of an algorithm that implements
+ * {@link MultiThreaded} and {@link Algorithm} so that less code has to be
+ * re-implemented.
  * 
- * IMPORTANT: It is not meant to be used for any other purpose than that, it should not be 
- * demanded by any other method or generic construct, use the interfaces instead.
- *   
+ * IMPORTANT: It is not meant to be used for any other purpose than that, it
+ * should not be demanded by any other method or generic construct, use the
+ * interfaces instead.
+ * 
  * @author Stephan Preibisch
  */
 public abstract class MultiThreadedAlgorithm implements MultiThreaded, Algorithm
 {
 	protected int numThreads;
+
 	protected String errorMessage = "";
 
-	public MultiThreadedAlgorithm() { setNumThreads(); }
-	
-	@Override
-	public void setNumThreads() { this.numThreads = Runtime.getRuntime().availableProcessors(); }
+	public MultiThreadedAlgorithm()
+	{
+		setNumThreads();
+	}
 
 	@Override
-	public void setNumThreads( final int numThreads ) { this.numThreads = numThreads; }
+	public void setNumThreads()
+	{
+		this.numThreads = Runtime.getRuntime().availableProcessors();
+	}
 
 	@Override
-	public int getNumThreads() { return numThreads; }
+	public void setNumThreads( final int numThreads )
+	{
+		this.numThreads = numThreads;
+	}
 
 	@Override
-	public String getErrorMessage() { return errorMessage; }
+	public int getNumThreads()
+	{
+		return numThreads;
+	}
+
+	@Override
+	public String getErrorMessage()
+	{
+		return errorMessage;
+	}
 }

@@ -40,7 +40,8 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.LongType;
 
 /**
- * Special implementation for long using the basic type to sum up the individual lines. 
+ * Special implementation for long using the basic type to sum up the individual
+ * lines.
  * 
  * @param <R>
  * @author Stephan Preibisch
@@ -48,18 +49,18 @@ import net.imglib2.type.numeric.integer.LongType;
 public class IntegralImgLong< R extends NumericType< R > > extends IntegralImg< R, LongType >
 {
 
-	public IntegralImgLong( final RandomAccessibleInterval<R> img, final LongType type, final Converter<R, LongType> converter) 
+	public IntegralImgLong( final RandomAccessibleInterval< R > img, final LongType type, final Converter< R, LongType > converter )
 	{
 		super( img, type, converter );
 	}
-	
+
 	@Override
 	protected void integrateLineDim0( final Converter< R, LongType > converter, final RandomAccess< R > cursorIn, final RandomAccess< LongType > cursorOut, final LongType sum, final LongType tmpVar, final long size )
 	{
 		// compute the first pixel
 		converter.convert( cursorIn.get(), sum );
 		cursorOut.get().set( sum );
-		
+
 		long sum2 = sum.get();
 
 		for ( int i = 2; i < size; ++i )
@@ -70,7 +71,7 @@ public class IntegralImgLong< R extends NumericType< R > > extends IntegralImg< 
 			converter.convert( cursorIn.get(), tmpVar );
 			sum2 += tmpVar.get();
 			cursorOut.get().set( sum2 );
-		}		
+		}
 	}
 
 	@Override

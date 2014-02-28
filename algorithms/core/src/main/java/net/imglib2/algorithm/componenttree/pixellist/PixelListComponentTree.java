@@ -50,18 +50,18 @@ import net.imglib2.util.Util;
 
 /**
  * Component tree of an image stored as a tree of {@link PixelListComponent}s.
- * This class is used both to represent and build the tree.
- * For building the tree {@link Component.Handler} is implemented to gather
+ * This class is used both to represent and build the tree. For building the
+ * tree {@link Component.Handler} is implemented to gather
  * {@link PixelListComponentIntermediate} emitted by {@link ComponentTree}.
- *
+ * 
  * <p>
  * <strong>TODO</strong> Add support for non-zero-min RandomAccessibleIntervals.
  * (Currently, we assume that the input image is a <em>zero-min</em> interval.)
  * </p>
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class PixelListComponentTree< T extends Type< T > > implements Component.Handler< PixelListComponentIntermediate< T > >, Iterable< PixelListComponent< T > >
@@ -71,7 +71,7 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 	 * {@link #buildComponentTree(RandomAccessibleInterval, RealType, ImgFactory, boolean)}
 	 * using an {@link ArrayImgFactory} or {@link CellImgFactory} depending on
 	 * input image size.
-	 *
+	 * 
 	 * @param input
 	 *            the input image.
 	 * @param type
@@ -89,7 +89,7 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 
 	/**
 	 * Build a component tree from an input image.
-	 *
+	 * 
 	 * @param input
 	 *            the input image.
 	 * @param type
@@ -117,7 +117,7 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 	 * {@link #buildComponentTree(RandomAccessibleInterval, Type, Comparator, ImgFactory)}
 	 * using an {@link ArrayImgFactory} or {@link CellImgFactory} depending on
 	 * input image size.
-	 *
+	 * 
 	 * @param input
 	 *            the input image.
 	 * @param maxValue
@@ -135,7 +135,7 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 
 	/**
 	 * Build a component tree from an input image.
-	 *
+	 * 
 	 * @param input
 	 *            the input image.
 	 * @param maxValue
@@ -176,7 +176,7 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 
 	/**
 	 * Returns an iterator over all connected components in the tree.
-	 *
+	 * 
 	 * @return iterator over all connected components in the tree.
 	 */
 	@Override
@@ -187,7 +187,7 @@ public final class PixelListComponentTree< T extends Type< T > > implements Comp
 
 	/**
 	 * Get the root component.
-	 *
+	 * 
 	 * @return root component.
 	 */
 	public PixelListComponent< T > root()

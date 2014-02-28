@@ -40,9 +40,9 @@ import net.imglib2.RealPoint;
  * A {@link RealPoint} representing a sub-pixel-localized peak. Contains the
  * original non-refined peak, a value, and a boolean validity flag. See
  * {@link SubpixelLocalization}.
- *
+ * 
  * @param <P>
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class RefinedPeak< P extends Localizable > extends RealPoint

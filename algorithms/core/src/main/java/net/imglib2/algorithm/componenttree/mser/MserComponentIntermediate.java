@@ -46,10 +46,10 @@ import net.imglib2.type.Type;
  * compute mean and covariance. It keeps track of which components were merged
  * into this since it was last emitted (this is used to establish region size
  * history).
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 final class MserComponentIntermediate< T extends Type< T > > implements Component< T >
@@ -75,7 +75,8 @@ final class MserComponentIntermediate< T extends Type< T > > implements Componen
 	final double[] sumPos;
 
 	/**
-	 * sum of independent elements of outer product of position (xx, xy, xz, ..., yy, yz, ..., zz, ...).
+	 * sum of independent elements of outer product of position (xx, xy, xz,
+	 * ..., yy, yz, ..., zz, ...).
 	 */
 	final double[] sumSquPos;
 
@@ -86,7 +87,7 @@ final class MserComponentIntermediate< T extends Type< T > > implements Componen
 	 * was last emitted. (For building up MSER evaluation structure.)
 	 */
 	ArrayList< MserComponentIntermediate< T > > children;
-	
+
 	/**
 	 * The {@link MserEvaluationNode} assigned to this MserComponent when it was
 	 * last emitted. (For building up MSER evaluation structure.)
@@ -95,7 +96,7 @@ final class MserComponentIntermediate< T extends Type< T > > implements Componen
 
 	/**
 	 * Create new empty component.
-	 *
+	 * 
 	 * @param value
 	 *            (initial) threshold value {@see #getValue()}.
 	 * @param generator
@@ -107,13 +108,13 @@ final class MserComponentIntermediate< T extends Type< T > > implements Componen
 		pixelList = new PixelList( generator.linkedList.randomAccess(), generator.dimensions );
 		n = generator.dimensions.length;
 		sumPos = new double[ n ];
-		sumSquPos = new double[ ( n * (n+1) ) / 2 ];
+		sumSquPos = new double[ ( n * ( n + 1 ) ) / 2 ];
 		this.value = value.copy();
 		this.children = new ArrayList< MserComponentIntermediate< T > >();
 		this.evaluationNode = null;
 		tmp = new long[ n ];
 	}
-	
+
 	@Override
 	public void addPosition( final Localizable position )
 	{
@@ -139,7 +140,7 @@ final class MserComponentIntermediate< T extends Type< T > > implements Componen
 	{
 		this.value.set( value );
 	}
-	
+
 	@Override
 	public void merge( final Component< T > component )
 	{
@@ -157,7 +158,7 @@ final class MserComponentIntermediate< T extends Type< T > > implements Componen
 	{
 		String s = "{" + value.toString() + " : ";
 		boolean first = true;
-		for ( Localizable l : pixelList )
+		for ( final Localizable l : pixelList )
 		{
 			if ( first )
 			{
@@ -174,30 +175,30 @@ final class MserComponentIntermediate< T extends Type< T > > implements Componen
 
 	/**
 	 * Get the number of pixels in the component.
-	 *
+	 * 
 	 * @return number of pixels in the component.
 	 */
 	long size()
 	{
 		return pixelList.size();
 	}
-	
+
 	/**
 	 * Get the {@link MserEvaluationNode} assigned to this
 	 * {@link MserComponentIntermediate} when it was last emitted.
-	 *
+	 * 
 	 * @return {@link MserEvaluationNode} last emitted from the component.
 	 */
 	MserEvaluationNode< T > getEvaluationNode()
 	{
 		return evaluationNode;
 	}
-	
+
 	/**
 	 * Set the {@link MserEvaluationNode} created from this
 	 * {@link MserComponentIntermediate} when it is emitted.
 	 */
-	void setEvaluationNode( MserEvaluationNode< T > node )
+	void setEvaluationNode( final MserEvaluationNode< T > node )
 	{
 		evaluationNode = node;
 	}

@@ -46,10 +46,10 @@ import net.imglib2.type.numeric.NumericType;
  * for very large images, where a single line has more than
  * {@link Integer#MAX_VALUE} elements. For smaller images, the faster
  * {@link ConvolverNativeTypeBuffered} should be used.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @see ConvolverFactory
- *
+ * 
  * @param <T>
  *            input and output type
  */
@@ -67,10 +67,13 @@ public final class ConvolverNativeType< T extends NumericType< T > & NativeType<
 	{
 		final private T type;
 
-		public ConvolverFactoryNativeType( final T type ) { this.type = type;}
+		public ConvolverFactoryNativeType( final T type )
+		{
+			this.type = type;
+		}
 
 		@Override
-		public Runnable create( final double[] halfkernel, final RandomAccess< T > in, final RandomAccess< T > out, final int d, final long lineLength)
+		public Runnable create( final double[] halfkernel, final RandomAccess< T > in, final RandomAccess< T > out, final int d, final long lineLength )
 		{
 			return new ConvolverNativeType< T >( halfkernel, in, out, d, lineLength, type );
 		}
@@ -121,7 +124,7 @@ public final class ConvolverNativeType< T extends NumericType< T > & NativeType<
 	private void next()
 	{
 		// move buf contents down
-		for( int i = 0; i < k1k1; ++i )
+		for ( int i = 0; i < k1k1; ++i )
 		{
 			b2.updateIndex( i + 1 );
 			b1.updateIndex( i );

@@ -53,10 +53,12 @@ import net.imglib2.view.Views;
  * gradient (perpendicular to the edge). The sub-pixel position of the edgel is
  * found as the maximum of a quadratic function fitted to the neighboring
  * magnitudes in the gradient direction. The method is described in
- * <p>F. Devernay,
- * <em>A Non-Maxima Suppression Method for Edge Detection with Sub-Pixel Accuracy</em>,
- * RR 2724, INRIA, nov. 1995</p>
- *
+ * <p>
+ * F. Devernay,
+ * <em>A Non-Maxima Suppression Method for Edge Detection with Sub-Pixel Accuracy</em>
+ * , RR 2724, INRIA, nov. 1995
+ * </p>
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class SubpixelEdgelDetection
@@ -82,9 +84,9 @@ public class SubpixelEdgelDetection
 	 * @return set of edgels found in the input image
 	 */
 	public static < T extends RealType< T > > ArrayList< Edgel > getEdgels(
-					final RandomAccessibleInterval< T > input,
-					final ImgFactory< T > factory,
-					final float minGradientMagnitude )
+			final RandomAccessibleInterval< T > input,
+			final ImgFactory< T > factory,
+			final float minGradientMagnitude )
 	{
 		final ArrayList< Edgel > edgels = new ArrayList< Edgel >();
 

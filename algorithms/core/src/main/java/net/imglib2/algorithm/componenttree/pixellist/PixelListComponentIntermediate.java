@@ -42,10 +42,10 @@ import net.imglib2.type.Type;
 /**
  * Implementation of {@link Component} that stores a list of associated pixels
  * in a {@link PixelList}.
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 final class PixelListComponentIntermediate< T extends Type< T > > implements Component< T >
@@ -74,7 +74,7 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 
 	/**
 	 * Create new empty component.
-	 *
+	 * 
 	 * @param value
 	 *            (initial) threshold value {@see #getValue()}.
 	 * @param generator
@@ -110,7 +110,7 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 	@Override
 	public void merge( final Component< T > component )
 	{
-		final PixelListComponentIntermediate< T > c = (PixelListComponentIntermediate< T > ) component;
+		final PixelListComponentIntermediate< T > c = ( PixelListComponentIntermediate< T > ) component;
 		pixelList.merge( c.pixelList );
 		children.add( c );
 	}
@@ -120,7 +120,7 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 	{
 		String s = "{" + value.toString() + " : ";
 		boolean first = true;
-		for ( Localizable l : pixelList )
+		for ( final Localizable l : pixelList )
 		{
 			if ( first )
 			{

@@ -36,44 +36,52 @@ package net.imglib2.algorithm.stats;
 /**
  * An interface used by the Histogram class to map Type objects to histogram
  * bins.
- *
+ * 
  * @author 2011 Larry Lindsey
  * @author Larry Lindsey
  */
-public interface HistogramBinMapper <T>{
-	
-    /**
-     * Returns the minimum bin for the histogram.  This value may not
-     * be relevant for histograms over Type's that do not have a natural order.
-     * @return the minimum bin Type for the histogram.
-     */
+public interface HistogramBinMapper< T >
+{
+
+	/**
+	 * Returns the minimum bin for the histogram. This value may not be relevant
+	 * for histograms over Type's that do not have a natural order.
+	 * 
+	 * @return the minimum bin Type for the histogram.
+	 */
 	public T getMinBin();
-	
-    /**
-     * Returns the maximum bin for the histogram.  This value may not
-     * be relevant for histograms over Type's that do not have a natural order.
-     * @return the maximum bin Type for the histogram.
-     */
+
+	/**
+	 * Returns the maximum bin for the histogram. This value may not be relevant
+	 * for histograms over Type's that do not have a natural order.
+	 * 
+	 * @return the maximum bin Type for the histogram.
+	 */
 	public T getMaxBin();
-	
+
 	/**
 	 * Returns the number of bins for the histogram.
+	 * 
 	 * @return the number of bins for the histogram.
 	 */
 	public int getNumBins();
 
 	/**
 	 * Maps a given Type to its histogram bin.
-	 * @param type the Type to map.
+	 * 
+	 * @param type
+	 *            the Type to map.
 	 * @return the histogram bin index.
 	 */
-	public int map(final T type);
-	
+	public int map( final T type );
+
 	/**
 	 * Maps a given histogram bin index to a Type containing the bin center
 	 * value.
-	 * @param i the histogram bin index to map.
+	 * 
+	 * @param i
+	 *            the histogram bin index to map.
 	 * @return a Type containing the bin center value.
 	 */
-	public T invMap(final int i);
+	public T invMap( final int i );
 }

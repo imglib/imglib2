@@ -47,10 +47,10 @@ import net.imglib2.type.numeric.integer.LongType;
  * {@link PixelListComponentIntermediate} components. According to the
  * dimensions of the input image it creates a {@link LongType} {@link Img} to
  * store the {@link PixelList} used in the components.
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 final class PixelListComponentGenerator< T extends Type< T > > implements Component.Generator< T, PixelListComponentIntermediate< T > >
@@ -63,7 +63,7 @@ final class PixelListComponentGenerator< T extends Type< T > > implements Compon
 	final long[] dimensions;
 
 	/**
-	 * Represents a singly-linked list of pixel locations {@see PixelList}. 
+	 * Represents a singly-linked list of pixel locations {@see PixelList}.
 	 */
 	final Img< LongType > linkedList;
 
@@ -71,7 +71,7 @@ final class PixelListComponentGenerator< T extends Type< T > > implements Compon
 	 * According to the dimensions of the input image, create a {@link LongType}
 	 * {@link Img} to store the {@link PixelList} used in the components
 	 * generated {@link #createComponent(Type)}.
-	 *
+	 * 
 	 * @param maxValue
 	 *            a value (e.g., grey-level) greater than any occurring in the
 	 *            input image.
@@ -89,7 +89,7 @@ final class PixelListComponentGenerator< T extends Type< T > > implements Compon
 	}
 
 	@Override
-	public PixelListComponentIntermediate< T > createComponent( T value )
+	public PixelListComponentIntermediate< T > createComponent( final T value )
 	{
 		return new PixelListComponentIntermediate< T >( value, this );
 	}

@@ -42,10 +42,10 @@ import net.imglib2.type.numeric.RealType;
  * array. This is intented for very large images, where a single line has more
  * than {@link Integer#MAX_VALUE} elements. For smaller images, the faster
  * {@link DoubleConvolverRealTypeBuffered} should be used.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @see ConvolverFactory
- *
+ * 
  * @param <S>
  *            input type
  * @param <T>
@@ -54,11 +54,13 @@ import net.imglib2.type.numeric.RealType;
 public final class FloatConvolverRealType< S extends RealType< S >, T extends RealType< T > > implements Runnable
 {
 	/**
-	 * @return a {@link ConvolverFactory} producing {@link FloatConvolverRealType}.
+	 * @return a {@link ConvolverFactory} producing
+	 *         {@link FloatConvolverRealType}.
 	 */
 	public static < S extends RealType< S >, T extends RealType< T > > ConvolverFactory< S, T > factory()
 	{
-		return new ConvolverFactory< S, T >() {
+		return new ConvolverFactory< S, T >()
+		{
 			@Override
 			public Runnable create( final double[] halfkernel, final RandomAccess< S > in, final RandomAccess< T > out, final int d, final long lineLength )
 			{
