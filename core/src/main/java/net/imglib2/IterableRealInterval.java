@@ -98,11 +98,8 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	public long size();
 
 	/**
-	 * Get the first element of this {@IterableRealInterval
-	 * 
-	 * 
-	 * }. This is a shortcut for
-	 * <code>cursor().next()</code>.
+	 * Get the first element of this {@link IterableRealInterval}. This is a
+	 * shortcut for <code>cursor().next()</code>.
 	 * 
 	 * This can be used to create a new variable of type T using
 	 * <code>firstElement().createVariable()</code>, which is useful in generic
