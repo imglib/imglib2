@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,13 +28,19 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The views and conclusions contained in the software and documentation are
+ * those of the authors and should not be interpreted as representing official
+ * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.algorithm.dog;
 
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
@@ -50,10 +56,9 @@ import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
-
 /**
  * Compute Difference-of-Gaussian of a {@link RandomAccessible}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class DifferenceOfGaussian
@@ -62,11 +67,11 @@ public class DifferenceOfGaussian
 	 * Compute the difference of Gaussian for the input. Input convolved with
 	 * Gaussian of sigma1 is subtracted from input convolved with Gaussian of
 	 * sigma2 (where sigma2 > sigma1).
-	 *
+	 * 
 	 * <p>
 	 * Creates an appropriate temporary image and calls
 	 * {@link #DoG(double[], double[], RandomAccessible, RandomAccessible, RandomAccessibleInterval, int)}.
-	 *
+	 * 
 	 * @param sigma1
 	 *            stddev (in every dimension) of smaller Gaussian.
 	 * @param sigma2
@@ -80,20 +85,20 @@ public class DifferenceOfGaussian
 	 * @param numThreads
 	 *            how many threads to use for the computation.
 	 */
-	public static < T extends NumericType< T > & NativeType< T > > void DoG( final double[] sigma1, final double[] sigma2, final RandomAccessible< T > input, final RandomAccessibleInterval< T > dog, final int numThreads )
+	public static < T extends NumericType< T > & NativeType< T >> void DoG( final double[] sigma1, final double[] sigma2, final RandomAccessible< T > input, final RandomAccessibleInterval< T > dog, final ExecutorService service )
 	{
 		final T type = Util.getTypeFromInterval( dog );
 		final Img< T > g1 = Util.getArrayOrCellImgFactory( dog, type ).create( dog, type );
 		final long[] translation = new long[ dog.numDimensions() ];
 		dog.min( translation );
-		DoG( sigma1, sigma2, input, Views.translate( g1, translation ), dog, numThreads );
+		DoG( sigma1, sigma2, input, Views.translate( g1, translation ), dog, service );
 	}
 
 	/**
 	 * Compute the difference of Gaussian for the input. Input convolved with
 	 * Gaussian of sigma1 is subtracted from input convolved with Gaussian of
 	 * sigma2 (where sigma2 > sigma1).
-	 *
+	 * 
 	 * @param sigma1
 	 *            stddev (in every dimension) of smaller Gaussian.
 	 * @param sigma2
@@ -110,13 +115,14 @@ public class DifferenceOfGaussian
 	 * @param numThreads
 	 *            how many threads to use for the computation.
 	 */
-	public static < T extends NumericType< T > > void DoG( final double[] sigma1, final double[] sigma2, final RandomAccessible< T > input, final RandomAccessible< T > tmp, final RandomAccessibleInterval< T > dog, final int numThreads )
+	public static < T extends NumericType< T >> void DoG( final double[] sigma1, final double[] sigma2, final RandomAccessible< T > input, final RandomAccessible< T > tmp, final RandomAccessibleInterval< T > dog, final ExecutorService service )
 	{
+		final ArrayList< Future< Void >> futures = new ArrayList< Future< Void >>();
 		final IntervalView< T > tmpInterval = Views.interval( tmp, dog );
 		try
 		{
-			Gauss3.gauss( sigma1, input, tmpInterval, numThreads );
-			Gauss3.gauss( sigma2, input, dog, numThreads );
+			Gauss3.gauss( sigma1, input, tmpInterval, service );
+			Gauss3.gauss( sigma2, input, dog, service );
 		}
 		catch ( final IncompatibleTypeException e )
 		{
@@ -125,18 +131,19 @@ public class DifferenceOfGaussian
 		final IterableInterval< T > dogIterable = Views.iterable( dog );
 		final IterableInterval< T > tmpIterable = Views.iterable( tmpInterval );
 		final long size = dogIterable.size();
-		final int numTasks = numThreads <= 1 ? 1 : numThreads * 20;
+		final int numTasks = Runtime.getRuntime().availableProcessors() * 20;
 		final long taskSize = size / numTasks;
-		final ExecutorService ex = Executors.newFixedThreadPool( numThreads );
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
 			final long fromIndex = taskNum * taskSize;
 			final long thisTaskSize = ( taskNum == numTasks - 1 ) ? size - fromIndex : taskSize;
+			final Callable< Void > r;
 			if ( dogIterable.iterationOrder().equals( tmpIterable.iterationOrder() ) )
-				ex.execute( new Runnable()
+			{
+				r = new Callable< Void >()
 				{
 					@Override
-					public void run()
+					public Void call()
 					{
 						final Cursor< T > dogCursor = dogIterable.cursor();
 						final Cursor< T > tmpCursor = tmpIterable.cursor();
@@ -144,13 +151,17 @@ public class DifferenceOfGaussian
 						tmpCursor.jumpFwd( fromIndex );
 						for ( int i = 0; i < thisTaskSize; ++i )
 							dogCursor.next().sub( tmpCursor.next() );
+
+						return null;
 					}
-				} );
+				};
+			}
 			else
-				ex.execute( new Runnable()
+			{
+				r = new Callable< Void >()
 				{
 					@Override
-					public void run()
+					public Void call()
 					{
 						final Cursor< T > dogCursor = dogIterable.localizingCursor();
 						final RandomAccess< T > tmpAccess = tmpInterval.randomAccess();
@@ -161,17 +172,29 @@ public class DifferenceOfGaussian
 							tmpAccess.setPosition( dogCursor );
 							o.sub( tmpAccess.get() );
 						}
+
+						return null;
 					}
-				} );
+				};
+			}
+
+			futures.add( service.submit( r ) );
 		}
-		ex.shutdown();
-		try
+
+		for ( final Future< Void > f : futures )
 		{
-			ex.awaitTermination( 1000, TimeUnit.DAYS );
-		}
-		catch ( final InterruptedException e )
-		{
-			e.printStackTrace();
+			try
+			{
+				f.get();
+			}
+			catch ( final InterruptedException e )
+			{
+				throw new RuntimeException( e );
+			}
+			catch ( final ExecutionException e )
+			{
+				throw new RuntimeException( e );
+			}
 		}
 	}
 
@@ -182,7 +205,7 @@ public class DifferenceOfGaussian
 	 * input image as well as the image calibration, the resulting sigma arrays
 	 * specifiy the smoothing that has to be applied to achieve the desired
 	 * sigmas.
-	 *
+	 * 
 	 * @param imageSigma
 	 *            estimated sigma of the input image, in pixel coordinates.
 	 * @param minf
