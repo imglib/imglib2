@@ -41,23 +41,23 @@ import net.imglib2.RealPositionable;
  * </sup>.
  * 
  * <p>
- * Applying the transformation to a <em>n</em>-dimensional
- * <em>source</em> vector yields a <em>m</em>-dimensional
- * <em>target</em> vector.
+ * Applying the transformation to a <em>n</em>-dimensional <em>source</em>
+ * vector yields a <em>m</em>-dimensional <em>target</em> vector.
  * </p>
  * 
  * <p>
  * You can also
  * {@link InvertibleRealTransform#applyInverse(RealPositionable, RealLocalizable)
- * apply the inverse transformation} to a <em>m</em>-dimensional
- * <em>target</em> vector to get the <em>n</em>-dimensional
- * <em>source</em> vector.
+ * apply the inverse transformation} to a <em>m</em>-dimensional <em>target</em>
+ * vector to get the <em>n</em>-dimensional <em>source</em> vector.
  * </p>
- * <p>Source and target vectors are required to be at least <em>n</em>- or
- * <em>m</em>-dimensional respectively.  The {@link InvertibleRealTransform} is
- * expected to leave all dimensions beyond <em>n</em>-1 in the source vector
- * and <em>m</em>-1 in the target vector unchanged.</p>
- *  
+ * <p>
+ * Source and target vectors are required to be at least <em>n</em>- or
+ * <em>m</em>-dimensional respectively. The {@link InvertibleRealTransform} is
+ * expected to leave all dimensions beyond <em>n</em>-1 in the source vector and
+ * <em>m</em>-1 in the target vector unchanged.
+ * </p>
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -100,7 +100,7 @@ public interface InvertibleRealTransform extends RealTransform
 	 * @return the inverse transform
 	 */
 	public InvertibleRealTransform inverse();
-	
+
 	@Override
 	public InvertibleRealTransform copy();
 }

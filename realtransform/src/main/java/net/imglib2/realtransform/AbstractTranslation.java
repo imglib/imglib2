@@ -39,57 +39,62 @@ import net.imglib2.RealPositionable;
 
 /**
  * 
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 abstract public class AbstractTranslation implements InvertibleRealTransform, TranslationGet
 {
 	final protected double[] t;
+
 	final protected RealPoint[] ds;
-	
+
 	protected AbstractTranslation( final double[] t, final RealPoint[] ds )
 	{
-		assert t.length == ds.length : "Input dimensions do not match.";
-		
+		assert t.length == ds.length: "Input dimensions do not match.";
+
 		this.t = t;
 		this.ds = ds;
 	}
-	
+
 	public AbstractTranslation( final int n )
 	{
 		t = new double[ n ];
-		
+
 		ds = new RealPoint[ n ];
 		for ( int d = 0; d < n; ++d )
 			ds[ d ].setPosition( 1, d );
 	}
-	
+
 	public AbstractTranslation( final double... t )
 	{
 		this( t.length );
 		set( t );
 	}
-	
+
 	/**
 	 * Set the translation vector.
 	 * 
-	 * @param t t.length <= the number of dimensions of this {@link AbstractTranslation}
+	 * @param t
+	 *            t.length <= the number of dimensions of this
+	 *            {@link AbstractTranslation}
 	 */
 	abstract public void set( final double... t );
-	
+
 	/**
 	 * Set one value of the translation vector.
 	 * 
-	 * @param t t.length <= the number of dimensions of this {@link AbstractTranslation}
+	 * @param t
+	 *            t.length <= the number of dimensions of this
+	 *            {@link AbstractTranslation}
 	 */
 	abstract public void set( final double t, final int d );
-	
+
 	@Override
 	public int numDimensions()
 	{
 		return t.length;
 	}
-	
+
 	@Override
 	public int numSourceDimensions()
 	{
@@ -105,8 +110,8 @@ abstract public class AbstractTranslation implements InvertibleRealTransform, Tr
 	@Override
 	public void apply( final double[] source, final double[] target )
 	{
-		assert source.length >= t.length && target.length >= t.length : "Input dimensions too small.";
-		
+		assert source.length >= t.length && target.length >= t.length: "Input dimensions too small.";
+
 		for ( int d = 0; d < t.length; ++d )
 			target[ d ] = source[ d ] + t[ d ];
 	}
@@ -114,17 +119,17 @@ abstract public class AbstractTranslation implements InvertibleRealTransform, Tr
 	@Override
 	public void apply( final float[] source, final float[] target )
 	{
-		assert source.length >= t.length && target.length >= t.length : "Input dimensions too small.";
-		
+		assert source.length >= t.length && target.length >= t.length: "Input dimensions too small.";
+
 		for ( int d = 0; d < t.length; ++d )
-			target[ d ] = ( float )( source[ d ] + t[ d ] );
+			target[ d ] = ( float ) ( source[ d ] + t[ d ] );
 	}
 
 	@Override
 	public void apply( final RealLocalizable source, final RealPositionable target )
 	{
-		assert source.numDimensions() >= t.length && target.numDimensions() >= t.length : "Input dimensions too small.";
-		
+		assert source.numDimensions() >= t.length && target.numDimensions() >= t.length: "Input dimensions too small.";
+
 		for ( int d = 0; d < t.length; ++d )
 			target.setPosition( source.getDoublePosition( d ) + t[ d ], d );
 	}
@@ -132,8 +137,8 @@ abstract public class AbstractTranslation implements InvertibleRealTransform, Tr
 	@Override
 	public void applyInverse( final double[] source, final double[] target )
 	{
-		assert source.length >= t.length && target.length >= t.length : "Input dimensions too small.";
-		
+		assert source.length >= t.length && target.length >= t.length: "Input dimensions too small.";
+
 		for ( int d = 0; d < t.length; ++d )
 			source[ d ] = target[ d ] - t[ d ];
 	}
@@ -141,17 +146,17 @@ abstract public class AbstractTranslation implements InvertibleRealTransform, Tr
 	@Override
 	public void applyInverse( final float[] source, final float[] target )
 	{
-		assert source.length >= t.length && target.length >= t.length : "Input dimensions too small.";
-		
+		assert source.length >= t.length && target.length >= t.length: "Input dimensions too small.";
+
 		for ( int d = 0; d < t.length; ++d )
-			source[ d ] = ( float )( target[ d ] - t[ d ] );
+			source[ d ] = ( float ) ( target[ d ] - t[ d ] );
 	}
 
 	@Override
 	public void applyInverse( final RealPositionable source, final RealLocalizable target )
 	{
-		assert source.numDimensions() >= t.length && target.numDimensions() >= t.length : "Input dimensions too small.";
-		
+		assert source.numDimensions() >= t.length && target.numDimensions() >= t.length: "Input dimensions too small.";
+
 		for ( int d = 0; d < t.length; ++d )
 			source.setPosition( target.getDoublePosition( d ) - t[ d ], d );
 
@@ -183,16 +188,16 @@ abstract public class AbstractTranslation implements InvertibleRealTransform, Tr
 	@Override
 	public RealLocalizable d( final int d )
 	{
-		assert d >= 0 && d < numDimensions() : "Dimension index out of bounds.";
-		
+		assert d >= 0 && d < numDimensions(): "Dimension index out of bounds.";
+
 		return ds[ d ];
 	}
 
 	@Override
 	public double getTranslation( final int d )
 	{
-		assert d >= 0 && d < numDimensions() : "Dimension index out of bounds.";
-		
+		assert d >= 0 && d < numDimensions(): "Dimension index out of bounds.";
+
 		return t[ d ];
 	}
 

@@ -38,12 +38,12 @@ import net.imglib2.RealPositionable;
 
 /**
  * Transforms scaled polar to translated cartesian coordinates.
- *
+ * 
  * The source coordinate <em>(r,&theta;)</em> is scaled by
  * <em>s<sub>r</sub></em>, <em>s<sub>&theta;</sub></em> then converted to
  * cartesian <em>(x',y')</em> and translated by <em>t</em> to obtain the target
  * coordinate <em>(x,y)</em>.
- *
+ * 
  * The translation <em>t</em> represents the origin of the polar transform. The
  * scale factors <em>s<sub>r</sub></em> and <em>s<sub>&theta;</sub></em>
  * respresent the radial and angular resolution of the polar image. For example,
@@ -51,10 +51,10 @@ import net.imglib2.RealPositionable;
  * corresponds to <em>1/3</em> pixel along the ray.
  * <em>s<sub>&theta;</sub>=36/(2*&Pi;)</em> means that pixel height in the polar
  * image corresponds to 10 degree.
- *
+ * 
  * For the inverse transform (cartesian to polar), the range of the computed
  * (unscaled) <em>&theta;</em> is <em>-pi</em> to <em>pi</em>.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class ScaledPolarToTranslatedCartesianTransform2D implements InvertibleRealTransform
@@ -169,7 +169,7 @@ public class ScaledPolarToTranslatedCartesianTransform2D implements InvertibleRe
 	{
 		return inverse;
 	}
-	
+
 	@Override
 	public ScaledPolarToTranslatedCartesianTransform2D copy()
 	{

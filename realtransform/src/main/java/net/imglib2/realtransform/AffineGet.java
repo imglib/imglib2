@@ -37,10 +37,10 @@ import net.imglib2.EuclideanSpace;
 import net.imglib2.RealLocalizable;
 
 /**
- * An <em>n</em>-dimensional affine transformation whose
- * <em>n</em>&times;(<em>n</em>+1) affine transformation matrix can be accessed
- * via row and column index.
- *
+ * An <em>n</em>-dimensional affine transformation whose <em>n</em>&times;(
+ * <em>n</em>+1) affine transformation matrix can be accessed via row and column
+ * index.
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -51,18 +51,18 @@ public interface AffineGet extends InvertibleRealTransform, EuclideanSpace
 	 * matrix.
 	 */
 	public double get( final int row, final int column );
-	
+
 	/**
 	 * Get a copy of the <em>n</em>&times;(<em>n</em>+1) affine transformation
 	 * matrix as a row packed array similar to Jama.
 	 */
 	public double[] getRowPackedCopy();
-	
+
 	/**
 	 * Get the constant partial differential vector for dimension d.
 	 */
 	public RealLocalizable d( int d );
-	
+
 	@Override
 	AffineGet inverse();
 }

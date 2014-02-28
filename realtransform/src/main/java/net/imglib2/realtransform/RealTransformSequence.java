@@ -35,7 +35,7 @@ package net.imglib2.realtransform;
 
 /**
  * A sequence of {@link RealTransform RealTransforms}.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealTransformSequence extends AbstractRealTransformSequence< RealTransform >

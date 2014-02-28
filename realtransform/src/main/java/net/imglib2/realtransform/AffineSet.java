@@ -34,10 +34,10 @@
 package net.imglib2.realtransform;
 
 /**
- * An <em>n</em>-dimensional affine transformation whose
- * <em>n</em>&times;(<em>n</em>+1) affine transformation matrix can be set
- * via row and column index and from double  arrays.
- *
+ * An <em>n</em>-dimensional affine transformation whose <em>n</em>&times;(
+ * <em>n</em>+1) affine transformation matrix can be set via row and column
+ * index and from double arrays.
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface AffineSet
@@ -52,10 +52,10 @@ public interface AffineSet
 	 * @return
 	 */
 	public void set( final double value, final int row, final int column );
-	
+
 	/**
-	 * Set the <em>n</em>&times;(<em>n</em>+1) affine transformation matrix
-	 * with row packed double values.
+	 * Set the <em>n</em>&times;(<em>n</em>+1) affine transformation matrix with
+	 * row packed double values.
 	 * 
 	 * @param values
 	 * @param row
@@ -63,10 +63,10 @@ public interface AffineSet
 	 * @return
 	 */
 	public void set( final double... values );
-	
+
 	/**
-	 * Set the <em>n</em>&times;(<em>n</em>+1) affine transformation matrix
-	 * with double values from a [row][column] addressed array.
+	 * Set the <em>n</em>&times;(<em>n</em>+1) affine transformation matrix with
+	 * double values from a [row][column] addressed array.
 	 * 
 	 * @param values
 	 * @param row

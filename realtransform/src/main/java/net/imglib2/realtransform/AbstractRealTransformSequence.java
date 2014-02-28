@@ -41,9 +41,9 @@ import net.imglib2.RealPositionable;
 
 /**
  * Shared properties of {@link RealTransformSequence} and
- * {@link InvertibleRealTransformSequence}, sequences of
- * something that extends {@link RealTransform RealTransforms}.
- *
+ * {@link InvertibleRealTransformSequence}, sequences of something that extends
+ * {@link RealTransform RealTransforms}.
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class AbstractRealTransformSequence< R extends RealTransform > implements RealTransform
@@ -51,12 +51,17 @@ public class AbstractRealTransformSequence< R extends RealTransform > implements
 	final protected ArrayList< R > transforms = new ArrayList< R >();;
 
 	protected double[] a = new double[ 0 ];
+
 	protected double[] b = new double[ 0 ];
+
 	protected RealPoint pa = RealPoint.wrap( a );
+
 	protected RealPoint pb = RealPoint.wrap( b );
+
 	protected int nSource = 0;
+
 	protected int nTarget = 0;
-	
+
 	final protected void switchAB()
 	{
 		final double[] c = a;
@@ -69,7 +74,7 @@ public class AbstractRealTransformSequence< R extends RealTransform > implements
 
 	/**
 	 * Append a {@link RealTransform} to the sequence.
-	 *  
+	 * 
 	 * @param transform
 	 */
 	public void add( final R transform )
@@ -92,7 +97,7 @@ public class AbstractRealTransformSequence< R extends RealTransform > implements
 				b = new double[ nSource ];
 				pa = RealPoint.wrap( a );
 				pb = RealPoint.wrap( b );
-			}	
+			}
 		}
 		else if ( nTarget > a.length )
 		{
@@ -118,8 +123,8 @@ public class AbstractRealTransformSequence< R extends RealTransform > implements
 	@Override
 	public void apply( final double[] source, final double[] target )
 	{
-		assert source.length >= nSource && target.length >= nTarget : "Input dimensions too small.";
-		
+		assert source.length >= nSource && target.length >= nTarget: "Input dimensions too small.";
+
 		final int s = transforms.size() - 1;
 		if ( s > -1 )
 		{
@@ -141,30 +146,30 @@ public class AbstractRealTransformSequence< R extends RealTransform > implements
 	@Override
 	public void apply( final float[] source, final float[] target )
 	{
-		assert source.length >= nSource && target.length >= nTarget : "Input dimensions too small.";
-		
+		assert source.length >= nSource && target.length >= nTarget: "Input dimensions too small.";
+
 		final int s = transforms.size() - 1;
 		if ( s > -1 )
 		{
 			for ( int d = Math.min( source.length, a.length ) - 1; d >= 0; --d )
 				a[ d ] = source[ d ];
-			
+
 			for ( final RealTransform t : transforms )
 			{
 				t.apply( a, b );
 				switchAB();
 			}
-			
+
 			for ( int d = Math.min( target.length, a.length ) - 1; d >= 0; --d )
-				target[ d ] = ( float )a[ d ];
+				target[ d ] = ( float ) a[ d ];
 		}
 	}
 
 	@Override
 	public void apply( final RealLocalizable source, final RealPositionable target )
 	{
-		assert source.numDimensions() >= nSource && target.numDimensions() >= nTarget : "Input dimensions too small.";
-		
+		assert source.numDimensions() >= nSource && target.numDimensions() >= nTarget: "Input dimensions too small.";
+
 		final int s = transforms.size() - 1;
 		if ( s > -1 )
 		{
@@ -182,14 +187,14 @@ public class AbstractRealTransformSequence< R extends RealTransform > implements
 				transforms.get( 0 ).apply( source, target );
 		}
 	}
-	
+
 	@SuppressWarnings( "unchecked" )
 	@Override
 	public AbstractRealTransformSequence< R > copy()
 	{
 		final AbstractRealTransformSequence< R > copy = new AbstractRealTransformSequence< R >();
 		for ( final R t : transforms )
-			copy.add( ( R )t.copy() );
+			copy.add( ( R ) t.copy() );
 		return copy;
 	}
 }
