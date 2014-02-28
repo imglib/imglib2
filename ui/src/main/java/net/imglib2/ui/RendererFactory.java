@@ -40,19 +40,20 @@ import net.imglib2.realtransform.AffineSet;
 
 /**
  * Factory to create a {@link Renderer}.
- *
+ * 
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface RendererFactory< A extends AffineSet & AffineGet & Concatenable< AffineGet > >
 {
 	/**
 	 * Create a new {@link Renderer}.
-	 *
+	 * 
 	 * @param display
-	 *            Receiver for the rendered {@link BufferedImage BufferedImages}.
+	 *            Receiver for the rendered {@link BufferedImage BufferedImages}
+	 *            .
 	 * @param painterThread
 	 *            Thread that triggers repainting of the display. Requests for
 	 *            repainting are send there.

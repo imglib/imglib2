@@ -48,15 +48,15 @@ import net.imglib2.view.Views;
  * A {@link RenderSource}, that provides an interpolated source
  * {@link RandomAccessible} and is able to switch between nearest-neighbor and
  * n-linear interpolation.
- *
+ * 
  * The (discrete) source {@link RandomAccessible}, transform, and
  * {@link Converter} provided in the constructor.
- *
+ * 
  * @param <T>
  *            pixel type
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class InterpolatingSource< T extends NumericType< T >, A > implements RenderSource< T, A >
@@ -74,7 +74,7 @@ public class InterpolatingSource< T extends NumericType< T >, A > implements Ren
 	{
 		final InterpolatorFactory< T, RandomAccessible< T > > nLinearInterpolatorFactory;
 		if ( ARGBType.class.isInstance( source.randomAccess().get() ) )
-			nLinearInterpolatorFactory = ( InterpolatorFactory )new NLinearInterpolatorARGBFactory();
+			nLinearInterpolatorFactory = ( InterpolatorFactory ) new NLinearInterpolatorARGBFactory();
 		else
 			nLinearInterpolatorFactory = new NLinearInterpolatorFactory< T >();
 
@@ -114,7 +114,7 @@ public class InterpolatingSource< T extends NumericType< T >, A > implements Ren
 
 	/**
 	 * Get current interpolation method.
-	 *
+	 * 
 	 * @return interpolation method: 0 is nearest-neighbor, 1 is n-linear
 	 */
 	public int getInterpolation()
@@ -124,7 +124,7 @@ public class InterpolatingSource< T extends NumericType< T >, A > implements Ren
 
 	/**
 	 * Set current interpolation method.
-	 *
+	 * 
 	 * @param interpolation
 	 *            0 is nearest-neighbor, 1 is n-linear
 	 */

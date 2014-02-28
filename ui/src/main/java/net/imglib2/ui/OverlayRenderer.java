@@ -37,7 +37,7 @@ import java.awt.Graphics;
 /**
  * Draw something to a {@link Graphics} canvas and receive notifications about
  * changes of the canvas size.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface OverlayRenderer
@@ -52,7 +52,7 @@ public interface OverlayRenderer
 	 * displaying the image and generating mouse events) changes. This can be
 	 * used to determine scale of overlay or screen coordinates relative to the
 	 * border.
-	 *
+	 * 
 	 * @param width
 	 *            the new canvas width.
 	 * @param height

@@ -70,9 +70,11 @@ final public class PainterThread extends Thread
 				pleaseRepaint = false;
 			}
 			if ( b )
-				try {
+				try
+				{
 					paintable.paint();
-				} catch( final RejectedExecutionException e )
+				}
+				catch ( final RejectedExecutionException e )
 				{
 					// this happens when the rendering threadpool
 					// is killed before the painter thread.

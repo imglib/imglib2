@@ -45,7 +45,7 @@ import net.imglib2.realtransform.AffineTransform3D;
 /**
  * Paint a transformed box (interval + transform) that represents the source
  * that is shown in the viewer.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -72,7 +72,7 @@ public class BoxOverlay
 	/**
 	 * This paints the box overlay with perspective and scale set such that it
 	 * fits approximately into the specified screen area.
-	 *
+	 * 
 	 * @param graphics
 	 *            graphics context to paint to.
 	 * @param sourceToScreen
@@ -121,7 +121,6 @@ public class BoxOverlay
 		final AffineTransform translate = new AffineTransform( 1, 0, 0, 1, x, y );
 		translate.preConcatenate( tOld );
 		graphics.setTransform( translate );
-
 
 		origin[ 0 ] = targetInterval.min( 0 ) + targetInterval.dimension( 0 ) / 2;
 		origin[ 1 ] = targetInterval.min( 1 ) + targetInterval.dimension( 1 ) / 2;
@@ -179,7 +178,7 @@ public class BoxOverlay
 	}
 
 	/**
-	 *
+	 * 
 	 * @param p
 	 *            point to project
 	 * @return X coordinate of projected point
@@ -190,7 +189,7 @@ public class BoxOverlay
 	}
 
 	/**
-	 *
+	 * 
 	 * @param p
 	 *            point to project
 	 * @return Y coordinate of projected point

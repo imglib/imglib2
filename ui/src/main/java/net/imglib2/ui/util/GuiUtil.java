@@ -49,7 +49,7 @@ import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 /**
  * Static helper methods for setting up {@link GraphicsConfiguration} and
  * {@link BufferedImage BufferedImages}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class GuiUtil
@@ -78,18 +78,18 @@ public class GuiUtil
 		return defaultGc;
 	}
 
-	public static final ColorModel ARGB_COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
+	public static final ColorModel ARGB_COLOR_MODEL = new DirectColorModel( 32, 0xff0000, 0xff00, 0xff, 0xff000000 );
 
-	public static final ColorModel RGB_COLOR_MODEL = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
+	public static final ColorModel RGB_COLOR_MODEL = new DirectColorModel( 24, 0xff0000, 0xff00, 0xff );
 
 	/**
 	 * Get a {@link BufferedImage} for the given {@link ARGBScreenImage}.
-	 *
+	 * 
 	 * @param screenImage
 	 *            the image.
 	 * @param discardAlpha
-	 *            Whether to discard the <code>screenImage</code> alpha components
-	 *            when drawing.
+	 *            Whether to discard the <code>screenImage</code> alpha
+	 *            components when drawing.
 	 */
 	public static final BufferedImage getBufferedImage( final ARGBScreenImage screenImage, final boolean discardAlpha )
 	{
@@ -109,7 +109,7 @@ public class GuiUtil
 	 * Get a {@link BufferedImage} for the given {@link ARGBScreenImage}.
 	 * {@link #discardAlpha} determines whether to discard the
 	 * <code>screenImage</code> alpha components when drawing.
-	 *
+	 * 
 	 * @param screenImage
 	 *            the image.
 	 */

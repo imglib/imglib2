@@ -45,10 +45,10 @@ import java.awt.image.BufferedImage;
  * global coordinates. The transformation to apply to the source data then is a
  * composition of this source transform (source to global) and the viewer
  * transform (global to screen).
- *
+ * 
  * @param <A>
  *            viewer transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public abstract class AbstractRenderer< A > implements Renderer< A >
@@ -61,8 +61,8 @@ public abstract class AbstractRenderer< A > implements Renderer< A >
 	final protected RenderTarget display;
 
 	/**
-	 * Thread that triggers repainting of the display.
-	 * Requests for repainting are send there.
+	 * Thread that triggers repainting of the display. Requests for repainting
+	 * are send there.
 	 */
 	final protected PainterThread painterThread;
 

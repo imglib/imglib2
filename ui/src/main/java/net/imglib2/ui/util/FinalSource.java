@@ -41,12 +41,12 @@ import net.imglib2.ui.RenderSource;
  * A minimal implementation of {@link RenderSource}, with source
  * {@link RealRandomAccessible}, transform, and {@link Converter} provided in
  * the constructor.
- *
+ * 
  * @param <T>
  *            pixel type
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class FinalSource< T, A > implements RenderSource< T, A >
@@ -59,7 +59,7 @@ public class FinalSource< T, A > implements RenderSource< T, A >
 
 	/**
 	 * Create a {@link RenderSource}.
-	 *
+	 * 
 	 * @param source
 	 *            a source image, extending to infinity and interpolated if
 	 *            necessary.

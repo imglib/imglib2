@@ -40,20 +40,20 @@ import net.imglib2.realtransform.AffineTransform3D;
  * <code>A</code>. This is to be able to avoid having duplicate implementations
  * for {@link AffineTransform2D} and {@link AffineTransform3D} in imglib-ui.
  * (Also higher-dimensional affine transforms can be added easily later).
- *
+ * 
  * TODO: RealTransform should extend Type. Then we could simply use set() and
  * createVariable() instead of having to define this interface.
- *
+ * 
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface AffineTransformType< A >
 {
 	/**
 	 * Create a new transform of type A.
-	 *
+	 * 
 	 * @return a new A.
 	 */
 	public A createTransform();

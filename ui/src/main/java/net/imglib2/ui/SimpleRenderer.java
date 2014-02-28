@@ -43,10 +43,10 @@ import net.imglib2.type.numeric.ARGBType;
 
 /**
  * A {@link AbstractSimpleRenderer} for a single {@link RenderSource}.
- *
+ * 
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > extends AbstractSimpleRenderer< A >
@@ -65,9 +65,10 @@ public class SimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > e
 		final protected int numRenderingThreads;
 
 		/**
-		 * Create a factory for {@link SimpleRenderer SimpleRenderer} of the given source, with the
-		 * specified multi-threading and double-buffering properties.
-		 *
+		 * Create a factory for {@link SimpleRenderer SimpleRenderer} of the
+		 * given source, with the specified multi-threading and double-buffering
+		 * properties.
+		 * 
 		 * @param transformType
 		 *            which transformation type (e.g.
 		 *            {@link AffineTransformType2D affine 2d} or

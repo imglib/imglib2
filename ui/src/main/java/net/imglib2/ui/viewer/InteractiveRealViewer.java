@@ -64,9 +64,9 @@ import net.imglib2.ui.util.GuiUtil;
  * repainting} through a {@link PainterThread}. It implements
  * {@link TransformListener} to be notified about viewer transformation changes
  * made by the user.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
- *
+ * 
  * @param <A>
  *            transform type
  * @param <C>
@@ -82,7 +82,8 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 	final protected A viewerTransform;
 
 	/**
-	 * Canvas used for displaying the rendered {@link #screenImages screen image}.
+	 * Canvas used for displaying the rendered {@link #screenImages screen
+	 * image}.
 	 */
 	final protected C display;
 
@@ -110,7 +111,7 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 	 * created which queues repainting requests from the renderer and
 	 * interactive canvas, and triggers {@link #paint() repainting} of the
 	 * viewer.
-	 *
+	 * 
 	 * @param transformType
 	 * @param interactiveDisplayCanvas
 	 *            the canvas {@link JComponent} which will show the rendered
@@ -163,7 +164,6 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 		display.repaint();
 	}
 
-
 	@Override
 	public void transformChanged( final A transform )
 	{
@@ -173,7 +173,7 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 
 	/**
 	 * Get the canvas component used for painting
-	 *
+	 * 
 	 * @return the canvas component used for painting.
 	 */
 	public C getDisplayCanvas()
@@ -182,14 +182,14 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 	}
 
 	/**
-	 * Request a repaint of the display.
-	 * Calls {@link Renderer#requestRepaint()}.
+	 * Request a repaint of the display. Calls {@link Renderer#requestRepaint()}
+	 * .
 	 */
 	public void requestRepaint()
 	{
 		imageRenderer.requestRepaint();
 	}
-	
+
 	/**
 	 * Get the {@link JFrame frame}.
 	 * 

@@ -32,24 +32,23 @@
  */
 package net.imglib2.ui;
 
-
 /**
  * Change a transformation in response to user input (mouse events, key events,
  * etc.). Report to a {@link TransformListener} when the transformation changes.
  * The {@link TransformEventHandler} receives notifications about changes of the
  * canvas size (it may react for example by changing the scale of the
  * transformation accordingly).
- *
+ * 
  * @param <A>
  *            type of transformation.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface TransformEventHandler< A >
 {
 	/**
 	 * Get (a copy of) the current source-to-screen transform.
-	 *
+	 * 
 	 * @return current transform.
 	 */
 	public A getTransform();
@@ -67,7 +66,7 @@ public interface TransformEventHandler< A >
 	 * <em>(width/2, height/2)</em>. It can also be used to update the current
 	 * source-to-screen transform, e.g., to change the zoom along with the
 	 * canvas size.
-	 *
+	 * 
 	 * @param width
 	 *            the new canvas width.
 	 * @param height
@@ -85,7 +84,7 @@ public interface TransformEventHandler< A >
 	/**
 	 * Set the {@link TransformListener} who will receive updated
 	 * transformations.
-	 *
+	 * 
 	 * @param transformListener
 	 *            will receive transformation updates.
 	 */

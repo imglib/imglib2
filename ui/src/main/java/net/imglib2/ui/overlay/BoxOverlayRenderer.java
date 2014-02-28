@@ -45,7 +45,7 @@ import net.imglib2.util.Intervals;
 /**
  * {@link OverlayRenderer} showing a transformed box (interval + transform) that
  * represents the source that is shown in the viewer.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class BoxOverlayRenderer implements OverlayRenderer, TransformListener< AffineTransform3D >
@@ -93,7 +93,7 @@ public class BoxOverlayRenderer implements OverlayRenderer, TransformListener< A
 
 	/**
 	 * Create a {@link BoxOverlayRenderer} with the given initial canvas size.
-	 *
+	 * 
 	 * @param screenWidth
 	 *            initial canvas width.
 	 * @param screenHeight
@@ -121,7 +121,7 @@ public class BoxOverlayRenderer implements OverlayRenderer, TransformListener< A
 
 	/**
 	 * Update data to show in the box overlay.
-	 *
+	 * 
 	 * @param sourceTransform
 	 *            transforms source into the global coordinate system.
 	 * @param sourceInterval
@@ -145,7 +145,7 @@ public class BoxOverlayRenderer implements OverlayRenderer, TransformListener< A
 	{
 		sourceToScreen.set( viewerTransform );
 		sourceToScreen.concatenate( sourceTransform );
-		box.paint( ( Graphics2D) g, sourceToScreen, sourceInterval, virtualScreenInterval, boxInterval );
+		box.paint( ( Graphics2D ) g, sourceToScreen, sourceInterval, virtualScreenInterval, boxInterval );
 	}
 
 	/**
