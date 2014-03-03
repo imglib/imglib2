@@ -46,7 +46,7 @@ import net.imglib2.util.Util;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-final public class ARGBType extends AbstractNativeType<ARGBType> implements NumericType<ARGBType>
+public class ARGBType extends AbstractNativeType< ARGBType > implements NumericType< ARGBType >
 {
 	final protected NativeImg<ARGBType, ? extends IntAccess> img;
 	
