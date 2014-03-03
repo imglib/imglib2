@@ -48,15 +48,15 @@ import net.imglib2.util.Util;
  */
 public class ARGBType extends AbstractNativeType< ARGBType > implements NumericType< ARGBType >
 {
-	final protected NativeImg<ARGBType, ? extends IntAccess> img;
+	final protected NativeImg< ?, ? extends IntAccess > img;
 	
 	// the DataAccess that holds the information 
 	protected IntAccess dataAccess;
 	
 	// this is the constructor if you want it to read from an array
-	public ARGBType( NativeImg<ARGBType, ? extends IntAccess> byteStorage )
+	public ARGBType( NativeImg< ?, ? extends IntAccess > intStorage )
 	{
-		img = byteStorage;
+		img = intStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
