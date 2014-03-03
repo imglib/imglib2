@@ -30,78 +30,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.ui;
 
-import java.util.concurrent.RejectedExecutionException;
+package net.imglib2.img.planar;
+
+import static org.junit.Assert.assertTrue;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.ImgTestHelper;
+import net.imglib2.util.Util;
+
+import org.junit.Test;
 
 /**
- * Thread to repaint display.
+ * Unit tests for {@link PlanarImg}.
+ *
+ * @author Stephan Preibisch
+ * @author Stephan Saalfeld
+ * @author Curtis Rueden
  */
-final public class PainterThread extends Thread
+public class PlanarImgTest
 {
-	public static interface Paintable
+	@Test public void testPlanarImg()
 	{
-		/**
-		 * This is called by the painter thread to repaint the display.
-		 */
-		public void paint();
-	}
-
-	private final Paintable paintable;
-
-	private boolean pleaseRepaint;
-
-	public PainterThread( final Paintable paintable )
-	{
-		this.paintable = paintable;
-		this.pleaseRepaint = false;
-		this.setName( "PainterThread" );
-	}
-
-	@Override
-	public void run()
-	{
-		while ( !isInterrupted() )
+		final long[][] dim = ImgTestHelper.dims();
+		for ( int i = 0; i < dim.length; ++i )
 		{
-			final boolean b;
-			synchronized ( this )
-			{
-				b = pleaseRepaint;
-				pleaseRepaint = false;
-			}
-			if ( b )
-				try {
-					paintable.paint();
-				} catch( final RejectedExecutionException e )
-				{
-					// this happens when the rendering threadpool
-					// is killed before the painter thread.
-				}
-			synchronized ( this )
-			{
-				try
-				{
-					if ( !pleaseRepaint )
-						wait();
-				}
-				catch ( final InterruptedException e )
-				{
-					break;
-				}
-			}
-		}
-	}
-
-	/**
-	 * Request repaint. This will trigger a call to {@link Paintable#paint()}
-	 * from the {@link PainterThread}.
-	 */
-	public void requestRepaint()
-	{
-		synchronized ( this )
-		{
-			pleaseRepaint = true;
-			notify();
+			assertTrue( "ArrayImg vs PlanarImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
+			            ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory< FloatType >(), new PlanarImgFactory< FloatType >() ) );
+			assertTrue( "PlanarImg vs ArrayImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
+			            ImgTestHelper.testImg( dim[ i ], new PlanarImgFactory< FloatType >(), new ArrayImgFactory< FloatType >() ) );
+			assertTrue( "PlanarImg vs PlanarImg failed for dim = " + Util.printCoordinates( dim[ i ] ),
+			            ImgTestHelper.testImg( dim[ i ], new PlanarImgFactory< FloatType >(), new PlanarImgFactory< FloatType >() ) );
 		}
 	}
 }
