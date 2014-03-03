@@ -38,13 +38,18 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.AbstractNativeType;
+import net.imglib2.type.NativeType;
 import net.imglib2.util.Util;
 
 /**
- * TODO
- *
+ * A {@link NativeType native} {@link NumericType} that encodes four channels
+ * at unsigned byte precision into one 32bit signed integer which is the format
+ * used in most display oriented image processing libraries such as AWT or
+ * ImageJ.  {@link ARGBType} implements {@link NumericType} as element-wise
+ * vector algebra.
+ * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class ARGBType extends AbstractNativeType< ARGBType > implements NumericType< ARGBType >
 {

@@ -37,25 +37,29 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ShortAccess;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.util.Util;
 
 /**
- * TODO
+ * Abstract base class for {@link NativeType native} {@link IntegerType}s that
+ * encode their value into a 16bit short.
  *
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
-public abstract class GenericShortType<T extends GenericShortType<T>> extends AbstractIntegerType<T> implements NativeType<T>
+public abstract class GenericShortType< T extends GenericShortType< T > >
+	extends AbstractIntegerType< T >
+	implements NativeType< T >
 {
 	int i = 0;
 
-	final protected NativeImg<?, ? extends ShortAccess> img;
+	final protected NativeImg< ?, ? extends ShortAccess > img;
 
 	// the DataAccess that holds the information
 	protected ShortAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public GenericShortType( final NativeImg<?, ? extends ShortAccess> shortStorage )
+	public GenericShortType( final NativeImg< ?, ? extends ShortAccess > shortStorage )
 	{
 		img = shortStorage;
 	}
