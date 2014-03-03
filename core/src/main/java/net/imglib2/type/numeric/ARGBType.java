@@ -66,6 +66,13 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 		dataAccess = new IntArray( 1 );
 		set( value );
 	}
+	
+	// this is the constructor if you want to specify the dataAccess
+	public ARGBType( final IntAccess access )
+	{
+		img = null;
+		dataAccess = access;
+	}
 
 	// this is the constructor if you want it to be a variable
 	public ARGBType() { this( 0 ); }

@@ -61,7 +61,7 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	}
 
 	// this is the constructor if you want it to be a variable
-	protected GenericByteType( final byte value )
+	public GenericByteType( final byte value )
 	{
 		img = null;
 		dataAccess = new ByteArray( 1 );
@@ -69,14 +69,14 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	}
 
 	// this is the constructor if you want to specify the dataAccess
-	protected GenericByteType( final ByteAccess access )
+	public GenericByteType( final ByteAccess access )
 	{
 		img = null;
 		dataAccess = access;
 	}
 
 	// this is the constructor if you want it to be a variable
-	protected GenericByteType() { this( ( byte )0 ); }
+	public GenericByteType() { this( ( byte )0 ); }
 
 	@Override
 	public int getEntitiesPerPixel() { return 1; }

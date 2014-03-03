@@ -69,7 +69,7 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 	}
 
 	// this is the constructor if you want to specify the dataAccess
-	protected GenericIntType( final IntAccess access )
+	public GenericIntType( final IntAccess access )
 	{
 		img = null;
 		dataAccess = access;

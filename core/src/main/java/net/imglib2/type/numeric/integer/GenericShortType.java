@@ -69,7 +69,7 @@ public abstract class GenericShortType<T extends GenericShortType<T>> extends Ab
 	}
 
 	// this is the constructor if you want to specify the dataAccess
-	protected GenericShortType( final ShortAccess access )
+	public GenericShortType( final ShortAccess access )
 	{
 		img = null;
 		dataAccess = access;
