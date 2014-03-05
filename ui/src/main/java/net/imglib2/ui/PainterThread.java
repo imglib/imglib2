@@ -32,6 +32,8 @@
  */
 package net.imglib2.ui;
 
+import java.util.concurrent.RejectedExecutionException;
+
 /**
  * Thread to repaint display.
  */
@@ -68,7 +70,13 @@ final public class PainterThread extends Thread
 				pleaseRepaint = false;
 			}
 			if ( b )
-				paintable.paint();
+				try {
+					paintable.paint();
+				} catch( final RejectedExecutionException e )
+				{
+					// this happens when the rendering threadpool
+					// is killed before the painter thread.
+				}
 			synchronized ( this )
 			{
 				try
