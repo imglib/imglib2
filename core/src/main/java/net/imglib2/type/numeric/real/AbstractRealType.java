@@ -84,6 +84,24 @@ public abstract class AbstractRealType<T extends AbstractRealType<T>> extends Ab
 	public void setOne() { setReal( 1 ); }
 	
 	@Override
+	public boolean equals( final Object o )
+	{
+		if ( ! (o instanceof RealType) )
+			return false;
+		@SuppressWarnings("unchecked")
+		final T t = (T) o;
+		return compareTo(t) == 0;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Double#hashCode().
+		final long bits = Double.doubleToLongBits(getRealDouble());
+		return (int) (bits ^ (bits >>> 32));
+	}
+
+	@Override
 	public int compareTo( final T c ) 
 	{ 
 		final double a = getRealDouble();
@@ -95,6 +113,7 @@ public abstract class AbstractRealType<T extends AbstractRealType<T>> extends Ab
 		else 
 			return 0;
 	}
+
 	@Override
 	public float getPowerFloat() { return getRealFloat(); }
 

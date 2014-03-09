@@ -145,6 +145,13 @@ public class UnsignedByteType extends GenericByteType<UnsignedByteType>
 	public double getMinValue()  { return 0; }
 
 	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Integer#hashCode().
+		return get();
+	}
+
+	@Override
 	public int compareTo( final UnsignedByteType c )
 	{
 		final int a = get();
