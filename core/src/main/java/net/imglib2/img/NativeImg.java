@@ -37,7 +37,7 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -45,8 +45,9 @@ public interface NativeImg< T extends Type< T >, A > extends Img< T >
 {
 	/**
 	 * called by type with cursor.
-	 *
-	 * @param updater cursor
+	 * 
+	 * @param updater
+	 *            cursor
 	 * @return native array which is referred to by the updater
 	 */
 	public A update( final Object updater );

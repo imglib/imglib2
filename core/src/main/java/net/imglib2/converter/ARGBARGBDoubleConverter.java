@@ -37,13 +37,13 @@ import net.imglib2.type.numeric.AbstractARGBDoubleType;
 
 /**
  * 
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class ARGBARGBDoubleConverter< T extends AbstractARGBDoubleType< ? > > implements Converter< ARGBType, T >
 {
 	final static protected double scale = 1.0 / 255.0;
-	
+
 	@Override
 	public void convert( final ARGBType input, final T output )
 	{

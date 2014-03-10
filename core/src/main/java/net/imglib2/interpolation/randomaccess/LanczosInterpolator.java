@@ -50,17 +50,21 @@ import net.imglib2.type.numeric.RealType;
 public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset< RandomAccess< T > > implements RealRandomAccess< T >
 {
 	final static protected double piSquare = Math.PI * Math.PI;
+
 	final static protected int lutScale = 10;
-	
+
 	final protected int alpha;
-	final protected T interpolatedValue;	
+
+	final protected T interpolatedValue;
+
 	final protected long[] size, max;
-	
+
 	final protected double minValue, maxValue;
+
 	final protected boolean clip;
-	
+
 	final protected double[] lut, products;
-	
+
 	final static private long[] createOffset( final int a, final int n )
 	{
 		final long[] offset = new long[ n ];
@@ -72,32 +76,38 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 	/**
 	 * Creates a new Lanczos-interpolation
 	 * 
-	 * @param randomAccessible - the {@link RandomAccessible} to work on
-	 * @param alpha - the radius of values to incorporate (typically 2 or 3)
-	 * @param clip - clips the value to range of the {@link RealType}, i.e. tests if the interpolated value is out of range
-	 * @param min - range for clipping (ignored if min==max)
-	 * @param max - range for clipping (ignored if min==max)
+	 * @param randomAccessible
+	 *            - the {@link RandomAccessible} to work on
+	 * @param alpha
+	 *            - the radius of values to incorporate (typically 2 or 3)
+	 * @param clip
+	 *            - clips the value to range of the {@link RealType}, i.e. tests
+	 *            if the interpolated value is out of range
+	 * @param min
+	 *            - range for clipping (ignored if min==max)
+	 * @param max
+	 *            - range for clipping (ignored if min==max)
 	 */
 	public LanczosInterpolator( final RandomAccessible< T > randomAccessible, final int alpha, final boolean clip, final double min, final double max )
 	{
 		super( randomAccessible.randomAccess(), createOffset( alpha, randomAccessible.numDimensions() ) );
-		
+
 		this.alpha = alpha;
-		
+
 		lut = createLanczosLUT( alpha, lutScale );
 		products = new double[ n + 1 ];
 		products[ n ] = 1.0;
-		
+
 		this.size = new long[ n ];
 		this.max = new long[ n ];
-		
+
 		for ( int d = 0; d < n; ++d )
 			size[ d ] = alpha * 2;
-		
+
 		this.clip = clip;
-		
+
 		this.interpolatedValue = target.get().createVariable();
-		
+
 		if ( min == max )
 		{
 			this.minValue = interpolatedValue.getMinValue();
@@ -113,33 +123,33 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 	public LanczosInterpolator( final LanczosInterpolator< T > interpolator )
 	{
 		super( interpolator.target.copyRandomAccess(), interpolator.offset );
-		
+
 		this.alpha = interpolator.alpha;
-		
+
 		lut = interpolator.lut.clone();
 		products = interpolator.products.clone();
-		
+
 		this.size = interpolator.size.clone();
 		this.max = interpolator.max.clone();
-				
+
 		this.clip = interpolator.clip;
-		
+
 		this.interpolatedValue = interpolator.interpolatedValue.copy();
 		this.minValue = interpolator.minValue;
 		this.maxValue = interpolator.maxValue;
 	}
-	
+
 	final static private double[] createLanczosLUT( final int max, final int scale )
 	{
 		final double[] lut = new double[ max * scale + 2 ];
 		for ( int i = 0; i < lut.length; ++i )
 		{
-			final double x = ( double )i / ( double )lutScale;
+			final double x = ( double ) i / ( double ) lutScale;
 			lut[ i ] = lanczos( x, max );
 		}
 		return lut;
 	}
-	
+
 	final protected void resetKernel()
 	{
 		for ( int d = n - 1; d >= 0; --d )
@@ -149,27 +159,26 @@ public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset<
 			products[ d ] = lookUpLanczos( position[ d ] - p ) * products[ d + 1 ];
 		}
 	}
-	
+
 	final protected void accumulate( final int d )
 	{
 		for ( int e = d; e >= 0; --e )
 			products[ e ] = lookUpLanczos( position[ e ] - target.getLongPosition( e ) ) * products[ e + 1 ];
 	}
-	
-	
+
 	@Override
-	public T get() 
+	public T get()
 	{
 		double convolved = 0;
-		
+
 		resetKernel();
-		
+
 		boolean proceed = true;
-		
-A:		while ( proceed )
+
+		A: while ( proceed )
 		{
 			convolved += target.get().getRealDouble() * products[ 0 ];
-			
+
 			for ( int d = 0; d < n; ++d )
 			{
 				target.fwd( d );
@@ -184,8 +193,9 @@ A:		while ( proceed )
 			}
 			proceed = false;
 		}
-		
-		// do clipping if desired (it should be, except maybe for float or double input)
+
+		// do clipping if desired (it should be, except maybe for float or
+		// double input)
 		if ( clip )
 		{
 			if ( convolved < minValue )
@@ -195,28 +205,34 @@ A:		while ( proceed )
 		}
 
 		interpolatedValue.setReal( convolved );
-		
-		return interpolatedValue; 
+
+		return interpolatedValue;
 	}
 
 	private static final double lanczos( final double x, final double a )
 	{
 		if ( x == 0 )
 			return 1;
-		return (( a * Math.sin( Math.PI * x ) * Math.sin( Math.PI * x / a ) ) / ( piSquare * x * x ));
+		return ( ( a * Math.sin( Math.PI * x ) * Math.sin( Math.PI * x / a ) ) / ( piSquare * x * x ) );
 	}
-	
+
 	final private double lookUpLanczos( final double x )
 	{
 		final double y = x < 0 ? -lutScale * x : lutScale * x;
-		final int yi = ( int )y;
+		final int yi = ( int ) y;
 		final double d = y - yi;
 		return ( lut[ yi + 1 ] - lut[ yi ] ) * d + lut[ yi ];
 	}
 
 	@Override
-	public Sampler< T > copy() { return copy(); }
+	public Sampler< T > copy()
+	{
+		return copy();
+	}
 
 	@Override
-	public RealRandomAccess<T> copyRealRandomAccess() { return new LanczosInterpolator< T >( this ); }
+	public RealRandomAccess< T > copyRealRandomAccess()
+	{
+		return new LanczosInterpolator< T >( this );
+	}
 }

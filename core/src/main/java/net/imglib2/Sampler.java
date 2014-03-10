@@ -38,13 +38,15 @@ import java.util.Collection;
 import net.imglib2.img.array.ArrayCursor;
 import net.imglib2.type.NativeType;
 
-/** 
- * <p>The {@link Sampler} interface provides access to a value whose type is
- * specified by the generic parameter T.  This T may point to an actual
- * {@link Object} as stored in a {@link Collection}, a proxy {@link Object}
- * that allows reading and writing pixel data of an image (e.g. all
- * {@link NativeType NativeTypes}), or a proxy {@link Object} whose content
- * is generated otherwise and may only be readable (e.g. ShapeList2D).</p>
+/**
+ * <p>
+ * The {@link Sampler} interface provides access to a value whose type is
+ * specified by the generic parameter T. This T may point to an actual
+ * {@link Object} as stored in a {@link Collection}, a proxy {@link Object} that
+ * allows reading and writing pixel data of an image (e.g. all
+ * {@link NativeType NativeTypes}), or a proxy {@link Object} whose content is
+ * generated otherwise and may only be readable (e.g. ShapeList2D).
+ * </p>
  * 
  * @author Pietzsch
  * @author Preibisch
@@ -58,17 +60,17 @@ public interface Sampler< T >
 	 * sub-pixel or integral region value the {@link Sampler} points at.
 	 */
 	public T get();
-	
+
 	/**
-	 * @return - A new {@link Sampler} in the same state accessing the 
-	 * same values.
-	 *  
-	 * It does NOT copy T, just the state of the {@link Sampler}.
-	 * Otherwise use T.copy() if available.
+	 * @return - A new {@link Sampler} in the same state accessing the same
+	 *         values.
 	 * 
-	 * Sampler.copy().get() == Sampler.get(), i.e. both hold the same value,
-	 * not necessarily the same instance (this is the case for an 
-	 * {@link ArrayCursor} for example)
+	 *         It does NOT copy T, just the state of the {@link Sampler}.
+	 *         Otherwise use T.copy() if available.
+	 * 
+	 *         Sampler.copy().get() == Sampler.get(), i.e. both hold the same
+	 *         value, not necessarily the same instance (this is the case for an
+	 *         {@link ArrayCursor} for example)
 	 */
 	public Sampler< T > copy();
 }

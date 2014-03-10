@@ -59,13 +59,17 @@ public class NearestNeighborInterpolatorFactory< T > implements InterpolatorFact
 	{
 		return new NearestNeighborInterpolator< T >( search.copy() );
 	}
-	
+
 	/**
-	 * <p>Creates a new {@link NearestNeighborInterpolator} using a copy of the
-	 * passed {@link NearestNeighborSearch}.</p>
+	 * <p>
+	 * Creates a new {@link NearestNeighborInterpolator} using a copy of the
+	 * passed {@link NearestNeighborSearch}.
+	 * </p>
 	 * 
-	 * <p>For now, ignore the {@link RealInterval} and return
-	 * {@link #create(NearestNeighborSearch)}.</p>
+	 * <p>
+	 * For now, ignore the {@link RealInterval} and return
+	 * {@link #create(NearestNeighborSearch)}.
+	 * </p>
 	 */
 	@Override
 	public NearestNeighborInterpolator< T > create( final NearestNeighborSearch< T > search, final RealInterval interval )

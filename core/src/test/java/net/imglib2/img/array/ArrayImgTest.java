@@ -42,20 +42,21 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link ArrayImg}.
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
 public class ArrayImgTest
 {
-	@Test public void testArrayImg()
+	@Test
+	public void testArrayImg()
 	{
 		final long[][] dim = ImgTestHelper.dims();
 		for ( int i = 0; i < dim.length; ++i )
 		{
 			assertTrue( "ArrayImg failed for: dim=" + Util.printCoordinates( dim[ i ] ),
-			            ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory< FloatType >(), new ArrayImgFactory< FloatType >() ) );
+					ImgTestHelper.testImg( dim[ i ], new ArrayImgFactory< FloatType >(), new ArrayImgFactory< FloatType >() ) );
 		}
 	}
 }

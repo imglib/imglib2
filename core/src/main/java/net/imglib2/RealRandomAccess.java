@@ -35,7 +35,7 @@ package net.imglib2;
 
 /**
  * 
- *
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -48,7 +48,7 @@ public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable
 	// copy(), copyCursor(), copyRandomAccess() and copyRealRandomAccess().
 	// Unfortunately, due to a Javac bug with multiple interface inheritance,
 	// we must avoid doing so for now. For details, see:
-	//     http://bugs.sun.com/view_bug.do?bug_id=6656332
+	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
 	RealRandomAccess< T > copyRealRandomAccess();
 //	@Override

@@ -35,11 +35,11 @@ package net.imglib2;
 
 /**
  * The {@link Localizable} interface can localize itself in an n-dimensional
- * discrete space.  Not only {@link Cursor}s can use this 
- * interface, it might be used by much more classes as {@link RandomAccess}s
- * can take any {@link Localizable} as input for where they should move to.
- *  
- *
+ * discrete space. Not only {@link Cursor}s can use this interface, it might be
+ * used by much more classes as {@link RandomAccess}s can take any
+ * {@link Localizable} as input for where they should move to.
+ * 
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -48,30 +48,34 @@ public interface Localizable extends RealLocalizable
 	/**
 	 * Write the current position into the passed array.
 	 * 
-	 * @param position   receives current position
+	 * @param position
+	 *            receives current position
 	 */
 	public void localize( int[] position );
-	
+
 	/**
 	 * Write the current position into the passed array.
 	 * 
-	 * @param position   receives current position
+	 * @param position
+	 *            receives current position
 	 */
 	public void localize( long[] position );
-	
+
 	/**
 	 * Return the current position in a given dimension.
 	 * 
-	 * @param d   dimension
-	 * @return      dimension of current position
+	 * @param d
+	 *            dimension
+	 * @return dimension of current position
 	 */
 	public int getIntPosition( int d );
-	
+
 	/**
 	 * Return the current position in a given dimension.
 	 * 
-	 * @param d   dimension
-	 * @return      dimension of current position
+	 * @param d
+	 *            dimension
+	 * @return dimension of current position
 	 */
 	public long getLongPosition( int d );
 }

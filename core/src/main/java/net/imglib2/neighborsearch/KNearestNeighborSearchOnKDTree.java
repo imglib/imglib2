@@ -46,16 +46,19 @@ import net.imglib2.collection.KDTreeNode;
 public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSearch< T >
 {
 	protected KDTree< T > tree;
-	
+
 	protected final int n;
+
 	protected final double[] pos;
 
 	protected final int k;
+
 	protected KDTreeNode< T >[] bestPoints;
+
 	protected double[] bestSquDistances;
 
 	@SuppressWarnings( "unchecked" )
-	public KNearestNeighborSearchOnKDTree( KDTree< T > tree, final int k )
+	public KNearestNeighborSearchOnKDTree( final KDTree< T > tree, final int k )
 	{
 		this.tree = tree;
 		this.n = tree.numDimensions();
@@ -66,18 +69,21 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 		for ( int i = 0; i < k; ++i )
 			bestSquDistances[ i ] = Double.MAX_VALUE;
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{
 		return n;
 	}
-	
+
 	@Override
-	public int getK() { return k; }
-	
+	public int getK()
+	{
+		return k;
+	}
+
 	@Override
-	public void search( RealLocalizable reference )
+	public void search( final RealLocalizable reference )
 	{
 		reference.localize( pos );
 		for ( int i = 0; i < k; ++i )
@@ -85,22 +91,22 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 		searchNode( tree.getRoot() );
 	}
 
-	protected void searchNode( KDTreeNode< T > current )
+	protected void searchNode( final KDTreeNode< T > current )
 	{
 		// consider the current node
 		final double squDistance = current.squDistanceTo( pos );
 		if ( squDistance < bestSquDistances[ k - 1 ] )
 		{
 			int i = k - 1;
-            for ( int j = i - 1; i > 0 && squDistance < bestSquDistances[ j ]; --i, --j )
-            {
-            	bestSquDistances[ i ] = bestSquDistances[ j ];
-            	bestPoints[ i ] = bestPoints[ j ];
-            }
-            bestSquDistances[ i ] = squDistance;
-            bestPoints[ i ] = current;
+			for ( int j = i - 1; i > 0 && squDistance < bestSquDistances[ j ]; --i, --j )
+			{
+				bestSquDistances[ i ] = bestSquDistances[ j ];
+				bestPoints[ i ] = bestPoints[ j ];
+			}
+			bestSquDistances[ i ] = squDistance;
+			bestPoints[ i ] = current;
 		}
-		
+
 		final double axisDiff = pos[ current.getSplitDimension() ] - current.getSplitCoordinate();
 		final double axisSquDistance = axisDiff * axisDiff;
 		final boolean leftIsNearBranch = axisDiff < 0;
@@ -111,62 +117,61 @@ public class KNearestNeighborSearchOnKDTree< T > implements KNearestNeighborSear
 		if ( nearChild != null )
 			searchNode( nearChild );
 
-	    // search the away branch - maybe
+		// search the away branch - maybe
 		if ( ( axisSquDistance <= bestSquDistances[ k - 1 ] ) && ( awayChild != null ) )
 			searchNode( awayChild );
 	}
 
 	@Override
-	public Sampler< T > getSampler( int i )
+	public Sampler< T > getSampler( final int i )
 	{
 		return bestPoints[ i ];
 	}
 
 	@Override
-	public RealLocalizable getPosition( int i )
+	public RealLocalizable getPosition( final int i )
 	{
 		return bestPoints[ i ];
 	}
 
 	@Override
-	public double getSquareDistance( int i )
+	public double getSquareDistance( final int i )
 	{
 		return bestSquDistances[ i ];
 	}
 
 	@Override
-	public double getDistance( int i )
+	public double getDistance( final int i )
 	{
 		return Math.sqrt( bestSquDistances[ i ] );
 	}
-	
-	
+
 	/* NearestNeighborSearch */
-	
+
 	@Override
 	public RealLocalizable getPosition()
 	{
 		return getPosition( 0 );
 	}
-	
+
 	@Override
 	public Sampler< T > getSampler()
 	{
 		return getSampler( 0 );
 	}
-	
+
 	@Override
 	public double getSquareDistance()
 	{
 		return getSquareDistance( 0 );
 	}
-	
+
 	@Override
 	public double getDistance()
 	{
 		return getDistance( 0 );
 	}
-	 	
+
 	@Override
 	public KNearestNeighborSearchOnKDTree< T > copy()
 	{

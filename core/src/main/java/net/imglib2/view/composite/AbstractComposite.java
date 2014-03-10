@@ -36,20 +36,21 @@ import net.imglib2.RandomAccess;
 
 /**
  * Abstract implementation of {@link Composite}.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class AbstractComposite< T > implements Composite< T >
 {
 	final protected RandomAccess< T > sourceAccess;
+
 	final protected int d;
-	
+
 	public AbstractComposite( final RandomAccess< T > sourceAccess )
 	{
 		this.sourceAccess = sourceAccess;
 		this.d = sourceAccess.numDimensions() - 1;
 	}
-	
+
 	@Override
 	public T get( final long i )
 	{

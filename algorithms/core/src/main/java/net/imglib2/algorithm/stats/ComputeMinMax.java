@@ -64,7 +64,7 @@ public class ComputeMinMax< T extends Type< T > & Comparable< T >> implements Al
 	 */
 	final public static < T extends Comparable< T > & Type< T > > void computeMinMax( final RandomAccessibleInterval< T > interval, final T min, final T max )
 	{
-		ComputeMinMax< T > c = new ComputeMinMax< T >( Views.iterable( interval ), min, max );
+		final ComputeMinMax< T > c = new ComputeMinMax< T >( Views.iterable( interval ), min, max );
 		c.process();
 
 		min.set( c.getMin() );

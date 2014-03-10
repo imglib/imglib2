@@ -89,7 +89,7 @@ public abstract class ArrayImgAWTScreenImage< T extends NativeType< T >, A > ext
 		final DataBuffer buffer = createDataBuffer( data );
 		final SampleModel model = new PixelInterleavedSampleModel( buffer.getDataType(), width, height, 1, width, new int[] { 0 } );
 		final ColorModel colorModel = createColorModel( type, buffer );
-		final WritableRaster raster = Raster.createWritableRaster(model, buffer, null);
+		final WritableRaster raster = Raster.createWritableRaster( model, buffer, null );
 		return new BufferedImage( colorModel, raster, false, null );
 	}
 

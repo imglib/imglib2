@@ -47,12 +47,12 @@ public class RealARGBConverter< R extends RealType< ? > > extends AbstractLinear
 	{
 		super();
 	}
-	
+
 	public RealARGBConverter( final double min, final double max )
 	{
 		super( min, max );
 	}
-	
+
 	@Override
 	public void convert( final R input, final ARGBType output )
 	{

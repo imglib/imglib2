@@ -39,40 +39,40 @@ import net.imglib2.RealPositionable;
 import Jama.Matrix;
 
 /**
- * An abstract implementation of an affine transformation that returns
- * default values referring tot the identity transformation for all fields.
- *
+ * An abstract implementation of an affine transformation that returns default
+ * values referring tot the identity transformation for all fields.
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 {
 	final protected int n;
-	
+
 	final protected Matrix a;
+
 	final protected double[] t;
-	
+
 	final protected RealPoint[] ds;
-	
+
 	protected AbstractAffineTransform( final Matrix a, final double[] t )
 	{
-		assert
-			a.getRowDimension() == t.length &&
-			a.getColumnDimension() == t.length : "The passed arrays must be n*n and the t-vector n.";
-		
+		assert a.getRowDimension() == t.length &&
+				a.getColumnDimension() == t.length: "The passed arrays must be n*n and the t-vector n.";
+
 		this.n = t.length;
 		this.a = a;
 		this.t = t;
 		ds = new RealPoint[ n ];
 		for ( int r = 0; r < n; ++r )
 			ds[ r ] = new RealPoint( n );
-		
+
 		updateDs();
 	}
-	
+
 	public AbstractAffineTransform( final Matrix matrix )
 	{
-		assert matrix.getRowDimension() == matrix.getColumnDimension() - 1 : "The passed affine matrix must be of the format (n-1)*n.";
-		
+		assert matrix.getRowDimension() == matrix.getColumnDimension() - 1: "The passed affine matrix must be of the format (n-1)*n.";
+
 		n = matrix.getRowDimension();
 		a = new Matrix( n, n );
 		t = new double[ n ];
@@ -86,14 +86,14 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 		}
 		updateDs();
 	}
-	
+
 	public AbstractAffineTransform( final int n )
 	{
 		this.n = n;
 		a = new Matrix( n, n );
 		t = new double[ n ];
 		ds = new RealPoint[ n ];
-		
+
 		for ( int r = 0; r < n; ++r )
 		{
 			final RealPoint d = new RealPoint( n );
@@ -102,8 +102,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 			ds[ r ] = d;
 		}
 	}
-	
-	
+
 	protected void updateDs()
 	{
 		for ( int c = 0; c < n; ++c )
@@ -113,7 +112,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 				d.setPosition( a.get( r, c ), r );
 		}
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{
@@ -135,14 +134,14 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	@Override
 	public void apply( final double[] source, final double[] target )
 	{
-		assert source.length >= n && target.length >= n : "Source or target vector dimensions do not match with the transformation.";
-		
+		assert source.length >= n && target.length >= n: "Source or target vector dimensions do not match with the transformation.";
+
 		for ( int r = 0; r < n; ++r )
 		{
 			double ar = 0;
 			for ( int c = 0; c < n; ++c )
 				ar += source[ c ] * a.get( r, c );
-			
+
 			target[ r ] = ar + t[ r ];
 		}
 	}
@@ -150,14 +149,14 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	@Override
 	public void apply( final RealLocalizable source, final RealPositionable target )
 	{
-		assert source.numDimensions() >= n && target.numDimensions() >= n : "Source or target vector dimensions do not match with the transformation.";
-		
+		assert source.numDimensions() >= n && target.numDimensions() >= n: "Source or target vector dimensions do not match with the transformation.";
+
 		for ( int r = 0; r < n; ++r )
 		{
 			double ar = 0;
 			for ( int c = 0; c < n; ++c )
 				ar += source.getDoublePosition( c ) * a.get( r, c );
-			
+
 			target.setPosition( ar + t[ r ], r );
 		}
 	}
@@ -165,13 +164,13 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	@Override
 	public double get( final int row, final int column )
 	{
-		assert row >= 0 && row < n && column >= 0 && column <= n : "Row or column out of bounds.";
-	
+		assert row >= 0 && row < n && column >= 0 && column <= n: "Row or column out of bounds.";
+
 		if ( column == n )
 			return t[ row ];
 		return a.get( row, column );
 	}
-	
+
 	@Override
 	public double[] getRowPackedCopy()
 	{
@@ -184,12 +183,12 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 		}
 		return copy;
 	}
-	
+
 	@Override
 	public RealLocalizable d( final int d )
 	{
-		assert d >= 0 && d < n : "Dimension out of bounds.";
-		
+		assert d >= 0 && d < n: "Dimension out of bounds.";
+
 		return ds[ d ];
 	}
 }

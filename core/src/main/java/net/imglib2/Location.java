@@ -35,9 +35,9 @@ package net.imglib2;
 
 /**
  * Provides an instance of {@link Localizable} that can store positions
- *
+ * 
  * TODO: replace this by Point everywhere it is used. Then remove it.
- *
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -45,22 +45,22 @@ package net.imglib2;
 @Deprecated
 public class Location extends Point
 {
-	public Location ( final Localizable position )
+	public Location( final Localizable position )
 	{
 		super( position );
 	}
 
-	public Location ( final long[] position )
+	public Location( final long[] position )
 	{
 		super( position );
 	}
 
-	public Location ( final int[] position )
+	public Location( final int[] position )
 	{
 		super( position );
 	}
 
-	public Location ( final int numDimensions )
+	public Location( final int numDimensions )
 	{
 		super( numDimensions );
 	}

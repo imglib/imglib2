@@ -36,9 +36,9 @@ package net.imglib2.iterator;
 import net.imglib2.Interval;
 
 /**
- * A {@link LocalizingIntervalIterator} that has an adjustable offset 
+ * A {@link LocalizingIntervalIterator} that has an adjustable offset
  * 
- *
+ * 
  * @author Stephan Preibisch
  */
 public class OffsetableLocalizingIntervalIterator extends LocalizingIntervalIterator
@@ -62,7 +62,7 @@ public class OffsetableLocalizingIntervalIterator extends LocalizingIntervalIter
 	{
 		super( min, max );
 	}
-	
+
 	public OffsetableLocalizingIntervalIterator( final Interval interval )
 	{
 		super( interval );
@@ -71,7 +71,8 @@ public class OffsetableLocalizingIntervalIterator extends LocalizingIntervalIter
 	/**
 	 * Adjust the offset and reset the iterator
 	 * 
-	 * @param min - new offset
+	 * @param min
+	 *            - new offset
 	 */
 	public void setMin( final int[] min )
 	{
@@ -80,14 +81,15 @@ public class OffsetableLocalizingIntervalIterator extends LocalizingIntervalIter
 			this.min[ d ] = min[ d ];
 			this.max[ d ] = this.dimensions[ d ] + min[ d ] - 1;
 		}
-		
+
 		reset();
 	}
-	
+
 	/**
 	 * Adjust the offset and reset the iterator
 	 * 
-	 * @param min - new offset
+	 * @param min
+	 *            - new offset
 	 */
 	public void setMin( final long[] min )
 	{
@@ -96,7 +98,7 @@ public class OffsetableLocalizingIntervalIterator extends LocalizingIntervalIter
 			this.min[ d ] = min[ d ];
 			this.max[ d ] = this.dimensions[ d ] + min[ d ] - 1;
 		}
-		
+
 		reset();
 	}
 }

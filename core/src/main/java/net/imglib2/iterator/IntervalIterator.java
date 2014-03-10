@@ -44,10 +44,10 @@ import net.imglib2.util.Util;
 
 /**
  * Use this class to iterate a virtual {@link Interval} in flat order, that is:
- * row by row, plane by plane, cube by cube, ...  This is useful for iterating
- * an arbitrary interval in a defined order.  For that, connect an
+ * row by row, plane by plane, cube by cube, ... This is useful for iterating an
+ * arbitrary interval in a defined order. For that, connect an
  * {@link IntervalIterator} to a {@link Positionable}.
- *
+ * 
  * <pre>
  * ...
  * IntervalIterator i = new IntervalIterator(image);
@@ -60,13 +60,13 @@ import net.imglib2.util.Util;
  * }
  * ...
  * </pre>
- *
+ * 
  * Note that {@link IntervalIterator} is the right choice in situations where
  * <em>not</em> for each pixel you want to localize and/or set the
- * {@link Positionable} [{@link Sampler}], that is in a sparse sampling situation.
- * For localizing at each iteration step (as in the simplified example above),
- * use {@link LocalizingIntervalIterator} instead.
- *
+ * {@link Positionable} [{@link Sampler}], that is in a sparse sampling
+ * situation. For localizing at each iteration step (as in the simplified
+ * example above), use {@link LocalizingIntervalIterator} instead.
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -74,14 +74,17 @@ import net.imglib2.util.Util;
 public class IntervalIterator extends AbstractInterval implements Iterator, Localizable
 {
 	final protected long[] dimensions;
+
 	final protected long[] steps;
+
 	final protected long lastIndex;
+
 	protected long index = -1;
 
 	/**
-	 * Iterates an {@link Interval} of the given dimensions with
-	 * <em>min</em>=0<sup><em>n</em></sup>
-	 *
+	 * Iterates an {@link Interval} of the given dimensions with <em>min</em>=
+	 * 0<sup><em>n</em></sup>
+	 * 
 	 * @param dimensions
 	 */
 	public IntervalIterator( final long[] dimensions )
@@ -106,9 +109,9 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 	}
 
 	/**
-	 * Iterates an {@link Interval} of the given dimensions with
-	 * <em>min</em>=0<sup><em>n</em></sup>
-	 *
+	 * Iterates an {@link Interval} of the given dimensions with <em>min</em>=
+	 * 0<sup><em>n</em></sup>
+	 * 
 	 * @param dimensions
 	 */
 	public IntervalIterator( final int[] dimensions )
@@ -118,7 +121,7 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 
 	/**
 	 * Iterates an {@link Interval} with given <em>min</em> and <em>max</em>.
-	 *
+	 * 
 	 * @param min
 	 * @param max
 	 */
@@ -145,7 +148,7 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 
 	/**
 	 * Iterates an {@link Interval} with given <em>min</em> and <em>max</em>.
-	 *
+	 * 
 	 * @param min
 	 * @param max
 	 */
@@ -156,7 +159,7 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 
 	/**
 	 * Iterates a given {@link Interval}.
-	 *
+	 * 
 	 * @param interval
 	 */
 	public IntervalIterator( final Interval interval )
@@ -192,21 +195,36 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 	/* Iterator */
 
 	@Override
-	public void jumpFwd( final long i ) { index += i; }
+	public void jumpFwd( final long i )
+	{
+		index += i;
+	}
 
 	@Override
-	public void fwd() { ++index; }
+	public void fwd()
+	{
+		++index;
+	}
 
 	@Override
-	public void reset() { index = -1; }
+	public void reset()
+	{
+		index = -1;
+	}
 
 	@Override
-	public boolean hasNext() { return index < lastIndex; }
+	public boolean hasNext()
+	{
+		return index < lastIndex;
+	}
 
 	/**
 	 * @return - the current iteration index
 	 */
-	public long getIndex() { return index; }
+	public long getIndex()
+	{
+		return index;
+	}
 
 	/* Localizable */
 
@@ -225,7 +243,7 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 	@Override
 	public int getIntPosition( final int dim )
 	{
-		return ( int )IntervalIndexer.indexToPositionWithOffset( index, dimensions, steps, min, dim );
+		return ( int ) IntervalIndexer.indexToPositionWithOffset( index, dimensions, steps, min, dim );
 	}
 
 	@Override

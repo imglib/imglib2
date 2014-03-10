@@ -39,9 +39,9 @@ import net.imglib2.util.Intervals;
 
 /**
  * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
- * through an {@link OutOfBoundsFactory}.
- * Note that it is not an Interval itself.
- *
+ * through an {@link OutOfBoundsFactory}. Note that it is not an Interval
+ * itself.
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch
@@ -49,6 +49,7 @@ import net.imglib2.util.Intervals;
 final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >
 {
 	final protected F source;
+
 	final protected OutOfBoundsFactory< T, ? super F > factory;
 
 	public ExtendedRandomAccessibleInterval( final F source, final OutOfBoundsFactory< T, ? super F > factory )
@@ -74,10 +75,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	{
 		assert source.numDimensions() == interval.numDimensions();
 
-		if ( Intervals.contains( source, interval ) )
-		{
-			return source.randomAccess( interval );
-		}
+		if ( Intervals.contains( source, interval ) ) { return source.randomAccess( interval ); }
 		return randomAccess();
 	}
 

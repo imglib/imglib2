@@ -53,9 +53,9 @@ import net.imglib2.util.Intervals;
 /**
  * The "brain" of the Views framework. Simplifies View cascades to provide the
  * most efficient accessor for a specified Interval.
- *
+ * 
  * @see #getEfficientRandomAccessible(Interval, RandomAccessible)
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class TransformBuilder< T >
@@ -63,14 +63,14 @@ public class TransformBuilder< T >
 	/**
 	 * Get a RandomAccessible which provides RandomAccess to the specified
 	 * {@code interval} of {@code randomAccessible}.
-	 *
+	 * 
 	 * <p>
 	 * Create a new TransformBuilder that traverses the view hierarchy starting
 	 * from {@code randomAccessible}. {@link #build()} an efficient
 	 * RandomAccessible by joining and simplifying the collected
 	 * transformations.
 	 * </p>
-	 *
+	 * 
 	 * @param interval
 	 *            The interval in which access is needed.
 	 * @param randomAccessible
@@ -106,7 +106,7 @@ public class TransformBuilder< T >
 	 * list. These transforms have to be applied when wrapping the source
 	 * RandomAccess to obtain a RandomAccess in the coordinate system of
 	 * {@code randomAccessible}.
-	 *
+	 * 
 	 * @param interval
 	 *            The interval in which access is needed. This is converted to a
 	 *            bounding box which is propagated through the transforms down
@@ -116,7 +116,7 @@ public class TransformBuilder< T >
 	protected TransformBuilder( final Interval interval, final RandomAccessible< T > randomAccessible )
 	{
 		transforms = new LinkedList< Transform >();
-		boundingBox = ( interval == null) ? null : new BoundingBox( interval );
+		boundingBox = ( interval == null ) ? null : new BoundingBox( interval );
 		// System.out.println( randomAccessible );
 		visit( randomAccessible );
 		simplifyTransforms();
@@ -127,7 +127,7 @@ public class TransformBuilder< T >
 	 * transform to {@link #boundingBox}, which will be used to specify the
 	 * interval for the RandomAccess on the final source (at the end of the view
 	 * chain). This is called while traversing the view hierarchy.
-	 *
+	 * 
 	 * @param t
 	 *            the transform to add.
 	 */
@@ -147,7 +147,7 @@ public class TransformBuilder< T >
 	 * {@link #visitExtended(ExtendedRandomAccessibleInterval)} when it has the
 	 * appropriate type. Otherwise, the traversal stops and
 	 * {@code randomAccessible} is set as the {@link #source}.
-	 *
+	 * 
 	 * @param randomAccessible
 	 */
 	@SuppressWarnings( "unchecked" )
@@ -175,7 +175,7 @@ public class TransformBuilder< T >
 	 * Visit a TransformedRandomAccessible (while traversing the view
 	 * hierarchy). Append the view's transform to the list and
 	 * {@link #visit(RandomAccessible)} the view's source.
-	 *
+	 * 
 	 * @param randomAccessible
 	 */
 	protected void visitTransformed( final TransformedRandomAccessible< T > randomAccessible )
@@ -190,7 +190,7 @@ public class TransformBuilder< T >
 	 * bounding box, {@link #visit(RandomAccessible)} the view's source.
 	 * Otherwise, the traversal stops and {@code randomAccessible} is set as the
 	 * {@link #source}.
-	 *
+	 * 
 	 * @param randomAccessible
 	 */
 	protected void visitExtended( final ExtendedRandomAccessibleInterval< T, ? > randomAccessible )
@@ -267,7 +267,7 @@ public class TransformBuilder< T >
 
 		for ( int d = 0; d < m; ++d )
 		{
-			if ( t.getTranslation( d ) != 0 && ( ! t.getComponentZero( d ) ) )
+			if ( t.getTranslation( d ) != 0 && ( !t.getComponentZero( d ) ) )
 				return false;
 			if ( t.getComponentInversion( d ) )
 				return false;
@@ -276,13 +276,13 @@ public class TransformBuilder< T >
 	}
 
 	/**
-	 * Simplify the {@link #transforms} list.
-	 * First, concatenate neighboring transforms if possible.
-	 * Then, for every {@link Mixed} transform:
+	 * Simplify the {@link #transforms} list. First, concatenate neighboring
+	 * transforms if possible. Then, for every {@link Mixed} transform:
 	 * <ul>
-	 * <li> remove it if it is the identity transforms.
-	 * <li> replace it by a {@link TranslationTransform} if it is a pure translation.
-	 * <li> replace it by a {@link SlicingTransform} if it is a pure slicing.
+	 * <li>remove it if it is the identity transforms.
+	 * <li>replace it by a {@link TranslationTransform} if it is a pure
+	 * translation.
+	 * <li>replace it by a {@link SlicingTransform} if it is a pure slicing.
 	 * </ul>
 	 */
 	protected void simplifyTransforms()
@@ -309,7 +309,7 @@ public class TransformBuilder< T >
 					mixed.getTranslation( translation );
 					i.set( new TranslationTransform( translation ) );
 				}
-//				else if ( isComponentMapping( mixed ) )
+				// else if ( isComponentMapping( mixed ) )
 //				{
 //					// found pure component mapping
 //					// replace by a ComponentMappingTransform
@@ -317,7 +317,7 @@ public class TransformBuilder< T >
 //					mixed.getComponentMapping( component );
 //					i.set( new ComponentMappingTransform( component ) );
 //				}
-				else if ( isSlicing ( mixed ) )
+				else if ( isSlicing( mixed ) )
 				{
 					// found pure slicing
 					// replace by a SlicingTransform
@@ -339,8 +339,9 @@ public class TransformBuilder< T >
 	}
 
 	/**
-	 * Create a sequence of wrapped RandomAccessibles from the {@link #transforms} list.
-	 *
+	 * Create a sequence of wrapped RandomAccessibles from the
+	 * {@link #transforms} list.
+	 * 
 	 * @return RandomAccessible on the interval specified in the constructor.
 	 */
 	protected RandomAccessible< T > build()

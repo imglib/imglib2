@@ -43,13 +43,13 @@ import net.imglib2.util.Util;
 /**
  * Abstract base class for {@link NativeType native} {@link IntegerType}s that
  * encode their value into a 16bit short.
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public abstract class GenericShortType< T extends GenericShortType< T > >
-	extends AbstractIntegerType< T >
-	implements NativeType< T >
+		extends AbstractIntegerType< T >
+		implements NativeType< T >
 {
 	int i = 0;
 
@@ -80,57 +80,80 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	}
 
 	// this is the constructor if you want it to be a variable
-	public GenericShortType(){ this( ( short )0 ); }
+	public GenericShortType()
+	{
+		this( ( short ) 0 );
+	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public int getEntitiesPerPixel()
+	{
+		return 1;
+	}
 
 	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
+	}
 
-	protected short getValue(){ return dataAccess.getValue( i ); }
-	protected void setValue( final short f ){ dataAccess.setValue( i, f ); }
+	protected short getValue()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	protected void setValue( final short f )
+	{
+		dataAccess.setValue( i, f );
+	}
 
 	@Override
 	public void mul( final float c )
 	{
 		final short a = getValue();
-		setValue( ( short )Util.round( a * c ) );
+		setValue( ( short ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final short a = getValue();
-		setValue( ( short )Util.round( a * c ) );
+		setValue( ( short ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void add( final T c )
 	{
-		final short a = getValue( );
-		setValue( ( short )( a + c.getValue() ) );
+		final short a = getValue();
+		setValue( ( short ) ( a + c.getValue() ) );
 	}
 
 	@Override
 	public void div( final T c )
 	{
 		final short a = getValue();
-		setValue( ( short )( a / c.getValue() ) );
+		setValue( ( short ) ( a / c.getValue() ) );
 	}
 
 	@Override
 	public void mul( final T c )
 	{
-		final short a = getValue( );
-		setValue( ( short )( a * c.getValue() ) );
+		final short a = getValue();
+		setValue( ( short ) ( a * c.getValue() ) );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final short a = getValue( );
-		setValue( ( byte )( a - c.getValue() ) );
+		final short a = getValue();
+		setValue( ( byte ) ( a - c.getValue() ) );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Short#hashCode().
+		return getValue();
 	}
 
 	@Override
@@ -153,10 +176,16 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	}
 
 	@Override
-	public void setOne() { setValue( ( short )1 ); }
+	public void setOne()
+	{
+		setValue( ( short ) 1 );
+	}
 
 	@Override
-	public void setZero() { setValue( ( short )0 ); }
+	public void setZero()
+	{
+		setValue( ( short ) 0 );
+	}
 
 	@Override
 	public void inc()
@@ -173,22 +202,50 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	}
 
 	@Override
-	public String toString() { return "" + getValue(); }
+	public String toString()
+	{
+		return "" + getValue();
+	}
 
 	@Override
-	public void updateIndex( final int index ) { i = index; }
-	@Override
-	public int getIndex() { return i; }
+	public void updateIndex( final int index )
+	{
+		i = index;
+	}
 
 	@Override
-	public void incIndex() { ++i; }
-	@Override
-	public void incIndex( final int increment ) { i += increment; }
-	@Override
-	public void decIndex() { --i; }
-	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
+	public int getIndex()
+	{
+		return i;
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 16; }
+	public void incIndex()
+	{
+		++i;
+	}
+
+	@Override
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
+	@Override
+	public void decIndex()
+	{
+		--i;
+	}
+
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
+	@Override
+	public int getBitsPerPixel()
+	{
+		return 16;
+	}
 }

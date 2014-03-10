@@ -39,12 +39,12 @@ import net.imglib2.type.numeric.NumericType;
 /**
  * Abstract base class for {@link VolatileNumericType}s that wrap a
  * {@link NumericType} that is either VALID or INVALID.
- *
+ * 
  * @param <N>
  *            wrapped {@link NumericType}.
  * @param <T>
  *            type of derived concrete class.
- *
+ * 
  * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T extends AbstractVolatileNumericType< N, T > >
@@ -55,7 +55,7 @@ abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T
 	{
 		super( t, valid );
 	}
-	
+
 	public AbstractVolatileNumericType( final N t )
 	{
 		this( t, false );

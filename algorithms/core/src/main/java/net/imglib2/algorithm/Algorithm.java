@@ -35,13 +35,15 @@ package net.imglib2.algorithm;
 
 /**
  * TODO This interface should extend Runnable
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public interface Algorithm
 {
 	public boolean checkInput();
+
 	public boolean process();
+
 	public String getErrorMessage();
 }

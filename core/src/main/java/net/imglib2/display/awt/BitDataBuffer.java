@@ -57,7 +57,7 @@ public class BitDataBuffer extends DataBuffer
 	 * 
 	 * @param numEntities
 	 */
-	public BitDataBuffer( int[] source, final int numEntities )
+	public BitDataBuffer( final int[] source, final int numEntities )
 	{
 		super( TYPE_INT, numEntities );
 
@@ -92,7 +92,7 @@ public class BitDataBuffer extends DataBuffer
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getElem( int bank, int i )
+	public int getElem( final int bank, final int i )
 	{
 		// only one bank supported since now
 		assert ( bank == 0 );
@@ -110,7 +110,7 @@ public class BitDataBuffer extends DataBuffer
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setElem( int bank, int i, int val )
+	public void setElem( final int bank, final int i, final int val )
 	{
 		final int arrayIndex = i / bitsPerEntity;
 		final int arrayOffset = i % bitsPerEntity;
@@ -133,7 +133,8 @@ public class BitDataBuffer extends DataBuffer
 	 * @see #setElem(int, int)
 	 * @see #setElem(int, int, int)
 	 */
-	public int getElem( int i )
+	@Override
+	public int getElem( final int i )
 	{
 		return data[ i + offset ];
 	}

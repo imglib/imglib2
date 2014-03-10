@@ -36,7 +36,7 @@ package net.imglib2;
 /**
  * An abstract class that implements the {@link Localizable} interface using a
  * long[] array to maintain position.
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -64,7 +64,7 @@ public abstract class AbstractLocalizable extends AbstractEuclideanSpace impleme
 	/**
 	 * Protected constructor that re-uses the passed position array. This is
 	 * intended to allow subclasses to provide a way to wrap a long[] array.
-	 *
+	 * 
 	 * @param position
 	 *            position array to use.
 	 */

@@ -39,54 +39,68 @@ import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 
 /**
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Lee Kamentsky
  */
-public class ConstantRealRandomAccessible<T> implements RealRandomAccessible<T> {
+public class ConstantRealRandomAccessible< T > implements RealRandomAccessible< T >
+{
 
-	protected class ConstantRealRandomAccess extends RealPoint implements RealRandomAccess<T> {
-		public ConstantRealRandomAccess() {
-			super(nDimensions);
+	protected class ConstantRealRandomAccess extends RealPoint implements RealRandomAccess< T >
+	{
+		public ConstantRealRandomAccess()
+		{
+			super( nDimensions );
 		}
 
 		@Override
-		public RealRandomAccess<T> copyRealRandomAccess() {
+		public RealRandomAccess< T > copyRealRandomAccess()
+		{
 			return new ConstantRealRandomAccess();
 		}
 
 		@Override
-		public T get() {
+		public T get()
+		{
 			return constant;
 		}
 
 		@Override
-		public ConstantRealRandomAccess copy() {
+		public ConstantRealRandomAccess copy()
+		{
 			return new ConstantRealRandomAccess();
 		}
 
 	}
+
 	private final int nDimensions;
+
 	private final T constant;
-	public ConstantRealRandomAccessible(final T constant, final int nDimensions) {
+
+	public ConstantRealRandomAccessible( final T constant, final int nDimensions )
+	{
 		this.nDimensions = nDimensions;
 		this.constant = constant;
 	}
+
 	@Override
-	public int numDimensions() {
+	public int numDimensions()
+	{
 		return nDimensions;
 	}
 
 	@Override
-	public RealRandomAccess<T> realRandomAccess() {
-		return new ConstantRealRandomAccess() {
-		};
+	public RealRandomAccess< T > realRandomAccess()
+	{
+		return new ConstantRealRandomAccess()
+		{};
 	}
 
 	@Override
-	public RealRandomAccess<T> realRandomAccess( final RealInterval interval ) {
-		return new ConstantRealRandomAccess() {
-		};
+	public RealRandomAccess< T > realRandomAccess( final RealInterval interval )
+	{
+		return new ConstantRealRandomAccess()
+		{};
 	}
 }

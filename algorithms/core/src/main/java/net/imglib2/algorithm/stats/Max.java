@@ -38,14 +38,14 @@ import net.imglib2.IterableInterval;
 
 /**
  * Find the maximum value and its position in an {@link IterableInterval}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Max
 {
 	/**
 	 * Find the maximum value and its position in an {@link IterableInterval}.
-	 *
+	 * 
 	 * @param iterable
 	 *            input interval.
 	 * @return a cursor positioned on the global maximum. If several maxima with

@@ -53,37 +53,37 @@ import net.imglib2.type.logic.BitType;
  * Build the component tree of an image. This is an implementation of the
  * algorithm described by D. Nister and H. Stewenius in
  * "Linear Time Maximally Stable Extremal Regions" (ECCV 2008).
- *
+ * 
  * The input to the algorithm is a RandomAccessibleInterval< T >. Further, a
  * Comparator<T> and a {@link Component.Generator} to instantiate new components
  * are required. Pixel locations are aggregated in {@link Component}s which are
  * passed to a {@link Component.Handler} whenever a connected component for a
  * specific threshold is completed.
- *
+ * 
  * Building up a tree structure out of the completed components should happen in
- * the {@link Component.Handler} implementation. See {@link PixelListComponentTree}
- * for an example.
- *
+ * the {@link Component.Handler} implementation. See
+ * {@link PixelListComponentTree} for an example.
+ * 
  * <p>
  * <strong>TODO</strong> Add support for non-zero-min RandomAccessibleIntervals.
  * (Currently, we assume that the input image is a <em>zero-min</em> interval.)
  * </p>
- *
+ * 
  * @param <T>
  *            value type of the input image.
  * @param <C>
  *            component type.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class ComponentTree< T extends Type< T >, C extends Component< T > >
 {
 	/**
 	 * Run the algorithm. Completed components are emitted to the
-	 * {@link Component.Handler} which is responsible for building up the
-	 * tree structure. An implementations of {@link Component.Handler} is
-	 * provided for example by {@link PixelListComponentTree}.
-	 *
+	 * {@link Component.Handler} which is responsible for building up the tree
+	 * structure. An implementations of {@link Component.Handler} is provided
+	 * for example by {@link PixelListComponentTree}.
+	 * 
 	 * @param input
 	 *            input image.
 	 * @param componentGenerator
@@ -103,7 +103,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	 * {@link Component.Handler} which is responsible for building up the tree
 	 * structure. An implementations of {@link Component.Handler} is provided
 	 * for example by {@link PixelListComponentTree}.
-	 *
+	 * 
 	 * @param input
 	 *            input image of a comparable value type.
 	 * @param componentGenerator
@@ -125,7 +125,8 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	}
 
 	/**
-	 * Default comparator for {@link Comparable} pixel values for dark-to-bright pass.
+	 * Default comparator for {@link Comparable} pixel values for dark-to-bright
+	 * pass.
 	 */
 	public static final class DarkToBright< T extends Comparable< T > > implements Comparator< T >
 	{
@@ -137,7 +138,8 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	}
 
 	/**
-	 * Default comparator for {@link Comparable} pixel values for bright-to-dark pass.
+	 * Default comparator for {@link Comparable} pixel values for bright-to-dark
+	 * pass.
 	 */
 	public static final class BrightToDark< T extends Comparable< T > > implements Comparator< T >
 	{
@@ -202,7 +204,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		 * Assumes that prior to any call to next() neighbor was a the same
 		 * position as current, i.e. neighbor position is only modified
 		 * incrementally.
-		 *
+		 * 
 		 * @param current
 		 * @param neighbor
 		 * @return false if the neighbor position is out of bounds, true
@@ -211,7 +213,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 		public boolean next( final Localizable current, final Positionable neighbor, final Positionable neighbor2 )
 		{
 			final int d = n / 2;
-			final boolean bck = (n == 2*d); // n % 2 == 0
+			final boolean bck = ( n == 2 * d ); // n % 2 == 0
 			++n;
 			if ( bck )
 			{
@@ -305,7 +307,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	/**
 	 * Set up data structures and run the algorithm. Completed components are
 	 * emitted to the provided {@link Component.Handler}.
-	 *
+	 * 
 	 * @param input
 	 *            input image.
 	 * @param componentGenerator
@@ -343,7 +345,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 	/**
 	 * Main loop of the algorithm. This follows exactly along steps of the
 	 * algorithm as described in the paper.
-	 *
+	 * 
 	 * @param input
 	 *            the input image.
 	 */
@@ -377,9 +379,11 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 				if ( !visitedRandomAccess.get().get() )
 				{
 					// actually we could
-					//   visit( neighbor );
+					// visit( neighbor );
 					// here.
-					// however, because wasVisited() already set the visitedRandomAccess to the correct position, this is faster:
+					// however, because wasVisited() already set the
+					// visitedRandomAccess to the correct position, this is
+					// faster:
 					visitedRandomAccess.get().set( true );
 
 					neighborLevel.set( neighbor.get() );
@@ -428,7 +432,7 @@ public final class ComponentTree< T extends Type< T >, C extends Component< T > 
 
 	/**
 	 * This is called whenever the current value is raised.
-	 *
+	 * 
 	 * @param value
 	 */
 	private void processStack( final T value )

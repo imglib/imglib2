@@ -40,7 +40,7 @@ import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * TODO
- *
+ * 
  */
 public final class RealFloatSamplerConverter< R extends RealType< R > > implements SamplerConverter< R, FloatType >
 {
@@ -60,8 +60,7 @@ public final class RealFloatSamplerConverter< R extends RealType< R > > implemen
 		}
 
 		/**
-		 * This is only intended to work with FloatType!
-		 * We ignore index!!!
+		 * This is only intended to work with FloatType! We ignore index!!!
 		 */
 		@Override
 		public float getValue( final int index )
@@ -70,8 +69,7 @@ public final class RealFloatSamplerConverter< R extends RealType< R > > implemen
 		}
 
 		/**
-		 * This is only intended to work with FloatType!
-		 * We ignore index!!!
+		 * This is only intended to work with FloatType! We ignore index!!!
 		 */
 		@Override
 		public void setValue( final int index, final float value )
