@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -53,6 +53,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.util.Util;
 
+//@formatter:off
 /**
  * MSER tree of an image stored as a tree of {@link PixelListComponent}s. This
  * class is used both to represent and build the tree. For building the tree
@@ -63,37 +64,62 @@ import net.imglib2.util.Util;
  * Maximally Stable Extremal Regions (MSER) are selected from the component tree
  * as follows. For each component, an instability score is computed as
  * <!-- |R_i - R_{i-\Delta}| / |R_i| -->
- * <math style="display:block"><mi>s</mi><mfenced><msub><mi>R</mi><mi>i</mi></msub></mfenced><mo>=</mo><mfrac><mfenced open="|" close="|"><mrow><msub><mi>R</mi><mi>i</mi></msub><mo lspace=mediummathspace rspace=mediummathspace>\</mo><msub><mi>R</mi><mrow><mi>i</mi><mo>-</mo><mi>&Delta;</mi></mrow></msub></mrow></mfenced><mfenced open="|" close="|"><msub><mi>R</mi><mi>i</mi></msub></mfenced></mfrac></math>
+ * <math style="display:block">
+ * <mi>s</mi><mfenced><msub><mi>R</mi><mi>i</mi></msub></mfenced>
+ * <mo>=</mo>
+ * <mfrac>
+ *   <mfenced open="|" close="|">
+ *     <mrow><msub><mi>R</mi><mi>i</mi></msub>
+ *   	   <mo lspace=mediummathspace rspace=mediummathspace>\</mo>
+ *         <msub><mi>R</mi><mrow><mi>i</mi><mo>-</mo><mi>&Delta;</mi></mrow></msub>
+ *     </mrow>
+ *   </mfenced>
+ *   <mfenced open="|" close="|">
+ *     <msub><mi>R</mi><mi>i</mi></msub>
+ *   </mfenced>
+ * </mfrac>
+ * </math>
  * </p>
- *
+ * 
  * <p>
  * Regions whose score is a local minimum are selected as MSER candidates.
  * </p>
- *
+ * 
  * <p>
  * A candidate region is discarded if its size (number of pixels) is smaller
  * than <em>minSize</em> or larger than <em>maxSize</em>. A candidate region is
  * discarded if its instability score is greater than <em>maxVar</em>.
  * </p>
- *
+ * 
  * <p>
  * A tree is build of the remaining candidates. Finally, candidates are pruned
  * from the tree, if they are too similar to their parent: Let <em>A</em>,
  * <em>B</em> be a region and its parent. Then <em>A</em> is discarded if
  * <!-- |B - A| / |B| <= minDiversity -->
- * <math style="display:block"><mfrac><mfenced open="|" close="|"><mrow><mi>B</mi><mo lspace=mediummathspace rspace=mediummathspace>\</mo><mi>A</mi></mrow></mfenced><mfenced open="|" close="|"><mi>B</mi></mfenced></mfrac><mo>&le;</mo><mi>minDiversity</mi></math>
+ * <math style="display:block">
+ * <mfrac>
+ *   <mfenced open="|" close="|"><mrow>
+ *     <mi>B</mi>
+ *     <mo lspace=mediummathspace rspace=mediummathspace>\</mo>
+ *     <mi>A</mi>
+ *   </mrow></mfenced>
+ *   <mfenced open="|" close="|"><mi>B</mi></mfenced>
+ * </mfrac>
+ * <mo>&le;</mo><mi>minDiversity</mi>
+ * </math>
  * </p>
- *
+ * 
  * <p>
  * <strong>TODO</strong> Add support for non-zero-min RandomAccessibleIntervals.
  * (Currently, we assume that the input image is a <em>zero-min</em> interval.)
  * </p>
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
+//@formatter:on
 public final class MserTree< T extends Type< T > > implements ComponentForest< Mser< T > >, Iterable< Mser< T > >, PartialComponent.Handler< MserPartialComponent< T > >
 {
 	/**
@@ -101,7 +127,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 	 * {@link #buildMserTree(RandomAccessibleInterval, RealType, long, long, double, double, ImgFactory, boolean)}
 	 * using an {@link ArrayImgFactory} or {@link CellImgFactory} depending on
 	 * input image size.
-	 *
+	 * 
 	 * @param input
 	 *            the input image.
 	 * @param delta
@@ -129,7 +155,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 	 * {@link #buildMserTree(RandomAccessibleInterval, RealType, long, long, double, double, ImgFactory, boolean)}
 	 * using an {@link ArrayImgFactory} or {@link CellImgFactory} depending on
 	 * input image size.
-	 *
+	 * 
 	 * @param input
 	 *            the input image.
 	 * @param delta
@@ -155,7 +181,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 
 	/**
 	 * Build a MSER tree from an input image.
-	 *
+	 * 
 	 * @param input
 	 *            the input image.
 	 * @param delta
@@ -194,7 +220,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 	 * {@link #buildMserTree(RandomAccessibleInterval, ComputeDelta, long, long, double, double, ImgFactory, Type, Comparator)}
 	 * using an {@link ArrayImgFactory} or {@link CellImgFactory} depending on
 	 * input image size.
-	 *
+	 * 
 	 * @param input
 	 *            the input image.
 	 * @param computeDelta
@@ -222,7 +248,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 
 	/**
 	 * Build a MSER tree from an input image.
-	 *
+	 * 
 	 * @param input
 	 *            the input image.
 	 * @param computeDelta
@@ -297,7 +323,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 
 	/**
 	 * The number of minima found since the last {@link #pruneDuplicates()}.
-	 *
+	 * 
 	 * @see #foundNewMinimum(MserEvaluationNode)
 	 */
 	private int minimaFoundSinceLastPrune;
@@ -364,7 +390,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 	/**
 	 * Called when a local minimal {@link MserEvaluationNode} (a MSER candidate)
 	 * is found.
-	 *
+	 * 
 	 * @param node
 	 *            MSER candidate.
 	 */
@@ -392,7 +418,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 
 	/**
 	 * Get number of detected MSERs.
-	 *
+	 * 
 	 * @return number of detected MSERs.
 	 */
 	public int size()
@@ -402,7 +428,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 
 	/**
 	 * Returns an iterator over all MSERs in the tree.
-	 *
+	 * 
 	 * @return iterator over all MSERss in the tree.
 	 */
 	@Override
@@ -413,7 +439,7 @@ public final class MserTree< T extends Type< T > > implements ComponentForest< M
 
 	/**
 	 * Get the set of roots of the MSER tree (respectively forest...).
-	 *
+	 * 
 	 * @return set of roots.
 	 */
 	@Override

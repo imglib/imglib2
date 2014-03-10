@@ -39,12 +39,12 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 
 /**
- * A {@link RealPositionable} that drives a {@link Positionable} to its
- * floor discrete coordinates.  For practical useage, the floor operation is
- * defined as the integer smaller than the real value:
- *
+ * A {@link RealPositionable} that drives a {@link Positionable} to its floor
+ * discrete coordinates. For practical useage, the floor operation is defined as
+ * the integer smaller than the real value:
+ * 
  * f = r < 0 ? (long)r - 1 : (long)r
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -66,12 +66,12 @@ public class Floor< LocalizablePositionable extends Localizable & Positionable >
 
 	public static final long floor( final double r )
 	{
-		return r < 0 ? ( long )r - 1 : ( long )r;
+		return r < 0 ? ( long ) r - 1 : ( long ) r;
 	}
 
 	public static final long floor( final float r )
 	{
-		return r < 0 ? ( long )r - 1 : ( long )r;
+		return r < 0 ? ( long ) r - 1 : ( long ) r;
 	}
 
 	public static final void floor( final double[] r, final long[] f )

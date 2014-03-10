@@ -33,7 +33,6 @@
 
 package net.imglib2.converter;
 
-
 import static net.imglib2.converter.ChannelARGBConverter.Channel.A;
 import static net.imglib2.converter.ChannelARGBConverter.Channel.B;
 import static net.imglib2.converter.ChannelARGBConverter.Channel.G;
@@ -47,11 +46,11 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 /**
  * Convert UnsignedByteType into one channel of {@link ARGBType}.
- *
+ * 
  * {@link #converterListRGBA} can be used in {@link CompositeXYProjector} to
  * convert a 4-channel (R,G,B,A) {@link UnsignedByteType} into composite
  * {@link ARGBType}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public final class ChannelARGBConverter implements Converter< UnsignedByteType, ARGBType >

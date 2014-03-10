@@ -43,13 +43,13 @@ import net.imglib2.type.Type;
 /**
  * A connected component of the image thresholded at {@link #value()}. The set
  * of pixels can be accessed by iterating ({@link #iterator()}) the component.
- *
+ * 
  * This is a node in a {@link PixelListComponentTree}. The child and parent
  * nodes can be accessed by {@link #getChildren()} and {@link #getParent()}.
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class PixelListComponent< T extends Type< T > > implements Component< T, PixelListComponent< T > >
@@ -93,7 +93,7 @@ public final class PixelListComponent< T extends Type< T > > implements Componen
 
 	/**
 	 * Get the image threshold that created the extremal region.
-	 *
+	 * 
 	 * @return the image threshold that created the extremal region.
 	 */
 	@Override
@@ -104,7 +104,7 @@ public final class PixelListComponent< T extends Type< T > > implements Componen
 
 	/**
 	 * Get the number of pixels in the extremal region.
-	 *
+	 * 
 	 * @return number of pixels in the extremal region.
 	 */
 	@Override
@@ -116,7 +116,7 @@ public final class PixelListComponent< T extends Type< T > > implements Componen
 	/**
 	 * Get an iterator over the pixel locations ({@link Localizable}) in this
 	 * connected component.
-	 *
+	 * 
 	 * @return iterator over locations.
 	 */
 	@Override
@@ -127,7 +127,7 @@ public final class PixelListComponent< T extends Type< T > > implements Componen
 
 	/**
 	 * Get the children of this node in the {@link PixelListComponentTree}.
-	 *
+	 * 
 	 * @return the children of this node in the {@link PixelListComponentTree}.
 	 */
 	@Override
@@ -138,7 +138,7 @@ public final class PixelListComponent< T extends Type< T > > implements Componen
 
 	/**
 	 * Get the parent of this node in the {@link PixelListComponentTree}.
-	 *
+	 * 
 	 * @return the parent of this node in the {@link PixelListComponentTree}.
 	 */
 	@Override

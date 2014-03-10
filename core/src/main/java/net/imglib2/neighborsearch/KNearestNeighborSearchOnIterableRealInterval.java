@@ -41,20 +41,22 @@ import net.imglib2.Sampler;
 /**
  * <em>k</em>-nearest-neighbor search on {@link IterableRealInterval}
  * implemented as linear search.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNearestNeighborSearch< T >
 {
 	final protected IterableRealInterval< T > iterable;
-	
+
 	final protected int k, n;
+
 	final protected RealCursor< T >[] elements;
+
 	final protected double[] squareDistances;
-	
+
 	final protected double[] referenceLocation;
-	
+
 	/**
 	 * Calculate the square Euclidean distance of a query location to the
 	 * location stored in referenceLocation.
@@ -69,36 +71,39 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 		}
 		return squareSum;
 	}
-	
+
 	@SuppressWarnings( "unchecked" )
 	public KNearestNeighborSearchOnIterableRealInterval( final IterableRealInterval< T > iterable, final int k )
 	{
 		this.iterable = iterable;
 		this.k = k;
 		n = iterable.numDimensions();
-		
+
 		elements = ( new RealCursor[ k ] );
 		squareDistances = new double[ k ];
 		referenceLocation = new double[ n ];
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{
 		return n;
 	}
-	
+
 	@Override
-	public int getK() { return k; }
-	
+	public int getK()
+	{
+		return k;
+	}
+
 	@Override
 	public void search( final RealLocalizable reference )
 	{
 		for ( int i = 0; i < k; ++i )
 			squareDistances[ i ] = Double.MAX_VALUE;
-		
+
 		reference.localize( referenceLocation );
-		
+
 		final RealCursor< T > cursor = iterable.localizingCursor();
 		while ( cursor.hasNext() )
 		{
@@ -108,7 +113,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 			if ( squareDistances[ i ] > squareDistance )
 			{
 				final RealCursor< T > candidate = cursor.copyCursor();
-				
+
 				for ( int j = i - 1; i > 0 && squareDistances[ j ] > squareDistance; --i, --j )
 				{
 					squareDistances[ i ] = squareDistances[ j ];
@@ -119,8 +124,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 			}
 		}
 	}
-	
-	
+
 	/* KNearestNeighborSearch */
 
 	@Override
@@ -134,7 +138,7 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	{
 		return elements[ i ];
 	}
-	
+
 	@Override
 	public double getSquareDistance( final int i )
 	{
@@ -146,34 +150,33 @@ public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNeare
 	{
 		return Math.sqrt( squareDistances[ i ] );
 	}
-	
-	
+
 	/* NearestNeighborSearch */
-	
+
 	@Override
 	public RealLocalizable getPosition()
 	{
 		return getPosition( 0 );
 	}
-	
+
 	@Override
 	public Sampler< T > getSampler()
 	{
 		return getSampler( 0 );
 	}
-	
+
 	@Override
 	public double getSquareDistance()
 	{
 		return getSquareDistance( 0 );
 	}
-	
+
 	@Override
 	public double getDistance()
 	{
 		return getDistance( 0 );
 	}
-	
+
 	@Override
 	public KNearestNeighborSearchOnIterableRealInterval< T > copy()
 	{

@@ -44,14 +44,14 @@ import net.imglib2.ui.overlay.BufferedImageOverlayRenderer;
  * <p>
  * See {@link BufferedImageOverlayRenderer}, which is a {@link RenderTarget} and
  * also an {@link OverlayRenderer} that draws the {@link BufferedImage}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface RenderTarget
 {
 	/**
 	 * Set the {@link BufferedImage} that is to be drawn on the canvas.
-	 *
+	 * 
 	 * @param bufferedImage
 	 *            image to draw (may be null).
 	 * @return a previously set {@link BufferedImage} that is currently not
@@ -61,14 +61,14 @@ public interface RenderTarget
 
 	/**
 	 * Get the current canvas width.
-	 *
+	 * 
 	 * @return canvas width.
 	 */
 	public int getWidth();
 
 	/**
 	 * Get the current canvas height.
-	 *
+	 * 
 	 * @return canvas height.
 	 */
 	public int getHeight();

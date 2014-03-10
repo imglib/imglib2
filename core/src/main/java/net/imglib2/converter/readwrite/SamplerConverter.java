@@ -37,7 +37,7 @@ import net.imglib2.Sampler;
 
 /**
  * TODO
- *
+ * 
  */
 public interface SamplerConverter< A, B >
 {

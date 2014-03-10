@@ -51,7 +51,7 @@ import net.imglib2.ui.viewer.InteractiveViewer3D;
  * Default rendering settings used by the convenience viewer classes
  * {@link InteractiveViewer2D}, {@link InteractiveRealViewer2D},
  * {@link InteractiveViewer3D}, and {@link InteractiveRealViewer3D}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Defaults
@@ -91,7 +91,7 @@ public class Defaults
 	/**
 	 * Create a factory to construct the default {@link Renderer} type with
 	 * default settings for a single {@link RenderSource}.
-	 *
+	 * 
 	 * @param transformType
 	 * @param source
 	 *            the source data that will be rendered by the {@link Renderer}

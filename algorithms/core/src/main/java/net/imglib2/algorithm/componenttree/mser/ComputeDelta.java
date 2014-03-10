@@ -38,17 +38,17 @@ package net.imglib2.algorithm.componenttree.mser;
  * component tree. This might mean addition or subtraction, depending on whether
  * it's a dark-to-bright or bright-to-dark pass. {@see ComputeDeltaBrightToDark}
  * {@see ComputeDeltaDarkToBright}
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public interface ComputeDelta< T >
 {
 	/**
 	 * Compute the threshold = (value - delta).
-	 *
+	 * 
 	 * @return (value - delta)
 	 */
 	public T valueMinusDelta( final T value );

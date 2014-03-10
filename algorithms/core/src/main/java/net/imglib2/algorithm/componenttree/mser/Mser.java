@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -45,13 +45,13 @@ import net.imglib2.type.Type;
  * A maximally stable extremal region (MSER) of the image thresholded at
  * {@link #value()}. The set of pixels can be accessed by iterating (
  * {@link #iterator()}) the component.
- *
+ * 
  * This is a node in a {@link MserTree}. The child and parent nodes can be
  * accessed by {@link #getChildren()} and {@link #getParent()}.
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class Mser< T extends Type< T > > implements Component< T, Mser< T > >
@@ -105,7 +105,7 @@ public final class Mser< T extends Type< T > > implements Component< T, Mser< T 
 
 	/**
 	 * Get the image threshold that created the extremal region.
-	 *
+	 * 
 	 * @return the image threshold that created the extremal region.
 	 */
 	@Override
@@ -116,7 +116,7 @@ public final class Mser< T extends Type< T > > implements Component< T, Mser< T 
 
 	/**
 	 * Get the number of pixels in the extremal region.
-	 *
+	 * 
 	 * @return number of pixels in the extremal region.
 	 */
 	@Override
@@ -127,7 +127,7 @@ public final class Mser< T extends Type< T > > implements Component< T, Mser< T 
 
 	/**
 	 * The MSER score is computed as |R_i - R_{i-\Delta}| / |R_i|.
-	 *
+	 * 
 	 * @return the MSER score.
 	 */
 	public double score()
@@ -138,7 +138,7 @@ public final class Mser< T extends Type< T > > implements Component< T, Mser< T 
 	/**
 	 * Mean of the pixel positions in the region. This is a position vector (x,
 	 * y, z, ...)
-	 *
+	 * 
 	 * @return mean vector.
 	 */
 	public double[] mean()
@@ -150,7 +150,7 @@ public final class Mser< T extends Type< T > > implements Component< T, Mser< T 
 	 * Covariance of the pixel positions in the region. This is a vector of the
 	 * independent elements of the covariance matrix (xx, xy, xz, ..., yy, yz,
 	 * ..., zz, ...)
-	 *
+	 * 
 	 * @return vector of covariance elements.
 	 */
 	public double[] cov()
@@ -161,7 +161,7 @@ public final class Mser< T extends Type< T > > implements Component< T, Mser< T 
 	/**
 	 * Get an iterator over the pixel locations ({@link Localizable}) in this
 	 * connected component.
-	 *
+	 * 
 	 * @return iterator over locations.
 	 */
 	@Override
@@ -172,7 +172,7 @@ public final class Mser< T extends Type< T > > implements Component< T, Mser< T 
 
 	/**
 	 * Get the children of this node in the {@link MserTree}.
-	 *
+	 * 
 	 * @return the children of this node in the {@link MserTree}.
 	 */
 	@Override
@@ -183,7 +183,7 @@ public final class Mser< T extends Type< T > > implements Component< T, Mser< T 
 
 	/**
 	 * Get the parent of this node in the {@link MserTree}.
-	 *
+	 * 
 	 * @return the parent of this node in the {@link MserTree}.
 	 */
 	@Override

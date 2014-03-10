@@ -35,17 +35,20 @@ package net.imglib2.type.numeric;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface RealType<T extends RealType<T>> extends ComplexType<T>, Comparable<T>
-{			
+public interface RealType< T extends RealType< T >> extends ComplexType< T >, Comparable< T >
+{
 	public void inc();
-	public void dec();	
-	
+
+	public void dec();
+
 	public double getMaxValue();
+
 	public double getMinValue();
+
 	public double getMinIncrement();
 
 	public int getBitsPerPixel();

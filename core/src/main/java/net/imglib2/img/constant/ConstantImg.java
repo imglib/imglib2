@@ -47,16 +47,17 @@ import net.imglib2.type.Type;
  * Btw, we only need T to be instance of Type for the copy() method.
  * 
  * @param <T>
- *
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ConstantImg < T extends Type< T > > extends AbstractImg< T >
+public class ConstantImg< T extends Type< T > > extends AbstractImg< T >
 {
 	final T type;
-	
+
 	ImgFactory< T > factory;
+
 	final protected long[] dim;
 
 	public ConstantImg( final long[] size, final T type )
@@ -68,30 +69,39 @@ public class ConstantImg < T extends Type< T > > extends AbstractImg< T >
 	}
 
 	@Override
-	public ImgFactory< T > factory() 
+	public ImgFactory< T > factory()
 	{
 		// only create it if necessary
 		if ( factory == null )
 			factory = new ConstantImgFactory< T >();
-		
+
 		return factory;
 	}
 
 	@Override
-	public Img< T > copy() { return new ConstantImg< T >( dim, type ); }
-
-	@Override
-	public RandomAccess< T > randomAccess() { return new ConstantRandomAccess< T >( type, this.numDimensions() ); }
-
-	@Override
-	public Cursor< T > cursor() { return new ConstantCursor< T >( type, this.numDimensions(), dim, this.numPixels ); }
-
-	@Override
-	public Cursor< T > localizingCursor() 
+	public Img< T > copy()
 	{
-		final long[] m = new long[ this.numDimensions() ];		
+		return new ConstantImg< T >( dim, type );
+	}
+
+	@Override
+	public RandomAccess< T > randomAccess()
+	{
+		return new ConstantRandomAccess< T >( type, this.numDimensions() );
+	}
+
+	@Override
+	public Cursor< T > cursor()
+	{
+		return new ConstantCursor< T >( type, this.numDimensions(), dim, this.numPixels );
+	}
+
+	@Override
+	public Cursor< T > localizingCursor()
+	{
+		final long[] m = new long[ this.numDimensions() ];
 		this.max( m );
-		
+
 		return new ConstantLocalizingCursor< T >( type, this.numDimensions(), m, this.numPixels );
 	}
 

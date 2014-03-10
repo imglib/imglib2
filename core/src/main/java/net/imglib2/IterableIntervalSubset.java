@@ -38,7 +38,7 @@ import java.util.Iterator;
 /**
  * A subset of an {@link IterableInterval} defined by the index of its first
  * element and the number of iterable elements.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -49,6 +49,7 @@ final public class IterableIntervalSubset< T > extends AbstractWrappedInterval< 
 		private long index;
 
 		final private Cursor< T > cursor;
+
 		final private boolean localizing;
 
 		private IISCursor( final IISCursor cursor )
@@ -209,28 +210,29 @@ final public class IterableIntervalSubset< T > extends AbstractWrappedInterval< 
 		@Override
 		public boolean equals( final Object obj )
 		{
-			if ( ! ( obj instanceof IterableIntervalSubset.IISIterationOrder ) )
+			if ( !( obj instanceof IterableIntervalSubset.IISIterationOrder ) )
 				return false;
 
 			@SuppressWarnings( "unchecked" )
-			final IISIterationOrder o = ( IISIterationOrder )obj;
+			final IISIterationOrder o = ( IISIterationOrder ) obj;
 
-			return
-				o.firstIndex() == firstIndex() &&
-				o.size() == size() &&
-				o.interval().iterationOrder().equals( interval().iterationOrder() );
+			return o.firstIndex() == firstIndex() &&
+					o.size() == size() &&
+					o.interval().iterationOrder().equals( interval().iterationOrder() );
 		}
 	}
 
 	final protected long firstIndex;
+
 	final private long size;
+
 	final protected long lastIndex;
 
 	/**
 	 * Make sure that size and last index are dictated by the parent
-	 * {@link IterableInterval} or the {@link IterableIntervalSubset},
-	 * depending on which finishes earlier.
-	 *
+	 * {@link IterableInterval} or the {@link IterableIntervalSubset}, depending
+	 * on which finishes earlier.
+	 * 
 	 * @param interval
 	 * @param firstIndex
 	 * @param size
@@ -266,7 +268,8 @@ final public class IterableIntervalSubset< T > extends AbstractWrappedInterval< 
 	}
 
 	@Override
-	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
 		return iterationOrder().equals( f.iterationOrder() );
 	}
 

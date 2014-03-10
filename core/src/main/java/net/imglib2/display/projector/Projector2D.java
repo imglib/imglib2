@@ -113,7 +113,7 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 
 		// TODO: this is ugly, but the only way to make sure, that iteration
 		// order fits in the case of one sized dims. Tobi?
-		IterableInterval< A > ii = Views.iterable( Views.interval( source, new FinalInterval( min, max ) ) );
+		final IterableInterval< A > ii = Views.iterable( Views.interval( source, new FinalInterval( min, max ) ) );
 
 		final Cursor< B > targetCursor = target.localizingCursor();
 		final Cursor< A > sourceCursor = ii.cursor();
@@ -130,7 +130,7 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 		else
 		{
 			// use localizing cursor
-			RandomAccess< A > sourceRandomAccess = source.randomAccess();
+			final RandomAccess< A > sourceRandomAccess = source.randomAccess();
 			sourceRandomAccess.setPosition( position );
 			while ( targetCursor.hasNext() )
 			{

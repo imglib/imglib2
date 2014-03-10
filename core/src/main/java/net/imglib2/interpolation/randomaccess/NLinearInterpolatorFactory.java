@@ -40,7 +40,7 @@ import net.imglib2.type.numeric.NumericType;
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Saalfeld
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
@@ -51,7 +51,7 @@ public class NLinearInterpolatorFactory< T extends NumericType< T > > implements
 	@Override
 	public NLinearInterpolator< T > create( final RandomAccessible< T > randomAccessible )
 	{
-		switch ( randomAccessible.numDimensions() ) 
+		switch ( randomAccessible.numDimensions() )
 		{
 		case 1:
 			return new NLinearInterpolator1D< T >( randomAccessible );
@@ -63,7 +63,7 @@ public class NLinearInterpolatorFactory< T extends NumericType< T > > implements
 			return new NLinearInterpolator< T >( randomAccessible );
 		}
 	}
-	
+
 	/**
 	 * For now, ignore the {@link RealInterval} and return
 	 * {@link #create(RandomAccessible)}.

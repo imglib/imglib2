@@ -41,12 +41,12 @@ import net.imglib2.util.Util;
 
 /**
  * Abstract implementation of shared functions for mirroring out of bounds.
- * Internally used coordinates use an interval
- * [0<sup><em>n</em></sup>,max<sup><em>n</em></sup>-min<sup><em>n</em></sup>]
- * and compensate for min-shift on localization and positioning.
- *
+ * Internally used coordinates use an interval [0<sup><em>n</em></sup>,max<sup>
+ * <em>n</em></sup>-min<sup><em>n</em></sup>] and compensate for min-shift on
+ * localization and positioning.
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -73,9 +73,9 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	final protected long[] min;
 
 	/**
-	 * Period of the extended interval.
-	 * This depends on whether boundary pixels are mirrored.
-	 * {@see OutOfBoundsMirrorDoubleBoundary} {@see OutOfBoundsMirrorSingleBoundary}.
+	 * Period of the extended interval. This depends on whether boundary pixels
+	 * are mirrored. {@see OutOfBoundsMirrorDoubleBoundary} {@see
+	 * OutOfBoundsMirrorSingleBoundary}.
 	 */
 	final protected long[] p;
 
@@ -185,7 +185,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = ( int )( this.zeroMinPos[ d ] + min[ d ] );
+			pos[ d ] = ( int ) ( this.zeroMinPos[ d ] + min[ d ] );
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	@Override
 	public int getIntPosition( final int d )
 	{
-		return ( int )( zeroMinPos[ d ] + min[ d ] );
+		return ( int ) ( zeroMinPos[ d ] + min[ d ] );
 	}
 
 	@Override

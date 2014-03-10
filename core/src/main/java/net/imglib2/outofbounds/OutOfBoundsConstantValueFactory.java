@@ -40,7 +40,7 @@ import net.imglib2.type.Type;
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */

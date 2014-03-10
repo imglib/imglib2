@@ -76,9 +76,9 @@ public class CompositeXYProjector< A > extends AbstractProjector2D< A, ARGBType 
 
 	protected final Converter< A, ARGBType >[] currentConverters;
 
-	private IterableInterval< ARGBType > target;
+	private final IterableInterval< ARGBType > target;
 
-	private RandomAccessibleInterval< A > source;
+	private final RandomAccessibleInterval< A > source;
 
 	@SuppressWarnings( "unchecked" )
 	public CompositeXYProjector( final RandomAccessibleInterval< A > source, final IterableInterval< ARGBType > target, final ArrayList< Converter< A, ARGBType >> converters, final int dimIndex )

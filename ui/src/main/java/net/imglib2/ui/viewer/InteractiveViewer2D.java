@@ -49,14 +49,14 @@ import net.imglib2.ui.util.InterpolatingSource;
 
 /**
  * Interactive viewer for a 2D {@link RandomAccessible}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class InteractiveViewer2D< T extends NumericType< T > > extends InteractiveRealViewer< AffineTransform2D, InteractiveDisplayCanvasComponent< AffineTransform2D > >
 {
 	/**
 	 * Create an interactive viewer for a 2D {@link RandomAccessible}.
-	 *
+	 * 
 	 * @param width
 	 *            window width.
 	 * @param height
@@ -89,7 +89,8 @@ public class InteractiveViewer2D< T extends NumericType< T > > extends Interacti
 				Defaults.rendererFactory( AffineTransformType2D.instance, interpolatingSource ) );
 
 		// add KeyHandler for toggling interpolation
-		display.addHandler( new KeyAdapter() {
+		display.addHandler( new KeyAdapter()
+		{
 			@Override
 			public void keyPressed( final KeyEvent e )
 			{
@@ -99,6 +100,6 @@ public class InteractiveViewer2D< T extends NumericType< T > > extends Interacti
 					requestRepaint();
 				}
 			}
-		});
+		} );
 	}
 }

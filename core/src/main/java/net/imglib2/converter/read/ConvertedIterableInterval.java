@@ -40,15 +40,17 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- *
+ * 
  */
 public class ConvertedIterableInterval< A, B extends Type< B > > extends AbstractConvertedIterableInterval< A, B >
 {
 	final protected Converter< A, B > converter;
+
 	final protected B converted;
 
 	/**
-	 * Creates a copy of b for conversion that can be accessed through {@link #get()}.
+	 * Creates a copy of b for conversion that can be accessed through
+	 * {@link #get()}.
 	 * 
 	 * @param source
 	 * @param converter

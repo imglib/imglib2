@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -43,7 +43,7 @@ import net.imglib2.Localizable;
  * {@link #getParent()}. The set of pixels can be accessed by iterating (
  * {@link #iterator()}) the component. The threshold value that created the
  * component (extremal region) can be obtained by {@link #value()}.
- *
+ * 
  * @author Florian Jug
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -51,7 +51,7 @@ public interface Component< T, C extends Component< T, C > > extends Iterable< L
 {
 	/**
 	 * Get the number of pixels in the connected component.
-	 *
+	 * 
 	 * @return number of pixels in the connected component.
 	 */
 	public long size();
@@ -59,21 +59,21 @@ public interface Component< T, C extends Component< T, C > > extends Iterable< L
 	/**
 	 * Get the image threshold that created the connected component (extremal
 	 * region).
-	 *
+	 * 
 	 * @return the image threshold that created the connected component.
 	 */
 	public T value();
 
 	/**
 	 * Get the parent of this node in the {@link ComponentTree}.
-	 *
+	 * 
 	 * @return the parent of this node in the {@link ComponentTree}.
 	 */
 	public C getParent();
 
 	/**
 	 * Get the children of this node in the {@link ComponentTree}.
-	 *
+	 * 
 	 * @return the children of this node in the {@link ComponentTree}.
 	 */
 	public List< C > getChildren();

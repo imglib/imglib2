@@ -39,7 +39,7 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * A cell of an {@link CellImg}.
- *
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -59,8 +59,8 @@ public abstract class AbstractCell< A > implements Serializable
 
 	protected int numPixels;
 
-	public AbstractCell() {
-	}
+	public AbstractCell()
+	{}
 
 	public AbstractCell( final int[] dimensions, final long[] min )
 	{
@@ -82,7 +82,7 @@ public abstract class AbstractCell< A > implements Serializable
 
 	/**
 	 * Get the basic type array that stores this cells pixels.
-	 *
+	 * 
 	 * @return underlying basic type array.
 	 */
 	public abstract A getData();
@@ -108,7 +108,7 @@ public abstract class AbstractCell< A > implements Serializable
 	 * compute the index in the underlying flat array of this cell which
 	 * corresponds to a local position (i.e., relative to the origin of this
 	 * cell).
-	 *
+	 * 
 	 * @param position
 	 *            a local position
 	 * @return corresponding index
@@ -119,7 +119,7 @@ public abstract class AbstractCell< A > implements Serializable
 	}
 
 	/**
-	 *
+	 * 
 	 * @param d
 	 *            dimension
 	 * @return minimum
@@ -131,7 +131,7 @@ public abstract class AbstractCell< A > implements Serializable
 
 	/**
 	 * Write the minimum of each dimension into long[].
-	 *
+	 * 
 	 * @param minValue
 	 */
 	public void min( final long[] minimum )
@@ -142,7 +142,7 @@ public abstract class AbstractCell< A > implements Serializable
 
 	/**
 	 * Get the number of pixels in a given dimension <em>d</em>.
-	 *
+	 * 
 	 * @param d
 	 */
 	public int dimension( final int d )
@@ -152,7 +152,7 @@ public abstract class AbstractCell< A > implements Serializable
 
 	/**
 	 * Write the number of pixels in each dimension into long[].
-	 *
+	 * 
 	 * @param dimensions
 	 */
 	public void dimensions( final int[] dim )

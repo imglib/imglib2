@@ -42,25 +42,25 @@ import net.imglib2.Localizable;
  * incomplete components is maintained while visiting the pixels of the input
  * image. {@link PartialComponent} represents an element on the component stack,
  * i.e., a connected component in the making.
- *
+ * 
  * It provides methods to get/set the threshold value for the connected
  * component, to add pixels to the component, and to merge it with another
  * component.
- *
+ * 
  * {@link BuildComponentTree} uses a {@link PartialComponent.Generator} to
  * create new components and emits completed components to a
  * {@link PartialComponent.Handler}.
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public interface PartialComponent< T, C extends PartialComponent< T, C > >
 {
 	/**
 	 * Create new components.
-	 *
+	 * 
 	 * @param <T>
 	 *            value type of the input image.
 	 * @param <C>
@@ -70,7 +70,7 @@ public interface PartialComponent< T, C extends PartialComponent< T, C > >
 	{
 		/**
 		 * Create a new empty component with the given value (e.g., grey-level).
-		 *
+		 * 
 		 * @param value
 		 *            value of the component
 		 * @return new component
@@ -81,7 +81,7 @@ public interface PartialComponent< T, C extends PartialComponent< T, C > >
 		 * Create a component with a value (e.g., grey-level) greater than any
 		 * occurring in the input for the {@link BuildComponentTree}. This is
 		 * used as a terminator element on the component stack.
-		 *
+		 * 
 		 * @return new component
 		 */
 		public C createMaxComponent();
@@ -90,7 +90,7 @@ public interface PartialComponent< T, C extends PartialComponent< T, C > >
 	/**
 	 * Handle completed components that are output by {@link BuildComponentTree}
 	 * .
-	 *
+	 * 
 	 * @param <C>
 	 *            component type.
 	 */
@@ -101,7 +101,7 @@ public interface PartialComponent< T, C extends PartialComponent< T, C > >
 		 * NOTE THAT THE COMPONENT IS RE-USED BY {@link BuildComponentTree}!
 		 * That is, after calling emit() new pixels may be added, etc. Do not
 		 * store the component object but rather copy the relevant data!
-		 *
+		 * 
 		 * @param component
 		 *            a completed component
 		 */
@@ -110,7 +110,7 @@ public interface PartialComponent< T, C extends PartialComponent< T, C > >
 
 	/**
 	 * Set the threshold value (e.g., grey-level) for this component.
-	 *
+	 * 
 	 * @param value
 	 *            the threshold value
 	 */
@@ -118,14 +118,14 @@ public interface PartialComponent< T, C extends PartialComponent< T, C > >
 
 	/**
 	 * Get the threshold value (e.g., grey-level) for this component.
-	 *
+	 * 
 	 * @return the threshold value
 	 */
 	public abstract T getValue();
 
 	/**
 	 * Add a pixel to the set of pixels represented by this component.
-	 *
+	 * 
 	 * @param position
 	 *            a pixel position
 	 */
@@ -133,7 +133,7 @@ public interface PartialComponent< T, C extends PartialComponent< T, C > >
 
 	/**
 	 * Merge other component (of the same concrete type) into this component.
-	 *
+	 * 
 	 * @param component
 	 *            the other component
 	 */

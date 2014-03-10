@@ -37,10 +37,10 @@ import java.util.Set;
 
 /**
  * A component forest.
- *
+ * 
  * @param <C>
  *            component type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Florian Jug
  */
@@ -48,7 +48,7 @@ public interface ComponentForest< C extends Component< ?, C > >
 {
 	/**
 	 * Get the set of root nodes of this component forest.
-	 *
+	 * 
 	 * @return set of roots.
 	 */
 	public Set< C > roots();

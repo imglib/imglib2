@@ -35,8 +35,8 @@ package net.imglib2;
 
 /**
  * Implementation of the {@link Interval} interface.
- *
- *
+ * 
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  */
@@ -44,31 +44,35 @@ public final class FinalInterval extends AbstractInterval
 {
 	/**
 	 * Creates an Interval from another {@link Interval}
-	 *
-	 * @param interval - another {@link Interval}
+	 * 
+	 * @param interval
+	 *            - another {@link Interval}
 	 */
-	public FinalInterval ( final Interval interval )
+	public FinalInterval( final Interval interval )
 	{
 		super( interval );
 	}
 
 	/**
 	 * Creates an Interval with the boundaries [min, max] (both including)
-	 *
-	 * @param min - the position of the first elements in each dimension
-	 * @param max - the position of the last elements in each dimension
+	 * 
+	 * @param min
+	 *            - the position of the first elements in each dimension
+	 * @param max
+	 *            - the position of the last elements in each dimension
 	 */
-	public FinalInterval ( final long[] min, final long[] max )
+	public FinalInterval( final long[] min, final long[] max )
 	{
 		super( min, max );
 	}
 
 	/**
 	 * Creates an Interval with the boundaries [0, dimensions-1]
-	 *
-	 * @param dimensions - the size of the interval
+	 * 
+	 * @param dimensions
+	 *            - the size of the interval
 	 */
-	public FinalInterval ( final long... dimensions )
+	public FinalInterval( final long... dimensions )
 	{
 		super( dimensions );
 	}
@@ -77,7 +81,7 @@ public final class FinalInterval extends AbstractInterval
 	 * Create a {@link FinalInterval} from a parameter list comprising minimum
 	 * coordinates and size. For example, to create a 2D interval from (10, 10)
 	 * to (20, 40) use createMinSize( 10, 10, 11, 31 ).
-	 *
+	 * 
 	 * @param minsize
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -102,7 +106,7 @@ public final class FinalInterval extends AbstractInterval
 	 * Create a {@link FinalInterval} from a parameter list comprising minimum
 	 * and maximum coordinates. For example, to create a 2D interval from (10,
 	 * 10) to (20, 40) use createMinMax( 10, 10, 20, 40 ).
-	 *
+	 * 
 	 * @param minmax
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify

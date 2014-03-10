@@ -51,7 +51,7 @@ public class ConstantImgFactory< T extends Type< T > > extends ImgFactory< T >
 	{
 		return new ConstantImg< T >( dim, type );
 	}
-	
+
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
@@ -60,5 +60,5 @@ public class ConstantImgFactory< T extends Type< T > > extends ImgFactory< T >
 			return new ConstantImgFactory();
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement Type." );
 	}
-	
+
 }

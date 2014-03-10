@@ -35,7 +35,7 @@ package net.imglib2.multithreading;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */

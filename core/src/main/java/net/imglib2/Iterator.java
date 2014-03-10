@@ -34,11 +34,11 @@
 package net.imglib2;
 
 /**
- * The {@link Iterator} interface provides basic functionality for
- * iterating over a set of elements.  The iteration order depends on
- * the {@link Iterator} implementation.
- *
- *
+ * The {@link Iterator} interface provides basic functionality for iterating
+ * over a set of elements. The iteration order depends on the {@link Iterator}
+ * implementation.
+ * 
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -46,7 +46,7 @@ public interface Iterator
 {
 	/**
 	 * Move steps &times; forward.
-	 *
+	 * 
 	 * @param steps
 	 *            number of steps to move forward
 	 */
@@ -65,7 +65,7 @@ public interface Iterator
 
 	/**
 	 * Returns true if another step forward is possible.
-	 *
+	 * 
 	 * @return true, if there is another step forward is possible, otherwise
 	 *         false
 	 */

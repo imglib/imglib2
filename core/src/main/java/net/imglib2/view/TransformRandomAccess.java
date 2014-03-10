@@ -41,8 +41,8 @@ import net.imglib2.transform.Transform;
 /**
  * Wrap a {@code source} RandomAccess which is related to this by a generic
  * {@link Transform} {@code transformToSource}.
- *
- *
+ * 
+ * 
  * @author Tobias Pietzsch
  */
 public final class TransformRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >

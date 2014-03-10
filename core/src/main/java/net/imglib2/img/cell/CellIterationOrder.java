@@ -36,7 +36,7 @@ package net.imglib2.img.cell;
 /**
  * Iteration order for a {@link CellImg}. A {@link CellImg} is iterated cell by
  * cell, where each cell is iterated in flat iteration order.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class CellIterationOrder
@@ -51,7 +51,7 @@ public class CellIterationOrder
 	/**
 	 * To be equal an object has to be a {@link CellIterationOrder} on a
 	 * {@link CellImg} of the same dimensions and cell-dimensions.
-	 *
+	 * 
 	 * @return true, if obj is a compatible {@link CellIterationOrder}.
 	 */
 	@Override

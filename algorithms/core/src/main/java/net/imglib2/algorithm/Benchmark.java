@@ -35,10 +35,10 @@ package net.imglib2.algorithm;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
-public interface Benchmark 
+public interface Benchmark
 {
 	public long getProcessingTime();
 }

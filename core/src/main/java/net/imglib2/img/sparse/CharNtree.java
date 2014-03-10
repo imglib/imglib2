@@ -37,7 +37,7 @@ import net.imglib2.img.basictypeaccess.CharAccess;
 
 /**
  * CharAccess based on a {@link Ntree}<Char>.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class CharNtree implements CharAccess, NtreeAccess< Character, CharNtree >

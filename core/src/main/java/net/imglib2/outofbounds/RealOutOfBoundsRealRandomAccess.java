@@ -42,7 +42,7 @@ import net.imglib2.RealRandomAccessible;
 
 /**
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
@@ -50,12 +50,13 @@ import net.imglib2.RealRandomAccessible;
 public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclideanSpace implements RealRandomAccess< T >, Bounded
 {
 	/**
-	 *  performs the actual moves and generates/queries a Type
+	 * performs the actual moves and generates/queries a Type
 	 */
 	final protected RealOutOfBounds< T > outOfBounds;
 
 	/**
-	 * @param n number of dimensions in the {@link RealRandomAccessible}.
+	 * @param n
+	 *            number of dimensions in the {@link RealRandomAccessible}.
 	 * @param outOfBounds
 	 */
 	public RealOutOfBoundsRealRandomAccess( final RealOutOfBoundsRealRandomAccess< T > realOutOfBoundsRealRandomAccess )
@@ -65,7 +66,8 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclidea
 	}
 
 	/**
-	 * @param n number of dimensions in the {@link RealRandomAccessible}.
+	 * @param n
+	 *            number of dimensions in the {@link RealRandomAccessible}.
 	 * @param outOfBounds
 	 */
 	public RealOutOfBoundsRealRandomAccess( final int n, final RealOutOfBounds< T > outOfBounds )
@@ -107,84 +109,162 @@ public final class RealOutOfBoundsRealRandomAccess< T > extends AbstractEuclidea
 	/* RealLocalizable */
 
 	@Override
-	final public void localize( final float[] position ){ outOfBounds.localize( position ); }
+	final public void localize( final float[] position )
+	{
+		outOfBounds.localize( position );
+	}
 
 	@Override
-	final public void localize( final double[] position ){ outOfBounds.localize( position ); }
+	final public void localize( final double[] position )
+	{
+		outOfBounds.localize( position );
+	}
 
 	@Override
-	final public double getDoublePosition( final int dim ){ return outOfBounds.getDoublePosition( dim ); }
+	final public double getDoublePosition( final int dim )
+	{
+		return outOfBounds.getDoublePosition( dim );
+	}
 
 	@Override
-	final public float  getFloatPosition( final int dim ){ return outOfBounds.getFloatPosition( dim ); }
+	final public float getFloatPosition( final int dim )
+	{
+		return outOfBounds.getFloatPosition( dim );
+	}
 
 	/* RealPositionable */
 
 	@Override
-	public void move( final float distance, final int d ) { outOfBounds.move( distance, d ); }
+	public void move( final float distance, final int d )
+	{
+		outOfBounds.move( distance, d );
+	}
 
 	@Override
-	public void move( final double distance, final int d ) { outOfBounds.move( distance, d ); }
+	public void move( final double distance, final int d )
+	{
+		outOfBounds.move( distance, d );
+	}
 
 	@Override
-	public void move( final RealLocalizable localizable ) { outOfBounds.move( localizable ); }
+	public void move( final RealLocalizable localizable )
+	{
+		outOfBounds.move( localizable );
+	}
 
 	@Override
-	public void move( final float[] distance ) { outOfBounds.move( distance ); }
+	public void move( final float[] distance )
+	{
+		outOfBounds.move( distance );
+	}
 
 	@Override
-	public void move( final double[] distance ) { outOfBounds.move( distance ); }
+	public void move( final double[] distance )
+	{
+		outOfBounds.move( distance );
+	}
 
 	@Override
-	public void setPosition( final RealLocalizable localizable ) { outOfBounds.setPosition( localizable ); }
+	public void setPosition( final RealLocalizable localizable )
+	{
+		outOfBounds.setPosition( localizable );
+	}
 
 	@Override
-	public void setPosition( final float[] position ) { outOfBounds.setPosition( position ); }
+	public void setPosition( final float[] position )
+	{
+		outOfBounds.setPosition( position );
+	}
 
 	@Override
-	public void setPosition( final double[] position ) { outOfBounds.setPosition( position ); }
+	public void setPosition( final double[] position )
+	{
+		outOfBounds.setPosition( position );
+	}
 
 	@Override
-	public void setPosition( final float position, final int d ) { outOfBounds.setPosition( position, d ); }
+	public void setPosition( final float position, final int d )
+	{
+		outOfBounds.setPosition( position, d );
+	}
 
 	@Override
-	public void setPosition( final double position, final int d ) { outOfBounds.setPosition( position, d ); }
+	public void setPosition( final double position, final int d )
+	{
+		outOfBounds.setPosition( position, d );
+	}
 
 	/* Positionable */
 
 	@Override
-	public void fwd( final int d ) { outOfBounds.fwd( d ); }
+	public void fwd( final int d )
+	{
+		outOfBounds.fwd( d );
+	}
 
 	@Override
-	public void bck( final int d ) { outOfBounds.bck( d ); }
+	public void bck( final int d )
+	{
+		outOfBounds.bck( d );
+	}
 
 	@Override
-	public void move( final int distance, final int d ) { outOfBounds.move( distance, d ); }
+	public void move( final int distance, final int d )
+	{
+		outOfBounds.move( distance, d );
+	}
 
 	@Override
-	public void move( final long distance, final int d ) { outOfBounds.move( distance, d ); }
+	public void move( final long distance, final int d )
+	{
+		outOfBounds.move( distance, d );
+	}
 
 	@Override
-	public void move( final Localizable localizable ) { outOfBounds.move( localizable ); }
+	public void move( final Localizable localizable )
+	{
+		outOfBounds.move( localizable );
+	}
 
 	@Override
-	public void move( final int[] distance ) { outOfBounds.move( distance ); }
+	public void move( final int[] distance )
+	{
+		outOfBounds.move( distance );
+	}
 
 	@Override
-	public void move( final long[] distance ) { outOfBounds.move( distance ); }
+	public void move( final long[] distance )
+	{
+		outOfBounds.move( distance );
+	}
 
 	@Override
-	public void setPosition( final Localizable localizable ) { outOfBounds.setPosition( localizable ); }
+	public void setPosition( final Localizable localizable )
+	{
+		outOfBounds.setPosition( localizable );
+	}
 
 	@Override
-	public void setPosition( final int[] position ) { outOfBounds.setPosition( position ); }
+	public void setPosition( final int[] position )
+	{
+		outOfBounds.setPosition( position );
+	}
 
 	@Override
-	public void setPosition( final long[] position ) { outOfBounds.setPosition( position ); }
+	public void setPosition( final long[] position )
+	{
+		outOfBounds.setPosition( position );
+	}
 
 	@Override
-	public void setPosition( final int position, final int d ) { outOfBounds.setPosition( position, d ); }
+	public void setPosition( final int position, final int d )
+	{
+		outOfBounds.setPosition( position, d );
+	}
 
 	@Override
-	public void setPosition( final long position, final int d ) { outOfBounds.setPosition( position, d ); }
+	public void setPosition( final long position, final int d )
+	{
+		outOfBounds.setPosition( position, d );
+	}
 }

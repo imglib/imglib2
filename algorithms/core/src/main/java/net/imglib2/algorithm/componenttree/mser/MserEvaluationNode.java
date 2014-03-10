@@ -47,7 +47,7 @@ import net.imglib2.type.Type;
  * this case, it is passed to
  * {@link MserTree#foundNewMinimum(MserEvaluationNode)}, where a MSER is
  * created.
- *
+ * 
  * We construct the component tree for generic types, which means that we cannot
  * raise the threshold values in steps of 1 (value type might be continuous or
  * non-numeric). To create a tree whose every branch covers a continuous range

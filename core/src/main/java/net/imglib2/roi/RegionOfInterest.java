@@ -54,6 +54,7 @@ public interface RegionOfInterest extends RealRandomAccessibleRealInterval< BitT
 	 */
 	boolean contains( double[] position );
 
-	void move(double displacement, int d);
-	void move(double[] displacement);
+	void move( double displacement, int d );
+
+	void move( double[] displacement );
 }

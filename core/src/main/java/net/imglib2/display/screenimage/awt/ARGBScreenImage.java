@@ -48,38 +48,45 @@ import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
- *
- *
+ * 
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements AWTScreenImage
 {
 	final protected int[] data;
+
 	final protected BufferedImage image;
 
-	static final public ColorModel ARGB_COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
+	static final public ColorModel ARGB_COLOR_MODEL = new DirectColorModel( 32, 0xff0000, 0xff00, 0xff, 0xff000000 );
 
 	public ARGBScreenImage( final int width, final int height )
 	{
 		this( width, height, new int[ width * height ] );
 	}
 
-	/** Create an {@link Image} with {@code data}. Writing to the {@code data} array will update the {@link Image}. */
+	/**
+	 * Create an {@link Image} with {@code data}. Writing to the {@code data}
+	 * array will update the {@link Image}.
+	 */
 	public ARGBScreenImage( final int width, final int height, final IntArray data )
 	{
 		this( width, height, data.getCurrentStorageArray() );
 	}
 
-	/** Create an {@link Image} with {@code data}. Writing to the {@code data} array will update the {@link Image}. */
+	/**
+	 * Create an {@link Image} with {@code data}. Writing to the {@code data}
+	 * array will update the {@link Image}.
+	 */
 	public ARGBScreenImage( final int width, final int height, final int[] data )
 	{
-		super( new IntArray( data ), new long[]{ width, height }, 1 );
+		super( new IntArray( data ), new long[] { width, height }, 1 );
 		setLinkedType( new ARGBType( this ) );
 		this.data = data;
 
 		final SampleModel sampleModel = ARGB_COLOR_MODEL.createCompatibleWritableRaster( 1, 1 ).getSampleModel()
-									.createCompatibleSampleModel( width, height );
+				.createCompatibleSampleModel( width, height );
 		final DataBuffer dataBuffer = new DataBufferInt( data, width * height, 0 );
 		final WritableRaster rgbRaster = Raster.createWritableRaster( sampleModel, dataBuffer, null );
 		image = new BufferedImage( ARGB_COLOR_MODEL, rgbRaster, false, null );
@@ -91,8 +98,11 @@ public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements A
 		return image;
 	}
 
-	/** The underlying array holding the data. Writing to this array will change
-	 * the content of the {@link Image} returned by {@link ARGBScreenImage#image()} */
+	/**
+	 * The underlying array holding the data. Writing to this array will change
+	 * the content of the {@link Image} returned by
+	 * {@link ARGBScreenImage#image()}
+	 */
 	public int[] getData()
 	{
 		return data;

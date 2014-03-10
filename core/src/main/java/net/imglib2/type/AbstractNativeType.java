@@ -35,28 +35,50 @@ package net.imglib2.type;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public abstract class AbstractNativeType<T extends AbstractNativeType<T>> implements NativeType<T>
+public abstract class AbstractNativeType< T extends AbstractNativeType< T >> implements NativeType< T >
 {
 	protected int i = 0;
 
 	@Override
-	public void updateIndex( final int j ) { this.i = j; }
+	public void updateIndex( final int j )
+	{
+		this.i = j;
+	}
+
 	@Override
-	public int getIndex() { return i; }
-	
+	public int getIndex()
+	{
+		return i;
+	}
+
 	@Override
-	public void incIndex() { ++i; }
+	public void incIndex()
+	{
+		++i;
+	}
+
 	@Override
-	public void incIndex( final int increment ) { i += increment; }
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
 	@Override
-	public void decIndex() { --i; }
+	public void decIndex()
+	{
+		--i;
+	}
+
 	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
-		
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
 	@Override
-	public abstract String toString();	
+	public abstract String toString();
 }
