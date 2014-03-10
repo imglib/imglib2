@@ -40,7 +40,7 @@ import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
 
 /**
- *
+ * 
  * @author Stephan Saalfeld
  */
 public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoubleType > implements NativeType< NativeARGBDoubleType >
@@ -96,33 +96,33 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	@Override
 	public NativeARGBDoubleType duplicateTypeOnSameNativeImg()
 	{
-		return new NativeARGBDoubleType( img ); 
+		return new NativeARGBDoubleType( img );
 	}
-	
+
 	@Override
 	public double getA()
 	{
 		return dataAccess.getValue( ai );
 	}
-	
+
 	@Override
 	public double getR()
 	{
 		return dataAccess.getValue( ri );
 	}
-	
+
 	@Override
 	public double getG()
 	{
 		return dataAccess.getValue( gi );
 	}
-	
+
 	@Override
 	public double getB()
 	{
 		return dataAccess.getValue( bi );
 	}
-	
+
 	@Override
 	public void setA( final double a )
 	{
@@ -148,16 +148,16 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 	}
 
 	@Override
-	public void set( final double a, final double r, final double g, final double b ) 
-	{ 
+	public void set( final double a, final double r, final double g, final double b )
+	{
 		dataAccess.setValue( ai, a );
 		dataAccess.setValue( ri, r );
 		dataAccess.setValue( gi, g );
 		dataAccess.setValue( bi, b );
 	}
-	
-	public void set( final ARGBDoubleType c ) 
-	{ 
+
+	public void set( final ARGBDoubleType c )
+	{
 		set( c.getA(), c.getR(), c.getG(), c.getB() );
 	}
 
@@ -198,7 +198,7 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 		gi += 4;
 		bi += 4;
 	}
-	
+
 	@Override
 	public void incIndex( final int increment )
 	{
@@ -210,6 +210,7 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 		gi += inc2;
 		bi += inc2;
 	}
+
 	@Override
 	public void decIndex()
 	{
@@ -219,6 +220,7 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 		gi -= 4;
 		bi -= 4;
 	}
+
 	@Override
 	public void decIndex( final int decrement )
 	{

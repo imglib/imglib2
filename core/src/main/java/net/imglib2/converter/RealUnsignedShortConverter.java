@@ -39,7 +39,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 /**
  * 
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -47,18 +47,18 @@ public class RealUnsignedShortConverter< R extends RealType< R > > extends Abstr
 {
 	public RealUnsignedShortConverter()
 	{
-		super();		
+		super();
 	}
-	
+
 	public RealUnsignedShortConverter( final double min, final double max )
 	{
 		super( min, max );
 	}
-	
+
 	@Override
 	public void convert( final R input, final UnsignedShortType output )
 	{
 		final double a = input.getRealDouble();
 		output.set( Math.min( 65535, roundPositive( Math.max( 0, ( ( a - min ) / scale * 65535.0 ) ) ) ) );
-	}	
+	}
 }

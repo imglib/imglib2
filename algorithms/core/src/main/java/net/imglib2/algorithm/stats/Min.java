@@ -38,14 +38,14 @@ import net.imglib2.IterableInterval;
 
 /**
  * Find the minimum value and its position in an {@link IterableInterval}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Min
 {
 	/**
 	 * Find the minimum value and its position in an {@link IterableInterval}.
-	 *
+	 * 
 	 * @param iterable
 	 *            input interval.
 	 * @return a cursor positioned on the global minimum. If several minima with

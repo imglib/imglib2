@@ -47,7 +47,7 @@ import net.imglib2.RealPositionable;
 
 /**
  * TODO
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Preibisch <preibisch@mpi-cbg.de>
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -216,7 +216,7 @@ public class HyperSphereNeighborhood< T > extends AbstractLocalizable implements
 				source.setPosition( position[ d ], d );
 			}
 
-			source.setPosition( position[ maxDim ] - radius - 1, maxDim  );
+			source.setPosition( position[ maxDim ] - radius - 1, maxDim );
 
 			r[ maxDim ] = radius;
 			ri[ maxDim ] = radius;

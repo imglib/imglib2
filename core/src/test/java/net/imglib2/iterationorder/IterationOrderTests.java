@@ -33,12 +33,11 @@
 
 package net.imglib2.iterationorder;
 
+import static org.junit.Assert.assertTrue;
 import net.imglib2.FinalInterval;
 import net.imglib2.FlatIterationOrder;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests to check code of iteration orders
@@ -46,37 +45,39 @@ import static org.junit.Assert.assertTrue;
  * @author Christian dietz <dietzc85@googlemail.com>
  * 
  */
-public class IterationOrderTests {
+public class IterationOrderTests
+{
 
 	// Object to test
-	FlatIterationOrder flatA = new FlatIterationOrder(new FinalInterval(
-			new long[] { 10, 1, 20, 1, 1, 1, 30 }));
+	FlatIterationOrder flatA = new FlatIterationOrder( new FinalInterval(
+			new long[] { 10, 1, 20, 1, 1, 1, 30 } ) );
 
 	// Exactly the same
-	FlatIterationOrder flatB = new FlatIterationOrder(new FinalInterval(
-			new long[] { 10, 1, 20, 1, 1, 1, 30 }));
+	FlatIterationOrder flatB = new FlatIterationOrder( new FinalInterval(
+			new long[] { 10, 1, 20, 1, 1, 1, 30 } ) );
 
 	// Same if you remove dims of size one
-	FlatIterationOrder flatC = new FlatIterationOrder(new FinalInterval(
-			new long[] { 10, 20, 30 }));
+	FlatIterationOrder flatC = new FlatIterationOrder( new FinalInterval(
+			new long[] { 10, 20, 30 } ) );
 
 	// not the same
-	FlatIterationOrder flatD = new FlatIterationOrder(new FinalInterval(
-			new long[] { 10, 1, 10, 1, 1, 1, 10 }));
-	
+	FlatIterationOrder flatD = new FlatIterationOrder( new FinalInterval(
+			new long[] { 10, 1, 10, 1, 1, 1, 10 } ) );
+
 	// not the same
-	FlatIterationOrder flatE = new FlatIterationOrder(new FinalInterval(
-			new long[] { 10, 10, 10 }));
+	FlatIterationOrder flatE = new FlatIterationOrder( new FinalInterval(
+			new long[] { 10, 10, 10 } ) );
 
 	@Test
-	public void testFlatIterationOrder() {
+	public void testFlatIterationOrder()
+	{
 
 		// the same
-		assertTrue(flatA.equals(flatB));
-		assertTrue(flatA.equals(flatC));
-		
+		assertTrue( flatA.equals( flatB ) );
+		assertTrue( flatA.equals( flatC ) );
+
 		// not the same
-		assertTrue(!flatA.equals(flatD));
-		assertTrue(!flatA.equals(flatE));
+		assertTrue( !flatA.equals( flatD ) );
+		assertTrue( !flatA.equals( flatE ) );
 	}
 }

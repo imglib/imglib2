@@ -45,13 +45,13 @@ import net.imglib2.type.numeric.integer.LongType;
 
 /**
  * Implementation of {@link Component.Generator} for creating
- * {@link MserComponentIntermediate} components. According to the
- * dimensions of the input image it creates a {@link LongType} {@link Img} to
- * store the {@link PixelList} used in the components.
- *
+ * {@link MserComponentIntermediate} components. According to the dimensions of
+ * the input image it creates a {@link LongType} {@link Img} to store the
+ * {@link PixelList} used in the components.
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 final class MserComponentGenerator< T extends Type< T > > implements Component.Generator< T, MserComponentIntermediate< T > >
@@ -72,7 +72,7 @@ final class MserComponentGenerator< T extends Type< T > > implements Component.G
 	 * According to the dimensions of the input image, create a {@link LongType}
 	 * {@link Img} to store the {@link PixelList} used in the components
 	 * generated {@link #createComponent(Type)}.
-	 *
+	 * 
 	 * @param maxValue
 	 *            a value (e.g., grey-level) greater than any occurring in the
 	 *            input image.
@@ -90,7 +90,7 @@ final class MserComponentGenerator< T extends Type< T > > implements Component.G
 	}
 
 	@Override
-	public MserComponentIntermediate< T > createComponent( T value )
+	public MserComponentIntermediate< T > createComponent( final T value )
 	{
 		return new MserComponentIntermediate< T >( value, this );
 	}

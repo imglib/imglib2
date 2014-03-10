@@ -45,7 +45,7 @@ package net.imglib2.transform.integer;
  * is mapped to several target components!</em>
  * </p>
  * 
- *
+ * 
  * @author Tobias Pietzsch
  */
 public interface ComponentMapping extends Mixed

@@ -38,7 +38,7 @@ import net.imglib2.RandomAccessible;
 
 /**
  * TODO
- *
+ * 
  */
 abstract public class AbstractConvertedRandomAccessible< A, B > implements RandomAccessible< B >
 {

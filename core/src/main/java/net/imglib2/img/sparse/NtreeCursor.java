@@ -42,64 +42,72 @@ import net.imglib2.type.NativeType;
  * @author Tobias Pietzsch
  * 
  */
-public final class NtreeCursor<T extends NativeType<T>> extends
-		LocalizingIntervalIterator implements Cursor<T>, PositionProvider {
-	private final NtreeImg<T, ?> img;
+public final class NtreeCursor< T extends NativeType< T >> extends
+		LocalizingIntervalIterator implements Cursor< T >, PositionProvider
+{
+	private final NtreeImg< T, ? > img;
 
 	private final T type;
 
-	public NtreeCursor(final NtreeImg<T, ?> img) {
-		super(img);
+	public NtreeCursor( final NtreeImg< T, ? > img )
+	{
+		super( img );
 
 		this.img = img;
 		this.type = img.createLinkedType();
 
-		for (int d = 0; d < n; d++)
-			position[d] = 0;
+		for ( int d = 0; d < n; d++ )
+			position[ d ] = 0;
 
-		position[0]--;
-		type.updateContainer(this);
+		position[ 0 ]--;
+		type.updateContainer( this );
 	}
 
-	private NtreeCursor(final NtreeCursor<T> cursor) {
-		super(cursor);
+	private NtreeCursor( final NtreeCursor< T > cursor )
+	{
+		super( cursor );
 
 		this.img = cursor.img;
 		this.type = img.createLinkedType();
 
-		for (int d = 0; d < n; d++)
-			position[d] = cursor.position[d];
+		for ( int d = 0; d < n; d++ )
+			position[ d ] = cursor.position[ d ];
 
-		type.updateContainer(this);
+		type.updateContainer( this );
 	}
 
 	@Override
-	public T get() {
+	public T get()
+	{
 		return type;
 	}
 
 	@Override
-	public T next() {
+	public T next()
+	{
 		fwd();
 		return get();
 	}
 
 	@Override
-	public void remove() {
+	public void remove()
+	{}
+
+	@Override
+	public NtreeCursor< T > copy()
+	{
+		return new NtreeCursor< T >( this );
 	}
 
 	@Override
-	public NtreeCursor<T> copy() {
-		return new NtreeCursor<T>(this);
-	}
-
-	@Override
-	public NtreeCursor<T> copyCursor() {
+	public NtreeCursor< T > copyCursor()
+	{
 		return copy();
 	}
 
 	@Override
-	public long[] getPosition() {
+	public long[] getPosition()
+	{
 		return position;
 	}
 }

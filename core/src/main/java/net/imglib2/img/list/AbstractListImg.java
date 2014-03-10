@@ -45,12 +45,12 @@ import net.imglib2.util.IntervalIndexer;
  * Abstract base class for {@link Img} that store pixels in a single linear
  * array (an {@link ArrayList} or similar).In principle, the number of entities
  * stored is limited to {@link Integer#MAX_VALUE}.
- *
+ * 
  * Derived classes need to implement the {@link #get(int)} and
  * {@link #set(int, Object)} methods that are used by accessors to access
  * pixels. These could be implemented to fetch pixels from an {@link ArrayList},
  * create them on the fly, cache to disk, etc.
- *
+ * 
  * @param <T>
  *            The value type of the pixels. You can us {@link Type}s or
  *            arbitrary {@link Object}s. If you use non-{@link Type} pixels,
@@ -58,7 +58,7 @@ import net.imglib2.util.IntervalIndexer;
  *            value stored in every reference. Instead, you can use the
  *            {@link ListCursor#set(Object)} and
  *            {@link ListRandomAccess#set(Object)} methods to alter pixels.
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>

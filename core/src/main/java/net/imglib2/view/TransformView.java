@@ -41,8 +41,8 @@ import net.imglib2.transform.Transform;
 /**
  * Wrap a {@code source} RandomAccessible which is related to this by a generic
  * {@link Transform} {@code transformToSource}.
- *  
- *
+ * 
+ * 
  * @author Tobias Pietzsch
  */
 public class TransformView< T > implements TransformedRandomAccessible< T >
@@ -50,12 +50,12 @@ public class TransformView< T > implements TransformedRandomAccessible< T >
 	protected final int n;
 
 	protected final RandomAccessible< T > source;
-	
+
 	protected final Transform transformToSource;
-	
+
 	protected RandomAccessible< T > fullViewRandomAccessible;
-	
-	public TransformView( RandomAccessible< T > source, final Transform transformToSource )
+
+	public TransformView( final RandomAccessible< T > source, final Transform transformToSource )
 	{
 		assert source.numDimensions() == transformToSource.numTargetDimensions();
 
@@ -63,8 +63,8 @@ public class TransformView< T > implements TransformedRandomAccessible< T >
 
 		this.source = source;
 		this.transformToSource = transformToSource;
-		
-		fullViewRandomAccessible = null;		
+
+		fullViewRandomAccessible = null;
 	}
 
 	@Override
@@ -86,16 +86,16 @@ public class TransformView< T > implements TransformedRandomAccessible< T >
 	}
 
 	@Override
-	public RandomAccess< T > randomAccess( Interval interval )
+	public RandomAccess< T > randomAccess( final Interval interval )
 	{
-		return TransformBuilder.getEfficientRandomAccessible( interval, this ).randomAccess(); 
+		return TransformBuilder.getEfficientRandomAccessible( interval, this ).randomAccess();
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
 		if ( fullViewRandomAccessible == null )
-			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( null, this ); 
+			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( null, this );
 		return fullViewRandomAccessible.randomAccess();
 	}
 }

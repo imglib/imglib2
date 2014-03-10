@@ -120,7 +120,7 @@ public class SamplingProjector2D< A, B > extends AbstractProjector2D< A, B >
 		// get min and max of the USED part of the projection dim
 		projectedDimMinPos = Long.MAX_VALUE;
 		projectedDimMaxPos = Long.MIN_VALUE;
-		for ( long pos : projectedPositions )
+		for ( final long pos : projectedPositions )
 		{
 			if ( pos < projectedDimMinPos )
 			{

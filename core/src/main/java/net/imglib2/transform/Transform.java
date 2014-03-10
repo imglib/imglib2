@@ -71,7 +71,7 @@ public interface Transform
 	 * @param source
 	 *            source coordinates.
 	 * @param target
-	 *            set this to the target coordinates. 
+	 *            set this to the target coordinates.
 	 */
 	public void apply( final long[] source, final long[] target );
 
@@ -81,7 +81,7 @@ public interface Transform
 	 * @param source
 	 *            source coordinates.
 	 * @param target
-	 *            set this to the target coordinates. 
+	 *            set this to the target coordinates.
 	 */
 	public void apply( final int[] source, final int[] target );
 
@@ -92,7 +92,7 @@ public interface Transform
 	 * @param source
 	 *            source coordinates.
 	 * @param target
-	 *            set this to the target coordinates. 
+	 *            set this to the target coordinates.
 	 */
 	public void apply( final Localizable source, final Positionable target );
 }

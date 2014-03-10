@@ -38,7 +38,7 @@ import net.imglib2.Interval;
 
 /**
  * TODO
- *
+ * 
  */
 public final class BoundingBox
 {
@@ -64,7 +64,7 @@ public final class BoundingBox
 		this.corner2 = corner2.clone();
 	}
 
-	public BoundingBox( Interval interval )
+	public BoundingBox( final Interval interval )
 	{
 		this.n = interval.numDimensions();
 		this.corner1 = new long[ n ];
@@ -78,14 +78,14 @@ public final class BoundingBox
 		return n;
 	}
 
-	public void corner1( long[] c )
+	public void corner1( final long[] c )
 	{
 		assert c.length >= n;
 		for ( int d = 0; d < n; ++d )
 			c[ d ] = this.corner1[ d ];
 	}
 
-	public void corner2( long[] c )
+	public void corner2( final long[] c )
 	{
 		assert c.length >= n;
 		for ( int d = 0; d < n; ++d )

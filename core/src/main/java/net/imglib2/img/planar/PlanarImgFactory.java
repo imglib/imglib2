@@ -59,14 +59,14 @@ import net.imglib2.type.NativeType;
  * @author Stephan Saalfeld
  * @author Johannes Schindelin
  */
-public class PlanarImgFactory< T extends NativeType<T> > extends NativeImgFactory< T >
+public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
 	@Override
 	public PlanarImg< T, ? > create( final long[] dim, final T type )
 	{
 		return ( PlanarImg< T, ? > ) type.createSuitableNativeImg( this, dim );
 	}
-	
+
 	@Override
 	public NativeImg< T, BitArray > createBitInstance( final long[] dimensions, final int entitiesPerPixel )
 	{
@@ -76,7 +76,7 @@ public class PlanarImgFactory< T extends NativeType<T> > extends NativeImgFactor
 	@Override
 	public NativeImg< T, ByteArray > createByteInstance( final long[] dimensions, final int entitiesPerPixel )
 	{
-		return new PlanarImg< T , ByteArray >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< T, ByteArray >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -114,13 +114,13 @@ public class PlanarImgFactory< T extends NativeType<T> > extends NativeImgFactor
 	{
 		return new PlanarImg< T, ShortArray >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
 	}
-	
+
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
-	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
+	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
 		if ( NativeType.class.isInstance( type ) )
 			return new PlanarImgFactory();
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
-	}	
+	}
 }

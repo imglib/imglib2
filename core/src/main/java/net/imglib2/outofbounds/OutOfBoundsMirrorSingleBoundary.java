@@ -44,14 +44,14 @@ import net.imglib2.RandomAccessible;
  * Example:
  * 
  * width=4
- *
+ * 
  *                                  |<-inside->|
  * x:    -9 -8 -7 -6 -5 -4 -3 -2 -1  0  1  2  3  4  5  6  7  8  9
  * f(x):  3  2  1  0  1  2  3  2  1  0  1  2  3  2  1  0  1  2  3
  * </pre>
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -61,16 +61,14 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 	{
 		super( outOfBounds );
 	}
-	
+
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsMirrorSingleBoundary( final F f )
 	{
 		super( f );
-		
+
 		for ( int i = 0; i < dimension.length; ++i )
 			p[ i ] = 2 * dimension[ i ] - 2;
 	}
-	
-	
 
 	/* Sampler */
 
@@ -79,8 +77,7 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 	{
 		return new OutOfBoundsMirrorSingleBoundary< T >( this );
 	}
-	
-	
+
 	/* RandomAccess */
 
 	@Override
@@ -88,18 +85,18 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 	{
 		return copy();
 	}
-	
-	
+
 	/* Positionable */
-	
+
 	@Override
-	final public void fwd( final int d ) 
+	final public void fwd( final int d )
 	{
 		final long x = ++zeroMinPos[ d ];
 		if ( x == 0 )
 		{
 			dimIsOutOfBounds[ d ] = false;
-			if ( isOutOfBounds ) checkOutOfBounds();
+			if ( isOutOfBounds )
+				checkOutOfBounds();
 		}
 		else if ( x == dimension[ d ] )
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
@@ -120,15 +117,15 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 			if ( y == 0 )
 			{
 				inc[ d ] = true;
-				outOfBoundsRandomAccess.fwd( d  );
+				outOfBoundsRandomAccess.fwd( d );
 			}
 			else
 				outOfBoundsRandomAccess.bck( d );
 		}
 	}
-	
+
 	@Override
-	final public void bck( final int d ) 
+	final public void bck( final int d )
 	{
 		final long x = zeroMinPos[ d ]--;
 		if ( x == 0 )
@@ -136,7 +133,8 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 		else if ( x == dimension[ d ] )
 		{
 			dimIsOutOfBounds[ d ] = false;
-			if ( isOutOfBounds ) checkOutOfBounds();
+			if ( isOutOfBounds )
+				checkOutOfBounds();
 		}
 
 		final long y = outOfBoundsRandomAccess.getLongPosition( d ) - min[ d ];
@@ -155,13 +153,13 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 			if ( y + 1 == dimension[ d ] )
 			{
 				inc[ d ] = true;
-				outOfBoundsRandomAccess.bck( d  );
+				outOfBoundsRandomAccess.bck( d );
 			}
 			else
 				outOfBoundsRandomAccess.fwd( d );
 		}
 	}
-	
+
 	@Override
 	final public void setPosition( long position, final int d )
 	{
@@ -176,13 +174,13 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 			pos = false;
 		}
 		else
-			pos = true;	
-		
+			pos = true;
+
 		if ( position >= mod )
 		{
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
 			final long x = this.p[ d ];
-			
+
 			if ( position <= x )
 			{
 				position = x - position;
@@ -202,7 +200,10 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 					else
 						inc[ d ] = pos;
 				}
-				catch ( ArithmeticException e ){ position = 0; }
+				catch ( final ArithmeticException e )
+				{
+					position = 0;
+				}
 			}
 		}
 		else
@@ -213,10 +214,10 @@ public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMir
 				if ( isOutOfBounds )
 					checkOutOfBounds();
 			}
-			
+
 			inc[ d ] = pos;
 		}
-		
+
 		outOfBoundsRandomAccess.setPosition( position += min[ d ], d );
 	}
 }

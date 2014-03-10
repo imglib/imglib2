@@ -51,7 +51,7 @@ import net.imglib2.type.NativeType;
  * standard cell can be supplied in the constructor of the factory. If no cell
  * dimensions are given, the factory creates cells of size
  * <em>10 x 10 x ... x 10</em>.
- *
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */

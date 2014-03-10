@@ -39,16 +39,16 @@ import net.imglib2.util.Util;
  * Abstract implementation of {@link Cursor}. Java's {@link java.util.Iterator}
  * interface is implemented by mapping to abstract {@link #fwd()} and
  * {@link #get()}.
- *
+ * 
  * <p>
  * For localization, default implementations are available that all build on the
  * abstract int variant. For particular cursors, this may be implemented more
  * efficiently saving at least one loop over <em>n</em>.
- *
+ * 
  * <p>
  * This is identical to {@link AbstractCursor}, except that default
  * implementations build on the abstract int instead of long variant here.
- *
+ * 
  * @param <T>
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -63,7 +63,8 @@ public abstract class AbstractCursorInt< T > extends AbstractEuclideanSpace impl
 	final private int[] tmp;
 
 	/**
-	 * @param n number of dimensions in the {@link net.imglib2.img.Img}.
+	 * @param n
+	 *            number of dimensions in the {@link net.imglib2.img.Img}.
 	 */
 	public AbstractCursorInt( final int n )
 	{
@@ -86,7 +87,7 @@ public abstract class AbstractCursorInt< T > extends AbstractEuclideanSpace impl
 
 	/**
 	 * Highly recommended to override this with a more efficient version.
-	 *
+	 * 
 	 * @param steps
 	 */
 	@Override

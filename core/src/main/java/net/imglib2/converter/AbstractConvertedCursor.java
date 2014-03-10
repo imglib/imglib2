@@ -37,7 +37,7 @@ import net.imglib2.Cursor;
 
 /**
  * TODO
- *
+ * 
  */
 abstract public class AbstractConvertedCursor< A, B > implements Cursor< B >
 {

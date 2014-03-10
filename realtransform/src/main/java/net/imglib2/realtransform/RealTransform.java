@@ -40,14 +40,15 @@ import net.imglib2.RealPositionable;
  * Transformation from R<sup><em>n</em></sup> to R<sup><em>m</em></sup>.
  * 
  * <p>
- * Applying the transformation to an <em>n</em>-dimensional
- * <em>source</em> vector yields an <em>m</em>-dimensional
- * <em>target</em> vector.
+ * Applying the transformation to an <em>n</em>-dimensional <em>source</em>
+ * vector yields an <em>m</em>-dimensional <em>target</em> vector.
  * </p>
- * <p>Source and target vectors are required to be at least <em>n</em>- or
- * <em>m</em>-dimensional respectively.  The {@link RealTransform} is expected
- * to leave all dimensions beyond <em>n</em>-1 in the source vector and
- * <em>m</em>-1 in the target vector unchanged.</p>
+ * <p>
+ * Source and target vectors are required to be at least <em>n</em>- or
+ * <em>m</em>-dimensional respectively. The {@link RealTransform} is expected to
+ * leave all dimensions beyond <em>n</em>-1 in the source vector and <em>m</em>
+ * -1 in the target vector unchanged.
+ * </p>
  * 
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -70,45 +71,46 @@ public interface RealTransform
 
 	/**
 	 * Apply the {@link RealTransform} to a source vector to obtain a target
-	 * vector.  Source and target must not reference the same vector.
+	 * vector. Source and target must not reference the same vector.
 	 * 
 	 * @param source
 	 *            source coordinates.
 	 * @param target
-	 *            set this to the target coordinates. 
+	 *            set this to the target coordinates.
 	 */
 	public void apply( final double[] source, final double[] target );
 
 	/**
 	 * Apply the {@link RealTransform} to a source vector to obtain a target
-	 * vector.  Source and target must not reference the same vector.
+	 * vector. Source and target must not reference the same vector.
 	 * 
 	 * @param source
 	 *            source coordinates.
 	 * @param target
-	 *            set this to the target coordinates. 
+	 *            set this to the target coordinates.
 	 */
 	public void apply( final float[] source, final float[] target );
 
 	/**
 	 * Apply the {@link RealTransform} to a source {@link RealLocalizable} to
-	 * obtain a target {@link RealPositionable}.  Source and target must not
+	 * obtain a target {@link RealPositionable}. Source and target must not
 	 * reference the same vector.
 	 * 
 	 * @param source
 	 *            source coordinates.
 	 * @param target
-	 *            set this to the target coordinates. 
+	 *            set this to the target coordinates.
 	 */
 	public void apply( final RealLocalizable source, final RealPositionable target );
-	
+
 	/**
 	 * Create a deep copy of this {@link RealTransform}.
 	 * 
-	 * <p>Deep copying is required to make sure that stateful
-	 * {@link RealTransform RealTransform} can be duplicated for concurrent
-	 * code.</p>
-	 *  
+	 * <p>
+	 * Deep copying is required to make sure that stateful {@link RealTransform
+	 * RealTransform} can be duplicated for concurrent code.
+	 * </p>
+	 * 
 	 * @return deep copy
 	 */
 	public RealTransform copy();

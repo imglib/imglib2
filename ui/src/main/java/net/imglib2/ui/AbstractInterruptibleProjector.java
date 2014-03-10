@@ -45,12 +45,12 @@ import net.imglib2.converter.Converter;
  * <code>this</code> to obtain a
  * {@link RandomAccessible#randomAccess(net.imglib2.Interval) constrained
  * RandomAccess}
- *
+ * 
  * @param <A>
  *            pixel type of the source.
  * @param <B>
  *            pixel type of the target {@link RandomAccessibleInterval}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld
  */
@@ -72,7 +72,7 @@ abstract public class AbstractInterruptibleProjector< A, B > extends AbstractInt
 	 * from source to target pixel type. The new projector's
 	 * {@link #numDimensions()} will be equal the number of source dimensions,
 	 * allowing it to act as an interval on the source.
-	 *
+	 * 
 	 * @param numSourceDimensions
 	 *            number of dimensions of the source.
 	 * @param converter

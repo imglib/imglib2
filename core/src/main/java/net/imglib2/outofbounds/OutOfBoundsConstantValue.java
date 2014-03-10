@@ -40,20 +40,20 @@ import net.imglib2.type.Type;
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOutOfBoundsValue< T >
 {
 	final protected T value;
-	
+
 	protected OutOfBoundsConstantValue( final OutOfBoundsConstantValue< T > outOfBounds )
 	{
 		super( outOfBounds );
 		this.value = outOfBounds.value.copy();
 	}
-	
+
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsConstantValue( final F f, final T value )
 	{
 		super( f );
@@ -61,16 +61,16 @@ public class OutOfBoundsConstantValue< T extends Type< T > > extends AbstractOut
 	}
 
 	/* Sampler */
-	
+
 	@Override
 	final public T get()
 	{
-		//System.out.println( getLocationAsString() + " " + isOutOfBounds );
+		// System.out.println( getLocationAsString() + " " + isOutOfBounds );
 		if ( isOutOfBounds )
 			return value;
 		return sampler.get();
 	}
-	
+
 	@Override
 	final public OutOfBoundsConstantValue< T > copy()
 	{

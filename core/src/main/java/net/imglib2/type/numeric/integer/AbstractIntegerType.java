@@ -39,32 +39,63 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  */
-public abstract class AbstractIntegerType<T extends AbstractIntegerType<T>> extends AbstractRealType<T> implements IntegerType<T>
+public abstract class AbstractIntegerType< T extends AbstractIntegerType< T >> extends AbstractRealType< T > implements IntegerType< T >
 {
 	@Override
-	public double getMinIncrement() { return 1; }
+	public double getMinIncrement()
+	{
+		return 1;
+	}
 
 	@Override
-	public float getRealFloat() { return getIntegerLong(); }
-	@Override
-	public double getRealDouble() { return getIntegerLong(); }
-	
-	@Override
-	public void setReal( final float real ){ setInteger( Util.round( real ) ); }
-	@Override
-	public void setReal( final double real ){ setInteger( Util.round( real ) ); }	
+	public float getRealFloat()
+	{
+		return getIntegerLong();
+	}
 
 	@Override
-	public void inc() { setInteger( getIntegerLong() + 1 ); }
-	@Override
-	public void dec() { setInteger( getIntegerLong() - 1 ); }
+	public double getRealDouble()
+	{
+		return getIntegerLong();
+	}
 
 	@Override
-	public void setZero() { setInteger( 0 ); }
+	public void setReal( final float real )
+	{
+		setInteger( Util.round( real ) );
+	}
+
 	@Override
-	public void setOne() { setInteger( 1 ); }	
+	public void setReal( final double real )
+	{
+		setInteger( Util.round( real ) );
+	}
+
+	@Override
+	public void inc()
+	{
+		setInteger( getIntegerLong() + 1 );
+	}
+
+	@Override
+	public void dec()
+	{
+		setInteger( getIntegerLong() - 1 );
+	}
+
+	@Override
+	public void setZero()
+	{
+		setInteger( 0 );
+	}
+
+	@Override
+	public void setOne()
+	{
+		setInteger( 1 );
+	}
 
 	@Override
 	public int hashCode()
@@ -75,18 +106,21 @@ public abstract class AbstractIntegerType<T extends AbstractIntegerType<T>> exte
 	}
 
 	@Override
-	public int compareTo( final T c ) 
-	{ 
+	public int compareTo( final T c )
+	{
 		final long a = getIntegerLong();
 		final long b = c.getIntegerLong();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
-	
+
 	@Override
-	public String toString() { return "" + getIntegerLong(); }	
+	public String toString()
+	{
+		return "" + getIntegerLong();
+	}
 }

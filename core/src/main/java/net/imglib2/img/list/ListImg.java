@@ -44,7 +44,7 @@ import net.imglib2.type.Type;
  * pixel is stored as an individual object, so {@link ListImg} should only be
  * used for images with relatively few pixels. In principle, the number of
  * entities stored is limited to {@link Integer#MAX_VALUE}.
- *
+ * 
  * @param <T>
  *            The value type of the pixels. You can us {@link Type}s or
  *            arbitrary {@link Object}s. If you use non-{@link Type} pixels,
@@ -53,7 +53,7 @@ import net.imglib2.type.Type;
  *            {@link ListCursor#set(Object)} and
  *            {@link ListRandomAccess#set(Object)} methods to alter the
  *            underlying {@link ArrayList}.
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -119,10 +119,7 @@ public class ListImg< T > extends AbstractListImg< T >
 	public ListImg< T > copy()
 	{
 		final T type = firstElement();
-		if ( type instanceof Type< ? > )
-		{
-			return copyWithType( ( ListImg< Type > ) this );
-		}
+		if ( type instanceof Type< ? > ) { return copyWithType( ( ListImg< Type > ) this ); }
 		return new ListImg< T >( this.pixels, dimension );
 	}
 }

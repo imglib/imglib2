@@ -58,7 +58,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 
 	private final double[] extent;
 
-	public RectangleRegionOfInterest( double[] origin, double[] extent )
+	public RectangleRegionOfInterest( final double[] origin, final double[] extent )
 	{
 		super( origin.length );
 		this.origin = origin;
@@ -71,7 +71,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param ptOrigin
 	 *            write the origin position to this RealPositionable
 	 */
-	public void getOrigin( RealPositionable ptOrigin )
+	public void getOrigin( final RealPositionable ptOrigin )
 	{
 		ptOrigin.setPosition( origin );
 	}
@@ -94,7 +94,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            the dimension to retrieve
 	 * @return the position of the origin along the given dimension
 	 */
-	public double getOrigin( int d )
+	public double getOrigin( final int d )
 	{
 		return origin[ d ];
 	}
@@ -106,7 +106,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param ptOrigin
 	 *            - new origin. This should define the minima of the rectangle
 	 */
-	public void setOrigin( RealLocalizable ptOrigin )
+	public void setOrigin( final RealLocalizable ptOrigin )
 	{
 		ptOrigin.localize( origin );
 		this.invalidateCachedState();
@@ -119,7 +119,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param origin
 	 *            the coordinates of the minima of the rectangle
 	 */
-	public void setOrigin( double[] origin )
+	public void setOrigin( final double[] origin )
 	{
 		System.arraycopy( origin, 0, this.origin, 0, numDimensions() );
 		invalidateCachedState();
@@ -134,7 +134,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param d
 	 *            zero-based index of the dimension to be affected
 	 */
-	public void setOrigin( double origin, int d )
+	public void setOrigin( final double origin, final int d )
 	{
 		this.origin[ d ] = origin;
 		invalidateCachedState();
@@ -148,7 +148,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            the extent (width, height, depth, duration, etc) of the
 	 *            rectangle
 	 */
-	public void setExtent( double[] extent )
+	public void setExtent( final double[] extent )
 	{
 		System.arraycopy( extent, 0, this.extent, 0, numDimensions() );
 		invalidateCachedState();
@@ -160,7 +160,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param extent
 	 * @param d
 	 */
-	public void setExtent( double extent, int d )
+	public void setExtent( final double extent, final int d )
 	{
 		this.extent[ d ] = extent;
 		invalidateCachedState();
@@ -172,7 +172,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param p
 	 *            - RealPositionable that will hold the extent
 	 */
-	public void getExtent( RealPositionable p )
+	public void getExtent( final RealPositionable p )
 	{
 		p.setPosition( extent );
 	}
@@ -183,7 +183,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param ext
 	 *            on output, the extent of the rectangle
 	 */
-	public void getExtent( double[] ext )
+	public void getExtent( final double[] ext )
 	{
 		System.arraycopy( this.extent, 0, ext, 0, numDimensions() );
 	}
@@ -195,13 +195,13 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            dimension in question
 	 * @return extent (eg. width, height) of rectangle in given dimension
 	 */
-	public double getExtent( int d )
+	public double getExtent( final int d )
 	{
 		return extent[ d ];
 	}
 
 	@Override
-	protected boolean nextRaster( long[] position, long[] end )
+	protected boolean nextRaster( final long[] position, final long[] end )
 	{
 		/*
 		 * Check for before
@@ -231,7 +231,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	public boolean contains( double[] position )
+	public boolean contains( final double[] position )
 	{
 		for ( int i = 0; i < numDimensions(); i++ )
 		{
@@ -255,7 +255,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	protected void getExtrema( long[] minima, long[] maxima )
+	protected void getExtrema( final long[] minima, final long[] maxima )
 	{
 		for ( int i = 0; i < numDimensions(); i++ )
 		{
@@ -265,7 +265,7 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	protected void getRealExtrema( double[] minima, double[] maxima )
+	protected void getRealExtrema( final double[] minima, final double[] maxima )
 	{
 		System.arraycopy( origin, 0, minima, 0, numDimensions() );
 		for ( int i = 0; i < numDimensions(); i++ )
@@ -275,8 +275,9 @@ public class RectangleRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	public void move(double displacement, int d) {
-		double newVal = getOrigin(d) + displacement;
-		setOrigin(newVal, d);
+	public void move( final double displacement, final int d )
+	{
+		final double newVal = getOrigin( d ) + displacement;
+		setOrigin( newVal, d );
 	}
 }

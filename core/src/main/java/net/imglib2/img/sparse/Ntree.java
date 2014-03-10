@@ -254,10 +254,10 @@ public final class Ntree< T extends Comparable< T >>
 			{
 				if ( current.getValue().compareTo( value ) == 0 )
 					return current;
-					
+
 				current.children = new NtreeNode[ numChildren ];
-					for ( int i = 0; i < numChildren; ++i )
-						current.children[ i ] = new NtreeNode< T >( current, current.getValue() );
+				for ( int i = 0; i < numChildren; ++i )
+					current.children[ i ] = new NtreeNode< T >( current, current.getValue() );
 			}
 
 			final long bitmask = 1 << l;

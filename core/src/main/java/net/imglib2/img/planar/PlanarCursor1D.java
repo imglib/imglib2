@@ -37,7 +37,7 @@ import net.imglib2.type.NativeType;
 
 /**
  * Basic Iterator for 1d {@link PlanarImg PlanarContainers}
- *
+ * 
  * @author Stephan Saalfeld
  */
 public class PlanarCursor1D< T extends NativeType< T > > extends PlanarCursor< T >
@@ -52,18 +52,18 @@ public class PlanarCursor1D< T extends NativeType< T > > extends PlanarCursor< T
 	{
 		return type.getIndex() < lastIndex;
 	}
-	
+
 	@Override
 	public void localize( final int[] position )
-	{		
+	{
 		position[ 0 ] = type.getIndex();
 	}
-	
+
 	@Override
 	public int getIntPosition( final int dim )
 	{
 		if ( dim == 0 )
 			return type.getIndex();
 		return 0;
-	}	
+	}
 }

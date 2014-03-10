@@ -46,10 +46,10 @@ import net.imglib2.type.Type;
  * every reference in the {@link ListImg}. Instead, you can use the
  * {@link ListCursor#set(Object)} and {@link ListRandomAccess#set(Object)}
  * methods to alter the underlying {@link ArrayList}.
- *
+ * 
  * @param <T>
  *            The value type of the pixels.
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -64,7 +64,7 @@ public class ListImgFactory< T > extends ImgFactory< T >
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
-	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
+	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
 		return new ListImgFactory();
 	}

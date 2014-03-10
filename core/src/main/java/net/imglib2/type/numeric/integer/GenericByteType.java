@@ -41,21 +41,21 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public abstract class GenericByteType<T extends GenericByteType<T>> extends AbstractIntegerType<T> implements NativeType<T>
+public abstract class GenericByteType< T extends GenericByteType< T >> extends AbstractIntegerType< T > implements NativeType< T >
 {
 	int i = 0;
 
-	final protected NativeImg<?, ? extends ByteAccess> img;
+	final protected NativeImg< ?, ? extends ByteAccess > img;
 
 	// the DataAccess that holds the information
 	protected ByteAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public GenericByteType( final NativeImg<?, ? extends ByteAccess> byteStorage )
+	public GenericByteType( final NativeImg< ?, ? extends ByteAccess > byteStorage )
 	{
 		img = byteStorage;
 	}
@@ -76,10 +76,16 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	}
 
 	// this is the constructor if you want it to be a variable
-	protected GenericByteType() { this( ( byte )0 ); }
+	protected GenericByteType()
+	{
+		this( ( byte ) 0 );
+	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public int getEntitiesPerPixel()
+	{
+		return 1;
+	}
 
 	@Override
 	public void updateContainer( final Object c )
@@ -87,49 +93,56 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 		dataAccess = img.update( c );
 	}
 
-	protected byte getValue(){ return dataAccess.getValue( i ); }
-	protected void setValue( final byte f ){ dataAccess.setValue( i, f ); }
+	protected byte getValue()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	protected void setValue( final byte f )
+	{
+		dataAccess.setValue( i, f );
+	}
 
 	@Override
 	public void mul( final float c )
 	{
 		final byte a = getValue();
-		setValue( ( byte )Util.round( a * c ) );
+		setValue( ( byte ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final byte a = getValue();
-		setValue( ( byte )Util.round( a * c ) );
+		setValue( ( byte ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void add( final T c )
 	{
-		final byte a = getValue( );
-		setValue( ( byte )( a + c.getValue() ) );
+		final byte a = getValue();
+		setValue( ( byte ) ( a + c.getValue() ) );
 	}
 
 	@Override
 	public void div( final T c )
 	{
 		final byte a = getValue();
-		setValue( ( byte )( a / c.getValue() ) );
+		setValue( ( byte ) ( a / c.getValue() ) );
 	}
 
 	@Override
 	public void mul( final T c )
 	{
-		final byte a = getValue( );
-		setValue( ( byte )( a * c.getValue() ) );
+		final byte a = getValue();
+		setValue( ( byte ) ( a * c.getValue() ) );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final byte a = getValue( );
-		setValue( ( byte )( a - c.getValue() ) );
+		final byte a = getValue();
+		setValue( ( byte ) ( a - c.getValue() ) );
 	}
 
 	@Override
@@ -153,13 +166,22 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	}
 
 	@Override
-	public void set( final T c ) { setValue( c.getValue() );	}
+	public void set( final T c )
+	{
+		setValue( c.getValue() );
+	}
 
 	@Override
-	public void setOne() { setValue( ( byte )1 ); }
+	public void setOne()
+	{
+		setValue( ( byte ) 1 );
+	}
 
 	@Override
-	public void setZero() { setValue( ( byte )0 ); }
+	public void setZero()
+	{
+		setValue( ( byte ) 0 );
+	}
 
 	@Override
 	public void inc()
@@ -176,22 +198,50 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	}
 
 	@Override
-	public String toString() { return "" + getValue(); }
+	public String toString()
+	{
+		return "" + getValue();
+	}
 
 	@Override
-	public void updateIndex( final int index ) { i = index; }
-	@Override
-	public int getIndex() { return i; }
+	public void updateIndex( final int index )
+	{
+		i = index;
+	}
 
 	@Override
-	public void incIndex() { ++i; }
-	@Override
-	public void incIndex( final int increment ) { i += increment; }
-	@Override
-	public void decIndex() { --i; }
-	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
+	public int getIndex()
+	{
+		return i;
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 8; }
+	public void incIndex()
+	{
+		++i;
+	}
+
+	@Override
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
+	@Override
+	public void decIndex()
+	{
+		--i;
+	}
+
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
+	@Override
+	public int getBitsPerPixel()
+	{
+		return 8;
+	}
 }

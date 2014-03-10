@@ -39,101 +39,101 @@ import net.imglib2.RealPositionable;
 
 /**
  * 2-d arbitrary scaling.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class Scale2D extends AbstractScale
 {
 	final protected Scale2D inverse;
-	
+
 	protected Scale2D( final double[] s, final Scale2D inverse, final RealPoint[] ds )
 	{
 		super( s, ds );
-		
-		assert s.length == numDimensions() : "Input dimensions do not match or are not 2.";
-		
+
+		assert s.length == numDimensions(): "Input dimensions do not match or are not 2.";
+
 		this.inverse = inverse;
 	}
-	
+
 	public Scale2D( final double sx, final double sy )
 	{
 		super( new double[ 2 ], new RealPoint[ 2 ] );
-		
+
 		s[ 0 ] = sx;
 		s[ 1 ] = sy;
-		
+
 		ds[ 0 ] = new RealPoint( sx, 0 );
 		ds[ 1 ] = new RealPoint( 0, sy );
-		
+
 		final double[] si = new double[ 2 ];
 		si[ 0 ] = 1.0 / s[ 0 ];
 		si[ 1 ] = 1.0 / s[ 1 ];
-		
-		final RealPoint[] dis = new RealPoint[ 2 ]; 
+
+		final RealPoint[] dis = new RealPoint[ 2 ];
 		dis[ 0 ] = new RealPoint( si[ 0 ], 0 );
 		dis[ 1 ] = new RealPoint( 0, si[ 1 ] );
-		
+
 		inverse = new Scale2D( si, this, dis );
 	}
-	
+
 	public Scale2D( final double... s )
 	{
 		super( s.clone(), new RealPoint[ s.length ] );
-		
-		assert s.length == numDimensions() : "Input dimensions do not match or are not 2.";
-		
+
+		assert s.length == numDimensions(): "Input dimensions do not match or are not 2.";
+
 		ds[ 0 ] = new RealPoint( s[ 0 ], 0 );
 		ds[ 1 ] = new RealPoint( 0, s[ 1 ] );
-		
+
 		final double[] si = new double[ 2 ];
 		si[ 0 ] = 1.0 / s[ 0 ];
 		si[ 1 ] = 1.0 / s[ 1 ];
-		
-		final RealPoint[] dis = new RealPoint[ 2 ]; 
+
+		final RealPoint[] dis = new RealPoint[ 2 ];
 		dis[ 0 ] = new RealPoint( si[ 0 ], 0 );
 		dis[ 1 ] = new RealPoint( 0, si[ 1 ] );
-		
+
 		inverse = new Scale2D( si, this, dis );
 	}
-	
+
 	public void set( final double sx, final double sy )
 	{
 		s[ 0 ] = sx;
 		s[ 1 ] = sy;
-		
+
 		inverse.s[ 0 ] = 1.0 / sx;
 		inverse.s[ 1 ] = 1.0 / sy;
-		
+
 		ds[ 0 ].setPosition( sx, 0 );
 		ds[ 1 ].setPosition( sy, 1 );
-		
+
 		inverse.ds[ 0 ].setPosition( inverse.s[ 0 ], 0 );
 		inverse.ds[ 1 ].setPosition( inverse.s[ 1 ], 1 );
 	}
-	
+
 	@Override
 	public void set( final double... s )
 	{
-		assert s.length == numDimensions() : "Input dimensions do not match or are not 2.";
-		
+		assert s.length == numDimensions(): "Input dimensions do not match or are not 2.";
+
 		this.s[ 0 ] = s[ 0 ];
 		this.s[ 1 ] = s[ 1 ];
-		
+
 		inverse.s[ 0 ] = 1.0 / s[ 0 ];
 		inverse.s[ 1 ] = 1.0 / s[ 1 ];
-		
+
 		ds[ 0 ].setPosition( s[ 0 ], 0 );
 		ds[ 1 ].setPosition( s[ 1 ], 1 );
-		
+
 		inverse.ds[ 0 ].setPosition( inverse.s[ 0 ], 0 );
 		inverse.ds[ 1 ].setPosition( inverse.s[ 1 ], 1 );
 	}
-	
+
 	@Override
 	public void applyInverse( final double[] source, final double[] target )
 	{
-		assert source.length >= numDimensions() && target.length >= numDimensions() : "Input dimensions too small.";
-		
+		assert source.length >= numDimensions() && target.length >= numDimensions(): "Input dimensions too small.";
+
 		source[ 0 ] = target[ 0 ] / s[ 0 ];
 		source[ 1 ] = target[ 1 ] / s[ 1 ];
 	}
@@ -141,17 +141,17 @@ public class Scale2D extends AbstractScale
 	@Override
 	public void applyInverse( final float[] source, final float[] target )
 	{
-		assert source.length >= numDimensions() && target.length >= numDimensions() : "Input dimensions too small.";
-		
-		source[ 0 ] = ( float )( target[ 0 ] / s[ 0 ] );
-		source[ 1 ] = ( float )( target[ 1 ] / s[ 1 ] );
+		assert source.length >= numDimensions() && target.length >= numDimensions(): "Input dimensions too small.";
+
+		source[ 0 ] = ( float ) ( target[ 0 ] / s[ 0 ] );
+		source[ 1 ] = ( float ) ( target[ 1 ] / s[ 1 ] );
 	}
 
 	@Override
 	public void applyInverse( final RealPositionable source, final RealLocalizable target )
 	{
-		assert source.numDimensions() >= numDimensions() && target.numDimensions() >= numDimensions() : "Input dimensions too small.";
-		
+		assert source.numDimensions() >= numDimensions() && target.numDimensions() >= numDimensions(): "Input dimensions too small.";
+
 		source.setPosition( target.getDoublePosition( 0 ) / s[ 0 ], 0 );
 		source.setPosition( target.getDoublePosition( 1 ) / s[ 1 ], 1 );
 	}
@@ -159,8 +159,8 @@ public class Scale2D extends AbstractScale
 	@Override
 	public void apply( final double[] source, final double[] target )
 	{
-		assert source.length >= numDimensions() && target.length >= numDimensions() : "Input dimensions too small.";
-		
+		assert source.length >= numDimensions() && target.length >= numDimensions(): "Input dimensions too small.";
+
 		target[ 0 ] = source[ 0 ] * s[ 0 ];
 		target[ 1 ] = source[ 1 ] * s[ 1 ];
 	}
@@ -168,17 +168,17 @@ public class Scale2D extends AbstractScale
 	@Override
 	public void apply( final float[] source, final float[] target )
 	{
-		assert source.length >= numDimensions() && target.length >= numDimensions() : "Input dimensions too small.";
-		
-		target[ 0 ] = ( float )( source[ 0 ] * s[ 0 ] );
-		target[ 1 ] = ( float )( source[ 1 ] * s[ 1 ] );
+		assert source.length >= numDimensions() && target.length >= numDimensions(): "Input dimensions too small.";
+
+		target[ 0 ] = ( float ) ( source[ 0 ] * s[ 0 ] );
+		target[ 1 ] = ( float ) ( source[ 1 ] * s[ 1 ] );
 	}
 
 	@Override
 	public void apply( final RealLocalizable source, final RealPositionable target )
 	{
-		assert source.numDimensions() >= numDimensions() && target.numDimensions() >= numDimensions() : "Input dimensions too small.";
-		
+		assert source.numDimensions() >= numDimensions() && target.numDimensions() >= numDimensions(): "Input dimensions too small.";
+
 		target.setPosition( source.getDoublePosition( 0 ) * s[ 0 ], 0 );
 		target.setPosition( source.getDoublePosition( 1 ) * s[ 1 ], 1 );
 	}
@@ -186,8 +186,8 @@ public class Scale2D extends AbstractScale
 	@Override
 	public double get( final int row, final int column )
 	{
-		assert row >= 0 && row < numDimensions() : "Dimension index out of bounds.";
-		
+		assert row >= 0 && row < numDimensions(): "Dimension index out of bounds.";
+
 		return row == column ? s[ row ] : 0;
 	}
 
@@ -197,7 +197,7 @@ public class Scale2D extends AbstractScale
 		final double[] matrix = new double[ 6 ];
 		matrix[ 0 ] = s[ 0 ];
 		matrix[ 4 ] = s[ 1 ];
-		
+
 		return matrix;
 	}
 
@@ -206,7 +206,7 @@ public class Scale2D extends AbstractScale
 	{
 		return inverse;
 	}
-	
+
 	@Override
 	public Scale2D copy()
 	{

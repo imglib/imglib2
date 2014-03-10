@@ -42,17 +42,17 @@ import net.imglib2.Localizable;
  * incomplete components is maintained while visiting the pixels of the input
  * image. {@link Component} represents an element on the component stack, i.e.,
  * a connected component in the making.
- *
+ * 
  * It provides methods to get/set the threshold value for the connected
  * component, to add pixels to the component, and to merge it with another
  * component.
- *
+ * 
  * {@link ComponentTree} uses a {@link Component.Generator} to create new
  * components and emits completed components to a {@link Component.Handler}.
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public interface Component< T >
@@ -78,8 +78,8 @@ public interface Component< T >
 
 		/**
 		 * Create a component with a value (e.g., grey-level) greater than any
-		 * occurring in the input for the {@link ComponentTree}. This is used as a
-		 * terminator element on the component stack.
+		 * occurring in the input for the {@link ComponentTree}. This is used as
+		 * a terminator element on the component stack.
 		 * 
 		 * @return new component
 		 */
@@ -99,7 +99,7 @@ public interface Component< T >
 		 * THAT THE COMPONENT IS RE-USED BY {@link ComponentTree}! That is,
 		 * after calling emit() new pixels may be added, etc. Do not store the
 		 * component object but rather copy the relevant data!
-		 *
+		 * 
 		 * @param component
 		 *            a completed component
 		 */
@@ -137,4 +137,3 @@ public interface Component< T >
 	 */
 	public abstract void merge( final Component< T > component );
 }
-

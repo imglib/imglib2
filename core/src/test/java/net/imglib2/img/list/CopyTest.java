@@ -50,7 +50,7 @@ import org.junit.Test;
 
 /**
  * TODO
- *
+ * 
  */
 public class CopyTest
 {
@@ -95,12 +95,13 @@ public class CopyTest
 		}
 	}
 
-	void copyWithSourceIteration(final Img< IntType > srcImg, final Img< IntType > dstImg)
+	void copyWithSourceIteration( final Img< IntType > srcImg, final Img< IntType > dstImg )
 	{
 		final long[] pos = new long[ dimensions.length ];
 		final Cursor< IntType > src = srcImg.localizingCursor();
 		final RandomAccess< IntType > dst = dstImg.randomAccess();
-		while( src.hasNext() ) {
+		while ( src.hasNext() )
+		{
 			src.fwd();
 			src.localize( pos );
 			dst.setPosition( pos );
@@ -108,12 +109,13 @@ public class CopyTest
 		}
 	}
 
-	void copyWithDestIteration(final Img< IntType > srcImg, final Img< IntType > dstImg)
+	void copyWithDestIteration( final Img< IntType > srcImg, final Img< IntType > dstImg )
 	{
 		final long[] pos = new long[ dstImg.numDimensions() ];
 		final Cursor< IntType > dst = dstImg.localizingCursor();
 		final RandomAccess< IntType > src = srcImg.randomAccess();
-		while( dst.hasNext() ) {
+		while ( dst.hasNext() )
+		{
 			dst.fwd();
 			dst.localize( pos );
 			src.setPosition( pos );
@@ -129,7 +131,8 @@ public class CopyTest
 		final long[] dim = new long[ img.numDimensions() ];
 		final long[] pos = new long[ img.numDimensions() ];
 		img.dimensions( dim );
-		for ( int i = 0; i < N; ++i ) {
+		for ( int i = 0; i < N; ++i )
+		{
 			IntervalIndexer.indexToPosition( i, dim, pos );
 			a.setPosition( pos );
 			data[ i ] = a.get().get();

@@ -42,10 +42,10 @@ import net.imglib2.type.numeric.RealType;
  * (approximately) as big as one output line. This works for images, where a
  * single line has no more than {@link Integer#MAX_VALUE} elements. For larger
  * images {@link DoubleConvolverRealType} can be used.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @see ConvolverFactory
- *
+ * 
  * @param <S>
  *            input type
  * @param <T>
@@ -54,11 +54,13 @@ import net.imglib2.type.numeric.RealType;
 public final class FloatConvolverRealTypeBuffered< S extends RealType< S >, T extends RealType< T > > implements Runnable
 {
 	/**
-	 * @return a {@link ConvolverFactory} producing {@link FloatConvolverRealTypeBuffered}.
+	 * @return a {@link ConvolverFactory} producing
+	 *         {@link FloatConvolverRealTypeBuffered}.
 	 */
 	public static < S extends RealType< S >, T extends RealType< T > > ConvolverFactory< S, T > factory()
 	{
-		return new ConvolverFactory< S, T >() {
+		return new ConvolverFactory< S, T >()
+		{
 			@Override
 			public Runnable create( final double[] halfkernel, final RandomAccess< S > in, final RandomAccess< T > out, final int d, final long lineLength )
 			{

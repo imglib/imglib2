@@ -41,8 +41,8 @@ import net.imglib2.img.list.ListLocalizingCursor;
 /**
  * Implementation of {@link Cells} that uses {@link DefaultCell}s and keeps them
  * all in memory all the time in a {@link ListImg}.
- *
- *
+ * 
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */

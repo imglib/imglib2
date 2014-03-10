@@ -43,7 +43,7 @@ import net.imglib2.realtransform.AffineTransform3D;
 /**
  * A {@link TransformEventHandler} that changes an {@link AffineTransform3D} in
  * response to mouse and keyboard events.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -175,28 +175,28 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 
 	final private static String helpString =
 			"Mouse control:" + NL + " " + NL +
-			"Pan and tilt the volume by left-click and dragging the image in the canvas, " + NL +
-			"move the volume by middle-or-right-click and dragging the image in the canvas, " + NL +
-			"browse alongside the z-axis using the mouse-wheel, and" + NL +
-			"zoom in and out using the mouse-wheel holding CTRL+SHIFT or META." + NL + " " + NL +
-			"Key control:" + NL + " " + NL +
-			"X - Select x-axis as rotation axis." + NL +
-			"Y - Select y-axis as rotation axis." + NL +
-			"Z - Select z-axis as rotation axis." + NL +
-			"CURSOR LEFT - Rotate clockwise around the choosen rotation axis." + NL +
-			"CURSOR RIGHT - Rotate counter-clockwise around the choosen rotation axis." + NL +
-			"CURSOR UP - Zoom in." + NL +
-			"CURSOR DOWN - Zoom out." + NL +
-			"./> - Forward alongside z-axis." + NL +
-			",/< - Backward alongside z-axis." + NL +
-			"SHIFT - Rotate and browse 10x faster." + NL +
-			"CTRL - Rotate and browse 10x slower.";
+					"Pan and tilt the volume by left-click and dragging the image in the canvas, " + NL +
+					"move the volume by middle-or-right-click and dragging the image in the canvas, " + NL +
+					"browse alongside the z-axis using the mouse-wheel, and" + NL +
+					"zoom in and out using the mouse-wheel holding CTRL+SHIFT or META." + NL + " " + NL +
+					"Key control:" + NL + " " + NL +
+					"X - Select x-axis as rotation axis." + NL +
+					"Y - Select y-axis as rotation axis." + NL +
+					"Z - Select z-axis as rotation axis." + NL +
+					"CURSOR LEFT - Rotate clockwise around the choosen rotation axis." + NL +
+					"CURSOR RIGHT - Rotate counter-clockwise around the choosen rotation axis." + NL +
+					"CURSOR UP - Zoom in." + NL +
+					"CURSOR DOWN - Zoom out." + NL +
+					"./> - Forward alongside z-axis." + NL +
+					",/< - Backward alongside z-axis." + NL +
+					"SHIFT - Rotate and browse 10x faster." + NL +
+					"CTRL - Rotate and browse 10x slower.";
 
 	/**
 	 * Return rotate/translate/scale speed resulting from modifier keys.
-	 *
+	 * 
 	 * Normal speed is 1. SHIFT is faster (10). CTRL is slower (0.1).
-	 *
+	 * 
 	 * @param modifiers
 	 * @return speed resulting from modifier keys.
 	 */

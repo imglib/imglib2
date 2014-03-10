@@ -37,8 +37,9 @@ import net.imglib2.type.NativeType;
 
 /**
  * Basic Iterator for 2d {@link PlanarImg PlanarContainers}
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

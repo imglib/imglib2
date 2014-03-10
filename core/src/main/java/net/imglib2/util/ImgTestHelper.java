@@ -45,7 +45,7 @@ import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * Helper class for {@link Img} subclass unit tests.
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Curtis Rueden
@@ -54,21 +54,22 @@ public class ImgTestHelper
 {
 	// which dimensions to test
 	private static final long[][] DIM =
-		new long[][]{
-			{ 127 },
-			{ 288 },
-			{ 135, 111 },
-			{ 172, 131 },
-			{  15,  13, 33 },
-			{ 110,  38, 30 },
-			{ 109,  34, 111 },
-			{  12,  43,  92, 10 },
-			{  21,  34,  29, 13 },
-			{   5,  12,  30,  4,  21 },
-			{  14,  21,  13,  9,  12 }
-		};
+			new long[][] {
+					{ 127 },
+					{ 288 },
+					{ 135, 111 },
+					{ 172, 131 },
+					{ 15, 13, 33 },
+					{ 110, 38, 30 },
+					{ 109, 34, 111 },
+					{ 12, 43, 92, 10 },
+					{ 21, 34, 29, 13 },
+					{ 5, 12, 30, 4, 21 },
+					{ 14, 21, 13, 9, 12 }
+			};
 
-	public static long[][] dims() {
+	public static long[][] dims()
+	{
 		return DIM.clone();
 	}
 
@@ -87,7 +88,7 @@ public class ImgTestHelper
 		final Cursor< FloatType > cursor1 = img1.cursor();
 		final Cursor< FloatType > cursor2 = img2.cursor();
 
-		while( cursor1.hasNext() )
+		while ( cursor1.hasNext() )
 		{
 			cursor1.fwd();
 			cursor2.fwd();
@@ -99,7 +100,7 @@ public class ImgTestHelper
 		cursor2.reset();
 
 		// and copy right back
-		while( cursor2.hasNext() )
+		while ( cursor2.hasNext() )
 		{
 			cursor1.fwd();
 			cursor2.fwd();
@@ -107,9 +108,10 @@ public class ImgTestHelper
 			cursor1.get().set( cursor2.get() );
 		}
 
-		// copy back into a second image using localizable and positionable cursors
-		final Cursor<FloatType> localizableCursor1 = img1.localizingCursor();
-		final RandomAccess<FloatType> positionable2 = img2.randomAccess();
+		// copy back into a second image using localizable and positionable
+		// cursors
+		final Cursor< FloatType > localizableCursor1 = img1.localizingCursor();
+		final RandomAccess< FloatType > positionable2 = img2.randomAccess();
 
 		int i = 0;
 
@@ -123,31 +125,34 @@ public class ImgTestHelper
 			else
 				positionable2.setPosition( localizableCursor1 );
 
-			FloatType t2 = positionable2.get();
-			FloatType t1 = localizableCursor1.get();
+			final FloatType t2 = positionable2.get();
+			final FloatType t1 = localizableCursor1.get();
 //			float f1 = t1.getRealFloat();
 //			float f2 = t2.getRealFloat();
 			t2.set( t1 );
 //			positionable2.get().set( localizableCursor1.get() );
 		}
 
-		// copy again to the first image using a LocalizableByDimOutsideCursor and a LocalizableByDimCursor
-		final ExtendedRandomAccessibleInterval< FloatType, Img< FloatType > > extendedImg2 = new ExtendedRandomAccessibleInterval< FloatType, Img<FloatType> >( img2, new OutOfBoundsPeriodicFactory< FloatType, Img< FloatType > >() );
-		final RandomAccess<FloatType> outsideCursor2 = extendedImg2.randomAccess();
+		// copy again to the first image using a LocalizableByDimOutsideCursor
+		// and a LocalizableByDimCursor
+		final ExtendedRandomAccessibleInterval< FloatType, Img< FloatType > > extendedImg2 = new ExtendedRandomAccessibleInterval< FloatType, Img< FloatType > >( img2, new OutOfBoundsPeriodicFactory< FloatType, Img< FloatType > >() );
+		final RandomAccess< FloatType > outsideCursor2 = extendedImg2.randomAccess();
 		localizableCursor1.reset();
 
 		final int[] pos = new int[ numDimensions ];
 		i = 0;
 		int direction = 1;
 
-		try{
+		try
+		{
 			while ( localizableCursor1.hasNext() )
 			{
 				localizableCursor1.fwd();
 				localizableCursor1.localize( pos );
 				++i;
 
-				// how many times far away from the original image do we grab the pixel
+				// how many times far away from the original image do we grab
+				// the pixel
 				final int distance = i % 5;
 				direction *= -1;
 
@@ -168,7 +173,12 @@ public class ImgTestHelper
 
 			}
 		}
-		catch ( ArrayIndexOutOfBoundsException e ){ System.err.println( ( i % 7 == 0 ? "setPosition() " : "moveTo() " ) + Util.printCoordinates( pos ) ); e.printStackTrace(); System.exit( 1 ); }
+		catch ( final ArrayIndexOutOfBoundsException e )
+		{
+			System.err.println( ( i % 7 == 0 ? "setPosition() " : "moveTo() " ) + Util.printCoordinates( pos ) );
+			e.printStackTrace();
+			System.exit( 1 );
+		}
 
 		final boolean success = test( img1, reference );
 
@@ -181,13 +191,13 @@ public class ImgTestHelper
 		final Random rnd = new Random( 1241234 );
 
 		// create reference array
-		final float[] reference = new float[ ( int )img.size() ];
+		final float[] reference = new float[ ( int ) img.size() ];
 
 		// iterate over image and reference array and fill with data
 		final Cursor< FloatType > cursor = img.cursor();
 		int i = 0;
 
-		while( cursor.hasNext() )
+		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
 
@@ -206,7 +216,7 @@ public class ImgTestHelper
 		final Cursor< FloatType > cursor = img.cursor();
 		int i = 0;
 
-		while( cursor.hasNext() )
+		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
 			allEqual &= cursor.get().get() == reference[ i++ ];
