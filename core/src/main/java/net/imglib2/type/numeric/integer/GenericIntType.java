@@ -130,6 +130,13 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 	}
 
 	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Integer#hashCode().
+		return getValue();
+	}
+
+	@Override
 	public int compareTo( final T c )
 	{
 		final int a = getValue();

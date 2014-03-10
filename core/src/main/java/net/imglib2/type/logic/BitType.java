@@ -190,6 +190,13 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	public void dec() { inc(); }
 
 	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Boolean#hashCode().
+		return get() ? 1231 : 1237;
+	}
+
+	@Override
 	public int compareTo( final BitType c )
 	{
 		final boolean b1 = dataAccess.getValue(i);
