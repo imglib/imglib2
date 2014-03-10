@@ -192,6 +192,14 @@ final public class LongType extends AbstractIntegerType< LongType > implements N
 	}
 
 	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Long#hashCode().
+		final long value = get();
+		return (int) (value ^ (value >>> 32));
+	}
+
+	@Override
 	public int compareTo( final LongType c )
 	{
 		final long a = get();

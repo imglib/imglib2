@@ -146,6 +146,13 @@ public abstract class GenericShortType< T extends GenericShortType< T >> extends
 	}
 
 	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Short#hashCode().
+		return getValue();
+	}
+
+	@Override
 	public int compareTo( final T c )
 	{
 		final short a = getValue();

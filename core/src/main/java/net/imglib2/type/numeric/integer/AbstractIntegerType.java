@@ -98,6 +98,14 @@ public abstract class AbstractIntegerType< T extends AbstractIntegerType< T >> e
 	}
 
 	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Long#hashCode().
+		final long value = getIntegerLong();
+		return (int) (value ^ (value >>> 32));
+	}
+
+	@Override
 	public int compareTo( final T c )
 	{
 		final long a = getIntegerLong();

@@ -146,6 +146,13 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 	}
 
 	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Byte#hashCode().
+		return getValue();
+	}
+
+	@Override
 	public int compareTo( final T c )
 	{
 		final byte a = getValue();

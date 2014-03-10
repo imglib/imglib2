@@ -197,6 +197,13 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	}
 
 	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Float#hashCode().
+		return Float.floatToIntBits(get());
+	}
+
+	@Override
 	public int compareTo( final FloatType c )
 	{
 		final float a = get();
