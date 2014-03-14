@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.imglib2.Localizable;
+import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.Type;
 
@@ -53,7 +54,7 @@ import net.imglib2.type.Type;
  * 
  * @author Tobias Pietzsch
  */
-public final class Mser< T extends Type< T > > implements Iterable< Localizable >
+public final class Mser< T extends Type< T > > implements Component< T, Mser< T > >
 {
 	/**
 	 * child nodes in the {@link MserTree}.
@@ -107,6 +108,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 	 * 
 	 * @return the image threshold that created the extremal region.
 	 */
+	@Override
 	public T value()
 	{
 		return value;
@@ -117,6 +119,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 	 * 
 	 * @return number of pixels in the extremal region.
 	 */
+	@Override
 	public long size()
 	{
 		return pixelList.size();
@@ -172,6 +175,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 	 * 
 	 * @return the children of this node in the {@link MserTree}.
 	 */
+	@Override
 	public ArrayList< Mser< T > > getChildren()
 	{
 		return children;
@@ -182,6 +186,7 @@ public final class Mser< T extends Type< T > > implements Iterable< Localizable 
 	 * 
 	 * @return the parent of this node in the {@link MserTree}.
 	 */
+	@Override
 	public Mser< T > getParent()
 	{
 		return parent;

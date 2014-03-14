@@ -42,27 +42,27 @@ import net.imglib2.type.Type;
 /**
  * Store {@link PixelList}, mean, covariance, instability score, parent, and
  * children of a extremal region. A tree of {@link MserEvaluationNode} is built
- * from emitted {@link MserComponentIntermediate}. As soon as the parent of a
- * node is available, it is checked whether the instability score is a local
- * minimum. In this case, it is passed to
+ * from emitted {@link MserPartialComponent}. As soon as the parent of a node is
+ * available, it is checked whether the instability score is a local minimum. In
+ * this case, it is passed to
  * {@link MserTree#foundNewMinimum(MserEvaluationNode)}, where a MSER is
  * created.
  * 
  * We construct the component tree for generic types, which means that we cannot
  * raise the threshold values in steps of 1 (value type might be continuous or
  * non-numeric). To create a tree whose every branch covers a continuous range
- * of values, two nodes are created for every {@link MserComponentIntermediate}.
+ * of values, two nodes are created for every {@link MserPartialComponent}.
  * These mark the range of values covered by that component. The first node is
  * called the <em>"direct"</em> or <em>"non-intermediate node"</em> and is
- * created, when the {@link MserComponentIntermediate} is emitted. It marks the
- * lower bound (inclusive) of the value range. When the parent of the
- * {@link MserComponentIntermediate} is emitted, the
- * <em>"intermediate node"</em> is created which covers the same pixels as the
- * direct node but marks the upper bound (exclusive) of the value range.
- * 
+ * created, when the {@link MserPartialComponent} is emitted. It marks the lower
+ * bound (inclusive) of the value range. When the parent of the
+ * {@link MserPartialComponent} is emitted, the <em>"intermediate node"</em> is
+ * created which covers the same pixels as the direct node but marks the upper
+ * bound (exclusive) of the value range.
+ *
  * @param <T>
  *            value type of the input image.
- * 
+ *
  * @author Tobias Pietzsch
  */
 final class MserEvaluationNode< T extends Type< T > >
@@ -126,7 +126,7 @@ final class MserEvaluationNode< T extends Type< T > >
 	 */
 	final ArrayList< Mser< T > > mserThisOrChildren;
 
-	MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDelta< T > delta, final MserTree< T > tree )
+	MserEvaluationNode( final MserPartialComponent< T > component, final Comparator< T > comparator, final ComputeDelta< T > delta, final MserTree< T > tree )
 	{
 		value = component.getValue().copy();
 		pixelList = new PixelList( component.pixelList );
@@ -138,18 +138,16 @@ final class MserEvaluationNode< T extends Type< T > >
 		if ( node != null )
 		{
 			historySize = node.size;
-			// create intermediate MserEvaluationNode between last emitted and
-			// this node.
+			// create intermediate MserEvaluationNode between last emitted and this node.
 			node = new MserEvaluationNode< T >( node, value, comparator, delta );
 			children.add( node );
 			node.setParent( this );
 		}
 
 		MserEvaluationNode< T > historyWinner = node;
-		for ( final MserComponentIntermediate< T > c : component.children )
+		for ( final MserPartialComponent< T > c : component.children )
 		{
-			// create intermediate MserEvaluationNode between child and this
-			// node.
+			// create intermediate MserEvaluationNode between child and this node.
 			node = new MserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta );
 			children.add( node );
 			node.setParent( this );
@@ -164,7 +162,7 @@ final class MserEvaluationNode< T extends Type< T > >
 
 		n = component.n;
 		mean = new double[ n ];
-		cov = new double[ ( n * ( n + 1 ) ) / 2 ];
+		cov = new double[ ( n * (n+1) ) / 2 ];
 		for ( int i = 0; i < n; ++i )
 			mean[ i ] = component.sumPos[ i ] / size;
 		int k = 0;
@@ -224,7 +222,7 @@ final class MserEvaluationNode< T extends Type< T > >
 	 * node. The mser score is computed as |R_i - R_{i-\Delta}| / |R_i|, where
 	 * R_i is this component and R_{i-delta} is the component delta steps down
 	 * the component tree (threshold level is delta lower than this).
-	 * 
+	 *
 	 * @param delta
 	 * @param isIntermediate
 	 *            whether this is an intermediate node. This influences the
@@ -239,17 +237,15 @@ final class MserEvaluationNode< T extends Type< T > >
 	 */
 	private boolean computeMserScore( final ComputeDelta< T > delta, final Comparator< T > comparator, final boolean isIntermediate )
 	{
-		// we are looking for a precursor node with
-		// value == (this.value - delta)
+		// we are looking for a precursor node with value == (this.value - delta)
 		final T valueMinus = delta.valueMinusDelta( value );
 
 		// go back in history until we find a node with (value <= valueMinus)
 		MserEvaluationNode< T > node = historyChild;
-		while ( node != null && comparator.compare( node.value, valueMinus ) > 0 )
+		while ( node != null  &&  comparator.compare( node.value, valueMinus ) > 0 )
 			node = node.historyChild;
 		if ( node == null )
-			// we cannot compute the mser score because the history is too
-			// short.
+			// we cannot compute the mser score because the history is too short.
 			return false;
 		if ( isIntermediate && comparator.compare( node.value, valueMinus ) == 0 && node.historyChild != null )
 			node = node.historyChild;
@@ -273,7 +269,7 @@ final class MserEvaluationNode< T extends Type< T > >
 				below = below.historyChild;
 			if ( below.isScoreValid )
 			{
-				below = below.historyChild;
+					below = below.historyChild;
 				if ( ( score <= below.score ) && ( score < parent.score ) )
 					tree.foundNewMinimum( this );
 			}
@@ -281,9 +277,8 @@ final class MserEvaluationNode< T extends Type< T > >
 			{
 				final T valueMinus = delta.valueMinusDelta( value );
 				if ( comparator.compare( valueMinus, below.value ) > 0 )
-					// we are just above the bottom of a branch and this
-					// components value is high enough above the bottom value to
-					// make its score=0.
+					// we are just above the bottom of a branch and this components
+					// value is high enough above the bottom value to make its score=0.
 					// so let's pretend we found a minimum here...
 					tree.foundNewMinimum( this );
 			}

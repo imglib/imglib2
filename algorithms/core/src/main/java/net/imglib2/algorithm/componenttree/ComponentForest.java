@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,48 +33,23 @@
 
 package net.imglib2.algorithm.componenttree;
 
-import java.util.List;
-
-import net.imglib2.Localizable;
+import java.util.Set;
 
 /**
- * Represents a connected component and a node in a {@link ComponentTree}. The
- * child and parent nodes can be accessed by {@link #getChildren()} and
- * {@link #getParent()}. The set of pixels can be accessed by iterating (
- * {@link #iterator()}) the component. The threshold value that created the
- * component (extremal region) can be obtained by {@link #value()}.
+ * A component forest.
  * 
- * @author Florian Jug
+ * @param <C>
+ *            component type
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Florian Jug
  */
-public interface Component< T, C extends Component< T, C > > extends Iterable< Localizable >
+public interface ComponentForest< C extends Component< ?, C > >
 {
 	/**
-	 * Get the number of pixels in the connected component.
+	 * Get the set of root nodes of this component forest.
 	 * 
-	 * @return number of pixels in the connected component.
+	 * @return set of roots.
 	 */
-	public long size();
-
-	/**
-	 * Get the image threshold that created the connected component (extremal
-	 * region).
-	 * 
-	 * @return the image threshold that created the connected component.
-	 */
-	public T value();
-
-	/**
-	 * Get the parent of this node in the {@link ComponentTree}.
-	 * 
-	 * @return the parent of this node in the {@link ComponentTree}.
-	 */
-	public C getParent();
-
-	/**
-	 * Get the children of this node in the {@link ComponentTree}.
-	 * 
-	 * @return the children of this node in the {@link ComponentTree}.
-	 */
-	public List< C > getChildren();
+	public Set< C > roots();
 }

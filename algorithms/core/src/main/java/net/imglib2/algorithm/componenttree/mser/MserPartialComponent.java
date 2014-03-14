@@ -31,24 +31,28 @@
  * #L%
  */
 
-package net.imglib2.algorithm.componenttree.pixellist;
+package net.imglib2.algorithm.componenttree.mser;
 
 import java.util.ArrayList;
 
 import net.imglib2.Localizable;
-import net.imglib2.algorithm.componenttree.Component;
+import net.imglib2.algorithm.componenttree.PartialComponent;
+import net.imglib2.algorithm.componenttree.pixellist.PixelList;
 import net.imglib2.type.Type;
 
 /**
- * Implementation of {@link Component} that stores a list of associated pixels
- * in a {@link PixelList}.
- * 
+ * Implementation of {@link PartialComponent} that stores a list of associated pixels
+ * in a {@link PixelList}, maintains running sums over pixel positions to
+ * compute mean and covariance. It keeps track of which components were merged
+ * into this since it was last emitted (this is used to establish region size
+ * history).
+ *
  * @param <T>
  *            value type of the input image.
- * 
+ *
  * @author Tobias Pietzsch
  */
-final class PixelListComponentIntermediate< T extends Type< T > > implements Component< T >
+final class MserPartialComponent< T extends Type< T > > implements PartialComponent< T, MserPartialComponent< T > >
 {
 	/**
 	 * Threshold value of the connected component.
@@ -61,38 +65,68 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 	final PixelList pixelList;
 
 	/**
-	 * A list of PixelListComponentIntermediate merged into this one since it
-	 * was last emitted. (For building up component tree.)
+	 * number of dimensions in the image.
 	 */
-	final ArrayList< PixelListComponentIntermediate< T > > children;
+	final int n;
 
 	/**
-	 * The PixelListComponent assigned to this PixelListComponentIntermediate
-	 * when it was last emitted. (For building up component tree.)
+	 * sum of pixel positions (x, y, z, ...).
 	 */
-	PixelListComponent< T > emittedComponent;
+	final double[] sumPos;
+
+	/**
+	 * sum of independent elements of outer product of position (xx, xy, xz, ..., yy, yz, ..., zz, ...).
+	 */
+	final double[] sumSquPos;
+
+	private final long[] tmp;
+
+	/**
+	 * A list of {@link MserPartialComponent} merged into this one since it
+	 * was last emitted. (For building up MSER evaluation structure.)
+	 */
+	ArrayList< MserPartialComponent< T > > children;
+
+	/**
+	 * The {@link MserEvaluationNode} assigned to this
+	 * {@link MserPartialComponent} when it was last emitted. (For building up
+	 * MSER evaluation structure.)
+	 */
+	MserEvaluationNode< T > evaluationNode;
 
 	/**
 	 * Create new empty component.
-	 * 
+	 *
 	 * @param value
 	 *            (initial) threshold value {@see #getValue()}.
 	 * @param generator
-	 *            the {@link PixelListComponentGenerator#linkedList} is used to
-	 *            store the {@link #pixelList}.
+	 *            the {@link MserPartialComponentGenerator#linkedList} is used to store
+	 *            the {@link #pixelList}.
 	 */
-	PixelListComponentIntermediate( final T value, final PixelListComponentGenerator< T > generator )
+	MserPartialComponent( final T value, final MserPartialComponentGenerator< T > generator )
 	{
 		pixelList = new PixelList( generator.linkedList.randomAccess(), generator.dimensions );
+		n = generator.dimensions.length;
+		sumPos = new double[ n ];
+		sumSquPos = new double[ ( n * (n+1) ) / 2 ];
 		this.value = value.copy();
-		children = new ArrayList< PixelListComponentIntermediate< T > >();
-		emittedComponent = null;
+		this.children = new ArrayList< MserPartialComponent< T > >();
+		this.evaluationNode = null;
+		tmp = new long[ n ];
 	}
 
 	@Override
 	public void addPosition( final Localizable position )
 	{
 		pixelList.addPosition( position );
+		position.localize( tmp );
+		int k = 0;
+		for ( int i = 0; i < n; ++i )
+		{
+			sumPos[ i ] += tmp[ i ];
+			for ( int j = i; j < n; ++j )
+				sumSquPos[ k++ ] += tmp[ i ] * tmp[ j ];
+		}
 	}
 
 	@Override
@@ -108,11 +142,14 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 	}
 
 	@Override
-	public void merge( final Component< T > component )
+	public void merge( final MserPartialComponent< T > component )
 	{
-		final PixelListComponentIntermediate< T > c = ( PixelListComponentIntermediate< T > ) component;
-		pixelList.merge( c.pixelList );
-		children.add( c );
+		pixelList.merge( component.pixelList );
+		for ( int i = 0; i < sumPos.length; ++i )
+			sumPos[ i ] += component.sumPos[ i ];
+		for ( int i = 0; i < sumSquPos.length; ++i )
+			sumSquPos[ i ] += component.sumSquPos[ i ];
+		children.add( component );
 	}
 
 	@Override
@@ -133,5 +170,35 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 			s += l.toString();
 		}
 		return s + "}";
+	}
+
+	/**
+	 * Get the number of pixels in the component.
+	 *
+	 * @return number of pixels in the component.
+	 */
+	long size()
+	{
+		return pixelList.size();
+	}
+
+	/**
+	 * Get the {@link MserEvaluationNode} assigned to this
+	 * {@link MserPartialComponent} when it was last emitted.
+	 *
+	 * @return {@link MserEvaluationNode} last emitted from the component.
+	 */
+	MserEvaluationNode< T > getEvaluationNode()
+	{
+		return evaluationNode;
+	}
+
+	/**
+	 * Set the {@link MserEvaluationNode} created from this
+	 * {@link MserPartialComponent} when it is emitted.
+	 */
+	void setEvaluationNode( final MserEvaluationNode< T > node )
+	{
+		evaluationNode = node;
 	}
 }
