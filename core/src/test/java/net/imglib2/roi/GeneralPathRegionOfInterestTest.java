@@ -130,6 +130,30 @@ public class GeneralPathRegionOfInterestTest
 		}
 	}
 
+	@Test
+	public void testOnePixelWideRoiIteration()
+	{
+		final double x0 = 6, y0 = 7, height = 5;
+		final IterableRegionOfInterest roi = makeOnePixelWideRoi( x0, y0, height );
+
+		final long imgHeight = ( int ) Math.ceil( x0 + 1 + 5 );
+		final long imgWidth = ( int ) Math.ceil( y0 + height + 5 );
+
+		final RandomAccessible< BitType > randomAccessible = new ArrayImgFactory< BitType >().create( new long[] { imgWidth, imgHeight }, new BitType() );
+		final IterableInterval< BitType > interval = roi.getIterableIntervalOverROI( randomAccessible );
+		final Cursor< BitType > cursor = interval.localizingCursor();
+
+		/*
+		 * This iteration can cause an ArrayIndexOutOfBoundsException if {@link
+		 * GeneralPathRegionOfInterest#ensureStripes()} allocates less space
+		 * than needed for saving states.
+		 */
+		while ( cursor.hasNext() )
+		{
+			cursor.fwd();
+		}
+	}
+
 	private double getDistance( final double x0, final double y0,
 			final double x1, final double y1 )
 	{
@@ -162,6 +186,26 @@ public class GeneralPathRegionOfInterestTest
 				radius, x0, y0 + radius );
 		path.curveTo( x0 + controlDistance, y0 + radius, x0 + radius, y0 +
 				controlDistance, x0 + radius, y0 );
+		path.closePath();
+
+		final GeneralPathRegionOfInterest roi = new GeneralPathRegionOfInterest();
+		roi.setGeneralPath( path );
+
+		return roi;
+	}
+
+	/**
+	 * Generate a one pixel wide GeneralPathRegionOfInterest.
+	 */
+	private GeneralPathRegionOfInterest makeOnePixelWideRoi( final double x0,
+			final double y0, final double height )
+	{
+		final GeneralPath path = new GeneralPath();
+
+		path.moveTo( x0, y0 );
+		path.lineTo( x0 + 1d, y0 );
+		path.lineTo( x0 + 1d, y0 + height );
+		path.lineTo( x0, y0 + height );
 		path.closePath();
 
 		final GeneralPathRegionOfInterest roi = new GeneralPathRegionOfInterest();
