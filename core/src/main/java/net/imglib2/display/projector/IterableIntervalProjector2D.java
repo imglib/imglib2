@@ -53,7 +53,7 @@ import net.imglib2.view.Views;
  * @param <A>
  * @param <B>
  */
-public class Projector2D< A, B > extends AbstractProjector2D< A, B >
+public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D< A, B >
 {
 
 	final protected Converter< ? super A, B > converter;
@@ -84,7 +84,7 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 	 *            a converter that is applied to each point in the plain. This
 	 *            can e.g. be used for normalization, conversions, ...
 	 */
-	public Projector2D( final int dimX, final int dimY, final RandomAccessible< A > source, final IterableInterval< B > target, final Converter< ? super A, B > converter )
+	public IterableIntervalProjector2D( final int dimX, final int dimY, final RandomAccessible< A > source, final IterableInterval< B > target, final Converter< ? super A, B > converter )
 	{
 		super( source.numDimensions() );
 		this.dimX = dimX;
@@ -127,7 +127,7 @@ public class Projector2D< A, B > extends AbstractProjector2D< A, B >
 				converter.convert( sourceCursor.next(), targetCursor.next() );
 			}
 		}
-		else
+		else 
 		{
 			// use localizing cursor
 			final RandomAccess< A > sourceRandomAccess = source.randomAccess();

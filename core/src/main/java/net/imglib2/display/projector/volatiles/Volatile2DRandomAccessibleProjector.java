@@ -40,7 +40,7 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Volatile;
 import net.imglib2.converter.Converter;
-import net.imglib2.display.projector.Projector2D;
+import net.imglib2.display.projector.IterableIntervalProjector2D;
 import net.imglib2.view.Views;
 
 /**
@@ -50,7 +50,7 @@ import net.imglib2.view.Views;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class Volatile2DRandomAccessibleProjector< T, A extends Volatile< T >, B > extends Projector2D< A, B >
+public class Volatile2DRandomAccessibleProjector< T, A extends Volatile< T >, B > extends IterableIntervalProjector2D< A, B >
 {
 	protected boolean valid = false;
 
