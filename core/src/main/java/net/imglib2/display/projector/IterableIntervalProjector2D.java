@@ -34,6 +34,7 @@ package net.imglib2.display.projector;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
+import net.imglib2.FlatIterationOrder;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -127,7 +128,35 @@ public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D< A,
 				converter.convert( sourceCursor.next(), targetCursor.next() );
 			}
 		}
-		else 
+		else if ( target.iterationOrder() instanceof FlatIterationOrder )
+		{
+
+			final FinalInterval sourceInterval = new FinalInterval( min, max );
+
+			// use localizing cursor
+			final RandomAccess< A > sourceRandomAccess = source.randomAccess( sourceInterval );
+			sourceRandomAccess.setPosition( position );
+
+			final long cr = -target.dimension( dimX );
+
+			final long width = target.dimension( dimX );
+			final long height = target.dimension( dimY );
+
+			sourceRandomAccess.setPosition( min );
+			for ( long y = 0; y < height; ++y )
+			{
+				for ( long x = 0; x < width; ++x )
+				{
+					converter.convert( sourceRandomAccess.get(), targetCursor.get() );
+					sourceRandomAccess.fwd( dimX );
+					targetCursor.fwd();
+				}
+				sourceRandomAccess.move( cr, dimX );
+				sourceRandomAccess.fwd( dimY );
+			}
+
+		}
+		else
 		{
 			// use localizing cursor
 			final RandomAccess< A > sourceRandomAccess = source.randomAccess();
