@@ -130,7 +130,7 @@ public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D< A,
 		}
 		else if ( target.iterationOrder() instanceof FlatIterationOrder )
 		{
-
+			targetCursor.fwd();
 			final FinalInterval sourceInterval = new FinalInterval( min, max );
 
 			// use localizing cursor
