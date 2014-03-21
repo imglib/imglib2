@@ -68,6 +68,19 @@ public class BenchmarkHelper
 	}
 
 	/**
+	 * Compute minimum of a list of {@link Long}s.
+	 * 
+	 * @param values
+	 *            list of values.
+	 * @return minimum of values.
+	 */
+	public static Long best( final ArrayList< Long > values )
+	{
+		Collections.sort( values );
+		return values.get( 0 );
+	}
+
+	/**
 	 * Run a benchmark numRuns times and record the milliseconds taken for each
 	 * run.
 	 * 
@@ -120,6 +133,7 @@ public class BenchmarkHelper
 			System.out.println();
 		}
 		System.out.println( "median: " + median( times ) + " ms" );
+		System.out.println( "best: " + best( times ) + " ms" );
 		System.out.println();
 	}
 }
