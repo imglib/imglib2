@@ -116,13 +116,11 @@ public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D< A,
 		// order fits in the case of one sized dims. Tobi?
 		final IterableInterval< A > ii = Views.iterable( Views.interval( source, new FinalInterval( min, max ) ) );
 
-		final Cursor< B > targetCursor = target.localizingCursor();
 		final Cursor< A > sourceCursor = ii.cursor();
 
 		if ( target.iterationOrder().equals( ii.iterationOrder() ) && !( sourceCursor instanceof RandomAccessibleIntervalCursor ) )
 		{
-			// use cursors
-
+			final Cursor< B > targetCursor = target.cursor();
 			while ( targetCursor.hasNext() )
 			{
 				converter.convert( sourceCursor.next(), targetCursor.next() );
@@ -130,6 +128,7 @@ public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D< A,
 		}
 		else if ( target.iterationOrder() instanceof FlatIterationOrder )
 		{
+			final Cursor< B > targetCursor = target.cursor();
 			targetCursor.fwd();
 			final FinalInterval sourceInterval = new FinalInterval( min, max );
 
@@ -158,6 +157,8 @@ public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D< A,
 		}
 		else
 		{
+			final Cursor< B > targetCursor = target.localizingCursor();
+			
 			// use localizing cursor
 			final RandomAccess< A > sourceRandomAccess = source.randomAccess();
 			sourceRandomAccess.setPosition( position );
