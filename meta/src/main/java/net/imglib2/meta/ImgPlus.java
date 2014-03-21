@@ -137,6 +137,7 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 	 * appropriate {@link Img} implementation such as {@link ArrayImg}).
 	 * </p>
 	 */
+	@Override
 	public Img<T> getImg() {
 		return img;
 	}
