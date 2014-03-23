@@ -33,6 +33,9 @@
 
 package net.imglib2.algorithm.gauss3;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.exception.IncompatibleTypeException;
@@ -120,7 +123,11 @@ public final class Gauss3
 	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target ) throws IncompatibleTypeException
 	{
 		final int numthreads = Runtime.getRuntime().availableProcessors();
-		gauss( sigma, source, target, numthreads );
+		final ExecutorService service = Executors.newFixedThreadPool( numthreads );
+		
+		gauss( sigma, source, target, service );
+		
+		service.shutdown();
 	}
 
 	/**
@@ -144,7 +151,7 @@ public final class Gauss3
 	 * @param target
 	 *            target image
 	 * @param numthreads
-	 *            how many threads to use for the computation.
+	 *            number of threads used for multi-threading
 	 * @param <S>
 	 *            source type
 	 * @param <T>
@@ -153,10 +160,52 @@ public final class Gauss3
 	 *             if source and target type are not compatible (they must be
 	 *             either both {@link RealType RealTypes} or the same type).
 	 */
-	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final int numthreads ) throws IncompatibleTypeException
+	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final int numThreads ) throws IncompatibleTypeException
 	{
 		final double[][] halfkernels = halfkernels( sigma );
-		SeparableSymmetricConvolution.convolve( halfkernels, source, target, numthreads );
+		
+		final ExecutorService service = Executors.newFixedThreadPool( numThreads );
+		
+		SeparableSymmetricConvolution.convolve( halfkernels, source, target, service );
+		
+		service.shutdown();
+	}
+
+	
+	/**
+	 * Apply Gaussian convolution to source and write the result to output.
+	 * In-place operation (source==target) is supported.
+	 * 
+	 * <p>
+	 * If the target type T is {@link DoubleType}, all calculations are done in
+	 * double precision. For all other target {@link RealType RealTypes} float
+	 * precision is used. General {@link NumericType NumericTypes} are computed
+	 * in their own precision. The source type S and target type T are either
+	 * both {@link RealType RealTypes} or both the same type.
+	 * 
+	 * @param sigma
+	 *            standard deviation in every dimension.
+	 * @param source
+	 *            source image, must be sufficiently padded (e.g.
+	 *            {@link Views#extendMirrorSingle(RandomAccessibleInterval)}) to
+	 *            provide values for the target interval plus a border of half
+	 *            the kernel size.
+	 * @param target
+	 *            target image
+	 * @param service
+	 *            service providing threads for multi-threading
+	 * @param <S>
+	 *            source type
+	 * @param <T>
+	 *            target type
+	 * @throws IncompatibleTypeException
+	 *             if source and target type are not compatible (they must be
+	 *             either both {@link RealType RealTypes} or the same type).
+	 */
+	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ExecutorService service ) throws IncompatibleTypeException
+	{
+		final double[][] halfkernels = halfkernels( sigma );
+		SeparableSymmetricConvolution.convolve( halfkernels, source, target, service );
 	}
 
 	public static double[][] halfkernels( final double[] sigma )
