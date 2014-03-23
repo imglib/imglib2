@@ -41,14 +41,14 @@ import net.imglib2.type.NativeType;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
-public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> implements NativeType<Unsigned12BitType>
+public class Unsigned12BitType extends AbstractIntegerType< Unsigned12BitType > implements NativeType< Unsigned12BitType >
 {
 	private int i = 0;
 
-	final protected NativeImg<Unsigned12BitType, ? extends BitAccess> img;
+	final protected NativeImg< Unsigned12BitType, ? extends BitAccess > img;
 
 	// the adresses of the bits that we store
 	int j1, j2, j3, j4, j5, j6, j7, j8, j9, j10, j11, j12;
@@ -57,7 +57,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	protected BitAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public Unsigned12BitType( final NativeImg<Unsigned12BitType, ? extends BitAccess> bitStorage )
+	public Unsigned12BitType( final NativeImg< Unsigned12BitType, ? extends BitAccess > bitStorage )
 	{
 		img = bitStorage;
 		updateIndex( 0 );
@@ -81,13 +81,16 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	}
 
 	// this is the constructor if you want it to be a variable
-	public Unsigned12BitType() { this( (short)0 ); }
+	public Unsigned12BitType()
+	{
+		this( ( short ) 0 );
+	}
 
 	@Override
-	public NativeImg<Unsigned12BitType, ? extends BitAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned12BitType> storageFactory, final long dim[] )
+	public NativeImg< Unsigned12BitType, ? extends BitAccess > createSuitableNativeImg( final NativeImgFactory< Unsigned12BitType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<Unsigned12BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 12 );
+		final NativeImg< Unsigned12BitType, ? extends BitAccess > container = storageFactory.createBitInstance( dim, 12 );
 
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );
@@ -99,62 +102,106 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	}
 
 	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
+	}
 
 	@Override
-	public Unsigned12BitType duplicateTypeOnSameNativeImg() { return new Unsigned12BitType( img ); }
+	public Unsigned12BitType duplicateTypeOnSameNativeImg()
+	{
+		return new Unsigned12BitType( img );
+	}
 
 	public short get()
 	{
 		short value = 0;
 
-		if ( dataAccess.getValue( j1 ) ) ++value;
-		if ( dataAccess.getValue( j2 ) ) value += 2;
-		if ( dataAccess.getValue( j3 ) ) value += 4;
-		if ( dataAccess.getValue( j4 ) ) value += 8;
-		if ( dataAccess.getValue( j5 ) ) value += 16;
-		if ( dataAccess.getValue( j6 ) ) value += 32;
-		if ( dataAccess.getValue( j7 ) ) value += 64;
-		if ( dataAccess.getValue( j8 ) ) value += 128;
-		if ( dataAccess.getValue( j9 ) ) value += 256;
-		if ( dataAccess.getValue( j10 ) ) value += 512;
-		if ( dataAccess.getValue( j11 ) ) value += 1024;
-		if ( dataAccess.getValue( j12 ) ) value += 2048;
+		if ( dataAccess.getValue( j1 ) )
+			++value;
+		if ( dataAccess.getValue( j2 ) )
+			value += 2;
+		if ( dataAccess.getValue( j3 ) )
+			value += 4;
+		if ( dataAccess.getValue( j4 ) )
+			value += 8;
+		if ( dataAccess.getValue( j5 ) )
+			value += 16;
+		if ( dataAccess.getValue( j6 ) )
+			value += 32;
+		if ( dataAccess.getValue( j7 ) )
+			value += 64;
+		if ( dataAccess.getValue( j8 ) )
+			value += 128;
+		if ( dataAccess.getValue( j9 ) )
+			value += 256;
+		if ( dataAccess.getValue( j10 ) )
+			value += 512;
+		if ( dataAccess.getValue( j11 ) )
+			value += 1024;
+		if ( dataAccess.getValue( j12 ) )
+			value += 2048;
 
 		return value;
 	}
+
 	public void set( final short value )
 	{
-		dataAccess.setValue( j1, (value & 1) == 1 );
-		dataAccess.setValue( j2, (value & 2) == 2 );
-		dataAccess.setValue( j3, (value & 4) == 4 );
-		dataAccess.setValue( j4, (value & 8) == 8 );
-		dataAccess.setValue( j5, (value & 16) == 16 );
-		dataAccess.setValue( j6, (value & 32) == 32 );
-		dataAccess.setValue( j7, (value & 64) == 64 );
-		dataAccess.setValue( j8, (value & 128) == 128 );
-		dataAccess.setValue( j9, (value & 256) == 256 );
-		dataAccess.setValue( j10, (value & 512) == 512 );
-		dataAccess.setValue( j11, (value & 1024) == 1024 );
-		dataAccess.setValue( j12, (value & 2048) == 2048 );
+		dataAccess.setValue( j1, ( value & 1 ) == 1 );
+		dataAccess.setValue( j2, ( value & 2 ) == 2 );
+		dataAccess.setValue( j3, ( value & 4 ) == 4 );
+		dataAccess.setValue( j4, ( value & 8 ) == 8 );
+		dataAccess.setValue( j5, ( value & 16 ) == 16 );
+		dataAccess.setValue( j6, ( value & 32 ) == 32 );
+		dataAccess.setValue( j7, ( value & 64 ) == 64 );
+		dataAccess.setValue( j8, ( value & 128 ) == 128 );
+		dataAccess.setValue( j9, ( value & 256 ) == 256 );
+		dataAccess.setValue( j10, ( value & 512 ) == 512 );
+		dataAccess.setValue( j11, ( value & 1024 ) == 1024 );
+		dataAccess.setValue( j12, ( value & 2048 ) == 2048 );
 	}
 
 	@Override
-	public int getInteger(){ return get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ) { set( (short)f ); }
-	@Override
-	public void setInteger( final long f ) { set( (short)f ); }
+	public int getInteger()
+	{
+		return get();
+	}
 
 	@Override
-	public double getMaxValue() { return 4095; }
-	@Override
-	public double getMinValue()  { return 0; }
+	public long getIntegerLong()
+	{
+		return get();
+	}
 
 	@Override
-	public int getIndex() { return i; }
+	public void setInteger( final int f )
+	{
+		set( ( short ) f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( ( short ) f );
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return 4095;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getIndex()
+	{
+		return i;
+	}
 
 	@Override
 	public void updateIndex( final int index )
@@ -191,6 +238,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 		j11 += 12;
 		j12 += 12;
 	}
+
 	@Override
 	public void incIndex( final int increment )
 	{
@@ -210,6 +258,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 		j11 += inc12;
 		j12 += inc12;
 	}
+
 	@Override
 	public void decIndex()
 	{
@@ -227,6 +276,7 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 		j11 -= 12;
 		j12 -= 12;
 	}
+
 	@Override
 	public void decIndex( final int decrement )
 	{
@@ -248,14 +298,26 @@ public class Unsigned12BitType extends AbstractIntegerType<Unsigned12BitType> im
 	}
 
 	@Override
-	public Unsigned12BitType createVariable(){ return new Unsigned12BitType(); }
+	public Unsigned12BitType createVariable()
+	{
+		return new Unsigned12BitType();
+	}
 
 	@Override
-	public Unsigned12BitType copy(){ return new Unsigned12BitType( get() ); }
+	public Unsigned12BitType copy()
+	{
+		return new Unsigned12BitType( get() );
+	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public int getEntitiesPerPixel()
+	{
+		return 1;
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 12; }
+	public int getBitsPerPixel()
+	{
+		return 12;
+	}
 }

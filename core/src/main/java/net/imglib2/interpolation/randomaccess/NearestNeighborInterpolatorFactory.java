@@ -55,7 +55,7 @@ public class NearestNeighborInterpolatorFactory< T > implements InterpolatorFact
 	{
 		return new NearestNeighborInterpolator< T >( randomAccessible );
 	}
-	
+
 	/**
 	 * For now, ignore the {@link RealInterval} and return
 	 * {@link #create(RandomAccessible)}.

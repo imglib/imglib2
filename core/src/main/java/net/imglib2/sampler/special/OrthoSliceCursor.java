@@ -44,17 +44,17 @@ import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.type.Type;
 
 /**
- * TODO: Remove or fix (currently assumes that the underlying RandomAccessibleInterval has min=0).
- *
- * Generic {@link Iterator} for orthogonal 2d-slices.  This implementation
+ * TODO: Remove or fix (currently assumes that the underlying
+ * RandomAccessibleInterval has min=0).
+ * 
+ * Generic {@link Iterator} for orthogonal 2d-slices. This implementation
  * iterates row by row from top left to bottom right mapping <em>x</em> and
- * <em>y</em> to two arbitrary dimensions using a
- * {@link RandomAccess} provided either directly or through an
- * {@link Img}.  While, for most {@link Img Containers}, this is the
- * sufficient implementation, sometimes, a different iteration order is
- * required.  Such {@link Img Containers} are expected to provide their
- * own adapted implementation.
- *
+ * <em>y</em> to two arbitrary dimensions using a {@link RandomAccess} provided
+ * either directly or through an {@link Img}. While, for most {@link Img
+ * Containers}, this is the sufficient implementation, sometimes, a different
+ * iteration order is required. Such {@link Img Containers} are expected to
+ * provide their own adapted implementation.
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -64,28 +64,33 @@ public class OrthoSliceCursor< T extends Type< T > > extends AbstractWrappedInte
 {
 	/* index of x and y dimensions */
 	final protected int x, y;
+
 	final protected long w, h, maxX, maxY;
+
 	protected boolean initialState;
 
 	final protected RandomAccess< T > sampler;
 
 	/*
-	private static long[] intToLong( final int[] i )
-	{
-		final long[] l = new long[ i.length ];
-
-		for ( int d = 0; d < i.length; ++d )
-			l[ d ] = i[ d ];
-
-		return l;
-	}
-	*/
+	 * private static long[] intToLong( final int[] i ) { final long[] l = new
+	 * long[ i.length ];
+	 * 
+	 * for ( int d = 0; d < i.length; ++d ) l[ d ] = i[ d ];
+	 * 
+	 * return l; }
+	 */
 
 	/**
-	 * @param f The {@link RandomAccessible} and {@link Interval} object, such as an {@link Img}.
-	 * @param x One of the two dimensions of the orthoslice plane.
-	 * @param y The other dimension of the orthoslice plane.
-	 * @param position The starting point for the sampler, that is, the offset to the first value to consider.
+	 * @param f
+	 *            The {@link RandomAccessible} and {@link Interval} object, such
+	 *            as an {@link Img}.
+	 * @param x
+	 *            One of the two dimensions of the orthoslice plane.
+	 * @param y
+	 *            The other dimension of the orthoslice plane.
+	 * @param position
+	 *            The starting point for the sampler, that is, the offset to the
+	 *            first value to consider.
 	 */
 	public < F extends RandomAccessible< T > & Interval > OrthoSliceCursor( final F f, final int x, final int y, final long[] position )
 	{
@@ -203,8 +208,8 @@ public class OrthoSliceCursor< T extends Type< T > > extends AbstractWrappedInte
 
 	/**
 	 * We {@link PlanarAccess} to the end of the line, a state that has to be
-	 * checked anyways. In the fwd() call we then check for this special case
-	 * if it was maybe the initialState and set it to (0,x) (0,y)
+	 * checked anyways. In the fwd() call we then check for this special case if
+	 * it was maybe the initialState and set it to (0,x) (0,y)
 	 */
 	@Override
 	public void reset()
@@ -230,7 +235,8 @@ public class OrthoSliceCursor< T extends Type< T > > extends AbstractWrappedInte
 	}
 
 	@Override
-	public void remove() {}
+	public void remove()
+	{}
 
 	@Override
 	public OrthoSliceCursor< T > copy()

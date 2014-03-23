@@ -39,18 +39,18 @@ import net.imglib2.type.numeric.NumericType;
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class NLinearInterpolator3D< T extends NumericType< T > > extends NLinearInterpolator< T > 
-{	
+public class NLinearInterpolator3D< T extends NumericType< T > > extends NLinearInterpolator< T >
+{
 	protected NLinearInterpolator3D( final NLinearInterpolator3D< T > interpolator )
 	{
 		super( interpolator );
 	}
-	
+
 	protected NLinearInterpolator3D( final RandomAccessible< T > randomAccessible, final T type )
 	{
 		super( randomAccessible, type );
@@ -62,7 +62,10 @@ public class NLinearInterpolator3D< T extends NumericType< T > > extends NLinear
 	}
 
 	@Override
-	final public int numDimensions() { return 3; }
+	final public int numDimensions()
+	{
+		return 3;
+	}
 
 	@Override
 	protected void fillWeights()
@@ -75,15 +78,15 @@ public class NLinearInterpolator3D< T extends NumericType< T > > extends NLinear
 		final double w2Inv = 1.0d - w2;
 
 		weights[ 0 ] = w0Inv * w1Inv * w2Inv;
-		weights[ 1 ] = w0    * w1Inv * w2Inv;
-		weights[ 2 ] = w0Inv * w1    * w2Inv;
-		weights[ 3 ] = w0    * w1    * w2Inv;
+		weights[ 1 ] = w0 * w1Inv * w2Inv;
+		weights[ 2 ] = w0Inv * w1 * w2Inv;
+		weights[ 3 ] = w0 * w1 * w2Inv;
 		weights[ 4 ] = w0Inv * w1Inv * w2;
-		weights[ 5 ] = w0    * w1Inv * w2;
-		weights[ 6 ] = w0Inv * w1    * w2;
-		weights[ 7 ] = w0    * w1    * w2;
+		weights[ 5 ] = w0 * w1Inv * w2;
+		weights[ 6 ] = w0Inv * w1 * w2;
+		weights[ 7 ] = w0 * w1 * w2;
 	}
-	
+
 	@Override
 	public T get()
 	{
@@ -123,7 +126,7 @@ public class NLinearInterpolator3D< T extends NumericType< T > > extends NLinear
 
 		return accumulator;
 	}
-	
+
 	@Override
 	public NLinearInterpolator3D< T > copy()
 	{

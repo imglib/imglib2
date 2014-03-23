@@ -35,7 +35,7 @@ package net.imglib2;
 
 /**
  * A point is a location in EuclideanSpace.
- *
+ * 
  * @author ImgLib2 developers
  * @author Lee Kamentsky
  * @author Stephan Saalfeld
@@ -45,7 +45,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 {
 	/**
 	 * Protected constructor that can re-use the passed position array.
-	 *
+	 * 
 	 * @param position
 	 *            array used to store the position.
 	 * @param copy
@@ -58,7 +58,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 
 	/**
 	 * Create a point in <i>nDimensional</i> space initialized to 0,0,...
-	 *
+	 * 
 	 * @param n
 	 *            number of dimensions of the space
 	 */
@@ -70,7 +70,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	/**
 	 * Create a point at a definite location in a space of the dimensionality of
 	 * the position.
-	 *
+	 * 
 	 * @param position
 	 *            the initial position. The length of the array determines the
 	 *            dimensionality of the space.
@@ -83,7 +83,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	/**
 	 * Create a point at a definite location in a space of the dimensionality of
 	 * the position.
-	 *
+	 * 
 	 * @param position
 	 *            the initial position. The length of the array determines the
 	 *            dimensionality of the space.
@@ -97,7 +97,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	/**
 	 * Create a point using the position and dimensionality of a
 	 * {@link RealLocalizable}
-	 *
+	 * 
 	 * @param localizable
 	 *            the initial position. Its dimensionality determines the
 	 *            dimensionality of the space.
@@ -268,7 +268,7 @@ public class RealPoint extends AbstractRealLocalizable implements RealPositionab
 	/**
 	 * Create a point that stores its coordinates in the provided position
 	 * array.
-	 *
+	 * 
 	 * @param position
 	 *            array to use for storing the position.
 	 */

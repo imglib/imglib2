@@ -42,19 +42,19 @@ import net.imglib2.util.Util;
 
 /**
  * Coordinates out of image bounds are periodically repeated.
- *
+ * 
  * <pre>
  * Example:
- *
+ * 
  * width=4
- *
+ * 
  *                                  |<-inside->|
  * x:    -9 -8 -7 -6 -5 -4 -3 -2 -1  0  1  2  3  4  5  6  7  8  9
  * f(x):  3  0  1  2  3  0  1  2  3  0  1  2  3  0  1  2  3  0  1
  * </pre>
- *
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -190,7 +190,7 @@ public class OutOfBoundsPeriodic< T > extends AbstractLocalizable implements Out
 		if ( q == max[ d ] )
 			outOfBoundsRandomAccess.setPosition( min[ d ], d );
 		else
-			outOfBoundsRandomAccess.fwd( d  );
+			outOfBoundsRandomAccess.fwd( d );
 	}
 
 	@Override
@@ -209,7 +209,7 @@ public class OutOfBoundsPeriodic< T > extends AbstractLocalizable implements Out
 		if ( q == min[ d ] )
 			outOfBoundsRandomAccess.setPosition( max[ d ], d );
 		else
-			outOfBoundsRandomAccess.bck( d  );
+			outOfBoundsRandomAccess.bck( d );
 	}
 
 	@Override
@@ -275,7 +275,7 @@ public class OutOfBoundsPeriodic< T > extends AbstractLocalizable implements Out
 	@Override
 	public void setPosition( final int position, final int d )
 	{
-		setPosition( ( long )position, d );
+		setPosition( ( long ) position, d );
 	}
 
 	@Override

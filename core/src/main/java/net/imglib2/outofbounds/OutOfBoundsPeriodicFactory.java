@@ -38,9 +38,9 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 
 /**
- * Create appropriate strategies that virtually extend a {@link RandomAccessibleInterval}
- * periodically.
- *
+ * Create appropriate strategies that virtually extend a
+ * {@link RandomAccessibleInterval} periodically.
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>

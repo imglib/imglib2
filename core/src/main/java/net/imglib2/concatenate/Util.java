@@ -38,8 +38,8 @@ import java.util.ListIterator;
 
 /**
  * Utilities for manipulating lists of (pre-)concatenable objects.
- *
- *
+ * 
+ * 
  * @author Tobias Pietzsch
  */
 public class Util
@@ -62,7 +62,7 @@ public class Util
 	/**
 	 * Reduce a list of objects by iteratively pre/concatenating neighboring
 	 * objects if they support it.
-	 *
+	 * 
 	 * @param objects
 	 *            list of objects that will be reduced in place
 	 */

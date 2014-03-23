@@ -33,14 +33,14 @@
 
 package net.imglib2.histogram;
 
-
 /**
  * An interface for defining a bin mapping algorithm. Arbitrary values of type T
  * are mapped to long indices. There are also bounds testing methods.
- *  
+ * 
  * @author Barry DeZonia
  */
-public interface BinMapper1d<T> {
+public interface BinMapper1d< T >
+{
 
 	/**
 	 * Returns true if this bin mapping has bins on the ends of the distribution
@@ -56,52 +56,59 @@ public interface BinMapper1d<T> {
 	/**
 	 * Converts a data value to a long index within the bin distribution.
 	 */
-	long map(T value);
+	long map( T value );
 
 	/**
 	 * Gets the data value associated with the center of a bin.
 	 * 
 	 * @param binPos
-	 * @param value Output to contain center data value
+	 * @param value
+	 *            Output to contain center data value
 	 */
-	void getCenterValue(long binPos, T value);
+	void getCenterValue( long binPos, T value );
 
 	/**
 	 * Gets the data value associated with the left edge of a bin.
 	 * 
-	 * @param binPos Bin number of interest
-	 * @param value Output to contain left edge data value
+	 * @param binPos
+	 *            Bin number of interest
+	 * @param value
+	 *            Output to contain left edge data value
 	 */
-	void getLowerBound(long binPos, T value);
+	void getLowerBound( long binPos, T value );
 
 	/**
 	 * Gets the data value associated with the right edge of a bin.
 	 * 
-	 * @param binPos Bin number of interest
-	 * @param value Output to contain right edge data value
+	 * @param binPos
+	 *            Bin number of interest
+	 * @param value
+	 *            Output to contain right edge data value
 	 */
-	void getUpperBound(long binPos, T value);
+	void getUpperBound( long binPos, T value );
 
 	/**
 	 * Returns true if values matching the right edge data value for a given bin
 	 * are counted in the distribution. Basically is this bin interval closed on
 	 * the right or not.
 	 * 
-	 * @param binPos Bin number of interest
+	 * @param binPos
+	 *            Bin number of interest
 	 */
-	boolean includesUpperBound(long binPos);
+	boolean includesUpperBound( long binPos );
 
 	/**
 	 * Returns true if values matching the left edge data value for a given bin
 	 * are counted in the distribution. Basically is this bin interval closed on
 	 * the left or not.
 	 * 
-	 * @param binPos Bin number of interest
+	 * @param binPos
+	 *            Bin number of interest
 	 */
-	boolean includesLowerBound(long binPos);
+	boolean includesLowerBound( long binPos );
 
 	/**
 	 * Returns a copy of this BinMapper1d<T>.
 	 */
-	BinMapper1d<T> copy();
+	BinMapper1d< T > copy();
 }

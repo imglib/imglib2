@@ -37,18 +37,18 @@ import net.imglib2.type.numeric.NumericType;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
-public class SubtractNorm< A extends NumericType<A> > implements Function< A, A, A >
+public class SubtractNorm< A extends NumericType< A > > implements Function< A, A, A >
 {
 	final A normalizationFactor;
-	
+
 	public SubtractNorm( final A normalizationFactor )
 	{
 		this.normalizationFactor = normalizationFactor;
 	}
-	
+
 	@Override
 	public void compute( final A input1, final A input2, final A output )
 	{

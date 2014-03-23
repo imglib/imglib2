@@ -44,7 +44,7 @@ import net.imglib2.RandomAccessibleInterval;
 
 /**
  * TODO
- *
+ * 
  */
 abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S extends RandomAccessible< A > & IterableInterval< A > > extends AbstractWrappedInterval< S > implements IterableInterval< B >, RandomAccessibleInterval< B >
 {

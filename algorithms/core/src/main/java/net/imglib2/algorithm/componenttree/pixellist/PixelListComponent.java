@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,21 +37,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.imglib2.Localizable;
+import net.imglib2.algorithm.componenttree.Component;
 import net.imglib2.type.Type;
 
 /**
  * A connected component of the image thresholded at {@link #value()}. The set
  * of pixels can be accessed by iterating ({@link #iterator()}) the component.
- *
+ * 
  * This is a node in a {@link PixelListComponentTree}. The child and parent
  * nodes can be accessed by {@link #getChildren()} and {@link #getParent()}.
- *
+ * 
  * @param <T>
  *            value type of the input image.
- *
+ * 
  * @author Tobias Pietzsch
  */
-public final class PixelListComponent< T extends Type< T > > implements Iterable< Localizable >
+public final class PixelListComponent< T extends Type< T > > implements Component< T, PixelListComponent< T > >
 {
 	/**
 	 * child nodes in the {@link PixelListComponentTree}.
@@ -73,15 +74,15 @@ public final class PixelListComponent< T extends Type< T > > implements Iterable
 	 */
 	private final PixelList pixelList;
 
-	PixelListComponent( final PixelListComponentIntermediate< T > intermediate )
+	PixelListComponent( final PixelListPartialComponent< T > intermediate )
 	{
 		children = new ArrayList< PixelListComponent< T > >();
 		parent = null;
 		value = intermediate.getValue().copy();
 		pixelList = new PixelList( intermediate.pixelList );
-		if( intermediate.emittedComponent != null )
+		if ( intermediate.emittedComponent != null )
 			children.add( intermediate.emittedComponent );
-		for ( final PixelListComponentIntermediate< T > c : intermediate.children )
+		for ( final PixelListPartialComponent< T > c : intermediate.children )
 		{
 			children.add( c.emittedComponent );
 			c.emittedComponent.parent = this;
@@ -92,9 +93,10 @@ public final class PixelListComponent< T extends Type< T > > implements Iterable
 
 	/**
 	 * Get the image threshold that created the extremal region.
-	 *
+	 * 
 	 * @return the image threshold that created the extremal region.
 	 */
+	@Override
 	public T value()
 	{
 		return value;
@@ -102,9 +104,10 @@ public final class PixelListComponent< T extends Type< T > > implements Iterable
 
 	/**
 	 * Get the number of pixels in the extremal region.
-	 *
+	 * 
 	 * @return number of pixels in the extremal region.
 	 */
+	@Override
 	public long size()
 	{
 		return pixelList.size();
@@ -113,7 +116,7 @@ public final class PixelListComponent< T extends Type< T > > implements Iterable
 	/**
 	 * Get an iterator over the pixel locations ({@link Localizable}) in this
 	 * connected component.
-	 *
+	 * 
 	 * @return iterator over locations.
 	 */
 	@Override
@@ -124,9 +127,10 @@ public final class PixelListComponent< T extends Type< T > > implements Iterable
 
 	/**
 	 * Get the children of this node in the {@link PixelListComponentTree}.
-	 *
+	 * 
 	 * @return the children of this node in the {@link PixelListComponentTree}.
 	 */
+	@Override
 	public ArrayList< PixelListComponent< T > > getChildren()
 	{
 		return children;
@@ -134,9 +138,10 @@ public final class PixelListComponent< T extends Type< T > > implements Iterable
 
 	/**
 	 * Get the parent of this node in the {@link PixelListComponentTree}.
-	 *
+	 * 
 	 * @return the parent of this node in the {@link PixelListComponentTree}.
 	 */
+	@Override
 	public PixelListComponent< T > getParent()
 	{
 		return parent;

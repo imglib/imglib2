@@ -42,7 +42,7 @@ import net.imglib2.util.Util;
 /**
  * Repeat the boundary pixels. That is, for every out-of-bounds coordinate
  * {@link #get()} returns the nearest within-bounds pixel.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class OutOfBoundsBorder< T > extends AbstractLocalizable implements OutOfBounds< T >

@@ -38,15 +38,15 @@ import net.imglib2.RealPositionable;
 
 /**
  * Transforms 2D polar to cartesian coordinates.
- *
+ * 
  * The source coordinate <em>(r,&theta;)</em> is converted to the cartesian
  * target coordinate <em>(x,y)</em>.
- *
+ * 
  * For the inverse transform (cartesian to polar), the range of the computed
  * <em>&theta;</em> is <em>-pi</em> to <em>pi</em>.
- *
+ * 
  * TODO This can be a singleton
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class PolarToCartesianTransform2D implements InvertibleRealTransform
@@ -149,7 +149,7 @@ public class PolarToCartesianTransform2D implements InvertibleRealTransform
 	{
 		return inverse;
 	}
-	
+
 	@Override
 	public PolarToCartesianTransform2D copy()
 	{

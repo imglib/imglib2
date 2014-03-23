@@ -37,7 +37,7 @@ import net.imglib2.img.basictypeaccess.IntAccess;
 
 /**
  * IntAccess based on a {@link Ntree}<Integer>.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class NtreeIntAccess implements IntAccess

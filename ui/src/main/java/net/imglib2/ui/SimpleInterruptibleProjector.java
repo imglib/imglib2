@@ -51,12 +51,12 @@ import net.imglib2.ui.util.StopWatch;
  * <em>(x,y,0,...,0)</em>.
  * <p>
  * A specified number of threads is used for rendering.
- *
+ * 
  * @param <A>
  *            pixel type of the source {@link RandomAccessible}.
  * @param <B>
  *            pixel type of the target {@link RandomAccessibleInterval}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld
  */
@@ -77,7 +77,7 @@ public class SimpleInterruptibleProjector< A, B > extends AbstractInterruptibleP
 	/**
 	 * Create new projector with the given source and a converter from source to
 	 * target pixel type.
-	 *
+	 * 
 	 * @param source
 	 *            source pixels.
 	 * @param converter
@@ -103,7 +103,7 @@ public class SimpleInterruptibleProjector< A, B > extends AbstractInterruptibleP
 	 * Render the 2D target image by copying values from the source. Source can
 	 * have more dimensions than the target. Target coordinate <em>(x,y)</em> is
 	 * copied from source coordinate <em>(x,y,0,...,0)</em>.
-	 *
+	 * 
 	 * @param target
 	 * @param numThreads
 	 *            how many threads to use for rendering.
@@ -132,7 +132,7 @@ public class SimpleInterruptibleProjector< A, B > extends AbstractInterruptibleP
 		final int numTasks;
 		if ( numThreads > 1 )
 		{
-			numTasks = Math.max( numThreads * 10, height );
+			numTasks = Math.min( numThreads * 10, height );
 		}
 		else
 			numTasks = 1;
@@ -140,7 +140,7 @@ public class SimpleInterruptibleProjector< A, B > extends AbstractInterruptibleP
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
 			final long myMinY = min[ 1 ] + ( int ) ( taskNum * taskHeight );
-			final long myHeight = ( (taskNum == numTasks - 1 ) ? height : ( int ) ( ( taskNum + 1 ) * taskHeight ) ) - myMinY - min[ 1 ];
+			final long myHeight = ( ( taskNum == numTasks - 1 ) ? height : ( int ) ( ( taskNum + 1 ) * taskHeight ) ) - myMinY - min[ 1 ];
 
 			final Runnable r = new Runnable()
 			{
@@ -188,7 +188,7 @@ public class SimpleInterruptibleProjector< A, B > extends AbstractInterruptibleP
 
 		lastFrameRenderNanoTime = stopWatch.nanoTime();
 
-		return ! interrupted.get();
+		return !interrupted.get();
 	}
 
 	protected AtomicBoolean interrupted = new AtomicBoolean();

@@ -38,10 +38,10 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * {@link Cursor} on a {@link ListImg}.
- *
+ * 
  * @param <T>
  *            the pixel type
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>

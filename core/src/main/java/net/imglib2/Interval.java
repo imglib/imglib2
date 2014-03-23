@@ -34,17 +34,22 @@
 package net.imglib2;
 
 /**
- * <p>{x&isin;Z<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;<em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;<em>n</em>-1}}</p>
- *
- * <p>An {@link Interval} over the discrete source domain.  <em>Note</em>
- * that this does <em>not</em> imply that for <em>all</em> coordinates in the
- * {@link Interval} function values exist or can be generated.  It only
- * defines where the minimum and maximum source coordinates are.  E.g. an
- * {@link IterableInterval} has a limited number
- * of values and a source coordinate for each.  By that, minimum and maximum
- * are defined but the {@link Interval} does not define a value for all
- * coordinates in between.</p>
- *
+ * <p>
+ * {x&isin;Z<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;
+ * <em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;
+ * <em>n</em>-1}}
+ * </p>
+ * 
+ * <p>
+ * An {@link Interval} over the discrete source domain. <em>Note</em> that this
+ * does <em>not</em> imply that for <em>all</em> coordinates in the
+ * {@link Interval} function values exist or can be generated. It only defines
+ * where the minimum and maximum source coordinates are. E.g. an
+ * {@link IterableInterval} has a limited number of values and a source
+ * coordinate for each. By that, minimum and maximum are defined but the
+ * {@link Interval} does not define a value for all coordinates in between.
+ * </p>
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Stephan Preibisch
  */
@@ -52,7 +57,7 @@ public interface Interval extends RealInterval, Dimensions
 {
 	/**
 	 * Get the minimum in dimension d.
-	 *
+	 * 
 	 * @param d
 	 *            dimension
 	 * @return minimum in dimension d.
@@ -61,21 +66,21 @@ public interface Interval extends RealInterval, Dimensions
 
 	/**
 	 * Write the minimum of each dimension into long[].
-	 *
+	 * 
 	 * @param min
 	 */
 	public void min( long[] min );
 
 	/**
 	 * Sets a {@link Positionable} to the minimum of this {@link Interval}
-	 *
+	 * 
 	 * @param min
 	 */
 	public void min( Positionable min );
 
 	/**
 	 * Get the maximum in dimension d.
-	 *
+	 * 
 	 * @param d
 	 *            dimension
 	 * @return maximum in dimension d.
@@ -84,14 +89,14 @@ public interface Interval extends RealInterval, Dimensions
 
 	/**
 	 * Write the maximum of each dimension into long[].
-	 *
+	 * 
 	 * @param max
 	 */
 	public void max( long[] max );
 
 	/**
 	 * Sets a {@link Positionable} to the maximum of this {@link Interval}
-	 *
+	 * 
 	 * @param max
 	 */
 	public void max( Positionable max );

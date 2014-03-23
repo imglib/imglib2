@@ -35,7 +35,7 @@ package net.imglib2;
 
 /**
  * An element that can be positioned in n-dimensional real space.
- *
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -45,7 +45,7 @@ public interface RealPositionable extends Positionable
 {
 	/**
 	 * Move the element in one dimension for some distance.
-	 *  
+	 * 
 	 * @param distance
 	 * @param d
 	 */
@@ -53,7 +53,7 @@ public interface RealPositionable extends Positionable
 
 	/**
 	 * Move the element in one dimension for some distance.
-	 *  
+	 * 
 	 * @param distance
 	 * @param d
 	 */
@@ -66,7 +66,7 @@ public interface RealPositionable extends Positionable
 	 * @param localizable
 	 */
 	public void move( RealLocalizable localizable );
-	
+
 	/**
 	 * Move the element relative to its current location using a float[] as
 	 * distance vector.
@@ -74,7 +74,7 @@ public interface RealPositionable extends Positionable
 	 * @param distance
 	 */
 	public void move( float[] distance );
-	
+
 	/**
 	 * Move the element relative to its current location using a float[] as
 	 * distance vector.
@@ -82,36 +82,36 @@ public interface RealPositionable extends Positionable
 	 * @param distance
 	 */
 	public void move( double[] distance );
-	
+
 	/**
 	 * Place the element at the same location as a given {@link RealLocalizable}
 	 * 
 	 * @param localizable
 	 */
 	public void setPosition( RealLocalizable localizable );
-	
+
 	/**
 	 * Set the position of the element.
 	 * 
 	 * @param position
 	 */
 	public void setPosition( float position[] );
-	
+
 	/**
 	 * Set the position of the element.
 	 * 
 	 * @param position
 	 */
 	public void setPosition( double position[] );
-	
+
 	/**
 	 * Set the position of the element for one dimension.
 	 * 
 	 * @param position
 	 * @param d
 	 */
-	public void setPosition( float position, int d );		
-	
+	public void setPosition( float position, int d );
+
 	/**
 	 * Set the position of the element for one dimension.
 	 * 

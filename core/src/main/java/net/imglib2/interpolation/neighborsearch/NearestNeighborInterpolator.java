@@ -41,9 +41,9 @@ import net.imglib2.neighborsearch.NearestNeighborSearch;
 /**
  * {@link RealRandomAccess} to a {@link RandomAccess} by nearest neighbor
  * interpolation.
- *
+ * 
  * @param <T>
- *
+ * 
  * @author Pietzsch
  * @author Preibisch
  * @author Saalfeld

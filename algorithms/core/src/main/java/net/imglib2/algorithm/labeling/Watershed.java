@@ -39,7 +39,6 @@ import java.util.PriorityQueue;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.OutputAlgorithm;
-import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingOutOfBoundsRandomAccessFactory;
@@ -83,7 +82,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 
 		protected final List< U > labeling;
 
-		public PixelIntensity( long[] position, long[] dimensions, double intensity, long age, List< U > labeling )
+		public PixelIntensity( final long[] position, final long[] dimensions, final double intensity, final long age, final List< U > labeling )
 		{
 			long index = position[ 0 ];
 			long multiplier = dimensions[ 0 ];
@@ -100,7 +99,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 		}
 
 		@Override
-		public int compareTo( PixelIntensity< U > other )
+		public int compareTo( final PixelIntensity< U > other )
 		{
 			int result = Double.compare( intensity, other.intensity );
 			if ( result == 0 )
@@ -108,7 +107,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 			return result;
 		}
 
-		void getPosition( long[] position, long[] dimensions )
+		void getPosition( final long[] position, final long[] dimensions )
 		{
 			long idx = index;
 			for ( int i = 0; i < dimensions.length; i++ )
@@ -141,7 +140,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 	 *            the intensity image that defines the watershed landscape.
 	 *            Lower values will be labeled first.
 	 */
-	public void setIntensityImage( RandomAccessibleInterval< T > image )
+	public void setIntensityImage( final RandomAccessibleInterval< T > image )
 	{
 		this.image = image;
 	}
@@ -154,7 +153,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 	 *            space to be labeled. The seeded pixels will be similarly
 	 *            labeled in the output as will be their watershed neighbors.
 	 */
-	public void setSeeds( Labeling< L > seeds )
+	public void setSeeds( final Labeling< L > seeds )
 	{
 		this.seeds = seeds;
 	}
@@ -169,7 +168,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 	 *            8-connected (or N-dimensional equivalent) structuring element
 	 *            (all adjacent pixels + diagonals).
 	 */
-	public void setStructuringElement( long[][] structuringElement )
+	public void setStructuringElement( final long[][] structuringElement )
 	{
 		this.structuringElement = structuringElement;
 	}
@@ -180,7 +179,7 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 	 * 
 	 * @param outputLabeling
 	 */
-	public void setOutputLabeling( Labeling< L > outputLabeling )
+	public void setOutputLabeling( final Labeling< L > outputLabeling )
 	{
 		output = outputLabeling;
 	}
@@ -203,9 +202,9 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 
 		if ( output == null )
 		{
-			long[] dimensions = new long[ seeds.numDimensions() ];
+			final long[] dimensions = new long[ seeds.numDimensions() ];
 			seeds.dimensions( dimensions );
-			NativeImgLabeling< L, IntType > o = new NativeImgLabeling< L, IntType >( new ArrayImgFactory< IntType >().create( dimensions, new IntType() ) );
+			final NativeImgLabeling< L, IntType > o = new NativeImgLabeling< L, IntType >( new ArrayImgFactory< IntType >().create( dimensions, new IntType() ) );
 			output = o;
 		}
 		/*
@@ -214,29 +213,29 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 		 * maximum intensity if out of bounds so that in-bounds will be in a
 		 * deep valley.
 		 */
-		OutOfBoundsFactory< LabelingType< L >, Labeling< L >> factory = new LabelingOutOfBoundsRandomAccessFactory< L, Labeling< L >>();
-		OutOfBounds< LabelingType< L >> outputAccess = factory.create( output );
+		final OutOfBoundsFactory< LabelingType< L >, Labeling< L >> factory = new LabelingOutOfBoundsRandomAccessFactory< L, Labeling< L >>();
+		final OutOfBounds< LabelingType< L >> outputAccess = factory.create( output );
 
-		T maxVal = Views.iterable( image ).firstElement().createVariable();
+		final T maxVal = Views.iterable( image ).firstElement().createVariable();
 		maxVal.setReal( maxVal.getMaxValue() );
-		OutOfBoundsFactory< T, RandomAccessibleInterval< T >> oobImageFactory = new OutOfBoundsConstantValueFactory< T, RandomAccessibleInterval< T >>( maxVal );
-		OutOfBounds< T > imageAccess = oobImageFactory.create( image );
+		final OutOfBoundsFactory< T, RandomAccessibleInterval< T >> oobImageFactory = new OutOfBoundsConstantValueFactory< T, RandomAccessibleInterval< T >>( maxVal );
+		final OutOfBounds< T > imageAccess = oobImageFactory.create( image );
 
 		/*
 		 * Start by loading up a priority queue with the seeded pixels
 		 */
-		PriorityQueue< PixelIntensity< L >> pq = new PriorityQueue< PixelIntensity< L >>();
-		Cursor< LabelingType< L >> c = seeds.localizingCursor();
+		final PriorityQueue< PixelIntensity< L >> pq = new PriorityQueue< PixelIntensity< L >>();
+		final Cursor< LabelingType< L >> c = seeds.localizingCursor();
 
-		long[] dimensions = new long[ image.numDimensions() ];
+		final long[] dimensions = new long[ image.numDimensions() ];
 		output.dimensions( dimensions );
-		long[] position = new long[ image.numDimensions() ];
-		long[] destPosition = new long[ image.numDimensions() ];
+		final long[] position = new long[ image.numDimensions() ];
+		final long[] destPosition = new long[ image.numDimensions() ];
 		long age = 0;
 
 		while ( c.hasNext() )
 		{
-			LabelingType< L > tSrc = c.next();
+			final LabelingType< L > tSrc = c.next();
 			List< L > l = tSrc.getLabeling();
 			if ( l.isEmpty() )
 				continue;
@@ -248,18 +247,18 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 			outputAccess.setPosition( position );
 			if ( outputAccess.isOutOfBounds() )
 				continue;
-			LabelingType< L > tDest = outputAccess.get();
+			final LabelingType< L > tDest = outputAccess.get();
 			l = tDest.intern( l );
 			tDest.setLabeling( l );
-			double intensity = imageAccess.get().getRealDouble();
+			final double intensity = imageAccess.get().getRealDouble();
 			pq.add( new PixelIntensity< L >( position, dimensions, intensity, age++, l ) );
 		}
 		/*
 		 * Rework the structuring element into a series of consecutive offsets
 		 * so we can use Positionable.move to scan the image array.
 		 */
-		long[][] strelMoves = new long[ structuringElement.length ][];
-		long[] currentOffset = new long[ image.numDimensions() ];
+		final long[][] strelMoves = new long[ structuringElement.length ][];
+		final long[] currentOffset = new long[ image.numDimensions() ];
 		for ( int i = 0; i < structuringElement.length; i++ )
 		{
 			strelMoves[ i ] = new long[ image.numDimensions() ];
@@ -278,12 +277,12 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 		 */
 		while ( !pq.isEmpty() )
 		{
-			PixelIntensity< L > currentPI = pq.remove();
-			List< L > l = currentPI.getLabeling();
+			final PixelIntensity< L > currentPI = pq.remove();
+			final List< L > l = currentPI.getLabeling();
 			currentPI.getPosition( position, dimensions );
 			outputAccess.setPosition( position );
 			imageAccess.setPosition( position );
-			for ( long[] offset : strelMoves )
+			for ( final long[] offset : strelMoves )
 			{
 				outputAccess.move( offset );
 				imageAccess.move( offset );
@@ -291,11 +290,11 @@ public class Watershed< T extends RealType< T >, L extends Comparable< L >> impl
 					continue;
 				if ( imageAccess.isOutOfBounds() )
 					continue;
-				LabelingType< L > outputLabelingType = outputAccess.get();
+				final LabelingType< L > outputLabelingType = outputAccess.get();
 				if ( !outputLabelingType.getLabeling().isEmpty() )
 					continue;
 				outputLabelingType.setLabeling( l );
-				double intensity = imageAccess.get().getRealDouble();
+				final double intensity = imageAccess.get().getRealDouble();
 				outputAccess.localize( destPosition );
 				pq.add( new PixelIntensity< L >( destPosition, dimensions, intensity, age++, l ) );
 			}

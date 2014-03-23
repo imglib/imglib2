@@ -34,7 +34,9 @@
 package net.imglib2.meta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
@@ -74,6 +76,7 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 
 	private int compositeChannelCount = 1;
 	private final ArrayList<ColorTable> colorTable;
+	private final Map<String, Object> properties = new HashMap<String, Object>();
 
 	// -- Constructors --
 
@@ -137,6 +140,7 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 	 * appropriate {@link Img} implementation such as {@link ArrayImg}).
 	 * </p>
 	 */
+	@Override
 	public Img<T> getImg() {
 		return img;
 	}
@@ -500,6 +504,11 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 			axes[d] = space.axis(d).copy();
 		}
 		return axes;
+	}
+
+	@Override
+	public Map<String, Object> getProperties() {
+		return properties;
 	}
 	
 

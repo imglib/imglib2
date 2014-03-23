@@ -50,10 +50,9 @@ import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
-
 /**
  * Compute Difference-of-Gaussian of a {@link RandomAccessible}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class DifferenceOfGaussian
@@ -62,11 +61,11 @@ public class DifferenceOfGaussian
 	 * Compute the difference of Gaussian for the input. Input convolved with
 	 * Gaussian of sigma1 is subtracted from input convolved with Gaussian of
 	 * sigma2 (where sigma2 > sigma1).
-	 *
+	 * 
 	 * <p>
 	 * Creates an appropriate temporary image and calls
 	 * {@link #DoG(double[], double[], RandomAccessible, RandomAccessible, RandomAccessibleInterval, int)}.
-	 *
+	 * 
 	 * @param sigma1
 	 *            stddev (in every dimension) of smaller Gaussian.
 	 * @param sigma2
@@ -93,7 +92,7 @@ public class DifferenceOfGaussian
 	 * Compute the difference of Gaussian for the input. Input convolved with
 	 * Gaussian of sigma1 is subtracted from input convolved with Gaussian of
 	 * sigma2 (where sigma2 > sigma1).
-	 *
+	 * 
 	 * @param sigma1
 	 *            stddev (in every dimension) of smaller Gaussian.
 	 * @param sigma2
@@ -182,7 +181,7 @@ public class DifferenceOfGaussian
 	 * input image as well as the image calibration, the resulting sigma arrays
 	 * specifiy the smoothing that has to be applied to achieve the desired
 	 * sigmas.
-	 *
+	 * 
 	 * @param imageSigma
 	 *            estimated sigma of the input image, in pixel coordinates.
 	 * @param minf

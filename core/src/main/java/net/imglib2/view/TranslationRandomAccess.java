@@ -40,7 +40,7 @@ import net.imglib2.transform.integer.Translation;
 
 /**
  * TODO
- *
+ * 
  */
 public final class TranslationRandomAccess< T > extends AbstractEuclideanSpace implements RandomAccess< T >
 {
@@ -206,14 +206,14 @@ public final class TranslationRandomAccess< T > extends AbstractEuclideanSpace i
 	public void setPosition( final int position, final int d )
 	{
 		assert d <= n;
-		s.setPosition( position + translation[ d ], d);
+		s.setPosition( position + translation[ d ], d );
 	}
 
 	@Override
 	public void setPosition( final long position, final int d )
 	{
 		assert d <= n;
-		s.setPosition( position + translation[ d ], d);
+		s.setPosition( position + translation[ d ], d );
 	}
 
 	@Override

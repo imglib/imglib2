@@ -39,9 +39,9 @@ import net.imglib2.RandomAccess;
 /**
  * A simple {@link RandomAccess} that always returns the same value at each
  * position, but is positioned correctly.
- *
+ * 
  * @param <T>
- *
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -68,11 +68,20 @@ public class ConstantRandomAccess< T > extends Point implements RandomAccess< T 
 	}
 
 	@Override
-	public T get() { return type; }
+	public T get()
+	{
+		return type;
+	}
 
 	@Override
-	public ConstantRandomAccess<T> copy() { return new ConstantRandomAccess< T >( this ); }
+	public ConstantRandomAccess< T > copy()
+	{
+		return new ConstantRandomAccess< T >( this );
+	}
 
 	@Override
-	public ConstantRandomAccess<T> copyRandomAccess() { return copy(); }
+	public ConstantRandomAccess< T > copyRandomAccess()
+	{
+		return copy();
+	}
 }

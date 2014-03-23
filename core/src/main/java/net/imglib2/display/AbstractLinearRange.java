@@ -35,35 +35,44 @@ package net.imglib2.display;
 
 /**
  * 
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class AbstractLinearRange implements LinearRange
 {
 	protected double min = 0;
+
 	protected double max = 1;
+
 	protected double scale = 1;
-	
-	public AbstractLinearRange() {}
-	
+
+	public AbstractLinearRange()
+	{}
+
 	public AbstractLinearRange( final double min, final double max )
 	{
 		this.min = min;
 		this.max = max;
 		scale = max - min;
 	}
-	
+
 	final static protected int roundPositive( final double a )
 	{
-		return ( int )( a + 0.5 );
+		return ( int ) ( a + 0.5 );
 	}
-	
-	@Override
-	public double getMin() { return min; }
 
 	@Override
-	public double getMax() { return max; }
+	public double getMin()
+	{
+		return min;
+	}
+
+	@Override
+	public double getMax()
+	{
+		return max;
+	}
 
 	@Override
 	public void setMax( final double max )

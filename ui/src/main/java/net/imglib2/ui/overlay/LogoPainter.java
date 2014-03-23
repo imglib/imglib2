@@ -46,7 +46,7 @@ import net.imglib2.ui.OverlayRenderer;
 /**
  * Overlay a logo (by default the ImgLib2 logo) on the top-right corner of the
  * output window.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -125,7 +125,7 @@ public class LogoPainter implements OverlayRenderer
 	/**
 	 * Load the {@link #imgLib2Overlay} (the ImgLib2 logo). This assumes that
 	 * the image is 4-channel RGBA.
-	 *
+	 * 
 	 * @param overlayFilename
 	 *            name of the image file
 	 * @return the loaded image or null if something went wrong.
@@ -145,7 +145,7 @@ public class LogoPainter implements OverlayRenderer
 	/**
 	 * Load the {@link #imgLib2Overlay} (the ImgLib2 logo). This assumes that
 	 * the image is RGBA.
-	 *
+	 * 
 	 * @param overlayFilename
 	 *            name of the image file
 	 * @return the loaded image or null if something went wrong.

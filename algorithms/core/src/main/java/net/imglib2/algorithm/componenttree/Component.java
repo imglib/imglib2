@@ -33,108 +33,48 @@
 
 package net.imglib2.algorithm.componenttree;
 
+import java.util.List;
+
 import net.imglib2.Localizable;
 
 /**
- * This interface is used by {@link ComponentTree} to build the component tree
- * of an image. In the algorithm described by D. Nister and H. Stewenius in
- * "Linear Time Maximally Stable Extremal Regions" (ECCV 2008) a stack of
- * incomplete components is maintained while visiting the pixels of the input
- * image. {@link Component} represents an element on the component stack, i.e.,
- * a connected component in the making.
- *
- * It provides methods to get/set the threshold value for the connected
- * component, to add pixels to the component, and to merge it with another
- * component.
- *
- * {@link ComponentTree} uses a {@link Component.Generator} to create new
- * components and emits completed components to a {@link Component.Handler}.
- *
- * @param <T>
- *            value type of the input image.
- *
- * @author Tobias Pietzsch
+ * Represents a connected component and a node in a {@link ComponentTree}. The
+ * child and parent nodes can be accessed by {@link #getChildren()} and
+ * {@link #getParent()}. The set of pixels can be accessed by iterating (
+ * {@link #iterator()}) the component. The threshold value that created the
+ * component (extremal region) can be obtained by {@link #value()}.
+ * 
+ * @author Florian Jug
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public interface Component< T >
+public interface Component< T, C extends Component< T, C > > extends Iterable< Localizable >
 {
 	/**
-	 * Create new components.
+	 * Get the number of pixels in the connected component.
 	 * 
-	 * @param <T>
-	 *            value type of the input image.
-	 * @param <C>
-	 *            component type.
+	 * @return number of pixels in the connected component.
 	 */
-	public interface Generator< T, C extends Component< T > >
-	{
-		/**
-		 * Create a new empty component with the given value (e.g., grey-level).
-		 * 
-		 * @param value
-		 *            value of the component
-		 * @return new component
-		 */
-		public C createComponent( final T value );
-
-		/**
-		 * Create a component with a value (e.g., grey-level) greater than any
-		 * occurring in the input for the {@link ComponentTree}. This is used as a
-		 * terminator element on the component stack.
-		 * 
-		 * @return new component
-		 */
-		public C createMaxComponent();
-	}
+	public long size();
 
 	/**
-	 * Handle completed components that are output by {@link ComponentTree}.
+	 * Get the image threshold that created the connected component (extremal
+	 * region).
 	 * 
-	 * @param <C>
-	 *            component type.
+	 * @return the image threshold that created the connected component.
 	 */
-	public interface Handler< C >
-	{
-		/**
-		 * {@link ComponentTree} calls this for every completed component. NOTE
-		 * THAT THE COMPONENT IS RE-USED BY {@link ComponentTree}! That is,
-		 * after calling emit() new pixels may be added, etc. Do not store the
-		 * component object but rather copy the relevant data!
-		 *
-		 * @param component
-		 *            a completed component
-		 */
-		public void emit( C component );
-	}
+	public T value();
 
 	/**
-	 * Set the threshold value (e.g., grey-level) for this component.
+	 * Get the parent of this node in the {@link ComponentTree}.
 	 * 
-	 * @param value
-	 *            the threshold value
+	 * @return the parent of this node in the {@link ComponentTree}.
 	 */
-	public abstract void setValue( final T value );
+	public C getParent();
 
 	/**
-	 * Get the threshold value (e.g., grey-level) for this component.
+	 * Get the children of this node in the {@link ComponentTree}.
 	 * 
-	 * @return the threshold value
+	 * @return the children of this node in the {@link ComponentTree}.
 	 */
-	public abstract T getValue();
-
-	/**
-	 * Add a pixel to the set of pixels represented by this component.
-	 * 
-	 * @param position
-	 *            a pixel position
-	 */
-	public abstract void addPosition( final Localizable position );
-
-	/**
-	 * Merge other component (of the same concrete type) into this component.
-	 * 
-	 * @param component
-	 *            the other component
-	 */
-	public abstract void merge( final Component< T > component );
+	public List< C > getChildren();
 }
-

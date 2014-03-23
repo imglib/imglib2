@@ -39,7 +39,8 @@ import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**
- * A {@link AWTScreenImage} that is an {@code ArrayImg<DoubleType, DoubleArray>}.
+ * A {@link AWTScreenImage} that is an {@code ArrayImg<DoubleType, DoubleArray>}
+ * .
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn

@@ -40,23 +40,35 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class UnsignedShortType extends GenericShortType<UnsignedShortType>
+public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedShortType( final NativeImg<?, ? extends ShortAccess> img ) { super( img ); }
+	public UnsignedShortType( final NativeImg< ?, ? extends ShortAccess > img )
+	{
+		super( img );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedShortType( final int value ) { super( getCodedSignedShortChecked(value) ); }
+	public UnsignedShortType( final int value )
+	{
+		super( getCodedSignedShortChecked( value ) );
+	}
 
 	// this is the constructor if you want to specify the dataAccess
-	public UnsignedShortType( final ShortAccess access ) { super( access ); }
+	public UnsignedShortType( final ShortAccess access )
+	{
+		super( access );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedShortType() { this( 0 ); }
+	public UnsignedShortType()
+	{
+		this( 0 );
+	}
 
 	public static short getCodedSignedShortChecked( int unsignedShort )
 	{
@@ -67,14 +79,22 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 
 		return getCodedSignedShort( unsignedShort );
 	}
-	public static short getCodedSignedShort( final int unsignedShort ) { return (short)( unsignedShort & 0xffff );	}
-	public static int getUnsignedShort( final short signedShort ) { return signedShort & 0xffff; }
+
+	public static short getCodedSignedShort( final int unsignedShort )
+	{
+		return ( short ) ( unsignedShort & 0xffff );
+	}
+
+	public static int getUnsignedShort( final short signedShort )
+	{
+		return signedShort & 0xffff;
+	}
 
 	@Override
-	public NativeImg<UnsignedShortType, ? extends ShortAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedShortType> storageFactory, final long dim[] )
+	public NativeImg< UnsignedShortType, ? extends ShortAccess > createSuitableNativeImg( final NativeImgFactory< UnsignedShortType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
+		final NativeImg< UnsignedShortType, ? extends ShortAccess > container = storageFactory.createShortInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final UnsignedShortType linkedType = new UnsignedShortType( container );
@@ -86,7 +106,10 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	}
 
 	@Override
-	public UnsignedShortType duplicateTypeOnSameNativeImg() { return new UnsignedShortType( img ); }
+	public UnsignedShortType duplicateTypeOnSameNativeImg()
+	{
+		return new UnsignedShortType( img );
+	}
 
 	@Override
 	public void mul( final float c )
@@ -97,7 +120,7 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	@Override
 	public void mul( final double c )
 	{
-		set( ( int )Util.round( get() * c ) );
+		set( ( int ) Util.round( get() * c ) );
 	}
 
 	@Override
@@ -136,22 +159,58 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 		set( get() - 1 );
 	}
 
-	public int get() { return getUnsignedShort( getValue() ); }
-	public void set( final int f ) { setValue( getCodedSignedShort( f ) ); }
+	public int get()
+	{
+		return getUnsignedShort( getValue() );
+	}
+
+	public void set( final int f )
+	{
+		setValue( getCodedSignedShort( f ) );
+	}
 
 	@Override
-	public int getInteger(){ return get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ){ set( f ); }
-	@Override
-	public void setInteger( final long f ){ set( (int)f ); }
+	public int getInteger()
+	{
+		return get();
+	}
 
 	@Override
-	public double getMaxValue() { return -Short.MIN_VALUE + Short.MAX_VALUE; }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
 	@Override
-	public double getMinValue()  { return 0; }
+	public void setInteger( final int f )
+	{
+		set( f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( ( int ) f );
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return -Short.MIN_VALUE + Short.MAX_VALUE;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return 0;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Integer#hashCode().
+		return get();
+	}
 
 	@Override
 	public int compareTo( final UnsignedShortType c )
@@ -168,11 +227,20 @@ public class UnsignedShortType extends GenericShortType<UnsignedShortType>
 	}
 
 	@Override
-	public UnsignedShortType createVariable(){ return new UnsignedShortType( 0 ); }
+	public UnsignedShortType createVariable()
+	{
+		return new UnsignedShortType( 0 );
+	}
 
 	@Override
-	public UnsignedShortType copy(){ return new UnsignedShortType( get() ); }
+	public UnsignedShortType copy()
+	{
+		return new UnsignedShortType( get() );
+	}
 
 	@Override
-	public String toString() { return "" + get(); }
+	public String toString()
+	{
+		return "" + get();
+	}
 }

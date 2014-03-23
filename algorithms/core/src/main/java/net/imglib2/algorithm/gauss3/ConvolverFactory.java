@@ -36,11 +36,11 @@ package net.imglib2.algorithm.gauss3;
 import net.imglib2.RandomAccess;
 
 /**
- * {@link ConvolverFactory} creates 1-dimensional line convolvers.
- * See {@link #create(double[], RandomAccess, RandomAccess, int, long)}.
- *
+ * {@link ConvolverFactory} creates 1-dimensional line convolvers. See
+ * {@link #create(double[], RandomAccess, RandomAccess, int, long)}.
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
- *
+ * 
  * @param <S>
  * @param <T>
  */
@@ -55,12 +55,19 @@ public interface ConvolverFactory< S, T >
 	 * then call {@link Runnable#run()} to do the convolution. Then the input
 	 * and an output {@link RandomAccess} are moved to the next line,
 	 * {@link Runnable#run()} is called again, and so on.
-	 *
-	 * @param halfkernel the upper half (starting at the center pixel) of the symmetric convolution kernel.
-	 * @param in {@link RandomAccess} on the source values.
-	 * @param out {@link RandomAccess} on the target (convolved) values.
-	 * @param d dimension in which to convolve.
-	 * @param lineLength how many convolved values to produce in one {@link Runnable#run()}.
+	 * 
+	 * @param halfkernel
+	 *            the upper half (starting at the center pixel) of the symmetric
+	 *            convolution kernel.
+	 * @param in
+	 *            {@link RandomAccess} on the source values.
+	 * @param out
+	 *            {@link RandomAccess} on the target (convolved) values.
+	 * @param d
+	 *            dimension in which to convolve.
+	 * @param lineLength
+	 *            how many convolved values to produce in one
+	 *            {@link Runnable#run()}.
 	 * @return a line convolver.
 	 */
 	public Runnable create( final double[] halfkernel, final RandomAccess< S > in, final RandomAccess< T > out, final int d, final long lineLength );
