@@ -44,10 +44,14 @@ import net.imglib2.view.Views;
 
 /**
  * A general 2D Projector that uses two dimensions as input to create the 2D
- * result. Starting from the reference point two dimensions are sampled such
+ * result. The output of the projection is written into a {@link IterableInterval}.
+ * 
+ * Depending on input and output an optimal strategy is chosen in the map() method.
+ * 
+ * Starting from the reference point two dimensions are sampled such
  * that a plain gets cut out of a higher dimensional data volume. <br>
  * The mapping function can be specified with a {@link Converter}. <br>
- * A basic example is cutting out a time frame from a (greyscale) video
+ * A basic example is cutting out a time frame from a (greyscale) video.
  * 
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 

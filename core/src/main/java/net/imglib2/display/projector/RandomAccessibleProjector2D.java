@@ -33,6 +33,8 @@
 package net.imglib2.display.projector;
 
 import net.imglib2.FinalInterval;
+import net.imglib2.FlatIterationOrder;
+import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -40,10 +42,18 @@ import net.imglib2.converter.Converter;
 
 /**
  * A general 2D Projector that uses two dimensions as input to create the 2D
- * result. Starting from the reference point two dimensions are sampled such
- * that a plain gets cut out of a higher dimensional data volume. <br>
+ * result. The output of the projection is written into a
+ * {@link RandomAccessibleInterval}.
+ * 
+ * Starting from the reference point two dimensions are sampled such that a
+ * plain gets cut out of a higher dimensional data volume. <br>
  * The mapping function can be specified with a {@link Converter}. <br>
  * A basic example is cutting out a time frame from a (greyscale) video
+ * 
+ * Note: This {@link Projector} should only be used if one can be sure, that the
+ * target {@link RandomAccessibleInterval} is not an {@link IterableInterval} of
+ * {@link FlatIterationOrder}. If, please use
+ * {@link IterableIntervalProjector2D} for performance reasons.
  * 
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
