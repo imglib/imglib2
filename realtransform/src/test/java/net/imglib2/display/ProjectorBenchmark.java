@@ -6,7 +6,6 @@ import net.imglib2.converter.Converter;
 import net.imglib2.converter.RealFloatConverter;
 import net.imglib2.display.projector.IterableIntervalProjector2D;
 import net.imglib2.display.projector.RandomAccessibleProjector2D;
-import net.imglib2.display.projector.XYRandomAccessibleProjector;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
@@ -62,27 +61,27 @@ public class ProjectorBenchmark
 		} );
 	}
 
-	public static < A, B > void benchmarkXYRandomAccessibleProjector(
-			final RandomAccessibleInterval< A > source,
-			final RandomAccessibleInterval< B > target,
-			final Converter< A, B > converter )
-	{
-		final XYRandomAccessibleProjector< A, B > projector =
-				new XYRandomAccessibleProjector< A, B >( source, target, converter );
-
-		BenchmarkHelper.benchmarkAndPrint( 100, false, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				for ( int z = 0; z < source.dimension( 2 ); ++z )
-				{
-					projector.setPosition( z, 2 );
-					projector.map();
-				}
-			}
-		} );
-	}
+//	public static < A, B > void benchmarkXYRandomAccessibleProjector(
+//			final RandomAccessibleInterval< A > source,
+//			final RandomAccessibleInterval< B > target,
+//			final Converter< A, B > converter )
+//	{
+//		final XYRandomAccessibleProjector< A, B > projector =
+//				new XYRandomAccessibleProjector< A, B >( source, target, converter );
+//
+//		BenchmarkHelper.benchmarkAndPrint( 100, false, new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				for ( int z = 0; z < source.dimension( 2 ); ++z )
+//				{
+//					projector.setPosition( z, 2 );
+//					projector.map();
+//				}
+//			}
+//		} );
+//	}
 
 	public static void main( final String[] args )
 	{
@@ -127,10 +126,10 @@ public class ProjectorBenchmark
 			System.out.println( "RandomAccessibleProjector2D Affine" );
 			benchmarkRandomAccessibleProjector2D( view, target, converter );
 
-			System.out.println( "XYRandomAccessibleProjector Img" );
-			benchmarkXYRandomAccessibleProjector( source, target, converter );
-			System.out.println( "XYRandomAccessibleProjector Affine" );
-			benchmarkXYRandomAccessibleProjector( view, target, converter );
+//			System.out.println( "XYRandomAccessibleProjector Img" );
+//			benchmarkXYRandomAccessibleProjector( source, target, converter );
+//			System.out.println( "XYRandomAccessibleProjector Affine" );
+//			benchmarkXYRandomAccessibleProjector( view, target, converter );
 
 			System.out.println( "--------------------------------" );
 		}
