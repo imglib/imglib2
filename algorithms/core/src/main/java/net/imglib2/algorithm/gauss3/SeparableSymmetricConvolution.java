@@ -221,7 +221,7 @@ public final class SeparableSymmetricConvolution
 	 *            factory to create temporary images.
 	 * @param type
 	 *            instance of the temporary image type.
-	 * @param numThreads
+	 * @param service
 	 *            service providing threads for multi-threading
 	 */
 	public static < S, I, T > void convolve( final double[][] halfkernels, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ConvolverFactory< S, I > convolverFactorySI, final ConvolverFactory< I, I > convolverFactoryII, final ConvolverFactory< I, T > convolverFactoryIT, final ConvolverFactory< S, T > convolverFactoryST, final ImgFactory< I > imgFactory, final I type, final ExecutorService service )
