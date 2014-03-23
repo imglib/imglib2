@@ -35,9 +35,10 @@ package net.imglib2.algorithm.localextrema;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
@@ -101,14 +102,15 @@ public class LocalExtrema
 	 * @param numThreads
 	 * @return
 	 */
-	public static < P, T extends Comparable< T > > ArrayList< P > findLocalExtrema( final RandomAccessibleInterval< T > img, final LocalNeighborhoodCheck< P, T > localNeighborhoodCheck, final int numThreads )
+	public static < P, T extends Comparable< T > > ArrayList< P > findLocalExtrema( final RandomAccessibleInterval< T > img, final LocalNeighborhoodCheck< P, T > localNeighborhoodCheck, final ExecutorService service )
 	{
 		final ArrayList< P > allExtrema = new ArrayList< P >();
 
 		final Interval full = Intervals.expand( img, -1 );
 		final int n = img.numDimensions();
 		final int splitd = n - 1;
-		final int numTasks = numThreads <= 1 ? 1 : ( int ) Math.min( full.dimension( splitd ), numThreads * 20 );
+		// FIXME is there a better way to determine number of threads
+		final int numTasks = Math.max( 1, ( int ) Math.min( full.dimension( splitd ), Runtime.getRuntime().availableProcessors() * 20 ) );
 		final long dsize = full.dimension( splitd ) / numTasks;
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];
@@ -116,8 +118,9 @@ public class LocalExtrema
 		full.max( max );
 
 		final RectangleShape shape = new RectangleShape( 1, true );
+		
+		final ArrayList< Future< Void > > futures = new ArrayList< Future< Void > >();
 
-		final ExecutorService ex = Executors.newFixedThreadPool( numThreads );
 		final List< P > synchronizedAllExtrema = Collections.synchronizedList( allExtrema );
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
@@ -125,10 +128,10 @@ public class LocalExtrema
 			max[ splitd ] = ( taskNum == numTasks - 1 ) ? full.max( splitd ) : min[ splitd ] + dsize - 1;
 			final RandomAccessibleInterval< T > source = Views.interval( img, new FinalInterval( min, max ) );
 			final ArrayList< P > extrema = new ArrayList< P >( 128 );
-			final Runnable r = new Runnable()
+			final Callable< Void > r = new Callable< Void >()
 			{
 				@Override
-				public void run()
+				public Void call()
 				{
 					final Cursor< T > center = Views.flatIterable( source ).cursor();
 					for ( final Neighborhood< T > neighborhood : shape.neighborhoods( source ) )
@@ -139,18 +142,27 @@ public class LocalExtrema
 							extrema.add( p );
 					}
 					synchronizedAllExtrema.addAll( extrema );
+					return null;
 				}
 			};
-			ex.execute( r );
+			
+			futures.add( service.submit( r ) );
 		}
-		ex.shutdown();
-		try
+		
+		for ( final Future< Void > f : futures )
 		{
-			ex.awaitTermination( 1000, TimeUnit.DAYS );
-		}
-		catch ( final InterruptedException e )
-		{
-			e.printStackTrace();
+			try
+			{
+				f.get();
+			}
+			catch ( InterruptedException e )
+			{
+				e.printStackTrace();
+			}
+			catch ( ExecutionException e )
+			{
+				e.printStackTrace();
+			}
 		}
 
 		return allExtrema;
