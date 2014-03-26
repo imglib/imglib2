@@ -33,6 +33,8 @@
 package net.imglib2.algorithm.dog;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.imglib2.Interval;
 import net.imglib2.Point;
@@ -58,6 +60,12 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	{
 		MINIMA, MAXIMA
 	}
+
+	/**
+	 * {@link ExecutorService} used for Multi-Threading. If null, a new one will
+	 * be created on demand
+	 **/
+	private ExecutorService executorService;
 
 	public < I extends RandomAccessibleInterval< T > & LinearSpace< ? > > DogDetection(
 			final I input,
@@ -132,6 +140,12 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	 */
 	public ArrayList< Point > getPeaks()
 	{
+		final ExecutorService service;
+		if ( executorService == null )
+			service = Executors.newFixedThreadPool( numThreads );
+		else
+			service = executorService;
+
 		final T type = Util.getTypeFromInterval( Views.interval( input, interval ) );
 		dogImg = Util.getArrayOrCellImgFactory( interval, type ).create( interval, type );
 		final long[] translation = new long[ interval.numDimensions() ];
@@ -139,7 +153,7 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 		dogImg = Views.translate( dogImg, translation );
 
 		final double[][] sigmas = DifferenceOfGaussian.computeSigmas( imageSigma, minf, pixelSize, sigma1, sigma2 );
-		DifferenceOfGaussian.DoG( sigmas[ 0 ], sigmas[ 1 ], input, dogImg, numThreads );
+		DifferenceOfGaussian.DoG( sigmas[ 0 ], sigmas[ 1 ], input, dogImg, service );
 		final T val = type.createVariable();
 		final double minValueT = type.getMinValue();
 		final double maxValueT = type.getMaxValue();
@@ -156,9 +170,13 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 			val.setReal( Math.max( Math.min( minPeakValue * normalization, maxValueT ), minValueT ) );
 			localNeighborhoodCheck = new LocalExtrema.MaximumCheck< T >( val );
 		}
-		final ArrayList< Point > peaks = LocalExtrema.findLocalExtrema( dogImg, localNeighborhoodCheck, numThreads );
+		final ArrayList< Point > peaks = LocalExtrema.findLocalExtrema( dogImg, localNeighborhoodCheck, service );
 		if ( !keepDoGImg )
 			dogImg = null;
+
+		if ( executorService == null )
+			service.shutdown();
+
 		return peaks;
 	}
 
@@ -261,6 +279,11 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	public int getNumThreads()
 	{
 		return numThreads;
+	}
+
+	public void setExecutorService( final ExecutorService service )
+	{
+		this.executorService = service;
 	}
 
 	private static double[] getcalib( final LinearSpace< ? > calib )
