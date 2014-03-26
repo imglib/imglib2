@@ -78,8 +78,8 @@ public class DifferenceOfGaussian
 	 *            convolution).
 	 * @param dog
 	 *            the Difference-of-Gaussian result image.
-	 * @param numThreads
-	 *            how many threads to use for the computation.
+	 * @param service
+	 *            service providing threads for multi-threading
 	 */
 	public static < T extends NumericType< T > & NativeType< T > > void DoG( final double[] sigma1, final double[] sigma2, final RandomAccessible< T > input, final RandomAccessibleInterval< T > dog, final ExecutorService service )
 	{
@@ -108,7 +108,7 @@ public class DifferenceOfGaussian
 	 *            dog result image.
 	 * @param dog
 	 *            the Difference-of-Gaussian result image.
-	 * @param numThreads
+	 * @param service
 	 *            how many threads to use for the computation.
 	 */
 	public static < T extends NumericType< T > > void DoG( final double[] sigma1, final double[] sigma2, final RandomAccessible< T > input, final RandomAccessible< T > tmp, final RandomAccessibleInterval< T > dog, final ExecutorService service )

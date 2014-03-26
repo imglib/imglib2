@@ -99,7 +99,7 @@ public class LocalExtrema
 	 * 
 	 * @param img
 	 * @param localNeighborhoodCheck
-	 * @param numThreads
+	 * @param service
 	 * @return
 	 */
 	public static < P, T extends Comparable< T > > ArrayList< P > findLocalExtrema( final RandomAccessibleInterval< T > img, final LocalNeighborhoodCheck< P, T > localNeighborhoodCheck, final ExecutorService service )

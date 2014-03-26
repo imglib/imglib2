@@ -150,8 +150,8 @@ public final class Gauss3
 	 *            the kernel size.
 	 * @param target
 	 *            target image
-	 * @param numthreads
-	 *            number of threads used for multi-threading
+	 * @param numThreads
+	 *            how many threads to use for the computation.
 	 * @param <S>
 	 *            source type
 	 * @param <T>
