@@ -124,9 +124,7 @@ public final class Gauss3
 	{
 		final int numthreads = Runtime.getRuntime().availableProcessors();
 		final ExecutorService service = Executors.newFixedThreadPool( numthreads );
-		
 		gauss( sigma, source, target, service );
-		
 		service.shutdown();
 	}
 
@@ -163,15 +161,11 @@ public final class Gauss3
 	public static < S extends NumericType< S >, T extends NumericType< T > > void gauss( final double[] sigma, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final int numThreads ) throws IncompatibleTypeException
 	{
 		final double[][] halfkernels = halfkernels( sigma );
-		
 		final ExecutorService service = Executors.newFixedThreadPool( numThreads );
-		
 		SeparableSymmetricConvolution.convolve( halfkernels, source, target, service );
-		
 		service.shutdown();
 	}
 
-	
 	/**
 	 * Apply Gaussian convolution to source and write the result to output.
 	 * In-place operation (source==target) is supported.

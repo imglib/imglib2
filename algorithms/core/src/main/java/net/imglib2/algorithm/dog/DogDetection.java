@@ -67,7 +67,12 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	 **/
 	private ExecutorService executorService;
 
-	public < I extends RandomAccessibleInterval< T > & LinearSpace< ? > > DogDetection( final I input, final double sigma1, final double sigma2, final ExtremaType extremaType, final double minPeakValue )
+	public < I extends RandomAccessibleInterval< T > & LinearSpace< ? > > DogDetection(
+			final I input,
+			final double sigma1,
+			final double sigma2,
+			final ExtremaType extremaType,
+			final double minPeakValue )
 	{
 		this( Views.extendMirrorSingle( input ), input, getcalib( input ), sigma1, sigma2, extremaType, minPeakValue, true );
 	}
@@ -105,7 +110,15 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	 *            will be divided by <em>f</em> (which is equivalent to scaling
 	 *            the DoG by <em>f</em>).
 	 */
-	public DogDetection( final RandomAccessible< T > input, final Interval interval, final double[] calibration, final double sigma1, final double sigma2, final ExtremaType extremaType, final double minPeakValue, final boolean normalizeMinPeakValue )
+	public DogDetection(
+			final RandomAccessible< T > input,
+			final Interval interval,
+			final double[] calibration,
+			final double sigma1,
+			final double sigma2,
+			final ExtremaType extremaType,
+			final double minPeakValue,
+			final boolean normalizeMinPeakValue )
 	{
 		this.input = input;
 		this.interval = interval;
@@ -127,9 +140,7 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	 */
 	public ArrayList< Point > getPeaks()
 	{
-
 		final ExecutorService service;
-
 		if ( executorService == null )
 			service = Executors.newFixedThreadPool( numThreads );
 		else

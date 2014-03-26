@@ -128,27 +128,46 @@ public final class SeparableSymmetricConvolution
 		}
 	}
 
-	private static < S extends RealType< S >, T extends RealType< T > > void convolveRealTypeFloat( final double[][] halfkernels, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
+	private static < S extends RealType< S >, T extends RealType< T > > void convolveRealTypeFloat( final double[][] halfkernels,
+			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
 	{
 		final FloatType type = new FloatType();
 		final ImgFactory< FloatType > imgfac = getImgFactory( target, halfkernels, type );
 		if ( canUseBufferedConvolver( target, halfkernels ) )
-			convolve( halfkernels, source, target, FloatConvolverRealTypeBuffered.< S, FloatType >factory(), FloatConvolverRealTypeBuffered.< FloatType, FloatType >factory(), FloatConvolverRealTypeBuffered.< FloatType, T >factory(), FloatConvolverRealTypeBuffered.< S, T >factory(), imgfac, type, service );
+			convolve( halfkernels, source, target,
+					FloatConvolverRealTypeBuffered.< S, FloatType >factory(),
+					FloatConvolverRealTypeBuffered.< FloatType, FloatType >factory(),
+					FloatConvolverRealTypeBuffered.< FloatType, T >factory(),
+					FloatConvolverRealTypeBuffered.< S, T >factory(), imgfac, type, service );
 		else
-			convolve( halfkernels, source, target, FloatConvolverRealType.< S, FloatType >factory(), FloatConvolverRealType.< FloatType, FloatType >factory(), FloatConvolverRealType.< FloatType, T >factory(), FloatConvolverRealType.< S, T >factory(), imgfac, type, service );
+			convolve( halfkernels, source, target,
+					FloatConvolverRealType.< S, FloatType >factory(),
+					FloatConvolverRealType.< FloatType, FloatType >factory(),
+					FloatConvolverRealType.< FloatType, T >factory(),
+					FloatConvolverRealType.< S, T >factory(), imgfac, type, service );
 	}
 
-	private static < S extends RealType< S >, T extends RealType< T > > void convolveRealTypeDouble( final double[][] halfkernels, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
+	private static < S extends RealType< S >, T extends RealType< T > > void convolveRealTypeDouble( final double[][] halfkernels,
+			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
 	{
 		final DoubleType type = new DoubleType();
 		final ImgFactory< DoubleType > imgfac = getImgFactory( target, halfkernels, type );
 		if ( canUseBufferedConvolver( target, halfkernels ) )
-			convolve( halfkernels, source, target, DoubleConvolverRealTypeBuffered.< S, DoubleType >factory(), DoubleConvolverRealTypeBuffered.< DoubleType, DoubleType >factory(), DoubleConvolverRealTypeBuffered.< DoubleType, T >factory(), DoubleConvolverRealTypeBuffered.< S, T >factory(), imgfac, type, service );
+			convolve( halfkernels, source, target,
+					DoubleConvolverRealTypeBuffered.< S, DoubleType >factory(),
+					DoubleConvolverRealTypeBuffered.< DoubleType, DoubleType >factory(),
+					DoubleConvolverRealTypeBuffered.< DoubleType, T >factory(),
+					DoubleConvolverRealTypeBuffered.< S, T >factory(), imgfac, type, service );
 		else
-			convolve( halfkernels, source, target, DoubleConvolverRealType.< S, DoubleType >factory(), DoubleConvolverRealType.< DoubleType, DoubleType >factory(), DoubleConvolverRealType.< DoubleType, T >factory(), DoubleConvolverRealType.< S, T >factory(), imgfac, type, service );
+			convolve( halfkernels, source, target,
+					DoubleConvolverRealType.< S, DoubleType >factory(),
+					DoubleConvolverRealType.< DoubleType, DoubleType >factory(),
+					DoubleConvolverRealType.< DoubleType, T >factory(),
+					DoubleConvolverRealType.< S, T >factory(), imgfac, type, service );
 	}
 
-	private static < T extends NumericType< T > & NativeType< T > > void convolveNativeType( final double[][] halfkernels, final RandomAccessible< T > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
+	private static < T extends NumericType< T > & NativeType< T > > void convolveNativeType( final double[][] halfkernels,
+			final RandomAccessible< T > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
 	{
 		final T type = Util.getTypeFromInterval( target );
 		final ConvolverFactory< T, T > convfac;
@@ -160,7 +179,8 @@ public final class SeparableSymmetricConvolution
 		convolve( halfkernels, source, target, convfac, convfac, convfac, convfac, imgfac, type, service );
 	}
 
-	private static < T extends NumericType< T > > void convolveNumericType( final double[][] halfkernels, final RandomAccessible< T > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
+	private static < T extends NumericType< T > > void convolveNumericType( final double[][] halfkernels,
+			final RandomAccessible< T > source, final RandomAccessibleInterval< T > target, final ExecutorService service )
 	{
 		final T type = Util.getTypeFromInterval( target );
 		final ConvolverFactory< T, T > convfac = ConvolverNumericType.factory( type );
@@ -182,7 +202,10 @@ public final class SeparableSymmetricConvolution
 		return a.get();
 	}
 
-	public static < S, T > void convolve1d( final double[] halfkernel, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ConvolverFactory< S, T > convolverFactoryST, final ExecutorService service )
+	public static < S, T > void convolve1d( final double[] halfkernel,
+			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target,
+			final ConvolverFactory< S, T > convolverFactoryST,
+			final ExecutorService service )
 	{
 		final long[] sourceOffset = new long[] { 1 - halfkernel.length };
 		convolveOffset( halfkernel, source, sourceOffset, target, target, 0, convolverFactoryST, service, 1 );
@@ -224,7 +247,14 @@ public final class SeparableSymmetricConvolution
 	 * @param service
 	 *            service providing threads for multi-threading
 	 */
-	public static < S, I, T > void convolve( final double[][] halfkernels, final RandomAccessible< S > source, final RandomAccessibleInterval< T > target, final ConvolverFactory< S, I > convolverFactorySI, final ConvolverFactory< I, I > convolverFactoryII, final ConvolverFactory< I, T > convolverFactoryIT, final ConvolverFactory< S, T > convolverFactoryST, final ImgFactory< I > imgFactory, final I type, final ExecutorService service )
+	public static < S, I, T > void convolve( final double[][] halfkernels,
+			final RandomAccessible< S > source, final RandomAccessibleInterval< T > target,
+			final ConvolverFactory< S, I > convolverFactorySI,
+			final ConvolverFactory< I, I > convolverFactoryII,
+			final ConvolverFactory< I, T > convolverFactoryIT,
+			final ConvolverFactory< S, T > convolverFactoryST,
+			final ImgFactory< I > imgFactory, final I type,
+			final ExecutorService service )
 	{
 		final int n = source.numDimensions();
 		if ( n == 1 )
@@ -304,7 +334,9 @@ public final class SeparableSymmetricConvolution
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
 			final long myStartIndex = taskNum * ( ( endIndex + 1 ) / numTasks );
-			final long myEndIndex = ( taskNum == numTasks - 1 ) ? endIndex : ( taskNum + 1 ) * ( ( endIndex + 1 ) / numTasks );
+			final long myEndIndex = ( taskNum == numTasks - 1 ) ?
+					endIndex :
+					( taskNum + 1 ) * ( ( endIndex + 1 ) / numTasks );
 			final Callable< Void > r = new Callable< Void >()
 			{
 				@Override
@@ -350,23 +382,21 @@ public final class SeparableSymmetricConvolution
 			};
 			futures.add( service.submit( r ) );
 		}
-
-		for ( Future< Void > future : futures )
+		for ( final Future< Void > future : futures )
 		{
 			try
 			{
 				future.get();
 			}
-			catch ( InterruptedException e )
+			catch ( final InterruptedException e )
 			{
 				e.printStackTrace();
 			}
-			catch ( ExecutionException e )
+			catch ( final ExecutionException e )
 			{
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	static long[][] getTempImageDimensions( final Dimensions targetsize, final double[][] halfkernels )

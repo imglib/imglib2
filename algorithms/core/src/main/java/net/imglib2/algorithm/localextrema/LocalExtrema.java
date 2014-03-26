@@ -119,9 +119,8 @@ public class LocalExtrema
 		full.max( max );
 
 		final RectangleShape shape = new RectangleShape( 1, true );
-		
-		final ArrayList< Future< Void > > futures = new ArrayList< Future< Void > >();
 
+		final ArrayList< Future< Void > > futures = new ArrayList< Future< Void > >();
 		final List< P > synchronizedAllExtrema = Collections.synchronizedList( allExtrema );
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
@@ -146,21 +145,19 @@ public class LocalExtrema
 					return null;
 				}
 			};
-			
 			futures.add( service.submit( r ) );
 		}
-		
 		for ( final Future< Void > f : futures )
 		{
 			try
 			{
 				f.get();
 			}
-			catch ( InterruptedException e )
+			catch ( final InterruptedException e )
 			{
 				e.printStackTrace();
 			}
-			catch ( ExecutionException e )
+			catch ( final ExecutionException e )
 			{
 				e.printStackTrace();
 			}

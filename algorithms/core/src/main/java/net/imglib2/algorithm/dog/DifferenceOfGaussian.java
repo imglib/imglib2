@@ -130,17 +130,13 @@ public class DifferenceOfGaussian
 		final int numThreads = Runtime.getRuntime().availableProcessors();
 		final int numTasks = numThreads <= 1 ? 1 : numThreads * 20;
 		final long taskSize = size / numTasks;
-
-		final ArrayList< Future< Void >> futures = new ArrayList< Future< Void >>();
-
+		final ArrayList< Future< Void > > futures = new ArrayList< Future< Void > >();
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
 			final long fromIndex = taskNum * taskSize;
 			final long thisTaskSize = ( taskNum == numTasks - 1 ) ? size - fromIndex : taskSize;
-			final Callable< Void > r;
 			if ( dogIterable.iterationOrder().equals( tmpIterable.iterationOrder() ) )
-			{
-				r = new Callable< Void >()
+				futures.add( service.submit( new Callable< Void >()
 				{
 					@Override
 					public Void call()
@@ -153,11 +149,9 @@ public class DifferenceOfGaussian
 							dogCursor.next().sub( tmpCursor.next() );
 						return null;
 					}
-				};
-			}
+				} ) );
 			else
-			{
-				r = new Callable< Void >()
+				futures.add( service.submit( new Callable< Void >()
 				{
 					@Override
 					public Void call()
@@ -173,22 +167,19 @@ public class DifferenceOfGaussian
 						}
 						return null;
 					}
-				};
-			}
-			futures.add( service.submit( r ) );
+				} ) );
 		}
-
 		for ( final Future< Void > f : futures )
 		{
 			try
 			{
 				f.get();
 			}
-			catch ( InterruptedException e )
+			catch ( final InterruptedException e )
 			{
 				e.printStackTrace();
 			}
-			catch ( ExecutionException e )
+			catch ( final ExecutionException e )
 			{
 				e.printStackTrace();
 			}
