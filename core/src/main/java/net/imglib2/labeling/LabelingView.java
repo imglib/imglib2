@@ -36,6 +36,8 @@ package net.imglib2.labeling;
 import java.util.Collection;
 
 import net.imglib2.Cursor;
+import net.imglib2.FlatIterationOrder;
+import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
@@ -43,6 +45,7 @@ import net.imglib2.roi.IterableRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
+import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
  * Allows a {@link RandomAccessibleInterval} of type {@link LabelingType} to be
@@ -53,7 +56,7 @@ import net.imglib2.view.Views;
  */
 public class LabelingView< L extends Comparable< L >> extends
 		IterableRandomAccessibleInterval< LabelingType< L >> implements
-		Labeling< L >
+		Labeling< L >, SubIntervalIterable< LabelingType< L > >
 {
 
 	protected LabelingROIStrategy< L, ? extends Labeling< L >> m_strategy;
@@ -147,5 +150,50 @@ public class LabelingView< L extends Comparable< L >> extends
 	public < LL extends Comparable< LL >> LabelingFactory< LL > factory()
 	{
 		return ( LabelingFactory< LL > ) m_fac;
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public boolean supportsOptimizedCursor( Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval )
+					.supportsOptimizedCursor( interval );
+		else
+			return false;
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Object subIntervalIterationOrder( Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval )
+					.subIntervalIterationOrder( interval );
+		else
+			return new FlatIterationOrder( interval );
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Cursor< LabelingType< L >> cursor( Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval )
+					.cursor( interval );
+		else
+			return Views.interval( this.sourceInterval, interval ).cursor();
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Cursor< LabelingType< L >> localizingCursor( Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval )
+					.localizingCursor( interval );
+		else
+			return Views.interval( this.sourceInterval, interval )
+					.localizingCursor();
 	}
 }
