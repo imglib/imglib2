@@ -234,7 +234,8 @@ public final class SeparableSymmetricConvolution
 		else
 		{
 			// FIXME: is there a better way to determine the number of threads
-			final int numTasks = Runtime.getRuntime().availableProcessors() * 20;
+			final int numThreads = Runtime.getRuntime().availableProcessors();
+			final int numTasks = numThreads > 1 ? numThreads * 4 : 1;
 			final long[] sourceOffset = new long[ n ];
 			final long[] targetOffset = new long[ n ];
 			target.min( sourceOffset );

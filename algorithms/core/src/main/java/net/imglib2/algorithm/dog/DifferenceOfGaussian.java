@@ -127,7 +127,8 @@ public class DifferenceOfGaussian
 		final IterableInterval< T > tmpIterable = Views.iterable( tmpInterval );
 		final long size = dogIterable.size();
 		// FIXME find better heuristic?
-		final int numTasks = Runtime.getRuntime().availableProcessors() * 20;
+		final int numThreads = Runtime.getRuntime().availableProcessors();
+		final int numTasks = numThreads <= 1 ? 1 : numThreads * 20;
 		final long taskSize = size / numTasks;
 
 		final ArrayList< Future< Void >> futures = new ArrayList< Future< Void >>();
