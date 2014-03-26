@@ -33,9 +33,8 @@
 
 package net.imglib2.img.array;
 
-import net.imglib2.AbstractCursorInt;
+import net.imglib2.Cursor;
 import net.imglib2.type.NativeType;
-import net.imglib2.util.IntervalIndexer;
 
 /**
  * {@link Cursor} on an {@link ArrayImg}.
@@ -45,95 +44,22 @@ import net.imglib2.util.IntervalIndexer;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ArrayCursor< T extends NativeType< T > > extends AbstractCursorInt< T >
+public final class ArrayCursor< T extends NativeType< T > > extends AbstractArrayCursor< T >
 {
-	protected final T type;
-
-	protected final ArrayImg< T, ? > img;
-
-	protected final int lastIndex;
 
 	protected ArrayCursor( final ArrayCursor< T > cursor )
 	{
-		super( cursor.numDimensions() );
-
-		this.img = cursor.img;
-		this.type = img.createLinkedType();
-		this.lastIndex = ( int ) img.size() - 1;
-
-		type.updateIndex( cursor.type.getIndex() );
-		type.updateContainer( this );
+		super( cursor );
 	}
 
 	public ArrayCursor( final ArrayImg< T, ? > img )
 	{
-		super( img.numDimensions() );
-
-		this.type = img.createLinkedType();
-		this.img = img;
-		this.lastIndex = ( int ) img.size() - 1;
-
-		reset();
-	}
-
-	@Override
-	public T get()
-	{
-		return type;
-	}
-
-	@Override
-	public boolean hasNext()
-	{
-		return type.getIndex() < lastIndex;
-	}
-
-	@Override
-	public void jumpFwd( final long steps )
-	{
-		type.incIndex( ( int ) steps );
-	}
-
-	@Override
-	public void fwd()
-	{
-		type.incIndex();
-	}
-
-	@Override
-	public void reset()
-	{
-		type.updateIndex( -1 );
-		type.updateContainer( this );
-	}
-
-	@Override
-	public String toString()
-	{
-		return type.toString();
-	}
-
-	@Override
-	public int getIntPosition( final int dim )
-	{
-		return IntervalIndexer.indexToPosition( type.getIndex(), img.dim, dim );
-	}
-
-	@Override
-	public void localize( final int[] position )
-	{
-		IntervalIndexer.indexToPosition( type.getIndex(), img.dim, position );
+		super( img, 0, ( int ) img.size() );
 	}
 
 	@Override
 	public ArrayCursor< T > copy()
 	{
 		return new ArrayCursor< T >( this );
-	}
-
-	@Override
-	public ArrayCursor< T > copyCursor()
-	{
-		return copy();
 	}
 }
