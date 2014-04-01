@@ -297,28 +297,38 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 
 		return copy;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean supportsOptimizedCursor( final Interval interval )
 	{
-		int dimIdx = 0;
+		
+		// we want to optimize exactly one plane
+		if ( correspondsToPlane( interval ) )
+		{
+			return true;
+		}
+		else
+		{
+			// we want to optimize a set of planes
+			int dimIdx = 0;
 
-		// Find equal dims
-		for ( int d = 0; d < interval.numDimensions(); d++, dimIdx++ )
-			if ( interval.dimension( d ) != dimension( d ) )
-			{
-				dimIdx++;
-				break;
-			}
+			// Find equal dims
+			for ( int d = 0; d < interval.numDimensions(); d++, dimIdx++ )
+				if ( interval.dimension( d ) != dimension( d ) )
+				{
+					dimIdx++;
+					break;
+				}
 
-		for ( int d = dimIdx; d < interval.numDimensions(); d++ )
-			if ( interval.dimension( d ) != 1 )
-				return false;
+			for ( int d = dimIdx; d < interval.numDimensions(); d++ )
+				if ( interval.dimension( d ) != 1 )
+					return false;
 
-		return true;
+			return true;
+		}
 	}
 
 	/**
@@ -336,7 +346,24 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	@Override
 	public Cursor< T > cursor( Interval interval )
 	{
+		if ( correspondsToPlane( interval ) ) { return new PlanarPlaneSubsetCursor< T >( this, interval ); }
 		return new PlanarSubsetCursor< T >( this, interval );
+	}
+
+	private boolean correspondsToPlane( final Interval interval )
+	{
+		// check if interval describes one plane
+		if ( interval.dimension( 0 ) != dimension[ 0 ] ) { return false; }
+
+		if ( interval.dimension( 1 ) != dimension[ 1 ] ) { return false; }
+
+		for ( int d = 2; d < interval.numDimensions(); ++d )
+		{
+			if ( interval.dimension( d ) != 1 )
+				return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -345,6 +372,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	@Override
 	public Cursor< T > localizingCursor( Interval interval )
 	{
+		if ( correspondsToPlane( interval ) ) { return new PlanarPlaneSubsetLocalizingCursor< T >( this, interval ); }
 		return new PlanarSubsetLocalizingCursor< T >( this, interval );
 	}
 }
