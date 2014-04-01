@@ -36,6 +36,8 @@
 
 package net.imglib2.img.planar;
 
+import java.util.Arrays;
+
 import net.imglib2.AbstractLocalizingCursorInt;
 import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
@@ -222,23 +224,46 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 	@Override
 	public void fwd()
 	{
-		indexContainer++;
+		++indexContainer;
 
 		if ( ++index > lastIndexPlane )
 		{
 			index = 0;
 			++sliceIndex;
 			type.updateContainer( this );
-		}
-		type.updateIndex( index );
 
-		for ( int d = 0; d < n; ++d )
-		{
-			if ( ++position[ d ] > max[ d ] )
-				position[ d ] = 0;
-			else
-				break;
+			type.updateIndex( index );
 		}
+		else
+			type.incIndex();
+
+//		 for ( int d = 0; d < n; ++d )
+//		 {
+//		 if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
+//		 else break;
+//		 }
+
+		/*
+		 * Benchmarks @ 2012-04-17 demonstrate that the less readable code below
+		 * is reliably 5-10% faster than the almost equivalent commented code
+		 * above. The reason is NOT simply that d=0 is executed outside the
+		 * loop. We have tested that and it does not provide improved speed when
+		 * done in the above version of the code. Below, it plays a role.
+		 */
+		if ( ++position[ 0 ] <= max[ 0 ] )
+		{
+			return;
+		}
+		position[ 0 ] = 0;
+		
+		for ( int d = 1; d < n; ++d )
+		{
+			 if ( ++position[ d ] > max[ d ] )
+			 	position[ d ] = 0;
+			 else
+			 	break;
+		}
+
 	}
 
 	/**
@@ -271,9 +296,9 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 
 		// Set current slice index
 		sliceIndex = offsetContainer / planeSize;
-
+		
 		// Set index inside the slice
-		index = offsetContainer % planeSize - 1;
+		index = -1; //Previously (offsetContainer % planeSize) - 1
 
 		// Set total index to index
 		indexContainer = offsetContainer + index;
@@ -299,7 +324,10 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 	@Override
 	public void localize( final int[] position )
 	{
-		container.indexToGlobalPosition( sliceIndex, index, position );
+		for ( int i = 0; i < n; ++i )
+		{
+			position[ i ] = this.position[ i ];
+		}
 	}
 
 	/**
@@ -308,16 +336,17 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 	@Override
 	public int getIntPosition( final int dim )
 	{
-		return container.indexToGlobalPosition( sliceIndex, index, dim );
+		return this.position[ dim ];
 	}
 
 	private long offset( final Interval interval )
 	{
-		final int maxDim = numDimensions() - 1;
-		long i = interval.min( maxDim );
-		for ( int d = maxDim - 1; d >= 0; --d )
-			i = i * container.dimension( d ) + interval.min( d );
+		int i = 1;
+		for ( int d = 2; d < n; ++d )
+			i *= interval.min( d );
 
+		i *= container.dimension( 0 ) * container.dimension( 1 );
+		
 		return i;
 	}
 }
