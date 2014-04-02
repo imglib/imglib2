@@ -298,7 +298,7 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 		sliceIndex = offsetContainer / planeSize;
 		
 		// Set index inside the slice
-		index = -1; //Previously (offsetContainer % planeSize) - 1
+		index = offsetContainer % planeSize - 1;
 
 		// Set total index to index
 		indexContainer = offsetContainer + index;
@@ -339,14 +339,12 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 		return this.position[ dim ];
 	}
 
-	private long offset( final Interval interval )
-	{
-		int i = 1;
-		for ( int d = 2; d < n; ++d )
-			i *= interval.min( d );
+	private long offset(final Interval interval) {
+		final int maxDim = numDimensions() - 1;
+		long i = interval.min(maxDim);
+		for (int d = maxDim - 1; d >= 0; --d)
+			i = i * container.dimension(d) + interval.min(d);
 
-		i *= container.dimension( 0 ) * container.dimension( 1 );
-		
 		return i;
 	}
 }
