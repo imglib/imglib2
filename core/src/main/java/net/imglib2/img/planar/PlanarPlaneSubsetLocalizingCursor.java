@@ -1,12 +1,9 @@
 package net.imglib2.img.planar;
 
 import net.imglib2.AbstractLocalizingCursorInt;
-import net.imglib2.Cursor;
 import net.imglib2.Interval;
-import net.imglib2.Sampler;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
-import net.imglib2.util.Intervals;
 
 /**
  * 
@@ -99,7 +96,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 		this.container = container;
 
 		this.planeSize = ( ( n > 1 ) ? ( int ) interval.dimension( 1 ) : 1 )
-				* ( int ) interval.dimension( 0 ) - 1;
+				* ( int ) interval.dimension( 0 );
 
 		this.lastIndexPlane = planeSize - 1;
 		
@@ -186,8 +183,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 		}
 		else
 		{
-			position[ 0 ] = 0; //TODO probably gives wrong last positions if n = 1. 
-							 // One could move it before "break" which would include a "1 < n" test.
+			position[ 0 ] = 0;
 			
 			for ( int d = 1; d < n; ++d )
 			{
@@ -220,7 +216,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 	{
 		type.updateIndex( -1 );
 
-		IntervalIndexer.indexToPosition( type.getIndex(), container.dimensions, position );
+		IntervalIndexer.indexToPosition( ( int ) offsetContainer + type.getIndex(), container.dimensions, position );
 	}
 
 	/**
@@ -256,14 +252,12 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 	/*
 	 * Computes global offset of the interval in the Img
 	 */
-	private long offset( final Interval interval )
-	{
-		int i = 1;
-		for ( int d = 2; d < n; ++d )
-			i *= interval.min( d );
+	private long offset(final Interval interval) {
+		final int maxDim = numDimensions() - 1;
+		long i = interval.min(maxDim);
+		for (int d = maxDim - 1; d >= 0; --d)
+			i = i * container.dimension(d) + interval.min(d);
 
-		i *= container.dimension( 0 ) * container.dimension( 1 );
-		
 		return i;
 	}
 
