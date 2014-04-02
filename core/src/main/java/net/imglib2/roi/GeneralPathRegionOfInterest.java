@@ -204,8 +204,8 @@ public class GeneralPathRegionOfInterest extends
 		g2d.setStroke( new BasicStroke( 0 ) );
 		g2d.fill( transformed );
 
-		final long[] strps = new long[ 3 * width * height / 2 ]; // avoid
-																	// re-allocation
+		final long[] strps = new long[ 3 * (width==1?2:width) * height / 2 ]; // avoid
+																				// re-allocation
 		int i = 0;
 		for ( int y = 0; y < height; y++ )
 		{
