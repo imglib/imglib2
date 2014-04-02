@@ -114,7 +114,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 		this.planeSize = ( ( n > 1 ) ? ( int ) interval.dimension( 1 ) : 1 )
 				* ( int ) interval.dimension( 0 );
 		
-		this.lastPlaneIndex = planeSize -1;
+		this.lastPlaneIndex = planeSize - 1;
 
 		this.sliceIndex = ( int ) ( offset( interval ) / planeSize );
 
@@ -222,12 +222,11 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 		return container.indexToGlobalPosition( sliceIndex, type.getIndex(), dim );
 	}
 
-	private final long offset( final Interval interval )
-	{
+	private long offset(final Interval interval) {
 		final int maxDim = numDimensions() - 1;
-		long i = interval.min( maxDim );
-		for ( int d = maxDim - 1; d >= 0; --d )
-			i = i * container.dimension( d ) + interval.min( d );
+		long i = interval.min(maxDim);
+		for (int d = maxDim - 1; d >= 0; --d)
+			i = i * container.dimension(d) + interval.min(d);
 
 		return i;
 	}
