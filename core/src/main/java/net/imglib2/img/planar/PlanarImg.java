@@ -346,6 +346,8 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	@Override
 	public Cursor< T > cursor( Interval interval )
 	{
+		assert supportsOptimizedCursor( interval );
+
 		if ( correspondsToPlane( interval ) ) { return new PlanarPlaneSubsetCursor< T >( this, interval ); }
 		return new PlanarSubsetCursor< T >( this, interval );
 	}
@@ -372,6 +374,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	@Override
 	public Cursor< T > localizingCursor( Interval interval )
 	{
+		
+		assert supportsOptimizedCursor( interval );
+		
 		if ( correspondsToPlane( interval ) ) { return new PlanarPlaneSubsetLocalizingCursor< T >( this, interval ); }
 		return new PlanarSubsetLocalizingCursor< T >( this, interval );
 	}
