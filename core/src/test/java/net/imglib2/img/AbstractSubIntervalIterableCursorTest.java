@@ -62,7 +62,7 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 	@Test
 	public void testJumpFwdShifted()
 	{
-		Cursor< IntType > cursor = Views.interval( img, intervalShifted ).localizingCursor();
+		Cursor< IntType > cursor = Views.interval( img, intervalShifted ).cursor();
 
 		testCursorJumpFwd( cursor, intervalShifted );
 	}
@@ -113,7 +113,7 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 
 		cursor.fwd();
 		cursor.localize( position );
-		assertArrayEquals( "first position was incorrect.", min, position );
+		assertArrayEquals( "start position was incorrect.", min, position );
 
 		cursor.reset();
 
