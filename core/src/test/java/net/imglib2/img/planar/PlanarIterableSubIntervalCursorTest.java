@@ -3,13 +3,13 @@ package net.imglib2.img.planar;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
+import net.imglib2.img.AbstractSubIntervalIterableCursorTest;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.view.Views;
@@ -17,44 +17,34 @@ import net.imglib2.view.Views;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PlanarIterableSubIntervalCursorTest
+public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIterableCursorTest< PlanarImg< IntType, ? >>
 {
-	long[] dimensions = new long[] { 23, 31, 11, 7, 3 };
 
-	Interval intervalA, intervalB, intervalC, intervalD;
+	/** Interval for a single plane in img **/
+	protected Interval intervalSinglePlaneShifted;
 
-	int numValues, fastintervalsize_A, shiftedintervalsize_C, singleplaneintervalsize_D;
+	protected Interval intervalSinglePlaneFull;
+	
+	protected Interval intervalFastPart;
 
-	int[] intData;
-
-	PlanarImg< IntType, ? > planarImg;
+	int numValues;
 
 	@Before
 	public void createSourceData()
 	{
+		dimensions = new long[] { 23, 31, 11, 7, 3 };
+
+		intervalShifted = new FinalInterval( new long[] { 0, 0, 3, 5, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 4, 5, 1 } );
+
+		intervalFast = new FinalInterval( new long[] { dimensions[ 0 ], dimensions[ 1 ], 5, 1, 1 } );
+
+		intervalFastPart = new FinalInterval( new long[] { dimensions[ 0 ], 2, 3, 1, 1 } );
 		
-		// fastA -> d1,d2 full, subset of d3, position in d4,d5  => iterate over multiple planes  
-		intervalA = new FinalInterval( new long[] { 23, 31, 5, 1, 1 } );
+		intervalSinglePlaneShifted = new FinalInterval( new long[] { 0, 0, 3, 5, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 3, 5, 1 } );
 
-		// not optimized -> d1 full, subset of d2,d3 position in d4, d5 => cannot simply iterate over planes
-		intervalB = new FinalInterval( new long[] { 23, 2, 3, 1, 1 } );
+		intervalSinglePlaneFull = new FinalInterval( new long[] { 0, 0, 1, 1, 1 }, new long[] { dimensions[ 0 ] - 1, dimensions[ 1 ] - 1, 1, 1, 1 } );
 
-		// fastCShifted -> d1, d2 full, subset of d3, position in d4,d5 => iterate over multiple planes
-		intervalC = new FinalInterval( new long[] { 0, 0, 3, 5, 1 }, new long[] { 22, 30, 4, 5, 1 } );
-		
-		// fastDSinglePlane -> d1,d2 full position for the rest => iterate over one plane
-		intervalD = new FinalInterval( new long[] { 23, 31, 1, 1, 1 } );	
-
-		// Size of the planes which can be iterated fast
-		fastintervalsize_A = 23 * 31 * 5;
-				
-		shiftedintervalsize_C = 23 * 31 * 2;
-
-		singleplaneintervalsize_D = 23 * 31;
-		
-		
-
-		//create random data for all dims and fill the planar img
+		// create random data for all dims and fill the planar img
 		numValues = 1;
 		for ( int d = 0; d < dimensions.length; ++d )
 			numValues *= dimensions[ d ];
@@ -66,10 +56,10 @@ public class PlanarIterableSubIntervalCursorTest
 			intData[ i ] = random.nextInt();
 		}
 
-		planarImg = ( PlanarImg< IntType, ? > ) new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
+		img = ( PlanarImg< IntType, ? > ) new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
 
 		long[] pos = new long[ dimensions.length ];
-		RandomAccess< IntType > a = planarImg.randomAccess();
+		RandomAccess< IntType > a = img.randomAccess();
 
 		for ( int i = 0; i < numValues; ++i )
 		{
@@ -78,203 +68,99 @@ public class PlanarIterableSubIntervalCursorTest
 			a.get().set( intData[ i ] );
 		}
 	}
-
+	
+	/**
+	 * Test whether the correct cursors are created.
+	 */
 	@Test
 	public void testOptimizable()
 	{
 
 		// Testing Cursor
-		assertTrue( ( Views.interval( planarImg, intervalA ).cursor() instanceof PlanarSubsetCursor ) );
+		assertTrue( ( Views.interval( img, intervalShifted ).cursor() instanceof PlanarSubsetCursor ) );
 
 		// Testing Localizing Cursor
-		assertTrue( ( Views.interval( planarImg, intervalA ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
+		assertTrue( ( Views.interval( img, intervalShifted ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
 
 		// Testing Cursor
-		assertFalse( ( Views.interval( planarImg, intervalB ).cursor() instanceof PlanarSubsetCursor ) );
+		assertTrue( ( Views.interval( img, intervalSinglePlaneShifted ).cursor() instanceof PlanarPlaneSubsetCursor ) );
 
 		// Testing Localizing Cursor
-		assertFalse( ( Views.interval( planarImg, intervalB ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
+		assertTrue( ( Views.interval( img, intervalSinglePlaneShifted ).localizingCursor() instanceof PlanarPlaneSubsetLocalizingCursor ) );
 
 		// Testing Cursor
-		assertTrue( ( Views.interval( planarImg, intervalC ).cursor() instanceof PlanarSubsetCursor ) );
+		assertTrue( ( Views.interval( img, intervalFast ).cursor() instanceof PlanarSubsetCursor ) );
 
 		// Testing Localizing Cursor
-		assertTrue( ( Views.interval( planarImg, intervalC ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
+		assertTrue( ( Views.interval( img, intervalFast ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
+
+		// Testing Cursor
+		assertTrue( ( Views.interval( img, intervalSinglePlaneFull ).cursor() instanceof PlanarPlaneSubsetCursor ) );
+
+		// Testing Localizing Cursor
+		assertTrue( ( Views.interval( img, intervalSinglePlaneFull ).localizingCursor() instanceof PlanarPlaneSubsetLocalizingCursor ) );
+
+		// Following, test that optimized cursor is not created when not optimizeable
+		// Testing Cursor
+		assertFalse( ( Views.interval( img, intervalFastPart ).cursor() instanceof PlanarSubsetCursor) );
+		
+		// Testing Localizing Cursor
+		assertFalse( ( Views.interval( img, intervalFastPart ).localizingCursor() instanceof PlanarSubsetLocalizingCursor) );
 		
 		// Testing Cursor
-		assertTrue( ( Views.interval( planarImg, intervalD ).cursor() instanceof PlanarSubsetCursor ) );
-
+		assertFalse( ( Views.interval( img, intervalFastPart ).cursor() instanceof PlanarPlaneSubsetCursor) );
+		
 		// Testing Localizing Cursor
-		assertTrue( ( Views.interval( planarImg, intervalD ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
-
-	}
-
-	@Test
-	public void testIterationFast()
-	{
-		Cursor< IntType > cursor = planarImg.cursor( intervalA );
-
-		long[] position = new long[ cursor.numDimensions() ];
-		long[] max = new long[ cursor.numDimensions() ];
-
-		int ctr = 0;
-		long sum = 0;
-
-		while ( cursor.hasNext() )
-		{
-			cursor.next();
-			cursor.localize( position );
-			sum += cursor.get().get();
-			ctr++;
-		}
-
-		intervalA.max( max );
-
-		assertTrue( Arrays.equals( max, position ) );
-		assertTrue( ctr == fastintervalsize_A );
-		assertTrue( sum == getSum(intervalA));
-
-	}
-
-	@Test
-	public void testIterationShifted()
-	{
-		Cursor< IntType > cursor = Views.interval( planarImg, intervalC ).cursor();
-
-		long[] position = new long[ cursor.numDimensions() ];
-		long[] tmp = new long[ cursor.numDimensions() ];
-
-		intervalC.min( tmp );
-
-		cursor.fwd();
-		cursor.localize( position );
-		assertTrue( Arrays.equals( tmp, position ) );
-
-		cursor.reset();
-		int ctr = 0;
-		long sum = 0;
-		while ( cursor.hasNext() )
-		{
-			cursor.next();
-			cursor.localize( position );
-			sum += cursor.get().get();
-			ctr++;
-		}
-
-		intervalC.max( tmp );
-
-		assertTrue( Arrays.equals( tmp, position ) );
-		assertTrue( ctr == shiftedintervalsize_C );
-		assertTrue( sum == getSum(intervalC));
+		assertFalse( ( Views.interval( img, intervalFastPart ).localizingCursor() instanceof PlanarPlaneSubsetLocalizingCursor) );
 	}
 
 	@Test
 	public void testIterationSinglePlane()
 	{
-		Cursor< IntType > cursor = Views.interval( planarImg, intervalD ).cursor();
+		Cursor< IntType > cursor = Views.interval( img, intervalSinglePlaneFull ).cursor();
 
-		long[] position = new long[ cursor.numDimensions() ];
-		long[] tmp = new long[ cursor.numDimensions() ];
-
-		intervalD.min( tmp );
-
-		cursor.fwd();
-		cursor.localize( position );
-		assertTrue( Arrays.equals( tmp, position ) );
-
-		cursor.reset();
-		int ctr = 0;
-		long sum = 0;
-		while ( cursor.hasNext() )
-		{
-			cursor.next();
-			cursor.localize( position );
-			sum += cursor.get().get();
-			ctr++;
-		}
-
-		intervalD.max( tmp );
-
-		assertTrue( Arrays.equals( tmp, position ) );
-		assertTrue( ctr == singleplaneintervalsize_D );
-		assertTrue( sum == getSum(intervalD));
-	}
-	
-	@Test
-	public void testJumpFwdFast()
-	{
-		Cursor< IntType > cursor = Views.interval( planarImg, intervalA ).cursor();
-
-		long[] position = new long[ cursor.numDimensions() ];
-		long[] ref = new long[ cursor.numDimensions() ];
-
-		intervalA.min( ref );
-
-		ref[ 0 ] += 17;
-		cursor.jumpFwd( 18 );
-		cursor.localize( position );
-
-		assertTrue( Arrays.equals( ref, position ) );
+		testCursorIteration( cursor, intervalSinglePlaneFull );
 	}
 
 	@Test
-	public void testJumpFwdShifted()
+	public void testIterationSinglePlaneShifted()
 	{
-		Cursor< IntType > cursor = Views.interval( planarImg, intervalC ).cursor();
+		Cursor< IntType > cursor = Views.interval( img, intervalSinglePlaneShifted ).cursor();
 
-		long[] position = new long[ cursor.numDimensions() ];
-		long[] ref = new long[ cursor.numDimensions() ];
-
-		intervalC.min( ref );
-
-		ref[ 0 ] += 17;
-		cursor.jumpFwd( 18 );
-		cursor.localize( position );
-
-		assertTrue( Arrays.equals( ref, position ) );
+		testCursorIteration( cursor, intervalSinglePlaneShifted );
 	}
-	
+
 	@Test
 	public void testJumpFwdSinglePlane()
 	{
-		Cursor< IntType > cursor = Views.interval( planarImg, intervalD ).cursor();
+		Cursor< IntType > cursor = Views.interval( img, intervalSinglePlaneFull ).localizingCursor();
+		
+		testCursorJumpFwd( cursor, intervalSinglePlaneFull );
+	}
 
-		long[] position = new long[ cursor.numDimensions() ];
-		long[] ref = new long[ cursor.numDimensions() ];
+	// Localizing cursor
 
-		intervalD.min( ref );
+	@Test
+	public void tesLocalizingtIterationSinglePlaneShifted()
+	{
+		Cursor< IntType > cursor = Views.interval( img, intervalSinglePlaneShifted ).localizingCursor();
 
-		ref[ 0 ] += 17;
-		cursor.jumpFwd( 18 );
-		cursor.localize( position );
-
-		assertTrue( Arrays.equals( ref, position ) );
+		testCursorIteration( cursor, intervalSinglePlaneShifted );
 	}
 	
-	//HELPER
-	
-	private long getSum(Interval inter) {
-		long[] pos = new long[dimensions.length];
-		long sum = 0;
-		
-		
-		for ( int i = 0; i < intData.length; ++i )
-		{
-			IntervalIndexer.indexToPosition( i, dimensions, pos );
+	@Test
+	public void testLocalizingJumpFwdSinglePlane()
+	{
+		Cursor< IntType > cursor = Views.interval( img, intervalSinglePlaneFull ).localizingCursor();
 
-			boolean in = true;
-			for (int j = 0; j < pos.length; j++) {
-				if (pos[j] < inter.min(j) || pos[j] > inter.max(j)) {
-					in = false;
-					break;
-				}
-			}
-			
-			if (in) {
-				sum += intData[i];
-			}
-		}
-		
-		return sum;
+		testCursorJumpFwd( cursor, intervalSinglePlaneFull );
+	}
+
+	@Test
+	public void testLocalizingIterationSinglePlane()
+	{
+		Cursor< IntType > cursor = Views.interval( img, intervalSinglePlaneFull ).localizingCursor();
+
+		testCursorIteration( cursor, intervalSinglePlaneFull );
 	}
 }
