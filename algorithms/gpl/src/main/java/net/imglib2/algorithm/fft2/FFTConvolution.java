@@ -26,13 +26,15 @@
 
 package net.imglib2.algorithm.fft2;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import net.imglib2.Cursor;
 import net.imglib2.FinalDimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -49,7 +51,7 @@ import net.imglib2.view.Views;
  * (http://en.wikipedia.org/wiki/Convolution_theorem). By default computation is
  * performed in-place, i.e. the input is replaced by the convolution. A separate
  * output can, however, be specified.
- *
+ * 
  * The class supports to sequentially convolve the same image with different
  * kernels. To achieve that, you have to call setKeepImgFFT(true) and for each
  * sequential run replace the kernel by either calling
@@ -61,7 +63,7 @@ import net.imglib2.view.Views;
  * will simply fail. It is up to you to look for that. NOTE: This is not
  * influenced by whether the computation is performed in-place or not, just the
  * FFT of the image is kept.
- *
+ * 
  * In the same way, you can sequentially convolve varying images with the same
  * kernel. For that, you simply have to replace the image after the first run()
  * call by calling either setImg(RandomAccessibleInterval< R > img) or
@@ -72,10 +74,11 @@ import net.imglib2.view.Views;
  * will simply fail. It is up to you to look for that. NOTE: This is not
  * influenced by whether the computation is performed in-place or not, just the
  * FFT of the kernel is kept.
- *
+ * 
  * @author Stephan Preibisch
+ * @author Jonathan Hale
  */
-public class FFTConvolution< R extends RealType< R > > implements Runnable, MultiThreaded
+public class FFTConvolution< R extends RealType< R > >
 {
 	Img< ComplexFloatType > fftImg, fftKernel;
 
@@ -93,7 +96,7 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 	// by default we do not keep the image
 	boolean keepImgFFT = false;
 
-	private int numThreads;
+	private ExecutorService service;
 
 	/**
 	 * Compute a Fourier space based convolution in-place (img will be replaced
@@ -102,7 +105,10 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 	 * for creating the FFT will be identical to the one used by the 'img' if
 	 * possible, otherwise an {@link ArrayImgFactory} or {@link CellImgFactory}
 	 * depending on the size.
-	 *
+	 * 
+	 * ExecutorService will be created on {@link #convolve()} with threads equal
+	 * to number of processors equal to the runtime.
+	 * 
 	 * @param img
 	 *            - the image
 	 * @param kernel
@@ -110,7 +116,27 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 	 */
 	public FFTConvolution( final Img< R > img, final Img< R > kernel )
 	{
-		this( img, kernel, img );
+		this( img, kernel, img, (ExecutorService) null );
+	}
+	
+	/**
+	 * Compute a Fourier space based convolution in-place (img will be replaced
+	 * by the convolved result). The image will be extended by mirroring with
+	 * single boundary, the kernel will be zero-padded. The {@link ImgFactory}
+	 * for creating the FFT will be identical to the one used by the 'img' if
+	 * possible, otherwise an {@link ArrayImgFactory} or {@link CellImgFactory}
+	 * depending on the size.
+	 * 
+	 * @param img
+	 *            - the image
+	 * @param kernel
+	 *            - the convolution kernel
+	 * @param service
+	 *            - service providing threads for multi-threading
+	 */
+	public FFTConvolution( final Img< R > img, final Img< R > kernel, ExecutorService service )
+	{
+		this( img, kernel, img, service );
 	}
 
 	/**
@@ -119,7 +145,10 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 	 * {@link ImgFactory} for creating the FFT will be identical to the one used
 	 * by the 'img' if possible, otherwise an {@link ArrayImgFactory} or
 	 * {@link CellImgFactory} depending on the size.
-	 *
+	 * 
+	 * ExecutorService will be created on {@link #convolve()} with threads equal
+	 * to number of processors equal to the runtime.
+	 * 
 	 * @param img
 	 *            - the image
 	 * @param kernel
@@ -129,14 +158,38 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 	 */
 	public FFTConvolution( final Img< R > img, final Img< R > kernel, final RandomAccessibleInterval< R > output )
 	{
-		this( img, kernel, output, getFFTFactory( img ) );
+		this( img, kernel, output, getFFTFactory( img ), null );
 	}
-
+	
+	/**
+	 * Compute a Fourier space based convolution The image will be extended by
+	 * mirroring with single boundary, the kernel will be zero-padded. The
+	 * {@link ImgFactory} for creating the FFT will be identical to the one used
+	 * by the 'img' if possible, otherwise an {@link ArrayImgFactory} or
+	 * {@link CellImgFactory} depending on the size.
+	 * 
+	 * @param img
+	 *            - the image
+	 * @param kernel
+	 *            - the convolution kernel
+	 * @param output
+	 *            - the result of the convolution
+	 * @param service
+	 *            - service providing threads for multi-threading
+	 */
+	public FFTConvolution( final Img< R > img, final Img< R > kernel, final RandomAccessibleInterval< R > output, final ExecutorService service )
+	{
+		this( img, kernel, output, getFFTFactory( img ), service );
+	}
+	
 	/**
 	 * Compute a Fourier space based convolution in-place (img will be replaced
 	 * by the convolved result). The image will be extended by mirroring with
 	 * single boundary, the kernel will be zero-padded.
-	 *
+	 * 
+	 * ExecutorService will be created on {@link #convolve()} with threads equal
+	 * to number of processors equal to the runtime.
+	 * 
 	 * @param img
 	 *            - the image
 	 * @param kernel
@@ -146,13 +199,35 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 	 */
 	public FFTConvolution( final RandomAccessibleInterval< R > img, final RandomAccessibleInterval< R > kernel, final ImgFactory< ComplexFloatType > factory )
 	{
-		this( img, kernel, img, factory );
+		this( img, kernel, img, factory, null );
 	}
 
 	/**
+	 * Compute a Fourier space based convolution in-place (img will be replaced
+	 * by the convolved result). The image will be extended by mirroring with
+	 * single boundary, the kernel will be zero-padded.
+	 * 
+	 * @param img
+	 *            - the image
+	 * @param kernel
+	 *            - the convolution kernel
+	 * @param factory
+	 *            - the {@link ImgFactory} to create the fourier transforms
+	 * @param service
+	 *            - service providing threads for multi-threading
+	 */
+	public FFTConvolution( final RandomAccessibleInterval< R > img, final RandomAccessibleInterval< R > kernel, final ImgFactory< ComplexFloatType > factory, final ExecutorService service )
+	{
+		this( img, kernel, img, factory, service );
+	}
+	
+	/**
 	 * Compute a Fourier space based convolution The image will be extended by
 	 * mirroring with single boundary, the kernel will be zero-padded.
-	 *
+	 * 
+	 * ExecutorService will be created on {@link #convolve()} with threads equal
+	 * to number of processors equal to the runtime.
+	 * 
 	 * @param img
 	 *            - the image
 	 * @param kernel
@@ -164,19 +239,43 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 	 */
 	public FFTConvolution( final RandomAccessibleInterval< R > img, final RandomAccessibleInterval< R > kernel, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory )
 	{
-		this( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, output, factory );
+		this( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, output, factory, null );
 	}
+	
 
+	/**
+	 * Compute a Fourier space based convolution The image will be extended by
+	 * mirroring with single boundary, the kernel will be zero-padded.
+	 * 
+	 * @param img
+	 *            - the image
+	 * @param kernel
+	 *            - the convolution kernel
+	 * @param output
+	 *            - the output
+	 * @param factory
+	 *            - the {@link ImgFactory} to create the fourier transforms
+	 * @param service
+	 *            - service providing threads for multi-threading
+	 */
+	public FFTConvolution( final RandomAccessibleInterval< R > img, final RandomAccessibleInterval< R > kernel, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory, final ExecutorService service )
+	{
+		this( Views.extendMirrorSingle( img ), img, Views.extendValue( kernel, Util.getTypeFromInterval( kernel ).createVariable() ), kernel, output, factory, service );
+	}
+	
 	/**
 	 * Compute a Fourier space based convolution in-place (img will be replaced
 	 * by the convolved result). The input as well as the kernel need to be
 	 * extended or infinite already as the {@link Interval} required to perform
 	 * the Fourier convolution is significantly bigger than the {@link Interval}
 	 * provided here.
-	 *
+	 * 
 	 * Interval size of img and kernel: size(img) + 2*(size(kernel)-1) + pad to
 	 * fft compatible size
-	 *
+	 * 
+	 * ExecutorService will be created on {@link #convolve()} with threads equal
+	 * to number of processors equal to the runtime.
+	 *  
 	 * @param img
 	 *            - the input
 	 * @param imgInterval
@@ -190,7 +289,35 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 	 */
 	public FFTConvolution( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final ImgFactory< ComplexFloatType > factory )
 	{
-		this( img, imgInterval, kernel, kernelInterval, Views.interval( img, imgInterval ), factory );
+		this( img, imgInterval, kernel, kernelInterval, Views.interval( img, imgInterval ), factory, null );
+	}
+
+	/**
+	 * Compute a Fourier space based convolution in-place (img will be replaced
+	 * by the convolved result). The input as well as the kernel need to be
+	 * extended or infinite already as the {@link Interval} required to perform
+	 * the Fourier convolution is significantly bigger than the {@link Interval}
+	 * provided here.
+	 * 
+	 * Interval size of img and kernel: size(img) + 2*(size(kernel)-1) + pad to
+	 * fft compatible size
+	 * 
+	 * @param img
+	 *            - the input
+	 * @param imgInterval
+	 *            - the input interval (i.e. the area to be convolved)
+	 * @param kernel
+	 *            - the kernel
+	 * @param kernelInterval
+	 *            - the kernel interval
+	 * @param factory
+	 *            - the {@link ImgFactory} to create the fourier transforms
+	 * @param service
+	 *            - service providing threads for multi-threading
+	 */
+	public FFTConvolution( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final ImgFactory< ComplexFloatType > factory, final ExecutorService service )
+	{
+		this( img, imgInterval, kernel, kernelInterval, Views.interval( img, imgInterval ), factory, service );
 	}
 
 	/**
@@ -198,10 +325,13 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 	 * kernel need to be extended or infinite already as the {@link Interval}
 	 * required to perform the Fourier convolution is significantly bigger than
 	 * the {@link Interval} provided here.
-	 *
+	 * 
 	 * Interval size of img and kernel: size(img) + 2*(size(kernel)-1) + pad to
 	 * fft compatible size
-	 *
+	 * 
+	 * ExecutorService will be created on {@link #convolve()} with threads equal
+	 * to number of processors equal to the runtime.
+	 *  
 	 * @param img
 	 *            - the input
 	 * @param imgInterval
@@ -217,13 +347,44 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 	 */
 	public FFTConvolution( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory )
 	{
+		this(img, imgInterval, kernel, kernelInterval, output, factory, null );
+	}
+	
+	/**
+	 * Compute a Fourier space based convolution. The input as well as the
+	 * kernel need to be extended or infinite already as the {@link Interval}
+	 * required to perform the Fourier convolution is significantly bigger than
+	 * the {@link Interval} provided here.
+	 * 
+	 * Interval size of img and kernel: size(img) + 2*(size(kernel)-1) + pad to
+	 * fft compatible size
+	 * 
+	 * @param img
+	 *            - the input
+	 * @param imgInterval
+	 *            - the input interval (i.e. the area to be convolved)
+	 * @param kernel
+	 *            - the kernel
+	 * @param kernelInterval
+	 *            - the kernel interval
+	 * @param output
+	 *            - the output data+interval
+	 * @param factory
+	 *            - the {@link ImgFactory} to create the fourier transforms
+	 * @param service
+	 *            - service providing threads for multi-threading
+	 * 
+	 */
+	public FFTConvolution( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory, final ExecutorService service )
+	{
 		this.img = img;
 		this.imgInterval = imgInterval;
 		this.kernel = kernel;
 		this.kernelInterval = kernelInterval;
 		this.output = output;
 		this.fftFactory = factory;
-		setNumThreads();
+
+		setExecutorService( service );
 	}
 
 	public void setImg( final RandomAccessibleInterval< R > img )
@@ -305,9 +466,14 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 		return fftKernel;
 	}
 
-	@Override
-	public void run()
+	public void convolve()
 	{
+		ExecutorService s = service;
+		if (service == null) {
+			// create an ExecutorService
+			// FIXME: Better way to define number of threads?
+			s = Executors.newFixedThreadPool( Runtime.getRuntime( ).availableProcessors());
+		}
 		final int numDimensions = imgInterval.numDimensions();
 
 		// the image has to be extended at least by kernelDimensions/2-1 in each
@@ -351,11 +517,11 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 
 		// compute the FFT's if they do not exist yet
 		if ( fftImg == null )
-			fftImg = FFT.realToComplex( imgInput, fftFactory, numThreads );
+			fftImg = FFT.realToComplex( imgInput, fftFactory, s );
 
 		if ( fftKernel == null )
 		{
-			fftKernel = FFT.realToComplex( kernelInput, fftFactory, numThreads );
+			fftKernel = FFT.realToComplex( kernelInput, fftFactory, s );
 
 			// compute the complex conjugate of the FFT of the kernel (same as
 			// mirroring the input image)
@@ -375,7 +541,12 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 		multiplyComplex( fftconvolved, fftKernel );
 
 		// inverse FFT in place
-		FFT.complexToRealUnpad( fftconvolved, output, numThreads );
+		FFT.complexToRealUnpad( fftconvolved, output, s );
+		
+		if ( service == null ) { 
+			// shutdown own self created service
+			s.shutdown();
+		}
 	}
 
 	final public static < R extends RealType< R > > void convolve( final RandomAccessible< R > img, final Interval imgInterval, final RandomAccessible< R > kernel, final Interval kernelInterval, final RandomAccessibleInterval< R > output, final ImgFactory< ComplexFloatType > factory, final int numThreads )
@@ -455,21 +626,38 @@ public class FFTConvolution< R extends RealType< R > > implements Runnable, Mult
 		}
 	}
 
-	@Override
-	public void setNumThreads()
+	/**
+	 * Set the executor service to use.
+	 * 
+	 * @param service
+	 *            - Executor service to use.
+	 */
+	public void setExecutorService( final ExecutorService service )
 	{
-		this.numThreads = Runtime.getRuntime().availableProcessors();
+		this.service = service;
 	}
 
-	@Override
-	public void setNumThreads( final int numThreads )
+	/**
+	 * Utility function to create an ExecutorService
+	 * 
+	 * Number of threads utilized matches available processors in runtime.
+	 * 
+	 * @return - the new ExecutorService
+	 */
+	public static final ExecutorService createExecutorService()
 	{
-		this.numThreads = numThreads;
+		return createExecutorService( Runtime.getRuntime().availableProcessors() );
 	}
 
-	@Override
-	public int getNumThreads()
+	/**
+	 * Utility function to create an ExecutorService
+	 * 
+	 * @param nThreads
+	 *            - number of threads to utilize
+	 * @return - the new ExecutorService
+	 */
+	public static final ExecutorService createExecutorService( int nThreads )
 	{
-		return numThreads;
+		return Executors.newFixedThreadPool( nThreads );
 	}
 }
