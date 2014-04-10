@@ -44,7 +44,7 @@ import net.imglib2.type.Type;
  */
 public class ConvertedCursor< A, B extends Type< B > > extends AbstractConvertedCursor< A, B >
 {
-	final protected Converter< A, B > converter;
+	final protected Converter< ? super A, ? super B > converter;
 
 	final protected B converted;
 
@@ -56,7 +56,7 @@ public class ConvertedCursor< A, B extends Type< B > > extends AbstractConverted
 	 * @param converter
 	 * @param b
 	 */
-	public ConvertedCursor( final Cursor< A > source, final Converter< A, B > converter, final B b )
+	public ConvertedCursor( final Cursor< A > source, final Converter< ? super A, ? super B > converter, final B b )
 	{
 		super( source );
 		this.converter = converter;
