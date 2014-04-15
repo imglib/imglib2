@@ -11,7 +11,7 @@
 
 	<groupId>net.imglib2</groupId>
 	<artifactId>pom-imglib2</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.0-beta-26</version>
 	<packaging>pom</packaging>
 
 	<name>ImgLib2 Projects</name>
@@ -260,7 +260,7 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 	<scm>
 		<connection>scm:git:git://github.com/imglib/imglib</connection>
 		<developerConnection>scm:git:git@github.com:imglib/imglib</developerConnection>
-		<tag>HEAD</tag>
+		<tag>imglib2-2.0.0-beta-26</tag>
 		<url>https://github.com/imglib/imglib</url>
 	</scm>
 
