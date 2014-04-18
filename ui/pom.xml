@@ -18,15 +18,11 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2-realtransform</artifactId>
-			<version>${project.version}</version>
 		</dependency>
-
-		<!-- External dependencies -->
 	</dependencies>
 
 	<build>
