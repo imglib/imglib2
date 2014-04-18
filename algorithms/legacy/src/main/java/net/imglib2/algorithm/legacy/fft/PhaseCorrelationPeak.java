@@ -84,17 +84,22 @@ public class PhaseCorrelationPeak implements Comparable<PhaseCorrelationPeak>
 		{
 			if ( this.phaseCorrelationPeak > o.phaseCorrelationPeak )
 				return 1;
-			return this.phaseCorrelationPeak == o.phaseCorrelationPeak ? 0 : -1;
+			if ( this.phaseCorrelationPeak < o.phaseCorrelationPeak )
+				return -1;
+			return 0;
 		}
+
 		if ( this.crossCorrelationPeak > o.crossCorrelationPeak )
-		{
 			return 1;
-		}
-		if ( this.crossCorrelationPeak == o.crossCorrelationPeak )
-		{
-			return this.numPixels >= o.numPixels ? 1 : 0;
-		}
-		return -1;
+		if ( this.crossCorrelationPeak < o.crossCorrelationPeak )
+			return -1;
+
+		if ( this.numPixels > o.numPixels )
+			return 1;
+		if ( this.numPixels < o.numPixels )
+			return -1;
+
+		return 0;
 	}
 	
 	@Override
