@@ -33,13 +33,15 @@
 
 package net.imglib2.algorithm.edge;
 
+import net.imglib2.RealLocalizable;
+
 /**
  * An oriented point representing a sub-pixel localized segment of a
  * (hyper-)edge.
  * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class Edgel
+public class Edgel implements RealLocalizable
 {
 	private final float[] position;
 
@@ -95,4 +97,37 @@ public class Edgel
 	{
 		return magnitude;
 	}
+	
+	@Override
+	public final int numDimensions()
+	{
+		return position.length;
+	}
+
+	@Override
+	public final void localize( final float[] position )
+	{
+		for ( int d = 0; d < position.length; ++d )
+			position[ d ] = position [ d ];
+	}
+
+	@Override
+	public final void localize( final double[] position )
+	{
+		for ( int d = 0; d < position.length; ++d )
+			position[ d ] = position[ d ];
+	}
+
+	@Override
+	public final float getFloatPosition( final int d )
+	{
+		return position[ d ];
+	}
+
+	@Override
+	public final double getDoublePosition( final int d )
+	{
+		return position[ d ];
+	}
+	
 }
