@@ -33,7 +33,7 @@
 
 package net.imglib2.algorithm.edge;
 
-import net.imglib2.RealLocalizable;
+import net.imglib2.AbstractRealLocalizable;
 
 /**
  * An oriented point representing a sub-pixel localized segment of a
@@ -41,13 +41,12 @@ import net.imglib2.RealLocalizable;
  * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class Edgel implements RealLocalizable
+public class Edgel extends AbstractRealLocalizable
 {
-	private final float[] position;
 
-	private final float[] gradient;
+	private final double[] gradient;
 
-	private final float magnitude;
+	private final double magnitude;
 
 	/**
 	 * Create an edgel.
@@ -60,9 +59,9 @@ public class Edgel implements RealLocalizable
 	 * @param magnitude
 	 *            the gradient magnitude at the edgel position.
 	 */
-	public Edgel( final float[] position, final float[] gradient, final float magnitude )
+	public Edgel( final double[] position, final double[] gradient, final double magnitude )
 	{
-		this.position = position.clone();
+		super(position);
 		this.gradient = gradient.clone();
 		this.magnitude = magnitude;
 	}
@@ -72,7 +71,7 @@ public class Edgel implements RealLocalizable
 	 * 
 	 * @return the sub-pixel position of the edgel.
 	 */
-	public float[] getPosition()
+	public double[] getPosition()
 	{
 		return position;
 	}
@@ -83,7 +82,7 @@ public class Edgel implements RealLocalizable
 	 * 
 	 * @return the gradient direction at the edgel position.
 	 */
-	public float[] getGradient()
+	public double[] getGradient()
 	{
 		return gradient;
 	}
@@ -93,41 +92,9 @@ public class Edgel implements RealLocalizable
 	 * 
 	 * @return the gradient magnitude at the edgel position.
 	 */
-	public float getMagnitude()
+	public double getMagnitude()
 	{
 		return magnitude;
-	}
-	
-	@Override
-	public final int numDimensions()
-	{
-		return position.length;
-	}
-
-	@Override
-	public final void localize( final float[] position )
-	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] = position [ d ];
-	}
-
-	@Override
-	public final void localize( final double[] position )
-	{
-		for ( int d = 0; d < position.length; ++d )
-			position[ d ] = position[ d ];
-	}
-
-	@Override
-	public final float getFloatPosition( final int d )
-	{
-		return position[ d ];
-	}
-
-	@Override
-	public final double getDoublePosition( final int d )
-	{
-		return position[ d ];
 	}
 	
 }
