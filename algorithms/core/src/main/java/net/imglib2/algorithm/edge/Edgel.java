@@ -61,7 +61,7 @@ public class Edgel extends AbstractRealLocalizable
 	 */
 	public Edgel( final double[] position, final double[] gradient, final double magnitude )
 	{
-		super(position);
+		super(position.clone());
 		this.gradient = gradient.clone();
 		this.magnitude = magnitude;
 	}
