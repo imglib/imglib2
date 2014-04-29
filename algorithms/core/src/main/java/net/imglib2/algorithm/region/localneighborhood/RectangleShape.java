@@ -35,6 +35,7 @@ package net.imglib2.algorithm.region.localneighborhood;
 
 import java.util.Iterator;
 
+import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.AbstractInterval;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
@@ -43,15 +44,16 @@ import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 
 /**
  * A factory for Accessibles on rectangular neighboorhoods.
- * 
+ *
  * TODO: support non-isotropic, non-symmetric rectangular neighboorhood shapes.
  * (the Neighborhood implementation supports it already, we just need to change
  * this factory.)
- * 
+ *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class RectangleShape implements Shape
@@ -71,13 +73,15 @@ public class RectangleShape implements Shape
 	}
 
 	@Override
-	public < T > NeighborhoodsAccessible< T > neighborhoods( final RandomAccessibleInterval< T > source )
+	public < T > NeighborhoodsIterableInterval< T > neighborhoods( final RandomAccessibleInterval< T > source )
 	{
-		return neighborhoodsRandomAccessible( source );
+		final RectangleNeighborhoodFactory< T > f = skipCenter ? RectangleNeighborhoodSkipCenterUnsafe.< T >factory() : RectangleNeighborhoodUnsafe.< T >factory();
+		final Interval spanInterval = createSpan( source.numDimensions() );
+		return new NeighborhoodsIterableInterval< T >( source, spanInterval, f );
 	}
 
 	@Override
-	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessible( final RandomAccessibleInterval< T > source )
+	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessible( final RandomAccessible< T > source )
 	{
 		final RectangleNeighborhoodFactory< T > f = skipCenter ? RectangleNeighborhoodSkipCenterUnsafe.< T >factory() : RectangleNeighborhoodUnsafe.< T >factory();
 		final Interval spanInterval = createSpan( source.numDimensions() );
@@ -85,13 +89,15 @@ public class RectangleShape implements Shape
 	}
 
 	@Override
-	public < T > NeighborhoodsAccessible< T > neighborhoodsSafe( final RandomAccessibleInterval< T > source )
+	public < T > NeighborhoodsIterableInterval< T > neighborhoodsSafe( final RandomAccessibleInterval< T > source )
 	{
-		return neighborhoodsRandomAccessibleSafe( source );
+		final RectangleNeighborhoodFactory< T > f = skipCenter ? RectangleNeighborhoodSkipCenter.< T >factory() : RectangleNeighborhood.< T >factory();
+		final Interval spanInterval = createSpan( source.numDimensions() );
+		return new NeighborhoodsIterableInterval< T >( source, spanInterval, f );
 	}
 
 	@Override
-	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessibleSafe( final RandomAccessibleInterval< T > source )
+	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessibleSafe( final RandomAccessible< T > source )
 	{
 		final RectangleNeighborhoodFactory< T > f = skipCenter ? RectangleNeighborhoodSkipCenter.< T >factory() : RectangleNeighborhood.< T >factory();
 		final Interval spanInterval = createSpan( source.numDimensions() );
@@ -110,7 +116,8 @@ public class RectangleShape implements Shape
 		return new FinalInterval( min, max );
 	}
 
-	public static final class NeighborhoodsAccessible< T > extends AbstractInterval implements RandomAccessibleInterval< Neighborhood< T > >, IterableInterval< Neighborhood< T > >
+
+	public static final class NeighborhoodsIterableInterval< T > extends AbstractInterval implements IterableInterval< Neighborhood< T > >
 	{
 		final RandomAccessibleInterval< T > source;
 
@@ -120,7 +127,7 @@ public class RectangleShape implements Shape
 
 		final long size;
 
-		public NeighborhoodsAccessible( final RandomAccessibleInterval< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory )
+		public NeighborhoodsIterableInterval( final RandomAccessibleInterval< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory )
 		{
 			super( source );
 			this.source = source;
@@ -133,21 +140,9 @@ public class RectangleShape implements Shape
 		}
 
 		@Override
-		public RandomAccess< Neighborhood< T >> randomAccess()
-		{
-			return new RectangleNeighborhoodRandomAccess< T >( source, span, factory );
-		}
-
-		@Override
 		public Cursor< Neighborhood< T >> cursor()
 		{
 			return new RectangleNeighborhoodCursor< T >( source, span, factory );
-		}
-
-		@Override
-		public RandomAccess< Neighborhood< T >> randomAccess( final Interval interval )
-		{
-			return randomAccess();
 		}
 
 		@Override
@@ -184,6 +179,35 @@ public class RectangleShape implements Shape
 		public Cursor< Neighborhood< T >> localizingCursor()
 		{
 			return cursor();
+		}
+	}
+
+	public static final class NeighborhoodsAccessible< T > extends AbstractEuclideanSpace implements RandomAccessible< Neighborhood< T > >
+	{
+		final RandomAccessible< T > source;
+
+		final Interval span;
+
+		final RectangleNeighborhoodFactory< T > factory;
+
+		public NeighborhoodsAccessible( final RandomAccessible< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory )
+		{
+			super( source.numDimensions() );
+			this.source = source;
+			this.span = span;
+			this.factory = factory;
+		}
+
+		@Override
+		public RandomAccess< Neighborhood< T >> randomAccess()
+		{
+			return new RectangleNeighborhoodRandomAccess< T >( source, span, factory );
+		}
+
+		@Override
+		public RandomAccess< Neighborhood< T >> randomAccess( final Interval interval )
+		{
+			return new RectangleNeighborhoodRandomAccess< T >( source, span, factory, interval );
 		}
 	}
 }

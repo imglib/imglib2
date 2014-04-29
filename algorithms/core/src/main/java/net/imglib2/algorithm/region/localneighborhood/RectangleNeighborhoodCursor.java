@@ -42,6 +42,10 @@ public final class RectangleNeighborhoodCursor< T > extends RectangleNeighborhoo
 {
 	private final long[] dimensions;
 
+	private final long[] min;
+
+	private final long[] max;
+
 	private long index;
 
 	private final long maxIndex;
@@ -50,10 +54,14 @@ public final class RectangleNeighborhoodCursor< T > extends RectangleNeighborhoo
 
 	public RectangleNeighborhoodCursor( final RandomAccessibleInterval< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory )
 	{
-		super( source, span, factory );
+		super( source, span, factory, source );
 
 		dimensions = new long[ n ];
-		dimensions( dimensions );
+		min = new long[ n ];
+		max = new long[ n ];
+		source.dimensions( dimensions );
+		source.min( min );
+		source.max( max );
 		long size = dimensions[ 0 ];
 		for ( int d = 1; d < n; ++d )
 			size *= dimensions[ d ];
@@ -65,6 +73,8 @@ public final class RectangleNeighborhoodCursor< T > extends RectangleNeighborhoo
 	{
 		super( c );
 		dimensions = c.dimensions.clone();
+		min = c.min.clone();
+		max = c.max.clone();
 		maxIndex = c.maxIndex;
 		index = c.index;
 		maxIndexOnLine = c.maxIndexOnLine;
@@ -158,5 +168,4 @@ public final class RectangleNeighborhoodCursor< T > extends RectangleNeighborhoo
 	{
 		return copy();
 	}
-
 }
