@@ -86,7 +86,7 @@ public class SubpixelEdgelDetection
 	public static < T extends RealType< T > > ArrayList< Edgel > getEdgels(
 			final RandomAccessibleInterval< T > input,
 			final ImgFactory< T > factory,
-			final float minGradientMagnitude )
+			final double minGradientMagnitude )
 	{
 		final ArrayList< Edgel > edgels = new ArrayList< Edgel >();
 
@@ -142,19 +142,19 @@ public class SubpixelEdgelDetection
 			src.setPosition( min[ d ], d );
 		src.setPosition( 0, n );
 
-		final float g[] = new float[ n ];
-		final float doublePos[] = new float[ n ];
+		final double g[] = new double[ n ];
+		final double doublePos[] = new double[ n ];
 
-		final float minMagnitudeSquared = minGradientMagnitude * minGradientMagnitude;
+		final double minMagnitudeSquared = minGradientMagnitude * minGradientMagnitude;
 		final long max0 = max[ 0 ];
 		while ( true )
 		{
 			// process pixel...
 			// gradient direction
-			float len = 0;
+			double len = 0;
 			for ( int d = 0; d < n; ++d )
 			{
-				final float gg = src.get().getRealFloat();
+				final double gg = src.get().getRealDouble();
 				len += gg * gg;
 				g[ d ] = gg;
 				src.fwd( n );
@@ -162,26 +162,27 @@ public class SubpixelEdgelDetection
 			src.setPosition( 0, n );
 			if ( len >= minMagnitudeSquared )
 			{
-				len = ( float ) Math.sqrt( len );
+				len = Math.sqrt( len );
 
 				for ( int d = 0; d < n; ++d )
 				{
 					g[ d ] /= len;
-					doublePos[ d ] = src.getFloatPosition( d ) + g[ d ];
+					doublePos[ d ] = src.getDoublePosition( d ) + g[ d ];
 				}
-				final float lighterMag = gradientMagnitudeInDirection( doublePos, g, gradientAccess );
+				final double lighterMag = gradientMagnitudeInDirection( doublePos, g, gradientAccess );
 				if ( len >= lighterMag )
 				{
 					for ( int d = 0; d < n; ++d )
-						doublePos[ d ] = src.getFloatPosition( d ) - g[ d ];
-					final float darkerMag = gradientMagnitudeInDirection( doublePos, g, gradientAccess );
+						doublePos[ d ] = src.getDoublePosition( d ) - g[ d ];
+
+					final double darkerMag = gradientMagnitudeInDirection( doublePos, g, gradientAccess );
 
 					if ( len >= darkerMag )
 					{
 						// sub-pixel localization
-						final float m = ( darkerMag - lighterMag ) / ( 2 * ( darkerMag - 2 * len + lighterMag ) );
+						final double m = ( darkerMag - lighterMag ) / ( 2 * ( darkerMag - 2 * len + lighterMag ) );
 						for ( int d = 0; d < n; ++d )
-							doublePos[ d ] = src.getFloatPosition( d ) + m * g[ d ];
+							doublePos[ d ] = src.getDoublePosition( d ) + m * g[ d ];
 						edgels.add( new Edgel( doublePos, g, len ) );
 					}
 				}
@@ -213,13 +214,13 @@ public class SubpixelEdgelDetection
 		}
 	}
 
-	private static < T extends RealType< T > > float gradientMagnitudeInDirection( final float[] position, final float[] direction, final RealRandomAccess< T >[] gradientAccess )
+	private static < T extends RealType< T > > double gradientMagnitudeInDirection( final double[] position, final double[] direction, final RealRandomAccess< T >[] gradientAccess )
 	{
-		float len = 0;
+		double len = 0;
 		for ( int d = 0; d < gradientAccess.length; ++d )
 		{
 			gradientAccess[ d ].setPosition( position );
-			len += gradientAccess[ d ].get().getRealFloat() * direction[ d ];
+			len += gradientAccess[ d ].get().getRealDouble() * direction[ d ];
 		}
 		return len;
 	}
