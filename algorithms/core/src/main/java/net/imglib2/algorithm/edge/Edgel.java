@@ -67,16 +67,6 @@ public class Edgel extends AbstractRealLocalizable
 	}
 
 	/**
-	 * Get the sub-pixel position of the edgel.
-	 * 
-	 * @return the sub-pixel position of the edgel.
-	 */
-	public double[] getPosition()
-	{
-		return position;
-	}
-
-	/**
 	 * Get the gradient direction at the edgel position. This is a unit vector
 	 * perpendicular to the edge direction.
 	 * 
@@ -95,6 +85,14 @@ public class Edgel extends AbstractRealLocalizable
 	public double getMagnitude()
 	{
 		return magnitude;
+	}
+
+	public String toString()
+	{
+		return String.format("Edgel: pos (%.2f,%.2f,%.2f) grad (%.2f,%.2f,%.2f) mag (%.2f)", 
+				position[0], position[1], position[2], 
+				gradient[0], gradient[1], gradient[2], 
+				magnitude);
 	}
 	
 }
