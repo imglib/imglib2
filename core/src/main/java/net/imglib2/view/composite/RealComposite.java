@@ -37,6 +37,11 @@
 package net.imglib2.view.composite;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.list.ListImgFactory;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 
@@ -45,9 +50,9 @@ import net.imglib2.type.numeric.RealType;
  * itself, implementing the {@link NumericType} algebra as element-wise
  * operations.
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
-public class RealComposite< T extends RealType< T > > extends NumericComposite< T >
+public class RealComposite< T extends RealType< T > > extends AbstractNumericComposite< T, RealComposite< T > >
 {
 	static public class Factory< T extends RealType< T > > implements CompositeFactory< T, RealComposite< T > > 
 	{
@@ -68,5 +73,27 @@ public class RealComposite< T extends RealType< T > > extends NumericComposite< 
 	public RealComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
 		super( sourceAccess, length );
+	}
+
+	/**
+	 * Generates a 1D {@link ArrayImg}&lt;T&gt; 
+	 */
+	@Override
+	@SuppressWarnings( { "unchecked", "rawtypes" } )
+	public RealComposite< T > createVariable()
+	{
+		final T t = sourceAccess.get();
+		final Img< T > img;
+		if ( NativeType.class.isInstance( t ) )
+			img = ( ( NativeType )t ).createSuitableNativeImg( new ArrayImgFactory(), new long[]{ length } );
+		else
+			img = new ListImgFactory< T >().create( new long[]{ length }, t );
+		return new RealComposite< T >( img.randomAccess(), length );
+	}
+
+	@Override
+	public RealComposite< T > copy()
+	{
+		return new RealComposite< T >( sourceAccess.copyRandomAccess(), length );
 	}
 }
