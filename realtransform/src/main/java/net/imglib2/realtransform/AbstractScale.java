@@ -121,7 +121,7 @@ abstract public class AbstractScale implements ScaleGet
 	{
 		assert source.numDimensions() >= s.length && target.numDimensions() >= s.length : "Input dimensions too small.";
 		
-		for ( int d =0; d < s.length; ++d )
+		for ( int d = 0; d < s.length; ++d )
 			source.setPosition( target.getDoublePosition( d ) / s[ d ], d );
 	}
 

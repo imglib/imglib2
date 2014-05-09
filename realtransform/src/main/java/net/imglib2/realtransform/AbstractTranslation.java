@@ -91,7 +91,10 @@ abstract public class AbstractTranslation implements InvertibleRealTransform, Tr
 		
 		ds = new RealPoint[ n ];
 		for ( int d = 0; d < n; ++d )
+		{
+			ds[ d ] = new RealPoint( n );
 			ds[ d ].setPosition( 1, d );
+		}
 	}
 	
 	public AbstractTranslation( final double... t )
