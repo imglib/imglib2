@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,23 +28,19 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2;
 
 /**
- * {@link RandomAccessible} on a {@link RealRandomAccessible}.  For optimal
+ * {@link RandomAccessible} on a {@link RealRandomAccessible}. For optimal
  * performance, no integer coordinates are stored in the {@link RandomAccess}
  * but only method calls passed through to an actual {@link RealRandomAccess}.
  * Therefore, localization into integer fields performs a Math.round operation
- * per field and is thus not very efficient.  Localization into real fields,
+ * per field and is thus not very efficient. Localization into real fields,
  * however, is passed through and thus performs optimally.
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -65,20 +61,20 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 		public void localize( final int[] position )
 		{
 			for ( int d = 0; d < n; ++d )
-				position[ d ] = ( int )Math.round( targetAccess.getDoublePosition( d ) );
+				position[ d ] = ( int ) Math.round( targetAccess.getDoublePosition( d ) );
 		}
 
 		@Override
 		public void localize( final long[] position )
 		{
 			for ( int d = 0; d < n; ++d )
-				position[ d ] = Math.round( targetAccess.getDoublePosition( d ) );			
+				position[ d ] = Math.round( targetAccess.getDoublePosition( d ) );
 		}
 
 		@Override
 		public int getIntPosition( final int d )
 		{
-			return ( int )Math.round( targetAccess.getDoublePosition( d ) );
+			return ( int ) Math.round( targetAccess.getDoublePosition( d ) );
 		}
 
 		@Override
@@ -110,7 +106,7 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 		{
 			return targetAccess.getDoublePosition( d );
 		}
-		
+
 		@Override
 		public void fwd( final int d )
 		{

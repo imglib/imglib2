@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui.viewer;
@@ -54,14 +50,14 @@ import net.imglib2.ui.util.InterpolatingSource;
 
 /**
  * Interactive viewer for a 3D {@link RandomAccessible}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class InteractiveViewer3D< T extends NumericType< T > > extends InteractiveRealViewer< AffineTransform3D, InteractiveDisplayCanvasComponent< AffineTransform3D > >
 {
 	/**
 	 * Create an interactive viewer for a 3D {@link RandomAccessible}.
-	 *
+	 * 
 	 * @param width
 	 *            window width.
 	 * @param height
@@ -102,7 +98,8 @@ public class InteractiveViewer3D< T extends NumericType< T > > extends Interacti
 		display.addOverlayRenderer( box );
 
 		// add KeyHandler for toggling interpolation
-		display.addHandler( new KeyAdapter() {
+		display.addHandler( new KeyAdapter()
+		{
 			@Override
 			public void keyPressed( final KeyEvent e )
 			{
@@ -112,6 +109,6 @@ public class InteractiveViewer3D< T extends NumericType< T > > extends Interacti
 					requestRepaint();
 				}
 			}
-		});
+		} );
 	}
 }

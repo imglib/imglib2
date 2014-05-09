@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -48,188 +44,207 @@ import net.imglib2.type.Type;
 
 /**
  * Implements a Histogram over an Image.
- *
+ * 
  * @author 2011 Larry Lindsey
  * @author Larry Lindsey
  */
-public class Histogram <T> implements Algorithm, Benchmark
+public class Histogram< T > implements Algorithm, Benchmark
 {
 	/**
 	 * Processing time, milliseconds.
 	 */
 	private long pTime = 0;
-	
+
 	/**
 	 * Hold the histogram itself.
 	 */
 	private final int[] histogram;
-	
+
 	/**
 	 * The Cursor from which the histogram is to be calculated.
 	 */
-	private final RealCursor<T> cursor;
-	
+	private final RealCursor< T > cursor;
+
 	/**
-	 * The HistogramBinMapper, used to map Type values to histogram bin
-	 * indices.
+	 * The HistogramBinMapper, used to map Type values to histogram bin indices.
 	 */
-	private final HistogramBinMapper<T> binMapper;	
+	private final HistogramBinMapper< T > binMapper;
 
 	/**
 	 * Create a Histogram using the given mapper, calculating from the given
 	 * Cursor.
-	 * @param mapper the HistogramBinMapper used to map Type values to 
-	 * histogram bin indices. 
-	 * @param c a Cursor corresponding to the Image from which the Histogram
-	 * will be calculated
+	 * 
+	 * @param mapper
+	 *            the HistogramBinMapper used to map Type values to histogram
+	 *            bin indices.
+	 * @param c
+	 *            a Cursor corresponding to the Image from which the Histogram
+	 *            will be calculated
 	 * 
 	 */
-	public Histogram(final HistogramBinMapper<T> mapper,
-			final RealCursor<T> c)
-	{		
+	public Histogram( final HistogramBinMapper< T > mapper,
+			final RealCursor< T > c )
+	{
 		cursor = c;
 		binMapper = mapper;
-		histogram = new int[binMapper.getNumBins()];
+		histogram = new int[ binMapper.getNumBins() ];
 	}
-	
+
 	/**
-     * Create a Histogram using the given mapper, calculating from the given
-     * Image.
-     * @param mapper the HistogramBinMapper used to map Type values to 
-     * histogram bin indices. 
-     * @param image an Image from which the Histogram will be calculated
-     * 
-     */
-	public Histogram(final HistogramBinMapper<T> mapper,
-			final Img<T> image)
+	 * Create a Histogram using the given mapper, calculating from the given
+	 * Image.
+	 * 
+	 * @param mapper
+	 *            the HistogramBinMapper used to map Type values to histogram
+	 *            bin indices.
+	 * @param image
+	 *            an Image from which the Histogram will be calculated
+	 * 
+	 */
+	public Histogram( final HistogramBinMapper< T > mapper,
+			final Img< T > image )
 	{
-		this(mapper, image.cursor());
+		this( mapper, image.cursor() );
 	}
-	
+
 	/**
 	 * Resets the histogram array and the Cursor.
 	 */
 	public void reset()
 	{
-		Arrays.fill(histogram, 0);
+		Arrays.fill( histogram, 0 );
 		cursor.reset();
 	}
-	
+
 	/**
 	 * Returns the bin count corresponding to a given {@link Type}.
-	 * @param t the Type corresponding to the requested 
+	 * 
+	 * @param t
+	 *            the Type corresponding to the requested
 	 * @return The requested bin count.
 	 */
-	public int getBin(final T t)
+	public int getBin( final T t )
 	{
-		return getHistogram()[binMapper.map(t)];
+		return getHistogram()[ binMapper.map( t ) ];
 	}
 
 	/**
 	 * Returns the bin count given by the indicated bin index.
-	 * @param i the index of the requested bin
+	 * 
+	 * @param i
+	 *            the index of the requested bin
 	 * @return the bin count at the given index
 	 */
-	public int getBin(int i)
-    {
-        return getHistogram()[i];
-    }
-	
+	public int getBin( final int i )
+	{
+		return getHistogram()[ i ];
+	}
+
 	/**
 	 * Returns this Histogram's HistogramBinMapper.
+	 * 
 	 * @return the HistogramBinMapper associated with this Histogram.
 	 */
-	public HistogramBinMapper<T> getBinMapper()
+	public HistogramBinMapper< T > getBinMapper()
 	{
-	    return binMapper;
+		return binMapper;
 	}
-	
+
 	/**
 	 * Returns the histogram array.
+	 * 
 	 * @return the histogram array.
 	 */
 	public int[] getHistogram()
 	{
-		return histogram; 
+		return histogram;
 	}
-	
+
 	/**
-	 * Creates and returns the a Type whose value corresponds to the center
-	 * of the bin indexed by i.
-	 * @param i the requested bin index.
+	 * Creates and returns the a Type whose value corresponds to the center of
+	 * the bin indexed by i.
+	 * 
+	 * @param i
+	 *            the requested bin index.
 	 * @return a Type whose value corresponds to the requested bin center.
 	 */
-	public T getBinCenter(final int i)
+	public T getBinCenter( final int i )
 	{
-	    return getBinMapper().invMap(i);
+		return getBinMapper().invMap( i );
 	}
-	
+
 	/**
 	 * Creates and returns a List containing Types that correspond to the
 	 * centers of the histogram bins.
-	 * @return a List containing Types that correspond to the centers of the 
-     * histogram bins.
+	 * 
+	 * @return a List containing Types that correspond to the centers of the
+	 *         histogram bins.
 	 */
-	public ArrayList<T> getBinCenters()
+	public ArrayList< T > getBinCenters()
 	{
-		ArrayList<T> binCenters = new ArrayList<T>(histogram.length);
-		for (int i = 0; i < histogram.length; ++i)
+		final ArrayList< T > binCenters = new ArrayList< T >( histogram.length );
+		for ( int i = 0; i < histogram.length; ++i )
 		{
-			binCenters.add(i, getBinMapper().invMap(i));
+			binCenters.add( i, getBinMapper().invMap( i ) );
 		}
-		
+
 		return binCenters;
 	}
-	
+
 	/**
 	 * Returns the number of bins in this Histogram.
+	 * 
 	 * @return the number of bins in this Histogram
 	 * 
 	 */
 	public int getNumBins()
 	{
-	    return getBinMapper().getNumBins();
+		return getBinMapper().getNumBins();
 	}
-	
+
 	@Override
-	public boolean checkInput() {		
+	public boolean checkInput()
+	{
 		return true;
 	}
 
 	@Override
-	public String getErrorMessage() {
+	public String getErrorMessage()
+	{
 		return null;
 	}
 
 	@Override
-	public boolean process() {
-		long startTime = System.currentTimeMillis();
+	public boolean process()
+	{
+		final long startTime = System.currentTimeMillis();
 		int index;
-		
-		while (cursor.hasNext())
-		{			
+
+		while ( cursor.hasNext() )
+		{
 			cursor.fwd();
-			index = binMapper.map(cursor.get());
+			index = binMapper.map( cursor.get() );
 			/*
-		    The following check makes this run for IntegerTypes at 3 to 4
-		    longer than the manual case on my machine.  This is a necessary
-		    check, but if this takes too long, it might be worthwhile to
-		    separate out an UncheckedHistogram, which would instead throw an
-		    ArrayOutOfBoundsException.
-			*/
-			if (index >=0 && index < histogram.length)
+			 * The following check makes this run for IntegerTypes at 3 to 4
+			 * longer than the manual case on my machine. This is a necessary
+			 * check, but if this takes too long, it might be worthwhile to
+			 * separate out an UncheckedHistogram, which would instead throw an
+			 * ArrayOutOfBoundsException.
+			 */
+			if ( index >= 0 && index < histogram.length )
 			{
-			    ++histogram[index];
+				++histogram[ index ];
 			}
 		}
-		
+
 		pTime = System.currentTimeMillis() - startTime;
 		return true;
 	}
 
 	@Override
-	public long getProcessingTime() {		
+	public long getProcessingTime()
+	{
 		return pTime;
 	}
-	
+
 }

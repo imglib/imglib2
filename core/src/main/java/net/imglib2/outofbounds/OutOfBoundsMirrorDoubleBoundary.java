@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -41,8 +37,8 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 
 /**
- * Coordinates out of image bounds are mirrored between boundary coordinates.
- * So boundary pixels are repeated.
+ * Coordinates out of image bounds are mirrored between boundary coordinates. So
+ * boundary pixels are repeated.
  * 
  * <pre>
  * Example:
@@ -55,7 +51,7 @@ import net.imglib2.RandomAccessible;
  * </pre>
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -65,11 +61,11 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 	{
 		super( outOfBounds );
 	}
-	
+
 	public < F extends Interval & RandomAccessible< T > > OutOfBoundsMirrorDoubleBoundary( final F f )
 	{
 		super( f );
-		
+
 		for ( int i = 0; i < dimension.length; ++i )
 			p[ i ] = 2 * dimension[ i ];
 	}
@@ -91,15 +87,16 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 	}
 
 	/* Positionable */
-	
+
 	@Override
-	final public void fwd( final int d ) 
+	final public void fwd( final int d )
 	{
 		final long x = ++zeroMinPos[ d ];
 		if ( x == 0 )
 		{
 			dimIsOutOfBounds[ d ] = false;
-			if ( isOutOfBounds ) checkOutOfBounds();
+			if ( isOutOfBounds )
+				checkOutOfBounds();
 		}
 		else if ( x == dimension[ d ] )
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
@@ -120,7 +117,7 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 				outOfBoundsRandomAccess.bck( d );
 		}
 	}
-	
+
 	@Override
 	final public void bck( final int d )
 	{
@@ -130,7 +127,8 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 		else if ( x == dimension[ d ] )
 		{
 			dimIsOutOfBounds[ d ] = false;
-			if ( isOutOfBounds ) checkOutOfBounds();
+			if ( isOutOfBounds )
+				checkOutOfBounds();
 		}
 
 		final long y = outOfBoundsRandomAccess.getLongPosition( d ) - min[ d ];
@@ -149,7 +147,7 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 				outOfBoundsRandomAccess.fwd( d );
 		}
 	}
-	
+
 	@Override
 	final public void setPosition( long position, final int d )
 	{
@@ -165,8 +163,8 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 			pos = false;
 		}
 		else
-			pos = true;	
-		
+			pos = true;
+
 		if ( position >= mod )
 		{
 			dimIsOutOfBounds[ d ] = isOutOfBounds = true;
@@ -197,7 +195,7 @@ final public class OutOfBoundsMirrorDoubleBoundary< T > extends AbstractOutOfBou
 			}
 			inc[ d ] = pos;
 		}
-		
+
 		outOfBoundsRandomAccess.setPosition( position + min[ d ], d );
 	}
 }

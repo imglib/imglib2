@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,21 +41,21 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public abstract class GenericIntType<T extends GenericIntType<T>> extends AbstractIntegerType<T> implements NativeType<T>
+public abstract class GenericIntType< T extends GenericIntType< T >> extends AbstractIntegerType< T > implements NativeType< T >
 {
 	int i = 0;
 
-	final protected NativeImg<T, ? extends IntAccess> img;
+	final protected NativeImg< ?, ? extends IntAccess > img;
 
 	// the DataAccess that holds the information
 	protected IntAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public GenericIntType( final NativeImg<T, ? extends IntAccess> intStorage )
+	public GenericIntType( final NativeImg< ?, ? extends IntAccess > intStorage )
 	{
 		img = intStorage;
 	}
@@ -73,23 +69,39 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 	}
 
 	// this is the constructor if you want to specify the dataAccess
-	protected GenericIntType( final IntAccess access )
+	public GenericIntType( final IntAccess access )
 	{
 		img = null;
 		dataAccess = access;
 	}
 
 	// this is the constructor if you want it to be a variable
-	public GenericIntType() { this( 0 ); }
+	public GenericIntType()
+	{
+		this( 0 );
+	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public int getEntitiesPerPixel()
+	{
+		return 1;
+	}
 
 	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
+	}
 
-	protected int getValue(){ return dataAccess.getValue( i ); }
-	protected void setValue( final int f ){ dataAccess.setValue( i, f ); }
+	protected int getValue()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	protected void setValue( final int f )
+	{
+		dataAccess.setValue( i, f );
+	}
 
 	@Override
 	public void mul( final float c )
@@ -102,7 +114,7 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 	public void mul( final double c )
 	{
 		final int a = getValue();
-		setValue( ( int )Util.round( a * c ) );
+		setValue( ( int ) Util.round( a * c ) );
 	}
 
 	@Override
@@ -122,15 +134,22 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 	@Override
 	public void mul( final T c )
 	{
-		final int a = getValue( );
+		final int a = getValue();
 		setValue( a * c.getValue() );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final int a = getValue( );
+		final int a = getValue();
 		setValue( a - c.getValue() );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Integer#hashCode().
+		return getValue();
 	}
 
 	@Override
@@ -153,10 +172,16 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 	}
 
 	@Override
-	public void setOne() { setValue( 1 ); }
+	public void setOne()
+	{
+		setValue( 1 );
+	}
 
 	@Override
-	public void setZero() { setValue( 0 ); }
+	public void setZero()
+	{
+		setValue( 0 );
+	}
 
 	@Override
 	public void inc()
@@ -173,22 +198,50 @@ public abstract class GenericIntType<T extends GenericIntType<T>> extends Abstra
 	}
 
 	@Override
-	public String toString(){ return "" + getValue(); }
+	public String toString()
+	{
+		return "" + getValue();
+	}
 
 	@Override
-	public void updateIndex( final int index ) { i = index; }
-	@Override
-	public int getIndex() { return i; }
+	public void updateIndex( final int index )
+	{
+		i = index;
+	}
 
 	@Override
-	public void incIndex() { ++i; }
-	@Override
-	public void incIndex( final int increment ) { i += increment; }
-	@Override
-	public void decIndex() { --i; }
-	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
+	public int getIndex()
+	{
+		return i;
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 32; }
+	public void incIndex()
+	{
+		++i;
+	}
+
+	@Override
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
+	@Override
+	public void decIndex()
+	{
+		--i;
+	}
+
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
+	@Override
+	public int getBitsPerPixel()
+	{
+		return 32;
+	}
 }

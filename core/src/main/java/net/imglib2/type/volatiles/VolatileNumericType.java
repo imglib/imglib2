@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,30 +28,25 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.type.volatiles;
 
-import net.imglib2.Volatile;
 import net.imglib2.type.numeric.NumericType;
 
 /**
  * Something volatile that has a value and is either VALID or INVALID.
- *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * 
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
-public class VolatileNumericType< T extends NumericType< T > > extends Volatile< T > implements NumericType< VolatileNumericType< T > >
+public class VolatileNumericType< T extends NumericType< T > > extends AbstractVolatileNumericType< T, VolatileNumericType< T > >
 {
 	public VolatileNumericType( final T t, final boolean valid )
 	{
 		super( t, valid );
 	}
-	
+
 	public VolatileNumericType( final T t )
 	{
 		this( t, false );
@@ -67,64 +62,5 @@ public class VolatileNumericType< T extends NumericType< T > > extends Volatile<
 	public VolatileNumericType< T > copy()
 	{
 		return new VolatileNumericType< T >( t.copy(), false );
-	}
-
-	@Override
-	public void set( final VolatileNumericType< T > c )
-	{
-		t.set( c.t );
-		valid = c.valid;
-	}
-
-	@Override
-	public void add( final VolatileNumericType< T > c )
-	{
-		t.add( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void sub( final VolatileNumericType< T > c )
-	{
-		t.sub( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void mul( final VolatileNumericType< T > c )
-	{
-		t.mul( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void div( final VolatileNumericType< T > c )
-	{
-		t.div( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void setZero()
-	{
-		t.setZero();
-	}
-
-	@Override
-	public void setOne()
-	{
-		t.setOne();
-	}
-
-	@Override
-	public void mul( final float c )
-	{
-		t.mul( c );
-	}
-
-	@Override
-	public void mul( final double c )
-	{
-		t.mul( c );
 	}
 }

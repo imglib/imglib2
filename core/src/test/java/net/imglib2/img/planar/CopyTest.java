@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -54,7 +50,7 @@ import org.junit.Test;
 
 /**
  * TODO
- *
+ * 
  */
 public class CopyTest
 {
@@ -79,17 +75,17 @@ public class CopyTest
 
 		intData = new int[ numValues ];
 		intDataSum = 0;
-		Random random = new Random( 0 );
+		final Random random = new Random( 0 );
 		for ( int i = 0; i < numValues; ++i )
 		{
 			intData[ i ] = random.nextInt();
 			intDataSum += intData[ i ];
 		}
-		
+
 		intImg = new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
 
-		long[] pos = new long[ dimensions.length ];
-		RandomAccess< IntType > a = intImg.randomAccess();
+		final long[] pos = new long[ dimensions.length ];
+		final RandomAccess< IntType > a = intImg.randomAccess();
 
 		for ( int i = 0; i < numValues; ++i )
 		{
@@ -99,12 +95,13 @@ public class CopyTest
 		}
 	}
 
-	void copyWithSourceIteration(Img< IntType > srcImg, Img< IntType > dstImg)
+	void copyWithSourceIteration( final Img< IntType > srcImg, final Img< IntType > dstImg )
 	{
-		long[] pos = new long[ dimensions.length ];
-		Cursor< IntType > src = srcImg.localizingCursor();
-		RandomAccess< IntType > dst = dstImg.randomAccess();
-		while( src.hasNext() ) {
+		final long[] pos = new long[ dimensions.length ];
+		final Cursor< IntType > src = srcImg.localizingCursor();
+		final RandomAccess< IntType > dst = dstImg.randomAccess();
+		while ( src.hasNext() )
+		{
 			src.fwd();
 			src.localize( pos );
 			dst.setPosition( pos );
@@ -112,12 +109,13 @@ public class CopyTest
 		}
 	}
 
-	void copyWithDestIteration(Img< IntType > srcImg, Img< IntType > dstImg)
+	void copyWithDestIteration( final Img< IntType > srcImg, final Img< IntType > dstImg )
 	{
-		long[] pos = new long[ dstImg.numDimensions() ];
-		Cursor< IntType > dst = dstImg.localizingCursor();
-		RandomAccess< IntType > src = srcImg.randomAccess();
-		while( dst.hasNext() ) {
+		final long[] pos = new long[ dstImg.numDimensions() ];
+		final Cursor< IntType > dst = dstImg.localizingCursor();
+		final RandomAccess< IntType > src = srcImg.randomAccess();
+		while ( dst.hasNext() )
+		{
 			dst.fwd();
 			dst.localize( pos );
 			src.setPosition( pos );
@@ -125,18 +123,19 @@ public class CopyTest
 		}
 	}
 
-	int[] getImgAsInts( Img< IntType > img )
+	int[] getImgAsInts( final Img< IntType > img )
 	{
-		RandomAccess< IntType > a = img.randomAccess();
+		final RandomAccess< IntType > a = img.randomAccess();
 		final int N = ( int ) img.size();
-		int[] data = new int[ N ];
+		final int[] data = new int[ N ];
 		final long[] dim = new long[ img.numDimensions() ];
 		final long[] pos = new long[ img.numDimensions() ];
 		img.dimensions( dim );
-		for ( int i = 0; i < N; ++i ) {
+		for ( int i = 0; i < N; ++i )
+		{
 			IntervalIndexer.indexToPosition( i, dim, pos );
 			a.setPosition( pos );
-			data[ i ] = a.get().get(); 
+			data[ i ] = a.get().get();
 		}
 		return data;
 	}
@@ -144,7 +143,7 @@ public class CopyTest
 	@Test
 	public void testCopyToArrayContainerWithSourceIteration()
 	{
-		ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		final ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
 		copyWithSourceIteration( intImg, array );
 		assertArrayEquals( intData, getImgAsInts( array ) );
 	}
@@ -152,7 +151,7 @@ public class CopyTest
 	@Test
 	public void testCopyToArrayContainerWithDestIteration()
 	{
-		ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
+		final ArrayImg< IntType, ? > array = new ArrayImgFactory< IntType >().create( dimensions, new IntType() );
 		copyWithDestIteration( intImg, array );
 		assertArrayEquals( intData, getImgAsInts( array ) );
 	}
@@ -160,7 +159,7 @@ public class CopyTest
 	@Test
 	public void testCopyToPlanarContainerWithSourceIteration()
 	{
-		PlanarImg< IntType, ? > planarImg = new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
+		final PlanarImg< IntType, ? > planarImg = new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
 		copyWithSourceIteration( intImg, planarImg );
 		assertArrayEquals( intData, getImgAsInts( planarImg ) );
 	}
@@ -168,7 +167,7 @@ public class CopyTest
 	@Test
 	public void testCopyToPlanarContainerWithDestIteration()
 	{
-		PlanarImg< IntType, ? > planarImg = new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
+		final PlanarImg< IntType, ? > planarImg = new PlanarImgFactory< IntType >().create( dimensions, new IntType() );
 		copyWithDestIteration( intImg, planarImg );
 		assertArrayEquals( intData, getImgAsInts( planarImg ) );
 	}

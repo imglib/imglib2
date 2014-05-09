@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui;
@@ -47,31 +43,31 @@ import net.imglib2.ui.util.InterpolatingSource;
  * {@link RealRandomAccessible} of arbitrary pixel type <code>T</code>, a source
  * transform, and an converter that converts type <code>T</code> to
  * {@link ARGBType} for display.
- *
+ * 
  * The {@link #getInterpolatedSource() source accessible} is assumed to be
  * extended to infinity. If the underlying data is a pixel image, it is also
  * assumed to be interpolated already (see {@link InterpolatingSource}).
- *
+ * 
  * @param <T>
  *            pixel type
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface RenderSource< T, A >
 {
 	/**
 	 * Get the image, extended to infinity and interpolated.
-	 *
+	 * 
 	 * @return the extended and interpolated {@link RandomAccessible image}.
 	 */
 	public RealRandomAccessible< T > getInterpolatedSource();
 
 	/**
-	 * Get the transform from the {@link #getSource(long) source}
-	 * into the global coordinate system.
-	 *
+	 * Get the transform from the {@link #getSource(long) source} into the
+	 * global coordinate system.
+	 * 
 	 * @return transforms source into the global coordinate system.
 	 */
 	public A getSourceTransform();

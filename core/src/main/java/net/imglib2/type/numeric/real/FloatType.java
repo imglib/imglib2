@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,21 +41,21 @@ import net.imglib2.type.NativeType;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class FloatType extends AbstractRealType<FloatType> implements NativeType<FloatType>
+public class FloatType extends AbstractRealType< FloatType > implements NativeType< FloatType >
 {
 	private int i = 0;
 
-	final protected NativeImg<FloatType, ? extends FloatAccess> img;
-	
-	// the DataAccess that holds the information 
+	final protected NativeImg< ?, ? extends FloatAccess > img;
+
+	// the DataAccess that holds the information
 	protected FloatAccess dataAccess;
-	
+
 	// this is the constructor if you want it to read from an array
-	public FloatType( NativeImg<FloatType, ? extends FloatAccess> floatStorage )
+	public FloatType( final NativeImg< ?, ? extends FloatAccess > floatStorage )
 	{
 		img = floatStorage;
 	}
@@ -80,51 +76,89 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	}
 
 	// this is the constructor if you want it to be a variable
-	public FloatType() { this( 0 ); }
+	public FloatType()
+	{
+		this( 0 );
+	}
 
 	@Override
-	public NativeImg<FloatType, ? extends FloatAccess> createSuitableNativeImg( final NativeImgFactory<FloatType> storageFactory, final long dim[] )
+	public NativeImg< FloatType, ? extends FloatAccess > createSuitableNativeImg( final NativeImgFactory< FloatType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 1 );
-		
+		final NativeImg< FloatType, ? extends FloatAccess > container = storageFactory.createFloatInstance( dim, 1 );
+
 		// create a Type that is linked to the container
 		final FloatType linkedType = new FloatType( container );
-		
+
 		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
 
 	@Override
-	public void updateContainer( final Object c ) 
-	{ 
-		dataAccess = img.update( c ); 
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
 	}
-	
-	@Override
-	public FloatType duplicateTypeOnSameNativeImg() { return new FloatType( img ); }
 
-	public float get(){ return dataAccess.getValue( i ); }
-	public void set( final float f ){ dataAccess.setValue( i, f ); }
-	
 	@Override
-	public float getRealFloat() { return get(); }
+	public FloatType duplicateTypeOnSameNativeImg()
+	{
+		return new FloatType( img );
+	}
+
+	public float get()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	public void set( final float f )
+	{
+		dataAccess.setValue( i, f );
+	}
+
 	@Override
-	public double getRealDouble() { return get(); }
-	
+	public float getRealFloat()
+	{
+		return get();
+	}
+
 	@Override
-	public void setReal( final float real ){ set( real ); }
+	public double getRealDouble()
+	{
+		return get();
+	}
+
 	@Override
-	public void setReal( final double real ){ set( (float)real ); }
-	
+	public void setReal( final float real )
+	{
+		set( real );
+	}
+
 	@Override
-	public double getMaxValue() { return Float.MAX_VALUE; }
+	public void setReal( final double real )
+	{
+		set( ( float ) real );
+	}
+
 	@Override
-	public double getMinValue()  { return -Float.MAX_VALUE; }
+	public double getMaxValue()
+	{
+		return Float.MAX_VALUE;
+	}
+
 	@Override
-	public double getMinIncrement()  { return Float.MIN_VALUE; }
+	public double getMinValue()
+	{
+		return -Float.MAX_VALUE;
+	}
+
+	@Override
+	public double getMinIncrement()
+	{
+		return Float.MIN_VALUE;
+	}
 
 	@Override
 	public void mul( final float c )
@@ -135,9 +169,9 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	@Override
 	public void mul( final double c )
 	{
-		set( ( float )( get() * c ) );
+		set( ( float ) ( get() * c ) );
 	}
-	
+
 	@Override
 	public void add( final FloatType c )
 	{
@@ -163,26 +197,42 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	}
 
 	@Override
-	public int compareTo( final FloatType c ) 
-	{ 
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Float#hashCode().
+		return Float.floatToIntBits(get());
+	}
+
+	@Override
+	public int compareTo( final FloatType c )
+	{
 		final float a = get();
 		final float b = c.get();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
-	
-	@Override
-	public void set( final FloatType c ){ set( c.get() ); }
 
 	@Override
-	public void setOne() { set( 1 ); }
+	public void set( final FloatType c )
+	{
+		set( c.get() );
+	}
 
 	@Override
-	public void setZero() { set( 0 ); }
+	public void setOne()
+	{
+		set( 1 );
+	}
+
+	@Override
+	public void setZero()
+	{
+		set( 0 );
+	}
 
 	@Override
 	public void inc()
@@ -197,30 +247,64 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 		float a = get();
 		set( --a );
 	}
-		
-	@Override
-	public FloatType createVariable(){ return new FloatType( 0 ); }
-	
-	@Override
-	public FloatType copy(){ return new FloatType( get() ); }
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
-	
-	@Override
-	public void updateIndex( final int index ) { i = index; }
-	@Override
-	public int getIndex() { return i; }
-	
-	@Override
-	public void incIndex() { ++i; }
-	@Override
-	public void incIndex( final int increment ) { i += increment; }
-	@Override
-	public void decIndex() { --i; }
-	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
+	public FloatType createVariable()
+	{
+		return new FloatType( 0 );
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 32; }
+	public FloatType copy()
+	{
+		return new FloatType( get() );
+	}
+
+	@Override
+	public int getEntitiesPerPixel()
+	{
+		return 1;
+	}
+
+	@Override
+	public void updateIndex( final int index )
+	{
+		i = index;
+	}
+
+	@Override
+	public int getIndex()
+	{
+		return i;
+	}
+
+	@Override
+	public void incIndex()
+	{
+		++i;
+	}
+
+	@Override
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
+	@Override
+	public void decIndex()
+	{
+		--i;
+	}
+
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
+	@Override
+	public int getBitsPerPixel()
+	{
+		return 32;
+	}
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.display.projector.specialized;
@@ -69,21 +65,27 @@ public class ArrayImgXYShortProjector< A extends GenericShortType< A >> extends 
 	private final long[] dims;
 
 	/**
-	 * Normalizes an ArrayImg and writes the result into target. This can be used in conjunction with {@link UnsignedByteAWTScreenImage} for direct displaying.
-	 * The normalization is based on a normalization factor and a minimum value with the following dependency:<br>
+	 * Normalizes an ArrayImg and writes the result into target. This can be
+	 * used in conjunction with {@link UnsignedByteAWTScreenImage} for direct
+	 * displaying. The normalization is based on a normalization factor and a
+	 * minimum value with the following dependency:<br>
 	 * <br>
 	 * normalizationFactor = (typeMax - typeMin) / (newMax - newMin) <br>
 	 * min = newMin <br>
 	 * <br>
-	 * A value is normalized by: normalizedValue = (value - min) * normalizationFactor.<br>
-	 * Additionally the result gets clamped to the type range of target (that allows playing with saturation...).
-	 *  
-	 * @param source Signed/Unsigned input data
-	 * @param target Unsigned output
+	 * A value is normalized by: normalizedValue = (value - min) *
+	 * normalizationFactor.<br>
+	 * Additionally the result gets clamped to the type range of target (that
+	 * allows playing with saturation...).
+	 * 
+	 * @param source
+	 *            Signed/Unsigned input data
+	 * @param target
+	 *            Unsigned output
 	 * @param normalizationFactor
 	 * @param min
 	 */
-	public ArrayImgXYShortProjector( ArrayImg< A, ShortArray > source, ArrayImg< UnsignedShortType, ShortArray > target, double normalizationFactor, double min)
+	public ArrayImgXYShortProjector( final ArrayImg< A, ShortArray > source, final ArrayImg< UnsignedShortType, ShortArray > target, final double normalizationFactor, final double min )
 	{
 		super( source.numDimensions() );
 
@@ -100,11 +102,12 @@ public class ArrayImgXYShortProjector< A extends GenericShortType< A >> extends 
 	@Override
 	public void map()
 	{
-		//more detailed documentation of the binary arithmetic can be found in ArrayImgXYByteProjector
-		
+		// more detailed documentation of the binary arithmetic can be found in
+		// ArrayImgXYByteProjector
+
 		double minCopy = min;
 		int offset = 0;
-		long[] tmpPos = position.clone();
+		final long[] tmpPos = position.clone();
 		tmpPos[ 0 ] = 0;
 		tmpPos[ 1 ] = 0;
 
@@ -118,7 +121,8 @@ public class ArrayImgXYShortProjector< A extends GenericShortType< A >> extends 
 		{
 			for ( int i = 0; i < targetArray.length; i++ )
 			{
-				// Short.MIN => 0 && Short.MAX => 65535 (2^16 - 1)  => unsigned short
+				// Short.MIN => 0 && Short.MAX => 65535 (2^16 - 1) => unsigned
+				// short
 				targetArray[ i ] = ( short ) ( targetArray[ i ] - 0x8000 );
 			}
 			// old => unsigned short minimum
@@ -130,7 +134,7 @@ public class ArrayImgXYShortProjector< A extends GenericShortType< A >> extends 
 			{
 				// normalizedValue = (oldValue - min) * normalizationFactor
 				// clamped to 0 .. 65535
-				targetArray[ i ] = ( short ) Math.min( 65535, Math.max( 0, ( Math.round( ( (targetArray[ i ] & 0xFFFF) - minCopy) * normalizationFactor ) ) ) );
+				targetArray[ i ] = ( short ) Math.min( 65535, Math.max( 0, ( Math.round( ( ( targetArray[ i ] & 0xFFFF ) - minCopy ) * normalizationFactor ) ) ) );
 			}
 		}
 	}

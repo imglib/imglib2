@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -66,7 +62,7 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 
 	private long[] cached_max;
 
-	protected AbstractIterableRegionOfInterest( int nDimensions )
+	protected AbstractIterableRegionOfInterest( final int nDimensions )
 	{
 		super( nDimensions );
 	}
@@ -97,13 +93,13 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 * @return true if there is a raster after this one.
 	 */
 	protected abstract boolean nextRaster( long[] position, long[] end );
-	
+
 	/**
-	 * Advance the position to the next raster, taking care that the
-	 * raster is wholly within the given interval.
+	 * Advance the position to the next raster, taking care that the raster is
+	 * wholly within the given interval.
 	 * 
-	 * Consider overriding if knowing the interval can be used to skip
-	 * rasters outside of the interval.
+	 * Consider overriding if knowing the interval can be used to skip rasters
+	 * outside of the interval.
 	 * 
 	 * @param position
 	 *            on entry, the position of the raster after advancement to its
@@ -118,23 +114,25 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 *            the raster must be within this interval.
 	 * @return true if there is a raster after this one.
 	 */
-	protected boolean nextRaster( long [] position, long [] end, Interval interval) {
-		loop:
-		while(nextRaster(position, end)) {
-			
+	protected boolean nextRaster( final long[] position, final long[] end, final Interval interval )
+	{
+		loop: while ( nextRaster( position, end ) )
+		{
+
 			for ( int i = 0; i < position.length; i++ )
 			{
-				if (position[i] > interval.max(i))
+				if ( position[ i ] > interval.max( i ) )
 					continue loop;
 			}
-			for (int i = 1; i < position.length; i++ ) {
-				if (position[i] < interval.min( i ))
+			for ( int i = 1; i < position.length; i++ )
+			{
+				if ( position[ i ] < interval.min( i ) )
 					continue loop;
 			}
-			if (end[0] <= interval.min(0))
+			if ( end[ 0 ] <= interval.min( 0 ) )
 				continue;
-			position[0] = Math.max( position[0], interval.min(0) );
-			end[0] = Math.min( end[0], interval.max( 0 ) + 1 );
+			position[ 0 ] = Math.max( position[ 0 ], interval.min( 0 ) );
+			end[ 0 ] = Math.min( end[ 0 ], interval.max( 0 ) + 1 );
 			return true;
 		}
 		return false;
@@ -157,12 +155,12 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 * @param end
 	 *            - the end position of the current raster on entry and on exit.
 	 * @param interval
-	 *            - constraining interval. Pixels will only be counted while jumping
-	 *              for the region within the interval. If interval is null,
-	 *              there is no constraining interval.
+	 *            - constraining interval. Pixels will only be counted while
+	 *            jumping for the region within the interval. If interval is
+	 *            null, there is no constraining interval.
 	 * @return true if taking that number of steps still lands within the ROI.
 	 */
-	protected boolean jumpFwd( long totalSteps, long[] position, long[] end, Interval interval )
+	protected boolean jumpFwd( final long totalSteps, final long[] position, final long[] end, final Interval interval )
 	{
 		long steps = totalSteps;
 		while ( true )
@@ -174,10 +172,12 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 			}
 			steps -= end[ 0 ] - position[ 0 ];
 			position[ 0 ] = end[ 0 ];
-			if (interval != null) {
-				if ( !nextRaster( position, end, interval))
+			if ( interval != null )
+			{
+				if ( !nextRaster( position, end, interval ) )
 					return false;
-			} else if ( !nextRaster( position, end ) )
+			}
+			else if ( !nextRaster( position, end ) )
 				return false;
 		}
 	}
@@ -200,8 +200,8 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 		}
 	}
 
-	protected class AROIIterableInterval< T extends Type< T >> 
-	implements IterableInterval< T >
+	protected class AROIIterableInterval< T extends Type< T >>
+			implements IterableInterval< T >
 	{
 		protected RandomAccessible< T > src;
 
@@ -216,13 +216,13 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 		{
 			private RandomAccess< T > randomAccess = AROIIterableInterval.this.src.randomAccess();
 
-			private long[] position = new long[ AbstractIterableRegionOfInterest.this.numDimensions() ];
+			private final long[] position = new long[ AbstractIterableRegionOfInterest.this.numDimensions() ];
 
-			private long[] next_position = new long[ AbstractIterableRegionOfInterest.this.numDimensions() ];
+			private final long[] next_position = new long[ AbstractIterableRegionOfInterest.this.numDimensions() ];
 
-			private long[] raster_end = new long[ AbstractIterableRegionOfInterest.this.numDimensions() ];
+			private final long[] raster_end = new long[ AbstractIterableRegionOfInterest.this.numDimensions() ];
 
-			private long[] next_raster_end = new long[ AbstractIterableRegionOfInterest.this.numDimensions() ];
+			private final long[] next_raster_end = new long[ AbstractIterableRegionOfInterest.this.numDimensions() ];
 
 			private boolean next_is_valid = false;
 
@@ -257,21 +257,21 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 			}
 
 			@Override
-			public void localize( float[] pos )
+			public void localize( final float[] pos )
 			{
 				for ( int d = 0; d < pos.length; d++ )
 					pos[ d ] = this.position[ d ];
 			}
 
 			@Override
-			public void localize( double[] pos )
+			public void localize( final double[] pos )
 			{
 				for ( int d = 0; d < pos.length; d++ )
 					pos[ d ] = this.position[ d ];
 			}
 
 			@Override
-			public void localize( int[] pos )
+			public void localize( final int[] pos )
 			{
 				for ( int d = 0; d < pos.length; d++ )
 					pos[ d ] = ( int ) this.position[ d ];
@@ -279,32 +279,32 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 			}
 
 			@Override
-			public void localize( long[] pos )
+			public void localize( final long[] pos )
 			{
 				for ( int d = 0; d < pos.length; d++ )
 					pos[ d ] = this.position[ d ];
 			}
 
 			@Override
-			public float getFloatPosition( int dim )
+			public float getFloatPosition( final int dim )
 			{
 				return position[ dim ];
 			}
 
 			@Override
-			public double getDoublePosition( int dim )
+			public double getDoublePosition( final int dim )
 			{
 				return position[ dim ];
 			}
 
 			@Override
-			public int getIntPosition( int dim )
+			public int getIntPosition( final int dim )
 			{
 				return ( int ) position[ dim ];
 			}
 
 			@Override
-			public long getLongPosition( int dim )
+			public long getLongPosition( final int dim )
 			{
 				return position[ dim ];
 			}
@@ -326,12 +326,10 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 			}
 
 			@Override
-			public void jumpFwd( long steps )
+			public void jumpFwd( final long steps )
 			{
-				final Interval interval = (src instanceof Interval)?(Interval)src:null;
-				if ( !AbstractIterableRegionOfInterest.this.jumpFwd( steps, position, raster_end, interval ) ) { 
-					throw new IllegalAccessError( "Jumped past end of sequence" ); 
-				}
+				final Interval interval = ( src instanceof Interval ) ? ( Interval ) src : null;
+				if ( !AbstractIterableRegionOfInterest.this.jumpFwd( steps, position, raster_end, interval ) ) { throw new IllegalAccessError( "Jumped past end of sequence" ); }
 				mark_dirty();
 			}
 
@@ -350,7 +348,7 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 			@Override
 			public void reset()
 			{
-				for ( long[] a : new long[][] { position, next_position, raster_end, next_raster_end } )
+				for ( final long[] a : new long[][] { position, next_position, raster_end, next_raster_end } )
 				{
 					Arrays.fill( a, Long.MIN_VALUE );
 				}
@@ -363,7 +361,7 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 			{
 				if ( !next_is_valid )
 				{
-					final Interval interval = (src instanceof Interval)?(Interval)src:null;
+					final Interval interval = ( src instanceof Interval ) ? ( Interval ) src : null;
 					has_next = AbstractIterableRegionOfInterest.this.jumpFwd( 1, next_position, next_raster_end, interval );
 				}
 				next_is_valid = true;
@@ -408,20 +406,21 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 		{
 			if ( cached_first_element == null )
 			{
-				RandomAccess< T > r = src.randomAccess();
-				long[] position = new long[ numDimensions() ];
-				long[] raster_end = new long[ numDimensions() ];
+				final RandomAccess< T > r = src.randomAccess();
+				final long[] position = new long[ numDimensions() ];
+				final long[] raster_end = new long[ numDimensions() ];
 				Arrays.fill( position, Long.MIN_VALUE );
 				Arrays.fill( raster_end, Long.MIN_VALUE );
 				boolean hasNext;
-				if (src instanceof Interval) {
-					hasNext = nextRaster( position, raster_end, (Interval) src );
-				} else {
+				if ( src instanceof Interval )
+				{
+					hasNext = nextRaster( position, raster_end, ( Interval ) src );
+				}
+				else
+				{
 					hasNext = nextRaster( position, raster_end );
 				}
-				if (! hasNext) { 
-					throw new IllegalAccessError( "Tried to get first element, but ROI has no elements" ); 
-				}
+				if ( !hasNext ) { throw new IllegalAccessError( "Tried to get first element, but ROI has no elements" ); }
 				r.setPosition( position );
 				cached_first_element = r.get();
 			}
@@ -441,37 +440,37 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 		}
 
 		@Override
-		public double realMin( int d )
+		public double realMin( final int d )
 		{
 			return AbstractIterableRegionOfInterest.this.realMin( d );
 		}
 
 		@Override
-		public void realMin( double[] min )
+		public void realMin( final double[] min )
 		{
 			AbstractIterableRegionOfInterest.this.realMin( min );
 		}
 
 		@Override
-		public void realMin( RealPositionable min )
+		public void realMin( final RealPositionable min )
 		{
 			AbstractIterableRegionOfInterest.this.realMin( min );
 		}
 
 		@Override
-		public double realMax( int d )
+		public double realMax( final int d )
 		{
 			return AbstractIterableRegionOfInterest.this.realMax( d );
 		}
 
 		@Override
-		public void realMax( double[] max )
+		public void realMax( final double[] max )
 		{
 			AbstractIterableRegionOfInterest.this.realMax( max );
 		}
 
 		@Override
-		public void realMax( RealPositionable max )
+		public void realMax( final RealPositionable max )
 		{
 			AbstractIterableRegionOfInterest.this.realMax( max );
 		}
@@ -489,49 +488,49 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 		}
 
 		@Override
-		public long min( int d )
+		public long min( final int d )
 		{
 			return AbstractIterableRegionOfInterest.this.min( d );
 		}
 
 		@Override
-		public void min( long[] min )
+		public void min( final long[] min )
 		{
 			AbstractIterableRegionOfInterest.this.min( min );
 		}
 
 		@Override
-		public void min( Positionable min )
+		public void min( final Positionable min )
 		{
 			AbstractIterableRegionOfInterest.this.min( min );
 		}
 
 		@Override
-		public long max( int d )
+		public long max( final int d )
 		{
 			return AbstractIterableRegionOfInterest.this.max( d );
 		}
 
 		@Override
-		public void max( long[] max )
+		public void max( final long[] max )
 		{
 			AbstractIterableRegionOfInterest.this.max( max );
 		}
 
 		@Override
-		public void max( Positionable max )
+		public void max( final Positionable max )
 		{
 			AbstractIterableRegionOfInterest.this.max( max );
 		}
 
 		@Override
-		public void dimensions( long[] dimensions )
+		public void dimensions( final long[] dimensions )
 		{
 			AbstractIterableRegionOfInterest.this.dimensions( dimensions );
 		}
 
 		@Override
-		public long dimension( int d )
+		public long dimension( final int d )
 		{
 			return AbstractIterableRegionOfInterest.this.dimension( d );
 		}
@@ -549,144 +548,206 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 		}
 
 	}
-	
-	protected class AROIClippedIterableInterval< T extends Type< T >> extends AROIIterableInterval<T> {
 
-		public AROIClippedIterableInterval(RandomAccessibleInterval< T > src)
+	protected class AROIClippedIterableInterval< T extends Type< T >> extends AROIIterableInterval< T >
+	{
+
+		public AROIClippedIterableInterval( final RandomAccessibleInterval< T > src )
 		{
 			super( src );
 		}
-		
-		protected Interval getSrcInterval() {
-			return (Interval) src;
-		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#realMin(int)
-		 */
-		@Override
-		public double realMin( int d )
+
+		protected Interval getSrcInterval()
 		{
-			return Math.max( super.realMin( d ), getSrcInterval().realMin( d ));
+			return ( Interval ) src;
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#realMin(double[])
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #realMin(int)
 		 */
 		@Override
-		public void realMin( double[] min )
+		public double realMin( final int d )
+		{
+			return Math.max( super.realMin( d ), getSrcInterval().realMin( d ) );
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #realMin(double[])
+		 */
+		@Override
+		public void realMin( final double[] min )
 		{
 			for ( int i = 0; i < min.length; i++ )
 			{
-				min[i] = realMin(i);
+				min[ i ] = realMin( i );
 			}
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#realMin(net.imglib2.RealPositionable)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #realMin(net.imglib2.RealPositionable)
 		 */
 		@Override
-		public void realMin( RealPositionable min )
+		public void realMin( final RealPositionable min )
 		{
 			for ( int i = 0; i < min.numDimensions(); i++ )
 			{
-				min.setPosition( realMin(i), i);
+				min.setPosition( realMin( i ), i );
 			}
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#realMax(int)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #realMax(int)
 		 */
 		@Override
-		public double realMax( int d )
+		public double realMax( final int d )
 		{
-			return Math.min( super.realMax( d ), getSrcInterval().realMax( d ));
+			return Math.min( super.realMax( d ), getSrcInterval().realMax( d ) );
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#realMax(double[])
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #realMax(double[])
 		 */
 		@Override
-		public void realMax( double[] max )
+		public void realMax( final double[] max )
 		{
 			for ( int i = 0; i < max.length; i++ )
 			{
-				max[i] = realMax(i);
+				max[ i ] = realMax( i );
 			}
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#realMax(net.imglib2.RealPositionable)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #realMax(net.imglib2.RealPositionable)
 		 */
 		@Override
-		public void realMax( RealPositionable max )
+		public void realMax( final RealPositionable max )
 		{
 			for ( int i = 0; i < max.numDimensions(); i++ )
 			{
-				max.setPosition( realMax(i) , i);
+				max.setPosition( realMax( i ), i );
 			}
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#min(int)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #min(int)
 		 */
 		@Override
-		public long min( int d )
+		public long min( final int d )
 		{
 			return Math.max( super.min( d ), getSrcInterval().min( d ) );
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#min(long[])
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #min(long[])
 		 */
 		@Override
-		public void min( long[] min )
+		public void min( final long[] min )
 		{
 			for ( int i = 0; i < min.length; i++ )
 			{
-				min[i] = min(i);
+				min[ i ] = min( i );
 			}
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#min(net.imglib2.Positionable)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #min(net.imglib2.Positionable)
 		 */
 		@Override
-		public void min( Positionable min )
+		public void min( final Positionable min )
 		{
 			for ( int i = 0; i < min.numDimensions(); i++ )
 			{
-				min.setPosition( min(i), i );
+				min.setPosition( min( i ), i );
 			}
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#max(int)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #max(int)
 		 */
 		@Override
-		public long max( int d )
+		public long max( final int d )
 		{
-			return Math.min(super.max( d ), getSrcInterval().max( d ));
+			return Math.min( super.max( d ), getSrcInterval().max( d ) );
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#max(long[])
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #max(long[])
 		 */
 		@Override
-		public void max( long[] max )
+		public void max( final long[] max )
 		{
-			for ( int i = 0; i<max.length; i++) 
+			for ( int i = 0; i < max.length; i++ )
 			{
-				max[i] = max(i);
+				max[ i ] = max( i );
 			}
 		}
-		/* (non-Javadoc)
-		 * @see net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval#max(net.imglib2.Positionable)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.imglib2.roi.AbstractIterableRegionOfInterest.AROIIterableInterval
+		 * #max(net.imglib2.Positionable)
 		 */
 		@Override
-		public void max( Positionable max )
+		public void max( final Positionable max )
 		{
 			for ( int i = 0; i < max.numDimensions(); i++ )
 			{
-				max.setPosition( max(i), i );
+				max.setPosition( max( i ), i );
 			}
 		}
 	}
 
 	@Override
-	public < T extends Type< T >> IterableInterval< T > getIterableIntervalOverROI( RandomAccessible< T > src )
+	public < T extends Type< T >> IterableInterval< T > getIterableIntervalOverROI( final RandomAccessible< T > src )
 	{
-		if (src instanceof RandomAccessibleInterval)
-			return new AROIClippedIterableInterval< T >( (RandomAccessibleInterval< T >) src );
+		if ( src instanceof RandomAccessibleInterval )
+			return new AROIClippedIterableInterval< T >( ( RandomAccessibleInterval< T > ) src );
 		return new AROIIterableInterval< T >( src );
 	}
 
@@ -698,8 +759,8 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 */
 	protected long size()
 	{
-		long[] position = new long[ numDimensions() ];
-		long[] end = new long[ numDimensions() ];
+		final long[] position = new long[ numDimensions() ];
+		final long[] end = new long[ numDimensions() ];
 		Arrays.fill( position, Long.MIN_VALUE );
 		long accumulator = 0;
 		while ( nextRaster( position, end ) )
@@ -722,10 +783,10 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 * @param maxima
 	 *            - maximum coordinates of the ROI
 	 */
-	protected void getExtrema( long[] minima, long[] maxima )
+	protected void getExtrema( final long[] minima, final long[] maxima )
 	{
-		long[] position = new long[ numDimensions() ];
-		long[] end = new long[ numDimensions() ];
+		final long[] position = new long[ numDimensions() ];
+		final long[] end = new long[ numDimensions() ];
 		Arrays.fill( position, Long.MIN_VALUE );
 		Arrays.fill( minima, Long.MAX_VALUE );
 		Arrays.fill( maxima, Long.MIN_VALUE );
@@ -768,7 +829,7 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 * @param maxima
 	 */
 	@Override
-	protected void getRealExtrema( double[] minima, double[] maxima )
+	protected void getRealExtrema( final double[] minima, final double[] maxima )
 	{
 		validateExtremaCache();
 		for ( int i = 0; i < numDimensions(); i++ )
@@ -787,7 +848,8 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	 * @param position
 	 *            - position that should be removed from the ROI.
 	 */
-	protected void remove( final long[] position ) {
+	protected void remove( final long[] position )
+	{
 		/* default behavior is to do nothing */
 	}
 
@@ -795,8 +857,8 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 	{
 		if ( cached_max == null )
 		{
-			long[] min = new long[ numDimensions() ];
-			long[] max = new long[ numDimensions() ];
+			final long[] min = new long[ numDimensions() ];
+			final long[] max = new long[ numDimensions() ];
 			getExtrema( min, max );
 			this.cached_min = min;
 			this.cached_max = max;
@@ -812,13 +874,13 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 		return cached_size;
 	}
 
-	protected long dimension( int d )
+	protected long dimension( final int d )
 	{
 		validateExtremaCache();
 		return cached_max[ d ] - cached_min[ d ] + 1;
 	}
 
-	protected void dimensions( long[] d )
+	protected void dimensions( final long[] d )
 	{
 		for ( int i = 0; i < d.length; i++ )
 		{
@@ -826,7 +888,7 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 		}
 	}
 
-	protected void max( long[] max )
+	protected void max( final long[] max )
 	{
 		validateExtremaCache();
 		for ( int i = 0; i < max.length; i++ )
@@ -835,19 +897,19 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 		}
 	}
 
-	protected void max( Positionable max )
+	protected void max( final Positionable max )
 	{
 		validateExtremaCache();
 		max.setPosition( cached_max );
 	}
 
-	protected long max( int d )
+	protected long max( final int d )
 	{
 		validateExtremaCache();
 		return cached_max[ d ];
 	}
 
-	protected void min( long[] min )
+	protected void min( final long[] min )
 	{
 		validateExtremaCache();
 		for ( int i = 0; i < min.length; i++ )
@@ -857,13 +919,13 @@ public abstract class AbstractIterableRegionOfInterest extends AbstractRegionOfI
 
 	}
 
-	protected void min( Positionable min )
+	protected void min( final Positionable min )
 	{
 		validateExtremaCache();
 		min.setPosition( cached_min );
 	}
 
-	protected long min( int d )
+	protected long min( final int d )
 	{
 		validateExtremaCache();
 		return cached_min[ d ];

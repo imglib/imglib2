@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -50,17 +46,18 @@ import net.imglib2.type.numeric.NumericType;
  * output line. This works for images, where a single line has no more than
  * {@link Integer#MAX_VALUE} elements. For larger images
  * {@link ConvolverNativeType} can be used.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @see ConvolverFactory
- *
+ * 
  * @param <T>
  *            input and output type
  */
 public final class ConvolverNativeTypeBuffered< T extends NumericType< T > & NativeType< T > > implements Runnable
 {
 	/**
-	 * @return a {@link ConvolverFactory} producing {@link ConvolverNativeTypeBuffered}.
+	 * @return a {@link ConvolverFactory} producing
+	 *         {@link ConvolverNativeTypeBuffered}.
 	 */
 	public static < T extends NumericType< T > & NativeType< T > > ConvolverFactoryNativeTypeBuffered< T > factory( final T type )
 	{
@@ -71,10 +68,13 @@ public final class ConvolverNativeTypeBuffered< T extends NumericType< T > & Nat
 	{
 		final private T type;
 
-		public ConvolverFactoryNativeTypeBuffered( final T type ) { this.type = type;}
+		public ConvolverFactoryNativeTypeBuffered( final T type )
+		{
+			this.type = type;
+		}
 
 		@Override
-		public Runnable create( final double[] halfkernel, final RandomAccess< T > in, final RandomAccess< T > out, final int d, final long lineLength)
+		public Runnable create( final double[] halfkernel, final RandomAccess< T > in, final RandomAccess< T > out, final int d, final long lineLength )
 		{
 			return new ConvolverNativeTypeBuffered< T >( halfkernel, in, out, d, lineLength, type );
 		}

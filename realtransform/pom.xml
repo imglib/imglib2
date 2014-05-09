@@ -18,28 +18,22 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
-		<!-- External dependencies -->
+		<!-- Third-party dependencies -->
 		<dependency>
 			<groupId>gov.nist.math</groupId>
 			<artifactId>jama</artifactId>
 			<version>${jama.version}</version>
 		</dependency>
 
-		<!-- Test scope dependencies -->
+		<!-- Test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.9</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<properties>
-		<project.rootdir>${basedir}/..</project.rootdir>
-	</properties>
 
 	<build>
 		<plugins>
@@ -56,15 +50,11 @@
 		</plugins>
 	</build>
 
-	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
+		<!-- NB: for project parent, in case of partial checkout -->
 		<repository>
-			<id>imagej.releases</id>
+			<id>imagej.public</id>
 			<url>http://code.imagej.net/maven2/releases</url>
-		</repository>
-		<repository>
-			<id>imagej.snapshots</id>
-			<url>http://code.imagej.net/maven2/snapshots</url>
 		</repository>
 	</repositories>
 

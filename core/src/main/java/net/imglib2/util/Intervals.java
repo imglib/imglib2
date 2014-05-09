@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -47,7 +43,7 @@ import net.imglib2.RealLocalizable;
 
 /**
  * Convenience methods for manipulating {@link Interval Intervals}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Intervals
@@ -56,7 +52,7 @@ public class Intervals
 	 * Create a {@link FinalInterval} from a parameter list comprising minimum
 	 * coordinates and size. For example, to create a 2D interval from (10, 10)
 	 * to (20, 40) use createMinSize( 10, 10, 11, 31 ).
-	 *
+	 * 
 	 * @param minsize
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -73,7 +69,7 @@ public class Intervals
 	 * Create a {@link FinalInterval} from a parameter list comprising minimum
 	 * and maximum coordinates. For example, to create a 2D interval from (10,
 	 * 10) to (20, 40) use createMinMax( 10, 10, 20, 40 ).
-	 *
+	 * 
 	 * @param minmax
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -87,10 +83,10 @@ public class Intervals
 	}
 
 	/**
-	 * Create a {@link FinalRealInterval} from a parameter list comprising minimum
-	 * coordinates and size. For example, to create a 2D interval from (10, 10)
-	 * to (20, 40) use createMinSize( 10, 10, 11, 31 ).
-	 *
+	 * Create a {@link FinalRealInterval} from a parameter list comprising
+	 * minimum coordinates and size. For example, to create a 2D interval from
+	 * (10, 10) to (20, 40) use createMinSize( 10, 10, 11, 31 ).
+	 * 
 	 * @param minsize
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -104,10 +100,10 @@ public class Intervals
 	}
 
 	/**
-	 * Create a {@link FinalRealInterval} from a parameter list comprising minimum
-	 * and maximum coordinates. For example, to create a 2D interval from (10,
-	 * 10) to (20, 40) use createMinMax( 10, 10, 20, 40 ).
-	 *
+	 * Create a {@link FinalRealInterval} from a parameter list comprising
+	 * minimum and maximum coordinates. For example, to create a 2D interval
+	 * from (10, 10) to (20, 40) use createMinMax( 10, 10, 20, 40 ).
+	 * 
 	 * @param minmax
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -122,10 +118,10 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in all dimensions.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the input interval plus border
 	 * pixels on every side, in every dimension.
-	 *
+	 * 
 	 * @param interval
 	 *            the input interval
 	 * @param border
@@ -149,10 +145,10 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in one dimensions.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the input interval plus border
 	 * pixels on every side, in dimension d.
-	 *
+	 * 
 	 * @param interval
 	 *            the input interval
 	 * @param border
@@ -175,10 +171,10 @@ public class Intervals
 
 	/**
 	 * Translate an interval in one dimension.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the input interval shifted by t
 	 * in dimension d.
-	 *
+	 * 
 	 * @param interval
 	 *            the input interval
 	 * @param t
@@ -201,10 +197,10 @@ public class Intervals
 
 	/**
 	 * Compute the intersection of two intervals.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the intersection of the input
 	 * intervals (i.e., the area contained in both input intervals).
-	 *
+	 * 
 	 * @param intervalA
 	 *            input interval
 	 * @param intervalB
@@ -229,7 +225,7 @@ public class Intervals
 	/**
 	 * Compute the smallest {@link Interval} containing the specified
 	 * {@link RealInterval}.
-	 *
+	 * 
 	 * @param ri
 	 *            input interval.
 	 * @return the smallest integer interval that completely contains the input
@@ -251,7 +247,7 @@ public class Intervals
 	/**
 	 * Compute the largest {@link Interval} that is contained in the specified
 	 * {@link RealInterval}.
-	 *
+	 * 
 	 * @param ri
 	 *            input interval.
 	 * @return the largest integer interval that is completely contained in the
@@ -273,7 +269,7 @@ public class Intervals
 	/**
 	 * Check whether the given interval is empty, that is, the maximum is
 	 * smaller than the minimum in some dimension.
-	 *
+	 * 
 	 * @param interval
 	 *            interval to check
 	 * @return true when the interval is empty, that is, the maximum is smaller
@@ -283,7 +279,7 @@ public class Intervals
 	{
 		final int n = interval.numDimensions();
 		for ( int d = 0; d < n; ++d )
-			if (interval.min( d ) > interval.max( d ))
+			if ( interval.min( d ) > interval.max( d ) )
 				return true;
 		return false;
 	}
@@ -292,7 +288,7 @@ public class Intervals
 	 * Test whether the {@code containing} interval contains the
 	 * {@code contained} point. The interval is closed, that is, boundary points
 	 * are contained.
-	 *
+	 * 
 	 * @return true, iff {@code contained} is in {@code containing}.
 	 */
 	public static boolean contains( final Interval containing, final Localizable contained )
@@ -313,7 +309,7 @@ public class Intervals
 	 * Test whether the {@code containing} interval contains the
 	 * {@code contained} point. The interval is closed, that is, boundary points
 	 * are contained.
-	 *
+	 * 
 	 * @return true, iff {@code contained} is in {@code containing}.
 	 */
 	public static boolean contains( final RealInterval containing, final RealLocalizable contained )
@@ -365,8 +361,9 @@ public class Intervals
 	}
 
 	/**
-	 * Compute the number of elements contained in an (integer) {@link Interval}.
-	 *
+	 * Compute the number of elements contained in an (integer) {@link Interval}
+	 * .
+	 * 
 	 * @return number of elements in {@code interval}.
 	 */
 	public static long numElements( final Dimensions interval )

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,17 +28,15 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.meta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
@@ -78,6 +76,7 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 
 	private int compositeChannelCount = 1;
 	private final ArrayList<ColorTable> colorTable;
+	private final Map<String, Object> properties = new HashMap<String, Object>();
 
 	// -- Constructors --
 
@@ -141,6 +140,7 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 	 * appropriate {@link Img} implementation such as {@link ArrayImg}).
 	 * </p>
 	 */
+	@Override
 	public Img<T> getImg() {
 		return img;
 	}
@@ -504,6 +504,11 @@ public class ImgPlus<T> extends AbstractCalibratedRealInterval<CalibratedAxis>
 			axes[d] = space.axis(d).copy();
 		}
 		return axes;
+	}
+
+	@Override
+	public Map<String, Object> getProperties() {
+		return properties;
 	}
 	
 

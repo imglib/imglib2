@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -56,21 +52,25 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
- *
+ * 
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class OutOfBoundsBorderTest
 {
-	final private long[] dim = new long[]{ 5, 4, 3 };
+	final private long[] dim = new long[] { 5, 4, 3 };
 
 	static private ArrayImg< IntType, ? > arrayImage;
+
 	static private CellImg< IntType, ?, ? > cellImage;
+
 	static private Img< IntType > listImage;
 
 	static private OutOfBounds< IntType > cArray;
+
 	static private OutOfBounds< IntType > cCell;
+
 	static private OutOfBounds< IntType > cList;
 
 	/**
@@ -78,16 +78,14 @@ public class OutOfBoundsBorderTest
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
-	{
-	}
+	{}
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception
-	{
-	}
+	{}
 
 	/**
 	 * @throws java.lang.Exception
@@ -111,7 +109,7 @@ public class OutOfBoundsBorderTest
 
 			i = 0;
 			for ( int d = dim.length - 1; d >= 0; --d )
-				i = i * ( int )dim[ d ] + position[ d ];
+				i = i * ( int ) dim[ d ] + position[ d ];
 
 			c.get().setInteger( i );
 		}
@@ -123,7 +121,7 @@ public class OutOfBoundsBorderTest
 
 			i = 0;
 			for ( int d = dim.length - 1; d >= 0; --d )
-				i = i * ( int )dim[ d ] + position[ d ];
+				i = i * ( int ) dim[ d ] + position[ d ];
 
 			c.get().setInteger( i );
 		}
@@ -142,22 +140,22 @@ public class OutOfBoundsBorderTest
 	 */
 	@After
 	public void tearDown() throws Exception
-	{
-	}
+	{}
 
 	final private boolean isOutOfBounds( final Localizable l )
 	{
 		for ( int i = 0; i < dim.length; ++i )
-			if ( l.getIntPosition( i ) < 0 || l.getIntPosition( i ) >= dim[ i ] ) return true;
+			if ( l.getIntPosition( i ) < 0 || l.getIntPosition( i ) >= dim[ i ] )
+				return true;
 		return false;
 	}
 
 	@Test
 	public void fwd()
 	{
-		final int[] expectedX = new int[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
-		final int[] expectedY = new int[]{ 0, 0, 0, 0, 0, 0, 0, 5, 10, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 };
-		final int[] expectedZ = new int[]{ 0, 0, 0, 0, 0, 20, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40 };
+		final int[] expectedX = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
+		final int[] expectedY = new int[] { 0, 0, 0, 0, 0, 0, 0, 5, 10, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 };
+		final int[] expectedZ = new int[] { 0, 0, 0, 0, 0, 20, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40 };
 
 		cArray.setPosition( -8, 0 );
 		cCell.setPosition( -8, 0 );
@@ -299,7 +297,7 @@ public class OutOfBoundsBorderTest
 		final int[] d = new int[] { 0, 0, 1, 0, 1, 2, 2 };
 		final int[] v = new int[] { 33, 34, 39, 36, 36, 56, 56 };
 
-		final int[] start = new int[]{ 3, 2, 1 };
+		final int[] start = new int[] { 3, 2, 1 };
 
 		cArray.setPosition( start );
 		cCell.setPosition( start );
@@ -324,12 +322,12 @@ public class OutOfBoundsBorderTest
 	@Test
 	public void setPosition()
 	{
-		final int[] x = new int[]{ 0, 1, 2, 3, 18, -9, 20 };
-		final int[] y = new int[]{ 0, 0, 2, 3, 11, 12, -40 };
-		final int[] z = new int[]{ 0, 0, 1, 2, 10, -13, -15 };
-		final int[] t = new int[]{ 0, 1, 32, 58, 59, 15, 4 };
+		final int[] x = new int[] { 0, 1, 2, 3, 18, -9, 20 };
+		final int[] y = new int[] { 0, 0, 2, 3, 11, 12, -40 };
+		final int[] z = new int[] { 0, 0, 1, 2, 10, -13, -15 };
+		final int[] t = new int[] { 0, 1, 32, 58, 59, 15, 4 };
 
-		for ( int i = 0; i < x.length; ++ i )
+		for ( int i = 0; i < x.length; ++i )
 		{
 			cArray.setPosition( x[ i ], 0 );
 			cArray.setPosition( y[ i ], 1 );

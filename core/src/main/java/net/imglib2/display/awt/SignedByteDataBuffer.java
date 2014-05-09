@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,49 +40,58 @@ import java.awt.image.DataBuffer;
  * 
  * @author Melissa Linkert
  */
-public class SignedByteDataBuffer extends DataBuffer {
+public class SignedByteDataBuffer extends DataBuffer
+{
 
 	private final byte[][] bankData;
 
 	/** Construct a new buffer of signed bytes using the given byte array. */
-	public SignedByteDataBuffer(final byte[] dataArray, final int size) {
-		super(DataBuffer.TYPE_BYTE, size);
-		bankData = new byte[1][];
-		bankData[0] = dataArray;
+	public SignedByteDataBuffer( final byte[] dataArray, final int size )
+	{
+		super( DataBuffer.TYPE_BYTE, size );
+		bankData = new byte[ 1 ][];
+		bankData[ 0 ] = dataArray;
 	}
 
 	/** Construct a new buffer of signed bytes using the given 2D byte array. */
-	public SignedByteDataBuffer(final byte[][] dataArray, final int size) {
-		super(DataBuffer.TYPE_BYTE, size);
+	public SignedByteDataBuffer( final byte[][] dataArray, final int size )
+	{
+		super( DataBuffer.TYPE_BYTE, size );
 		bankData = dataArray;
 	}
 
-	public byte[] getData() {
-		return bankData[0];
+	public byte[] getData()
+	{
+		return bankData[ 0 ];
 	}
 
-	public byte[] getData(final int bank) {
-		return bankData[bank];
-	}
-
-	@Override
-	public int getElem(final int i) {
-		return getElem(0, i);
+	public byte[] getData( final int bank )
+	{
+		return bankData[ bank ];
 	}
 
 	@Override
-	public int getElem(final int bank, final int i) {
-		return bankData[bank][i + getOffsets()[bank]];
+	public int getElem( final int i )
+	{
+		return getElem( 0, i );
 	}
 
 	@Override
-	public void setElem(final int i, final int val) {
-		setElem(0, i, val);
+	public int getElem( final int bank, final int i )
+	{
+		return bankData[ bank ][ i + getOffsets()[ bank ] ];
 	}
 
 	@Override
-	public void setElem(final int bank, final int i, final int val) {
-		bankData[bank][i + getOffsets()[bank]] = (byte) val;
+	public void setElem( final int i, final int val )
+	{
+		setElem( 0, i, val );
+	}
+
+	@Override
+	public void setElem( final int bank, final int i, final int val )
+	{
+		bankData[ bank ][ i + getOffsets()[ bank ] ] = ( byte ) val;
 	}
 
 }

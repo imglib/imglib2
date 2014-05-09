@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.display;
@@ -41,12 +37,13 @@ import net.imglib2.type.numeric.ARGBType;
 
 /**
  * Abstract superclass for array-based color lookup tables.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  * @author Mark Hiner
  */
-public abstract class AbstractArrayColorTable<T> implements ArrayColorTable<T> {
+public abstract class AbstractArrayColorTable< T > implements ArrayColorTable< T >
+{
 
 	// -- Fields --
 
@@ -60,37 +57,42 @@ public abstract class AbstractArrayColorTable<T> implements ArrayColorTable<T> {
 	/**
 	 * Initializes a color table with the given table values.
 	 */
-	public AbstractArrayColorTable(final T... values) {
+	public AbstractArrayColorTable( final T... values )
+	{
 		this.values = values;
 	}
 
 	// -- ArrayColorTable methods --
 
 	@Override
-	public T[] getValues() {
+	public T[] getValues()
+	{
 		return values.clone();
 	}
 
 	@Override
-	public int argb(final int i) {
-		final int r = values.length > 0 ? get(ColorTable.RED,   i) : 0;
-		final int g = values.length > 1 ? get(ColorTable.GREEN, i) : 0;
-		final int b = values.length > 2 ? get(ColorTable.BLUE,  i) : 0;
-		final int a = values.length > 3 ? get(ColorTable.ALPHA, i) : 0xff;
-		return ARGBType.rgba(r, g, b, a);
+	public int argb( final int i )
+	{
+		final int r = values.length > 0 ? get( ColorTable.RED, i ) : 0;
+		final int g = values.length > 1 ? get( ColorTable.GREEN, i ) : 0;
+		final int b = values.length > 2 ? get( ColorTable.BLUE, i ) : 0;
+		final int a = values.length > 3 ? get( ColorTable.ALPHA, i ) : 0xff;
+		return ARGBType.rgba( r, g, b, a );
 	}
 
 	// -- ColorTable methods --
 
 	@Override
-	public int lookupARGB(final double min, final double max, final double value) {
-		int bins = getLength();
-		int bin = Binning.valueToBin(bins, min, max, value);
-		return argb(bin);
+	public int lookupARGB( final double min, final double max, final double value )
+	{
+		final int bins = getLength();
+		final int bin = Binning.valueToBin( bins, min, max, value );
+		return argb( bin );
 	}
 
 	@Override
-	public int getComponentCount() {
+	public int getComponentCount()
+	{
 		return values.length;
 	}
 
@@ -101,7 +103,7 @@ public abstract class AbstractArrayColorTable<T> implements ArrayColorTable<T> {
 	 * </p>
 	 */
 	@Override
-	public abstract int get(final int comp, final int bin);
+	public abstract int get( final int comp, final int bin );
 
 	/**
 	 * {@inheritDoc}
@@ -110,6 +112,6 @@ public abstract class AbstractArrayColorTable<T> implements ArrayColorTable<T> {
 	 * </p>
 	 */
 	@Override
-	public abstract int getResampled(final int comp, final int bins, final int bin);
+	public abstract int getResampled( final int comp, final int bins, final int bin );
 
 }

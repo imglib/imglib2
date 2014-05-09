@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui.util;
@@ -55,7 +51,7 @@ import net.imglib2.ui.viewer.InteractiveViewer3D;
  * Default rendering settings used by the convenience viewer classes
  * {@link InteractiveViewer2D}, {@link InteractiveRealViewer2D},
  * {@link InteractiveViewer3D}, and {@link InteractiveRealViewer3D}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Defaults
@@ -95,7 +91,7 @@ public class Defaults
 	/**
 	 * Create a factory to construct the default {@link Renderer} type with
 	 * default settings for a single {@link RenderSource}.
-	 *
+	 * 
 	 * @param transformType
 	 * @param source
 	 *            the source data that will be rendered by the {@link Renderer}

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.view;
@@ -44,57 +40,59 @@ import net.imglib2.RandomAccessible;
 /**
  * {@link SubsampleView} is a view that provides access to only every
  * <em>s<sub>d</sub></em><sup>th</sup> value of a source
- * {@link RandomAccessible}.  This is effectively an integer scaling
- * transformation.  Localization calls to the {@link RandomAccess} return
- * scaled coordinates that are generated on-the-fly.  Localization is thus
- * moderately inefficient to the benefit of faster positioning.  Don't ask for
- * what you already know ;).
- *
+ * {@link RandomAccessible}. This is effectively an integer scaling
+ * transformation. Localization calls to the {@link RandomAccess} return scaled
+ * coordinates that are generated on-the-fly. Localization is thus moderately
+ * inefficient to the benefit of faster positioning. Don't ask for what you
+ * already know ;).
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class SubsampleView< T > implements RandomAccessible< T >
 {
 	final protected RandomAccessible< T > source;
+
 	final protected long[] steps;
-	
+
 	public class SubsampleRandomAccess implements RandomAccess< T >
 	{
 		final protected RandomAccess< T > sourceRandomAccess;
+
 		final protected long[] tmp = new long[ source.numDimensions() ];
-		
+
 		protected SubsampleRandomAccess( final RandomAccess< T > sourceRandomAccess )
 		{
 			this.sourceRandomAccess = sourceRandomAccess;
 		}
-		
+
 		public SubsampleRandomAccess()
 		{
 			this( source.randomAccess() );
 		}
-		
+
 		public SubsampleRandomAccess( final Interval interval )
 		{
 			this( source.randomAccess( interval ) );
 		}
-		
+
 		@Override
 		public void localize( final int[] position )
 		{
-			for ( int d = 0; d < steps.length; ++ d )
-				position[ d ] = sourceRandomAccess.getIntPosition( d ) / ( int )steps[ d ];
+			for ( int d = 0; d < steps.length; ++d )
+				position[ d ] = sourceRandomAccess.getIntPosition( d ) / ( int ) steps[ d ];
 		}
 
 		@Override
 		public void localize( final long[] position )
 		{
-			for ( int d = 0; d < steps.length; ++ d )
+			for ( int d = 0; d < steps.length; ++d )
 				position[ d ] = sourceRandomAccess.getLongPosition( d ) / steps[ d ];
 		}
 
 		@Override
 		public int getIntPosition( final int d )
 		{
-			return sourceRandomAccess.getIntPosition( d ) / ( int )steps[ d ];
+			return sourceRandomAccess.getIntPosition( d ) / ( int ) steps[ d ];
 		}
 
 		@Override
@@ -106,27 +104,27 @@ public class SubsampleView< T > implements RandomAccessible< T >
 		@Override
 		public void localize( final float[] position )
 		{
-			for ( int d = 0; d < steps.length; ++ d )
-				position[ d ] = sourceRandomAccess.getFloatPosition( d ) / ( float )steps[ d ];
+			for ( int d = 0; d < steps.length; ++d )
+				position[ d ] = sourceRandomAccess.getFloatPosition( d ) / steps[ d ];
 		}
 
 		@Override
 		public void localize( final double[] position )
 		{
-			for ( int d = 0; d < steps.length; ++ d )
-				position[ d ] = sourceRandomAccess.getDoublePosition( d ) / ( double )steps[ d ];
+			for ( int d = 0; d < steps.length; ++d )
+				position[ d ] = sourceRandomAccess.getDoublePosition( d ) / steps[ d ];
 		}
 
 		@Override
 		public float getFloatPosition( final int d )
 		{
-			return sourceRandomAccess.getFloatPosition( d ) / ( float )steps[ d ];
+			return sourceRandomAccess.getFloatPosition( d ) / steps[ d ];
 		}
 
 		@Override
 		public double getDoublePosition( final int d )
 		{
-			return sourceRandomAccess.getDoublePosition( d ) / ( double )steps[ d ];
+			return sourceRandomAccess.getDoublePosition( d ) / steps[ d ];
 		}
 
 		@Override
@@ -237,7 +235,7 @@ public class SubsampleView< T > implements RandomAccessible< T >
 			return copy();
 		}
 	}
-	
+
 	public SubsampleView( final RandomAccessible< T > source, final long step )
 	{
 		this.source = source;
@@ -245,15 +243,15 @@ public class SubsampleView< T > implements RandomAccessible< T >
 		for ( int d = 0; d < steps.length; ++d )
 			steps[ d ] = step;
 	}
-	
+
 	public SubsampleView( final RandomAccessible< T > source, final long... steps )
 	{
-		assert steps.length >= source.numDimensions() : "Dimensions do not match.";
-		
+		assert steps.length >= source.numDimensions(): "Dimensions do not match.";
+
 		this.source = source;
 		this.steps = steps.clone();
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{

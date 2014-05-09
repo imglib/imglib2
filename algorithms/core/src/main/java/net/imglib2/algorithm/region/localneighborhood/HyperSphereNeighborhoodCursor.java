@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,6 +41,10 @@ public final class HyperSphereNeighborhoodCursor< T > extends HypersphereNeighbo
 {
 	private final long[] dimensions;
 
+	private final long[] min;
+
+	private final long[] max;
+
 	private long index;
 
 	private final long maxIndex;
@@ -53,10 +53,14 @@ public final class HyperSphereNeighborhoodCursor< T > extends HypersphereNeighbo
 
 	public HyperSphereNeighborhoodCursor( final RandomAccessibleInterval< T > source, final long radius, final HyperSphereNeighborhoodFactory< T > factory )
 	{
-		super( source, radius, factory );
+		super( source, radius, factory, source );
 
 		dimensions = new long[ n ];
-		dimensions( dimensions );
+		min = new long[ n ];
+		max = new long[ n ];
+		source.dimensions( dimensions );
+		source.min( min );
+		source.max( max );
 		long size = dimensions[ 0 ];
 		for ( int d = 1; d < n; ++d )
 			size *= dimensions[ d ];
@@ -68,6 +72,8 @@ public final class HyperSphereNeighborhoodCursor< T > extends HypersphereNeighbo
 	{
 		super( c );
 		dimensions = c.dimensions.clone();
+		min = c.min.clone();
+		max = c.max.clone();
 		maxIndex = c.maxIndex;
 		index = c.index;
 		maxIndexOnLine = c.maxIndexOnLine;

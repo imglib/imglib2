@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -62,7 +58,7 @@ import Jama.Matrix;
  * {@link #refinePeaks(List, RandomAccessible, Interval, boolean, int, boolean, float, boolean[], int)}
  * method to do this, but this has a lot of parameters. Therefore, this class
  * can also be instantiated to encapsulate the parameter settings.
- *
+ * 
  * <p>
  * A List {@link RefinedPeak} for the given list of {@link Localizable} is
  * computed by, for each peak, fitting a quadratic function to the image and
@@ -71,18 +67,24 @@ import Jama.Matrix;
  * repeated at the corresponding integer coordinates. This is repeated to
  * convergence, for a maximum number of iterations, or until the integer
  * coordinates move out of the valid image.
- *
+ * 
  * @author Stephan Preibisch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class SubpixelLocalization< P extends Localizable, T extends RealType<T> >
+public class SubpixelLocalization< P extends Localizable, T extends RealType< T > >
 {
 	protected int maxNumMoves = 4;
+
 	protected boolean allowMaximaTolerance = false;
+
 	protected boolean canMoveOutside = false;
+
 	protected float maximaTolerance = 0.01f;
+
 	protected boolean[] allowedToMoveInDim;
+
 	protected boolean returnInvalidPeaks = false;
+
 	protected int numThreads;
 
 	public SubpixelLocalization( final int numDimensions )
@@ -94,27 +96,81 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 		numThreads = Runtime.getRuntime().availableProcessors();
 	}
 
-	public void setAllowMaximaTolerance( final boolean allowMaximaTolerance ) { this.allowMaximaTolerance = allowMaximaTolerance; }
-	public void setCanMoveOutside( final boolean canMoveOutside ) { this.canMoveOutside = canMoveOutside; }
-	public void setMaximaTolerance( final float maximaTolerance ) { this.maximaTolerance = maximaTolerance; }
-	public void setMaxNumMoves( final int maxNumMoves ) { this.maxNumMoves = maxNumMoves; }
-	public void setAllowedToMoveInDim( final boolean[] allowedToMoveInDim ) { this.allowedToMoveInDim = allowedToMoveInDim.clone(); }
-	public void setReturnInvalidPeaks( final boolean returnInvalidPeaks ) { this.returnInvalidPeaks = returnInvalidPeaks; }
-	public void setNumThreads( final int numThreads ) { this.numThreads = numThreads; }
+	public void setAllowMaximaTolerance( final boolean allowMaximaTolerance )
+	{
+		this.allowMaximaTolerance = allowMaximaTolerance;
+	}
 
-	public boolean getAllowMaximaTolerance() { return allowMaximaTolerance; }
-	public boolean getCanMoveOutside() { return canMoveOutside; }
-	public float getMaximaTolerance() { return maximaTolerance; }
-	public int getMaxNumMoves() { return maxNumMoves; }
-	public boolean[] getAllowedToMoveInDim() { return allowedToMoveInDim.clone(); }
-	public boolean getReturnInvalidPeaks() { return returnInvalidPeaks; }
-	public int getNumThreads() { return numThreads; }
+	public void setCanMoveOutside( final boolean canMoveOutside )
+	{
+		this.canMoveOutside = canMoveOutside;
+	}
+
+	public void setMaximaTolerance( final float maximaTolerance )
+	{
+		this.maximaTolerance = maximaTolerance;
+	}
+
+	public void setMaxNumMoves( final int maxNumMoves )
+	{
+		this.maxNumMoves = maxNumMoves;
+	}
+
+	public void setAllowedToMoveInDim( final boolean[] allowedToMoveInDim )
+	{
+		this.allowedToMoveInDim = allowedToMoveInDim.clone();
+	}
+
+	public void setReturnInvalidPeaks( final boolean returnInvalidPeaks )
+	{
+		this.returnInvalidPeaks = returnInvalidPeaks;
+	}
+
+	public void setNumThreads( final int numThreads )
+	{
+		this.numThreads = numThreads;
+	}
+
+	public boolean getAllowMaximaTolerance()
+	{
+		return allowMaximaTolerance;
+	}
+
+	public boolean getCanMoveOutside()
+	{
+		return canMoveOutside;
+	}
+
+	public float getMaximaTolerance()
+	{
+		return maximaTolerance;
+	}
+
+	public int getMaxNumMoves()
+	{
+		return maxNumMoves;
+	}
+
+	public boolean[] getAllowedToMoveInDim()
+	{
+		return allowedToMoveInDim.clone();
+	}
+
+	public boolean getReturnInvalidPeaks()
+	{
+		return returnInvalidPeaks;
+	}
+
+	public int getNumThreads()
+	{
+		return numThreads;
+	}
 
 	/**
 	 * Refine a set of peaks to subpixel coordinates. Calls
 	 * {@link #refinePeaks(List, RandomAccessible, Interval, boolean, int, boolean, float, boolean[], int)}
 	 * with the parameters set to this object.
-	 *
+	 * 
 	 * @param peaks
 	 *            List of integer peaks.
 	 * @param img
@@ -140,7 +196,7 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 	 * fit is repeated at the corresponding integer coordinates. This is
 	 * repeated to convergence, for a maximum number of iterations, or until the
 	 * integer coordinates move out of the valid image.
-	 *
+	 * 
 	 * @param peaks
 	 *            List of integer peaks.
 	 * @param img
@@ -173,7 +229,7 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 			final List< P > peaks, final RandomAccessible< T > img, final Interval validInterval, final boolean returnInvalidPeaks,
 			final int maxNumMoves, final boolean allowMaximaTolerance, final float maximaTolerance, final boolean[] allowedToMoveInDim,
 			final int numThreads )
-			{
+	{
 		final int numPeaks = peaks.size();
 		final ArrayList< RefinedPeak< P > > allRefinedPeaks = new ArrayList< RefinedPeak< P > >( numPeaks );
 
@@ -210,7 +266,7 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 		}
 
 		return allRefinedPeaks;
-			}
+	}
 
 	/**
 	 * Refine a set of peaks to subpixel coordinates. Single-threaded version.
@@ -222,7 +278,7 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 	 * fit is repeated at the corresponding integer coordinates. This is
 	 * repeated to convergence, for a maximum number of iterations, or until the
 	 * integer coordinates move out of the valid image.
-	 *
+	 * 
 	 * @param peaks
 	 *            List of integer peaks.
 	 * @param img
@@ -252,7 +308,7 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 	public static < T extends RealType< T >, P extends Localizable > ArrayList< RefinedPeak< P > > refinePeaks(
 			final List< P > peaks, final RandomAccessible< T > img, final Interval validInterval, final boolean returnInvalidPeaks,
 			final int maxNumMoves, final boolean allowMaximaTolerance, final float maximaTolerance, final boolean[] allowedToMoveInDim )
-			{
+	{
 		final ArrayList< RefinedPeak< P >> refinedPeaks = new ArrayList< RefinedPeak< P > >();
 
 		final int n = img.numDimensions();
@@ -348,20 +404,19 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 				subpixelOffset.move( currentPosition );
 				refinedPeaks.add( new RefinedPeak< P >( p, subpixelOffset, value, true ) );
 			}
-			else
-				if ( returnInvalidPeaks )
-				{
-					refinedPeaks.add( new RefinedPeak< P >( p, p, 0, false ) );
-				}
+			else if ( returnInvalidPeaks )
+			{
+				refinedPeaks.add( new RefinedPeak< P >( p, p, 0, false ) );
+			}
 		}
 
 		return refinedPeaks;
-			}
+	}
 
 	/**
 	 * Estimate subpixel <code>offset</code> of extremum of quadratic function
 	 * fitted at <code>p</code>.
-	 *
+	 * 
 	 * @param p
 	 *            integer position at which to fit quadratic.
 	 * @param access
@@ -387,22 +442,25 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 		final double a1 = access.get().getRealDouble();
 		for ( int d = 0; d < n; ++d )
 		{
+			// @formatter:off
 			// gradient
 			// we compute the derivative for dimension d like this
 			//
 			// | a0 | a1 | a2 |
 			//        ^
 			//        |
-			//  Original position of access
+			// Original position of access
 			//
 			// g(d) = (a2 - a0)/2
 			// we divide by 2 because it is a jump over two pixels
+			// @formatter:on
 			access.bck( d );
 			final double a0 = access.get().getRealDouble();
 			access.move( 2, d );
 			final double a2 = access.get().getRealDouble();
 			g.set( d, 0, ( a2 - a0 ) * 0.5 );
 
+			// @formatter:off
 			// Hessian
 			// diagonal element for dimension d
 			// computed from the row a in the input
@@ -410,15 +468,16 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 			// | a0 | a1 | a2 |
 			//        ^
 			//        |
-			//  Original position of access
+			// Original position of access
 			//
 			// H(dd) = (a2-a1) - (a1-a0)
 			//       = a2 - 2*a1 + a0
-			H.set( d, d, a2 - 2*a1 + a0 );
+			// @formatter:on
+			H.set( d, d, a2 - 2 * a1 + a0 );
 
-			// off-diagonal Hessian elements H(de) = H(ed) are computed as a combination
-			// of dimA (dimension a) and dimB (dimension b), i.e. we always operate in a
-			// two-dimensional plane
+			// off-diagonal Hessian elements H(de) = H(ed) are computed as a
+			// combination of dimA (dimension a) and dimB (dimension b), i.e. we
+			// always operate in a two-dimensional plane
 			// ______________________
 			// | a0b0 | a1b0 | a2b0 |
 			// | a0b1 | a1b1 | a2b1 |
@@ -467,4 +526,3 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType<T> 
 		}
 	}
 }
-

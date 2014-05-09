@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -43,51 +39,66 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 
 /**
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Lee Kamentsky
  */
-public class ConstantRandomAccessible<T> implements RandomAccessible<T> {
+public class ConstantRandomAccessible< T > implements RandomAccessible< T >
+{
 
-	protected class ConstantRandomAccess extends Point implements RandomAccess<T> {
-		public ConstantRandomAccess() {
-			super(nDimensions);
+	protected class ConstantRandomAccess extends Point implements RandomAccess< T >
+	{
+		public ConstantRandomAccess()
+		{
+			super( nDimensions );
 		}
 
 		@Override
-		public T get() {
+		public T get()
+		{
 			return constant;
 		}
 
 		@Override
-		public ConstantRandomAccess copy() {
+		public ConstantRandomAccess copy()
+		{
 			return new ConstantRandomAccess();
 		}
 
 		@Override
-		public ConstantRandomAccess copyRandomAccess() {
+		public ConstantRandomAccess copyRandomAccess()
+		{
 			return new ConstantRandomAccess();
 		}
 
 	}
+
 	private final int nDimensions;
+
 	private final T constant;
-	public ConstantRandomAccessible(final T constant, final int nDimensions) {
+
+	public ConstantRandomAccessible( final T constant, final int nDimensions )
+	{
 		this.nDimensions = nDimensions;
 		this.constant = constant;
 	}
+
 	@Override
-	public int numDimensions() {
+	public int numDimensions()
+	{
 		return nDimensions;
 	}
 
 	@Override
-	public RandomAccess<T> randomAccess() {
+	public RandomAccess< T > randomAccess()
+	{
 		return new ConstantRandomAccess();
 	}
+
 	@Override
-	public RandomAccess<T> randomAccess(final Interval interval) {
+	public RandomAccess< T > randomAccess( final Interval interval )
+	{
 		return new ConstantRandomAccess();
 	}
 }

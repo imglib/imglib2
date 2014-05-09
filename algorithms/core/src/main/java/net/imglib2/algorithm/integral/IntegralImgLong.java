@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,7 +40,8 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.integer.LongType;
 
 /**
- * Special implementation for long using the basic type to sum up the individual lines. 
+ * Special implementation for long using the basic type to sum up the individual
+ * lines.
  * 
  * @param <R>
  * @author Stephan Preibisch
@@ -52,18 +49,18 @@ import net.imglib2.type.numeric.integer.LongType;
 public class IntegralImgLong< R extends NumericType< R > > extends IntegralImg< R, LongType >
 {
 
-	public IntegralImgLong( final RandomAccessibleInterval<R> img, final LongType type, final Converter<R, LongType> converter) 
+	public IntegralImgLong( final RandomAccessibleInterval< R > img, final LongType type, final Converter< R, LongType > converter )
 	{
 		super( img, type, converter );
 	}
-	
+
 	@Override
 	protected void integrateLineDim0( final Converter< R, LongType > converter, final RandomAccess< R > cursorIn, final RandomAccess< LongType > cursorOut, final LongType sum, final LongType tmpVar, final long size )
 	{
 		// compute the first pixel
 		converter.convert( cursorIn.get(), sum );
 		cursorOut.get().set( sum );
-		
+
 		long sum2 = sum.get();
 
 		for ( int i = 2; i < size; ++i )
@@ -74,7 +71,7 @@ public class IntegralImgLong< R extends NumericType< R > > extends IntegralImg< 
 			converter.convert( cursorIn.get(), tmpVar );
 			sum2 += tmpVar.get();
 			cursorOut.get().set( sum2 );
-		}		
+		}
 	}
 
 	@Override

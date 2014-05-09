@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,20 +41,22 @@ import net.imglib2.Sampler;
 /**
  * <em>k</em>-nearest-neighbor search on {@link IterableRealInterval}
  * implemented as linear search.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class NearestNeighborSearchOnIterableRealInterval< T > implements NearestNeighborSearch< T >
 {
 	final protected IterableRealInterval< T > iterable;
-	
+
 	final protected int n;
+
 	protected RealCursor< T > element = null;
+
 	protected double squareDistance = Double.MAX_VALUE;
-	
+
 	final protected double[] referenceLocation;
-	
+
 	/**
 	 * Calculate the square Euclidean distance of a query location to the
 	 * location stored in referenceLocation.
@@ -73,28 +71,28 @@ public class NearestNeighborSearchOnIterableRealInterval< T > implements Nearest
 		}
 		return squareSum;
 	}
-	
+
 	public NearestNeighborSearchOnIterableRealInterval( final IterableRealInterval< T > iterable )
 	{
 		this.iterable = iterable;
 		n = iterable.numDimensions();
-		
+
 		referenceLocation = new double[ n ];
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{
 		return n;
 	}
-	
+
 	@Override
 	public void search( final RealLocalizable reference )
 	{
 		squareDistance = Double.MAX_VALUE;
-		
+
 		reference.localize( referenceLocation );
-		
+
 		final RealCursor< T > cursor = iterable.localizingCursor();
 		while ( cursor.hasNext() )
 		{
@@ -107,10 +105,9 @@ public class NearestNeighborSearchOnIterableRealInterval< T > implements Nearest
 			}
 		}
 	}
-	
-	
+
 	/* NearestNeighborSearch */
-	
+
 	@Override
 	public RealLocalizable getPosition()
 	{
@@ -128,13 +125,13 @@ public class NearestNeighborSearchOnIterableRealInterval< T > implements Nearest
 	{
 		return squareDistance;
 	}
-	
+
 	@Override
 	public double getDistance()
 	{
 		return Math.sqrt( squareDistance );
 	}
-	
+
 	@Override
 	public NearestNeighborSearchOnIterableRealInterval< T > copy()
 	{

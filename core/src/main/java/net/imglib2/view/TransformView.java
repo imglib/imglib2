@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,8 +41,8 @@ import net.imglib2.transform.Transform;
 /**
  * Wrap a {@code source} RandomAccessible which is related to this by a generic
  * {@link Transform} {@code transformToSource}.
- *  
- *
+ * 
+ * 
  * @author Tobias Pietzsch
  */
 public class TransformView< T > implements TransformedRandomAccessible< T >
@@ -54,12 +50,12 @@ public class TransformView< T > implements TransformedRandomAccessible< T >
 	protected final int n;
 
 	protected final RandomAccessible< T > source;
-	
+
 	protected final Transform transformToSource;
-	
+
 	protected RandomAccessible< T > fullViewRandomAccessible;
-	
-	public TransformView( RandomAccessible< T > source, final Transform transformToSource )
+
+	public TransformView( final RandomAccessible< T > source, final Transform transformToSource )
 	{
 		assert source.numDimensions() == transformToSource.numTargetDimensions();
 
@@ -67,8 +63,8 @@ public class TransformView< T > implements TransformedRandomAccessible< T >
 
 		this.source = source;
 		this.transformToSource = transformToSource;
-		
-		fullViewRandomAccessible = null;		
+
+		fullViewRandomAccessible = null;
 	}
 
 	@Override
@@ -90,16 +86,16 @@ public class TransformView< T > implements TransformedRandomAccessible< T >
 	}
 
 	@Override
-	public RandomAccess< T > randomAccess( Interval interval )
+	public RandomAccess< T > randomAccess( final Interval interval )
 	{
-		return TransformBuilder.getEfficientRandomAccessible( interval, this ).randomAccess(); 
+		return TransformBuilder.getEfficientRandomAccessible( interval, this ).randomAccess();
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
 		if ( fullViewRandomAccessible == null )
-			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( null, this ); 
+			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( null, this );
 		return fullViewRandomAccessible.randomAccess();
 	}
 }

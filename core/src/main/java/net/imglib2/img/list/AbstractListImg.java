@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -49,12 +45,12 @@ import net.imglib2.util.IntervalIndexer;
  * Abstract base class for {@link Img} that store pixels in a single linear
  * array (an {@link ArrayList} or similar).In principle, the number of entities
  * stored is limited to {@link Integer#MAX_VALUE}.
- *
+ * 
  * Derived classes need to implement the {@link #get(int)} and
  * {@link #set(int, Object)} methods that are used by accessors to access
  * pixels. These could be implemented to fetch pixels from an {@link ArrayList},
  * create them on the fly, cache to disk, etc.
- *
+ * 
  * @param <T>
  *            The value type of the pixels. You can us {@link Type}s or
  *            arbitrary {@link Object}s. If you use non-{@link Type} pixels,
@@ -62,7 +58,7 @@ import net.imglib2.util.IntervalIndexer;
  *            value stored in every reference. Instead, you can use the
  *            {@link ListCursor#set(Object)} and
  *            {@link ListRandomAccess#set(Object)} methods to alter pixels.
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>

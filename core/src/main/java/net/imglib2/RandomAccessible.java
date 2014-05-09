@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,25 +28,26 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2;
 
 /**
- * <p><em>f:Z<sup>n</sup>&rarr;T</em></p>
+ * <p>
+ * <em>f:Z<sup>n</sup>&rarr;T</em>
+ * </p>
  * 
- * <p>A function over integer space that can create a random access
- * {@link Sampler}.</p>
+ * <p>
+ * A function over integer space that can create a random access {@link Sampler}
+ * .
+ * </p>
  * 
- * <p>If your algorithm takes a RandomAccessible, this
- * usually means that you expect that the domain is infinite.
- * (In contrast to this, {@link RandomAccessibleInterval}s have a
- * finite domain.)</p>
+ * <p>
+ * If your algorithm takes a RandomAccessible, this usually means that you
+ * expect that the domain is infinite. (In contrast to this,
+ * {@link RandomAccessibleInterval}s have a finite domain.)
+ * </p>
  * 
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
@@ -57,8 +58,7 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * Create a random access sampler for integer coordinates.
 	 * 
 	 * <p>
-	 * The returned random access covers as much of the
-	 * domain as possible.
+	 * The returned random access covers as much of the domain as possible.
 	 * </p>
 	 * 
 	 * @return random access sampler
@@ -69,14 +69,15 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * Create a random access sampler for integer coordinates.
 	 * 
 	 * <p>
-	 * The returned random access is intended to be used in the specified interval only.
-	 * Thus, the RandomAccessible may provide optimized versions.
-	 * If the interval is completely contained in the domain,
-	 * the random access is guaranteed to provide the same values as that
-	 * obtained by {@link #randomAccess()} within the interval.
+	 * The returned random access is intended to be used in the specified
+	 * interval only. Thus, the RandomAccessible may provide optimized versions.
+	 * If the interval is completely contained in the domain, the random access
+	 * is guaranteed to provide the same values as that obtained by
+	 * {@link #randomAccess()} within the interval.
 	 * </p>
 	 * 
-	 * @param interval   in which interval you intend to use the random access.
+	 * @param interval
+	 *            in which interval you intend to use the random access.
 	 * 
 	 * @return random access sampler
 	 */

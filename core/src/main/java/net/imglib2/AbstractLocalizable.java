@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -40,7 +36,7 @@ package net.imglib2;
 /**
  * An abstract class that implements the {@link Localizable} interface using a
  * long[] array to maintain position.
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -68,7 +64,7 @@ public abstract class AbstractLocalizable extends AbstractEuclideanSpace impleme
 	/**
 	 * Protected constructor that re-uses the passed position array. This is
 	 * intended to allow subclasses to provide a way to wrap a long[] array.
-	 *
+	 * 
 	 * @param position
 	 *            position array to use.
 	 */

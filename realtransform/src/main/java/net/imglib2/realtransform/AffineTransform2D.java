@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -53,148 +49,148 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	final static protected class AffineMatrix2D
 	{
 		public double
-			m00 = 1.0, m01 = 0.0, m02 = 0.0, 
-			m10 = 0.0, m11 = 1.0, m12 = 0.0;
-		
+				m00 = 1.0, m01 = 0.0, m02 = 0.0,
+				m10 = 0.0, m11 = 1.0, m12 = 0.0;
+
 		public AffineMatrix2D copy()
 		{
 			final AffineMatrix2D copy = new AffineMatrix2D();
-			
+
 			copy.m00 = m00;
 			copy.m01 = m01;
 			copy.m02 = m02;
-			
+
 			copy.m10 = m10;
 			copy.m11 = m11;
 			copy.m12 = m12;
-			
+
 			return copy;
 		}
-		
+
 		final protected double det()
 		{
 			return m00 * m11 - m01 * m10;
 		}
 	}
-	
-	
+
 	final protected AffineMatrix2D a;
-	
+
 	final protected RealPoint d0;
+
 	final protected RealPoint d1;
+
 	final protected RealPoint[] ds;
-	
+
 	final protected AffineTransform2D inverse;
-	
+
 	public AffineTransform2D()
 	{
 		this( new AffineMatrix2D() );
 	}
-	
+
 	protected AffineTransform2D( final AffineMatrix2D a )
 	{
 		this.a = a;
 
 		d0 = new RealPoint( 2 );
 		d1 = new RealPoint( 2 );
-		ds = new RealPoint[]{ d0, d1 };
+		ds = new RealPoint[] { d0, d1 };
 		updateDs();
-		
+
 		inverse = new AffineTransform2D( this );
 		invert();
 		inverse.updateDs();
 	}
-	
+
 	protected AffineTransform2D( final AffineTransform2D inverse )
 	{
 		this.inverse = inverse;
-		
+
 		a = new AffineMatrix2D();
 
 		d0 = new RealPoint( 2 );
 		d1 = new RealPoint( 2 );
-		ds = new RealPoint[]{ d0, d1 };
+		ds = new RealPoint[] { d0, d1 };
 	}
-	
+
 	protected void invert()
 	{
 		final double det = a.det();
-		
+
 		/* similar to Jama, throw a RunTimeException for singular matrices. */
 		if ( det == 0 )
 			throw new RuntimeException( "Matrix is singular." );
-		
+
 		final double idet = 1.0 / det;
-		
+
 		inverse.a.m00 = a.m11 * idet;
 		inverse.a.m01 = -a.m01 * idet;
 		inverse.a.m02 = ( a.m01 * a.m12 - a.m02 * a.m11 ) * idet;
-		
+
 		inverse.a.m10 = -a.m10 * idet;
 		inverse.a.m11 = a.m00 * idet;
-		inverse.a.m12 = ( a.m02 * a.m10 - a.m00 * a.m12 ) * idet;		
+		inverse.a.m12 = ( a.m02 * a.m10 - a.m00 * a.m12 ) * idet;
 	}
-	
+
 	protected void updateDs()
 	{
 		d0.setPosition( a.m00, 0 );
 		d0.setPosition( a.m10, 1 );
-		
+
 		d1.setPosition( a.m01, 0 );
 		d1.setPosition( a.m11, 1 );
 	}
-	
+
 	@Override
 	final public void apply( final double[] source, final double[] target )
 	{
-		assert source.length >= 2 && target.length >= 2 : "2d affine transformations can be applied to 2d coordinates only.";
-		
+		assert source.length >= 2 && target.length >= 2: "2d affine transformations can be applied to 2d coordinates only.";
+
 		target[ 0 ] = source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + a.m02;
 		target[ 1 ] = source[ 0 ] * a.m10 + source[ 1 ] * a.m11 + a.m12;
 	}
-	
+
 	@Override
 	public void apply( final float[] source, final float[] target )
 	{
-		assert source.length >= 2 && target.length >= 2 : "2d affine transformations can be applied to 2d coordinates only.";
-		
-		target[ 0 ] = ( float )( source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + a.m02 );
-		target[ 1 ] = ( float )( source[ 0 ] * a.m10 + source[ 1 ] * a.m11 + a.m12 );
+		assert source.length >= 2 && target.length >= 2: "2d affine transformations can be applied to 2d coordinates only.";
+
+		target[ 0 ] = ( float ) ( source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + a.m02 );
+		target[ 1 ] = ( float ) ( source[ 0 ] * a.m10 + source[ 1 ] * a.m11 + a.m12 );
 	}
-	
+
 	@Override
 	public void apply( final RealLocalizable source, final RealPositionable target )
 	{
-		assert source.numDimensions() >= 2 && target.numDimensions() >= 2 : "2d affine transformations can be applied to 2d coordinates only.";
-		
+		assert source.numDimensions() >= 2 && target.numDimensions() >= 2: "2d affine transformations can be applied to 2d coordinates only.";
+
 		target.setPosition( source.getDoublePosition( 0 ) * a.m00 + source.getDoublePosition( 1 ) * a.m01 + a.m02, 0 );
 		target.setPosition( source.getDoublePosition( 0 ) * a.m10 + source.getDoublePosition( 1 ) * a.m11 + a.m12, 1 );
 	}
-	
+
 	@Override
 	final public void applyInverse( final double[] source, final double[] target )
 	{
-		assert source.length >= 2 && target.length >= 2 : "2d affine transformations can be applied to 2d coordinates only.";
-		
+		assert source.length >= 2 && target.length >= 2: "2d affine transformations can be applied to 2d coordinates only.";
+
 		source[ 0 ] = target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + inverse.a.m02;
 		source[ 1 ] = target[ 0 ] * inverse.a.m10 + target[ 1 ] * inverse.a.m11 + inverse.a.m12;
 	}
-	
+
 	@Override
 	public void applyInverse( final float[] source, final float[] target )
 	{
-		assert source.length >= 2 && target.length >= 2 : "2d affine transformations can be applied to 2d coordinates only.";
-		
-		source[ 0 ] = ( float )( target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + inverse.a.m02 );
-		source[ 1 ] = ( float )( target[ 0 ] * inverse.a.m10 + target[ 1 ] * inverse.a.m11 + inverse.a.m12 );
+		assert source.length >= 2 && target.length >= 2: "2d affine transformations can be applied to 2d coordinates only.";
+
+		source[ 0 ] = ( float ) ( target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + inverse.a.m02 );
+		source[ 1 ] = ( float ) ( target[ 0 ] * inverse.a.m10 + target[ 1 ] * inverse.a.m11 + inverse.a.m12 );
 	}
-	
 
 	@Override
 	public void applyInverse( final RealPositionable source, final RealLocalizable target )
 	{
-		assert source.numDimensions() >= 2 && target.numDimensions() >= 2 : "2d affine transformations can be applied to 2d coordinates only.";
-		
+		assert source.numDimensions() >= 2 && target.numDimensions() >= 2: "2d affine transformations can be applied to 2d coordinates only.";
+
 		source.setPosition( target.getDoublePosition( 0 ) * inverse.a.m00 + target.getDoublePosition( 1 ) * inverse.a.m01 + inverse.a.m02, 0 );
 		source.setPosition( target.getDoublePosition( 0 ) * inverse.a.m10 + target.getDoublePosition( 1 ) * inverse.a.m11 + inverse.a.m12, 1 );
 	}
@@ -202,64 +198,64 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	final public AffineTransform2D concatenate( final AffineGet affine )
 	{
-		assert affine.numSourceDimensions() >= 2 : "Only >=2d affine transformations can be concatenated to a 2d affine transformation.";
-		
+		assert affine.numSourceDimensions() >= 2: "Only >=2d affine transformations can be concatenated to a 2d affine transformation.";
+
 		final double am00 = affine.get( 0, 0 );
 		final double am01 = affine.get( 0, 1 );
 		final double am02 = affine.get( 0, 2 );
-		
+
 		final double am10 = affine.get( 1, 0 );
 		final double am11 = affine.get( 1, 1 );
 		final double am12 = affine.get( 1, 2 );
-		
+
 		final double a00 = a.m00 * am00 + a.m01 * am10;
 		final double a01 = a.m00 * am01 + a.m01 * am11;
 		final double a02 = a.m00 * am02 + a.m01 * am12 + a.m02;
-		
+
 		final double a10 = a.m10 * am00 + a.m11 * am10;
 		final double a11 = a.m10 * am01 + a.m11 * am11;
 		final double a12 = a.m10 * am02 + a.m11 * am12 + a.m12;
-		
+
 		a.m00 = a00;
 		a.m01 = a01;
 		a.m02 = a02;
-		
+
 		a.m10 = a10;
 		a.m11 = a11;
 		a.m12 = a12;
-		
+
 		invert();
 		updateDs();
 		inverse.updateDs();
-		
+
 		return this;
 	}
-	
+
 	final public AffineTransform2D concatenate( final AffineTransform2D model )
 	{
 		final double a00 = a.m00 * model.a.m00 + a.m01 * model.a.m10;
 		final double a01 = a.m00 * model.a.m01 + a.m01 * model.a.m11;
 		final double a02 = a.m00 * model.a.m02 + a.m01 * model.a.m12 + a.m02;
-		
+
 		final double a10 = a.m10 * model.a.m00 + a.m11 * model.a.m10;
 		final double a11 = a.m10 * model.a.m01 + a.m11 * model.a.m11;
 		final double a12 = a.m10 * model.a.m02 + a.m11 * model.a.m12 + a.m12;
-		
+
 		a.m00 = a00;
 		a.m01 = a01;
 		a.m02 = a02;
-		
+
 		a.m10 = a10;
 		a.m11 = a11;
 		a.m12 = a12;
-		
+
 		invert();
 		updateDs();
 		inverse.updateDs();
-		
+
 		return this;
 	}
-	
+
 	@Override
 	public AffineTransform2D copy()
 	{
@@ -272,26 +268,25 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 
 		ma.m02 = a.m02;
 		ma.m12 = a.m12;
-		
+
 		return new AffineTransform2D( ma );
 	}
-	
+
 	@Override
 	public RealLocalizable d( final int d )
 	{
 		return ds[ d ];
 	}
-	
-	
+
 	@Override
 	public double get( final int row, final int column )
 	{
-		assert row >= 0 && row < 2 && column >= 0 && column < 3 : "Index out of bounds, a 3d affine matrix is a 2x3 matrix.";
-		
-		switch( row )
+		assert row >= 0 && row < 2 && column >= 0 && column < 3: "Index out of bounds, a 3d affine matrix is a 2x3 matrix.";
+
+		switch ( row )
 		{
 		case 0:
-			switch( column )
+			switch ( column )
 			{
 			case 0:
 				return a.m00;
@@ -301,7 +296,7 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 				return a.m02;
 			}
 		default:
-			switch( column )
+			switch ( column )
 			{
 			case 0:
 				return a.m10;
@@ -312,40 +307,40 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 			}
 		}
 	}
-	
+
 	@Override
 	public double[] getRowPackedCopy()
 	{
-		return new double[]{
+		return new double[] {
 				a.m00, a.m01, a.m02,
 				a.m10, a.m11, a.m12,
 		};
 	}
-	
+
 	@Override
 	public Class< AffineGet > getConcatenableClass()
 	{
 		return AffineGet.class;
 	}
-	
+
 	@Override
 	public Class< AffineGet > getPreConcatenableClass()
 	{
 		return AffineGet.class;
 	}
-	
+
 	@Override
 	public AffineTransform2D inverse()
-	{	
+	{
 		return inverse;
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{
 		return 2;
 	}
-	
+
 	@Override
 	public int numSourceDimensions()
 	{
@@ -361,36 +356,36 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	final public AffineTransform2D preConcatenate( final AffineGet affine )
 	{
-		assert affine.numSourceDimensions() >= 2 : "Only >=2d affine transformations can be pre-concatenated to a 2d affine transformation.";
-		
+		assert affine.numSourceDimensions() >= 2: "Only >=2d affine transformations can be pre-concatenated to a 2d affine transformation.";
+
 		final double am00 = affine.get( 0, 0 );
 		final double am01 = affine.get( 0, 1 );
 		final double am02 = affine.get( 0, 2 );
-		
+
 		final double am10 = affine.get( 1, 0 );
 		final double am11 = affine.get( 1, 1 );
 		final double am12 = affine.get( 1, 2 );
-		
+
 		final double a00 = am00 * a.m00 + am01 * a.m10;
 		final double a01 = am00 * a.m01 + am01 * a.m11;
 		final double a02 = am00 * a.m02 + am01 * a.m12 + am02;
-		
+
 		final double a10 = am10 * a.m00 + am11 * a.m10;
 		final double a11 = am10 * a.m01 + am11 * a.m11;
 		final double a12 = am10 * a.m02 + am11 * a.m12 + am12;
-		
+
 		a.m00 = a00;
 		a.m01 = a01;
 		a.m02 = a02;
-		
+
 		a.m10 = a10;
 		a.m11 = a11;
 		a.m12 = a12;
-		
+
 		invert();
 		updateDs();
 		inverse.updateDs();
-		
+
 		return this;
 	}
 
@@ -399,55 +394,58 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 		final double a00 = affine.a.m00 * a.m00 + affine.a.m01 * a.m10;
 		final double a01 = affine.a.m00 * a.m01 + affine.a.m01 * a.m11;
 		final double a02 = affine.a.m00 * a.m02 + affine.a.m01 * a.m12 + affine.a.m02;
-		
+
 		final double a10 = affine.a.m10 * a.m00 + affine.a.m11 * a.m10;
 		final double a11 = affine.a.m10 * a.m01 + affine.a.m11 * a.m11;
 		final double a12 = affine.a.m10 * a.m02 + affine.a.m11 * a.m12 + affine.a.m12;
-		
+
 		a.m00 = a00;
 		a.m01 = a01;
 		a.m02 = a02;
-		
+
 		a.m10 = a10;
 		a.m11 = a11;
 		a.m12 = a12;
-		
+
 		invert();
 		updateDs();
 		inverse.updateDs();
-		
+
 		return this;
 	}
 
 	/**
 	 * Rotate
 	 * 
-	 * @param d angle in radians
+	 * @param d
+	 *            angle in radians
 	 * 
-	 * TODO Don't be lazy and do it directly on the values instead of creating another transform
+	 *            TODO Don't be lazy and do it directly on the values instead of
+	 *            creating another transform
 	 */
 	public void rotate( final double d )
 	{
-		final double dcos = Math.cos( d ); 
+		final double dcos = Math.cos( d );
 		final double dsin = Math.sin( d );
 		final AffineTransform2D dR = new AffineTransform2D();
-		
+
 		dR.set(
 				dcos, -dsin, 0.0,
 				dsin, dcos, 0.0 );
-		
+
 		preConcatenate( dR );
 	}
 
 	/**
 	 * Translate
-	 *
-	 * @param t 2d translation vector
-	 *
+	 * 
+	 * @param t
+	 *            2d translation vector
+	 * 
 	 */
 	public void translate( final double... t )
 	{
-		assert t.length == 2 : "2d affine transformations can be translated by 2d vector only.";
+		assert t.length == 2: "2d affine transformations can be translated by 2d vector only.";
 		a.m02 += t[ 0 ];
 		a.m12 += t[ 1 ];
 
@@ -458,9 +456,10 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 
 	/**
 	 * Scale
-	 *
-	 * @param d scale factor
-	 *
+	 * 
+	 * @param d
+	 *            scale factor
+	 * 
 	 */
 	public void scale( final double d )
 	{
@@ -470,7 +469,7 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 		a.m10 *= d;
 		a.m11 *= d;
 		a.m12 *= d;
-		
+
 		invert();
 		updateDs();
 		inverse.updateDs();
@@ -484,18 +483,17 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 		a.m11 = m.a.m11;
 		a.m02 = m.a.m02;
 		a.m12 = m.a.m12;
-		
+
 		inverse.a.m00 = m.inverse.a.m00;
 		inverse.a.m10 = m.inverse.a.m10;
 		inverse.a.m01 = m.inverse.a.m01;
 		inverse.a.m11 = m.inverse.a.m11;
 		inverse.a.m02 = m.inverse.a.m02;
 		inverse.a.m12 = m.inverse.a.m12;
-		
+
 		updateDs();
 		inverse.updateDs();
 	}
-	
 
 	public void toArray( final double[] data )
 	{
@@ -520,21 +518,20 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	final public String toString()
 	{
-		return
-			"2d-affine: (" +
-			a.m00 + ", " + a.m01 + ", " + a.m02 + ", " +
-			a.m10 + ", " + a.m11 + ", " + a.m12 + ")";
+		return "2d-affine: (" +
+				a.m00 + ", " + a.m01 + ", " + a.m02 + ", " +
+				a.m10 + ", " + a.m11 + ", " + a.m12 + ")";
 	}
 
 	@Override
 	public void set( final double value, final int row, final int column )
 	{
-		assert row >= 0 && row < 2 && column >= 0 && column < 3 : "Index out of bounds, a 2d affine matrix is a 2x3 matrix.";
-		
-		switch( row )
+		assert row >= 0 && row < 2 && column >= 0 && column < 3: "Index out of bounds, a 2d affine matrix is a 2x3 matrix.";
+
+		switch ( row )
 		{
 		case 0:
-			switch( column )
+			switch ( column )
 			{
 			case 0:
 				a.m00 = value;
@@ -547,7 +544,7 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 			}
 			break;
 		default:
-			switch( column )
+			switch ( column )
 			{
 			case 0:
 				a.m10 = value;
@@ -560,7 +557,7 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 				break;
 			}
 		}
-		
+
 		updateDs();
 		invert();
 		inverse.updateDs();
@@ -569,16 +566,16 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	public void set( final double... values )
 	{
-		assert values.length >= 6 : "Input dimensions do not match.  A 2d affine matrix is a 2x3 matrix.";
-		
+		assert values.length >= 6: "Input dimensions do not match.  A 2d affine matrix is a 2x3 matrix.";
+
 		a.m00 = values[ 0 ];
 		a.m01 = values[ 1 ];
 		a.m02 = values[ 2 ];
-		
+
 		a.m10 = values[ 3 ];
 		a.m11 = values[ 4 ];
 		a.m12 = values[ 5 ];
-		
+
 		updateDs();
 		invert();
 		inverse.updateDs();
@@ -587,16 +584,16 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	@Override
 	public void set( final double[][] values )
 	{
-		assert values.length >= 2 && values[ 0 ].length >= 3 && values[ 1 ].length == 3 : "Input dimensions do not match.  A 2d affine matrix is a 2x3 matrix.";
-		
+		assert values.length >= 2 && values[ 0 ].length >= 3 && values[ 1 ].length == 3: "Input dimensions do not match.  A 2d affine matrix is a 2x3 matrix.";
+
 		a.m00 = values[ 0 ][ 0 ];
 		a.m01 = values[ 0 ][ 1 ];
 		a.m02 = values[ 0 ][ 2 ];
-		
+
 		a.m10 = values[ 1 ][ 0 ];
 		a.m11 = values[ 1 ][ 1 ];
 		a.m12 = values[ 1 ][ 2 ];
-		
+
 		updateDs();
 		invert();
 		inverse.updateDs();

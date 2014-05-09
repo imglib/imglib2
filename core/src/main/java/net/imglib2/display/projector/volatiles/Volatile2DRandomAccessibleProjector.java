@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.display.projector.volatiles;
@@ -44,7 +40,7 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Volatile;
 import net.imglib2.converter.Converter;
-import net.imglib2.display.projector.Projector2D;
+import net.imglib2.display.projector.IterableIntervalProjector2D;
 import net.imglib2.view.Views;
 
 /**
@@ -54,11 +50,11 @@ import net.imglib2.view.Views;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class Volatile2DRandomAccessibleProjector< T, A extends Volatile< T >, B > extends Projector2D< A, B >
+public class Volatile2DRandomAccessibleProjector< T, A extends Volatile< T >, B > extends IterableIntervalProjector2D< A, B >
 {
 	protected boolean valid = false;
 
-	public Volatile2DRandomAccessibleProjector( int dimX, int dimY, final RandomAccessible< A > source, final RandomAccessibleInterval< B > target, final Converter< ? super A, B > converter )
+	public Volatile2DRandomAccessibleProjector( final int dimX, final int dimY, final RandomAccessible< A > source, final RandomAccessibleInterval< B > target, final Converter< ? super A, B > converter )
 	{
 		super( dimX, dimY, source, Views.iterable( target ), converter );
 	}
@@ -87,7 +83,7 @@ public class Volatile2DRandomAccessibleProjector< T, A extends Volatile< T >, B 
 		max[ X ] = target.max( X );
 		max[ Y ] = target.max( Y );
 
-		IterableInterval< A > srcIterable = Views.iterable( Views.interval( source, new FinalInterval( min, max ) ) );
+		final IterableInterval< A > srcIterable = Views.iterable( Views.interval( source, new FinalInterval( min, max ) ) );
 		final Cursor< B > targetCursor = target.localizingCursor();
 
 		if ( target.iterationOrder().equals( srcIterable.iterationOrder() ) )
@@ -102,7 +98,7 @@ public class Volatile2DRandomAccessibleProjector< T, A extends Volatile< T >, B 
 		else
 		{
 			// use localizing cursor
-			RandomAccess< A > sourceRandomAccess = source.randomAccess();
+			final RandomAccess< A > sourceRandomAccess = source.randomAccess();
 			while ( targetCursor.hasNext() )
 			{
 				final B b = targetCursor.next();

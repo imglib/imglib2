@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -40,8 +36,8 @@ package net.imglib2;
 /**
  * The {@link RealLocalizable} interface can localize itself in an n-dimensional
  * real space.
- *  
- *
+ * 
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -50,30 +46,34 @@ public interface RealLocalizable extends EuclideanSpace
 	/**
 	 * Write the current position into the passed array.
 	 * 
-	 * @param position   receives current position
+	 * @param position
+	 *            receives current position
 	 */
 	public void localize( float[] position );
-	
+
 	/**
 	 * Write the current position into the passed array.
 	 * 
-	 * @param position   receives current position
+	 * @param position
+	 *            receives current position
 	 */
 	public void localize( double[] position );
-	
+
 	/**
 	 * Return the current position in a given dimension.
 	 * 
-	 * @param d   dimension
-	 * @return      dimension of current position
+	 * @param d
+	 *            dimension
+	 * @return dimension of current position
 	 */
 	public float getFloatPosition( int d );
-	
+
 	/**
 	 * Return the current position in a given dimension.
 	 * 
-	 * @param d   dimension
-	 * @return      dimension of current position
+	 * @param d
+	 *            dimension
+	 * @return dimension of current position
 	 */
 	public double getDoublePosition( int d );
 }

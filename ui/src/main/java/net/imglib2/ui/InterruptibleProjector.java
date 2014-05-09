@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui;
@@ -44,7 +40,7 @@ import net.imglib2.display.projector.Projector;
  * {@link RandomAccessibleInterval}). In contrast to a {@link Projector},
  * rendering can be interrupted, in which case {@link #map()} will return false.
  * Also, the rendering time for the last {@link #map()} can be queried.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld
  */
@@ -52,7 +48,7 @@ public interface InterruptibleProjector
 {
 	/**
 	 * Render the target image.
-	 *
+	 * 
 	 * @return true if rendering was completed (all target pixels written).
 	 *         false if rendering was interrupted.
 	 */
@@ -65,7 +61,7 @@ public interface InterruptibleProjector
 
 	/**
 	 * How many nano-seconds did the last {@link #map()} take.
-	 *
+	 * 
 	 * @return time needed for rendering the last frame, in nano-seconds.
 	 */
 	public long getLastFrameRenderNanoTime();

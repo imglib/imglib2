@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -43,13 +39,12 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 
 /**
- * A {@link RealPositionable} that drives a {@link Positionable} to its
- * floor discrete coordinates plus a discrete offset vector.  For practical
- * useage, the floor operation is defined as the integer smaller than the real
- * value:
- *
+ * A {@link RealPositionable} that drives a {@link Positionable} to its floor
+ * discrete coordinates plus a discrete offset vector. For practical useage, the
+ * floor operation is defined as the integer smaller than the real value:
+ * 
  * f = r < 0 ? (long)r - 1 : (long)r
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -110,12 +105,12 @@ public class FloorOffset< LocalizablePositionable extends Localizable & Position
 
 	final static protected long f( final double r, final long off )
 	{
-		return r < 0 ? ( long )r + off - 1 : ( long )r + off;
+		return r < 0 ? ( long ) r + off - 1 : ( long ) r + off;
 	}
 
 	final static protected long f( final float r, final long off )
 	{
-		return r < 0 ? ( long )r + off - 1 : ( long )r + off;
+		return r < 0 ? ( long ) r + off - 1 : ( long ) r + off;
 	}
 
 	protected void f( final double[] r, final long[] f )

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -48,7 +44,7 @@ import net.imglib2.type.Type;
  * pixel is stored as an individual object, so {@link ListImg} should only be
  * used for images with relatively few pixels. In principle, the number of
  * entities stored is limited to {@link Integer#MAX_VALUE}.
- *
+ * 
  * @param <T>
  *            The value type of the pixels. You can us {@link Type}s or
  *            arbitrary {@link Object}s. If you use non-{@link Type} pixels,
@@ -57,7 +53,7 @@ import net.imglib2.type.Type;
  *            {@link ListCursor#set(Object)} and
  *            {@link ListRandomAccess#set(Object)} methods to alter the
  *            underlying {@link ArrayList}.
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -123,10 +119,7 @@ public class ListImg< T > extends AbstractListImg< T >
 	public ListImg< T > copy()
 	{
 		final T type = firstElement();
-		if ( type instanceof Type< ? > )
-		{
-			return copyWithType( ( ListImg< Type > ) this );
-		}
+		if ( type instanceof Type< ? > ) { return copyWithType( ( ListImg< Type > ) this ); }
 		return new ListImg< T >( this.pixels, dimension );
 	}
 }

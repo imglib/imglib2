@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -47,7 +43,7 @@ import net.imglib2.util.IntervalIndexer;
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
@@ -72,14 +68,14 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	protected int code;
 
 	/**
-	 *  Weights for each pixel of the <em>2x2x...x2</em> hypercube
-	 *  of pixels participating in the interpolation.
-	 *  
-	 *  Indices into this array are arranged in the standard iteration
-	 *  order (as provided by {@link IntervalIndexer#positionToIndex}).
-	 *  Element 0 refers to position <em>(0,0,...,0)</em>,
-	 *  element 1 refers to position <em>(1,0,...,0)</em>,
-	 *  element 2 refers to position <em>(0,1,...,0)</em>, etc.
+	 * Weights for each pixel of the <em>2x2x...x2</em> hypercube of pixels
+	 * participating in the interpolation.
+	 * 
+	 * Indices into this array are arranged in the standard iteration order (as
+	 * provided by {@link IntervalIndexer#positionToIndex}). Element 0 refers to
+	 * position <em>(0,0,...,0)</em>, element 1 refers to position
+	 * <em>(1,0,...,0)</em>, element 2 refers to position <em>(0,1,...,0)</em>,
+	 * etc.
 	 */
 	final protected double[] weights;
 
@@ -90,23 +86,23 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	protected NLinearInterpolator( final NLinearInterpolator< T > interpolator )
 	{
 		super( interpolator.target.copyRandomAccess() );
-		
-		weights = interpolator.weights.clone();		
+
+		weights = interpolator.weights.clone();
 		code = interpolator.code;
 		accumulator = interpolator.accumulator.createVariable();
 		tmp = interpolator.tmp.createVariable();
-		
+
 		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] = interpolator.position[ d ];
 			discrete[ d ] = interpolator.discrete[ d ];
 		}
 	}
-	
+
 	protected NLinearInterpolator( final RandomAccessible< T > randomAccessible, final T type )
 	{
 		super( randomAccessible.randomAccess() );
-		weights = new double [ 1 << n ];		
+		weights = new double[ 1 << n ];
 		code = 0;
 		accumulator = type.createVariable();
 		tmp = type.createVariable();
@@ -158,13 +154,13 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 
 		for ( int d = n - 1; d >= 0; --d )
 		{
-			final double w    = position[ d ] - target.getLongPosition( d );
+			final double w = position[ d ] - target.getLongPosition( d );
 			final double wInv = 1.0d - w;
 			final int wInvIndexIncrement = 1 << d;
 			final int loopCount = 1 << ( n - 1 - d );
 			final int baseIndexIncrement = wInvIndexIncrement * 2;
 			int baseIndex = 0;
-			for (int i = 0; i < loopCount; ++i )
+			for ( int i = 0; i < loopCount; ++i )
 			{
 				weights[ baseIndex + wInvIndexIncrement ] = weights[ baseIndex ] * w;
 				weights[ baseIndex ] *= wInv;
@@ -174,7 +170,7 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 //		printWeights();
 //		System.out.println();
 	}
-	
+
 	/**
 	 * Get the interpolated value at the current position.
 	 * 
@@ -197,10 +193,10 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 		code = 0;
 		graycodeFwdRecursive( n - 1 );
 		target.bck( n - 1 );
-		
+
 		return accumulator;
 	}
-	
+
 	@Override
 	public NLinearInterpolator< T > copy()
 	{
@@ -213,39 +209,39 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 		return copy();
 	}
 
-	final private void graycodeFwdRecursive ( final int dimension )
+	final private void graycodeFwdRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
-			target.fwd ( 0 );
+			target.fwd( 0 );
 			code += 1;
 			accumulate();
 		}
 		else
 		{
-			graycodeFwdRecursive ( dimension - 1 );
-			target.fwd ( dimension );
+			graycodeFwdRecursive( dimension - 1 );
+			target.fwd( dimension );
 			code += 1 << dimension;
 			accumulate();
-			graycodeBckRecursive ( dimension - 1 );
+			graycodeBckRecursive( dimension - 1 );
 		}
 	}
 
-	final private void graycodeBckRecursive ( final int dimension )
+	final private void graycodeBckRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
-			target.bck ( 0 );
+			target.bck( 0 );
 			code -= 1;
 			accumulate();
-	}
+		}
 		else
 		{
-			graycodeFwdRecursive ( dimension - 1 );
-			target.bck ( dimension );
+			graycodeFwdRecursive( dimension - 1 );
+			target.bck( dimension );
 			code -= 1 << dimension;
 			accumulate();
-			graycodeBckRecursive ( dimension - 1 );
+			graycodeBckRecursive( dimension - 1 );
 		}
 	}
 
@@ -267,16 +263,16 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	final private void printWeights()
 	{
 		for ( int i = 0; i < weights.length; ++i )
-			System.out.printf("weights [ %2d ] = %f\n", i, weights[ i ] );
+			System.out.printf( "weights [ %2d ] = %f\n", i, weights[ i ] );
 	}
-	
+
 	@SuppressWarnings( "unused" )
 	final private void printCode()
 	{
 		final int maxbits = 4;
 		final String binary = Integer.toBinaryString( code );
 		for ( int i = binary.length(); i < maxbits; ++i )
-			System.out.print("0");
-		System.out.print ( binary );
+			System.out.print( "0" );
+		System.out.print( binary );
 	}
 }

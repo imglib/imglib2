@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,7 +35,7 @@ package net.imglib2.transform.integer;
 
 /**
  * TODO
- *
+ * 
  */
 public abstract class AbstractMixedTransform implements Mixed
 {
@@ -48,11 +44,11 @@ public abstract class AbstractMixedTransform implements Mixed
 	 */
 	protected final int numTargetDimensions;
 
-	protected AbstractMixedTransform( int numTargetDimensions )
+	protected AbstractMixedTransform( final int numTargetDimensions )
 	{
 		this.numTargetDimensions = numTargetDimensions;
 	}
-	
+
 	@Override
 	public int numSourceDimensions()
 	{
@@ -81,7 +77,7 @@ public abstract class AbstractMixedTransform implements Mixed
 	}
 
 	@Override
-	public void getComponentZero( boolean[] zero )
+	public void getComponentZero( final boolean[] zero )
 	{
 		assert zero.length >= numTargetDimensions;
 
@@ -96,7 +92,7 @@ public abstract class AbstractMixedTransform implements Mixed
 	}
 
 	@Override
-	public void getComponentMapping( int[] component )
+	public void getComponentMapping( final int[] component )
 	{
 		assert component.length >= numTargetDimensions;
 
@@ -111,7 +107,7 @@ public abstract class AbstractMixedTransform implements Mixed
 	}
 
 	@Override
-	public void getComponentInversion( boolean[] invert )
+	public void getComponentInversion( final boolean[] invert )
 	{
 		assert invert.length >= numTargetDimensions;
 
@@ -126,20 +122,20 @@ public abstract class AbstractMixedTransform implements Mixed
 	}
 
 	@Override
-	public BoundingBox transform( BoundingBox boundingBox )
+	public BoundingBox transform( final BoundingBox boundingBox )
 	{
 		assert boundingBox.numDimensions() == numSourceDimensions();
 
 		if ( numSourceDimensions() == numTargetDimensions )
 		{ // apply in-place
-			long[] tmp = new long[ numTargetDimensions ];
+			final long[] tmp = new long[ numTargetDimensions ];
 			boundingBox.corner1( tmp );
 			apply( tmp, boundingBox.corner1 );
 			boundingBox.corner2( tmp );
 			apply( tmp, boundingBox.corner2 );
 			return boundingBox;
 		}
-		BoundingBox b = new BoundingBox( numTargetDimensions );
+		final BoundingBox b = new BoundingBox( numTargetDimensions );
 		apply( boundingBox.corner1, b.corner1 );
 		apply( boundingBox.corner2, b.corner2 );
 		return b;

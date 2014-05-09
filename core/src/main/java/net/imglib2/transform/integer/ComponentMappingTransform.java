@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,7 +41,7 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * Map the components of the source vector to obtain the target vector, for
  * instance transform (x,y,z) to (x,z,y).
- *
+ * 
  * <p>
  * The intended use of ComponentMapping is as a dimension permutation. The
  * mapping is implemented as a inverse lookup, i.e., every component of the
@@ -53,8 +49,8 @@ import net.imglib2.concatenate.PreConcatenable;
  * <em>Note, that it is not allowed to set this array such that a source component
  * is mapped to several target components!</em>
  * </p>
- *
- *
+ * 
+ * 
  * @author Tobias Pietzsch
  */
 public class ComponentMappingTransform extends AbstractMixedTransform implements ComponentMapping, Concatenable< ComponentMapping >, PreConcatenable< ComponentMapping >
@@ -101,12 +97,12 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 
 	/**
 	 * Set for each target dimensions from which source dimension it is taken.
-	 *
+	 * 
 	 * <p>
 	 * For instance, if the transform maps 3D (x,y,z) coordinates to 2D (z,x,y)
 	 * coordinate this will be [2, 0, 1].
 	 * </p>
-	 *
+	 * 
 	 * @param component
 	 *            array that says for each component of the target vector from
 	 *            which source vector component it should be taken.
@@ -123,11 +119,11 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 	{
 		final double[][] mat = new double[ numTargetDimensions + 1 ][ numTargetDimensions + 1 ];
 
-		mat[ numTargetDimensions ][ numTargetDimensions] = 1;
+		mat[ numTargetDimensions ][ numTargetDimensions ] = 1;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 		{
-			mat[ d ][ component[ d ] ] = 1 ;
+			mat[ d ][ component[ d ] ] = 1;
 		}
 
 		return mat;

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -52,74 +48,100 @@ import org.junit.Test;
 
 /**
  * TODO
- *
+ * 
  */
 public class CellTest
 {
 	int[][] dim = {
-			{10, 12},
-			{200, 30, 2, 384},
-			{12, 3, 4, 1, 9}
-		};
+			{ 10, 12 },
+			{ 200, 30, 2, 384 },
+			{ 12, 3, 4, 1, 9 }
+	};
+
 	long[][] offset = {
-			{0, 0},
-			{0, 912389123123l, 1231238214214367l, 2},
-			{321, 3, 1, 0, 0}
-		};
+			{ 0, 0 },
+			{ 0, 912389123123l, 1231238214214367l, 2 },
+			{ 321, 3, 1, 0, 0 }
+	};
+
 	int[] expectedLength = {
 			120,
 			4608000,
 			1296
-		};
+	};
 
 	public < A extends ArrayDataAccess< A > > void testConstruction( final A creator )
 	{
-		for ( int i = 0; i < dim.length; ++i ) {
-			final AbstractCell< A > cell = new DefaultCell< A >( creator, dim[ i ], offset[ i ], 2);
+		for ( int i = 0; i < dim.length; ++i )
+		{
+			final AbstractCell< A > cell = new DefaultCell< A >( creator, dim[ i ], offset[ i ], 2 );
 			assertTrue( creator.getClass().isInstance( cell.getData() ) );
 			assertTrue( cell.size() == expectedLength[ i ] );
 		}
 	}
 
 	@Test
-	public void testBitConstruction() { testConstruction( new BitArray( 1 ) ); }
+	public void testBitConstruction()
+	{
+		testConstruction( new BitArray( 1 ) );
+	}
 
 	@Test
-	public void testByteConstruction() { testConstruction( new ByteArray( 1 ) ); }
+	public void testByteConstruction()
+	{
+		testConstruction( new ByteArray( 1 ) );
+	}
 
 	@Test
-	public void testCharConstruction() { testConstruction( new CharArray( 1 ) ); }
+	public void testCharConstruction()
+	{
+		testConstruction( new CharArray( 1 ) );
+	}
 
 	@Test
-	public void testShortConstruction() { testConstruction( new ShortArray( 1 ) ); }
+	public void testShortConstruction()
+	{
+		testConstruction( new ShortArray( 1 ) );
+	}
 
 	@Test
-	public void testIntConstruction() { testConstruction( new IntArray( 1 ) ); }
+	public void testIntConstruction()
+	{
+		testConstruction( new IntArray( 1 ) );
+	}
 
 	@Test
-	public void testFloatConstruction() { testConstruction( new FloatArray( 1 ) ); }
+	public void testFloatConstruction()
+	{
+		testConstruction( new FloatArray( 1 ) );
+	}
 
 	@Test
-	public void testDoubleConstruction() { testConstruction( new DoubleArray( 1 ) ); }
+	public void testDoubleConstruction()
+	{
+		testConstruction( new DoubleArray( 1 ) );
+	}
 
 	@Test
 	public void testLocalIndexCalculation()
 	{
-		final AbstractCell< FloatArray > cell = new DefaultCell< FloatArray >( new FloatArray( 1 ), new int[] {20, 8, 10}, new long[] { 0, 9876543210l, 222 } , 2);
-		final long[][] position = { {3, 4, 5}, {12, 0, 3}, {3, 2, 0} };
+		final AbstractCell< FloatArray > cell = new DefaultCell< FloatArray >( new FloatArray( 1 ), new int[] { 20, 8, 10 }, new long[] { 0, 9876543210l, 222 }, 2 );
+		final long[][] position = { { 3, 4, 5 }, { 12, 0, 3 }, { 3, 2, 0 } };
 		final int[] expectedIndex = { 883, 492, 43 };
-		for ( int i = 0; i < position.length; ++i ) {
-			assertTrue( cell.localPositionToIndex( position[ i ] ) == expectedIndex[ i ]);
+		for ( int i = 0; i < position.length; ++i )
+		{
+			assertTrue( cell.localPositionToIndex( position[ i ] ) == expectedIndex[ i ] );
 		}
 	}
 
 	@Test
 	public void testGlobalPositionCalculation()
 	{
-		final AbstractCell< FloatArray > cell = new DefaultCell< FloatArray >( new FloatArray( 1 ), new int[] {20, 8, 10}, new long[] { 0, 9876543210l, 222 } , 2);
+		final AbstractCell< FloatArray > cell = new DefaultCell< FloatArray >( new FloatArray( 1 ), new int[] { 20, 8, 10 }, new long[] { 0, 9876543210l, 222 }, 2 );
 		final int[] index = { 883, 492, 43 };
-		final long[][] expectedPosition = { {3, 9876543214l, 227}, {12, 9876543210l, 225}, {3, 9876543212l, 222} };
-		for ( int i = 0; i < index.length; ++i ) {
+		final long[][] expectedPosition = { { 3, 9876543214l, 227 }, { 12, 9876543210l, 225 }, { 3, 9876543212l, 222 } };
+		for ( int i = 0; i < index.length; ++i )
+		{
 			final long[] position = new long[ 3 ];
 			cell.indexToGlobalPosition( index[ i ], position );
 			assertArrayEquals( expectedPosition[ i ], position );

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui.viewer;
@@ -68,9 +64,9 @@ import net.imglib2.ui.util.GuiUtil;
  * repainting} through a {@link PainterThread}. It implements
  * {@link TransformListener} to be notified about viewer transformation changes
  * made by the user.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
- *
+ * 
  * @param <A>
  *            transform type
  * @param <C>
@@ -86,7 +82,8 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 	final protected A viewerTransform;
 
 	/**
-	 * Canvas used for displaying the rendered {@link #screenImages screen image}.
+	 * Canvas used for displaying the rendered {@link #screenImages screen
+	 * image}.
 	 */
 	final protected C display;
 
@@ -114,7 +111,7 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 	 * created which queues repainting requests from the renderer and
 	 * interactive canvas, and triggers {@link #paint() repainting} of the
 	 * viewer.
-	 *
+	 * 
 	 * @param transformType
 	 * @param interactiveDisplayCanvas
 	 *            the canvas {@link JComponent} which will show the rendered
@@ -167,7 +164,6 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 		display.repaint();
 	}
 
-
 	@Override
 	public void transformChanged( final A transform )
 	{
@@ -177,7 +173,7 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 
 	/**
 	 * Get the canvas component used for painting
-	 *
+	 * 
 	 * @return the canvas component used for painting.
 	 */
 	public C getDisplayCanvas()
@@ -186,14 +182,14 @@ public class InteractiveRealViewer< A extends AffineSet & AffineGet & Concatenab
 	}
 
 	/**
-	 * Request a repaint of the display.
-	 * Calls {@link Renderer#requestRepaint()}.
+	 * Request a repaint of the display. Calls {@link Renderer#requestRepaint()}
+	 * .
 	 */
 	public void requestRepaint()
 	{
 		imageRenderer.requestRepaint();
 	}
-	
+
 	/**
 	 * Get the {@link JFrame frame}.
 	 * 

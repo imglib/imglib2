@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -46,59 +42,73 @@ import java.util.List;
  * 
  * @author Curtis Rueden
  */
-public abstract class AbstractAnnotatedSpace<A extends Axis> implements
-	AnnotatedSpace<A>
+public abstract class AbstractAnnotatedSpace< A extends Axis > implements
+		AnnotatedSpace< A >
 {
 
-	private final List<A> axisList;
+	private final List< A > axisList;
 
-	public AbstractAnnotatedSpace(final int numDims) {
-		axisList = new ArrayList<A>(numDims);
-		// We have no way of knowing the axes to populate, so we fill with nulls.
-		for (int d = 0; d < numDims; d++) {
-			axisList.add(null);
+	public AbstractAnnotatedSpace( final int numDims )
+	{
+		axisList = new ArrayList< A >( numDims );
+		// We have no way of knowing the axes to populate, so we fill with
+		// nulls.
+		for ( int d = 0; d < numDims; d++ )
+		{
+			axisList.add( null );
 		}
 	}
 
-	public AbstractAnnotatedSpace(final A... axes) {
-		this(Arrays.asList(axes));
+	public AbstractAnnotatedSpace( final A... axes )
+	{
+		this( Arrays.asList( axes ) );
 	}
 
-	public AbstractAnnotatedSpace(final List<A> axes) {
-		axisList = new ArrayList<A>(axes.size());
-		axisList.addAll(axes);
+	public AbstractAnnotatedSpace( final List< A > axes )
+	{
+		axisList = new ArrayList< A >( axes.size() );
+		axisList.addAll( axes );
 	}
 
 	// -- AnnotatedSpace methods --
 
 	@Override
-	public A axis(final int d) {
-		return axisList.get(d);
+	public A axis( final int d )
+	{
+		return axisList.get( d );
 	}
 
 	@Override
-	public void axes(final A[] axes) {
-		for (int d = 0; d < axes.length; d++) {
-			axes[d] = axis(d);
+	public void axes( final A[] axes )
+	{
+		for ( int d = 0; d < axes.length; d++ )
+		{
+			axes[ d ] = axis( d );
 		}
 	}
 
 	@Override
-	public void setAxis(final A axis, final int d) {
-		// NB - in some cases AnnotatedSpaces have a fixed number of dimensions. But
-		// some users (like ImageJ2 overlays) may not know their dimensions until
-		// after initial construction. To be safe we need to allow the axisList to
+	public void setAxis( final A axis, final int d )
+	{
+		// NB - in some cases AnnotatedSpaces have a fixed number of dimensions.
+		// But
+		// some users (like ImageJ2 overlays) may not know their dimensions
+		// until
+		// after initial construction. To be safe we need to allow the axisList
+		// to
 		// grow as needed. BDZ Aug 14 2013
-		while (axisList.size() <= d) {
-			axisList.add(null);
+		while ( axisList.size() <= d )
+		{
+			axisList.add( null );
 		}
-		axisList.set(d, axis);
+		axisList.set( d, axis );
 	}
 
 	// -- EuclideanSpace methods --
 
 	@Override
-	public int numDimensions() {
+	public int numDimensions()
+	{
 		return axisList.size();
 	}
 

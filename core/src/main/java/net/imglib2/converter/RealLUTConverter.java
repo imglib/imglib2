@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -50,41 +46,45 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @see CompositeXYProjector
  * @see RealARGBConverter for the code upon which this class was based.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Grant Harris
  * @author Curtis Rueden
  */
-public class RealLUTConverter<R extends RealType<R>> extends
-	AbstractLinearRange implements Converter<R, ARGBType>
+public class RealLUTConverter< R extends RealType< R >> extends
+		AbstractLinearRange implements Converter< R, ARGBType >
 {
 
 	private ColorTable lut = null;
 
-	public RealLUTConverter() {
+	public RealLUTConverter()
+	{
 		super();
 	}
 
-	public RealLUTConverter(final double min, final double max,
-		final ColorTable lut)
+	public RealLUTConverter( final double min, final double max,
+			final ColorTable lut )
 	{
-		super(min, max);
-		setLUT(lut);
+		super( min, max );
+		setLUT( lut );
 	}
 
-	public ColorTable getLUT() {
+	public ColorTable getLUT()
+	{
 		return lut;
 	}
 
-	public void setLUT(final ColorTable lut) {
+	public void setLUT( final ColorTable lut )
+	{
 		this.lut = lut == null ? new ColorTable8() : lut;
 	}
 
 	@Override
-	public void convert(final R input, final ARGBType output) {
+	public void convert( final R input, final ARGBType output )
+	{
 		final double a = input.getRealDouble();
-		final int argb = lut.lookupARGB(min, max, a);
-		output.set(argb);
+		final int argb = lut.lookupARGB( min, max, a );
+		output.set( argb );
 	}
 
 }

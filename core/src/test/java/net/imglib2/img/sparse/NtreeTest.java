@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,7 +40,7 @@ import org.junit.Test;
 
 /**
  * @author Tobias Pietzsch
- *
+ * 
  */
 public class NtreeTest
 {
@@ -52,8 +48,8 @@ public class NtreeTest
 	public void test_getNode()
 	{
 		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
+		final Ntree< Integer > t = new Ntree< Integer >( new long[] { 256, 257, 100 }, v );
+		final long[] pos = new long[] { 27, 38, 99 };
 		final Ntree.NtreeNode< Integer > n = t.getNode( pos );
 
 		assertTrue( n != null );
@@ -64,15 +60,15 @@ public class NtreeTest
 	public void test_createNote()
 	{
 		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
+		final Ntree< Integer > t = new Ntree< Integer >( new long[] { 256, 257, 100 }, v );
+		final long[] pos = new long[] { 27, 38, 99 };
 		final Ntree.NtreeNode< Integer > n = t.createNode( pos );
 
 		assertTrue( n != null );
 		assertTrue( n.getValue() == v );
 
 		n.setValue( v + 1 );
-		final long[] pos2 = new long[] {28, 38, 99};
+		final long[] pos2 = new long[] { 28, 38, 99 };
 		final Ntree.NtreeNode< Integer > n2 = t.getNode( pos2 );
 
 		assertTrue( n2 != null );
@@ -83,8 +79,8 @@ public class NtreeTest
 	public void test_mergeUpwards()
 	{
 		final int v = 10;
-		final Ntree< Integer > t = new Ntree< Integer >( new long[]{ 256, 257, 100 }, v );
-		final long[] pos = new long[] {27, 38, 99};
+		final Ntree< Integer > t = new Ntree< Integer >( new long[] { 256, 257, 100 }, v );
+		final long[] pos = new long[] { 27, 38, 99 };
 		t.createNode( pos ).setValue( v + 1 );
 
 		final Ntree.NtreeNode< Integer > n = t.getNode( pos );

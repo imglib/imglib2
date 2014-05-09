@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui;
@@ -94,10 +90,10 @@ import net.imglib2.ui.util.GuiUtil;
  * {@link RenderTarget} will release one of the previously set images to be
  * rendered again. Thus, rendering will not interfere with painting the
  * {@link BufferedImage} to the canvas.
- *
+ * 
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld
  */
@@ -120,14 +116,14 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 	final protected ArrayDeque< Integer > renderIdQueue;
 
 	/**
-	 * Maps from {@link BufferedImage} to double-buffer index.
-	 * Needed for double-buffering.
+	 * Maps from {@link BufferedImage} to double-buffer index. Needed for
+	 * double-buffering.
 	 */
 	final protected HashMap< BufferedImage, Integer > bufferedImageToRenderId;
 
 	/**
-	 * Used to render the image for display. Two images per screen resolution
-	 * if double buffering is enabled. First index is screen scale, second index is
+	 * Used to render the image for display. Two images per screen resolution if
+	 * double buffering is enabled. First index is screen scale, second index is
 	 * double-buffer.
 	 */
 	protected ARGBScreenImage[][] screenImages;
@@ -141,7 +137,7 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 	/**
 	 * Scale factors from the {@link #display viewer canvas} to the
 	 * {@link #screenImages}.
-	 *
+	 * 
 	 * A scale factor of 1 means 1 pixel in the screen image is displayed as 1
 	 * pixel on the canvas, a scale factor of 0.5 means 1 pixel in the screen
 	 * image is displayed as 2 pixel on the canvas, etc.
@@ -184,9 +180,9 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 	protected int requestedScreenScaleIndex;
 
 	/**
-	 * Whether the current rendering operation may be cancelled (to start a
-	 * new one). Rendering may be cancelled unless we are rendering at
-	 * coarsest screen scale.
+	 * Whether the current rendering operation may be cancelled (to start a new
+	 * one). Rendering may be cancelled unless we are rendering at coarsest
+	 * screen scale.
 	 */
 	protected volatile boolean renderingMayBeCancelled;
 
@@ -270,9 +266,9 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 	}
 
 	/**
-	 * Check whether the size of the display component was changed and
-	 * recreate {@link #screenImages} and {@link #screenScaleTransforms} accordingly.
-	 *
+	 * Check whether the size of the display component was changed and recreate
+	 * {@link #screenImages} and {@link #screenScaleTransforms} accordingly.
+	 * 
 	 * @return whether the size was changed.
 	 */
 	protected synchronized boolean checkResize()
@@ -324,7 +320,7 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 	 * Create a {@link InterruptibleProjector} that renders to the specified
 	 * target image, applying the specified transformations to some source (that
 	 * is specific to the derived class).
-	 *
+	 * 
 	 * @param viewerTransform
 	 *            transforms global to screen coordinates
 	 * @param screenScaleTransform
@@ -346,7 +342,7 @@ abstract public class AbstractMultiResolutionRenderer< A extends AffineSet & Aff
 	 * The default implementation checks whether the full canvas resolution has
 	 * been reached. Derived classes may override this to implement different
 	 * checks.
-	 *
+	 * 
 	 * @return true, if another repaint is required.
 	 */
 	protected boolean isComplete()

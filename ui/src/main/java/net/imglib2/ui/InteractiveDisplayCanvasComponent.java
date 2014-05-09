@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui;
@@ -53,10 +49,10 @@ import javax.swing.JComponent;
 
 /**
  * A {@link JComponent} that is a {@link InteractiveDisplayCanvas}.
- *
+ * 
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class InteractiveDisplayCanvasComponent< A > extends JComponent implements InteractiveDisplayCanvas< A >
@@ -85,7 +81,7 @@ public class InteractiveDisplayCanvasComponent< A > extends JComponent implement
 	 * TransformListeners}. A {@link TransformEventHandler} is instantiated
 	 * using the given factory, and registered for mouse and key events if it
 	 * implements the appropriate interfaces ({@link MouseListener} etc.)
-	 *
+	 * 
 	 * @param width
 	 *            preferred component width.
 	 * @param height
@@ -135,7 +131,7 @@ public class InteractiveDisplayCanvasComponent< A > extends JComponent implement
 	/**
 	 * Add an {@link OverlayRenderer} that draws on top of the current
 	 * {@link #bufferedImage}.
-	 *
+	 * 
 	 * @param renderer
 	 *            overlay renderer to add.
 	 */
@@ -148,7 +144,7 @@ public class InteractiveDisplayCanvasComponent< A > extends JComponent implement
 
 	/**
 	 * Remove an {@link OverlayRenderer}.
-	 *
+	 * 
 	 * @param renderer
 	 *            overlay renderer to remove.
 	 */
@@ -161,7 +157,7 @@ public class InteractiveDisplayCanvasComponent< A > extends JComponent implement
 	/**
 	 * Add a {@link TransformListener} to notify about view transformation
 	 * changes.
-	 *
+	 * 
 	 * @param listener
 	 *            the transform listener to add.
 	 */
@@ -173,7 +169,7 @@ public class InteractiveDisplayCanvasComponent< A > extends JComponent implement
 
 	/**
 	 * Remove a {@link TransformListener}.
-	 *
+	 * 
 	 * @param listener
 	 *            the transform listener to remove.
 	 */
@@ -233,7 +229,7 @@ public class InteractiveDisplayCanvasComponent< A > extends JComponent implement
 	/**
 	 * Get the {@link TransformEventHandler} that handles mouse and key events
 	 * to update our view transform.
-	 *
+	 * 
 	 * @return handles mouse and key events to update the view transform.
 	 */
 	@Override
@@ -245,7 +241,7 @@ public class InteractiveDisplayCanvasComponent< A > extends JComponent implement
 	/**
 	 * Set the {@link TransformEventHandler} that handles mouse and key events
 	 * to update our view transform.
-	 *
+	 * 
 	 * @param handles
 	 *            mouse and key events to update the view transform
 	 */

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -52,38 +48,45 @@ import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.ARGBType;
 
 /**
- *
- *
+ * 
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements AWTScreenImage
 {
 	final protected int[] data;
+
 	final protected BufferedImage image;
 
-	static final public ColorModel ARGB_COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
+	static final public ColorModel ARGB_COLOR_MODEL = new DirectColorModel( 32, 0xff0000, 0xff00, 0xff, 0xff000000 );
 
 	public ARGBScreenImage( final int width, final int height )
 	{
 		this( width, height, new int[ width * height ] );
 	}
 
-	/** Create an {@link Image} with {@code data}. Writing to the {@code data} array will update the {@link Image}. */
+	/**
+	 * Create an {@link Image} with {@code data}. Writing to the {@code data}
+	 * array will update the {@link Image}.
+	 */
 	public ARGBScreenImage( final int width, final int height, final IntArray data )
 	{
 		this( width, height, data.getCurrentStorageArray() );
 	}
 
-	/** Create an {@link Image} with {@code data}. Writing to the {@code data} array will update the {@link Image}. */
+	/**
+	 * Create an {@link Image} with {@code data}. Writing to the {@code data}
+	 * array will update the {@link Image}.
+	 */
 	public ARGBScreenImage( final int width, final int height, final int[] data )
 	{
-		super( new IntArray( data ), new long[]{ width, height }, 1 );
+		super( new IntArray( data ), new long[] { width, height }, 1 );
 		setLinkedType( new ARGBType( this ) );
 		this.data = data;
 
 		final SampleModel sampleModel = ARGB_COLOR_MODEL.createCompatibleWritableRaster( 1, 1 ).getSampleModel()
-									.createCompatibleSampleModel( width, height );
+				.createCompatibleSampleModel( width, height );
 		final DataBuffer dataBuffer = new DataBufferInt( data, width * height, 0 );
 		final WritableRaster rgbRaster = Raster.createWritableRaster( sampleModel, dataBuffer, null );
 		image = new BufferedImage( ARGB_COLOR_MODEL, rgbRaster, false, null );
@@ -95,8 +98,11 @@ public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements A
 		return image;
 	}
 
-	/** The underlying array holding the data. Writing to this array will change
-	 * the content of the {@link Image} returned by {@link ARGBScreenImage#image()} */
+	/**
+	 * The underlying array holding the data. Writing to this array will change
+	 * the content of the {@link Image} returned by
+	 * {@link ARGBScreenImage#image()}
+	 */
 	public int[] getData()
 	{
 		return data;

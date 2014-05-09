@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,27 +28,28 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2;
 
 /**
- * <p>{x&isin;Z<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;<em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;<em>n</em>-1}}</p>
- *
- * <p>An {@link Interval} over the discrete source domain.  <em>Note</em>
- * that this does <em>not</em> imply that for <em>all</em> coordinates in the
- * {@link Interval} function values exist or can be generated.  It only
- * defines where the minimum and maximum source coordinates are.  E.g. an
- * {@link IterableInterval} has a limited number
- * of values and a source coordinate for each.  By that, minimum and maximum
- * are defined but the {@link Interval} does not define a value for all
- * coordinates in between.</p>
- *
+ * <p>
+ * {x&isin;Z<sup><em>n</em></sup>|<em>min<sub>d</sub></em>&le;
+ * <em>x<sub>d</sub></em>&le;<em>max<sub>d</sub></em>;<em>d</em>&isin;{0&hellip;
+ * <em>n</em>-1}}
+ * </p>
+ * 
+ * <p>
+ * An {@link Interval} over the discrete source domain. <em>Note</em> that this
+ * does <em>not</em> imply that for <em>all</em> coordinates in the
+ * {@link Interval} function values exist or can be generated. It only defines
+ * where the minimum and maximum source coordinates are. E.g. an
+ * {@link IterableInterval} has a limited number of values and a source
+ * coordinate for each. By that, minimum and maximum are defined but the
+ * {@link Interval} does not define a value for all coordinates in between.
+ * </p>
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Stephan Preibisch
  */
@@ -56,7 +57,7 @@ public interface Interval extends RealInterval, Dimensions
 {
 	/**
 	 * Get the minimum in dimension d.
-	 *
+	 * 
 	 * @param d
 	 *            dimension
 	 * @return minimum in dimension d.
@@ -65,21 +66,21 @@ public interface Interval extends RealInterval, Dimensions
 
 	/**
 	 * Write the minimum of each dimension into long[].
-	 *
+	 * 
 	 * @param min
 	 */
 	public void min( long[] min );
 
 	/**
 	 * Sets a {@link Positionable} to the minimum of this {@link Interval}
-	 *
+	 * 
 	 * @param min
 	 */
 	public void min( Positionable min );
 
 	/**
 	 * Get the maximum in dimension d.
-	 *
+	 * 
 	 * @param d
 	 *            dimension
 	 * @return maximum in dimension d.
@@ -88,14 +89,14 @@ public interface Interval extends RealInterval, Dimensions
 
 	/**
 	 * Write the maximum of each dimension into long[].
-	 *
+	 * 
 	 * @param max
 	 */
 	public void max( long[] max );
 
 	/**
 	 * Sets a {@link Positionable} to the maximum of this {@link Interval}
-	 *
+	 * 
 	 * @param max
 	 */
 	public void max( Positionable max );

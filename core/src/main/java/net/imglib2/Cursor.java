@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -67,8 +63,8 @@ package net.imglib2;
  * imglib Cursors, in general.
  * </p>
  * 
- *         <saalfeld@mpi-cbg.de>
- *
+ * <saalfeld@mpi-cbg.de>
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -80,7 +76,7 @@ public interface Cursor< T > extends RealCursor< T >, Localizable
 	// copy(), copyCursor(), copyRandomAccess() and copyRealRandomAccess().
 	// Unfortunately, due to a Javac bug with multiple interface inheritance,
 	// we must avoid doing so for now. For details, see:
-	//     http://bugs.sun.com/view_bug.do?bug_id=6656332
+	// http://bugs.sun.com/view_bug.do?bug_id=6656332
 	// The bug is fixed in JDK7.
 	@Override
 	public Cursor< T > copyCursor();

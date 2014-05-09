@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,7 +41,7 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * Map the components of the source vector to a slice of the target space, for
  * instance transform (x,y) to (x,C,y) where C is a constant.
- *
+ * 
  * <p>
  * A {@link SlicingTransform} transform a n-dimensional source vector to a
  * m-dimensional target vector, where m >= n. It can be represented as a
@@ -56,17 +52,17 @@ import net.imglib2.concatenate.PreConcatenable;
  * <li>project up & position (add constant components in the target vector)</li>
  * </ol>
  * </p>
- *
+ * 
  * <p>
- * The  component permutation step is implemented by the
+ * The component permutation step is implemented by the
  * {@link #setComponentMapping(int[]) component mapping}. This is a lookup array
  * that specifies for each target dimension from which source dimension it is
  * taken.
  * <em>Note, that it is not allowed to set this array such that a source component
  * is mapped to several target components!</em>
  * </p>
- *
- *
+ * 
+ * 
  * @author Tobias Pietzsch
  */
 public class SlicingTransform extends AbstractMixedTransform implements Slicing, Concatenable< Slicing >, PreConcatenable< Slicing >
@@ -84,17 +80,16 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 	protected final boolean[] zero;
 
 	/**
-	 * translation is added to the target vector after applying the permutation and
-	 * project-up operations. Only translation values for dimensions that have not
-	 * been assigned a source vector component are used.
-	 * For instance, if you project (x,y) to (x,y,z) only the translation value for
-	 * z is used.
+	 * translation is added to the target vector after applying the permutation
+	 * and project-up operations. Only translation values for dimensions that
+	 * have not been assigned a source vector component are used. For instance,
+	 * if you project (x,y) to (x,y,z) only the translation value for z is used.
 	 */
 	protected final long[] translation;
 
 	/**
-	 * specifies for each component of the target vector from which
-	 * source vector component should it be taken.
+	 * specifies for each component of the target vector from which source
+	 * vector component should it be taken.
 	 */
 	protected final int[] component;
 
@@ -166,12 +161,12 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 
 	/**
 	 * Set which target dimensions are _not_ taken from source dimensions.
-	 *
+	 * 
 	 * <p>
 	 * For instance, if the transform maps 2D (x,y) coordinates to the first two
 	 * components of a 3D (x,y,z) coordinate, this will be [false, false, true]
 	 * </p>
-	 *
+	 * 
 	 * @param zero
 	 *            array that says for each component of the target vector
 	 *            (before translation) whether the value should be taken from a
@@ -202,7 +197,7 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 
 	/**
 	 * Set for each target dimensions from which source dimension it is taken.
-	 *
+	 * 
 	 * <p>
 	 * For instance, if the transform maps 2D (x,y) coordinates to the first two
 	 * components of a 3D (x,y,z) coordinate, this will be [0, 1, x]. Here, x
@@ -210,12 +205,12 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 	 * to any source dimension, which can be realized using
 	 * {@link #setZero(boolean[])}.
 	 * </p>
-	 *
+	 * 
 	 * <p>
 	 * <em>Note, that it is not allowed to set the {@code component} array such that
 	 * a source component is mapped to several target components!</em>
 	 * </p>
-	 *
+	 * 
 	 * @param component
 	 *            array that says for each component of the target vector
 	 *            (before translation) from which source vector component it
@@ -336,7 +331,7 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 
 	/**
 	 * set parameters to <code>transform</code>.
-	 *
+	 * 
 	 * @param transform
 	 */
 	public void set( final Slicing transform )
@@ -358,14 +353,14 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 	{
 		final double[][] mat = new double[ numTargetDimensions + 1 ][ numSourceDimensions + 1 ];
 
-		mat[ numTargetDimensions ][ numSourceDimensions] = 1;
+		mat[ numTargetDimensions ][ numSourceDimensions ] = 1;
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 			mat[ d ][ numSourceDimensions ] = getTranslation( d );
 
 		for ( int d = 0; d < numTargetDimensions; ++d )
 			if ( zero[ d ] == false )
-				mat[ d ][ component[ d ] ] = 1 ;
+				mat[ d ][ component[ d ] ] = 1;
 
 		return mat;
 	}

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -43,46 +39,88 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  */
-public abstract class AbstractIntegerType<T extends AbstractIntegerType<T>> extends AbstractRealType<T> implements IntegerType<T>
+public abstract class AbstractIntegerType< T extends AbstractIntegerType< T >> extends AbstractRealType< T > implements IntegerType< T >
 {
 	@Override
-	public double getMinIncrement() { return 1; }
+	public double getMinIncrement()
+	{
+		return 1;
+	}
 
 	@Override
-	public float getRealFloat() { return getIntegerLong(); }
-	@Override
-	public double getRealDouble() { return getIntegerLong(); }
-	
-	@Override
-	public void setReal( final float real ){ setInteger( Util.round( real ) ); }
-	@Override
-	public void setReal( final double real ){ setInteger( Util.round( real ) ); }	
+	public float getRealFloat()
+	{
+		return getIntegerLong();
+	}
 
 	@Override
-	public void inc() { setInteger( getIntegerLong() + 1 ); }
-	@Override
-	public void dec() { setInteger( getIntegerLong() - 1 ); }
+	public double getRealDouble()
+	{
+		return getIntegerLong();
+	}
 
 	@Override
-	public void setZero() { setInteger( 0 ); }
-	@Override
-	public void setOne() { setInteger( 1 ); }	
+	public void setReal( final float real )
+	{
+		setInteger( Util.round( real ) );
+	}
 
 	@Override
-	public int compareTo( final T c ) 
-	{ 
+	public void setReal( final double real )
+	{
+		setInteger( Util.round( real ) );
+	}
+
+	@Override
+	public void inc()
+	{
+		setInteger( getIntegerLong() + 1 );
+	}
+
+	@Override
+	public void dec()
+	{
+		setInteger( getIntegerLong() - 1 );
+	}
+
+	@Override
+	public void setZero()
+	{
+		setInteger( 0 );
+	}
+
+	@Override
+	public void setOne()
+	{
+		setInteger( 1 );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Long#hashCode().
+		final long value = getIntegerLong();
+		return (int) (value ^ (value >>> 32));
+	}
+
+	@Override
+	public int compareTo( final T c )
+	{
 		final long a = getIntegerLong();
 		final long b = c.getIntegerLong();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
-	
+
 	@Override
-	public String toString() { return "" + getIntegerLong(); }	
+	public String toString()
+	{
+		return "" + getIntegerLong();
+	}
 }

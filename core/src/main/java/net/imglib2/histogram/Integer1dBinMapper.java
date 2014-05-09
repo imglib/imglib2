@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -47,14 +43,16 @@ import net.imglib2.type.numeric.IntegerType;
  * 
  * @author Barry DeZonia
  */
-public class Integer1dBinMapper<T extends IntegerType<T>> implements
-	BinMapper1d<T>
+public class Integer1dBinMapper< T extends IntegerType< T >> implements
+		BinMapper1d< T >
 {
 
 	// -- instance variables --
 
 	private final long bins;
+
 	private final long minVal, maxVal;
+
 	private final boolean tailBins;
 
 	// -- constructor --
@@ -65,134 +63,169 @@ public class Integer1dBinMapper<T extends IntegerType<T>> implements
 	 * that count values outside the user specified ranges. If false then values
 	 * outside the range fail to map to any bin.
 	 * 
-	 * @param minVal The first data value of interest.
-	 * @param numBins The total number of bins to create.
-	 * @param tailBins A boolean specifying whether to have a bin in each tail to
-	 *          count values outside the user defined range.
+	 * @param minVal
+	 *            The first data value of interest.
+	 * @param numBins
+	 *            The total number of bins to create.
+	 * @param tailBins
+	 *            A boolean specifying whether to have a bin in each tail to
+	 *            count values outside the user defined range.
 	 */
-	public Integer1dBinMapper(long minVal, long numBins, boolean tailBins) {
+	public Integer1dBinMapper( final long minVal, final long numBins, final boolean tailBins )
+	{
 		this.bins = numBins;
 		this.tailBins = tailBins;
 		this.minVal = minVal;
-		if (tailBins) {
+		if ( tailBins )
+		{
 			this.maxVal = minVal + numBins - 1 - 2;
 		}
-		else {
+		else
+		{
 			this.maxVal = minVal + numBins - 1;
 		}
-		if ((bins <= 0) || (tailBins && bins <= 2)) {
-			throw new IllegalArgumentException(
-				"invalid Integer1dBinMapper: no data bins specified");
-		}
+		if ( ( bins <= 0 ) || ( tailBins && bins <= 2 ) ) { throw new IllegalArgumentException(
+				"invalid Integer1dBinMapper: no data bins specified" ); }
 	}
 
 	// -- BinMapper methods --
 
 	@Override
-	public long getBinCount() {
+	public long getBinCount()
+	{
 		return bins;
 	}
 
 	@Override
-	public long map(T value) {
-		long val = value.getIntegerLong();
+	public long map( final T value )
+	{
+		final long val = value.getIntegerLong();
 		long pos;
-		if (val >= minVal && val <= maxVal) {
+		if ( val >= minVal && val <= maxVal )
+		{
 			pos = val - minVal;
-			if (tailBins) pos++;
+			if ( tailBins )
+				pos++;
 		}
-		else if (tailBins) {
-			if (val < minVal) pos = 0;
-			else pos = bins - 1;
+		else if ( tailBins )
+		{
+			if ( val < minVal )
+				pos = 0;
+			else
+				pos = bins - 1;
 		}
-		else { // no tail bins and we are outside
-			if (val < minVal) pos = Long.MIN_VALUE;
-			else pos = Long.MAX_VALUE;
+		else
+		{ // no tail bins and we are outside
+			if ( val < minVal )
+				pos = Long.MIN_VALUE;
+			else
+				pos = Long.MAX_VALUE;
 		}
 		return pos;
 	}
 
 	@Override
-	public void getCenterValue(long binPos, T value) {
+	public void getCenterValue( final long binPos, final T value )
+	{
 		long val;
-		if (tailBins) {
-			if (binPos == 0) val = minVal - 1; // TODO HACK - what is best to return?
-			else if (binPos == bins - 1) val = maxVal + 1; // TODO same HACK
-			else val = minVal + binPos - 1;
+		if ( tailBins )
+		{
+			if ( binPos == 0 )
+				val = minVal - 1; // TODO HACK - what is best to return?
+			else if ( binPos == bins - 1 )
+				val = maxVal + 1; // TODO same HACK
+			else
+				val = minVal + binPos - 1;
 		}
-		else { // no tail bins
+		else
+		{ // no tail bins
 			val = minVal + binPos;
 		}
-		value.setInteger(val);
+		value.setInteger( val );
 	}
 
 	@Override
-	public void getLowerBound(long binPos, T value) {
-		if (tailBins && (binPos == 0 || binPos == bins - 1)) {
-			if (binPos == 0) value.setInteger(Long.MIN_VALUE + 1);
-			else value.setInteger(maxVal + 1);
+	public void getLowerBound( final long binPos, final T value )
+	{
+		if ( tailBins && ( binPos == 0 || binPos == bins - 1 ) )
+		{
+			if ( binPos == 0 )
+				value.setInteger( Long.MIN_VALUE + 1 );
+			else
+				value.setInteger( maxVal + 1 );
 		}
-		else {
-			getCenterValue(binPos, value);
-		}
-	}
-
-	@Override
-	public void getUpperBound(long binPos, T value) {
-		if (tailBins && (binPos == 0 || binPos == bins - 1)) {
-			if (binPos == 0) value.setInteger(minVal - 1);
-			else value.setInteger(Long.MAX_VALUE - 1);
-		}
-		else {
-			getCenterValue(binPos, value);
+		else
+		{
+			getCenterValue( binPos, value );
 		}
 	}
 
 	@Override
-	public boolean includesLowerBound(long binPos) {
+	public void getUpperBound( final long binPos, final T value )
+	{
+		if ( tailBins && ( binPos == 0 || binPos == bins - 1 ) )
+		{
+			if ( binPos == 0 )
+				value.setInteger( minVal - 1 );
+			else
+				value.setInteger( Long.MAX_VALUE - 1 );
+		}
+		else
+		{
+			getCenterValue( binPos, value );
+		}
+	}
+
+	@Override
+	public boolean includesLowerBound( final long binPos )
+	{
 		return true;
 	}
 
 	@Override
-	public boolean includesUpperBound(long binPos) {
+	public boolean includesUpperBound( final long binPos )
+	{
 		return true;
 	}
 
 	@Override
-	public boolean hasTails() {
+	public boolean hasTails()
+	{
 		return tailBins;
 	}
 
 	@Override
-	public Integer1dBinMapper<T> copy() {
-		return new Integer1dBinMapper<T>(minVal, bins, tailBins);
+	public Integer1dBinMapper< T > copy()
+	{
+		return new Integer1dBinMapper< T >( minVal, bins, tailBins );
 	}
 
 	/**
-	 * This is a convenience method for creating a {@link HistogramNd} from inputs
-	 * that describe a set of integer 1-d based bin mappers. The inputs should all
-	 * have n entries for an n-d set of mappers.
+	 * This is a convenience method for creating a {@link HistogramNd} from
+	 * inputs that describe a set of integer 1-d based bin mappers. The inputs
+	 * should all have n entries for an n-d set of mappers.
 	 * 
-	 * @param minVals The minimum bin values for each dimension
-	 * @param numBins The total bin count for each dimension
-	 * @param tailBins Flags per dimension for whether to include tail bins
+	 * @param minVals
+	 *            The minimum bin values for each dimension
+	 * @param numBins
+	 *            The total bin count for each dimension
+	 * @param tailBins
+	 *            Flags per dimension for whether to include tail bins
 	 * @return An unpopulated HistogramNd
 	 */
-	public static <K extends IntegerType<K>> HistogramNd<K> histogramNd(
-		long[] minVals, long[] numBins, boolean[] tailBins)
+	public static < K extends IntegerType< K >> HistogramNd< K > histogramNd(
+			final long[] minVals, final long[] numBins, final boolean[] tailBins )
 	{
-		if ((minVals.length != numBins.length) ||
-			(minVals.length != tailBins.length))
+		if ( ( minVals.length != numBins.length ) ||
+				( minVals.length != tailBins.length ) ) { throw new IllegalArgumentException(
+				"multiDimMapper: differing input array sizes" ); }
+		final List< BinMapper1d< K >> binMappers = new ArrayList< BinMapper1d< K >>();
+		for ( int i = 0; i < minVals.length; i++ )
 		{
-			throw new IllegalArgumentException(
-				"multiDimMapper: differing input array sizes");
+			final Integer1dBinMapper< K > mapper =
+					new Integer1dBinMapper< K >( minVals[ i ], numBins[ i ], tailBins[ i ] );
+			binMappers.add( mapper );
 		}
-		List<BinMapper1d<K>> binMappers = new ArrayList<BinMapper1d<K>>();
-		for (int i = 0; i < minVals.length; i++) {
-			Integer1dBinMapper<K> mapper =
-				new Integer1dBinMapper<K>(minVals[i], numBins[i], tailBins[i]);
-			binMappers.add(mapper);
-		}
-		return new HistogramNd<K>(binMappers);
+		return new HistogramNd< K >( binMappers );
 	}
 }

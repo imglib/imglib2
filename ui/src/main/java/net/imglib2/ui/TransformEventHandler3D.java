@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui;
@@ -47,7 +43,7 @@ import net.imglib2.realtransform.AffineTransform3D;
 /**
  * A {@link TransformEventHandler} that changes an {@link AffineTransform3D} in
  * response to mouse and keyboard events.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -179,28 +175,28 @@ public class TransformEventHandler3D extends MouseAdapter implements KeyListener
 
 	final private static String helpString =
 			"Mouse control:" + NL + " " + NL +
-			"Pan and tilt the volume by left-click and dragging the image in the canvas, " + NL +
-			"move the volume by middle-or-right-click and dragging the image in the canvas, " + NL +
-			"browse alongside the z-axis using the mouse-wheel, and" + NL +
-			"zoom in and out using the mouse-wheel holding CTRL+SHIFT or META." + NL + " " + NL +
-			"Key control:" + NL + " " + NL +
-			"X - Select x-axis as rotation axis." + NL +
-			"Y - Select y-axis as rotation axis." + NL +
-			"Z - Select z-axis as rotation axis." + NL +
-			"CURSOR LEFT - Rotate clockwise around the choosen rotation axis." + NL +
-			"CURSOR RIGHT - Rotate counter-clockwise around the choosen rotation axis." + NL +
-			"CURSOR UP - Zoom in." + NL +
-			"CURSOR DOWN - Zoom out." + NL +
-			"./> - Forward alongside z-axis." + NL +
-			",/< - Backward alongside z-axis." + NL +
-			"SHIFT - Rotate and browse 10x faster." + NL +
-			"CTRL - Rotate and browse 10x slower.";
+					"Pan and tilt the volume by left-click and dragging the image in the canvas, " + NL +
+					"move the volume by middle-or-right-click and dragging the image in the canvas, " + NL +
+					"browse alongside the z-axis using the mouse-wheel, and" + NL +
+					"zoom in and out using the mouse-wheel holding CTRL+SHIFT or META." + NL + " " + NL +
+					"Key control:" + NL + " " + NL +
+					"X - Select x-axis as rotation axis." + NL +
+					"Y - Select y-axis as rotation axis." + NL +
+					"Z - Select z-axis as rotation axis." + NL +
+					"CURSOR LEFT - Rotate clockwise around the choosen rotation axis." + NL +
+					"CURSOR RIGHT - Rotate counter-clockwise around the choosen rotation axis." + NL +
+					"CURSOR UP - Zoom in." + NL +
+					"CURSOR DOWN - Zoom out." + NL +
+					"./> - Forward alongside z-axis." + NL +
+					",/< - Backward alongside z-axis." + NL +
+					"SHIFT - Rotate and browse 10x faster." + NL +
+					"CTRL - Rotate and browse 10x slower.";
 
 	/**
 	 * Return rotate/translate/scale speed resulting from modifier keys.
-	 *
+	 * 
 	 * Normal speed is 1. SHIFT is faster (10). CTRL is slower (0.1).
-	 *
+	 * 
 	 * @param modifiers
 	 * @return speed resulting from modifier keys.
 	 */

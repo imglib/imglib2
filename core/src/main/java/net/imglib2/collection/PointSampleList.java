@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -51,7 +47,7 @@ import net.imglib2.Point;
 
 /**
  * A list of data samples at explicit {@link Localizable integer coordinates}.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -60,7 +56,9 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 	public class PointSampleListCursor implements Cursor< T >
 	{
 		protected int index = -1;
+
 		protected Point position = null;
+
 		protected T sample = null;
 
 		@Override
@@ -93,13 +91,13 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 		}
 
 		@Override
-		public int getIntPosition( int d )
+		public int getIntPosition( final int d )
 		{
 			return position.getIntPosition( d );
 		}
 
 		@Override
-		public long getLongPosition( int d )
+		public long getLongPosition( final int d )
 		{
 			return position.getLongPosition( d );
 		}
@@ -117,13 +115,13 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 		}
 
 		@Override
-		public void localize( int[] pos )
+		public void localize( final int[] pos )
 		{
 			position.localize( pos );
 		}
 
 		@Override
-		public void localize( long[] pos )
+		public void localize( final long[] pos )
 		{
 			position.localize( pos );
 		}
@@ -185,7 +183,9 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 	}
 
 	final protected ArrayList< Point > coordinates = new ArrayList< Point >();
+
 	final protected ArrayList< T > samples = new ArrayList< T >();
+
 	protected int lastIndex = -1;
 
 	private static Interval initInterval( final int n )
@@ -201,7 +201,8 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 	}
 
 	/**
-	 * @param n - number of dimensions
+	 * @param n
+	 *            - number of dimensions
 	 */
 	public PointSampleList( final int n )
 	{

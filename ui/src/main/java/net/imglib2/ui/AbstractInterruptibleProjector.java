@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui;
@@ -49,12 +45,12 @@ import net.imglib2.converter.Converter;
  * <code>this</code> to obtain a
  * {@link RandomAccessible#randomAccess(net.imglib2.Interval) constrained
  * RandomAccess}
- *
+ * 
  * @param <A>
  *            pixel type of the source.
  * @param <B>
  *            pixel type of the target {@link RandomAccessibleInterval}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld
  */
@@ -76,7 +72,7 @@ abstract public class AbstractInterruptibleProjector< A, B > extends AbstractInt
 	 * from source to target pixel type. The new projector's
 	 * {@link #numDimensions()} will be equal the number of source dimensions,
 	 * allowing it to act as an interval on the source.
-	 *
+	 * 
 	 * @param numSourceDimensions
 	 *            number of dimensions of the source.
 	 * @param converter

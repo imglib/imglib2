@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -42,16 +38,17 @@ import net.imglib2.outofbounds.RealOutOfBoundsRealRandomAccess;
 import net.imglib2.util.Intervals;
 
 /**
- * Implements {@link RealRandomAccessible} for a {@link RealRandomAccessibleRealInterval}
- * through an {@link RealOutOfBoundsFactory}.
- * Note that it is not a RealInterval itself.
- *
+ * Implements {@link RealRandomAccessible} for a
+ * {@link RealRandomAccessibleRealInterval} through an
+ * {@link RealOutOfBoundsFactory}. Note that it is not a RealInterval itself.
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T > > implements RealRandomAccessible< T > 
+final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T > > implements RealRandomAccessible< T >
 {
 	final protected F source;
+
 	final protected RealOutOfBoundsFactory< T, ? super F > factory;
 
 	public ExtendedRealRandomAccessibleRealInterval( final F source, final RealOutOfBoundsFactory< T, ? super F > factory )
@@ -59,7 +56,7 @@ final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRa
 		this.source = source;
 		this.factory = factory;
 	}
-	
+
 	@Override
 	final public int numDimensions()
 	{
@@ -71,16 +68,13 @@ final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRa
 	{
 		return new RealOutOfBoundsRealRandomAccess< T >( source.numDimensions(), factory.create( source ) );
 	}
-	
+
 	@Override
 	final public RealRandomAccess< T > realRandomAccess( final RealInterval interval )
 	{
 		assert source.numDimensions() == interval.numDimensions();
-		
-		if ( Intervals.contains( source, interval ) )
-		{
-			return source.realRandomAccess();
-		}
+
+		if ( Intervals.contains( source, interval ) ) { return source.realRandomAccess(); }
 		return realRandomAccess();
 	}
 }

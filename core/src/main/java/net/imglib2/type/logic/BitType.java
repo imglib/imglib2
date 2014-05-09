@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -47,21 +43,21 @@ import net.imglib2.type.numeric.integer.AbstractIntegerType;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class BitType extends AbstractIntegerType<BitType> implements BooleanType<BitType>, NativeType<BitType>
+public class BitType extends AbstractIntegerType< BitType > implements BooleanType< BitType >, NativeType< BitType >
 {
 	private int i = 0;
 
-	final protected NativeImg<BitType, ? extends BitAccess> img;
+	final protected NativeImg< BitType, ? extends BitAccess > img;
 
 	// the DataAccess that holds the information
 	protected BitAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public BitType( final NativeImg<BitType, ? extends BitAccess> bitStorage )
+	public BitType( final NativeImg< BitType, ? extends BitAccess > bitStorage )
 	{
 		img = bitStorage;
 	}
@@ -82,13 +78,16 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	}
 
 	// this is the constructor if you want it to be a variable
-	public BitType() { this( false ); }
+	public BitType()
+	{
+		this( false );
+	}
 
 	@Override
-	public NativeImg<BitType, ? extends BitAccess> createSuitableNativeImg( final NativeImgFactory<BitType> storageFactory, final long dim[] )
+	public NativeImg< BitType, ? extends BitAccess > createSuitableNativeImg( final NativeImgFactory< BitType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<BitType, ? extends BitAccess> container = storageFactory.createBitInstance( dim, 1 );
+		final NativeImg< BitType, ? extends BitAccess > container = storageFactory.createBitInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final BitType linkedType = new BitType( container );
@@ -100,20 +99,41 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	}
 
 	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
+	}
 
 	@Override
-	public BitType duplicateTypeOnSameNativeImg() { return new BitType( img ); }
+	public BitType duplicateTypeOnSameNativeImg()
+	{
+		return new BitType( img );
+	}
 
 	@Override
-	public boolean get() { return dataAccess.getValue( i ); }
-	@Override
-	public void set( final boolean value ) { dataAccess.setValue( i, value ); }
+	public boolean get()
+	{
+		return dataAccess.getValue( i );
+	}
 
 	@Override
-	public int getInteger(){ return get() ? 1 : 0; }
+	public void set( final boolean value )
+	{
+		dataAccess.setValue( i, value );
+	}
+
 	@Override
-	public long getIntegerLong() { return get() ? 1 : 0; }
+	public int getInteger()
+	{
+		return get() ? 1 : 0;
+	}
+
+	@Override
+	public long getIntegerLong()
+	{
+		return get() ? 1 : 0;
+	}
+
 	@Override
 	public void setInteger( final int f )
 	{
@@ -122,6 +142,7 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 		else
 			set( false );
 	}
+
 	@Override
 	public void setInteger( final long f )
 	{
@@ -132,71 +153,124 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	}
 
 	@Override
-	public double getMaxValue() { return 1; }
-	@Override
-	public double getMinValue()  { return 0; }
+	public double getMaxValue()
+	{
+		return 1;
+	}
 
 	@Override
-	public void set( final BitType c ) { dataAccess.setValue(i, c.get() ); }
+	public double getMinValue()
+	{
+		return 0;
+	}
 
 	@Override
-	public void and( final BitType c ) { dataAccess.setValue(i, dataAccess.getValue(i) && c.get() ); }
+	public void set( final BitType c )
+	{
+		dataAccess.setValue( i, c.get() );
+	}
 
 	@Override
-	public void or( final BitType c ) { dataAccess.setValue(i, dataAccess.getValue(i) || c.get() ); }
+	public void and( final BitType c )
+	{
+		dataAccess.setValue( i, dataAccess.getValue( i ) && c.get() );
+	}
 
 	@Override
-	public void xor( final BitType c ) { dataAccess.setValue(i, dataAccess.getValue(i) ^ c.get() ); }
+	public void or( final BitType c )
+	{
+		dataAccess.setValue( i, dataAccess.getValue( i ) || c.get() );
+	}
 
 	@Override
-	public void not() { dataAccess.setValue(i, !dataAccess.getValue(i) ); }
+	public void xor( final BitType c )
+	{
+		dataAccess.setValue( i, dataAccess.getValue( i ) ^ c.get() );
+	}
 
 	@Override
-	public void add( final BitType c ) { xor( c ); }
+	public void not()
+	{
+		dataAccess.setValue( i, !dataAccess.getValue( i ) );
+	}
 
 	@Override
-	public void div( final BitType c ) { and( c ); }
+	public void add( final BitType c )
+	{
+		xor( c );
+	}
 
 	@Override
-	public void mul( final BitType c ) { and( c ); }
+	public void div( final BitType c )
+	{
+		and( c );
+	}
 
 	@Override
-	public void sub( final BitType c ) { xor( c ); }
+	public void mul( final BitType c )
+	{
+		and( c );
+	}
+
+	@Override
+	public void sub( final BitType c )
+	{
+		xor( c );
+	}
 
 	@Override
 	public void mul( final float c )
 	{
 		if ( c >= 0.5f )
-			dataAccess.setValue(i, dataAccess.getValue(i) && true );
+			dataAccess.setValue( i, dataAccess.getValue( i ) && true );
 		else
-			dataAccess.setValue(i, dataAccess.getValue(i) && false );
+			dataAccess.setValue( i, dataAccess.getValue( i ) && false );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		if ( c >= 0.5f )
-			dataAccess.setValue(i, dataAccess.getValue(i) && true );
+			dataAccess.setValue( i, dataAccess.getValue( i ) && true );
 		else
-			dataAccess.setValue(i, dataAccess.getValue(i) && false );
+			dataAccess.setValue( i, dataAccess.getValue( i ) && false );
 	}
 
 	@Override
-	public void setOne() { dataAccess.setValue( i, true ); }
+	public void setOne()
+	{
+		dataAccess.setValue( i, true );
+	}
 
 	@Override
-	public void setZero() { dataAccess.setValue( i, false ); }
+	public void setZero()
+	{
+		dataAccess.setValue( i, false );
+	}
 
 	@Override
-	public void inc() { dataAccess.setValue( i, !dataAccess.getValue( i) ); }
+	public void inc()
+	{
+		dataAccess.setValue( i, !dataAccess.getValue( i ) );
+	}
 
 	@Override
-	public void dec() { inc(); }
+	public void dec()
+	{
+		inc();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Boolean#hashCode().
+		return get() ? 1231 : 1237;
+	}
 
 	@Override
 	public int compareTo( final BitType c )
 	{
-		final boolean b1 = dataAccess.getValue(i);
+		final boolean b1 = dataAccess.getValue( i );
 		final boolean b2 = c.get();
 
 		if ( b1 && !b2 )
@@ -208,36 +282,70 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	}
 
 	@Override
-	public BitType createVariable(){ return new BitType(); }
+	public BitType createVariable()
+	{
+		return new BitType();
+	}
 
 	@Override
-	public BitType copy(){ return new BitType( dataAccess.getValue(i) ); }
+	public BitType copy()
+	{
+		return new BitType( dataAccess.getValue( i ) );
+	}
 
 	@Override
 	public String toString()
 	{
-		final boolean value = dataAccess.getValue(i);
+		final boolean value = dataAccess.getValue( i );
 
 		return value ? "1" : "0";
 	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public int getEntitiesPerPixel()
+	{
+		return 1;
+	}
 
 	@Override
-	public void updateIndex( final int index ) { this.i = index; }
-	@Override
-	public int getIndex() { return i; }
+	public void updateIndex( final int index )
+	{
+		this.i = index;
+	}
 
 	@Override
-	public void incIndex() { ++i; }
-	@Override
-	public void incIndex( final int increment ) { i += increment; }
-	@Override
-	public void decIndex() { --i; }
-	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
+	public int getIndex()
+	{
+		return i;
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 1; }
+	public void incIndex()
+	{
+		++i;
+	}
+
+	@Override
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
+	@Override
+	public void decIndex()
+	{
+		--i;
+	}
+
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
+	@Override
+	public int getBitsPerPixel()
+	{
+		return 1;
+	}
 }

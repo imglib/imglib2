@@ -18,15 +18,14 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>imglib2</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
-		<!-- External dependencies -->
+		<!-- SciJava dependencies -->
 		<dependency>
-			<groupId>${scijava-common.groupId}</groupId>
+			<groupId>org.scijava</groupId>
 			<artifactId>scijava-common</artifactId>
-			<version>${scijava-common.version}</version>
 		</dependency>
+
 		<dependency>
 			<!-- FIXME: NOT IN CENTRAL -->
 			<groupId>edu.ucar</groupId>
@@ -38,14 +37,9 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<properties>
-		<project.rootdir>${basedir}/..</project.rootdir>
-	</properties>
 
 	<build>
 		<plugins>
@@ -62,15 +56,11 @@
 		</plugins>
 	</build>
 
-	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
+		<!-- NB: for project parent, in case of partial checkout -->
 		<repository>
-			<id>imagej.releases</id>
-			<url>http://maven.imagej.net/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>imagej.snapshots</id>
-			<url>http://maven.imagej.net/content/repositories/snapshots</url>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
 

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui.util;
@@ -52,15 +48,15 @@ import net.imglib2.view.Views;
  * A {@link RenderSource}, that provides an interpolated source
  * {@link RandomAccessible} and is able to switch between nearest-neighbor and
  * n-linear interpolation.
- *
+ * 
  * The (discrete) source {@link RandomAccessible}, transform, and
  * {@link Converter} provided in the constructor.
- *
+ * 
  * @param <T>
  *            pixel type
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class InterpolatingSource< T extends NumericType< T >, A > implements RenderSource< T, A >
@@ -78,7 +74,7 @@ public class InterpolatingSource< T extends NumericType< T >, A > implements Ren
 	{
 		final InterpolatorFactory< T, RandomAccessible< T > > nLinearInterpolatorFactory;
 		if ( ARGBType.class.isInstance( source.randomAccess().get() ) )
-			nLinearInterpolatorFactory = ( InterpolatorFactory )new NLinearInterpolatorARGBFactory();
+			nLinearInterpolatorFactory = ( InterpolatorFactory ) new NLinearInterpolatorARGBFactory();
 		else
 			nLinearInterpolatorFactory = new NLinearInterpolatorFactory< T >();
 
@@ -118,7 +114,7 @@ public class InterpolatingSource< T extends NumericType< T >, A > implements Ren
 
 	/**
 	 * Get current interpolation method.
-	 *
+	 * 
 	 * @return interpolation method: 0 is nearest-neighbor, 1 is n-linear
 	 */
 	public int getInterpolation()
@@ -128,7 +124,7 @@ public class InterpolatingSource< T extends NumericType< T >, A > implements Ren
 
 	/**
 	 * Set current interpolation method.
-	 *
+	 * 
 	 * @param interpolation
 	 *            0 is nearest-neighbor, 1 is n-linear
 	 */

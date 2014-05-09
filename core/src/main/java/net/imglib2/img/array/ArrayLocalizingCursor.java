@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -43,9 +39,9 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * Localizing {@link Cursor} on an {@link ArrayImg}.
- *
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -58,8 +54,8 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 	protected final int lastIndex;
 
 	/**
-	 * Maximum of the {@link ArrayImg} in every dimension.
-	 * This is used to check isOutOfBounds().
+	 * Maximum of the {@link ArrayImg} in every dimension. This is used to check
+	 * isOutOfBounds().
 	 */
 	protected final int[] max;
 
@@ -69,10 +65,10 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 
 		this.img = cursor.img;
 		this.type = img.createLinkedType();
-		this.lastIndex = ( int )img.size() - 1;
+		this.lastIndex = ( int ) img.size() - 1;
 
 		max = new int[ n ];
-		for( int d = 0; d < n; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			position[ d ] = cursor.position[ d ];
 			max[ d ] = cursor.max[ d ];
@@ -88,10 +84,10 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 
 		this.img = img;
 		this.type = img.createLinkedType();
-		this.lastIndex = ( int )img.size() - 1;
+		this.lastIndex = ( int ) img.size() - 1;
 
 		max = new int[ n ];
-		for( int d = 0; d < n; ++d )
+		for ( int d = 0; d < n; ++d )
 			max[ d ] = ( int ) img.max( d );
 
 		reset();
@@ -121,12 +117,11 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 //		}
 
 		/*
-		 * Benchmarks @ 2012-04-17 demonstrate that the less readable code
-		 * below is reliably 5-10% faster than the almost equivalent commented
-		 * code above.  The reason is NOT simply that d=0 is executed
-		 * outside the loop.  We have tested that and it does not provide
-		 * improved speed when done in the above version of the code.  Below,
-		 * it plays a role.
+		 * Benchmarks @ 2012-04-17 demonstrate that the less readable code below
+		 * is reliably 5-10% faster than the almost equivalent commented code
+		 * above. The reason is NOT simply that d=0 is executed outside the
+		 * loop. We have tested that and it does not provide improved speed when
+		 * done in the above version of the code. Below, it plays a role.
 		 */
 		if ( ++position[ 0 ] <= max[ 0 ] )
 		{
@@ -137,8 +132,10 @@ public class ArrayLocalizingCursor< T extends NativeType< T > > extends Abstract
 		type.incIndex();
 		for ( int d = 1; d < n; ++d )
 		{
-			if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
-			else break;
+			if ( ++position[ d ] > max[ d ] )
+				position[ d ] = 0;
+			else
+				break;
 		}
 	}
 

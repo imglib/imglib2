@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui;
@@ -52,10 +48,10 @@ import net.imglib2.ui.util.GuiUtil;
  * {@link RenderTarget}, next time, rendering goes to the second one. Thus, the
  * {@link RenderTarget} will always have a complete image. Rendering will not
  * interfere with painting the {@link BufferedImage} to the canvas.
- *
+ * 
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public abstract class AbstractSimpleRenderer< A extends AffineGet & Concatenable< AffineGet > > extends AbstractRenderer< A >
@@ -121,8 +117,8 @@ public abstract class AbstractSimpleRenderer< A extends AffineGet & Concatenable
 	}
 
 	/**
-	 * Check whether the size of the display component was changed and
-	 * recreate {@link #screenImages} and {@link #screenScaleTransforms} accordingly.
+	 * Check whether the size of the display component was changed and recreate
+	 * {@link #screenImages} and {@link #screenScaleTransforms} accordingly.
 	 */
 	protected synchronized boolean checkResize()
 	{
@@ -156,7 +152,7 @@ public abstract class AbstractSimpleRenderer< A extends AffineGet & Concatenable
 		// the projector that paints to the screenImage.
 		final InterruptibleProjector p;
 
-		synchronized( this )
+		synchronized ( this )
 		{
 			screenImage = screenImages[ 0 ];
 			bufferedImage = bufferedImages[ 0 ];
@@ -191,7 +187,7 @@ public abstract class AbstractSimpleRenderer< A extends AffineGet & Concatenable
 	 * Create a {@link InterruptibleProjector} that renders to the specified
 	 * target image, applying the specified transformation to some source (that
 	 * is specific to the derived class).
-	 *
+	 * 
 	 * @param viewerTransform
 	 *            transforms global to screen coordinates
 	 * @param target

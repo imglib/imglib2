@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,13 +41,13 @@ import Jama.Matrix;
 
 /**
  * An <em>n</em>-dimensional affine transformation.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class AffineTransform extends AbstractAffineTransform implements Concatenable< AffineGet >, PreConcatenable< AffineGet >
 {
 	final protected AffineTransform inverse;
-	
+
 	public AffineTransform( final int n )
 	{
 		super( n );
@@ -59,32 +55,31 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 		invert();
 		inverse.updateDs();
 	}
-	
+
 	protected AffineTransform( final Matrix a, final double[] t )
 	{
 		super( a, t );
-		
+
 		inverse = new AffineTransform( this );
 		invert();
 		inverse.updateDs();
 	}
-	
+
 	public AffineTransform( final Matrix matrix )
 	{
 		super( matrix );
-		
+
 		inverse = new AffineTransform( this );
 		invert();
 		inverse.updateDs();
 	}
-	
+
 	protected AffineTransform( final AffineTransform inverse )
 	{
 		super( inverse.n );
 		this.inverse = inverse;
 	}
-	
-	
+
 	protected void invertT()
 	{
 		for ( int r = 0; r < n; ++r )
@@ -95,35 +90,33 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 			inverse.t[ r ] = tir;
 		}
 	}
-	
+
 	protected void invert()
 	{
 		final Matrix ii = a.inverse();
 		inverse.a.setMatrix( 0, n - 1, 0, n - 1, ii );
 		invertT();
 	}
-	
-	
+
 	@Override
 	public void apply( final float[] source, final float[] target )
 	{
-		assert source.length >= n && target.length >= n : "Source or target vector dimensions do not match with the transformation.";
+		assert source.length >= n && target.length >= n: "Source or target vector dimensions do not match with the transformation.";
 
 		for ( int r = 0; r < n; ++r )
 		{
 			double ar = 0;
 			for ( int c = 0; c < n; ++c )
 				ar += source[ c ] * a.get( r, c );
-			
-			target[ r ] = ( float )( ar + t[ r ] );
+
+			target[ r ] = ( float ) ( ar + t[ r ] );
 		}
 	}
-	
-	
+
 	@Override
 	public void applyInverse( final double[] source, final double[] target )
 	{
-		assert source.length >= n && target.length >= n : "Source or target vector dimensions do not match with the transformation.";
+		assert source.length >= n && target.length >= n: "Source or target vector dimensions do not match with the transformation.";
 
 		inverse.apply( target, source );
 	}
@@ -131,7 +124,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public void applyInverse( final float[] source, final float[] target )
 	{
-		assert source.length >= n && target.length >= n : "Source or target vector dimensions do not match with the transformation.";
+		assert source.length >= n && target.length >= n: "Source or target vector dimensions do not match with the transformation.";
 
 		inverse.apply( target, source );
 	}
@@ -139,22 +132,21 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public void applyInverse( final RealPositionable source, final RealLocalizable target )
 	{
-		assert source.numDimensions() >= n && target.numDimensions() >= n : "Source or target vector dimensions do not match with the transformation.";
+		assert source.numDimensions() >= n && target.numDimensions() >= n: "Source or target vector dimensions do not match with the transformation.";
 
 		inverse.apply( target, source );
 	}
-	
-	
+
 	@Override
 	public AffineTransform inverse()
 	{
 		return inverse;
 	}
-	
+
 	public void set( final AffineGet affine )
 	{
-		assert n == affine.numSourceDimensions() : "Dimensions do not match.";
-		
+		assert n == affine.numSourceDimensions(): "Dimensions do not match.";
+
 		for ( int r = 0; r < n; ++r )
 		{
 			for ( int c = 0; c < n; ++c )
@@ -165,21 +157,21 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 		invert();
 		inverse.updateDs();
 	}
-	
+
 	@Override
 	public void set( final double[][] affine )
 	{
-		assert n == affine.length : "Dimensions do not match.";
-		
+		assert n == affine.length: "Dimensions do not match.";
+
 		for ( int r = 0; r < n; ++r )
 		{
-			assert n + 1 == affine[ r ].length : "Dimensions do not match.";
-			
+			assert n + 1 == affine[ r ].length: "Dimensions do not match.";
+
 			for ( int c = 0; c < n; ++c )
 				a.set( r, c, affine[ r ][ c ] );
 			t[ r ] = affine[ r ][ n ];
 		}
-		
+
 		updateDs();
 		invert();
 		inverse.updateDs();
@@ -188,7 +180,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public AffineTransform concatenate( final AffineGet affine )
 	{
-		assert affine.numSourceDimensions() == n : "Dimensions do not match.";
+		assert affine.numSourceDimensions() == n: "Dimensions do not match.";
 
 		final Matrix matrix = new Matrix( n, n );
 		final double[] translation = new double[ n ];
@@ -206,13 +198,13 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 				tr += get( r, k ) * affine.get( k, n );
 			translation[ r ] = tr;
 		}
-		a.setMatrix( 0, n - 1, 0, n -  1, matrix );
+		a.setMatrix( 0, n - 1, 0, n - 1, matrix );
 		System.arraycopy( translation, 0, t, 0, t.length );
-		
+
 		updateDs();
 		invert();
 		inverse.updateDs();
-		
+
 		return this;
 	}
 
@@ -225,7 +217,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public AffineTransform preConcatenate( final AffineGet affine )
 	{
-		assert affine.numSourceDimensions() == n : "Dimensions do not match.";
+		assert affine.numSourceDimensions() == n: "Dimensions do not match.";
 
 		final Matrix matrix = new Matrix( n, n );
 		final double[] translation = new double[ n ];
@@ -243,7 +235,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 				tr += affine.get( r, k ) * get( k, n );
 			translation[ r ] = tr;
 		}
-		a.setMatrix( 0, n - 1, 0, n -  1, matrix );
+		a.setMatrix( 0, n - 1, 0, n - 1, matrix );
 		System.arraycopy( translation, 0, t, 0, t.length );
 
 		updateDs();
@@ -262,7 +254,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public void set( final double value, final int row, final int column )
 	{
-		if( column == n )
+		if ( column == n )
 			t[ row ] = value;
 		else
 			a.set( row, column, value );
@@ -275,8 +267,8 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 	@Override
 	public void set( final double... values )
 	{
-		assert values.length == n * n + n : "Input dimensions do not match dimensions of this affine transform.";
-		
+		assert values.length == n * n + n: "Input dimensions do not match dimensions of this affine transform.";
+
 		int i = 0;
 		for ( int r = 0; r < n; ++r )
 		{
@@ -284,7 +276,7 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 				a.set( r, c, values[ i ] );
 			t[ r ] = values[ i++ ];
 		}
-		
+
 		updateDs();
 		invert();
 		inverse.updateDs();

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -49,152 +45,190 @@ import net.imglib2.type.logic.BitType;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author Lee Kamentsky
  */
-public class CompositeRegionOfInterestTest {
+public class CompositeRegionOfInterestTest
+{
 
 	/**
-	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#CompositeRegionOfInterest(int)}.
+	 * Test method for
+	 * {@link net.imglib2.roi.CompositeRegionOfInterest#CompositeRegionOfInterest(int)}
+	 * .
 	 */
 	@Test
-	public void testCompositeRegionOfInterestInt() {
+	public void testCompositeRegionOfInterestInt()
+	{
 		@SuppressWarnings( "deprecation" )
-		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(2);
-		assertEquals(2, c.numDimensions());
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest( 2 );
+		assertEquals( 2, c.numDimensions() );
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#CompositeRegionOfInterest(net.imglib2.roi.RegionOfInterest)}.
+	 * Test method for
+	 * {@link net.imglib2.roi.CompositeRegionOfInterest#CompositeRegionOfInterest(net.imglib2.roi.RegionOfInterest)}
+	 * .
 	 */
 	@Test
-	public void testCompositeRegionOfInterestRegionOfInterest() {
+	public void testCompositeRegionOfInterestRegionOfInterest()
+	{
 		@SuppressWarnings( "deprecation" )
-		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
-		assertEquals(2, c.numDimensions());
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest( new RectangleRegionOfInterest( new double[] { 1, 2 }, new double[] { 3, 4 } ) );
+		assertEquals( 2, c.numDimensions() );
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#CompositeRegionOfInterest(java.util.Collection)}.
+	 * Test method for
+	 * {@link net.imglib2.roi.CompositeRegionOfInterest#CompositeRegionOfInterest(java.util.Collection)}
+	 * .
 	 */
 	@Test
-	public void testCompositeRegionOfInterestCollectionOfRegionOfInterest() {
-		final ArrayList<RegionOfInterest> list = new ArrayList<RegionOfInterest>();
-		list.add(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
-		list.add(new RectangleRegionOfInterest(new double[] {5,6}, new double[] { 3,4}));
+	public void testCompositeRegionOfInterestCollectionOfRegionOfInterest()
+	{
+		final ArrayList< RegionOfInterest > list = new ArrayList< RegionOfInterest >();
+		list.add( new RectangleRegionOfInterest( new double[] { 1, 2 }, new double[] { 3, 4 } ) );
+		list.add( new RectangleRegionOfInterest( new double[] { 5, 6 }, new double[] { 3, 4 } ) );
 		@SuppressWarnings( "deprecation" )
-		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(list);
-		assertEquals(2, c.numDimensions());
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest( list );
+		assertEquals( 2, c.numDimensions() );
 	}
 
-	private void assertInside(@SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double [] position) {
-		final RealRandomAccess<BitType> ra = c.realRandomAccess();
-		ra.setPosition(position);
-		assertTrue(ra.get().get());
-	}
-	private void assertInside(@SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double x, final double y) {
-		assertInside(c,new double[] { x,y});
+	private void assertInside( @SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double[] position )
+	{
+		final RealRandomAccess< BitType > ra = c.realRandomAccess();
+		ra.setPosition( position );
+		assertTrue( ra.get().get() );
 	}
 
-	private void assertOutside(@SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double [] position) {
-		final RealRandomAccess<BitType> ra = c.realRandomAccess();
-		ra.setPosition(position);
-		assertFalse(ra.get().get());
+	private void assertInside( @SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double x, final double y )
+	{
+		assertInside( c, new double[] { x, y } );
 	}
-	private void assertOutside(@SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double x, final double y) {
-		assertOutside(c,new double[] { x,y});
+
+	private void assertOutside( @SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double[] position )
+	{
+		final RealRandomAccess< BitType > ra = c.realRandomAccess();
+		ra.setPosition( position );
+		assertFalse( ra.get().get() );
 	}
+
+	private void assertOutside( @SuppressWarnings( "deprecation" ) final CompositeRegionOfInterest c, final double x, final double y )
+	{
+		assertOutside( c, new double[] { x, y } );
+	}
+
 	/**
-	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#or(net.imglib2.roi.RegionOfInterest)}.
+	 * Test method for
+	 * {@link net.imglib2.roi.CompositeRegionOfInterest#or(net.imglib2.roi.RegionOfInterest)}
+	 * .
 	 */
 	@SuppressWarnings( "deprecation" )
 	@Test
-	public void testOr() {
-		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
-		c.or(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
-		assertInside(c, 2,3);
-		assertInside(c, 5, 8);
-		assertInside(c, 3.5, 5.5);
-		assertOutside(c, 0, 0);
+	public void testOr()
+	{
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest( new RectangleRegionOfInterest( new double[] { 1, 2 }, new double[] { 3, 4 } ) );
+		c.or( new RectangleRegionOfInterest( new double[] { 3, 5 }, new double[] { 3, 4 } ) );
+		assertInside( c, 2, 3 );
+		assertInside( c, 5, 8 );
+		assertInside( c, 3.5, 5.5 );
+		assertOutside( c, 0, 0 );
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#remove(net.imglib2.roi.RegionOfInterest)}.
+	 * Test method for
+	 * {@link net.imglib2.roi.CompositeRegionOfInterest#remove(net.imglib2.roi.RegionOfInterest)}
+	 * .
 	 */
 	@SuppressWarnings( "deprecation" )
 	@Test
-	public void testRemove() {
-		final RectangleRegionOfInterest [] rois = new RectangleRegionOfInterest[] {
-			new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}),
-			new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4})
+	public void testRemove()
+	{
+		final RectangleRegionOfInterest[] rois = new RectangleRegionOfInterest[] {
+				new RectangleRegionOfInterest( new double[] { 1, 2 }, new double[] { 3, 4 } ),
+				new RectangleRegionOfInterest( new double[] { 3, 5 }, new double[] { 3, 4 } )
 		};
-		final double [][] inside = { {2,4},{5,8}};
-		for (int i=0; i<2; i++) {
-			final CompositeRegionOfInterest c = new CompositeRegionOfInterest(rois[0]);
-			c.or(rois[1]);
-			c.remove(rois[i]);
-			for (int j=0; j<2; j++) {
-				if (i == j) {
-					assertOutside(c, inside[j]);
-				} else {
-					assertInside(c, inside[j]);
+		final double[][] inside = { { 2, 4 }, { 5, 8 } };
+		for ( int i = 0; i < 2; i++ )
+		{
+			final CompositeRegionOfInterest c = new CompositeRegionOfInterest( rois[ 0 ] );
+			c.or( rois[ 1 ] );
+			c.remove( rois[ i ] );
+			for ( int j = 0; j < 2; j++ )
+			{
+				if ( i == j )
+				{
+					assertOutside( c, inside[ j ] );
+				}
+				else
+				{
+					assertInside( c, inside[ j ] );
 				}
 			}
 		}
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#and(net.imglib2.roi.RegionOfInterest)}.
+	 * Test method for
+	 * {@link net.imglib2.roi.CompositeRegionOfInterest#and(net.imglib2.roi.RegionOfInterest)}
+	 * .
 	 */
 	@SuppressWarnings( "deprecation" )
 	@Test
-	public void testAnd() {
-		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
-		c.and(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
-		assertOutside(c, 2,3);
-		assertOutside(c, 5, 8);
-		assertInside(c, 3.5, 5.5);
-		assertOutside(c, 0, 0);
+	public void testAnd()
+	{
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest( new RectangleRegionOfInterest( new double[] { 1, 2 }, new double[] { 3, 4 } ) );
+		c.and( new RectangleRegionOfInterest( new double[] { 3, 5 }, new double[] { 3, 4 } ) );
+		assertOutside( c, 2, 3 );
+		assertOutside( c, 5, 8 );
+		assertInside( c, 3.5, 5.5 );
+		assertOutside( c, 0, 0 );
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#xor(net.imglib2.roi.RegionOfInterest)}.
+	 * Test method for
+	 * {@link net.imglib2.roi.CompositeRegionOfInterest#xor(net.imglib2.roi.RegionOfInterest)}
+	 * .
 	 */
 	@SuppressWarnings( "deprecation" )
 	@Test
-	public void testXor() {
-		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
-		c.xor(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
-		assertInside(c, 2,3);
-		assertInside(c, 5, 8);
-		assertOutside(c, 3.5, 5.5);
-		assertOutside(c, 0, 0);
+	public void testXor()
+	{
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest( new RectangleRegionOfInterest( new double[] { 1, 2 }, new double[] { 3, 4 } ) );
+		c.xor( new RectangleRegionOfInterest( new double[] { 3, 5 }, new double[] { 3, 4 } ) );
+		assertInside( c, 2, 3 );
+		assertInside( c, 5, 8 );
+		assertOutside( c, 3.5, 5.5 );
+		assertOutside( c, 0, 0 );
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.roi.CompositeRegionOfInterest#not(net.imglib2.roi.RegionOfInterest)}.
+	 * Test method for
+	 * {@link net.imglib2.roi.CompositeRegionOfInterest#not(net.imglib2.roi.RegionOfInterest)}
+	 * .
 	 */
 	@SuppressWarnings( "deprecation" )
 	@Test
-	public void testNot() {
-		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
-		c.not(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
-		assertInside(c, 2,3);
-		assertOutside(c, 5, 8);
-		assertOutside(c, 3.5, 5.5);
-		assertOutside(c, 0, 0);
+	public void testNot()
+	{
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest( new RectangleRegionOfInterest( new double[] { 1, 2 }, new double[] { 3, 4 } ) );
+		c.not( new RectangleRegionOfInterest( new double[] { 3, 5 }, new double[] { 3, 4 } ) );
+		assertInside( c, 2, 3 );
+		assertOutside( c, 5, 8 );
+		assertOutside( c, 3.5, 5.5 );
+		assertOutside( c, 0, 0 );
 	}
-	
+
 	/*
 	 * Regression test of trak # 704
 	 */
 	@SuppressWarnings( "deprecation" )
 	@Test
-	public void testRealMin() {
-		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
-		c.or(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
-		assertEquals(1, c.realMin(0), 0);
-		assertEquals(2, c.realMin(1), 0);
+	public void testRealMin()
+	{
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest( new RectangleRegionOfInterest( new double[] { 1, 2 }, new double[] { 3, 4 } ) );
+		c.or( new RectangleRegionOfInterest( new double[] { 3, 5 }, new double[] { 3, 4 } ) );
+		assertEquals( 1, c.realMin( 0 ), 0 );
+		assertEquals( 2, c.realMin( 1 ), 0 );
 	}
 
 	/*
@@ -202,10 +236,11 @@ public class CompositeRegionOfInterestTest {
 	 */
 	@SuppressWarnings( "deprecation" )
 	@Test
-	public void testRealMax() {
-		final CompositeRegionOfInterest c = new CompositeRegionOfInterest(new RectangleRegionOfInterest(new double[] {1,2}, new double[] { 3,4}));
-		c.or(new RectangleRegionOfInterest(new double[] {3,5}, new double[] { 3,4}));
-		assertEquals(6, c.realMax(0), 0);
-		assertEquals(9, c.realMax(1), 0);
+	public void testRealMax()
+	{
+		final CompositeRegionOfInterest c = new CompositeRegionOfInterest( new RectangleRegionOfInterest( new double[] { 1, 2 }, new double[] { 3, 4 } ) );
+		c.or( new RectangleRegionOfInterest( new double[] { 3, 5 }, new double[] { 3, 4 } ) );
+		assertEquals( 6, c.realMax( 0 ), 0 );
+		assertEquals( 9, c.realMax( 1 ), 0 );
 	}
 }

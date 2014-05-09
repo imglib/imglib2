@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -53,10 +49,10 @@ import net.imglib2.util.KthElement;
 
 /**
  * KDTree to access values at RealLocalizable positions.
- *
+ * 
  * @param <T>
  *            type of values stored in the tree.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
@@ -102,7 +98,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		 * @param right
 		 *            right child node
 		 */
-		public ValueNode( T value, RealLocalizable position, int dimension, final ValueNode< T > left, final ValueNode< T > right )
+		public ValueNode( final T value, final RealLocalizable position, final int dimension, final ValueNode< T > left, final ValueNode< T > right )
 		{
 			super( position, dimension, left, right );
 			this.value = value;
@@ -152,7 +148,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		 * @param right
 		 *            right child node
 		 */
-		public SamplerNode( Sampler< T > sampler, RealLocalizable position, int dimension, final SamplerNode< T > left, final SamplerNode< T > right )
+		public SamplerNode( final Sampler< T > sampler, final RealLocalizable position, final int dimension, final SamplerNode< T > left, final SamplerNode< T > right )
 		{
 			super( position, dimension, left, right );
 			this.sampler = sampler;
@@ -185,12 +181,12 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Construct a KDTree from the elements in the given list.
-	 *
+	 * 
 	 * <p>
 	 * Note that the constructor can be called with the same list for both
 	 * {@code values == positions} if {@code T extends RealLocalizable}.
 	 * </p>
-	 *
+	 * 
 	 * @param values
 	 *            a list of values
 	 * @param positions
@@ -213,7 +209,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 			min[ d ] = Double.MAX_VALUE;
 			max[ d ] = -Double.MAX_VALUE;
 		}
-		for ( L position : positions )
+		for ( final L position : positions )
 		{
 			for ( int d = 0; d < n; ++d )
 			{
@@ -249,7 +245,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	/**
 	 * Construct a KDTree from the elements of the given
 	 * {@link IterableRealInterval}.
-	 *
+	 * 
 	 * @param interval
 	 *            elements in the tree are obtained by iterating this
 	 */
@@ -261,8 +257,8 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		interval.realMin( this.min );
 		this.max = new double[ n ];
 		interval.realMax( this.max );
-		ArrayList< RealCursor< T > > values = new ArrayList< RealCursor< T > >( ( int ) interval.size() );
-		RealCursor< T > cursor = interval.localizingCursor();
+		final ArrayList< RealCursor< T > > values = new ArrayList< RealCursor< T > >( ( int ) interval.size() );
+		final RealCursor< T > cursor = interval.localizingCursor();
 		while ( cursor.hasNext() )
 		{
 			cursor.next();
@@ -273,7 +269,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Check whether all positions in the positions list have dimension n.
-	 *
+	 * 
 	 * @return true, if all positions have dimension n.
 	 */
 	protected static < L extends RealLocalizable > boolean verifyDimensions( final List< L > positions, final int n )
@@ -291,13 +287,13 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	{
 		final int d;
 
-		public DimComparator( int d )
+		public DimComparator( final int d )
 		{
 			this.d = d;
 		}
 
 		@Override
-		public int compare( L o1, L o2 )
+		public int compare( final L o1, final L o2 )
 		{
 			final float diff = o1.getFloatPosition( d ) - o2.getFloatPosition( d );
 			return ( diff < 0 ) ? -1 : ( diff > 0 ? 1 : 0 );
@@ -311,7 +307,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * new node which is returned. The left and right partitions of the sublist
 	 * are processed recursively and form the left and right subtrees of the
 	 * node.
-	 *
+	 * 
 	 * @param positions
 	 *            list of positions
 	 * @param i
@@ -354,7 +350,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * new node which is returned. The left and right partitions of the sublist
 	 * are processed recursively and form the left and right subtrees of the
 	 * node.
-	 *
+	 * 
 	 * @param first
 	 *            first element of the sublist of positions
 	 * @param last
@@ -384,14 +380,14 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 			// Node< T > right = makeNode( elements, k + 1, j, dChild );
 			for ( int c = j - last.previousIndex(); c > 0; --c )
 				last.next();
-			ValueNode< T > right = makeNode( first, last, dChild, values, permutation );
+			final ValueNode< T > right = makeNode( first, last, dChild, values, permutation );
 
 			// Node< T > left = makeNode( elements, i, k - 1, dChild );
 			for ( int c = first.nextIndex() - i; c > 0; --c )
 				first.previous();
 			for ( int c = last.nextIndex() - k; c > 0; --c )
 				last.previous();
-			ValueNode< T > left = makeNode( first, last, dChild, values, permutation );
+			final ValueNode< T > left = makeNode( first, last, dChild, values, permutation );
 
 			return new ValueNode< T >( values.get( permutation[ k ] ), current, d, left, right );
 		}
@@ -409,7 +405,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	/**
 	 * {@see #makeNode(List, int, int, int, List, int[])}. Here, no values are
 	 * attached to the nodes (or rather the positions are the values).
-	 *
+	 * 
 	 * @param elements
 	 *            list of elements (positions and values at the same time)
 	 * @param i
@@ -444,7 +440,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * {@see #makeNode(ListIterator, ListIterator, int, List, int[])}. Here, no
 	 * values are attached to the nodes (or rather the positions are the
 	 * values).
-	 *
+	 * 
 	 * @param first
 	 *            first element of the sublist to process
 	 * @param last
@@ -462,27 +458,27 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 			final int k = i + ( j - i ) / 2;
 			KthElement.kthElement( first, last, k, new DimComparator< L >( d ) );
 			first.previous();
-			L current = first.next();
+			final L current = first.next();
 
 			final int dChild = ( d + 1 == n ) ? 0 : d + 1;
 
 			// Node< T > right = makeNode( elements, k + 1, j, dChild );
 			for ( int c = j - last.previousIndex(); c > 0; --c )
 				last.next();
-			ValueNode< T > right = makeNode( first, last, dChild );
+			final ValueNode< T > right = makeNode( first, last, dChild );
 
 			// Node< T > left = makeNode( elements, i, k - 1, dChild );
 			for ( int c = first.nextIndex() - i; c > 0; --c )
 				first.previous();
 			for ( int c = last.nextIndex() - k; c > 0; --c )
 				last.previous();
-			ValueNode< T > left = makeNode( first, last, dChild );
+			final ValueNode< T > left = makeNode( first, last, dChild );
 
 			return new ValueNode< T >( ( T ) current, current, d, left, right );
 		}
 		else if ( j == i )
 		{
-			L current = first.next();
+			final L current = first.next();
 			return new ValueNode< T >( ( T ) current, current, d, null, null );
 		}
 		else
@@ -499,7 +495,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	 * are processed recursively and form the left and right subtrees of the
 	 * node. (The elements of the list are RealCursors which provide coordinates
 	 * and values.)
-	 *
+	 * 
 	 * @param elements
 	 *            list of elements (positions and values at the same time)
 	 * @param i
@@ -533,7 +529,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 	/**
 	 * Get the root node.
-	 *
+	 * 
 	 * @return the root node.
 	 */
 	public KDTreeNode< T > getRoot()
@@ -547,7 +543,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		return n;
 	}
 
-	public String toString( KDTreeNode< T > left, String indent )
+	public String toString( final KDTreeNode< T > left, final String indent )
 	{
 		if ( left == null )
 			return "";
@@ -555,13 +551,14 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		return indent + "- " + left.toString() + "\n" + toString( left.left, indent + "  " ) + toString( left.right, indent + "  " );
 	}
 
+	@Override
 	public String toString()
 	{
 		return toString( root, "" );
 	}
 
 	@Override
-	public double realMin( int d )
+	public double realMin( final int d )
 	{
 		return min[ d ];
 	}
@@ -580,7 +577,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 	}
 
 	@Override
-	public double realMax( int d )
+	public double realMax( final int d )
 	{
 		return max[ d ];
 	}
@@ -624,15 +621,15 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 
 		private KDTreeNode< T > currentNode;
 
-		public KDTreeCursor( KDTree< T > kdtree )
+		public KDTreeCursor( final KDTree< T > kdtree )
 		{
 			this.tree = kdtree;
-			final int capacity = 2 + (int) ( Math.log( kdtree.size() ) / Math.log( 2 ) );
+			final int capacity = 2 + ( int ) ( Math.log( kdtree.size() ) / Math.log( 2 ) );
 			this.nodes = new ArrayDeque< KDTreeNode< T > >( capacity );
 			reset();
 		}
 
-		public KDTreeCursor( KDTreeCursor c )
+		public KDTreeCursor( final KDTreeCursor c )
 		{
 			this.tree = c.tree;
 			this.nodes = c.nodes.clone();
@@ -640,25 +637,25 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		}
 
 		@Override
-		public void localize( float[] position )
+		public void localize( final float[] position )
 		{
 			currentNode.localize( position );
 		}
 
 		@Override
-		public void localize( double[] position )
+		public void localize( final double[] position )
 		{
 			currentNode.localize( position );
 		}
 
 		@Override
-		public float getFloatPosition( int d )
+		public float getFloatPosition( final int d )
 		{
 			return currentNode.getFloatPosition( d );
 		}
 
 		@Override
-		public double getDoublePosition( int d )
+		public double getDoublePosition( final int d )
 		{
 			return currentNode.getDoublePosition( d );
 		}
@@ -714,7 +711,7 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		@Override
 		public boolean hasNext()
 		{
-			return ! nodes.isEmpty();
+			return !nodes.isEmpty();
 		}
 
 		@Override

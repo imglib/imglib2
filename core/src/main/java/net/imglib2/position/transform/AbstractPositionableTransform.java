@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -46,7 +42,7 @@ import net.imglib2.RealPositionable;
 /**
  * A {@link RealPositionable} that drives a {@link Positionable} to somehow
  * derived discrete coordinates.
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -57,7 +53,10 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 	/* current position, required for relative movement */
 	final protected double[] position;
 
-	/* current discrete position for temporary storage, this field does not necessarily contain the actual discrete position! */
+	/*
+	 * current discrete position for temporary storage, this field does not
+	 * necessarily contain the actual discrete position!
+	 */
 	final protected long[] discrete;
 
 	public AbstractPositionableTransform( final LocalizablePositionable target )
@@ -81,14 +80,14 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 	@Override
 	public float getFloatPosition( final int dim )
 	{
-		return ( float )position[ dim ];
+		return ( float ) position[ dim ];
 	}
 
 	@Override
 	public void localize( final float[] pos )
 	{
 		for ( int d = 0; d < pos.length; ++d )
-			pos[ d ] = ( float )this.position[ d ];
+			pos[ d ] = ( float ) this.position[ d ];
 	}
 
 	@Override

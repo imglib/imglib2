@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -43,19 +39,20 @@ import net.imglib2.util.Util;
 
 /**
  * N-linear interpolator for ARGB values with overflow check.
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 {
 	protected double accA, accR, accG, accB;
-	
+
 	protected NLinearInterpolatorARGB( final NLinearInterpolatorARGB interpolator )
 	{
 		super( interpolator );
 	}
-	
+
 	protected NLinearInterpolatorARGB( final RandomAccessible< ARGBType > randomAccessible, final ARGBType type )
 	{
 		super( randomAccessible, type );
@@ -65,7 +62,7 @@ public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 	{
 		this( randomAccessible, randomAccessible.randomAccess().get() );
 	}
-	
+
 	/**
 	 * Get the interpolated value at the current position.
 	 * 
@@ -91,17 +88,17 @@ public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 		code = 0;
 		graycodeFwdRecursive( n - 1 );
 		target.bck( n - 1 );
-		
-		final int a = Math.min( 255, ( int )Util.round( accA ) ); 
-		final int r = Math.min( 255, ( int )Util.round( accR ) ); 
-		final int g = Math.min( 255, ( int )Util.round( accG ) ); 
-		final int b = Math.min( 255, ( int )Util.round( accB ) ); 
-		
+
+		final int a = Math.min( 255, ( int ) Util.round( accA ) );
+		final int r = Math.min( 255, ( int ) Util.round( accR ) );
+		final int g = Math.min( 255, ( int ) Util.round( accG ) );
+		final int b = Math.min( 255, ( int ) Util.round( accB ) );
+
 		accumulator.set( ( ( ( ( ( a << 8 ) | r ) << 8 ) | g ) << 8 ) | b );
-		
+
 		return accumulator;
 	}
-	
+
 	@Override
 	public NLinearInterpolatorARGB copy()
 	{
@@ -114,39 +111,39 @@ public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 		return copy();
 	}
 
-	final private void graycodeFwdRecursive ( final int dimension )
+	final private void graycodeFwdRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
-			target.fwd ( 0 );
+			target.fwd( 0 );
 			code += 1;
 			accumulate();
 		}
 		else
 		{
-			graycodeFwdRecursive ( dimension - 1 );
-			target.fwd ( dimension );
+			graycodeFwdRecursive( dimension - 1 );
+			target.fwd( dimension );
 			code += 1 << dimension;
 			accumulate();
-			graycodeBckRecursive ( dimension - 1 );
+			graycodeBckRecursive( dimension - 1 );
 		}
 	}
 
-	final private void graycodeBckRecursive ( final int dimension )
+	final private void graycodeBckRecursive( final int dimension )
 	{
 		if ( dimension == 0 )
 		{
-			target.bck ( 0 );
+			target.bck( 0 );
 			code -= 1;
 			accumulate();
-	}
+		}
 		else
 		{
-			graycodeFwdRecursive ( dimension - 1 );
-			target.bck ( dimension );
+			graycodeFwdRecursive( dimension - 1 );
+			target.bck( dimension );
 			code -= 1 << dimension;
 			accumulate();
-			graycodeBckRecursive ( dimension - 1 );
+			graycodeBckRecursive( dimension - 1 );
 		}
 	}
 
@@ -160,7 +157,7 @@ public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 		accR += ( ( argb >> 16 ) & 0xff ) * weights[ code ];
 		accG += ( ( argb >> 8 ) & 0xff ) * weights[ code ];
 		accB += ( argb & 0xff ) * weights[ code ];
-		
+
 //		System.out.print( "accumulating value at " + target );
 //		System.out.print( "with weights [" );
 //		printCode();
@@ -171,16 +168,16 @@ public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 	final private void printWeights()
 	{
 		for ( int i = 0; i < weights.length; ++i )
-			System.out.printf("weights [ %2d ] = %f\n", i, weights[ i ] );
+			System.out.printf( "weights [ %2d ] = %f\n", i, weights[ i ] );
 	}
-	
+
 	@SuppressWarnings( "unused" )
 	final private void printCode()
 	{
 		final int maxbits = 4;
 		final String binary = Integer.toBinaryString( code );
 		for ( int i = binary.length(); i < maxbits; ++i )
-			System.out.print("0");
-		System.out.print ( binary );
+			System.out.print( "0" );
+		System.out.print( binary );
 	}
 }

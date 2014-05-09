@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -46,7 +42,7 @@ import net.imglib2.transform.InvertibleTransform;
  * dimensions > m. An example of this transformation is the way, a 2D image is
  * flattened out as a 1D array in memory.
  * 
- *
+ * 
  * @author Tobias Pietzsch
  */
 public class SequentializeTransform implements InvertibleTransform
@@ -98,37 +94,37 @@ public class SequentializeTransform implements InvertibleTransform
 			}
 
 			@Override
-			public void apply( long[] source, long[] target )
+			public void apply( final long[] source, final long[] target )
 			{
 				SequentializeTransform.this.applyInverse( target, source );
 			}
 
 			@Override
-			public void apply( int[] source, int[] target )
+			public void apply( final int[] source, final int[] target )
 			{
 				SequentializeTransform.this.applyInverse( target, source );
 			}
 
 			@Override
-			public void apply( Localizable source, Positionable target )
+			public void apply( final Localizable source, final Positionable target )
 			{
 				SequentializeTransform.this.applyInverse( target, source );
 			}
 
 			@Override
-			public void applyInverse( long[] source, long[] target )
+			public void applyInverse( final long[] source, final long[] target )
 			{
 				SequentializeTransform.this.apply( target, source );
 			}
 
 			@Override
-			public void applyInverse( int[] source, int[] target )
+			public void applyInverse( final int[] source, final int[] target )
 			{
 				SequentializeTransform.this.apply( target, source );
 			}
 
 			@Override
-			public void applyInverse( Positionable source, Localizable target )
+			public void applyInverse( final Positionable source, final Localizable target )
 			{
 				SequentializeTransform.this.apply( target, source );
 			}
@@ -154,7 +150,7 @@ public class SequentializeTransform implements InvertibleTransform
 	}
 
 	@Override
-	public void apply( long[] source, long[] target )
+	public void apply( final long[] source, final long[] target )
 	{
 		assert source.length >= numSourceDimensions;
 		assert target.length >= numTargetDimensions;
@@ -168,7 +164,7 @@ public class SequentializeTransform implements InvertibleTransform
 	}
 
 	@Override
-	public void apply( int[] source, int[] target )
+	public void apply( final int[] source, final int[] target )
 	{
 		assert source.length >= numSourceDimensions;
 		assert target.length >= numTargetDimensions;
@@ -182,7 +178,7 @@ public class SequentializeTransform implements InvertibleTransform
 	}
 
 	@Override
-	public void apply( Localizable source, Positionable target )
+	public void apply( final Localizable source, final Positionable target )
 	{
 		assert source.numDimensions() >= numSourceDimensions;
 		assert target.numDimensions() >= numTargetDimensions;
@@ -196,7 +192,7 @@ public class SequentializeTransform implements InvertibleTransform
 	}
 
 	@Override
-	public void applyInverse( long[] source, long[] target )
+	public void applyInverse( final long[] source, final long[] target )
 	{
 		assert source.length >= numSourceDimensions;
 		assert target.length >= numTargetDimensions;
@@ -214,7 +210,7 @@ public class SequentializeTransform implements InvertibleTransform
 	}
 
 	@Override
-	public void applyInverse( int[] source, int[] target )
+	public void applyInverse( final int[] source, final int[] target )
 	{
 		assert source.length >= numSourceDimensions;
 		assert target.length >= numTargetDimensions;
@@ -232,7 +228,7 @@ public class SequentializeTransform implements InvertibleTransform
 	}
 
 	@Override
-	public void applyInverse( Positionable source, Localizable target )
+	public void applyInverse( final Positionable source, final Localizable target )
 	{
 		assert source.numDimensions() >= numSourceDimensions;
 		assert target.numDimensions() >= numTargetDimensions;

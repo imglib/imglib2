@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,12 +41,12 @@ import net.imglib2.util.Util;
 
 /**
  * Abstract implementation of shared functions for mirroring out of bounds.
- * Internally used coordinates use an interval
- * [0<sup><em>n</em></sup>,max<sup><em>n</em></sup>-min<sup><em>n</em></sup>]
- * and compensate for min-shift on localization and positioning.
- *
+ * Internally used coordinates use an interval [0<sup><em>n</em></sup>,max<sup>
+ * <em>n</em></sup>-min<sup><em>n</em></sup>] and compensate for min-shift on
+ * localization and positioning.
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -77,9 +73,9 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	final protected long[] min;
 
 	/**
-	 * Period of the extended interval.
-	 * This depends on whether boundary pixels are mirrored.
-	 * {@see OutOfBoundsMirrorDoubleBoundary} {@see OutOfBoundsMirrorSingleBoundary}.
+	 * Period of the extended interval. This depends on whether boundary pixels
+	 * are mirrored. {@see OutOfBoundsMirrorDoubleBoundary} {@see
+	 * OutOfBoundsMirrorSingleBoundary}.
 	 */
 	final protected long[] p;
 
@@ -189,7 +185,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < n; ++d )
-			pos[ d ] = ( int )( this.zeroMinPos[ d ] + min[ d ] );
+			pos[ d ] = ( int ) ( this.zeroMinPos[ d ] + min[ d ] );
 	}
 
 	@Override
@@ -214,7 +210,7 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 	@Override
 	public int getIntPosition( final int d )
 	{
-		return ( int )( zeroMinPos[ d ] + min[ d ] );
+		return ( int ) ( zeroMinPos[ d ] + min[ d ] );
 	}
 
 	@Override

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -42,8 +38,9 @@ import net.imglib2.type.NativeType;
 
 /**
  * Localizing Iterator for a {@link PlanarImg PlanarContainers}
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -54,32 +51,33 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 	protected final PlanarImg< T, ? > container;
 
 	protected final int lastIndex, lastSliceIndex;
+
 	protected int sliceIndex;
 
 	/**
-	 * The current index of the type.
-	 * It is faster to duplicate this here than to access it through type.getIndex(). 
+	 * The current index of the type. It is faster to duplicate this here than
+	 * to access it through type.getIndex().
 	 */
 	protected int index;
 
 	/**
-	 * Maximum of the {@link PlanarImg} in every dimension.
-	 * This is used to check isOutOfBounds().
+	 * Maximum of the {@link PlanarImg} in every dimension. This is used to
+	 * check isOutOfBounds().
 	 */
 	protected final int[] max;
-	
+
 	protected PlanarLocalizingCursor( final PlanarLocalizingCursor< T > cursor )
 	{
 		super( cursor.numDimensions() );
-		
+
 		container = cursor.container;
 		this.type = container.createLinkedType();
-		
+
 		lastIndex = cursor.lastIndex;
 		lastSliceIndex = cursor.lastSliceIndex;
-		
+
 		max = new int[ n ];
-		for( int d = 0; d < n; ++d )
+		for ( int d = 0; d < n; ++d )
 		{
 			max[ d ] = cursor.max[ d ];
 			position[ d ] = cursor.position[ d ];
@@ -87,58 +85,64 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 
 		sliceIndex = cursor.sliceIndex;
 		index = cursor.index;
-		
+
 		type.updateContainer( this );
 		type.updateIndex( index );
 	}
-	
+
 	public PlanarLocalizingCursor( final PlanarImg< T, ? > container )
 	{
 		super( container.numDimensions() );
-		
+
 		this.type = container.createLinkedType();
 		this.container = container;
 
-		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 )  *  container.dimensions[ 0 ] - 1;
+		lastIndex = ( ( n > 1 ) ? container.dimensions[ 1 ] : 1 ) * container.dimensions[ 0 ] - 1;
 		lastSliceIndex = container.numSlices() - 1;
-		
+
 		max = new int[ n ];
-		for( int d = 0; d < n; ++d )
+		for ( int d = 0; d < n; ++d )
 			max[ d ] = ( int ) container.max( d );
 
 		reset();
 	}
 
 	@Override
-	public int getCurrentSliceIndex() { return sliceIndex; }
+	public int getCurrentSliceIndex()
+	{
+		return sliceIndex;
+	}
 
 	@Override
-	public T get() { return type; }
-	
+	public T get()
+	{
+		return type;
+	}
+
 	@Override
 	public PlanarLocalizingCursor< T > copy()
 	{
 		return new PlanarLocalizingCursor< T >( this );
 	}
-	
+
 	@Override
 	public PlanarLocalizingCursor< T > copyCursor()
 	{
 		return copy();
 	}
-	
+
 	/**
 	 * Note: This test is fragile in a sense that it returns true for elements
 	 * after the last element as well.
 	 * 
-	 * @return false for the last element 
+	 * @return false for the last element
 	 */
 	@Override
 	public boolean hasNext()
 	{
-		return ( sliceIndex < lastSliceIndex ) || ( index < lastIndex );		
+		return ( sliceIndex < lastSliceIndex ) || ( index < lastIndex );
 	}
-	
+
 	@Override
 	public void fwd()
 	{
@@ -152,19 +156,21 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 
 		for ( int d = 0; d < n; ++d )
 		{
-			if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
-			else break;
+			if ( ++position[ d ] > max[ d ] )
+				position[ d ] = 0;
+			else
+				break;
 		}
 	}
 
 	@Override
-	public void jumpFwd( long steps )
+	public void jumpFwd( final long steps )
 	{
 		long newIndex = index + steps;
 		if ( newIndex > lastIndex )
 		{
-			final long s = newIndex / (lastIndex + 1);
-			newIndex -= s * (lastIndex + 1);
+			final long s = newIndex / ( lastIndex + 1 );
+			newIndex -= s * ( lastIndex + 1 );
 			sliceIndex += s;
 			type.updateContainer( this );
 		}
@@ -179,10 +185,10 @@ public class PlanarLocalizingCursor< T extends NativeType< T > > extends Abstrac
 		position[ 0 ] = -1;
 		for ( int d = 1; d < n; d++ )
 			position[ d ] = 0;
-		
+
 		sliceIndex = 0;
-		index = -1;		
-		type.updateIndex( -1 );		
+		index = -1;
+		type.updateIndex( -1 );
 		type.updateContainer( this );
 	}
 }

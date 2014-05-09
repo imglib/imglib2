@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.display.projector.specialized;
@@ -70,21 +66,27 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends A
 	private final long[] dims;
 
 	/**
-	 * Normalizes a PlanarImg and writes the result into target. This can be used in conjunction with {@link UnsignedByteAWTScreenImage} for direct displaying.
-	 * The normalization is based on a normalization factor and a minimum value with the following dependency:<br>
+	 * Normalizes a PlanarImg and writes the result into target. This can be
+	 * used in conjunction with {@link UnsignedByteAWTScreenImage} for direct
+	 * displaying. The normalization is based on a normalization factor and a
+	 * minimum value with the following dependency:<br>
 	 * <br>
 	 * normalizationFactor = (typeMax - typeMin) / (newMax - newMin) <br>
 	 * min = newMin <br>
 	 * <br>
-	 * A value is normalized by: normalizedValue = (value - min) * normalizationFactor.<br>
-	 * Additionally the result gets clamped to the type range of target (that allows playing with saturation...).
-	 *  
-	 * @param source Signed/Unsigned input data
-	 * @param target Unsigned output
+	 * A value is normalized by: normalizedValue = (value - min) *
+	 * normalizationFactor.<br>
+	 * Additionally the result gets clamped to the type range of target (that
+	 * allows playing with saturation...).
+	 * 
+	 * @param source
+	 *            Signed/Unsigned input data
+	 * @param target
+	 *            Unsigned output
 	 * @param normalizationFactor
 	 * @param min
 	 */
-	public PlanarImgXYByteProjector( PlanarImg< A, ByteArray > source, ArrayImg< UnsignedByteType, ByteArray > target, double normalizationFactor, double min)
+	public PlanarImgXYByteProjector( final PlanarImg< A, ByteArray > source, final ArrayImg< UnsignedByteType, ByteArray > target, final double normalizationFactor, final double min )
 	{
 		super( source.numDimensions() );
 
@@ -101,18 +103,19 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends A
 	@Override
 	public void map()
 	{
-		//more detailed documentation of the binary arithmetic can be found in ArrayImgXYByteProjector
-		
+		// more detailed documentation of the binary arithmetic can be found in
+		// ArrayImgXYByteProjector
+
 		double minCopy = min;
-		int offset = 0;
+		final int offset = 0;
 
 		// positioning for every call to map because the plane index is
 		// position dependent
 		int planeIndex;
 		if ( position.length > 2 )
 		{
-			long[] tmpPos = new long[ position.length - 2 ];
-			long[] tmpDim = new long[ position.length - 2 ];
+			final long[] tmpPos = new long[ position.length - 2 ];
+			final long[] tmpDim = new long[ position.length - 2 ];
 			for ( int i = 0; i < tmpDim.length; i++ )
 			{
 				tmpPos[ i ] = position[ i + 2 ];
@@ -125,7 +128,7 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends A
 			planeIndex = 0;
 		}
 
-		byte[] sourceArray = source.update( new PlanarImgContainerSamplerImpl( planeIndex ) ).getCurrentStorageArray();
+		final byte[] sourceArray = source.update( new PlanarImgContainerSamplerImpl( planeIndex ) ).getCurrentStorageArray();
 
 		// copy the selected part of the source array (e.g. a xy plane at time t
 		// in a video) into the target array.
@@ -147,7 +150,7 @@ public class PlanarImgXYByteProjector< A extends GenericByteType< A >> extends A
 			{
 				// normalizedValue = (oldValue - min) * normalizationFactor
 				// clamped to 0 .. 255
-				targetArray[ i ] = ( byte ) Math.min( 255, Math.max( 0, ( Math.round( ( (targetArray[i] & 0xFF) - minCopy ) * normalizationFactor ) ) ) );
+				targetArray[ i ] = ( byte ) Math.min( 255, Math.max( 0, ( Math.round( ( ( targetArray[ i ] & 0xFF ) - minCopy ) * normalizationFactor ) ) ) );
 			}
 		}
 	}

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,14 +28,9 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui;
-
 
 /**
  * Change a transformation in response to user input (mouse events, key events,
@@ -43,17 +38,17 @@ package net.imglib2.ui;
  * The {@link TransformEventHandler} receives notifications about changes of the
  * canvas size (it may react for example by changing the scale of the
  * transformation accordingly).
- *
+ * 
  * @param <A>
  *            type of transformation.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public interface TransformEventHandler< A >
 {
 	/**
 	 * Get (a copy of) the current source-to-screen transform.
-	 *
+	 * 
 	 * @return current transform.
 	 */
 	public A getTransform();
@@ -71,7 +66,7 @@ public interface TransformEventHandler< A >
 	 * <em>(width/2, height/2)</em>. It can also be used to update the current
 	 * source-to-screen transform, e.g., to change the zoom along with the
 	 * canvas size.
-	 *
+	 * 
 	 * @param width
 	 *            the new canvas width.
 	 * @param height
@@ -89,7 +84,7 @@ public interface TransformEventHandler< A >
 	/**
 	 * Set the {@link TransformListener} who will receive updated
 	 * transformations.
-	 *
+	 * 
 	 * @param transformListener
 	 *            will receive transformation updates.
 	 */

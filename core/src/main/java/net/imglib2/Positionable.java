@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,8 +35,8 @@ package net.imglib2;
 
 /**
  * An element that can be positioned in n-dimensional discrete space.
- *
- *
+ * 
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -50,92 +46,108 @@ public interface Positionable extends EuclideanSpace
 {
 	/**
 	 * Move by 1 in one dimension.
-	 *
-	 * @param d dimension
+	 * 
+	 * @param d
+	 *            dimension
 	 */
 	public void fwd( int d );
 
 	/**
 	 * Move by -1 in one dimension.
-	 *
-	 * @param d dimension
+	 * 
+	 * @param d
+	 *            dimension
 	 */
 	public void bck( int d );
 
 	/**
 	 * Move the element in one dimension for some distance.
-	 *
-	 * @param distance relative offset in dimension d
-	 * @param d dimension
+	 * 
+	 * @param distance
+	 *            relative offset in dimension d
+	 * @param d
+	 *            dimension
 	 */
 	public void move( int distance, int d );
 
 	/**
 	 * Move the element in one dimension for some distance.
-	 *
-	 * @param distance relative offset in dimension d
-	 * @param d dimension
+	 * 
+	 * @param distance
+	 *            relative offset in dimension d
+	 * @param d
+	 *            dimension
 	 */
 	public void move( long distance, int d );
 
 	/**
 	 * Move the element relative to its current location using an
 	 * {@link Localizable} as distance vector.
-	 *
-	 * @param localizable relative offset
+	 * 
+	 * @param localizable
+	 *            relative offset
 	 */
 	public void move( Localizable localizable );
 
 	/**
 	 * Move the element relative to its current location using an int[] as
 	 * distance vector.
-	 *
-	 * @param distance relative offset
+	 * 
+	 * @param distance
+	 *            relative offset
 	 */
 	public void move( int[] distance );
 
 	/**
 	 * Move the element relative to its current location using a long[] as
 	 * distance vector.
-	 *
-	 * @param distance relative offset
+	 * 
+	 * @param distance
+	 *            relative offset
 	 */
 	public void move( long[] distance );
 
 	/**
 	 * Place the element at the same location as a given {@link Localizable}
-	 *
-	 * @param localizable relative offset
+	 * 
+	 * @param localizable
+	 *            relative offset
 	 */
 	public void setPosition( Localizable localizable );
 
 	/**
 	 * Set the position of the element.
-	 *
-	 * @param position absolute position
+	 * 
+	 * @param position
+	 *            absolute position
 	 */
 	public void setPosition( int[] position );
 
 	/**
 	 * Set the position of the element.
-	 *
-	 * @param position absolute position
+	 * 
+	 * @param position
+	 *            absolute position
 	 */
 	public void setPosition( long[] position );
 
 	/**
 	 * Set the position of the element for one dimension.
-	 *
-	 * @param position absolute position in dimension d
-	 * @param d dimension
+	 * 
+	 * @param position
+	 *            absolute position in dimension d
+	 * @param d
+	 *            dimension
 	 */
 	public void setPosition( int position, int d );
 
 	/**
 	 * Set the position of the element for one dimension.
-	 *
-	 * @param position absolute position in dimension d
-	 * @param d dimension
+	 * 
+	 * @param position
+	 *            absolute position in dimension d
+	 * @param d
+	 *            dimension
 	 */
 	public void setPosition( long position, int d );
 }

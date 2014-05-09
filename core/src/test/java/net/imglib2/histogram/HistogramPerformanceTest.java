@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,17 +28,11 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.histogram;
 
-import net.imglib2.histogram.Histogram1d;
-import net.imglib2.histogram.Integer1dBinMapper;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -56,72 +50,78 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
  * @author Curtis Rueden
  * @author Barry DeZonia
  */
-public class HistogramPerformanceTest<T extends IntegerType<T> & NativeType<T>>
+public class HistogramPerformanceTest< T extends IntegerType< T > & NativeType< T >>
 {
 
 	private static final int[] DIMS = { 1024, 1024, 3, 5 };
 
-	public static void main(String[] args) {
-		System.out.println("== UNSIGNED 8-BIT ==");
-		new HistogramPerformanceTest<UnsignedByteType>().run(
-			new UnsignedByteType(), 256);
-		System.out.println("== UNSIGNED 16-BIT ==");
-		new HistogramPerformanceTest<UnsignedShortType>().run(
-			new UnsignedShortType(), 65536);
+	public static void main( final String[] args )
+	{
+		System.out.println( "== UNSIGNED 8-BIT ==" );
+		new HistogramPerformanceTest< UnsignedByteType >().run(
+				new UnsignedByteType(), 256 );
+		System.out.println( "== UNSIGNED 16-BIT ==" );
+		new HistogramPerformanceTest< UnsignedShortType >().run(
+				new UnsignedShortType(), 65536 );
 	}
 
-	public void run(T type, int max) {
+	public void run( final T type, final int max )
+	{
 		long start, end;
 
-		System.out.print("Creating image... ");
+		System.out.print( "Creating image... " );
 		start = System.currentTimeMillis();
-		final Img<T> img = createImage(type, max);
+		final Img< T > img = createImage( type, max );
 		end = System.currentTimeMillis();
-		long createMillis = end - start;
-		System.out.println(createMillis + " ms");
+		final long createMillis = end - start;
+		System.out.println( createMillis + " ms" );
 
 		// build histogram through manual pixel counting
-		System.out.print("Counting pixel values manually... ");
+		System.out.print( "Counting pixel values manually... " );
 		start = System.currentTimeMillis();
-		final long[] bins = new long[max];
-		for (T t : img) {
-			double v = t.getRealDouble();
-			bins[(int) v]++;
+		final long[] bins = new long[ max ];
+		for ( final T t : img )
+		{
+			final double v = t.getRealDouble();
+			bins[ ( int ) v ]++;
 		}
 		end = System.currentTimeMillis();
-		long manualMillis = end - start;
-		System.out.println(manualMillis + " ms");
+		final long manualMillis = end - start;
+		System.out.println( manualMillis + " ms" );
 
 		// build histogram with Histogram implementation
-		System.out.print("Building histogram... ");
+		System.out.print( "Building histogram... " );
 		start = System.currentTimeMillis();
-		Integer1dBinMapper<T> binMapper = new Integer1dBinMapper<T>(0, max, false);
-		Histogram1d<T> hist = new Histogram1d<T>(img, binMapper);
+		final Integer1dBinMapper< T > binMapper = new Integer1dBinMapper< T >( 0, max, false );
+		final Histogram1d< T > hist = new Histogram1d< T >( img, binMapper );
 		end = System.currentTimeMillis();
-		long histMillis = end - start;
-		System.out.println(histMillis + " ms");
+		final long histMillis = end - start;
+		System.out.println( histMillis + " ms" );
 
 		// check results
-		T val = img.firstElement();
-		for (int i = 0; i < max; i++) {
-			val.setReal(i);
-			final long binPos = hist.map(val);
-			final long actual = hist.frequency(binPos);
-			final long expect = bins[i];
-			if (actual != expect) {
-				System.out.println("Error: for bin #" + i + ": expected=" + expect +
-					", actual=" + actual);
+		final T val = img.firstElement();
+		for ( int i = 0; i < max; i++ )
+		{
+			val.setReal( i );
+			final long binPos = hist.map( val );
+			final long actual = hist.frequency( binPos );
+			final long expect = bins[ i ];
+			if ( actual != expect )
+			{
+				System.out.println( "Error: for bin #" + i + ": expected=" + expect +
+						", actual=" + actual );
 			}
 		}
 	}
 
-	private Img<T> createImage(T type, int max) {
-		ImgFactory<T> imFactory = new ArrayImgFactory<T>();
-		Img<T> img = imFactory.create(DIMS, type);
+	private Img< T > createImage( final T type, final int max )
+	{
+		final ImgFactory< T > imFactory = new ArrayImgFactory< T >();
+		final Img< T > img = imFactory.create( DIMS, type );
 
 		// populate image with random samples
-		for (T t : img)
-			t.setReal(max * Math.random());
+		for ( final T t : img )
+			t.setReal( max * Math.random() );
 
 		return img;
 	}

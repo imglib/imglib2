@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -47,53 +43,67 @@ import org.junit.Test;
 
 /**
  * 
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class FloorOffsetTest
 {
-	final private double[] singleRealLocations = new double[]{ 0.1, 0.7, -0.1, -0.7, 0.2, 0.3, 0.3, 20.1, -13.5, 1, 1, -2.4 };
-	final private long[] singleLocations = new long[]{ 1, 7, -1, -7, 2, 3, 3, 20, -135, 1, -1, -4 };
-	final private double[][] realLocations = new double[][]{
+	final private double[] singleRealLocations = new double[] { 0.1, 0.7, -0.1, -0.7, 0.2, 0.3, 0.3, 20.1, -13.5, 1, 1, -2.4 };
+
+	final private long[] singleLocations = new long[] { 1, 7, -1, -7, 2, 3, 3, 20, -135, 1, -1, -4 };
+
+	final private double[][] realLocations = new double[][] {
 			{ 0.1, 0.7, -0.1 },
 			{ -0.7, 0.2, 0.3 },
 			{ 0.3, 20.1, -13.5 },
 			{ 1, 1, -2.4 } };
-	final private long[][] locations = new long[][]{
+
+	final private long[][] locations = new long[][] {
 			{ 1, 7, -1 },
 			{ -7, 2, 3 },
 			{ 3, 20, -135 },
 			{ 1, -1, -4 } };
-	
+
 	private double[] r;
+
 	private RealPoint reference;
+
 	private long[] t;
+
 	private Point target;
+
 	private long[] o;
+
 	private Point offset;
+
 	private double[] realLocation;
+
 	private long[] location;
+
 	private long[] referenceFloorOffset;
+
 	private FloorOffset< Point > fo;
-	
+
 	@Before
 	public void init()
 	{
-		r = new double[]{ 1.54, -20.3, 100.4 };
+		r = new double[] { 1.54, -20.3, 100.4 };
 		reference = RealPoint.wrap( r );
-		t = new long[]{ 3, 4, 5 };
+		t = new long[] { 3, 4, 5 };
 		target = Point.wrap( t );
-		o = new long[]{ 1, -2, 3 };
+		o = new long[] { 1, -2, 3 };
 		offset = Point.wrap( o );
 		realLocation = new double[ 3 ];
 		location = new long[ 3 ];
-		referenceFloorOffset = new long[]{ 2, -23, 103 };
+		referenceFloorOffset = new long[] { 2, -23, 103 };
 		fo = new FloorOffset< Point >( reference, target, offset );
 	}
-	
+
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#FloorOffset(net.imglib2.Localizable, long[])}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#FloorOffset(net.imglib2.Localizable, long[])}
+	 * .
 	 */
 	@Test
 	public void testFloorOffsetLocalizablePositionableLongArray()
@@ -104,7 +114,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#FloorOffset(net.imglib2.Localizable, net.imglib2.Localizable)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#FloorOffset(net.imglib2.Localizable, net.imglib2.Localizable)}
+	 * .
 	 */
 	@Test
 	public void testFloorOffsetLocalizablePositionableLocalizable()
@@ -115,7 +127,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#FloorOffset(net.imglib2.RealLocalizable, net.imglib2.Localizable, long[])}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#FloorOffset(net.imglib2.RealLocalizable, net.imglib2.Localizable, long[])}
+	 * .
 	 */
 	@Test
 	public void testFloorOffsetRealLocalizableLocalizablePositionableLongArray()
@@ -126,7 +140,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#FloorOffset(net.imglib2.RealLocalizable, net.imglib2.Localizable, net.imglib2.Localizable)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#FloorOffset(net.imglib2.RealLocalizable, net.imglib2.Localizable, net.imglib2.Localizable)}
+	 * .
 	 */
 	@Test
 	public void testFloorOffsetRealLocalizableLocalizablePositionableLocalizable()
@@ -137,7 +153,8 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#f(double, long)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#f(double, long)}.
 	 */
 	@Test
 	public void testFDoubleLong()
@@ -149,7 +166,8 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#f(float, long)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#f(float, long)}.
 	 */
 	@Test
 	public void testFFloatLong()
@@ -161,7 +179,8 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#move(float, int)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#move(float, int)}.
 	 */
 	@Test
 	public void testMoveFloatInt()
@@ -172,10 +191,10 @@ public class FloorOffsetTest
 			long discrete = FloorOffset.f( real, o[ d ] );
 			for ( final double move : singleRealLocations )
 			{
-				final float f = ( float )move;
+				final float f = ( float ) move;
 				real += f;
 				discrete = FloorOffset.f( real, o[ d ] );
-				fo.move( ( float )move, d );
+				fo.move( ( float ) move, d );
 				assertEquals( fo.getDoublePosition( d ), real, 0.00001 );
 				assertEquals( target.getLongPosition( d ), discrete );
 			}
@@ -183,7 +202,8 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#move(double, int)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#move(double, int)}.
 	 */
 	@Test
 	public void testMoveDoubleInt()
@@ -204,7 +224,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#move(net.imglib2.RealLocalizable)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#move(net.imglib2.RealLocalizable)}
+	 * .
 	 */
 	@Test
 	public void testMoveRealLocalizable()
@@ -227,7 +249,8 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#move(float[])}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#move(float[])}.
 	 */
 	@Test
 	public void testMoveFloatArray()
@@ -239,7 +262,7 @@ public class FloorOffsetTest
 			final float[] f = new float[ move.length ];
 			for ( int d = 0; d < move.length; ++d )
 			{
-				f[ d ] = ( float )move[ d ];
+				f[ d ] = ( float ) move[ d ];
 				real[ d ] += f[ d ];
 				discrete[ d ] = FloorOffset.f( real[ d ], o[ d ] );
 			}
@@ -252,7 +275,8 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#move(double[])}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#move(double[])}.
 	 */
 	@Test
 	public void testMoveDoubleArray()
@@ -275,7 +299,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#setPosition(net.imglib2.RealLocalizable)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#setPosition(net.imglib2.RealLocalizable)}
+	 * .
 	 */
 	@Test
 	public void testSetPositionRealLocalizable()
@@ -295,7 +321,8 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#setPosition(float[])}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#setPosition(float[])}.
 	 */
 	@Test
 	public void testSetPositionFloatArray()
@@ -306,7 +333,7 @@ public class FloorOffsetTest
 			final float[] f = new float[ real.length ];
 			for ( int d = 0; d < real.length; ++d )
 			{
-				f[ d ] = ( float )real[ d ];
+				f[ d ] = ( float ) real[ d ];
 				discrete[ d ] = FloorOffset.f( real[ d ], o[ d ] );
 			}
 			fo.setPosition( f );
@@ -318,7 +345,8 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#setPosition(double[])}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#setPosition(double[])}.
 	 */
 	@Test
 	public void testSetPositionDoubleArray()
@@ -338,7 +366,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#setPosition(float, int)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#setPosition(float, int)}
+	 * .
 	 */
 	@Test
 	public void testSetPositionFloatInt()
@@ -348,7 +378,7 @@ public class FloorOffsetTest
 			for ( final double real : singleRealLocations )
 			{
 				final long discrete = FloorOffset.f( real, o[ d ] );
-				fo.setPosition( ( float )real, d );
+				fo.setPosition( ( float ) real, d );
 				assertEquals( fo.getDoublePosition( d ), real, 0.00001 );
 				assertEquals( target.getLongPosition( d ), discrete );
 			}
@@ -356,7 +386,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.FloorOffset#setPosition(double, int)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.FloorOffset#setPosition(double, int)}
+	 * .
 	 */
 	@Test
 	public void testSetPositionDoubleInt()
@@ -374,7 +406,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#bck(int)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#bck(int)}
+	 * .
 	 */
 	@Test
 	public void testBck()
@@ -388,7 +422,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#fwd(int)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#fwd(int)}
+	 * .
 	 */
 	@Test
 	public void testFwd()
@@ -402,7 +438,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#move(int, int)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#move(int, int)}
+	 * .
 	 */
 	@Test
 	public void testMoveIntInt()
@@ -413,7 +451,7 @@ public class FloorOffsetTest
 			long discrete = FloorOffset.f( real, o[ d ] );
 			for ( final long move : singleLocations )
 			{
-				final int f = ( int )move;
+				final int f = ( int ) move;
 				real += f;
 				discrete = FloorOffset.f( real, o[ d ] );
 				fo.move( f, d );
@@ -424,7 +462,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#move(long, int)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#move(long, int)}
+	 * .
 	 */
 	@Test
 	public void testMoveLongInt()
@@ -445,7 +485,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#move(net.imglib2.Localizable)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#move(net.imglib2.Localizable)}
+	 * .
 	 */
 	@Test
 	public void testMoveLocalizable()
@@ -468,7 +510,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#move(int[])}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#move(int[])}
+	 * .
 	 */
 	@Test
 	public void testMoveIntArray()
@@ -480,7 +524,7 @@ public class FloorOffsetTest
 			final int[] f = new int[ move.length ];
 			for ( int d = 0; d < move.length; ++d )
 			{
-				f[ d ] = ( int )move[ d ];
+				f[ d ] = ( int ) move[ d ];
 				real[ d ] += f[ d ];
 				discrete[ d ] = FloorOffset.f( real[ d ], o[ d ] );
 			}
@@ -493,7 +537,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#move(long[])}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#move(long[])}
+	 * .
 	 */
 	@Test
 	public void testMoveLongArray()
@@ -516,7 +562,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#setPosition(net.imglib2.Localizable)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#setPosition(net.imglib2.Localizable)}
+	 * .
 	 */
 	@Test
 	public void testSetPositionLocalizable()
@@ -526,7 +574,7 @@ public class FloorOffsetTest
 		{
 			for ( int d = 0; d < l.length; ++d )
 				real[ d ] = l[ d ];
-			
+
 			fo.setPosition( Point.wrap( l ) );
 			fo.localize( realLocation );
 			target.localize( location );
@@ -536,7 +584,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#setPosition(int[])}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#setPosition(int[])}
+	 * .
 	 */
 	@Test
 	public void testSetPositionIntArray()
@@ -548,9 +598,9 @@ public class FloorOffsetTest
 			for ( int d = 0; d < l.length; ++d )
 			{
 				real[ d ] = l[ d ];
-				li[ d ] = ( int )l[ d ];
+				li[ d ] = ( int ) l[ d ];
 			}
-			
+
 			fo.setPosition( li );
 			fo.localize( realLocation );
 			target.localize( location );
@@ -560,7 +610,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#setPosition(long[])}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#setPosition(long[])}
+	 * .
 	 */
 	@Test
 	public void testSetPositionLongArray()
@@ -570,7 +622,7 @@ public class FloorOffsetTest
 		{
 			for ( int d = 0; d < l.length; ++d )
 				real[ d ] = l[ d ];
-			
+
 			fo.setPosition( l );
 			fo.localize( realLocation );
 			target.localize( location );
@@ -580,7 +632,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#setPosition(int, int)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#setPosition(int, int)}
+	 * .
 	 */
 	@Test
 	public void testSetPositionIntInt()
@@ -589,7 +643,7 @@ public class FloorOffsetTest
 		{
 			for ( final long l : singleLocations )
 			{
-				fo.setPosition( ( int )l, d );
+				fo.setPosition( ( int ) l, d );
 				assertEquals( fo.getDoublePosition( d ), l, 0.00001 );
 				assertEquals( target.getLongPosition( d ), l );
 			}
@@ -597,7 +651,9 @@ public class FloorOffsetTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.position.transform.AbstractPositionableTransform#setPosition(long, int)}.
+	 * Test method for
+	 * {@link net.imglib2.position.transform.AbstractPositionableTransform#setPosition(long, int)}
+	 * .
 	 */
 	@Test
 	public void testSetPositionLongInt()

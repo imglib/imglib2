@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,90 +40,107 @@ import java.awt.image.DataBuffer;
  * 
  * @author Melissa Linkert
  */
-public class UnsignedIntDataBuffer extends DataBuffer {
+public class UnsignedIntDataBuffer extends DataBuffer
+{
 
 	private final int[][] bankData;
 
 	/** Construct a new buffer of unsigned ints using the given int array. */
-	public UnsignedIntDataBuffer(final int[] dataArray, final int size) {
-		super(DataBuffer.TYPE_INT, size);
-		bankData = new int[1][];
-		bankData[0] = dataArray;
+	public UnsignedIntDataBuffer( final int[] dataArray, final int size )
+	{
+		super( DataBuffer.TYPE_INT, size );
+		bankData = new int[ 1 ][];
+		bankData[ 0 ] = dataArray;
 	}
 
 	/** Construct a new buffer of unsigned ints using the given 2D int array. */
-	public UnsignedIntDataBuffer(final int[][] dataArray, final int size) {
-		super(DataBuffer.TYPE_INT, size);
+	public UnsignedIntDataBuffer( final int[][] dataArray, final int size )
+	{
+		super( DataBuffer.TYPE_INT, size );
 		bankData = dataArray;
 	}
 
-	public int[] getData() {
-		return bankData[0];
+	public int[] getData()
+	{
+		return bankData[ 0 ];
 	}
 
-	public int[] getData(final int bank) {
-		return bankData[bank];
-	}
-
-	@Override
-	public int getElem(final int i) {
-		return getElem(0, i);
+	public int[] getData( final int bank )
+	{
+		return bankData[ bank ];
 	}
 
 	@Override
-	public int getElem(final int bank, final int i) {
-		final int value = bankData[bank][i + getOffsets()[bank]];
-		return (int) (value & 0xffffffffL);
+	public int getElem( final int i )
+	{
+		return getElem( 0, i );
 	}
 
 	@Override
-	public float getElemFloat(final int i) {
-		return getElemFloat(0, i);
+	public int getElem( final int bank, final int i )
+	{
+		final int value = bankData[ bank ][ i + getOffsets()[ bank ] ];
+		return ( int ) ( value & 0xffffffffL );
 	}
 
 	@Override
-	public float getElemFloat(final int bank, final int i) {
-		return (getElem(bank, i) & 0xffffffffL);
+	public float getElemFloat( final int i )
+	{
+		return getElemFloat( 0, i );
 	}
 
 	@Override
-	public double getElemDouble(final int i) {
-		return getElemDouble(0, i);
+	public float getElemFloat( final int bank, final int i )
+	{
+		return ( getElem( bank, i ) & 0xffffffffL );
 	}
 
 	@Override
-	public double getElemDouble(final int bank, final int i) {
-		return (getElem(bank, i) & 0xffffffffL);
+	public double getElemDouble( final int i )
+	{
+		return getElemDouble( 0, i );
 	}
 
 	@Override
-	public void setElem(final int i, final int val) {
-		setElem(0, i, val);
+	public double getElemDouble( final int bank, final int i )
+	{
+		return ( getElem( bank, i ) & 0xffffffffL );
 	}
 
 	@Override
-	public void setElem(final int bank, final int i, final int val) {
-		bankData[bank][i + getOffsets()[bank]] = val;
+	public void setElem( final int i, final int val )
+	{
+		setElem( 0, i, val );
 	}
 
 	@Override
-	public void setElemFloat(final int i, final float val) {
-		setElemFloat(0, i, val);
+	public void setElem( final int bank, final int i, final int val )
+	{
+		bankData[ bank ][ i + getOffsets()[ bank ] ] = val;
 	}
 
 	@Override
-	public void setElemFloat(final int bank, final int i, final float val) {
-		bankData[bank][i + getOffsets()[bank]] = (int) val;
+	public void setElemFloat( final int i, final float val )
+	{
+		setElemFloat( 0, i, val );
 	}
 
 	@Override
-	public void setElemDouble(final int i, final double val) {
-		setElemDouble(0, i, val);
+	public void setElemFloat( final int bank, final int i, final float val )
+	{
+		bankData[ bank ][ i + getOffsets()[ bank ] ] = ( int ) val;
 	}
 
 	@Override
-	public void setElemDouble(final int bank, final int i, final double val) {
-		bankData[bank][i + getOffsets()[bank]] = (int) val;
+	public void setElemDouble( final int i, final double val )
+	{
+		setElemDouble( 0, i, val );
+	}
+
+	@Override
+	public void setElemDouble( final int bank, final int i, final double val )
+	{
+		bankData[ bank ][ i + getOffsets()[ bank ] ] = ( int ) val;
 	}
 
 }

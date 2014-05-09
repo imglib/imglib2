@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -60,13 +56,13 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * Create a view that defines an interval on a source. It is the callers
 	 * responsibility to ensure that the source is defined in the specified
 	 * interval.
-	 *
+	 * 
 	 * @see Views#interval(RandomAccessible, Interval)
 	 */
 	public IntervalView( final RandomAccessible< T > source, final Interval interval )
 	{
 		super( interval );
-		assert( source.numDimensions() == interval.numDimensions() );
+		assert ( source.numDimensions() == interval.numDimensions() );
 
 		this.source = source;
 		this.fullViewRandomAccessible = null;
@@ -76,9 +72,9 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * Create a view that defines an interval on a source. It is the callers
 	 * responsibility to ensure that the source is defined in the specified
 	 * interval.
-	 *
+	 * 
 	 * @see Views#interval(RandomAccessible, Interval)
-	 *
+	 * 
 	 * @param min
 	 *            minimum coordinate of the interval.
 	 * @param max
@@ -87,7 +83,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	public IntervalView( final RandomAccessible< T > source, final long[] min, final long[] max )
 	{
 		super( min, max );
-		assert( source.numDimensions() == min.length );
+		assert ( source.numDimensions() == min.length );
 
 		this.source = source;
 		this.fullViewRandomAccessible = null;

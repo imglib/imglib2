@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,18 +41,19 @@ import net.imglib2.RealPositionable;
 
 /**
  * Moves a {@link RealLocalizable} & {@link RealPositionable} and a
- * {@link Positionable} in synchrony.  The position of the latter is at the
- * floor coordinates of the former.  For practical useage, the floor operation
- * is defined as the integer smaller than the real value:
- *
+ * {@link Positionable} in synchrony. The position of the latter is at the floor
+ * coordinates of the former. For practical useage, the floor operation is
+ * defined as the integer smaller than the real value:
+ * 
  * f = r < 0 ? (long)r - 1 : (long)r
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealPositionableFloorPositionable< P extends RealLocalizable & RealPositionable > extends AbstractEuclideanSpace implements RealPositionable, RealLocalizable
 {
 	final protected P source;
+
 	final protected Positionable target;
 
 	/* temporary floor position register */

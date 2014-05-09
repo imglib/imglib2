@@ -5,7 +5,8 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>1.116</version>
+		<version>1.161</version>
+		<relativePath />
 	</parent>
 
 	<groupId>net.imglib2</groupId>
@@ -21,74 +22,37 @@
 	<modules>
 		<module>algorithms</module>
 		<module>core</module>
-		<module>examples</module>
-		<module>ij</module>
 		<module>meta</module>
 		<module>ops</module>
 		<module>realtransform</module>
-		<module>scripting</module>
-		<module>tests</module>
 		<module>ui</module>
 	</modules>
 
 	<properties>
-		<argLine>-Dapple.awt.UIElement="true" -Xmx512m</argLine>
-		<project.rootdir>${basedir}</project.rootdir>
+		<!-- NB: Needed to override managed versions. -->
+		<imglib2.version>${project.version}</imglib2.version>
+
 		<jama.version>1.0.3</jama.version>
+		<mpicbg.groupId>mpicbg</mpicbg.groupId>
+		<mpicbg.version>20111128</mpicbg.version>
 	</properties>
 
 	<build>
 		<plugins>
 			<plugin>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>buildnumber-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
-					<licenseName>imglib2</licenseName>
-					<licenseResolver>file://${project.rootdir}/license</licenseResolver>
-					<inceptionYear>2009</inceptionYear>
+					<licenseName>bsd_2</licenseName>
 					<organizationName>Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
 Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
 Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
 Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
 Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationName>
 					<projectName>ImgLib2: a general-purpose, multidimensional image processing library.</projectName>
-					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-					<canUpdateDescription>true</canUpdateDescription>
-					<canUpdateCopyright>true</canUpdateCopyright>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.fusesource.mvnplugins</groupId>
-				<artifactId>maven-graph-plugin</artifactId>
-			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--
-				 Sometimes, one needs to pass JVM options to the JVM
-				 running the unit tests, such as -verbose:class or
-				 -Djava.awt.headless=true.
-
-				 Unfortunately, maven-surefire does not expose a
-				 command-line interface to do so, therefore let's
-				 simulate it by re-using the property 'argLine' to
-				 specify those options.
-				 -->
-				<plugin>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<configuration>
-						<argLine>${argLine}</argLine>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 
 	<licenses>
@@ -129,18 +93,6 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			<timezone>+1</timezone>
 		</developer>
 		<developer>
-			<id>bdezonia</id>
-			<name>Barry DeZonia</name>
-			<email>bdezonia@wisc.edu</email>
-			<url>http://loci.wisc.edu/people/barry-dezonia</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-		<developer>
 			<id>axtimwalde</id>
 			<name>Stephan Saalfeld</name>
 			<email>saalfeld@mpi-cbg.de</email>
@@ -149,18 +101,6 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
 			<roles>
 				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>acardona</id>
-			<name>Albert Cardona</name>
-			<email>sapristi@gmail.com</email>
-			<url>http://albert.rierol.net/</url>
-			<organization>Institute of Neuroinformatics, Uni/ETH Zürich</organization>
-			<organizationUrl>http://www.ini.uzh.ch/</organizationUrl>
-			<roles>
 				<role>developer</role>
 			</roles>
 			<timezone>+1</timezone>
@@ -191,6 +131,7 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			<timezone>+1</timezone>
 		</developer>
 		<developer>
+			<id>tinevez</id>
 			<name>Jean-Yves Tinevez</name>
 			<email>jean-yves.tinevez@pasteur.fr</email>
 			<url>http://www.pasteur.fr/ip/easysite/pasteur/fr/recherche/plates-formes-technologiques/imagopole/plates-formes-imagopole/la-plate-forme-d-imagerie-dynamique/equipe-pfid/equipe-pfid-jyt</url>
@@ -225,8 +166,31 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			</roles>
 			<timezone>-5</timezone>
 		</developer>
-		<developer>
-			<id>larrylindsey</id>
+	</developers>
+
+	<contributors>
+		<contributor>
+			<name>Barry DeZonia</name>
+			<url>http://loci.wisc.edu/people/barry-dezonia</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</contributor>
+		<contributor>
+			<name>Albert Cardona</name>
+			<email>sapristi@gmail.com</email>
+			<url>http://albert.rierol.net/</url>
+			<organization>Institute of Neuroinformatics, Uni/ETH Zürich</organization>
+			<organizationUrl>http://www.ini.uzh.ch/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</contributor>
+		<contributor>
 			<name>Larry Lindsey</name>
 			<email>llindsey@clm.utexas.edu</email>
 			<url>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.htm</url>
@@ -236,10 +200,18 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 				<role>developer</role>
 			</roles>
 			<timezone>-6</timezone>
-		</developer>
-	</developers>
-
-	<contributors>
+		</contributor>
+		<contributor>
+			<name>Mark Hiner</name>
+			<email>hiner@wisc.edu</email>
+			<url>http://loci.wisc.edu/people/mark-hiner</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</contributor>
 		<contributor>
 			<name>Grant Harris</name>
 			<email>gharris@mbl.edu</email>
@@ -251,7 +223,6 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 			</roles>
 			<timezone>-5</timezone>
 		</contributor>
-		<contributor><name>Mark Hiner</name></contributor>
 		<contributor><name>Aivar Grislis</name></contributor>
 		<contributor><name>Martin Horn</name></contributor>
 		<contributor><name>Nick Perry</name></contributor>
@@ -264,7 +235,7 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/imagej/imglib/issues</url>
+		<url>https://github.com/imglib/imglib/issues</url>
 	</issueManagement>
 
 	<ciManagement>
@@ -290,31 +261,32 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/imagej/imglib.git</connection>
-		<developerConnection>scm:git:git@github.com:imagej/imglib.git</developerConnection>
+		<connection>scm:git:git://github.com/imglib/imglib</connection>
+		<developerConnection>scm:git:git@github.com:imglib/imglib</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/imagej/imglib</url>
+		<url>https://github.com/imglib/imglib</url>
 	</scm>
 
-	<!-- NB: for project parent, in case of partial checkout -->
 	<repositories>
+		<!-- NB: for project parent -->
 		<repository>
-			<id>imagej.releases</id>
-			<url>http://maven.imagej.net/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>imagej.snapshots</id>
-			<url>http://maven.imagej.net/content/repositories/snapshots</url>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
 
-	<profiles>
-		<profile>
-			<id>broken</id>
-			<modules>
-				<module>broken</module>
-			</modules>
-		</profile>
-	</profiles>
+	<!-- NB: for deploying to maven.imagej.net -->
+	<distributionManagement>
+		<repository>
+			<id>imagej.releases</id>
+			<name>ImageJ Releases Repository</name>
+			<url>dav:http://maven.imagej.net/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>imagej.snapshots</id>
+			<name>ImageJ Snapshots Repository</name>
+			<url>dav:http://maven.imagej.net/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>

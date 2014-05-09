@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -48,7 +44,7 @@ import net.imglib2.Sampler;
  * @param <T>
  *            value type.
  * 
- *
+ * 
  * @author Tobias Pietzsch
  */
 public abstract class KDTreeNode< T > implements RealLocalizable, Sampler< T >
@@ -90,7 +86,7 @@ public abstract class KDTreeNode< T > implements RealLocalizable, Sampler< T >
 	 * @param right
 	 *            right child node
 	 */
-	public KDTreeNode( RealLocalizable position, int dimension, final KDTreeNode< T > left, final KDTreeNode< T > right )
+	public KDTreeNode( final RealLocalizable position, final int dimension, final KDTreeNode< T > left, final KDTreeNode< T > right )
 	{
 		this.n = position.numDimensions();
 		this.pos = new double[ n ];
@@ -120,7 +116,8 @@ public abstract class KDTreeNode< T > implements RealLocalizable, Sampler< T >
 	}
 
 	/**
-	 * Get the position along {@link KDTreeNode#getSplitDimension()} where this node divides the space.
+	 * Get the position along {@link KDTreeNode#getSplitDimension()} where this
+	 * node divides the space.
 	 * 
 	 * @return splitting position.
 	 */
@@ -136,27 +133,27 @@ public abstract class KDTreeNode< T > implements RealLocalizable, Sampler< T >
 	}
 
 	@Override
-	public final void localize( float[] position )
+	public final void localize( final float[] position )
 	{
 		for ( int d = 0; d < n; ++d )
 			position[ d ] = ( float ) pos[ d ];
 	}
 
 	@Override
-	public final void localize( double[] position )
+	public final void localize( final double[] position )
 	{
 		for ( int d = 0; d < n; ++d )
 			position[ d ] = pos[ d ];
 	}
 
 	@Override
-	public final float getFloatPosition( int d )
+	public final float getFloatPosition( final int d )
 	{
 		return ( float ) pos[ d ];
 	}
 
 	@Override
-	public final double getDoublePosition( int d )
+	public final double getDoublePosition( final int d )
 	{
 		return pos[ d ];
 	}

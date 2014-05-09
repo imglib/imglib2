@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -48,7 +44,7 @@ import net.imglib2.realtransform.AffineTransform2D;
 /**
  * A {@link TransformEventHandler} that changes an {@link AffineTransform2D} in
  * response to mouse and keyboard events.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -95,8 +91,9 @@ public class TransformEventHandler2D extends MouseAdapter implements KeyListener
 	protected int canvasW = 1, canvasH = 1;
 
 	/**
-	 * Screen coordinates to keep centered while zooming or rotating with the keyboard.
-	 * For example set these to <em>(screen-width/2, screen-height/2)</em>
+	 * Screen coordinates to keep centered while zooming or rotating with the
+	 * keyboard. For example set these to
+	 * <em>(screen-width/2, screen-height/2)</em>
 	 */
 	protected int centerX = 0, centerY = 0;
 
@@ -174,22 +171,22 @@ public class TransformEventHandler2D extends MouseAdapter implements KeyListener
 
 	final private static String helpString =
 			"Mouse control:" + NL + " " + NL +
-			"rotate the image by left-click and dragging the image in the canvas, " + NL +
-			"move the image by middle-or-right-click and dragging the image in the canvas, " + NL +
-			"zoom in and out using the mouse-wheel." + NL + " " + NL +
-			"Key control:" + NL + " " + NL +
-			"CURSOR LEFT - Rotate clockwise." + NL +
-			"CURSOR RIGHT - Rotate counter-clockwise." + NL +
-			"CURSOR UP - Zoom in." + NL +
-			"CURSOR DOWN - Zoom out." + NL +
-			"SHIFT - Rotate and zoom 10x faster." + NL +
-			"CTRL - Rotate and zoom 10x slower.";
+					"rotate the image by left-click and dragging the image in the canvas, " + NL +
+					"move the image by middle-or-right-click and dragging the image in the canvas, " + NL +
+					"zoom in and out using the mouse-wheel." + NL + " " + NL +
+					"Key control:" + NL + " " + NL +
+					"CURSOR LEFT - Rotate clockwise." + NL +
+					"CURSOR RIGHT - Rotate counter-clockwise." + NL +
+					"CURSOR UP - Zoom in." + NL +
+					"CURSOR DOWN - Zoom out." + NL +
+					"SHIFT - Rotate and zoom 10x faster." + NL +
+					"CTRL - Rotate and zoom 10x slower.";
 
 	/**
 	 * Return rotate/translate/scale speed resulting from modifier keys.
-	 *
+	 * 
 	 * Normal speed is 1. SHIFT is faster (10). CTRL is slower (0.1).
-	 *
+	 * 
 	 * @param modifiers
 	 * @return speed resulting from modifier keys.
 	 */

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,28 +35,50 @@ package net.imglib2.type;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public abstract class AbstractNativeType<T extends AbstractNativeType<T>> implements NativeType<T>
+public abstract class AbstractNativeType< T extends AbstractNativeType< T >> implements NativeType< T >
 {
 	protected int i = 0;
 
 	@Override
-	public void updateIndex( final int j ) { this.i = j; }
+	public void updateIndex( final int j )
+	{
+		this.i = j;
+	}
+
 	@Override
-	public int getIndex() { return i; }
-	
+	public int getIndex()
+	{
+		return i;
+	}
+
 	@Override
-	public void incIndex() { ++i; }
+	public void incIndex()
+	{
+		++i;
+	}
+
 	@Override
-	public void incIndex( final int increment ) { i += increment; }
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
 	@Override
-	public void decIndex() { --i; }
+	public void decIndex()
+	{
+		--i;
+	}
+
 	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
-		
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
 	@Override
-	public abstract String toString();	
+	public abstract String toString();
 }

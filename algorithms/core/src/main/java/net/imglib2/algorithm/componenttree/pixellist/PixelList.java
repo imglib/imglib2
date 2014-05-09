@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -50,8 +46,8 @@ import net.imglib2.util.IntervalIndexer;
  * A singly-linked list of pixel locations stored in a {@link RandomAccessible}.
  * (the value at a given location in the {@link RandomAccessible} is the index
  * of the next location in the list.)
- *
- *
+ * 
+ * 
  * @author Tobias Pietzsch
  */
 public final class PixelList implements Iterable< Localizable >
@@ -106,7 +102,7 @@ public final class PixelList implements Iterable< Localizable >
 	}
 
 	/**
-	 * Append a pixel location to the list. 
+	 * Append a pixel location to the list.
 	 */
 	public void addPosition( final Localizable position )
 	{
@@ -127,7 +123,7 @@ public final class PixelList implements Iterable< Localizable >
 	}
 
 	/**
-	 * Append another {@link PixelList} to this one. 
+	 * Append another {@link PixelList} to this one.
 	 */
 	public void merge( final PixelList l )
 	{
@@ -135,14 +131,14 @@ public final class PixelList implements Iterable< Localizable >
 		{
 			headIndex = l.headIndex;
 			for ( int i = 0; i < tailPos.length; ++i )
-				tailPos[i] = l.tailPos[i];
+				tailPos[ i ] = l.tailPos[ i ];
 		}
 		else
 		{
 			locationsAccess.setPosition( tailPos );
 			locationsAccess.get().set( l.headIndex );
 			for ( int i = 0; i < tailPos.length; ++i )
-				tailPos[i] = l.tailPos[i];
+				tailPos[ i ] = l.tailPos[ i ];
 		}
 		size += l.size;
 	}
@@ -150,8 +146,11 @@ public final class PixelList implements Iterable< Localizable >
 	public class PixelListIterator implements Iterator< Localizable >
 	{
 		private long i;
+
 		private long nextIndex;
+
 		private final long[] tmp;
+
 		private final Point pos;
 
 		public PixelListIterator()
@@ -180,7 +179,8 @@ public final class PixelList implements Iterable< Localizable >
 		}
 
 		@Override
-		public void remove() {}
+		public void remove()
+		{}
 	}
 
 	@Override
@@ -191,7 +191,7 @@ public final class PixelList implements Iterable< Localizable >
 
 	/**
 	 * Get the size of the list.
-	 *
+	 * 
 	 * @return number of elements in this list.
 	 */
 	public long size()

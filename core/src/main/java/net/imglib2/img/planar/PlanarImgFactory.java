@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -63,14 +59,14 @@ import net.imglib2.type.NativeType;
  * @author Stephan Saalfeld
  * @author Johannes Schindelin
  */
-public class PlanarImgFactory< T extends NativeType<T> > extends NativeImgFactory< T >
+public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
 	@Override
 	public PlanarImg< T, ? > create( final long[] dim, final T type )
 	{
 		return ( PlanarImg< T, ? > ) type.createSuitableNativeImg( this, dim );
 	}
-	
+
 	@Override
 	public NativeImg< T, BitArray > createBitInstance( final long[] dimensions, final int entitiesPerPixel )
 	{
@@ -80,7 +76,7 @@ public class PlanarImgFactory< T extends NativeType<T> > extends NativeImgFactor
 	@Override
 	public NativeImg< T, ByteArray > createByteInstance( final long[] dimensions, final int entitiesPerPixel )
 	{
-		return new PlanarImg< T , ByteArray >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< T, ByteArray >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -118,13 +114,13 @@ public class PlanarImgFactory< T extends NativeType<T> > extends NativeImgFactor
 	{
 		return new PlanarImg< T, ShortArray >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
 	}
-	
+
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	@Override
-	public <S> ImgFactory<S> imgFactory( final S type ) throws IncompatibleTypeException
+	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
 		if ( NativeType.class.isInstance( type ) )
 			return new PlanarImgFactory();
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
-	}	
+	}
 }

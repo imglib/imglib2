@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui.util;
@@ -53,7 +49,7 @@ import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 /**
  * Static helper methods for setting up {@link GraphicsConfiguration} and
  * {@link BufferedImage BufferedImages}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class GuiUtil
@@ -82,18 +78,18 @@ public class GuiUtil
 		return defaultGc;
 	}
 
-	public static final ColorModel ARGB_COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
+	public static final ColorModel ARGB_COLOR_MODEL = new DirectColorModel( 32, 0xff0000, 0xff00, 0xff, 0xff000000 );
 
-	public static final ColorModel RGB_COLOR_MODEL = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
+	public static final ColorModel RGB_COLOR_MODEL = new DirectColorModel( 24, 0xff0000, 0xff00, 0xff );
 
 	/**
 	 * Get a {@link BufferedImage} for the given {@link ARGBScreenImage}.
-	 *
+	 * 
 	 * @param screenImage
 	 *            the image.
 	 * @param discardAlpha
-	 *            Whether to discard the <code>screenImage</code> alpha components
-	 *            when drawing.
+	 *            Whether to discard the <code>screenImage</code> alpha
+	 *            components when drawing.
 	 */
 	public static final BufferedImage getBufferedImage( final ARGBScreenImage screenImage, final boolean discardAlpha )
 	{
@@ -113,7 +109,7 @@ public class GuiUtil
 	 * Get a {@link BufferedImage} for the given {@link ARGBScreenImage}.
 	 * {@link #discardAlpha} determines whether to discard the
 	 * <code>screenImage</code> alpha components when drawing.
-	 *
+	 * 
 	 * @param screenImage
 	 *            the image.
 	 */

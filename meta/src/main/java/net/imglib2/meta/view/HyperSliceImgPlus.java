@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,33 +28,19 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.meta.view;
 
-import java.util.Iterator;
-
-import net.imglib2.Cursor;
-import net.imglib2.Interval;
-import net.imglib2.IterableInterval;
-import net.imglib2.IterableRealInterval;
-import net.imglib2.Positionable;
-import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.RealPositionable;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
+import net.imglib2.img.ImgView;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
+import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.ImgPlus;
-import net.imglib2.transform.integer.MixedTransform;
-import net.imglib2.view.MixedTransformView;
-import net.imglib2.view.TransformBuilder;
+import net.imglib2.type.Type;
 import net.imglib2.view.Views;
 
 /**
@@ -70,27 +56,9 @@ import net.imglib2.view.Views;
  * Internally, we strongly rely on the fantastic {@link Views} class.
  * 
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com>
+ * @author Christian Dietz <christian.dietz@uni-konstanz.de>
  */
-public class HyperSliceImgPlus< T > extends ImgPlus< T >
-{
-
-	/**
-	 * The number of dimension in the target {@link ImgPlus}. Equals the number
-	 * of dimensions in the source image minus one.
-	 */
-	protected final int nDimensions;
-
-	/** The source {@link ImgPlus}. */
-	protected final ImgPlus< T > source;
-
-	/** The iterable built by wrapping the {@link #fullViewRandomAccessible}. */
-	protected final IterableInterval< T > fullViewIterable;
-
-	/** An optimized RandomAccess over the transformed source. */
-	protected RandomAccessible< T > fullViewRandomAccessible;
-
-	/** The transformed source. */
-	protected final MixedTransformView< T > mtv;
+public class HyperSliceImgPlus<T extends Type<T>> extends ImgPlus<T> {
 
 	/** The dimension to freeze. */
 	protected final int targetDimension;
@@ -116,83 +84,38 @@ public class HyperSliceImgPlus< T > extends ImgPlus< T >
 	 * @param pos
 	 *            the position at which to hold the target dimension
 	 */
-	public HyperSliceImgPlus( final ImgPlus< T > source, final int d, final long pos )
-	{
-		super( source );
+	public HyperSliceImgPlus(final ImgPlus<T> sourceImgPlus, final int d,
+			final long pos) {
+		super(setUpSlice(sourceImgPlus, d, pos), sourceImgPlus.getName(),
+				setUpAxis(sourceImgPlus, d));
 
-		final int m = source.numDimensions();
-		this.nDimensions = m - 1;
+		setSource(sourceImgPlus.getSource());
+
 		this.targetDimension = d;
 		this.dimensionPosition = pos;
+	}
 
-		// Prepare reslice
-		final long[] min = new long[ nDimensions ];
-		final long[] max = new long[ nDimensions ];
+	private static <T extends Type<T>> CalibratedAxis[] setUpAxis(
+			ImgPlus<T> source, int d) {
 
-		final MixedTransform t = new MixedTransform( nDimensions, m );
-		final long[] translation = new long[ m ];
-		translation[ d ] = pos;
-		final boolean[] zero = new boolean[ m ];
-		final int[] component = new int[ m ];
+		CalibratedAxis[] copiedAxes = new CalibratedAxis[source.numDimensions() - 1];
 
-		/*
-		 * Determine transform component & iterable bounds and defines
-		 * calibration of the target ImgPlus
-		 */
-		for ( int e = 0; e < m; ++e )
-		{
-			if ( e < d )
-			{
-
-				zero[ e ] = false;
-				component[ e ] = e;
-				min[ e ] = source.min( e );
-				max[ e ] = source.max( e );
-				setAxis( source.axis( e ), e );
-
+		int offset = 0;
+		for (int i = 0; i < source.numDimensions(); i++) {
+			if (i == d) {
+				offset = 1;
+				continue;
 			}
-			else if ( e > d )
-			{
-
-				zero[ e ] = false;
-				component[ e ] = e - 1;
-				min[ e - 1 ] = source.min( e );
-				max[ e - 1 ] = source.max( e );
-				setAxis( source.axis( e ), e - 1 );
-
-			}
-			else
-			{
-
-				zero[ e ] = true;
-				component[ e ] = 0;
-
-			}
+			copiedAxes[i - offset] = source.axis(i).copy();
 		}
 
-		// Set target name
-		setName( "Hypserslice of " + source.getName() + " at dim " + d + "=" + pos );
+		return copiedAxes;
+	}
 
-		// Create transform and transformed view
-		t.setTranslation( translation );
-		t.setComponentZero( zero );
-		t.setComponentMapping( component );
-		this.mtv = new MixedTransformView< T >( source, t );
-
-		// Copy calibration and axes
-		int index = 0;
-		for ( int i = 0; i < m; i++ )
-		{
-			if ( i != d )
-			{
-				setAxis( source.axis( i ), index );
-				index++;
-			}
-		}
-
-		this.source = source;
-		this.fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( null, mtv );
-		this.fullViewIterable = Views.iterable( Views.interval( fullViewRandomAccessible, min, max ) );
+	private static <T extends Type<T>> Img<T> setUpSlice(
+			ImgPlus<T> sourceImgPlus, int d, long pos) {
+		return new ImgView<T>(Views.hyperSlice(sourceImgPlus, d, pos),
+				sourceImgPlus.factory());
 	}
 
 	/*
@@ -203,234 +126,14 @@ public class HyperSliceImgPlus< T > extends ImgPlus< T >
 	 * Return the <code>n</code>-dimensional source of this view.
 	 */
 	@Override
-	public Img< T > getImg()
-	{
+	public Img<T> getImg() {
 		return super.getImg();
 	}
 
 	@Override
-	public RandomAccess< T > randomAccess( final Interval interval )
-	{
-		return TransformBuilder.getEfficientRandomAccessible( interval, mtv ).randomAccess();
-	}
-
-	@Override
-	public RandomAccess< T > randomAccess()
-	{
-		return fullViewRandomAccessible.randomAccess();
-	}
-
-	@Override
-	public int numDimensions()
-	{
-		return nDimensions;
-	}
-
-	@Override
-	public long min( final int d )
-	{
-		if ( d < targetDimension )
-			return source.min( d );
-		return source.min( d + 1 );
-	}
-
-	@Override
-	public void min( final long[] min )
-	{
-		for ( int d = 0; d < nDimensions; d++ )
-		{
-			if ( d < targetDimension )
-				min[ d ] = source.min( d );
-			else
-				min[ d ] = source.min( d + 1 );
-		}
-	}
-
-	@Override
-	public void min( final Positionable min )
-	{
-		for ( int d = 0; d < nDimensions; d++ )
-		{
-			if ( d < targetDimension )
-				min.setPosition( source.min( d ), d );
-			else
-				min.setPosition( source.min( d + 1 ), d );
-		}
-	}
-
-	@Override
-	public long max( final int d )
-	{
-		if ( d < targetDimension )
-			return source.max( d );
-		return source.max( d + 1 );
-	}
-
-	@Override
-	public void max( final long[] max )
-	{
-		for ( int d = 0; d < nDimensions; d++ )
-		{
-			if ( d < targetDimension )
-				max[ d ] = source.max( d );
-			else
-				max[ d ] = source.max( d + 1 );
-		}
-	}
-
-	@Override
-	public void max( final Positionable max )
-	{
-		for ( int d = 0; d < nDimensions; d++ )
-		{
-			if ( d < targetDimension )
-				max.setPosition( source.max( d ), d );
-			else
-				max.setPosition( source.max( d + 1 ), d );
-		}
-	}
-
-	@Override
-	public void dimensions( final long[] dimensions )
-	{
-		for ( int d = 0; d < nDimensions; d++ )
-		{
-			if ( d < targetDimension )
-				dimensions[ d ] = source.dimension( d );
-			else
-				dimensions[ d ] = source.dimension( d + 1 );
-		}
-	}
-
-	@Override
-	public long dimension( final int d )
-	{
-		if ( d < targetDimension )
-			return source.dimension( d );
-		return source.dimension( d + 1 );
-	}
-
-	@Override
-	public double realMin( final int d )
-	{
-		if ( d < targetDimension )
-			return source.realMin( d );
-		return source.realMin( d + 1 );
-	}
-
-	@Override
-	public void realMin( final double[] min )
-	{
-		for ( int d = 0; d < nDimensions; d++ )
-		{
-			if ( d < targetDimension )
-				min[ d ] = source.realMin( d );
-			else
-				min[ d ] = source.realMin( d + 1 );
-		}
-	}
-
-	@Override
-	public void realMin( final RealPositionable min )
-	{
-		for ( int d = 0; d < nDimensions; d++ )
-		{
-			if ( d < targetDimension )
-				min.setPosition( source.realMin( d ), d );
-			else
-				min.setPosition( source.realMin( d + 1 ), d );
-		}
-	}
-
-	@Override
-	public double realMax( final int d )
-	{
-		if ( d < targetDimension )
-			return source.realMax( d );
-		return source.realMax( d + 1 );
-	}
-
-	@Override
-	public void realMax( final double[] max )
-	{
-		for ( int d = 0; d < nDimensions; d++ )
-		{
-			if ( d < targetDimension )
-				max[ d ] = source.realMax( d );
-			else
-				max[ d ] = source.realMax( d + 1 );
-		}
-	}
-
-	@Override
-	public void realMax( final RealPositionable max )
-	{
-		for ( int d = 0; d < nDimensions; d++ )
-		{
-			if ( d < targetDimension )
-				max.setPosition( source.realMax( d ), d );
-			else
-				max.setPosition( source.realMax( d + 1 ), d );
-		}
-	}
-
-	@Override
-	public Cursor< T > cursor()
-	{
-		return fullViewIterable.cursor();
-	}
-
-	@Override
-	public Cursor< T > localizingCursor()
-	{
-		return fullViewIterable.localizingCursor();
-	}
-
-	@Override
-	public long size()
-	{
-		long size = 1;
-		for ( int d = 0; d < nDimensions; d++ )
-		{
-			size *= dimension( d );
-		}
-		return size;
-	}
-
-	@Override
-	public T firstElement()
-	{
-		return source.firstElement();
-	}
-
-	@Override
-	public Object iterationOrder()
-	{
-		return fullViewIterable;
-	}
-
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
-	@Override
-	public Iterator< T > iterator()
-	{
-		return fullViewIterable.iterator();
-	}
-
-	@Override
-	public ImgFactory< T > factory()
-	{
-		return source.factory();
-	}
-
-	@Override
-	public HyperSliceImgPlus< T > copy()
-	{
-		return new HyperSliceImgPlus< T >( source, targetDimension, dimensionPosition );
+	public HyperSliceImgPlus<T> copy() {
+		return new HyperSliceImgPlus<T>(new ImgPlus<T>(getImg().copy(), this),
+				targetDimension, dimensionPosition);
 	}
 
 	/*
@@ -446,24 +149,21 @@ public class HyperSliceImgPlus< T > extends ImgPlus< T >
 	 *         If the axis type is not found in the source image, then the
 	 *         source image is returned.
 	 */
-	public static final < T > ImgPlus< T > fixAxis( final ImgPlus< T > source, final AxisType axis, final long pos )
-	{
+	public static final <T extends Type<T>> ImgPlus<T> fixAxis(
+			final ImgPlus<T> source, final AxisType axis, final long pos) {
 		// Determine target axis dimension
 		int targetDim = -1;
-		for ( int d = 0; d < source.numDimensions(); d++ )
-		{
-			if ( source.axis( d ).type() == axis )
-			{
+		for (int d = 0; d < source.numDimensions(); d++) {
+			if (source.axis(d).type() == axis) {
 				targetDim = d;
 				break;
 			}
 		}
-		if ( targetDim < 0 )
-		{
+		if (targetDim < 0) {
 			// not found
 			return source;
 		}
-		return new HyperSliceImgPlus< T >( source, targetDim, pos );
+		return new HyperSliceImgPlus<T>(source, targetDim, pos);
 	}
 
 	/**
@@ -474,9 +174,9 @@ public class HyperSliceImgPlus< T > extends ImgPlus< T >
 	 *         If the time axis is not found in the source image, then the
 	 *         source image is returned.
 	 */
-	public static final < T > ImgPlus< T > fixTimeAxis( final ImgPlus< T > source, final long pos )
-	{
-		return fixAxis( source, Axes.TIME, pos );
+	public static final <T extends Type<T>> ImgPlus<T> fixTimeAxis(
+			final ImgPlus<T> source, final long pos) {
+		return fixAxis(source, Axes.TIME, pos);
 	}
 
 	/**
@@ -487,9 +187,9 @@ public class HyperSliceImgPlus< T > extends ImgPlus< T >
 	 *         If the Z axis is not found in the source image, then the source
 	 *         image is returned.
 	 */
-	public static final < T > ImgPlus< T > fixZAxis( final ImgPlus< T > source, final long pos )
-	{
-		return fixAxis( source, Axes.Z, pos );
+	public static final <T extends Type<T>> ImgPlus<T> fixZAxis(
+			final ImgPlus<T> source, final long pos) {
+		return fixAxis(source, Axes.Z, pos);
 	}
 
 	/**
@@ -500,9 +200,9 @@ public class HyperSliceImgPlus< T > extends ImgPlus< T >
 	 *         If the channel axis is not found in the source image, then the
 	 *         source image is returned.
 	 */
-	public static final < T > ImgPlus< T > fixChannelAxis( final ImgPlus< T > source, final long pos )
-	{
-		return fixAxis( source, Axes.CHANNEL, pos );
+	public static final <T extends Type<T>> ImgPlus<T> fixChannelAxis(
+			final ImgPlus<T> source, final long pos) {
+		return fixAxis(source, Axes.CHANNEL, pos);
 	}
 
 }

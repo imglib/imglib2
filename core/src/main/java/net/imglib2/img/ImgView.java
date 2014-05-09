@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -49,17 +45,18 @@ import net.imglib2.view.Views;
 /**
  * Allows a {@link RandomAccessibleInterval} to be treated as an {@link Img}.
  * 
- * @author Tobias Pietzsch 
+ * @author Tobias Pietzsch
  * @author Christian Dietz (dietzc85@googlemail.com)
  */
-public class ImgView<T extends Type<T>> extends
-		IterableRandomAccessibleInterval<T> implements Img<T> {
+public class ImgView< T extends Type< T >> extends
+		IterableRandomAccessibleInterval< T > implements Img< T >
+{
 
 	// factory
-	private final ImgFactory<T> factory;
+	private final ImgFactory< T > factory;
 
 	// ImgView ii
-	private final IterableInterval<T> ii;
+	private final IterableInterval< T > ii;
 
 	/**
 	 * View on {@link Img} which is defined by a given Interval, but still is an
@@ -70,46 +67,53 @@ public class ImgView<T extends Type<T>> extends
 	 * @param fac
 	 *            <T> Factory to create img
 	 */
-	public ImgView(final RandomAccessibleInterval<T> in, ImgFactory<T> fac) {
-		super(in);
+	public ImgView( final RandomAccessibleInterval< T > in, final ImgFactory< T > fac )
+	{
+		super( in );
 		factory = fac;
-		ii = Views.flatIterable(in);
+		ii = Views.flatIterable( in );
 	}
 
 	@Override
-	public ImgFactory<T> factory() {
+	public ImgFactory< T > factory()
+	{
 		return factory;
 	}
 
 	@Override
-	public Img<T> copy() {
-		final Img<T> copy = factory.create(this, randomAccess().get()
-				.createVariable());
+	public Img< T > copy()
+	{
+		final Img< T > copy = factory.create( this, randomAccess().get()
+				.createVariable() );
 
-		Cursor<T> srcCursor = localizingCursor();
-		RandomAccess<T> resAccess = copy.randomAccess();
+		final Cursor< T > srcCursor = localizingCursor();
+		final RandomAccess< T > resAccess = copy.randomAccess();
 
-		while (srcCursor.hasNext()) {
+		while ( srcCursor.hasNext() )
+		{
 			srcCursor.fwd();
-			resAccess.setPosition(srcCursor);
-			resAccess.get().set(srcCursor.get());
+			resAccess.setPosition( srcCursor );
+			resAccess.get().set( srcCursor.get() );
 		}
 
 		return copy;
 	}
 
 	@Override
-	public Cursor<T> cursor() {
+	public Cursor< T > cursor()
+	{
 		return ii.cursor();
 	}
 
 	@Override
-	public Cursor<T> localizingCursor() {
+	public Cursor< T > localizingCursor()
+	{
 		return ii.localizingCursor();
 	}
 
 	@Override
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return iterationOrder().equals(f.iterationOrder());
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
 	}
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -49,7 +45,7 @@ import org.junit.Test;
 
 /**
  * TODO
- *
+ * 
  */
 public class RandomAccessTest
 {
@@ -58,7 +54,7 @@ public class RandomAccessTest
 	@Before
 	public void setUp()
 	{
-		final long[] dimension = new long[] {100, 60, 10, 30, 50 };
+		final long[] dimension = new long[] { 100, 60, 10, 30, 50 };
 		img = new ArrayImgFactory< UnsignedByteType >().create( dimension, new UnsignedByteType() );
 	}
 
@@ -69,7 +65,7 @@ public class RandomAccessTest
 
 		final long[] pos = new long[] { 28, 30, 5, 5, 12 };
 		final long[] dist = new long[] { 2, 3, 4, 2, 1 };
-		
+
 		testlocalize( a, pos );
 		testfwd( a, pos );
 		testbck( a, pos );
@@ -84,12 +80,12 @@ public class RandomAccessTest
 		final long[] dim = new long[] { 10, 10, 10, 10 };
 		@SuppressWarnings( "deprecation" )
 		final RandomAccess< UnsignedByteType > a = Views.offsetInterval( Views.flippedView( Views.hyperSlice( img, 2, 2 ), 3 ), offset, dim ).randomAccess();
-		
+
 		assertTrue( FullSourceMapMixedRandomAccess.class.isInstance( a ) );
 
 		final long[] pos = new long[] { 28, 30, 2, 15 };
 		final long[] dist = new long[] { 2, 3, 4, 1 };
-		
+
 		testlocalize( a, pos );
 		testfwd( a, pos );
 		testbck( a, pos );
@@ -104,15 +100,15 @@ public class RandomAccessTest
 		final long[] expected = pos.clone();
 
 		a.setPosition( pos );
-		a.localize( loc );			
+		a.localize( loc );
 		Assert.assertArrayEquals( expected, loc );
-		
-		for( int d = 0; d < a.numDimensions(); ++d )
+
+		for ( int d = 0; d < a.numDimensions(); ++d )
 		{
 			Assert.assertTrue( expected[ d ] == a.getLongPosition( d ) );
 			Assert.assertTrue( expected[ d ] == a.getIntPosition( d ) );
-			Assert.assertTrue( expected[ d ] == (long) a.getFloatPosition( d ) );
-			Assert.assertTrue( expected[ d ] == (long) a.getDoublePosition( d ) );
+			Assert.assertTrue( expected[ d ] == ( long ) a.getFloatPosition( d ) );
+			Assert.assertTrue( expected[ d ] == ( long ) a.getDoublePosition( d ) );
 		}
 	}
 
@@ -121,12 +117,12 @@ public class RandomAccessTest
 		final long[] loc = new long[ pos.length ];
 		final long[] expected = new long[ pos.length ];
 
-		for( int d = 0; d < a.numDimensions(); ++d )
+		for ( int d = 0; d < a.numDimensions(); ++d )
 		{
 			a.setPosition( pos );
 			a.fwd( d );
 			a.localize( loc );
-			
+
 			for ( int i = 0; i < pos.length; ++i )
 				expected[ i ] = pos[ i ];
 			expected[ d ] += 1;
@@ -140,12 +136,12 @@ public class RandomAccessTest
 		final long[] loc = new long[ pos.length ];
 		final long[] expected = new long[ pos.length ];
 
-		for( int d = 0; d < a.numDimensions(); ++d )
+		for ( int d = 0; d < a.numDimensions(); ++d )
 		{
 			a.setPosition( pos );
 			a.bck( d );
 			a.localize( loc );
-			
+
 			for ( int i = 0; i < pos.length; ++i )
 				expected[ i ] = pos[ i ];
 			expected[ d ] -= 1;
@@ -159,12 +155,12 @@ public class RandomAccessTest
 		final long[] loc = new long[ pos.length ];
 		final long[] expected = new long[ pos.length ];
 
-		for( int d = 0; d < a.numDimensions(); ++d )
+		for ( int d = 0; d < a.numDimensions(); ++d )
 		{
 			a.setPosition( pos );
 			a.move( distance, d );
 			a.localize( loc );
-			
+
 			for ( int i = 0; i < pos.length; ++i )
 				expected[ i ] = pos[ i ];
 			expected[ d ] += distance;
@@ -184,7 +180,7 @@ public class RandomAccessTest
 		a.setPosition( pos );
 		a.move( distance );
 		a.localize( loc );
-		
+
 		Assert.assertArrayEquals( expected, loc );
 	}
 }

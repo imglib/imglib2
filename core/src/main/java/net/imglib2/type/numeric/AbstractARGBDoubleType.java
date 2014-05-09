@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -40,25 +36,25 @@ package net.imglib2.type.numeric;
 import net.imglib2.util.Util;
 
 /**
- *
+ * 
  * @author Stephan Saalfeld
  */
 abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< T > > implements NumericType< T >
 {
 	abstract public double getA();
-	
+
 	abstract public double getR();
-	
+
 	abstract public double getG();
-	
+
 	abstract public double getB();
-	
+
 	abstract public void setA( final double a );
-	
+
 	abstract public void setR( final double r );
-	
+
 	abstract public void setG( final double g );
-	
+
 	abstract public void setB( final double b );
 
 	public void set( final double a, final double r, final double g, final double b )
@@ -146,18 +142,17 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 				getG() * c,
 				getB() * c );
 	}
-	
+
 	/**
-	 * Create and integer packed representation of this ARGB value.
-	 * Crop 
+	 * Create and integer packed representation of this ARGB value. Crop
 	 */
 	public int toARGBInt()
 	{
-		final int a = ( int )Math.max( 0, Math.min( 255, Util.round( getA() * 255 ) ) );
-		final int r = ( int )Math.max( 0, Math.min( 255, Util.round( getR() * 255 ) ) );
-		final int g = ( int )Math.max( 0, Math.min( 255, Util.round( getG() * 255 ) ) );
-		final int b = ( int )Math.max( 0, Math.min( 255, Util.round( getB() * 255 ) ) );
-		
+		final int a = ( int ) Math.max( 0, Math.min( 255, Util.round( getA() * 255 ) ) );
+		final int r = ( int ) Math.max( 0, Math.min( 255, Util.round( getR() * 255 ) ) );
+		final int g = ( int ) Math.max( 0, Math.min( 255, Util.round( getG() * 255 ) ) );
+		final int b = ( int ) Math.max( 0, Math.min( 255, Util.round( getB() * 255 ) ) );
+
 		return ( ( ( ( ( a << 8 ) | r ) << 8 ) | g ) << 8 ) | b;
 	}
 }

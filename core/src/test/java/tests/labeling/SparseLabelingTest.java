@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -123,7 +119,7 @@ public class SparseLabelingTest
 	public void testDefaultConstructor()
 	{
 		final long[] dimensions = { 5, 6, 7 };
-		Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new NtreeImgFactory< IntType >().create( dimensions, new IntType() ) );
+		final Labeling< String > labeling = new NativeImgLabeling< String, IntType >( new NtreeImgFactory< IntType >().create( dimensions, new IntType() ) );
 		assertEquals( 3, labeling.numDimensions() );
 	}
 
@@ -520,12 +516,12 @@ public class SparseLabelingTest
 		final long[] dimensions = new long[] { 1000, 1000, 40 };
 		final Img< IntType > tree = new NtreeImgFactory< IntType >().create( dimensions, new IntType() );
 
-		long[] posA = new long[] { 1, 1, 1 };
-		long[] posB = new long[] { 5, 5, 5 };
+		final long[] posA = new long[] { 1, 1, 1 };
+		final long[] posB = new long[] { 5, 5, 5 };
 
-		int label = 5;
+		final int label = 5;
 
-		RandomAccess< IntType > randomAccess = tree.randomAccess();
+		final RandomAccess< IntType > randomAccess = tree.randomAccess();
 
 		// Set 1,1,1 to label
 		randomAccess.setPosition( posA );

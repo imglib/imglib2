@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -43,52 +39,63 @@ package net.imglib2.display;
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  */
-public class ColorTable8 extends AbstractArrayColorTable<byte[]> {
+public class ColorTable8 extends AbstractArrayColorTable< byte[] >
+{
 
 	/** Initializes an 8-bit color table with a linear grayscale ramp. */
-	public ColorTable8() {
-		super(gray());
+	public ColorTable8()
+	{
+		super( gray() );
 	}
 
 	/** Initializes an 8-bit color table with the given table values. */
-	public ColorTable8(final byte[]... values) {
-		super(values);
+	public ColorTable8( final byte[]... values )
+	{
+		super( values );
 	}
 
 	@Override
-	public int getLength() {
-		return values[0].length;
+	public int getLength()
+	{
+		return values[ 0 ].length;
 	}
 
 	@Override
-	public int getBits() {
+	public int getBits()
+	{
 		return 8;
 	}
 
 	@Override
-	public int get(final int comp, final int bin) {
-		return getNative(comp, bin);
+	public int get( final int comp, final int bin )
+	{
+		return getNative( comp, bin );
 	}
 
 	@Override
-	public int getNative(final int comp, final int bin) {
-		return values[comp][bin] & 0xff;
+	public int getNative( final int comp, final int bin )
+	{
+		return values[ comp ][ bin ] & 0xff;
 	}
 
 	@Override
-	public int getResampled(final int comp, final int bins, final int bin) {
-		final int newBin = (int)((long) getLength() * bin / bins);
-		return getNative(comp, newBin);
+	public int getResampled( final int comp, final int bins, final int bin )
+	{
+		final int newBin = ( int ) ( ( long ) getLength() * bin / bins );
+		return getNative( comp, newBin );
 	}
 
 	// -- Helper methods --
 
 	/** Creates a linear grayscale ramp with 3 components and 256 values. */
-	private static byte[][] gray() {
-		final byte[][] gray = new byte[3][256];
-		for (int j = 0; j < gray.length; j++) {
-			for (int i = 0; i < gray[j].length; i++) {
-				gray[j][i] = (byte) i;
+	private static byte[][] gray()
+	{
+		final byte[][] gray = new byte[ 3 ][ 256 ];
+		for ( int j = 0; j < gray.length; j++ )
+		{
+			for ( int i = 0; i < gray[ j ].length; i++ )
+			{
+				gray[ j ][ i ] = ( byte ) i;
 			}
 		}
 		return gray;

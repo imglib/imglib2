@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -42,33 +38,33 @@ import net.imglib2.RandomAccessibleInterval;
 
 /**
  * An {@link Img} is a {@link RandomAccessibleInterval} that has its min at
- * 0<sup><em>n</em></sup> and its max positive.  {@link Img}s store pixels
- * and thus are the basis for conventional image processing.
- *
+ * 0<sup><em>n</em></sup> and its max positive. {@link Img}s store pixels and
+ * thus are the basis for conventional image processing.
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Stephan Preibisch
  */
 public interface Img< T >
-	extends
+		extends
 		RandomAccessibleInterval< T >,
 		IterableInterval< T >
 {
 	/**
-	 * Get a {@link ImgFactory} that creates {@link Img}s
-	 * of the same kind as this one.
+	 * Get a {@link ImgFactory} that creates {@link Img}s of the same kind as
+	 * this one.
 	 * 
-	 * This is useful to create Imgs for temporary storage
-	 * in generic methods where the specific Img type is
-	 * unknown.  Note, that the factory can be used even if
-	 * all references to this Img have been invalidated. 
-	 *  
-	 * @return a factory for Imgs of the same kind as this one. 
+	 * This is useful to create Imgs for temporary storage in generic methods
+	 * where the specific Img type is unknown. Note, that the factory can be
+	 * used even if all references to this Img have been invalidated.
+	 * 
+	 * @return a factory for Imgs of the same kind as this one.
 	 */
 	public ImgFactory< T > factory();
-	
+
 	/**
-	 * @return - A copy of the current {@link Img} instance, all pixels are duplicated
+	 * @return - A copy of the current {@link Img} instance, all pixels are
+	 *         duplicated
 	 */
 	public Img< T > copy();
 }

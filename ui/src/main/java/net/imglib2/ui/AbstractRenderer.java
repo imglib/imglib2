@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ui;
@@ -49,10 +45,10 @@ import java.awt.image.BufferedImage;
  * global coordinates. The transformation to apply to the source data then is a
  * composition of this source transform (source to global) and the viewer
  * transform (global to screen).
- *
+ * 
  * @param <A>
  *            viewer transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public abstract class AbstractRenderer< A > implements Renderer< A >
@@ -65,8 +61,8 @@ public abstract class AbstractRenderer< A > implements Renderer< A >
 	final protected RenderTarget display;
 
 	/**
-	 * Thread that triggers repainting of the display.
-	 * Requests for repainting are send there.
+	 * Thread that triggers repainting of the display. Requests for repainting
+	 * are send there.
 	 */
 	final protected PainterThread painterThread;
 

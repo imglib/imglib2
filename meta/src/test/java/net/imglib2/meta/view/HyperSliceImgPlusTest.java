@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -63,14 +59,18 @@ import org.junit.Test;
 public class HyperSliceImgPlusTest {
 
 	private static final long[] dim = new long[] { 16, 16, 64, 8, 32 };
-	private static final AxisType[] axisTypes = new AxisType[] {
-		Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME };
-	private static final float[] calibration = new float[] { 0.5f, 0.5f, 0.8f, 1, 5 };
+	private static final AxisType[] axisTypes = new AxisType[] { Axes.X,
+			Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME };
+	private static final float[] calibration = new float[] { 0.5f, 0.5f, 0.8f,
+			1, 5 };
 	private static final String name = "Source";
 	private static final int REMOVED_DIM_1 = 2; // we will remove Z
-	private static final long DIM_POS_1 = dim[REMOVED_DIM_1] / 2; // fix it there
-	private static final int REMOVED_DIM_2 = 3; // we will remove T in the Z-removed imgplus
-	private static final long DIM_POS_2 = dim[REMOVED_DIM_2+1] / 2; // fix it there
+	private static final long DIM_POS_1 = dim[REMOVED_DIM_1] / 2; // fix it
+																	// there
+	private static final int REMOVED_DIM_2 = 3; // we will remove T in the
+												// Z-removed imgplus
+	private static final long DIM_POS_2 = dim[REMOVED_DIM_2 + 1] / 2; // fix it
+																		// there
 
 	/** The source {@link ImgPlus}. */
 	private ImgPlus<UnsignedByteType> source;
@@ -86,7 +86,8 @@ public class HyperSliceImgPlusTest {
 	public void setUp() throws Exception {
 		// Set up source
 		ArrayImgFactory<UnsignedByteType> factory = new ArrayImgFactory<UnsignedByteType>();
-		ArrayImg<UnsignedByteType, ?> img = factory.create(dim , new UnsignedByteType());
+		ArrayImg<UnsignedByteType, ?> img = factory.create(dim,
+				new UnsignedByteType());
 		source = new ImgPlus<UnsignedByteType>(img);
 		for (int d = 0; d < dim.length; d++) {
 			CalibratedAxis axis = source.axis(d);
@@ -98,10 +99,12 @@ public class HyperSliceImgPlusTest {
 		source.setName(name);
 
 		// Set up first hyperslice
-		imgplusZ = new HyperSliceImgPlus<UnsignedByteType>(source, REMOVED_DIM_1, dim[REMOVED_DIM_1]/2);
+		imgplusZ = new HyperSliceImgPlus<UnsignedByteType>(source,
+				REMOVED_DIM_1, dim[REMOVED_DIM_1] / 2);
 
 		// Set up second hyperslice
-		imgplusZT = new HyperSliceImgPlus<UnsignedByteType>(imgplusZ, REMOVED_DIM_2, dim[REMOVED_DIM_2+1]/2); // Time is now dim 3
+		imgplusZT = new HyperSliceImgPlus<UnsignedByteType>(imgplusZ,
+				REMOVED_DIM_2, dim[REMOVED_DIM_2 + 1] / 2); // Time is now dim 3
 	}
 
 	private void reset() {
@@ -109,14 +112,14 @@ public class HyperSliceImgPlusTest {
 			type.setZero();
 		}
 	}
-	
+
 	@Test
 	public void testMetadata() {
 		int index1 = 0;
 		for (int d = 0; d < dim.length; d++) {
 			if (d != REMOVED_DIM_1) {
-				assertEquals(source.averageScale(d), imgplusZ.averageScale(index1),
-					Float.MIN_VALUE);
+				assertEquals(source.averageScale(d),
+						imgplusZ.averageScale(index1), Float.MIN_VALUE);
 				assertEquals(source.axis(d), imgplusZ.axis(index1));
 				index1++;
 			}
@@ -124,9 +127,9 @@ public class HyperSliceImgPlusTest {
 
 		int index2 = 0;
 		for (int d = 0; d < dim.length; d++) {
-			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2+1)) {
-				assertEquals(source.averageScale(d), imgplusZT.averageScale(index2),
-					Float.MIN_VALUE);
+			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2 + 1)) {
+				assertEquals(source.averageScale(d),
+						imgplusZT.averageScale(index2), Float.MIN_VALUE);
 				assertEquals(source.axis(d), imgplusZT.axis(index2));
 				index2++;
 			}
@@ -148,7 +151,8 @@ public class HyperSliceImgPlusTest {
 			position[d] = dim[d] / 2; // middle
 		}
 		position[REMOVED_DIM_1] = DIM_POS_1;
-		position[REMOVED_DIM_2] = DIM_POS_2; // move to the hyper plane of interest
+		position[REMOVED_DIM_2] = DIM_POS_2; // move to the hyper plane of
+												// interest
 		ra.setPosition(position);
 		final int val = 50;
 		ra.get().set(val);
@@ -167,19 +171,21 @@ public class HyperSliceImgPlusTest {
 			}
 			if (d != REMOVED_DIM_1 && d != REMOVED_DIM_2) {
 				ra2.setPosition(position[d], index2);
-				index2++;  
+				index2++;
 			}
 		}
 
 		assertEquals(
-				String.format("Set the value %d at %s in source, so expected to find it at %s in target; instead got %d.", 
+				String.format(
+						"Set the value %d at %s in source, so expected to find it at %s in target; instead got %d.",
 						val, printCoords(ra), printCoords(ra1), ra1.get().get()),
-						val, ra1.get().get());
+				val, ra1.get().get());
 
 		assertEquals(
-				String.format("Set the value %d at %s in source, so expected to find it at %s in target; instead got %d.", 
+				String.format(
+						"Set the value %d at %s in source, so expected to find it at %s in target; instead got %d.",
 						val, printCoords(ra), printCoords(ra2), ra2.get().get()),
-						val, ra2.get().get());
+				val, ra2.get().get());
 
 	}
 
@@ -188,8 +194,8 @@ public class HyperSliceImgPlusTest {
 	 */
 	@Test
 	public void testNumDimensions() {
-		assertEquals(source.numDimensions()-1, imgplusZ.numDimensions());
-		assertEquals(source.numDimensions()-2, imgplusZT.numDimensions());
+		assertEquals(source.numDimensions() - 1, imgplusZ.numDimensions());
+		assertEquals(source.numDimensions() - 2, imgplusZT.numDimensions());
 	}
 
 	/**
@@ -210,10 +216,11 @@ public class HyperSliceImgPlusTest {
 	 */
 	@Test
 	public void testMinLongArray() {
-		long[] min1 = new long[imgplusZ.nDimensions];
-		long[] expected1 = Util.getArrayFromValue(0l, imgplusZ.nDimensions);
-		long[] min2 = new long[imgplusZT.nDimensions];
-		long[] expected2 = Util.getArrayFromValue(0l, imgplusZT.nDimensions);
+		long[] min1 = new long[imgplusZ.numDimensions()];
+		long[] expected1 = Util.getArrayFromValue(0l, imgplusZ.numDimensions());
+		long[] min2 = new long[imgplusZT.numDimensions()];
+		long[] expected2 = Util
+				.getArrayFromValue(0l, imgplusZT.numDimensions());
 		imgplusZ.min(min1);
 		imgplusZT.min(min2);
 		assertArrayEquals(expected1, min1);
@@ -228,14 +235,14 @@ public class HyperSliceImgPlusTest {
 		int index1 = 0;
 		for (int d = 0; d < imgplusZ.numDimensions(); d++) {
 			if (d != REMOVED_DIM_1) {
-				assertEquals(dim[d]-1, imgplusZ.max(index1));
+				assertEquals(dim[d] - 1, imgplusZ.max(index1));
 				index1++;
 			}
 		}
 		int index2 = 0;
 		for (int d = 0; d < imgplusZT.numDimensions(); d++) {
-			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2+1)) {
-				assertEquals(dim[d]-1, imgplusZT.max(index2));
+			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2 + 1)) {
+				assertEquals(dim[d] - 1, imgplusZT.max(index2));
 				index2++;
 			}
 		}
@@ -246,20 +253,20 @@ public class HyperSliceImgPlusTest {
 	 */
 	@Test
 	public void testMaxLongArray() {
-		long[] max1 = new long[imgplusZ.nDimensions];
-		long[] expected1 = new long[imgplusZ.nDimensions];
-		long[] max2 = new long[imgplusZT.nDimensions];
-		long[] expected2 = new long[imgplusZT.nDimensions];
+		long[] max1 = new long[imgplusZ.numDimensions()];
+		long[] expected1 = new long[imgplusZ.numDimensions()];
+		long[] max2 = new long[imgplusZT.numDimensions()];
+		long[] expected2 = new long[imgplusZT.numDimensions()];
 
 		int index1 = 0;
 		int index2 = 0;
 		for (int d = 0; d < dim.length; d++) {
 			if (d != REMOVED_DIM_1) {
-				expected1[ index1 ] = dim[d]-1;
+				expected1[index1] = dim[d] - 1;
 				index1++;
 			}
-			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2+1)) {
-				expected2[ index2 ] = dim[d]-1;
+			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2 + 1)) {
+				expected2[index2] = dim[d] - 1;
 				index2++;
 			}
 		}
@@ -267,11 +274,13 @@ public class HyperSliceImgPlusTest {
 		imgplusZ.max(max1);
 		imgplusZT.max(max2);
 		assertArrayEquals(
-				String.format("Expected max[] to be %s, but was %s", Util.printCoordinates(expected1), Util.printCoordinates(max1)),
-				expected1, max1);
+				String.format("Expected max[] to be %s, but was %s",
+						Util.printCoordinates(expected1),
+						Util.printCoordinates(max1)), expected1, max1);
 		assertArrayEquals(
-				String.format("Expected max[] to be %s, but was %s", Util.printCoordinates(expected2), Util.printCoordinates(max2)),
-				expected2, max2);
+				String.format("Expected max[] to be %s, but was %s",
+						Util.printCoordinates(expected2),
+						Util.printCoordinates(max2)), expected2, max2);
 	}
 
 	/**
@@ -288,7 +297,7 @@ public class HyperSliceImgPlusTest {
 			}
 		}
 		for (int d = 0; d < imgplusZT.numDimensions(); d++) {
-			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2+1)) {
+			if (d != REMOVED_DIM_1 && d != (REMOVED_DIM_2 + 1)) {
 				assertEquals(source.dimension(d), imgplusZ.dimension(index2));
 				index2++;
 			}
@@ -300,53 +309,64 @@ public class HyperSliceImgPlusTest {
 	 */
 	@Test
 	public void testCursor() {
-		
+
 		reset();
-		
+
 		// Write something in the target image
 		Cursor<UnsignedByteType> cursor = imgplusZ.cursor();
 		while (cursor.hasNext()) {
 			cursor.fwd();
 			// Sum X & C in ( X, Y, C, T ) image
-			cursor.get().set( cursor.getIntPosition(0) + cursor.getIntPosition(2) ); 
+			cursor.get().set(
+					cursor.getIntPosition(0) + cursor.getIntPosition(2));
 		}
-		
-		/* Compare what happened to the source. It should be zero everywhere
-		 * BUT in the slice we modified with the hyper slice accessor. */
+
+		/*
+		 * Compare what happened to the source. It should be zero everywhere BUT
+		 * in the slice we modified with the hyper slice accessor.
+		 */
 		Cursor<UnsignedByteType> scursor = source.cursor();
 		while (scursor.hasNext()) {
 			scursor.fwd();
 			if (scursor.getIntPosition(REMOVED_DIM_1) == DIM_POS_1) {
-				assertEquals( scursor.getIntPosition(0) + scursor.getIntPosition(3) , scursor.get().get() );
+				assertEquals(
+						scursor.getIntPosition(0) + scursor.getIntPosition(3),
+						scursor.get().get());
 			} else {
-				assertEquals( 0 , scursor.get().get() );
+				assertEquals(0, scursor.get().get());
 			}
 		}
 
 		reset();
-		
+
 		// Write something in the target image
 		cursor = imgplusZT.cursor();
 		while (cursor.hasNext()) {
 			cursor.fwd();
-			// Still sum X & C in ( X, Y, C ) image		
-			cursor.get().set( cursor.getIntPosition(0) + cursor.getIntPosition(2) ); 
+			// Still sum X & C in ( X, Y, C ) image
+			cursor.get().set(
+					cursor.getIntPosition(0) + cursor.getIntPosition(2));
 		}
-		
-		/* Compare what happened to the source. It should be zero everywhere
-		 * BUT in the slice we modified with the hyper slice accessor. */
+
+		/*
+		 * Compare what happened to the source. It should be zero everywhere BUT
+		 * in the slice we modified with the hyper slice accessor.
+		 */
 		scursor = source.cursor();
 		while (scursor.hasNext()) {
 			scursor.fwd();
-			if (scursor.getIntPosition(REMOVED_DIM_1) == DIM_POS_1 && scursor.getIntPosition(REMOVED_DIM_2+1) == DIM_POS_2) {
-				int expected = scursor.getIntPosition(0) + scursor.getIntPosition(3);
+			if (scursor.getIntPosition(REMOVED_DIM_1) == DIM_POS_1
+					&& scursor.getIntPosition(REMOVED_DIM_2 + 1) == DIM_POS_2) {
+				int expected = scursor.getIntPosition(0)
+						+ scursor.getIntPosition(3);
 				int got = scursor.get().get();
 				assertEquals(
-						String.format("At position %s in the source,  expected %d, but got %d.", 
-								printCoords(scursor), expected, got), 
-						 expected, got );
+						String.format(
+								"At position %s in the source,  expected %d, but got %d.",
+								printCoords(scursor), expected, got), expected,
+						got);
 			} else {
-				assertEquals( 0 , scursor.get().get() );
+				assertEquals(0, scursor.get().get());
 			}
 		}
 	}
@@ -359,7 +379,8 @@ public class HyperSliceImgPlusTest {
 		long expected1 = source.size() / source.dimension(REMOVED_DIM_1);
 		assertEquals(expected1, imgplusZ.size());
 
-		long expected2 = source.size() / source.dimension(REMOVED_DIM_1) / source.dimension(REMOVED_DIM_2+1);
+		long expected2 = source.size() / source.dimension(REMOVED_DIM_1)
+				/ source.dimension(REMOVED_DIM_2 + 1);
 		assertEquals(expected2, imgplusZT.size());
 	}
 
