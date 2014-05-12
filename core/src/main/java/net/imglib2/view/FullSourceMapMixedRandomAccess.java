@@ -39,17 +39,18 @@ import net.imglib2.RandomAccess;
 import net.imglib2.transform.integer.Mixed;
 
 /**
- * Wrap a {@code source} RandomAccess which is related to this by a {@link Mixed}
- * {@code transformToSource}.
- * This is for {@link Mixed} transforms that feature a full mapping of source to
- * target components. That is, there is no down-projection, no source component is discarded.
- * In this case, the current position can be recovered from the position of the source RandomAccess.
- * Localize can be implemented via localize on the source RandomAccess.
- *
+ * Wrap a {@code source} RandomAccess which is related to this by a
+ * {@link Mixed} {@code transformToSource}. This is for {@link Mixed} transforms
+ * that feature a full mapping of source to target components. That is, there is
+ * no down-projection, no source component is discarded. In this case, the
+ * current position can be recovered from the position of the source
+ * RandomAccess. Localize can be implemented via localize on the source
+ * RandomAccess.
+ * 
  * <p>
  * For the general case, see {@link MixedRandomAccess}.
  * </p>
- *
+ * 
  * @param <T>
  * @author Tobias Pietzsch
  */
@@ -259,7 +260,8 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractEuclidean
 		assert distance.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in tmpDistance[].
+		// this may not assign all components of the target distance in
+		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 		{
@@ -275,7 +277,8 @@ public final class FullSourceMapMixedRandomAccess< T > extends AbstractEuclidean
 		assert distance.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in tmpDistance[].
+		// this may not assign all components of the target distance in
+		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 		{

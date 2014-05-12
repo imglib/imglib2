@@ -33,23 +33,24 @@
 
 package net.imglib2.algorithm.edge;
 
+import net.imglib2.AbstractRealLocalizable;
+
 /**
  * An oriented point representing a sub-pixel localized segment of a
  * (hyper-)edge.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class Edgel
+public class Edgel extends AbstractRealLocalizable
 {
-	private final float[] position;
 
-	private final float[] gradient;
+	private final double[] gradient;
 
-	private final float magnitude;
+	private final double magnitude;
 
 	/**
 	 * Create an edgel.
-	 *
+	 * 
 	 * @param position
 	 *            the sub-pixel position of the edgel.
 	 * @param gradient
@@ -58,41 +59,40 @@ public class Edgel
 	 * @param magnitude
 	 *            the gradient magnitude at the edgel position.
 	 */
-	public Edgel( final float[] position, final float[] gradient, final float magnitude )
+	public Edgel( final double[] position, final double[] gradient, final double magnitude )
 	{
-		this.position = position.clone();
+		super(position.clone());
 		this.gradient = gradient.clone();
 		this.magnitude = magnitude;
 	}
 
 	/**
-	 * Get the sub-pixel position of the edgel.
-	 *
-	 * @return the sub-pixel position of the edgel.
-	 */
-	public float[] getPosition()
-	{
-		return position;
-	}
-
-	/**
 	 * Get the gradient direction at the edgel position. This is a unit vector
 	 * perpendicular to the edge direction.
-	 *
+	 * 
 	 * @return the gradient direction at the edgel position.
 	 */
-	public float[] getGradient()
+	public double[] getGradient()
 	{
 		return gradient;
 	}
 
 	/**
 	 * Get the gradient magnitude at the edgel position.
-	 *
+	 * 
 	 * @return the gradient magnitude at the edgel position.
 	 */
-	public float getMagnitude()
+	public double getMagnitude()
 	{
 		return magnitude;
 	}
+
+	public String toString()
+	{
+		return String.format("Edgel: pos (%.2f,%.2f,%.2f) grad (%.2f,%.2f,%.2f) mag (%.2f)", 
+				position[0], position[1], position[2], 
+				gradient[0], gradient[1], gradient[2], 
+				magnitude);
+	}
+	
 }

@@ -46,41 +46,45 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @see CompositeXYProjector
  * @see RealARGBConverter for the code upon which this class was based.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Grant Harris
  * @author Curtis Rueden
  */
-public class RealLUTConverter<R extends RealType<R>> extends
-	AbstractLinearRange implements Converter<R, ARGBType>
+public class RealLUTConverter< R extends RealType< R >> extends
+		AbstractLinearRange implements Converter< R, ARGBType >
 {
 
 	private ColorTable lut = null;
 
-	public RealLUTConverter() {
+	public RealLUTConverter()
+	{
 		super();
 	}
 
-	public RealLUTConverter(final double min, final double max,
-		final ColorTable lut)
+	public RealLUTConverter( final double min, final double max,
+			final ColorTable lut )
 	{
-		super(min, max);
-		setLUT(lut);
+		super( min, max );
+		setLUT( lut );
 	}
 
-	public ColorTable getLUT() {
+	public ColorTable getLUT()
+	{
 		return lut;
 	}
 
-	public void setLUT(final ColorTable lut) {
+	public void setLUT( final ColorTable lut )
+	{
 		this.lut = lut == null ? new ColorTable8() : lut;
 	}
 
 	@Override
-	public void convert(final R input, final ARGBType output) {
+	public void convert( final R input, final ARGBType output )
+	{
 		final double a = input.getRealDouble();
-		final int argb = lut.lookupARGB(min, max, a);
-		output.set(argb);
+		final int argb = lut.lookupARGB( min, max, a );
+		output.set( argb );
 	}
 
 }

@@ -42,23 +42,23 @@ import net.imglib2.type.Type;
 /**
  * Store {@link PixelList}, mean, covariance, instability score, parent, and
  * children of a extremal region. A tree of {@link MserEvaluationNode} is built
- * from emitted {@link MserComponentIntermediate}. As soon as the parent of a
- * node is available, it is checked whether the instability score is a local
- * minimum. In this case, it is passed to
+ * from emitted {@link MserPartialComponent}. As soon as the parent of a node is
+ * available, it is checked whether the instability score is a local minimum. In
+ * this case, it is passed to
  * {@link MserTree#foundNewMinimum(MserEvaluationNode)}, where a MSER is
  * created.
- *
+ * 
  * We construct the component tree for generic types, which means that we cannot
  * raise the threshold values in steps of 1 (value type might be continuous or
  * non-numeric). To create a tree whose every branch covers a continuous range
- * of values, two nodes are created for every {@link MserComponentIntermediate}.
+ * of values, two nodes are created for every {@link MserPartialComponent}.
  * These mark the range of values covered by that component. The first node is
  * called the <em>"direct"</em> or <em>"non-intermediate node"</em> and is
- * created, when the {@link MserComponentIntermediate} is emitted. It marks the
- * lower bound (inclusive) of the value range. When the parent of the
- * {@link MserComponentIntermediate} is emitted, the
- * <em>"intermediate node"</em> is created which covers the same pixels as the
- * direct node but marks the upper bound (exclusive) of the value range.
+ * created, when the {@link MserPartialComponent} is emitted. It marks the lower
+ * bound (inclusive) of the value range. When the parent of the
+ * {@link MserPartialComponent} is emitted, the <em>"intermediate node"</em> is
+ * created which covers the same pixels as the direct node but marks the upper
+ * bound (exclusive) of the value range.
  *
  * @param <T>
  *            value type of the input image.
@@ -83,7 +83,8 @@ final class MserEvaluationNode< T extends Type< T > >
 	final PixelList pixelList;
 
 	/**
-	 * The child in the component tree from which we inherit the component size history.
+	 * The child in the component tree from which we inherit the component size
+	 * history.
 	 */
 	private final MserEvaluationNode< T > historyChild;
 
@@ -91,18 +92,18 @@ final class MserEvaluationNode< T extends Type< T > >
 	 * Parent of this {@link MserEvaluationNode} in the component tree.
 	 */
 	private MserEvaluationNode< T > parent;
-	
+
 	/**
 	 * MSER score : |R_i - R_{i-\Delta}| / |R_i|.
 	 */
 	double score;
 
 	/**
-	 * Whether the {@link #score} is valid.
-	 * (Otherwise it has not or cannot be computed.)
+	 * Whether the {@link #score} is valid. (Otherwise it has not or cannot be
+	 * computed.)
 	 */
-	private boolean isScoreValid;
-	
+	private final boolean isScoreValid;
+
 	/**
 	 * Number of dimensions in the image.
 	 */
@@ -114,17 +115,18 @@ final class MserEvaluationNode< T extends Type< T > >
 	final double[] mean;
 
 	/**
-	 * Independent elements of the covariance of pixel positions (xx, xy, xz, ..., yy, yz, ..., zz, ...).
+	 * Independent elements of the covariance of pixel positions (xx, xy, xz,
+	 * ..., yy, yz, ..., zz, ...).
 	 */
 	final double[] cov;
 
 	/**
-	 * {@link Mser}s associated to this region or its children. To build up the MSER
-	 * tree.
+	 * {@link Mser}s associated to this region or its children. To build up the
+	 * MSER tree.
 	 */
 	final ArrayList< Mser< T > > mserThisOrChildren;
 
-	MserEvaluationNode( final MserComponentIntermediate< T > component, final Comparator< T > comparator, final ComputeDelta< T > delta, final MserTree< T > tree )
+	MserEvaluationNode( final MserPartialComponent< T > component, final Comparator< T > comparator, final ComputeDelta< T > delta, final MserTree< T > tree )
 	{
 		value = component.getValue().copy();
 		pixelList = new PixelList( component.pixelList );
@@ -143,7 +145,7 @@ final class MserEvaluationNode< T extends Type< T > >
 		}
 
 		MserEvaluationNode< T > historyWinner = node;
-		for ( MserComponentIntermediate< T > c : component.children )
+		for ( final MserPartialComponent< T > c : component.children )
 		{
 			// create intermediate MserEvaluationNode between child and this node.
 			node = new MserEvaluationNode< T >( c.getEvaluationNode(), value, comparator, delta );
@@ -155,9 +157,9 @@ final class MserEvaluationNode< T extends Type< T > >
 				historySize = c.size();
 			}
 		}
-		
+
 		historyChild = historyWinner;
-		
+
 		n = component.n;
 		mean = new double[ n ];
 		cov = new double[ ( n * (n+1) ) / 2 ];
@@ -174,7 +176,7 @@ final class MserEvaluationNode< T extends Type< T > >
 		component.setEvaluationNode( this );
 		isScoreValid = computeMserScore( delta, comparator, false );
 		if ( isScoreValid )
-			for ( MserEvaluationNode< T > a : children )
+			for ( final MserEvaluationNode< T > a : children )
 				a.evaluateLocalMinimum( tree, delta, comparator );
 
 		if ( children.size() == 1 )
@@ -182,7 +184,7 @@ final class MserEvaluationNode< T extends Type< T > >
 		else
 		{
 			mserThisOrChildren = new ArrayList< Mser< T > >();
-			for ( MserEvaluationNode< T > a : children )
+			for ( final MserEvaluationNode< T > a : children )
 				mserThisOrChildren.addAll( a.mserThisOrChildren );
 		}
 	}
@@ -209,7 +211,7 @@ final class MserEvaluationNode< T extends Type< T > >
 		mserThisOrChildren = child.mserThisOrChildren;
 	}
 
-	private void setParent( MserEvaluationNode< T > node )
+	private void setParent( final MserEvaluationNode< T > node )
 	{
 		parent = node;
 	}
@@ -220,7 +222,7 @@ final class MserEvaluationNode< T extends Type< T > >
 	 * node. The mser score is computed as |R_i - R_{i-\Delta}| / |R_i|, where
 	 * R_i is this component and R_{i-delta} is the component delta steps down
 	 * the component tree (threshold level is delta lower than this).
-	 * 
+	 *
 	 * @param delta
 	 * @param isIntermediate
 	 *            whether this is an intermediate node. This influences the
@@ -248,7 +250,7 @@ final class MserEvaluationNode< T extends Type< T > >
 		if ( isIntermediate && comparator.compare( node.value, valueMinus ) == 0 && node.historyChild != null )
 			node = node.historyChild;
 		score = ( size - node.size ) / ( ( double ) size );
-		return true;		
+		return true;
 	}
 
 	/**
@@ -296,7 +298,7 @@ final class MserEvaluationNode< T extends Type< T > >
 			if ( first )
 				first = false;
 			else
-				s += ", ";	
+				s += ", ";
 			s += "(" + node.value + "; " + node.size;
 			if ( node.isScoreValid )
 				s += " s " + node.score + ")";

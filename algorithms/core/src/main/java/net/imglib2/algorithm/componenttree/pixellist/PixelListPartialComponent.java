@@ -36,19 +36,19 @@ package net.imglib2.algorithm.componenttree.pixellist;
 import java.util.ArrayList;
 
 import net.imglib2.Localizable;
-import net.imglib2.algorithm.componenttree.Component;
+import net.imglib2.algorithm.componenttree.PartialComponent;
 import net.imglib2.type.Type;
 
 /**
- * Implementation of {@link Component} that stores a list of associated pixels
- * in a {@link PixelList}.
+ * Implementation of {@link PartialComponent} that stores a list of associated
+ * pixels in a {@link PixelList}.
  *
  * @param <T>
  *            value type of the input image.
  *
  * @author Tobias Pietzsch
  */
-final class PixelListComponentIntermediate< T extends Type< T > > implements Component< T >
+final class PixelListPartialComponent< T extends Type< T > > implements PartialComponent< T, PixelListPartialComponent< T > >
 {
 	/**
 	 * Threshold value of the connected component.
@@ -61,13 +61,13 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 	final PixelList pixelList;
 
 	/**
-	 * A list of PixelListComponentIntermediate merged into this one since it
+	 * A list of {@link PixelListPartialComponent} merged into this one since it
 	 * was last emitted. (For building up component tree.)
 	 */
-	final ArrayList< PixelListComponentIntermediate< T > > children;
+	final ArrayList< PixelListPartialComponent< T > > children;
 
 	/**
-	 * The PixelListComponent assigned to this PixelListComponentIntermediate
+	 * The PixelListComponent assigned to this {@link PixelListPartialComponent}
 	 * when it was last emitted. (For building up component tree.)
 	 */
 	PixelListComponent< T > emittedComponent;
@@ -78,14 +78,14 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 	 * @param value
 	 *            (initial) threshold value {@see #getValue()}.
 	 * @param generator
-	 *            the {@link PixelListComponentGenerator#linkedList} is used to
-	 *            store the {@link #pixelList}.
+	 *            the {@link PixelListPartialComponentGenerator#linkedList} is
+	 *            used to store the {@link #pixelList}.
 	 */
-	PixelListComponentIntermediate( final T value, final PixelListComponentGenerator< T > generator )
+	PixelListPartialComponent( final T value, final PixelListPartialComponentGenerator< T > generator )
 	{
 		pixelList = new PixelList( generator.linkedList.randomAccess(), generator.dimensions );
 		this.value = value.copy();
-		children = new ArrayList< PixelListComponentIntermediate< T > >();
+		children = new ArrayList< PixelListPartialComponent< T > >();
 		emittedComponent = null;
 	}
 
@@ -108,11 +108,10 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 	}
 
 	@Override
-	public void merge( final Component< T > component )
+	public void merge( final PixelListPartialComponent< T > component )
 	{
-		final PixelListComponentIntermediate< T > c = (PixelListComponentIntermediate< T > ) component;
-		pixelList.merge( c.pixelList );
-		children.add( c );
+		pixelList.merge( component.pixelList );
+		children.add( component );
 	}
 
 	@Override
@@ -120,7 +119,7 @@ final class PixelListComponentIntermediate< T extends Type< T > > implements Com
 	{
 		String s = "{" + value.toString() + " : ";
 		boolean first = true;
-		for ( Localizable l : pixelList )
+		for ( final Localizable l : pixelList )
 		{
 			if ( first )
 			{

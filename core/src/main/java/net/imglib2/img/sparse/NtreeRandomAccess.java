@@ -49,9 +49,9 @@ public final class NtreeRandomAccess< T extends NativeType< T >> implements Posi
 
 	private final T type;
 
-	private int n;
+	private final int n;
 
-	private long[] position;
+	private final long[] position;
 
 	public NtreeRandomAccess( final NtreeImg< T, ? > img )
 	{
@@ -214,14 +214,14 @@ public final class NtreeRandomAccess< T extends NativeType< T >> implements Posi
 	}
 
 	@Override
-	public void localize( int[] pos )
+	public void localize( final int[] pos )
 	{
 		for ( int d = 0; d < n; d++ )
 			pos[ d ] = ( int ) this.position[ d ];
 	}
 
 	@Override
-	public void localize( long[] pos )
+	public void localize( final long[] pos )
 	{
 		for ( int d = 0; d < n; d++ )
 			pos[ d ] = this.position[ d ];

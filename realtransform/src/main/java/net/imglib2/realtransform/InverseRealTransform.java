@@ -38,7 +38,7 @@ import net.imglib2.RealPositionable;
 
 /**
  * Final implementation of the inverse of an {@link InvertibleRealTransform}
- * that simply replaces apply by applyInverse and conversely.  The original
+ * that simply replaces apply by applyInverse and conversely. The original
  * {@link InvertibleRealTransform} is returned on {@link #inverse()}.
  * 
  * @author Tobias Pietzsch
@@ -47,7 +47,7 @@ import net.imglib2.RealPositionable;
 public final class InverseRealTransform implements InvertibleRealTransform
 {
 	private final InvertibleRealTransform inverse;
-	
+
 	public InverseRealTransform( final InvertibleRealTransform transform )
 	{
 		inverse = transform;
@@ -106,7 +106,7 @@ public final class InverseRealTransform implements InvertibleRealTransform
 	{
 		return inverse;
 	}
-	
+
 	@Override
 	public InverseRealTransform copy()
 	{

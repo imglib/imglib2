@@ -41,10 +41,10 @@ import net.imglib2.type.numeric.ARGBType;
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Pietzsch
  * @author Preibisch
- * @author 
+ * @author
  * @author Saalfeld
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
@@ -55,9 +55,9 @@ public class NLinearInterpolatorARGBFactory implements InterpolatorFactory< ARGB
 	@Override
 	public NLinearInterpolatorARGB create( final RandomAccessible< ARGBType > randomAccessible )
 	{
-			return new NLinearInterpolatorARGB( randomAccessible );
+		return new NLinearInterpolatorARGB( randomAccessible );
 	}
-	
+
 	/**
 	 * For now, ignore the {@link RealInterval} and return
 	 * {@link #create(RandomAccessible)}.

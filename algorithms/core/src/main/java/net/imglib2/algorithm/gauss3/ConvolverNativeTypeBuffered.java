@@ -46,17 +46,18 @@ import net.imglib2.type.numeric.NumericType;
  * output line. This works for images, where a single line has no more than
  * {@link Integer#MAX_VALUE} elements. For larger images
  * {@link ConvolverNativeType} can be used.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @see ConvolverFactory
- *
+ * 
  * @param <T>
  *            input and output type
  */
 public final class ConvolverNativeTypeBuffered< T extends NumericType< T > & NativeType< T > > implements Runnable
 {
 	/**
-	 * @return a {@link ConvolverFactory} producing {@link ConvolverNativeTypeBuffered}.
+	 * @return a {@link ConvolverFactory} producing
+	 *         {@link ConvolverNativeTypeBuffered}.
 	 */
 	public static < T extends NumericType< T > & NativeType< T > > ConvolverFactoryNativeTypeBuffered< T > factory( final T type )
 	{
@@ -67,10 +68,13 @@ public final class ConvolverNativeTypeBuffered< T extends NumericType< T > & Nat
 	{
 		final private T type;
 
-		public ConvolverFactoryNativeTypeBuffered( final T type ) { this.type = type;}
+		public ConvolverFactoryNativeTypeBuffered( final T type )
+		{
+			this.type = type;
+		}
 
 		@Override
-		public Runnable create( final double[] halfkernel, final RandomAccess< T > in, final RandomAccess< T > out, final int d, final long lineLength)
+		public Runnable create( final double[] halfkernel, final RandomAccess< T > in, final RandomAccess< T > out, final int d, final long lineLength )
 		{
 			return new ConvolverNativeTypeBuffered< T >( halfkernel, in, out, d, lineLength, type );
 		}

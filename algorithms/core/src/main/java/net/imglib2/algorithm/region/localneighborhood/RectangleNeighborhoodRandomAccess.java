@@ -36,13 +36,18 @@ package net.imglib2.algorithm.region.localneighborhood;
 import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RandomAccessible;
 
 public final class RectangleNeighborhoodRandomAccess< T > extends RectangleNeighborhoodLocalizableSampler< T > implements RandomAccess< Neighborhood< T > >
 {
-	public RectangleNeighborhoodRandomAccess( final RandomAccessibleInterval< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory )
+	public RectangleNeighborhoodRandomAccess( final RandomAccessible< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory )
 	{
-		super( source, span, factory );
+		super( source, span, factory, null );
+	}
+
+	public RectangleNeighborhoodRandomAccess( final RandomAccessible< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory, final Interval interval )
+	{
+		super( source, span, factory, interval );
 	}
 
 	private RectangleNeighborhoodRandomAccess( final RectangleNeighborhoodRandomAccess< T > c )

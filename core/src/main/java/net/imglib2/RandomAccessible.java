@@ -34,15 +34,20 @@
 package net.imglib2;
 
 /**
- * <p><em>f:Z<sup>n</sup>&rarr;T</em></p>
+ * <p>
+ * <em>f:Z<sup>n</sup>&rarr;T</em>
+ * </p>
  * 
- * <p>A function over integer space that can create a random access
- * {@link Sampler}.</p>
+ * <p>
+ * A function over integer space that can create a random access {@link Sampler}
+ * .
+ * </p>
  * 
- * <p>If your algorithm takes a RandomAccessible, this
- * usually means that you expect that the domain is infinite.
- * (In contrast to this, {@link RandomAccessibleInterval}s have a
- * finite domain.)</p>
+ * <p>
+ * If your algorithm takes a RandomAccessible, this usually means that you
+ * expect that the domain is infinite. (In contrast to this,
+ * {@link RandomAccessibleInterval}s have a finite domain.)
+ * </p>
  * 
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
@@ -53,8 +58,7 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * Create a random access sampler for integer coordinates.
 	 * 
 	 * <p>
-	 * The returned random access covers as much of the
-	 * domain as possible.
+	 * The returned random access covers as much of the domain as possible.
 	 * </p>
 	 * 
 	 * @return random access sampler
@@ -65,14 +69,15 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * Create a random access sampler for integer coordinates.
 	 * 
 	 * <p>
-	 * The returned random access is intended to be used in the specified interval only.
-	 * Thus, the RandomAccessible may provide optimized versions.
-	 * If the interval is completely contained in the domain,
-	 * the random access is guaranteed to provide the same values as that
-	 * obtained by {@link #randomAccess()} within the interval.
+	 * The returned random access is intended to be used in the specified
+	 * interval only. Thus, the RandomAccessible may provide optimized versions.
+	 * If the interval is completely contained in the domain, the random access
+	 * is guaranteed to provide the same values as that obtained by
+	 * {@link #randomAccess()} within the interval.
 	 * </p>
 	 * 
-	 * @param interval   in which interval you intend to use the random access.
+	 * @param interval
+	 *            in which interval you intend to use the random access.
 	 * 
 	 * @return random access sampler
 	 */

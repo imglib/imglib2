@@ -38,23 +38,23 @@ import net.imglib2.type.volatiles.VolatileRealType;
 
 /**
  * Converts a {@link VolatileRealType} to an {@link ARGBType}.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class VolatileRealTypeARGBConverter extends RealARGBConverter< VolatileRealType< ? > >
 {
 	final protected ARGBType background = new ARGBType( 0xff000040 );
-	
+
 	public VolatileRealTypeARGBConverter()
 	{
 		super();
 	}
-	
+
 	public VolatileRealTypeARGBConverter( final double min, final double max )
 	{
 		super( min, max );
 	}
-	
+
 	@Override
 	public void convert( final VolatileRealType< ? > input, final ARGBType output )
 	{

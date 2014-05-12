@@ -40,10 +40,10 @@ import net.imglib2.type.NativeType;
 
 /**
  * {@link RandomAccess} on a {@link CellImg}.
- *
+ * 
  * The boundaries of the current cell are cached, so that position changes
  * within the same cell have minimal overhead.
- *
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
@@ -435,7 +435,7 @@ public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractC
 	 * Update type to currentCellSteps, currentCellMin, and type after switching
 	 * cells. This is called after randomAccessOnCells and position fields have
 	 * been set.
-	 *
+	 * 
 	 * @param updateD
 	 *            the (first) dimension that triggered the call by moving out of
 	 *            current cell range.

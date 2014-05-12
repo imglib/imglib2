@@ -34,11 +34,11 @@
 package net.imglib2.util;
 
 /**
- * {@link RealSum} implements a method to reduce numerical instabilities
- * when summing up a very large number of double precision numbers.  Numerical
- * problems occur when a small number is added to an already very large sum.
- * In such case, the reduced accuracy of the very large number may lead to the
- * small number being entirely ignored.  The method here stores and updates
+ * {@link RealSum} implements a method to reduce numerical instabilities when
+ * summing up a very large number of double precision numbers. Numerical
+ * problems occur when a small number is added to an already very large sum. In
+ * such case, the reduced accuracy of the very large number may lead to the
+ * small number being entirely ignored. The method here stores and updates
  * intermediate sums for all power of two elements such that the final sum can
  * be generated from intermediate sums that result from equal number of
  * summands.
@@ -48,27 +48,26 @@ package net.imglib2.util;
 public class RealSum
 {
 	protected boolean[] flags;
+
 	protected double[] sums;
-	
-	
+
 	/**
-	 * Create a new {@link RealSum}.  The fields for intermediate sums is
-	 * initialized with a single element and expanded on demand as new
-	 * elements are added.
+	 * Create a new {@link RealSum}. The fields for intermediate sums is
+	 * initialized with a single element and expanded on demand as new elements
+	 * are added.
 	 */
 	public RealSum()
 	{
 		flags = new boolean[ 1 ];
 		sums = new double[ 1 ];
 	}
-	
-	
+
 	/**
-	 * Create a new {@link RealSum}.  The fields for intermediate sums is
-	 * initialized with a given number of elements and will only be expanded
-	 * on demand as new elements are added and the number of existing elements
-	 * is not sufficient.  This may be faster in cases where the required
-	 * number of elements is known in prior.
+	 * Create a new {@link RealSum}. The fields for intermediate sums is
+	 * initialized with a given number of elements and will only be expanded on
+	 * demand as new elements are added and the number of existing elements is
+	 * not sufficient. This may be faster in cases where the required number of
+	 * elements is known in prior.
 	 * 
 	 * @param capacity
 	 */
@@ -78,41 +77,39 @@ public class RealSum
 		flags = new boolean[ ldu ];
 		sums = new double[ ldu ];
 	}
-	
-	
+
 	/**
-	 * Get the current sum by summing up all intermediate sums.  Do not call
-	 * this method repeatedly when the sum has not changed.
+	 * Get the current sum by summing up all intermediate sums. Do not call this
+	 * method repeatedly when the sum has not changed.
 	 */
 	final public double getSum()
 	{
 		double sum = 0;
 		for ( final double s : sums )
 			sum += s;
-		
+
 		return sum;
 	}
-	
-	
+
 	final protected void expand( final double s )
 	{
 		final double[] oldSums = sums;
 		sums = new double[ oldSums.length + 1 ];
 		System.arraycopy( oldSums, 0, sums, 0, oldSums.length );
 		sums[ oldSums.length ] = s;
-		
+
 		final boolean[] oldFlags = flags;
 		flags = new boolean[ sums.length ];
 		System.arraycopy( oldFlags, 0, flags, 0, oldFlags.length );
 		flags[ oldSums.length ] = true;
 	}
-	
 
 	/**
-	 * Add an element to the sum.  All intermediate sums are updated and
-	 * the capacity is increased on demand.
+	 * Add an element to the sum. All intermediate sums are updated and the
+	 * capacity is increased on demand.
 	 * 
-	 * @param a the summand to be added
+	 * @param a
+	 *            the summand to be added
 	 */
 	final public void add( final double a )
 	{
@@ -124,7 +121,7 @@ public class RealSum
 			{
 				flags[ i ] = false;
 				s += sums[ i ];
-				sums[ i ] =  0.0;
+				sums[ i ] = 0.0;
 				++i;
 			}
 			flags[ i ] = true;

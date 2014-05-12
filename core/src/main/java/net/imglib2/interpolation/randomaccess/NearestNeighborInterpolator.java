@@ -43,7 +43,7 @@ import net.imglib2.position.transform.Round;
  * interpolation.
  * 
  * @param <T>
- *
+ * 
  * @author Pietzsch
  * @author Preibisch
  * @author Saalfeld
@@ -57,7 +57,7 @@ public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > >
 	{
 		super( nearestNeighborInterpolator.target.copyRandomAccess() );
 	}
-	
+
 	protected NearestNeighborInterpolator( final RandomAccessible< T > randomAccessible )
 	{
 		super( randomAccessible.randomAccess() );
@@ -68,7 +68,7 @@ public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > >
 	{
 		return target.get();
 	}
-	
+
 	@Override
 	public NearestNeighborInterpolator< T > copy()
 	{

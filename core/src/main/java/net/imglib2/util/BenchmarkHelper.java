@@ -38,19 +38,19 @@ import java.util.Collections;
 
 /**
  * Tools for setting up basic benchmarks.
- *
+ * 
  * Call {@link BenchmarkHelper#benchmark(int, Benchmark)} with the number of
  * iterations and a {@link Runnable} to benchmark to obtain a list of run-times
  * in milliseconds. Use {@link BenchmarkHelper#median(ArrayList)} to compute the
  * median run-time.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class BenchmarkHelper
 {
 	/**
 	 * Compute median of a list of {@link Long}s.
-	 *
+	 * 
 	 * @param values
 	 *            list of values.
 	 * @return median of values.
@@ -68,9 +68,22 @@ public class BenchmarkHelper
 	}
 
 	/**
+	 * Compute minimum of a list of {@link Long}s.
+	 * 
+	 * @param values
+	 *            list of values.
+	 * @return minimum of values.
+	 */
+	public static Long best( final ArrayList< Long > values )
+	{
+		Collections.sort( values );
+		return values.get( 0 );
+	}
+
+	/**
 	 * Run a benchmark numRuns times and record the milliseconds taken for each
 	 * run.
-	 *
+	 * 
 	 * @param numRuns
 	 *            how many times to run the benchmark.
 	 * @param benchmark
@@ -91,12 +104,14 @@ public class BenchmarkHelper
 	}
 
 	/**
-	 * Run a benchmark numRuns times and print the results to {@link System#out}.
-	 *
+	 * Run a benchmark numRuns times and print the results to {@link System#out}
+	 * .
+	 * 
 	 * @param numRuns
 	 *            how many times to run the benchmark.
 	 * @param printIndividualTimes
-	 * 			  whether to print the time for every individual run or just the median.
+	 *            whether to print the time for every individual run or just the
+	 *            median.
 	 * @param benchmark
 	 *            the benchmark.
 	 * @return run-times for each run (in milliseconds).
@@ -118,6 +133,7 @@ public class BenchmarkHelper
 			System.out.println();
 		}
 		System.out.println( "median: " + median( times ) + " ms" );
+		System.out.println( "best: " + best( times ) + " ms" );
 		System.out.println();
 	}
 }

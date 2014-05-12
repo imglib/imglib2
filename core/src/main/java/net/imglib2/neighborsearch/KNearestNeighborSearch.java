@@ -37,13 +37,13 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
 
 /**
- * <em>k</em>-nearest-neighbor search in an Euclidean space.  The interface
+ * <em>k</em>-nearest-neighbor search in an Euclidean space. The interface
  * describes implementations that perform the search for a specified location
  * and provide access to the data, location and distance of the found nearest
- * neighbors until the next search is performed.  In a multi-threaded
+ * neighbors until the next search is performed. In a multi-threaded
  * application, each thread will thus need its own
  * {@link KNearestNeighborSearch}.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -51,7 +51,7 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 {
 	/**
 	 * Perform <em>k</em>-nearest-neighbor search for a reference coordinate.
-	 *
+	 * 
 	 * @param reference
 	 */
 	@Override
@@ -59,14 +59,14 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 
 	/**
 	 * Get the of k nearest neighbor points used in this search
-	 *
+	 * 
 	 * @return the number of nearest neighbor points k used for this search
 	 */
 	public int getK();
 
 	/**
 	 * Access the data of the <em>i</em><sup>th</sup> nearest neighbor, ordered
-	 * by square Euclidean distance.  Data is accessed through a {@link Sampler}
+	 * by square Euclidean distance. Data is accessed through a {@link Sampler}
 	 * that guarantees write access if the underlying data set is writable.
 	 */
 	public Sampler< T > getSampler( final int i );
@@ -78,16 +78,16 @@ public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 	public RealLocalizable getPosition( final int i );
 
 	/**
-	 * Access the square Euclidean distance between the reference location
-	 * as used for the last search and the <em>i</em><sup>th</sup> nearest
+	 * Access the square Euclidean distance between the reference location as
+	 * used for the last search and the <em>i</em><sup>th</sup> nearest
 	 * neighbor, ordered by square Euclidean distance.
 	 */
 	public double getSquareDistance( final int i );
 
 	/**
 	 * Access the Euclidean distance between the reference location as used for
-	 * the last search and the <em>i</em><sup>th</sup> nearest neighbor,
-	 * ordered by square Euclidean distance.
+	 * the last search and the <em>i</em><sup>th</sup> nearest neighbor, ordered
+	 * by square Euclidean distance.
 	 */
 	public double getDistance( final int i );
 

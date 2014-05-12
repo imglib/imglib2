@@ -57,176 +57,207 @@ import java.awt.image.WritableRaster;
  * @author Johannes Schindelin
  */
 public class GeneralPathRegionOfInterest extends
-	AbstractIterableRegionOfInterest implements GeneralPathSegmentHandler
+		AbstractIterableRegionOfInterest implements GeneralPathSegmentHandler
 {
 
 	private GeneralPath path;
-	private long[] stripes; // one-dimensional array for efficiency; these are really { xStart, xEnd, y } triplets
+
+	private long[] stripes; // one-dimensional array for efficiency; these are
+							// really { xStart, xEnd, y } triplets
+
 	private int index;
 
-	public GeneralPathRegionOfInterest() {
-		super(2);
+	public GeneralPathRegionOfInterest()
+	{
+		super( 2 );
 		path = new GeneralPath();
 	}
 
 	@Override
-	public void moveTo(double x, double y) {
-		path.moveTo(x, y);
+	public void moveTo( final double x, final double y )
+	{
+		path.moveTo( x, y );
 	}
 
 	@Override
-	public void lineTo(double x, double y) {
-		path.lineTo(x, y);
+	public void lineTo( final double x, final double y )
+	{
+		path.lineTo( x, y );
 	}
 
 	@Override
-	public void quadTo(double x1, double y1, double x, double y) {
-		path.quadTo(x1, y1, x, y);
+	public void quadTo( final double x1, final double y1, final double x, final double y )
+	{
+		path.quadTo( x1, y1, x, y );
 	}
 
 	@Override
-	public void cubicTo(double x1, double y1, double x2, double y2, double x, double y) {
-		path.curveTo(x1, y1, x2, y2, x, y);
+	public void cubicTo( final double x1, final double y1, final double x2, final double y2, final double x, final double y )
+	{
+		path.curveTo( x1, y1, x2, y2, x, y );
 	}
 
 	@Override
-	public void close() {
+	public void close()
+	{
 		path.closePath();
 	}
 
-	public void reset() {
+	public void reset()
+	{
 		path.reset();
 	}
 
 	// TODO: remove
-	public void setGeneralPath(final GeneralPath path) {
+	public void setGeneralPath( final GeneralPath path )
+	{
 		this.path = path;
 		this.stripes = null;
 	}
 
 	// TODO: remove
-	public GeneralPath getGeneralPath() {
+	public GeneralPath getGeneralPath()
+	{
 		return path;
 	}
 
 	// TODO: use an Interval
-	public void iteratePath(final GeneralPathSegmentHandler handler) {
-		final double[] coords = new double[6];
-		for (final PathIterator iterator = path.getPathIterator(null); !iterator.isDone(); iterator.next()) {
-			int type = iterator.currentSegment(coords);
-			switch (type) {
-				case PathIterator.SEG_MOVETO:
-					handler.moveTo(coords[0], coords[1]);
-					break;
-				case PathIterator.SEG_LINETO:
-					handler.lineTo(coords[0], coords[1]);
-					break;
-				case PathIterator.SEG_QUADTO:
-					handler.quadTo(coords[0], coords[1], coords[2], coords[3]);
-					break;
-				case PathIterator.SEG_CUBICTO:
-					handler.cubicTo(coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
-					break;
-				case PathIterator.SEG_CLOSE:
-					handler.close();
-					break;
-				default:
-					throw new RuntimeException("Unsupported segment type: " + type);
+	public void iteratePath( final GeneralPathSegmentHandler handler )
+	{
+		final double[] coords = new double[ 6 ];
+		for ( final PathIterator iterator = path.getPathIterator( null ); !iterator.isDone(); iterator.next() )
+		{
+			final int type = iterator.currentSegment( coords );
+			switch ( type )
+			{
+			case PathIterator.SEG_MOVETO:
+				handler.moveTo( coords[ 0 ], coords[ 1 ] );
+				break;
+			case PathIterator.SEG_LINETO:
+				handler.lineTo( coords[ 0 ], coords[ 1 ] );
+				break;
+			case PathIterator.SEG_QUADTO:
+				handler.quadTo( coords[ 0 ], coords[ 1 ], coords[ 2 ], coords[ 3 ] );
+				break;
+			case PathIterator.SEG_CUBICTO:
+				handler.cubicTo( coords[ 0 ], coords[ 1 ], coords[ 2 ], coords[ 3 ], coords[ 4 ], coords[ 5 ] );
+				break;
+			case PathIterator.SEG_CLOSE:
+				handler.close();
+				break;
+			default:
+				throw new RuntimeException( "Unsupported segment type: " + type );
 			}
 		}
 	}
 
 	@Override
-	protected boolean nextRaster(long[] position, long[] end) {
+	protected boolean nextRaster( final long[] position, final long[] end )
+	{
 		ensureStripes();
-		if (index >= stripes.length) {
+		if ( index >= stripes.length )
+		{
 			index = 0;
 			return false;
 		}
-		position[0] = stripes[index];
-		end[0] = stripes[index + 1];
-		position[1] = end[1] = stripes[index + 2];
+		position[ 0 ] = stripes[ index ];
+		end[ 0 ] = stripes[ index + 1 ];
+		position[ 1 ] = end[ 1 ] = stripes[ index + 2 ];
 		index += 3;
 		return true;
 	}
 
 	@Override
-	public boolean contains(double[] position) {
-		return path.contains(position[0], position[1]);
+	public boolean contains( final double[] position )
+	{
+		return path.contains( position[ 0 ], position[ 1 ] );
 	}
 
-	private void ensureStripes() {
-		if (stripes != null) return;
+	private void ensureStripes()
+	{
+		if ( stripes != null )
+			return;
 
 		// handle degenerate case gracefully
-		if (path.getPathIterator(null).isDone()) {
-			stripes = new long[0];
+		if ( path.getPathIterator( null ).isDone() )
+		{
+			stripes = new long[ 0 ];
 			return;
 		}
 
-		Rectangle2D bounds = path.getBounds2D();
-		int left = (int)Math.floor(bounds.getMinX());
-		int top = (int)Math.floor(bounds.getMinY());
-		int width = (int)(Math.ceil(bounds.getMaxX()) - left);
-		int height = (int)(Math.ceil(bounds.getMaxY()) - top);
+		final Rectangle2D bounds = path.getBounds2D();
+		final int left = ( int ) Math.floor( bounds.getMinX() );
+		final int top = ( int ) Math.floor( bounds.getMinY() );
+		final int width = ( int ) ( Math.ceil( bounds.getMaxX() ) - left );
+		final int height = ( int ) ( Math.ceil( bounds.getMaxY() ) - top );
 
-		byte[] pixels = new byte[width * height];
-		final ColorModel colorModel = new IndexColorModel(1, 2, new byte[] { 0, 1 }, new byte[] { 0, 1 }, new byte[] { 0, 1 });
-		final SampleModel sampleModel = new MultiPixelPackedSampleModel(DataBuffer.TYPE_BYTE, width, height, 8);
-		final DataBuffer dataBuffer = new DataBufferByte(pixels, width * height);
-		final WritableRaster raster = Raster.createWritableRaster(sampleModel, dataBuffer, null);
-		final BufferedImage image = new BufferedImage(colorModel, raster, false, null );
-		final GeneralPath transformed = new GeneralPath(path);
-		transformed.transform(AffineTransform.getTranslateInstance(-bounds.getMinX(), -bounds.getMinY()));
-		Graphics2D g2d = (Graphics2D)image.getGraphics();
-		g2d.setColor(Color.WHITE);
-		g2d.setStroke(new BasicStroke(0));
-		g2d.fill(transformed);
+		final byte[] pixels = new byte[ width * height ];
+		final ColorModel colorModel = new IndexColorModel( 1, 2, new byte[] { 0, 1 }, new byte[] { 0, 1 }, new byte[] { 0, 1 } );
+		final SampleModel sampleModel = new MultiPixelPackedSampleModel( DataBuffer.TYPE_BYTE, width, height, 8 );
+		final DataBuffer dataBuffer = new DataBufferByte( pixels, width * height );
+		final WritableRaster raster = Raster.createWritableRaster( sampleModel, dataBuffer, null );
+		final BufferedImage image = new BufferedImage( colorModel, raster, false, null );
+		final GeneralPath transformed = new GeneralPath( path );
+		transformed.transform( AffineTransform.getTranslateInstance( -bounds.getMinX(), -bounds.getMinY() ) );
+		final Graphics2D g2d = ( Graphics2D ) image.getGraphics();
+		g2d.setColor( Color.WHITE );
+		g2d.setStroke( new BasicStroke( 0 ) );
+		g2d.fill( transformed );
 
-		long[] strps = new long[3 * width * height / 2]; // avoid re-allocation
+		final long[] strps = new long[ 3 * (width==1?2:width) * height / 2 ]; // avoid
+																				// re-allocation
 		int i = 0;
-		for (int y = 0; y < height; y++) {
+		for ( int y = 0; y < height; y++ )
+		{
 			long start = -1;
-			for (int x = 0; x < width; x++) {
-				boolean inside = pixels[x + width * y] != 0;
-				if (start < 0) {
-					if (inside) {
+			for ( int x = 0; x < width; x++ )
+			{
+				final boolean inside = pixels[ x + width * y ] != 0;
+				if ( start < 0 )
+				{
+					if ( inside )
+					{
 						start = x;
-						strps[i] = x + left;
-						strps[i + 2] = y + top;
+						strps[ i ] = x + left;
+						strps[ i + 2 ] = y + top;
 					}
-				} else if (!inside) {
+				}
+				else if ( !inside )
+				{
 					start = -1;
-					strps[i + 1] = x + left;
+					strps[ i + 1 ] = x + left;
 					i += 3;
 				}
 			}
-			if (start >= 0) {
+			if ( start >= 0 )
+			{
 				start = -1;
-				strps[i + 1] = width + left;
+				strps[ i + 1 ] = width + left;
 				i += 3;
 			}
 		}
 
-		this.stripes = new long[i];
-		System.arraycopy(strps, 0, this.stripes, 0, i);
+		this.stripes = new long[ i ];
+		System.arraycopy( strps, 0, this.stripes, 0, i );
 		this.index = 0;
 	}
 
 	@Override
-	public void move(double displacement, int d) {
-		if (d != 0 && d != 1)
-			throw new IllegalArgumentException("Cannot move 2D ROI in dimension " + d);
-		AffineTransform transform = AffineTransform.getTranslateInstance(d == 0 ? displacement : 0, d == 1 ? displacement : 0);
-		path.transform(transform);
+	public void move( final double displacement, final int d )
+	{
+		if ( d != 0 && d != 1 )
+			throw new IllegalArgumentException( "Cannot move 2D ROI in dimension " + d );
+		final AffineTransform transform = AffineTransform.getTranslateInstance( d == 0 ? displacement : 0, d == 1 ? displacement : 0 );
+		path.transform( transform );
 	}
 
 	@Override
-	public void move(double[] displacement) {
-		if (displacement.length != 2)
-			throw new IllegalArgumentException("Cannot move 2D ROI in " + displacement.length + " dimensions");
-		AffineTransform transform = AffineTransform.getTranslateInstance(displacement[0], displacement[1]);
-		path.transform(transform);
+	public void move( final double[] displacement )
+	{
+		if ( displacement.length != 2 )
+			throw new IllegalArgumentException( "Cannot move 2D ROI in " + displacement.length + " dimensions" );
+		final AffineTransform transform = AffineTransform.getTranslateInstance( displacement[ 0 ], displacement[ 1 ] );
+		path.transform( transform );
 	}
 
 }

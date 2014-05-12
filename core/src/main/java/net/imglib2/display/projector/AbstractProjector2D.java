@@ -41,7 +41,7 @@ import net.imglib2.display.projector.specialized.ArrayImgXYByteProjector;
  * source format to a target format (A->B). 2D hints that the result is
  * something 2 dimensional. The base class provides methods to select a
  * reference point in a multi-dimensional data object. Sub classes like
- * {@link Projector2D}, {@link SamplingProjector2D} or
+ * {@link IterableIntervalProjector2D}, {@link SamplingProjector2D} or
  * {@link ArrayImgXYByteProjector} specify a mapping that uses the reference
  * point to project data into a 2 dimensional representation. <br>
  * A basic example is the extraction of a data plain (containing the reference
@@ -51,8 +51,10 @@ import net.imglib2.display.projector.specialized.ArrayImgXYByteProjector;
  * 
  * @author Michael Zinsmaier, Martin Horn, Christian Dietz
  * 
- * @param <A> source type
- * @param <B> target type
+ * @param <A>
+ *            source type
+ * @param <B>
+ *            target type
  */
 public abstract class AbstractProjector2D< A, B > extends Point implements Projector< A, B >
 {
@@ -67,11 +69,11 @@ public abstract class AbstractProjector2D< A, B > extends Point implements Proje
 	 * 
 	 * @param numDims
 	 */
-	public AbstractProjector2D( int numDims )
+	public AbstractProjector2D( final int numDims )
 	{
 		// as this is an 2D projector, we need at least two dimensions,
 		// even if the source is one-dimensional
-		super(Math.max( 2, numDims ) );
+		super( Math.max( 2, numDims ) );
 
 		min = new long[ n ];
 		max = new long[ n ];

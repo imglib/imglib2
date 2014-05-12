@@ -33,6 +33,8 @@
 
 package net.imglib2.meta;
 
+import java.util.Map;
+
 import net.imglib2.display.ColorTable;
 import net.imglib2.img.Img;
 
@@ -90,5 +92,8 @@ public interface ImageMetadata {
 	 * number typically matches the total number of planes.
 	 */
 	int getColorTableCount();
+
+	/** Gets a table of key/value pairs associated with the image. */
+	Map<String, Object> getProperties();
 
 }

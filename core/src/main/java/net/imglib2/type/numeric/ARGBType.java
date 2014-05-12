@@ -38,26 +38,31 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.AbstractNativeType;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeId;
 import net.imglib2.util.Util;
 
 /**
- * TODO
+ * A {@link NativeType native} {@link NumericType} that encodes four channels at
+ * unsigned byte precision into one 32bit signed integer which is the format
+ * used in most display oriented image processing libraries such as AWT or
+ * ImageJ. {@link ARGBType} implements {@link NumericType} as element-wise
+ * vector algebra.
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
-final public class ARGBType extends AbstractNativeType< ARGBType > implements NumericType< ARGBType >
+public class ARGBType extends AbstractNativeType< ARGBType > implements NumericType< ARGBType >
 {
-	final protected NativeImg< ARGBType, ? extends IntAccess > img;
+	final protected NativeImg< ?, ? extends IntAccess > img;
 
 	// the DataAccess that holds the information
 	protected IntAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public ARGBType( final NativeImg< ARGBType, ? extends IntAccess > byteStorage )
+	public ARGBType( final NativeImg< ?, ? extends IntAccess > intStorage )
 	{
-		img = byteStorage;
+		img = intStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -66,6 +71,13 @@ final public class ARGBType extends AbstractNativeType< ARGBType > implements Nu
 		img = null;
 		dataAccess = new IntArray( 1 );
 		set( value );
+	}
+
+	// this is the constructor if you want to specify the dataAccess
+	public ARGBType( final IntAccess access )
+	{
+		img = null;
+		dataAccess = access;
 	}
 
 	// this is the constructor if you want it to be a variable

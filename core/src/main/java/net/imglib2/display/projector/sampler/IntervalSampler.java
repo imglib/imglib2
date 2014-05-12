@@ -53,7 +53,7 @@ public class IntervalSampler< T > implements ProjectedSampler< T >
 
 	private RandomAccess< T > m_source;
 
-	public IntervalSampler( int projectionDimension, long startPosition, long endPosition )
+	public IntervalSampler( final int projectionDimension, final long startPosition, final long endPosition )
 	{
 
 		m_projectionDimension = projectionDimension;
@@ -62,7 +62,7 @@ public class IntervalSampler< T > implements ProjectedSampler< T >
 	}
 
 	@Override
-	public void jumpFwd( long steps )
+	public void jumpFwd( final long steps )
 	{
 		for ( int i = 0; i < steps; i++ )
 		{
@@ -101,7 +101,7 @@ public class IntervalSampler< T > implements ProjectedSampler< T >
 	}
 
 	@Override
-	public void setRandomAccess( RandomAccess< T > srcAccess )
+	public void setRandomAccess( final RandomAccess< T > srcAccess )
 	{
 		m_source = srcAccess;
 	}

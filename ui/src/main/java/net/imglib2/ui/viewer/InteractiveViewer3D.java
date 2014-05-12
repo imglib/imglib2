@@ -50,14 +50,14 @@ import net.imglib2.ui.util.InterpolatingSource;
 
 /**
  * Interactive viewer for a 3D {@link RandomAccessible}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class InteractiveViewer3D< T extends NumericType< T > > extends InteractiveRealViewer< AffineTransform3D, InteractiveDisplayCanvasComponent< AffineTransform3D > >
 {
 	/**
 	 * Create an interactive viewer for a 3D {@link RandomAccessible}.
-	 *
+	 * 
 	 * @param width
 	 *            window width.
 	 * @param height
@@ -98,7 +98,8 @@ public class InteractiveViewer3D< T extends NumericType< T > > extends Interacti
 		display.addOverlayRenderer( box );
 
 		// add KeyHandler for toggling interpolation
-		display.addHandler( new KeyAdapter() {
+		display.addHandler( new KeyAdapter()
+		{
 			@Override
 			public void keyPressed( final KeyEvent e )
 			{
@@ -108,6 +109,6 @@ public class InteractiveViewer3D< T extends NumericType< T > > extends Interacti
 					requestRepaint();
 				}
 			}
-		});
+		} );
 	}
 }

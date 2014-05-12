@@ -43,10 +43,10 @@ import net.imglib2.type.numeric.ARGBType;
 
 /**
  * An {@link AbstractMultiResolutionRenderer} for a single {@link RenderSource}.
- *
+ * 
  * @param <A>
  *            transform type
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld
  */
@@ -73,7 +73,7 @@ public class MultiResolutionRenderer< A extends AffineSet & AffineGet & Concaten
 		 * Create a factory for {@link MultiResolutionRenderer
 		 * MultiResolutionRenderer} of the given source, with the specified
 		 * multi-resolution, multi-threading, and double-buffering properties.
-		 *
+		 * 
 		 * @param transformType
 		 *            which transformation type (e.g.
 		 *            {@link AffineTransformType2D affine 2d} or

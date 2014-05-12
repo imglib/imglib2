@@ -54,12 +54,15 @@ import net.imglib2.type.numeric.integer.LongType;
  * 
  * @author Barry DeZonia
  */
-public class DiscreteFrequencyDistribution implements Img<LongType> {
+public class DiscreteFrequencyDistribution implements Img< LongType >
+{
 
 	// -- instance variables --
 
-	private final Img<LongType> counts;
-	private final RandomAccess<LongType> accessor;
+	private final Img< LongType > counts;
+
+	private final RandomAccess< LongType > accessor;
+
 	private long totalValues;
 
 	// -- public api --
@@ -67,18 +70,18 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	/**
 	 * Construct an n-dimensional counter with the given number of bins
 	 */
-	public DiscreteFrequencyDistribution(long[] binCounts) {
+	public DiscreteFrequencyDistribution( final long[] binCounts )
+	{
 		// check inputs for issues
 
-		for (int i = 0; i < binCounts.length; i++) {
-			if (binCounts[i] <= 0) {
-				throw new IllegalArgumentException("invalid bin count (<= 0)");
-			}
+		for ( int i = 0; i < binCounts.length; i++ )
+		{
+			if ( binCounts[ i ] <= 0 ) { throw new IllegalArgumentException( "invalid bin count (<= 0)" ); }
 		}
 
 		// then build object
 
-		counts = new ArrayImgFactory<LongType>().create(binCounts, new LongType());
+		counts = new ArrayImgFactory< LongType >().create( binCounts, new LongType() );
 
 		accessor = counts.randomAccess();
 
@@ -86,10 +89,11 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	}
 
 	/**
-	 * Construct an n-dimensional counter using a provided Img<LongType> to store
-	 * counts.
+	 * Construct an n-dimensional counter using a provided Img<LongType> to
+	 * store counts.
 	 */
-	public DiscreteFrequencyDistribution(Img<LongType> img) {
+	public DiscreteFrequencyDistribution( final Img< LongType > img )
+	{
 		counts = img;
 		accessor = counts.randomAccess();
 		resetCounters();
@@ -98,9 +102,11 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	/**
 	 * Resets all frequency counts to zero.
 	 */
-	public void resetCounters() {
-		Cursor<LongType> cursor = counts.cursor();
-		while (cursor.hasNext()) {
+	public void resetCounters()
+	{
+		final Cursor< LongType > cursor = counts.cursor();
+		while ( cursor.hasNext() )
+		{
 			cursor.next().setZero();
 		}
 		totalValues = 0;
@@ -109,40 +115,45 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	/**
 	 * Returns the frequency count associated with a given bin.
 	 */
-	public long frequency(long[] binPos) {
-		for (int i = 0; i < accessor.numDimensions(); i++) {
-			if (binPos[i] < 0 || binPos[i] >= dimension(i)) return 0;
+	public long frequency( final long[] binPos )
+	{
+		for ( int i = 0; i < accessor.numDimensions(); i++ )
+		{
+			if ( binPos[ i ] < 0 || binPos[ i ] >= dimension( i ) )
+				return 0;
 		}
-		accessor.setPosition(binPos);
+		accessor.setPosition( binPos );
 		return accessor.get().get();
 	}
 
 	/**
 	 * Sets the frequency count associated with a given bin.
 	 */
-	public void setFrequency(long[] binPos, long value) {
-		if (value < 0) {
-			throw new IllegalArgumentException("frequency count must be >= 0");
-		}
-		accessor.setPosition(binPos);
-		long currentValue = accessor.get().get();
-		totalValues += (value - currentValue);
-		accessor.get().set(value);
+	public void setFrequency( final long[] binPos, final long value )
+	{
+		if ( value < 0 ) { throw new IllegalArgumentException( "frequency count must be >= 0" ); }
+		accessor.setPosition( binPos );
+		final long currentValue = accessor.get().get();
+		totalValues += ( value - currentValue );
+		accessor.get().set( value );
 	}
 
 	/**
 	 * Returns the relative frequency (0 <= f <= 1) associated with a given bin.
 	 */
-	public double relativeFrequency(long[] binPos) {
-		if (totalValues == 0) return 0;
-		return 1.0 * frequency(binPos) / totalValues;
+	public double relativeFrequency( final long[] binPos )
+	{
+		if ( totalValues == 0 )
+			return 0;
+		return 1.0 * frequency( binPos ) / totalValues;
 	}
 
 	/**
 	 * Increments the frequency count of a specified bin.
 	 */
-	public void increment(long[] binPos) {
-		accessor.setPosition(binPos);
+	public void increment( final long[] binPos )
+	{
+		accessor.setPosition( binPos );
 		accessor.get().inc();
 		totalValues++;
 	}
@@ -150,8 +161,9 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	/**
 	 * Decrements the frequency count of a specified bin.
 	 */
-	public void decrement(long[] binPos) {
-		accessor.setPosition(binPos);
+	public void decrement( final long[] binPos )
+	{
+		accessor.setPosition( binPos );
 		accessor.get().dec();
 		totalValues--;
 	}
@@ -159,38 +171,44 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	/**
 	 * Returns the total number of values counted by this distribution.
 	 */
-	public long totalValues() {
+	public long totalValues()
+	{
 		return totalValues;
 	}
 
 	/**
 	 * Returns the highest frequency count found within the bins.
 	 */
-	public long modeCount() {
-		List<long[]> modes = modePositions();
-		return frequency(modes.get(0));
+	public long modeCount()
+	{
+		final List< long[] > modes = modePositions();
+		return frequency( modes.get( 0 ) );
 	}
 
 	/**
 	 * Returns a list of bin positions of the highest frequency bins.
 	 */
-	public List<long[]> modePositions() {
+	public List< long[] > modePositions()
+	{
 		long commonValue = 0;
-		List<long[]> modePositions = new ArrayList<long[]>();
-		Cursor<LongType> cursor = localizingCursor();
-		while (cursor.hasNext()) {
-			long val = cursor.next().get();
-			if (val > commonValue) {
+		final List< long[] > modePositions = new ArrayList< long[] >();
+		final Cursor< LongType > cursor = localizingCursor();
+		while ( cursor.hasNext() )
+		{
+			final long val = cursor.next().get();
+			if ( val > commonValue )
+			{
 				commonValue = val;
 				modePositions.clear();
-				long[] pos = new long[numDimensions()];
-				cursor.localize(pos);
-				modePositions.add(pos);
+				final long[] pos = new long[ numDimensions() ];
+				cursor.localize( pos );
+				modePositions.add( pos );
 			}
-			else if (val == commonValue) {
-				long[] pos = new long[numDimensions()];
-				cursor.localize(pos);
-				modePositions.add(pos);
+			else if ( val == commonValue )
+			{
+				final long[] pos = new long[ numDimensions() ];
+				cursor.localize( pos );
+				modePositions.add( pos );
 			}
 		}
 		return modePositions;
@@ -199,134 +217,160 @@ public class DiscreteFrequencyDistribution implements Img<LongType> {
 	// -- Img methods --
 
 	@Override
-	public RandomAccess<LongType> randomAccess() {
+	public RandomAccess< LongType > randomAccess()
+	{
 		return counts.randomAccess();
 	}
 
 	@Override
-	public RandomAccess<LongType> randomAccess(Interval interval) {
-		return counts.randomAccess(interval);
+	public RandomAccess< LongType > randomAccess( final Interval interval )
+	{
+		return counts.randomAccess( interval );
 	}
 
 	@Override
-	public int numDimensions() {
+	public int numDimensions()
+	{
 		return counts.numDimensions();
 	}
 
 	@Override
-	public long min(int d) {
-		return counts.min(d);
+	public long min( final int d )
+	{
+		return counts.min( d );
 	}
 
 	@Override
-	public void min(long[] min) {
-		counts.min(min);
+	public void min( final long[] min )
+	{
+		counts.min( min );
 	}
 
 	@Override
-	public void min(Positionable min) {
-		counts.min(min);
+	public void min( final Positionable min )
+	{
+		counts.min( min );
 	}
 
 	@Override
-	public long max(int d) {
-		return counts.max(d);
+	public long max( final int d )
+	{
+		return counts.max( d );
 	}
 
 	@Override
-	public void max(long[] max) {
-		counts.max(max);
+	public void max( final long[] max )
+	{
+		counts.max( max );
 	}
 
 	@Override
-	public void max(Positionable max) {
-		counts.max(max);
+	public void max( final Positionable max )
+	{
+		counts.max( max );
 	}
 
 	@Override
-	public double realMin(int d) {
-		return counts.realMin(d);
+	public double realMin( final int d )
+	{
+		return counts.realMin( d );
 	}
 
 	@Override
-	public void realMin(double[] min) {
-		counts.realMin(min);
+	public void realMin( final double[] min )
+	{
+		counts.realMin( min );
 	}
 
 	@Override
-	public void realMin(RealPositionable min) {
-		counts.realMin(min);
+	public void realMin( final RealPositionable min )
+	{
+		counts.realMin( min );
 	}
 
 	@Override
-	public double realMax(int d) {
-		return counts.realMax(d);
+	public double realMax( final int d )
+	{
+		return counts.realMax( d );
 	}
 
 	@Override
-	public void realMax(double[] max) {
-		counts.realMax(max);
+	public void realMax( final double[] max )
+	{
+		counts.realMax( max );
 	}
 
 	@Override
-	public void realMax(RealPositionable max) {
-		counts.realMax(max);
+	public void realMax( final RealPositionable max )
+	{
+		counts.realMax( max );
 	}
 
 	@Override
-	public void dimensions(long[] dimensions) {
-		counts.dimensions(dimensions);
+	public void dimensions( final long[] dimensions )
+	{
+		counts.dimensions( dimensions );
 	}
 
 	@Override
-	public long dimension(int d) {
-		return counts.dimension(d);
+	public long dimension( final int d )
+	{
+		return counts.dimension( d );
 	}
 
 	@Override
-	public Cursor<LongType> cursor() {
+	public Cursor< LongType > cursor()
+	{
 		return counts.cursor();
 	}
 
 	@Override
-	public Cursor<LongType> localizingCursor() {
+	public Cursor< LongType > localizingCursor()
+	{
 		return counts.localizingCursor();
 	}
 
 	@Override
-	public long size() {
+	public long size()
+	{
 		return counts.size();
 	}
 
 	@Override
-	public LongType firstElement() {
+	public LongType firstElement()
+	{
 		return counts.firstElement();
 	}
 
 	@Override
-	public Object iterationOrder() {
+	public Object iterationOrder()
+	{
 		return counts.iterationOrder();
 	}
 
 	@Override
 	@Deprecated
-	public boolean equalIterationOrder(IterableRealInterval<?> f) {
-		return counts.equalIterationOrder(f);
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return counts.equalIterationOrder( f );
 	}
 
 	@Override
-	public Iterator<LongType> iterator() {
+	public Iterator< LongType > iterator()
+	{
 		return counts.iterator();
 	}
 
 	@Override
-	public ImgFactory<LongType> factory() {
+	public ImgFactory< LongType > factory()
+	{
 		return counts.factory();
 	}
 
 	@Override
-	public DiscreteFrequencyDistribution copy() {
-		return new DiscreteFrequencyDistribution(counts.copy());
+	public DiscreteFrequencyDistribution copy()
+	{
+		return new DiscreteFrequencyDistribution( counts.copy() );
 	}
 
 }

@@ -41,7 +41,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.NativeTypeId;
 
 /**
- *
+ * 
  * @author Stephan Saalfeld
  */
 public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoubleType > implements NativeType< NativeARGBDoubleType >
@@ -211,6 +211,7 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 		gi += inc2;
 		bi += inc2;
 	}
+
 	@Override
 	public void decIndex()
 	{
@@ -220,6 +221,7 @@ public class NativeARGBDoubleType extends AbstractARGBDoubleType< NativeARGBDoub
 		gi -= 4;
 		bi -= 4;
 	}
+
 	@Override
 	public void decIndex( final int decrement )
 	{

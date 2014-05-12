@@ -40,19 +40,19 @@ import org.junit.Test;
 
 /**
  * TODO
- *
+ * 
  */
 public class SequentializeTransformTest
 {
 	@Test
 	public void test2Dto1D()
 	{
-		long[] dim = new long[] {10, 20};
-		SequentializeTransform t = new SequentializeTransform( dim, 1 );
-		
-		long[] source = new long[ 2 ];
-		long[] target = new long[ 1 ];
-		long[] expectedTarget = new long[ 1 ];
+		final long[] dim = new long[] { 10, 20 };
+		final SequentializeTransform t = new SequentializeTransform( dim, 1 );
+
+		final long[] source = new long[ 2 ];
+		final long[] target = new long[ 1 ];
+		final long[] expectedTarget = new long[ 1 ];
 
 		source[ 0 ] = 0;
 		source[ 1 ] = 0;
@@ -65,7 +65,7 @@ public class SequentializeTransformTest
 		expectedTarget[ 0 ] = 5;
 		t.apply( source, target );
 		assertArrayEquals( expectedTarget, target );
-	
+
 		source[ 0 ] = 5;
 		source[ 1 ] = 1;
 		expectedTarget[ 0 ] = 15;
@@ -76,12 +76,12 @@ public class SequentializeTransformTest
 	@Test
 	public void test3Dto1D()
 	{
-		long[] dim = new long[] {10, 20, 30};
-		SequentializeTransform t = new SequentializeTransform( dim, 1 );
-		
-		int[] source = new int[ 3 ];
-		int[] target = new int[ 1 ];
-		int[] expectedTarget = new int[ 1 ];
+		final long[] dim = new long[] { 10, 20, 30 };
+		final SequentializeTransform t = new SequentializeTransform( dim, 1 );
+
+		final int[] source = new int[ 3 ];
+		final int[] target = new int[ 1 ];
+		final int[] expectedTarget = new int[ 1 ];
 
 		source[ 0 ] = 0;
 		source[ 1 ] = 0;
@@ -96,7 +96,7 @@ public class SequentializeTransformTest
 		expectedTarget[ 0 ] = 5;
 		t.apply( source, target );
 		assertArrayEquals( expectedTarget, target );
-	
+
 		source[ 0 ] = 5;
 		source[ 1 ] = 1;
 		source[ 2 ] = 0;
@@ -107,7 +107,7 @@ public class SequentializeTransformTest
 		source[ 0 ] = 5;
 		source[ 1 ] = 4;
 		source[ 2 ] = 3;
-		expectedTarget[ 0 ] = 5 + 4*10 + 3*20*10;
+		expectedTarget[ 0 ] = 5 + 4 * 10 + 3 * 20 * 10;
 		t.apply( source, target );
 		assertArrayEquals( expectedTarget, target );
 	}
@@ -115,12 +115,12 @@ public class SequentializeTransformTest
 	@Test
 	public void test4Dto3D()
 	{
-		long[] dim = new long[] {10, 20, 30, 40};
-		SequentializeTransform t = new SequentializeTransform( dim, 3 );
-		
-		long[] source = new long[ 4 ];
-		long[] target = new long[ 3 ];
-		long[] expectedTarget = new long[ 3 ];
+		final long[] dim = new long[] { 10, 20, 30, 40 };
+		final SequentializeTransform t = new SequentializeTransform( dim, 3 );
+
+		final long[] source = new long[ 4 ];
+		final long[] target = new long[ 3 ];
+		final long[] expectedTarget = new long[ 3 ];
 
 		source[ 0 ] = 0;
 		source[ 1 ] = 0;
@@ -148,20 +148,20 @@ public class SequentializeTransformTest
 		source[ 3 ] = 3;
 		expectedTarget[ 0 ] = source[ 0 ];
 		expectedTarget[ 1 ] = source[ 1 ];
-		expectedTarget[ 2 ] = 2 + 3*30;
+		expectedTarget[ 2 ] = 2 + 3 * 30;
 		t.apply( source, target );
-		assertArrayEquals( expectedTarget, target );	
+		assertArrayEquals( expectedTarget, target );
 	}
-	
+
 	@Test
 	public void test4Dto3DInverse()
 	{
-		long[] dim = new long[] {10, 20, 30, 40};
-		SequentializeTransform t = new SequentializeTransform( dim, 3 );
-		
-		long[] source = new long[ 4 ];
-		long[] target = new long[ 3 ];
-		long[] expectedSource = new long[ 4 ];
+		final long[] dim = new long[] { 10, 20, 30, 40 };
+		final SequentializeTransform t = new SequentializeTransform( dim, 3 );
+
+		final long[] source = new long[ 4 ];
+		final long[] target = new long[ 3 ];
+		final long[] expectedSource = new long[ 4 ];
 
 		source[ 0 ] = 0;
 		source[ 1 ] = 0;
@@ -202,5 +202,5 @@ public class SequentializeTransformTest
 		t.applyInverse( source, target );
 		assertArrayEquals( expectedSource, source );
 	}
-	
+
 }

@@ -37,10 +37,10 @@ import net.imglib2.type.numeric.RealType;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
-public class SubtractReal< A extends RealType<A>, B extends RealType<B>, C extends RealType<C> > implements Function< A, B, C >
+public class SubtractReal< A extends RealType< A >, B extends RealType< B >, C extends RealType< C > > implements Function< A, B, C >
 {
 	@Override
 	public void compute( final A input1, final B input2, final C output )

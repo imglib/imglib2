@@ -38,35 +38,37 @@ import net.imglib2.concatenate.PreConcatenable;
 
 /**
  * 
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class Translation extends AbstractTranslation implements Concatenable< TranslationGet >, PreConcatenable< TranslationGet >
 {
 	final protected Translation inverse;
-	
+
 	protected Translation( final double[] t, final Translation inverse )
 	{
 		super( t, inverse.ds );
 		this.inverse = inverse;
 	}
-	
+
 	public Translation( final int n )
 	{
 		super( n );
 		this.inverse = new Translation( new double[ n ], this );
 	}
-	
+
 	public Translation( final double... t )
 	{
 		this( t.length );
 		set( t );
 	}
-	
+
 	/**
 	 * Set the translation vector.
 	 * 
-	 * @param t t.length <= the number of dimensions of this {@link Translation}
+	 * @param t
+	 *            t.length <= the number of dimensions of this
+	 *            {@link Translation}
 	 */
 	@Override
 	public void set( final double... t )
@@ -77,21 +79,23 @@ public class Translation extends AbstractTranslation implements Concatenable< Tr
 			inverse.t[ d ] = -t[ d ];
 		}
 	}
-	
+
 	/**
 	 * Set one value of the translation vector.
 	 * 
-	 * @param t t.length <= the number of dimensions of this {@link Translation}
+	 * @param t
+	 *            t.length <= the number of dimensions of this
+	 *            {@link Translation}
 	 */
 	@Override
 	public void set( final double t, final int d )
 	{
-		assert d >= 0 && d < numDimensions() : "Dimension index out of bounds.";
-		
+		assert d >= 0 && d < numDimensions(): "Dimension index out of bounds.";
+
 		this.t[ d ] = t;
 		inverse.t[ d ] = -t;
 	}
-	
+
 	@Override
 	public Translation copy()
 	{
@@ -103,13 +107,13 @@ public class Translation extends AbstractTranslation implements Concatenable< Tr
 	{
 		return inverse;
 	}
-	
+
 	@Override
 	public Translation preConcatenate( final TranslationGet a )
 	{
 		for ( int d = 0; d < numDimensions(); ++d )
 			set( t[ d ] + a.getTranslation( d ) );
-		
+
 		return this;
 	}
 
@@ -124,7 +128,7 @@ public class Translation extends AbstractTranslation implements Concatenable< Tr
 	{
 		for ( int d = 0; d < numDimensions(); ++d )
 			set( t[ d ] + a.getTranslation( d ) );
-		
+
 		return this;
 	}
 

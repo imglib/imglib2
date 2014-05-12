@@ -37,7 +37,7 @@ import net.imglib2.img.basictypeaccess.ByteAccess;
 
 /**
  * ByteAccess based on a {@link Ntree}<Byte>.
- *
+ * 
  * @author Tobias Pietzsch
  */
 public final class ByteNtree implements ByteAccess, NtreeAccess< Byte, ByteNtree >

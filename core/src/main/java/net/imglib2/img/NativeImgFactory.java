@@ -46,16 +46,16 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- *
+ * 
  */
 public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgFactory< T >
 {
 	/**
-	 * This class will ask the {@link Type} to create a 
-	 * suitable {@link Img} for the {@link Type} and the dimensionality.
+	 * This class will ask the {@link Type} to create a suitable {@link Img} for
+	 * the {@link Type} and the dimensionality.
 	 * 
-	 * {@link Type} will then call one of the abstract methods defined below to create the 
-	 * {@link NativeImg}
+	 * {@link Type} will then call one of the abstract methods defined below to
+	 * create the {@link NativeImg}
 	 * 
 	 * @return {@link Img} - the instantiated Container
 	 */

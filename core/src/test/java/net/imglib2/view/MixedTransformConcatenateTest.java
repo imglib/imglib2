@@ -27,7 +27,6 @@
 package net.imglib2.view;
 
 import static org.junit.Assert.assertTrue;
-import Jama.Matrix;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.transform.integer.SlicingTransform;
@@ -36,17 +35,19 @@ import net.imglib2.transform.integer.TranslationTransform;
 import org.junit.Before;
 import org.junit.Test;
 
+import Jama.Matrix;
+
 /**
  * TODO
- *
+ * 
  */
 public class MixedTransformConcatenateTest
 {
 	public static boolean testConcatenation( final MixedTransform t1, final Mixed t2 )
 	{
-		if (t1.numSourceDimensions() != t2.numTargetDimensions() )
+		if ( t1.numSourceDimensions() != t2.numTargetDimensions() )
 		{
-			System.out.println("incompatible dimensions");
+			System.out.println( "incompatible dimensions" );
 			return false;
 		}
 
@@ -56,11 +57,12 @@ public class MixedTransformConcatenateTest
 		final Matrix mt2 = new Matrix( t2.getMatrix() );
 		final Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
-		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
-			System.out.println("=======================");
-			System.out.println("t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
+		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 )
+		{
+			System.out.println( "=======================" );
+			System.out.println( "t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
 
 			System.out.print( "t1 = " );
 			mt1.print( 1, 0 );
@@ -72,7 +74,7 @@ public class MixedTransformConcatenateTest
 			mt1.times( mt2 ).print( 1, 0 );
 
 			System.out.println( "wrong result" );
-			System.out.println("=======================");
+			System.out.println( "=======================" );
 			return false;
 		}
 
@@ -81,9 +83,9 @@ public class MixedTransformConcatenateTest
 
 	public static boolean testPreConcatenation( final Mixed t1, final MixedTransform t2 )
 	{
-		if (t1.numSourceDimensions() != t2.numTargetDimensions() )
+		if ( t1.numSourceDimensions() != t2.numTargetDimensions() )
 		{
-			System.out.println("incompatible dimensions");
+			System.out.println( "incompatible dimensions" );
 			return false;
 		}
 
@@ -93,11 +95,12 @@ public class MixedTransformConcatenateTest
 		final Matrix mt2 = new Matrix( t2.getMatrix() );
 		final Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
-		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
-			System.out.println("=======================");
-			System.out.println("t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
+		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 )
+		{
+			System.out.println( "=======================" );
+			System.out.println( "t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
 
 			System.out.print( "t1 = " );
 			mt1.print( 1, 0 );
@@ -109,7 +112,7 @@ public class MixedTransformConcatenateTest
 			mt1.times( mt2 ).print( 1, 0 );
 
 			System.out.println( "wrong result" );
-			System.out.println("=======================");
+			System.out.println( "=======================" );
 			return false;
 		}
 
@@ -117,40 +120,50 @@ public class MixedTransformConcatenateTest
 	}
 
 	MixedTransform tr1;
+
 	MixedTransform tr2;
+
 	MixedTransform tr3;
+
 	MixedTransform perm1;
+
 	MixedTransform rot1;
+
 	MixedTransform proj1;
+
 	MixedTransform proj2;
+
 	MixedTransform comp1;
+
 	MixedTransform slice1;
+
 	TranslationTransform translation1;
+
 	SlicingTransform slicing1;
 
 	@Before
 	public void setUp()
-    {
+	{
 		tr1 = new MixedTransform( 3, 3 );
-		long[] translation = new long[] {3, 4, 5};
+		long[] translation = new long[] { 3, 4, 5 };
 		tr1.setTranslation( translation );
 
 		tr2 = new MixedTransform( 3, 3 );
-		translation = new long[] {7, 8, 9};
+		translation = new long[] { 7, 8, 9 };
 		tr2.setTranslation( translation );
 
 		perm1 = new MixedTransform( 3, 3 );
-		boolean[] zero = new boolean[] {false, false, false};
-		boolean[] inv = new boolean[] {false, false, false};
-		int[] component = new int[] {0, 2, 1};
+		boolean[] zero = new boolean[] { false, false, false };
+		boolean[] inv = new boolean[] { false, false, false };
+		int[] component = new int[] { 0, 2, 1 };
 		perm1.setComponentZero( zero );
 		perm1.setComponentMapping( component );
 		perm1.setComponentInversion( inv );
 
 		rot1 = new MixedTransform( 3, 3 );
-		zero = new boolean[] {false, false, false};
-		inv = new boolean[] {false, true, false};
-		component = new int[] {1, 0, 2};
+		zero = new boolean[] { false, false, false };
+		inv = new boolean[] { false, true, false };
+		component = new int[] { 1, 0, 2 };
 		rot1.setComponentZero( zero );
 		rot1.setComponentMapping( component );
 		rot1.setComponentInversion( inv );
@@ -169,13 +182,13 @@ public class MixedTransformConcatenateTest
 
 		comp1 = rot1.concatenate( tr2 );
 
-		translation1 = new TranslationTransform( new long[] {2011, 3, 24} );
+		translation1 = new TranslationTransform( new long[] { 2011, 3, 24 } );
 
 		slicing1 = new SlicingTransform( 2, 3 );
 		slicing1.setComponentMapping( new int[] { 0, 1, 0 } );
 		slicing1.setComponentZero( new boolean[] { false, false, true } );
 		slicing1.setTranslation( new long[] { 0, 0, 100 } );
-    }
+	}
 
 	@Test
 	public void concatenateSlice1Tr3()

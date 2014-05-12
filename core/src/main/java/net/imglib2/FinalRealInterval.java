@@ -35,15 +35,16 @@ package net.imglib2;
 
 /**
  * Implementation of the {@link RealInterval} interface.
- *
- *
+ * 
+ * 
  * @author Stephan Preibisch
  */
 public class FinalRealInterval extends AbstractRealInterval
 {
 	/**
-	 * Creates a new {@link AbstractRealInterval} using an existing {@link RealInterval}
-	 *
+	 * Creates a new {@link AbstractRealInterval} using an existing
+	 * {@link RealInterval}
+	 * 
 	 * @param interval
 	 */
 	public FinalRealInterval( final RealInterval interval )
@@ -53,7 +54,7 @@ public class FinalRealInterval extends AbstractRealInterval
 
 	/**
 	 * Creates a new {@link AbstractRealInterval} from min and max coordinates
-	 *
+	 * 
 	 * @param min
 	 * @param max
 	 */
@@ -63,10 +64,10 @@ public class FinalRealInterval extends AbstractRealInterval
 	}
 
 	/**
-	 * Create a {@link FinalRealInterval} from a parameter list comprising minimum
-	 * coordinates and size. For example, to create a 2D interval from (10, 10)
-	 * to (20, 40) use createMinSize( 10, 10, 11, 31 ).
-	 *
+	 * Create a {@link FinalRealInterval} from a parameter list comprising
+	 * minimum coordinates and size. For example, to create a 2D interval from
+	 * (10, 10) to (20, 40) use createMinSize( 10, 10, 11, 31 ).
+	 * 
 	 * @param minsize
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -88,10 +89,10 @@ public class FinalRealInterval extends AbstractRealInterval
 	}
 
 	/**
-	 * Create a {@link FinalRealInterval} from a parameter list comprising minimum
-	 * and maximum coordinates. For example, to create a 2D interval from (10,
-	 * 10) to (20, 40) use createMinMax( 10, 10, 20, 40 ).
-	 *
+	 * Create a {@link FinalRealInterval} from a parameter list comprising
+	 * minimum and maximum coordinates. For example, to create a 2D interval
+	 * from (10, 10) to (20, 40) use createMinMax( 10, 10, 20, 40 ).
+	 * 
 	 * @param minmax
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify

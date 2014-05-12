@@ -207,6 +207,13 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 	}
 
 	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Integer#hashCode().
+		return get();
+	}
+
+	@Override
 	public int compareTo( final UnsignedShortType c )
 	{
 		final int a = get();

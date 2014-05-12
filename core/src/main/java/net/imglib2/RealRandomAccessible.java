@@ -34,15 +34,19 @@
 package net.imglib2;
 
 /**
- * <p><em>f:R<sup>n</sup>&rarr;T</em></p>
+ * <p>
+ * <em>f:R<sup>n</sup>&rarr;T</em>
+ * </p>
  * 
- * <p>A function over real space that can create a random access
- * {@link Sampler}.</p>
+ * <p>
+ * A function over real space that can create a random access {@link Sampler}.
+ * </p>
  * 
- * <p>If your algorithm takes a RealRandomAccessible, this
- * usually means that you expect that the domain is infinite.
- * (In contrast to this, {@link RealRandomAccessibleRealInterval}s have a
- * finite domain.)</p>
+ * <p>
+ * If your algorithm takes a RealRandomAccessible, this usually means that you
+ * expect that the domain is infinite. (In contrast to this,
+ * {@link RealRandomAccessibleRealInterval}s have a finite domain.)
+ * </p>
  * 
  * @author Stephan Saalfeld
  */
@@ -54,6 +58,6 @@ public interface RealRandomAccessible< T > extends EuclideanSpace
 	 * @return random access sampler
 	 */
 	public RealRandomAccess< T > realRandomAccess();
-	
+
 	public RealRandomAccess< T > realRandomAccess( RealInterval interval );
 }

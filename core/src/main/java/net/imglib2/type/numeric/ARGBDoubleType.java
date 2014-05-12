@@ -32,17 +32,17 @@
  */
 package net.imglib2.type.numeric;
 
-
 /**
  * 
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class ARGBDoubleType extends AbstractARGBDoubleType< ARGBDoubleType >
 {
 	protected double a, r, g, b;
-	
-	public ARGBDoubleType() {}
+
+	public ARGBDoubleType()
+	{}
 
 	public ARGBDoubleType( final double a, final double r, final double g, final double b )
 	{
@@ -60,18 +60,18 @@ public class ARGBDoubleType extends AbstractARGBDoubleType< ARGBDoubleType >
 	{
 		return new ARGBDoubleType( a, r, g, b );
 	}
-	
+
 	@Override
-	public void set( final double a, final double r, final double g, final double b)
+	public void set( final double a, final double r, final double g, final double b )
 	{
 		this.a = a;
 		this.r = r;
 		this.g = g;
 		this.b = b;
 	}
-	
-	public void set( final NativeARGBDoubleType c ) 
-	{ 
+
+	public void set( final NativeARGBDoubleType c )
+	{
 		set( c.getA(), c.getR(), c.getG(), c.getB() );
 	}
 

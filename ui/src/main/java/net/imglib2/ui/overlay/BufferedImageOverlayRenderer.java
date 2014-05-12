@@ -44,7 +44,7 @@ import net.imglib2.ui.RenderTarget;
  * {@link OverlayRenderer} drawing a {@link BufferedImage}, scaled to fill the
  * canvas. It can be used as a {@link RenderTarget}, such that the
  * {@link BufferedImage} to draw is set by a {@link Renderer}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class BufferedImageOverlayRenderer implements OverlayRenderer, RenderTarget
@@ -93,7 +93,7 @@ public class BufferedImageOverlayRenderer implements OverlayRenderer, RenderTarg
 
 	/**
 	 * Set the {@link BufferedImage} that is to be drawn on the canvas.
-	 *
+	 * 
 	 * @param img
 	 *            image to draw (may be null).
 	 */

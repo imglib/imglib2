@@ -70,7 +70,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * 
 	 * @param nDim
 	 */
-	public EllipseRegionOfInterest( int nDim )
+	public EllipseRegionOfInterest( final int nDim )
 	{
 		super( nDim );
 		origin = new RealPoint( nDim );
@@ -84,7 +84,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param origin
 	 * @param radii
 	 */
-	public EllipseRegionOfInterest( RealLocalizable origin, double[] radii )
+	public EllipseRegionOfInterest( final RealLocalizable origin, final double[] radii )
 	{
 		super( origin.numDimensions() );
 		this.origin = new RealPoint( origin );
@@ -98,7 +98,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * 
 	 * @param origin
 	 */
-	public EllipseRegionOfInterest( RealLocalizable origin )
+	public EllipseRegionOfInterest( final RealLocalizable origin )
 	{
 		this( origin, new double[ origin.numDimensions() ] );
 	}
@@ -110,7 +110,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param origin
 	 * @param radius
 	 */
-	public EllipseRegionOfInterest( RealLocalizable origin, double radius )
+	public EllipseRegionOfInterest( final RealLocalizable origin, final double radius )
 	{
 		this( origin );
 		Arrays.fill( radii, radius );
@@ -122,7 +122,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param origin
 	 *            the new origin
 	 */
-	public void setOrigin( RealLocalizable origin )
+	public void setOrigin( final RealLocalizable origin )
 	{
 		this.origin.setPosition( origin );
 		invalidateCachedState();
@@ -133,7 +133,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * 
 	 * @param origin
 	 */
-	public void setOrigin( double[] origin )
+	public void setOrigin( final double[] origin )
 	{
 		this.origin.setPosition( origin );
 		invalidateCachedState();
@@ -148,7 +148,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            the dimension (0 to n-1 for n-dimensional hyper-ellipse) of
 	 *            the coordinate
 	 */
-	public void setOrigin( double origin, int d )
+	public void setOrigin( final double origin, final int d )
 	{
 		this.origin.setPosition( origin, d );
 		invalidateCachedState();
@@ -160,21 +160,21 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param displacement
 	 *            add this displacement to the origin coordinates.
 	 */
-	public void move( RealLocalizable displacement )
+	public void move( final RealLocalizable displacement )
 	{
 		origin.move( displacement );
 		invalidateCachedState();
 	}
 
 	@Override
-	public void move( double[] displacement )
+	public void move( final double[] displacement )
 	{
 		origin.move( displacement );
 		invalidateCachedState();
 	}
 
 	@Override
-	public void move( double displacement, int d )
+	public void move( final double displacement, final int d )
 	{
 		origin.move( displacement, d );
 		invalidateCachedState();
@@ -187,7 +187,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            dimension to retrieve
 	 * @return the coordinate of the origin / center at that dimension
 	 */
-	public double getOrigin( int d )
+	public double getOrigin( final int d )
 	{
 		return origin.getDoublePosition( d );
 	}
@@ -199,12 +199,12 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 *            set the position of this RealPositionable to that of the
 	 *            origin.
 	 */
-	public void getOrigin( RealPositionable orig )
+	public void getOrigin( final RealPositionable orig )
 	{
 		orig.setPosition( this.origin );
 	}
 
-	public void getOrigin( double[] orig )
+	public void getOrigin( final double[] orig )
 	{
 		this.origin.localize( orig );
 	}
@@ -215,7 +215,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param d
 	 *            fetch radius for this dimension
 	 */
-	public double getRadius( int d )
+	public double getRadius( final int d )
 	{
 		return radii[ d ];
 	}
@@ -226,7 +226,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param r
 	 *            an array of doubles to be filled with the radii
 	 */
-	public void getRadii( double[] r )
+	public void getRadii( final double[] r )
 	{
 		System.arraycopy( this.radii, 0, r, 0, numDimensions() );
 	}
@@ -236,7 +236,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * 
 	 * @param radius
 	 */
-	public void setRadius( double radius )
+	public void setRadius( final double radius )
 	{
 		Arrays.fill( radii, radius );
 		invalidateCachedState();
@@ -250,7 +250,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param d
 	 *            dimension to be adjusted
 	 */
-	public void setRadius( double radius, int d )
+	public void setRadius( final double radius, final int d )
 	{
 		this.radii[ d ] = radius;
 		invalidateCachedState();
@@ -261,7 +261,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * 
 	 * @param radii
 	 */
-	public void setRadii( double[] radii )
+	public void setRadii( final double[] radii )
 	{
 		System.arraycopy( radii, 0, this.radii, 0, numDimensions() );
 		invalidateCachedState();
@@ -274,10 +274,10 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * long[])
 	 */
 	@Override
-	protected void getExtrema( long[] minima, long[] maxima )
+	protected void getExtrema( final long[] minima, final long[] maxima )
 	{
-		double dMinima[] = new double[ numDimensions() ];
-		double dMaxima[] = new double[ numDimensions() ];
+		final double dMinima[] = new double[ numDimensions() ];
+		final double dMaxima[] = new double[ numDimensions() ];
 		getRealExtrema( dMinima, dMaxima );
 		for ( int i = 0; i < numDimensions(); i++ )
 		{
@@ -294,7 +294,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * double[])
 	 */
 	@Override
-	protected void getRealExtrema( double[] minima, double[] maxima )
+	protected void getRealExtrema( final double[] minima, final double[] maxima )
 	{
 		for ( int i = 0; i < numDimensions(); i++ )
 		{
@@ -310,7 +310,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * long[])
 	 */
 	@Override
-	protected boolean nextRaster( long[] position, long[] end )
+	protected boolean nextRaster( final long[] position, final long[] end )
 	{
 		if ( position[ numDimensions() - 1 ] < min( numDimensions() - 1 ) )
 		{
@@ -350,12 +350,12 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 				double d = 0;
 				for ( int j = i; j < numDimensions(); j++ )
 				{
-					double diff = ( position[ j ] - origin.getDoublePosition( j ) ) / radii[ j ];
+					final double diff = ( position[ j ] - origin.getDoublePosition( j ) ) / radii[ j ];
 					d += diff * diff;
 				}
 				for ( int j = 0; j < i; j++ )
 				{
-					double diff = ( origin.getDoublePosition( j ) - Math.round( origin.getDoublePosition( j ) ) ) / radii[ j ];
+					final double diff = ( origin.getDoublePosition( j ) - Math.round( origin.getDoublePosition( j ) ) ) / radii[ j ];
 					d += diff * diff;
 				}
 				if ( d > 1 )
@@ -365,7 +365,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 				 */
 				for ( int j = i - 1; j >= 0; j-- )
 				{
-					double displacement = getRasterDisplacement( position, j );
+					final double displacement = getRasterDisplacement( position, j );
 					position[ j ] = ( long ) Math.ceil( origin.getDoublePosition( j ) - displacement );
 					if ( j == 0 )
 					{
@@ -391,7 +391,7 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param dim
 	 *            dimension to retrieve
 	 */
-	private double getRasterDisplacement( long[] position, int dim )
+	private double getRasterDisplacement( final long[] position, final int dim )
 	{
 		return Math.sqrt( 1 - getPartialDisplacement( position, dim + 1 ) ) * radii[ dim ];
 	}
@@ -404,12 +404,12 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @param position
 	 * @param dim
 	 */
-	private double getPartialDisplacement( long[] position, int dim )
+	private double getPartialDisplacement( final long[] position, final int dim )
 	{
 		double accumulator = 0;
 		for ( int i = dim; i < numDimensions(); i++ )
 		{
-			double diff = ( position[ i ] - origin.getDoublePosition( i ) ) / radii[ i ];
+			final double diff = ( position[ i ] - origin.getDoublePosition( i ) ) / radii[ i ];
 			accumulator += diff * diff;
 		}
 		return accumulator;
@@ -421,12 +421,12 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * @see net.imglib2.roi.AbstractRegionOfInterest#isMember(double[])
 	 */
 	@Override
-	public boolean contains( double[] position )
+	public boolean contains( final double[] position )
 	{
 		double accumulator = 0;
 		for ( int i = 0; i < numDimensions(); i++ )
 		{
-			double diff = ( ( position[ i ] - origin.getDoublePosition( i ) ) / radii[ i ] );
+			final double diff = ( ( position[ i ] - origin.getDoublePosition( i ) ) / radii[ i ] );
 			accumulator += diff * diff;
 		}
 		return accumulator <= 1;
@@ -437,12 +437,12 @@ public class EllipseRegionOfInterest extends AbstractIterableRegionOfInterest
 	 * 
 	 * @param position
 	 */
-	public boolean isMember( long[] position )
+	public boolean isMember( final long[] position )
 	{
 		double accumulator = 0;
 		for ( int i = 0; i < numDimensions(); i++ )
 		{
-			double diff = ( ( position[ i ] - origin.getDoublePosition( i ) ) / radii[ i ] );
+			final double diff = ( ( position[ i ] - origin.getDoublePosition( i ) ) / radii[ i ] );
 			accumulator += diff * diff;
 		}
 		return accumulator <= 1;

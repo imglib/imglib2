@@ -39,7 +39,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.transform.integer.Slicing;
 
 /**
- *
+ * 
  * @param <T>
  * @author Tobias Pietzsch
  */
@@ -95,7 +95,7 @@ public class SlicingRandomAccess< T > extends AbstractEuclideanSpace implements 
 		tmpDistance = new long[ m ];
 	}
 
-	protected SlicingRandomAccess(  final SlicingRandomAccess< T > randomAccess )
+	protected SlicingRandomAccess( final SlicingRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
 		s = randomAccess.s.copyRandomAccess();
@@ -211,7 +211,8 @@ public class SlicingRandomAccess< T > extends AbstractEuclideanSpace implements 
 		assert distance.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in tmpDistance[].
+		// this may not assign all components of the target distance in
+		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 			tmpDistance[ sourceComponent[ d ] ] = distance[ d ];
@@ -224,7 +225,8 @@ public class SlicingRandomAccess< T > extends AbstractEuclideanSpace implements 
 		assert distance.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in tmpDistance[].
+		// this may not assign all components of the target distance in
+		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 			tmpDistance[ sourceComponent[ d ] ] = distance[ d ];

@@ -39,7 +39,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 /**
  * 
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -47,18 +47,18 @@ public class RealUnsignedByteConverter< R extends RealType< R > > extends Abstra
 {
 	public RealUnsignedByteConverter()
 	{
-		super();		
+		super();
 	}
-	
+
 	public RealUnsignedByteConverter( final double min, final double max )
 	{
 		super( min, max );
 	}
-	
+
 	@Override
 	public void convert( final R input, final UnsignedByteType output )
 	{
 		final double a = input.getRealDouble();
 		output.set( Math.min( 255, roundPositive( Math.max( 0, ( ( a - min ) / scale * 255.0 ) ) ) ) );
-	}	
+	}
 }

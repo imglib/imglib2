@@ -34,9 +34,9 @@
 package net.imglib2.realtransform;
 
 /**
- * An <em>n</em>-dimensional scale whose fields can be accessed
- * through their dimension index or as a double array.
- *
+ * An <em>n</em>-dimensional scale whose fields can be accessed through their
+ * dimension index or as a double array.
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public interface ScaleGet extends AffineGet
@@ -48,14 +48,14 @@ public interface ScaleGet extends AffineGet
 	 * @return
 	 */
 	public double getScale( final int d );
-	
+
 	/**
 	 * Get a copy of the <em>n</em>-dimensionsional scale vector.
-	 *  
+	 * 
 	 * @return
 	 */
 	public double[] getScaleCopy();
-	
+
 	@Override
 	ScaleGet inverse();
 }

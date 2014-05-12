@@ -39,10 +39,10 @@ import net.imglib2.RandomAccess;
 
 /**
  * {@link RandomAccess} on a {@link ListImg}.
- *
+ * 
  * @param <T>
  *            the pixel type
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -171,14 +171,14 @@ public class ListRandomAccess< T > extends AbstractLocalizableInt implements Ran
 	@Override
 	public void setPosition( final int position, final int d )
 	{
-		i += img.step[ d ] * (position - this.position[ d ]);
+		i += img.step[ d ] * ( position - this.position[ d ] );
 		this.position[ d ] = position;
 	}
 
 	@Override
 	public void setPosition( final long position, final int d )
 	{
-		i += img.step[ d ] * (position - this.position[ d ]);
+		i += img.step[ d ] * ( position - this.position[ d ] );
 		this.position[ d ] = ( int ) position;
 	}
 

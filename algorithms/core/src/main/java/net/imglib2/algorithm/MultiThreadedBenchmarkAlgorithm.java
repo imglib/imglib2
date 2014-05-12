@@ -34,20 +34,28 @@
 package net.imglib2.algorithm;
 
 /**
- * This is a convenience implementation of an algorithm that implements {@link MultiThreaded},
- * {@link Benchmark} and {@link Algorithm} so that less code has to be re-implemented.
+ * This is a convenience implementation of an algorithm that implements
+ * {@link MultiThreaded}, {@link Benchmark} and {@link Algorithm} so that less
+ * code has to be re-implemented.
  * 
- * IMPORTANT: It is not meant to be used for any other purpose than that, it should not be 
- * demanded by any other method or generic construct, use the interfaces instead.
- *   
+ * IMPORTANT: It is not meant to be used for any other purpose than that, it
+ * should not be demanded by any other method or generic construct, use the
+ * interfaces instead.
+ * 
  * @author Stephan Preibisch
  */
 public abstract class MultiThreadedBenchmarkAlgorithm extends MultiThreadedAlgorithm implements Benchmark
 {
 	protected long processingTime = -1;
 
-	public MultiThreadedBenchmarkAlgorithm() { super(); }
-	
+	public MultiThreadedBenchmarkAlgorithm()
+	{
+		super();
+	}
+
 	@Override
-	public long getProcessingTime() { return processingTime; }
+	public long getProcessingTime()
+	{
+		return processingTime;
+	}
 }

@@ -912,10 +912,12 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	public void move(final double displacement, final int d) {
-		for (final RealPoint p : points) {
-			final double currPos = p.getDoublePosition(d);
-			p.setPosition(currPos + displacement, d);
+	public void move( final double displacement, final int d )
+	{
+		for ( final RealPoint p : points )
+		{
+			final double currPos = p.getDoublePosition( d );
+			p.setPosition( currPos + displacement, d );
 		}
 		invalidateCachedState();
 		stripes = null;

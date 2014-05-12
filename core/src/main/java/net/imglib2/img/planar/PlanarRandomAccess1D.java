@@ -38,8 +38,9 @@ import net.imglib2.type.NativeType;
 
 /**
  * {@link RandomAccess} for a 1-dimensional {@link PlanarImg}.
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -118,7 +119,7 @@ public class PlanarRandomAccess1D< T extends NativeType< T > > extends PlanarRan
 	@Override
 	public void setPosition( final long[] position )
 	{
-		type.updateIndex( ( int )position[ 0 ] );
-		this.position[ 0 ] = ( int )position[ 0 ];
+		type.updateIndex( ( int ) position[ 0 ] );
+		this.position[ 0 ] = ( int ) position[ 0 ];
 	}
 }

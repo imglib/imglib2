@@ -37,8 +37,7 @@ import net.imglib2.transform.InvertibleTransform;
 
 /**
  * TODO
- *
+ * 
  */
 public interface Translation extends Mixed, InvertibleTransform
-{
-}
+{}

@@ -42,7 +42,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -50,7 +50,9 @@ public class OutOfBoundsRandomValueFactory< T extends RealType< T >, F extends I
 		implements OutOfBoundsFactory< T, F >
 {
 	protected T value;
+
 	protected double min, max;
+
 	protected Random rnd;
 
 	public OutOfBoundsRandomValueFactory( final T value, final double min, final double max )
@@ -66,7 +68,7 @@ public class OutOfBoundsRandomValueFactory< T extends RealType< T >, F extends I
 		this.min = min;
 		this.max = max;
 	}
-	
+
 	public void setRandom( final Random rnd )
 	{
 		this.rnd = rnd;

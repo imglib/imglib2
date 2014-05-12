@@ -40,7 +40,8 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**
- * Special implementation for double using the basic type to sum up the individual lines. 
+ * Special implementation for double using the basic type to sum up the
+ * individual lines.
  * 
  * @param <R>
  * @author Stephan Preibisch
@@ -48,7 +49,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 public class IntegralImgDouble< R extends NumericType< R > > extends IntegralImg< R, DoubleType >
 {
 
-	public IntegralImgDouble( final RandomAccessibleInterval<R> img, final DoubleType type, final Converter<R, DoubleType> converter) 
+	public IntegralImgDouble( final RandomAccessibleInterval< R > img, final DoubleType type, final Converter< R, DoubleType > converter )
 	{
 		super( img, type, converter );
 	}
@@ -59,7 +60,7 @@ public class IntegralImgDouble< R extends NumericType< R > > extends IntegralImg
 		// compute the first pixel
 		converter.convert( cursorIn.get(), sum );
 		cursorOut.get().set( sum );
-		
+
 		double sum2 = sum.get();
 
 		for ( int i = 2; i < size; ++i )
@@ -70,7 +71,7 @@ public class IntegralImgDouble< R extends NumericType< R > > extends IntegralImg
 			converter.convert( cursorIn.get(), tmpVar );
 			sum2 += tmpVar.get();
 			cursorOut.get().set( sum2 );
-		}		
+		}
 	}
 
 	@Override
@@ -87,5 +88,5 @@ public class IntegralImgDouble< R extends NumericType< R > > extends IntegralImg
 			cursor.get().set( sum2 );
 		}
 	}
-	
+
 }

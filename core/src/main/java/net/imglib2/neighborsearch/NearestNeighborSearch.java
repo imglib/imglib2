@@ -38,13 +38,12 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.Sampler;
 
 /**
- * Nearest-neighbor search in an Euclidean space.  The interface
- * describes implementations that perform the search for a specified location
- * and provide access to the data, location and distance of the found nearest
- * neighbor until the next search is performed.  In a multi-threaded
- * application, each thread will thus need its own
- * {@link NearestNeighborSearch}. 
- *
+ * Nearest-neighbor search in an Euclidean space. The interface describes
+ * implementations that perform the search for a specified location and provide
+ * access to the data, location and distance of the found nearest neighbor until
+ * the next search is performed. In a multi-threaded application, each thread
+ * will thus need its own {@link NearestNeighborSearch}.
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -56,30 +55,26 @@ public interface NearestNeighborSearch< T > extends EuclideanSpace
 	 * @param reference
 	 */
 	public void search( final RealLocalizable reference );
-	
 
 	/**
-	 * Access the data of the nearest neighbor.  Data is accessed through a
+	 * Access the data of the nearest neighbor. Data is accessed through a
 	 * {@link Sampler} that guarantees write access if the underlying data set
 	 * is writable.
 	 */
 	public Sampler< T > getSampler();
-	
 
 	/**
 	 * Access the position of the nearest neighbor, ordered by square Euclidean
 	 * distance.
 	 */
 	public RealLocalizable getPosition();
-	
-	
+
 	/**
-	 * Access the square Euclidean distance between the reference location
-	 * as used for the last search and the nearest neighbor, ordered by square
+	 * Access the square Euclidean distance between the reference location as
+	 * used for the last search and the nearest neighbor, ordered by square
 	 * Euclidean distance.
 	 */
 	public double getSquareDistance();
-	
 
 	/**
 	 * Access the Euclidean distance between the reference location as used for
@@ -87,8 +82,7 @@ public interface NearestNeighborSearch< T > extends EuclideanSpace
 	 * distance.
 	 */
 	public double getDistance();
-	
-	
+
 	/**
 	 * Create a copy.
 	 */

@@ -35,9 +35,10 @@ package net.imglib2.algorithm.localextrema;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
@@ -55,14 +56,14 @@ import net.imglib2.view.Views;
  * Provides
  * {@link #findLocalExtrema(RandomAccessibleInterval, LocalNeighborhoodCheck, int)}
  * to find pixels that are extrema in their local neighborhood.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class LocalExtrema
 {
 	/**
 	 * A local extremum check.
-	 *
+	 * 
 	 * @param <P>
 	 *            A representation of the extremum. For example, this could be
 	 *            just a {@link Point} describing the location of the extremum.
@@ -77,7 +78,7 @@ public class LocalExtrema
 		 * Determine whether a pixel is a local extremum. If so, return a
 		 * <code>P</code> that represents the maximum. Otherwise return
 		 * <code>null</code>.
-		 *
+		 * 
 		 * @param center
 		 *            an access located on the pixel to test
 		 * @param neighborhood
@@ -92,21 +93,24 @@ public class LocalExtrema
 	 * Find pixels that are extrema in their local neighborhood. The specific
 	 * test for being an extremum can is specified as an implementation of the
 	 * {@link LocalNeighborhoodCheck} interface.
-	 *
-	 * TODO: Make neighborhood shape configurable. This will require that Shape can give a bounding box.
-	 *
+	 * 
+	 * TODO: Make neighborhood shape configurable. This will require that Shape
+	 * can give a bounding box.
+	 * 
 	 * @param img
 	 * @param localNeighborhoodCheck
-	 * @param numThreads
+	 * @param service
 	 * @return
 	 */
-	public static < P, T extends Comparable< T > > ArrayList< P > findLocalExtrema( final RandomAccessibleInterval< T > img, final LocalNeighborhoodCheck< P, T > localNeighborhoodCheck, final int numThreads )
+	public static < P, T extends Comparable< T > > ArrayList< P > findLocalExtrema( final RandomAccessibleInterval< T > img, final LocalNeighborhoodCheck< P, T > localNeighborhoodCheck, final ExecutorService service )
 	{
 		final ArrayList< P > allExtrema = new ArrayList< P >();
 
 		final Interval full = Intervals.expand( img, -1 );
 		final int n = img.numDimensions();
 		final int splitd = n - 1;
+		// FIXME is there a better way to determine number of threads
+		final int numThreads = Runtime.getRuntime().availableProcessors();
 		final int numTasks = numThreads <= 1 ? 1 : ( int ) Math.min( full.dimension( splitd ), numThreads * 20 );
 		final long dsize = full.dimension( splitd ) / numTasks;
 		final long[] min = new long[ n ];
@@ -116,7 +120,7 @@ public class LocalExtrema
 
 		final RectangleShape shape = new RectangleShape( 1, true );
 
-		final ExecutorService ex = Executors.newFixedThreadPool( numThreads );
+		final ArrayList< Future< Void > > futures = new ArrayList< Future< Void > >();
 		final List< P > synchronizedAllExtrema = Collections.synchronizedList( allExtrema );
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
@@ -124,10 +128,10 @@ public class LocalExtrema
 			max[ splitd ] = ( taskNum == numTasks - 1 ) ? full.max( splitd ) : min[ splitd ] + dsize - 1;
 			final RandomAccessibleInterval< T > source = Views.interval( img, new FinalInterval( min, max ) );
 			final ArrayList< P > extrema = new ArrayList< P >( 128 );
-			final Runnable r = new Runnable()
+			final Callable< Void > r = new Callable< Void >()
 			{
 				@Override
-				public void run()
+				public Void call()
 				{
 					final Cursor< T > center = Views.flatIterable( source ).cursor();
 					for ( final Neighborhood< T > neighborhood : shape.neighborhoods( source ) )
@@ -138,18 +142,25 @@ public class LocalExtrema
 							extrema.add( p );
 					}
 					synchronizedAllExtrema.addAll( extrema );
+					return null;
 				}
 			};
-			ex.execute( r );
+			futures.add( service.submit( r ) );
 		}
-		ex.shutdown();
-		try
+		for ( final Future< Void > f : futures )
 		{
-			ex.awaitTermination( 1000, TimeUnit.DAYS );
-		}
-		catch ( final InterruptedException e )
-		{
-			e.printStackTrace();
+			try
+			{
+				f.get();
+			}
+			catch ( final InterruptedException e )
+			{
+				e.printStackTrace();
+			}
+			catch ( final ExecutionException e )
+			{
+				e.printStackTrace();
+			}
 		}
 
 		return allExtrema;
@@ -161,10 +172,10 @@ public class LocalExtrema
 	 * equal to a specified minimum allowed value, and no pixel in the
 	 * neighborhood has a greater value. That means that maxima are non-strict.
 	 * Intensity plateaus may result in multiple maxima.
-	 *
+	 * 
 	 * @param <T>
 	 *            pixel type.
-	 *
+	 * 
 	 * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
 	 */
 	public static class MaximumCheck< T extends Comparable< T > > implements LocalNeighborhoodCheck< Point, T >
@@ -197,10 +208,10 @@ public class LocalExtrema
 	 * equal to a specified maximum allowed value, and no pixel in the
 	 * neighborhood has a smaller value. That means that minima are non-strict.
 	 * Intensity plateaus may result in multiple minima.
-	 *
+	 * 
 	 * @param <T>
 	 *            pixel type.
-	 *
+	 * 
 	 * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
 	 */
 	public static class MinimumCheck< T extends Comparable< T > > implements LocalNeighborhoodCheck< Point, T >

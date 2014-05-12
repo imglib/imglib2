@@ -37,24 +37,26 @@ import net.imglib2.AbstractCursor;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * A simple Cursor that always returns the same value at each location, but iterates the right amount of
- * pixels relative to its size.
+ * A simple Cursor that always returns the same value at each location, but
+ * iterates the right amount of pixels relative to its size.
  * 
  * @param <T>
- *
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ConstantCursor < T > extends AbstractCursor< T >
+public class ConstantCursor< T > extends AbstractCursor< T >
 {
 	long i;
+
 	final long[] dimensions;
-	
+
 	final long maxNumPixels;
+
 	final T type;
-	
-	public ConstantCursor( final T type, final int numDimensions, final long[] dimensions, final long numPixels ) 
+
+	public ConstantCursor( final T type, final int numDimensions, final long[] dimensions, final long numPixels )
 	{
 		super( numDimensions );
 
@@ -62,38 +64,62 @@ public class ConstantCursor < T > extends AbstractCursor< T >
 		this.type = type;
 		this.dimensions = dimensions;
 	}
-	
+
 	public ConstantCursor( final ConstantCursor< T > cursor )
 	{
 		super( cursor.n );
-		
+
 		this.maxNumPixels = cursor.maxNumPixels;
 		this.type = cursor.type;
 		this.i = cursor.i;
 		this.dimensions = cursor.dimensions;
 	}
-	
-	@Override
-	public void reset() { i = -1; }
 
 	@Override
-	public T get() { return type; }
+	public void reset()
+	{
+		i = -1;
+	}
 
 	@Override
-	public boolean hasNext() { return i < maxNumPixels; }
+	public T get()
+	{
+		return type;
+	}
 
 	@Override
-	public void fwd() { ++i; }
+	public boolean hasNext()
+	{
+		return i < maxNumPixels;
+	}
 
 	@Override
-	public void localize( final long[] position ) { IntervalIndexer.indexToPosition( i, dimensions, position ); }
+	public void fwd()
+	{
+		++i;
+	}
 
 	@Override
-	public long getLongPosition( final int d ) { return IntervalIndexer.indexToPosition( i, dimensions, d ); }
+	public void localize( final long[] position )
+	{
+		IntervalIndexer.indexToPosition( i, dimensions, position );
+	}
 
 	@Override
-	public ConstantCursor<T> copy()  { return new ConstantCursor< T >( this ); }
+	public long getLongPosition( final int d )
+	{
+		return IntervalIndexer.indexToPosition( i, dimensions, d );
+	}
 
 	@Override
-	public ConstantCursor<T> copyCursor() { return copy(); }
+	public ConstantCursor< T > copy()
+	{
+		return new ConstantCursor< T >( this );
+	}
+
+	@Override
+	public ConstantCursor< T > copyCursor()
+	{
+		return copy();
+	}
 }

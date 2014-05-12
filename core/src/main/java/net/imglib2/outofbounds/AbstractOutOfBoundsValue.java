@@ -41,9 +41,9 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.type.Type;
 
 /**
- *
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
@@ -129,7 +129,8 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends Ab
 			return;
 		}
 
-		if ( isOutOfBounds ) return;
+		if ( isOutOfBounds )
+			return;
 		if ( wasOutOfBounds )
 			sampler.setPosition( position );
 		else
@@ -149,7 +150,8 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends Ab
 			checkOutOfBounds();
 		}
 
-		if ( isOutOfBounds ) return;
+		if ( isOutOfBounds )
+			return;
 		if ( wasOutOfBounds )
 			sampler.setPosition( position );
 		else
@@ -201,7 +203,8 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends Ab
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
 
-			if ( isOutOfBounds ) return;
+			if ( isOutOfBounds )
+				return;
 			if ( wasOutOfBounds )
 				sampler.setPosition( this.position );
 			else

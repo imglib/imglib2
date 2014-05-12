@@ -14,17 +14,16 @@
 	<description>A multidimensional, type-agnostic image processing library.</description>
 
 	<dependencies>
-		<!-- Test scope dependencies -->
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>gov.nist.math</groupId>
 			<artifactId>jama</artifactId>
 			<version>${jama.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
