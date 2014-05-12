@@ -40,29 +40,41 @@ import net.imglib2.type.NativeTypeId;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ShortType extends GenericShortType<ShortType>
+public class ShortType extends GenericShortType< ShortType >
 {
 	// this is the constructor if you want it to read from an array
-	public ShortType( final NativeImg<?, ? extends ShortAccess> img ) { super( img ); }
+	public ShortType( final NativeImg< ?, ? extends ShortAccess > img )
+	{
+		super( img );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public ShortType( final short value ) { super( value ); }
+	public ShortType( final short value )
+	{
+		super( value );
+	}
 
 	// this is the constructor if you want to specify the dataAccess
-	public ShortType( final ShortAccess access ) { super( access ); }
+	public ShortType( final ShortAccess access )
+	{
+		super( access );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public ShortType() { this( (short)0 ); }
+	public ShortType()
+	{
+		this( ( short ) 0 );
+	}
 
 	@Override
-	public NativeImg<ShortType, ? extends ShortAccess> createSuitableNativeImg( final NativeImgFactory<ShortType> storageFactory, final long dim[] )
+	public NativeImg< ShortType, ? extends ShortAccess > createSuitableNativeImg( final NativeImgFactory< ShortType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, 1 );
+		final NativeImg< ShortType, ? extends ShortAccess > container = storageFactory.createShortInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final ShortType linkedType = new ShortType( container );
@@ -74,30 +86,68 @@ public class ShortType extends GenericShortType<ShortType>
 	}
 
 	@Override
-	public ShortType duplicateTypeOnSameNativeImg() { return new ShortType( img ); }
+	public ShortType duplicateTypeOnSameNativeImg()
+	{
+		return new ShortType( img );
+	}
 
-	public short get() { return getValue(); }
-	public void set( final short b ) { setValue( b ); }
+	public short get()
+	{
+		return getValue();
+	}
 
-	@Override
-	public int getInteger(){ return get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ){ set( (short)f ); }
-	@Override
-	public void setInteger( final long f ){ set( (short)f ); }
-
-	@Override
-	public double getMaxValue() { return Short.MAX_VALUE; }
-	@Override
-	public double getMinValue()  { return Short.MIN_VALUE; }
+	public void set( final short b )
+	{
+		setValue( b );
+	}
 
 	@Override
-	public ShortType createVariable(){ return new ShortType( (short)0 ); }
+	public int getInteger()
+	{
+		return get();
+	}
 
 	@Override
-	public ShortType copy(){ return new ShortType( getValue() ); }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
+	@Override
+	public void setInteger( final int f )
+	{
+		set( ( short ) f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( ( short ) f );
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return Short.MAX_VALUE;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return Short.MIN_VALUE;
+	}
+
+	@Override
+	public ShortType createVariable()
+	{
+		return new ShortType( ( short ) 0 );
+	}
+
+	@Override
+	public ShortType copy()
+	{
+		return new ShortType( getValue() );
+	}
 
 	@Override
 	public NativeTypeId getNativeTypeId()

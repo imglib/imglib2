@@ -44,21 +44,21 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class DoubleType extends AbstractRealType<DoubleType> implements ExponentialMathType<DoubleType>, NativeType<DoubleType>
+public class DoubleType extends AbstractRealType< DoubleType > implements ExponentialMathType< DoubleType >, NativeType< DoubleType >
 {
 	private int i = 0;
 
-	final protected NativeImg<?, ? extends DoubleAccess> img;
+	final protected NativeImg< ?, ? extends DoubleAccess > img;
 
 	// the DataAccess that holds the information
 	protected DoubleAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public DoubleType( final NativeImg<?, ? extends DoubleAccess> doubleStorage )
+	public DoubleType( final NativeImg< ?, ? extends DoubleAccess > doubleStorage )
 	{
 		img = doubleStorage;
 	}
@@ -79,13 +79,16 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 	}
 
 	// this is the constructor if you want it to be a variable
-	public DoubleType() { this( 0 ); }
+	public DoubleType()
+	{
+		this( 0 );
+	}
 
 	@Override
-	public NativeImg<DoubleType, ? extends DoubleAccess> createSuitableNativeImg( final NativeImgFactory<DoubleType> storageFactory, final long dim[] )
+	public NativeImg< DoubleType, ? extends DoubleAccess > createSuitableNativeImg( final NativeImgFactory< DoubleType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, 1 );
+		final NativeImg< DoubleType, ? extends DoubleAccess > container = storageFactory.createDoubleInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final DoubleType linkedType = new DoubleType( container );
@@ -97,62 +100,140 @@ public class DoubleType extends AbstractRealType<DoubleType> implements Exponent
 	}
 
 	@Override
-	public void updateContainer( final Object c )  { dataAccess = img.update( c ); }
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
+	}
 
 	@Override
-	public DoubleType duplicateTypeOnSameNativeImg() { return new DoubleType( img ); }
+	public DoubleType duplicateTypeOnSameNativeImg()
+	{
+		return new DoubleType( img );
+	}
 
-	public double get(){ return dataAccess.getValue( i ); }
-	public void set( final double f ){ dataAccess.setValue( i, f ); }
+	public double get()
+	{
+		return dataAccess.getValue( i );
+	}
 
-	@Override
-	public float getRealFloat() { return (float)get(); }
-	@Override
-	public double getRealDouble() { return get(); }
-
-	@Override
-	public void setReal( final float real ){ set( real ); }
-	@Override
-	public void setReal( final double real ){ set( real ); }
-
-	@Override
-	public double getMaxValue() { return Double.MAX_VALUE; }
-	@Override
-	public double getMinValue()  { return -Double.MAX_VALUE; }
-	@Override
-	public double getMinIncrement()  { return Double.MIN_VALUE; }
+	public void set( final double f )
+	{
+		dataAccess.setValue( i, f );
+	}
 
 	@Override
-	public DoubleType createVariable(){ return new DoubleType( 0 ); }
+	public float getRealFloat()
+	{
+		return ( float ) get();
+	}
 
 	@Override
-	public DoubleType copy(){ return new DoubleType( get() ); }
+	public double getRealDouble()
+	{
+		return get();
+	}
 
 	@Override
-	public void exp() { set( Math.exp( get() ) ); }
+	public void setReal( final float real )
+	{
+		set( real );
+	}
 
 	@Override
-	public void round() { set( Util.round( get() ) ); }
+	public void setReal( final double real )
+	{
+		set( real );
+	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public double getMaxValue()
+	{
+		return Double.MAX_VALUE;
+	}
 
 	@Override
-	public void updateIndex( final int index ) { i = index; }
-	@Override
-	public int getIndex() { return i; }
+	public double getMinValue()
+	{
+		return -Double.MAX_VALUE;
+	}
 
 	@Override
-	public void incIndex() { ++i; }
-	@Override
-	public void incIndex( final int increment ) { i += increment; }
-	@Override
-	public void decIndex() { --i; }
-	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
+	public double getMinIncrement()
+	{
+		return Double.MIN_VALUE;
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 64; }
+	public DoubleType createVariable()
+	{
+		return new DoubleType( 0 );
+	}
+
+	@Override
+	public DoubleType copy()
+	{
+		return new DoubleType( get() );
+	}
+
+	@Override
+	public void exp()
+	{
+		set( Math.exp( get() ) );
+	}
+
+	@Override
+	public void round()
+	{
+		set( Util.round( get() ) );
+	}
+
+	@Override
+	public int getEntitiesPerPixel()
+	{
+		return 1;
+	}
+
+	@Override
+	public void updateIndex( final int index )
+	{
+		i = index;
+	}
+
+	@Override
+	public int getIndex()
+	{
+		return i;
+	}
+
+	@Override
+	public void incIndex()
+	{
+		++i;
+	}
+
+	@Override
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
+	@Override
+	public void decIndex()
+	{
+		--i;
+	}
+
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
+	@Override
+	public int getBitsPerPixel()
+	{
+		return 64;
+	}
 
 	@Override
 	public NativeTypeId getNativeTypeId()

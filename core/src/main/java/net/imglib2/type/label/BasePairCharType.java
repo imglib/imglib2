@@ -44,22 +44,25 @@ import net.imglib2.type.label.BasePairBitType.Base;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class BasePairCharType extends AbstractNativeType<BasePairCharType> implements BasePairType<BasePairCharType>
+public class BasePairCharType extends AbstractNativeType< BasePairCharType > implements BasePairType< BasePairCharType >
 {
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public int getEntitiesPerPixel()
+	{
+		return 1;
+	}
 
-	final protected NativeImg<BasePairCharType, ? extends CharAccess> img;
+	final protected NativeImg< BasePairCharType, ? extends CharAccess > img;
 
 	// the DataAccess that holds the information
 	protected CharAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public BasePairCharType( final NativeImg<BasePairCharType, ? extends CharAccess> charStorage )
+	public BasePairCharType( final NativeImg< BasePairCharType, ? extends CharAccess > charStorage )
 	{
 		img = charStorage;
 	}
@@ -81,13 +84,16 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	}
 
 	// this is the constructor if you want it to be a variable
-	public BasePairCharType() { this( Base.N ); }
+	public BasePairCharType()
+	{
+		this( Base.N );
+	}
 
 	@Override
-	public NativeImg<BasePairCharType, ? extends CharAccess> createSuitableNativeImg( final NativeImgFactory<BasePairCharType> storageFactory, final long dim[] )
+	public NativeImg< BasePairCharType, ? extends CharAccess > createSuitableNativeImg( final NativeImgFactory< BasePairCharType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, 1 );
+		final NativeImg< BasePairCharType, ? extends CharAccess > container = storageFactory.createCharInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final BasePairCharType linkedType = new BasePairCharType( container );
@@ -99,25 +105,50 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	}
 
 	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
+	}
 
 	@Override
-	public BasePairCharType duplicateTypeOnSameNativeImg() { return new BasePairCharType( img ); }
+	public BasePairCharType duplicateTypeOnSameNativeImg()
+	{
+		return new BasePairCharType( img );
+	}
 
-	public char getChar() { return dataAccess.getValue( i ); }
-	public void setChar( final char f ) { dataAccess.setValue( i, f ); }
+	public char getChar()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	public void setChar( final char f )
+	{
+		dataAccess.setValue( i, f );
+	}
 
 	@Override
 	public void set( final Base base )
 	{
 		switch ( base )
 		{
-			case A: setChar('A'); return;
-			case T: setChar('T'); return;
-			case G: setChar('G'); return;
-			case C: setChar('C'); return;
-			case gap: setChar(' '); return;
-			default: setChar('N'); return;
+		case A:
+			setChar( 'A' );
+			return;
+		case T:
+			setChar( 'T' );
+			return;
+		case G:
+			setChar( 'G' );
+			return;
+		case C:
+			setChar( 'C' );
+			return;
+		case gap:
+			setChar( ' ' );
+			return;
+		default:
+			setChar( 'N' );
+			return;
 		}
 	}
 
@@ -128,17 +159,26 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 
 		switch ( value )
 		{
-			case 'A': return Base.A;
-			case 'T': return Base.T;
-			case 'G': return Base.G;
-			case 'C': return Base.C;
-			case ' ': return Base.gap;
-			default: return Base.N;
+		case 'A':
+			return Base.A;
+		case 'T':
+			return Base.T;
+		case 'G':
+			return Base.G;
+		case 'C':
+			return Base.C;
+		case ' ':
+			return Base.gap;
+		default:
+			return Base.N;
 		}
 	}
 
 	@Override
-	public void set( final BasePairCharType c ) { dataAccess.setValue( i, c.getChar() ); }
+	public void set( final BasePairCharType c )
+	{
+		dataAccess.setValue( i, c.getChar() );
+	}
 
 	@Override
 	public int compareTo( final BasePairCharType c )
@@ -146,18 +186,21 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 		final char input = getChar();
 		final char compare = c.getChar();
 
-		if ( input == compare )
-		{
-			return 0;
-		}
+		if ( input == compare ) { return 0; }
 		switch ( input )
 		{
-			case ' ': return -1;
-			case 'N': return compare == ' ' ? 1 : -1;
-			case 'A': return compare == ' ' || compare == 'N' ? 1 : -1;
-			case 'T': return compare == 'G' || compare == 'C' ? -1 : 1;
-			case 'G': return compare == 'C' ? -1 : 1;
-			default: return 1;
+		case ' ':
+			return -1;
+		case 'N':
+			return compare == ' ' ? 1 : -1;
+		case 'A':
+			return compare == ' ' || compare == 'N' ? 1 : -1;
+		case 'T':
+			return compare == 'G' || compare == 'C' ? -1 : 1;
+		case 'G':
+			return compare == 'C' ? -1 : 1;
+		default:
+			return 1;
 		}
 	}
 
@@ -167,10 +210,18 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 		final char base = getChar();
 		switch ( base )
 		{
-			case 'A': setChar( 'T' ); break;
-			case 'T': setChar( 'A' ); break;
-			case 'G': setChar( 'C' ); break;
-			case 'C': setChar( 'G' ); break;
+		case 'A':
+			setChar( 'T' );
+			break;
+		case 'T':
+			setChar( 'A' );
+			break;
+		case 'G':
+			setChar( 'C' );
+			break;
+		case 'C':
+			setChar( 'G' );
+			break;
 		}
 	}
 
@@ -181,23 +232,38 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 
 		switch ( base )
 		{
-			case 'N': return 1;
-			case 'A': return 2;
-			case 'T': return 3;
-			case 'G': return 4;
-			case 'C': return 5;
-			default: return 0;
+		case 'N':
+			return 1;
+		case 'A':
+			return 2;
+		case 'T':
+			return 3;
+		case 'G':
+			return 4;
+		case 'C':
+			return 5;
+		default:
+			return 0;
 		}
 	}
 
 	@Override
-	public BasePairCharType createVariable(){ return new BasePairCharType( Base.N ); }
+	public BasePairCharType createVariable()
+	{
+		return new BasePairCharType( Base.N );
+	}
 
 	@Override
-	public BasePairCharType copy(){ return new BasePairCharType( get() ); }
+	public BasePairCharType copy()
+	{
+		return new BasePairCharType( get() );
+	}
 
 	@Override
-	public String toString() { return "" + get(); }
+	public String toString()
+	{
+		return "" + get();
+	}
 
 	@Override
 	public NativeTypeId getNativeTypeId()

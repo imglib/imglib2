@@ -42,21 +42,21 @@ import net.imglib2.type.NativeTypeId;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class FloatType extends AbstractRealType<FloatType> implements NativeType<FloatType>
+public class FloatType extends AbstractRealType< FloatType > implements NativeType< FloatType >
 {
 	private int i = 0;
 
-	final protected NativeImg<?, ? extends FloatAccess> img;
+	final protected NativeImg< ?, ? extends FloatAccess > img;
 
 	// the DataAccess that holds the information
 	protected FloatAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public FloatType( final NativeImg<?, ? extends FloatAccess> floatStorage )
+	public FloatType( final NativeImg< ?, ? extends FloatAccess > floatStorage )
 	{
 		img = floatStorage;
 	}
@@ -77,13 +77,16 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	}
 
 	// this is the constructor if you want it to be a variable
-	public FloatType() { this( 0 ); }
+	public FloatType()
+	{
+		this( 0 );
+	}
 
 	@Override
-	public NativeImg<FloatType, ? extends FloatAccess> createSuitableNativeImg( final NativeImgFactory<FloatType> storageFactory, final long dim[] )
+	public NativeImg< FloatType, ? extends FloatAccess > createSuitableNativeImg( final NativeImgFactory< FloatType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<FloatType, ? extends FloatAccess> container = storageFactory.createFloatInstance( dim, 1 );
+		final NativeImg< FloatType, ? extends FloatAccess > container = storageFactory.createFloatInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final FloatType linkedType = new FloatType( container );
@@ -101,27 +104,62 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	}
 
 	@Override
-	public FloatType duplicateTypeOnSameNativeImg() { return new FloatType( img ); }
+	public FloatType duplicateTypeOnSameNativeImg()
+	{
+		return new FloatType( img );
+	}
 
-	public float get(){ return dataAccess.getValue( i ); }
-	public void set( final float f ){ dataAccess.setValue( i, f ); }
+	public float get()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	public void set( final float f )
+	{
+		dataAccess.setValue( i, f );
+	}
 
 	@Override
-	public float getRealFloat() { return get(); }
-	@Override
-	public double getRealDouble() { return get(); }
+	public float getRealFloat()
+	{
+		return get();
+	}
 
 	@Override
-	public void setReal( final float real ){ set( real ); }
-	@Override
-	public void setReal( final double real ){ set( (float)real ); }
+	public double getRealDouble()
+	{
+		return get();
+	}
 
 	@Override
-	public double getMaxValue() { return Float.MAX_VALUE; }
+	public void setReal( final float real )
+	{
+		set( real );
+	}
+
 	@Override
-	public double getMinValue()  { return -Float.MAX_VALUE; }
+	public void setReal( final double real )
+	{
+		set( ( float ) real );
+	}
+
 	@Override
-	public double getMinIncrement()  { return Float.MIN_VALUE; }
+	public double getMaxValue()
+	{
+		return Float.MAX_VALUE;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return -Float.MAX_VALUE;
+	}
+
+	@Override
+	public double getMinIncrement()
+	{
+		return Float.MIN_VALUE;
+	}
 
 	@Override
 	public void mul( final float c )
@@ -132,7 +170,7 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	@Override
 	public void mul( final double c )
 	{
-		set( ( float )( get() * c ) );
+		set( ( float ) ( get() * c ) );
 	}
 
 	@Override
@@ -173,13 +211,22 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	}
 
 	@Override
-	public void set( final FloatType c ){ set( c.get() ); }
+	public void set( final FloatType c )
+	{
+		set( c.get() );
+	}
 
 	@Override
-	public void setOne() { set( 1 ); }
+	public void setOne()
+	{
+		set( 1 );
+	}
 
 	@Override
-	public void setZero() { set( 0 ); }
+	public void setZero()
+	{
+		set( 0 );
+	}
 
 	@Override
 	public void inc()
@@ -196,30 +243,64 @@ public class FloatType extends AbstractRealType<FloatType> implements NativeType
 	}
 
 	@Override
-	public FloatType createVariable(){ return new FloatType( 0 ); }
+	public FloatType createVariable()
+	{
+		return new FloatType( 0 );
+	}
 
 	@Override
-	public FloatType copy(){ return new FloatType( get() ); }
+	public FloatType copy()
+	{
+		return new FloatType( get() );
+	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public int getEntitiesPerPixel()
+	{
+		return 1;
+	}
 
 	@Override
-	public void updateIndex( final int index ) { i = index; }
-	@Override
-	public int getIndex() { return i; }
+	public void updateIndex( final int index )
+	{
+		i = index;
+	}
 
 	@Override
-	public void incIndex() { ++i; }
-	@Override
-	public void incIndex( final int increment ) { i += increment; }
-	@Override
-	public void decIndex() { --i; }
-	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
+	public int getIndex()
+	{
+		return i;
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 32; }
+	public void incIndex()
+	{
+		++i;
+	}
+
+	@Override
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
+	@Override
+	public void decIndex()
+	{
+		--i;
+	}
+
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
+	@Override
+	public int getBitsPerPixel()
+	{
+		return 32;
+	}
 
 	@Override
 	public NativeTypeId getNativeTypeId()

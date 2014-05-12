@@ -43,19 +43,19 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-final public class ARGBType extends AbstractNativeType<ARGBType> implements NumericType<ARGBType>
+final public class ARGBType extends AbstractNativeType< ARGBType > implements NumericType< ARGBType >
 {
-	final protected NativeImg<ARGBType, ? extends IntAccess> img;
+	final protected NativeImg< ARGBType, ? extends IntAccess > img;
 
 	// the DataAccess that holds the information
 	protected IntAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public ARGBType( final NativeImg<ARGBType, ? extends IntAccess> byteStorage )
+	public ARGBType( final NativeImg< ARGBType, ? extends IntAccess > byteStorage )
 	{
 		img = byteStorage;
 	}
@@ -69,13 +69,16 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 	}
 
 	// this is the constructor if you want it to be a variable
-	public ARGBType() { this( 0 ); }
+	public ARGBType()
+	{
+		this( 0 );
+	}
 
 	@Override
-	public NativeImg<ARGBType, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<ARGBType> storageFactory, final long dim[] )
+	public NativeImg< ARGBType, ? extends IntAccess > createSuitableNativeImg( final NativeImgFactory< ARGBType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<ARGBType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		final NativeImg< ARGBType, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final ARGBType linkedType = new ARGBType( container );
@@ -93,31 +96,34 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 	}
 
 	@Override
-	public ARGBType duplicateTypeOnSameNativeImg() { return new ARGBType( img ); }
-
-	final public static int rgba( final int r, final int g, final int b, final int a)
+	public ARGBType duplicateTypeOnSameNativeImg()
 	{
-		return ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff) | ((a & 0xff) << 24);
+		return new ARGBType( img );
 	}
 
-	final public static int rgba( final float r, final float g, final float b, final float a)
+	final public static int rgba( final int r, final int g, final int b, final int a )
 	{
-		return rgba( Util.round(r), Util.round(g), Util.round(b), Util.round(a) );
+		return ( ( r & 0xff ) << 16 ) | ( ( g & 0xff ) << 8 ) | ( b & 0xff ) | ( ( a & 0xff ) << 24 );
 	}
 
-	final public static int rgba( final double r, final double g, final double b, final double a)
+	final public static int rgba( final float r, final float g, final float b, final float a )
 	{
-		return rgba( (int)Util.round(r), (int)Util.round(g), (int)Util.round(b), (int)Util.round(a) );
+		return rgba( Util.round( r ), Util.round( g ), Util.round( b ), Util.round( a ) );
+	}
+
+	final public static int rgba( final double r, final double g, final double b, final double a )
+	{
+		return rgba( ( int ) Util.round( r ), ( int ) Util.round( g ), ( int ) Util.round( b ), ( int ) Util.round( a ) );
 	}
 
 	final public static int red( final int value )
 	{
-		return (value >> 16) & 0xff;
+		return ( value >> 16 ) & 0xff;
 	}
 
 	final public static int green( final int value )
 	{
-		return (value >> 8) & 0xff;
+		return ( value >> 8 ) & 0xff;
 	}
 
 	final public static int blue( final int value )
@@ -127,24 +133,31 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 
 	final public static int alpha( final int value )
 	{
-		return (value >> 24) & 0xff;
+		return ( value >> 24 ) & 0xff;
 	}
 
-	public int get(){ return dataAccess.getValue( i ); }
-	public void set( final int f ){ dataAccess.setValue( i, f ); }
+	public int get()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	public void set( final int f )
+	{
+		dataAccess.setValue( i, f );
+	}
 
 	@Override
 	public void mul( final float c )
 	{
 		final int value = get();
-		set( rgba( red(value) * c, green(value) * c, blue(value) * c, alpha(value) * c ) );
+		set( rgba( red( value ) * c, green( value ) * c, blue( value ) * c, alpha( value ) * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final int value = get();
-		set( rgba( red(value) * c, green(value) * c, blue(value) * c, alpha(value) * c ) );
+		set( rgba( red( value ) * c, green( value ) * c, blue( value ) * c, alpha( value ) * c ) );
 	}
 
 	@Override
@@ -153,7 +166,7 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 		final int value1 = get();
 		final int value2 = c.get();
 
-		set( rgba( red(value1) + red(value2), green(value1) + green(value2), blue(value1) + blue(value2), alpha(value1) + alpha(value2) ) );
+		set( rgba( red( value1 ) + red( value2 ), green( value1 ) + green( value2 ), blue( value1 ) + blue( value2 ), alpha( value1 ) + alpha( value2 ) ) );
 	}
 
 	@Override
@@ -162,7 +175,7 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 		final int value1 = get();
 		final int value2 = c.get();
 
-		set( rgba( red(value1) / red(value2), green(value1) / green(value2), blue(value1) / blue(value2), alpha(value1) / alpha(value2) ) );
+		set( rgba( red( value1 ) / red( value2 ), green( value1 ) / green( value2 ), blue( value1 ) / blue( value2 ), alpha( value1 ) / alpha( value2 ) ) );
 	}
 
 	@Override
@@ -171,7 +184,7 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 		final int value1 = get();
 		final int value2 = c.get();
 
-		set( rgba( red(value1) * red(value2), green(value1) * green(value2), blue(value1) * blue(value2), alpha(value1) * alpha(value2) ) );
+		set( rgba( red( value1 ) * red( value2 ), green( value1 ) * green( value2 ), blue( value1 ) * blue( value2 ), alpha( value1 ) * alpha( value2 ) ) );
 	}
 
 	@Override
@@ -180,23 +193,38 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 		final int value1 = get();
 		final int value2 = c.get();
 
-		set( rgba( red(value1) - red(value2), green(value1) - green(value2), blue(value1) - blue(value2), alpha(value1) - alpha(value2) ) );
+		set( rgba( red( value1 ) - red( value2 ), green( value1 ) - green( value2 ), blue( value1 ) - blue( value2 ), alpha( value1 ) - alpha( value2 ) ) );
 	}
 
 	@Override
-	public void set( final ARGBType c ) { set( c.get() ); }
+	public void set( final ARGBType c )
+	{
+		set( c.get() );
+	}
 
 	@Override
-	public void setOne() { set( rgba( 1, 1, 1, 1 ) ); }
+	public void setOne()
+	{
+		set( rgba( 1, 1, 1, 1 ) );
+	}
 
 	@Override
-	public void setZero() { set( 0 ); }
+	public void setZero()
+	{
+		set( 0 );
+	}
 
 	@Override
-	public ARGBType createVariable() { return new ARGBType( 0 ); }
+	public ARGBType createVariable()
+	{
+		return new ARGBType( 0 );
+	}
 
 	@Override
-	public ARGBType copy() { return new ARGBType( get() ); }
+	public ARGBType copy()
+	{
+		return new ARGBType( get() );
+	}
 
 	@Override
 	public String toString()
@@ -206,7 +234,10 @@ final public class ARGBType extends AbstractNativeType<ARGBType> implements Nume
 	}
 
 	@Override
-	public int getEntitiesPerPixel() { return 1; }
+	public int getEntitiesPerPixel()
+	{
+		return 1;
+	}
 
 	@Override
 	public NativeTypeId getNativeTypeId()

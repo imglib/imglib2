@@ -41,23 +41,35 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class UnsignedIntType extends GenericIntType<UnsignedIntType>
+public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( final NativeImg<?, ? extends IntAccess> img ) { super( img ); }
+	public UnsignedIntType( final NativeImg< ?, ? extends IntAccess > img )
+	{
+		super( img );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }
+	public UnsignedIntType( final long value )
+	{
+		super( getCodedSignedIntChecked( value ) );
+	}
 
 	// this is the constructor if you want to specify the dataAccess
-	public UnsignedIntType( final IntAccess access ) { super( access ); }
+	public UnsignedIntType( final IntAccess access )
+	{
+		super( access );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedIntType() { this( 0 ); }
+	public UnsignedIntType()
+	{
+		this( 0 );
+	}
 
 	public static int getCodedSignedIntChecked( long unsignedInt )
 	{
@@ -68,14 +80,22 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 
 		return getCodedSignedInt( unsignedInt );
 	}
-	public static int getCodedSignedInt( final long unsignedInt ) { return (int)( unsignedInt & 0xffffffff ); }
-	public static long getUnsignedInt( final int signedInt ) { return signedInt & 0xffffffffL; }
+
+	public static int getCodedSignedInt( final long unsignedInt )
+	{
+		return ( int ) ( unsignedInt & 0xffffffff );
+	}
+
+	public static long getUnsignedInt( final int signedInt )
+	{
+		return signedInt & 0xffffffffL;
+	}
 
 	@Override
-	public NativeImg<UnsignedIntType, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedIntType> storageFactory, final long dim[] )
+	public NativeImg< UnsignedIntType, ? extends IntAccess > createSuitableNativeImg( final NativeImgFactory< UnsignedIntType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, 1 );
+		final NativeImg< UnsignedIntType, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
 
 		// create a Type that is linked to the container
 		final UnsignedIntType linkedType = new UnsignedIntType( container );
@@ -87,7 +107,10 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 
 	@Override
-	public UnsignedIntType duplicateTypeOnSameNativeImg() { return new UnsignedIntType( img ); }
+	public UnsignedIntType duplicateTypeOnSameNativeImg()
+	{
+		return new UnsignedIntType( img );
+	}
 
 	@Override
 	public void mul( final float c )
@@ -100,8 +123,9 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public void mul( final double c )
 	{
 		final long a = getUnsignedInt( getValue() );
-		setValue( getCodedSignedInt( ( int )Util.round( a * c ) ) );
+		setValue( getCodedSignedInt( ( int ) Util.round( a * c ) ) );
 	}
+
 	@Override
 	public void add( final UnsignedIntType c )
 	{
@@ -127,10 +151,16 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 
 	@Override
-	public void setOne() { set( 1 ); }
+	public void setOne()
+	{
+		set( 1 );
+	}
 
 	@Override
-	public void setZero() { set( 0 ); }
+	public void setZero()
+	{
+		set( 0 );
+	}
 
 	@Override
 	public void inc()
@@ -145,24 +175,56 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 
 	@Override
-	public String toString() { return "" + get(); }
+	public String toString()
+	{
+		return "" + get();
+	}
 
-	public long get() { return getUnsignedInt( getValue() ); }
-	public void set( final long f ) { setValue( getCodedSignedInt( f ) ); }
+	public long get()
+	{
+		return getUnsignedInt( getValue() );
+	}
+
+	public void set( final long f )
+	{
+		setValue( getCodedSignedInt( f ) );
+	}
 
 	@Override
-	public int getInteger() { return (int)get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ) { set( f ); }
-	@Override
-	public void setInteger( final long f ) { set( f ); }
+	public int getInteger()
+	{
+		return ( int ) get();
+	}
 
 	@Override
-	public double getMaxValue() { return 0xffffffffL; }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
 	@Override
-	public double getMinValue()  { return 0; }
+	public void setInteger( final int f )
+	{
+		set( f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( f );
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return 0xffffffffL;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return 0;
+	}
 
 	@Override
 	public int compareTo( final UnsignedIntType c )
@@ -179,10 +241,16 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 
 	@Override
-	public UnsignedIntType createVariable() { return new UnsignedIntType( 0 ); }
+	public UnsignedIntType createVariable()
+	{
+		return new UnsignedIntType( 0 );
+	}
 
 	@Override
-	public UnsignedIntType copy() { return new UnsignedIntType( get() ); }
+	public UnsignedIntType copy()
+	{
+		return new UnsignedIntType( get() );
+	}
 
 	@Override
 	public NativeTypeId getNativeTypeId()
