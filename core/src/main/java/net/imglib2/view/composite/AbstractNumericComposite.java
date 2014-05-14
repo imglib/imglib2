@@ -36,6 +36,8 @@
  */
 package net.imglib2.view.composite;
 
+import java.util.Iterator;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.NumericType;
 
@@ -46,9 +48,32 @@ import net.imglib2.type.numeric.NumericType;
  *
  * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
-abstract public class AbstractNumericComposite< T extends NumericType< T >, C extends AbstractNumericComposite< T, C > > extends AbstractComposite< T > implements NumericType< C >
+abstract public class AbstractNumericComposite< T extends NumericType< T >, C extends AbstractNumericComposite< T, C > > extends AbstractComposite< T > implements NumericType< C >, Iterable< T >
 {
 	final protected int length;
+	
+	final protected Iterator< T > iterator = new Iterator< T >()
+	{
+		@Override
+		public boolean hasNext()
+		{
+			return sourceAccess.getIntPosition( d ) < length;
+		}
+
+		@Override
+		public T next()
+		{
+			final T t = sourceAccess.get();
+			sourceAccess.fwd( d );
+			return t;
+		}
+
+		@Override
+		public void remove()
+		{
+			throw new UnsupportedOperationException();
+		}
+	};
 	
 	public AbstractNumericComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
@@ -163,5 +188,12 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 			sourceAccess.get().mul( c );
 			sourceAccess.fwd( d );
 		}
+	}
+
+	@Override
+	public Iterator< T > iterator()
+	{
+		sourceAccess.setPosition( 0, d );
+		return iterator;
 	}
 }
