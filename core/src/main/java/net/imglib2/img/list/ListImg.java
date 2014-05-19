@@ -62,7 +62,7 @@ public class ListImg< T > extends AbstractListImg< T >
 {
 	final private ArrayList< T > pixels;
 
-	protected ListImg( final long[] dim, final T type )
+	public ListImg( final long[] dim, final T type )
 	{
 		super( dim );
 		pixels = new ArrayList< T >( ( int ) numPixels );
@@ -82,9 +82,12 @@ public class ListImg< T > extends AbstractListImg< T >
 		}
 	}
 
-	protected ListImg( final Collection< T > collection, final long[] dim )
+	public ListImg( final Collection< T > collection, final long... dim )
 	{
 		super( dim );
+		
+		assert numPixels == collection.size() : "Dimensions do not match number of pixels.";
+		
 		pixels = new ArrayList< T >( ( int ) numPixels );
 		pixels.addAll( collection );
 	}
