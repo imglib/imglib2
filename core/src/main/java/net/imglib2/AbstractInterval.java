@@ -75,6 +75,19 @@ public abstract class AbstractInterval extends AbstractEuclideanSpace implements
 	}
 
 	/**
+	 * Creates an Interval with the boundaries [0, dimensions-1]
+	 * 
+	 * @param dimensions
+	 *            - the size of the interval
+	 */
+	public AbstractInterval( final Dimensions dimensions )
+	{
+		this( dimensions.numDimensions() );
+		for ( int d = 0; d < n; ++d )
+			this.max[ d ] = dimensions.dimension( d ) - 1;
+	}
+
+	/**
 	 * Creates an Interval with the boundaries [min, max] (both including)
 	 * 
 	 * @param min
@@ -102,10 +115,7 @@ public abstract class AbstractInterval extends AbstractEuclideanSpace implements
 	 */
 	public AbstractInterval( final long[] dimensions )
 	{
-		super( dimensions.length );
-		this.min = new long[ n ];
-		this.max = new long[ n ];
-
+		this( dimensions.length );
 		for ( int d = 0; d < n; ++d )
 			this.max[ d ] = dimensions[ d ] - 1;
 	}
