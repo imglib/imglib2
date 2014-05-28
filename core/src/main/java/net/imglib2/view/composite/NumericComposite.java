@@ -41,39 +41,37 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 
 /**
- * A vector of {@link NumericType} scalars. It is a {@link NumericType} itself,
- * implementing the {@link NumericType} algebra as element-wise operations.
- * 
+ * A vector of {@link NumericType} scalars.  It is a {@link NumericType}
+ * itself, implementing the {@link NumericType} algebra as element-wise
+ * operations.
+ *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class NumericComposite< T extends NumericType< T > > extends AbstractComposite< T > implements NumericType< NumericComposite< T > >
+public class NumericComposite< T extends NumericType< T > > extends AbstractNumericComposite< T, NumericComposite< T > >
 {
-	final protected int length;
-
-	static public class Factory< T extends NumericType< T > > implements CompositeFactory< T, NumericComposite< T > >
+	static public class Factory< T extends NumericType< T > > implements CompositeFactory< T, NumericComposite< T > > 
 	{
 		final protected int numChannels;
-
+		
 		public Factory( final int numChannels )
 		{
 			this.numChannels = numChannels;
 		}
-
+		
 		@Override
 		public NumericComposite< T > create( final RandomAccess< T > sourceAccess )
 		{
 			return new NumericComposite< T >( sourceAccess, numChannels );
 		}
 	}
-
+	
 	public NumericComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
-		super( sourceAccess );
-		this.length = length;
+		super( sourceAccess, length );
 	}
 
 	/**
-	 * Generates a 1D {@link ArrayImg}&lt;T&gt;
+	 * Generates a 1D {@link ArrayImg}&lt;T&gt; 
 	 */
 	@Override
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
@@ -82,9 +80,9 @@ public class NumericComposite< T extends NumericType< T > > extends AbstractComp
 		final T t = sourceAccess.get();
 		final Img< T > img;
 		if ( NativeType.class.isInstance( t ) )
-			img = ( ( NativeType ) t ).createSuitableNativeImg( new ArrayImgFactory(), new long[] { length } );
+			img = ( ( NativeType )t ).createSuitableNativeImg( new ArrayImgFactory(), new long[]{ length } );
 		else
-			img = new ListImgFactory< T >().create( new long[] { length }, t );
+			img = new ListImgFactory< T >().create( new long[]{ length }, t );
 		return new NumericComposite< T >( img.randomAccess(), length );
 	}
 
@@ -92,114 +90,5 @@ public class NumericComposite< T extends NumericType< T > > extends AbstractComp
 	public NumericComposite< T > copy()
 	{
 		return new NumericComposite< T >( sourceAccess.copyRandomAccess(), length );
-	}
-
-	@Override
-	public void set( final NumericComposite< T > c )
-	{
-		sourceAccess.setPosition( 0, d );
-		c.sourceAccess.setPosition( 0, c.d );
-		while ( sourceAccess.getLongPosition( d ) < length )
-		{
-			sourceAccess.get().set( c.sourceAccess.get() );
-			sourceAccess.fwd( d );
-			c.sourceAccess.fwd( c.d );
-		}
-	}
-
-	@Override
-	public void add( final NumericComposite< T > c )
-	{
-		sourceAccess.setPosition( 0, d );
-		c.sourceAccess.setPosition( 0, d );
-		while ( sourceAccess.getLongPosition( d ) < length )
-		{
-			sourceAccess.get().add( c.sourceAccess.get() );
-			sourceAccess.fwd( d );
-			c.sourceAccess.fwd( d );
-		}
-	}
-
-	@Override
-	public void sub( final NumericComposite< T > c )
-	{
-		sourceAccess.setPosition( 0, d );
-		c.sourceAccess.setPosition( 0, d );
-		while ( sourceAccess.getLongPosition( d ) < length )
-		{
-			sourceAccess.get().sub( c.sourceAccess.get() );
-			sourceAccess.fwd( d );
-			c.sourceAccess.fwd( d );
-		}
-	}
-
-	@Override
-	public void mul( final NumericComposite< T > c )
-	{
-		sourceAccess.setPosition( 0, d );
-		c.sourceAccess.setPosition( 0, d );
-		while ( sourceAccess.getLongPosition( d ) < length )
-		{
-			sourceAccess.get().mul( c.sourceAccess.get() );
-			sourceAccess.fwd( d );
-			c.sourceAccess.fwd( d );
-		}
-	}
-
-	@Override
-	public void div( final NumericComposite< T > c )
-	{
-		sourceAccess.setPosition( 0, d );
-		c.sourceAccess.setPosition( 0, d );
-		while ( sourceAccess.getLongPosition( d ) < length )
-		{
-			sourceAccess.get().div( c.sourceAccess.get() );
-			sourceAccess.fwd( d );
-			c.sourceAccess.fwd( d );
-		}
-	}
-
-	@Override
-	public void setZero()
-	{
-		sourceAccess.setPosition( 0, d );
-		while ( sourceAccess.getLongPosition( d ) < length )
-		{
-			sourceAccess.get().setZero();
-			sourceAccess.fwd( d );
-		}
-	}
-
-	@Override
-	public void setOne()
-	{
-		sourceAccess.setPosition( 0, d );
-		while ( sourceAccess.getLongPosition( d ) < length )
-		{
-			sourceAccess.get().setOne();
-			sourceAccess.fwd( d );
-		}
-	}
-
-	@Override
-	public void mul( final float c )
-	{
-		sourceAccess.setPosition( 0, d );
-		while ( sourceAccess.getLongPosition( d ) < length )
-		{
-			sourceAccess.get().mul( c );
-			sourceAccess.fwd( d );
-		}
-	}
-
-	@Override
-	public void mul( final double c )
-	{
-		sourceAccess.setPosition( 0, d );
-		while ( sourceAccess.getLongPosition( d ) < length )
-		{
-			sourceAccess.get().mul( c );
-			sourceAccess.fwd( d );
-		}
 	}
 }

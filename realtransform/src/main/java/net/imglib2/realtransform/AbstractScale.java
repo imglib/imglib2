@@ -38,8 +38,8 @@ import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
 
 /**
- * <em>n</em>-d arbitrary scaling. Abstract base implementation.
- * 
+ * <em>n</em>-d arbitrary scaling.  Abstract base implementation.
+ *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 abstract public class AbstractScale implements ScaleGet
@@ -72,8 +72,8 @@ abstract public class AbstractScale implements ScaleGet
 	@Override
 	public void applyInverse( final double[] source, final double[] target )
 	{
-		assert source.length >= s.length && target.length >= s.length: "Input dimensions too small.";
-
+		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
+		
 		for ( int d = 0; d < s.length; ++d )
 			source[ d ] = target[ d ] / s[ d ];
 	}
@@ -81,18 +81,18 @@ abstract public class AbstractScale implements ScaleGet
 	@Override
 	public void applyInverse( final float[] source, final float[] target )
 	{
-		assert source.length >= s.length && target.length >= s.length: "Input dimensions too small.";
-
+		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
+		
 		for ( int d = 0; d < s.length; ++d )
-			source[ d ] = ( float ) ( target[ d ] / s[ d ] );
-
+			source[ d ] = ( float )( target[ d ] / s[ d ] );
+		
 	}
 
 	@Override
 	public void applyInverse( final RealPositionable source, final RealLocalizable target )
 	{
-		assert source.numDimensions() >= s.length && target.numDimensions() >= s.length: "Input dimensions too small.";
-
+		assert source.numDimensions() >= s.length && target.numDimensions() >= s.length : "Input dimensions too small.";
+		
 		for ( int d = 0; d < s.length; ++d )
 			source.setPosition( target.getDoublePosition( d ) / s[ d ], d );
 	}
@@ -121,8 +121,8 @@ abstract public class AbstractScale implements ScaleGet
 	@Override
 	public void apply( final double[] source, final double[] target )
 	{
-		assert source.length >= s.length && target.length >= s.length: "Input dimensions too small.";
-
+		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
+		
 		for ( int d = 0; d < s.length; ++d )
 			target[ d ] = source[ d ] * s[ d ];
 	}
@@ -130,17 +130,17 @@ abstract public class AbstractScale implements ScaleGet
 	@Override
 	public void apply( final float[] source, final float[] target )
 	{
-		assert source.length >= s.length && target.length >= s.length: "Input dimensions too small.";
-
+		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
+		
 		for ( int d = 0; d < s.length; ++d )
-			target[ d ] = ( float ) ( source[ d ] * s[ d ] );
+			target[ d ] = ( float )( source[ d ] * s[ d ] );
 	}
 
 	@Override
 	public void apply( final RealLocalizable source, final RealPositionable target )
 	{
-		assert source.numDimensions() >= s.length && target.numDimensions() >= s.length: "Input dimensions too small.";
-
+		assert source.numDimensions() >= s.length && target.numDimensions() >= s.length : "Input dimensions too small.";
+		
 		for ( int d = 0; d < s.length; ++d )
 			target.setPosition( source.getDoublePosition( d ) * s[ d ], d );
 	}
@@ -148,8 +148,8 @@ abstract public class AbstractScale implements ScaleGet
 	@Override
 	public double get( final int row, final int column )
 	{
-		assert row >= 0 && row < numDimensions(): "Dimension index out of bounds.";
-
+		assert row >= 0 && row < numDimensions() : "Dimension index out of bounds.";
+		
 		return row == column ? s[ row ] : 0;
 	}
 
@@ -166,8 +166,8 @@ abstract public class AbstractScale implements ScaleGet
 	@Override
 	public RealLocalizable d( final int d )
 	{
-		assert d >= 0 && d < numDimensions(): "Dimension index out of bounds.";
-
+		assert d >= 0 && d < numDimensions() : "Dimension index out of bounds.";
+		
 		return ds[ d ];
 	}
 
