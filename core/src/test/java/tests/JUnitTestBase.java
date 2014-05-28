@@ -43,7 +43,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.util.Util;
+import net.imglib2.util.Intervals;
 
 /**
  * The base class for JUnit tests
@@ -151,7 +151,7 @@ public class JUnitTestBase
 			result[ i + dim + 1 ] = ( float ) Math.sqrt( result[ i + dim + 1 ] / result[ 0 ] - result[ i ] * result[ i ] );
 		}
 
-		final long[] dims = Util.intervalDimensions( image );
+		final long[] dims = Intervals.dimensionsAsLongArray( image );
 		float total = dims[ 0 ];
 		for ( int i = 1; i < dim; i++ )
 			total *= dims[ i ];

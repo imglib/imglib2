@@ -45,6 +45,7 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 
 /**
@@ -71,7 +72,7 @@ public class FloydSteinbergDithering< T extends RealType< T >> implements Output
 	public FloydSteinbergDithering( final RandomAccessibleInterval< T > img, final float ditheringThreshold )
 	{
 		this.img = img;
-		this.dim = Util.intervalDimensions( img );
+		this.dim = Intervals.dimensionsAsLongArray( img );
 		this.tmp1 = new long[ img.numDimensions() ];
 		this.tmp2 = new long[ img.numDimensions() ];
 

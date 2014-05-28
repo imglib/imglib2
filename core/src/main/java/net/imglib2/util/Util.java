@@ -73,6 +73,7 @@ public class Util
 		return Math.log( value ) / Math.log( 2.0 );
 	}
 
+	// TODO: move to ArrayUtil?
 	public static double[] getArrayFromValue( final double value, final int numDimensions )
 	{
 		final double[] values = new double[ numDimensions ];
@@ -83,6 +84,7 @@ public class Util
 		return values;
 	}
 
+	// TODO: move to ArrayUtil?
 	public static float[] getArrayFromValue( final float value, final int numDimensions )
 	{
 		final float[] values = new float[ numDimensions ];
@@ -93,6 +95,7 @@ public class Util
 		return values;
 	}
 
+	// TODO: move to ArrayUtil?
 	public static int[] getArrayFromValue( final int value, final int numDimensions )
 	{
 		final int[] values = new int[ numDimensions ];
@@ -103,6 +106,7 @@ public class Util
 		return values;
 	}
 
+	// TODO: move to ArrayUtil?
 	public static long[] getArrayFromValue( final long value, final int numDimensions )
 	{
 		final long[] values = new long[ numDimensions ];
@@ -948,6 +952,9 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, use {@link Intervals#dimensionsAsLongArray(Dimensions)}
+	 * instead.
+	 * 
 	 * <p>
 	 * Create a long[] with the dimensions of an {@link Interval}.
 	 * </p>
@@ -961,6 +968,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new long[]
 	 */
+	@Deprecated
 	final static public long[] intervalDimensions( final Interval interval )
 	{
 		final long[] dimensions = new long[ interval.numDimensions() ];
@@ -989,6 +997,8 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, use {@link Intervals#maxAsLongArray(Interval)} instead.
+	 * 
 	 * <p>
 	 * Create a long[] with the max coordinates of an {@link Interval}.
 	 * </p>
@@ -1002,6 +1012,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new long[]
 	 */
+	@Deprecated
 	final static public long[] intervalMax( final Interval interval )
 	{
 		final long[] max = new long[ interval.numDimensions() ];
@@ -1010,6 +1021,8 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, use {@link Intervals#minAsLongArray(Interval)} instead.
+	 * 
 	 * <p>
 	 * Create a long[] with the min coordinates of an {@link Interval}.
 	 * </p>
@@ -1023,6 +1036,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new long[]
 	 */
+	@Deprecated
 	final static public long[] intervalMin( final Interval interval )
 	{
 		final long[] min = new long[ interval.numDimensions() ];
@@ -1031,6 +1045,8 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, no replacement.
+	 * 
 	 * <p>
 	 * Create a double[] with the dimensions of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.
@@ -1045,6 +1061,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new double[]
 	 */
+	@Deprecated
 	final static public double[] realIntervalDimensions( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
@@ -1057,6 +1074,8 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, use {@link Intervals#maxAsDoubleArray(RealInterval)} instead.
+	 * 
 	 * <p>
 	 * Create a double[] with the max coordinates of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.
@@ -1071,6 +1090,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new double[]
 	 */
+	@Deprecated
 	final static public double[] realIntervalMax( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
@@ -1083,6 +1103,8 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, use {@link Intervals#minAsDoubleArray(RealInterval)} instead.
+	 * 
 	 * <p>
 	 * Create a double[] with the min coordinates of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.
@@ -1097,6 +1119,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new double[]
 	 */
+	@Deprecated
 	final static public double[] realIntervalMin( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();

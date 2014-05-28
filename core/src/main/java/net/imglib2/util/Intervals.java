@@ -396,7 +396,6 @@ public class Intervals
 	 */
 	public static boolean equalDimensions( final Interval a, final Interval b )
 	{
-
 		if ( a.numDimensions() != b.numDimensions() )
 			return false;
 
@@ -405,5 +404,176 @@ public class Intervals
 				return false;
 
 		return true;
+	}
+
+	/**
+	 * Create a <code>long[]</code> with the dimensions of a {@link Dimensions}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See
+	 * {@link Dimensions#dimensions(long[])}.
+	 * </p>
+	 * 
+	 * @param dimensions
+	 *            something which has dimensions
+	 * 
+	 * @return dimensions as a new <code>long[]</code>
+	 */
+	public static long[] dimensionsAsLongArray( final Dimensions dimensions )
+	{
+		final long[] dims = new long[ dimensions.numDimensions() ];
+		dimensions.dimensions( dims );
+		return dims;
+	}
+
+	/**
+	 * Create a <code>int[]</code> with the dimensions of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
+	 * @param dimensions
+	 *            something which has dimensions
+	 * 
+	 * @return dimensions as a new <code>int[]</code>
+	 */
+	public static int[] dimensionsAsIntArray( final Dimensions dimensions )
+	{
+		final int n = dimensions.numDimensions();
+		final int[] dims = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			dims[ d ] = ( int ) dimensions.dimension( d );
+		return dims;
+	}
+
+	/**
+	 * Create a <code>long[]</code> with the minimum of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See {@link Interval#min(long[])}.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return minimum as a new <code>long[]</code>
+	 */
+	public static long[] minAsLongArray( final Interval interval )
+	{
+		final long[] min = new long[ interval.numDimensions() ];
+		interval.min( min );
+		return min;
+	}
+
+	/**
+	 * Create a <code>int[]</code> with the minimum of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return minimum as a new <code>int[]</code>
+	 */
+	public static int[] minAsIntArray( final Interval interval )
+	{
+		final int n = interval.numDimensions();
+		final int[] min = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			min[ d ] = ( int ) interval.min( d );
+		return min;
+	}
+
+	/**
+	 * Create a <code>long[]</code> with the maximum of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See {@link Interval#max(long[])}.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return maximum as a new <code>long[]</code>
+	 */
+	public static long[] maxAsLongArray( final Interval interval )
+	{
+		final long[] max = new long[ interval.numDimensions() ];
+		interval.max( max );
+		return max;
+	}
+
+	/**
+	 * Create a <code>int[]</code> with the maximum of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return maximum as a new <code>int[]</code>
+	 */
+	public static int[] maxAsIntArray( final Interval interval )
+	{
+		final int n = interval.numDimensions();
+		final int[] max = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = ( int ) interval.max( d );
+		return max;
+	}
+
+	/**
+	 * Create a <code>double[]</code> with the maximum of a {@link RealInterval}
+	 * .
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See
+	 * {@link RealInterval#realMax(double[])}.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return maximum as a new double[]
+	 */
+	public static double[] maxAsDoubleArray( final RealInterval interval )
+	{
+		final double[] max = new double[ interval.numDimensions() ];
+		interval.realMax( max );
+		return max;
+	}
+
+	/**
+	 * Create a <code>double[]</code> with the minimum of a {@link RealInterval}
+	 * .
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See
+	 * {@link RealInterval#realMin(double[])}.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return minimum as a new double[]
+	 */
+	public static double[] minAsDoubleArray( final RealInterval interval )
+	{
+		final double[] min = new double[ interval.numDimensions() ];
+		interval.realMin( min );
+		return min;
 	}
 }
