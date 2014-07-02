@@ -38,7 +38,8 @@ import net.imglib2.RandomAccessible;
 
 /**
  * Coordinates out of image bounds are mirrored at boundary coordinates.
- * Boundary pixels are not repeated.
+ * Boundary pixels are not repeated.  Note that this requires that all
+ * dimensions of the source (F f) must be &gt; 1.
  * 
  * <pre>
  * Example:

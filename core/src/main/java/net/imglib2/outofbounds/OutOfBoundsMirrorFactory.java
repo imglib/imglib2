@@ -39,7 +39,8 @@ import net.imglib2.RandomAccessible;
 /**
  * Create appropriate strategies that virtually mirror a
  * {@link RandomAccessible} at its boundaries. Boundary pixels are either
- * duplicated or not.
+ * duplicated or not.  Note that if boundary pixels should not be duplicated
+ * then all dimensions of the source (F f) must be &gt; 1.
  * 
  * @param <T>
  * 

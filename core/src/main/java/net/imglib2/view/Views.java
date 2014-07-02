@@ -113,85 +113,86 @@ public class Views
 	/**
 	 * Extend a RandomAccessibleInterval with an out-of-bounds strategy.
 	 * 
-	 * @param randomAccessible
+	 * @param source
 	 *            the interval to extend.
 	 * @param factory
 	 *            the out-of-bounds strategy.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
 	 */
-	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extend( final F randomAccessible, final OutOfBoundsFactory< T, ? super F > factory )
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extend( final F source, final OutOfBoundsFactory< T, ? super F > factory )
 	{
-		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, factory );
+		return new ExtendedRandomAccessibleInterval< T, F >( source, factory );
 	}
 
 	/**
 	 * Extend a RandomAccessibleInterval with a mirroring out-of-bounds
-	 * strategy. Boundary pixels are not repeated.
+	 * strategy. Boundary pixels are not repeated.  Note that this requires
+	 * that all dimensions of the source (F source) must be &gt; 1.
 	 * 
-	 * @param randomAccessible
+	 * @param source
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
 	 * @see net.imglib2.outofbounds.OutOfBoundsMirrorSingleBoundary
 	 */
-	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendMirrorSingle( final F randomAccessible )
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendMirrorSingle( final F source )
 	{
-		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsMirrorFactory< T, F >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
+		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsMirrorFactory< T, F >( OutOfBoundsMirrorFactory.Boundary.SINGLE ) );
 	}
 
 	/**
 	 * Extend a RandomAccessibleInterval with a mirroring out-of-bounds
 	 * strategy. Boundary pixels are repeated.
 	 * 
-	 * @param randomAccessible
+	 * @param source
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
 	 * @see net.imglib2.outofbounds.OutOfBoundsMirrorDoubleBoundary
 	 */
-	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendMirrorDouble( final F randomAccessible )
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendMirrorDouble( final F source )
 	{
-		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsMirrorFactory< T, F >( OutOfBoundsMirrorFactory.Boundary.DOUBLE ) );
+		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsMirrorFactory< T, F >( OutOfBoundsMirrorFactory.Boundary.DOUBLE ) );
 	}
 
 	/**
 	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
 	 * strategy.
 	 * 
-	 * @param randomAccessible
+	 * @param source
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
 	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
 	 */
-	public static < T extends Type< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F randomAccessible, final T value )
+	public static < T extends Type< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendValue( final F source, final T value )
 	{
-		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsConstantValueFactory< T, F >( value ) );
+		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsConstantValueFactory< T, F >( value ) );
 	}
 
 	/**
 	 * Extend a RandomAccessibleInterval with a constant-value out-of-bounds
 	 * strategy where the constant value is the zero-element of the data type.
 	 * 
-	 * @param randomAccessible
+	 * @param source
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity with a constant value of zero.
 	 * @see net.imglib2.outofbounds.OutOfBoundsConstantValue
 	 */
-	public static < T extends NumericType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendZero( final F randomAccessible )
+	public static < T extends NumericType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendZero( final F source )
 	{
-		final T zero = Util.getTypeFromInterval( randomAccessible ).createVariable();
+		final T zero = Util.getTypeFromInterval( source ).createVariable();
 		zero.setZero();
-		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsConstantValueFactory< T, F >( zero ) );
+		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsConstantValueFactory< T, F >( zero ) );
 	}
 
 	/**
 	 * Extend a RandomAccessibleInterval with a random-value out-of-bounds
 	 * strategy.
 	 * 
-	 * @param randomAccessible
+	 * @param source
 	 *            the interval to extend.
 	 * @param min
 	 *            the minimal random value
@@ -201,38 +202,38 @@ public class Views
 	 *         infinity.
 	 * @see net.imglib2.outofbounds.OutOfBoundsRandomValue
 	 */
-	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendRandom( final F randomAccessible, final double min, final double max )
+	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendRandom( final F source, final double min, final double max )
 	{
-		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsRandomValueFactory< T, F >( Util.getTypeFromRandomAccess( randomAccessible ), min, max ) );
+		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsRandomValueFactory< T, F >( Util.getTypeFromRandomAccess( source ), min, max ) );
 	}
 
 	/**
 	 * Extend a RandomAccessibleInterval with a periodic out-of-bounds strategy.
 	 * 
-	 * @param randomAccessible
+	 * @param source
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
 	 * @see net.imglib2.outofbounds.OutOfBoundsPeriodic
 	 */
-	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendPeriodic( final F randomAccessible )
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendPeriodic( final F source )
 	{
-		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsPeriodicFactory< T, F >() );
+		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsPeriodicFactory< T, F >() );
 	}
 
 	/**
 	 * Extend a RandomAccessibleInterval with an out-of-bounds strategy to
 	 * repeat border pixels.
 	 * 
-	 * @param randomAccessible
+	 * @param source
 	 *            the interval to extend.
 	 * @return (unbounded) RandomAccessible which extends the input interval to
 	 *         infinity.
 	 * @see net.imglib2.outofbounds.OutOfBoundsBorder
 	 */
-	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendBorder( final F randomAccessible )
+	public static < T, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendBorder( final F source )
 	{
-		return new ExtendedRandomAccessibleInterval< T, F >( randomAccessible, new OutOfBoundsBorderFactory< T, F >() );
+		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsBorderFactory< T, F >() );
 	}
 
 	/**
