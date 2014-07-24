@@ -33,62 +33,31 @@
 
 package net.imglib2.interpolation.randomaccess;
 
-import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
-import net.imglib2.RealRandomAccess;
-import net.imglib2.position.transform.Round;
+import net.imglib2.RealInterval;
+import net.imglib2.interpolation.InterpolatorFactory;
 
 /**
- * {@link RealRandomAccess} to a {@link RandomAccess} by nearest neighbor
- * interpolation.
- * 
- * <p>In ImgLib2, the coordinate of a sample corresponds to the 'center' point
- * of the sample, i.e. the location at which the sample was acquired.  This
- * scheme is intuitive in both rasters and irregularly samples data but can
- * trigger confusion when displaying images on a screen with a pixel raster
- * which, in this scheme, spans the range [-0.5,<em>width</em>-0.5].  In the
- * screen-friendly alternative scheme, where sample coordinates reference the
- * top left corner of the pixel rectangle representing a sample the range
- * covered by an image is [0,<em>width</em>], however, coordinate transfer
- * functions other than translation and homogeneous scaling generate different
- * results than in the center-scheme.  Rendering an image using
- * {@link FloorInterpolator} means using the top-left-scheme, rendering it
- * using {@link NearestNeighborInterpolator}, {@link NLinearInterpolator}, or
- * {@link LanczosInterpolator} means using the center-scheme.</p>
  * 
  * @param <T>
  * 
- * @author Tobias Pietzsch
- * @author Stephan Preibisch
  * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
-public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > > implements RealRandomAccess< T >
+public class FloorInterpolatorFactory< T > implements InterpolatorFactory< T, RandomAccessible< T > >
 {
-	protected NearestNeighborInterpolator( final NearestNeighborInterpolator< T > nearestNeighborInterpolator )
-	{
-		super( nearestNeighborInterpolator.target.copyRandomAccess() );
-	}
-
-	protected NearestNeighborInterpolator( final RandomAccessible< T > randomAccessible )
-	{
-		super( randomAccessible.randomAccess() );
-	}
-
 	@Override
-	public T get()
+	public FloorInterpolator< T > create( final RandomAccessible< T > randomAccessible )
 	{
-		return target.get();
+		return new FloorInterpolator< T >( randomAccessible );
 	}
 
+	/**
+	 * For now, ignore the {@link RealInterval} and return
+	 * {@link #create(RandomAccessible)}.
+	 */
 	@Override
-	public NearestNeighborInterpolator< T > copy()
+	public FloorInterpolator< T > create( final RandomAccessible< T > randomAccessible, final RealInterval interval )
 	{
-		return new NearestNeighborInterpolator< T >( this );
-	}
-
-	@Override
-	public NearestNeighborInterpolator< T > copyRealRandomAccess()
-	{
-		return copy();
+		return create( randomAccessible );
 	}
 }
