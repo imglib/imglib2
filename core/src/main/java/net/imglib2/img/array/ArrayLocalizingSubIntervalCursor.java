@@ -80,4 +80,10 @@ public final class ArrayLocalizingSubIntervalCursor< T extends NativeType< T > >
 		return new ArrayLocalizingSubIntervalCursor< T >( this );
 	}
 
+	@Override
+	public ArrayLocalizingSubIntervalCursor< T > copyCursor()
+	{
+		return copy();
+	}
+
 }

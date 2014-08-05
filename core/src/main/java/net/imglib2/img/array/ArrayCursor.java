@@ -62,4 +62,10 @@ public final class ArrayCursor< T extends NativeType< T > > extends AbstractArra
 	{
 		return new ArrayCursor< T >( this );
 	}
+
+	@Override
+	public ArrayCursor< T > copyCursor()
+	{
+		return copy();
+	}
 }

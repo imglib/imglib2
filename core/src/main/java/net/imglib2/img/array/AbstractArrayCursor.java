@@ -168,14 +168,4 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 	{
 		IntervalIndexer.indexToPosition( type.getIndex(), img.dim, position );
 	}
-
-	@Override
-	abstract public AbstractArrayCursor< T > copy();
-
-	@Override
-	public AbstractArrayCursor< T > copyCursor()
-	{
-		return copy();
-	}
-
 }

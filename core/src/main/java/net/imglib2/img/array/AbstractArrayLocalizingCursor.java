@@ -222,19 +222,4 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 
 		type.updateContainer( this );
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	abstract public AbstractArrayLocalizingCursor< T > copy();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public AbstractArrayLocalizingCursor< T > copyCursor()
-	{
-		return copy();
-	}
 }
