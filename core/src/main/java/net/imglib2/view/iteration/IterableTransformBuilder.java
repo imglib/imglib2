@@ -35,6 +35,7 @@
  */
 package net.imglib2.view.iteration;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import net.imglib2.AbstractWrappedInterval;
@@ -77,6 +78,9 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 	}
 
 	/**
+	 * TODO: Figure this out. Currently the interval is not propagated. It is
+	 * simply the requested interval.
+	 * 
 	 * The interval in which access is needed. This is propagated through the
 	 * transforms down the view hierarchy.
 	 */
@@ -94,6 +98,10 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 		this.interval = interval;
 	}
 
+	/**
+	 * TODO Javadoc
+	 * 
+	 */
 	class SubInterval extends AbstractWrappedInterval< Interval > implements IterableInterval< T >
 	{
 		final long numElements;
@@ -244,28 +252,43 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 			{
 				final SlicingTransform t = ( SlicingTransform ) transforms.get( 0 );
 				final int m = t.numTargetDimensions();
+				final int n = t.numSourceDimensions();
+
+				// Check whether the slicing can be potentially optimized.
 				boolean optimizable = true;
+
+				// 1.) Slice dimensions must be mapped to a contiguous range of
+				// target dimensions starting with dimension 0.
 				int firstZeroDim = 0;
 				for ( ; firstZeroDim < m && !t.getComponentZero( firstZeroDim ); ++firstZeroDim );
-				for ( int d = firstZeroDim + 1; d < m; ++d )
-					if ( t.getComponentZero( d ) )
-					{
+				for ( int d = firstZeroDim + 1; d < m && optimizable; ++d )
+					if ( !t.getComponentZero( d ) )
 						optimizable = false;
-						break;
-					}
+
+				// 2.) All slice dimensions must be mapped to a target dimension
+				final int[] sourceComponent = new int[ n ];
 				if ( optimizable )
 				{
-					// System.out.println( "interval = " + Util.printInterval(
-					// interval ) );
+					Arrays.fill( sourceComponent, -1 );
+					for ( int d = 0; d < m; ++d )
+						if ( !t.getComponentZero( d ) )
+							sourceComponent[ t.getComponentMapping( d ) ] = d;
+					for ( int d = 0; d < n && optimizable; ++d )
+						if ( sourceComponent[ d ] < 0 )
+							optimizable = false;
+				}
+
+				if ( optimizable )
+				{
+//					System.out.println( "interval = " + Util.printInterval( interval ) );
 					final Interval sliceInterval = t.transform( new BoundingBox( interval ) ).getInterval();
-					// System.out.println( "transformed interval = " +
-					// Util.printInterval( sliceInterval ) );
+//					System.out.println( "transformed interval = " + Util.printInterval( sliceInterval ) );
 					if ( iterableSource.supportsOptimizedCursor( sliceInterval ) )
 					{
 						// check for FlatIterationOrder
 						boolean flat = FlatIterationOrder.class.isInstance( iterableSource.subIntervalIterationOrder( sliceInterval ) );
-						for ( int d = 0; d < firstZeroDim && flat; ++d )
-							if ( t.getComponentMapping( d ) != d )
+						for ( int d = 0; d < n - 1; ++d )
+							if ( sourceComponent[ d + 1 ] <= sourceComponent[ d ] )
 								flat = false;
 						return new Slice( iterableSource, sliceInterval, t, flat );
 					}
