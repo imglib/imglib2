@@ -43,6 +43,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Intervals;
 import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
@@ -304,7 +305,10 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	@Override
 	public boolean supportsOptimizedCursor( final Interval interval )
 	{
-		
+		// first check whether the interval is completely contained.
+		if ( !Intervals.contains( this, interval ) )
+			return false;
+
 		// we want to optimize exactly one plane
 		if ( correspondsToPlane( interval ) )
 		{
@@ -313,17 +317,18 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		else
 		{
 			// we want to optimize a set of planes
+
+			// find the first dimension in which image and interval differ
 			int dimIdx = 0;
-
-			// Find equal dims
-			for ( int d = 0; d < interval.numDimensions(); d++, dimIdx++ )
-				if ( interval.dimension( d ) != dimension( d ) )
-				{
-					dimIdx++;
+			for ( ; dimIdx < n; ++dimIdx )
+				if ( interval.dimension( dimIdx ) != dimension( dimIdx ) )
 					break;
-				}
 
-			for ( int d = dimIdx; d < interval.numDimensions(); d++ )
+			// in the dimension after that, image and interval may differ
+			++dimIdx;
+
+			// but image extents of all higher dimensions must equal 1
+			for ( int d = dimIdx; d < n; ++d )
 				if ( interval.dimension( d ) != 1 )
 					return false;
 
@@ -335,7 +340,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object subIntervalIterationOrder( Interval interval )
+	public Object subIntervalIterationOrder( final Interval interval )
 	{
 		return new FlatIterationOrder( interval );
 	}
@@ -344,7 +349,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Cursor< T > cursor( Interval interval )
+	public Cursor< T > cursor( final Interval interval )
 	{
 		assert supportsOptimizedCursor( interval );
 
@@ -372,11 +377,11 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Cursor< T > localizingCursor( Interval interval )
+	public Cursor< T > localizingCursor( final Interval interval )
 	{
-		
+
 		assert supportsOptimizedCursor( interval );
-		
+
 		if ( correspondsToPlane( interval ) ) { return new PlanarPlaneSubsetLocalizingCursor< T >( this, interval ); }
 		return new PlanarSubsetLocalizingCursor< T >( this, interval );
 	}

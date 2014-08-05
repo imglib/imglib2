@@ -40,6 +40,7 @@ import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.util.Intervals;
 import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
@@ -178,23 +179,25 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 
 	/**
 	 * If method returns -1 no fast cursor is available, else the amount of dims
-	 * (starting from zero) which can be iterated fast are returned
+	 * (starting from zero) which can be iterated fast are returned.
 	 */
 	private int fastCursorAvailable( final Interval interval )
 	{
+		// first check whether the interval is completely contained.
+		if ( !Intervals.contains( this, interval ) )
+			return -1;
+
+		// find the first dimension in which image and interval differ
 		int dimIdx = 0;
-
-		// Find equal dims
-		for ( int d = 0; d < interval.numDimensions(); ++d, ++dimIdx )
-		{
-			if ( interval.dimension( d ) != dimension( d ) )
-			{
-				++dimIdx;
+		for ( ; dimIdx < n; ++dimIdx )
+			if ( interval.dimension( dimIdx ) != dimension( dimIdx ) )
 				break;
-			}
-		}
 
-		for ( int d = dimIdx; d < interval.numDimensions(); ++d )
+		// in the dimension after that, image and interval may differ
+		++dimIdx;
+
+		// but image extents of all higher dimensions must equal 1
+		for ( int d = dimIdx; d < n; ++d )
 			if ( interval.dimension( d ) != 1 )
 				return -1;
 
