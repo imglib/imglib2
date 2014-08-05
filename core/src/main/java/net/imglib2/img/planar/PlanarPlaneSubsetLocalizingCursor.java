@@ -10,11 +10,11 @@ import net.imglib2.util.IntervalIndexer;
  * Cursor optimized for one plane in an PlanarImg.
  * 
  * @author Jonathan Hale
- *
+ * 
  * @param <T>
  */
-public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> extends
-		AbstractLocalizingCursorInt< T > implements PlanarImg.PlanarContainerSampler
+public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
+		extends AbstractLocalizingCursorInt< T > implements PlanarImg.PlanarContainerSampler
 {
 
 	/**
@@ -36,7 +36,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 	 * Size of one plane
 	 */
 	protected final int planeSize;
-	
+
 	/**
 	 * Last index on the plane
 	 */
@@ -56,7 +56,8 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 	/**
 	 * Copy Constructor
 	 * 
-	 * @param cursor - PlanarPlaneSubsetLocalizingCursor to copy from
+	 * @param cursor
+	 *            PlanarPlaneSubsetLocalizingCursor to copy from
 	 */
 	protected PlanarPlaneSubsetLocalizingCursor( final PlanarPlaneSubsetLocalizingCursor< T > cursor )
 	{
@@ -84,10 +85,12 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 	/**
 	 * Constructor
 	 * 
-	 * @param container - PlanarImg this cursor shall work on.
-	 * @param interval - Interval over which shall be iterated.
+	 * @param container
+	 *            PlanarImg this cursor shall work on.
+	 * @param interval
+	 *            Interval over which shall be iterated.
 	 */
-	public PlanarPlaneSubsetLocalizingCursor( final PlanarImg< T, ? > container, Interval interval )
+	public PlanarPlaneSubsetLocalizingCursor( final PlanarImg< T, ? > container, final Interval interval )
 	{
 		super( container.numDimensions() );
 
@@ -95,11 +98,10 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 
 		this.container = container;
 
-		this.planeSize = ( ( n > 1 ) ? ( int ) interval.dimension( 1 ) : 1 )
-				* ( int ) interval.dimension( 0 );
+		this.planeSize = ( ( n > 1 ) ? ( int ) interval.dimension( 1 ) : 1 ) * ( int ) interval.dimension( 0 );
 
 		this.lastIndexPlane = planeSize - 1;
-		
+
 		// Set current slice index
 		offsetContainer = offset( interval );
 		sliceIndex = ( int ) ( offsetContainer / planeSize );
@@ -164,7 +166,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 	public final void fwd()
 	{
 		type.incIndex();
-		
+
 //		 for ( int d = 0; d < n; ++d )
 //		 {
 //		 if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
@@ -184,15 +186,15 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 		else
 		{
 			position[ 0 ] = 0;
-			
+
 			for ( int d = 1; d < n; ++d )
 			{
-				 if ( ++position[ d ] <= max[ d ] )
-				 	break;
-				 else
-				 	position[ d ] = 0;
+				if ( ++position[ d ] <= max[ d ] )
+					break;
+				else
+					position[ d ] = 0;
 			}
-			
+
 			return;
 		}
 	}
@@ -201,7 +203,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final void jumpFwd( long steps )
+	public final void jumpFwd( final long steps )
 	{
 		type.incIndex( ( int ) steps );
 
@@ -228,35 +230,15 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T >> exten
 		return type.toString();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final void localize( final int[] position )
-	{
-		for ( int i = 0; i < n; ++i )
-		{
-			position[ i ] = this.position[ i ];
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final int getIntPosition( final int dim )
-	{
-		return this.position[ dim ];
-	}
-
 	/*
 	 * Computes global offset of the interval in the Img
 	 */
-	private long offset(final Interval interval) {
+	private long offset( final Interval interval )
+	{
 		final int maxDim = numDimensions() - 1;
-		long i = interval.min(maxDim);
-		for (int d = maxDim - 1; d >= 0; --d)
-			i = i * container.dimension(d) + interval.min(d);
+		long i = interval.min( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * container.dimension( d ) + interval.min( d );
 
 		return i;
 	}

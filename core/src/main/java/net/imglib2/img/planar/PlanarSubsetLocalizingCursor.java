@@ -36,8 +36,6 @@
 
 package net.imglib2.img.planar;
 
-import java.util.Arrays;
-
 import net.imglib2.AbstractLocalizingCursorInt;
 import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
@@ -53,8 +51,8 @@ import net.imglib2.util.Intervals;
  * @author Stephan Saalfeld
  * @author Christian Dietz
  */
-public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
-		AbstractLocalizingCursorInt< T > implements PlanarImg.PlanarContainerSampler
+public class PlanarSubsetLocalizingCursor< T extends NativeType< T > >
+		extends AbstractLocalizingCursorInt< T > implements PlanarImg.PlanarContainerSampler
 {
 
 	/**
@@ -146,7 +144,7 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 	 * @param container
 	 * @param interval
 	 */
-	public PlanarSubsetLocalizingCursor( final PlanarImg< T, ? > container, Interval interval )
+	public PlanarSubsetLocalizingCursor( final PlanarImg< T, ? > container, final Interval interval )
 	{
 		super( container.numDimensions() );
 
@@ -156,8 +154,7 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 
 		this.offsetContainer = ( int ) offset( interval );
 
-		this.planeSize = ( ( n > 1 ) ? ( int ) interval.dimension( 1 ) : 1 )
-				* ( int ) interval.dimension( 0 );
+		this.planeSize = ( ( n > 1 ) ? ( int ) interval.dimension( 1 ) : 1 ) * ( int ) interval.dimension( 0 );
 
 		this.lastIndexPlane = planeSize - 1;
 
@@ -237,11 +234,11 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 		else
 			type.incIndex();
 
-//		 for ( int d = 0; d < n; ++d )
-//		 {
-//		 if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
-//		 else break;
-//		 }
+//		for ( int d = 0; d < n; ++d )
+//		{
+//			if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
+//			else break;
+//		}
 
 		/*
 		 * Benchmarks @ 2012-04-17 demonstrate that the less readable code below
@@ -251,17 +248,15 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 		 * done in the above version of the code. Below, it plays a role.
 		 */
 		if ( ++position[ 0 ] <= max[ 0 ] )
-		{
 			return;
-		}
 		position[ 0 ] = 0;
-		
+
 		for ( int d = 1; d < n; ++d )
 		{
-			 if ( ++position[ d ] > max[ d ] )
-			 	position[ d ] = 0;
-			 else
-			 	break;
+			if ( ++position[ d ] > max[ d ] )
+				position[ d ] = 0;
+			else
+				break;
 		}
 
 	}
@@ -270,7 +265,7 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void jumpFwd( long steps )
+	public void jumpFwd( final long steps )
 	{
 		long newIndex = index + steps;
 		if ( newIndex > lastIndexPlane )
@@ -296,7 +291,7 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 
 		// Set current slice index
 		sliceIndex = offsetContainer / planeSize;
-		
+
 		// Set index inside the slice
 		index = offsetContainer % planeSize - 1;
 
@@ -318,32 +313,12 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T >> extends
 		return type.toString();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void localize( final int[] position )
+	private long offset( final Interval interval )
 	{
-		for ( int i = 0; i < n; ++i )
-		{
-			position[ i ] = this.position[ i ];
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getIntPosition( final int dim )
-	{
-		return this.position[ dim ];
-	}
-
-	private long offset(final Interval interval) {
 		final int maxDim = numDimensions() - 1;
-		long i = interval.min(maxDim);
-		for (int d = maxDim - 1; d >= 0; --d)
-			i = i * container.dimension(d) + interval.min(d);
+		long i = interval.min( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * container.dimension( d ) + interval.min( d );
 
 		return i;
 	}
