@@ -164,7 +164,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 	@Override
 	public void fwd()
 	{
-		 type.incIndex();
+		type.incIndex();
 
 //		 for ( int d = 0; d < n; ++d )
 //		 {
@@ -186,15 +186,15 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 		else
 		{
 			position[ 0 ] = 0;
-			
+
 			for ( int d = 1; d < n; ++d )
 			{
-				 if ( ++position[ d ] <= max[ d ] )
-				 	break;
-				 else
-				 	position[ d ] = 0;
+				if ( ++position[ d ] <= max[ d ] )
+					break;
+				else
+					position[ d ] = 0;
 			}
-			
+
 			return;
 		}
 	}

@@ -139,7 +139,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 
 		return copy;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -176,7 +176,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 		return i;
 	}
 
-	/*
+	/**
 	 * If method returns -1 no fast cursor is available, else the amount of dims
 	 * (starting from zero) which can be iterated fast are returned
 	 */
@@ -195,12 +195,8 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 		}
 
 		for ( int d = dimIdx; d < interval.numDimensions(); ++d )
-		{
 			if ( interval.dimension( d ) != 1 )
-			{
 				return -1;
-			}
-		}
 
 		return dimIdx;
 	}

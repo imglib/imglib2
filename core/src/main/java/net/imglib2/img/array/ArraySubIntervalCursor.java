@@ -67,7 +67,7 @@ public final class ArraySubIntervalCursor< T extends NativeType< T > > extends A
 	 * @param offset
 	 * @param size
 	 */
-	public ArraySubIntervalCursor( final ArrayImg< T, ? > img, int offset, int size )
+	public ArraySubIntervalCursor( final ArrayImg< T, ? > img, final int offset, final int size )
 	{
 		super( img, offset, size );
 	}
