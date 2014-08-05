@@ -42,11 +42,11 @@ import net.imglib2.converter.AbstractConvertedCursor;
  */
 public class WriteConvertedCursor< A, B > extends AbstractConvertedCursor< A, B >
 {
-	private final SamplerConverter< A, B > converter;
+	private final SamplerConverter< ? super A, B > converter;
 
 	private final B converted;
 
-	public WriteConvertedCursor( final Cursor< A > source, final SamplerConverter< A, B > converter )
+	public WriteConvertedCursor( final Cursor< A > source, final SamplerConverter< ? super A, B > converter )
 	{
 		super( source );
 		this.converter = converter;

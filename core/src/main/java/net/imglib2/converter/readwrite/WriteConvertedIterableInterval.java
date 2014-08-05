@@ -42,9 +42,9 @@ import net.imglib2.converter.AbstractConvertedIterableInterval;
  */
 public class WriteConvertedIterableInterval< A, B > extends AbstractConvertedIterableInterval< A, B >
 {
-	private final SamplerConverter< A, B > converter;
+	private final SamplerConverter< ? super A, B > converter;
 
-	public WriteConvertedIterableInterval( final IterableInterval< A > source, final SamplerConverter< A, B > converter )
+	public WriteConvertedIterableInterval( final IterableInterval< A > source, final SamplerConverter< ? super A, B > converter )
 	{
 		super( source );
 		this.converter = converter;
