@@ -197,19 +197,15 @@ public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends Ab
 		this.position[ dim ] = position;
 		if ( position < min[ dim ] || position > max[ dim ] )
 			dimIsOutOfBounds[ dim ] = isOutOfBounds = true;
-		else
+		else if ( isOutOfBounds )
 		{
-			final boolean wasOutOfBounds = isOutOfBounds;
 			dimIsOutOfBounds[ dim ] = false;
 			checkOutOfBounds();
-
-			if ( isOutOfBounds )
-				return;
-			if ( wasOutOfBounds )
+			if ( !isOutOfBounds )
 				sampler.setPosition( this.position );
-			else
-				sampler.setPosition( position, dim );
 		}
+		else
+			sampler.setPosition( position, dim );
 	}
 
 	@Override
