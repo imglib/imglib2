@@ -45,16 +45,16 @@ import net.imglib2.type.numeric.real.FloatType;
 public final class RealFloatSamplerConverter< R extends RealType< R > > implements SamplerConverter< R, FloatType >
 {
 	@Override
-	public FloatType convert( final Sampler< R > sampler )
+	public FloatType convert( final Sampler< ? extends R > sampler )
 	{
 		return new FloatType( new RealConvertingFloatAccess< R >( sampler ) );
 	}
 
 	private static final class RealConvertingFloatAccess< R extends RealType< R > > implements FloatAccess
 	{
-		private final Sampler< R > sampler;
+		private final Sampler< ? extends R > sampler;
 
-		private RealConvertingFloatAccess( final Sampler< R > sampler )
+		private RealConvertingFloatAccess( final Sampler< ? extends R > sampler )
 		{
 			this.sampler = sampler;
 		}

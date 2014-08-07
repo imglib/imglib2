@@ -31,37 +31,33 @@
  * #L%
  */
 
-package net.imglib2.converter.readwrite;
+package net.imglib2.interpolation.randomaccess;
 
-import net.imglib2.Cursor;
-import net.imglib2.converter.AbstractConvertedCursor;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RealInterval;
+import net.imglib2.interpolation.InterpolatorFactory;
 
 /**
- * TODO
  * 
+ * @param <T>
+ * 
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
-public class WriteConvertedCursor< A, B > extends AbstractConvertedCursor< A, B >
+public class FloorInterpolatorFactory< T > implements InterpolatorFactory< T, RandomAccessible< T > >
 {
-	private final SamplerConverter< ? super A, B > converter;
-
-	private final B converted;
-
-	public WriteConvertedCursor( final Cursor< A > source, final SamplerConverter< ? super A, B > converter )
+	@Override
+	public FloorInterpolator< T > create( final RandomAccessible< T > randomAccessible )
 	{
-		super( source );
-		this.converter = converter;
-		this.converted = converter.convert( source );
+		return new FloorInterpolator< T >( randomAccessible );
 	}
 
+	/**
+	 * For now, ignore the {@link RealInterval} and return
+	 * {@link #create(RandomAccessible)}.
+	 */
 	@Override
-	public B get()
+	public FloorInterpolator< T > create( final RandomAccessible< T > randomAccessible, final RealInterval interval )
 	{
-		return converted;
-	}
-
-	@Override
-	public WriteConvertedCursor< A, B > copy()
-	{
-		return new WriteConvertedCursor< A, B >( ( Cursor< A > ) source.copy(), converter );
+		return create( randomAccessible );
 	}
 }

@@ -42,11 +42,11 @@ import net.imglib2.converter.AbstractConvertedRandomAccess;
  */
 public final class WriteConvertedRandomAccess< A, B > extends AbstractConvertedRandomAccess< A, B >
 {
-	private final SamplerConverter< A, B > converter;
+	private final SamplerConverter< ? super A, B > converter;
 
 	private final B converted;
 
-	public WriteConvertedRandomAccess( final RandomAccess< A > source, final SamplerConverter< A, B > converter )
+	public WriteConvertedRandomAccess( final RandomAccess< A > source, final SamplerConverter< ? super A, B > converter )
 	{
 		super( source );
 		this.converter = converter;

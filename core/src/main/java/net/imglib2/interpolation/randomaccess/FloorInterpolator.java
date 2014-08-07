@@ -36,11 +36,11 @@ package net.imglib2.interpolation.randomaccess;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccess;
-import net.imglib2.position.transform.Round;
+import net.imglib2.position.transform.Floor;
 
 /**
- * {@link RealRandomAccess} to a {@link RandomAccess} by nearest neighbor
- * interpolation.
+ * {@link RealRandomAccess} to a {@link RandomAccess} by nearest floor
+ * interpolation (i.e., the value is sampled at floor(<em>x</em>)).
  * 
  * <p>In ImgLib2, the coordinate of a sample corresponds to the 'center' point
  * of the sample, i.e. the location at which the sample was acquired.  This
@@ -58,18 +58,16 @@ import net.imglib2.position.transform.Round;
  * 
  * @param <T>
  * 
- * @author Tobias Pietzsch
- * @author Stephan Preibisch
  * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
-public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > > implements RealRandomAccess< T >
+public class FloorInterpolator< T > extends Floor< RandomAccess< T > > implements RealRandomAccess< T >
 {
-	protected NearestNeighborInterpolator( final NearestNeighborInterpolator< T > nearestNeighborInterpolator )
+	protected FloorInterpolator( final FloorInterpolator< T > floorInterpolator )
 	{
-		super( nearestNeighborInterpolator.target.copyRandomAccess() );
+		super( floorInterpolator.target.copyRandomAccess() );
 	}
 
-	protected NearestNeighborInterpolator( final RandomAccessible< T > randomAccessible )
+	protected FloorInterpolator( final RandomAccessible< T > randomAccessible )
 	{
 		super( randomAccessible.randomAccess() );
 	}
@@ -81,13 +79,13 @@ public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > >
 	}
 
 	@Override
-	public NearestNeighborInterpolator< T > copy()
+	public FloorInterpolator< T > copy()
 	{
-		return new NearestNeighborInterpolator< T >( this );
+		return new FloorInterpolator< T >( this );
 	}
 
 	@Override
-	public NearestNeighborInterpolator< T > copyRealRandomAccess()
+	public FloorInterpolator< T > copyRealRandomAccess()
 	{
 		return copy();
 	}

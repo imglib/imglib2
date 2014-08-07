@@ -73,7 +73,7 @@ public class Converters
 	@SuppressWarnings( "unchecked" )
 	final static public < A, B extends Type< B > > RandomAccessible< B > convert(
 			final RandomAccessible< A > source,
-			final Converter< A, B > converter,
+			final Converter< ? super A, ? super B > converter,
 			final B b )
 	{
 		if ( TypeIdentity.class.isInstance( converter ) )
@@ -94,7 +94,7 @@ public class Converters
 	 */
 	final static public < A, B extends Type< B > > WriteConvertedRandomAccessible< A, B > convert(
 			final RandomAccessible< A > source,
-			final SamplerConverter< A, B > converter )
+			final SamplerConverter< ? super A, B > converter )
 	{
 		return new WriteConvertedRandomAccessible< A, B >( source, converter );
 	}
@@ -115,7 +115,7 @@ public class Converters
 	@SuppressWarnings( "unchecked" )
 	final static public < A, B extends Type< B > > RandomAccessibleInterval< B > convert(
 			final RandomAccessibleInterval< A > source,
-			final Converter< A, B > converter,
+			final Converter< ? super A, ? super B > converter,
 			final B b )
 	{
 		if ( TypeIdentity.class.isInstance( converter ) )
@@ -136,7 +136,7 @@ public class Converters
 	 */
 	final static public < A, B extends Type< B > > WriteConvertedRandomAccessibleInterval< A, B > convert(
 			final RandomAccessibleInterval< A > source,
-			final SamplerConverter< A, B > converter )
+			final SamplerConverter< ? super A, B > converter )
 	{
 		return new WriteConvertedRandomAccessibleInterval< A, B >( source, converter );
 	}
@@ -156,7 +156,7 @@ public class Converters
 	@SuppressWarnings( "unchecked" )
 	final static public < A, B extends Type< B > > IterableInterval< B > convert(
 			final IterableInterval< A > source,
-			final Converter< A, B > converter,
+			final Converter< ? super A, ? super B > converter,
 			final B b )
 	{
 		if ( TypeIdentity.class.isInstance( converter ) )
@@ -176,7 +176,7 @@ public class Converters
 	 */
 	final static public < A, B extends Type< B > > WriteConvertedIterableInterval< A, B > convert(
 			final IterableInterval< A > source,
-			final SamplerConverter< A, B > converter )
+			final SamplerConverter< ? super A, B > converter )
 	{
 		return new WriteConvertedIterableInterval< A, B >( source, converter );
 	}
@@ -196,7 +196,7 @@ public class Converters
 	final static public < A, B extends Type< B >, S extends RandomAccessible< A > & IterableInterval< A > >
 			WriteConvertedIterableRandomAccessibleInterval< A, B, S > convertRandomAccessibleIterableInterval(
 					final S source,
-					final SamplerConverter< A, B > converter )
+					final SamplerConverter< ? super A, B > converter )
 	{
 		return new WriteConvertedIterableRandomAccessibleInterval< A, B, S >( source, converter );
 	}
