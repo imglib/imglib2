@@ -154,6 +154,24 @@ public class LinAlgHelpers
 	}
 
 	/**
+	 * set c = a + b. Dimensions of a, b, and c must match. In place addition
+	 * (c==a) is permitted.
+	 * 
+	 * @param a
+	 * @param b
+	 * @param c
+	 */
+	public static void add( final double[] a, final double[] b, final double[] c )
+	{
+		assert ( rows( a ) == rows( b ) ) && ( rows( a ) == rows( c ) );
+
+		final int rows = rows( a );
+
+		for ( int i = 0; i < rows; ++i )
+			c[ i ] = a[ i ] + b[ i ];
+	}
+
+	/**
 	 * set c = A * b.
 	 * 
 	 * Dimensions of A, b, and c must match. That is, cols(A) == rows(b), and
