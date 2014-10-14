@@ -23,7 +23,6 @@
 		<module>algorithms</module>
 		<module>core</module>
 		<module>meta</module>
-		<module>realtransform</module>
 	</modules>
 
 	<properties>
