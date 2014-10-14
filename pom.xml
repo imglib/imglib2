@@ -24,7 +24,6 @@
 		<module>core</module>
 		<module>meta</module>
 		<module>realtransform</module>
-		<module>ui</module>
 	</modules>
 
 	<properties>
