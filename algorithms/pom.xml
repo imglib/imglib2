@@ -17,7 +17,6 @@
 	<modules>
 		<module>core</module>
 		<module>gpl</module>
-		<module>legacy</module>
 	</modules>
 
 	<repositories>
