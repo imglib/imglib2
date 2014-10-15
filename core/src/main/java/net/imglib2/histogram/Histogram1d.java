@@ -61,6 +61,8 @@ public class Histogram1d< T > implements Img< LongType >
 
 	// -- instance variables --
 
+	private T firstValue;
+
 	private BinMapper1d< T > mapper;
 
 	private DiscreteFrequencyDistribution distrib;
@@ -119,6 +121,14 @@ public class Histogram1d< T > implements Img< LongType >
 	}
 
 	// -- public api --
+
+	/**
+	 * Returns the first data value of the input iteration.
+	 */
+	public T firstDataValue()
+	{
+		return firstValue;
+	}
 
 	/**
 	 * Returns true if the histogram has tail bins at both ends which count
@@ -724,12 +734,26 @@ public class Histogram1d< T > implements Img< LongType >
 	{
 		distrib.resetCounters();
 		ignoredCount = 0;
+		firstValue = null;
 	}
 
 	private void init( final Iterable< T > data )
 	{
 		reset();
-		add( data );
+
+		// record the first element
+		final Iterator<T> iter = data.iterator();
+		if ( iter.hasNext() )
+		{
+			firstValue = iter.next();
+			increment( firstValue );
+		}
+
+		// record the rest of the elements
+		while ( iter.hasNext() )
+		{
+			increment ( iter.next() );
+		}
 	}
 
 	private void add( final Iterable< T > data )

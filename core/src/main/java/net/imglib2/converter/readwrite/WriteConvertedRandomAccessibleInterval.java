@@ -43,9 +43,9 @@ import net.imglib2.RandomAccessibleInterval;
  */
 public class WriteConvertedRandomAccessibleInterval< A, B > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< B >
 {
-	private final SamplerConverter< A, B > converter;
+	private final SamplerConverter< ? super A, B > converter;
 
-	public WriteConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source, final SamplerConverter< A, B > converter )
+	public WriteConvertedRandomAccessibleInterval( final RandomAccessibleInterval< A > source, final SamplerConverter< ? super A, B > converter )
 	{
 		super( source );
 		this.converter = converter;

@@ -311,6 +311,7 @@ public final class SeparableSymmetricConvolution
 			if ( i != d )
 				tmp *= targetInterval.dimension( i );
 		final long endIndex = tmp;
+		final long taskSize = tmp / numTasks;
 
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];
@@ -333,10 +334,10 @@ public final class SeparableSymmetricConvolution
 
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
-			final long myStartIndex = taskNum * ( ( endIndex + 1 ) / numTasks );
+			final long myStartIndex = taskNum * taskSize;
 			final long myEndIndex = ( taskNum == numTasks - 1 ) ?
 					endIndex :
-					( taskNum + 1 ) * ( ( endIndex + 1 ) / numTasks );
+					myStartIndex + taskSize;
 			final Callable< Void > r = new Callable< Void >()
 			{
 				@Override

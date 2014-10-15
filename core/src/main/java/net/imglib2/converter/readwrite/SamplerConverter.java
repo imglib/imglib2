@@ -41,5 +41,5 @@ import net.imglib2.Sampler;
  */
 public interface SamplerConverter< A, B >
 {
-	public B convert( Sampler< A > sampler );
+	public B convert( Sampler< ? extends A > sampler );
 }

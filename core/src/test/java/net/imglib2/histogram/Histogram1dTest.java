@@ -62,6 +62,8 @@ public class Histogram1dTest
 		Histogram1d< UnsignedByteType > hist =
 				new Histogram1d< UnsignedByteType >( data, binMapper );
 
+		assertEquals( 5, hist.firstDataValue().get() );
+
 		assertEquals( 256, hist.getBinCount() );
 		assertEquals( 11, hist.totalCount() );
 		assertEquals( 1, hist.frequency( new UnsignedByteType( 3 ) ) );

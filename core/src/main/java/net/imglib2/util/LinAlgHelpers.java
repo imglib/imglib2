@@ -154,6 +154,24 @@ public class LinAlgHelpers
 	}
 
 	/**
+	 * set c = a + b. Dimensions of a, b, and c must match. In place addition
+	 * (c==a) is permitted.
+	 * 
+	 * @param a
+	 * @param b
+	 * @param c
+	 */
+	public static void add( final double[] a, final double[] b, final double[] c )
+	{
+		assert ( rows( a ) == rows( b ) ) && ( rows( a ) == rows( c ) );
+
+		final int rows = rows( a );
+
+		for ( int i = 0; i < rows; ++i )
+			c[ i ] = a[ i ] + b[ i ];
+	}
+
+	/**
 	 * set c = A * b.
 	 * 
 	 * Dimensions of A, b, and c must match. That is, cols(A) == rows(b), and
@@ -500,10 +518,10 @@ public class LinAlgHelpers
 
 		// The trace determines the method of decomposition
 		final double d0 = R[ 0 ][ 0 ], d1 = R[ 1 ][ 1 ], d2 = R[ 2 ][ 2 ];
-		final double rr = 1.0 + d0 + d1 + d2;
+		final double rr = d0 + d1 + d2;
 		if ( rr > 0 )
 		{
-			final double s = 0.5 / Math.sqrt( rr );
+			final double s = 0.5 / Math.sqrt( 1.0 + rr );
 			q[ 1 ] = ( R[ 2 ][ 1 ] - R[ 1 ][ 2 ] ) * s;
 			q[ 2 ] = ( R[ 0 ][ 2 ] - R[ 2 ][ 0 ] ) * s;
 			q[ 3 ] = ( R[ 1 ][ 0 ] - R[ 0 ][ 1 ] ) * s;

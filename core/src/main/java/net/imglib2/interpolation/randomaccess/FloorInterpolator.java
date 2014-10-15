@@ -48,7 +48,13 @@ import net.imglib2.position.transform.Floor;
  * trigger confusion when displaying images on a screen with a pixel raster
  * which, in this scheme, spans the range [-0.5,<em>width</em>-0.5].  In the
  * screen-friendly alternative scheme, where sample coordinates reference the
- * top left corner of a sample</p>
+ * top left corner of the pixel rectangle representing a sample the range
+ * covered by an image is [0,<em>width</em>], however, coordinate transfer
+ * functions other than translation and homogeneous scaling generate different
+ * results than in the center-scheme.  Rendering an image using
+ * {@link FloorInterpolator} means using the top-left-scheme, rendering it
+ * using {@link NearestNeighborInterpolator}, {@link NLinearInterpolator}, or
+ * {@link LanczosInterpolator} means using the center-scheme.</p>
  * 
  * @param <T>
  * 
@@ -56,9 +62,9 @@ import net.imglib2.position.transform.Floor;
  */
 public class FloorInterpolator< T > extends Floor< RandomAccess< T > > implements RealRandomAccess< T >
 {
-	protected FloorInterpolator( final FloorInterpolator< T > nearestNeighborInterpolator )
+	protected FloorInterpolator( final FloorInterpolator< T > floorInterpolator )
 	{
-		super( nearestNeighborInterpolator.target.copyRandomAccess() );
+		super( floorInterpolator.target.copyRandomAccess() );
 	}
 
 	protected FloorInterpolator( final RandomAccessible< T > randomAccessible )

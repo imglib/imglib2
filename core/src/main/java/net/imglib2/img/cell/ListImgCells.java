@@ -69,7 +69,7 @@ public class ListImgCells< A extends ArrayDataAccess< A > > extends AbstractCell
 	}
 
 	@Override
-	protected ListImg< DefaultCell< A >> cells()
+	protected ListImg< DefaultCell< A > > cells()
 	{
 		return cells;
 	}

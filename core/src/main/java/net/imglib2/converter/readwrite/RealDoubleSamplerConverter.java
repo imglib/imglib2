@@ -45,16 +45,16 @@ import net.imglib2.type.numeric.real.DoubleType;
 public final class RealDoubleSamplerConverter< R extends RealType< R > > implements SamplerConverter< R, DoubleType >
 {
 	@Override
-	public DoubleType convert( final Sampler< R > sampler )
+	public DoubleType convert( final Sampler< ? extends R > sampler )
 	{
 		return new DoubleType( new RealConvertingDoubleAccess< R >( sampler ) );
 	}
 
 	private static final class RealConvertingDoubleAccess< R extends RealType< R > > implements DoubleAccess
 	{
-		private final Sampler< R > sampler;
+		private final Sampler< ? extends R > sampler;
 
-		private RealConvertingDoubleAccess( final Sampler< R > sampler )
+		private RealConvertingDoubleAccess( final Sampler< ? extends R > sampler )
 		{
 			this.sampler = sampler;
 		}

@@ -233,6 +233,9 @@ public class SubpixelLocalization< P extends Localizable, T extends RealType< T 
 		final int numPeaks = peaks.size();
 		final ArrayList< RefinedPeak< P > > allRefinedPeaks = new ArrayList< RefinedPeak< P > >( numPeaks );
 
+		if ( numPeaks == 0 )
+			return allRefinedPeaks;
+
 		final int numTasks = numThreads <= 1 ? 1 : ( int ) Math.min( numPeaks, numThreads * 20 );
 		final int taskSize = numPeaks / numTasks;
 

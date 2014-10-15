@@ -42,14 +42,25 @@ import net.imglib2.position.transform.Round;
  * {@link RealRandomAccess} to a {@link RandomAccess} by nearest neighbor
  * interpolation.
  * 
+ * <p>In ImgLib2, the coordinate of a sample corresponds to the 'center' point
+ * of the sample, i.e. the location at which the sample was acquired.  This
+ * scheme is intuitive in both rasters and irregularly samples data but can
+ * trigger confusion when displaying images on a screen with a pixel raster
+ * which, in this scheme, spans the range [-0.5,<em>width</em>-0.5].  In the
+ * screen-friendly alternative scheme, where sample coordinates reference the
+ * top left corner of the pixel rectangle representing a sample the range
+ * covered by an image is [0,<em>width</em>], however, coordinate transfer
+ * functions other than translation and homogeneous scaling generate different
+ * results than in the center-scheme.  Rendering an image using
+ * {@link FloorInterpolator} means using the top-left-scheme, rendering it
+ * using {@link NearestNeighborInterpolator}, {@link NLinearInterpolator}, or
+ * {@link LanczosInterpolator} means using the center-scheme.</p>
+ * 
  * @param <T>
  * 
- * @author Pietzsch
- * @author Preibisch
- * @author Saalfeld
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > > implements RealRandomAccess< T >
 {
