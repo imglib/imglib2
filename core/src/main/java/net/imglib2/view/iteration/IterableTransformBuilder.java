@@ -46,7 +46,6 @@ import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.transform.integer.BoundingBox;
-import net.imglib2.transform.integer.BoundingBoxTransform;
 import net.imglib2.transform.integer.SlicingTransform;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
@@ -54,23 +53,27 @@ import net.imglib2.view.TransformBuilder;
 import net.imglib2.view.Views;
 
 /**
- * TODO
+ * Simplifies View cascades to provide the most efficient {@link Cursor}.
  * 
- * TODO: {@link TransformBuilder} propagates a BoundingBox through
- * {@link BoundingBoxTransform} transforms. Additionally, for iteration, we need
- * to guarantee that the transforms are bijections (at least within the bounding
- * box).
+ * @see #getEfficientIterableInterval(Interval, RandomAccessible)
  * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class IterableTransformBuilder< T > extends TransformBuilder< T >
 {
 	/**
-	 * TODO
+	 * Create an {@link IterableInterval} that iterates an {@link Interval} of a
+	 * {@link RandomAccessible}. If possible, this should return an optimized
+	 * cursor. If not, falls back to creating an
+	 * {@link IterableRandomAccessibleInterval}.
 	 * 
 	 * @param interval
+	 *            the interval of {@code randomAccessible} which should be
+	 *            iterated.
 	 * @param randomAccessible
-	 * @return
+	 *            the {@link RandomAccessible} that should be iterated.
+	 * @return an {@link IterableInterval} that iterates {@code interval} of
+	 *         {@code randomAccessible}.
 	 */
 	public static < S > IterableInterval< S > getEfficientIterableInterval( final Interval interval, final RandomAccessible< S > randomAccessible )
 	{
@@ -78,19 +81,26 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 	}
 
 	/**
-	 * TODO: Figure this out. Currently the interval is not propagated. It is
-	 * simply the requested interval.
+	 * The interval which should be iterated.
 	 * 
-	 * The interval in which access is needed. This is propagated through the
-	 * transforms down the view hierarchy.
+	 * <p>
+	 * Currently, no transformations are done on this, because the cases where
+	 * an optimized {@link IterableInterval} can be returned do not allow for
+	 * any transformation except a single slicing. In the future, it may become
+	 * necessary, to propagated the interval through the transforms down the
+	 * view hierarchy.
 	 */
 	protected Interval interval;
 
 	/**
-	 * TODO Javadoc
+	 * Create a new IterableTransformBuilder. This calls the the super
+	 * constructor to gather and simplify transformations.
 	 * 
 	 * @param interval
+	 *            the interval of {@code randomAccessible} which should be
+	 *            iterated.
 	 * @param randomAccessible
+	 *            the {@link RandomAccessible} that should be iterated.
 	 */
 	public IterableTransformBuilder( final Interval interval, final RandomAccessible< T > randomAccessible )
 	{
@@ -99,20 +109,15 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 	}
 
 	/**
-	 * TODO Javadoc
-	 * 
+	 * An {@link IterableInterval} on {@link IterableTransformBuilder#interval
+	 * interval} of {@link SubIntervalIterable}.
 	 */
-	class SubInterval extends AbstractWrappedInterval< Interval > implements IterableInterval< T >
+	private class SubInterval extends AbstractWrappedInterval< Interval > implements IterableInterval< T >
 	{
 		final long numElements;
 
 		final SubIntervalIterable< T > iterableSource;
 
-		/**
-		 * TODO Javadoc
-		 * 
-		 * @param iterableSource
-		 */
 		public SubInterval( final SubIntervalIterable< T > iterableSource )
 		{
 			super( interval );
@@ -164,10 +169,9 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 	}
 
 	/**
-	 * TODO Javadoc
-	 * 
+	 * An {@link IterableInterval} on a slice of a {@link SubIntervalIterable}.
 	 */
-	class Slice extends AbstractWrappedInterval< Interval > implements IterableInterval< T >
+	private class Slice extends AbstractWrappedInterval< Interval > implements IterableInterval< T >
 	{
 		final long numElements;
 
@@ -233,9 +237,9 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 	}
 
 	/**
-	 * TODO Javadoc
-	 * 
-	 * @return
+	 * Create an {@link IterableInterval} on the {@link Interval} specified in
+	 * the constructor of the {@link RandomAccessible} specified in the
+	 * constructor.
 	 */
 	public IterableInterval< T > buildIterableInterval()
 	{

@@ -37,6 +37,7 @@ package net.imglib2.view.iteration;
 
 import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.Cursor;
+import net.imglib2.Localizable;
 import net.imglib2.transform.integer.Slicing;
 
 /**
@@ -68,10 +69,9 @@ public class SlicingCursor< T > extends AbstractEuclideanSpace implements Cursor
 	private final long[] tmpPosition;
 
 	/**
-	 * TODO Javadoc
-	 * 
-	 * @param source
-	 * @param transformToSource
+	 * Create a Cursor that forwards all {@link Cursor} methods to
+	 * {@code source}, except {@link Localizable} methods. Localize calls are
+	 * propagated through {@code transformToSource}.
 	 */
 	SlicingCursor( final Cursor< T > source, final Slicing transformToSource )
 	{
@@ -97,11 +97,6 @@ public class SlicingCursor< T > extends AbstractEuclideanSpace implements Cursor
 		transformToSource.getTranslation( tmpPosition );
 	}
 
-	/**
-	 * TODO Javadoc
-	 * 
-	 * @param cursor
-	 */
 	protected SlicingCursor( final SlicingCursor< T > cursor )
 	{
 		super( cursor.numDimensions() );
@@ -142,7 +137,7 @@ public class SlicingCursor< T > extends AbstractEuclideanSpace implements Cursor
 		assert d < n;
 		return s.getIntPosition( sourceComponent[ d ] );
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

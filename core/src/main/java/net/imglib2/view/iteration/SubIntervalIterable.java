@@ -47,23 +47,20 @@ import net.imglib2.IterableRealInterval;
  */
 public interface SubIntervalIterable< T >
 {
-	// TODO: How to deal with iterationOrder() ??? Enforce FlatIterationOrder?
-
 	/**
-	 * Determine whether a {@link Cursor} can be optimized, given the current
-	 * {@link Interval}
+	 * Determine whether a {@link Cursor} can be created that iterates the given
+	 * {@link Interval}.
 	 * 
 	 * @param interval
 	 *            to be checked
 	 * 
 	 * @return true if a {@link Cursor} can be optimized given the
 	 *         {@link Interval}
-	 * 
 	 */
 	public boolean supportsOptimizedCursor( Interval interval );
 
 	/**
-	 * Returns the iteration order given the interval
+	 * Returns the iteration order given the interval.
 	 * 
 	 * @param interval
 	 *            {@link Interval} over which to iterate
@@ -73,7 +70,7 @@ public interface SubIntervalIterable< T >
 	public Object subIntervalIterationOrder( Interval interval );
 
 	/**
-	 * Create a {@link Cursor} to iterate over the given {@link Interval}
+	 * Create a {@link Cursor} to iterate over the given {@link Interval}.
 	 * 
 	 * @param interval
 	 *            {@link Interval} over which to iterate
@@ -83,7 +80,7 @@ public interface SubIntervalIterable< T >
 	public Cursor< T > cursor( Interval interval );
 
 	/**
-	 * Create a {@link Cursor} to iterate over the given {@link Interval}
+	 * Create a {@link Cursor} to iterate over the given {@link Interval}.
 	 * 
 	 * @param interval
 	 *            {@link Interval} over which to iterate
