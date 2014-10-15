@@ -353,16 +353,19 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	{
 		assert supportsOptimizedCursor( interval );
 
-		if ( correspondsToPlane( interval ) ) { return new PlanarPlaneSubsetCursor< T >( this, interval ); }
+		if ( correspondsToPlane( interval ) )
+			return new PlanarPlaneSubsetCursor< T >( this, interval );
 		return new PlanarSubsetCursor< T >( this, interval );
 	}
 
 	private boolean correspondsToPlane( final Interval interval )
 	{
 		// check if interval describes one plane
-		if ( interval.dimension( 0 ) != dimension[ 0 ] ) { return false; }
+		if ( interval.dimension( 0 ) != dimension[ 0 ] )
+			return false;
 
-		if ( interval.dimension( 1 ) != dimension[ 1 ] ) { return false; }
+		if ( interval.dimension( 1 ) != dimension[ 1 ] )
+			return false;
 
 		for ( int d = 2; d < interval.numDimensions(); ++d )
 		{
@@ -382,7 +385,8 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 
 		assert supportsOptimizedCursor( interval );
 
-		if ( correspondsToPlane( interval ) ) { return new PlanarPlaneSubsetLocalizingCursor< T >( this, interval ); }
+		if ( correspondsToPlane( interval ) )
+			return new PlanarPlaneSubsetLocalizingCursor< T >( this, interval );
 		return new PlanarSubsetLocalizingCursor< T >( this, interval );
 	}
 }

@@ -54,16 +54,16 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * @author Christian Dietz (dietzc85@googlemail.com)
  * @author Martin Horn (martin.horn@uni-konstanz.de)
  */
-public class LabelingView< L extends Comparable< L >> extends
-		IterableRandomAccessibleInterval< LabelingType< L >> implements
+public class LabelingView< L extends Comparable< L > > extends
+		IterableRandomAccessibleInterval< LabelingType< L > > implements
 		Labeling< L >, SubIntervalIterable< LabelingType< L > >
 {
 
-	protected LabelingROIStrategy< L, ? extends Labeling< L >> m_strategy;
+	protected LabelingROIStrategy< L, ? extends Labeling< L > > m_strategy;
 
 	private final LabelingFactory< L > m_fac;
 
-	private final IterableInterval< LabelingType< L >> m_ii;
+	private final IterableInterval< LabelingType< L > > m_ii;
 
 	/**
 	 * @param in
@@ -71,12 +71,12 @@ public class LabelingView< L extends Comparable< L >> extends
 	 * @param fac
 	 *            factory to create a new {@link Labeling}
 	 */
-	public LabelingView( final RandomAccessibleInterval< LabelingType< L >> in,
+	public LabelingView( final RandomAccessibleInterval< LabelingType< L > > in,
 			final LabelingFactory< L > fac )
 	{
 		super( in );
 		m_fac = fac;
-		m_strategy = new DefaultROIStrategy< L, Labeling< L >>( this );
+		m_strategy = new DefaultROIStrategy< L, Labeling< L > >( this );
 		m_ii = Views.flatIterable( in );
 	}
 
@@ -105,13 +105,13 @@ public class LabelingView< L extends Comparable< L >> extends
 	}
 
 	@Override
-	public Cursor< LabelingType< L >> cursor()
+	public Cursor< LabelingType< L > > cursor()
 	{
 		return m_ii.cursor();
 	}
 
 	@Override
-	public Cursor< LabelingType< L >> localizingCursor()
+	public Cursor< LabelingType< L > > localizingCursor()
 	{
 		return m_ii.localizingCursor();
 	}
@@ -132,8 +132,8 @@ public class LabelingView< L extends Comparable< L >> extends
 	public Labeling< L > copy()
 	{
 		final Labeling< L > copy = m_fac.create( this );
-		final Cursor< LabelingType< L >> cursor = copy.cursor();
-		final RandomAccess< LabelingType< L >> srcAccess = randomAccess();
+		final Cursor< LabelingType< L > > cursor = copy.cursor();
+		final RandomAccess< LabelingType< L > > srcAccess = randomAccess();
 
 		while ( cursor.hasNext() )
 		{
@@ -147,53 +147,48 @@ public class LabelingView< L extends Comparable< L >> extends
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public < LL extends Comparable< LL >> LabelingFactory< LL > factory()
+	public < LL extends Comparable< LL > > LabelingFactory< LL > factory()
 	{
 		return ( LabelingFactory< LL > ) m_fac;
 	}
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public boolean supportsOptimizedCursor( Interval interval )
+	public boolean supportsOptimizedCursor( final Interval interval )
 	{
 		if ( this.sourceInterval instanceof SubIntervalIterable )
-			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval )
-					.supportsOptimizedCursor( interval );
+			return ( ( SubIntervalIterable< LabelingType< L > > ) this.sourceInterval ).supportsOptimizedCursor( interval );
 		else
 			return false;
 	}
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Object subIntervalIterationOrder( Interval interval )
+	public Object subIntervalIterationOrder( final Interval interval )
 	{
 		if ( this.sourceInterval instanceof SubIntervalIterable )
-			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval )
-					.subIntervalIterationOrder( interval );
+			return ( ( SubIntervalIterable< LabelingType< L > > ) this.sourceInterval ).subIntervalIterationOrder( interval );
 		else
 			return new FlatIterationOrder( interval );
 	}
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Cursor< LabelingType< L >> cursor( Interval interval )
+	public Cursor< LabelingType< L > > cursor( final Interval interval )
 	{
 		if ( this.sourceInterval instanceof SubIntervalIterable )
-			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval )
-					.cursor( interval );
+			return ( ( SubIntervalIterable< LabelingType< L > > ) this.sourceInterval ).cursor( interval );
 		else
 			return Views.interval( this.sourceInterval, interval ).cursor();
 	}
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Cursor< LabelingType< L >> localizingCursor( Interval interval )
+	public Cursor< LabelingType< L > > localizingCursor( final Interval interval )
 	{
 		if ( this.sourceInterval instanceof SubIntervalIterable )
-			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval )
-					.localizingCursor( interval );
+			return ( ( SubIntervalIterable< LabelingType< L > > ) this.sourceInterval ).localizingCursor( interval );
 		else
-			return Views.interval( this.sourceInterval, interval )
-					.localizingCursor();
+			return Views.interval( this.sourceInterval, interval ).localizingCursor();
 	}
 }

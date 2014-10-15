@@ -54,7 +54,7 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * 
  * @author Lee Kamentsky, Christian Dietz, Martin Horn
  */
-public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType< I >> extends AbstractNativeLabeling< T > implements SubIntervalIterable< LabelingType< T > >
+public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType< I > > extends AbstractNativeLabeling< T > implements SubIntervalIterable< LabelingType< T > >
 {
 
 	protected final long[] generation;
@@ -94,7 +94,7 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	}
 
 	@Override
-	public RandomAccess< LabelingType< T >> randomAccess()
+	public RandomAccess< LabelingType< T > > randomAccess()
 	{
 		final RandomAccess< I > rndAccess = img.randomAccess();
 
@@ -109,14 +109,14 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	 * .labeling.LabelingType)
 	 */
 	@Override
-	public Cursor< LabelingType< T >> cursor()
+	public Cursor< LabelingType< T > > cursor()
 	{
 		final Cursor< I > c = img.cursor();
 		return new LabelingConvertedCursor< I, T >( c, generation, mapping );
 	}
 
 	@Override
-	public Cursor< LabelingType< T >> localizingCursor()
+	public Cursor< LabelingType< T > > localizingCursor()
 	{
 		final Cursor< I > c = img.localizingCursor();
 		return new LabelingConvertedCursor< I, T >( c, generation, mapping );
@@ -131,8 +131,8 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	public Labeling< T > copy()
 	{
 		final NativeImgLabeling< T, I > result = new NativeImgLabeling< T, I >( img.factory().create( img, img.firstElement().createVariable() ) );
-		final Cursor< LabelingType< T >> srcCursor = cursor();
-		final Cursor< LabelingType< T >> resCursor = result.cursor();
+		final Cursor< LabelingType< T > > srcCursor = cursor();
+		final Cursor< LabelingType< T > > resCursor = result.cursor();
 
 		while ( srcCursor.hasNext() )
 		{
@@ -159,13 +159,13 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	}
 
 	@Override
-	public Iterator< LabelingType< T >> iterator()
+	public Iterator< LabelingType< T > > iterator()
 	{
 		return cursor();
 	}
 
 	@Override
-	public RandomAccess< LabelingType< T >> randomAccess( final Interval interval )
+	public RandomAccess< LabelingType< T > > randomAccess( final Interval interval )
 	{
 		return randomAccess();
 	}
@@ -177,23 +177,21 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 	}
 
 	@Override
-	public < LL extends Comparable< LL >> LabelingFactory< LL > factory()
+	public < LL extends Comparable< LL > > LabelingFactory< LL > factory()
 	{
 		return new LabelingFactory< LL >()
 		{
-
 			@Override
 			public Labeling< LL > create( final long[] dim )
 			{
 				return new NativeImgLabeling< LL, I >( img.factory().create( dim, img.firstElement().createVariable() ) );
 			}
-
 		};
 	}
-	
+
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public boolean supportsOptimizedCursor( Interval interval )
+	public boolean supportsOptimizedCursor( final Interval interval )
 	{
 		if ( this.img instanceof SubIntervalIterable )
 			return ( ( SubIntervalIterable< I > ) this.img ).supportsOptimizedCursor( interval );
@@ -203,7 +201,7 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Object subIntervalIterationOrder( Interval interval )
+	public Object subIntervalIterationOrder( final Interval interval )
 	{
 		if ( this.img instanceof SubIntervalIterable )
 			return ( ( SubIntervalIterable< I > ) this.img ).subIntervalIterationOrder( interval );
@@ -213,7 +211,7 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Cursor< LabelingType< T > > cursor( Interval interval )
+	public Cursor< LabelingType< T > > cursor( final Interval interval )
 	{
 		Cursor< I > c = null;
 		if ( this.img instanceof SubIntervalIterable )
@@ -226,7 +224,7 @@ public class NativeImgLabeling< T extends Comparable< T >, I extends IntegerType
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Cursor< LabelingType< T > > localizingCursor( Interval interval )
+	public Cursor< LabelingType< T > > localizingCursor( final Interval interval )
 	{
 		Cursor< I > c = null;
 		if ( this.img instanceof SubIntervalIterable )
