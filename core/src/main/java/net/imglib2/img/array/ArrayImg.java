@@ -33,12 +33,15 @@
 
 package net.imglib2.img.array;
 
+import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.util.Intervals;
+import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
  * This {@link Img} stores an image in a single linear array of basic types. By
@@ -54,7 +57,7 @@ import net.imglib2.util.IntervalIndexer;
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg< T, A >
+public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg< T, A > implements SubIntervalIterable< T >
 {
 	final int[] steps, dim;
 
@@ -136,5 +139,99 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 			target.next().set( source.next() );
 
 		return copy;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Cursor< T > cursor( final Interval interval )
+	{
+		final int dimLength = fastCursorAvailable( interval );
+
+		assert dimLength > 0;
+
+		return new ArraySubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
+	}
+
+	private long size( final Interval interval, final int length )
+	{
+		long size = interval.dimension( 0 );
+		for ( int d = 1; d < length; ++d )
+		{
+			size *= interval.dimension( d );
+		}
+
+		return size;
+	}
+
+	private long offset( final Interval interval, final int length )
+	{
+		final int maxDim = numDimensions() - 1;
+		long i = interval.min( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+		{
+			i = i * dimension( d ) + interval.min( d );
+		}
+
+		return i;
+	}
+
+	/**
+	 * If method returns -1 no fast cursor is available, else the amount of dims
+	 * (starting from zero) which can be iterated fast are returned.
+	 */
+	private int fastCursorAvailable( final Interval interval )
+	{
+		// first check whether the interval is completely contained.
+		if ( !Intervals.contains( this, interval ) )
+			return -1;
+
+		// find the first dimension in which image and interval differ
+		int dimIdx = 0;
+		for ( ; dimIdx < n; ++dimIdx )
+			if ( interval.dimension( dimIdx ) != dimension( dimIdx ) )
+				break;
+
+		// in the dimension after that, image and interval may differ
+		++dimIdx;
+
+		// but image extents of all higher dimensions must equal 1
+		for ( int d = dimIdx; d < n; ++d )
+			if ( interval.dimension( d ) != 1 )
+				return -1;
+
+		return dimIdx;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Cursor< T > localizingCursor( final Interval interval )
+	{
+		final int dimLength = fastCursorAvailable( interval );
+
+		assert dimLength > 0;
+
+		return new ArrayLocalizingSubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean supportsOptimizedCursor( final Interval interval )
+	{
+		return fastCursorAvailable( interval ) > 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object subIntervalIterationOrder( final Interval interval )
+	{
+		return new FlatIterationOrder( interval );
 	}
 }

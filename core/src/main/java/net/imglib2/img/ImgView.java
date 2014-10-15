@@ -34,6 +34,8 @@
 package net.imglib2.img;
 
 import net.imglib2.Cursor;
+import net.imglib2.FlatIterationOrder;
+import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
@@ -41,6 +43,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.Type;
 import net.imglib2.view.IterableRandomAccessibleInterval;
 import net.imglib2.view.Views;
+import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
  * Allows a {@link RandomAccessibleInterval} to be treated as an {@link Img}.
@@ -48,8 +51,8 @@ import net.imglib2.view.Views;
  * @author Tobias Pietzsch
  * @author Christian Dietz (dietzc85@googlemail.com)
  */
-public class ImgView< T extends Type< T >> extends
-		IterableRandomAccessibleInterval< T > implements Img< T >
+public class ImgView< T extends Type< T > > extends
+		IterableRandomAccessibleInterval< T > implements Img< T >, SubIntervalIterable< T >
 {
 
 	// factory
@@ -115,5 +118,46 @@ public class ImgView< T extends Type< T >> extends
 	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
 	{
 		return iterationOrder().equals( f.iterationOrder() );
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public boolean supportsOptimizedCursor( final Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< T > ) this.sourceInterval ).supportsOptimizedCursor( interval );
+		else
+			return false;
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Object subIntervalIterationOrder( final Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< T > ) this.sourceInterval ).subIntervalIterationOrder( interval );
+		else
+			return new FlatIterationOrder( interval );
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Cursor< T > cursor( final Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< T > ) this.sourceInterval ).cursor( interval );
+		else
+			return Views.interval( this.sourceInterval, interval ).cursor();
+	}
+
+	@SuppressWarnings( "unchecked" )
+	@Override
+	public Cursor< T > localizingCursor( final Interval interval )
+	{
+		if ( this.sourceInterval instanceof SubIntervalIterable )
+			return ( ( SubIntervalIterable< T > ) this.sourceInterval ).localizingCursor( interval );
+		else
+			return Views.interval( this.sourceInterval, interval )
+					.localizingCursor();
 	}
 }

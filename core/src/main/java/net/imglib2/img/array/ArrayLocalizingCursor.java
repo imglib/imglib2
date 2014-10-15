@@ -33,9 +33,8 @@
 
 package net.imglib2.img.array;
 
-import net.imglib2.AbstractLocalizingCursorInt;
+import net.imglib2.Cursor;
 import net.imglib2.type.NativeType;
-import net.imglib2.util.IntervalIndexer;
 
 /**
  * Localizing {@link Cursor} on an {@link ArrayImg}.
@@ -45,120 +44,32 @@ import net.imglib2.util.IntervalIndexer;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T >
+public final class ArrayLocalizingCursor< T extends NativeType< T > > extends AbstractArrayLocalizingCursor< T >
 {
-	protected final T type;
-
-	protected final ArrayImg< T, ? > img;
-
-	protected final int lastIndex;
 
 	/**
-	 * Maximum of the {@link ArrayImg} in every dimension. This is used to check
-	 * isOutOfBounds().
+	 * TODO Javadoc
+	 * 
+	 * @param cursor
 	 */
-	protected final int[] max;
-
 	protected ArrayLocalizingCursor( final ArrayLocalizingCursor< T > cursor )
 	{
-		super( cursor.numDimensions() );
-
-		this.img = cursor.img;
-		this.type = img.createLinkedType();
-		this.lastIndex = ( int ) img.size() - 1;
-
-		max = new int[ n ];
-		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] = cursor.position[ d ];
-			max[ d ] = cursor.max[ d ];
-		}
-
-		type.updateIndex( cursor.type.getIndex() );
-		type.updateContainer( this );
+		super( cursor );
 	}
 
+	/**
+	 * TODO Javadoc
+	 * 
+	 * @param img
+	 */
 	public ArrayLocalizingCursor( final ArrayImg< T, ? > img )
 	{
-		super( img.numDimensions() );
-
-		this.img = img;
-		this.type = img.createLinkedType();
-		this.lastIndex = ( int ) img.size() - 1;
-
-		max = new int[ n ];
-		for ( int d = 0; d < n; ++d )
-			max[ d ] = ( int ) img.max( d );
-
-		reset();
+		super( img, 0, ( int ) img.size() );
 	}
 
-	@Override
-	public T get()
-	{
-		return type;
-	}
-
-	@Override
-	public boolean hasNext()
-	{
-		return type.getIndex() < lastIndex;
-	}
-
-	@Override
-	public void fwd()
-	{
-//		type.incIndex();
-//
-//		for ( int d = 0; d < n; ++d )
-//		{
-//			if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
-//			else break;
-//		}
-
-		/*
-		 * Benchmarks @ 2012-04-17 demonstrate that the less readable code below
-		 * is reliably 5-10% faster than the almost equivalent commented code
-		 * above. The reason is NOT simply that d=0 is executed outside the
-		 * loop. We have tested that and it does not provide improved speed when
-		 * done in the above version of the code. Below, it plays a role.
-		 */
-		if ( ++position[ 0 ] <= max[ 0 ] )
-		{
-			type.incIndex();
-			return;
-		}
-		position[ 0 ] = 0;
-		type.incIndex();
-		for ( int d = 1; d < n; ++d )
-		{
-			if ( ++position[ d ] > max[ d ] )
-				position[ d ] = 0;
-			else
-				break;
-		}
-	}
-
-	@Override
-	public void jumpFwd( final long steps )
-	{
-		type.incIndex( ( int ) steps );
-		IntervalIndexer.indexToPosition( type.getIndex(), img.dim, position );
-	}
-
-	@Override
-	public void reset()
-	{
-		type.updateIndex( -1 );
-
-		position[ 0 ] = -1;
-
-		for ( int d = 1; d < n; d++ )
-			position[ d ] = 0;
-
-		type.updateContainer( this );
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ArrayLocalizingCursor< T > copy()
 	{

@@ -35,12 +35,16 @@ package net.imglib2.img.planar;
 
 import java.util.ArrayList;
 
+import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
+import net.imglib2.Interval;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Intervals;
+import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
  * A {@link NativeImg} that stores data in an list of primitive arrays, one per
@@ -56,7 +60,7 @@ import net.imglib2.type.NativeType;
  * @author Johannes Schindelin
  * @author Tobias Pietzsch
  */
-public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeImg< T, A > implements PlanarAccess< A >
+public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A > > extends AbstractNativeImg< T, A > implements PlanarAccess< A >, SubIntervalIterable< T >
 {
 	final protected int numSlices;
 
@@ -293,5 +297,96 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 			cursor2.next().set( cursor1.next() );
 
 		return copy;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean supportsOptimizedCursor( final Interval interval )
+	{
+		// first check whether the interval is completely contained.
+		if ( !Intervals.contains( this, interval ) )
+			return false;
+
+		// we want to optimize exactly one plane
+		if ( correspondsToPlane( interval ) )
+		{
+			return true;
+		}
+		else
+		{
+			// we want to optimize a set of planes
+
+			// find the first dimension in which image and interval differ
+			int dimIdx = 0;
+			for ( ; dimIdx < n; ++dimIdx )
+				if ( interval.dimension( dimIdx ) != dimension( dimIdx ) )
+					break;
+
+			// in the dimension after that, image and interval may differ
+			++dimIdx;
+
+			// but image extents of all higher dimensions must equal 1
+			for ( int d = dimIdx; d < n; ++d )
+				if ( interval.dimension( d ) != 1 )
+					return false;
+
+			return true;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object subIntervalIterationOrder( final Interval interval )
+	{
+		return new FlatIterationOrder( interval );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Cursor< T > cursor( final Interval interval )
+	{
+		assert supportsOptimizedCursor( interval );
+
+		if ( correspondsToPlane( interval ) )
+			return new PlanarPlaneSubsetCursor< T >( this, interval );
+		return new PlanarSubsetCursor< T >( this, interval );
+	}
+
+	private boolean correspondsToPlane( final Interval interval )
+	{
+		// check if interval describes one plane
+		if ( interval.dimension( 0 ) != dimension[ 0 ] )
+			return false;
+
+		if ( interval.dimension( 1 ) != dimension[ 1 ] )
+			return false;
+
+		for ( int d = 2; d < interval.numDimensions(); ++d )
+		{
+			if ( interval.dimension( d ) != 1 )
+				return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Cursor< T > localizingCursor( final Interval interval )
+	{
+
+		assert supportsOptimizedCursor( interval );
+
+		if ( correspondsToPlane( interval ) )
+			return new PlanarPlaneSubsetLocalizingCursor< T >( this, interval );
+		return new PlanarSubsetLocalizingCursor< T >( this, interval );
 	}
 }
