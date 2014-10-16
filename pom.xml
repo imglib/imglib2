@@ -20,7 +20,6 @@
 	<url>http://imglib2.net/</url>
 
 	<modules>
-		<module>algorithms</module>
 		<module>core</module>
 		<module>meta</module>
 	</modules>
