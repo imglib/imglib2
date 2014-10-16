@@ -31,8 +31,12 @@
  * #L%
  */
 
-package net.imglib2;
+package net.imglib2.view;
 
+import net.imglib2.RealInterval;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.RealRandomAccessibleRealInterval;
 import net.imglib2.outofbounds.RealOutOfBoundsFactory;
 import net.imglib2.outofbounds.RealOutOfBoundsRealRandomAccess;
 import net.imglib2.util.Intervals;

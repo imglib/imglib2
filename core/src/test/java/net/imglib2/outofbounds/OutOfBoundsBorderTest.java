@@ -35,7 +35,6 @@ package net.imglib2.outofbounds;
 
 import static org.junit.Assert.assertEquals;
 import net.imglib2.Cursor;
-import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.Localizable;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
@@ -44,6 +43,7 @@ import net.imglib2.img.cell.CellImg;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.view.ExtendedRandomAccessibleInterval;
 
 import org.junit.After;
 import org.junit.AfterClass;

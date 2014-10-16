@@ -29,7 +29,6 @@ package net.imglib2.algorithm.transformation;
 import mpicbg.models.InvertibleBoundable;
 import mpicbg.models.NoninvertibleModelException;
 import net.imglib2.Cursor;
-import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -39,6 +38,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.type.Type;
+import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**

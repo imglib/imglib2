@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.imglib2.Cursor;
-import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.algorithm.Algorithm;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
@@ -47,6 +46,7 @@ import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
+import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.RandomAccessibleIntervalCursor;
 import net.imglib2.view.Views;
 

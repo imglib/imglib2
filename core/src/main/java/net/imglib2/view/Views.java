@@ -34,7 +34,6 @@
 package net.imglib2.view;
 
 import net.imglib2.EuclideanSpace;
-import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
