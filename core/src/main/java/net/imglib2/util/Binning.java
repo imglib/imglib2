@@ -31,7 +31,7 @@
  * #L%
  */
 
-package net.imglib2;
+package net.imglib2.util;
 
 /**
  * Static utility methods to convert from a value to a bin, useful for dealing
