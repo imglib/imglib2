@@ -33,7 +33,6 @@
 
 package net.imglib2.img.array;
 
-import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
@@ -241,9 +240,9 @@ final public class ArrayImgs
 	 * Create an {@link ArrayImg}<{@link BitType}, {@link BitArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public ArrayImg< BitType, BitArray > bits( final long... dim )
+	final static public ArrayImg< BitType, LongArray > bits( final long... dim )
 	{
-		return ( ArrayImg< BitType, BitArray > ) new ArrayImgFactory< BitType >().create( dim, new BitType() );
+		return ( ArrayImg< BitType, LongArray > ) new ArrayImgFactory< BitType >().create( dim, new BitType() );
 	}
 
 	/**

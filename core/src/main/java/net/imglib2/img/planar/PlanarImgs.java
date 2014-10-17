@@ -33,7 +33,6 @@
 
 package net.imglib2.img.planar;
 
-import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
@@ -143,9 +142,9 @@ final public class PlanarImgs
 	 * Create an {@link PlanarImg}<{@link BitType}, {@link BitArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
-	final static public PlanarImg< BitType, BitArray > bits( final long... dim )
+	final static public PlanarImg< BitType, LongArray > bits( final long... dim )
 	{
-		return ( PlanarImg< BitType, BitArray > ) new PlanarImgFactory< BitType >().create( dim, new BitType() );
+		return ( PlanarImg< BitType, LongArray > ) new PlanarImgFactory< BitType >().create( dim, new BitType() );
 	}
 
 	/**

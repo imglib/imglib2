@@ -37,7 +37,6 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
@@ -71,14 +70,6 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 			throw new RuntimeException( "Number of elements in Container too big, use for example CellContainer instead: " + numEntities + " > " + Integer.MAX_VALUE );
 
 		return ( int ) numEntities;
-	}
-
-	@Override
-	public ArrayImg< T, BitArray > createBitInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
-
-		return new ArrayImg< T, BitArray >( new BitArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override

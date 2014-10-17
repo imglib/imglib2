@@ -36,7 +36,6 @@ package net.imglib2.img.cell;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
@@ -76,12 +75,6 @@ public final class CellImgFactory< T extends NativeType< T > > extends AbstractC
 	public CellImg< T, ?, ? > create( final long[] dim, final T type )
 	{
 		return ( CellImg< T, ?, ? > ) type.createSuitableNativeImg( this, dim );
-	}
-
-	@Override
-	public CellImg< T, BitArray, DefaultCell< BitArray > > createBitInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return createInstance( new BitArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override

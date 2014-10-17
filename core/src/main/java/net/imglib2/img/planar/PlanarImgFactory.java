@@ -37,7 +37,6 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
@@ -66,12 +65,6 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	public PlanarImg< T, ? > create( final long[] dim, final T type )
 	{
 		return ( PlanarImg< T, ? > ) type.createSuitableNativeImg( this, dim );
-	}
-
-	@Override
-	public NativeImg< T, BitArray > createBitInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		return new PlanarImg< T, BitArray >( new BitArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override

@@ -33,14 +33,12 @@
 
 package net.imglib2.img.sparse;
 
-import net.imglib2.img.basictypeaccess.BitAccess;
-
 /**
  * BitAccess based on a {@link Ntree}<Boolean>.
  * 
  * @author Tobias Pietzsch
  */
-public final class BooleanNtree implements BitAccess, NtreeAccess< Boolean, BooleanNtree >
+public final class BooleanNtree implements NtreeAccess< Boolean, BooleanNtree >
 {
 	private final long[] position;
 
@@ -59,14 +57,12 @@ public final class BooleanNtree implements BitAccess, NtreeAccess< Boolean, Bool
 		this.position = position;
 	}
 
-	@Override
 	public boolean getValue( final int index )
 	{
 		// ignore index, get tree position from RandomAccess/Cursor
 		return data.getNode( position ).getValue();
 	}
 
-	@Override
 	public void setValue( final int index, final boolean value )
 	{
 		// ignore index, get tree position from RandomAccess/Cursor

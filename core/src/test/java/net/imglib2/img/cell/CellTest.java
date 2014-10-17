@@ -36,7 +36,6 @@ package net.imglib2.img.cell;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
@@ -78,12 +77,6 @@ public class CellTest
 			assertTrue( creator.getClass().isInstance( cell.getData() ) );
 			assertTrue( cell.size() == expectedLength[ i ] );
 		}
-	}
-
-	@Test
-	public void testBitConstruction()
-	{
-		testConstruction( new BitArray( 1 ) );
 	}
 
 	@Test

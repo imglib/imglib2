@@ -33,7 +33,6 @@
 
 package net.imglib2.img;
 
-import net.imglib2.img.basictypeaccess.BitAccess;
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.CharAccess;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
@@ -67,8 +66,6 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	}
 
 	/* basic type containers */
-	public abstract NativeImg< T, ? extends BitAccess > createBitInstance( long[] dimensions, Fraction entitiesPerPixel );
-
 	public abstract NativeImg< T, ? extends ByteAccess > createByteInstance( long[] dimensions, Fraction entitiesPerPixel );
 
 	public abstract NativeImg< T, ? extends CharAccess > createCharInstance( long[] dimensions, Fraction entitiesPerPixel );

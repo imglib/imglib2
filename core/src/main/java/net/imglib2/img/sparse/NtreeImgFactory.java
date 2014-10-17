@@ -52,15 +52,6 @@ public class NtreeImgFactory< T extends NativeType< T >> extends NativeImgFactor
 	}
 
 	@Override
-	public NtreeImg< T, BooleanNtree > createBitInstance( final long[] dimensions, final Fraction entitiesPerPixel )
-	{
-		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
-			throw new RuntimeException( "not implemented" );
-
-		return new NtreeImg< T, BooleanNtree >( new BooleanNtree( dimensions, new long[ dimensions.length ], false ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
 	public NtreeImg< T, ByteNtree > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
