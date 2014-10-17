@@ -31,7 +31,11 @@
  * #L%
  */
 
-package net.imglib2;
+package net.imglib2.outofbounds;
+
+import net.imglib2.Localizable;
+import net.imglib2.Positionable;
+import net.imglib2.Sampler;
 
 /**
  * Interface implemented by entities ({@link Sampler}s, {@link Positionable}s,
