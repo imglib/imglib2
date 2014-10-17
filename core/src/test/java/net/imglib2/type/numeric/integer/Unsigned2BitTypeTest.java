@@ -25,7 +25,7 @@ public class Unsigned2BitTypeTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.type.logic.BitType#setOne()}.
+	 * Test method for {@link net.imglib2.type.numeric.integer.Unsigned2BitType}.
 	 */
 	@Test
 	public void testSetRandom()

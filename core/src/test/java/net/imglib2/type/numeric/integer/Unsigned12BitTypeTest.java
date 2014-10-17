@@ -1,6 +1,6 @@
 package net.imglib2.type.numeric.integer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 
@@ -25,7 +25,7 @@ public class Unsigned12BitTypeTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.type.logic.BitType#setOne()}.
+	 * Test method for {@link net.imglib2.type.numeric.integer.Unsigned12BitType}.
 	 */
 	@Test
 	public void testSetRandom()
