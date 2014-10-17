@@ -38,8 +38,8 @@ import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.neighborsearch.NearestNeighborSearch;
 
 /**
- * Factory for {@link NearestNeighborInterpolator} instances that work on a
- * {@link NearestNeighborSearch}.
+ * Factory for {@link NearestNeighborSearchInterpolator} instances that work on
+ * a {@link NearestNeighborSearch}.
  * 
  * @param <T>
  * 
@@ -48,22 +48,22 @@ import net.imglib2.neighborsearch.NearestNeighborSearch;
  * @author Saalfeld
  * @author Stephan Saalfeld
  */
-public class NearestNeighborInterpolatorFactory< T > implements InterpolatorFactory< T, NearestNeighborSearch< T > >
+public class NearestNeighborSearchInterpolatorFactory< T > implements InterpolatorFactory< T, NearestNeighborSearch< T > >
 {
 	/**
-	 * Creates a new {@link NearestNeighborInterpolator} using a copy of the
-	 * passed {@link NearestNeighborSearch}.
+	 * Creates a new {@link NearestNeighborSearchInterpolator} using a copy of
+	 * the passed {@link NearestNeighborSearch}.
 	 */
 	@Override
-	public NearestNeighborInterpolator< T > create( final NearestNeighborSearch< T > search )
+	public NearestNeighborSearchInterpolator< T > create( final NearestNeighborSearch< T > search )
 	{
-		return new NearestNeighborInterpolator< T >( search.copy() );
+		return new NearestNeighborSearchInterpolator< T >( search.copy() );
 	}
 
 	/**
 	 * <p>
-	 * Creates a new {@link NearestNeighborInterpolator} using a copy of the
-	 * passed {@link NearestNeighborSearch}.
+	 * Creates a new {@link NearestNeighborSearchInterpolator} using a copy of
+	 * the passed {@link NearestNeighborSearch}.
 	 * </p>
 	 * 
 	 * <p>
@@ -72,7 +72,7 @@ public class NearestNeighborInterpolatorFactory< T > implements InterpolatorFact
 	 * </p>
 	 */
 	@Override
-	public NearestNeighborInterpolator< T > create( final NearestNeighborSearch< T > search, final RealInterval interval )
+	public NearestNeighborSearchInterpolator< T > create( final NearestNeighborSearch< T > search, final RealInterval interval )
 	{
 		return create( search );
 	}

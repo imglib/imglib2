@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,27 +33,23 @@
 
 package net.imglib2.interpolation.neighborsearch;
 
-import net.imglib2.RandomAccess;
 import net.imglib2.RealPoint;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.neighborsearch.NearestNeighborSearch;
 
 /**
- * {@link RealRandomAccess} to a {@link RandomAccess} by nearest neighbor
- * interpolation.
- * 
- * @param <T>
+ * Nearest-neighbor interpolation implemented by {@link NearestNeighborSearch}.
  * 
  * @author Pietzsch
  * @author Preibisch
  * @author Saalfeld
  * @author Stephan Saalfeld
  */
-public class NearestNeighborInterpolator< T > extends RealPoint implements RealRandomAccess< T >
+public class NearestNeighborSearchInterpolator< T > extends RealPoint implements RealRandomAccess< T >
 {
 	final protected NearestNeighborSearch< T > search;
 
-	public NearestNeighborInterpolator( final NearestNeighborSearch< T > search )
+	public NearestNeighborSearchInterpolator( final NearestNeighborSearch< T > search )
 	{
 		super( search.numDimensions() );
 		this.search = search;
@@ -67,13 +63,13 @@ public class NearestNeighborInterpolator< T > extends RealPoint implements RealR
 	}
 
 	@Override
-	public NearestNeighborInterpolator< T > copy()
+	public NearestNeighborSearchInterpolator< T > copy()
 	{
-		return new NearestNeighborInterpolator< T >( search.copy() );
+		return new NearestNeighborSearchInterpolator< T >( search.copy() );
 	}
 
 	@Override
-	public NearestNeighborInterpolator< T > copyRealRandomAccess()
+	public NearestNeighborSearchInterpolator< T > copyRealRandomAccess()
 	{
 		return copy();
 	}
