@@ -40,7 +40,6 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RandomAccessibleOnRealRandomAccessible;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;

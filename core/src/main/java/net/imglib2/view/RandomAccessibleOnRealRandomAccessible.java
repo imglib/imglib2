@@ -31,7 +31,15 @@
  * #L%
  */
 
-package net.imglib2;
+package net.imglib2.view;
+
+import net.imglib2.AbstractEuclideanSpace;
+import net.imglib2.Interval;
+import net.imglib2.Localizable;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
 
 /**
  * {@link RandomAccessible} on a {@link RealRandomAccessible}. For optimal
