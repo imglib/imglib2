@@ -37,6 +37,7 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.list.ListImg;
 import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.img.list.ListLocalizingCursor;
+import net.imglib2.util.Fraction;
 
 /**
  * Implementation of {@link Cells} that uses {@link DefaultCell}s and keeps them
@@ -50,7 +51,7 @@ public class ListImgCells< A extends ArrayDataAccess< A > > extends AbstractCell
 {
 	private final ListImg< DefaultCell< A > > cells;
 
-	public ListImgCells( final A creator, final int entitiesPerPixel, final long[] dimensions, final int[] cellDimensions )
+	public ListImgCells( final A creator, final Fraction entitiesPerPixel, final long[] dimensions, final int[] cellDimensions )
 	{
 		super( entitiesPerPixel, dimensions, cellDimensions );
 		cells = new ListImgFactory< DefaultCell< A > >().create( numCells, new DefaultCell< A >( creator, new int[ 1 ], new long[ 1 ], entitiesPerPixel ) );

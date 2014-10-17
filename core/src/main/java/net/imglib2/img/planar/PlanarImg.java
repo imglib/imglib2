@@ -43,6 +43,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.iteration.SubIntervalIterable;
 
@@ -73,12 +74,12 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 
 	final protected ArrayList< A > mirror;
 
-	public PlanarImg( final long[] dim, final int entitiesPerPixel )
+	public PlanarImg( final long[] dim, final Fraction entitiesPerPixel )
 	{
 		this( null, dim, entitiesPerPixel );
 	}
 
-	PlanarImg( final A creator, final long[] dim, final int entitiesPerPixel )
+	PlanarImg( final A creator, final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );
 
@@ -116,9 +117,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		}
 		else
 		{
-			final int entitiesPerSlice = ( ( n > 1 ) ? dimensions[ 1 ] : 1 ) * dimensions[ 0 ] * entitiesPerPixel;
+			final int numEntitiesPerSlice = (int)entitiesPerPixel.mulCeil( ( ( n > 1 ) ? dimensions[ 1 ] : 1 )  *  dimensions[ 0 ] ); 
 			for ( int i = 0; i < numSlices; ++i )
-				mirror.add( creator.createArray( entitiesPerSlice ) );
+				mirror.add( creator.createArray( numEntitiesPerSlice ) );
 		}
 	}
 

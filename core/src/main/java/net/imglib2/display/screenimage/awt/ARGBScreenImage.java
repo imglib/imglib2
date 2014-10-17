@@ -46,6 +46,7 @@ import java.awt.image.WritableRaster;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.util.Fraction;
 
 /**
  * 
@@ -81,7 +82,7 @@ public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements A
 	 */
 	public ARGBScreenImage( final int width, final int height, final int[] data )
 	{
-		super( new IntArray( data ), new long[] { width, height }, 1 );
+		super( new IntArray( data ), new long[]{ width, height }, new Fraction() );
 		setLinkedType( new ARGBType( this ) );
 		this.data = data;
 

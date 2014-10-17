@@ -37,6 +37,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
 /**
@@ -82,10 +83,7 @@ public abstract class GenericIntType< T extends GenericIntType< T >> extends Abs
 	}
 
 	@Override
-	public int getEntitiesPerPixel()
-	{
-		return 1;
-	}
+	public Fraction getEntitiesPerPixel() { return new Fraction(); }
 
 	@Override
 	public void updateContainer( final Object c )

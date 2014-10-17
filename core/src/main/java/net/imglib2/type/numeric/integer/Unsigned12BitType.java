@@ -35,62 +35,54 @@ package net.imglib2.type.numeric.integer;
 
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.BitAccess;
-import net.imglib2.img.basictypeaccess.array.BitArray;
-import net.imglib2.type.NativeType;
+import net.imglib2.img.basictypeaccess.LongAccess;
+import net.imglib2.img.basictypeaccess.array.LongArray;
+import net.imglib2.util.Fraction;
 
 /**
- * TODO
+ * A 12-bit {@link Type} whose data is stored in a {@link LongAccess}.
  * 
+ * @author Albert Cardona
  * @author Stephan Preibisch
+ *
  */
-public class Unsigned12BitType extends AbstractIntegerType< Unsigned12BitType > implements NativeType< Unsigned12BitType >
+public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
 {
-	private int i = 0;
-
-	final protected NativeImg< Unsigned12BitType, ? extends BitAccess > img;
-
-	// the adresses of the bits that we store
-	int j1, j2, j3, j4, j5, j6, j7, j8, j9, j10, j11, j12;
-
-	// the DataAccess that holds the information
-	protected BitAccess dataAccess;
+	// A mask for bit and, containing nBits of 1
+	private final long mask;
 
 	// this is the constructor if you want it to read from an array
-	public Unsigned12BitType( final NativeImg< Unsigned12BitType, ? extends BitAccess > bitStorage )
+	public Unsigned12BitType(
+			final NativeImg<Unsigned12BitType,
+			? extends LongAccess> bitStorage)
 	{
-		img = bitStorage;
-		updateIndex( 0 );
+		super( bitStorage, 12 );
+		this.mask = 4095; // 111111111111 in binary
 	}
 
 	// this is the constructor if you want it to be a variable
-	public Unsigned12BitType( final short value )
+	public Unsigned12BitType( final long value )
 	{
-		img = null;
-		updateIndex( 0 );
-		dataAccess = new BitArray( 12 );
+		this( (NativeImg<Unsigned12BitType, ? extends LongAccess>)null );
+		dataAccess = new LongArray( 1 );
 		set( value );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
-	public Unsigned12BitType( final BitAccess access )
+	public Unsigned12BitType( final LongAccess access )
 	{
-		img = null;
-		updateIndex( 0 );
+		this( (NativeImg<Unsigned12BitType, ? extends LongAccess>)null );
 		dataAccess = access;
 	}
 
 	// this is the constructor if you want it to be a variable
-	public Unsigned12BitType()
-	{
-		this( ( short ) 0 );
-	}
+	public Unsigned12BitType() { this( 0 ); }
 
 	@Override
-	public NativeImg< Unsigned12BitType, ? extends BitAccess > createSuitableNativeImg( final NativeImgFactory< Unsigned12BitType > storageFactory, final long dim[] )
+	public NativeImg<Unsigned12BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned12BitType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg< Unsigned12BitType, ? extends BitAccess > container = storageFactory.createBitInstance( dim, 12 );
+		final NativeImg<Unsigned12BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
 
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );
@@ -102,222 +94,62 @@ public class Unsigned12BitType extends AbstractIntegerType< Unsigned12BitType > 
 	}
 
 	@Override
-	public void updateContainer( final Object c )
-	{
-		dataAccess = img.update( c );
+	public Unsigned12BitType duplicateTypeOnSameNativeImg() { return new Unsigned12BitType( img ); }
+
+	@Override
+	public long get() {
+		final long k = i * 12;
+		final int i1 = (int)(k >>> 6); // k / 64;
+		final long shift = k & 63; // k % 64;		
+		final long v = dataAccess.getValue(i1);
+		final long antiShift = 64 - shift;
+		
+		if (antiShift < 12) {
+			// Number split between two adjacent long
+			final long v1 = (v >>> shift) & (mask >>> (12 - antiShift)); // lower part, stored at the upper end
+			final long v2 = (dataAccess.getValue(i1 + 1) & (mask >>> antiShift)) << antiShift; // upper part, stored at the lower end
+			return v1 | v2;
+		} else {
+			// Number contained inside a single long
+			return (v >>> shift) & mask;
+		}
+	}
+
+	// Crops value to within mask
+	@Override
+	public void set( final long value ) {
+		final long k = i * 12;
+		final int i1 = (int)(k >>> 6); // k / 64;
+		final long shift = k & 63; // k % 64;
+		final long safeValue = value & mask;
+
+		final long antiShift = 64 - shift;
+		final long v = dataAccess.getValue(i1);
+		if (antiShift < 12) {
+			// Number split between two adjacent longs
+			// 1. Store the lower bits of safeValue at the upper bits of v1
+			final long v1 = (v & (0xffffffffffffffffL >>> antiShift)) // clear upper bits, keep other values
+					| ((safeValue & (mask >>> (12 - antiShift))) << shift); // the lower part of safeValue, stored at the upper end
+			dataAccess.setValue(i1, v1);
+			// 2. Store the upper bits of safeValue at the lower bits of v2
+			final long v2 = (dataAccess.getValue(i1 + 1) & (0xffffffffffffffffL << (12 - antiShift))) // other
+					| (safeValue >>> antiShift); // upper part of safeValue, stored at the lower end
+			dataAccess.setValue(i1 + 1, v2);
+		} else {
+			// Number contained inside a single long
+			if (0 == v) {
+				// Trivial case
+				dataAccess.setValue(i1, safeValue << shift);
+			} else {
+				// Clear the bits first
+				dataAccess.setValue(i1, (v & ~(mask << shift)) | (safeValue << shift));
+			}
+		}
 	}
 
 	@Override
-	public Unsigned12BitType duplicateTypeOnSameNativeImg()
-	{
-		return new Unsigned12BitType( img );
-	}
-
-	public short get()
-	{
-		short value = 0;
-
-		if ( dataAccess.getValue( j1 ) )
-			++value;
-		if ( dataAccess.getValue( j2 ) )
-			value += 2;
-		if ( dataAccess.getValue( j3 ) )
-			value += 4;
-		if ( dataAccess.getValue( j4 ) )
-			value += 8;
-		if ( dataAccess.getValue( j5 ) )
-			value += 16;
-		if ( dataAccess.getValue( j6 ) )
-			value += 32;
-		if ( dataAccess.getValue( j7 ) )
-			value += 64;
-		if ( dataAccess.getValue( j8 ) )
-			value += 128;
-		if ( dataAccess.getValue( j9 ) )
-			value += 256;
-		if ( dataAccess.getValue( j10 ) )
-			value += 512;
-		if ( dataAccess.getValue( j11 ) )
-			value += 1024;
-		if ( dataAccess.getValue( j12 ) )
-			value += 2048;
-
-		return value;
-	}
-
-	public void set( final short value )
-	{
-		dataAccess.setValue( j1, ( value & 1 ) == 1 );
-		dataAccess.setValue( j2, ( value & 2 ) == 2 );
-		dataAccess.setValue( j3, ( value & 4 ) == 4 );
-		dataAccess.setValue( j4, ( value & 8 ) == 8 );
-		dataAccess.setValue( j5, ( value & 16 ) == 16 );
-		dataAccess.setValue( j6, ( value & 32 ) == 32 );
-		dataAccess.setValue( j7, ( value & 64 ) == 64 );
-		dataAccess.setValue( j8, ( value & 128 ) == 128 );
-		dataAccess.setValue( j9, ( value & 256 ) == 256 );
-		dataAccess.setValue( j10, ( value & 512 ) == 512 );
-		dataAccess.setValue( j11, ( value & 1024 ) == 1024 );
-		dataAccess.setValue( j12, ( value & 2048 ) == 2048 );
-	}
+	public Unsigned12BitType createVariable(){ return new Unsigned12BitType( 0 ); }
 
 	@Override
-	public int getInteger()
-	{
-		return get();
-	}
-
-	@Override
-	public long getIntegerLong()
-	{
-		return get();
-	}
-
-	@Override
-	public void setInteger( final int f )
-	{
-		set( ( short ) f );
-	}
-
-	@Override
-	public void setInteger( final long f )
-	{
-		set( ( short ) f );
-	}
-
-	@Override
-	public double getMaxValue()
-	{
-		return 4095;
-	}
-
-	@Override
-	public double getMinValue()
-	{
-		return 0;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
-	}
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		i = index;
-		j1 = index * 12;
-		j2 = j1 + 1;
-		j3 = j1 + 2;
-		j4 = j1 + 3;
-		j5 = j1 + 4;
-		j6 = j1 + 5;
-		j7 = j1 + 6;
-		j8 = j1 + 7;
-		j9 = j1 + 8;
-		j10 = j1 + 9;
-		j11 = j1 + 10;
-		j12 = j1 + 11;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-		j1 += 12;
-		j2 += 12;
-		j3 += 12;
-		j4 += 12;
-		j5 += 12;
-		j6 += 12;
-		j7 += 12;
-		j8 += 12;
-		j9 += 12;
-		j10 += 12;
-		j11 += 12;
-		j12 += 12;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-
-		final int inc12 = 12 * increment;
-		j1 += inc12;
-		j2 += inc12;
-		j3 += inc12;
-		j4 += inc12;
-		j5 += inc12;
-		j6 += inc12;
-		j7 += inc12;
-		j8 += inc12;
-		j9 += inc12;
-		j10 += inc12;
-		j11 += inc12;
-		j12 += inc12;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-		j1 -= 12;
-		j2 -= 12;
-		j3 -= 12;
-		j4 -= 12;
-		j5 -= 12;
-		j6 -= 12;
-		j7 -= 12;
-		j8 -= 12;
-		j9 -= 12;
-		j10 -= 12;
-		j11 -= 12;
-		j12 -= 12;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
-
-		final int dec12 = 12 * decrement;
-		j1 -= dec12;
-		j2 -= dec12;
-		j3 -= dec12;
-		j4 -= dec12;
-		j5 -= dec12;
-		j6 -= dec12;
-		j7 -= dec12;
-		j8 -= dec12;
-		j9 -= dec12;
-		j10 -= dec12;
-		j11 -= dec12;
-		j12 -= dec12;
-	}
-
-	@Override
-	public Unsigned12BitType createVariable()
-	{
-		return new Unsigned12BitType();
-	}
-
-	@Override
-	public Unsigned12BitType copy()
-	{
-		return new Unsigned12BitType( get() );
-	}
-
-	@Override
-	public int getEntitiesPerPixel()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getBitsPerPixel()
-	{
-		return 12;
-	}
+	public Unsigned12BitType copy(){ return new Unsigned12BitType( get() ); }
 }

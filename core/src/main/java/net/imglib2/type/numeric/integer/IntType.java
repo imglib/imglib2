@@ -36,6 +36,7 @@ package net.imglib2.type.numeric.integer;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.IntAccess;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -73,7 +74,7 @@ public class IntType extends GenericIntType< IntType >
 	public NativeImg< IntType, ? extends IntAccess > createSuitableNativeImg( final NativeImgFactory< IntType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg< IntType, ? extends IntAccess > container = storageFactory.createIntInstance( dim, 1 );
+		final NativeImg<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, new Fraction() );
 
 		// create a Type that is linked to the container
 		final IntType linkedType = new IntType( container );

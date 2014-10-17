@@ -37,7 +37,6 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
@@ -46,6 +45,7 @@ import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * Factory that creates an appropriate {@link PlanarImg}.
@@ -68,49 +68,43 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	}
 
 	@Override
-	public NativeImg< T, BitArray > createBitInstance( final long[] dimensions, final int entitiesPerPixel )
-	{
-		return new PlanarImg< T, BitArray >( new BitArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public NativeImg< T, ByteArray > createByteInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, ByteArray > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return new PlanarImg< T, ByteArray >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeImg< T, CharArray > createCharInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, CharArray > createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return new PlanarImg< T, CharArray >( new CharArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeImg< T, DoubleArray > createDoubleInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, DoubleArray > createDoubleInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return new PlanarImg< T, DoubleArray >( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeImg< T, FloatArray > createFloatInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, FloatArray > createFloatInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return new PlanarImg< T, FloatArray >( new FloatArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeImg< T, IntArray > createIntInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, IntArray > createIntInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return new PlanarImg< T, IntArray >( new IntArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeImg< T, LongArray > createLongInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, LongArray > createLongInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return new PlanarImg< T, LongArray >( new LongArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NativeImg< T, ShortArray > createShortInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NativeImg< T, ShortArray > createShortInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return new PlanarImg< T, ShortArray >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
 	}

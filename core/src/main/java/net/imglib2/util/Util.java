@@ -954,7 +954,7 @@ public class Util
 	{
 		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
 			return new ArrayImgFactory< T >();
-		final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel(), 1.0 / targetSize.numDimensions() );
+		final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
 		return new CellImgFactory< T >( cellSize );
 	}
 
@@ -982,7 +982,7 @@ public class Util
 		if ( Math.pow( targetCellSize, targetSize.numDimensions() ) <= Integer.MAX_VALUE )
 			cellSize = targetCellSize;
 		else
-			cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel(), 1.0 / targetSize.numDimensions() );
+			cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
 		return new CellImgFactory< T >( cellSize );
 	}
 

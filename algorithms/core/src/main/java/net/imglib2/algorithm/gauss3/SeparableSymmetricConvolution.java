@@ -54,6 +54,7 @@ import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.IntervalIndexer;
@@ -436,7 +437,7 @@ public final class SeparableSymmetricConvolution
 	{
 		if ( canUseArrayImgFactory( targetsize, halfkernels ) )
 			return new ArrayImgFactory< T >();
-		final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel(), 1.0 / targetsize.numDimensions() );
+		final int cellSize = ( int ) Math.pow( Math.round( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio() ), 1.0 / targetsize.numDimensions() );
 		return new CellImgFactory< T >( cellSize );
 	}
 }

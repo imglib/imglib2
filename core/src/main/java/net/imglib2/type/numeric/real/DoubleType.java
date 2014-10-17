@@ -38,6 +38,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -85,8 +86,8 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	public NativeImg< DoubleType, ? extends DoubleAccess > createSuitableNativeImg( final NativeImgFactory< DoubleType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg< DoubleType, ? extends DoubleAccess > container = storageFactory.createDoubleInstance( dim, 1 );
-
+		final NativeImg<DoubleType, ? extends DoubleAccess> container = storageFactory.createDoubleInstance( dim, new Fraction() );
+		
 		// create a Type that is linked to the container
 		final DoubleType linkedType = new DoubleType( container );
 
@@ -173,9 +174,9 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	}
 
 	@Override
-	public int getEntitiesPerPixel()
+	public Fraction getEntitiesPerPixel()
 	{
-		return 1;
+		return new Fraction();
 	}
 
 	@Override

@@ -37,7 +37,6 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
-import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
@@ -46,6 +45,7 @@ import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * 
@@ -62,9 +62,9 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 		return ( ArrayImg< T, ? > ) type.createSuitableNativeImg( this, dim );
 	}
 
-	public static int numEntitiesRangeCheck( final long[] dimensions, final int entitiesPerPixel )
+	public static int numEntitiesRangeCheck( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		final long numEntities = AbstractImg.numElements( dimensions ) * entitiesPerPixel;
+		final long numEntities = entitiesPerPixel.mulCeil( AbstractImg.numElements( dimensions ) );
 
 		if ( numEntities > Integer.MAX_VALUE )
 			throw new RuntimeException( "Number of elements in Container too big, use for example CellContainer instead: " + numEntities + " > " + Integer.MAX_VALUE );
@@ -73,15 +73,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	}
 
 	@Override
-	public ArrayImg< T, BitArray > createBitInstance( final long[] dimensions, final int entitiesPerPixel )
-	{
-		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
-
-		return new ArrayImg< T, BitArray >( new BitArray( numEntities ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public ArrayImg< T, ByteArray > createByteInstance( final long[] dimensions, final int entitiesPerPixel )
+	public ArrayImg< T, ByteArray > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -89,7 +81,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	}
 
 	@Override
-	public ArrayImg< T, CharArray > createCharInstance( final long[] dimensions, final int entitiesPerPixel )
+	public ArrayImg< T, CharArray> createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -97,7 +89,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	}
 
 	@Override
-	public ArrayImg< T, DoubleArray > createDoubleInstance( final long[] dimensions, final int entitiesPerPixel )
+	public ArrayImg< T, DoubleArray > createDoubleInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -105,7 +97,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	}
 
 	@Override
-	public ArrayImg< T, FloatArray > createFloatInstance( final long[] dimensions, final int entitiesPerPixel )
+	public ArrayImg< T, FloatArray > createFloatInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -113,7 +105,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	}
 
 	@Override
-	public ArrayImg< T, IntArray > createIntInstance( final long[] dimensions, final int entitiesPerPixel )
+	public ArrayImg< T, IntArray > createIntInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -121,7 +113,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	}
 
 	@Override
-	public ArrayImg< T, LongArray > createLongInstance( final long[] dimensions, final int entitiesPerPixel )
+	public ArrayImg< T, LongArray > createLongInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -129,7 +121,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	}
 
 	@Override
-	public ArrayImg< T, ShortArray > createShortInstance( final long[] dimensions, final int entitiesPerPixel )
+	public ArrayImg< T, ShortArray > createShortInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 

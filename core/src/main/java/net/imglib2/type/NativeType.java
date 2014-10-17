@@ -39,6 +39,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.cell.CellCursor;
 import net.imglib2.img.cell.CellImg;
+import net.imglib2.util.Fraction;
 
 /**
  * A {@link NativeType} is a {@link Type} that that provides access to data
@@ -69,14 +70,15 @@ public interface NativeType< T extends NativeType< T >> extends Type< T >
 {
 	/**
 	 * Get the number of entities in the storage array required to store one
-	 * pixel value. A pixel value may be spread over several entities. For
-	 * example, a complex number may require 2 entries of a float[] array to
-	 * store one pixel).
-	 * 
+	 * pixel value. A pixel value may be spread over several or less than one 
+	 * entity. For example, a complex number may require 2 entries of a float[]
+	 * array to store one pixel. Or a 12-bit type might need 12/64th entries
+	 * of a long[] array.
+	 *
 	 * @return the number of storage type entities required to store one pixel
 	 *         value.
 	 */
-	public int getEntitiesPerPixel();
+	public Fraction getEntitiesPerPixel();
 
 	/**
 	 * The {@link NativeType} creates the {@link NativeImg} used for storing

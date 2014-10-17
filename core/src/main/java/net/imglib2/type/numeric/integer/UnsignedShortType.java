@@ -36,6 +36,7 @@ package net.imglib2.type.numeric.integer;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ShortAccess;
+import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
 /**
@@ -94,7 +95,7 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 	public NativeImg< UnsignedShortType, ? extends ShortAccess > createSuitableNativeImg( final NativeImgFactory< UnsignedShortType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg< UnsignedShortType, ? extends ShortAccess > container = storageFactory.createShortInstance( dim, 1 );
+		final NativeImg<UnsignedShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, new Fraction() );
 
 		// create a Type that is linked to the container
 		final UnsignedShortType linkedType = new UnsignedShortType( container );

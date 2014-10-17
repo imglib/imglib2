@@ -37,6 +37,7 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * @author Tobias Pietzsch
@@ -51,75 +52,66 @@ public class NtreeImgFactory< T extends NativeType< T >> extends NativeImgFactor
 	}
 
 	@Override
-	public NtreeImg< T, BooleanNtree > createBitInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NtreeImg< T, ByteNtree > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		if ( entitiesPerPixel != 1 )
+		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
 			throw new RuntimeException( "not implemented" );
 
-		return new NtreeImg< T, BooleanNtree >( new BooleanNtree( dimensions, new long[ dimensions.length ], false ), dimensions, 1 );
+		return new NtreeImg< T, ByteNtree >( new ByteNtree( dimensions, new long[ dimensions.length ], ( byte ) 0 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NtreeImg< T, ByteNtree > createByteInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NtreeImg< T, CharNtree > createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		if ( entitiesPerPixel != 1 )
+		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
 			throw new RuntimeException( "not implemented" );
 
-		return new NtreeImg< T, ByteNtree >( new ByteNtree( dimensions, new long[ dimensions.length ], ( byte ) 0 ), dimensions, 1 );
+		return new NtreeImg< T, CharNtree >( new CharNtree( dimensions, new long[ dimensions.length ], ( char ) 0 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NtreeImg< T, CharNtree > createCharInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NtreeImg< T, ShortNtree > createShortInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		if ( entitiesPerPixel != 1 )
+		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
 			throw new RuntimeException( "not implemented" );
 
-		return new NtreeImg< T, CharNtree >( new CharNtree( dimensions, new long[ dimensions.length ], ( char ) 0 ), dimensions, 1 );
+		return new NtreeImg< T, ShortNtree >( new ShortNtree( dimensions, new long[ dimensions.length ], ( short ) 0 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NtreeImg< T, ShortNtree > createShortInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NtreeImg< T, IntNtree > createIntInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		if ( entitiesPerPixel != 1 )
+		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
 			throw new RuntimeException( "not implemented" );
 
-		return new NtreeImg< T, ShortNtree >( new ShortNtree( dimensions, new long[ dimensions.length ], ( short ) 0 ), dimensions, 1 );
+		return new NtreeImg< T, IntNtree >( new IntNtree( dimensions, new long[ dimensions.length ], 0 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NtreeImg< T, IntNtree > createIntInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NtreeImg< T, LongNtree > createLongInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		if ( entitiesPerPixel != 1 )
+		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
 			throw new RuntimeException( "not implemented" );
 
-		return new NtreeImg< T, IntNtree >( new IntNtree( dimensions, new long[ dimensions.length ], 0 ), dimensions, 1 );
+		return new NtreeImg< T, LongNtree >( new LongNtree( dimensions, new long[ dimensions.length ], 0 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NtreeImg< T, LongNtree > createLongInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NtreeImg< T, FloatNtree > createFloatInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		if ( entitiesPerPixel != 1 )
+		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
 			throw new RuntimeException( "not implemented" );
 
-		return new NtreeImg< T, LongNtree >( new LongNtree( dimensions, new long[ dimensions.length ], 0 ), dimensions, 1 );
+		return new NtreeImg< T, FloatNtree >( new FloatNtree( dimensions, new long[ dimensions.length ], 0.0f ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public NtreeImg< T, FloatNtree > createFloatInstance( final long[] dimensions, final int entitiesPerPixel )
+	public NtreeImg< T, DoubleNtree > createDoubleInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		if ( entitiesPerPixel != 1 )
+		if ( entitiesPerPixel.getNumerator() != entitiesPerPixel.getDenominator() )
 			throw new RuntimeException( "not implemented" );
 
-		return new NtreeImg< T, FloatNtree >( new FloatNtree( dimensions, new long[ dimensions.length ], 0.0f ), dimensions, 1 );
-	}
-
-	@Override
-	public NtreeImg< T, DoubleNtree > createDoubleInstance( final long[] dimensions, final int entitiesPerPixel )
-	{
-		if ( entitiesPerPixel != 1 )
-			throw new RuntimeException( "not implemented" );
-
-		return new NtreeImg< T, DoubleNtree >( new DoubleNtree( dimensions, new long[ dimensions.length ], 0.0d ), dimensions, 1 );
+		return new NtreeImg< T, DoubleNtree >( new DoubleNtree( dimensions, new long[ dimensions.length ], 0.0d ), dimensions, entitiesPerPixel );
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
@@ -130,5 +122,4 @@ public class NtreeImgFactory< T extends NativeType< T >> extends NativeImgFactor
 			return new NtreeImgFactory();
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
-
 }

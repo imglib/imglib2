@@ -38,6 +38,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
+import net.imglib2.util.Fraction;
 
 /**
  * Implementation of {@link Cells} that keeps array of {@link AbstractCell}s as
@@ -51,7 +52,7 @@ import net.imglib2.img.Img;
  */
 public abstract class AbstractCells< A, C extends AbstractCell< A >, I extends RandomAccessibleInterval< C > & IterableInterval< C > > implements Cells< A, C >
 {
-	protected final int entitiesPerPixel;
+	protected final Fraction entitiesPerPixel;
 
 	protected final int n;
 
@@ -63,7 +64,7 @@ public abstract class AbstractCells< A, C extends AbstractCell< A >, I extends R
 
 	protected final int[] borderSize;
 
-	public AbstractCells( final int entitiesPerPixel, final long[] dimensions, final int[] cellDimensions )
+	public AbstractCells( final Fraction entitiesPerPixel, final long[] dimensions, final int[] cellDimensions )
 	{
 		this.entitiesPerPixel = entitiesPerPixel;
 		this.n = dimensions.length;
@@ -163,7 +164,7 @@ public abstract class AbstractCells< A, C extends AbstractCell< A >, I extends R
 	}
 
 	@Override
-	public int getEntitiesPerPixel()
+	public Fraction getEntitiesPerPixel()
 	{
 		return entitiesPerPixel;
 	}

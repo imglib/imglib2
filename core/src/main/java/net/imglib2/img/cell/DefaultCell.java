@@ -34,6 +34,7 @@
 package net.imglib2.img.cell;
 
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.util.Fraction;
 
 /**
  * Default (empty) implementation of the {@link AbstractCell}.
@@ -46,10 +47,10 @@ public final class DefaultCell< A extends ArrayDataAccess< A > > extends Abstrac
 {
 	private final A data;
 
-	public DefaultCell( final A creator, final int[] dimensions, final long[] min, final int entitiesPerPixel )
+	public DefaultCell( final A creator, final int[] dimensions, final long[] min, final Fraction entitiesPerPixel )
 	{
 		super( dimensions, min );
-		this.data = creator.createArray( numPixels * entitiesPerPixel );
+		this.data = creator.createArray( (int)entitiesPerPixel.mulCeil( numPixels ) );
 	}
 
 	@Override

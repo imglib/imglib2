@@ -34,6 +34,7 @@
 package net.imglib2.img;
 
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * TODO
@@ -45,17 +46,16 @@ public abstract class AbstractNativeImg< T extends NativeType< T >, A >
 		extends AbstractImg< T >
 		implements NativeImg< T, A >
 {
-	final protected int entitiesPerPixel;
-
+	final protected Fraction entitiesPerPixel;
 	protected long numEntities;
 
 	protected T linkedType;
 
-	public AbstractNativeImg( final long[] dim, final int entitiesPerPixel )
+	public AbstractNativeImg( final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim );
 		this.entitiesPerPixel = entitiesPerPixel;
-		this.numEntities = numPixels * entitiesPerPixel;
+		this.numEntities = entitiesPerPixel.mulCeil( numPixels );
 	}
 
 	@Override

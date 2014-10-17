@@ -33,14 +33,12 @@
 package net.imglib2.display.screenimage.awt;
 
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.ShortType;
@@ -85,14 +83,6 @@ public class AWTScreenImageUtil
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	public static < T extends NativeType< T >> ArrayImgAWTScreenImage< T, ? > emptyScreenImage( final T type, final long[] dims )
 	{
-
-		if ( BitType.class.isAssignableFrom( type.getClass() ) )
-		{
-			final BitArray array = new BitArray( numElements( dims ) );
-			final ArrayImgAWTScreenImage< BitType, BitArray > container = new BitAWTScreenImage( new BitType( array ), array, dims );
-			container.setLinkedType( new BitType( container ) );
-			return ( ArrayImgAWTScreenImage ) container;
-		}
 
 		if ( ByteType.class.isAssignableFrom( type.getClass() ) )
 		{

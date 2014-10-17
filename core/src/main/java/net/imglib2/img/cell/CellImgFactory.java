@@ -36,7 +36,6 @@ package net.imglib2.img.cell;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.basictypeaccess.array.BitArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
@@ -45,6 +44,7 @@ import net.imglib2.img.basictypeaccess.array.IntArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.util.Fraction;
 
 /**
  * Factory for creating {@link CellImg CellImgs}. The cell dimensions for a
@@ -78,49 +78,43 @@ public final class CellImgFactory< T extends NativeType< T > > extends AbstractC
 	}
 
 	@Override
-	public CellImg< T, BitArray, DefaultCell< BitArray > > createBitInstance( final long[] dimensions, final int entitiesPerPixel )
-	{
-		return createInstance( new BitArray( 1 ), dimensions, entitiesPerPixel );
-	}
-
-	@Override
-	public CellImg< T, ByteArray, DefaultCell< ByteArray > > createByteInstance( final long[] dimensions, final int entitiesPerPixel )
+	public CellImg< T, ByteArray, DefaultCell< ByteArray > > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return createInstance( new ByteArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public CellImg< T, CharArray, DefaultCell< CharArray > > createCharInstance( final long[] dimensions, final int entitiesPerPixel )
+	public CellImg< T, CharArray, DefaultCell< CharArray > > createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return createInstance( new CharArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public CellImg< T, ShortArray, DefaultCell< ShortArray > > createShortInstance( final long[] dimensions, final int entitiesPerPixel )
+	public CellImg< T, ShortArray, DefaultCell< ShortArray > > createShortInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return createInstance( new ShortArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public CellImg< T, IntArray, DefaultCell< IntArray > > createIntInstance( final long[] dimensions, final int entitiesPerPixel )
+	public CellImg< T, IntArray, DefaultCell< IntArray > > createIntInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return createInstance( new IntArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public CellImg< T, LongArray, DefaultCell< LongArray > > createLongInstance( final long[] dimensions, final int entitiesPerPixel )
+	public CellImg< T, LongArray, DefaultCell< LongArray > > createLongInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return createInstance( new LongArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public CellImg< T, FloatArray, DefaultCell< FloatArray > > createFloatInstance( final long[] dimensions, final int entitiesPerPixel )
+	public CellImg< T, FloatArray, DefaultCell< FloatArray > > createFloatInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return createInstance( new FloatArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
-	public CellImg< T, DoubleArray, DefaultCell< DoubleArray > > createDoubleInstance( final long[] dimensions, final int entitiesPerPixel )
+	public CellImg< T, DoubleArray, DefaultCell< DoubleArray > > createDoubleInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		return createInstance( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
 	}
@@ -134,7 +128,7 @@ public final class CellImgFactory< T extends NativeType< T > > extends AbstractC
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
 
-	private < A extends ArrayDataAccess< A > > CellImg< T, A, DefaultCell< A > > createInstance( final A array, long[] dimensions, final int entitiesPerPixel )
+	private < A extends ArrayDataAccess< A > > CellImg< T, A, DefaultCell< A > > createInstance( final A array, long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		dimensions = checkDimensions( dimensions );
 		final int[] cellSize = checkCellSize( defaultCellDimensions, dimensions );
