@@ -55,33 +55,33 @@ import net.imglib2.util.Util;
  *
  * @author Albert Cardona and Stephan Preibisch
  */
-class UnsignedBit64TypeOld extends AbstractBit64Type<UnsignedBit64TypeOld> implements IntegerType< UnsignedBit64TypeOld >
+class UnsignedVariableBitLengthType extends AbstractBit64Type<UnsignedVariableBitLengthType> implements IntegerType< UnsignedVariableBitLengthType >
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedBit64TypeOld(
-			final NativeImg<UnsignedBit64TypeOld, ? extends LongAccess> bitStorage,
+	public UnsignedVariableBitLengthType(
+			final NativeImg<UnsignedVariableBitLengthType, ? extends LongAccess> bitStorage,
 			final int nBits)
 	{
 		super( bitStorage, nBits );
 	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedBit64TypeOld( final long value, final int nBits ) { super( value, nBits ); }
+	public UnsignedVariableBitLengthType( final long value, final int nBits ) { super( value, nBits ); }
 
 	// this is the constructor if you want to specify the dataAccess
-	public UnsignedBit64TypeOld( final LongAccess access, final int nBits ) { super( access, nBits ); }
+	public UnsignedVariableBitLengthType( final LongAccess access, final int nBits ) { super( access, nBits ); }
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedBit64TypeOld( final int nBits ) { super(nBits ); }
+	public UnsignedVariableBitLengthType( final int nBits ) { super(nBits ); }
 
 	@Override
-	public NativeImg<UnsignedBit64TypeOld, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedBit64TypeOld> storageFactory, final long dim[] )
+	public NativeImg<UnsignedVariableBitLengthType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedVariableBitLengthType> storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<UnsignedBit64TypeOld, ? extends LongAccess> container = storageFactory.createLongInstance( dim, getEntitiesPerPixel() );
+		final NativeImg<UnsignedVariableBitLengthType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, getEntitiesPerPixel() );
 
 		// create a Type that is linked to the container
-		final UnsignedBit64TypeOld linkedType = new UnsignedBit64TypeOld( container, nBits );
+		final UnsignedVariableBitLengthType linkedType = new UnsignedVariableBitLengthType( container, nBits );
 
 		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
@@ -94,24 +94,24 @@ class UnsignedBit64TypeOld extends AbstractBit64Type<UnsignedBit64TypeOld> imple
 	public long get() { return getBits(); }
 	
 	@Override
-	public void set( final UnsignedBit64TypeOld c ) { setBits( c.getBits() ); }
+	public void set( final UnsignedVariableBitLengthType c ) { setBits( c.getBits() ); }
 
 	@Override
-	public UnsignedBit64TypeOld duplicateTypeOnSameNativeImg() { return new UnsignedBit64TypeOld( img, nBits ); }
+	public UnsignedVariableBitLengthType duplicateTypeOnSameNativeImg() { return new UnsignedVariableBitLengthType( img, nBits ); }
 
 	@Override
-	public UnsignedBit64TypeOld createVariable(){ return new UnsignedBit64TypeOld( nBits ); }
+	public UnsignedVariableBitLengthType createVariable(){ return new UnsignedVariableBitLengthType( nBits ); }
 
 	@Override
-	public UnsignedBit64TypeOld copy(){ return new UnsignedBit64TypeOld( getBits(), nBits ); }
+	public UnsignedVariableBitLengthType copy(){ return new UnsignedVariableBitLengthType( getBits(), nBits ); }
 
 	/** @see UnsignedLongType#divide(long, long) */
 	@Override
-	public void div(final UnsignedBit64TypeOld t) { setBits( UnsignedLongType.divide( getBits(), t.getBits() ) ); }
+	public void div(final UnsignedVariableBitLengthType t) { setBits( UnsignedLongType.divide( getBits(), t.getBits() ) ); }
 	
 	/** @see UnsignedLongType#compare(long, long) */
 	@Override
-	public int compareTo( final UnsignedBit64TypeOld t ) { return UnsignedLongType.compare( getBits(), t.getBits() ); }
+	public int compareTo( final UnsignedVariableBitLengthType t ) { return UnsignedLongType.compare( getBits(), t.getBits() ); }
 	
 	@Override
 	public void mul( final float c ) { setReal( getRealDouble() * c ); }
@@ -166,13 +166,13 @@ class UnsignedBit64TypeOld extends AbstractBit64Type<UnsignedBit64TypeOld> imple
 	public void dec() {	set(get() - 1); }
 
 	@Override
-	public void add(final UnsignedBit64TypeOld t) { set(get() + t.get()); }
+	public void add(final UnsignedVariableBitLengthType t) { set(get() + t.get()); }
 
 	@Override
-	public void sub(final UnsignedBit64TypeOld t) { set(get() - t.get()); }
+	public void sub(final UnsignedVariableBitLengthType t) { set(get() - t.get()); }
 
 	@Override
-	public void mul(final UnsignedBit64TypeOld t) { set(get() * t.get()); }
+	public void mul(final UnsignedVariableBitLengthType t) { set(get() * t.get()); }
 
 	@Override
 	public float getImaginaryFloat() { return 0; }
