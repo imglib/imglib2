@@ -31,19 +31,10 @@
  * #L%
  */
 
-package net.imglib2.collection;
+package net.imglib2;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import net.imglib2.AbstractInterval;
-import net.imglib2.Cursor;
-import net.imglib2.FinalInterval;
-import net.imglib2.Interval;
-import net.imglib2.IterableInterval;
-import net.imglib2.IterableRealInterval;
-import net.imglib2.Localizable;
-import net.imglib2.Point;
 
 /**
  * A list of data samples at explicit {@link Localizable integer coordinates}.

@@ -31,16 +31,10 @@
  * #L%
  */
 
-package net.imglib2.collection;
+package net.imglib2;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import net.imglib2.IterableRealInterval;
-import net.imglib2.RealCursor;
-import net.imglib2.RealLocalizable;
-import net.imglib2.RealPoint;
-import net.imglib2.RealPositionable;
 
 /**
  * A list of data samples at explicit {@link RealLocalizable real coordinates}.

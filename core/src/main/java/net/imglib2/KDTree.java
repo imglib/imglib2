@@ -31,7 +31,7 @@
  * #L%
  */
 
-package net.imglib2.collection;
+package net.imglib2;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -39,12 +39,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
-import net.imglib2.EuclideanSpace;
-import net.imglib2.IterableRealInterval;
-import net.imglib2.RealCursor;
-import net.imglib2.RealLocalizable;
-import net.imglib2.RealPositionable;
-import net.imglib2.Sampler;
 import net.imglib2.util.KthElement;
 
 /**

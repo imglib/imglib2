@@ -31,10 +31,8 @@
  * #L%
  */
 
-package net.imglib2.collection;
+package net.imglib2;
 
-import net.imglib2.RealLocalizable;
-import net.imglib2.Sampler;
 
 /**
  * Abstract base class for nodes in a KDTree. A KDTreeNode has coordinates and a
