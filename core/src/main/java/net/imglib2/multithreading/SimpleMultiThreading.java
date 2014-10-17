@@ -40,6 +40,7 @@ import java.util.Vector;
  * 
  * @author Stephan Preibisch
  */
+@Deprecated
 public class SimpleMultiThreading
 {
 	/*
