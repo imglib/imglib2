@@ -145,7 +145,7 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 	}
 
 	@Override
-	public void getComponentZero( @SuppressWarnings( "hiding" ) final boolean[] zero )
+	public void getComponentZero( final boolean[] zero )
 	{
 		assert zero.length >= numTargetDimensions;
 		for ( int d = 0; d < numTargetDimensions; ++d )
@@ -181,7 +181,7 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 	}
 
 	@Override
-	public void getComponentMapping( @SuppressWarnings( "hiding" ) final int[] component )
+	public void getComponentMapping( final int[] component )
 	{
 		assert component.length >= numTargetDimensions;
 		for ( int d = 0; d < numTargetDimensions; ++d )

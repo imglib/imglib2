@@ -29,7 +29,6 @@ package net.imglib2.algorithm.pde;
 import java.util.Vector;
 
 import net.imglib2.Cursor;
-import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreadedBenchmarkAlgorithm;
@@ -43,6 +42,7 @@ import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 public abstract class ExplicitDiffusionScheme< T extends RealType< T >> extends MultiThreadedBenchmarkAlgorithm

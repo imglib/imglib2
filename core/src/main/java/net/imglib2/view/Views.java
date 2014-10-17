@@ -34,14 +34,12 @@
 package net.imglib2.view;
 
 import net.imglib2.EuclideanSpace;
-import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RandomAccessibleOnRealRandomAccessible;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
@@ -204,7 +202,7 @@ public class Views
 	 */
 	public static < T extends RealType< T >, F extends RandomAccessibleInterval< T > > ExtendedRandomAccessibleInterval< T, F > extendRandom( final F source, final double min, final double max )
 	{
-		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsRandomValueFactory< T, F >( Util.getTypeFromRandomAccess( source ), min, max ) );
+		return new ExtendedRandomAccessibleInterval< T, F >( source, new OutOfBoundsRandomValueFactory< T, F >( Util.getTypeFromInterval( source ), min, max ) );
 	}
 
 	/**

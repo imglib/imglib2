@@ -40,8 +40,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 
+import net.imglib2.KDTree;
 import net.imglib2.RealPoint;
-import net.imglib2.collection.KDTree;
 import net.imglib2.neighborsearch.KNearestNeighborSearchOnKDTree;
 import net.imglib2.neighborsearch.NearestNeighborSearchOnKDTree;
 import net.imglib2.neighborsearch.RadiusNeighborSearchOnKDTree;

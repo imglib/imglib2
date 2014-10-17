@@ -58,9 +58,8 @@ import net.imglib2.view.Views;
  * @param <A>
  * @param <B>
  */
-public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D< A, B >
+public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D
 {
-
 	final protected Converter< ? super A, B > converter;
 
 	final protected RandomAccessible< A > source;

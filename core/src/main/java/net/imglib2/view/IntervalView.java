@@ -33,11 +33,17 @@
 
 package net.imglib2.view;
 
+import java.util.Iterator;
+
 import net.imglib2.AbstractInterval;
+import net.imglib2.Cursor;
 import net.imglib2.Interval;
+import net.imglib2.IterableInterval;
+import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.view.iteration.IterableTransformBuilder;
 
 /**
  * IntervalView is a view that puts {@link Interval} boundaries on its source
@@ -46,11 +52,22 @@ import net.imglib2.RandomAccessibleInterval;
  * created through the {@link Views#interval(RandomAccessible, Interval)} method
  * instead.
  */
-public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >
+public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, IterableInterval< T >
 {
+	/**
+	 * The source {@link RandomAccessible}.
+	 */
 	protected final RandomAccessible< T > source;
 
+	/**
+	 * TODO Javadoc
+	 */
 	protected RandomAccessible< T > fullViewRandomAccessible;
+	
+	/**
+	 * TODO Javadoc
+	 */
+	protected IterableInterval< T > fullViewIterableInterval;
 
 	/**
 	 * Create a view that defines an interval on a source. It is the callers
@@ -89,6 +106,11 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 		this.fullViewRandomAccessible = null;
 	}
 
+	/**
+	 * Gets the underlying source {@link RandomAccessible}.
+	 * 
+	 * @return the source {@link RandomAccessible}.
+	 */
 	public RandomAccessible< T > getSource()
 	{
 		return source;
@@ -106,5 +128,54 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 		if ( fullViewRandomAccessible == null )
 			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( this, this );
 		return fullViewRandomAccessible.randomAccess();
+	}
+	
+	protected IterableInterval< T > getFullViewIterableInterval()
+	{
+		if ( fullViewIterableInterval == null )
+			fullViewIterableInterval = IterableTransformBuilder.getEfficientIterableInterval( this, this );
+		return fullViewIterableInterval;
+	}
+
+	@Override
+	public long size()
+	{
+		return getFullViewIterableInterval().size();
+	}
+
+	@Override
+	public T firstElement()
+	{
+		return getFullViewIterableInterval().firstElement();
+	}
+
+	@Override
+	public Object iterationOrder()
+	{
+		return getFullViewIterableInterval().iterationOrder();
+	}
+
+	@Override
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
+		return iterationOrder().equals( f.iterationOrder() );
+	}
+
+	@Override
+	public Iterator< T > iterator()
+	{
+		return getFullViewIterableInterval().iterator();
+	}
+
+	@Override
+	public Cursor< T > cursor()
+	{
+		return getFullViewIterableInterval().cursor();
+	}
+
+	@Override
+	public Cursor< T > localizingCursor()
+	{
+		return getFullViewIterableInterval().localizingCursor();
 	}
 }

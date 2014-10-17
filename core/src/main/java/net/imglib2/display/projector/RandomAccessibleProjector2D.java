@@ -60,7 +60,7 @@ import net.imglib2.converter.Converter;
  * @param <A>
  * @param <B>
  */
-public class RandomAccessibleProjector2D< A, B > extends AbstractProjector2D< A, B >
+public class RandomAccessibleProjector2D< A, B > extends AbstractProjector2D
 {
 
 	final protected Converter< ? super A, B > converter;

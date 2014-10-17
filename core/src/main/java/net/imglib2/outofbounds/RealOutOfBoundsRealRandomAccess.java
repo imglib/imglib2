@@ -34,7 +34,6 @@
 package net.imglib2.outofbounds;
 
 import net.imglib2.AbstractEuclideanSpace;
-import net.imglib2.Bounded;
 import net.imglib2.Localizable;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;

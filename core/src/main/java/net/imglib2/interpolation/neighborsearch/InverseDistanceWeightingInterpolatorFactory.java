@@ -36,12 +36,11 @@ package net.imglib2.interpolation.neighborsearch;
 import net.imglib2.RealInterval;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.neighborsearch.KNearestNeighborSearch;
-import net.imglib2.neighborsearch.NearestNeighborSearch;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * Factory for {@link NearestNeighborInterpolator} instances that work on a
- * {@link NearestNeighborSearch}.
+ * Factory for {@link InverseDistanceWeightingInterpolator} instances that work
+ * on a {@link KNearestNeighborSearch}.
  * 
  * @param <T>
  * 
@@ -71,8 +70,6 @@ public class InverseDistanceWeightingInterpolatorFactory< T extends RealType< T 
 	@Override
 	public InverseDistanceWeightingInterpolator< T > create( final KNearestNeighborSearch< T > search )
 	{
-		// TODO: Ugly cast, needs a change in the KNearestNeighborSearch
-		// interface
 		return new InverseDistanceWeightingInterpolator< T >( search.copy(), p );
 	}
 

@@ -38,6 +38,7 @@ package net.imglib2.multithreading;
  * 
  * @author Stephan Preibisch
  */
+@Deprecated
 public class Chunk
 {
 	public Chunk( final long startPosition, final long loopSize )

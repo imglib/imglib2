@@ -33,7 +33,6 @@
 
 package net.imglib2.util;
 
-import net.imglib2.Pair;
 
 /**
  * TODO

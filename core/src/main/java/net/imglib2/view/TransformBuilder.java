@@ -36,7 +36,6 @@ package net.imglib2.view;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -292,7 +291,7 @@ public class TransformBuilder< T >
 	 */
 	protected void simplifyTransforms()
 	{
-		net.imglib2.concatenate.Util.join( transforms );
+		net.imglib2.concatenate.ConcatenateUtils.join( transforms );
 
 		for ( final ListIterator< Transform > i = transforms.listIterator(); i.hasNext(); )
 		{
