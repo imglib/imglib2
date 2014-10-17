@@ -26,7 +26,6 @@
 
 package net.imglib2.algorithm.region.localneighborhood;
 
-import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.Localizable;
@@ -35,6 +34,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
+import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
 /**

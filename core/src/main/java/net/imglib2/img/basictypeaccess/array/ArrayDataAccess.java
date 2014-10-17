@@ -36,11 +36,8 @@ package net.imglib2.img.basictypeaccess.array;
 import java.io.Serializable;
 
 /**
- *
- */
-/**
  * TODO
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>

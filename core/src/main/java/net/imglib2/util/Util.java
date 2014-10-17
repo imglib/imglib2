@@ -45,14 +45,12 @@ import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.RealRandomAccessibleRealInterval;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
-import net.imglib2.type.numeric.ExponentialMathType;
 
 /**
  * TODO
@@ -117,6 +115,7 @@ public class Util
 		return values;
 	}
 
+	// TODO: move to LinAlgHelpers
 	final public static float computeDistance( final RealLocalizable position1, final RealLocalizable position2 )
 	{
 		float dist = 0;
@@ -132,6 +131,7 @@ public class Util
 		return ( float ) Math.sqrt( dist );
 	}
 
+	// TODO: move to LinAlgHelpers
 	final public static float computeDistance( final int[] position1, final int[] position2 )
 	{
 		float dist = 0;
@@ -146,6 +146,7 @@ public class Util
 		return ( float ) Math.sqrt( dist );
 	}
 
+	// TODO: move to LinAlgHelpers
 	final public static float computeDistance( final long[] position1, final long[] position2 )
 	{
 		float dist = 0;
@@ -160,6 +161,7 @@ public class Util
 		return ( float ) Math.sqrt( dist );
 	}
 
+	// TODO: move to LinAlgHelpers
 	final public static float computeLength( final int[] position )
 	{
 		float dist = 0;
@@ -174,6 +176,7 @@ public class Util
 		return ( float ) Math.sqrt( dist );
 	}
 
+	// TODO: move to LinAlgHelpers
 	final public static float computeLength( final long[] position )
 	{
 		float dist = 0;
@@ -188,7 +191,115 @@ public class Util
 		return ( float ) Math.sqrt( dist );
 	}
 
-	public static long computeMedian( final long[] values )
+	/**
+	 * Computes the percentile of a collection of doubles (percentile 0.5
+	 * roughly corresponds to median)
+	 * 
+	 * @param values
+	 *            - the values
+	 * @param percentile
+	 *            - the percentile [0...1]
+	 * @return the corresponding value
+	 */
+	public static double percentile( final double[] values, final double percentile )
+	{
+		final double temp[] = values.clone();
+		final int length = temp.length;
+
+		quicksort( temp );
+
+		return temp[ Math.min( length - 1, Math.max( 0, ( int ) Math.round( ( length - 1 ) * percentile ) ) ) ];
+	}
+
+	public static double averageDouble( final List< Double > values )
+	{
+		final double size = values.size();
+		double avg = 0;
+
+		for ( final double v : values )
+			avg += v / size;
+
+		return avg;
+	}
+
+	public static float averageFloat( final List< Float > values )
+	{
+		final double size = values.size();
+		double avg = 0;
+
+		for ( final double v : values )
+			avg += v / size;
+
+		return ( float ) avg;
+	}
+
+	public static float min( final List< Float > values )
+	{
+		float min = Float.MAX_VALUE;
+
+		for ( final float v : values )
+			if ( v < min )
+				min = v;
+
+		return min;
+	}
+
+	public static float max( final List< Float > values )
+	{
+		float max = -Float.MAX_VALUE;
+
+		for ( final float v : values )
+			if ( v > max )
+				max = v;
+
+		return max;
+	}
+
+	public static float average( final float[] values )
+	{
+		final double size = values.length;
+		double avg = 0;
+
+		for ( final float v : values )
+			avg += v / size;
+
+		return ( float ) avg;
+	}
+
+	public static double average( final double[] values )
+	{
+		final double size = values.length;
+		double avg = 0;
+
+		for ( final double v : values )
+			avg += v / size;
+
+		return avg;
+	}
+
+	public static double min( final double[] values )
+	{
+		double min = values[ 0 ];
+
+		for ( final double v : values )
+			if ( v < min )
+				min = v;
+
+		return min;
+	}
+
+	public static double max( final double[] values )
+	{
+		double max = values[ 0 ];
+
+		for ( final double v : values )
+			if ( v > max )
+				max = v;
+
+		return max;
+	}
+
+	public static long median( final long[] values )
 	{
 		final long temp[] = values.clone();
 		long median;
@@ -206,7 +317,7 @@ public class Util
 		return median;
 	}
 
-	public static double computeMedian( final double[] values )
+	public static double median( final double[] values )
 	{
 		final double temp[] = values.clone();
 		double median;
@@ -224,115 +335,7 @@ public class Util
 		return median;
 	}
 
-	/**
-	 * Computes the percentile of a collection of doubles (percentile 0.5
-	 * roughly corresponds to median)
-	 * 
-	 * @param values
-	 *            - the values
-	 * @param percentile
-	 *            - the percentile [0...1]
-	 * @return the corresponding value
-	 */
-	public static double computePercentile( final double[] values, final double percentile )
-	{
-		final double temp[] = values.clone();
-		final int length = temp.length;
-
-		quicksort( temp );
-
-		return temp[ Math.min( length - 1, Math.max( 0, ( int ) Math.round( ( length - 1 ) * percentile ) ) ) ];
-	}
-
-	public static double computeAverageDouble( final List< Double > values )
-	{
-		final double size = values.size();
-		double avg = 0;
-
-		for ( final double v : values )
-			avg += v / size;
-
-		return avg;
-	}
-
-	public static float computeAverageFloat( final List< Float > values )
-	{
-		final double size = values.size();
-		double avg = 0;
-
-		for ( final double v : values )
-			avg += v / size;
-
-		return ( float ) avg;
-	}
-
-	public static float computeMinimum( final List< Float > values )
-	{
-		float min = Float.MAX_VALUE;
-
-		for ( final float v : values )
-			if ( v < min )
-				min = v;
-
-		return min;
-	}
-
-	public static float computeMaximum( final List< Float > values )
-	{
-		float max = -Float.MAX_VALUE;
-
-		for ( final float v : values )
-			if ( v > max )
-				max = v;
-
-		return max;
-	}
-
-	public static float computeAverage( final float[] values )
-	{
-		final double size = values.length;
-		double avg = 0;
-
-		for ( final float v : values )
-			avg += v / size;
-
-		return ( float ) avg;
-	}
-
-	public static double computeAverage( final double[] values )
-	{
-		final double size = values.length;
-		double avg = 0;
-
-		for ( final double v : values )
-			avg += v / size;
-
-		return avg;
-	}
-
-	public static double computeMin( final double[] values )
-	{
-		double min = values[ 0 ];
-
-		for ( final double v : values )
-			if ( v < min )
-				min = v;
-
-		return min;
-	}
-
-	public static double computeMax( final double[] values )
-	{
-		double max = values[ 0 ];
-
-		for ( final double v : values )
-			if ( v > max )
-				max = v;
-
-		return max;
-	}
-
-	public static float computeMedian( final float[] values )
+	public static float median( final float[] values )
 	{
 		final float temp[] = values.clone();
 		float median;
@@ -584,121 +587,6 @@ public class Util
 		return gaussianKernel;
 	}
 
-	/**
-	 * This method creates a gaussian kernel
-	 * 
-	 * @param sigma
-	 *            Standard Derivation of the gaussian function in the desired
-	 *            {@link Type}
-	 * @param normalize
-	 *            Normalize integral of gaussian function to 1 or not...
-	 * @return T[] The gaussian kernel
-	 * 
-	 */
-	@SuppressWarnings( "unchecked" )
-	public static < T extends ExponentialMathType< T > > T[] createGaussianKernel1D( final T sigma, final boolean normalize )
-	{
-		final T[] gaussianKernel;
-		int kernelSize;
-
-		final T zero = sigma.createVariable();
-		final T two = sigma.createVariable();
-		final T one = sigma.createVariable();
-		final T minusOne = sigma.createVariable();
-		final T two_sq_sigma = zero.createVariable();
-		final T sum = sigma.createVariable();
-		final T value = sigma.createVariable();
-		final T xPos = sigma.createVariable();
-		final T cs = sigma.createVariable();
-
-		zero.setZero();
-		one.setOne();
-
-		two.setOne();
-		two.add( one );
-
-		minusOne.setZero();
-		minusOne.sub( one );
-
-		if ( sigma.compareTo( zero ) <= 0 )
-		{
-			kernelSize = 3;
-			// NB: Need explicit cast to T[] to satisfy javac;
-			// See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6302954
-			gaussianKernel = ( T[] ) genericArray( 3 ); // zero.createArray1D( 3
-														// );
-			gaussianKernel[ 1 ].set( one );
-		}
-		else
-		{
-			// size = Math.max(3, (int) (2 * (int) (3 * sigma + 0.5) + 1));
-			cs.set( sigma );
-			cs.mul( 3.0 );
-			cs.round();
-			cs.mul( 2.0 );
-			cs.add( one );
-
-			kernelSize = Util.round( cs.getRealFloat() );
-
-			// kernelsize has to be at least 3
-			kernelSize = Math.max( 3, kernelSize );
-
-			// kernelsize has to be odd
-			if ( kernelSize % 2 == 0 )
-				++kernelSize;
-
-			// two_sq_sigma = 2 * sigma * sigma;
-			two_sq_sigma.set( two );
-			two_sq_sigma.mul( sigma );
-			two_sq_sigma.mul( sigma );
-
-			// NB: Need explicit cast to T[] to satisfy javac;
-			// See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6302954
-			gaussianKernel = ( T[] ) genericArray( kernelSize ); // zero.createArray1D(
-																	// kernelSize
-																	// );
-
-			for ( int i = 0; i < gaussianKernel.length; ++i )
-				gaussianKernel[ i ] = zero.createVariable();
-
-			// set the xPos to kernelSize/2
-			xPos.setZero();
-			for ( int x = 1; x <= kernelSize / 2; ++x )
-				xPos.add( one );
-
-			for ( int x = kernelSize / 2; x >= 0; --x )
-			{
-				// final double val = Math.exp( -(x * x) / two_sq_sigma );
-				value.set( xPos );
-				value.mul( xPos );
-				value.mul( minusOne );
-				value.div( two_sq_sigma );
-				value.exp();
-
-				gaussianKernel[ kernelSize / 2 - x ].set( value );
-				gaussianKernel[ kernelSize / 2 + x ].set( value );
-
-				xPos.sub( one );
-			}
-		}
-
-		if ( normalize )
-		{
-			sum.setZero();
-
-			for ( final T val : gaussianKernel )
-				sum.add( val );
-
-			for ( int i = 0; i < gaussianKernel.length; ++i )
-				gaussianKernel[ i ].div( sum );
-		}
-
-		for ( int i = 0; i < gaussianKernel.length; ++i )
-			System.out.println( gaussianKernel[ i ] );
-
-		return gaussianKernel;
-	}
-
 	public static int getSuggestedKernelDiameter( final double sigma )
 	{
 		int size = 3;
@@ -860,95 +748,20 @@ public class Util
 		}
 	}
 
-	public static < T extends Type< T > & Comparable< T >> T max( final T value1, final T value2 )
+	public static < T extends Type< T > & Comparable< T > > T max( final T value1, final T value2 )
 	{
 		if ( value1.compareTo( value2 ) >= 0 )
 			return value1;
-		return value2;
+		else
+			return value2;
 	}
 
-	public static < T extends Type< T > & Comparable< T >> T min( final T value1, final T value2 )
+	public static < T extends Type< T > & Comparable< T > > T min( final T value1, final T value2 )
 	{
 		if ( value1.compareTo( value2 ) <= 0 )
 			return value1;
-		return value2;
-	}
-
-	public static boolean[][] getRecursiveCoordinates( final int numDimensions )
-	{
-		final boolean[][] positions = new boolean[ Util.pow( 2, numDimensions ) ][ numDimensions ];
-
-		setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
-
-		return positions;
-	}
-
-	/**
-	 * recursively get coordinates covering all binary combinations for the
-	 * given dimensionality
-	 * 
-	 * example for 3d:
-	 * 
-	 * x y z index 0 0 0 [0] 1 0 0 [1] 0 1 0 [2] 1 1 0 [3] 0 0 1 [4] 1 0 1 [5] 0
-	 * 1 1 [6] 1 1 1 [7]
-	 * 
-	 * All typical call will look like that:
-	 * 
-	 * boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][
-	 * numDimensions ]; MathLib.setCoordinateRecursive( numDimensions - 1,
-	 * numDimensions, new int[ numDimensions ], positions );
-	 * 
-	 * @param dimension
-	 *            - recusively changed current dimension, init with
-	 *            numDimensions - 1
-	 * @param numDimensions
-	 *            - the number of dimensions
-	 * @param location
-	 *            - recursively changed current state, init with new int[
-	 *            numDimensions ]
-	 * @param result
-	 *            - where the result will be stored when finished, needes a
-	 *            boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ]
-	 */
-	public static void setCoordinateRecursive( final int dimension, final int numDimensions, final int[] location, final boolean[][] result )
-	{
-		final int[] newLocation0 = new int[ numDimensions ];
-		final int[] newLocation1 = new int[ numDimensions ];
-
-		for ( int d = 0; d < numDimensions; d++ )
-		{
-			newLocation0[ d ] = location[ d ];
-			newLocation1[ d ] = location[ d ];
-		}
-
-		newLocation0[ dimension ] = 0;
-		newLocation1[ dimension ] = 1;
-
-		if ( dimension == 0 )
-		{
-			// compute the index in the result array ( binary to decimal
-			// conversion )
-			int index0 = 0, index1 = 0;
-
-			for ( int d = 0; d < numDimensions; d++ )
-			{
-				index0 += newLocation0[ d ] * pow( 2, d );
-				index1 += newLocation1[ d ] * pow( 2, d );
-			}
-
-			// fill the result array
-			for ( int d = 0; d < numDimensions; d++ )
-			{
-				result[ index0 ][ d ] = ( newLocation0[ d ] == 1 );
-				result[ index1 ][ d ] = ( newLocation1[ d ] == 1 );
-			}
-		}
 		else
-		{
-			setCoordinateRecursive( dimension - 1, numDimensions, newLocation0, result );
-			setCoordinateRecursive( dimension - 1, numDimensions, newLocation1, result );
-		}
-
+			return value2;
 	}
 
 	/**
@@ -1141,7 +954,7 @@ public class Util
 	 *            - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
 	 */
-	final public static < T, F extends Interval & RandomAccessible< T >> T getTypeFromInterval( final F rai )
+	final public static < T, F extends Interval & RandomAccessible< T > > T getTypeFromInterval( final F rai )
 	{
 		// create RandomAccess
 		final RandomAccess< T > randomAccess = rai.randomAccess();
@@ -1150,24 +963,6 @@ public class Util
 		rai.min( randomAccess );
 
 		return randomAccess.get();
-	}
-
-	/**
-	 * Gets an instance of T from the {@link RandomAccessible}
-	 * 
-	 * @param <T>
-	 *            - the T
-	 * @param rai
-	 *            - the {@link RandomAccessible}
-	 * @return - an instance of T
-	 */
-	final public static < T > T getTypeFromRandomAccess( final RandomAccessible< T > ra )
-	{
-		// test that it is not an interval, because in this case a simple get()
-		// at the position of creation will fail
-		if ( RandomAccessibleInterval.class.isInstance( ra ) )
-			return getTypeFromInterval( ( RandomAccessibleInterval< T > ) ra );
-		return ra.randomAccess().get();
 	}
 
 	/**
@@ -1189,24 +984,6 @@ public class Util
 		rai.realMin( realRandomAccess );
 
 		return realRandomAccess.get();
-	}
-
-	/**
-	 * Gets an instance of T from the {@link RealRandomAccessible}
-	 * 
-	 * @param <T>
-	 *            - the T
-	 * @param rai
-	 *            - the {@link RealRandomAccessible}
-	 * @return - an instance of T
-	 */
-	final public static < T > T getTypeFromRealRandomAccess( final RealRandomAccessible< T > ra )
-	{
-		// test that it is not an interval, because in this case a simple get()
-		// at the position of creation will fail
-		if ( RealRandomAccessibleRealInterval.class.isInstance( ra ) )
-			return getTypeFromRealInterval( ( RealRandomAccessibleRealInterval< T > ) ra );
-		return ra.realRandomAccess().get();
 	}
 
 	/**

@@ -32,8 +32,8 @@
  */
 package net.imglib2.display;
 
-import net.imglib2.Binning;
 import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.util.Binning;
 
 /**
  * Abstract superclass for array-based color lookup tables.

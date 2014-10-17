@@ -47,7 +47,7 @@ import java.util.List;
  * @author ImgLib2 developers
  * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
- * @author Chrisitan Dietz <cdietz85@googlemail.com>
+ * @author Christian Dietz <dietzc85@googlemail.com>
  */
 public class FlatIterationOrder
 {

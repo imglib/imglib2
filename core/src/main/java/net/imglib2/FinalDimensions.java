@@ -39,7 +39,7 @@ package net.imglib2;
  * 
  * @author Stephan Preibisch
  */
-public class FinalDimensions implements Dimensions
+public final class FinalDimensions implements Dimensions
 {
 	final long[] dimensions;
 

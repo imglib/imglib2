@@ -33,13 +33,13 @@
 
 package net.imglib2.ops.function.real;
 
-import net.imglib2.ExtendedRandomAccessibleInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.function.Function;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.ExtendedRandomAccessibleInterval;
 
 /**
  * RealImageFunction wraps {@link RandomAccessibleInterval}s or

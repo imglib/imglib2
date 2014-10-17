@@ -26,9 +26,9 @@
 
 package net.imglib2.algorithm.region.localneighborhood;
 
-import net.imglib2.Bounded;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.outofbounds.Bounded;
 import net.imglib2.outofbounds.OutOfBounds;
 
 public abstract class AbstractNeighborhoodCursor<T> implements Cursor<T>,

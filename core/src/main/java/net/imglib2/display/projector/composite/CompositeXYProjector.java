@@ -59,7 +59,7 @@ import net.imglib2.type.numeric.ARGBType;
  * @author Grant Harris
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class CompositeXYProjector< A > extends AbstractProjector2D< A, ARGBType >
+public class CompositeXYProjector< A > extends AbstractProjector2D
 {
 
 	private final ArrayList< Converter< A, ARGBType >> converters;

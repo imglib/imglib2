@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.imglib2.util.Binning;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -33,7 +33,6 @@
 
 package net.imglib2.outofbounds;
 
-import net.imglib2.Bounded;
 import net.imglib2.RandomAccess;
 
 /**

@@ -33,20 +33,17 @@
 
 package net.imglib2.exception;
 
+import net.imglib2.type.Type;
+
 /**
- * TODO
- * 
+ * Is thrown if a {@link Type} is not supported.
+ *
  * @author Curtis Rueden
  * @author Stephan Preibisch
  * @author Johannes Schindelin
  */
 public class IncompatibleTypeException extends ImgLibException
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	public IncompatibleTypeException( final Object obj, final String message )
 	{
 		super( obj.getClass().getCanonicalName() + ": " + message );

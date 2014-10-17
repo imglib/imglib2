@@ -39,13 +39,13 @@ import java.util.List;
 import java.util.Stack;
 
 import net.imglib2.Interval;
+import net.imglib2.KDTree;
+import net.imglib2.KDTreeNode;
 import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
-import net.imglib2.collection.KDTree;
-import net.imglib2.collection.KDTreeNode;
 
 /**
  * The volumetric search uses a K-D tree to search for all hyper-rectangular
