@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,11 +38,11 @@ import java.util.ListIterator;
 
 /**
  * Utilities for manipulating lists of (pre-)concatenable objects.
- * 
- * 
+ *
+ *
  * @author Tobias Pietzsch
  */
-public class Util
+public class ConcatenateUtils
 {
 	public static void print( final List< ? > concatenatables )
 	{
@@ -62,14 +62,13 @@ public class Util
 	/**
 	 * Reduce a list of objects by iteratively pre/concatenating neighboring
 	 * objects if they support it.
-	 * 
+	 *
 	 * @param objects
 	 *            list of objects that will be reduced in place
 	 */
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
 	public static < T > void join( final List< T > objects )
 	{
-		// print( objects );
 		int oldConcatenablesSize;
 		do
 		{
@@ -102,7 +101,6 @@ public class Util
 					}
 				}
 			}
-			// print( objects );
 		}
 		while ( oldConcatenablesSize != objects.size() );
 	}
