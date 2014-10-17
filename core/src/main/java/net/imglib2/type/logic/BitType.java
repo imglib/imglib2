@@ -116,7 +116,7 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	@Override
 	public boolean get()
 	{
-		return 1 == ((dataAccess.getValue((int)(i >>> 6)) >>> ((i & 63))) & 1);
+		return 1 == ((dataAccess.getValue((int)(i >>> 6)) >>> ((i & 63))) & 1l);
 	}
 
 	// Crops value to within mask
@@ -132,9 +132,9 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 		final long shift = i & 63; 
 		// Clear the bits first, then or the masked value
 		if ( value )
-			dataAccess.setValue(i1, (dataAccess.getValue(i1) | (1 << shift) ) );
+			dataAccess.setValue(i1, (dataAccess.getValue(i1) | (1l << shift) ) );
 		else
-			dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(1 << shift)) );
+			dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(1l << shift)) );
 	}
 
 	@Override
