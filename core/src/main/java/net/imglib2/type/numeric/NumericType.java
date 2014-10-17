@@ -34,26 +34,18 @@
 package net.imglib2.type.numeric;
 
 import net.imglib2.type.Type;
+import net.imglib2.type.operators.Add;
+import net.imglib2.type.operators.Div;
+import net.imglib2.type.operators.Mul;
+import net.imglib2.type.operators.MulFloatingPoint;
+import net.imglib2.type.operators.SetOne;
+import net.imglib2.type.operators.SetZero;
+import net.imglib2.type.operators.Sub;
 
 /**
  * TODO
  * 
  */
-public interface NumericType< T extends NumericType< T >> extends Type< T >
+public interface NumericType< T extends NumericType< T >> extends Type< T >, Add< T >, Mul< T >, Sub< T >, Div< T >, SetOne, SetZero, MulFloatingPoint
 {
-	public void add( T c );
-
-	public void sub( T c );
-
-	public void mul( T c );
-
-	public void div( T c );
-
-	public void setZero();
-
-	public void setOne();
-
-	public void mul( float c );
-
-	public void mul( double c );
 }
