@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -31,21 +31,21 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
 
-public class EllipseNeighborhood<T, IN extends RandomAccessibleInterval<T>> extends AbstractNeighborhood<T, IN> {
+public class EllipseNeighborhood<T> extends AbstractNeighborhood<T> {
 	
 	/*
 	 * CONSTRUCTORS
 	 */
 	
-	public EllipseNeighborhood(final IN source, final long[] center, final long[] radiuses, final OutOfBoundsFactory<T, IN> outOfBounds) {
+	public EllipseNeighborhood(final RandomAccessibleInterval<T> source, final long[] center, final long[] radiuses, final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds) {
 		super(source.numDimensions(), outOfBounds);
 		setSpan(radiuses);
 		setPosition(center);
 		updateSource(source);
 	}
 
-	public EllipseNeighborhood(final IN source, final long[] center, final long[] radiuses) {
-		this(source, center, radiuses, new OutOfBoundsMirrorFactory<T, IN>(Boundary.DOUBLE));
+	public EllipseNeighborhood(final RandomAccessibleInterval<T> source, final long[] center, final long[] radiuses) {
+		this(source, center, radiuses, new OutOfBoundsMirrorFactory<T, RandomAccessibleInterval<T>>(Boundary.DOUBLE));
 	}
 	
 	/*
@@ -86,8 +86,8 @@ public class EllipseNeighborhood<T, IN extends RandomAccessibleInterval<T>> exte
 	}
 
 	@Override
-	public EllipseNeighborhood<T, IN> copy() {
-		return new EllipseNeighborhood<T, IN>(source, center, span, outOfBounds);
+	public EllipseNeighborhood<T> copy() {
+		return new EllipseNeighborhood<T>(source, center, span, outOfBounds);
 	}
 
 }

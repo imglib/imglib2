@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,25 +28,24 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.ops.operation.metadata.unary;
 
 import net.imglib2.Interval;
+import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.ops.operation.UnaryOperation;
 
 /**
  * @author Christian Dietz (University of Konstanz)
+ * @author Curtis Rueden
  * 
- * @param <CS>
+ * @param <S>
+ *            The type of the space to copy
  */
-public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryOperation< CS, CS >
+public class CopyCalibratedSpace< S extends CalibratedSpace< CalibratedAxis > > implements UnaryOperation< S, S >
 {
 	private Interval interval;
 
@@ -61,7 +60,7 @@ public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryO
 	}
 
 	@Override
-	public CS compute( CS input, CS output )
+	public S compute( S input, S output )
 	{
 
 		int offset = 0;
@@ -73,8 +72,12 @@ public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryO
 			}
 			else
 			{
+				// NB: Axes are copied by reference here. If an axis is later
+				// mutated, this could cause unintuitive side effects...
 				output.setAxis( input.axis( d ), d - offset );
-				output.setCalibration( input.calibration( d ), d - offset );
+
+				// No longer needed:
+				// output.setCalibration(input.averageScale(d), d - offset);
 			}
 		}
 
@@ -82,9 +85,9 @@ public class CopyCalibratedSpace< CS extends CalibratedSpace > implements UnaryO
 	}
 
 	@Override
-	public UnaryOperation< CS, CS > copy()
+	public UnaryOperation< S, S > copy()
 	{
-		return new CopyCalibratedSpace< CS >();
+		return new CopyCalibratedSpace< S >();
 	}
 
 }

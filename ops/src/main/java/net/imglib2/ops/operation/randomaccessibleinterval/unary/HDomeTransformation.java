@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,15 +28,14 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.randomaccessibleinterval.unary;
 
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.list.ListImgFactory;
 import net.imglib2.ops.img.BinaryOperationAssignment;
 import net.imglib2.ops.img.UnaryOperationAssignment;
 import net.imglib2.ops.operation.BinaryOperation;
@@ -45,13 +44,14 @@ import net.imglib2.ops.operation.img.unary.ImgCopyOperation;
 import net.imglib2.ops.operation.real.binary.RealSubtract;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.Views;
 
 /**
  * @author Clemens Muething (University of Konstanz)
- *
+ * 
  * @param <T>
  */
-public class HDomeTransformation< T extends RealType< T >> implements UnaryOperation< Img< T >, Img< T >>
+public class HDomeTransformation< T extends RealType< T >> implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >>
 {
 
 	private final ConnectedType m_type;
@@ -60,15 +60,36 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 
 	private final double m_substractBefore;
 
+	private final ImgFactory< T > m_imgFactory;
+
+	/**
+	 * 
+	 * @param type
+	 * @param height
+	 * @param substractBefore
+	 * @deprecated Use the other constructor and specify an ImgFactory for the
+	 *             Output instead.
+	 */
+	@Deprecated
 	public HDomeTransformation( ConnectedType type, double height, double substractBefore )
 	{
 		m_type = type;
 		m_height = height;
 		m_substractBefore = substractBefore;
+		m_imgFactory = new ListImgFactory< T >();
+	}
+
+	@SuppressWarnings( "unchecked" )
+	public HDomeTransformation( ConnectedType type, double height, double substractBefore, @SuppressWarnings( "rawtypes" ) ImgFactory imgFactory )
+	{
+		m_type = type;
+		m_height = height;
+		m_substractBefore = substractBefore;
+		m_imgFactory = imgFactory;
 	}
 
 	@Override
-	public Img< T > compute( Img< T > input, Img< T > output )
+	public RandomAccessibleInterval< T > compute( RandomAccessibleInterval< T > input, RandomAccessibleInterval< T > output )
 	{
 
 		// calculate the regional maxima that should be
@@ -77,7 +98,7 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 
 		if ( m_substractBefore > 0.0 )
 		{
-			Img< T > noSingular = input.factory().create( input, input.firstElement().createVariable() );
+			Img< T > noSingular = m_imgFactory.create( input, Views.iterable( input ).firstElement().createVariable() );
 			getRegionalMaxima( input, m_substractBefore, noSingular );
 			// subtract these maxima from the
 			// original image
@@ -92,30 +113,30 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 		}
 		else
 		{
-			new ImgCopyOperation< T >().compute( input, output );
+			new ImgCopyOperation< T >().compute( Views.iterable( input ), Views.iterable( output ) );
 		}
 
 		return output;
 	}
 
 	@Override
-	public UnaryOperation< Img< T >, Img< T >> copy()
+	public UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >> copy()
 	{
-		return new HDomeTransformation< T >( m_type, m_height, m_substractBefore );
+		return new HDomeTransformation< T >( m_type, m_height, m_substractBefore, m_imgFactory );
 	}
 
-	private Img< T > getRegionalMaxima( final Img< T > img, double height, Img< T > output )
+	private RandomAccessibleInterval< T > getRegionalMaxima( final RandomAccessibleInterval< T > img, double height, RandomAccessibleInterval< T > output )
 	{
 
 		// compute the marker image, i.e. subtract
 		// height from image
-		UnaryOperation< Img< T >, Img< T >> op = new SubstractConstantOp( height );
+		UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >> op = new SubstractConstantOp( height );
 
 		op.compute( img, output );
 
 		// reconstruct the image from the marker and the
 		// original image
-		GrayscaleReconstructionByDilation< T, T, Img< T >, Img< T >> op2 = new GrayscaleReconstructionByDilation< T, T, Img< T >, Img< T >>( m_type );
+		GrayscaleReconstructionByDilation< T, T > op2 = new GrayscaleReconstructionByDilation< T, T >( m_type );
 
 		output = op2.compute( img, output );
 
@@ -128,16 +149,16 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 	/**
 	 * ATTENTION: Subtrahend will be overwritten.
 	 */
-	private Img< T > subtract( final Img< T > minuend, final Img< T > subtrahend )
+	private RandomAccessibleInterval< T > subtract( final RandomAccessibleInterval< T > minuend, final RandomAccessibleInterval< T > subtrahend )
 	{
 
-		BinaryOperation< Img< T >, Img< T >, Img< T >> subtract = new SubstractImgFromImgOp();
+		BinaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >, RandomAccessibleInterval< T >> subtract = new SubstractImgFromImgOp();
 
 		subtract.compute( minuend, subtrahend, subtrahend );
 		return subtrahend;
 	}
 
-	private class SubstractConstantOp implements UnaryOperation< Img< T >, Img< T >>
+	private class SubstractConstantOp implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >>
 	{
 
 		private final double height;
@@ -148,14 +169,14 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 		}
 
 		@Override
-		public Img< T > compute( Img< T > input, Img< T > output )
+		public RandomAccessibleInterval< T > compute( RandomAccessibleInterval< T > input, RandomAccessibleInterval< T > output )
 		{
-			new UnaryOperationAssignment< T, T >( new RealSubtractConstantBounded< T >( height ) ).compute( input, output );
+			new UnaryOperationAssignment< T, T >( new RealSubtractConstantBounded< T >( height ) ).compute( Views.iterable( input ), Views.iterable( output ) );
 			return output;
 		}
 
 		@Override
-		public UnaryOperation< Img< T >, Img< T >> copy()
+		public UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >> copy()
 		{
 			return new SubstractConstantOp( height );
 		}
@@ -190,18 +211,18 @@ public class HDomeTransformation< T extends RealType< T >> implements UnaryOpera
 
 	}
 
-	private class SubstractImgFromImgOp implements BinaryOperation< Img< T >, Img< T >, Img< T >>
+	private class SubstractImgFromImgOp implements BinaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >, RandomAccessibleInterval< T >>
 	{
 
 		@Override
-		public Img< T > compute( Img< T > input1, Img< T > input2, Img< T > output )
+		public RandomAccessibleInterval< T > compute( RandomAccessibleInterval< T > input1, RandomAccessibleInterval< T > input2, RandomAccessibleInterval< T > output )
 		{
-			new BinaryOperationAssignment< T, T, T >( new RealSubtract< T, T, T >() ).compute( input1, input2, output );
+			new BinaryOperationAssignment< T, T, T >( new RealSubtract< T, T, T >() ).compute( Views.iterable( input1 ), Views.iterable( input2 ), Views.iterable( output ) );
 			return output;
 		}
 
 		@Override
-		public BinaryOperation< Img< T >, Img< T >, Img< T >> copy()
+		public BinaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< T >, RandomAccessibleInterval< T >> copy()
 		{
 			return new SubstractImgFromImgOp();
 		}

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,26 +40,38 @@ import net.imglib2.util.Fraction;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class IntType extends GenericIntType<IntType>
+public class IntType extends GenericIntType< IntType >
 {
 	// this is the constructor if you want it to read from an array
-	public IntType( final NativeImg<IntType, ? extends IntAccess> img ) { super( img ); }
+	public IntType( final NativeImg< ?, ? extends IntAccess > img )
+	{
+		super( img );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public IntType( final int value ) { super( value ); }
+	public IntType( final int value )
+	{
+		super( value );
+	}
 
 	// this is the constructor if you want to specify the dataAccess
-	public IntType( final IntAccess access ) { super( access ); }
+	public IntType( final IntAccess access )
+	{
+		super( access );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public IntType() { super( 0 ); }
+	public IntType()
+	{
+		super( 0 );
+	}
 
 	@Override
-	public NativeImg<IntType, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<IntType> storageFactory, final long dim[] )
+	public NativeImg< IntType, ? extends IntAccess > createSuitableNativeImg( final NativeImgFactory< IntType > storageFactory, final long dim[] )
 	{
 		// create the container
 		final NativeImg<IntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, new Fraction() );
@@ -78,28 +86,66 @@ public class IntType extends GenericIntType<IntType>
 	}
 
 	@Override
-	public IntType duplicateTypeOnSameNativeImg() { return new IntType( img ); }
+	public IntType duplicateTypeOnSameNativeImg()
+	{
+		return new IntType( img );
+	}
 
-	public int get() { return getValue(); }
-	public void set( final int b ) { setValue( b ); }
+	public int get()
+	{
+		return getValue();
+	}
 
-	@Override
-	public int getInteger(){ return get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ){ set( f ); }
-	@Override
-	public void setInteger( final long f ){ set( (int)f ); }
-
-	@Override
-	public double getMaxValue() { return Integer.MAX_VALUE; }
-	@Override
-	public double getMinValue()  { return Integer.MIN_VALUE; }
+	public void set( final int b )
+	{
+		setValue( b );
+	}
 
 	@Override
-	public IntType createVariable(){ return new IntType( 0 ); }
+	public int getInteger()
+	{
+		return get();
+	}
 
 	@Override
-	public IntType copy(){ return new IntType( getValue() ); }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
+	@Override
+	public void setInteger( final int f )
+	{
+		set( f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( ( int ) f );
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return Integer.MAX_VALUE;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return Integer.MIN_VALUE;
+	}
+
+	@Override
+	public IntType createVariable()
+	{
+		return new IntType( 0 );
+	}
+
+	@Override
+	public IntType copy()
+	{
+		return new IntType( getValue() );
+	}
 }

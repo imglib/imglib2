@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -30,12 +30,16 @@ import mpicbg.models.InvertibleBoundable;
 import mpicbg.models.NoninvertibleModelException;
 import net.imglib2.Cursor;
 import net.imglib2.ExtendedRandomAccessibleInterval;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.type.Type;
+import net.imglib2.view.Views;
 
 /**
  * TODO
@@ -43,26 +47,39 @@ import net.imglib2.type.Type;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>>
+public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<RandomAccessibleInterval<T>>
 {
 	final InvertibleBoundable transform;
-	final ExtendedRandomAccessibleInterval<T, Img<T>> container;
+	final RandomAccessibleInterval<T> image;
 	final int numDimensions;
-	final InterpolatorFactory<T,ExtendedRandomAccessibleInterval<T, Img<T>>> interpolatorFactory;
+	final InterpolatorFactory<T,RandomAccessible<T>> interpolatorFactory;
 	
-	ImgFactory<T> outputContainerFactory;
+	ImgFactory<T> outputImageFactory;
 	
 	final long[] newDim;
 	final float[] offset;
 	
 	Img<T> transformed;
 	String errorMessage = "";
-		
-	public ImageTransform( final ExtendedRandomAccessibleInterval<T, Img<T>> container, final InvertibleBoundable transform, final InterpolatorFactory<T,ExtendedRandomAccessibleInterval<T, Img<T>>> interpolatorFactory )
+	
+	// for compatibility with old API:
+	/**
+	 * 
+	 * @param container
+	 * @param transform
+	 * @param interpolatorFactory
+	 * @deprecated Use a different constructor and explicitly define a {@link ImgFactory} which will create the output.
+	 */
+	@Deprecated
+	public ImageTransform( final ExtendedRandomAccessibleInterval<T, Img<T>> container, final InvertibleBoundable transform, final InterpolatorFactory<T,RandomAccessible<T>> interpolatorFactory ){
+		this( container, container.getSource(), transform, interpolatorFactory, container.getSource().factory() );
+	}
+	
+	public ImageTransform( final RandomAccessible<T> input, final Interval interval, final InvertibleBoundable transform, final InterpolatorFactory<T,RandomAccessible<T>> interpolatorFactory, ImgFactory<T> outImgFactory)
 	{
-		this.container = container;
+		this.image = Views.interval( input, interval);
 		this.interpolatorFactory = interpolatorFactory;
-		this.numDimensions = container.numDimensions();
+		this.numDimensions = input.numDimensions();
 		this.transform = transform;		
 
 		//
@@ -73,13 +90,12 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>
 		float[] min = new float[ numDimensions ];
 		float[] max = new float[ numDimensions ];
 
-		final Img<T> source = container.getSource();
-		this.outputContainerFactory = source.factory();
+		this.outputImageFactory = outImgFactory;
 		
 		for ( int d = 0; d < numDimensions; ++d )
 		{
-			min[ d ] = (float) source.realMin( d );
-			max[ d ] = (float) source.realMax( d ); 
+			min[ d ] = (float) image.realMin( d );
+			max[ d ] = (float) image.realMax( d ); 
 		}
 		transform.estimateBounds( min, max );
 		
@@ -95,8 +111,33 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>
 		}		
 	}
 	
-	public void setOutputContainerFactory( final ImgFactory<T> outputContainerFactory ) { this.outputContainerFactory = outputContainerFactory; }
-	public ImgFactory<T> getOutputContainerFactory() { return this.outputContainerFactory; }
+	/**
+	 * Set the image factory which will be used for output.
+	 * @param outputContainerFactory
+	 * @deprecated Use {@link #setOutputImgFactory(ImgFactory)} instead.
+	 */
+	@Deprecated
+	public void setOutputContainerFactory( final ImgFactory<T> outputContainerFactory ) { this.outputImageFactory = outputContainerFactory; }
+	
+	/**
+	 * 
+	 * @return the image factory used for the output
+	 * @deprecated Use {@link #getOutputImgFactory()} instead.
+	 */
+	@Deprecated
+	public ImgFactory<T> getOutputContainerFactory() { return this.outputImageFactory; }
+	
+	/**
+	 * Set the image factory which will be used for output.
+	 * @param outputImgFactory
+	 */
+	public void setOutputImgFactory( final ImgFactory<T> outputImgFactory ) { this.outputImageFactory = outputImgFactory; }
+	
+	/**
+	 * 
+	 * @return the image factory used for the output
+	 */
+	public ImgFactory<T> getOutputImgFactory() { return this.outputImageFactory; }
 	
 	public float[] getOffset() { return offset; }
 	public void setOffset( final float[] offset ) 
@@ -119,7 +160,7 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>
 		{
 			return false;
 		}
-		else if ( container == null )
+		else if ( image == null )
 		{
 			errorMessage = "AffineTransform: [Container<T> container] is null.";
 			return false;
@@ -152,10 +193,10 @@ public class ImageTransform<T extends Type<T>> implements OutputAlgorithm<Img<T>
 			return false;
 		
 		// create the new output image
-		transformed = outputContainerFactory.create( newDim, container.getSource().firstElement().createVariable() );
+		transformed = outputImageFactory.create( newDim, Views.iterable( image ).firstElement().createVariable() );
 
 		final Cursor<T> transformedIterator = transformed.localizingCursor();
-		final RealRandomAccess<T> interpolator = interpolatorFactory.create( container );
+		final RealRandomAccess<T> interpolator = interpolatorFactory.create( image );
 		
 		try
 		{

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -48,14 +44,16 @@ import org.junit.Test;
 
 /**
  * TODO
- *
+ * 
  */
 public class CellContainerTest
 {
 	int[] cellDimensions;
+
 	long[] dimensions;
+
 	Img< FloatType > img;
-	
+
 	@Before
 	public void setUp()
 	{
@@ -69,15 +67,15 @@ public class CellContainerTest
 	public void equalIterationOrder()
 	{
 		final Img< FloatType > img2 = new CellImgFactory< FloatType >( cellDimensions ).create( dimensions, new FloatType() );
-		assertTrue( img2.equalIterationOrder( img ) );		
-		assertTrue( img.equalIterationOrder( img2 ) );		
+		assertTrue( img2.equalIterationOrder( img ) );
+		assertTrue( img.equalIterationOrder( img2 ) );
 
 		final Img< FloatType > img3 = new CellImgFactory< FloatType >( 9 ).create( dimensions, new FloatType() );
-		assertFalse( img3.equalIterationOrder( img ) );		
-		assertFalse( img.equalIterationOrder( img3 ) );		
+		assertFalse( img3.equalIterationOrder( img ) );
+		assertFalse( img.equalIterationOrder( img3 ) );
 
 		final Img< FloatType > img4 = new ArrayImgFactory< FloatType >().create( dimensions, new FloatType() );
-		assertFalse( img4.equalIterationOrder( img ) );		
-		assertFalse( img.equalIterationOrder( img4 ) );		
+		assertFalse( img4.equalIterationOrder( img ) );
+		assertFalse( img.equalIterationOrder( img4 ) );
 	}
 }

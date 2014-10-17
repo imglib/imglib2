@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,9 +40,9 @@ import net.imglib2.type.NativeType;
 
 /**
  * {@link RandomAccess} on a {@link PlanarImg}.
- *
+ * 
  * @param <T>
- *
+ * 
  * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -55,9 +51,11 @@ import net.imglib2.type.NativeType;
 public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLocalizableInt implements RandomAccess< T >, PlanarImg.PlanarContainerSampler
 {
 	final protected int[] sliceSteps;
+
 	final protected int width;
 
 	final protected T type;
+
 	protected int sliceIndex;
 
 	protected PlanarRandomAccess( final PlanarRandomAccess< T > randomAccess )
@@ -89,10 +87,16 @@ public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLoc
 	}
 
 	@Override
-	public int getCurrentSliceIndex() { return sliceIndex; }
+	public int getCurrentSliceIndex()
+	{
+		return sliceIndex;
+	}
 
 	@Override
-	public T get() { return type; }
+	public T get()
+	{
+		return type;
+	}
 
 	@Override
 	public PlanarRandomAccess< T > copy()

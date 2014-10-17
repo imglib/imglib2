@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -62,28 +58,28 @@ import org.junit.Test;
  */
 public class AllConnectedComponentsTest
 {
-	private void test2D( boolean[][] input, int[][] expected, long[][] structuringElement, int start, int background )
+	private void test2D( final boolean[][] input, final int[][] expected, final long[][] structuringElement, final int start, final int background )
 	{
-		long[] dimensions = new long[] { input.length, input[ 0 ].length };
-		ArrayImgFactory< BitType > imgFactory = new ArrayImgFactory< BitType >();
-		ArrayImgFactory< IntType > labelingFactory = new ArrayImgFactory< IntType >();
-		ArrayImg< BitType, ? > image = imgFactory.create( dimensions, new BitType() );
-		NativeImgLabeling< Integer, IntType > labeling = new NativeImgLabeling< Integer, IntType >( labelingFactory.create( dimensions, new IntType() ) );
+		final long[] dimensions = new long[] { input.length, input[ 0 ].length };
+		final ArrayImgFactory< BitType > imgFactory = new ArrayImgFactory< BitType >();
+		final ArrayImgFactory< IntType > labelingFactory = new ArrayImgFactory< IntType >();
+		final ArrayImg< BitType, ? > image = imgFactory.create( dimensions, new BitType() );
+		final NativeImgLabeling< Integer, IntType > labeling = new NativeImgLabeling< Integer, IntType >( labelingFactory.create( dimensions, new IntType() ) );
 		/*
 		 * Fill the image.
 		 */
-		Cursor< BitType > c = image.localizingCursor();
-		int[] position = new int[ 2 ];
+		final Cursor< BitType > c = image.localizingCursor();
+		final int[] position = new int[ 2 ];
 		while ( c.hasNext() )
 		{
-			BitType t = c.next();
+			final BitType t = c.next();
 			c.localize( position );
 			t.set( input[ position[ 0 ] ][ position[ 1 ] ] );
 		}
 		/*
 		 * Run the algorithm.
 		 */
-		Iterator< Integer > names = AllConnectedComponents.getIntegerNames( start );
+		final Iterator< Integer > names = AllConnectedComponents.getIntegerNames( start );
 		if ( structuringElement == null )
 			AllConnectedComponents.labelAllConnectedComponents( labeling, image, names );
 		else
@@ -92,14 +88,14 @@ public class AllConnectedComponentsTest
 		/*
 		 * Check the result
 		 */
-		Cursor< LabelingType< Integer >> lc = labeling.localizingCursor();
-		HashMap< Integer, Integer > map = new HashMap< Integer, Integer >();
+		final Cursor< LabelingType< Integer >> lc = labeling.localizingCursor();
+		final HashMap< Integer, Integer > map = new HashMap< Integer, Integer >();
 		while ( lc.hasNext() )
 		{
-			LabelingType< Integer > lt = lc.next();
+			final LabelingType< Integer > lt = lc.next();
 			lc.localize( position );
-			List< Integer > labels = lt.getLabeling();
-			int expectedValue = expected[ ( position[ 0 ] ) ][ ( position[ 1 ] ) ];
+			final List< Integer > labels = lt.getLabeling();
+			final int expectedValue = expected[ ( position[ 0 ] ) ][ ( position[ 1 ] ) ];
 			if ( expectedValue == background )
 				assertEquals( labels.size(), 0 );
 			else
@@ -117,16 +113,16 @@ public class AllConnectedComponentsTest
 	@Test
 	public void testEmpty()
 	{
-		boolean[][] input = new boolean[ 3 ][ 3 ];
-		int[][] expected = new int[ 3 ][ 3 ];
+		final boolean[][] input = new boolean[ 3 ][ 3 ];
+		final int[][] expected = new int[ 3 ][ 3 ];
 		test2D( input, expected, null, 1, 0 );
 	}
 
 	@Test
 	public void testOne()
 	{
-		boolean[][] input = new boolean[][] { { false, false, false }, { false, true, false }, { false, false, false } };
-		int[][] expected = new int[][] { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
+		final boolean[][] input = new boolean[][] { { false, false, false }, { false, true, false }, { false, false, false } };
+		final int[][] expected = new int[][] { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } };
 		test2D( input, expected, null, 1, 0 );
 	}
 
@@ -136,10 +132,10 @@ public class AllConnectedComponentsTest
 		/*
 		 * Make sure that the labeler can handle out of bounds conditions
 		 */
-		for ( long[] offset : AllConnectedComponents.getStructuringElement( 2 ) )
+		for ( final long[] offset : AllConnectedComponents.getStructuringElement( 2 ) )
 		{
-			boolean[][] input = new boolean[ 3 ][ 3 ];
-			int[][] expected = new int[ 3 ][ 3 ];
+			final boolean[][] input = new boolean[ 3 ][ 3 ];
+			final int[][] expected = new int[ 3 ][ 3 ];
 
 			input[ ( int ) ( offset[ 0 ] ) + 1 ][ ( int ) ( offset[ 1 ] ) + 1 ] = true;
 			expected[ ( int ) ( offset[ 0 ] ) + 1 ][ ( int ) ( offset[ 1 ] ) + 1 ] = 1;
@@ -150,16 +146,16 @@ public class AllConnectedComponentsTest
 	@Test
 	public void testOneObject()
 	{
-		boolean[][] input = new boolean[][] { { false, false, false, false, false }, { false, true, true, true, false }, { false, true, true, true, false }, { false, true, true, true, false }, { false, false, false, false, false } };
-		int[][] expected = new int[][] { { 0, 0, 0, 0, 0 }, { 0, 1, 1, 1, 0 }, { 0, 1, 1, 1, 0 }, { 0, 1, 1, 1, 0 }, { 0, 0, 0, 0, 0 } };
+		final boolean[][] input = new boolean[][] { { false, false, false, false, false }, { false, true, true, true, false }, { false, true, true, true, false }, { false, true, true, true, false }, { false, false, false, false, false } };
+		final int[][] expected = new int[][] { { 0, 0, 0, 0, 0 }, { 0, 1, 1, 1, 0 }, { 0, 1, 1, 1, 0 }, { 0, 1, 1, 1, 0 }, { 0, 0, 0, 0, 0 } };
 		test2D( input, expected, null, 1, 0 );
 	}
 
 	@Test
 	public void testTwoObjects()
 	{
-		boolean[][] input = new boolean[][] { { false, false, false, false, false }, { false, true, true, true, false }, { false, false, false, false, false }, { false, true, true, true, false }, { false, false, false, false, false } };
-		int[][] expected = new int[][] { { 0, 0, 0, 0, 0 }, { 0, 1, 1, 1, 0 }, { 0, 0, 0, 0, 0 }, { 0, 2, 2, 2, 0 }, { 0, 0, 0, 0, 0 } };
+		final boolean[][] input = new boolean[][] { { false, false, false, false, false }, { false, true, true, true, false }, { false, false, false, false, false }, { false, true, true, true, false }, { false, false, false, false, false } };
+		final int[][] expected = new int[][] { { 0, 0, 0, 0, 0 }, { 0, 1, 1, 1, 0 }, { 0, 0, 0, 0, 0 }, { 0, 2, 2, 2, 0 }, { 0, 0, 0, 0, 0 } };
 		test2D( input, expected, null, 1, 0 );
 	}
 
@@ -170,8 +166,8 @@ public class AllConnectedComponentsTest
 		 * Internally, AllConnectedComponents has a custom stack that grows when
 		 * it hits 100 elements. So we exercise that code.
 		 */
-		boolean[][] input = new boolean[ 25 ][ 25 ];
-		int[][] expected = new int[ 25 ][ 25 ];
+		final boolean[][] input = new boolean[ 25 ][ 25 ];
+		final int[][] expected = new int[ 25 ][ 25 ];
 		for ( int i = 0; i < input.length; i++ )
 		{
 			Arrays.fill( input[ i ], true );
@@ -188,8 +184,8 @@ public class AllConnectedComponentsTest
 		 * code should fail on a 2-d array that needs to push more than 675 / 2
 		 * elements.
 		 */
-		boolean[][] input = new boolean[ 100 ][ 100 ];
-		int[][] expected = new int[ 100 ][ 100 ];
+		final boolean[][] input = new boolean[ 100 ][ 100 ];
+		final int[][] expected = new int[ 100 ][ 100 ];
 		for ( int i = 0; i < input.length; i++ )
 		{
 			Arrays.fill( input[ i ], true );
@@ -201,9 +197,9 @@ public class AllConnectedComponentsTest
 	@Test
 	public void testCustomStrel()
 	{
-		boolean[][] input = new boolean[][] { { false, false, false, false, false }, { false, true, true, true, false }, { true, false, false, false, false }, { false, true, true, true, false }, { false, false, false, false, false } };
-		int[][] expected = new int[][] { { 0, 0, 0, 0, 0 }, { 0, 1, 1, 1, 0 }, { 3, 0, 0, 0, 0 }, { 0, 2, 2, 2, 0 }, { 0, 0, 0, 0, 0 } };
-		long[][] strel = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+		final boolean[][] input = new boolean[][] { { false, false, false, false, false }, { false, true, true, true, false }, { true, false, false, false, false }, { false, true, true, true, false }, { false, false, false, false, false } };
+		final int[][] expected = new int[][] { { 0, 0, 0, 0, 0 }, { 0, 1, 1, 1, 0 }, { 3, 0, 0, 0, 0 }, { 0, 2, 2, 2, 0 }, { 0, 0, 0, 0, 0 } };
+		final long[][] strel = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 		test2D( input, expected, strel, 1, 0 );
 
 	}

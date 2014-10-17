@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.randomaccessibleinterval.unary;
@@ -44,7 +40,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * @author Clemens Muething (University of Konstanz)
  */
-public class GrayscaleReconstructionByDilation< T extends RealType< T >, V extends RealType< V >, MASK extends RandomAccessibleInterval< T >, MARKER extends RandomAccessibleInterval< V >> extends AbstractGrayscaleReconstruction< T, V, MASK, MARKER >
+public class GrayscaleReconstructionByDilation< T extends RealType< T >, V extends RealType< V >> extends AbstractGrayscaleReconstruction< T, V >
 {
 
 	public GrayscaleReconstructionByDilation( final ConnectedType connection )
@@ -52,7 +48,7 @@ public class GrayscaleReconstructionByDilation< T extends RealType< T >, V exten
 		super( connection );
 	}
 
-	public GrayscaleReconstructionByDilation( final GrayscaleReconstructionByDilation< T, V, MASK, MARKER > copy )
+	public GrayscaleReconstructionByDilation( final GrayscaleReconstructionByDilation< T, V > copy )
 	{
 		super( copy );
 	}
@@ -116,8 +112,8 @@ public class GrayscaleReconstructionByDilation< T extends RealType< T >, V exten
 	}
 
 	@Override
-	public UnaryOperation< MASK, MARKER > copy()
+	public UnaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V> > copy()
 	{
-		return new GrayscaleReconstructionByDilation< T, V, MASK, MARKER >( this );
+		return new GrayscaleReconstructionByDilation< T, V >( this );
 	}
 }

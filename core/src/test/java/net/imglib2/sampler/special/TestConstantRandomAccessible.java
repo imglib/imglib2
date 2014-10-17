@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,40 +40,50 @@ import net.imglib2.Sampler;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author leek
  */
-public class TestConstantRandomAccessible {
+public class TestConstantRandomAccessible
+{
 
 	/**
-	 * Test method for {@link net.imglib2.sampler.special.ConstantRealRandomAccessible#ConstantRealRandomAccessible(java.lang.Object, int)}.
+	 * Test method for
+	 * {@link net.imglib2.sampler.special.ConstantRealRandomAccessible#ConstantRealRandomAccessible(java.lang.Object, int)}
+	 * .
 	 */
 	@Test
-	public void testConstantRandomAccessible() {
-		new ConstantRandomAccessible<Integer>(5, 2);
+	public void testConstantRandomAccessible()
+	{
+		new ConstantRandomAccessible< Integer >( 5, 2 );
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.sampler.special.ConstantRealRandomAccessible#numDimensions()}.
+	 * Test method for
+	 * {@link net.imglib2.sampler.special.ConstantRealRandomAccessible#numDimensions()}
+	 * .
 	 */
 	@Test
-	public void testNumDimensions() {
-		ConstantRandomAccessible<Integer> x = new ConstantRandomAccessible<Integer>(5, 2);
-		assertEquals(2, x.numDimensions());
+	public void testNumDimensions()
+	{
+		final ConstantRandomAccessible< Integer > x = new ConstantRandomAccessible< Integer >( 5, 2 );
+		assertEquals( 2, x.numDimensions() );
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.sampler.special.ConstantRealRandomAccessible#realRandomAccess()}.
+	 * Test method for
+	 * {@link net.imglib2.sampler.special.ConstantRealRandomAccessible#realRandomAccess()}
+	 * .
 	 */
 	@Test
-	public void testRandomAccess() {
-		ConstantRandomAccessible<Integer> x = new ConstantRandomAccessible<Integer>(5, 2);
-		RandomAccess<Integer> y = x.randomAccess();
-		assertEquals(5, y.get().intValue());
+	public void testRandomAccess()
+	{
+		final ConstantRandomAccessible< Integer > x = new ConstantRandomAccessible< Integer >( 5, 2 );
+		RandomAccess< Integer > y = x.randomAccess();
+		assertEquals( 5, y.get().intValue() );
 		y = y.copyRandomAccess();
-		assertEquals(5, y.get().intValue());
-		Sampler<Integer> z = y.copy();
-		assertEquals(5, z.get().intValue());
+		assertEquals( 5, y.get().intValue() );
+		final Sampler< Integer > z = y.copy();
+		assertEquals( 5, z.get().intValue() );
 	}
 
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,11 +35,16 @@
 
 package net.imglib2.ops.function.real;
 
+import java.util.Arrays;
+
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.ops.pointset.PointSetIterator;
 import net.imglib2.ops.util.Tuple2;
 import net.imglib2.type.numeric.RealType;
+
+import org.scijava.util.DoubleArray;
+
 
 // NOTE:
 //   For a couple methods this class uses a PrimitiveDoubleArray to store copies
@@ -70,6 +71,9 @@ import net.imglib2.type.numeric.RealType;
 // an allocated size and a used element size. Finally one should be able to
 // efficiently sort the used values within it.
 
+// BDZ 7-19-13
+// all the above may have been addressed by using SciJava's DoubleArray.
+
 /**
  * 
  * StatCollector calculates statistics from a {@link PointSet} region of a
@@ -85,7 +89,7 @@ public class StatCalculator<T extends RealType<T>> {
 	private Function<long[],T> func;
 	private PointSet region;
 	private PointSetIterator iter;
-	private final PrimitiveDoubleArray values; // see NOTE at top re: this use
+	private final DoubleArray values; // see NOTE at top re: this use
 	
 	// -- constructor --
 
@@ -100,7 +104,7 @@ public class StatCalculator<T extends RealType<T>> {
 		this.func = func;
 		this.region = region;
 		this.iter = region.iterator();
-		this.values = new PrimitiveDoubleArray();
+		this.values = new DoubleArray();
 	}
 
 	// -- public api --
@@ -146,7 +150,7 @@ public class StatCalculator<T extends RealType<T>> {
 			func.compute(pos, tmp);
 			values.add(tmp.getRealDouble());
 		}
-		values.sortValues();
+		Arrays.sort(values.getArray(), 0, values.size());
 		double tailSize = alpha * values.size();
 		// can we avoid interpolation?
 		if (tailSize == Math.floor(tailSize)) {
@@ -322,20 +326,20 @@ public class StatCalculator<T extends RealType<T>> {
 			func.compute(pos, tmp);
 			values.add(tmp.getRealDouble());
 		}
-		final int numElements = values.size();
-		if (numElements <= 0)
+		int count = values.size();
+
+		if (count <= 0)
 			throw new IllegalArgumentException(
 				"number of samples must be greater than 0");
 		
-		values.sortValues();
+		Arrays.sort(values.getArray(), 0, count);
 
 		// odd number of elements
-		if ((numElements % 2) == 1)
-			return values.get(numElements/2);
+		if ((count % 2) == 1) return values.getValue(count / 2);
 		
 		// else an even number of elements
-		double value1 = values.get((numElements/2) - 1); 
-		double value2 = values.get((numElements/2));
+		double value1 = values.getValue((count / 2) - 1);
+		double value2 = values.getValue((count / 2));
 		return (value1 + value2) / 2;
 	}
 	
@@ -621,7 +625,7 @@ public class StatCalculator<T extends RealType<T>> {
 			func.compute(pos, tmp);
 			values.add(tmp.getRealDouble());
 		}
-		values.sortValues();
+		Arrays.sort(values.getArray(), 0, values.size());
 		return calcTrimmedMean(values, halfTrimSize);
 	}
 
@@ -671,16 +675,16 @@ public class StatCalculator<T extends RealType<T>> {
 
 	// NB - assumes values already sorted
 
-	private double calcTrimmedMean(PrimitiveDoubleArray vals, int halfTrim) {
+	private double calcTrimmedMean(DoubleArray vals, int halfTrim) {
 		final int trimSize = halfTrim * 2;
-		final int numElements = vals.size();
-		if (numElements <= trimSize) throw new IllegalArgumentException(
+		final int numElem = vals.size();
+		if (numElem <= trimSize) throw new IllegalArgumentException(
 			"number of samples must be greater than number of trimmed values");
-		final int top = numElements - halfTrim;
+		final int top = numElem - halfTrim;
 		double sum = 0;
 		for (int i = halfTrim; i < top; i++) {
-			sum += vals.get(i);
+			sum += vals.getValue(i);
 		}
-		return sum / (numElements - trimSize);
+		return sum / (numElem - trimSize);
 	}
 }

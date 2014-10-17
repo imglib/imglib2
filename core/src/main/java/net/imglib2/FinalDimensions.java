@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,34 +28,32 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2;
 
 /**
- * An implementation of dimensionality that can wrap a long[] array. The same principle
- * for wrapping as in Point is used.
+ * An implementation of dimensionality that can wrap a long[] array. The same
+ * principle for wrapping as in Point is used.
  * 
  * @author Stephan Preibisch
  */
 public class FinalDimensions implements Dimensions
 {
 	final long[] dimensions;
-	
+
 	/**
 	 * Protected constructor that can re-use the passed position array.
-	 *
-	 * @param dimensions - array used to store the position.
-	 * @param copy - flag indicating whether position array should be duplicated.
+	 * 
+	 * @param dimensions
+	 *            - array used to store the position.
+	 * @param copy
+	 *            - flag indicating whether position array should be duplicated.
 	 */
 	protected FinalDimensions( final long[] dimensions, final boolean copy )
 	{
-		if ( copy ) 
+		if ( copy )
 			this.dimensions = dimensions.clone();
 		else
 			this.dimensions = dimensions;
@@ -64,48 +62,64 @@ public class FinalDimensions implements Dimensions
 	/**
 	 * Creates a FinalDimensions object with size zero in all dimensions
 	 * 
-	 * @param n - number of dimensions
+	 * @param n
+	 *            - number of dimensions
 	 */
-	public FinalDimensions( final int n ) { this.dimensions = new long[ n ]; }
-	
-	/**
-	 * Create a FinalDimensions with a defined size
-	 * 
-	 * @param dimensions - the size
-	 */
-	public FinalDimensions( final long... dimensions ) { this( dimensions, true ); }
+	public FinalDimensions( final int n )
+	{
+		this.dimensions = new long[ n ];
+	}
 
 	/**
 	 * Create a FinalDimensions with a defined size
 	 * 
-	 * @param dimensions - the size
+	 * @param dimensions
+	 *            - the size
+	 */
+	public FinalDimensions( final long... dimensions )
+	{
+		this( dimensions, true );
+	}
+
+	/**
+	 * Create a FinalDimensions with a defined size
+	 * 
+	 * @param dimensions
+	 *            - the size
 	 */
 	public FinalDimensions( final int... dimensions )
 	{
 		this.dimensions = new long[ dimensions.length ];
-		
+
 		for ( int d = 0; d < dimensions.length; ++d )
 			this.dimensions[ d ] = dimensions[ d ];
 	}
 
 	@Override
-	public int numDimensions() { return dimensions.length; }
+	public int numDimensions()
+	{
+		return dimensions.length;
+	}
 
 	@Override
 	public void dimensions( final long[] dims )
 	{
 		for ( int d = 0; d < dims.length; ++d )
-			this.dimensions[ d ] = dims[ d ];
+			dims[ d ] = this.dimensions[ d ];
 	}
 
 	@Override
-	public long dimension( final int d ) { return dimensions[ d ]; }
-	
+	public long dimension( final int d )
+	{
+		return dimensions[ d ];
+	}
+
 	/**
-	 * Create a FinalDimensions object that stores its coordinates in the provided position
-	 * array.
-	 *
-	 * @param dimensions -array to use for storing the position.
+	 * Create a FinalDimensions object that stores its coordinates in the
+	 * provided position array.
+	 * 
+	 * @param dimensions
+	 *            -array to use for storing the position.
 	 */
 	public static FinalDimensions wrap( final long[] dimensions )
 	{

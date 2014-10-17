@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,56 +28,31 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.algorithm.region.localneighborhood;
 
-import net.imglib2.AbstractInterval;
+import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RandomAccessible;
 
-public class HyperSphereNeighborhoodRandomAccess< T > extends AbstractInterval implements RandomAccess< Neighborhood< T > >
+public class HyperSphereNeighborhoodRandomAccess< T > extends HypersphereNeighborhoodLocalizableSampler< T > implements RandomAccess< Neighborhood< T > >
 {
-	protected final RandomAccessibleInterval< T > source;
-
-	protected final long radius;
-
-	protected final HyperSphereNeighborhoodFactory< T > neighborhoodFactory;
-
-	protected final Neighborhood< T > currentNeighborhood;
-
-	protected final long[] currentPos;
-
-	public HyperSphereNeighborhoodRandomAccess( final RandomAccessibleInterval< T > source, final long radius, final HyperSphereNeighborhoodFactory< T > factory )
+	public HyperSphereNeighborhoodRandomAccess( final RandomAccessible< T > source, final long radius, final HyperSphereNeighborhoodFactory< T > factory )
 	{
-		super( source );
-		this.source = source;
-		this.radius = radius;
-		neighborhoodFactory = factory;
-		currentPos = new long[ n ];
-		currentNeighborhood = neighborhoodFactory.create( currentPos, radius, source.randomAccess() );
+		super( source, radius, factory, null );
+	}
+
+	public HyperSphereNeighborhoodRandomAccess( final RandomAccessible< T > source, final long radius, final HyperSphereNeighborhoodFactory< T > factory, final Interval interval )
+	{
+		super( source, radius, factory, interval );
 	}
 
 	protected HyperSphereNeighborhoodRandomAccess( final HyperSphereNeighborhoodRandomAccess< T > c )
 	{
-		super( c.source );
-		source = c.source;
-		radius = c.radius;
-		neighborhoodFactory = c.neighborhoodFactory;
-		currentPos = c.currentPos.clone();
-		currentNeighborhood = neighborhoodFactory.create( currentPos, radius, source.randomAccess() );
-	}
-
-	@Override
-	public Neighborhood< T > get()
-	{
-		return currentNeighborhood;
+		super( c );
 	}
 
 	@Override
@@ -168,53 +143,5 @@ public class HyperSphereNeighborhoodRandomAccess< T > extends AbstractInterval i
 	public HyperSphereNeighborhoodRandomAccess< T > copyRandomAccess()
 	{
 		return copy();
-	}
-
-	@Override
-	public void localize( final int[] position )
-	{
-		currentNeighborhood.localize( position );
-	}
-
-	@Override
-	public void localize( final long[] position )
-	{
-		currentNeighborhood.localize( position );
-	}
-
-	@Override
-	public int getIntPosition( final int d )
-	{
-		return currentNeighborhood.getIntPosition( d );
-	}
-
-	@Override
-	public long getLongPosition( final int d )
-	{
-		return currentNeighborhood.getLongPosition( d );
-	}
-
-	@Override
-	public void localize( final float[] position )
-	{
-		currentNeighborhood.localize( position );
-	}
-
-	@Override
-	public void localize( final double[] position )
-	{
-		currentNeighborhood.localize( position );
-	}
-
-	@Override
-	public float getFloatPosition( final int d )
-	{
-		return currentNeighborhood.getFloatPosition( d );
-	}
-
-	@Override
-	public double getDoublePosition( final int d )
-	{
-		return currentNeighborhood.getDoublePosition( d );
 	}
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,12 +28,9 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
+
 package net.imglib2.realtransform;
 
 import net.imglib2.EuclideanSpace;
@@ -41,28 +38,29 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;
 
 /**
- * 3d inverse perspective transformation.  Implemented as singleton as it has
- * no properties.
- *
+ * 3d inverse perspective transformation. Implemented as singleton as it has no
+ * properties.
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class InversePerspective3D implements InvertibleRealTransform, EuclideanSpace
 {
 	final static protected InversePerspective3D instance = new InversePerspective3D();
-	
-	private InversePerspective3D() {}
-	
+
+	private InversePerspective3D()
+	{}
+
 	static public InversePerspective3D getInstance()
 	{
 		return instance;
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{
 		return 3;
 	}
-	
+
 	@Override
 	public int numSourceDimensions()
 	{
@@ -78,8 +76,8 @@ public class InversePerspective3D implements InvertibleRealTransform, EuclideanS
 	@Override
 	public void apply( final double[] source, final double[] target )
 	{
-		assert source.length >= 3 && target.length >= 3 : "Input dimensions too small.";
-		
+		assert source.length >= 3 && target.length >= 3: "Input dimensions too small.";
+
 		target[ 0 ] = source[ 0 ] * source[ 2 ];
 		target[ 1 ] = source[ 1 ] * source[ 2 ];
 //		target[ 2 ] = source[ 2 ] / source[ 2 ];
@@ -88,8 +86,8 @@ public class InversePerspective3D implements InvertibleRealTransform, EuclideanS
 	@Override
 	public void apply( final float[] source, final float[] target )
 	{
-		assert source.length >= 3 && target.length >= 3 : "Input dimensions too small.";
-		
+		assert source.length >= 3 && target.length >= 3: "Input dimensions too small.";
+
 		target[ 0 ] = source[ 0 ] * source[ 2 ];
 		target[ 1 ] = source[ 1 ] * source[ 2 ];
 //		target[ 2 ] = source[ 2 ] / source[ 2 ];
@@ -98,8 +96,8 @@ public class InversePerspective3D implements InvertibleRealTransform, EuclideanS
 	@Override
 	public void apply( final RealLocalizable source, final RealPositionable target )
 	{
-		assert source.numDimensions() >= 3 && target.numDimensions() >= 3 : "Input dimensions too small.";
-		
+		assert source.numDimensions() >= 3 && target.numDimensions() >= 3: "Input dimensions too small.";
+
 		final double z = source.getDoublePosition( 2 );
 		target.setPosition( source.getDoublePosition( 0 ) * z, 0 );
 		target.setPosition( source.getDoublePosition( 1 ) * z, 1 );
@@ -109,8 +107,8 @@ public class InversePerspective3D implements InvertibleRealTransform, EuclideanS
 	@Override
 	public void applyInverse( final double[] source, final double[] target )
 	{
-		assert source.length >= 3 && target.length >= 3 : "Input dimensions too small.";
-		
+		assert source.length >= 3 && target.length >= 3: "Input dimensions too small.";
+
 		source[ 0 ] = target[ 0 ] / target[ 2 ];
 		source[ 1 ] = target[ 1 ] / target[ 2 ];
 //		source[ 2 ] = target[ 2 ] * target[ 2 ];
@@ -119,8 +117,8 @@ public class InversePerspective3D implements InvertibleRealTransform, EuclideanS
 	@Override
 	public void applyInverse( final float[] source, final float[] target )
 	{
-		assert source.length >= 3 && target.length >= 3 : "Input dimensions too small.";
-		
+		assert source.length >= 3 && target.length >= 3: "Input dimensions too small.";
+
 		source[ 0 ] = target[ 0 ] / target[ 2 ];
 		source[ 1 ] = target[ 1 ] / target[ 2 ];
 //		source[ 2 ] = target[ 2 ] * target[ 2 ];
@@ -129,8 +127,8 @@ public class InversePerspective3D implements InvertibleRealTransform, EuclideanS
 	@Override
 	public void applyInverse( final RealPositionable source, final RealLocalizable target )
 	{
-		assert source.numDimensions() >= 3 && target.numDimensions() >= 3 : "Input dimensions too small.";
-		
+		assert source.numDimensions() >= 3 && target.numDimensions() >= 3: "Input dimensions too small.";
+
 		final double z = target.getDoublePosition( 2 );
 		source.setPosition( target.getDoublePosition( 0 ) / z, 0 );
 		source.setPosition( target.getDoublePosition( 1 ) / z, 1 );
@@ -142,11 +140,11 @@ public class InversePerspective3D implements InvertibleRealTransform, EuclideanS
 	{
 		return Perspective3D.getInstance();
 	}
-	
+
 	@Override
 	public InversePerspective3D copy()
 	{
 		return this;
 	}
-	
+
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -42,12 +38,12 @@ import net.imglib2.RealPositionable;
 
 /**
  * Transforms scaled polar to translated cartesian coordinates.
- *
+ * 
  * The source coordinate <em>(r,&theta;)</em> is scaled by
  * <em>s<sub>r</sub></em>, <em>s<sub>&theta;</sub></em> then converted to
  * cartesian <em>(x',y')</em> and translated by <em>t</em> to obtain the target
  * coordinate <em>(x,y)</em>.
- *
+ * 
  * The translation <em>t</em> represents the origin of the polar transform. The
  * scale factors <em>s<sub>r</sub></em> and <em>s<sub>&theta;</sub></em>
  * respresent the radial and angular resolution of the polar image. For example,
@@ -55,10 +51,10 @@ import net.imglib2.RealPositionable;
  * corresponds to <em>1/3</em> pixel along the ray.
  * <em>s<sub>&theta;</sub>=36/(2*&Pi;)</em> means that pixel height in the polar
  * image corresponds to 10 degree.
- *
+ * 
  * For the inverse transform (cartesian to polar), the range of the computed
  * (unscaled) <em>&theta;</em> is <em>-pi</em> to <em>pi</em>.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class ScaledPolarToTranslatedCartesianTransform2D implements InvertibleRealTransform
@@ -173,7 +169,7 @@ public class ScaledPolarToTranslatedCartesianTransform2D implements InvertibleRe
 	{
 		return inverse;
 	}
-	
+
 	@Override
 	public ScaledPolarToTranslatedCartesianTransform2D copy()
 	{

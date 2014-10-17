@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -27,7 +27,8 @@
 package net.imglib2.algorithm.pde;
 
 import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
@@ -49,9 +50,12 @@ public abstract class ExplicitDiffusionScheme2D<T extends RealType<T>> extends E
 	 * PROTECTED CONSTRUCTOR
 	 */
 
-	public ExplicitDiffusionScheme2D(final Img<T> input, final Img<FloatType> D) {
+	public ExplicitDiffusionScheme2D(final RandomAccessibleInterval<T> input, final RandomAccessibleInterval<FloatType> D) {
 		super(input, D);
-		
+	}
+	
+	public ExplicitDiffusionScheme2D(final RandomAccessibleInterval<T> input, final RandomAccessibleInterval<FloatType> D, ImgFactory<FloatType> imgFactory) {
+		super(input, D, imgFactory);
 	}
 
 	/*

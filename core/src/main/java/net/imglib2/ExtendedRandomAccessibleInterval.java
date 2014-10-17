@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -43,9 +39,9 @@ import net.imglib2.util.Intervals;
 
 /**
  * Implements {@link RandomAccessible} for a {@link RandomAccessibleInterval}
- * through an {@link OutOfBoundsFactory}.
- * Note that it is not an Interval itself.
- *
+ * through an {@link OutOfBoundsFactory}. Note that it is not an Interval
+ * itself.
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch
@@ -53,6 +49,7 @@ import net.imglib2.util.Intervals;
 final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >
 {
 	final protected F source;
+
 	final protected OutOfBoundsFactory< T, ? super F > factory;
 
 	public ExtendedRandomAccessibleInterval( final F source, final OutOfBoundsFactory< T, ? super F > factory )
@@ -78,10 +75,7 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	{
 		assert source.numDimensions() == interval.numDimensions();
 
-		if ( Intervals.contains( source, interval ) )
-		{
-			return source.randomAccess( interval );
-		}
+		if ( Intervals.contains( source, interval ) ) { return source.randomAccess( interval ); }
 		return randomAccess();
 	}
 

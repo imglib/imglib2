@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -42,10 +38,11 @@ import java.util.BitSet;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.ops.operation.UnaryOutputOperation;
+import net.imglib2.ops.operation.metadata.unary.CopyMetadata;
 import net.imglib2.type.Type;
 
 /**
@@ -81,7 +78,10 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 	{
 
 		AxisType[] axes = new AxisType[ op.numDimensions() ];
-		op.axes( axes );
+		for ( int d = 0; d < axes.length; d++ )
+		{
+			axes[ d ] = op.axis( d ).type();
+		}
 		m_isNewDim.clear();
 		for ( int d = 0; d < m_newDimensions.length; d++ )
 		{
@@ -111,12 +111,11 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 		Cursor< T > srcCur = op.localizingCursor();
 		RandomAccess< T > resRA = r.randomAccess();
 
-		// TODO: Copy metadata!
-		r.setName( op.getName() );
+		new CopyMetadata().compute(op, r);
 
 		for ( int d = 0; d < op.numDimensions(); d++ )
 		{
-			r.setAxis( Axes.get( op.axis( d ).getLabel() ), d );
+			r.axis( d ).setType( Axes.get( op.axis( d ).type().getLabel() ) );
 		}
 
 		int d = op.numDimensions();
@@ -124,7 +123,7 @@ public class ImgPlusExtendDims< T extends Type< T >> implements UnaryOutputOpera
 		{
 			if ( m_isNewDim.get( i ) )
 			{
-				r.setAxis( Axes.get( m_newDimensions[ i ] ), d );
+				r.axis( d ).setType( Axes.get( m_newDimensions[ i ] ) );
 				d++;
 			}
 		}

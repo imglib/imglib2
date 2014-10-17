@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,6 +35,7 @@ package net.imglib2.util;
 
 import java.util.List;
 
+import net.imglib2.Dimensions;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
@@ -49,6 +46,11 @@ import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.RealRandomAccessibleRealInterval;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ExponentialMathType;
 
@@ -71,6 +73,7 @@ public class Util
 		return Math.log( value ) / Math.log( 2.0 );
 	}
 
+	// TODO: move to ArrayUtil?
 	public static double[] getArrayFromValue( final double value, final int numDimensions )
 	{
 		final double[] values = new double[ numDimensions ];
@@ -81,6 +84,7 @@ public class Util
 		return values;
 	}
 
+	// TODO: move to ArrayUtil?
 	public static float[] getArrayFromValue( final float value, final int numDimensions )
 	{
 		final float[] values = new float[ numDimensions ];
@@ -91,6 +95,7 @@ public class Util
 		return values;
 	}
 
+	// TODO: move to ArrayUtil?
 	public static int[] getArrayFromValue( final int value, final int numDimensions )
 	{
 		final int[] values = new int[ numDimensions ];
@@ -101,6 +106,7 @@ public class Util
 		return values;
 	}
 
+	// TODO: move to ArrayUtil?
 	public static long[] getArrayFromValue( final long value, final int numDimensions )
 	{
 		final long[] values = new long[ numDimensions ];
@@ -878,29 +884,31 @@ public class Util
 	}
 
 	/**
-	 * recursively get coordinates covering all binary combinations for the given dimensionality
-	 *
+	 * recursively get coordinates covering all binary combinations for the
+	 * given dimensionality
+	 * 
 	 * example for 3d:
-	 *
-	 * x y z index
-	 * 0 0 0 [0]
-	 * 1 0 0 [1]
-	 * 0 1 0 [2]
-	 * 1 1 0 [3]
-	 * 0 0 1 [4]
-	 * 1 0 1 [5]
-	 * 0 1 1 [6]
-	 * 1 1 1 [7]
-	 *
+	 * 
+	 * x y z index 0 0 0 [0] 1 0 0 [1] 0 1 0 [2] 1 1 0 [3] 0 0 1 [4] 1 0 1 [5] 0
+	 * 1 1 [6] 1 1 1 [7]
+	 * 
 	 * All typical call will look like that:
-	 *
-	 * boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ];
-	 * MathLib.setCoordinateRecursive( numDimensions - 1, numDimensions, new int[ numDimensions ], positions );
-	 *
-	 * @param dimension - recusively changed current dimension, init with numDimensions - 1
-	 * @param numDimensions - the number of dimensions
-	 * @param location - recursively changed current state, init with new int[ numDimensions ]
-	 * @param result - where the result will be stored when finished, needes a boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ]
+	 * 
+	 * boolean[][] positions = new boolean[ MathLib.pow( 2, numDimensions ) ][
+	 * numDimensions ]; MathLib.setCoordinateRecursive( numDimensions - 1,
+	 * numDimensions, new int[ numDimensions ], positions );
+	 * 
+	 * @param dimension
+	 *            - recusively changed current dimension, init with
+	 *            numDimensions - 1
+	 * @param numDimensions
+	 *            - the number of dimensions
+	 * @param location
+	 *            - recursively changed current state, init with new int[
+	 *            numDimensions ]
+	 * @param result
+	 *            - where the result will be stored when finished, needes a
+	 *            boolean[ MathLib.pow( 2, numDimensions ) ][ numDimensions ]
 	 */
 	public static void setCoordinateRecursive( final int dimension, final int numDimensions, final int[] location, final boolean[][] result )
 	{
@@ -944,6 +952,9 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, use {@link Intervals#dimensionsAsLongArray(Dimensions)}
+	 * instead.
+	 * 
 	 * <p>
 	 * Create a long[] with the dimensions of an {@link Interval}.
 	 * </p>
@@ -957,6 +968,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new long[]
 	 */
+	@Deprecated
 	final static public long[] intervalDimensions( final Interval interval )
 	{
 		final long[] dimensions = new long[ interval.numDimensions() ];
@@ -985,6 +997,8 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, use {@link Intervals#maxAsLongArray(Interval)} instead.
+	 * 
 	 * <p>
 	 * Create a long[] with the max coordinates of an {@link Interval}.
 	 * </p>
@@ -998,6 +1012,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new long[]
 	 */
+	@Deprecated
 	final static public long[] intervalMax( final Interval interval )
 	{
 		final long[] max = new long[ interval.numDimensions() ];
@@ -1006,6 +1021,8 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, use {@link Intervals#minAsLongArray(Interval)} instead.
+	 * 
 	 * <p>
 	 * Create a long[] with the min coordinates of an {@link Interval}.
 	 * </p>
@@ -1019,6 +1036,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new long[]
 	 */
+	@Deprecated
 	final static public long[] intervalMin( final Interval interval )
 	{
 		final long[] min = new long[ interval.numDimensions() ];
@@ -1027,6 +1045,8 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, no replacement.
+	 * 
 	 * <p>
 	 * Create a double[] with the dimensions of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.
@@ -1041,6 +1061,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new double[]
 	 */
+	@Deprecated
 	final static public double[] realIntervalDimensions( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
@@ -1053,6 +1074,8 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, use {@link Intervals#maxAsDoubleArray(RealInterval)} instead.
+	 * 
 	 * <p>
 	 * Create a double[] with the max coordinates of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.
@@ -1067,6 +1090,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new double[]
 	 */
+	@Deprecated
 	final static public double[] realIntervalMax( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
@@ -1079,6 +1103,8 @@ public class Util
 	}
 
 	/**
+	 * Deprecated, use {@link Intervals#minAsDoubleArray(RealInterval)} instead.
+	 * 
 	 * <p>
 	 * Create a double[] with the min coordinates of a {@link RealInterval}.
 	 * Dimensions are returned as <em>max</em> - <em>min</em>.
@@ -1093,6 +1119,7 @@ public class Util
 	 * 
 	 * @return dimensions of the interval as a new double[]
 	 */
+	@Deprecated
 	final static public double[] realIntervalMin( final RealInterval interval )
 	{
 		final int n = interval.numDimensions();
@@ -1183,6 +1210,53 @@ public class Util
 	}
 
 	/**
+	 * Create an {@link ArrayImgFactory} if an image of the requested
+	 * <code>targetSize</code> could be held in an {@link ArrayImg}. Otherwise
+	 * return a {@link CellImgFactory} with as large as possible cell size.
+	 * 
+	 * @param targetSize
+	 *            size of image that the factory should be able to create.
+	 * @param type
+	 *            type of the factory.
+	 * @return an {@link ArrayImgFactory} or a {@link CellImgFactory}.
+	 */
+	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final T type )
+	{
+		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
+			return new ArrayImgFactory< T >();
+		final int cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
+		return new CellImgFactory< T >( cellSize );
+	}
+
+	/**
+	 * Create an {@link ArrayImgFactory} if an image of the requested
+	 * <code>targetSize</code> could be held in an {@link ArrayImg}. Otherwise
+	 * return a {@link CellImgFactory} with cell size
+	 * <code>targetCellSize</code> (or as large as possible if
+	 * <code>targetCellSize</code> is too large).
+	 * 
+	 * @param targetSize
+	 *            size of image that the factory should be able to create.
+	 * @param targetCellSize
+	 *            if a {@link CellImgFactory} is created, what should be the
+	 *            cell size.
+	 * @param type
+	 *            type of the factory.
+	 * @return an {@link ArrayImgFactory} or a {@link CellImgFactory}.
+	 */
+	public static < T extends NativeType< T > > ImgFactory< T > getArrayOrCellImgFactory( final Dimensions targetSize, final int targetCellSize, final T type )
+	{
+		if ( Intervals.numElements( targetSize ) <= Integer.MAX_VALUE )
+			return new ArrayImgFactory< T >();
+		final int cellSize;
+		if ( Math.pow( targetCellSize, targetSize.numDimensions() ) <= Integer.MAX_VALUE )
+			cellSize = targetCellSize;
+		else
+			cellSize = ( int ) Math.pow( Integer.MAX_VALUE / type.getEntitiesPerPixel().getRatio(), 1.0 / targetSize.numDimensions() );
+		return new CellImgFactory< T >( cellSize );
+	}
+
+	/**
 	 * (Hopefully) fast floor log<sub>2</sub> of an unsigned(!) integer value.
 	 * 
 	 * @param v
@@ -1215,7 +1289,7 @@ public class Util
 
 		return true;
 	}
-	
+
 	/**
 	 * Writes min(a,b) into a
 	 * 
@@ -1225,9 +1299,10 @@ public class Util
 	final static public void min( final double[] a, final double[] b )
 	{
 		for ( int i = 0; i < a.length; ++i )
-			if ( b[ i ] < a[ i ] ) a[ i ] = b[ i ];
+			if ( b[ i ] < a[ i ] )
+				a[ i ] = b[ i ];
 	}
-	
+
 	/**
 	 * Writes max(a,b) into a
 	 * 
@@ -1237,6 +1312,7 @@ public class Util
 	final static public void max( final double[] a, final double[] b )
 	{
 		for ( int i = 0; i < a.length; ++i )
-			if ( b[ i ] > a[ i ] ) a[ i ] = b[ i ];
+			if ( b[ i ] > a[ i ] )
+				a[ i ] = b[ i ];
 	}
 }

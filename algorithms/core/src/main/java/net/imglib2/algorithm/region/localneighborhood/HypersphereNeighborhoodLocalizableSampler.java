@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,24 +28,25 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.algorithm.region.localneighborhood;
 
-import net.imglib2.AbstractInterval;
+import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.FinalInterval;
+import net.imglib2.Interval;
 import net.imglib2.Localizable;
-import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RandomAccessible;
 import net.imglib2.Sampler;
 
-public abstract class HypersphereNeighborhoodLocalizableSampler< T > extends AbstractInterval implements Localizable, Sampler< Neighborhood< T > >
+public abstract class HypersphereNeighborhoodLocalizableSampler< T > extends AbstractEuclideanSpace implements Localizable, Sampler< Neighborhood< T > >
 {
-	protected final RandomAccessibleInterval< T > source;
+	protected final RandomAccessible< T > source;
+
+	protected final long radius;
+
+	protected final Interval sourceInterval;
 
 	protected final HyperSphereNeighborhoodFactory< T > neighborhoodFactory;
 
@@ -53,35 +54,42 @@ public abstract class HypersphereNeighborhoodLocalizableSampler< T > extends Abs
 
 	protected final long[] currentPos;
 
-	protected final long radius;
-
-	public HypersphereNeighborhoodLocalizableSampler( final RandomAccessibleInterval< T > source, final long radius, final HyperSphereNeighborhoodFactory< T > factory )
+	public HypersphereNeighborhoodLocalizableSampler( final RandomAccessible< T > source, final long radius, final HyperSphereNeighborhoodFactory< T > factory, final Interval accessInterval )
 	{
-		super( source );
+		super( source.numDimensions() );
 		this.source = source;
 		this.radius = radius;
 		neighborhoodFactory = factory;
 		currentPos = new long[ n ];
-		final long[] accessMin = new long[ n ];
-		final long[] accessMax = new long[ n ];
-		source.min( accessMin );
-		source.max( accessMax );
-		for ( int d = 0; d < n; ++d )
+		if ( accessInterval == null )
+			sourceInterval = null;
+		else
 		{
-			accessMin[ d ] -= radius;
-			accessMax[ d ] += radius;
+			final long[] accessMin = new long[ n ];
+			final long[] accessMax = new long[ n ];
+			accessInterval.min( accessMin );
+			accessInterval.max( accessMax );
+			for ( int d = 0; d < n; ++d )
+			{
+				accessMin[ d ] -= radius;
+				accessMax[ d ] += radius;
+			}
+			sourceInterval = new FinalInterval( accessMin, accessMax );
 		}
-		currentNeighborhood = neighborhoodFactory.create( currentPos, radius, source.randomAccess( new FinalInterval( accessMin, accessMax ) ) );
+		currentNeighborhood = neighborhoodFactory.create( currentPos, radius,
+				sourceInterval == null ? source.randomAccess() : source.randomAccess( sourceInterval ) );
 	}
 
 	protected HypersphereNeighborhoodLocalizableSampler( final HypersphereNeighborhoodLocalizableSampler< T > c )
 	{
-		super( c.source );
+		super( c.n );
 		source = c.source;
 		radius = c.radius;
+		sourceInterval = c.sourceInterval;
 		neighborhoodFactory = c.neighborhoodFactory;
 		currentPos = c.currentPos.clone();
-		currentNeighborhood = neighborhoodFactory.create( currentPos, radius, source.randomAccess() );
+		currentNeighborhood = neighborhoodFactory.create( currentPos, radius,
+				sourceInterval == null ? source.randomAccess() : source.randomAccess( sourceInterval ) );
 	}
 
 	@Override

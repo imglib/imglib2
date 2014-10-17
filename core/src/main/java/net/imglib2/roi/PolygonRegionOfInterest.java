@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -504,7 +500,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	protected void getRealExtrema( final double[] minima, final double[] maxima )
 	{
 		Arrays.fill( minima, Double.MAX_VALUE );
-		Arrays.fill( maxima, Double.MIN_VALUE );
+		Arrays.fill( maxima, -Double.MAX_VALUE );
 		for ( int i = 0; i < points.size(); i++ )
 		{
 			final RealPoint p = points.get( i );
@@ -852,7 +848,7 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 		{
 			x_intercepts = new double[ 2 ];
 		}
-		x_intercepts[ 0 ] = Double.MIN_VALUE;
+		x_intercepts[ 0 ] = -Double.MAX_VALUE;
 		x_intercepts[ 1 ] = Double.MAX_VALUE;
 		int count_to_left = 0;
 		for ( int i = 0; i < getVertexCount(); i++ )
@@ -916,10 +912,12 @@ public class PolygonRegionOfInterest extends AbstractIterableRegionOfInterest
 	}
 
 	@Override
-	public void move(final double displacement, final int d) {
-		for (final RealPoint p : points) {
-			final double currPos = p.getDoublePosition(d);
-			p.setPosition(currPos + displacement, d);
+	public void move( final double displacement, final int d )
+	{
+		for ( final RealPoint p : points )
+		{
+			final double currPos = p.getDoublePosition( d );
+			p.setPosition( currPos + displacement, d );
 		}
 		invalidateCachedState();
 		stripes = null;

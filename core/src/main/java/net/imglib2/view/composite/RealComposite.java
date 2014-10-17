@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,23 +28,27 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.view.composite;
 
 import net.imglib2.RandomAccess;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.list.ListImgFactory;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * 
+ * A vector of {@link RealType} scalars.  It is a {@link NumericType}
+ * itself, implementing the {@link NumericType} algebra as element-wise
+ * operations.
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
-public class RealComposite< T extends RealType< T > > extends NumericComposite< T >
+public class RealComposite< T extends RealType< T > > extends AbstractNumericComposite< T, RealComposite< T > >
 {
 	static public class Factory< T extends RealType< T > > implements CompositeFactory< T, RealComposite< T > > 
 	{
@@ -65,5 +69,27 @@ public class RealComposite< T extends RealType< T > > extends NumericComposite< 
 	public RealComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
 		super( sourceAccess, length );
+	}
+
+	/**
+	 * Generates a 1D {@link ArrayImg}&lt;T&gt; 
+	 */
+	@Override
+	@SuppressWarnings( { "unchecked", "rawtypes" } )
+	public RealComposite< T > createVariable()
+	{
+		final T t = sourceAccess.get();
+		final Img< T > img;
+		if ( NativeType.class.isInstance( t ) )
+			img = ( ( NativeType )t ).createSuitableNativeImg( new ArrayImgFactory(), new long[]{ length } );
+		else
+			img = new ListImgFactory< T >().create( new long[]{ length }, t );
+		return new RealComposite< T >( img.randomAccess(), length );
+	}
+
+	@Override
+	public RealComposite< T > copy()
+	{
+		return new RealComposite< T >( sourceAccess.copyRandomAccess(), length );
 	}
 }

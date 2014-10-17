@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,14 +41,14 @@ import net.imglib2.RealRandomAccessible;
 
 /**
  * A {@link RealRandomAccessible} whose samples are generated from a
- * {@link RealRandomAccessible} transformed by an
- * {@link AffineGet affine transformation}.  Changing the
- * {@link AffineGet affine transformation} will affect the
- * {@link AffineRealRandomAccessible} and any {@link RealRandomAccess} on it.
- * Make sure that you either request a new {@link RealRandomAccess} after
- * modifying the transformation or perform a full initialization (e.g.
- * setPosition(double[])) of any existing one before making any relative move. 
- *
+ * {@link RealRandomAccessible} transformed by an {@link AffineGet affine
+ * transformation}. Changing the {@link AffineGet affine transformation} will
+ * affect the {@link AffineRealRandomAccessible} and any
+ * {@link RealRandomAccess} on it. Make sure that you either request a new
+ * {@link RealRandomAccess} after modifying the transformation or perform a full
+ * initialization (e.g. setPosition(double[])) of any existing one before making
+ * any relative move.
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class AffineRealRandomAccessible< T, R extends AffineGet > extends RealTransformRealRandomAccessible< T, R >
@@ -61,25 +57,25 @@ public class AffineRealRandomAccessible< T, R extends AffineGet > extends RealTr
 	 * {@link RealRandomAccess} that generates its samples from a target
 	 * {@link RealRandomAccessible} at coordinates transformed by a
 	 * {@link RealTransform}.
-	 *
+	 * 
 	 */
 	public class AffineRealRandomAccess extends RealTransformRealRandomAccessible< T, R >.RealTransformRealRandomAccess
 	{
 		final double[] move = new double[ n ];
-		
+
 		protected AffineRealRandomAccess()
 		{
 			super();
 			apply();
 		}
-		
+
 		final private void scaleMove( final double distance, final int d )
 		{
 			final RealLocalizable dd = transformCopy.d( d );
 			for ( int ddd = 0; ddd < n; ++ddd )
 				move[ ddd ] = distance * dd.getDoublePosition( ddd );
 		}
-		
+
 		@Override
 		public void move( final float distance, final int d )
 		{
@@ -141,7 +137,7 @@ public class AffineRealRandomAccessible< T, R extends AffineGet > extends RealTr
 		@Override
 		public void setPosition( final float pos, final int d )
 		{
-			setPosition( ( double )pos, d );
+			setPosition( ( double ) pos, d );
 		}
 
 		@Override
@@ -227,13 +223,13 @@ public class AffineRealRandomAccessible< T, R extends AffineGet > extends RealTr
 		@Override
 		public void setPosition( final int pos, final int d )
 		{
-			setPosition( ( double )pos, d );
+			setPosition( ( double ) pos, d );
 		}
 
 		@Override
 		public void setPosition( final long pos, final int d )
 		{
-			setPosition( ( double )pos, d );
+			setPosition( ( double ) pos, d );
 		}
 
 		@Override
@@ -254,13 +250,12 @@ public class AffineRealRandomAccessible< T, R extends AffineGet > extends RealTr
 			return copy();
 		}
 	}
-	
-	
+
 	public AffineRealRandomAccessible( final RealRandomAccessible< T > target, final R affine )
 	{
 		super( target, affine );
 	}
-	
+
 	@Override
 	public AffineRealRandomAccess realRandomAccess()
 	{

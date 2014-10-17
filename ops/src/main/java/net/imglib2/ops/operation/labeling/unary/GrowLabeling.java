@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.labeling.unary;
@@ -41,17 +37,19 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.randomaccessibleinterval.unary.regiongrowing.AbstractRegionGrowing;
 import net.imglib2.util.ValuePair;
+import net.imglib2.view.Views;
 
 /**
  * 
  * @author Christian Dietz (University of Konstanz)
  */
-public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrowing< LabelingType< L >, L, Labeling< L >, Labeling< L >>
+public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrowing< LabelingType< L >, L>
 {
 
 	private Cursor< LabelingType< L >> m_seedLabCur;
@@ -80,9 +78,9 @@ public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrow
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void initRegionGrowing( Labeling< L > srcImg )
+	protected void initRegionGrowing( RandomAccessibleInterval< LabelingType < L > > srcImg )
 	{
-		m_seedLabCur = srcImg.localizingCursor();
+		m_seedLabCur = Views.iterable(srcImg).localizingCursor();
 
 	}
 
@@ -151,7 +149,7 @@ public class GrowLabeling< L extends Comparable< L >> extends AbstractRegionGrow
 	}
 
 	@Override
-	public UnaryOperation< Labeling< L >, Labeling< L >> copy()
+	public UnaryOperation< RandomAccessibleInterval< LabelingType < L > >, Labeling< L >> copy()
 	{
 		return new GrowLabeling< L >( m_structuringElement.clone(), m_iterations );
 	}

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -48,7 +44,7 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * TODO
- *
+ * 
  */
 public class CellRandomAccessBenchmark
 {
@@ -61,6 +57,7 @@ public class CellRandomAccessBenchmark
 	long intDataSum;
 
 	CellImg< IntType, ?, ? > intImg;
+
 	CellImg< IntType, ?, ? > intImgCopy;
 
 	public void createSourceData()
@@ -84,7 +81,8 @@ public class CellRandomAccessBenchmark
 	}
 
 	/**
-	 * Fill intImg (a CellContainer with 40x40x40 cells) with data using flat array iteration order.
+	 * Fill intImg (a CellContainer with 40x40x40 cells) with data using flat
+	 * array iteration order.
 	 */
 	public void fillImage()
 	{
@@ -103,12 +101,13 @@ public class CellRandomAccessBenchmark
 		}
 	}
 
-	public void copyWithSourceIteration(final Img< IntType > srcImg, final Img< IntType > dstImg)
+	public void copyWithSourceIteration( final Img< IntType > srcImg, final Img< IntType > dstImg )
 	{
 		final long[] pos = new long[ dimensions.length ];
 		final Cursor< IntType > src = srcImg.localizingCursor();
 		final RandomAccess< IntType > dst = dstImg.randomAccess();
-		while( src.hasNext() ) {
+		while ( src.hasNext() )
+		{
 			src.fwd();
 			src.localize( pos );
 			dst.setPosition( pos );
@@ -156,7 +155,7 @@ public class CellRandomAccessBenchmark
 		} );
 		randomAccessBenchmark.intImgCopy = null;
 
-		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( new int[] {32, 64, 16} ).create( randomAccessBenchmark.dimensions, new IntType() );
+		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( new int[] { 32, 64, 16 } ).create( randomAccessBenchmark.dimensions, new IntType() );
 		System.out.println( "benchmarking copy to mixed" );
 		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
 		{

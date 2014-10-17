@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -37,12 +37,15 @@ import net.imglib2.algorithm.region.localneighborhood.RectangleCursor;
 import net.imglib2.algorithm.region.localneighborhood.RectangleNeighborhoodGPL;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
+import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.multithreading.Chunk;
 import net.imglib2.multithreading.SimpleMultiThreading;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorExpWindowingFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.Views;
 
 /**
  * A class to compute a diffusion tensor for anisotropic diffusion, based on
@@ -80,7 +83,7 @@ public class MomentOfInertiaTensor2D< T extends RealType< T >> extends MultiThre
 
 	private static final String BASE_ERROR_MESSAGE = "[" + MomentOfInertiaTensor2D.class.getSimpleName() + "] ";
 
-	private final Img< T > input;
+	private final RandomAccessibleInterval< T > input;
 
 	private final double epsilon_1;
 
@@ -90,21 +93,68 @@ public class MomentOfInertiaTensor2D< T extends RealType< T >> extends MultiThre
 
 	private Img< FloatType > D;
 
+	private ImgFactory< FloatType > imgFactory;
+
 	/*
 	 * CONSTRUCTORS
 	 */
 
+	/**
+	 * Sets the image factory to be either the ImgFactory of the input with FloatType, or
+	 * if types are incompatible, a default {@ArrayImgFactory}<FloatType>.
+	 * @param input
+	 * @param scale
+	 * @param epsilon_1
+	 * @param epsilon_2
+	 * @deprecated Use
+	 *             {@link #MomentOfInertiaTensor2D(RandomAccessibleInterval, ImgFactory, int, double, double)}
+	 *             and specify the {@link ImgFactory}<Float> for the output.
+	 */
+	@Deprecated
 	public MomentOfInertiaTensor2D( Img< T > input, int scale, double epsilon_1, double epsilon_2 )
+	{
+		this( input, chooseFactory( input ), scale, epsilon_1, epsilon_2 );
+	}
+
+	//TODO: Remove with above
+	private static ImgFactory< FloatType > chooseFactory( Img< ? > input )
+	{
+		try
+		{
+			return input.factory().imgFactory( new FloatType() );
+		}
+		catch ( IncompatibleTypeException e )
+		{
+			return new ArrayImgFactory< FloatType >();
+		}
+	}
+
+	/**
+	 * Calls {@link #MomentOfInertiaTensor2D(RandomAccessibleInterval, int, double, double) }
+	 * @param input
+	 * @param scale
+	 * @deprecated Use
+	 *             {@link #MomentOfInertiaTensor2D(RandomAccessibleInterval, ImgFactory, int)}
+	 *             and specify the {@link ImgFactory}<Float> for the output.
+	 */
+	@Deprecated
+	public MomentOfInertiaTensor2D( Img< T > input, int scale )
+	{
+		this( input, scale, DEFAULT_EPSILON_1, DEFAULT_EPSILON_2 );
+	}
+
+	public MomentOfInertiaTensor2D( RandomAccessibleInterval< T > input, ImgFactory< FloatType > imgFactory, int scale )
+	{
+		this( input, imgFactory, scale, DEFAULT_EPSILON_1, DEFAULT_EPSILON_2 );
+	}
+
+	public MomentOfInertiaTensor2D( RandomAccessibleInterval< T > input, ImgFactory< FloatType > imgFactory, int scale, double epsilon_1, double epsilon_2 )
 	{
 		this.input = input;
 		this.scale = scale;
 		this.epsilon_1 = epsilon_1;
 		this.epsilon_2 = epsilon_2;
-	}
-
-	public MomentOfInertiaTensor2D( Img< T > input, int scale )
-	{
-		this( input, scale, DEFAULT_EPSILON_1, DEFAULT_EPSILON_2 );
+		this.imgFactory = imgFactory;
 	}
 
 	/*
@@ -131,16 +181,9 @@ public class MomentOfInertiaTensor2D< T extends RealType< T >> extends MultiThre
 		final int tensorDim = input.numDimensions(); // the dim to write the
 														// tensor components to.
 
-		try
-		{
-			D = input.factory().imgFactory( new FloatType() ).create( tensorDims, new FloatType() );
-		}
-		catch ( IncompatibleTypeException e )
-		{
-			e.printStackTrace();
-		}
+		D = imgFactory.create( tensorDims, new FloatType() );
 
-		Vector< Chunk > chunks = SimpleMultiThreading.divideIntoChunks( input.size(), numThreads );
+		Vector< Chunk > chunks = SimpleMultiThreading.divideIntoChunks( Views.iterable( input ).size(), numThreads );
 		Thread[] threads = SimpleMultiThreading.newThreads( numThreads );
 
 		for ( int i = 0; i < threads.length; i++ )
@@ -155,7 +198,7 @@ public class MomentOfInertiaTensor2D< T extends RealType< T >> extends MultiThre
 				public void run()
 				{
 
-					Cursor< T > cursor = input.localizingCursor();
+					Cursor< T > cursor = Views.iterable( input ).localizingCursor();
 					RandomAccess< FloatType > Dcursor = D.randomAccess();
 
 					// Main cursor position
@@ -169,7 +212,7 @@ public class MomentOfInertiaTensor2D< T extends RealType< T >> extends MultiThre
 														// but for all pixels
 
 					OutOfBoundsFactory< T, RandomAccessibleInterval< T >> oobf = new OutOfBoundsMirrorExpWindowingFactory< T, RandomAccessibleInterval< T >>( ( scale - 1 ) / 2 );
-					RectangleNeighborhoodGPL< T, RandomAccessibleInterval< T >> neighborhood = new RectangleNeighborhoodGPL< T, RandomAccessibleInterval< T >>( input, oobf );
+					RectangleNeighborhoodGPL< T > neighborhood = new RectangleNeighborhoodGPL< T >( input, oobf );
 					neighborhood.setSpan( domain );
 
 					RectangleCursor< T > neighborhoodCursor = neighborhood.cursor();

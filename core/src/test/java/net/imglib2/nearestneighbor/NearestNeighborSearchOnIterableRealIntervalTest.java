@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -50,22 +46,23 @@ import org.junit.Test;
 
 /**
  * TODO
- *
+ * 
  */
 public class NearestNeighborSearchOnIterableRealIntervalTest
 {
 	final static private RealPointSampleList< DoubleType > realPointSampleList = new RealPointSampleList< DoubleType >( 2 );
-	final static private double[][] coordinates = new double[][]{
-		{ 0, 0 },
-		{ 0, 1 },
-		{ 1, 0 },
-		{ 1, 1 }
+
+	final static private double[][] coordinates = new double[][] {
+			{ 0, 0 },
+			{ 0, 1 },
+			{ 1, 0 },
+			{ 1, 1 }
 	};
-	
-	final static private double[] samples = new double[]{
-		0, 1, 2, 3
+
+	final static private double[] samples = new double[] {
+			0, 1, 2, 3
 	};
-	
+
 	final static private boolean positionEquals(
 			final RealLocalizable a,
 			final RealLocalizable b )
@@ -80,26 +77,26 @@ public class NearestNeighborSearchOnIterableRealIntervalTest
 		}
 		return true;
 	}
-	
+
 	@Before
 	public void init()
 	{
 		for ( int i = 0; i < samples.length; ++i )
 			realPointSampleList.add( new RealPoint( coordinates[ i ] ), new DoubleType( samples[ i ] ) );
 	}
-	
+
 	@Test
 	public void testKNearestNeighborSearch()
 	{
 		final RealCursor< DoubleType > cursor = realPointSampleList.cursor();
 		final KNearestNeighborSearchOnIterableRealInterval< DoubleType > search1 = new KNearestNeighborSearchOnIterableRealInterval< DoubleType >( realPointSampleList, 1 );
-		
-		search1.search( new RealPoint( new double[]{ 0.1, 0.2 } ) );
+
+		search1.search( new RealPoint( new double[] { 0.1, 0.2 } ) );
 		assertTrue( "Position mismatch ", positionEquals( search1.getPosition( 0 ), new RealPoint( coordinates[ 0 ] ) ) );
 		assertTrue( "Sample mismatch ", search1.getSampler( 0 ).get() == cursor.next() );
-		
-		search1.search( new RealPoint( new double[]{ -1, 20 } ) );
+
+		search1.search( new RealPoint( new double[] { -1, 20 } ) );
 		assertTrue( "Position mismatch ", positionEquals( search1.getPosition( 0 ), new RealPoint( coordinates[ 1 ] ) ) );
 		assertTrue( "Sample mismatch ", search1.getSampler( 0 ).get() == cursor.next() );
-	}	
+	}
 }

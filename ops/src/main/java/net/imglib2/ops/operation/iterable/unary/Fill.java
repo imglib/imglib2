@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,23 +28,21 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.iterable.unary;
+
+import java.util.Iterator;
 
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
 
 /**
  * @author Felix Schönenberger (University of Konstanz)
- *
+ * @author Jonathan Hale (University of Konstanz)
  * @param <T>
  */
-public class Fill< T extends Type< T >, ITER extends Iterable< T >> implements UnaryOperation< T, ITER >
+public class Fill< T extends Type< T >> implements UnaryOperation< T, Iterator<T> >
 {
 
 	/**
@@ -55,18 +53,18 @@ public class Fill< T extends Type< T >, ITER extends Iterable< T >> implements U
 	 *            Is filled with the value.
 	 */
 	@Override
-	public ITER compute( final T in, final ITER out )
+	public Iterator<T> compute( final T in, final Iterator<T> out )
 	{
-		for ( final T t : out )
+		while (out.hasNext())
 		{
-			t.set( in );
+			out.next().set( in );
 		}
 		return out;
 	}
 
 	@Override
-	public UnaryOperation< T, ITER > copy()
+	public UnaryOperation< T, Iterator<T> > copy()
 	{
-		return new Fill< T, ITER >();
+		return new Fill< T >();
 	}
 }

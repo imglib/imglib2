@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,23 +41,35 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class UnsignedIntType extends GenericIntType<UnsignedIntType>
+public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedIntType( final NativeImg<UnsignedIntType, ? extends IntAccess> img ) { super( img ); }
+	public UnsignedIntType( final NativeImg< ?, ? extends IntAccess > img )
+	{
+		super( img );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedIntType( final long value ) { super( getCodedSignedIntChecked(value) ); }
+	public UnsignedIntType( final long value )
+	{
+		super( getCodedSignedIntChecked( value ) );
+	}
 
 	// this is the constructor if you want to specify the dataAccess
-	public UnsignedIntType( final IntAccess access ) { super( access ); }
+	public UnsignedIntType( final IntAccess access )
+	{
+		super( access );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedIntType() { this( 0 ); }
+	public UnsignedIntType()
+	{
+		this( 0 );
+	}
 
 	public static int getCodedSignedIntChecked( long unsignedInt )
 	{
@@ -72,11 +80,19 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 
 		return getCodedSignedInt( unsignedInt );
 	}
-	public static int getCodedSignedInt( final long unsignedInt ) { return (int)( unsignedInt & 0xffffffff ); }
-	public static long getUnsignedInt( final int signedInt ) { return signedInt & 0xffffffffL; }
+
+	public static int getCodedSignedInt( final long unsignedInt )
+	{
+		return ( int ) ( unsignedInt & 0xffffffff );
+	}
+
+	public static long getUnsignedInt( final int signedInt )
+	{
+		return signedInt & 0xffffffffL;
+	}
 
 	@Override
-	public NativeImg<UnsignedIntType, ? extends IntAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedIntType> storageFactory, final long dim[] )
+	public NativeImg< UnsignedIntType, ? extends IntAccess > createSuitableNativeImg( final NativeImgFactory< UnsignedIntType > storageFactory, final long dim[] )
 	{
 		// create the container
 		final NativeImg<UnsignedIntType, ? extends IntAccess> container = storageFactory.createIntInstance( dim, new Fraction() );
@@ -91,7 +107,10 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 
 	@Override
-	public UnsignedIntType duplicateTypeOnSameNativeImg() { return new UnsignedIntType( img ); }
+	public UnsignedIntType duplicateTypeOnSameNativeImg()
+	{
+		return new UnsignedIntType( img );
+	}
 
 	@Override
 	public void mul( final float c )
@@ -104,8 +123,9 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	public void mul( final double c )
 	{
 		final long a = getUnsignedInt( getValue() );
-		setValue( getCodedSignedInt( ( int )Util.round( a * c ) ) );
+		setValue( getCodedSignedInt( ( int ) Util.round( a * c ) ) );
 	}
+
 	@Override
 	public void add( final UnsignedIntType c )
 	{
@@ -131,10 +151,16 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 
 	@Override
-	public void setOne() { set( 1 ); }
+	public void setOne()
+	{
+		set( 1 );
+	}
 
 	@Override
-	public void setZero() { set( 0 ); }
+	public void setZero()
+	{
+		set( 0 );
+	}
 
 	@Override
 	public void inc()
@@ -149,24 +175,64 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 
 	@Override
-	public String toString() { return "" + get(); }
+	public String toString()
+	{
+		return "" + get();
+	}
 
-	public long get() { return getUnsignedInt( getValue() ); }
-	public void set( final long f ) { setValue( getCodedSignedInt( f ) ); }
+	public long get()
+	{
+		return getUnsignedInt( getValue() );
+	}
+
+	public void set( final long f )
+	{
+		setValue( getCodedSignedInt( f ) );
+	}
 
 	@Override
-	public int getInteger() { return (int)get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ) { set( f ); }
-	@Override
-	public void setInteger( final long f ) { set( f ); }
+	public int getInteger()
+	{
+		return ( int ) get();
+	}
 
 	@Override
-	public double getMaxValue() { return 0xffffffffL; }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
 	@Override
-	public double getMinValue()  { return 0; }
+	public void setInteger( final int f )
+	{
+		set( f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( f );
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return 0xffffffffL;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return 0;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Long#hashCode().
+		final long value = get();
+		return (int) (value ^ (value >>> 32));
+	}
 
 	@Override
 	public int compareTo( final UnsignedIntType c )
@@ -183,8 +249,14 @@ public class UnsignedIntType extends GenericIntType<UnsignedIntType>
 	}
 
 	@Override
-	public UnsignedIntType createVariable() { return new UnsignedIntType( 0 ); }
+	public UnsignedIntType createVariable()
+	{
+		return new UnsignedIntType( 0 );
+	}
 
 	@Override
-	public UnsignedIntType copy() { return new UnsignedIntType( get() ); }
+	public UnsignedIntType copy()
+	{
+		return new UnsignedIntType( get() );
+	}
 }

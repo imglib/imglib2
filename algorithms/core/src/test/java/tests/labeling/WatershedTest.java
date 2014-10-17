@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -62,35 +62,35 @@ import org.junit.Test;
  */
 public class WatershedTest
 {
-	private void testSeededCase2D( int[][] image, int[][] seeds, int[][] expected, long[][] structuringElement, int background )
+	private void testSeededCase2D( final int[][] image, final int[][] seeds, final int[][] expected, long[][] structuringElement, final int background )
 	{
-		long[] imageDimensions = new long[] { image.length, image[ 0 ].length };
-		long[] seedDimensions = new long[] { seeds.length, seeds[ 0 ].length };
-		long[] outputDimensions = new long[] { expected.length, expected[ 0 ].length };
-		NativeImgLabeling< Integer, IntType > seedLabeling = new NativeImgLabeling< Integer, IntType >( new ArrayImgFactory< IntType >().create( seedDimensions, new IntType() ) );
-		NativeImgLabeling< Integer, IntType > outputLabeling = new NativeImgLabeling< Integer, IntType >( new ArrayImgFactory< IntType >().create( outputDimensions, new IntType() ) );
-		NativeImg< IntType, ? extends IntAccess > imageImage = new ArrayImgFactory< IntType >().createIntInstance( imageDimensions, new Fraction() );
+		final long[] imageDimensions = new long[] { image.length, image[ 0 ].length };
+		final long[] seedDimensions = new long[] { seeds.length, seeds[ 0 ].length };
+		final long[] outputDimensions = new long[] { expected.length, expected[ 0 ].length };
+		final NativeImgLabeling< Integer, IntType > seedLabeling = new NativeImgLabeling< Integer, IntType >( new ArrayImgFactory< IntType >().create( seedDimensions, new IntType() ) );
+		final NativeImgLabeling< Integer, IntType > outputLabeling = new NativeImgLabeling< Integer, IntType >( new ArrayImgFactory< IntType >().create( outputDimensions, new IntType() ) );
+		final NativeImg< IntType, ? extends IntAccess > imageImage = new ArrayImgFactory< IntType >().createIntInstance( imageDimensions, new Fraction() );
 		imageImage.setLinkedType( new IntType( imageImage ) );
 		/*
 		 * Fill the image.
 		 */
-		Cursor< IntType > ic = imageImage.localizingCursor();
-		int[] position = new int[ imageImage.numDimensions() ];
+		final Cursor< IntType > ic = imageImage.localizingCursor();
+		final int[] position = new int[ imageImage.numDimensions() ];
 		while ( ic.hasNext() )
 		{
-			IntType t = ic.next();
+			final IntType t = ic.next();
 			ic.localize( position );
 			t.set( image[ position[ 0 ] ][ position[ 1 ] ] );
 		}
 		/*
 		 * Fill the seeded image
 		 */
-		Cursor< LabelingType< Integer >> sc = seedLabeling.localizingCursor();
+		final Cursor< LabelingType< Integer >> sc = seedLabeling.localizingCursor();
 		while ( sc.hasNext() )
 		{
-			LabelingType< Integer > t = sc.next();
+			final LabelingType< Integer > t = sc.next();
 			sc.localize( position );
-			int seedLabel = seeds[ position[ 0 ] ][ position[ 1 ] ];
+			final int seedLabel = seeds[ position[ 0 ] ][ position[ 1 ] ];
 			if ( seedLabel == background )
 				continue;
 			t.setLabel( seedLabel );
@@ -102,7 +102,7 @@ public class WatershedTest
 		/*
 		 * Run the seeded watershed algorithm
 		 */
-		Watershed< IntType, Integer > watershed = new Watershed< IntType, Integer >();
+		final Watershed< IntType, Integer > watershed = new Watershed< IntType, Integer >();
 		watershed.setSeeds( seedLabeling );
 		watershed.setIntensityImage( imageImage );
 		watershed.setStructuringElement( structuringElement );
@@ -111,13 +111,13 @@ public class WatershedTest
 		/*
 		 * Check against expected
 		 */
-		Cursor< LabelingType< Integer >> oc = outputLabeling.localizingCursor();
+		final Cursor< LabelingType< Integer >> oc = outputLabeling.localizingCursor();
 		while ( oc.hasNext() )
 		{
-			LabelingType< Integer > t = oc.next();
+			final LabelingType< Integer > t = oc.next();
 			oc.localize( position );
-			int expectedLabel = expected[ position[ 0 ] ][ position[ 1 ] ];
-			List< Integer > l = t.getLabeling();
+			final int expectedLabel = expected[ position[ 0 ] ][ position[ 1 ] ];
+			final List< Integer > l = t.getLabeling();
 			if ( expectedLabel == background )
 			{
 				assertTrue( l.isEmpty() );
@@ -147,23 +147,28 @@ public class WatershedTest
 	{
 		testSeededCase2D( new int[][] { { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 }, { 0, 0, 0 } }, new int[][] { { 0, 1, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 2, 0 } }, new int[][] { { 1, 1, 1 }, { 1, 1, 1 }, { 2, 2, 2 }, { 2, 2, 2 } }, null, 0 );
 	}
+
 	@Test
 	public final void testBig()
 	{
-		// Make an image that's composed of two rectangles that require propagation.
-		int [][] image = new int[9][11];
-		for (int i = 0; i<image.length; i++) {
-			image[i][image[0].length / 2] = 1;
+		// Make an image that's composed of two rectangles that require
+		// propagation.
+		final int[][] image = new int[ 9 ][ 11 ];
+		for ( int i = 0; i < image.length; i++ )
+		{
+			image[ i ][ image[ 0 ].length / 2 ] = 1;
 		}
 		// The seeds are placed asymetrically so that the closer to the middle
 		// (= # 2) will propagate first to the ridge.
-		int [][] seeds = new int [9][11];
-		seeds[4][0] = 1;
-		seeds[4][6] = 2;
-		int [][] expected = new int[9][11];
-		for (int i = 0; i < image.length; i++) {
-			for (int j = 0; j < image[0].length; j++) {
-				expected[i][j] = (j < image[0].length / 2) ? 1:2;
+		final int[][] seeds = new int[ 9 ][ 11 ];
+		seeds[ 4 ][ 0 ] = 1;
+		seeds[ 4 ][ 6 ] = 2;
+		final int[][] expected = new int[ 9 ][ 11 ];
+		for ( int i = 0; i < image.length; i++ )
+		{
+			for ( int j = 0; j < image[ 0 ].length; j++ )
+			{
+				expected[ i ][ j ] = ( j < image[ 0 ].length / 2 ) ? 1 : 2;
 			}
 		}
 		testSeededCase2D( image, seeds, expected, null, 0 );

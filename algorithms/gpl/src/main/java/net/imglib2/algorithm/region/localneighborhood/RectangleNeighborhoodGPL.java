@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -43,8 +43,8 @@ import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
  * <code>2 x span[d] + 1</code>. {@link Cursor}s can be instantiated from this
  * neighborhood, that will iterate through the rectangle in raster order.
  */
-public class RectangleNeighborhoodGPL<T, IN extends RandomAccessibleInterval<T>>
-		extends AbstractNeighborhood<T, IN> {
+public class RectangleNeighborhoodGPL<T>
+		extends AbstractNeighborhood<T> {
 
 	/*
 	 * CONSTRUCTOR
@@ -58,7 +58,7 @@ public class RectangleNeighborhoodGPL<T, IN extends RandomAccessibleInterval<T>>
 	 * span a single pixel.
 	 */
 	public RectangleNeighborhoodGPL(final int numDims,
-			final OutOfBoundsFactory<T, IN> outOfBounds) {
+			final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds) {
 		super(numDims, outOfBounds);
 	}
 
@@ -69,8 +69,8 @@ public class RectangleNeighborhoodGPL<T, IN extends RandomAccessibleInterval<T>>
 	 * The rectangle is initiated centered on the first pixel of the source, and
 	 * span a single pixel.
 	 */
-	public RectangleNeighborhoodGPL(final IN source,
-			final OutOfBoundsFactory<T, IN> outOfBounds) {
+	public RectangleNeighborhoodGPL(final RandomAccessibleInterval<T> source,
+			final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds) {
 		super(source.numDimensions(), outOfBounds);
 		updateSource(source);
 	}
@@ -81,8 +81,8 @@ public class RectangleNeighborhoodGPL<T, IN extends RandomAccessibleInterval<T>>
 	 * 
 	 * @param source
 	 */
-	public RectangleNeighborhoodGPL(IN source) {
-		this(source.numDimensions(), new OutOfBoundsPeriodicFactory<T, IN>());
+	public RectangleNeighborhoodGPL(RandomAccessibleInterval<T> source) {
+		this(source.numDimensions(), new OutOfBoundsPeriodicFactory<T, RandomAccessibleInterval<T>>());
 		updateSource(source);
 	}
 
@@ -126,10 +126,10 @@ public class RectangleNeighborhoodGPL<T, IN extends RandomAccessibleInterval<T>>
 	}
 
 	@Override
-	public AbstractNeighborhood<T, IN> copy() {
+	public AbstractNeighborhood<T> copy() {
 		if (source != null)
-			return new RectangleNeighborhoodGPL<T, IN>(source, outOfBounds);
-		return new RectangleNeighborhoodGPL<T, IN>(n, outOfBounds);
+			return new RectangleNeighborhoodGPL<T>(source, outOfBounds);
+		return new RectangleNeighborhoodGPL<T>(n, outOfBounds);
 	}
 
 }

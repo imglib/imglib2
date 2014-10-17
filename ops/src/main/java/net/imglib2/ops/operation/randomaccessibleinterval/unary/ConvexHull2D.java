@@ -1,8 +1,9 @@
+
 /*
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +29,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.randomaccessibleinterval.unary;
@@ -41,11 +38,11 @@ import java.awt.Polygon;
 import java.util.ArrayList;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.view.Views;
 
 /**
  * 
@@ -53,7 +50,7 @@ import net.imglib2.type.logic.BitType;
  * 
  * @author Martin Horn (University of Konstanz)
  */
-public class ConvexHull2D< K extends RandomAccessibleInterval< BitType > & IterableInterval< BitType >> implements UnaryOperation< K, K >
+public class ConvexHull2D implements UnaryOperation< RandomAccessibleInterval<BitType>, RandomAccessibleInterval<BitType> >
 {
 
 	private final int m_dimX;
@@ -76,9 +73,9 @@ public class ConvexHull2D< K extends RandomAccessibleInterval< BitType > & Itera
 	}
 
 	@Override
-	public K compute( final K in, final K r )
+	public RandomAccessibleInterval<BitType> compute( final RandomAccessibleInterval<BitType> in, final RandomAccessibleInterval<BitType> r )
 	{
-		final Cursor< BitType > cur = in.localizingCursor();
+		final Cursor< BitType > cur = Views.iterable( in ).localizingCursor();
 		ArrayList< Point > points = new ArrayList< Point >();
 		while ( cur.hasNext() )
 		{
@@ -95,7 +92,7 @@ public class ConvexHull2D< K extends RandomAccessibleInterval< BitType > & Itera
 			poly.addPoint( p.x, p.y );
 		}
 
-		Cursor< BitType > resCur = r.localizingCursor();
+		Cursor< BitType > resCur = Views.iterable( r ).localizingCursor();
 
 		if ( m_fill )
 		{
@@ -272,9 +269,9 @@ public class ConvexHull2D< K extends RandomAccessibleInterval< BitType > & Itera
 	}
 
 	@Override
-	public UnaryOperation< K, K > copy()
+	public UnaryOperation< RandomAccessibleInterval<BitType>, RandomAccessibleInterval<BitType> > copy()
 	{
-		return new ConvexHull2D< K >( m_dimX, m_dimY, m_fill );
+		return new ConvexHull2D ( m_dimX, m_dimY, m_fill );
 	}
 
 	public int[][] rasterizeLine( final int[] point1, final int[] point2 )

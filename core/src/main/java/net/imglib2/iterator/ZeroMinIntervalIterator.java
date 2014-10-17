@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,8 +41,8 @@ import net.imglib2.util.IntervalIndexer;
 /**
  * Use this class to iterate a virtual rectangular {@link Interval} whose
  * <em>min</em> coordinates are at 0<sup><em>n</em></sup> in flat order, that
- * is: row by row, plane by plane, cube by cube, ...  This is useful for
- * iterating an arbitrary interval in a defined order.  For that, connect a
+ * is: row by row, plane by plane, cube by cube, ... This is useful for
+ * iterating an arbitrary interval in a defined order. For that, connect a
  * {@link ZeroMinIntervalIterator} to a {@link Positionable}.
  * 
  * <pre>
@@ -65,9 +61,9 @@ import net.imglib2.util.IntervalIndexer;
  * Note that {@link ZeroMinIntervalIterator} is the right choice in situations
  * where <em>not</em> for each pixel you want to localize and/or set the
  * {@link Positionable} [{@link Sampler}], that is in a sparse sampling
- * situation.  For localizing at each iteration step (as in the simplified
+ * situation. For localizing at each iteration step (as in the simplified
  * example above), use {@link LocalizingZeroMinIntervalIterator} instead.
- *  
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -83,7 +79,6 @@ public class ZeroMinIntervalIterator extends IntervalIterator
 	{
 		super( interval );
 	}
-	
 
 	/* Localizable */
 
@@ -92,7 +87,7 @@ public class ZeroMinIntervalIterator extends IntervalIterator
 	{
 		return IntervalIndexer.indexToPosition( index, dimensions, steps, d );
 	}
-	
+
 	@Override
 	final public void localize( final long[] position )
 	{
@@ -111,7 +106,6 @@ public class ZeroMinIntervalIterator extends IntervalIterator
 		IntervalIndexer.indexToPosition( index, dimensions, position );
 	}
 
-	
 	/* RealLocalizable */
 
 	@Override
@@ -119,7 +113,7 @@ public class ZeroMinIntervalIterator extends IntervalIterator
 	{
 		return IntervalIndexer.indexToPosition( index, dimensions, steps, d );
 	}
-	
+
 	@Override
 	final public void localize( final double[] position )
 	{

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -47,21 +43,21 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-final public class LongType extends AbstractIntegerType<LongType> implements NativeType<LongType>
+final public class LongType extends AbstractIntegerType< LongType > implements NativeType< LongType >
 {
 	private int i = 0;
 
-	final protected NativeImg<LongType, ? extends LongAccess> img;
+	final protected NativeImg< ?, ? extends LongAccess > img;
 
 	// the DataAccess that holds the information
 	protected LongAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public LongType( final NativeImg<LongType, ? extends LongAccess> longStorage )
+	public LongType( final NativeImg< ?, ? extends LongAccess > longStorage )
 	{
 		img = longStorage;
 	}
@@ -77,15 +73,18 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	public LongType( final long value )
 	{
 		img = null;
-		dataAccess = new LongArray ( 1 );
+		dataAccess = new LongArray( 1 );
 		set( value );
 	}
 
 	// this is the constructor if you want it to be a variable
-	public LongType() { this( 0 ); }
+	public LongType()
+	{
+		this( 0 );
+	}
 
 	@Override
-	public NativeImg<LongType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<LongType> storageFactory, final long dim[] )
+	public NativeImg< LongType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< LongType > storageFactory, final long dim[] )
 	{
 		// create the container
 		final NativeImg<LongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction() );
@@ -100,27 +99,62 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	}
 
 	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
+	}
 
 	@Override
-	public LongType duplicateTypeOnSameNativeImg() { return new LongType( img ); }
+	public LongType duplicateTypeOnSameNativeImg()
+	{
+		return new LongType( img );
+	}
 
-	public long get(){ return dataAccess.getValue( i ); }
-	public void set( final long f ){ dataAccess.setValue( i, f ); }
+	public long get()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	public void set( final long f )
+	{
+		dataAccess.setValue( i, f );
+	}
 
 	@Override
-	public int getInteger(){ return (int)get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ){ set( f ); }
-	@Override
-	public void setInteger( final long f ){ set( f ); }
+	public int getInteger()
+	{
+		return ( int ) get();
+	}
 
 	@Override
-	public double getMaxValue() { return Long.MAX_VALUE; }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
 	@Override
-	public double getMinValue()  { return Long.MIN_VALUE; }
+	public void setInteger( final int f )
+	{
+		set( f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( f );
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return Long.MAX_VALUE;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return Long.MIN_VALUE;
+	}
 
 	@Override
 	public void mul( final float c )
@@ -159,6 +193,14 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	}
 
 	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Long#hashCode().
+		final long value = get();
+		return (int) (value ^ (value >>> 32));
+	}
+
+	@Override
 	public int compareTo( final LongType c )
 	{
 		final long a = get();
@@ -172,13 +214,22 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	}
 
 	@Override
-	public void set( final LongType c ){ set( c.get() ); }
+	public void set( final LongType c )
+	{
+		set( c.get() );
+	}
 
 	@Override
-	public void setOne() { set( 1 ); }
+	public void setOne()
+	{
+		set( 1 );
+	}
 
 	@Override
-	public void setZero() { set( 0 ); }
+	public void setZero()
+	{
+		set( 0 );
+	}
 
 	@Override
 	public void inc()
@@ -195,28 +246,59 @@ final public class LongType extends AbstractIntegerType<LongType> implements Nat
 	}
 
 	@Override
-	public LongType createVariable(){ return new LongType( 0 ); }
+	public LongType createVariable()
+	{
+		return new LongType( 0 );
+	}
 
 	@Override
-	public LongType copy(){ return new LongType( get() ); }
+	public LongType copy()
+	{
+		return new LongType( get() );
+	}
 
 	@Override
 	public Fraction getEntitiesPerPixel() { return new Fraction(); }
 
 	@Override
-	public void updateIndex( final int index ) { this.i = index; }
-	@Override
-	public int getIndex() { return i; }
+	public void updateIndex( final int index )
+	{
+		this.i = index;
+	}
 
 	@Override
-	public void incIndex() { ++i; }
-	@Override
-	public void incIndex( final int increment ) { i += increment; }
-	@Override
-	public void decIndex() { --i; }
-	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
+	public int getIndex()
+	{
+		return i;
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 64; }
+	public void incIndex()
+	{
+		++i;
+	}
+
+	@Override
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
+	@Override
+	public void decIndex()
+	{
+		--i;
+	}
+
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
+	@Override
+	public int getBitsPerPixel()
+	{
+		return 64;
+	}
 }

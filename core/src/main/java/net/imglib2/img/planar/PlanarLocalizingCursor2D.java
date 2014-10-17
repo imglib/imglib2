@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -41,35 +37,32 @@ import net.imglib2.type.NativeType;
 
 /**
  * TODO
- *
+ * 
  */
-public class PlanarLocalizingCursor2D< T extends NativeType< T > > extends PlanarLocalizingCursor< T > 
+public class PlanarLocalizingCursor2D< T extends NativeType< T > > extends PlanarLocalizingCursor< T >
 {
 	protected PlanarLocalizingCursor2D( final PlanarLocalizingCursor2D< T > cursor )
 	{
 		super( cursor );
 	}
-	
-	
-	public PlanarLocalizingCursor2D( final PlanarImg<T, ?> container )
+
+	public PlanarLocalizingCursor2D( final PlanarImg< T, ? > container )
 	{
 		super( container );
 	}
 
-	
 	@Override
 	public PlanarLocalizingCursor2D< T > copy()
 	{
 		return new PlanarLocalizingCursor2D< T >( this );
 	}
-	
-	
+
 	@Override
 	public boolean hasNext()
 	{
 		return type.getIndex() < lastIndex;
 	}
-	
+
 	@Override
 	public void fwd()
 	{

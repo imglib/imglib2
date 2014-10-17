@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -46,27 +42,27 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public abstract class GenericByteType<T extends GenericByteType<T>> extends AbstractIntegerType<T> implements NativeType<T>
+public abstract class GenericByteType< T extends GenericByteType< T >> extends AbstractIntegerType< T > implements NativeType< T >
 {
 	int i = 0;
 
-	final protected NativeImg<T, ? extends ByteAccess> img;
+	final protected NativeImg< ?, ? extends ByteAccess > img;
 
 	// the DataAccess that holds the information
 	protected ByteAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public GenericByteType( final NativeImg<T, ? extends ByteAccess> byteStorage )
+	public GenericByteType( final NativeImg< ?, ? extends ByteAccess > byteStorage )
 	{
 		img = byteStorage;
 	}
 
 	// this is the constructor if you want it to be a variable
-	protected GenericByteType( final byte value )
+	public GenericByteType( final byte value )
 	{
 		img = null;
 		dataAccess = new ByteArray( 1 );
@@ -74,14 +70,17 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	}
 
 	// this is the constructor if you want to specify the dataAccess
-	protected GenericByteType( final ByteAccess access )
+	public GenericByteType( final ByteAccess access )
 	{
 		img = null;
 		dataAccess = access;
 	}
 
 	// this is the constructor if you want it to be a variable
-	protected GenericByteType() { this( ( byte )0 ); }
+	public GenericByteType()
+	{
+		this( ( byte ) 0 );
+	}
 
 	@Override
 	public Fraction getEntitiesPerPixel() { return new Fraction(); }
@@ -92,49 +91,63 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 		dataAccess = img.update( c );
 	}
 
-	protected byte getValue(){ return dataAccess.getValue( i ); }
-	protected void setValue( final byte f ){ dataAccess.setValue( i, f ); }
+	protected byte getValue()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	protected void setValue( final byte f )
+	{
+		dataAccess.setValue( i, f );
+	}
 
 	@Override
 	public void mul( final float c )
 	{
 		final byte a = getValue();
-		setValue( ( byte )Util.round( a * c ) );
+		setValue( ( byte ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
 		final byte a = getValue();
-		setValue( ( byte )Util.round( a * c ) );
+		setValue( ( byte ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void add( final T c )
 	{
-		final byte a = getValue( );
-		setValue( ( byte )( a + c.getValue() ) );
+		final byte a = getValue();
+		setValue( ( byte ) ( a + c.getValue() ) );
 	}
 
 	@Override
 	public void div( final T c )
 	{
 		final byte a = getValue();
-		setValue( ( byte )( a / c.getValue() ) );
+		setValue( ( byte ) ( a / c.getValue() ) );
 	}
 
 	@Override
 	public void mul( final T c )
 	{
-		final byte a = getValue( );
-		setValue( ( byte )( a * c.getValue() ) );
+		final byte a = getValue();
+		setValue( ( byte ) ( a * c.getValue() ) );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final byte a = getValue( );
-		setValue( ( byte )( a - c.getValue() ) );
+		final byte a = getValue();
+		setValue( ( byte ) ( a - c.getValue() ) );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Byte#hashCode().
+		return getValue();
 	}
 
 	@Override
@@ -151,13 +164,22 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	}
 
 	@Override
-	public void set( final T c ) { setValue( c.getValue() );	}
+	public void set( final T c )
+	{
+		setValue( c.getValue() );
+	}
 
 	@Override
-	public void setOne() { setValue( ( byte )1 ); }
+	public void setOne()
+	{
+		setValue( ( byte ) 1 );
+	}
 
 	@Override
-	public void setZero() { setValue( ( byte )0 ); }
+	public void setZero()
+	{
+		setValue( ( byte ) 0 );
+	}
 
 	@Override
 	public void inc()
@@ -174,22 +196,50 @@ public abstract class GenericByteType<T extends GenericByteType<T>> extends Abst
 	}
 
 	@Override
-	public String toString() { return "" + getValue(); }
+	public String toString()
+	{
+		return "" + getValue();
+	}
 
 	@Override
-	public void updateIndex( final int index ) { i = index; }
-	@Override
-	public int getIndex() { return i; }
+	public void updateIndex( final int index )
+	{
+		i = index;
+	}
 
 	@Override
-	public void incIndex() { ++i; }
-	@Override
-	public void incIndex( final int increment ) { i += increment; }
-	@Override
-	public void decIndex() { --i; }
-	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
+	public int getIndex()
+	{
+		return i;
+	}
 
 	@Override
-	public int getBitsPerPixel() { return 8; }
+	public void incIndex()
+	{
+		++i;
+	}
+
+	@Override
+	public void incIndex( final int increment )
+	{
+		i += increment;
+	}
+
+	@Override
+	public void decIndex()
+	{
+		--i;
+	}
+
+	@Override
+	public void decIndex( final int decrement )
+	{
+		i -= decrement;
+	}
+
+	@Override
+	public int getBitsPerPixel()
+	{
+		return 8;
+	}
 }

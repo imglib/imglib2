@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,9 +40,9 @@ import net.imglib2.RandomAccessible;
 
 /**
  * Iterate over all pixels in an n-dimensional sphere.
- *  
+ * 
  * @param <T>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Preibisch <preibisch@mpi-cbg.de>
@@ -56,12 +52,15 @@ import net.imglib2.RandomAccessible;
 public class HyperSphereCursor< T > implements Cursor< T >
 {
 	final RandomAccessible< T > source;
+
 	final protected long[] center;
+
 	final protected RandomAccess< T > randomAccess;
-	
+
 	final protected long radius;
+
 	final int numDimensions, maxDim;
-	
+
 	// the current radius in each dimension we are at
 	final double[] r;
 
@@ -70,7 +69,7 @@ public class HyperSphereCursor< T > implements Cursor< T >
 
 	// the remaining number of steps in each dimension we still have to go
 	final long[] s;
-	
+
 	public HyperSphereCursor( final RandomAccessible< T > source, final long[] center, final long radius )
 	{
 		this.source = source;
@@ -82,10 +81,10 @@ public class HyperSphereCursor< T > implements Cursor< T >
 		this.ri = new long[ numDimensions ];
 		this.s = new long[ numDimensions ];
 		this.randomAccess = source.randomAccess();
-		
+
 		reset();
 	}
-	
+
 	public HyperSphereCursor( final HyperSphereCursor< T > cursor )
 	{
 		this.source = cursor.source;
@@ -97,7 +96,7 @@ public class HyperSphereCursor< T > implements Cursor< T >
 		this.r = cursor.r.clone();
 		this.ri = cursor.ri.clone();
 		this.s = cursor.s.clone();
-		
+
 		this.randomAccess = source.randomAccess();
 		this.randomAccess.setPosition( cursor.randomAccess );
 	}
@@ -106,22 +105,22 @@ public class HyperSphereCursor< T > implements Cursor< T >
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			this.center[ d ] = center[ d ];
-		
+
 		reset();
 	}
-	
+
 	public void updateCenter( final Localizable center )
 	{
 		for ( int d = 0; d < numDimensions; ++d )
 			this.center[ d ] = center.getLongPosition( d );
-		
+
 		reset();
 	}
 
 	@Override
 	public boolean hasNext()
 	{
-		return s[ maxDim ] > 0; 
+		return s[ maxDim ] > 0;
 	}
 
 	@Override
@@ -166,7 +165,7 @@ public class HyperSphereCursor< T > implements Cursor< T >
 			randomAccess.setPosition( center[ d ], d );
 		}
 
-		randomAccess.setPosition( center[ maxDim ] - radius - 1, maxDim  );
+		randomAccess.setPosition( center[ maxDim ] - radius - 1, maxDim );
 
 		r[ maxDim ] = radius;
 		ri[ maxDim ] = radius;
@@ -181,48 +180,85 @@ public class HyperSphereCursor< T > implements Cursor< T >
 	}
 
 	@Override
-	public void localize( final float[] position ) { randomAccess.localize( position ); }
+	public void localize( final float[] position )
+	{
+		randomAccess.localize( position );
+	}
 
 	@Override
-	public void localize( final double[] position ) { randomAccess.localize( position ); }
+	public void localize( final double[] position )
+	{
+		randomAccess.localize( position );
+	}
 
 	@Override
-	public float getFloatPosition( final int d ) { return randomAccess.getFloatPosition( d ); }
+	public float getFloatPosition( final int d )
+	{
+		return randomAccess.getFloatPosition( d );
+	}
 
 	@Override
-	public double getDoublePosition( final int d ) { return randomAccess.getDoublePosition( d ); }
+	public double getDoublePosition( final int d )
+	{
+		return randomAccess.getDoublePosition( d );
+	}
 
 	@Override
-	public int numDimensions() { return numDimensions; }
+	public int numDimensions()
+	{
+		return numDimensions;
+	}
 
 	@Override
-	public T get() { return randomAccess.get(); }
+	public T get()
+	{
+		return randomAccess.get();
+	}
 
 	@Override
-	public T next() 
+	public T next()
 	{
 		fwd();
 		return get();
 	}
 
 	@Override
-	public void remove() {}
+	public void remove()
+	{}
 
 	@Override
-	public void localize( final int[] position ) { randomAccess.localize( position ); }
+	public void localize( final int[] position )
+	{
+		randomAccess.localize( position );
+	}
 
 	@Override
-	public void localize( final long[] position ) { randomAccess.localize( position ); }
+	public void localize( final long[] position )
+	{
+		randomAccess.localize( position );
+	}
 
 	@Override
-	public int getIntPosition( final int d ) { return randomAccess.getIntPosition( d ); }
+	public int getIntPosition( final int d )
+	{
+		return randomAccess.getIntPosition( d );
+	}
 
 	@Override
-	public long getLongPosition( final int d )  { return randomAccess.getLongPosition( d ); }
+	public long getLongPosition( final int d )
+	{
+		return randomAccess.getLongPosition( d );
+	}
 
 	@Override
-	public HyperSphereCursor< T > copyCursor() { return new HyperSphereCursor< T >( this ); }
-	
+	public HyperSphereCursor< T > copyCursor()
+	{
+		return new HyperSphereCursor< T >( this );
+	}
+
 	@Override
-	public HyperSphereCursor< T > copy() { return copyCursor(); }
+	public HyperSphereCursor< T > copy()
+	{
+		return copyCursor();
+	}
 }

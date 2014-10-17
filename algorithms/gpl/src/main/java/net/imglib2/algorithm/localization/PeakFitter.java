@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -34,6 +34,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import net.imglib2.Localizable;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.algorithm.OutputAlgorithm;
@@ -47,7 +48,7 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 
 	private static final String BASE_ERROR_MESSAGE = "PeakFitter: ";
 
-	private final Img<T> image;
+	private final RandomAccessibleInterval<T> image;
 	private final Collection<Localizable> peaks;
 	private final FunctionFitter fitter;
 	private final FitFunction peakFunction;
@@ -68,7 +69,7 @@ public class PeakFitter <T extends RealType<T>> implements MultiThreaded, Output
 	/**
 	 * @param image the image to operate on.
 	 */
-	public PeakFitter(final Img<T> image, Collection<Localizable> peaks, FunctionFitter fitter, FitFunction peakFunction, StartPointEstimator estimator) {
+	public PeakFitter(final RandomAccessibleInterval<T> image, Collection<Localizable> peaks, FunctionFitter fitter, FitFunction peakFunction, StartPointEstimator estimator) {
 		this.image = image;
 		this.fitter = fitter;
 		this.peakFunction = peakFunction;

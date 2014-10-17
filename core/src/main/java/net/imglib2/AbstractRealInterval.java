@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,36 +35,46 @@ package net.imglib2;
 
 /**
  * Implementation of the {@link RealInterval} interface.
- *
- *
+ * 
+ * 
  * @author Stephan Preibisch
  */
-public class AbstractRealInterval extends AbstractEuclideanSpace  implements RealInterval
+public class AbstractRealInterval extends AbstractEuclideanSpace implements RealInterval
 {
 	final protected double[] min;
+
 	final protected double[] max;
 
 	/**
-	 * Creates a new {@link AbstractRealInterval} using an existing {@link RealInterval}
-	 *
+	 * Creates an <em>n</em>-dimensional {@link AbstractInterval} with min and
+	 * max = 0<sup>n</sup>.
+	 * 
+	 * @param n
+	 *            number of dimensions
+	 */
+	public AbstractRealInterval( final int n )
+	{
+		super( n );
+		this.min = new double[ n ];
+		this.max = new double[ n ];
+	}
+
+	/**
+	 * Creates a new {@link AbstractRealInterval} using an existing
+	 * {@link RealInterval}
+	 * 
 	 * @param interval
 	 */
 	public AbstractRealInterval( final RealInterval interval )
 	{
-		super( interval.numDimensions() );
-		this.min = new double[ n ];
-		this.max = new double[ n ];
-
-		for ( int d = 0; d < n; ++d )
-		{
-			this.min[ d ] = min[ d ];
-			this.max[ d ] = max[ d ];
-		}
+		this( interval.numDimensions() );
+		interval.realMin( min );
+		interval.realMax( max );
 	}
 
 	/**
 	 * Creates a new {@link AbstractRealInterval} from min and max coordinates
-	 *
+	 * 
 	 * @param min
 	 * @param max
 	 */
@@ -79,23 +85,11 @@ public class AbstractRealInterval extends AbstractEuclideanSpace  implements Rea
 		this.max = max.clone();
 	}
 
-	/**
-	 * Creates a new zero-bounded {@link AbstractRealInterval} with a certain size
-	 *
-	 * @param dimensions
-	 */
-	public AbstractRealInterval( final double[] dimensions )
-	{
-		super( dimensions.length );
-		this.min = new double[ n ];
-		this.max = new double[ n ];
-
-		for ( int d = 0; d < n; ++d )
-			this.max[ d ] = dimensions[ d ] - 1;
-	}
-
 	@Override
-	public double realMin( final int d) { return min[ d ]; }
+	public double realMin( final int d )
+	{
+		return min[ d ];
+	}
 
 	@Override
 	public void realMin( final double[] realMin )
@@ -112,7 +106,10 @@ public class AbstractRealInterval extends AbstractEuclideanSpace  implements Rea
 	}
 
 	@Override
-	public double realMax( final int d ) { return max[ d ]; }
+	public double realMax( final int d )
+	{
+		return max[ d ];
+	}
 
 	@Override
 	public void realMax( final double[] realMax )

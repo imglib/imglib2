@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -57,28 +53,39 @@ import net.imglib2.type.numeric.RealType;
 public class InverseDistanceWeightingInterpolatorFactory< T extends RealType< T > > implements InterpolatorFactory< T, KNearestNeighborSearch< T > >
 {
 	final double p;
-	
-	public InverseDistanceWeightingInterpolatorFactory() { this.p = 3; }
 
-	public InverseDistanceWeightingInterpolatorFactory( final double p ) { this.p = p; }
+	public InverseDistanceWeightingInterpolatorFactory()
+	{
+		this.p = 3;
+	}
+
+	public InverseDistanceWeightingInterpolatorFactory( final double p )
+	{
+		this.p = p;
+	}
 
 	/**
-	 * Creates a new {@link InverseDistanceWeightingInterpolator} using a copy of the
-	 * passed {@link KNearestNeighborSearch}.
+	 * Creates a new {@link InverseDistanceWeightingInterpolator} using a copy
+	 * of the passed {@link KNearestNeighborSearch}.
 	 */
 	@Override
 	public InverseDistanceWeightingInterpolator< T > create( final KNearestNeighborSearch< T > search )
 	{
-		//TODO: Ugly cast, needs a change in the KNearestNeighborSearch interface
+		// TODO: Ugly cast, needs a change in the KNearestNeighborSearch
+		// interface
 		return new InverseDistanceWeightingInterpolator< T >( search.copy(), p );
 	}
-	
+
 	/**
-	 * <p>Creates a new {@link InverseDistanceWeightingInterpolator} using a copy of the
-	 * passed {@link KNearestNeighborSearch}.</p>
+	 * <p>
+	 * Creates a new {@link InverseDistanceWeightingInterpolator} using a copy
+	 * of the passed {@link KNearestNeighborSearch}.
+	 * </p>
 	 * 
-	 * <p>For now, ignore the {@link RealInterval} and return
-	 * {@link #create(InverseDistanceWeightingInterpolator)}.</p>
+	 * <p>
+	 * For now, ignore the {@link RealInterval} and return
+	 * {@link #create(InverseDistanceWeightingInterpolator)}.
+	 * </p>
 	 */
 	@Override
 	public InverseDistanceWeightingInterpolator< T > create( final KNearestNeighborSearch< T > search, final RealInterval interval )

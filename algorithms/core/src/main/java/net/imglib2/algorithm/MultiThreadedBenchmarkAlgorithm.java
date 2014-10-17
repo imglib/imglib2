@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,30 +28,34 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.algorithm;
 
 /**
- * This is a convenience implementation of an algorithm that implements {@link MultiThreaded},
- * {@link Benchmark} and {@link Algorithm} so that less code has to be re-implemented.
+ * This is a convenience implementation of an algorithm that implements
+ * {@link MultiThreaded}, {@link Benchmark} and {@link Algorithm} so that less
+ * code has to be re-implemented.
  * 
- * IMPORTANT: It is not meant to be used for any other purpose than that, it should not be 
- * demanded by any other method or generic construct, use the interfaces instead.
- *   
+ * IMPORTANT: It is not meant to be used for any other purpose than that, it
+ * should not be demanded by any other method or generic construct, use the
+ * interfaces instead.
+ * 
  * @author Stephan Preibisch
  */
 public abstract class MultiThreadedBenchmarkAlgorithm extends MultiThreadedAlgorithm implements Benchmark
 {
 	protected long processingTime = -1;
 
-	public MultiThreadedBenchmarkAlgorithm() { super(); }
-	
+	public MultiThreadedBenchmarkAlgorithm()
+	{
+		super();
+	}
+
 	@Override
-	public long getProcessingTime() { return processingTime; }
+	public long getProcessingTime()
+	{
+		return processingTime;
+	}
 }

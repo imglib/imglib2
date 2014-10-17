@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,58 +35,74 @@ package net.imglib2.ui;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 
 import net.imglib2.realtransform.AffineTransform2D;
 
-public class TransformEventHandler2D implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener
+/**
+ * A {@link TransformEventHandler} that changes an {@link AffineTransform2D} in
+ * response to mouse and keyboard events.
+ * 
+ * @author Stephan Saalfeld
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
+public class TransformEventHandler2D extends MouseAdapter implements KeyListener, TransformEventHandler< AffineTransform2D >
 {
+	final static private TransformEventHandlerFactory< AffineTransform2D > factory = new TransformEventHandlerFactory< AffineTransform2D >()
+	{
+		@Override
+		public TransformEventHandler< AffineTransform2D > create( final TransformListener< AffineTransform2D > transformListener )
+		{
+			return new TransformEventHandler2D( transformListener );
+		}
+	};
+
+	public static TransformEventHandlerFactory< AffineTransform2D > factory()
+	{
+		return factory;
+	}
+
 	/**
 	 * Current source to screen transform.
 	 */
-	final private AffineTransform2D affine = new AffineTransform2D();
+	final protected AffineTransform2D affine = new AffineTransform2D();
 
 	/**
 	 * Whom to notify when the {@link #affine current transform} is changed.
 	 */
-	final private TransformListener2D listener;
+	protected TransformListener< AffineTransform2D > listener;
 
 	/**
 	 * Copy of {@link #affine current transform} when mouse dragging started.
 	 */
-	final private AffineTransform2D affineDragStart = new AffineTransform2D();
+	final protected AffineTransform2D affineDragStart = new AffineTransform2D();
 
 	/**
 	 * Coordinates where mouse dragging started.
 	 */
-	private double oX, oY;
+	protected double oX, oY;
 
 	/**
-	 * Screen coordinates to keep centered while zooming or rotating with the keyboard.
-	 * For example set these to <em>(screen-width/2, screen-height/2)</em>
+	 * The screen size of the canvas (the component displaying the image and
+	 * generating mouse events).
 	 */
-	private int centerX = 0, centerY = 0;
+	protected int canvasW = 1, canvasH = 1;
 
-	public TransformEventHandler2D( final TransformListener2D listener )
+	/**
+	 * Screen coordinates to keep centered while zooming or rotating with the
+	 * keyboard. For example set these to
+	 * <em>(screen-width/2, screen-height/2)</em>
+	 */
+	protected int centerX = 0, centerY = 0;
+
+	public TransformEventHandler2D( final TransformListener< AffineTransform2D > listener )
 	{
 		this.listener = listener;
 	}
 
-	public TransformEventHandler2D( final AffineTransform2D t, final TransformListener2D listener )
-	{
-		this.listener = listener;
-		affine.set( t );
-	}
-
-	/**
-	 * Get (a copy of) the current source to screen transform.
-	 *
-	 * @return current transform.
-	 */
+	@Override
 	public AffineTransform2D getTransform()
 	{
 		synchronized ( affine )
@@ -99,9 +111,7 @@ public class TransformEventHandler2D implements MouseListener, MouseMotionListen
 		}
 	}
 
-	/**
-	 * Set the current source to screen transform.
-	 */
+	@Override
 	public void setTransform( final AffineTransform2D transform )
 	{
 		synchronized ( affine )
@@ -110,30 +120,46 @@ public class TransformEventHandler2D implements MouseListener, MouseMotionListen
 		}
 	}
 
-	/**
-	 * Get description of how mouse and keyboard actions map to transformations.
-	 */
+	@Override
+	public void setCanvasSize( final int width, final int height, final boolean updateTransform )
+	{
+		if ( updateTransform )
+		{
+			synchronized ( affine )
+			{
+				affine.set( affine.get( 0, 2 ) - canvasW / 2, 0, 2 );
+				affine.set( affine.get( 1, 2 ) - canvasH / 2, 1, 2 );
+				affine.scale( ( double ) width / canvasW );
+				affine.set( affine.get( 0, 2 ) + width / 2, 0, 2 );
+				affine.set( affine.get( 1, 2 ) + height / 2, 1, 2 );
+				update();
+			}
+		}
+		canvasW = width;
+		canvasH = height;
+		centerX = width / 2;
+		centerY = height / 2;
+	}
+
+	@Override
+	public void setTransformListener( final TransformListener< AffineTransform2D > transformListener )
+	{
+		listener = transformListener;
+	}
+
+	@Override
 	public String getHelpString()
 	{
 		return helpString;
 	}
 
 	/**
-	 * Set screen coordinates to keep fixed while zooming or rotating with the keyboard.
-	 * For example set these to <em>(screen-width/2, screen-height/2)</em>
-	 */
-	public void setWindowCenter( final int x, final int y )
-	{
-		centerX = x;
-		centerY = y;
-	}
-
-	/**
 	 * notifies {@link #listener} that the current transform changed.
 	 */
-	private void update()
+	protected void update()
 	{
-		listener.transformChanged( affine );
+		if ( listener != null )
+			listener.transformChanged( affine );
 	}
 
 	/**
@@ -145,22 +171,22 @@ public class TransformEventHandler2D implements MouseListener, MouseMotionListen
 
 	final private static String helpString =
 			"Mouse control:" + NL + " " + NL +
-			"rotate the image by left-click and dragging the image in the canvas, " + NL +
-			"move the image by middle-click and dragging the image in the canvas, " + NL +
-			"zoom in and out using the mouse-wheel." + NL + " " + NL +
-			"Key control:" + NL + " " + NL +
-			"CURSOR LEFT - Rotate clockwise." + NL +
-			"CURSOR RIGHT - Rotate counter-clockwise." + NL +
-			"CURSOR UP - Zoom in." + NL +
-			"CURSOR DOWN - Zoom out." + NL +
-			"SHIFT - Rotate and zoom 10x faster." + NL +
-			"CTRL - Rotate and zoom 10x slower.";
+					"rotate the image by left-click and dragging the image in the canvas, " + NL +
+					"move the image by middle-or-right-click and dragging the image in the canvas, " + NL +
+					"zoom in and out using the mouse-wheel." + NL + " " + NL +
+					"Key control:" + NL + " " + NL +
+					"CURSOR LEFT - Rotate clockwise." + NL +
+					"CURSOR RIGHT - Rotate counter-clockwise." + NL +
+					"CURSOR UP - Zoom in." + NL +
+					"CURSOR DOWN - Zoom out." + NL +
+					"SHIFT - Rotate and zoom 10x faster." + NL +
+					"CTRL - Rotate and zoom 10x slower.";
 
 	/**
 	 * Return rotate/translate/scale speed resulting from modifier keys.
-	 *
+	 * 
 	 * Normal speed is 1. SHIFT is faster (10). CTRL is slower (0.1).
-	 *
+	 * 
 	 * @param modifiers
 	 * @return speed resulting from modifier keys.
 	 */
@@ -179,9 +205,8 @@ public class TransformEventHandler2D implements MouseListener, MouseMotionListen
 	{
 		synchronized ( affine )
 		{
-			final double f = getMouseScaleFactor();
-			oX = e.getX() * f;
-			oY = e.getY() * f;
+			oX = e.getX();
+			oY = e.getY();
 			affineDragStart.set( affine );
 		}
 	}
@@ -192,26 +217,25 @@ public class TransformEventHandler2D implements MouseListener, MouseMotionListen
 		synchronized ( affine )
 		{
 			final int modifiers = e.getModifiersEx();
-			final double f = getMouseScaleFactor();
 
 			if ( ( modifiers & MouseEvent.BUTTON1_DOWN_MASK ) != 0 ) // rotate
 			{
 				affine.set( affineDragStart );
 
-				final double dX = e.getX() * f - centerX;
-				final double dY = e.getY() * f - centerY;
+				final double dX = e.getX() - centerX;
+				final double dY = e.getY() - centerY;
 				final double odX = oX - centerX;
 				final double odY = oY - centerY;
 				final double theta = Math.atan2( dY, dX ) - Math.atan2( odY, odX );
 
 				rotate( theta );
 			}
-			else if ( ( modifiers & MouseEvent.BUTTON2_DOWN_MASK ) != 0 ) // translate
+			else if ( ( modifiers & ( MouseEvent.BUTTON2_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK ) ) != 0 ) // translate
 			{
 				affine.set( affineDragStart );
 
-				final double dX = oX - e.getX() * f;
-				final double dY = oY - e.getY() * f;
+				final double dX = oX - e.getX();
+				final double dY = oY - e.getY();
 
 				affine.set( affine.get( 0, 2 ) - dX, 0, 2 );
 				affine.set( affine.get( 1, 2 ) - dY, 1, 2 );
@@ -265,12 +289,11 @@ public class TransformEventHandler2D implements MouseListener, MouseMotionListen
 			final double v = keyModfiedSpeed( modifiers );
 			final int s = e.getWheelRotation();
 
-			final double f = getMouseScaleFactor();
 			final double dScale = 1.0 + 0.05 * v;
 			if ( s > 0 )
-				scale( 1.0 / dScale, e.getX() * f, e.getY() * f );
+				scale( 1.0 / dScale, e.getX(), e.getY() );
 			else
-				scale( dScale, e.getX() * f, e.getY() * f );
+				scale( dScale, e.getX(), e.getY() );
 
 			update();
 		}
@@ -308,28 +331,10 @@ public class TransformEventHandler2D implements MouseListener, MouseMotionListen
 	}
 
 	@Override
-	public void mouseMoved( final MouseEvent e ) {}
+	public void keyTyped( final KeyEvent e )
+	{}
 
 	@Override
-	public void mouseClicked( final MouseEvent e ) {}
-
-	@Override
-	public void mouseReleased( final MouseEvent e ) {}
-
-	@Override
-	public void mouseEntered( final MouseEvent e ) {}
-
-	@Override
-	public void mouseExited( final MouseEvent e ) {}
-
-	@Override
-	public void keyTyped( final KeyEvent e ) {}
-
-	@Override
-	public void keyReleased( final KeyEvent e ) {}
-
-	protected double getMouseScaleFactor()
-	{
-		return 1.0;
-	}
+	public void keyReleased( final KeyEvent e )
+	{}
 }

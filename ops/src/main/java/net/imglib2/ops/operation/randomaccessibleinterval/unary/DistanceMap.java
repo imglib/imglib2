@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.randomaccessibleinterval.unary;
@@ -48,7 +44,7 @@ import net.imglib2.type.numeric.real.FloatType;
  * 
  * @author Jens Metzner (University of Konstanz)
  */
-public class DistanceMap< T extends RealType< T >, K extends RandomAccessibleInterval< T >, M extends RandomAccessibleInterval< FloatType >> implements UnaryOperation< K, M >
+public class DistanceMap< T extends RealType< T >> implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< FloatType > >
 {
 
 	public final static int MAX_DIMS = 4;
@@ -56,7 +52,7 @@ public class DistanceMap< T extends RealType< T >, K extends RandomAccessibleInt
 	public final static int MIN_DIMS = 2;
 
 	@Override
-	public M compute( final K src, final M res )
+	public RandomAccessibleInterval<FloatType> compute( final RandomAccessibleInterval<T> src, final RandomAccessibleInterval<FloatType> res )
 	{
 
 		final RandomAccess< FloatType > resAccess = res.randomAccess();
@@ -75,8 +71,11 @@ public class DistanceMap< T extends RealType< T >, K extends RandomAccessibleInt
 				// if (src.dimension(i) > 1) {
 				if ( a < MAX_DIMS )
 				{
-					if ( src instanceof CalibratedSpace )
-						dim_unit[ a ] = ( ( CalibratedSpace ) src ).calibration( i );
+					if ( src instanceof CalibratedSpace ) {
+						final CalibratedSpace<?> space = ( CalibratedSpace<?> ) src;
+						// TODO - using averageScale() introduces error for nonlinear axes
+						dim_unit[a] = space.averageScale( i );
+					}
 					else
 						dim_unit[ a ] = 1;
 
@@ -292,8 +291,8 @@ public class DistanceMap< T extends RealType< T >, K extends RandomAccessibleInt
 	}
 
 	@Override
-	public UnaryOperation< K, M > copy()
+	public UnaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<FloatType> > copy()
 	{
-		return new DistanceMap< T, K, M >();
+		return new DistanceMap< T >();
 	}
 }

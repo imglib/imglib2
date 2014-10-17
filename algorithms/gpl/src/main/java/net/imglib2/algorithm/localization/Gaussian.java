@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -29,17 +29,27 @@ package net.imglib2.algorithm.localization;
 /**
  * A n-dimensional, symmetric Gaussian peak function.
  * <p>
- * This fitting target function is defined over dimension <code>n</code>, by the following 
- * <code>n+2</code> parameters:
- * <pre>k = 0..n-1  - x₀ᵢ (with i = k)
- *k = n       - A
- *k = n+1 	   - b</pre>
- * with
- * <pre>f(x) = A × exp( - S )</pre>
- * and
- * <pre>S = b × ∑ (xᵢ - x₀ᵢ)² </pre>
+ * This fitting target function is defined over dimension <code>n</code>, by the
+ * following <code>n+2</code> parameters:
  * 
- *
+ * <pre>
+ * k = 0..n-1  - x₀ᵢ (with i = k)
+ * k = n       - A
+ * k = n+1 	   - b
+ * </pre>
+ * 
+ * with
+ * 
+ * <pre>
+ * f(x) = A × exp( - S )
+ * </pre>
+ * 
+ * and
+ * 
+ * <pre>
+ * S = b × ∑ (xᵢ - x₀ᵢ)²
+ * </pre>
+ * 
  * @author Jean-Yves Tinevez <jeanyves.tinevez@gmail.com> - 2013
  */
 public class Gaussian implements FitFunction {
@@ -88,7 +98,11 @@ public class Gaussian implements FitFunction {
 	}
 
 	@Override
-	public final double hessian(final double[] x, final double[] a, int r, int c) {
+	public final double hessian(final double[] x, final double[] a, int rIn,
+		int cIn)
+	{
+		int r = rIn;
+		int c = cIn;
 		if (c < r) {
 			int tmp = c;
 			c = r;
@@ -138,13 +152,12 @@ public class Gaussian implements FitFunction {
 				// With respect to b
 				return - S(x, a) * E(x, a) / a[a.length-1];
 
-			} else {
-
-				// H3
-				// d²G / (dxi db)
-				final int i = r; // xi
-				return 2 * a[a.length-2] * (x[i]-a[i]) * E(x, a) * ( 1 - S(x, a) );
 			}
+
+			// H3
+			// d²G / (dxi db)
+			final int i = r; // xi
+			return 2 * a[a.length - 2] * (x[i] - a[i]) * E(x, a) * (1 - S(x, a));
 
 		}
 

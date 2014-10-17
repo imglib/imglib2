@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -42,78 +38,154 @@ import net.imglib2.type.numeric.complex.AbstractComplexType;
 
 /**
  * TODO
- *
+ * 
  */
-public abstract class AbstractRealType<T extends AbstractRealType<T>> extends AbstractComplexType<T> implements RealType<T>
+public abstract class AbstractRealType< T extends AbstractRealType< T >> extends AbstractComplexType< T > implements RealType< T >
 {
 	@Override
-	public float getImaginaryFloat() { return 0; }
-	@Override
-	public double getImaginaryDouble() { return 0; }
-	
-	@Override
-	public void setImaginary( final float complex ){}
-	@Override
-	public void setImaginary( final double complex ){}
-	
-	@Override
-	public void complexConjugate(){}
+	public float getImaginaryFloat()
+	{
+		return 0;
+	}
 
 	@Override
-	public void inc() { setReal( getRealDouble() + 1 ); }
-	@Override
-	public void dec() { setReal( getRealDouble() - 1 ); }
-	
-	@Override
-	public void set( final T c ){ setReal( c.getRealDouble() ); }
-	
-	@Override
-	public void mul( final float c ) { setReal( getRealDouble() * c ); }
+	public double getImaginaryDouble()
+	{
+		return 0;
+	}
 
 	@Override
-	public void mul( final double c ) { setReal( getRealDouble() * c ); }
-	
-	@Override
-	public void add( final T c ) { setReal( getRealDouble() + c.getRealDouble() ); }
+	public void setImaginary( final float complex )
+	{}
 
 	@Override
-	public void div( final T c ) { setReal( getRealDouble() / c.getRealDouble() ); }
+	public void setImaginary( final double complex )
+	{}
 
 	@Override
-	public void mul( final T c ) { setReal( getRealDouble() * c.getRealDouble() ); }
+	public void inc()
+	{
+		setReal( getRealDouble() + 1 );
+	}
 
 	@Override
-	public void sub( final T c ) { setReal( getRealDouble() - c.getRealDouble() ); }
-	
+	public void dec()
+	{
+		setReal( getRealDouble() - 1 );
+	}
+
 	@Override
-	public void setZero() { setReal( 0 ); }
+	public void set( final T c )
+	{
+		setReal( c.getRealDouble() );
+	}
+
 	@Override
-	public void setOne() { setReal( 1 ); }
-	
+	public void mul( final float c )
+	{
+		setReal( getRealDouble() * c );
+	}
+
 	@Override
-	public int compareTo( final T c ) 
-	{ 
+	public void mul( final double c )
+	{
+		setReal( getRealDouble() * c );
+	}
+
+	@Override
+	public void add( final T c )
+	{
+		setReal( getRealDouble() + c.getRealDouble() );
+	}
+
+	@Override
+	public void div( final T c )
+	{
+		setReal( getRealDouble() / c.getRealDouble() );
+	}
+
+	@Override
+	public void mul( final T c )
+	{
+		setReal( getRealDouble() * c.getRealDouble() );
+	}
+
+	@Override
+	public void sub( final T c )
+	{
+		setReal( getRealDouble() - c.getRealDouble() );
+	}
+
+	@Override
+	public void setZero()
+	{
+		setReal( 0 );
+	}
+
+	@Override
+	public void setOne()
+	{
+		setReal( 1 );
+	}
+
+	@Override
+	public boolean equals( final Object o )
+	{
+		if ( ! (o instanceof RealType) )
+			return false;
+		@SuppressWarnings("unchecked")
+		final T t = (T) o;
+		return compareTo(t) == 0;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Double#hashCode().
+		final long bits = Double.doubleToLongBits(getRealDouble());
+		return (int) (bits ^ (bits >>> 32));
+	}
+
+	@Override
+	public int compareTo( final T c )
+	{
 		final double a = getRealDouble();
 		final double b = c.getRealDouble();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
-	@Override
-	public float getPowerFloat() { return getRealFloat(); }
 
 	@Override
-	public double getPowerDouble() { return getRealDouble(); }
-	
+	public float getPowerFloat()
+	{
+		return getRealFloat();
+	}
+
 	@Override
-	public float getPhaseFloat() { return 0; }
-	
+	public double getPowerDouble()
+	{
+		return getRealDouble();
+	}
+
 	@Override
-	public double getPhaseDouble() { return 0; }
-	
+	public float getPhaseFloat()
+	{
+		return 0;
+	}
+
 	@Override
-	public String toString() { return "" + getRealDouble(); }	
+	public double getPhaseDouble()
+	{
+		return 0;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "" + getRealDouble();
+	}
 }

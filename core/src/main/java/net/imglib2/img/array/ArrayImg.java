@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -46,15 +42,15 @@ import net.imglib2.util.Fraction;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * This {@link Img} stores an image in a single linear array of basic
- * types.  By that, it provides the fastest possible access to data while
- * limiting the number of basic types stored to {@link Integer#MAX_VALUE}.
- * Keep in mind that this does not necessarily reflect the number of pixels,
- * because a pixel can be stored in less than or more than a basic type entry.
- *
+ * This {@link Img} stores an image in a single linear array of basic types. By
+ * that, it provides the fastest possible access to data while limiting the
+ * number of basic types stored to {@link Integer#MAX_VALUE}. Keep in mind that
+ * this does not necessarily reflect the number of pixels, because a pixel can
+ * be stored in less than or more than a basic type entry.
+ * 
  * @param <T>
  * @param <A>
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
@@ -67,9 +63,9 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	final private A data;
 
 	/**
-	 * TODO check for the size of numPixels being < Integer.MAX_VALUE?
-	 * TODO Type is suddenly not necessary anymore
-	 *
+	 * TODO check for the size of numPixels being < Integer.MAX_VALUE? TODO Type
+	 * is suddenly not necessary anymore
+	 * 
 	 * @param factory
 	 * @param data
 	 * @param dim
@@ -80,7 +76,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 		super( dim, entitiesPerPixel );
 		this.dim = new int[ n ];
 		for ( int d = 0; d < n; ++d )
-			this.dim[ d ] = ( int )dim[ d ];
+			this.dim[ d ] = ( int ) dim[ d ];
 
 		this.steps = new int[ n ];
 		IntervalIndexer.createAllocationSteps( this.dim, this.steps );
@@ -94,16 +90,28 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	}
 
 	@Override
-	public ArrayCursor< T > cursor() { return new ArrayCursor< T >( this ); }
+	public ArrayCursor< T > cursor()
+	{
+		return new ArrayCursor< T >( this );
+	}
 
 	@Override
-	public ArrayLocalizingCursor< T > localizingCursor() { return new ArrayLocalizingCursor< T >( this ); }
+	public ArrayLocalizingCursor< T > localizingCursor()
+	{
+		return new ArrayLocalizingCursor< T >( this );
+	}
 
 	@Override
-	public ArrayRandomAccess< T > randomAccess() { return new ArrayRandomAccess< T >( this ); }
+	public ArrayRandomAccess< T > randomAccess()
+	{
+		return new ArrayRandomAccess< T >( this );
+	}
 
 	@Override
-	public ArrayRandomAccess< T > randomAccess( final Interval interval ){ return randomAccess(); }
+	public ArrayRandomAccess< T > randomAccess( final Interval interval )
+	{
+		return randomAccess();
+	}
 
 	@Override
 	public FlatIterationOrder iterationOrder()
@@ -112,7 +120,10 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	}
 
 	@Override
-	public ArrayImgFactory<T> factory() { return new ArrayImgFactory<T>(); }
+	public ArrayImgFactory< T > factory()
+	{
+		return new ArrayImgFactory< T >();
+	}
 
 	@Override
 	public ArrayImg< T, ? > copy()

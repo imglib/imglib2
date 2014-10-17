@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.randomaccessibleinterval.unary;
@@ -57,7 +53,7 @@ import net.imglib2.type.Type;
  * 
  * @author Clemens Muehting (University of Konstanz)
  */
-public abstract class AbstractGrayscaleReconstruction< T extends Type< T >, V extends Type< V >, MASK extends RandomAccessibleInterval< T >, MARKER extends RandomAccessibleInterval< V >> implements UnaryOperation< MASK, MARKER >
+public abstract class AbstractGrayscaleReconstruction< T extends Type< T >, V extends Type< V > > implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > >
 {
 
 	/**
@@ -218,7 +214,7 @@ public abstract class AbstractGrayscaleReconstruction< T extends Type< T >, V ex
 		m_connection = connection;
 	}
 
-	protected AbstractGrayscaleReconstruction( final AbstractGrayscaleReconstruction< T, V, MASK, MARKER > copy )
+	protected AbstractGrayscaleReconstruction( final AbstractGrayscaleReconstruction< T, V > copy )
 	{
 		m_connection = copy.m_connection;
 	}
@@ -241,7 +237,7 @@ public abstract class AbstractGrayscaleReconstruction< T extends Type< T >, V ex
 	}
 
 	@Override
-	public MARKER compute( MASK input, MARKER output )
+	public RandomAccessibleInterval< V > compute( RandomAccessibleInterval< T > input, RandomAccessibleInterval< V > output )
 	{
 		setUpNeighbours( input.numDimensions() );
 

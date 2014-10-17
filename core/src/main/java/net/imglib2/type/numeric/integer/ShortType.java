@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,26 +40,38 @@ import net.imglib2.util.Fraction;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class ShortType extends GenericShortType<ShortType>
+public class ShortType extends GenericShortType< ShortType >
 {
 	// this is the constructor if you want it to read from an array
-	public ShortType( final NativeImg<ShortType, ? extends ShortAccess> img ) { super( img ); }
+	public ShortType( final NativeImg< ?, ? extends ShortAccess > img )
+	{
+		super( img );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public ShortType( final short value ) { super( value ); }
+	public ShortType( final short value )
+	{
+		super( value );
+	}
 
 	// this is the constructor if you want to specify the dataAccess
-	public ShortType( final ShortAccess access ) { super( access ); }
+	public ShortType( final ShortAccess access )
+	{
+		super( access );
+	}
 
 	// this is the constructor if you want it to be a variable
-	public ShortType() { this( (short)0 ); }
+	public ShortType()
+	{
+		this( ( short ) 0 );
+	}
 
 	@Override
-	public NativeImg<ShortType, ? extends ShortAccess> createSuitableNativeImg( final NativeImgFactory<ShortType> storageFactory, final long dim[] )
+	public NativeImg< ShortType, ? extends ShortAccess > createSuitableNativeImg( final NativeImgFactory< ShortType > storageFactory, final long dim[] )
 	{
 		// create the container
 		final NativeImg<ShortType, ? extends ShortAccess> container = storageFactory.createShortInstance( dim, new Fraction() );
@@ -78,28 +86,66 @@ public class ShortType extends GenericShortType<ShortType>
 	}
 
 	@Override
-	public ShortType duplicateTypeOnSameNativeImg() { return new ShortType( img ); }
+	public ShortType duplicateTypeOnSameNativeImg()
+	{
+		return new ShortType( img );
+	}
 
-	public short get() { return getValue(); }
-	public void set( final short b ) { setValue( b ); }
+	public short get()
+	{
+		return getValue();
+	}
 
-	@Override
-	public int getInteger(){ return get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ){ set( (short)f ); }
-	@Override
-	public void setInteger( final long f ){ set( (short)f ); }
-
-	@Override
-	public double getMaxValue() { return Short.MAX_VALUE; }
-	@Override
-	public double getMinValue()  { return Short.MIN_VALUE; }
+	public void set( final short b )
+	{
+		setValue( b );
+	}
 
 	@Override
-	public ShortType createVariable(){ return new ShortType( (short)0 ); }
+	public int getInteger()
+	{
+		return get();
+	}
 
 	@Override
-	public ShortType copy(){ return new ShortType( getValue() ); }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
+	@Override
+	public void setInteger( final int f )
+	{
+		set( ( short ) f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( ( short ) f );
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return Short.MAX_VALUE;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return Short.MIN_VALUE;
+	}
+
+	@Override
+	public ShortType createVariable()
+	{
+		return new ShortType( ( short ) 0 );
+	}
+
+	@Override
+	public ShortType copy()
+	{
+		return new ShortType( getValue() );
+	}
 }

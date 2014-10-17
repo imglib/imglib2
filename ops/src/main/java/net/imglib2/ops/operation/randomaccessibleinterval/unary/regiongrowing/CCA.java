@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,31 +28,27 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.ops.operation.randomaccessibleinterval.unary.regiongrowing;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.labeling.LabelingType;
+import net.imglib2.labeling.Labeling;
 import net.imglib2.ops.operation.UnaryOperation;
-import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.Views;
 
 /**
  * nD Connected Component Analysis.
- * 
- * @author Felix Schoenenberger (University of Konstanz)
+ *
  * @author Christian Dietz (University of Konstanz)
  * @author Martin Horn (University of Konstanz)
+ * @author Jonathan Hale (University of Konstanz)
  */
-public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomAccessibleInterval< T > & IterableInterval< T >, LL extends RandomAccessibleInterval< LabelingType< Integer >> & IterableInterval< LabelingType< Integer >>> extends AbstractRegionGrowing< T, Integer, I, LL >
+public class CCA< T extends RealType< T >> extends AbstractRegionGrowing< T, Integer >
 {
 
 	private Cursor< T > srcCur;
@@ -71,7 +67,7 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	 * @param structuringElement
 	 * @param background
 	 */
-	public CCA( long[][] structuringElement, T background )
+	public CCA( final long[][] structuringElement, final T background )
 	{
 		this( structuringElement, background, null );
 	}
@@ -80,16 +76,27 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	 * @param structuringElement
 	 * @param background
 	 */
-	public CCA( long[][] structuringElement, T background, ThreadSafeLabelNumbers synchronizer )
+	public CCA( final long[][] structuringElement, final T background, final ThreadSafeLabelNumbers synchronizer )
 	{
 		super( structuringElement, GrowingMode.ASYNCHRONOUS, false );
 
-		if ( synchronizer == null )
-			m_synchronizer = new ThreadSafeLabelNumbers();
-		else
-			m_synchronizer = synchronizer;
+		if ( synchronizer == null ) {
+            m_synchronizer = new ThreadSafeLabelNumbers();
+        } else {
+            m_synchronizer = synchronizer;
+        }
 
 		m_background = background;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void initRegionGrowing( final RandomAccessibleInterval<T> src )
+	{
+		srcCur = Views.iterable(src).localizingCursor();
+		srcRA = src.randomAccess();
 		m_labelNumber = m_synchronizer.aquireNewLabelNumber();
 	}
 
@@ -97,17 +104,7 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void initRegionGrowing( I srcImg )
-	{
-		srcCur = srcImg.localizingCursor();
-		srcRA = srcImg.randomAccess();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Integer nextSeedPosition( int[] seedPos )
+	protected Integer nextSeedPosition( final int[] seedPos )
 	{
 		while ( srcCur.hasNext() )
 		{
@@ -123,7 +120,11 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 
 	}
 
-	protected synchronized Integer labelNumber()
+	   /**
+	    *
+	    * @return
+	    */
+    protected synchronized Integer labelNumber()
 	{
 		return m_labelNumber;
 	}
@@ -132,7 +133,7 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected boolean includeInRegion( int[] oldPos, int[] nextPos, Integer label )
+	protected boolean includeInRegion( final int[] oldPos, final int[] nextPos, final Integer label )
 	{
 		srcRA.setPosition( nextPos );
 		return srcRA.get().compareTo( m_currentLabel ) == 0;
@@ -149,14 +150,14 @@ public class CCA< T extends NativeType< T > & Comparable< T >, I extends RandomA
 	}
 
 	@Override
-	public UnaryOperation< I, LL > copy()
+	public UnaryOperation< RandomAccessibleInterval<T>, Labeling< Integer >> copy()
 	{
-		return new CCA< T, I, LL >( m_structuringElement.clone(), m_background.copy(), m_synchronizer );
+		return new CCA< T >( m_structuringElement.clone(), m_background.copy(), m_synchronizer );
 	}
 
 	/**
 	 * Simple helper class
-	 * 
+	 *
 	 * @author Christian Dietz (University of Konstanz)
 	 */
 	private class ThreadSafeLabelNumbers

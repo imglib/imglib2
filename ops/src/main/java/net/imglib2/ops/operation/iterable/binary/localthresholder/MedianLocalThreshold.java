@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.iterable.binary.localthresholder;
@@ -46,7 +42,7 @@ import net.imglib2.type.numeric.real.DoubleType;
 /**
  * @author Markus Friedrich (University of Konstanz)
  */
-public class MedianLocalThreshold< T extends RealType< T >, IN extends Iterator< T >> implements BinaryOperation< IN, T, BitType >
+public class MedianLocalThreshold< T extends RealType< T >> implements BinaryOperation< Iterator< T >, T, BitType >
 {
 
 	private double m_c;
@@ -63,16 +59,16 @@ public class MedianLocalThreshold< T extends RealType< T >, IN extends Iterator<
 	}
 
 	@Override
-	public BitType compute( IN input, T px, BitType output )
+	public BitType compute( Iterator< T > input, T px, BitType output )
 	{
 		output.set( px.getRealDouble() > m_median.compute( input, m_tmp ).getRealDouble() - m_c );
 		return output;
 	}
 
 	@Override
-	public BinaryOperation< IN, T, BitType > copy()
+	public BinaryOperation< Iterator< T >, T, BitType > copy()
 	{
-		return new MedianLocalThreshold< T, IN >( m_c );
+		return new MedianLocalThreshold< T >( m_c );
 	}
 
 }

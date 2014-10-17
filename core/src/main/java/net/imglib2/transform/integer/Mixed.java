@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,19 +40,19 @@ import net.imglib2.transform.Transform;
  * translation, rotation, rotoinversion, and projection.
  * 
  * <p>
- * It transform a n-dimensional source vector to a m-dimensional target vector, and
- * can be represented as a <em>m+1</em> &times; <em>n+1</em> homogeneous matrix.
- * The mixed transform can be decomposed as follows:
+ * It transform a n-dimensional source vector to a m-dimensional target vector,
+ * and can be represented as a <em>m+1</em> &times; <em>n+1</em> homogeneous
+ * matrix. The mixed transform can be decomposed as follows:
  * <ol>
- *   <li>project down (discard some components of the source vector)</li>
- *   <li>component permutation</li>
- *   <li>component inversion</li>
- *   <li>project up (add zero components in the target vector)</li>
- *   <li>translation</li>
+ * <li>project down (discard some components of the source vector)</li>
+ * <li>component permutation</li>
+ * <li>component inversion</li>
+ * <li>project up (add zero components in the target vector)</li>
+ * <li>translation</li>
  * </ol>
  * </p>
  * 
- *
+ * 
  * @author Tobias Pietzsch
  */
 public interface Mixed extends Transform, BoundingBoxTransform

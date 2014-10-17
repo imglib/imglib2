@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.iterable.binary.localthresholder;
@@ -39,43 +35,37 @@ package net.imglib2.ops.operation.iterable.binary.localthresholder;
 import java.util.Iterator;
 
 import net.imglib2.ops.operation.BinaryOperation;
+import net.imglib2.ops.operation.iterable.unary.Mean;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.DoubleType;
 /**
  * @author Markus Friedrich (University of Konstanz)
+ * @author Jonathan Hale (University of Konstanz)
  */
-public class MeanLocalThreshold< T extends RealType< T >, IN extends Iterator< T >> implements BinaryOperation< IN, T, BitType >
+public class MeanLocalThreshold< T extends RealType< T > > implements BinaryOperation< Iterator< T >, T, BitType >
 {
 
 	private double m_c;
+	private Mean<T, DoubleType> m_meanOp;
 
 	public MeanLocalThreshold( double c )
 	{
 		m_c = c;
+		m_meanOp = new Mean<T, DoubleType>();
 	}
 
 	@Override
-	public BitType compute( IN input, T px, BitType output )
+	public BitType compute( Iterator< T > input, T px, BitType output )
 	{
-		int numElements = 0;
-		double mean = 0;
-
-		while ( input.hasNext() )
-		{
-			mean += input.next().getRealDouble();
-			numElements++;
-		}
-
-		mean /= numElements;
-
-		output.set( px.getRealDouble() > mean - m_c );
+		output.set( px.getRealDouble() > m_meanOp.compute( input, new DoubleType() ).getRealDouble() - m_c );
 		return output;
 	}
 
 	@Override
-	public BinaryOperation< IN, T, BitType > copy()
+	public BinaryOperation< Iterator< T >, T, BitType > copy()
 	{
-		return new MeanLocalThreshold< T, IN >( m_c );
+		return new MeanLocalThreshold< T >( m_c );
 	}
 
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -48,22 +44,22 @@ import net.imglib2.util.Fraction;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class BasePairCharType extends AbstractNativeType<BasePairCharType> implements BasePairType<BasePairCharType>
+public class BasePairCharType extends AbstractNativeType< BasePairCharType > implements BasePairType< BasePairCharType >
 {
 	@Override
 	public Fraction getEntitiesPerPixel() { return new Fraction(); }
 
-	final protected NativeImg<BasePairCharType, ? extends CharAccess> img;
-	
-	// the DataAccess that holds the information 
+	final protected NativeImg< BasePairCharType, ? extends CharAccess > img;
+
+	// the DataAccess that holds the information
 	protected CharAccess dataAccess;
-	
+
 	// this is the constructor if you want it to read from an array
-	public BasePairCharType( NativeImg<BasePairCharType, ? extends CharAccess> charStorage )
+	public BasePairCharType( final NativeImg< BasePairCharType, ? extends CharAccess > charStorage )
 	{
 		img = charStorage;
 	}
@@ -78,103 +74,151 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 
 	// this is the constructor if you want it to be a variable
 	public BasePairCharType( final char value )
-	{	
+	{
 		img = null;
 		dataAccess = new CharArray( 1 );
 		setChar( value );
 	}
 
 	// this is the constructor if you want it to be a variable
-	public BasePairCharType() { this( Base.N ); }
+	public BasePairCharType()
+	{
+		this( Base.N );
+	}
 
 	@Override
-	public NativeImg<BasePairCharType, ? extends CharAccess> createSuitableNativeImg( final NativeImgFactory<BasePairCharType> storageFactory, final long dim[] )
+	public NativeImg< BasePairCharType, ? extends CharAccess > createSuitableNativeImg( final NativeImgFactory< BasePairCharType > storageFactory, final long dim[] )
 	{
 		// create the container
 		final NativeImg<BasePairCharType, ? extends CharAccess> container = storageFactory.createCharInstance( dim, new Fraction() );
 		
 		// create a Type that is linked to the container
 		final BasePairCharType linkedType = new BasePairCharType( container );
-		
+
 		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
-	
-	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
-	
-	@Override
-	public BasePairCharType duplicateTypeOnSameNativeImg() { return new BasePairCharType( img ); }
-	
-	public char getChar() { return dataAccess.getValue( i ); }
-	public void setChar( final char f ) { dataAccess.setValue( i, f ); }
 
 	@Override
-	public void set( final Base base ) 
+	public void updateContainer( final Object c )
+	{
+		dataAccess = img.update( c );
+	}
+
+	@Override
+	public BasePairCharType duplicateTypeOnSameNativeImg()
+	{
+		return new BasePairCharType( img );
+	}
+
+	public char getChar()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	public void setChar( final char f )
+	{
+		dataAccess.setValue( i, f );
+	}
+
+	@Override
+	public void set( final Base base )
 	{
 		switch ( base )
 		{
-			case A: setChar('A'); return;
-			case T: setChar('T'); return;
-			case G: setChar('G'); return;
-			case C: setChar('C'); return;
-			case gap: setChar(' '); return;
-			default: setChar('N'); return;
+		case A:
+			setChar( 'A' );
+			return;
+		case T:
+			setChar( 'T' );
+			return;
+		case G:
+			setChar( 'G' );
+			return;
+		case C:
+			setChar( 'C' );
+			return;
+		case gap:
+			setChar( ' ' );
+			return;
+		default:
+			setChar( 'N' );
+			return;
 		}
 	}
-	
+
 	@Override
-	public Base get() 
+	public Base get()
 	{
 		final char value = getChar();
-		
+
 		switch ( value )
 		{
-			case 'A': return Base.A;
-			case 'T': return Base.T;
-			case 'G': return Base.G;
-			case 'C': return Base.C;
-			case ' ': return Base.gap;
-			default: return Base.N;
+		case 'A':
+			return Base.A;
+		case 'T':
+			return Base.T;
+		case 'G':
+			return Base.G;
+		case 'C':
+			return Base.C;
+		case ' ':
+			return Base.gap;
+		default:
+			return Base.N;
 		}
 	}
-	
-	@Override
-	public void set( final BasePairCharType c ) { dataAccess.setValue( i, c.getChar() ); }
 
 	@Override
-	public int compareTo( final BasePairCharType c ) 
-	{ 
+	public void set( final BasePairCharType c )
+	{
+		dataAccess.setValue( i, c.getChar() );
+	}
+
+	@Override
+	public int compareTo( final BasePairCharType c )
+	{
 		final char input = getChar();
 		final char compare = c.getChar();
-		
-		if ( input == compare )
-		{
-			return 0;
-		}
+
+		if ( input == compare ) { return 0; }
 		switch ( input )
 		{
-			case ' ': return -1; 
-			case 'N': return compare == ' ' ? 1 : -1;
-			case 'A': return compare == ' ' || compare == 'N' ? 1 : -1;
-			case 'T': return compare == 'G' || compare == 'C' ? -1 : 1;
-			case 'G': return compare == 'C' ? -1 : 1;
-			default: return 1;
+		case ' ':
+			return -1;
+		case 'N':
+			return compare == ' ' ? 1 : -1;
+		case 'A':
+			return compare == ' ' || compare == 'N' ? 1 : -1;
+		case 'T':
+			return compare == 'G' || compare == 'C' ? -1 : 1;
+		case 'G':
+			return compare == 'C' ? -1 : 1;
+		default:
+			return 1;
 		}
 	}
 
 	@Override
-	public void complement() 
+	public void complement()
 	{
 		final char base = getChar();
 		switch ( base )
 		{
-			case 'A': setChar( 'T' ); break;
-			case 'T': setChar( 'A' ); break;
-			case 'G': setChar( 'C' ); break;
-			case 'C': setChar( 'G' ); break;
+		case 'A':
+			setChar( 'T' );
+			break;
+		case 'T':
+			setChar( 'A' );
+			break;
+		case 'G':
+			setChar( 'C' );
+			break;
+		case 'C':
+			setChar( 'G' );
+			break;
 		}
 	}
 
@@ -182,24 +226,39 @@ public class BasePairCharType extends AbstractNativeType<BasePairCharType> imple
 	public byte baseToValue()
 	{
 		final char base = getChar();
-		
+
 		switch ( base )
 		{
-			case 'N': return 1;
-			case 'A': return 2;
-			case 'T': return 3;
-			case 'G': return 4;
-			case 'C': return 5;
-			default: return 0;
-		}		
+		case 'N':
+			return 1;
+		case 'A':
+			return 2;
+		case 'T':
+			return 3;
+		case 'G':
+			return 4;
+		case 'C':
+			return 5;
+		default:
+			return 0;
+		}
 	}
 
 	@Override
-	public BasePairCharType createVariable(){ return new BasePairCharType( Base.N ); }
-	
+	public BasePairCharType createVariable()
+	{
+		return new BasePairCharType( Base.N );
+	}
+
 	@Override
-	public BasePairCharType copy(){ return new BasePairCharType( get() ); }
-	
+	public BasePairCharType copy()
+	{
+		return new BasePairCharType( get() );
+	}
+
 	@Override
-	public String toString() { return "" + get(); }
+	public String toString()
+	{
+		return "" + get();
+	}
 }

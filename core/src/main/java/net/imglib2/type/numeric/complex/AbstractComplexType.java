@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -41,9 +37,9 @@ import net.imglib2.type.numeric.ComplexType;
 
 /**
  * TODO
- *
+ * 
  */
-public abstract class AbstractComplexType<T extends AbstractComplexType<T>> implements ComplexType<T>
+public abstract class AbstractComplexType< T extends AbstractComplexType< T >> implements ComplexType< T >
 {
 	@Override
 	public void set( final T c )
@@ -81,8 +77,8 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 		final double c1 = c.getRealDouble();
 		final double d1 = c.getImaginaryDouble();
 
-		setReal( ( a1*c1 + b1*d1 ) / ( c1*c1 + d1*d1 ) );
-		setImaginary( ( b1*c1 - a1*d1 ) / ( c1*c1 + d1*d1 ) );
+		setReal( ( a1 * c1 + b1 * d1 ) / ( c1 * c1 + d1 * d1 ) );
+		setImaginary( ( b1 * c1 - a1 * d1 ) / ( c1 * c1 + d1 * d1 ) );
 	}
 
 	@Override
@@ -96,8 +92,8 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 		final double c = t.getRealDouble();
 		final double d = t.getImaginaryDouble();
 
-		setReal( a*c - b*d );
-		setImaginary( a*d + b*c );
+		setReal( a * c - b * d );
+		setImaginary( a * d + b * c );
 	}
 
 	@Override
@@ -108,7 +104,10 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 	}
 
 	@Override
-	public void complexConjugate(){ setImaginary( -getImaginaryDouble() ); }
+	public void complexConjugate()
+	{
+		setImaginary( -getImaginaryDouble() );
+	}
 
 	@Override
 	public float getPowerFloat()
@@ -116,7 +115,7 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 		final double real = getRealDouble();
 		final double imaginary = getImaginaryDouble();
 
-		return (float)Math.sqrt( real * real + imaginary * imaginary );
+		return ( float ) Math.sqrt( real * real + imaginary * imaginary );
 	}
 
 	@Override
@@ -131,7 +130,7 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 	@Override
 	public float getPhaseFloat()
 	{
-		return (float)Math.atan2( getImaginaryDouble(), getRealDouble() );
+		return ( float ) Math.atan2( getImaginaryDouble(), getRealDouble() );
 	}
 
 	@Override
@@ -169,5 +168,8 @@ public abstract class AbstractComplexType<T extends AbstractComplexType<T>> impl
 	}
 
 	@Override
-	public String toString(){ return "(" + getRealDouble() + ") + (" + getImaginaryDouble() + ")i"; }
+	public String toString()
+	{
+		return "(" + getRealDouble() + ") + (" + getImaginaryDouble() + ")i";
+	}
 }

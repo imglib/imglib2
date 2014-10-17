@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,68 +28,105 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.ops.operation.iterableinterval.unary;
 
-import java.util.Iterator;
-
+import net.imglib2.histogram.Histogram1d;
+import net.imglib2.histogram.Real1dBinMapper;
 import net.imglib2.ops.operation.UnaryOutputOperation;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.ValuePair;
 
 /**
  * 
- * @author Felix Schoenenberger (University of Konstanz)
- *
+ * @author dietzc (University of Konstanz)
+ * 
  * @param <T>
  */
-public final class MakeHistogram< T extends RealType< T >> implements UnaryOutputOperation< Iterable< T >, OpsHistogram >
+public final class MakeHistogram< T extends RealType< T >> implements UnaryOutputOperation< Iterable< T >, Histogram1d< T > >
 {
 
-	int m_numBins = 0;
+	private final int m_numBins;
+
+	private final boolean m_calculateMinMax;
 
 	public MakeHistogram()
 	{
-		this( -1 );
+		this( -1, false );
 	}
 
 	public MakeHistogram( int numBins )
 	{
+		this( numBins, false );
+	}
+
+	/**
+	 * @param calculateMinMax
+	 *            Calculates the real min and max values of the image and uses
+	 *            them for creation of the histogram
+	 */
+	public MakeHistogram( boolean calculateMinMax )
+	{
+		this( -1, calculateMinMax );
+	}
+
+	/**
+	 * 
+	 * @param numBins
+	 * @param calculateMinMax
+	 *            Calculates the real min and max values of the image and uses
+	 *            them for creation of the histogram
+	 */
+	public MakeHistogram( int numBins, boolean calculateMinMax )
+	{
 		m_numBins = numBins;
+		m_calculateMinMax = calculateMinMax;
 	}
 
 	@Override
-	public final OpsHistogram createEmptyOutput( Iterable< T > op )
+	public final Histogram1d< T > createEmptyOutput( Iterable< T > op )
 	{
-		return m_numBins <= 0 ? new OpsHistogram( op.iterator().next().createVariable() ) : new OpsHistogram( m_numBins, op.iterator().next().createVariable() );
-	}
+		T type = op.iterator().next().createVariable();
 
-	@Override
-	public final OpsHistogram compute( Iterable< T > op, OpsHistogram r )
-	{
-		final Iterator< T > it = op.iterator();
-		r.clear();
-		while ( it.hasNext() )
+		double min = type.getMinValue();
+		double max = type.getMaxValue();
+
+		if ( m_calculateMinMax )
 		{
-			r.incByValue( it.next().getRealDouble() );
+			ValuePair< T, T > minMaxPair = new MinMax< T >().compute( op );
+			min = minMaxPair.getA().getRealDouble();
+			max = minMaxPair.getB().getRealDouble();
 		}
+
+		if ( m_numBins <= 0 )
+		{
+			return new Histogram1d< T >( new Real1dBinMapper< T >( min, max, 256, false ) );
+		}
+		else
+		{
+			return new Histogram1d< T >( new Real1dBinMapper< T >( min, max, m_numBins, false ) );
+		}
+	}
+
+	@Override
+	public final Histogram1d< T > compute( Iterable< T > op, Histogram1d< T > r )
+	{
+		r.resetCounters();
+		r.addData( op );
 
 		return r;
 	}
 
 	@Override
-	public OpsHistogram compute( Iterable< T > op )
+	public Histogram1d< T > compute( Iterable< T > op )
 	{
 		return compute( op, createEmptyOutput( op ) );
 	}
 
 	@Override
-	public UnaryOutputOperation< Iterable< T >, OpsHistogram > copy()
+	public UnaryOutputOperation< Iterable< T >, Histogram1d< T > > copy()
 	{
 		return new MakeHistogram< T >( m_numBins );
 	}

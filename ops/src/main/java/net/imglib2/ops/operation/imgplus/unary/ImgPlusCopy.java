@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,18 +28,15 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.ops.operation.imgplus.unary;
 
-import net.imglib2.img.ImgPlus;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.img.unary.ImgCopyOperation;
+import net.imglib2.ops.operation.metadata.unary.CopyMetadata;
 import net.imglib2.type.Type;
 
 /**
@@ -55,15 +52,7 @@ public class ImgPlusCopy< T extends Type< T >> implements UnaryOperation< ImgPlu
 	@Override
 	public ImgPlus< T > compute( ImgPlus< T > op, ImgPlus< T > r )
 	{
-		r.setName( op.getName() );
-		r.setSource( op.getSource() );
-		for ( int d = 0; d < op.numDimensions(); d++ )
-		{
-
-			r.setAxis( op.axis( d ), d );
-			r.setCalibration( op.calibration( d ), d );
-
-		}
+		new CopyMetadata().compute(op, r);
 		new ImgCopyOperation< T >().compute( op, r );
 		return r;
 	}

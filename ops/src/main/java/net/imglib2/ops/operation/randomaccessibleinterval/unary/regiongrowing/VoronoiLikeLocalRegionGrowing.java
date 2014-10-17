@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -41,10 +37,12 @@ import java.util.Collection;
 
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.labeling.Labeling;
+import net.imglib2.labeling.LabelingType;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.Type;
+import net.imglib2.view.Views;
 
 /**
  * First attempt to voronoi-like local region growing. NOT FINISHED YET!
@@ -54,7 +52,7 @@ import net.imglib2.type.Type;
 public class VoronoiLikeLocalRegionGrowing< L extends Comparable< L >, T extends Type< T > & Comparable< T >> extends VoronoiLikeRegionGrowing< L, T >
 {
 
-	private Img< T > m_srcImg;
+	private RandomAccessibleInterval< T > m_srcImg;
 
 	private RandomAccess< T > m_srcImgRA;
 
@@ -66,9 +64,9 @@ public class VoronoiLikeLocalRegionGrowing< L extends Comparable< L >, T extends
 	 *            fills the wholes in a post-processing step within segments of
 	 *            the same label
 	 */
-	public VoronoiLikeLocalRegionGrowing( Img< T > srcImg, boolean fillHoles )
+	public VoronoiLikeLocalRegionGrowing( RandomAccessibleInterval< T > srcImg, boolean fillHoles )
 	{
-		super( srcImg, srcImg.firstElement().createVariable(), fillHoles );
+		super( srcImg, Views.iterable( srcImg ).firstElement().createVariable(), fillHoles );
 		m_srcImg = srcImg;
 		m_srcImgRA = m_srcImg.randomAccess();
 
@@ -78,10 +76,17 @@ public class VoronoiLikeLocalRegionGrowing< L extends Comparable< L >, T extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void initRegionGrowing( Labeling< L > srcLab )
+	protected void initRegionGrowing( RandomAccessibleInterval< LabelingType< L > > in )
 	{
+		if(!(in instanceof Labeling)){
+			throw new IllegalArgumentException("Since now only Labelings are supported");
+		}
+		
+		Labeling<L> srcLab = (Labeling<L>) in;
+		
 		super.initRegionGrowing( srcLab );
 
+		
 		// determine the local threshold for each region by means of the
 		// seeding
 		// regions
@@ -109,7 +114,7 @@ public class VoronoiLikeLocalRegionGrowing< L extends Comparable< L >, T extends
 	}
 
 	@Override
-	public UnaryOperation< Labeling< L >, Labeling< L >> copy()
+	public UnaryOperation< RandomAccessibleInterval< LabelingType< L > >, Labeling< L >> copy()
 	{
 		return new VoronoiLikeLocalRegionGrowing< L, T >( m_srcImg, m_fillHoles );
 

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -53,90 +49,118 @@ import net.imglib2.view.Views;
 
 /**
  * TODO
- *
+ * 
  */
+@Deprecated
 public class GaussGeneral< T extends NumericType< T > > extends AbstractGauss< T >
 {
 	/**
-	 * Computes a Gaussian convolution on a {@link RandomAccessible} in a certain {@link Interval}
-	 * and returns an {@link Img} defined by the {@link ImgFactory} containing the result.
+	 * Computes a Gaussian convolution on a {@link RandomAccessible} in a
+	 * certain {@link Interval} and returns an {@link Img} defined by the
+	 * {@link ImgFactory} containing the result.
 	 * 
-	 * WARNING: This is a very slow implementation as it is not written for {@link NativeType}. If your type is {@link NativeType},
-	 * use {@link GaussNativeType} instead!
+	 * WARNING: This is a very slow implementation as it is not written for
+	 * {@link NativeType}. If your type is {@link NativeType}, use
+	 * {@link GaussNativeType} instead!
 	 * 
-	 * @param sigma - the sigma for the convolution
-	 * @param input - the {@link RandomAccessible} to work on
-	 * @param interval - the area that is convolved
-	 * @param factory - the {@link ImgFactory} that defines the temporary and output images to be used
+	 * @param sigma
+	 *            - the sigma for the convolution
+	 * @param input
+	 *            - the {@link RandomAccessible} to work on
+	 * @param interval
+	 *            - the area that is convolved
+	 * @param factory
+	 *            - the {@link ImgFactory} that defines the temporary and output
+	 *            images to be used
 	 */
-	public GaussGeneral( final double[] sigma, final RandomAccessible<T> input, final Interval interval, final ImgFactory<T> factory, final T type )
+	public GaussGeneral( final double[] sigma, final RandomAccessible< T > input, final Interval interval, final ImgFactory< T > factory, final T type )
 	{
 		super( sigma, input, interval, factory.create( interval, type ), new Point( sigma.length ), factory, type );
 	}
 
 	/**
-	 * Computes a Gaussian convolution with any precision on a {@link RandomAccessible} in a certain {@link Interval}
-	 * and writes it into a given {@link RandomAccessible} at a specific Point
-	 *
-	 * WARNING: This is a very slow implementation as it is not written for {@link NativeType}. If your type is {@link NativeType},
-	 * use {@link GaussNativeType} instead!
+	 * Computes a Gaussian convolution with any precision on a
+	 * {@link RandomAccessible} in a certain {@link Interval} and writes it into
+	 * a given {@link RandomAccessible} at a specific Point
 	 * 
-	 * @param sigma - the sigma for the convolution
-	 * @param input - the {@link RandomAccessible} to work on
-	 * @param interval - the area that is convolved
-	 * @param output - the {@link RandomAccessible} where the output will be written to
-	 * @param outputOffset - the offset that corresponds to the first pixel in output {@link RandomAccessible}
-	 * @param factory - the {@link ImgFactory} for creating temporary images
+	 * WARNING: This is a very slow implementation as it is not written for
+	 * {@link NativeType}. If your type is {@link NativeType}, use
+	 * {@link GaussNativeType} instead!
+	 * 
+	 * @param sigma
+	 *            - the sigma for the convolution
+	 * @param input
+	 *            - the {@link RandomAccessible} to work on
+	 * @param interval
+	 *            - the area that is convolved
+	 * @param output
+	 *            - the {@link RandomAccessible} where the output will be
+	 *            written to
+	 * @param outputOffset
+	 *            - the offset that corresponds to the first pixel in output
+	 *            {@link RandomAccessible}
+	 * @param factory
+	 *            - the {@link ImgFactory} for creating temporary images
 	 */
-	public GaussGeneral( final double[] sigma, final RandomAccessible<T> input, final Interval interval, final RandomAccessible<T> output, final Localizable outputOffset, final ImgFactory<T> factory, final T type )
+	public GaussGeneral( final double[] sigma, final RandomAccessible< T > input, final Interval interval, final RandomAccessible< T > output, final Localizable outputOffset, final ImgFactory< T > factory, final T type )
 	{
 		super( sigma, input, interval, output, outputOffset, factory, type );
 	}
 
 	/**
-	 * Computes a Gaussian convolution with any precision on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
-	 *
-	 * WARNING: This is a very slow implementation as it is not written for {@link NativeType}. If your type is {@link NativeType},
-	 * use {@link GaussNativeType} instead!
+	 * Computes a Gaussian convolution with any precision on an entire
+	 * {@link Img} using the {@link OutOfBoundsMirrorFactory} with single
+	 * boundary
 	 * 
-	 * @param sigma - the sigma for the convolution
-	 * @param input - the input {@link Img}
+	 * WARNING: This is a very slow implementation as it is not written for
+	 * {@link NativeType}. If your type is {@link NativeType}, use
+	 * {@link GaussNativeType} instead!
+	 * 
+	 * @param sigma
+	 *            - the sigma for the convolution
+	 * @param input
+	 *            - the input {@link Img}
 	 */
-	public GaussGeneral( final double[] sigma, final Img<T> input )
+	public GaussGeneral( final double[] sigma, final Img< T > input )
 	{
-		this( sigma, Views.extend( input, new OutOfBoundsMirrorFactory< T, Img<T> >( Boundary.SINGLE ) ), input, input.factory(), input.firstElement().createVariable() );
+		this( sigma, Views.extend( input, new OutOfBoundsMirrorFactory< T, Img< T > >( Boundary.SINGLE ) ), input, input.factory(), input.firstElement().createVariable() );
 	}
 
 	/**
-	 * Computes a Gaussian convolution with any precision on an entire {@link Img} using the {@link OutOfBoundsMirrorFactory} with single boundary
-	 *
-	 * WARNING: This is a very slow implementation as it is not written for {@link NativeType}. If your type is {@link NativeType},
-	 * use {@link GaussNativeType} instead!
+	 * Computes a Gaussian convolution with any precision on an entire
+	 * {@link Img} using the {@link OutOfBoundsMirrorFactory} with single
+	 * boundary
 	 * 
-	 * @param sigma - the sigma for the convolution
-	 * @param input - the input {@link Img}
+	 * WARNING: This is a very slow implementation as it is not written for
+	 * {@link NativeType}. If your type is {@link NativeType}, use
+	 * {@link GaussNativeType} instead!
+	 * 
+	 * @param sigma
+	 *            - the sigma for the convolution
+	 * @param input
+	 *            - the input {@link Img}
 	 */
-	public GaussGeneral( final double[] sigma, final Img<T> input, final OutOfBoundsFactory< T, Img<T> > outOfBounds )
+	public GaussGeneral( final double[] sigma, final Img< T > input, final OutOfBoundsFactory< T, Img< T > > outOfBounds )
 	{
 		this( sigma, Views.extend( input, outOfBounds ), input, input.factory(), input.firstElement().createVariable() );
 	}
-	
+
 	@Override
-	protected Img<T> getProcessingLine( final long sizeProcessLine ) 
+	protected Img< T > getProcessingLine( final long sizeProcessLine )
 	{
-		final Img<T> processLine;
-		
+		final Img< T > processLine;
+
 		// try to use array if each individual line is not too long
 		if ( sizeProcessLine <= Integer.MAX_VALUE )
 		{
-			processLine = new ListImgFactory< T >().create( new long[]{ sizeProcessLine }, getProcessingType() );
+			processLine = new ListImgFactory< T >().create( new long[] { sizeProcessLine }, getProcessingType() );
 		}
 		else
 		{
 			System.out.println( "Individual dimension size is too large for ListImg, sorry. We need a CellListImg..." );
 			processLine = null;
 		}
-		
-		return processLine;		
+
+		return processLine;
 	}
 }

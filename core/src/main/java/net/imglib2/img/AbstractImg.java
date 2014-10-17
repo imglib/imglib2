@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -47,32 +43,35 @@ import net.imglib2.RealPositionable;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
 public abstract class AbstractImg< T > implements Img< T >
 {
 	final protected int n;
+
 	protected long numPixels;
+
 	protected final long[] dimension;
+
 	protected final long[] max;
-	
+
 	public AbstractImg( final long[] size )
 	{
 		this.n = size.length;
-		
+
 		this.numPixels = numElements( size );
-		
+
 		this.dimension = size.clone();
 		max = new long[ size.length ];
 		for ( int i = 0; i < size.length; ++i )
 			max[ i ] = size[ i ] - 1;
 	}
-	
+
 	@Override
-	public Iterator<T> iterator()
-	{ 
+	public Iterator< T > iterator()
+	{
 		return cursor();
 	}
 
@@ -81,20 +80,23 @@ public abstract class AbstractImg< T > implements Img< T >
 	{
 		return cursor().next();
 	}
-	
+
 	public static long numElements( final long[] dim )
 	{
-		long numPixels = 1;		
-		
+		long numPixels = 1;
+
 		for ( int i = 0; i < dim.length; ++i )
 			numPixels *= dim[ i ];
-		
-		return numPixels;		
+
+		return numPixels;
 	}
-		
+
 	@Override
-	public int numDimensions() { return n; }
-	
+	public int numDimensions()
+	{
+		return n;
+	}
+
 	@Override
 	public void dimensions( final long[] s )
 	{
@@ -105,35 +107,44 @@ public abstract class AbstractImg< T > implements Img< T >
 	@Override
 	public long dimension( final int d )
 	{
-		try { return this.dimension[ d ]; }
-		catch ( ArrayIndexOutOfBoundsException e ) { return 1; }
+		try
+		{
+			return this.dimension[ d ];
+		}
+		catch ( final ArrayIndexOutOfBoundsException e )
+		{
+			return 1;
+		}
 	}
-	
+
 	@Override
-	public long size() { return numPixels; }
+	public long size()
+	{
+		return numPixels;
+	}
 
 	@Override
 	public String toString()
 	{
 		String className = this.getClass().getCanonicalName();
-		className = className.substring( className.lastIndexOf(".") + 1, className.length());
-		
+		className = className.substring( className.lastIndexOf( "." ) + 1, className.length() );
+
 		String description = className + " [" + dimension[ 0 ];
-		
+
 		for ( int i = 1; i < n; ++i )
 			description += "x" + dimension[ i ];
-		
+
 		description += "]";
-		
+
 		return description;
 	}
 
 	@Override
-	public double realMax( int d )
+	public double realMax( final int d )
 	{
 		return max[ d ];
 	}
-	
+
 	@Override
 	public void realMax( final double[] m )
 	{
@@ -148,11 +159,11 @@ public abstract class AbstractImg< T > implements Img< T >
 	}
 
 	@Override
-	public double realMin( int d )
+	public double realMin( final int d )
 	{
 		return 0;
 	}
-	
+
 	@Override
 	public void realMin( final double[] m )
 	{
@@ -168,7 +179,7 @@ public abstract class AbstractImg< T > implements Img< T >
 	}
 
 	@Override
-	public long max( int d )
+	public long max( final int d )
 	{
 		return max[ d ];
 	}
@@ -194,7 +205,7 @@ public abstract class AbstractImg< T > implements Img< T >
 	}
 
 	@Override
-	public long min( int d )
+	public long min( final int d )
 	{
 		return 0;
 	}
@@ -207,7 +218,7 @@ public abstract class AbstractImg< T > implements Img< T >
 	}
 
 	@Override
-	public RandomAccess< T > randomAccess( Interval interval )
+	public RandomAccess< T > randomAccess( final Interval interval )
 	{
 		return randomAccess();
 	}

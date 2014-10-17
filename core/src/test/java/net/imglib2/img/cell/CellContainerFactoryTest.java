@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -47,61 +43,81 @@ import org.junit.Test;
 
 /**
  * TODO
- *
+ * 
  */
 public class CellContainerFactoryTest
 {
 	int[][] dim = {
-			{10, 12},
-			{200, 30, 2, 2384},
-			{12, 3, 4, 1, 9}
-		};
+			{ 10, 12 },
+			{ 200, 30, 2, 2384 },
+			{ 12, 3, 4, 1, 9 }
+	};
+
 	long[][] offset = {
-			{0, 0},
-			{0, 912389123123l, 1231238214214367l, 2},
-			{321, 3, 1, 0, 0}
-		};
+			{ 0, 0 },
+			{ 0, 912389123123l, 1231238214214367l, 2 },
+			{ 321, 3, 1, 0, 0 }
+	};
+
 	int[] expectedLength = {
 			120,
 			28608000,
 			1296
-		};
+	};
 
-	private < T extends NativeType< T > > void testDefaultCellSize (T type)
+	private < T extends NativeType< T > > void testDefaultCellSize( final T type )
 	{
-		int defaultCellSize = 43;
-		int[] expectedCellDims = {43, 43, 43, 43};
-		CellImgFactory< T > factory = new CellImgFactory< T >( defaultCellSize );
-		long[] dimension = {100, 80, 4, 3}; 
-		CellImg< T, ?, ? > img = factory.create( dimension, type );
-		assertArrayEquals( expectedCellDims, img.cellDims );
-	}
-	
-	@Test
-	public void testBitDefaultCellSize() { testDefaultCellSize( new BitType() ); }
-
-	@Test
-	public void testIntDefaultCellSize() { testDefaultCellSize( new IntType() ); }
-
-	@Test
-	public void testFloatDefaultCellSize() { testDefaultCellSize( new FloatType() ); }
-
-	private < T extends NativeType< T > > void testDefaultCellDimensions (T type)
-	{
-		int[] defaultCellDims = {6, 8, 5, 3};
-		int[] expectedCellDims = defaultCellDims.clone();
-		CellImgFactory< T > factory = new CellImgFactory< T >( defaultCellDims );
-		long[] dimension = {100, 80, 4, 3}; 
-		CellImg< T, ?, ? > img = factory.create( dimension, type );
+		final int defaultCellSize = 43;
+		final int[] expectedCellDims = { 43, 43, 43, 43 };
+		final CellImgFactory< T > factory = new CellImgFactory< T >( defaultCellSize );
+		final long[] dimension = { 100, 80, 4, 3 };
+		final CellImg< T, ?, ? > img = factory.create( dimension, type );
 		assertArrayEquals( expectedCellDims, img.cellDims );
 	}
 
 	@Test
-	public void testBitDefaultCellDimensions() { testDefaultCellDimensions( new BitType() ); }
+	public void testBitDefaultCellSize()
+	{
+		testDefaultCellSize( new BitType() );
+	}
 
 	@Test
-	public void testIntDefaultCellDimensions() { testDefaultCellDimensions( new IntType() ); }
+	public void testIntDefaultCellSize()
+	{
+		testDefaultCellSize( new IntType() );
+	}
 
 	@Test
-	public void testFloatDefaultCellDimensions() { testDefaultCellDimensions( new FloatType() ); }
+	public void testFloatDefaultCellSize()
+	{
+		testDefaultCellSize( new FloatType() );
+	}
+
+	private < T extends NativeType< T > > void testDefaultCellDimensions( final T type )
+	{
+		final int[] defaultCellDims = { 6, 8, 5, 3 };
+		final int[] expectedCellDims = defaultCellDims.clone();
+		final CellImgFactory< T > factory = new CellImgFactory< T >( defaultCellDims );
+		final long[] dimension = { 100, 80, 4, 3 };
+		final CellImg< T, ?, ? > img = factory.create( dimension, type );
+		assertArrayEquals( expectedCellDims, img.cellDims );
+	}
+
+	@Test
+	public void testBitDefaultCellDimensions()
+	{
+		testDefaultCellDimensions( new BitType() );
+	}
+
+	@Test
+	public void testIntDefaultCellDimensions()
+	{
+		testDefaultCellDimensions( new IntType() );
+	}
+
+	@Test
+	public void testFloatDefaultCellDimensions()
+	{
+		testDefaultCellDimensions( new FloatType() );
+	}
 }

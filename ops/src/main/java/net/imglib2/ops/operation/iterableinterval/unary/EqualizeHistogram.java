@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -41,12 +37,15 @@ import java.util.Random;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.histogram.Histogram1d;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
 
+
+//TODO Fix the algorithm their should't be values < 0 or > binCount
 /**
  * TODO
  * 
@@ -68,19 +67,25 @@ public class EqualizeHistogram<T extends RealType<T>> implements
 
         assert (in.iterationOrder().equals(r.iterationOrder()));
 
-        OpsHistogram histo = new MakeHistogram<T>(numBins).compute(in);
+        Histogram1d<T> histo = new MakeHistogram<T>(numBins).compute(in);
         T val = r.firstElement().createVariable();
 
-        int min = (int)val.getMaxValue();
+		long min = (long)val.getMaxValue();
+		if (Long.MAX_VALUE < val.getMaxValue()) {
+			min = Long.MAX_VALUE;
+		}
+
+        long[] histoArray = histo.toLongArray();
+        
         // calc cumulated histogram
-        for (int i = 1; i < histo.numBins(); i++) {
-            histo.hist()[i] = histo.get(i) + histo.get(i - 1);
-            if (histo.get(i) != 0) {
-                min = Math.min(min, histo.get(i));
+        for (int i = 1; i < histo.getBinCount(); i++) {
+            histoArray[i] = histoArray[i] + histoArray[i-1];
+            if (histoArray[i] != 0) {
+                min = Math.min(min, histoArray[i]);
             }
         }
 
-        double gmax = histo.numBins();
+        double gmax = histo.getBinCount();
 
         Cursor<T> cin = in.cursor();
         Cursor<T> cout = r.cursor();
@@ -92,12 +97,21 @@ public class EqualizeHistogram<T extends RealType<T>> implements
             cout.fwd();
 
             val = cin.get();
-            int p = histo.getByValue(val.getRealFloat());
+            long p = histoArray[(int) histo.map(val)];
             double t = (p - min);
             t /= numPix - min;
             t *= gmax;
             p = (int)Math.round(t);
-            cout.get().setReal(histo.binToValue(p));
+			//TODO fix algorithm
+			//code accesses for n bins the n+1 th bin
+			//that should be properly fixed by adapting the algorithm
+			if (p >= histo.getBinCount()) {
+				p = histo.getBinCount() -1;
+			}
+			if (p < 0) {
+				p = 0;
+			}
+			histo.getCenterValue(p, cout.get());
         }
         return r;
 

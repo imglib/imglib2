@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,32 +28,30 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.ops.operation.randomaccessibleinterval.unary.morph;
 
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.types.ConnectedType;
+import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.type.logic.BitType;
 
 /**
  * @author Felix Schoenenberger (University of Konstanz)
  */
-public final class Erode< I extends RandomAccessibleInterval< BitType > & IterableInterval< BitType >> implements UnaryOperation< I, I >
+public final class Erode implements UnaryOperation< RandomAccessibleInterval< BitType >, RandomAccessibleInterval< BitType > >
 {
 
 	private final int m_neighbourhoodCount;
 
 	private final ConnectedType m_type;
 
-	private final BinaryOps< I > m_binOps;
+	private final BinaryOps m_binOps;
+
+	private final OutOfBoundsFactory< BitType, RandomAccessibleInterval< BitType >> m_factory;
 
 	/**
 	 * @param type
@@ -61,15 +59,15 @@ public final class Erode< I extends RandomAccessibleInterval< BitType > & Iterab
 	 * @param iterations
 	 *            number of iterations, at least 1
 	 */
-	public Erode( ConnectedType type, final int neighbourhoodCount )
+	public Erode( ConnectedType type, OutOfBoundsFactory< BitType, RandomAccessibleInterval< BitType > > factory, final int neighbourhoodCount )
 	{
 		m_neighbourhoodCount = neighbourhoodCount;
 		m_type = type;
-		m_binOps = new BinaryOps< I >();
+		m_binOps = new BinaryOps( m_factory = factory );
 	}
 
 	@Override
-	public I compute( I op, I r )
+	public RandomAccessibleInterval< BitType > compute( RandomAccessibleInterval< BitType > op, RandomAccessibleInterval< BitType > r )
 	{
 		m_binOps.erode( m_type, r, op, m_neighbourhoodCount );
 		return r;
@@ -77,8 +75,8 @@ public final class Erode< I extends RandomAccessibleInterval< BitType > & Iterab
 	}
 
 	@Override
-	public UnaryOperation< I, I > copy()
+	public UnaryOperation< RandomAccessibleInterval< BitType >, RandomAccessibleInterval< BitType > > copy()
 	{
-		return new Erode< I >( m_type, m_neighbourhoodCount );
+		return new Erode( m_type, m_factory, m_neighbourhoodCount );
 	}
 }

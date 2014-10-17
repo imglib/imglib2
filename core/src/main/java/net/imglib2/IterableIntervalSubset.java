@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -42,7 +38,7 @@ import java.util.Iterator;
 /**
  * A subset of an {@link IterableInterval} defined by the index of its first
  * element and the number of iterable elements.
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -53,6 +49,7 @@ final public class IterableIntervalSubset< T > extends AbstractWrappedInterval< 
 		private long index;
 
 		final private Cursor< T > cursor;
+
 		final private boolean localizing;
 
 		private IISCursor( final IISCursor cursor )
@@ -213,28 +210,29 @@ final public class IterableIntervalSubset< T > extends AbstractWrappedInterval< 
 		@Override
 		public boolean equals( final Object obj )
 		{
-			if ( ! ( obj instanceof IterableIntervalSubset.IISIterationOrder ) )
+			if ( !( obj instanceof IterableIntervalSubset.IISIterationOrder ) )
 				return false;
 
 			@SuppressWarnings( "unchecked" )
-			final IISIterationOrder o = ( IISIterationOrder )obj;
+			final IISIterationOrder o = ( IISIterationOrder ) obj;
 
-			return
-				o.firstIndex() == firstIndex() &&
-				o.size() == size() &&
-				o.interval().iterationOrder().equals( interval().iterationOrder() );
+			return o.firstIndex() == firstIndex() &&
+					o.size() == size() &&
+					o.interval().iterationOrder().equals( interval().iterationOrder() );
 		}
 	}
 
 	final protected long firstIndex;
+
 	final private long size;
+
 	final protected long lastIndex;
 
 	/**
 	 * Make sure that size and last index are dictated by the parent
-	 * {@link IterableInterval} or the {@link IterableIntervalSubset},
-	 * depending on which finishes earlier.
-	 *
+	 * {@link IterableInterval} or the {@link IterableIntervalSubset}, depending
+	 * on which finishes earlier.
+	 * 
 	 * @param interval
 	 * @param firstIndex
 	 * @param size
@@ -270,7 +268,8 @@ final public class IterableIntervalSubset< T > extends AbstractWrappedInterval< 
 	}
 
 	@Override
-	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
+	{
 		return iterationOrder().equals( f.iterationOrder() );
 	}
 

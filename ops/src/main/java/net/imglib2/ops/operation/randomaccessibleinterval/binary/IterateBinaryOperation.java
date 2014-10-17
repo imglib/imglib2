@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,12 +28,9 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
+ 
 package net.imglib2.ops.operation.randomaccessibleinterval.binary;
 
 import java.util.concurrent.ExecutionException;
@@ -43,8 +40,8 @@ import java.util.concurrent.Future;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.labeling.Labeling;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.ops.operation.metadata.unary.CopyCalibratedSpace;
 import net.imglib2.ops.operation.metadata.unary.CopyImageMetadata;
@@ -58,14 +55,14 @@ import net.imglib2.ops.operation.subset.views.SubsetViews;
 import net.imglib2.type.Type;
 
 /**
- * Applies a given Operation to each interval separately.
+ * Applies a given Operation to each interval Separately.
  * 
  * @author Christian Dietz (University of Konstanz)
  */
-public final class IterateBinaryOperation< T extends Type< T >, V extends Type< V >, O extends Type< O >, S extends RandomAccessibleInterval< T >, U extends RandomAccessibleInterval< V >, R extends RandomAccessibleInterval< O > > implements BinaryOperation< S, U, R >
+public final class IterateBinaryOperation< T extends Type< T >, V extends Type< V >, O extends Type< O > > implements BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> >
 {
 
-	private final BinaryOperation< S, U, R > m_op;
+	private final BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> > m_op;
 
 	private final Interval[] m_in0Intervals;
 
@@ -82,7 +79,7 @@ public final class IterateBinaryOperation< T extends Type< T >, V extends Type< 
 	 * @param intervals
 	 * @param service
 	 */
-	public IterateBinaryOperation( BinaryOperation< S, U, R > op, Interval[] in0InIntervals, Interval[] in1Intervals, Interval[] outIntervals, ExecutorService service )
+	public IterateBinaryOperation( BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> > op, Interval[] in0InIntervals, Interval[] in1Intervals, Interval[] outIntervals, ExecutorService service )
 	{
 		m_op = op;
 		m_in0Intervals = in0InIntervals;
@@ -98,55 +95,55 @@ public final class IterateBinaryOperation< T extends Type< T >, V extends Type< 
 	 * @param intervals
 	 * @param service
 	 */
-	public IterateBinaryOperation( BinaryOperation< S, U, R > op, Interval[] in0InIntervals, Interval[] in1Intervals, Interval[] outIntervals )
+	public IterateBinaryOperation( BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> > op, Interval[] in0InIntervals, Interval[] in1Intervals, Interval[] outIntervals )
 	{
 		this( op, in0InIntervals, in1Intervals, outIntervals, null );
 	}
 
 	/**
-	 * Intervals for in0, in1 are the same.
+	 * Intervals for in0, in1 are the Same.
 	 * 
 	 * @param op
 	 * @param intervals
 	 * @param service
 	 */
-	public IterateBinaryOperation( BinaryOperation< S, U, R > op, Interval[] inInIntervals, Interval[] outIntervals )
+	public IterateBinaryOperation( BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> > op, Interval[] inInIntervals, Interval[] outIntervals )
 	{
 		this( op, inInIntervals, inInIntervals, outIntervals, null );
 	}
 
 	/**
-	 * Intervals for in0, in1 are the same.
+	 * Intervals for in0, in1 are the Same.
 	 * 
 	 * @param op
 	 * @param intervals
 	 * @param service
 	 */
-	public IterateBinaryOperation( BinaryOperation< S, U, R > op, Interval[] inInIntervals, Interval[] outIntervals, ExecutorService service )
+	public IterateBinaryOperation( BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> > op, Interval[] inInIntervals, Interval[] outIntervals, ExecutorService service )
 	{
 		this( op, inInIntervals, inInIntervals, outIntervals, service );
 	}
 
 	/**
-	 * Intervals for in0, in1 and out are the same.
+	 * Intervals for in0, in1 and out are the Same.
 	 * 
 	 * @param op
 	 * @param intervals
 	 * @param service
 	 */
-	public IterateBinaryOperation( BinaryOperation< S, U, R > op, Interval[] intervals )
+	public IterateBinaryOperation( BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> > op, Interval[] intervals )
 	{
 		this( op, intervals, intervals, intervals, null );
 	}
 
 	/**
-	 * Intervals for in0, in1 and out are the same.
+	 * Intervals for in0, in1 and out are the Same.
 	 * 
 	 * @param op
 	 * @param intervals
 	 * @param service
 	 */
-	public IterateBinaryOperation( BinaryOperation< S, U, R > op, Interval[] intervals, ExecutorService service )
+	public IterateBinaryOperation( BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> > op, Interval[] intervals, ExecutorService service )
 	{
 		this( op, intervals, intervals, intervals, service );
 	}
@@ -155,7 +152,7 @@ public final class IterateBinaryOperation< T extends Type< T >, V extends Type< 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final R compute( final S in0, U in1, R out )
+	public final RandomAccessibleInterval<O> compute( final RandomAccessibleInterval<T> in0, RandomAccessibleInterval<V> in1, RandomAccessibleInterval<O> out )
 	{
 
 		if ( m_in0Intervals.length != m_outIntervals.length || m_in0Intervals.length != m_in1Intervals.length ) { throw new IllegalArgumentException( "In and out intervals do not match! Most likely an implementation error!" ); }
@@ -227,9 +224,9 @@ public final class IterateBinaryOperation< T extends Type< T >, V extends Type< 
 	}
 
 	@Override
-	public BinaryOperation< S, U, R > copy()
+	public BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> > copy()
 	{
-		return new IterateBinaryOperation< T, V, O, S, U, R >( m_op.copy(), m_in0Intervals, m_in1Intervals, m_outIntervals, m_service );
+		return new IterateBinaryOperation< T, V, O >( m_op.copy(), m_in0Intervals, m_in1Intervals, m_outIntervals, m_service );
 	}
 
 	/**
@@ -241,15 +238,15 @@ public final class IterateBinaryOperation< T extends Type< T >, V extends Type< 
 	private class OperationTask implements Runnable
 	{
 
-		private final BinaryOperation< S, U, R > m_op;
+		private final BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> > m_op;
 
-		private final S m_in1;
+		private final RandomAccessibleInterval<T> m_in1;
 
-		private final U m_in2;
+		private final RandomAccessibleInterval<V> m_in2;
 
-		private final R m_out;
+		private final RandomAccessibleInterval<O> m_out;
 
-		public OperationTask( final BinaryOperation< S, U, R > op, final S in1, final U in2, final R out )
+		public OperationTask( final BinaryOperation< RandomAccessibleInterval<T>, RandomAccessibleInterval<V>, RandomAccessibleInterval<O> > op, final RandomAccessibleInterval <T> in1, final RandomAccessibleInterval<V> in2, final RandomAccessibleInterval<O> out )
 		{
 			m_in1 = in1;
 			m_in2 = in2;

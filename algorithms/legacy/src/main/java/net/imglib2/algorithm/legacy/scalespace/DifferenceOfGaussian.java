@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -57,7 +57,7 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 {
 	public static enum SpecialPoint { INVALID, MIN, MAX }
 
-	protected final Img<A> image;
+	protected final RandomAccessibleInterval<A> image;
 	protected Img<FloatType> dogImg;
 	protected final ImgFactory<A> factory;
 	protected final OutOfBoundsFactory<A, RandomAccessibleInterval<A>> outOfBoundsFactory;
@@ -82,7 +82,7 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 
 	/** Calls the DifferenceOfGaussian constructor with the given sigmas copied into double[] arrays,
 	 * one entry per {@param img} dimension. */
-	public DifferenceOfGaussian( final Img<A> img, final ImgFactory<A> factory,
+	public DifferenceOfGaussian( final RandomAccessibleInterval<A> img, final ImgFactory<A> factory,
 		    final OutOfBoundsFactory<A, RandomAccessibleInterval<A>> outOfBoundsFactory,
 		    final double sigma1, final double sigma2, final double minPeakValue, final double normalizationFactor )
 	{
@@ -110,7 +110,7 @@ public class DifferenceOfGaussian < A extends RealType<A> > implements Algorithm
 	 * @param minPeakValue -
 	 * @param normalizationFactor
 	 */
-	public DifferenceOfGaussian( final Img<A> img, final ImgFactory<A> factory,
+	public DifferenceOfGaussian( final RandomAccessibleInterval<A> img, final ImgFactory<A> factory,
 			    final OutOfBoundsFactory<A, RandomAccessibleInterval<A>> outOfBoundsFactory,
 			    final double[] sigma1, final double[] sigma2, final double minPeakValue, final double normalizationFactor )
 	{

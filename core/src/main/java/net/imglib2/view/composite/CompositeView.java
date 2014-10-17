@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.view.composite;
@@ -42,27 +38,33 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 
 /**
+ * {@link CompositeView} collapses the trailing dimension of a
+ * {@link RandomAccessible} of T into a {@link Composite} of T. The results is
+ * an (<em>n</em>-1)-dimensional {@link RandomAccessible} of {@link Composite}
+ * of T.
  * 
- *
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class CompositeView< T, C extends Composite< T > > implements RandomAccessible< C >
 {
 	final protected CompositeFactory< T, C > compositeFactory;
+
 	final protected RandomAccessible< T > source;
+
 	final protected int n;
-	
+
 	public class CompositeRandomAccess implements RandomAccess< C >
 	{
 		final protected RandomAccess< T > sourceAccess;
+
 		final protected C composite;
-		
+
 		public CompositeRandomAccess()
 		{
 			sourceAccess = source.randomAccess();
 			composite = compositeFactory.create( sourceAccess );
 		}
-		
+
 		@Override
 		public void localize( final int[] position )
 		{
@@ -217,14 +219,14 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 			return copy();
 		}
 	}
-	
+
 	public CompositeView( final RandomAccessible< T > source, final CompositeFactory< T, C > compositeFactory )
 	{
 		this.source = source;
 		this.compositeFactory = compositeFactory;
 		n = source.numDimensions() - 1;
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{

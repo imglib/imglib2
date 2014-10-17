@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -70,7 +70,7 @@ public class BufferedRectangularNeighborhoodCursor<T extends Type<T>> extends
 
 	@SuppressWarnings("unchecked")
 	public BufferedRectangularNeighborhoodCursor(
-			BufferedRectangularNeighborhood<T, ? extends RandomAccessibleInterval<T>> neighborhood) {
+			BufferedRectangularNeighborhood<T> neighborhood) {
 		super(neighborhood);
 
 		n = neighborhood.numDimensions();
@@ -107,7 +107,7 @@ public class BufferedRectangularNeighborhoodCursor<T extends Type<T>> extends
 	protected BufferedRectangularNeighborhoodCursor(
 			final BufferedRectangularNeighborhoodCursor<T> c) {
 		this(
-				(BufferedRectangularNeighborhood<T, ? extends RandomAccessibleInterval<T>>) c.neighborhood);
+				(BufferedRectangularNeighborhood<T>) c.neighborhood);
 	}
 
 	@Override

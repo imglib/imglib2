@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -50,23 +46,25 @@ import net.imglib2.RealRandomAccessible;
  * Make sure that you either request a new {@link RealRandomAccess} after
  * modifying the transformation or perform a full initialization (e.g.
  * setPosition(double[])) of any existing one before making any relative move.
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RealTransformRealRandomAccessible< T, R extends RealTransform > implements RealRandomAccessible< T >
 {
 	final protected RealRandomAccessible< T > target;
+
 	final protected R transform;
 
 	/**
 	 * {@link RealRandomAccess} that generates its samples from a target
 	 * {@link RealRandomAccessible} at coordinates transformed by a
 	 * {@link RealTransform}.
-	 *
+	 * 
 	 */
 	public class RealTransformRealRandomAccess extends RealPoint implements RealRandomAccess< T >
 	{
 		final protected RealRandomAccess< T > targetAccess;
+
 		final protected R transformCopy;
 
 		@SuppressWarnings( "unchecked" )
@@ -74,7 +72,7 @@ public class RealTransformRealRandomAccessible< T, R extends RealTransform > imp
 		{
 			super( transform.numSourceDimensions() );
 			targetAccess = target.realRandomAccess();
-			transformCopy = ( R )transform.copy();
+			transformCopy = ( R ) transform.copy();
 		}
 
 		@SuppressWarnings( "unchecked" )
@@ -82,7 +80,7 @@ public class RealTransformRealRandomAccessible< T, R extends RealTransform > imp
 		{
 			super( a );
 			this.targetAccess = a.targetAccess.copyRealRandomAccess();
-			transformCopy = ( R )a.transformCopy.copy();
+			transformCopy = ( R ) a.transformCopy.copy();
 		}
 
 		final protected void apply()

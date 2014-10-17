@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -46,7 +46,7 @@ import net.imglib2.view.Views;
  * bounding box of the neighborhood in dimension <code>d</code> will be
  * <code>2 x span[d] + 1</code>.
  */
-public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterval<T>>
+public abstract class AbstractNeighborhood<T>
 		implements Positionable, IterableInterval<T> {
 
 	/** The pixel coordinates of the center of this regions. */
@@ -56,9 +56,9 @@ public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterva
 	 * dimension <code>d</code> will be <code>2 x span[d] + 1</code>.
 	 */
 	protected final long[] span;
-	protected ExtendedRandomAccessibleInterval<T, IN> extendedSource;
-	protected IN source;
-	protected OutOfBoundsFactory<T, IN> outOfBounds;
+	protected ExtendedRandomAccessibleInterval<T, RandomAccessibleInterval<T>> extendedSource;
+	protected RandomAccessibleInterval<T> source;
+	protected OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds;
 	protected int n;
 
 	/*
@@ -66,7 +66,7 @@ public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterva
 	 */
 
 	public AbstractNeighborhood(final int numDims,
-			final OutOfBoundsFactory<T, IN> outOfBounds) {
+			final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds) {
 		this.n = numDims;
 		this.outOfBounds = outOfBounds;
 		this.center = new long[numDims];
@@ -193,7 +193,7 @@ public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterva
 		if (!(f instanceof RectangleNeighborhoodGPL)) {
 			return false;
 		}
-		RectangleNeighborhoodGPL<?, ?> otherRectangle = (RectangleNeighborhoodGPL<?, ?>) f;
+		RectangleNeighborhoodGPL<?> otherRectangle = (RectangleNeighborhoodGPL<?>) f;
 		if (otherRectangle.numDimensions() != numDimensions()) {
 			return false;
 		}
@@ -297,7 +297,7 @@ public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterva
 	/**
 	 * Updates the source.
 	 */
-	public void updateSource(IN source) {
+	public void updateSource(RandomAccessibleInterval<T> source) {
 		this.source = source;
 		this.extendedSource = Views.extend(source, outOfBounds);
 	}
@@ -305,6 +305,6 @@ public abstract class AbstractNeighborhood<T, IN extends RandomAccessibleInterva
 	/**
 	 * Copies the {@link AbstractNeighborhood}.
 	 */
-	public abstract AbstractNeighborhood<T, IN> copy();
+	public abstract AbstractNeighborhood<T> copy();
 
 }

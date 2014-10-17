@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,17 +28,13 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.ops.img;
 
 import net.imglib2.RandomAccess;
-import net.imglib2.img.Img;
+import net.imglib2.RandomAccessible;
 import net.imglib2.ops.condition.Condition;
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.input.InputIterator;
@@ -63,7 +59,7 @@ import net.imglib2.type.numeric.ComplexType;
  */
 public class SerialImageAssignment<U extends ComplexType<U>,V extends ComplexType<V>,INPUT> {
 
-	private final Img<U> img;
+	private final RandomAccessible<U> img;
 	private final Function<INPUT,V> function;
 	private final InputIterator<INPUT> iter;
 	private final Condition<INPUT> condition;
@@ -72,7 +68,7 @@ public class SerialImageAssignment<U extends ComplexType<U>,V extends ComplexTyp
 	 * SerialImageAssignment constructor
 	 * 
 	 * @param img
-	 * 	The Img<?> to assign output values to
+	 * 	The RandomAccess<?> to assign output values to
 	 * @param function
 	 * 	The Function<?,?> to obtain values from
 	 * @param iter
@@ -80,7 +76,7 @@ public class SerialImageAssignment<U extends ComplexType<U>,V extends ComplexTyp
 	 * @param condition
 	 * 	The optional Condition<?> that can further constrain which values to fill
 	 */
-	public SerialImageAssignment(Img<U> img, Function<INPUT,V> function,
+	public SerialImageAssignment(RandomAccessible<U> img, Function<INPUT,V> function,
 		InputIterator<INPUT> iter, Condition<INPUT> condition)
 	{
 		this.img = img;

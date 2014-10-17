@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -52,15 +48,14 @@ import net.imglib2.collection.KDTree;
 import net.imglib2.collection.KDTreeNode;
 
 /**
- *The volumetric search uses a K-D tree to search for all hyper-rectangular nodes
- *that contain a given point.
- *
- *You can use this via the RandomAccessible<List<I>> interface:
- *   Get the RandomAccess<List<I>> interface
- *   Localize it to your point
- *   get() performs the search, returning the list.
- *
- *
+ * The volumetric search uses a K-D tree to search for all hyper-rectangular
+ * nodes that contain a given point.
+ * 
+ * You can use this via the RandomAccessible<List<I>> interface: Get the
+ * RandomAccess<List<I>> interface Localize it to your point get() performs the
+ * search, returning the list.
+ * 
+ * 
  * @author Lee Kamentsky
  * @author Tobias Pietzsch
  */
@@ -145,7 +140,7 @@ public class VolumetricSearch< I extends RealInterval > implements RandomAccessi
 
 	/**
 	 * Find all intervals that contain a given point
-	 *
+	 * 
 	 * @param pt
 	 *            the point in question
 	 * @return list of all intervals containing the point.
@@ -185,7 +180,8 @@ public class VolumetricSearch< I extends RealInterval > implements RandomAccessi
 				// The coordinate is a minimum.
 				// If it is greater than the position, only take the left branch
 				// which still could be lower.
-				// Otherwise (coordinate is smaller/equal position, take the right branch as well
+				// Otherwise (coordinate is smaller/equal position, take the
+				// right branch as well
 				if ( node.left != null )
 					toDo.push( node.left );
 				if ( node.right != null && node.getSplitCoordinate() <= position[ k ] )
@@ -194,9 +190,11 @@ public class VolumetricSearch< I extends RealInterval > implements RandomAccessi
 			else
 			{
 				// The coordinate is a maximum.
-				// If it is smaller than the position, only take the right branch
+				// If it is smaller than the position, only take the right
+				// branch
 				// which still could be higher.
-				// Otherwise (coordinate is larger/equal position, take the left branch as well
+				// Otherwise (coordinate is larger/equal position, take the left
+				// branch as well
 				if ( node.right != null )
 					toDo.push( node.right );
 				if ( node.left != null && node.getSplitCoordinate() >= position[ k - numDimensions ] )

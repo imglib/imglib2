@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,16 +28,12 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.labeling.unary;
 
 import net.imglib2.Cursor;
-import net.imglib2.img.Img;
+import net.imglib2.IterableInterval;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.LabelingMapping;
 import net.imglib2.labeling.LabelingType;
@@ -45,17 +41,17 @@ import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.type.numeric.RealType;
 
 /**
- * 
+ * TODO: Now computes to IterableInterval.
  * @author Martin Horn (University of Konstanz)
  *
  * @param <L>
  * @param <T>
  */
-public class LabelingToImg< L extends Comparable< L >, T extends RealType< T >> implements UnaryOperation< Labeling< L >, Img< T >>
+public class LabelingToImg< L extends Comparable< L >, T extends RealType< T >> implements UnaryOperation< Labeling< L >, IterableInterval< T >>
 {
 
 	@Override
-	public Img< T > compute( Labeling< L > op, Img< T > r )
+	public IterableInterval< T > compute( Labeling< L > op, IterableInterval< T > r )
 	{
 		T ref = r.firstElement().createVariable();
 		final Cursor< T > rc = r.cursor();
@@ -79,7 +75,7 @@ public class LabelingToImg< L extends Comparable< L >, T extends RealType< T >> 
 	}
 
 	@Override
-	public UnaryOperation< Labeling< L >, Img< T >> copy()
+	public UnaryOperation< Labeling< L >, IterableInterval< T >> copy()
 	{
 		return new LabelingToImg< L, T >();
 	}

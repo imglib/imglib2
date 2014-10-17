@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -40,11 +36,11 @@ package net.imglib2.algorithm.gauss3;
 import net.imglib2.RandomAccess;
 
 /**
- * {@link ConvolverFactory} creates 1-dimensional line convolvers.
- * See {@link #create(double[], RandomAccess, RandomAccess, int, long)}.
- *
+ * {@link ConvolverFactory} creates 1-dimensional line convolvers. See
+ * {@link #create(double[], RandomAccess, RandomAccess, int, long)}.
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
- *
+ * 
  * @param <S>
  * @param <T>
  */
@@ -59,12 +55,19 @@ public interface ConvolverFactory< S, T >
 	 * then call {@link Runnable#run()} to do the convolution. Then the input
 	 * and an output {@link RandomAccess} are moved to the next line,
 	 * {@link Runnable#run()} is called again, and so on.
-	 *
-	 * @param halfkernel the upper half (starting at the center pixel) of the symmetric convolution kernel.
-	 * @param in {@link RandomAccess} on the source values.
-	 * @param out {@link RandomAccess} on the target (convolved) values.
-	 * @param d dimension in which to convolve.
-	 * @param lineLength how many convolved values to produce in one {@link Runnable#run()}.
+	 * 
+	 * @param halfkernel
+	 *            the upper half (starting at the center pixel) of the symmetric
+	 *            convolution kernel.
+	 * @param in
+	 *            {@link RandomAccess} on the source values.
+	 * @param out
+	 *            {@link RandomAccess} on the target (convolved) values.
+	 * @param d
+	 *            dimension in which to convolve.
+	 * @param lineLength
+	 *            how many convolved values to produce in one
+	 *            {@link Runnable#run()}.
 	 * @return a line convolver.
 	 */
 	public Runnable create( final double[] halfkernel, final RandomAccess< S > in, final RandomAccess< T > out, final int d, final long lineLength );

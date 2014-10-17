@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,62 +40,79 @@ import net.imglib2.img.Img;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
-public class SamplingLineIterator<T> extends AbstractLineIterator implements Sampler<T>
+@Deprecated
+public class SamplingLineIterator< T > extends AbstractLineIterator implements Sampler< T >
 {
-	final Img<T> processLine;
-	final RandomAccess<T> randomAccess;
-	
+	final Img< T > processLine;
+
+	final RandomAccess< T > randomAccess;
+
 	final Cursor< T > resultCursor;
+
 	final RandomAccess< T > randomAccessLeft, randomAccessRight;
+
 	final T copy, tmp;
-	
+
 	/**
-	 * Make a new SamplingLineIterator which iterates a 1d line of a certain length
-	 * and is used as the input for the convolution operation
+	 * Make a new SamplingLineIterator which iterates a 1d line of a certain
+	 * length and is used as the input for the convolution operation
 	 * 
-	 * @param dim - which dimension to iterate (dimension id)
-	 * @param size - number of pixels to iterate
-	 * @param randomAccess - the {@link RandomAccess} which is moved along the line and is 
-	 * placed at the right location (one pixel left of the starting pixel)
-	 * @param processLine - the line that will be used for processing and is associated with this {@link SamplingLineIterator},
-	 * this is important for multithreading so that each SamplingLineIterator has its own temporary space for computing the
-	 * gaussian convolution 
+	 * @param dim
+	 *            - which dimension to iterate (dimension id)
+	 * @param size
+	 *            - number of pixels to iterate
+	 * @param randomAccess
+	 *            - the {@link RandomAccess} which is moved along the line and
+	 *            is placed at the right location (one pixel left of the
+	 *            starting pixel)
+	 * @param processLine
+	 *            - the line that will be used for processing and is associated
+	 *            with this {@link SamplingLineIterator}, this is important for
+	 *            multithreading so that each SamplingLineIterator has its own
+	 *            temporary space for computing the gaussian convolution
 	 */
-	public SamplingLineIterator( final int dim, final long size, final RandomAccess<T> randomAccess, final Img<T> processLine, final T copy, final T tmp )
+	public SamplingLineIterator( final int dim, final long size, final RandomAccess< T > randomAccess, final Img< T > processLine, final T copy, final T tmp )
 	{
 		super( dim, size, randomAccess, randomAccess );
 
 		this.processLine = processLine;
 		this.randomAccess = randomAccess;
-		
+
 		this.randomAccessLeft = processLine.randomAccess();
 		this.randomAccessRight = processLine.randomAccess();
 		this.copy = copy;
 		this.tmp = tmp;
-		
-		this.resultCursor = processLine.cursor(); 
+
+		this.resultCursor = processLine.cursor();
 	}
-	
+
 	/**
-	 * @return - the line that is used for processing and is associated with this {@link SamplingLineIterator}  
+	 * @return - the line that is used for processing and is associated with
+	 *         this {@link SamplingLineIterator}
 	 */
-	public Img<T> getProcessLine() { return processLine; }
-	
-	@Override
-	public T get() { return randomAccess.get(); }
+	public Img< T > getProcessLine()
+	{
+		return processLine;
+	}
 
 	@Override
-	public SamplingLineIterator<T> copy()
+	public T get()
+	{
+		return randomAccess.get();
+	}
+
+	@Override
+	public SamplingLineIterator< T > copy()
 	{
 		// new instance with same properties
-		SamplingLineIterator<T> c = new SamplingLineIterator<T>( d, size, randomAccess, getProcessLine(), copy, tmp );
-		
+		final SamplingLineIterator< T > c = new SamplingLineIterator< T >( d, size, randomAccess, getProcessLine(), copy, tmp );
+
 		// update current status
 		c.i = i;
-		
+
 		return c;
-	}	
+	}
 }

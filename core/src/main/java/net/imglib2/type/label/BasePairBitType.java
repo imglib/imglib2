@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,7 +41,7 @@ import net.imglib2.type.BasePairType;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -54,11 +50,11 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	public static enum Base { gap, N, A, T, G, C, U; }
 	
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( NativeImg<BasePairBitType, ? extends LongAccess> bitStorage )
+	public BasePairBitType( final NativeImg<BasePairBitType, ? extends LongAccess> bitStorage )
 	{
 		super( bitStorage, 3 );
 	}
-	
+
 	// this is the constructor if you want it to be a variable
 	public BasePairBitType( final Base value )
 	{
@@ -66,8 +62,11 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	}	
 
 	// this is the constructor if you want it to be a variable
-	public BasePairBitType() { this( Base.N ); }
-	
+	public BasePairBitType()
+	{
+		this( Base.N );
+	}
+
 	@Override
 	public NativeImg<BasePairBitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<BasePairBitType> storageFactory, final long dim[] )	
 	{
@@ -76,10 +75,10 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 		
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );
-		
+
 		// pass it to the NativeContainer
 		container.setLinkedType( linkedType );
-		
+
 		return container;
 	}
 
@@ -92,13 +91,13 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	{
 		setBits( base.ordinal() );
 	}
-	
+
 	@Override
 	public Base get() 
 	{
 		return Base.values()[ (int)getBits() ];
 	}
-	
+
 	@Override
 	public int compareTo( final BasePairBitType c ) 
 	{ 
@@ -119,9 +118,9 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 			default: return 1;
 		}
 	}
-	
+
 	@Override
-	public void complement() 
+	public void complement()
 	{
 		final Base base = get();
 		switch ( base )
@@ -137,27 +136,45 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	public byte baseToValue()
 	{
 		final Base base = get();
-		
+
 		switch ( base )
 		{
-			case N: return 1;
-			case A: return 2;
-			case T: return 3;
-			case G: return 4;
-			case C: return 5;
-			default: return 0;
-		}		
+		case N:
+			return 1;
+		case A:
+			return 2;
+		case T:
+			return 3;
+		case G:
+			return 4;
+		case C:
+			return 5;
+		default:
+			return 0;
+		}
 	}
-	
-	@Override
-	public void set( final BasePairBitType c ) { set( c.get() ); }
 
 	@Override
-	public BasePairBitType createVariable(){ return new BasePairBitType(); }
+	public void set( final BasePairBitType c )
+	{
+		set( c.get() );
+	}
 
 	@Override
-	public BasePairBitType copy(){ return new BasePairBitType( this.get() ); }
+	public BasePairBitType createVariable()
+	{
+		return new BasePairBitType();
+	}
 
 	@Override
-	public String toString() { return this.get().toString(); }
+	public BasePairBitType copy()
+	{
+		return new BasePairBitType( this.get() );
+	}
+
+	@Override
+	public String toString()
+	{
+		return this.get().toString();
+	}
 }

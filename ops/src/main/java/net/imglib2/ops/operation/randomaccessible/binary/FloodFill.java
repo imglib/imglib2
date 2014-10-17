@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -40,10 +36,9 @@ package net.imglib2.ops.operation.randomaccessible.binary;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import net.imglib2.IterableInterval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.BinaryOperation;
 import net.imglib2.ops.types.ConnectedType;
 import net.imglib2.type.numeric.IntegerType;
@@ -53,7 +48,7 @@ import net.imglib2.type.numeric.IntegerType;
  * 
  * @author Martin Horn (University of Konstanz)
  */
-public final class FloodFill< T extends IntegerType< T >, K extends RandomAccessible< T > & IterableInterval< T >> implements BinaryOperation< K, Localizable, K >
+public final class FloodFill< T extends IntegerType< T >> implements BinaryOperation< RandomAccessibleInterval<T>, Localizable, RandomAccessibleInterval<T> >
 {
 
 	private final ConnectedType m_type;
@@ -74,7 +69,7 @@ public final class FloodFill< T extends IntegerType< T >, K extends RandomAccess
 	 *            Start position.
 	 */
 	@Override
-	public final K compute( final K op0, final Localizable op1, final K r )
+	public final RandomAccessibleInterval<T> compute( final RandomAccessibleInterval<T> op0, final Localizable op1, final RandomAccessibleInterval<T> r )
 	{
 		final long[] op1pos = new long[ op1.numDimensions() ];
 		op1.localize( op1pos );
@@ -93,7 +88,7 @@ public final class FloodFill< T extends IntegerType< T >, K extends RandomAccess
 	 * @param op1
 	 *            Start position.
 	 */
-	public final void compute( K op0, final long[] op1, final K r )
+	public final void compute( RandomAccessibleInterval<T> op0, final long[] op1, final RandomAccessibleInterval<T> r )
 	{
 		final RandomAccess< T > rc = r.randomAccess();
 		final RandomAccess< T > op0c = op0.randomAccess();
@@ -180,8 +175,8 @@ public final class FloodFill< T extends IntegerType< T >, K extends RandomAccess
 	}
 
 	@Override
-	public BinaryOperation< K, Localizable, K > copy()
+	public BinaryOperation< RandomAccessibleInterval<T>, Localizable, RandomAccessibleInterval<T> > copy()
 	{
-		return new FloodFill< T, K >( m_type );
+		return new FloodFill< T >( m_type );
 	}
 }

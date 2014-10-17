@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -27,87 +27,140 @@
 package net.imglib2.algorithm.fft;
 
 import net.imglib2.Cursor;
+import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.Benchmark;
 import net.imglib2.algorithm.OutputAlgorithm;
 import net.imglib2.img.Img;
+import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.Util;
+import net.imglib2.view.Views;
 
 /**
  * TODO
- *
+ * 
+ * @deprecated use {@link net.imglib2.algorithm.fft2.FFT} instead
  */
-public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<Img<T>>, Benchmark
+@Deprecated
+public class Bandpass< T extends NumericType< T >> implements OutputAlgorithm< RandomAccessibleInterval< T >>, Benchmark
 {
 	String errorMessage = "";
+
 	boolean inPlace, bandPass;
+
+	RandomAccessibleInterval< T > input;
+
+	Img< T > output;
 	
-	Img<T> img, output;
-	
+	ImgFactory<T> imgFactory;
+
 	int beginRadius, endRadius;
+
 	long processingTime;
+
 	long[] origin;
-	
-	public Bandpass( final Img<T> img, final int beginRadius, final int endRadius )
+
+	public Bandpass( final RandomAccessibleInterval< T > input, final int beginRadius, final int endRadius, ImgFactory<T> imgFactory )
 	{
-		this.img = img;		
+		this.input = input;
 
 		this.inPlace = false;
 		this.bandPass = true;
 		this.beginRadius = beginRadius;
 		this.endRadius = endRadius;
-		
-		this.origin = new long[ img.numDimensions() ];
-		
-		this.origin[ 0 ] = img.dimension( 0 ) - 1;
+
+		this.origin = new long[ input.numDimensions() ];
+
+		this.origin[ 0 ] = input.dimension( 0 ) - 1;
 		for ( int d = 1; d < this.origin.length; ++d )
-			origin[ d ] = img.dimension( d ) / 2;
+			origin[ d ] = input.dimension( d ) / 2;
 	}
 	
-	public void setImage( final Img<T> img ) { this.img = img; }
-	public void setInPlace( final boolean inPlace ) { this.inPlace = inPlace; }
-	public void setBandPass( final boolean bandPass ) { this.bandPass = bandPass; }
-	public void setOrigin( final long[] position ) { this.origin = position.clone(); }
+	public Bandpass( final Img< T > img, final int beginRadius, final int endRadius )
+	{
+		this( img, beginRadius, endRadius, img.factory());
+	}
+
+	public void setImage( final RandomAccessibleInterval< T > img )
+	{
+		this.input = img;
+	}
+
+	public void setInPlace( final boolean inPlace )
+	{
+		this.inPlace = inPlace;
+	}
+
+	public void setBandPass( final boolean bandPass )
+	{
+		this.bandPass = bandPass;
+	}
+
+	public void setOrigin( final long[] position )
+	{
+		this.origin = position.clone();
+	}
+
 	public void setBandPassRadius( final int beginRadius, final int endRadius )
 	{
 		this.beginRadius = beginRadius;
 		this.endRadius = endRadius;
 	}
 
-	public Img<T> getImage() { return img; }
-	public boolean getInPlace() { return inPlace; }
-	public int getBeginBandPassRadius() { return beginRadius; }
-	public int getEndBandPassRadius() { return endRadius; }
-	public long[] getOrigin() { return origin; }
-	
+	public RandomAccessibleInterval< T > getInput()
+	{
+		return input;
+	}
+
+	public boolean getInPlace()
+	{
+		return inPlace;
+	}
+
+	public int getBeginBandPassRadius()
+	{
+		return beginRadius;
+	}
+
+	public int getEndBandPassRadius()
+	{
+		return endRadius;
+	}
+
+	public long[] getOrigin()
+	{
+		return origin;
+	}
+
 	@Override
 	public boolean process()
 	{
 		final long startTime = System.currentTimeMillis();
-		final Img<T> img;
+		final IterableInterval< T > iterableInput;
 
 		if ( inPlace )
 		{
-			img = this.img;
+			iterableInput = Views.iterable(this.input);
 		}
 		else
 		{
-			this.output = this.img.copy();
-			img = this.output;
+			this.output = imgFactory.create( this.input, Views.iterable( this.input ).firstElement().createVariable());
+			iterableInput = this.output;
 		}
-		
-		final Cursor<T> cursor = img.cursor();
-		final long[] pos = new long[ img.numDimensions() ];
-		
+
+		final Cursor< T > cursor = iterableInput.cursor();
+		final long[] pos = new long[ iterableInput.numDimensions() ];
+
 		final boolean actAsBandPass = bandPass;
-		
+
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
 			cursor.localize( pos );
-			
+
 			final float dist = Util.computeDistance( origin, pos );
-			
+
 			if ( actAsBandPass )
 			{
 				if ( dist < beginRadius || dist > endRadius )
@@ -116,30 +169,39 @@ public class Bandpass<T extends NumericType<T>> implements OutputAlgorithm<Img<T
 			else
 			{
 				if ( dist >= beginRadius && dist <= endRadius )
-					cursor.get().setZero();				
+					cursor.get().setZero();
 			}
 		}
-		
+
 		processingTime = System.currentTimeMillis() - startTime;
-		
+
 		// finished applying bandpass
 		return true;
-	}	
-	
+	}
+
 	@Override
-	public Img<T> getResult()
+	public RandomAccessibleInterval< T > getResult()
 	{
 		if ( inPlace )
-			return img;
+			return input;
 		return output;
 	}
 
 	@Override
-	public long getProcessingTime() { return processingTime; }
-	
-	@Override
-	public boolean checkInput() { return true; }
+	public long getProcessingTime()
+	{
+		return processingTime;
+	}
 
 	@Override
-	public String getErrorMessage() { return errorMessage; }	
+	public boolean checkInput()
+	{
+		return true;
+	}
+
+	@Override
+	public String getErrorMessage()
+	{
+		return errorMessage;
+	}
 }

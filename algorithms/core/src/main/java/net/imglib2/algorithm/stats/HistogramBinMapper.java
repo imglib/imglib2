@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -40,44 +36,52 @@ package net.imglib2.algorithm.stats;
 /**
  * An interface used by the Histogram class to map Type objects to histogram
  * bins.
- *
+ * 
  * @author 2011 Larry Lindsey
  * @author Larry Lindsey
  */
-public interface HistogramBinMapper <T>{
-	
-    /**
-     * Returns the minimum bin for the histogram.  This value may not
-     * be relevant for histograms over Type's that do not have a natural order.
-     * @return the minimum bin Type for the histogram.
-     */
+public interface HistogramBinMapper< T >
+{
+
+	/**
+	 * Returns the minimum bin for the histogram. This value may not be relevant
+	 * for histograms over Type's that do not have a natural order.
+	 * 
+	 * @return the minimum bin Type for the histogram.
+	 */
 	public T getMinBin();
-	
-    /**
-     * Returns the maximum bin for the histogram.  This value may not
-     * be relevant for histograms over Type's that do not have a natural order.
-     * @return the maximum bin Type for the histogram.
-     */
+
+	/**
+	 * Returns the maximum bin for the histogram. This value may not be relevant
+	 * for histograms over Type's that do not have a natural order.
+	 * 
+	 * @return the maximum bin Type for the histogram.
+	 */
 	public T getMaxBin();
-	
+
 	/**
 	 * Returns the number of bins for the histogram.
+	 * 
 	 * @return the number of bins for the histogram.
 	 */
 	public int getNumBins();
 
 	/**
 	 * Maps a given Type to its histogram bin.
-	 * @param type the Type to map.
+	 * 
+	 * @param type
+	 *            the Type to map.
 	 * @return the histogram bin index.
 	 */
-	public int map(final T type);
-	
+	public int map( final T type );
+
 	/**
 	 * Maps a given histogram bin index to a Type containing the bin center
 	 * value.
-	 * @param i the histogram bin index to map.
+	 * 
+	 * @param i
+	 *            the histogram bin index to map.
 	 * @return a Type containing the bin center value.
 	 */
-	public T invMap(final int i);
+	public T invMap( final int i );
 }

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -33,33 +33,35 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
+import net.imglib2.view.Views;
 
 /**
- * Convolve an image with the inverse of a kernel which is division in the Fourier domain.
- * This is the simple, unnormalized version of what is used in the {@link PhaseCorrelation}. 
- *
- *
+ * Convolve an image with the inverse of a kernel which is division in the
+ * Fourier domain. This is the simple, unnormalized version of what is used in
+ * the {@link PhaseCorrelation}.
+ * 
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @deprecated use {@link net.imglib2.algorithm.fft2.FFT} instead
  */
+@Deprecated
 public class InverseFourierConvolution< T extends RealType< T >, S extends RealType< S > > extends FourierConvolution< T, S >
 {
-	public InverseFourierConvolution( final RandomAccessibleInterval<T> image, final RandomAccessibleInterval<S> kernel,
-			   final ImgFactory<T> imgFactory, final ImgFactory<S> kernelImgFactory,
-			   final ImgFactory<ComplexFloatType> fftImgFactory )
+	public InverseFourierConvolution( final RandomAccessibleInterval< T > image, final RandomAccessibleInterval< S > kernel, final ImgFactory< T > imgFactory, final ImgFactory< S > kernelImgFactory, final ImgFactory< ComplexFloatType > fftImgFactory )
 	{
 		super( image, kernel, imgFactory, kernelImgFactory, fftImgFactory );
 	}
-	
-	public InverseFourierConvolution( final Img<T> image, final Img<S> kernel, final ImgFactory<ComplexFloatType> fftImgFactory )
+
+	public InverseFourierConvolution( final Img< T > image, final Img< S > kernel, final ImgFactory< ComplexFloatType > fftImgFactory )
 	{
 		super( image, kernel, fftImgFactory );
 	}
-	
+
 	public InverseFourierConvolution( final Img< T > image, final Img< S > kernel ) throws IncompatibleTypeException
 	{
 		super( image, kernel );
 	}
-	
+
 	/**
 	 * Divide in Fourier Space
 	 * 
@@ -67,16 +69,16 @@ public class InverseFourierConvolution< T extends RealType< T >, S extends RealT
 	 * @param b
 	 */
 	@Override
-	protected void multiply( final Img< ComplexFloatType > a, final Img< ComplexFloatType > b )
+	protected void multiply( final RandomAccessibleInterval< ComplexFloatType > a, final RandomAccessibleInterval< ComplexFloatType > b )
 	{
-		final Cursor<ComplexFloatType> cursorA = a.cursor();
-		final Cursor<ComplexFloatType> cursorB = b.cursor();
-		
+		final Cursor< ComplexFloatType > cursorA = Views.iterable( a ).cursor();
+		final Cursor< ComplexFloatType > cursorB = Views.iterable( b ).cursor();
+
 		while ( cursorA.hasNext() )
 		{
 			cursorA.fwd();
 			cursorB.fwd();
-			
+
 			cursorA.get().div( cursorB.get() );
 		}
 	}

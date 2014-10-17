@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -42,81 +38,102 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author leek
  */
-public class TestAbstractRealLocalizable {
+public class TestAbstractRealLocalizable
+{
 
-	static private class AbstractRealLocalizableImpl extends AbstractRealLocalizable {
-		public AbstractRealLocalizableImpl(final int nDimensions) {
-			super(nDimensions);
+	static private class AbstractRealLocalizableImpl extends AbstractRealLocalizable
+	{
+		public AbstractRealLocalizableImpl( final int nDimensions )
+		{
+			super( nDimensions );
 		}
 
-		double getPosition(final int d) {
-			return position[d];
-		}
-	}
-	/**
-	 * Test method for {@link net.imglib2.AbstractRealLocalizable#AbstractRealLocalizableSampler(int)}.
-	 */
-	@Test
-	public void testAbstractRealLocalizableSampler() {
-		final AbstractRealLocalizableImpl x = new AbstractRealLocalizableImpl(2);
-		assertEquals(x.numDimensions(), 2);
-		for (int i=0; i<2; i++) {
-			assertEquals(x.getPosition(i), 0, 0);
+		double getPosition( final int d )
+		{
+			return position[ d ];
 		}
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.AbstractRealLocalizable#localize(float[])}.
+	 * Test method for
+	 * {@link net.imglib2.AbstractRealLocalizable#AbstractRealLocalizableSampler(int)}
+	 * .
 	 */
 	@Test
-	public void testLocalizeFloatArray() {
-		final AbstractRealLocalizableImpl x = new AbstractRealLocalizableImpl(2);
-		final float [] p = { 1.1F, 2.2F };
-		x.localize(p);
-		for (int i=0; i<2; i++) {
-			assertEquals((float)(x.getPosition(i)), p[i], 0);
+	public void testAbstractRealLocalizableSampler()
+	{
+		final AbstractRealLocalizableImpl x = new AbstractRealLocalizableImpl( 2 );
+		assertEquals( x.numDimensions(), 2 );
+		for ( int i = 0; i < 2; i++ )
+		{
+			assertEquals( x.getPosition( i ), 0, 0 );
 		}
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.AbstractRealLocalizable#localize(double[])}.
+	 * Test method for
+	 * {@link net.imglib2.AbstractRealLocalizable#localize(float[])}.
 	 */
 	@Test
-	public void testLocalizeDoubleArray() {
-		final AbstractRealLocalizableImpl x = new AbstractRealLocalizableImpl(2);
-		final double [] p = { 1.1, 2.2 };
-		x.localize(p);
-		for (int i=0; i<2; i++) {
-			assertEquals(x.getPosition(i), p[i], 0);
+	public void testLocalizeFloatArray()
+	{
+		final AbstractRealLocalizableImpl x = new AbstractRealLocalizableImpl( 2 );
+		final float[] p = { 1.1F, 2.2F };
+		x.localize( p );
+		for ( int i = 0; i < 2; i++ )
+		{
+			assertEquals( ( float ) ( x.getPosition( i ) ), p[ i ], 0 );
 		}
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.AbstractRealLocalizable#getFloatPosition(int)}.
+	 * Test method for
+	 * {@link net.imglib2.AbstractRealLocalizable#localize(double[])}.
 	 */
 	@Test
-	public void testGetFloatPosition() {
-		final AbstractRealLocalizableImpl x = new AbstractRealLocalizableImpl(2);
-		final float [] p = { 1.1F, 2.2F };
-		x.localize(p);
-		for (int i=0; i<2; i++) {
-			assertEquals(x.getFloatPosition(i), p[i], 0);
+	public void testLocalizeDoubleArray()
+	{
+		final AbstractRealLocalizableImpl x = new AbstractRealLocalizableImpl( 2 );
+		final double[] p = { 1.1, 2.2 };
+		x.localize( p );
+		for ( int i = 0; i < 2; i++ )
+		{
+			assertEquals( x.getPosition( i ), p[ i ], 0 );
 		}
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.AbstractRealLocalizable#getDoublePosition(int)}.
+	 * Test method for
+	 * {@link net.imglib2.AbstractRealLocalizable#getFloatPosition(int)}.
 	 */
 	@Test
-	public void testGetDoublePosition() {
-		final AbstractRealLocalizableImpl x = new AbstractRealLocalizableImpl(2);
-		final double [] p = { 1.1, 2.2 };
-		x.localize(p);
-		for (int i=0; i<2; i++) {
-			assertEquals(x.getDoublePosition(i), p[i], 0);
+	public void testGetFloatPosition()
+	{
+		final AbstractRealLocalizableImpl x = new AbstractRealLocalizableImpl( 2 );
+		final float[] p = { 1.1F, 2.2F };
+		x.localize( p );
+		for ( int i = 0; i < 2; i++ )
+		{
+			assertEquals( x.getFloatPosition( i ), p[ i ], 0 );
+		}
+	}
+
+	/**
+	 * Test method for
+	 * {@link net.imglib2.AbstractRealLocalizable#getDoublePosition(int)}.
+	 */
+	@Test
+	public void testGetDoublePosition()
+	{
+		final AbstractRealLocalizableImpl x = new AbstractRealLocalizableImpl( 2 );
+		final double[] p = { 1.1, 2.2 };
+		x.localize( p );
+		for ( int i = 0; i < 2; i++ )
+		{
+			assertEquals( x.getDoublePosition( i ), p[ i ], 0 );
 		}
 	}
 

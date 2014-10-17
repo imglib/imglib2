@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,36 +28,39 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.img.cell;
 
+import java.io.Serializable;
+
 import net.imglib2.util.IntervalIndexer;
 
 /**
  * A cell of an {@link CellImg}.
- *
+ * 
  * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public abstract class AbstractCell< A >
+public abstract class AbstractCell< A > implements Serializable
 {
-	final protected int n;
+	private static final long serialVersionUID = 1L;
 
-	final int[] dimensions;
+	protected int n;
 
-	final int[] steps;
+	protected int[] dimensions;
 
-	final long[] min;
+	protected int[] steps;
 
-	final long[] max;
+	protected long[] min;
 
-	final protected int numPixels;
+	protected long[] max;
+
+	protected int numPixels;
+
+	public AbstractCell()
+	{}
 
 	public AbstractCell( final int[] dimensions, final long[] min )
 	{
@@ -79,7 +82,7 @@ public abstract class AbstractCell< A >
 
 	/**
 	 * Get the basic type array that stores this cells pixels.
-	 *
+	 * 
 	 * @return underlying basic type array.
 	 */
 	public abstract A getData();
@@ -105,7 +108,7 @@ public abstract class AbstractCell< A >
 	 * compute the index in the underlying flat array of this cell which
 	 * corresponds to a local position (i.e., relative to the origin of this
 	 * cell).
-	 *
+	 * 
 	 * @param position
 	 *            a local position
 	 * @return corresponding index
@@ -116,7 +119,7 @@ public abstract class AbstractCell< A >
 	}
 
 	/**
-	 *
+	 * 
 	 * @param d
 	 *            dimension
 	 * @return minimum
@@ -128,7 +131,7 @@ public abstract class AbstractCell< A >
 
 	/**
 	 * Write the minimum of each dimension into long[].
-	 *
+	 * 
 	 * @param minValue
 	 */
 	public void min( final long[] minimum )
@@ -139,7 +142,7 @@ public abstract class AbstractCell< A >
 
 	/**
 	 * Get the number of pixels in a given dimension <em>d</em>.
-	 *
+	 * 
 	 * @param d
 	 */
 	public int dimension( final int d )
@@ -149,7 +152,7 @@ public abstract class AbstractCell< A >
 
 	/**
 	 * Write the number of pixels in each dimension into long[].
-	 *
+	 * 
 	 * @param dimensions
 	 */
 	public void dimensions( final int[] dim )

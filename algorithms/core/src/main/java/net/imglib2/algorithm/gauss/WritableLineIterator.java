@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -42,33 +38,39 @@ import net.imglib2.type.Type;
 
 /**
  * TODO
- *
+ * 
  * @author Stephan Preibisch
  */
-public class WritableLineIterator< T extends Type<T> > extends AbstractLineIterator
+@Deprecated
+public class WritableLineIterator< T extends Type< T > > extends AbstractLineIterator
 {
 	final RandomAccess< T > randomAccess;
 
 	/**
-	 * Make a new AbstractWritableLineIterator which iterates a 1d line of a certain length
-	 * and is used as the input for the convolution operation
+	 * Make a new AbstractWritableLineIterator which iterates a 1d line of a
+	 * certain length and is used as the input for the convolution operation
 	 * 
-	 * @param dim - which dimension to iterate (dimension id)
-	 * @param size - number of pixels to iterate
-	 * @param randomAccess - the {@link RandomAccess} which is moved along the line and is 
-	 * placed at the right location (one pixel left of the starting pixel) 
+	 * @param dim
+	 *            - which dimension to iterate (dimension id)
+	 * @param size
+	 *            - number of pixels to iterate
+	 * @param randomAccess
+	 *            - the {@link RandomAccess} which is moved along the line and
+	 *            is placed at the right location (one pixel left of the
+	 *            starting pixel)
 	 */
-	public WritableLineIterator( final int dim, final long size, final RandomAccess<T> randomAccess )
+	public WritableLineIterator( final int dim, final long size, final RandomAccess< T > randomAccess )
 	{
-		super ( dim, size, randomAccess, randomAccess );
-		
+		super( dim, size, randomAccess, randomAccess );
+
 		this.randomAccess = randomAccess;
 	}
-	
+
 	/**
 	 * Sets the possibly converted value at the current location
 	 * 
-	 * @param type - the value
+	 * @param type
+	 *            - the value
 	 */
 	public void set( final T type )
 	{

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,57 +35,87 @@ package net.imglib2;
 
 /**
  * Implementation of the {@link Interval} interface.
- *
- *
+ * 
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  */
 public abstract class AbstractInterval extends AbstractEuclideanSpace implements Interval
 {
 	final protected long[] min;
+
 	final protected long[] max;
 
 	/**
-	 * Creates a {@link AbstractInterval} from another {@link Interval}
-	 *
-	 * @param interval - another {@link Interval}
+	 * Creates an <em>n</em>-dimensional {@link AbstractInterval} with min and
+	 * max = 0<sup>n</sup>.
+	 * 
+	 * @param n
+	 *            number of dimensions
 	 */
-	public AbstractInterval ( final Interval interval )
+	public AbstractInterval( final int n )
 	{
-		super( interval.numDimensions() );
+		super( n );
 		this.min = new long[ n ];
 		this.max = new long[ n ];
+	}
+
+	/**
+	 * Creates a {@link AbstractInterval} from another {@link Interval}
+	 * 
+	 * @param interval
+	 *            - another {@link Interval}
+	 */
+	public AbstractInterval( final Interval interval )
+	{
+		this( interval.numDimensions() );
 
 		interval.min( min );
 		interval.max( max );
 	}
 
 	/**
-	 * Creates an Interval with the boundaries [min, max] (both including)
-	 *
-	 * @param min - the position of the first elements in each dimension
-	 * @param max - the position of the last elements in each dimension
+	 * Creates an Interval with the boundaries [0, dimensions-1]
+	 * 
+	 * @param dimensions
+	 *            - the size of the interval
 	 */
-	public AbstractInterval ( final long[] min, final long[] max )
+	public AbstractInterval( final Dimensions dimensions )
 	{
-		super( min.length );
+		this( dimensions.numDimensions() );
+		for ( int d = 0; d < n; ++d )
+			this.max[ d ] = dimensions.dimension( d ) - 1;
+	}
+
+	/**
+	 * Creates an Interval with the boundaries [min, max] (both including)
+	 * 
+	 * @param min
+	 *            - the position of the first elements in each dimension
+	 * @param max
+	 *            - the position of the last elements in each dimension
+	 */
+	public AbstractInterval( final long[] min, final long[] max )
+	{
+		this( min.length );
 		assert min.length == max.length;
 
-		this.min = min.clone();
-		this.max = max.clone();
+		for ( int d = 0; d < n; ++d )
+		{
+			this.min[ d ] = min[ d ];
+			this.max[ d ] = max[ d ];
+		}
 	}
 
 	/**
 	 * Creates an Interval with the boundaries [0, dimensions-1]
-	 *
-	 * @param dimensions - the size of the interval
+	 * 
+	 * @param dimensions
+	 *            - the size of the interval
 	 */
-	public AbstractInterval ( final long[] dimensions )
+	public AbstractInterval( final long[] dimensions )
 	{
-		super( dimensions.length );
-		this.min = new long[ n ];
-		this.max = new long[ n ];
-
+		this( dimensions.length );
 		for ( int d = 0; d < n; ++d )
 			this.max[ d ] = dimensions[ d ] - 1;
 	}

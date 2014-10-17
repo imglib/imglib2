@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,7 +35,7 @@ package net.imglib2.util;
 
 /**
  * Basic vector and matrix operations implemented on double[] and double[][].
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class LinAlgHelpers
@@ -61,7 +57,7 @@ public class LinAlgHelpers
 
 	/**
 	 * get the squared length of a.
-	 *
+	 * 
 	 * @param a
 	 */
 	public static double squareLength( final double[] a )
@@ -75,7 +71,7 @@ public class LinAlgHelpers
 
 	/**
 	 * get the length of a.
-	 *
+	 * 
 	 * @param a
 	 */
 	public static double length( final double[] a )
@@ -84,10 +80,9 @@ public class LinAlgHelpers
 	}
 
 	/**
-	 * set c = a * b, where a is a vector and b is scalar.
-	 * Dimensions of a and c must match.
-	 * In place scaling (c==a) is permitted.
-	 *
+	 * set c = a * b, where a is a vector and b is scalar. Dimensions of a and c
+	 * must match. In place scaling (c==a) is permitted.
+	 * 
 	 * @param a
 	 * @param b
 	 * @param c
@@ -103,10 +98,9 @@ public class LinAlgHelpers
 	}
 
 	/**
-	 * set C = A * b, where A is a matrix and b is scalar.
-	 * Dimensions of A and C must match.
-	 * In place scaling (C==A) is permitted.
-	 *
+	 * set C = A * b, where A is a matrix and b is scalar. Dimensions of A and C
+	 * must match. In place scaling (C==A) is permitted.
+	 * 
 	 * @param A
 	 * @param b
 	 * @param C
@@ -124,9 +118,8 @@ public class LinAlgHelpers
 	}
 
 	/**
-	 * set C = A, where A is a matrix.
-	 * Dimensions of A and C must match.
-	 *
+	 * set C = A, where A is a matrix. Dimensions of A and C must match.
+	 * 
 	 * @param A
 	 * @param C
 	 */
@@ -143,9 +136,9 @@ public class LinAlgHelpers
 	}
 
 	/**
-	 * set c = a - b. Dimensions of a, b, and c must match.
-	 * In place subtraction (c==a) is permitted.
-	 *
+	 * set c = a - b. Dimensions of a, b, and c must match. In place subtraction
+	 * (c==a) is permitted.
+	 * 
 	 * @param a
 	 * @param b
 	 * @param c
@@ -161,11 +154,29 @@ public class LinAlgHelpers
 	}
 
 	/**
+	 * set c = a + b. Dimensions of a, b, and c must match. In place addition
+	 * (c==a) is permitted.
+	 * 
+	 * @param a
+	 * @param b
+	 * @param c
+	 */
+	public static void add( final double[] a, final double[] b, final double[] c )
+	{
+		assert ( rows( a ) == rows( b ) ) && ( rows( a ) == rows( c ) );
+
+		final int rows = rows( a );
+
+		for ( int i = 0; i < rows; ++i )
+			c[ i ] = a[ i ] + b[ i ];
+	}
+
+	/**
 	 * set c = A * b.
-	 *
+	 * 
 	 * Dimensions of A, b, and c must match. That is, cols(A) == rows(b), and
 	 * rows(c) == rows(A).
-	 *
+	 * 
 	 * @param A
 	 * @param b
 	 * @param c
@@ -189,10 +200,10 @@ public class LinAlgHelpers
 
 	/**
 	 * set C = A * B.
-	 *
+	 * 
 	 * Dimensions of A, B, and C must match. That is, cols(A) == rows(B),
 	 * rows(C) == rows(A), and cols(C) == cols(B).
-	 *
+	 * 
 	 * @param A
 	 * @param B
 	 * @param C
@@ -220,10 +231,10 @@ public class LinAlgHelpers
 
 	/**
 	 * set C = A * B^T.
-	 *
+	 * 
 	 * Dimensions of A, B, and C must match. That is, cols(A) == cols(B),
 	 * rows(C) == rows(A), and cols(C) == rows(B).
-	 *
+	 * 
 	 * @param A
 	 * @param B
 	 * @param C
@@ -251,10 +262,10 @@ public class LinAlgHelpers
 
 	/**
 	 * set C = A^T * B.
-	 *
+	 * 
 	 * Dimensions of A, B, and C must match. That is, rows(A) == rows(B),
 	 * rows(C) == cols(A), and cols(C) == cols(B).
-	 *
+	 * 
 	 * @param A
 	 * @param B
 	 * @param C
@@ -282,10 +293,10 @@ public class LinAlgHelpers
 
 	/**
 	 * set C = A + B.
-	 *
-	 * Dimensions of A, B, and C must match.
-	 * In place addition (C==A or C==B) is permitted.
-	 *
+	 * 
+	 * Dimensions of A, B, and C must match. In place addition (C==A or C==B) is
+	 * permitted.
+	 * 
 	 * @param A
 	 * @param B
 	 * @param C
@@ -305,9 +316,9 @@ public class LinAlgHelpers
 
 	/**
 	 * extract column c of A into vector b.
-	 *
+	 * 
 	 * Dimensions of A and b must match. That is, rows(A) == rows(b).
-	 *
+	 * 
 	 * @param c
 	 * @param A
 	 * @param b
@@ -325,9 +336,9 @@ public class LinAlgHelpers
 
 	/**
 	 * set column c of B to vector a.
-	 *
+	 * 
 	 * Dimensions of a and B must match. That is, rows(a) == rows(B).
-	 *
+	 * 
 	 * @param c
 	 * @param a
 	 * @param B
@@ -345,9 +356,9 @@ public class LinAlgHelpers
 
 	/**
 	 * extract row r of A into vector b.
-	 *
+	 * 
 	 * Dimensions of A and b must match. That is, cols(A) == rows(b).
-	 *
+	 * 
 	 * @param r
 	 * @param A
 	 * @param b
@@ -365,9 +376,9 @@ public class LinAlgHelpers
 
 	/**
 	 * set row r of B to vector a.
-	 *
+	 * 
 	 * Dimensions of a and B must match. That is, rows(a) == cols(B).
-	 *
+	 * 
 	 * @param r
 	 * @param a
 	 * @param B
@@ -385,7 +396,7 @@ public class LinAlgHelpers
 
 	/**
 	 * normalize a, i.e., scale to unit length.
-	 *
+	 * 
 	 * @param a
 	 */
 	public static void normalize( final double[] a )
@@ -398,9 +409,9 @@ public class LinAlgHelpers
 
 	/**
 	 * compute dot product a * b.
-	 *
+	 * 
 	 * Dimensions of a and b must match.
-	 *
+	 * 
 	 * @param a
 	 * @param b
 	 */
@@ -419,9 +430,9 @@ public class LinAlgHelpers
 
 	/**
 	 * compute cross product, set c = a ^ b.
-	 *
+	 * 
 	 * Dimensions of a, b, and c must equal 3.
-	 *
+	 * 
 	 * @param a
 	 * @param b
 	 */
@@ -434,10 +445,10 @@ public class LinAlgHelpers
 
 	/**
 	 * compute outer product, set C = a * b^T.
-	 *
-	 * Dimensions of a, b, and C must match. That is, rows(a) == rows(C),
-	 * and rows(b) == cols(C).
-	 *
+	 * 
+	 * Dimensions of a, b, and C must match. That is, rows(a) == rows(C), and
+	 * rows(b) == cols(C).
+	 * 
 	 * @param a
 	 * @param b
 	 * @param C
@@ -455,9 +466,9 @@ public class LinAlgHelpers
 	}
 
 	/**
-	 * compute the angle of rotation from a rotation matrix.
-	 * The returned value is in the range [0, PI].
-	 *
+	 * compute the angle of rotation from a rotation matrix. The returned value
+	 * is in the range [0, PI].
+	 * 
 	 * @param R
 	 *            rotation matrix
 	 */
@@ -473,7 +484,7 @@ public class LinAlgHelpers
 
 	/**
 	 * compute the axis of rotation from a rotation matrix.
-	 *
+	 * 
 	 * @param R
 	 *            rotation matrix
 	 * @param a
@@ -493,7 +504,7 @@ public class LinAlgHelpers
 
 	/**
 	 * compute a unit quaternion from a rotation matrix.
-	 *
+	 * 
 	 * @param R
 	 *            rotation matrix.
 	 * @param q
@@ -507,10 +518,10 @@ public class LinAlgHelpers
 
 		// The trace determines the method of decomposition
 		final double d0 = R[ 0 ][ 0 ], d1 = R[ 1 ][ 1 ], d2 = R[ 2 ][ 2 ];
-		final double rr = 1.0 + d0 + d1 + d2;
+		final double rr = d0 + d1 + d2;
 		if ( rr > 0 )
 		{
-			final double s = 0.5 / Math.sqrt( rr );
+			final double s = 0.5 / Math.sqrt( 1.0 + rr );
 			q[ 1 ] = ( R[ 2 ][ 1 ] - R[ 1 ][ 2 ] ) * s;
 			q[ 2 ] = ( R[ 0 ][ 2 ] - R[ 2 ][ 0 ] ) * s;
 			q[ 3 ] = ( R[ 1 ][ 0 ] - R[ 0 ][ 1 ] ) * s;
@@ -552,7 +563,7 @@ public class LinAlgHelpers
 
 	/**
 	 * compute a rotation matrix from a unit quaternion.
-	 *
+	 * 
 	 * @param q
 	 *            unit quaternion (w, x, y, z).
 	 * @param R
@@ -584,7 +595,7 @@ public class LinAlgHelpers
 
 	/**
 	 * compute a quaternion from rotation axis and angle.
-	 *
+	 * 
 	 * @param axis
 	 *            rotation axis as a unit vector.
 	 * @param angle
@@ -608,7 +619,7 @@ public class LinAlgHelpers
 	 * compute the quaternion product pq = p * q. applying rotation pq
 	 * corresponds to applying first q, then p (i.e. same as multiplication of
 	 * rotation matrices).
-	 *
+	 * 
 	 * @param p
 	 *            unit quaternion (w, x, y, z).
 	 * @param q
@@ -640,7 +651,7 @@ public class LinAlgHelpers
 
 	/**
 	 * compute the power of a quaternion q raised to the exponent a.
-	 *
+	 * 
 	 * @param q
 	 *            unit quaternion (w, x, y, z).
 	 * @param a
@@ -672,9 +683,9 @@ public class LinAlgHelpers
 	}
 
 	/**
-	 * invert quaternion, set q = p^{-1}.
-	 * In place inversion (p==q) is permitted.
-	 *
+	 * invert quaternion, set q = p^{-1}. In place inversion (p==q) is
+	 * permitted.
+	 * 
 	 * @param p
 	 *            unit quaternion (w, x, y, z).
 	 * @param q
@@ -692,9 +703,9 @@ public class LinAlgHelpers
 	}
 
 	/**
-	 * Apply quaternion rotation q to 3D point p, set qp = q * p.
-	 * In place rotation (p==qp) is permitted.
-	 *
+	 * Apply quaternion rotation q to 3D point p, set qp = q * p. In place
+	 * rotation (p==qp) is permitted.
+	 * 
 	 * @param q
 	 *            unit quaternion (w, x, y, z).
 	 * @param p

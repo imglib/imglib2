@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,23 +41,23 @@ import net.imglib2.RealPositionable;
  * </sup>.
  * 
  * <p>
- * Applying the transformation to a <em>n</em>-dimensional
- * <em>source</em> vector yields a <em>m</em>-dimensional
- * <em>target</em> vector.
+ * Applying the transformation to a <em>n</em>-dimensional <em>source</em>
+ * vector yields a <em>m</em>-dimensional <em>target</em> vector.
  * </p>
  * 
  * <p>
  * You can also
  * {@link InvertibleRealTransform#applyInverse(RealPositionable, RealLocalizable)
- * apply the inverse transformation} to a <em>m</em>-dimensional
- * <em>target</em> vector to get the <em>n</em>-dimensional
- * <em>source</em> vector.
+ * apply the inverse transformation} to a <em>m</em>-dimensional <em>target</em>
+ * vector to get the <em>n</em>-dimensional <em>source</em> vector.
  * </p>
- * <p>Source and target vectors are required to be at least <em>n</em>- or
- * <em>m</em>-dimensional respectively.  The {@link InvertibleRealTransform} is
- * expected to leave all dimensions beyond <em>n</em>-1 in the source vector
- * and <em>m</em>-1 in the target vector unchanged.</p>
- *  
+ * <p>
+ * Source and target vectors are required to be at least <em>n</em>- or
+ * <em>m</em>-dimensional respectively. The {@link InvertibleRealTransform} is
+ * expected to leave all dimensions beyond <em>n</em>-1 in the source vector and
+ * <em>m</em>-1 in the target vector unchanged.
+ * </p>
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -104,7 +100,7 @@ public interface InvertibleRealTransform extends RealTransform
 	 * @return the inverse transform
 	 */
 	public InvertibleRealTransform inverse();
-	
+
 	@Override
 	public InvertibleRealTransform copy();
 }

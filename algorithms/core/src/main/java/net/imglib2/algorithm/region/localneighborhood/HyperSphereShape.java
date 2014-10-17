@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,6 +35,7 @@ package net.imglib2.algorithm.region.localneighborhood;
 
 import java.util.Iterator;
 
+import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.AbstractInterval;
 import net.imglib2.Cursor;
 import net.imglib2.FlatIterationOrder;
@@ -46,12 +43,12 @@ import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
 import net.imglib2.IterableRealInterval;
 import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.view.Views;
 
 /**
  * A factory for Accessibles on hyper-sphere neighboorhoods.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class HyperSphereShape implements Shape
@@ -64,30 +61,30 @@ public class HyperSphereShape implements Shape
 	}
 
 	@Override
-	public < T > IterableInterval< Neighborhood< T >> neighborhoods( final RandomAccessibleInterval< T > source )
+	public < T > NeighborhoodsIterableInterval< T > neighborhoods( final RandomAccessibleInterval< T > source )
 	{
-		return Views.iterable( neighborhoodsRandomAccessible( source ) );
+		return new NeighborhoodsIterableInterval< T >( source, radius, HyperSphereNeighborhoodUnsafe.< T >factory() );
 	}
 
 	@Override
-	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessible( final RandomAccessibleInterval< T > source )
+	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessible( final RandomAccessible< T > source )
 	{
 		return new NeighborhoodsAccessible< T >( source, radius, HyperSphereNeighborhoodUnsafe.< T >factory() );
 	}
 
 	@Override
-	public < T > IterableInterval< Neighborhood< T >> neighborhoodsSafe( final RandomAccessibleInterval< T > source )
+	public < T > NeighborhoodsIterableInterval< T > neighborhoodsSafe( final RandomAccessibleInterval< T > source )
 	{
-		return Views.iterable( neighborhoodsRandomAccessible( source ) );
+		return new NeighborhoodsIterableInterval< T >( source, radius, HyperSphereNeighborhood.< T >factory() );
 	}
 
 	@Override
-	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessibleSafe( final RandomAccessibleInterval< T > source )
+	public < T > NeighborhoodsAccessible< T > neighborhoodsRandomAccessibleSafe( final RandomAccessible< T > source )
 	{
 		return new NeighborhoodsAccessible< T >( source, radius, HyperSphereNeighborhood.< T >factory() );
 	}
 
-	public static final class NeighborhoodsAccessible< T > extends AbstractInterval implements RandomAccessibleInterval< Neighborhood< T > >, IterableInterval< Neighborhood< T > >
+	public static final class NeighborhoodsIterableInterval< T > extends AbstractInterval implements IterableInterval< Neighborhood< T > >
 	{
 		final RandomAccessibleInterval< T > source;
 
@@ -97,7 +94,7 @@ public class HyperSphereShape implements Shape
 
 		final HyperSphereNeighborhoodFactory< T > factory;
 
-		public NeighborhoodsAccessible( final RandomAccessibleInterval< T > source, final long radius, final HyperSphereNeighborhoodFactory< T > factory )
+		public NeighborhoodsIterableInterval( final RandomAccessibleInterval< T > source, final long radius, final HyperSphereNeighborhoodFactory< T > factory )
 		{
 			super( source );
 			this.source = source;
@@ -108,18 +105,6 @@ public class HyperSphereShape implements Shape
 			for ( int d = 1; d < n; ++d )
 				s *= source.dimension( d );
 			size = s;
-		}
-
-		@Override
-		public RandomAccess< Neighborhood< T >> randomAccess()
-		{
-			return new HyperSphereNeighborhoodRandomAccess< T >( source, radius, factory );
-		}
-
-		@Override
-		public RandomAccess< Neighborhood< T >> randomAccess( final Interval interval )
-		{
-			return randomAccess();
 		}
 
 		@Override
@@ -162,6 +147,35 @@ public class HyperSphereShape implements Shape
 		public Cursor< Neighborhood< T >> localizingCursor()
 		{
 			return cursor();
+		}
+	}
+
+	public static final class NeighborhoodsAccessible< T > extends AbstractEuclideanSpace implements RandomAccessible< Neighborhood< T > >
+	{
+		final RandomAccessible< T > source;
+
+		final long radius;
+
+		final HyperSphereNeighborhoodFactory< T > factory;
+
+		public NeighborhoodsAccessible( final RandomAccessible< T > source, final long radius, final HyperSphereNeighborhoodFactory< T > factory )
+		{
+			super( source.numDimensions() );
+			this.source = source;
+			this.radius = radius;
+			this.factory = factory;
+		}
+
+		@Override
+		public RandomAccess< Neighborhood< T >> randomAccess()
+		{
+			return new HyperSphereNeighborhoodRandomAccess< T >( source, radius, factory );
+		}
+
+		@Override
+		public RandomAccess< Neighborhood< T >> randomAccess( final Interval interval )
+		{
+			return new HyperSphereNeighborhoodRandomAccess< T >( source, radius, factory, interval );
 		}
 	}
 }

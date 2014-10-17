@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,27 +28,23 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.ops.operation.metadata.unary;
 
-import net.imglib2.meta.Metadata;
+import net.imglib2.meta.ImgPlusMetadata;
 import net.imglib2.ops.operation.UnaryOperation;
 
 /**
  * @author Christian Dietz (University of Konstanz)
  */
-public class CopyMetadata implements UnaryOperation< Metadata, Metadata >
+public class CopyMetadata implements UnaryOperation< ImgPlusMetadata, ImgPlusMetadata >
 {
 
-	private UnaryOperation< Metadata, Metadata >[] ops;
+	private UnaryOperation< ImgPlusMetadata, ImgPlusMetadata >[] ops;
 
-	public CopyMetadata( UnaryOperation< Metadata, Metadata >... ops )
+	public CopyMetadata( UnaryOperation< ImgPlusMetadata, ImgPlusMetadata >... ops )
 	{
 		this.ops = ops;
 	}
@@ -57,16 +53,16 @@ public class CopyMetadata implements UnaryOperation< Metadata, Metadata >
 	public CopyMetadata()
 	{
 		ops = new UnaryOperation[ 4 ];
-		ops[ 0 ] = new CopyCalibratedSpace< Metadata >();
-		ops[ 1 ] = new CopyImageMetadata< Metadata >();
-		ops[ 2 ] = new CopyNamed< Metadata >();
-		ops[ 3 ] = new CopySourced< Metadata >();
+		ops[ 0 ] = new CopyCalibratedSpace< ImgPlusMetadata >();
+		ops[ 1 ] = new CopyImageMetadata< ImgPlusMetadata >();
+		ops[ 2 ] = new CopyNamed< ImgPlusMetadata >();
+		ops[ 3 ] = new CopySourced< ImgPlusMetadata >();
 	}
 
 	@Override
-	public Metadata compute( Metadata input, Metadata output )
+	public ImgPlusMetadata compute( ImgPlusMetadata input, ImgPlusMetadata output )
 	{
-		for ( UnaryOperation< Metadata, Metadata > op : ops )
+		for ( UnaryOperation< ImgPlusMetadata, ImgPlusMetadata > op : ops )
 		{
 			op.compute( input, output );
 		}
@@ -75,7 +71,7 @@ public class CopyMetadata implements UnaryOperation< Metadata, Metadata >
 	}
 
 	@Override
-	public UnaryOperation< Metadata, Metadata > copy()
+	public UnaryOperation< ImgPlusMetadata, ImgPlusMetadata > copy()
 	{
 		return new CopyMetadata();
 	}

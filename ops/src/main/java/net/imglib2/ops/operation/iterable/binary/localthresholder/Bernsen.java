@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,8 +40,9 @@ import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 /**
  * @author Markus Friedrich (University of Konstanz)
+ * @author Jonathan Hale (University of Konstanz)
  */
-public class Bernsen< T extends RealType< T >, IN extends Iterator< T >> implements BinaryOperation< IN, T, BitType >
+public class Bernsen< T extends RealType< T > > implements BinaryOperation< Iterator< T >, T, BitType >
 {
 
 	private double m_contrastThreshold;
@@ -59,7 +56,7 @@ public class Bernsen< T extends RealType< T >, IN extends Iterator< T >> impleme
 	}
 
 	@Override
-	public BitType compute( IN input, T px, BitType output )
+	public BitType compute( Iterator< T > input, T px, BitType output )
 	{
 
 		double min = Double.MAX_VALUE;
@@ -88,9 +85,9 @@ public class Bernsen< T extends RealType< T >, IN extends Iterator< T >> impleme
 	}
 
 	@Override
-	public BinaryOperation< IN, T, BitType > copy()
+	public BinaryOperation< Iterator< T >, T, BitType > copy()
 	{
-		return new Bernsen< T, IN >( m_contrastThreshold, m_maxHalfValue );
+		return new Bernsen< T >( m_contrastThreshold, m_maxHalfValue );
 	}
 
 }

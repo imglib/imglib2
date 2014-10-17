@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,36 +28,34 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
 package net.imglib2.transform;
 
 /**
- * A class is transformable if it can produce a copy of
- * itself in the transformed space using the supplied transform.
+ * A class is transformable if it can produce a copy of itself in the
+ * transformed space using the supplied transform.
  * 
  * Note that a class may require either a Transform or an InvertibleTransform
- * depending on whether the strategy is to transform coordinates in the
- * source space into the destination space or to generate the object in
- * the destination space by sampling invert-transformed points in the
- * source space.
+ * depending on whether the strategy is to transform coordinates in the source
+ * space into the destination space or to generate the object in the destination
+ * space by sampling invert-transformed points in the source space.
  * 
- *
+ * 
  * @author ImgLib2 developers
  * @author leek
  */
-public interface Transformable<O,T extends Transform> {
+public interface Transformable< O, T extends Transform >
+{
 	/**
 	 * Generate a copy of the object in the transformed space.
-	 * @param t the transform that maps points in the source space to those
-	 *          in the destination space.
+	 * 
+	 * @param t
+	 *            the transform that maps points in the source space to those in
+	 *            the destination space.
 	 * @return a copy built to operate similarly in the transformed space.
 	 */
-	public O transform(final T t);
+	public O transform( final T t );
 
 }

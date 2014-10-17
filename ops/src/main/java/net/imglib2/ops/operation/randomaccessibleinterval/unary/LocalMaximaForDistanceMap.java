@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.randomaccessibleinterval.unary;
@@ -41,7 +37,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.roi.RectangleRegionOfInterest;
@@ -56,7 +51,7 @@ import net.imglib2.view.Views;
  * @param <T>
  * @param <K>
  */
-public class LocalMaximaForDistanceMap< T extends RealType< T >, K extends RandomAccessibleInterval< T > & IterableInterval< T >> implements UnaryOperation< K, List< long[] >>
+public class LocalMaximaForDistanceMap< T extends RealType< T > > implements UnaryOperation< RandomAccessibleInterval< T >, List< long[] >>
 {
 
 	public enum NeighborhoodType
@@ -107,7 +102,7 @@ public class LocalMaximaForDistanceMap< T extends RealType< T >, K extends Rando
 	}
 
 	@Override
-	public List< long[] > compute( final K src, final List< long[] > res )
+	public List< long[] > compute( final RandomAccessibleInterval< T > src, final List< long[] > res )
 	{
 		final int numDims = src.numDimensions();
 		if ( src.numDimensions() < 2 )
@@ -129,14 +124,14 @@ public class LocalMaximaForDistanceMap< T extends RealType< T >, K extends Rando
 		}
 
 		{
-			final T val = src.firstElement().createVariable();
+			final T val = Views.iterable( src ).firstElement().createVariable();
 			val.setReal( 0 );
 			m_roiCursor = m_roi.getIterableIntervalOverROI( Views.extendValue( src, val ) ).cursor();
 		}
 
 		final ArrayList< LocalMaxima > localMax = new ArrayList< LocalMaxima >( 10 );
 
-		final Cursor< T > srcCursor = src.localizingCursor();
+		final Cursor< T > srcCursor = Views.iterable( src ).localizingCursor();
 		while ( srcCursor.hasNext() )
 		{
 			srcCursor.fwd();
@@ -233,9 +228,9 @@ public class LocalMaximaForDistanceMap< T extends RealType< T >, K extends Rando
 	}
 
 	@Override
-	public UnaryOperation< K, List< long[] >> copy()
+	public UnaryOperation< RandomAccessibleInterval<T>, List< long[] >> copy()
 	{
-		return new LocalMaximaForDistanceMap< T, K >( m_neighborhood );
+		return new LocalMaximaForDistanceMap< T >( m_neighborhood );
 	}
 
 }

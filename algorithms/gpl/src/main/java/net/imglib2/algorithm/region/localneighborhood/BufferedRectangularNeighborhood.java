@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -37,19 +37,19 @@ import net.imglib2.type.Type;
  * 
  * 
  */
-public class BufferedRectangularNeighborhood<T extends Type<T>, IN extends RandomAccessibleInterval<T>>
-		extends AbstractNeighborhood<T, IN> {
+public class BufferedRectangularNeighborhood<T extends Type<T>>
+		extends AbstractNeighborhood<T> {
 
 	private int size;
 
-	public BufferedRectangularNeighborhood(IN source,
-			OutOfBoundsFactory<T, IN> outOfBounds, long[] spans) {
+	public BufferedRectangularNeighborhood(RandomAccessibleInterval<T> source,
+			OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds, long[] spans) {
 		this(source.numDimensions(), outOfBounds, spans);
 		updateSource(source);
 	}
 
 	public BufferedRectangularNeighborhood(int numDims,
-			OutOfBoundsFactory<T, IN> outOfBounds, long[] spans) {
+			OutOfBoundsFactory<T, RandomAccessibleInterval<T>> outOfBounds, long[] spans) {
 		super(numDims, outOfBounds);
 		setSpan(spans);
 
@@ -79,11 +79,11 @@ public class BufferedRectangularNeighborhood<T extends Type<T>, IN extends Rando
 	}
 
 	@Override
-	public BufferedRectangularNeighborhood<T, IN> copy() {
+	public BufferedRectangularNeighborhood<T> copy() {
 		if (source != null)
-			return new BufferedRectangularNeighborhood<T, IN>(source,
+			return new BufferedRectangularNeighborhood<T>(source,
 					outOfBounds, span);
-		return new BufferedRectangularNeighborhood<T, IN>(n, outOfBounds,
+		return new BufferedRectangularNeighborhood<T>(n, outOfBounds,
 				span);
 	}
 }

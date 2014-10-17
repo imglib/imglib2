@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,8 +41,10 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.meta.AxisType;
+import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.CalibratedSpace;
-import net.imglib2.ops.util.metadata.CalibratedSpaceImpl;
+import net.imglib2.meta.DefaultCalibratedSpace;
+import net.imglib2.meta.axis.DefaultLinearAxis;
 import net.imglib2.type.Type;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IterableRandomAccessibleInterval;
@@ -121,8 +119,8 @@ public class SubsetViews {
 	 * @return Adjusted {@link RandomAccessibleInterval}
 	 */
 	public static <T> RandomAccessibleInterval<T> synchronizeDimensionality(
-			final RandomAccessibleInterval<T> src, CalibratedSpace srcSpace,
-			final Interval target, CalibratedSpace targetSpace) {
+			final RandomAccessibleInterval<T> src, CalibratedSpace<CalibratedAxis> srcSpace,
+			final Interval target, CalibratedSpace<CalibratedAxis> targetSpace) {
 
 		// must hold, if not: most likely an implementation error
 		assert (srcSpace.numDimensions() == src.numDimensions() && target
@@ -134,20 +132,20 @@ public class SubsetViews {
 
 		// Init result vars
 		RandomAccessibleInterval<T> res = src;
-		CalibratedSpace resSpace = new CalibratedSpaceImpl(
+		CalibratedSpace<CalibratedAxis> resSpace = new DefaultCalibratedSpace(
 				target.numDimensions());
 
 		// 1. Step remove axis from source which can't be found in target
-		AxisType[] dispensable = getDeltaAxisTypes(targetSpace, srcSpace);
+		AxisType[] dispensable = getDeltaAxes(targetSpace, srcSpace);
 		for (int d = dispensable.length - 1; d >= 0; --d) {
-			int idx = srcSpace.getAxisIndex(dispensable[d]);
+			int idx = srcSpace.dimensionIndex(dispensable[d]);
 			res = Views.hyperSlice(res, idx, 0);
 		}
 
 		int i = 0;
 		outer: for (int d = 0; d < srcSpace.numDimensions(); d++) {
 			for (AxisType type : dispensable) {
-				if (d == srcSpace.getAxisIndex(type)) {
+				if (d == srcSpace.dimensionIndex(type)) {
 					continue outer;
 				}
 			}
@@ -156,14 +154,14 @@ public class SubsetViews {
 		}
 
 		// 2. Add Axis which are available in target but not in source
-		AxisType[] missing = getDeltaAxisTypes(srcSpace, targetSpace);
+		AxisType[] missing = getDeltaAxes(srcSpace, targetSpace);
 
 		// Dimensions are added and resSpace is synchronized with res
 		i = srcSpace.numDimensions() - dispensable.length;
 		for (final AxisType type : missing) {
-			final int idx = targetSpace.getAxisIndex(type);
+			final int idx = targetSpace.dimensionIndex(type);
 			res = Views.addDimension(res, target.min(idx), target.max(idx));
-			resSpace.setAxis(type, i++);
+			resSpace.setAxis(new DefaultLinearAxis(type), i++);
 		}
 
 		// res should have the same size, but with different metadata
@@ -172,13 +170,13 @@ public class SubsetViews {
 		// 3. Permutate axis if necessary
 		RandomAccessible<T> resRndAccessible = res;
 		for (int d = 0; d < res.numDimensions(); d++) {
-			int srcIdx = resSpace.getAxisIndex(targetSpace.axis(d));
+			int srcIdx = resSpace.dimensionIndex(targetSpace.axis(d).type());
 
 			if (srcIdx != d) {
 				resRndAccessible = Views.permute(resRndAccessible, srcIdx, d);
 
 				// also permutate calibrated space
-				AxisType tmp = resSpace.axis(d);
+				CalibratedAxis tmp = resSpace.axis(d);
 				resSpace.setAxis(targetSpace.axis(d), d);
 				resSpace.setAxis(tmp, srcIdx);
 			}
@@ -223,8 +221,8 @@ public class SubsetViews {
 
 	}
 
-	private static boolean spaceEquals(CalibratedSpace srcSpace,
-			CalibratedSpace targetSpace) {
+	private static boolean spaceEquals(CalibratedSpace<CalibratedAxis> srcSpace,
+			CalibratedSpace<CalibratedAxis> targetSpace) {
 
 		if (srcSpace.numDimensions() != targetSpace.numDimensions())
 			return false;
@@ -240,14 +238,14 @@ public class SubsetViews {
 	 * Calculate the delta axis which are missing in the smaller space. From the
 	 * smallest index of axistype to the biggest
 	 */
-	private synchronized static AxisType[] getDeltaAxisTypes(
-			CalibratedSpace sourceSpace, CalibratedSpace targetSpace) {
+	private synchronized static AxisType[] getDeltaAxes(
+			CalibratedSpace<CalibratedAxis> sourceSpace, CalibratedSpace<CalibratedAxis> targetSpace) {
 
 		List<AxisType> delta = new ArrayList<AxisType>();
 		for (int d = 0; d < targetSpace.numDimensions(); d++) {
-			AxisType axisType = targetSpace.axis(d);
-			if (sourceSpace.getAxisIndex(axisType) == -1) {
-				delta.add(axisType);
+			CalibratedAxis axis = targetSpace.axis(d);
+			if (sourceSpace.dimensionIndex(axis.type()) == -1) {
+				delta.add(axis.type());
 			}
 		}
 		return delta.toArray(new AxisType[delta.size()]);

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -41,10 +37,10 @@ import net.imglib2.EuclideanSpace;
 import net.imglib2.RealLocalizable;
 
 /**
- * An <em>n</em>-dimensional affine transformation whose
- * <em>n</em>&times;(<em>n</em>+1) affine transformation matrix can be accessed
- * via row and column index.
- *
+ * An <em>n</em>-dimensional affine transformation whose <em>n</em>&times;(
+ * <em>n</em>+1) affine transformation matrix can be accessed via row and column
+ * index.
+ * 
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
@@ -55,27 +51,18 @@ public interface AffineGet extends InvertibleRealTransform, EuclideanSpace
 	 * matrix.
 	 */
 	public double get( final int row, final int column );
-	
+
 	/**
 	 * Get a copy of the <em>n</em>&times;(<em>n</em>+1) affine transformation
 	 * matrix as a row packed array similar to Jama.
 	 */
 	public double[] getRowPackedCopy();
-	
+
 	/**
 	 * Get the constant partial differential vector for dimension d.
 	 */
 	public RealLocalizable d( int d );
-	
-	// NB: Ideally, we would utilize covariant inheritance to narrow the return
-	// type of a single inverse() method here, rather than needing separate
-	// methods inverse(), inverseAffine().  Unfortunately, due to a Javac bug
-	// with multiple interface inheritance, we must avoid doing so for now. For
-	// details, see:
-	//     http://bugs.sun.com/view_bug.do?bug_id=6656332
-	// The bug is fixed in JDK7.
-	
-	public AffineGet inverseAffine();
-//	@Override
-//	AffineGet inverse();
+
+	@Override
+	AffineGet inverse();
 }

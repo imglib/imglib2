@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -51,16 +47,16 @@ import net.imglib2.util.Fraction;
 
 /**
  * TODO
- *
+ * 
  */
 public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgFactory< T >
 {
 	/**
-	 * This class will ask the {@link Type} to create a 
-	 * suitable {@link Img} for the {@link Type} and the dimensionality.
+	 * This class will ask the {@link Type} to create a suitable {@link Img} for
+	 * the {@link Type} and the dimensionality.
 	 * 
-	 * {@link Type} will then call one of the abstract methods defined below to create the 
-	 * {@link NativeImg}
+	 * {@link Type} will then call one of the abstract methods defined below to
+	 * create the {@link NativeImg}
 	 * 
 	 * @return {@link Img} - the instantiated Container
 	 */

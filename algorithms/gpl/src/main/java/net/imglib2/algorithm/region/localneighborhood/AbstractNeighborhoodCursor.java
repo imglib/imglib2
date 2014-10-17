@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -34,14 +34,14 @@ import net.imglib2.outofbounds.OutOfBounds;
 public abstract class AbstractNeighborhoodCursor<T> implements Cursor<T>,
 		Bounded {
 
-	protected AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> neighborhood;
+	protected AbstractNeighborhood<T> neighborhood;
 	protected final OutOfBounds<T> ra;
 
 	/*
 	 * CONSTRUCTOR
 	 */
 
-	public AbstractNeighborhoodCursor(AbstractNeighborhood<T, ? extends RandomAccessibleInterval<T>> neighborhood) {
+	public AbstractNeighborhoodCursor(AbstractNeighborhood<T> neighborhood) {
 		this.neighborhood = neighborhood;
 		this.ra = neighborhood.extendedSource.randomAccess();
 	}

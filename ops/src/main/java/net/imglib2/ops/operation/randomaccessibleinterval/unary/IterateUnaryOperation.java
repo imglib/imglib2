@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 package net.imglib2.ops.operation.randomaccessibleinterval.unary;
@@ -43,9 +39,9 @@ import java.util.concurrent.Future;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.labeling.Labeling;
 import net.imglib2.labeling.NativeImgLabeling;
+import net.imglib2.meta.ImgPlus;
 import net.imglib2.ops.operation.UnaryOperation;
 import net.imglib2.ops.operation.metadata.unary.CopyCalibratedSpace;
 import net.imglib2.ops.operation.metadata.unary.CopyImageMetadata;
@@ -61,36 +57,39 @@ import net.imglib2.type.Type;
 /**
  * Applies a given Operation to each interval separately.
  * 
+ * TODO: Now works on RandomAccessibleIntervals
+ * 
  * @author Christian Dietz (University of Konstanz)
  * @author Clemens Muething (University of Konstanz)
+ * @author Jonathan Hale (University of Konstanz)
  */
-public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V >, S extends RandomAccessibleInterval< T >, U extends RandomAccessibleInterval< V >> implements UnaryOperation< S, U >
+public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V >> implements UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > >
 {
 
 	private final ExecutorService m_service;
 
-	private final UnaryOperation< S, U > m_op;
+	private final UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > m_op;
 
 	private final Interval[] m_outIntervals;
 
 	private final Interval[] m_inIntervals;
 
-	public IterateUnaryOperation( UnaryOperation< S, U > op, Interval[] inIntervals )
+	public IterateUnaryOperation( UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > op, Interval[] inIntervals )
 	{
 		this( op, inIntervals, inIntervals, null );
 	}
 
-	public IterateUnaryOperation( UnaryOperation< S, U > op, Interval[] inIntervals, Interval[] outIntervals )
+	public IterateUnaryOperation( UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > op, Interval[] inIntervals, Interval[] outIntervals )
 	{
 		this( op, inIntervals, outIntervals, null );
 	}
 
-	public IterateUnaryOperation( UnaryOperation< S, U > op, Interval[] inIntervals, ExecutorService service )
+	public IterateUnaryOperation( UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > op, Interval[] inIntervals, ExecutorService service )
 	{
 		this( op, inIntervals, inIntervals, service );
 	}
 
-	public IterateUnaryOperation( UnaryOperation< S, U > op, Interval[] inIntervals, Interval[] outIntervals, ExecutorService service )
+	public IterateUnaryOperation( UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > op, Interval[] inIntervals, Interval[] outIntervals, ExecutorService service )
 	{
 
 		if ( inIntervals.length != outIntervals.length ) { throw new IllegalArgumentException( "In and out intervals do not match! Most likely an implementation error!" ); }
@@ -105,7 +104,7 @@ public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final U compute( final S in, final U out )
+	public final RandomAccessibleInterval< V > compute( final RandomAccessibleInterval< T > in, final RandomAccessibleInterval< V > out )
 	{
 
 		Future< ? >[] futures = new Future< ? >[ m_inIntervals.length ];
@@ -173,9 +172,9 @@ public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V
 	}
 
 	@Override
-	public UnaryOperation< S, U > copy()
+	public UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > copy()
 	{
-		return new IterateUnaryOperation< T, V, S, U >( m_op.copy(), m_inIntervals, m_outIntervals, m_service );
+		return new IterateUnaryOperation< T, V >( m_op.copy(), m_inIntervals, m_outIntervals, m_service );
 	}
 
 	/**
@@ -187,13 +186,13 @@ public final class IterateUnaryOperation< T extends Type< T >, V extends Type< V
 	private class OperationTask implements Runnable
 	{
 
-		private final UnaryOperation< S, U > m_op;
+		private final UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > m_op;
 
-		private final S m_in;
+		private final RandomAccessibleInterval< T > m_in;
 
-		private final U m_out;
+		private final RandomAccessibleInterval< V > m_out;
 
-		public OperationTask( final UnaryOperation< S, U > op, final S in, final U out )
+		public OperationTask( final UnaryOperation< RandomAccessibleInterval< T >, RandomAccessibleInterval< V > > op, final RandomAccessibleInterval< T > in, final RandomAccessibleInterval< V > out )
 		{
 			m_in = in;
 			m_out = out;

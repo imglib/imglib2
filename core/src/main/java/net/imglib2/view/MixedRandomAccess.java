@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -43,9 +39,9 @@ import net.imglib2.RandomAccess;
 import net.imglib2.transform.integer.Mixed;
 
 /**
- * Wrap a {@code source} RandomAccess which is related to this by a {@link Mixed}
- * {@code transformToSource}.
- *
+ * Wrap a {@code source} RandomAccess which is related to this by a
+ * {@link Mixed} {@code transformToSource}.
+ * 
  * @param <T>
  * @author Tobias Pietzsch
  */
@@ -208,7 +204,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert localizable.numDimensions() >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in tmpDistance[].
+		// this may not assign all components of the target distance in
+		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 		{
@@ -229,7 +226,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert distance.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in tmpDistance[].
+		// this may not assign all components of the target distance in
+		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 		{
@@ -249,7 +247,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert distance.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target distance in tmpDistance[].
+		// this may not assign all components of the target distance in
+		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
 		{
@@ -269,7 +268,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert localizable.numDimensions() >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target position in tmpPosition[].
+		// this may not assign all components of the target position in
+		// tmpPosition[].
 		// however, the missing components are already assigned to the correct
 		// translation components.
 		for ( int d = 0; d < n; ++d )
@@ -291,7 +291,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert position.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target position in tmpPosition[].
+		// this may not assign all components of the target position in
+		// tmpPosition[].
 		// however, the missing components are already assigned to the correct
 		// translation components.
 		for ( int d = 0; d < n; ++d )
@@ -313,7 +314,8 @@ public final class MixedRandomAccess< T > extends AbstractLocalizable implements
 		assert position.length >= n;
 
 		// we just loop over the source dimension.
-		// this may not assign all components of the target position in tmpPosition[].
+		// this may not assign all components of the target position in
+		// tmpPosition[].
 		// however, the missing components are already assigned to the correct
 		// translation components.
 		for ( int d = 0; d < n; ++d )

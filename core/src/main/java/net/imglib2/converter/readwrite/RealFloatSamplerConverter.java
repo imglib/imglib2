@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -44,28 +40,27 @@ import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * TODO
- *
+ * 
  */
 public final class RealFloatSamplerConverter< R extends RealType< R > > implements SamplerConverter< R, FloatType >
 {
 	@Override
-	public FloatType convert( final Sampler< R > sampler )
+	public FloatType convert( final Sampler< ? extends R > sampler )
 	{
 		return new FloatType( new RealConvertingFloatAccess< R >( sampler ) );
 	}
 
 	private static final class RealConvertingFloatAccess< R extends RealType< R > > implements FloatAccess
 	{
-		private final Sampler< R > sampler;
+		private final Sampler< ? extends R > sampler;
 
-		private RealConvertingFloatAccess( final Sampler< R > sampler )
+		private RealConvertingFloatAccess( final Sampler< ? extends R > sampler )
 		{
 			this.sampler = sampler;
 		}
 
 		/**
-		 * This is only intended to work with FloatType!
-		 * We ignore index!!!
+		 * This is only intended to work with FloatType! We ignore index!!!
 		 */
 		@Override
 		public float getValue( final int index )
@@ -74,8 +69,7 @@ public final class RealFloatSamplerConverter< R extends RealType< R > > implemen
 		}
 
 		/**
-		 * This is only intended to work with FloatType!
-		 * We ignore index!!!
+		 * This is only intended to work with FloatType! We ignore index!!!
 		 */
 		@Override
 		public void setValue( final int index, final float value )

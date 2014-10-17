@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -63,7 +59,17 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 	private final double[] position;
 	
 	// -- constructor --
-	
+
+	/**
+	 * Creates a Function that can compute the integral of another function. One
+	 * computes the integral at a point over the limits of integration by the
+	 * given per dimension step sizes.
+	 * 
+	 * @param otherFunc The function to integrate.
+	 * @param ranges The per dimension min and max limits of integration.
+	 * @param deltas The per dimension step sizes that divide the space between
+	 *          the limits of integration.
+	 */
 	public RealContinuousIntegralFunction(
 		Function<double[],T> otherFunc, double[] ranges, double[] deltas)
 	{
@@ -77,6 +83,11 @@ public class RealContinuousIntegralFunction<T extends RealType<T>>
 	
 	// -- Function methods --
 	
+	/**
+	 * Compute the integral of a prespecified neighborhood anchored at the given
+	 * point. The neighborhood is specified at construction time as the limits of
+	 * integration.
+	 */
 	@Override
 	public void compute(double[] point, T output) {
 		

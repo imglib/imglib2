@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -61,137 +57,141 @@ import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * Convenience factory methods for creation of {@link PlanarImg} instances with
- * the most common pixel {@link Type} variants.  Keep in mind that this cannot
- * be a complete collection since the number of existing pixel {@link Type}s
- * may be extended.
+ * the most common pixel {@link Type} variants. Keep in mind that this cannot be
+ * a complete collection since the number of existing pixel {@link Type}s may be
+ * extended.
  * 
  * For pixel {@link Type}s T not present in this collection, use the generic
  * {@link PlanarImgFactory#create(long[], net.imglib2.type.NativeType)}, e.g.
  * 
  * <pre>
- * img = new PlanarImgFactory&lt;MyType&gt;.create(new long[]{100, 200}, new MyType());
+ * img = new PlanarImgFactory&lt; MyType &gt;.create( new long[] { 100, 200 }, new MyType() );
  * </pre>
- *
+ * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 final public class PlanarImgs
 {
-	private PlanarImgs() {}
-	
+	private PlanarImgs()
+	{}
+
 	/**
 	 * Create an {@link PlanarImg}<{@link UnsignedByteType}, {@link ByteArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedByteType, ByteArray > unsignedBytes( final long... dim )
 	{
-		return ( PlanarImg< UnsignedByteType, ByteArray > )new PlanarImgFactory< UnsignedByteType >().create( dim, new UnsignedByteType() );
+		return ( PlanarImg< UnsignedByteType, ByteArray > ) new PlanarImgFactory< UnsignedByteType >().create( dim, new UnsignedByteType() );
 	}
-	
+
 	/**
 	 * Create an {@link PlanarImg}<{@link ByteType}, {@link ByteArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ByteType, ByteArray > bytes( final long... dim )
 	{
-		return ( PlanarImg< ByteType, ByteArray > )new PlanarImgFactory< ByteType >().create( dim, new ByteType() );
+		return ( PlanarImg< ByteType, ByteArray > ) new PlanarImgFactory< ByteType >().create( dim, new ByteType() );
 	}
-	
+
 	/**
-	 * Create an {@link PlanarImg}<{@link UnsignedShortType}, {@link ShortArray}>.
+	 * Create an {@link PlanarImg}<{@link UnsignedShortType}, {@link ShortArray}
+	 * >.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedShortType, ShortArray > unsignedShorts( final long... dim )
 	{
-		return ( PlanarImg< UnsignedShortType, ShortArray > )new PlanarImgFactory< UnsignedShortType >().create( dim, new UnsignedShortType() );
+		return ( PlanarImg< UnsignedShortType, ShortArray > ) new PlanarImgFactory< UnsignedShortType >().create( dim, new UnsignedShortType() );
 	}
-	
+
 	/**
 	 * Create an {@link PlanarImg}<{@link ShortType}, {@link ShortArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ShortType, ShortArray > shorts( final long... dim )
 	{
-		return ( PlanarImg< ShortType, ShortArray > )new PlanarImgFactory< ShortType >().create( dim, new ShortType() );
+		return ( PlanarImg< ShortType, ShortArray > ) new PlanarImgFactory< ShortType >().create( dim, new ShortType() );
 	}
-	
+
 	/**
 	 * Create an {@link PlanarImg}<{@link UnsignedIntType}, {@link IntArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedIntType, IntArray > unsignedInts( final long... dim )
 	{
-		return ( PlanarImg< UnsignedIntType, IntArray > )new PlanarImgFactory< UnsignedIntType >().create( dim, new UnsignedIntType() );
+		return ( PlanarImg< UnsignedIntType, IntArray > ) new PlanarImgFactory< UnsignedIntType >().create( dim, new UnsignedIntType() );
 	}
-	
+
 	/**
 	 * Create an {@link PlanarImg}<{@link IntType}, {@link IntArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< IntType, IntArray > ints( final long... dim )
 	{
-		return ( PlanarImg< IntType, IntArray > )new PlanarImgFactory< IntType >().create( dim, new IntType() );
+		return ( PlanarImg< IntType, IntArray > ) new PlanarImgFactory< IntType >().create( dim, new IntType() );
 	}
-	
+
 	/**
 	 * Create an {@link PlanarImg}<{@link LongType}, {@link LongArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< LongType, LongArray > longs( final long... dim )
 	{
-		return ( PlanarImg< LongType, LongArray > )new PlanarImgFactory< LongType >().create( dim, new LongType() );
+		return ( PlanarImg< LongType, LongArray > ) new PlanarImgFactory< LongType >().create( dim, new LongType() );
 	}
-	
+
 	/**
 	 * Create an {@link PlanarImg}<{@link BitType}, {@link BitArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< BitType, BitArray > bits( final long... dim )
 	{
-		return ( PlanarImg< BitType, BitArray > )new PlanarImgFactory< BitType >().create( dim, new BitType() );
+		return ( PlanarImg< BitType, BitArray > ) new PlanarImgFactory< BitType >().create( dim, new BitType() );
 	}
-	
+
 	/**
 	 * Create an {@link PlanarImg}<{@link FloatType}, {@link FloatArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< FloatType, FloatArray > floats( final long... dim )
 	{
-		return ( PlanarImg< FloatType, FloatArray > )new PlanarImgFactory< FloatType >().create( dim, new FloatType() );
+		return ( PlanarImg< FloatType, FloatArray > ) new PlanarImgFactory< FloatType >().create( dim, new FloatType() );
 	}
-	
+
 	/**
 	 * Create an {@link PlanarImg}<{@link DoubleType}, {@link DoubleArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< DoubleType, DoubleArray > doubles( final long... dim )
 	{
-		return ( PlanarImg< DoubleType, DoubleArray > )new PlanarImgFactory< DoubleType >().create( dim, new DoubleType() );
+		return ( PlanarImg< DoubleType, DoubleArray > ) new PlanarImgFactory< DoubleType >().create( dim, new DoubleType() );
 	}
-	
+
 	/**
 	 * Create an {@link PlanarImg}<{@link ARGBType}, {@link IntArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ARGBType, IntArray > argbs( final long... dim )
 	{
-		return ( PlanarImg< ARGBType, IntArray > )new PlanarImgFactory< ARGBType >().create( dim, new ARGBType() );
+		return ( PlanarImg< ARGBType, IntArray > ) new PlanarImgFactory< ARGBType >().create( dim, new ARGBType() );
 	}
-	
+
 	/**
-	 * Create an {@link PlanarImg}<{@link ComplexFloatType}, {@link FloatArray}>.
+	 * Create an {@link PlanarImg}<{@link ComplexFloatType}, {@link FloatArray}
+	 * >.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ComplexFloatType, FloatArray > complexFloats( final long... dim )
 	{
-		return ( PlanarImg< ComplexFloatType, FloatArray > )new PlanarImgFactory< ComplexFloatType >().create( dim, new ComplexFloatType() );
+		return ( PlanarImg< ComplexFloatType, FloatArray > ) new PlanarImgFactory< ComplexFloatType >().create( dim, new ComplexFloatType() );
 	}
-	
+
 	/**
-	 * Create an {@link PlanarImg}<{@link ComplexDoubleType}, {@link DoubleArray}>.
+	 * Create an {@link PlanarImg}<{@link ComplexDoubleType},
+	 * {@link DoubleArray}>.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ComplexDoubleType, DoubleArray > complexDoubles( final long... dim )
 	{
-		return ( PlanarImg< ComplexDoubleType, DoubleArray > )new PlanarImgFactory< ComplexDoubleType >().create( dim, new ComplexDoubleType() );
+		return ( PlanarImg< ComplexDoubleType, DoubleArray > ) new PlanarImgFactory< ComplexDoubleType >().create( dim, new ComplexDoubleType() );
 	}
 }

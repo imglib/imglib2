@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -27,7 +27,8 @@
 package net.imglib2.algorithm.region.localneighborhood;
 
 import net.imglib2.meta.Axes;
-import net.imglib2.meta.Metadata;
+import net.imglib2.meta.CalibratedAxis;
+import net.imglib2.meta.CalibratedSpace;
 import net.imglib2.util.Util;
 
 /**
@@ -38,19 +39,24 @@ public class Utils {
 	
 	
 	/**
-	 * Return the xyz calibration stored in an {@link Metadata} in a 3-elements
-	 * double array. Calibration is ordered as X, Y, Z. If one axis is not found,
-	 * then the calibration for this axis takes the value of 1.
+	 * Return the xyz calibration stored in a {@link CalibratedSpace} in a
+	 * 3-elements double array. Calibration is ordered as X, Y, Z. If one axis is
+	 * not found, then the calibration for this axis takes the value of 1.
 	 */
-	public static final double[] getSpatialCalibration(final Metadata img) {
+	public static final double[] getSpatialCalibration(
+		final CalibratedSpace<?> space)
+	{
 		final double[] calibration = Util.getArrayFromValue(1d, 3);
-		for (int d = 0; d < img.numDimensions(); d++) {
-			if (img.axis(d).equals(Axes.X)) {
-				calibration[0] = img.calibration(d);
-			} else if (img.axis(d).equals(Axes.Y)) {
-				calibration[1] = img.calibration(d);
-			} else if (img.axis(d).equals(Axes.Z)) {
-				calibration[2] = img.calibration(d);
+		for (int d = 0; d < space.numDimensions(); d++) {
+			final CalibratedAxis axis = space.axis(d);
+			// TODO - using averageScale() introduces error for nonlinear axes
+			final double scale = space.averageScale(d);
+			if (axis.type() == Axes.X) {
+				calibration[0] = scale;
+			} else if (axis.type() == Axes.Y) {
+				calibration[1] = scale;
+			} else if (axis.type() == Axes.Z) {
+				calibration[2] = scale;
 			}
 		}
 		return calibration;

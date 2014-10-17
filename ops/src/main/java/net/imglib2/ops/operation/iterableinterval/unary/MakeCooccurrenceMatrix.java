@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -148,7 +144,7 @@ public class MakeCooccurrenceMatrix< T extends RealType< T >> implements UnaryOp
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
-			m_pixels[ cursor.getIntPosition( m_dimY ) - ( int ) input.min( m_dimY ) ][ cursor.getIntPosition( m_dimX ) - ( int ) input.min( m_dimX ) ] = ( int ) ( ( ( cursor.get().getRealDouble() - m_min ) / ( m_max - m_min + 1 ) ) * m_nrGrayLevels );
+			m_pixels[ cursor.getIntPosition( m_dimY ) - ( int ) input.min( m_dimY ) ][ cursor.getIntPosition( m_dimX ) - ( int ) input.min( m_dimX ) ] = ( int ) ( ( ( cursor.get().getRealDouble() - m_min ) / ( m_max - m_min ) ) * ( m_nrGrayLevels - 1 ) );
 
 		}
 		output.clear();

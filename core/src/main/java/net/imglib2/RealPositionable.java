@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -39,7 +35,7 @@ package net.imglib2;
 
 /**
  * An element that can be positioned in n-dimensional real space.
- *
+ * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -49,7 +45,7 @@ public interface RealPositionable extends Positionable
 {
 	/**
 	 * Move the element in one dimension for some distance.
-	 *  
+	 * 
 	 * @param distance
 	 * @param d
 	 */
@@ -57,7 +53,7 @@ public interface RealPositionable extends Positionable
 
 	/**
 	 * Move the element in one dimension for some distance.
-	 *  
+	 * 
 	 * @param distance
 	 * @param d
 	 */
@@ -70,7 +66,7 @@ public interface RealPositionable extends Positionable
 	 * @param localizable
 	 */
 	public void move( RealLocalizable localizable );
-	
+
 	/**
 	 * Move the element relative to its current location using a float[] as
 	 * distance vector.
@@ -78,7 +74,7 @@ public interface RealPositionable extends Positionable
 	 * @param distance
 	 */
 	public void move( float[] distance );
-	
+
 	/**
 	 * Move the element relative to its current location using a float[] as
 	 * distance vector.
@@ -86,36 +82,36 @@ public interface RealPositionable extends Positionable
 	 * @param distance
 	 */
 	public void move( double[] distance );
-	
+
 	/**
 	 * Place the element at the same location as a given {@link RealLocalizable}
 	 * 
 	 * @param localizable
 	 */
 	public void setPosition( RealLocalizable localizable );
-	
+
 	/**
 	 * Set the position of the element.
 	 * 
 	 * @param position
 	 */
 	public void setPosition( float position[] );
-	
+
 	/**
 	 * Set the position of the element.
 	 * 
 	 * @param position
 	 */
 	public void setPosition( double position[] );
-	
+
 	/**
 	 * Set the position of the element for one dimension.
 	 * 
 	 * @param position
 	 * @param d
 	 */
-	public void setPosition( float position, int d );		
-	
+	public void setPosition( float position, int d );
+
 	/**
 	 * Set the position of the element for one dimension.
 	 * 

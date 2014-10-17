@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -41,6 +37,7 @@ import java.util.Arrays;
 
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.roi.RectangleRegionOfInterest;
 import net.imglib2.roi.RegionOfInterest;
@@ -49,51 +46,59 @@ import net.imglib2.type.numeric.real.DoubleType;
 
 /**
  * TODO
- *
+ * 
  */
-public class NewImageAssign<U extends ComplexType<U>, V extends ComplexType<V>> {
-	
-	Img<U> img;
+public class NewImageAssign< U extends ComplexType< U >, V extends ComplexType< V >>
+{
+
+	RandomAccessibleInterval< U > img;
+
 	double[] origin;
+
 	double[] span;
-	NewFunc<U,V> func;
-	
-	public NewImageAssign(Img<U> img, double[] origin, double[] span, NewFunc<U,V> func) {
+
+	NewFunc< U, V > func;
+
+	public NewImageAssign( RandomAccessibleInterval< U > img, double[] origin, double[] span, NewFunc< U, V > func )
+	{
 		this.img = img;
 		this.origin = origin;
 		this.span = span;
 		this.func = func;
 	}
-	
-	public void assign() {
+
+	public void assign()
+	{
 		RegionOfInterest r = null;
-		
-		RectangleRegionOfInterest roi = new RectangleRegionOfInterest(
-                origin, span);
-		double[] pos = new double[2];
-		Img<DoubleType> img = null;
-		NewFunc<DoubleType,DoubleType> newFunc = new NewAvgFunc<DoubleType,DoubleType>(new DoubleType());
+
+		RectangleRegionOfInterest roi = new RectangleRegionOfInterest( origin, span );
+		double[] pos = new double[ 2 ];
+		Img< DoubleType > img = null;
+		NewFunc< DoubleType, DoubleType > newFunc = new NewAvgFunc< DoubleType, DoubleType >( new DoubleType() );
 		DoubleType output = new DoubleType();
-		IterableInterval<DoubleType> ii = roi.getIterableIntervalOverROI(img);
-		Cursor<DoubleType> iiC = ii.cursor();
-		while (iiC.hasNext()) {
-		         iiC.fwd();
-		}
-		iiC.reset();
-		roi.setOrigin(new double[] { 7, 123242 });
-		while (iiC.hasNext()) {
-		         iiC.fwd();
-	// TODO - ARG
-//		         newFunc.evaluate(iiC, output);
-		         iiC.localize(pos);
-		         System.out.println(Arrays.toString(pos));
-		}
-		roi.setOrigin(new double[] { 0, 0 });
-		iiC.reset();
-		while (iiC.hasNext()) {
+		IterableInterval< DoubleType > ii = roi.getIterableIntervalOverROI( img );
+		Cursor< DoubleType > iiC = ii.cursor();
+		while ( iiC.hasNext() )
+		{
 			iiC.fwd();
-		    iiC.localize(pos);
-		    System.out.println(Arrays.toString(pos));
+		}
+		iiC.reset();
+		roi.setOrigin( new double[] { 7, 123242 } );
+		while ( iiC.hasNext() )
+		{
+			iiC.fwd();
+			// TODO - ARG
+			// newFunc.evaluate(iiC, output);
+			iiC.localize( pos );
+			System.out.println( Arrays.toString( pos ) );
+		}
+		roi.setOrigin( new double[] { 0, 0 } );
+		iiC.reset();
+		while ( iiC.hasNext() )
+		{
+			iiC.fwd();
+			iiC.localize( pos );
+			System.out.println( Arrays.toString( pos ) );
 		}
 	}
 }

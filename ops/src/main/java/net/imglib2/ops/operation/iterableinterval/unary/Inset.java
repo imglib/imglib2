@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -49,42 +45,47 @@ import net.imglib2.type.Type;
  * 
  * @author Martin Horn (University of Konstanz)
  * @param <T>
- *                image type
+ *            image type
  */
-public class Inset<T extends Type<T>, K extends RandomAccessibleInterval<T>>
-                implements UnaryOperation<IterableInterval<T>, K> {
+public class Inset< T extends Type< T > > implements UnaryOperation< IterableInterval< T >, RandomAccessibleInterval< T >>
+{
 
-        private final long[] m_offset;
+	private final long[] m_offset;
 
-        public Inset(long[] offset) {
-                m_offset = offset;
-        }
+	public Inset( long[] offset )
+	{
+		m_offset = offset;
+	}
 
-        @Override
-        public K compute(IterableInterval<T> inset, K res) {
-                long[] pos = new long[inset.numDimensions()];
+	@Override
+	public RandomAccessibleInterval< T > compute( IterableInterval< T > inset, RandomAccessibleInterval< T > res )
+	{
+		long[] pos = new long[ inset.numDimensions() ];
 
-                RandomAccess<T> ra = res.randomAccess();
-                for (int d = 0; d < Math.min(res.numDimensions(),
-                                m_offset.length); d++) {
-                        ra.setPosition(m_offset[d], d);
-                }
+		RandomAccess< T > ra = res.randomAccess();
+		for ( int d = 0; d < Math.min( res.numDimensions(), m_offset.length ); d++ )
+		{
+			ra.setPosition( m_offset[ d ], d );
+		}
 
-                Cursor<T> c = inset.localizingCursor();
+		Cursor< T > c = inset.localizingCursor();
 
-                while (c.hasNext()) {
-                        c.fwd();
-                        c.localize(pos);
-                        for (int d = 0; d < pos.length; d++) {
-                                ra.setPosition(m_offset[d] + pos[d], d);
-                        }
-                        ra.get().set(c.get());
-                }
-                return res;
-        }
+		while ( c.hasNext() )
+		{
+			c.fwd();
+			c.localize( pos );
+			for ( int d = 0; d < pos.length; d++ )
+			{
+				ra.setPosition( m_offset[ d ] + pos[ d ], d );
+			}
+			ra.get().set( c.get() );
+		}
+		return res;
+	}
 
-        @Override
-        public Inset<T, K> copy() {
-                return new Inset<T, K>(m_offset.clone());
-        }
+	@Override
+	public Inset< T > copy()
+	{
+		return new Inset< T >( m_offset.clone() );
+	}
 }

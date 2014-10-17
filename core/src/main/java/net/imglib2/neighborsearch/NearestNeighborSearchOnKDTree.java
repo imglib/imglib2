@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -45,41 +41,43 @@ import net.imglib2.collection.KDTreeNode;
 /**
  * Implementation of {@link NearestNeighborSearch} search for kd-trees.
  * 
- *
+ * 
  * @author Tobias Pietzsch
  */
 public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch< T >
 {
 	protected KDTree< T > tree;
-	
+
 	protected final int n;
+
 	protected final double[] pos;
 
 	protected KDTreeNode< T > bestPoint;
+
 	protected double bestSquDistance;
-	
-	public NearestNeighborSearchOnKDTree( KDTree< T > tree )
+
+	public NearestNeighborSearchOnKDTree( final KDTree< T > tree )
 	{
 		n = tree.numDimensions();
 		pos = new double[ n ];
 		this.tree = tree;
 	}
-	
+
 	@Override
 	public int numDimensions()
 	{
 		return n;
 	}
-	
+
 	@Override
-	public void search( RealLocalizable p )
+	public void search( final RealLocalizable p )
 	{
 		p.localize( pos );
 		bestSquDistance = Double.MAX_VALUE;
 		searchNode( tree.getRoot() );
 	}
-	
-	protected void searchNode( KDTreeNode< T > current )
+
+	protected void searchNode( final KDTreeNode< T > current )
 	{
 		// consider the current node
 		final double distance = current.squDistanceTo( pos );
@@ -88,7 +86,7 @@ public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch
 			bestSquDistance = distance;
 			bestPoint = current;
 		}
-		
+
 		final double axisDiff = pos[ current.getSplitDimension() ] - current.getSplitCoordinate();
 		final double axisSquDistance = axisDiff * axisDiff;
 		final boolean leftIsNearBranch = axisDiff < 0;
@@ -99,7 +97,7 @@ public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch
 		if ( nearChild != null )
 			searchNode( nearChild );
 
-	    // search the away branch - maybe
+		// search the away branch - maybe
 		if ( ( axisSquDistance <= bestSquDistance ) && ( awayChild != null ) )
 			searchNode( awayChild );
 	}
@@ -127,7 +125,7 @@ public class NearestNeighborSearchOnKDTree< T > implements NearestNeighborSearch
 	{
 		return Math.sqrt( bestSquDistance );
 	}
-	
+
 	@Override
 	public NearestNeighborSearchOnKDTree< T > copy()
 	{

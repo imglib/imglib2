@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -28,10 +28,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of any organization.
  * #L%
  */
 
@@ -42,11 +38,11 @@ import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 
 /**
- * N-dimensional data is often stored in a flat 1-dimensional array.
- * This class provides convenience methods to translate between N-dimensional
- * indices (positions) and 1-dimensional indices.
- *
- *
+ * N-dimensional data is often stored in a flat 1-dimensional array. This class
+ * provides convenience methods to translate between N-dimensional indices
+ * (positions) and 1-dimensional indices.
+ * 
+ * 
  * @author Tobias Pietzsch
  */
 public class IntervalIndexer
@@ -63,9 +59,9 @@ public class IntervalIndexer
 	final static public int positionToIndex( final long[] position, final int[] dimensions )
 	{
 		final int maxDim = dimensions.length - 1;
-		int i = ( int )position[ maxDim ];
+		int i = ( int ) position[ maxDim ];
 		for ( int d = maxDim - 1; d >= 0; --d )
-			i = i * dimensions[ d ] + ( int )position[ d ];
+			i = i * dimensions[ d ] + ( int ) position[ d ];
 		return i;
 	}
 
@@ -123,10 +119,10 @@ public class IntervalIndexer
 		for ( int d = 0; d < maxDim; ++d )
 		{
 			final long j = index / dimensions[ d ];
-			position[ d ] = ( int )( index - j * dimensions[ d ] );
+			position[ d ] = ( int ) ( index - j * dimensions[ d ] );
 			index = j;
 		}
-		position[ maxDim ] = ( int )index;
+		position[ maxDim ] = ( int ) index;
 	}
 
 	final static public void indexToPosition( int index, final int[] dimensions, final long[] position )
@@ -243,10 +239,10 @@ public class IntervalIndexer
 		for ( int d = 0; d < maxDim; ++d )
 		{
 			final long j = index / dimensions[ d ];
-			position[ d ] = ( int )( index - j * dimensions[ d ] + offsets[ d ] );
+			position[ d ] = ( int ) ( index - j * dimensions[ d ] + offsets[ d ] );
 			index = j;
 		}
-		position[ maxDim ] = ( int )( index + offsets[ maxDim ] );
+		position[ maxDim ] = ( int ) ( index + offsets[ maxDim ] );
 	}
 
 	final static public void indexToPositionWithOffset( long index, final long[] dimensions, final long[] offsets, final float[] position )
@@ -315,8 +311,9 @@ public class IntervalIndexer
 	}
 
 	/**
-	 * Create allocation step array from the dimensions of an N-dimensional array.
-	 *
+	 * Create allocation step array from the dimensions of an N-dimensional
+	 * array.
+	 * 
 	 * @param dimensions
 	 * @param steps
 	 */
@@ -328,8 +325,9 @@ public class IntervalIndexer
 	}
 
 	/**
-	 * Create allocation step array from the dimensions of an N-dimensional array.
-	 *
+	 * Create allocation step array from the dimensions of an N-dimensional
+	 * array.
+	 * 
 	 * @param dimensions
 	 * @param steps
 	 */

@@ -2,7 +2,7 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2013 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
+ * Copyright (C) 2009 - 2014 Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
  * Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
  * Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
  * Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
@@ -27,50 +27,85 @@
 package net.imglib2.algorithm.pde;
 
 /**
- * A collection of util static methods related to partial differential equations.
+ * A collection of util static methods related to partial differential
+ * equations.
+ * 
+ * @author Jean-Yves Tivenez
  */
 public class PdeUtil {
 
 	/**
 	 * Return the eigenvalues and the eigenvectors of a 2x2 real symetric matrix:
-	 * <pre> a c
-	 * c b</pre>
-	 * @return a <code>double[]</code> array containing in order: <code>mu_1</code> and <code>mu_2</code> the
-	 * two eigenvalues in ascending order, and <code>cosα</code> and <code>sinα</code> the X & Y 
-	 * components of the first eigenvector.
+	 * 
+	 * <pre>
+	 * a c
+	 * c b
+	 * </pre>
+	 * 
+	 * @return a <code>double[]</code> array containing in order:
+	 *         <code>mu_1</code> and <code>mu_2</code> the two eigenvalues in
+	 *         ascending order, and <code>cosα</code> and <code>sinα</code> the X
+	 *         & Y components of the first eigenvector.
+	 * @author Jean-Yves Tivenez
+	 * @author Barry DeZonia
 	 */
-	public static final double[] realSymetricMatrix2x2(final double ixx, final double iyy, final double ixy) {
+	public static final double[] realSymetricMatrix2x2(final double ixx,
+		final double iyy, final double ixy)
+	{
 		// Matrix: [ Ixx Ixy ; Ixy Iyy ];
 
-		double mu_1 = 0.5 * (ixx + iyy + Math.sqrt( (ixx-iyy) * (ixx-iyy) + 4*ixy*ixy) );
-		double mu_2 = 0.5 * (ixx + iyy - Math.sqrt( (ixx-iyy) * (ixx-iyy) + 4*ixy*ixy) );
+		final double term = Math.sqrt((ixx - iyy) * (ixx - iyy) + 4 * ixy * ixy);
 
-		double cosalpha;
-		double sinalpha;
+		final double mu_1 = 0.5 * (ixx + iyy + term);
+		final double mu_2 = 0.5 * (ixx + iyy - term);
 
-		if (iyy > Float.MIN_VALUE) {
+		if (Math.abs(iyy) > Float.MIN_VALUE) {
 
-			cosalpha = 2 * ixy;
-			sinalpha = iyy - ixx + Math.sqrt( (ixx-iyy)*(ixx-iyy) + 4*ixy*ixy );
-			double norm = Math.sqrt(cosalpha*cosalpha + sinalpha*sinalpha);
-
+			final double cos = 2 * ixy;
+			final double sin = iyy - ixx + term;
+			final double norm = Math.sqrt(cos * cos + sin * sin);
 			if (norm > Float.MIN_VALUE) {
-				cosalpha /= norm;
-				sinalpha /= norm;
-			} else {
-				cosalpha = 1;
-				sinalpha = 0;
+				return new double[] { mu_1, mu_2, cos / norm, sin / norm };
 			}
-
-		} else {
-
-			cosalpha = 1;
-			sinalpha = 0;
 
 		}
 
-		return new double[] { mu_1, mu_2, cosalpha, sinalpha };
+		// Edge case logic
+
+		// NB BDZ - cosAlpha and sinAlpha edge cases determined by comparing
+		// Float.MIN_VALUE cases to values near it to see trend lines.
+
+		double cosAlpha;
+		double sinAlpha;
+
+		// default cosAlpha and sinAlpha
+
+		if (ixx < 0) {
+			cosAlpha = 0;
+			sinAlpha = 1;
+		}
+		else if (iyy >= 0) {
+			if (ixy >= 0) {
+				cosAlpha = 1;
+				sinAlpha = 0;
+			}
+			else { // ixy < 0
+				cosAlpha = -1;
+				sinAlpha = 0;
+			}
+		}
+		else { // iyy < 0
+			if (ixy >= 0) {
+				cosAlpha = 1;
+				sinAlpha = 0;
+			}
+			else { // ixy < 0
+				cosAlpha = -1;
+				sinAlpha = 0;
+			}
+		}
+
+		return new double[] { mu_1, mu_2, cosAlpha, sinAlpha };
 
 	}
-
 }
