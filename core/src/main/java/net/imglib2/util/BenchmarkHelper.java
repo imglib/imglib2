@@ -41,45 +41,12 @@ import java.util.Collections;
  * 
  * Call {@link BenchmarkHelper#benchmark(int, Benchmark)} with the number of
  * iterations and a {@link Runnable} to benchmark to obtain a list of run-times
- * in milliseconds. Use {@link BenchmarkHelper#median(ArrayList)} to compute the
- * median run-time.
+ * in milliseconds.
  * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class BenchmarkHelper
 {
-	/**
-	 * Compute median of a list of {@link Long}s.
-	 * 
-	 * @param values
-	 *            list of values.
-	 * @return median of values.
-	 */
-	public static Long median( final ArrayList< Long > values )
-	{
-		Collections.sort( values );
-
-		if ( values.size() % 2 == 1 )
-			return values.get( ( values.size() + 1 ) / 2 - 1 );
-		final long lower = values.get( values.size() / 2 - 1 );
-		final long upper = values.get( values.size() / 2 );
-
-		return ( lower + upper ) / 2;
-	}
-
-	/**
-	 * Compute minimum of a list of {@link Long}s.
-	 * 
-	 * @param values
-	 *            list of values.
-	 * @return minimum of values.
-	 */
-	public static Long best( final ArrayList< Long > values )
-	{
-		Collections.sort( values );
-		return values.get( 0 );
-	}
-
 	/**
 	 * Run a benchmark numRuns times and record the milliseconds taken for each
 	 * run.
@@ -132,8 +99,26 @@ public class BenchmarkHelper
 				System.out.println( "run " + i + ": " + times.get( i ) + " ms" );
 			System.out.println();
 		}
+		Collections.sort( times );
 		System.out.println( "median: " + median( times ) + " ms" );
-		System.out.println( "best: " + best( times ) + " ms" );
+		System.out.println( "best: " + times.get( 0 ) + " ms" );
 		System.out.println();
+	}
+
+	/**
+	 * Compute median of a sorted list of {@link Long}s.
+	 * 
+	 * @param values
+	 *            sorted list of values.
+	 * @return median of the values.
+	 */
+	private static long median( final ArrayList< Long > values )
+	{
+		if ( values.size() % 2 == 1 )
+			return values.get( ( values.size() + 1 ) / 2 - 1 );
+		final long lower = values.get( values.size() / 2 - 1 );
+		final long upper = values.get( values.size() / 2 );
+
+		return ( lower + upper ) / 2;
 	}
 }
