@@ -186,7 +186,115 @@ public class Util
 		return ( float ) Math.sqrt( dist );
 	}
 
-	public static long computeMedian( final long[] values )
+	/**
+	 * Computes the percentile of a collection of doubles (percentile 0.5
+	 * roughly corresponds to median)
+	 * 
+	 * @param values
+	 *            - the values
+	 * @param percentile
+	 *            - the percentile [0...1]
+	 * @return the corresponding value
+	 */
+	public static double percentile( final double[] values, final double percentile )
+	{
+		final double temp[] = values.clone();
+		final int length = temp.length;
+
+		quicksort( temp );
+
+		return temp[ Math.min( length - 1, Math.max( 0, ( int ) Math.round( ( length - 1 ) * percentile ) ) ) ];
+	}
+
+	public static double averageDouble( final List< Double > values )
+	{
+		final double size = values.size();
+		double avg = 0;
+
+		for ( final double v : values )
+			avg += v / size;
+
+		return avg;
+	}
+
+	public static float averageFloat( final List< Float > values )
+	{
+		final double size = values.size();
+		double avg = 0;
+
+		for ( final double v : values )
+			avg += v / size;
+
+		return ( float ) avg;
+	}
+
+	public static float min( final List< Float > values )
+	{
+		float min = Float.MAX_VALUE;
+
+		for ( final float v : values )
+			if ( v < min )
+				min = v;
+
+		return min;
+	}
+
+	public static float max( final List< Float > values )
+	{
+		float max = -Float.MAX_VALUE;
+
+		for ( final float v : values )
+			if ( v > max )
+				max = v;
+
+		return max;
+	}
+
+	public static float average( final float[] values )
+	{
+		final double size = values.length;
+		double avg = 0;
+
+		for ( final float v : values )
+			avg += v / size;
+
+		return ( float ) avg;
+	}
+
+	public static double average( final double[] values )
+	{
+		final double size = values.length;
+		double avg = 0;
+
+		for ( final double v : values )
+			avg += v / size;
+
+		return avg;
+	}
+
+	public static double min( final double[] values )
+	{
+		double min = values[ 0 ];
+
+		for ( final double v : values )
+			if ( v < min )
+				min = v;
+
+		return min;
+	}
+
+	public static double max( final double[] values )
+	{
+		double max = values[ 0 ];
+
+		for ( final double v : values )
+			if ( v > max )
+				max = v;
+
+		return max;
+	}
+
+	public static long median( final long[] values )
 	{
 		final long temp[] = values.clone();
 		long median;
@@ -204,7 +312,7 @@ public class Util
 		return median;
 	}
 
-	public static double computeMedian( final double[] values )
+	public static double median( final double[] values )
 	{
 		final double temp[] = values.clone();
 		double median;
@@ -222,115 +330,7 @@ public class Util
 		return median;
 	}
 
-	/**
-	 * Computes the percentile of a collection of doubles (percentile 0.5
-	 * roughly corresponds to median)
-	 * 
-	 * @param values
-	 *            - the values
-	 * @param percentile
-	 *            - the percentile [0...1]
-	 * @return the corresponding value
-	 */
-	public static double computePercentile( final double[] values, final double percentile )
-	{
-		final double temp[] = values.clone();
-		final int length = temp.length;
-
-		quicksort( temp );
-
-		return temp[ Math.min( length - 1, Math.max( 0, ( int ) Math.round( ( length - 1 ) * percentile ) ) ) ];
-	}
-
-	public static double computeAverageDouble( final List< Double > values )
-	{
-		final double size = values.size();
-		double avg = 0;
-
-		for ( final double v : values )
-			avg += v / size;
-
-		return avg;
-	}
-
-	public static float computeAverageFloat( final List< Float > values )
-	{
-		final double size = values.size();
-		double avg = 0;
-
-		for ( final double v : values )
-			avg += v / size;
-
-		return ( float ) avg;
-	}
-
-	public static float computeMinimum( final List< Float > values )
-	{
-		float min = Float.MAX_VALUE;
-
-		for ( final float v : values )
-			if ( v < min )
-				min = v;
-
-		return min;
-	}
-
-	public static float computeMaximum( final List< Float > values )
-	{
-		float max = -Float.MAX_VALUE;
-
-		for ( final float v : values )
-			if ( v > max )
-				max = v;
-
-		return max;
-	}
-
-	public static float computeAverage( final float[] values )
-	{
-		final double size = values.length;
-		double avg = 0;
-
-		for ( final float v : values )
-			avg += v / size;
-
-		return ( float ) avg;
-	}
-
-	public static double computeAverage( final double[] values )
-	{
-		final double size = values.length;
-		double avg = 0;
-
-		for ( final double v : values )
-			avg += v / size;
-
-		return avg;
-	}
-
-	public static double computeMin( final double[] values )
-	{
-		double min = values[ 0 ];
-
-		for ( final double v : values )
-			if ( v < min )
-				min = v;
-
-		return min;
-	}
-
-	public static double computeMax( final double[] values )
-	{
-		double max = values[ 0 ];
-
-		for ( final double v : values )
-			if ( v > max )
-				max = v;
-
-		return max;
-	}
-
-	public static float computeMedian( final float[] values )
+	public static float median( final float[] values )
 	{
 		final float temp[] = values.clone();
 		float median;
@@ -743,18 +743,20 @@ public class Util
 		}
 	}
 
-	public static < T extends Type< T > & Comparable< T >> T max( final T value1, final T value2 )
+	public static < T extends Type< T > & Comparable< T > > T max( final T value1, final T value2 )
 	{
 		if ( value1.compareTo( value2 ) >= 0 )
 			return value1;
-		return value2;
+		else
+			return value2;
 	}
 
-	public static < T extends Type< T > & Comparable< T >> T min( final T value1, final T value2 )
+	public static < T extends Type< T > & Comparable< T > > T min( final T value1, final T value2 )
 	{
 		if ( value1.compareTo( value2 ) <= 0 )
 			return value1;
-		return value2;
+		else
+			return value2;
 	}
 
 	/**
@@ -947,7 +949,7 @@ public class Util
 	 *            - the {@link RandomAccessibleInterval}
 	 * @return - an instance of T
 	 */
-	final public static < T, F extends Interval & RandomAccessible< T >> T getTypeFromInterval( final F rai )
+	final public static < T, F extends Interval & RandomAccessible< T > > T getTypeFromInterval( final F rai )
 	{
 		// create RandomAccess
 		final RandomAccess< T > randomAccess = rai.randomAccess();
