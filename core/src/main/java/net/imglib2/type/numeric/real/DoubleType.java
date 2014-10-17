@@ -38,8 +38,6 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.DoubleAccess;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.ExponentialMathType;
-import net.imglib2.util.Util;
 
 /**
  * TODO
@@ -47,7 +45,7 @@ import net.imglib2.util.Util;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class DoubleType extends AbstractRealType< DoubleType > implements ExponentialMathType< DoubleType >, NativeType< DoubleType >
+public class DoubleType extends AbstractRealType< DoubleType > implements NativeType< DoubleType >
 {
 	private int i = 0;
 
@@ -172,18 +170,6 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Expone
 	public DoubleType copy()
 	{
 		return new DoubleType( get() );
-	}
-
-	@Override
-	public void exp()
-	{
-		set( Math.exp( get() ) );
-	}
-
-	@Override
-	public void round()
-	{
-		set( Util.round( get() ) );
 	}
 
 	@Override

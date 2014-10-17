@@ -52,7 +52,6 @@ import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
-import net.imglib2.type.numeric.ExponentialMathType;
 
 /**
  * TODO
@@ -580,121 +579,6 @@ public class Util
 			for ( int i = 0; i < gaussianKernel.length; ++i )
 				gaussianKernel[ i ] /= sum;
 		}
-
-		return gaussianKernel;
-	}
-
-	/**
-	 * This method creates a gaussian kernel
-	 * 
-	 * @param sigma
-	 *            Standard Derivation of the gaussian function in the desired
-	 *            {@link Type}
-	 * @param normalize
-	 *            Normalize integral of gaussian function to 1 or not...
-	 * @return T[] The gaussian kernel
-	 * 
-	 */
-	@SuppressWarnings( "unchecked" )
-	public static < T extends ExponentialMathType< T > > T[] createGaussianKernel1D( final T sigma, final boolean normalize )
-	{
-		final T[] gaussianKernel;
-		int kernelSize;
-
-		final T zero = sigma.createVariable();
-		final T two = sigma.createVariable();
-		final T one = sigma.createVariable();
-		final T minusOne = sigma.createVariable();
-		final T two_sq_sigma = zero.createVariable();
-		final T sum = sigma.createVariable();
-		final T value = sigma.createVariable();
-		final T xPos = sigma.createVariable();
-		final T cs = sigma.createVariable();
-
-		zero.setZero();
-		one.setOne();
-
-		two.setOne();
-		two.add( one );
-
-		minusOne.setZero();
-		minusOne.sub( one );
-
-		if ( sigma.compareTo( zero ) <= 0 )
-		{
-			kernelSize = 3;
-			// NB: Need explicit cast to T[] to satisfy javac;
-			// See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6302954
-			gaussianKernel = ( T[] ) genericArray( 3 ); // zero.createArray1D( 3
-														// );
-			gaussianKernel[ 1 ].set( one );
-		}
-		else
-		{
-			// size = Math.max(3, (int) (2 * (int) (3 * sigma + 0.5) + 1));
-			cs.set( sigma );
-			cs.mul( 3.0 );
-			cs.round();
-			cs.mul( 2.0 );
-			cs.add( one );
-
-			kernelSize = Util.round( cs.getRealFloat() );
-
-			// kernelsize has to be at least 3
-			kernelSize = Math.max( 3, kernelSize );
-
-			// kernelsize has to be odd
-			if ( kernelSize % 2 == 0 )
-				++kernelSize;
-
-			// two_sq_sigma = 2 * sigma * sigma;
-			two_sq_sigma.set( two );
-			two_sq_sigma.mul( sigma );
-			two_sq_sigma.mul( sigma );
-
-			// NB: Need explicit cast to T[] to satisfy javac;
-			// See: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6302954
-			gaussianKernel = ( T[] ) genericArray( kernelSize ); // zero.createArray1D(
-																	// kernelSize
-																	// );
-
-			for ( int i = 0; i < gaussianKernel.length; ++i )
-				gaussianKernel[ i ] = zero.createVariable();
-
-			// set the xPos to kernelSize/2
-			xPos.setZero();
-			for ( int x = 1; x <= kernelSize / 2; ++x )
-				xPos.add( one );
-
-			for ( int x = kernelSize / 2; x >= 0; --x )
-			{
-				// final double val = Math.exp( -(x * x) / two_sq_sigma );
-				value.set( xPos );
-				value.mul( xPos );
-				value.mul( minusOne );
-				value.div( two_sq_sigma );
-				value.exp();
-
-				gaussianKernel[ kernelSize / 2 - x ].set( value );
-				gaussianKernel[ kernelSize / 2 + x ].set( value );
-
-				xPos.sub( one );
-			}
-		}
-
-		if ( normalize )
-		{
-			sum.setZero();
-
-			for ( final T val : gaussianKernel )
-				sum.add( val );
-
-			for ( int i = 0; i < gaussianKernel.length; ++i )
-				gaussianKernel[ i ].div( sum );
-		}
-
-		for ( int i = 0; i < gaussianKernel.length; ++i )
-			System.out.println( gaussianKernel[ i ] );
 
 		return gaussianKernel;
 	}
