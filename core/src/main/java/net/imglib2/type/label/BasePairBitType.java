@@ -40,7 +40,8 @@ import net.imglib2.type.AbstractBit64Type;
 import net.imglib2.type.BasePairType;
 
 /**
- * TODO
+ * Representation of base pairs using 3 bits per entry, supported characters: gap, N, A, T, G, C, U
+ * Bases are handled using the {@link Base} enumeration.
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -113,8 +114,9 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 			case gap: return -1; 
 			case N: return compare == Base.gap ? 1 : -1;
 			case A: return compare == Base.gap || compare == Base.N ? 1 : -1;
-			case T: return compare == Base.G || compare == Base.C ? -1 : 1;
-			case G: return compare == Base.C ? -1 : 1;
+			case T: return compare == Base.G || compare == Base.C || compare == Base.U ? -1 : 1;
+			case G: return compare == Base.C || compare == Base.U ? -1 : 1;
+			case C: return compare == Base.U ? -1 : 1;
 			default: return 1;
 		}
 	}
@@ -129,6 +131,8 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 			case T: set( Base.A ); break;
 			case G: set( Base.C ); break;
 			case C: set( Base.G ); break;
+			case U: set( Base.A ); break;
+			default: break;
 		}
 	}
 
@@ -149,6 +153,8 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 			return 4;
 		case C:
 			return 5;
+		case U:
+			return 6;
 		default:
 			return 0;
 		}
