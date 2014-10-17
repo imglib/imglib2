@@ -81,7 +81,7 @@ public class ComponentMappingTransform extends AbstractMixedTransform implements
 	}
 
 	@Override
-	public void getComponentMapping( @SuppressWarnings( "hiding" ) final int[] component )
+	public void getComponentMapping( final int[] component )
 	{
 		assert component.length >= numTargetDimensions;
 		for ( int d = 0; d < numTargetDimensions; ++d )
