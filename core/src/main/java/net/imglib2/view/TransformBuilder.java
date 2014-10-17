@@ -291,7 +291,7 @@ public class TransformBuilder< T >
 	 */
 	protected void simplifyTransforms()
 	{
-		net.imglib2.concatenate.Util.join( transforms );
+		net.imglib2.concatenate.ConcatenateUtils.join( transforms );
 
 		for ( final ListIterator< Transform > i = transforms.listIterator(); i.hasNext(); )
 		{
