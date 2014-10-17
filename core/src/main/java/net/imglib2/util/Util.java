@@ -115,6 +115,7 @@ public class Util
 		return values;
 	}
 
+	// TODO: move to LinAlgHelpers
 	final public static float computeDistance( final RealLocalizable position1, final RealLocalizable position2 )
 	{
 		float dist = 0;
@@ -130,6 +131,7 @@ public class Util
 		return ( float ) Math.sqrt( dist );
 	}
 
+	// TODO: move to LinAlgHelpers
 	final public static float computeDistance( final int[] position1, final int[] position2 )
 	{
 		float dist = 0;
@@ -144,6 +146,7 @@ public class Util
 		return ( float ) Math.sqrt( dist );
 	}
 
+	// TODO: move to LinAlgHelpers
 	final public static float computeDistance( final long[] position1, final long[] position2 )
 	{
 		float dist = 0;
@@ -158,6 +161,7 @@ public class Util
 		return ( float ) Math.sqrt( dist );
 	}
 
+	// TODO: move to LinAlgHelpers
 	final public static float computeLength( final int[] position )
 	{
 		float dist = 0;
@@ -172,6 +176,7 @@ public class Util
 		return ( float ) Math.sqrt( dist );
 	}
 
+	// TODO: move to LinAlgHelpers
 	final public static float computeLength( final long[] position )
 	{
 		float dist = 0;
