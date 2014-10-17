@@ -45,7 +45,6 @@ import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.RealRandomAccessibleRealInterval;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -1037,24 +1036,6 @@ public class Util
 	}
 
 	/**
-	 * Gets an instance of T from the {@link RandomAccessible}
-	 * 
-	 * @param <T>
-	 *            - the T
-	 * @param rai
-	 *            - the {@link RandomAccessible}
-	 * @return - an instance of T
-	 */
-	final public static < T > T getTypeFromRandomAccess( final RandomAccessible< T > ra )
-	{
-		// test that it is not an interval, because in this case a simple get()
-		// at the position of creation will fail
-		if ( RandomAccessibleInterval.class.isInstance( ra ) )
-			return getTypeFromInterval( ( RandomAccessibleInterval< T > ) ra );
-		return ra.randomAccess().get();
-	}
-
-	/**
 	 * Gets an instance of T from the {@link RandomAccessibleInterval} by
 	 * querying the value at the min coordinate
 	 * 
@@ -1073,24 +1054,6 @@ public class Util
 		rai.realMin( realRandomAccess );
 
 		return realRandomAccess.get();
-	}
-
-	/**
-	 * Gets an instance of T from the {@link RealRandomAccessible}
-	 * 
-	 * @param <T>
-	 *            - the T
-	 * @param rai
-	 *            - the {@link RealRandomAccessible}
-	 * @return - an instance of T
-	 */
-	final public static < T > T getTypeFromRealRandomAccess( final RealRandomAccessible< T > ra )
-	{
-		// test that it is not an interval, because in this case a simple get()
-		// at the position of creation will fail
-		if ( RealRandomAccessibleRealInterval.class.isInstance( ra ) )
-			return getTypeFromRealInterval( ( RealRandomAccessibleRealInterval< T > ) ra );
-		return ra.realRandomAccess().get();
 	}
 
 	/**
