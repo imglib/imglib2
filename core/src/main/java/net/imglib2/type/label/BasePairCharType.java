@@ -43,7 +43,8 @@ import net.imglib2.type.label.BasePairBitType.Base;
 import net.imglib2.util.Fraction;
 
 /**
- * TODO
+ * Representation of base pairs using one char per entry, supported characters: gap, N, A, T, G, C, U
+ * Bases are handled using the {@link Base} enumeration.
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -140,6 +141,9 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 		case C:
 			setChar( 'C' );
 			return;
+		case U:
+			setChar( 'U' );
+			return;
 		case gap:
 			setChar( ' ' );
 			return;
@@ -164,6 +168,8 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 			return Base.G;
 		case 'C':
 			return Base.C;
+		case 'U':
+			return Base.U;
 		case ' ':
 			return Base.gap;
 		default:
@@ -193,9 +199,11 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 		case 'A':
 			return compare == ' ' || compare == 'N' ? 1 : -1;
 		case 'T':
-			return compare == 'G' || compare == 'C' ? -1 : 1;
+			return compare == 'G' || compare == 'C' || compare == 'U' ? -1 : 1;
 		case 'G':
-			return compare == 'C' ? -1 : 1;
+			return compare == 'C' || compare == 'U' ? -1 : 1;
+		case 'C':
+			return compare == 'U' ? -1 : 1;
 		default:
 			return 1;
 		}
@@ -219,6 +227,9 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 		case 'C':
 			setChar( 'G' );
 			break;
+		case 'U':
+			setChar( 'A' );
+			break;
 		}
 	}
 
@@ -239,6 +250,8 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 			return 4;
 		case 'C':
 			return 5;
+		case 'U':
+			return 6;
 		default:
 			return 0;
 		}
