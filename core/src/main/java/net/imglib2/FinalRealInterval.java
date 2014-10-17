@@ -39,7 +39,7 @@ package net.imglib2;
  * 
  * @author Stephan Preibisch
  */
-public class FinalRealInterval extends AbstractRealInterval
+public final class FinalRealInterval extends AbstractRealInterval
 {
 	/**
 	 * Creates a new {@link AbstractRealInterval} using an existing
