@@ -3,24 +3,21 @@
  */
 package net.imglib2.type.logic;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 
-import net.imglib2.Cursor;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @author saalfeld
- *
+ * @author Stephan Saalfeld
+ * @author Stephan Preibisch
+ * @author Tobias Pietzsch
  */
 public class BitTypeTest {
 
@@ -39,7 +36,8 @@ public class BitTypeTest {
 	 * Test method for {@link net.imglib2.type.logic.BitType#setOne()}.
 	 */
 	@Test
-	public void testSetOne() {
+	public void testSetOne()
+	{
 		for ( final BitType t : img )
 			t.setOne();
 		for ( final BitType t : img )
@@ -50,7 +48,8 @@ public class BitTypeTest {
 	 * Test method for {@link net.imglib2.type.logic.BitType#setZero()}.
 	 */
 	@Test
-	public void testSetZero() {
+	public void testSetZero()
+	{
 		for ( final BitType t : img )
 			t.setZero();
 		for ( final BitType t : img )
@@ -65,32 +64,12 @@ public class BitTypeTest {
 	{
 		final Random rnd = new Random( 0 );
 
-		int i = 0;
-
 		for ( final BitType t : img )
 		{
-			boolean b = rnd.nextBoolean();
+			final boolean b = rnd.nextBoolean();
 			t.set( b );
-			
-			// fails at i==32
-			System.out.println( i + ": " + t.get() + " " + b );
-			
-			if ( t.get() != b )
-			{
-				// debug why
-				final int i1 = (int)(i >>> 6); // Same as (i * 2) / 64 = (i << 1) >>> 6
-				final long shift = i & 63; 
-				
-				System.out.println( i1 );
-				System.out.println( shift );
-				return;
-			}
-			
-			++i;
+			assertTrue( t.get() == b );
 		}
-		
-		//assertTrue( t.get() == rnd1.nextBoolean() );
-		
 	}
 
 //	/**
