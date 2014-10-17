@@ -61,7 +61,7 @@ import net.imglib2.display.projector.AbstractProjector2D;
  * @param <B>
  *            target type
  */
-public class SamplingProjector2D< A, B > extends AbstractProjector2D< A, B >
+public class SamplingProjector2D< A, B > extends AbstractProjector2D
 {
 
 	private final static int X = 0;

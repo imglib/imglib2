@@ -49,7 +49,7 @@ import net.imglib2.util.IntervalIndexer;
  * 
  * @param <A>
  */
-public class ArrayImgXYShortProjector< A extends GenericShortType< A >> extends AbstractProjector2D< A, UnsignedShortType >
+public class ArrayImgXYShortProjector< A extends GenericShortType< A >> extends AbstractProjector2D
 {
 
 	private final short[] sourceArray;

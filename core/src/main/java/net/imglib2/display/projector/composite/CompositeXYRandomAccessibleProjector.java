@@ -59,7 +59,7 @@ import net.imglib2.type.numeric.ARGBType;
  * @author Grant Harris
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class CompositeXYRandomAccessibleProjector< A > extends AbstractProjector2D< A, ARGBType >
+public class CompositeXYRandomAccessibleProjector< A > extends AbstractProjector2D
 {
 	final protected RandomAccessibleInterval< ARGBType > target;
 

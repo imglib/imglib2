@@ -50,7 +50,7 @@ import net.imglib2.util.IntervalIndexer;
  * @param <A>
  *            source
  */
-public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends AbstractProjector2D< A, UnsignedByteType >
+public class ArrayImgXYByteProjector< A extends GenericByteType< A >> extends AbstractProjector2D
 {
 
 	private final byte[] sourceArray;
