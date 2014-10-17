@@ -159,7 +159,7 @@ public class Bandpass< T extends NumericType< T >> implements OutputAlgorithm< R
 			cursor.fwd();
 			cursor.localize( pos );
 
-			final float dist = Util.computeDistance( origin, pos );
+			final double dist = Util.distance( origin, pos );
 
 			if ( actAsBandPass )
 			{

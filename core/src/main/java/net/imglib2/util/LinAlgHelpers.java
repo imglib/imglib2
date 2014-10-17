@@ -80,6 +80,33 @@ public class LinAlgHelpers
 	}
 
 	/**
+	 * get the squared length of (a - b).
+	 * 
+	 * @param a
+	 * @param b
+	 */
+	public static double squareDistance( final double[] a, final double[] b )
+	{
+		assert rows( a ) == rows( b );
+		final int rows = rows( a );
+		double squ_len = 0.0;
+		for ( int i = 0; i < rows; ++i )
+			squ_len += ( a[ i ] - b[ i ] ) * ( a[ i ] - b[ i ] );
+		return squ_len;
+	}
+
+	/**
+	 * get the length of (a - b).
+	 * 
+	 * @param a
+	 * @param b
+	 */
+	public static double distance( final double[] a, final double[] b )
+	{
+		return Math.sqrt( squareDistance( a, b ) );
+	}
+
+	/**
 	 * set c = a * b, where a is a vector and b is scalar. Dimensions of a and c
 	 * must match. In place scaling (c==a) is permitted.
 	 * 

@@ -115,41 +115,24 @@ public class Util
 		return values;
 	}
 
-	// TODO: move to LinAlgHelpers
-	final public static float computeDistance( final RealLocalizable position1, final RealLocalizable position2 )
+	final public static double distance( final RealLocalizable position1, final RealLocalizable position2 )
 	{
-		float dist = 0;
+		double dist = 0;
 
 		final int n = position1.numDimensions();
 		for ( int d = 0; d < n; ++d )
 		{
-			final float pos = position2.getFloatPosition( d ) - position1.getFloatPosition( d );
+			final double pos = position2.getDoublePosition( d ) - position1.getDoublePosition( d );
 
 			dist += pos * pos;
 		}
 
-		return ( float ) Math.sqrt( dist );
+		return Math.sqrt( dist );
 	}
 
-	// TODO: move to LinAlgHelpers
-	final public static float computeDistance( final int[] position1, final int[] position2 )
+	final public static double distance( final long[] position1, final long[] position2 )
 	{
-		float dist = 0;
-
-		for ( int d = 0; d < position1.length; ++d )
-		{
-			final int pos = position2[ d ] - position1[ d ];
-
-			dist += pos * pos;
-		}
-
-		return ( float ) Math.sqrt( dist );
-	}
-
-	// TODO: move to LinAlgHelpers
-	final public static float computeDistance( final long[] position1, final long[] position2 )
-	{
-		float dist = 0;
+		double dist = 0;
 
 		for ( int d = 0; d < position1.length; ++d )
 		{
@@ -158,37 +141,7 @@ public class Util
 			dist += pos * pos;
 		}
 
-		return ( float ) Math.sqrt( dist );
-	}
-
-	// TODO: move to LinAlgHelpers
-	final public static float computeLength( final int[] position )
-	{
-		float dist = 0;
-
-		for ( int d = 0; d < position.length; ++d )
-		{
-			final int pos = position[ d ];
-
-			dist += pos * pos;
-		}
-
-		return ( float ) Math.sqrt( dist );
-	}
-
-	// TODO: move to LinAlgHelpers
-	final public static float computeLength( final long[] position )
-	{
-		float dist = 0;
-
-		for ( int d = 0; d < position.length; ++d )
-		{
-			final long pos = position[ d ];
-
-			dist += pos * pos;
-		}
-
-		return ( float ) Math.sqrt( dist );
+		return Math.sqrt( dist );
 	}
 
 	/**
