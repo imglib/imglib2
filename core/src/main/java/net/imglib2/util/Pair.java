@@ -31,7 +31,7 @@
  * #L%
  */
 
-package net.imglib2;
+package net.imglib2.util;
 
 public interface Pair< A, B >
 {
