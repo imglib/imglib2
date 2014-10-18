@@ -81,9 +81,9 @@ public class Views
 	 * Returns a {@link RealRandomAccessible} using interpolation
 	 * 
 	 * @param source
-	 *            the {@link EuclidenSpace} to be interpolated
+	 *            the {@link EuclideanSpace} to be interpolated
 	 * @param factory
-	 *            the {@link InterpolatorFactor} to provide interpolators for
+	 *            the {@link InterpolatorFactory} to provide interpolators for
 	 *            source
 	 * @return
 	 */
@@ -702,65 +702,6 @@ public class Views
 				return false;
 
 		return true;
-	}
-
-	/**
-	 * Invert the d-axis and shift the resulting view to the origin.
-	 * 
-	 * @param interval
-	 *            the source
-	 * @param d
-	 *            the axis to invert
-	 */
-	@Deprecated
-	public static < T > IntervalView< T > flippedView( final RandomAccessibleInterval< T > interval, final int d )
-	{
-		return zeroMin( invertAxis( interval, d ) );
-	}
-
-	/**
-	 * Create view that is rotated by 90 degrees and shifted to the origin. The
-	 * rotation is specified by the fromAxis and toAxis arguments.
-	 * 
-	 * If fromAxis=0 and toAxis=1, this means that the X-axis of the source view
-	 * is mapped to the Y-Axis of the rotated view. That is, it corresponds to a
-	 * 90 degree clock-wise rotation of the source view in the XY plane.
-	 * 
-	 * fromAxis=1 and toAxis=0 corresponds to a counter-clock-wise rotation in
-	 * the XY plane.
-	 * 
-	 * @param interval
-	 *            the source view
-	 * @param fromAxis
-	 *            axis of interval which is to be mapped to toAxis of target
-	 *            view
-	 * @param toAxis
-	 *            axis of target view to which mapped to fromAxis of interval is
-	 *            mapped
-	 */
-	@Deprecated
-	public static < T > IntervalView< T > rotatedView( final RandomAccessibleInterval< T > interval, final int fromAxis, final int toAxis )
-	{
-		return zeroMin( rotate( interval, fromAxis, toAxis ) );
-	}
-
-	/**
-	 * Define an interval on a RandomAccessible and translate it such that the
-	 * min corner is at the origin. It is the callers responsibility to ensure
-	 * that the source RandomAccessible is defined in the specified interval.
-	 * 
-	 * @param randomAccessible
-	 *            the source
-	 * @param offset
-	 *            offset of min corner.
-	 * @param dimension
-	 *            size of the interval.
-	 * @return a RandomAccessibleInterval
-	 */
-	@Deprecated
-	public static < T > IntervalView< T > superIntervalView( final RandomAccessible< T > randomAccessible, final long[] offset, final long[] dimension )
-	{
-		return offsetInterval( randomAccessible, offset, dimension );
 	}
 
 	/**

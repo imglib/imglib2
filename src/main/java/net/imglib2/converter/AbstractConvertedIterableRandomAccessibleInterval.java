@@ -72,12 +72,6 @@ abstract public class AbstractConvertedIterableRandomAccessibleInterval< A, B, S
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
-	@Override
 	public Iterator< B > iterator()
 	{
 		return cursor();

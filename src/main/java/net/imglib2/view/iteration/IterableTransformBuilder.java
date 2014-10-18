@@ -144,12 +144,6 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 		}
 
 		@Override
-		public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-		{
-			return iterationOrder().equals( f.iterationOrder() );
-		}
-
-		@Override
 		public Iterator< T > iterator()
 		{
 			return cursor();
@@ -209,12 +203,6 @@ public class IterableTransformBuilder< T > extends TransformBuilder< T >
 		public Object iterationOrder()
 		{
 			return hasFlatIterationOrder ? new FlatIterationOrder( interval ) : this;
-		}
-
-		@Override
-		public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-		{
-			return iterationOrder().equals( f.iterationOrder() );
 		}
 
 		@Override

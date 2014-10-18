@@ -156,12 +156,6 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
-	@Override
 	public Iterator< T > iterator()
 	{
 		return getFullViewIterableInterval().iterator();

@@ -204,12 +204,6 @@ public class RealPointSampleList< T > implements IterableRealInterval< T >
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
-	@Override
 	public T firstElement()
 	{
 		return samples.get( 0 );

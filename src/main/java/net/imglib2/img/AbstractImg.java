@@ -223,12 +223,6 @@ public abstract class AbstractImg< T > implements Img< T >
 		return randomAccess();
 	}
 
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
 //	@Override
 //	public OrthoSliceIterator< T > createOrthoSliceIterator( final Image< T > image, final int x, final int y, final int[] position )
 //	{

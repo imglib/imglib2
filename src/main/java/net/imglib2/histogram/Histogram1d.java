@@ -704,13 +704,6 @@ public class Histogram1d< T > implements Img< LongType >
 	}
 
 	@Override
-	@Deprecated
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return distrib.equalIterationOrder( f );
-	}
-
-	@Override
 	public Iterator< LongType > iterator()
 	{
 		return distrib.iterator();

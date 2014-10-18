@@ -229,12 +229,6 @@ public class PointSampleList< T > extends AbstractInterval implements IterableIn
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
-	@Override
 	public T firstElement()
 	{
 		return samples.get( 0 );

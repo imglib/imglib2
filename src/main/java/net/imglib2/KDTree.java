@@ -601,12 +601,6 @@ public class KDTree< T > implements EuclideanSpace, IterableRealInterval< T >
 		return this; // iteration order is only compatible with ourselves
 	}
 
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
 	public final class KDTreeCursor implements RealCursor< T >
 	{
 		private final KDTree< T > tree;

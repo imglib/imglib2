@@ -63,12 +63,6 @@ abstract public class AbstractConvertedIterableInterval< A, B > extends Abstract
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
-	@Override
 	public Iterator< B > iterator()
 	{
 		return cursor();

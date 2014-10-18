@@ -62,20 +62,19 @@ public class CellContainerTest
 		img = new CellImgFactory< FloatType >( cellDimensions ).create( dimensions, new FloatType() );
 	}
 
-	@SuppressWarnings( "deprecation" )
 	@Test
 	public void equalIterationOrder()
 	{
 		final Img< FloatType > img2 = new CellImgFactory< FloatType >( cellDimensions ).create( dimensions, new FloatType() );
-		assertTrue( img2.equalIterationOrder( img ) );
-		assertTrue( img.equalIterationOrder( img2 ) );
+		assertTrue( img2.iterationOrder().equals( img.iterationOrder() ) );
+		assertTrue( img.iterationOrder().equals( img2.iterationOrder() ) );
 
 		final Img< FloatType > img3 = new CellImgFactory< FloatType >( 9 ).create( dimensions, new FloatType() );
-		assertFalse( img3.equalIterationOrder( img ) );
-		assertFalse( img.equalIterationOrder( img3 ) );
+		assertFalse( img3.iterationOrder().equals( img.iterationOrder() ) );
+		assertFalse( img.iterationOrder().equals( img3.iterationOrder() ) );
 
 		final Img< FloatType > img4 = new ArrayImgFactory< FloatType >().create( dimensions, new FloatType() );
-		assertFalse( img4.equalIterationOrder( img ) );
-		assertFalse( img.equalIterationOrder( img4 ) );
+		assertFalse( img4.iterationOrder().equals( img.iterationOrder() ) );
+		assertFalse( img.iterationOrder().equals( img4.iterationOrder() ) );
 	}
 }

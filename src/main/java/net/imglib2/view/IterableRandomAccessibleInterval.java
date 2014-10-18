@@ -92,12 +92,6 @@ public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterv
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
-	@Override
 	public Iterator< T > iterator()
 	{
 		return cursor();

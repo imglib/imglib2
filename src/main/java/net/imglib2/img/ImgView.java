@@ -114,12 +114,6 @@ public class ImgView< T extends Type< T > > extends
 		return ii.localizingCursor();
 	}
 
-	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
-	}
-
 	@SuppressWarnings( "unchecked" )
 	@Override
 	public boolean supportsOptimizedCursor( final Interval interval )

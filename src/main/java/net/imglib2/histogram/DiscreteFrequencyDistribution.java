@@ -349,13 +349,6 @@ public class DiscreteFrequencyDistribution implements Img< LongType >
 	}
 
 	@Override
-	@Deprecated
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return counts.equalIterationOrder( f );
-	}
-
-	@Override
 	public Iterator< LongType > iterator()
 	{
 		return counts.iterator();
