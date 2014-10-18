@@ -13,12 +13,6 @@
 
 	<name>ImgLib2 Core Library</name>
 	<description>A multidimensional, type-agnostic image processing library.</description>
-	<licenses>
-		<license>
-			<name>Simplified BSD License</name>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
 
 	<scm>
 		<connection>scm:git:git://github.com/imglib/imglib2</connection>
