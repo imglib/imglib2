@@ -3,53 +3,16 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.scijava</groupId>
-		<artifactId>pom-scijava</artifactId>
-		<version>1.161</version>
-		<relativePath />
+		<groupId>net.imglib2</groupId>
+		<artifactId>pom-imglib2</artifactId>
+		<version>3.1</version>
 	</parent>
 
-	<groupId>net.imglib2</groupId>
-	<artifactId>pom-imglib2</artifactId>
+	<artifactId>imglib2</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
 
-	<name>ImgLib2 Projects</name>
-	<description>Umbrella project for ImgLib2 projects.</description>
-	<inceptionYear>2009</inceptionYear>
-	<url>http://imglib2.net/</url>
-
-	<modules>
-		<module>core</module>
-	</modules>
-
-	<properties>
-		<!-- NB: Needed to override managed versions. -->
-		<imglib2.version>${project.version}</imglib2.version>
-
-		<jama.version>1.0.3</jama.version>
-		<mpicbg.groupId>mpicbg</mpicbg.groupId>
-		<mpicbg.version>20111128</mpicbg.version>
-	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<configuration>
-					<licenseName>bsd_2</licenseName>
-					<organizationName>Stephan Preibisch, Tobias Pietzsch, Barry DeZonia,
-Stephan Saalfeld, Albert Cardona, Curtis Rueden, Christian Dietz, Jean-Yves
-Tinevez, Johannes Schindelin, Lee Kamentsky, Larry Lindsey, Grant Harris,
-Mark Hiner, Aivar Grislis, Martin Horn, Nick Perry, Michael Zinsmaier,
-Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationName>
-					<projectName>ImgLib2: a general-purpose, multidimensional image processing library.</projectName>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
+	<name>ImgLib2 Core Library</name>
+	<description>A multidimensional, type-agnostic image processing library.</description>
 	<licenses>
 		<license>
 			<name>Simplified BSD License</name>
@@ -57,231 +20,48 @@ Steffen Jaensch, Jan Funke, Mark Longair, and Dimiter Prodanov.</organizationNam
 		</license>
 	</licenses>
 
-	<organization>
-		<name>Fiji Is Just ImageJ</name>
-		<url>http://fiji.sc/</url>
-	</organization>
-
-	<developers>
-		<developer>
-			<id>StephanPreibisch</id>
-			<name>Stephan Preibisch</name>
-			<email>stephan.preibisch@gmx.de</email>
-			<url>http://fly.mpi-cbg.de/~preibisch/</url>
-			<organization>MPI-CBG at Dresden</organization>
-			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>tpietzsch</id>
-			<name>Tobias Pietzsch</name>
-			<email>tobias.pietzsch@gmail.com</email>
-			<organization>MPI-CBG at Dresden</organization>
-			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>axtimwalde</id>
-			<name>Stephan Saalfeld</name>
-			<email>saalfeld@mpi-cbg.de</email>
-			<url>http://fly.mpi-cbg.de/~saalfeld/</url>
-			<organization>MPI-CBG at Dresden</organization>
-			<organizationUrl>http://mpi-cbg.de/</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>ctrueden</id>
-			<name>Curtis Rueden</name>
-			<email>ctrueden@wisc.edu</email>
-			<url>http://loci.wisc.edu/people/curtis-rueden</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-		<developer>
-			<id>dietzc</id>
-			<name>Christian Dietz</name>
-			<email>christian.dietz@uni-konstanz.de</email>
-			<url>http://www.informatik.uni-konstanz.de/berthold/mitglieder/christian-dietz/</url>
-			<organization>University of Konstanz</organization>
-			<organizationUrl>http://www.informatik.uni-konstanz.de/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>tinevez</id>
-			<name>Jean-Yves Tinevez</name>
-			<email>jean-yves.tinevez@pasteur.fr</email>
-			<url>http://www.pasteur.fr/ip/easysite/pasteur/fr/recherche/plates-formes-technologiques/imagopole/plates-formes-imagopole/la-plate-forme-d-imagerie-dynamique/equipe-pfid/equipe-pfid-jyt</url>
-			<organization>Institut Pasteur</organization>
-			<organizationUrl>http://www.pasteur.fr/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>dscho</id>
-			<name>Johannes Schindelin</name>
-			<email>johannes.schindelin@gmx.de</email>
-			<url>http://loci.wisc.edu/people/johannes-schindelin</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-		<developer>
-			<id>LeeKamentsky</id>
-			<name>Lee Kamentsky</name>
-			<email>leek@broadinstitute.org</email>
-			<url>http://www.broadinstitute.org/~leek/</url>
-			<organization>Broad Institute of MIT and Harvard</organization>
-			<organizationUrl>http://www.broadinstitute.org/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-5</timezone>
-		</developer>
-	</developers>
-
-	<contributors>
-		<contributor>
-			<name>Barry DeZonia</name>
-			<url>http://loci.wisc.edu/people/barry-dezonia</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</contributor>
-		<contributor>
-			<name>Albert Cardona</name>
-			<email>sapristi@gmail.com</email>
-			<url>http://albert.rierol.net/</url>
-			<organization>Institute of Neuroinformatics, Uni/ETH Zürich</organization>
-			<organizationUrl>http://www.ini.uzh.ch/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</contributor>
-		<contributor>
-			<name>Larry Lindsey</name>
-			<email>llindsey@clm.utexas.edu</email>
-			<url>http://synapses.clm.utexas.edu/lab/lindsey/lindsey.htm</url>
-			<organization>University of Texas at Austin</organization>
-			<organizationUrl>http://www.utexas.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</contributor>
-		<contributor>
-			<name>Mark Hiner</name>
-			<email>hiner@wisc.edu</email>
-			<url>http://loci.wisc.edu/people/mark-hiner</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</contributor>
-		<contributor>
-			<name>Grant Harris</name>
-			<email>gharris@mbl.edu</email>
-			<url>http://loci.wisc.edu/people/grant-harris</url>
-			<organization>MBL at Woods Hole</organization>
-			<organizationUrl>http://www.mbl.edu/</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>-5</timezone>
-		</contributor>
-		<contributor><name>Aivar Grislis</name></contributor>
-		<contributor><name>Martin Horn</name></contributor>
-		<contributor><name>Nick Perry</name></contributor>
-		<contributor><name>Michael Zinsmaier</name></contributor>
-		<contributor><name>Steffen Jaensch</name></contributor>
-		<contributor><name>Jan Funke</name></contributor>
-		<contributor><name>Mark Longair</name></contributor>
-		<contributor><name>Dimiter Prodanov</name></contributor>
-	</contributors>
-
+	<scm>
+		<connection>scm:git:git://github.com/imglib/imglib2</connection>
+		<developerConnection>scm:git:git@github.com:imglib/imglib2</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/imglib/imglib2</url>
+	</scm>
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/imglib/imglib/issues</url>
+		<url>https://github.com/imglib/imglib2/issues</url>
 	</issueManagement>
-
 	<ciManagement>
 		<system>Jenkins</system>
-		<url>http://jenkins.imagej.net/</url>
+		<url>http://jenkins.imagej.net/job/ImgLib2/</url>
 	</ciManagement>
 
-	<mailingLists>
-		<mailingList>
-			<name>ImageJ-devel</name>
-			<subscribe>http://imagej.net/mailman/listinfo/imagej-devel</subscribe>
-			<unsubscribe>http://imagej.net/mailman/listinfo/imagej-devel</unsubscribe>
-			<post>imagej-devel@imagej.net</post>
-			<archive>http://imagej.net/pipermail/imagej-devel/</archive>
-		</mailingList>
-		<mailingList>
-			<name>Fiji-devel</name>
-			<subscribe>http://groups.google.com/group/fiji-devel</subscribe>
-			<unsubscribe>http://groups.google.com/group/fiji-devel</unsubscribe>
-			<post>fiji-devel@googlegroups.com</post>
-			<archive>http://groups.google.com/group/fiji-devel</archive>
-		</mailingList>
-	</mailingLists>
+	<dependencies>
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>gov.nist.math</groupId>
+			<artifactId>jama</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
-	<scm>
-		<connection>scm:git:git://github.com/imglib/imglib</connection>
-		<developerConnection>scm:git:git@github.com:imglib/imglib</developerConnection>
-		<tag>HEAD</tag>
-		<url>https://github.com/imglib/imglib</url>
-	</scm>
-
-	<repositories>
-		<!-- NB: for project parent -->
-		<repository>
-			<id>imagej.public</id>
-			<url>http://maven.imagej.net/content/groups/public</url>
-		</repository>
-	</repositories>
-
-	<!-- NB: for deploying to maven.imagej.net -->
-	<distributionManagement>
-		<repository>
-			<id>imagej.releases</id>
-			<name>ImageJ Releases Repository</name>
-			<url>dav:http://maven.imagej.net/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>imagej.snapshots</id>
-			<name>ImageJ Snapshots Repository</name>
-			<url>dav:http://maven.imagej.net/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<packageName>net.imglib2</packageName>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
