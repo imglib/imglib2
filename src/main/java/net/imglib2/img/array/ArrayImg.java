@@ -194,6 +194,9 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 			if ( interval.dimension( dimIdx ) != dimension( dimIdx ) )
 				break;
 
+		if ( dimIdx == n )
+			return dimIdx;
+
 		// in the dimension after that, image and interval may differ
 		++dimIdx;
 
