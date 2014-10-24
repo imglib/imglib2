@@ -49,7 +49,7 @@ import net.imglib2.RealRandomAccessible;
  * initialization (e.g. setPosition(double[])) of any existing one before making
  * any relative move.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class AffineRealRandomAccessible< T, R extends AffineGet > extends RealTransformRealRandomAccessible< T, R >
 {
@@ -155,6 +155,10 @@ public class AffineRealRandomAccessible< T, R extends AffineGet > extends RealTr
 		}
 
 		@Override
+		/* TODO storing an inverse of all ds would potentially improve the
+		 * performance of bck calls for some overhead on construction of
+		 * the access.
+		 */
 		public void bck( final int d )
 		{
 			super.bck( d );

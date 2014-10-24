@@ -39,7 +39,7 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * 
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class Translation extends AbstractTranslation implements Concatenable< TranslationGet >, PreConcatenable< TranslationGet >
 {
@@ -73,6 +73,8 @@ public class Translation extends AbstractTranslation implements Concatenable< Tr
 	@Override
 	public void set( final double... t )
 	{
+		assert t.length <= this.t.length : "Too many inputs.";
+		
 		for ( int d = 0; d < t.length; ++d )
 		{
 			this.t[ d ] = t[ d ];
@@ -90,7 +92,7 @@ public class Translation extends AbstractTranslation implements Concatenable< Tr
 	@Override
 	public void set( final double t, final int d )
 	{
-		assert d >= 0 && d < numDimensions(): "Dimension index out of bounds.";
+		assert d >= 0 && d < numDimensions() : "Dimension index out of bounds.";
 
 		this.t[ d ] = t;
 		inverse.t[ d ] = -t;
@@ -126,10 +128,7 @@ public class Translation extends AbstractTranslation implements Concatenable< Tr
 	@Override
 	public Translation concatenate( final TranslationGet a )
 	{
-		for ( int d = 0; d < numDimensions(); ++d )
-			set( t[ d ] + a.getTranslation( d ) );
-
-		return this;
+		return preConcatenate( a );
 	}
 
 	@Override

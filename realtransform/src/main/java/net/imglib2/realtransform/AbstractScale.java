@@ -40,7 +40,7 @@ import net.imglib2.RealPositionable;
 /**
  * <em>n</em>-d arbitrary scaling.  Abstract base implementation.
  *
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 abstract public class AbstractScale implements ScaleGet
 {

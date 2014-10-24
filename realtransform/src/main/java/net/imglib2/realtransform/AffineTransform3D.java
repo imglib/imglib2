@@ -45,7 +45,7 @@ import net.imglib2.util.Util;
 /**
  * 3d-affine transformation.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< AffineGet >, PreConcatenable< AffineGet >
 {
@@ -68,6 +68,7 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 		public AffineMatrix3D( final double... m )
 		{
 			assert m.length == 12;
+			
 			//@formatter:off
 			m00 = m[ 0 ]; m01 = m[ 1 ]; m02 = m[ 2 ];  m03 = m[ 3 ];
 			m10 = m[ 4 ]; m11 = m[ 5 ]; m12 = m[ 6 ];  m13 = m[ 7 ];
@@ -82,7 +83,8 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 
 		final protected double det()
 		{
-			return m00 * m11 * m22 +
+			return
+					m00 * m11 * m22 +
 					m10 * m21 * m02 +
 					m20 * m01 * m12 -
 					m02 * m11 * m20 -
@@ -90,22 +92,25 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 					m22 * m01 * m10;
 		}
 
-		final protected void concatenate( final AffineMatrix3D m )
+		final protected void concatenate(
+				final double mm00, final double mm01, final double mm02, final double mm03,
+				final double mm10, final double mm11, final double mm12, final double mm13,
+				final double mm20, final double mm21, final double mm22, final double mm23 )
 		{
-			final double a00 = m00 * m.m00 + m01 * m.m10 + m02 * m.m20;
-			final double a01 = m00 * m.m01 + m01 * m.m11 + m02 * m.m21;
-			final double a02 = m00 * m.m02 + m01 * m.m12 + m02 * m.m22;
-			final double a03 = m00 * m.m03 + m01 * m.m13 + m02 * m.m23 + m03;
+			final double a00 = m00 * mm00 + m01 * mm10 + m02 * mm20;
+			final double a01 = m00 * mm01 + m01 * mm11 + m02 * mm21;
+			final double a02 = m00 * mm02 + m01 * mm12 + m02 * mm22;
+			final double a03 = m00 * mm03 + m01 * mm13 + m02 * mm23 + m03;
 
-			final double a10 = m10 * m.m00 + m11 * m.m10 + m12 * m.m20;
-			final double a11 = m10 * m.m01 + m11 * m.m11 + m12 * m.m21;
-			final double a12 = m10 * m.m02 + m11 * m.m12 + m12 * m.m22;
-			final double a13 = m10 * m.m03 + m11 * m.m13 + m12 * m.m23 + m13;
+			final double a10 = m10 * mm00 + m11 * mm10 + m12 * mm20;
+			final double a11 = m10 * mm01 + m11 * mm11 + m12 * mm21;
+			final double a12 = m10 * mm02 + m11 * mm12 + m12 * mm22;
+			final double a13 = m10 * mm03 + m11 * mm13 + m12 * mm23 + m13;
 
-			final double a20 = m20 * m.m00 + m21 * m.m10 + m22 * m.m20;
-			final double a21 = m20 * m.m01 + m21 * m.m11 + m22 * m.m21;
-			final double a22 = m20 * m.m02 + m21 * m.m12 + m22 * m.m22;
-			final double a23 = m20 * m.m03 + m21 * m.m13 + m22 * m.m23 + m23;
+			final double a20 = m20 * mm00 + m21 * mm10 + m22 * mm20;
+			final double a21 = m20 * mm01 + m21 * mm11 + m22 * mm21;
+			final double a22 = m20 * mm02 + m21 * mm12 + m22 * mm22;
+			final double a23 = m20 * mm03 + m21 * mm13 + m22 * mm23 + m23;
 
 			m00 = a00;
 			m01 = a01;
@@ -122,23 +127,45 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 			m22 = a22;
 			m23 = a23;
 		}
-
-		final protected void preConcatenate( final AffineMatrix3D m )
+		
+		final protected void concatenate( final AffineMatrix3D m )
 		{
-			final double a00 = m.m00 * m00 + m.m01 * m10 + m.m02 * m20;
-			final double a01 = m.m00 * m01 + m.m01 * m11 + m.m02 * m21;
-			final double a02 = m.m00 * m02 + m.m01 * m12 + m.m02 * m22;
-			final double a03 = m.m00 * m03 + m.m01 * m13 + m.m02 * m23 + m.m03;
+			concatenate(
+					m.m00, m.m01, m.m02, m.m03,
+					m.m10, m.m11, m.m12, m.m13,
+					m.m20, m.m21, m.m22, m.m23 );
+		}
+		
+		final protected void concatenate( final double... mm )
+		{
+			assert mm.length >= 12 : "Not enough parameters for a 3d affine.";
+			
+			concatenate(
+					mm[ 0 ], mm[ 1 ], mm[ 2 ], mm[ 3 ],
+					mm[ 4 ], mm[ 5 ], mm[ 6 ], mm[ 7 ],
+					mm[ 8 ], mm[ 9 ], mm[ 10 ], mm[ 11 ] );
+		}
+		
 
-			final double a10 = m.m10 * m00 + m.m11 * m10 + m.m12 * m20;
-			final double a11 = m.m10 * m01 + m.m11 * m11 + m.m12 * m21;
-			final double a12 = m.m10 * m02 + m.m11 * m12 + m.m12 * m22;
-			final double a13 = m.m10 * m03 + m.m11 * m13 + m.m12 * m23 + m.m13;
+		final protected void preConcatenate(
+				final double mm00, final double mm01, final double mm02, final double mm03,
+				final double mm10, final double mm11, final double mm12, final double mm13,
+				final double mm20, final double mm21, final double mm22, final double mm23 )
+		{
+			final double a00 = mm00 * m00 + mm01 * m10 + mm02 * m20;
+			final double a01 = mm00 * m01 + mm01 * m11 + mm02 * m21;
+			final double a02 = mm00 * m02 + mm01 * m12 + mm02 * m22;
+			final double a03 = mm00 * m03 + mm01 * m13 + mm02 * m23 + mm03;
 
-			final double a20 = m.m20 * m00 + m.m21 * m10 + m.m22 * m20;
-			final double a21 = m.m20 * m01 + m.m21 * m11 + m.m22 * m21;
-			final double a22 = m.m20 * m02 + m.m21 * m12 + m.m22 * m22;
-			final double a23 = m.m20 * m03 + m.m21 * m13 + m.m22 * m23 + m.m23;
+			final double a10 = mm10 * m00 + mm11 * m10 + mm12 * m20;
+			final double a11 = mm10 * m01 + mm11 * m11 + mm12 * m21;
+			final double a12 = mm10 * m02 + mm11 * m12 + mm12 * m22;
+			final double a13 = mm10 * m03 + mm11 * m13 + mm12 * m23 + mm13;
+
+			final double a20 = mm20 * m00 + mm21 * m10 + mm22 * m20;
+			final double a21 = mm20 * m01 + mm21 * m11 + mm22 * m21;
+			final double a22 = mm20 * m02 + mm21 * m12 + mm22 * m22;
+			final double a23 = mm20 * m03 + mm21 * m13 + mm22 * m23 + mm23;
 
 			m00 = a00;
 			m01 = a01;
@@ -154,6 +181,111 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 			m21 = a21;
 			m22 = a22;
 			m23 = a23;
+		}
+		
+		final protected void preConcatenate( final AffineMatrix3D m )
+		{
+			preConcatenate(
+					m.m00, m.m01, m.m02, m.m03,
+					m.m10, m.m11, m.m12, m.m13,
+					m.m20, m.m21, m.m22, m.m23 );
+		}
+		
+		final protected void preConcatenate( final double... mm )
+		{
+			assert mm.length >= 12 : "Not enough parameters for a 3d affine.";
+			
+			preConcatenate(
+					mm[ 0 ], mm[ 1 ], mm[ 2 ], mm[ 3 ],
+					mm[ 4 ], mm[ 5 ], mm[ 6 ], mm[ 7 ],
+					mm[ 8 ], mm[ 9 ], mm[ 10 ], mm[ 11 ] );
+		}
+		
+		final protected void rotateX( final double dcos, final double dsin )
+		{
+			final double a10 = dcos * m10 - dsin * m20;
+			final double a11 = dcos * m11 - dsin * m21;
+			final double a12 = dcos * m12 - dsin * m22;
+			final double a13 = dcos * m13 - dsin * m23;
+
+			final double a20 = dsin * m10 + dcos * m20;
+			final double a21 = dsin * m11 + dcos * m21;
+			final double a22 = dsin * m12 + dcos * m22;
+			final double a23 = dsin * m13 + dcos * m23;
+
+			m10 = a10;
+			m11 = a11;
+			m12 = a12;
+			m13 = a13;
+
+			m20 = a20;
+			m21 = a21;
+			m22 = a22;
+			m23 = a23;
+		}
+		
+		final protected void rotateY( final double dcos, final double dsin )
+		{
+			final double a00 = dcos * m00 + dsin * m20;
+			final double a01 = dcos * m01 + dsin * m21;
+			final double a02 = dcos * m02 + dsin * m22;
+			final double a03 = dcos * m03 + dsin * m23;
+
+			final double a20 = dcos * m20 - dsin * m00;
+			final double a21 = dcos * m21 - dsin * m01 ;
+			final double a22 = dcos * m22 - dsin * m02 ;
+			final double a23 = dcos * m23 - dsin * m03;
+
+			m00 = a00;
+			m01 = a01;
+			m02 = a02;
+			m03 = a03;
+
+			m20 = a20;
+			m21 = a21;
+			m22 = a22;
+			m23 = a23;
+		}
+		
+		final protected void rotateZ( final double dcos, final double dsin )
+		{
+			final double a00 = dcos * m00 - dsin * m10;
+			final double a01 = dcos * m01 - dsin * m11;
+			final double a02 = dcos * m02 - dsin * m12;
+			final double a03 = dcos * m03 - dsin * m13;
+
+			final double a10 = dsin * m00 + dcos * m10;
+			final double a11 = dsin * m01 + dcos * m11;
+			final double a12 = dsin * m02 + dcos * m12;
+			final double a13 = dsin * m03 + dcos * m13;
+
+			m00 = a00;
+			m01 = a01;
+			m02 = a02;
+			m03 = a03;
+
+			m10 = a10;
+			m11 = a11;
+			m12 = a12;
+			m13 = a13;
+		}
+		
+		final protected void scale( final double s )
+		{
+			m00 *= s;
+			m01 *= s;
+			m02 *= s;
+			m03 *= s;
+
+			m10 *= s;
+			m11 *= s;
+			m12 *= s;
+			m13 *= s;
+
+			m20 *= s;
+			m21 *= s;
+			m22 *= s;
+			m23 *= s;
 		}
 	}
 
@@ -247,9 +379,12 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.length >= 3 && target.length >= 3: "3d affine transformations can be applied to 3d coordinates only.";
 
-		target[ 0 ] = source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + source[ 2 ] * a.m02 + a.m03;
-		target[ 1 ] = source[ 0 ] * a.m10 + source[ 1 ] * a.m11 + source[ 2 ] * a.m12 + a.m13;
+		/* source and target may be the same vector, so do not write into target before done with source */
+		final double t0 = source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + source[ 2 ] * a.m02 + a.m03;
+		final double t1 = source[ 0 ] * a.m10 + source[ 1 ] * a.m11 + source[ 2 ] * a.m12 + a.m13;
 		target[ 2 ] = source[ 0 ] * a.m20 + source[ 1 ] * a.m21 + source[ 2 ] * a.m22 + a.m23;
+		target[ 0 ] = t0;
+		target[ 1 ] = t1;				
 	}
 
 	@Override
@@ -257,9 +392,12 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.length >= 3 && target.length >= 3: "3d affine transformations can be applied to 3d coordinates only.";
 
-		target[ 0 ] = ( float ) ( source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + source[ 2 ] * a.m02 + a.m03 );
-		target[ 1 ] = ( float ) ( source[ 0 ] * a.m10 + source[ 1 ] * a.m11 + source[ 2 ] * a.m12 + a.m13 );
+		/* source and target may be the same vector, so do not write into target before done with source */
+		final float t0 = ( float ) ( source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + source[ 2 ] * a.m02 + a.m03 );
+		final float t1 = ( float ) ( source[ 0 ] * a.m10 + source[ 1 ] * a.m11 + source[ 2 ] * a.m12 + a.m13 );
 		target[ 2 ] = ( float ) ( source[ 0 ] * a.m20 + source[ 1 ] * a.m21 + source[ 2 ] * a.m22 + a.m23 );
+		target[ 0 ] = t0;
+		target[ 1 ] = t1;
 	}
 
 	@Override
@@ -267,9 +405,14 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.numDimensions() >= 3 && target.numDimensions() >= 3: "3d affine transformations can be applied to 3d coordinates only.";
 
-		target.setPosition( source.getDoublePosition( 0 ) * a.m00 + source.getDoublePosition( 1 ) * a.m01 + source.getDoublePosition( 2 ) * a.m02 + a.m03, 0 );
-		target.setPosition( source.getDoublePosition( 0 ) * a.m10 + source.getDoublePosition( 1 ) * a.m11 + source.getDoublePosition( 2 ) * a.m12 + a.m13, 1 );
-		target.setPosition( source.getDoublePosition( 0 ) * a.m20 + source.getDoublePosition( 1 ) * a.m21 + source.getDoublePosition( 2 ) * a.m22 + a.m23, 2 );
+		/* source and target may be the same vector, so do not write into target before done with source */
+		final double s0 = source.getDoublePosition( 0 );
+		final double s1 = source.getDoublePosition( 1 );
+		final double s2 = source.getDoublePosition( 2 );
+		
+		target.setPosition( s0 * a.m00 + s1 * a.m01 + s2 * a.m02 + a.m03, 0 );
+		target.setPosition( s0 * a.m10 + s1 * a.m11 + s2 * a.m12 + a.m13, 1 );
+		target.setPosition( s0 * a.m20 + s1 * a.m21 + s2 * a.m22 + a.m23, 2 );
 	}
 
 	@Override
@@ -277,9 +420,12 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.length >= 3 && target.length >= 3: "3d affine transformations can be applied to 3d coordinates only.";
 
-		source[ 0 ] = target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + target[ 2 ] * inverse.a.m02 + inverse.a.m03;
-		source[ 1 ] = target[ 0 ] * inverse.a.m10 + target[ 1 ] * inverse.a.m11 + target[ 2 ] * inverse.a.m12 + inverse.a.m13;
+		/* source and target may be the same vector, so do not write into source before done with target */
+		final double s0 = target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + target[ 2 ] * inverse.a.m02 + inverse.a.m03;
+		final double s1 = target[ 0 ] * inverse.a.m10 + target[ 1 ] * inverse.a.m11 + target[ 2 ] * inverse.a.m12 + inverse.a.m13;
 		source[ 2 ] = target[ 0 ] * inverse.a.m20 + target[ 1 ] * inverse.a.m21 + target[ 2 ] * inverse.a.m22 + inverse.a.m23;
+		source[ 0 ] = s0;
+		source[ 1 ] = s1;
 	}
 
 	@Override
@@ -287,9 +433,12 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.length >= 3 && target.length >= 3: "3d affine transformations can be applied to 3d coordinates only.";
 
-		source[ 0 ] = ( float ) ( target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + target[ 2 ] * inverse.a.m02 + inverse.a.m03 );
-		source[ 1 ] = ( float ) ( target[ 0 ] * inverse.a.m10 + target[ 1 ] * inverse.a.m11 + target[ 2 ] * inverse.a.m12 + inverse.a.m13 );
+		/* source and target may be the same vector, so do not write into source before done with target */
+		final float s0 = ( float ) ( target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + target[ 2 ] * inverse.a.m02 + inverse.a.m03 );
+		final float s1 = ( float ) ( target[ 0 ] * inverse.a.m10 + target[ 1 ] * inverse.a.m11 + target[ 2 ] * inverse.a.m12 + inverse.a.m13 );
 		source[ 2 ] = ( float ) ( target[ 0 ] * inverse.a.m20 + target[ 1 ] * inverse.a.m21 + target[ 2 ] * inverse.a.m22 + inverse.a.m23 );
+		source[ 0 ] = s0;
+		source[ 1 ] = s1;
 	}
 
 	@Override
@@ -297,17 +446,19 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.numDimensions() >= 3 && target.numDimensions() >= 3: "3d affine transformations can be applied to 3d coordinates only.";
 
-		source.setPosition( target.getDoublePosition( 0 ) * inverse.a.m00 + target.getDoublePosition( 1 ) * inverse.a.m01 + target.getDoublePosition( 2 ) * inverse.a.m02 + inverse.a.m03, 0 );
-		source.setPosition( target.getDoublePosition( 0 ) * inverse.a.m10 + target.getDoublePosition( 1 ) * inverse.a.m11 + target.getDoublePosition( 2 ) * inverse.a.m12 + inverse.a.m13, 1 );
-		source.setPosition( target.getDoublePosition( 0 ) * inverse.a.m20 + target.getDoublePosition( 1 ) * inverse.a.m21 + target.getDoublePosition( 2 ) * inverse.a.m22 + inverse.a.m23, 2 );
+		/* source and target may be the same vector, so do not write into source before done with target */
+		final double t0 = target.getDoublePosition( 0 );
+		final double t1 = target.getDoublePosition( 1 );
+		final double t2 = target.getDoublePosition( 2 );
+		
+		source.setPosition( t0 * inverse.a.m00 + t1 * inverse.a.m01 + t2 * inverse.a.m02 + inverse.a.m03, 0 );
+		source.setPosition( t0 * inverse.a.m10 + t1 * inverse.a.m11 + t2 * inverse.a.m12 + inverse.a.m13, 1 );
+		source.setPosition( t0 * inverse.a.m20 + t1 * inverse.a.m21 + t2 * inverse.a.m22 + inverse.a.m23, 2 );
 	}
-
-	@Override
-	final public AffineTransform3D concatenate( final AffineGet affine )
+	
+	final public AffineTransform3D concatenate( final AffineTransform3D affine )
 	{
-		assert affine.numSourceDimensions() >= 3: "Only >=3d affine transformations can be concatenated to a 3d affine transformation.";
-
-		a.concatenate( new AffineMatrix3D( affine.getRowPackedCopy() ) );
+		a.concatenate( affine.a );
 		invert();
 		updateDs();
 		inverse.updateDs();
@@ -315,9 +466,12 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 		return this;
 	}
 
-	final public AffineTransform3D concatenate( final AffineTransform3D affine )
+	@Override
+	final public AffineTransform3D concatenate( final AffineGet affine )
 	{
-		a.concatenate( affine.a );
+		assert affine.numSourceDimensions() >= 3: "Only >=3d affine transformations can be concatenated to a 3d affine transformation.";
+
+		a.concatenate( affine.getRowPackedCopy() );
 		invert();
 		updateDs();
 		inverse.updateDs();
@@ -443,12 +597,9 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 		return 3;
 	}
 
-	@Override
-	final public AffineTransform3D preConcatenate( final AffineGet affine )
+	final public AffineTransform3D preConcatenate( final AffineTransform3D affine )
 	{
-		assert affine.numSourceDimensions() == 3: "Only 3d affine transformations can be preconcatenated to a 3d affine transformation.";
-
-		a.preConcatenate( new AffineMatrix3D( affine.getRowPackedCopy() ) );
+		a.preConcatenate( affine.a );
 		invert();
 		updateDs();
 		inverse.updateDs();
@@ -456,9 +607,12 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 		return this;
 	}
 
-	final public AffineTransform3D preConcatenate( final AffineTransform3D affine )
+	@Override
+	final public AffineTransform3D preConcatenate( final AffineGet affine )
 	{
-		a.preConcatenate( affine.a );
+		assert affine.numSourceDimensions() == 3: "Only 3d affine transformations can be preconcatenated to a 3d affine transformation.";
+
+		a.preConcatenate( affine.getRowPackedCopy() );
 		invert();
 		updateDs();
 		inverse.updateDs();
@@ -473,39 +627,24 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	 *            0=x, 1=y, 2=z
 	 * @param d
 	 *            angle in radians
-	 * 
-	 *            TODO Don't be lazy and do it directly on the values instead of
-	 *            creating another transform
 	 */
 	public void rotate( final int axis, final double d )
 	{
 		final double dcos = Math.cos( d );
 		final double dsin = Math.sin( d );
-		final AffineTransform3D dR = new AffineTransform3D();
-
+		
 		switch ( axis )
 		{
 		case 0:
-			dR.set(
-					1.0f, 0.0f, 0.0f, 0.0f,
-					0.0f, dcos, -dsin, 0.0f,
-					0.0f, dsin, dcos, 0.0f );
+			a.rotateX( dcos, dsin );
 			break;
 		case 1:
-			dR.set(
-					dcos, 0.0f, dsin, 0.0f,
-					0.0f, 1.0f, 0.0f, 0.0f,
-					-dsin, 0.0f, dcos, 0.0f );
+			a.rotateY( dcos, dsin );
 			break;
 		default:
-			dR.set(
-					dcos, -dsin, 0.0f, 0.0f,
-					dsin, dcos, 0.0f, 0.0f,
-					0.0f, 0.0f, 1.0f, 0.0f );
+			a.rotateZ( dcos, dsin );
 			break;
 		}
-
-		preConcatenate( dR );
 	}
 
 	/**
@@ -513,19 +652,10 @@ public class AffineTransform3D implements AffineGet, AffineSet, Concatenable< Af
 	 * 
 	 * @param s
 	 *            scale factor
-	 * 
-	 *            TODO Don't be lazy and do it directly on the values instead of
-	 *            creating another transform
 	 */
 	public void scale( final double s )
 	{
-		final AffineTransform3D dR = new AffineTransform3D();
-		dR.set(
-				s, 0.0, 0.0, 0.0,
-				0.0, s, 0.0, 0.0,
-				0.0, 0.0, s, 0.0 );
-
-		preConcatenate( dR );
+		a.scale( s );
 	}
 
 	/**

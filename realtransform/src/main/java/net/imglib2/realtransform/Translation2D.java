@@ -42,7 +42,7 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * 2-dimensional translation.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class Translation2D extends AbstractTranslation implements Concatenable< TranslationGet >, PreConcatenable< TranslationGet >
 {
@@ -100,6 +100,8 @@ public class Translation2D extends AbstractTranslation implements Concatenable< 
 	@Override
 	public void set( final double... t )
 	{
+		assert t.length <= 2 : "Too many inputs.";
+		
 		try
 		{
 			this.t[ 0 ] = t[ 0 ];
@@ -220,11 +222,7 @@ public class Translation2D extends AbstractTranslation implements Concatenable< 
 	@Override
 	public Translation2D concatenate( final TranslationGet a )
 	{
-		set(
-				t[ 0 ] + a.getTranslation( 0 ),
-				t[ 1 ] + a.getTranslation( 1 ) );
-
-		return this;
+		return preConcatenate( a );
 	}
 
 	@Override

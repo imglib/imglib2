@@ -42,7 +42,7 @@ import Jama.Matrix;
 /**
  * An <em>n</em>-dimensional affine transformation.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class AffineTransform extends AbstractAffineTransform implements Concatenable< AffineGet >, PreConcatenable< AffineGet >
 {
@@ -96,21 +96,6 @@ public class AffineTransform extends AbstractAffineTransform implements Concaten
 		final Matrix ii = a.inverse();
 		inverse.a.setMatrix( 0, n - 1, 0, n - 1, ii );
 		invertT();
-	}
-
-	@Override
-	public void apply( final float[] source, final float[] target )
-	{
-		assert source.length >= n && target.length >= n: "Source or target vector dimensions do not match with the transformation.";
-
-		for ( int r = 0; r < n; ++r )
-		{
-			double ar = 0;
-			for ( int c = 0; c < n; ++c )
-				ar += source[ c ] * a.get( r, c );
-
-			target[ r ] = ( float ) ( ar + t[ r ] );
-		}
 	}
 
 	@Override

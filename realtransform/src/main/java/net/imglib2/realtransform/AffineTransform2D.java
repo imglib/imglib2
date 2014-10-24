@@ -42,7 +42,7 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * 2d-affine transformation.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< AffineGet >, PreConcatenable< AffineGet >
 {
@@ -146,8 +146,10 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.length >= 2 && target.length >= 2: "2d affine transformations can be applied to 2d coordinates only.";
 
-		target[ 0 ] = source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + a.m02;
+		/* source and target may be the same vector, so do not write into target before done with source */
+		final double tmp = source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + a.m02;
 		target[ 1 ] = source[ 0 ] * a.m10 + source[ 1 ] * a.m11 + a.m12;
+		target[ 0 ] = tmp;
 	}
 
 	@Override
@@ -155,8 +157,10 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.length >= 2 && target.length >= 2: "2d affine transformations can be applied to 2d coordinates only.";
 
-		target[ 0 ] = ( float ) ( source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + a.m02 );
-		target[ 1 ] = ( float ) ( source[ 0 ] * a.m10 + source[ 1 ] * a.m11 + a.m12 );
+		/* source and target may be the same vector, so do not write into target before done with source */
+		final float tmp = ( float )( source[ 0 ] * a.m00 + source[ 1 ] * a.m01 + a.m02 );
+		target[ 1 ] = ( float )( source[ 0 ] * a.m10 + source[ 1 ] * a.m11 + a.m12 );
+		target[ 0 ] = tmp;
 	}
 
 	@Override
@@ -164,8 +168,11 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.numDimensions() >= 2 && target.numDimensions() >= 2: "2d affine transformations can be applied to 2d coordinates only.";
 
-		target.setPosition( source.getDoublePosition( 0 ) * a.m00 + source.getDoublePosition( 1 ) * a.m01 + a.m02, 0 );
-		target.setPosition( source.getDoublePosition( 0 ) * a.m10 + source.getDoublePosition( 1 ) * a.m11 + a.m12, 1 );
+		/* source and target may be the same vector, so do not write into target before done with source */
+		final double s0 = source.getDoublePosition( 0 );
+		final double s1 = source.getDoublePosition( 1 );
+		target.setPosition( s0 * a.m00 + s1 * a.m01 + a.m02, 0 );
+		target.setPosition( s0 * a.m10 + s1 * a.m11 + a.m12, 1 );
 	}
 
 	@Override
@@ -173,8 +180,10 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.length >= 2 && target.length >= 2: "2d affine transformations can be applied to 2d coordinates only.";
 
-		source[ 0 ] = target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + inverse.a.m02;
+		/* source and target may be the same vector, so do not write into source before done with target */
+		final double tmp = target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + inverse.a.m02;
 		source[ 1 ] = target[ 0 ] * inverse.a.m10 + target[ 1 ] * inverse.a.m11 + inverse.a.m12;
+		source[ 0 ] = tmp;
 	}
 
 	@Override
@@ -182,8 +191,10 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.length >= 2 && target.length >= 2: "2d affine transformations can be applied to 2d coordinates only.";
 
-		source[ 0 ] = ( float ) ( target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + inverse.a.m02 );
+		/* source and target may be the same vector, so do not write into source before done with target */
+		final float tmp = ( float ) ( target[ 0 ] * inverse.a.m00 + target[ 1 ] * inverse.a.m01 + inverse.a.m02 );
 		source[ 1 ] = ( float ) ( target[ 0 ] * inverse.a.m10 + target[ 1 ] * inverse.a.m11 + inverse.a.m12 );
+		source[ 0 ] = tmp;
 	}
 
 	@Override
@@ -191,8 +202,11 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	{
 		assert source.numDimensions() >= 2 && target.numDimensions() >= 2: "2d affine transformations can be applied to 2d coordinates only.";
 
-		source.setPosition( target.getDoublePosition( 0 ) * inverse.a.m00 + target.getDoublePosition( 1 ) * inverse.a.m01 + inverse.a.m02, 0 );
-		source.setPosition( target.getDoublePosition( 0 ) * inverse.a.m10 + target.getDoublePosition( 1 ) * inverse.a.m11 + inverse.a.m12, 1 );
+		/* source and target may be the same vector, so do not write into source before done with target */
+		final double t0 = target.getDoublePosition( 0 );
+		final double t1 = target.getDoublePosition( 1 );
+		source.setPosition( t0 * inverse.a.m00 + t1 * inverse.a.m01 + inverse.a.m02, 0 );
+		source.setPosition( t0 * inverse.a.m10 + t1 * inverse.a.m11 + inverse.a.m12, 1 );
 	}
 
 	@Override
@@ -419,21 +433,31 @@ public class AffineTransform2D implements AffineGet, AffineSet, Concatenable< Af
 	 * 
 	 * @param d
 	 *            angle in radians
-	 * 
-	 *            TODO Don't be lazy and do it directly on the values instead of
-	 *            creating another transform
 	 */
 	public void rotate( final double d )
 	{
 		final double dcos = Math.cos( d );
 		final double dsin = Math.sin( d );
-		final AffineTransform2D dR = new AffineTransform2D();
 
-		dR.set(
-				dcos, -dsin, 0.0,
-				dsin, dcos, 0.0 );
+		final double a00 = dcos * a.m00 - dsin * a.m10;
+		final double a01 = dcos * a.m01 - dsin * a.m11;
+		final double a02 = dcos * a.m02 - dsin * a.m12;
 
-		preConcatenate( dR );
+		final double a10 = dsin * a.m00 + dcos * a.m10;
+		final double a11 = dsin * a.m01 + dcos * a.m11;
+		final double a12 = dsin * a.m02 + dcos * a.m12;
+		
+		a.m00 = a00;
+		a.m01 = a01;
+		a.m02 = a02;
+
+		a.m10 = a10;
+		a.m11 = a11;
+		a.m12 = a12;
+
+		invert();
+		updateDs();
+		inverse.updateDs();
 	}
 
 	/**

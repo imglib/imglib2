@@ -42,7 +42,7 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * 3-dimensional translation.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class Translation3D extends AbstractTranslation implements Concatenable< TranslationGet >, PreConcatenable< TranslationGet >
 {
@@ -50,7 +50,7 @@ public class Translation3D extends AbstractTranslation implements Concatenable< 
 	{
 		constDs[ 0 ] = new RealPoint( 1.0, 0.0, 0.0 );
 		constDs[ 1 ] = new RealPoint( 0.0, 1.0, 0.0 );
-		constDs[ 2 ] = new RealPoint( 0.0, 1.0, 0.0 );
+		constDs[ 2 ] = new RealPoint( 0.0, 0.0, 1.0 );
 	}
 
 	final protected Translation3D inverse;
@@ -103,6 +103,8 @@ public class Translation3D extends AbstractTranslation implements Concatenable< 
 	@Override
 	public void set( final double... t )
 	{
+		assert t.length <= 3 : "Too many inputs.";
+		
 		try
 		{
 			this.t[ 0 ] = t[ 0 ];
@@ -141,9 +143,9 @@ public class Translation3D extends AbstractTranslation implements Concatenable< 
 	{
 		assert source.length >= numDimensions() && target.length >= numDimensions(): "Input dimensions too small.";
 
-		target[ 0 ] = ( float ) ( source[ 0 ] + t[ 0 ] );
-		target[ 1 ] = ( float ) ( source[ 1 ] + t[ 1 ] );
-		target[ 2 ] = ( float ) ( source[ 2 ] + t[ 2 ] );
+		target[ 0 ] = ( float )( source[ 0 ] + t[ 0 ] );
+		target[ 1 ] = ( float )( source[ 1 ] + t[ 1 ] );
+		target[ 2 ] = ( float )( source[ 2 ] + t[ 2 ] );
 	}
 
 	@Override
@@ -171,9 +173,9 @@ public class Translation3D extends AbstractTranslation implements Concatenable< 
 	{
 		assert source.length >= numDimensions() && target.length >= numDimensions(): "Input dimensions too small.";
 
-		source[ 0 ] = ( float ) ( target[ 0 ] - t[ 0 ] );
-		source[ 1 ] = ( float ) ( target[ 1 ] - t[ 1 ] );
-		source[ 2 ] = ( float ) ( target[ 2 ] - t[ 2 ] );
+		source[ 0 ] = ( float )( target[ 0 ] - t[ 0 ] );
+		source[ 1 ] = ( float )( target[ 1 ] - t[ 1 ] );
+		source[ 2 ] = ( float )( target[ 2 ] - t[ 2 ] );
 	}
 
 	@Override
@@ -234,12 +236,7 @@ public class Translation3D extends AbstractTranslation implements Concatenable< 
 	@Override
 	public Translation3D concatenate( final TranslationGet a )
 	{
-		set(
-				t[ 0 ] + a.getTranslation( 0 ),
-				t[ 1 ] + a.getTranslation( 1 ),
-				t[ 2 ] + a.getTranslation( 2 ) );
-
-		return this;
+		return preConcatenate( a );
 	}
 
 	@Override

@@ -38,7 +38,7 @@ import net.imglib2.RealPoint;
 /**
  * <em>n</em>-d arbitrary scaling.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class Scale extends AbstractScale
 {

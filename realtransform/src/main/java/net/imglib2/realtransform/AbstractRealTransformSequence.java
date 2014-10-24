@@ -44,33 +44,19 @@ import net.imglib2.RealPositionable;
  * {@link InvertibleRealTransformSequence}, sequences of something that extends
  * {@link RealTransform RealTransforms}.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class AbstractRealTransformSequence< R extends RealTransform > implements RealTransform
 {
 	final protected ArrayList< R > transforms = new ArrayList< R >();;
 
-	protected double[] a = new double[ 0 ];
+	protected double[] tmp = new double[ 0 ];
 
-	protected double[] b = new double[ 0 ];
-
-	protected RealPoint pa = RealPoint.wrap( a );
-
-	protected RealPoint pb = RealPoint.wrap( b );
+	protected RealPoint ptmp = RealPoint.wrap( tmp );
 
 	protected int nSource = 0;
 
 	protected int nTarget = 0;
-
-	final protected void switchAB()
-	{
-		final double[] c = a;
-		a = b;
-		b = c;
-		final RealPoint pc = pa;
-		pa = pb;
-		pb = pc;
-	}
 
 	/**
 	 * Append a {@link RealTransform} to the sequence.
@@ -80,31 +66,26 @@ public class AbstractRealTransformSequence< R extends RealTransform > implements
 	public void add( final R transform )
 	{
 		transforms.add( transform );
-		nTarget = transform.numTargetDimensions();
+		
 		if ( transforms.size() == 1 )
 		{
 			nSource = transform.numSourceDimensions();
-			if ( nTarget > nSource )
-			{
-				a = new double[ nTarget ];
-				b = new double[ nTarget ];
-				pa = RealPoint.wrap( a );
-				pb = RealPoint.wrap( b );
-			}
-			else
-			{
-				a = new double[ nSource ];
-				b = new double[ nSource ];
-				pa = RealPoint.wrap( a );
-				pb = RealPoint.wrap( b );
-			}
+			
+			/**
+			 * tmp has to be initialized at source size to enable
+			 * #apply(float[], float[]) later which requires initial copy of
+			 * source into tmp.
+			 */
+			tmp = new double[ nSource ];
+			ptmp = RealPoint.wrap( tmp );
 		}
-		else if ( nTarget > a.length )
+		
+		nTarget = transform.numTargetDimensions();
+		
+		if ( tmp.length < nTarget )
 		{
-			a = new double[ nTarget ];
-			b = new double[ nTarget ];
-			pa = RealPoint.wrap( a );
-			pb = RealPoint.wrap( b );
+			tmp = new double[ nTarget ];
+			ptmp = RealPoint.wrap( tmp );
 		}
 	}
 
@@ -130,13 +111,12 @@ public class AbstractRealTransformSequence< R extends RealTransform > implements
 		{
 			if ( s > 0 )
 			{
-				transforms.get( 0 ).apply( source, a );
+				transforms.get( 0 ).apply( source, tmp );
+				
 				for ( int i = 1; i < s; ++i )
-				{
-					transforms.get( i ).apply( a, b );
-					switchAB();
-				}
-				transforms.get( s ).apply( a, target );
+					transforms.get( i ).apply( tmp, tmp );
+				
+				transforms.get( s ).apply( tmp, target );
 			}
 			else
 				transforms.get( 0 ).apply( source, target );
@@ -151,17 +131,14 @@ public class AbstractRealTransformSequence< R extends RealTransform > implements
 		final int s = transforms.size() - 1;
 		if ( s > -1 )
 		{
-			for ( int d = Math.min( source.length, a.length ) - 1; d >= 0; --d )
-				a[ d ] = source[ d ];
+			for ( int d = 0; d < nSource; ++d )
+				tmp[ d ] = source[ d ];
 
 			for ( final RealTransform t : transforms )
-			{
-				t.apply( a, b );
-				switchAB();
-			}
+				t.apply( tmp, tmp );
 
-			for ( int d = Math.min( target.length, a.length ) - 1; d >= 0; --d )
-				target[ d ] = ( float ) a[ d ];
+			for ( int d = 0; d < nTarget; ++d )
+				target[ d ] = ( float )tmp[ d ];
 		}
 	}
 
@@ -175,13 +152,11 @@ public class AbstractRealTransformSequence< R extends RealTransform > implements
 		{
 			if ( s > 0 )
 			{
-				transforms.get( 0 ).apply( source, pa );
+				transforms.get( 0 ).apply( source, ptmp );
 				for ( int i = 1; i < s; ++i )
-				{
-					transforms.get( i ).apply( a, b );
-					switchAB();
-				}
-				transforms.get( s ).apply( pa, target );
+					transforms.get( i ).apply( tmp, tmp );
+
+				transforms.get( s ).apply( ptmp, target );
 			}
 			else
 				transforms.get( 0 ).apply( source, target );

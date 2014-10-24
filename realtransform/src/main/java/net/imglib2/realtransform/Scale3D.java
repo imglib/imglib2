@@ -42,7 +42,7 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * 3-d arbitrary scaling.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class Scale3D extends AbstractScale implements Concatenable< ScaleGet >, PreConcatenable< ScaleGet >
 {
@@ -161,9 +161,9 @@ public class Scale3D extends AbstractScale implements Concatenable< ScaleGet >, 
 	{
 		assert source.length >= numDimensions() && target.length >= numDimensions(): "Input dimensions too small.";
 
-		source[ 0 ] = ( float ) ( target[ 0 ] / s[ 0 ] );
-		source[ 1 ] = ( float ) ( target[ 1 ] / s[ 1 ] );
-		source[ 2 ] = ( float ) ( target[ 2 ] / s[ 2 ] );
+		source[ 0 ] = ( float )( target[ 0 ] / s[ 0 ] );
+		source[ 1 ] = ( float )( target[ 1 ] / s[ 1 ] );
+		source[ 2 ] = ( float )( target[ 2 ] / s[ 2 ] );
 	}
 
 	@Override
@@ -191,9 +191,9 @@ public class Scale3D extends AbstractScale implements Concatenable< ScaleGet >, 
 	{
 		assert source.length >= numDimensions() && target.length >= numDimensions(): "Input dimensions too small.";
 
-		target[ 0 ] = ( float ) ( source[ 0 ] * s[ 0 ] );
-		target[ 1 ] = ( float ) ( source[ 1 ] * s[ 1 ] );
-		target[ 2 ] = ( float ) ( source[ 2 ] * s[ 2 ] );
+		target[ 0 ] = ( float )( source[ 0 ] * s[ 0 ] );
+		target[ 1 ] = ( float )( source[ 1 ] * s[ 1 ] );
+		target[ 2 ] = ( float )( source[ 2 ] * s[ 2 ] );
 	}
 
 	@Override
@@ -257,8 +257,7 @@ public class Scale3D extends AbstractScale implements Concatenable< ScaleGet >, 
 	@Override
 	public Scale3D concatenate( final ScaleGet a )
 	{
-		// TODO Auto-generated method stub
-		return this;
+		return preConcatenate( a );
 	}
 
 	@Override

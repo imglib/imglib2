@@ -41,7 +41,7 @@ import net.imglib2.RealPositionable;
  * 3d perspective transformation. Implemented as singleton as it has no
  * properties.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class Perspective3D implements InvertibleRealTransform, EuclideanSpace
 {

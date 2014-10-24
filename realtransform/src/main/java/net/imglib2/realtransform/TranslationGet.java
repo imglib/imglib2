@@ -37,7 +37,7 @@ package net.imglib2.realtransform;
  * An <em>n</em>-dimensional translation vector whose fields can be accessed
  * through their dimension index or as a double array.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public interface TranslationGet extends AffineGet
 {

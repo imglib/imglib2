@@ -40,9 +40,11 @@ import Jama.Matrix;
 
 /**
  * An abstract implementation of an affine transformation that returns default
- * values referring tot the identity transformation for all fields.
+ * values referring to the identity transformation for all fields.  This
+ * implementation is not thread safe.  Create a {@link #copy()} for each
+ * consumer.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 {
@@ -50,7 +52,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 
 	final protected Matrix a;
 
-	final protected double[] t;
+	final protected double[] t, tmp;
 
 	final protected RealPoint[] ds;
 
@@ -62,6 +64,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 		this.n = t.length;
 		this.a = a;
 		this.t = t;
+		this.tmp = new double[ n ];
 		ds = new RealPoint[ n ];
 		for ( int r = 0; r < n; ++r )
 			ds[ r ] = new RealPoint( n );
@@ -76,6 +79,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 		n = matrix.getRowDimension();
 		a = new Matrix( n, n );
 		t = new double[ n ];
+		tmp = new double[ n ];
 		ds = new RealPoint[ n ];
 
 		a.setMatrix( 0, n - 1, 0, n - 1, matrix );
@@ -92,6 +96,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 		this.n = n;
 		a = new Matrix( n, n );
 		t = new double[ n ];
+		tmp = new double[ n ];
 		ds = new RealPoint[ n ];
 
 		for ( int r = 0; r < n; ++r )
@@ -130,7 +135,7 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 	{
 		return n;
 	}
-
+	
 	@Override
 	public void apply( final double[] source, final double[] target )
 	{
@@ -138,12 +143,29 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 
 		for ( int r = 0; r < n; ++r )
 		{
-			double ar = 0;
+			tmp[ r ] = 0;
 			for ( int c = 0; c < n; ++c )
-				ar += source[ c ] * a.get( r, c );
-
-			target[ r ] = ar + t[ r ];
+				tmp[ r ] += source[ c ] * a.get( r, c );
 		}
+		
+		for ( int r = 0; r < n; ++r )
+			target[ r ] = tmp[ r ] + t[ r ];
+	}
+	
+	@Override
+	public void apply( final float[] source, final float[] target )
+	{
+		assert source.length >= n && target.length >= n: "Source or target vector dimensions do not match with the transformation.";
+
+		for ( int r = 0; r < n; ++r )
+		{
+			tmp[ r ] = 0;
+			for ( int c = 0; c < n; ++c )
+				tmp[ r ] += source[ c ] * a.get( r, c );
+		}
+		
+		for ( int r = 0; r < n; ++r )
+			target[ r ] = ( float )( tmp[ r ] + t[ r ] );
 	}
 
 	@Override
@@ -153,12 +175,13 @@ public abstract class AbstractAffineTransform implements AffineGet, AffineSet
 
 		for ( int r = 0; r < n; ++r )
 		{
-			double ar = 0;
+			tmp[ r ] = 0;
 			for ( int c = 0; c < n; ++c )
-				ar += source.getDoublePosition( c ) * a.get( r, c );
-
-			target.setPosition( ar + t[ r ], r );
+				tmp[ r ] += source.getDoublePosition( c ) * a.get( r, c );
 		}
+		
+		for ( int r = 0; r < n; ++r )
+			target.setPosition( tmp[ r ] + t[ r ], r );
 	}
 
 	@Override

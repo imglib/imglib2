@@ -40,7 +40,7 @@ import net.imglib2.RealPositionable;
 /**
  * 2-d arbitrary scaling.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class Scale2D extends AbstractScale
 {
@@ -143,8 +143,8 @@ public class Scale2D extends AbstractScale
 	{
 		assert source.length >= numDimensions() && target.length >= numDimensions(): "Input dimensions too small.";
 
-		source[ 0 ] = ( float ) ( target[ 0 ] / s[ 0 ] );
-		source[ 1 ] = ( float ) ( target[ 1 ] / s[ 1 ] );
+		source[ 0 ] = ( float )( target[ 0 ] / s[ 0 ] );
+		source[ 1 ] = ( float )( target[ 1 ] / s[ 1 ] );
 	}
 
 	@Override
@@ -170,8 +170,8 @@ public class Scale2D extends AbstractScale
 	{
 		assert source.length >= numDimensions() && target.length >= numDimensions(): "Input dimensions too small.";
 
-		target[ 0 ] = ( float ) ( source[ 0 ] * s[ 0 ] );
-		target[ 1 ] = ( float ) ( source[ 1 ] * s[ 1 ] );
+		target[ 0 ] = ( float )( source[ 0 ] * s[ 0 ] );
+		target[ 1 ] = ( float )( source[ 1 ] * s[ 1 ] );
 	}
 
 	@Override

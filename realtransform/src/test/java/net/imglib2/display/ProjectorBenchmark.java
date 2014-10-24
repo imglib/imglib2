@@ -91,7 +91,7 @@ public class ProjectorBenchmark
 
 		final AffineTransform3D t = new AffineTransform3D();
 		final RandomAccessibleInterval< FloatType > view = Views.interval(
-				RealViews.constantAffine(
+				RealViews.affine(
 						Views.interpolate( source, new NearestNeighborInterpolatorFactory< FloatType >() ),
 						t ),
 				source );

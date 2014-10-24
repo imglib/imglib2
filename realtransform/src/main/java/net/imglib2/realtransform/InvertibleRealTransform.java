@@ -59,7 +59,7 @@ import net.imglib2.RealPositionable;
  * </p>
  * 
  * @author Tobias Pietzsch
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public interface InvertibleRealTransform extends RealTransform
 {

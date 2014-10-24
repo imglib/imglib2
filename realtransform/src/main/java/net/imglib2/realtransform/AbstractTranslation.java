@@ -38,9 +38,9 @@ import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
 
 /**
+ * <em>n</em>-d translation.  Abstract base implementation.
  * 
- * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 abstract public class AbstractTranslation implements InvertibleRealTransform, TranslationGet
 {

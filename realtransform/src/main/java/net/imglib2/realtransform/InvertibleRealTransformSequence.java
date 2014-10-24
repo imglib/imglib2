@@ -40,7 +40,7 @@ import net.imglib2.RealPositionable;
  * An {@link InvertibleRealTransform} that is a sequence of
  * {@link InvertibleRealTransform InvertibleRealTransforms}.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public class InvertibleRealTransformSequence extends AbstractRealTransformSequence< InvertibleRealTransform > implements InvertibleRealTransform
 {
@@ -54,13 +54,12 @@ public class InvertibleRealTransformSequence extends AbstractRealTransformSequen
 		{
 			if ( s > 0 )
 			{
-				transforms.get( s ).applyInverse( b, target );
+				transforms.get( s ).applyInverse( tmp, target );
+				
 				for ( int i = s - 1; i > 0; --i )
-				{
-					transforms.get( i ).applyInverse( a, b );
-					switchAB();
-				}
-				transforms.get( 0 ).applyInverse( source, b );
+					transforms.get( i ).applyInverse( tmp, tmp );
+
+				transforms.get( 0 ).applyInverse( source, tmp );
 			}
 			else
 				transforms.get( 0 ).applyInverse( source, target );
@@ -75,17 +74,14 @@ public class InvertibleRealTransformSequence extends AbstractRealTransformSequen
 		final int s = transforms.size() - 1;
 		if ( s > -1 )
 		{
-			for ( int d = Math.min( target.length, a.length ) - 1; d >= 0; --d )
-				b[ d ] = target[ d ];
+			for ( int d = 0; d < nTarget; ++d )
+				tmp[ d ] = target[ d ];
 
 			for ( int i = s; i > -1; --i )
-			{
-				transforms.get( i ).applyInverse( a, b );
-				switchAB();
-			}
+				transforms.get( i ).applyInverse( tmp, tmp );
 
-			for ( int d = Math.min( source.length, a.length ) - 1; d >= 0; --d )
-				source[ d ] = ( float ) b[ d ];
+			for ( int d = 0; d < nSource; ++d )
+				source[ d ] = ( float )tmp[ d ];
 		}
 	}
 
@@ -99,13 +95,12 @@ public class InvertibleRealTransformSequence extends AbstractRealTransformSequen
 		{
 			if ( s > 0 )
 			{
-				transforms.get( s ).applyInverse( pb, target );
+				transforms.get( s ).applyInverse( ptmp, target );
+				
 				for ( int i = s - 1; i > 0; --i )
-				{
-					transforms.get( i ).applyInverse( a, b );
-					switchAB();
-				}
-				transforms.get( 0 ).applyInverse( source, pb );
+					transforms.get( i ).applyInverse( tmp, tmp );
+
+				transforms.get( 0 ).applyInverse( source, ptmp );
 			}
 			else
 				transforms.get( 0 ).applyInverse( source, target );

@@ -51,7 +51,7 @@ import net.imglib2.RealPositionable;
  * </p>
  * 
  * @author Tobias Pietzsch
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
  */
 public interface RealTransform
 {
@@ -71,7 +71,7 @@ public interface RealTransform
 
 	/**
 	 * Apply the {@link RealTransform} to a source vector to obtain a target
-	 * vector. Source and target must not reference the same vector.
+	 * vector.
 	 * 
 	 * @param source
 	 *            source coordinates.
@@ -82,7 +82,7 @@ public interface RealTransform
 
 	/**
 	 * Apply the {@link RealTransform} to a source vector to obtain a target
-	 * vector. Source and target must not reference the same vector.
+	 * vector.
 	 * 
 	 * @param source
 	 *            source coordinates.
@@ -93,8 +93,7 @@ public interface RealTransform
 
 	/**
 	 * Apply the {@link RealTransform} to a source {@link RealLocalizable} to
-	 * obtain a target {@link RealPositionable}. Source and target must not
-	 * reference the same vector.
+	 * obtain a target {@link RealPositionable}.
 	 * 
 	 * @param source
 	 *            source coordinates.
@@ -108,7 +107,7 @@ public interface RealTransform
 	 * 
 	 * <p>
 	 * Deep copying is required to make sure that stateful {@link RealTransform
-	 * RealTransform} can be duplicated for concurrent code.
+	 * RealTransforms} can be duplicated for concurrent code.
 	 * </p>
 	 * 
 	 * @return deep copy
