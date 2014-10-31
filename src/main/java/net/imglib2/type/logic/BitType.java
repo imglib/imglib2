@@ -129,12 +129,12 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 		*/
 		// Same as above, minus one multiplication, plus one shift to multiply the reminder by 2
 		final int i1 = (int)(i >>> 6); // Same as (i * 2) / 64 = (i << 1) >>> 6
-		final long shift = i & 63; 
+		final long shift = i & 63;
 		// Clear the bits first, then or the masked value
 		if ( value )
-			dataAccess.setValue(i1, (dataAccess.getValue(i1) | (1l << shift) ) );
+			dataAccess.setValue( i1, dataAccess.getValue(i1) | (1l << shift) );
 		else
-			dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(1l << shift)) );
+			dataAccess.setValue( i1, dataAccess.getValue(i1) & ~(1l << shift) );
 	}
 
 	@Override
