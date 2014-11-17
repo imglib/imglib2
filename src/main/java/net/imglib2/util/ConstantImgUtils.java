@@ -58,6 +58,11 @@ public class ConstantImgUtils
 
 			final class ConstantRandomAccess extends Point implements RandomAccess< T >
 			{
+				public ConstantRandomAccess()
+				{
+					super( numDimensions );
+				}
+
 				@Override
 				public T get()
 				{
@@ -108,6 +113,11 @@ public class ConstantImgUtils
 
 			final class ConstantRealRandomAccess extends RealPoint implements RealRandomAccess< T >
 			{
+				public ConstantRealRandomAccess()
+				{
+					super( numDimensions );
+				}
+
 				@Override
 				public T get()
 				{
