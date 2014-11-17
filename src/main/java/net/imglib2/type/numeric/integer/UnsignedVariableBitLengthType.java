@@ -55,7 +55,7 @@ import net.imglib2.util.Util;
  *
  * @author Albert Cardona and Stephan Preibisch
  */
-class UnsignedVariableBitLengthType extends AbstractBit64Type<UnsignedVariableBitLengthType> implements IntegerType< UnsignedVariableBitLengthType >
+public class UnsignedVariableBitLengthType extends AbstractBit64Type<UnsignedVariableBitLengthType> implements IntegerType< UnsignedVariableBitLengthType >
 {
 	// this is the constructor if you want it to read from an array
 	public UnsignedVariableBitLengthType(
