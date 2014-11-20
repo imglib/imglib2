@@ -44,7 +44,7 @@ import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.view.Views;
 
-public class ConstantAcessibleUtils
+public class ConstantUtils
 {
 	public static < T > RandomAccessible< T > constantRandomAccessible( final T constant, final int numDimensions )
 	{
