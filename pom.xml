@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>imglib2</artifactId>
-	<version>2.1.1-SNAPSHOT</version>
+	<version>2.2.0</version>
 
 	<name>ImgLib2 Core Library</name>
 	<description>A multidimensional, type-agnostic image processing library.</description>
@@ -17,7 +17,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/imglib/imglib2</connection>
 		<developerConnection>scm:git:git@github.com:imglib/imglib2</developerConnection>
-		<tag>HEAD</tag>
+		<tag>imglib2-2.2.0</tag>
 		<url>https://github.com/imglib/imglib2</url>
 	</scm>
 	<issueManagement>
