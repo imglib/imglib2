@@ -34,6 +34,7 @@
 package net.imglib2.type.numeric;
 
 import net.imglib2.type.Type;
+import net.imglib2.type.operators.Abs;
 import net.imglib2.type.operators.Add;
 import net.imglib2.type.operators.Div;
 import net.imglib2.type.operators.Mul;
@@ -46,6 +47,6 @@ import net.imglib2.type.operators.Sub;
  * TODO
  * 
  */
-public interface NumericType< T extends NumericType< T >> extends Type< T >, Add< T >, Mul< T >, Sub< T >, Div< T >, SetOne, SetZero, MulFloatingPoint
+public interface NumericType< T extends NumericType< T >> extends Type< T >, Add< T >, Mul< T >, Sub< T >, Div< T >, Abs, SetOne, SetZero, MulFloatingPoint
 {
 }
