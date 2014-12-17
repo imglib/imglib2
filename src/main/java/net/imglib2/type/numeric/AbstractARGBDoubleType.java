@@ -110,6 +110,12 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 				getG() / c.getG(),
 				getB() / c.getB() );
 	}
+	
+	@Override
+	public void abs()
+	{
+		set( 0, 0, 0, 0 );
+	}
 
 	@Override
 	public void setZero()

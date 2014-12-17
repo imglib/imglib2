@@ -33,7 +33,7 @@
 
 package net.imglib2.type.volatiles;
 
-import net.imglib2.Volatile;
+import net.imglib2.Volatile; 
 import net.imglib2.type.numeric.NumericType;
 
 /**
@@ -91,6 +91,13 @@ abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T
 
 	@Override
 	public void div( final T c )
+	{
+		t.div( c.t );
+		valid &= c.valid;
+	}
+	
+	@Override
+	public void abs( final T c )
 	{
 		t.div( c.t );
 		valid &= c.valid;
