@@ -36,7 +36,7 @@
  */
 package net.imglib2.view.composite;
 
-import java.util.Iterator;
+import java.util.Iterator; 
 
 import net.imglib2.RandomAccess;
 import net.imglib2.type.numeric.NumericType;
@@ -145,6 +145,20 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 			c.sourceAccess.fwd( d );
 		}
 	}
+	
+	@Override
+	public void abs( final C c )
+	{
+		sourceAccess.setPosition( 0, d );
+		c.sourceAccess.setPosition( 0, d );
+		while ( sourceAccess.getLongPosition( d ) < length )
+		{
+			sourceAccess.get().abs( c.sourceAccess.get() );
+			sourceAccess.fwd( d );
+			c.sourceAccess.fwd( d );
+		}
+	}
+
 
 	@Override
 	public void setZero()

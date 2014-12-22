@@ -7,5 +7,6 @@ package net.imglib2.type.operators;
  */
 public interface Abs< T >
 {
-	public void abs(T c);
+	void abs(T c);
+
 }

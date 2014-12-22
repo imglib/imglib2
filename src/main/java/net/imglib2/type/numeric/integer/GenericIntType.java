@@ -142,6 +142,12 @@ public abstract class GenericIntType< T extends GenericIntType< T >> extends Abs
 		final int a = getValue();
 		setValue( a - c.getValue() );
 	}
+	@Override
+	public void abs( final T c )
+	{
+		final int a = getValue();
+		String compare = a.
+	}
 
 	@Override
 	public int hashCode()

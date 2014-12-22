@@ -99,7 +99,7 @@ abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T
 	@Override
 	public void abs( final T c )
 	{
-		t.div( c.t );
+		t.abs( c.t );
 		valid &= c.valid;
 	}
 

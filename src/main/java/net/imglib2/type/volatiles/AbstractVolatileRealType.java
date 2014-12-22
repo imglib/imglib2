@@ -223,6 +223,12 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	}
 
 	@Override
+	public void abs( final T c )
+	{
+		t.abs( c.t );
+		valid &= c.valid;
+	}
+	@Override
 	public void setZero()
 	{
 		t.setZero();
