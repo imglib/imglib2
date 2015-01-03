@@ -246,4 +246,19 @@ public class ARGBType extends AbstractNativeType< ARGBType > implements NumericT
 
 	@Override
 	public Fraction getEntitiesPerPixel() { return new Fraction(); }
+
+	@Override
+	public void abs(final ARGBType c ) {
+		final int value1 = get();
+		final int value2 = c.get();
+		
+		if (value1 < 0)
+		{
+			value1 = value1* -1;
+		}
+		
+		set( rgba( red( value1 ), green( value1 ), blue( value1 ), alpha( value1 ) ) );
+		
+		
+	}
 }

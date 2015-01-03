@@ -32,7 +32,7 @@
  */
 package net.imglib2.view.composite;
 
-import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccess; 
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;

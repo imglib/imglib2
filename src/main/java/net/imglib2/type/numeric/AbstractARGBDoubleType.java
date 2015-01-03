@@ -112,8 +112,9 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 	}
 	
 	@Override
-	public void abs()
+	public void abs(final T c)
 	{
+		
 		set( 0, 0, 0, 0 );
 	}
 

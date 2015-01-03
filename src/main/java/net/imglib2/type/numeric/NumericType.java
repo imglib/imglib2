@@ -33,7 +33,7 @@
 
 package net.imglib2.type.numeric;
 
-import net.imglib2.type.Type; 
+import net.imglib2.type.Type;  
 import net.imglib2.type.operators.Abs;
 import net.imglib2.type.operators.Add;
 import net.imglib2.type.operators.Div;
