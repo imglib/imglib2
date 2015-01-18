@@ -51,11 +51,11 @@ Applications
 Resources
 ---------
 
-* [ImgLib2 source code on GitHub](https://github.com/imglib/imglib2).
-* [Documentation on how to use ImgLib2](http://imglib2.net/).
+* [ImgLib2 source code on GitHub](https://github.com/imglib/imglib2)
+* [Documentation on how to use ImgLib2](http://imglib2.net/)
 * [ImgLib2 Examples](http://imagej.net/ImgLib2_Examples)
-* [Online Javadoc](http://javadoc.imagej.net/ImgLib2/).
-* [Performance benchmarks](http://developer.imagej.net/imglib-benchmarks).
+* [Online Javadoc](http://javadoc.imagej.net/ImgLib2/)
+* [Performance benchmarks](http://developer.imagej.net/imglib-benchmarks)
 
 
 Building the source code
