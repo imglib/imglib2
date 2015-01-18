@@ -41,10 +41,9 @@ Applications
 ------------
 
 * ImgLib2 provides the
-  [core data model for ImageJ2](http://developer.imagej.net/imglib).
+  [core data model for ImageJ2](http://imagej.net/ImageJ2).
 * ImgLib2 is bundled with the [Fiji](http://fiji.sc/) distribution of ImageJ.
-* The [SCIFIO](http://loci.wisc.edu/software/scifio) library utilizes
-  ImgLib2's N-dimensional image API.
+* The [SCIFIO](http://scif.io/) library utilizes ImgLib2's N-dimensional image API.
 * ImgLib2 is a key component of the
   [SciJava software initiative](http://scijava.org/).
 
@@ -52,10 +51,10 @@ Applications
 Resources
 ---------
 
-* [ImgLib2 source code on GitHub](https://github.com/imagej/imglib).
+* [ImgLib2 source code on GitHub](https://github.com/imglib/imglib2).
 * [Documentation on how to use ImgLib2](http://imglib2.net/).
-* [ImgLib2 Examples](http://fiji.sc/ImgLib2_Examples)
-* [Online Javadoc](http://jenkins.imagej.net/job/ImgLib-daily/javadoc/).
+* [ImgLib2 Examples](http://imagej.net/ImgLib2_Examples)
+* [Online Javadoc](http://javadoc.imagej.net/ImgLib2/).
 * [Performance benchmarks](http://developer.imagej.net/imglib-benchmarks).
 
 
