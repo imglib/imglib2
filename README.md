@@ -82,8 +82,7 @@ ImgLib1
 -------
 
 The previous incarnation of the library, known as ImgLib1, is still available
-as [part of
-Fiji](https://github.com/fiji/fiji/tree/master/src-plugins/legacy-imglib1).
+as [part of Fiji](https://github.com/fiji/legacy-imglib1).
 However, we strongly encourage developers to use ImgLib2 instead, and migrate
 existing ImgLib1 programs to ImgLib2 whenever possible.
 
