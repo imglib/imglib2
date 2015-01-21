@@ -33,8 +33,6 @@
 
 package net.imglib2;
 
-import net.imglib2.img.Img;
-
 /**
  * <p>
  * <em>f</em>:R<sup><em>n</em></sup>&isin;[0,<em>s</em>]&rarr;T</em>
@@ -68,7 +66,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * Use this where localization is required rarely/ not for each iteration.
 	 * </p>
 	 * 
-	 * @return I fast iterating iterator
+	 * @return fast iterating iterator
 	 */
 	public RealCursor< T > cursor();
 
@@ -83,7 +81,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * Use this where localization is required often/ for each iteration.
 	 * </p>
 	 * 
-	 * @return I fast localizing iterator
+	 * @return fast localizing iterator
 	 */
 	public RealCursor< T > localizingCursor();
 
