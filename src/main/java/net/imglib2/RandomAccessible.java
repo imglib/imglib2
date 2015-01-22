@@ -33,14 +33,15 @@
 
 package net.imglib2;
 
+import net.imglib2.view.Views;
+
 /**
  * <p>
  * <em>f:Z<sup>n</sup>&rarr;T</em>
  * </p>
  * 
  * <p>
- * A function over integer space that can create a random access {@link Sampler}
- * .
+ * A function over integer space that can create a random access {@link Sampler}.
  * </p>
  * 
  * <p>
@@ -59,6 +60,42 @@ public interface RandomAccessible< T > extends EuclideanSpace
 	 * 
 	 * <p>
 	 * The returned random access covers as much of the domain as possible.
+	 * </p>
+	 * 
+	 * <p>
+	 * <em>
+	 * Please note: {@link RandomAccessibleInterval}s have a finite domain (their {@link Interval}),
+	 * so {@link #randomAccess()} is only guaranteed to cover this finite domain.
+	 * </em> This may lead to unexpected results when using {@link Views}. In
+	 * the following code
+	 * 
+	 * <pre>
+	 * RandomAccessible&lt;T&gt; extended = Views.extendBorder( img )
+	 * RandomAccessibleInterval&lt;T&gt; cropped = Views.interval( extended, img );
+	 * RandomAccess&lt;T&gt; a1 = extended.randomAccess();
+	 * RandomAccess&lt;T&gt; a2 = cropped.randomAccess();
+	 * </pre>
+	 * 
+	 * The {@link RandomAccess access} {@code a1} on the extended image is valid
+	 * everywhere. However, somewhat counter-intuitively, the
+	 * {@link RandomAccess access} {@code a2} on the extended and cropped image
+	 * is only valid on the interval {@code img} to which the extended image was
+	 * cropped. The access is only required to cover this interval, because it
+	 * is the domain of the cropped image. {@link Views} attempts to provide the
+	 * fastest possible access that meets this requirement, and will therefore
+	 * strip the extension.
+	 * 
+	 * To deal with this, if you know that you need to access pixels outside the
+	 * domain of the {@link RandomAccessibleInterval}, and you know that the
+	 * {@link RandomAccessibleInterval} is actually defined beyond its interval
+	 * boundaries, then use the {@link #randomAccess(Interval)} variant and
+	 * specify which interval you actually want to access. In the above example,
+	 * 
+	 * <pre>
+	 * RandomAccess&lt;T&gt; a2 = cropped.randomAccess( Intervals.expand( img, 10 ) );
+	 * </pre>
+	 * 
+	 * will provide the extended access as expected.
 	 * </p>
 	 * 
 	 * @return random access sampler
