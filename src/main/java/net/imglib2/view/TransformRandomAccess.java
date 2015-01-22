@@ -10,13 +10,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,6 +34,8 @@
 package net.imglib2.view;
 
 import net.imglib2.AbstractLocalizable;
+import net.imglib2.Cursor;
+import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.transform.Transform;
@@ -41,8 +43,18 @@ import net.imglib2.transform.Transform;
 /**
  * Wrap a {@code source} RandomAccess which is related to this by a generic
  * {@link Transform} {@code transformToSource}.
- * 
- * 
+ *
+ * {@link TransformRandomAccess} gets called by {@link Cursor} implementations
+ * over {@link RandomAccess} that initialize at the {@link Interval} min
+ * position - 1, i.e. they call {@link #bck(int) bck(0)} after
+ * {@link #setPosition(long[]) setPosition(min)}.  Transforms are not
+ * necessarily defined at this position and may throw an exception.  Therefore,
+ * position update must not apply the transformation!  Instead, the
+ * transformation is applied at {@link #get()}.  So don't call {@link #get()}
+ * more than once at the same place (generally a good idea).
+ *
+ * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
+ * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org>
  * @author Tobias Pietzsch
  */
 public final class TransformRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >
@@ -78,8 +90,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 	{
 		assert d < n;
 		position[ d ] += 1;
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -87,8 +97,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 	{
 		assert d < n;
 		position[ d ] -= 1;
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -96,8 +104,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 	{
 		assert d < n;
 		position[ d ] += distance;
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -105,8 +111,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 	{
 		assert d < n;
 		position[ d ] += distance;
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -116,8 +120,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 
 		for ( int d = 0; d < n; ++d )
 			position[ d ] += localizable.getLongPosition( d );
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -127,8 +129,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 
 		for ( int d = 0; d < n; ++d )
 			position[ d ] += distance[ d ];
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -138,8 +138,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 
 		for ( int d = 0; d < n; ++d )
 			position[ d ] += distance[ d ];
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -148,8 +146,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 		assert localizable.numDimensions() == n;
 
 		localizable.localize( position );
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -159,8 +155,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 
 		for ( int d = 0; d < n; ++d )
 			position[ d ] = pos[ d ];
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -170,8 +164,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 
 		for ( int d = 0; d < n; ++d )
 			position[ d ] = pos[ d ];
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -179,8 +171,6 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 	{
 		assert d < n;
 		position[ d ] = pos;
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
@@ -188,13 +178,13 @@ public final class TransformRandomAccess< T > extends AbstractLocalizable implem
 	{
 		assert d < n;
 		position[ d ] = pos;
-		transformToSource.apply( position, tmp );
-		source.setPosition( tmp );
 	}
 
 	@Override
 	public T get()
 	{
+        transformToSource.apply( position, tmp );
+        source.setPosition( tmp );
 		return source.get();
 	}
 
