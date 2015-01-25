@@ -282,27 +282,30 @@ public class Views
 	public static < T > MixedTransformView< T > rotate( final RandomAccessible< T > randomAccessible, final int fromAxis, final int toAxis )
 	{
 		final int n = randomAccessible.numDimensions();
-		final int[] component = new int[ n ];
-		final boolean[] inv = new boolean[ n ];
-		for ( int e = 0; e < n; ++e )
-		{
-			if ( e == toAxis )
-			{
-				component[ e ] = fromAxis;
-				inv[ e ] = true;
-			}
-			else if ( e == fromAxis )
-			{
-				component[ e ] = toAxis;
-			}
-			else
-			{
-				component[ e ] = e;
-			}
-		}
 		final MixedTransform t = new MixedTransform( n, n );
-		t.setComponentMapping( component );
-		t.setComponentInversion( inv );
+		if ( fromAxis != toAxis )
+		{
+			final int[] component = new int[ n ];
+			final boolean[] inv = new boolean[ n ];
+			for ( int e = 0; e < n; ++e )
+			{
+				if ( e == toAxis )
+				{
+					component[ e ] = fromAxis;
+					inv[ e ] = true;
+				}
+				else if ( e == fromAxis )
+				{
+					component[ e ] = toAxis;
+				}
+				else
+				{
+					component[ e ] = e;
+				}
+			}
+			t.setComponentMapping( component );
+			t.setComponentInversion( inv );
+		}
 		return new MixedTransformView< T >( randomAccessible, t );
 	}
 
@@ -324,12 +327,15 @@ public class Views
 		final long[] max = new long[ n ];
 		interval.min( min );
 		interval.max( max );
-		final long fromMinNew = -max[ toAxis ];
-		final long fromMaxNew = -min[ toAxis ];
-		min[ toAxis ] = min[ fromAxis ];
-		max[ toAxis ] = max[ fromAxis ];
-		min[ fromAxis ] = fromMinNew;
-		max[ fromAxis ] = fromMaxNew;
+		if ( fromAxis != toAxis )
+		{
+			final long fromMinNew = -max[ toAxis ];
+			final long fromMaxNew = -min[ toAxis ];
+			min[ toAxis ] = min[ fromAxis ];
+			max[ toAxis ] = max[ fromAxis ];
+			min[ fromAxis ] = fromMinNew;
+			max[ fromAxis ] = fromMaxNew;
+		}
 		return interval( rotate( ( RandomAccessible< T > ) interval, fromAxis, toAxis ), min, max );
 	}
 
