@@ -102,7 +102,9 @@ public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 
 	@Override
 	public long get() {
-		return (dataAccess.getValue((int)(i >>> 4)) >>> ((i & 15) << 2)) & mask;
+		synchronized ( dataAccess ) {
+			return (dataAccess.getValue((int)(i >>> 4)) >>> ((i & 15) << 2)) & mask;
+		}
 	}
 
 	// Crops value to within mask
@@ -117,7 +119,10 @@ public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 		final int i1 = (int)(i >>> 4); //  Same as (i * 4) / 64 = ((i << 2) >>> 6)
 		final long shift = (i << 2) & 63; // Same as (i * 4) % 64
 		// Clear the bits first, then or the masked value
-		dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
+		
+		synchronized ( dataAccess ) {
+			dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
+		}
 	}
 
 	@Override
