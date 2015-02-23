@@ -128,8 +128,8 @@ public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
 		final long antiShift = 64 - shift;
 		
 		synchronized ( dataAccess ) {
-		final long v = dataAccess.getValue(i1);
-		if (antiShift < 12) {
+			final long v = dataAccess.getValue(i1);
+			if (antiShift < 12) {
 				// Number split between two adjacent longs
 				// 1. Store the lower bits of safeValue at the upper bits of v1
 				final long v1 = (v & (0xffffffffffffffffL >>> antiShift)) // clear upper bits, keep other values
