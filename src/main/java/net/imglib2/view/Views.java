@@ -56,6 +56,7 @@ import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 import net.imglib2.view.composite.CompositeIntervalView;
 import net.imglib2.view.composite.CompositeView;
@@ -920,5 +921,24 @@ public class Views
 		assert steps.length >= source.numDimensions(): "Dimensions do not match.";
 
 		return new SubsampleView< T >( source, steps );
+	}
+	
+	/**
+	 * Removes all unit dimensions (dimensions with size one) from the
+	 * RandomAccessibleInterval
+	 * 
+	 * @param source
+	 *            the source
+	 * @return a RandomAccessibleInterval without dimensions of size one
+	 */
+	public static < T > RandomAccessibleInterval< T > dropSingletonDimensions( final RandomAccessibleInterval< T > source )
+	{
+
+		RandomAccessibleInterval< T > res = source;
+		for ( int d = source.numDimensions() - 1; d >= 0; --d )
+			if ( source.dimension( d ) == 1 )
+				res = Views.hyperSlice( res, d, 0 );
+
+		return res;
 	}
 }
