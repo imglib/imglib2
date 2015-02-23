@@ -45,7 +45,7 @@ import net.imglib2.type.Type;
 import net.imglib2.util.Fraction;
 
 /**
- * A {@link Type} with a bit depth of 2.
+ * A {@link Type} with a bit depth of 4.
  * 
  * The performance of this type is traded off for the gain in memory storage.
  * 
