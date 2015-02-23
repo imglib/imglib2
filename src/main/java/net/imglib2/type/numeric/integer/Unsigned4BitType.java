@@ -119,9 +119,11 @@ public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 		final int i1 = (int)(i >>> 4); //  Same as (i * 4) / 64 = ((i << 2) >>> 6)
 		final long shift = (i << 2) & 63; // Same as (i * 4) % 64
 		// Clear the bits first, then or the masked value
-		
+
+		final long bitsToRetain = ~(mask << shift);
+		final long bitsToSet = (value & mask) << shift;
 		synchronized ( dataAccess ) {
-			dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
+			dataAccess.setValue(i1, (dataAccess.getValue(i1) & bitsToRetain) | bitsToSet);
 		}
 	}
 
