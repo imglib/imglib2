@@ -108,22 +108,20 @@ public abstract class AbstractBit64Type<T extends AbstractBit64Type<T>> extends 
 		final long k = i * nBits;
 		final int i1 = (int)(k >>> 6); // k / 64;
 		final long shift = k & 63; // Same as k % 64;
-		synchronized ( dataAccess ) {
-			final long v = dataAccess.getValue(i1);
-			if (0 == shift) {
-				// Number contained in a single long, ending exactly at the first bit
-				return v & mask;
+		final long v = dataAccess.getValue(i1);
+		if (0 == shift) {
+			// Number contained in a single long, ending exactly at the first bit
+			return v & mask;
+		} else {
+			final long antiShift = 64 - shift;
+			if (antiShift < nBits) {
+				// Number split between two adjacent long
+				final long v1 = (v >>> shift) & (mask >>> (nBits - antiShift)); // lower part, stored at the upper end
+				final long v2 = (dataAccess.getValue(i1 + 1) & (mask >>> antiShift)) << antiShift; // upper part, stored at the lower end
+				return v1 | v2;
 			} else {
-				final long antiShift = 64 - shift;
-				if (antiShift < nBits) {
-					// Number split between two adjacent long
-					final long v1 = (v >>> shift) & (mask >>> (nBits - antiShift)); // lower part, stored at the upper end
-					final long v2 = (dataAccess.getValue(i1 + 1) & (mask >>> antiShift)) << antiShift; // upper part, stored at the lower end
-					return v1 | v2;
-				} else {
-					// Number contained inside a single long
-					return (v >>> shift) & mask;
-				}
+				// Number contained inside a single long
+				return (v >>> shift) & mask;
 			}
 		}
 	}

@@ -102,9 +102,7 @@ public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 
 	@Override
 	public long get() {
-		synchronized ( dataAccess ) {
-			return (dataAccess.getValue((int)(i >>> 4)) >>> ((i & 15) << 2)) & mask;
-		}
+		return (dataAccess.getValue((int)(i >>> 4)) >>> ((i & 15) << 2)) & mask;
 	}
 
 	// Crops value to within mask

@@ -110,9 +110,7 @@ public class Unsigned2BitType extends AbstractIntegerBitType<Unsigned2BitType>
 		//return (dataAccess.getValue((int)(i >>> 5)) >>> ((i % 32) << 1)) & mask;
 		// Even less operations
 		// div 32 == shr 5
-		synchronized ( dataAccess ) {
-			return (dataAccess.getValue((int)(i >>> 5)) >>> ((i & 31) << 1)) & mask;
-		}
+		return (dataAccess.getValue((int)(i >>> 5)) >>> ((i & 31) << 1)) & mask;
 	}
 
 	// Crops value to within mask
