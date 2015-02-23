@@ -66,11 +66,15 @@ public class ImgView< T extends Type< T > > extends
 	 * View on {@link Img} which is defined by a given Interval, but still is an
 	 * {@link Img}.
 	 * 
+	 * Deprecation: Use {@link ImgView#wrap(RandomAccessibleInterval, ImgFactory)} 
+	 * to represent a RandomAccessibleInterval as an Img
+	 * 
 	 * @param in
 	 *            Source interval for the view
 	 * @param fac
 	 *            <T> Factory to create img
 	 */
+	@Deprecated
 	public ImgView( final RandomAccessibleInterval< T > in, final ImgFactory< T > fac )
 	{
 		super( in );
@@ -154,5 +158,23 @@ public class ImgView< T extends Type< T > > extends
 		else
 			return Views.interval( this.sourceInterval, interval )
 					.localizingCursor();
+	}
+	
+	/**
+	 * Represent an arbitrary RandomAccessibleInterval as an Img
+	 * 
+	 * @param accessible 
+	 * 			RandomAccessibleInterval which will be wrapped with an ImgView
+	 * @param factory
+	 * 			ImgFactory returned by {@link ImgView#factory()}
+	 * @return
+	 * 			RandomAccessibleInterval represented as an Img
+	 */
+	public static < T extends Type< T >> Img< T > wrap(RandomAccessibleInterval< T > accessible, final ImgFactory< T > factory){
+		if(accessible instanceof Img){
+			return (Img<T>) accessible;
+		}else{
+			return new ImgView< T >(accessible, factory);
+		}
 	}
 }
