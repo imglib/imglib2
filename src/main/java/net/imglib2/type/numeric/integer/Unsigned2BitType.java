@@ -123,7 +123,12 @@ public class Unsigned2BitType extends AbstractIntegerBitType<Unsigned2BitType>
 		final int i1 = (int)(i >>> 5); // Same as (i * 2) / 64 = (i << 1) >>> 6
 		final long shift = (i << 1) & 63; // Same as (i * 2) % 64
 		// Clear the bits first, then or the masked value
-		dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
+
+		final long bitsToRetain = ~(mask << shift);
+		final long bitsToSet = (value & mask) << shift;
+		synchronized ( dataAccess ) {
+			dataAccess.setValue(i1, (dataAccess.getValue(i1) & bitsToRetain) | bitsToSet);
+		}
 	}
 
 	@Override

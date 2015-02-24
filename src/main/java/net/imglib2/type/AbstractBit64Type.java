@@ -137,30 +137,32 @@ public abstract class AbstractBit64Type<T extends AbstractBit64Type<T>> extends 
 		final int i1 = (int)(k >>> 6); // k / 64;
 		final long shift = k & 63; // Same as k % 64;
 		final long safeValue = value & mask;
-		if (0 == shift) {
-			// Number contained in a single long, ending exactly at the first bit
-			dataAccess.setValue(i1, (dataAccess.getValue(i1) & invMask) | safeValue);
-		} else {
-			final long antiShift = 64 - shift;
-			final long v = dataAccess.getValue(i1);
-			if (antiShift < nBits) {
-				// Number split between two adjacent longs
-				// 1. Store the lower bits of safeValue at the upper bits of v1
-				final long v1 = (v & (0xffffffffffffffffL >>> antiShift)) // clear upper bits, keep other values
-						| ((safeValue & (mask >>> (nBits - antiShift))) << shift); // the lower part of safeValue, stored at the upper end
-				dataAccess.setValue(i1, v1);
-				// 2. Store the upper bits of safeValue at the lower bits of v2
-				final long v2 = (dataAccess.getValue(i1 + 1) & (0xffffffffffffffffL << (nBits - antiShift))) // other
-						| (safeValue >>> antiShift); // upper part of safeValue, stored at the lower end
-				dataAccess.setValue(i1 + 1, v2);
+		synchronized ( dataAccess ) {
+			if (0 == shift) {
+				// Number contained in a single long, ending exactly at the first bit
+				dataAccess.setValue(i1, (dataAccess.getValue(i1) & invMask) | safeValue);
 			} else {
-				// Number contained inside a single long
-				if (0 == v) {
-					// Trivial case
-					dataAccess.setValue(i1, safeValue << shift);
+				final long antiShift = 64 - shift;
+				final long v = dataAccess.getValue(i1);
+				if (antiShift < nBits) {
+					// Number split between two adjacent longs
+					// 1. Store the lower bits of safeValue at the upper bits of v1
+					final long v1 = (v & (0xffffffffffffffffL >>> antiShift)) // clear upper bits, keep other values
+							| ((safeValue & (mask >>> (nBits - antiShift))) << shift); // the lower part of safeValue, stored at the upper end
+					dataAccess.setValue(i1, v1);
+					// 2. Store the upper bits of safeValue at the lower bits of v2
+					final long v2 = (dataAccess.getValue(i1 + 1) & (0xffffffffffffffffL << (nBits - antiShift))) // other
+							| (safeValue >>> antiShift); // upper part of safeValue, stored at the lower end
+					dataAccess.setValue(i1 + 1, v2);
 				} else {
-					// Clear the bits first
-					dataAccess.setValue(i1, (v & ~(mask << shift)) | (safeValue << shift));
+					// Number contained inside a single long
+					if (0 == v) {
+						// Trivial case
+						dataAccess.setValue(i1, safeValue << shift);
+					} else {
+						// Clear the bits first
+						dataAccess.setValue(i1, (v & ~(mask << shift)) | (safeValue << shift));
+					}
 				}
 			}
 		}

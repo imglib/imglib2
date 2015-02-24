@@ -43,7 +43,7 @@ import net.imglib2.type.Type;
 import net.imglib2.util.Fraction;
 
 /**
- * A {@link Type} with a bit depth of 2.
+ * A {@link Type} with a bit depth of 4.
  * 
  * The performance of this type is traded off for the gain in memory storage.
  * 
@@ -115,7 +115,12 @@ public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 		final int i1 = (int)(i >>> 4); //  Same as (i * 4) / 64 = ((i << 2) >>> 6)
 		final long shift = (i << 2) & 63; // Same as (i * 4) % 64
 		// Clear the bits first, then or the masked value
-		dataAccess.setValue(i1, (dataAccess.getValue(i1) & ~(mask << shift)) | ((value & mask) << shift));
+
+		final long bitsToRetain = ~(mask << shift);
+		final long bitsToSet = (value & mask) << shift;
+		synchronized ( dataAccess ) {
+			dataAccess.setValue(i1, (dataAccess.getValue(i1) & bitsToRetain) | bitsToSet);
+		}
 	}
 
 	@Override
