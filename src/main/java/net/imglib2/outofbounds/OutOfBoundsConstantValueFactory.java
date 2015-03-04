@@ -68,6 +68,6 @@ public class OutOfBoundsConstantValueFactory< T extends Type< T >, F extends Int
 	@Override
 	public OutOfBoundsConstantValue< T > create( final F f )
 	{
-		return new OutOfBoundsConstantValue< T >( f, value );
+		return new OutOfBoundsConstantValue< T >( f, value.copy() );
 	}
 }

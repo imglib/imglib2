@@ -78,6 +78,6 @@ public class OutOfBoundsRandomValueFactory< T extends RealType< T >, F extends I
 	@Override
 	public OutOfBoundsRandomValue< T > create( final F f )
 	{
-		return new OutOfBoundsRandomValue< T >( f, value, rnd, min, max );
+		return new OutOfBoundsRandomValue< T >( f, value.copy(), rnd, min, max );
 	}
 }
