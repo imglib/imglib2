@@ -54,14 +54,14 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 		@Override
 		public boolean hasNext()
 		{
-			return sourceAccess.getIntPosition( d ) < length;
+			return sourceAccess.getIntPosition( d ) + 1 < length;
 		}
 
 		@Override
 		public T next()
 		{
-			final T t = sourceAccess.get();
 			sourceAccess.fwd( d );
+			final T t = sourceAccess.get();
 			return t;
 		}
 
@@ -190,7 +190,7 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 	@Override
 	public Iterator< T > iterator()
 	{
-		sourceAccess.setPosition( 0, d );
+		sourceAccess.setPosition( -1, d );
 		return iterator;
 	}
 }
