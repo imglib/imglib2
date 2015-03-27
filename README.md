@@ -1,3 +1,5 @@
+[![Join the chat at https://gitter.im/imglib/imglib2](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imglib/imglib2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ImgLib2 is a general-purpose, multidimensional image processing library.
 
 It provides an interface-driven design that supports numeric and
