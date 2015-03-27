@@ -11,6 +11,8 @@ demand, and planes read on demand from disk.
 Benefits
 --------
 
+[![Join the chat at https://gitter.im/imglib/imglib2](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imglib/imglib2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 1. By avoiding unnecessarily complex syntax (such as nested loops) ImgLib2
    allows developers to concentrate on the essence of the algorithm.
 
