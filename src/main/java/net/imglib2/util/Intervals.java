@@ -377,6 +377,36 @@ public class Intervals
 	}
 
 	/**
+	 * Compute the number of elements contained in an (integer) interval.
+	 * 
+	 * @param dimensions
+	 *            dimensions of the interval.
+	 * @return number of elements in the interval.
+	 */
+	public static long numElements( final int... dimensions )
+	{
+		long numPixels = dimensions[ 0 ];
+		for ( int d = 1; d < dimensions.length; ++d )
+			numPixels *= dimensions[ d ];
+		return numPixels;
+	}
+
+	/**
+	 * Compute the number of elements contained in an (integer) interval.
+	 * 
+	 * @param dimensions
+	 *            dimensions of the interval.
+	 * @return number of elements in the interval.
+	 */
+	public static long numElements( final long... dimensions )
+	{
+		long numPixels = dimensions[ 0 ];
+		for ( int d = 1; d < dimensions.length; ++d )
+			numPixels *= dimensions[ d ];
+		return numPixels;
+	}
+
+	/**
 	 * Tests weather two intervals are equal in their min / max
 	 */
 	public static boolean equals( final Interval a, final Interval b )
