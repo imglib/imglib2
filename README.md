@@ -1,4 +1,4 @@
-![](http://jenkins.imagej.net/job/ImgLib2/lastBuild/badge/icon)
+[![](http://jenkins.imagej.net/job/ImgLib2/lastBuild/badge/icon)](http://jenkins.imagej.net/job/ImgLib2/)
 
 [![Join the chat at https://gitter.im/imglib/imglib2](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imglib/imglib2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
