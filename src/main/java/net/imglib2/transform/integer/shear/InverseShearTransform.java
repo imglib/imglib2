@@ -98,6 +98,7 @@ public class InverseShearTransform extends AbstractShearTransform {
 	
 	@Override public BoundingBox transform( BoundingBox bb )
 	{
+		bb.orderMinMax();
 		long[] c = bb.corner1;
 		// assume that corner2[ i ] > corner1[ i ]
 		long diff = bb.corner2[ this.referenceDimension ] - c[ this.referenceDimension ];

@@ -98,6 +98,7 @@ public class ShearTransform extends AbstractShearTransform {
 	
 	@Override public BoundingBox transform( BoundingBox bb )
 	{
+		bb.orderMinMax();
 		long[] c = bb.corner2;
 		// assume that corner2[ i ] > corner1[ i ]
 		long diff = c[ this.referenceDimension ] - bb.corner1[ this.referenceDimension ];
