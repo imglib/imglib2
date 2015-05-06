@@ -49,7 +49,8 @@ public class InverseShearTransform extends AbstractShearTransform {
 			int nDim, 
 			int shearDimension,
 			int referenceDimension, 
-			AbstractShearTransform inverse ) {
+			AbstractShearTransform inverse )
+	{
 		super( nDim, shearDimension, referenceDimension, inverse );
 	}
 
