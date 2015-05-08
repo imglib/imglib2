@@ -21,7 +21,8 @@ import net.imglib2.transform.integer.BoundingBoxTransform;
  * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org>
  *
  */
-public abstract class AbstractShearTransform implements InvertibleTransform, BoundingBoxTransform  {
+public abstract class AbstractShearTransform implements InvertibleTransform, BoundingBoxTransform
+{
 	
 	
 	protected final int nDim;

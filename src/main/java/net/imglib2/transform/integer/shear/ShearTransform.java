@@ -14,7 +14,8 @@ import net.imglib2.transform.integer.BoundingBox;
  * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org>
  *
  */
-public class ShearTransform extends AbstractShearTransform {
+public class ShearTransform extends AbstractShearTransform
+{
 	
 
 	/**
