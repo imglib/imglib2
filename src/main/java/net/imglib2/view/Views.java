@@ -55,7 +55,10 @@ import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
 import net.imglib2.outofbounds.OutOfBoundsPeriodicFactory;
 import net.imglib2.outofbounds.OutOfBoundsRandomValueFactory;
+import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.transform.integer.shear.InverseShearTransform;
+import net.imglib2.transform.integer.shear.ShearTransform;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
@@ -79,6 +82,7 @@ import net.imglib2.view.composite.RealComposite;
  * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org>
  */
 public class Views
 {
@@ -1014,4 +1018,49 @@ public class Views
 	{
 		return new StackView< T >( Arrays.asList( hyperslices ), stackAccessMode );
 	}
+	
+	/**
+	 * Positive shear transform of a RandomAccessible using {@link ShearTransform}, i.e.
+	 * c[ shearDimension ] = c[ shearDimension ] + c[ referenceDimension ]
+	 * 
+	 * @param source				input, e.g. extended {@link RandomAccessibleInterval}
+	 * @param interval				original interval
+	 * @param shearDimension		dimension to be sheared
+	 * @param referenceDimension	reference dimension for shear
+	 * 
+	 * @return {@link IntervalView} containing the result. The returned interval's dimension are determined by
+	 * applying the {@link ShearTransform#transform} method on the input interval.
+	 */
+	public static < T > IntervalView< T > shear( 
+			final RandomAccessible< T > source,
+			final Interval interval,
+			final int shearDimension,
+			final int referenceDimension )
+	{
+		ShearTransform transform = new ShearTransform( source.numDimensions(), shearDimension, referenceDimension );
+		return Views.interval( new TransformView< T >( source, transform.inverse() ),transform.transform( new BoundingBox( interval) ).getInterval() );
+	}
+	
+	/**
+	 * Negative shear transform of a RandomAccessible using {@link InverseShearTransform}, i.e.
+	 * c[ shearDimension ] = c[ shearDimension ] - c[ referenceDimension ]
+	 * 
+	 * @param source				input, e.g. extended {@link RandomAccessibleInterval}
+	 * @param interval				original interval
+	 * @param shearDimension		dimension to be sheared
+	 * @param referenceDimension	reference dimension for shear
+	 * 
+	 * @return {@link IntervalView} containing the result. The returned interval's dimension are determined by
+	 * applying the {@link ShearTransform#transform} method on the input interval.
+	 */
+	public static < T > IntervalView< T > unshear( 
+			final RandomAccessible< T > source,
+			final Interval interval,
+			final int shearDimension,
+			final int referenceDimension )
+	{
+		InverseShearTransform transform = new InverseShearTransform( source.numDimensions(), shearDimension, referenceDimension );
+		return Views.interval( new TransformView< T >( source, transform.inverse() ),transform.transform( new BoundingBox( interval) ).getInterval() );
+	}
+	
 }

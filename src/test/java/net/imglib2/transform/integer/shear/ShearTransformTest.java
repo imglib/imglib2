@@ -15,6 +15,7 @@ import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.transform.integer.BoundingBox;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.ExtendedRandomAccessibleInterval;
+import net.imglib2.view.IntervalView;
 import net.imglib2.view.TransformView;
 import net.imglib2.view.Views;
 
@@ -26,7 +27,8 @@ import org.junit.Test;
  * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org>
  *
  */
-public class ShearTransformTest {
+public class ShearTransformTest
+{
 	
 	final private long[] dim = new long[] { 5, 6, 7, 8 };
 	final private int numDimensions = dim.length;
@@ -39,15 +41,19 @@ public class ShearTransformTest {
 	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws Exception
+	{
 		for ( FloatType i : img ) i.set( rng.nextFloat() );
 	}
 
 	
 	@Test
-	public void testIdentity() {
-		for ( int source = 0; source < numDimensions; ++source ) {
-			for ( int target = 0; target < numDimensions; ++ target ) {
+	public void testIdentity()
+	{
+		for ( int source = 0; source < numDimensions; ++source )
+		{
+			for ( int target = 0; target < numDimensions; ++ target ) 
+			{
 				
 				if ( target == source ) continue;
 				
@@ -58,7 +64,8 @@ public class ShearTransformTest {
 				ArrayCursor<FloatType> i = img.cursor();
 				Cursor<FloatType> t      = Views.flatIterable( Views.interval( transformed, img ) ).cursor();
 				
-				while( t.hasNext() ) {
+				while( t.hasNext() ) 
+				{
 					Assert.assertTrue( i.hasNext() );
 					Assert.assertEquals( i.next().get(), t.next().get(), 0.0f );
 				}
@@ -70,8 +77,10 @@ public class ShearTransformTest {
 	
 	@Test
 	public void testTransform() {
-		for ( int source = 0; source < numDimensions; ++source ) {
-			for ( int target = 0; target < numDimensions; ++ target ) {
+		for ( int source = 0; source < numDimensions; ++source )
+		{
+			for ( int target = 0; target < numDimensions; ++ target )
+			{
 				if ( target == source ) continue;
 				
 				ShearTransform tf = new ShearTransform( numDimensions, target, source );
@@ -81,6 +90,8 @@ public class ShearTransformTest {
 				BoundingBox boundingBox = new BoundingBox( img );
 				tf.transform( boundingBox );
 				
+				IntervalView<FloatType> viewTransformed = Views.shear( extended, img, target, source );
+				
 				// BoundingBox holds max, and not max + 1; need to account for that by adding 1+1;
 				Assert.assertEquals( dim[ target ] + dim[ source ], boundingBox.corner2[ target ] + 2 );
 				
@@ -88,12 +99,20 @@ public class ShearTransformTest {
 				FinalInterval interval   = new FinalInterval( boundingBox.corner1, boundingBox.corner2 );
 				OutOfBounds<FloatType> i = extended.randomAccess();
 				Cursor<FloatType> t      = Views.flatIterable( Views.interval( transformed, interval ) ).cursor();
+				Cursor<FloatType> v      = Views.flatIterable( viewTransformed ).cursor();
 				
-				while( t.hasNext() ) {
+				Assert.assertEquals( interval.numDimensions(), viewTransformed.numDimensions() );
+				for ( int d = 0; d < interval.numDimensions(); ++d )
+					Assert.assertEquals( interval.dimension( d ), viewTransformed.dimension( d ) );
+				
+				while( t.hasNext() )
+				{
 					t.fwd();
+					v.fwd();
 					i.setPosition( t );
 					i.setPosition( i.getLongPosition( target ) - i.getLongPosition( source ), target );
 					Assert.assertEquals( i.get().get(), t.get().get(), 0.0f );
+					Assert.assertEquals( t.get().get(), v.get().get(), 0.0f );
 				}
 				
 			}
@@ -102,9 +121,12 @@ public class ShearTransformTest {
 	
 	
 	@Test
-	public void testInverseTransform() {
-		for ( int source = 0; source < numDimensions; ++source ) {
-			for ( int target = 0; target < numDimensions; ++ target ) {
+	public void testInverseTransform() 
+	{
+		for ( int source = 0; source < numDimensions; ++source )
+		{
+			for ( int target = 0; target < numDimensions; ++ target )
+			{
 				if ( target == source ) continue;
 				
 				ShearTransform tf = new ShearTransform( numDimensions, target, source );
@@ -114,6 +136,8 @@ public class ShearTransformTest {
 				BoundingBox boundingBox = new BoundingBox( img );
 				iv.transform( boundingBox );
 				
+				IntervalView<FloatType> viewTransformed = Views.unshear( extended, img, target, source );
+				
 				// BoundingBox holds max, and not max + 1; need to account for that by subtracting 1 (zero stays the same);
 				Assert.assertEquals( zero[ target ] - dim[ source ], boundingBox.corner1[ target ] - 1 );
 				
@@ -121,17 +145,23 @@ public class ShearTransformTest {
 				FinalInterval interval   = new FinalInterval( boundingBox.corner1, boundingBox.corner2 );
 				OutOfBounds<FloatType> i = extended.randomAccess();
 				Cursor<FloatType> t      = Views.flatIterable( Views.interval( transformed, interval ) ).cursor();
+				Cursor<FloatType> v      = Views.flatIterable( viewTransformed ).cursor();
 				
-				while( t.hasNext() ) {
+				Assert.assertEquals( interval.numDimensions(), viewTransformed.numDimensions() );
+				for ( int d = 0; d < interval.numDimensions(); ++d )
+					Assert.assertEquals( interval.dimension( d ), viewTransformed.dimension( d ) );
+				
+				while( t.hasNext() )
+				{
 					t.fwd();
+					v.fwd();
 					i.setPosition( t );
 					i.setPosition( i.getLongPosition( target ) + i.getLongPosition( source ), target );
 					Assert.assertEquals( i.get().get(), t.get().get(), 0.0f );
+					Assert.assertEquals( t.get().get(), v.get().get(), 0.0f );
 				}
 				
 			}
 		}
 	}
-	
-
 }
