@@ -17,7 +17,7 @@ import org.junit.Test;
  * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org>
  *
  */
-public class AbstractPerumtationTransformTest
+public class AbstractPermutationTransformTest
 {
 
 	/**
