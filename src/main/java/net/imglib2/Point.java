@@ -200,6 +200,24 @@ public class Point extends AbstractLocalizable implements Positionable
 		return sb.toString();
 	}
 
+	@Override
+	public boolean equals( Object obj )
+	{
+		if ( obj instanceof RealLocalizable && ( ( RealLocalizable ) obj ).numDimensions() == numDimensions() )
+		{
+			final RealLocalizable asLocalizable = ( ( RealLocalizable ) obj );
+
+			for ( int d = 0; d < numDimensions(); d++ )
+			{
+				if ( asLocalizable.getDoublePosition( d ) != getDoublePosition( d ) )
+					return false;
+			}
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Create a point that stores its coordinates in the provided position
 	 * array.
