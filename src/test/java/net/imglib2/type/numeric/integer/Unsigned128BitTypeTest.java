@@ -78,4 +78,30 @@ public class Unsigned128BitTypeTest
 			assertTrue( t.get().compareTo( b ) == 0 );
 		}
 	}
+
+	/**
+	 * Regression test that verifies small {@link BigInteger} values work as
+	 * expected when passed to
+	 * {@link Unsigned128BitType#Unsigned128BitType(BigInteger)}.
+	 */
+	@Test
+	public void testSmallBigIntegerValues()
+	{
+		final BigInteger b = BigInteger.valueOf( 329l );
+		final Unsigned128BitType u = new Unsigned128BitType( b );
+
+		assertEquals( b, u.get() );
+	}
+
+	/**
+	 * Tests {@link Unsigned128BitType#equals(Object)}.
+	 */
+	@Test
+	public void testEquals()
+	{
+		final UnsignedIntType i = new UnsignedIntType( 127l );
+		final Unsigned128BitType b = new Unsigned128BitType( BigInteger.valueOf( 908742l ) );
+
+		assertFalse( i.equals( b ) );
+	}
 }
