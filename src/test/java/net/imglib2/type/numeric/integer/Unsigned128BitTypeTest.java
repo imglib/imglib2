@@ -59,7 +59,7 @@ public class Unsigned128BitTypeTest
 	}
 
 	/**
-	 * Test method for {@link net.imglib2.type.numeric.integer.Unsigned128BitType}.
+	 * Tests {@link Unsigned128BitType#set(BigInteger)} with random values.
 	 */
 	@Test
 	public void testSetRandom()
