@@ -142,34 +142,22 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 		bytes[15] = (byte)((lower >>>  8) & 0xffL);
 		bytes[16] = (byte) (lower         & 0xffL);
 	}
-	
+
 	/** The first byte is the most significant byte, like in {@link BigInteger#toByteArray()}.
 	 * Only the last 16 bytes are read, if there are more. */
 	public void set( final byte[] bytes ) {
 		final int k = i * 2;
-		int b = bytes.length -1;
-		int cut = b - 8;
-		long u = 0;
-
-		// Set lower
-		if ( b > cut ) {
-			for (int p = 0; b > cut; --b, ++p) {
-				u |= ( bytes[ b ] & 0xffL ) << ( p * 8 );
+		int b = bytes.length - 1;
+		for ( int offset = 0; offset < 2; ++offset ) {
+			final int cut = Math.max( -1, b - 8 );
+			long u = 0;
+			for ( int p = 0; b > cut; --b, p += 8 ) {
+				u |= ( bytes[ b ] & 0xffL ) << p;
 			}
+			dataAccess.setValue( k + offset, u );
 		}
-		dataAccess.setValue( k, u );
-
-		// Set upper
-		u = 0;
-		cut = Math.max( -1, cut - 8 );
-		if ( b > cut ) {
-			for (int p = 0; b > cut; --b, ++p) {
-				u |= ( bytes[ b ] & 0xffL ) << ( p * 8 );
-			}
-		}
-		dataAccess.setValue( k + 1, u );
 	}
-	
+
 	public BigInteger get() {
 		final int k = i * 2;
 		intoBytes( dataAccess.getValue( k ), dataAccess.getValue( k + 1 ) );
