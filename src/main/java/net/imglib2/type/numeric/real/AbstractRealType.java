@@ -132,7 +132,7 @@ public abstract class AbstractRealType< T extends AbstractRealType< T >> extends
 	@Override
 	public boolean equals( final Object o )
 	{
-		if ( ! (o instanceof RealType) )
+		if ( !getClass().isInstance(o) )
 			return false;
 		@SuppressWarnings("unchecked")
 		final T t = (T) o;
