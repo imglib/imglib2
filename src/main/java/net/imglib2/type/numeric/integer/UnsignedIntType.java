@@ -57,7 +57,7 @@ public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 	// this is the constructor if you want it to be a variable
 	public UnsignedIntType( final long value )
 	{
-		super( getCodedSignedIntChecked( value ) );
+		super( getCodedSignedInt( value ) );
 	}
 
 	// this is the constructor if you want to specify the dataAccess

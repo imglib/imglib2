@@ -57,7 +57,7 @@ public class UnsignedShortType extends GenericShortType< UnsignedShortType >
 	// this is the constructor if you want it to be a variable
 	public UnsignedShortType( final int value )
 	{
-		super( getCodedSignedShortChecked( value ) );
+		super( getCodedSignedShort( value ) );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
