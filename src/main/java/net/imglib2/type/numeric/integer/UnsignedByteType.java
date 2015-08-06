@@ -57,7 +57,7 @@ public class UnsignedByteType extends GenericByteType< UnsignedByteType >
 	// this is the constructor if you want it to be a variable
 	public UnsignedByteType( final int value )
 	{
-		super( getCodedSignedByteChecked( value ) );
+		super( getCodedSignedByte( value ) );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
