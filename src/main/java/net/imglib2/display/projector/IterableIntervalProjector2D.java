@@ -140,10 +140,10 @@ public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D
 			final RandomAccess< A > sourceRandomAccess = source.randomAccess( sourceInterval );
 			sourceRandomAccess.setPosition( position );
 
-			final long cr = -target.dimension( dimX );
+			final long cr = -target.dimension( X );
 
-			final long width = target.dimension( dimX );
-			final long height = target.dimension( dimY );
+			final long width = target.dimension( X );
+			final long height = target.dimension( Y );
 
 			sourceRandomAccess.setPosition( min );
 			for ( long y = 0; y < height; ++y )
