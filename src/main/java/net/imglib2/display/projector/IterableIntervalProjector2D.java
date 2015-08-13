@@ -73,10 +73,6 @@ public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D
 
 	private final int dimY;
 
-	protected final int X = 0;
-
-	protected final int Y = 1;
-
 	/**
 	 * creates a new 2D projector that samples a plain in the dimensions dimX,
 	 * dimY.
@@ -111,10 +107,10 @@ public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D
 		for ( int d = 0; d < position.length; ++d )
 			min[ d ] = max[ d ] = position[ d ];
 
-		min[ dimX ] = target.min( X );
-		min[ dimY ] = target.min( Y );
-		max[ dimX ] = target.max( X );
-		max[ dimY ] = target.max( Y );
+		min[ dimX ] = target.min( 0 );
+		min[ dimY ] = target.min( 1 );
+		max[ dimX ] = target.max( 0 );
+		max[ dimY ] = target.max( 1 );
 
 		// TODO: this is ugly, but the only way to make sure, that iteration
 		// order fits in the case of one sized dims. Tobi?
@@ -140,10 +136,10 @@ public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D
 			final RandomAccess< A > sourceRandomAccess = source.randomAccess( sourceInterval );
 			sourceRandomAccess.setPosition( position );
 
-			final long cr = -target.dimension( dimX );
+			final long cr = -target.dimension( 0 );
 
-			final long width = target.dimension( dimX );
-			final long height = target.dimension( dimY );
+			final long width = target.dimension( 0 );
+			final long height = target.dimension( 1 );
 
 			sourceRandomAccess.setPosition( min );
 			for ( long y = 0; y < height; ++y )
@@ -169,8 +165,8 @@ public class IterableIntervalProjector2D< A, B > extends AbstractProjector2D
 			while ( targetCursor.hasNext() )
 			{
 				final B b = targetCursor.next();
-				sourceRandomAccess.setPosition( targetCursor.getLongPosition( X ), dimX );
-				sourceRandomAccess.setPosition( targetCursor.getLongPosition( Y ), dimY );
+				sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), dimX );
+				sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), dimY );
 
 				converter.convert( sourceRandomAccess.get(), b );
 			}

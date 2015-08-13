@@ -79,10 +79,10 @@ public class Volatile2DRandomAccessibleProjector< T, A extends Volatile< T >, B 
 		for ( int d = 0; d < position.length; ++d )
 			min[ d ] = max[ d ] = position[ d ];
 
-		min[ X ] = target.min( X );
-		min[ Y ] = target.min( Y );
-		max[ X ] = target.max( X );
-		max[ Y ] = target.max( Y );
+		min[ 0 ] = target.min( 0 );
+		min[ 1 ] = target.min( 1 );
+		max[ 0 ] = target.max( 0 );
+		max[ 1 ] = target.max( 1 );
 
 		final IterableInterval< A > srcIterable = Views.iterable( Views.interval( source, new FinalInterval( min, max ) ) );
 		final Cursor< B > targetCursor = target.localizingCursor();
@@ -103,8 +103,8 @@ public class Volatile2DRandomAccessibleProjector< T, A extends Volatile< T >, B 
 			while ( targetCursor.hasNext() )
 			{
 				final B b = targetCursor.next();
-				sourceRandomAccess.setPosition( targetCursor.getLongPosition( X ), X );
-				sourceRandomAccess.setPosition( targetCursor.getLongPosition( Y ), Y );
+				sourceRandomAccess.setPosition( targetCursor.getLongPosition( 0 ), 0 );
+				sourceRandomAccess.setPosition( targetCursor.getLongPosition( 1 ), 1 );
 
 				converter.convert( sourceRandomAccess.get(), b );
 			}
