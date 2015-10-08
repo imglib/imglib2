@@ -37,7 +37,6 @@ import java.util.Iterator;
 
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
-import net.imglib2.IterableRealInterval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealPositionable;
