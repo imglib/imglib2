@@ -35,9 +35,6 @@ package net.imglib2.img;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
 
 import net.imglib2.Cursor;
 import net.imglib2.Interval;

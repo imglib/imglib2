@@ -38,7 +38,6 @@ import java.util.Iterator;
 
 import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.IterableInterval;
-import net.imglib2.IterableRealInterval;
 
 /**
  * TODO
