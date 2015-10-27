@@ -34,6 +34,8 @@
 
 package net.imglib2.type.numeric.integer;
 
+import java.math.BigInteger;
+
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
@@ -209,8 +211,16 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	@Override
 	public void setInteger( final long f ) { set( f ); }
 
+	/** The maximum value that can be stored is {@code Math.pow( 2, 64 ) - 1},
+	 * which can't be represented with exact precision using a double */
 	@Override
-	public double getMaxValue() { return 0xffffffffL; }
+	public double getMaxValue() { return Math.pow( 2, 64 ) - 1; } //imprecise
+
+	/** Returns the true maximum value as a BigInteger, since it cannot be 
+	 * precisely represented as a {@code double}. */
+	public BigInteger getMaxBigIntegerValue() {
+		return new BigInteger("+FFFFFFFFFFFFFFFF", 16);
+	}
 	@Override
 	public double getMinValue()  { return 0; }
 
