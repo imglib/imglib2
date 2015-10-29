@@ -74,6 +74,14 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 		set( value );
 	}
 
+	// this is the constructor if you want it to be a variable 
+	public UnsignedLongType ( final BigInteger value )
+	{
+		img = null;
+		dataAccess = new LongArray ( 1 );
+		set( value.longValue() );
+	}
+
 	// this is the constructor if you want to specify the dataAccess
 	public UnsignedLongType( final LongAccess access )
 	{
