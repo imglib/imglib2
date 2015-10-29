@@ -3,6 +3,8 @@ package net.imglib2.type.numeric.integer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigInteger;
+
 import org.junit.Test;
 
 
@@ -76,6 +78,20 @@ public class UnsignedLongTypeTest {
 		u.set( 0L );
 		t.set( 698L );
 		assertTrue( u.compareTo( t ) <= -1 );
+
+	}
+
+	@Test 
+	public void testBIConstructor() {
+
+		BigInteger bi = new BigInteger("2", 10);
+		BigInteger sub = new BigInteger("1239847", 10);
+		bi = bi.pow(89);
+		bi = bi.subtract(sub);
+
+		final UnsignedLongType l = new UnsignedLongType(bi);
+
+		assertEquals(bi.longValue(), l.get() );
 
 	}
 
