@@ -203,6 +203,9 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	@Override
 	public String toString() { return "" + get(); }
 
+	/** This method returns the value of the UnsignedLongType as a signed long. 
+	 * To get the unsigned value, use {@link UnsignedLongType#getAsBigInteger()}.
+	 */
 	public long get() {
 		return dataAccess.getValue( i );
 	}
