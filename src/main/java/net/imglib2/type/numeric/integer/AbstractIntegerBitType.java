@@ -35,6 +35,8 @@
 
 package net.imglib2.type.numeric.integer;
 
+import java.math.BigInteger;
+
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.type.AbstractBitType;
@@ -117,10 +119,16 @@ public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>
 	public long getIntegerLong() { return get(); }
 
 	@Override
+	public BigInteger getBigInteger() { return BigInteger.valueOf( get() ); }
+
+	@Override
 	public void setInteger( final int f ) { set( f ); }
 
 	@Override
 	public void setInteger( final long f ) { set( f ); }
+
+	@Override
+	public void setBigInteger( final BigInteger b) { set( b.longValue() ); }
 
 	/** The maximum value that can be stored is {@code Math.pow(2, nBits) -1}. */
 	@Override

@@ -209,6 +209,16 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	public long get() {
 		return dataAccess.getValue( i );
 	}
+
+	/** This method returns the unsigned representation of this UnsignedLongType
+	 * as a {@code BigInteger}. */
+	@Override
+	public BigInteger getBigInteger ()
+	{
+		final BigInteger mask = new BigInteger("FFFFFFFFFFFFFFFF", 16);
+		return BigInteger.valueOf( get() ).and(mask);
+	}
+
 	public void set( final long value ) {
 		dataAccess.setValue( i, value);
 	}
@@ -221,6 +231,10 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	public void setInteger( final int f ) { set( f ); }
 	@Override
 	public void setInteger( final long f ) { set( f ); }
+	@Override
+	public void setBigInteger( final BigInteger b ) { set( b.longValue() ); }
+
+	public void set( final BigInteger bi ) { set( bi.longValue() ); }
 
 	/** The maximum value that can be stored is {@code Math.pow( 2, 64 ) - 1},
 	 * which can't be represented with exact precision using a double */

@@ -34,6 +34,8 @@
 
 package net.imglib2.type.logic;
 
+import java.math.BigInteger;
+
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
@@ -153,6 +155,12 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	}
 
 	@Override
+	public BigInteger getBigInteger()
+	{
+		return get() ? BigInteger.ONE : BigInteger.ZERO;
+	}
+
+	@Override
 	public void setInteger( final int f )
 	{
 		if ( f >= 1 )
@@ -166,6 +174,15 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	{
 		if ( f >= 1 )
 			set( true );
+		else
+			set( false );
+	}
+
+	@Override
+	public void setBigInteger(BigInteger b)
+	{
+		if ( b.compareTo(BigInteger.ZERO) > 0 )
+			set ( true );
 		else
 			set( false );
 	}

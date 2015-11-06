@@ -35,6 +35,8 @@
 
 package net.imglib2.type.numeric.integer;
 
+import java.math.BigInteger;
+
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
@@ -146,10 +148,19 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type<UnsignedVar
 	public long getIntegerLong() { return get(); }
 
 	@Override
+	public BigInteger getBigInteger() {
+		if( get() < 0 )
+			return BigInteger.valueOf(get()).add(new BigInteger("2", 10).pow(nBits));
+		return BigInteger.valueOf( get() ); }
+
+	@Override
 	public void setInteger( final int f ) { setBits( f ); }
 
 	@Override
 	public void setInteger( final long f ) { setBits( f ); }
+
+	@Override
+	public void setBigInteger(BigInteger b) { setBits( b.longValue() ); }
 
 	/** The maximum value that can be stored is {@code Math.pow(2, nBits) -1}. */
 	@Override

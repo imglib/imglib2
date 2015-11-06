@@ -34,6 +34,8 @@
 
 package net.imglib2.type.numeric.integer;
 
+import java.math.BigInteger;
+
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.IntAccess;
@@ -204,6 +206,12 @@ public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 	}
 
 	@Override
+	public BigInteger getBigInteger()
+	{
+		return BigInteger.valueOf( get() );
+	}
+
+	@Override
 	public void setInteger( final int f )
 	{
 		set( f );
@@ -213,6 +221,12 @@ public class UnsignedIntType extends GenericIntType< UnsignedIntType >
 	public void setInteger( final long f )
 	{
 		set( f );
+	}
+
+	@Override
+	public void setBigInteger(BigInteger b)
+	{
+		set( b.longValue() );
 	}
 
 	@Override

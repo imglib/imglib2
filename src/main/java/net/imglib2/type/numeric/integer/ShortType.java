@@ -34,6 +34,8 @@
 
 package net.imglib2.type.numeric.integer;
 
+import java.math.BigInteger;
+
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.ShortAccess;
@@ -115,6 +117,12 @@ public class ShortType extends GenericShortType< ShortType >
 	}
 
 	@Override
+	public BigInteger getBigInteger()
+	{
+		return BigInteger.valueOf( get() );
+	}
+
+	@Override
 	public void setInteger( final int f )
 	{
 		set( ( short ) f );
@@ -124,6 +132,12 @@ public class ShortType extends GenericShortType< ShortType >
 	public void setInteger( final long f )
 	{
 		set( ( short ) f );
+	}
+
+	@Override
+	public void setBigInteger( final BigInteger b)
+	{
+		set( b.shortValue() );
 	}
 
 	@Override
