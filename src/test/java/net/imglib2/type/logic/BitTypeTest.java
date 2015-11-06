@@ -36,13 +36,16 @@
  */
 package net.imglib2.type.logic;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigInteger;
 import java.util.Random;
 
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.basictypeaccess.array.LongArray;
+import net.imglib2.type.logic.BitType;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -103,6 +106,35 @@ public class BitTypeTest {
 			t.set( b );
 			assertTrue( t.get() == b );
 		}
+	}
+
+	/**
+	 * Tests that {@link BitType#getBigInteger()} returns the BigInteger 
+	 * representation of a BitType.
+	 */
+	@Test
+	public void testGetBigInteger() {
+
+		final BitType l = new BitType(false);
+
+		assertEquals( BigInteger.ZERO, l.getBigInteger() );
+	}
+
+	/**
+	 * Tests {@link BitType#setBigInteger(BigInteger)} and ensures that the value
+	 * returned is within BitType range.
+	 */
+	@Test
+	public void testSetBigInteger() {
+
+		final BitType ul = new BitType( false );
+
+		assertEquals( ul.get(), false );
+
+		final BigInteger bi = new BigInteger( "AAAAAA3141343BBBBBBBBBBB4134", 16 );
+		ul.setBigInteger( bi );
+
+		assertEquals( ul.get(), true );
 	}
 
 //	/**

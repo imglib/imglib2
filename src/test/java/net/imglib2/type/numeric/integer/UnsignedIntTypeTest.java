@@ -35,6 +35,8 @@ package net.imglib2.type.numeric.integer;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigInteger;
+
 import org.junit.Test;
 
 public class UnsignedIntTypeTest
@@ -83,5 +85,36 @@ public class UnsignedIntTypeTest
 		final UnsignedIntType u = new UnsignedIntType( l );
 
 		assertEquals( 4294965258L, u.get() );
+	}
+
+	/**
+	 * Test which verifies {@link UnsignedIntType#getBigInteger()} returns the
+	 * {@code BigInteger} representation of an UnsignedIntType.
+	 */
+	@Test
+	public void testGetBigInteger() {
+
+		final UnsignedIntType l = new UnsignedIntType( 120345l );
+		assertEquals( BigInteger.valueOf( 120345l ), l.getBigInteger() );
+
+		final UnsignedIntType l2 = new UnsignedIntType( -1209843l );
+		assertEquals( BigInteger.valueOf( 4293757453l ) , l2.getBigInteger() );
+	}
+
+	/**
+	 * Test which verifies {@link UnsignedIntType#setBigInteger(BigInteger)}
+	 * can set UnsignedIntTypes with a {@code BigInteger} and still return a
+	 * {@code long} value within the proper range.
+	 */
+	@Test
+	public void testSetBigInteger() {
+
+		final UnsignedIntType l = new UnsignedIntType( 6943 );
+
+		assertEquals( l.get(), 6943 );
+
+		final BigInteger bi = BigInteger.valueOf( 400984314908l );
+		l.setBigInteger( bi );
+		assertEquals( l.get(), 1552356380l );
 	}
 }
