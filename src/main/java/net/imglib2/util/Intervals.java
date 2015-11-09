@@ -84,6 +84,12 @@ public class Intervals
 	}
 
 	/**
+	 * THIS METHOD WILL BE REMOVED IN A FUTURE RELEASE. It was mistakenly
+	 * introduced, analogous to {@link #createMinSize(long...)} for integer
+	 * intervals. Dimension is not defined for {@link RealInterval} and
+	 * computing the <em>max</em> as <em>min + dim - 1</em> does not make sense.
+	 *
+	 * <p>
 	 * Create a {@link FinalRealInterval} from a parameter list comprising
 	 * minimum coordinates and size. For example, to create a 2D interval from
 	 * (10, 10) to (20, 40) use createMinSize( 10, 10, 11, 31 ).
@@ -95,6 +101,7 @@ public class Intervals
 	 *            specify the dimensions of the interval.
 	 * @return interval with the specified boundaries
 	 */
+	@Deprecated
 	public static FinalRealInterval createMinSizeReal( final double... minsize )
 	{
 		return FinalRealInterval.createMinSize( minsize );
