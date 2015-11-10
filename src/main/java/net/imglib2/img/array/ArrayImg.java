@@ -152,7 +152,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 
 		assert dimLength > 0;
 
-		return new ArraySubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
+		return new ArraySubIntervalCursor< T >( this, ( int ) offset( interval ), ( int ) size( interval, dimLength ) );
 	}
 
 	private long size( final Interval interval, final int length )
@@ -166,7 +166,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 		return size;
 	}
 
-	private long offset( final Interval interval, final int length )
+	private long offset( final Interval interval )
 	{
 		final int maxDim = numDimensions() - 1;
 		long i = interval.min( maxDim );
@@ -218,7 +218,7 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 
 		assert dimLength > 0;
 
-		return new ArrayLocalizingSubIntervalCursor< T >( this, ( int ) offset( interval, dimLength ), ( int ) size( interval, dimLength ) );
+		return new ArrayLocalizingSubIntervalCursor< T >( this, ( int ) offset( interval ), ( int ) size( interval, dimLength ) );
 	}
 
 	/**
