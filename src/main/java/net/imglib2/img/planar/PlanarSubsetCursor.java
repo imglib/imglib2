@@ -126,8 +126,8 @@ public class PlanarSubsetCursor<T extends NativeType<T>> extends
 		
 		this.offsetContainer = (int) offset(interval);
 		
-		this.planeSize = ((n > 1) ? ( int )interval.dimension( 1 ) : 1)
-				* ( int ) interval.dimension( 0 );
+		this.planeSize = ((n > 1) ? ( int )container.dimension( 1 ) : 1)
+				* ( int ) container.dimension( 0 );
 
 		this.lastIndexPlane = planeSize - 1;
 
