@@ -104,4 +104,37 @@ public class Unsigned128BitTypeTest
 
 		assertFalse( i.equals( b ) );
 	}
+
+	/**
+	 * Test which verifies {@link Unsigned128BitType#getBigInteger()} returns the
+	 * {@code BigInteger} representation of an Unsigned128BitType.
+	 */
+	@Test
+	public void testGetBigInteger() {
+
+		final BigInteger bi = new BigInteger("CAFE123498230498CAFE", 16);
+		final Unsigned128BitType l = new Unsigned128BitType( bi );
+		assertEquals( bi, l.getBigInteger() );
+
+		final BigInteger bi2 = BigInteger.valueOf( -279l );
+		final Unsigned128BitType l2 = new Unsigned128BitType( bi2 );
+		assertEquals( BigInteger.valueOf( 65257l ), l2.getBigInteger() );
+	}
+
+	/**
+	 * Test which verifies {@link Unsigned128BitType#setBigInteger(BigInteger)}
+	 * can set Unsigned128BitTypes with a {@code BigInteger} and still return an
+	 * {@code int} value.
+	 */
+	@Test
+	public void testSetBigInteger() {
+
+		final BigInteger b = new BigInteger("BABE09481BEEF", 16);
+		final Unsigned128BitType l = new Unsigned128BitType( b );
+		assertEquals( l.get(), b );
+
+		final BigInteger bi = BigInteger.valueOf( 7987431l );
+		l.setBigInteger( bi );
+		assertEquals( l.get(), bi );
+	}
 }

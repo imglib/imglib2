@@ -69,8 +69,10 @@ public abstract class AbstractBit64Type<T extends AbstractBit64Type<T>> extends 
 		
 		if ( nBits < 1 || nBits > 64 )
 			throw new IllegalArgumentException( "Supports only bit depths between 1 and 64, can't take " + nBits );
-
-		this.mask = ((long)(Math.pow(2, nBits) -1));
+		else if ( nBits == 64 )
+			this.mask = -1l; // all 1s
+		else
+			this.mask = ((long)(Math.pow(2, nBits) -1));
 		this.invMask = ~mask;
 	}
 

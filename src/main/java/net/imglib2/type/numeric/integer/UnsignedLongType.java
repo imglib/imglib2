@@ -34,6 +34,8 @@
 
 package net.imglib2.type.numeric.integer;
 
+import java.math.BigInteger;
+
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
@@ -70,6 +72,14 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 		img = null;
 		dataAccess = new LongArray( 1 );
 		set( value );
+	}
+
+	// this is the constructor if you want it to be a variable 
+	public UnsignedLongType ( final BigInteger value )
+	{
+		img = null;
+		dataAccess = new LongArray ( 1 );
+		set( value.longValue() );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
@@ -193,9 +203,22 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	@Override
 	public String toString() { return "" + get(); }
 
+	/** This method returns the value of the UnsignedLongType as a signed long. 
+	 * To get the unsigned value, use {@link UnsignedLongType#getAsBigInteger()}.
+	 */
 	public long get() {
 		return dataAccess.getValue( i );
 	}
+
+	/** This method returns the unsigned representation of this UnsignedLongType
+	 * as a {@code BigInteger}. */
+	@Override
+	public BigInteger getBigInteger ()
+	{
+		final BigInteger mask = new BigInteger("FFFFFFFFFFFFFFFF", 16);
+		return BigInteger.valueOf( get() ).and(mask);
+	}
+
 	public void set( final long value ) {
 		dataAccess.setValue( i, value);
 	}
@@ -208,9 +231,21 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	public void setInteger( final int f ) { set( f ); }
 	@Override
 	public void setInteger( final long f ) { set( f ); }
-
 	@Override
-	public double getMaxValue() { return 0xffffffffL; }
+	public void setBigInteger( final BigInteger b ) { set( b.longValue() ); }
+
+	public void set( final BigInteger bi ) { set( bi.longValue() ); }
+
+	/** The maximum value that can be stored is {@code Math.pow( 2, 64 ) - 1},
+	 * which can't be represented with exact precision using a double */
+	@Override
+	public double getMaxValue() { return Math.pow( 2, 64 ) - 1; } //imprecise
+
+	/** Returns the true maximum value as a BigInteger, since it cannot be 
+	 * precisely represented as a {@code double}. */
+	public BigInteger getMaxBigIntegerValue() {
+		return new BigInteger("+FFFFFFFFFFFFFFFF", 16);
+	}
 	@Override
 	public double getMinValue()  { return 0; }
 

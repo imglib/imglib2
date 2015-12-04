@@ -33,8 +33,10 @@
  */
 package net.imglib2.type.numeric.integer;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigInteger;
 import java.util.Random;
 
 import net.imglib2.img.array.ArrayImg;
@@ -71,5 +73,36 @@ public class Unsigned4BitTypeTest
 			t.set( v );
 			assertTrue( t.get() == v );
 		}
+	}
+
+	/**
+	 * Test which verifies {@link Unsigned4BitType#getBigInteger()} returns the
+	 * {@code BigInteger} representation of an Unsigned4BitType.
+	 */
+	@Test
+	public void testGetBigInteger() {
+
+		final Unsigned4BitType l = new Unsigned4BitType( 14l );
+		assertEquals( BigInteger.valueOf( 14l ), l.getBigInteger() );
+
+		final Unsigned4BitType l2 = new Unsigned4BitType( -7l );
+		assertEquals( BigInteger.valueOf( 9l ) , l2.getBigInteger() );
+	}
+
+	/**
+	 * Test which verifies {@link Unsigned4BitType#setBigInteger(BigInteger)}
+	 * can set Unsigned4BitType with a {@code BigInteger} and still return an
+	 * {@code int} value that is in the proper range.
+	 */
+	@Test
+	public void testSetBigInteger() {
+
+		final Unsigned4BitType l = new Unsigned4BitType( 4l );
+
+		assertEquals( l.get(), 4l );
+
+		final BigInteger bi = BigInteger.valueOf( 163l );
+		l.setBigInteger( bi );
+		assertEquals( l.get(), 3l );
 	}
 }

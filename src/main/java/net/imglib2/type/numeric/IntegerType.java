@@ -34,6 +34,8 @@
 
 package net.imglib2.type.numeric;
 
+import java.math.BigInteger;
+
 /**
  * TODO
  * 
@@ -44,7 +46,11 @@ public interface IntegerType< T extends IntegerType< T >> extends RealType< T >
 
 	public long getIntegerLong();
 
+	public BigInteger getBigInteger();
+
 	public void setInteger( int f );
 
 	public void setInteger( long f );
+
+	public void setBigInteger( BigInteger b );
 }

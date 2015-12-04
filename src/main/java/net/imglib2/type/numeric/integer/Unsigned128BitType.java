@@ -187,6 +187,11 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	}
 
 	@Override
+	public BigInteger getBigInteger() {
+		return get();
+	}
+
+	@Override
 	public void setInteger( final int value ) {
 		final int k = i * 2;
 		dataAccess.setValue( k, value );
@@ -198,6 +203,11 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 		final int k = i * 2;
 		dataAccess.setValue( k, value );
 		dataAccess.setValue( k + 1, 0 );
+	}
+
+	@Override
+	public void setBigInteger(BigInteger b) {
+		set( b );
 	}
 
 	/** The maximum value that can be stored is {@code Math.pow(2, 128) -1},
