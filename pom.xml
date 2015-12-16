@@ -177,7 +177,11 @@
 			<url>http://imagej.net/User:Mark</url>
 			<properties><id>mhl</id></properties>
 		</contributor>
-		<contributor><name>Nick Perry</name></contributor>
+		<contributor>
+			<name>Nick Perry</name>
+			<url>http://imagej.net/User:NicholasPerry</url>
+			<properties><id>nickp</id></properties>
+		</contributor>
 		<contributor>
 			<name>Dimiter Prodanov</name>
 			<properties><id>dprodanov</id></properties>
