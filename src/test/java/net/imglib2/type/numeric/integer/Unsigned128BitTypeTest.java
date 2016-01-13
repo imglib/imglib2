@@ -99,10 +99,35 @@ public class Unsigned128BitTypeTest
 	@Test
 	public void testEquals()
 	{
-		final UnsignedIntType i = new UnsignedIntType( 127l );
 		final Unsigned128BitType b = new Unsigned128BitType( BigInteger.valueOf( 908742l ) );
 
+		// non-matching types and values
+		final UnsignedIntType i = new UnsignedIntType( 127l );
+		assertFalse( b.equals( i ) );
 		assertFalse( i.equals( b ) );
+
+		// non-matching types
+		final UnsignedIntType i2 = new UnsignedIntType( 908742l );
+		assertFalse( b.equals( i2 ) );
+		assertFalse( i2.equals( b ) );
+
+		// non-matching values
+		final Unsigned128BitType i3 = new Unsigned128BitType( BigInteger.valueOf( 127l ) );
+		assertFalse( b.equals( i3 ) );
+		assertFalse( i3.equals( b ) );
+
+		// matching type and value
+		final Unsigned128BitType i4 = new Unsigned128BitType( BigInteger.valueOf( 908742l ) );
+		assertTrue( b.equals( i4 ) );
+		assertTrue( i4.equals( b ) );
+	}
+
+	/** Tests {@link Unsigned128BitType#hashCode()}. */
+	@Test
+	public void testHashCode()
+	{
+		final Unsigned128BitType b = new Unsigned128BitType( BigInteger.valueOf( 908742l ) );
+		assertEquals( 908742, b.hashCode() );
 	}
 
 	/**
@@ -137,4 +162,5 @@ public class Unsigned128BitTypeTest
 		l.setBigInteger( bi );
 		assertEquals( l.get(), bi );
 	}
+
 }
