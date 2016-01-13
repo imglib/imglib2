@@ -34,6 +34,7 @@
 package net.imglib2.type.numeric.integer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
@@ -105,4 +106,45 @@ public class Unsigned2BitTypeTest
 		l.setBigInteger( bi );
 		assertEquals( l.get(), 2l );
 	}
+
+	/**
+	 * Tests {@link Unsigned2BitType#equals(Object)}.
+	 */
+	@Test
+	public void testEquals()
+	{
+		final Unsigned2BitType b = new Unsigned2BitType( 3l );
+
+		// non-matching types and values
+		final UnsignedIntType i = new UnsignedIntType( 1l );
+		assertFalse( b.equals( i ) );
+		assertFalse( i.equals( b ) );
+
+		// non-matching types
+		final UnsignedIntType i2 = new UnsignedIntType( 3l );
+		assertFalse( b.equals( i2 ) );
+		assertFalse( i2.equals( b ) );
+
+		// non-matching values
+		final Unsigned2BitType i3 = new Unsigned2BitType( 1l );
+		assertFalse( b.equals( i3 ) );
+		assertFalse( i3.equals( b ) );
+
+		// matching type and value
+		final Unsigned2BitType i4 = new Unsigned2BitType( 3l );
+		assertTrue( b.equals( i4 ) );
+		assertTrue( i4.equals( b ) );
+	}
+
+
+	/** Tests {@link Unsigned2BitType#hashCode()}. */
+	@Test
+	public void testHashCode()
+	{
+		for (int i = 0; i < 4; i++) {
+			final Unsigned2BitType b = new Unsigned2BitType( i );
+			assertEquals( i, b.hashCode() );
+		}
+	}
+
 }

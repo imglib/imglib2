@@ -34,6 +34,7 @@
 package net.imglib2.type.numeric.integer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
@@ -105,4 +106,43 @@ public class Unsigned12BitTypeTest
 		l.setBigInteger( bi );
 		assertEquals( l.get(), 3974l );
 	}
+
+	/**
+	 * Tests {@link Unsigned12BitType#equals(Object)}.
+	 */
+	@Test
+	public void testEquals()
+	{
+		final Unsigned12BitType b = new Unsigned12BitType( 3526l );
+
+		// non-matching types and values
+		final UnsignedIntType i = new UnsignedIntType( 127l );
+		assertFalse( b.equals( i ) );
+		assertFalse( i.equals( b ) );
+
+		// non-matching types
+		final UnsignedIntType i2 = new UnsignedIntType( 3526l );
+		assertFalse( b.equals( i2 ) );
+		assertFalse( i2.equals( b ) );
+
+		// non-matching values
+		final Unsigned12BitType i3 = new Unsigned12BitType( 127l );
+		assertFalse( b.equals( i3 ) );
+		assertFalse( i3.equals( b ) );
+
+		// matching type and value
+		final Unsigned12BitType i4 = new Unsigned12BitType( 3526l );
+		assertTrue( b.equals( i4 ) );
+		assertTrue( i4.equals( b ) );
+	}
+
+
+	/** Tests {@link Unsigned12BitType#hashCode()}. */
+	@Test
+	public void testHashCode()
+	{
+		final Unsigned12BitType b = new Unsigned12BitType( 3526l );
+		assertEquals( 3526, b.hashCode() );
+	}
+
 }
