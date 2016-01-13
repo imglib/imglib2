@@ -122,6 +122,14 @@ public class Unsigned128BitTypeTest
 		assertTrue( i4.equals( b ) );
 	}
 
+	/** Tests {@link Unsigned128BitType#hashCode()}. */
+	@Test
+	public void testHashCode()
+	{
+		final Unsigned128BitType b = new Unsigned128BitType( BigInteger.valueOf( 908742l ) );
+		assertEquals( 908742, b.hashCode() );
+	}
+
 	/**
 	 * Test which verifies {@link Unsigned128BitType#getBigInteger()} returns the
 	 * {@code BigInteger} representation of an Unsigned128BitType.
