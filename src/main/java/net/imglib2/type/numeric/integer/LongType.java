@@ -39,51 +39,39 @@ import java.math.BigInteger;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
-import net.imglib2.util.Util;
 
 /**
  * TODO
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Mark Hiner
  */
-final public class LongType extends AbstractIntegerType< LongType > implements NativeType< LongType >
+final public class LongType extends GenericLongType<LongType>
 {
-	private int i = 0;
-
-	final protected NativeImg< ?, ? extends LongAccess > img;
-
-	// the DataAccess that holds the information
-	protected LongAccess dataAccess;
-
 	// this is the constructor if you want it to read from an array
-	public LongType( final NativeImg< ?, ? extends LongAccess > longStorage )
+	public LongType( final NativeImg< LongType, ? extends LongAccess > longStorage )
 	{
-		img = longStorage;
+		super( longStorage );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
 	public LongType( final LongAccess access )
 	{
-		img = null;
-		dataAccess = access;
+		super ( access );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public LongType( final long value )
 	{
-		img = null;
-		dataAccess = new LongArray( 1 );
-		set( value );
+		super( value );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public LongType()
 	{
-		this( 0 );
+		super( 0 );
 	}
 
 	@Override
@@ -99,12 +87,6 @@ final public class LongType extends AbstractIntegerType< LongType > implements N
 		container.setLinkedType( linkedType );
 
 		return container;
-	}
-
-	@Override
-	public void updateContainer( final Object c )
-	{
-		dataAccess = img.update( c );
 	}
 
 	@Override
@@ -154,7 +136,7 @@ final public class LongType extends AbstractIntegerType< LongType > implements N
 	}
 
 	@Override
-	public void setBigInteger(BigInteger b)
+	public void setBigInteger( BigInteger b )
 	{
 		set( b.longValue() );
 	}
@@ -169,42 +151,6 @@ final public class LongType extends AbstractIntegerType< LongType > implements N
 	public double getMinValue()
 	{
 		return Long.MIN_VALUE;
-	}
-
-	@Override
-	public void mul( final float c )
-	{
-		set( Util.round( get() * c ) );
-	}
-
-	@Override
-	public void mul( final double c )
-	{
-		set( Util.round( get() * c ) );
-	}
-
-	@Override
-	public void add( final LongType c )
-	{
-		set( get() + c.get() );
-	}
-
-	@Override
-	public void div( final LongType c )
-	{
-		set( get() / c.get() );
-	}
-
-	@Override
-	public void mul( final LongType c )
-	{
-		set( get() * c.get() );
-	}
-
-	@Override
-	public void sub( final LongType c )
-	{
-		set( get() - c.get() );
 	}
 
 	@Override
@@ -229,38 +175,6 @@ final public class LongType extends AbstractIntegerType< LongType > implements N
 	}
 
 	@Override
-	public void set( final LongType c )
-	{
-		set( c.get() );
-	}
-
-	@Override
-	public void setOne()
-	{
-		set( 1 );
-	}
-
-	@Override
-	public void setZero()
-	{
-		set( 0 );
-	}
-
-	@Override
-	public void inc()
-	{
-		long a = get();
-		set( ++a );
-	}
-
-	@Override
-	public void dec()
-	{
-		long a = get();
-		set( --a );
-	}
-
-	@Override
 	public LongType createVariable()
 	{
 		return new LongType( 0 );
@@ -270,50 +184,5 @@ final public class LongType extends AbstractIntegerType< LongType > implements N
 	public LongType copy()
 	{
 		return new LongType( get() );
-	}
-
-	@Override
-	public Fraction getEntitiesPerPixel() { return new Fraction(); }
-
-	@Override
-	public void updateIndex( final int index )
-	{
-		this.i = index;
-	}
-
-	@Override
-	public int getIndex()
-	{
-		return i;
-	}
-
-	@Override
-	public void incIndex()
-	{
-		++i;
-	}
-
-	@Override
-	public void incIndex( final int increment )
-	{
-		i += increment;
-	}
-
-	@Override
-	public void decIndex()
-	{
-		--i;
-	}
-
-	@Override
-	public void decIndex( final int decrement )
-	{
-		i -= decrement;
-	}
-
-	@Override
-	public int getBitsPerPixel()
-	{
-		return 64;
 	}
 }
