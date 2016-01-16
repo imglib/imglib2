@@ -40,7 +40,6 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.array.LongArray;
-import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
@@ -50,34 +49,26 @@ import net.imglib2.util.Util;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Albert Cardona
+ * @author Mark Hiner
  */
-public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> implements NativeType<UnsignedLongType>
+public class UnsignedLongType extends GenericLongType<UnsignedLongType>
 {
-	private int i = 0;
-
-	final protected NativeImg<UnsignedLongType, ? extends LongAccess> img;
-
-	// the DataAccess that holds the information
-	protected LongAccess dataAccess;
-	
 	// this is the constructor if you want it to read from an array
 	public UnsignedLongType( final NativeImg<UnsignedLongType, ? extends LongAccess> img )
 	{
-		this.img = img;
+		super( img );
 	}
 
 	// this is the constructor if you want it to be a variable
 	public UnsignedLongType( final long value )
 	{
-		img = null;
-		dataAccess = new LongArray( 1 );
-		set( value );
+		super( value );
 	}
 
 	// this is the constructor if you want it to be a variable 
 	public UnsignedLongType ( final BigInteger value )
 	{
-		img = null;
+		super( ( NativeImg<UnsignedLongType, ? extends LongAccess> )null );
 		dataAccess = new LongArray ( 1 );
 		set( value.longValue() );
 	}
@@ -85,8 +76,7 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	// this is the constructor if you want to specify the dataAccess
 	public UnsignedLongType( final LongAccess access )
 	{
-		img = null;
-		dataAccess = access;
+		super( access );
 	}
 
 	// this is the constructor if you want it to be a variable
@@ -181,7 +171,15 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 	{
 		set( get() - c.get() );
 	}
-
+	
+	@Override
+	public int hashCode()
+	{
+		// NB: Use the same hash code as java.lang.Long#hashCode().
+		final long value = get();
+		return (int) (value ^ (value >>> 32));
+	}
+	
 	@Override
 	public void setOne() { set( 1 ); }
 
@@ -278,36 +276,4 @@ public class UnsignedLongType extends AbstractIntegerType<UnsignedLongType> impl
 
 	@Override
 	public UnsignedLongType copy() { return new UnsignedLongType( get() ); }
-
-	@Override
-	public int getBitsPerPixel() {
-		return 64;
-	}
-
-	@Override
-	public Fraction getEntitiesPerPixel() {
-		return new Fraction();
-	}
-
-	@Override
-	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
-
-
-	@Override
-	public void updateIndex( final int index ) { i = index; }
-
-	@Override
-	public int getIndex() { return i; }
-
-	@Override
-	public void incIndex() { ++i; }
-
-	@Override
-	public void incIndex( final int increment ) { i += increment; }
-
-	@Override
-	public void decIndex() { --i; }
-
-	@Override
-	public void decIndex( final int decrement ) { i -= decrement; }
 }
