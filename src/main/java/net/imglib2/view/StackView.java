@@ -33,6 +33,7 @@
  */
 package net.imglib2.view;
 
+import java.util.Arrays;
 import java.util.List;
 
 import net.imglib2.AbstractInterval;
@@ -146,6 +147,26 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 				new DefaultRA< T >( slices, interval );
 	}
 
+	/**
+	 * Get the source slices that are stacked in this {@link StackView}. These
+	 * are {@code (numDimensions() - 1)} dimensional
+	 * {@link RandomAccessibleInterval}s.
+	 *
+	 * @return list of source hyperslices.
+	 */
+	public List< RandomAccessibleInterval< T > > getSourceSlices()
+	{
+		return Arrays.asList( slices );
+	}
+
+	/**
+	 * @return {@link StackAccessMode} defined in constructor
+	 */
+	public StackAccessMode getStackAccessMode()
+	{
+		return stackAccessMode;
+	}
+	
 	/**
 	 * A {@link RandomAccess} on a {@link StackView}. It keeps a list of
 	 * {@link RandomAccess}es on all constituent hyper-slices of the

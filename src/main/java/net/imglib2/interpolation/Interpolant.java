@@ -75,4 +75,17 @@ final public class Interpolant< T, F extends EuclideanSpace > implements RealRan
 	{
 		return factory.create( source, interval );
 	}
+	
+	public F getSource()
+	{
+		return source;
+	}
+	
+	/**
+	 * @return {@link InterpolatorFactory} used for interpolation
+	 */
+	public InterpolatorFactory< T, F > getInterpolatorFactory()
+	{
+		return factory;
+	}
 }

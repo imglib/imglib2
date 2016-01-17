@@ -270,4 +270,17 @@ public class SubsampleView< T > implements RandomAccessible< T >
 	{
 		return new SubsampleRandomAccess( interval );
 	}
+	
+	public RandomAccessible< T > getSource()
+	{
+		return source;
+	}
+
+	/**
+	 * @return sub-sampling steps
+	 */
+	public long[] getSteps()
+	{
+		return steps.clone();
+	}
 }
