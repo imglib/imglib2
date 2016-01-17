@@ -68,7 +68,10 @@ public class ConvertedRandomAccessibleInterval< A, B extends Type< B > > extends
 	{
 		return new ConvertedRandomAccess< A, B >( sourceInterval.randomAccess( interval ), converter, converted );
 	}
-	
+
+	/**
+	 * @return an instance of the destination {@link Type}.
+	 */
 	public B getDestinationType()
 	{
 		return converted.copy();
