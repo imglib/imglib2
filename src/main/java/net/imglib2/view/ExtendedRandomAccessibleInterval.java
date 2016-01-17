@@ -88,4 +88,9 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 	{
 		return source;
 	}
+	
+	public OutOfBoundsFactory< T, ? super F > getOutOfBoundsFactory()
+	{
+		return factory;
+	}
 }

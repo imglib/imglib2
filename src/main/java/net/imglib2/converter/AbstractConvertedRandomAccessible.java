@@ -56,9 +56,15 @@ abstract public class AbstractConvertedRandomAccessible< A, B > implements Rando
 		return source.numDimensions();
 	}
 
+	public RandomAccessible< A > getSource()
+	{
+		return source;
+	}
+
 	@Override
 	abstract public AbstractConvertedRandomAccess< A, B > randomAccess();
 
 	@Override
 	abstract public AbstractConvertedRandomAccess< A, B > randomAccess( final Interval interval );
+	
 }

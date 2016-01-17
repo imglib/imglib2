@@ -68,4 +68,14 @@ public class ConvertedRandomAccessible< A, B extends Type< B > > extends Abstrac
 	{
 		return new ConvertedRandomAccess< A, B >( source.randomAccess( interval ), converter, converted );
 	}
+	
+	public B getDestinationType()
+	{
+		return converted.copy();
+	}
+
+	public Converter< ? super A, ? super B > getConverter()
+	{
+		return converter;
+	}
 }
