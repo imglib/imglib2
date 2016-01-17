@@ -42,6 +42,7 @@ import net.imglib2.type.numeric.NumericType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
+ * Performs multi-linear interpolation.
  * 
  * @param <T>
  * 
