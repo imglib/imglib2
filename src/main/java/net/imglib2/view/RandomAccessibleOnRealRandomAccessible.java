@@ -41,6 +41,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealRandomAccess;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.View;
 
 /**
  * {@link RandomAccessible} on a {@link RealRandomAccessible}. For optimal
@@ -53,7 +54,7 @@ import net.imglib2.RealRandomAccessible;
  * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclideanSpace implements RandomAccessible< T >
+public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclideanSpace implements RandomAccessible< T >, View
 {
 	final protected RealRandomAccessible< T > target;
 

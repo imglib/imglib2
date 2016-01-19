@@ -43,6 +43,7 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.View;
 import net.imglib2.view.iteration.IterableTransformBuilder;
 
 /**
@@ -52,7 +53,7 @@ import net.imglib2.view.iteration.IterableTransformBuilder;
  * created through the {@link Views#interval(RandomAccessible, Interval)} method
  * instead.
  */
-public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, IterableInterval< T >
+public class IntervalView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, IterableInterval< T >, View
 {
 	/**
 	 * The source {@link RandomAccessible}.
