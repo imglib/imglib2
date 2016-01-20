@@ -212,6 +212,11 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 			return n;
 		}
 	}
+	
+	public RealRandomAccessible< T > getTarget()
+	{
+	    return target;
+	}
 
 	public RandomAccessibleOnRealRandomAccessible( final RealRandomAccessible< T > target )
 	{
