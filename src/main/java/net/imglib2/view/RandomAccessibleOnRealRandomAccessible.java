@@ -55,149 +55,149 @@ import net.imglib2.RealRandomAccessible;
  */
 public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclideanSpace implements RandomAccessible< T >
 {
-	final protected RealRandomAccessible< T > target;
+	final protected RealRandomAccessible< T > source;
 
 	final protected class RandomAccessOnRealRandomAccessible implements RandomAccess< T >
 	{
-		final protected RealRandomAccess< T > targetAccess;
+		final protected RealRandomAccess< T > sourceAccess;
 
-		public RandomAccessOnRealRandomAccessible( final RealRandomAccess< T > targetAccess )
+		public RandomAccessOnRealRandomAccessible( final RealRandomAccess< T > sourceAccess )
 		{
-			this.targetAccess = targetAccess;
+			this.sourceAccess = sourceAccess;
 		}
 
 		@Override
 		public void localize( final int[] position )
 		{
 			for ( int d = 0; d < n; ++d )
-				position[ d ] = ( int ) Math.round( targetAccess.getDoublePosition( d ) );
+				position[ d ] = ( int ) Math.round( sourceAccess.getDoublePosition( d ) );
 		}
 
 		@Override
 		public void localize( final long[] position )
 		{
 			for ( int d = 0; d < n; ++d )
-				position[ d ] = Math.round( targetAccess.getDoublePosition( d ) );
+				position[ d ] = Math.round( sourceAccess.getDoublePosition( d ) );
 		}
 
 		@Override
 		public int getIntPosition( final int d )
 		{
-			return ( int ) Math.round( targetAccess.getDoublePosition( d ) );
+			return ( int ) Math.round( sourceAccess.getDoublePosition( d ) );
 		}
 
 		@Override
 		public long getLongPosition( final int d )
 		{
-			return Math.round( targetAccess.getDoublePosition( d ) );
+			return Math.round( sourceAccess.getDoublePosition( d ) );
 		}
 
 		@Override
 		public void localize( final float[] position )
 		{
-			targetAccess.localize( position );
+			sourceAccess.localize( position );
 		}
 
 		@Override
 		public void localize( final double[] position )
 		{
-			targetAccess.localize( position );
+			sourceAccess.localize( position );
 		}
 
 		@Override
 		public float getFloatPosition( final int d )
 		{
-			return targetAccess.getFloatPosition( d );
+			return sourceAccess.getFloatPosition( d );
 		}
 
 		@Override
 		public double getDoublePosition( final int d )
 		{
-			return targetAccess.getDoublePosition( d );
+			return sourceAccess.getDoublePosition( d );
 		}
 
 		@Override
 		public void fwd( final int d )
 		{
-			targetAccess.fwd( d );
+			sourceAccess.fwd( d );
 		}
 
 		@Override
 		public void bck( final int d )
 		{
-			targetAccess.bck( d );
+			sourceAccess.bck( d );
 		}
 
 		@Override
 		public void move( final int distance, final int d )
 		{
-			targetAccess.move( distance, d );
+			sourceAccess.move( distance, d );
 		}
 
 		@Override
 		public void move( final long distance, final int d )
 		{
-			targetAccess.move( distance, d );
+			sourceAccess.move( distance, d );
 		}
 
 		@Override
 		public void move( final Localizable localizable )
 		{
-			targetAccess.move( localizable );
+			sourceAccess.move( localizable );
 		}
 
 		@Override
 		public void move( final int[] distance )
 		{
-			targetAccess.move( distance );
+			sourceAccess.move( distance );
 		}
 
 		@Override
 		public void move( final long[] distance )
 		{
-			targetAccess.move( distance );
+			sourceAccess.move( distance );
 		}
 
 		@Override
 		public void setPosition( final Localizable localizable )
 		{
-			targetAccess.setPosition( localizable );
+			sourceAccess.setPosition( localizable );
 		}
 
 		@Override
 		public void setPosition( final int[] position )
 		{
-			targetAccess.setPosition( position );
+			sourceAccess.setPosition( position );
 		}
 
 		@Override
 		public void setPosition( final long[] position )
 		{
-			targetAccess.setPosition( position );
+			sourceAccess.setPosition( position );
 		}
 
 		@Override
 		public void setPosition( final int position, final int d )
 		{
-			targetAccess.setPosition( position, d );
+			sourceAccess.setPosition( position, d );
 		}
 
 		@Override
 		public void setPosition( final long position, final int d )
 		{
-			targetAccess.setPosition( position, d );
+			sourceAccess.setPosition( position, d );
 		}
 
 		@Override
 		public T get()
 		{
-			return targetAccess.get();
+			return sourceAccess.get();
 		}
 
 		@Override
 		public RandomAccessOnRealRandomAccessible copy()
 		{
-			return new RandomAccessOnRealRandomAccessible( targetAccess.copyRealRandomAccess() );
+			return new RandomAccessOnRealRandomAccessible( sourceAccess.copyRealRandomAccess() );
 		}
 
 		@Override
@@ -212,27 +212,27 @@ public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclide
 			return n;
 		}
 	}
-	
-	public RealRandomAccessible< T > getTarget()
+
+	public RealRandomAccessible< T > getSource()
 	{
-	    return target;
+	    return source;
 	}
 
-	public RandomAccessibleOnRealRandomAccessible( final RealRandomAccessible< T > target )
+	public RandomAccessibleOnRealRandomAccessible( final RealRandomAccessible< T > source )
 	{
-		super( target.numDimensions() );
-		this.target = target;
+		super( source.numDimensions() );
+		this.source = source;
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess()
 	{
-		return new RandomAccessOnRealRandomAccessible( target.realRandomAccess() );
+		return new RandomAccessOnRealRandomAccessible( source.realRandomAccess() );
 	}
 
 	@Override
 	public RandomAccess< T > randomAccess( final Interval interval )
 	{
-		return new RandomAccessOnRealRandomAccessible( target.realRandomAccess( interval ) );
+		return new RandomAccessOnRealRandomAccessible( source.realRandomAccess( interval ) );
 	}
 }
