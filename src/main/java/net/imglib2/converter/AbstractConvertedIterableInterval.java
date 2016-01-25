@@ -38,12 +38,13 @@ import java.util.Iterator;
 
 import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.IterableInterval;
+import net.imglib2.View;
 
 /**
  * TODO
  * 
  */
-abstract public class AbstractConvertedIterableInterval< A, B > extends AbstractWrappedInterval< IterableInterval< A > > implements IterableInterval< B >
+abstract public class AbstractConvertedIterableInterval< A, B > extends AbstractWrappedInterval< IterableInterval< A > > implements IterableInterval< B >, View
 {
 	public AbstractConvertedIterableInterval( final IterableInterval< A > source )
 	{

@@ -35,6 +35,7 @@
 package net.imglib2.view;
 
 import net.imglib2.RandomAccessible;
+import net.imglib2.View;
 import net.imglib2.transform.Transform;
 
 /**
@@ -44,7 +45,7 @@ import net.imglib2.transform.Transform;
  * 
  * @author Tobias Pietzsch
  */
-public interface TransformedRandomAccessible< T > extends RandomAccessible< T >
+public interface TransformedRandomAccessible< T > extends RandomAccessible< T >, View
 {
 	/**
 	 * Get the source of the TransformedRandomAccessible. This is the next

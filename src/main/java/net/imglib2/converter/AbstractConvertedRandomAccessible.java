@@ -36,12 +36,13 @@ package net.imglib2.converter;
 
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
+import net.imglib2.View;
 
 /**
  * TODO
  * 
  */
-abstract public class AbstractConvertedRandomAccessible< A, B > implements RandomAccessible< B >
+abstract public class AbstractConvertedRandomAccessible< A, B > implements RandomAccessible< B >, View
 {
 	final protected RandomAccessible< A > source;
 

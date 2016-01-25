@@ -37,6 +37,7 @@ import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
+import net.imglib2.View;
 
 /**
  * {@link SubsampleView} is a view that provides access to only every
@@ -49,7 +50,7 @@ import net.imglib2.RandomAccessible;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class SubsampleView< T > implements RandomAccessible< T >
+public class SubsampleView< T > implements RandomAccessible< T >, View
 {
 	final protected RandomAccessible< T > source;
 

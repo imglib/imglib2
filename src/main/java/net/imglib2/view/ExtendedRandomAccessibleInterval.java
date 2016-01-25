@@ -38,6 +38,7 @@ import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.View;
 import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.util.Intervals;
@@ -51,7 +52,7 @@ import net.imglib2.util.Intervals;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch
  */
-final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >
+final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >, View
 {
 	final protected F source;
 

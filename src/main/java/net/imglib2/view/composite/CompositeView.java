@@ -37,6 +37,7 @@ import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
+import net.imglib2.View;
 
 /**
  * {@link CompositeView} collapses the trailing dimension of a
@@ -46,7 +47,7 @@ import net.imglib2.RandomAccessible;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class CompositeView< T, C extends Composite< T > > implements RandomAccessible< C >
+public class CompositeView< T, C extends Composite< T > > implements RandomAccessible< C >, View
 {
 	final protected CompositeFactory< T, C > compositeFactory;
 

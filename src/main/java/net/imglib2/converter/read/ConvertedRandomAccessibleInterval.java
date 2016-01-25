@@ -37,6 +37,7 @@ package net.imglib2.converter.read;
 import net.imglib2.AbstractWrappedInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.View;
 import net.imglib2.converter.Converter;
 import net.imglib2.type.Type;
 
@@ -44,7 +45,7 @@ import net.imglib2.type.Type;
  * TODO
  * 
  */
-public class ConvertedRandomAccessibleInterval< A, B extends Type< B > > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< B >
+public class ConvertedRandomAccessibleInterval< A, B extends Type< B > > extends AbstractWrappedInterval< RandomAccessibleInterval< A > > implements RandomAccessibleInterval< B >, View
 {
 	final protected Converter< ? super A, ? super B > converter;
 
