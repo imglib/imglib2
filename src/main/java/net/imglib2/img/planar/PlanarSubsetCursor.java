@@ -48,9 +48,10 @@ import net.imglib2.util.Intervals;
  * @author Stephan Saalfeld
  * @author Christian Dietz
  */
-public class PlanarSubsetCursor<T extends NativeType<T>> extends
-		AbstractCursorInt<T> implements PlanarImg.PlanarContainerSampler {
-	
+public class PlanarSubsetCursor< T extends NativeType< T > > extends
+		AbstractCursorInt< T > implements PlanarImg.PlanarContainerSampler
+{
+
 	/**
 	 * Access to the type
 	 */
@@ -59,13 +60,13 @@ public class PlanarSubsetCursor<T extends NativeType<T>> extends
 	/**
 	 * Container
 	 */
-	protected final PlanarImg<T, ?> container;
+	protected final PlanarImg< T, ? > container;
 
 	/**
 	 * Last index in plane
 	 */
 	protected final int lastIndexPlane;
-	
+
 	/**
 	 * Current slice index
 	 */
@@ -97,8 +98,9 @@ public class PlanarSubsetCursor<T extends NativeType<T>> extends
 	 */
 	protected final int lastIndexContainer;
 
-	protected PlanarSubsetCursor(final PlanarSubsetCursor<T> cursor) {
-		super(cursor.numDimensions());
+	protected PlanarSubsetCursor( final PlanarSubsetCursor< T > cursor )
+	{
+		super( cursor.numDimensions() );
 
 		container = cursor.container;
 		this.type = container.createLinkedType();
@@ -111,46 +113,51 @@ public class PlanarSubsetCursor<T extends NativeType<T>> extends
 		planeSize = cursor.planeSize;
 		lastIndexContainer = cursor.lastIndexContainer;
 
-		type.updateContainer(this);
-		type.updateIndex(index);
+		type.updateContainer( this );
+		type.updateIndex( index );
 	}
 
-	public PlanarSubsetCursor(final PlanarImg<T, ?> container, Interval interval) {
-		super(container.numDimensions());
+	public PlanarSubsetCursor( final PlanarImg< T, ? > container, Interval interval )
+	{
+		super( container.numDimensions() );
 
 		this.type = container.createLinkedType();
-		
+
 		this.container = container;
-		
-		this.offsetContainer = (int) offset(interval);
-		
-		this.planeSize = ((n > 1) ? ( int )container.dimension( 1 ) : 1)
+
+		this.offsetContainer = ( int ) offset( interval );
+
+		this.planeSize = ( ( n > 1 ) ? ( int ) container.dimension( 1 ) : 1 )
 				* ( int ) container.dimension( 0 );
 
 		this.lastIndexPlane = planeSize - 1;
 
-		this.lastIndexContainer = ( int ) (offsetContainer + Intervals.numElements( interval ) - 1);
-		
+		this.lastIndexContainer = ( int ) ( offsetContainer + Intervals.numElements( interval ) - 1 );
+
 		reset();
 	}
 
 	@Override
-	public int getCurrentSliceIndex() {
+	public int getCurrentSliceIndex()
+	{
 		return sliceIndex;
 	}
 
 	@Override
-	public T get() {
+	public T get()
+	{
 		return type;
 	}
 
 	@Override
-	public PlanarSubsetCursor<T> copy() {
-		return new PlanarSubsetCursor<T>(this);
+	public PlanarSubsetCursor< T > copy()
+	{
+		return new PlanarSubsetCursor< T >( this );
 	}
 
 	@Override
-	public PlanarSubsetCursor<T> copyCursor() {
+	public PlanarSubsetCursor< T > copyCursor()
+	{
 		return copy();
 	}
 
@@ -161,38 +168,44 @@ public class PlanarSubsetCursor<T extends NativeType<T>> extends
 	 * @return false for the last element
 	 */
 	@Override
-	public boolean hasNext() {
+	public boolean hasNext()
+	{
 		return indexContainer < lastIndexContainer;
 	}
 
 	@Override
-	public void fwd() {
+	public void fwd()
+	{
 		indexContainer++;
 
-		if (++index > lastIndexPlane) {
+		if ( ++index > lastIndexPlane )
+		{
 			index = 0;
 			++sliceIndex;
-			type.updateContainer(this);
+			type.updateContainer( this );
 		}
-		type.updateIndex(index);
+		type.updateIndex( index );
 	}
 
 	@Override
-	public void jumpFwd(long steps) {
+	public void jumpFwd( long steps )
+	{
 		long newIndex = index + steps;
-		if (newIndex > lastIndexPlane) {
+		if ( newIndex > lastIndexPlane )
+		{
 			final long s = newIndex / planeSize;
 			newIndex -= s * planeSize;
 			sliceIndex += s;
-			type.updateContainer(this);
+			type.updateContainer( this );
 		}
-		index = (int) newIndex;
+		index = ( int ) newIndex;
 		indexContainer += steps;
-		type.updateIndex(index);
+		type.updateIndex( index );
 	}
 
 	@Override
-	public void reset() {
+	public void reset()
+	{
 
 		// Set current slice index
 		sliceIndex = offsetContainer / planeSize;
@@ -203,30 +216,34 @@ public class PlanarSubsetCursor<T extends NativeType<T>> extends
 		// Set total index to index
 		indexContainer = offsetContainer + index;
 
-		type.updateIndex(index);
-		type.updateContainer(this);
+		type.updateIndex( index );
+		type.updateContainer( this );
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return type.toString();
 	}
 
 	@Override
-	public void localize(final int[] position) {
-		container.indexToGlobalPosition(sliceIndex, index, position);
+	public void localize( final int[] position )
+	{
+		container.indexToGlobalPosition( sliceIndex, index, position );
 	}
 
 	@Override
-	public int getIntPosition(final int dim) {
-		return container.indexToGlobalPosition(sliceIndex, index, dim);
+	public int getIntPosition( final int dim )
+	{
+		return container.indexToGlobalPosition( sliceIndex, index, dim );
 	}
 
-	private long offset(final Interval interval) {
+	private long offset( final Interval interval )
+	{
 		final int maxDim = numDimensions() - 1;
-		long i = interval.min(maxDim);
-		for (int d = maxDim - 1; d >= 0; --d)
-			i = i * container.dimension(d) + interval.min(d);
+		long i = interval.min( maxDim );
+		for ( int d = maxDim - 1; d >= 0; --d )
+			i = i * container.dimension( d ) + interval.min( d );
 
 		return i;
 	}
