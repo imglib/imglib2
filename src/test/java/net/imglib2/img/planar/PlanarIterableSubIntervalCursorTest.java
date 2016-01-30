@@ -118,7 +118,7 @@ public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIter
 
 		// Testing Localzing Cursor
 		assertTrue( ( Views.interval( img, intervalLine ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
-		
+
 		// Testing Localizing Cursor
 		assertTrue( ( Views.interval( img, intervalShifted ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
 
@@ -140,18 +140,19 @@ public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIter
 		// Testing Localizing Cursor
 		assertTrue( ( Views.interval( img, intervalSinglePlaneFull ).localizingCursor() instanceof PlanarPlaneSubsetLocalizingCursor ) );
 
-		// Following, test that optimized cursor is not created when not optimizeable
+		// Following, test that optimized cursor is not created when not
+		// optimizeable
 		// Testing Cursor
-		assertFalse( ( Views.interval( img, intervalFastPart ).cursor() instanceof PlanarSubsetCursor) );
-		
+		assertFalse( ( Views.interval( img, intervalFastPart ).cursor() instanceof PlanarSubsetCursor ) );
+
 		// Testing Localizing Cursor
-		assertFalse( ( Views.interval( img, intervalFastPart ).localizingCursor() instanceof PlanarSubsetLocalizingCursor) );
-		
+		assertFalse( ( Views.interval( img, intervalFastPart ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
+
 		// Testing Cursor
-		assertFalse( ( Views.interval( img, intervalFastPart ).cursor() instanceof PlanarPlaneSubsetCursor) );
-		
+		assertFalse( ( Views.interval( img, intervalFastPart ).cursor() instanceof PlanarPlaneSubsetCursor ) );
+
 		// Testing Localizing Cursor
-		assertFalse( ( Views.interval( img, intervalFastPart ).localizingCursor() instanceof PlanarPlaneSubsetLocalizingCursor) );
+		assertFalse( ( Views.interval( img, intervalFastPart ).localizingCursor() instanceof PlanarPlaneSubsetLocalizingCursor ) );
 	}
 
 	@Test
@@ -161,7 +162,7 @@ public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIter
 
 		testCursorIteration( cursor, intervalSinglePlaneFull );
 	}
-	
+
 	@Test
 	public void testIterationIntervalLine()
 	{
@@ -169,7 +170,6 @@ public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIter
 
 		testCursorIteration( cursor, intervalLine );
 	}
-
 
 	@Test
 	public void testIterationSinglePlaneShifted()
@@ -183,7 +183,7 @@ public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIter
 	public void testJumpFwdSinglePlane()
 	{
 		Cursor< IntType > cursor = Views.interval( img, intervalSinglePlaneFull ).localizingCursor();
-		
+
 		testCursorJumpFwd( cursor, intervalSinglePlaneFull );
 	}
 
@@ -196,7 +196,7 @@ public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIter
 
 		testCursorIteration( cursor, intervalSinglePlaneShifted );
 	}
-	
+
 	@Test
 	public void testLocalizingJumpFwdSinglePlane()
 	{
