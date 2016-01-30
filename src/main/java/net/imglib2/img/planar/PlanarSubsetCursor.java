@@ -214,7 +214,7 @@ public class PlanarSubsetCursor< T extends NativeType< T > > extends
 		indexInPlane = offsetContainer % planeSize - 1;
 
 		// Set total index to index
-		indexContainer = offsetContainer + indexInPlane;
+		indexContainer = ( planeSize * planeIndex ) + indexInPlane;
 
 		type.updateIndex( indexInPlane );
 		type.updateContainer( this );
