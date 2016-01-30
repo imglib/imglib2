@@ -152,7 +152,7 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T > >
 
 		this.offsetContainer = ( int ) offset( interval );
 
-		this.planeSize = ( ( n > 1 ) ? ( int ) interval.dimension( 1 ) : 1 ) * ( int ) interval.dimension( 0 );
+		this.planeSize = ( ( n > 1 ) ? ( int ) container.dimension( 1 ) : 1 ) * ( int ) container.dimension( 0 );
 
 		this.lastIndexPlane = planeSize - 1;
 
@@ -160,7 +160,7 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T > >
 
 		max = new int[ n ];
 		for ( int d = 0; d < n; ++d )
-			max[ d ] = ( int ) interval.max( d );
+			max[ d ] = ( int ) container.max( d );
 
 		reset();
 	}
@@ -277,7 +277,7 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T > >
 		indexContainer += steps;
 		type.updateIndex( indexInPlane );
 
-		IntervalIndexer.indexToPosition( indexContainer, container.dimensions, position );
+		container.indexToGlobalPosition( planeIndex, indexInPlane, position );
 	}
 
 	/**
@@ -299,7 +299,7 @@ public class PlanarSubsetLocalizingCursor< T extends NativeType< T > >
 		type.updateIndex( indexInPlane );
 		type.updateContainer( this );
 
-		IntervalIndexer.indexToPosition( indexContainer, container.dimensions, position );
+		container.indexToGlobalPosition( planeIndex, indexInPlane, position );
 	}
 
 	/**
