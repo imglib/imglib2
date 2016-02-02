@@ -52,13 +52,25 @@ public interface ComplexType< T extends ComplexType< T >> extends NumericType< T
 
 	public void setReal( double f );
 
+	public void setReal( int f );
+
+	public void setReal( long f );
+
 	public void setImaginary( float f );
 
 	public void setImaginary( double f );
 
+	public void setImaginary( int f );
+
+	public void setImaginary( long f );
+
 	public void setComplexNumber( float r, float i );
 
 	public void setComplexNumber( double r, double i );
+
+	public void setComplexNumber( int r, int i );
+
+	public void setComplexNumber( long r, long i );
 
 	public float getPowerFloat();
 

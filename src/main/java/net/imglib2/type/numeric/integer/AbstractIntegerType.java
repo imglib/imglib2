@@ -75,6 +75,18 @@ public abstract class AbstractIntegerType< T extends AbstractIntegerType< T >> e
 	}
 
 	@Override
+	public void setReal( final int real )
+	{
+		setInteger( real );
+	}
+
+	@Override
+	public void setReal( final long real )
+	{
+		setInteger( real );
+	}
+
+	@Override
 	public void inc()
 	{
 		setInteger( getIntegerLong() + 1 );
