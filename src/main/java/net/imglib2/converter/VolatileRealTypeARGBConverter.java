@@ -44,16 +44,28 @@ import net.imglib2.type.volatiles.VolatileRealType;
  */
 public class VolatileRealTypeARGBConverter extends RealARGBConverter< VolatileRealType< ? > >
 {
-	final protected ARGBType background = new ARGBType( 0xff000040 );
+	final protected ARGBType background;
 
-	public VolatileRealTypeARGBConverter()
+	public VolatileRealTypeARGBConverter( final ARGBType background )
 	{
 		super();
+		this.background = background;
+	}
+	
+	public VolatileRealTypeARGBConverter()
+	{
+		this( new ARGBType( 0xff000040 ) );
+	}
+	
+	public VolatileRealTypeARGBConverter( final double min, final double max, final ARGBType background )
+	{
+		super( min, max );
+		this.background = background;
 	}
 
 	public VolatileRealTypeARGBConverter( final double min, final double max )
 	{
-		super( min, max );
+		this( min, max, new ARGBType( 0xff000040 ) );
 	}
 
 	@Override
