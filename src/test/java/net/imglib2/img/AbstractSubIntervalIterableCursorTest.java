@@ -135,33 +135,38 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 
 	protected void testCursorIteration( Cursor< IntType > cursor, Interval i )
 	{
+
 		long[] position = new long[ cursor.numDimensions() ];
 		long[] min = new long[ cursor.numDimensions() ];
-		long[] max = new long[ cursor.numDimensions() ];
 
 		i.min( min );
 
 		cursor.fwd();
 		cursor.localize( position );
-		assertArrayEquals( "start position was incorrect.", min, position );
 
 		cursor.reset();
 
 		int ctr = 0;
 		long sum = 0;
 
+		final RandomAccess< BitType > check = Views.translate( new ArrayImgFactory< BitType >().create( i, new BitType() ), min ).randomAccess();
+
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
 			cursor.localize( position );
+
+			check.setPosition( position );
+
+			assertFalse( check.get().get() );
+
+			check.get().set( true );
+
 			sum += cursor.get().get();
 			ctr++;
 		}
 
-		i.max( max );
-
 		assertEquals( "wrong number of elements accessed.", getIntervalSize( i ), ctr );
-		assertArrayEquals( "end position incorrect.", max, position );
 		assertEquals( "sum of elements incorrect.", sum, getSum( i ) );
 	}
 
