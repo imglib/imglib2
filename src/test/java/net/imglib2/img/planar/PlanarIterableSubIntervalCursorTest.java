@@ -114,39 +114,16 @@ public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIter
 	{
 
 		// Testing Cursor
-		assertTrue( ( Views.interval( img, intervalLine ).cursor() instanceof PlanarSubsetCursor ) );
-
-		// Testing Localzing Cursor
-		assertTrue( ( Views.interval( img, intervalLine ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
-
-		// Testing Localizing Cursor
-		assertTrue( ( Views.interval( img, intervalShifted ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
-
-		// Testing Cursor
 		assertTrue( ( Views.interval( img, intervalSinglePlaneShifted ).cursor() instanceof PlanarPlaneSubsetCursor ) );
 
 		// Testing Localizing Cursor
 		assertTrue( ( Views.interval( img, intervalSinglePlaneShifted ).localizingCursor() instanceof PlanarPlaneSubsetLocalizingCursor ) );
 
 		// Testing Cursor
-		assertTrue( ( Views.interval( img, intervalFast ).cursor() instanceof PlanarSubsetCursor ) );
-
-		// Testing Localizing Cursor
-		assertTrue( ( Views.interval( img, intervalFast ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
-
-		// Testing Cursor
 		assertTrue( ( Views.interval( img, intervalSinglePlaneFull ).cursor() instanceof PlanarPlaneSubsetCursor ) );
 
 		// Testing Localizing Cursor
 		assertTrue( ( Views.interval( img, intervalSinglePlaneFull ).localizingCursor() instanceof PlanarPlaneSubsetLocalizingCursor ) );
-
-		// Following, test that optimized cursor is not created when not
-		// optimizeable
-		// Testing Cursor
-		assertFalse( ( Views.interval( img, intervalFastPart ).cursor() instanceof PlanarSubsetCursor ) );
-
-		// Testing Localizing Cursor
-		assertFalse( ( Views.interval( img, intervalFastPart ).localizingCursor() instanceof PlanarSubsetLocalizingCursor ) );
 
 		// Testing Cursor
 		assertFalse( ( Views.interval( img, intervalFastPart ).cursor() instanceof PlanarPlaneSubsetCursor ) );
