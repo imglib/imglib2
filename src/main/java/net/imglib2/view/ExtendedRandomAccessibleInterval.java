@@ -35,10 +35,12 @@
 package net.imglib2.view;
 
 import net.imglib2.Interval;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.View;
+import net.imglib2.RealPositionable;
 import net.imglib2.outofbounds.OutOfBounds;
 import net.imglib2.outofbounds.OutOfBoundsFactory;
 import net.imglib2.util.Intervals;
@@ -52,7 +54,7 @@ import net.imglib2.util.Intervals;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch
  */
-public final class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >, View
+public final class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessibleInterval< T >, View
 {
 	final protected F source;
 
@@ -93,5 +95,89 @@ public final class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 
 		if ( Intervals.contains( source, interval ) ) { return source.randomAccess( interval ); }
 		return randomAccess();
+	}
+
+	@Override
+	public long min( int d )
+	{
+		return source.min( d );
+	}
+
+	@Override
+	public void min( long[] min )
+	{
+		source.min( min );
+	}
+
+	@Override
+	public void min( Positionable min )
+	{
+		source.min( min );
+	}
+
+	@Override
+	public long max( int d )
+	{
+		return source.max( d );
+	}
+
+	@Override
+	public void max( long[] max )
+	{
+		source.max( max );
+	}
+
+	@Override
+	public void max( Positionable max )
+	{
+		source.max( max );
+	}
+
+	@Override
+	public double realMin( int d )
+	{
+		return source.realMin( d );
+	}
+
+	@Override
+	public void realMin( double[] min )
+	{
+		source.realMin( min );
+	}
+
+	@Override
+	public void realMin( RealPositionable min )
+	{
+		source.realMin( min );
+	}
+
+	@Override
+	public double realMax( int d )
+	{
+		return source.realMax( d );
+	}
+
+	@Override
+	public void realMax( double[] max )
+	{
+		source.realMax( max );
+	}
+
+	@Override
+	public void realMax( RealPositionable max )
+	{
+		source.realMax( max );
+	}
+
+	@Override
+	public void dimensions( long[] dimensions )
+	{
+		source.dimensions( dimensions );
+	}
+
+	@Override
+	public long dimension( int d )
+	{
+		return source.dimension( d );
 	}
 }
