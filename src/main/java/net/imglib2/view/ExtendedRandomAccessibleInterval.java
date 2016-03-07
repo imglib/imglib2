@@ -64,6 +64,16 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 		this.factory = factory;
 	}
 
+	public F getSource()
+	{
+		return source;
+	}
+
+	public OutOfBoundsFactory< T, ? super F > getOutOfBoundsFactory()
+	{
+		return factory;
+	}
+
 	@Override
 	final public int numDimensions()
 	{
@@ -83,15 +93,5 @@ final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessib
 
 		if ( Intervals.contains( source, interval ) ) { return source.randomAccess( interval ); }
 		return randomAccess();
-	}
-
-	public F getSource()
-	{
-		return source;
-	}
-	
-	public OutOfBoundsFactory< T, ? super F > getOutOfBoundsFactory()
-	{
-		return factory;
 	}
 }
