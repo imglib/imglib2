@@ -52,7 +52,7 @@ import net.imglib2.util.Intervals;
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch
  */
-final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >, View
+public final class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >, View
 {
 	final protected F source;
 
