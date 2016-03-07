@@ -190,7 +190,7 @@ public class PlanarIterableSubIntervalCursorTest extends AbstractSubIntervalIter
 	// Localizing cursor
 
 	@Test
-	public void tesLocalizingtIterationSinglePlaneShifted()
+	public void testLocalizingtIterationSinglePlaneShifted()
 	{
 		Cursor< IntType > cursor = Views.interval( img, intervalSinglePlaneShifted ).localizingCursor();
 
