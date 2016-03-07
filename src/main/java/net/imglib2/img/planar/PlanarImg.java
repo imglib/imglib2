@@ -118,7 +118,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		}
 		else
 		{
-			final int numEntitiesPerSlice = (int)entitiesPerPixel.mulCeil( ( ( n > 1 ) ? dimensions[ 1 ] : 1 )  *  dimensions[ 0 ] ); 
+			final int numEntitiesPerSlice = ( int ) entitiesPerPixel.mulCeil( ( ( n > 1 ) ? dimensions[ 1 ] : 1 ) * dimensions[ 0 ] );
 			for ( int i = 0; i < numSlices; ++i )
 				mirror.add( creator.createArray( numEntitiesPerSlice ) );
 		}
@@ -157,7 +157,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	 * @param l
 	 * @return
 	 * 
-	 *         TODO: remove this method? (it doesn't seem to be used anywhere)
+	 * 		TODO: remove this method? (it doesn't seem to be used anywhere)
 	 */
 	public final int getIndex( final int[] l )
 	{
