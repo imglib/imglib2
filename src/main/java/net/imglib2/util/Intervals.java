@@ -231,6 +231,33 @@ public class Intervals
 	}
 
 	/**
+	 * Compute the smallest interval that contains both input intervals.
+	 * 
+	 * Create a {@link FinalInterval} , which is the union of the input
+	 * intervals (i.e., the area contained in either input interval).
+	 * 
+	 * @param intervalA
+	 *            input interval
+	 * @param intervalB
+	 *            input interval
+	 * @return union of input intervals
+	 */
+	public static FinalInterval union( final Interval intervalA, final Interval intervalB )
+	{
+		assert intervalA.numDimensions() == intervalB.numDimensions();
+
+		final int n = intervalA.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] = Math.min( intervalA.min( d ), intervalB.min( d ) );
+			max[ d ] = Math.max( intervalA.max( d ), intervalB.max( d ) );
+		}
+		return new FinalInterval( min, max );
+	}
+
+	/**
 	 * Compute the smallest {@link Interval} containing the specified
 	 * {@link RealInterval}.
 	 * 
