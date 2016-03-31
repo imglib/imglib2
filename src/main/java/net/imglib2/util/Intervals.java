@@ -233,8 +233,7 @@ public class Intervals
 	/**
 	 * Compute the smallest interval that contains both input intervals.
 	 * 
-	 * Create a {@link FinalInterval} , which is the union of the input
-	 * intervals (i.e., the area contained in either input interval).
+	 * Create a {@link FinalInterval} that represents that interval.
 	 * 
 	 * @param intervalA
 	 *            input interval
