@@ -42,6 +42,7 @@ import net.imglib2.Interval;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.View;
 import net.imglib2.util.Util;
 
 /**
@@ -53,7 +54,7 @@ import net.imglib2.util.Util;
  * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class StackView< T > extends AbstractInterval implements RandomAccessibleInterval< T >
+public class StackView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
 {
 	/**
 	 * Describes how a {@link RandomAccess} on the <em>(n+1)</em>-dimensional
@@ -147,7 +148,14 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 				new DefaultRA< T >( slices, interval );
 	}
 
-	public List< RandomAccessibleInterval< T > > getSource()
+	/**
+	 * Get the source slices that are stacked in this {@link StackView}. These
+	 * are {@code (numDimensions() - 1)} dimensional
+	 * {@link RandomAccessibleInterval}s.
+	 *
+	 * @return list of source hyperslices.
+	 */
+	public List< RandomAccessibleInterval< T > > getSourceSlices()
 	{
 		return Arrays.asList( slices );
 	}

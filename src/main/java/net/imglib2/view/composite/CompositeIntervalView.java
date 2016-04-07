@@ -37,6 +37,7 @@ import net.imglib2.Interval;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealPositionable;
+import net.imglib2.View;
 import net.imglib2.view.Views;
 
 /**
@@ -44,7 +45,7 @@ import net.imglib2.view.Views;
  * 
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
-public class CompositeIntervalView< T, C extends Composite< T > > extends CompositeView< T, C > implements RandomAccessibleInterval< C >
+public class CompositeIntervalView< T, C extends Composite< T > > extends CompositeView< T, C > implements RandomAccessibleInterval< C >, View
 {
 	final Interval interval;
 

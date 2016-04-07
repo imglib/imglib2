@@ -82,13 +82,13 @@ final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRa
 		if ( Intervals.contains( source, interval ) ) { return source.realRandomAccess(); }
 		return realRandomAccess();
 	}
-	
+
 	public F getSource()
 	{
 		return source;
 	}
 
-	public RealOutOfBoundsFactory< T, ? super F > getFactory()
+	public RealOutOfBoundsFactory< T, ? super F > getOutOfBoundsFactory()
 	{
 		return factory;
 	}

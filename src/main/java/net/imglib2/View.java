@@ -32,61 +32,28 @@
  * #L%
  */
 
-package net.imglib2.interpolation;
-
-import net.imglib2.EuclideanSpace;
-import net.imglib2.RealInterval;
-import net.imglib2.RealRandomAccess;
-import net.imglib2.RealRandomAccessible;
-import net.imglib2.View;
+package net.imglib2;
 
 /**
- * A {@link RealRandomAccessible} that is generated through interpolation.
+ * An interface which marks an object that is a lightweight wrapper or "view"
+ * around actual data.
+ * <p>
+ * This is useful to introspect at runtime whether a data object might benefit
+ * from being copied to "burn in" the information, for reasons such as:
+ * </p>
+ * <ul>
+ * <li>To avoid costly recomputation, at the expense of more memory use.</li>
+ * <li>To avoid corrupting the wrapped data structure when the object is
+ * mutated.</li>
+ * </ul>
  * 
- * @author ImgLib2 developers
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Curtis Rueden
  * @author Tobias Pietzsch
+ * @author Christian Dietz (University of Konstanz)
+ * @see net.imglib2.view.Views
+ * @see net.imglib2.converter.Converters
  */
-final public class Interpolant< T, F extends EuclideanSpace > implements RealRandomAccessible< T >, View
+public interface View
 {
-	final protected F source;
-
-	final InterpolatorFactory< T, F > factory;
-
-	public Interpolant( final F source, final InterpolatorFactory< T, F > factory )
-	{
-		this.source = source;
-		this.factory = factory;
-	}
-
-	@Override
-	public int numDimensions()
-	{
-		return source.numDimensions();
-	}
-
-	@Override
-	public RealRandomAccess< T > realRandomAccess()
-	{
-		return factory.create( source );
-	}
-
-	@Override
-	public RealRandomAccess< T > realRandomAccess( final RealInterval interval )
-	{
-		return factory.create( source, interval );
-	}
-	
-	public F getSource()
-	{
-		return source;
-	}
-	
-	/**
-	 * @return {@link InterpolatorFactory} used for interpolation
-	 */
-	public InterpolatorFactory< T, F > getInterpolatorFactory()
-	{
-		return factory;
-	}
+	// NB: Marker interface.
 }

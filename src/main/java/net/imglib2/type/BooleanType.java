@@ -34,13 +34,15 @@
 
 package net.imglib2.type;
 
+import net.imglib2.type.numeric.RealType;
+
 /**
  * TODO
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface BooleanType< T extends BooleanType< T >> extends Type< T >, Comparable< T >
+public interface BooleanType< T extends BooleanType< T > > extends Type< T >, RealType< T >
 {
 	public boolean get();
 

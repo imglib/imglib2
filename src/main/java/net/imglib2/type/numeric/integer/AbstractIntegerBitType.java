@@ -97,6 +97,22 @@ public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>
 	public void setOne() { setInteger( 1 ); }	
 
 	@Override
+	public boolean equals( final Object o ) {
+		if ( !getClass().isInstance(o) )
+			return false;
+		@SuppressWarnings("unchecked")
+		final T t = (T) o;
+		return compareTo(t) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		// NB: Use the same hash code as java.lang.Long#hashCode().
+		final long value = get();
+		return (int) (value ^ (value >>> 32));
+	}
+
+	@Override
 	public int compareTo( final T c ) 
 	{ 
 		final long a = getIntegerLong();

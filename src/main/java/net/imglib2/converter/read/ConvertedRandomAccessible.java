@@ -68,7 +68,10 @@ public class ConvertedRandomAccessible< A, B extends Type< B > > extends Abstrac
 	{
 		return new ConvertedRandomAccess< A, B >( source.randomAccess( interval ), converter, converted );
 	}
-	
+
+	/**
+	 * @return an instance of the destination {@link Type}.
+	 */
 	public B getDestinationType()
 	{
 		return converted.copy();

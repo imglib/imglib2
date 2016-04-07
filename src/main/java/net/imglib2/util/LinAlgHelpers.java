@@ -227,6 +227,33 @@ public class LinAlgHelpers
 	}
 
 	/**
+	 * set c = A^T * b.
+	 *
+	 * Dimensions of A, b, and c must match. That is, rows(A) == rows(b), and
+	 * rows(c) == cols(A).
+	 *
+	 * @param A
+	 * @param b
+	 * @param c
+	 */
+	public static void multT( final double[][] A, final double[] b, final double[] c )
+	{
+		assert rows( A ) == rows( b );
+		assert rows( c ) == cols( A );
+
+		final int rows = rows( c );
+		final int Arows = rows( A );
+
+		for ( int i = 0; i < rows; ++i )
+		{
+			double sum = 0;
+			for ( int k = 0; k < Arows; ++k )
+				sum += A[ k ][ i ] * b[ k ];
+			c[ i ] = sum;
+		}
+	}
+
+	/**
 	 * set C = A * B.
 	 * 
 	 * Dimensions of A, B, and C must match. That is, cols(A) == rows(B),

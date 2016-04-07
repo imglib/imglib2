@@ -33,14 +33,17 @@
  */
 package net.imglib2.type.logic;
 
+import java.math.BigInteger;
+
 import net.imglib2.type.BooleanType;
+import net.imglib2.type.numeric.integer.AbstractIntegerType;
 
 /**
  * A {@link BooleanType} wrapping a single primitive {@code boolean} variable.
  *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
-public class BoolType implements BooleanType< BoolType >
+public class BoolType extends AbstractIntegerType< BoolType > implements BooleanType< BoolType >
 {
 	boolean value;
 
@@ -135,5 +138,59 @@ public class BoolType implements BooleanType< BoolType >
 	public void not()
 	{
 		value = !value;
+	}
+
+	@Override
+	public double getMaxValue()
+	{
+		return 1;
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getBitsPerPixel()
+	{
+		return 1;
+	}
+
+	@Override
+	public int getInteger()
+	{
+		return get() ? 1 : 0;
+	}
+
+	@Override
+	public long getIntegerLong()
+	{
+		return get() ? 1 : 0;
+	}
+
+	@Override
+	public BigInteger getBigInteger()
+	{
+		return get() ? BigInteger.ONE : BigInteger.ZERO;
+	}
+
+	@Override
+	public void setInteger( final int f )
+	{
+		set( f >= 1 );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( f >= 1 );
+	}
+
+	@Override
+	public void setBigInteger( final BigInteger b )
+	{
+		set( b.compareTo(BigInteger.ZERO) > 0 );
 	}
 }

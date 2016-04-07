@@ -75,12 +75,15 @@ public class ConvertedIterableInterval< A, B extends Type< B > > extends Abstrac
 	{
 		return new ConvertedCursor< A, B >( sourceInterval.localizingCursor(), converter, converted );
 	}
-	
+
+	/**
+	 * @return an instance of the destination {@link Type}.
+	 */
 	public B getDestinationType()
 	{
 		return converted.copy();
 	}
-	
+
 	public Converter< ? super A, ? super B > getConverter()
 	{
 		return converter;
