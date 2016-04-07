@@ -337,6 +337,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		if ( interval.dimension( 0 ) != dimension[ 0 ] )
 			return false;
 
+		if ( dimension.length == 1 )
+			return true;
+
 		if ( interval.dimension( 1 ) != dimension[ 1 ] )
 			return false;
 
