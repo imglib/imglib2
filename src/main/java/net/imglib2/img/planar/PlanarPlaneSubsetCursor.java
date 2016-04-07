@@ -53,28 +53,28 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	/**
 	 * Access to the type
 	 */
-	protected final T type;
+	private final T type;
 
 	/**
 	 * Container
 	 */
-	protected final PlanarImg< T, ? > container;
+	private final PlanarImg< T, ? > container;
 
 	/**
 	 * Current slice index
 	 */
-	protected final int sliceIndex;
+	private final int sliceIndex;
 
 	/**
 	 * Size of one plane
 	 */
-	protected final int planeSize;
-	
+	private final int planeSize;
+
 	/**
 	 * Last index on plane
 	 */
-	protected final int lastPlaneIndex;
-	
+	private final int lastPlaneIndex;
+
 	/**
 	 * Copy Constructor
 	 * 
@@ -101,7 +101,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	 * @param container - the container this cursor shall work on.
 	 * @param interval - the interval to iterate over.
 	 */
-	public PlanarPlaneSubsetCursor( final PlanarImg< T, ? > container, Interval interval )
+	public PlanarPlaneSubsetCursor( final PlanarImg< T, ? > container, final Interval interval )
 	{
 		super( container.numDimensions() );
 
@@ -177,7 +177,7 @@ public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final void jumpFwd( long steps )
+	public final void jumpFwd( final long steps )
 	{
 		type.incIndex( ( int ) steps );
 	}

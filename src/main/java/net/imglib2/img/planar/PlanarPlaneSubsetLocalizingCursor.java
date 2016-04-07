@@ -53,12 +53,12 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	/**
 	 * Access to the type
 	 */
-	protected final T type;
+	private final T type;
 
 	/**
 	 * Container
 	 */
-	protected final PlanarImg< T, ? > container;
+	private final PlanarImg< T, ? > container;
 
 	/**
 	 * Current slice index
@@ -68,7 +68,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	/**
 	 * Last index on the plane
 	 */
-	protected final int lastIndexPlane;
+	private final int lastIndexPlane;
 
 	private final int maxX;
 
