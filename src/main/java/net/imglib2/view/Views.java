@@ -35,6 +35,7 @@
 package net.imglib2.view;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import net.imglib2.EuclideanSpace;
@@ -736,7 +737,13 @@ public class Views
 	public static < T > IterableInterval< T > iterable( final RandomAccessibleInterval< T > randomAccessibleInterval )
 	{
 		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) )
-			return ( IterableInterval< T > ) randomAccessibleInterval;
+		{
+			final Class< ? > raiType = Util.getTypeFromInterval( randomAccessibleInterval ).getClass();
+			final Iterator< ? > iter = ( ( IterableInterval< ? > ) randomAccessibleInterval ).iterator();
+			final Object o = iter.hasNext() ? iter.next() : null;
+			if ( raiType.isInstance( o ) )
+				return ( IterableInterval< T > ) randomAccessibleInterval;
+		}
 		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
 	}
 
@@ -755,7 +762,13 @@ public class Views
 	public static < T > IterableInterval< T > flatIterable( final RandomAccessibleInterval< T > randomAccessibleInterval )
 	{
 		if ( IterableInterval.class.isInstance( randomAccessibleInterval ) && FlatIterationOrder.class.isInstance( ( ( IterableInterval< T > ) randomAccessibleInterval ).iterationOrder() ) )
-			return ( IterableInterval< T > ) randomAccessibleInterval;
+		{
+			final Class< ? > raiType = Util.getTypeFromInterval( randomAccessibleInterval ).getClass();
+			final Iterator< ? > iter = ( ( IterableInterval< ? > ) randomAccessibleInterval ).iterator();
+			final Object o = iter.hasNext() ? iter.next() : null;
+			if ( raiType.isInstance( o ) )
+				return ( IterableInterval< T > ) randomAccessibleInterval;
+		}
 		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
 	}
 
