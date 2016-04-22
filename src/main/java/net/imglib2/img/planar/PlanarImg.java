@@ -118,7 +118,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		}
 		else
 		{
-			final int numEntitiesPerSlice = (int)entitiesPerPixel.mulCeil( ( ( n > 1 ) ? dimensions[ 1 ] : 1 )  *  dimensions[ 0 ] ); 
+			final int numEntitiesPerSlice = ( int ) entitiesPerPixel.mulCeil( ( ( n > 1 ) ? dimensions[ 1 ] : 1 ) * dimensions[ 0 ] );
 			for ( int i = 0; i < numSlices; ++i )
 				mirror.add( creator.createArray( numEntitiesPerSlice ) );
 		}
@@ -157,7 +157,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	 * @param l
 	 * @return
 	 * 
-	 *         TODO: remove this method? (it doesn't seem to be used anywhere)
+	 * 		TODO: remove this method? (it doesn't seem to be used anywhere)
 	 */
 	public final int getIndex( final int[] l )
 	{
@@ -307,35 +307,8 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	@Override
 	public boolean supportsOptimizedCursor( final Interval interval )
 	{
-		// first check whether the interval is completely contained.
-		if ( !Intervals.contains( this, interval ) )
-			return false;
-
 		// we want to optimize exactly one plane
-		if ( correspondsToPlane( interval ) )
-		{
-			return true;
-		}
-		else
-		{
-			// we want to optimize a set of planes
-
-			// find the first dimension in which image and interval differ
-			int dimIdx = 0;
-			for ( ; dimIdx < n; ++dimIdx )
-				if ( interval.dimension( dimIdx ) != dimension( dimIdx ) )
-					break;
-
-			// in the dimension after that, image and interval may differ
-			++dimIdx;
-
-			// but image extents of all higher dimensions must equal 1
-			for ( int d = dimIdx; d < n; ++d )
-				if ( interval.dimension( d ) != 1 )
-					return false;
-
-			return true;
-		}
+		return Intervals.contains( this, interval ) && correspondsToPlane( interval );
 	}
 
 	/**
@@ -353,11 +326,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	@Override
 	public Cursor< T > cursor( final Interval interval )
 	{
-		assert supportsOptimizedCursor( interval );
+		assert ( supportsOptimizedCursor( interval ) );
 
-		if ( correspondsToPlane( interval ) )
-			return new PlanarPlaneSubsetCursor< T >( this, interval );
-		return new PlanarSubsetCursor< T >( this, interval );
+		return new PlanarPlaneSubsetCursor< T >( this, interval );
 	}
 
 	private boolean correspondsToPlane( final Interval interval )
@@ -365,6 +336,9 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 		// check if interval describes one plane
 		if ( interval.dimension( 0 ) != dimension[ 0 ] )
 			return false;
+
+		if ( dimension.length == 1 )
+			return true;
 
 		if ( interval.dimension( 1 ) != dimension[ 1 ] )
 			return false;
@@ -384,11 +358,8 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	@Override
 	public Cursor< T > localizingCursor( final Interval interval )
 	{
+		assert ( supportsOptimizedCursor( interval ) );
 
-		assert supportsOptimizedCursor( interval );
-
-		if ( correspondsToPlane( interval ) )
-			return new PlanarPlaneSubsetLocalizingCursor< T >( this, interval );
-		return new PlanarSubsetLocalizingCursor< T >( this, interval );
+		return new PlanarPlaneSubsetLocalizingCursor< T >( this, interval );
 	}
 }

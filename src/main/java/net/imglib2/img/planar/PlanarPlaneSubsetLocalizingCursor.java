@@ -36,14 +36,14 @@ package net.imglib2.img.planar;
 import net.imglib2.AbstractLocalizingCursorInt;
 import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
-import net.imglib2.util.IntervalIndexer;
 
 /**
  * 
  * Cursor optimized for one plane in an PlanarImg.
  * 
  * @author Jonathan Hale
- * 
+ * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ *
  * @param <T>
  */
 public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
@@ -53,38 +53,26 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	/**
 	 * Access to the type
 	 */
-	protected final T type;
+	private final T type;
 
 	/**
 	 * Container
 	 */
-	protected final PlanarImg< T, ? > container;
+	private final PlanarImg< T, ? > container;
 
 	/**
 	 * Current slice index
 	 */
-	protected int sliceIndex;
-
-	/**
-	 * Size of one plane
-	 */
-	protected final int planeSize;
+	private final int sliceIndex;
 
 	/**
 	 * Last index on the plane
 	 */
-	protected final int lastIndexPlane;
+	private final int lastIndexPlane;
 
-	/**
-	 * Offset index of the container
-	 */
-	protected final long offsetContainer;
+	private final int maxX;
 
-	/**
-	 * Maximum of the {@link PlanarImg} in every dimension. This is used to
-	 * check isOutOfBounds().
-	 */
-	protected final int[] max;
+	private final int dimX;
 
 	/**
 	 * Copy Constructor
@@ -100,16 +88,12 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 		this.type = container.createLinkedType();
 
 		sliceIndex = cursor.sliceIndex;
-		planeSize = cursor.planeSize;
 		lastIndexPlane = cursor.lastIndexPlane;
-		offsetContainer = cursor.offsetContainer;
 
-		max = new int[ n ];
+		maxX = cursor.maxX;
+		dimX = cursor.dimX;
 		for ( int d = 0; d < n; ++d )
-		{
-			max[ d ] = cursor.max[ d ];
 			position[ d ] = cursor.position[ d ];
-		}
 
 		type.updateContainer( this );
 		type.updateIndex( cursor.type.getIndex() );
@@ -131,19 +115,18 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 
 		this.container = container;
 
-		this.planeSize = ( ( n > 1 ) ? ( int ) interval.dimension( 1 ) : 1 ) * ( int ) interval.dimension( 0 );
-
+		final int planeSize = ( ( n > 1 ) ? ( int ) interval.dimension( 1 ) : 1 ) * ( int ) interval.dimension( 0 );
 		this.lastIndexPlane = planeSize - 1;
 
 		// Set current slice index
-		offsetContainer = offset( interval );
-		sliceIndex = ( int ) ( offsetContainer / planeSize );
+		sliceIndex = ( int ) ( offset( interval ) / planeSize );
 
-		max = new int[ n ];
-		for ( int d = 0; d < n; ++d )
-			max[ d ] = ( int ) interval.max( d );
+		maxX = ( int ) interval.max( 0 );
+		dimX = ( int ) container.dimension( 0 );
 
 		type.updateContainer( this ); // we're working on one container only.
+		for ( int d = 2; d < n; ++d )
+			position[ d ] = ( int ) interval.min( d );
 		reset();
 	}
 
@@ -199,36 +182,10 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	public final void fwd()
 	{
 		type.incIndex();
-
-//		 for ( int d = 0; d < n; ++d )
-//		 {
-//		 if ( ++position[ d ] > max[ d ] ) position[ d ] = 0;
-//		 else break;
-//		 }
-		/*
-		 * Benchmarks @ 2012-04-17 demonstrate that the less readable code below
-		 * is reliably 5-10% faster than the almost equivalent commented code
-		 * above. The reason is NOT simply that d=0 is executed outside the
-		 * loop. We have tested that and it does not provide improved speed when
-		 * done in the above version of the code. Below, it plays a role.
-		 */
-		if ( ++position[ 0 ] <= max[ 0 ] )
-		{
-			return;
-		}
-		else
+		if ( ++position[ 0 ] > maxX && n > 1 )
 		{
 			position[ 0 ] = 0;
-
-			for ( int d = 1; d < n; ++d )
-			{
-				if ( ++position[ d ] <= max[ d ] )
-					break;
-				else
-					position[ d ] = 0;
-			}
-
-			return;
+			++position[ 1 ];
 		}
 	}
 
@@ -239,8 +196,19 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	public final void jumpFwd( final long steps )
 	{
 		type.incIndex( ( int ) steps );
+		updatePositionFromIndex( type.getIndex() );
+	}
 
-		IntervalIndexer.indexToPosition( ( int ) offsetContainer + type.getIndex(), container.dimensions, position );
+	private void updatePositionFromIndex( final int index )
+	{
+		if ( n == 1 )
+			position[ 0 ] = index;
+		else
+		{
+			final int j = index / dimX;
+			position[ 0 ] = index - j * dimX;
+			position[ 1 ] = j;
+		}
 	}
 
 	/**
@@ -250,8 +218,7 @@ public class PlanarPlaneSubsetLocalizingCursor< T extends NativeType< T > >
 	public final void reset()
 	{
 		type.updateIndex( -1 );
-
-		IntervalIndexer.indexToPosition( ( int ) offsetContainer + type.getIndex(), container.dimensions, position );
+		updatePositionFromIndex( type.getIndex() );
 	}
 
 	/**

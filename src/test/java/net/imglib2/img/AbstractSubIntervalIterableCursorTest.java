@@ -35,9 +35,13 @@ package net.imglib2.img;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import net.imglib2.Cursor;
 import net.imglib2.Interval;
+import net.imglib2.RandomAccess;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.view.Views;
@@ -45,9 +49,11 @@ import net.imglib2.view.iteration.SubIntervalIterable;
 
 import org.junit.Test;
 
-public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntType > & SubIntervalIterable< IntType >>
+public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntType > & SubIntervalIterable< IntType > >
 {
-	/** dimensions of the tested Image. dimension 0 of all should be at least 18 */
+	/**
+	 * dimensions of the tested Image. dimension 0 of all should be at least 18
+	 */
 	protected long[] dimensions;
 
 	protected int[] intData;
@@ -68,7 +74,7 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 	@Test
 	public void testIterationFast()
 	{
-		Cursor< IntType > cursor = img.cursor( intervalFast );
+		Cursor< IntType > cursor = Views.interval( img, intervalFast ).cursor();
 
 		testCursorIteration( cursor, intervalFast );
 	}
@@ -76,7 +82,7 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 	@Test
 	public void testIterationShifted()
 	{
-		Cursor< IntType > cursor = img.cursor( intervalShifted );
+		Cursor< IntType > cursor = Views.interval( img, intervalShifted ).cursor();
 
 		testCursorIteration( cursor, intervalShifted );
 	}
@@ -104,7 +110,7 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 	@Test
 	public void testLocalizingIterationFast()
 	{
-		Cursor< IntType > cursor = img.localizingCursor( intervalFast );
+		Cursor< IntType > cursor = Views.interval( img, intervalFast ).localizingCursor();
 
 		testCursorIteration( cursor, intervalFast );
 	}
@@ -112,8 +118,8 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 	@Test
 	public void testLocalizingIterationShifted()
 	{
-		Cursor< IntType > cursor = img.localizingCursor( intervalShifted );
-
+		Cursor< IntType > cursor = Views.interval( img, intervalShifted ).localizingCursor();
+		
 		testCursorIteration( cursor, intervalShifted );
 	}
 
@@ -124,7 +130,7 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 
 		testCursorJumpFwd( cursor, intervalFast );
 	}
-	
+
 	@Test
 	public void testLocalizingJumpFwdShifted()
 	{
@@ -135,33 +141,38 @@ public abstract class AbstractSubIntervalIterableCursorTest< T extends Img< IntT
 
 	protected void testCursorIteration( Cursor< IntType > cursor, Interval i )
 	{
+
 		long[] position = new long[ cursor.numDimensions() ];
 		long[] min = new long[ cursor.numDimensions() ];
-		long[] max = new long[ cursor.numDimensions() ];
 
 		i.min( min );
 
 		cursor.fwd();
 		cursor.localize( position );
-		assertArrayEquals( "start position was incorrect.", min, position );
 
 		cursor.reset();
 
 		int ctr = 0;
 		long sum = 0;
 
+		final RandomAccess< BitType > check = Views.translate( new ArrayImgFactory< BitType >().create( i, new BitType() ), min ).randomAccess();
+
 		while ( cursor.hasNext() )
 		{
 			cursor.fwd();
 			cursor.localize( position );
+
+			check.setPosition( position );
+
+			assertFalse( check.get().get() );
+
+			check.get().set( true );
+
 			sum += cursor.get().get();
 			ctr++;
 		}
 
-		i.max( max );
-
 		assertEquals( "wrong number of elements accessed.", getIntervalSize( i ), ctr );
-		assertArrayEquals( "end position incorrect.", max, position );
 		assertEquals( "sum of elements incorrect.", sum, getSum( i ) );
 	}
 
