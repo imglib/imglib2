@@ -1243,7 +1243,7 @@ public class Views
 	 * @param sourceB
 	 * @return
 	 */
-	public static < A, B > RandomAccessiblePair< A, B > pair(
+	public static < A, B > RandomAccessible< Pair< A, B > > pair(
 			final RandomAccessible< A > sourceA,
 			final RandomAccessible< B > sourceB )
 	{
