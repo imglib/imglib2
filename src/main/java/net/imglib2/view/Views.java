@@ -66,6 +66,7 @@ import net.imglib2.transform.integer.shear.ShearTransform;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Pair;
 import net.imglib2.util.Util;
 import net.imglib2.view.StackView.StackAccessMode;
 import net.imglib2.view.composite.CompositeIntervalView;
@@ -1245,6 +1246,21 @@ public class Views
 		final int nDim = source.numDimensions();
 		final SingleDimensionPermutationTransform transform = new SingleDimensionPermutationTransform( permutation, nDim, nDim, d ).inverse();
 		return Views.interval( new TransformView< T >( source, transform.inverse() ), source );
+	}
+
+	/**
+	 * Compose two {@link RandomAccessible} sources into a
+	 * {@link RandomAccessible} of {@link Pair}.
+	 *
+	 * @param sourceA
+	 * @param sourceB
+	 * @return
+	 */
+	public static < A, B > RandomAccessible< Pair< A, B > > pair(
+			final RandomAccessible< A > sourceA,
+			final RandomAccessible< B > sourceB )
+	{
+		return new RandomAccessiblePair< A, B >( sourceA, sourceB );
 	}
 
 }
