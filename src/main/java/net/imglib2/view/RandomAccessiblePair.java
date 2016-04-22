@@ -11,96 +11,82 @@ import net.imglib2.util.Pair;
  * corresponding values at the same coordinates in either of the two sources.
  *
  * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
+ * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
 public class RandomAccessiblePair< A, B > implements RandomAccessible< Pair< A, B > >
 {
-	public class Pair implements net.imglib2.util.Pair< A, B >
+	final protected RandomAccessible< A > sourceA;
+	final protected RandomAccessible< B > sourceB;
+
+	public class RandomAccess implements Pair< A, B >, net.imglib2.RandomAccess< Pair< A, B > >
 	{
-		private A a = null;
-		private B b = null;
+		final protected net.imglib2.RandomAccess< A > a;
+		final protected net.imglib2.RandomAccess< B > b;
+
+		public RandomAccess()
+		{
+			a = sourceA.randomAccess();
+			b = sourceB.randomAccess();
+		}
 
 		@Override
 		public A getA()
 		{
-			return a;
+			return a.get();
 		}
 
 		@Override
 		public B getB()
 		{
-			return b;
-		}
-
-		public void setA( final A a )
-		{
-			this.a = a;
-		}
-
-		public void setB( final B b )
-		{
-			this.b = b;
-		}
-	}
-
-	public class RandomAccess implements net.imglib2.RandomAccess< net.imglib2.util.Pair< A, B > >
-	{
-		final protected net.imglib2.RandomAccess< A > raA;
-		final protected net.imglib2.RandomAccess< B > raB;
-		final protected Pair pair;
-
-		public RandomAccess()
-		{
-			raA = sourceA.randomAccess();
-			raB = sourceB.randomAccess();
-			pair = new Pair();
+			return b.get();
 		}
 
 		@Override
 		public void localize( final int[] position )
 		{
-			raA.localize( position );
+			a.localize( position );
 		}
 
 		@Override
 		public void localize( final long[] position )
 		{
-			raA.localize( position );
+			a.localize( position );
 		}
 
 		@Override
 		public int getIntPosition( final int d )
 		{
-			return raA.getIntPosition( d );
+			return a.getIntPosition( d );
 		}
 
 		@Override
 		public long getLongPosition( final int d )
 		{
-			return raA.getLongPosition( d );
+			return a.getLongPosition( d );
 		}
 
 		@Override
 		public void localize( final float[] position )
 		{
-			raA.localize( position );
+			a.localize( position );
 		}
 
 		@Override
 		public void localize( final double[] position )
 		{
-			raA.localize( position );
+			a.localize( position );
 		}
 
 		@Override
 		public float getFloatPosition( final int d )
 		{
-			return raA.getFloatPosition( d );
+			return a.getFloatPosition( d );
 		}
 
 		@Override
 		public double getDoublePosition( final int d )
 		{
-			return raA.getDoublePosition( d );
+			return a.getDoublePosition( d );
 		}
 
 		@Override
@@ -112,93 +98,91 @@ public class RandomAccessiblePair< A, B > implements RandomAccessible< Pair< A, 
 		@Override
 		public void fwd( final int d )
 		{
-			raA.fwd( d );
-			raB.fwd( d );
+			a.fwd( d );
+			b.fwd( d );
 		}
 
 		@Override
 		public void bck( final int d )
 		{
-			raA.bck( d );
-			raB.bck( d );
+			a.bck( d );
+			b.bck( d );
 		}
 
 		@Override
 		public void move( final int distance, final int d )
 		{
-			raA.move( distance, d );
-			raB.move( distance, d );
+			a.move( distance, d );
+			b.move( distance, d );
 		}
 
 		@Override
 		public void move( final long distance, final int d )
 		{
-			raA.move( distance, d );
-			raB.move( distance, d );
+			a.move( distance, d );
+			b.move( distance, d );
 		}
 
 		@Override
 		public void move( final Localizable localizable )
 		{
-			raA.move( localizable );
-			raB.move( localizable );
+			a.move( localizable );
+			b.move( localizable );
 		}
 
 		@Override
 		public void move( final int[] distance )
 		{
-			raA.move( distance );
-			raB.move( distance );
+			a.move( distance );
+			b.move( distance );
 		}
 
 		@Override
 		public void move( final long[] distance )
 		{
-			raA.move( distance );
-			raB.move( distance );
+			a.move( distance );
+			b.move( distance );
 		}
 
 		@Override
 		public void setPosition( final Localizable localizable )
 		{
-			raA.setPosition( localizable );
-			raB.setPosition( localizable );
+			a.setPosition( localizable );
+			b.setPosition( localizable );
 		}
 
 		@Override
 		public void setPosition( final int[] position )
 		{
-			raA.setPosition( position );
-			raB.setPosition( position );
+			a.setPosition( position );
+			b.setPosition( position );
 		}
 
 		@Override
 		public void setPosition( final long[] position )
 		{
-			raA.setPosition( position );
-			raB.setPosition( position );
+			a.setPosition( position );
+			b.setPosition( position );
 		}
 
 		@Override
 		public void setPosition( final int position, final int d )
 		{
-			raA.setPosition( position, d );
-			raB.setPosition( position, d );
+			a.setPosition( position, d );
+			b.setPosition( position, d );
 		}
 
 		@Override
 		public void setPosition( final long position, final int d )
 		{
-			raA.setPosition( position, d );
-			raB.setPosition( position, d );
+			a.setPosition( position, d );
+			b.setPosition( position, d );
 		}
 
 		@Override
-		public Pair get()
+		public RandomAccess get()
 		{
-			pair.setA( raA.get() );
-			pair.setB( raB.get() );
-			return pair;
+			return this;
 		}
 
 		@Override
@@ -215,9 +199,6 @@ public class RandomAccessiblePair< A, B > implements RandomAccessible< Pair< A, 
 			return copy();
 		}
 	}
-
-	final private RandomAccessible< A > sourceA;
-	final private RandomAccessible< B > sourceB;
 
 	public RandomAccessiblePair(
 			final RandomAccessible< A > sourceA,
