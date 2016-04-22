@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,21 +34,28 @@
 
 package net.imglib2.view;
 
-import java.util.Arrays;
-
-import net.imglib2.AbstractLocalizable;
+import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.Localizable;
 import net.imglib2.RandomAccess;
 import net.imglib2.transform.integer.Slicing;
 
 /**
  * Wrap a {@code source} RandomAccess which is related to this by a
- * {@link Slicing} {@code transformToSource}.
+ * {@link Slicing} {@code transformToSource}. This is for {@link Slicing} transforms
+ * that feature a full mapping of source to target components. That is, there is
+ * no down-projection, no source component is discarded. In this case, the
+ * current position can be recovered from the position of the source
+ * RandomAccess. Localize can be implemented via localize on the source
+ * RandomAccess.
+ *
+ * <p>
+ * For the general case, see {@link SlicingRandomAccess}.
+ * </p>
  *
  * @param <T>
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
-public class SlicingRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >
+public class FullSourceMapSlicingRandomAccess< T > extends AbstractEuclideanSpace implements RandomAccess< T >
 {
 	/**
 	 * source RandomAccess. note that this is the <em>target</em> of the
@@ -63,12 +70,6 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 	private final int m;
 
 	/**
-	 * for each component of the source vector: should the value be taken to a
-	 * target vector component (false) or should it be discarded (true).
-	 */
-	private final boolean[] sourceZero;
-
-	/**
 	 * for each component of the source vector: to which target vector component
 	 * should it be taken.
 	 */
@@ -78,7 +79,7 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 
 	private final long[] tmpDistance;
 
-	SlicingRandomAccess( final RandomAccess< T > source, final Slicing transformToSource )
+	FullSourceMapSlicingRandomAccess( final RandomAccess< T > source, final Slicing transformToSource )
 	{
 		super( transformToSource.numSourceDimensions() );
 		// n == transformToSource.numSourceDimensions()
@@ -93,18 +94,12 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 		transformToSource.getComponentZero( targetZero );
 		transformToSource.getComponentMapping( targetComponent );
 
-		sourceZero = new boolean[ n ];
 		sourceComponent = new int[ n ];
-		Arrays.fill( sourceZero, true );
 		for ( int d = 0; d < m; ++d )
-			if ( targetZero[ d ] )
+			if ( transformToSource.getComponentZero( d ) )
 				s.setPosition( transformToSource.getTranslation( d ), d );
 			else
-			{
-				final int e = targetComponent[ d ];
-				sourceZero[ e ] = false;
-				sourceComponent[ e ] = d;
-			}
+				sourceComponent[ transformToSource.getComponentMapping( d ) ] = d;
 
 		tmpPosition = new long[ m ];
 		transformToSource.getTranslation( tmpPosition );
@@ -112,51 +107,100 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 		tmpDistance = new long[ m ];
 	}
 
-	protected SlicingRandomAccess( final SlicingRandomAccess< T > randomAccess )
+	protected FullSourceMapSlicingRandomAccess( final FullSourceMapSlicingRandomAccess< T > randomAccess )
 	{
 		super( randomAccess.numDimensions() );
 		s = randomAccess.s.copyRandomAccess();
 		m = randomAccess.m;
-		sourceZero = randomAccess.sourceZero.clone();
 		sourceComponent = randomAccess.sourceComponent.clone();
 		tmpPosition = randomAccess.tmpPosition.clone();
 		tmpDistance = randomAccess.tmpDistance.clone();
 	}
 
 	@Override
-	public void fwd( final int d )
+	public void localize( final int[] position )
+	{
+		assert position.length >= n;
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = getIntPosition( d );
+	}
+
+	@Override
+	public void localize( final long[] position )
+	{
+		assert position.length >= n;
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = getLongPosition( d );
+	}
+
+	@Override
+	public int getIntPosition( final int d )
 	{
 		assert d < n;
-		++position[ d ];
-		if ( !sourceZero[ d ] )
-			s.fwd( sourceComponent[ d ] );
+		return s.getIntPosition( sourceComponent[ d ] );
+	}
+
+	@Override
+	public long getLongPosition( final int d )
+	{
+		assert d < n;
+		return s.getLongPosition( sourceComponent[ d ] );
+	}
+
+	@Override
+	public void localize( final float[] position )
+	{
+		assert position.length >= n;
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = getFloatPosition( d );
+	}
+
+	@Override
+	public void localize( final double[] position )
+	{
+		assert position.length >= n;
+		for ( int d = 0; d < n; ++d )
+			position[ d ] = getDoublePosition( d );
+	}
+
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		assert d < n;
+		return s.getFloatPosition( sourceComponent[ d ] );
+	}
+
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		assert d < n;
+		return s.getDoublePosition( sourceComponent[ d ] );
+	}
+
+	@Override
+	public void fwd( final int d )
+	{
+		s.fwd( sourceComponent[ d ] );
 	}
 
 	@Override
 	public void bck( final int d )
 	{
-		assert d < n;
-		--position[ d ];
-		if ( !sourceZero[ d ] )
-			s.bck( sourceComponent[ d ] );
+		s.bck( sourceComponent[ d ] );
 	}
 
 	@Override
 	public void move( final int distance, final int d )
 	{
 		assert d < n;
-		position[ d ] += distance;
-		if ( !sourceZero[ d ] )
-			s.move( distance, sourceComponent[ d ] );
+		s.move( distance, sourceComponent[ d ] );
 	}
 
 	@Override
 	public void move( final long distance, final int d )
 	{
 		assert d < n;
-		position[ d ] += distance;
-		if ( !sourceZero[ d ] )
-			s.move( distance, sourceComponent[ d ] );
+		s.move( distance, sourceComponent[ d ] );
 	}
 
 	@Override
@@ -169,12 +213,7 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
-		{
-			final long distance = localizable.getLongPosition( d );
-			position[ d ] += distance;
-			if ( !sourceZero[ d ] )
-				tmpDistance[ sourceComponent[ d ] ] = distance;
-		}
+			tmpDistance[ sourceComponent[ d ] ] = localizable.getLongPosition( d );
 		s.move( tmpDistance );
 	}
 
@@ -188,11 +227,7 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] += distance[ d ];
-			if ( !sourceZero[ d ] )
-				tmpDistance[ sourceComponent[ d ] ] = distance[ d ];
-		}
+			tmpDistance[ sourceComponent[ d ] ] = distance[ d ];
 		s.move( tmpDistance );
 	}
 
@@ -206,11 +241,7 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 		// tmpDistance[].
 		// however, the missing components are already assigned to 0
 		for ( int d = 0; d < n; ++d )
-		{
-			position[ d ] += distance[ d ];
-			if ( !sourceZero[ d ] )
-				tmpDistance[ sourceComponent[ d ] ] = distance[ d ];
-		}
+			tmpDistance[ sourceComponent[ d ] ] = distance[ d ];
 		s.move( tmpDistance );
 	}
 
@@ -225,12 +256,7 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 		// however, the missing components are already assigned to the correct
 		// translation components.
 		for ( int d = 0; d < n; ++d )
-		{
-			final long p = localizable.getLongPosition( d );
-			position[ d ] = p;
-			if ( !sourceZero[ d ] )
-				tmpPosition[ sourceComponent[ d ] ] = p;
-		}
+			tmpPosition[ sourceComponent[ d ] ] = localizable.getLongPosition( d );
 		s.setPosition( tmpPosition );
 	}
 
@@ -245,12 +271,7 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 		// however, the missing components are already assigned to the correct
 		// translation components.
 		for ( int d = 0; d < n; ++d )
-		{
-			final long p = position[ d ];
-			this.position[ d ] = p;
-			if ( !sourceZero[ d ] )
-				tmpPosition[ sourceComponent[ d ] ] = p;
-		}
+			tmpPosition[ sourceComponent[ d ] ] = position[ d ];
 		s.setPosition( tmpPosition );
 	}
 
@@ -265,12 +286,7 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 		// however, the missing components are already assigned to the correct
 		// translation components.
 		for ( int d = 0; d < n; ++d )
-		{
-			final long p = position[ d ];
-			this.position[ d ] = p;
-			if ( !sourceZero[ d ] )
-				tmpPosition[ sourceComponent[ d ] ] = p;
-		}
+			tmpPosition[ sourceComponent[ d ] ] = position[ d ];
 		s.setPosition( tmpPosition );
 	}
 
@@ -278,18 +294,14 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 	public void setPosition( final int position, final int d )
 	{
 		assert d < n;
-		this.position[ d ] = position;
-		if ( !sourceZero[ d ] )
-			s.setPosition( position, sourceComponent[ d ] );
+		s.setPosition( position, sourceComponent[ d ] );
 	}
 
 	@Override
 	public void setPosition( final long position, final int d )
 	{
 		assert d < n;
-		this.position[ d ] = position;
-		if ( !sourceZero[ d ] )
-			s.setPosition( position, sourceComponent[ d ] );
+		s.setPosition( position, sourceComponent[ d ] );
 	}
 
 	@Override
@@ -299,13 +311,13 @@ public class SlicingRandomAccess< T > extends AbstractLocalizable implements Ran
 	}
 
 	@Override
-	public SlicingRandomAccess< T > copy()
+	public FullSourceMapSlicingRandomAccess< T > copy()
 	{
-		return new SlicingRandomAccess< T >( this );
+		return new FullSourceMapSlicingRandomAccess< T >( this );
 	}
 
 	@Override
-	public SlicingRandomAccess< T > copyRandomAccess()
+	public FullSourceMapSlicingRandomAccess< T > copyRandomAccess()
 	{
 		return copy();
 	}
