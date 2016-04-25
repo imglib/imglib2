@@ -365,4 +365,27 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 
 		return mat;
 	}
+
+	/**
+	 * Check whether the transforms has a full mapping of source to target
+	 * components (no source component is discarded).
+	 *
+	 * @return whether there is a full mapping of source to target components.
+	 */
+	public boolean hasFullSourceMapping()
+	{
+		final boolean[] sourceMapped = new boolean[ numSourceDimensions ];
+		for ( int d = 0; d < numTargetDimensions; ++d )
+		{
+			if ( !zero[ d ] )
+			{
+				sourceMapped[ component[ d ] ] = true;
+			}
+		}
+		for ( int d = 0; d < numSourceDimensions; ++d )
+		{
+			if ( !sourceMapped[ d ] ) { return false; }
+		}
+		return true;
+	}
 }

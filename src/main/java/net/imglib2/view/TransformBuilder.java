@@ -446,6 +446,7 @@ public class TransformBuilder< T >
 
 	protected RandomAccessible< T > wrapSlicingTransform( final RandomAccessible< T > s, final SlicingTransform t )
 	{
+		final boolean full = t.hasFullSourceMapping();
 		return new RandomAccessible< T >()
 		{
 			@Override
@@ -455,14 +456,18 @@ public class TransformBuilder< T >
 			}
 
 			@Override
-			public SlicingRandomAccess< T > randomAccess()
+			public RandomAccess< T > randomAccess()
 			{
+				if ( full )
+					return new FullSourceMapSlicingRandomAccess< T >( s.randomAccess(), t );
 				return new SlicingRandomAccess< T >( s.randomAccess(), t );
 			}
 
 			@Override
-			public SlicingRandomAccess< T > randomAccess( final Interval interval )
+			public RandomAccess< T > randomAccess( final Interval interval )
 			{
+				if ( full )
+					return new FullSourceMapSlicingRandomAccess< T >( s.randomAccess(), t );
 				return new SlicingRandomAccess< T >( s.randomAccess(), t );
 			}
 		};
