@@ -123,7 +123,11 @@ public class ListImg< T > extends AbstractListImg< T >
 	public ListImg< T > copy()
 	{
 		final T type = firstElement();
-		if ( type instanceof Type< ? > ) { return copyWithType( ( ListImg< Type > ) this ); }
+		if ( type instanceof Type< ? > )
+		{
+			final ListImg< ? > copy = copyWithType( ( ListImg< Type > ) this );
+			return ( ListImg< T > ) copy;
+		}
 		return new ListImg< T >( this.pixels, dimension );
 	}
 }
