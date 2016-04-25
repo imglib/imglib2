@@ -236,4 +236,10 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	{
 		return 64;
 	}
+
+	@Override
+	public boolean valueEquals( T t )
+	{
+		return getValue() == t.getValue();
+	}
 }

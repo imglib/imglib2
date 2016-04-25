@@ -306,4 +306,10 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	{
 		return 32;
 	}
+
+	@Override
+	public boolean valueEquals( FloatType t )
+	{
+		return get() == t.get();
+	}
 }

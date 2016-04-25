@@ -291,4 +291,12 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	{
 		return i;
 	}
+
+	@Override
+	public boolean valueEquals( ComplexFloatType t )
+	{
+		return
+				( getRealFloat() == t.getRealFloat() ) &&
+				( getImaginaryFloat() == t.getImaginaryFloat() );
+	}
 }

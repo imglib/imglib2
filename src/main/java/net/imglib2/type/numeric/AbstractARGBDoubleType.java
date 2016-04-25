@@ -156,4 +156,14 @@ abstract public class AbstractARGBDoubleType< T extends AbstractARGBDoubleType< 
 
 		return ( ( ( ( ( a << 8 ) | r ) << 8 ) | g ) << 8 ) | b;
 	}
+
+	@Override
+	public boolean valueEquals( T t )
+	{
+		return
+				( getA() == t.getA() ) &&
+				( getR() == t.getR() ) &&
+				( getG() == t.getG() ) &&
+				( getB() == t.getB() );
+	}
 }

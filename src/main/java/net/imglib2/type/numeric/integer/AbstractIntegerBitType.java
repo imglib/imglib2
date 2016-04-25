@@ -200,4 +200,16 @@ public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>
 
 	@Override
 	public void complexConjugate(){}
+
+	/**
+	 * Default test at long precision.  Please override for types longer than 64bit.
+	 *
+	 * @param t
+	 * @return
+	 */
+	@Override
+	public boolean valueEquals( T t )
+	{
+		return get() == t.get();
+	}
 }

@@ -39,6 +39,7 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.type.AbstractBit64Type;
 import net.imglib2.type.BasePairType;
+import net.imglib2.type.logic.BitType;
 
 /**
  * Representation of base pairs using 3 bits per entry, supported characters: gap, N, A, T, G, C, U
@@ -183,5 +184,11 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	public String toString()
 	{
 		return this.get().toString();
+	}
+	
+	@Override
+	public boolean valueEquals( BasePairBitType t )
+	{
+		return get() == t.get();
 	}
 }

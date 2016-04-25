@@ -246,4 +246,10 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	{
 		return 16;
 	}
+
+	@Override
+	public boolean valueEquals( T t )
+	{
+		return getValue() == t.getValue();
+	}
 }

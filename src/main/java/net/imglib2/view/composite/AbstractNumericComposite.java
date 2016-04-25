@@ -193,4 +193,21 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 		sourceAccess.setPosition( -1, d );
 		return iterator;
 	}
+
+	@Override
+	public boolean valueEquals( C t )
+	{
+		if ( t.length == length )
+		{
+			final Iterator< T > a = iterator();
+			final Iterator< T > b = iterator();
+			while ( a.hasNext() )
+				if ( !a.next().valueEquals( b.next() ) )
+					return false;
+
+			return true;
+		}
+		else
+			return false;
+	}
 }

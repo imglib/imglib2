@@ -246,4 +246,10 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	{
 		t.mul( c );
 	}
+
+	@Override
+	public boolean valueEquals( T other )
+	{
+		return ( isValid() && other.isValid() ) && t.valueEquals( other.t );
+	}
 }

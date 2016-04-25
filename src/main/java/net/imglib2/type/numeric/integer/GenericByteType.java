@@ -38,6 +38,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
@@ -242,5 +243,11 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 	public int getBitsPerPixel()
 	{
 		return 8;
+	}
+
+	@Override
+	public boolean valueEquals( T t )
+	{
+		return getValue() == t.getValue();
 	}
 }

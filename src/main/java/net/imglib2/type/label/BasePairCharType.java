@@ -41,6 +41,7 @@ import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.type.AbstractNativeType;
 import net.imglib2.type.BasePairType;
 import net.imglib2.type.label.BasePairBitType.Base;
+import net.imglib2.type.logic.BitType;
 import net.imglib2.util.Fraction;
 
 /**
@@ -274,5 +275,11 @@ public class BasePairCharType extends AbstractNativeType< BasePairCharType > imp
 	public String toString()
 	{
 		return "" + get();
+	}
+	
+	@Override
+	public boolean valueEquals( BasePairCharType t )
+	{
+		return get() == t.get();
 	}
 }

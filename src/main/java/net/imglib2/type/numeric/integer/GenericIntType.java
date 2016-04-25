@@ -243,4 +243,10 @@ public abstract class GenericIntType< T extends GenericIntType< T >> extends Abs
 	{
 		return 32;
 	}
+
+	@Override
+	public boolean valueEquals( T t )
+	{
+		return getValue() == t.getValue();
+	}
 }

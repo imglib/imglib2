@@ -31,99 +31,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-
-package net.imglib2.type.volatiles;
-
-import net.imglib2.Volatile;
-import net.imglib2.type.numeric.NumericType;
+package net.imglib2.type.operators;
 
 /**
- * Abstract base class for {@link VolatileNumericType}s that wrap a
- * {@link NumericType} that is either VALID or INVALID.
+ * Tests equivalency of values.  This is related to
+ * {@link Object#equals(Object)} but for typed parameters, without reference
+ * equality, and without side effects in the JDK when done otherwise.
  * 
- * @param <N>
- *            wrapped {@link NumericType}.
- * @param <T>
- *            type of derived concrete class.
- * 
- * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
+ * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
  */
-abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T extends AbstractVolatileNumericType< N, T > >
-		extends Volatile< N >
-		implements NumericType< T >
+public interface ValueEquals< T >
 {
-	public AbstractVolatileNumericType( final N t, final boolean valid )
-	{
-		super( t, valid );
-	}
-
-	public AbstractVolatileNumericType( final N t )
-	{
-		this( t, false );
-	}
-
-	@Override
-	public void set( final T c )
-	{
-		t.set( c.t );
-		valid = c.valid;
-	}
-
-	@Override
-	public void add( final T c )
-	{
-		t.add( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void sub( final T c )
-	{
-		t.sub( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void mul( final T c )
-	{
-		t.mul( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void div( final T c )
-	{
-		t.div( c.t );
-		valid &= c.valid;
-	}
-
-	@Override
-	public void setZero()
-	{
-		t.setZero();
-	}
-
-	@Override
-	public void setOne()
-	{
-		t.setOne();
-	}
-
-	@Override
-	public void mul( final float c )
-	{
-		t.mul( c );
-	}
-
-	@Override
-	public void mul( final double c )
-	{
-		t.mul( c );
-	}
-
-	@Override
-	public boolean valueEquals( T other )
-	{
-		return ( isValid() && other.isValid() ) && t.valueEquals( other.t );
-	}
+	public boolean valueEquals( T t );
 }
