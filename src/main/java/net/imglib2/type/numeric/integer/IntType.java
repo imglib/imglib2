@@ -39,6 +39,7 @@ import java.math.BigInteger;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.IntAccess;
+import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.Fraction;
 
 /**

@@ -34,6 +34,8 @@
 
 package net.imglib2.type;
 
+import net.imglib2.type.operators.ValueEquals;
+
 /**
  * The {@link Type} interface is responsible for accessing and manipulating
  * (pixel) values. It can be realized as an object instance holding a single
@@ -47,7 +49,7 @@ package net.imglib2.type;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public interface Type< T extends Type< T > >
+public interface Type< T extends Type< T > > extends ValueEquals< T >
 {
 	/**
 	 * Creates a new {@link Type} variable which can only store one value.

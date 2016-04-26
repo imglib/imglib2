@@ -193,4 +193,10 @@ public class BoolType extends AbstractIntegerType< BoolType > implements Boolean
 	{
 		set( b.compareTo(BigInteger.ZERO) > 0 );
 	}
+	
+	@Override
+	public boolean valueEquals( BoolType t )
+	{
+		return get() == t.get();
+	}
 }

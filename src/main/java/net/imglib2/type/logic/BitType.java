@@ -343,4 +343,10 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	{
 		return 1;
 	}
+
+	@Override
+	public boolean valueEquals( BitType t )
+	{
+		return get() == t.get();
+	}
 }

@@ -367,4 +367,15 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 		}
 		return 1;
 	}
+
+	@Override
+	public boolean valueEquals( Unsigned128BitType t )
+	{
+		final int k = i * 2;
+		final int kt = t.i * 2;
+
+		return
+				( dataAccess.getValue( k ) == t.dataAccess.getValue( kt ) ) &&
+				( dataAccess.getValue( k + 1 ) == t.dataAccess.getValue( kt + 1 ) );
+	}
 }

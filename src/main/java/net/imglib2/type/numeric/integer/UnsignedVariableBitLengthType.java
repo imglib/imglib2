@@ -210,4 +210,16 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type<UnsignedVar
 
 	@Override
 	public void complexConjugate(){}
+
+	/**
+	 * Default test at long precision.  Please override for types longer than 64bit.
+	 *
+	 * @param t
+	 * @return
+	 */
+	@Override
+	public boolean valueEquals( UnsignedVariableBitLengthType t )
+	{
+		return getBits() == t.getBits();
+	}
 }
