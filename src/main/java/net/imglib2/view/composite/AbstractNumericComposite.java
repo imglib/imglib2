@@ -200,7 +200,7 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 		if ( t.length == length )
 		{
 			final Iterator< T > a = iterator();
-			final Iterator< T > b = iterator();
+			final Iterator< T > b = t.iterator();
 			while ( a.hasNext() )
 				if ( !a.next().valueEquals( b.next() ) )
 					return false;
