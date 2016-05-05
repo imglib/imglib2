@@ -904,7 +904,7 @@ public class Views
 	 * @return a subsampled {@link RandomAccessibleInterval} with its origin
 	 *         coordinates at zero
 	 */
-	public static < T > SubsampleView< T > subsample( final RandomAccessibleInterval< T > source, final long... steps )
+	public static < T > SubsampleIntervalView< T > subsample( final RandomAccessibleInterval< T > source, final long... steps )
 	{
 		assert steps.length >= source.numDimensions(): "Dimensions do not match.";
 
