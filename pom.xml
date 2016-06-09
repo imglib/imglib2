@@ -13,8 +13,8 @@
 
 	<name>ImgLib2 Core Library</name>
 	<description>A multidimensional, type-agnostic image processing library.</description>
-	<inceptionYear>2009</inceptionYear>
 	<url>http://imglib2.net/</url>
+	<inceptionYear>2009</inceptionYear>
 
 	<developers>
 		<developer>
@@ -220,5 +220,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
