@@ -46,11 +46,11 @@ import net.imglib2.type.Type;
  */
 public class ConvertedRealRandomAccessible< A, B extends Type< B > > extends AbstractConvertedRealRandomAccessible< A, B >
 {
-	final protected Converter< A, B > converter;
+	final protected Converter< ? super A, ? super B > converter;
 
 	final protected B converted;
 
-	public ConvertedRealRandomAccessible( final RealRandomAccessible< A > source, final Converter< A, B > converter, final B b )
+	public ConvertedRealRandomAccessible( final RealRandomAccessible< A > source, final Converter< ? super A, ? super B > converter, final B b )
 	{
 		super( source );
 		this.converter = converter;
@@ -77,7 +77,7 @@ public class ConvertedRealRandomAccessible< A, B extends Type< B > > extends Abs
 		return converted.copy();
 	}
 
-	public Converter< A, B > getConverter()
+	public Converter< ? super A, ? super B > getConverter()
 	{
 		return converter;
 	}

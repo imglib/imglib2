@@ -45,11 +45,11 @@ import net.imglib2.type.Type;
  */
 final public class ConvertedRealRandomAccess< A, B extends Type< B > > extends AbstractConvertedRealRandomAccess< A, B >
 {
-	final protected Converter< A, B > converter;
+	final protected Converter< ? super A, ? super B > converter;
 
 	final protected B converted;
 
-	public ConvertedRealRandomAccess( final RealRandomAccess< A > source, final Converter< A, B > converter, final B b )
+	public ConvertedRealRandomAccess( final RealRandomAccess< A > source, final Converter< ? super A, ? super B > converter, final B b )
 	{
 		super( source );
 		this.converter = converter;

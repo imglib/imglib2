@@ -47,11 +47,11 @@ import net.imglib2.type.Type;
  */
 public class ConvertedRealRandomAccessibleRealInterval< A, B extends Type< B > > extends AbstractWrappedRealInterval< RealRandomAccessibleRealInterval< A > > implements RealRandomAccessibleRealInterval< B >, View
 {
-	final protected Converter< A, B > converter;
+	final protected Converter< ? super A, ? super B > converter;
 
 	final protected B converted;
 
-	public ConvertedRealRandomAccessibleRealInterval( final RealRandomAccessibleRealInterval< A > source, final Converter< A, B > converter, final B b )
+	public ConvertedRealRandomAccessibleRealInterval( final RealRandomAccessibleRealInterval< A > source, final Converter< ? super A, ? super B > converter, final B b )
 	{
 		super( source );
 		this.converter = converter;
@@ -78,7 +78,7 @@ public class ConvertedRealRandomAccessibleRealInterval< A, B extends Type< B > >
 		return converted.copy();
 	}
 
-	public Converter< A, B > getConverter()
+	public Converter< ? super A, ? super B > getConverter()
 	{
 		return converter;
 	}

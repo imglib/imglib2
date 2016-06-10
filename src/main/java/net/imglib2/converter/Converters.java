@@ -223,7 +223,7 @@ public class Converters
 	@SuppressWarnings( "unchecked" )
 	final static public < A, B extends Type< B > > RealRandomAccessibleRealInterval< B > convert(
 			final RealRandomAccessibleRealInterval< A > source,
-			final Converter< A, B > converter,
+			final  Converter< ? super A, ? super B > converter,
 			final B b )
 	{
 		if ( TypeIdentity.class.isInstance( converter ) )
@@ -247,7 +247,7 @@ public class Converters
 	@SuppressWarnings( "unchecked" )
 	final static public < A, B extends Type< B > > RealRandomAccessible< B > convert(
 			final RealRandomAccessible< A > source,
-			final Converter< A, B > converter,
+			final  Converter< ? super A, ? super B > converter,
 			final B b )
 	{
 		if ( TypeIdentity.class.isInstance( converter ) )
