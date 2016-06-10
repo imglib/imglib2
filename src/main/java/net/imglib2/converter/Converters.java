@@ -39,10 +39,15 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealRandomAccess;
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.RealRandomAccessibleRealInterval;
 import net.imglib2.Sampler;
 import net.imglib2.converter.read.ConvertedIterableInterval;
 import net.imglib2.converter.read.ConvertedRandomAccessible;
 import net.imglib2.converter.read.ConvertedRandomAccessibleInterval;
+import net.imglib2.converter.read.ConvertedRealRandomAccessible;
+import net.imglib2.converter.read.ConvertedRealRandomAccessibleRealInterval;
 import net.imglib2.converter.readwrite.SamplerConverter;
 import net.imglib2.converter.readwrite.WriteConvertedIterableInterval;
 import net.imglib2.converter.readwrite.WriteConvertedIterableRandomAccessibleInterval;
@@ -200,5 +205,53 @@ public class Converters
 					final SamplerConverter< ? super A, B > converter )
 	{
 		return new WriteConvertedIterableRandomAccessibleInterval< A, B, S >( source, converter );
+	}
+
+	/**
+	 * Create a {@link RealRandomAccessibleRealInterval} whose {@link RealRandomAccess
+	 * RealRandomAccesses} {@link RealRandomAccess#get()} you a converted sample.
+	 * Conversion is done on-the-fly when reading values. Writing to the
+	 * converted {@link RealRandomAccessibleInterval} has no effect.
+	 *
+	 * @param source
+	 * @param converter
+	 * @param b
+	 * @return a converted {@link RealRandomAccessibleInterval} whose
+	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
+	 *         conversion using the provided converter.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public < A, B extends Type< B > > RealRandomAccessibleRealInterval< B > convert(
+			final RealRandomAccessibleRealInterval< A > source,
+			final Converter< A, B > converter,
+			final B b )
+	{
+		if ( TypeIdentity.class.isInstance( converter ) )
+			return ( RealRandomAccessibleRealInterval< B > ) source;
+		return new ConvertedRealRandomAccessibleRealInterval< A, B >( source, converter, b );
+	}
+
+	/**
+	 * Create a {@link RealRandomAccessible} whose {@link RealRandomAccess
+	 * RealRandomAccesses} {@link RealRandomAccess#get()} you a converted sample.
+	 * Conversion is done on-the-fly when reading values. Writing to the
+	 * converted {@link RandomAccessibleInterval} has no effect.
+	 *
+	 * @param source
+	 * @param converter
+	 * @param b
+	 * @return a converted {@link RealRandomAccessible} whose {@link RealRandomAccess
+	 *         RealRandomAccesses} perform on-the-fly value conversion using the
+	 *         provided converter.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public < A, B extends Type< B > > RealRandomAccessible< B > convert(
+			final RealRandomAccessible< A > source,
+			final Converter< A, B > converter,
+			final B b )
+	{
+		if ( TypeIdentity.class.isInstance( converter ) )
+			return ( RealRandomAccessible< B > ) source;
+		return new ConvertedRealRandomAccessible< A, B >( source, converter, b );
 	}
 }

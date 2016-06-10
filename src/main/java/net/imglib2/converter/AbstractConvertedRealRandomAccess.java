@@ -1,0 +1,224 @@
+/*
+ * #%L
+ * ImgLib2: a general-purpose, multidimensional image processing library.
+ * %%
+ * Copyright (C) 2009 - 2015 Tobias Pietzsch, Stephan Preibisch, Barry DeZonia,
+ * Stephan Saalfeld, Curtis Rueden, Albert Cardona, Christian Dietz, Jean-Yves
+ * Tinevez, Johannes Schindelin, Jonathan Hale, Lee Kamentsky, Larry Lindsey, Mark
+ * Hiner, Michael Zinsmaier, Martin Horn, Grant Harris, Aivar Grislis, John
+ * Bogovic, Steffen Jaensch, Stefan Helfrich, Jan Funke, Nick Perry, Mark Longair,
+ * Melissa Linkert and Dimiter Prodanov.
+ * %%
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * #L%
+ */
+
+package net.imglib2.converter;
+
+import net.imglib2.Localizable;
+import net.imglib2.RealLocalizable;
+import net.imglib2.RealRandomAccess;
+
+/**
+ * TODO
+ * 
+ */
+abstract public class AbstractConvertedRealRandomAccess< A, B > implements RealRandomAccess< B >
+{
+	final protected RealRandomAccess< A > source;
+
+	public AbstractConvertedRealRandomAccess( final RealRandomAccess< A > source )
+	{
+		this.source = source;
+	}
+
+	@Override
+	public void localize( final float[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public void localize( final double[] position )
+	{
+		source.localize( position );
+	}
+
+	@Override
+	public float getFloatPosition( final int d )
+	{
+		return source.getFloatPosition( d );
+	}
+
+	@Override
+	public double getDoublePosition( final int d )
+	{
+		return source.getDoublePosition( d );
+	}
+
+	@Override
+	public int numDimensions()
+	{
+		return source.numDimensions();
+	}
+
+	@Override
+	public void fwd( final int d )
+	{
+		source.fwd( d );
+	}
+
+	@Override
+	public void bck( final int d )
+	{
+		source.bck( d );
+	}
+
+	@Override
+	public void move( final int distance, final int d )
+	{
+		source.move( distance, d );
+	}
+
+	@Override
+	public void move( final long distance, final int d )
+	{
+		source.move( distance, d );
+	}
+
+	@Override
+	public void move( final Localizable localizable )
+	{
+		source.move( localizable );
+	}
+
+	@Override
+	public void move( final int[] distance )
+	{
+		source.move( distance );
+	}
+
+	@Override
+	public void move( final long[] distance )
+	{
+		source.move( distance );
+	}
+
+	@Override
+	public void setPosition( final Localizable localizable )
+	{
+		source.setPosition( localizable );
+	}
+
+	@Override
+	public void setPosition( final int[] position )
+	{
+		source.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final long[] position )
+	{
+		source.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( final int position, final int d )
+	{
+		source.setPosition( position, d );
+	}
+
+	@Override
+	public void setPosition( final long position, final int d )
+	{
+		source.setPosition( position, d );
+	}
+
+	@Override
+	abstract public AbstractConvertedRealRandomAccess< A, B > copy();
+
+	@Override
+	public AbstractConvertedRealRandomAccess< A, B > copyRealRandomAccess()
+	{
+		return copy();
+	}
+
+	@Override
+	public void move( float distance, int d )
+	{
+		source.move( distance, d );
+	}
+
+	@Override
+	public void move( double distance, int d )
+	{
+		source.move( distance, d );
+	}
+
+	@Override
+	public void move( RealLocalizable localizable )
+	{
+		source.move( localizable );
+	}
+
+	@Override
+	public void move( float[] distance )
+	{
+		source.move( distance );
+	}
+
+	@Override
+	public void move( double[] distance )
+	{
+		source.move( distance );
+	}
+
+	@Override
+	public void setPosition( RealLocalizable localizable )
+	{
+		source.setPosition( localizable );
+	}
+
+	@Override
+	public void setPosition( float[] position )
+	{
+		source.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( double[] position )
+	{
+		source.setPosition( position );
+	}
+
+	@Override
+	public void setPosition( float position, int d )
+	{
+		source.setPosition( position, d );
+	}
+
+	@Override
+	public void setPosition( double position, int d )
+	{
+		source.setPosition( position, d );
+	}
+}
