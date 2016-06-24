@@ -39,7 +39,7 @@ package net.imglib2.img.basictypeaccess;
  * 
  * @param <A>
  *            primitive array type
- * @author Curtis Rueden ctrueden at wisc.edu
+ * @author Curtis Rueden
  */
 public interface PlanarAccess< A >
 {
