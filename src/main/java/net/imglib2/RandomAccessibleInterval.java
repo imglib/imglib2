@@ -40,7 +40,7 @@ package net.imglib2;
  * </p>
  * 
  * <p>
- * A function over an an n-dimensional integer interval that can create a random
+ * A function over an n-dimensional integer interval that can create a random
  * access {@link Sampler}.
  * </p>
  * 
