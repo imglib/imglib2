@@ -66,7 +66,6 @@ import net.imglib2.util.IntervalIndexer;
  * example above), use {@link LocalizingZeroMinIntervalIterator} instead.
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class ZeroMinIntervalIterator extends IntervalIterator

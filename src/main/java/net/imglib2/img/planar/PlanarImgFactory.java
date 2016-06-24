@@ -55,10 +55,6 @@ import net.imglib2.util.Fraction;
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Johannes Schindelin
- * @author Jan Funke
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
- * @author Johannes Schindelin
  */
 public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {

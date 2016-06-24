@@ -40,7 +40,6 @@ package net.imglib2;
  * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public interface IterableInterval< T > extends IterableRealInterval< T >, Interval

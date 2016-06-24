@@ -40,7 +40,6 @@ import net.imglib2.type.numeric.real.FloatType;
 /**
  * Computes the phase spectrum for a complex value
  * 
- * @author Stephan Preibisch
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
 public class ComplexPhaseFloatConverter< R extends ComplexType< R > > implements Converter< R, FloatType >

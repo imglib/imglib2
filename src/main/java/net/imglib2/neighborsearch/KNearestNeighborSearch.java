@@ -45,7 +45,6 @@ import net.imglib2.Sampler;
  * application, each thread will thus need its own
  * {@link KNearestNeighborSearch}.
  * 
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >

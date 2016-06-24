@@ -51,7 +51,6 @@ import net.imglib2.type.NativeType;
  * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public interface Sampler< T >

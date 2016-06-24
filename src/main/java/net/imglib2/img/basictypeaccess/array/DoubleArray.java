@@ -40,7 +40,6 @@ import net.imglib2.img.basictypeaccess.DoubleAccess;
  * TODO
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class DoubleArray implements DoubleAccess, ArrayDataAccess< DoubleArray >

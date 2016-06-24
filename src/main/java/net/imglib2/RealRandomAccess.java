@@ -39,7 +39,6 @@ package net.imglib2;
  * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public interface RealRandomAccess< T > extends RealLocalizable, RealPositionable, Sampler< T >

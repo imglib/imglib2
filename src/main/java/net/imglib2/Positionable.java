@@ -39,7 +39,6 @@ package net.imglib2;
  * 
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  * @author Tobias Pietzsch
  */

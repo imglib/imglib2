@@ -46,9 +46,6 @@ import net.imglib2.type.numeric.ARGBType;
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
 public class NLinearInterpolatorARGBFactory implements InterpolatorFactory< ARGBType, RandomAccessible< ARGBType > >
 {

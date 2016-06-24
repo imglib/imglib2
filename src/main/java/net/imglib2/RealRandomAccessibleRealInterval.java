@@ -44,7 +44,6 @@ package net.imglib2;
  * access {@link Sampler}.
  * </p>
  * 
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public interface RealRandomAccessibleRealInterval< T > extends RealRandomAccessible< T >, RealInterval

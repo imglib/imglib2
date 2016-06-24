@@ -51,7 +51,6 @@ package net.imglib2;
  * 
  * @param <T>
  * 
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public interface IterableRealInterval< T > extends RealInterval, Iterable< T >

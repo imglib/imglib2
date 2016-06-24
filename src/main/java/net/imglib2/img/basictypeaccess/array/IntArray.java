@@ -40,7 +40,6 @@ import net.imglib2.img.basictypeaccess.IntAccess;
  * TODO
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class IntArray implements IntAccess, ArrayDataAccess< IntArray >

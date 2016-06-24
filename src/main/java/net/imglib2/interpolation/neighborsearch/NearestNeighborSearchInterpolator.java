@@ -44,7 +44,6 @@ import net.imglib2.neighborsearch.NearestNeighborSearch;
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld
  */
 public class NearestNeighborSearchInterpolator< T > extends RealPoint implements RealRandomAccess< T >
 {

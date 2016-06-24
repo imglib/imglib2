@@ -41,7 +41,6 @@ import net.imglib2.util.Util;
 /**
  * Computes the generalized log of the power spectrum for a complex value
  * 
- * @author Stephan Preibisch
  * @author Stephan Preibisch (stephan.preibisch@gmx.de)
  */
 public class ComplexPowerGLogFloatConverter< R extends ComplexType< R > > implements Converter< R, FloatType >

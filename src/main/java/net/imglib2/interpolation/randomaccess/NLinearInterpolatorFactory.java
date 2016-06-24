@@ -45,7 +45,6 @@ import net.imglib2.type.numeric.NumericType;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
 public class NLinearInterpolatorFactory< T extends NumericType< T > > implements InterpolatorFactory< T, RandomAccessible< T > >
 {

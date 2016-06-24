@@ -56,7 +56,6 @@ import org.junit.Test;
 
 /**
  * 
- * @author Tobias Pietzsch
  * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class RandomAccessibleIntervalCursorTest

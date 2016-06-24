@@ -40,7 +40,6 @@ import net.imglib2.img.basictypeaccess.FloatAccess;
  * TODO
  *
  * @author Stephan Preibisch
- * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class FloatArray implements FloatAccess, ArrayDataAccess< FloatArray >

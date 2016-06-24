@@ -45,9 +45,6 @@ import net.imglib2.interpolation.InterpolatorFactory;
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
  */
 public class NearestNeighborInterpolatorFactory< T > implements InterpolatorFactory< T, RandomAccessible< T > >
 {
