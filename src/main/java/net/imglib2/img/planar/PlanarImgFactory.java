@@ -51,7 +51,7 @@ import net.imglib2.util.Fraction;
 /**
  * Factory that creates an appropriate {@link PlanarImg}.
  * 
- * @author Funke
+ * @author Jan Funke
  * @author Preibisch
  * @author Saalfeld
  * @author Schindelin
