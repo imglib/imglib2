@@ -46,7 +46,7 @@ import net.imglib2.neighborsearch.NearestNeighborSearch;
  * 
  * @author Pietzsch
  * @author Preibisch
- * @author Saalfeld
+ * @author Stephan Saalfeld
  * @author Stephan Saalfeld
  */
 public class NearestNeighborSearchInterpolatorFactory< T > implements InterpolatorFactory< T, NearestNeighborSearch< T > >

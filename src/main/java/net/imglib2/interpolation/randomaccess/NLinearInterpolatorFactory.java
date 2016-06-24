@@ -42,7 +42,7 @@ import net.imglib2.type.numeric.NumericType;
  * 
  * @param <T>
  * 
- * @author Saalfeld
+ * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld

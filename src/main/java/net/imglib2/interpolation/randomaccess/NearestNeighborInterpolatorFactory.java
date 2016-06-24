@@ -44,7 +44,7 @@ import net.imglib2.interpolation.InterpolatorFactory;
  * 
  * @author Pietzsch
  * @author Preibisch
- * @author Saalfeld
+ * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld

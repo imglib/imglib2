@@ -46,7 +46,7 @@ import net.imglib2.type.numeric.ARGBType;
  * @author Pietzsch
  * @author Preibisch
  * @author
- * @author Saalfeld
+ * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld

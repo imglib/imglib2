@@ -53,7 +53,7 @@ import net.imglib2.util.Fraction;
  * 
  * @author Jan Funke
  * @author Preibisch
- * @author Saalfeld
+ * @author Stephan Saalfeld
  * @author Schindelin
  * @author Jan Funke
  * @author Stephan Preibisch

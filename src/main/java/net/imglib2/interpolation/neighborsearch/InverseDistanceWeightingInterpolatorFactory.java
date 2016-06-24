@@ -47,7 +47,7 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @author Pietzsch
  * @author Preibisch
- * @author Saalfeld
+ * @author Stephan Saalfeld
  * @author Stephan Preibisch
  */
 public class InverseDistanceWeightingInterpolatorFactory< T extends RealType< T > > implements InterpolatorFactory< T, KNearestNeighborSearch< T > >
