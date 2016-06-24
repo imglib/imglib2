@@ -43,7 +43,7 @@ import net.imglib2.type.NativeType;
  * 
  * @param <T>
  * 
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  * @author Jonathan Hale
  */
 public class PlanarPlaneSubsetCursor< T extends NativeType< T >> extends

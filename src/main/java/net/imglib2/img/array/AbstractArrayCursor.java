@@ -45,7 +45,7 @@ import net.imglib2.util.IntervalIndexer;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  * @author Tobias Pietzsch
  */
 //TODO Review Javadoc

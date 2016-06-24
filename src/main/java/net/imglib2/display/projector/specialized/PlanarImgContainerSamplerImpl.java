@@ -40,7 +40,7 @@ import net.imglib2.img.planar.PlanarImg.PlanarContainerSampler;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  */
 public class PlanarImgContainerSamplerImpl implements PlanarContainerSampler
 {

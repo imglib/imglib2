@@ -45,7 +45,7 @@ import net.imglib2.type.numeric.real.DoubleType;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  * @author Curtis Rueden
  */
 public class DoubleAWTScreenImage extends ArrayImgAWTScreenImage< DoubleType, DoubleArray >

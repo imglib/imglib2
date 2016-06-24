@@ -43,7 +43,7 @@ import net.imglib2.type.numeric.integer.ByteType;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  * @author Curtis Rueden
  */
 public class ByteAWTScreenImage extends ArrayImgAWTScreenImage< ByteType, ByteArray >

@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.integer.IntType;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  * @author Curtis Rueden
  */
 public class IntAWTScreenImage extends ArrayImgAWTScreenImage< IntType, IntArray >

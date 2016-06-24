@@ -47,7 +47,7 @@ import java.util.List;
  * 
  * 
  * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
- * @author Christian Dietz (dietzc85@googlemail.com)
+ * @author Christian Dietz (University of Konstanz)
  */
 public class FlatIterationOrder
 {

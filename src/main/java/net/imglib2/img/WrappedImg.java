@@ -37,7 +37,7 @@ package net.imglib2.img;
 /**
  * An object that wraps an {@link Img} somehow.
  * 
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  */
 public interface WrappedImg< T >
 {

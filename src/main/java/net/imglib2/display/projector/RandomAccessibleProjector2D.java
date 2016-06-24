@@ -58,7 +58,7 @@ import net.imglib2.converter.Converter;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  * 
  * @param <A>
  * @param <B>

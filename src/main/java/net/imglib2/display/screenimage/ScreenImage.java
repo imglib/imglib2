@@ -41,7 +41,7 @@ package net.imglib2.display.screenimage;
  *            The type of images this screen image produces.
  * 
  * @author Curtis Rueden
- * @author Christian Dietz
+ * @author Christian Dietz (University of Konstanz)
  */
 public interface ScreenImage< T >
 {
