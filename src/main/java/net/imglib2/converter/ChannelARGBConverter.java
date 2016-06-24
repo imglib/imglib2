@@ -52,7 +52,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  * convert a 4-channel (R,G,B,A) {@link UnsignedByteType} into composite
  * {@link ARGBType}.
  * 
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public final class ChannelARGBConverter implements Converter< UnsignedByteType, ARGBType >
 {

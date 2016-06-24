@@ -47,7 +47,7 @@ import net.imglib2.type.numeric.RealType;
  * itself, implementing the {@link NumericType} algebra as element-wise
  * operations.
  *
- * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
+ * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
  */
 public class RealComposite< T extends RealType< T > > extends AbstractNumericComposite< T, RealComposite< T > >
 {

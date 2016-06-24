@@ -54,7 +54,7 @@ import net.imglib2.view.Views;
  * 
  * @see #getEfficientIterableInterval(Interval, RandomAccessible)
  * 
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class IterableTransformBuilder< T > extends TransformBuilder< T >
 {

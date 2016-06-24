@@ -53,7 +53,7 @@ import net.imglib2.type.Type;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class ListImgFactory< T > extends ImgFactory< T >
 {

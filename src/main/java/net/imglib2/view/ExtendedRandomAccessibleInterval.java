@@ -48,7 +48,7 @@ import net.imglib2.util.Intervals;
  * through an {@link OutOfBoundsFactory}. Note that it is not an Interval
  * itself.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  * @author Tobias Pietzsch
  */
 final public class ExtendedRandomAccessibleInterval< T, F extends RandomAccessibleInterval< T > > implements RandomAccessible< T >, View

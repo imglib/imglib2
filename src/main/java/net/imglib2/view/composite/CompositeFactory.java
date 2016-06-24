@@ -39,7 +39,7 @@ import net.imglib2.RandomAccess;
  * A factory to create a {@link Composite} vector of scalars T given a
  * {@link RandomAccess}.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public interface CompositeFactory< T, C extends Composite< T > >
 {

@@ -42,7 +42,7 @@ import net.imglib2.interpolation.InterpolatorFactory;
  * 
  * @param <T>
  * 
- * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
+ * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
  */
 public class FloorInterpolatorFactory< T > implements InterpolatorFactory< T, RandomAccessible< T > >
 {

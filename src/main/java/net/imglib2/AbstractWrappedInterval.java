@@ -38,7 +38,7 @@ package net.imglib2;
  * {@link RandomAccessibleInterval RandomAccessibleIntervals}, etc that forward
  * the {@link Interval} interface to, for example, their source accessible.
  * 
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public abstract class AbstractWrappedInterval< I extends Interval > extends AbstractWrappedRealInterval< I > implements Interval
 {

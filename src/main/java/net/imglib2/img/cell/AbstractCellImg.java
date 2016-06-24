@@ -43,7 +43,7 @@ import net.imglib2.type.NativeType;
  * into cells.
  * 
  * @author Mark Hiner hinerm at gmail.com
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public abstract class AbstractCellImg< T extends NativeType< T >, A, C extends AbstractCell< A >, F extends AbstractCellImgFactory< T > > extends AbstractNativeImg< T, A >
 {

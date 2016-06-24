@@ -10,8 +10,8 @@ import net.imglib2.Positionable;
 /**
  * Bijective integer transform mapping between integer coordinates in [0,n-1].
  *
- * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
- * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org>
+ * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
+ * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
  */
 public class PermutationTransform extends AbstractPermutationTransform
 {

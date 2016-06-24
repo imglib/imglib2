@@ -40,7 +40,7 @@ package net.imglib2;
  * 
  * @author Lee Kamentsky
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public abstract class AbstractRealLocalizable extends AbstractEuclideanSpace implements RealLocalizable
 {

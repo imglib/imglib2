@@ -46,7 +46,7 @@ import net.imglib2.RealPositionable;
  * 
  * f = r < 0 ? (long)r - 1 : (long)r
  * 
- * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
+ * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
  */
 public class Floor< LocalizablePositionable extends Localizable & Positionable > extends AbstractPositionableTransform< LocalizablePositionable >
 {

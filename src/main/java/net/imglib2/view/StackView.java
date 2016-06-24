@@ -52,7 +52,7 @@ import net.imglib2.util.Util;
  * @param <T>
  *            the pixel type.
  * 
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class StackView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
 {
@@ -66,7 +66,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 	 * {@link RandomAccess}es on all constituent hyper-slices of the
 	 * {@link StackView}.
 	 * 
-	 * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+	 * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
 	 */
 	public static enum StackAccessMode
 	{
@@ -183,7 +183,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 	 * @param <T>
 	 *            the pixel type
 	 * 
-	 * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+	 * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
 	 */
 	public static final class DefaultRA< T > implements RandomAccess< T >
 	{
@@ -475,7 +475,7 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 	 * @param <T>
 	 *            the pixel type
 	 * 
-	 * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+	 * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
 	 */
 	public static class MoveAllSlicesRA< T > implements RandomAccess< T >
 	{

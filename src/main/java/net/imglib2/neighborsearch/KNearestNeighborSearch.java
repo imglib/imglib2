@@ -46,7 +46,7 @@ import net.imglib2.Sampler;
  * {@link KNearestNeighborSearch}.
  * 
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public interface KNearestNeighborSearch< T > extends NearestNeighborSearch< T >
 {

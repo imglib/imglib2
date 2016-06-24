@@ -41,7 +41,7 @@ import java.util.Iterator;
  * A list of data samples at explicit {@link RealLocalizable real coordinates}.
  * 
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class RealPointSampleList< T > implements IterableRealInterval< T >
 {

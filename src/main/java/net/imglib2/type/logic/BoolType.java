@@ -41,7 +41,7 @@ import net.imglib2.type.numeric.integer.AbstractIntegerType;
 /**
  * A {@link BooleanType} wrapping a single primitive {@code boolean} variable.
  *
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class BoolType extends AbstractIntegerType< BoolType > implements BooleanType< BoolType >
 {

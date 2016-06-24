@@ -44,7 +44,7 @@ import net.imglib2.Sampler;
  * implemented as linear search.
  * 
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class KNearestNeighborSearchOnIterableRealInterval< T > implements KNearestNeighborSearch< T >
 {

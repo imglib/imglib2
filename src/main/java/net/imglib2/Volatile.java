@@ -37,7 +37,7 @@ package net.imglib2;
 /**
  * Something volatile that has a value and is either VALID or INVALID.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class Volatile< T >
 {

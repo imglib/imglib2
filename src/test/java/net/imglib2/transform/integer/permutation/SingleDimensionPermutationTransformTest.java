@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org>
+ * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
  *
  */
 public class SingleDimensionPermutationTransformTest

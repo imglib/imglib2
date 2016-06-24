@@ -43,7 +43,7 @@ import net.imglib2.View;
 /**
  * A {@link RealRandomAccessible} that is generated through interpolation.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  * @author Tobias Pietzsch
  */
 final public class Interpolant< T, F extends EuclideanSpace > implements RealRandomAccessible< T >, View

@@ -39,8 +39,8 @@ package net.imglib2;
  * long[] array to maintain position.
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public abstract class AbstractLocalizable extends AbstractEuclideanSpace implements Localizable
 {

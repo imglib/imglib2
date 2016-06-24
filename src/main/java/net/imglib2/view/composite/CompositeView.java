@@ -45,7 +45,7 @@ import net.imglib2.View;
  * an (<em>n</em>-1)-dimensional {@link RandomAccessible} of {@link Composite}
  * of T.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class CompositeView< T, C extends Composite< T > > implements RandomAccessible< C >, View
 {

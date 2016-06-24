@@ -39,7 +39,7 @@ import net.imglib2.type.numeric.AbstractARGBDoubleType;
 /**
  * 
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class ARGBDoubleARGBConverter< T extends AbstractARGBDoubleType< ? > > implements Converter< T, ARGBType >
 {

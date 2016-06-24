@@ -10,8 +10,8 @@ import net.imglib2.util.Pair;
  * {@link RandomAccessible RandomAccessibles} whose type is the {@link Pair} of
  * corresponding values at the same coordinates in either of the two sources.
  *
- * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
- * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class RandomAccessiblePair< A, B > implements RandomAccessible< Pair< A, B > >
 {

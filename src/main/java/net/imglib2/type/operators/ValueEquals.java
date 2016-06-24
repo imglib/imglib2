@@ -38,7 +38,7 @@ package net.imglib2.type.operators;
  * {@link Object#equals(Object)} but for typed parameters, without reference
  * equality, and without side effects in the JDK when done otherwise.
  * 
- * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
+ * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
  */
 public interface ValueEquals< T >
 {

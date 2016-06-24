@@ -49,7 +49,7 @@ package net.imglib2;
  * coordinate for each. By that, minimum and maximum are defined but the
  * {@link RealInterval} does not define a value for all coordinates in between.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public interface RealInterval extends EuclideanSpace
 {

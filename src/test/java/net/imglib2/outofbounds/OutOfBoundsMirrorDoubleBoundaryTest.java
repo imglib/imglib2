@@ -57,7 +57,7 @@ import org.junit.Test;
  * 
  * 
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class OutOfBoundsMirrorDoubleBoundaryTest
 {

@@ -43,7 +43,7 @@ import org.junit.Test;
 /**
  * Tests to check code of iteration orders
  * 
- * @author Christian dietz <dietzc85@googlemail.com>
+ * @author Christian dietz (dietzc85@googlemail.com)
  * 
  */
 public class IterationOrderTests

@@ -46,7 +46,7 @@ import net.imglib2.Sampler;
  * will thus need its own {@link NearestNeighborSearch}.
  * 
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public interface NearestNeighborSearch< T > extends EuclideanSpace
 {

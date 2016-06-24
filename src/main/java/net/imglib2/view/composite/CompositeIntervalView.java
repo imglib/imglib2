@@ -43,7 +43,7 @@ import net.imglib2.view.Views;
 /**
  * {@link CompositeView} of a {@link RandomAccessibleInterval}.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class CompositeIntervalView< T, C extends Composite< T > > extends CompositeView< T, C > implements RandomAccessibleInterval< C >, View
 {

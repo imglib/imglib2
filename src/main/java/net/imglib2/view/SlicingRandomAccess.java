@@ -46,7 +46,7 @@ import net.imglib2.transform.integer.Slicing;
  * {@link Slicing} {@code transformToSource}.
  *
  * @param <T>
- * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class SlicingRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >
 {

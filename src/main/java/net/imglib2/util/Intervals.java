@@ -45,7 +45,7 @@ import net.imglib2.RealLocalizable;
 /**
  * Convenience methods for manipulating {@link Interval Intervals}.
  * 
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class Intervals
 {

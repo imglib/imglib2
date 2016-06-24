@@ -46,7 +46,7 @@ import net.imglib2.type.numeric.NumericType;
  * @param <T>
  *            type of derived concrete class.
  * 
- * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
+ * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
  */
 abstract public class AbstractVolatileNumericType< N extends NumericType< N >, T extends AbstractVolatileNumericType< N, T > >
 		extends Volatile< N >

@@ -55,8 +55,8 @@ import org.junit.Test;
 /**
  * 
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class OutOfBoundsBorderTest
 {

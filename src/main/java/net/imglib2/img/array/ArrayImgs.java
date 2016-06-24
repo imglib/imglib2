@@ -75,7 +75,7 @@ import net.imglib2.util.Fraction;
  * img = new ArrayImgFactory&lt; MyType &gt;.create( new long[] { 100, 200 }, new MyType() );
  * </pre>
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 final public class ArrayImgs
 {

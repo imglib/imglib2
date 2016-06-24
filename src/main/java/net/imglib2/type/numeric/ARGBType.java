@@ -50,7 +50,7 @@ import net.imglib2.util.Util;
  * vector algebra.
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
+ * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
  */
 public class ARGBType extends AbstractNativeType< ARGBType > implements NumericType< ARGBType >
 {

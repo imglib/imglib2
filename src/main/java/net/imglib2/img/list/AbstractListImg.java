@@ -62,7 +62,7 @@ import net.imglib2.util.IntervalIndexer;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public abstract class AbstractListImg< T > extends AbstractImg< T >
 {

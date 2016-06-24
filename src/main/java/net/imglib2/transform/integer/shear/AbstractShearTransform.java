@@ -18,7 +18,7 @@ import net.imglib2.transform.integer.BoundingBoxTransform;
  * This abstract class holds the inverse and implements applyInverse in
  * terms of inverse.apply
  * 
- * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org>
+ * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
  *
  */
 public abstract class AbstractShearTransform implements InvertibleTransform, BoundingBoxTransform

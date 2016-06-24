@@ -42,7 +42,7 @@ package net.imglib2;
  * Stephan Saalfeld
  * 
  * @author Tobias Pietzsch
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  * @author Stephan Preibisch and
  */
 public abstract class AbstractEuclideanSpace implements EuclideanSpace

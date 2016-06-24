@@ -14,14 +14,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org>
+ * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
  *
  */
 public class AbstractPermutationTransformTest
 {
 
 	/**
-	 * @author Philipp Hanslovsky <hanslovskyp@janelia.hhmi.org> Wrapper class
+	 * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org) Wrapper class
 	 *         for AbstractPermutatioTransform to test protected methods.
 	 */
 	public static class MockPermutation extends AbstractPermutationTransform

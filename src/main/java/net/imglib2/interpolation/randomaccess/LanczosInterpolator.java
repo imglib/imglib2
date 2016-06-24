@@ -45,7 +45,7 @@ import net.imglib2.type.numeric.RealType;
  * n-dimensional double-based Lanczos Interpolation
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class LanczosInterpolator< T extends RealType< T > > extends FloorOffset< RandomAccess< T > > implements RealRandomAccess< T >
 {

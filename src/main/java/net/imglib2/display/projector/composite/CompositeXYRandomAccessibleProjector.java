@@ -58,7 +58,7 @@ import net.imglib2.type.numeric.ARGBType;
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  * @author Grant Harris
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class CompositeXYRandomAccessibleProjector< A > extends AbstractProjector2D
 {

@@ -51,7 +51,7 @@ import net.imglib2.View;
  * plane, cube by cube, ...
  * 
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class IterableRandomAccessibleInterval< T > extends AbstractWrappedInterval< RandomAccessibleInterval< T > > implements IterableInterval< T >, RandomAccessibleInterval< T >, View
 {

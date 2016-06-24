@@ -38,7 +38,7 @@ import net.imglib2.RandomAccess;
 /**
  * A generic vector of scalars T.
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class GenericComposite< T > extends AbstractComposite< T >
 {

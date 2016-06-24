@@ -44,7 +44,7 @@ package net.imglib2;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public abstract class AbstractLocalizableInt extends AbstractEuclideanSpace implements Localizable
 {

@@ -46,7 +46,7 @@ import net.imglib2.RealPositionable;
  * 
  * f = r < 0 ? (long)r - 1 : (long)r
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class FloorOffset< LocalizablePositionable extends Localizable & Positionable > extends AbstractPositionableTransform< LocalizablePositionable >
 {

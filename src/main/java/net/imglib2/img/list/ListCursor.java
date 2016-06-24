@@ -45,7 +45,7 @@ import net.imglib2.util.IntervalIndexer;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 final public class ListCursor< T > extends AbstractCursorInt< T >
 {

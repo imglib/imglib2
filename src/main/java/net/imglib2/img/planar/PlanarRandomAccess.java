@@ -46,7 +46,7 @@ import net.imglib2.type.NativeType;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class PlanarRandomAccess< T extends NativeType< T > > extends AbstractLocalizableInt implements RandomAccess< T >, PlanarImg.PlanarContainerSampler
 {

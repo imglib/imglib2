@@ -48,7 +48,7 @@ import net.imglib2.View;
  * inefficient to the benefit of faster positioning. Don't ask for what you
  * already know ;).
  * 
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */
 public class SubsampleView< T > implements RandomAccessible< T >, View
 {

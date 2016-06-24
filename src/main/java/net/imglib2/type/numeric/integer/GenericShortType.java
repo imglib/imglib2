@@ -46,7 +46,7 @@ import net.imglib2.util.Util;
  * encode their value into a 16bit short.
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld <saalfelds@janelia.hhmi.org>
+ * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
  */
 public abstract class GenericShortType< T extends GenericShortType< T > >
 		extends AbstractIntegerType< T >

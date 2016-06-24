@@ -57,7 +57,7 @@ import net.imglib2.util.Intervals;
  * 
  * @see #getEfficientRandomAccessible(Interval, RandomAccessible)
  * 
- * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public class TransformBuilder< T >
 {

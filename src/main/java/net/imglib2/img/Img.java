@@ -43,7 +43,7 @@ import net.imglib2.RandomAccessibleInterval;
  * thus are the basis for conventional image processing.
  * 
  * @author Stephan Saalfeld
- * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
+ * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  * @author Stephan Preibisch
  */
 public interface Img< T >
