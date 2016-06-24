@@ -56,7 +56,9 @@ import net.imglib2.converter.Converter;
  * {@link FlatIterationOrder}. If, please use
  * {@link IterableIntervalProjector2D} for performance reasons.
  * 
- * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * @author Michael Zinsmaier
+ * @author Martin Horn
+ * @author Christian Dietz
  * 
  * @param <A>
  * @param <B>

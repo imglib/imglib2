@@ -53,7 +53,8 @@ import net.imglib2.util.Util;
  * The {@link #set(long)} operation takes have the time as the {@link #get} operation.
  * The performance may degrade very slightly with increasing bit depth, but the decrease is barely noticeable.
  *
- * @author Albert Cardona and Stephan Preibisch
+ * @author Albert Cardona
+ * @author Stephan Preibisch
  */
 public class UnsignedVariableBitLengthType extends AbstractBit64Type<UnsignedVariableBitLengthType> implements IntegerType< UnsignedVariableBitLengthType >
 {

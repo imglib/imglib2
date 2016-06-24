@@ -46,7 +46,9 @@ import net.imglib2.util.IntervalIndexer;
  * plain from an ShortType ArrayImg. The map method implements a normalization
  * function. The resulting image is a ShortType ArrayImg. *
  * 
- * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * @author Michael Zinsmaier
+ * @author Martin Horn
+ * @author Christian Dietz
  * 
  * @param <A>
  */

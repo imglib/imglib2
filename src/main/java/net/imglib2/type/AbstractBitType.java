@@ -43,7 +43,8 @@ import net.imglib2.util.Fraction;
 /**
  * Provides basic infrastructure to implement Types based on single bits stored in a LongAccess
  * 
- * @author Albert Cardona and Stephan Preibisch
+ * @author Albert Cardona
+ * @author Stephan Preibisch
  */
 public abstract class AbstractBitType<T extends AbstractBitType<T>> implements NativeType<T>
 {

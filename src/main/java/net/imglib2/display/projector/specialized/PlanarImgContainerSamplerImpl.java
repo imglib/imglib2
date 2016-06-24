@@ -38,7 +38,9 @@ import net.imglib2.img.planar.PlanarImg.PlanarContainerSampler;
 /**
  * Helps to sample a planar image by keeping track of the current slice.
  * 
- * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * @author Michael Zinsmaier
+ * @author Martin Horn
+ * @author Christian Dietz
  */
 public class PlanarImgContainerSamplerImpl implements PlanarContainerSampler
 {

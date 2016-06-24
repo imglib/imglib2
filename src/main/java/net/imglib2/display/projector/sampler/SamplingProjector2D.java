@@ -55,7 +55,9 @@ import net.imglib2.display.projector.AbstractProjector2D;
  * dimension onto the plain. Alternatively mapping up to three measures (from a
  * measurement dimension) to the three color channels would also be possible...
  * 
- * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * @author Michael Zinsmaier
+ * @author Martin Horn
+ * @author Christian Dietz
  * 
  * @param <A>
  *            source type

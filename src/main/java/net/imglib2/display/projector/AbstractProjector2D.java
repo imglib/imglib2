@@ -48,7 +48,9 @@ import net.imglib2.display.projector.specialized.ArrayImgXYByteProjector;
  * A basic example is the extraction of a data plain (containing the reference
  * point) by sampling two axes
  * 
- * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * @author Michael Zinsmaier
+ * @author Martin Horn
+ * @author Christian Dietz
  */
 public abstract class AbstractProjector2D extends Point implements Projector
 {

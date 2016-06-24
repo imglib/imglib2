@@ -39,7 +39,9 @@ import net.imglib2.Sampler;
 /**
  * allows stepwise access to a preselected projected dimension.
  * 
- * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * @author Michael Zinsmaier
+ * @author Martin Horn
+ * @author Christian Dietz
  * 
  * @param <T>
  */

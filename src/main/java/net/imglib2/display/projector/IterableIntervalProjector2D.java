@@ -54,7 +54,9 @@ import net.imglib2.view.Views;
  * The mapping function can be specified with a {@link Converter}. <br>
  * A basic example is cutting out a time frame from a (greyscale) video.
  * 
- * @author Michael Zinsmaier, Martin Horn, Christian Dietz
+ * @author Michael Zinsmaier
+ * @author Martin Horn
+ * @author Christian Dietz
  * 
  * @param <A>
  * @param <B>

@@ -50,7 +50,8 @@ import net.imglib2.img.basictypeaccess.array.LongArray;
  * The {@link #setBits(long)} operation takes have the time as the {@link #getBits} operation.
  * The performance may degrade very slightly with increasing bit depth, but the decrease is barely noticeable.
  *
- * @author Albert Cardona and Stephan Preibisch
+ * @author Albert Cardona
+ * @author Stephan Preibisch
  */
 public abstract class AbstractBit64Type<T extends AbstractBit64Type<T>> extends AbstractBitType< T >
 {	
