@@ -42,7 +42,7 @@ import net.imglib2.neighborsearch.NearestNeighborSearch;
  * Nearest-neighbor interpolation implemented by {@link NearestNeighborSearch}.
  * 
  * @author Tobias Pietzsch
- * @author Preibisch
+ * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld
  */

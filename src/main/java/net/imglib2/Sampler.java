@@ -50,7 +50,7 @@ import net.imglib2.type.NativeType;
  * </p>
  * 
  * @author Tobias Pietzsch
- * @author Preibisch
+ * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  */

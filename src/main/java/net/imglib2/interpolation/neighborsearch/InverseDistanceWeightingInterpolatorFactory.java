@@ -46,7 +46,7 @@ import net.imglib2.type.numeric.RealType;
  * @param <T>
  * 
  * @author Tobias Pietzsch
- * @author Preibisch
+ * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Preibisch
  */
