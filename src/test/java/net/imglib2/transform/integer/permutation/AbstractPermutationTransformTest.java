@@ -54,8 +54,7 @@ public class AbstractPermutationTransformTest
 {
 
 	/**
-	 * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org) Wrapper class
-	 *         for AbstractPermutatioTransform to test protected methods.
+	 * Wrapper class for AbstractPermutatioTransform to test protected methods.
 	 */
 	public static class MockPermutation extends AbstractPermutationTransform
 	{
