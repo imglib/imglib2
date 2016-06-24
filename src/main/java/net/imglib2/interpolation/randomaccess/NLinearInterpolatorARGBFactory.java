@@ -43,7 +43,7 @@ import net.imglib2.type.numeric.ARGBType;
  * 
  * @param <T>
  * 
- * @author Pietzsch
+ * @author Tobias Pietzsch
  * @author Preibisch
  * @author
  * @author Stephan Saalfeld

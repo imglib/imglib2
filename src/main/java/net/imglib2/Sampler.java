@@ -49,7 +49,7 @@ import net.imglib2.type.NativeType;
  * generated otherwise and may only be readable (e.g. ShapeList2D).
  * </p>
  * 
- * @author Pietzsch
+ * @author Tobias Pietzsch
  * @author Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)

@@ -42,7 +42,7 @@ import net.imglib2.interpolation.InterpolatorFactory;
  * 
  * @param <T>
  * 
- * @author Pietzsch
+ * @author Tobias Pietzsch
  * @author Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch

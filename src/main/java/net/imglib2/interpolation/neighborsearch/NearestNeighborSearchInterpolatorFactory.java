@@ -44,7 +44,7 @@ import net.imglib2.neighborsearch.NearestNeighborSearch;
  * 
  * @param <T>
  * 
- * @author Pietzsch
+ * @author Tobias Pietzsch
  * @author Preibisch
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld
