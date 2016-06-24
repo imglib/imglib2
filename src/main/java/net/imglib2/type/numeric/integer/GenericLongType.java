@@ -43,7 +43,7 @@ import net.imglib2.util.Util;
 /**
  * Abstract superclass for Long types.
  *
- * @author Mark Hiner hinerm at gmail.com
+ * @author Mark Hiner
  */
 public abstract class GenericLongType < T extends GenericLongType< T >> extends AbstractIntegerType< T > implements NativeType< T > {
 

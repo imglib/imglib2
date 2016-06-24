@@ -42,7 +42,7 @@ import net.imglib2.type.NativeType;
  * Abstract superclass for {@link Img} types that divide their underlying data
  * into cells.
  * 
- * @author Mark Hiner hinerm at gmail.com
+ * @author Mark Hiner
  * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
 public abstract class AbstractCellImg< T extends NativeType< T >, A, C extends AbstractCell< A >, F extends AbstractCellImgFactory< T > > extends AbstractNativeImg< T, A >
