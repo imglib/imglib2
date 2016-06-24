@@ -40,7 +40,7 @@ import org.junit.Test;
 
 /**
  * 
- * @author leek
+ * @author Lee Kamentsky
  */
 public class RealPointTest
 {

@@ -44,7 +44,7 @@ package net.imglib2.transform;
  * space by sampling invert-transformed points in the source space.
  * 
  * 
- * @author leek
+ * @author Lee Kamentsky
  */
 public interface Transformable< O, T extends Transform >
 {
