@@ -42,7 +42,6 @@ package net.imglib2;
  * This is identical to {@link AbstractLocalizable}, except that the position is
  * limited to {@link Integer#MAX_VALUE} in every dimension.
  * 
- * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>

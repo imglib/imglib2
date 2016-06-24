@@ -53,7 +53,6 @@ import net.imglib2.util.Fraction;
  * dimensions are given, the factory creates cells of size
  * <em>10 x 10 x ... x 10</em>.
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public final class CellImgFactory< T extends NativeType< T > > extends AbstractCellImgFactory< T >

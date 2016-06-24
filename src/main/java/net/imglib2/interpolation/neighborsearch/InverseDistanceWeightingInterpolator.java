@@ -47,7 +47,6 @@ import net.imglib2.type.numeric.RealType;
  * 
  * @param <T>
  * 
- * @author ImgLib2 authors
  * @author Stephan Preibisch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

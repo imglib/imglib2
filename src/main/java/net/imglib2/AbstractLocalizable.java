@@ -38,7 +38,6 @@ package net.imglib2;
  * An abstract class that implements the {@link Localizable} interface using a
  * long[] array to maintain position.
  * 
- * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>

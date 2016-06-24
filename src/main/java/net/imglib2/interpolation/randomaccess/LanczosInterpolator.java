@@ -44,7 +44,6 @@ import net.imglib2.type.numeric.RealType;
 /**
  * n-dimensional double-based Lanczos Interpolation
  * 
- * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */

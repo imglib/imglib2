@@ -42,7 +42,6 @@ import net.imglib2.type.numeric.RealType;
 /**
  * TODO
  * 
- * @author ImgLib2 developers
  */
 public class LanczosInterpolatorFactory< T extends RealType< T >> implements InterpolatorFactory< T, RandomAccessible< T > >
 {

@@ -45,7 +45,6 @@ import java.util.List;
  * <em>(0,0,0), (1,0,0), (0,1,0), (1,1,0), (0,0,1), (1,0,1), (0,1,1), (1,1,1)</em>
  * 
  * 
- * @author ImgLib2 developers
  * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Christian Dietz <dietzc85@googlemail.com>

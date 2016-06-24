@@ -44,7 +44,6 @@ import net.imglib2.type.NativeType;
  * 
  * @param <T>
  * 
- * @author ImgLib2 developers
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch

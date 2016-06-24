@@ -43,7 +43,6 @@ import net.imglib2.View;
 /**
  * A {@link RealRandomAccessible} that is generated through interpolation.
  * 
- * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch
  */

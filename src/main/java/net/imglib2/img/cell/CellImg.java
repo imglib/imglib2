@@ -48,7 +48,6 @@ import net.imglib2.type.NativeType;
  * cells at the max boundary of the image may have non-standard sizes). Each
  * basic type array corresponds to a cell.
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 final public class CellImg< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractCellImg< T, A, C, CellImgFactory< T > >

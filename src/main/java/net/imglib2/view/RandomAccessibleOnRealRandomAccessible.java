@@ -51,7 +51,6 @@ import net.imglib2.View;
  * per field and is thus not very efficient. Localization into real fields,
  * however, is passed through and thus performs optimally.
  * 
- * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class RandomAccessibleOnRealRandomAccessible< T > extends AbstractEuclideanSpace implements RandomAccessible< T >, View

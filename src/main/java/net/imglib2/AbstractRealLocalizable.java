@@ -38,7 +38,6 @@ package net.imglib2;
  * An abstract class that implements the {@link RealLocalizable} interface using
  * an array of doubles to maintain position
  * 
- * @author ImgLib2 developers
  * @author Lee Kamentsky
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>

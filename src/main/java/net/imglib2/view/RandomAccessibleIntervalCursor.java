@@ -48,7 +48,6 @@ import net.imglib2.util.IntervalIndexer;
  * a {@link RandomAccess} in flat iteration order. {@link Localizable} calls are
  * forwarded to the {@link RandomAccess}.
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  * @author Stephan Saalfeld
  */

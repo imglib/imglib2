@@ -54,7 +54,6 @@ import net.imglib2.Positionable;
  * vector to get the <em>n</em>-dimensional integer <em>source</em> vector.
  * </p>
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld
  */

@@ -42,7 +42,6 @@ import net.imglib2.Positionable;
  * simply replaces apply by applyInverse and conversely. The original
  * {@link InvertibleTransform} is returned on {@link #inverse()}.
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld
  */

@@ -42,7 +42,6 @@ package net.imglib2.concatenate;
  * equivalent to first applying <em>a</em> to <em>x</em> and then applying
  * <em>b</em> to the result.
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld
  */

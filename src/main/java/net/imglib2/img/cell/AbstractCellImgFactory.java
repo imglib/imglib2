@@ -42,7 +42,6 @@ import net.imglib2.type.NativeType;
  * 
  * @link CellImg}s.
  * 
- * @author ImgLib2 developers
  * @author Mark Hiner hinerm at gmail.com
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */

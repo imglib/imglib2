@@ -48,7 +48,6 @@ import net.imglib2.util.Intervals;
  * through an {@link OutOfBoundsFactory}. Note that it is not an Interval
  * itself.
  * 
- * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Tobias Pietzsch
  */

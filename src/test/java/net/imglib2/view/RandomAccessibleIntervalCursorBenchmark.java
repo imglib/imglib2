@@ -51,7 +51,6 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */

@@ -46,7 +46,6 @@ import net.imglib2.Positionable;
  * <em>target</em> vector.
  * </p>
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld
  */

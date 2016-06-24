@@ -45,7 +45,6 @@ import org.junit.Test;
 /**
  * 
  * 
- * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public class FloorOffsetTest

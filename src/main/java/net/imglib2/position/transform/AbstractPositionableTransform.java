@@ -44,7 +44,6 @@ import net.imglib2.RealPositionable;
  * A {@link RealPositionable} that drives a {@link Positionable} to somehow
  * derived discrete coordinates.
  * 
- * @author ImgLib2 developers
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  */
 public abstract class AbstractPositionableTransform< LocalizablePositionable extends Localizable & Positionable > extends AbstractEuclideanSpace implements RealPositionable, RealLocalizable

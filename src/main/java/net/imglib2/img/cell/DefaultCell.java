@@ -41,7 +41,6 @@ import net.imglib2.util.Fraction;
  * Default (empty) implementation of the {@link AbstractCell}.
  * 
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public final class DefaultCell< A extends ArrayDataAccess< A > > extends AbstractCell< A >

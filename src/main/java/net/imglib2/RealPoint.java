@@ -37,7 +37,6 @@ package net.imglib2;
 /**
  * A point is a location in EuclideanSpace.
  * 
- * @author ImgLib2 developers
  * @author Lee Kamentsky
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>

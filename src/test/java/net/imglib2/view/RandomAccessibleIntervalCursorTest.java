@@ -56,7 +56,6 @@ import org.junit.Test;
 
 /**
  * 
- * @author ImgLib2 developers
  * @author Tobias Pietzsch
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */

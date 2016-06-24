@@ -37,7 +37,6 @@ package net.imglib2;
 /**
  * A Point is a position in Euclidean space specified in integer coordinates.
  * 
- * @author ImgLib2 developers
  * @author Lee Kamentsky
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
