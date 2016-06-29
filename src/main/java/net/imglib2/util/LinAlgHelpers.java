@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,7 +36,7 @@ package net.imglib2.util;
 
 /**
  * Basic vector and matrix operations implemented on double[] and double[][].
- * 
+ *
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class LinAlgHelpers
@@ -58,7 +58,7 @@ public class LinAlgHelpers
 
 	/**
 	 * get the squared length of a.
-	 * 
+	 *
 	 * @param a
 	 */
 	public static double squareLength( final double[] a )
@@ -72,7 +72,7 @@ public class LinAlgHelpers
 
 	/**
 	 * get the length of a.
-	 * 
+	 *
 	 * @param a
 	 */
 	public static double length( final double[] a )
@@ -82,7 +82,7 @@ public class LinAlgHelpers
 
 	/**
 	 * get the squared length of (a - b).
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 */
@@ -98,7 +98,7 @@ public class LinAlgHelpers
 
 	/**
 	 * get the length of (a - b).
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 */
@@ -110,7 +110,7 @@ public class LinAlgHelpers
 	/**
 	 * set c = a * b, where a is a vector and b is scalar. Dimensions of a and c
 	 * must match. In place scaling (c==a) is permitted.
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 * @param c
@@ -128,7 +128,7 @@ public class LinAlgHelpers
 	/**
 	 * set C = A * b, where A is a matrix and b is scalar. Dimensions of A and C
 	 * must match. In place scaling (C==A) is permitted.
-	 * 
+	 *
 	 * @param A
 	 * @param b
 	 * @param C
@@ -147,7 +147,7 @@ public class LinAlgHelpers
 
 	/**
 	 * set C = A, where A is a matrix. Dimensions of A and C must match.
-	 * 
+	 *
 	 * @param A
 	 * @param C
 	 */
@@ -166,7 +166,7 @@ public class LinAlgHelpers
 	/**
 	 * set c = a - b. Dimensions of a, b, and c must match. In place subtraction
 	 * (c==a) is permitted.
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 * @param c
@@ -184,7 +184,7 @@ public class LinAlgHelpers
 	/**
 	 * set c = a + b. Dimensions of a, b, and c must match. In place addition
 	 * (c==a) is permitted.
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 * @param c
@@ -201,10 +201,10 @@ public class LinAlgHelpers
 
 	/**
 	 * set c = A * b.
-	 * 
+	 *
 	 * Dimensions of A, b, and c must match. That is, cols(A) == rows(b), and
 	 * rows(c) == rows(A).
-	 * 
+	 *
 	 * @param A
 	 * @param b
 	 * @param c
@@ -255,10 +255,10 @@ public class LinAlgHelpers
 
 	/**
 	 * set C = A * B.
-	 * 
+	 *
 	 * Dimensions of A, B, and C must match. That is, cols(A) == rows(B),
 	 * rows(C) == rows(A), and cols(C) == cols(B).
-	 * 
+	 *
 	 * @param A
 	 * @param B
 	 * @param C
@@ -286,10 +286,10 @@ public class LinAlgHelpers
 
 	/**
 	 * set C = A * B^T.
-	 * 
+	 *
 	 * Dimensions of A, B, and C must match. That is, cols(A) == cols(B),
 	 * rows(C) == rows(A), and cols(C) == rows(B).
-	 * 
+	 *
 	 * @param A
 	 * @param B
 	 * @param C
@@ -317,10 +317,10 @@ public class LinAlgHelpers
 
 	/**
 	 * set C = A^T * B.
-	 * 
+	 *
 	 * Dimensions of A, B, and C must match. That is, rows(A) == rows(B),
 	 * rows(C) == cols(A), and cols(C) == cols(B).
-	 * 
+	 *
 	 * @param A
 	 * @param B
 	 * @param C
@@ -348,10 +348,10 @@ public class LinAlgHelpers
 
 	/**
 	 * set C = A + B.
-	 * 
+	 *
 	 * Dimensions of A, B, and C must match. In place addition (C==A or C==B) is
 	 * permitted.
-	 * 
+	 *
 	 * @param A
 	 * @param B
 	 * @param C
@@ -371,9 +371,9 @@ public class LinAlgHelpers
 
 	/**
 	 * extract column c of A into vector b.
-	 * 
+	 *
 	 * Dimensions of A and b must match. That is, rows(A) == rows(b).
-	 * 
+	 *
 	 * @param c
 	 * @param A
 	 * @param b
@@ -391,9 +391,9 @@ public class LinAlgHelpers
 
 	/**
 	 * set column c of B to vector a.
-	 * 
+	 *
 	 * Dimensions of a and B must match. That is, rows(a) == rows(B).
-	 * 
+	 *
 	 * @param c
 	 * @param a
 	 * @param B
@@ -411,9 +411,9 @@ public class LinAlgHelpers
 
 	/**
 	 * extract row r of A into vector b.
-	 * 
+	 *
 	 * Dimensions of A and b must match. That is, cols(A) == rows(b).
-	 * 
+	 *
 	 * @param r
 	 * @param A
 	 * @param b
@@ -431,9 +431,9 @@ public class LinAlgHelpers
 
 	/**
 	 * set row r of B to vector a.
-	 * 
+	 *
 	 * Dimensions of a and B must match. That is, rows(a) == cols(B).
-	 * 
+	 *
 	 * @param r
 	 * @param a
 	 * @param B
@@ -451,7 +451,7 @@ public class LinAlgHelpers
 
 	/**
 	 * normalize a, i.e., scale to unit length.
-	 * 
+	 *
 	 * @param a
 	 */
 	public static void normalize( final double[] a )
@@ -464,9 +464,9 @@ public class LinAlgHelpers
 
 	/**
 	 * compute dot product a * b.
-	 * 
+	 *
 	 * Dimensions of a and b must match.
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 */
@@ -485,9 +485,9 @@ public class LinAlgHelpers
 
 	/**
 	 * compute cross product, set c = a ^ b.
-	 * 
+	 *
 	 * Dimensions of a, b, and c must equal 3.
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 */
@@ -500,10 +500,10 @@ public class LinAlgHelpers
 
 	/**
 	 * compute outer product, set C = a * b^T.
-	 * 
+	 *
 	 * Dimensions of a, b, and C must match. That is, rows(a) == rows(C), and
 	 * rows(b) == cols(C).
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 * @param C
@@ -523,7 +523,7 @@ public class LinAlgHelpers
 	/**
 	 * compute the angle of rotation from a rotation matrix. The returned value
 	 * is in the range [0, PI].
-	 * 
+	 *
 	 * @param R
 	 *            rotation matrix
 	 */
@@ -539,7 +539,7 @@ public class LinAlgHelpers
 
 	/**
 	 * compute the axis of rotation from a rotation matrix.
-	 * 
+	 *
 	 * @param R
 	 *            rotation matrix
 	 * @param a
@@ -559,7 +559,7 @@ public class LinAlgHelpers
 
 	/**
 	 * compute a unit quaternion from a rotation matrix.
-	 * 
+	 *
 	 * @param R
 	 *            rotation matrix.
 	 * @param q
@@ -618,7 +618,7 @@ public class LinAlgHelpers
 
 	/**
 	 * compute a rotation matrix from a unit quaternion.
-	 * 
+	 *
 	 * @param q
 	 *            unit quaternion (w, x, y, z).
 	 * @param R
@@ -650,7 +650,7 @@ public class LinAlgHelpers
 
 	/**
 	 * compute a quaternion from rotation axis and angle.
-	 * 
+	 *
 	 * @param axis
 	 *            rotation axis as a unit vector.
 	 * @param angle
@@ -674,7 +674,7 @@ public class LinAlgHelpers
 	 * compute the quaternion product pq = p * q. applying rotation pq
 	 * corresponds to applying first q, then p (i.e. same as multiplication of
 	 * rotation matrices).
-	 * 
+	 *
 	 * @param p
 	 *            unit quaternion (w, x, y, z).
 	 * @param q
@@ -706,7 +706,7 @@ public class LinAlgHelpers
 
 	/**
 	 * compute the power of a quaternion q raised to the exponent a.
-	 * 
+	 *
 	 * @param q
 	 *            unit quaternion (w, x, y, z).
 	 * @param a
@@ -740,7 +740,7 @@ public class LinAlgHelpers
 	/**
 	 * invert quaternion, set q = p^{-1}. In place inversion (p==q) is
 	 * permitted.
-	 * 
+	 *
 	 * @param p
 	 *            unit quaternion (w, x, y, z).
 	 * @param q
@@ -760,7 +760,7 @@ public class LinAlgHelpers
 	/**
 	 * Apply quaternion rotation q to 3D point p, set qp = q * p. In place
 	 * rotation (p==qp) is permitted.
-	 * 
+	 *
 	 * @param q
 	 *            unit quaternion (w, x, y, z).
 	 * @param p
@@ -787,6 +787,117 @@ public class LinAlgHelpers
 		qp[ 0 ] = -q0 * x + q1 * w - q2 * z + q3 * y;
 		qp[ 1 ] = -q0 * y + q2 * w - q3 * x + q1 * z;
 		qp[ 2 ] = -q0 * z + q3 * w - q1 * y + q2 * x;
+	}
+
+	/**
+	 * Calculates the determinant of a 3x3 matrix given as a double[] (row major).
+	 *
+	 * @param matrix
+	 *
+	 * @return determinant
+	 */
+	final static public double det3x3( final double[] a )
+	{
+		assert a.length >= 9 : "Not enough coordinates.";
+
+		return
+			a[ 0 ] * a[ 4 ] * a[ 8 ] +
+			a[ 3 ] * a[ 7 ] * a[ 2 ] +
+			a[ 6 ] * a[ 1 ] * a[ 5 ] -
+			a[ 2 ] * a[ 4 ] * a[ 6 ] -
+			a[ 5 ] * a[ 7 ] * a[ 0 ] -
+			a[ 8 ] * a[ 1 ] * a[ 3 ];
+	}
+
+
+	/**
+	 * Calculate the determinant of a 3x3 matrix.
+	 *
+	 * @param m00
+	 * @param m01
+	 * @param m02
+	 * @param m10
+	 * @param m11
+	 * @param m12
+	 * @param m20
+	 * @param m21
+	 * @param m22
+	 *
+	 * @return
+	 */
+	final static public double det3x3(
+			final double m00, final double m01, final double m02,
+			final double m10, final double m11, final double m12,
+			final double m20, final double m21, final double m22 )
+	{
+		return
+			m00 * m11 * m22 +
+			m10 * m21 * m02 +
+			m20 * m01 * m12 -
+			m02 * m11 * m20 -
+			m12 * m21 * m00 -
+			m22 * m01 * m10;
+	}
+
+	/**
+	 * Invert a 3x3 matrix given as row major double[] in place.
+	 *
+	 * @param m matrix
+	 *
+	 * @throws IllegalArgumentException if matrix is not invertible
+	 */
+	final static public void invert3x3( double[] m ) throws IllegalArgumentException
+	{
+		assert m.length >= 9 : "Not enough coordinates.";
+
+		final double det = det3x3( m );
+		if ( det == 0 ) throw new IllegalArgumentException( "Matrix not invertible." );
+
+		final double i00 = ( m[ 4 ] * m[ 8 ] - m[ 5 ] * m[ 7 ] ) / det;
+		final double i01 = ( m[ 2 ] * m[ 7 ] - m[ 1 ] * m[ 8 ] ) / det;
+		final double i02 = ( m[ 1 ] * m[ 5 ] - m[ 2 ] * m[ 4 ] ) / det;
+
+		final double i10 = ( m[ 5 ] * m[ 6 ] - m[ 3 ] * m[ 8 ] ) / det;
+		final double i11 = ( m[ 0 ] * m[ 8 ] - m[ 2 ] * m[ 6 ] ) / det;
+		final double i12 = ( m[ 2 ] * m[ 3 ] - m[ 0 ] * m[ 5 ] ) / det;
+
+		final double i20 = ( m[ 3 ] * m[ 7 ] - m[ 4 ] * m[ 6 ] ) / det;
+		final double i21 = ( m[ 1 ] * m[ 6 ] - m[ 0 ] * m[ 7 ] ) / det;
+		final double i22 = ( m[ 0 ] * m[ 4 ] - m[ 1 ] * m[ 3 ] ) / det;
+
+		m[ 0 ] = i00;
+		m[ 1 ] = i01;
+		m[ 2 ] = i02;
+
+		m[ 3 ] = i10;
+		m[ 4 ] = i11;
+		m[ 5 ] = i12;
+
+		m[ 6 ] = i20;
+		m[ 7 ] = i21;
+		m[ 8 ] = i22;
+	}
+
+	/**
+	 * Invert a 3x3 matrix given as row major double[] in place.
+	 *
+	 * @param m matrix
+	 * @return inverted matrix as row major double[]
+	 *
+	 * @throws IllegalArgumentException if matrix is not invertible
+	 */
+	final static public double[] invert3x3(
+			final double m00, final double m01, final double m02,
+			final double m10, final double m11, final double m12,
+			final double m20, final double m21, final double m22 ) throws IllegalArgumentException
+	{
+		final double det = det3x3( m00, m01, m02, m10, m11, m12, m20, m21, m22 );
+		if ( det == 0 ) throw new IllegalArgumentException( "Matrix not invertible." );
+
+		return new double[]{
+				( m11 * m22 - m12 * m21 ) / det, ( m02 * m21 - m01 * m22 ) / det, ( m01 * m12 - m02 * m11 ) / det,
+				( m12 * m20 - m10 * m22 ) / det, ( m00 * m22 - m02 * m20 ) / det, ( m02 * m10 - m00 * m12 ) / det,
+				( m10 * m21 - m11 * m20 ) / det, ( m01 * m20 - m00 * m21 ) / det, ( m00 * m11 - m01 * m10 ) / det };
 	}
 
 	public static String toString( final double[][] A )
