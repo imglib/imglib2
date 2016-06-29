@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -1263,4 +1263,20 @@ public class Views
 		return new RandomAccessiblePair< A, B >( sourceA, sourceB );
 	}
 
+	/**
+	 * Provide an (<em>n + m</em>)-dimensional {@link RandomAccessible} of T as
+	 * an <em>m</em>-dimensional {@link RandomAccessible} of
+	 * <em>n</em>-dimensional {@link RandomAccessible RandomAccessibles} of T.
+	 *
+	 * @param source
+	 * @param axes the axes to become the inner axes (embedded into the co-domain)
+	 *
+	 * @return
+	 */
+	public static < T > RandomAccessible< ? extends RandomAccessible< T > > hyperSlices(
+			final RandomAccessible< T > source,
+			final int... axes )
+	{
+		return new HyperSlicesView< T >( source, axes );
+	}
 }
