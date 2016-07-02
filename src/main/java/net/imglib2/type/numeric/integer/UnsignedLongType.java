@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -51,10 +51,10 @@ import net.imglib2.util.Util;
  * @author Albert Cardona
  * @author Mark Hiner
  */
-public class UnsignedLongType extends GenericLongType<UnsignedLongType>
+public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 {
 	// this is the constructor if you want it to read from an array
-	public UnsignedLongType( final NativeImg<UnsignedLongType, ? extends LongAccess> img )
+	public UnsignedLongType( final NativeImg< ?, ? extends LongAccess > img )
 	{
 		super( img );
 	}
@@ -65,11 +65,11 @@ public class UnsignedLongType extends GenericLongType<UnsignedLongType>
 		super( value );
 	}
 
-	// this is the constructor if you want it to be a variable 
-	public UnsignedLongType ( final BigInteger value )
+	// this is the constructor if you want it to be a variable
+	public UnsignedLongType( final BigInteger value )
 	{
-		super( ( NativeImg<UnsignedLongType, ? extends LongAccess> )null );
-		dataAccess = new LongArray ( 1 );
+		super( ( NativeImg< ?, ? extends LongAccess > ) null );
+		dataAccess = new LongArray( 1 );
 		set( value.longValue() );
 	}
 
@@ -80,13 +80,16 @@ public class UnsignedLongType extends GenericLongType<UnsignedLongType>
 	}
 
 	// this is the constructor if you want it to be a variable
-	public UnsignedLongType() { this( 0 ); }
+	public UnsignedLongType()
+	{
+		this( 0 );
+	}
 
 	@Override
-	public NativeImg<UnsignedLongType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<UnsignedLongType> storageFactory, final long dim[] )
+	public NativeImg< UnsignedLongType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< UnsignedLongType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<UnsignedLongType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction() );
+		final NativeImg< UnsignedLongType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, new Fraction() );
 
 		// create a Type that is linked to the container
 		final UnsignedLongType linkedType = new UnsignedLongType( container );
@@ -98,12 +101,15 @@ public class UnsignedLongType extends GenericLongType<UnsignedLongType>
 	}
 
 	@Override
-	public UnsignedLongType duplicateTypeOnSameNativeImg() { return new UnsignedLongType( img ); }
+	public UnsignedLongType duplicateTypeOnSameNativeImg()
+	{
+		return new UnsignedLongType( img );
+	}
 
 	@Override
 	public void mul( final float c )
 	{
-		set( Util.round( (double) ( get() * c ) ) );
+		set( Util.round( ( double ) ( get() * c ) ) );
 	}
 
 	@Override
@@ -111,6 +117,7 @@ public class UnsignedLongType extends GenericLongType<UnsignedLongType>
 	{
 		set( Util.round( ( get() * c ) ) );
 	}
+
 	@Override
 	public void add( final UnsignedLongType c )
 	{
@@ -129,32 +136,38 @@ public class UnsignedLongType extends GenericLongType<UnsignedLongType>
 	/**
 	 * Unsigned division of {@param d1} by {@param d2}.
 	 *
-	 * See "Division by Invariant Integers using Multiplication",
-	 * by Torbjorn Granlund and Peter L. Montgomery, 1994.
+	 * See "Division by Invariant Integers using Multiplication", by Torbjorn
+	 * Granlund and Peter L. Montgomery, 1994.
 	 * http://gmplib.org/~tege/divcnst-pldi94.pdf
 	 *
-	 * @throws ArithmeticException when c equals zero.
+	 * @throws ArithmeticException
+	 *             when c equals zero.
 	 */
 	static public final long divide( final long d1, final long d2 )
-	{	
-		if ( d2 < 0 ) {
+	{
+		if ( d2 < 0 )
+		{
 			// d2 is larger than the maximum signed long value
-			if ( -1 == compare( d1, d2 ) ) {
+			if ( -1 == compare( d1, d2 ) )
+			{
 				// d1 is smaller than d2
 				return 0;
-			} else {
+			}
+			else
+			{
 				// d1 is larger or equal than d2
 				return 1;
 			}
 		}
-		
-		if ( d1 < 0 ) {
+
+		if ( d1 < 0 )
+		{
 			// Approximate division: exact or one less than the actual value
-			final long quotient = ((d1 >>> 1) / d2) << 1;
+			final long quotient = ( ( d1 >>> 1 ) / d2 ) << 1;
 			final long reminder = d1 - quotient * d2;
-			return quotient + (-1 == compare(d2, reminder) ? 0 : 1);
+			return quotient + ( -1 == compare( d2, reminder ) ? 0 : 1 );
 		}
-		
+
 		// Exact division, given that both d1 and d2 are smaller than
 		// or equal to the maximum signed long value
 		return d1 / d2;
@@ -171,20 +184,26 @@ public class UnsignedLongType extends GenericLongType<UnsignedLongType>
 	{
 		set( get() - c.get() );
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
 		// NB: Use the same hash code as java.lang.Long#hashCode().
 		final long value = get();
-		return (int) (value ^ (value >>> 32));
+		return ( int ) ( value ^ ( value >>> 32 ) );
 	}
-	
-	@Override
-	public void setOne() { set( 1 ); }
 
 	@Override
-	public void setZero() { set( 0 ); }
+	public void setOne()
+	{
+		set( 1 );
+	}
+
+	@Override
+	public void setZero()
+	{
+		set( 0 );
+	}
 
 	@Override
 	public void inc()
@@ -199,72 +218,118 @@ public class UnsignedLongType extends GenericLongType<UnsignedLongType>
 	}
 
 	@Override
-	public String toString() { return "" + get(); }
+	public String toString()
+	{
+		return "" + get();
+	}
 
-	/** This method returns the value of the UnsignedLongType as a signed long. 
-	 * To get the unsigned value, use {@link UnsignedLongType#getAsBigInteger()}.
+	/**
+	 * This method returns the value of the UnsignedLongType as a signed long.
+	 * To get the unsigned value, use {@link UnsignedLongType#getAsBigInteger()}
+	 * .
 	 */
-	public long get() {
+	public long get()
+	{
 		return dataAccess.getValue( i );
 	}
 
-	/** This method returns the unsigned representation of this UnsignedLongType
-	 * as a {@code BigInteger}. */
+	/**
+	 * This method returns the unsigned representation of this UnsignedLongType
+	 * as a {@code BigInteger}.
+	 */
 	@Override
-	public BigInteger getBigInteger ()
+	public BigInteger getBigInteger()
 	{
-		final BigInteger mask = new BigInteger("FFFFFFFFFFFFFFFF", 16);
-		return BigInteger.valueOf( get() ).and(mask);
+		final BigInteger mask = new BigInteger( "FFFFFFFFFFFFFFFF", 16 );
+		return BigInteger.valueOf( get() ).and( mask );
 	}
 
-	public void set( final long value ) {
-		dataAccess.setValue( i, value);
+	public void set( final long value )
+	{
+		dataAccess.setValue( i, value );
 	}
 
 	@Override
-	public int getInteger() { return (int)get(); }
-	@Override
-	public long getIntegerLong() { return get(); }
-	@Override
-	public void setInteger( final int f ) { set( f ); }
-	@Override
-	public void setInteger( final long f ) { set( f ); }
-	@Override
-	public void setBigInteger( final BigInteger b ) { set( b.longValue() ); }
-
-	public void set( final BigInteger bi ) { set( bi.longValue() ); }
-
-	/** The maximum value that can be stored is {@code Math.pow( 2, 64 ) - 1},
-	 * which can't be represented with exact precision using a double */
-	@Override
-	public double getMaxValue() { return Math.pow( 2, 64 ) - 1; } //imprecise
-
-	/** Returns the true maximum value as a BigInteger, since it cannot be 
-	 * precisely represented as a {@code double}. */
-	public BigInteger getMaxBigIntegerValue() {
-		return new BigInteger("+FFFFFFFFFFFFFFFF", 16);
+	public int getInteger()
+	{
+		return ( int ) get();
 	}
+
 	@Override
-	public double getMinValue()  { return 0; }
+	public long getIntegerLong()
+	{
+		return get();
+	}
+
+	@Override
+	public void setInteger( final int f )
+	{
+		set( f );
+	}
+
+	@Override
+	public void setInteger( final long f )
+	{
+		set( f );
+	}
+
+	@Override
+	public void setBigInteger( final BigInteger b )
+	{
+		set( b.longValue() );
+	}
+
+	public void set( final BigInteger bi )
+	{
+		set( bi.longValue() );
+	}
+
+	/**
+	 * The maximum value that can be stored is {@code Math.pow( 2, 64 ) - 1},
+	 * which can't be represented with exact precision using a double
+	 */
+	@Override
+	public double getMaxValue()
+	{
+		return Math.pow( 2, 64 ) - 1;
+	} // imprecise
+
+	/**
+	 * Returns the true maximum value as a BigInteger, since it cannot be
+	 * precisely represented as a {@code double}.
+	 */
+	public BigInteger getMaxBigIntegerValue()
+	{
+		return new BigInteger( "+FFFFFFFFFFFFFFFF", 16 );
+	}
+
+	@Override
+	public double getMinValue()
+	{
+		return 0;
+	}
 
 	@Override
 	public int compareTo( final UnsignedLongType c )
 	{
 		return compare( get(), c.get() );
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 * @return -1 if a < b, 0 if a == b, 1 if a > b.
 	 */
-	static public final int compare( final long a, final long b ) {
-		if (a == b)
+	static public final int compare( final long a, final long b )
+	{
+		if ( a == b )
 			return 0;
-		else {
-			boolean test = (a < b);
-			if ((a < 0) != (b < 0)) {
+		else
+		{
+			boolean test = ( a < b );
+			if ( ( a < 0 ) != ( b < 0 ) )
+			{
 				test = !test;
 			}
 			return test ? -1 : 1;
@@ -272,8 +337,14 @@ public class UnsignedLongType extends GenericLongType<UnsignedLongType>
 	}
 
 	@Override
-	public UnsignedLongType createVariable() { return new UnsignedLongType( 0 ); }
+	public UnsignedLongType createVariable()
+	{
+		return new UnsignedLongType( 0 );
+	}
 
 	@Override
-	public UnsignedLongType copy() { return new UnsignedLongType( get() ); }
+	public UnsignedLongType copy()
+	{
+		return new UnsignedLongType( get() );
+	}
 }
