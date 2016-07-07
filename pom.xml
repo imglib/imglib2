@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>imglib2</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.1.1-SNAPSHOT</version>
 
 	<name>ImgLib2 Core Library</name>
 	<description>A multidimensional, type-agnostic image processing library.</description>
@@ -160,11 +160,6 @@
 			<name>Nick Perry</name>
 			<url>http://imagej.net/User:NicholasPerry</url>
 			<properties><id>nickp</id></properties>
-		</contributor>
-		<contributor>
-			<name>Dimiter Prodanov</name>
-			<url>http://imagej.net/User:Dimiterpp</url>
-			<properties><id>dprodanov</id></properties>
 		</contributor>
 		<contributor>
 			<name>Alison Walter</name>

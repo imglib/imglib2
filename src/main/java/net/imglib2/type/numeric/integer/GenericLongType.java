@@ -2,22 +2,22 @@
  * #%L
  * ImgLib2: a general-purpose, multidimensional image processing library.
  * %%
- * Copyright (C) 2009 - 2015 Tobias Pietzsch, Stephan Preibisch, Barry DeZonia,
- * Stephan Saalfeld, Curtis Rueden, Albert Cardona, Christian Dietz, Jean-Yves
- * Tinevez, Johannes Schindelin, Jonathan Hale, Lee Kamentsky, Larry Lindsey, Mark
- * Hiner, Michael Zinsmaier, Martin Horn, Grant Harris, Aivar Grislis, John
- * Bogovic, Steffen Jaensch, Stefan Helfrich, Jan Funke, Nick Perry, Mark Longair,
- * Melissa Linkert and Dimiter Prodanov.
+ * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
+ * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
+ * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
+ * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
+ * Mark Longair, Brian Northan, Nick Perry, Curtis Rueden, Johannes Schindelin,
+ * Jean-Yves Tinevez and Michael Zinsmaier.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -43,19 +43,19 @@ import net.imglib2.util.Util;
 /**
  * Abstract superclass for Long types.
  *
- * @author Mark Hiner hinerm at gmail.com
+ * @author Mark Hiner
  */
 public abstract class GenericLongType < T extends GenericLongType< T >> extends AbstractIntegerType< T > implements NativeType< T > {
 
 	int i = 0;
 
-	final protected NativeImg< T, ? extends LongAccess > img;
+	final protected NativeImg< ?, ? extends LongAccess > img;
 
 	// the DataAccess that holds the information
 	protected LongAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public GenericLongType( final NativeImg< T, ? extends LongAccess > longStorage )
+	public GenericLongType( final NativeImg< ?, ? extends LongAccess > longStorage )
 	{
 		img = longStorage;
 	}
