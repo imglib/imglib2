@@ -957,11 +957,10 @@ public class Views
 	 */
 	public static < T > RandomAccessibleInterval< T > dropSingletonDimensions( final RandomAccessibleInterval< T > source )
 	{
-
 		RandomAccessibleInterval< T > res = source;
 		for ( int d = source.numDimensions() - 1; d >= 0; --d )
 			if ( source.dimension( d ) == 1 )
-				res = Views.hyperSlice( res, d, 0 );
+				res = Views.hyperSlice( res, d, source.min( d ) );
 
 		return res;
 	}
