@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,6 +34,8 @@
 
 package net.imglib2.converter;
 
+import java.util.ArrayList;
+
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
@@ -48,16 +50,20 @@ import net.imglib2.converter.read.ConvertedRandomAccessible;
 import net.imglib2.converter.read.ConvertedRandomAccessibleInterval;
 import net.imglib2.converter.read.ConvertedRealRandomAccessible;
 import net.imglib2.converter.read.ConvertedRealRandomAccessibleRealInterval;
+import net.imglib2.converter.readwrite.ARGBChannelSamplerConverter;
 import net.imglib2.converter.readwrite.SamplerConverter;
 import net.imglib2.converter.readwrite.WriteConvertedIterableInterval;
 import net.imglib2.converter.readwrite.WriteConvertedIterableRandomAccessibleInterval;
 import net.imglib2.converter.readwrite.WriteConvertedRandomAccessible;
 import net.imglib2.converter.readwrite.WriteConvertedRandomAccessibleInterval;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.view.Views;
 
 /**
  * Convenience factory methods for sample conversion.
- * 
+ *
  * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
  * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
  */
@@ -68,7 +74,7 @@ public class Converters
 	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
-	 * 
+	 *
 	 * @param source
 	 * @param converter
 	 * @param b
@@ -91,7 +97,7 @@ public class Converters
 	 * Create a {@link RandomAccessible} whose {@link RandomAccess
 	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
 	 * Conversion is done on-the-fly both when reading and writing values.
-	 * 
+	 *
 	 * @param source
 	 * @param converter
 	 * @return a converted {@link RandomAccessible} whose {@link RandomAccess
@@ -110,7 +116,7 @@ public class Converters
 	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
 	 * Conversion is done on-the-fly when reading values. Writing to the
 	 * converted {@link RandomAccessibleInterval} has no effect.
-	 * 
+	 *
 	 * @param source
 	 * @param converter
 	 * @param b
@@ -133,7 +139,7 @@ public class Converters
 	 * Create a {@link RandomAccessibleInterval} whose {@link RandomAccess
 	 * RandomAccesses} {@link RandomAccess#get()} you a converted sample.
 	 * Conversion is done on-the-fly both when reading and writing values.
-	 * 
+	 *
 	 * @param source
 	 * @param converter
 	 * @return a converted {@link RandomAccessibleInterval} whose
@@ -152,7 +158,7 @@ public class Converters
 	 * {@link Cursor#get()} you a converted sample. Conversion is done
 	 * on-the-fly when reading values. Writing to the converted
 	 * {@link IterableInterval} has no effect.
-	 * 
+	 *
 	 * @param source
 	 * @param converter
 	 * @param b
@@ -174,7 +180,7 @@ public class Converters
 	 * Create an {@link IterableInterval} whose {@link Cursor Cursors}
 	 * {@link Cursor#get()} you a converted sample. Conversion is done
 	 * on-the-fly both when reading and writing values.
-	 * 
+	 *
 	 * @param source
 	 * @param converter
 	 * @return a converted {@link IterableInterval} whose {@link Cursor Cursors}
@@ -192,7 +198,7 @@ public class Converters
 	 * {@link RandomAccess RandomAccesses} and {@link Cursor Cursors}
 	 * {@link Cursor#get()} you a converted sample. Conversion is done
 	 * on-the-fly both when reading and writing values.
-	 * 
+	 *
 	 * @param source
 	 * @param converter
 	 * @return a {@link WriteConvertedIterableRandomAccessibleInterval} whose
@@ -253,5 +259,95 @@ public class Converters
 		if ( TypeIdentity.class.isInstance( converter ) )
 			return ( RealRandomAccessible< B > ) source;
 		return new ConvertedRealRandomAccessible< A, B >( source, converter, b );
+	}
+
+	/**
+	 * Create a {@link WriteConvertedRandomAccessibleInterval} to one of the
+	 * four channels encoded in a {@link RandomAccessibleInterval} of
+	 * {@link ARGBType}.  The source is being modified as expected by writing
+	 * into the converted channels.
+	 *
+	 * @param source
+	 * @param channel 0 = alpha, 1 = red, 2 = green, 3 = blue
+	 *
+	 * @return a converted {@link WriteConvertedRandomAccessibleInterval} whose
+	 *         {@link Sampler Samplers} perform on-the-fly value conversion
+	 *         into and from one channel of the original {@link ARGBType}.
+	 */
+	final static public WriteConvertedRandomAccessibleInterval< ARGBType, UnsignedByteType > argbChannel(
+			final RandomAccessibleInterval< ARGBType > source,
+			final int channel )
+	{
+		return convert(
+				source,
+				new ARGBChannelSamplerConverter( channel ) );
+	}
+
+	/**
+	 * Create a {@link WriteConvertedRandomAccessible} to one of the four
+	 * channels encoded in a {@link RandomAccessible} of {@link ARGBType}.
+	 * The source is being modified as expected by writing into the converted
+	 * channels.
+	 *
+	 * @param source
+	 * @param channel 0 = alpha, 1 = red, 2 = green, 3 = blue
+	 *
+	 * @return a converted {@link WriteConvertedRandomAccessible} whose
+	 *         {@link Sampler Samplers} perform on-the-fly value conversion
+	 *         into and from one channel of the original {@link ARGBType}.
+	 */
+	final static public WriteConvertedRandomAccessible< ARGBType, UnsignedByteType > argbChannel(
+			final RandomAccessible< ARGBType > source,
+			final int channel )
+	{
+		return convert(
+				source,
+				new ARGBChannelSamplerConverter( channel ) );
+	}
+
+	/**
+	 * Create an (<em>n</em>+1)-dimensional {@link RandomAccessible} of an
+	 * <em>n</em>-dimensional {@link RandomAccessible} that maps the four
+	 * channels encoded in {@link ARGBType} into a dimension.  The source is
+	 * being modified as expected by writing into the converted channels.
+	 *
+	 * @param source
+	 *
+	 * @return a converted {@link RandomAccessibleInterval} whose
+	 *         {@link Sampler Samplers} perform on-the-fly value conversion
+	 *         into and from the corresponding channels of the original
+	 *         {@link ARGBType}.
+	 */
+	final static public RandomAccessibleInterval< UnsignedByteType > argbChannels( final RandomAccessibleInterval< ARGBType > source )
+	{
+		return Views.stack(
+				argbChannel( source, 0 ),
+				argbChannel( source, 1 ),
+				argbChannel( source, 2 ),
+				argbChannel( source, 3 ) );
+	}
+
+	/**
+	 * Create an (<em>n</em>+1)-dimensional {@link RandomAccessible} of an
+	 * <em>n</em>-dimensional {@link RandomAccessible} that maps the four
+	 * channels encoded in {@link ARGBType} into a dimension.  The order
+	 * of the channels passed as arguments is preserved.  The source is being
+	 * modified as expected by writing into the converted channels.
+	 *
+	 * @param source
+	 * @param channels 0 = alpha, 1 = red, 2 = green, 3 = blue
+	 *
+	 * @return a converted {@link RandomAccessibleInterval} whose
+	 *         {@link Sampler Samplers} perform on-the-fly value conversion
+	 *         into and from the corresponding channels of the original
+	 *         {@link ARGBType}.
+	 */
+	final static public RandomAccessibleInterval< UnsignedByteType > argbChannels( final RandomAccessibleInterval< ARGBType > source, final int... channels )
+	{
+		final ArrayList< RandomAccessibleInterval< UnsignedByteType > > hyperSlices = new ArrayList<>();
+		for ( final int c : channels )
+			hyperSlices.add( argbChannel( source, channels[ c ] ) );
+
+		return Views.stack( hyperSlices );
 	}
 }
