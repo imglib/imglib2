@@ -957,11 +957,10 @@ public class Views
 	 */
 	public static < T > RandomAccessibleInterval< T > dropSingletonDimensions( final RandomAccessibleInterval< T > source )
 	{
-
 		RandomAccessibleInterval< T > res = source;
 		for ( int d = source.numDimensions() - 1; d >= 0; --d )
 			if ( source.dimension( d ) == 1 )
-				res = Views.hyperSlice( res, d, 0 );
+				res = Views.hyperSlice( res, d, source.min( d ) );
 
 		return res;
 	}
@@ -991,6 +990,7 @@ public class Views
 	 * @return a <em>(n+1)</em>-dimensional {@link RandomAccessibleInterval}
 	 *         where the final dimension is the index of the hyperslice.
 	 */
+	@SafeVarargs
 	public static < T > RandomAccessibleInterval< T > stack( final RandomAccessibleInterval< T >... hyperslices )
 	{
 		return new StackView< T >( Arrays.asList( hyperslices ) );

@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,71 +32,73 @@
  * #L%
  */
 
-package net.imglib2.util;
+package net.imglib2.converter.readwrite;
 
+import net.imglib2.Sampler;
+import net.imglib2.img.basictypeaccess.ByteAccess;
+import net.imglib2.type.numeric.ARGBType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
 
 /**
- * TODO
- * 
+ * Access the on channel of an {@link ARGBType} as an UnsignedByteType.
+ *
  */
-public class ValuePair< A, B > implements Pair< A, B >
+public final class ARGBChannelSamplerConverter implements SamplerConverter< ARGBType, UnsignedByteType >
 {
-	final public A a;
+	static final private int[] masks = new int[]{
+			0x00ffffff,
+			0xff00ffff,
+			0xffff00ff,
+			0x00ffff00
+	};
 
-	final public B b;
+	static final private int[] shifts = new int[]{
+			24,
+			16,
+			8,
+			0
+	};
 
-	public ValuePair( final A a, final B b )
+	final private int mask, shift;
+
+	public ARGBChannelSamplerConverter( final int channel )
 	{
-		this.a = a;
-		this.b = b;
+		mask = masks[ channel ];
+		shift = shifts[ channel ];
 	}
 
 	@Override
-	public A getA()
+	public UnsignedByteType convert( final Sampler< ? extends ARGBType > sampler )
 	{
-		return a;
+		return new UnsignedByteType( new ARGBChannelConvertingAccess( sampler ) );
 	}
 
-	@Override
-	public B getB()
+	final private class ARGBChannelConvertingAccess implements ByteAccess
 	{
-		return b;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ( ( a == null ) ? 0 : a.hashCode() );
-		result = prime * result + ( ( b == null ) ? 0 : b.hashCode() );
-		return result;
-	}
+		final private Sampler< ? extends ARGBType > sampler;
 
-	@Override
-	public boolean equals(Object obj)
-	{
-		if ( this == obj )
-			return true;
-		if ( obj == null )
-			return false;
-		if ( !(obj instanceof Pair) )
-			return false;
-		Pair other = (Pair) obj;
-		if ( a == null )
+		private ARGBChannelConvertingAccess( final Sampler< ? extends ARGBType > sampler )
 		{
-			if ( other.getA() != null )
-				return false;
+			this.sampler = sampler;
 		}
-		else if ( !a.equals( other.getA() ) )
-			return false;
-		if ( b == null )
+
+		/**
+		 * This is only intended to work with UnsignedByteType! We ignore index!!!
+		 */
+		@Override
+		public byte getValue( final int index )
 		{
-			if ( other.getB() != null )
-				return false;
+			return ( byte )( ( sampler.get().get() >> shift ) & 0xff );
 		}
-		else if ( !b.equals( other.getB() ) )
-			return false;
-		return true;
+
+		/**
+		 * This is only intended to work with UnsignedByteType! We ignore index!!!
+		 */
+		@Override
+		public void setValue( final int index, final byte value )
+		{
+			final ARGBType t = sampler.get();
+			t.set( ( t.get() & mask ) | ( value << shift ) );
+		}
 	}
 }
