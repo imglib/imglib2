@@ -41,7 +41,7 @@ import net.imglib2.type.NativeType;
  * 
  * @param <T>
  * 
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  * @author Tobias Pietzsch
  */
 public final class ArrayLocalizingSubIntervalCursor< T extends NativeType< T > > extends AbstractArrayLocalizingCursor< T >

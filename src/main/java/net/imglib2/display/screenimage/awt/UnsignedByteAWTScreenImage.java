@@ -45,7 +45,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  * @author Curtis Rueden
  */
 public class UnsignedByteAWTScreenImage extends ArrayImgAWTScreenImage< UnsignedByteType, ByteArray >

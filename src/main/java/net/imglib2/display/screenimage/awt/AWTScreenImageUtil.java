@@ -54,7 +54,7 @@ import net.imglib2.type.numeric.real.FloatType;
  * 
  * TODO: Add convenience methods to render {@link RandomAccessibleInterval}s.
  * 
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  * 
  */
 public class AWTScreenImageUtil

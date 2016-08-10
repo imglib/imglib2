@@ -68,7 +68,7 @@ import net.imglib2.type.numeric.real.FloatType;
  * img = new PlanarImgFactory&lt; MyType &gt;.create( new long[] { 100, 200 }, new MyType() );
  * </pre>
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 final public class PlanarImgs
 {

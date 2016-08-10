@@ -42,7 +42,7 @@ import net.imglib2.transform.integer.Slicing;
  * Wrap a cursor that runs on a hyperslice and apply coordinate transform on
  * localize calls.
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class SlicingCursor< T > extends AbstractEuclideanSpace implements Cursor< T >
 {

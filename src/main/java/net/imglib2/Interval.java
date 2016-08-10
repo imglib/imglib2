@@ -51,7 +51,7 @@ package net.imglib2;
  * {@link Interval} does not define a value for all coordinates in between.
  * </p>
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  * @author Stephan Preibisch
  */
 public interface Interval extends RealInterval, Dimensions

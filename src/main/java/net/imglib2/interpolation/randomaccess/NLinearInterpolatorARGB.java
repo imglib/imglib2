@@ -43,7 +43,7 @@ import net.imglib2.util.Util;
  * 
  * @param <T>
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 {

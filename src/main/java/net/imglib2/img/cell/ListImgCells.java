@@ -45,7 +45,7 @@ import net.imglib2.util.Fraction;
  * all in memory all the time in a {@link ListImg}.
  * 
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class ListImgCells< A extends ArrayDataAccess< A > > extends AbstractCells< A, DefaultCell< A >, ListImg< DefaultCell< A > > >
 {

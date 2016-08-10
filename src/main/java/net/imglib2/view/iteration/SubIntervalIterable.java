@@ -41,7 +41,7 @@ import net.imglib2.IterableRealInterval;
  * Implementing this interface enables the implementor to return optimized
  * {@link Cursor}s for certain {@link Interval}s
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public interface SubIntervalIterable< T >
 {

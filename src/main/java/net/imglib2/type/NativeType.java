@@ -65,7 +65,7 @@ import net.imglib2.util.Fraction;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public interface NativeType< T extends NativeType< T >> extends Type< T >
 {

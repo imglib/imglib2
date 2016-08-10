@@ -40,7 +40,7 @@ import net.imglib2.RealRandomAccess;
  * 
  * @param <T>
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public interface RealOutOfBounds< T > extends OutOfBounds< T >, RealRandomAccess< T >
 {

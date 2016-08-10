@@ -44,7 +44,7 @@ import net.imglib2.type.numeric.real.FloatType;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  * @author Curtis Rueden
  */
 public class FloatAWTScreenImage extends ArrayImgAWTScreenImage< FloatType, FloatArray >

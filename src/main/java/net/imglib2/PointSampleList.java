@@ -40,8 +40,8 @@ import java.util.Iterator;
 /**
  * A list of data samples at explicit {@link Localizable integer coordinates}.
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
 public class PointSampleList< T > extends AbstractInterval implements IterableInterval< T >
 {

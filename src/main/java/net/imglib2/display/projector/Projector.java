@@ -37,7 +37,7 @@ package net.imglib2.display.projector;
 /**
  * 
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public interface Projector
 {

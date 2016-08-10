@@ -54,7 +54,7 @@ import net.imglib2.RandomAccessible;
  * 
  * @param <T>
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class OutOfBoundsMirrorSingleBoundary< T > extends AbstractOutOfBoundsMirror< T >
 {

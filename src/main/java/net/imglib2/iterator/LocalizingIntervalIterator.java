@@ -65,7 +65,7 @@ import net.imglib2.util.Util;
  * {@link IntervalIterator} instead.
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class LocalizingIntervalIterator extends IntervalIterator
 {

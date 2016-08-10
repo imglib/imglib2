@@ -45,7 +45,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  * @author Curtis Rueden
  */
 public class UnsignedShortAWTScreenImage extends ArrayImgAWTScreenImage< UnsignedShortType, ShortArray >

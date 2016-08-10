@@ -40,7 +40,7 @@ import java.io.Serializable;
  * TODO
  *
  * @author Stephan Preibisch
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public interface ArrayDataAccess< A > extends Serializable
 {

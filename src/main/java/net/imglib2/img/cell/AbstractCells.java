@@ -48,7 +48,7 @@ import net.imglib2.util.Fraction;
  * {@link RandomAccessibleInterval} and {@link IterableInterval} with minimum at
  * 0 and flat iteration order.
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public abstract class AbstractCells< A, C extends AbstractCell< A >, I extends RandomAccessibleInterval< C > & IterableInterval< C > > implements Cells< A, C >
 {

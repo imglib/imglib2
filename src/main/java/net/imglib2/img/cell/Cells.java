@@ -44,7 +44,7 @@ import net.imglib2.util.Fraction;
  * Implementations may either keep all cells in memory, or cache them on demand.
  * 
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public interface Cells< A, C extends AbstractCell< A > > extends EuclideanSpace
 {

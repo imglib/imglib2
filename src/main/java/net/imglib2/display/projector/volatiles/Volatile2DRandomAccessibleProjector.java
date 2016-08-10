@@ -49,7 +49,7 @@ import net.imglib2.view.Views;
  * {@link #map()} call, the projector has a {@link #isValid() state} that
  * signalizes whether all projected pixels were valid.
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class Volatile2DRandomAccessibleProjector< T, A extends Volatile< T >, B > extends IterableIntervalProjector2D< A, B >
 {

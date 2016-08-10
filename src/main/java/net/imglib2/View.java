@@ -49,7 +49,7 @@ package net.imglib2;
  * 
  * @author Curtis Rueden
  * @author Tobias Pietzsch
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  * @see net.imglib2.view.Views
  * @see net.imglib2.converter.Converters
  */

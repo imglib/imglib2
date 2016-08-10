@@ -61,7 +61,7 @@ import net.imglib2.position.transform.Round;
  * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
- * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
+ * @author Stephan Saalfeld
  */
 public class NearestNeighborInterpolator< T > extends Round< RandomAccess< T > > implements RealRandomAccess< T >
 {

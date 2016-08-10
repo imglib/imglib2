@@ -54,8 +54,8 @@ import net.imglib2.transform.Transform;
  * transformation is applied at {@link #get()}.  So don't call {@link #get()}
  * more than once at the same place (generally a good idea).
  *
- * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
- * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
+ * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  * @author Tobias Pietzsch
  */
 public final class TransformRandomAccess< T > extends AbstractLocalizable implements RandomAccess< T >

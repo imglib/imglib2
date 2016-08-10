@@ -43,7 +43,7 @@ import net.imglib2.type.numeric.integer.UnsignedIntType;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  * @author Curtis Rueden
  */
 public class UnsignedIntAWTScreenImage extends ArrayImgAWTScreenImage< UnsignedIntType, IntArray >

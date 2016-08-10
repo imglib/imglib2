@@ -44,7 +44,7 @@ import net.imglib2.transform.integer.BoundingBox;
  * Forward implementation of the most simple case of a shear transform:
  * coordinate[ shearDimension ] += coordinate[ referenceDimension ]
  * 
- * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
+ * @author Philipp Hanslovsky
  *
  */
 public class ShearTransform extends AbstractShearTransform

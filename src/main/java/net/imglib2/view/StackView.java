@@ -52,7 +52,7 @@ import net.imglib2.util.Util;
  * @param <T>
  *            the pixel type.
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class StackView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
 {

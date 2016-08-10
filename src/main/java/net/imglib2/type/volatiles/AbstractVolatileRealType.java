@@ -44,8 +44,8 @@ import net.imglib2.type.numeric.RealType;
  * @param <T>
  *            type of derived concrete class.
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
- * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
+ * @author Tobias Pietzsch
+ * @author Stephan Saalfeld
  */
 public abstract class AbstractVolatileRealType< R extends RealType< R >, T extends AbstractVolatileRealType< R, T > >
 		extends Volatile< R >

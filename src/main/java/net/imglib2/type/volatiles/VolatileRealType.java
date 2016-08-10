@@ -39,7 +39,7 @@ import net.imglib2.type.numeric.RealType;
 /**
  * Something volatile that has a value and is either VALID or INVALID.
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class VolatileRealType< T extends RealType< T > > extends AbstractVolatileRealType< T, VolatileRealType< T > >
 {

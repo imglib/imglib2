@@ -44,7 +44,7 @@ package net.imglib2;
  * access {@link Sampler}.
  * </p>
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public interface RandomAccessibleInterval< T > extends RandomAccessible< T >, Interval
 {}

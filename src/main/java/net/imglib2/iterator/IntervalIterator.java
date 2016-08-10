@@ -69,7 +69,7 @@ import net.imglib2.util.Util;
  * example above), use {@link LocalizingIntervalIterator} instead.
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class IntervalIterator extends AbstractInterval implements Iterator, Localizable
 {

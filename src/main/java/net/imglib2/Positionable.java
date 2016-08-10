@@ -39,7 +39,7 @@ package net.imglib2;
  * 
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
 public interface Positionable extends EuclideanSpace

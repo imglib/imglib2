@@ -37,7 +37,7 @@ package net.imglib2.display;
 /**
  * 
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class AbstractLinearRange implements LinearRange
 {

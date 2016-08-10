@@ -47,7 +47,7 @@ import net.imglib2.util.Intervals;
  * {@link RealRandomAccessibleRealInterval} through an
  * {@link RealOutOfBoundsFactory}. Note that it is not a RealInterval itself.
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 final public class ExtendedRealRandomAccessibleRealInterval< T, F extends RealRandomAccessibleRealInterval< T > > implements RealRandomAccessible< T >
 {

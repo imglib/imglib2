@@ -44,7 +44,7 @@ package net.imglib2.util;
  * be generated from intermediate sums that result from equal number of
  * summands.
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class RealSum
 {

@@ -39,7 +39,7 @@ import net.imglib2.type.numeric.NumericType;
 /**
  * Something volatile that has a value and is either VALID or INVALID.
  * 
- * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
+ * @author Stephan Saalfeld
  */
 public class VolatileNumericType< T extends NumericType< T > > extends AbstractVolatileNumericType< T, VolatileNumericType< T > >
 {

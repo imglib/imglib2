@@ -85,9 +85,9 @@ import net.imglib2.view.composite.RealComposite;
  * optimally efficient accessors. Note, that accessors provided by a view are
  * read/write. Changing pixels in a view changes the underlying image data.
  *
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
- * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
- * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
+ * @author Tobias Pietzsch
+ * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public class Views
 {
