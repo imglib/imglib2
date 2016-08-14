@@ -46,7 +46,7 @@ import net.imglib2.RandomAccess;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class ListRandomAccess< T > extends AbstractLocalizableInt implements RandomAccess< T >
 {

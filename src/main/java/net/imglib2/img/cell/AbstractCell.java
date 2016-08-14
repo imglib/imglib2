@@ -41,7 +41,7 @@ import net.imglib2.util.IntervalIndexer;
 /**
  * A cell of an {@link CellImg}.
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public abstract class AbstractCell< A > implements Serializable
 {

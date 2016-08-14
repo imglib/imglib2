@@ -45,7 +45,7 @@ import net.imglib2.Sampler;
  * the next search is performed. In a multi-threaded application, each thread
  * will thus need its own {@link NearestNeighborSearch}.
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public interface NearestNeighborSearch< T > extends EuclideanSpace
 {

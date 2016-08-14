@@ -66,7 +66,7 @@ import net.imglib2.util.IntervalIndexer;
  * {@link ZeroMinIntervalIterator} instead.
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class LocalizingZeroMinIntervalIterator extends LocalizingIntervalIterator
 {

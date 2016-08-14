@@ -41,7 +41,7 @@ import net.imglib2.Sampler;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  * 
  * @param <T>
  */

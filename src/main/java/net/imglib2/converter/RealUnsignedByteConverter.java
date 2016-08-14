@@ -41,7 +41,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 /**
  * 
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class RealUnsignedByteConverter< R extends RealType< R > > extends AbstractLinearRange implements Converter< R, UnsignedByteType >
 {

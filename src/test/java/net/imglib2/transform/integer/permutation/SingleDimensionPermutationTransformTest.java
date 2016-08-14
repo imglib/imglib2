@@ -56,7 +56,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
+ * @author Philipp Hanslovsky
  *
  */
 public class SingleDimensionPermutationTransformTest

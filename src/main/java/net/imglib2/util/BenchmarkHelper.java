@@ -44,7 +44,7 @@ import java.util.Collections;
  * iterations and a {@link Runnable} to benchmark to obtain a list of run-times
  * in milliseconds.
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class BenchmarkHelper
 {

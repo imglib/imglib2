@@ -39,7 +39,7 @@ import net.imglib2.RandomAccessible;
 /**
  * Strategy to repeat the boundary pixels (creates {@link OutOfBoundsBorder}).
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class OutOfBoundsBorderFactory< T, F extends Interval & RandomAccessible< T > > implements OutOfBoundsFactory< T, F >
 {

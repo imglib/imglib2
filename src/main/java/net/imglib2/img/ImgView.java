@@ -49,7 +49,7 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * Allows a {@link RandomAccessibleInterval} to be treated as an {@link Img}.
  * 
  * @author Tobias Pietzsch
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  */
 public class ImgView< T extends Type< T > > extends
 		IterableRandomAccessibleInterval< T > implements Img< T >, SubIntervalIterable< T >

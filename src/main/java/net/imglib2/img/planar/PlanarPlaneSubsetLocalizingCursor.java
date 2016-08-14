@@ -42,7 +42,7 @@ import net.imglib2.type.NativeType;
  * Cursor optimized for one plane in an PlanarImg.
  * 
  * @author Jonathan Hale
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  *
  * @param <T>
  */

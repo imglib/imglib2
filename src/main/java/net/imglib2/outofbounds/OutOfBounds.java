@@ -39,7 +39,7 @@ import net.imglib2.RandomAccess;
 /**
  * 
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public interface OutOfBounds< T > extends RandomAccess< T >, Bounded
 {

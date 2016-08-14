@@ -45,8 +45,8 @@ import net.imglib2.transform.InvertibleTransform;
  * efficiency reasons.  Expect this permutation to be transferred to long
  * coordinates some time in more distant future.
  *
- * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
- * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
+ * @author Philipp Hanslovsky
+ * @author Stephan Saalfeld
  */
 public abstract class AbstractPermutationTransform implements InvertibleTransform
 {

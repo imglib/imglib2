@@ -52,7 +52,7 @@ import org.junit.Test;
 /**
  * Simple test to test Views.stack(...)
  * 
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  *
  */
 public class StackRandomAccessibleIntervalsTest

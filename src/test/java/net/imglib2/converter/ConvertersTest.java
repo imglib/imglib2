@@ -50,7 +50,7 @@ import net.imglib2.view.Views;
 /**
  *
  *
- * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
+ * @author Stephan Saalfeld
  */
 public class ConvertersTest
 {

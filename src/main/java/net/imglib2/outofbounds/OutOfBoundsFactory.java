@@ -39,7 +39,7 @@ package net.imglib2.outofbounds;
  * @param <T>
  * @param <F>
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public interface OutOfBoundsFactory< T, F >
 {

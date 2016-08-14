@@ -50,7 +50,7 @@ import net.imglib2.display.projector.specialized.ArrayImgXYByteProjector;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  */
 public abstract class AbstractProjector2D extends Point implements Projector
 {

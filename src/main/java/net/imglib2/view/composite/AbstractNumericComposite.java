@@ -43,7 +43,7 @@ import net.imglib2.type.numeric.NumericType;
  * {@link NumericType} itself, implementing the {@link NumericType} algebra as
  * element-wise operations.
  *
- * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
+ * @author Stephan Saalfeld
  */
 abstract public class AbstractNumericComposite< T extends NumericType< T >, C extends AbstractNumericComposite< T, C > > extends AbstractComposite< T > implements NumericType< C >, Iterable< T >
 {

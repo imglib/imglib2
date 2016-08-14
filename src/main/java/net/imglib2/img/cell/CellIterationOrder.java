@@ -38,7 +38,7 @@ package net.imglib2.img.cell;
  * Iteration order for a {@link CellImg}. A {@link CellImg} is iterated cell by
  * cell, where each cell is iterated in flat iteration order.
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class CellIterationOrder
 {

@@ -53,7 +53,7 @@ import net.imglib2.transform.integer.Slicing;
  * </p>
  *
  * @param <T>
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class FullSourceMapSlicingRandomAccess< T > extends AbstractEuclideanSpace implements RandomAccess< T >
 {

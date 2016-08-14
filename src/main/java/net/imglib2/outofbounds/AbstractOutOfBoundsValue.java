@@ -47,7 +47,7 @@ import net.imglib2.type.Type;
  * 
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public abstract class AbstractOutOfBoundsValue< T extends Type< T > > extends AbstractLocalizable implements OutOfBounds< T >
 {

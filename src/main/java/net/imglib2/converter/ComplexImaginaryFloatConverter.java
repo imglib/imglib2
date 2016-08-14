@@ -40,7 +40,7 @@ import net.imglib2.type.numeric.real.FloatType;
 /**
  * Returns the imaginary value of a complex value
  * 
- * @author Stephan Preibisch (stephan.preibisch@gmx.de)
+ * @author Stephan Preibisch
  */
 public class ComplexImaginaryFloatConverter< R extends ComplexType< R > > implements Converter< R, FloatType >
 {

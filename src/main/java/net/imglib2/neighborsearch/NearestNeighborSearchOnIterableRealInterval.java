@@ -43,7 +43,7 @@ import net.imglib2.Sampler;
  * <em>k</em>-nearest-neighbor search on {@link IterableRealInterval}
  * implemented as linear search.
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class NearestNeighborSearchOnIterableRealInterval< T > implements NearestNeighborSearch< T >
 {

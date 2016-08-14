@@ -39,7 +39,7 @@ package net.imglib2;
  * 
  * @author Lee Kamentsky
  * @author Stephan Saalfeld
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class RealPoint extends AbstractRealLocalizable implements RealPositionable
 {

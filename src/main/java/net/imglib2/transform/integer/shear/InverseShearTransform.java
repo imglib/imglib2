@@ -45,7 +45,7 @@ import net.imglib2.transform.integer.BoundingBox;
  * coordinate[ shearDimension ] -= coordinate[ referenceDimension ]
  * 
  * 
- * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
+ * @author Philipp Hanslovsky
  *
  */
 public class InverseShearTransform extends AbstractShearTransform

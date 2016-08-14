@@ -48,7 +48,7 @@ import net.imglib2.util.IntervalIndexer;
  * 
  * @author Michael Zinsmaier
  * @author Martin Horn
- * @author Christian Dietz (University of Konstanz)
+ * @author Christian Dietz
  * 
  * @param <A>
  */

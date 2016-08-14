@@ -41,7 +41,7 @@ import net.imglib2.type.NativeType;
 /**
  * {@link Cursor} on a {@link CellImg}.
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class CellCursor< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractCursor< T > implements AbstractCellImg.CellContainerSampler< T, A, C >
 {

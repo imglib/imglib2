@@ -50,7 +50,7 @@ import net.imglib2.RealPositionable;
  * are generated on-the-fly. Localization is thus moderately inefficient to the
  * benefit of faster positioning. Don't ask for what you already know ;).
  * 
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class SubsampleIntervalView< T > extends SubsampleView< T > implements RandomAccessibleInterval< T >
 {

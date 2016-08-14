@@ -58,8 +58,8 @@ import org.junit.Test;
 /**
  *
  *
- * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
- * @author Philipp Hanslovsky (hanslovskyp@janelia.hhmi.org)
+ * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public class PermutationTransformTest
 {

@@ -51,7 +51,7 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class RandomAccessibleIntervalCursorBenchmark
 {

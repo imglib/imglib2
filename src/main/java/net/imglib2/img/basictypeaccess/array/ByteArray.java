@@ -40,7 +40,7 @@ import net.imglib2.img.basictypeaccess.ByteAccess;
  * TODO
  *
  * @author Stephan Preibisch
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class ByteArray implements ByteAccess, ArrayDataAccess< ByteArray >
 {

@@ -62,9 +62,9 @@ import net.imglib2.util.IntervalIndexer;
  *            {@link LongListCursor#set(Object)} and
  *            {@link LongListRandomAccess#set(Object)} methods to alter pixels.
  *
- * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
+ * @author Stephan Saalfeld
  * @author Stephan Preibisch
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public abstract class AbstractLongListImg< T > extends AbstractImg< T >
 {

@@ -42,7 +42,7 @@ import net.imglib2.view.composite.Composite;
 /**
  * A converter to extract one channel of a {@link Composite}.
  * 
- * @author Stephan Saalfeld (saalfelds@janelia.hhmi.org)
+ * @author Stephan Saalfeld
  *
  */
 public class CompositeChannelConverter< T extends Type< T >, A extends Composite< T > > implements Converter< A, T >

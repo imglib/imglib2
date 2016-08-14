@@ -41,7 +41,7 @@ import net.imglib2.type.NativeType;
 /**
  * Localizing {@link Cursor} on a {@link CellImg}.
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class CellLocalizingCursor< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A, C >
 {

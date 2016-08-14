@@ -37,8 +37,8 @@ package net.imglib2.util;
 /**
  * Basic vector and matrix operations implemented on double[] and double[][].
  *
- * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
- * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
+ * @author Tobias Pietzsch
+ * @author Stephan Saalfeld
  */
 public class LinAlgHelpers
 {

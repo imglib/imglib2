@@ -48,7 +48,7 @@ import net.imglib2.type.numeric.RealType;
  * @param <T>
  * 
  * @author Stephan Preibisch
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
+ * @author Stephan Saalfeld
  */
 public class InverseDistanceWeightingInterpolator< T extends RealType< T > > extends RealPoint implements RealRandomAccess< T >
 {

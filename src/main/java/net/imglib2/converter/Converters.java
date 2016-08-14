@@ -64,8 +64,8 @@ import net.imglib2.view.Views;
 /**
  * Convenience factory methods for sample conversion.
  *
- * @author Stephan Saalfeld (saalfeld@mpi-cbg.de)
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
 public class Converters
 {

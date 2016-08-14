@@ -45,7 +45,7 @@ import net.imglib2.type.NativeType;
  * The boundaries of the current cell are cached, so that position changes
  * within the same cell have minimal overhead.
  * 
- * @author Tobias Pietzsch (tobias.pietzsch@gmail.com)
+ * @author Tobias Pietzsch
  */
 public class CellRandomAccess< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractLocalizable implements RandomAccess< T >, CellImg.CellContainerSampler< T, A, C >
 {
