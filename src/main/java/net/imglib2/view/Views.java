@@ -293,6 +293,8 @@ public class Views
 	 */
 	public static < T > MixedTransformView< T > rotate( final RandomAccessible< T > randomAccessible, final int fromAxis, final int toAxis )
 	{
+		checkAxis( fromAxis, "fromAxis", randomAccessible );
+		checkAxis( toAxis, "toAxis", randomAccessible );
 		final int n = randomAccessible.numDimensions();
 		final MixedTransform t = new MixedTransform( n, n );
 		if ( fromAxis != toAxis )
@@ -334,6 +336,8 @@ public class Views
 	 */
 	public static < T > IntervalView< T > rotate( final RandomAccessibleInterval< T > interval, final int fromAxis, final int toAxis )
 	{
+		checkAxis( fromAxis, "fromAxis", interval );
+		checkAxis( toAxis, "toAxis", interval );
 		final int n = interval.numDimensions();
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];
@@ -351,6 +355,12 @@ public class Views
 		return Views.interval( Views.rotate( ( RandomAccessible< T > ) interval, fromAxis, toAxis ), min, max );
 	}
 
+	private static void checkAxis( final int axis, final String label, final EuclideanSpace space )
+	{
+		final int n = space.numDimensions();
+		if ( axis < 0 || axis >= n ) { throw new IllegalArgumentException( "Invalid " + label + ": " + axis + ", dims = " + n ); }
+	}
+
 	/**
 	 * Create view with permuted axes. fromAxis and toAxis are swapped.
 	 *
@@ -360,6 +370,8 @@ public class Views
 	 */
 	public static < T > MixedTransformView< T > permute( final RandomAccessible< T > randomAccessible, final int fromAxis, final int toAxis )
 	{
+		checkAxis( fromAxis, "fromAxis", randomAccessible );
+		checkAxis( toAxis, "toAxis", randomAccessible );
 		final int n = randomAccessible.numDimensions();
 		final int[] component = new int[ n ];
 		for ( int e = 0; e < n; ++e )
@@ -380,6 +392,8 @@ public class Views
 	 */
 	public static < T > IntervalView< T > permute( final RandomAccessibleInterval< T > interval, final int fromAxis, final int toAxis )
 	{
+		checkAxis( fromAxis, "fromAxis", interval );
+		checkAxis( toAxis, "toAxis", interval );
 		final int n = interval.numDimensions();
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];

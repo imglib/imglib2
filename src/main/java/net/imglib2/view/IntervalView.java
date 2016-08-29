@@ -79,7 +79,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	public IntervalView( final RandomAccessible< T > source, final Interval interval )
 	{
 		super( interval );
-		assert ( source.numDimensions() == interval.numDimensions() );
+		if ( source.numDimensions() != interval.numDimensions() ) { throw new IllegalArgumentException( "Dimension mismatch: source = " + source.numDimensions() + ", interval = " + interval.numDimensions() ); }
 
 		this.source = source;
 		this.fullViewRandomAccessible = null;
@@ -100,7 +100,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	public IntervalView( final RandomAccessible< T > source, final long[] min, final long[] max )
 	{
 		super( min, max );
-		assert ( source.numDimensions() == min.length );
+		if ( source.numDimensions() != min.length || min.length != max.length ) { throw new IllegalArgumentException( "Dimension mismatch: source = " + source.numDimensions() + ", min = " + min.length + ", max = " + max.length ); }
 
 		this.source = source;
 		this.fullViewRandomAccessible = null;
