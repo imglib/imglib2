@@ -42,12 +42,15 @@ import net.imglib2.EuclideanSpace;
 import net.imglib2.FlatIterationOrder;
 import net.imglib2.Interval;
 import net.imglib2.IterableInterval;
+import net.imglib2.LinearAccess;
+import net.imglib2.LinearAccessible;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.outofbounds.OutOfBoundsBorderFactory;
@@ -63,6 +66,7 @@ import net.imglib2.transform.integer.permutation.PermutationTransform;
 import net.imglib2.transform.integer.permutation.SingleDimensionPermutationTransform;
 import net.imglib2.transform.integer.shear.InverseShearTransform;
 import net.imglib2.transform.integer.shear.ShearTransform;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
@@ -74,6 +78,9 @@ import net.imglib2.view.composite.CompositeView;
 import net.imglib2.view.composite.GenericComposite;
 import net.imglib2.view.composite.NumericComposite;
 import net.imglib2.view.composite.RealComposite;
+import net.imglib2.view.linear.LinearAccessibleViewOnArrayImg;
+import net.imglib2.view.linear.LinearAccessibleViewOnPlanarImg;
+import net.imglib2.view.linear.LinearAccessibleViewOnRandomAccessibleInterval;
 
 /**
  * Create light-weight views into {@link RandomAccessible RandomAccessibles}.
@@ -365,7 +372,9 @@ public class Views
 		final int n = randomAccessible.numDimensions();
 		final int[] component = new int[ n ];
 		for ( int e = 0; e < n; ++e )
+		{
 			component[ e ] = e;
+		}
 		component[ fromAxis ] = toAxis;
 		component[ toAxis ] = fromAxis;
 		final MixedTransform t = new MixedTransform( n, n );
@@ -502,7 +511,9 @@ public class Views
 		interval.min( offset );
 		interval.max( max );
 		for ( int d = 0; d < n; ++d )
+		{
 			max[ d ] -= offset[ d ];
+		}
 		final MixedTransform t = new MixedTransform( n, n );
 		t.setTranslation( offset );
 		return Views.interval( new MixedTransformView< T >( interval, t ), min, max );
@@ -679,7 +690,9 @@ public class Views
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];
 		for ( int d = 0; d < n; ++d )
+		{
 			max[ d ] = dimension[ d ] - 1;
+		}
 		return Views.interval( Views.offset( randomAccessible, offset ), min, max );
 	}
 
@@ -704,7 +717,9 @@ public class Views
 		interval.min( offset );
 		interval.max( max );
 		for ( int d = 0; d < n; ++d )
+		{
 			max[ d ] -= offset[ d ];
+		}
 		return Views.interval( Views.offset( randomAccessible, offset ), min, max );
 	}
 
@@ -718,8 +733,11 @@ public class Views
 	public static boolean isZeroMin( final Interval interval )
 	{
 		for ( int d = 0; d < interval.numDimensions(); ++d )
-			if ( interval.min( d ) != 0 )
+		{
+			if ( interval.min( d ) != 0 ) {
 				return false;
+			}
+		}
 
 		return true;
 	}
@@ -742,8 +760,9 @@ public class Views
 			final Class< ? > raiType = Util.getTypeFromInterval( randomAccessibleInterval ).getClass();
 			final Iterator< ? > iter = ( ( IterableInterval< ? > ) randomAccessibleInterval ).iterator();
 			final Object o = iter.hasNext() ? iter.next() : null;
-			if ( raiType.isInstance( o ) )
+			if ( raiType.isInstance( o ) ) {
 				return ( IterableInterval< T > ) randomAccessibleInterval;
+			}
 		}
 		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
 	}
@@ -767,8 +786,9 @@ public class Views
 			final Class< ? > raiType = Util.getTypeFromInterval( randomAccessibleInterval ).getClass();
 			final Iterator< ? > iter = ( ( IterableInterval< ? > ) randomAccessibleInterval ).iterator();
 			final Object o = iter.hasNext() ? iter.next() : null;
-			if ( raiType.isInstance( o ) )
+			if ( raiType.isInstance( o ) ) {
 				return ( IterableInterval< T > ) randomAccessibleInterval;
+			}
 		}
 		return new IterableRandomAccessibleInterval< T >( randomAccessibleInterval );
 	}
@@ -959,8 +979,12 @@ public class Views
 	{
 		RandomAccessibleInterval< T > res = source;
 		for ( int d = source.numDimensions() - 1; d >= 0; --d )
+		{
 			if ( source.dimension( d ) == 1 )
+			{
 				res = Views.hyperSlice( res, d, source.min( d ) );
+			}
+		}
 
 		return res;
 	}
@@ -1263,4 +1287,49 @@ public class Views
 		return new RandomAccessiblePair< A, B >( sourceA, sourceB );
 	}
 
+	/**
+	 *
+	 * Access a {@link RandomAccessibleInterval} by a linear index. If
+	 * {@code source} offers an efficient {@link LinearAccess}, this will be
+	 * used. Fall back to generic
+	 * {@link LinearAccessibleViewOnRandomAccessibleInterval.RandomAccessibleIntervalLinearAccess}
+	 * otherwise.
+	 *
+	 * @param source
+	 * @return
+	 */
+	public static < T > LinearAccessible< T >
+	linearAccessible( final RandomAccessibleInterval< T > source )
+	{
+		if ( source instanceof LinearAccessible )
+		{
+			return ( LinearAccessible< T > ) source;
+		}
+
+		else
+		{
+
+			final T t = source.randomAccess().get();
+
+			if ( t instanceof NativeType )
+			{
+				if ( source instanceof ArrayImg )
+				{
+					return new LinearAccessibleViewOnArrayImg<>( ( ArrayImg ) source );
+				}
+				else if ( source instanceof PlanarImg )
+				{
+					return new LinearAccessibleViewOnPlanarImg<>( ( PlanarImg ) source );
+				}
+				else
+				{
+					return new LinearAccessibleViewOnRandomAccessibleInterval<>( source );
+				}
+			}
+			else
+			{
+				return new LinearAccessibleViewOnRandomAccessibleInterval<>( source );
+			}
+		}
+	}
 }
