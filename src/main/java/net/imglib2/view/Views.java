@@ -49,6 +49,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.list.ListImg;
 import net.imglib2.interpolation.Interpolant;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.outofbounds.OutOfBoundsBorderFactory;
@@ -93,6 +94,28 @@ import net.imglib2.view.composite.RealComposite;
  */
 public class Views
 {
+	// --- EXPERIMENTAL ---
+	public static < T > TiledView< T > tile( final RandomAccessibleInterval< T > source, final long... blockSize )
+	{
+		return new TiledView<>( source, blockSize );
+	}
+
+	public static < T > ListImg< T > arrange( final List< T > source, final long... grid )
+	{
+		return new ListImg<>( source, grid );
+	}
+
+	public static < T > GridView< T > grid( final RandomAccessibleInterval< RandomAccessibleInterval< T > > source )
+	{
+		return new GridView<>( source );
+	}
+
+	public static < T > GridView< T > grid( final List< RandomAccessibleInterval< T > > source, final long... grid )
+	{
+		return new GridView<>( new ListImg<>( source, grid ) );
+	}
+	// --------------------
+
 	/**
 	 * Returns a {@link RealRandomAccessible} using interpolation
 	 *
@@ -1214,13 +1237,14 @@ public class Views
 	 *            dimension index to be permuted
 	 *
 	 * @return {@link IntervalView} of permuted source.
-	 * 
-	 * @deprecated use {@link Views#permuteCoordinatesInverse(RandomAccessibleInterval, int[], int)}
+	 *
+	 * @deprecated use
+	 *             {@link Views#permuteCoordinatesInverse(RandomAccessibleInterval, int[], int)}
 	 */
 	@Deprecated
 	public static < T > IntervalView< T > permuteCoordinateInverse( final RandomAccessibleInterval< T > source, final int[] permutation, final int d )
 	{
-		return permuteCoordinatesInverse(source, permutation, d);
+		return permuteCoordinatesInverse( source, permutation, d );
 	}
 
 	/**
