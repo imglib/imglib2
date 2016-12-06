@@ -34,27 +34,42 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
+import net.imglib2.img.basictypeaccess.ShortAccess;
+
 /**
- * TODO
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class DoubleArray extends AbstractDoubleArray< DoubleArray >
+abstract public class AbstractShortArray< A extends AbstractShortArray< A > > implements ShortAccess, ArrayDataAccess< A >
 {
-	public DoubleArray( final int numEntities )
+	protected short data[];
+
+	public AbstractShortArray( final int numEntities )
 	{
-		super( numEntities );
+		this.data = new short[ numEntities ];
 	}
 
-	public DoubleArray( final double[] data )
+	public AbstractShortArray( final short[] data )
 	{
-		super( data );
+		this.data = data;
 	}
 
 	@Override
-	public DoubleArray createArray( final int numEntities )
+	public short getValue( final int index )
 	{
-		return new DoubleArray( numEntities );
+		return data[ index ];
+	}
+
+	@Override
+	public void setValue( final int index, final short value )
+	{
+		data[ index ] = value;
+	}
+
+	@Override
+	public short[] getCurrentStorageArray()
+	{
+		return data;
 	}
 }

@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,49 +34,28 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
-import net.imglib2.img.basictypeaccess.IntAccess;
-
 /**
- * TODO
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class IntArray implements IntAccess, ArrayDataAccess< IntArray >
+public class IntArray extends AbstractIntArray< IntArray >
 {
 	protected int data[];
 
 	public IntArray( final int numEntities )
 	{
-		this.data = new int[ numEntities ];
+		super( numEntities );
 	}
 
 	public IntArray( final int[] data )
 	{
-		this.data = data;
-	}
-
-	@Override
-	public int getValue( final int index )
-	{
-		return data[ index ];
-	}
-
-	@Override
-	public void setValue( final int index, final int value )
-	{
-		data[ index ] = value;
+		super( data );
 	}
 
 	@Override
 	public IntArray createArray( final int numEntities )
 	{
 		return new IntArray( numEntities );
-	}
-
-	@Override
-	public int[] getCurrentStorageArray()
-	{
-		return data;
 	}
 }

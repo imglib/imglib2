@@ -31,30 +31,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-
-package net.imglib2.img.basictypeaccess.array;
+package net.imglib2;
 
 /**
- * TODO
+ * Interface for objects that can be flagged dirty (useful for access
+ * objects that track if their content was modified)
  *
- * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class DoubleArray extends AbstractDoubleArray< DoubleArray >
+public interface Dirty
 {
-	public DoubleArray( final int numEntities )
-	{
-		super( numEntities );
-	}
-
-	public DoubleArray( final double[] data )
-	{
-		super( data );
-	}
-
-	@Override
-	public DoubleArray createArray( final int numEntities )
-	{
-		return new DoubleArray( numEntities );
-	}
+	public boolean isDirty();
 }

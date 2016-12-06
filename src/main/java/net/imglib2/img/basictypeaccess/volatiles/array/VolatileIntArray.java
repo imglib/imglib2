@@ -1,13 +1,9 @@
 /*
  * #%L
- * ImgLib2: a general-purpose, multidimensional image processing library.
+ * BigDataViewer core classes with minimal dependencies
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
- * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
- * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
- * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
- * Mark Longair, Brian Northan, Nick Perry, Curtis Rueden, Johannes Schindelin,
- * Jean-Yves Tinevez and Michael Zinsmaier.
+ * Copyright (C) 2012 - 2016 Tobias Pietzsch, Stephan Saalfeld, Stephan Preibisch,
+ * Jean-Yves Tinevez, HongKee Moon, Johannes Schindelin, Curtis Rueden, John Bogovic
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,30 +27,44 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
+package net.imglib2.img.basictypeaccess.volatiles.array;
 
-package net.imglib2.img.basictypeaccess.array;
+import net.imglib2.img.basictypeaccess.array.AbstractIntArray;
+import net.imglib2.img.basictypeaccess.array.IntArray;
+import net.imglib2.img.basictypeaccess.volatiles.VolatileIntAccess;
 
 /**
- * TODO
+ * A {@link IntArray} with an {@link #isValid()} flag.
  *
- * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
-public class DoubleArray extends AbstractDoubleArray< DoubleArray >
+public class VolatileIntArray extends AbstractIntArray< VolatileIntArray > implements VolatileIntAccess
 {
-	public DoubleArray( final int numEntities )
+	final protected boolean isValid;
+
+	public VolatileIntArray( final int numEntities, final boolean isValid )
 	{
 		super( numEntities );
+		this.isValid = isValid;
+		this.data = new int[ numEntities ];
 	}
 
-	public DoubleArray( final double[] data )
+	public VolatileIntArray( final int[] data, final boolean isValid )
 	{
 		super( data );
+		this.isValid = isValid;
 	}
 
 	@Override
-	public DoubleArray createArray( final int numEntities )
+	public VolatileIntArray createArray( final int numEntities )
 	{
-		return new DoubleArray( numEntities );
+		return new VolatileIntArray( numEntities, true );
+	}
+
+	@Override
+	public boolean isValid()
+	{
+		return isValid;
 	}
 }

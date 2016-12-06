@@ -1,13 +1,9 @@
 /*
  * #%L
- * ImgLib2: a general-purpose, multidimensional image processing library.
+ * BigDataViewer core classes with minimal dependencies
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
- * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
- * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
- * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
- * Mark Longair, Brian Northan, Nick Perry, Curtis Rueden, Johannes Schindelin,
- * Jean-Yves Tinevez and Michael Zinsmaier.
+ * Copyright (C) 2012 - 2016 Tobias Pietzsch, Stephan Saalfeld, Stephan Preibisch,
+ * Jean-Yves Tinevez, HongKee Moon, Johannes Schindelin, Curtis Rueden, John Bogovic
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,30 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
+package net.imglib2.img.basictypeaccess.volatiles;
 
-package net.imglib2.img.basictypeaccess.array;
+import net.imglib2.img.basictypeaccess.LongAccess;
 
 /**
- * TODO
- *
- * @author Stephan Preibisch
  * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
-public class DoubleArray extends AbstractDoubleArray< DoubleArray >
-{
-	public DoubleArray( final int numEntities )
-	{
-		super( numEntities );
-	}
-
-	public DoubleArray( final double[] data )
-	{
-		super( data );
-	}
-
-	@Override
-	public DoubleArray createArray( final int numEntities )
-	{
-		return new DoubleArray( numEntities );
-	}
-}
+public interface VolatileLongAccess extends LongAccess, VolatileAccess
+{}

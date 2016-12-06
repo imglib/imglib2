@@ -1,23 +1,19 @@
 /*
  * #%L
- * ImgLib2: a general-purpose, multidimensional image processing library.
+ * BigDataViewer core classes with minimal dependencies
  * %%
- * Copyright (C) 2009 - 2016 Tobias Pietzsch, Stephan Preibisch, Stephan Saalfeld,
- * John Bogovic, Albert Cardona, Barry DeZonia, Christian Dietz, Jan Funke,
- * Aivar Grislis, Jonathan Hale, Grant Harris, Stefan Helfrich, Mark Hiner,
- * Martin Horn, Steffen Jaensch, Lee Kamentsky, Larry Lindsey, Melissa Linkert,
- * Mark Longair, Brian Northan, Nick Perry, Curtis Rueden, Johannes Schindelin,
- * Jean-Yves Tinevez and Michael Zinsmaier.
+ * Copyright (C) 2012 - 2016 Tobias Pietzsch, Stephan Saalfeld, Stephan Preibisch,
+ * Jean-Yves Tinevez, HongKee Moon, Johannes Schindelin, Curtis Rueden, John Bogovic
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,30 +27,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-
-package net.imglib2.img.basictypeaccess.array;
+package net.imglib2.img.basictypeaccess.volatiles;
 
 /**
- * TODO
+ * A basic type access that can contain valid or invalid data.
  *
- * @author Stephan Preibisch
- * @author Stephan Saalfeld
+ * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
-public class DoubleArray extends AbstractDoubleArray< DoubleArray >
+public interface VolatileAccess
 {
-	public DoubleArray( final int numEntities )
-	{
-		super( numEntities );
-	}
-
-	public DoubleArray( final double[] data )
-	{
-		super( data );
-	}
-
-	@Override
-	public DoubleArray createArray( final int numEntities )
-	{
-		return new DoubleArray( numEntities );
-	}
+	boolean isValid();
 }

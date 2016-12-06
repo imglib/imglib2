@@ -34,27 +34,42 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
+import net.imglib2.Dirty;
+
 /**
- * TODO
  *
- * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class DoubleArray extends AbstractDoubleArray< DoubleArray >
+public class DirtyByteArray extends AbstractByteArray< DirtyByteArray > implements Dirty
 {
-	public DoubleArray( final int numEntities )
+	protected boolean dirty = false;
+
+	public DirtyByteArray( final int numEntities )
 	{
 		super( numEntities );
 	}
 
-	public DoubleArray( final double[] data )
+	public DirtyByteArray( final byte[] data )
 	{
 		super( data );
 	}
 
 	@Override
-	public DoubleArray createArray( final int numEntities )
+	public void setValue( final int index, final byte value )
 	{
-		return new DoubleArray( numEntities );
+		dirty = true;
+		data[ index ] = value;
+	}
+
+	@Override
+	public DirtyByteArray createArray( final int numEntities )
+	{
+		return new DirtyByteArray( numEntities );
+	}
+
+	@Override
+	public boolean isDirty()
+	{
+		return dirty;
 	}
 }

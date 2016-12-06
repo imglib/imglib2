@@ -34,27 +34,42 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
+import net.imglib2.img.basictypeaccess.FloatAccess;
+
 /**
- * TODO
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class DoubleArray extends AbstractDoubleArray< DoubleArray >
+abstract public class AbstractFloatArray< A extends AbstractFloatArray< A > > implements FloatAccess, ArrayDataAccess< A >
 {
-	public DoubleArray( final int numEntities )
+	protected float data[];
+
+	public AbstractFloatArray( final int numEntities )
 	{
-		super( numEntities );
+		this.data = new float[ numEntities ];
 	}
 
-	public DoubleArray( final double[] data )
+	public AbstractFloatArray( final float[] data )
 	{
-		super( data );
+		this.data = data;
 	}
 
 	@Override
-	public DoubleArray createArray( final int numEntities )
+	public float getValue( final int index )
 	{
-		return new DoubleArray( numEntities );
+		return data[ index ];
+	}
+
+	@Override
+	public void setValue( final int index, final float value )
+	{
+		data[ index ] = value;
+	}
+
+	@Override
+	public float[] getCurrentStorageArray()
+	{
+		return data;
 	}
 }
