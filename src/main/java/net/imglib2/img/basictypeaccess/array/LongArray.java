@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,44 +34,21 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
-import net.imglib2.img.basictypeaccess.LongAccess;
-
 /**
- * TODO
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class LongArray implements LongAccess, ArrayDataAccess< LongArray >
+public class LongArray extends AbstractLongArray< LongArray >
 {
-	protected long data[];
-
 	public LongArray( final int numEntities )
 	{
-		this.data = new long[ numEntities ];
+		super( numEntities );
 	}
 
 	public LongArray( final long[] data )
 	{
-		this.data = data;
-	}
-
-	@Override
-	public long getValue( final int index )
-	{
-		return data[ index ];
-	}
-
-	@Override
-	public void setValue( final int index, final long value )
-	{
-		data[ index ] = value;
-	}
-
-	@Override
-	public long[] getCurrentStorageArray()
-	{
-		return data;
+		super( data );
 	}
 
 	@Override

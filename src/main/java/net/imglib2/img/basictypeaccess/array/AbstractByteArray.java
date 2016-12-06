@@ -34,27 +34,42 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
+import net.imglib2.img.basictypeaccess.ByteAccess;
+
 /**
- * TODO
  *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class DoubleArray extends AbstractDoubleArray< DoubleArray >
+abstract public class AbstractByteArray< A extends AbstractByteArray< A > > implements ByteAccess, ArrayDataAccess< A >
 {
-	public DoubleArray( final int numEntities )
+	protected byte data[];
+
+	public AbstractByteArray( final int numEntities )
 	{
-		super( numEntities );
+		this.data = new byte[ numEntities ];
 	}
 
-	public DoubleArray( final double[] data )
+	public AbstractByteArray( final byte[] data )
 	{
-		super( data );
+		this.data = data;
 	}
 
 	@Override
-	public DoubleArray createArray( final int numEntities )
+	public byte getValue( final int index )
 	{
-		return new DoubleArray( numEntities );
+		return data[ index ];
+	}
+
+	@Override
+	public void setValue( final int index, final byte value )
+	{
+		data[ index ] = value;
+	}
+
+	@Override
+	public byte[] getCurrentStorageArray()
+	{
+		return data;
 	}
 }
