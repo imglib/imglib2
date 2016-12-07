@@ -29,7 +29,7 @@
  */
 package net.imglib2.img.basictypeaccess.volatiles.array;
 
-import net.imglib2.img.Dirty;
+import net.imglib2.Dirty;
 import net.imglib2.img.basictypeaccess.array.AbstractByteArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileByteAccess;

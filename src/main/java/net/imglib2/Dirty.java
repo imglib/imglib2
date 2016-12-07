@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.img;
+package net.imglib2;
 
 /**
  * Interface for objects that can be flagged dirty (useful for access

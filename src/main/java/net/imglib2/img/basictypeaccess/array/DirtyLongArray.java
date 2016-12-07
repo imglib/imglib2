@@ -34,7 +34,7 @@
 
 package net.imglib2.img.basictypeaccess.array;
 
-import net.imglib2.img.Dirty;
+import net.imglib2.Dirty;
 
 /**
  *
