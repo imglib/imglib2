@@ -29,9 +29,9 @@
  */
 package net.imglib2.img.basictypeaccess.volatiles.array;
 
-import net.imglib2.img.basictypeaccess.array.AbstractDoubleArray;
+import net.imglib2.img.basictypeaccess.array.AbstractFloatArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
-import net.imglib2.img.basictypeaccess.volatiles.VolatileDoubleAccess;
+import net.imglib2.img.basictypeaccess.volatiles.VolatileFloatAccess;
 
 /**
  * A {@link FloatArray} with an {@link #isValid()} flag.
@@ -39,7 +39,7 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileDoubleAccess;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class VolatileFloatArray extends AbstractDoubleArray< VolatileFloatArray > implements VolatileDoubleAccess
+public class VolatileFloatArray extends AbstractFloatArray< VolatileFloatArray > implements VolatileFloatAccess
 {
 	final protected boolean isValid;
 
@@ -47,10 +47,10 @@ public class VolatileFloatArray extends AbstractDoubleArray< VolatileFloatArray 
 	{
 		super( numEntities );
 		this.isValid = isValid;
-		this.data = new double[ numEntities ];
+		this.data = new float[ numEntities ];
 	}
 
-	public VolatileFloatArray( final double[] data, final boolean isValid )
+	public VolatileFloatArray( final float[] data, final boolean isValid )
 	{
 		super( data );
 		this.isValid = isValid;
