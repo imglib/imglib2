@@ -34,62 +34,64 @@
 
 package net.imglib2.cache;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
-import java.util.Map;
-
 /**
- * A {@link SoftReference} based implementation of {@link ReferenceCache}
+ * A {@link Thread} that tries to cleanup a {@link CacheReferenceQueue}
+ * regularly.
  *
- * @param <K>
- *            key type.
- * @param <V>
- *            value type.
- *
- * @author Tobias Pietzsch
  * @author Stephan Saalfeld
  */
-public class SoftReferenceCache< K, V > extends ReferenceCache< K, V >
+public class CacheReferenceQueueCleanupThread extends Thread
 {
-	public static class Reference< K, V > extends SoftReference< V > implements net.imglib2.cache.ReferenceCache.CacheReference< K >
+	final static public int DEFAULT_WAIT_TIME = 2000;
+	final static public int DEFAULT_MAX_NUM_ENTRIES = Integer.MAX_VALUE;
+
+	final protected CacheReferenceQueue< ?, ? > referenceQueue;
+
+	/**
+	 * wait time in milliseconds between two runs
+	 */
+	final int waitTime;
+
+	/**
+	 * max number of entries to clean up in each cycle
+	 */
+	final int maxNumEntries;
+
+	public CacheReferenceQueueCleanupThread( CacheReferenceQueue< ?, ? > referenceQueue, final int waitTime, final int maxNumEntries )
 	{
-		final protected K key;
-		final protected Map< K, ? super Reference > map;
-
-		public Reference(
-				final K key,
-				final V referent,
-				final Map< K, ? super Reference > map,
-				final ReferenceQueue< ? super V > q )
-		{
-			super( referent, q );
-			this.key = key;
-			this.map = map;
-		}
-
-		@Override
-		public K getKey()
-		{
-			return key;
-		}
-
-		@Override
-		public Map< K, ? super Reference > getMap()
-		{
-			return map;
-		}
+		this.referenceQueue = referenceQueue;
+		this.waitTime = waitTime;
+		this.maxNumEntries = maxNumEntries;
 	}
 
-	public SoftReferenceCache(
-			final Loader< K, V > loader,
-			final ReferenceQueue< ? super V > referenceQueue )
+	public CacheReferenceQueueCleanupThread( CacheReferenceQueue< ?, ? > referenceQueue, final int waitTime )
 	{
-		super( loader, referenceQueue );
+		this( referenceQueue, waitTime, DEFAULT_MAX_NUM_ENTRIES );
+	}
+
+
+	public CacheReferenceQueueCleanupThread( CacheReferenceQueue< ?, ? > referenceQueue )
+	{
+		this( referenceQueue, DEFAULT_WAIT_TIME );
 	}
 
 	@Override
-	protected Reference createReference( final K key, final V value )
+	public void run()
 	{
-		return new Reference( key, value, map, referenceQueue );
+		try
+		{
+			while ( !isInterrupted() )
+			{
+				referenceQueue.cleanUp( maxNumEntries );
+				synchronized ( this )
+				{
+					wait( waitTime );
+				}
+			}
+		}
+		catch ( final InterruptedException e )
+		{
+			System.out.println( "CacheReferenceQueueCleanupThread " + this + " iterrupted!" );
+		}
 	}
 }

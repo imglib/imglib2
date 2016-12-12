@@ -50,9 +50,9 @@ import java.util.Map;
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld
  */
-abstract public class WeakReferenceCache< K, V > extends ReferenceCache< K, V >
+public class WeakReferenceCache< K, V > extends ReferenceCache< K, V >
 {
-	protected class Reference extends WeakReference< V > implements net.imglib2.cache.ReferenceCache.CacheReference< K >
+	static public class Reference< K, V > extends WeakReference< V > implements net.imglib2.cache.ReferenceCache.CacheReference< K >
 	{
 		final protected K key;
 		final protected Map< K, ? super Reference > map;

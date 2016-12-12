@@ -34,62 +34,46 @@
 
 package net.imglib2.cache;
 
+import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
 import java.util.Map;
 
+import net.imglib2.cache.ReferenceCache.CacheReference;
+
 /**
- * A {@link SoftReference} based implementation of {@link ReferenceCache}
- *
- * @param <K>
- *            key type.
- * @param <V>
- *            value type.
+ * A {@link ReferenceQueue} for {@link ReferenceCache}s.  Runs a thread to
+ * clean pending references when ...
  *
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld
  */
-public class SoftReferenceCache< K, V > extends ReferenceCache< K, V >
+public class CacheReferenceQueue< K, V > extends ReferenceQueue< V >
 {
-	public static class Reference< K, V > extends SoftReference< V > implements net.imglib2.cache.ReferenceCache.CacheReference< K >
+	/**
+	 * Remove references from the cache that have been garbage-collected.
+	 * To avoid long run-times, per call to {@code cleanUp()}, at most
+	 * {@link #MAX_PER_FRAME_FINALIZE_ENTRIES} are processed.
+	 */
+	public void cleanUp( final int maxNumEntries )
 	{
-		final protected K key;
-		final protected Map< K, ? super Reference > map;
-
-		public Reference(
-				final K key,
-				final V referent,
-				final Map< K, ? super Reference > map,
-				final ReferenceQueue< ? super V > q )
+		System.out.println( "Cleaning up..." );
+		for ( int i = 0; i < maxNumEntries; ++i )
 		{
-			super( referent, q );
-			this.key = key;
-			this.map = map;
+			final Reference< ? > poll = poll();
+			if ( poll == null )
+			{
+				System.out.println( "  Cleaned up " + i + " entries" );
+				break;
+			}
+			final CacheReference< K > x = ( CacheReference< K > ) poll;
+			final Object key = x.getKey();
+			final Map< K, ? > map = x.getMap();
+			final Object ref = map.get( key );
+			if ( ref == poll )
+			{
+				map.remove( key );
+				System.out.println( "  Removed key " + key );
+			}
 		}
-
-		@Override
-		public K getKey()
-		{
-			return key;
-		}
-
-		@Override
-		public Map< K, ? super Reference > getMap()
-		{
-			return map;
-		}
-	}
-
-	public SoftReferenceCache(
-			final Loader< K, V > loader,
-			final ReferenceQueue< ? super V > referenceQueue )
-	{
-		super( loader, referenceQueue );
-	}
-
-	@Override
-	protected Reference createReference( final K key, final V value )
-	{
-		return new Reference( key, value, map, referenceQueue );
 	}
 }
