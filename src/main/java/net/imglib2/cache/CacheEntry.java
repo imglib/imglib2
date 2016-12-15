@@ -34,12 +34,8 @@
 
 package net.imglib2.cache;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
-import java.util.Map;
-
 /**
- * A {@link SoftReference} based implementation of {@link ReferenceCache}
+ * A cache entry that loads its content using a {@link Loader}
  *
  * @param <K>
  *            key type.
@@ -49,47 +45,30 @@ import java.util.Map;
  * @author Tobias Pietzsch
  * @author Stephan Saalfeld
  */
-public class SoftReferenceCache< K, V > extends ReferenceCache< K, V >
+public class CacheEntry< K, V >
 {
-	static protected class Reference< K, V > extends SoftReference< CacheEntry< K, V > > implements CacheReference< K >
+	protected V value = null;
+
+	public V get()
 	{
-		final protected K key;
-		final protected Map< K, ? > map;
-
-		public Reference(
-				final K key,
-				final CacheEntry< K, V > referent,
-				final Map< K, ? > map,
-				final ReferenceQueue< ? super CacheEntry< K, V > > q )
-		{
-			super( referent, q );
-			this.key = key;
-			this.map = map;
-		}
-
-		@Override
-		public K getKey()
-		{
-			return key;
-		}
-
-		@Override
-		public Map< K, ? > getMap()
-		{
-			return map;
-		}
+		return value;
 	}
 
-	public SoftReferenceCache(
-			final Loader< K, V > loader,
-			final ReferenceQueue< ? super CacheEntry< K, V > > referenceQueue )
+	/**
+	 * Load the value for key
+	 *
+	 * @param key
+	 * @return
+	 */
+	public void load( final Loader< K, V > loader, final K key )
 	{
-		super( loader, referenceQueue );
-	}
-
-	@Override
-	protected Reference< K, V > createReference( final K key, final CacheEntry< K, V > entry )
-	{
-		return new Reference<>( key, entry, map, referenceQueue );
+		if ( value == null )
+		{
+			synchronized ( this )
+			{
+				if ( value == null )
+					value = loader.get( key );
+			}
+		}
 	}
 }

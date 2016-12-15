@@ -40,8 +40,18 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * A cache associating keys {@code K} to values {@code V}.  How values are
- * obtained and when and which entries are evicted is implementation-specific.
+ * A cache associating keys {@code K} to values {@code V} by {@link Reference}.
+ * The {@link Reference} objects are stored in a {@link Map} and refer to
+ * {@link CacheEntry} objects that hold the actual value.  The
+ * {@link CacheEntry} layer is necessary for synchronization to prevent double
+ * loading of values and not exposed to the user.  Implementations of this
+ * abstract class, however, have to implement how to
+ * {@link #createReference(Object, CacheEntry) create} a {@link Reference} to a
+ * {@link CacheEntry}.
+ * <p>
+ * {@link Reference} objects that are subject for removal are expected to be
+ * enqueued to a {@link CacheReferenceQueue} and implement logic to remove
+ * themselves from their respective maps.
  *
  * @param <K>
  *            key type.
@@ -53,35 +63,42 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 abstract public class ReferenceCache< K, V > implements Cache< K, V >
 {
-	/** holds references to values */
-	protected final ConcurrentHashMap< K, Reference< V > > map = new ConcurrentHashMap<>();
+	/** holds references to {@link CacheEntry CacheEntries} */
+	protected final ConcurrentHashMap< K, Reference< CacheEntry< K, V > > > map = new ConcurrentHashMap<>();
 
+	/** loads values */
 	protected final Loader< K, V > loader;
 
-	protected final ReferenceQueue< ? super V > referenceQueue;
+	protected final ReferenceQueue< ? super CacheEntry< K, V > > referenceQueue;
 
 	public ReferenceCache(
 			final Loader< K, V > loader,
-			final ReferenceQueue< ? super V > referenceQueue )
+			final ReferenceQueue< ? super CacheEntry< K, V > > referenceQueue )
 	{
 		this.loader = loader;
 		this.referenceQueue = referenceQueue;
 	}
 
-	abstract protected Reference< V > createReference( final K key, final V value );
+	abstract protected Reference< CacheEntry< K, V > > createReference( final K key, final CacheEntry< K, V > entry );
 
 	@Override
 	public V get( final K key )
 	{
-		Reference< V > reference = map.get( key );
-		if ( reference != null ) {
-			final V cachedValue = reference.get();
-			if ( cachedValue != null )
-				return cachedValue;
+		CacheEntry< K, V > entry;
+		synchronized ( this )
+		{
+			Reference< CacheEntry< K, V > > ref = map.get( key );
+			if ( ref == null || ref.get() == null )
+			{
+				entry = new CacheEntry<>();
+				ref = createReference( key, entry );
+				map.put( key, ref );
+			}
+			else
+				entry = ref.get();
 		}
-		final V value = loader.get( key );
-		map.put( key, createReference( key, value ) );
-		return value;
+		entry.load( loader, key );
+		return entry.get();
 	}
 
 	@Override

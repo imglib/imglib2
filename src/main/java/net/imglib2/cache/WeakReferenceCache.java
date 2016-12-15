@@ -35,12 +35,11 @@
 package net.imglib2.cache;
 
 import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 
 /**
- * A {@link SoftReference} based implementation of {@link ReferenceCache}
+ * A {@link WeakReference} based implementation of {@link ReferenceCache}
  *
  * @param <K>
  *            key type.
@@ -52,21 +51,20 @@ import java.util.Map;
  */
 public class WeakReferenceCache< K, V > extends ReferenceCache< K, V >
 {
-	static public class Reference< K, V > extends WeakReference< V > implements net.imglib2.cache.ReferenceCache.CacheReference< K >
+	static protected class Reference< K, V > extends WeakReference< CacheEntry< K, V > > implements CacheReference< K >
 	{
 		final protected K key;
-		final protected Map< K, ? super Reference > map;
+		final protected Map< K, ? > map;
 
 		public Reference(
 				final K key,
-				final V referent,
-				final Map< K, ? super Reference > map,
-				final ReferenceQueue< ? super V > q )
+				final CacheEntry< K, V > referent,
+				final Map< K, ? > map,
+				final ReferenceQueue< ? super CacheEntry< K, V > > q )
 		{
 			super( referent, q );
 			this.key = key;
 			this.map = map;
-
 		}
 
 		@Override
@@ -76,7 +74,7 @@ public class WeakReferenceCache< K, V > extends ReferenceCache< K, V >
 		}
 
 		@Override
-		public Map< K, ? super Reference > getMap()
+		public Map< K, ? > getMap()
 		{
 			return map;
 		}
@@ -84,14 +82,14 @@ public class WeakReferenceCache< K, V > extends ReferenceCache< K, V >
 
 	public WeakReferenceCache(
 			final Loader< K, V > loader,
-			final ReferenceQueue< ? super V > referenceQueue )
+			final ReferenceQueue< ? super CacheEntry< K, V > > referenceQueue )
 	{
 		super( loader, referenceQueue );
 	}
 
 	@Override
-	protected Reference createReference( final K key, final V value )
+	protected Reference< K, V > createReference( final K key, final CacheEntry< K, V > entry )
 	{
-		return new Reference( key, value, map, referenceQueue );
+		return new Reference<>( key, entry, map, referenceQueue );
 	}
 }
