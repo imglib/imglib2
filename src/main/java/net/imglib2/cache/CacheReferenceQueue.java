@@ -49,6 +49,7 @@ import net.imglib2.cache.ReferenceCache.CacheReference;
  */
 public class CacheReferenceQueue< K, V > extends ReferenceQueue< V >
 {
+
 	/**
 	 * Remove references from the cache that have been garbage-collected.
 	 * To avoid long run-times, per call to {@code cleanUp()}, at most

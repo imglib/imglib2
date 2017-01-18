@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,8 +39,8 @@ import java.io.Serializable;
 import net.imglib2.util.IntervalIndexer;
 
 /**
- * A cell of an {@link CellImg}.
- * 
+ * A cell of a {@link CellImg}.
+ *
  * @author Tobias Pietzsch
  */
 public abstract class AbstractCell< A > implements Serializable
@@ -81,8 +81,8 @@ public abstract class AbstractCell< A > implements Serializable
 	}
 
 	/**
-	 * Get the basic type array that stores this cells pixels.
-	 * 
+	 * Get the basic type array that stores this cell's pixels.
+	 *
 	 * @return underlying basic type array.
 	 */
 	public abstract A getData();
@@ -108,7 +108,7 @@ public abstract class AbstractCell< A > implements Serializable
 	 * compute the index in the underlying flat array of this cell which
 	 * corresponds to a local position (i.e., relative to the origin of this
 	 * cell).
-	 * 
+	 *
 	 * @param position
 	 *            a local position
 	 * @return corresponding index
@@ -119,7 +119,7 @@ public abstract class AbstractCell< A > implements Serializable
 	}
 
 	/**
-	 * 
+	 *
 	 * @param d
 	 *            dimension
 	 * @return minimum
@@ -131,7 +131,7 @@ public abstract class AbstractCell< A > implements Serializable
 
 	/**
 	 * Write the minimum of each dimension into long[].
-	 * 
+	 *
 	 * @param minValue
 	 */
 	public void min( final long[] minimum )
@@ -142,7 +142,7 @@ public abstract class AbstractCell< A > implements Serializable
 
 	/**
 	 * Get the number of pixels in a given dimension <em>d</em>.
-	 * 
+	 *
 	 * @param d
 	 */
 	public int dimension( final int d )
@@ -152,7 +152,7 @@ public abstract class AbstractCell< A > implements Serializable
 
 	/**
 	 * Write the number of pixels in each dimension into long[].
-	 * 
+	 *
 	 * @param dimensions
 	 */
 	public void dimensions( final int[] dim )
