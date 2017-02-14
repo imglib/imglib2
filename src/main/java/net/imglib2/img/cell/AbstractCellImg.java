@@ -111,19 +111,19 @@ public abstract class AbstractCellImg< T extends NativeType< T >, A, C extends A
 	@Override
 	public CellCursor< T, A, C > cursor()
 	{
-		return new CellCursor< T, A, C >( this );
+		return new CellCursor<>( this );
 	}
 
 	@Override
 	public CellLocalizingCursor< T, A, C > localizingCursor()
 	{
-		return new CellLocalizingCursor< T, A, C >( this );
+		return new CellLocalizingCursor<>( this );
 	}
 
 	@Override
 	public CellRandomAccess< T, A, C > randomAccess()
 	{
-		return new CellRandomAccess< T, A, C >( this );
+		return new CellRandomAccess<>( this );
 	}
 
 	@Override
@@ -139,9 +139,10 @@ public abstract class AbstractCellImg< T extends NativeType< T >, A, C extends A
 	}
 
 	/**
-	 * @return - a reference to the {@link Cells} interface which itself gives
+	 * @return a reference to the {@link Cells} interface which itself gives
 	 *         access to the individual {@link AbstractCell}s through Cursors
-	 *         and RandomAcess that can return the actual underlying data object
+	 *         and RandomAccesses that can return the actual underlying data
+	 *         object.
 	 */
 	public Cells< A, C > getCells()
 	{
