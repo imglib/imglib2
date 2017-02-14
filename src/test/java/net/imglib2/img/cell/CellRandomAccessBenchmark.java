@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -45,7 +45,7 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * TODO
- * 
+ *
  */
 public class CellRandomAccessBenchmark
 {
@@ -122,7 +122,7 @@ public class CellRandomAccessBenchmark
 		randomAccessBenchmark.createSourceData();
 
 		System.out.println( "benchmarking fill" );
-		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
+		BenchmarkHelper.benchmarkAndPrint( 50, true, new Runnable()
 		{
 			@Override
 			public void run()
@@ -132,40 +132,40 @@ public class CellRandomAccessBenchmark
 		} );
 		randomAccessBenchmark.intData = null;
 
-		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( 32 ).create( randomAccessBenchmark.dimensions, new IntType() );
-		System.out.println( "benchmarking copy to smaller" );
-		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
-			}
-		} );
-		randomAccessBenchmark.intImgCopy = null;
-
-		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( 50 ).create( randomAccessBenchmark.dimensions, new IntType() );
-		System.out.println( "benchmarking copy to larger" );
-		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
-			}
-		} );
-		randomAccessBenchmark.intImgCopy = null;
-
-		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( new int[] { 32, 64, 16 } ).create( randomAccessBenchmark.dimensions, new IntType() );
-		System.out.println( "benchmarking copy to mixed" );
-		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
-			}
-		} );
-		randomAccessBenchmark.intImgCopy = null;
+//		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( 32 ).create( randomAccessBenchmark.dimensions, new IntType() );
+//		System.out.println( "benchmarking copy to smaller" );
+//		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
+//			}
+//		} );
+//		randomAccessBenchmark.intImgCopy = null;
+//
+//		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( 50 ).create( randomAccessBenchmark.dimensions, new IntType() );
+//		System.out.println( "benchmarking copy to larger" );
+//		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
+//			}
+//		} );
+//		randomAccessBenchmark.intImgCopy = null;
+//
+//		randomAccessBenchmark.intImgCopy = new CellImgFactory< IntType >( new int[] { 32, 64, 16 } ).create( randomAccessBenchmark.dimensions, new IntType() );
+//		System.out.println( "benchmarking copy to mixed" );
+//		BenchmarkHelper.benchmarkAndPrint( 20, false, new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				randomAccessBenchmark.copyWithSourceIteration( randomAccessBenchmark.intImg, randomAccessBenchmark.intImgCopy );
+//			}
+//		} );
+//		randomAccessBenchmark.intImgCopy = null;
 	}
 }
