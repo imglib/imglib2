@@ -1,5 +1,7 @@
 package net.imglib2.img.cell2;
 
+import java.util.Arrays;
+
 import net.imglib2.Positionable;
 
 public class CellGrid
@@ -13,6 +15,8 @@ public class CellGrid
 	protected final long[] numCells;
 
 	protected final int[] borderSize;
+
+	private final int hashcode;
 
 	public CellGrid(
 			final long[] dimensions,
@@ -29,6 +33,7 @@ public class CellGrid
 			numCells[ d ] = ( dimensions[ d ] - 1 ) / cellDimensions[ d ] + 1;
 			borderSize[ d ] = ( int ) ( dimensions[ d ] - ( numCells[ d ] - 1 ) * cellDimensions[ d ] );
 		}
+		hashcode = 31 * Arrays.hashCode( dimensions ) + Arrays.hashCode( cellDimensions );
 	}
 
 	public CellGrid( final CellGrid grid )
@@ -38,6 +43,7 @@ public class CellGrid
 		cellDimensions = grid.cellDimensions.clone();
 		numCells = grid.numCells.clone();
 		borderSize = grid.borderSize.clone();
+		hashcode = grid.hashcode;
 	}
 
 	public int numDimensions()
@@ -182,5 +188,23 @@ public class CellGrid
 	{
 		for ( int d = 0; d < n; ++d )
 			cellPos.setPosition( position[ d ] / cellDimensions[ d ], d );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return hashcode;
+	}
+
+	@Override
+	public boolean equals( final Object obj )
+	{
+		if ( obj instanceof CellGrid )
+		{
+			final CellGrid other = ( CellGrid ) obj;
+			return Arrays.equals( dimensions, other.dimensions )
+					&& Arrays.equals( cellDimensions, other.cellDimensions );
+		}
+		return false;
 	}
 }

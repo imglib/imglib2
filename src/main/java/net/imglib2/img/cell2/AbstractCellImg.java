@@ -38,7 +38,6 @@ import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.img.AbstractNativeImg;
 import net.imglib2.img.Img;
-import net.imglib2.img.cell.CellIterationOrder;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 
@@ -108,7 +107,7 @@ public abstract class AbstractCellImg<
 	@Override
 	public CellIterationOrder iterationOrder()
 	{
-		return null; // TODO new CellIterationOrder( this );
+		return new CellIterationOrder( this );
 	}
 
 	/**
