@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,7 +37,7 @@ package net.imglib2.img.cell;
 /**
  * Iteration order for a {@link CellImg}. A {@link CellImg} is iterated cell by
  * cell, where each cell is iterated in flat iteration order.
- * 
+ *
  * @author Tobias Pietzsch
  */
 public class CellIterationOrder
@@ -52,7 +52,7 @@ public class CellIterationOrder
 	/**
 	 * To be equal an object has to be a {@link CellIterationOrder} on a
 	 * {@link CellImg} of the same dimensions and cell-dimensions.
-	 * 
+	 *
 	 * @return true, if obj is a compatible {@link CellIterationOrder}.
 	 */
 	@Override
@@ -61,15 +61,8 @@ public class CellIterationOrder
 		if ( !( obj instanceof CellIterationOrder ) )
 			return false;
 
-		final AbstractCellImg< ?, ?, ?, ? > i = ( ( CellIterationOrder ) obj ).img;
-		if ( i.numDimensions() != img.numDimensions() )
-			return false;
-
-		final int n = img.numDimensions();
-		for ( int d = 0; d < n; ++d )
-			if ( i.dimension( d ) != img.dimension( d ) || i.cellDims[ d ] != img.cellDims[ d ] )
-				return false;
-
-		return true;
+		final AbstractCellImg< ?, ?, ?, ? > other = ( ( CellIterationOrder ) obj ).img;
+		return other.getCellGrid().equals( img.getCellGrid() )
+				&& other.getCells().iterationOrder().equals( img.getCells().iterationOrder() );
 	}
 }

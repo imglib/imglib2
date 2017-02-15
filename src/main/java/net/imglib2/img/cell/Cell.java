@@ -32,7 +32,7 @@
  * #L%
  */
 
-package net.imglib2.img.cell2;
+package net.imglib2.img.cell;
 
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;

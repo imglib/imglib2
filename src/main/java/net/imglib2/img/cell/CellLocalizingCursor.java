@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,11 +39,13 @@ import net.imglib2.Cursor;
 import net.imglib2.type.NativeType;
 
 /**
- * Localizing {@link Cursor} on a {@link CellImg}.
- * 
+ * Localizing {@link Cursor} on a {@link AbstractCellImg}.
+ *
  * @author Tobias Pietzsch
  */
-public class CellLocalizingCursor< T extends NativeType< T >, A, C extends AbstractCell< A > > extends AbstractLocalizingCursor< T > implements CellImg.CellContainerSampler< T, A, C >
+public class CellLocalizingCursor< T extends NativeType< T >, C extends Cell< ? > >
+	extends AbstractLocalizingCursor< T >
+	implements AbstractCellImg.CellImgSampler< C >
 {
 	protected final T type;
 
@@ -66,7 +68,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A, C extends Abstr
 	 */
 	protected boolean isNotLastCell;
 
-	protected CellLocalizingCursor( final CellLocalizingCursor< T, A, C > cursor )
+	protected CellLocalizingCursor( final CellLocalizingCursor< T, C > cursor )
 	{
 		super( cursor.numDimensions() );
 
@@ -85,12 +87,12 @@ public class CellLocalizingCursor< T extends NativeType< T >, A, C extends Abstr
 		type.updateIndex( index );
 	}
 
-	public CellLocalizingCursor( final AbstractCellImg< T, A, C, ? > container )
+	public CellLocalizingCursor( final AbstractCellImg< T, ?, C, ? > img )
 	{
-		super( container.numDimensions() );
+		super( img.numDimensions() );
 
-		this.type = container.createLinkedType();
-		this.cursorOnCells = container.cells.cursor();
+		this.type = img.createLinkedType();
+		this.cursorOnCells = img.getCells().cursor();
 		this.currentCellMin = null;
 		this.currentCellMax = null;
 
@@ -110,13 +112,13 @@ public class CellLocalizingCursor< T extends NativeType< T >, A, C extends Abstr
 	}
 
 	@Override
-	public CellLocalizingCursor< T, A, C > copy()
+	public CellLocalizingCursor< T, C > copy()
 	{
-		return new CellLocalizingCursor< T, A, C >( this );
+		return new CellLocalizingCursor<>( this );
 	}
 
 	@Override
-	public CellLocalizingCursor< T, A, C > copyCursor()
+	public CellLocalizingCursor< T, C > copyCursor()
 	{
 		return copy();
 	}
@@ -124,7 +126,7 @@ public class CellLocalizingCursor< T extends NativeType< T >, A, C extends Abstr
 	@Override
 	public boolean hasNext()
 	{
-		return ( index < lastIndexInCell ) || isNotLastCell;
+		return isNotLastCell || ( index < lastIndexInCell );
 	}
 
 	@Override
