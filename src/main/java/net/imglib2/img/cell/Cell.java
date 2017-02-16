@@ -80,7 +80,7 @@ public class Cell< A >
 	 *
 	 * @return underlying basic type array.
 	 */
-	protected A getData()
+	public A getData()
 	{
 		return data;
 	}
