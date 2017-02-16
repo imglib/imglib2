@@ -6,15 +6,15 @@ import net.imglib2.Positionable;
 
 public class CellGrid
 {
-	protected final int n;
+	private final int n;
 
-	protected final long[] dimensions;
+	private final long[] dimensions;
 
-	protected final int[] cellDimensions;
+	private final int[] cellDimensions;
 
-	protected final long[] numCells;
+	private final long[] numCells;
 
-	protected final int[] borderSize;
+	private final int[] borderSize;
 
 	private final int hashcode;
 
@@ -51,6 +51,11 @@ public class CellGrid
 		return n;
 	}
 
+	public long[] getGridDimensions()
+	{
+		return numCells.clone();
+	}
+
 	public void gridDimensions( final long[] s )
 	{
 		for ( int i = 0; i < n; ++i )
@@ -60,6 +65,15 @@ public class CellGrid
 	public long gridDimension( final int d )
 	{
 		return numCells[ d ];
+	}
+
+	/**
+	 * Get the number of pixels in each dimension as a new long[]. Note, that this
+	 * is the number of pixels in all cells combined, not the number of cells!
+	 */
+	public long[] getImgDimensions()
+	{
+		return dimensions.clone();
 	}
 
 	/**

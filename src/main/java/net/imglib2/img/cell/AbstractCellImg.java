@@ -61,7 +61,7 @@ public abstract class AbstractCellImg<
 
 	public AbstractCellImg( final CellGrid grid, final I imgOfCells, final Fraction entitiesPerPixel )
 	{
-		super( grid.dimensions, entitiesPerPixel );
+		super( grid.getImgDimensions(), entitiesPerPixel );
 		this.grid = grid;
 		this.cells = imgOfCells;
 	}
