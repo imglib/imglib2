@@ -150,6 +150,33 @@ public class Intervals
 		}
 		return new FinalInterval( min, max );
 	}
+	
+	/**
+	 * Grow/shrink an interval in all dimensions.
+	 * 
+	 * Create a {@link FinalInterval}, which is the input interval plus border
+	 * pixels on every side, in every dimension.
+	 * 
+	 * @param interval
+	 *            the input interval
+	 * @param border
+	 *            how many pixels to add on every side
+	 * @return expanded interval
+	 */
+	public FinalInterval expand( final Interval interval, final Dimensions border )
+	{
+		final int n = interval.numDimensions();
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		interval.min( min );
+		interval.max( max );
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] -= border.dimension( d );
+			max[ d ] += border.dimension( d );
+		}
+		return new FinalInterval( min, max );
+	}
 
 	/**
 	 * Grow/shrink an interval in one dimensions.
