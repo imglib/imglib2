@@ -35,6 +35,7 @@
 package net.imglib2.util;
 
 import net.imglib2.Dimensions;
+import net.imglib2.FinalDimensions;
 import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
@@ -149,6 +150,23 @@ public class Intervals
 			max[ d ] += border;
 		}
 		return new FinalInterval( min, max );
+	}
+	
+	/**
+	 * Grow/shrink an interval in all dimensions.
+	 * 
+	 * Create a {@link FinalInterval}, which is the input interval plus border
+	 * pixels on every side, in every dimension.
+	 * 
+	 * @param interval
+	 *            the input interval
+	 * @param border
+	 *            how many pixels to add on every side
+	 * @return expanded interval
+	 */
+	public FinalInterval expand( final Interval interval, final long ... border )
+	{
+		return expand(interval, new FinalDimensions( border ));
 	}
 	
 	/**
