@@ -126,14 +126,16 @@ public class CellGrid
 	}
 
 	/**
-	 * From the index of a cell in the {@link #cells()} grid, compute the image
-	 * position of the first pixel of the cell (the offset of the cell in image
-	 * coordinates) and the dimensions of the cell. The dimensions will be the
-	 * standard {@link #cellDimensions} unless the cell is at the border of the
-	 * image in which case it might be truncated.
-	 *
-	 * <em> Note, that this method assumes that the cell grid has flat iteration
-	 * order. It this is not the case, use </em>
+	 * From the index of a cell in the grid, compute the image position of the
+	 * first pixel of the cell (the offset of the cell in image coordinates) and
+	 * the dimensions of the cell. The dimensions will be the standard
+	 * {@link #cellDimensions} unless the cell is at the border of the image in
+	 * which case it might be truncated.
+	 * <p>
+	 * Note, that this method assumes that the cell grid has flat iteration
+	 * order. It this is not the case, use
+	 * {@link #getCellDimensions(long[], long[], int[])}.
+	 * </p>
 	 *
 	 * @param index
 	 *            flattened grid coordinates of the cell.
@@ -155,11 +157,11 @@ public class CellGrid
 	}
 
 	/**
-	 * From the position of a cell in the {@link #cells()} grid, compute the
-	 * image position of the first pixel of the cell (the offset of the cell in
-	 * image coordinates) and the dimensions of the cell. The dimensions will be
-	 * the standard {@link #cellDimensions} unless the cell is at the border of
-	 * the image in which case it might be truncated.
+	 * From the position of a cell in the grid, compute the image position of
+	 * the first pixel of the cell (the offset of the cell in image coordinates)
+	 * and the dimensions of the cell. The dimensions will be the standard
+	 * {@link #cellDimensions} unless the cell is at the border of the image in
+	 * which case it might be truncated.
 	 *
 	 * @param cellGridPosition
 	 *            grid coordinates of the cell.
