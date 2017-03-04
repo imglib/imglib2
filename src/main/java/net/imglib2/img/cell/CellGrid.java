@@ -3,6 +3,7 @@ package net.imglib2.img.cell;
 import java.util.Arrays;
 
 import net.imglib2.Positionable;
+import net.imglib2.util.IntervalIndexer;
 
 public class CellGrid
 {
@@ -174,6 +175,20 @@ public class CellGrid
 			cellDims[ d ] = ( ( cellGridPosition[ d ] + 1 == numCells[ d ] ) ? borderSize[ d ] : cellDimensions[ d ] );
 			cellMin[ d ] = cellGridPosition[ d ] * cellDimensions[ d ];
 		}
+	}
+
+	/**
+	 * From the flattened index of a cell in the grid, compute the position of a
+	 * cell in the grid.
+	 *
+	 * @param index
+	 *            flattened grid coordinates of the cell.
+	 * @param cellGridPosition
+	 *            grid coordinates of the cell are written here.
+	 */
+	public void getCellGridPositionFlat( final long index, final long[] cellGridPosition )
+	{
+		IntervalIndexer.indexToPosition( index, numCells, cellGridPosition );
 	}
 
 	/**
