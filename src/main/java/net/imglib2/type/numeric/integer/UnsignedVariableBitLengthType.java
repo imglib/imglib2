@@ -127,7 +127,11 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type<UnsignedVar
 	@Override
 	public void setReal( final float real ){ setInteger( Util.round( real ) ); }
 	@Override
-	public void setReal( final double real ){ setInteger( Util.round( real ) ); }	
+	public void setReal( final double real ){ setInteger( Util.round( real ) ); }
+	@Override
+	public void setReal( final int real ){ setInteger( real ); }	
+	@Override
+	public void setReal( final long real ){ setInteger( real ); }	
 
 	@Override
 	public void setZero() { setInteger( 0 ); }
@@ -193,6 +197,10 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type<UnsignedVar
 	public void setImaginary( final float complex ){}
 	@Override
 	public void setImaginary( final double complex ){}
+	@Override
+	public void setImaginary( final int complex ){}
+	@Override
+	public void setImaginary( final long complex ){}
 
 	@Override
 	public float getPhaseFloat() { return 0; }
@@ -208,6 +216,10 @@ public class UnsignedVariableBitLengthType extends AbstractBit64Type<UnsignedVar
 	public void setComplexNumber( final float r, final float i ) { setReal( r ); }
 	@Override
 	public void setComplexNumber( final double r, final double i ) { setReal( r ); }
+	@Override
+	public void setComplexNumber( final int r, final int i ) { setReal( r ); }
+	@Override
+	public void setComplexNumber( final long r, final long i ) { setReal( r ); }
 
 	@Override
 	public void complexConjugate(){}

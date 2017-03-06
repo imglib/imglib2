@@ -150,6 +150,18 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 	}
 
 	@Override
+	public void setReal( final int r )
+	{
+		dataAccess.setValue( realI, r );
+	}
+
+	@Override
+	public void setReal( final long r )
+	{
+		dataAccess.setValue( realI, r );
+	}
+
+	@Override
 	public void setImaginary( final float i )
 	{
 		dataAccess.setValue( imaginaryI, i );
@@ -157,6 +169,18 @@ public class ComplexDoubleType extends AbstractComplexType< ComplexDoubleType > 
 
 	@Override
 	public void setImaginary( final double i )
+	{
+		dataAccess.setValue( imaginaryI, i );
+	}
+
+	@Override
+	public void setImaginary( final int i )
+	{
+		dataAccess.setValue( imaginaryI, i );
+	}
+
+	@Override
+	public void setImaginary( final long i )
 	{
 		dataAccess.setValue( imaginaryI, i );
 	}

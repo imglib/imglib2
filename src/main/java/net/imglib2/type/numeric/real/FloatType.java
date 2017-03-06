@@ -145,6 +145,18 @@ public class FloatType extends AbstractRealType< FloatType > implements NativeTy
 	}
 
 	@Override
+	public void setReal( final int real )
+	{
+		set( real );
+	}
+
+	@Override
+	public void setReal( final long real )
+	{
+		set( real );
+	}
+
+	@Override
 	public double getMaxValue()
 	{
 		return Float.MAX_VALUE;

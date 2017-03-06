@@ -64,6 +64,14 @@ public abstract class AbstractRealType< T extends AbstractRealType< T >> extends
 	{}
 
 	@Override
+	public void setImaginary( final int complex )
+	{}
+
+	@Override
+	public void setImaginary( final long complex )
+	{}
+
+	@Override
 	public void inc()
 	{
 		setReal( getRealDouble() + 1 );

@@ -169,6 +169,20 @@ public abstract class AbstractComplexType< T extends AbstractComplexType< T >> i
 	}
 
 	@Override
+	public void setComplexNumber( final int r, final int i)
+	{
+		setReal( r );
+		setImaginary( i );
+	}
+
+	@Override
+	public void setComplexNumber( final long r, final long i)
+	{
+		setReal( r );
+		setImaginary( i );
+	}
+
+	@Override
 	public boolean equals( final Object o )
 	{
 		if ( !getClass().isInstance(o) )

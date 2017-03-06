@@ -145,6 +145,18 @@ public class DoubleType extends AbstractRealType< DoubleType > implements Native
 	}
 
 	@Override
+	public void setReal( final int real )
+	{
+		set( real );
+	}
+
+	@Override
+	public void setReal( final long real )
+	{
+		set( real );
+	}
+
+	@Override
 	public double getMaxValue()
 	{
 		return Double.MAX_VALUE;

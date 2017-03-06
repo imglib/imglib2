@@ -93,6 +93,18 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	}
 
 	@Override
+	public void setReal( final int f )
+	{
+		t.setReal( f );
+	}
+
+	@Override
+	public void setReal( final long f )
+	{
+		t.setReal( f );
+	}
+
+	@Override
 	public void setImaginary( final float f )
 	{
 		t.setImaginary( f );
@@ -105,6 +117,18 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 	}
 
 	@Override
+	public void setImaginary( final int f )
+	{
+		t.setImaginary( f );
+	}
+
+	@Override
+	public void setImaginary( final long f )
+	{
+		t.setImaginary( f );
+	}
+
+	@Override
 	public void setComplexNumber( final float r, final float i )
 	{
 		t.setComplexNumber( r, i );
@@ -112,6 +136,18 @@ public abstract class AbstractVolatileRealType< R extends RealType< R >, T exten
 
 	@Override
 	public void setComplexNumber( final double r, final double i )
+	{
+		t.setComplexNumber( r, i );
+	}
+
+	@Override
+	public void setComplexNumber( final int r, final int i )
+	{
+		t.setComplexNumber( r, i );
+	}
+
+	@Override
+	public void setComplexNumber( final long r, final long i )
 	{
 		t.setComplexNumber( r, i );
 	}
