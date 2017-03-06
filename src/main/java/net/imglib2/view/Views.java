@@ -66,6 +66,7 @@ import net.imglib2.transform.integer.shear.ShearTransform;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Intervals;
 import net.imglib2.util.Pair;
 import net.imglib2.util.Util;
 import net.imglib2.view.StackView.StackAccessMode;
@@ -1279,4 +1280,127 @@ public class Views
 	{
 		return new HyperSlicesView< T >( source, axes );
 	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. Out of bounds
+	 * pixels will be sampled as specified by {@link OutOfBoundsFactory} oob.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @param factory
+	 *            the out-of-bounds strategy.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by oob and border.
+	 */
+	public static < T, F extends RandomAccessibleInterval< T > > IntervalView< T > expand( final F source, final OutOfBoundsFactory< T, ? super F > oob, final long... border )
+	{
+		return Views.interval( Views.extend( source, oob ), Intervals.expand( source, border ) );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. Out of bounds
+	 * pixels will be sampled by mirroring source. Boundary pixels are not
+	 * repeated. Note that this requires that all dimensions of the source (F
+	 * source) must be &gt; 1.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by border.
+	 */
+	public static < T > IntervalView< T > expandMirrorSingle( final RandomAccessibleInterval< T > source, final long... border )
+	{
+		return interval( extendMirrorSingle( source ), Intervals.expand( source, border ) );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. Out of bounds
+	 * pixels will be sampled by mirroring source. Boundary pixels are repeated.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by border.
+	 */
+	public static < T > IntervalView< T > expandMirrorDouble( final RandomAccessibleInterval< T > source, final long... border )
+	{
+		return interval( extendMirrorDouble( source ), Intervals.expand( source, border ) );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with a constant value specified by the caller.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @param t
+	 *            Constant extension of source.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by t and border.
+	 */
+	public static < T extends Type< T > > IntervalView< T > expandValue( final RandomAccessibleInterval< T > source, final T t, final long... border )
+	{
+		return interval( extendValue( source, t ), Intervals.expand( source, border ) );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with the zero-element of that data type.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by border.
+	 */
+	public static < T extends NumericType< T > > IntervalView< T > expandZero( final RandomAccessibleInterval< T > source, final long... border )
+	{
+		return interval( extendZero( source ), Intervals.expand( source, border ) );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with a random-value out-of-bounds strategy.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @param min
+	 *            the minimal random value
+	 * @param max
+	 *            the maximal random value
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by min, max, and border.
+	 */
+	public static < T extends RealType< T > > IntervalView< T > expandRandom( final RandomAccessibleInterval< T > source, final double min, final double max, final long... border )
+	{
+		return interval( extendRandom( source, min, max ), Intervals.expand( source, border ) );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with a periodic out-of-bounds strategy.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by border.
+	 */
+	public static < T > IntervalView< T > expandPeriodic( final RandomAccessibleInterval< T > source, final long... border )
+	{
+		return interval( extendPeriodic( source ), Intervals.expand( source, border ) );
+	}
+
+	/**
+	 * Expand a RandomAccessibleInterval as specified by border. source will be
+	 * extended with the border value.
+	 *
+	 * @param source
+	 *            the interval to expand.
+	 * @return Expansion of the {@link RandomAccessibleInterval} source as
+	 *         specified by border.
+	 */
+	public static < T > IntervalView< T > expandBorder( final RandomAccessibleInterval< T > source, final long... border )
+	{
+		return interval( extendBorder( source ), Intervals.expand( source, border ) );
+	}
+
 }
