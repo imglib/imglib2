@@ -164,7 +164,7 @@ public class Intervals
 	 *            how many pixels to add on every side
 	 * @return expanded interval
 	 */
-	public FinalInterval expand( final Interval interval, final long ... border )
+	public static FinalInterval expand( final Interval interval, final long ... border )
 	{
 		return expand(interval, new FinalDimensions( border ));
 	}
@@ -181,7 +181,7 @@ public class Intervals
 	 *            how many pixels to add on every side
 	 * @return expanded interval
 	 */
-	public FinalInterval expand( final Interval interval, final Dimensions border )
+	public static FinalInterval expand( final Interval interval, final Dimensions border )
 	{
 		final int n = interval.numDimensions();
 		final long[] min = new long[ n ];
