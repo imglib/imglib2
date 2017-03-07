@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -45,10 +45,10 @@ import net.imglib2.util.Util;
 
 /**
  * The performance of this type is traded off for the gain in memory storage.
- * 
+ *
  * @author Albert Cardona
  */
-public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>> extends AbstractBitType<T> implements IntegerType<T> 
+public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>> extends AbstractBitType<T> implements IntegerType<T>
 {
 	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
 	//protected long i = 0;
@@ -60,7 +60,7 @@ public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>
 
 	// this is the constructor if you want it to read from an array
 	public AbstractIntegerBitType(
-			final NativeImg<T,? extends LongAccess> bitStorage, 
+			final NativeImg< ?, ? extends LongAccess > bitStorage,
 			final int nBits )
 	{
 		super( bitStorage, nBits );
@@ -85,16 +85,16 @@ public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>
 	public float getRealFloat() { return getIntegerLong(); }
 	@Override
 	public double getRealDouble() { return getIntegerLong(); }
-	
+
 	@Override
 	public void setReal( final float real ){ setInteger( Util.round( real ) ); }
 	@Override
-	public void setReal( final double real ){ setInteger( Util.round( real ) ); }	
+	public void setReal( final double real ){ setInteger( Util.round( real ) ); }
 
 	@Override
 	public void setZero() { setInteger( 0 ); }
 	@Override
-	public void setOne() { setInteger( 1 ); }	
+	public void setOne() { setInteger( 1 ); }
 
 	@Override
 	public boolean equals( final Object o ) {
@@ -113,21 +113,21 @@ public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>
 	}
 
 	@Override
-	public int compareTo( final T c ) 
-	{ 
+	public int compareTo( final T c )
+	{
 		final long a = getIntegerLong();
 		final long b = c.getIntegerLong();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
 			return -1;
-		else 
+		else
 			return 0;
 	}
-	
+
 	@Override
-	public String toString() { return "" + getIntegerLong(); }	
-	
+	public String toString() { return "" + getIntegerLong(); }
+
 	@Override
 	public int getInteger() { return (int)get(); }
 
@@ -169,7 +169,7 @@ public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>
 
 	@Override
 	public void div(final T t) { set(get() / t.get()); }
-	
+
 	@Override
 	public void set( final T c ) { set( c.get() ); }
 
@@ -177,7 +177,7 @@ public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>
 	public float getImaginaryFloat() { return 0; }
 	@Override
 	public double getImaginaryDouble() { return 0; }
-	
+
 	@Override
 	public void setImaginary( final float complex ){}
 	@Override
@@ -192,7 +192,7 @@ public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>
 	public float getPowerFloat() { return getRealFloat(); }
 	@Override
 	public double getPowerDouble() { return getRealDouble(); }
-	
+
 	@Override
 	public void setComplexNumber( final float r, final float i ) { setReal( r ); }
 	@Override
@@ -208,7 +208,7 @@ public abstract class AbstractIntegerBitType<T extends AbstractIntegerBitType<T>
 	 * @return
 	 */
 	@Override
-	public boolean valueEquals( T t )
+	public boolean valueEquals( final T t )
 	{
 		return get() == t.get();
 	}

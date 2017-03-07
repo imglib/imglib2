@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,20 +42,18 @@ import net.imglib2.util.Fraction;
 
 /**
  * A 12-bit {@link Type} whose data is stored in a {@link LongAccess}.
- * 
+ *
  * @author Albert Cardona
  * @author Stephan Preibisch
  *
  */
-public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
+public class Unsigned12BitType extends AbstractIntegerBitType< Unsigned12BitType >
 {
 	// A mask for bit and, containing nBits of 1
 	private final long mask;
 
 	// this is the constructor if you want it to read from an array
-	public Unsigned12BitType(
-			final NativeImg<Unsigned12BitType,
-			? extends LongAccess> bitStorage)
+	public Unsigned12BitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
 	{
 		super( bitStorage, 12 );
 		this.mask = 4095; // 111111111111 in binary
@@ -64,7 +62,7 @@ public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
 	// this is the constructor if you want it to be a variable
 	public Unsigned12BitType( final long value )
 	{
-		this( (NativeImg<Unsigned12BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = new LongArray( 1 );
 		set( value );
 	}
@@ -72,7 +70,7 @@ public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
 	// this is the constructor if you want to specify the dataAccess
 	public Unsigned12BitType( final LongAccess access )
 	{
-		this( (NativeImg<Unsigned12BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = access;
 	}
 
@@ -80,10 +78,10 @@ public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
 	public Unsigned12BitType() { this( 0 ); }
 
 	@Override
-	public NativeImg<Unsigned12BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned12BitType> storageFactory, final long dim[] )
+	public NativeImg< Unsigned12BitType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< Unsigned12BitType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<Unsigned12BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
+		final NativeImg< Unsigned12BitType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
 
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );
@@ -125,7 +123,7 @@ public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
 		final long safeValue = value & mask;
 
 		final long antiShift = 64 - shift;
-		
+
 		synchronized ( dataAccess ) {
 			final long v = dataAccess.getValue(i1);
 			if (antiShift < 12) {

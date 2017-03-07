@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -53,25 +53,23 @@ import net.imglib2.util.Fraction;
  * with the lower long first, then the upper long.
  * Currently the math methods defined in the superinterface {@link NumericType} are implemented using {@link BigInteger} and {@link BigDecimal}.
  * This class is not {@link Thread}-safe; do a {@link #copy()} first to operate on a different {@link Thread}.
- * 
+ *
  * @author Albert Cardona
  */
 public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> implements NativeType<Unsigned128BitType>
 {
 	private int i = 0;
 
-	final protected NativeImg<Unsigned128BitType, ? extends LongAccess> img;
+	final protected NativeImg< ?, ? extends LongAccess > img;
 
 	// 17, so the first byte is 0 to mean positive integer
 	final protected byte[] bytes = new byte[17];
-	
+
 	// the DataAccess that holds the information
 	protected LongAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public Unsigned128BitType(
-			final NativeImg<Unsigned128BitType,
-			? extends LongAccess> bitStorage)
+	public Unsigned128BitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
 	{
 		img = bitStorage;
 	}
@@ -79,15 +77,15 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	// this is the constructor if you want it to be a variable
 	public Unsigned128BitType( final long lower, final long upper )
 	{
-		this( (NativeImg<Unsigned128BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = new LongArray( 2 );
 		set( lower, upper );
 	}
-	
+
 	// this is the constructor if you want it to be a variable
 	public Unsigned128BitType( final BigInteger value )
 	{
-		this ( (NativeImg<Unsigned128BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = new LongArray( 2 );
 		set( value );
 	}
@@ -95,7 +93,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	// this is the constructor if you want to specify the dataAccess
 	public Unsigned128BitType( final LongAccess access )
 	{
-		this( (NativeImg<Unsigned128BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = access;
 	}
 
@@ -103,10 +101,10 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	public Unsigned128BitType( ) { this( 0, 0 ); }
 
 	@Override
-	public NativeImg<Unsigned128BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned128BitType> storageFactory, final long dim[] )
+	public NativeImg< Unsigned128BitType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< Unsigned128BitType > storageFactory, final long dim[] )
 	{
 		// create the container:
-		final NativeImg<Unsigned128BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( 2, 1 ) );
+		final NativeImg< Unsigned128BitType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, new Fraction( 2, 1 ) );
 
 		// create a Type that is linked to the container
 		final Unsigned128BitType linkedType = new Unsigned128BitType( container );
@@ -163,7 +161,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 		intoBytes( dataAccess.getValue( k ), dataAccess.getValue( k + 1 ) );
 		return new BigInteger( bytes );
 	}
-	
+
 	public void set( final BigInteger value ) {
 		set( value.toByteArray() );
 	}
@@ -197,7 +195,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 		dataAccess.setValue( k, value );
 		dataAccess.setValue( k + 1, 0 );
 	}
-	
+
 	@Override
 	public void setInteger( final long value ) {
 		final int k = i * 2;
@@ -206,7 +204,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	}
 
 	@Override
-	public void setBigInteger(BigInteger b) {
+	public void setBigInteger(final BigInteger b) {
 		set( b );
 	}
 
@@ -224,7 +222,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 		}
 		return new BigInteger(bytes);
 	}
-	
+
 	@Override
 	public double getMinValue()  { return 0; }
 
@@ -308,7 +306,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 			dataAccess.setValue( k, lower - 1 );
 		}
 	}
-	
+
 	@Override
 	public void setZero() {
 		set( 0, 0 );
@@ -318,15 +316,16 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	public void setOne() {
 		set( 1, 0 );
 	}
-	
+
 	/** @see {@link #mul(double)}. */
 	@Override
-	public void mul( float c ) {
+	public void mul( final float c ) {
 		mul( (double)c );
 	}
 
 	/** Implemented using {@link BigDecimal#multiply(BigDecimal)} and {@link BigDecimal#toBigInteger()}. */
-	public void mul( double c ) {
+	@Override
+	public void mul( final double c ) {
 		set( new BigDecimal( get() ).multiply( new BigDecimal( c ) ).toBigInteger() );
 	}
 
@@ -369,7 +368,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	}
 
 	@Override
-	public boolean valueEquals( Unsigned128BitType t )
+	public boolean valueEquals( final Unsigned128BitType t )
 	{
 		final int k = i * 2;
 		final int kt = t.i * 2;

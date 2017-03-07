@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,16 +37,15 @@ package net.imglib2.type;
 
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.LongAccess;
-import net.imglib2.type.NativeType;
 import net.imglib2.util.Fraction;
 
 /**
  * Provides basic infrastructure to implement Types based on single bits stored in a LongAccess
- * 
+ *
  * @author Albert Cardona
  * @author Stephan Preibisch
  */
-public abstract class AbstractBitType<T extends AbstractBitType<T>> implements NativeType<T>
+public abstract class AbstractBitType< T extends AbstractBitType< T > > implements NativeType< T >
 {
 	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
 	protected long i = 0;
@@ -55,14 +54,14 @@ public abstract class AbstractBitType<T extends AbstractBitType<T>> implements N
 	protected final int nBits;
 
 	// the NativeImg that can update the DataAccess (if this instance is not a variable)
-	final protected NativeImg<T, ? extends LongAccess> img;
+	final protected NativeImg< ?, ? extends LongAccess > img;
 
 	// the DataAccess that holds the information
 	protected LongAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
 	public AbstractBitType(
-			final NativeImg<T, ? extends LongAccess> bitStorage,
+			final NativeImg< ?, ? extends LongAccess> bitStorage,
 			final int nBits)
 	{
 		img = bitStorage;
@@ -73,7 +72,7 @@ public abstract class AbstractBitType<T extends AbstractBitType<T>> implements N
 	public void updateContainer( final Object c ) { dataAccess = img.update( c ); }
 
 	@Override
-	public int getIndex() { return (int)i; }
+	public int getIndex() { return ( int )i; }
 
 	@Override
 	public void updateIndex( final int index )
@@ -86,19 +85,19 @@ public abstract class AbstractBitType<T extends AbstractBitType<T>> implements N
 	{
 		++i;
 	}
-	
+
 	@Override
 	public void incIndex( final int increment )
 	{
 		i += increment;
 	}
-	
+
 	@Override
 	public void decIndex()
 	{
 		--i;
 	}
-	
+
 	@Override
 	public void decIndex( final int decrement )
 	{

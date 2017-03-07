@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,21 +39,20 @@ import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.type.AbstractBit64Type;
 import net.imglib2.type.BasePairType;
-import net.imglib2.type.logic.BitType;
 
 /**
  * Representation of base pairs using 3 bits per entry, supported characters: gap, N, A, T, G, C, U
  * Bases are handled using the {@link Base} enumeration.
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implements BasePairType<BasePairBitType>
+public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implements BasePairType< BasePairBitType >
 {
 	public static enum Base { gap, N, A, T, G, C, U; }
-	
+
 	// this is the constructor if you want it to read from an array
-	public BasePairBitType( final NativeImg<BasePairBitType, ? extends LongAccess> bitStorage )
+	public BasePairBitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
 	{
 		super( bitStorage, 3 );
 	}
@@ -62,7 +61,7 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	public BasePairBitType( final Base value )
 	{
 		super( value.ordinal() );
-	}	
+	}
 
 	// this is the constructor if you want it to be a variable
 	public BasePairBitType()
@@ -71,11 +70,11 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	}
 
 	@Override
-	public NativeImg<BasePairBitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<BasePairBitType> storageFactory, final long dim[] )	
+	public NativeImg< BasePairBitType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< BasePairBitType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<BasePairBitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, getEntitiesPerPixel() );
-		
+		final NativeImg< BasePairBitType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, getEntitiesPerPixel() );
+
 		// create a Type that is linked to the container
 		final BasePairBitType linkedType = new BasePairBitType( container );
 
@@ -87,33 +86,33 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 
 	@Override
 	public BasePairBitType duplicateTypeOnSameNativeImg() { return new BasePairBitType( img ); }
-	
+
 
 	@Override
-	public void set( final Base base ) 
+	public void set( final Base base )
 	{
 		setBits( base.ordinal() );
 	}
 
 	@Override
-	public Base get() 
+	public Base get()
 	{
 		return Base.values()[ (int)getBits() ];
 	}
 
 	@Override
-	public int compareTo( final BasePairBitType c ) 
-	{ 
+	public int compareTo( final BasePairBitType c )
+	{
 		final Base input = get();
 		final Base compare = c.get();
-		
+
 		if ( input == compare )
 		{
 			return 0;
 		}
 		switch ( input )
 		{
-			case gap: return -1; 
+			case gap: return -1;
 			case N: return compare == Base.gap ? 1 : -1;
 			case A: return compare == Base.gap || compare == Base.N ? 1 : -1;
 			case T: return compare == Base.G || compare == Base.C || compare == Base.U ? -1 : 1;
@@ -185,9 +184,9 @@ public class BasePairBitType extends AbstractBit64Type< BasePairBitType > implem
 	{
 		return this.get().toString();
 	}
-	
+
 	@Override
-	public boolean valueEquals( BasePairBitType t )
+	public boolean valueEquals( final BasePairBitType t )
 	{
 		return get() == t.get();
 	}
