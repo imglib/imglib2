@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -60,14 +60,14 @@ import net.imglib2.type.numeric.real.FloatType;
  * the most common pixel {@link Type} variants. Keep in mind that this cannot be
  * a complete collection since the number of existing pixel {@link Type}s may be
  * extended.
- * 
+ *
  * For pixel {@link Type}s T not present in this collection, use the generic
  * {@link PlanarImgFactory#create(long[], net.imglib2.type.NativeType)}, e.g.
- * 
+ *
  * <pre>
  * img = new PlanarImgFactory&lt; MyType &gt;.create( new long[] { 100, 200 }, new MyType() );
  * </pre>
- * 
+ *
  * @author Stephan Saalfeld
  */
 final public class PlanarImgs
@@ -76,7 +76,7 @@ final public class PlanarImgs
 	{}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link UnsignedByteType}, {@link ByteArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link UnsignedByteType}, {@link ByteArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedByteType, ByteArray > unsignedBytes( final long... dim )
@@ -85,7 +85,7 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link ByteType}, {@link ByteArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link ByteType}, {@link ByteArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ByteType, ByteArray > bytes( final long... dim )
@@ -94,8 +94,8 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link UnsignedShortType}, {@link ShortArray}
-	 * >.
+	 * Create an {@link PlanarImg}&lt;{@link UnsignedShortType}, {@link ShortArray}
+	 * &gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedShortType, ShortArray > unsignedShorts( final long... dim )
@@ -104,7 +104,7 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link ShortType}, {@link ShortArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link ShortType}, {@link ShortArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ShortType, ShortArray > shorts( final long... dim )
@@ -113,7 +113,7 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link UnsignedIntType}, {@link IntArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link UnsignedIntType}, {@link IntArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< UnsignedIntType, IntArray > unsignedInts( final long... dim )
@@ -122,7 +122,7 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link IntType}, {@link IntArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link IntType}, {@link IntArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< IntType, IntArray > ints( final long... dim )
@@ -131,7 +131,7 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link LongType}, {@link LongArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link LongType}, {@link LongArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< LongType, LongArray > longs( final long... dim )
@@ -140,7 +140,7 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link BitType}, {@link BitArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link BitType}, {@link LongArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< BitType, LongArray > bits( final long... dim )
@@ -149,7 +149,7 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link FloatType}, {@link FloatArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link FloatType}, {@link FloatArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< FloatType, FloatArray > floats( final long... dim )
@@ -158,7 +158,7 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link DoubleType}, {@link DoubleArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link DoubleType}, {@link DoubleArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< DoubleType, DoubleArray > doubles( final long... dim )
@@ -167,7 +167,7 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link ARGBType}, {@link IntArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link ARGBType}, {@link IntArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ARGBType, IntArray > argbs( final long... dim )
@@ -176,8 +176,8 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link ComplexFloatType}, {@link FloatArray}
-	 * >.
+	 * Create an {@link PlanarImg}&lt;{@link ComplexFloatType}, {@link FloatArray}
+	 * &gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ComplexFloatType, FloatArray > complexFloats( final long... dim )
@@ -186,8 +186,8 @@ final public class PlanarImgs
 	}
 
 	/**
-	 * Create an {@link PlanarImg}<{@link ComplexDoubleType},
-	 * {@link DoubleArray}>.
+	 * Create an {@link PlanarImg}&lt;{@link ComplexDoubleType},
+	 * {@link DoubleArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public PlanarImg< ComplexDoubleType, DoubleArray > complexDoubles( final long... dim )

@@ -99,9 +99,11 @@ public class LazyCellImg< T extends NativeType< T >, A >
 
 
 	/**
-	 * Reflection hack because there is no T NativeType<T>.create(NativeImg<?, A>) method in ImgLib2
-	 * Note that for this method to be introduced, NativeType would need an additional generic parameter A
-	 * that specifies the accepted family of access objects that can be used in the NativeImg... big change
+	 * Reflection hack because there is no {@code T NativeType
+	 * <T>.create(NativeImg<?, A>)} method in ImgLib2 Note that for this method
+	 * to be introduced, NativeType would need an additional generic parameter A
+	 * that specifies the accepted family of access objects that can be used in
+	 * the NativeImg... big change
 	 *
 	 * @throws SecurityException
 	 * @throws NoSuchMethodException

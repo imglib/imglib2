@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -43,9 +43,9 @@ import net.imglib2.util.IntervalIndexer;
 
 /**
  * Performs multi-linear interpolation.
- * 
+ *
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
@@ -54,30 +54,35 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 {
 	/**
 	 * Index into {@link weights} array.
-	 * 
+	 *
 	 * <p>
 	 * To visit the pixels that contribute to an interpolated value, we move in
 	 * a (binary-reflected) Gray code pattern, such that only one dimension of
 	 * the target position is modified per move.
-	 * 
+	 * </p>
 	 * <p>
 	 * This index is the corresponding gray code bit pattern which will select
 	 * the correct corresponding weight.
-	 * 
+	 * </p>
 	 * <p>
-	 * {@see http://en.wikipedia.org/wiki/Gray_code}
+	 * See
+	 * <a href="http://en.wikipedia.org/wiki/Gray_code">http://en.wikipedia.org/
+	 * wiki/Gray_code</a>
+	 * </p>
 	 */
 	protected int code;
 
 	/**
 	 * Weights for each pixel of the <em>2x2x...x2</em> hypercube of pixels
 	 * participating in the interpolation.
-	 * 
+	 *
+	 * <p>
 	 * Indices into this array are arranged in the standard iteration order (as
 	 * provided by {@link IntervalIndexer#positionToIndex}). Element 0 refers to
 	 * position <em>(0,0,...,0)</em>, element 1 refers to position
 	 * <em>(1,0,...,0)</em>, element 2 refers to position <em>(0,1,...,0)</em>,
 	 * etc.
+	 * </p>
 	 */
 	final protected double[] weights;
 
@@ -117,20 +122,20 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 
 	/**
 	 * Fill the {@link weights} array.
-	 * 
+	 *
 	 * <p>
 	 * Let <em>w_d</em> denote the fraction of a pixel at which the sample
 	 * position <em>p_d</em> lies from the floored position <em>pf_d</em> in
 	 * dimension <em>d</em>. That is, the value at <em>pf_d</em> contributes
 	 * with <em>(1 - w_d)</em> to the sampled value; the value at
 	 * <em>( pf_d + 1 )</em> contributes with <em>w_d</em>.
-	 * 
+	 * </p>
 	 * <p>
 	 * At every pixel, the total weight results from multiplying the weights of
 	 * all dimensions for that pixel. That is, the "top-left" contributing pixel
 	 * (position floored in all dimensions) gets assigned weight
 	 * <em>(1-w_0)(1-w_1)...(1-w_n)</em>.
-	 * 
+	 * </p>
 	 * <p>
 	 * We work through the weights array starting from the highest dimension.
 	 * For the highest dimension, the first half of the weights contain the
@@ -139,16 +144,17 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 	 * factor <em>w_n</em>. In this first step, the first weight of the first
 	 * half gets assigned <em>(1 - w_n)</em>. The first element of the second
 	 * half gets assigned <em>w_n</em>
-	 * 
+	 * </p>
 	 * <p>
 	 * From their, we work recursively down to dimension 0. That is, each half
 	 * of weights is again split recursively into two partitions. The first
 	 * element of the second partitions is the first element of the half
 	 * multiplied with <em>(w_d)</em>. The first element of the first partitions
 	 * is multiplied with <em>(1 - w_d)</em>.
-	 * 
+	 * </p>
 	 * <p>
 	 * When we have reached dimension 0, all weights will have a value assigned.
+	 * </p>
 	 */
 	protected void fillWeights()
 	{
@@ -175,14 +181,17 @@ public class NLinearInterpolator< T extends NumericType< T > > extends Floor< Ra
 
 	/**
 	 * Get the interpolated value at the current position.
-	 * 
+	 *
 	 * <p>
 	 * To visit the pixels that contribute to an interpolated value, we move in
 	 * a (binary-reflected) Gray code pattern, such that only one dimension of
 	 * the target position is modified per move.
-	 * 
+	 * </p>
 	 * <p>
-	 * {@see http://en.wikipedia.org/wiki/Gray_code}
+	 * See
+	 * <a href="http://en.wikipedia.org/wiki/Gray_code">http://en.wikipedia.org/
+	 * wiki/Gray_code</a>
+	 * </p>
 	 */
 	@Override
 	public T get()

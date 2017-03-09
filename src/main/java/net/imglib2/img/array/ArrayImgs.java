@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -65,16 +65,16 @@ import net.imglib2.util.Fraction;
  * in mind that this cannot be a complete collection since the number of
  * existing pixel {@link Type}s may be extended.
  * </p>
- * 
+ *
  * <p>
  * For pixel {@link Type}s T not present in this collection, use the generic
  * {@link ArrayImgFactory#create(long[], net.imglib2.type.NativeType)}, e.g.
  * </p>
- * 
+ *
  * <pre>
  * img = new ArrayImgFactory&lt; MyType &gt;.create( new long[] { 100, 200 }, new MyType() );
  * </pre>
- * 
+ *
  * @author Stephan Saalfeld
  */
 final public class ArrayImgs
@@ -83,7 +83,7 @@ final public class ArrayImgs
 	{}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link UnsignedByteType}, {@link ByteArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link UnsignedByteType}, {@link ByteArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedByteType, ByteArray > unsignedBytes( final long... dim )
@@ -92,20 +92,20 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link UnsignedByteType}, {@link ByteArray}>
+	 * Creates an {@link ArrayImg}&lt;{@link UnsignedByteType}, {@link ByteArray}&gt;
 	 * reusing a passed byte[] array.
 	 */
 	final public static ArrayImg< UnsignedByteType, ByteArray > unsignedBytes( final byte[] array, final long... dim )
 	{
 		final ByteArray access = new ByteArray( array );
 		final ArrayImg< UnsignedByteType, ByteArray > img = new ArrayImg< UnsignedByteType, ByteArray >( access, dim, new Fraction() );
-		final UnsignedByteType t = new UnsignedByteType( img );		
+		final UnsignedByteType t = new UnsignedByteType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link ByteType}, {@link ByteArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link ByteType}, {@link ByteArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ByteType, ByteArray > bytes( final long... dim )
@@ -114,21 +114,21 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link ByteType}, {@link ByteArray}> reusing
+	 * Creates an {@link ArrayImg}&lt;{@link ByteType}, {@link ByteArray}&gt; reusing
 	 * a passed byte[] array.
 	 */
 	final public static ArrayImg< ByteType, ByteArray > bytes( final byte[] array, final long... dim )
 	{
 		final ByteArray access = new ByteArray( array );
 		final ArrayImg< ByteType, ByteArray > img = new ArrayImg< ByteType, ByteArray >( access, dim, new Fraction() );
-		final ByteType t = new ByteType( img );		
+		final ByteType t = new ByteType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link UnsignedShortType}, {@link ShortArray}
-	 * >.
+	 * Create an {@link ArrayImg}&lt;{@link UnsignedShortType},
+	 * {@link ShortArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedShortType, ShortArray > unsignedShorts( final long... dim )
@@ -137,20 +137,20 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link UnsignedShortType}, {@link ShortArray}
-	 * > reusing a passed short[] array.
+	 * Creates an {@link ArrayImg}&lt;{@link UnsignedShortType},
+	 * {@link ShortArray}&gt; reusing a passed short[] array.
 	 */
 	final public static ArrayImg< UnsignedShortType, ShortArray > unsignedShorts( final short[] array, final long... dim )
 	{
 		final ShortArray access = new ShortArray( array );
 		final ArrayImg< UnsignedShortType, ShortArray > img = new ArrayImg< UnsignedShortType, ShortArray >( access, dim, new Fraction() );
-		final UnsignedShortType t = new UnsignedShortType( img );		
+		final UnsignedShortType t = new UnsignedShortType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link ShortType}, {@link ShortArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link ShortType}, {@link ShortArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ShortType, ShortArray > shorts( final long... dim )
@@ -159,20 +159,20 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link ShortType}, {@link ShortArray}>
+	 * Creates an {@link ArrayImg}&lt;{@link ShortType}, {@link ShortArray}&gt;
 	 * reusing a passed short[] array.
 	 */
 	final public static ArrayImg< ShortType, ShortArray > shorts( final short[] array, final long... dim )
 	{
 		final ShortArray access = new ShortArray( array );
 		final ArrayImg< ShortType, ShortArray > img = new ArrayImg< ShortType, ShortArray >( access, dim, new Fraction() );
-		final ShortType t = new ShortType( img );		
+		final ShortType t = new ShortType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link UnsignedIntType}, {@link IntArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link UnsignedIntType}, {@link IntArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< UnsignedIntType, IntArray > unsignedInts( final long... dim )
@@ -181,20 +181,20 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link UnsignedIntType}, {@link IntArray}>
+	 * Creates an {@link ArrayImg}&lt;{@link UnsignedIntType}, {@link IntArray}&gt;
 	 * reusing a passed int[] array.
 	 */
 	final public static ArrayImg< UnsignedIntType, IntArray > unsignedInts( final int[] array, final long... dim )
 	{
 		final IntArray access = new IntArray( array );
 		final ArrayImg< UnsignedIntType, IntArray > img = new ArrayImg< UnsignedIntType, IntArray >( access, dim, new Fraction() );
-		final UnsignedIntType t = new UnsignedIntType( img );		
+		final UnsignedIntType t = new UnsignedIntType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link IntType}, {@link IntArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link IntType}, {@link IntArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< IntType, IntArray > ints( final long... dim )
@@ -203,20 +203,20 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link IntType}, {@link IntArray}> reusing a
+	 * Creates an {@link ArrayImg}&lt;{@link IntType}, {@link IntArray}&gt; reusing a
 	 * passed int[] array.
 	 */
 	final public static ArrayImg< IntType, IntArray > ints( final int[] array, final long... dim )
 	{
 		final IntArray access = new IntArray( array );
 		final ArrayImg< IntType, IntArray > img = new ArrayImg< IntType, IntArray >( access, dim, new Fraction() );
-		final IntType t = new IntType( img );	
+		final IntType t = new IntType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link LongType}, {@link LongArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link LongType}, {@link LongArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< LongType, LongArray > longs( final long... dim )
@@ -225,20 +225,20 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link LongType}, {@link LongArray}> reusing
+	 * Creates an {@link ArrayImg}&lt;{@link LongType}, {@link LongArray}&gt; reusing
 	 * a passed long[] array.
 	 */
 	final public static ArrayImg< LongType, LongArray > longs( final long[] array, final long... dim )
 	{
 		final LongArray access = new LongArray( array );
 		final ArrayImg< LongType, LongArray > img = new ArrayImg< LongType, LongArray >( access, dim, new Fraction() );
-		final LongType t = new LongType( img );	
+		final LongType t = new LongType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link BitType}, {@link BitArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link BitType}, {@link LongArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< BitType, LongArray > bits( final long... dim )
@@ -247,7 +247,7 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link FloatType}, {@link FloatArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< FloatType, FloatArray > floats( final long... dim )
@@ -256,20 +256,20 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>
+	 * Creates an {@link ArrayImg}&lt;{@link FloatType}, {@link FloatArray}&gt;
 	 * reusing a passed float[] array.
 	 */
 	final public static ArrayImg< FloatType, FloatArray > floats( final float[] array, final long... dim )
 	{
 		final FloatArray access = new FloatArray( array );
 		final ArrayImg< FloatType, FloatArray > img = new ArrayImg< FloatType, FloatArray >( access, dim, new Fraction() );
-		final FloatType t = new FloatType( img );	
+		final FloatType t = new FloatType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link DoubleType}, {@link DoubleArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< DoubleType, DoubleArray > doubles( final long... dim )
@@ -278,20 +278,20 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>
+	 * Creates an {@link ArrayImg}&lt;{@link DoubleType}, {@link DoubleArray}&gt;
 	 * reusing a passed double[] array.
 	 */
 	final public static ArrayImg< DoubleType, DoubleArray > doubles( final double[] array, final long... dim )
 	{
 		final DoubleArray access = new DoubleArray( array );
 		final ArrayImg< DoubleType, DoubleArray > img = new ArrayImg< DoubleType, DoubleArray >( access, dim, new Fraction() );
-		final DoubleType t = new DoubleType( img );	
+		final DoubleType t = new DoubleType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link ARGBType}, {@link IntArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link ARGBType}, {@link IntArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ARGBType, IntArray > argbs( final long... dim )
@@ -300,20 +300,20 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link ARGBType}, {@link IntArray}> reusing a
+	 * Creates an {@link ArrayImg}&lt;{@link ARGBType}, {@link IntArray}&gt; reusing a
 	 * passed int[] array.
 	 */
 	final public static ArrayImg< ARGBType, IntArray > argbs( final int[] array, final long... dim )
 	{
 		final IntArray access = new IntArray( array );
 		final ArrayImg< ARGBType, IntArray > img = new ArrayImg< ARGBType, IntArray >( access, dim, new Fraction() );
-		final ARGBType t = new ARGBType( img );	
+		final ARGBType t = new ARGBType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link ComplexFloatType}, {@link FloatArray}>.
+	 * Create an {@link ArrayImg}&lt;{@link ComplexFloatType}, {@link FloatArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ComplexFloatType, FloatArray > complexFloats( final long... dim )
@@ -322,21 +322,21 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link FloatType}, {@link FloatArray}>
+	 * Creates an {@link ArrayImg}&lt;{@link FloatType}, {@link FloatArray}&gt;
 	 * reusing a passed float[] array.
 	 */
 	final public static ArrayImg< ComplexFloatType, FloatArray > complexFloats( final float[] array, final long... dim )
 	{
 		final FloatArray access = new FloatArray( array );
 		final ArrayImg< ComplexFloatType, FloatArray > img = new ArrayImg< ComplexFloatType, FloatArray >( access, dim, new Fraction( 2, 1 ) );
-		final ComplexFloatType t = new ComplexFloatType( img );	
+		final ComplexFloatType t = new ComplexFloatType( img );
 		img.setLinkedType( t );
 		return img;
 	}
 
 	/**
-	 * Create an {@link ArrayImg}<{@link ComplexDoubleType}, {@link DoubleArray}
-	 * >.
+	 * Create an {@link ArrayImg}&lt;{@link ComplexDoubleType},
+	 * {@link DoubleArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< ComplexDoubleType, DoubleArray > complexDoubles( final long... dim )
@@ -345,14 +345,14 @@ final public class ArrayImgs
 	}
 
 	/**
-	 * Creates an {@link ArrayImg}<{@link DoubleType}, {@link DoubleArray}>
+	 * Creates an {@link ArrayImg}&lt;{@link DoubleType}, {@link DoubleArray}&gt;
 	 * reusing a passed double[] array.
 	 */
 	final public static ArrayImg< ComplexDoubleType, DoubleArray > complexDoubles( final double[] array, final long... dim )
 	{
 		final DoubleArray access = new DoubleArray( array );
 		final ArrayImg< ComplexDoubleType, DoubleArray > img = new ArrayImg< ComplexDoubleType, DoubleArray >( access, dim, new Fraction( 2, 1 ) );
-		final ComplexDoubleType t = new ComplexDoubleType( img );	
+		final ComplexDoubleType t = new ComplexDoubleType( img );
 		img.setLinkedType( t );
 		return img;
 	}

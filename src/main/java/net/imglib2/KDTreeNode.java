@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,11 +39,11 @@ package net.imglib2;
  * Abstract base class for nodes in a KDTree. A KDTreeNode has coordinates and a
  * value. It provides the coordinates via the {@link RealLocalizable} interface.
  * It provides the value via {@link Sampler#get()}.
- * 
+ *
  * @param <T>
  *            value type.
- * 
- * 
+ *
+ *
  * @author Tobias Pietzsch
  */
 public abstract class KDTreeNode< T > implements RealLocalizable, Sampler< T >
@@ -65,13 +65,13 @@ public abstract class KDTreeNode< T > implements RealLocalizable, Sampler< T >
 
 	/**
 	 * Left child of this node. All nodes x in the left subtree have
-	 * x.pos[splitDimension] <= this.pos[splitDimension].
+	 * {@code x.pos[splitDimension] <= this.pos[splitDimension]}.
 	 */
 	public final KDTreeNode< T > left;
 
 	/**
 	 * Right child of this node. All nodes x in the right subtree have
-	 * x.pos[splitDimension] >= this.pos[splitDimension].
+	 * {@code x.pos[splitDimension] >= this.pos[splitDimension]}.
 	 */
 	public final KDTreeNode< T > right;
 
@@ -106,7 +106,7 @@ public abstract class KDTreeNode< T > implements RealLocalizable, Sampler< T >
 
 	/**
 	 * Get the dimension along which this node divides the space.
-	 * 
+	 *
 	 * @return splitting dimension.
 	 */
 	public final int getSplitDimension()
@@ -117,7 +117,7 @@ public abstract class KDTreeNode< T > implements RealLocalizable, Sampler< T >
 	/**
 	 * Get the position along {@link KDTreeNode#getSplitDimension()} where this
 	 * node divides the space.
-	 * 
+	 *
 	 * @return splitting position.
 	 */
 	public final double getSplitCoordinate()

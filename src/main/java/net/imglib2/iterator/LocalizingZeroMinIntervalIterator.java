@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -45,8 +45,9 @@ import net.imglib2.util.IntervalIndexer;
  * is: row by row, plane by plane, cube by cube, ... This is useful for
  * iterating an arbitrary interval in a defined order. For that, connect a
  * {@link LocalizingZeroMinIntervalIterator} to a {@link Positionable}.
- * 
+ *
  * <pre>
+ * {@code
  * ...
  * LocalizingZeroMinIntervalIterator i = new LocalizingZeroMinIntervalIterator(image);
  * RandomAccess<T> s = image.randomAccess();
@@ -57,14 +58,15 @@ import net.imglib2.util.IntervalIndexer;
  *   ...
  * }
  * ...
+ * }
  * </pre>
- * 
+ *
  * Note that {@link LocalizingZeroMinIntervalIterator} is the right choice in
  * situations where, for <em>each</em> pixel, you want to localize and/or set
  * the {@link Positionable} [{@link Sampler}], that is in a dense sampling
  * situation. For localizing sparsely (e.g. under an external condition), use
  * {@link ZeroMinIntervalIterator} instead.
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */

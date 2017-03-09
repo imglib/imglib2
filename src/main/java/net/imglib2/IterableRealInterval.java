@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,9 +36,9 @@ package net.imglib2;
 
 /**
  * <p>
- * <em>f</em>:R<sup><em>n</em></sup>&isin;[0,<em>s</em>]&rarr;T</em>
+ * <em>f</em>:R<sup><em>n</em></sup>&isin;[0,<em>s</em>]&rarr;T
  * </p>
- * 
+ *
  * <p>
  * A function over real space and a finite set of elements in the target domain
  * <em>T</em>. All target elements <em>T</em> can be accessed through Iterators.
@@ -48,9 +48,9 @@ package net.imglib2;
  * order is constant for an individual {@link IterableRealInterval} but not
  * further specified.
  * </p>
- * 
+ *
  * @param <T>
- * 
+ *
  * @author Stephan Saalfeld
  */
 public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
@@ -61,11 +61,11 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * calculating the location at each iteration step. Localization is
 	 * performed on demand.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Use this where localization is required rarely/ not for each iteration.
 	 * </p>
-	 * 
+	 *
 	 * @return fast iterating iterator
 	 */
 	public RealCursor< T > cursor();
@@ -76,11 +76,11 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * location at each iteration step. That is, localization is performed with
 	 * optimal speed.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * Use this where localization is required often/ for each iteration.
 	 * </p>
-	 * 
+	 *
 	 * @return fast localizing iterator
 	 */
 	public RealCursor< T > localizingCursor();
@@ -90,7 +90,7 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * Returns the number of elements in this {@link IterableRealInterval
 	 * Function}.
 	 * </p>
-	 * 
+	 *
 	 * @return number of elements
 	 */
 	public long size();
@@ -98,12 +98,12 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	/**
 	 * Get the first element of this {@link IterableRealInterval}. This is a
 	 * shortcut for <code>cursor().next()</code>.
-	 * 
+	 *
 	 * This can be used to create a new variable of type T using
 	 * <code>firstElement().createVariable()</code>, which is useful in generic
 	 * methods to store temporary results, e.g., a running sum over pixels in
-	 * the {@IterableRealInterval}.
-	 * 
+	 * the {@link IterableRealInterval}.
+	 *
 	 * @return the first element in iteration order.
 	 */
 	public T firstElement();
@@ -116,10 +116,10 @@ public interface IterableRealInterval< T > extends RealInterval, Iterable< T >
 	 * this and another {@link Iterator} on <em>f</em>, moving both in synchrony
 	 * will point both of them to corresponding locations in their source
 	 * domain. In other words, this and <em>f</em> have the same iteration order
-	 * and means and the same number of elements.</p>
-	 * 
+	 * and means and the same number of elements.
+	 *
 	 * @see FlatIterationOrder
-	 * 
+	 *
 	 * @return the iteration order of this {@link IterableRealInterval}.
 	 */
 	public Object iterationOrder();

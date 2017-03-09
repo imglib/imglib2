@@ -134,11 +134,11 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	}
 
 	/**
-	 * Unsigned division of {@param d1} by {@param d2}.
+	 * Unsigned division of {@code d1} by {@code d2}.
 	 *
 	 * See "Division by Invariant Integers using Multiplication", by Torbjorn
 	 * Granlund and Peter L. Montgomery, 1994.
-	 * http://gmplib.org/~tege/divcnst-pldi94.pdf
+	 * <a href="http://gmplib.org/~tege/divcnst-pldi94.pdf">http://gmplib.org/~tege/divcnst-pldi94.pdf</a>
 	 *
 	 * @throws ArithmeticException
 	 *             when c equals zero.
@@ -225,8 +225,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 
 	/**
 	 * This method returns the value of the UnsignedLongType as a signed long.
-	 * To get the unsigned value, use {@link UnsignedLongType#getAsBigInteger()}
-	 * .
+	 * To get the unsigned value, use {@link #getBigInteger()}.
 	 */
 	public long get()
 	{
@@ -319,7 +318,7 @@ public class UnsignedLongType extends GenericLongType< UnsignedLongType >
 	 *
 	 * @param a
 	 * @param b
-	 * @return -1 if a < b, 0 if a == b, 1 if a > b.
+	 * @return -1 if {@code a < b}, 0 if {@code a == b}, 1 if {@code a > b}.
 	 */
 	static public final int compare( final long a, final long b )
 	{

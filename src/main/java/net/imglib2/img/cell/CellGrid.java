@@ -200,7 +200,7 @@ public class CellGrid
 	}
 
 	/**
-	 * Get the grid position of the cell containing the element at {@link position}.
+	 * Get the grid position of the cell containing the element at {@code position}.
 	 *
 	 * @param position
 	 *            position of an element in the image.
@@ -214,7 +214,7 @@ public class CellGrid
 	}
 
 	/**
-	 * Get the grid position of the cell containing the element at {@link position}.
+	 * Get the grid position of the cell containing the element at {@code position}.
 	 *
 	 * @param position
 	 *            position of an element in the image.

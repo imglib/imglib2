@@ -64,8 +64,6 @@ package net.imglib2;
  * imglib Cursors, in general.
  * </p>
  * 
- * <saalfeld@mpi-cbg.de>
- * 
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld

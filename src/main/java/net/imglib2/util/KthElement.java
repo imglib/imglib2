@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,7 +42,7 @@ import java.util.ListIterator;
 
 /**
  * TODO
- * 
+ *
  */
 public class KthElement
 {
@@ -50,13 +50,13 @@ public class KthElement
 	 * Partition a subarray of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
 	 */
@@ -84,9 +84,9 @@ public class KthElement
 	 * Partition an array of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.length.
+	 *            index for k-th smallest value. {@code 0 <= k < values.length}.
 	 * @param values
 	 *            array
 	 */
@@ -99,13 +99,13 @@ public class KthElement
 	 * Partition a subarray of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
 	 */
@@ -133,9 +133,9 @@ public class KthElement
 	 * Partition an array of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.length.
+	 *            index for k-th smallest value. {@code 0 <= k < values.length}.
 	 * @param values
 	 *            array
 	 */
@@ -148,13 +148,13 @@ public class KthElement
 	 * Partition a subarray of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
 	 */
@@ -182,9 +182,9 @@ public class KthElement
 	 * Partition an array of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.length.
+	 *            index for k-th smallest value. {@code 0 <= k < values.length}.
 	 * @param values
 	 *            array
 	 */
@@ -197,13 +197,13 @@ public class KthElement
 	 * Partition a subarray of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
 	 */
@@ -231,9 +231,9 @@ public class KthElement
 	 * Partition an array of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.length.
+	 *            index for k-th smallest value. {@code 0 <= k < values.length}.
 	 * @param values
 	 *            array
 	 */
@@ -246,13 +246,13 @@ public class KthElement
 	 * Partition a subarray of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
 	 */
@@ -280,9 +280,9 @@ public class KthElement
 	 * Partition an array of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.length.
+	 *            index for k-th smallest value. {@code 0 <= k < values.length}.
 	 * @param values
 	 *            array
 	 */
@@ -295,13 +295,13 @@ public class KthElement
 	 * Partition a subarray of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
 	 */
@@ -329,9 +329,9 @@ public class KthElement
 	 * Partition an array of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.length.
+	 *            index for k-th smallest value. {@code 0 <= k < values.length}.
 	 * @param values
 	 *            array
 	 */
@@ -344,13 +344,13 @@ public class KthElement
 	 * Partition a subarray of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
 	 */
@@ -378,9 +378,9 @@ public class KthElement
 	 * Partition an array of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.length.
+	 *            index for k-th smallest value. {@code 0 <= k < values.length}.
 	 * @param values
 	 *            array
 	 */
@@ -393,16 +393,16 @@ public class KthElement
 	 * Partition a sublist of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
-	 * @param compare
+	 * @param comparator
 	 *            ordering function on T
 	 */
 	public static < T > void kthElement( int i, int j, final int k, final List< T > values, final Comparator< ? super T > comparator )
@@ -429,12 +429,12 @@ public class KthElement
 	 * Partition a list of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.size().
+	 *            index for k-th smallest value. {@code 0 <= k < values.size()}.
 	 * @param values
 	 *            array
-	 * @param compare
+	 * @param comparator
 	 *            ordering function on T
 	 */
 	public static < T > void kthElement( final int k, final List< T > values, final Comparator< ? super T > comparator )
@@ -446,13 +446,13 @@ public class KthElement
 	 * Partition a sublist of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
 	 */
@@ -480,9 +480,9 @@ public class KthElement
 	 * Partition a list of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.size().
+	 *            index for k-th smallest value. {@code 0 <= k < values.size()}.
 	 * @param values
 	 *            array
 	 */
@@ -495,12 +495,12 @@ public class KthElement
 	 * Partition a sublist such that the k-th smallest value is at position
 	 * {@code k}, elements before the k-th are smaller or equal, and elements
 	 * after the k-th are larger or equal.
-	 * 
+	 *
 	 * <p>
 	 * After the function returns, the iterator {@code i} is on the k-th
 	 * element. That is, {@code i.next()} gives the (k+1)-th element.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            iterator pointing before first element of the sublist, that
 	 *            is, {@code i.next()} gives you the first element.
@@ -508,9 +508,9 @@ public class KthElement
 	 *            iterator pointing behind the last element of the sublist, that
 	 *            is, {@code i.previous()} gives you the last element.
 	 * @param k
-	 *            index for k-th smallest value. i.nextIndex() <= k <=
-	 *            j.previousIndex().
-	 * @param compare
+	 *            index for k-th smallest value.
+	 *            {@code i.nextIndex() <= k <= j.previousIndex()}.
+	 * @param comparator
 	 *            ordering function on T
 	 */
 	public static < T > void kthElement( final ListIterator< T > i, final ListIterator< T > j, final int k, final Comparator< ? super T > comparator )
@@ -546,12 +546,12 @@ public class KthElement
 	 * Partition a sublist such that the k-th smallest value is at position
 	 * {@code k}, elements before the k-th are smaller or equal, and elements
 	 * after the k-th are larger or equal.
-	 * 
+	 *
 	 * <p>
 	 * After the function returns, the iterator {@code i} is on the k-th
 	 * element. That is, {@code i.next()} gives the (k+1)-th element.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            iterator pointing before first element of the sublist, that
 	 *            is, {@code i.next()} gives you the first element.
@@ -559,8 +559,8 @@ public class KthElement
 	 *            iterator pointing behind the last element of the sublist, that
 	 *            is, {@code i.previous()} gives you the last element.
 	 * @param k
-	 *            index for k-th smallest value. i.nextIndex() <= k <=
-	 *            j.previousIndex().
+	 *            index for k-th smallest value. {@code i.nextIndex() <= k <=
+	 *            j.previousIndex()}.
 	 */
 	public static < T extends Comparable< T > > void kthElement( final ListIterator< T > i, final ListIterator< T > j, final int k )
 	{
@@ -595,7 +595,7 @@ public class KthElement
 	 * Partition a sublist of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * <p>
 	 * The {@code permutation} array is permuted in the same way as the list.
 	 * Usually, this will be an array of indices, so that the partition
@@ -605,19 +605,19 @@ public class KthElement
 	 * an indices array [0, 1, 2, ...] and use the permutation of the indices to
 	 * permute the values list.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
 	 * @param permutation
 	 *            elements of this array are permuted in the same way as the
 	 *            elements in the values list
-	 * @param compare
+	 * @param comparator
 	 *            ordering function on T
 	 */
 	public static < T > void kthElement( int i, int j, final int k, final List< T > values, final int[] permutation, final Comparator< ? super T > comparator )
@@ -644,7 +644,7 @@ public class KthElement
 	 * Partition a list of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * <p>
 	 * The {@code permutation} array is permuted in the same way as the list.
 	 * Usually, this will be an array of indices, so that the partition
@@ -654,15 +654,15 @@ public class KthElement
 	 * an indices array [0, 1, 2, ...] and use the permutation of the indices to
 	 * permute the values list.
 	 * </p>
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.size().
+	 *            index for k-th smallest value. {@code 0 <= k < values.size()}.
 	 * @param values
 	 *            array
 	 * @param permutation
 	 *            elements of this array are permuted in the same way as the
 	 *            elements in the values list
-	 * @param compare
+	 * @param comparator
 	 *            ordering function on T
 	 */
 	public static < T > void kthElement( final int k, final List< T > values, final int[] permutation, final Comparator< ? super T > comparator )
@@ -674,7 +674,7 @@ public class KthElement
 	 * Partition a sublist of {@code values} such that the k-th smallest value
 	 * is at position {@code k}, elements before the k-th are smaller or equal
 	 * and elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * <p>
 	 * The {@code permutation} array is permuted in the same way as the list.
 	 * Usually, this will be an array of indices, so that the partition
@@ -684,13 +684,13 @@ public class KthElement
 	 * an indices array [0, 1, 2, ...] and use the permutation of the indices to
 	 * permute the values list.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
 	 *            index of last element of subarray
 	 * @param k
-	 *            index for k-th smallest value. i <= k <= j.
+	 *            index for k-th smallest value. {@code i <= k <= j}.
 	 * @param values
 	 *            array
 	 * @param permutation
@@ -721,7 +721,7 @@ public class KthElement
 	 * Partition a list of {@code values} such that the k-th smallest value is
 	 * at position {@code k}, elements before the k-th are smaller or equal and
 	 * elements after the k-th are larger or equal.
-	 * 
+	 *
 	 * <p>
 	 * The {@code permutation} array is permuted in the same way as the list.
 	 * Usually, this will be an array of indices, so that the partition
@@ -731,9 +731,9 @@ public class KthElement
 	 * an indices array [0, 1, 2, ...] and use the permutation of the indices to
 	 * permute the values list.
 	 * </p>
-	 * 
+	 *
 	 * @param k
-	 *            index for k-th smallest value. 0 <= k < values.size().
+	 *            index for k-th smallest value. {@code 0 <= k < values.size()}.
 	 * @param values
 	 *            array
 	 * @param permutation
@@ -749,12 +749,12 @@ public class KthElement
 	 * Partition a sublist such that the k-th smallest value is at position
 	 * {@code k}, elements before the k-th are smaller or equal, and elements
 	 * after the k-th are larger or equal.
-	 * 
+	 *
 	 * <p>
 	 * After the function returns, the iterator {@code i} is on the k-th
 	 * element. That is, {@code i.next()} gives the (k+1)-th element.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * The {@code permutation} array is permuted in the same way as the list.
 	 * Usually, this will be an array of indices, so that the partition
@@ -764,7 +764,7 @@ public class KthElement
 	 * an indices array [0, 1, 2, ...] and use the permutation of the indices to
 	 * permute the values list.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            iterator pointing before first element of the sublist, that
 	 *            is, {@code i.next()} gives you the first element.
@@ -772,12 +772,12 @@ public class KthElement
 	 *            iterator pointing behind the last element of the sublist, that
 	 *            is, {@code i.previous()} gives you the last element.
 	 * @param k
-	 *            index for k-th smallest value. i.nextIndex() <= k <=
-	 *            j.previousIndex().
+	 *            index for k-th smallest value. {@code i.nextIndex() <= k <=
+	 *            j.previousIndex()}.
 	 * @param permutation
 	 *            elements of this array are permuted in the same way as the
 	 *            elements in the values list
-	 * @param compare
+	 * @param comparator
 	 *            ordering function on T
 	 */
 	public static < T > void kthElement( final ListIterator< T > i, final ListIterator< T > j, final int k, final int[] permutation, final Comparator< ? super T > comparator )
@@ -813,12 +813,12 @@ public class KthElement
 	 * Partition a sublist such that the k-th smallest value is at position
 	 * {@code k}, elements before the k-th are smaller or equal, and elements
 	 * after the k-th are larger or equal.
-	 * 
+	 *
 	 * <p>
 	 * After the function returns, the iterator {@code i} is on the k-th
 	 * element. That is, {@code i.next()} gives the (k+1)-th element.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * The {@code permutation} array is permuted in the same way as the list.
 	 * Usually, this will be an array of indices, so that the partition
@@ -828,7 +828,7 @@ public class KthElement
 	 * an indices array [0, 1, 2, ...] and use the permutation of the indices to
 	 * permute the values list.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            iterator pointing before first element of the sublist, that
 	 *            is, {@code i.next()} gives you the first element.
@@ -836,8 +836,8 @@ public class KthElement
 	 *            iterator pointing behind the last element of the sublist, that
 	 *            is, {@code i.previous()} gives you the last element.
 	 * @param k
-	 *            index for k-th smallest value. i.nextIndex() <= k <=
-	 *            j.previousIndex().
+	 *            index for k-th smallest value. {@code i.nextIndex() <= k <=
+	 *            j.previousIndex()}.
 	 * @param permutation
 	 *            elements of this array are permuted in the same way as the
 	 *            elements in the values list

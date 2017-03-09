@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,19 +35,20 @@
 package net.imglib2.img.array;
 
 import net.imglib2.AbstractLocalizingCursorInt;
+import net.imglib2.Cursor;
 import net.imglib2.type.NativeType;
 import net.imglib2.util.IntervalIndexer;
 
 /**
  * Localizing {@link Cursor} on an {@link ArrayImg}.
- * 
+ *
  * @param <T>
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Christian Dietz
  * @author Tobias Pietzsch
- * 
+ *
  */
 //TODO Review Javadoc
 public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > > extends AbstractLocalizingCursorInt< T >
@@ -86,7 +87,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 
 	/**
 	 * TODO Javadoc
-	 * 
+	 *
 	 * @param cursor
 	 */
 	protected AbstractArrayLocalizingCursor( final AbstractArrayLocalizingCursor< T > cursor )
@@ -115,7 +116,7 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 
 	/**
 	 * TODO Javadoc
-	 * 
+	 *
 	 * @param img
 	 * @param offset
 	 * @param size

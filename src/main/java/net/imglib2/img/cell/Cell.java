@@ -129,7 +129,7 @@ public class Cell< A >
 	/**
 	 * Write the minimum of each dimension into long[].
 	 *
-	 * @param minValue
+	 * @param minimum
 	 */
 	public void min( final long[] minimum )
 	{
@@ -150,7 +150,7 @@ public class Cell< A >
 	/**
 	 * Write the number of pixels in each dimension into long[].
 	 *
-	 * @param dimensions
+	 * @param dim
 	 */
 	public void dimensions( final int[] dim )
 	{

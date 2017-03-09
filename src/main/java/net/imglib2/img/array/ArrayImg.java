@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -51,10 +51,10 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * number of basic types stored to {@link Integer#MAX_VALUE}. Keep in mind that
  * this does not necessarily reflect the number of pixels, because a pixel can
  * be stored in less than or more than a basic type entry.
- * 
+ *
  * @param <T>
  * @param <A>
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -65,15 +65,8 @@ public class ArrayImg< T extends NativeType< T >, A > extends AbstractNativeImg<
 	// the DataAccess created by the ArrayContainerFactory
 	final private A data;
 
-	/**
-	 * TODO check for the size of numPixels being < Integer.MAX_VALUE? TODO Type
-	 * is suddenly not necessary anymore
-	 * 
-	 * @param factory
-	 * @param data
-	 * @param dim
-	 * @param entitiesPerPixel
-	 */
+	// TODO check for the size of numPixels being < Integer.MAX_VALUE?
+	// TODO Type is suddenly not necessary anymore
 	public ArrayImg( final A data, final long[] dim, final Fraction entitiesPerPixel )
 	{
 		super( dim, entitiesPerPixel );

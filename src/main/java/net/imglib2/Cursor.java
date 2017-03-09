@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,7 +37,7 @@ package net.imglib2;
 /**
  * A Cursor iterates over a set of Localizable elements, for example the image
  * values at the (integer) pixel positions of an image.
- * 
+ *
  * <p>
  * Cursor is a combination of several interfaces to achieve this. The
  * {@link Iterator} interface is used to iterate the set. Use
@@ -46,13 +46,13 @@ package net.imglib2;
  * <em>before</em> the first element, i.e., you have to call {@code fwd()} once
  * to move to the first element.
  * </p>
- * 
+ *
  * <p>
  * The {@link Localizable} interface provides access to the position of the
  * current element. The {@link Sampler#get()} method of the {@link Sampler}
  * interface provides access to the value of the current element.
  * </p>
- * 
+ *
  * <p>
  * For convenience, Cursor also extends the {@link java.util.Iterator} interface
  * so that you are able to use Cursors in for-each loops. Calling the
@@ -63,9 +63,7 @@ package net.imglib2;
  * position. The {@link java.util.Iterator#remove()} method is not supported by
  * imglib Cursors, in general.
  * </p>
- * 
- * <saalfeld@mpi-cbg.de>
- * 
+ *
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
