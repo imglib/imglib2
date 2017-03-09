@@ -5,6 +5,12 @@ import java.util.Arrays;
 import net.imglib2.Positionable;
 import net.imglib2.util.IntervalIndexer;
 
+/**
+ * Defines {@link AbstractCellImg} geometry and translates between image, cell,
+ * and grid coordinates.
+ *
+ * @author Tobias Pietzsch
+ */
 public class CellGrid
 {
 	private final int n;
