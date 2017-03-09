@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -48,22 +48,22 @@ import net.imglib2.util.Fraction;
 
 /**
  * TODO
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
-public class BitType extends AbstractIntegerType<BitType> implements BooleanType<BitType>, NativeType<BitType>, IntegerType<BitType>
+public class BitType extends AbstractIntegerType< BitType > implements BooleanType< BitType >, NativeType< BitType >, IntegerType< BitType >
 {
 	// Maximum count is Integer.MAX_VALUE * (64 / getBitsPerPixel())
 	protected int i = 0;
 
-	final protected NativeImg<BitType, ? extends LongAccess> img;
+	final protected NativeImg< ?, ? extends LongAccess > img;
 
 	// the DataAccess that holds the information
 	protected LongAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public BitType( final NativeImg<BitType,? extends LongAccess> bitStorage )
+	public BitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
 	{
 		img = bitStorage;
 	}
@@ -71,7 +71,7 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	// this is the constructor if you want it to be a variable
 	public BitType( final boolean value )
 	{
-		this( (NativeImg<BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = new LongArray( 1 );
 		set( value );
 	}
@@ -179,7 +179,7 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	}
 
 	@Override
-	public void setBigInteger(BigInteger b)
+	public void setBigInteger(final BigInteger b)
 	{
 		if ( b.compareTo(BigInteger.ZERO) > 0 )
 			set ( true );
@@ -345,7 +345,7 @@ public class BitType extends AbstractIntegerType<BitType> implements BooleanType
 	}
 
 	@Override
-	public boolean valueEquals( BitType t )
+	public boolean valueEquals( final BitType t )
 	{
 		return get() == t.get();
 	}

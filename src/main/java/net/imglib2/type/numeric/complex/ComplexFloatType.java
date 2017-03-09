@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -43,7 +43,7 @@ import net.imglib2.util.Fraction;
 
 /**
  * TODO
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -54,13 +54,13 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	// the indices for real and imaginary number
 	private int realI = 0, imaginaryI = 1;
 
-	final protected NativeImg< ComplexFloatType, ? extends FloatAccess > img;
+	final protected NativeImg< ?, ? extends FloatAccess > img;
 
 	// the DataAccess that holds the information
 	protected FloatAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public ComplexFloatType( final NativeImg< ComplexFloatType, ? extends FloatAccess > complexfloatStorage )
+	public ComplexFloatType( final NativeImg< ?, ? extends FloatAccess > complexfloatStorage )
 	{
 		img = complexfloatStorage;
 	}
@@ -293,7 +293,7 @@ public class ComplexFloatType extends AbstractComplexType< ComplexFloatType > im
 	}
 
 	@Override
-	public boolean valueEquals( ComplexFloatType t )
+	public boolean valueEquals( final ComplexFloatType t )
 	{
 		return
 				( getRealFloat() == t.getRealFloat() ) &&

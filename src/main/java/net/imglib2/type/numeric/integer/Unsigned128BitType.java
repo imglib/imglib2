@@ -60,7 +60,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 {
 	private int i = 0;
 
-	final protected NativeImg<Unsigned128BitType, ? extends LongAccess> img;
+	final protected NativeImg< ?, ? extends LongAccess > img;
 
 	// 17, so the first byte is 0 to mean positive integer
 	final protected byte[] bytes = new byte[17];
@@ -69,9 +69,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	protected LongAccess dataAccess;
 
 	// this is the constructor if you want it to read from an array
-	public Unsigned128BitType(
-			final NativeImg<Unsigned128BitType,
-			? extends LongAccess> bitStorage)
+	public Unsigned128BitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
 	{
 		img = bitStorage;
 	}
@@ -79,7 +77,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	// this is the constructor if you want it to be a variable
 	public Unsigned128BitType( final long lower, final long upper )
 	{
-		this( (NativeImg<Unsigned128BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = new LongArray( 2 );
 		set( lower, upper );
 	}
@@ -87,7 +85,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	// this is the constructor if you want it to be a variable
 	public Unsigned128BitType( final BigInteger value )
 	{
-		this ( (NativeImg<Unsigned128BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = new LongArray( 2 );
 		set( value );
 	}
@@ -95,7 +93,7 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	// this is the constructor if you want to specify the dataAccess
 	public Unsigned128BitType( final LongAccess access )
 	{
-		this( (NativeImg<Unsigned128BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = access;
 	}
 
@@ -103,10 +101,10 @@ public class Unsigned128BitType extends AbstractIntegerType<Unsigned128BitType> 
 	public Unsigned128BitType( ) { this( 0, 0 ); }
 
 	@Override
-	public NativeImg<Unsigned128BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned128BitType> storageFactory, final long dim[] )
+	public NativeImg< Unsigned128BitType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< Unsigned128BitType > storageFactory, final long dim[] )
 	{
 		// create the container:
-		final NativeImg<Unsigned128BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( 2, 1 ) );
+		final NativeImg< Unsigned128BitType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, new Fraction( 2, 1 ) );
 
 		// create a Type that is linked to the container
 		final Unsigned128BitType linkedType = new Unsigned128BitType( container );

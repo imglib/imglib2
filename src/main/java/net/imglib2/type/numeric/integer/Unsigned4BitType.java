@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,9 +44,9 @@ import net.imglib2.util.Fraction;
 
 /**
  * A {@link Type} with a bit depth of 4.
- * 
+ *
  * The performance of this type is traded off for the gain in memory storage.
- * 
+ *
  * @author Albert Cardona
  */
 public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
@@ -55,9 +55,7 @@ public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 	private final static long mask = 15; // 1111 in binary
 
 	// this is the constructor if you want it to read from an array
-	public Unsigned4BitType(
-			final NativeImg<Unsigned4BitType,
-			? extends LongAccess> bitStorage)
+	public Unsigned4BitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
 	{
 		super( bitStorage, 4 );
 	}
@@ -65,7 +63,7 @@ public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 	// this is the constructor if you want it to be a variable
 	public Unsigned4BitType( final long value )
 	{
-		this( (NativeImg<Unsigned4BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = new LongArray( 1 );
 		set( value );
 	}
@@ -73,7 +71,7 @@ public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 	// this is the constructor if you want to specify the dataAccess
 	public Unsigned4BitType( final LongAccess access )
 	{
-		this( (NativeImg<Unsigned4BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = access;
 	}
 
@@ -81,10 +79,10 @@ public class Unsigned4BitType extends AbstractIntegerBitType<Unsigned4BitType>
 	public Unsigned4BitType() { this( 0 ); }
 
 	@Override
-	public NativeImg<Unsigned4BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned4BitType> storageFactory, final long dim[] )
+	public NativeImg< Unsigned4BitType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< Unsigned4BitType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<Unsigned4BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
+		final NativeImg< Unsigned4BitType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
 
 		// create a Type that is linked to the container
 		final Unsigned4BitType linkedType = new Unsigned4BitType( container );

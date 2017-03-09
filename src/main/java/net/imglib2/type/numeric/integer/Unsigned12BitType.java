@@ -48,15 +48,13 @@ import net.imglib2.util.Fraction;
  * @author Stephan Preibisch
  *
  */
-public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
+public class Unsigned12BitType extends AbstractIntegerBitType< Unsigned12BitType >
 {
 	// A mask for bit and, containing nBits of 1
 	private final long mask;
 
 	// this is the constructor if you want it to read from an array
-	public Unsigned12BitType(
-			final NativeImg<Unsigned12BitType,
-			? extends LongAccess> bitStorage)
+	public Unsigned12BitType( final NativeImg< ?, ? extends LongAccess > bitStorage )
 	{
 		super( bitStorage, 12 );
 		this.mask = 4095; // 111111111111 in binary
@@ -65,7 +63,7 @@ public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
 	// this is the constructor if you want it to be a variable
 	public Unsigned12BitType( final long value )
 	{
-		this( (NativeImg<Unsigned12BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = new LongArray( 1 );
 		set( value );
 	}
@@ -73,7 +71,7 @@ public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
 	// this is the constructor if you want to specify the dataAccess
 	public Unsigned12BitType( final LongAccess access )
 	{
-		this( (NativeImg<Unsigned12BitType, ? extends LongAccess>)null );
+		this( ( NativeImg< ?, ? extends LongAccess > ) null );
 		dataAccess = access;
 	}
 
@@ -81,10 +79,10 @@ public class Unsigned12BitType extends AbstractIntegerBitType<Unsigned12BitType>
 	public Unsigned12BitType() { this( 0 ); }
 
 	@Override
-	public NativeImg<Unsigned12BitType, ? extends LongAccess> createSuitableNativeImg( final NativeImgFactory<Unsigned12BitType> storageFactory, final long dim[] )
+	public NativeImg< Unsigned12BitType, ? extends LongAccess > createSuitableNativeImg( final NativeImgFactory< Unsigned12BitType > storageFactory, final long dim[] )
 	{
 		// create the container
-		final NativeImg<Unsigned12BitType, ? extends LongAccess> container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
+		final NativeImg< Unsigned12BitType, ? extends LongAccess > container = storageFactory.createLongInstance( dim, new Fraction( getBitsPerPixel(), 64 ) );
 
 		// create a Type that is linked to the container
 		final Unsigned12BitType linkedType = new Unsigned12BitType( container );
