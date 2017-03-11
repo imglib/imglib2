@@ -67,6 +67,12 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 			composite = compositeFactory.create( sourceAccess );
 		}
 
+		protected CompositeRandomAccess( final CompositeRandomAccess other )
+		{
+			sourceAccess = other.sourceAccess.copyRandomAccess();
+			composite = compositeFactory.create( sourceAccess );
+		}
+
 		@Override
 		public void localize( final int[] position )
 		{
@@ -212,7 +218,7 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 		@Override
 		public CompositeRandomAccess copy()
 		{
-			return new CompositeRandomAccess();
+			return new CompositeRandomAccess( this );
 		}
 
 		@Override
