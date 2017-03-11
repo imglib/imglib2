@@ -30,7 +30,6 @@
 package net.imglib2.img.basictypeaccess.volatiles.array;
 
 import net.imglib2.Dirty;
-import net.imglib2.img.basictypeaccess.array.AbstractLongArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileLongAccess;
 
@@ -39,24 +38,20 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileLongAccess;
  * flag.
  *
  * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
-public class DirtyVolatileLongArray extends AbstractLongArray< DirtyVolatileLongArray > implements VolatileLongAccess, Dirty
+public class DirtyVolatileLongArray extends AbstractVolatileLongArray< DirtyVolatileLongArray > implements VolatileLongAccess, Dirty
 {
-	final protected boolean isValid;
-
 	protected boolean dirty = false;
 
 	public DirtyVolatileLongArray( final int numEntities, final boolean isValid )
 	{
-		super( numEntities );
-		this.isValid = isValid;
-		this.data = new long[ numEntities ];
+		super( numEntities, isValid );
 	}
 
 	public DirtyVolatileLongArray( final long[] data, final boolean isValid )
 	{
-		super( data );
-		this.isValid = isValid;
+		super( data, isValid );
 	}
 
 	@Override
@@ -67,15 +62,9 @@ public class DirtyVolatileLongArray extends AbstractLongArray< DirtyVolatileLong
 	}
 
 	@Override
-	public DirtyVolatileLongArray createArray( final int numEntities )
+	public DirtyVolatileLongArray createArray( final int numEntities, final boolean isValid )
 	{
-		return new DirtyVolatileLongArray( numEntities, true );
-	}
-
-	@Override
-	public boolean isValid()
-	{
-		return isValid;
+		return new DirtyVolatileLongArray( numEntities, isValid );
 	}
 
 	@Override

@@ -27,49 +27,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package net.imglib2.img.basictypeaccess.volatiles.array;
+package net.imglib2.img.basictypeaccess.volatiles;
 
-import net.imglib2.Dirty;
-import net.imglib2.img.basictypeaccess.array.ByteArray;
-import net.imglib2.img.basictypeaccess.volatiles.VolatileByteAccess;
+import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 
 /**
- * A {@link ByteArray} with an {@link #isDirty()} and an {@link #isValid()}
- * flag.
+ * An {@link ArrayDataAccess} that can contain valid or invalid data.
  *
- * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class DirtyVolatileByteArray extends AbstractVolatileByteArray< DirtyVolatileByteArray > implements VolatileByteAccess, Dirty
+public interface VolatileArrayDataAccess< A > extends ArrayDataAccess< A >, VolatileAccess
 {
-	protected boolean dirty = false;
-
-	public DirtyVolatileByteArray( final int numEntities, final boolean isValid )
-	{
-		super( numEntities, isValid );
-	}
-
-	public DirtyVolatileByteArray( final byte[] data, final boolean isValid )
-	{
-		super( data, isValid );
-	}
-
-	@Override
-	public void setValue( final int index, final byte value )
-	{
-		dirty = true;
-		data[ index ] = value;
-	}
-
-	@Override
-	public DirtyVolatileByteArray createArray( final int numEntities, final boolean isValid )
-	{
-		return new DirtyVolatileByteArray( numEntities, isValid );
-	}
-
-	@Override
-	public boolean isDirty()
-	{
-		return dirty;
-	}
+	A createArray( int numEntities, boolean isValid );
 }

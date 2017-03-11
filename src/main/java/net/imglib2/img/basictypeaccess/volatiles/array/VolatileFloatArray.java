@@ -29,7 +29,6 @@
  */
 package net.imglib2.img.basictypeaccess.volatiles.array;
 
-import net.imglib2.img.basictypeaccess.array.AbstractFloatArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileFloatAccess;
 
@@ -39,32 +38,21 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileFloatAccess;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class VolatileFloatArray extends AbstractFloatArray< VolatileFloatArray > implements VolatileFloatAccess
+public class VolatileFloatArray extends AbstractVolatileFloatArray< VolatileFloatArray > implements VolatileFloatAccess
 {
-	final protected boolean isValid;
-
 	public VolatileFloatArray( final int numEntities, final boolean isValid )
 	{
-		super( numEntities );
-		this.isValid = isValid;
-		this.data = new float[ numEntities ];
+		super( numEntities, isValid );
 	}
 
 	public VolatileFloatArray( final float[] data, final boolean isValid )
 	{
-		super( data );
-		this.isValid = isValid;
+		super( data, isValid );
 	}
 
 	@Override
-	public VolatileFloatArray createArray( final int numEntities )
+	public VolatileFloatArray createArray( final int numEntities, final boolean isValid )
 	{
-		return new VolatileFloatArray( numEntities, true );
-	}
-
-	@Override
-	public boolean isValid()
-	{
-		return isValid;
+		return new VolatileFloatArray( numEntities, isValid );
 	}
 }

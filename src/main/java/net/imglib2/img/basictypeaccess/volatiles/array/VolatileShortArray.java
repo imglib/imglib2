@@ -29,7 +29,6 @@
  */
 package net.imglib2.img.basictypeaccess.volatiles.array;
 
-import net.imglib2.img.basictypeaccess.array.AbstractShortArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileShortAccess;
 
@@ -39,32 +38,21 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileShortAccess;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class VolatileShortArray extends AbstractShortArray< VolatileShortArray > implements VolatileShortAccess
+public class VolatileShortArray extends AbstractVolatileShortArray< VolatileShortArray > implements VolatileShortAccess
 {
-	final protected boolean isValid;
-
 	public VolatileShortArray( final int numEntities, final boolean isValid )
 	{
-		super( numEntities );
-		this.isValid = isValid;
-		this.data = new short[ numEntities ];
+		super( numEntities, isValid );
 	}
 
 	public VolatileShortArray( final short[] data, final boolean isValid )
 	{
-		super( data );
-		this.isValid = isValid;
+		super( data, isValid );
 	}
 
 	@Override
-	public VolatileShortArray createArray( final int numEntities )
+	public VolatileShortArray createArray( final int numEntities, final boolean isValid )
 	{
-		return new VolatileShortArray( numEntities, true );
-	}
-
-	@Override
-	public boolean isValid()
-	{
-		return isValid;
+		return new VolatileShortArray( numEntities, isValid );
 	}
 }

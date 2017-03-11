@@ -30,7 +30,6 @@
 package net.imglib2.img.basictypeaccess.volatiles.array;
 
 import net.imglib2.Dirty;
-import net.imglib2.img.basictypeaccess.array.AbstractCharArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileCharAccess;
 
@@ -39,24 +38,20 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileCharAccess;
  * flag.
  *
  * @author Stephan Saalfeld
+ * @author Tobias Pietzsch
  */
-public class DirtyVolatileCharArray extends AbstractCharArray< DirtyVolatileCharArray > implements VolatileCharAccess, Dirty
+public class DirtyVolatileCharArray extends AbstractVolatileCharArray< DirtyVolatileCharArray > implements VolatileCharAccess, Dirty
 {
-	final protected boolean isValid;
-
 	protected boolean dirty = false;
 
 	public DirtyVolatileCharArray( final int numEntities, final boolean isValid )
 	{
-		super( numEntities );
-		this.isValid = isValid;
-		this.data = new char[ numEntities ];
+		super( numEntities, isValid );
 	}
 
 	public DirtyVolatileCharArray( final char[] data, final boolean isValid )
 	{
-		super( data );
-		this.isValid = isValid;
+		super( data, isValid );
 	}
 
 	@Override
@@ -67,15 +62,9 @@ public class DirtyVolatileCharArray extends AbstractCharArray< DirtyVolatileChar
 	}
 
 	@Override
-	public DirtyVolatileCharArray createArray( final int numEntities )
+	public DirtyVolatileCharArray createArray( final int numEntities, final boolean isValid )
 	{
-		return new DirtyVolatileCharArray( numEntities, true );
-	}
-
-	@Override
-	public boolean isValid()
-	{
-		return isValid;
+		return new DirtyVolatileCharArray( numEntities, isValid );
 	}
 
 	@Override

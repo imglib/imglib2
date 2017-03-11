@@ -29,7 +29,6 @@
  */
 package net.imglib2.img.basictypeaccess.volatiles.array;
 
-import net.imglib2.img.basictypeaccess.array.AbstractCharArray;
 import net.imglib2.img.basictypeaccess.array.CharArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileCharAccess;
 
@@ -39,32 +38,21 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileCharAccess;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class VolatileCharArray extends AbstractCharArray< VolatileCharArray > implements VolatileCharAccess
+public class VolatileCharArray extends AbstractVolatileCharArray< VolatileCharArray > implements VolatileCharAccess
 {
-	final protected boolean isValid;
-
 	public VolatileCharArray( final int numEntities, final boolean isValid )
 	{
-		super( numEntities );
-		this.isValid = isValid;
-		this.data = new char[ numEntities ];
+		super( numEntities, isValid );
 	}
 
 	public VolatileCharArray( final char[] data, final boolean isValid )
 	{
-		super( data );
-		this.isValid = isValid;
+		super( data, isValid );
 	}
 
 	@Override
-	public VolatileCharArray createArray( final int numEntities )
+	public VolatileCharArray createArray( final int numEntities, final boolean isValid )
 	{
-		return new VolatileCharArray( numEntities, true );
-	}
-
-	@Override
-	public boolean isValid()
-	{
-		return isValid;
+		return new VolatileCharArray( numEntities, isValid );
 	}
 }

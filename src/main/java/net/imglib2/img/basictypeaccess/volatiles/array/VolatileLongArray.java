@@ -29,7 +29,6 @@
  */
 package net.imglib2.img.basictypeaccess.volatiles.array;
 
-import net.imglib2.img.basictypeaccess.array.AbstractLongArray;
 import net.imglib2.img.basictypeaccess.array.LongArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileLongAccess;
 
@@ -39,32 +38,21 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileLongAccess;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class VolatileLongArray extends AbstractLongArray< VolatileLongArray > implements VolatileLongAccess
+public class VolatileLongArray extends AbstractVolatileLongArray< VolatileLongArray > implements VolatileLongAccess
 {
-	final protected boolean isValid;
-
 	public VolatileLongArray( final int numEntities, final boolean isValid )
 	{
-		super( numEntities );
-		this.isValid = isValid;
-		this.data = new long[ numEntities ];
+		super( numEntities, isValid );
 	}
 
 	public VolatileLongArray( final long[] data, final boolean isValid )
 	{
-		super( data );
-		this.isValid = isValid;
+		super( data, isValid );
 	}
 
 	@Override
-	public VolatileLongArray createArray( final int numEntities )
+	public VolatileLongArray createArray( final int numEntities, final boolean isValid )
 	{
-		return new VolatileLongArray( numEntities, true );
-	}
-
-	@Override
-	public boolean isValid()
-	{
-		return isValid;
+		return new VolatileLongArray( numEntities, isValid );
 	}
 }

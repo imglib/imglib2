@@ -29,7 +29,6 @@
  */
 package net.imglib2.img.basictypeaccess.volatiles.array;
 
-import net.imglib2.img.basictypeaccess.array.AbstractByteArray;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileByteAccess;
 
@@ -39,32 +38,21 @@ import net.imglib2.img.basictypeaccess.volatiles.VolatileByteAccess;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
  */
-public class VolatileByteArray extends AbstractByteArray< VolatileByteArray > implements VolatileByteAccess
+public class VolatileByteArray extends AbstractVolatileByteArray< VolatileByteArray > implements VolatileByteAccess
 {
-	final protected boolean isValid;
-
 	public VolatileByteArray( final int numEntities, final boolean isValid )
 	{
-		super( numEntities );
-		this.isValid = isValid;
-		this.data = new byte[ numEntities ];
+		super( numEntities, isValid );
 	}
 
 	public VolatileByteArray( final byte[] data, final boolean isValid )
 	{
-		super( data );
-		this.isValid = isValid;
+		super( data, isValid );
 	}
 
 	@Override
-	public VolatileByteArray createArray( final int numEntities )
+	public VolatileByteArray createArray( final int numEntities, final boolean isValid )
 	{
-		return new VolatileByteArray( numEntities, true );
-	}
-
-	@Override
-	public boolean isValid()
-	{
-		return isValid;
+		return new VolatileByteArray( numEntities, isValid );
 	}
 }
