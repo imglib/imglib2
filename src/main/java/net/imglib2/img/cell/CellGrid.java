@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import net.imglib2.Positionable;
 import net.imglib2.util.IntervalIndexer;
+import net.imglib2.util.Util;
 
 /**
  * Defines {@link AbstractCellImg} geometry and translates between image, cell,
@@ -243,5 +244,13 @@ public class CellGrid
 					&& Arrays.equals( cellDimensions, other.cellDimensions );
 		}
 		return false;
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName()
+				+ "( dims = " + Util.printCoordinates( dimensions )
+				+ ", cellDims = " + Util.printCoordinates( cellDimensions ) + " )";
 	}
 }
