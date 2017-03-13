@@ -61,17 +61,6 @@ public final class FinalDimensions implements Dimensions
 	}
 
 	/**
-	 * Creates a FinalDimensions object with size zero in all dimensions
-	 * 
-	 * @param n
-	 *            - number of dimensions
-	 */
-	public FinalDimensions( final int n )
-	{
-		this.dimensions = new long[ n ];
-	}
-
-	/**
 	 * Create a FinalDimensions with a defined size
 	 * 
 	 * @param dimensions
