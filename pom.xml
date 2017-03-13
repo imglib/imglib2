@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>imglib2</artifactId>
-	<version>3.3.1-SNAPSHOT</version>
+	<version>4.0.1-SNAPSHOT</version>
 
 	<name>ImgLib2 Core Library</name>
 	<description>A multidimensional, type-agnostic image processing library.</description>
