@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -45,9 +45,9 @@ import net.imglib2.util.Util;
  * Internally used coordinates use an interval [0<sup><em>n</em></sup>,max<sup>
  * <em>n</em></sup>-min<sup><em>n</em></sup>] and compensate for min-shift on
  * localization and positioning.
- * 
+ *
  * @param <T>
- * 
+ *
  * @author Stephan Saalfeld
  */
 public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
@@ -74,8 +74,8 @@ public abstract class AbstractOutOfBoundsMirror< T > implements OutOfBounds< T >
 
 	/**
 	 * Period of the extended interval. This depends on whether boundary pixels
-	 * are mirrored. {@see OutOfBoundsMirrorDoubleBoundary} {@see
-	 * OutOfBoundsMirrorSingleBoundary}.
+	 * are mirrored. See {@link OutOfBoundsMirrorDoubleBoundary}, see
+	 * {@link OutOfBoundsMirrorSingleBoundary}.
 	 */
 	final protected long[] p;
 

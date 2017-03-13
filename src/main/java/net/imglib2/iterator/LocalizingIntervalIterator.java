@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,6 +36,7 @@ package net.imglib2.iterator;
 
 import net.imglib2.Interval;
 import net.imglib2.Positionable;
+import net.imglib2.RandomAccess;
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Util;
 
@@ -44,8 +45,9 @@ import net.imglib2.util.Util;
  * row by row, plane by plane, cube by cube, ... This is useful for iterating an
  * arbitrary interval in a defined order. For that, connect a
  * {@link LocalizingIntervalIterator} to a {@link Positionable}.
- * 
+ *
  * <pre>
+ * {@code
  * ...
  * LocalizingIntervalIterator i = new LocalizingIntervalIterator(image);
  * RandomAccess<T> s = image.randomAccess();
@@ -56,14 +58,14 @@ import net.imglib2.util.Util;
  *   ...
  * }
  * ...
- * </pre>
- * 
+ * }</pre>
+ *
  * Note that {@link LocalizingIntervalIterator} is the right choice in
  * situations where, for <em>each</em> pixel, you want to localize and/or set
  * the {@link RandomAccess}, that is, in a dense sampling situation. For
  * localizing sparsely (e.g. under an external condition), use
  * {@link IntervalIterator} instead.
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */

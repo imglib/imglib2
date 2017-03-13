@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,16 +35,17 @@
 package net.imglib2.img.cell;
 
 import static org.junit.Assert.assertArrayEquals;
+
+import org.junit.Test;
+
 import net.imglib2.type.NativeType;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.real.FloatType;
 
-import org.junit.Test;
-
 /**
  * TODO
- * 
+ *
  */
 public class CellContainerFactoryTest
 {
@@ -72,8 +73,10 @@ public class CellContainerFactoryTest
 		final int[] expectedCellDims = { 43, 43, 43, 43 };
 		final CellImgFactory< T > factory = new CellImgFactory< T >( defaultCellSize );
 		final long[] dimension = { 100, 80, 4, 3 };
-		final CellImg< T, ?, ? > img = factory.create( dimension, type );
-		assertArrayEquals( expectedCellDims, img.cellDims );
+		final CellImg< T, ? > img = factory.create( dimension, type );
+		final int[] cellDims = new int[ dimension.length ];
+		img.getCellGrid().cellDimensions( cellDims );
+		assertArrayEquals( expectedCellDims, cellDims );
 	}
 
 	@Test
@@ -100,8 +103,10 @@ public class CellContainerFactoryTest
 		final int[] expectedCellDims = defaultCellDims.clone();
 		final CellImgFactory< T > factory = new CellImgFactory< T >( defaultCellDims );
 		final long[] dimension = { 100, 80, 4, 3 };
-		final CellImg< T, ?, ? > img = factory.create( dimension, type );
-		assertArrayEquals( expectedCellDims, img.cellDims );
+		final CellImg< T, ? > img = factory.create( dimension, type );
+		final int[] cellDims = new int[ dimension.length ];
+		img.getCellGrid().cellDimensions( cellDims );
+		assertArrayEquals( expectedCellDims, cellDims );
 	}
 
 	@Test

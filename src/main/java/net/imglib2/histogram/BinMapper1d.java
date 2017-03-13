@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,7 +37,7 @@ package net.imglib2.histogram;
 /**
  * An interface for defining a bin mapping algorithm. Arbitrary values of type T
  * are mapped to long indices. There are also bounds testing methods.
- * 
+ *
  * @author Barry DeZonia
  */
 public interface BinMapper1d< T >
@@ -61,7 +61,7 @@ public interface BinMapper1d< T >
 
 	/**
 	 * Gets the data value associated with the center of a bin.
-	 * 
+	 *
 	 * @param binPos
 	 * @param value
 	 *            Output to contain center data value
@@ -70,7 +70,7 @@ public interface BinMapper1d< T >
 
 	/**
 	 * Gets the data value associated with the left edge of a bin.
-	 * 
+	 *
 	 * @param binPos
 	 *            Bin number of interest
 	 * @param value
@@ -80,7 +80,7 @@ public interface BinMapper1d< T >
 
 	/**
 	 * Gets the data value associated with the right edge of a bin.
-	 * 
+	 *
 	 * @param binPos
 	 *            Bin number of interest
 	 * @param value
@@ -92,7 +92,7 @@ public interface BinMapper1d< T >
 	 * Returns true if values matching the right edge data value for a given bin
 	 * are counted in the distribution. Basically is this bin interval closed on
 	 * the right or not.
-	 * 
+	 *
 	 * @param binPos
 	 *            Bin number of interest
 	 */
@@ -102,14 +102,14 @@ public interface BinMapper1d< T >
 	 * Returns true if values matching the left edge data value for a given bin
 	 * are counted in the distribution. Basically is this bin interval closed on
 	 * the left or not.
-	 * 
+	 *
 	 * @param binPos
 	 *            Bin number of interest
 	 */
 	boolean includesLowerBound( long binPos );
 
 	/**
-	 * Returns a copy of this BinMapper1d<T>.
+	 * Returns a copy of this {@code BinMapper1d<T>}.
 	 */
 	BinMapper1d< T > copy();
 }

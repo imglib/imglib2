@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -37,13 +37,14 @@ package net.imglib2.interpolation.randomaccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RealInterval;
 import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 
 /**
  * TODO
- * 
+ *
  */
-public class LanczosInterpolatorFactory< T extends RealType< T >> implements InterpolatorFactory< T, RandomAccessible< T > >
+public class LanczosInterpolatorFactory< T extends RealType< T > > implements InterpolatorFactory< T, RandomAccessible< T > >
 {
 	int alpha;
 
@@ -54,13 +55,13 @@ public class LanczosInterpolatorFactory< T extends RealType< T >> implements Int
 	/**
 	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc)
 	 * interpolation in a certain window
-	 * 
+	 *
 	 * @param alpha
-	 *            - the rectangular radius of the window for perfoming the
-	 *            lanczos interpolation
+	 *            the rectangular radius of the window for perfoming the lanczos
+	 *            interpolation
 	 * @param clipping
-	 *            - the lanczos-interpolation can create values that are bigger
-	 *            or smaller than the original values, so they can be clipped to
+	 *            the lanczos-interpolation can create values that are bigger or
+	 *            smaller than the original values, so they can be clipped to
 	 *            the range of the {@link Type} if wanted
 	 */
 	public LanczosInterpolatorFactory( final int alpha, final boolean clipping )
@@ -73,17 +74,17 @@ public class LanczosInterpolatorFactory< T extends RealType< T >> implements Int
 	/**
 	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc)
 	 * interpolation in a certain window
-	 * 
+	 *
 	 * @param alpha
-	 *            - the rectangular radius of the window for perfoming the
-	 *            lanczos interpolation
+	 *            the rectangular radius of the window for perfoming the lanczos
+	 *            interpolation
 	 * @param min
-	 *            - the lanczos-interpolation can create values that are bigger
-	 *            or smaller than the original values, so they can be clipped to
+	 *            the lanczos-interpolation can create values that are bigger or
+	 *            smaller than the original values, so they can be clipped to
 	 *            the range of the if wanted
 	 * @param max
-	 *            - the lanczos-interpolation can create values that are bigger
-	 *            or smaller than the original values, so they can be clipped to
+	 *            the lanczos-interpolation can create values that are bigger or
+	 *            smaller than the original values, so they can be clipped to
 	 *            the range of the if wanted
 	 */
 	public LanczosInterpolatorFactory( final int alpha, final double min, final double max )
@@ -97,14 +98,14 @@ public class LanczosInterpolatorFactory< T extends RealType< T >> implements Int
 	/**
 	 * Creates a new {@link LanczosInterpolatorFactory} using the Lanczos (sinc)
 	 * interpolation in a certain window
-	 * 
+	 *
 	 * @param min
-	 *            - the lanczos-interpolation can create values that are bigger
-	 *            or smaller than the original values, so they can be clipped to
+	 *            the lanczos-interpolation can create values that are bigger or
+	 *            smaller than the original values, so they can be clipped to
 	 *            the range of the if wanted
 	 * @param max
-	 *            - the lanczos-interpolation can create values that are bigger
-	 *            or smaller than the original values, so they can be clipped to
+	 *            the lanczos-interpolation can create values that are bigger or
+	 *            smaller than the original values, so they can be clipped to
 	 *            the range of the if wanted
 	 */
 	public LanczosInterpolatorFactory( final double min, final double max )
@@ -143,9 +144,9 @@ public class LanczosInterpolatorFactory< T extends RealType< T >> implements Int
 	/**
 	 * Set the rectangular radius of the window for perfoming the lanczos
 	 * interpolation
-	 * 
+	 *
 	 * @param alpha
-	 *            - radius
+	 *            radius
 	 */
 	public void setAlpha( final int alpha )
 	{
@@ -156,9 +157,9 @@ public class LanczosInterpolatorFactory< T extends RealType< T >> implements Int
 	 * The lanczos-interpolation can create values that are bigger or smaller
 	 * than the original values, so they can be clipped to the range of the
 	 * {@link RealType} if wanted
-	 * 
+	 *
 	 * @param clipping
-	 *            - perform clipping (true)
+	 *            perform clipping (true)
 	 */
 	public void setClipping( final boolean clipping )
 	{
@@ -166,7 +167,7 @@ public class LanczosInterpolatorFactory< T extends RealType< T >> implements Int
 	}
 
 	/**
-	 * @return - rectangular radius of the window for perfoming the lanczos
+	 * @return rectangular radius of the window for perfoming the lanczos
 	 *         interpolation
 	 */
 	public int getAlpha()
@@ -175,7 +176,7 @@ public class LanczosInterpolatorFactory< T extends RealType< T >> implements Int
 	}
 
 	/**
-	 * @return - if clipping to the {@link RealType} range will be performed
+	 * @return if clipping to the {@link RealType} range will be performed
 	 */
 	public boolean getClipping()
 	{

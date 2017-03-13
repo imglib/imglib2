@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,18 +42,19 @@ import net.imglib2.concatenate.PreConcatenable;
 /**
  * Map the components of the source vector to a slice of the target space, for
  * instance transform (x,y) to (x,C,y) where C is a constant.
- * 
+ *
  * <p>
  * A {@link SlicingTransform} transform a n-dimensional source vector to a
- * m-dimensional target vector, where m >= n. It can be represented as a
+ * m-dimensional target vector, where m &ge; n. It can be represented as a
  * <em>m+1</em> &times; <em>n+1</em> homogeneous matrix. The
  * {@link SlicingTransform} can be decomposed as follows:
+ * </p>
  * <ol>
  * <li>component permutation</li>
- * <li>project up & position (add constant components in the target vector)</li>
+ * <li>project up and position (add constant components in the target vector)
+ * </li>
  * </ol>
- * </p>
- * 
+ *
  * <p>
  * The component permutation step is implemented by the
  * {@link #setComponentMapping(int[]) component mapping}. This is a lookup array
@@ -62,8 +63,8 @@ import net.imglib2.concatenate.PreConcatenable;
  * <em>Note, that it is not allowed to set this array such that a source component
  * is mapped to several target components!</em>
  * </p>
- * 
- * 
+ *
+ *
  * @author Tobias Pietzsch
  */
 public class SlicingTransform extends AbstractMixedTransform implements Slicing, Concatenable< Slicing >, PreConcatenable< Slicing >
@@ -162,12 +163,12 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 
 	/**
 	 * Set which target dimensions are _not_ taken from source dimensions.
-	 * 
+	 *
 	 * <p>
 	 * For instance, if the transform maps 2D (x,y) coordinates to the first two
 	 * components of a 3D (x,y,z) coordinate, this will be [false, false, true]
 	 * </p>
-	 * 
+	 *
 	 * @param zero
 	 *            array that says for each component of the target vector
 	 *            (before translation) whether the value should be taken from a
@@ -198,20 +199,20 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 
 	/**
 	 * Set for each target dimensions from which source dimension it is taken.
-	 * 
+	 *
 	 * <p>
 	 * For instance, if the transform maps 2D (x,y) coordinates to the first two
 	 * components of a 3D (x,y,z) coordinate, this will be [0, 1, x]. Here, x
 	 * can be any value because the third target dimension does not correspond
 	 * to any source dimension, which can be realized using
-	 * {@link #setZero(boolean[])}.
+	 * {@link #setComponentZero(boolean[])}.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * <em>Note, that it is not allowed to set the {@code component} array such that
 	 * a source component is mapped to several target components!</em>
 	 * </p>
-	 * 
+	 *
 	 * @param component
 	 *            array that says for each component of the target vector
 	 *            (before translation) from which source vector component it
@@ -332,7 +333,7 @@ public class SlicingTransform extends AbstractMixedTransform implements Slicing,
 
 	/**
 	 * set parameters to <code>transform</code>.
-	 * 
+	 *
 	 * @param transform
 	 */
 	public void set( final Slicing transform )

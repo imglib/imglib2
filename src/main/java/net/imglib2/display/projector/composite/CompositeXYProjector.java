@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -52,9 +52,9 @@ import net.imglib2.type.numeric.ARGBType;
  * the final value. Positions along the axis can be individually toggled for
  * inclusion in the computed composite value using the {@link #setComposite}
  * methods.
- * 
- * @see XYProjector for the code upon which this class was based.
- * 
+ *
+ * See XYProjector for the code upon which this class was based.
+ *
  * @author Stephan Saalfeld
  * @author Curtis Rueden
  * @author Grant Harris
@@ -225,13 +225,13 @@ public class CompositeXYProjector< A > extends AbstractProjector2D
 	 * Walk through composite[] and store the currently active converters and
 	 * positions (in dimension {@link #dimIndex}) to {@link #currentConverters}
 	 * and {@link #currentPositions}.
-	 * 
+	 *
 	 * A special cases is single-position mode. The projector is in
 	 * single-position mode iff all dimensional positions along the composited
 	 * axis are excluded. In this case, the current position along that axis is
 	 * used instead. The converter corresponding to the current position is
 	 * used.
-	 * 
+	 *
 	 * @return number of positions to convert
 	 */
 	protected int updateCurrentArrays()

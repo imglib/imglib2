@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,11 +39,10 @@ import java.util.Collections;
 
 /**
  * Tools for setting up basic benchmarks.
- * 
- * Call {@link BenchmarkHelper#benchmark(int, Benchmark)} with the number of
- * iterations and a {@link Runnable} to benchmark to obtain a list of run-times
- * in milliseconds.
- * 
+ *
+ * Call {@link #benchmark(int, Runnable)} with the number of iterations and a
+ * {@link Runnable} to benchmark to obtain a list of run-times in milliseconds.
+ *
  * @author Tobias Pietzsch
  */
 public class BenchmarkHelper
@@ -51,7 +50,7 @@ public class BenchmarkHelper
 	/**
 	 * Run a benchmark numRuns times and record the milliseconds taken for each
 	 * run.
-	 * 
+	 *
 	 * @param numRuns
 	 *            how many times to run the benchmark.
 	 * @param benchmark
@@ -74,15 +73,14 @@ public class BenchmarkHelper
 	/**
 	 * Run a benchmark numRuns times and print the results to {@link System#out}
 	 * .
-	 * 
+	 *
 	 * @param numRuns
 	 *            how many times to run the benchmark.
 	 * @param printIndividualTimes
 	 *            whether to print the time for every individual run or just the
 	 *            median.
-	 * @param benchmark
+	 * @param b
 	 *            the benchmark.
-	 * @return run-times for each run (in milliseconds).
 	 */
 	public static void benchmarkAndPrint( final int numRuns, final boolean printIndividualTimes, final Runnable b )
 	{
@@ -108,7 +106,7 @@ public class BenchmarkHelper
 
 	/**
 	 * Compute median of a sorted list of {@link Long}s.
-	 * 
+	 *
 	 * @param values
 	 *            sorted list of values.
 	 * @return median of the values.

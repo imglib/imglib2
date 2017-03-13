@@ -37,7 +37,7 @@ package net.imglib2;
 /**
  * An implementation of dimensionality that can wrap a long[] array. The same
  * principle for wrapping as in Point is used.
- * 
+ *
  * @author Stephan Preibisch
  */
 public final class FinalDimensions implements Dimensions
@@ -46,11 +46,11 @@ public final class FinalDimensions implements Dimensions
 
 	/**
 	 * Protected constructor that can re-use the passed position array.
-	 * 
+	 *
 	 * @param dimensions
-	 *            - array used to store the position.
+	 *            array used to store the position.
 	 * @param copy
-	 *            - flag indicating whether position array should be duplicated.
+	 *            flag indicating whether position array should be duplicated.
 	 */
 	protected FinalDimensions( final long[] dimensions, final boolean copy )
 	{
@@ -61,21 +61,10 @@ public final class FinalDimensions implements Dimensions
 	}
 
 	/**
-	 * Creates a FinalDimensions object with size zero in all dimensions
-	 * 
-	 * @param n
-	 *            - number of dimensions
-	 */
-	public FinalDimensions( final int n )
-	{
-		this.dimensions = new long[ n ];
-	}
-
-	/**
 	 * Create a FinalDimensions with a defined size
-	 * 
+	 *
 	 * @param dimensions
-	 *            - the size
+	 *            the size
 	 */
 	public FinalDimensions( final long... dimensions )
 	{
@@ -84,9 +73,9 @@ public final class FinalDimensions implements Dimensions
 
 	/**
 	 * Create a FinalDimensions with a defined size
-	 * 
+	 *
 	 * @param dimensions
-	 *            - the size
+	 *            the size
 	 */
 	public FinalDimensions( final int... dimensions )
 	{
@@ -118,9 +107,9 @@ public final class FinalDimensions implements Dimensions
 	/**
 	 * Create a FinalDimensions object that stores its coordinates in the
 	 * provided position array.
-	 * 
+	 *
 	 * @param dimensions
-	 *            -array to use for storing the position.
+	 *            array to use for storing the position.
 	 */
 	public static FinalDimensions wrap( final long[] dimensions )
 	{

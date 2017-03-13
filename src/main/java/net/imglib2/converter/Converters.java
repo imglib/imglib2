@@ -217,12 +217,12 @@ public class Converters
 	 * Create a {@link RealRandomAccessibleRealInterval} whose {@link RealRandomAccess
 	 * RealRandomAccesses} {@link RealRandomAccess#get()} you a converted sample.
 	 * Conversion is done on-the-fly when reading values. Writing to the
-	 * converted {@link RealRandomAccessibleInterval} has no effect.
+	 * converted {@link RealRandomAccessibleRealInterval} has no effect.
 	 *
 	 * @param source
 	 * @param converter
 	 * @param b
-	 * @return a converted {@link RealRandomAccessibleInterval} whose
+	 * @return a converted {@link RealRandomAccessibleRealInterval} whose
 	 *         {@link RealRandomAccess RealRandomAccesses} perform on-the-fly value
 	 *         conversion using the provided converter.
 	 */

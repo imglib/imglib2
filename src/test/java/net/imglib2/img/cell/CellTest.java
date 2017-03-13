@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,20 +36,14 @@ package net.imglib2.img.cell;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.basictypeaccess.array.ByteArray;
-import net.imglib2.img.basictypeaccess.array.CharArray;
-import net.imglib2.img.basictypeaccess.array.DoubleArray;
-import net.imglib2.img.basictypeaccess.array.FloatArray;
-import net.imglib2.img.basictypeaccess.array.IntArray;
-import net.imglib2.img.basictypeaccess.array.ShortArray;
-import net.imglib2.util.Fraction;
 
 import org.junit.Test;
 
+import net.imglib2.img.basictypeaccess.array.FloatArray;
+
 /**
  * TODO
- * 
+ *
  */
 public class CellTest
 {
@@ -71,67 +65,25 @@ public class CellTest
 			1296
 	};
 
-	public < A extends ArrayDataAccess< A > > void testConstruction( final A creator )
-	{
-		for ( int i = 0; i < dim.length; ++i ) {
-			final AbstractCell< A > cell = new DefaultCell< A >( creator, dim[ i ], offset[ i ], new Fraction( 2, 1 ) );
-			assertTrue( creator.getClass().isInstance( cell.getData() ) );
-			assertTrue( cell.size() == expectedLength[ i ] );
-		}
-	}
-
-	@Test
-	public void testByteConstruction()
-	{
-		testConstruction( new ByteArray( 1 ) );
-	}
-
-	@Test
-	public void testCharConstruction()
-	{
-		testConstruction( new CharArray( 1 ) );
-	}
-
-	@Test
-	public void testShortConstruction()
-	{
-		testConstruction( new ShortArray( 1 ) );
-	}
-
-	@Test
-	public void testIntConstruction()
-	{
-		testConstruction( new IntArray( 1 ) );
-	}
-
-	@Test
-	public void testFloatConstruction()
-	{
-		testConstruction( new FloatArray( 1 ) );
-	}
-
-	@Test
-	public void testDoubleConstruction()
-	{
-		testConstruction( new DoubleArray( 1 ) );
-	}
-
 	@Test
 	public void testLocalIndexCalculation()
 	{
-		final AbstractCell< FloatArray > cell = new DefaultCell< FloatArray >( new FloatArray( 1 ), new int[] {20, 8, 10}, new long[] { 0, 9876543210l, 222 } , new Fraction( 2, 1 ) );
+		final long[] min = new long[] { 0, 9876543210l, 222 };
+		final Cell< FloatArray > cell = new Cell<>( new int[] {20, 8, 10}, min, new FloatArray( 1 ) );
 		final long[][] position = { {3, 4, 5}, {12, 0, 3}, {3, 2, 0} };
 		final int[] expectedIndex = { 883, 492, 43 };
 		for ( int i = 0; i < position.length; ++i )
 		{
-			assertTrue( cell.localPositionToIndex( position[ i ] ) == expectedIndex[ i ] );
+			for ( int d =0; d <min.length; ++d)
+				position[ i ][ d ] += min[ d ];
+			assertTrue( cell.globalPositionToIndex( position[ i ] ) == expectedIndex[ i ] );
 		}
 	}
 
 	@Test
 	public void testGlobalPositionCalculation()
 	{
-		final AbstractCell< FloatArray > cell = new DefaultCell< FloatArray >( new FloatArray( 1 ), new int[] {20, 8, 10}, new long[] { 0, 9876543210l, 222 } , new Fraction( 2, 1 ) );
+		final Cell< FloatArray > cell = new Cell<>( new int[] {20, 8, 10}, new long[] { 0, 9876543210l, 222 }, new FloatArray( 1 ) );
 		final int[] index = { 883, 492, 43 };
 		final long[][] expectedPosition = { { 3, 9876543214l, 227 }, { 12, 9876543210l, 225 }, { 3, 9876543212l, 222 } };
 		for ( int i = 0; i < index.length; ++i )

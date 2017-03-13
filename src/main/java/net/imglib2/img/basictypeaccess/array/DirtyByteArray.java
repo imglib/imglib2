@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,46 +32,44 @@
  * #L%
  */
 
-package net.imglib2.img.cell;
+package net.imglib2.img.basictypeaccess.array;
 
-import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
-import net.imglib2.img.list.ListImg;
-import net.imglib2.img.list.ListImgFactory;
-import net.imglib2.img.list.ListLocalizingCursor;
-import net.imglib2.util.Fraction;
+import net.imglib2.Dirty;
 
 /**
- * Implementation of {@link Cells} that uses {@link DefaultCell}s and keeps them
- * all in memory all the time in a {@link ListImg}.
- * 
- * 
- * @author Tobias Pietzsch
+ *
+ * @author Stephan Saalfeld
  */
-public class ListImgCells< A extends ArrayDataAccess< A > > extends AbstractCells< A, DefaultCell< A >, ListImg< DefaultCell< A > > >
+public class DirtyByteArray extends AbstractByteArray< DirtyByteArray > implements Dirty
 {
-	private final ListImg< DefaultCell< A > > cells;
+	protected boolean dirty = false;
 
-	public ListImgCells( final A creator, final Fraction entitiesPerPixel, final long[] dimensions, final int[] cellDimensions )
+	public DirtyByteArray( final int numEntities )
 	{
-		super( entitiesPerPixel, dimensions, cellDimensions );
-		cells = new ListImgFactory< DefaultCell< A > >().create( numCells, new DefaultCell< A >( creator, new int[ 1 ], new long[ 1 ], entitiesPerPixel ) );
+		super( numEntities );
+	}
 
-		final long[] cellGridPosition = new long[ n ];
-		final long[] cellMin = new long[ n ];
-		final int[] cellDims = new int[ n ];
-		final ListLocalizingCursor< DefaultCell< A > > cellCursor = cells.localizingCursor();
-		while ( cellCursor.hasNext() )
-		{
-			cellCursor.fwd();
-			cellCursor.localize( cellGridPosition );
-			getCellDimensions( cellGridPosition, cellMin, cellDims );
-			cellCursor.set( new DefaultCell< A >( creator, cellDims, cellMin, entitiesPerPixel ) );
-		}
+	public DirtyByteArray( final byte[] data )
+	{
+		super( data );
 	}
 
 	@Override
-	protected ListImg< DefaultCell< A > > cells()
+	public void setValue( final int index, final byte value )
 	{
-		return cells;
+		dirty = true;
+		data[ index ] = value;
+	}
+
+	@Override
+	public DirtyByteArray createArray( final int numEntities )
+	{
+		return new DirtyByteArray( numEntities );
+	}
+
+	@Override
+	public boolean isDirty()
+	{
+		return dirty;
 	}
 }

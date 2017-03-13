@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -47,7 +47,7 @@ import net.imglib2.view.iteration.SubIntervalIterable;
 
 /**
  * Allows a {@link RandomAccessibleInterval} to be treated as an {@link Img}.
- * 
+ *
  * @author Tobias Pietzsch
  * @author Christian Dietz
  */
@@ -64,14 +64,14 @@ public class ImgView< T extends Type< T > > extends
 	/**
 	 * View on {@link Img} which is defined by a given Interval, but still is an
 	 * {@link Img}.
-	 * 
-	 * Deprecation: Use {@link ImgView#wrap(RandomAccessibleInterval, ImgFactory)} 
+	 *
+	 * Deprecation: Use {@link ImgView#wrap(RandomAccessibleInterval, ImgFactory)}
 	 * to represent a RandomAccessibleInterval as an Img
-	 * 
+	 *
 	 * @param in
 	 *            Source interval for the view
 	 * @param fac
-	 *            <T> Factory to create img
+	 *            T Factory to create img
 	 */
 	@Deprecated
 	public ImgView( final RandomAccessibleInterval< T > in, final ImgFactory< T > fac )
@@ -158,18 +158,18 @@ public class ImgView< T extends Type< T > > extends
 			return Views.interval( this.sourceInterval, interval )
 					.localizingCursor();
 	}
-	
+
 	/**
 	 * Represent an arbitrary RandomAccessibleInterval as an Img
-	 * 
-	 * @param accessible 
+	 *
+	 * @param accessible
 	 * 			RandomAccessibleInterval which will be wrapped with an ImgView
 	 * @param factory
 	 * 			ImgFactory returned by {@link ImgView#factory()}
 	 * @return
 	 * 			RandomAccessibleInterval represented as an Img
 	 */
-	public static < T extends Type< T >> Img< T > wrap(RandomAccessibleInterval< T > accessible, final ImgFactory< T > factory){
+	public static < T extends Type< T >> Img< T > wrap(final RandomAccessibleInterval< T > accessible, final ImgFactory< T > factory){
 		if(accessible instanceof Img){
 			return (Img<T>) accessible;
 		}else{

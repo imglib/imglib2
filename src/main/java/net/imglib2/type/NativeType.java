@@ -35,6 +35,7 @@
 package net.imglib2.type;
 
 import net.imglib2.Cursor;
+import net.imglib2.RandomAccess;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.NativeImgFactory;
 import net.imglib2.img.array.ArrayImg;
@@ -118,23 +119,25 @@ public interface NativeType< T extends NativeType< T >> extends Type< T >
 	 * image data. When the cursor moves from one cell to the next, the
 	 * underlying data array of the {@link NativeType} must be switched to the
 	 * data array of the new cell.
-	 *
+	 * </p>
 	 * <p>
-	 * To achieve this, the {@link CellCursor} calls {@link updateContainer()}
-	 * with itself as the argument. {@link updateContainer()} in turn will call
-	 * {@link update()} on it's container, passing along the reference to the
-	 * cursor. In this example, the container would be a {@link CellImg}. While
-	 * the {@link NativeType} does not know about the type of the cursor, the
-	 * container does. {@link CellImg} knows that it is passed a
-	 * {@link CellCursor} instance, which can be used to figure out the current
-	 * cell and the underlying data array, which is then returned to the
+	 * To achieve this, the {@link CellCursor} calls {@code updateContainer()}
+	 * with itself as the argument. {@code updateContainer()} in turn will call
+	 * {@link NativeImg#update(Object)} on it's container, passing along the
+	 * reference to the cursor. In this example, the container would be a
+	 * {@link CellImg}. While the {@link NativeType} does not know about the
+	 * type of the cursor, the container does. {@link CellImg} knows that it is
+	 * passed a {@link CellCursor} instance, which can be used to figure out the
+	 * current cell and the underlying data array, which is then returned to the
 	 * {@link NativeType}.
-	 *
+	 * </p>
 	 * <p>
 	 * The idea behind this concept is maybe not obvious. The {@link NativeType}
 	 * knows which basic type is used (float, int, byte, ...). However, it does
 	 * not know how the data is stored ({@link ArrayImg}, {@link CellImg}, ...).
-	 * This prevents the need for multiple implementations of {@link NativeType}.
+	 * This prevents the need for multiple implementations of {@link NativeType}
+	 * .
+	 * </p>
 	 *
 	 * @param c
 	 *            reference to an accessor which can be passed on to the
@@ -175,7 +178,7 @@ public interface NativeType< T extends NativeType< T >> extends Type< T >
 	public void incIndex();
 
 	/**
-	 * Increases the index into the current data array by {@link increment}
+	 * Increases the index into the current data array by {@code increment}
 	 * steps.
 	 *
 	 * <p>
@@ -197,7 +200,7 @@ public interface NativeType< T extends NativeType< T >> extends Type< T >
 	public void decIndex();
 
 	/**
-	 * Decrease the index into the current data array by {@link decrement}
+	 * Decrease the index into the current data array by {@code decrement}
 	 * steps.
 	 *
 	 * <p>

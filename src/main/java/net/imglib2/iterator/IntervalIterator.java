@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -48,8 +48,8 @@ import net.imglib2.util.Util;
  * row by row, plane by plane, cube by cube, ... This is useful for iterating an
  * arbitrary interval in a defined order. For that, connect an
  * {@link IntervalIterator} to a {@link Positionable}.
- * 
- * <pre>
+ *
+ * <pre>{@code
  * ...
  * IntervalIterator i = new IntervalIterator(image);
  * RandomAccess<T> s = image.randomAccess();
@@ -60,14 +60,14 @@ import net.imglib2.util.Util;
  *   ...
  * }
  * ...
- * </pre>
- * 
+ * }</pre>
+ *
  * Note that {@link IntervalIterator} is the right choice in situations where
  * <em>not</em> for each pixel you want to localize and/or set the
  * {@link Positionable} [{@link Sampler}], that is in a sparse sampling
  * situation. For localizing at each iteration step (as in the simplified
  * example above), use {@link LocalizingIntervalIterator} instead.
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -84,7 +84,7 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 	/**
 	 * Iterates an {@link Interval} of the given dimensions with <em>min</em>=
 	 * 0<sup><em>n</em></sup>
-	 * 
+	 *
 	 * @param dimensions
 	 */
 	public IntervalIterator( final long[] dimensions )
@@ -111,7 +111,7 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 	/**
 	 * Iterates an {@link Interval} of the given dimensions with <em>min</em>=
 	 * 0<sup><em>n</em></sup>
-	 * 
+	 *
 	 * @param dimensions
 	 */
 	public IntervalIterator( final int[] dimensions )
@@ -121,7 +121,7 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 
 	/**
 	 * Iterates an {@link Interval} with given <em>min</em> and <em>max</em>.
-	 * 
+	 *
 	 * @param min
 	 * @param max
 	 */
@@ -148,7 +148,7 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 
 	/**
 	 * Iterates an {@link Interval} with given <em>min</em> and <em>max</em>.
-	 * 
+	 *
 	 * @param min
 	 * @param max
 	 */
@@ -159,7 +159,7 @@ public class IntervalIterator extends AbstractInterval implements Iterator, Loca
 
 	/**
 	 * Iterates a given {@link Interval}.
-	 * 
+	 *
 	 * @param interval
 	 */
 	public IntervalIterator( final Interval interval )

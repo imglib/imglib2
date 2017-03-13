@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,18 +40,18 @@ import java.util.ListIterator;
 
 /**
  * TODO
- * 
+ *
  */
 public class Partition
 {
 	/**
 	 * Partition a subarray of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
@@ -114,12 +114,12 @@ public class Partition
 
 	/**
 	 * Partition a subarray of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
@@ -182,12 +182,12 @@ public class Partition
 
 	/**
 	 * Partition a subarray of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
@@ -250,12 +250,12 @@ public class Partition
 
 	/**
 	 * Partition a subarray of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
@@ -318,12 +318,12 @@ public class Partition
 
 	/**
 	 * Partition a subarray of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
@@ -386,12 +386,12 @@ public class Partition
 
 	/**
 	 * Partition a subarray of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
@@ -454,12 +454,12 @@ public class Partition
 
 	/**
 	 * Partition a subarray of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of subarray
 	 * @param j
@@ -522,12 +522,12 @@ public class Partition
 
 	/**
 	 * Partition a sublist of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of the sublist
 	 * @param j
@@ -593,12 +593,12 @@ public class Partition
 
 	/**
 	 * Partition a sublist of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of the sublist
 	 * @param j
@@ -662,18 +662,18 @@ public class Partition
 
 	/**
 	 * Partition a sublist.
-	 * 
+	 *
 	 * The element at {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * <p>
 	 * After the function returns, the iterator {@code i} is on the pivot
 	 * element. That is, {@code i.next()} gives the element <em>after</em> the
 	 * pivot.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            iterator pointing before first element of the sublist, that
 	 *            is, {@code i.next()} gives you the first element.
@@ -682,7 +682,6 @@ public class Partition
 	 *            is, {@code i.previous()} gives you the last element.
 	 * @param compare
 	 *            ordering function on T
-	 * @return index of pivot element
 	 */
 	public static < T > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j, final Comparator< ? super T > compare )
 	{
@@ -740,25 +739,24 @@ public class Partition
 
 	/**
 	 * Partition a sublist.
-	 * 
+	 *
 	 * The element at {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller, and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * <p>
 	 * After the function returns, the iterator {@code i} is on the pivot
 	 * element. That is, {@code i.next()} gives the element <em>after</em> the
 	 * pivot.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            iterator pointing before first element of the sublist, that
 	 *            is, {@code i.next()} gives you the first element.
 	 * @param j
 	 *            iterator pointing behind the last element of the sublist, that
 	 *            is, {@code i.previous()} gives you the last element.
-	 * @return index of pivot element
 	 */
 	public static < T extends Comparable< T > > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j )
 	{
@@ -816,12 +814,12 @@ public class Partition
 
 	/**
 	 * Partition a sublist of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * <p>
 	 * The {@code permutation} array is permuted in the same way as the list.
 	 * Usually, this will be an array of indices, so that the partition
@@ -831,7 +829,7 @@ public class Partition
 	 * in the same manner. We pass an indices array [0, 1, 2, ...] and use the
 	 * permutation of the indices to permute the values list.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of the sublist
 	 * @param j
@@ -906,12 +904,12 @@ public class Partition
 
 	/**
 	 * Partition a sublist of {@code values}.
-	 * 
+	 *
 	 * The element at index {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * <p>
 	 * The {@code permutation} array is permuted in the same way as the list.
 	 * Usually, this will be an array of indices, so that the partition
@@ -921,7 +919,7 @@ public class Partition
 	 * in the same manner. We pass an indices array [0, 1, 2, ...] and use the
 	 * permutation of the indices to permute the values list.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            index of first element of the sublist
 	 * @param j
@@ -994,18 +992,18 @@ public class Partition
 
 	/**
 	 * Partition a sublist.
-	 * 
+	 *
 	 * The element at {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * <p>
 	 * After the function returns, the iterator {@code i} is on the pivot
 	 * element. That is, {@code i.next()} gives the element <em>after</em> the
 	 * pivot.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * The {@code permutation} array is permuted in the same way as the list.
 	 * Usually, this will be an array of indices, so that the partition
@@ -1015,7 +1013,7 @@ public class Partition
 	 * in the same manner. We pass an indices array [0, 1, 2, ...] and use the
 	 * permutation of the indices to permute the values list.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            iterator pointing before first element of the sublist, that
 	 *            is, {@code i.next()} gives you the first element.
@@ -1027,7 +1025,6 @@ public class Partition
 	 *            elements in the values list
 	 * @param compare
 	 *            ordering function on T
-	 * @return index of pivot element
 	 */
 	public static < T > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j, final int[] permutation, final Comparator< ? super T > compare )
 	{
@@ -1094,25 +1091,27 @@ public class Partition
 
 	/**
 	 * Partition a sublist.
-	 * 
+	 *
 	 * The element at {@code j} is taken as the pivot value. The elements
 	 * {@code [i,j]} are reordered, such that all elements before the pivot are
 	 * smaller, and all elements after the pivot are equal or larger than the
 	 * pivot. The index of the pivot element is returned.
-	 * 
+	 *
 	 * <p>
 	 * After the function returns, the iterator {@code i} is on the pivot
 	 * element. That is, {@code i.next()} gives the element <em>after</em> the
 	 * pivot.
 	 * </p>
-	 * 
+	 *
 	 * @param i
 	 *            iterator pointing before first element of the sublist, that
 	 *            is, {@code i.next()} gives you the first element.
 	 * @param j
 	 *            iterator pointing behind the last element of the sublist, that
 	 *            is, {@code i.previous()} gives you the last element.
-	 * @return index of pivot element
+	 * @param permutation
+	 *            elements of this array are permuted in the same way as the
+	 *            elements in the values list
 	 */
 	public static < T extends Comparable< T > > void partitionSubList( final ListIterator< T > i, final ListIterator< T > j, final int[] permutation )
 	{

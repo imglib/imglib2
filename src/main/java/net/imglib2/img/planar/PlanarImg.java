@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -55,7 +55,7 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * The {@link PlanarImg} provides access to the underlying data arrays via the
  * {@link #getPlane(int)} method.
  * </p>
- * 
+ *
  * @author Jan Funke
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
@@ -152,11 +152,11 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	}
 
 	/**
-	 * For a given >=2d location, estimate the pixel index in the stack slice.
-	 * 
+	 * For a given &ge;2d location, estimate the pixel index in the stack slice.
+	 *
 	 * @param l
 	 * @return
-	 * 
+	 *
 	 * 		TODO: remove this method? (it doesn't seem to be used anywhere)
 	 */
 	public final int getIndex( final int[] l )
@@ -169,14 +169,14 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	/**
 	 * Compute a global position from the index of a slice and an index within
 	 * that slice.
-	 * 
+	 *
 	 * @param sliceIndex
 	 *            index of slice
 	 * @param indexInSlice
 	 *            index of element within slice
 	 * @param position
 	 *            receives global position of element
-	 * 
+	 *
 	 *            TODO: move this method to AbstractPlanarCursor? (that seems to
 	 *            be the only place where it is needed)
 	 */
@@ -209,7 +209,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	/**
 	 * Compute a global position from the index of a slice and an index within
 	 * that slice.
-	 * 
+	 *
 	 * @param sliceIndex
 	 *            index of slice
 	 * @param indexInSlice
@@ -217,7 +217,7 @@ public class PlanarImg< T extends NativeType< T >, A extends ArrayDataAccess< A 
 	 * @param dim
 	 *            which dimension of the position we are interested in
 	 * @return dimension dim of global position
-	 * 
+	 *
 	 *         TODO: move this method to AbstractPlanarCursor? (that seems to be
 	 *         the only place where it is needed)
 	 */

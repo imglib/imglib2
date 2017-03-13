@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,9 +40,7 @@ import net.imglib2.util.Util;
 
 /**
  * N-linear interpolator for ARGB values with overflow check.
- * 
- * @param <T>
- * 
+ *
  * @author Stephan Saalfeld
  */
 public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
@@ -66,14 +64,15 @@ public class NLinearInterpolatorARGB extends NLinearInterpolator< ARGBType >
 
 	/**
 	 * Get the interpolated value at the current position.
-	 * 
+	 *
 	 * <p>
 	 * To visit the pixels that contribute to an interpolated value, we move in
 	 * a (binary-reflected) Gray code pattern, such that only one dimension of
 	 * the target position is modified per move.
-	 * 
+	 * </p>
 	 * <p>
-	 * {@see http://en.wikipedia.org/wiki/Gray_code}
+	 * See <a href="http://en.wikipedia.org/wiki/Gray_code">http://en.wikipedia.org/wiki/Gray_code</a>
+	 * </p>
 	 */
 	@Override
 	public ARGBType get()

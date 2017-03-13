@@ -13,7 +13,7 @@ import net.imglib2.RandomAccessible;
 /**
  * {@link HyperSlicesView} is a {@link RandomAccessible} of all
  * {@link HyperSlice hyperslices}.  This implementation creates a new and
- * therefore independent {@link HyperSlice} per {@link #get()} at the correct
+ * therefore independent {@link HyperSlice} per {@code get()} at the correct
  * position.
  *
  * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
@@ -89,7 +89,7 @@ public class HyperSlicesView< T > implements RandomAccessible< HyperSlice< T > >
 	}
 
 	@Override
-	public HyperSlicesViewRandomAccess randomAccess( Interval interval )
+	public HyperSlicesViewRandomAccess randomAccess( final Interval interval )
 	{
 		/* intervals only matter inside hyperslice space as the slice itself is only
 		 * one pixel thick (constant) in all outer dimensions */
