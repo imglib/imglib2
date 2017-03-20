@@ -105,11 +105,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< UnsignedByteType, ByteArray > unsignedBytes( final byte[] array, final long... dim )
 	{
-		final ByteArray access = new ByteArray( array );
-		final ArrayImg< UnsignedByteType, ByteArray > img = new ArrayImg< UnsignedByteType, ByteArray >( access, dim, new Fraction() );
-		final UnsignedByteType t = new UnsignedByteType( img );
-		img.setLinkedType( t );
-		return img;
+		return unsignedBytes( new ByteArray( array ), dim );
 	}
 
 	/**
@@ -139,11 +135,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< ByteType, ByteArray > bytes( final byte[] array, final long... dim )
 	{
-		final ByteArray access = new ByteArray( array );
-		final ArrayImg< ByteType, ByteArray > img = new ArrayImg< ByteType, ByteArray >( access, dim, new Fraction() );
-		final ByteType t = new ByteType( img );
-		img.setLinkedType( t );
-		return img;
+		return bytes( new ByteArray( array ), dim );
 	}
 
 	/**
@@ -174,11 +166,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< UnsignedShortType, ShortArray > unsignedShorts( final short[] array, final long... dim )
 	{
-		final ShortArray access = new ShortArray( array );
-		final ArrayImg< UnsignedShortType, ShortArray > img = new ArrayImg< UnsignedShortType, ShortArray >( access, dim, new Fraction() );
-		final UnsignedShortType t = new UnsignedShortType( img );
-		img.setLinkedType( t );
-		return img;
+		return unsignedShorts( new ShortArray( array ), dim );
 	}
 
 	/**
@@ -208,11 +196,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< ShortType, ShortArray > shorts( final short[] array, final long... dim )
 	{
-		final ShortArray access = new ShortArray( array );
-		final ArrayImg< ShortType, ShortArray > img = new ArrayImg< ShortType, ShortArray >( access, dim, new Fraction() );
-		final ShortType t = new ShortType( img );
-		img.setLinkedType( t );
-		return img;
+		return shorts( new ShortArray( array ), dim );
 	}
 
 	/**
@@ -242,11 +226,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< UnsignedIntType, IntArray > unsignedInts( final int[] array, final long... dim )
 	{
-		final IntArray access = new IntArray( array );
-		final ArrayImg< UnsignedIntType, IntArray > img = new ArrayImg< UnsignedIntType, IntArray >( access, dim, new Fraction() );
-		final UnsignedIntType t = new UnsignedIntType( img );
-		img.setLinkedType( t );
-		return img;
+		return unsignedInts( new IntArray( array ), dim );
 	}
 
 	/**
@@ -276,11 +256,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< IntType, IntArray > ints( final int[] array, final long... dim )
 	{
-		final IntArray access = new IntArray( array );
-		final ArrayImg< IntType, IntArray > img = new ArrayImg< IntType, IntArray >( access, dim, new Fraction() );
-		final IntType t = new IntType( img );
-		img.setLinkedType( t );
-		return img;
+		return ints( new IntArray( array ), dim );
 	}
 
 	/**
@@ -322,11 +298,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< LongType, LongArray > longs( final long[] array, final long... dim )
 	{
-		final LongArray access = new LongArray( array );
-		final ArrayImg< LongType, LongArray > img = new ArrayImg< LongType, LongArray >( access, dim, new Fraction() );
-		final LongType t = new LongType( img );
-		img.setLinkedType( t );
-		return img;
+		return longs( new LongArray( array ), dim );
 	}
 
 	/**
@@ -377,11 +349,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< FloatType, FloatArray > floats( final float[] array, final long... dim )
 	{
-		final FloatArray access = new FloatArray( array );
-		final ArrayImg< FloatType, FloatArray > img = new ArrayImg< FloatType, FloatArray >( access, dim, new Fraction() );
-		final FloatType t = new FloatType( img );
-		img.setLinkedType( t );
-		return img;
+		return floats( new FloatArray( array ), dim );
 	}
 
 	/**
@@ -411,11 +379,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< DoubleType, DoubleArray > doubles( final double[] array, final long... dim )
 	{
-		final DoubleArray access = new DoubleArray( array );
-		final ArrayImg< DoubleType, DoubleArray > img = new ArrayImg< DoubleType, DoubleArray >( access, dim, new Fraction() );
-		final DoubleType t = new DoubleType( img );
-		img.setLinkedType( t );
-		return img;
+		return doubles( new DoubleArray( array ), dim );
 	}
 
 	/**
@@ -445,11 +409,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< ARGBType, IntArray > argbs( final int[] array, final long... dim )
 	{
-		final IntArray access = new IntArray( array );
-		final ArrayImg< ARGBType, IntArray > img = new ArrayImg< ARGBType, IntArray >( access, dim, new Fraction() );
-		final ARGBType t = new ARGBType( img );
-		img.setLinkedType( t );
-		return img;
+		return argbs( new IntArray( array ), dim );
 	}
 
 	/**
@@ -479,11 +439,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< ComplexFloatType, FloatArray > complexFloats( final float[] array, final long... dim )
 	{
-		final FloatArray access = new FloatArray( array );
-		final ArrayImg< ComplexFloatType, FloatArray > img = new ArrayImg< ComplexFloatType, FloatArray >( access, dim, new Fraction( 2, 1 ) );
-		final ComplexFloatType t = new ComplexFloatType( img );
-		img.setLinkedType( t );
-		return img;
+		return complexFloats( new FloatArray( array ), dim );
 	}
 
 	/**
@@ -514,11 +470,7 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< ComplexDoubleType, DoubleArray > complexDoubles( final double[] array, final long... dim )
 	{
-		final DoubleArray access = new DoubleArray( array );
-		final ArrayImg< ComplexDoubleType, DoubleArray > img = new ArrayImg< ComplexDoubleType, DoubleArray >( access, dim, new Fraction( 2, 1 ) );
-		final ComplexDoubleType t = new ComplexDoubleType( img );
-		img.setLinkedType( t );
-		return img;
+		return complexDoubles( new DoubleArray( array ), dim );
 	}
 
 	/**
