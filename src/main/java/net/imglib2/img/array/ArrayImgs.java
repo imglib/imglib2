@@ -34,6 +34,12 @@
 
 package net.imglib2.img.array;
 
+import net.imglib2.img.basictypeaccess.ByteAccess;
+import net.imglib2.img.basictypeaccess.DoubleAccess;
+import net.imglib2.img.basictypeaccess.FloatAccess;
+import net.imglib2.img.basictypeaccess.IntAccess;
+import net.imglib2.img.basictypeaccess.LongAccess;
+import net.imglib2.img.basictypeaccess.ShortAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.DoubleArray;
 import net.imglib2.img.basictypeaccess.array.FloatArray;
@@ -51,6 +57,7 @@ import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.ShortType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
+import net.imglib2.type.numeric.integer.UnsignedLongType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -76,6 +83,7 @@ import net.imglib2.util.Fraction;
  * </pre>
  *
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 final public class ArrayImgs
 {
@@ -105,6 +113,18 @@ final public class ArrayImgs
 	}
 
 	/**
+	 * Creates an {@link ArrayImg}&lt;{@link UnsignedByteType},
+	 * {@link ByteAccess}&gt; using a {@link ByteAccess} passed as argument.
+	 */
+	final public static < A extends ByteAccess > ArrayImg< UnsignedByteType, A > unsignedBytes( final A access, final long... dim )
+	{
+		final ArrayImg< UnsignedByteType, A > img = new ArrayImg<>( access, dim, new Fraction() );
+		final UnsignedByteType t = new UnsignedByteType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
 	 * Create an {@link ArrayImg}&lt;{@link ByteType}, {@link ByteArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
@@ -121,6 +141,18 @@ final public class ArrayImgs
 	{
 		final ByteArray access = new ByteArray( array );
 		final ArrayImg< ByteType, ByteArray > img = new ArrayImg< ByteType, ByteArray >( access, dim, new Fraction() );
+		final ByteType t = new ByteType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link ByteType}, {@link ByteAccess}&gt;
+	 * using a {@link ByteAccess} passed as argument.
+	 */
+	final public static < A extends ByteAccess > ArrayImg< ByteType, A > bytes( final A access, final long... dim )
+	{
+		final ArrayImg< ByteType, A > img = new ArrayImg<>( access, dim, new Fraction() );
 		final ByteType t = new ByteType( img );
 		img.setLinkedType( t );
 		return img;
@@ -150,6 +182,18 @@ final public class ArrayImgs
 	}
 
 	/**
+	 * Creates an {@link ArrayImg}&lt;{@link UnsignedShortType},
+	 * {@link ShortAccess}&gt; using a {@link ShortAccess} passed as argument.
+	 */
+	final public static < A extends ShortAccess > ArrayImg< UnsignedShortType, A > unsignedShorts( final A access, final long... dim )
+	{
+		final ArrayImg< UnsignedShortType, A > img = new ArrayImg<>( access, dim, new Fraction() );
+		final UnsignedShortType t = new UnsignedShortType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
 	 * Create an {@link ArrayImg}&lt;{@link ShortType}, {@link ShortArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
@@ -166,6 +210,18 @@ final public class ArrayImgs
 	{
 		final ShortArray access = new ShortArray( array );
 		final ArrayImg< ShortType, ShortArray > img = new ArrayImg< ShortType, ShortArray >( access, dim, new Fraction() );
+		final ShortType t = new ShortType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link ShortType}, {@link ShortAccess}&gt;
+	 * using a {@link ShortAccess} passed as argument.
+	 */
+	final public static < A extends ShortAccess > ArrayImg< ShortType, A > shorts( final A access, final long... dim )
+	{
+		final ArrayImg< ShortType, A > img = new ArrayImg<>( access, dim, new Fraction() );
 		final ShortType t = new ShortType( img );
 		img.setLinkedType( t );
 		return img;
@@ -194,6 +250,18 @@ final public class ArrayImgs
 	}
 
 	/**
+	 * Creates an {@link ArrayImg}&lt;{@link UnsignedIntType},
+	 * {@link IntAccess}&gt; using a {@link IntAccess} passed as argument.
+	 */
+	final public static < A extends IntAccess > ArrayImg< UnsignedIntType, A > unsignedInts( final A access, final long... dim )
+	{
+		final ArrayImg< UnsignedIntType, A > img = new ArrayImg<>( access, dim, new Fraction() );
+		final UnsignedIntType t = new UnsignedIntType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
 	 * Create an {@link ArrayImg}&lt;{@link IntType}, {@link IntArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
@@ -211,6 +279,30 @@ final public class ArrayImgs
 		final IntArray access = new IntArray( array );
 		final ArrayImg< IntType, IntArray > img = new ArrayImg< IntType, IntArray >( access, dim, new Fraction() );
 		final IntType t = new IntType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link IntType}, {@link IntAccess}&gt;
+	 * using a {@link IntAccess} passed as argument.
+	 */
+	final public static < A extends IntAccess > ArrayImg< IntType, A > ints( final A access, final long... dim )
+	{
+		final ArrayImg< IntType, A > img = new ArrayImg<>( access, dim, new Fraction() );
+		final IntType t = new IntType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link UnsignedLongType},
+	 * {@link LongAccess}&gt; using a {@link LongAccess} passed as argument.
+	 */
+	final public static < A extends LongAccess > ArrayImg< UnsignedLongType, A > unsignedLongs( final A access, final long... dim )
+	{
+		final ArrayImg< UnsignedLongType, A > img = new ArrayImg<>( access, dim, new Fraction() );
+		final UnsignedLongType t = new UnsignedLongType( img );
 		img.setLinkedType( t );
 		return img;
 	}
@@ -238,12 +330,36 @@ final public class ArrayImgs
 	}
 
 	/**
+	 * Creates an {@link ArrayImg}&lt;{@link LongType}, {@link LongAccess}&gt;
+	 * using a {@link LongAccess} passed as argument.
+	 */
+	final public static < A extends LongAccess > ArrayImg< LongType, A > longs( final A access, final long... dim )
+	{
+		final ArrayImg< LongType, A > img = new ArrayImg<>( access, dim, new Fraction() );
+		final LongType t = new LongType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
 	 * Create an {@link ArrayImg}&lt;{@link BitType}, {@link LongArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
 	final static public ArrayImg< BitType, LongArray > bits( final long... dim )
 	{
 		return ( ArrayImg< BitType, LongArray > ) new ArrayImgFactory< BitType >().create( dim, new BitType() );
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link BitType}, {@link LongAccess}&gt;
+	 * using a {@link LongAccess} passed as argument.
+	 */
+	final static public < A extends LongAccess > ArrayImg< BitType, A > bits( final A access, final long... dim )
+	{
+		final ArrayImg< BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final BitType t = new BitType( img );
+		img.setLinkedType( t );
+		return img;
 	}
 
 	/**
@@ -263,6 +379,18 @@ final public class ArrayImgs
 	{
 		final FloatArray access = new FloatArray( array );
 		final ArrayImg< FloatType, FloatArray > img = new ArrayImg< FloatType, FloatArray >( access, dim, new Fraction() );
+		final FloatType t = new FloatType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link FloatType}, {@link FloatAccess}&gt;
+	 * using a {@link FloatAccess} passed as argument.
+	 */
+	final static public < A extends FloatAccess > ArrayImg< FloatType, A > floats( final A access, final long... dim )
+	{
+		final ArrayImg< FloatType, A > img = new ArrayImg<>( access, dim, new Fraction() );
 		final FloatType t = new FloatType( img );
 		img.setLinkedType( t );
 		return img;
@@ -291,6 +419,18 @@ final public class ArrayImgs
 	}
 
 	/**
+	 * Creates an {@link ArrayImg}&lt;{@link DoubleType},
+	 * {@link DoubleAccess}&gt; using a {@link DoubleAccess} passed as argument.
+	 */
+	final static public < A extends DoubleAccess > ArrayImg< DoubleType, A > doubles( final A access, final long... dim )
+	{
+		final ArrayImg< DoubleType, A > img = new ArrayImg<>( access, dim, new Fraction() );
+		final DoubleType t = new DoubleType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
 	 * Create an {@link ArrayImg}&lt;{@link ARGBType}, {@link IntArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
@@ -307,6 +447,18 @@ final public class ArrayImgs
 	{
 		final IntArray access = new IntArray( array );
 		final ArrayImg< ARGBType, IntArray > img = new ArrayImg< ARGBType, IntArray >( access, dim, new Fraction() );
+		final ARGBType t = new ARGBType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link ARGBType}, {@link IntAccess}&gt;
+	 * using a {@link IntAccess} passed as argument.
+	 */
+	final static public < A extends IntAccess > ArrayImg< ARGBType, A > argbs( final A access, final long... dim )
+	{
+		final ArrayImg< ARGBType, A > img = new ArrayImg<>( access, dim, new Fraction() );
 		final ARGBType t = new ARGBType( img );
 		img.setLinkedType( t );
 		return img;
@@ -335,6 +487,18 @@ final public class ArrayImgs
 	}
 
 	/**
+	 * Creates an {@link ArrayImg}&lt;{@link ComplexFloatType},
+	 * {@link FloatAccess}&gt; using a {@link FloatAccess} passed as argument.
+	 */
+	final public static < A extends FloatAccess > ArrayImg< ComplexFloatType, A > complexFloats( final A access, final long... dim )
+	{
+		final ArrayImg< ComplexFloatType, A > img = new ArrayImg<>( access, dim, new Fraction( 2, 1 ) );
+		final ComplexFloatType t = new ComplexFloatType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
 	 * Create an {@link ArrayImg}&lt;{@link ComplexDoubleType},
 	 * {@link DoubleArray}&gt;.
 	 */
@@ -352,6 +516,18 @@ final public class ArrayImgs
 	{
 		final DoubleArray access = new DoubleArray( array );
 		final ArrayImg< ComplexDoubleType, DoubleArray > img = new ArrayImg< ComplexDoubleType, DoubleArray >( access, dim, new Fraction( 2, 1 ) );
+		final ComplexDoubleType t = new ComplexDoubleType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link ComplexDoubleType},
+	 * {@link DoubleAccess}&gt; using a {@link DoubleAccess} passed as argument.
+	 */
+	final public static < A extends DoubleAccess > ArrayImg< ComplexDoubleType, A > complexDoubles( final A access, final long... dim )
+	{
+		final ArrayImg< ComplexDoubleType, A > img = new ArrayImg<>( access, dim, new Fraction( 2, 1 ) );
 		final ComplexDoubleType t = new ComplexDoubleType( img );
 		img.setLinkedType( t );
 		return img;
