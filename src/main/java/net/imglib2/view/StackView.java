@@ -110,13 +110,13 @@ public class StackView< T > extends AbstractInterval implements RandomAccessible
 
 	private final StackAccessMode stackAccessMode;
 
-	public StackView( final List< RandomAccessibleInterval< T > > hyperslices )
+	public StackView( final List< ? extends RandomAccessibleInterval< T > > hyperslices )
 	{
 		this( hyperslices, StackAccessMode.DEFAULT );
 	}
 
 	@SuppressWarnings( "unchecked" )
-	public StackView( final List< RandomAccessibleInterval< T > > hyperslices, final StackAccessMode stackAccessMode )
+	public StackView( final List< ? extends RandomAccessibleInterval< T > > hyperslices, final StackAccessMode stackAccessMode )
 	{
 		super( hyperslices.get( 0 ).numDimensions() + 1 );
 		this.stackAccessMode = stackAccessMode;

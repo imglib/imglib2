@@ -976,9 +976,9 @@ public class Views
 	 * @return a <em>(n+1)</em>-dimensional {@link RandomAccessibleInterval}
 	 *         where the final dimension is the index of the hyperslice.
 	 */
-	public static < T > RandomAccessibleInterval< T > stack( final List< RandomAccessibleInterval< T > > hyperslices )
+	public static < T > RandomAccessibleInterval< T > stack( final List< ? extends RandomAccessibleInterval< T > > hyperslices )
 	{
-		return new StackView< T >( hyperslices );
+		return new StackView<>( hyperslices );
 	}
 
 	/**
@@ -1012,9 +1012,9 @@ public class Views
 	 * @return a <em>(n+1)</em>-dimensional {@link RandomAccessibleInterval}
 	 *         where the final dimension is the index of the hyperslice.
 	 */
-	public static < T > RandomAccessibleInterval< T > stack( final StackAccessMode stackAccessMode, final List< RandomAccessibleInterval< T > > hyperslices )
+	public static < T > RandomAccessibleInterval< T > stack( final StackAccessMode stackAccessMode, final List< ? extends RandomAccessibleInterval< T > > hyperslices )
 	{
-		return new StackView< T >( hyperslices, stackAccessMode );
+		return new StackView<>( hyperslices, stackAccessMode );
 	}
 
 	/**
