@@ -34,6 +34,7 @@
 
 package net.imglib2.view;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -1401,6 +1402,93 @@ public class Views
 	public static < T > IntervalView< T > expandBorder( final RandomAccessibleInterval< T > source, final long... border )
 	{
 		return interval( extendBorder( source ), Intervals.expand( source, border ) );
+	}
+
+	/**
+	 *
+	 * Concatenate an array of {@link RandomAccessibleInterval} along the
+	 * provided <code>concatenationAxis</code>. The random access behaves as
+	 * defined by {@link StackView.StackAccessMode#DEFAULT}.
+	 *
+	 * @param concatenationAxis
+	 *            Concatenate along this axis.
+	 * @param sources
+	 *            {@link RandomAccessibleInterval}s to be concatenated.
+	 * @return {@link RandomAccessibleInterval} of concatenated sources.
+	 */
+	@SafeVarargs
+	public static < T > RandomAccessibleInterval< T > concatenate( final int concatenationAxis, final RandomAccessibleInterval< T >... sources )
+	{
+		return concatenate( concatenationAxis, StackView.StackAccessMode.DEFAULT, sources );
+	}
+
+	/**
+	 *
+	 * Concatenate a list of {@link RandomAccessibleInterval} along the provided
+	 * <code>concatenationAxis</code>. The random access behaves as defined by
+	 * {@link StackView.StackAccessMode#DEFAULT}.
+	 *
+	 * @param concatenationAxis
+	 *            Concatenate along this axis.
+	 * @param sources
+	 *            {@link RandomAccessibleInterval}s to be concatenated.
+	 * @return {@link RandomAccessibleInterval} of concatenated sources.
+	 */
+	public static < T > RandomAccessibleInterval< T > concatenate( final int concatenationAxis, final List< ? extends RandomAccessibleInterval< T > > sources )
+	{
+		return concatenate( concatenationAxis, StackView.StackAccessMode.DEFAULT, sources );
+	}
+
+
+	/**
+	 *
+	 * Concatenate an array of {@link RandomAccessibleInterval} along the
+	 * provided <code>concatenationAxis</code>. See
+	 * {@link StackView.StackAccessMode} for behaviors of {@link RandomAccess}.
+	 *
+	 * @param concatenationAxis
+	 *            Concatenate along this axis.
+	 * @param mode
+	 *            Defines how random accesses are moved. See
+	 *            {@link StackView.StackAccessMode} for behaviors of
+	 *            {@link RandomAccess}.
+	 * @param sources
+	 *            {@link RandomAccessibleInterval}s to be concatenated.
+	 * @return {@link RandomAccessibleInterval} of concatenated sources.
+	 */
+	@SafeVarargs
+	public static < T > RandomAccessibleInterval< T > concatenate( final int concatenationAxis, final StackView.StackAccessMode mode, final RandomAccessibleInterval< T >... sources )
+	{
+		return concatenate( concatenationAxis, mode, Arrays.asList( sources ) );
+	}
+
+	/**
+	 *
+	 * Concatenate a list of {@link RandomAccessibleInterval} along the provided
+	 * <code>concatenationAxis</code>. See {@link StackView.StackAccessMode} for
+	 * behaviors of {@link RandomAccess}.
+	 *
+	 * @param concatenationAxis
+	 *            Concatenate along this axis.
+	 * @param mode
+	 *            Defines how random accesses are moved. See
+	 *            {@link StackView.StackAccessMode} for behaviors of
+	 *            {@link RandomAccess}.
+	 * @param sources
+	 *            {@link RandomAccessibleInterval}s to be concatenated.
+	 * @return {@link RandomAccessibleInterval} of concatenated sources.
+	 */
+	public static < T > RandomAccessibleInterval< T > concatenate( final int concatenationAxis, final StackView.StackAccessMode mode, final List< ? extends RandomAccessibleInterval< T > > sources )
+	{
+
+		assert sources.size() > 0;
+
+		final ArrayList< RandomAccessibleInterval< T > > hyperSlices = new ArrayList<>();
+		for ( RandomAccessibleInterval< T > source : sources )
+			for ( long index = source.min( concatenationAxis ); index <= source.max( concatenationAxis ); ++index )
+				hyperSlices.add( Views.hyperSlice( source, concatenationAxis, index ) );
+
+		return Views.stack( mode, hyperSlices );
 	}
 
 }
