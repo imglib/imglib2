@@ -49,6 +49,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.IntegerType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.integer.ByteType;
@@ -61,6 +62,7 @@ import net.imglib2.type.numeric.integer.UnsignedLongType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 
 /**
@@ -147,7 +149,33 @@ public class ArrayImgsTest
 			testRange( comp, ref, 0, nElements );
 		}
 
-		// (complex) floats
+		// floats
+		{
+			final Random rng = new Random();
+			final float[] data = new float[ nElements ];
+			for ( int d = 0; d < data.length; ++d )
+				data[ d ] = rng.nextFloat();
+			final FloatArray access = new FloatArray( data );
+			final ArrayImg< FloatType, FloatArray > comp = ArrayImgs.floats( access, dims );
+			final ArrayImg< FloatType, FloatArray > ref = ArrayImgs.floats( data, dims );
+			testEquality( comp, ref );
+			testEquality( comp, data );
+
+			final float[] d0 = new float[ nElements ];
+			final float[] d1 = new float[ nElements ];
+			final ArrayCursor< FloatType > c = ArrayImgs.floats( d1, dims ).cursor();
+			for ( int i = 0; c.hasNext(); ++i )
+			{
+				final float v = rng.nextFloat();
+				d0[ i ] = v;
+				c.next().set( v );
+			}
+			Assert.assertArrayEquals( d0, d1, 0.0f );
+			testEquality( ArrayImgs.floats( d1, dims ), d0 );
+
+		}
+
+		// complex floats
 		{
 			final Random rng = new Random();
 			final float[] data = new float[ 2 * nElements ];
@@ -159,26 +187,71 @@ public class ArrayImgsTest
 			final ArrayImg< ComplexFloatType, FloatArray > complexRef = ArrayImgs.complexFloats( data, dims );
 			testEquality( complexComp, complexRef );
 
-			final ArrayImg< FloatType, FloatArray > comp = ArrayImgs.floats( access, dims );
-			final ArrayImg< FloatType, FloatArray > ref = ArrayImgs.floats( data, dims );
-			testEquality( comp, ref );
+			final float[] d0 = new float[ 2 * nElements ];
+			final float[] d1 = new float[ 2 * nElements ];
+			final ArrayCursor< ComplexFloatType > c = ArrayImgs.complexFloats( d1, dims ).cursor();
+			for ( int i = 0; c.hasNext(); i += 2 )
+			{
+				final float v1 = rng.nextFloat();
+				final float v2 = rng.nextFloat();
+				d0[ i ] = v1;
+				d0[ i + 1 ] = v2;
+				c.next().setReal( v1 );
+				c.get().setImaginary( v2 );
+			}
+			Assert.assertArrayEquals( d0, d1, 0.0f );
 		}
 
-		// (complex) doubles
+		// doubles
+		{
+			final Random rng = new Random();
+			final double[] data = new double[ nElements ];
+			for ( int d = 0; d < data.length; ++d )
+				data[ d ] = rng.nextDouble();
+			final DoubleArray access = new DoubleArray( data );
+			final ArrayImg< DoubleType, DoubleArray > comp = ArrayImgs.doubles( access, dims );
+			final ArrayImg< DoubleType, DoubleArray > ref = ArrayImgs.doubles( data, dims );
+			testEquality( comp, ref );
+			testEquality( comp, data );
+
+			final double[] d0 = new double[ nElements ];
+			final double[] d1 = new double[ nElements ];
+			final ArrayCursor< DoubleType > c = ArrayImgs.doubles( d1, dims ).cursor();
+			for ( int i = 0; c.hasNext(); ++i )
+			{
+				final double v = rng.nextDouble();
+				d0[ i ] = v;
+				c.next().set( v );
+			}
+			Assert.assertArrayEquals( d0, d1, 0.0f );
+			testEquality( ArrayImgs.doubles( d1, dims ), d0 );
+		}
+
+		// complex doubles
 		{
 			final Random rng = new Random();
 			final double[] data = new double[ 2 * nElements ];
 			for ( int d = 0; d < data.length; ++d )
-				data[ d ] = rng.nextFloat();
+				data[ d ] = rng.nextDouble();
 			final DoubleArray access = new DoubleArray( data );
 
 			final ArrayImg< ComplexDoubleType, DoubleArray > complexComp = ArrayImgs.complexDoubles( access, dims );
 			final ArrayImg< ComplexDoubleType, DoubleArray > complexRef = ArrayImgs.complexDoubles( data, dims );
 			testEquality( complexComp, complexRef );
 
-			final ArrayImg< DoubleType, DoubleArray > comp = ArrayImgs.doubles( access, dims );
-			final ArrayImg< DoubleType, DoubleArray > ref = ArrayImgs.doubles( data, dims );
-			testEquality( comp, ref );
+			final double[] d0 = new double[ 2 * nElements ];
+			final double[] d1 = new double[ 2 * nElements ];
+			final ArrayCursor< ComplexDoubleType > c = ArrayImgs.complexDoubles( d1, dims ).cursor();
+			for ( int i = 0; c.hasNext(); i += 2 )
+			{
+				final double v1 = rng.nextDouble();
+				final double v2 = rng.nextDouble();
+				d0[ i ] = v1;
+				d0[ i + 1 ] = v2;
+				c.next().setReal( v1 );
+				c.get().setImaginary( v2 );
+			}
+			Assert.assertArrayEquals( d0, d1, 0.0 );
 		}
 
 		// bits
@@ -210,7 +283,30 @@ public class ArrayImgsTest
 	{
 		for ( ArrayCursor< T > c = comp.cursor(), r = ref.cursor(); c.hasNext(); )
 			Assert.assertTrue( c.next().valueEquals( r.next() ) );
+	}
 
+	public static void testEquality( final ArrayImg< ? extends RealType< ? >, ? > img, final float[] array )
+	{
+		Assert.assertEquals( array.length, Intervals.numElements( img ) );
+
+		final ArrayRandomAccess< ? extends RealType< ? > > access = img.randomAccess();
+		for ( int i = 0; i < array.length; ++i )
+		{
+			IntervalIndexer.indexToPosition( i, img, access );
+			Assert.assertEquals( array[ i ], access.get().getRealDouble(), 0.0 );
+		}
+	}
+
+	public static void testEquality( final ArrayImg< ? extends RealType< ? >, ? > img, final double[] array )
+	{
+		Assert.assertEquals( array.length, Intervals.numElements( img ) );
+
+		final ArrayRandomAccess< ? extends RealType< ? > > access = img.randomAccess();
+		for ( int i = 0; i < array.length; ++i )
+		{
+			IntervalIndexer.indexToPosition( i, img, access );
+			Assert.assertEquals( array[ i ], access.get().getRealDouble(), 0.0 );
+		}
 	}
 
 }
