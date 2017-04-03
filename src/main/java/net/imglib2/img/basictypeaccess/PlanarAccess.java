@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,7 +36,7 @@ package net.imglib2.img.basictypeaccess;
 
 /**
  * Interface allowing access to data on a plane-by-plane basis.
- * 
+ *
  * @param <A>
  *            primitive array type
  * @author Curtis Rueden
@@ -46,4 +46,14 @@ public interface PlanarAccess< A >
 	A getPlane( int no );
 
 	void setPlane( int no, A plane );
+
+	public default A getPlane( final long index )
+	{
+		return getPlane( ( int )index );
+	}
+
+	public default void setPlane( final long index, final A value )
+	{
+		setPlane( ( int )index, value );
+	}
 }
