@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -64,7 +64,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * TODO Javadoc
 	 */
 	protected RandomAccessible< T > fullViewRandomAccessible;
-	
+
 	/**
 	 * TODO Javadoc
 	 */
@@ -74,13 +74,13 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * Create a view that defines an interval on a source. It is the callers
 	 * responsibility to ensure that the source is defined in the specified
 	 * interval.
-	 * 
+	 *
 	 * @see Views#interval(RandomAccessible, Interval)
 	 */
 	public IntervalView( final RandomAccessible< T > source, final Interval interval )
 	{
 		super( interval );
-		assert ( source.numDimensions() == interval.numDimensions() );
+		if ( source.numDimensions() != interval.numDimensions() ) { throw new IllegalArgumentException( "Dimension mismatch: source = " + source.numDimensions() + ", interval = " + interval.numDimensions() ); }
 
 		this.source = source;
 		this.fullViewRandomAccessible = null;
@@ -90,9 +90,9 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	 * Create a view that defines an interval on a source. It is the callers
 	 * responsibility to ensure that the source is defined in the specified
 	 * interval.
-	 * 
+	 *
 	 * @see Views#interval(RandomAccessible, Interval)
-	 * 
+	 *
 	 * @param min
 	 *            minimum coordinate of the interval.
 	 * @param max
@@ -101,7 +101,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 	public IntervalView( final RandomAccessible< T > source, final long[] min, final long[] max )
 	{
 		super( min, max );
-		assert ( source.numDimensions() == min.length );
+		if ( source.numDimensions() != min.length || min.length != max.length ) { throw new IllegalArgumentException( "Dimension mismatch: source = " + source.numDimensions() + ", min = " + min.length + ", max = " + max.length ); }
 
 		this.source = source;
 		this.fullViewRandomAccessible = null;
@@ -109,7 +109,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 
 	/**
 	 * Gets the underlying source {@link RandomAccessible}.
-	 * 
+	 *
 	 * @return the source {@link RandomAccessible}.
 	 */
 	public RandomAccessible< T > getSource()
@@ -130,7 +130,7 @@ public class IntervalView< T > extends AbstractInterval implements RandomAccessi
 			fullViewRandomAccessible = TransformBuilder.getEfficientRandomAccessible( this, this );
 		return fullViewRandomAccessible.randomAccess();
 	}
-	
+
 	protected IterableInterval< T > getFullViewIterableInterval()
 	{
 		if ( fullViewIterableInterval == null )
