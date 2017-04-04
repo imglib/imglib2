@@ -62,7 +62,6 @@ import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.transform.integer.permutation.AbstractPermutationTransform;
 import net.imglib2.transform.integer.permutation.PermutationTransform;
 import net.imglib2.transform.integer.permutation.SingleDimensionPermutationTransform;
-import net.imglib2.transform.integer.shear.InverseShearTransform;
 import net.imglib2.transform.integer.shear.ShearTransform;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.NumericType;
@@ -1041,7 +1040,36 @@ public class Views
 	/**
 	 * Positive shear transform of a RandomAccessible using
 	 * {@link ShearTransform}, i.e. c[ shearDimension ] = c[ shearDimension ] +
+	 * c[ referenceDimension ] * shearFactor
+	 *
+	 * @param source
+	 *            input, e.g. extended {@link RandomAccessibleInterval}
+	 * @param shearDimension
+	 *            dimension to be sheared
+	 * @param referenceDimension
+	 *            reference dimension for shear
+	 * @param shearFactor
+	 *			  amount to shift the shear dimension with respect to the
+	 *			  referenceDimension
+	 *
+	 * @return {@link TransformView} containing the result.
+	 */
+	public static < T > TransformView< T > shear(
+			final RandomAccessible< T > source,
+			final int shearDimension,
+			final int referenceDimension,
+			final int shearFactor )
+	{
+		final ShearTransform transform = new ShearTransform( source.numDimensions(), shearDimension, referenceDimension, shearFactor );
+		return new TransformView< T >( source, transform.inverse() );
+	}
+
+	/**
+	 * Positive shear transform of a RandomAccessible using
+	 * {@link ShearTransform}, i.e. c[ shearDimension ] = c[ shearDimension ] +
 	 * c[ referenceDimension ]
+	 *
+	 * Simply calls {@link Views#shear} with a shearFactor = 1.
 	 *
 	 * @param source
 	 *            input, e.g. extended {@link RandomAccessibleInterval}
@@ -1054,14 +1082,42 @@ public class Views
 	 */
 	public static < T > TransformView< T > shear( final RandomAccessible< T > source, final int shearDimension, final int referenceDimension )
 	{
-		final ShearTransform transform = new ShearTransform( source.numDimensions(), shearDimension, referenceDimension );
-		return new TransformView< T >( source, transform.inverse() );
+		return shear(source, shearDimension, referenceDimension, 1);
 	}
 
 	/**
 	 * Negative shear transform of a RandomAccessible using
-	 * {@link InverseShearTransform}, i.e. c[ shearDimension ] = c[
+	 * {@link ShearTransform}, i.e. c[ shearDimension ] = c[
+	 * shearDimension ] - c[ referenceDimension ] * shearFactor
+	 *
+	 * @param source
+	 *            input, e.g. extended {@link RandomAccessibleInterval}
+	 * @param shearDimension
+	 *            dimension to be sheared
+	 * @param referenceDimension
+	 *            reference dimension for shear
+	 * @param shearFactor
+	 *			  amount to shift the shear dimension with respect to the
+	 *			  referenceDimension
+	 *
+	 * @return {@link TransformView} containing the result.
+	 */
+	public static < T > TransformView< T > unshear(
+			final RandomAccessible< T > source,
+			final int shearDimension,
+			final int referenceDimension,
+			final int shearFactor )
+	{
+		final ShearTransform transform = new ShearTransform( source.numDimensions(), shearDimension, referenceDimension, shearFactor );
+		return new TransformView< T >( source, transform );
+	}
+
+	/**
+	 * Negative shear transform of a RandomAccessible using
+	 * {@link ShearTransform}, i.e. c[ shearDimension ] = c[
 	 * shearDimension ] - c[ referenceDimension ]
+	 *
+	 * Simply calls {@link Views#shear} with a shearFactor = 1.
 	 *
 	 * @param source
 	 *            input, e.g. extended {@link RandomAccessibleInterval}
@@ -1074,14 +1130,47 @@ public class Views
 	 */
 	public static < T > TransformView< T > unshear( final RandomAccessible< T > source, final int shearDimension, final int referenceDimension )
 	{
-		final InverseShearTransform transform = new InverseShearTransform( source.numDimensions(), shearDimension, referenceDimension );
-		return new TransformView< T >( source, transform.inverse() );
+		return unshear(source, shearDimension, referenceDimension, 1);
+	}
+
+	/**
+	 * Positive shear transform of a RandomAccessible using
+	 * {@link ShearTransform}, i.e. c[ shearDimension ] = c[ shearDimension ] +
+	 * c[ referenceDimension ] * shearFactor
+	 *
+	 * @param source
+	 *            input, e.g. extended {@link RandomAccessibleInterval}
+	 * @param interval
+	 *            original interval
+	 * @param shearDimension
+	 *            dimension to be sheared
+	 * @param referenceDimension
+	 *            reference dimension for shear
+	 * @param shearFactor
+	 *			  amount to shift the shear dimension with respect to the
+	 *			  referenceDimension
+	 *
+	 * @return {@link IntervalView} containing the result. The returned
+	 *         interval's dimension are determined by applying the
+	 *         {@link ShearTransform#transform} method on the input interval.
+	 */
+	public static < T > IntervalView< T > shear(
+			final RandomAccessible< T > source,
+			final Interval interval,
+			final int shearDimension,
+			final int referenceDimension,
+			final int shearFactor )
+	{
+		final ShearTransform transform = new ShearTransform( source.numDimensions(), shearDimension, referenceDimension, shearFactor );
+		return Views.interval( new TransformView< T >( source, transform.inverse() ), transform.transform( new BoundingBox( interval ) ).getInterval() );
 	}
 
 	/**
 	 * Positive shear transform of a RandomAccessible using
 	 * {@link ShearTransform}, i.e. c[ shearDimension ] = c[ shearDimension ] +
 	 * c[ referenceDimension ]
+	 *
+	 * Simply calls {@link Views#shear} with a shearFactor = 1.
 	 *
 	 * @param source
 	 *            input, e.g. extended {@link RandomAccessibleInterval}
@@ -1098,14 +1187,47 @@ public class Views
 	 */
 	public static < T > IntervalView< T > shear( final RandomAccessible< T > source, final Interval interval, final int shearDimension, final int referenceDimension )
 	{
-		final ShearTransform transform = new ShearTransform( source.numDimensions(), shearDimension, referenceDimension );
-		return Views.interval( Views.shear( source, shearDimension, referenceDimension ), transform.transform( new BoundingBox( interval ) ).getInterval() );
+		return shear(source, interval, shearDimension, referenceDimension, 1);
 	}
 
 	/**
 	 * Negative shear transform of a RandomAccessible using
-	 * {@link InverseShearTransform}, i.e. c[ shearDimension ] = c[
+	 * {@link ShearTransform}, i.e. c[ shearDimension ] = c[
+	 * shearDimension ] - c[ referenceDimension ] * shearFactor
+	 *
+	 * @param source
+	 *            input, e.g. extended {@link RandomAccessibleInterval}
+	 * @param interval
+	 *            original interval
+	 * @param shearDimension
+	 *            dimension to be sheared
+	 * @param referenceDimension
+	 *            reference dimension for shear
+	 * @param shearFactor
+	 *			  amount to shift the shear dimension with respect to the
+	 *			  referenceDimension
+	 *
+	 * @return {@link IntervalView} containing the result. The returned
+	 *         interval's dimension are determined by applying the
+	 *         {@link ShearTransform#transform} method on the input interval.
+	 */
+	public static < T > IntervalView< T > unshear(
+			final RandomAccessible< T > source,
+			final Interval interval,
+			final int shearDimension,
+			final int referenceDimension,
+			final int shearFactor )
+	{
+		final ShearTransform transform = new ShearTransform( source.numDimensions(), shearDimension, referenceDimension, shearFactor );
+		return Views.interval( new TransformView< T >(source, transform), transform.inverse().transform( new BoundingBox( interval ) ).getInterval() );
+	}
+
+	/**
+	 * Negative shear transform of a RandomAccessible using
+	 * {@link ShearTransform}, i.e. c[ shearDimension ] = c[
 	 * shearDimension ] - c[ referenceDimension ]
+	 *
+	 * Simply calls {@link Views#shear} with a shearFactor = 1.
 	 *
 	 * @param source
 	 *            input, e.g. extended {@link RandomAccessibleInterval}
@@ -1122,8 +1244,7 @@ public class Views
 	 */
 	public static < T > IntervalView< T > unshear( final RandomAccessible< T > source, final Interval interval, final int shearDimension, final int referenceDimension )
 	{
-		final InverseShearTransform transform = new InverseShearTransform( source.numDimensions(), shearDimension, referenceDimension );
-		return Views.interval( Views.unshear( source, shearDimension, referenceDimension ), transform.transform( new BoundingBox( interval ) ).getInterval() );
+		return unshear(source, interval, shearDimension, referenceDimension, 1);
 	}
 
 	/**
