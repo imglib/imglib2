@@ -33,25 +33,24 @@
  */
 package net.imglib2.view.composite;
 
-import net.imglib2.Interval;
+import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 
-import static net.imglib2.view.composite.GenericCompositeIntervalView.zeroMinN;
-
 /**
- * {@link CompositeView} of a {@link RandomAccessibleInterval}.
+ * {@link CompositeIntervalViewOfFirstDimension} collapses the first dimension of a
+ * {@link RandomAccessible} of T into a {@link Composite} of T. The results is
+ * an (<em>n</em>-1)-dimensional {@link RandomAccessible} of {@link Composite}
+ * of T.
  * 
  * @author Stephan Saalfeld
  * @author Philipp Hanslovsky
  */
-public class CompositeIntervalView< T, C extends Composite< T > > extends GenericCompositeIntervalView< T, C, ToSourceDimension.Identity >
+public class CompositeIntervalViewOfFirstDimension< T, C extends Composite< T > > extends GenericCompositeIntervalView< T, C, ToSourceDimension.AddOne >
 {
-	final Interval interval;
 
-	public CompositeIntervalView( final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory )
-	{
-		super( zeroMinN( source ), compositeFactory, new ToSourceDimension.Identity(), source.numDimensions() - 1 );
-		interval = source;
+	public CompositeIntervalViewOfFirstDimension(final RandomAccessibleInterval<T> source, final CompositeFactory<T, C> compositeFactory) {
+
+		super(source, compositeFactory, new ToSourceDimension.AddOne(), 0 );
 	}
 
 }

@@ -44,6 +44,7 @@ import net.imglib2.type.numeric.NumericType;
  * element-wise operations.
  *
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 abstract public class AbstractNumericComposite< T extends NumericType< T >, C extends AbstractNumericComposite< T, C > > extends AbstractComposite< T > implements NumericType< C >, Iterable< T >
 {
@@ -71,6 +72,12 @@ abstract public class AbstractNumericComposite< T extends NumericType< T >, C ex
 			throw new UnsupportedOperationException();
 		}
 	};
+
+	public AbstractNumericComposite( final RandomAccess< T > sourceAccess, final int length, final int d )
+	{
+		super( sourceAccess, d );
+		this.length = length;
+	}
 	
 	public AbstractNumericComposite( final RandomAccess< T > sourceAccess, final int length )
 	{

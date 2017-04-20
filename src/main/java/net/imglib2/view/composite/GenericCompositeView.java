@@ -34,24 +34,60 @@
 package net.imglib2.view.composite;
 
 import net.imglib2.Interval;
-import net.imglib2.RandomAccessibleInterval;
-
-import static net.imglib2.view.composite.GenericCompositeIntervalView.zeroMinN;
+import net.imglib2.RandomAccessible;
+import net.imglib2.View;
 
 /**
- * {@link CompositeView} of a {@link RandomAccessibleInterval}.
+ * {@link GenericCompositeView} collapses the trailing dimension of a
+ * {@link RandomAccessible} of T into a {@link Composite} of T. The results is
+ * an (<em>n</em>-1)-dimensional {@link RandomAccessible} of {@link Composite}
+ * of T.
  * 
  * @author Stephan Saalfeld
  * @author Philipp Hanslovsky
  */
-public class CompositeIntervalView< T, C extends Composite< T > > extends GenericCompositeIntervalView< T, C, ToSourceDimension.Identity >
+public class GenericCompositeView< T, C extends Composite< T >, D extends ToSourceDimension > implements RandomAccessible< C >, View
 {
-	final Interval interval;
+	final protected RandomAccessible< T > source;
 
-	public CompositeIntervalView( final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory )
+	final protected CompositeFactory< T, C > compositeFactory;
+
+	final protected int n;
+
+	final D toSourceDimension;
+
+	final int collapseDimension;
+
+	public GenericCompositeView(
+			final RandomAccessible< T > source,
+			final CompositeFactory< T, C > compositeFactory,
+			final D toSourceDimension,
+			final int collapseDimension )
 	{
-		super( zeroMinN( source ), compositeFactory, new ToSourceDimension.Identity(), source.numDimensions() - 1 );
-		interval = source;
+		this.source = source;
+		this.compositeFactory = compositeFactory;
+		this.toSourceDimension = toSourceDimension;
+		this.collapseDimension = collapseDimension;
+		n = source.numDimensions() - 1;
 	}
+
+	@Override
+	public int numDimensions()
+	{
+		return n;
+	}
+
+	@Override
+	public CompositeRandomAccess< T, C > randomAccess()
+	{
+		return new CompositeRandomAccess< T, C >( source.randomAccess(), compositeFactory, toSourceDimension, collapseDimension );
+	}
+
+	@Override
+	public CompositeRandomAccess randomAccess(final Interval interval )
+	{
+		return new CompositeRandomAccess< T, C >( source.randomAccess( interval ), compositeFactory, toSourceDimension, collapseDimension );
+	}
+
 
 }

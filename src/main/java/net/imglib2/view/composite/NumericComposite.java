@@ -47,6 +47,7 @@ import net.imglib2.type.numeric.NumericType;
  * operations.
  *
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public class NumericComposite< T extends NumericType< T > > extends AbstractNumericComposite< T, NumericComposite< T > >
 {
@@ -60,15 +61,20 @@ public class NumericComposite< T extends NumericType< T > > extends AbstractNume
 		}
 		
 		@Override
-		public NumericComposite< T > create( final RandomAccess< T > sourceAccess )
+		public NumericComposite< T > create( final RandomAccess< T > sourceAccess, int d )
 		{
-			return new NumericComposite< T >( sourceAccess, numChannels );
+			return new NumericComposite< T >( sourceAccess, numChannels, d );
 		}
 	}
-	
+
 	public NumericComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
 		super( sourceAccess, length );
+	}
+	
+	public NumericComposite( final RandomAccess< T > sourceAccess, final int length, final int d )
+	{
+		super( sourceAccess, length, d );
 	}
 
 	/**

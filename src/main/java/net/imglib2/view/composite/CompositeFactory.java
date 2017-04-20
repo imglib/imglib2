@@ -40,8 +40,14 @@ import net.imglib2.RandomAccess;
  * {@link RandomAccess}.
  * 
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public interface CompositeFactory< T, C extends Composite< T > >
 {
-	public C create( final RandomAccess< T > sourceAccess );
+	public C create( final RandomAccess< T > sourceAccess, int d );
+
+	default public C create( final RandomAccess< T > sourceAccess ) {
+		return create( sourceAccess, sourceAccess.numDimensions() - 1 );
+	}
+
 }
