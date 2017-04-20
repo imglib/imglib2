@@ -48,7 +48,7 @@ public class GenericComposite< T > extends AbstractComposite< T >
 		@Override
 		public GenericComposite< T > create( final RandomAccess< T > sourceAccess, int d )
 		{
-			return new GenericComposite< T >( sourceAccess, d );
+			return new GenericComposite<>( sourceAccess, d );
 		}
 
 	}

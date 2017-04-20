@@ -58,12 +58,12 @@ public class CompositeIntervalView< T, C extends Composite< T > > extends Compos
 		return Views.offset( source, min );
 	}
 
-	public CompositeIntervalView(final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory )
+	public CompositeIntervalView( final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory )
 	{
 		this( source, compositeFactory, source.numDimensions() - 1 );
 	}
 
-	public CompositeIntervalView(final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory, int collapseDimension )
+	public CompositeIntervalView( final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory, int collapseDimension )
 	{
 		super( zeroMinN( source ), compositeFactory, collapseDimension );
 		interval = source;

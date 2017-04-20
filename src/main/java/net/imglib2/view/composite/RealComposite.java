@@ -64,7 +64,7 @@ public class RealComposite< T extends RealType< T > > extends AbstractNumericCom
 		@Override
 		public RealComposite< T > create( final RandomAccess< T > sourceAccess, final int d )
 		{
-			return new RealComposite< T >( sourceAccess, numChannels , d);
+			return new RealComposite<>( sourceAccess, numChannels, d);
 		}
 	}
 	

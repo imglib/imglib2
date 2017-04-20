@@ -33,7 +33,11 @@
  */
 package net.imglib2.view.composite;
 
-import net.imglib2.*;
+import net.imglib2.Interval;
+import net.imglib2.Localizable;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessible;
+import net.imglib2.View;
 
 import java.util.function.IntUnaryOperator;
 
@@ -90,7 +94,7 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 	}
 
 	@Override
-	public CompositeRandomAccess randomAccess(final Interval interval )
+	public CompositeRandomAccess randomAccess( final Interval interval )
 	{
 		return new CompositeRandomAccess( interval );
 	}

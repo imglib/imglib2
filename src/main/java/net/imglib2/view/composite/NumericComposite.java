@@ -63,7 +63,7 @@ public class NumericComposite< T extends NumericType< T > > extends AbstractNume
 		@Override
 		public NumericComposite< T > create( final RandomAccess< T > sourceAccess, int d )
 		{
-			return new NumericComposite< T >( sourceAccess, numChannels, d );
+			return new NumericComposite<>( sourceAccess, numChannels, d );
 		}
 	}
 

@@ -71,9 +71,9 @@ import net.imglib2.util.Intervals;
 import net.imglib2.util.Pair;
 import net.imglib2.util.Util;
 import net.imglib2.view.StackView.StackAccessMode;
-import net.imglib2.view.composite.GenericComposite;
 import net.imglib2.view.composite.CompositeIntervalView;
 import net.imglib2.view.composite.CompositeView;
+import net.imglib2.view.composite.GenericComposite;
 import net.imglib2.view.composite.NumericComposite;
 import net.imglib2.view.composite.RealComposite;
 
@@ -788,7 +788,7 @@ public class Views
 	 */
 	public static < T > CompositeIntervalView< T, ? extends GenericComposite< T > > collapse( final RandomAccessibleInterval< T > source )
 	{
-		return new CompositeIntervalView< T, GenericComposite< T > >( source, new GenericComposite.Factory< T >() );
+		return new CompositeIntervalView<>( source, new GenericComposite.Factory< T >() );
 	}
 
 	/**
@@ -806,7 +806,7 @@ public class Views
 	 */
 	public static < T > CompositeIntervalView< T, ? extends GenericComposite< T > > collapse( final RandomAccessibleInterval< T > source, int d )
 	{
-		return new CompositeIntervalView< T, GenericComposite< T > >( source, new GenericComposite.Factory< T >(), d );
+		return new CompositeIntervalView<>( source, new GenericComposite.Factory< T >(), d );
 	}
 
 	/**
@@ -822,7 +822,7 @@ public class Views
 	 */
 	public static < T extends RealType< T > > CompositeIntervalView< T, RealComposite< T > > collapseReal( final RandomAccessibleInterval< T > source )
 	{
-		return new CompositeIntervalView< T, RealComposite< T > >( source, new RealComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ) );
+		return new CompositeIntervalView<>( source, new RealComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ) );
 	}
 
 	/**
@@ -840,7 +840,7 @@ public class Views
 	 */
 	public static < T extends RealType< T > > CompositeIntervalView< T, RealComposite< T > > collapseReal( final RandomAccessibleInterval< T > source, int d )
 	{
-		return new CompositeIntervalView< T, RealComposite< T > >( source, new RealComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ), d );
+		return new CompositeIntervalView<>( source, new RealComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ), d );
 	}
 
 	/**
@@ -856,7 +856,7 @@ public class Views
 	 */
 	public static < T extends NumericType< T > > CompositeIntervalView< T, NumericComposite< T > > collapseNumeric( final RandomAccessibleInterval< T > source )
 	{
-		return new CompositeIntervalView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ) );
+		return new CompositeIntervalView<>( source, new NumericComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ) );
 	}
 
 	/**
@@ -874,7 +874,7 @@ public class Views
 	 */
 	public static < T extends NumericType< T > > CompositeIntervalView< T, NumericComposite< T > > collapseNumeric( final RandomAccessibleInterval< T > source, int d )
 	{
-		return new CompositeIntervalView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ), d );
+		return new CompositeIntervalView<>( source, new NumericComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ), d );
 	}
 
 	/**
@@ -890,7 +890,7 @@ public class Views
 	 */
 	public static < T > CompositeView< T, ? extends GenericComposite< T > > collapse( final RandomAccessible< T > source )
 	{
-		return new CompositeView< T, GenericComposite< T > >( source, new GenericComposite.Factory< T >() );
+		return new CompositeView<>( source, new GenericComposite.Factory< T >() );
 	}
 
 	/**
@@ -908,7 +908,7 @@ public class Views
 	 */
 	public static < T > CompositeView< T, ? extends GenericComposite< T > > collapse( final RandomAccessible< T > source, final int d )
 	{
-		return new CompositeView< T, GenericComposite< T > >( source, new GenericComposite.Factory< T >(), d );
+		return new CompositeView<>( source, new GenericComposite.Factory< T >(), d );
 	}
 
 	/**
@@ -927,7 +927,7 @@ public class Views
 	 */
 	public static < T extends RealType< T > > CompositeView< T, RealComposite< T > > collapseReal( final RandomAccessible< T > source, final int numChannels )
 	{
-		return new CompositeView< T, RealComposite< T > >( source, new RealComposite.Factory< T >( numChannels ) );
+		return new CompositeView<>( source, new RealComposite.Factory< T >( numChannels ) );
 	}
 
 	/**
@@ -948,7 +948,7 @@ public class Views
 	 */
 	public static < T extends RealType< T > > CompositeView< T, RealComposite< T > > collapseReal( final RandomAccessible< T > source, final int numChannels, final int d )
 	{
-		return new CompositeView< T, RealComposite< T > >( source, new RealComposite.Factory< T >( numChannels ), d );
+		return new CompositeView<>( source, new RealComposite.Factory< T >( numChannels ), d );
 	}
 
 	/**
@@ -967,7 +967,7 @@ public class Views
 	 */
 	public static < T extends NumericType< T > > CompositeView< T, NumericComposite< T > > collapseNumeric( final RandomAccessible< T > source, final int numChannels )
 	{
-		return new CompositeView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( numChannels ) );
+		return new CompositeView<>( source, new NumericComposite.Factory< T >( numChannels ) );
 	}
 
 	/**
@@ -988,7 +988,7 @@ public class Views
 	 */
 	public static < T extends NumericType< T > > CompositeView< T, NumericComposite< T > > collapseNumeric( final RandomAccessible< T > source, final int numChannels, int d )
 	{
-		return new CompositeView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( numChannels ), d );
+		return new CompositeView<>( source, new NumericComposite.Factory< T >( numChannels ), d );
 	}
 
 	/**
