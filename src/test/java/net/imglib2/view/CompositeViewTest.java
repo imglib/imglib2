@@ -5,16 +5,8 @@ import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.IntegerType;
 import net.imglib2.type.numeric.integer.ShortType;
-import net.imglib2.type.operators.ValueEquals;
 import net.imglib2.util.Pair;
-import net.imglib2.view.composite.Composite;
-import net.imglib2.view.composite.CompositeIntervalView;
-import net.imglib2.view.composite.CompositeIntervalViewOfFirstDimension;
-import net.imglib2.view.composite.CompositeView;
-import net.imglib2.view.composite.GenericComposite;
-import net.imglib2.view.composite.GenericCompositeIntervalView;
-import net.imglib2.view.composite.NumericComposite;
-import net.imglib2.view.composite.RealComposite;
+import net.imglib2.view.composite.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,22 +32,23 @@ public class CompositeViewTest {
         }
     }
 
-    private void testLast() {
+    private void testNoArgumentDefaultsToLast() {
         long size = dims[dims.length - 1];
         {
-            CompositeIntervalView<ShortType, ? extends GenericComposite<ShortType>> ref = Views.collapse(img);
-            GenericCompositeIntervalView<ShortType, ? extends GenericComposite<ShortType>, ?> comp = Views.collapseDth(img, dims.length - 1);
+            CompositeIntervalView< ShortType, ? extends GenericComposite< ShortType > > ref = Views.collapse(img);
+            CompositeIntervalView< ShortType, ? extends GenericComposite< ShortType > > comp = Views.collapse(img, dims.length - 1);
 
             for (Pair<? extends GenericComposite<ShortType>, ? extends GenericComposite<ShortType>> p : Views.interval(Views.pair(ref, comp), ref)) {
-                for (int i = 0; i < size; ++i)
+                for (int i = 0; i < size; ++i) {
                     Assert.assertTrue(p.getA().get(i).valueEquals(p.getB().get(i)));
+                }
             }
         }
 
 
         {
             CompositeIntervalView<ShortType, RealComposite<ShortType>> ref = Views.collapseReal(img);
-            GenericCompositeIntervalView<ShortType, RealComposite<ShortType>, ?> comp = Views.collapseRealDth(img, dims.length - 1);
+            CompositeIntervalView<ShortType, RealComposite<ShortType>> comp = Views.collapseReal(img, dims.length - 1);
 
             for (Pair<RealComposite<ShortType>, RealComposite<ShortType>> p : Views.interval(Views.pair(ref, comp), ref)) {
                 for (int i = 0; i < size; ++i)
@@ -66,44 +59,7 @@ public class CompositeViewTest {
 
         {
             CompositeIntervalView<ShortType, NumericComposite<ShortType>> ref = Views.collapseNumeric(img);
-            GenericCompositeIntervalView<ShortType, NumericComposite<ShortType>, ?> comp = Views.collapseNumericDth(img, dims.length - 1);
-
-            for (Pair<NumericComposite<ShortType>, NumericComposite<ShortType>> p : Views.interval(Views.pair(ref, comp), ref)) {
-                for (int i = 0; i < size; ++i) {
-                    Assert.assertTrue(p.getA().get(i).valueEquals(p.getB().get(i)));
-                }
-            }
-        }
-
-    }
-
-    private void testFirst() {
-        long size = dims[dims.length - 1];
-        {
-            CompositeIntervalViewOfFirstDimension<ShortType, ? extends GenericComposite<ShortType>> ref = Views.collapseFirst(img);
-            GenericCompositeIntervalView<ShortType, ? extends GenericComposite<ShortType>, ?> comp = Views.collapseDth(img, 0);
-
-            for (Pair<? extends GenericComposite<ShortType>, ? extends GenericComposite<ShortType>> p : Views.interval(Views.pair(ref, comp), ref)) {
-                for (int i = 0; i < size; ++i)
-                    Assert.assertTrue(p.getA().get(i).valueEquals(p.getB().get(i)));
-            }
-        }
-
-
-        {
-            CompositeIntervalViewOfFirstDimension<ShortType, RealComposite<ShortType>> ref = Views.collapseRealFirst(img);
-            GenericCompositeIntervalView<ShortType, RealComposite<ShortType>, ?> comp = Views.collapseRealDth(img, 0);
-
-            for (Pair<RealComposite<ShortType>, RealComposite<ShortType>> p : Views.interval(Views.pair(ref, comp), ref)) {
-                for (int i = 0; i < size; ++i)
-                    Assert.assertTrue(p.getA().get(i).valueEquals(p.getB().get(i)));
-            }
-        }
-
-
-        {
-            CompositeIntervalViewOfFirstDimension<ShortType, NumericComposite<ShortType>> ref = Views.collapseNumericFirst(img);
-            GenericCompositeIntervalView<ShortType, NumericComposite<ShortType>, ?> comp = Views.collapseNumericDth(img, 0);
+            CompositeIntervalView<ShortType, NumericComposite<ShortType>> comp = Views.collapseNumeric(img, dims.length - 1);
 
             for (Pair<NumericComposite<ShortType>, NumericComposite<ShortType>> p : Views.interval(Views.pair(ref, comp), ref)) {
                 for (int i = 0; i < size; ++i) {
@@ -128,23 +84,21 @@ public class CompositeViewTest {
     @Test
     public void testComposites() {
 
-        testFirst();
-
-        testLast();
+        testNoArgumentDefaultsToLast();
 
         for ( int d = 0; d < dims.length; ++d ) {
             {
-                GenericCompositeIntervalView<ShortType, ? extends GenericComposite<ShortType>, ?> collapsed = Views.collapseDth(img, d);
+                CompositeIntervalView<ShortType, ? extends GenericComposite<ShortType>> collapsed = Views.collapse(img, d);
                 testStrided( collapsed, dims[ d ], strides[ d ] );
             }
 
             {
-                GenericCompositeIntervalView<ShortType, RealComposite<ShortType>, ?> collapsed = Views.collapseRealDth(img, d);
+                CompositeIntervalView<ShortType, RealComposite<ShortType>> collapsed = Views.collapseReal(img, d);
                 testStrided( collapsed, dims[ d ], strides[ d ] );
             }
 
             {
-                GenericCompositeIntervalView<ShortType, NumericComposite<ShortType>, ?> collapsed = Views.collapseNumericDth(img, d);
+                CompositeIntervalView<ShortType, NumericComposite<ShortType>> collapsed = Views.collapseNumeric(img, d);
                 testStrided( collapsed, dims[ d ], strides[ d ] );
             }
         }

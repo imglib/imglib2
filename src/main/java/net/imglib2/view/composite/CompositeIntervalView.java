@@ -34,9 +34,11 @@
 package net.imglib2.view.composite;
 
 import net.imglib2.Interval;
+import net.imglib2.Positionable;
 import net.imglib2.RandomAccessibleInterval;
-
-import static net.imglib2.view.composite.GenericCompositeIntervalView.zeroMinN;
+import net.imglib2.RealPositionable;
+import net.imglib2.View;
+import net.imglib2.view.Views;
 
 /**
  * {@link CompositeView} of a {@link RandomAccessibleInterval}.
@@ -44,14 +46,117 @@ import static net.imglib2.view.composite.GenericCompositeIntervalView.zeroMinN;
  * @author Stephan Saalfeld
  * @author Philipp Hanslovsky
  */
-public class CompositeIntervalView< T, C extends Composite< T > > extends GenericCompositeIntervalView< T, C, ToSourceDimension.Identity >
+public class CompositeIntervalView< T, C extends Composite< T > > extends CompositeView< T, C > implements RandomAccessibleInterval< C >, View
 {
 	final Interval interval;
 
-	public CompositeIntervalView( final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory )
+	final static protected < T > RandomAccessibleInterval< T > zeroMinN( final RandomAccessibleInterval< T > source )
 	{
-		super( zeroMinN( source ), compositeFactory, new ToSourceDimension.Identity(), source.numDimensions() - 1 );
+		final long[] min = new long[ source.numDimensions() ];
+		final int n = min.length - 1;
+		min[ n ] = source.min( n );
+		return Views.offset( source, min );
+	}
+
+	public CompositeIntervalView(final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory )
+	{
+		this( source, compositeFactory, source.numDimensions() - 1 );
+	}
+
+	public CompositeIntervalView(final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory, int collapseDimension )
+	{
+		super( zeroMinN( source ), compositeFactory, collapseDimension );
 		interval = source;
 	}
 
+	@Override
+	public long min( final int d )
+	{
+		return interval.min( d );
+	}
+
+	@Override
+	public void min( final long[] min )
+	{
+		for ( int d = 0; d < n; ++d )
+			min[ d ] = min( d );
+	}
+
+	@Override
+	public void min( final Positionable min )
+	{
+		for ( int d = 0; d < n; ++d )
+			min.setPosition( min( d ), d );
+	}
+
+	@Override
+	public long max( final int d )
+	{
+		return interval.max( d );
+	}
+
+	@Override
+	public void max( final long[] max )
+	{
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = max( d );
+	}
+
+	@Override
+	public void max( final Positionable max )
+	{
+		for ( int d = 0; d < n; ++d )
+			max.setPosition( max( d ), d );
+	}
+
+	@Override
+	public double realMin( final int d )
+	{
+		return min( d );
+	}
+
+	@Override
+	public void realMin( final double[] min )
+	{
+		for ( int d = 0; d < n; ++d )
+			min[ d ] = min( d );
+	}
+
+	@Override
+	public void realMin( final RealPositionable min )
+	{
+		min( min );
+	}
+
+	@Override
+	public double realMax( final int d )
+	{
+		return max( d );
+	}
+
+	@Override
+	public void realMax( final double[] max )
+	{
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = max( d );
+	}
+
+	@Override
+	public void realMax( final RealPositionable max )
+	{
+		max( max );
+	}
+
+	@Override
+	public void dimensions( final long[] dimensions )
+	{
+		for ( int d = 0; d < n; ++d )
+			dimensions[ d ] = interval.dimension( d );
+	}
+
+	@Override
+	public long dimension( final int d )
+	{
+		return interval.dimension( d );
+	}
 }
