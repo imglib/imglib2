@@ -840,7 +840,7 @@ public class Views
 	 */
 	public static < T extends RealType< T > > CompositeIntervalView< T, RealComposite< T > > collapseReal( final RandomAccessibleInterval< T > source, int d )
 	{
-		return new CompositeIntervalView<>( source, new RealComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ), d );
+		return new CompositeIntervalView<>( source, new RealComposite.Factory< T >( ( int ) source.dimension( d ) ), d );
 	}
 
 	/**
@@ -874,7 +874,7 @@ public class Views
 	 */
 	public static < T extends NumericType< T > > CompositeIntervalView< T, NumericComposite< T > > collapseNumeric( final RandomAccessibleInterval< T > source, int d )
 	{
-		return new CompositeIntervalView<>( source, new NumericComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ), d );
+		return new CompositeIntervalView<>( source, new NumericComposite.Factory< T >( ( int ) source.dimension( d ) ), d );
 	}
 
 	/**
