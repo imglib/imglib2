@@ -72,7 +72,7 @@ public class CompositeIntervalView< T, C extends Composite< T > > extends Compos
 	@Override
 	public long min( final int d )
 	{
-		return interval.min( d );
+		return interval.min( toSourceDimension.applyAsInt( d ) );
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class CompositeIntervalView< T, C extends Composite< T > > extends Compos
 	@Override
 	public long max( final int d )
 	{
-		return interval.max( d );
+		return interval.max( toSourceDimension.applyAsInt( d ) );
 	}
 
 	@Override
@@ -151,12 +151,12 @@ public class CompositeIntervalView< T, C extends Composite< T > > extends Compos
 	public void dimensions( final long[] dimensions )
 	{
 		for ( int d = 0; d < n; ++d )
-			dimensions[ d ] = interval.dimension( d );
+			dimensions[ d ] = dimension( d );
 	}
 
 	@Override
 	public long dimension( final int d )
 	{
-		return interval.dimension( d );
+		return interval.dimension( toSourceDimension.applyAsInt( d ) );
 	}
 }
