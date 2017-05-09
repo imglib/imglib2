@@ -110,8 +110,6 @@ public abstract class AbstractArrayLocalizingCursor< T extends NativeType< T > >
 
 		type.updateIndex( cursor.type.getIndex() );
 		type.updateContainer( this );
-
-		reset();
 	}
 
 	/**
