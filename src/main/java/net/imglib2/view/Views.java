@@ -788,7 +788,25 @@ public class Views
 	 */
 	public static < T > CompositeIntervalView< T, ? extends GenericComposite< T > > collapse( final RandomAccessibleInterval< T > source )
 	{
-		return new CompositeIntervalView< T, GenericComposite< T > >( source, new GenericComposite.Factory< T >() );
+		return new CompositeIntervalView<>( source, new GenericComposite.Factory< T >() );
+	}
+
+	/**
+	 * Collapse the <em>d</em><sup>th</sup> dimension of an <em>n</em>
+	 * -dimensional {@link RandomAccessibleInterval}&lt;T&gt; into an (
+	 * <em>n</em>-1)-dimensional {@link RandomAccessibleInterval}&lt;
+	 * {@link GenericComposite}&lt;T&gt;&gt;
+	 *
+	 * @param source
+	 *            the source
+	 * @param d
+	 *            dimension along which to collapse
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeIntervalView} of
+	 *         {@link GenericComposite GenericComposites}
+	 */
+	public static < T > CompositeIntervalView< T, ? extends GenericComposite< T > > collapse( final RandomAccessibleInterval< T > source, int d )
+	{
+		return new CompositeIntervalView<>( source, new GenericComposite.Factory< T >(), d );
 	}
 
 	/**
@@ -804,7 +822,25 @@ public class Views
 	 */
 	public static < T extends RealType< T > > CompositeIntervalView< T, RealComposite< T > > collapseReal( final RandomAccessibleInterval< T > source )
 	{
-		return new CompositeIntervalView< T, RealComposite< T > >( source, new RealComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ) );
+		return new CompositeIntervalView<>( source, new RealComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ) );
+	}
+
+	/**
+	 * Collapse the <em>d</em><sup>th</sup> dimension of an <em>n</em>
+	 * -dimensional {@link RandomAccessibleInterval}&lt;T extends
+	 * {@link RealType}&lt;T&gt;&gt; into an (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessibleInterval}&lt;{@link RealComposite}&lt;T&gt;&gt;
+	 *
+	 * @param source
+	 *            the source
+	 * @param d
+	 *            dimension along which to collapse
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeIntervalView} of
+	 *         {@link RealComposite RealComposites}
+	 */
+	public static < T extends RealType< T > > CompositeIntervalView< T, RealComposite< T > > collapseReal( final RandomAccessibleInterval< T > source, int d )
+	{
+		return new CompositeIntervalView<>( source, new RealComposite.Factory< T >( ( int ) source.dimension( d ) ), d );
 	}
 
 	/**
@@ -820,7 +856,25 @@ public class Views
 	 */
 	public static < T extends NumericType< T > > CompositeIntervalView< T, NumericComposite< T > > collapseNumeric( final RandomAccessibleInterval< T > source )
 	{
-		return new CompositeIntervalView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ) );
+		return new CompositeIntervalView<>( source, new NumericComposite.Factory< T >( ( int ) source.dimension( source.numDimensions() - 1 ) ) );
+	}
+
+	/**
+	 * Collapse the <em>d</em><sup>th</sup> dimension of an <em>n</em>
+	 * -dimensional {@link RandomAccessibleInterval}&lt;T extends
+	 * {@link NumericType}&lt;T&gt;&gt; into an (<em>n</em>-1)-dimensional
+	 * {@link RandomAccessibleInterval}&lt;{@link NumericComposite}&lt;T&gt;&gt;
+	 *
+	 * @param source
+	 *            the source
+	 * @param d
+	 *            dimension along which to collapse
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeIntervalView} of
+	 *         {@link NumericComposite NumericComposites}
+	 */
+	public static < T extends NumericType< T > > CompositeIntervalView< T, NumericComposite< T > > collapseNumeric( final RandomAccessibleInterval< T > source, int d )
+	{
+		return new CompositeIntervalView<>( source, new NumericComposite.Factory< T >( ( int ) source.dimension( d ) ), d );
 	}
 
 	/**
@@ -836,7 +890,25 @@ public class Views
 	 */
 	public static < T > CompositeView< T, ? extends GenericComposite< T > > collapse( final RandomAccessible< T > source )
 	{
-		return new CompositeView< T, GenericComposite< T > >( source, new GenericComposite.Factory< T >() );
+		return new CompositeView<>( source, new GenericComposite.Factory< T >() );
+	}
+
+	/**
+	 * Collapse the <em>d</em><sup>th</sup> dimension of an <em>n</em>
+	 * -dimensional {@link RandomAccessible}&lt;T&gt; into an (<em>n</em>
+	 * -1)-dimensional {@link RandomAccessible}&lt;{@link GenericComposite}
+	 * &lt;T&gt;&gt;
+	 *
+	 * @param source
+	 *            the source
+	 * @param d
+	 *            dimension along which to collapse
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeView} of
+	 *         {@link GenericComposite GenericComposites}
+	 */
+	public static < T > CompositeView< T, ? extends GenericComposite< T > > collapse( final RandomAccessible< T > source, final int d )
+	{
+		return new CompositeView<>( source, new GenericComposite.Factory< T >(), d );
 	}
 
 	/**
@@ -855,7 +927,28 @@ public class Views
 	 */
 	public static < T extends RealType< T > > CompositeView< T, RealComposite< T > > collapseReal( final RandomAccessible< T > source, final int numChannels )
 	{
-		return new CompositeView< T, RealComposite< T > >( source, new RealComposite.Factory< T >( numChannels ) );
+		return new CompositeView<>( source, new RealComposite.Factory< T >( numChannels ) );
+	}
+
+	/**
+	 * Collapse the <em>d</em><sup>th</sup> dimension of an <em>n</em>
+	 * -dimensional {@link RandomAccessible}&lt;T extends {@link RealType}
+	 * &lt;T&gt;&gt; into an (<em>n</em>-1)-dimensional {@link RandomAccessible}
+	 * &lt;{@link RealComposite}&lt;T&gt;&gt;
+	 *
+	 * @param source
+	 *            the source
+	 * @param numChannels
+	 *            the number of channels that the {@link RealComposite} will
+	 *            consider when performing calculations
+	 * @param d
+	 *            dimension along which to collapse
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeView} of
+	 *         {@link RealComposite RealComposites}
+	 */
+	public static < T extends RealType< T > > CompositeView< T, RealComposite< T > > collapseReal( final RandomAccessible< T > source, final int numChannels, final int d )
+	{
+		return new CompositeView<>( source, new RealComposite.Factory< T >( numChannels ), d );
 	}
 
 	/**
@@ -874,7 +967,28 @@ public class Views
 	 */
 	public static < T extends NumericType< T > > CompositeView< T, NumericComposite< T > > collapseNumeric( final RandomAccessible< T > source, final int numChannels )
 	{
-		return new CompositeView< T, NumericComposite< T > >( source, new NumericComposite.Factory< T >( numChannels ) );
+		return new CompositeView<>( source, new NumericComposite.Factory< T >( numChannels ) );
+	}
+
+	/**
+	 * Collapse the <em>d</em><sup>th</sup> dimension of an <em>n</em>
+	 * -dimensional {@link RandomAccessible}&lt;T extends {@link NumericType}
+	 * &lt;T&gt;&gt; into an (<em>n</em>-1)-dimensional {@link RandomAccessible}
+	 * &lt;{@link NumericComposite}&lt;T&gt;&gt;
+	 *
+	 * @param source
+	 *            the source
+	 * @param numChannels
+	 *            the number of channels that the {@link NumericComposite} will
+	 *            consider when performing calculations
+	 * @param d
+	 *            dimension along which to collapse
+	 * @return an (<em>n</em>-1)-dimensional {@link CompositeView} of
+	 *         {@link NumericComposite NumericComposites}
+	 */
+	public static < T extends NumericType< T > > CompositeView< T, NumericComposite< T > > collapseNumeric( final RandomAccessible< T > source, final int numChannels, int d )
+	{
+		return new CompositeView<>( source, new NumericComposite.Factory< T >( numChannels ), d );
 	}
 
 	/**

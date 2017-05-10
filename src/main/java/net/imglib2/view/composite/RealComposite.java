@@ -48,6 +48,7 @@ import net.imglib2.type.numeric.RealType;
  * operations.
  *
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public class RealComposite< T extends RealType< T > > extends AbstractNumericComposite< T, RealComposite< T > >
 {
@@ -61,12 +62,17 @@ public class RealComposite< T extends RealType< T > > extends AbstractNumericCom
 		}
 		
 		@Override
-		public RealComposite< T > create( final RandomAccess< T > sourceAccess )
+		public RealComposite< T > create( final RandomAccess< T > sourceAccess, final int d )
 		{
-			return new RealComposite< T >( sourceAccess, numChannels );
+			return new RealComposite<>( sourceAccess, numChannels, d);
 		}
 	}
 	
+	public RealComposite( final RandomAccess< T > sourceAccess, final int length, final int d )
+	{
+		super( sourceAccess, length, d );
+	}
+
 	public RealComposite( final RandomAccess< T > sourceAccess, final int length )
 	{
 		super( sourceAccess, length );

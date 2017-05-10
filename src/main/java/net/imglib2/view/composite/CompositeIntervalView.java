@@ -44,6 +44,7 @@ import net.imglib2.view.Views;
  * {@link CompositeView} of a {@link RandomAccessibleInterval}.
  * 
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public class CompositeIntervalView< T, C extends Composite< T > > extends CompositeView< T, C > implements RandomAccessibleInterval< C >, View
 {
@@ -59,14 +60,19 @@ public class CompositeIntervalView< T, C extends Composite< T > > extends Compos
 
 	public CompositeIntervalView( final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory )
 	{
-		super( zeroMinN( source ), compositeFactory );
+		this( source, compositeFactory, source.numDimensions() - 1 );
+	}
+
+	public CompositeIntervalView( final RandomAccessibleInterval< T > source, final CompositeFactory< T, C > compositeFactory, int collapseDimension )
+	{
+		super( zeroMinN( source ), compositeFactory, collapseDimension );
 		interval = source;
 	}
 
 	@Override
 	public long min( final int d )
 	{
-		return interval.min( d );
+		return interval.min( toSourceDimension.applyAsInt( d ) );
 	}
 
 	@Override
@@ -86,7 +92,7 @@ public class CompositeIntervalView< T, C extends Composite< T > > extends Compos
 	@Override
 	public long max( final int d )
 	{
-		return interval.max( d );
+		return interval.max( toSourceDimension.applyAsInt( d ) );
 	}
 
 	@Override
@@ -145,12 +151,12 @@ public class CompositeIntervalView< T, C extends Composite< T > > extends Compos
 	public void dimensions( final long[] dimensions )
 	{
 		for ( int d = 0; d < n; ++d )
-			dimensions[ d ] = interval.dimension( d );
+			dimensions[ d ] = dimension( d );
 	}
 
 	@Override
 	public long dimension( final int d )
 	{
-		return interval.dimension( d );
+		return interval.dimension( toSourceDimension.applyAsInt( d ) );
 	}
 }

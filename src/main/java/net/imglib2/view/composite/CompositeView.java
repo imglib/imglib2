@@ -39,6 +39,8 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.View;
 
+import java.util.function.IntUnaryOperator;
+
 /**
  * {@link CompositeView} collapses the trailing dimension of a
  * {@link RandomAccessible} of T into a {@link Composite} of T. The results is
@@ -46,193 +48,37 @@ import net.imglib2.View;
  * of T.
  * 
  * @author Stephan Saalfeld
+ * @author Philipp Hanslovsky
  */
 public class CompositeView< T, C extends Composite< T > > implements RandomAccessible< C >, View
 {
-	final protected CompositeFactory< T, C > compositeFactory;
-
 	final protected RandomAccessible< T > source;
+
+	final protected CompositeFactory< T, C > compositeFactory;
 
 	final protected int n;
 
-	public class CompositeRandomAccess implements RandomAccess< C >
+	final int collapseDimension;
+
+	final IntUnaryOperator toSourceDimension;
+
+	public CompositeView(
+			final RandomAccessible< T > source,
+			final CompositeFactory< T, C > compositeFactory )
 	{
-		final protected RandomAccess< T > sourceAccess;
-
-		final protected C composite;
-
-		public CompositeRandomAccess()
-		{
-			sourceAccess = source.randomAccess();
-			composite = compositeFactory.create( sourceAccess );
-		}
-
-		protected CompositeRandomAccess( final CompositeRandomAccess other )
-		{
-			sourceAccess = other.sourceAccess.copyRandomAccess();
-			composite = compositeFactory.create( sourceAccess );
-		}
-
-		@Override
-		public void localize( final int[] position )
-		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getIntPosition( d );
-		}
-
-		@Override
-		public void localize( final long[] position )
-		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getLongPosition( d );
-		}
-
-		@Override
-		public int getIntPosition( final int d )
-		{
-			return sourceAccess.getIntPosition( d );
-		}
-
-		@Override
-		public long getLongPosition( final int d )
-		{
-			return sourceAccess.getLongPosition( d );
-		}
-
-		@Override
-		public void localize( final float[] position )
-		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getFloatPosition( d );
-		}
-
-		@Override
-		public void localize( final double[] position )
-		{
-			for ( int d = 0; d < n; ++d )
-				position[ d ] = sourceAccess.getDoublePosition( d );
-		}
-
-		@Override
-		public float getFloatPosition( final int d )
-		{
-			return sourceAccess.getFloatPosition( d );
-		}
-
-		@Override
-		public double getDoublePosition( final int d )
-		{
-			return sourceAccess.getFloatPosition( d );
-		}
-
-		@Override
-		public int numDimensions()
-		{
-			return n;
-		}
-
-		@Override
-		public void fwd( final int d )
-		{
-			sourceAccess.fwd( d );
-		}
-
-		@Override
-		public void bck( final int d )
-		{
-			sourceAccess.bck( d );
-		}
-
-		@Override
-		public void move( final int distance, final int d )
-		{
-			sourceAccess.move( distance, d );
-		}
-
-		@Override
-		public void move( final long distance, final int d )
-		{
-			sourceAccess.move( distance, d );
-		}
-
-		@Override
-		public void move( final Localizable localizable )
-		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.move( localizable.getLongPosition( d ), d );
-		}
-
-		@Override
-		public void move( final int[] distance )
-		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.move( distance[ d ], d );
-		}
-
-		@Override
-		public void move( final long[] distance )
-		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.move( distance[ d ], d );
-		}
-
-		@Override
-		public void setPosition( final Localizable localizable )
-		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.setPosition( localizable.getLongPosition( d ), d );
-		}
-
-		@Override
-		public void setPosition( final int[] position )
-		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.setPosition( position[ d ], d );
-		}
-
-		@Override
-		public void setPosition( final long[] position )
-		{
-			for ( int d = 0; d < n; ++d )
-				sourceAccess.setPosition( position[ d ], d );
-		}
-
-		@Override
-		public void setPosition( final int position, final int d )
-		{
-			sourceAccess.setPosition( position, d );
-		}
-
-		@Override
-		public void setPosition( final long position, final int d )
-		{
-			sourceAccess.setPosition( position, d );
-		}
-
-		@Override
-		public C get()
-		{
-			return composite;
-		}
-
-		@Override
-		public CompositeRandomAccess copy()
-		{
-			return new CompositeRandomAccess( this );
-		}
-
-		@Override
-		public CompositeRandomAccess copyRandomAccess()
-		{
-			return copy();
-		}
+		this( source, compositeFactory, source.numDimensions() - 1 );
 	}
 
-	public CompositeView( final RandomAccessible< T > source, final CompositeFactory< T, C > compositeFactory )
+	public CompositeView(
+			final RandomAccessible< T > source,
+			final CompositeFactory< T, C > compositeFactory,
+			final int collapseDimension )
 	{
 		this.source = source;
 		this.compositeFactory = compositeFactory;
+		this.collapseDimension = collapseDimension;
 		n = source.numDimensions() - 1;
+		this.toSourceDimension = collapseDimension == 0 ? first() : collapseDimension == n ? last() : nth( collapseDimension );
 	}
 
 	@Override
@@ -250,7 +96,195 @@ public class CompositeView< T, C extends Composite< T > > implements RandomAcces
 	@Override
 	public CompositeRandomAccess randomAccess( final Interval interval )
 	{
-		return randomAccess();
+		return new CompositeRandomAccess( interval );
 	}
 
+	private static IntUnaryOperator first() {
+		return i -> i + 1;
+	}
+
+	private static IntUnaryOperator last() {
+		return i -> i;
+	}
+
+	private static IntUnaryOperator nth( int n ) {
+		return i ->  i >= n ? i + 1 : i;
+	}
+
+    public class CompositeRandomAccess implements RandomAccess< C >
+    {
+        final protected RandomAccess< T > sourceAccess;
+
+        final protected C composite;
+
+        public CompositeRandomAccess()
+        {
+            this.sourceAccess = source.randomAccess();
+            this.composite = compositeFactory.create( sourceAccess, collapseDimension );
+        }
+
+		public CompositeRandomAccess( Interval interval )
+		{
+			this.sourceAccess = source.randomAccess( interval );
+			this.composite = compositeFactory.create( sourceAccess, collapseDimension );
+		}
+
+		private CompositeRandomAccess( CompositeRandomAccess other )
+		{
+			this.sourceAccess = other.sourceAccess.copyRandomAccess();
+			this.composite = compositeFactory.create( sourceAccess, collapseDimension );
+		}
+
+        @Override
+        public void localize( final int[] position )
+        {
+            for ( int d = 0; d < n; ++d )
+                position[ d ] = sourceAccess.getIntPosition( toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void localize( final long[] position )
+        {
+            for ( int d = 0; d < n; ++d )
+                position[ d ] = sourceAccess.getLongPosition( toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public int getIntPosition( final int d )
+        {
+            return sourceAccess.getIntPosition( toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public long getLongPosition( final int d )
+        {
+            return sourceAccess.getLongPosition( toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void localize( final float[] position )
+        {
+            for ( int d = 0; d < n; ++d )
+                position[ d ] = sourceAccess.getFloatPosition( toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void localize( final double[] position )
+        {
+            for ( int d = 0; d < n; ++d )
+                position[ d ] = sourceAccess.getDoublePosition( toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public float getFloatPosition( final int d )
+        {
+            return sourceAccess.getFloatPosition( toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public double getDoublePosition( final int d )
+        {
+            return sourceAccess.getFloatPosition( toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public int numDimensions()
+        {
+            return n;
+        }
+
+        @Override
+        public void fwd( final int d )
+        {
+            sourceAccess.fwd( toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void bck( final int d )
+        {
+            sourceAccess.bck( toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void move( final int distance, final int d )
+        {
+            sourceAccess.move( distance, toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void move( final long distance, final int d )
+        {
+            sourceAccess.move( distance, toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void move( final Localizable localizable )
+        {
+            for ( int d = 0; d < n; ++d )
+                sourceAccess.move( localizable.getLongPosition( d ), toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void move( final int[] distance )
+        {
+            for ( int d = 0; d < n; ++d )
+                sourceAccess.move( distance[ d ], toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void move( final long[] distance )
+        {
+            for ( int d = 0; d < n; ++d )
+                sourceAccess.move( distance[ d ], toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void setPosition( final Localizable localizable )
+        {
+            for ( int d = 0; d < n; ++d )
+                sourceAccess.setPosition( localizable.getLongPosition( d ), toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void setPosition( final int[] position )
+        {
+            for ( int d = 0; d < n; ++d )
+                sourceAccess.setPosition( position[ d ], toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void setPosition( final long[] position )
+        {
+            for ( int d = 0; d < n; ++d )
+                sourceAccess.setPosition( position[ d ], toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void setPosition( final int position, final int d )
+        {
+            sourceAccess.setPosition( position, toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public void setPosition( final long position, final int d )
+        {
+            sourceAccess.setPosition( position, toSourceDimension.applyAsInt( d ) );
+        }
+
+        @Override
+        public C get()
+        {
+            return composite;
+        }
+
+        @Override
+        public CompositeRandomAccess copy() {
+            return copyRandomAccess();
+        }
+
+        @Override
+        public CompositeRandomAccess copyRandomAccess() {
+            return new CompositeRandomAccess( this );
+        }
+    }
 }
