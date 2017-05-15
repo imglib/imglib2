@@ -231,6 +231,18 @@ public class IntervalIndexer
 		position[ maxDim ] = index + offsets[ maxDim ];
 	}
 
+	final static public void indexToPositionWithOffset( int index, final int[] dimensions, final long[] offsets, final long[] position )
+	{
+		final int maxDim = dimensions.length - 1;
+		for ( int d = 0; d < maxDim; ++d )
+		{
+			final int j = index / dimensions[ d ];
+			position[ d ] = index - j * dimensions[ d ] + offsets[ d ];
+			index = j;
+		}
+		position[ maxDim ] = index + offsets[ maxDim ];
+	}
+
 	final static public void indexToPositionWithOffset( long index, final long[] dimensions, final long[] offsets, final long[] position )
 	{
 		final int maxDim = dimensions.length - 1;
@@ -311,6 +323,11 @@ public class IntervalIndexer
 	}
 
 	final static public int indexToPositionWithOffset( final int index, final int[] dimensions, final int[] steps, final int[] offset, final int dimension )
+	{
+		return indexToPosition( index, dimensions, steps, dimension ) + offset[ dimension ];
+	}
+
+	public static long indexToPositionWithOffset( final int index, final int[] dimensions, final int[] steps, final long[] offset, final int dimension )
 	{
 		return indexToPosition( index, dimensions, steps, dimension ) + offset[ dimension ];
 	}
