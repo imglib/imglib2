@@ -66,7 +66,7 @@ public class LazyCellImg< T extends NativeType< T >, A >
 	{
 		private final Get< T > get;
 
-		protected LazyCells( final long[] dimensions, final Get< T > get )
+		public LazyCells( final long[] dimensions, final Get< T > get )
 		{
 			super( dimensions );
 			this.get = get;
