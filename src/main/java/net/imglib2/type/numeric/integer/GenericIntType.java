@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -43,7 +43,7 @@ import net.imglib2.util.Util;
 
 /**
  * TODO
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -67,7 +67,7 @@ public abstract class GenericIntType< T extends GenericIntType< T >> extends Abs
 	{
 		img = null;
 		dataAccess = new IntArray( 1 );
-		setValue( value );
+		setInt( value );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
@@ -92,12 +92,24 @@ public abstract class GenericIntType< T extends GenericIntType< T >> extends Abs
 		dataAccess = img.update( c );
 	}
 
+	@Deprecated
 	protected int getValue()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	@Deprecated
 	protected void setValue( final int f )
+	{
+		dataAccess.setValue( i, f );
+	}
+
+	public int getInt()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	public void setInt( final int f )
 	{
 		dataAccess.setValue( i, f );
 	}
@@ -105,57 +117,57 @@ public abstract class GenericIntType< T extends GenericIntType< T >> extends Abs
 	@Override
 	public void mul( final float c )
 	{
-		final int a = getValue();
-		setValue( Util.round( a * c ) );
+		final int a = getInt();
+		setInt( Util.round( a * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
-		final int a = getValue();
-		setValue( ( int ) Util.round( a * c ) );
+		final int a = getInt();
+		setInt( ( int ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void add( final T c )
 	{
-		final int a = getValue();
-		setValue( a + c.getValue() );
+		final int a = getInt();
+		setInt( a + c.getInt() );
 	}
 
 	@Override
 	public void div( final T c )
 	{
-		final int a = getValue();
-		setValue( a / c.getValue() );
+		final int a = getInt();
+		setInt( a / c.getInt() );
 	}
 
 	@Override
 	public void mul( final T c )
 	{
-		final int a = getValue();
-		setValue( a * c.getValue() );
+		final int a = getInt();
+		setInt( a * c.getInt() );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final int a = getValue();
-		setValue( a - c.getValue() );
+		final int a = getInt();
+		setInt( a - c.getInt() );
 	}
 
 	@Override
 	public int hashCode()
 	{
 		// NB: Use the same hash code as java.lang.Integer#hashCode().
-		return getValue();
+		return getInt();
 	}
 
 	@Override
 	public int compareTo( final T c )
 	{
-		final int a = getValue();
-		final int b = c.getValue();
+		final int a = getInt();
+		final int b = c.getInt();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
@@ -167,39 +179,39 @@ public abstract class GenericIntType< T extends GenericIntType< T >> extends Abs
 	@Override
 	public void set( final T c )
 	{
-		setValue( c.getValue() );
+		setInt( c.getInt() );
 	}
 
 	@Override
 	public void setOne()
 	{
-		setValue( 1 );
+		setInt( 1 );
 	}
 
 	@Override
 	public void setZero()
 	{
-		setValue( 0 );
+		setInt( 0 );
 	}
 
 	@Override
 	public void inc()
 	{
-		int a = getValue();
-		setValue( ++a );
+		int a = getInt();
+		setInt( ++a );
 	}
 
 	@Override
 	public void dec()
 	{
-		int a = getValue();
-		setValue( --a );
+		int a = getInt();
+		setInt( --a );
 	}
 
 	@Override
 	public String toString()
 	{
-		return "" + getValue();
+		return "" + getInt();
 	}
 
 	@Override
@@ -245,8 +257,8 @@ public abstract class GenericIntType< T extends GenericIntType< T >> extends Abs
 	}
 
 	@Override
-	public boolean valueEquals( T t )
+	public boolean valueEquals( final T t )
 	{
-		return getValue() == t.getValue();
+		return getInt() == t.getInt();
 	}
 }

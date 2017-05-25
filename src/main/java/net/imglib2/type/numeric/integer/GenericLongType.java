@@ -65,7 +65,7 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	{
 		img = null;
 		dataAccess = new LongArray( 1 );
-		setValue( value );
+		setLong( value );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
@@ -90,12 +90,24 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 		dataAccess = img.update( c );
 	}
 
+	@Deprecated
 	protected long getValue()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	@Deprecated
 	protected void setValue( final long f )
+	{
+		dataAccess.setValue( i, f );
+	}
+
+	public long getLong()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	public void setLong( final long f )
 	{
 		dataAccess.setValue( i, f );
 	}
@@ -104,51 +116,51 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	@Override
 	public void mul( final float c )
 	{
-		setValue( Util.round( getValue() * c ) );
+		setLong( Util.round( getLong() * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
-		setValue( Util.round( getValue() * c ) );
+		setLong( Util.round( getLong() * c ) );
 	}
 
 	@Override
 	public void add( final T c )
 	{
-		setValue( getValue() + c.getValue() );
+		setLong( getLong() + c.getLong() );
 	}
 
 	@Override
 	public void div( final T c )
 	{
-		setValue( getValue() / c.getValue() );
+		setLong( getLong() / c.getLong() );
 	}
 
 	@Override
 	public void mul( final T c )
 	{
-		setValue( getValue() * c.getValue() );
+		setLong( getLong() * c.getLong() );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		setValue( getValue() - c.getValue() );
+		setLong( getLong() - c.getLong() );
 	}
 
 	@Override
 	public int hashCode()
 	{
 		// NB: Use the same hash code as java.lang.Long#hashCode().
-		return ( (Long)getValue() ).hashCode();
+		return ( (Long)getLong() ).hashCode();
 	}
 
 	@Override
 	public int compareTo( final T c )
 	{
-		final long a = getValue();
-		final long b = c.getValue();
+		final long a = getLong();
+		final long b = c.getLong();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
@@ -160,39 +172,39 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	@Override
 	public void set( final T c )
 	{
-		setValue( c.getValue() );
+		setLong( c.getLong() );
 	}
 
 	@Override
 	public void setOne()
 	{
-		setValue( 1 );
+		setLong( 1 );
 	}
 
 	@Override
 	public void setZero()
 	{
-		setValue( 0 );
+		setLong( 0 );
 	}
 
 	@Override
 	public void inc()
 	{
-		long a = getValue();
-		setValue( ++a );
+		long a = getLong();
+		setLong( ++a );
 	}
 
 	@Override
 	public void dec()
 	{
-		long a = getValue();
-		setValue( --a );
+		long a = getLong();
+		setLong( --a );
 	}
 
 	@Override
 	public String toString()
 	{
-		return "" + getValue();
+		return "" + getLong();
 	}
 
 	@Override
@@ -238,8 +250,8 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 	}
 
 	@Override
-	public boolean valueEquals( T t )
+	public boolean valueEquals( final T t )
 	{
-		return getValue() == t.getValue();
+		return getLong() == t.getLong();
 	}
 }

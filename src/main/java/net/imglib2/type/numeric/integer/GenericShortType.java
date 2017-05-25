@@ -71,7 +71,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	{
 		img = null;
 		dataAccess = new ShortArray( 1 );
-		setValue( value );
+		setShort( value );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
@@ -96,12 +96,24 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 		dataAccess = img.update( c );
 	}
 
+	@Deprecated
 	protected short getValue()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	@Deprecated
 	protected void setValue( final short f )
+	{
+		dataAccess.setValue( i, f );
+	}
+
+	public short getShort()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	public void setShort( final short f )
 	{
 		dataAccess.setValue( i, f );
 	}
@@ -109,57 +121,57 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	@Override
 	public void mul( final float c )
 	{
-		final short a = getValue();
-		setValue( ( short ) Util.round( a * c ) );
+		final short a = getShort();
+		setShort( ( short ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
-		final short a = getValue();
-		setValue( ( short ) Util.round( a * c ) );
+		final short a = getShort();
+		setShort( ( short ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void add( final T c )
 	{
-		final short a = getValue();
-		setValue( ( short ) ( a + c.getValue() ) );
+		final short a = getShort();
+		setShort( ( short ) ( a + c.getShort() ) );
 	}
 
 	@Override
 	public void div( final T c )
 	{
-		final short a = getValue();
-		setValue( ( short ) ( a / c.getValue() ) );
+		final short a = getShort();
+		setShort( ( short ) ( a / c.getShort() ) );
 	}
 
 	@Override
 	public void mul( final T c )
 	{
-		final short a = getValue();
-		setValue( ( short ) ( a * c.getValue() ) );
+		final short a = getShort();
+		setShort( ( short ) ( a * c.getShort() ) );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final short a = getValue();
-		setValue( ( byte ) ( a - c.getValue() ) );
+		final short a = getShort();
+		setShort( ( byte ) ( a - c.getShort() ) );
 	}
 
 	@Override
 	public int hashCode()
 	{
 		// NB: Use the same hash code as java.lang.Short#hashCode().
-		return getValue();
+		return getShort();
 	}
 
 	@Override
 	public int compareTo( final T c )
 	{
-		final short a = getValue();
-		final short b = c.getValue();
+		final short a = getShort();
+		final short b = c.getShort();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
@@ -171,39 +183,39 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	@Override
 	public void set( final T c )
 	{
-		setValue( c.getValue() );
+		setShort( c.getShort() );
 	}
 
 	@Override
 	public void setOne()
 	{
-		setValue( ( short ) 1 );
+		setShort( ( short ) 1 );
 	}
 
 	@Override
 	public void setZero()
 	{
-		setValue( ( short ) 0 );
+		setShort( ( short ) 0 );
 	}
 
 	@Override
 	public void inc()
 	{
-		short a = getValue();
-		setValue( ++a );
+		short a = getShort();
+		setShort( ++a );
 	}
 
 	@Override
 	public void dec()
 	{
-		short a = getValue();
-		setValue( --a );
+		short a = getShort();
+		setShort( --a );
 	}
 
 	@Override
 	public String toString()
 	{
-		return "" + getValue();
+		return "" + getShort();
 	}
 
 	@Override
@@ -251,6 +263,6 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	@Override
 	public boolean valueEquals( final T t )
 	{
-		return getValue() == t.getValue();
+		return getShort() == t.getShort();
 	}
 }
