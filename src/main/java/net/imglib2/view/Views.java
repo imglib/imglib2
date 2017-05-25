@@ -1288,7 +1288,7 @@ public class Views
 	 *
 	 * @param source
 	 *            the interval to expand.
-	 * @param factory
+	 * @param oob
 	 *            the out-of-bounds strategy.
 	 * @return Expansion of the {@link RandomAccessibleInterval} source as
 	 *         specified by oob and border.

@@ -34,6 +34,8 @@
 
 package net.imglib2.img.cell;
 
+import java.io.Serializable;
+
 import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 
@@ -42,8 +44,10 @@ import net.imglib2.util.Intervals;
  *
  * @author Tobias Pietzsch
  */
-public class Cell< A >
+public class Cell< A > implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	protected final int n;
 
 	protected final int[] dimensions;

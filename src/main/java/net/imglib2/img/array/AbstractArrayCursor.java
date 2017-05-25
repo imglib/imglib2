@@ -95,8 +95,6 @@ public abstract class AbstractArrayCursor< T extends NativeType< T > > extends A
 
 		type.updateIndex( cursor.type.getIndex() );
 		type.updateContainer( this );
-
-		reset();
 	}
 
 	/**
