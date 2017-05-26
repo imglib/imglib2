@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,13 +38,12 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.basictypeaccess.ByteAccess;
 import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.util.Fraction;
 import net.imglib2.util.Util;
 
 /**
  * TODO
- * 
+ *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  */
@@ -68,7 +67,7 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 	{
 		img = null;
 		dataAccess = new ByteArray( 1 );
-		setValue( value );
+		setByte( value );
 	}
 
 	// this is the constructor if you want to specify the dataAccess
@@ -93,12 +92,38 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 		dataAccess = img.update( c );
 	}
 
+	/**
+	 * @deprecated Use {@link #getByte()} instead.
+	 */
+	@Deprecated
 	protected byte getValue()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	/**
+	 * @deprecated Use {@link #setByte(byte)} instead.
+	 */
+	@Deprecated
 	protected void setValue( final byte f )
+	{
+		dataAccess.setValue( i, f );
+	}
+
+	/**
+	 * Returns the primitive byte value that is used to store this type.
+	 *
+	 * @return primitive byte value
+	 */
+	public byte getByte()
+	{
+		return dataAccess.getValue( i );
+	}
+
+	/**
+	 * Sets the primitive byte value that is used to store this type.
+	 */
+	public void setByte( final byte f )
 	{
 		dataAccess.setValue( i, f );
 	}
@@ -106,57 +131,57 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 	@Override
 	public void mul( final float c )
 	{
-		final byte a = getValue();
-		setValue( ( byte ) Util.round( a * c ) );
+		final byte a = getByte();
+		setByte( ( byte ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void mul( final double c )
 	{
-		final byte a = getValue();
-		setValue( ( byte ) Util.round( a * c ) );
+		final byte a = getByte();
+		setByte( ( byte ) Util.round( a * c ) );
 	}
 
 	@Override
 	public void add( final T c )
 	{
-		final byte a = getValue();
-		setValue( ( byte ) ( a + c.getValue() ) );
+		final byte a = getByte();
+		setByte( ( byte ) ( a + c.getByte() ) );
 	}
 
 	@Override
 	public void div( final T c )
 	{
-		final byte a = getValue();
-		setValue( ( byte ) ( a / c.getValue() ) );
+		final byte a = getByte();
+		setByte( ( byte ) ( a / c.getByte() ) );
 	}
 
 	@Override
 	public void mul( final T c )
 	{
-		final byte a = getValue();
-		setValue( ( byte ) ( a * c.getValue() ) );
+		final byte a = getByte();
+		setByte( ( byte ) ( a * c.getByte() ) );
 	}
 
 	@Override
 	public void sub( final T c )
 	{
-		final byte a = getValue();
-		setValue( ( byte ) ( a - c.getValue() ) );
+		final byte a = getByte();
+		setByte( ( byte ) ( a - c.getByte() ) );
 	}
 
 	@Override
 	public int hashCode()
 	{
 		// NB: Use the same hash code as java.lang.Byte#hashCode().
-		return getValue();
+		return getByte();
 	}
 
 	@Override
 	public int compareTo( final T c )
 	{
-		final byte a = getValue();
-		final byte b = c.getValue();
+		final byte a = getByte();
+		final byte b = c.getByte();
 		if ( a > b )
 			return 1;
 		else if ( a < b )
@@ -168,39 +193,39 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 	@Override
 	public void set( final T c )
 	{
-		setValue( c.getValue() );
+		setByte( c.getByte() );
 	}
 
 	@Override
 	public void setOne()
 	{
-		setValue( ( byte ) 1 );
+		setByte( ( byte ) 1 );
 	}
 
 	@Override
 	public void setZero()
 	{
-		setValue( ( byte ) 0 );
+		setByte( ( byte ) 0 );
 	}
 
 	@Override
 	public void inc()
 	{
-		byte a = getValue();
-		setValue( ++a );
+		byte a = getByte();
+		setByte( ++a );
 	}
 
 	@Override
 	public void dec()
 	{
-		byte a = getValue();
-		setValue( --a );
+		byte a = getByte();
+		setByte( --a );
 	}
 
 	@Override
 	public String toString()
 	{
-		return "" + getValue();
+		return "" + getByte();
 	}
 
 	@Override
@@ -246,8 +271,8 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 	}
 
 	@Override
-	public boolean valueEquals( T t )
+	public boolean valueEquals( final T t )
 	{
-		return getValue() == t.getValue();
+		return getByte() == t.getByte();
 	}
 }
