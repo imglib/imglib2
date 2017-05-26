@@ -92,23 +92,37 @@ public abstract class GenericByteType< T extends GenericByteType< T >> extends A
 		dataAccess = img.update( c );
 	}
 
+	/**
+	 * @deprecated Use {@link #getByte()} instead.
+	 */
 	@Deprecated
 	protected byte getValue()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	/**
+	 * @deprecated Use {@link #setByte(byte)} instead.
+	 */
 	@Deprecated
 	protected void setValue( final byte f )
 	{
 		dataAccess.setValue( i, f );
 	}
 
+	/**
+	 * Returns the primitive byte value that is used to store this type.
+	 *
+	 * @return primitive byte value
+	 */
 	public byte getByte()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	/**
+	 * Sets the primitive byte value that is used to store this type.
+	 */
 	public void setByte( final byte f )
 	{
 		dataAccess.setValue( i, f );

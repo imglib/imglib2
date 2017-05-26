@@ -90,23 +90,37 @@ public abstract class GenericLongType < T extends GenericLongType< T >> extends 
 		dataAccess = img.update( c );
 	}
 
+	/**
+	 * @deprecated Use {@link #getLong()} instead.
+	 */
 	@Deprecated
 	protected long getValue()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	/**
+	 * @deprecated Use {@link #setLong(long)} instead.
+	 */
 	@Deprecated
 	protected void setValue( final long f )
 	{
 		dataAccess.setValue( i, f );
 	}
 
+	/**
+	 * Returns the primitive long value that is used to store this type.
+	 *
+	 * @return primitive long value
+	 */
 	public long getLong()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	/**
+	 * Sets the primitive long value that is used to store this type.
+	 */
 	public void setLong( final long f )
 	{
 		dataAccess.setValue( i, f );

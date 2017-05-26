@@ -96,23 +96,37 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 		dataAccess = img.update( c );
 	}
 
+	/**
+	 * @deprecated Use {@link #getShort()} instead.
+	 */
 	@Deprecated
 	protected short getValue()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	/**
+	 * @deprecated Use {@link #setShort(short)} instead.
+	 */
 	@Deprecated
 	protected void setValue( final short f )
 	{
 		dataAccess.setValue( i, f );
 	}
 
+	/**
+	 * Returns the primitive short value that is used to store this type.
+	 *
+	 * @return primitive short value
+	 */
 	public short getShort()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	/**
+	 * Sets the primitive short value that is used to store this type.
+	 */
 	public void setShort( final short f )
 	{
 		dataAccess.setValue( i, f );

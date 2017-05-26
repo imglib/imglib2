@@ -92,23 +92,37 @@ public abstract class GenericIntType< T extends GenericIntType< T >> extends Abs
 		dataAccess = img.update( c );
 	}
 
+	/**
+	 * @deprecated Use {@link #getInt()} instead.
+	 */
 	@Deprecated
 	protected int getValue()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	/**
+	 * @deprecated Use {@link #setInt(int)} instead.
+	 */
 	@Deprecated
 	protected void setValue( final int f )
 	{
 		dataAccess.setValue( i, f );
 	}
 
+	/**
+	 * Returns the primitive int value that is used to store this type.
+	 *
+	 * @return primitive int value
+	 */
 	public int getInt()
 	{
 		return dataAccess.getValue( i );
 	}
 
+	/**
+	 * Sets the primitive int value that is used to store this type.
+	 */
 	public void setInt( final int f )
 	{
 		dataAccess.setValue( i, f );
