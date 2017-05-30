@@ -72,4 +72,10 @@ public class DirtyVolatileCharArray extends AbstractVolatileCharArray< DirtyVola
 	{
 		return dirty;
 	}
+
+	@Override
+	public void setDirty()
+	{
+		dirty = true;
+	}
 }

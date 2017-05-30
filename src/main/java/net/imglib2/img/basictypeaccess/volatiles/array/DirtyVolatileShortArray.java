@@ -72,4 +72,10 @@ public class DirtyVolatileShortArray extends AbstractVolatileShortArray< DirtyVo
 	{
 		return dirty;
 	}
+
+	@Override
+	public void setDirty()
+	{
+		dirty = true;
+	}
 }

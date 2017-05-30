@@ -72,4 +72,10 @@ public class DirtyByteArray extends AbstractByteArray< DirtyByteArray > implemen
 	{
 		return dirty;
 	}
+
+	@Override
+	public void setDirty()
+	{
+		dirty = true;
+	}
 }

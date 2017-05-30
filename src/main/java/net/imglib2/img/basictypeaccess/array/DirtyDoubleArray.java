@@ -72,4 +72,10 @@ public class DirtyDoubleArray extends AbstractDoubleArray< DirtyDoubleArray > im
 	{
 		return dirty;
 	}
+
+	@Override
+	public void setDirty()
+	{
+		dirty = true;
+	}
 }

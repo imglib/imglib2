@@ -72,4 +72,10 @@ public class DirtyIntArray extends AbstractIntArray< DirtyIntArray > implements 
 	{
 		return dirty;
 	}
+
+	@Override
+	public void setDirty()
+	{
+		dirty = true;
+	}
 }

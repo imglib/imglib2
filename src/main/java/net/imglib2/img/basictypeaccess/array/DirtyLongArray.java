@@ -72,4 +72,10 @@ public class DirtyLongArray extends AbstractLongArray< DirtyLongArray > implemen
 	{
 		return dirty;
 	}
+
+	@Override
+	public void setDirty()
+	{
+		dirty = true;
+	}
 }

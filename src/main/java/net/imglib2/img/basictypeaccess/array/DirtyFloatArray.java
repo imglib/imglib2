@@ -72,4 +72,10 @@ public class DirtyFloatArray extends AbstractFloatArray< DirtyFloatArray > imple
 	{
 		return dirty;
 	}
+
+	@Override
+	public void setDirty()
+	{
+		dirty = true;
+	}
 }
