@@ -34,6 +34,8 @@
 
 package net.imglib2.img;
 
+import java.util.function.Supplier;
+
 import net.imglib2.Dimensions;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.type.NativeType;
@@ -101,4 +103,67 @@ public abstract class ImgFactory< T >
 	 *             if type S is not compatible
 	 */
 	public abstract < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException;
+
+	/**
+	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
+	 * {@link NativeImgFactory} will ask the supplied {@link Type} to create a
+	 * suitable {@link NativeImg}.
+	 *
+	 * @return {@link Img}
+	 */
+	public Img< T > create( final Supplier< T > typeSupplier, final long... dim ) {
+		return create( dim, typeSupplier.get() );
+	}
+
+	/**
+	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
+	 * {@link NativeImgFactory} will ask the supplied {@link Type} to create a
+	 * suitable {@link NativeImg}.
+	 *
+	 * @return {@link Img}
+	 */
+	public Img< T > create( final Supplier< T > typeSupplier, final Dimensions dim )
+	{
+		return create( dim, typeSupplier.get() );
+	}
+
+	/**
+	 * The {@link ImgFactory} can decide how to create the {@link Img}. A
+	 * {@link NativeImgFactory} will ask the supplied {@link Type} to create a
+	 * suitable {@link NativeImg}.
+	 *
+	 * <p>
+	 * Note: This is not a vararg function because the underlying int[]
+	 * based methods alreay copies the int[] dimensions into a disposable
+	 * long[] anyways.  This would be an unnecessary copy for int... varargs.
+	 * </p>
+	 *
+	 * @return {@link Img}
+	 */
+	public Img< T > create( final Supplier< T > typeSupplier, final int[] dim )
+	{
+		return create( dim, typeSupplier.get() );
+	}
+
+	/**
+	 * Creates the same {@link ImgFactory} for a different generic parameter if
+	 * possible.
+	 *
+	 * If the supplied type "S" does not suit the needs of the
+	 * {@link ImgFactory} (for example implement {@link NativeType} in all
+	 * {@link NativeImgFactory}, this method will throw an
+	 * {@link IncompatibleTypeException}.
+	 *
+	 * @param <S>
+	 *            the new type
+	 * @param typeSupplier
+	 *            a supplier of S
+	 * @return {@link ImgFactory} of type S
+	 * @throws IncompatibleTypeException
+	 *             if type S is not compatible
+	 */
+	public < S > ImgFactory< S > imgFactory( final Supplier< S > typeSupplier ) throws IncompatibleTypeException
+	{
+		return imgFactory( typeSupplier.get() );
+	}
 }
