@@ -49,40 +49,63 @@ import net.imglib2.util.Util;
  */
 public abstract class ImgFactory< T >
 {
-	/**
-	 * Create an {@code Img} of the specified {@code type} with specified
-	 * {@code dimensions}.
-	 *
-	 * @return {@link Img} new image of specified {@code type} and
-	 *         {@code dimensions}.
-	 */
-	public abstract Img< T > create( final long[] dimensions, final T type );
+	private final Supplier< T > supplier;
+
+	private T t;
+
+	public ImgFactory( final T type )
+	{
+		t = type;
+		supplier = null;
+	}
+
+	public ImgFactory( final Supplier< T > supplier )
+	{
+		t = null;
+		this.supplier = supplier;
+	}
+
+	public T type()
+	{
+		if ( t == null ) t = supplier.get();
+		return t;
+	}
 
 	/**
-	 * Create an {@code Img} of the specified {@code type} with specified
-	 * {@code dimensions}.
+	 * Create an {@code Img<T>} with the specified {@code dimensions}.
 	 *
-	 * @return {@link Img} new image of specified {@code type} and
-	 *         {@code dimensions}.
+	 * @return new image with the specified {@code dimensions}.
 	 */
-	public Img< T > create( final Dimensions dimensions, final T type )
+	public abstract Img< T > create( final long... dimensions );
+
+	/**
+	 * Create an {@code Img<T>} with the specified {@code dimensions}.
+	 *
+	 * @return new image with the specified {@code dimensions}.
+	 */
+	public Img< T > create( final Dimensions dimensions )
 	{
 		final long[] size = new long[ dimensions.numDimensions() ];
 		dimensions.dimensions( size );
 
-		return create( size, type );
+		return create( size );
 	}
 
 	/**
-	 * Create an {@code Img} of the specified {@code type} with specified
-	 * {@code dimensions}.
+	 * Create an {@code Img<T>} with the specified {@code dimensions}.
 	 *
-	 * @return {@link Img} new image of specified {@code type} and
-	 *         {@code dimensions}.
+	 * <p>
+	 * Note: This is not a vararg function because the underlying {@code int[]}
+	 * based methods already copies the {@code int[]} dimensions into a
+	 * disposable {@code long[]} anyways. This would be an unnecessary copy for
+	 * {@code int...} varargs.
+	 * </p>
+	 *
+	 * @return new image with the specified {@code dimensions}.
 	 */
-	public Img< T > create( final int[] dimensions, final T type )
+	public Img< T > create( final int[] dimensions )
 	{
-		return create( Util.int2long( dimensions ), type );
+		return create( Util.int2long( dimensions ) );
 	}
 
 	/**
@@ -102,48 +125,6 @@ public abstract class ImgFactory< T >
 	 *             if type S is not compatible
 	 */
 	public abstract < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException;
-
-	/**
-	 * Create an {@code Img} of the supplied {@code type} with specified
-	 * {@code dimensions}.
-	 *
-	 * @return {@link Img} new image of specified {@code type} and
-	 *         {@code dimensions}.
-	 */
-	public Img< T > create( final Supplier< T > typeSupplier, final long... dimensions ) {
-		return create( dimensions, typeSupplier.get() );
-	}
-
-	/**
-	 * Create an {@code Img} of the supplied {@code type} with specified
-	 * {@code dimensions}.
-	 *
-	 * @return {@link Img} new image of specified {@code type} and
-	 *         {@code dimensions}.
-	 */
-	public Img< T > create( final Supplier< T > typeSupplier, final Dimensions dimensions )
-	{
-		return create( dimensions, typeSupplier.get() );
-	}
-
-	/**
-	 * Create an {@code Img} of the supplied {@code type} with specified
-	 * {@code dimensions}.
-	 *
-	 * <p>
-	 * Note: This is not a vararg function because the underlying {@code int[]}
-	 * based methods already copies the {@code int[]} dimensions into a
-	 * disposable {@code long[]} anyways. This would be an unnecessary copy for
-	 * {@code int...} varargs.
-	 * </p>
-	 *
-	 * @return {@link Img} new image of specified {@code type} and
-	 *         {@code dimensions}.
-	 */
-	public Img< T > create( final Supplier< T > typeSupplier, final int[] dimensions )
-	{
-		return create( dimensions, typeSupplier.get() );
-	}
 
 	/**
 	 * Creates the same {@link ImgFactory} for a different generic parameter if
@@ -166,4 +147,45 @@ public abstract class ImgFactory< T >
 	{
 		return imgFactory( typeSupplier.get() );
 	}
+
+	@Deprecated
+	public ImgFactory() {
+		t = null;
+		supplier = null;
+	}
+
+	@Deprecated
+	public abstract Img< T > create( final long[] dim, final T type );
+
+	@Deprecated
+	public Img< T > create( final Dimensions dim, final T type )
+	{
+		final long[] size = new long[ dim.numDimensions() ];
+		dim.dimensions( size );
+
+		return create( size, type );
+	}
+
+	@Deprecated
+	public Img< T > create( final int[] dim, final T type )
+	{
+		return create( Util.int2long( dim ), type );
+	}
+
+	@Deprecated
+	public Img< T > create( final Supplier< T > typeSupplier, final long... dim ) {
+		return create( dim, typeSupplier.get() );
+	}
+
+	@Deprecated
+	public Img< T > create( final Supplier< T > typeSupplier, final Dimensions dim )
+	{
+		return create( dim, typeSupplier.get() );
+	}
+
+	public Img< T > create( final Supplier< T > typeSupplier, final int[] dim )
+	{
+		return create( dim, typeSupplier.get() );
+	}
+
 }

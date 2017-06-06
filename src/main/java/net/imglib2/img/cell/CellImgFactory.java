@@ -34,6 +34,8 @@
 
 package net.imglib2.img.cell;
 
+import java.util.function.Supplier;
+
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
@@ -58,13 +60,26 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 {
 	private final int[] defaultCellDimensions;
 
-	public CellImgFactory()
+	public CellImgFactory( final T type )
 	{
-		this( 10 );
+		this( type, 10 );
 	}
 
-	public CellImgFactory( final int... cellDimensions )
+	public CellImgFactory( final Supplier< T > type )
 	{
+		this( type, 10 );
+	}
+
+	public CellImgFactory( final T type, final int... cellDimensions )
+	{
+		super( type );
+		defaultCellDimensions = cellDimensions.clone();
+		verifyDimensions( defaultCellDimensions );
+	}
+
+	public CellImgFactory( final Supplier< T > type, final int... cellDimensions )
+	{
+		super( type );
 		defaultCellDimensions = cellDimensions.clone();
 		verifyDimensions( defaultCellDimensions );
 	}
@@ -137,9 +152,9 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	}
 
 	@Override
-	public CellImg< T, ? > create( final long[] dimensions, final T type )
+	public CellImg< T, ? > create( final long... dimensions )
 	{
-		return create( type.getPrimitiveTypeInfo(), dimensions, type.getEntitiesPerPixel() );
+		return create( type().getPrimitiveTypeInfo(), dimensions, type().getEntitiesPerPixel() );
 	}
 
 	private < A > CellImg< T, ? > create(
@@ -193,7 +208,27 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
 		if ( NativeType.class.isInstance( type ) )
-			return new CellImgFactory( defaultCellDimensions );
+			return new CellImgFactory( ( NativeType ) type, defaultCellDimensions );
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
+	}
+
+	@Deprecated
+	public CellImgFactory()
+	{
+		this( 10 );
+	}
+
+	@Deprecated
+	public CellImgFactory( final int... cellDimensions )
+	{
+		defaultCellDimensions = cellDimensions.clone();
+		verifyDimensions( defaultCellDimensions );
+	}
+
+	@Deprecated
+	@Override
+	public CellImg< T, ? > create( final long[] dimensions, final T type )
+	{
+		return create( type.getPrimitiveTypeInfo(), dimensions, type.getEntitiesPerPixel() );
 	}
 }

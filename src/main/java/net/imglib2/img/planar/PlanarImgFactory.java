@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,6 +33,8 @@
  */
 
 package net.imglib2.img.planar;
+
+import java.util.function.Supplier;
 
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
@@ -54,10 +56,20 @@ import net.imglib2.util.Fraction;
  */
 public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
-	@Override
-	public PlanarImg< T, ? > create( final long[] dimensions, final T type )
+	public PlanarImgFactory( final T type )
 	{
-		return create( type.getPrimitiveTypeInfo(), dimensions, type.getEntitiesPerPixel() );
+		super( type );
+	}
+
+	public PlanarImgFactory( final Supplier< T > supplier )
+	{
+		super( supplier );
+	}
+
+	@Override
+	public PlanarImg< T, ? > create( final long... dimensions )
+	{
+		return create( type().getPrimitiveTypeInfo(), dimensions, type().getEntitiesPerPixel() );
 	}
 
 	private < A > PlanarImg< T, ? > create(
@@ -87,7 +99,21 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
 		if ( NativeType.class.isInstance( type ) )
-			return new PlanarImgFactory();
+			return new PlanarImgFactory( ( NativeType ) type );
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
+
+	@Deprecated
+	public PlanarImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public PlanarImg< T, ? > create( final long[] dimensions, final T type )
+	{
+		return create( type.getPrimitiveTypeInfo(), dimensions, type.getEntitiesPerPixel() );
+	}
+
 }

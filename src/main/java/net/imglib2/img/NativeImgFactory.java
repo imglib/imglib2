@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,6 +34,8 @@
 
 package net.imglib2.img;
 
+import java.util.function.Supplier;
+
 import net.imglib2.type.NativeType;
 
 /**
@@ -42,6 +44,19 @@ import net.imglib2.type.NativeType;
  */
 public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgFactory< T >
 {
+	public NativeImgFactory( final T type )
+	{
+		super( type );
+	}
+
+	public NativeImgFactory( final Supplier< T > supplier )
+	{
+		super( supplier );
+	}
+
+	@Override
+	public abstract NativeImg< T, ? > create( final long... dimensions );
+
 	/**
 	 * Create a {@link NativeImg} of the specified {@code type} with specified
 	 * {@code dimensions}.
@@ -54,5 +69,12 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	 * @return new {@link NativeImg} of specified {@code type} and {@code dimensions}.
 	 */
 	@Override
+	@Deprecated
 	public abstract NativeImg< T, ? > create( final long[] dimension, final T type );
+
+	@Deprecated
+	public NativeImgFactory( )
+	{
+		super();
+	}
 }

@@ -11,13 +11,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,6 +33,8 @@
  */
 
 package net.imglib2.img.array;
+
+import java.util.function.Supplier;
 
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.AbstractImg;
@@ -52,10 +54,20 @@ import net.imglib2.util.Fraction;
  */
 public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
-	@Override
-	public ArrayImg< T, ? > create( final long[] dimensions, final T type )
+	public ArrayImgFactory( final T type )
 	{
-		return create( dimensions, type, type.getPrimitiveTypeInfo() );
+		super( type );
+	}
+
+	public ArrayImgFactory( final Supplier< T > supplier )
+	{
+		super( supplier );
+	}
+
+	@Override
+	public ArrayImg< T, ? > create( final long... dimensions )
+	{
+		return create( dimensions, type(), type().getPrimitiveTypeInfo() );
 	}
 
 	private < A > ArrayImg< T, A > create( final long[] dimensions, final T type, final PrimitiveTypeInfo< T, A > info )
@@ -82,8 +94,21 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	@Override
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
-		if ( NativeType.class.isInstance( type ) )
-			return new ArrayImgFactory();
+		if ( type instanceof NativeType )
+			return new ArrayImgFactory( (NativeType) type );
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
+	}
+
+	@Deprecated
+	public ArrayImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public ArrayImg< T, ? > create( final long[] dim, final T type )
+	{
+		return create( dim, type, type.getPrimitiveTypeInfo() );
 	}
 }
