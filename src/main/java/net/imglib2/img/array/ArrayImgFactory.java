@@ -34,6 +34,8 @@
 
 package net.imglib2.img.array;
 
+import java.util.function.Supplier;
+
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.ImgFactory;
@@ -57,10 +59,20 @@ import net.imglib2.util.Fraction;
  */
 public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
-	@Override
-	public ArrayImg< T, ? > create( final long[] dim, final T type )
+	public ArrayImgFactory( final T type )
 	{
-		return ( ArrayImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		super( type );
+	}
+
+	public ArrayImgFactory( final Supplier< T > supplier )
+	{
+		super( supplier );
+	}
+
+	@Override
+	public ArrayImg< T, ? > create( final long[] dim )
+	{
+		return ( ArrayImg< T, ? > ) type().createSuitableNativeImg( this, dim );
 	}
 
 	public static int numEntitiesRangeCheck( final long[] dimensions, final Fraction entitiesPerPixel )
@@ -82,7 +94,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	}
 
 	@Override
-	public ArrayImg< T, CharArray> createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
+	public ArrayImg< T, CharArray > createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
@@ -133,8 +145,21 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	@Override
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
-		if ( NativeType.class.isInstance( type ) )
-			return new ArrayImgFactory();
+		if ( type instanceof NativeType )
+			return new ArrayImgFactory( (NativeType) type );
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
+	}
+
+	@Deprecated
+	public ArrayImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public ArrayImg< T, ? > create( final long[] dim, final T type )
+	{
+		return ( ArrayImg< T, ? > ) type.createSuitableNativeImg( this, dim );
 	}
 }

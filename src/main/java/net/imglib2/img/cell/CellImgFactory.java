@@ -34,6 +34,8 @@
 
 package net.imglib2.img.cell;
 
+import java.util.function.Supplier;
+
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
@@ -63,13 +65,26 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 {
 	private final int[] defaultCellDimensions;
 
-	public CellImgFactory()
+	public CellImgFactory( T type )
 	{
-		this( 10 );
+		this( type, 10 );
 	}
 
-	public CellImgFactory( final int... cellDimensions )
+	public CellImgFactory( Supplier< T > type )
 	{
+		this( type, 10 );
+	}
+
+	public CellImgFactory( T type, final int... cellDimensions )
+	{
+		super( type );
+		defaultCellDimensions = cellDimensions.clone();
+		verifyDimensions( defaultCellDimensions );
+	}
+
+	public CellImgFactory( Supplier< T > type, final int... cellDimensions )
+	{
+		super( type );
 		defaultCellDimensions = cellDimensions.clone();
 		verifyDimensions( defaultCellDimensions );
 	}
@@ -142,9 +157,9 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	}
 
 	@Override
-	public CellImg< T, ? > create( final long[] dim, final T type )
+	public CellImg< T, ? > create( final long[] dim )
 	{
-		return ( CellImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		return ( CellImg< T, ? > ) type().createSuitableNativeImg( this, dim );
 	}
 
 	@Override
@@ -228,5 +243,25 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 		}
 
 		return new CellImg<>( this, grid, cells, entitiesPerPixel );
+	}
+
+	@Deprecated
+	public CellImgFactory()
+	{
+		this( 10 );
+	}
+
+	@Deprecated
+	public CellImgFactory( final int... cellDimensions )
+	{
+		defaultCellDimensions = cellDimensions.clone();
+		verifyDimensions( defaultCellDimensions );
+	}
+
+	@Deprecated
+	@Override
+	public CellImg< T, ? > create( final long[] dim, final T type )
+	{
+		return ( CellImg< T, ? > ) type.createSuitableNativeImg( this, dim );
 	}
 }

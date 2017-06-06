@@ -34,6 +34,8 @@
 
 package net.imglib2.img.sparse;
 
+import java.util.function.Supplier;
+
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImgFactory;
@@ -46,10 +48,20 @@ import net.imglib2.util.Fraction;
  */
 public class NtreeImgFactory< T extends NativeType< T >> extends NativeImgFactory< T >
 {
-	@Override
-	public NtreeImg< T, ? > create( final long[] dim, final T type )
+	public NtreeImgFactory( final T type )
 	{
-		return ( NtreeImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		super( type );
+	}
+
+	public NtreeImgFactory( final Supplier< T > supplier )
+	{
+		super( supplier );
+	}
+
+	@Override
+	public NtreeImg< T, ? > create( final long[] dim )
+	{
+		return ( NtreeImg< T, ? > ) type().createSuitableNativeImg( this, dim );
 	}
 
 	@Override
@@ -123,4 +135,18 @@ public class NtreeImgFactory< T extends NativeType< T >> extends NativeImgFactor
 			return new NtreeImgFactory();
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
+
+	@Deprecated
+	public NtreeImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public NtreeImg< T, ? > create( final long[] dim, final T type )
+	{
+		return ( NtreeImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+	}
+
 }

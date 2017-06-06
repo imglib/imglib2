@@ -34,6 +34,8 @@
 
 package net.imglib2.img.planar;
 
+import java.util.function.Supplier;
+
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.NativeImg;
@@ -58,10 +60,20 @@ import net.imglib2.util.Fraction;
  */
 public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFactory< T >
 {
-	@Override
-	public PlanarImg< T, ? > create( final long[] dim, final T type )
+	public PlanarImgFactory( final T type )
 	{
-		return ( PlanarImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		super( type );
+	}
+
+	public PlanarImgFactory( final Supplier< T > supplier )
+	{
+		super( supplier );
+	}
+
+	@Override
+	public PlanarImg< T, ? > create( final long[] dim )
+	{
+		return ( PlanarImg< T, ? > ) type().createSuitableNativeImg( this, dim );
 	}
 
 	@Override
@@ -114,4 +126,18 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 			return new PlanarImgFactory();
 		throw new IncompatibleTypeException( this, type.getClass().getCanonicalName() + " does not implement NativeType." );
 	}
+
+	@Deprecated
+	public PlanarImgFactory()
+	{
+		super();
+	}
+
+	@Deprecated
+	@Override
+	public PlanarImg< T, ? > create( final long[] dim, final T type )
+	{
+		return ( PlanarImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+	}
+
 }
