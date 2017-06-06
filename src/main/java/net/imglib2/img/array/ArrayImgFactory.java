@@ -78,7 +78,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, ByteArray >( new ByteArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new ByteArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, CharArray >( new CharArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new CharArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, DoubleArray >( new DoubleArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new DoubleArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, FloatArray >( new FloatArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new FloatArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, IntArray >( new IntArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new IntArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, LongArray >( new LongArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new LongArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	{
 		final int numEntities = numEntitiesRangeCheck( dimensions, entitiesPerPixel );
 
-		return new ArrayImg< T, ShortArray >( new ShortArray( numEntities ), dimensions, entitiesPerPixel );
+		return new ArrayImg< >( new ShortArray( numEntities ), dimensions, entitiesPerPixel );
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
