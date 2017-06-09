@@ -90,7 +90,7 @@ public class ListImgFactory< T > extends ImgFactory< T >
 	@Override
 	public ListImg< T > create( final long[] dim, final T type )
 	{
-		return new ListImg< >( dim, type );
+		return new ListImg<>( dim, cache( type ) );
 	}
 
 }

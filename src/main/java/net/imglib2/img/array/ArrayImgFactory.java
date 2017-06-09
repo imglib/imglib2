@@ -160,6 +160,6 @@ public class ArrayImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	@Override
 	public ArrayImg< T, ? > create( final long[] dim, final T type )
 	{
-		return ( ArrayImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		return ( ArrayImg< T, ? > ) cache( type ).createSuitableNativeImg( this, dim );
 	}
 }

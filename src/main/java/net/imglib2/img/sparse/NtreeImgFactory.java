@@ -146,7 +146,7 @@ public class NtreeImgFactory< T extends NativeType< T >> extends NativeImgFactor
 	@Override
 	public NtreeImg< T, ? > create( final long[] dim, final T type )
 	{
-		return ( NtreeImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		return ( NtreeImg< T, ? > ) cache( type ).createSuitableNativeImg( this, dim );
 	}
 
 }

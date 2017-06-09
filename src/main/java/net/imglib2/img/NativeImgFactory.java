@@ -103,7 +103,7 @@ public abstract class NativeImgFactory< T extends NativeType< T > > extends ImgF
 	@Deprecated
 	public NativeImg< T, ? > create( final long[] dim, final T type )
 	{
-		return type.createSuitableNativeImg( this, dim );
+		return cache( type ).createSuitableNativeImg( this, dim );
 	}
 
 }

@@ -262,6 +262,6 @@ public class CellImgFactory< T extends NativeType< T > > extends NativeImgFactor
 	@Override
 	public CellImg< T, ? > create( final long[] dim, final T type )
 	{
-		return ( CellImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		return ( CellImg< T, ? > ) cache( type ).createSuitableNativeImg( this, dim );
 	}
 }

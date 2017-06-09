@@ -137,7 +137,7 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	@Override
 	public PlanarImg< T, ? > create( final long[] dim, final T type )
 	{
-		return ( PlanarImg< T, ? > ) type.createSuitableNativeImg( this, dim );
+		return ( PlanarImg< T, ? > ) cache( type ).createSuitableNativeImg( this, dim );
 	}
 
 }
