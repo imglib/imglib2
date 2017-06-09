@@ -127,7 +127,8 @@ public class NtreeImgFactory< T extends NativeType< T > > extends NativeImgFacto
 	@Override
 	public NtreeImg< T, ? > create( final long[] dimensions, final T type )
 	{
-		return create( dimensions, type, type.getPrimitiveTypeInfo() );
+		T cachedType = cache( type );
+		return create( dimensions, cachedType, cachedType.getPrimitiveTypeInfo() );
 	}
 
 }

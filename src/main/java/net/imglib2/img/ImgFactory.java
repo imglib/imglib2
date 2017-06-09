@@ -148,6 +148,31 @@ public abstract class ImgFactory< T >
 		return imgFactory( typeSupplier.get() );
 	}
 
+	/**
+	 * Makes a best effort to return a non-null type instance, caching the given
+	 * type if a cached type is not already in place.
+	 * <p>
+	 * Furthermore, if the cached type instance was previously null, the given
+	 * {@code type} becomes the cached instance. In this way, if the factory was
+	 * created using one of the deprecated typeless constructor signatures, but
+	 * then one of the deprecated {@code create} methods is called (i.e.: a
+	 * method which provides a type instance as an argument), the provided type
+	 * becomes the cached type instance so that subsequent invocations of the
+	 * typeless {@code create} methods will work as desired.
+	 * </p>
+	 * 
+	 * @param type
+	 *            The type to return, and cache if needed.
+	 * @return A type instance matching the type of the factory. If the given
+	 *         {@code type} argument is non-null, it is returned. Otherwise, the
+	 *         cached type instance {@link #t} is returned.
+	 */
+	protected T cache( final T type )
+	{
+		if ( t == null ) t = type;
+		return type == null ? t : type;
+	}
+
 	@Deprecated
 	public ImgFactory() {
 		t = null;
@@ -163,29 +188,30 @@ public abstract class ImgFactory< T >
 		final long[] size = new long[ dim.numDimensions() ];
 		dim.dimensions( size );
 
-		return create( size, type );
+		return create( size, cache( type ) );
 	}
 
 	@Deprecated
 	public Img< T > create( final int[] dim, final T type )
 	{
-		return create( Util.int2long( dim ), type );
+		return create( Util.int2long( dim ), cache( type ) );
 	}
 
 	@Deprecated
-	public Img< T > create( final Supplier< T > typeSupplier, final long... dim ) {
-		return create( dim, typeSupplier.get() );
+	public Img< T > create( final Supplier< T > typeSupplier, final long... dim )
+	{
+		return create( dim, cache( typeSupplier.get() ) );
 	}
 
 	@Deprecated
 	public Img< T > create( final Supplier< T > typeSupplier, final Dimensions dim )
 	{
-		return create( dim, typeSupplier.get() );
+		return create( dim, cache( typeSupplier.get() ) );
 	}
 
 	public Img< T > create( final Supplier< T > typeSupplier, final int[] dim )
 	{
-		return create( dim, typeSupplier.get() );
+		return create( dim, cache( typeSupplier.get() ) );
 	}
 
 }

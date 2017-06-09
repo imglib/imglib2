@@ -113,7 +113,8 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	@Override
 	public PlanarImg< T, ? > create( final long[] dimensions, final T type )
 	{
-		return create( type.getPrimitiveTypeInfo(), dimensions, type.getEntitiesPerPixel() );
+		T cachedType = cache( type );
+		return create( cachedType.getPrimitiveTypeInfo(), dimensions, cachedType.getEntitiesPerPixel() );
 	}
 
 }
