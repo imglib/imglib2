@@ -67,43 +67,43 @@ public class PlanarImgFactory< T extends NativeType< T > > extends NativeImgFact
 	@Override
 	public NativeImg< T, ByteArray > createByteInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, ByteArray >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new ByteArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, CharArray > createCharInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, CharArray >( new CharArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new CharArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, DoubleArray > createDoubleInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, DoubleArray >( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new DoubleArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, FloatArray > createFloatInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, FloatArray >( new FloatArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new FloatArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, IntArray > createIntInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, IntArray >( new IntArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new IntArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, LongArray > createLongInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, LongArray >( new LongArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new LongArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@Override
 	public NativeImg< T, ShortArray > createShortInstance( final long[] dimensions, final Fraction entitiesPerPixel )
 	{
-		return new PlanarImg< T, ShortArray >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
+		return new PlanarImg< >( new ShortArray( 1 ), dimensions, entitiesPerPixel );
 	}
 
 	@SuppressWarnings( { "unchecked", "rawtypes" } )
