@@ -50,6 +50,14 @@ import net.imglib2.view.Views;
  * expect that the domain is infinite. (In contrast to this,
  * {@link RandomAccessibleInterval}s have a finite domain.)
  * </p>
+ * <p>
+ * A {@code RandomAccessible} might be defined only partially. You should be
+ * aware of this especially when creating {@link RandomAccessibleInterval}s.
+ * While it is straightforward to turn a {@code RandomAccessible} into a
+ * {@code RandomAccessibleInterval} by adding interval boundaries via
+ * {@link Views#interval}, it is your responsibility to ensure that the
+ * {@code RandomAccessible} is fully defined within these boundaries.
+ * </p>
  *
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
