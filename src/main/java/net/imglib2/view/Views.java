@@ -1491,4 +1491,25 @@ public class Views
 		return Views.stack( mode, hyperSlices );
 	}
 
+	/**
+	 * Make a best guess estimate whether the {@code rai} is "defined" in the
+	 * specified {@code interval}. "Defined" means that a {@link RandomAccess}
+	 * obtained by {@code rai.randomAccess(interval)} will provide valid values
+	 * everywhere in the interval.
+	 *
+	 * This method walks through the View chain until it reaches an {@link Img}
+	 * or a unknown type of {@link RandomAccessibleInterval}. At this point, it
+	 * assumes that this {@link RandomAccessibleInterval} is defined everywhere
+	 * inside its interval bounds (and undefined everywhere outside the bounds).
+	 * This information is then propagated up the chain (which contains only
+	 * known transformations and extensions).
+	 *
+	 * @param rai
+	 * @param interval
+	 * @return
+	 */
+	public static boolean isDefined( final RandomAccessibleInterval< ? > rai, final Interval interval )
+	{
+		throw new UnsupportedOperationException();
+	}
 }
