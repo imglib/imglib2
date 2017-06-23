@@ -64,6 +64,12 @@ package net.imglib2;
  * imglib Cursors, in general.
  * </p>
  *
+ * <p>
+ * It is not guaranteed that a Cursor will perform bounds checking. Asking the
+ * position or value of a Cursor that was not advanced to its first element, or
+ * was moved beyond its last element, has undefined results.
+ * </p>
+ *
  * @author Tobias Pietzsch
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
