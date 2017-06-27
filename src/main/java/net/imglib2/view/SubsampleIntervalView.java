@@ -67,7 +67,7 @@ public class SubsampleIntervalView< T > extends SubsampleView< T > implements Ra
 		for ( int d = 0; d < steps.length; ++d )
 		{
 			steps[ d ] = step;
-			dimensions[ d ] = source.dimension( d ) / step;
+			dimensions[ d ] = ( int )Math.ceil( ( double )source.dimension( d ) / step );
 			max[ d ] = dimensions[ d ] - 1;
 		}
 	}
@@ -81,7 +81,7 @@ public class SubsampleIntervalView< T > extends SubsampleView< T > implements Ra
 		for ( int d = 0; d < steps.length; ++d )
 		{
 			this.steps[ d ] = steps[ d ];
-			dimensions[ d ] = source.dimension( d ) / steps[ d ];
+			dimensions[ d ] = ( int )Math.ceil( ( double )source.dimension( d ) / steps[ d ]);
 			max[ d ] = dimensions[ d ] - 1;
 		}
 	}
