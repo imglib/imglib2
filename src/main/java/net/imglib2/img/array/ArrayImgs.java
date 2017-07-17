@@ -55,10 +55,15 @@ import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.LongType;
 import net.imglib2.type.numeric.integer.ShortType;
+import net.imglib2.type.numeric.integer.Unsigned128BitType;
+import net.imglib2.type.numeric.integer.Unsigned12BitType;
+import net.imglib2.type.numeric.integer.Unsigned2BitType;
+import net.imglib2.type.numeric.integer.Unsigned4BitType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedLongType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.type.numeric.integer.UnsignedVariableBitLengthType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Fraction;
@@ -353,6 +358,111 @@ final public class ArrayImgs
 	}
 
 	/**
+	 * Create an {@link ArrayImg}&lt;{@link Unsigned2BitType}, {@link LongArray}&gt;.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< Unsigned2BitType, LongArray > unsigned2Bits( final long... dim )
+	{
+		return ( ArrayImg< Unsigned2BitType, LongArray > ) new ArrayImgFactory< Unsigned2BitType >().create( dim, new Unsigned2BitType() );
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link Unsigned2BitType}, {@link LongAccess}&gt;
+	 * using a {@link LongAccess} passed as argument.
+	 */
+	final static public < A extends LongAccess > ArrayImg< Unsigned2BitType, A > unsigned2Bits( final A access, final long... dim )
+	{
+		final ArrayImg< Unsigned2BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final Unsigned2BitType t = new Unsigned2BitType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Create an {@link ArrayImg}&lt;{@link Unsigned4BitType}, {@link LongArray}&gt;.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< Unsigned4BitType, LongArray > unsigned4Bits( final long... dim )
+	{
+		return ( ArrayImg< Unsigned4BitType, LongArray > ) new ArrayImgFactory< Unsigned4BitType >().create( dim, new Unsigned4BitType() );
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link Unsigned4BitType}, {@link LongAccess}&gt;
+	 * using a {@link LongAccess} passed as argument.
+	 */
+	final static public < A extends LongAccess > ArrayImg< Unsigned4BitType, A > unsigned4Bits( final A access, final long... dim )
+	{
+		final ArrayImg< Unsigned4BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final Unsigned4BitType t = new Unsigned4BitType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Create an {@link ArrayImg}&lt;{@link Unsigned12BitType}, {@link LongArray}&gt;.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< Unsigned12BitType, LongArray > unsigned12Bits( final long... dim )
+	{
+		return ( ArrayImg< Unsigned12BitType, LongArray > ) new ArrayImgFactory< Unsigned12BitType >().create( dim, new Unsigned12BitType() );
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link Unsigned12BitType}, {@link LongAccess}&gt;
+	 * using a {@link LongAccess} passed as argument.
+	 */
+	final static public < A extends LongAccess > ArrayImg< Unsigned12BitType, A > unsigned12Bits( final A access, final long... dim )
+	{
+		final ArrayImg< Unsigned12BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final Unsigned12BitType t = new Unsigned12BitType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Create an {@link ArrayImg}&lt;{@link Unsigned128BitType}, {@link LongArray}&gt;.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< Unsigned128BitType, LongArray > unsigned128Bits( final long... dim )
+	{
+		return ( ArrayImg< Unsigned128BitType, LongArray > ) new ArrayImgFactory< Unsigned128BitType >().create( dim, new Unsigned128BitType() );
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link Unsigned128BitType}, {@link LongAccess}&gt;
+	 * using a {@link LongAccess} passed as argument.
+	 */
+	final static public < A extends LongAccess > ArrayImg< Unsigned128BitType, A > unsigned128Bits( final A access, final long... dim )
+	{
+		final ArrayImg< Unsigned128BitType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final Unsigned128BitType t = new Unsigned128BitType( img );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
+	 * Create an {@link ArrayImg}&lt;{@link UnsignedVariableBitLengthType}, {@link LongArray}&gt;.
+	 */
+	@SuppressWarnings( "unchecked" )
+	final static public ArrayImg< UnsignedVariableBitLengthType, LongArray > unsignedVariableBitLengths(final int nbits, final long... dim )
+	{
+		return ( ArrayImg< UnsignedVariableBitLengthType, LongArray > ) new ArrayImgFactory< UnsignedVariableBitLengthType >().create( dim, new UnsignedVariableBitLengthType(nbits) );
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link UnsignedVariableBitLengthType}, {@link LongAccess}&gt;
+	 * using a {@link LongAccess} passed as argument.
+	 */
+	final static public < A extends LongAccess > ArrayImg< UnsignedVariableBitLengthType, A > unsignedVariableBitLengths( final A access, final int nbits, final long... dim )
+	{
+		final ArrayImg< UnsignedVariableBitLengthType, A > img = new ArrayImg<>( access, dim, new Fraction( 1, 64 ) );
+		final UnsignedVariableBitLengthType t = new UnsignedVariableBitLengthType( img, nbits );
+		img.setLinkedType( t );
+		return img;
+	}
+
+	/**
 	 * Create an {@link ArrayImg}&lt;{@link FloatType}, {@link FloatArray}&gt;.
 	 */
 	@SuppressWarnings( "unchecked" )
@@ -502,4 +612,5 @@ final public class ArrayImgs
 		img.setLinkedType( t );
 		return img;
 	}
+
 }
