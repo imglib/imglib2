@@ -1052,10 +1052,7 @@ public class Views
 	 *
 	 * @return {@link TransformView} containing the result.
 	 */
-	public static < T > TransformView< T > shear(
-			final RandomAccessible< T > source,
-			final int shearDimension,
-			final int referenceDimension )
+	public static < T > TransformView< T > shear( final RandomAccessible< T > source, final int shearDimension, final int referenceDimension )
 	{
 		final ShearTransform transform = new ShearTransform( source.numDimensions(), shearDimension, referenceDimension );
 		return new TransformView< T >( source, transform.inverse() );
@@ -1075,10 +1072,7 @@ public class Views
 	 *
 	 * @return {@link TransformView} containing the result.
 	 */
-	public static < T > TransformView< T > unshear(
-			final RandomAccessible< T > source,
-			final int shearDimension,
-			final int referenceDimension )
+	public static < T > TransformView< T > unshear( final RandomAccessible< T > source, final int shearDimension, final int referenceDimension )
 	{
 		final InverseShearTransform transform = new InverseShearTransform( source.numDimensions(), shearDimension, referenceDimension );
 		return new TransformView< T >( source, transform.inverse() );
@@ -1102,11 +1096,7 @@ public class Views
 	 *         interval's dimension are determined by applying the
 	 *         {@link ShearTransform#transform} method on the input interval.
 	 */
-	public static < T > IntervalView< T > shear(
-			final RandomAccessible< T > source,
-			final Interval interval,
-			final int shearDimension,
-			final int referenceDimension )
+	public static < T > IntervalView< T > shear( final RandomAccessible< T > source, final Interval interval, final int shearDimension, final int referenceDimension )
 	{
 		final ShearTransform transform = new ShearTransform( source.numDimensions(), shearDimension, referenceDimension );
 		return Views.interval( Views.shear( source, shearDimension, referenceDimension ), transform.transform( new BoundingBox( interval ) ).getInterval() );
@@ -1130,11 +1120,7 @@ public class Views
 	 *         interval's dimension are determined by applying the
 	 *         {@link ShearTransform#transform} method on the input interval.
 	 */
-	public static < T > IntervalView< T > unshear(
-			final RandomAccessible< T > source,
-			final Interval interval,
-			final int shearDimension,
-			final int referenceDimension )
+	public static < T > IntervalView< T > unshear( final RandomAccessible< T > source, final Interval interval, final int shearDimension, final int referenceDimension )
 	{
 		final InverseShearTransform transform = new InverseShearTransform( source.numDimensions(), shearDimension, referenceDimension );
 		return Views.interval( Views.unshear( source, shearDimension, referenceDimension ), transform.transform( new BoundingBox( interval ) ).getInterval() );
@@ -1154,9 +1140,7 @@ public class Views
 	 *
 	 * @return {@link IntervalView} of permuted source.
 	 */
-	public static < T > IntervalView< T > permuteCoordinates(
-			final RandomAccessibleInterval< T > source,
-			final int[] permutation )
+	public static < T > IntervalView< T > permuteCoordinates( final RandomAccessibleInterval< T > source, final int[] permutation )
 	{
 		assert AbstractPermutationTransform.checkBijectivity( permutation ): "Non-bijective LUT passed for coordinate permuation.";
 		assert PermutationTransform.checkInterval( source, permutation ): "Source interval boundaries do not match permutation.";
@@ -1181,10 +1165,7 @@ public class Views
 	 *
 	 * @return {@link IntervalView} of permuted source.
 	 */
-	public static < T > IntervalView< T > permuteCoordinates(
-			final RandomAccessibleInterval< T > source,
-			final int[] permutation,
-			final int d )
+	public static < T > IntervalView< T > permuteCoordinates( final RandomAccessibleInterval< T > source, final int[] permutation, final int d )
 	{
 		assert AbstractPermutationTransform.checkBijectivity( permutation ): "Non-bijective LUT passed for coordinate permuation.";
 		assert source.min( d ) == 0: "Source with min[d] coordinate != 0 passed to coordinate permutation.";
@@ -1209,9 +1190,7 @@ public class Views
 	 *
 	 * @return {@link IntervalView} of permuted source.
 	 */
-	public static < T > IntervalView< T > permuteCoordinatesInverse(
-			final RandomAccessibleInterval< T > source,
-			final int[] permutation )
+	public static < T > IntervalView< T > permuteCoordinatesInverse( final RandomAccessibleInterval< T > source, final int[] permutation )
 	{
 		assert AbstractPermutationTransform.checkBijectivity( permutation ): "Non-bijective LUT passed for coordinate permuation.";
 		assert PermutationTransform.checkInterval( source, permutation ): "Source interval boundaries do not match permutation.";
@@ -1235,11 +1214,31 @@ public class Views
 	 *            dimension index to be permuted
 	 *
 	 * @return {@link IntervalView} of permuted source.
+	 * 
+	 * @deprecated use {@link Views#permuteCoordinatesInverse(RandomAccessibleInterval, int[], int)}
 	 */
-	public static < T > IntervalView< T > permuteCoordinateInverse(
-			final RandomAccessibleInterval< T > source,
-			final int[] permutation,
-			final int d )
+	@Deprecated
+	public static < T > IntervalView< T > permuteCoordinateInverse( final RandomAccessibleInterval< T > source, final int[] permutation, final int d )
+	{
+		return permuteCoordinatesInverse(source, permutation, d);
+	}
+
+	/**
+	 * Inverse bijective permutation of the integer coordinates of one dimension
+	 * of a {@link RandomAccessibleInterval}.
+	 *
+	 * @param source
+	 *            must have dimension(dimension) == permutation.length
+	 * @param permutation
+	 *            must be a bijective permutation over its index set, i.e. for a
+	 *            lut of length n, the sorted content the array must be
+	 *            [0,...,n-1] which is the index set of the lut.
+	 * @param d
+	 *            dimension index to be permuted
+	 *
+	 * @return {@link IntervalView} of permuted source.
+	 */
+	public static < T > IntervalView< T > permuteCoordinatesInverse( final RandomAccessibleInterval< T > source, final int[] permutation, final int d )
 	{
 		assert AbstractPermutationTransform.checkBijectivity( permutation ): "Non-bijective LUT passed for coordinate permuation.";
 		assert source.min( d ) == 0: "Source with min[d] coordinate != 0 passed to coordinate permutation.";
@@ -1258,9 +1257,7 @@ public class Views
 	 * @param sourceB
 	 * @return
 	 */
-	public static < A, B > RandomAccessible< Pair< A, B > > pair(
-			final RandomAccessible< A > sourceA,
-			final RandomAccessible< B > sourceB )
+	public static < A, B > RandomAccessible< Pair< A, B > > pair( final RandomAccessible< A > sourceA, final RandomAccessible< B > sourceB )
 	{
 		return new RandomAccessiblePair< A, B >( sourceA, sourceB );
 	}
@@ -1271,13 +1268,13 @@ public class Views
 	 * <em>n</em>-dimensional {@link RandomAccessible RandomAccessibles} of T.
 	 *
 	 * @param source
-	 * @param axes the axes to become the inner axes (embedded into the co-domain)
+	 * @param axes
+	 *            the axes to become the inner axes (embedded into the
+	 *            co-domain)
 	 *
 	 * @return
 	 */
-	public static < T > RandomAccessible< ? extends RandomAccessible< T > > hyperSlices(
-			final RandomAccessible< T > source,
-			final int... axes )
+	public static < T > RandomAccessible< ? extends RandomAccessible< T > > hyperSlices( final RandomAccessible< T > source, final int... axes )
 	{
 		return new HyperSlicesView< T >( source, axes );
 	}
@@ -1439,7 +1436,6 @@ public class Views
 		return concatenate( concatenationAxis, StackView.StackAccessMode.DEFAULT, sources );
 	}
 
-
 	/**
 	 *
 	 * Concatenate an array of {@link RandomAccessibleInterval} along the
@@ -1484,7 +1480,7 @@ public class Views
 		assert sources.size() > 0;
 
 		final ArrayList< RandomAccessibleInterval< T > > hyperSlices = new ArrayList<>();
-		for ( RandomAccessibleInterval< T > source : sources )
+		for ( final RandomAccessibleInterval< T > source : sources )
 			for ( long index = source.min( concatenationAxis ); index <= source.max( concatenationAxis ); ++index )
 				hyperSlices.add( Views.hyperSlice( source, concatenationAxis, index ) );
 
