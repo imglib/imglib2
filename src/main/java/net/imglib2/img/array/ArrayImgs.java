@@ -288,7 +288,10 @@ final public class ArrayImgs
 	/**
 	 * Creates an {@link ArrayImg}&lt;{@link UnsignedLongType}, {@link LongArray}&gt;
 	 * reusing a passed long[] array.
+	 * 
+	 * @deprecated use {@link ArrayImgs#unsignedLongs(long[], long...)}
 	 */
+	@Deprecated
 	final public static ArrayImg< UnsignedLongType, LongArray > unsignedLongss( final long[] array, final long... dim )
 	{
 		return unsignedLongs( array, dim );
