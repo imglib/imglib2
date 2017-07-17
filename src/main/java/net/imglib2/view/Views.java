@@ -1227,6 +1227,32 @@ public class Views
 	}
 
 	/**
+	 * Inverse bijective permutation of the integer coordinates of one dimension
+	 * of a {@link RandomAccessibleInterval}.
+	 *
+	 * @param source
+	 *            must have dimension(dimension) == permutation.length
+	 * @param permutation
+	 *            must be a bijective permutation over its index set, i.e. for a
+	 *            lut of length n, the sorted content the array must be
+	 *            [0,...,n-1] which is the index set of the lut.
+	 * @param d
+	 *            dimension index to be permuted
+	 *
+	 * @return {@link IntervalView} of permuted source.
+	 */
+	public static < T > IntervalView< T > permuteCoordinatesInverse( final RandomAccessibleInterval< T > source, final int[] permutation, final int d )
+	{
+		assert AbstractPermutationTransform.checkBijectivity( permutation ): "Non-bijective LUT passed for coordinate permuation.";
+		assert source.min( d ) == 0: "Source with min[d] coordinate != 0 passed to coordinate permutation.";
+		assert source.dimension( d ) == permutation.length: "Source with dimension[d] != LUT.length passed to coordinate permutation.";
+
+		final int nDim = source.numDimensions();
+		final SingleDimensionPermutationTransform transform = new SingleDimensionPermutationTransform( permutation, nDim, nDim, d ).inverse();
+		return Views.interval( new TransformView< T >( source, transform.inverse() ), source );
+	}
+
+	/**
 	 * Compose two {@link RandomAccessible} sources into a
 	 * {@link RandomAccessible} of {@link Pair}.
 	 *
