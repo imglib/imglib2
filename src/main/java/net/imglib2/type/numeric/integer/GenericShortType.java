@@ -171,7 +171,7 @@ public abstract class GenericShortType< T extends GenericShortType< T > >
 	public void sub( final T c )
 	{
 		final short a = getShort();
-		setShort( ( byte ) ( a - c.getShort() ) );
+		setShort( ( short ) ( a - c.getShort() ) );
 	}
 
 	@Override
