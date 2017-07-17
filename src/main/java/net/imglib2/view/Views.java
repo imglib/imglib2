@@ -1214,16 +1214,13 @@ public class Views
 	 *            dimension index to be permuted
 	 *
 	 * @return {@link IntervalView} of permuted source.
+	 * 
+	 * @deprecated use {@link Views#permuteCoordinatesInverse(RandomAccessibleInterval, int[], int)}
 	 */
+	@Deprecated
 	public static < T > IntervalView< T > permuteCoordinateInverse( final RandomAccessibleInterval< T > source, final int[] permutation, final int d )
 	{
-		assert AbstractPermutationTransform.checkBijectivity( permutation ): "Non-bijective LUT passed for coordinate permuation.";
-		assert source.min( d ) == 0: "Source with min[d] coordinate != 0 passed to coordinate permutation.";
-		assert source.dimension( d ) == permutation.length: "Source with dimension[d] != LUT.length passed to coordinate permutation.";
-
-		final int nDim = source.numDimensions();
-		final SingleDimensionPermutationTransform transform = new SingleDimensionPermutationTransform( permutation, nDim, nDim, d ).inverse();
-		return Views.interval( new TransformView< T >( source, transform.inverse() ), source );
+		return permuteCoordinatesInverse(source, permutation, d);
 	}
 
 	/**
