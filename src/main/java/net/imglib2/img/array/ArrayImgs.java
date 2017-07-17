@@ -291,6 +291,15 @@ final public class ArrayImgs
 	 */
 	final public static ArrayImg< UnsignedLongType, LongArray > unsignedLongss( final long[] array, final long... dim )
 	{
+		return unsignedLongs( array, dim );
+	}
+
+	/**
+	 * Creates an {@link ArrayImg}&lt;{@link UnsignedLongType}, {@link LongArray}&gt;
+	 * reusing a passed long[] array.
+	 */
+	final public static ArrayImg< UnsignedLongType, LongArray > unsignedLongs( final long[] array, final long... dim )
+	{
 		return unsignedLongs( new LongArray( array ), dim );
 	}
 
