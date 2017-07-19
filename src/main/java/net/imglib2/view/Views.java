@@ -1510,6 +1510,6 @@ public class Views
 	 */
 	public static boolean isDefined( final RandomAccessibleInterval< ? > rai, final Interval interval )
 	{
-		throw new UnsupportedOperationException();
+		return false;
 	}
 }
