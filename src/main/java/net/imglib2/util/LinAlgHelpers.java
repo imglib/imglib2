@@ -900,6 +900,51 @@ public class LinAlgHelpers
 				( m10 * m21 - m11 * m20 ) / det, ( m01 * m20 - m00 * m21 ) / det, ( m00 * m11 - m01 * m10 ) / det };
 	}
 
+	/**
+	 * Inverts a (invertible) symmetric 3x3 matrix.
+	 *
+	 * @param m
+	 *            symmetric matrix to invert.
+	 * @param inverse
+	 *            inverse of {@code m} is stored here.
+	 */
+	public static void invertSymmetric3x3( final double[][] m, final double[][] inverse )
+	{
+		final double a00 = m[ 2 ][ 2 ] * m[ 1 ][ 1 ] - m[ 1 ][ 2 ] * m[ 1 ][ 2 ];
+		final double a01 = m[ 0 ][ 2 ] * m[ 1 ][ 2 ] - m[ 2 ][ 2 ] * m[ 0 ][ 1 ];
+		final double a02 = m[ 0 ][ 1 ] * m[ 1 ][ 2 ] - m[ 0 ][ 2 ] * m[ 1 ][ 1 ];
+
+		final double a11 = m[ 2 ][ 2 ] * m[ 0 ][ 0 ] - m[ 0 ][ 2 ] * m[ 0 ][ 2 ];
+		final double a12 = m[ 0 ][ 1 ] * m[ 0 ][ 2 ] - m[ 0 ][ 0 ] * m[ 1 ][ 2 ];
+
+		final double a22 = m[ 0 ][ 0 ] * m[ 1 ][ 1 ] - m[ 0 ][ 1 ] * m[ 0 ][ 1 ];
+
+		final double Dinv = 1.0 / ( ( m[ 0 ][ 0 ] * a00 ) + ( m[ 1 ][ 0 ] * a01 ) + ( m[ 0 ][ 2 ] * a02 ) );
+
+		inverse[ 0 ][ 0 ] = a00 * Dinv;
+		inverse[ 1 ][ 0 ] = inverse[ 0 ][ 1 ] = a01 * Dinv;
+		inverse[ 2 ][ 0 ] = inverse[ 0 ][ 2 ] = a02 * Dinv;
+		inverse[ 1 ][ 1 ] = a11 * Dinv;
+		inverse[ 2 ][ 1 ] = inverse[ 1 ][ 2 ] = a12 * Dinv;
+		inverse[ 2 ][ 2 ] = a22 * Dinv;
+	}
+
+	/**
+	 * Inverts a (invertible) symmetric 2x2 matrix.
+	 *
+	 * @param m
+	 *            symmetric matrix to invert.
+	 * @param inverse
+	 *            inverse of {@code m} is stored here.
+	 */
+	public static void invertSymmetric2x2( final double[][] m, final double[][] inverse )
+	{
+		final double Dinv = 1.0 / ( m[ 0 ][ 0 ] * m[ 1 ][ 1 ] - m[ 1 ][ 0 ] * m[ 1 ][ 0 ] );
+		inverse[ 0 ][ 0 ] = m[ 1 ][ 1 ] * Dinv;
+		inverse[ 1 ][ 0 ] = inverse[ 0 ][ 1 ] = -m[ 1 ][ 0 ] * Dinv;
+		inverse[ 1 ][ 1 ] = m[ 0 ][ 0 ] * Dinv;
+	}
+
 	public static String toString( final double[][] A )
 	{
 		return toString( A, "%6.3f " );
