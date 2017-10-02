@@ -63,7 +63,9 @@ public interface RealPositionable extends Positionable
 	 * Move the element relative to its current location using a
 	 * {@link RealLocalizable} as distance vector.
 	 *
-	 * @param distance relative offset, {@link RealLocalizable#numDimensions()} must be >= {@link #numDimensions()}
+	 * @param distance
+	 *            relative offset, {@link RealLocalizable#numDimensions()} must
+	 *            be &ge; {@link #numDimensions()}
 	 */
 	public void move( RealLocalizable distance );
 
@@ -71,7 +73,8 @@ public interface RealPositionable extends Positionable
 	 * Move the element relative to its current location using a float[] as
 	 * distance vector.
 	 *
-	 * @param distance, length must be >= {@link #numDimensions()}
+	 * @param distance,
+	 *            length must be &ge; {@link #numDimensions()}
 	 */
 	public void move( float[] distance );
 
@@ -79,28 +82,35 @@ public interface RealPositionable extends Positionable
 	 * Move the element relative to its current location using a float[] as
 	 * distance vector.
 	 *
-	 * @param distance, length must be >= {@link #numDimensions()}
+	 * @param distance,
+	 *            length must be &ge; {@link #numDimensions()}
 	 */
 	public void move( double[] distance );
 
 	/**
 	 * Place the element at the same location as a given {@link RealLocalizable}
 	 *
-	 * @param position absolute position, {@link RealLocalizable#numDimensions()} must be >= {@link #numDimensions()}
+	 * @param position
+	 *            absolute position, {@link RealLocalizable#numDimensions()}
+	 *            must be &ge; {@link #numDimensions()}
 	 */
 	public void setPosition( RealLocalizable position );
 
 	/**
 	 * Set the position of the element.
 	 *
-	 * @param position absolute position, length must be >= {@link #numDimensions()}
+	 * @param position
+	 *            absolute position, length must be &ge;
+	 *            {@link #numDimensions()}
 	 */
 	public void setPosition( float position[] );
 
 	/**
 	 * Set the position of the element.
 	 *
-	 * @param position absolute position, length must be >= {@link #numDimensions()}
+	 * @param position
+	 *            absolute position, length must be &ge;
+	 *            {@link #numDimensions()}
 	 */
 	public void setPosition( double position[] );
 

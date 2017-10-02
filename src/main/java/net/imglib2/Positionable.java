@@ -37,7 +37,6 @@ package net.imglib2;
 /**
  * An element that can be positioned in n-dimensional discrete space.
  *
- *
  * @author Stephan Preibisch
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch
@@ -85,7 +84,8 @@ public interface Positionable extends EuclideanSpace
 	 * {@link Localizable} as distance vector.
 	 *
 	 * @param localizable
-	 *            relative offset, {@link Localizable#numDimensions()} must be >= {@link #numDimensions()}
+	 *            relative offset, {@link Localizable#numDimensions()} must be
+	 *            &ge; {@link #numDimensions()}
 	 */
 	public void move( Localizable localizable );
 
@@ -94,7 +94,7 @@ public interface Positionable extends EuclideanSpace
 	 * distance vector.
 	 *
 	 * @param distance
-	 *            relative offset, length must be >= {@link #numDimensions()}
+	 *            relative offset, length must be &ge; {@link #numDimensions()}
 	 */
 	public void move( int[] distance );
 
@@ -103,7 +103,7 @@ public interface Positionable extends EuclideanSpace
 	 * distance vector.
 	 *
 	 * @param distance
-	 *            relative offset, length must be >= {@link #numDimensions()}
+	 *            relative offset, length must be &ge; {@link #numDimensions()}
 	 */
 	public void move( long[] distance );
 
@@ -111,7 +111,8 @@ public interface Positionable extends EuclideanSpace
 	 * Place the element at the same location as a given {@link Localizable}
 	 *
 	 * @param localizable
-	 *            absolute position, {@link Localizable#numDimensions()} must be >= {@link #numDimensions()}
+	 *            absolute position, {@link Localizable#numDimensions()} must be
+	 *            &ge; {@link #numDimensions()}
 	 */
 	public void setPosition( Localizable localizable );
 
@@ -119,7 +120,8 @@ public interface Positionable extends EuclideanSpace
 	 * Set the position of the element.
 	 *
 	 * @param position
-	 *            absolute position, length must be >= {@link #numDimensions()}
+	 *            absolute position, length must be &ge;
+	 *            {@link #numDimensions()}
 	 */
 	public void setPosition( int[] position );
 
@@ -127,7 +129,8 @@ public interface Positionable extends EuclideanSpace
 	 * Set the position of the element.
 	 *
 	 * @param position
-	 *            absolute position, length must be >= {@link #numDimensions()}
+	 *            absolute position, length must be &ge;
+	 *            {@link #numDimensions()}
 	 */
 	public void setPosition( long[] position );
 
