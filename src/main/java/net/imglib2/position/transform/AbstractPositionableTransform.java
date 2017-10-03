@@ -157,7 +157,8 @@ public abstract class AbstractPositionableTransform< LocalizablePositionable ext
 	@Override
 	public void setPosition( final Localizable localizable )
 	{
-		localizable.localize( position );
+		for(int d = 0; d < n; d++)
+			position[d] = localizable.getLongPosition(d);
 		target.setPosition( localizable );
 	}
 
