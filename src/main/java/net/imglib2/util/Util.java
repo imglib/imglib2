@@ -307,6 +307,11 @@ public class Util
 
 		return median;
 	}
+	
+	public static void quicksort( final long[] data )
+	{
+		quicksort( data, 0, data.length - 1 );
+	}
 
 	public static void quicksort( final long[] data, final int left, final int right )
 	{
