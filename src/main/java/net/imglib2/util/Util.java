@@ -159,10 +159,11 @@ public class Util
 	{
 		final double temp[] = values.clone();
 		final int length = temp.length;
+		final int pos = Math.min( length - 1, Math.max( 0, ( int ) Math.round( ( length - 1 ) * percentile ) ) );
 
-		quicksort( temp );
+		KthElement.kthElement( pos, temp );
 
-		return temp[ Math.min( length - 1, Math.max( 0, ( int ) Math.round( ( length - 1 ) * percentile ) ) ) ];
+		return temp[ pos ];
 	}
 
 	public static double averageDouble( final List< Double > values )
