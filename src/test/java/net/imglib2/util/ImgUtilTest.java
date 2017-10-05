@@ -34,8 +34,13 @@
 
 package net.imglib2.util;
 
+import static net.imglib2.util.Util.percentile;
+import static net.imglib2.util.Util.quicksort;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
@@ -52,6 +57,35 @@ import org.junit.Test;
  */
 public class ImgUtilTest
 {
+	
+	@Test
+	public void testPercentile()
+	{
+		final double[] data = new double[42];
+		for(int i = 0; i < data.length; i++) {
+		    data[i] = Math.random()*42;
+		}
+		final double[] sortedData = data.clone();
+		final double[] quicksortedData = data.clone();
+		Arrays.sort( sortedData );
+		quicksort( quicksortedData );
+		
+		for(int i = 0; i < 3; i++){
+		
+			double percentile = Math.random();
+			
+			int pos = Math.min( data.length - 1,
+								Math.max( 0, ( int ) Math.round( ( data.length - 1 ) * percentile ) ) );
+			
+			final double percentileRes = percentile( data, percentile );
+			
+			assertEquals(quicksortedData[pos], sortedData[pos], 0.001);
+			assertEquals(quicksortedData[pos], percentileRes, 0.001);
+			
+		}
+		
+		
+	}
 
 	@Test
 	public void testCopyDoubleArrayIntIntArrayImgOfT()
